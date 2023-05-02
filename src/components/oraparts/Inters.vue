@@ -1,27 +1,10 @@
 <template>
     <div>
-        
-        <v-card class="mb-2">
-            <v-card-title>
-                {{title}}
+        <v-card class="mb-2" flat>
+           <v-card-title>
             </v-card-title>
             <v-card-text>
-                <p><span style="color:red">К.</span> <span> Божа, прыйдзі мне на дапамогу.</span>
-
-                </p>
-                <p><span style="color:red">Н.</span> <span> Божа, прыйдзі мне на дапамогу.</span>
-
-                </p>
-                <p>Хвала Айцу і Сыну,* і Духу Святому.
-
-                </p>
-                <p>Як была спрадвеку, цяпер і заўсёды, *
-І на векі вечныя. Амэн.
-                    
-                </p>
-                <p>
-                    Аллелюя.
-                </p>
+                <div v-html="text"></div>
             </v-card-text>
         </v-card>
     </div>
@@ -30,11 +13,8 @@
 
 <script setup>
 const props = defineProps({
-  title: String,
+  text: String,
 })
-
-
-
 // import { ref } from 'vue'
 // import moment from 'moment';
 // import 'moment/dist/locale/be';

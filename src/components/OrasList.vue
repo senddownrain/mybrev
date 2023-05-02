@@ -1,14 +1,10 @@
 <template>
-
     <v-container fluid>
         <v-row dense>
-            <v-col cols="12">
-                <v-card v-if="!pending">
-                    <v-card-title>
-                        {{ day.dayName == "" ? day.feastName : day.dayName}} - {{ day.weekDay }}
-                    </v-card-title>
-                    <v-card-text>
-                        <v-list density="compact">
+            <v-col cols="12" v-if="!pending">
+                <div class="text-h6"> {{ day.dayName == "" ? day.feastName : day.dayName }} - {{ day.weekDay }}</div>
+
+                <v-list>
                     <v-list-item v-for="(item, i) in oras" :key="i" :value="item" active-color="primary" :to="item.to">
                         <v-list-item-title>
                             {{ item.title }}
@@ -19,9 +15,8 @@
                         </template>
                     </v-list-item>
                 </v-list>
-                    </v-card-text>
-                </v-card>
-               
+
+
             </v-col>
 
         </v-row></v-container>
@@ -45,12 +40,34 @@ var { data: day, pending } = useDocument(docRef)
 
 const oras = [
     {
+        title: "Laudes",
+        to: `/ora/${route.params.id}/laudes`
+    },
+    {
+        title: "Officium Lectionis",
+        to: `/ora/${route.params.id}/lectionis`
+    },
+    {
+        title: "Terz",
+        to: `/ora/${route.params.id}/terz`
+    },
+    {
+        title: "Sext",
+        to: `/ora/${route.params.id}/sext`
+    },
+    {
+        title: "Non",
+        to: `/ora/${route.params.id}/non`
+    },
+    {
         title: "Vesper",
         to: `/ora/${route.params.id}/vesper`
     },
     {
-        title: "Laudes",
-    }
+        title: "Completorium",
+        to: `/ora/${route.params.id}/completorium`
+    },
+
 ]
 
 </script>

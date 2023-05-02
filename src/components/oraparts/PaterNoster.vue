@@ -1,11 +1,10 @@
 <template>
     <div>
-        <v-card>
-            <v-card-title>
-                ГІМН
+        <v-card class="mb-2" flat>
+           <v-card-title>
             </v-card-title>
             <v-card-text>
-                <div v-html="text"></div>
+                Ойча наш.
             </v-card-text>
         </v-card>
     </div>
@@ -13,9 +12,9 @@
 
 
 <script setup>
-const props = defineProps({
-  text: String,
-})
+// const props = defineProps({
+//   text: String,
+// })
 // import { ref } from 'vue'
 // import moment from 'moment';
 // import 'moment/dist/locale/be';

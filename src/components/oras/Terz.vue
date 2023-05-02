@@ -1,0 +1,53 @@
+<template>
+    <v-container>
+        <v-row>
+            <v-col cols="12" v-if="!pending">
+                <day-title :day="day.weekDay" :date="nowDate"/>
+                <intro :title="name" />
+                <hymnus :text="day[`sext${num}Hymn`]" />
+                <psalms :ant1="day[`sext${num}Ant1`]" :ant2="day[`sext${num}Ant2`]" :ant3="day[`sext${num}Ant3`]" 
+                :ps1="day[`sext${num}Ps1`]"
+                    :ps2="day[`sext${num}Ps2`]" :ps3="day[`sext${num}Ps3`]" />
+                <reading :text="day[`sext${num}R`]" />
+                <last-prayer :text="day[`sext${num}Pr`]" />
+                <end-of-sext/>
+            </v-col>
+        </v-row>
+    </v-container>
+    <div>
+
+
+    </div>
+</template>
+<script setup>
+
+import { ref } from 'vue'
+import moment from 'moment';
+import 'moment/dist/locale/be';
+
+import { useRoute } from 'vue-router'
+import { useCollection, useFirestore, useDocument } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import Hymnus from '@/components/oraparts/Hymnus.vue';
+import Intro from '@/components/oraparts/Intro.vue';
+import Psalms from '@/components/oraparts/Psalms.vue';
+import Reading from '@/components/oraparts/Reading.vue';
+import LastPrayer from '@/components/oraparts/LastPrayer.vue';
+import EndOfSext from '@/components/oraparts/EndOfSext.vue';
+import DayTitle from '@/components/oraparts/DayTitle.vue';
+
+const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+const route = useRoute()
+const docRef = doc(db, "days", route.params.id);
+var { data: day, pending } = useDocument(docRef)
+
+const nowDate = moment(Date.now()).format('LL')
+
+const name = "МАЛІТВА ПЕРАД ПОЎДНЕМ"
+const num = 1 // нумар палудневай малітвы
+
+</script>
