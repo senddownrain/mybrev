@@ -1,8 +1,10 @@
 <template>
-    <BridgeComponent />
+  <div>
+    <ItemsList/>
+  </div>
   </template>
   
   <script setup>
-    import BridgeComponent from '@/components/Bridge.vue'
+    import ItemsList from '@/components/ItemsList.vue'
   </script>
   

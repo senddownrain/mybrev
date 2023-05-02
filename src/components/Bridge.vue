@@ -2,125 +2,122 @@
     <v-container fluid>
         <v-row dense>
             <v-col cols="12" sm="6">
-                <v-select
-          v-model="selectedDay"
-          :hint="`${selectedDay}`"
-          :items="bridgeDaysModel"
-          label="Days"
-          persistent-hint
-          return-object
-          single-line
-        ></v-select>
+                <v-select v-model="selectedDay" :hint="`${selectedDay}`" :items="bridgeDaysModel" label="Days"
+                    persistent-hint return-object single-line></v-select>
             </v-col>
             <v-col cols="12" sm="6" class="mt-2">
-                    <v-text-field v-model="loadingDay" hint="дзень" label="дата"></v-text-field>
+                <v-text-field v-model="loadingDay" hint="дзень" label="дата"></v-text-field>
                 <v-btn @click="loadDay()">load</v-btn>
-                </v-col>
-                
+                <v-btn @click="mapDay()">map</v-btn>
+            </v-col>
+
         </v-row>
-      <v-row dense>
-        <v-col cols="12" sm="12" v-if="devMode">
-          <v-card flat>
-            <v-card-actions >
-              <v-spacer></v-spacer>
-              <v-btn @click="showAdd()">Add</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-  
-  
-        <v-col v-for="n in Object.getOwnPropertyNames(findItem(selectedDay))" :key="n" cols="12">
-                <v-card :title="`${n} - ${selectedItem[n]}`"  >
+        <v-row dense>
+
+
+            <v-col v-for="n in Object.getOwnPropertyNames(findItem(selectedDay))" :key="n" cols="12">
+                <v-card :title="`${n} - ${selectedItem[n]}`">
                     <v-card-text>
                         <p v-html="JSON.stringify(getProp(n, selectedItem[n]))"></p>
                     </v-card-text>
-                    
+
                 </v-card>
             </v-col>
-      </v-row>
-  
-      <v-dialog v-model="dialog" ref="my" fullscreen :scrim="false" transition="dialog-bottom-transition">
-        <v-card>
-          <v-toolbar dark color="primary">
-            <v-btn icon dark @click="dialog = false">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-            <v-toolbar-title>{{ current.title }}</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-              <v-btn v-if="!editMode" variant="text" @click="edit(current)">
-                Изменить
-              </v-btn>
-  
-              <v-btn v-if="editMode" variant="text" @click="save(current)">
-                Сохранить
-              </v-btn>
-              <v-btn v-if="editMode" variant="text" @click="editMode = false">
-                Отменить
-              </v-btn>
-            </v-toolbar-items>
-          </v-toolbar>
-          <v-card-text>
-            <quill-editor v-if="editMode" theme="snow" toolbar="minimal" v-model:content="tmp.text" contentType="html" />
-  
-            <p v-if="!editMode" v-html="current.text">
-  
-            </p>
-  
-          </v-card-text>
-  
-        </v-card>
-      </v-dialog>
-  
-  
-      <v-dialog v-model="dialogAdd" fullscreen :scrim="false" transition="dialog-bottom-transition">
-        <v-card>
-          <v-toolbar dark color="primary">
-            <v-btn icon dark @click="dialogAdd = false">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-            <v-toolbar-title> Add Note</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-  
-              <v-btn variant="text" @click="add(addItem)">
-                Сохранить
-              </v-btn>
-              <v-btn  variant="text" @click="dialogAdd = false">
-                Отменить
-              </v-btn>
-            </v-toolbar-items>
-          </v-toolbar>
-          <v-card-text>
-            <v-row>
-                <v-col cols="12" sm="6" class="mb-2">
-                    <v-text-field v-model="addItem.title" hint="Назва уводзін" label="Назва"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="12" class="mb-5">
-                  <quill-editor theme="snow" toolbar="minimal" v-model:content="addItem.text" contentType="html" />
-                </v-col>
-            </v-row>
-  
-  
-          </v-card-text>
-  
-        </v-card>
-      </v-dialog>
-  
-  
+        </v-row>
+
+        <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title> Map day</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+
+                        <v-btn  variant="text" @click="save()">
+                            Сохранить
+                        </v-btn>
+                        <v-btn variant="text" @click="dialog = false">
+                            Отменить
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-card-text>
+
+
+                    <v-col v-for="n in Object.getOwnPropertyNames(mappingDay)" :key="n" cols="12">
+                        <v-card :title="`${n}`">
+                            <v-card-text>
+<div v-if="!checkEditor(mappingDay[n])">
+    <v-text-field v-model="mappingDay[n]"></v-text-field></div>
+<div v-if="checkEditor(mappingDay[n])">
+    <quill-editor  theme="snow" toolbar="minimal" v-model:content="mappingDay[n]"
+                                    contentType="html" />
+</div>
+                                
+                            </v-card-text>
+
+                        </v-card>
+                    </v-col>
+                    <v-col cols="12">
+    {{ mappingDay }}
+</v-col>
+                </v-card-text>
+
+            </v-card>
+        </v-dialog>
+
+
+        <v-dialog v-model="dialogAdd" fullscreen :scrim="false" transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialogAdd = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title> Add Note</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+
+                        <v-btn variant="text" @click="add(addItem)">
+                            Сохранить
+                        </v-btn>
+                        <v-btn variant="text" @click="dialogAdd = false">
+                            Отменить
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12" sm="6" class="mb-2">
+                            <v-text-field v-model="addItem.title" hint="Назва уводзін" label="Назва"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="12" class="mb-5">
+                            <quill-editor theme="snow" toolbar="minimal" v-model:content="addItem.text"
+                                contentType="html" />
+                        </v-col>
+                    </v-row>
+
+
+                </v-card-text>
+
+            </v-card>
+        </v-dialog>
+
+
     </v-container>
-  </template>
-  
-  
-  <script setup>
-  import tables from '@/json'
+</template>
 
-  import { ref } from 'vue'
-  
-  import { useCollection, useFirestore } from 'vuefire'
-  import { collection, orderBy, query, doc, updateDoc, setDoc, addDoc } from 'firebase/firestore'
 
-  
+<script setup>
+import tables from '@/json'
+
+import { ref } from 'vue'
+
+import { useCollection, useFirestore } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc, setDoc, addDoc } from 'firebase/firestore'
+
+
 console.log(tables.Bridge_table.map(a => a.Bridge_DayId));
 
 const bridgeDaysModel = ref(tables.Bridge_table.map(a => a.Bridge_DayId));
@@ -129,112 +126,247 @@ const selectedDay = ref(bridgeDaysModel.value[0]);
 const selectedItem = ref({});
 
 const loadingDay = ref("");
-function loadDay(){
+function loadDay() {
     selectedItem.value = tables.Bridge_table.find(x => x.Bridge_DayId == loadingDay.value);
 }
 
-function findItem(id){
+const mappingDay = ref({})
+
+function checkEditor(field){
+    return field && field.length > 40000
+}
+
+function mapDay() {
+    dialog.value = true
+    let b = selectedItem.value;
+    let day = {
+        id:"",
+        dayName: b["Day"],
+        weekDay: b["Bridge_DayName"],
+        weekNum: b["Bridge_Week"],
+        feastName: b["Svyata"],
+        feastType: b["Uspamin"],
+        allowedAlleluia: b["Alleluia"] == "1",
+
+        invitatoriumAntId: b["Zakl_Ant"],
+        invitatoriumPsId: b["Zakl_PS"],
+
+
+        officeOfReadingsHymn: getTableField("GCH_Gimn", b["GCH_Gimn"], "GCH_Gimn_Text"),
+        
+        officeOfReadingsAnt1: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text1"),
+        officeOfReadingsAnt2: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text2"),
+        officeOfReadingsAnt3: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text3"),
+        
+        officeOfReadingsPs1: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text1"),
+        officeOfReadingsPs2: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text2"),
+        officeOfReadingsPs3: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text3"),
+    
+        officeOfReadingsR1: getTableField("GCH_CH_1", b["GCH_CH_1"], "GCH_CH_1_Text"),
+        officeOfReadingsR2: getTableField("GCH_CH_2", b["GCH_CH_2"], "GCH_CH_2_Text"),
+    
+        officeOfReadingsTeDeum:b["GCH_Tabe"] == "1",
+        officeOfReadingsPr: getTableField("GCH_Mal", b["GCH_Mal"], "GCH_Mal_Text"),
+    
+        laudesHymn: getTableField("UTR_Gimn", b["UTR_Gimn"], "UTR_Gimn_Text"),
+        laudesAnt: getTableFieldUtr("UTR_Ant", b["UTR_Ant"], "NESH_Mal_Text", "NESH_Mal_ID"),
+        laudesPs1: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text1"),
+        laudesPs2: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text2"),
+        laudesPs3: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text3"),
+        laudesR: getTableField("UTR_Chyt", b["UTR_Chyt"], "UTR_Chyt_Text"),
+        laudesAntBen: getTableField("UTR_Ant_Zakh", b["UTR_Ant_Zakh"], "UTR_Ant_Zakh_Text"),
+        laudesInter: getTableField("UTR_Prosby", b["UTR_Prosby"], "UTR_Prosby_Text"),
+        laudesPr: getTableField("UTR_Mal", b["UTR_Mal"], "UTR_Mal_Text"),
+
+        sext1Hymn:getTableField("MPD_Gimn_1", b["MPD_Gimn_1"], "MPD_Gimn_1_Text"),
+        sext1Ant1:getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text1"),
+        sext1Ant2:getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text2"),
+        sext1Ant3:getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text3"),
+        sext1Ps1:getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text1"),
+        sext1Ps2:getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text2"),
+        sext1Ps3:getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text3"),
+        sext1R:getTableField("MPD_Chyt_1", b["MPD_Chyt_1"], "MPD_Chyt_1_Text"),
+        sext1Pr:getTableField("MPD_Mal_1", b["MPD_Mal_1"], "MPD_Mal_1_Text"),
+
+        sext2Hymn:getTableField("MPD_Gimn_2", b["MPD_Gimn_2"], "MPD_Gimn_2_Text"),
+        sext2Ant1:getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text"),
+        sext2Ant2:getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text2"),
+        sext2Ant3:getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text3"),
+        sext2Ps1:getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text1"),
+        sext2Ps2:getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text2"),
+        sext2Ps3:getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text3"),
+        sext2R:getTableField("MPD_Chyt_2", b["MPD_Chyt_2"], "MPD_Chyt_2_Text"),
+        sext2Pr:getTableField("MPD_Mal_2", b["MPD_Mal_2"], "MPD_Mal_2_Text"),
+
+        sext3Hymn:getTableField("MPD_Gimn_3", b["MPD_Gimn_3"], "MPD_Gimn_3_Text"),
+        sext3Ant1:getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text"),
+        sext3Ant2:getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text2"),
+        sext3Ant3:getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text3"),
+        sext3Ps1:getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text1"),
+        sext3Ps2:getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text2"),
+        sext3Ps3:getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text3"),
+        sext3R:getTableField("MPD_Chyt_3", b["MPD_Chyt_3"], "MPD_Chyt_3_Text"),
+        sext3Pr:getTableField("MPD_Mal_3", b["MPD_Mal_3"], "MPD_Mal_3_Text"),
+
+        vesperHymn: getTableField("NESH_Gimn", b["NESH_Gimn"], "NESH_Gimn_Text"),
+        vesperAnt1: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text1"),
+        vesperAnt2: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text2"),
+        vesperAnt3: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text3"),
+        vesperPs1: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text1"),
+        vesperPs2: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text2"),
+        vesperPs3: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text3"),
+        vesperR: getTableField("NESH_Chyt", b["NESH_Chyt"], "NESH_Chyt_Text"),
+        vesperAntMag: getTableField("NESH_Ant_M", b["NESH_Ant_M"], "NESH_Ant_M_Text"),
+        vesperInter: getTableField("NESH_Prosby", b["NESH_Prosby"], "NESH_Prosby_Text"),
+        vesperPr: getTableField("NESH_Mal", b["NESH_Mal"], "NESH_Mal_Text"),
+
+        compHymn: getTableField("KAMP_Gimn", b["KAMP_Gimn"], "KAMP_Gimn_Text"),
+        compAnt1: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text1"),
+        compAnt2: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text2"),
+        
+        compPs1: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text1"),
+        compPs2: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text2"),
+
+        compR: getTableField("KAMP_Chyt", b["KAMP_Chyt"], "KAMP_Chyt_Text"),
+        compResp: getTableField("KAMP_Resp", b["KAMP_Resp"], "KAMP_Resp_Text"),
+        compAntS: getTableField("KAMP_Ant_S", b["KAMP_Ant_S"], "KAMP_Ant_S_Text"),
+        compPr: getTableField("KAMP_Mal", b["KAMP_Mal"], "KAMP_Mal_Text"),
+        compAntS: getTableField("KAMP_Ant_M", b["KAMP_Ant_M"], "KAMP_Ant_M_Text"),
+        
+
+
+    }
+    mappingDay.value = day;
+}
+
+
+async function save() {
+    dialog.value = false
+
+//    await addDoc(collection(db, "days"), mappingDay.value)
+    await setDoc(doc(db, "days", mappingDay.value.id), mappingDay.value);
+    // item.text = tmp.value.text
+    // const noteRef = doc(db, "notes", item.id);
+
+    // await updateDoc(noteRef, {
+    //     text: tmp.value.text
+    // });
+}
+
+function getTableField(table, id, field) {
+    let tableName = table + "_table";
+
+    if (tables[tableName]) {
+        
+        let item = tables[tableName].find(x => x[table + "_ID"] == id)
+        //console.log(item)
+        if (item && item[field]) {
+            return item[field]
+        }
+    }
+    return ""
+}
+
+function getTableFieldUtr(table, id, field, idName) {
+    let tableName = table + "_table";
+
+    if (tables[tableName]) {
+        
+        let item = tables[tableName].find(x => x[idName] == id)
+        //console.log(item)
+        if (item && item[field]) {
+            return item[field]
+        }
+    }
+    return ""
+}
+
+function findItem(id) {
     let item = tables.Bridge_table.find(x => x.Bridge_DayId == id);
     selectedItem.value = item;
 
     return item;
 }
 
-function getProp(name, val){
-    let tbl = tables[name+"_table"] 
-    if(tbl){
-        console.log(name+"_table");
+function getProp(name, val) {
+    let tbl = tables[name + "_table"]
+    if (tbl) {
         let itemID = name + "_ID"
-        console.log(itemID);
-        if(tbl[0][itemID]){
-            
-            let item = tables[name+"_table"].find(x => x[itemID] == val);
-        return JSON.stringify(item);
+        if (tbl[0][itemID]) {
+
+            let item = tables[name + "_table"].find(x => x[itemID] == val);
+            return JSON.stringify(item);
         }
-        else
-        {
+        else {
             return "no id"
         }
-        
+
     }
-    else{
+    else {
         return 'not a table'
     }
 }
 
-function getIdProp(obj){
+function getIdProp(obj) {
     var props = Object.getOwnPropertyNames(obj);
     var id = props.find(x => x.indexOf("ID") != -1);
 
-    return id; 
+    return id;
 }
 
-  const devMode = false
-  
-  const db = useFirestore()
-  const notes = useCollection(query(collection(db, 'notes'), orderBy('title')))
-  
-  const dialog = ref(false)
-  
-  const dialogAdd = ref(false)
-  const addItem = ref({
-    text:""
-  })
-  
-  const current = ref({})
-  const tmp = ref({})
-  const editMode = ref(false)
-  
-  
-  function strippedHtml(value) {
+const db = useFirestore()
+
+const dialog = ref(false)
+
+const dialogAdd = ref(false)
+const addItem = ref({
+    text: ""
+})
+
+const current = ref({})
+const tmp = ref({})
+const editMode = ref(false)
+
+
+function strippedHtml(value) {
     let regex = /(<([^>]+)>)/ig;
     return value.replace(regex, "");
-  }
-  
-  function select(item) {
+}
+
+function select(item) {
     current.value = item;
     dialog.value = true
-  }
-  
-  function edit(item) {
+}
+
+function edit(item) {
     tmp.value = Object.assign({}, item);
     editMode.value = true
-  }
-  
-  async function save(item) {
-    editMode.value = false
-  
-    item.text = tmp.value.text
-    const noteRef = doc(db, "notes", item.id);
-  
-    await updateDoc(noteRef, {
-      text: tmp.value.text
-    });
-  }
-  
-  function showAdd(){
-      addItem.value = {
-    text:""
-  }
-      dialogAdd.value = true
+}
+
+
+function showAdd() {
+    addItem.value = {
+        text: ""
     }
-  
-    async function add(item){
-      
-      dialogAdd.value = false
-      await addDoc(collection(db, "notes"), item)
-    
-      addItem.value = ref({
-    text:""
-  })
-    }
-  
-  </script>
-  
-  
-  <style>
-  .dialog-bottom-transition-enter-active,
-  .dialog-bottom-transition-leave-active {
+    dialogAdd.value = true
+}
+
+async function add(item) {
+
+    dialogAdd.value = false
+    await addDoc(collection(db, "notes"), item)
+
+    addItem.value = ref({
+        text: ""
+    })
+}
+
+</script>
+
+
+<style>
+.dialog-bottom-transition-enter-active,
+.dialog-bottom-transition-leave-active {
     transition: transform .2s ease-in-out;
-  }
-  </style>
+}
+</style>
