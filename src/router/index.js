@@ -1,12 +1,10 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
-import Today from '@/views/Today.vue'
 import BottomNavVue from '@/layouts/default/BottomNav.vue'
 import DefaultVue from '@/layouts/default/Default.vue'
 import OneVue from '@/layouts/simple/One.vue'
 import BridgeVue from '@/components/Bridge.vue'
 import TableListVue from '@/components/TableList.vue'
-import testVue from '@/views/test.vue'
 import TodayVue from '@/views/Today.vue'
 import OrasListVue from '@/components/OrasList.vue'
 import VesperVue from '@/components/oras/Vesper.vue'
@@ -16,14 +14,14 @@ import NonVue from '@/components/oras/Non.vue'
 import TerzVue from '@/components/oras/Terz.vue'
 import CompletoriumVue from '@/components/oras/Completorium.vue'
 import LectionisVue from '@/components/oras/Lectionis.vue'
+import YearOptionsVue from '@/components/YearOptions.vue'
+import first from '@/layouts/default/View.vue'
 
 const routes = [
   {
     path: '/',
     components: {
       default: DefaultVue,
-      // short for LeftSidebar: LeftSidebar
-      BottomNav: BottomNavVue,
     },
     children: [
       {
@@ -98,6 +96,13 @@ const routes = [
         name: 'tables',
         component: TableListVue,
       },
+      {
+        path: '/yearOptions',
+        name: 'yearOptions',
+        component: YearOptionsVue
+        ,
+      }
+      
     
     ]
   },

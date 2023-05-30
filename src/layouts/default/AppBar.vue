@@ -82,6 +82,11 @@ const menu = [
     text: 'Tables',
     to: '/tables',
     icon: 'mdi-clock'
+  },
+  {
+    text: 'YearOptions',
+    to: '/yearOptions',
+    icon: 'mdi-clock'
   }
 ]
 

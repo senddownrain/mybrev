@@ -140,12 +140,16 @@ function mapDay() {
     dialog.value = true
     let b = selectedItem.value;
     let day = {
-        id:"",
-        dayName: b["Day"],
-        weekDay: b["Bridge_DayName"],
-        weekNum: b["Bridge_Week"],
-        feastName: b["Svyata"],
-        feastType: b["Uspamin"],
+        _dayOfWeek: "", // 1 - sunday, ...
+        _periodType: "", // pasha, ordinary, advent
+        _pariodWeekNumber: "",
+        _date: "",
+
+        _dayName: b["Day"],
+        _weekDay: b["Bridge_DayName"],
+        _weekNum: b["Bridge_Week"],
+        _feastName: b["Svyata"],
+        _feastType: b["Uspamin"],
         allowedAlleluia: b["Alleluia"] == "1",
 
         invitatoriumAntId: b["Zakl_Ant"],
@@ -243,8 +247,8 @@ function mapDay() {
 async function save() {
     dialog.value = false
 
-//    await addDoc(collection(db, "days"), mappingDay.value)
-    await setDoc(doc(db, "days", mappingDay.value.id), mappingDay.value);
+    await addDoc(collection(db, "days"), mappingDay.value)
+   // await setDoc(doc(db, "days", mappingDay.value.id), mappingDay.value);
     // item.text = tmp.value.text
     // const noteRef = doc(db, "notes", item.id);
 
