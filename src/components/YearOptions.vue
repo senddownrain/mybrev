@@ -92,7 +92,7 @@ export default {
             { title: 'Колькасць тыдняў перад пастом', key: 'ordintaryWeeks1', sortable: false, }, 
             { title: 'Пачатак звычайнага пасля Вялікадня', key: 'ordintaryStart2', sortable: false, }, 
             { title: 'Колькасць тыдняў пасля вялікадня', key: 'ordintaryWeeks2', sortable: false, }, 
-            { title: 'Першая нядзеля адвэнту', key: 'firstAndventSunday', sortable: false, },
+            { title: 'Першая нядзеля адвэнту', key: 'firstAdventSunday', sortable: false, },
             { title: 'Actions', key: 'actions', sortable: false },
         ],
         options: [],

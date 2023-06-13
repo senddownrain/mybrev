@@ -1,35 +1,308 @@
 <template>
-
     <v-container fluid>
         <v-row dense>
             <v-col cols="12">
-                <v-list density="compact">
-                <v-list-item v-for="(item, i) in days" :key="i" :value="item" active-color="primary" :to="`/ora/${item.id}`">
-                    <v-list-item-title>
-                        {{ item.dayName == "" ? item.feastName : item.dayName}} - {{ item.weekDay }}
-                    </v-list-item-title>
+                <v-card flat>
+                    <v-toolbar @click="showCalendar()" :title="dayToDisplay"></v-toolbar>
 
-                    <template v-slot:append>
-          <v-icon>mdi-chevron-right</v-icon>
-        </template>
-                </v-list-item>
-            </v-list>
+                    <v-card-text>
+                        <v-list v-if="days.length > 0" density="compact">
+                            <v-list-item v-for="(item, i) in days" :key="i" :value="item" active-color="primary"
+                                :to="`/ora/${item.id}`">
+                                <v-list-item-title>
+                                    {{ item._dayName == "" ? item._feastName : item._dayName }} - {{ item._weekDay }}
+                                </v-list-item-title>
+
+                                <template v-slot:append>
+                                    <v-icon>mdi-chevron-right</v-icon>
+                                </template>
+                            </v-list-item>
+                        </v-list>
+                        <v-alert v-else-if="loading" type="info">Loading...</v-alert>
+                        <v-alert v-else type="info">No items available</v-alert>
+                    </v-card-text>
+                </v-card>
+
+                <v-dialog v-model="dialog" width="auto">
+                    <v-card>
+                        <v-card-text>
+                            <DatePicker v-model="picker" mode="date" />
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn variant="text" @click="dialog = false">Close</v-btn>
+                            <v-btn variant="text" @click="loadDay()">Select</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+
             </v-col>
-            
-        </v-row></v-container>
+
+        </v-row>
+    </v-container>
 </template>
 
-<script setup>
+<script>
 
-import { ref } from 'vue'
+import moment from 'moment'
+import 'moment/dist/locale/be'
 
+import { ref, onMounted, reactive, computed } from 'vue';
 import { useCollection, useFirestore } from 'vuefire'
-import { collection, orderBy, query, doc, updateDoc, setDoc } from 'firebase/firestore'
+import { collection, orderBy, query, doc, getDoc, getDocs, where, updateDoc, setDoc } from 'firebase/firestore'
 
-const db = useFirestore()
 
-const days = useCollection(query(collection(db, 'days')))
-//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+export default {
+    setup() {
+        const db = useFirestore()
+        const selectedDay = ref(moment());
+        const picker = ref(Date.now());
+
+        const dialog = ref(false);
+
+        const days = ref([]);
+        const loading = ref(false);
+
+        const yearOptions = ref({});
+
+        const dayToDisplay = computed(() => { return selectedDay.value ? selectedDay.value.format("LL") : "" });
+
+        const fetchItems = async () => {
+
+            loading.value = true;
+            yearOptions.value = await getYearOptions()
+
+            await checkFeast(selectedDay.value.day(), selectedDay.value.month())
+            await checkPeriods(yearOptions.value, selectedDay.value)
+            await checkDynamicFeasts(yearOptions.value, selectedDay.value)
+
+            loading.value = false;
+        }
+
+        const getYearOptions = async () => {
+            const currentYear = moment().year();
+            const docRef = doc(db, "yearOptions", `${currentYear}`);
+            const docSnap = await getDoc(docRef);
+            return docSnap.data();
+        };
+
+        async function checkDynamicFeasts(opts, current) {
+            // christthehighpriest, trinity
+            await getDayByFeast(opts, "ashWednesday", current);
+            await getDayByFeast(opts, "easterSunday", current);
+            await getDayByFeast(opts, "ascension", current);
+            await getDayByFeast(opts, "corpuschristi", current);
+            await getDayByFeast(opts, "ashWednesday", current);
+        }
+
+        async function checkPeriods(opts, day) {
+            await checkAdvent(opts, day);
+            await checkChristmasTime(opts, day);
+            await checkLent(opts, day);
+            await checkEaster(opts, day);
+            await checkOrdinary(opts, day)
+        }
+
+        async function getDayByFeast(opts, name, current) {
+            let feast = getMomentDay(opts[name]);
+            if (feast) {
+                if (current.diff(feast, "days") == 0) {
+                    logDay(name);
+
+                    const q = query(collection(db, "days"), where("_feast", "==", `${name}`));
+
+                    const querySnapshot = await getDocs(q);
+                    querySnapshot.forEach((doc) => {
+                        days.value.push({
+                            id: doc.id,
+                            ...doc.data()
+                        })
+                    });
+                }
+            }
+
+        }
+
+        async function checkFeast(day, month) {
+
+            const q = query(collection(db, "days"), where("_date", "==", `${day}.${month}`));
+
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+
+                days.value.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+                logDay(doc.data()._feastName)
+            });
+
+        }
+
+        async function checkAdvent(opts, current) {
+            const period = "advent"
+            const fa = getMomentDay(opts.firstAdventSunday, opts.year);
+            const christmas = moment(`${12}.${25}.${opts.year}`);
+
+            if (current.diff(fa, "days") >= 0 && current.diff(christmas, "days") < 0) {
+                logDay("advent time")
+                const diff = current.diff(fa, "days");
+                // 1 - sunday
+                // 7 - saturday
+                const dayOfWeek = diff % 7 + 1
+                const periodWeek = Math.floor(diff / 7) + 1
+
+                await getItemsForPeriod(period, dayOfWeek, periodWeek);
+            }
+        }
+
+        async function checkChristmasTime(opts, current) {
+            // const period = "christmas"
+            // const fa = getMomentDay(opts.firstAdventSunday, opts.year);
+            // const christmas = moment(`${12}.${25}.${opts.year}`);
+
+            // if (current.diff(fa, "days") >= 0 && current.diff(christmas, "days") < 0) {
+            //     const diff = current.diff(fa, "days");
+            //     // 1 - sunday
+            //     // 7 - saturday
+            //     const dayOfWeek = diff % 7 + 1
+            //     const periodWeek = Math.floor(diff / 7) + 1
+
+            //     await getItemsForPeriod(period, dayOfWeek, periodWeek);
+            // }
+        }
+
+        async function checkLent(opts, current) {
+            const period = "lent";
+            const ash = getMomentDay(opts.ashWednesday, opts.year);
+            const easter = getMomentDay(opts.easterSunday, opts.year);
+
+            if (current.diff(ash, "days") >= 0 && current.diff(easter, "days") < 0) {
+                const firstLentSunday = ash.add(4, "days");
+                const lastLentSunday = easter.add(-1, "weeks");
+
+                if (current.diff(firstLentSunday, "days") < 0) {
+                    logDay('after ash')
+                    await getItemsForPeriod(period, 7 + diff + 1, 0)
+                } else if (current.diff(lastLentSunday, "days") > 0) {
+                    logDay("todo great week")
+                    // great week
+                } else if (current.diff(lastLentSunday, "days") == 0) {
+                    logDay("todo palm sunday")
+                    // palm sunday
+                } else {
+                    logDay('easter time')
+                    let diff = current.diff(firstLentSunday, "days");
+                    // 1 - sunday
+                    // 7 - saturday
+                    let dayOfWeek = diff % 7 + 1
+                    let periodWeek = Math.floor(diff / 7) + 1
+                    await getItemsForPeriod(period, dayOfWeek, periodWeek);
+                }
+            }
+        }
+
+        async function checkEaster(opts, current) {
+            const period = "easter"
+            const easter = getMomentDay(opts.easterSunday, opts.year);
+            //const ascension = getMomentDay(opts.ascension, opts.year);
+            const pentecost = getMomentDay(opts.pentecost, opts.year);
+
+            if (current.diff(easter, "days") >= 0 && current.diff(pentecost, "days") < 0) {
+                logDay("easter time")
+
+                const diff = current.diff(easter, "days");
+                // 1 - sunday
+                // 7 - saturday
+                const dayOfWeek = diff % 7 + 1
+                const periodWeek = Math.floor(diff / 7) + 1
+
+                await getItemsForPeriod(period, dayOfWeek, periodWeek);
+            }
+        }
+
+        async function checkOrdinary(opts, current) {
+            const period = "ordinary"
+            const ash = getMomentDay(opts.ashWednesday, opts.year);
+            //const ascension = getMomentDay(opts.ascension, opts.year);
+            const pentecost = getMomentDay(opts.pentecost, opts.year);
+            const fa = getMomentDay(opts.firstAdventSunday, opts.year);
+            const weeksBefore = parseInt(opts.ordintaryWeeks1) - 1;
+            const fo = ash.clone().add(-2, "days").add(-weeksBefore, "weeks");
+
+            if (current.diff(fo, "days") >= 0 && current.diff(ash, "days") < 0) {
+                logDay("ordinary before ash")
+                let diff = current.diff(fo, "days");
+                // 1 - sunday
+                // 7 - saturday
+                let dayOfWeek = diff % 7 + 1
+                let periodWeek = Math.floor(diff / 7) + 1
+
+                await getItemsForPeriod(period, dayOfWeek, periodWeek);
+            } else if (current.diff(pentecost, "days") > 0 && current.diff(fa, "days") < 0) {
+                let diff = current.diff(pentecost, "days");
+                // 1 - sunday
+                // 7 - saturday
+                let startWeek = parseInt(opts.ordintaryWeeks2);
+
+                let dayOfWeek = diff % 7 + 1
+                let periodWeek = Math.floor(diff / 7) + startWeek
+
+                logDay(`ordinary after pentocost. week - ${periodWeek}. day - ${dayOfWeek}`)
+
+                await getItemsForPeriod(period, dayOfWeek, periodWeek);
+            }
+        }
+
+        async function getItemsForPeriod(type, day, week) {
+            const q = query(collection(db, "days"), where("_periodType", "==", type), where("_dayOfWeek", "==", `${day}`), where("_periodWeekNumber", "==", `${week}`));
+
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                console.log(doc.data())
+                days.value.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+            });
+        }
+
+        function getMomentDay(val, year) {
+            const month = val.split('.')[1]
+            const day = val.split('.')[0]
+            return moment(`${month}.${day}.${year}`);
+        }
+
+        function logDay(val) {
+            console.log(`selected day: ${val}`)
+        }
+
+        function showCalendar() {
+            picker.value = selectedDay.value.toDate()
+            dialog.value = true
+        }
+
+        function loadDay() {
+            selectedDay.value = moment(picker.value)
+            dialog.value = false
+            fetchItems();
+        }
+
+        onMounted(fetchItems);
+        return {
+            days,
+            loading,
+            selectedDay,
+            dayToDisplay,
+            dialog,
+            picker,
+            showCalendar,
+            loadDay
+        };
+
+    }
+
+
+}
 
 
 </script>

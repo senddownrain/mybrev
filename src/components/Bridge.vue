@@ -35,7 +35,7 @@
                     <v-spacer></v-spacer>
                     <v-toolbar-items>
 
-                        <v-btn  variant="text" @click="save()">
+                        <v-btn variant="text" @click="save()">
                             Сохранить
                         </v-btn>
                         <v-btn variant="text" @click="dialog = false">
@@ -49,20 +49,21 @@
                     <v-col v-for="n in Object.getOwnPropertyNames(mappingDay)" :key="n" cols="12">
                         <v-card :title="`${n}`">
                             <v-card-text>
-<div v-if="!checkEditor(mappingDay[n])">
-    <v-text-field v-model="mappingDay[n]"></v-text-field></div>
-<div v-if="checkEditor(mappingDay[n])">
-    <quill-editor  theme="snow" toolbar="minimal" v-model:content="mappingDay[n]"
-                                    contentType="html" />
-</div>
-                                
+                                <div v-if="!checkEditor(mappingDay[n])">
+                                    <v-text-field v-model="mappingDay[n]"></v-text-field>
+                                </div>
+                                <div v-if="checkEditor(mappingDay[n])">
+                                    <quill-editor theme="snow" toolbar="minimal" v-model:content="mappingDay[n]"
+                                        contentType="html" />
+                                </div>
+
                             </v-card-text>
 
                         </v-card>
                     </v-col>
                     <v-col cols="12">
-    {{ mappingDay }}
-</v-col>
+                        {{ mappingDay }}
+                    </v-col>
                 </v-card-text>
 
             </v-card>
@@ -132,7 +133,7 @@ function loadDay() {
 
 const mappingDay = ref({})
 
-function checkEditor(field){
+function checkEditor(field) {
     return field && field.length > 40000
 }
 
@@ -142,8 +143,9 @@ function mapDay() {
     let day = {
         _dayOfWeek: "", // 1 - sunday, ...
         _periodType: "", // pasha, ordinary, advent
-        _pariodWeekNumber: "",
-        _date: "",
+        _periodWeekNumber: "", 
+        _date: "", // date of feast
+        _feast: "", // easter, christmas, ascension, pentocost, christthehighpriest
 
         _dayName: b["Day"],
         _weekDay: b["Bridge_DayName"],
@@ -157,21 +159,21 @@ function mapDay() {
 
 
         officeOfReadingsHymn: getTableField("GCH_Gimn", b["GCH_Gimn"], "GCH_Gimn_Text"),
-        
+
         officeOfReadingsAnt1: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text1"),
         officeOfReadingsAnt2: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text2"),
         officeOfReadingsAnt3: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text3"),
-        
+
         officeOfReadingsPs1: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text1"),
         officeOfReadingsPs2: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text2"),
         officeOfReadingsPs3: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text3"),
-    
+
         officeOfReadingsR1: getTableField("GCH_CH_1", b["GCH_CH_1"], "GCH_CH_1_Text"),
         officeOfReadingsR2: getTableField("GCH_CH_2", b["GCH_CH_2"], "GCH_CH_2_Text"),
-    
-        officeOfReadingsTeDeum:b["GCH_Tabe"] == "1",
+
+        officeOfReadingsTeDeum: b["GCH_Tabe"] == "1",
         officeOfReadingsPr: getTableField("GCH_Mal", b["GCH_Mal"], "GCH_Mal_Text"),
-    
+
         laudesHymn: getTableField("UTR_Gimn", b["UTR_Gimn"], "UTR_Gimn_Text"),
         laudesAnt: getTableFieldUtr("UTR_Ant", b["UTR_Ant"], "NESH_Mal_Text", "NESH_Mal_ID"),
         laudesPs1: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text1"),
@@ -182,35 +184,35 @@ function mapDay() {
         laudesInter: getTableField("UTR_Prosby", b["UTR_Prosby"], "UTR_Prosby_Text"),
         laudesPr: getTableField("UTR_Mal", b["UTR_Mal"], "UTR_Mal_Text"),
 
-        sext1Hymn:getTableField("MPD_Gimn_1", b["MPD_Gimn_1"], "MPD_Gimn_1_Text"),
-        sext1Ant1:getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text1"),
-        sext1Ant2:getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text2"),
-        sext1Ant3:getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text3"),
-        sext1Ps1:getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text1"),
-        sext1Ps2:getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text2"),
-        sext1Ps3:getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text3"),
-        sext1R:getTableField("MPD_Chyt_1", b["MPD_Chyt_1"], "MPD_Chyt_1_Text"),
-        sext1Pr:getTableField("MPD_Mal_1", b["MPD_Mal_1"], "MPD_Mal_1_Text"),
+        sext1Hymn: getTableField("MPD_Gimn_1", b["MPD_Gimn_1"], "MPD_Gimn_1_Text"),
+        sext1Ant1: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text1"),
+        sext1Ant2: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text2"),
+        sext1Ant3: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text3"),
+        sext1Ps1: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text1"),
+        sext1Ps2: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text2"),
+        sext1Ps3: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text3"),
+        sext1R: getTableField("MPD_Chyt_1", b["MPD_Chyt_1"], "MPD_Chyt_1_Text"),
+        sext1Pr: getTableField("MPD_Mal_1", b["MPD_Mal_1"], "MPD_Mal_1_Text"),
 
-        sext2Hymn:getTableField("MPD_Gimn_2", b["MPD_Gimn_2"], "MPD_Gimn_2_Text"),
-        sext2Ant1:getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text"),
-        sext2Ant2:getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text2"),
-        sext2Ant3:getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text3"),
-        sext2Ps1:getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text1"),
-        sext2Ps2:getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text2"),
-        sext2Ps3:getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text3"),
-        sext2R:getTableField("MPD_Chyt_2", b["MPD_Chyt_2"], "MPD_Chyt_2_Text"),
-        sext2Pr:getTableField("MPD_Mal_2", b["MPD_Mal_2"], "MPD_Mal_2_Text"),
+        sext2Hymn: getTableField("MPD_Gimn_2", b["MPD_Gimn_2"], "MPD_Gimn_2_Text"),
+        sext2Ant1: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text"),
+        sext2Ant2: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text2"),
+        sext2Ant3: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text3"),
+        sext2Ps1: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text1"),
+        sext2Ps2: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text2"),
+        sext2Ps3: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text3"),
+        sext2R: getTableField("MPD_Chyt_2", b["MPD_Chyt_2"], "MPD_Chyt_2_Text"),
+        sext2Pr: getTableField("MPD_Mal_2", b["MPD_Mal_2"], "MPD_Mal_2_Text"),
 
-        sext3Hymn:getTableField("MPD_Gimn_3", b["MPD_Gimn_3"], "MPD_Gimn_3_Text"),
-        sext3Ant1:getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text"),
-        sext3Ant2:getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text2"),
-        sext3Ant3:getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text3"),
-        sext3Ps1:getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text1"),
-        sext3Ps2:getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text2"),
-        sext3Ps3:getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text3"),
-        sext3R:getTableField("MPD_Chyt_3", b["MPD_Chyt_3"], "MPD_Chyt_3_Text"),
-        sext3Pr:getTableField("MPD_Mal_3", b["MPD_Mal_3"], "MPD_Mal_3_Text"),
+        sext3Hymn: getTableField("MPD_Gimn_3", b["MPD_Gimn_3"], "MPD_Gimn_3_Text"),
+        sext3Ant1: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text"),
+        sext3Ant2: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text2"),
+        sext3Ant3: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text3"),
+        sext3Ps1: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text1"),
+        sext3Ps2: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text2"),
+        sext3Ps3: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text3"),
+        sext3R: getTableField("MPD_Chyt_3", b["MPD_Chyt_3"], "MPD_Chyt_3_Text"),
+        sext3Pr: getTableField("MPD_Mal_3", b["MPD_Mal_3"], "MPD_Mal_3_Text"),
 
         vesperHymn: getTableField("NESH_Gimn", b["NESH_Gimn"], "NESH_Gimn_Text"),
         vesperAnt1: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text1"),
@@ -227,7 +229,7 @@ function mapDay() {
         compHymn: getTableField("KAMP_Gimn", b["KAMP_Gimn"], "KAMP_Gimn_Text"),
         compAnt1: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text1"),
         compAnt2: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text2"),
-        
+
         compPs1: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text1"),
         compPs2: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text2"),
 
@@ -236,7 +238,7 @@ function mapDay() {
         compAntS: getTableField("KAMP_Ant_S", b["KAMP_Ant_S"], "KAMP_Ant_S_Text"),
         compPr: getTableField("KAMP_Mal", b["KAMP_Mal"], "KAMP_Mal_Text"),
         compAntM: getTableField("KAMP_Ant_M", b["KAMP_Ant_M"], "KAMP_Ant_M_Text"),
-        
+
 
 
     }
@@ -248,7 +250,7 @@ async function save() {
     dialog.value = false
 
     await addDoc(collection(db, "days"), mappingDay.value)
-   // await setDoc(doc(db, "days", mappingDay.value.id), mappingDay.value);
+    // await setDoc(doc(db, "days", mappingDay.value.id), mappingDay.value);
     // item.text = tmp.value.text
     // const noteRef = doc(db, "notes", item.id);
 
@@ -261,7 +263,7 @@ function getTableField(table, id, field) {
     let tableName = table + "_table";
 
     if (tables[tableName]) {
-        
+
         let item = tables[tableName].find(x => x[table + "_ID"] == id)
         //console.log(item)
         if (item && item[field]) {
@@ -275,7 +277,7 @@ function getTableFieldUtr(table, id, field, idName) {
     let tableName = table + "_table";
 
     if (tables[tableName]) {
-        
+
         let item = tables[tableName].find(x => x[idName] == id)
         //console.log(item)
         if (item && item[field]) {
