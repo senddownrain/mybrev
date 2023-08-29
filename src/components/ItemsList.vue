@@ -3,14 +3,15 @@
         <v-row dense>
             <v-col cols="12">
                 <v-card flat>
-                    <v-toolbar @click="showCalendar()" :title="dayToDisplay"></v-toolbar>
+                    <v-toolbar @click="showCalendar()" :title="dayToDisplay" style="cursor: pointer;"></v-toolbar>
 
                     <v-card-text>
                         <v-list v-if="days.length > 0" density="compact">
                             <v-list-item v-for="(item, i) in days" :key="i" :value="item" active-color="primary"
                                 :to="`/ora/${item.id}`">
                                 <v-list-item-title>
-                                    {{ item._dayName == "" ? item._feastName : item._dayName }} - {{ item._weekDay }}
+                                    {{ item._dayName == "" ? item._feastName : item._dayName }} - {{
+                                        selectedDay.format("dddd") }}
                                 </v-list-item-title>
 
                                 <template v-slot:append>
@@ -26,7 +27,7 @@
                 <v-dialog v-model="dialog" width="auto">
                     <v-card>
                         <v-card-text>
-                            <DatePicker v-model="picker" mode="date" />
+                            <VDatePicker  v-model="picker" mode="date" />
                         </v-card-text>
                         <v-card-actions>
                             <v-btn variant="text" @click="dialog = false">Close</v-btn>
@@ -34,6 +35,10 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
+
+                <v-snackbar v-model="snackbar" timeout="3000" color="error">
+                    {{ snackText }}
+                </v-snackbar>
 
             </v-col>
 
@@ -46,15 +51,51 @@
 import moment from 'moment'
 import 'moment/dist/locale/be'
 
-import { ref, onMounted, reactive, computed } from 'vue';
+import { ref, onMounted, reactive, computed, watch } from 'vue';
 import { useCollection, useFirestore } from 'vuefire'
 import { collection, orderBy, query, doc, getDoc, getDocs, where, updateDoc, setDoc } from 'firebase/firestore'
-
+import { useRoute } from 'vue-router'
+import router from '@/router';
 
 export default {
     setup() {
+
+        const snackText = ref("");
+        const snackbar = ref(false)
+
+        function showError(text) {
+            snackText.value = text
+            snackbar.value = true
+        }
+
+
         const db = useFirestore()
-        const selectedDay = ref(moment());
+        const route = useRoute()
+
+        watch(
+            () => route.params.day,
+            async newDay => {
+                selectedDay.value = checkTargetDay()
+                await fetchItems();
+            }
+        )
+
+        function checkTargetDay() {
+            var targetDay = moment()
+            if (route.params.day) {
+                var tmp = moment(route.params.day, "DD-MM-YYYY")
+                if (tmp.isValid()) {
+                    targetDay = tmp
+                } else {
+                    showError(`Error on parsing Day param ${route.params.day}`)
+                    console.log("!!Error on parsing day param %s", route.params.day)
+                }
+            }
+            return targetDay;
+        }
+
+
+        const selectedDay = ref(checkTargetDay());
         const picker = ref(Date.now());
 
         const dialog = ref(false);
@@ -70,8 +111,8 @@ export default {
 
             loading.value = true;
             yearOptions.value = await getYearOptions()
-
-            await checkFeast(selectedDay.value.day(), selectedDay.value.month())
+            days.value = []
+            await checkFeast(selectedDay.value.date(), selectedDay.value.month() + 1)
             await checkPeriods(yearOptions.value, selectedDay.value)
             await checkDynamicFeasts(yearOptions.value, selectedDay.value)
 
@@ -125,7 +166,7 @@ export default {
         async function checkFeast(day, month) {
 
             const q = query(collection(db, "days"), where("_date", "==", `${day}.${month}`));
-
+            console.log(`${day}.${month}`)
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
 
@@ -282,9 +323,8 @@ export default {
         }
 
         function loadDay() {
-            selectedDay.value = moment(picker.value)
             dialog.value = false
-            fetchItems();
+            router.push(`/day/${moment(picker.value).format("DD-MM-YYYY")}`)
         }
 
         onMounted(fetchItems);
@@ -295,6 +335,9 @@ export default {
             dayToDisplay,
             dialog,
             picker,
+            snackText,
+            snackbar,
+
             showCalendar,
             loadDay
         };

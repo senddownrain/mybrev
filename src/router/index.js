@@ -1,6 +1,5 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
-import BottomNavVue from '@/layouts/default/BottomNav.vue'
 import DefaultVue from '@/layouts/default/Default.vue'
 import OneVue from '@/layouts/simple/One.vue'
 import BridgeVue from '@/components/Bridge.vue'
@@ -16,6 +15,8 @@ import CompletoriumVue from '@/components/oras/Completorium.vue'
 import LectionisVue from '@/components/oras/Lectionis.vue'
 import YearOptionsVue from '@/components/YearOptions.vue'
 import first from '@/layouts/default/View.vue'
+import BottomNavVue from '@/layouts/default/BottomNav.vue'
+import ItemsListVue from '@/components/ItemsList.vue'
 
 const routes = [
   {
@@ -27,8 +28,21 @@ const routes = [
       {
         path: '/',
         name: 'Today',
-        component: TodayVue,
-      },]
+        components:{
+          default:ItemsListVue,
+          bottomNav: BottomNavVue
+        },
+      },
+      {
+        path: '/day/:day',
+        name: 'SelectedDay',
+        components:{
+          default:ItemsListVue,
+          bottomNav: BottomNavVue
+        },
+        props: true 
+      },
+    ]
   },
 
   {
@@ -102,11 +116,11 @@ const routes = [
         component: YearOptionsVue
         ,
       }
-      
-    
+
+
     ]
   },
-  
+
 ]
 
 const router = createRouter({

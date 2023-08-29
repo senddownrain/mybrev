@@ -128,7 +128,7 @@ const selectedItem = ref({});
 
 const loadingDay = ref("");
 function loadDay() {
-    selectedItem.value = tables.Bridge_table.find(x => x.Bridge_DayId == loadingDay.value);
+    selectedItem.value = tables.Bridge_table.find(x => x?.Bridge_DayId == loadingDay.value);
 }
 
 const mappingDay = ref({})
