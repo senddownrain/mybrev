@@ -2,44 +2,45 @@
     <v-container fluid>
         <v-row dense>
             <v-col cols="12">
-                <v-card flat>
+                <v-card>
                     <v-toolbar @click="showCalendar()" :title="dayToDisplay" style="cursor: pointer;"></v-toolbar>
 
-                    <v-card-text>
-                        <v-list v-if="days.length > 0" density="compact">
-                            <v-list-item v-for="(item, i) in days" :key="i" :value="item" active-color="primary"
-                                :to="`/ora/${item.id}`">
-                                <v-list-item-title>
-                                    {{ item._dayName == "" ? item._feastName : item._dayName }} - {{
-                                        selectedDay.format("dddd") }}
-                                </v-list-item-title>
+                    <v-list v-if="days.length > 0" density="compact">
+                        <v-list-item v-for="(item, i) in days" :key="i" :value="item" active-color="primary"
+                            :to="`/day/${dayToURL}/ora/${item.id}`">
+                            <v-list-item-title>
+                                {{ item._dayName == "" ? item._feastName : item._dayName }} - {{
+                                    selectedDay.format("dddd") }}
+                            </v-list-item-title>
 
-                                <template v-slot:append>
-                                    <v-icon>mdi-chevron-right</v-icon>
-                                </template>
-                            </v-list-item>
-                        </v-list>
-                        <v-alert v-else-if="loading" type="info">Loading...</v-alert>
-                        <v-alert v-else type="info">No items available</v-alert>
-                    </v-card-text>
+                            <template v-slot:append>
+                                <v-icon>mdi-chevron-right</v-icon>
+                            </template>
+                        </v-list-item>
+                    </v-list>
+                    <v-sheet v-else-if="loading" height="20" class="mb-5 mt-7 mr-7" >
+                        <v-progress-linear class="ma-3 pa-1" indeterminate color="#2F4475"></v-progress-linear>
+                    </v-sheet>
+
+                    <v-alert class="my-3 mx-3" v-else type="info" color="#2F4475" variant="tonal">No items available</v-alert>
+
+
+                    <v-dialog v-model="dialog" width="auto">
+                        <v-card>
+                            <v-card-text>
+                                <VDatePicker v-model="picker" mode="date" />
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-btn variant="text" @click="dialog = false">Close</v-btn>
+                                <v-btn variant="text" @click="loadDay()">Select</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+
+                    <v-snackbar v-model="snackbar" timeout="3000" color="error">
+                        {{ snackText }}
+                    </v-snackbar>
                 </v-card>
-
-                <v-dialog v-model="dialog" width="auto">
-                    <v-card>
-                        <v-card-text>
-                            <VDatePicker  v-model="picker" mode="date" />
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn variant="text" @click="dialog = false">Close</v-btn>
-                            <v-btn variant="text" @click="loadDay()">Select</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-
-                <v-snackbar v-model="snackbar" timeout="3000" color="error">
-                    {{ snackText }}
-                </v-snackbar>
-
             </v-col>
 
         </v-row>
@@ -106,6 +107,9 @@ export default {
         const yearOptions = ref({});
 
         const dayToDisplay = computed(() => { return selectedDay.value ? selectedDay.value.format("LL") : "" });
+
+        const dayToURL = computed(() => { return selectedDay.value ? selectedDay.value.format("DD-MM-YYYY") : "" });
+
 
         const fetchItems = async () => {
 
@@ -337,6 +341,7 @@ export default {
             picker,
             snackText,
             snackbar,
+            dayToURL,
 
             showCalendar,
             loadDay

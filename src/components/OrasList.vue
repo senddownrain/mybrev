@@ -41,31 +41,31 @@ var { data: day, pending } = useDocument(docRef)
 const oras = [
     {
         title: "Laudes",
-        to: `/ora/${route.params.id}/laudes`
+        to: `/day/${route.params.day}/ora/${route.params.id}/laudes`
     },
     {
         title: "Officium Lectionis",
-        to: `/ora/${route.params.id}/lectionis`
+        to: `/day/${route.params.day}/ora/${route.params.id}/lectionis`
     },
     {
         title: "Terz",
-        to: `/ora/${route.params.id}/terz`
+        to: `/day/${route.params.day}/ora/${route.params.id}/terz`
     },
     {
         title: "Sext",
-        to: `/ora/${route.params.id}/sext`
+        to: `/day/${route.params.day}/ora/${route.params.id}/sext`
     },
     {
         title: "Non",
-        to: `/ora/${route.params.id}/non`
+        to: `/day/${route.params.day}/ora/${route.params.id}/non`
     },
     {
         title: "Vesper",
-        to: `/ora/${route.params.id}/vesper`
+        to: `/day/${route.params.day}/ora/${route.params.id}/vesper`
     },
     {
         title: "Completorium",
-        to: `/ora/${route.params.id}/completorium`
+        to: `/day/${route.params.day}/ora/${route.params.id}/completorium`
     },
 
 ]

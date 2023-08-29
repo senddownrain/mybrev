@@ -17,6 +17,7 @@ import YearOptionsVue from '@/components/YearOptions.vue'
 import first from '@/layouts/default/View.vue'
 import BottomNavVue from '@/layouts/default/BottomNav.vue'
 import ItemsListVue from '@/components/ItemsList.vue'
+import OraBarVue from '@/layouts/default/OraBar.vue'
 
 const routes = [
   {
@@ -46,48 +47,55 @@ const routes = [
   },
 
   {
-    path: '/ora',
+    path: '/day/:day/ora',
     components: {
       default: OneVue,
+      topNav: OraBarVue
     },
     children: [
       {
-        path: '/ora/:id',
+        path: '/day/:day/ora/:id',
         name: 'oras',
-        component: OrasListVue,
+        components: {
+          default: OrasListVue,
+          topNav: OraBarVue
+        },
       },
       {
-        path: '/ora/:id/vesper',
+        path: '/day/:day/ora/:id/vesper',
         name: 'vesper',
-        component: VesperVue,
+        components: {
+          default:VesperVue,
+          topNav: OraBarVue
+        }
       },
       {
-        path: '/ora/:id/laudes',
+        path: '/day/:day/ora/:id/laudes',
         name: 'laudes',
         component: LaudesVue,
       },
       {
-        path: '/ora/:id/sext',
+        path: '/day/:day/ora/:id/sext',
         name: 'sext',
         component: SextVue,
       },
       {
-        path: '/ora/:id/non',
+        path: '/day/:day/ora/:id/non',
         name: 'non',
         component: NonVue,
       },
       {
-        path: '/ora/:id/terz',
+        path: '/day/:day/ora/:id/terz',
         name: 'terz',
         component: TerzVue,
       },
       {
-        path: '/ora/:id/completorium',
+        path: '/day/:day/ora/:id/completorium',
         name: 'completorium',
         component: CompletoriumVue,
       },
       {
-        path: '/ora/:id/lectionis',
+        path: '/day/:day/ora/:id/lectionis',
         name: 'lectionis',
         component: LectionisVue,
       },
@@ -95,9 +103,9 @@ const routes = [
   },
 
   {
-    path: '/simple',
+    path: '/admin',
     components: {
-      default: OneVue,
+      default: DefaultVue,
     },
     children: [
       {
