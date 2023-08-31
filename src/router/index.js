@@ -2,8 +2,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DefaultVue from '@/layouts/default/Default.vue'
 import OneVue from '@/layouts/simple/One.vue'
-import BridgeVue from '@/components/Bridge.vue'
-import TableListVue from '@/components/TableList.vue'
+import BridgeVue from '@/components/admin/Bridge.vue'
+import TableListVue from '@/components/admin/TableList.vue'
 import TodayVue from '@/views/Today.vue'
 import OrasListVue from '@/components/OrasList.vue'
 import VesperVue from '@/components/oras/Vesper.vue'
@@ -13,11 +13,12 @@ import NonVue from '@/components/oras/Non.vue'
 import TerzVue from '@/components/oras/Terz.vue'
 import CompletoriumVue from '@/components/oras/Completorium.vue'
 import LectionisVue from '@/components/oras/Lectionis.vue'
-import YearOptionsVue from '@/components/YearOptions.vue'
+import YearOptionsVue from '@/components/admin/YearOptions.vue'
 import first from '@/layouts/default/View.vue'
 import BottomNavVue from '@/layouts/default/BottomNav.vue'
 import ItemsListVue from '@/components/ItemsList.vue'
 import OraBarVue from '@/layouts/default/OraBar.vue'
+import DbDayListVue from '@/components/admin/DbDayList.vue'
 
 const routes = [
   {
@@ -72,32 +73,50 @@ const routes = [
       {
         path: '/day/:day/ora/:id/laudes',
         name: 'laudes',
-        component: LaudesVue,
+        components: {
+          default:LaudesVue,
+          topNav: OraBarVue
+        }
       },
       {
         path: '/day/:day/ora/:id/sext',
         name: 'sext',
-        component: SextVue,
+        components: {
+          default:SextVue,
+          topNav: OraBarVue
+        }
       },
       {
         path: '/day/:day/ora/:id/non',
         name: 'non',
-        component: NonVue,
+        components: {
+          default:NonVue,
+          topNav: OraBarVue
+        }
       },
       {
         path: '/day/:day/ora/:id/terz',
         name: 'terz',
-        component: TerzVue,
+        components: {
+          default:TerzVue,
+          topNav: OraBarVue
+        }
       },
       {
         path: '/day/:day/ora/:id/completorium',
         name: 'completorium',
-        component: CompletoriumVue,
+        components: {
+          default:CompletoriumVue,
+          topNav: OraBarVue
+        }
       },
       {
         path: '/day/:day/ora/:id/lectionis',
         name: 'lectionis',
-        component: LectionisVue,
+        components: {
+          default:LectionisVue,
+          topNav: OraBarVue
+        }
       },
     ]
   },
@@ -122,6 +141,12 @@ const routes = [
         path: '/yearOptions',
         name: 'yearOptions',
         component: YearOptionsVue
+        ,
+      },
+      {
+        path: '/dayList',
+        name: 'dayList',
+        component: DbDayListVue
         ,
       }
 

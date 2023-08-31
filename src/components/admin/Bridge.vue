@@ -146,6 +146,8 @@ function mapDay() {
         _periodWeekNumber: "", 
         _date: "", // date of feast
         _feast: "", // easter, christmas, ascension, pentocost, christthehighpriest
+        _psalmWeek: b["Svyata"], // week of psalms
+
 
         _dayName: b["Day"],
         _weekDay: b["Bridge_DayName"],

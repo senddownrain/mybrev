@@ -78,6 +78,11 @@ const menu = [
     text: 'YearOptions',
     to: '/yearOptions',
     icon: 'mdi-clock'
+  },
+  {
+    text: 'Day List',
+    to: '/dayList',
+    icon: 'mdi-clock'
   }
 ]
 

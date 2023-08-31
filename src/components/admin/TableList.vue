@@ -132,8 +132,6 @@ function getIdProp(obj){
   const devMode = false
   
   const db = useFirestore()
-  const notes = useCollection(query(collection(db, 'notes'), orderBy('title')))
-  
   const dialog = ref(false)
   
   const dialogAdd = ref(false)

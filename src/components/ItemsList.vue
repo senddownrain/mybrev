@@ -131,18 +131,28 @@ export default {
         };
 
         async function checkDynamicFeasts(opts, current) {
-            // christthehighpriest, trinity
+
+            // calculate all of these
+            await getDayByFeast(opts, "heartofjesus", current);
+            await getDayByFeast(opts, "heartofmary", current);
+            await getDayByFeast(opts, "christthehighpriest", current);
+            await getDayByFeast(opts, "trinity", current);
+            await getDayByFeast(opts, "buptismofthelord", current);
+            await getDayByFeast(opts, "christking", current);
+
             await getDayByFeast(opts, "ashWednesday", current);
+            await getDayByFeast(opts, "palmSunday", current);
             await getDayByFeast(opts, "easterSunday", current);
             await getDayByFeast(opts, "ascension", current);
-            await getDayByFeast(opts, "corpuschristi", current);
-            await getDayByFeast(opts, "ashWednesday", current);
+            await getDayByFeast(opts, "pentecost", current);
+            await getDayByFeast(opts, "corpuschristi", current); 
         }
 
         async function checkPeriods(opts, day) {
             await checkAdvent(opts, day);
             await checkChristmasTime(opts, day);
             await checkLent(opts, day);
+            await checkHolyWeek(opts, day);
             await checkEaster(opts, day);
             await checkOrdinary(opts, day)
         }
@@ -166,6 +176,9 @@ export default {
             }
 
         }
+
+
+        async function checkHolyWeek(opts, day){}
 
         async function checkFeast(day, month) {
 
@@ -312,8 +325,8 @@ export default {
         }
 
         function getMomentDay(val, year) {
-            const month = val.split('.')[1]
-            const day = val.split('.')[0]
+            const month = val?.split('.')[1]
+            const day = val?.split('.')[0]
             return moment(`${month}.${day}.${year}`);
         }
 
