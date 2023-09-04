@@ -1,7 +1,8 @@
 <template>
     <v-container>
-        <v-row>
-            <v-col cols="12" v-if="!pending">
+        <v-row lign="center"
+      justify="center">
+            <v-col md="6" lg="4" sm="12" v-if="!pending">
                 <day-title :day="day.weekDay" :date="nowDate"/>
                 <intro :title="title" />
                 <hymnus :text="day.officeOfReadingsHymn" />

@@ -1,9 +1,9 @@
 <template>
     <div>
-        <v-card class="mb-2" flat>
-           <v-card-title>
+        <v-card class="mb-2 ora" flat>
+           <v-card-title class="ora-title">
             </v-card-title>
-            <v-card-text>
+            <v-card-text class="ora-text">
                 <div v-html="text"></div>
             </v-card-text>
         </v-card>

@@ -1,27 +1,27 @@
 <template>
     <div>
-        <v-card class="mb-2" flat>
-            <v-card-title>
+        <v-card class="ora" flat>
+            <v-card-title class="ora-title">
                 ПСАЛМОДЫЯ
             </v-card-title>
-            <v-card-text>
-                <div v-html="ant1"></div>
+            <v-card-text class="ora-text">
+                <div class="ora-ant" v-html="ant1"></div>
                 <br>
-                <div v-html="ps1"></div>
+                <div class="ora-psalm" v-html="ps1"></div>
                 <br>
-                <div v-html="ant1"></div>
+                <div class="ora-ant" v-html="ant1"></div>
                 <br v-if="ant2"><br v-if="ant2">
-                <div v-if="ant2" v-html="ant2"></div>
+                <div class="ora-ant" v-if="ant2" v-html="ant2"></div>
                 <br v-if="ant2">
-                <div v-if="ps2" v-html="ps2"></div>
+                <div class="ora-psalm" v-if="ps2" v-html="ps2"></div>
                 <br v-if="ps2">
-                <div v-if="ant2" v-html="ant2"></div>
+                <div class="ora-ant" v-if="ant2" v-html="ant2"></div>
                 <br v-if="ant2"><br v-if="ant2">
-                <div v-if="ant3" v-html="ant3"></div>
+                <div class="ora-ant" v-if="ant3" v-html="ant3"></div>
                 <br v-if="ant3">
-                <div v-if="ps3" v-html="ps3"></div>
+                <div class="ora-psalm" v-if="ps3" v-html="ps3"></div>
                 <br v-if="ant3">
-                <div v-if="ant3" v-html="ant3"></div>
+                <div class="ora-ant" v-if="ant3" v-html="ant3"></div>
                 <!-- <p><span style="color:red">1 ант.</span> <span> {{ ant1 }}</span></p>
                 <p>{{ ps1 }}</p>
                 <p><span style="color:red">2 ант.</span> <span> {{ ant2 }}</span></p>

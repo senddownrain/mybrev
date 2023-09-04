@@ -1,27 +1,25 @@
 <template>
     <div>
 
-        <v-card class="mb-2" flat>
-            <v-card-title>
+        <v-card class="ora" flat>
+            <v-card-title class="ora-header">
                 {{ title }}
             </v-card-title>
-            <v-card-text>
-                <p><span style="color:red">К.</span> <span> Божа, прыйдзі мне на дапамогу.</span>
+            <v-card-text class="ora-text">
+                <span style="color:red">К.</span> <span> Божа, прыйдзі мне на дапамогу.</span><br>
 
-                </p>
-                <p><span style="color:red">Н.</span> <span> Божа, прыйдзі мне на дапамогу.</span>
+                <span style="color:red">Н.</span> <span> Божа, прыйдзі мне на дапамогу.</span><br>
 
-                </p>
-                <p>Хвала Айцу і Сыну,* і Духу Святому.
+                Хвала Айцу і Сыну,* і Духу Святому. <br>
 
-                </p>
-                <p>Як была спрадвеку, цяпер і заўсёды, *
+                
+                Як была спрадвеку, цяпер і заўсёды, *<br>
                     І на векі вечныя. Амэн.
 
-                </p>
-                <p>
+                
+                
                     Аллелюя.
-                </p>
+                
             </v-card-text>
         </v-card>
     </div>
@@ -55,3 +53,8 @@ const props = defineProps({
 // const nowDate = moment(Date.now()).format('LL') 
 
 </script>
+<style>
+.ora-header{
+    font-weight: 700;
+}
+</style>

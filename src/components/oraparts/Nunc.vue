@@ -1,36 +1,21 @@
 <template>
     <div>
-        <v-card class="mb-2" flat>
-            <v-card-title>
+        <v-card class="mb-2 ora" flat>
+            <v-card-title class="ora-title">
                 ПЕСНЯ З ЕВАНГЕЛЛЯ
             </v-card-title>
-            <v-card-text>
-                <div v-html="ant"></div>
-                <br>
+            <v-card-text class="ora-text">
+                <div class="ora-ant" v-html="ant"></div>
+                
                 <!-- <div v-html="ps1"></div> -->
-                <p>
+                <p class="ora-sub">
                     <span style="color:red">Песня Сімяона (Лк 2, 29-32)</span>
                 <br>
                 <span style="color:red">Хрыстус – святло народаў і хвала Ізраэля</span>
                 </p>
-               <p>
-                Цяпер адпускаеш слугу Твайго, Валадару, *
-паводле слова Твайго, у спакоі;
-
-бо вочы мае ўбачылі збаўленне Тваё, *
-якое падрыхтаваў Ты перад абліччам усіх народаў, 
-
-святло для асвятлення язычнікаў *
-і хвалу народу Твайго Ізраэля.
-
-Хвала Айцу і Сыну, *
-І Духу Святому.
-
-Як была спрадвеку, цяпер і заўсёды, *
-і на векі вечныя. Амэн.
-               </p>
-               <br>
-               <div v-html="ant"></div>
+                <div class="ora-psalm" v-html="nunc"></div>
+                
+                <div class="ora-ant" v-html="ant"></div>
             </v-card-text>
         </v-card>
     </div>
@@ -41,6 +26,28 @@
 const props = defineProps({
     ant: String,
 })
+
+const nunc = `
+<p>
+Цяпер адпускаеш слугу Твайго, Валадару, *<br>
+паводле слова Твайго, у спакоі;
+</p>
+<p>
+бо вочы мае ўбачылі збаўленне Тваё, *<br>
+якое падрыхтаваў Ты перад абліччам усіх народаў, 
+</p>
+<p>
+святло для асвятлення язычнікаў *<br>
+і хвалу народу Твайго Ізраэля.
+</p>
+<p>
+Хвала Айцу і Сыну, *<br>
+І Духу Святому.
+</p>
+<p>
+Як была спрадвеку, цяпер і заўсёды, *<br>
+і на векі вечныя. Амэн.
+</p>`
 // import { ref } from 'vue'
 // import moment from 'moment';
 // import 'moment/dist/locale/be';

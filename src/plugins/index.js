@@ -17,10 +17,14 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import VCalendar from 'v-calendar';
 import 'v-calendar/style.css';
 
+import { createPinia } from 'pinia'
+
+const pinia = createPinia()
+
 export function registerPlugins (app) {
   loadFonts()
   app
-    
+    .use(pinia)
     .use(vuetify)
     .use(router)
     .use(VCalendar, {})

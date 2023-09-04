@@ -1,8 +1,9 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col cols="12" v-if="!pending">
-                <day-title :day="day.weekDay" :date="nowDate"/>
+    <v-container fill-height fluid>
+        <v-row lign="center"
+      justify="center">
+            <v-col md="4" lg="4" sm="6" v-if="!pending">
+                <day-title :date="nowDate" :psalms="day._psalmWeek" :feastType="day._feastType" :dayName="day._feastName ? day._feastName : day._dayName"/>
                 <intro title="ЮТРАНЬ" />
                 <hymnus :text="day.laudesHymn" />
                 <psalms :ant1="day.laudesAnt1" :ant2="day.laudesAnt2" :ant3="day.laudesAnt3" :ps1="day.laudesPs1"
@@ -51,6 +52,10 @@ const route = useRoute()
 const docRef = doc(db, "days", route.params.id);
 var { data: day, pending } = useDocument(docRef)
 
-const nowDate = moment(Date.now()).format('LL')
+const nowDate = `${moment(Date.now()).format('dddd')}, ${moment(Date.now()).format('LL')} `
 
 </script>
+
+<style>
+@import '@/assets/defaultOra.css';
+</style>
