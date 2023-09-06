@@ -4,11 +4,11 @@
                 {{ date }}
             </p>
             <p class="text-h5 day-name">
-                {{ dayName }} <span v-if="feastType">({{ feastType }})</span>
+            <div v-if="dayName" v-html="dayName"></div>  <div v-if="feastType" v-html="feastType"></div>
             </p>
 
 
-            <p class="text-h6 psalms">
+            <p v-if="!feastType" class="text-h6 psalms">
                 {{ psalms }}
             </p>
 

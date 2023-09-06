@@ -2,7 +2,7 @@
     <v-container fluid>
         <v-row dense>
             <v-col cols="12" v-if="!pending">
-                <div class="text-h6"> {{ day._dayName == "" ? day._feastName : day._dayName }} - {{ day._weekDay }}</div>
+                <div class="text-h6"> <span v-html="day._dayName == '' ? day._feastName : day._dayName"></span> - {{ day._weekDay }}</div>
 
                 <v-list>
                     <v-list-item v-for="(item, i) in oras" :key="i" :value="item" active-color="primary" :to="item.to">

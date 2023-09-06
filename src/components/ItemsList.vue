@@ -9,8 +9,8 @@
                         <v-list-item v-for="(item, i) in days" :key="i" :value="item" active-color="primary"
                             :to="`/day/${dayToURL}/ora/${item.id}`">
                             <v-list-item-title>
-                                {{ item._dayName == "" ? item._feastName : item._dayName }} - {{
-                                    selectedDay.format("dddd") }}
+                                <span v-html="item._dayName == '' ? item._feastName : item._dayName"></span>
+                                 - {{ selectedDay.format("dddd") }}
                             </v-list-item-title>
 
                             <template v-slot:append>
@@ -22,7 +22,7 @@
                         <v-progress-linear class="ma-3 pa-1" indeterminate color="#2F4475"></v-progress-linear>
                     </v-sheet>
 
-                    <v-alert class="my-3 mx-3" v-else type="info" color="#2F4475" variant="tonal">No items available</v-alert>
+                    <v-alert class="my-3 mx-3" v-else type="info" color="#2F4475" variant="tonal">Дзень адсутнічае. Звярніцеся за падтрымкай</v-alert>
 
 
                     <v-dialog v-model="dialog" width="auto">

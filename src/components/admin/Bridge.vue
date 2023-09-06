@@ -129,6 +129,7 @@ const selectedItem = ref({});
 const loadingDay = ref("");
 function loadDay() {
     selectedItem.value = tables.Bridge_table.find(x => x?.Bridge_DayId == loadingDay.value);
+    console.log(tables.Bridge_table.filter(x => x?.Day == "ХІІ звычайная нядзеля" && x?.Bridge_DayName == "Пятніца"))
 }
 
 const mappingDay = ref({})
