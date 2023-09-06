@@ -2,7 +2,7 @@
     <v-container fill-height fluid>
         <v-row lign="center"
       justify="center">
-            <v-col md="4" lg="4" sm="6" v-if="!pending">
+            <v-col md="6" lg="6" sm="8" v-if="!pending">
                 <day-title :date="nowDate" :psalms="day._psalmWeek" :feastType="day._feastType" :dayName="day._feastName ? day._feastName : day._dayName"/>
                 <intro title="ЮТРАНЬ" />
                 <hymnus :text="day.laudesHymn" />
@@ -45,6 +45,12 @@ import DayTitle from '@/components/oraparts/DayTitle.vue';
 
 const db = useFirestore()
 
+
+import { useFontStore } from '@/stores/font'
+
+const font = useFontStore()
+
+
 //const days = useCollection(query(collection(db, 'days')))
 //const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
 
@@ -56,6 +62,3 @@ const nowDate = `${moment(Date.now()).format('dddd')}, ${moment(Date.now()).form
 
 </script>
 
-<style>
-@import '@/assets/defaultOra.css';
-</style>

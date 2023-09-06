@@ -14,11 +14,6 @@
 
 
 <script setup>
-
-import { useFontsStore } from '@/stores/fonts'
-
-const fonts = useFontsStore()
-
 const props = defineProps({
   text: String,
 })
@@ -42,7 +37,3 @@ const props = defineProps({
 // const nowDate = moment(Date.now()).format('LL') 
 
 </script>
-
-<style>
-@import '@/assets/defaultOra.css';
-</style>

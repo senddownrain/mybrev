@@ -62,14 +62,14 @@ import { useRoute } from 'vue-router'
 import router from '@/router';
 import { ref } from 'vue'
 
-import { useFontsStore } from '@/stores/fonts'
-const fonts = useFontsStore()
+import { useFontStore } from '@/stores/font'
+const font = useFontStore()
 
 function increaseFont() {
-  fonts.increaseFont()
+  font.increaseFont()
 }
 function decreaseFont() {
-  fonts.decreaseFont()
+  font.decreaseFont()
 }
 
 const route = useRoute()

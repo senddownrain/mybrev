@@ -2,7 +2,7 @@
     <v-container>
         <v-row lign="center"
       justify="center">
-            <v-col md="6" lg="4" sm="12" v-if="!pending">
+      <v-col md="6" lg="6" sm="8" v-if="!pending">
                 <day-title :day="day.weekDay" :date="nowDate"/>
                 <intro :title="name" />
                 <hymnus :text="day[`sext${num}Hymn`]" />
