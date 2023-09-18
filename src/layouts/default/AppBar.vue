@@ -47,7 +47,7 @@
 
 
 
-    <v-navigation-drawer v-model="drawer" location="bottom" temporary>
+    <v-navigation-drawer v-model="drawer" location="left" temporary>
       <v-list :items="items"></v-list>
     </v-navigation-drawer>
   </div>
@@ -88,19 +88,19 @@ const menu = [
 
 const items = [
   {
-    title: 'Foo',
+    title: 'Чытанні',
     value: 'foo',
   },
   {
-    title: 'Bar',
+    title: 'Малітвы',
     value: 'bar',
   },
   {
-    title: 'Fizz',
+    title: 'Імшал',
     value: 'fizz',
   },
   {
-    title: 'Buzz',
+    title: 'Агенда',
     value: 'buzz',
   },
 ];

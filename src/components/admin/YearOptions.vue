@@ -110,7 +110,7 @@ export default {
             ordintaryWeeks1: "",
             ordintaryStart2: '',
             ordintaryWeeks2: "",
-            firstAndventSunday: "",
+            firstAdventSunday: "",
         },
         defaultItem: {
             year: '',
@@ -124,7 +124,7 @@ export default {
             ordintaryWeeks1: "",
             ordintaryStart2: '',
             ordintaryWeeks2: "",
-            firstAndventSunday: "",
+            firstAdventSunday: "",
         },
     }),
 

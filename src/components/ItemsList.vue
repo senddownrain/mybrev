@@ -31,8 +31,8 @@
                                 <VDatePicker v-model="picker" mode="date" />
                             </v-card-text>
                             <v-card-actions>
-                                <v-btn variant="text" @click="dialog = false">Close</v-btn>
-                                <v-btn variant="text" @click="loadDay()">Select</v-btn>
+                                <v-btn variant="text" @click="dialog = false">Адмена</v-btn>
+                                <v-btn variant="text" @click="loadDay()">Выбраць</v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
@@ -178,7 +178,9 @@ export default {
         }
 
 
-        async function checkHolyWeek(opts, day){}
+        async function checkHolyWeek(opts, day){
+            
+        }
 
         async function checkFeast(day, month) {
 
