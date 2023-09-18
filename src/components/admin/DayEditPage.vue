@@ -12,9 +12,9 @@
                                 <v-textarea auto-grow variant="filled" v-model="dte[n]"></v-textarea>
                             </v-col>
                             <v-col cols="6">
-                                <v-card class="ora" flat>
+                                <v-card class="ora-edit" flat>
 
-                                    <v-card-text class="ora-text">
+                                    <v-card-text class="ora-edit-text">
                                         <div v-html="dte[n]"></div>
                                     </v-card-text>
                                 </v-card>
@@ -70,12 +70,12 @@ function getTitle(field){
 </script>
 
 <style>
-.ora-text p {
+.ora-edit-text p {
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.v-card .ora-text {
+.v-card .ora-edit-text {
     padding-left: 0;
     font-size: v-bind('font.getHeader.textSize');
     line-height: v-bind('font.getHeader.textLine');
@@ -96,22 +96,7 @@ function getTitle(field){
 }
 */
 
-.ora-header {
-    padding-left: 0;
-}
 
-.ora-title {
-    padding-left: 0;
-    color: red;
-    font-weight: 600;
+.ora-edit {}
 
-    font-size: v-bind('font.getHeader.headerSize');
-
-}
-
-.ora {}
-
-.ora-ant {}
-
-.ora-psalm {}
 </style>

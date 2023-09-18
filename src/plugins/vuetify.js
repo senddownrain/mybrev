@@ -20,12 +20,12 @@ export default createVuetify({
   },
   theme: {
     themes: {
-      light: {
-        colors: {
-          primary: String(colors.red),
-          secondary: '#5CBBF6',
-        },
-      },
+      // light: {
+      //   colors: {
+      //     primary: String(colors.yellow),
+      //     secondary: '#5CBBF6',
+      //   },
+      // },
     },
   },
 })

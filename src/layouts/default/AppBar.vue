@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-app-bar color="teal-darken-4">
+    <v-app-bar color="teal-darken-1">
       <template v-slot:image>
-        <v-img gradient="to bottom left, #2F4475, #2F4475"></v-img>
+        <!-- <v-img gradient="to bottom left, #2F4475, #2F4475"></v-img> -->
       </template>
 
       <!-- <template v-slot:prepend>

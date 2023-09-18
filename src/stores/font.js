@@ -16,6 +16,7 @@ export const useFontStore = defineStore('font', {
   // state: () => ({ count: 0 })
   actions: {
     decreaseFont(){
+      console.log(this.textSize)
       this.textLetterSpacing = this.textLetterSpacing - 0.005
       this.textSize = this.textSize - 0.1
       this.headerSize = this.headerSize - 0.05
