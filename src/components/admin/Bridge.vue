@@ -46,17 +46,21 @@
                 <v-card-text>
 
 
-                    <v-col v-for="n in Object.getOwnPropertyNames(mappingDay)" :key="n" cols="12">
+                    <v-col v-for="n in Object.getOwnPropertyNames(mappingDay).sort()" :key="n" cols="12">
                         <v-card :title="`${n}`">
                             <v-card-text>
                                 <div v-if="!checkEditor(mappingDay[n])">
                                     <v-text-field v-model="mappingDay[n]"></v-text-field>
                                 </div>
-                                <div v-if="checkEditor(mappingDay[n])">
-                                    <quill-editor theme="snow" toolbar="minimal" v-model:content="mappingDay[n]"
-                                        contentType="html" />
-                                </div>
 
+                                <v-row v-if="checkEditor(mappingDay[n])">
+                            <v-col cols="6">
+                                <v-textarea auto-grow variant="filled" v-model="mappingDay[n]"></v-textarea>
+                            </v-col>
+                            <v-col cols="6">
+                                <div v-html="mappingDay[n]"></div>
+                            </v-col>
+                        </v-row>
                             </v-card-text>
 
                         </v-card>
@@ -135,7 +139,7 @@ function loadDay() {
 const mappingDay = ref({})
 
 function checkEditor(field) {
-    return field && field.length > 40000
+    return field && field.length > 100
 }
 
 function mapDay() {

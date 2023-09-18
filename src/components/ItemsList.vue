@@ -115,16 +115,19 @@ export default {
 
             loading.value = true;
             yearOptions.value = await getYearOptions()
+            let nextYearOptions = await getYearOptions(moment().year() + 1)
+            console.log(nextYearOptions);
             days.value = []
             await checkFeast(selectedDay.value.date(), selectedDay.value.month() + 1)
             await checkPeriods(yearOptions.value, selectedDay.value)
             await checkDynamicFeasts(yearOptions.value, selectedDay.value)
+            await checkChristmasTime(yearOptions.value, nextYearOptions, selectedDay.value)
 
             loading.value = false;
         }
 
-        const getYearOptions = async () => {
-            const currentYear = moment().year();
+        const getYearOptions = async (year) => {
+            const currentYear = year ? year : moment().year();
             const docRef = doc(db, "yearOptions", `${currentYear}`);
             const docSnap = await getDoc(docRef);
             return docSnap.data();
@@ -150,7 +153,6 @@ export default {
 
         async function checkPeriods(opts, day) {
             await checkAdvent(opts, day);
-            await checkChristmasTime(opts, day);
             await checkLent(opts, day);
             await checkHolyWeek(opts, day);
             await checkEaster(opts, day);
@@ -179,7 +181,7 @@ export default {
 
 
         async function checkHolyWeek(opts, day){
-            
+
         }
 
         async function checkFeast(day, month) {
@@ -215,20 +217,23 @@ export default {
             }
         }
 
-        async function checkChristmasTime(opts, current) {
-            // const period = "christmas"
-            // const fa = getMomentDay(opts.firstAdventSunday, opts.year);
-            // const christmas = moment(`${12}.${25}.${opts.year}`);
+        async function checkChristmasTime(opts, nextYearOpts, current) {
+            const period = "christmas"
+            const fl = getMomentDay(nextYearOpts.ordintaryStart1, nextYearOpts.year);
+            const weeksBefore = parseInt(nextYearOpts.ordintaryWeeks1)
+            const lastChristmas = fl.add(-weeksBefore, 'weeks').add(-2, 'days'); 
+            const christmas = moment(`${12}.${25}.${opts.year}`);
 
-            // if (current.diff(fa, "days") >= 0 && current.diff(christmas, "days") < 0) {
-            //     const diff = current.diff(fa, "days");
-            //     // 1 - sunday
-            //     // 7 - saturday
-            //     const dayOfWeek = diff % 7 + 1
-            //     const periodWeek = Math.floor(diff / 7) + 1
-
-            //     await getItemsForPeriod(period, dayOfWeek, periodWeek);
-            // }
+            if (current.diff(christmas, "days") >= 0 && current.diff(lastChristmas, "days") <= 0) {
+                const diff = current.diff(christmas, "days");
+                
+                // 1 - sunday
+                // 7 - saturday
+                const dayOfWeek = diff % 7 + 1
+                const periodWeek = Math.floor(diff / 7) + 1
+                console.log(`${dayOfWeek} ${periodWeek}`)
+                await getItemsForPeriod(period, dayOfWeek, periodWeek);
+            }
         }
 
         async function checkLent(opts, current) {
