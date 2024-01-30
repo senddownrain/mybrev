@@ -29,14 +29,14 @@
 
       <v-menu activator="#menu-activator">
         <v-card class="mx-auto" max-width="300" tile>
-          <!-- <v-list dense>
+          <v-list dense>
               <v-list-item link v-for="(item, i) in menu" :key="i" :value="item" :to="item.to">
                 <template v-slot:prepend>
                   <v-icon :icon="item.icon"></v-icon>
                 </template>
-                <v-list-item-title v-text="item.text"></v-list-item-title>
+                <v-list-item-title v-text="item.text" @click="item.action()"></v-list-item-title>
               </v-list-item>
-            </v-list> -->
+            </v-list>
 
         </v-card>
       </v-menu>
@@ -45,6 +45,23 @@
 
     </v-app-bar>
 
+    <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title>Edit Day</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                        <v-btn variant="text" @click="updateItem()">
+                            Аднавіць
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <day-edit></day-edit>
+            </v-card>
+        </v-dialog>
 
 
     <!-- <v-navigation-drawer v-model="drawer" location="bottom" temporary>
@@ -62,7 +79,21 @@ import { useRoute } from 'vue-router'
 import router from '@/router';
 import { ref } from 'vue'
 
+import DayEdit from '@/components/admin/DayEditPage.vue';
+
 import { useFontStore } from '@/stores/font'
+
+const menu = [
+{
+  text: "Змяніць",
+  icon: "mdi-minus-circle",
+  action: () => dialog.value = true
+},
+
+];
+
+const dialog = ref(false);
+
 const font = useFontStore()
 
 function increaseFont() {
@@ -83,6 +114,8 @@ const getDay = function () {
     return moment(route.params.day, "DD-MM-YYYY").format("LL")
   } else ""
 }
+
+
 
 </script>
   

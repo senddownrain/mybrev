@@ -203,7 +203,7 @@ export default {
         async function checkAdvent(opts, current) {
             const period = "advent"
             const fa = getMomentDay(opts.firstAdventSunday, opts.year);
-            const christmas = moment(`${12}.${25}.${opts.year}`);
+            const christmas = moment(`${12}.${25}.${opts.year}`, "MM-DD-YYYY");
 
             if (current.diff(fa, "days") >= 0 && current.diff(christmas, "days") < 0) {
                 logDay("advent time")
@@ -334,7 +334,7 @@ export default {
         function getMomentDay(val, year) {
             const month = val?.split('.')[1]
             const day = val?.split('.')[0]
-            return moment(`${month}.${day}.${year}`);
+            return moment(`${month}.${day}.${year}`, "MM-DD-YYYY");
         }
 
         function logDay(val) {

@@ -38,6 +38,11 @@ const route = useRoute()
 const docRef = doc(db, "days", route.params.id);
 var { data: day, pending } = useDocument(docRef)
 
+
+import { useDayStore } from '@/stores/day'
+const dayStore = useDayStore()
+dayStore.setDayToEdit(day);
+
 const oras = [
     {
         title: "Laudes",

@@ -133,38 +133,23 @@
             </v-col>
         </v-row>
 
-    <v-dialog
-      v-model="dialog"
-      fullscreen
-      :scrim="false"
-      transition="dialog-bottom-transition"
-    >
-      <v-card>
-        <v-toolbar
-          dark
-          color="primary"
-        >
-          <v-btn
-            icon
-            dark
-            @click="dialog = false"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>Edit Day</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn
-              variant="text"
-              @click="updateItem()"
-            >
-              Save
-            </v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
-       <day-edit></day-edit>
-      </v-card>
-    </v-dialog>
+        <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title>Edit Day</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                        <v-btn variant="text" @click="updateItem()">
+                            Save
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <day-edit></day-edit>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -183,7 +168,7 @@ import { useDayStore } from '@/stores/day'
 const dayStore = useDayStore()
 const currentItem = ref({})
 
-function edit(item){
+function edit(item) {
     dialog.value = true;
     currentItem.value = item
     dayStore.setDayToEdit(item);
@@ -192,7 +177,7 @@ function edit(item){
 const db = useFirestore()
 const days = useCollection(query(collection(db, 'days'), orderBy('_weekNum')))
 
-function updateItem(){
+function updateItem() {
     dayStore.updateDay(currentItem.value)
     dialog.value = false;
 }
