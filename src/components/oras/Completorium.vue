@@ -51,7 +51,9 @@ const route = useRoute()
 const docRef = doc(db, "days", route.params.id);
 var { data: day, pending } = useDocument(docRef)
 
-const nowDate = moment(Date.now()).format('LL')
+let [d, m, y] = route.params.day.split('-').map(Number);
+const originDate = new Date(y, m - 1, d) 
+const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
 const title = "КАМПЛЕТА"
 
 </script>
