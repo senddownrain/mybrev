@@ -70,6 +70,11 @@ const menu = [
     icon: 'mdi-flag'
   },
   {
+    text: "Bridge List",
+    to: '/bridgeList',
+    icon: 'mdi-flag'
+  },
+  {
     text: 'Tables',
     to: '/tables',
     icon: 'mdi-clock'

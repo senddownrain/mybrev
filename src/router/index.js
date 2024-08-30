@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import DefaultVue from '@/layouts/default/Default.vue'
 import OneVue from '@/layouts/simple/One.vue'
 import BridgeVue from '@/components/admin/Bridge.vue'
+import BridgeListVue from '@/components/admin/BridgeList.vue'
 import TableListVue from '@/components/admin/TableList.vue'
 import TodayVue from '@/views/Today.vue'
 import OrasListVue from '@/components/OrasList.vue'
@@ -14,7 +15,6 @@ import TerzVue from '@/components/oras/Terz.vue'
 import CompletoriumVue from '@/components/oras/Completorium.vue'
 import LectionisVue from '@/components/oras/Lectionis.vue'
 import YearOptionsVue from '@/components/admin/YearOptions.vue'
-import first from '@/layouts/default/View.vue'
 import BottomNavVue from '@/layouts/default/BottomNav.vue'
 import ItemsListVue from '@/components/ItemsList.vue'
 import OraBarVue from '@/layouts/default/OraBar.vue'
@@ -131,6 +131,11 @@ const routes = [
         path: '/bridge',
         name: 'bridge',
         component: BridgeVue,
+      },
+      {
+        path: '/bridgeList',
+        name: 'bridgeList',
+        component: BridgeListVue,
       },
       {
         path: '/tables',

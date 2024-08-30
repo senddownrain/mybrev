@@ -51,7 +51,7 @@ import NESH_PS_table from './NESH_PS_table.json'
 import Svyat_table from './Svyat_table.json'
 
 
-import UTR_Ant_table from './NESH_Mal_table.json'
+import UTR_Ant_table from './UTR_Ant_table.json'
 import UTR_Ant_Zakh_table from './UTR_Ant_Zakh_table.json'
 import UTR_Chyt_table from './UTR_Chyt_table.json'
 import UTR_Gimn_table from './UTR_Gimn_table.json'

@@ -5,6 +5,10 @@
                 <v-select v-model="selectedDay" :hint="`${selectedDay}`" :items="bridgeDaysModel" label="Days"
                     persistent-hint return-object single-line></v-select>
             </v-col>
+            <v-col cols="12" sm="6">
+                <v-select v-model="selectedDay" :hint="`${selectedDay}`" :items="bridgeDaysModel" label="Days"
+                    persistent-hint return-object single-line></v-select>
+            </v-col>
             <v-col cols="12" sm="6" class="mt-2">
                 <v-text-field v-model="loadingDay" hint="дзень" label="дата"></v-text-field>
                 <v-btn @click="loadDay()">load</v-btn>
@@ -123,17 +127,37 @@ import { useCollection, useFirestore } from 'vuefire'
 import { collection, orderBy, query, doc, updateDoc, setDoc, addDoc } from 'firebase/firestore'
 
 
-console.log(tables.Bridge_table.map(a => a.Bridge_DayId));
+//console.log(tables.Bridge_table.map(a => a.Bridge_DayId));
 
 const bridgeDaysModel = ref(tables.Bridge_table.map(a => a.Bridge_DayId));
-const bridgeItemsModel = ref(tables.Bridge_table.map(a => a.Bridge_DayId));
+
+// Функция для преобразования строки даты в объект Date
+function parseDate(dateString) {
+  const [day, month, year] = dateString.split('.').map(Number);
+  return new Date(year, month - 1, day); // month - 1, т.к. месяцы начинаются с 0
+}
+
+// Преобразование и сортировка массива
+const transformedArray = tables.Bridge_table.map(item => ({
+    Bridge_DayId: item.Bridge_DayId,
+    Bridge_DayName: item.Bridge_DayName,
+    Day: item.Day,
+  date: parseDate(item.Bridge_DayId) // добавляем дату для сортировки
+}))
+.sort((a, b) => a.date - b.date) // сортируем по дате
+
+
+
 const selectedDay = ref(bridgeDaysModel.value[0]);
 const selectedItem = ref({});
 
 const loadingDay = ref("");
 function loadDay() {
-    selectedItem.value = tables.Bridge_table.find(x => x?.Bridge_DayId == loadingDay.value);
-    console.log(tables.Bridge_table.filter(x => x?.Day == "ХІІ звычайная нядзеля" && x?.Bridge_DayName == "Пятніца"))
+    console.log(loadingDay.value)
+    selectedItem.value = tables.Bridge_table.find(x => x?.Bridge_DayId === loadingDay.value);
+    console.log(selectedItem.value);
+    //console.log(tables.Bridge_table.map(a => a.Bridge_DayId))
+   // console.log(tables.Bridge_table.filter(x => x?.Day == "ХІІ звычайная нядзеля" && x?.Bridge_DayName == "Пятніца"))
 }
 
 const mappingDay = ref({})
@@ -182,7 +206,9 @@ function mapDay() {
         officeOfReadingsPr: getTableField("GCH_Mal", b["GCH_Mal"], "GCH_Mal_Text"),
 
         laudesHymn: getTableField("UTR_Gimn", b["UTR_Gimn"], "UTR_Gimn_Text"),
-        laudesAnt: getTableFieldUtr("UTR_Ant", b["UTR_Ant"], "NESH_Mal_Text", "NESH_Mal_ID"),
+        laudesAnt1: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text1"),
+        laudesAnt2: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text2"),
+        laudesAnt3: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text3"),
         laudesPs1: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text1"),
         laudesPs2: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text2"),
         laudesPs3: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text3"),

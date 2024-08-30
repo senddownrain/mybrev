@@ -8,7 +8,7 @@
             <v-card-text class="ora-text">
                 <span style="color:red">К.</span> <span> Божа, прыйдзі мне на дапамогу.</span><br>
 
-                <span style="color:red">Н.</span> <span> Божа, прыйдзі мне на дапамогу.</span><br>
+                <span style="color:red">Н.</span> <span> Пане, паспяшы да мяне на паратунак.</span><br>
 
                 Хвала Айцу і Сыну,* і Духу Святому. <br>
 

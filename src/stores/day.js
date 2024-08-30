@@ -2,12 +2,13 @@
 import { defineStore } from 'pinia'
 
 import { useCollection, useFirestore } from 'vuefire'
-import { collection, orderBy, query, doc, updateDoc, setDoc, addDoc } from 'firebase/firestore'
+import { collection, orderBy, query, doc, updateDoc, deleteDoc, setDoc, addDoc } from 'firebase/firestore'
 
 export const useDayStore = defineStore('day', {
     state: () => {
         return {
-            dayToEdit: {}
+            dayToEdit: {},
+            dayToDelete: {}
         }
     },
     actions: {
@@ -21,6 +22,16 @@ export const useDayStore = defineStore('day', {
             const docRef = doc(db, "days", `${dte.id}`);
 
             await updateDoc(docRef, {
+                ...dte
+            });
+        },
+        async deleteDay(dte) {
+            this.dayToDelete = dte;
+            
+            const db = useFirestore()
+            const docRef = doc(db, "days", `${dte.id}`);
+
+            await deleteDoc(docRef, {
                 ...dte
             });
         }

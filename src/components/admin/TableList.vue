@@ -110,7 +110,7 @@
   
   <script setup>
   import tables from '@/json'
-
+console.log(tables)
   import { ref } from 'vue'
   
   import { useCollection, useFirestore } from 'vuefire'
@@ -119,6 +119,7 @@
   
 
 const tablesModel = ref(Object.getOwnPropertyNames(tables));
+console.log(tablesModel.value)
 
 const selectedTable = ref(tablesModel.value[0]);
 
