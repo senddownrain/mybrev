@@ -44,6 +44,12 @@
                                 :label="'Аллелюя (allowedAlleluia)'"></v-text-field></v-col>
                     </v-row>
 
+                    
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'feastComment'" :fieldTitle="'Апісанне свята (feastComment)'" />
+                    </v-row>
+
+
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn @click="updateItem()" color="primary">
@@ -55,6 +61,37 @@
         </v-row>
         <v-divider></v-divider>
         
+        <v-row>
+            <v-col>
+                <v-card flat>
+                    <v-card-title>
+                        Заклік
+                    </v-card-title>
+
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumAnt'" :fieldTitle="'Антыфона (invitatoriumAnt)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs1'" :fieldTitle="'Пасальм 1 куплет (invitatoriumPs1)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs2'" :fieldTitle="'Пасальм 2 куплет (invitatoriumPs2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs3'" :fieldTitle="'Пасальм 3 куплет (invitatoriumPs3)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs4'" :fieldTitle="'Пасальм 4 куплет (invitatoriumPs4)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs5'" :fieldTitle="'Пасальм 5 куплет (invitatoriumPs5)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs6'" :fieldTitle="'Пасальм 6 куплет (invitatoriumPs6)'" />
+                        
+                    </v-row>                 
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="updateItem()" color="primary">
+                            Абнавіць
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <v-divider></v-divider>
+        
+
         <v-row>
             <v-col>
                 <v-card flat>
@@ -286,31 +323,7 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-divider></v-divider>
-        <v-row>
-            <v-col>
-                <v-card flat>
-                    <v-card-title>
-                        Заклік
-                    </v-card-title>
-
-                    <v-row>
-                        <v-col>
-                            <v-text-field v-model="dte.invitatoriumAntId" :label="'invitatoriumAntId (invitatoriumAntId)'"></v-text-field></v-col>
-                        <v-col>
-                            <v-text-field v-model="dte.invitatoriumPsId" :label="'invitatoriumAntId (invitatoriumAntId)'"></v-text-field></v-col>
-                        
-                    </v-row>                 
-
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn @click="updateItem()" color="primary">
-                            Абнавіць
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-col>
-        </v-row>
+      
 
         
     </v-container>

@@ -9,6 +9,7 @@ import TodayVue from '@/views/Today.vue'
 import OrasListVue from '@/components/OrasList.vue'
 import VesperVue from '@/components/oras/Vesper.vue'
 import LaudesVue from '@/components/oras/Laudes.vue'
+import InvitVue from '@/components/oras/Invit.vue'
 import SextVue from '@/components/oras/Sext.vue'
 import NonVue from '@/components/oras/Non.vue'
 import TerzVue from '@/components/oras/Terz.vue'
@@ -67,6 +68,14 @@ const routes = [
         name: 'vesper',
         components: {
           default:VesperVue,
+          topNav: OraBarVue
+        }
+      },
+      {
+        path: '/day/:day/ora/:id/invitatorium',
+        name: 'invitatorium',
+        components: {
+          default:InvitVue,
           topNav: OraBarVue
         }
       },

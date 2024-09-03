@@ -49,6 +49,9 @@ import NESH_PS_table from './NESH_PS_table.json'
 
 
 import Svyat_table from './Svyat_table.json'
+import Zakl_Ant_table from './Zakl_Ant_table.json'
+import Zakl_PS_table from './Zakl_PS_table.json'
+
 
 
 import UTR_Ant_table from './UTR_Ant_table.json'
@@ -61,6 +64,9 @@ import UTR_PS_table from './UTR_PS_table.json'
 
 
 export default {
+    Zakl_Ant_table,
+    Zakl_PS_table,
+    
     GCH_Ant_table,
     GCH_CH_1_table,
     

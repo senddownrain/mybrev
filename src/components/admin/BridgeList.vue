@@ -132,7 +132,7 @@ const transformedArray = tables.Bridge_table.map(item => ({
     Day: item.Day,
     Feast: item.Svyata,
     date: parseDate(item.Bridge_DayId) // добавляем дату для сортировки
-})).sort((a, b) => a.date - b.date) // сортируем по дате
+})).sort((a, b) =>  b.date - a.date) // сортируем по дате
 
 
 function getFeastOrPeriod(a) {
@@ -189,9 +189,15 @@ function mapDay(item) {
         _feastType: b["Uspamin"],
         allowedAlleluia: b["Alleluia"] == "1",
 
-        invitatoriumAntId: b["Zakl_Ant"],
-        invitatoriumPsId: b["Zakl_PS"],
+        invitatoriumAnt: getTableField("Zakl_Ant", b["Zakl_Ant"], "Zakl_Ant_Text"),
+        invitatoriumPs1: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text1"),
+        invitatoriumPs2: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text2"),
+        invitatoriumPs3: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text3"),
+        invitatoriumPs4: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text4"),
+        invitatoriumPs5: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text5"),
+        invitatoriumPs6: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text6"),
 
+        feastComment: getTableField("Svyat", b["Svyat"], "Svyat_Text"),
 
         officeOfReadingsHymn: getTableField("GCH_Gimn", b["GCH_Gimn"], "GCH_Gimn_Text"),
 

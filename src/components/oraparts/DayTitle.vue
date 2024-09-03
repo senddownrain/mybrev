@@ -10,8 +10,12 @@
 
             <p v-if="!feastType" class="text-h6 psalms">
                 {{ psalms }}
+                
             </p>
-
+            <p v-if="feastComment" class="psalms">
+                <div  v-html="feastComment"></div>
+                
+            </p>
 
         </div>
     </template>
@@ -24,6 +28,7 @@
         date: String,
         psalms: String,
         feastType: String,
+        feastComment: String,
         dayName: String,
 
     })

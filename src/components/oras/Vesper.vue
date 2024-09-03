@@ -3,7 +3,7 @@
         <v-row lign="center"
       justify="center">
       <v-col md="6" lg="6" sm="8" v-if="!pending">
-                <day-title :day="day.weekDay" :date="nowDate"/>
+                <day-title :day="day.weekDay" :date="nowDate" :feastComment="day.feastComment"/>
                 <intro title="НЕШПАРЫ" />
                 <hymnus :text="day.vesperHymn" />
                 <psalms :ant1="day.vesperAnt1" :ant2="day.vesperAnt2" :ant3="day.vesperAnt3" :ps1="day.vesperPs1"

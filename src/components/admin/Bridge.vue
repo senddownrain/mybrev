@@ -5,10 +5,6 @@
                 <v-select v-model="selectedDay" :hint="`${selectedDay}`" :items="bridgeDaysModel" label="Days"
                     persistent-hint return-object single-line></v-select>
             </v-col>
-            <v-col cols="12" sm="6">
-                <v-select v-model="selectedDay" :hint="`${selectedDay}`" :items="bridgeDaysModel" label="Days"
-                    persistent-hint return-object single-line></v-select>
-            </v-col>
             <v-col cols="12" sm="6" class="mt-2">
                 <v-text-field v-model="loadingDay" hint="дзень" label="дата"></v-text-field>
                 <v-btn @click="loadDay()">load</v-btn>
@@ -185,9 +181,15 @@ function mapDay() {
         _feastType: b["Uspamin"],
         allowedAlleluia: b["Alleluia"] == "1",
 
-        invitatoriumAntId: b["Zakl_Ant"],
-        invitatoriumPsId: b["Zakl_PS"],
+        invitatoriumAnt: getTableField("Zakl_Ant", b["Zakl_Ant"], "Zakl_Ant_Text"),
+        invitatoriumPs1: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text1"),
+        invitatoriumPs2: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text2"),
+        invitatoriumPs3: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text3"),
+        invitatoriumPs4: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text4"),
+        invitatoriumPs5: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text5"),
+        invitatoriumPs6: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text6"),
 
+        feastComment: getTableField("Svyat", b["Svyat"], "Svyat_Text"),
 
         officeOfReadingsHymn: getTableField("GCH_Gimn", b["GCH_Gimn"], "GCH_Gimn_Text"),
 
@@ -328,6 +330,8 @@ function findItem(id) {
 }
 
 function getProp(name, val) {
+    console.log(`${name} - ${val}`);
+    
     let tbl = tables[name + "_table"]
     if (tbl) {
         let itemID = name + "_ID"

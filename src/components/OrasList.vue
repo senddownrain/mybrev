@@ -45,6 +45,10 @@ dayStore.setDayToEdit(day);
 
 const oras = [
     {
+        title: "Invitatorium",
+        to: `/day/${route.params.day}/ora/${route.params.id}/invitatorium`
+    },
+    {
         title: "Laudes",
         to: `/day/${route.params.day}/ora/${route.params.id}/laudes`
     },
