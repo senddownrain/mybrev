@@ -16,7 +16,6 @@
                <p>
                 <div class="ora-psalm" v-html="mag"></div>
                </p>
-               <br>
                <div class="ora-ant" v-html="ant"></div>
             </v-card-text>
         </v-card>

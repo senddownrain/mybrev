@@ -219,6 +219,7 @@ export default {
 
         async function checkChristmasTime(opts, nextYearOpts, current) {
             const period = "christmas"
+            console.log(nextYearOpts)
             const fl = getMomentDay(nextYearOpts.ordintaryStart1, nextYearOpts.year);
             const weeksBefore = parseInt(nextYearOpts.ordintaryWeeks1)
             const lastChristmas = fl.add(-weeksBefore, 'weeks').add(-2, 'days'); 

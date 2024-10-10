@@ -13,7 +13,7 @@
 
 <script setup>
 const props = defineProps({
-  text: String,
+  text: String
 })
 // import { ref } from 'vue'
 // import moment from 'moment';

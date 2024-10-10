@@ -200,6 +200,7 @@ const dayStore = useDayStore()
 const currentItem = ref({})
 
 function edit(item) {
+    console.log(item)
     dialog.value = true;
     currentItem.value = item
     dayStore.setDayToEdit(item);

@@ -112,8 +112,11 @@ import tables from '@/json'
 import { ref } from 'vue'
 
 import { useCollection, useFirestore } from 'vuefire'
-import { collection, orderBy, query, doc, updateDoc, setDoc, addDoc } from 'firebase/firestore'
 
+import { collection, orderBy, query, doc, updateDoc, getDocs, setDoc, addDoc } from 'firebase/firestore'
+
+
+const db = useFirestore()
 
 //console.log(tables.Bridge_table.map(a => a.Bridge_DayId));
 
@@ -134,6 +137,68 @@ const transformedArray = tables.Bridge_table.map(item => ({
     date: parseDate(item.Bridge_DayId) // добавляем дату для сортировки
 })).sort((a, b) =>  b.date - a.date) // сортируем по дате
 
+//refactorDB();
+
+function refactorDB() {
+    const readingFixArray = tables.Bridge_table.map(item => ({
+        Bridge_DayId: item.Bridge_DayId,
+        Bridge_DayName: item.Bridge_DayName,
+        Day: item.Day,
+        Feast: item.Svyata,
+        weekDay: item.Bridge_DayName,
+        date: parseDate(item.Bridge_DayId), // добавляем дату для сортировки
+        officeOfReadingsVers: getTableField("GCH_Versh", item["GCH_Versh"], "GCH_Versh_Text"),
+    })).sort((a, b) => b.date - a.date); // сортируем по дате
+
+    const ordinaryVersArray = readingFixArray
+        .filter(item => item.Day.includes('звычай')) // Фильтруем по ключевой фразе
+        .reduce((accumulator, current) => {
+            const isDuplicate = accumulator.find(item => item.Day === current.Day && item.weekDay === current.weekDay);
+            if (!isDuplicate) {
+                accumulator.push({ date: current.date, Day: current.Day, weekDay: current.weekDay, officeOfReadingsVers: current.officeOfReadingsVers });
+            }
+            return accumulator;
+        }, []);
+
+    console.log(`unique elems ${ordinaryVersArray.length}`);
+
+    const daysCollectionRef = collection(db, 'days');
+
+    // Получение документов из Firestore и обновление их по данным из uniqueDays
+    async function updateFirestoreDays(uniqueDays) {
+        try {
+            const querySnapshot = await getDocs(query(daysCollectionRef, orderBy('_weekNum')));
+            const batch = [];
+
+            // Проходим по каждому документу из Firestore
+            querySnapshot.forEach(docSnapshot => {
+                const docData = docSnapshot.data();
+                const matchingUniqueDay = uniqueDays.find(uniqueDay => uniqueDay.Day === docData._dayName && uniqueDay.weekDay === docData._weekDay);
+
+                // Если найден соответствующий uniqueDay, обновляем officeOfReadingsVers
+                if (matchingUniqueDay) {
+                    const docRef = doc(db, 'days', docSnapshot.id);
+                    const updateOperation = updateDoc(docRef, {
+                        officeOfReadingsVers: matchingUniqueDay.officeOfReadingsVers
+                    });
+                    // console.log(`${docData._dayName}-${docData._weekDay} updated`)
+                    batch.push(updateOperation);
+                }
+            });
+
+            console.log(`to update ${batch.length}`);
+            // Выполняем все обновления
+            await Promise.all(batch);
+
+            console.log("Обновление завершено.");
+        } catch (error) {
+            console.error("Ошибка при обновлении Firestore:", error);
+        }
+    }
+
+    // Вызов функции
+    updateFirestoreDays(ordinaryVersArray);
+}
 
 function getFeastOrPeriod(a) {
   // Проверяем, существует ли объект и его свойства
@@ -153,9 +218,8 @@ const selectedItem = ref({});
 
 const loadingDay = ref("");
 function loadDay() {
-    console.log(loadingDay.value)
     selectedItem.value = tables.Bridge_table.find(x => x?.Bridge_DayId === loadingDay.value);
-    console.log(selectedItem.value);
+    
     //console.log(tables.Bridge_table.map(a => a.Bridge_DayId))
     // console.log(tables.Bridge_table.filter(x => x?.Day == "ХІІ звычайная нядзеля" && x?.Bridge_DayName == "Пятніца"))
 }
@@ -208,6 +272,7 @@ function mapDay(item) {
         officeOfReadingsPs1: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text1"),
         officeOfReadingsPs2: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text2"),
         officeOfReadingsPs3: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text3"),
+        officeOfReadingsVers: getTableField("GCH_Versh", b["GCH_Versh"], "GCH_Versh_Text"),
 
         officeOfReadingsR1: getTableField("GCH_CH_1", b["GCH_CH_1"], "GCH_CH_1_Text"),
         officeOfReadingsR2: getTableField("GCH_CH_2", b["GCH_CH_2"], "GCH_CH_2_Text"),
@@ -363,7 +428,6 @@ function getIdProp(obj) {
     return id;
 }
 
-const db = useFirestore()
 
 const dialog = ref(false)
 

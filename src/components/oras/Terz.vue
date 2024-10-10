@@ -6,9 +6,9 @@
                 <day-title :day="day.weekDay" :date="nowDate"/>
                 <intro :title="name" />
                 <hymnus :text="day[`sext${num}Hymn`]" />
-                <psalms :ant1="day[`sext${num}Ant1`]" :ant2="day[`sext${num}Ant2`]" :ant3="day[`sext${num}Ant3`]" 
-                :ps1="day[`sext${num}Ps1`]"
-                    :ps2="day[`sext${num}Ps2`]" :ps3="day[`sext${num}Ps3`]" />
+                <psalms :ant1="day[`sext${psalmDb}Ant1`]" :ant2="day[`sext${psalmDb}Ant2`]" :ant3="day[`sext${psalmDb}Ant3`]" 
+                :ps1="day[`sext${psalmDb}Ps1`]"
+                    :ps2="day[`sext${psalmDb}Ps2`]" :ps3="day[`sext${psalmDb}Ps3`]" />
                 <reading :text="day[`sext${num}R`]" />
                 <last-prayer :text="day[`sext${num}Pr`]" />
                 <end-of-sext/>
@@ -52,5 +52,6 @@ const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).form
 
 const name = "МАЛІТВА ПЕРАД ПОЎДНЕМ"
 const num = 1 // нумар палудневай малітвы
+const psalmDb = 1 // все псальмы одинаковые, храняться в первом из дневных часов
 
 </script>

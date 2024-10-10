@@ -200,7 +200,8 @@ function mapDay() {
         officeOfReadingsPs1: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text1"),
         officeOfReadingsPs2: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text2"),
         officeOfReadingsPs3: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text3"),
-
+        officeOfReadingsVers: getTableField("GCH_Versh", b["GCH_Versh"], "GCH_Versh_Text"),
+        
         officeOfReadingsR1: getTableField("GCH_CH_1", b["GCH_CH_1"], "GCH_CH_1_Text"),
         officeOfReadingsR2: getTableField("GCH_CH_2", b["GCH_CH_2"], "GCH_CH_2_Text"),
 

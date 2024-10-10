@@ -6,21 +6,15 @@
             </v-card-title>
             <v-card-text class="ora-text">
                 <div class="ora-ant" v-html="ant1"></div>
-                <br>
                 <div class="ora-psalm" v-html="ps1"></div>
-                <br>
                 <div class="ora-ant" v-html="ant1"></div>
                 <br v-if="ant2"><br v-if="ant2">
                 <div class="ora-ant" v-if="ant2" v-html="ant2"></div>
-                <br v-if="ant2">
                 <div class="ora-psalm" v-if="ps2" v-html="ps2"></div>
-                <br v-if="ps2">
                 <div class="ora-ant" v-if="ant2" v-html="ant2"></div>
                 <br v-if="ant2"><br v-if="ant2">
                 <div class="ora-ant" v-if="ant3" v-html="ant3"></div>
-                <br v-if="ant3">
                 <div class="ora-psalm" v-if="ps3" v-html="ps3"></div>
-                <br v-if="ant3">
                 <div class="ora-ant" v-if="ant3" v-html="ant3"></div>
                 <!-- <p><span style="color:red">1 ант.</span> <span> {{ ant1 }}</span></p>
                 <p>{{ ps1 }}</p>

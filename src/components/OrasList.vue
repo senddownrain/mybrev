@@ -45,35 +45,35 @@ dayStore.setDayToEdit(day);
 
 const oras = [
     {
-        title: "Invitatorium",
+        title: "Заклік",
         to: `/day/${route.params.day}/ora/${route.params.id}/invitatorium`
     },
     {
-        title: "Laudes",
-        to: `/day/${route.params.day}/ora/${route.params.id}/laudes`
-    },
-    {
-        title: "Officium Lectionis",
+        title: "Гадзіна чытанняў",
         to: `/day/${route.params.day}/ora/${route.params.id}/lectionis`
     },
     {
-        title: "Terz",
+        title: "Ютрань",
+        to: `/day/${route.params.day}/ora/${route.params.id}/laudes`
+    },
+    {
+        title: "Малітва перад поўднем",
         to: `/day/${route.params.day}/ora/${route.params.id}/terz`
     },
     {
-        title: "Sext",
+        title: "Малітва апоўдні",
         to: `/day/${route.params.day}/ora/${route.params.id}/sext`
     },
     {
-        title: "Non",
+        title: "Малітва пасля поўдня",
         to: `/day/${route.params.day}/ora/${route.params.id}/non`
     },
     {
-        title: "Vesper",
+        title: "Нешпары",
         to: `/day/${route.params.day}/ora/${route.params.id}/vesper`
     },
     {
-        title: "Completorium",
+        title: "Камплета",
         to: `/day/${route.params.day}/ora/${route.params.id}/completorium`
     },
 

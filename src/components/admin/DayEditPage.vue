@@ -28,13 +28,16 @@
                             <v-text-field v-model="dte._periodType" :label="'Перыяд (_periodType)'"></v-text-field></v-col>
                         <v-col>
                             <v-text-field v-model="dte._periodWeekNumber"
-                                :label="'Нумар тыдня (_periodType)'"></v-text-field></v-col>
+                                :label="'Нумар тыдня перыяду (_periodWeekNumber)'"></v-text-field></v-col>
                         <v-col>
                             <v-text-field v-model="dte._psalmWeek"
                                 :label="'Тыдзень псалтыра (_psalmWeek)'"></v-text-field></v-col>
                     </v-row>
 
                     <v-row>
+                        <v-col>
+                            <v-text-field v-model="dte._dayOfWeek" :label="'Нумар дня (_dayOfWeek)'"></v-text-field></v-col>
+                        
                         <v-col>
                             <v-text-field v-model="dte._weekDay" :label="'Дзень тыдня (_weekDay)'"></v-text-field></v-col>
                         <v-col>
@@ -91,6 +94,43 @@
 
         <v-divider></v-divider>
         
+        <v-row>
+            <v-col>
+                <v-card flat>
+                    <v-card-title>
+                        Гадзіна чытанняў
+                    </v-card-title>
+
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsHymn'" :fieldTitle="'Гімн (officeOfReadingsHymn)'" />
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsAnt1'" :fieldTitle="'Антыфона 1 (officeOfReadingsAnt1)'" />
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsPs1'" :fieldTitle="'Пальм 1 (officeOfReadingsPs1)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsAnt2'" :fieldTitle="'Антыфона 2 (officeOfReadingsAnt2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsPs2'" :fieldTitle="'Пальм 2 (officeOfReadingsPs2)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsAnt3'" :fieldTitle="'Антыфона 3 (officeOfReadingsAnt3)'" />
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsPs3'" :fieldTitle="'Пальм 3 (officeOfReadingsPs3)'" />
+                        
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsVers'" :fieldTitle="'Першы рэспансорый (officeOfReadingsVers)'" />
+                    
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsR1'" :fieldTitle="'Чытанне 1 (officeOfReadingsR1)'" />
+                       
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsR2'" :fieldTitle="'Чытанне 2 (officeOfReadingsR2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingPr'" :fieldTitle="'Малітва (officeOfReadingsPr)'" />
+                    </v-row>                    
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="updateItem()" color="primary">
+                            Абнавіць
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-divider></v-divider>
+
 
         <v-row>
             <v-col>
@@ -127,41 +167,6 @@
         </v-row>
         <v-divider></v-divider>
         
-        <v-row>
-            <v-col>
-                <v-card flat>
-                    <v-card-title>
-                        Гадзіна чытанняў
-                    </v-card-title>
-
-                    <v-row>
-                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsHymn'" :fieldTitle="'Гімн (officeOfReadingsHymn)'" />
-                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsAnt1'" :fieldTitle="'Антыфона 1 (officeOfReadingsAnt1)'" />
-                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsPs1'" :fieldTitle="'Пальм 1 (officeOfReadingsPs1)'" />
-
-                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsAnt2'" :fieldTitle="'Антыфона 2 (officeOfReadingsAnt2)'" />
-                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsPs2'" :fieldTitle="'Пальм 2 (officeOfReadingsPs2)'" />
-
-                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsAnt3'" :fieldTitle="'Антыфона 3 (officeOfReadingsAnt3)'" />
-                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsPs3'" :fieldTitle="'Пальм 3 (officeOfReadingsPs3)'" />
-                       
-                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsR1'" :fieldTitle="'Чытанне 1 (officeOfReadingsR1)'" />
-                       
-                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsR2'" :fieldTitle="'Чытанне 2 (officeOfReadingsR2)'" />
-                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingPr'" :fieldTitle="'Малітва (officeOfReadingsPr)'" />
-                    </v-row>                    
-
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn @click="updateItem()" color="primary">
-                            Абнавіць
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-col>
-        </v-row>
-        <v-divider></v-divider>
-
         <v-row>
             <v-col>
                 <v-card flat>
@@ -348,10 +353,9 @@ import { ref } from 'vue'
 
 import { useDayStore } from '@/stores/day'
 const dayStore = useDayStore()
-console.log(dayStore)
 const dte = ref(dayStore.getDayToEdit);
 
-
+console.log(dte.value)
 
 function checkEditor(field) {
     return field && field.length > 50

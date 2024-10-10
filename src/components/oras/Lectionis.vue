@@ -8,6 +8,7 @@
                 <hymnus :text="day.officeOfReadingsHymn" />
                 <psalms :ant1="day.officeOfReadingsAnt1" :ant2="day.officeOfReadingsAnt2" :ant3="day.officeOfReadingsAnt3" :ps1="day.officeOfReadingsPs1"
                     :ps2="day.officeOfReadingsPs2" :ps3="day.officeOfReadingsPs3" />
+                <resp :text="day.officeOfReadingsVers"/>
                 <lectio :text="day.officeOfReadingsR1" />
                 <lectio :text="day.officeOfReadingsR2" />   
                 <last-prayer :text="day.officeOfReadingsPr" />

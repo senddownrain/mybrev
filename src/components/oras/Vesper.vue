@@ -12,7 +12,7 @@
                 <magnificat :ant="day.vesperAntMag" />
                 <inters :text="day.vesperInter" />
                 <pater-noster />
-                <last-prayer :text="day.vesperPr" />
+                <last-prayer :text="day.vesperPr == '' ? day.laudesPr : day.vesperPr" />
                 <end-of-vesper/>
             </v-col>
         </v-row>
