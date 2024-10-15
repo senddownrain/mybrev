@@ -117,10 +117,10 @@ export default {
 
         const fetchItems = async () => {
 
+            let currentYear = selectedDay.value.year()
             loading.value = true;
-            yearOptions.value = await getYearOptions()
-            console.log(yearOptions)
-            nextYearOptions.value = await getYearOptions(moment().year() + 1)
+            yearOptions.value = await getYearOptions(currentYear)
+            nextYearOptions.value = await getYearOptions(currentYear + 1)
             dynamicDates.value = getDynamicDates(yearOptions.value);
 
             //console.log(nextYearOptions);
@@ -148,7 +148,7 @@ export default {
                 if (opts.hasOwnProperty(propName)) {
                     if (opts[propName].indexOf('.' == -1))
                     continue;
-                
+
                     let momentDate = getMomentDay(opts[propName], opts.year);
 
                     // Check if the date is valid
@@ -164,12 +164,13 @@ export default {
 
             // find holy family fest
             // Assuming you have Moment.js loaded
-            let date = moment('25.12', 'DD.MM'); // Create a Moment object for December 25th
-            let nextSunday = date.clone().add(1, 'week').weekday(0); // Get the next Sunday after 25.12
-            console.log(nextSunday.format('DD.MM'))
+            let date = moment(`25.12.${opts.year}`, 'DD.MM.YYYY'); // Create a Moment object for December 25th
+
+            let nextSunday = date.clone().add(1, 'week').weekday(0).add(-1, 'days'); // Get the next Sunday after 25.12
+            console.log(nextSunday.format('LL'))
             // Create a Moment object for January 1st of the following year
             let firstOfJanuary = moment(date).add(1, 'year').startOf('year');
-            let holyfamily = nextSunday.isBefore(firstOfJanuary) ? nextSunday : moment('30.12', 'DD.MM');
+            let holyfamily = nextSunday.isBefore(firstOfJanuary) ? nextSunday : moment(`30.12.${opts.year}`, 'DD.MM.YYYY');
 console.log(opts)
             let firstAdventSunday = getMomentDay(opts.firstAdventSunday, opts.year);
             let christking = firstAdventSunday.clone().add(-7, 'days');
@@ -184,7 +185,7 @@ console.log(opts)
             let trinity = pentecost.clone().add(7, 'days');
             let christthehighpriest = pentecost.clone().add(4, 'days');
 
-            let theophany = moment('06.01', 'DD.MM'); // Create a Moment object for January 6th
+            let theophany = moment(`06.01.${opts.year}`, 'DD.MM.YYYY'); // Create a Moment object for January 6th
             // If the date is a Sunday, `day(7)` will return the next Sunday (one week later).
             let buptismofthelord = theophany.clone().day(7); // Find the next Sunday
 
@@ -227,7 +228,7 @@ console.log(opts)
         async function checkDynamicFeasts(feasts, current) {
 
             feasts.forEach(async f => {
-                console.log(`${current.format('DD.MM')}-${f.date.format('DD.MM')} - ${f.name}`)
+                //console.log(`${current.format('DD.MM')}-${f.date.format('DD.MM')} - ${f.name}`)
                 if (current.isSame(f.date)) {
                     await getDayByFeast(f.name)
                 }
