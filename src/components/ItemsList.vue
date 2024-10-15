@@ -10,7 +10,7 @@
                             :to="`/day/${dayToURL}/ora/${item.id}`">
                             <v-list-item-title>
                                 <span v-html="item._dayName == '' ? item._feastName : item._dayName"></span>
-                                 - {{ selectedDay.format("dddd") }}
+                                 - {{ selectedDay.format("dddd") }} - {{ item.id }}
                             </v-list-item-title>
 
                             <template v-slot:append>
@@ -105,6 +105,8 @@ export default {
         const loading = ref(false);
 
         const yearOptions = ref({});
+        
+        const nextYearOptions = ref({});
 
         const dayToDisplay = computed(() => { return selectedDay.value ? selectedDay.value.format("LL") : "" });
 
@@ -115,13 +117,12 @@ export default {
 
             loading.value = true;
             yearOptions.value = await getYearOptions()
-            let nextYearOptions = await getYearOptions(moment().year() + 1)
-            console.log(nextYearOptions);
+            nextYearOptions.value = await getYearOptions(moment().year() + 1)
+            //console.log(nextYearOptions);
             days.value = []
             await checkFeast(selectedDay.value.date(), selectedDay.value.month() + 1)
             await checkPeriods(yearOptions.value, selectedDay.value)
             await checkDynamicFeasts(yearOptions.value, selectedDay.value)
-            await checkChristmasTime(yearOptions.value, nextYearOptions, selectedDay.value)
 
             loading.value = false;
         }
@@ -135,45 +136,58 @@ export default {
 
         async function checkDynamicFeasts(opts, current) {
 
+            
+            // let feasts = {
+            //     ...opts,
+            //     'palmSunday':  getMomentDay(opts['easterSunday']).diff(7, 'days')
+            // }
+            // console.log(feasts);
             // calculate all of these
-            await getDayByFeast(opts, "heartofjesus", current);
-            await getDayByFeast(opts, "heartofmary", current);
-            await getDayByFeast(opts, "christthehighpriest", current);
-            await getDayByFeast(opts, "trinity", current);
-            await getDayByFeast(opts, "buptismofthelord", current);
-            await getDayByFeast(opts, "christking", current);
+            await getDayByFeastName(opts, "heartofjesus", current);
+            await getDayByFeastName(opts, "heartofmary", current);
+            await getDayByFeastName(opts, "christthehighpriest", current);
+            await getDayByFeastName(opts, "trinity", current);
+            await getDayByFeastName(opts, "buptismofthelord", current);
+            await getDayByFeastName(opts, "christking", current);
 
-            await getDayByFeast(opts, "ashWednesday", current);
-            await getDayByFeast(opts, "palmSunday", current);
-            await getDayByFeast(opts, "easterSunday", current);
-            await getDayByFeast(opts, "ascension", current);
-            await getDayByFeast(opts, "pentecost", current);
-            await getDayByFeast(opts, "corpuschristi", current); 
+            await getDayByFeastName(opts, "ashWednesday", current);
+            await getDayByFeastName(opts, "palmSunday", current);
+            await getDayByFeastName(opts, "easterSunday", current);
+            await getDayByFeastName(opts, "ascension", current);
+            await getDayByFeastName(opts, "pentecost", current);
+            await getDayByFeastName(opts, "corpuschristi", current); 
         }
 
         async function checkPeriods(opts, day) {
             await checkAdvent(opts, day);
+            await checkChristmasTime(opts, nextYearOptions, day);
             await checkLent(opts, day);
             await checkHolyWeek(opts, day);
             await checkEaster(opts, day);
             await checkOrdinary(opts, day)
         }
 
-        async function getDayByFeast(opts, name, current) {
-            let feast = getMomentDay(opts[name]);
+        async function getDayByFeast(name){
+            const q = query(collection(db, "days"), where("_feast", "==", `${name}`));
+
+const querySnapshot = await getDocs(q);
+querySnapshot.forEach((doc) => {
+days.value.push({
+id: doc.id,
+...doc.data()
+})
+});
+        }
+
+        async function getDayByFeastName(opts, name, current) {
+
+            let feast = getMomentDay(opts[name], opts.year);
+            logDay(feast)
+            
             if (feast) {
                 if (current.diff(feast, "days") == 0) {
                     logDay(name);
-
-                    const q = query(collection(db, "days"), where("_feast", "==", `${name}`));
-
-                    const querySnapshot = await getDocs(q);
-                    querySnapshot.forEach((doc) => {
-                        days.value.push({
-                            id: doc.id,
-                            ...doc.data()
-                        })
-                    });
+getDayByFeast(name);
                 }
             }
 
@@ -187,7 +201,7 @@ export default {
         async function checkFeast(day, month) {
 
             const q = query(collection(db, "days"), where("_date", "==", `${day}.${month}`));
-            console.log(`${day}.${month}`)
+            console.log(`check feast ${day}.${month}`)
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
 
@@ -219,7 +233,7 @@ export default {
 
         async function checkChristmasTime(opts, nextYearOpts, current) {
             const period = "christmas"
-            console.log(nextYearOpts)
+            //console.log(nextYearOpts)
             const fl = getMomentDay(nextYearOpts.ordintaryStart1, nextYearOpts.year);
             const weeksBefore = parseInt(nextYearOpts.ordintaryWeeks1)
             const lastChristmas = fl.add(-weeksBefore, 'weeks').add(-2, 'days'); 
@@ -246,22 +260,30 @@ export default {
                 const firstLentSunday = ash.add(4, "days");
                 const lastLentSunday = easter.add(-1, "weeks");
 
-                if (current.diff(firstLentSunday, "days") < 0) {
+                const startDiff = current.diff(firstLentSunday, "days");
+                const endDiff = current.diff(lastLentSunday, "days");
+                if (startDiff < 0) {
+                    
                     logDay('after ash')
-                    await getItemsForPeriod(period, 7 + diff + 1, 0)
-                } else if (current.diff(lastLentSunday, "days") > 0) {
-                    logDay("todo great week")
+                    await getItemsForPeriod(period, 7 + startDiff + 1, 0)
+
+                } else if (endDiff > 0 && endDiff < 8) {
                     // great week
-                } else if (current.diff(lastLentSunday, "days") == 0) {
-                    logDay("todo palm sunday")
+                    let holyWeekDiff = current.diff(lastLentSunday, "days")
+                    let holyWeekPeriod = 'holyweek'
+                    
+                    await getItemsForPeriod(holyWeekPeriod, endDiff + 1, 1);
+
+                } else if (endDiff == 0) {
+                                
+                    await getDayByFeast("palmSunday");
                     // palm sunday
                 } else {
-                    logDay('easter time')
-                    let diff = current.diff(firstLentSunday, "days");
+                    logDay('lent time')
                     // 1 - sunday
                     // 7 - saturday
-                    let dayOfWeek = diff % 7 + 1
-                    let periodWeek = Math.floor(diff / 7) + 1
+                    let dayOfWeek = startDiff % 7 + 1
+                    let periodWeek = Math.floor(startDiff / 7) + 1
                     await getItemsForPeriod(period, dayOfWeek, periodWeek);
                 }
             }
