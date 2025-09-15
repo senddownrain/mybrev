@@ -1,72 +1,97 @@
-    <template>
-        <div class="my-2">
-            <p class="text-h5 date">
-                {{ date }}
-            </p>
-            <p class="text-h5 day-name">
-            <div v-if="dayName" v-html="dayName"></div>  <div v-if="feastType" v-html="feastType"></div>
-            </p>
+<template>
+  <!-- Используем наш глобальный класс для автоматического применения стилей -->
+  <div class="prayer-content-area text-center mb-6">
+    
+    <!-- Индикатор загрузки -->
+    <v-skeleton-loader v-if="loading" type="heading, subtitle"></v-skeleton-loader>
 
+    <!-- Основной контент, когда данные загружены -->
+    <div v-else-if="dayData">
+      <!-- 1. Полная дата -->
+      <p class="text-subtitle-1 text-grey-darken-1">{{ formattedDate }}</p>
+      
+      <!-- 2. Название праздника или дня периода -->
+      <h1 class="text-h4 font-weight-light mt-1">
+        {{ dayData._feastName || getPeriodTitle(dayData) }}
+      </h1>
+      
+      <!-- 3. Ранг праздника или псалтырь -->
+      <p v-if="dayData._feastType || dayData._psalmWeek" class="text-subtitle-1 mt-1">
+        {{ dayData._feastType ? `Ранг: ${getRankName(dayData._feastType)}` : `Псалтыр: ${dayData._psalmWeek}` }}
+      </p>
+    </div>
 
-            <p v-if="!feastType" class="text-h6 psalms">
-                {{ psalms }}
-                
-            </p>
-            <p v-if="feastComment" class="psalms">
-                <div  v-html="feastComment"></div>
-                
-            </p>
+    <!-- Сообщение, если данные не загрузились -->
+    <div v-else class="text-grey">
+      Немагчыма вызначыць назву дня
+    </div>
+  </div>
+</template>
 
-        </div>
-    </template>
-    <!-- 
-    <day-title :weekDay="day._weekDay" :date="nowDate" :psalms="day._psalmWeek" :feastType="day._feastType" :dayName="day._feastName ? day._feastName : day._dayName"/> -->
+<script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { useDocument } from 'vuefire';
+import { doc, getFirestore } from 'firebase/firestore';
+import moment from 'moment';
+import 'moment/dist/locale/be'; // Убедимся, что локаль подключена
 
-    <script setup>
-    const props = defineProps({
+// --- Инициализация ---
+const route = useRoute();
+const db = getFirestore();
+moment.locale('be'); // Активируем белорусскую локаль
 
-        date: String,
-        psalms: String,
-        feastType: String,
-        feastComment: String,
-        dayName: String,
+// --- Загрузка данных дня ---
+// Получаем ID дня из URL
+const dayId = route.params.id; 
+// Загружаем документ
+const dayDocRef = doc(db, 'days', dayId);
+const { data: dayData, pending: loading } = useDocument(dayDocRef);
 
-    })
+// --- Форматирование даты ---
+// Берем полную дату из параметра URL (:day) и форматируем ее
+const formattedDate = computed(() => {
+  if (!route.params.day) return '';
+  // Используем массив форматов для надежности, как мы делали раньше
+  const mDate = moment(route.params.day, ['YYYY-MM-DD', 'DD-MM-YYYY']);
+  if (!mDate.isValid()) return '';
+  // Форматируем в красивый вид, например, "18 верасня 2025 г."
+  const dateStr = mDate.format('D MMMM YYYY г.');
+  return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+});
 
+// --- Вспомогательные функции для отображения ---
 
+// Перевод ранга на белорусский
+const getRankName = (rank) => {
+  const rankMap = {
+    solemnity: 'Урачыстасць',
+    feast: 'Свята',
+    memorial: 'Успамін'
+  };
+  return rankMap[rank] || rank;
+};
 
-    // import { ref } from 'vue'
-    // import moment from 'moment';
-    // import 'moment/dist/locale/be';
+// Формирование заголовка для дня периода
+const getPeriodTitle = (day) => {
+  if (!day || !day._periodType) return 'Літургія Гадзінаў';
 
-    // import { useRoute } from 'vue-router'
-    // import { useCollection, useFirestore, useDocument } from 'vuefire'
-    // import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+  const periodMap = {
+    ordinary: 'Звычайны перыяд',
+    advent: 'Адвэнт',
+    lent: 'Вялікі Пост',
+    easter: 'Велікодны перыяд',
+    christmas: 'Перыяд Нараджэння Пана',
+    holyweek: 'Вялікі тыдзень'
+  };
+  const periodName = periodMap[day._periodType] || 'Перыяд';
+  const dayOfWeekMap = { '1': 'Нядзеля', '2': 'Панядзелак', '3': 'Аўторак', '4': 'Серада', '5': 'Чацвер', '6': 'Пятніца', '7': 'Субота' };
+  const dayName = dayOfWeekMap[day._dayOfWeek] || '';
 
-    //const db = useFirestore()
+  return `${periodName}, ${day._periodWeekNumber} тыдзень, ${dayName}`;
+};
+</script>
 
-    //const days = useCollection(query(collection(db, 'days')))
-    //const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
-
-    // const route = useRoute()
-    // const docRef = doc(db, "days", route.params.id);
-    // var { data: day, pending } = useDocument(docRef)
-
-    // const nowDate = moment(Date.now()).format('LL') 
-
-    </script>
-
-    <style>
-    .date {
-        font-weight: 700;
-        text-transform: uppercase !important;
-    }
-
-    .day-name {
-        font-weight: 700;
-    }
-
-    .psalms {
-        font-weight: 400;
-    }
-    </style>
+<style scoped>
+/* Здесь стили не нужны, так как все управляется глобальным классом .prayer-content-area */
+</style>

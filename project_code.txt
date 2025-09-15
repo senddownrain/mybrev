@@ -1,0 +1,5306 @@
+
+### package.json
+```
+{
+  "name": "mybrev",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",    
+    "export-code": "node export-code.js",
+    "lint": "eslint . --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@mdi/font": "7.0.96",
+    "@popperjs/core": "^2.11.8",
+    "@vueup/vue-quill": "^1.0.1",
+    "core-js": "^3.8.3",
+    "firebase": "^9.15.0",
+    "moment": "^2.29.4",
+    "pinia": "^2.1.6",
+    "roboto-fontface": "*",
+    "v-calendar": "^3.0.3",
+    "vue": "^3.2.13",
+    "vue-router": "^4.0.0",
+    "vuefire": "^3.0.0",
+    "vuetify": "^3.2.2",
+    "webfontloader": "^1.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.0.3",
+    "eslint": "^8.22.0",
+    "eslint-plugin-vue": "^9.3.0",
+    "sass": "^1.55.0",
+    "vite": "^3.1.9",
+    "vite-plugin-vuetify": "^1.0.2"
+  }
+}
+
+```
+
+### vite.config.js
+```
+// Plugins
+import vue from '@vitejs/plugin-vue'
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+
+// Utilities
+import { defineConfig } from 'vite'
+import { fileURLToPath, URL } from 'node:url'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    vue({ 
+      template: { transformAssetUrls }
+    }),
+    // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
+    vuetify({
+      autoImport: true,
+      styles: {
+        configFile: 'src/styles/settings.scss',
+      },
+    }),
+  ],
+  define: { 'process.env': {} },
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    },
+    extensions: [
+      '.js',
+      '.json',
+      '.jsx',
+      '.mjs',
+      '.ts',
+      '.tsx',
+      '.vue',
+    ],
+  },
+  server: {
+    port: 3000,
+  },
+})
+
+```
+
+### firebase.json
+```
+{
+  "hosting": {
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
+
+```
+
+### index.html
+```
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Літургія гадзін</title>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
+
+```
+
+### jsconfig.json
+```
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  },
+  "exclude": [
+      "node_modules",
+      "dist",
+      ".git"
+    ]
+}
+
+```
+
+### jsconfig.json
+```
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  },
+  "exclude": [
+      "node_modules",
+      "dist",
+      ".git"
+    ]
+}
+
+```
+
+### src/assets/defaultOra.css
+```
+.ora1{
+    max-width: 0;
+}
+```
+
+### src/components/admin/Bridge.vue
+```
+<template>
+    <v-container fluid>
+        <v-row dense>
+            <v-col cols="12" sm="6">
+                <v-select v-model="selectedDay" :hint="`${selectedDay}`" :items="bridgeDaysModel" label="Days"
+                    persistent-hint return-object single-line></v-select>
+            </v-col>
+            <v-col cols="12" sm="6" class="mt-2">
+                <v-text-field v-model="loadingDay" hint="дзень" label="дата"></v-text-field>
+                <v-btn @click="loadDay()">load</v-btn>
+                <v-btn @click="mapDay()">map</v-btn>
+            </v-col>
+
+        </v-row>
+        <v-row dense>
+
+
+            <v-col v-for="n in Object.getOwnPropertyNames(findItem(selectedDay))" :key="n" cols="12">
+                <v-card :title="`${n} - ${selectedItem[n]}`">
+                    <v-card-text>
+                        <p v-html="JSON.stringify(getProp(n, selectedItem[n]))"></p>
+                    </v-card-text>
+
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title> Map day</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+
+                        <v-btn variant="text" @click="save()">
+                            Сохранить
+                        </v-btn>
+                        <v-btn variant="text" @click="dialog = false">
+                            Отменить
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-card-text>
+
+
+                    <v-col v-for="n in Object.getOwnPropertyNames(mappingDay).sort()" :key="n" cols="12">
+                        <v-card :title="`${n}`">
+                            <v-card-text>
+                                <div v-if="!checkEditor(mappingDay[n])">
+                                    <v-text-field v-model="mappingDay[n]"></v-text-field>
+                                </div>
+
+                                <v-row v-if="checkEditor(mappingDay[n])">
+                            <v-col cols="6">
+                                <v-textarea auto-grow variant="filled" v-model="mappingDay[n]"></v-textarea>
+                            </v-col>
+                            <v-col cols="6">
+                                <div v-html="mappingDay[n]"></div>
+                            </v-col>
+                        </v-row>
+                            </v-card-text>
+
+                        </v-card>
+                    </v-col>
+                    <v-col cols="12">
+                        {{ mappingDay }}
+                    </v-col>
+                </v-card-text>
+
+            </v-card>
+        </v-dialog>
+
+
+        <v-dialog v-model="dialogAdd" fullscreen :scrim="false" transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialogAdd = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title> Add Note</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+
+                        <v-btn variant="text" @click="add(addItem)">
+                            Сохранить
+                        </v-btn>
+                        <v-btn variant="text" @click="dialogAdd = false">
+                            Отменить
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12" sm="6" class="mb-2">
+                            <v-text-field v-model="addItem.title" hint="Назва уводзін" label="Назва"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="12" class="mb-5">
+                            <quill-editor theme="snow" toolbar="minimal" v-model:content="addItem.text"
+                                contentType="html" />
+                        </v-col>
+                    </v-row>
+
+
+                </v-card-text>
+
+            </v-card>
+        </v-dialog>
+
+
+    </v-container>
+</template>
+
+
+<script setup>
+import tables from '@/json'
+
+import { ref } from 'vue'
+
+import { useCollection, useFirestore } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc, setDoc, addDoc } from 'firebase/firestore'
+
+
+//console.log(tables.Bridge_table.map(a => a.Bridge_DayId));
+
+const bridgeDaysModel = ref(tables.Bridge_table.map(a => a.Bridge_DayId));
+
+// Функция для преобразования строки даты в объект Date
+function parseDate(dateString) {
+  const [day, month, year] = dateString.split('.').map(Number);
+  return new Date(year, month - 1, day); // month - 1, т.к. месяцы начинаются с 0
+}
+
+// Преобразование и сортировка массива
+const transformedArray = tables.Bridge_table.map(item => ({
+    Bridge_DayId: item.Bridge_DayId,
+    Bridge_DayName: item.Bridge_DayName,
+    Day: item.Day,
+  date: parseDate(item.Bridge_DayId) // добавляем дату для сортировки
+}))
+.sort((a, b) => a.date - b.date) // сортируем по дате
+
+
+
+const selectedDay = ref(bridgeDaysModel.value[0]);
+const selectedItem = ref({});
+
+const loadingDay = ref("");
+function loadDay() {
+    console.log(loadingDay.value)
+    selectedItem.value = tables.Bridge_table.find(x => x?.Bridge_DayId === loadingDay.value);
+    console.log(selectedItem.value);
+    //console.log(tables.Bridge_table.map(a => a.Bridge_DayId))
+   // console.log(tables.Bridge_table.filter(x => x?.Day == "ХІІ звычайная нядзеля" && x?.Bridge_DayName == "Пятніца"))
+}
+
+const mappingDay = ref({})
+
+function checkEditor(field) {
+    return field && field.length > 100
+}
+
+function mapDay() {
+    dialog.value = true
+    let b = selectedItem.value;
+    let day = {
+        _dayOfWeek: "", // 1 - sunday, ...
+        _periodType: "", // pasha, ordinary, advent
+        _periodWeekNumber: "", 
+        _date: "", // date of feast
+        _feast: "", // easter, christmas, ascension, pentocost, christthehighpriest
+        _psalmWeek: b["Svyata"], // week of psalms
+
+
+        _dayName: b["Day"],
+        _weekDay: b["Bridge_DayName"],
+        _weekNum: b["Bridge_Week"],
+        _feastName: b["Svyata"],
+        _feastType: b["Uspamin"],
+        allowedAlleluia: b["Alleluia"] == "1",
+
+        invitatoriumAnt: getTableField("Zakl_Ant", b["Zakl_Ant"], "Zakl_Ant_Text"),
+        invitatoriumPs1: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text1"),
+        invitatoriumPs2: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text2"),
+        invitatoriumPs3: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text3"),
+        invitatoriumPs4: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text4"),
+        invitatoriumPs5: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text5"),
+        invitatoriumPs6: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text6"),
+
+        feastComment: getTableField("Svyat", b["Svyat"], "Svyat_Text"),
+
+        officeOfReadingsHymn: getTableField("GCH_Gimn", b["GCH_Gimn"], "GCH_Gimn_Text"),
+
+        officeOfReadingsAnt1: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text1"),
+        officeOfReadingsAnt2: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text2"),
+        officeOfReadingsAnt3: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text3"),
+
+        officeOfReadingsPs1: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text1"),
+        officeOfReadingsPs2: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text2"),
+        officeOfReadingsPs3: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text3"),
+        officeOfReadingsVers: getTableField("GCH_Versh", b["GCH_Versh"], "GCH_Versh_Text"),
+        
+        officeOfReadingsR1: getTableField("GCH_CH_1", b["GCH_CH_1"], "GCH_CH_1_Text"),
+        officeOfReadingsR2: getTableField("GCH_CH_2", b["GCH_CH_2"], "GCH_CH_2_Text"),
+
+        officeOfReadingsTeDeum: b["GCH_Tabe"] == "1",
+        officeOfReadingsPr: getTableField("GCH_Mal", b["GCH_Mal"], "GCH_Mal_Text"),
+
+        laudesHymn: getTableField("UTR_Gimn", b["UTR_Gimn"], "UTR_Gimn_Text"),
+        laudesAnt1: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text1"),
+        laudesAnt2: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text2"),
+        laudesAnt3: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text3"),
+        laudesPs1: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text1"),
+        laudesPs2: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text2"),
+        laudesPs3: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text3"),
+        laudesR: getTableField("UTR_Chyt", b["UTR_Chyt"], "UTR_Chyt_Text"),
+        laudesAntBen: getTableField("UTR_Ant_Zakh", b["UTR_Ant_Zakh"], "UTR_Ant_Zakh_Text"),
+        laudesInter: getTableField("UTR_Prosby", b["UTR_Prosby"], "UTR_Prosby_Text"),
+        laudesPr: getTableField("UTR_Mal", b["UTR_Mal"], "UTR_Mal_Text"),
+
+        sext1Hymn: getTableField("MPD_Gimn_1", b["MPD_Gimn_1"], "MPD_Gimn_1_Text"),
+        sext1Ant1: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text1"),
+        sext1Ant2: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text2"),
+        sext1Ant3: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text3"),
+        sext1Ps1: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text1"),
+        sext1Ps2: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text2"),
+        sext1Ps3: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text3"),
+        sext1R: getTableField("MPD_Chyt_1", b["MPD_Chyt_1"], "MPD_Chyt_1_Text"),
+        sext1Pr: getTableField("MPD_Mal_1", b["MPD_Mal_1"], "MPD_Mal_1_Text"),
+
+        sext2Hymn: getTableField("MPD_Gimn_2", b["MPD_Gimn_2"], "MPD_Gimn_2_Text"),
+        sext2Ant1: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text"),
+        sext2Ant2: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text2"),
+        sext2Ant3: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text3"),
+        sext2Ps1: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text1"),
+        sext2Ps2: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text2"),
+        sext2Ps3: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text3"),
+        sext2R: getTableField("MPD_Chyt_2", b["MPD_Chyt_2"], "MPD_Chyt_2_Text"),
+        sext2Pr: getTableField("MPD_Mal_2", b["MPD_Mal_2"], "MPD_Mal_2_Text"),
+
+        sext3Hymn: getTableField("MPD_Gimn_3", b["MPD_Gimn_3"], "MPD_Gimn_3_Text"),
+        sext3Ant1: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text"),
+        sext3Ant2: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text2"),
+        sext3Ant3: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text3"),
+        sext3Ps1: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text1"),
+        sext3Ps2: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text2"),
+        sext3Ps3: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text3"),
+        sext3R: getTableField("MPD_Chyt_3", b["MPD_Chyt_3"], "MPD_Chyt_3_Text"),
+        sext3Pr: getTableField("MPD_Mal_3", b["MPD_Mal_3"], "MPD_Mal_3_Text"),
+
+        vesperHymn: getTableField("NESH_Gimn", b["NESH_Gimn"], "NESH_Gimn_Text"),
+        vesperAnt1: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text1"),
+        vesperAnt2: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text2"),
+        vesperAnt3: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text3"),
+        vesperPs1: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text1"),
+        vesperPs2: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text2"),
+        vesperPs3: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text3"),
+        vesperR: getTableField("NESH_Chyt", b["NESH_Chyt"], "NESH_Chyt_Text"),
+        vesperAntMag: getTableField("NESH_Ant_M", b["NESH_Ant_M"], "NESH_Ant_M_Text"),
+        vesperInter: getTableField("NESH_Prosby", b["NESH_Prosby"], "NESH_Prosby_Text"),
+        vesperPr: getTableField("NESH_Mal", b["NESH_Mal"], "NESH_Mal_Text"),
+
+        compHymn: getTableField("KAMP_Gimn", b["KAMP_Gimn"], "KAMP_Gimn_Text"),
+        compAnt1: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text1"),
+        compAnt2: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text2"),
+
+        compPs1: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text1"),
+        compPs2: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text2"),
+
+        compR: getTableField("KAMP_Chyt", b["KAMP_Chyt"], "KAMP_Chyt_Text"),
+        compResp: getTableField("KAMP_Resp", b["KAMP_Resp"], "KAMP_Resp_Text"),
+        compAntS: getTableField("KAMP_Ant_S", b["KAMP_Ant_S"], "KAMP_Ant_S_Text"),
+        compPr: getTableField("KAMP_Mal", b["KAMP_Mal"], "KAMP_Mal_Text"),
+        compAntM: getTableField("KAMP_Ant_M", b["KAMP_Ant_M"], "KAMP_Ant_M_Text"),
+
+
+
+    }
+    mappingDay.value = day;
+}
+
+
+async function save() {
+    dialog.value = false
+
+    await addDoc(collection(db, "days"), mappingDay.value)
+    // await setDoc(doc(db, "days", mappingDay.value.id), mappingDay.value);
+    // item.text = tmp.value.text
+    // const noteRef = doc(db, "notes", item.id);
+
+    // await updateDoc(noteRef, {
+    //     text: tmp.value.text
+    // });
+}
+
+function getTableField(table, id, field) {
+    let tableName = table + "_table";
+
+    if (tables[tableName]) {
+
+        let item = tables[tableName].find(x => x[table + "_ID"] == id)
+        //console.log(item)
+        if (item && item[field]) {
+            return item[field]
+        }
+    }
+    return ""
+}
+
+function getTableFieldUtr(table, id, field, idName) {
+    let tableName = table + "_table";
+
+    if (tables[tableName]) {
+
+        let item = tables[tableName].find(x => x[idName] == id)
+        //console.log(item)
+        if (item && item[field]) {
+            return item[field]
+        }
+    }
+    return ""
+}
+
+function findItem(id) {
+    let item = tables.Bridge_table.find(x => x.Bridge_DayId == id);
+    selectedItem.value = item;
+
+    return item;
+}
+
+function getProp(name, val) {
+    console.log(`${name} - ${val}`);
+    
+    let tbl = tables[name + "_table"]
+    if (tbl) {
+        let itemID = name + "_ID"
+        if (tbl[0][itemID]) {
+
+            let item = tables[name + "_table"].find(x => x[itemID] == val);
+            return JSON.stringify(item);
+        }
+        else {
+            return "no id"
+        }
+
+    }
+    else {
+        return 'not a table'
+    }
+}
+
+function getIdProp(obj) {
+    var props = Object.getOwnPropertyNames(obj);
+    var id = props.find(x => x.indexOf("ID") != -1);
+
+    return id;
+}
+
+const db = useFirestore()
+
+const dialog = ref(false)
+
+const dialogAdd = ref(false)
+const addItem = ref({
+    text: ""
+})
+
+const current = ref({})
+const tmp = ref({})
+const editMode = ref(false)
+
+
+function strippedHtml(value) {
+    let regex = /(<([^>]+)>)/ig;
+    return value.replace(regex, "");
+}
+
+function select(item) {
+    current.value = item;
+    dialog.value = true
+}
+
+function edit(item) {
+    tmp.value = Object.assign({}, item);
+    editMode.value = true
+}
+
+
+function showAdd() {
+    addItem.value = {
+        text: ""
+    }
+    dialogAdd.value = true
+}
+
+async function add(item) {
+
+    dialogAdd.value = false
+    await addDoc(collection(db, "notes"), item)
+
+    addItem.value = ref({
+        text: ""
+    })
+}
+
+</script>
+
+
+<style>
+.dialog-bottom-transition-enter-active,
+.dialog-bottom-transition-leave-active {
+    transition: transform .2s ease-in-out;
+}
+</style>
+```
+
+### src/components/admin/BridgeList.vue
+```
+<template>
+    <v-container fluid>
+        <v-row dense>
+            <v-col cols="12" sm="6">
+                <v-list>
+                    <v-list-item-group>
+                        <v-list-item  v-for="(item, index) in transformedArray" :key="index" class="clickable-item"  @click="mapDay(item)">
+                            <v-list-item-content>
+                                <v-list-item-title>{{ item.Bridge_DayId }} {{ getFeastOrPeriod(item) }}</v-list-item-title>
+                                <v-list-item-subtitle>{{ item.Bridge_DayName }}</v-list-item-subtitle>
+                                <v-list-item-subtitle>{{ item.Day }}</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list-item-group>
+                </v-list>
+            </v-col>
+
+        </v-row>
+
+        <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title> Map day</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+
+                        <v-btn variant="text" @click="save()">
+                            Сохранить
+                        </v-btn>
+                        <v-btn variant="text" @click="dialog = false">
+                            Отменить
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-card-text>
+
+
+                    <v-col v-for="n in Object.getOwnPropertyNames(mappingDay).sort()" :key="n" cols="12">
+                        <v-card :title="`${n}`">
+                            <v-card-text>
+                                <div v-if="!checkEditor(mappingDay[n])">
+                                    <v-text-field v-model="mappingDay[n]"></v-text-field>
+                                </div>
+
+                                <v-row v-if="checkEditor(mappingDay[n])">
+                                    <v-col cols="6">
+                                        <v-textarea auto-grow variant="filled" v-model="mappingDay[n]"></v-textarea>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <div v-html="mappingDay[n]"></div>
+                                    </v-col>
+                                </v-row>
+                            </v-card-text>
+
+                        </v-card>
+                    </v-col>
+                    <v-col cols="12">
+                        {{ mappingDay }}
+                    </v-col>
+                </v-card-text>
+
+            </v-card>
+        </v-dialog>
+
+
+        <v-dialog v-model="dialogAdd" fullscreen :scrim="false" transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialogAdd = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title> Add Note</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+
+                        <v-btn variant="text" @click="add(addItem)">
+                            Сохранить
+                        </v-btn>
+                        <v-btn variant="text" @click="dialogAdd = false">
+                            Отменить
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12" sm="6" class="mb-2">
+                            <v-text-field v-model="addItem.title" hint="Назва уводзін" label="Назва"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="12" class="mb-5">
+                            <quill-editor theme="snow" toolbar="minimal" v-model:content="addItem.text"
+                                contentType="html" />
+                        </v-col>
+                    </v-row>
+
+
+                </v-card-text>
+
+            </v-card>
+        </v-dialog>
+
+
+    </v-container>
+</template>
+
+
+<script setup>
+import tables from '@/json'
+
+import { ref } from 'vue'
+
+import { useCollection, useFirestore } from 'vuefire'
+
+import { collection, orderBy, query, doc, updateDoc, getDocs, setDoc, addDoc } from 'firebase/firestore'
+
+
+const db = useFirestore()
+
+//console.log(tables.Bridge_table.map(a => a.Bridge_DayId));
+
+const bridgeDaysModel = ref(tables.Bridge_table.map(a => a.Bridge_DayId));
+
+// Функция для преобразования строки даты в объект Date
+function parseDate(dateString) {
+    const [day, month, year] = dateString.split('.').map(Number);
+    return new Date(year, month - 1, day); // month - 1, т.к. месяцы начинаются с 0
+}
+
+// Преобразование и сортировка массива
+const transformedArray = tables.Bridge_table.map(item => ({
+    Bridge_DayId: item.Bridge_DayId,
+    Bridge_DayName: item.Bridge_DayName,
+    Day: item.Day,
+    Feast: item.Svyata,
+    date: parseDate(item.Bridge_DayId) // добавляем дату для сортировки
+})).sort((a, b) =>  b.date - a.date) // сортируем по дате
+
+//refactorDB();
+
+function refactorDB() {
+    const readingFixArray = tables.Bridge_table.map(item => ({
+        Bridge_DayId: item.Bridge_DayId,
+        Bridge_DayName: item.Bridge_DayName,
+        Day: item.Day,
+        Feast: item.Svyata,
+        weekDay: item.Bridge_DayName,
+        date: parseDate(item.Bridge_DayId), // добавляем дату для сортировки
+        officeOfReadingsVers: getTableField("GCH_Versh", item["GCH_Versh"], "GCH_Versh_Text"),
+    })).sort((a, b) => b.date - a.date); // сортируем по дате
+
+    const ordinaryVersArray = readingFixArray
+        .filter(item => item.Day.includes('звычай')) // Фильтруем по ключевой фразе
+        .reduce((accumulator, current) => {
+            const isDuplicate = accumulator.find(item => item.Day === current.Day && item.weekDay === current.weekDay);
+            if (!isDuplicate) {
+                accumulator.push({ date: current.date, Day: current.Day, weekDay: current.weekDay, officeOfReadingsVers: current.officeOfReadingsVers });
+            }
+            return accumulator;
+        }, []);
+
+    console.log(`unique elems ${ordinaryVersArray.length}`);
+
+    const daysCollectionRef = collection(db, 'days');
+
+    // Получение документов из Firestore и обновление их по данным из uniqueDays
+    async function updateFirestoreDays(uniqueDays) {
+        try {
+            const querySnapshot = await getDocs(query(daysCollectionRef, orderBy('_weekNum')));
+            const batch = [];
+
+            // Проходим по каждому документу из Firestore
+            querySnapshot.forEach(docSnapshot => {
+                const docData = docSnapshot.data();
+                const matchingUniqueDay = uniqueDays.find(uniqueDay => uniqueDay.Day === docData._dayName && uniqueDay.weekDay === docData._weekDay);
+
+                // Если найден соответствующий uniqueDay, обновляем officeOfReadingsVers
+                if (matchingUniqueDay) {
+                    const docRef = doc(db, 'days', docSnapshot.id);
+                    const updateOperation = updateDoc(docRef, {
+                        officeOfReadingsVers: matchingUniqueDay.officeOfReadingsVers
+                    });
+                    // console.log(`${docData._dayName}-${docData._weekDay} updated`)
+                    batch.push(updateOperation);
+                }
+            });
+
+            console.log(`to update ${batch.length}`);
+            // Выполняем все обновления
+            await Promise.all(batch);
+
+            console.log("Обновление завершено.");
+        } catch (error) {
+            console.error("Ошибка при обновлении Firestore:", error);
+        }
+    }
+
+    // Вызов функции
+    updateFirestoreDays(ordinaryVersArray);
+}
+
+function getFeastOrPeriod(a) {
+  // Проверяем, существует ли объект и его свойства
+  if (a && typeof a.Feast === 'string' && typeof a.Day !== 'undefined') {
+    // Приводим свойство Feast к нижнему регистру и проверяем наличие слова "псалтыра"
+    if (a.Feast.toLowerCase().includes("псалтыра")) {
+      return a.Day; // Возвращаем значение свойства Day
+    }
+    return a.Feast; // Возвращаем значение свойства Feast
+  }
+  throw new Error("Неверный объект"); // Обработка ошибки, если объект не валиден
+}
+
+
+const selectedDay = ref(bridgeDaysModel.value[0]);
+const selectedItem = ref({});
+
+const loadingDay = ref("");
+function loadDay() {
+    selectedItem.value = tables.Bridge_table.find(x => x?.Bridge_DayId === loadingDay.value);
+    
+    //console.log(tables.Bridge_table.map(a => a.Bridge_DayId))
+    // console.log(tables.Bridge_table.filter(x => x?.Day == "ХІІ звычайная нядзеля" && x?.Bridge_DayName == "Пятніца"))
+}
+
+const mappingDay = ref({})
+
+function checkEditor(field) {
+    return field && field.length > 100
+}
+
+function mapDay(item) {
+
+    
+    let dbItem = tables.Bridge_table.find(x => x?.Bridge_DayId === item.Bridge_DayId);
+    
+    dialog.value = true
+    let b = dbItem;
+    let day = {
+        _dayOfWeek: "", // 1 - sunday, ...
+        _periodType: "", // pasha, ordinary, advent
+        _periodWeekNumber: "",
+        _date: "", // date of feast
+        _feast: "", // easter, christmas, ascension, pentocost, christthehighpriest
+        _psalmWeek: b["Svyata"], // week of psalms
+
+
+        _dayName: b["Day"],
+        _weekDay: b["Bridge_DayName"],
+        _weekNum: b["Bridge_Week"],
+        _feastName: b["Svyata"] && b["Svyata"].toLowerCase().includes("псалтыра") ? "" : b["Svyata"],
+        _feastType: b["Uspamin"],
+        allowedAlleluia: b["Alleluia"] == "1",
+
+        invitatoriumAnt: getTableField("Zakl_Ant", b["Zakl_Ant"], "Zakl_Ant_Text"),
+        invitatoriumPs1: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text1"),
+        invitatoriumPs2: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text2"),
+        invitatoriumPs3: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text3"),
+        invitatoriumPs4: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text4"),
+        invitatoriumPs5: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text5"),
+        invitatoriumPs6: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text6"),
+
+        feastComment: getTableField("Svyat", b["Svyat"], "Svyat_Text"),
+
+        officeOfReadingsHymn: getTableField("GCH_Gimn", b["GCH_Gimn"], "GCH_Gimn_Text"),
+
+        officeOfReadingsAnt1: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text1"),
+        officeOfReadingsAnt2: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text2"),
+        officeOfReadingsAnt3: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text3"),
+
+        officeOfReadingsPs1: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text1"),
+        officeOfReadingsPs2: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text2"),
+        officeOfReadingsPs3: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text3"),
+        officeOfReadingsVers: getTableField("GCH_Versh", b["GCH_Versh"], "GCH_Versh_Text"),
+
+        officeOfReadingsR1: getTableField("GCH_CH_1", b["GCH_CH_1"], "GCH_CH_1_Text"),
+        officeOfReadingsR2: getTableField("GCH_CH_2", b["GCH_CH_2"], "GCH_CH_2_Text"),
+
+        officeOfReadingsTeDeum: b["GCH_Tabe"] == "1",
+        officeOfReadingsPr: getTableField("GCH_Mal", b["GCH_Mal"], "GCH_Mal_Text"),
+
+        laudesHymn: getTableField("UTR_Gimn", b["UTR_Gimn"], "UTR_Gimn_Text"),
+        laudesAnt1: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text1"),
+        laudesAnt2: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text2"),
+        laudesAnt3: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text3"),
+        laudesPs1: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text1"),
+        laudesPs2: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text2"),
+        laudesPs3: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text3"),
+        laudesR: getTableField("UTR_Chyt", b["UTR_Chyt"], "UTR_Chyt_Text"),
+        laudesAntBen: getTableField("UTR_Ant_Zakh", b["UTR_Ant_Zakh"], "UTR_Ant_Zakh_Text"),
+        laudesInter: getTableField("UTR_Prosby", b["UTR_Prosby"], "UTR_Prosby_Text"),
+        laudesPr: getTableField("UTR_Mal", b["UTR_Mal"], "UTR_Mal_Text"),
+
+        sext1Hymn: getTableField("MPD_Gimn_1", b["MPD_Gimn_1"], "MPD_Gimn_1_Text"),
+        sext1Ant1: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text1"),
+        sext1Ant2: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text2"),
+        sext1Ant3: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text3"),
+        sext1Ps1: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text1"),
+        sext1Ps2: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text2"),
+        sext1Ps3: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text3"),
+        sext1R: getTableField("MPD_Chyt_1", b["MPD_Chyt_1"], "MPD_Chyt_1_Text"),
+        sext1Pr: getTableField("MPD_Mal_1", b["MPD_Mal_1"], "MPD_Mal_1_Text"),
+
+        sext2Hymn: getTableField("MPD_Gimn_2", b["MPD_Gimn_2"], "MPD_Gimn_2_Text"),
+        sext2Ant1: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text"),
+        sext2Ant2: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text2"),
+        sext2Ant3: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text3"),
+        sext2Ps1: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text1"),
+        sext2Ps2: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text2"),
+        sext2Ps3: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text3"),
+        sext2R: getTableField("MPD_Chyt_2", b["MPD_Chyt_2"], "MPD_Chyt_2_Text"),
+        sext2Pr: getTableField("MPD_Mal_2", b["MPD_Mal_2"], "MPD_Mal_2_Text"),
+
+        sext3Hymn: getTableField("MPD_Gimn_3", b["MPD_Gimn_3"], "MPD_Gimn_3_Text"),
+        sext3Ant1: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text"),
+        sext3Ant2: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text2"),
+        sext3Ant3: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text3"),
+        sext3Ps1: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text1"),
+        sext3Ps2: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text2"),
+        sext3Ps3: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text3"),
+        sext3R: getTableField("MPD_Chyt_3", b["MPD_Chyt_3"], "MPD_Chyt_3_Text"),
+        sext3Pr: getTableField("MPD_Mal_3", b["MPD_Mal_3"], "MPD_Mal_3_Text"),
+
+        vesperHymn: getTableField("NESH_Gimn", b["NESH_Gimn"], "NESH_Gimn_Text"),
+        vesperAnt1: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text1"),
+        vesperAnt2: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text2"),
+        vesperAnt3: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text3"),
+        vesperPs1: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text1"),
+        vesperPs2: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text2"),
+        vesperPs3: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text3"),
+        vesperR: getTableField("NESH_Chyt", b["NESH_Chyt"], "NESH_Chyt_Text"),
+        vesperAntMag: getTableField("NESH_Ant_M", b["NESH_Ant_M"], "NESH_Ant_M_Text"),
+        vesperInter: getTableField("NESH_Prosby", b["NESH_Prosby"], "NESH_Prosby_Text"),
+        vesperPr: getTableField("NESH_Mal", b["NESH_Mal"], "NESH_Mal_Text"),
+
+        compHymn: getTableField("KAMP_Gimn", b["KAMP_Gimn"], "KAMP_Gimn_Text"),
+        compAnt1: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text1"),
+        compAnt2: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text2"),
+
+        compPs1: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text1"),
+        compPs2: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text2"),
+
+        compR: getTableField("KAMP_Chyt", b["KAMP_Chyt"], "KAMP_Chyt_Text"),
+        compResp: getTableField("KAMP_Resp", b["KAMP_Resp"], "KAMP_Resp_Text"),
+        compAntS: getTableField("KAMP_Ant_S", b["KAMP_Ant_S"], "KAMP_Ant_S_Text"),
+        compPr: getTableField("KAMP_Mal", b["KAMP_Mal"], "KAMP_Mal_Text"),
+        compAntM: getTableField("KAMP_Ant_M", b["KAMP_Ant_M"], "KAMP_Ant_M_Text"),
+
+
+
+    }
+    mappingDay.value = day;
+}
+
+
+async function save() {
+    dialog.value = false
+
+    await addDoc(collection(db, "days"), mappingDay.value)
+    // await setDoc(doc(db, "days", mappingDay.value.id), mappingDay.value);
+    // item.text = tmp.value.text
+    // const noteRef = doc(db, "notes", item.id);
+
+    // await updateDoc(noteRef, {
+    //     text: tmp.value.text
+    // });
+}
+
+function getTableField(table, id, field) {
+    let tableName = table + "_table";
+
+    if (tables[tableName]) {
+
+        let item = tables[tableName].find(x => x[table + "_ID"] == id)
+        //console.log(item)
+        if (item && item[field]) {
+            return item[field]
+        }
+    }
+    return ""
+}
+
+function getTableFieldUtr(table, id, field, idName) {
+    let tableName = table + "_table";
+
+    if (tables[tableName]) {
+
+        let item = tables[tableName].find(x => x[idName] == id)
+        //console.log(item)
+        if (item && item[field]) {
+            return item[field]
+        }
+    }
+    return ""
+}
+
+function findItem(id) {
+    let item = tables.Bridge_table.find(x => x.Bridge_DayId == id);
+    selectedItem.value = item;
+
+    return item;
+}
+
+function getProp(name, val) {
+    let tbl = tables[name + "_table"]
+    if (tbl) {
+        let itemID = name + "_ID"
+        if (tbl[0][itemID]) {
+
+            let item = tables[name + "_table"].find(x => x[itemID] == val);
+            return JSON.stringify(item);
+        }
+        else {
+            return "no id"
+        }
+
+    }
+    else {
+        return 'not a table'
+    }
+}
+
+function getIdProp(obj) {
+    var props = Object.getOwnPropertyNames(obj);
+    var id = props.find(x => x.indexOf("ID") != -1);
+
+    return id;
+}
+
+
+const dialog = ref(false)
+
+const dialogAdd = ref(false)
+const addItem = ref({
+    text: ""
+})
+
+const current = ref({})
+const tmp = ref({})
+const editMode = ref(false)
+
+
+function strippedHtml(value) {
+    let regex = /(<([^>]+)>)/ig;
+    return value.replace(regex, "");
+}
+
+function select(item) {
+    current.value = item;
+    dialog.value = true
+}
+
+function edit(item) {
+    tmp.value = Object.assign({}, item);
+    editMode.value = true
+}
+
+
+function showAdd() {
+    addItem.value = {
+        text: ""
+    }
+    dialogAdd.value = true
+}
+
+async function add(item) {
+
+    dialogAdd.value = false
+    await addDoc(collection(db, "notes"), item)
+
+    addItem.value = ref({
+        text: ""
+    })
+}
+
+</script>
+
+
+<style scoped>
+.dialog-bottom-transition-enter-active,
+.dialog-bottom-transition-leave-active {
+    transition: transform .2s ease-in-out;
+}
+
+.clickable-item {
+    margin: 5px;
+  cursor: pointer; /* Указатель мыши при наведении */
+  background-color: #f5f5f5; /* Светлый фон для выделения */
+  border-radius: 4px; /* Закругленные углы */
+  transition: background-color 0.2s; /* Плавный переход цвета фона */
+}
+
+.clickable-item:hover {
+  background-color: #e0e0e0; /* Цвет фона на наведение */
+}
+
+</style>
+```
+
+### src/components/admin/DayEditPage.vue
+```
+<template>
+    <v-container>
+
+        <v-row>
+            <v-col>
+                <v-card flat>
+                    <v-card-title>
+                        Параметры 
+                    </v-card-title>
+                    <v-row>
+                        <v-col>
+                            <v-text-field v-model="dte._date" :label="'Дата (_date)'"></v-text-field></v-col>
+                        <v-col>
+                            <v-text-field v-model="dte._dayName" :label="'Імя дня (_dayName)'"></v-text-field></v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col>
+                            <v-text-field v-model="dte._feast" :label="'Свята (_feast)'"></v-text-field></v-col>
+                        <v-col>
+                            <v-text-field v-model="dte._feastName" :label="'Імя свята (_feastName)'"></v-text-field></v-col>
+                        <v-col>
+                            <v-text-field v-model="dte._feastType" :label="'Тып свята (_feastType)'"></v-text-field></v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col>
+                            <v-text-field v-model="dte._periodType" :label="'Перыяд (_periodType)'"></v-text-field></v-col>
+                        <v-col>
+                            <v-text-field v-model="dte._periodWeekNumber"
+                                :label="'Нумар тыдня перыяду (_periodWeekNumber)'"></v-text-field></v-col>
+                        <v-col>
+                            <v-text-field v-model="dte._psalmWeek"
+                                :label="'Тыдзень псалтыра (_psalmWeek)'"></v-text-field></v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col>
+                            <v-text-field v-model="dte._dayOfWeek" :label="'Нумар дня (_dayOfWeek)'"></v-text-field></v-col>
+                        
+                        <v-col>
+                            <v-text-field v-model="dte._weekDay" :label="'Дзень тыдня (_weekDay)'"></v-text-field></v-col>
+                        <v-col>
+                            <v-text-field v-model="dte._weekNum" :label="'Нумар тыдня (_weekNum)'"></v-text-field></v-col>
+                        <v-col>
+                            <v-text-field v-model="dte.allowedAlleluia"
+                                :label="'Аллелюя (allowedAlleluia)'"></v-text-field></v-col>
+                    </v-row>
+
+                    
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'feastComment'" :fieldTitle="'Апісанне свята (feastComment)'" />
+                    </v-row>
+
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="updateItem()" color="primary">
+                            Абнавіць
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        
+        <v-row>
+            <v-col>
+                <v-card flat>
+                    <v-card-title>
+                        Заклік
+                    </v-card-title>
+
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumAnt'" :fieldTitle="'Антыфона (invitatoriumAnt)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs1'" :fieldTitle="'Пасальм 1 куплет (invitatoriumPs1)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs2'" :fieldTitle="'Пасальм 2 куплет (invitatoriumPs2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs3'" :fieldTitle="'Пасальм 3 куплет (invitatoriumPs3)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs4'" :fieldTitle="'Пасальм 4 куплет (invitatoriumPs4)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs5'" :fieldTitle="'Пасальм 5 куплет (invitatoriumPs5)'" />
+                        <TwoColsField :dte="dte" :fieldName="'invitatoriumPs6'" :fieldTitle="'Пасальм 6 куплет (invitatoriumPs6)'" />
+                        
+                    </v-row>                 
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="updateItem()" color="primary">
+                            Абнавіць
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <v-divider></v-divider>
+        
+        <v-row>
+            <v-col>
+                <v-card flat>
+                    <v-card-title>
+                        Гадзіна чытанняў
+                    </v-card-title>
+
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsHymn'" :fieldTitle="'Гімн (officeOfReadingsHymn)'" />
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsAnt1'" :fieldTitle="'Антыфона 1 (officeOfReadingsAnt1)'" />
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsPs1'" :fieldTitle="'Пальм 1 (officeOfReadingsPs1)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsAnt2'" :fieldTitle="'Антыфона 2 (officeOfReadingsAnt2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsPs2'" :fieldTitle="'Пальм 2 (officeOfReadingsPs2)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsAnt3'" :fieldTitle="'Антыфона 3 (officeOfReadingsAnt3)'" />
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsPs3'" :fieldTitle="'Пальм 3 (officeOfReadingsPs3)'" />
+                        
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsVers'" :fieldTitle="'Першы рэспансорый (officeOfReadingsVers)'" />
+                    
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsR1'" :fieldTitle="'Чытанне 1 (officeOfReadingsR1)'" />
+                       
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingsR2'" :fieldTitle="'Чытанне 2 (officeOfReadingsR2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'officeOfReadingPr'" :fieldTitle="'Малітва (officeOfReadingsPr)'" />
+                    </v-row>                    
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="updateItem()" color="primary">
+                            Абнавіць
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-divider></v-divider>
+
+
+        <v-row>
+            <v-col>
+                <v-card flat>
+                    <v-card-title>
+                        Ютрань
+                    </v-card-title>
+
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'laudesHymn'" :fieldTitle="'Гімн (laudesHymn)'" />
+                        <TwoColsField :dte="dte" :fieldName="'laudesAnt1'" :fieldTitle="'Антыфона 1 (laudesAnt1)'" />
+                        <TwoColsField :dte="dte" :fieldName="'laudesPs1'" :fieldTitle="'Пальм 1 (laudesPs1)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'laudesAnt2'" :fieldTitle="'Антыфона 2 (laudesAnt2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'laudesPs2'" :fieldTitle="'Пальм 2 (laudesPs2)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'laudesAnt3'" :fieldTitle="'Антыфона 3 (laudesAnt3)'" />
+                        <TwoColsField :dte="dte" :fieldName="'laudesPs3'" :fieldTitle="'Пальм 3 (laudesPs3)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'laudesR'" :fieldTitle="'Чытанне (laudesR)'" />
+                        <TwoColsField :dte="dte" :fieldName="'laudesAntBen'" :fieldTitle="'Антыфона (laudesAntBen)'" />
+                        <TwoColsField :dte="dte" :fieldName="'laudesInter'" :fieldTitle="'Просьбы (laudesInter)'" />
+                        <TwoColsField :dte="dte" :fieldName="'laudesPr'" :fieldTitle="'Малітва (laudesPr)'" />
+                    </v-row>                    
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="updateItem()" color="primary">
+                            Абнавіць
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        
+        <v-row>
+            <v-col>
+                <v-card flat>
+                    <v-card-title>
+                        Малітва перад поўднем
+                    </v-card-title>
+
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'sext1Hymn'" :fieldTitle="'Гімн (sext1Hymn)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext1Ant1'" :fieldTitle="'Антыфона 1 (sext1Ant1)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext1Ps1'" :fieldTitle="'Пальм 1 (sext1Ps1)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'sext1Ant2'" :fieldTitle="'Антыфона 2 (sext1Ant2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext1Ps2'" :fieldTitle="'Пальм 2 (sext1Ps2)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'sext1Ant3'" :fieldTitle="'Антыфона 3 (sext1Ant3)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext1Ps3'" :fieldTitle="'Пальм 3 (sext1Ps3)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'sext1R'" :fieldTitle="'Чытанне (sext1R)'" /> />
+                        <TwoColsField :dte="dte" :fieldName="'sext1Pr'" :fieldTitle="'Малітва (sext1Pr)'" />
+                    </v-row>                    
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="updateItem()" color="primary">
+                            Абнавіць
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        <v-row>
+            <v-col>
+                <v-card flat>
+                    <v-card-title>
+                        Малітва апоўдні
+                    </v-card-title>
+
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'sext2Hymn'" :fieldTitle="'Гімн (sext2Hymn)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext2Ant1'" :fieldTitle="'Антыфона 1 (sext2Ant1)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext2Ps1'" :fieldTitle="'Пальм 1 (sext2Ps1)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'sext2Ant2'" :fieldTitle="'Антыфона 2 (sext2Ant2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext2Ps2'" :fieldTitle="'Пальм 2 (sext2Ps2)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'sext2Ant3'" :fieldTitle="'Антыфона 3 (sext2Ant3)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext2Ps3'" :fieldTitle="'Пальм 3 (sext2Ps3)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'sext2R'" :fieldTitle="'Чытанне (sext2R)'" /> />
+                        <TwoColsField :dte="dte" :fieldName="'sext2Pr'" :fieldTitle="'Малітва (sext2Pr)'" />
+                    </v-row>                    
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="updateItem()" color="primary">
+                            Абнавіць
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        <v-row>
+            <v-col>
+                <v-card flat>
+                    <v-card-title>
+                        Малітва пасля поўдня
+                    </v-card-title>
+
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'sext3Hymn'" :fieldTitle="'Гімн (3)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext3Ant1'" :fieldTitle="'Антыфона 1 (sext3Ant1)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext3Ps1'" :fieldTitle="'Пальм 1 (sext2Ps1)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'sext3Ant2'" :fieldTitle="'Антыфона 2 (sext3Ant2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext3Ps2'" :fieldTitle="'Пальм 2 (sext3Ps2)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'sext3Ant3'" :fieldTitle="'Антыфона 3 (sext3Ant3)'" />
+                        <TwoColsField :dte="dte" :fieldName="'sext3Ps3'" :fieldTitle="'Пальм 3 (sext3Ps3)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'sext3R'" :fieldTitle="'Чытанне (sext3R)'" /> />
+                        <TwoColsField :dte="dte" :fieldName="'sext3Pr'" :fieldTitle="'Малітва (sext3Pr)'" />
+                    </v-row>                    
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="updateItem()" color="primary">
+                            Абнавіць
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        <v-row>
+            <v-col>
+                <v-card flat>
+                    <v-card-title>
+                        Нешпары
+                    </v-card-title>
+
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'vesperHymn'" :fieldTitle="'Гімн (vesperHymn)'" />
+                        <TwoColsField :dte="dte" :fieldName="'vesperAnt1'" :fieldTitle="'Антыфона 1 (vesperAnt1)'" />
+                        <TwoColsField :dte="dte" :fieldName="'vesperPs1'" :fieldTitle="'Пальм 1 (vesperPs1)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'vesperAnt2'" :fieldTitle="'Антыфона 2 (vesperAnt2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'vesperPs2'" :fieldTitle="'Пальм 2 (vesperPs2)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'vesperAnt3'" :fieldTitle="'Антыфона 3 (vesperAnt3)'" />
+                        <TwoColsField :dte="dte" :fieldName="'vesperPs3'" :fieldTitle="'Пальм 3 (vesperPs3)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'vesperR'" :fieldTitle="'Чытанне (vesperR)'" />
+                        <TwoColsField :dte="dte" :fieldName="'vesperAntMag'" :fieldTitle="'Антыфона (vesperAntMag)'" />
+                        <TwoColsField :dte="dte" :fieldName="'vesperInter'" :fieldTitle="'Просьбы (vesperInter)'" />
+                        <TwoColsField :dte="dte" :fieldName="'vesperPr'" :fieldTitle="'Малітва (vesperPr)'" />
+                    </v-row>                    
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="updateItem()" color="primary">
+                            Абнавіць
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        <v-row>
+            <v-col>
+                <v-card flat>
+                    <v-card-title>
+                        Камплета
+                    </v-card-title>
+
+                    <v-row>
+                        <TwoColsField :dte="dte" :fieldName="'compHymn'" :fieldTitle="'Гімн'" />
+                        <TwoColsField :dte="dte" :fieldName="'compAnt1'" :fieldTitle="'Антыфона 1 (compAnt1)'" />
+                        <TwoColsField :dte="dte" :fieldName="'compPs1'" :fieldTitle="'Пальм 1 (compPs1)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'compAnt2'" :fieldTitle="'Антыфона 2 (compAnt2)'" />
+                        <TwoColsField :dte="dte" :fieldName="'compPs2'" :fieldTitle="'Пальм 2 (compPs2)'" />
+
+                        <TwoColsField :dte="dte" :fieldName="'compR'" :fieldTitle="'Чытанне (compR)'" />
+                        <TwoColsField :dte="dte" :fieldName="'compResp'" :fieldTitle="'Рэспансорый (compResp)'" />
+                        <TwoColsField :dte="dte" :fieldName="'compAntS'" :fieldTitle="'Антыфона (compAntS)'" />
+                        <TwoColsField :dte="dte" :fieldName="'compPr'" :fieldTitle="'Малітва (compPr)'" />
+                        <TwoColsField :dte="dte" :fieldName="'compAntM'" :fieldTitle="'Антыфона Марыі (compAntM)'" />
+                    </v-row>                    
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="updateItem()" color="primary">
+                            Абнавіць
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+      
+
+        
+    </v-container>
+</template>
+
+<script setup>
+import TwoColsField from './TwoColsField.vue'
+const props = defineProps({
+
+    // date: String,
+    // psalms: String,
+    // feastType: String,
+    // dayName: String,
+
+})
+
+
+
+import moment from 'moment'
+import 'moment/dist/locale/be'
+import { ref } from 'vue'
+
+import { useDayStore } from '@/stores/day'
+const dayStore = useDayStore()
+const dte = ref(dayStore.getDayToEdit);
+
+console.log(dte.value)
+
+function checkEditor(field) {
+    return field && field.length > 50
+}
+
+function getTitle(field) {
+    if (!field)
+        return "---"
+
+    return field.length > 30 ? "" : field;
+}
+
+function updateItem() {
+    dayStore.updateDay(dte.value)
+}
+
+
+
+
+</script>
+
+```
+
+### src/components/admin/DbDayList.vue
+```
+<template>
+    <v-container fluid>
+        <v-row dense>
+            <v-col cols="12">
+
+                <v-expansion-panels variant="popout">
+                    <v-expansion-panel title="Ordinary">
+                        <v-expansion-panel-text>
+                            <v-list>
+
+                                <v-list-item-group>
+                                    <v-list-item
+                                        v-for="(item, i) in days.filter(d => d._periodType == 'ordinary').sort((a, b) => a?._dayOfWeek - b?._dayOfWeek).sort((a, b) => a?._periodWeekNumber - b?._periodWeekNumber)"
+                                        :key="i" 
+                                        :value="item" 
+                                        color="primary">
+                                        <v-list-item-content>
+                                            <v-list-item-title @click="edit(item)">
+                                                {{ item?._feastName }} {{ item?._dayName }} - {{ item?._weekDay }} -
+                                                week
+                                                [{{
+                                            item?._periodWeekNumber }}]
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle> id [{{ item?.id }}]</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
+
+                                </v-list-item-group>
+                            </v-list>
+                        </v-expansion-panel-text>
+
+                    </v-expansion-panel>
+
+                    <v-expansion-panel title="Advent">
+                        <v-expansion-panel-text>
+                            <v-list>
+                                <v-list-item
+                                    v-for="(item, i) in days.filter(d => d._periodType == 'advent').sort((a, b) => a?._periodWeekNumber - b?._periodWeekNumber).sort((a, b) => a?._dayOfWeek - b?._dayOfWeek)"
+                                    :key="i" :value="item" color="primary">
+                                    <v-list-item-title @click="edit(item)">
+                                        {{ item?._feastName }} {{ item?._dayName }} - {{ item?._weekDay }} - week [{{
+                                            item?._periodWeekNumber }}] - id [{{ item?.id }}]
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-expansion-panel-text>
+                    </v-expansion-panel>
+                    <v-expansion-panel title="Christmas">
+                        <v-expansion-panel-text>
+                            <v-list>
+                                <v-list-item
+                                    v-for="(item, i) in days.filter(d => d._periodType == 'christmas').sort((a, b) => a?._periodWeekNumber - b?._periodWeekNumber).sort((a, b) => a?._dayOfWeek - b?._dayOfWeek)"
+                                    :key="i" :value="item" color="primary">
+                                    <v-list-item-title @click="edit(item)">
+                                        {{ item?._feastName }} {{ item?._dayName }} - {{ item?._weekDay }} - week [{{
+                                            item?._periodWeekNumber }}] - id [{{ item?.id }}]
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-expansion-panel-text>
+
+                    </v-expansion-panel>
+
+                    <v-expansion-panel title="Lent">
+                        <v-expansion-panel-text>
+                            <v-list>
+                                <v-list-item
+                                    v-for="(item, i) in days.filter(d => d._periodType == 'lent').sort((a, b) => a?._dayOfWeek - b?._dayOfWeek).sort((a, b) => a?._periodWeekNumber - b?._periodWeekNumber)"
+                                    :key="i" :value="item" color="primary">
+                                    <v-list-item-title @click="edit(item)">
+                                        {{ item?._feastName }} {{ item?._dayName }} - {{ item?._weekDay }} - week [{{
+                                            item?._periodWeekNumber }}] - id [{{ item?.id }}]
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-expansion-panel-text>
+
+                    </v-expansion-panel>
+
+                    <v-expansion-panel title="Holy Week">
+                        <v-expansion-panel-text>
+                            <v-list>
+                                <v-list-item
+                                    v-for="(item, i) in days.filter(d => d._periodType == 'holyweek').sort((a, b) => a?._periodWeekNumber - b?._periodWeekNumber).sort((a, b) => a?._dayOfWeek - b?._dayOfWeek)"
+                                    :key="i" :value="item" color="primary">
+                                    <v-list-item-title @click="edit(item)">
+                                        {{ item?._feastName }} {{ item?._dayName }} - {{ item?._weekDay }} - week [{{
+                                            item?._periodWeekNumber }}] - id [{{ item?.id }}]
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-expansion-panel-text>
+
+                    </v-expansion-panel>
+
+                    <v-expansion-panel title="Easter">
+                        <v-expansion-panel-text>
+                            <v-list>
+                                <v-list-item
+                                    v-for="(item, i) in days.filter(d => d._periodType == 'easter').sort((a, b) => a?._dayOfWeek - b?._dayOfWeek).sort((a, b) => a?._periodWeekNumber - b?._periodWeekNumber)"
+                                    :key="i" :value="item" color="primary">
+                                    <v-list-item-title @click="edit(item)">
+                                        {{ item?._feastName }} {{ item?._dayName }} - {{ item?._weekDay }} - week [{{
+                                            item?._periodWeekNumber }}] - id [{{ item?.id }}]
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-expansion-panel-text>
+
+                    </v-expansion-panel>
+
+                    <v-expansion-panel title="Dates">
+                        <v-expansion-panel-text>
+                            <v-list>
+                                <v-list-item v-for="(item, i) in days.filter(d => d._date)" :key="i" :value="item"
+                                    color="primary">
+                                    <v-list-item-title @click="edit(item)">
+                                        {{ item?._date }} {{ item?._feastName }} {{ item?._dayName }} - {{
+                                            item?._weekDay }} -
+                                        week [{{ item?._periodWeekNumber }}] - id [{{ item?.id }}]
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-expansion-panel-text>
+
+                    </v-expansion-panel>
+
+                    <v-expansion-panel title="Feasts">
+                        <v-expansion-panel-text>
+                            <v-list>
+                                <v-list-item v-for="(item, i) in days.filter(d => d._feast)" :key="i" :value="item"
+                                    color="primary">
+                                    <v-list-item-title @click="edit(item)">
+                                        {{ item?._date }} {{ item?._feastName }} {{ item?._dayName }} - {{
+                                            item?._weekDay }} -
+                                        week [{{ item?._periodWeekNumber }}] - id [{{ item?.id }}]
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-expansion-panel-text>
+
+                    </v-expansion-panel>
+                </v-expansion-panels>
+            </v-col>
+        </v-row>
+
+        <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title>Edit Day</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                        <v-btn variant="text" @click="deleteItem()">
+                            Delete
+                        </v-btn>
+                        <v-btn variant="text" @click="updateItem()">
+                            Save
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <day-edit></day-edit>
+            </v-card>
+        </v-dialog>
+
+        
+    <!-- Confirmation dialog -->
+    <v-dialog v-model="showConfirmDialog" max-width="290">
+      <v-card>
+        <v-card-title class="headline">Подтвердить удаление</v-card-title>
+        <v-card-text>
+          Уверен?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="confirmDelete">Подтвердить</v-btn>
+          <v-btn color="red darken-1" text @click="closeConfirmDialog">Отмена</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    </v-container>
+</template>
+
+<script setup>
+
+import { ref } from 'vue'
+import { useCollection, useFirestore } from 'vuefire'
+import { collection, query, orderBy } from 'firebase/firestore'
+
+import DayEdit from '@/components/admin/DayEditPage.vue';
+
+const dialog = ref(false);
+
+const showConfirmDialog = ref(false);
+
+import { useDayStore } from '@/stores/day'
+const dayStore = useDayStore()
+const currentItem = ref({})
+
+function edit(item) {
+    console.log(item)
+    dialog.value = true;
+    currentItem.value = item
+    dayStore.setDayToEdit(item);
+}
+
+const db = useFirestore()
+const days = useCollection(query(collection(db, 'days'), orderBy('_weekNum')))
+
+function updateItem() {
+    dayStore.updateDay(currentItem.value)
+    dialog.value = false;
+}
+
+function deleteItem() {
+    showConfirmDialog.value = true
+}
+
+function closeConfirmDialog() {
+      showConfirmDialog.value = false; // Hide the dialog
+    }
+
+  function  confirmDelete() {
+      dayStore.deleteDay(currentItem.value);
+      closeConfirmDialog(); // Close dialog after deletion
+      dialog.value = false
+    }
+
+</script>
+```
+
+### src/components/admin/TableList.vue
+```
+<template>
+    <v-container fluid>
+        <v-row dense>
+            <v-col cols="12" sm="6">
+                <v-select
+          v-model="selectedTable"
+          :hint="`${selectedTable}`"
+          :items="tablesModel"
+          label="Tables"
+          persistent-hint
+          return-object
+          single-line
+        ></v-select>
+
+            </v-col>
+        </v-row>
+      <v-row dense>
+        <v-col cols="12" sm="12" v-if="devMode">
+          <v-card flat>
+            <v-card-actions >
+              <v-spacer></v-spacer>
+              <v-btn @click="showAdd()">Add</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+  
+  
+        <v-col v-for="n in tables[selectedTable]" :key="n" cols="12">
+                <v-card :title="`${selectedTable} ${n[getIdProp(n)]}`"  >
+                    <v-card-text>
+                        <p v-html="JSON.stringify(n)"></p>
+                    </v-card-text>
+                    
+                </v-card>
+            </v-col>
+      </v-row>
+  
+      <v-dialog v-model="dialog" ref="my" fullscreen :scrim="false" transition="dialog-bottom-transition">
+        <v-card>
+          <v-toolbar dark color="primary">
+            <v-btn icon dark @click="dialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-toolbar-title>{{ current.title }}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn v-if="!editMode" variant="text" @click="edit(current)">
+                Изменить
+              </v-btn>
+  
+              <v-btn v-if="editMode" variant="text" @click="save(current)">
+                Сохранить
+              </v-btn>
+              <v-btn v-if="editMode" variant="text" @click="editMode = false">
+                Отменить
+              </v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+          <v-card-text>
+            <quill-editor v-if="editMode" theme="snow" toolbar="minimal" v-model:content="tmp.text" contentType="html" />
+  
+            <p v-if="!editMode" v-html="current.text">
+  
+            </p>
+  
+          </v-card-text>
+  
+        </v-card>
+      </v-dialog>
+  
+  
+      <v-dialog v-model="dialogAdd" fullscreen :scrim="false" transition="dialog-bottom-transition">
+        <v-card>
+          <v-toolbar dark color="primary">
+            <v-btn icon dark @click="dialogAdd = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-toolbar-title> Add Note</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+  
+              <v-btn variant="text" @click="add(addItem)">
+                Сохранить
+              </v-btn>
+              <v-btn  variant="text" @click="dialogAdd = false">
+                Отменить
+              </v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+          <v-card-text>
+            <v-row>
+                <v-col cols="12" sm="6" class="mb-2">
+                    <v-text-field v-model="addItem.title" hint="Назва уводзін" label="Назва"></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="12" class="mb-5">
+                  <quill-editor theme="snow" toolbar="minimal" v-model:content="addItem.text" contentType="html" />
+                </v-col>
+            </v-row>
+  
+  
+          </v-card-text>
+  
+        </v-card>
+      </v-dialog>
+  
+  
+    </v-container>
+  </template>
+  
+  
+  <script setup>
+  import tables from '@/json'
+console.log(tables)
+  import { ref } from 'vue'
+  
+  import { useCollection, useFirestore } from 'vuefire'
+  import { collection, orderBy, query, doc, updateDoc, setDoc, addDoc } from 'firebase/firestore'
+
+  
+
+const tablesModel = ref(Object.getOwnPropertyNames(tables));
+console.log(tablesModel.value)
+
+const selectedTable = ref(tablesModel.value[0]);
+
+function getIdProp(obj){
+    var props = Object.getOwnPropertyNames(obj);
+    var id = props.find(x => x.indexOf("ID") != -1);
+
+    return id; 
+}
+
+  const devMode = false
+  
+  const db = useFirestore()
+  const dialog = ref(false)
+  
+  const dialogAdd = ref(false)
+  const addItem = ref({
+    text:""
+  })
+  
+  const current = ref({})
+  const tmp = ref({})
+  const editMode = ref(false)
+  
+  
+  function strippedHtml(value) {
+    let regex = /(<([^>]+)>)/ig;
+    return value.replace(regex, "");
+  }
+  
+  function select(item) {
+    current.value = item;
+    dialog.value = true
+  }
+  
+  function edit(item) {
+    tmp.value = Object.assign({}, item);
+    editMode.value = true
+  }
+  
+  async function save(item) {
+    editMode.value = false
+  
+    item.text = tmp.value.text
+    const noteRef = doc(db, "notes", item.id);
+  
+    await updateDoc(noteRef, {
+      text: tmp.value.text
+    });
+  }
+  
+  function showAdd(){
+      addItem.value = {
+    text:""
+  }
+      dialogAdd.value = true
+    }
+  
+    async function add(item){
+      
+      dialogAdd.value = false
+      await addDoc(collection(db, "notes"), item)
+    
+      addItem.value = ref({
+    text:""
+  })
+    }
+  
+  </script>
+  
+  
+  <style>
+  .dialog-bottom-transition-enter-active,
+  .dialog-bottom-transition-leave-active {
+    transition: transform .2s ease-in-out;
+  }
+  </style>
+```
+
+### src/components/admin/TwoColsField.vue
+```
+<template>
+	<v-col cols="6">
+		<v-textarea :label="fieldTitle" auto-grow variant="filled" v-model="dte[fieldName]"></v-textarea>
+	</v-col>
+	<v-col cols="6">
+		<v-card class="ora-edit" flat>
+			<v-card-text class="ora-edit-text">
+				<div v-html="dte[fieldName]"></div>
+			</v-card-text>
+		</v-card>
+	</v-col>
+</template>
+
+<script setup>
+const props = defineProps({
+	dte: Object,
+	fieldName: String,
+	fieldTitle: String
+})
+
+import { useFontStore } from '@/stores/font'
+const font = useFontStore()
+
+</script>
+
+
+<style>
+.ora-edit-text p {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.v-card .ora-edit-text {
+	padding-left: 0;
+	font-size: v-bind('font.getHeader.textSize');
+	line-height: v-bind('font.getHeader.textLine');
+}
+
+/* 
+.ora-text{
+    padding-left: 0;
+    font-size: 0.975rem;
+    line-height: 1.4rem;
+    letter-spacing: 0.02rem;
+} 
+
+
+    letter-spacing: v-bind('font.getHeader.textLetterSpacing');
+
+    letter-spacing: v-bind('font.getHeader.headerLetterSpacing');
+}
+*/
+
+
+.ora-edit {}
+</style>
+```
+
+### src/components/admin/YearOptions.vue
+```
+<template>
+    <div>
+    <v-data-table :headers="headers" :items="options" class="elevation-1" >
+        <template v-slot:top>
+            <v-toolbar flat>
+                <v-toolbar-title>Year Options</v-toolbar-title>
+                <v-divider class="mx-4" inset vertical></v-divider>
+                <v-spacer></v-spacer>
+                <v-dialog v-model="dialog" max-width="500px">
+                    <template v-slot:activator="{ props }">
+                        <v-btn color="primary" class="mb-2" v-bind="props">
+                            New Item
+                        </v-btn>
+                    </template>
+                    <v-card>
+                        <v-card-title>
+                            <span class="text-h5">{{ formTitle }}</span>
+                        </v-card-title>
+
+                        <v-card-text>
+                            <v-container>
+                                <v-row>
+                                    <v-col v-for="n in Object.getOwnPropertyNames(editedItem)" :key="n" cols="12" sm="6" md="4">
+                                        <v-text-field v-model="editedItem[n]" :label="`${n}`"></v-text-field>
+                                    </v-col>   
+                                </v-row>
+                            </v-container>
+                        </v-card-text>
+
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue-darken-1" variant="text" @click="close">
+                                Cancel
+                            </v-btn>
+                            <v-btn color="blue-darken-1" variant="text" @click="save">
+                                Save
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-dialog v-model="dialogDelete" max-width="500px">
+                    <v-card>
+                        <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue-darken-1" variant="text" @click="closeDelete">Cancel</v-btn>
+                            <v-btn color="blue-darken-1" variant="text" @click="deleteItemConfirm">OK</v-btn>
+                            <v-spacer></v-spacer>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-toolbar>
+        </template>
+        <template v-slot:item.actions="{ item }">
+            <v-icon size="small" class="me-2" @click="editItem(item.raw, item.value)">
+                mdi-pencil
+            </v-icon>
+            <v-icon size="small" @click="deleteItem(item.raw, item.value)">
+                mdi-delete
+            </v-icon>
+        </template>
+        <!-- <template v-slot:no-data>
+            <v-btn color="primary" @click="initialize">
+                Reset
+            </v-btn>
+        </template> -->
+    </v-data-table></div>
+</template>
+
+
+<script>
+import { useCollection , useFirestore } from 'vuefire'
+import { collection, doc, setDoc , deleteDoc } from 'firebase/firestore'
+
+export default {
+    data: () => ({
+        dialog: false,
+        dialogDelete: false,
+        headers: [
+            {
+                title: 'Year',
+                align: 'start',
+                sortable: true,
+                key: 'id',
+            },
+            { title: 'Папялец', key: 'ashWednesday', sortable: false, },
+            { title: 'Вялікдзень', key: 'easterSunday', sortable: false, },
+            { title: 'Унеба­ў­шэсце', key: 'ascension', sortable: false, }, 
+            { title: 'Спасланне Духа Святога', key: 'pentecost', sortable: false, }, 
+            { title: 'Найсв.Цела і Крыві Хрыста', key: 'corpuschristi', sortable: false, }, 
+            { title: 'Пачатак звычайнага перад пастом', key: 'ordintaryStart1', sortable: false, }, 
+            { title: 'Колькасць тыдняў перад пастом', key: 'ordintaryWeeks1', sortable: false, }, 
+            { title: 'Пачатак звычайнага пасля Вялікадня', key: 'ordintaryStart2', sortable: false, }, 
+            { title: 'Колькасць тыдняў пасля вялікадня', key: 'ordintaryWeeks2', sortable: false, }, 
+            { title: 'Першая нядзеля адвэнту', key: 'firstAdventSunday', sortable: false, },
+            { title: 'Actions', key: 'actions', sortable: false },
+        ],
+        options: [],
+        loading: true,
+        editedIndex: -1,
+        editedItem: {
+            year: '',
+            ashWednesday: "",
+            easterSunday: "",
+            ascension: '',
+            pentecost: "",
+            corpuschristi: "",
+
+            ordintaryStart1: "",
+            ordintaryWeeks1: "",
+            ordintaryStart2: '',
+            ordintaryWeeks2: "",
+            firstAdventSunday: "",
+        },
+        defaultItem: {
+            year: '',
+            ashWednesday: "",
+            easterSunday: "",
+            ascension: '',
+            pentecost: "",
+            corpuschristi: "",
+
+            ordintaryStart1: "",
+            ordintaryWeeks1: "",
+            ordintaryStart2: '',
+            ordintaryWeeks2: "",
+            firstAdventSunday: "",
+        },
+    }),
+
+    computed: {
+        formTitle() {
+            return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        },
+    },
+
+    watch: {
+        dialog(val) {
+            val || this.close()
+        },
+        dialogDelete(val) {
+            val || this.closeDelete()
+        },
+    },
+
+    created() {
+        this.initialize()
+    },
+
+    methods: {
+        initialize() {
+            const db = useFirestore()
+            this.options = useCollection(collection(db, 'yearOptions'))
+
+            //console.log(todos)
+
+            // this.options = [
+            //     {
+            //         id: '2023',
+            //         ash: '22-2',
+            //         easter: '9-4'
+            //     },
+            //     {
+            //         id: '2024',
+            //         ash: '22-2',
+            //         easter: '9-4'
+            //     },
+            // ]
+        },
+
+        editItem(item, id) {
+            this.editedIndex = this.options.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.editedItem.year = id
+
+            this.dialog = true
+        },
+
+        deleteItem(item, id) {
+            this.editedIndex = this.options.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.editedItem.year = id
+            this.dialogDelete = true
+        },
+
+        async deleteItemConfirm() {
+            this.options.splice(this.editedIndex, 1)
+            const db = useFirestore()
+            await deleteDoc(doc(db, "yearOptions", this.editedItem.year));
+
+            this.closeDelete()
+        },
+
+        close() {
+            this.dialog = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
+        },
+
+        closeDelete() {
+            this.dialogDelete = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
+        },
+
+        async save() {
+            if (this.editedIndex > -1) {
+                Object.assign(this.options[this.editedIndex], this.editedItem);
+
+
+            const db = useFirestore()
+            const dbOptions = collection(db, "yearOptions");
+            await setDoc(doc(dbOptions, this.editedItem.year), this.editedItem);
+
+            } else {
+                
+                const db = useFirestore()
+            const dbOptions = collection(db, "yearOptions");
+            await setDoc(doc(dbOptions, this.editedItem.year), this.editedItem);
+                
+            }
+            this.close()
+        },
+    },
+}
+</script>
+    
+<!-- <script setup>
+
+import { ref } from 'vue'
+
+
+
+import { useDocument, useFirestore } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+const items = ref([
+        { id: 1, a: 'Item 1A', b: 'Item 1B' },
+        { id: 2, a: 'Item 2A', b: 'Item 2B' },
+        { id: 3, a: 'Item 3A', b: 'Item 3B' },
+      ])
+      const dialogVisible = ref(false);
+      const editMode = ref(false);
+      const editedItem = ref({ a: '', b: '' });
+
+function openAddDialog() {
+      editMode.value = false;
+      editedItem.value = { a: '', b: '' };
+      dialogVisible.value = true;
+    }
+
+    function openEditDialog(item) {
+      editMode.value = true;
+      editedItem.value = { ...item };
+      dialogVisible.value = true;
+    }
+
+    function saveItem() {
+      if (editMode.value) {
+        // Update existing item
+        const index = items.value.findIndex((item) => item.id === editedItem.value.id);
+        if (index !== -1) {
+          items.value.splice(index, 1, editedItem.value);
+        }
+      } else {
+        // Add new item
+        const newId = items.value.length + 1;
+        items.value.push({ id: newId, ...editedItem.value });
+        console.log(items)
+      }
+
+      closeDialog();
+    }
+
+    function closeDialog() {
+      dialogVisible.value= false;
+    }
+
+
+const db = useFirestore()
+
+
+const first = new Date('01.09.2023');
+const firstDayNum = getDayOfYear(first)
+const todayDayNum = getDayOfYear()
+const weekNum = Math.floor((todayDayNum - firstDayNum) / 7)
+const firstDayOfWeek = (todayDayNum - firstDayNum - weekNum * 7) == 0
+
+
+var { data: currentWeek, pending } = useDocument(doc(db, 'weeks', (weekNum + 1).toString()))
+
+var { data: current, pending } = useDocument(doc(db, 'days', (todayDayNum - firstDayNum + 1).toString()))
+
+function strippedHtml(value) {
+    if (!value)
+        return ""
+
+    let regex = /(<([^>]+)>)/ig;
+    return value.replace(regex, "");
+}
+
+function getDayOfYear(date = new Date()) {
+    const timestamp1 = Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+    );
+    const timestamp2 = Date.UTC(date.getFullYear(), 0, 0);
+
+    const differenceInMilliseconds = timestamp1 - timestamp2;
+
+    const differenceInDays = differenceInMilliseconds / 1000 / 60 / 60 / 24;
+
+    return differenceInDays;
+}
+
+</script>
+
+<style>
+.v-card .v-card-text {
+    line-height: 1.35rem !important;
+}
+
+.v-card-text {
+    font-size: 0.975rem !important;
+}
+</style> -->
+```
+
+### src/components/ItemsList.vue
+```
+<template>
+    <v-container fluid>
+        <v-row dense>
+            <v-col cols="12">
+                <v-card>
+                    <v-toolbar @click="showCalendar()" :title="dayToDisplay" style="cursor: pointer;"></v-toolbar>
+
+                    <v-list v-if="days.length > 0" density="compact">
+                        <v-list-item v-for="(item, i) in days" :key="i" :value="item" active-color="primary"
+                            :to="`/day/${dayToURL}/ora/${item.id}`">
+                            <v-list-item-title>
+                                <span v-html="item._dayName == '' ? item._feastName : item._dayName"></span>
+                                - {{ selectedDay.format("dddd") }} - {{ item.id }}
+                            </v-list-item-title>
+
+                            <template v-slot:append>
+                                <v-icon>mdi-chevron-right</v-icon>
+                            </template>
+                        </v-list-item>
+                    </v-list>
+                    <v-sheet v-else-if="loading" height="20" class="mb-5 mt-7 mr-7">
+                        <v-progress-linear class="ma-3 pa-1" indeterminate color="#2F4475"></v-progress-linear>
+                    </v-sheet>
+
+                    <v-alert class="my-3 mx-3" v-else type="info" color="#2F4475" variant="tonal">Дзень адсутнічае.
+                        Звярніцеся за
+                        падтрымкай</v-alert>
+
+
+                    <v-dialog v-model="dialog" width="auto">
+                        <v-card>
+                            <v-card-text>
+                                <VDatePicker v-model="picker" mode="date" />
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-btn variant="text" @click="dialog = false">Адмена</v-btn>
+                                <v-btn variant="text" @click="loadDay()">Выбраць</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+
+                    <v-snackbar v-model="snackbar" timeout="3000" color="error">
+                        {{ snackText }}
+                    </v-snackbar>
+                </v-card>
+            </v-col>
+
+        </v-row>
+    </v-container>
+</template>
+
+<script>
+
+import moment from 'moment'
+import 'moment/dist/locale/be'
+
+import { ref, onMounted, reactive, computed, watch } from 'vue';
+import { useCollection, useFirestore } from 'vuefire'
+import { collection, orderBy, query, doc, getDoc, getDocs, where, updateDoc, setDoc } from 'firebase/firestore'
+import { useRoute } from 'vue-router'
+import router from '@/router';
+
+export default {
+    setup() {
+
+        const snackText = ref("");
+        const snackbar = ref(false)
+
+        function showError(text) {
+            snackText.value = text
+            snackbar.value = true
+        }
+
+
+        const db = useFirestore()
+        const route = useRoute()
+
+        watch(
+            () => route.params.day,
+            async newDay => {
+                selectedDay.value = checkTargetDay()
+                await fetchItems();
+            }
+        )
+
+        function checkTargetDay() {
+            var targetDay = moment()
+            if (route.params.day) {
+                var tmp = moment(route.params.day, "DD-MM-YYYY")
+                if (tmp.isValid()) {
+                    targetDay = tmp
+                } else {
+                    showError(`Error on parsing Day param ${route.params.day}`)
+                    console.log("!!Error on parsing day param %s", route.params.day)
+                }
+            }
+            return targetDay;
+        }
+
+
+        const selectedDay = ref(checkTargetDay());
+        const picker = ref(Date.now());
+
+        const dialog = ref(false);
+
+        const days = ref([]);
+        const loading = ref(false);
+
+        const yearOptions = ref({});
+        const nextYearOptions = ref({});
+        const dynamicDates = ([]);
+
+        const dayToDisplay = computed(() => { return selectedDay.value ? selectedDay.value.format("LL") : "" });
+
+        const dayToURL = computed(() => { return selectedDay.value ? selectedDay.value.format("DD-MM-YYYY") : "" });
+
+
+        const fetchItems = async () => {
+
+            let currentYear = selectedDay.value.year()
+            loading.value = true;
+            yearOptions.value = await getYearOptions(currentYear)
+            nextYearOptions.value = await getYearOptions(currentYear + 1)
+            dynamicDates.value = getDynamicDates(yearOptions.value);
+
+            //console.log(nextYearOptions);
+            days.value = []
+            await checkFeast(selectedDay.value.date(), selectedDay.value.month() + 1)
+            await checkPeriods(yearOptions.value, selectedDay.value)
+            await checkDynamicFeasts(dynamicDates.value, selectedDay.value)
+
+            loading.value = false;
+        }
+
+        const getYearOptions = async (year) => {
+            const currentYear = year ? year : moment().year();
+            const docRef = doc(db, "yearOptions", `${currentYear}`);
+            const docSnap = await getDoc(docRef);
+            return docSnap.data();
+        };
+
+        function getDynamicDates(opts) {
+
+            let b = []; // result array
+
+            // Iterate over each property in object a
+            for (let propName in opts) {
+                if (opts.hasOwnProperty(propName)) {
+                    if (opts[propName].indexOf('.' == -1))
+                    continue;
+
+                    let momentDate = getMomentDay(opts[propName], opts.year);
+
+                    // Check if the date is valid
+                    if (momentDate.isValid()) {
+                        // Add a new item to the array b
+                        b.push({
+                            name: propName,
+                            date: momentDate
+                        });
+                    }
+                }
+            }
+
+            // find holy family fest
+            // Assuming you have Moment.js loaded
+            let date = moment(`25.12.${opts.year}`, 'DD.MM.YYYY'); // Create a Moment object for December 25th
+
+            let nextSunday = date.clone().add(1, 'week').weekday(0).add(-1, 'days'); // Get the next Sunday after 25.12
+            console.log(nextSunday.format('LL'))
+            // Create a Moment object for January 1st of the following year
+            let firstOfJanuary = moment(date).add(1, 'year').startOf('year');
+            let holyfamily = nextSunday.isBefore(firstOfJanuary) ? nextSunday : moment(`30.12.${opts.year}`, 'DD.MM.YYYY');
+console.log(opts)
+            let firstAdventSunday = getMomentDay(opts.firstAdventSunday, opts.year);
+            let christking = firstAdventSunday.clone().add(-7, 'days');
+
+
+            let easter = getMomentDay(opts.easterSunday, opts.year);
+            let heartofjesus = easter.clone().add(5 + 9 * 7, 'days');
+            let heartofmary = heartofjesus.clone().add(1, 'days');
+            let pentecost = getMomentDay(opts.pentecost, opts.year);
+            
+
+            let trinity = pentecost.clone().add(7, 'days');
+            let christthehighpriest = pentecost.clone().add(4, 'days');
+
+            let theophany = moment(`06.01.${opts.year}`, 'DD.MM.YYYY'); // Create a Moment object for January 6th
+            // If the date is a Sunday, `day(7)` will return the next Sunday (one week later).
+            let buptismofthelord = theophany.clone().day(7); // Find the next Sunday
+
+            return [
+                ...b,
+                {
+                    name: 'heartofjesus',
+                    date: heartofjesus
+                },
+
+                {
+                    name: 'heartofmary',
+                    date: heartofmary
+                },
+
+                {
+                    name: 'holyfamily',
+                    date: holyfamily
+                },
+                {
+                    name: 'christking',
+                    date: christking
+                },
+                {
+                    name: 'buptismofthelord',
+                    date: buptismofthelord
+                },
+                {
+                    name: 'trinity',
+                    date: trinity
+                },
+                {
+                    name: 'christthehighpriest',
+                    date: christthehighpriest
+                },
+            ];
+
+        }
+
+        async function checkDynamicFeasts(feasts, current) {
+
+            feasts.forEach(async f => {
+                //console.log(`${current.format('DD.MM')}-${f.date.format('DD.MM')} - ${f.name}`)
+                if (current.isSame(f.date)) {
+                    await getDayByFeast(f.name)
+                }
+            });
+        }
+
+        async function checkPeriods(opts, day) {
+            await checkAdvent(opts, day);
+            await checkChristmasTime(opts, nextYearOptions, day);
+            await checkLent(opts, day);
+            await checkEaster(opts, day);
+            await checkOrdinary(opts, day)
+        }
+
+        async function getDayByFeast(name) {
+            // get dynamic feast by name
+            const q = query(collection(db, "days"), where("_feast", "==", `${name}`));
+
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                days.value.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+            });
+        }
+
+        async function checkFeast(day, month) {
+
+            const q = query(collection(db, "days"), where("_date", "==", `${day}.${month}`));
+            console.log(`check feast ${day}.${month}`)
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+
+                days.value.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+                logDay(doc.data()._feastName)
+            });
+
+        }
+
+        async function checkAdvent(opts, current) {
+            const period = "advent"
+            const fa = getMomentDay(opts.firstAdventSunday, opts.year);
+            const christmas = moment(`${12}.${25}.${opts.year}`, "MM-DD-YYYY");
+
+            if (current.diff(fa, "days") >= 0 && current.diff(christmas, "days") < 0) {
+                logDay("advent time")
+                const diff = current.diff(fa, "days");
+                // 1 - sunday
+                // 7 - saturday
+                const dayOfWeek = diff % 7 + 1
+                const periodWeek = Math.floor(diff / 7) + 1
+
+                await getItemsForPeriod(period, dayOfWeek, periodWeek);
+            }
+        }
+
+        async function checkChristmasTime(opts, nextYearOpts, current) {
+            const period = "christmas"
+            //console.log(nextYearOpts)
+            const fl = getMomentDay(nextYearOpts.ordintaryStart1, nextYearOpts.year);
+            const weeksBefore = parseInt(nextYearOpts.ordintaryWeeks1)
+            const lastChristmas = fl.add(-weeksBefore, 'weeks').add(-2, 'days');
+            const christmas = moment(`${12}.${25}.${opts.year}`);
+
+            if (current.diff(christmas, "days") >= 0 && current.diff(lastChristmas, "days") <= 0) {
+                const diff = current.diff(christmas, "days");
+
+                // 1 - sunday
+                // 7 - saturday
+                const dayOfWeek = diff % 7 + 1
+                const periodWeek = Math.floor(diff / 7) + 1
+                console.log(`${dayOfWeek} ${periodWeek}`)
+                await getItemsForPeriod(period, dayOfWeek, periodWeek);
+            }
+        }
+
+        async function checkLent(opts, current) {
+            const period = "lent";
+            const ash = getMomentDay(opts.ashWednesday, opts.year);
+            const easter = getMomentDay(opts.easterSunday, opts.year);
+
+            if (current.diff(ash, "days") >= 0 && current.diff(easter, "days") < 0) {
+                const firstLentSunday = ash.add(4, "days");
+                const lastLentSunday = easter.add(-1, "weeks");
+
+                const startDiff = current.diff(firstLentSunday, "days");
+                const endDiff = current.diff(lastLentSunday, "days");
+                if (startDiff < 0) {
+
+                    logDay('after ash')
+                    await getItemsForPeriod(period, 7 + startDiff + 1, 0)
+
+                } else if (endDiff > 0 && endDiff < 8) {
+                    // great week
+                    let holyWeekDiff = current.diff(lastLentSunday, "days")
+                    let holyWeekPeriod = 'holyweek'
+
+                    await getItemsForPeriod(holyWeekPeriod, endDiff + 1, 1);
+
+                } else if (endDiff == 0) {
+
+                    await getDayByFeast("palmSunday");
+                    // palm sunday
+                } else {
+                    logDay('lent time')
+                    // 1 - sunday
+                    // 7 - saturday
+                    let dayOfWeek = startDiff % 7 + 1
+                    let periodWeek = Math.floor(startDiff / 7) + 1
+                    await getItemsForPeriod(period, dayOfWeek, periodWeek);
+                }
+            }
+        }
+
+        async function checkEaster(opts, current) {
+            const period = "easter"
+            const easter = getMomentDay(opts.easterSunday, opts.year);
+            //const ascension = getMomentDay(opts.ascension, opts.year);
+            const pentecost = getMomentDay(opts.pentecost, opts.year);
+
+            if (current.diff(easter, "days") >= 0 && current.diff(pentecost, "days") < 0) {
+                logDay("easter time")
+
+                const diff = current.diff(easter, "days");
+                // 1 - sunday
+                // 7 - saturday
+                const dayOfWeek = diff % 7 + 1
+                const periodWeek = Math.floor(diff / 7) + 1
+
+                await getItemsForPeriod(period, dayOfWeek, periodWeek);
+            }
+        }
+
+        async function checkOrdinary(opts, current) {
+            const period = "ordinary"
+            const ash = getMomentDay(opts.ashWednesday, opts.year);
+            //const ascension = getMomentDay(opts.ascension, opts.year);
+            const pentecost = getMomentDay(opts.pentecost, opts.year);
+            const fa = getMomentDay(opts.firstAdventSunday, opts.year);
+            const weeksBefore = parseInt(opts.ordintaryWeeks1) - 1;
+            const fo = ash.clone().add(-2, "days").add(-weeksBefore, "weeks");
+
+            if (current.diff(fo, "days") >= 0 && current.diff(ash, "days") < 0) {
+                logDay("ordinary before ash")
+                let diff = current.diff(fo, "days");
+                // 1 - sunday
+                // 7 - saturday
+                let dayOfWeek = diff % 7 + 1
+                let periodWeek = Math.floor(diff / 7) + 1
+
+                await getItemsForPeriod(period, dayOfWeek, periodWeek);
+            } else if (current.diff(pentecost, "days") > 0 && current.diff(fa, "days") < 0) {
+                let diff = current.diff(pentecost, "days");
+                // 1 - sunday
+                // 7 - saturday
+                let startWeek = parseInt(opts.ordintaryWeeks2);
+
+                let dayOfWeek = diff % 7 + 1
+                let periodWeek = Math.floor(diff / 7) + startWeek
+
+                logDay(`ordinary after pentocost. week - ${periodWeek}. day - ${dayOfWeek}`)
+
+                await getItemsForPeriod(period, dayOfWeek, periodWeek);
+            }
+        }
+
+        async function getItemsForPeriod(type, day, week) {
+            const q = query(collection(db, "days"), where("_periodType", "==", type), where("_dayOfWeek", "==", `${day}`), where("_periodWeekNumber", "==", `${week}`));
+
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                console.log(doc.data())
+                days.value.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+            });
+        }
+
+        function getMomentDay(val, year) {
+            const month = val?.split('.')[1]
+            const day = val?.split('.')[0]
+            return moment(`${month}.${day}.${year}`, "MM-DD-YYYY");
+        }
+
+        function logDay(val) {
+            console.log(`selected day: ${val}`)
+        }
+
+        function showCalendar() {
+            picker.value = selectedDay.value.toDate()
+            dialog.value = true
+        }
+
+        function loadDay() {
+            dialog.value = false
+            router.push(`/day/${moment(picker.value).format("DD-MM-YYYY")}`)
+        }
+
+        onMounted(fetchItems);
+        return {
+            days,
+            loading,
+            selectedDay,
+            dayToDisplay,
+            dialog,
+            picker,
+            snackText,
+            snackbar,
+            dayToURL,
+
+            showCalendar,
+            loadDay
+        };
+
+    }
+
+
+}
+
+
+</script>
+```
+
+### src/components/oraparts/Benedictus.vue
+```
+<template>
+    <div>
+        <v-card class="mb-2 ora" flat>
+            <v-card-title class="ora-title">
+                ПЕСНЯ З ЕВАНГЕЛЛЯ
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <div class="ora-ant" v-html="ant"></div>
+                
+                <!-- <div v-html="ps1"></div> -->
+                <p class="ora-sub">
+                    <span style="color:red">Песня Захарыі (Лк 1, 68-79)</span>
+                <br>
+                <span style="color:red">Месія і Яго папярэднік</span>
+                </p>
+                <div class="ora-psalm" v-html="ben"></div>        
+               
+                <div  class="ora-ant" v-html="ant"></div>
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+    ant: String,
+})
+
+const ben = `<p>Благаслаўлёны Пан, Бог Ізраэля, *<br>
+бо наведаў і адкупіў народ свой,
+</p>
+<p>
+і ўзняў моц збаўлення для нас *<br>
+у доме Давіда, слугі свайго.
+</p>
+<p>
+Як абвясціў спрадвеку *<br>
+вуснамі сваіх святых прарокаў,
+</p>
+<p>
+што збавіць нас ад ворагаў нашых *<br>
+і ад рук усіх, хто нас ненавідзіць.
+</p>
+<p>
+Каб праявіць міласэрнасць да айцоў нашых *<br>
+і нагадаць пра святы запавет свой.
+</p>
+<p>
+Прысягу, якую даў Абрагаму, айцу нашаму, *<br>
+дасць нам.
+</p>
+<p>
+Каб, выбаўленыя з рук ворагаў, *<br>
+мы без страху служылі Яму
+</p>
+<p>
+ў святасці і справядлівасці перад Ім *<br>
+ва ўсе дні нашыя.
+</p>
+<p>
+А ты, дзіцятка, прарокам Найвышэйшага будзеш названа, *<br>
+бо пойдзеш прад абліччам Пана падрыхтаваць шляхі Яму,
+</p>
+<p>
+каб даць народу Ягонаму пазнаць збаўленне *<br>
+праз адпушчэнне яго грахоў,
+</p>
+<p>
+дзякуючы сардэчнай міласэрнасці нашага Бога,*<br>
+у якой наведаў нас Усход з вышыні;
+</p>
+<p>
+каб асвятліць тых, *<br>
+хто сядзіць у цемры і ў цені смяротным;
+</p>
+<p>
+каб накіраваць ногі нашыя *<br>
+на шлях спакою.
+</p>
+<p>
+Хвала Айцу і Сыну, *<br>
+І Духу Святому.
+</p>
+<p>
+Як была спрадвеку, цяпер і заўсёды, *<br>
+і на векі вечныя. Амэн.
+</p>
+`
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/DayTitle.vue
+```
+    <template>
+        <div class="my-2">
+            <p class="text-h5 date">
+                {{ date }}
+            </p>
+            <p class="text-h5 day-name">
+            <div v-if="dayName" v-html="dayName"></div>  <div v-if="feastType" v-html="feastType"></div>
+            </p>
+
+
+            <p v-if="!feastType" class="text-h6 psalms">
+                {{ psalms }}
+                
+            </p>
+            <p v-if="feastComment" class="psalms">
+                <div  v-html="feastComment"></div>
+                
+            </p>
+
+        </div>
+    </template>
+    <!-- 
+    <day-title :weekDay="day._weekDay" :date="nowDate" :psalms="day._psalmWeek" :feastType="day._feastType" :dayName="day._feastName ? day._feastName : day._dayName"/> -->
+
+    <script setup>
+    const props = defineProps({
+
+        date: String,
+        psalms: String,
+        feastType: String,
+        feastComment: String,
+        dayName: String,
+
+    })
+
+
+
+    // import { ref } from 'vue'
+    // import moment from 'moment';
+    // import 'moment/dist/locale/be';
+
+    // import { useRoute } from 'vue-router'
+    // import { useCollection, useFirestore, useDocument } from 'vuefire'
+    // import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+    //const db = useFirestore()
+
+    //const days = useCollection(query(collection(db, 'days')))
+    //const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+    // const route = useRoute()
+    // const docRef = doc(db, "days", route.params.id);
+    // var { data: day, pending } = useDocument(docRef)
+
+    // const nowDate = moment(Date.now()).format('LL') 
+
+    </script>
+
+    <style>
+    .date {
+        font-weight: 700;
+        text-transform: uppercase !important;
+    }
+
+    .day-name {
+        font-weight: 700;
+    }
+
+    .psalms {
+        font-weight: 400;
+    }
+    </style>
+```
+
+### src/components/oraparts/EndOfCompline.vue
+```
+<template>
+    <div>
+
+        <v-card class="mb-2 ora" flat>
+            <v-card-title class="ora-title">
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <p><span style="color:red">Потым, нават тады, калі Камплета чытаецца індывідуальна, прамаўляецца благаслаўленне:</span> </p>
+                <br>
+                <p><span style="color:red">К.</span> <span>
+                    Ноч спакойную і смерць шчаслівую няхай дасць нам Бог усемагутны, Айцец і Сын, і Дух Святы.
+                    </span>
+                </p>
+                <p><span style="color:red">Н.</span> <span> Амэн.</span>
+                </p>
+<br>
+                <p><span style="color:red">АНТЫФОНЫ НА ЗАКАНЧЭННЕ ДА НАЙСВЯЦЕЙШАЙ ПАННЫ МАРЫІ</span> </p>
+                <br>
+                <div v-html="ant"></div>
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+  ant: String,
+})
+
+
+
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/EndOfSext.vue
+```
+<template>
+    <div>
+
+        <v-card class="mb-2 ora" flat>
+            <v-card-title class="ora-title">
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <span style="color:red">К.</span> <span>
+                        Благаславім Пана.
+                    </span><br>
+                
+                <span style="color:red">Н.</span> <span> Дзякуем Пану Богу.</span>
+                
+
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+// const props = defineProps({
+//   title: String,
+// })
+
+
+
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/EndOfVesper.vue
+```
+<template>
+    <div>
+
+        <v-card class="mb-2 ora" flat>
+            <v-card-title class="ora-title">
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <p><span style="color:red">Потым, калі прысутнічае святар або дыякан, ён рассылае народ, кажучы:</span> </p>
+                <br>
+                <p><span style="color:red">C.</span> <span> Пан з вамі.</span>
+                </p>
+                <p><span style="color:red">Н.</span> <span>  І з духам тваім.</span>
+                </p>
+                <p><span style="color:red">C.</span> <span> Няхай благаславіць вас Бог усемагутны, Айцец і Сын, і Дух Святы.</span>
+                </p>
+                <p><span style="color:red">Н.</span> <span>  Амэн.</span>
+                </p>
+<br>
+
+<p><span style="color:red">Калі адбываецца рассыланне народу, дадаецца заклік:</span> </p>
+                <br>
+                <p><span style="color:red">C.</span> <span> Ідзіце ў супакоі Хрыста.</span>
+                </p>
+                <p><span style="color:red">Н.</span> <span>  Дзякуем Пану Богу.</span>
+                </p>
+<br>
+
+<p><span style="color:red">Калі святар або дыякан адсутнічаюць ці калі Гадзіна чытаецца індывідуальна, то яна завяршаецца наступным чынам:</span> </p>
+                <br>
+                <p><span style="color:red">К.</span> <span> Няхай Пан благаславіць нас, абароніць ад усялякага зла і давядзе да жыцця вечнага.</span>
+                </p>
+                <p><span style="color:red">Н.</span> <span>  Амэн.</span>
+                </p>
+
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+// const props = defineProps({
+//   title: String,
+// })
+
+
+
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/Exam.vue
+```
+<template>
+    <div>
+
+        <v-card class="mb-2 ora" flat>
+            <v-card-title class="ora-title">
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <p><span style="color:red">Пасля гэтага пажадана зрабіць рахунак сумлення.</span>
+                </p>
+
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+// const props = defineProps({
+//   title: String,
+// })
+
+
+
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/Hymnus.vue
+```
+<template>
+    <div>
+        <v-card class="ora" flat>
+            <!-- <v-card-title :style="{ fontSize: fonts.header + 'px' }"> -->
+            <v-card-title class="ora-title">
+                ГІМН
+            </v-card-title >
+            <v-card-text class="ora-text">
+                <div v-html="text"></div>
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+  text: String,
+})
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+
+```
+
+### src/components/oraparts/Inters.vue
+```
+<template>
+    <div>
+        <v-card class="ora" flat>
+           <v-card-title class="ora-title">
+            ПРОСЬБЫ
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <div v-html="text"></div>
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+  text: String,
+})
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/Intro.vue
+```
+<template>
+    <div>
+
+        <v-card class="ora" flat>
+            <v-card-title class="ora-header">
+                {{ title }}
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <span style="color:red">К.</span> <span> Божа, прыйдзі мне на дапамогу.</span><br>
+
+                <span style="color:red">Н.</span> <span> Пане, паспяшы да мяне на паратунак.</span><br>
+
+                Хвала Айцу і Сыну,* і Духу Святому. <br>
+
+                
+                Як была спрадвеку, цяпер і заўсёды, *<br>
+                    І на векі вечныя. Амэн.
+
+                
+                
+                    Аллелюя.
+                
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+    title: String,
+})
+
+
+
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+<style>
+.ora-header{
+    font-weight: 700;
+}
+</style>
+```
+
+### src/components/oraparts/LastPrayer.vue
+```
+<template>
+    <div>
+        <v-card class="mb-2 ora" flat>
+           <v-card-title class="ora-title">
+            МАЛІТВА
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <div v-html="text"></div>
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+  text: String,
+})
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/Lectio.vue
+```
+<template>
+    <div>
+        <v-card class="mb-2 ora" flat>
+           <v-card-title class="ora-title">
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <div v-html="text"></div>
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+  text: String
+})
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/Magnificat.vue
+```
+<template>
+    <div>
+        <v-card class="mb-2 ora" flat>
+            <v-card-title class="ora-title">
+                ПЕСНЯ З ЕВАНГЕЛЛЯ
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <div class="ora-ant" v-html="ant"></div>
+                
+                <!-- <div v-html="ps1"></div> -->
+                <p class="ora-sub">
+                    <span style="color:red">Песня Марыі (Лк 1, 46-55)</span>
+                <br>
+                <span style="color:red">Радасць душы ў Пану</span>
+                </p>
+               <p>
+                <div class="ora-psalm" v-html="mag"></div>
+               </p>
+               <div class="ora-ant" v-html="ant"></div>
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+    ant: String,
+})
+
+const mag = `
+<p>
+Велічае душа мая Пана, *<br>
+і ўзрадаваўся дух мой у Богу, маім Збаўцу,
+</p>
+<p>
+бо глянуў Бог на пакору сваёй слугі. *<br>
+І цяпер благаслаўляць мяне будуць усе пакаленні.
+</p>
+<p>
+Бо вялікае ўчыніў мне Усемагутны, *<br>
+а імя Яго святое.
+</p>
+<p>
+І міласэрнасць Яго з пакалення ў пакаленне *<br>
+над тымі, хто Яго баіцца.
+</p>
+<p>
+Паказаў моц сваёй правіцы, *<br>
+рассеяў тых, хто пыхлівы сэрцам.
+</p>
+<p>
+Скінуў магутных з трону *<br>
+і ўзвысіў пакорных.
+</p>
+<p>
+Дабром галодных насыціў, *<br>
+а багатых ні з чым адправіў.
+</p>
+<p>
+Прыняў свайго слугу Ізраэля, *<br>
+памятаючы пра сваю міласэрнасць,
+</p>
+<p>
+як абяцаў бацькам нашым - *<br>
+Абрагаму і яго патомству навекі.
+</p>
+<p>
+Хвала Айцу і Сыну, *<br>
+І Духу Святому.
+</p>
+<p>
+    Як была спрадвеку, цяпер і заўсёды, *<br>
+і на векі вечныя. Амэн.
+</p>`
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/Nunc.vue
+```
+<template>
+    <div>
+        <v-card class="mb-2 ora" flat>
+            <v-card-title class="ora-title">
+                ПЕСНЯ З ЕВАНГЕЛЛЯ
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <div class="ora-ant" v-html="ant"></div>
+                
+                <!-- <div v-html="ps1"></div> -->
+                <p class="ora-sub">
+                    <span style="color:red">Песня Сімяона (Лк 2, 29-32)</span>
+                <br>
+                <span style="color:red">Хрыстус – святло народаў і хвала Ізраэля</span>
+                </p>
+                <div class="ora-psalm" v-html="nunc"></div>
+                
+                <div class="ora-ant" v-html="ant"></div>
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+    ant: String,
+})
+
+const nunc = `
+<p>
+Цяпер адпускаеш слугу Твайго, Валадару, *<br>
+паводле слова Твайго, у спакоі;
+</p>
+<p>
+бо вочы мае ўбачылі збаўленне Тваё, *<br>
+якое падрыхтаваў Ты перад абліччам усіх народаў, 
+</p>
+<p>
+святло для асвятлення язычнікаў *<br>
+і хвалу народу Твайго Ізраэля.
+</p>
+<p>
+Хвала Айцу і Сыну, *<br>
+І Духу Святому.
+</p>
+<p>
+Як была спрадвеку, цяпер і заўсёды, *<br>
+і на векі вечныя. Амэн.
+</p>`
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/PaterNoster.vue
+```
+<template>
+    <div>
+        <v-card class="mb-2 ora" flat>
+           <v-card-title class="ora-title">
+            </v-card-title>
+            <v-card-text class="ora-text">
+                Ойча наш.
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+// const props = defineProps({
+//   text: String,
+// })
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/Psalms.vue
+```
+<template>
+    <div>
+        <v-card class="ora" flat>
+            <v-card-title class="ora-title">
+                ПСАЛМОДЫЯ
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <div class="ora-ant" v-html="ant1"></div>
+                <div class="ora-psalm" v-html="ps1"></div>
+                <div class="ora-ant" v-html="ant1"></div>
+                <br v-if="ant2"><br v-if="ant2">
+                <div class="ora-ant" v-if="ant2" v-html="ant2"></div>
+                <div class="ora-psalm" v-if="ps2" v-html="ps2"></div>
+                <div class="ora-ant" v-if="ant2" v-html="ant2"></div>
+                <br v-if="ant2"><br v-if="ant2">
+                <div class="ora-ant" v-if="ant3" v-html="ant3"></div>
+                <div class="ora-psalm" v-if="ps3" v-html="ps3"></div>
+                <div class="ora-ant" v-if="ant3" v-html="ant3"></div>
+                <!-- <p><span style="color:red">1 ант.</span> <span> {{ ant1 }}</span></p>
+                <p>{{ ps1 }}</p>
+                <p><span style="color:red">2 ант.</span> <span> {{ ant2 }}</span></p>
+                <p>{{ ps2 }}</p>
+                <p><span style="color:red">3 ант.</span> <span> {{ ant3 }}</span></p>
+                <p>{{ ps3 }}</p> -->
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+    ant1: String,
+    ant2: String,
+    ant3: String,
+    ps1: String,
+    ps2: String,
+    ps3: String,
+})
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/Reading.vue
+```
+<template>
+    <div>
+        <v-card class="mb-2 ora" flat>
+           <v-card-title class="ora-title">
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <div v-html="text"></div>
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+  text: String,
+})
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oraparts/Resp.vue
+```
+<template>
+    <div>
+        <v-card class="mb-2 ora" flat>
+           <v-card-title class="ora-title">
+            </v-card-title>
+            <v-card-text class="ora-text">
+                <div v-html="text"></div>
+            </v-card-text>
+        </v-card>
+    </div>
+</template>
+
+
+<script setup>
+const props = defineProps({
+  text: String,
+})
+// import { ref } from 'vue'
+// import moment from 'moment';
+// import 'moment/dist/locale/be';
+
+// import { useRoute } from 'vue-router'
+// import { useCollection, useFirestore, useDocument } from 'vuefire'
+// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+//const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+// const route = useRoute()
+// const docRef = doc(db, "days", route.params.id);
+// var { data: day, pending } = useDocument(docRef)
+
+// const nowDate = moment(Date.now()).format('LL') 
+
+</script>
+```
+
+### src/components/oras/Completorium.vue
+```
+<template>
+    <v-container>
+        <v-row lign="center"
+      justify="center">
+      <v-col md="6" lg="6" sm="8" v-if="!pending">
+                <day-title :day="day.weekDay" :date="nowDate"/>
+                <intro :title="title"    />
+                <exam />
+                <hymnus :text="day.compHymn" />
+                <psalms :ant1="day.compAnt1" :ant2="day.compAnt2" :ant3="day.compAnt3" :ps1="day.compPs1"
+                   />
+                <reading :text="day.compR" />
+                <resp :text="day.compResp" />
+                <nunc :ant="day.compAntS" />
+                <last-prayer :text="day.compPr" />
+                <end-of-compline :ant="day.compAntM" />
+            </v-col>
+        </v-row>
+    </v-container>
+    <div>
+
+
+    </div>
+</template>
+<script setup>
+
+import { ref } from 'vue'
+import moment from 'moment';
+import 'moment/dist/locale/be';
+
+import { useRoute } from 'vue-router'
+import { useCollection, useFirestore, useDocument } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import Hymnus from '@/components/oraparts/Hymnus.vue';
+import Intro from '@/components/oraparts/Intro.vue';
+import Psalms from '@/components/oraparts/Psalms.vue';
+import Reading from '@/components/oraparts/Reading.vue';
+import Resp from '@/components/oraparts/Resp.vue';
+import Nunc from '@/components/oraparts/Nunc.vue';
+import LastPrayer from '@/components/oraparts/LastPrayer.vue';
+import EndOfCompline from '@/components/oraparts/EndOfCompline.vue';
+import Exam from '@/components/oraparts/Exam.vue';
+import DayTitle from '@/components/oraparts/DayTitle.vue';
+
+const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+const route = useRoute()
+const docRef = doc(db, "days", route.params.id);
+var { data: day, pending } = useDocument(docRef)
+
+let [d, m, y] = route.params.day.split('-').map(Number);
+const originDate = new Date(y, m - 1, d) 
+const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+const title = "КАМПЛЕТА"
+
+</script>
+```
+
+### src/components/oras/Invit.vue
+```
+<template>
+    <v-container>
+        <v-row lign="center" justify="center">
+            <v-col md="6" lg="6" sm="8" v-if="!pending">
+                <day-title :day="day.weekDay" :date="nowDate" />
+
+                <v-card class="ora" flat>
+                    <v-card-title class="ora-header">
+                        {{ title }}
+                    </v-card-title>
+                    <v-card-text class="ora-text">
+                        <span style="color:red">Заклік з’яўляецца пачаткам штодзённай літургічнай малітвы. Ён
+                            папярэднічае Гадзіне чытанняў або Ютрані, у залежнасці ад таго, якая з гэтых літургічных
+                            гадзінаў распачынае малітву дня.</span> <br>
+                        <br>
+                        <span style="color:red">К.</span> <span> Пане, адкрый мае вусны.</span><br>
+                        <span style="color:red">Н.</span> <span> І вусны мае будуць абвяшчаць Тваю хвалу.</span><br>
+                    </v-card-text>
+                </v-card>
+
+                <v-card class="ora" flat>
+                    <v-card-title class="ora-title">
+                    </v-card-title>
+                    <v-card-text class="ora-text">
+                        <div class="ora-ant" v-html="day.invitatoriumAnt"></div>
+                        <br>
+                        <div class="ora-psalm" v-html="day.invitatoriumPs1"></div>
+                        <br>
+                        <div class="ora-ant" v-html="day.invitatoriumAnt"></div>
+                        <br>
+                        <div class="ora-psalm" v-html="day.invitatoriumPs2"></div>
+                        <br>
+                        <div class="ora-ant" v-html="day.invitatoriumAnt"></div>
+                        <br>
+                        <div class="ora-psalm" v-html="day.invitatoriumPs3"></div>
+                        <br>
+                        <div class="ora-ant" v-html="day.invitatoriumAnt"></div>
+                        <br>
+                        <div class="ora-psalm" v-html="day.invitatoriumPs4"></div>
+                        <br>
+                        <div class="ora-ant" v-html="day.invitatoriumAnt"></div>
+                        <br v-if="day.invitatoriumPs5">
+                        <div class="ora-psalm" v-if="day.invitatoriumPs5" v-html="day.invitatoriumPs5"></div>
+                        <br v-if="day.invitatoriumPs5">
+                        <div class="ora-ant" v-if="day.invitatoriumPs5" v-html="day.invitatoriumAnt"></div>
+                        <br v-if="day.invitatoriumPs6">
+                        <div class="ora-psalm" v-if="day.invitatoriumPs6" v-html="day.invitatoriumPs6"></div>
+                        <br v-if="day.invitatoriumPs6">
+                        <div class="ora-ant" v-if="day.invitatoriumPs6" v-html="day.invitatoriumAnt"></div>
+                        <br v-if="day.invitatoriumPs6">
+                    </v-card-text>
+                </v-card>
+
+            </v-col>
+        </v-row>
+    </v-container>
+
+</template>
+
+<script setup>
+
+import { ref } from 'vue'
+import moment from 'moment';
+import 'moment/dist/locale/be';
+
+import { useRoute } from 'vue-router'
+import { useCollection, useFirestore, useDocument } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import DayTitle from '@/components/oraparts/DayTitle.vue';
+
+const db = useFirestore()
+
+const route = useRoute()
+const docRef = doc(db, "days", route.params.id);
+var { data: day, pending } = useDocument(docRef)
+
+let [d, m, y] = route.params.day.split('-').map(Number);
+const originDate = new Date(y, m - 1, d)
+const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+const title = "ЗАКЛІК"
+
+</script>
+```
+
+### src/components/oras/Laudes.vue
+```
+<template>
+    <v-container fill-height fluid>
+        <v-row lign="center"
+      justify="center">
+            <v-col md="6" lg="6" sm="8" v-if="!pending">
+                <day-title :date="nowDate" :psalms="day._psalmWeek" :feastType="day._feastType" :feastComment="day.feastComment" :dayName="day._feastName ? day._feastName : day._dayName"/>
+                <intro title="ЮТРАНЬ" />
+                <hymnus :text="day.laudesHymn" />
+                <psalms :ant1="day.laudesAnt1" :ant2="day.laudesAnt2" :ant3="day.laudesAnt3" :ps1="day.laudesPs1"
+                    :ps2="day.laudesPs2" :ps3="day.laudesPs3" />
+                <reading :text="day.laudesR" />
+                <benedictus :ant="day.laudesAntBen" />
+                <inters :text="day.laudesInter" />
+                <pater-noster />
+                <last-prayer :text="day.laudesPr" />
+                <end-of-vesper/>
+            </v-col>
+
+        </v-row>
+    </v-container>
+    <div>
+
+
+    </div>
+</template>
+<script setup>
+
+import { ref } from 'vue'
+import moment from 'moment';
+import 'moment/dist/locale/be';
+
+import { useRoute } from 'vue-router'
+import { useCollection, useFirestore, useDocument } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import Hymnus from '@/components/oraparts/Hymnus.vue';
+import Intro from '@/components/oraparts/Intro.vue';
+import Psalms from '@/components/oraparts/Psalms.vue';
+import Reading from '@/components/oraparts/Reading.vue';
+import Resp from '@/components/oraparts/Resp.vue';
+import Inters from '@/components/oraparts/Inters.vue';
+import Benedictus from '@/components/oraparts/Benedictus.vue';
+import PaterNoster from '@/components/oraparts/PaterNoster.vue';
+import LastPrayer from '@/components/oraparts/LastPrayer.vue';
+import EndOfVesper from '@/components/oraparts/EndOfVesper.vue';
+import DayTitle from '@/components/oraparts/DayTitle.vue';
+
+const db = useFirestore()
+
+
+import { useFontStore } from '@/stores/font'
+
+const font = useFontStore()
+
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+const route = useRoute()
+const docRef = doc(db, "days", route.params.id);
+var { data: day, pending } = useDocument(docRef)
+
+let [d, m, y] = route.params.day.split('-').map(Number);
+const originDate = new Date(y, m - 1, d) 
+const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+
+</script>
+
+
+```
+
+### src/components/oras/Lectionis.vue
+```
+<template>
+    <v-container>
+        <v-row lign="center"
+      justify="center">
+      <v-col md="6" lg="6" sm="8" v-if="!pending">
+                <day-title :day="day.weekDay" :date="nowDate" :feastComment="day.feastComment"/>
+                <intro :title="title" />
+                <hymnus :text="day.officeOfReadingsHymn" />
+                <psalms :ant1="day.officeOfReadingsAnt1" :ant2="day.officeOfReadingsAnt2" :ant3="day.officeOfReadingsAnt3" :ps1="day.officeOfReadingsPs1"
+                    :ps2="day.officeOfReadingsPs2" :ps3="day.officeOfReadingsPs3" />
+                <resp :text="day.officeOfReadingsVers"/>
+                <lectio :text="day.officeOfReadingsR1" />
+                <lectio :text="day.officeOfReadingsR2" />   
+                <last-prayer :text="day.officeOfReadingsPr" />
+                <end-of-sext/>
+            </v-col>
+        </v-row>
+    </v-container>
+    <div>
+
+
+    </div>
+</template>
+<script setup>
+
+import { ref } from 'vue'
+import moment from 'moment';
+import 'moment/dist/locale/be';
+
+import { useRoute } from 'vue-router'
+import { useCollection, useFirestore, useDocument } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import Hymnus from '@/components/oraparts/Hymnus.vue';
+import Intro from '@/components/oraparts/Intro.vue';
+import Psalms from '@/components/oraparts/Psalms.vue';
+import Reading from '@/components/oraparts/Reading.vue';
+import Resp from '@/components/oraparts/Resp.vue';
+import Inters from '@/components/oraparts/Inters.vue';
+import Magnificat from '@/components/oraparts/Magnificat.vue';
+import PaterNoster from '@/components/oraparts/PaterNoster.vue';
+import LastPrayer from '@/components/oraparts/LastPrayer.vue';
+import EndOfSext from '@/components/oraparts/EndOfSext.vue';
+import DayTitle from '@/components/oraparts/DayTitle.vue';
+import Lectio from '@/components/oraparts/Lectio.vue';
+
+const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+const route = useRoute()
+const docRef = doc(db, "days", route.params.id);
+var { data: day, pending } = useDocument(docRef)
+
+let [d, m, y] = route.params.day.split('-').map(Number);
+const originDate = new Date(y, m - 1, d) 
+const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+
+const title = "ГАДЗІНА ЧЫТАННЯЎ"
+
+</script>
+```
+
+### src/components/oras/Non.vue
+```
+<template>
+    <v-container>
+        <v-row lign="center"
+      justify="center">
+      <v-col md="6" lg="6" sm="8" v-if="!pending">
+                <day-title :day="day.weekDay" :date="nowDate" :feastComment="day.feastComment"/>
+                <intro :title="name" />
+                <hymnus :text="day[`sext${num}Hymn`]" />
+                <psalms :ant1="day[`sext${num}Ant1`]" :ant2="day[`sext${num}Ant2`]" :ant3="day[`sext${num}Ant3`]" 
+                :ps1="day[`sext${num}Ps1`]"
+                    :ps2="day[`sext${num}Ps2`]" :ps3="day[`sext${num}Ps3`]" />
+                <reading :text="day[`sext${num}R`]" />
+                <last-prayer :text="day[`sext${num}Pr`]" />
+                <end-of-sext/>
+            </v-col>
+        </v-row>
+    </v-container>
+    <div>
+
+
+    </div>
+</template>
+<script setup>
+
+import { ref } from 'vue'
+import moment from 'moment';
+import 'moment/dist/locale/be';
+
+import { useRoute } from 'vue-router'
+import { useCollection, useFirestore, useDocument } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import Hymnus from '@/components/oraparts/Hymnus.vue';
+import Intro from '@/components/oraparts/Intro.vue';
+import Psalms from '@/components/oraparts/Psalms.vue';
+import Reading from '@/components/oraparts/Reading.vue';
+import LastPrayer from '@/components/oraparts/LastPrayer.vue';
+import EndOfSext from '@/components/oraparts/EndOfSext.vue';
+import DayTitle from '@/components/oraparts/DayTitle.vue';
+
+const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+const route = useRoute()
+const docRef = doc(db, "days", route.params.id);
+var { data: day, pending } = useDocument(docRef)
+
+let [d, m, y] = route.params.day.split('-').map(Number);
+const originDate = new Date(y, m - 1, d) 
+const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+
+const name = "МАЛІТВА ПАСЛЯ ПОЎДНЯ"
+const num = 3 // нумар палудневай малітвы
+
+</script>
+```
+
+### src/components/oras/Sext.vue
+```
+<template>
+    <v-container>
+        <v-row lign="center"
+      justify="center">
+      <v-col md="6" lg="6" sm="8" v-if="!pending">
+                <day-title :day="day.weekDay" :date="nowDate"/>
+                <intro :title="name" />
+                <hymnus :text="day[`sext${num}Hymn`]" />
+                <psalms :ant1="day[`sext${psalmDb}Ant1`]" :ant2="day[`sext${psalmDb}Ant2`]" :ant3="day[`sext${psalmDb}Ant3`]" 
+                :ps1="day[`sext${psalmDb}Ps1`]"
+                    :ps2="day[`sext${psalmDb}Ps2`]" :ps3="day[`sext${psalmDb}Ps3`]" />
+                <reading :text="day[`sext${num}R`]" />
+                <last-prayer :text="day[`sext${num}Pr`]" />
+                <end-of-sext/>
+            </v-col>
+        </v-row>
+    </v-container>
+    <div>
+
+
+    </div>
+</template>
+<script setup>
+
+import { ref } from 'vue'
+import moment from 'moment';
+import 'moment/dist/locale/be';
+
+import { useRoute } from 'vue-router'
+import { useCollection, useFirestore, useDocument } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import Hymnus from '@/components/oraparts/Hymnus.vue';
+import Intro from '@/components/oraparts/Intro.vue';
+import Psalms from '@/components/oraparts/Psalms.vue';
+import Reading from '@/components/oraparts/Reading.vue';
+import LastPrayer from '@/components/oraparts/LastPrayer.vue';
+import EndOfSext from '@/components/oraparts/EndOfSext.vue';
+import DayTitle from '@/components/oraparts/DayTitle.vue';
+
+const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+const route = useRoute()
+const docRef = doc(db, "days", route.params.id);
+var { data: day, pending } = useDocument(docRef)
+
+let [d, m, y] = route.params.day.split('-').map(Number);
+const originDate = new Date(y, m - 1, d) 
+const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+
+const name = "МАЛІТВА АПОЎДНІ"
+const num = 2 // нумар палудневай малітвы
+const psalmDb = 1 // все псальмы одинаковые, храняться в первом из дневных часов
+
+</script>
+```
+
+### src/components/oras/Terz.vue
+```
+<template>
+    <v-container>
+        <v-row lign="center"
+      justify="center">
+      <v-col md="6" lg="6" sm="8" v-if="!pending">
+                <day-title :day="day.weekDay" :date="nowDate"/>
+                <intro :title="name" />
+                <hymnus :text="day[`sext${num}Hymn`]" />
+                <psalms :ant1="day[`sext${psalmDb}Ant1`]" :ant2="day[`sext${psalmDb}Ant2`]" :ant3="day[`sext${psalmDb}Ant3`]" 
+                :ps1="day[`sext${psalmDb}Ps1`]"
+                    :ps2="day[`sext${psalmDb}Ps2`]" :ps3="day[`sext${psalmDb}Ps3`]" />
+                <reading :text="day[`sext${num}R`]" />
+                <last-prayer :text="day[`sext${num}Pr`]" />
+                <end-of-sext/>
+            </v-col>
+        </v-row>
+    </v-container>
+    <div>
+
+
+    </div>
+</template>
+<script setup>
+
+import { ref } from 'vue'
+import moment from 'moment';
+import 'moment/dist/locale/be';
+
+import { useRoute } from 'vue-router'
+import { useCollection, useFirestore, useDocument } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import Hymnus from '@/components/oraparts/Hymnus.vue';
+import Intro from '@/components/oraparts/Intro.vue';
+import Psalms from '@/components/oraparts/Psalms.vue';
+import Reading from '@/components/oraparts/Reading.vue';
+import LastPrayer from '@/components/oraparts/LastPrayer.vue';
+import EndOfSext from '@/components/oraparts/EndOfSext.vue';
+import DayTitle from '@/components/oraparts/DayTitle.vue';
+
+const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+const route = useRoute()
+const docRef = doc(db, "days", route.params.id);
+var { data: day, pending } = useDocument(docRef)
+
+let [d, m, y] = route.params.day.split('-').map(Number);
+const originDate = new Date(y, m - 1, d) 
+const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+
+const name = "МАЛІТВА ПЕРАД ПОЎДНЕМ"
+const num = 1 // нумар палудневай малітвы
+const psalmDb = 1 // все псальмы одинаковые, храняться в первом из дневных часов
+
+</script>
+```
+
+### src/components/oras/Vesper.vue
+```
+<template>
+    <v-container>
+        <v-row lign="center"
+      justify="center">
+      <v-col md="6" lg="6" sm="8" v-if="!pending">
+                <day-title :day="day.weekDay" :date="nowDate" :feastComment="day.feastComment"/>
+                <intro title="НЕШПАРЫ" />
+                <hymnus :text="day.vesperHymn" />
+                <psalms :ant1="day.vesperAnt1" :ant2="day.vesperAnt2" :ant3="day.vesperAnt3" :ps1="day.vesperPs1"
+                    :ps2="day.vesperPs2" :ps3="day.vesperPs3" />
+                <reading :text="day.vesperR" />
+                <magnificat :ant="day.vesperAntMag" />
+                <inters :text="day.vesperInter" />
+                <pater-noster />
+                <last-prayer :text="day.vesperPr == '' ? day.laudesPr : day.vesperPr" />
+                <end-of-vesper/>
+            </v-col>
+        </v-row>
+    </v-container>
+    <div>
+
+
+    </div>
+</template>
+<script setup>
+
+import { ref } from 'vue'
+import moment from 'moment';
+import 'moment/dist/locale/be';
+
+import { useRoute } from 'vue-router'
+import { useCollection, useFirestore, useDocument } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import Hymnus from '@/components/oraparts/Hymnus.vue';
+import Intro from '@/components/oraparts/Intro.vue';
+import Psalms from '@/components/oraparts/Psalms.vue';
+import Reading from '@/components/oraparts/Reading.vue';
+import Resp from '@/components/oraparts/Resp.vue';
+import Inters from '@/components/oraparts/Inters.vue';
+import Magnificat from '@/components/oraparts/Magnificat.vue';
+import PaterNoster from '@/components/oraparts/PaterNoster.vue';
+import LastPrayer from '@/components/oraparts/LastPrayer.vue';
+import EndOfVesper from '@/components/oraparts/EndOfVesper.vue';
+import DayTitle from '@/components/oraparts/DayTitle.vue';
+
+const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+const route = useRoute()
+const docRef = doc(db, "days", route.params.id);
+var { data: day, pending } = useDocument(docRef)
+
+let [d, m, y] = route.params.day.split('-').map(Number);
+const originDate = new Date(y, m - 1, d) 
+const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+
+</script>
+```
+
+### src/components/OrasList.vue
+```
+<template>
+    <v-container fluid>
+        <v-row dense>
+            <v-col cols="12" v-if="!pending">
+                <div class="text-h6"> <span v-html="day._dayName == '' ? day._feastName : day._dayName"></span> - {{ day._weekDay }}</div>
+
+                <v-list>
+                    <v-list-item v-for="(item, i) in oras" :key="i" :value="item" active-color="primary" :to="item.to">
+                        <v-list-item-title>
+                            {{ item.title }}
+                        </v-list-item-title>
+
+                        <template v-slot:append>
+                            <v-icon>mdi-chevron-right</v-icon>
+                        </template>
+                    </v-list-item>
+                </v-list>
+
+
+            </v-col>
+
+        </v-row></v-container>
+</template>
+
+<script setup>
+
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { useCollection, useFirestore, useDocument } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+
+const db = useFirestore()
+
+//const days = useCollection(query(collection(db, 'days')))
+//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+
+const route = useRoute()
+const docRef = doc(db, "days", route.params.id);
+var { data: day, pending } = useDocument(docRef)
+
+
+import { useDayStore } from '@/stores/day'
+const dayStore = useDayStore()
+dayStore.setDayToEdit(day);
+
+const oras = [
+    {
+        title: "Заклік",
+        to: `/day/${route.params.day}/ora/${route.params.id}/invitatorium`
+    },
+    {
+        title: "Гадзіна чытанняў",
+        to: `/day/${route.params.day}/ora/${route.params.id}/lectionis`
+    },
+    {
+        title: "Ютрань",
+        to: `/day/${route.params.day}/ora/${route.params.id}/laudes`
+    },
+    {
+        title: "Малітва перад поўднем",
+        to: `/day/${route.params.day}/ora/${route.params.id}/terz`
+    },
+    {
+        title: "Малітва апоўдні",
+        to: `/day/${route.params.day}/ora/${route.params.id}/sext`
+    },
+    {
+        title: "Малітва пасля поўдня",
+        to: `/day/${route.params.day}/ora/${route.params.id}/non`
+    },
+    {
+        title: "Нешпары",
+        to: `/day/${route.params.day}/ora/${route.params.id}/vesper`
+    },
+    {
+        title: "Камплета",
+        to: `/day/${route.params.day}/ora/${route.params.id}/completorium`
+    },
+
+]
+
+</script>
+```
+
+### src/layouts/default/AppBar.vue
+```
+<template>
+  <div>
+    <v-app-bar color="teal-darken-1">
+      <template v-slot:image>
+        <!-- <v-img gradient="to bottom left, #2F4475, #2F4475"></v-img> -->
+      </template>
+
+      <!-- <template v-slot:prepend>
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    </template> -->
+
+      <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <v-app-bar-title> <span style="cursor: pointer;" @click="goHome()">My
+          Brev</span></v-app-bar-title>
+
+      <v-spacer></v-spacer>
+
+      <!-- <v-btn icon>
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+
+    <v-btn icon>
+      <v-icon>mdi-heart</v-icon>
+    </v-btn> -->
+      <v-btn icon id="menu-activator">
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+
+      <v-menu activator="#menu-activator">
+        <v-card class="mx-auto" max-width="300" tile>
+          <v-list dense>
+            <v-list-item link v-for="(item, i) in menu" :key="i" :value="item" :to="item.to">
+              <template v-slot:prepend>
+                <v-icon :icon="item.icon"></v-icon>
+              </template>
+              <v-list-item-title v-text="item.text"></v-list-item-title>
+            </v-list-item>
+          </v-list>
+
+        </v-card>
+      </v-menu>
+
+
+
+    </v-app-bar>
+
+
+
+    <v-navigation-drawer v-model="drawer" location="left" temporary>
+      <v-list :items="items"></v-list>
+    </v-navigation-drawer>
+  </div>
+</template>
+
+<script setup>
+
+import router from '@/router';
+import { ref } from 'vue'
+
+const drawer = ref(false);
+const goHome = function(){
+  router.push('/')
+}
+
+const menu = [
+  {
+    text: "Bridge",
+    to: '/bridge',
+    icon: 'mdi-flag'
+  },
+  {
+    text: "Bridge List",
+    to: '/bridgeList',
+    icon: 'mdi-flag'
+  },
+  {
+    text: 'Tables',
+    to: '/tables',
+    icon: 'mdi-clock'
+  },
+  {
+    text: 'YearOptions',
+    to: '/yearOptions',
+    icon: 'mdi-clock'
+  },
+  {
+    text: 'Day List',
+    to: '/dayList',
+    icon: 'mdi-clock'
+  }
+]
+
+const items = [
+  {
+    title: 'Чытанні',
+    value: 'foo',
+  },
+  {
+    title: 'Малітвы',
+    value: 'bar',
+  },
+  {
+    title: 'Імшал',
+    value: 'fizz',
+  },
+  {
+    title: 'Агенда',
+    value: 'buzz',
+  },
+];
+
+</script>
+
+```
+
+### src/layouts/default/BottomNav.vue
+```
+<template>
+  <div>
+
+    <v-bottom-navigation :value="value" color="#2F4475" horizontal>
+
+      <v-btn v-for="(m, i) in menu" :key="i" :to="m.to" :value="i">
+        <span>{{ m.title }}</span>
+        <v-icon>{{ m.icon }}</v-icon>
+      </v-btn>
+      <v-btn value="2" @click.stop="dialog = !dialog">
+        <span>Дзень</span>
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+
+    </v-bottom-navigation>
+
+    <v-dialog v-model="dialog" width="auto">
+      <v-card>
+        <v-card-text>
+          <VDatePicker v-model="picker" mode="date" />
+        </v-card-text>
+        <v-card-actions>
+          <v-btn variant="text" @click="dialog = false">Отмена</v-btn>
+          <v-btn variant="text" @click="loadDay()">Выбрать</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+  </div>
+</template>
+
+
+<script setup>
+
+
+import moment from 'moment'
+import 'moment/dist/locale/be'
+import { ref } from 'vue'
+import router from '@/router';
+
+const value = ref(1)
+const picker = ref(Date.now());
+const dialog = ref(false);
+
+
+function go(item) {
+  router.push(item)
+}
+const yeasterday = moment().subtract(1, 'days');
+const menu = [
+  {
+    title: "Учора",
+    to: `/day/${yeasterday.format("DD-MM-YYYY")}`,
+    icon: "mdi-heart"
+  },
+  {
+    title: "Сёння",
+    to: "/",
+    icon: "mdi-heart"
+  },
+]
+
+function loadDay() {
+  dialog.value = false
+  router.push(`/day/${moment(picker.value).format("DD-MM-YYYY")}`)
+}
+
+</script>
+```
+
+### src/layouts/default/Default.vue
+```
+<template>
+  <v-app>
+    <default-bar />
+
+  <default-view />
+  </v-app>
+</template>
+
+<script setup>
+  import DefaultBar from './AppBar.vue'
+  import DefaultView from './View.vue'
+</script>
+
+```
+
+### src/layouts/default/OraBar.vue
+```
+<template>
+  <div>
+    <v-app-bar color="teal-darken-1">
+      <template v-slot:image>
+        <!-- <v-img gradient="to bottom left, #2F4475, #2F4475"></v-img> -->
+      </template>
+
+      <!-- <template v-slot:prepend>
+        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      </template> -->
+
+      <v-app-bar-nav-icon variant="text" icon="mdi-arrow-left" @click.stop="router.go(-1)"></v-app-bar-nav-icon>
+
+      <v-app-bar-title> <span>{{ getDay() }}</span></v-app-bar-title>
+
+      <v-spacer></v-spacer>
+
+      <v-btn icon @click="increaseFont()">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+
+      <v-btn icon @click="decreaseFont()">
+        <v-icon>mdi-minus</v-icon>
+      </v-btn>
+
+      <v-btn icon id="menu-activator">
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+
+      <v-menu activator="#menu-activator">
+        <v-card class="mx-auto" max-width="300" tile>
+          <v-list dense>
+              <v-list-item link v-for="(item, i) in menu" :key="i" :value="item" :to="item.to">
+                <template v-slot:prepend>
+                  <v-icon :icon="item.icon"></v-icon>
+                </template>
+                <v-list-item-title v-text="item.text" @click="item.action()"></v-list-item-title>
+              </v-list-item>
+            </v-list>
+
+        </v-card>
+      </v-menu>
+
+
+
+    </v-app-bar>
+
+    <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
+            <v-card>
+                <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title>Edit Day</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                        <v-btn variant="text" @click="updateItem()">
+                            Аднавіць
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <day-edit></day-edit>
+            </v-card>
+        </v-dialog>
+
+
+    <!-- <v-navigation-drawer v-model="drawer" location="bottom" temporary>
+        <v-list :items="items"></v-list>
+      </v-navigation-drawer> -->
+  </div>
+</template>
+  
+<script setup>
+
+
+import moment from 'moment'
+import 'moment/dist/locale/be'
+import { useRoute } from 'vue-router'
+import router from '@/router';
+import { ref } from 'vue'
+
+import DayEdit from '@/components/admin/DayEditPage.vue';
+
+import { useFontStore } from '@/stores/font'
+
+const menu = [
+{
+  text: "Змяніць",
+  icon: "mdi-minus-circle",
+  action: () => dialog.value = true
+},
+
+];
+
+const dialog = ref(false);
+
+const font = useFontStore()
+
+function increaseFont() {
+  font.increaseFont()
+}
+function decreaseFont() {
+  font.decreaseFont()
+}
+
+const route = useRoute()
+
+const goHome = function () {
+  router.push('/')
+}
+
+const getDay = function () {
+  if (route.params.day) {
+    return moment(route.params.day, "DD-MM-YYYY").format("LL")
+  } else ""
+}
+
+
+
+</script>
+  
+```
+
+### src/layouts/default/View.vue
+```
+<template>
+  <v-main>
+    <router-view />
+    <router-view name="bottomNav"></router-view>
+  </v-main>
+</template>
+
+<script setup>
+  //
+</script>
+
+```
+
+### src/layouts/simple/One.vue
+```
+<template>
+  <v-app>
+    <simple />
+  </v-app>
+</template>
+  
+<script setup>
+import DefaultBar from '@/layouts/default/AppBar.vue'
+import simple from './Simple.vue';
+
+
+import { useFontStore } from '@/stores/font'
+const font = useFontStore()
+
+</script>
+  
+
+<style>
+.ora-text p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.v-card .ora-text{
+    padding-left: 0;
+    font-size: v-bind('font.getHeader.textSize');
+    line-height: v-bind('font.getHeader.textLine');
+} 
+
+/* 
+.ora-text{
+    padding-left: 0;
+    font-size: 0.975rem;
+    line-height: 1.4rem;
+    letter-spacing: 0.02rem;
+} 
+
+
+    letter-spacing: v-bind('font.getHeader.textLetterSpacing');
+
+    letter-spacing: v-bind('font.getHeader.headerLetterSpacing');
+}
+*/
+
+.ora-header{
+    padding-left: 0;
+}
+
+.ora-title{
+    padding-left: 0;
+    color: red;
+    font-weight: 600;
+    
+    font-size: v-bind('font.getHeader.headerSize');
+    
+  }
+
+.ora{
+}
+
+.ora-ant{
+
+}
+
+.ora-psalm{
+
+}
+
+
+</style>
+```
+
+### src/layouts/simple/Simple.vue
+```
+<template>
+    <v-main>
+      <router-view name="topNav"></router-view>
+      <router-view />
+    </v-main>
+  </template>
+  
+  <script setup>
+    //
+  </script>
+  
+```
+
+### src/plugins/firebase.js
+```
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDmdP5MpLLIX0RWuYXbYsDDgPqbLHCi_sM",
+  authDomain: "ibreviaryby.firebaseapp.com",
+  projectId: "ibreviaryby",
+  storageBucket: "ibreviaryby.appspot.com",
+  messagingSenderId: "344097781816",
+  appId: "1:344097781816:web:d94141222905f629fd8ecd",
+  measurementId: "G-GP0WJ4705G",
+  databaseUrl:"https://ibreviaryby.firebaseio.com",
+};
+
+// Initialize Firebase
+const firebaseApp = initializeApp(firebaseConfig);
+export  {firebaseApp} 
+```
+
+### src/plugins/index.js
+```
+/**
+ * plugins/index.js
+ *
+ * Automatically included in `./src/main.js`
+ */
+
+// Plugins
+import { loadFonts } from './webfontloader'
+import vuetify from './vuetify'
+//import VueRouter from 'vue-router'
+import router from '../router'
+import { VueFire, VueFireAuth } from 'vuefire'
+import { firebaseApp } from './firebase'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+
+import VCalendar from 'v-calendar';
+import 'v-calendar/style.css';
+
+import { createPinia } from 'pinia'
+
+const pinia = createPinia()
+
+export function registerPlugins (app) {
+  loadFonts()
+  app
+    .use(pinia)
+    .use(vuetify)
+    .use(router)
+    .use(VCalendar, {})
+    .use(VueFire, {
+      // imported above but could also just be created here
+      firebaseApp,
+      modules: [
+        // we will see other modules later on
+        VueFireAuth(),
+      ],
+    })
+    .component('QuillEditor', QuillEditor)
+    //.component('Calendar', VCalendar)
+}
+
+```
+
+### src/plugins/vuetify.js
+```
+/**
+ * plugins/vuetify.js
+ *
+ * Framework documentation: https://vuetifyjs.com`
+ */
+
+// Styles
+import '@mdi/font/css/materialdesignicons.css'
+import 'vuetify/styles'
+
+// Composables
+import { createVuetify } from 'vuetify'
+import { VDataTable } from 'vuetify/labs/VDataTable'
+import colors from 'vuetify/lib/util/colors'
+
+// https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
+export default createVuetify({
+  components: {
+    VDataTable,
+  },
+  theme: {
+    themes: {
+      // light: {
+      //   colors: {
+      //     primary: String(colors.yellow),
+      //     secondary: '#5CBBF6',
+      //   },
+      // },
+    },
+  },
+})
+
+```
+
+### src/plugins/webfontloader.js
+```
+/**
+ * plugins/webfontloader.js
+ *
+ * webfontloader documentation: https://github.com/typekit/webfontloader
+ */
+
+export async function loadFonts () {
+  const webFontLoader = await import(/* webpackChunkName: "webfontloader" */'webfontloader')
+
+  webFontLoader.load({
+    google: {
+      families: ['Roboto:100,300,400,500,700,900&display=swap'],
+    },
+  })
+}
+
+```
+
+### src/router/index.js
+```
+// Composables
+import { createRouter, createWebHistory } from 'vue-router'
+import DefaultVue from '@/layouts/default/Default.vue'
+import OneVue from '@/layouts/simple/One.vue'
+import BridgeVue from '@/components/admin/Bridge.vue'
+import BridgeListVue from '@/components/admin/BridgeList.vue'
+import TableListVue from '@/components/admin/TableList.vue'
+import TodayVue from '@/views/Today.vue'
+import OrasListVue from '@/components/OrasList.vue'
+import VesperVue from '@/components/oras/Vesper.vue'
+import LaudesVue from '@/components/oras/Laudes.vue'
+import InvitVue from '@/components/oras/Invit.vue'
+import SextVue from '@/components/oras/Sext.vue'
+import NonVue from '@/components/oras/Non.vue'
+import TerzVue from '@/components/oras/Terz.vue'
+import CompletoriumVue from '@/components/oras/Completorium.vue'
+import LectionisVue from '@/components/oras/Lectionis.vue'
+import YearOptionsVue from '@/components/admin/YearOptions.vue'
+import BottomNavVue from '@/layouts/default/BottomNav.vue'
+import ItemsListVue from '@/components/ItemsList.vue'
+import OraBarVue from '@/layouts/default/OraBar.vue'
+import DbDayListVue from '@/components/admin/DbDayList.vue'
+
+const routes = [
+  {
+    path: '/',
+    components: {
+      default: DefaultVue,
+    },
+    children: [
+      {
+        path: '/',
+        name: 'Today',
+        components:{
+          default:ItemsListVue,
+          bottomNav: BottomNavVue
+        },
+      },
+      {
+        path: '/day/:day',
+        name: 'SelectedDay',
+        components:{
+          default:ItemsListVue,
+          bottomNav: BottomNavVue
+        },
+        props: true 
+      },
+    ]
+  },
+
+  {
+    path: '/day/:day/ora',
+    components: {
+      default: OneVue,
+      topNav: OraBarVue
+    },
+    children: [
+      {
+        path: '/day/:day/ora/:id',
+        name: 'oras',
+        components: {
+          default: OrasListVue,
+          topNav: OraBarVue
+        },
+      },
+      {
+        path: '/day/:day/ora/:id/vesper',
+        name: 'vesper',
+        components: {
+          default:VesperVue,
+          topNav: OraBarVue
+        }
+      },
+      {
+        path: '/day/:day/ora/:id/invitatorium',
+        name: 'invitatorium',
+        components: {
+          default:InvitVue,
+          topNav: OraBarVue
+        }
+      },
+      {
+        path: '/day/:day/ora/:id/laudes',
+        name: 'laudes',
+        components: {
+          default:LaudesVue,
+          topNav: OraBarVue
+        }
+      },
+      {
+        path: '/day/:day/ora/:id/sext',
+        name: 'sext',
+        components: {
+          default:SextVue,
+          topNav: OraBarVue
+        }
+      },
+      {
+        path: '/day/:day/ora/:id/non',
+        name: 'non',
+        components: {
+          default:NonVue,
+          topNav: OraBarVue
+        }
+      },
+      {
+        path: '/day/:day/ora/:id/terz',
+        name: 'terz',
+        components: {
+          default:TerzVue,
+          topNav: OraBarVue
+        }
+      },
+      {
+        path: '/day/:day/ora/:id/completorium',
+        name: 'completorium',
+        components: {
+          default:CompletoriumVue,
+          topNav: OraBarVue
+        }
+      },
+      {
+        path: '/day/:day/ora/:id/lectionis',
+        name: 'lectionis',
+        components: {
+          default:LectionisVue,
+          topNav: OraBarVue
+        }
+      },
+    ]
+  },
+
+  {
+    path: '/admin',
+    components: {
+      default: DefaultVue,
+    },
+    children: [
+      {
+        path: '/bridge',
+        name: 'bridge',
+        component: BridgeVue,
+      },
+      {
+        path: '/bridgeList',
+        name: 'bridgeList',
+        component: BridgeListVue,
+      },
+      {
+        path: '/tables',
+        name: 'tables',
+        component: TableListVue,
+      },
+      {
+        path: '/yearOptions',
+        name: 'yearOptions',
+        component: YearOptionsVue
+        ,
+      },
+      {
+        path: '/dayList',
+        name: 'dayList',
+        component: DbDayListVue
+        ,
+      }
+
+
+    ]
+  },
+
+]
+
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
+})
+
+export default router
+
+```
+
+### src/stores/day.js
+```
+// stores/fonts.js
+import { defineStore } from 'pinia'
+
+import { useCollection, useFirestore } from 'vuefire'
+import { collection, orderBy, query, doc, updateDoc, deleteDoc, setDoc, addDoc } from 'firebase/firestore'
+
+export const useDayStore = defineStore('day', {
+    state: () => {
+        return {
+            dayToEdit: {},
+            dayToDelete: {}
+        }
+    },
+    actions: {
+        setDayToEdit(dte) {
+            this.dayToEdit = dte;
+        },
+        async updateDay(dte) {
+            this.dayToEdit = dte;
+            
+            const db = useFirestore()
+            const docRef = doc(db, "days", `${dte.id}`);
+
+            await updateDoc(docRef, {
+                ...dte
+            });
+        },
+        async deleteDay(dte) {
+            this.dayToDelete = dte;
+            
+            const db = useFirestore()
+            const docRef = doc(db, "days", `${dte.id}`);
+
+            await deleteDoc(docRef, {
+                ...dte
+            });
+        }
+    },
+
+    getters: {
+        getDayToEdit: (state) => {
+            return state.dayToEdit;
+        }
+    },
+})
+```
+
+### src/stores/font.js
+```
+// stores/fonts.js
+import { defineStore } from 'pinia'
+
+export const useFontStore = defineStore('font', {
+  state: () => {
+    return { 
+        headerSize: 1.5,
+        headerLetterSpacing: 0.0125,
+        textLetterSpacing: 0.02,
+        textSize: 0.975,
+        textLine: 1.25,
+        headerColor: 'red'
+     }
+  },
+  // could also be defined as
+  // state: () => ({ count: 0 })
+  actions: {
+    decreaseFont(){
+      console.log(this.textSize)
+      this.textLetterSpacing = this.textLetterSpacing - 0.005
+      this.textSize = this.textSize - 0.1
+      this.headerSize = this.headerSize - 0.05
+      this.headerLetterSpacing = this.headerLetterSpacing - 0.005
+      this.textLine = this.textLine - 0.03
+
+    },
+    increaseFont(){
+      console.log(this.textSize)
+      this.textLetterSpacing = this.textLetterSpacing + 0.005
+      this.textSize = this.textSize + 0.1
+      this.headerSize = this.headerSize + 0.05
+      this.headerLetterSpacing = this.headerLetterSpacing + 0.05
+      this.textLine = this.textLine + 0.03
+    }
+  },
+
+  getters: {
+    getHeader: (state) => {
+      return {
+        headerSize: `${state.headerSize}rem`,
+        headerLetterSpacing: `${state.headerLetterSpacing}rem`,
+        textSize: `${state.textSize}rem`,
+        textLetterSpacing: `${state.textLetterSpacing}rem`,
+      }
+    },
+  },
+})
+```
+
+### src/views/Today.vue
+```
+<template>
+  <div>
+    <ItemsList/>
+  </div>
+  </template>
+  
+  <script setup>
+    import ItemsList from '@/components/ItemsList.vue'
+  </script>
+  
+```
+
+### src/main.js
+```
+/**
+ * main.js
+ *
+ * Bootstraps Vuetify and other plugins then mounts the App`
+ */
+
+// Components
+import App from './App.vue'
+
+// Composables
+import { createApp } from 'vue'
+
+// Plugins
+import { registerPlugins } from '@/plugins'
+
+const app = createApp(App)
+
+registerPlugins(app)
+
+app.mount('#app')
+
+```
+
+### src/App.vue
+```
+<template>
+    <router-view />
+</template>
+
+<script setup>
+  //
+</script>
+
+```

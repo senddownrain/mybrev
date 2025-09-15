@@ -1,457 +1,192 @@
 <template>
-    <v-container fluid>
-        <v-row dense>
-            <v-col cols="12">
-                <v-card>
-                    <v-toolbar @click="showCalendar()" :title="dayToDisplay" style="cursor: pointer;"></v-toolbar>
+  <v-container>
+    <!-- Панель навигации по датам -->
+    <v-row class="d-flex align-center justify-center mb-4">
+      <v-col cols="auto">
+        <v-btn icon="mdi-chevron-left" @click="goToPrevDay" :disabled="loading"></v-btn>
+      </v-col>
+      <v-col cols="auto" class="text-center" style="width: 280px;">
+        <h2 class="text-h5 font-weight-regular">
+          {{ formattedCurrentDate }}
+        </h2>
+      </v-col>
+      <v-col cols="auto">
+        <v-btn icon="mdi-chevron-right" @click="goToNextDay" :disabled="loading"></v-btn>
+      </v-col>
+    </v-row>
 
-                    <v-list v-if="days.length > 0" density="compact">
-                        <v-list-item v-for="(item, i) in days" :key="i" :value="item" active-color="primary"
-                            :to="`/day/${dayToURL}/ora/${item.id}`">
-                            <v-list-item-title>
-                                <span v-html="item._dayName == '' ? item._feastName : item._dayName"></span>
-                                - {{ selectedDay.format("dddd") }} - {{ item.id }}
-                            </v-list-item-title>
+    <!-- Состояние загрузки -->
+    <v-row v-if="loading" class="justify-center mt-16">
+      <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
+    </v-row>
 
-                            <template v-slot:append>
-                                <v-icon>mdi-chevron-right</v-icon>
-                            </template>
-                        </v-list-item>
-                    </v-list>
-                    <v-sheet v-else-if="loading" height="20" class="mb-5 mt-7 mr-7">
-                        <v-progress-linear class="ma-3 pa-1" indeterminate color="#2F4475"></v-progress-linear>
-                    </v-sheet>
+    <!-- Состояние ошибки -->
+    <v-row v-else-if="error" class="mt-8">
+      <v-col>
+        <v-alert type="error" prominent border="start" icon="mdi-alert-circle-outline">
+          <div class="text-h6">Ошибка при загрузке</div>
+          <p>{{ error }}</p>
+        </v-alert>
+      </v-col>
+    </v-row>
 
-                    <v-alert class="my-3 mx-3" v-else type="info" color="#2F4475" variant="tonal">Дзень адсутнічае.
-                        Звярніцеся за
-                        падтрымкай</v-alert>
+    <!-- Основной список доступных служб -->
+    <v-row v-else-if="days.length > 0">
+      <v-col>
+        <v-list lines="two" bg-color="transparent">
+          <v-list-item
+            v-for="day in sortedDays"
+            :key="day.id"
+             :to="`/day/${currentDate.format('YYYY-MM-DD')}/ora/${day.id}`"
+            :title="getTitle(day)"
+            :subtitle="getSubtitle(day)"
+            class="mb-2"
+            border
+            rounded
+          >
+            <template v-slot:prepend>
+              <v-icon :icon="getIcon(day)" :color="getColor(day)"></v-icon>
+            </template>
+          </v-list-item>
+        </v-list>
+      </v-col>
+    </v-row>
+    
+    <!-- Состояние, когда для дня нет данных -->
+    <v-row v-else class="text-center text-grey mt-10">
+       <v-col>
+          <v-icon size="48">mdi-book-remove-outline</v-icon>
+          <p class="mt-2">Для этого дня не найдено служб.</p>
+          <p class="text-caption">Возможно, данные еще не были импортированы в базу.</p>
+       </v-col>
+    </v-row>
 
-
-                    <v-dialog v-model="dialog" width="auto">
-                        <v-card>
-                            <v-card-text>
-                                <VDatePicker v-model="picker" mode="date" />
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-btn variant="text" @click="dialog = false">Адмена</v-btn>
-                                <v-btn variant="text" @click="loadDay()">Выбраць</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
-
-                    <v-snackbar v-model="snackbar" timeout="3000" color="error">
-                        {{ snackText }}
-                    </v-snackbar>
-                </v-card>
-            </v-col>
-
-        </v-row>
-    </v-container>
+  </v-container>
 </template>
 
-<script>
-
-import moment from 'moment'
-import 'moment/dist/locale/be'
-
-import { ref, onMounted, reactive, computed, watch } from 'vue';
-import { useCollection, useFirestore } from 'vuefire'
-import { collection, orderBy, query, doc, getDoc, getDocs, where, updateDoc, setDoc } from 'firebase/firestore'
-import { useRoute } from 'vue-router'
-import router from '@/router';
-
-export default {
-    setup() {
-
-        const snackText = ref("");
-        const snackbar = ref(false)
-
-        function showError(text) {
-            snackText.value = text
-            snackbar.value = true
-        }
-
-
-        const db = useFirestore()
-        const route = useRoute()
-
-        watch(
-            () => route.params.day,
-            async newDay => {
-                selectedDay.value = checkTargetDay()
-                await fetchItems();
-            }
-        )
-
-        function checkTargetDay() {
-            var targetDay = moment()
-            if (route.params.day) {
-                var tmp = moment(route.params.day, "DD-MM-YYYY")
-                if (tmp.isValid()) {
-                    targetDay = tmp
-                } else {
-                    showError(`Error on parsing Day param ${route.params.day}`)
-                    console.log("!!Error on parsing day param %s", route.params.day)
-                }
-            }
-            return targetDay;
-        }
-
-
-        const selectedDay = ref(checkTargetDay());
-        const picker = ref(Date.now());
-
-        const dialog = ref(false);
-
-        const days = ref([]);
-        const loading = ref(false);
-
-        const yearOptions = ref({});
-        const nextYearOptions = ref({});
-        const dynamicDates = ([]);
-
-        const dayToDisplay = computed(() => { return selectedDay.value ? selectedDay.value.format("LL") : "" });
-
-        const dayToURL = computed(() => { return selectedDay.value ? selectedDay.value.format("DD-MM-YYYY") : "" });
-
-
-        const fetchItems = async () => {
-
-            let currentYear = selectedDay.value.year()
-            loading.value = true;
-            yearOptions.value = await getYearOptions(currentYear)
-            nextYearOptions.value = await getYearOptions(currentYear + 1)
-            dynamicDates.value = getDynamicDates(yearOptions.value);
-
-            //console.log(nextYearOptions);
-            days.value = []
-            await checkFeast(selectedDay.value.date(), selectedDay.value.month() + 1)
-            await checkPeriods(yearOptions.value, selectedDay.value)
-            await checkDynamicFeasts(dynamicDates.value, selectedDay.value)
-
-            loading.value = false;
-        }
-
-        const getYearOptions = async (year) => {
-            const currentYear = year ? year : moment().year();
-            const docRef = doc(db, "yearOptions", `${currentYear}`);
-            const docSnap = await getDoc(docRef);
-            return docSnap.data();
-        };
-
-        function getDynamicDates(opts) {
-
-            let b = []; // result array
-
-            // Iterate over each property in object a
-            for (let propName in opts) {
-                if (opts.hasOwnProperty(propName)) {
-                    if (opts[propName].indexOf('.' == -1))
-                    continue;
-
-                    let momentDate = getMomentDay(opts[propName], opts.year);
-
-                    // Check if the date is valid
-                    if (momentDate.isValid()) {
-                        // Add a new item to the array b
-                        b.push({
-                            name: propName,
-                            date: momentDate
-                        });
-                    }
-                }
-            }
-
-            // find holy family fest
-            // Assuming you have Moment.js loaded
-            let date = moment(`25.12.${opts.year}`, 'DD.MM.YYYY'); // Create a Moment object for December 25th
-
-            let nextSunday = date.clone().add(1, 'week').weekday(0).add(-1, 'days'); // Get the next Sunday after 25.12
-            console.log(nextSunday.format('LL'))
-            // Create a Moment object for January 1st of the following year
-            let firstOfJanuary = moment(date).add(1, 'year').startOf('year');
-            let holyfamily = nextSunday.isBefore(firstOfJanuary) ? nextSunday : moment(`30.12.${opts.year}`, 'DD.MM.YYYY');
-console.log(opts)
-            let firstAdventSunday = getMomentDay(opts.firstAdventSunday, opts.year);
-            let christking = firstAdventSunday.clone().add(-7, 'days');
-
-
-            let easter = getMomentDay(opts.easterSunday, opts.year);
-            let heartofjesus = easter.clone().add(5 + 9 * 7, 'days');
-            let heartofmary = heartofjesus.clone().add(1, 'days');
-            let pentecost = getMomentDay(opts.pentecost, opts.year);
-            
-
-            let trinity = pentecost.clone().add(7, 'days');
-            let christthehighpriest = pentecost.clone().add(4, 'days');
-
-            let theophany = moment(`06.01.${opts.year}`, 'DD.MM.YYYY'); // Create a Moment object for January 6th
-            // If the date is a Sunday, `day(7)` will return the next Sunday (one week later).
-            let buptismofthelord = theophany.clone().day(7); // Find the next Sunday
-
-            return [
-                ...b,
-                {
-                    name: 'heartofjesus',
-                    date: heartofjesus
-                },
-
-                {
-                    name: 'heartofmary',
-                    date: heartofmary
-                },
-
-                {
-                    name: 'holyfamily',
-                    date: holyfamily
-                },
-                {
-                    name: 'christking',
-                    date: christking
-                },
-                {
-                    name: 'buptismofthelord',
-                    date: buptismofthelord
-                },
-                {
-                    name: 'trinity',
-                    date: trinity
-                },
-                {
-                    name: 'christthehighpriest',
-                    date: christthehighpriest
-                },
-            ];
-
-        }
-
-        async function checkDynamicFeasts(feasts, current) {
-
-            feasts.forEach(async f => {
-                //console.log(`${current.format('DD.MM')}-${f.date.format('DD.MM')} - ${f.name}`)
-                if (current.isSame(f.date)) {
-                    await getDayByFeast(f.name)
-                }
-            });
-        }
-
-        async function checkPeriods(opts, day) {
-            await checkAdvent(opts, day);
-            await checkChristmasTime(opts, nextYearOptions, day);
-            await checkLent(opts, day);
-            await checkEaster(opts, day);
-            await checkOrdinary(opts, day)
-        }
-
-        async function getDayByFeast(name) {
-            // get dynamic feast by name
-            const q = query(collection(db, "days"), where("_feast", "==", `${name}`));
-
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-                days.value.push({
-                    id: doc.id,
-                    ...doc.data()
-                })
-            });
-        }
-
-        async function checkFeast(day, month) {
-
-            const q = query(collection(db, "days"), where("_date", "==", `${day}.${month}`));
-            console.log(`check feast ${day}.${month}`)
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-
-                days.value.push({
-                    id: doc.id,
-                    ...doc.data()
-                })
-                logDay(doc.data()._feastName)
-            });
-
-        }
-
-        async function checkAdvent(opts, current) {
-            const period = "advent"
-            const fa = getMomentDay(opts.firstAdventSunday, opts.year);
-            const christmas = moment(`${12}.${25}.${opts.year}`, "MM-DD-YYYY");
-
-            if (current.diff(fa, "days") >= 0 && current.diff(christmas, "days") < 0) {
-                logDay("advent time")
-                const diff = current.diff(fa, "days");
-                // 1 - sunday
-                // 7 - saturday
-                const dayOfWeek = diff % 7 + 1
-                const periodWeek = Math.floor(diff / 7) + 1
-
-                await getItemsForPeriod(period, dayOfWeek, periodWeek);
-            }
-        }
-
-        async function checkChristmasTime(opts, nextYearOpts, current) {
-            const period = "christmas"
-            //console.log(nextYearOpts)
-            const fl = getMomentDay(nextYearOpts.ordintaryStart1, nextYearOpts.year);
-            const weeksBefore = parseInt(nextYearOpts.ordintaryWeeks1)
-            const lastChristmas = fl.add(-weeksBefore, 'weeks').add(-2, 'days');
-            const christmas = moment(`${12}.${25}.${opts.year}`);
-
-            if (current.diff(christmas, "days") >= 0 && current.diff(lastChristmas, "days") <= 0) {
-                const diff = current.diff(christmas, "days");
-
-                // 1 - sunday
-                // 7 - saturday
-                const dayOfWeek = diff % 7 + 1
-                const periodWeek = Math.floor(diff / 7) + 1
-                console.log(`${dayOfWeek} ${periodWeek}`)
-                await getItemsForPeriod(period, dayOfWeek, periodWeek);
-            }
-        }
-
-        async function checkLent(opts, current) {
-            const period = "lent";
-            const ash = getMomentDay(opts.ashWednesday, opts.year);
-            const easter = getMomentDay(opts.easterSunday, opts.year);
-
-            if (current.diff(ash, "days") >= 0 && current.diff(easter, "days") < 0) {
-                const firstLentSunday = ash.add(4, "days");
-                const lastLentSunday = easter.add(-1, "weeks");
-
-                const startDiff = current.diff(firstLentSunday, "days");
-                const endDiff = current.diff(lastLentSunday, "days");
-                if (startDiff < 0) {
-
-                    logDay('after ash')
-                    await getItemsForPeriod(period, 7 + startDiff + 1, 0)
-
-                } else if (endDiff > 0 && endDiff < 8) {
-                    // great week
-                    let holyWeekDiff = current.diff(lastLentSunday, "days")
-                    let holyWeekPeriod = 'holyweek'
-
-                    await getItemsForPeriod(holyWeekPeriod, endDiff + 1, 1);
-
-                } else if (endDiff == 0) {
-
-                    await getDayByFeast("palmSunday");
-                    // palm sunday
-                } else {
-                    logDay('lent time')
-                    // 1 - sunday
-                    // 7 - saturday
-                    let dayOfWeek = startDiff % 7 + 1
-                    let periodWeek = Math.floor(startDiff / 7) + 1
-                    await getItemsForPeriod(period, dayOfWeek, periodWeek);
-                }
-            }
-        }
-
-        async function checkEaster(opts, current) {
-            const period = "easter"
-            const easter = getMomentDay(opts.easterSunday, opts.year);
-            //const ascension = getMomentDay(opts.ascension, opts.year);
-            const pentecost = getMomentDay(opts.pentecost, opts.year);
-
-            if (current.diff(easter, "days") >= 0 && current.diff(pentecost, "days") < 0) {
-                logDay("easter time")
-
-                const diff = current.diff(easter, "days");
-                // 1 - sunday
-                // 7 - saturday
-                const dayOfWeek = diff % 7 + 1
-                const periodWeek = Math.floor(diff / 7) + 1
-
-                await getItemsForPeriod(period, dayOfWeek, periodWeek);
-            }
-        }
-
-        async function checkOrdinary(opts, current) {
-            const period = "ordinary"
-            const ash = getMomentDay(opts.ashWednesday, opts.year);
-            //const ascension = getMomentDay(opts.ascension, opts.year);
-            const pentecost = getMomentDay(opts.pentecost, opts.year);
-            const fa = getMomentDay(opts.firstAdventSunday, opts.year);
-            const weeksBefore = parseInt(opts.ordintaryWeeks1) - 1;
-            const fo = ash.clone().add(-2, "days").add(-weeksBefore, "weeks");
-
-            if (current.diff(fo, "days") >= 0 && current.diff(ash, "days") < 0) {
-                logDay("ordinary before ash")
-                let diff = current.diff(fo, "days");
-                // 1 - sunday
-                // 7 - saturday
-                let dayOfWeek = diff % 7 + 1
-                let periodWeek = Math.floor(diff / 7) + 1
-
-                await getItemsForPeriod(period, dayOfWeek, periodWeek);
-            } else if (current.diff(pentecost, "days") > 0 && current.diff(fa, "days") < 0) {
-                let diff = current.diff(pentecost, "days");
-                // 1 - sunday
-                // 7 - saturday
-                let startWeek = parseInt(opts.ordintaryWeeks2);
-
-                let dayOfWeek = diff % 7 + 1
-                let periodWeek = Math.floor(diff / 7) + startWeek
-
-                logDay(`ordinary after pentocost. week - ${periodWeek}. day - ${dayOfWeek}`)
-
-                await getItemsForPeriod(period, dayOfWeek, periodWeek);
-            }
-        }
-
-        async function getItemsForPeriod(type, day, week) {
-            const q = query(collection(db, "days"), where("_periodType", "==", type), where("_dayOfWeek", "==", `${day}`), where("_periodWeekNumber", "==", `${week}`));
-
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-                console.log(doc.data())
-                days.value.push({
-                    id: doc.id,
-                    ...doc.data()
-                })
-            });
-        }
-
-        function getMomentDay(val, year) {
-            const month = val?.split('.')[1]
-            const day = val?.split('.')[0]
-            return moment(`${month}.${day}.${year}`, "MM-DD-YYYY");
-        }
-
-        function logDay(val) {
-            console.log(`selected day: ${val}`)
-        }
-
-        function showCalendar() {
-            picker.value = selectedDay.value.toDate()
-            dialog.value = true
-        }
-
-        function loadDay() {
-            dialog.value = false
-            router.push(`/day/${moment(picker.value).format("DD-MM-YYYY")}`)
-        }
-
-        onMounted(fetchItems);
-        return {
-            days,
-            loading,
-            selectedDay,
-            dayToDisplay,
-            dialog,
-            picker,
-            snackText,
-            snackbar,
-            dayToURL,
-
-            showCalendar,
-            loadDay
-        };
-
+<script setup>
+import { ref, watch, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import moment from 'moment';
+import 'moment/locale/be';
+import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
+
+// --- Инициализация ---
+moment.locale('be');
+const route = useRoute();
+const router = useRouter();
+const { getLiturgicalOptionsForDate } = useLiturgicalDay();
+
+// --- Реактивное состояние ---
+const days = ref([]);
+const loading = ref(true);
+const error = ref(null);
+const currentDate = ref(moment().startOf('day'));
+
+const fetchItemsForDate = async (date) => {
+  console.log(`[ItemsList] Запускаем загрузку для даты: ${date.format('YYYY-MM-DD')}`);
+  loading.value = true;
+  days.value = [];    // Очищаем 'days'
+  error.value = null; // Сбрасываем ошибку
+  try {
+    const results = await getLiturgicalOptionsForDate(date.toDate());
+    // Помещаем результат в 'days.value', а не в 'items.value'
+    days.value = results; 
+    if (days.value.length === 0) {
+      console.warn(`[ItemsList] Для даты ${date.format('YYYY-MM-DD')} не найдено ни одного литургического элемента.`);
     }
+  } catch (e) {
+    console.error("Произошла критическая ошибка при загрузке данных:", e);
+    error.value = e.message || "Не удалось загрузить данные. Попробуйте обновить страницу.";
+  } finally {
+    loading.value = false;
+  }
+};
 
-
+// --- Навигация ---
+function navigateToDate(date) {
+  const dateString = date.format('YYYY-MM-DD');
+  // Явно указываем имя маршрута 'SelectedDay'
+  router.push({ name: 'SelectedDay', params: { day: dateString } });
 }
+const goToNextDay = () => navigateToDate(currentDate.value.clone().add(1, 'day'));
+const goToPrevDay = () => navigateToDate(currentDate.value.clone().subtract(1, 'day'));
 
+// --- Вычисляемые свойства для отображения (Computed) ---
+
+// Форматированная дата для заголовка
+const formattedCurrentDate = computed(() => {
+  const dateStr = currentDate.value.format('dddd, D MMMM YYYY');
+  return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+});
+
+// Ранги для сортировки. Торжества и праздники всегда важнее дней периода.
+const rankOrder = { 'solemnity': 1, 'feast': 2, 'memorial': 3 };
+
+// Сортировка списка: сначала праздники по рангу, потом дни периода
+const sortedDays = computed(() => {
+  return [...days.value].sort((a, b) => {
+    const rankA = a._feastType ? rankOrder[a._feastType] || 99 : 100;
+    const rankB = b._feastType ? rankOrder[b._feastType] || 99 : 100;
+    return rankA - rankB;
+  });
+});
+
+// --- Функции для форматирования списка (UI Helpers) ---
+
+const getTitle = (day) => {
+  if (day.title) return day.title; // Если есть поле title, используем его
+  if (day._feastName) return day._feastName;
+
+  const periodMap = {
+    ordinary: 'Рядовое время',
+    advent: 'Адвент',
+    lent: 'Великий Пост',
+    easter: 'Пасхальное время',
+    christmas: 'Рождественское время'
+  };
+  const periodName = periodMap[day._periodType] || 'Период';
+  const dayOfWeekMap = { 1: 'Воскресенье', 2: 'Понедельник', 3: 'Вторник', 4: 'Среда', 5: 'Четверг', 6: 'Пятница', 7: 'Суббота' };
+  const dayName = dayOfWeekMap[day._dayOfWeek] || '';
+
+  return `${periodName}, ${day._periodWeekNumber} неделя, ${dayName}`;
+};
+
+const getSubtitle = (day) => {
+  const rankMap = {
+    solemnity: 'Торжество',
+    feast: 'Праздник',
+    memorial: 'Память'
+  };
+  if (day._feastType) return rankMap[day._feastType] || 'Праздник';
+  return day._psalmWeek ? `Псалтырь: ${day._psalmWeek} нед.` : '';
+};
+
+const getIcon = (day) => {
+  if (day._feastType === 'solemnity') return 'mdi-star-circle';
+  if (day._feastType === 'feast') return 'mdi-star';
+  if (day._feastType === 'memorial') return 'mdi-label';
+  return 'mdi-calendar-blank';
+};
+
+const getColor = (day) => {
+  if (day._feastType === 'solemnity') return 'red-darken-2';
+  if (day._periodType === 'advent' || day._periodType === 'lent') return 'purple-darken-3';
+  if (day._periodType === 'easter' || day._periodType === 'christmas') return 'yellow-darken-3';
+  if (day._periodType === 'ordinary') return 'green-darken-2';
+  return 'grey';
+};
+
+
+// --- Watcher: Сердце компонента, реагирующее на смену URL ---
+watch(
+  () => route.params.day,
+  (newDay) => {
+    const targetDate = newDay ? moment(newDay, 'DD-MM-YYYY') : moment();
+    currentDate.value = targetDate;
+    fetchItemsForDate(targetDate);
+  },
+  { immediate: true } // immediate: true заставляет его сработать сразу при загрузке компонента
+);// immediate: true - для вызова при первой загрузке
 
 </script>

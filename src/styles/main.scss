@@ -1,0 +1,31 @@
+/* src/styles/settings.scss */
+
+// Определяем базовый размер шрифта для контента
+$base-content-font-size: 1rem; // 16px по умолчанию
+
+// Создаем специальный класс, который будет применяться к контейнерам с текстом молитв
+.prayer-content-area {
+  // Применяем кастомный шрифт из нашего store
+  font-family: var(--app-font-family, sans-serif);
+
+  // Применяем кастомный размер шрифта, используя CSS-функцию calc()
+  // Мы умножаем базовый размер на наш множитель из store
+  font-size: calc(#{$base-content-font-size} * var(--font-size-multiplier, 1));
+  
+  // Улучшаем читаемость
+  line-height: 1.8;
+  text-align: justify;
+
+  // Чтобы заголовки внутри тоже масштабировались
+  h1, h2, h3, h4, h5, h6 {
+    font-size: calc(1.2em * var(--font-size-multiplier, 1)); // Заголовки чуть больше
+  }
+}
+
+.prayer-content-area,
+.prayer-content-area .v-card-text,
+.prayer-content-area p {
+  font-family: var(--app-font-family, sans-serif);
+  font-size: calc(1rem * var(--font-size-multiplier, 1));
+  line-height: 1.8;
+}

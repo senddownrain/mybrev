@@ -1,5 +1,5 @@
 <template>
-    <v-container fill-height fluid>
+    <v-container fill-height fluid  class="prayer-content-area">
         <v-row lign="center"
       justify="center">
             <v-col md="6" lg="6" sm="8" v-if="!pending">
