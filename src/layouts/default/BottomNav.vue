@@ -51,7 +51,7 @@ const yeasterday = moment().subtract(1, 'days');
 const menu = [
   {
     title: "Учора",
-    to: `/day/${yeasterday.format("DD-MM-YYYY")}`,
+    to: `/day/${yeasterday.format("YYYY-MM-DD")}`,
     icon: "mdi-heart"
   },
   {

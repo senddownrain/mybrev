@@ -55,8 +55,8 @@
     <v-row v-else class="text-center text-grey mt-10">
        <v-col>
           <v-icon size="48">mdi-book-remove-outline</v-icon>
-          <p class="mt-2">Для этого дня не найдено служб.</p>
-          <p class="text-caption">Возможно, данные еще не были импортированы в базу.</p>
+          <p class="mt-2">Малітвы не знойдзены.</p>
+          <p class="text-caption">Магчыма, іх не хапае ў базе.</p>
        </v-col>
     </v-row>
 
