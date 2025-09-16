@@ -7,21 +7,25 @@
         <span>{{ m.title }}</span>
         <v-icon>{{ m.icon }}</v-icon>
       </v-btn>
-      <v-btn value="2" @click.stop="dialog = !dialog">
+      <v-btn value="2" @click="toggleCalendarDialog()">
         <span>Дзень</span>
         <v-icon>mdi-heart</v-icon>
       </v-btn>
 
     </v-bottom-navigation>
-
-    <v-dialog v-model="dialog" width="auto">
+ <v-dialog v-model="isCalendarDialogOpen" width="auto">
       <v-card>
-        <v-card-text>
-          <VDatePicker v-model="picker" mode="date" />
+        <v-card-text class="pa-0">
+          <!-- ✅ У v-date-picker есть свой v-model -->
+          <v-date-picker 
+            v-model="selectedDate" 
+            color="primary"
+            hide-header
+          ></v-date-picker>
         </v-card-text>
         <v-card-actions>
-          <v-btn variant="text" @click="dialog = false">Отмена</v-btn>
-          <v-btn variant="text" @click="loadDay()">Выбрать</v-btn>
+          <v-btn variant="text" @click="toggleCalendarDialog">Адмена</v-btn>
+          <v-btn color="primary" variant="text" @click="loadDay">Выбраць</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -37,15 +41,12 @@ import moment from 'moment'
 import 'moment/dist/locale/be'
 import { ref } from 'vue'
 import router from '@/router';
+import { useAppBar } from '@/composables/useAppBar';
 
 const value = ref(1)
-const picker = ref(Date.now());
-const dialog = ref(false);
+const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar();
+const selectedDate = ref(new Date()); // ✅ Переменная для v-date-picker
 
-
-function go(item) {
-  router.push(item)
-}
 const yeasterday = moment().subtract(1, 'days');
 const menu = [
   {
@@ -61,8 +62,8 @@ const menu = [
 ]
 
 function loadDay() {
-  dialog.value = false
-  router.push(`/day/${moment(picker.value).format("DD-MM-YYYY")}`)
+  toggleCalendarDialog();
+  router.push(`/day/${moment(selectedDate.value).format("YYYY-MM-DD")}`)
 }
 
 </script>

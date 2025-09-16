@@ -10,10 +10,10 @@
     </template> -->
 
       <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-app-bar-title> <span style="cursor: pointer;" @click="goHome()">My
+<router-link to="/" class="text-decoration-none text-white">
+      <v-app-bar-title> <span style="cursor: pointer;">My
           Brev</span></v-app-bar-title>
-
+</router-link>
       <v-spacer></v-spacer>
 
       <!-- <v-btn icon>

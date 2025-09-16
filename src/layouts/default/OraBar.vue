@@ -11,7 +11,7 @@
  
     <!-- Кнопка настроек вида, видна всем -->
     <v-btn icon @click="toggleSettingsSheet">
-      <v-icon>mdi-cog-outline</v-icon>
+      <v-icon>mdi-format-font</v-icon>
     </v-btn>
 
      <v-btn v-if="auth && auth.isAdmin" icon @click="goToEdit">

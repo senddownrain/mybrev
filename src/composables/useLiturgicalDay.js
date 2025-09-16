@@ -10,6 +10,23 @@ export function useLiturgicalDay() {
     const daysCollection = collection(db, 'days');
     moment.locale('be');
 
+    const feastNameMap = {
+        holyFamily: 'holyfamily',
+        baptismOfLord: 'buptismofthelord',
+        holyTrinity: 'trinity',
+        christKing: 'christking',
+        sacredHeartOfJesus: 'heartofjesus',
+        immaculateHeartOfMary: 'heartofmary',
+        christTheHighPriest: 'christthehighpriest',
+        ashWednesday: 'ash',
+        easterSunday: 'eastersunday',
+        pentecost: 'pentecost',
+        palmsSnday: 'palmsunday',
+        corpusChristi: 'palmsunday',
+        ascension: 'ascension'
+        // Добавьте сюда другие соответствия, если они есть
+    };
+
     // Вспомогательная функция для создания moment-объектов из нового формата
     const getMoment = (isoDateStr) => moment(isoDateStr, 'YYYY-MM-DD');
 
@@ -142,13 +159,13 @@ export function useLiturgicalDay() {
         return query(daysCollection, where('_date', '==', mDate.format('D.M')));
     };
 
-    function getDynamicFeastsQueries(mDate, year) {
+     function getDynamicFeastsQueries(mDate, year) {
         const dynamicDates = calendarStore.dynamicDatesForYear(year).value || {};
         const queries = [];
         for (const feastKey in dynamicDates) {
-            if (dynamicDates[feastKey] && dynamicDates[feastKey].isSame(mDate, 'day')) {
-                const feastCode = feastKey.replace('Sunday', '').replace('Wednesday', '');
-                queries.push(query(daysCollection, where('_feast', '==', feastCode)));
+            // Проверяем, есть ли для этого ключа соответствие в нашей карте
+            if (feastNameMap[feastKey] && dynamicDates[feastKey].isSame(mDate, 'day')) {
+                queries.push(query(daysCollection, where('_feast', '==', feastNameMap[feastKey])));
             }
         }
         return queries;
@@ -204,7 +221,72 @@ export function useLiturgicalDay() {
             }
         };
     }
+// В самом конце файла src/composables/useLiturgicalDay.js, перед return { ... }
 
-    // Экспортируем обе функции для использования в разных частях приложения
-    return { getLiturgicalOptionsForDate, runLiturgicalDiagnostics };
+    // ✅ НОВАЯ ФУНКЦИЯ ДЛЯ АУДИТА ГОДА
+    async function auditYear(year, progressCallback) {
+        console.log(`[Audit] Пачатак праверкі ${year} года...`);
+        
+        // 1. Загрузка всех необходимых данных для года
+        await calendarStore.getYearOptions(year);
+        await calendarStore.getDynamicDates(year);
+        
+        const missing = {
+            periodDays: [],
+            feasts: [],
+        };
+
+        // --- 2. ПРАВЕРКА РУХОМЫХ СВЯТАЎ ---
+ const dynamicDates = calendarStore.dynamicDatesForYear(year).value;
+        for (const feastKey in feastNameMap) {
+            const feastCode = feastNameMap[feastKey];
+            
+            const q = query(daysCollection, where('_feast', '==', feastCode));
+            const snapshot = await getDocs(q);
+            
+            if (snapshot.empty) {
+                const date = dynamicDates[feastKey] ? dynamicDates[feastKey].format('DD.MM.YYYY') : 'Дата не вылічана';
+                missing.feasts.push({ name: feastCode, date });
+            }
+        }
+
+        // --- 3. ПРАВЕРКА ЎСІХ ДЗЁН ПЕРЫЯДАЎ ---
+        const startDate = moment().year(year).startOf('year');
+        const endDate = moment().year(year).endOf('year');
+        const totalDays = endDate.diff(startDate, 'days');
+
+        for (let i = 0; i <= totalDays; i++) {
+            const currentDate = startDate.clone().add(i, 'days');
+            
+            // Используем нашу существующую логику для определения запроса
+            const periodQuery = getPeriodQuery(currentDate, year);
+
+            if (periodQuery) {
+                const snapshot = await getDocs(periodQuery);
+                if (snapshot.empty) {
+                    // Если для этого дня периода нет документа, извлекаем параметры
+                    const params = {
+                        date: currentDate.format('DD.MM.YYYY (dddd)'),
+                        type: periodQuery._query.filters.find(f => f.field.segments.includes('_periodType'))?.value,
+                        week: periodQuery._query.filters.find(f => f.field.segments.includes('_periodWeekNumber'))?.value,
+                        day: periodQuery._query.filters.find(f => f.field.segments.includes('_dayOfWeek'))?.value,
+                    };
+                    console.warn(`[Audit] НЕ ЗНОЙДЗЕНЫ ДЗЕНЬ ПЕРЫЯДУ:`, params);
+                    missing.periodDays.push(params);
+                }
+            }
+            
+            // Вызываем колбэк для обновления прогресс-бара в UI
+            if (progressCallback) {
+                progressCallback(Math.round((i / totalDays) * 100));
+            }
+        }
+        
+        console.log('[Audit] Праверка завершана.');
+        return missing;
+    }
+
+
+    // ✅ Обновляем return, чтобы экспортировать новую функцию
+    return { getLiturgicalOptionsForDate, runLiturgicalDiagnostics, auditYear };
 }

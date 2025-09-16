@@ -1,19 +1,18 @@
 <template>
   <v-container>
     <!-- Панель навигации по датам -->
-    <v-row class="d-flex align-center justify-center mb-4">
-      <v-col cols="auto">
-        <v-btn icon="mdi-chevron-left" @click="goToPrevDay" :disabled="loading"></v-btn>
-      </v-col>
-      <v-col cols="auto" class="text-center" style="width: 280px;">
-        <h2 class="text-h5 font-weight-regular">
-          {{ formattedCurrentDate }}
-        </h2>
-      </v-col>
-      <v-col cols="auto">
-        <v-btn icon="mdi-chevron-right" @click="goToNextDay" :disabled="loading"></v-btn>
-      </v-col>
-    </v-row>
+    <!-- ✅ СТАЛО (АДАПТИВНО И ЧИСТО): -->
+<div class="d-flex align-center justify-space-between pa-2 mb-2">
+  <v-btn icon="mdi-chevron-left" @click="goToPrevDay" :disabled="loading"></v-btn>
+  
+  <div class="text-center flex-grow-1 mx-2" @click="toggleCalendarDialog" style="cursor: pointer;">
+    <h2 class="text-h6 font-weight-regular text-wrap">
+      {{ formattedCurrentDate }}
+    </h2>
+  </div>
+  
+  <v-btn icon="mdi-chevron-right" @click="goToNextDay" :disabled="loading"></v-btn>
+</div>
 
     <!-- Состояние загрузки -->
     <v-row v-if="loading" class="justify-center mt-16">
@@ -70,12 +69,14 @@ import { useRoute, useRouter } from 'vue-router';
 import moment from 'moment';
 import 'moment/locale/be';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
+import { useAppBar } from '@/composables/useAppBar';
 
 // --- Инициализация ---
 moment.locale('be');
 const route = useRoute();
 const router = useRouter();
 const { getLiturgicalOptionsForDate } = useLiturgicalDay();
+const { toggleCalendarDialog,  } = useAppBar(); 
 
 // --- Реактивное состояние ---
 const days = ref([]);
@@ -89,9 +90,15 @@ const fetchItemsForDate = async (date) => {
   days.value = [];    // Очищаем 'days'
   error.value = null; // Сбрасываем ошибку
   try {
-    const results = await getLiturgicalOptionsForDate(date.toDate());
-    // Помещаем результат в 'days.value', а не в 'items.value'
-    days.value = results; 
+     const result = await getLiturgicalOptionsForDate(date.toDate());
+    if (result && result.items) {
+      // ✅ ПРИСВАИВАЕМ ИМЕННО МАССИВ 'items'
+      days.value = result.items;
+    } else {
+      // На случай, если что-то пошло не так
+      days.value = [];
+    }
+
     if (days.value.length === 0) {
       console.warn(`[ItemsList] Для даты ${date.format('YYYY-MM-DD')} не найдено ни одного литургического элемента.`);
     }
@@ -139,27 +146,27 @@ const getTitle = (day) => {
   if (day._feastName) return day._feastName;
 
   const periodMap = {
-    ordinary: 'Рядовое время',
-    advent: 'Адвент',
-    lent: 'Великий Пост',
-    easter: 'Пасхальное время',
-    christmas: 'Рождественское время'
+    ordinary: 'звычайны',
+    advent: 'адвэнту',
+    lent: 'вялікага посту',
+    easter: 'у велікодны перыяд',
+    christmas: 'Божага нараджэння'
   };
-  const periodName = periodMap[day._periodType] || 'Период';
-  const dayOfWeekMap = { 1: 'Воскресенье', 2: 'Понедельник', 3: 'Вторник', 4: 'Среда', 5: 'Четверг', 6: 'Пятница', 7: 'Суббота' };
+  const periodName = periodMap[day._periodType] || 'Перыяд';
+  const dayOfWeekMap = { 1: 'Нядзеля', 2: 'Панядзелак', 3: 'Аўторак', 4: 'Серада', 5: 'Чацвер', 6: 'Пятніца', 7: 'Субота' };
   const dayName = dayOfWeekMap[day._dayOfWeek] || '';
 
-  return `${periodName}, ${day._periodWeekNumber} неделя, ${dayName}`;
+  return `${day._periodWeekNumber} тыдзень ${periodName}, ${dayName}`;
 };
 
 const getSubtitle = (day) => {
   const rankMap = {
-    solemnity: 'Торжество',
-    feast: 'Праздник',
-    memorial: 'Память'
+    solemnity: 'Урачыстасць',
+    feast: 'Свята',
+    memorial: 'Успамін'
   };
-  if (day._feastType) return rankMap[day._feastType] || 'Праздник';
-  return day._psalmWeek ? `Псалтырь: ${day._psalmWeek} нед.` : '';
+  if (day._feastType) return rankMap[day._feastType] || 'Свята';
+  return day._psalmWeek ? `${day._psalmWeek}` : '';
 };
 
 const getIcon = (day) => {
@@ -182,7 +189,7 @@ const getColor = (day) => {
 watch(
   () => route.params.day,
   (newDay) => {
-    const targetDate = newDay ? moment(newDay, 'DD-MM-YYYY') : moment();
+    const targetDate = newDay ? moment(newDay, 'YYYY-MM-DD') : moment();
     currentDate.value = targetDate;
     fetchItemsForDate(targetDate);
   },

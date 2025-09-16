@@ -8,7 +8,8 @@
     <!-- Основной контент, когда данные загружены -->
     <div v-else-if="dayData">
       <!-- 1. Полная дата -->
-      <p class="text-subtitle-1 text-grey-darken-1">{{ formattedDate }}</p>
+               <div class="text-subtitle-1 text-grey-darken-1" v-html="formattedDate"></div>
+        
       
       <!-- 2. Название праздника или дня периода -->
       <h1 class="text-h4 font-weight-light mt-1">
@@ -17,8 +18,11 @@
       
       <!-- 3. Ранг праздника или псалтырь -->
       <p v-if="dayData._feastType || dayData._psalmWeek" class="text-subtitle-1 mt-1">
-        {{ dayData._feastType ? `Ранг: ${getRankName(dayData._feastType)}` : `Псалтыр: ${dayData._psalmWeek}` }}
+        {{ dayData._feastType ? `${getRankName(dayData._feastType)}` : `${dayData._psalmWeek}` }}
       </p>
+
+<div v-if="dayData.feastComment" lass="text-subtitle-1 mt-1" v-html="dayData.feastComment"></div>
+     
     </div>
 
     <!-- Сообщение, если данные не загрузились -->

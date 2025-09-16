@@ -6,6 +6,8 @@ import { fileURLToPath, URL } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
+import { VitePWA } from 'vite-plugin-pwa'; // Импортируем
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -26,6 +28,65 @@ export default defineConfig({
       // в ваших собственных .scss файлах.
       styles: {
         configFile: 'src/styles/settings.scss',
+      },
+    }),
+
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'masked-icon.svg'],
+      manifest: {
+        name: 'Каталіцкі малітоўнік',
+        short_name: 'Малітоўнік',
+        description: 'малітоўнік мік',
+        theme_color: '#ffffff',
+        background_color: '#ffffff',
+        display: 'standalone',
+        start_url: '.',
+        icons: [
+          {
+      src: "web-app-manifest-192x192.png",
+      sizes: "192x192",
+      type: "image/png",
+      purpose: "maskable"
+    },
+    {
+      src: "web-app-manifest-512x512.png",
+      sizes: "512x512",
+      type: "image/png",
+      purpose: "maskable"
+    }
+        ]
+
+      },
+      workbox: {
+        // ✅ СТРАТЕГИЯ КЭШИРОВАНИЯ
+        runtimeCaching: [
+          {
+            // Кэшируем API запросы к Firestore (адаптируйте URL)
+            urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'firestore-cache',
+              expiration: {
+                maxEntries: 20, // Кэшируем ~20 последних запросов
+                maxAgeSeconds: 60 * 60 * 24 * 3, // 3 дня
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            // Кэшируем шрифты Google Fonts
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
       },
     }),
   ],

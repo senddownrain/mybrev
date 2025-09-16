@@ -10,7 +10,7 @@ export const useCalendarStore = defineStore('calendar', () => {
 
     const yearOptionsCache = ref({});
     const dynamicDatesCache = ref({});
-    
+
     // --- ✅ 1. ИЗМЕНЕНИЕ: getYearOptions теперь ищет по полю, а не по ID ---
     async function getYearOptions(year) {
         if (yearOptionsCache.value[year]) {
@@ -35,49 +35,43 @@ export const useCalendarStore = defineStore('calendar', () => {
 
     // --- ✅ 2. ИЗМЕНЕНИЕ: getDynamicDates работает с новым форматом дат ---
     async function getDynamicDates(year) {
-        if (dynamicDatesCache.value[year]) {
-            return dynamicDatesCache.value[year];
-        }
-        
-        const opts = await getYearOptions(year);
-        if (!opts) return {};
-
-        // Новый, более простой способ создания moment-объектов
-        const getMoment = (isoDateStr) => moment(isoDateStr, 'YYYY-MM-DD');
-
-        const dates = {};
-        const easter = getMoment(opts.easterSunday);
-        const pentecost = getMoment(opts.pentecost);
-        const firstAdventSunday = getMoment(opts.firstAdventSunday);
-
-        // Расчет Святого Семейства (логика без изменений, но работает с moment)
-        const christmas = moment(`${year}-12-25`, 'YYYY-MM-DD');
-        const nextSunday = christmas.clone().endOf('week').add(1, 'day');
-        const firstOfJanuary = christmas.clone().add(1, 'year').startOf('year');
-        dates.holyFamily = nextSunday.isBefore(firstOfJanuary) ? nextSunday : moment(`${year}-12-30`, 'YYYY-MM-DD');
-        
-        // Расчет Крещения (логика без изменений)
-        const epiphany = moment(`${year}-01-06`, 'YYYY-MM-DD');
-        dates.baptismOfLord = epiphany.clone().day(7);
-
-        // Прочие праздники
-        dates.christKing = firstAdventSunday.clone().subtract(7, 'days');
-        dates.sacredHeartOfJesus = easter.clone().add(68, 'days');
-        dates.immaculateHeartOfMary = dates.sacredHeartOfJesus.clone().add(1, 'day');
-        dates.holyTrinity = pentecost.clone().add(7, 'days');
-        dates.christTheHighPriest = pentecost.clone().add(4, 'days');
-
-        // Прямые даты из yearOptions
-        dates.ashWednesday = getMoment(opts.ashWednesday);
-        dates.easterSunday = easter;
-        dates.ascension = getMoment(opts.ascension);
-        dates.pentecost = pentecost;
-        dates.corpusChristi = getMoment(opts.corpusChristi); // Ваше поле 'corpuschristi'
-        dates.firstAdventSunday = firstAdventSunday;
-
-        dynamicDatesCache.value[year] = dates;
-        return dates;
+    console.log(`[CalendarStore] Вычисление динамических дат для ${year} года...`);
+    
+    // Убедимся, что опции для года загружены
+    await getYearOptions(year); 
+    const opts = yearOptionsCache.value[year];
+    if (!opts) {
+        console.error(`[CalendarStore] Не удалось получить опции для ${year} года. Вычисление дат прервано.`);
+        return {};
     }
+    const dates = {};
+    const getMoment = (isoDateStr) => moment(isoDateStr, 'YYYY-MM-DD');
+    const easter = getMoment(opts.easterSunday);
+    const pentecost = getMoment(opts.pentecost);
+    const firstAdventSunday = getMoment(opts.firstAdventSunday);
+    // Расчет дат до Пасхи
+    dates.ashWednesday = getMoment(opts.ashWednesday);
+    dates.palmSunday = easter.clone().subtract(7, 'days'); // ✅ ВЕРБНОЕ ВОСКРЕСЕНЬЕ
+    // Расчет дат после Пасхи
+    dates.easterSunday = easter;
+    dates.pentecost = pentecost;
+    dates.ascension = pentecost.clone().subtract(7, 'days'); // ✅ ВОЗНЕСЕНИЕ (7-е воскресенье Пасхи)
+    
+    const holyTrinitySunday = pentecost.clone().add(7, 'days');
+    dates.holyTrinity = holyTrinitySunday;
+    dates.corpusChristi = holyTrinitySunday.clone().add(4, 'days'); // ✅ ТЕЛО И КРОВЬ ХРИСТА (четверг после Троицы)
+    // Расчет дат в "обычное время"
+    dates.holyFamily = getMoment(opts.holyFamily);
+    dates.baptismOfLord = getMoment(opts.baptismOfLord);
+    dates.christKing = firstAdventSunday.clone().subtract(7, 'days');
+    const sacredHeartOfJesus = pentecost.clone().add(19, 'days');
+    dates.sacredHeartOfJesus = sacredHeartOfJesus;
+    dates.immaculateHeartOfMary = sacredHeartOfJesus.clone().add(1, 'day'); // Следующий день
+    dates.christTheHighPriest = pentecost.clone().subtract(11, 'days'); // Пн после Пятидесятницы - уточнить если нужно
+    dynamicDatesCache.value[year] = dates;
+    console.log(`[CalendarStore] Динамические даты для ${year} года вычислены.`);
+    return dates;
+}
 
     return { 
         getYearOptions, 

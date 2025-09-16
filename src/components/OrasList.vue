@@ -17,29 +17,17 @@
       <div v-for="(ora, index) in oras" :key="ora.name">
         <v-list-item
           :to="ora.path"
-          class="py-3"
         >
           <template v-slot:prepend>
-            <v-icon :icon="ora.icon" size="large" class="mr-5"></v-icon>
+            <v-icon :icon="ora.icon" size="large"></v-icon>
           </template>
 
           <v-list-item-title class="text-h6 font-weight-regular mb-1">
             {{ ora.title }}
           </v-list-item-title>
 
-          <v-list-item-subtitle>
-            {{ ora.subtitle }}
-          </v-list-item-subtitle>
-
           <template v-slot:append>
-            <v-chip
-              :color="ora.tagColor"
-              size="small"
-              variant="tonal"
-              class="ml-4"
-            >
-              {{ ora.tag }}
-            </v-chip>
+            <v-icon icon="mdi-chevron-right" size="large"></v-icon>
           </template>
         </v-list-item>
         
@@ -177,5 +165,23 @@ const getPeriodTitle = (day) => {
 }
 .v-list-item:hover {
   background-color: rgba(var(--v-theme-on-surface), 0.04);
+}
+
+@media (max-width: 600px) {
+  .v-list-item-title {
+    font-size: 1.1rem !important; /* Уменьшаем заголовок */
+    line-height: 1.4rem;
+  }
+  .v-list-item-subtitle {
+    font-size: 0.8rem !important; /* Уменьшаем подзаголовок */
+    line-height: 1.1rem;
+  }
+  .v-chip {
+    font-size: 0.75rem;
+    height: 24px;
+  }
+  .v-list-item {
+    padding-inline: 12px; /* Уменьшаем боковые отступы */
+  }
 }
 </style>
