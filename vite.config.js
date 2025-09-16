@@ -68,9 +68,9 @@ export default defineConfig({
             options: {
               cacheName: 'firestore-cache',
               expiration: {
-                maxEntries: 20, // Кэшируем ~20 последних запросов
-                maxAgeSeconds: 60 * 60 * 24 * 3, // 3 дня
-              },
+      maxEntries: 500, // ✅ Кэшируем более года дней (366 + праздники).
+      maxAgeSeconds: 60 * 60 * 24 * 365, // ✅ Храним данные год.
+    },
               cacheableResponse: {
                 statuses: [0, 200],
               },

@@ -45,6 +45,11 @@ const routes = [
         meta: { requiresAuth: true }, // Защищаем все дочерние маршруты
         children: [
           {
+  path: 'backup',
+  name: 'AdminBackup',
+  component: () => import('@/views/admin/Backup.vue'),
+},
+          {
             path: '', // <-- /admin (пустой path относительно родителя)
             name: 'Admin',
             component: () => import('@/views/Admin.vue'),
@@ -54,25 +59,20 @@ const routes = [
         name: 'AdminLogicTester',
         component: () => import('@/components/admin/LogicTester.vue'),
       },
+          
           {
-            path: 'table-days', // <-- /admin/table-days
-            name: 'AdminTableDays',
-            component: () => import('@/components/admin/TableList.vue'),
-          },
-          {
-            path: 'edit-day/:id', // ✅ НАША НОВАЯ СТРАНИЦА РЕДАКТИРОВАНИЯ
-            name: 'AdminEditDay',
-            component: () => import('@/views/DayEdit.vue'),
-            props: true, // Передаем :id как prop в компонент
-          },
+  // ✅ НАШ ЕДИНЫЙ РЕДАКТОР
+  path: 'day-editor/:id',
+  name: 'AdminDayEditor',
+  component: () => import('@/views/admin/DayEditor.vue'),
+  props: true,
+},
           {
             path: 'year-options', // ✅ ВАЖНАЯ СТРАНИЦА
             name: 'AdminYearOptions',
             component: () => import('@/components/admin/YearOptions.vue'),
           },
           // --- Временные, но рабочие маршруты ---
-          { path: 'bridge', name: 'AdminBridge', component: () => import('@/components/admin/Bridge.vue') },
-          { path: 'bridge-list', name: 'AdminBridgeList', component: () => import('@/components/admin/BridgeList.vue') },
           { path: 'db-day-list', name: 'AdminDbDayList', component: () => import('@/components/admin/DbDayList.vue') },
         ]
       },

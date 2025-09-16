@@ -186,6 +186,7 @@
 <script setup>
 
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useCollection, useFirestore } from 'vuefire'
 import { collection, query, orderBy } from 'firebase/firestore'
 
@@ -198,12 +199,14 @@ const showConfirmDialog = ref(false);
 import { useDayStore } from '@/stores/day'
 const dayStore = useDayStore()
 const currentItem = ref({})
-
+const router = useRouter();
+ 
 function edit(item) {
-    console.log(item)
-    dialog.value = true;
-    currentItem.value = item
-    dayStore.setDayToEdit(item);
+    router.push({ name: 'AdminDayEditor', params: { id: item.id } });
+    // console.log(item)
+    // dialog.value = true;
+    // currentItem.value = item
+    // dayStore.setDayToEdit(item);
 }
 
 const db = useFirestore()
