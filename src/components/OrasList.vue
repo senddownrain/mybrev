@@ -47,9 +47,10 @@ import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useDocument } from 'vuefire';
 import { doc, getFirestore } from 'firebase/firestore';
+import { db } from '@/plugins/firebase'; 
 
 const route = useRoute();
-const db = getFirestore();
+//const db = getFirestore();
 
 const { day: dateParam, id: dayId } = route.params;
 

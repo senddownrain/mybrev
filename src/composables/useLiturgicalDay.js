@@ -3,9 +3,10 @@ import { useFirestore } from 'vuefire';
 import { useCalendarStore } from '@/stores/calendar';
 import moment from 'moment';
 import 'moment/dist/locale/be';
+import { db } from '@/plugins/firebase'; 
 
 export function useLiturgicalDay() {
-    const db = useFirestore();
+    //const db = useFirestore();
     const calendarStore = useCalendarStore();
     const daysCollection = collection(db, 'days');
     moment.locale('be');

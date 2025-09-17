@@ -8,6 +8,8 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 import { VitePWA } from 'vite-plugin-pwa'; // Импортируем
 
+import { visualizer } from 'rollup-plugin-visualizer' // Импортируем
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -15,7 +17,12 @@ export default defineConfig({
     vue({ 
       template: { transformAssetUrls }
     }),
-    
+    visualizer({ // Добавляем плагин
+       filename: 'dist/stats.html', // 3. Явно указываем, куда сохранить отчет
+      open: true,                // Попытаться открыть отчет автоматически
+      gzipSize: true,            // Показать размер после gzip
+      brotliSize: true,  
+    }),
     // Плагин для Vuetify, который обеспечивает tree-shaking (удаление неиспользуемых компонентов)
     // и другие оптимизации.
     // Ссылка на документацию: https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
@@ -33,7 +40,8 @@ export default defineConfig({
 
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'masked-icon.svg'],
+      injectRegister: 'auto',
+      strategies: 'generateSW',
       manifest: {
         name: 'Каталіцкі малітоўнік',
         short_name: 'Малітоўнік',
@@ -59,35 +67,9 @@ export default defineConfig({
 
       },
       workbox: {
-        // ✅ СТРАТЕГИЯ КЭШИРОВАНИЯ
-        runtimeCaching: [
-          {
-            // Кэшируем API запросы к Firestore (адаптируйте URL)
-            urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i,
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'firestore-cache',
-              expiration: {
-      maxEntries: 500, // ✅ Кэшируем более года дней (366 + праздники).
-      maxAgeSeconds: 60 * 60 * 24 * 365, // ✅ Храним данные год.
-    },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-          {
-            // Кэшируем шрифты Google Fonts
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-cache',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-        ],
-      },
+        cleanupOutdatedCaches: true,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2,webmanifest}'],
+      }
     }),
   ],
   

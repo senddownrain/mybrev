@@ -136,10 +136,6 @@ import moment from 'moment';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import ResultCard from '@/components/admin/ResultCard.vue';
 
-import { useDataImporter } from '@/composables/useDataImporter';
-const { importMissingDays } = useDataImporter();
-
-
 const { runLiturgicalDiagnostics, getLiturgicalOptionsForDate, auditYear } = useLiturgicalDay();
 const selectedDate = ref(new Date());
 const selectedYear = computed(() => moment(selectedDate.value).year());
@@ -154,12 +150,6 @@ const audit = reactive({
   results: null,
 });
 
-
-const importState = reactive({
-  inProgress: false,
-  report: null
-});
-const missingDaysForImport = ref([]);
 
 
 // ✅ Новая функция для запуска аудита
@@ -218,20 +208,6 @@ const cleanDynamicDates = computed(() => {
 });
 
 runTest();
-
-// Внутри <script setup>
-const runImport = async () => {
-  importState.inProgress = true;
-  importState.report = null;
-  try {
-    importState.report = await importMissingDays(missingDaysForImport.value);
-  } catch (e) {
-    alert("Ошибка во время импорта: " + e.message);
-    console.error(e);
-  } finally {
-    importState.inProgress = false;
-  }
-};
 
 </script>
 

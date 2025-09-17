@@ -39,10 +39,10 @@ import { useDocument } from 'vuefire';
 import { doc, getFirestore } from 'firebase/firestore';
 import moment from 'moment';
 import 'moment/dist/locale/be'; // Убедимся, что локаль подключена
-
+import { db } from '@/plugins/firebase'; 
 // --- Инициализация ---
 const route = useRoute();
-const db = getFirestore();
+//const db = getFirestore();
 moment.locale('be'); // Активируем белорусскую локаль
 
 // --- Загрузка данных дня ---
