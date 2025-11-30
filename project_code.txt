@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
+    "rollup-plugin-visualizer": "^6.0.3",
     "sass": "^1.92.1",
     "vite": "^5.2.13",
     "vite-plugin-pwa": "^0.20.5",
@@ -52,6 +53,8 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 import { VitePWA } from 'vite-plugin-pwa'; // Импортируем
 
+import { visualizer } from 'rollup-plugin-visualizer' // Импортируем
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -59,7 +62,12 @@ export default defineConfig({
     vue({ 
       template: { transformAssetUrls }
     }),
-    
+    visualizer({ // Добавляем плагин
+       filename: 'dist/stats.html', // 3. Явно указываем, куда сохранить отчет
+      open: true,                // Попытаться открыть отчет автоматически
+      gzipSize: true,            // Показать размер после gzip
+      brotliSize: true,  
+    }),
     // Плагин для Vuetify, который обеспечивает tree-shaking (удаление неиспользуемых компонентов)
     // и другие оптимизации.
     // Ссылка на документацию: https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
@@ -77,7 +85,8 @@ export default defineConfig({
 
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'masked-icon.svg'],
+      injectRegister: 'auto',
+      strategies: 'generateSW',
       manifest: {
         name: 'Каталіцкі малітоўнік',
         short_name: 'Малітоўнік',
@@ -103,35 +112,9 @@ export default defineConfig({
 
       },
       workbox: {
-        // ✅ СТРАТЕГИЯ КЭШИРОВАНИЯ
-        runtimeCaching: [
-          {
-            // Кэшируем API запросы к Firestore (адаптируйте URL)
-            urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i,
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'firestore-cache',
-              expiration: {
-                maxEntries: 20, // Кэшируем ~20 последних запросов
-                maxAgeSeconds: 60 * 60 * 24 * 3, // 3 дня
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-          {
-            // Кэшируем шрифты Google Fonts
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-cache',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-        ],
-      },
+        cleanupOutdatedCaches: true,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2,webmanifest}'],
+      }
     }),
   ],
   
@@ -278,928 +261,6 @@ export default defineConfig({
 .ora1{
     max-width: 0;
 }
-```
-
-### src/components/admin/Bridge.vue
-```
-<template>
-    <v-container fluid>
-        <v-row dense>
-            <v-col cols="12" sm="6">
-                <v-select v-model="selectedDay" :hint="`${selectedDay}`" :items="bridgeDaysModel" label="Days"
-                    persistent-hint return-object single-line></v-select>
-            </v-col>
-            <v-col cols="12" sm="6" class="mt-2">
-                <v-text-field v-model="loadingDay" hint="дзень" label="дата"></v-text-field>
-                <v-btn @click="loadDay()">load</v-btn>
-                <v-btn @click="mapDay()">map</v-btn>
-            </v-col>
-
-        </v-row>
-        <v-row dense>
-
-
-            <v-col v-for="n in Object.getOwnPropertyNames(findItem(selectedDay))" :key="n" cols="12">
-                <v-card :title="`${n} - ${selectedItem[n]}`">
-                    <v-card-text>
-                        <p v-html="JSON.stringify(getProp(n, selectedItem[n]))"></p>
-                    </v-card-text>
-
-                </v-card>
-            </v-col>
-        </v-row>
-
-        <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
-            <v-card>
-                <v-toolbar dark color="primary">
-                    <v-btn icon dark @click="dialog = false">
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                    <v-toolbar-title> Map day</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-toolbar-items>
-
-                        <v-btn variant="text" @click="save()">
-                            Сохранить
-                        </v-btn>
-                        <v-btn variant="text" @click="dialog = false">
-                            Отменить
-                        </v-btn>
-                    </v-toolbar-items>
-                </v-toolbar>
-                <v-card-text>
-
-
-                    <v-col v-for="n in Object.getOwnPropertyNames(mappingDay).sort()" :key="n" cols="12">
-                        <v-card :title="`${n}`">
-                            <v-card-text>
-                                <div v-if="!checkEditor(mappingDay[n])">
-                                    <v-text-field v-model="mappingDay[n]"></v-text-field>
-                                </div>
-
-                                <v-row v-if="checkEditor(mappingDay[n])">
-                            <v-col cols="6">
-                                <v-textarea auto-grow variant="filled" v-model="mappingDay[n]"></v-textarea>
-                            </v-col>
-                            <v-col cols="6">
-                                <div v-html="mappingDay[n]"></div>
-                            </v-col>
-                        </v-row>
-                            </v-card-text>
-
-                        </v-card>
-                    </v-col>
-                    <v-col cols="12">
-                        {{ mappingDay }}
-                    </v-col>
-                </v-card-text>
-
-            </v-card>
-        </v-dialog>
-
-
-        <v-dialog v-model="dialogAdd" fullscreen :scrim="false" transition="dialog-bottom-transition">
-            <v-card>
-                <v-toolbar dark color="primary">
-                    <v-btn icon dark @click="dialogAdd = false">
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                    <v-toolbar-title> Add Note</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-toolbar-items>
-
-                        <v-btn variant="text" @click="add(addItem)">
-                            Сохранить
-                        </v-btn>
-                        <v-btn variant="text" @click="dialogAdd = false">
-                            Отменить
-                        </v-btn>
-                    </v-toolbar-items>
-                </v-toolbar>
-                <v-card-text>
-                    <v-row>
-                        <v-col cols="12" sm="6" class="mb-2">
-                            <v-text-field v-model="addItem.title" hint="Назва уводзін" label="Назва"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="12" class="mb-5">
-                            <quill-editor theme="snow" toolbar="minimal" v-model:content="addItem.text"
-                                contentType="html" />
-                        </v-col>
-                    </v-row>
-
-
-                </v-card-text>
-
-            </v-card>
-        </v-dialog>
-
-
-    </v-container>
-</template>
-
-
-<script setup>
-import tables from '@/json'
-
-import { ref } from 'vue'
-
-import { useCollection, useFirestore } from 'vuefire'
-import { collection, orderBy, query, doc, updateDoc, setDoc, addDoc } from 'firebase/firestore'
-
-
-//console.log(tables.Bridge_table.map(a => a.Bridge_DayId));
-
-const bridgeDaysModel = ref(tables.Bridge_table.map(a => a.Bridge_DayId));
-
-// Функция для преобразования строки даты в объект Date
-function parseDate(dateString) {
-  const [day, month, year] = dateString.split('.').map(Number);
-  return new Date(year, month - 1, day); // month - 1, т.к. месяцы начинаются с 0
-}
-
-// Преобразование и сортировка массива
-const transformedArray = tables.Bridge_table.map(item => ({
-    Bridge_DayId: item.Bridge_DayId,
-    Bridge_DayName: item.Bridge_DayName,
-    Day: item.Day,
-  date: parseDate(item.Bridge_DayId) // добавляем дату для сортировки
-}))
-.sort((a, b) => a.date - b.date) // сортируем по дате
-
-
-
-const selectedDay = ref(bridgeDaysModel.value[0]);
-const selectedItem = ref({});
-
-const loadingDay = ref("");
-function loadDay() {
-    console.log(loadingDay.value)
-    selectedItem.value = tables.Bridge_table.find(x => x?.Bridge_DayId === loadingDay.value);
-    console.log(selectedItem.value);
-    //console.log(tables.Bridge_table.map(a => a.Bridge_DayId))
-   // console.log(tables.Bridge_table.filter(x => x?.Day == "ХІІ звычайная нядзеля" && x?.Bridge_DayName == "Пятніца"))
-}
-
-const mappingDay = ref({})
-
-function checkEditor(field) {
-    return field && field.length > 100
-}
-
-function mapDay() {
-    dialog.value = true
-    let b = selectedItem.value;
-    let day = {
-        _dayOfWeek: "", // 1 - sunday, ...
-        _periodType: "", // pasha, ordinary, advent
-        _periodWeekNumber: "", 
-        _date: "", // date of feast
-        _feast: "", // easter, christmas, ascension, pentocost, christthehighpriest
-        _psalmWeek: b["Svyata"], // week of psalms
-
-
-        _dayName: b["Day"],
-        _weekDay: b["Bridge_DayName"],
-        _weekNum: b["Bridge_Week"],
-        _feastName: b["Svyata"],
-        _feastType: b["Uspamin"],
-        allowedAlleluia: b["Alleluia"] == "1",
-
-        invitatoriumAnt: getTableField("Zakl_Ant", b["Zakl_Ant"], "Zakl_Ant_Text"),
-        invitatoriumPs1: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text1"),
-        invitatoriumPs2: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text2"),
-        invitatoriumPs3: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text3"),
-        invitatoriumPs4: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text4"),
-        invitatoriumPs5: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text5"),
-        invitatoriumPs6: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text6"),
-
-        feastComment: getTableField("Svyat", b["Svyat"], "Svyat_Text"),
-
-        officeOfReadingsHymn: getTableField("GCH_Gimn", b["GCH_Gimn"], "GCH_Gimn_Text"),
-
-        officeOfReadingsAnt1: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text1"),
-        officeOfReadingsAnt2: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text2"),
-        officeOfReadingsAnt3: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text3"),
-
-        officeOfReadingsPs1: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text1"),
-        officeOfReadingsPs2: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text2"),
-        officeOfReadingsPs3: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text3"),
-        officeOfReadingsVers: getTableField("GCH_Versh", b["GCH_Versh"], "GCH_Versh_Text"),
-        
-        officeOfReadingsR1: getTableField("GCH_CH_1", b["GCH_CH_1"], "GCH_CH_1_Text"),
-        officeOfReadingsR2: getTableField("GCH_CH_2", b["GCH_CH_2"], "GCH_CH_2_Text"),
-
-        officeOfReadingsTeDeum: b["GCH_Tabe"] == "1",
-        officeOfReadingsPr: getTableField("GCH_Mal", b["GCH_Mal"], "GCH_Mal_Text"),
-
-        laudesHymn: getTableField("UTR_Gimn", b["UTR_Gimn"], "UTR_Gimn_Text"),
-        laudesAnt1: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text1"),
-        laudesAnt2: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text2"),
-        laudesAnt3: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text3"),
-        laudesPs1: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text1"),
-        laudesPs2: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text2"),
-        laudesPs3: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text3"),
-        laudesR: getTableField("UTR_Chyt", b["UTR_Chyt"], "UTR_Chyt_Text"),
-        laudesAntBen: getTableField("UTR_Ant_Zakh", b["UTR_Ant_Zakh"], "UTR_Ant_Zakh_Text"),
-        laudesInter: getTableField("UTR_Prosby", b["UTR_Prosby"], "UTR_Prosby_Text"),
-        laudesPr: getTableField("UTR_Mal", b["UTR_Mal"], "UTR_Mal_Text"),
-
-        sext1Hymn: getTableField("MPD_Gimn_1", b["MPD_Gimn_1"], "MPD_Gimn_1_Text"),
-        sext1Ant1: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text1"),
-        sext1Ant2: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text2"),
-        sext1Ant3: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text3"),
-        sext1Ps1: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text1"),
-        sext1Ps2: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text2"),
-        sext1Ps3: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text3"),
-        sext1R: getTableField("MPD_Chyt_1", b["MPD_Chyt_1"], "MPD_Chyt_1_Text"),
-        sext1Pr: getTableField("MPD_Mal_1", b["MPD_Mal_1"], "MPD_Mal_1_Text"),
-
-        sext2Hymn: getTableField("MPD_Gimn_2", b["MPD_Gimn_2"], "MPD_Gimn_2_Text"),
-        sext2Ant1: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text"),
-        sext2Ant2: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text2"),
-        sext2Ant3: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text3"),
-        sext2Ps1: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text1"),
-        sext2Ps2: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text2"),
-        sext2Ps3: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text3"),
-        sext2R: getTableField("MPD_Chyt_2", b["MPD_Chyt_2"], "MPD_Chyt_2_Text"),
-        sext2Pr: getTableField("MPD_Mal_2", b["MPD_Mal_2"], "MPD_Mal_2_Text"),
-
-        sext3Hymn: getTableField("MPD_Gimn_3", b["MPD_Gimn_3"], "MPD_Gimn_3_Text"),
-        sext3Ant1: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text"),
-        sext3Ant2: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text2"),
-        sext3Ant3: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text3"),
-        sext3Ps1: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text1"),
-        sext3Ps2: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text2"),
-        sext3Ps3: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text3"),
-        sext3R: getTableField("MPD_Chyt_3", b["MPD_Chyt_3"], "MPD_Chyt_3_Text"),
-        sext3Pr: getTableField("MPD_Mal_3", b["MPD_Mal_3"], "MPD_Mal_3_Text"),
-
-        vesperHymn: getTableField("NESH_Gimn", b["NESH_Gimn"], "NESH_Gimn_Text"),
-        vesperAnt1: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text1"),
-        vesperAnt2: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text2"),
-        vesperAnt3: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text3"),
-        vesperPs1: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text1"),
-        vesperPs2: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text2"),
-        vesperPs3: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text3"),
-        vesperR: getTableField("NESH_Chyt", b["NESH_Chyt"], "NESH_Chyt_Text"),
-        vesperAntMag: getTableField("NESH_Ant_M", b["NESH_Ant_M"], "NESH_Ant_M_Text"),
-        vesperInter: getTableField("NESH_Prosby", b["NESH_Prosby"], "NESH_Prosby_Text"),
-        vesperPr: getTableField("NESH_Mal", b["NESH_Mal"], "NESH_Mal_Text"),
-
-        compHymn: getTableField("KAMP_Gimn", b["KAMP_Gimn"], "KAMP_Gimn_Text"),
-        compAnt1: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text1"),
-        compAnt2: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text2"),
-
-        compPs1: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text1"),
-        compPs2: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text2"),
-
-        compR: getTableField("KAMP_Chyt", b["KAMP_Chyt"], "KAMP_Chyt_Text"),
-        compResp: getTableField("KAMP_Resp", b["KAMP_Resp"], "KAMP_Resp_Text"),
-        compAntS: getTableField("KAMP_Ant_S", b["KAMP_Ant_S"], "KAMP_Ant_S_Text"),
-        compPr: getTableField("KAMP_Mal", b["KAMP_Mal"], "KAMP_Mal_Text"),
-        compAntM: getTableField("KAMP_Ant_M", b["KAMP_Ant_M"], "KAMP_Ant_M_Text"),
-
-
-
-    }
-    mappingDay.value = day;
-}
-
-
-async function save() {
-    dialog.value = false
-
-    await addDoc(collection(db, "days"), mappingDay.value)
-    // await setDoc(doc(db, "days", mappingDay.value.id), mappingDay.value);
-    // item.text = tmp.value.text
-    // const noteRef = doc(db, "notes", item.id);
-
-    // await updateDoc(noteRef, {
-    //     text: tmp.value.text
-    // });
-}
-
-function getTableField(table, id, field) {
-    let tableName = table + "_table";
-
-    if (tables[tableName]) {
-
-        let item = tables[tableName].find(x => x[table + "_ID"] == id)
-        //console.log(item)
-        if (item && item[field]) {
-            return item[field]
-        }
-    }
-    return ""
-}
-
-function getTableFieldUtr(table, id, field, idName) {
-    let tableName = table + "_table";
-
-    if (tables[tableName]) {
-
-        let item = tables[tableName].find(x => x[idName] == id)
-        //console.log(item)
-        if (item && item[field]) {
-            return item[field]
-        }
-    }
-    return ""
-}
-
-function findItem(id) {
-    let item = tables.Bridge_table.find(x => x.Bridge_DayId == id);
-    selectedItem.value = item;
-
-    return item;
-}
-
-function getProp(name, val) {
-    console.log(`${name} - ${val}`);
-    
-    let tbl = tables[name + "_table"]
-    if (tbl) {
-        let itemID = name + "_ID"
-        if (tbl[0][itemID]) {
-
-            let item = tables[name + "_table"].find(x => x[itemID] == val);
-            return JSON.stringify(item);
-        }
-        else {
-            return "no id"
-        }
-
-    }
-    else {
-        return 'not a table'
-    }
-}
-
-function getIdProp(obj) {
-    var props = Object.getOwnPropertyNames(obj);
-    var id = props.find(x => x.indexOf("ID") != -1);
-
-    return id;
-}
-
-const db = useFirestore()
-
-const dialog = ref(false)
-
-const dialogAdd = ref(false)
-const addItem = ref({
-    text: ""
-})
-
-const current = ref({})
-const tmp = ref({})
-const editMode = ref(false)
-
-
-function strippedHtml(value) {
-    let regex = /(<([^>]+)>)/ig;
-    return value.replace(regex, "");
-}
-
-function select(item) {
-    current.value = item;
-    dialog.value = true
-}
-
-function edit(item) {
-    tmp.value = Object.assign({}, item);
-    editMode.value = true
-}
-
-
-function showAdd() {
-    addItem.value = {
-        text: ""
-    }
-    dialogAdd.value = true
-}
-
-async function add(item) {
-
-    dialogAdd.value = false
-    await addDoc(collection(db, "notes"), item)
-
-    addItem.value = ref({
-        text: ""
-    })
-}
-
-</script>
-
-
-<style>
-.dialog-bottom-transition-enter-active,
-.dialog-bottom-transition-leave-active {
-    transition: transform .2s ease-in-out;
-}
-</style>
-```
-
-### src/components/admin/BridgeList.vue
-```
-<template>
-    <v-container fluid>
-        <v-row dense>
-            <v-col cols="12" sm="6">
-                <v-list>
-                    <v-list-item-group>
-                        <v-list-item  v-for="(item, index) in transformedArray" :key="index" class="clickable-item"  @click="mapDay(item)">
-                            <v-list-item-content>
-                                <v-list-item-title>{{ item.Bridge_DayId }} {{ getFeastOrPeriod(item) }}</v-list-item-title>
-                                <v-list-item-subtitle>{{ item.Bridge_DayName }}</v-list-item-subtitle>
-                                <v-list-item-subtitle>{{ item.Day }}</v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-list-item-group>
-                </v-list>
-            </v-col>
-
-        </v-row>
-
-        <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
-            <v-card>
-                <v-toolbar dark color="primary">
-                    <v-btn icon dark @click="dialog = false">
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                    <v-toolbar-title> Map day</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-toolbar-items>
-
-                        <v-btn variant="text" @click="save()">
-                            Сохранить
-                        </v-btn>
-                        <v-btn variant="text" @click="dialog = false">
-                            Отменить
-                        </v-btn>
-                    </v-toolbar-items>
-                </v-toolbar>
-                <v-card-text>
-
-
-                    <v-col v-for="n in Object.getOwnPropertyNames(mappingDay).sort()" :key="n" cols="12">
-                        <v-card :title="`${n}`">
-                            <v-card-text>
-                                <div v-if="!checkEditor(mappingDay[n])">
-                                    <v-text-field v-model="mappingDay[n]"></v-text-field>
-                                </div>
-
-                                <v-row v-if="checkEditor(mappingDay[n])">
-                                    <v-col cols="6">
-                                        <v-textarea auto-grow variant="filled" v-model="mappingDay[n]"></v-textarea>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <div v-html="mappingDay[n]"></div>
-                                    </v-col>
-                                </v-row>
-                            </v-card-text>
-
-                        </v-card>
-                    </v-col>
-                    <v-col cols="12">
-                        {{ mappingDay }}
-                    </v-col>
-                </v-card-text>
-
-            </v-card>
-        </v-dialog>
-
-
-        <v-dialog v-model="dialogAdd" fullscreen :scrim="false" transition="dialog-bottom-transition">
-            <v-card>
-                <v-toolbar dark color="primary">
-                    <v-btn icon dark @click="dialogAdd = false">
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                    <v-toolbar-title> Add Note</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-toolbar-items>
-
-                        <v-btn variant="text" @click="add(addItem)">
-                            Сохранить
-                        </v-btn>
-                        <v-btn variant="text" @click="dialogAdd = false">
-                            Отменить
-                        </v-btn>
-                    </v-toolbar-items>
-                </v-toolbar>
-                <v-card-text>
-                    <v-row>
-                        <v-col cols="12" sm="6" class="mb-2">
-                            <v-text-field v-model="addItem.title" hint="Назва уводзін" label="Назва"></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="12" class="mb-5">
-                            <quill-editor theme="snow" toolbar="minimal" v-model:content="addItem.text"
-                                contentType="html" />
-                        </v-col>
-                    </v-row>
-
-
-                </v-card-text>
-
-            </v-card>
-        </v-dialog>
-
-
-    </v-container>
-</template>
-
-
-<script setup>
-import tables from '@/json'
-
-import { ref } from 'vue'
-
-import { useCollection, useFirestore } from 'vuefire'
-
-import { collection, orderBy, query, doc, updateDoc, getDocs, setDoc, addDoc } from 'firebase/firestore'
-
-
-const db = useFirestore()
-
-//console.log(tables.Bridge_table.map(a => a.Bridge_DayId));
-
-const bridgeDaysModel = ref(tables.Bridge_table.map(a => a.Bridge_DayId));
-
-// Функция для преобразования строки даты в объект Date
-function parseDate(dateString) {
-    const [day, month, year] = dateString.split('.').map(Number);
-    return new Date(year, month - 1, day); // month - 1, т.к. месяцы начинаются с 0
-}
-
-// Преобразование и сортировка массива
-const transformedArray = tables.Bridge_table.map(item => ({
-    Bridge_DayId: item.Bridge_DayId,
-    Bridge_DayName: item.Bridge_DayName,
-    Day: item.Day,
-    Feast: item.Svyata,
-    date: parseDate(item.Bridge_DayId) // добавляем дату для сортировки
-})).sort((a, b) =>  b.date - a.date) // сортируем по дате
-
-//refactorDB();
-
-function refactorDB() {
-    const readingFixArray = tables.Bridge_table.map(item => ({
-        Bridge_DayId: item.Bridge_DayId,
-        Bridge_DayName: item.Bridge_DayName,
-        Day: item.Day,
-        Feast: item.Svyata,
-        weekDay: item.Bridge_DayName,
-        date: parseDate(item.Bridge_DayId), // добавляем дату для сортировки
-        officeOfReadingsVers: getTableField("GCH_Versh", item["GCH_Versh"], "GCH_Versh_Text"),
-    })).sort((a, b) => b.date - a.date); // сортируем по дате
-
-    const ordinaryVersArray = readingFixArray
-        .filter(item => item.Day.includes('звычай')) // Фильтруем по ключевой фразе
-        .reduce((accumulator, current) => {
-            const isDuplicate = accumulator.find(item => item.Day === current.Day && item.weekDay === current.weekDay);
-            if (!isDuplicate) {
-                accumulator.push({ date: current.date, Day: current.Day, weekDay: current.weekDay, officeOfReadingsVers: current.officeOfReadingsVers });
-            }
-            return accumulator;
-        }, []);
-
-    console.log(`unique elems ${ordinaryVersArray.length}`);
-
-    const daysCollectionRef = collection(db, 'days');
-
-    // Получение документов из Firestore и обновление их по данным из uniqueDays
-    async function updateFirestoreDays(uniqueDays) {
-        try {
-            const querySnapshot = await getDocs(query(daysCollectionRef, orderBy('_weekNum')));
-            const batch = [];
-
-            // Проходим по каждому документу из Firestore
-            querySnapshot.forEach(docSnapshot => {
-                const docData = docSnapshot.data();
-                const matchingUniqueDay = uniqueDays.find(uniqueDay => uniqueDay.Day === docData._dayName && uniqueDay.weekDay === docData._weekDay);
-
-                // Если найден соответствующий uniqueDay, обновляем officeOfReadingsVers
-                if (matchingUniqueDay) {
-                    const docRef = doc(db, 'days', docSnapshot.id);
-                    const updateOperation = updateDoc(docRef, {
-                        officeOfReadingsVers: matchingUniqueDay.officeOfReadingsVers
-                    });
-                    // console.log(`${docData._dayName}-${docData._weekDay} updated`)
-                    batch.push(updateOperation);
-                }
-            });
-
-            console.log(`to update ${batch.length}`);
-            // Выполняем все обновления
-            await Promise.all(batch);
-
-            console.log("Обновление завершено.");
-        } catch (error) {
-            console.error("Ошибка при обновлении Firestore:", error);
-        }
-    }
-
-    // Вызов функции
-    updateFirestoreDays(ordinaryVersArray);
-}
-
-function getFeastOrPeriod(a) {
-  // Проверяем, существует ли объект и его свойства
-  if (a && typeof a.Feast === 'string' && typeof a.Day !== 'undefined') {
-    // Приводим свойство Feast к нижнему регистру и проверяем наличие слова "псалтыра"
-    if (a.Feast.toLowerCase().includes("псалтыра")) {
-      return a.Day; // Возвращаем значение свойства Day
-    }
-    return a.Feast; // Возвращаем значение свойства Feast
-  }
-  throw new Error("Неверный объект"); // Обработка ошибки, если объект не валиден
-}
-
-
-const selectedDay = ref(bridgeDaysModel.value[0]);
-const selectedItem = ref({});
-
-const loadingDay = ref("");
-function loadDay() {
-    selectedItem.value = tables.Bridge_table.find(x => x?.Bridge_DayId === loadingDay.value);
-    
-    //console.log(tables.Bridge_table.map(a => a.Bridge_DayId))
-    // console.log(tables.Bridge_table.filter(x => x?.Day == "ХІІ звычайная нядзеля" && x?.Bridge_DayName == "Пятніца"))
-}
-
-const mappingDay = ref({})
-
-function checkEditor(field) {
-    return field && field.length > 100
-}
-
-function mapDay(item) {
-
-    
-    let dbItem = tables.Bridge_table.find(x => x?.Bridge_DayId === item.Bridge_DayId);
-    
-    dialog.value = true
-    let b = dbItem;
-    let day = {
-        _dayOfWeek: "", // 1 - sunday, ...
-        _periodType: "", // pasha, ordinary, advent
-        _periodWeekNumber: "",
-        _date: "", // date of feast
-        _feast: "", // easter, christmas, ascension, pentocost, christthehighpriest
-        _psalmWeek: b["Svyata"], // week of psalms
-
-
-        _dayName: b["Day"],
-        _weekDay: b["Bridge_DayName"],
-        _weekNum: b["Bridge_Week"],
-        _feastName: b["Svyata"] && b["Svyata"].toLowerCase().includes("псалтыра") ? "" : b["Svyata"],
-        _feastType: b["Uspamin"],
-        allowedAlleluia: b["Alleluia"] == "1",
-
-        invitatoriumAnt: getTableField("Zakl_Ant", b["Zakl_Ant"], "Zakl_Ant_Text"),
-        invitatoriumPs1: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text1"),
-        invitatoriumPs2: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text2"),
-        invitatoriumPs3: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text3"),
-        invitatoriumPs4: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text4"),
-        invitatoriumPs5: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text5"),
-        invitatoriumPs6: getTableField("Zakl_PS", b["Zakl_PS"], "Zakl_PS_Text6"),
-
-        feastComment: getTableField("Svyat", b["Svyat"], "Svyat_Text"),
-
-        officeOfReadingsHymn: getTableField("GCH_Gimn", b["GCH_Gimn"], "GCH_Gimn_Text"),
-
-        officeOfReadingsAnt1: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text1"),
-        officeOfReadingsAnt2: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text2"),
-        officeOfReadingsAnt3: getTableField("GCH_Ant", b["GCH_Ant"], "GCH_Ant_Text3"),
-
-        officeOfReadingsPs1: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text1"),
-        officeOfReadingsPs2: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text2"),
-        officeOfReadingsPs3: getTableField("GCH_PS", b["GCH_PS"], "GCH_PS_Text3"),
-        officeOfReadingsVers: getTableField("GCH_Versh", b["GCH_Versh"], "GCH_Versh_Text"),
-
-        officeOfReadingsR1: getTableField("GCH_CH_1", b["GCH_CH_1"], "GCH_CH_1_Text"),
-        officeOfReadingsR2: getTableField("GCH_CH_2", b["GCH_CH_2"], "GCH_CH_2_Text"),
-
-        officeOfReadingsTeDeum: b["GCH_Tabe"] == "1",
-        officeOfReadingsPr: getTableField("GCH_Mal", b["GCH_Mal"], "GCH_Mal_Text"),
-
-        laudesHymn: getTableField("UTR_Gimn", b["UTR_Gimn"], "UTR_Gimn_Text"),
-        laudesAnt1: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text1"),
-        laudesAnt2: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text2"),
-        laudesAnt3: getTableField("UTR_Ant", b["UTR_Ant"], "UTR_Ant_Text3"),
-        laudesPs1: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text1"),
-        laudesPs2: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text2"),
-        laudesPs3: getTableField("UTR_PS", b["UTR_PS"], "UTR_PS_Text3"),
-        laudesR: getTableField("UTR_Chyt", b["UTR_Chyt"], "UTR_Chyt_Text"),
-        laudesAntBen: getTableField("UTR_Ant_Zakh", b["UTR_Ant_Zakh"], "UTR_Ant_Zakh_Text"),
-        laudesInter: getTableField("UTR_Prosby", b["UTR_Prosby"], "UTR_Prosby_Text"),
-        laudesPr: getTableField("UTR_Mal", b["UTR_Mal"], "UTR_Mal_Text"),
-
-        sext1Hymn: getTableField("MPD_Gimn_1", b["MPD_Gimn_1"], "MPD_Gimn_1_Text"),
-        sext1Ant1: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text1"),
-        sext1Ant2: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text2"),
-        sext1Ant3: getTableField("MPD_Ant_1", b["MPD_Ant_1"], "MPD_Ant_1_Text3"),
-        sext1Ps1: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text1"),
-        sext1Ps2: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text2"),
-        sext1Ps3: getTableField("MPD_PS_1", b["MPD_PS_1"], "MPD_PS_1_Text3"),
-        sext1R: getTableField("MPD_Chyt_1", b["MPD_Chyt_1"], "MPD_Chyt_1_Text"),
-        sext1Pr: getTableField("MPD_Mal_1", b["MPD_Mal_1"], "MPD_Mal_1_Text"),
-
-        sext2Hymn: getTableField("MPD_Gimn_2", b["MPD_Gimn_2"], "MPD_Gimn_2_Text"),
-        sext2Ant1: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text"),
-        sext2Ant2: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text2"),
-        sext2Ant3: getTableField("MPD_Ant_2", b["MPD_Ant_2"], "MPD_Ant_2_Text3"),
-        sext2Ps1: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text1"),
-        sext2Ps2: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text2"),
-        sext2Ps3: getTableField("MPD_PS_2", b["MPD_PS_2"], "MPD_PS_2_Text3"),
-        sext2R: getTableField("MPD_Chyt_2", b["MPD_Chyt_2"], "MPD_Chyt_2_Text"),
-        sext2Pr: getTableField("MPD_Mal_2", b["MPD_Mal_2"], "MPD_Mal_2_Text"),
-
-        sext3Hymn: getTableField("MPD_Gimn_3", b["MPD_Gimn_3"], "MPD_Gimn_3_Text"),
-        sext3Ant1: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text"),
-        sext3Ant2: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text2"),
-        sext3Ant3: getTableField("MPD_Ant_3", b["MPD_Ant_3"], "MPD_Ant_3_Text3"),
-        sext3Ps1: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text1"),
-        sext3Ps2: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text2"),
-        sext3Ps3: getTableField("MPD_PS_3", b["MPD_PS_3"], "MPD_PS_3_Text3"),
-        sext3R: getTableField("MPD_Chyt_3", b["MPD_Chyt_3"], "MPD_Chyt_3_Text"),
-        sext3Pr: getTableField("MPD_Mal_3", b["MPD_Mal_3"], "MPD_Mal_3_Text"),
-
-        vesperHymn: getTableField("NESH_Gimn", b["NESH_Gimn"], "NESH_Gimn_Text"),
-        vesperAnt1: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text1"),
-        vesperAnt2: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text2"),
-        vesperAnt3: getTableField("NESH_Ant", b["NESH_Ant"], "NESH_Ant_Text3"),
-        vesperPs1: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text1"),
-        vesperPs2: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text2"),
-        vesperPs3: getTableField("NESH_PS", b["NESH_PS"], "NESH_PS_Text3"),
-        vesperR: getTableField("NESH_Chyt", b["NESH_Chyt"], "NESH_Chyt_Text"),
-        vesperAntMag: getTableField("NESH_Ant_M", b["NESH_Ant_M"], "NESH_Ant_M_Text"),
-        vesperInter: getTableField("NESH_Prosby", b["NESH_Prosby"], "NESH_Prosby_Text"),
-        vesperPr: getTableField("NESH_Mal", b["NESH_Mal"], "NESH_Mal_Text"),
-
-        compHymn: getTableField("KAMP_Gimn", b["KAMP_Gimn"], "KAMP_Gimn_Text"),
-        compAnt1: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text1"),
-        compAnt2: getTableField("KAMP_Ant", b["KAMP_Ant"], "KAMP_Ant_Text2"),
-
-        compPs1: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text1"),
-        compPs2: getTableField("KAMP_PS", b["KAMP_PS"], "KAMP_PS_Text2"),
-
-        compR: getTableField("KAMP_Chyt", b["KAMP_Chyt"], "KAMP_Chyt_Text"),
-        compResp: getTableField("KAMP_Resp", b["KAMP_Resp"], "KAMP_Resp_Text"),
-        compAntS: getTableField("KAMP_Ant_S", b["KAMP_Ant_S"], "KAMP_Ant_S_Text"),
-        compPr: getTableField("KAMP_Mal", b["KAMP_Mal"], "KAMP_Mal_Text"),
-        compAntM: getTableField("KAMP_Ant_M", b["KAMP_Ant_M"], "KAMP_Ant_M_Text"),
-
-
-
-    }
-    mappingDay.value = day;
-}
-
-
-async function save() {
-    dialog.value = false
-
-    await addDoc(collection(db, "days"), mappingDay.value)
-    // await setDoc(doc(db, "days", mappingDay.value.id), mappingDay.value);
-    // item.text = tmp.value.text
-    // const noteRef = doc(db, "notes", item.id);
-
-    // await updateDoc(noteRef, {
-    //     text: tmp.value.text
-    // });
-}
-
-function getTableField(table, id, field) {
-    let tableName = table + "_table";
-
-    if (tables[tableName]) {
-
-        let item = tables[tableName].find(x => x[table + "_ID"] == id)
-        //console.log(item)
-        if (item && item[field]) {
-            return item[field]
-        }
-    }
-    return ""
-}
-
-function getTableFieldUtr(table, id, field, idName) {
-    let tableName = table + "_table";
-
-    if (tables[tableName]) {
-
-        let item = tables[tableName].find(x => x[idName] == id)
-        //console.log(item)
-        if (item && item[field]) {
-            return item[field]
-        }
-    }
-    return ""
-}
-
-function findItem(id) {
-    let item = tables.Bridge_table.find(x => x.Bridge_DayId == id);
-    selectedItem.value = item;
-
-    return item;
-}
-
-function getProp(name, val) {
-    let tbl = tables[name + "_table"]
-    if (tbl) {
-        let itemID = name + "_ID"
-        if (tbl[0][itemID]) {
-
-            let item = tables[name + "_table"].find(x => x[itemID] == val);
-            return JSON.stringify(item);
-        }
-        else {
-            return "no id"
-        }
-
-    }
-    else {
-        return 'not a table'
-    }
-}
-
-function getIdProp(obj) {
-    var props = Object.getOwnPropertyNames(obj);
-    var id = props.find(x => x.indexOf("ID") != -1);
-
-    return id;
-}
-
-
-const dialog = ref(false)
-
-const dialogAdd = ref(false)
-const addItem = ref({
-    text: ""
-})
-
-const current = ref({})
-const tmp = ref({})
-const editMode = ref(false)
-
-
-function strippedHtml(value) {
-    let regex = /(<([^>]+)>)/ig;
-    return value.replace(regex, "");
-}
-
-function select(item) {
-    current.value = item;
-    dialog.value = true
-}
-
-function edit(item) {
-    tmp.value = Object.assign({}, item);
-    editMode.value = true
-}
-
-
-function showAdd() {
-    addItem.value = {
-        text: ""
-    }
-    dialogAdd.value = true
-}
-
-async function add(item) {
-
-    dialogAdd.value = false
-    await addDoc(collection(db, "notes"), item)
-
-    addItem.value = ref({
-        text: ""
-    })
-}
-
-</script>
-
-
-<style scoped>
-.dialog-bottom-transition-enter-active,
-.dialog-bottom-transition-leave-active {
-    transition: transform .2s ease-in-out;
-}
-
-.clickable-item {
-    margin: 5px;
-  cursor: pointer; /* Указатель мыши при наведении */
-  background-color: #f5f5f5; /* Светлый фон для выделения */
-  border-radius: 4px; /* Закругленные углы */
-  transition: background-color 0.2s; /* Плавный переход цвета фона */
-}
-
-.clickable-item:hover {
-  background-color: #e0e0e0; /* Цвет фона на наведение */
-}
-
-</style>
 ```
 
 ### src/components/admin/DayEditPage.vue
@@ -1775,6 +836,7 @@ function updateItem() {
 <script setup>
 
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useCollection, useFirestore } from 'vuefire'
 import { collection, query, orderBy } from 'firebase/firestore'
 
@@ -1787,12 +849,14 @@ const showConfirmDialog = ref(false);
 import { useDayStore } from '@/stores/day'
 const dayStore = useDayStore()
 const currentItem = ref({})
-
+const router = useRouter();
+ 
 function edit(item) {
-    console.log(item)
-    dialog.value = true;
-    currentItem.value = item
-    dayStore.setDayToEdit(item);
+    router.push({ name: 'AdminDayEditor', params: { id: item.id } });
+    // console.log(item)
+    // dialog.value = true;
+    // currentItem.value = item
+    // dayStore.setDayToEdit(item);
 }
 
 const db = useFirestore()
@@ -1818,6 +882,100 @@ function closeConfirmDialog() {
     }
 
 </script>
+```
+
+### src/components/admin/InlineEditor.vue
+```
+<template>
+  <v-col cols="12" class="py-2">
+    <v-card variant="outlined">
+      <v-toolbar density="compact" flat color="transparent">
+        <v-toolbar-title class="text-subtitle-1 font-weight-regular">
+          {{ fieldTitle }}
+        </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <!-- Кнопки управления: видны только если мы не в режиме редактирования -->
+        <v-btn v-if="!isEditing" @click="startEditing" variant="text" size="small" prepend-icon="mdi-pencil">Рэдагаваць</v-btn>
+      </v-toolbar>
+      <v-divider></v-divider>
+
+      <!-- Режим Просмотра -->
+      <v-card-text v-if="!isEditing" class="pt-2">
+        <p v-if="!modelValue" class="text-grey-darken-1 text-body-2">Тэкст адсутнічае</p>
+        <div v-else v-html="modelValue" class="ora-text"></div>
+      </v-card-text>
+
+      <!-- Режим Редактирования -->
+      <div v-if="isEditing" class="pa-2">
+        <quill-editor
+          v-model:content="editableContent"
+          contentType="html"
+          theme="snow"
+          toolbar="essential"
+        />
+        <v-card-actions class="px-1 pb-1">
+          <v-spacer></v-spacer>
+          <v-btn @click="cancelEditing" variant="text" size="small">Адмяніць</v-btn>
+          <v-btn @click="saveContent" color="primary" variant="flat" size="small">Захаваць поле</v-btn>
+        </v-card-actions>
+      </div>
+    </v-card>
+  </v-col>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { QuillEditor } from '@vueup/vue-quill';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+
+// Используем defineModel для удобной двусторонней привязки (v-model)
+const modelValue = defineModel();
+
+const props = defineProps({
+  fieldTitle: String,
+});
+
+const isEditing = ref(false);
+const editableContent = ref('');
+
+const startEditing = () => {
+  // Копируем текущее значение во временную переменную для редактирования
+  editableContent.value = modelValue.value;
+  isEditing.value = true;
+};
+
+const saveContent = () => {
+  // Обновляем основную модель (v-model)
+  modelValue.value = editableContent.value;
+  isEditing.value = false;
+};
+
+const cancelEditing = () => {
+  // Просто выходим из режима редактирования, не сохраняя изменения
+  isEditing.value = false;
+};
+</script>
+
+<style>
+/* Стили для Quill, чтобы он выглядел аккуратно внутри v-card */
+.ql-toolbar.ql-snow {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+.ql-container.ql-snow {
+  border: none;
+  min-height: 200px;
+}
+/* Стили для текста предпросмотра */
+.ora-text p:last-child {
+  margin-bottom: 0;
+}
+.ora-text {
+    line-height: 1.6;
+}
+</style>
 ```
 
 ### src/components/admin/LogicTester.vue
@@ -1960,10 +1118,6 @@ import moment from 'moment';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import ResultCard from '@/components/admin/ResultCard.vue';
 
-import { useDataImporter } from '@/composables/useDataImporter';
-const { importMissingDays } = useDataImporter();
-
-
 const { runLiturgicalDiagnostics, getLiturgicalOptionsForDate, auditYear } = useLiturgicalDay();
 const selectedDate = ref(new Date());
 const selectedYear = computed(() => moment(selectedDate.value).year());
@@ -1978,12 +1132,6 @@ const audit = reactive({
   results: null,
 });
 
-
-const importState = reactive({
-  inProgress: false,
-  report: null
-});
-const missingDaysForImport = ref([]);
 
 
 // ✅ Новая функция для запуска аудита
@@ -2042,20 +1190,6 @@ const cleanDynamicDates = computed(() => {
 });
 
 runTest();
-
-// Внутри <script setup>
-const runImport = async () => {
-  importState.inProgress = true;
-  importState.report = null;
-  try {
-    importState.report = await importMissingDays(missingDaysForImport.value);
-  } catch (e) {
-    alert("Ошибка во время импорта: " + e.message);
-    console.error(e);
-  } finally {
-    importState.inProgress = false;
-  }
-};
 
 </script>
 
@@ -2170,209 +1304,6 @@ const getLink = (id) => {
   gap: 12px;
 }
 </style>
-```
-
-### src/components/admin/TableList.vue
-```
-<template>
-    <v-container fluid>
-        <v-row dense>
-            <v-col cols="12" sm="6">
-                <v-select
-          v-model="selectedTable"
-          :hint="`${selectedTable}`"
-          :items="tablesModel"
-          label="Tables"
-          persistent-hint
-          return-object
-          single-line
-        ></v-select>
-
-            </v-col>
-        </v-row>
-      <v-row dense>
-        <v-col cols="12" sm="12" v-if="devMode">
-          <v-card flat>
-            <v-card-actions >
-              <v-spacer></v-spacer>
-              <v-btn @click="showAdd()">Add</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-  
-  
-        <v-col v-for="n in tables[selectedTable]" :key="n" cols="12">
-                <v-card :title="`${selectedTable} ${n[getIdProp(n)]}`"  >
-                    <v-card-text>
-                        <p v-html="JSON.stringify(n)"></p>
-                    </v-card-text>
-                    
-                </v-card>
-            </v-col>
-      </v-row>
-  
-      <v-dialog v-model="dialog" ref="my" fullscreen :scrim="false" transition="dialog-bottom-transition">
-        <v-card>
-          <v-toolbar dark color="primary">
-            <v-btn icon dark @click="dialog = false">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-            <v-toolbar-title>{{ current.title }}</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-              <v-btn v-if="!editMode" variant="text" @click="edit(current)">
-                Изменить
-              </v-btn>
-  
-              <v-btn v-if="editMode" variant="text" @click="save(current)">
-                Сохранить
-              </v-btn>
-              <v-btn v-if="editMode" variant="text" @click="editMode = false">
-                Отменить
-              </v-btn>
-            </v-toolbar-items>
-          </v-toolbar>
-          <v-card-text>
-            <quill-editor v-if="editMode" theme="snow" toolbar="minimal" v-model:content="tmp.text" contentType="html" />
-  
-            <p v-if="!editMode" v-html="current.text">
-  
-            </p>
-  
-          </v-card-text>
-  
-        </v-card>
-      </v-dialog>
-  
-  
-      <v-dialog v-model="dialogAdd" fullscreen :scrim="false" transition="dialog-bottom-transition">
-        <v-card>
-          <v-toolbar dark color="primary">
-            <v-btn icon dark @click="dialogAdd = false">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-            <v-toolbar-title> Add Note</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items>
-  
-              <v-btn variant="text" @click="add(addItem)">
-                Сохранить
-              </v-btn>
-              <v-btn  variant="text" @click="dialogAdd = false">
-                Отменить
-              </v-btn>
-            </v-toolbar-items>
-          </v-toolbar>
-          <v-card-text>
-            <v-row>
-                <v-col cols="12" sm="6" class="mb-2">
-                    <v-text-field v-model="addItem.title" hint="Назва уводзін" label="Назва"></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="12" class="mb-5">
-                  <quill-editor theme="snow" toolbar="minimal" v-model:content="addItem.text" contentType="html" />
-                </v-col>
-            </v-row>
-  
-  
-          </v-card-text>
-  
-        </v-card>
-      </v-dialog>
-  
-  
-    </v-container>
-  </template>
-  
-  
-  <script setup>
-  import tables from '@/json'
-console.log(tables)
-  import { ref } from 'vue'
-  
-  import { useCollection, useFirestore } from 'vuefire'
-  import { collection, orderBy, query, doc, updateDoc, setDoc, addDoc } from 'firebase/firestore'
-
-  
-
-const tablesModel = ref(Object.getOwnPropertyNames(tables));
-console.log(tablesModel.value)
-
-const selectedTable = ref(tablesModel.value[0]);
-
-function getIdProp(obj){
-    var props = Object.getOwnPropertyNames(obj);
-    var id = props.find(x => x.indexOf("ID") != -1);
-
-    return id; 
-}
-
-  const devMode = false
-  
-  const db = useFirestore()
-  const dialog = ref(false)
-  
-  const dialogAdd = ref(false)
-  const addItem = ref({
-    text:""
-  })
-  
-  const current = ref({})
-  const tmp = ref({})
-  const editMode = ref(false)
-  
-  
-  function strippedHtml(value) {
-    let regex = /(<([^>]+)>)/ig;
-    return value.replace(regex, "");
-  }
-  
-  function select(item) {
-    current.value = item;
-    dialog.value = true
-  }
-  
-  function edit(item) {
-    tmp.value = Object.assign({}, item);
-    editMode.value = true
-  }
-  
-  async function save(item) {
-    editMode.value = false
-  
-    item.text = tmp.value.text
-    const noteRef = doc(db, "notes", item.id);
-  
-    await updateDoc(noteRef, {
-      text: tmp.value.text
-    });
-  }
-  
-  function showAdd(){
-      addItem.value = {
-    text:""
-  }
-      dialogAdd.value = true
-    }
-  
-    async function add(item){
-      
-      dialogAdd.value = false
-      await addDoc(collection(db, "notes"), item)
-    
-      addItem.value = ref({
-    text:""
-  })
-    }
-  
-  </script>
-  
-  
-  <style>
-  .dialog-bottom-transition-enter-active,
-  .dialog-bottom-transition-leave-active {
-    transition: transform .2s ease-in-out;
-  }
-  </style>
 ```
 
 ### src/components/admin/TwoColsField.vue
@@ -2999,10 +1930,10 @@ import { useDocument } from 'vuefire';
 import { doc, getFirestore } from 'firebase/firestore';
 import moment from 'moment';
 import 'moment/dist/locale/be'; // Убедимся, что локаль подключена
-
+import { db } from '@/plugins/firebase'; 
 // --- Инициализация ---
 const route = useRoute();
-const db = getFirestore();
+//const db = getFirestore();
 moment.locale('be'); // Активируем белорусскую локаль
 
 // --- Загрузка данных дня ---
@@ -4460,9 +3391,10 @@ import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useDocument } from 'vuefire';
 import { doc, getFirestore } from 'firebase/firestore';
+import { db } from '@/plugins/firebase'; 
 
 const route = useRoute();
-const db = getFirestore();
+//const db = getFirestore();
 
 const { day: dateParam, id: dayId } = route.params;
 
@@ -4726,8 +3658,7 @@ const fontOptions = ref([
 
       <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 <router-link to="/" class="text-decoration-none text-white">
-      <v-app-bar-title> <span style="cursor: pointer;">My
-          Brev</span></v-app-bar-title>
+      <v-app-bar-title> <span style="cursor: pointer;">Малітоўнік</span></v-app-bar-title>
 </router-link>
       <v-spacer></v-spacer>
 
@@ -5086,6 +4017,9 @@ const goToEdit = () => {
 ```
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { initializeFirestore, persistentLocalCache, 
+  CACHE_SIZE_UNLIMITED  } from "firebase/firestore";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -5101,9 +4035,22 @@ const firebaseConfig = {
   databaseUrl:"https://ibreviaryby.firebaseio.com",
 };
 
-// Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
-export  {firebaseApp} 
+/// Инициализация Firebase App
+export const firebaseApp = initializeApp(firebaseConfig);
+// 🔥 ИНИЦИАЛИЗАЦИЯ FIRESTORE С КЭШИРОВАНИЕМ
+// Здесь мы используем ваш правильный синтаксис
+export const db = initializeFirestore(firebaseApp, {
+  // localCache может быть 'memory', 'none', или 'persistent'
+  // persistentLocalCache() - это то, что нам нужно для оффлайна
+  localCache: persistentLocalCache({
+    // Вы можете настроить размер кэша
+    cacheSizeBytes: CACHE_SIZE_UNLIMITED
+  })
+});
+// Если вам нужна аутентификация, ее тоже можно экспортировать отсюда
+// import { getAuth } from 'firebase/auth';
+// export const auth = getAuth(firebaseApp);
+console.log("✅ Firebase и Firestore с оффлайн-кэшем инициализированы.");
 ```
 
 ### src/plugins/index.js
@@ -5255,6 +4202,11 @@ const routes = [
         meta: { requiresAuth: true }, // Защищаем все дочерние маршруты
         children: [
           {
+  path: 'backup',
+  name: 'AdminBackup',
+  component: () => import('@/views/admin/Backup.vue'),
+},
+          {
             path: '', // <-- /admin (пустой path относительно родителя)
             name: 'Admin',
             component: () => import('@/views/Admin.vue'),
@@ -5264,25 +4216,20 @@ const routes = [
         name: 'AdminLogicTester',
         component: () => import('@/components/admin/LogicTester.vue'),
       },
+          
           {
-            path: 'table-days', // <-- /admin/table-days
-            name: 'AdminTableDays',
-            component: () => import('@/components/admin/TableList.vue'),
-          },
-          {
-            path: 'edit-day/:id', // ✅ НАША НОВАЯ СТРАНИЦА РЕДАКТИРОВАНИЯ
-            name: 'AdminEditDay',
-            component: () => import('@/views/DayEdit.vue'),
-            props: true, // Передаем :id как prop в компонент
-          },
+  // ✅ НАШ ЕДИНЫЙ РЕДАКТОР
+  path: 'day-editor/:id',
+  name: 'AdminDayEditor',
+  component: () => import('@/views/admin/DayEditor.vue'),
+  props: true,
+},
           {
             path: 'year-options', // ✅ ВАЖНАЯ СТРАНИЦА
             name: 'AdminYearOptions',
             component: () => import('@/components/admin/YearOptions.vue'),
           },
           // --- Временные, но рабочие маршруты ---
-          { path: 'bridge', name: 'AdminBridge', component: () => import('@/components/admin/Bridge.vue') },
-          { path: 'bridge-list', name: 'AdminBridgeList', component: () => import('@/components/admin/BridgeList.vue') },
           { path: 'db-day-list', name: 'AdminDbDayList', component: () => import('@/components/admin/DbDayList.vue') },
         ]
       },
@@ -5646,6 +4593,369 @@ export const useSettingsStore = defineStore('settings', () => {
 });
 ```
 
+### src/views/admin/Backup.vue
+```
+<template>
+  <v-container>
+    <v-card>
+      <v-card-title>Резервоўнае капіраванне</v-card-title>
+      <v-card-text>
+        <p class="mb-4">Націсніце на кнопку ніжэй, каб спампаваць поўную рэзервовую копію калекцыі `days` у выглядзе аднаго JSON-файла. Захавайце гэты файл у надзейным месцы перад пачаткам любых змен.</p>
+        <v-btn color="primary" @click="downloadBackup" :loading="loading" block size="large">
+          Спампаваць бэкап калекцыі 'days'
+        </v-btn>
+      </v-card-text>
+    </v-card>
+  </v-container>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { useFirestore } from 'vuefire';
+import { collection, getDocs } from 'firebase/firestore';
+
+const db = useFirestore();
+const loading = ref(false);
+
+const downloadBackup = async () => {
+  loading.value = true;
+  try {
+    const daysRef = collection(db, 'days');
+    const querySnapshot = await getDocs(daysRef);
+
+    const dataToSave = [];
+    querySnapshot.forEach(doc => {
+      dataToSave.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+
+    const blob = new Blob([JSON.stringify(dataToSave, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const date = new Date().toISOString().slice(0, 10);
+    link.download = `firestore-days-backup-${date}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    alert(`Бэкап паспяхова створаны! Захавана ${dataToSave.length} дакументаў.`);
+  } catch (error) {
+    console.error("Памылка стварэння бэкапу:", error);
+    alert("Адбылася памылка. Глядзіце кансоль.");
+  } finally {
+    loading.value = false;
+  }
+};
+</script>
+```
+
+### src/views/admin/DayEditor.vue
+```
+<template>
+  <div>
+    <!-- НАВИГАЦИОННАЯ ПАНЕЛЬ -->
+    <v-app-bar color="primary" app>
+      <v-btn icon @click="goBack">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <v-toolbar-title>{{ isNew ? 'Стварэнне новага дня' : 'Рэдагаванне дня' }}</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn @click="saveChanges" :loading="saving" variant="text">Захаваць</v-btn>
+    </v-app-bar>
+
+    <!-- ИНДИКАТОР ЗАГРУЗКИ -->
+    <div v-if="pending || loadingDuplicate" class="d-flex justify-center align-center" style="height: 80vh;">
+      <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
+      <p v-if="loadingDuplicate" class="ml-4">Дубліраванне дня...</p>
+    </div>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ (ФОРМА) -->
+    <v-container v-else>
+      <!-- Секция 1: Основные параметры -->
+      <v-card class="mb-6">
+        <v-card-text>
+          <!-- "УМНЫЕ" ПОЛЯ ДЛЯ УПРАВЛЕНИЯ ПЕРИОДОМ -->
+          <v-row>
+            <v-col cols="12" md="4">
+              <v-select v-model="simpleFields.period" :items="periodOptions" label="Літургічны перыяд" clearable hide-details variant="outlined" density="compact"></v-select>
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-text-field v-model.number="simpleFields.weekNumber" label="Нумар тыдня" type="number" :disabled="!simpleFields.period" hide-details variant="outlined" density="compact"></v-text-field>
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-select v-model="simpleFields.dayOfWeek" :items="dayOfWeekOptions" label="Дзень тыдня" :disabled="!simpleFields.period" hide-details variant="outlined" density="compact"></v-select>
+            </v-col>
+          </v-row>
+          <!-- ПОЛЯ ДЛЯ ПРАЗДНИКОВ И ПСАЛТЫРИ -->
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-text-field v-model="dayData._feastName" label="Назва свята (калі ёсць)" hide-details variant="outlined" density="compact"></v-text-field>
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-text-field v-model="dayData._psalmWeek" label="Тыдзень псалтыра" hide-details variant="outlined" density="compact"></v-text-field>
+            </v-col>
+             <v-col cols="12" md="3">
+              <v-checkbox v-model="dayData.allowedAlleluia" label="Дазволена 'Аллелюя'" hide-details density="compact"></v-checkbox>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+      
+      <!-- Секция 2: Редактирование текстов -->
+      <v-expansion-panels variant="accordion" v-model="panel">
+        <v-expansion-panel title="Каментар і Заклік">
+          <v-expansion-panel-text class="pa-1">
+             <v-row no-gutters>
+                <InlineEditor v-model="dayData.feastComment" fieldTitle="Каментар да свята" />
+                <InlineEditor v-model="dayData.invitatoriumAnt" fieldTitle="Антыфона да Закліку" />
+            </v-row>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+
+        <v-expansion-panel title="Гадзіна Чытанняў">
+          <v-expansion-panel-text class="pa-1">
+            <v-row no-gutters>
+                <InlineEditor v-model="dayData.officeOfReadingsHymn" fieldTitle="Гімн (ГЧ)" />
+                <InlineEditor v-model="dayData.officeOfReadingsAnt1" fieldTitle="Антыфона 1 (ГЧ)" />
+                <InlineEditor v-model="dayData.officeOfReadingsPs1" fieldTitle="Псалом 1 (ГЧ)" />
+                <InlineEditor v-model="dayData.officeOfReadingsAnt2" fieldTitle="Антыфона 2 (ГЧ)" />
+                <InlineEditor v-model="dayData.officeOfReadingsPs2" fieldTitle="Псалом 2 (ГЧ)" />
+                <InlineEditor v-model="dayData.officeOfReadingsAnt3" fieldTitle="Антыфона 3 (ГЧ)" />
+                <InlineEditor v-model="dayData.officeOfReadingsPs3" fieldTitle="Псалом 3 (ГЧ)" />
+                <InlineEditor v-model="dayData.officeOfReadingsVers" fieldTitle="Верш (ГЧ)" />
+                <InlineEditor v-model="dayData.officeOfReadingsR1" fieldTitle="Чытанне 1 (ГЧ)" />
+                <InlineEditor v-model="dayData.officeOfReadingsR2" fieldTitle="Чытанне 2 (ГЧ)" />
+                <InlineEditor v-model="dayData.officeOfReadingsPr" fieldTitle="Малітва (ГЧ)" />
+            </v-row>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+
+        <v-expansion-panel title="Ютрань">
+          <v-expansion-panel-text class="pa-1">
+            <v-row no-gutters>
+                <InlineEditor v-model="dayData.laudesHymn" fieldTitle="Гімн (Ютрань)" />
+                <InlineEditor v-model="dayData.laudesAnt1" fieldTitle="Антыфона 1 (Ютрань)" />
+                <InlineEditor v-model="dayData.laudesPs1" fieldTitle="Псалом 1 (Ютрань)" />
+                <InlineEditor v-model="dayData.laudesAnt2" fieldTitle="Антыфона 2 (Ютрань)" />
+                <InlineEditor v-model="dayData.laudesPs2" fieldTitle="Псалом 2 (Ютрань)" />
+                <InlineEditor v-model="dayData.laudesAnt3" fieldTitle="Антыфона 3 (Ютрань)" />
+                <InlineEditor v-model="dayData.laudesPs3" fieldTitle="Псалом 3 (Ютрань)" />
+                <InlineEditor v-model="dayData.laudesR" fieldTitle="Кароткае чытанне (Ютрань)" />
+                <InlineEditor v-model="dayData.laudesAntBen" fieldTitle="Антыфона да Песні Захарыі" />
+                <InlineEditor v-model="dayData.laudesInter" fieldTitle="Просьбы (Ютрань)" />
+                <InlineEditor v-model="dayData.laudesPr" fieldTitle="Малітва (Ютрань)" />
+            </v-row>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+        
+        <v-expansion-panel title="Дзённыя малітвы">
+          <v-expansion-panel-text class="pa-1">
+              <v-row no-gutters>
+                <v-col cols="12"><v-divider class="my-3"><v-chip size="small">Малітва перад поўднем (Terz)</v-chip></v-divider></v-col>
+                <InlineEditor v-model="dayData.sext1Hymn" fieldTitle="Гімн (Terz)" />
+                <InlineEditor v-model="dayData.sext1R" fieldTitle="Кароткае чытанне (Terz)" />
+                <InlineEditor v-model="dayData.sext1Pr" fieldTitle="Малітва (Terz)" />
+                
+                <v-col cols="12"><v-divider class="my-3"><v-chip size="small">Малітва апоўдні (Sext)</v-chip></v-divider></v-col>
+                <InlineEditor v-model="dayData.sext2Hymn" fieldTitle="Гімн (Sext)" />
+                <InlineEditor v-model="dayData.sext2R" fieldTitle="Кароткае чытанне (Sext)" />
+                <InlineEditor v-model="dayData.sext2Pr" fieldTitle="Малітва (Sext)" />
+              
+                <v-col cols="12"><v-divider class="my-3"><v-chip size="small">Малітва пасля поўдня (Non)</v-chip></v-divider></v-col>
+                <InlineEditor v-model="dayData.sext3Hymn" fieldTitle="Гімн (Non)" />
+                <InlineEditor v-model="dayData.sext3R" fieldTitle="Кароткае чытанне (Non)" />
+                <InlineEditor v-model="dayData.sext3Pr" fieldTitle="Малітва (Non)" />
+
+                <v-col cols="12"><v-divider class="my-3"><v-chip size="small">Агульныя псалмы для дзённых малітваў</v-chip></v-divider></v-col>
+                <InlineEditor v-model="dayData.sext1Ant1" fieldTitle="Антыфона 1 (агульная)" />
+                <InlineEditor v-model="dayData.sext1Ps1" fieldTitle="Псалом 1 (агульны)" />
+                <InlineEditor v-model="dayData.sext1Ant2" fieldTitle="Антыфона 2 (агульная)" />
+                <InlineEditor v-model="dayData.sext1Ps2" fieldTitle="Псалом 2 (агульны)" />
+                <InlineEditor v-model="dayData.sext1Ant3" fieldTitle="Антыфона 3 (агульная)" />
+                <InlineEditor v-model="dayData.sext1Ps3" fieldTitle="Псалом 3 (агульны)" />
+            </v-row>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+
+        <v-expansion-panel title="Нешпары">
+          <v-expansion-panel-text class="pa-1">
+            <v-row no-gutters>
+                <InlineEditor v-model="dayData.vesperHymn" fieldTitle="Гімн (Нешпары)" />
+                <InlineEditor v-model="dayData.vesperAnt1" fieldTitle="Антыфона 1 (Нешпары)" />
+                <InlineEditor v-model="dayData.vesperPs1" fieldTitle="Псалом 1 (Нешпары)" />
+                <InlineEditor v-model="dayData.vesperAnt2" fieldTitle="Антыфона 2 (Нешпары)" />
+                <InlineEditor v-model="dayData.vesperPs2" fieldTitle="Псалом 2 (Нешпары)" />
+                <InlineEditor v-model="dayData.vesperAnt3" fieldTitle="Антыфона 3 (Нешпары)" />
+                <InlineEditor v-model="dayData.vesperPs3" fieldTitle="Псалом 3 (Нешпары)" />
+                <InlineEditor v-model="dayData.vesperR" fieldTitle="Кароткае чытанне (Нешпары)" />
+                <InlineEditor v-model="dayData.vesperAntMag" fieldTitle="Антыфона да Песні Марыі" />
+                <InlineEditor v-model="dayData.vesperInter" fieldTitle="Просьбы (Нешпары)" />
+                <InlineEditor v-model="dayData.vesperPr" fieldTitle="Малітва (Нешпары)" />
+            </v-row>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+
+        <v-expansion-panel title="Камплета">
+          <v-expansion-panel-text class="pa-1">
+            <v-row no-gutters>
+                <InlineEditor v-model="dayData.compHymn" fieldTitle="Гімн (Камплета)" />
+                <InlineEditor v-model="dayData.compAnt1" fieldTitle="Антыфона 1 (Камплета)" />
+                <InlineEditor v-model="dayData.compPs1" fieldTitle="Псалом 1 (Камплета)" />
+                <InlineEditor v-model="dayData.compAnt2" fieldTitle="Антыфона 2 (Камплета)" />
+                <InlineEditor v-model="dayData.compPs2" fieldTitle="Псалом 2 (Камплета)" />
+                <InlineEditor v-model="dayData.compR" fieldTitle="Кароткае чытанне (Камплета)" />
+                <InlineEditor v-model="dayData.compResp" fieldTitle="Рэспансорый (Камплета)" />
+                <InlineEditor v-model="dayData.compAntS" fieldTitle="Антыфона да Песні Сімяона" />
+                <InlineEditor v-model="dayData.compPr" fieldTitle="Малітва (Камплета)" />
+                <InlineEditor v-model="dayData.compAntM" fieldTitle="Антыфона да Найсвяцейшай Панны Марыі" />
+            </v-row>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </v-container>
+  </div>
+</template>
+
+<script setup>
+import { ref, reactive, watch, computed, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useDocument, useFirestore } from 'vuefire';
+import { doc, setDoc, addDoc, collection } from 'firebase/firestore';
+import InlineEditor from '@/components/admin/InlineEditor.vue';
+
+const router = useRouter();
+const route = useRoute();
+const db = useFirestore();
+
+const dayId = ref(route.params.id);
+const isNew = computed(() => dayId.value === 'new');
+const saving = ref(false);
+const panel = ref(); // Какая панель будет открыта, можно установить номер по умолчанию, например 0
+const loadingDuplicate = ref(false); 
+
+// Загружаем данные. promise.value позволяет дождаться окончания загрузки.
+const { data: dayData, pending, promise } = useDocument(isNew.value ? null : doc(db, 'days', dayId.value));
+
+// Реактивный объект для "умных" полей, которые видит пользователь
+const simpleFields = reactive({
+  period: null,
+  weekNumber: null,
+  dayOfWeek: null,
+});
+
+// Справочники для выпадающих списков
+const periodOptions = [
+  { value: 'ordinary', title: 'Звычайны перыяд' },
+  { value: 'advent', title: 'Адвэнт' },
+  { value: 'christmas', title: 'Перыяд Божага Нараджэння' },
+  { value: 'lent', title: 'Вялікі Пост' },
+  { value: 'holyweek', title: 'Вялікі тыдзень' },
+  { value: 'easter', title: 'Велікодны перыяд' },
+];
+const dayOfWeekOptions = [
+  { value: 1, title: 'Нядзеля' }, { value: 2, title: 'Панядзелак' }, { value: 3, title: 'Аўторак' },
+  { value: 4, title: 'Серада' }, { value: 5, title: 'Чацвер' }, { value: 6, title: 'Пятніца' }, { value: 7, title: 'Субота' },
+];
+
+// Эта функция инициализирует состояние формы
+const initializeForm = () => {
+    if (isNew.value) {
+        // Создаем пустой объект со всеми полями, чтобы избежать ошибок 'undefined'
+        const allFields = ["_dayOfWeek", "_periodType", "_periodWeekNumber", "_date", "_feast", "_psalmWeek", "_dayName", "_weekDay", "_weekNum", "_feastName", "_feastType", "allowedAlleluia", "invitatoriumAnt", "invitatoriumPs1", "invitatoriumPs2", "invitatoriumPs3", "invitatoriumPs4", "invitatoriumPs5", "invitatoriumPs6", "feastComment", "officeOfReadingsHymn", "officeOfReadingsAnt1", "officeOfReadingsAnt2", "officeOfReadingsAnt3", "officeOfReadingsPs1", "officeOfReadingsPs2", "officeOfReadingsPs3", "officeOfReadingsVers", "officeOfReadingsR1", "officeOfReadingsR2", "officeOfReadingsTeDeum", "officeOfReadingsPr", "laudesHymn", "laudesAnt1", "laudesAnt2", "laudesAnt3", "laudesPs1", "laudesPs2", "laudesPs3", "laudesR", "laudesAntBen", "laudesInter", "laudesPr", "sext1Hymn", "sext1Ant1", "sext1Ant2", "sext1Ant3", "sext1Ps1", "sext1Ps2", "sext1Ps3", "sext1R", "sext1Pr", "sext2Hymn", "sext2Ant1", "sext2Ant2", "sext2Ant3", "sext2Ps1", "sext2Ps2", "sext2Ps3", "sext2R", "sext2Pr", "sext3Hymn", "sext3Ant1", "sext3Ant2", "sext3Ant3", "sext3Ps1", "sext3Ps2", "sext3Ps3", "sext3R", "sext3Pr", "vesperHymn", "vesperAnt1", "vesperAnt2", "vesperAnt3", "vesperPs1", "vesperPs2", "vesperPs3", "vesperR", "vesperAntMag", "vesperInter", "vesperPr", "compHymn", "compAnt1", "compAnt2", "compPs1", "compPs2", "compR", "compResp", "compAntS", "compPr", "compAntM"];
+        dayData.value = allFields.reduce((obj, key) => ({ ...obj, [key]: '' }), {});
+        dayData.value.allowedAlleluia = true; // Значение по умолчанию
+    } else if (dayData.value) {
+        // Заполняем "умные" поля на основе загруженных данных
+        simpleFields.period = dayData.value._periodType;
+        simpleFields.weekNumber = dayData.value._periodWeekNumber;
+        simpleFields.dayOfWeek = dayData.value._dayOfWeek;
+    }
+};
+
+// Вызываем инициализацию после загрузки данных
+onMounted(async () => {
+   const duplicateFromId = route.query.duplicateFrom;
+  if (duplicateFromId) {
+    // ✅ ЛОГИКА ДУБЛИРОВАНИЯ
+    loadingDuplicate.value = true;
+    const sourceDocRef = doc(db, 'days', duplicateFromId);
+    const sourceDocSnap = await getDoc(sourceDocRef);
+    if (sourceDocSnap.exists()) {
+      const sourceData = sourceDocSnap.data();
+      // Заполняем dayData данными из оригинала, но без ID
+      dayData.value = { ...sourceData };
+      // Можно добавить "умное" автозаполнение, например, следующий день
+      if (dayData.value._dayOfWeek < 7) {
+        dayData.value._dayOfWeek++;
+      } else {
+        dayData.value._dayOfWeek = 1;
+        dayData.value._periodWeekNumber++;
+      }
+    }
+    loadingDuplicate.value = false;
+  }
+  
+    if (!isNew.value) {
+        await promise.value; // Ждем завершения загрузки
+    }
+    initializeForm();
+});
+
+// Главная "магия": следим за изменениями в простых полях
+// и автоматически обновляем "скрытые" поля в dayData
+watch(simpleFields, (newVal) => {
+  if (!dayData.value) return;
+
+  // Обновляем технические поля
+  dayData.value._periodType = newVal.period || '';
+  dayData.value._periodWeekNumber = newVal.weekNumber || null;
+  dayData.value._dayOfWeek = newVal.dayOfWeek || null;
+  
+  // Обновляем дублирующиеся и текстовые поля для совместимости
+  dayData.value._weekNum = newVal.weekNumber || '';
+  const dayNameObj = dayOfWeekOptions.find(d => d.value === newVal.dayOfWeek);
+  dayData.value._weekDay = dayNameObj ? dayNameObj.title : '';
+
+  const periodNameObj = periodOptions.find(p => p.value === newVal.period);
+  if (periodNameObj && newVal.weekNumber && dayNameObj) {
+      dayData.value._dayName = `${periodNameObj.title}, ${newVal.weekNumber} тыдзень`;
+  } else {
+      dayData.value._dayName = '';
+  }
+
+}, { deep: true });
+
+// Логика сохранения
+const saveChanges = async () => {
+    saving.value = true;
+    try {
+        // Убедимся, что boolean-значения сохраняются корректно
+        const dataToSave = { ...dayData.value, allowedAlleluia: !!dayData.value.allowedAlleluia };
+
+        if (isNew.value) {
+            const docRef = await addDoc(collection(db, 'days'), dataToSave);
+            alert('Дзень паспяхова створаны!');
+            router.replace({ name: 'AdminDayEditor', params: { id: docRef.id } });
+        } else {
+            await setDoc(doc(db, 'days', dayId.value), dataToSave, { merge: true });
+            alert('Змены паспяхова захаваны!');
+        }
+    } catch (e) {
+        console.error("Памылка захавання:", e);
+        alert("Адбылася памылка. Глядзіце кансоль.");
+    } finally {
+        saving.value = false;
+    }
+};
+
+const goBack = () => router.go(-1);
+</script>
+```
+
 ### src/views/Admin.vue
 ```
 <template>
@@ -5654,10 +4964,7 @@ export const useSettingsStore = defineStore('settings', () => {
     <p class="mb-6">Сардэчна запрашаем! Выберыце раздзел для кіравання.</p>
 
     <v-row>
-      <!-- Главные разделы -->
-      <v-col cols="12" md="6">
-        <v-card to="/admin/table-days" hover><v-card-title>Табліца дзён</v-card-title><v-card-subtitle>Прагляд і рэдагаванне ўсіх дзён</v-card-subtitle></v-card>
-      </v-col>
+      
       <v-col cols="12" md="6">
         <v-card to="/admin/year-options" hover><v-card-title>Налады года (YearOptions)</v-card-title><v-card-subtitle>Кіраванне рухомымі святамі і перыядамі</v-card-subtitle></v-card>
       </v-col>
@@ -5673,9 +4980,10 @@ export const useSettingsStore = defineStore('settings', () => {
         <v-divider class="my-4"></v-divider>
         <h2 class="text-h6 font-weight-light mb-3">Тэхнічныя раздзелы</h2>
       </v-col>
-      <v-col cols="12" md="4"><v-card to="/admin/bridge" hover><v-card-title>Bridge</v-card-title></v-card></v-col>
-      <v-col cols="12" md="4"><v-card to="/admin/bridge-list" hover><v-card-title>BridgeList</v-card-title></v-card></v-col>
       <v-col cols="12" md="4"><v-card to="/admin/db-day-list" hover><v-card-title>DbDayList</v-card-title></v-card></v-col>
+    
+     <v-col cols="12" md="4"><v-card to="/admin/backup" hover><v-card-title>Backup</v-card-title></v-card></v-col>
+    
     </v-row>
   </v-container>
 </template>

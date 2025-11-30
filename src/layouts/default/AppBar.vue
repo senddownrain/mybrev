@@ -11,8 +11,7 @@
 
       <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 <router-link to="/" class="text-decoration-none text-white">
-      <v-app-bar-title> <span style="cursor: pointer;">My
-          Brev</span></v-app-bar-title>
+      <v-app-bar-title> <span style="cursor: pointer;">Малітоўнік</span></v-app-bar-title>
 </router-link>
       <v-spacer></v-spacer>
 
