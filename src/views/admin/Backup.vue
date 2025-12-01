@@ -16,15 +16,19 @@
 import { ref } from 'vue';
 import { useFirestore } from 'vuefire';
 import { collection, getDocs } from 'firebase/firestore';
+import { useNotifier } from '@/composables/useNotifier';
+import { logger } from '@/utils/logger';
+import { retryFirestore } from '@/utils/retry';
 
 const db = useFirestore();
 const loading = ref(false);
+const { success, error: notifyError } = useNotifier();
 
 const downloadBackup = async () => {
   loading.value = true;
   try {
     const daysRef = collection(db, 'days');
-    const querySnapshot = await getDocs(daysRef);
+    const querySnapshot = await retryFirestore(() => getDocs(daysRef));
 
     const dataToSave = [];
     querySnapshot.forEach(doc => {
@@ -45,10 +49,10 @@ const downloadBackup = async () => {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    alert(`Бэкап паспяхова створаны! Захавана ${dataToSave.length} дакументаў.`);
+    success(`Бэкап паспяхова створаны! Захавана ${dataToSave.length} дакументаў.`);
   } catch (error) {
-    console.error("Памылка стварэння бэкапу:", error);
-    alert("Адбылася памылка. Глядзіце кансоль.");
+    logger.error("Памылка стварэння бэкапу:", error);
+    notifyError("Адбылася памылка пры стварэнні бэкапу.");
   } finally {
     loading.value = false;
   }

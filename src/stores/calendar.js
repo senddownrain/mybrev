@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia';
-import { ref, computed  } from 'vue'; // Убедимся, что импорт правильный
+import { ref, computed  } from 'vue';
 import { collection, query, where, getDocs, getFirestore } from 'firebase/firestore';
 import moment from 'moment';
 import 'moment/dist/locale/be';
+import { logger } from '@/utils/logger';
+import { retryFirestore } from '@/utils/retry';
 
 export const useCalendarStore = defineStore('calendar', () => {
     const db = getFirestore();
@@ -17,31 +19,31 @@ export const useCalendarStore = defineStore('calendar', () => {
             return yearOptionsCache.value[year];
         }
         
-        console.log(`[CalendarStore] Пошук наладаў для ${year} года ў Firestore...`);
+        logger.log(`[CalendarStore] Пошук наладаў для ${year} года ў Firestore...`);
         const q = query(collection(db, 'yearOptions'), where('year', '==', Number(year)));
         
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await retryFirestore(() => getDocs(q));
         
         if (querySnapshot.empty) {
-            console.error(`[CalendarStore] Налады для года ${year} не знойдзены!`);
+            logger.error(`[CalendarStore] Налады для года ${year} не знойдзены!`);
             return null;
         }
         
         const options = querySnapshot.docs[0].data();
         yearOptionsCache.value[year] = options;
-        console.log(`[CalendarStore] Налады для года ${year} паспяхова загружаны.`);
+        logger.log(`[CalendarStore] Налады для года ${year} паспяхова загружаны.`);
         return options;
     }
 
     // --- ✅ 2. ИЗМЕНЕНИЕ: getDynamicDates работает с новым форматом дат ---
     async function getDynamicDates(year) {
-    console.log(`[CalendarStore] Вычисление динамических дат для ${year} года...`);
+    logger.log(`[CalendarStore] Вычисление динамических дат для ${year} года...`);
     
     // Убедимся, что опции для года загружены
     await getYearOptions(year); 
     const opts = yearOptionsCache.value[year];
     if (!opts) {
-        console.error(`[CalendarStore] Не удалось получить опции для ${year} года. Вычисление дат прервано.`);
+        logger.error(`[CalendarStore] Не удалось получить опции для ${year} года. Вычисление дат прервано.`);
         return {};
     }
     const dates = {};
@@ -69,7 +71,7 @@ export const useCalendarStore = defineStore('calendar', () => {
     dates.immaculateHeartOfMary = sacredHeartOfJesus.clone().add(1, 'day'); // Следующий день
     dates.christTheHighPriest = pentecost.clone().subtract(11, 'days'); // Пн после Пятидесятницы - уточнить если нужно
     dynamicDatesCache.value[year] = dates;
-    console.log(`[CalendarStore] Динамические даты для ${year} года вычислены.`);
+    logger.log(`[CalendarStore] Динамические даты для ${year} года вычислены.`);
     return dates;
 }
 

@@ -355,7 +355,7 @@ import { useDayStore } from '@/stores/day'
 const dayStore = useDayStore()
 const dte = ref(dayStore.getDayToEdit);
 
-console.log(dte.value)
+// Removed console.log
 
 function checkEditor(field) {
     return field && field.length > 50

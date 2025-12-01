@@ -1,69 +1,156 @@
 <template>
   <div>
-
-    <v-bottom-navigation :value="value" color="#2F4475" horizontal>
-
-      <v-btn v-for="(m, i) in menu" :key="i" :to="m.to" :value="i">
-        <span>{{ m.title }}</span>
-        <v-icon>{{ m.icon }}</v-icon>
+    <v-bottom-navigation 
+      :model-value="activeIndex" 
+      color="primary" 
+      bg-color="surface"
+      elevation="4"
+      height="64"
+    >
+      <v-btn 
+        v-for="(m, i) in menu" 
+        :key="i" 
+        :value="i"
+        :active="activeIndex === i"
+        @click="navigateTo(m.to)"
+        variant="text"
+        size="large"
+        class="bottom-nav-btn"
+      >
+        <v-icon size="24">{{ m.icon }}</v-icon>
+        <span class="text-caption font-weight-medium">{{ m.title }}</span>
       </v-btn>
-      <v-btn value="2" @click="toggleCalendarDialog()">
-        <span>Дзень</span>
-        <v-icon>mdi-heart</v-icon>
+      
+      <v-btn 
+        :value="2" 
+        :active="activeIndex === 2"
+        @click="toggleCalendarDialog()"
+        variant="text"
+        size="large"
+        class="bottom-nav-btn"
+      >
+        <v-icon size="24">mdi-calendar-month</v-icon>
+        <span class="text-caption font-weight-medium">Дзень</span>
       </v-btn>
-
     </v-bottom-navigation>
- <v-dialog v-model="isCalendarDialogOpen" width="auto">
-      <v-card>
+
+    <v-dialog v-model="isCalendarDialogOpen" width="auto" max-width="400">
+      <v-card rounded="lg">
+        <v-card-title class="d-flex justify-space-between align-center pa-4">
+          <span class="text-h6">Выбраць дату</span>
+          <v-btn icon="mdi-close" variant="text" size="small" @click="toggleCalendarDialog"></v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
         <v-card-text class="pa-0">
-          <!-- ✅ У v-date-picker есть свой v-model -->
           <v-date-picker 
             v-model="selectedDate" 
             color="primary"
             hide-header
+            :first-day-of-week="1"
           ></v-date-picker>
         </v-card-text>
-        <v-card-actions>
+        <v-divider></v-divider>
+        <v-card-actions class="pa-3">
+          <v-spacer></v-spacer>
           <v-btn variant="text" @click="toggleCalendarDialog">Адмена</v-btn>
-          <v-btn color="primary" variant="text" @click="loadDay">Выбраць</v-btn>
+          <v-btn color="primary" variant="flat" @click="loadDay">Выбраць</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
   </div>
 </template>
 
-
 <script setup>
-
-
 import moment from 'moment'
 import 'moment/dist/locale/be'
-import { ref } from 'vue'
-import router from '@/router';
-import { useAppBar } from '@/composables/useAppBar';
+import { ref, computed, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useAppBar } from '@/composables/useAppBar'
 
-const value = ref(1)
-const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar();
-const selectedDate = ref(new Date()); // ✅ Переменная для v-date-picker
+const route = useRoute()
+const router = useRouter()
+const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar()
+const selectedDate = ref(new Date())
 
-const yeasterday = moment().subtract(1, 'days');
-const menu = [
+// Получаем текущую дату из роута или используем сегодняшнюю
+const currentRouteDate = computed(() => {
+  if (route.name === 'Today' || route.path === '/') {
+    return moment().startOf('day')
+  }
+  if (route.params.day) {
+    return moment(route.params.day, 'YYYY-MM-DD').startOf('day')
+  }
+  return moment().startOf('day')
+})
+
+// Сегодняшняя дата
+const today = computed(() => moment().startOf('day'))
+
+// Вчерашняя дата - всегда относительно реального сегодня
+const yesterday = computed(() => today.value.clone().subtract(1, 'days'))
+
+// Меню с динамическими датами
+const menu = computed(() => [
   {
     title: "Учора",
-    to: `/day/${yeasterday.format("YYYY-MM-DD")}`,
-    icon: "mdi-heart"
+    to: `/day/${yesterday.value.format("YYYY-MM-DD")}`,
+    icon: "mdi-chevron-left"
   },
   {
     title: "Сёння",
     to: "/",
-    icon: "mdi-heart"
+    icon: "mdi-calendar-today"
   },
-]
+])
 
-function loadDay() {
-  toggleCalendarDialog();
-  router.push(`/day/${moment(selectedDate.value).format("YYYY-MM-DD")}`)
+// Определяем активную кнопку на основе текущей даты
+const activeIndex = computed(() => {
+  const routeDate = currentRouteDate.value
+  const todayDate = today.value
+  const yesterdayDate = yesterday.value
+  
+  // Сравниваем даты без времени
+  if (routeDate.isSame(todayDate, 'day')) {
+    return 1 // Сёння
+  } else if (routeDate.isSame(yesterdayDate, 'day')) {
+    return 0 // Учора
+  } else {
+    return 2 // Другой день - активна кнопка "Дзень"
+  }
+})
+
+// Функция для навигации
+function navigateTo(path) {
+  router.push(path)
 }
 
+// Обновляем selectedDate при открытии календаря
+watch(isCalendarDialogOpen, (isOpen) => {
+  if (isOpen) {
+    selectedDate.value = currentRouteDate.value.toDate()
+  }
+})
+
+function loadDay() {
+  toggleCalendarDialog()
+  const dateString = moment(selectedDate.value).format('YYYY-MM-DD')
+  if (moment(selectedDate.value).isSame(today.value, 'day')) {
+    router.push('/')
+  } else {
+    router.push(`/day/${dateString}`)
+  }
+}
 </script>
+
+<style scoped>
+.bottom-nav-btn {
+  min-width: 80px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bottom-nav-btn :deep(.v-btn__content) {
+  flex-direction: column;
+  gap: 4px;
+}
+</style>

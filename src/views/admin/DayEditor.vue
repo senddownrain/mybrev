@@ -1,6 +1,10 @@
 <template>
-  <div>
-    <!-- НАВИГАЦИОННАЯ ПАНЕЛЬ -->
+  <v-app 
+    :style="{ 
+      '--app-font-family': settings.fontFamily,
+      '--font-size-multiplier': settings.fontSizeMultiplier 
+    }"
+  >
     <v-app-bar color="primary" app>
       <v-btn icon @click="goBack">
         <v-icon>mdi-arrow-left</v-icon>
@@ -10,18 +14,14 @@
       <v-btn @click="saveChanges" :loading="saving" variant="text">Захаваць</v-btn>
     </v-app-bar>
 
-    <!-- ИНДИКАТОР ЗАГРУЗКИ -->
     <div v-if="pending || loadingDuplicate" class="d-flex justify-center align-center" style="height: 80vh;">
       <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
       <p v-if="loadingDuplicate" class="ml-4">Дубліраванне дня...</p>
     </div>
 
-    <!-- ОСНОВНОЙ КОНТЕНТ (ФОРМА) -->
     <v-container v-else>
-      <!-- Секция 1: Основные параметры -->
       <v-card class="mb-6">
         <v-card-text>
-          <!-- "УМНЫЕ" ПОЛЯ ДЛЯ УПРАВЛЕНИЯ ПЕРИОДОМ -->
           <v-row>
             <v-col cols="12" md="4">
               <v-select v-model="simpleFields.period" :items="periodOptions" label="Літургічны перыяд" clearable hide-details variant="outlined" density="compact"></v-select>
@@ -33,7 +33,6 @@
               <v-select v-model="simpleFields.dayOfWeek" :items="dayOfWeekOptions" label="Дзень тыдня" :disabled="!simpleFields.period" hide-details variant="outlined" density="compact"></v-select>
             </v-col>
           </v-row>
-          <!-- ПОЛЯ ДЛЯ ПРАЗДНИКОВ И ПСАЛТЫРИ -->
           <v-row>
             <v-col cols="12" md="6">
               <v-text-field v-model="dayData._feastName" label="Назва свята (калі ёсць)" hide-details variant="outlined" density="compact"></v-text-field>
@@ -48,7 +47,6 @@
         </v-card-text>
       </v-card>
       
-      <!-- Секция 2: Редактирование текстов -->
       <v-expansion-panels variant="accordion" v-model="panel">
         <v-expansion-panel title="Каментар і Заклік">
           <v-expansion-panel-text class="pa-1">
@@ -160,37 +158,40 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </v-container>
-  </div>
+  </v-app>
 </template>
 
 <script setup>
 import { ref, reactive, watch, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useDocument, useFirestore } from 'vuefire';
-import { doc, setDoc, addDoc, collection } from 'firebase/firestore';
+import { doc, setDoc, addDoc, collection, getDoc } from 'firebase/firestore';
 import InlineEditor from '@/components/admin/InlineEditor.vue';
+import { useSettingsStore } from '@/stores/settings.js';
+import { useNotifier } from '@/composables/useNotifier';
+import { logger } from '@/utils/logger';
+import { retryFirestore } from '@/utils/retry';
 
 const router = useRouter();
 const route = useRoute();
 const db = useFirestore();
+const settings = useSettingsStore();
+const { success, error: notifyError } = useNotifier();
 
 const dayId = ref(route.params.id);
 const isNew = computed(() => dayId.value === 'new');
 const saving = ref(false);
-const panel = ref(); // Какая панель будет открыта, можно установить номер по умолчанию, например 0
-const loadingDuplicate = ref(false); 
+const panel = ref();
+const loadingDuplicate = ref(false);
 
-// Загружаем данные. promise.value позволяет дождаться окончания загрузки.
 const { data: dayData, pending, promise } = useDocument(isNew.value ? null : doc(db, 'days', dayId.value));
 
-// Реактивный объект для "умных" полей, которые видит пользователь
 const simpleFields = reactive({
   period: null,
   weekNumber: null,
   dayOfWeek: null,
 });
 
-// Справочники для выпадающих списков
 const periodOptions = [
   { value: 'ordinary', title: 'Звычайны перыяд' },
   { value: 'advent', title: 'Адвэнт' },
@@ -204,22 +205,18 @@ const dayOfWeekOptions = [
   { value: 4, title: 'Серада' }, { value: 5, title: 'Чацвер' }, { value: 6, title: 'Пятніца' }, { value: 7, title: 'Субота' },
 ];
 
-// Эта функция инициализирует состояние формы
 const initializeForm = () => {
     if (isNew.value) {
-        // Создаем пустой объект со всеми полями, чтобы избежать ошибок 'undefined'
         const allFields = ["_dayOfWeek", "_periodType", "_periodWeekNumber", "_date", "_feast", "_psalmWeek", "_dayName", "_weekDay", "_weekNum", "_feastName", "_feastType", "allowedAlleluia", "invitatoriumAnt", "invitatoriumPs1", "invitatoriumPs2", "invitatoriumPs3", "invitatoriumPs4", "invitatoriumPs5", "invitatoriumPs6", "feastComment", "officeOfReadingsHymn", "officeOfReadingsAnt1", "officeOfReadingsAnt2", "officeOfReadingsAnt3", "officeOfReadingsPs1", "officeOfReadingsPs2", "officeOfReadingsPs3", "officeOfReadingsVers", "officeOfReadingsR1", "officeOfReadingsR2", "officeOfReadingsTeDeum", "officeOfReadingsPr", "laudesHymn", "laudesAnt1", "laudesAnt2", "laudesAnt3", "laudesPs1", "laudesPs2", "laudesPs3", "laudesR", "laudesAntBen", "laudesInter", "laudesPr", "sext1Hymn", "sext1Ant1", "sext1Ant2", "sext1Ant3", "sext1Ps1", "sext1Ps2", "sext1Ps3", "sext1R", "sext1Pr", "sext2Hymn", "sext2Ant1", "sext2Ant2", "sext2Ant3", "sext2Ps1", "sext2Ps2", "sext2Ps3", "sext2R", "sext2Pr", "sext3Hymn", "sext3Ant1", "sext3Ant2", "sext3Ant3", "sext3Ps1", "sext3Ps2", "sext3Ps3", "sext3R", "sext3Pr", "vesperHymn", "vesperAnt1", "vesperAnt2", "vesperAnt3", "vesperPs1", "vesperPs2", "vesperPs3", "vesperR", "vesperAntMag", "vesperInter", "vesperPr", "compHymn", "compAnt1", "compAnt2", "compPs1", "compPs2", "compR", "compResp", "compAntS", "compPr", "compAntM"];
         dayData.value = allFields.reduce((obj, key) => ({ ...obj, [key]: '' }), {});
-        dayData.value.allowedAlleluia = true; // Значение по умолчанию
+        dayData.value.allowedAlleluia = true;
     } else if (dayData.value) {
-        // Заполняем "умные" поля на основе загруженных данных
         simpleFields.period = dayData.value._periodType;
         simpleFields.weekNumber = dayData.value._periodWeekNumber;
         simpleFields.dayOfWeek = dayData.value._dayOfWeek;
     }
 };
 
-// Вызываем инициализацию после загрузки данных
 onMounted(async () => {
    const duplicateFromId = route.query.duplicateFrom;
   if (duplicateFromId) {
@@ -280,16 +277,20 @@ const saveChanges = async () => {
         const dataToSave = { ...dayData.value, allowedAlleluia: !!dayData.value.allowedAlleluia };
 
         if (isNew.value) {
-            const docRef = await addDoc(collection(db, 'days'), dataToSave);
-            alert('Дзень паспяхова створаны!');
+            const docRef = await retryFirestore(
+                () => addDoc(collection(db, 'days'), dataToSave)
+            );
+            success('Дзень паспяхова створаны!');
             router.replace({ name: 'AdminDayEditor', params: { id: docRef.id } });
         } else {
-            await setDoc(doc(db, 'days', dayId.value), dataToSave, { merge: true });
-            alert('Змены паспяхова захаваны!');
+            await retryFirestore(
+                () => setDoc(doc(db, 'days', dayId.value), dataToSave, { merge: true })
+            );
+            success('Змены паспяхова захаваны!');
         }
     } catch (e) {
-        console.error("Памылка захавання:", e);
-        alert("Адбылася памылка. Глядзіце кансоль.");
+        logger.error("Памылка захавання:", e);
+        notifyError("Адбылася памылка пры захаванні. Паспрабуйце яшчэ раз.");
     } finally {
         saving.value = false;
     }

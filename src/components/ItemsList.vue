@@ -1,8 +1,6 @@
 <template>
   <v-container>
-    <!-- Панель навигации по датам -->
-    <!-- ✅ СТАЛО (АДАПТИВНО И ЧИСТО): -->
-<div class="d-flex align-center justify-space-between pa-2 mb-2">
+    <div class="d-flex align-center justify-space-between pa-2 mb-2">
   <v-btn icon="mdi-chevron-left" @click="goToPrevDay" :disabled="loading"></v-btn>
   
   <div class="text-center flex-grow-1 mx-2" @click="toggleCalendarDialog" style="cursor: pointer;">
@@ -14,12 +12,10 @@
   <v-btn icon="mdi-chevron-right" @click="goToNextDay" :disabled="loading"></v-btn>
 </div>
 
-    <!-- Состояние загрузки -->
     <v-row v-if="loading" class="justify-center mt-16">
       <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
     </v-row>
 
-    <!-- Состояние ошибки -->
     <v-row v-else-if="error" class="mt-8">
       <v-col>
         <v-alert type="error" prominent border="start" icon="mdi-alert-circle-outline">
@@ -29,7 +25,6 @@
       </v-col>
     </v-row>
 
-    <!-- Основной список доступных служб -->
     <v-row v-else-if="days.length > 0">
       <v-col>
         <v-list lines="two" bg-color="transparent">
@@ -51,7 +46,6 @@
       </v-col>
     </v-row>
     
-    <!-- Состояние, когда для дня нет данных -->
     <v-row v-else class="text-center text-grey mt-10">
        <v-col>
           <v-icon size="48">mdi-book-remove-outline</v-icon>
@@ -70,47 +64,47 @@ import moment from 'moment';
 import 'moment/locale/be';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { useAppBar } from '@/composables/useAppBar';
+import { logger } from '@/utils/logger';
+import { useNotifier } from '@/composables/useNotifier';
 
-// --- Инициализация ---
 moment.locale('be');
 const route = useRoute();
 const router = useRouter();
 const { getLiturgicalOptionsForDate } = useLiturgicalDay();
-const { toggleCalendarDialog,  } = useAppBar(); 
+const { toggleCalendarDialog } = useAppBar();
+const { error: notifyError } = useNotifier();
 
-// --- Реактивное состояние ---
 const days = ref([]);
 const loading = ref(true);
 const error = ref(null);
 const currentDate = ref(moment().startOf('day'));
 
 const fetchItemsForDate = async (date) => {
-  console.log(`[ItemsList] Запускаем загрузку для даты: ${date.format('YYYY-MM-DD')}`);
+  logger.log(`[ItemsList] Запускаем загрузку для даты: ${date.format('YYYY-MM-DD')}`);
   loading.value = true;
-  days.value = [];    // Очищаем 'days'
-  error.value = null; // Сбрасываем ошибку
+  days.value = [];
+  error.value = null;
   try {
      const result = await getLiturgicalOptionsForDate(date.toDate());
     if (result && result.items) {
-      // ✅ ПРИСВАИВАЕМ ИМЕННО МАССИВ 'items'
       days.value = result.items;
     } else {
-      // На случай, если что-то пошло не так
       days.value = [];
     }
 
     if (days.value.length === 0) {
-      console.warn(`[ItemsList] Для даты ${date.format('YYYY-MM-DD')} не найдено ни одного литургического элемента.`);
+      logger.warn(`[ItemsList] Для даты ${date.format('YYYY-MM-DD')} не найдено ни одного литургического элемента.`);
     }
   } catch (e) {
-    console.error("Произошла критическая ошибка при загрузке данных:", e);
-    error.value = e.message || "Не удалось загрузить данные. Попробуйте обновить страницу.";
+    logger.error("Произошла критическая ошибка при загрузке данных:", e);
+    const errorMessage = e.message || "Не удалось загрузить данные. Попробуйте обновить страницу.";
+    error.value = errorMessage;
+    notifyError(errorMessage);
   } finally {
     loading.value = false;
   }
 };
 
-// --- Навигация ---
 function navigateToDate(date) {
   const dateString = date.format('YYYY-MM-DD');
   // Явно указываем имя маршрута 'SelectedDay'
@@ -119,18 +113,13 @@ function navigateToDate(date) {
 const goToNextDay = () => navigateToDate(currentDate.value.clone().add(1, 'day'));
 const goToPrevDay = () => navigateToDate(currentDate.value.clone().subtract(1, 'day'));
 
-// --- Вычисляемые свойства для отображения (Computed) ---
-
-// Форматированная дата для заголовка
 const formattedCurrentDate = computed(() => {
   const dateStr = currentDate.value.format('dddd, D MMMM YYYY');
   return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 });
 
-// Ранги для сортировки. Торжества и праздники всегда важнее дней периода.
 const rankOrder = { 'solemnity': 1, 'feast': 2, 'memorial': 3 };
 
-// Сортировка списка: сначала праздники по рангу, потом дни периода
 const sortedDays = computed(() => {
   return [...days.value].sort((a, b) => {
     const rankA = a._feastType ? rankOrder[a._feastType] || 99 : 100;
@@ -138,8 +127,6 @@ const sortedDays = computed(() => {
     return rankA - rankB;
   });
 });
-
-// --- Функции для форматирования списка (UI Helpers) ---
 
 const getTitle = (day) => {
   if (day.title) return day.title; // Если есть поле title, используем его
@@ -184,8 +171,6 @@ const getColor = (day) => {
   return 'grey';
 };
 
-
-// --- Watcher: Сердце компонента, реагирующее на смену URL ---
 watch(
   () => route.params.day,
   (newDay) => {
@@ -193,7 +178,7 @@ watch(
     currentDate.value = targetDate;
     fetchItemsForDate(targetDate);
   },
-  { immediate: true } // immediate: true заставляет его сработать сразу при загрузке компонента
-);// immediate: true - для вызова при первой загрузке
+  { immediate: true }
+);
 
 </script>

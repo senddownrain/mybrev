@@ -18,8 +18,8 @@ const props = defineProps({
 	fieldTitle: String
 })
 
-import { useFontStore } from '@/stores/font'
-const font = useFontStore()
+import { useSettingsStore } from '@/stores/settings'
+const settings = useSettingsStore()
 
 </script>
 
@@ -32,25 +32,9 @@ const font = useFontStore()
 
 .v-card .ora-edit-text {
 	padding-left: 0;
-	font-size: v-bind('font.getHeader.textSize');
-	line-height: v-bind('font.getHeader.textLine');
+	font-size: calc(0.975rem * v-bind('settings.fontSizeMultiplier'));
+	line-height: 1.25;
+	font-family: v-bind('settings.fontFamily');
 }
 
-/* 
-.ora-text{
-    padding-left: 0;
-    font-size: 0.975rem;
-    line-height: 1.4rem;
-    letter-spacing: 0.02rem;
-} 
-
-
-    letter-spacing: v-bind('font.getHeader.textLetterSpacing');
-
-    letter-spacing: v-bind('font.getHeader.headerLetterSpacing');
-}
-*/
-
-
-.ora-edit {}
 </style>

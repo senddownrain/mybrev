@@ -6,8 +6,18 @@
     </div>
 
     <v-list v-else>
-      <v-list-item prepend-icon="mdi-home-outline" title="Галоўная" to="/"></v-list-item>
-      <v-list-item prepend-icon="mdi-cog-outline" title="Налады" to="/settings"></v-list-item>
+      <v-list-item 
+        prepend-icon="mdi-home-outline" 
+        title="Галоўная" 
+        :to="{ name: 'Today' }"
+        :active="route.name === 'Today'"
+      ></v-list-item>
+      <v-list-item 
+        prepend-icon="mdi-cog-outline" 
+        title="Налады" 
+        :to="{ name: 'Settings' }"
+        :active="route.name === 'Settings'"
+      ></v-list-item>
       
       <v-divider class="my-2"></v-divider>
 
@@ -30,7 +40,9 @@
 <script setup>
 import { useAppBar } from '@/composables/useAppBar.js';
 import { useAuthStore } from '@/stores/auth.js';
+import { useRoute } from 'vue-router';
 
 const { isDrawerOpen } = useAppBar();
 const auth = useAuthStore();
+const route = useRoute();
 </script>

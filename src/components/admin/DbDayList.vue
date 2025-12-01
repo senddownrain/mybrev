@@ -190,7 +190,7 @@ import { useRouter } from 'vue-router'
 import { useCollection, useFirestore } from 'vuefire'
 import { collection, query, orderBy } from 'firebase/firestore'
 
-import DayEdit from '@/components/admin/DayEditPage.vue';
+// DayEditPage removed - using DayEditor.vue instead
 
 const dialog = ref(false);
 
@@ -203,7 +203,7 @@ const router = useRouter();
  
 function edit(item) {
     router.push({ name: 'AdminDayEditor', params: { id: item.id } });
-    // console.log(item)
+    // Removed console.log
     // dialog.value = true;
     // currentItem.value = item
     // dayStore.setDayToEdit(item);

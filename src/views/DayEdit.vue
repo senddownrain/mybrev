@@ -46,11 +46,11 @@ const goBack = () => {
 
 const saveChanges = () => {
   // В будущем здесь будет логика сохранения данных в Firestore
-  alert(`Захаванне змен для дня з ID: ${dayId.value}`);
+  // This is old unused file - functionality moved to DayEditor.vue
 };
 
 onMounted(() => {
-  console.log(`Загружана старонка рэдагавання для дня з ID: ${dayId.value}`);
+  // Removed console.log
   // Здесь можно будет запустить функцию загрузки данных дня из Firestore
 });
 </script>

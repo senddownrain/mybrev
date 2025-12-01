@@ -14,12 +14,16 @@
 
       <!-- Панель настроек -->
       <TextSettingsSheet />
+      
+      <!-- Toast уведомления -->
+      <NotificationSnackbar />
     </v-main>
   </v-app>
 </template>
 
 <script setup>
   import TextSettingsSheet from '@/components/TextSettingsSheet.vue';
+  import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
   import { useSettingsStore } from '@/stores/settings.js';
   
   const settings = useSettingsStore();

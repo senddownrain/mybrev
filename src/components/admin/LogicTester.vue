@@ -135,6 +135,8 @@ import { ref, computed, reactive } from 'vue';
 import moment from 'moment';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import ResultCard from '@/components/admin/ResultCard.vue';
+import { useNotifier } from '@/composables/useNotifier';
+import { logger } from '@/utils/logger';
 
 const { runLiturgicalDiagnostics, getLiturgicalOptionsForDate, auditYear } = useLiturgicalDay();
 const selectedDate = ref(new Date());
@@ -166,12 +168,14 @@ const runYearAudit = async () => {
       missingDaysForImport.value = auditResults.periodDays;
     }
   } catch (error) {
-    console.error("Ошибка при аудите года:", error);
-    alert("Адбылася памылка падчас аўдыту. Глядзіце кансоль.");
+    logger.error("Ошибка при аудите года:", error);
+    notifyError("Адбылася памылка падчас аўдыту. Паспрабуйце яшчэ раз.");
   } finally {
     audit.inProgress = false;
   }
 };
+
+const { error: notifyError } = useNotifier();
 
 const runTest = async () => {
   if (!selectedDate.value) return;
@@ -182,7 +186,10 @@ const runTest = async () => {
     results.value = await runLiturgicalDiagnostics(selectedDate.value);
     const mainResult = await getLiturgicalOptionsForDate(selectedDate.value);
     liturgicalContext.value = mainResult.context;
-  } catch (error) { console.error("Ошибка:", error); } 
+  } catch (error) { 
+    logger.error("Ошибка:", error);
+    notifyError("Адбылася памылка пры выкананні тэсту.");
+  } 
   finally { loading.value = false; }
 };
 

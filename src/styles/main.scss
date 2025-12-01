@@ -29,3 +29,23 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   font-size: calc(1rem * var(--font-size-multiplier, 1));
   line-height: 1.8;
 }
+
+// Отступы между параграфами в тексте молитв
+.prayer-content-area p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.prayer-content-area p:last-child {
+  margin-bottom: 0;
+}
+
+// Стили для компонентов с классом ora-text
+.prayer-content-area .ora-text p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.prayer-content-area .ora-text p:last-child {
+  margin-bottom: 0;
+}

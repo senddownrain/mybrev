@@ -17,49 +17,25 @@
         </template>
       </v-list-item>
 
-      <!-- Настройка размера шрифта -->
-      <v-list-item title="Памер шрыфту для малітваў">
-        <template v-slot:prepend><v-icon>mdi-format-font-size-increase</v-icon></template>
+      <!-- Настройки текста теперь доступны через кнопку настроек в AppBar -->
+      <v-list-item title="Налады тэксту" prepend-icon="mdi-format-font" @click="openTextSettings">
         <template v-slot:append>
-          <div class="d-flex align-center">
-            <v-btn icon="mdi-minus" variant="text" size="small" @click="settings.decreaseFontSize" :disabled="settings.fontSizeMultiplier <= 0.7"></v-btn>
-            <span class="mx-2 font-weight-bold" style="width: 50px; text-align: center;">{{ Math.round(settings.fontSizeMultiplier * 100) }}%</span>
-            <v-btn icon="mdi-plus" variant="text" size="small" @click="settings.increaseFontSize" :disabled="settings.fontSizeMultiplier >= 1.8"></v-btn>
-          </div>
+          <v-icon>mdi-chevron-right</v-icon>
         </template>
       </v-list-item>
-
-      <!-- Настройка шрифта -->
-      <v-list-item title="Шрыфт для малітваў">
-        <template v-slot:prepend><v-icon>mdi-format-font</v-icon></template>
-      </v-list-item>
-      <div class="px-4 pb-4">
-        <v-chip-group 
-          :model-value="settings.fontFamily" 
-          @update:model-value="settings.setFontFamily"
-          mandatory column
-        >
-          <v-chip v-for="font in fontOptions" :key="font.value" :value="font.value" filter variant="outlined" class="ma-1" :style="{ fontFamily: font.value }">
-            {{ font.title }}
-          </v-chip>
-        </v-chip-group>
-      </div>
 
     </v-list>
   </v-container>
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { useSettingsStore } from '@/stores/settings.js';
+import { useAppBar } from '@/composables/useAppBar.js';
 
 const settings = useSettingsStore();
+const { toggleSettingsSheet } = useAppBar();
 
-const fontOptions = ref([
-  { title: 'Сістэмны', value: settings.systemFont },
-  { title: 'Kurale', value: 'Kurale, serif' },
-  { title: 'Old Standard TT', value: "'Old Standard TT', serif" },
-  { title: 'Pacifico', value: 'Pacifico, cursive' },
-  { title: 'Comfortaa', value: 'Comfortaa, sans-serif' },
-]);
+const openTextSettings = () => {
+  toggleSettingsSheet();
+};
 </script>

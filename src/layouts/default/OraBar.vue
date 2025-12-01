@@ -45,7 +45,7 @@ const goBack = () => {
 const goToEdit = () => {
   const dayId = route.params.id;
   if (dayId) {
-     router.push({ name: 'AdminEditDay', params: { id: dayId } });
+     router.push({ name: 'AdminDayEditor', params: { id: dayId } });
   }
 };
 </script>

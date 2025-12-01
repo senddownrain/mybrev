@@ -61,6 +61,9 @@
 import { ref, reactive, computed } from 'vue';
 import { useCollection } from 'vuefire';
 import { collection, doc, addDoc, deleteDoc, getFirestore } from 'firebase/firestore';
+import { useNotifier } from '@/composables/useNotifier';
+import { logger } from '@/utils/logger';
+import { retryFirestore } from '@/utils/retry';
 
 // --- Инициализация ---
 const db = getFirestore();
@@ -164,10 +167,10 @@ const saveNewYear = async () => {
   if (!isNewItemValid.value) return;
   try {
     // Создаем новый документ в коллекции 'yearOptions' с данными из формы
-    await addDoc(yearOptionsRef, { ...newItem });
+    await retryFirestore(() => addDoc(yearOptionsRef, { ...newItem }));
     
     // После успешного добавления:
-    alert(`Год ${newItem.year} успешно дададзены ў базу.`);
+    success(`Год ${newItem.year} успешно дададзены ў базу.`);
     
     // 1. Сбрасываем форму к значениям по умолчанию
     Object.assign(newItem, defaultItem);
@@ -176,23 +179,25 @@ const saveNewYear = async () => {
     // 3. Пересчитываем даты для нового предложенного года
     calculateAllDates();
   } catch (e) {
-    console.error("Памылка дадавання года: ", e);
-    alert("Не атрымалася дадаць год. Глядзіце кансоль для падрабязнасцяў.");
+    logger.error("Памылка дадавання года: ", e);
+    notifyError("Не атрымалася дадаць год. Паспрабуйце яшчэ раз.");
   }
 };
 /**
  * Удаляет выбранный год из Firestore
  */
+const { success, error: notifyError } = useNotifier();
+
 const deleteItem = async (item) => {
   // Запрашиваем подтверждение у пользователя
   if (confirm(`Вы сапраўды хочаце выдаліць ${item.year} год? Гэта дзеянне нельга будзе адмяніць.`)) {
     try {
       // Удаляем документ по его ID
-      await deleteDoc(doc(db, 'yearOptions', item.id));
-      alert(`Год ${item.year} быў паспяхова выдалены.`);
+      await retryFirestore(() => deleteDoc(doc(db, 'yearOptions', item.id)));
+      success(`Год ${item.year} быў паспяхова выдалены.`);
     } catch (e) {
-      console.error("Памылка выдалення года: ", e);
-      alert("Не атрымалася выдаліць год. Глядзіце кансоль для падрабязнасцяў.");
+      logger.error("Памылка выдалення года: ", e);
+      notifyError("Не атрымалася выдаліць год. Паспрабуйце яшчэ раз.");
     }
   }
 };

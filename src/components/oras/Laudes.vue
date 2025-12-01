@@ -46,15 +46,6 @@ import DayTitle from '@/components/oraparts/DayTitle.vue';
 
 const db = useFirestore()
 
-
-import { useFontStore } from '@/stores/font'
-
-const font = useFontStore()
-
-
-//const days = useCollection(query(collection(db, 'days')))
-//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
-
 const route = useRoute()
 const docRef = doc(db, "days", route.params.id);
 var { data: day, pending } = useDocument(docRef)
