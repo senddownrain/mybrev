@@ -54,10 +54,16 @@ const prayer = computed(() => {
   line-height: 1.8;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .prayer-text :deep(p) {
   margin-bottom: 1em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .prayer-text :deep(p:last-child) {
@@ -65,23 +71,53 @@ const prayer = computed(() => {
 }
 
 .prayer-text :deep(*) {
-  max-width: 100%;
+  max-width: 100% !important;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  box-sizing: border-box;
+}
+
+.prayer-text :deep(img) {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.prayer-text :deep(table) {
+  width: 100% !important;
+  max-width: 100% !important;
+  table-layout: fixed;
+  word-wrap: break-word;
 }
 
 @media (max-width: 600px) {
   .prayer-view-container {
-    padding: 8px 12px !important;
+    padding: 12px 16px !important;
+    max-width: 100% !important;
+  }
+
+  .prayer-content-area {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   .prayer-title {
     font-size: calc(1.4rem * var(--font-size-multiplier, 1)) !important;
     margin-bottom: 16px !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.3 !important;
   }
 
   .prayer-text {
     font-size: calc(1rem * var(--font-size-multiplier, 1));
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .prayer-text :deep(p) {
+    font-size: calc(1rem * var(--font-size-multiplier, 1));
+    line-height: 1.8;
   }
 }
 </style>

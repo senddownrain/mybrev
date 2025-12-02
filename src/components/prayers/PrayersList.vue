@@ -10,7 +10,7 @@
       variant="outlined"
       density="compact"
       hide-details
-      class="mb-4"
+      class="mb-4 search-field"
       clearable
     ></v-text-field>
 
@@ -25,7 +25,7 @@
       variant="outlined"
       density="compact"
       hide-details
-      class="mb-4"
+      class="mb-4 filter-field"
     ></v-combobox>
 
     <div v-if="isLoading">
@@ -141,6 +141,13 @@ function viewPrayer(id) {
 <style scoped>
 .prayers-list-container {
   max-width: 100%;
+  width: 100%;
+}
+
+.search-field,
+.filter-field {
+  width: 100%;
+  max-width: 100%;
 }
 
 .prayer-card {
@@ -155,27 +162,70 @@ function viewPrayer(id) {
   word-wrap: break-word;
   overflow-wrap: break-word;
   line-height: 1.4 !important;
+  white-space: normal !important;
+}
+
+.prayer-card-title span {
+  display: block;
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .prayer-preview {
   line-height: 1.6;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 600px) {
+  .prayers-list-container {
+    padding: 12px 8px !important;
+  }
+
   .prayer-card {
     margin-left: 0;
     margin-right: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .prayer-card-title {
     font-size: 0.95rem !important;
     padding: 12px 12px 8px 12px !important;
+    overflow: visible;
+  }
+
+  .prayer-card-title span {
+    max-width: 100%;
+    overflow-wrap: break-word;
   }
 
   .prayer-preview {
     font-size: 0.875rem !important;
+    -webkit-line-clamp: 4;
+  }
+
+  .search-field,
+  .filter-field {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .v-text-field,
+  .v-combobox {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   .add-prayer-btn {
