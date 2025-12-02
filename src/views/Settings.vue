@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="settings-container">
     <h1 class="text-h4 font-weight-light mb-4">Налады</h1>
 
     <v-list lines="two" subheader>
@@ -117,3 +117,24 @@ function removeCategory(index) {
   notifySuccess('Катэгорыя выдалена');
 }
 </script>
+
+<style scoped>
+@media (max-width: 600px) {
+  .settings-container {
+    padding: 8px 12px !important;
+  }
+
+  .settings-container h1 {
+    font-size: 1.4rem !important;
+    margin-bottom: 16px !important;
+  }
+
+  .v-list-item {
+    padding: 12px 8px !important;
+  }
+
+  .v-card {
+    margin-top: 16px !important;
+  }
+}
+</style>

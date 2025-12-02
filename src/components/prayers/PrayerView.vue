@@ -1,7 +1,7 @@
 <template>
-  <v-container v-if="prayer">
+  <v-container v-if="prayer" class="prayer-view-container">
     <div class="prayer-content-area">
-      <h1 class="text-h4 font-weight-light mb-4" v-html="getTitle(prayer)"></h1>
+      <h1 class="text-h4 font-weight-light mb-4 prayer-title" v-html="getTitle(prayer)"></h1>
       
       <div v-if="prayer.tags && prayer.tags.length > 0" class="mb-4">
         <v-chip
@@ -40,8 +40,20 @@ const prayer = computed(() => {
 </script>
 
 <style scoped>
+.prayer-view-container {
+  max-width: 100%;
+}
+
+.prayer-title {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.3;
+}
+
 .prayer-text {
   line-height: 1.8;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .prayer-text :deep(p) {
@@ -50,6 +62,27 @@ const prayer = computed(() => {
 
 .prayer-text :deep(p:last-child) {
   margin-bottom: 0;
+}
+
+.prayer-text :deep(*) {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 600px) {
+  .prayer-view-container {
+    padding: 8px 12px !important;
+  }
+
+  .prayer-title {
+    font-size: calc(1.4rem * var(--font-size-multiplier, 1)) !important;
+    margin-bottom: 16px !important;
+  }
+
+  .prayer-text {
+    font-size: calc(1rem * var(--font-size-multiplier, 1));
+  }
 }
 </style>
 

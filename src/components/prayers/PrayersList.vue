@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="prayers-list-container">
     <h1 class="text-h5 font-weight-light mb-4">Малітвы</h1>
 
     <!-- Поисковая строка -->
@@ -33,25 +33,26 @@
     </div>
     
     <div v-else>
-      <v-card v-for="prayer in filteredPrayers" :key="prayer.id" class="mb-4" variant="outlined">
-        <v-card-title class="font-weight-bold d-flex align-center">
-          <span class="flex-grow-1" @click="viewPrayer(prayer.id)" style="cursor: pointer;">
+      <v-card v-for="prayer in filteredPrayers" :key="prayer.id" class="mb-3 prayer-card" variant="outlined">
+        <v-card-title class="font-weight-bold d-flex align-center prayer-card-title">
+          <span class="flex-grow-1 text-wrap" @click="viewPrayer(prayer.id)" style="cursor: pointer;">
             {{ getTitle(prayer) }}
           </span>
         </v-card-title>
-        <v-card-text class="pb-0" @click="viewPrayer(prayer.id)" style="cursor: pointer;">
-          <p class="mb-4 text-medium-emphasis">{{ getPreviewText(prayer) }}</p>
-          <v-chip-group>
+        <v-card-text class="pb-2" @click="viewPrayer(prayer.id)" style="cursor: pointer;">
+          <p class="mb-3 text-medium-emphasis prayer-preview">{{ getPreviewText(prayer) }}</p>
+          <div class="d-flex flex-wrap ga-1">
             <v-chip 
               v-for="tag in prayer.tags" 
               :key="tag" 
               size="small" 
               color="primary" 
               variant="tonal"
+              class="mb-1"
             >
               {{ tag }}
             </v-chip>
-          </v-chip-group>
+          </div>
         </v-card-text>
         <v-card-actions v-if="authStore.isAdmin">
           <v-spacer></v-spacer>
@@ -77,7 +78,7 @@
       position="fixed"
       location="bottom right"
       size="large"
-      class="ma-4"
+      class="add-prayer-btn"
       @click="router.push({ name: 'PrayerAdd' })"
     ></v-btn>
   </v-container>
@@ -136,4 +137,58 @@ function viewPrayer(id) {
   router.push({ name: 'PrayerView', params: { id } });
 }
 </script>
+
+<style scoped>
+.prayers-list-container {
+  max-width: 100%;
+}
+
+.prayer-card {
+  transition: box-shadow 0.2s;
+}
+
+.prayer-card:active {
+  opacity: 0.8;
+}
+
+.prayer-card-title {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4 !important;
+}
+
+.prayer-preview {
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 600px) {
+  .prayer-card {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .prayer-card-title {
+    font-size: 0.95rem !important;
+    padding: 12px 12px 8px 12px !important;
+  }
+
+  .prayer-preview {
+    font-size: 0.875rem !important;
+  }
+
+  .add-prayer-btn {
+    margin: 16px !important;
+    bottom: 80px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .add-prayer-btn {
+    margin: 12px !important;
+    bottom: 76px !important;
+  }
+}
+</style>
 

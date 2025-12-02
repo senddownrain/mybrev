@@ -112,4 +112,20 @@ const getPeriodTitle = (day) => {
 .day-title-content * {
   pointer-events: none;
 }
+
+@media (max-width: 600px) {
+  .day-title-container {
+    padding: 0 8px;
+    margin-bottom: 16px;
+  }
+
+  .day-title-container h1 {
+    font-size: 1.3rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .day-title-container .text-subtitle-1 {
+    font-size: 0.85rem !important;
+  }
+}
 </style>

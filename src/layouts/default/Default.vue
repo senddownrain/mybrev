@@ -55,4 +55,15 @@ const goHome = function(){
 .app-bar-border {
   border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
+
+@media (max-width: 600px) {
+  .v-app-bar-title {
+    font-size: 1.1rem !important;
+    padding: 0 8px !important;
+  }
+
+  .v-app-bar-nav-icon {
+    margin-left: 4px !important;
+  }
+}
 </style>

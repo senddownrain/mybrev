@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <div class="d-flex align-center justify-space-between pa-2 mb-2">
+  <v-container class="items-list-container">
+    <div class="d-flex align-center justify-space-between pa-2 mb-2 date-selector">
   <v-btn icon="mdi-chevron-left" @click="goToPrevDay" :disabled="loading"></v-btn>
   
   <div class="text-center flex-grow-1 mx-2" @click="toggleCalendarDialog" style="cursor: pointer;">
@@ -182,3 +182,44 @@ watch(
 );
 
 </script>
+
+<style scoped>
+.items-list-container {
+  max-width: 100%;
+}
+
+.date-selector h2 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+  .items-list-container {
+    padding: 8px 4px !important;
+  }
+
+  .date-selector {
+    padding: 8px 4px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .date-selector h2 {
+    font-size: 0.9rem !important;
+  }
+
+  .v-list-item {
+    padding: 12px 8px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .v-list-item-title {
+    font-size: 0.95rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .v-list-item-subtitle {
+    font-size: 0.85rem !important;
+  }
+}
+</style>
