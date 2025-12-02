@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/auth';
 
 import DefaultVue from '@/layouts/default/Default.vue';
 import OneVue from '@/layouts/simple/One.vue';
+import AdminVue from '@/layouts/admin/Admin.vue';
 import ItemsListVue from '@/components/ItemsList.vue';
 import BottomNavVue from '@/layouts/default/BottomNav.vue';
 import OraBarVue from '@/layouts/default/OraBar.vue';
@@ -29,49 +30,90 @@ const routes = [
         component: () => import('@/views/Settings.vue'),
       },
       {
+        path: 'picker',
+        name: 'LiturgicalPicker',
+        component: () => import('@/views/LiturgicalPicker.vue'),
+      },
+      {
+        path: 'prayers',
+        name: 'Prayers',
+        component: () => import('@/views/Prayers.vue'),
+      },
+      {
+        path: 'prayers/list',
+        name: 'PrayersList',
+        component: () => import('@/components/prayers/PrayersList.vue'),
+      },
+      {
+        path: 'prayer/:id',
+        name: 'PrayerView',
+        component: () => import('@/components/prayers/PrayerView.vue'),
+        props: true,
+      },
+      {
+        path: 'prayer/add',
+        name: 'PrayerAdd',
+        component: () => import('@/components/prayers/PrayerForm.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'prayer/edit/:id',
+        name: 'PrayerEdit',
+        component: () => import('@/components/prayers/PrayerForm.vue'),
+        props: true,
+        meta: { requiresAuth: true },
+      },
+      {
         path: 'login',
         name: 'Login',
         component: () => import('@/views/Login.vue'),
       },
 
-      {
-        path: 'admin',
-        meta: { requiresAuth: true },
-        children: [
-          {
-            path: 'backup',
-            name: 'AdminBackup',
-            component: () => import('@/views/admin/Backup.vue'),
-          },
-          {
-            path: '',
-            name: 'Admin',
-            component: () => import('@/views/Admin.vue'),
-          },
-          {
-            path: 'logic-tester',
-            name: 'AdminLogicTester',
-            component: () => import('@/components/admin/LogicTester.vue'),
-          },
-          {
-            path: 'day-editor/:id',
-            name: 'AdminDayEditor',
-            component: () => import('@/views/admin/DayEditor.vue'),
-            props: true,
-          },
-          {
-            path: 'year-options',
-            name: 'AdminYearOptions',
-            component: () => import('@/components/admin/YearOptions.vue'),
-          },
-          {
-            path: 'db-day-list',
-            name: 'AdminDbDayList',
-            component: () => import('@/components/admin/DbDayList.vue')
-          },
-        ]
-      },
     ],
+  },
+
+  {
+    path: '/admin',
+    component: AdminVue,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: 'backup',
+        name: 'AdminBackup',
+        component: () => import('@/views/admin/Backup.vue'),
+      },
+      {
+        path: '',
+        name: 'Admin',
+        component: () => import('@/views/Admin.vue'),
+      },
+      {
+        path: 'logic-tester',
+        name: 'AdminLogicTester',
+        component: () => import('@/components/admin/LogicTester.vue'),
+      },
+      {
+        path: 'day-editor/:id',
+        name: 'AdminDayEditor',
+        component: () => import('@/views/admin/DayEditor.vue'),
+        props: true,
+      },
+      {
+        path: 'year-options',
+        name: 'AdminYearOptions',
+        component: () => import('@/components/admin/YearOptions.vue'),
+      },
+      {
+        path: 'db-day-list',
+        name: 'AdminDbDayList',
+        component: () => import('@/components/admin/DbDayList.vue')
+      },
+      {
+        path: 'categories',
+        name: 'AdminCategories',
+        component: () => import('@/views/admin/CategoriesManagement.vue'),
+      },
+    ]
   },
 
   {

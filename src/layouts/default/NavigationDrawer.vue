@@ -13,6 +13,18 @@
         :active="route.name === 'Today'"
       ></v-list-item>
       <v-list-item 
+        prepend-icon="mdi-calendar-text-outline" 
+        title="Літургія" 
+        :to="{ name: 'LiturgicalPicker' }"
+        :active="route.name === 'LiturgicalPicker'"
+      ></v-list-item>
+      <v-list-item 
+        prepend-icon="mdi-book-heart-outline" 
+        title="Малітвы" 
+        :to="{ name: 'Prayers' }"
+        :active="route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView'"
+      ></v-list-item>
+      <v-list-item 
         prepend-icon="mdi-cog-outline" 
         title="Налады" 
         :to="{ name: 'Settings' }"
@@ -28,6 +40,7 @@
       <template v-if="auth.user">
         <!-- Доступно только администратору -->
         <v-list-item v-if="auth.isAdmin" prepend-icon="mdi-shield-account-outline" title="Панэль адміністратара" to="/admin"></v-list-item>
+        <v-list-item v-if="auth.isAdmin" prepend-icon="mdi-label-outline" title="Катэгорыі малітваў" :to="{ name: 'AdminCategories' }"></v-list-item>
         
         <!-- Кнопка выхода -->
         <v-list-item prepend-icon="mdi-logout" title="Выйсці" @click="auth.logout"></v-list-item>

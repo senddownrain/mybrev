@@ -86,15 +86,12 @@ const currentRouteDate = computed(() => {
 // Сегодняшняя дата
 const today = computed(() => moment().startOf('day'))
 
-// Вчерашняя дата - всегда относительно реального сегодня
-const yesterday = computed(() => today.value.clone().subtract(1, 'days'))
-
 // Меню с динамическими датами
 const menu = computed(() => [
   {
-    title: "Учора",
-    to: `/day/${yesterday.value.format("YYYY-MM-DD")}`,
-    icon: "mdi-chevron-left"
+    title: "Выбраць",
+    to: "/picker",
+    icon: "mdi-calendar-search"
   },
   {
     title: "Сёння",
@@ -105,15 +102,17 @@ const menu = computed(() => [
 
 // Определяем активную кнопку на основе текущей даты
 const activeIndex = computed(() => {
+  // Если мы на странице выбора - активируем кнопку "Выбраць"
+  if (route.name === 'LiturgicalPicker') {
+    return 0
+  }
+  
   const routeDate = currentRouteDate.value
   const todayDate = today.value
-  const yesterdayDate = yesterday.value
   
   // Сравниваем даты без времени
   if (routeDate.isSame(todayDate, 'day')) {
     return 1 // Сёння
-  } else if (routeDate.isSame(yesterdayDate, 'day')) {
-    return 0 // Учора
   } else {
     return 2 // Другой день - активна кнопка "Дзень"
   }

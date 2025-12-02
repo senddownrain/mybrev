@@ -25,17 +25,95 @@
       </v-list-item>
 
     </v-list>
+
+    <!-- Пример текста для демонстрации эффекта настроек -->
+    <v-card class="mt-6" variant="outlined">
+      <v-card-title class="text-subtitle-1">Прыклад тэксту</v-card-title>
+      <v-card-text class="prayer-content-area">
+        <p>
+          <strong>Псалом 1</strong>
+        </p>
+        <p>
+          Шчаслівы чалавек, які не ходзіць па радзе бязбожных,<br>
+          і не стаіць на дарозе грэшных,<br>
+          і не сядзіць у сябраванні насмешнікаў,
+        </p>
+        <p>
+          але захапляецца законам Пана<br>
+          і разважае над ім днём і ноччу.
+        </p>
+        <p>
+          Ён падобны да дрэва, пасаджанага ля патокаў вады,<br>
+          якое дае плод у свой час<br>
+          і лісце яго не вяніе;<br>
+          усё, што ён робіць, паспяховае.
+        </p>
+      </v-card-text>
+    </v-card>
+
+    <!-- Категории молитв -->
+    <v-list lines="two" subheader class="mt-6">
+      <v-list-subheader>Катэгорыі малітваў</v-list-subheader>
+      
+      <v-list-item
+        v-for="(category, index) in settings.menuCategories"
+        :key="index"
+      >
+        <v-list-item-title>{{ category.name }}</v-list-item-title>
+        <v-list-item-subtitle>
+          Фільтр па тэгах: {{ category.tags.join(', ') }}
+        </v-list-item-subtitle>
+        
+        <template v-slot:append>
+          <v-btn
+            icon="mdi-delete"
+            variant="text"
+            size="small"
+            color="error"
+            @click="removeCategory(index)"
+          ></v-btn>
+        </template>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-title>
+          <v-btn
+            color="primary"
+            variant="outlined"
+            block
+            @click="showAddCategoryDialog = true"
+          >
+            Дадаць катэгорыю
+          </v-btn>
+        </v-list-item-title>
+      </v-list-item>
+    </v-list>
+
+    <AddCategoryDialog
+      v-model="showAddCategoryDialog"
+      @category-added="showAddCategoryDialog = false"
+    />
   </v-container>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { useAppBar } from '@/composables/useAppBar.js';
+import { useNotifier } from '@/composables/useNotifier';
+import AddCategoryDialog from '@/components/prayers/AddCategoryDialog.vue';
 
 const settings = useSettingsStore();
 const { toggleSettingsSheet } = useAppBar();
+const { notifySuccess } = useNotifier();
+const showAddCategoryDialog = ref(false);
 
 const openTextSettings = () => {
   toggleSettingsSheet();
 };
+
+function removeCategory(index) {
+  settings.removeCategory(index);
+  notifySuccess('Катэгорыя выдалена');
+}
 </script>

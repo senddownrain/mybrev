@@ -1,12 +1,12 @@
 <template>
   <!-- Используем наш глобальный класс для автоматического применения стилей -->
-  <div class="prayer-content-area text-center mb-6">
+  <div class="prayer-content-area text-center mb-6 day-title-container">
     
     <!-- Индикатор загрузки -->
     <v-skeleton-loader v-if="loading" type="heading, subtitle"></v-skeleton-loader>
 
     <!-- Основной контент, когда данные загружены -->
-    <div v-else-if="dayData">
+    <div v-else-if="dayData" class="day-title-content">
       <!-- 1. Полная дата -->
                <div class="text-subtitle-1 text-grey-darken-1" v-html="formattedDate"></div>
         
@@ -97,5 +97,19 @@ const getPeriodTitle = (day) => {
 </script>
 
 <style scoped>
-/* Здесь стили не нужны, так как все управляется глобальным классом .prayer-content-area */
+/* Запрещаем выделение текста и появление каретки в заголовке дня */
+.day-title-container {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.day-title-content {
+  pointer-events: none;
+}
+
+.day-title-content * {
+  pointer-events: none;
+}
 </style>

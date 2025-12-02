@@ -1,16 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="be">
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" href="/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  
+  <!-- Favicon и иконки -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  
+  <!-- PWA и установка на iOS + Android -->
+  <!-- Манифест будет добавлен автоматически vite-plugin-pwa -->
+  <meta name="theme-color" content="#1867C0">
+  
+  <!-- Мета-теги для полноэкранного режима на iOS и Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Малітоўнік">
+  
+  <!-- Дополнительные мета-теги для PWA -->
+  <meta name="application-name" content="Малітоўнік">
+  <meta name="description" content="Каталіцкі малітоўнік для штодзённай малітвы">
+  <meta name="format-detection" content="telephone=no">
+  
+  <!-- Open Graph мета-теги для социальных сетей -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Малітоўнік">
+  <meta property="og:description" content="Каталіцкі малітоўнік для штодзённай малітвы">
+  <meta property="og:site_name" content="Малітоўнік">
+  
+  <!-- Twitter Card мета-теги -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Малітоўнік">
+  <meta name="twitter:description" content="Каталіцкі малітоўнік для штодзённай малітвы">
+  
+  <!-- Подключение шрифтов -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Kurale&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Pacifico&display=swap" rel="stylesheet">
+  
   <title>Малітоўнік</title>
- <!-- ✅ НАЧАЛО ОБНОВЛЕННОГО БЛОКА ШРИФТОВ -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Kurale&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Pacifico&display=swap" rel="stylesheet">
-<!-- ✅ КОНЕЦ ОБНОВЛЕННОГО БЛОКА ШРИФТОВ -->
 </head>
 
 <body>

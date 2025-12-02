@@ -5,6 +5,12 @@ import { useTheme } from 'vuetify';
 // Константа для системного шрифта
 const systemFont = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 
+const defaultCategories = [
+  { name: 'Марыйныя', tags: ['Марыя'] },
+  { name: 'Літаніі', tags: ['Літанія'] },
+  { name: 'Навэнны', tags: ['Навэнна'] }
+];
+
 // Экспортируем константу с правильным именем 'useSettingsStore'
 export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme();
@@ -13,6 +19,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const currentTheme = ref(localStorage.getItem('theme') || 'light');
   const fontFamily = ref(localStorage.getItem('fontFamily') || systemFont);
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
+  const menuCategories = ref(JSON.parse(localStorage.getItem('menuCategories') || JSON.stringify(defaultCategories)));
 
   // --- Слежение за изменениями (Watchers) ---
   watch(currentTheme, (newTheme) => {
@@ -29,6 +36,8 @@ export const useSettingsStore = defineStore('settings', () => {
     document.documentElement.style.setProperty('--font-size-multiplier', newMultiplier);
     localStorage.setItem('fontSizeMultiplier', String(newMultiplier));
   }, { immediate: true });
+
+  watch(menuCategories, (v) => localStorage.setItem('menuCategories', JSON.stringify(v)), { deep: true });
 
 
   // --- Действия (Actions) ---
@@ -51,14 +60,27 @@ export const useSettingsStore = defineStore('settings', () => {
     }
   }
 
+  function addCategory(cat) {
+    if (cat && cat.name && cat.tags?.length > 0) {
+      menuCategories.value.push(cat);
+    }
+  }
+
+  function removeCategory(index) {
+    menuCategories.value.splice(index, 1);
+  }
+
   return {
     currentTheme,
     fontFamily,
     systemFont,
     fontSizeMultiplier,
+    menuCategories,
     toggleTheme,
     setFontFamily,
     increaseFontSize,
     decreaseFontSize,
+    addCategory,
+    removeCategory,
   };
 });

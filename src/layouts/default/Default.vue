@@ -9,14 +9,9 @@
       <!-- Кнопка-гамбургер для открытия бокового меню -->
       <v-app-bar-nav-icon @click.stop="isDrawerOpen = !isDrawerOpen"></v-app-bar-nav-icon>
 
-      <v-app-bar-title @click="goHome()" style="cursor: pointer;">My Brev</v-app-bar-title>
+      <v-app-bar-title @click="goHome()" style="cursor: pointer;">Малітоўнік</v-app-bar-title>
 
       <v-spacer></v-spacer>
-
-      <!-- Кнопка настроек текста -->
-      <v-btn icon @click="toggleSettingsSheet">
-        <v-icon>mdi-format-font</v-icon>
-      </v-btn>
 
     </v-app-bar>
     

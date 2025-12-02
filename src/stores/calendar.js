@@ -75,9 +75,29 @@ export const useCalendarStore = defineStore('calendar', () => {
     return dates;
 }
 
+    // --- Функция для получения всех доступных годов из Firestore ---
+    async function getAvailableYears() {
+        try {
+            const q = query(collection(db, 'yearOptions'));
+            const snapshot = await retryFirestore(() => getDocs(q));
+            const years = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                if (data.year) {
+                    years.push(data.year);
+                }
+            });
+            return years.sort((a, b) => b - a); // Сортируем по убыванию (новые первыми)
+        } catch (error) {
+            logger.error('[CalendarStore] Памылка пры атрыманні спісу гадоў:', error);
+            return [];
+        }
+    }
+
     return { 
         getYearOptions, 
-        getDynamicDates, 
+        getDynamicDates,
+        getAvailableYears,
         // Геттеры для доступа из компонентов
         optionsForYear: (year) => computed(() => yearOptionsCache.value[year]),
         dynamicDatesForYear: (year) => computed(() => dynamicDatesCache.value[year])

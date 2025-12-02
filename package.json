@@ -6,8 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "export-code": "node export-code.js",
-    "lint": "eslint . --fix --ignore-path .gitignore"
+    "lint": "eslint . --fix --ignore-path .gitignore",
+    "db:import-prayers": "node import-prayers-from-molitwy.js"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",

@@ -1,16 +1,20 @@
 <template>
-  <v-app 
-    :style="{ 
-      '--app-font-family': settings.fontFamily,
-      '--font-size-multiplier': settings.fontSizeMultiplier 
-    }"
-  >
+  <div>
     <v-app-bar color="primary" app>
       <v-btn icon @click="goBack">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>{{ isNew ? 'Стварэнне новага дня' : 'Рэдагаванне дня' }}</v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn 
+        v-if="!isNew" 
+        @click="createCopy" 
+        variant="text" 
+        class="mr-2"
+        prepend-icon="mdi-content-copy"
+      >
+        Стварыць копію
+      </v-btn>
       <v-btn @click="saveChanges" :loading="saving" variant="text">Захаваць</v-btn>
     </v-app-bar>
 
@@ -19,7 +23,7 @@
       <p v-if="loadingDuplicate" class="ml-4">Дубліраванне дня...</p>
     </div>
 
-    <v-container v-else>
+    <v-container v-else-if="dayData">
       <v-card class="mb-6">
         <v-card-text>
           <v-row>
@@ -158,16 +162,15 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </v-container>
-  </v-app>
+  </div>
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed, onMounted } from 'vue';
+import { ref, reactive, watch, computed, onMounted, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useDocument, useFirestore } from 'vuefire';
 import { doc, setDoc, addDoc, collection, getDoc } from 'firebase/firestore';
 import InlineEditor from '@/components/admin/InlineEditor.vue';
-import { useSettingsStore } from '@/stores/settings.js';
 import { useNotifier } from '@/composables/useNotifier';
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
@@ -175,16 +178,24 @@ import { retryFirestore } from '@/utils/retry';
 const router = useRouter();
 const route = useRoute();
 const db = useFirestore();
-const settings = useSettingsStore();
 const { success, error: notifyError } = useNotifier();
 
 const dayId = ref(route.params.id);
 const isNew = computed(() => dayId.value === 'new');
 const saving = ref(false);
 const panel = ref();
-const loadingDuplicate = ref(false);
+const loadingDuplicate = ref(false); 
 
-const { data: dayData, pending, promise } = useDocument(isNew.value ? null : doc(db, 'days', dayId.value));
+// Для нового дня создаем пустой объект сразу, для существующего - загружаем из Firestore
+const dayData = ref({});
+const { data: loadedDayData, pending, promise } = useDocument(isNew.value ? null : doc(db, 'days', dayId.value));
+
+// Синхронизируем загруженные данные с dayData
+watch(loadedDayData, (newData) => {
+  if (newData) {
+    dayData.value = newData;
+  }
+}, { immediate: true });
 
 const simpleFields = reactive({
   period: null,
@@ -207,17 +218,76 @@ const dayOfWeekOptions = [
 
 const initializeForm = () => {
     if (isNew.value) {
-        const allFields = ["_dayOfWeek", "_periodType", "_periodWeekNumber", "_date", "_feast", "_psalmWeek", "_dayName", "_weekDay", "_weekNum", "_feastName", "_feastType", "allowedAlleluia", "invitatoriumAnt", "invitatoriumPs1", "invitatoriumPs2", "invitatoriumPs3", "invitatoriumPs4", "invitatoriumPs5", "invitatoriumPs6", "feastComment", "officeOfReadingsHymn", "officeOfReadingsAnt1", "officeOfReadingsAnt2", "officeOfReadingsAnt3", "officeOfReadingsPs1", "officeOfReadingsPs2", "officeOfReadingsPs3", "officeOfReadingsVers", "officeOfReadingsR1", "officeOfReadingsR2", "officeOfReadingsTeDeum", "officeOfReadingsPr", "laudesHymn", "laudesAnt1", "laudesAnt2", "laudesAnt3", "laudesPs1", "laudesPs2", "laudesPs3", "laudesR", "laudesAntBen", "laudesInter", "laudesPr", "sext1Hymn", "sext1Ant1", "sext1Ant2", "sext1Ant3", "sext1Ps1", "sext1Ps2", "sext1Ps3", "sext1R", "sext1Pr", "sext2Hymn", "sext2Ant1", "sext2Ant2", "sext2Ant3", "sext2Ps1", "sext2Ps2", "sext2Ps3", "sext2R", "sext2Pr", "sext3Hymn", "sext3Ant1", "sext3Ant2", "sext3Ant3", "sext3Ps1", "sext3Ps2", "sext3Ps3", "sext3R", "sext3Pr", "vesperHymn", "vesperAnt1", "vesperAnt2", "vesperAnt3", "vesperPs1", "vesperPs2", "vesperPs3", "vesperR", "vesperAntMag", "vesperInter", "vesperPr", "compHymn", "compAnt1", "compAnt2", "compPs1", "compPs2", "compR", "compResp", "compAntS", "compPr", "compAntM"];
-        dayData.value = allFields.reduce((obj, key) => ({ ...obj, [key]: '' }), {});
-        dayData.value.allowedAlleluia = true;
+        // Проверяем, есть ли данные копии в sessionStorage
+        const copyDataStr = sessionStorage.getItem('dayEditorCopyData');
+        
+        if (copyDataStr) {
+            // Загружаем данные копии
+            try {
+                const copyData = JSON.parse(copyDataStr);
+                dayData.value = copyData;
+                
+                // Очищаем sessionStorage после использования
+                sessionStorage.removeItem('dayEditorCopyData');
+                
+                // Инициализируем простые поля (они будут пустыми, т.к. мы их очистили при копировании)
+                isUpdatingFromWatch.value = true;
+                simpleFields.period = null;
+                simpleFields.weekNumber = null;
+                simpleFields.dayOfWeek = null;
+                nextTick(() => {
+                  isUpdatingFromWatch.value = false;
+                });
+                
+                success('Копія дня створана. Запоўніце перыяд, тыдзень і дзень тыдня, затым захавайце.');
+            } catch (e) {
+                logger.error('Памылка пры загрузцы копіі:', e);
+                // Если ошибка - создаем пустой день
+                createEmptyDay();
+            }
+        } else {
+            // Создаем пустой день
+            createEmptyDay();
+        }
     } else if (dayData.value) {
+        isUpdatingFromWatch.value = true;
         simpleFields.period = dayData.value._periodType;
         simpleFields.weekNumber = dayData.value._periodWeekNumber;
         simpleFields.dayOfWeek = dayData.value._dayOfWeek;
+        nextTick(() => {
+          isUpdatingFromWatch.value = false;
+        });
     }
 };
 
+// Функция создания пустого дня
+const createEmptyDay = () => {
+    const allFields = ["_dayOfWeek", "_periodType", "_periodWeekNumber", "_date", "_feast", "_psalmWeek", "_dayName", "_weekDay", "_weekNum", "_feastName", "_feastType", "allowedAlleluia", "invitatoriumAnt", "invitatoriumPs1", "invitatoriumPs2", "invitatoriumPs3", "invitatoriumPs4", "invitatoriumPs5", "invitatoriumPs6", "feastComment", "officeOfReadingsHymn", "officeOfReadingsAnt1", "officeOfReadingsAnt2", "officeOfReadingsAnt3", "officeOfReadingsPs1", "officeOfReadingsPs2", "officeOfReadingsPs3", "officeOfReadingsVers", "officeOfReadingsR1", "officeOfReadingsR2", "officeOfReadingsTeDeum", "officeOfReadingsPr", "laudesHymn", "laudesAnt1", "laudesAnt2", "laudesAnt3", "laudesPs1", "laudesPs2", "laudesPs3", "laudesR", "laudesAntBen", "laudesInter", "laudesPr", "sext1Hymn", "sext1Ant1", "sext1Ant2", "sext1Ant3", "sext1Ps1", "sext1Ps2", "sext1Ps3", "sext1R", "sext1Pr", "sext2Hymn", "sext2Ant1", "sext2Ant2", "sext2Ant3", "sext2Ps1", "sext2Ps2", "sext2Ps3", "sext2R", "sext2Pr", "sext3Hymn", "sext3Ant1", "sext3Ant2", "sext3Ant3", "sext3Ps1", "sext3Ps2", "sext3Ps3", "sext3R", "sext3Pr", "vesperHymn", "vesperAnt1", "vesperAnt2", "vesperAnt3", "vesperPs1", "vesperPs2", "vesperPs3", "vesperR", "vesperAntMag", "vesperInter", "vesperPr", "compHymn", "compAnt1", "compAnt2", "compPs1", "compPs2", "compR", "compResp", "compAntS", "compPr", "compAntM"];
+    dayData.value = allFields.reduce((obj, key) => ({ ...obj, [key]: '' }), {});
+    dayData.value.allowedAlleluia = true;
+};
+
 onMounted(async () => {
+  if (isNew.value) {
+    // Для нового дня инициализируем пустой объект сразу
+    createEmptyDay();
+    
+    // Проверяем query params для автозаполнения из PeriodPicker
+    const periodType = route.query._periodType;
+    const periodWeekNumber = route.query._periodWeekNumber;
+    const dayOfWeek = route.query._dayOfWeek;
+    
+    // Если есть query params - заполняем простые поля
+    if (periodType && periodWeekNumber && dayOfWeek) {
+      isUpdatingFromWatch.value = true;
+      simpleFields.period = periodType;
+      simpleFields.weekNumber = parseInt(periodWeekNumber);
+      simpleFields.dayOfWeek = parseInt(dayOfWeek);
+      nextTick(() => {
+        isUpdatingFromWatch.value = false;
+      });
+    }
+    
    const duplicateFromId = route.query.duplicateFrom;
   if (duplicateFromId) {
     // ✅ ЛОГИКА ДУБЛИРОВАНИЯ
@@ -239,17 +309,26 @@ onMounted(async () => {
     loadingDuplicate.value = false;
   }
   
-    if (!isNew.value) {
-        await promise.value; // Ждем завершения загрузки
-    }
+    // Инициализируем форму после всех проверок
     initializeForm();
+  } else {
+    // Для существующего дня ждем загрузки
+    await promise.value;
+    initializeForm();
+  }
 });
+
+// Флаг для предотвращения циклических обновлений
+const isUpdatingFromWatch = ref(false);
 
 // Главная "магия": следим за изменениями в простых полях
 // и автоматически обновляем "скрытые" поля в dayData
 watch(simpleFields, (newVal) => {
-  if (!dayData.value) return;
+  if (!dayData.value || isUpdatingFromWatch.value) return;
+  
+  isUpdatingFromWatch.value = true;
 
+  try {
   // Обновляем технические поля
   dayData.value._periodType = newVal.period || '';
   dayData.value._periodWeekNumber = newVal.weekNumber || null;
@@ -266,7 +345,12 @@ watch(simpleFields, (newVal) => {
   } else {
       dayData.value._dayName = '';
   }
-
+  } finally {
+    // Используем nextTick чтобы избежать циклических обновлений
+    nextTick(() => {
+      isUpdatingFromWatch.value = false;
+    });
+  }
 }, { deep: true });
 
 // Логика сохранения
@@ -297,4 +381,30 @@ const saveChanges = async () => {
 };
 
 const goBack = () => router.go(-1);
+
+// Функция создания копии дня
+const createCopy = () => {
+    if (!dayData.value) return;
+    
+    // Создаем копию данных, очищая ID и поля периода
+    const copyData = { ...dayData.value };
+    
+    // Удаляем ID (чтобы создать новый документ)
+    delete copyData.id;
+    
+    // Очищаем поля периода/недели/дня, чтобы пользователь мог их изменить
+    copyData._periodType = '';
+    copyData._periodWeekNumber = null;
+    copyData._dayOfWeek = null;
+    copyData._date = '';
+    copyData._dayName = '';
+    copyData._weekDay = '';
+    copyData._weekNum = '';
+    
+    // Сохраняем данные копии в sessionStorage
+    sessionStorage.setItem('dayEditorCopyData', JSON.stringify(copyData));
+    
+    // Переходим на страницу создания нового дня
+    router.push({ name: 'AdminDayEditor', params: { id: 'new' } });
+};
 </script>

@@ -49,7 +49,7 @@ export async function retry(fn, options = {}) {
 export async function retryFirestore(fn, options = {}) {
   return retry(fn, {
     maxAttempts: 3,
-    delay: 500,
+    delay: 300, // Уменьшено с 500ms для более быстрого retry
     backoff: 2,
     shouldRetry: (error) => {
       // Retry on network errors or rate limit errors

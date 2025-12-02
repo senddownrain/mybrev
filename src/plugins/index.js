@@ -4,10 +4,8 @@
  * Automatically included in `./src/main.js`
  */
 
-// Plugins
 import { loadFonts } from './webfontloader'
 import vuetify from './vuetify'
-//import VueRouter from 'vue-router'
 import router from '../router'
 import { VueFire, VueFireAuth } from 'vuefire'
 import { firebaseApp } from './firebase'
@@ -30,13 +28,10 @@ export function registerPlugins (app) {
     .use(router)
     .use(VCalendar, {})
     .use(VueFire, {
-      // imported above but could also just be created here
       firebaseApp,
       modules: [
-        // we will see other modules later on
         VueFireAuth(),
       ],
     })
     .component('QuillEditor', QuillEditor)
-    //.component('Calendar', VCalendar)
 }
