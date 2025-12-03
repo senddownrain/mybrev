@@ -7,15 +7,9 @@
     <v-list v-else>
       <v-list-item 
         prepend-icon="mdi-home-outline" 
-        title="Галоўная" 
-        :to="{ name: 'Today' }"
-        :active="route.name === 'Today'"
-      ></v-list-item>
-      <v-list-item 
-        prepend-icon="mdi-calendar-text-outline" 
         title="Літургія" 
-        :to="{ name: 'LiturgicalPicker' }"
-        :active="route.name === 'LiturgicalPicker'"
+        :to="{ name: 'Today' }"
+        :active="route.name === 'Today' || route.name === 'SelectedDay'"
       ></v-list-item>
       <v-list-item 
         prepend-icon="mdi-book-heart-outline" 

@@ -41,6 +41,7 @@
       :scrim="false"
       location="top"
       :persistent="false"
+      :z-index="99"
     >
       <v-card rounded="lg">
         <v-card-title class="d-flex justify-space-between align-center pa-4">

@@ -19,7 +19,13 @@ export function getPrayersCollection() {
 }
 
 export function getPrayersQuery() {
-  return query(getPrayersCollection(), orderBy('createdAt', 'desc'));
+  try {
+    return query(getPrayersCollection(), orderBy('createdAt', 'desc'));
+  } catch (error) {
+    logger.error('[prayerService] Памылка стварэння запыту, спрабую без orderBy:', error);
+    // Fallback: если нет индекса, возвращаем запрос без сортировки
+    return query(getPrayersCollection());
+  }
 }
 
 export async function addPrayer(data) {

@@ -116,6 +116,9 @@ const sortOptions = [
 ];
 
 const favoritePrayers = computed(() => {
+  if (!prayers.value || !Array.isArray(prayers.value)) return [];
+  if (!settings.favoritePrayers || !Array.isArray(settings.favoritePrayers)) return [];
+  
   let filtered = prayers.value.filter(prayer => settings.favoritePrayers.includes(prayer.id));
   
   filtered.sort((a, b) => {

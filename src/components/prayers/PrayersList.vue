@@ -50,6 +50,14 @@
       <v-skeleton-loader v-for="n in 3" :key="n" type="card" class="mb-4"></v-skeleton-loader>
     </div>
     
+    <v-alert v-else-if="error" type="error" class="mb-4">
+      <div class="text-h6">Памылка загрузкі малітваў</div>
+      <p>{{ error.message || error }}</p>
+      <p v-if="error.code === 'failed-precondition'" class="text-caption mt-2">
+        Магчыма, патрабуецца стварыць індэкс у Firebase Console для запыту.
+      </p>
+    </v-alert>
+    
     <div v-else>
       <v-list lines="two" bg-color="transparent">
         <v-list-item
@@ -139,7 +147,7 @@ import { useDebounce } from '@/composables/useDebounce';
 import { getPrayerPreview } from '@/composables/usePrayerPreview';
 
 const router = useRouter();
-const { prayers, isLoading, getTitle, getText, allTags } = usePrayers();
+const { prayers, isLoading, getTitle, getText, allTags, error } = usePrayers();
 const authStore = useAuthStore();
 const settings = useSettingsStore();
 
@@ -158,7 +166,14 @@ const sortOptions = [
 const filteredPrayers = computed(() => {
   if (isLoading.value) return [];
   
-  let filtered = [...prayers.value];
+  const prayersArray = prayers.value;
+  if (!prayersArray || !Array.isArray(prayersArray)) {
+    console.warn('[PrayersList] prayers.value is not an array:', prayersArray, 'type:', typeof prayersArray);
+    return [];
+  }
+  
+  console.log('[PrayersList] Total prayers:', prayersArray.length);
+  let filtered = [...prayersArray];
   
   if (selectedTags.value.length > 0) {
     filtered = filtered.filter(prayer => {

@@ -32,7 +32,7 @@ const routes = [
       {
         path: 'picker',
         name: 'LiturgicalPicker',
-        component: () => import('@/views/LiturgicalPicker.vue'),
+        components: { default: () => import('@/views/LiturgicalPicker.vue'), bottomNav: BottomNavVue },
       },
       {
         path: 'prayers',

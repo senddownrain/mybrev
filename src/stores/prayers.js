@@ -18,26 +18,37 @@ export const usePrayersStore = defineStore('prayers', () => {
       unsubscribe();
     }
 
-    const prayersQuery = getPrayersQuery();
-    
-    unsubscribe = onSnapshot(
-      prayersQuery,
-      (snapshot) => {
-        prayers.value = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        allTags.value = [...new Set(prayers.value.flatMap(prayer => prayer.tags || []))].sort();
-        isLoading.value = false;
-        error.value = null;
-        logger.log('[prayersStore] Загружено молитв:', prayers.value.length);
-      },
-      (err) => {
-        logger.error('[prayersStore] Памылка пры загрузцы малітваў:', err);
-        error.value = err;
-        isLoading.value = false;
-      }
-    );
+    try {
+      const prayersQuery = getPrayersQuery();
+      logger.log('[prayersStore] Ініцыялізацыя падпіскі на малітвы...');
+      
+      unsubscribe = onSnapshot(
+        prayersQuery,
+        (snapshot) => {
+          logger.log('[prayersStore] Атрымана дакументаў:', snapshot.docs.length);
+          prayers.value = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          const tagsArray = (prayers.value || []).flatMap(prayer => prayer.tags || []);
+          allTags.value = [...new Set(tagsArray)].sort();
+          isLoading.value = false;
+          error.value = null;
+          logger.log('[prayersStore] Загружено молитв:', prayers.value.length);
+          logger.log('[prayersStore] Першыя 3 малітвы:', prayers.value.slice(0, 3).map(p => ({ id: p.id, title: getTitle(p) })));
+        },
+        (err) => {
+          logger.error('[prayersStore] Памылка пры загрузцы малітваў:', err);
+          logger.error('[prayersStore] Дэталі памылкі:', err.code, err.message);
+          error.value = err;
+          isLoading.value = false;
+        }
+      );
+    } catch (initError) {
+      logger.error('[prayersStore] Памылка ініцыялізацыі:', initError);
+      error.value = initError;
+      isLoading.value = false;
+    }
   }
 
   async function addPrayerAction(data) {
@@ -97,9 +108,15 @@ export const usePrayersStore = defineStore('prayers', () => {
   }
 
   return {
-    prayers: computed(() => prayers.value),
-    allTags: computed(() => allTags.value),
-    isLoading: computed(() => isLoading.value),
+    prayers: computed(() => {
+      const value = prayers.value;
+      return Array.isArray(value) ? value : [];
+    }),
+    allTags: computed(() => {
+      const value = allTags.value;
+      return Array.isArray(value) ? value : [];
+    }),
+    isLoading: computed(() => isLoading.value ?? true),
     error: computed(() => error.value),
     
     init,

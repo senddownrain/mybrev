@@ -153,6 +153,7 @@ async function loadFeasts() {
 }
 
 const filteredFeasts = computed(() => {
+  if (!allFeasts.value || !Array.isArray(allFeasts.value)) return [];
   let filtered = [...allFeasts.value];
 
   // Фильтр по типу

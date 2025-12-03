@@ -115,6 +115,7 @@ const goToPrevDay = () => navigateToDate(currentDate.value.clone().subtract(1, '
 const rankOrder = { 'solemnity': 1, 'feast': 2, 'memorial': 3 };
 
 const sortedDays = computed(() => {
+  if (!days.value || !Array.isArray(days.value)) return [];
   return [...days.value].sort((a, b) => {
     const rankA = a._feastType ? rankOrder[a._feastType] || 99 : 100;
     const rankB = b._feastType ? rankOrder[b._feastType] || 99 : 100;
