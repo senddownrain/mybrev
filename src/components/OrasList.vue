@@ -50,7 +50,6 @@ import { doc, getFirestore } from 'firebase/firestore';
 import { db } from '@/plugins/firebase'; 
 
 const route = useRoute();
-//const db = getFirestore();
 
 const { day: dateParam, id: dayId } = route.params;
 
@@ -170,11 +169,11 @@ const getPeriodTitle = (day) => {
 
 @media (max-width: 600px) {
   .v-list-item-title {
-    font-size: 1.1rem !important; /* Уменьшаем заголовок */
+    font-size: 1.1rem !important;
     line-height: 1.4rem;
   }
   .v-list-item-subtitle {
-    font-size: 0.8rem !important; /* Уменьшаем подзаголовок */
+    font-size: 0.8rem !important;
     line-height: 1.1rem;
   }
   .v-chip {
@@ -182,7 +181,7 @@ const getPeriodTitle = (day) => {
     height: 24px;
   }
   .v-list-item {
-    padding-inline: 12px; /* Уменьшаем боковые отступы */
+    padding-inline: 12px;
   }
 }
 </style>

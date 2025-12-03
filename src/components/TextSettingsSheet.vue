@@ -1,11 +1,9 @@
 <template>
-  <!-- Используем импортированный компонент -->
   <v-bottom-sheet v-model="isSettingsSheetOpen" inset>
     <v-card class="pa-2" rounded="t-xl">
       <v-list lines="one" subheader>
         <v-list-subheader class="text-center text-h6 font-weight-regular">Налады выгляду</v-list-subheader>
 
-        <!-- Настройка темы -->
         <v-list-item title="Цёмная тэма">
           <template v-slot:prepend>
             <v-icon>mdi-theme-light-dark</v-icon>
@@ -23,7 +21,6 @@
 
         <v-divider class="my-2"></v-divider>
 
-        <!-- Настройка размера шрифта -->
         <v-list-item title="Памер шрыфту">
           <template v-slot:prepend>
             <v-icon>mdi-format-font-size-increase</v-icon>
@@ -51,7 +48,6 @@
 
         <v-divider class="my-2"></v-divider>
 
-        <!-- Настройка шрифта -->
         <v-list-item>
           <template v-slot:title>
               Сямейства шрыфтоў
@@ -82,9 +78,6 @@
         </div>
 
       </v-list>
-      <!-- <v-card-actions>
-        <v-btn color="primary" block variant="text" @click="toggleSettingsSheet">Закрыць</v-btn>
-      </v-card-actions> -->
     </v-card>
   </v-bottom-sheet>
 </template>
@@ -100,7 +93,7 @@ const { isSettingsSheetOpen, toggleSettingsSheet } = useAppBar();
 const fontOptions = ref([
   { title: 'Сістэмны', value: settings.systemFont },
  { title: 'Kurale', value: 'Kurale, serif' },
-  { title: 'Old Standard TT', value: "'Old Standard TT', serif" }, // Важно: кавычки внутри строки для шрифтов с пробелами
+  { title: 'Old Standard TT', value: "'Old Standard TT', serif" },
   { title: 'Pacifico', value: 'Pacifico, cursive' },
   { title: 'Comfortaa', value: 'Comfortaa, sans-serif' },
 ]);

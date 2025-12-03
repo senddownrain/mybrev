@@ -51,6 +51,7 @@ import { ref, computed } from 'vue';
 import { useSettingsStore } from '@/stores/settings';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
+import { validateCategory } from '@/utils/validators';
 
 defineProps({ modelValue: Boolean });
 const emit = defineEmits(['update:modelValue']);
@@ -61,12 +62,14 @@ const { notifySuccess, notifyError } = useNotifier();
 const newCategory = ref({ name: '', tags: [] });
 
 const isValid = computed(() => {
-  return newCategory.value.name.trim() && newCategory.value.tags.length > 0;
+  const validation = validateCategory(newCategory.value);
+  return validation === true;
 });
 
 function onAddCategory() {
-  if (!isValid.value) {
-    notifyError('Запоўніце ўсе палі');
+  const validation = validateCategory(newCategory.value);
+  if (validation !== true) {
+    notifyError(validation);
     return;
   }
   

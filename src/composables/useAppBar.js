@@ -1,12 +1,12 @@
 import { ref } from 'vue';
 
 const isSettingsSheetOpen = ref(false);
-const isDrawerOpen = ref(false); // ✅ ДОБАВЛЯЕМ
-const isCalendarDialogOpen = ref(false); // ✅ ДОБАВЛЯЕМ СОСТОЯНИЕ ДЛЯ КАЛЕНДАРЯ
+const isDrawerOpen = ref(false);
+const isCalendarDialogOpen = ref(false);
 
 export function useAppBar() {
   const toggleSettingsSheet = () => {
-    isSettingsSheetOpen.value = !isSettingsSheetOpen.value; // ✅ МЕНЯЕМ ГЛОБАЛЬНОЕ СОСТОЯНИЕ
+    isSettingsSheetOpen.value = !isSettingsSheetOpen.value;
   };
   const toggleCalendarDialog = () => {
     isCalendarDialogOpen.value = !isCalendarDialogOpen.value;
@@ -14,8 +14,8 @@ export function useAppBar() {
   return {
     isDrawerOpen,
     isSettingsSheetOpen,
-    isCalendarDialogOpen, // ✅ ЭКСПОРТИРУЕМ
+    isCalendarDialogOpen,
     toggleSettingsSheet,
-    toggleCalendarDialog // ✅ ЭКСПОРТИРУЕМ ФУНКЦИЮ
+    toggleCalendarDialog
   };
 }

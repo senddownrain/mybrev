@@ -4,8 +4,7 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from
 import router from '@/router';
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
-
-const ADMIN_UIDS = ['64MeSP56IWVotVFG7bu8YKeLis12'];
+import { ADMIN_UIDS } from '@/constants/admin';
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null);

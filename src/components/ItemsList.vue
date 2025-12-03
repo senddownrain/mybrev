@@ -5,7 +5,7 @@
   
   <div class="text-center flex-grow-1 mx-2" @click="toggleCalendarDialog" style="cursor: pointer;">
     <h2 class="text-h6 font-weight-regular text-wrap">
-      {{ formattedCurrentDate }}
+      Літургія
     </h2>
   </div>
   
@@ -107,16 +107,10 @@ const fetchItemsForDate = async (date) => {
 
 function navigateToDate(date) {
   const dateString = date.format('YYYY-MM-DD');
-  // Явно указываем имя маршрута 'SelectedDay'
   router.push({ name: 'SelectedDay', params: { day: dateString } });
 }
 const goToNextDay = () => navigateToDate(currentDate.value.clone().add(1, 'day'));
 const goToPrevDay = () => navigateToDate(currentDate.value.clone().subtract(1, 'day'));
-
-const formattedCurrentDate = computed(() => {
-  const dateStr = currentDate.value.format('dddd, D MMMM YYYY');
-  return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-});
 
 const rankOrder = { 'solemnity': 1, 'feast': 2, 'memorial': 3 };
 
@@ -129,7 +123,7 @@ const sortedDays = computed(() => {
 });
 
 const getTitle = (day) => {
-  if (day.title) return day.title; // Если есть поле title, используем его
+  if (day.title) return day.title;
   if (day._feastName) return day._feastName;
 
   const periodMap = {

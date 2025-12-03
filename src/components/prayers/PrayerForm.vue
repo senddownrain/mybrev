@@ -2,35 +2,23 @@
   <v-container>
     <v-form @submit.prevent="handleSave">
       <v-text-field
-        v-model="form.titleVersions.be"
-        label="Назва (бел.)"
+        v-model="form.title"
+        label="Назва"
         variant="outlined"
         class="mb-4"
+        :rules="[validatePrayerTitle]"
+        counter="200"
         required
       ></v-text-field>
 
-      <v-text-field
-        v-model="form.titleVersions.ru"
-        label="Назва (рус.)"
-        variant="outlined"
-        class="mb-4"
-      ></v-text-field>
-
       <v-textarea
-        v-model="form.textVersions.be"
-        label="Тэкст малітвы (бел.)"
+        v-model="form.text"
+        label="Тэкст малітвы"
         variant="outlined"
         rows="10"
         class="mb-4"
+        :rules="[validatePrayerText]"
         required
-      ></v-textarea>
-
-      <v-textarea
-        v-model="form.textVersions.ru"
-        label="Текст молитвы (рус.)"
-        variant="outlined"
-        rows="10"
-        class="mb-4"
       ></v-textarea>
 
       <v-combobox
@@ -62,6 +50,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
+import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 
 const route = useRoute();
 const router = useRouter();
@@ -72,33 +61,49 @@ const isEditMode = computed(() => !!route.params.id);
 const saving = ref(false);
 
 const form = ref({
-  titleVersions: {
-    be: '',
-    ru: ''
-  },
-  textVersions: {
-    be: '',
-    ru: ''
-  },
+  title: '',
+  text: '',
   tags: []
 });
 
 onMounted(() => {
   if (isEditMode.value) {
     const prayer = prayers.value.find(p => p.id === route.params.id);
-    if (prayer) {
-      form.value = {
-        titleVersions: prayer.titleVersions || { be: '', ru: '' },
-        textVersions: prayer.textVersions || { be: '', ru: '' },
-        tags: prayer.tags || []
-      };
+    if (!prayer) {
+      notifyError('Малітва не знойдзена');
+      router.push({ name: 'PrayersList' });
+      return;
     }
+    
+    // Поддержка старого формата с titleVersions/textVersions и нового формата
+    if (prayer.titleVersions) {
+      form.value.title = prayer.titleVersions.be || prayer.titleVersions.ru || Object.values(prayer.titleVersions)[0] || '';
+    } else {
+      form.value.title = prayer.title || '';
+    }
+    
+    if (prayer.textVersions) {
+      form.value.text = prayer.textVersions.be || prayer.textVersions.ru || Object.values(prayer.textVersions)[0] || '';
+    } else {
+      form.value.text = prayer.text || '';
+    }
+    
+    form.value.tags = prayer.tags || [];
   }
 });
 
 async function handleSave() {
-  if (!form.value.titleVersions.be || !form.value.textVersions.be) {
-    notifyError('Запоўніце назву і тэкст на беларускай мове');
+  // Валидация
+  const titleValidation = validatePrayerTitle(form.value.title);
+  const textValidation = validatePrayerText(form.value.text);
+  
+  if (titleValidation !== true) {
+    notifyError(titleValidation);
+    return;
+  }
+  
+  if (textValidation !== true) {
+    notifyError(textValidation);
     return;
   }
 
@@ -113,7 +118,8 @@ async function handleSave() {
     }
     router.push({ name: 'PrayersList' });
   } catch (error) {
-    notifyError('Памылка захавання малітвы');
+    const { handleFirestoreError } = await import('@/utils/errorHandler');
+    handleFirestoreError(error, 'PrayerForm');
   } finally {
     saving.value = false;
   }

@@ -13,7 +13,6 @@ export const useCalendarStore = defineStore('calendar', () => {
     const yearOptionsCache = ref({});
     const dynamicDatesCache = ref({});
 
-    // --- ✅ 1. ИЗМЕНЕНИЕ: getYearOptions теперь ищет по полю, а не по ID ---
     async function getYearOptions(year) {
         if (yearOptionsCache.value[year]) {
             return yearOptionsCache.value[year];
@@ -35,11 +34,9 @@ export const useCalendarStore = defineStore('calendar', () => {
         return options;
     }
 
-    // --- ✅ 2. ИЗМЕНЕНИЕ: getDynamicDates работает с новым форматом дат ---
     async function getDynamicDates(year) {
     logger.log(`[CalendarStore] Вычисление динамических дат для ${year} года...`);
     
-    // Убедимся, что опции для года загружены
     await getYearOptions(year); 
     const opts = yearOptionsCache.value[year];
     if (!opts) {
@@ -98,7 +95,6 @@ export const useCalendarStore = defineStore('calendar', () => {
         getYearOptions, 
         getDynamicDates,
         getAvailableYears,
-        // Геттеры для доступа из компонентов
         optionsForYear: (year) => computed(() => yearOptionsCache.value[year]),
         dynamicDatesForYear: (year) => computed(() => dynamicDatesCache.value[year])
     };

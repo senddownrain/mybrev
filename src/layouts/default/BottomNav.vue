@@ -34,7 +34,14 @@
       </v-btn>
     </v-bottom-navigation>
 
-    <v-dialog v-model="isCalendarDialogOpen" width="auto" max-width="400">
+    <v-dialog 
+      v-model="isCalendarDialogOpen" 
+      width="auto" 
+      max-width="400"
+      :scrim="false"
+      location="top"
+      :persistent="false"
+    >
       <v-card rounded="lg">
         <v-card-title class="d-flex justify-space-between align-center pa-4">
           <span class="text-h6">Выбраць дату</span>
@@ -72,7 +79,6 @@ const router = useRouter()
 const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar()
 const selectedDate = ref(new Date())
 
-// Получаем текущую дату из роута или используем сегодняшнюю
 const currentRouteDate = computed(() => {
   if (route.name === 'Today' || route.path === '/') {
     return moment().startOf('day')
@@ -83,10 +89,8 @@ const currentRouteDate = computed(() => {
   return moment().startOf('day')
 })
 
-// Сегодняшняя дата
 const today = computed(() => moment().startOf('day'))
 
-// Меню с динамическими датами
 const menu = computed(() => [
   {
     title: "Выбраць",
@@ -100,9 +104,7 @@ const menu = computed(() => [
   },
 ])
 
-// Определяем активную кнопку на основе текущей даты
 const activeIndex = computed(() => {
-  // Если мы на странице выбора - активируем кнопку "Выбраць"
   if (route.name === 'LiturgicalPicker') {
     return 0
   }
@@ -110,20 +112,17 @@ const activeIndex = computed(() => {
   const routeDate = currentRouteDate.value
   const todayDate = today.value
   
-  // Сравниваем даты без времени
   if (routeDate.isSame(todayDate, 'day')) {
-    return 1 // Сёння
+    return 1
   } else {
-    return 2 // Другой день - активна кнопка "Дзень"
+    return 2
   }
 })
 
-// Функция для навигации
 function navigateTo(path) {
   router.push(path)
 }
 
-// Обновляем selectedDate при открытии календаря
 watch(isCalendarDialogOpen, (isOpen) => {
   if (isOpen) {
     selectedDate.value = currentRouteDate.value.toDate()
@@ -142,6 +141,14 @@ function loadDay() {
 </script>
 
 <style scoped>
+:deep(.v-bottom-navigation) {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 100 !important;
+}
+
 .bottom-nav-btn {
   min-width: 80px;
   flex-direction: column;

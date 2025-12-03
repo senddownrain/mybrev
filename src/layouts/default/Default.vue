@@ -6,7 +6,6 @@
     }"
   >
     <v-app-bar flat class="app-bar-border">
-      <!-- Кнопка-гамбургер для открытия бокового меню -->
       <v-app-bar-nav-icon @click.stop="isDrawerOpen = !isDrawerOpen"></v-app-bar-nav-icon>
 
       <v-app-bar-title @click="goHome()" style="cursor: pointer;">Малітоўнік</v-app-bar-title>
@@ -15,21 +14,16 @@
 
     </v-app-bar>
     
-    <!-- Наша боковая панель -->
     <NavigationDrawer />
 
     <v-main>
-      <!-- Здесь будут рендериться все дочерние страницы: ItemsList, Settings, Login... -->
       <router-view />
     </v-main>
 
-    <!-- Нижняя навигация (если нужна) -->
     <router-view name="bottomNav" />
     
-    <!-- Панель настроек текста -->
     <TextSettingsSheet />
     
-    <!-- Toast уведомления -->
     <NotificationSnackbar />
   </v-app>
 </template>

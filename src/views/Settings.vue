@@ -5,19 +5,17 @@
     <v-list lines="two" subheader>
       <v-list-subheader>Знешні выгляд</v-list-subheader>
 
-      <!-- Настройка темы -->
       <v-list-item title="Цёмная тэма">
         <template v-slot:prepend><v-icon>mdi-theme-light-dark</v-icon></template>
         <template v-slot:append>
           <v-switch
             :model-value="settings.currentTheme === 'dark'"
-            @update:model-value="settings.toggleTheme"
+            @update:model-value="settings.setTheme"
             inset color="primary" hide-details
           ></v-switch>
         </template>
       </v-list-item>
 
-      <!-- Настройки текста теперь доступны через кнопку настроек в AppBar -->
       <v-list-item title="Налады тэксту" prepend-icon="mdi-format-font" @click="openTextSettings">
         <template v-slot:append>
           <v-icon>mdi-chevron-right</v-icon>
@@ -26,7 +24,6 @@
 
     </v-list>
 
-    <!-- Пример текста для демонстрации эффекта настроек -->
     <v-card class="mt-6" variant="outlined">
       <v-card-title class="text-subtitle-1">Прыклад тэксту</v-card-title>
       <v-card-text class="prayer-content-area">
@@ -51,7 +48,6 @@
       </v-card-text>
     </v-card>
 
-    <!-- Категории молитв -->
     <v-list lines="two" subheader class="mt-6">
       <v-list-subheader>Катэгорыі малітваў</v-list-subheader>
       

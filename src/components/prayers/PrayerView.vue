@@ -1,5 +1,25 @@
 <template>
   <v-container v-if="prayer" class="prayer-view-container">
+    <div class="d-flex align-center mb-4">
+      <v-btn
+        icon="mdi-arrow-left"
+        variant="text"
+        @click="goBack"
+        class="mr-2"
+        aria-label="Вярнуцца назад"
+      ></v-btn>
+      <v-spacer></v-spacer>
+      <v-btn
+        icon="mdi-content-copy"
+        variant="text"
+        @click="copyText"
+        :title="copyButtonText"
+        aria-label="Скапіяваць тэкст малітвы"
+      >
+        <v-icon>{{ copySuccess ? 'mdi-check' : 'mdi-content-copy' }}</v-icon>
+      </v-btn>
+    </div>
+    
     <div class="prayer-content-area">
       <h1 class="text-h4 font-weight-light mb-4 prayer-title" v-html="getTitle(prayer)"></h1>
       
@@ -20,22 +40,103 @@
     </div>
   </v-container>
   
-  <v-container v-else class="text-center">
+  <v-container v-else-if="isLoading" class="text-center">
     <v-progress-circular indeterminate color="primary"></v-progress-circular>
     <p class="mt-4">Загрузка малітвы...</p>
+  </v-container>
+  
+  <v-container v-else class="text-center">
+    <v-icon size="64" class="mb-4" color="grey">mdi-file-question-outline</v-icon>
+    <h2 class="text-h5 mb-4">Малітва не знойдзена</h2>
+    <p class="text-medium-emphasis mb-6">Малітва з такім ID не існуе або была выдалена</p>
+    <v-btn color="primary" :to="{ name: 'PrayersList' }">Вярнуцца да спісу малітваў</v-btn>
   </v-container>
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, computed, watch, onUnmounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
+import { useNotifier } from '@/composables/useNotifier';
+import { logger } from '@/utils/logger';
 
 const route = useRoute();
-const { prayers, getTitle, getText } = usePrayers();
+const router = useRouter();
+const { prayers, isLoading, getTitle, getText } = usePrayers();
+const { notifySuccess } = useNotifier();
 
 const prayer = computed(() => {
   return prayers.value.find(p => p.id === route.params.id);
+});
+
+const copySuccess = ref(false);
+const copyButtonText = computed(() => copySuccess.value ? 'Скапіявана!' : 'Скапіяваць тэкст');
+
+function goBack() {
+  if (window.history.length > 1) {
+    router.back();
+  } else {
+    router.push({ name: 'PrayersList' });
+  }
+}
+
+let copyTimeoutId = null;
+
+async function copyText() {
+  if (!prayer.value) return;
+  
+  if (copyTimeoutId) {
+    clearTimeout(copyTimeoutId);
+  }
+  
+  const title = getTitle(prayer.value);
+  const text = getText(prayer.value);
+  
+  const doc = new DOMParser().parseFromString(text, 'text/html');
+  const plainText = doc.body.textContent || text;
+  
+  const textToCopy = `${title}\n\n${plainText}`;
+  
+  try {
+    await navigator.clipboard.writeText(textToCopy);
+    copySuccess.value = true;
+    notifySuccess('Тэкст скапіяваны');
+    copyTimeoutId = setTimeout(() => {
+      copySuccess.value = false;
+      copyTimeoutId = null;
+    }, 2000);
+  } catch (error) {
+    const textArea = document.createElement('textarea');
+    textArea.value = textToCopy;
+    textArea.style.position = 'fixed';
+    textArea.style.opacity = '0';
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      copySuccess.value = true;
+      notifySuccess('Тэкст скапіяваны');
+      copyTimeoutId = setTimeout(() => {
+        copySuccess.value = false;
+        copyTimeoutId = null;
+      }, 2000);
+    } catch (err) {
+      logger.error('Не атрымалася скапіяваць тэкст:', err);
+    } finally {
+      document.body.removeChild(textArea);
+    }
+  }
+}
+
+onUnmounted(() => {
+  if (copyTimeoutId) {
+    clearTimeout(copyTimeoutId);
+  }
+});
+
+watch([isLoading, prayer], ([loading, foundPrayer]) => {
+  if (!loading && !foundPrayer && prayers.value.length > 0) {
+  }
 });
 </script>
 

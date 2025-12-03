@@ -1,27 +1,19 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { useTheme } from 'vuetify';
+import { SYSTEM_FONT } from '@/constants/fonts';
+import { DEFAULT_CATEGORIES } from '@/constants/categories';
+import { validateCategory } from '@/utils/validators';
 
-// Константа для системного шрифта
-const systemFont = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-
-const defaultCategories = [
-  { name: 'Марыйныя', tags: ['Марыя'] },
-  { name: 'Літаніі', tags: ['Літанія'] },
-  { name: 'Навэнны', tags: ['Навэнна'] }
-];
-
-// Экспортируем константу с правильным именем 'useSettingsStore'
 export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme();
 
-  // --- Состояния (State) ---
   const currentTheme = ref(localStorage.getItem('theme') || 'light');
-  const fontFamily = ref(localStorage.getItem('fontFamily') || systemFont);
+  const fontFamily = ref(localStorage.getItem('fontFamily') || SYSTEM_FONT);
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
-  const menuCategories = ref(JSON.parse(localStorage.getItem('menuCategories') || JSON.stringify(defaultCategories)));
+  const menuCategories = ref(JSON.parse(localStorage.getItem('menuCategories') || JSON.stringify(DEFAULT_CATEGORIES)));
+  const favoritePrayers = ref(JSON.parse(localStorage.getItem('favoritePrayers') || '[]'));
 
-  // --- Слежение за изменениями (Watchers) ---
   watch(currentTheme, (newTheme) => {
     theme.global.name.value = newTheme;
     localStorage.setItem('theme', newTheme);
@@ -38,11 +30,15 @@ export const useSettingsStore = defineStore('settings', () => {
   }, { immediate: true });
 
   watch(menuCategories, (v) => localStorage.setItem('menuCategories', JSON.stringify(v)), { deep: true });
+  watch(favoritePrayers, (v) => localStorage.setItem('favoritePrayers', JSON.stringify(v)), { deep: true });
 
 
-  // --- Действия (Actions) ---
   function toggleTheme() {
     currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
+  }
+
+  function setTheme(isDark) {
+    currentTheme.value = isDark ? 'dark' : 'light';
   }
 
   function setFontFamily(font) {
@@ -61,7 +57,8 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   function addCategory(cat) {
-    if (cat && cat.name && cat.tags?.length > 0) {
+    const validation = validateCategory(cat);
+    if (validation === true) {
       menuCategories.value.push(cat);
     }
   }
@@ -70,17 +67,34 @@ export const useSettingsStore = defineStore('settings', () => {
     menuCategories.value.splice(index, 1);
   }
 
+  function toggleFavoritePrayer(prayerId) {
+    const index = favoritePrayers.value.indexOf(prayerId);
+    if (index > -1) {
+      favoritePrayers.value.splice(index, 1);
+    } else {
+      favoritePrayers.value.push(prayerId);
+    }
+  }
+
+  function isFavoritePrayer(prayerId) {
+    return favoritePrayers.value.includes(prayerId);
+  }
+
   return {
     currentTheme,
     fontFamily,
-    systemFont,
+    systemFont: SYSTEM_FONT,
     fontSizeMultiplier,
     menuCategories,
+    favoritePrayers,
     toggleTheme,
+    setTheme,
     setFontFamily,
     increaseFontSize,
     decreaseFontSize,
     addCategory,
     removeCategory,
+    toggleFavoritePrayer,
+    isFavoritePrayer,
   };
 });

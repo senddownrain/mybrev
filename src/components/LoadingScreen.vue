@@ -1,17 +1,14 @@
 <template>
   <div class="loading-screen">
     <div class="loading-content">
-      <!-- Иконка приложения -->
       <img 
         src="/web-app-manifest-192x192.png" 
         alt="Малітоўнік"
         class="app-icon"
       />
       
-      <!-- Название приложения -->
       <h1 class="app-title">Малітоўнік</h1>
       
-      <!-- Индикатор загрузки -->
       <v-progress-circular
         indeterminate
         color="primary"
@@ -20,15 +17,10 @@
         class="loading-spinner"
       ></v-progress-circular>
       
-      <!-- Текст загрузки -->
       <p class="loading-text">Загрузка...</p>
     </div>
   </div>
 </template>
-
-<script setup>
-// Компонент экрана загрузки
-</script>
 
 <style scoped>
 .loading-screen {

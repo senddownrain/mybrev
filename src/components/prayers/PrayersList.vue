@@ -1,8 +1,17 @@
 <template>
   <v-container class="prayers-list-container">
-    <h1 class="text-h5 font-weight-light mb-4">Малітвы</h1>
+    <div class="d-flex align-center justify-space-between mb-4">
+      <h1 class="text-h5 font-weight-light mb-0">Малітвы</h1>
+      <v-chip 
+        v-if="!isLoading && filteredPrayers.length > 0" 
+        size="small" 
+        color="primary" 
+        variant="tonal"
+      >
+        {{ filteredPrayers.length }} {{ filteredPrayers.length === 1 ? 'малітва' : 'малітваў' }}
+      </v-chip>
+    </div>
 
-    <!-- Поисковая строка -->
     <v-text-field
       v-model="searchQuery"
       label="Пошук малітваў"
@@ -14,7 +23,6 @@
       clearable
     ></v-text-field>
 
-    <!-- Фильтр по тегам -->
     <v-combobox
       v-model="selectedTags"
       :items="allTags"
@@ -28,46 +36,83 @@
       class="mb-4 filter-field"
     ></v-combobox>
 
+    <v-select
+      v-model="sortBy"
+      :items="sortOptions"
+      label="Сартаваць"
+      variant="outlined"
+      density="compact"
+      hide-details
+      class="mb-4"
+    ></v-select>
+
     <div v-if="isLoading">
       <v-skeleton-loader v-for="n in 3" :key="n" type="card" class="mb-4"></v-skeleton-loader>
     </div>
     
     <div v-else>
-      <v-card v-for="prayer in filteredPrayers" :key="prayer.id" class="mb-3 prayer-card" variant="outlined">
-        <v-card-title class="font-weight-bold d-flex align-center prayer-card-title">
-          <span class="flex-grow-1 text-wrap" @click="viewPrayer(prayer.id)" style="cursor: pointer;">
-            {{ getTitle(prayer) }}
-          </span>
-        </v-card-title>
-        <v-card-text class="pb-2" @click="viewPrayer(prayer.id)" style="cursor: pointer;">
-          <p class="mb-3 text-medium-emphasis prayer-preview">{{ getPreviewText(prayer) }}</p>
-          <div class="d-flex flex-wrap ga-1">
-            <v-chip 
-              v-for="tag in prayer.tags" 
-              :key="tag" 
-              size="small" 
-              color="primary" 
-              variant="tonal"
-              class="mb-1"
+      <v-list lines="two" bg-color="transparent">
+        <v-list-item
+          v-for="prayer in filteredPrayers"
+          :key="prayer.id"
+          :title="getTitle(prayer)"
+          :subtitle="getPreviewText(prayer)"
+          @click="viewPrayer(prayer.id)"
+          class="prayer-list-item"
+        >
+          <template v-slot:prepend>
+            <v-btn
+              icon
+              variant="text"
+              size="small"
+              @click.stop="toggleFavorite(prayer.id)"
+              :color="isFavorite(prayer.id) ? 'red' : 'grey'"
+              :aria-label="isFavorite(prayer.id) ? 'Выдаліць з абраных' : 'Дадаць у абраныя'"
             >
-              {{ tag }}
-            </v-chip>
-          </div>
-        </v-card-text>
-        <v-card-actions v-if="authStore.isAdmin">
-          <v-spacer></v-spacer>
-          <v-btn
-            icon="mdi-pencil"
-            variant="text"
-            size="small"
-            @click.stop="router.push({ name: 'PrayerEdit', params: { id: prayer.id } })"
-          ></v-btn>
-        </v-card-actions>
-      </v-card>
+              <v-icon>{{ isFavorite(prayer.id) ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
+            </v-btn>
+          </template>
+
+          <template v-slot:append>
+            <div class="d-flex align-center ga-2">
+              <div v-if="prayer.tags && prayer.tags.length > 0" class="d-flex flex-wrap ga-1">
+                <v-chip 
+                  v-for="tag in prayer.tags.slice(0, 2)" 
+                  :key="tag" 
+                  size="x-small" 
+                  color="primary" 
+                  variant="tonal"
+                >
+                  {{ tag }}
+                </v-chip>
+                <v-chip 
+                  v-if="prayer.tags.length > 2"
+                  size="x-small" 
+                  color="grey" 
+                  variant="tonal"
+                >
+                  +{{ prayer.tags.length - 2 }}
+                </v-chip>
+              </div>
+              <v-btn
+                v-if="authStore.isAdmin"
+                icon="mdi-pencil"
+                variant="text"
+                size="small"
+                @click.stop="router.push({ name: 'PrayerEdit', params: { id: prayer.id } })"
+                aria-label="Рэдагаваць малітву"
+              ></v-btn>
+            </div>
+          </template>
+        </v-list-item>
+      </v-list>
 
       <div v-if="!isLoading && filteredPrayers.length === 0" class="text-center text-grey-darken-1 mt-16">
         <v-icon size="48" class="mb-2">mdi-note-off-outline</v-icon>
         <p>Малітвы не знойдзены</p>
+        <p v-if="searchQuery || selectedTags.length > 0" class="text-caption mt-2">
+          Паспрабуйце змяніць пошук або фільтры
+        </p>
       </div>
     </div>
 
@@ -89,20 +134,32 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useAuthStore } from '@/stores/auth';
+import { useSettingsStore } from '@/stores/settings';
+import { useDebounce } from '@/composables/useDebounce';
+import { getPrayerPreview } from '@/composables/usePrayerPreview';
 
 const router = useRouter();
 const { prayers, isLoading, getTitle, getText, allTags } = usePrayers();
 const authStore = useAuthStore();
+const settings = useSettingsStore();
 
 const searchQuery = ref('');
+const debouncedSearchQuery = useDebounce(searchQuery, 300);
 const selectedTags = ref([]);
+const sortBy = ref('alphabet');
+
+const sortOptions = [
+  { title: 'Па алфавіце', value: 'alphabet' },
+  { title: 'Па даце (новыя першымі)', value: 'date-desc' },
+  { title: 'Па даце (старыя першымі)', value: 'date-asc' },
+  { title: 'Абраныя першымі', value: 'favorites-first' },
+];
 
 const filteredPrayers = computed(() => {
   if (isLoading.value) return [];
   
   let filtered = [...prayers.value];
   
-  // Фильтр по тегам
   if (selectedTags.value.length > 0) {
     filtered = filtered.filter(prayer => {
       const prayerTags = prayer.tags || [];
@@ -110,31 +167,65 @@ const filteredPrayers = computed(() => {
     });
   }
   
-  // Поиск по тексту (работает даже во время загрузки)
-  if (searchQuery.value.trim()) {
-    const query = searchQuery.value.toLowerCase().trim();
+  if (debouncedSearchQuery.value.trim()) {
+    const query = debouncedSearchQuery.value.toLowerCase().trim();
     filtered = filtered.filter(prayer => {
       const title = getTitle(prayer).toLowerCase();
       const text = getText(prayer);
-      // Убираем HTML теги для поиска
       const textPlain = text.replace(/<[^>]*>/g, '').toLowerCase();
       return title.includes(query) || textPlain.includes(query);
     });
   }
+  
+  filtered.sort((a, b) => {
+    switch (sortBy.value) {
+      case 'alphabet':
+        const titleA = getTitle(a).toLowerCase();
+        const titleB = getTitle(b).toLowerCase();
+        return titleA.localeCompare(titleB, 'be', { sensitivity: 'base' });
+      
+      case 'date-desc':
+        const dateA = a.createdAt?.toDate?.() || new Date(a.createdAt || 0);
+        const dateB = b.createdAt?.toDate?.() || new Date(b.createdAt || 0);
+        return dateB - dateA;
+      
+      case 'date-asc':
+        const dateA2 = a.createdAt?.toDate?.() || new Date(a.createdAt || 0);
+        const dateB2 = b.createdAt?.toDate?.() || new Date(b.createdAt || 0);
+        return dateA2 - dateB2;
+      
+      case 'favorites-first':
+        const aIsFavorite = settings.favoritePrayers.includes(a.id);
+        const bIsFavorite = settings.favoritePrayers.includes(b.id);
+        if (aIsFavorite && !bIsFavorite) return -1;
+        if (!aIsFavorite && bIsFavorite) return 1;
+        const titleA2 = getTitle(a).toLowerCase();
+        const titleB2 = getTitle(b).toLowerCase();
+        return titleA2.localeCompare(titleB2, 'be', { sensitivity: 'base' });
+      
+      default:
+        return 0;
+    }
+  });
   
   return filtered;
 });
 
 function getPreviewText(prayer) {
   const text = getText(prayer);
-  if (!text) return 'Няма змесціва';
-  const doc = new DOMParser().parseFromString(text, 'text/html');
-  const plainText = (doc.body.textContent || "").trim();
-  return plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText;
+  return getPrayerPreview(text);
 }
 
 function viewPrayer(id) {
   router.push({ name: 'PrayerView', params: { id } });
+}
+
+function isFavorite(prayerId) {
+  return settings.favoritePrayers.includes(prayerId);
+}
+
+function toggleFavorite(prayerId) {
+  settings.toggleFavoritePrayer(prayerId);
 }
 </script>
 
@@ -150,35 +241,27 @@ function viewPrayer(id) {
   max-width: 100%;
 }
 
-.prayer-card {
-  transition: box-shadow 0.2s;
+.prayer-list-item {
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-.prayer-card:active {
-  opacity: 0.8;
+.prayer-list-item:hover {
+  background-color: rgba(var(--v-theme-on-surface), 0.04);
 }
 
-.prayer-card-title {
+.prayer-list-item :deep(.v-list-item-title) {
   word-wrap: break-word;
   overflow-wrap: break-word;
-  line-height: 1.4 !important;
-  white-space: normal !important;
+  line-height: 1.4;
 }
 
-.prayer-card-title span {
-  display: block;
-  width: 100%;
+.prayer-list-item :deep(.v-list-item-subtitle) {
   word-wrap: break-word;
   overflow-wrap: break-word;
-}
-
-.prayer-preview {
-  line-height: 1.6;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  white-space: normal;
+  line-height: 1.5;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -189,28 +272,17 @@ function viewPrayer(id) {
     padding: 12px 8px !important;
   }
 
-  .prayer-card {
-    margin-left: 0;
-    margin-right: 0;
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden;
+  .prayer-list-item {
+    padding: 12px 8px !important;
   }
 
-  .prayer-card-title {
+  .prayer-list-item :deep(.v-list-item-title) {
     font-size: 0.95rem !important;
-    padding: 12px 12px 8px 12px !important;
-    overflow: visible;
   }
 
-  .prayer-card-title span {
-    max-width: 100%;
-    overflow-wrap: break-word;
-  }
-
-  .prayer-preview {
-    font-size: 0.875rem !important;
-    -webkit-line-clamp: 4;
+  .prayer-list-item :deep(.v-list-item-subtitle) {
+    font-size: 0.85rem !important;
+    -webkit-line-clamp: 2;
   }
 
   .search-field,

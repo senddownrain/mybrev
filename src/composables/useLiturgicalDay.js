@@ -13,7 +13,6 @@ export function useLiturgicalDay() {
     const daysCollection = collection(db, 'days');
     moment.locale('be');
     
-    // Кэш для праздников по годам
     const feastsCache = {};
 
     const feastNameMap = {
@@ -108,7 +107,6 @@ export function useLiturgicalDay() {
         return null;
     };
 
-    // --- Внутренняя функция для вычисления литургических опций ---
     async function computeLiturgicalOptionsForDate(currentDate) {
         const mDate = moment(currentDate).startOf('day');
         const year = mDate.year();
@@ -155,22 +153,18 @@ export function useLiturgicalDay() {
         };
     }
 
-    // --- Основная функция, используемая главной страницей (ItemsList.vue) ---
     async function getLiturgicalOptionsForDate(currentDate) {
         const mDate = moment(currentDate).startOf('day');
         const dateObj = mDate.toDate();
         
-        // 1. Пробуем взять из Firestore кэша (работает оффлайн благодаря persistentLocalCache)
         const cachedOptions = await getLiturgicalOptionsFromCache(dateObj);
         if (cachedOptions) {
             return cachedOptions;
         }
         
-        // 2. Если нет в кэше — вычисляем и сразу сохраняем
         logger.log(`[LiturgicalDay] Вылічэнне опцый для ${mDate.format('YYYY-MM-DD')}`);
         const options = await computeLiturgicalOptionsForDate(currentDate);
         
-        // Сохраняем в кэш (не ждем завершения, но обрабатываем ошибки)
         saveLiturgicalOptionsToCache(dateObj, options).catch(error => {
             logger.error(`[LiturgicalDay] Не ўдалося захаваць у кэш:`, error);
         });
@@ -241,7 +235,7 @@ export function useLiturgicalDay() {
     }
 
     async function auditYear(year, progressCallback) {
-        logger.log(`[Audit] Пачатак праверкі ${year} года...`);
+        logger.log(`[Audit] Пачатак праверкі ${year} года`);
         
         await calendarStore.getYearOptions(year);
         await calendarStore.getDynamicDates(year);
@@ -258,7 +252,7 @@ export function useLiturgicalDay() {
             const snapshot = await retryFirestore(() => getDocs(q));
             
             if (snapshot.empty) {
-                const date = dynamicDates[feastKey] ? dynamicDates[feastKey].format('DD.MM.YYYY') : 'Дата не вылічана';
+                const date = dynamicDates[feastKey] ? dynamicDates[feastKey].format('DD.MM.YYYY') : 'Дата не вылічаная';
                 missing.feasts.push({ name: feastCode, date });
             }
         }
@@ -280,7 +274,7 @@ export function useLiturgicalDay() {
                         week: periodQuery._query.filters.find(f => f.field.segments.includes('_periodWeekNumber'))?.value,
                         day: periodQuery._query.filters.find(f => f.field.segments.includes('_dayOfWeek'))?.value,
                     };
-                    logger.warn(`[Audit] НЕ ЗНОЙДЗЕНЫ ДЗЕНЬ ПЕРЫЯДУ:`, params);
+                    logger.warn(`[Audit] НЕ ЗНАЙДЗЕНЫ ДЗЕНЬ ПЕРЫЯДУ:`, params);
                     missing.periodDays.push(params);
                 }
             }
@@ -290,11 +284,10 @@ export function useLiturgicalDay() {
             }
         }
         
-        logger.log('[Audit] Праверка завершана.');
+        logger.log('[Audit] Праверка завершаная.');
         return missing;
     }
 
-    // --- Функция для поиска дня по периоду (для LiturgicalPicker) ---
     async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
         const q = getItemsForPeriodQuery(periodType, dayOfWeek, periodWeekNumber);
         const snapshot = await retryFirestore(() => getDocs(q));
@@ -303,12 +296,10 @@ export function useLiturgicalDay() {
             return null;
         }
         
-        // Возвращаем первый найденный документ
         const doc = snapshot.docs[0];
         return { id: doc.id, ...doc.data() };
     }
 
-    // --- Функция для вычисления даты по периоду (обратная к getPeriodQuery) ---
     async function calculateDateForPeriod(year, periodType, periodWeekNumber, dayOfWeek) {
         await calendarStore.getYearOptions(year);
         await calendarStore.getYearOptions(year + 1);
@@ -326,13 +317,12 @@ export function useLiturgicalDay() {
         let baseDate = null;
         let targetDate = null;
 
-        // Вычисляем базовую дату начала периода
         if (periodType === 'advent') {
             baseDate = fa.clone();
         } else if (periodType === 'christmas') {
             baseDate = christmas.clone();
         } else if (periodType === 'lent') {
-            baseDate = ash.clone().add(4, "days"); // Первое воскресенье Великого поста
+            baseDate = ash.clone().add(4, "days");
         } else if (periodType === 'holyweek') {
             baseDate = easter.clone().subtract(1, "week");
         } else if (periodType === 'easter') {
@@ -342,21 +332,16 @@ export function useLiturgicalDay() {
             const fo = ash.clone().subtract(2, "days").subtract(weeksBeforeOrd, "weeks");
             const startWeek2 = parseInt(opts.ordintaryWeeks2);
             
-            // Проверяем, в какой части обычного времени
             if (periodWeekNumber < parseInt(opts.ordintaryWeeks1)) {
-                // Первая часть обычного времени (до Великого поста)
                 baseDate = fo.clone();
             } else {
-                // Вторая часть обычного времени (после Пятидесятницы)
                 baseDate = pentecost.clone();
-                // Корректируем номер недели: вычитаем количество недель первой части
                 periodWeekNumber = periodWeekNumber - startWeek2 + 1;
             }
         }
 
         if (!baseDate) return null;
 
-        // Вычисляем дату: базовая дата + (неделя - 1) * 7 дней + (день недели - день недели базовой даты)
         const baseDayOfWeek = baseDate.isoWeekday();
         const daysToAdd = (periodWeekNumber - 1) * 7 + (dayOfWeek - baseDayOfWeek);
         targetDate = baseDate.clone().add(daysToAdd, 'days');
@@ -364,12 +349,10 @@ export function useLiturgicalDay() {
         return targetDate.format('YYYY-MM-DD');
     }
 
-    // --- Функция для получения всех праздников (для LiturgicalPicker) ---
     async function getAllFeasts(year) {
-        // Проверяем кэш
         const cacheKey = `year_${year}`;
         if (feastsCache[cacheKey]) {
-            logger.log(`[getAllFeasts] Используем кэш для года ${year}`);
+            logger.log(`[getAllFeasts] Выкарыстоўваем кэш для года ${year}`);
             return feastsCache[cacheKey];
         }
 
@@ -381,20 +364,16 @@ export function useLiturgicalDay() {
         const allFeasts = [];
         const seenIds = new Set();
         
-        // Получаем все документы из коллекции days
-        // Firestore не поддерживает != null, поэтому получаем все и фильтруем
         const snapshot = await retryFirestore(() => getDocs(daysCollection));
         
         snapshot.forEach(doc => {
             const data = doc.data();
-            // Фильтруем только те, у которых есть _feast или _feastType
             if ((data._feast || data._feastType) && !seenIds.has(doc.id)) {
                 seenIds.add(doc.id);
                 allFeasts.push({ id: doc.id, ...data });
             }
         });
         
-        // Определяем тип праздника (рухомы/нерухомы)
         const result = allFeasts.map(feast => {
             const isDynamic = Object.keys(feastNameMap).some(key => {
                 return feastNameMap[key] === feast._feast && dynamicDates[key];
@@ -407,21 +386,20 @@ export function useLiturgicalDay() {
             };
         });
 
-        // Сохраняем в кэш
         feastsCache[cacheKey] = result;
-        logger.log(`[getAllFeasts] Загружено и закэшировано ${result.length} праздников для года ${year}`);
+        logger.log(`[getAllFeasts] Загружана і закэшавана ${result.length} праздников для года ${year}`);
         
         return result;
     }
 
     return { 
         getLiturgicalOptionsForDate, 
-        computeLiturgicalOptionsForDate, // Экспортируем для прогрева кэша
+        computeLiturgicalOptionsForDate,
         runLiturgicalDiagnostics, 
         auditYear,
         findDayByPeriod,
         calculateDateForPeriod,
         getAllFeasts,
-        feastNameMap // Экспортируем для использования в компонентах
+        feastNameMap
     };
 }

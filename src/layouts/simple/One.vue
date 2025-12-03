@@ -6,16 +6,12 @@
     }"
   >
     <v-main>
-      <!-- Сюда будет рендериться OraBar -->
       <router-view name="topNav" /> 
       
-      <!-- Сюда будут рендериться страницы молитв -->
       <router-view />
 
-      <!-- Панель настроек -->
       <TextSettingsSheet />
       
-      <!-- Toast уведомления -->
       <NotificationSnackbar />
     </v-main>
   </v-app>

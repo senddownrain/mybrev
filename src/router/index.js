@@ -40,6 +40,11 @@ const routes = [
         component: () => import('@/views/Prayers.vue'),
       },
       {
+        path: 'prayers/favorites',
+        name: 'FavoritePrayers',
+        component: () => import('@/views/FavoritePrayers.vue'),
+      },
+      {
         path: 'prayers/list',
         name: 'PrayersList',
         component: () => import('@/components/prayers/PrayersList.vue'),
@@ -144,6 +149,12 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    }
+    return { top: 0, left: 0, behavior: 'smooth' };
+  },
 });
 
 router.beforeEach((to, from, next) => {

@@ -6,13 +6,8 @@
     }"
   >
     <v-main>
-      <!-- Здесь будет рендериться контент админки (DayEditor и т.д.) -->
       <router-view />
-      
-      <!-- Панель настроек текста -->
       <TextSettingsSheet />
-      
-      <!-- Toast уведомления -->
       <NotificationSnackbar />
     </v-main>
   </v-app>
