@@ -54,7 +54,7 @@ import { useNotifier } from '@/composables/useNotifier';
 import { validateCategory } from '@/utils/validators';
 
 defineProps({ modelValue: Boolean });
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'category-added']);
 
 const settings = useSettingsStore();
 const { allTags } = usePrayers();
@@ -73,10 +73,17 @@ function onAddCategory() {
     return;
   }
   
-  settings.addCategory({ ...newCategory.value });
-  notifySuccess('Катэгорыя дададзена');
-  newCategory.value = { name: '', tags: [] };
-  emit('update:modelValue', false);
+  try {
+    settings.addCategory({ ...newCategory.value });
+    notifySuccess('Катэгорыя дададзена');
+    newCategory.value = { name: '', tags: [] };
+    // Закрываем диалог
+    emit('update:modelValue', false);
+    // Также эмитим событие для совместимости
+    emit('category-added');
+  } catch (error) {
+    notifyError(error.message || 'Памылка пры дадаванні катэгорыі');
+  }
 }
 </script>
 

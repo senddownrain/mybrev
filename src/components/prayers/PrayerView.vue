@@ -1,42 +1,59 @@
 <template>
   <v-container v-if="prayer" class="prayer-view-container">
-    <div class="d-flex align-center mb-4">
-      <v-btn
-        icon="mdi-arrow-left"
-        variant="text"
-        @click="goBack"
-        class="mr-2"
-        aria-label="Вярнуцца назад"
-      ></v-btn>
-      <v-spacer></v-spacer>
-      <v-btn
-        icon="mdi-content-copy"
-        variant="text"
-        @click="copyText"
-        :title="copyButtonText"
-        aria-label="Скапіяваць тэкст малітвы"
-      >
-        <v-icon>{{ copySuccess ? 'mdi-check' : 'mdi-content-copy' }}</v-icon>
-      </v-btn>
-    </div>
-    
     <div class="prayer-content-area">
-      <h1 class="text-h4 font-weight-light mb-4 prayer-title" v-html="getTitle(prayer)"></h1>
-      
-      <div v-if="prayer.tags && prayer.tags.length > 0" class="mb-4">
-        <v-chip
-          v-for="tag in prayer.tags"
-          :key="tag"
-          size="small"
-          color="primary"
-          variant="tonal"
-          class="mr-2 mb-2"
-        >
-          {{ tag }}
-        </v-chip>
-      </div>
+      <!-- Режим редактирования -->
+      <template v-if="isEditing">
+        <v-text-field
+          v-model="editForm.title"
+          label="Назва"
+          variant="outlined"
+          class="mb-4"
+          :rules="[validatePrayerTitle]"
+          counter="200"
+          required
+        ></v-text-field>
 
-      <div v-html="getText(prayer)" class="prayer-text"></div>
+        <v-textarea
+          v-model="editForm.text"
+          label="Тэкст малітвы"
+          variant="outlined"
+          rows="15"
+          class="mb-4"
+          :rules="[validatePrayerText]"
+          required
+        ></v-textarea>
+
+        <v-combobox
+          v-model="editForm.tags"
+          :items="allTags"
+          label="Тэгі"
+          multiple
+          chips
+          clearable
+          variant="outlined"
+          class="mb-4"
+        ></v-combobox>
+      </template>
+
+      <!-- Режим просмотра -->
+      <template v-else>
+        <h1 class="text-h4 font-weight-light mb-4 prayer-title" v-html="getTitle(prayer)"></h1>
+        
+        <div v-if="prayer.tags && prayer.tags.length > 0" class="mb-4">
+          <v-chip
+            v-for="tag in prayer.tags"
+            :key="tag"
+            size="small"
+            color="primary"
+            variant="tonal"
+            class="mr-2 mb-2"
+          >
+            {{ tag }}
+          </v-chip>
+        </div>
+
+        <div v-html="getText(prayer)" class="prayer-text"></div>
+      </template>
     </div>
   </v-container>
   
@@ -54,31 +71,133 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onUnmounted } from 'vue';
+import { ref, computed, watch, onUnmounted, onMounted, provide } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
+import { useAuthStore } from '@/stores/auth';
+import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 import { logger } from '@/utils/logger';
 
 const route = useRoute();
 const router = useRouter();
-const { prayers, isLoading, getTitle, getText } = usePrayers();
-const { notifySuccess } = useNotifier();
+const { prayers, isLoading, getTitle, getText, updatePrayer, allTags } = usePrayers();
+const { notifySuccess, notifyError } = useNotifier();
+const authStore = useAuthStore();
 
 const prayer = computed(() => {
   return prayers.value.find(p => p.id === route.params.id);
 });
 
-const copySuccess = ref(false);
-const copyButtonText = computed(() => copySuccess.value ? 'Скапіявана!' : 'Скапіяваць тэкст');
+const isEditing = ref(false);
+const saving = ref(false);
 
-function goBack() {
-  if (window.history.length > 1) {
-    router.back();
+const editForm = ref({
+  title: '',
+  text: '',
+  tags: []
+});
+
+// Предоставляем функции для PrayerBar
+provide('prayerView', {
+  isEditing,
+  toggleEdit: () => toggleEdit(),
+  saving
+});
+
+watch(prayer, (newPrayer) => {
+  if (newPrayer && isEditing.value) {
+    loadPrayerData();
+  }
+}, { immediate: true });
+
+// Слушаем события от PrayerBar и отправляем обновления состояния
+onMounted(() => {
+  window.addEventListener('prayer-toggle-edit', toggleEdit);
+  
+  // Отправляем начальное состояние
+  updatePrayerBarState();
+});
+
+onUnmounted(() => {
+  window.removeEventListener('prayer-toggle-edit', toggleEdit);
+});
+
+// Отслеживаем изменения состояния и отправляем в PrayerBar
+watch([isEditing, saving], () => {
+  updatePrayerBarState();
+});
+
+function updatePrayerBarState() {
+  window.dispatchEvent(new CustomEvent('prayer-state-update', {
+    detail: {
+      isEditing: isEditing.value,
+      saving: saving.value
+    }
+  }));
+}
+
+function loadPrayerData() {
+  if (!prayer.value) return;
+  
+  if (prayer.value.titleVersions) {
+    editForm.value.title = prayer.value.titleVersions.be || prayer.value.titleVersions.ru || Object.values(prayer.value.titleVersions)[0] || '';
   } else {
-    router.push({ name: 'PrayersList' });
+    editForm.value.title = prayer.value.title || '';
+  }
+  
+  if (prayer.value.textVersions) {
+    editForm.value.text = prayer.value.textVersions.be || prayer.value.textVersions.ru || Object.values(prayer.value.textVersions)[0] || '';
+  } else {
+    editForm.value.text = prayer.value.text || '';
+  }
+  
+  editForm.value.tags = prayer.value.tags || [];
+}
+
+function toggleEdit() {
+  if (isEditing.value) {
+    // Сохраняем изменения
+    savePrayer();
+  } else {
+    // Включаем режим редактирования
+    loadPrayerData();
+    isEditing.value = true;
   }
 }
+
+async function savePrayer() {
+  const titleValidation = validatePrayerTitle(editForm.value.title);
+  const textValidation = validatePrayerText(editForm.value.text);
+  
+  if (titleValidation !== true) {
+    notifyError(titleValidation);
+    return;
+  }
+  
+  if (textValidation !== true) {
+    notifyError(textValidation);
+    return;
+  }
+
+  saving.value = true;
+  try {
+    await updatePrayer(route.params.id, editForm.value);
+    notifySuccess('Малітва абноўлена');
+    isEditing.value = false;
+  } catch (error) {
+    notifyError('Памылка пры абнаўленні малітвы');
+    logger.error('Error updating prayer:', error);
+  } finally {
+    saving.value = false;
+  }
+}
+
+// Экспортируем для использования в PrayerBar
+defineExpose({
+  isEditing,
+  toggleEdit
+});
 
 let copyTimeoutId = null;
 

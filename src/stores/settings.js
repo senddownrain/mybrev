@@ -4,6 +4,8 @@ import { useTheme } from 'vuetify';
 import { SYSTEM_FONT } from '@/constants/fonts';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { validateCategory } from '@/utils/validators';
+import { logger } from '@/utils/logger';
+import { requestWakeLock, releaseWakeLock } from '@/composables/useWakeLock';
 
 export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme();
@@ -13,6 +15,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
   const menuCategories = ref(JSON.parse(localStorage.getItem('menuCategories') || JSON.stringify(DEFAULT_CATEGORIES)));
   const favoritePrayers = ref(JSON.parse(localStorage.getItem('favoritePrayers') || '[]'));
+  const keepScreenOn = ref(localStorage.getItem('keepScreenOn') === 'true');
 
   watch(currentTheme, (newTheme) => {
     theme.global.name.value = newTheme;
@@ -31,6 +34,27 @@ export const useSettingsStore = defineStore('settings', () => {
 
   watch(menuCategories, (v) => localStorage.setItem('menuCategories', JSON.stringify(v)), { deep: true });
   watch(favoritePrayers, (v) => localStorage.setItem('favoritePrayers', JSON.stringify(v)), { deep: true });
+  
+  watch(keepScreenOn, async (newValue) => {
+    localStorage.setItem('keepScreenOn', String(newValue));
+    try {
+      if (newValue) {
+        await requestWakeLock();
+      } else {
+        await releaseWakeLock();
+      }
+    } catch (err) {
+      logger.error('[settings] Wake Lock error:', err);
+      // Не сбрасываем значение, если ошибка при выключении
+      if (newValue) {
+        keepScreenOn.value = false;
+      }
+    }
+  }, { immediate: true });
+  
+  async function setKeepScreenOn(value) {
+    keepScreenOn.value = value;
+  }
 
 
   function toggleTheme() {
@@ -87,6 +111,7 @@ export const useSettingsStore = defineStore('settings', () => {
     fontSizeMultiplier,
     menuCategories,
     favoritePrayers,
+    keepScreenOn,
     toggleTheme,
     setTheme,
     setFontFamily,
@@ -96,5 +121,6 @@ export const useSettingsStore = defineStore('settings', () => {
     removeCategory,
     toggleFavoritePrayer,
     isFavoritePrayer,
+    setKeepScreenOn,
   };
 });

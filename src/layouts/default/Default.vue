@@ -17,6 +17,7 @@
     <NavigationDrawer />
 
     <v-main>
+      <router-view name="topNav" />
       <router-view />
     </v-main>
 

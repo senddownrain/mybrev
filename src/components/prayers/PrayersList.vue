@@ -1,7 +1,7 @@
 <template>
   <v-container class="prayers-list-container">
     <div class="d-flex align-center justify-space-between mb-4">
-      <h1 class="text-h5 font-weight-light mb-0">Малітвы</h1>
+      <h1 class="text-h5 font-weight-light mb-0">{{ selectedCategory?.name || 'Малітвы' }}</h1>
       <v-chip 
         v-if="!isLoading && filteredPrayers.length > 0" 
         size="small" 
@@ -12,39 +12,63 @@
       </v-chip>
     </div>
 
-    <v-text-field
-      v-model="searchQuery"
-      label="Пошук малітваў"
-      prepend-inner-icon="mdi-magnify"
-      variant="outlined"
-      density="compact"
-      hide-details
-      class="mb-4 search-field"
-      clearable
-    ></v-text-field>
+    <!-- Кнопки поиска и фильтра -->
+    <div class="d-flex align-center ga-2 mb-4">
+      <v-btn
+        icon
+        :color="isSearchExpanded ? 'primary' : 'default'"
+        variant="flat"
+        size="large"
+        @click="isSearchExpanded = !isSearchExpanded"
+        aria-label="Пошук"
+      >
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+      
+      <v-btn
+        icon
+        :color="isFilterExpanded ? 'primary' : 'default'"
+        variant="flat"
+        size="large"
+        @click="isFilterExpanded = !isFilterExpanded"
+        aria-label="Фільтр"
+      >
+        <v-icon>mdi-filter</v-icon>
+      </v-btn>
+    </div>
 
-    <v-combobox
-      v-model="selectedTags"
-      :items="allTags"
-      label="Фільтр па тэгах"
-      multiple
-      chips
-      clearable
-      variant="outlined"
-      density="compact"
-      hide-details
-      class="mb-4 filter-field"
-    ></v-combobox>
+    <!-- Раскрывающаяся панель поиска -->
+    <v-expand-transition>
+      <v-text-field
+        v-if="isSearchExpanded"
+        v-model="searchQuery"
+        label="Пошук малітваў"
+        prepend-inner-icon="mdi-magnify"
+        variant="outlined"
+        density="compact"
+        hide-details
+        class="mb-4 search-field"
+        clearable
+        @click:clear="searchQuery = ''"
+      ></v-text-field>
+    </v-expand-transition>
 
-    <v-select
-      v-model="sortBy"
-      :items="sortOptions"
-      label="Сартаваць"
-      variant="outlined"
-      density="compact"
-      hide-details
-      class="mb-4"
-    ></v-select>
+    <!-- Раскрывающаяся панель фильтра -->
+    <v-expand-transition>
+      <v-combobox
+        v-if="isFilterExpanded"
+        v-model="selectedTags"
+        :items="allTags"
+        label="Фільтр па тэгах"
+        multiple
+        chips
+        clearable
+        variant="outlined"
+        density="compact"
+        hide-details
+        class="mb-4 filter-field"
+      ></v-combobox>
+    </v-expand-transition>
 
     <div v-if="isLoading">
       <v-skeleton-loader v-for="n in 3" :key="n" type="card" class="mb-4"></v-skeleton-loader>
@@ -59,12 +83,10 @@
     </v-alert>
     
     <div v-else>
-      <v-list lines="two" bg-color="transparent">
+      <v-list lines="one" bg-color="transparent">
         <v-list-item
           v-for="prayer in filteredPrayers"
           :key="prayer.id"
-          :title="getTitle(prayer)"
-          :subtitle="getPreviewText(prayer)"
           @click="viewPrayer(prayer.id)"
           class="prayer-list-item"
         >
@@ -81,27 +103,12 @@
             </v-btn>
           </template>
 
+          <v-list-item-title class="prayer-title-text">
+            {{ getTitle(prayer) }}
+          </v-list-item-title>
+
           <template v-slot:append>
-            <div class="d-flex align-center ga-2">
-              <div v-if="prayer.tags && prayer.tags.length > 0" class="d-flex flex-wrap ga-1">
-                <v-chip 
-                  v-for="tag in prayer.tags.slice(0, 2)" 
-                  :key="tag" 
-                  size="x-small" 
-                  color="primary" 
-                  variant="tonal"
-                >
-                  {{ tag }}
-                </v-chip>
-                <v-chip 
-                  v-if="prayer.tags.length > 2"
-                  size="x-small" 
-                  color="grey" 
-                  variant="tonal"
-                >
-                  +{{ prayer.tags.length - 2 }}
-                </v-chip>
-              </div>
+            <div class="d-flex align-center ga-1">
               <v-btn
                 v-if="authStore.isAdmin"
                 icon="mdi-pencil"
@@ -109,6 +116,15 @@
                 size="small"
                 @click.stop="router.push({ name: 'PrayerEdit', params: { id: prayer.id } })"
                 aria-label="Рэдагаваць малітву"
+              ></v-btn>
+              <v-btn
+                v-if="authStore.isAdmin"
+                icon="mdi-delete"
+                variant="text"
+                size="small"
+                color="error"
+                @click.stop="openDeleteDialog(prayer)"
+                aria-label="Выдаліць малітву"
               ></v-btn>
             </div>
           </template>
@@ -134,47 +150,75 @@
       class="add-prayer-btn"
       @click="router.push({ name: 'PrayerAdd' })"
     ></v-btn>
+
+    <!-- Диалог подтверждения удаления -->
+    <v-dialog v-model="deleteDialogOpen" max-width="400">
+      <v-card>
+        <v-card-title class="text-h6">Выдаліць малітву?</v-card-title>
+        <v-card-text>
+          <p>Вы ўпэўнены, што хочаце выдаліць малітву "{{ prayerToDelete ? getTitle(prayerToDelete) : '' }}"?</p>
+          <p class="text-caption text-error mt-2">Гэта дзеянне нельга адмяніць.</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn variant="text" @click="closeDeleteDialog">Скасаваць</v-btn>
+          <v-btn color="error" variant="flat" @click="confirmDelete">Выдаліць</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useAuthStore } from '@/stores/auth';
 import { useSettingsStore } from '@/stores/settings';
 import { useDebounce } from '@/composables/useDebounce';
-import { getPrayerPreview } from '@/composables/usePrayerPreview';
+import { useNotifier } from '@/composables/useNotifier';
+
+const props = defineProps({
+  selectedCategory: {
+    type: Object,
+    default: null
+  }
+});
 
 const router = useRouter();
-const { prayers, isLoading, getTitle, getText, allTags, error } = usePrayers();
+const { prayers, isLoading, getTitle, getText, allTags, error, deletePrayer } = usePrayers();
 const authStore = useAuthStore();
 const settings = useSettingsStore();
+const { notifySuccess, notifyError } = useNotifier();
 
 const searchQuery = ref('');
 const debouncedSearchQuery = useDebounce(searchQuery, 300);
 const selectedTags = ref([]);
-const sortBy = ref('alphabet');
+const isSearchExpanded = ref(false);
+const isFilterExpanded = ref(false);
+const deleteDialogOpen = ref(false);
+const prayerToDelete = ref(null);
 
-const sortOptions = [
-  { title: 'Па алфавіце', value: 'alphabet' },
-  { title: 'Па даце (новыя першымі)', value: 'date-desc' },
-  { title: 'Па даце (старыя першымі)', value: 'date-asc' },
-  { title: 'Абраныя першымі', value: 'favorites-first' },
-];
+// Применяем фильтр категории при изменении
+watch(() => props.selectedCategory, (category) => {
+  if (category && category.tags) {
+    selectedTags.value = [...category.tags];
+  } else {
+    selectedTags.value = [];
+  }
+}, { immediate: true });
 
 const filteredPrayers = computed(() => {
   if (isLoading.value) return [];
   
   const prayersArray = prayers.value;
   if (!prayersArray || !Array.isArray(prayersArray)) {
-    console.warn('[PrayersList] prayers.value is not an array:', prayersArray, 'type:', typeof prayersArray);
     return [];
   }
   
-  console.log('[PrayersList] Total prayers:', prayersArray.length);
   let filtered = [...prayersArray];
   
+  // Фильтр по тегам категории
   if (selectedTags.value.length > 0) {
     filtered = filtered.filter(prayer => {
       const prayerTags = prayer.tags || [];
@@ -182,6 +226,7 @@ const filteredPrayers = computed(() => {
     });
   }
   
+  // Поиск
   if (debouncedSearchQuery.value.trim()) {
     const query = debouncedSearchQuery.value.toLowerCase().trim();
     filtered = filtered.filter(prayer => {
@@ -192,44 +237,23 @@ const filteredPrayers = computed(() => {
     });
   }
   
+  // Сортировка: избранные вверху, затем по алфавиту
   filtered.sort((a, b) => {
-    switch (sortBy.value) {
-      case 'alphabet':
-        const titleA = getTitle(a).toLowerCase();
-        const titleB = getTitle(b).toLowerCase();
-        return titleA.localeCompare(titleB, 'be', { sensitivity: 'base' });
-      
-      case 'date-desc':
-        const dateA = a.createdAt?.toDate?.() || new Date(a.createdAt || 0);
-        const dateB = b.createdAt?.toDate?.() || new Date(b.createdAt || 0);
-        return dateB - dateA;
-      
-      case 'date-asc':
-        const dateA2 = a.createdAt?.toDate?.() || new Date(a.createdAt || 0);
-        const dateB2 = b.createdAt?.toDate?.() || new Date(b.createdAt || 0);
-        return dateA2 - dateB2;
-      
-      case 'favorites-first':
-        const aIsFavorite = settings.favoritePrayers.includes(a.id);
-        const bIsFavorite = settings.favoritePrayers.includes(b.id);
-        if (aIsFavorite && !bIsFavorite) return -1;
-        if (!aIsFavorite && bIsFavorite) return 1;
-        const titleA2 = getTitle(a).toLowerCase();
-        const titleB2 = getTitle(b).toLowerCase();
-        return titleA2.localeCompare(titleB2, 'be', { sensitivity: 'base' });
-      
-      default:
-        return 0;
-    }
+    const aIsFavorite = settings.favoritePrayers.includes(a.id);
+    const bIsFavorite = settings.favoritePrayers.includes(b.id);
+    
+    // Избранные всегда вверху
+    if (aIsFavorite && !bIsFavorite) return -1;
+    if (!aIsFavorite && bIsFavorite) return 1;
+    
+    // Затем сортировка по алфавиту
+    const titleA = getTitle(a).toLowerCase();
+    const titleB = getTitle(b).toLowerCase();
+    return titleA.localeCompare(titleB, 'be', { sensitivity: 'base' });
   });
   
   return filtered;
 });
-
-function getPreviewText(prayer) {
-  const text = getText(prayer);
-  return getPrayerPreview(text);
-}
 
 function viewPrayer(id) {
   router.push({ name: 'PrayerView', params: { id } });
@@ -241,6 +265,28 @@ function isFavorite(prayerId) {
 
 function toggleFavorite(prayerId) {
   settings.toggleFavoritePrayer(prayerId);
+}
+
+function openDeleteDialog(prayer) {
+  prayerToDelete.value = prayer;
+  deleteDialogOpen.value = true;
+}
+
+function closeDeleteDialog() {
+  deleteDialogOpen.value = false;
+  prayerToDelete.value = null;
+}
+
+async function confirmDelete() {
+  if (!prayerToDelete.value) return;
+  
+  try {
+    await deletePrayer(prayerToDelete.value.id);
+    notifySuccess('Малітва выдалена');
+    closeDeleteDialog();
+  } catch (error) {
+    notifyError('Памылка пры выдаленні малітвы');
+  }
 }
 </script>
 
@@ -265,52 +311,35 @@ function toggleFavorite(prayerId) {
   background-color: rgba(var(--v-theme-on-surface), 0.04);
 }
 
-.prayer-list-item :deep(.v-list-item-title) {
+.prayer-title-text {
   word-wrap: break-word;
   overflow-wrap: break-word;
   line-height: 1.4;
+  white-space: normal;
+  padding-left: 8px;
 }
 
-.prayer-list-item :deep(.v-list-item-subtitle) {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.prayer-list-item {
+  padding-left: 4px !important;
 }
 
 @media (max-width: 600px) {
   .prayers-list-container {
-    padding: 12px 8px !important;
+    padding: 12px 4px !important;
   }
 
   .prayer-list-item {
-    padding: 12px 8px !important;
+    padding: 12px 4px !important;
+    min-height: 56px;
   }
 
-  .prayer-list-item :deep(.v-list-item-title) {
+  .prayer-title-text {
     font-size: 0.95rem !important;
-  }
-
-  .prayer-list-item :deep(.v-list-item-subtitle) {
-    font-size: 0.85rem !important;
-    -webkit-line-clamp: 2;
+    padding-left: 4px;
   }
 
   .search-field,
   .filter-field {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  .v-text-field,
-  .v-combobox {
     width: 100% !important;
     max-width: 100% !important;
   }

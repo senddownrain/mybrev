@@ -3,6 +3,27 @@
     <h1 class="text-h4 font-weight-light mb-4">Налады</h1>
 
     <v-list lines="two" subheader>
+      <v-list-subheader>Агульныя налады</v-list-subheader>
+
+      <v-list-item>
+        <template v-slot:prepend>
+          <v-icon>mdi-lightbulb-outline</v-icon>
+        </template>
+        <v-list-item-title>Не выключаць экран</v-list-item-title>
+        <v-list-item-subtitle>Карысна падчас малітвы або чытання</v-list-item-subtitle>
+        <template v-slot:append>
+          <v-switch
+            :model-value="settings.keepScreenOn"
+            @update:model-value="settings.setKeepScreenOn"
+            inset
+            color="primary"
+            hide-details
+          ></v-switch>
+        </template>
+      </v-list-item>
+
+      <v-divider class="my-2"></v-divider>
+
       <v-list-subheader>Знешні выгляд</v-list-subheader>
 
       <v-list-item title="Цёмная тэма">
@@ -16,9 +37,67 @@
         </template>
       </v-list-item>
 
-      <v-list-item title="Налады тэксту" prepend-icon="mdi-format-font" @click="openTextSettings">
+      <v-divider class="my-2"></v-divider>
+
+      <v-list-subheader>Шрыфт праграмы</v-list-subheader>
+
+      <v-list-item>
+        <template v-slot:prepend>
+          <v-icon>mdi-format-font</v-icon>
+        </template>
+        <v-list-item-title>Абярыце асноўны шрыфт для інтэрфейсу</v-list-item-title>
+      </v-list-item>
+
+      <div class="px-4 pb-2">
+        <v-chip-group 
+          :model-value="settings.fontFamily" 
+          @update:model-value="settings.setFontFamily"
+          mandatory
+          column
+        >
+          <v-chip 
+            v-for="font in fontOptions" 
+            :key="font.value" 
+            :value="font.value" 
+            filter 
+            variant="outlined" 
+            class="ma-1"
+            :style="{ fontFamily: font.value }"
+          >
+            <v-icon v-if="font.value === settings.fontFamily" start>mdi-check</v-icon>
+            {{ font.title }}
+          </v-chip>
+        </v-chip-group>
+      </div>
+
+      <v-divider class="my-2"></v-divider>
+
+      <v-list-item>
+        <template v-slot:prepend>
+          <v-icon>mdi-format-font-size-increase</v-icon>
+        </template>
+        <v-list-item-title>Памер тэксту</v-list-item-title>
+        <v-list-item-subtitle>Наладзьце памер шрыфту для чытання</v-list-item-subtitle>
         <template v-slot:append>
-          <v-icon>mdi-chevron-right</v-icon>
+          <div class="d-flex align-center">
+            <v-btn 
+              icon="mdi-minus" 
+              variant="text" 
+              size="small" 
+              @click="settings.decreaseFontSize" 
+              :disabled="settings.fontSizeMultiplier <= 0.7"
+            ></v-btn>
+            <span class="mx-2 font-weight-bold" style="width: 60px; text-align: center;">
+              {{ Math.round(settings.fontSizeMultiplier * 100) }}%
+            </span>
+            <v-btn 
+              icon="mdi-plus" 
+              variant="text" 
+              size="small" 
+              @click="settings.increaseFontSize" 
+              :disabled="settings.fontSizeMultiplier >= 1.8"
+            ></v-btn>
+          </div>
         </template>
       </v-list-item>
 
@@ -26,24 +105,15 @@
 
     <v-card class="mt-6" variant="outlined">
       <v-card-title class="text-subtitle-1">Прыклад тэксту</v-card-title>
-      <v-card-text class="prayer-content-area">
+      <v-card-text 
+        class="prayer-content-area"
+        :style="{ 
+          fontFamily: settings.fontFamily,
+          fontSize: `${settings.fontSizeMultiplier}em`
+        }"
+      >
         <p>
-          <strong>Псалом 1</strong>
-        </p>
-        <p>
-          Шчаслівы чалавек, які не ходзіць па радзе бязбожных,<br>
-          і не стаіць на дарозе грэшных,<br>
-          і не сядзіць у сябраванні насмешнікаў,
-        </p>
-        <p>
-          але захапляецца законам Пана<br>
-          і разважае над ім днём і ноччу.
-        </p>
-        <p>
-          Ён падобны да дрэва, пасаджанага ля патокаў вады,<br>
-          якое дае плод у свой час<br>
-          і лісце яго не вяніе;<br>
-          усё, што ён робіць, паспяховае.
+          Так будзе выглядаць асноўны тэкст вашай нататкі.
         </p>
       </v-card-text>
     </v-card>
@@ -95,18 +165,22 @@
 <script setup>
 import { ref } from 'vue';
 import { useSettingsStore } from '@/stores/settings.js';
-import { useAppBar } from '@/composables/useAppBar.js';
 import { useNotifier } from '@/composables/useNotifier';
 import AddCategoryDialog from '@/components/prayers/AddCategoryDialog.vue';
+import { SYSTEM_FONT } from '@/constants/fonts';
 
 const settings = useSettingsStore();
-const { toggleSettingsSheet } = useAppBar();
 const { notifySuccess } = useNotifier();
 const showAddCategoryDialog = ref(false);
 
-const openTextSettings = () => {
-  toggleSettingsSheet();
-};
+const fontOptions = [
+  { title: 'Сістэмны', value: SYSTEM_FONT },
+  { title: 'Kurale', value: 'Kurale, serif' },
+  { title: 'Old Standard TT', value: "'Old Standard TT', serif" },
+  { title: 'Pacifico', value: 'Pacifico, cursive' },
+  { title: 'Comfortaa', value: 'Comfortaa, sans-serif' },
+  { title: 'Yeseva One', value: "'Yeseva One', cursive" },
+];
 
 function removeCategory(index) {
   settings.removeCategory(index);
