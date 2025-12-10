@@ -1,0 +1,60 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "readings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_periodType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_periodWeekNumber",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_dayOfWeek",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "cycle",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "readings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "cycle",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "readings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "feastId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "feastDate",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "cycle",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
+

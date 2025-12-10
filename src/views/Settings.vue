@@ -59,12 +59,12 @@
             v-for="font in fontOptions" 
             :key="font.value" 
             :value="font.value" 
-            filter 
             variant="outlined" 
             class="ma-1"
             :style="{ fontFamily: font.value }"
+            :color="font.value === settings.fontFamily ? 'primary' : undefined"
           >
-            <v-icon v-if="font.value === settings.fontFamily" start>mdi-check</v-icon>
+            <v-icon v-if="font.value === settings.fontFamily" start size="small">mdi-check</v-icon>
             {{ font.title }}
           </v-chip>
         </v-chip-group>

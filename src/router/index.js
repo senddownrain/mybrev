@@ -50,6 +50,17 @@ const routes = [
         component: () => import('@/components/prayers/PrayersList.vue'),
       },
       {
+        path: 'readings',
+        name: 'Readings',
+        component: () => import('@/components/readings/ReadingsView.vue'),
+      },
+      {
+        path: 'readings/:date',
+        name: 'ReadingsByDate',
+        component: () => import('@/components/readings/ReadingsView.vue'),
+        props: true,
+      },
+      {
         path: 'prayer/:id',
         name: 'PrayerView',
         components: { 
@@ -120,6 +131,11 @@ const routes = [
         path: 'categories',
         name: 'AdminCategories',
         component: () => import('@/views/admin/CategoriesManagement.vue'),
+      },
+      {
+        path: 'readings-test',
+        name: 'ReadingsTest',
+        component: () => import('@/views/admin/ReadingsTest.vue'),
       },
     ]
   },
