@@ -17,7 +17,10 @@ export function useReadings() {
    * Получить текст текущего чтения
    */
   const readingText = computed(() => {
-    return currentReading.value?.text || '';
+    if (!currentReading.value) return '';
+    
+    // Поддержка разных полей для текста (text, content)
+    return currentReading.value.text || currentReading.value.content || '';
   });
 
   /**

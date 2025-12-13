@@ -24,6 +24,12 @@
         :active="route.name === 'FavoritePrayers'"
       ></v-list-item>
       <v-list-item 
+        prepend-icon="mdi-book-open-variant-outline" 
+        title="Чытанні" 
+        :to="{ name: 'Readings' }"
+        :active="route.name === 'Readings' || route.name === 'ReadingsByDate' || route.name === 'ReadingsPicker'"
+      ></v-list-item>
+      <v-list-item 
         prepend-icon="mdi-cog-outline" 
         title="Налады" 
         :to="{ name: 'Settings' }"

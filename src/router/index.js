@@ -6,6 +6,7 @@ import OneVue from '@/layouts/simple/One.vue';
 import AdminVue from '@/layouts/admin/Admin.vue';
 import ItemsListVue from '@/components/ItemsList.vue';
 import BottomNavVue from '@/layouts/default/BottomNav.vue';
+import ReadingsBottomNavVue from '@/layouts/default/ReadingsBottomNav.vue';
 import OraBarVue from '@/layouts/default/OraBar.vue';
 
 const routes = [
@@ -52,13 +53,27 @@ const routes = [
       {
         path: 'readings',
         name: 'Readings',
-        component: () => import('@/components/readings/ReadingsView.vue'),
+        components: { 
+          default: () => import('@/components/readings/ReadingsView.vue'),
+          bottomNav: ReadingsBottomNavVue
+        },
       },
       {
         path: 'readings/:date',
         name: 'ReadingsByDate',
-        component: () => import('@/components/readings/ReadingsView.vue'),
-        props: true,
+        components: { 
+          default: () => import('@/components/readings/ReadingsView.vue'),
+          bottomNav: ReadingsBottomNavVue
+        },
+        props: { default: true },
+      },
+      {
+        path: 'readings/picker',
+        name: 'ReadingsPicker',
+        components: { 
+          default: () => import('@/views/ReadingsPicker.vue'),
+          bottomNav: ReadingsBottomNavVue
+        },
       },
       {
         path: 'prayer/:id',

@@ -48,8 +48,11 @@ const { getLiturgicalOptionsForDate } = useLiturgicalDay();
  * Загрузить чтения для текущей даты
  */
 async function loadReadings() {
+  // Поддержка параметра date из роута или query
   const dateParam = route.params.date || route.query.date;
   const date = dateParam ? moment(dateParam, 'YYYY-MM-DD').toDate() : moment().toDate();
+  
+  logger.log('[ReadingsView] Загрузка чытанняў для даты:', moment(date).format('YYYY-MM-DD'));
   
   try {
     // Получаем литургический контекст для даты

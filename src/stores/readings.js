@@ -21,25 +21,35 @@ export const useReadingsStore = defineStore('readings', () => {
       const results = await readingsService.getReadingsForDate(date, options);
       readings.value = results;
       
+      logger.log('[readingsStore] Атрымана чытанняў:', results.length);
+      
       // Если найдено одно чтение, сохраняем его как текущее
       if (results.length === 1) {
         currentReading.value = results[0];
+        logger.log('[readingsStore] Выбрана адно чытанне:', results[0].id, 'з крыніцы:', results[0]._source);
       } else if (results.length > 1) {
         // Если несколько, выбираем наиболее подходящее:
-        // 1. Приоритет чтениям с точной датой (_date)
-        // 2. Затем чтениям по празднику (feastId)
-        // 3. Затем чтениям по периоду
+        // 1. Приоритет чтениям из новой коллекции readings
+        // 2. Затем чтениям с точной датой (_date или day)
+        // 3. Затем чтениям по празднику (feastId)
+        // 4. Затем чтениям по периоду
         const prioritized = results.sort((a, b) => {
-          if (a._date && !b._date) return -1;
-          if (!a._date && b._date) return 1;
+          // Сначала по источнику (readings > readingsData)
+          if (a._source === 'readings' && b._source === 'readingsData') return -1;
+          if (a._source === 'readingsData' && b._source === 'readings') return 1;
+          // Затем по точной дате
+          if ((a._date || a.day) && !(b._date || b.day)) return -1;
+          if (!(a._date || a.day) && (b._date || b.day)) return 1;
+          // Затем по празднику
           if (a.feastId && !b.feastId) return -1;
           if (!a.feastId && b.feastId) return 1;
           return 0;
         });
         currentReading.value = prioritized[0];
-        logger.warn('[readingsStore] Знойдзена некалькі чытанняў для даты:', date, results.length, 'Выбрана:', prioritized[0].id);
+        logger.log('[readingsStore] Знойдзена некалькі чытанняў для даты:', date, results.length, 'Выбрана:', prioritized[0].id, 'з крыніцы:', prioritized[0]._source);
       } else {
         currentReading.value = null;
+        logger.log('[readingsStore] Чытанні не знойдзены для даты:', date);
       }
       
       return results;

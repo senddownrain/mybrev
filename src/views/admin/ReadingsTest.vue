@@ -1,10 +1,11 @@
 <template>
   <v-container>
-    <h1 class="text-h4 mb-4">Тэставая старонка для Readings</h1>
+    <h1 class="text-h4 mb-4">Кіраванне чытаннямі</h1>
 
-    <!-- Форма добавления тестового чтения -->
+    <!-- Форма добавления чтения -->
     <v-card class="mb-6" variant="outlined">
-      <v-card-title>Дадаць тэставае чытанне</v-card-title>
+      <v-card-title>Дадаць чытанне</v-card-title>
+      <v-card-subtitle class="mt-2">Выберыце спосаб ідэнтыфікацыі і ўвядзіце тэкст чытання</v-card-subtitle>
       <v-card-text>
         <v-form @submit.prevent="addTestReading">
           <v-row>

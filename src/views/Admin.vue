@@ -23,7 +23,7 @@
       <v-col cols="12" md="4"><v-card to="/admin/db-day-list" hover><v-card-title>DbDayList</v-card-title></v-card></v-col>
       <v-col cols="12" md="4"><v-card to="/admin/backup" hover><v-card-title>Backup</v-card-title></v-card></v-col>
       <v-col cols="12" md="4"><v-card :to="{ name: 'AdminCategories' }" hover><v-card-title>Катэгорыі малітваў</v-card-title><v-card-subtitle>Кіраванне катэгорыямі ў меню</v-card-subtitle></v-card></v-col>
-      <v-col cols="12" md="4"><v-card :to="{ name: 'ReadingsTest' }" hover color="green-darken-2"><v-card-title>Тэст Readings</v-card-title><v-card-subtitle>Тэставанне сістэмы чытанняў</v-card-subtitle></v-card></v-col>
+      <v-col cols="12" md="4"><v-card :to="{ name: 'ReadingsTest' }" hover color="green-darken-2"><v-card-title>Чытанні</v-card-title><v-card-subtitle>Даданне і кіраванне літургічнымі чытаннямі</v-card-subtitle></v-card></v-col>
     
     </v-row>
   </v-container>
