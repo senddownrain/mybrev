@@ -79,8 +79,7 @@ const routes = [
         path: 'prayer/:id',
         name: 'PrayerView',
         components: { 
-          default: () => import('@/components/prayers/PrayerView.vue'),
-          topNav: () => import('@/components/prayers/PrayerBar.vue')
+          default: () => import('@/components/prayers/PrayerView.vue')
         },
         props: { default: true },
       },

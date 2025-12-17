@@ -12,7 +12,9 @@ export function validatePrayerText(text) {
   if (!text || !text.trim()) {
     return 'Тэкст малітвы абавязковы';
   }
-  if (text.length < 10) {
+  // Удаляем HTML теги для проверки длины реального текста
+  const textWithoutHtml = text.replace(/<[^>]*>/g, '').trim();
+  if (textWithoutHtml.length < 10) {
     return 'Тэкст павінен быць не менш за 10 сімвалаў';
   }
   return true;

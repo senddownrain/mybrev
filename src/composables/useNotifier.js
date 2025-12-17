@@ -40,6 +40,11 @@ export function useNotifier() {
     error,
     warning,
     info,
+    // Алиасы для обратной совместимости
+    notifySuccess: success,
+    notifyError: error,
+    notifyWarning: warning,
+    notifyInfo: info,
   };
 }
 

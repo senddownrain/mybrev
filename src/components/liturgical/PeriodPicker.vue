@@ -1,12 +1,13 @@
 <template>
   <div>
     <!-- Блок выбора периода -->
-    <div class="mb-6">
-      <h3 class="text-subtitle-1 mb-3">Літургічны перыяд</h3>
+    <div class="mb-8">
+      <h3 class="text-h6 mb-4 font-weight-medium">Літургічны перыяд</h3>
       <v-chip-group
         v-model="selectedPeriod"
         mandatory
         column
+        class="period-chip-group"
       >
         <v-chip
           v-for="period in periodOptions"
@@ -15,7 +16,8 @@
           :color="period.color"
           filter
           variant="outlined"
-          class="ma-1"
+          size="large"
+          class="ma-2 period-chip"
         >
           {{ period.title }}
         </v-chip>
@@ -23,12 +25,13 @@
     </div>
 
     <!-- Блок выбора недели -->
-    <div v-if="selectedPeriod" class="mb-6">
-      <h3 class="text-subtitle-1 mb-3">Тыдзень</h3>
+    <div v-if="selectedPeriod" class="mb-8">
+      <h3 class="text-h6 mb-4 font-weight-medium">Тыдзень</h3>
       <v-chip-group
         v-model="selectedWeek"
         mandatory
         column
+        class="week-chip-group"
       >
         <v-chip
           v-for="week in availableWeeks"
@@ -36,7 +39,8 @@
           :value="week"
           filter
           variant="outlined"
-          class="ma-1"
+          size="large"
+          class="ma-2 week-chip"
         >
           {{ week }}
         </v-chip>
@@ -44,12 +48,13 @@
     </div>
 
     <!-- Блок выбора дня недели -->
-    <div v-if="selectedPeriod && selectedWeek" class="mb-6">
-      <h3 class="text-subtitle-1 mb-3">Дзень тыдня</h3>
+    <div v-if="selectedPeriod && selectedWeek" class="mb-8">
+      <h3 class="text-h6 mb-4 font-weight-medium">Дзень тыдня</h3>
       <v-chip-group
         v-model="selectedDayOfWeek"
         mandatory
         column
+        class="day-chip-group"
       >
         <v-chip
           v-for="day in dayOfWeekOptions"
@@ -57,7 +62,8 @@
           :value="day.value"
           filter
           variant="outlined"
-          class="ma-1"
+          size="large"
+          class="ma-2 day-chip"
         >
           {{ day.title }}
         </v-chip>
@@ -273,4 +279,45 @@ function createDay() {
   });
 }
 </script>
+
+<style scoped>
+/* Увеличение размера текста в чипах для лучшей читаемости */
+.period-chip,
+.week-chip,
+.day-chip {
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  min-height: 48px !important;
+  padding: 12px 20px !important;
+  letter-spacing: 0.02em;
+}
+
+/* Увеличение размера заголовков */
+.text-h6 {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+}
+
+/* Улучшение визуального восприятия для людей постарше */
+.period-chip-group,
+.week-chip-group,
+.day-chip-group {
+  gap: 8px;
+}
+
+/* Увеличение размера чипов на мобильных */
+@media (max-width: 600px) {
+  .period-chip,
+  .week-chip,
+  .day-chip {
+    font-size: 1.05rem !important;
+    min-height: 44px !important;
+    padding: 10px 16px !important;
+  }
+  
+  .text-h6 {
+    font-size: 1.15rem !important;
+  }
+}
+</style>
 

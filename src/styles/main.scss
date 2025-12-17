@@ -3,12 +3,70 @@ html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  overflow: hidden !important;
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  height: 100% !important;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+body {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  height: 100vh !important;
+  width: 100% !important;
+  position: relative !important;
+  -webkit-overflow-scrolling: touch;
+  margin: 0;
+  padding: 0;
+  /* Тонкий скроллбар для Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Тонкий скроллбар для WebKit браузеров (Chrome, Safari) */
+body::-webkit-scrollbar {
+  width: 4px;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 #app {
   width: 100%;
-  overflow-x: hidden;
+  overflow: visible !important;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  height: auto !important;
+  min-height: 100vh !important;
+  position: relative !important;
 }
+
+.v-application,
+.v-application__wrap {
+  overflow: visible !important;
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
 
 // Определяем базовый размер шрифта для контента
 $base-content-font-size: 1rem; // 16px по умолчанию
@@ -24,7 +82,7 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   
   // Улучшаем читаемость
   line-height: 1.8;
-  text-align: justify;
+  text-align: left;
 
   // Правильный перенос текста для мобильных
   word-wrap: break-word;
@@ -83,12 +141,141 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   overflow-wrap: break-word;
 }
 
+// Исправление двойного скролла на страницах с ora (гадинками)
+// Убираем фиксированную высоту у v-main
+.v-main {
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+}
+
+.v-main__wrap {
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+}
+
+.v-main .v-container.prayer-content-area {
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
 // Адаптивные стили для мобильных устройств
 @media (max-width: 600px) {
-  .v-main .v-container {
+  // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: только body скроллится на мобильных
+  html {
+    overflow: hidden !important;
+    overflow-y: hidden !important;
+    overflow-x: hidden !important;
+    height: 100% !important;
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+body {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  height: 100vh !important;
+  width: 100% !important;
+  position: relative !important;
+  -webkit-overflow-scrolling: touch;
+  margin: 0;
+  padding: 0;
+  /* Тонкий скроллбар для Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+/* Тонкий скроллбар для WebKit браузеров (Chrome, Safari) */
+body::-webkit-scrollbar {
+  width: 4px;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+  
+  #app {
+    overflow: visible !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  
+  .v-application,
+  .v-application__wrap {
+    overflow: visible !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  
+  .v-main {
+    overflow: visible !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    min-height: 100% !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  
+  .v-main__wrap {
+    overflow: visible !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    min-height: 100% !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  
+  .v-main .v-container,
+  .v-container {
     padding: 12px 8px !important;
     max-width: 100% !important;
     width: 100% !important;
+    overflow: visible !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    max-height: none !important;
+    position: relative !important;
+  }
+  
+  .v-row,
+  .v-col {
+    overflow: visible !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    height: auto !important;
+    max-height: none !important;
+    position: relative !important;
   }
 
   .v-container {
@@ -168,6 +355,18 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   .v-bottom-navigation .text-caption {
     font-size: 0.7rem !important;
   }
+}
+
+// Исправление обрезки текста в списках (v-list-item-title и subtitle)
+.v-list-item-title,
+.v-list-item-subtitle {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+  text-overflow: unset !important;
+  overflow: visible !important;
+  max-width: 100% !important;
 }
 
 // Адаптивные стили для очень маленьких экранов

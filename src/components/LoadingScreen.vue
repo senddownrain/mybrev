@@ -1,5 +1,5 @@
 <template>
-  <div class="loading-screen">
+  <div class="loading-screen" :class="{ 'telegram': isTelegram }">
     <div class="loading-content">
       <img 
         src="/web-app-manifest-192x192.png" 
@@ -12,7 +12,7 @@
       <v-progress-circular
         indeterminate
         color="primary"
-        size="48"
+        :size="isTelegram ? 40 : 48"
         width="4"
         class="loading-spinner"
       ></v-progress-circular>
@@ -21,6 +21,13 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { computed } from 'vue';
+import { isTelegramWebApp } from '@/utils/telegram';
+
+const isTelegram = computed(() => isTelegramWebApp());
+</script>
 
 <style scoped>
 .loading-screen {
@@ -85,6 +92,24 @@
 
 .loading-content {
   animation: fadeIn 0.3s ease-out;
+}
+
+/* Упрощенный стиль для Telegram */
+.loading-screen.telegram {
+  background: linear-gradient(135deg, #1867C0 0%, #4A90E2 100%);
+}
+
+.loading-screen.telegram .app-icon {
+  width: 100px;
+  height: 100px;
+}
+
+.loading-screen.telegram .app-title {
+  font-size: 24px;
+}
+
+.loading-screen.telegram .loading-text {
+  font-size: 14px;
 }
 </style>
 

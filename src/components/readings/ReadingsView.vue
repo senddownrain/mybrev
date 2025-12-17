@@ -11,6 +11,17 @@
     </v-alert>
 
     <div v-else-if="hasReading" class="readings-content">
+      <!-- Информация о чтении (цикл, источник) - только для админов или в режиме разработки -->
+      <div v-if="readingInfo" class="text-caption text-medium-emphasis mb-2">
+        <v-chip v-if="readingCycle" size="x-small" variant="outlined" class="mr-1">
+          Цыкл: {{ readingCycle }}
+        </v-chip>
+        <v-chip v-if="readingSource" size="x-small" variant="outlined" class="mr-1">
+          {{ readingSource === 'readings' ? 'Новая база' : 'Старая база' }}
+        </v-chip>
+      </div>
+      
+      <!-- Текст чтения (включает заголовок) -->
       <div class="prayer-content-area" v-html="readingText"></div>
     </div>
 
@@ -25,7 +36,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch } from 'vue';
+import { onMounted, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useReadings } from '@/composables/useReadings';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
@@ -36,11 +47,22 @@ import moment from 'moment';
 const route = useRoute();
 const { 
   readingText, 
+  readingCycle,
   hasReading, 
   isLoading, 
   error, 
-  loadReadingsForDate 
+  loadReadingsForDate,
+  currentReading
 } = useReadings();
+
+// Информация о чтении для отображения
+const readingInfo = computed(() => {
+  return currentReading.value && (readingCycle.value || currentReading.value._source);
+});
+
+const readingSource = computed(() => {
+  return currentReading.value?._source || null;
+});
 
 const { getLiturgicalOptionsForDate } = useLiturgicalDay();
 

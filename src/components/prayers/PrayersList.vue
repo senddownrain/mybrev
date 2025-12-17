@@ -12,63 +12,6 @@
       </v-chip>
     </div>
 
-    <!-- Кнопки поиска и фильтра -->
-    <div class="d-flex align-center ga-2 mb-4">
-      <v-btn
-        icon
-        :color="isSearchExpanded ? 'primary' : 'default'"
-        variant="flat"
-        size="large"
-        @click="isSearchExpanded = !isSearchExpanded"
-        aria-label="Пошук"
-      >
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-      
-      <v-btn
-        icon
-        :color="isFilterExpanded ? 'primary' : 'default'"
-        variant="flat"
-        size="large"
-        @click="isFilterExpanded = !isFilterExpanded"
-        aria-label="Фільтр"
-      >
-        <v-icon>mdi-filter</v-icon>
-      </v-btn>
-    </div>
-
-    <!-- Раскрывающаяся панель поиска -->
-    <v-expand-transition>
-      <v-text-field
-        v-if="isSearchExpanded"
-        v-model="searchQuery"
-        label="Пошук малітваў"
-        prepend-inner-icon="mdi-magnify"
-        variant="outlined"
-        density="compact"
-        hide-details
-        class="mb-4 search-field"
-        clearable
-        @click:clear="searchQuery = ''"
-      ></v-text-field>
-    </v-expand-transition>
-
-    <!-- Раскрывающаяся панель фильтра -->
-    <v-expand-transition>
-      <v-combobox
-        v-if="isFilterExpanded"
-        v-model="selectedTags"
-        :items="allTags"
-        label="Фільтр па тэгах"
-        multiple
-        chips
-        clearable
-        variant="outlined"
-        density="compact"
-        hide-details
-        class="mb-4 filter-field"
-      ></v-combobox>
-    </v-expand-transition>
 
     <div v-if="isLoading">
       <v-skeleton-loader v-for="n in 3" :key="n" type="card" class="mb-4"></v-skeleton-loader>
@@ -170,43 +113,23 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useAuthStore } from '@/stores/auth';
 import { useSettingsStore } from '@/stores/settings';
-import { useDebounce } from '@/composables/useDebounce';
 import { useNotifier } from '@/composables/useNotifier';
-
-const props = defineProps({
-  selectedCategory: {
-    type: Object,
-    default: null
-  }
-});
+import { usePrayersFilters } from '@/composables/usePrayersFilters';
 
 const router = useRouter();
-const { prayers, isLoading, getTitle, getText, allTags, error, deletePrayer } = usePrayers();
+const { prayers, isLoading, getTitle, getText, error, deletePrayer } = usePrayers();
 const authStore = useAuthStore();
 const settings = useSettingsStore();
 const { notifySuccess, notifyError } = useNotifier();
+const { debouncedSearchQuery, selectedTags, selectedCategory } = usePrayersFilters();
 
-const searchQuery = ref('');
-const debouncedSearchQuery = useDebounce(searchQuery, 300);
-const selectedTags = ref([]);
-const isSearchExpanded = ref(false);
-const isFilterExpanded = ref(false);
 const deleteDialogOpen = ref(false);
 const prayerToDelete = ref(null);
-
-// Применяем фильтр категории при изменении
-watch(() => props.selectedCategory, (category) => {
-  if (category && category.tags) {
-    selectedTags.value = [...category.tags];
-  } else {
-    selectedTags.value = [];
-  }
-}, { immediate: true });
 
 const filteredPrayers = computed(() => {
   if (isLoading.value) return [];
@@ -237,16 +160,8 @@ const filteredPrayers = computed(() => {
     });
   }
   
-  // Сортировка: избранные вверху, затем по алфавиту
+  // Сортировка только по алфавиту
   filtered.sort((a, b) => {
-    const aIsFavorite = settings.favoritePrayers.includes(a.id);
-    const bIsFavorite = settings.favoritePrayers.includes(b.id);
-    
-    // Избранные всегда вверху
-    if (aIsFavorite && !bIsFavorite) return -1;
-    if (!aIsFavorite && bIsFavorite) return 1;
-    
-    // Затем сортировка по алфавиту
     const titleA = getTitle(a).toLowerCase();
     const titleB = getTitle(b).toLowerCase();
     return titleA.localeCompare(titleB, 'be', { sensitivity: 'base' });

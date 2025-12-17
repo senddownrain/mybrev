@@ -5,7 +5,13 @@
       <v-col cols="12" md="6" lg="5">
         <div class="sticky-panel">
           <h1 class="text-h5 font-weight-light mb-4">Выберыце дату</h1>
-          <v-date-picker v-model="selectedDate" @update:model-value="runTest" color="primary" show-adjacent-months hide-header></v-date-picker>
+          <v-date-picker 
+            v-model="selectedDate" 
+            @update:model-value="runTest" 
+            color="primary" 
+            show-adjacent-months 
+            hide-header
+          ></v-date-picker>
 <!-- КАРТОЧКА АУДИТА -->
           <v-card variant="tonal" class="mt-6">
             <v-card-text>

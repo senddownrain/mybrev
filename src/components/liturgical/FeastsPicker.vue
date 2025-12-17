@@ -18,15 +18,16 @@
     ></v-text-field>
 
     <!-- Фильтры -->
-    <div class="mb-4">
+    <div class="mb-6">
       <v-chip-group
         v-model="feastTypeFilter"
         mandatory
         column
+        class="feast-filter-chip-group"
       >
-        <v-chip value="all" filter variant="outlined">Усе</v-chip>
-        <v-chip value="dynamic" filter variant="outlined">Рухомыя</v-chip>
-        <v-chip value="fixed" filter variant="outlined">Нерухомыя</v-chip>
+        <v-chip value="all" filter variant="outlined" size="large" class="ma-2 feast-filter-chip">Усе</v-chip>
+        <v-chip value="dynamic" filter variant="outlined" size="large" class="ma-2 feast-filter-chip">Рухомыя</v-chip>
+        <v-chip value="fixed" filter variant="outlined" size="large" class="ma-2 feast-filter-chip">Нерухомыя</v-chip>
       </v-chip-group>
     </div>
 
@@ -36,9 +37,8 @@
       :items="rankOptions"
       label="Ранг"
       variant="outlined"
-      density="compact"
       hide-details
-      class="mb-4"
+      class="mb-6 rank-select"
     ></v-select>
 
     <!-- Список святых -->
@@ -260,4 +260,58 @@ function selectFeast(feast) {
   }
 }
 </script>
+
+<style scoped>
+/* Исправление обрезки текста в списке святых */
+:deep(.v-list-item-title),
+:deep(.v-list-item-subtitle) {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+  text-overflow: unset !important;
+  overflow: visible !important;
+  max-width: 100% !important;
+  line-height: 1.4 !important;
+}
+
+/* Увеличение размера текста в чипах фильтров */
+.feast-filter-chip {
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  min-height: 48px !important;
+  padding: 12px 20px !important;
+  letter-spacing: 0.02em;
+}
+
+.feast-filter-chip-group {
+  gap: 8px;
+}
+
+/* Увеличение размера текста в селекте ранга */
+.rank-select :deep(.v-field__input),
+.rank-select :deep(.v-select__selection) {
+  font-size: 1.1rem !important;
+  min-height: 48px !important;
+}
+
+.rank-select :deep(.v-field__label) {
+  font-size: 1rem !important;
+}
+
+/* Увеличение размера чипов на мобильных */
+@media (max-width: 600px) {
+  .feast-filter-chip {
+    font-size: 1.05rem !important;
+    min-height: 44px !important;
+    padding: 10px 16px !important;
+  }
+  
+  .rank-select :deep(.v-field__input),
+  .rank-select :deep(.v-select__selection) {
+    font-size: 1.05rem !important;
+    min-height: 44px !important;
+  }
+}
+</style>
 

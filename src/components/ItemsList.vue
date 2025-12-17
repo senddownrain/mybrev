@@ -5,7 +5,7 @@
   
   <div class="text-center flex-grow-1 mx-2" @click="toggleCalendarDialog" style="cursor: pointer;">
     <h2 class="text-h6 font-weight-regular text-wrap">
-      Літургія
+      {{ currentDate.format('D MMMM YYYY') }}
     </h2>
   </div>
   
@@ -32,8 +32,6 @@
             v-for="day in sortedDays"
             :key="day.id"
              :to="`/day/${currentDate.format('YYYY-MM-DD')}/ora/${day.id}`"
-            :title="getTitle(day)"
-            :subtitle="getSubtitle(day)"
             class="mb-2"
             border
             rounded
@@ -41,6 +39,8 @@
             <template v-slot:prepend>
               <v-icon :icon="getIcon(day)" :color="getColor(day)"></v-icon>
             </template>
+            <v-list-item-title v-html="getTitle(day)"></v-list-item-title>
+            <v-list-item-subtitle v-html="getSubtitle(day)"></v-list-item-subtitle>
           </v-list-item>
         </v-list>
       </v-col>
@@ -211,10 +211,34 @@ watch(
   .v-list-item-title {
     font-size: 0.95rem !important;
     line-height: 1.4 !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+    text-overflow: unset !important;
+    overflow: visible !important;
   }
 
   .v-list-item-subtitle {
     font-size: 0.85rem !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+    text-overflow: unset !important;
+    overflow: visible !important;
   }
+}
+
+/* Глобальные стили для v-list-item-title и subtitle - чтобы текст не обрезался */
+:deep(.v-list-item-title),
+:deep(.v-list-item-subtitle) {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+  text-overflow: unset !important;
+  overflow: visible !important;
+  max-width: 100% !important;
 }
 </style>

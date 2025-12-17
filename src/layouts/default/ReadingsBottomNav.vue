@@ -126,14 +126,26 @@ function navigateTo(path) {
 
 watch(isCalendarDialogOpen, (isOpen) => {
   if (isOpen) {
-    selectedDate.value = currentRouteDate.value.toDate()
+    const date = currentRouteDate.value
+    if (date && date.isValid()) {
+      selectedDate.value = date.toDate()
+    } else {
+      selectedDate.value = new Date()
+    }
   }
 })
 
 function loadDay() {
   toggleCalendarDialog()
-  const dateString = moment(selectedDate.value).format('YYYY-MM-DD')
-  if (moment(selectedDate.value).isSame(today.value, 'day')) {
+  if (!selectedDate.value) {
+    return
+  }
+  const mDate = moment(selectedDate.value)
+  if (!mDate.isValid()) {
+    return
+  }
+  const dateString = mDate.format('YYYY-MM-DD')
+  if (mDate.isSame(today.value, 'day')) {
     router.push('/readings')
   } else {
     router.push(`/readings/${dateString}`)
@@ -161,5 +173,7 @@ function loadDay() {
   gap: 4px;
 }
 </style>
+
+
 
 

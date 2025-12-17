@@ -7,21 +7,22 @@
           v-model="editForm.title"
           label="Назва"
           variant="outlined"
-          class="mb-4"
+          class="mb-4 prayer-title-field"
           :rules="[validatePrayerTitle]"
           counter="200"
           required
         ></v-text-field>
 
-        <v-textarea
-          v-model="editForm.text"
-          label="Тэкст малітвы"
-          variant="outlined"
-          rows="15"
-          class="mb-4"
-          :rules="[validatePrayerText]"
-          required
-        ></v-textarea>
+        <div class="mb-4">
+          <label class="text-caption text-medium-emphasis mb-2 d-block">Тэкст малітвы</label>
+          <quill-editor
+            v-model:content="editForm.text"
+            contentType="html"
+            theme="snow"
+            toolbar="essential"
+            class="prayer-text-editor"
+          />
+        </div>
 
         <v-combobox
           v-model="editForm.tags"
@@ -111,9 +112,11 @@ watch(prayer, (newPrayer) => {
   }
 }, { immediate: true });
 
-// Слушаем события от PrayerBar и отправляем обновления состояния
+// Слушаем события от AppBar и отправляем обновления состояния
 onMounted(() => {
   window.addEventListener('prayer-toggle-edit', toggleEdit);
+  window.addEventListener('prayer-cancel-edit', cancelEdit);
+  window.addEventListener('prayer-save', savePrayer);
   
   // Отправляем начальное состояние
   updatePrayerBarState();
@@ -121,6 +124,8 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('prayer-toggle-edit', toggleEdit);
+  window.removeEventListener('prayer-cancel-edit', cancelEdit);
+  window.removeEventListener('prayer-save', savePrayer);
 });
 
 // Отслеживаем изменения состояния и отправляем в PrayerBar
@@ -163,6 +168,17 @@ function toggleEdit() {
     // Включаем режим редактирования
     loadPrayerData();
     isEditing.value = true;
+    // Сразу отправляем обновление состояния
+    updatePrayerBarState();
+  }
+}
+
+function cancelEdit() {
+  if (isEditing.value) {
+    // Отменяем редактирование без сохранения
+    isEditing.value = false;
+    // Восстанавливаем исходные данные
+    loadPrayerData();
   }
 }
 
@@ -339,6 +355,46 @@ watch([isLoading, prayer], ([loading, foundPrayer]) => {
     font-size: calc(1rem * var(--font-size-multiplier, 1));
     line-height: 1.8;
   }
+}
+
+/* Стили для QuillEditor */
+.prayer-text-editor :deep(.ql-toolbar.ql-snow) {
+  border-top: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-left: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-right: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-radius: 4px 4px 0 0;
+}
+
+.prayer-text-editor :deep(.ql-container.ql-snow) {
+  border-left: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-right: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  min-height: 200px;
+}
+
+.prayer-text-editor :deep(.ql-editor) {
+  min-height: 200px;
+  font-size: 1rem;
+}
+
+/* Стили для поля названия - чтобы текст не обрезался */
+.prayer-title-field :deep(.v-field__input) {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+  text-overflow: unset !important;
+  overflow: visible !important;
+}
+
+.prayer-title-field :deep(input) {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
 }
 </style>
 

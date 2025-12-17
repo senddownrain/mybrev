@@ -5,21 +5,22 @@
         v-model="form.title"
         label="Назва"
         variant="outlined"
-        class="mb-4"
+        class="mb-4 prayer-title-field"
         :rules="[validatePrayerTitle]"
         counter="200"
         required
       ></v-text-field>
 
-      <v-textarea
-        v-model="form.text"
-        label="Тэкст малітвы"
-        variant="outlined"
-        rows="10"
-        class="mb-4"
-        :rules="[validatePrayerText]"
-        required
-      ></v-textarea>
+      <div class="mb-4">
+        <label class="text-caption text-medium-emphasis mb-2 d-block">Тэкст малітвы</label>
+        <quill-editor
+          v-model:content="form.text"
+          contentType="html"
+          theme="snow"
+          toolbar="essential"
+          class="prayer-text-editor"
+        />
+      </div>
 
       <v-combobox
         v-model="form.tags"
@@ -46,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
@@ -90,6 +91,28 @@ onMounted(() => {
     
     form.value.tags = prayer.tags || [];
   }
+  
+  // Слушаем событие сохранения из AppBar
+  window.addEventListener('prayer-form-save', handleSave);
+  
+  // Отправляем начальное состояние
+  updateFormState();
+});
+
+onUnmounted(() => {
+  window.removeEventListener('prayer-form-save', handleSave);
+});
+
+function updateFormState() {
+  window.dispatchEvent(new CustomEvent('prayer-form-state-update', {
+    detail: {
+      saving: saving.value
+    }
+  }));
+}
+
+watch(saving, () => {
+  updateFormState();
 });
 
 async function handleSave() {
@@ -125,4 +148,46 @@ async function handleSave() {
   }
 }
 </script>
+
+<style scoped>
+/* Стили для QuillEditor */
+.prayer-text-editor :deep(.ql-toolbar.ql-snow) {
+  border-top: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-left: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-right: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-radius: 4px 4px 0 0;
+}
+
+.prayer-text-editor :deep(.ql-container.ql-snow) {
+  border-left: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-right: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  min-height: 200px;
+}
+
+.prayer-text-editor :deep(.ql-editor) {
+  min-height: 200px;
+  font-size: 1rem;
+}
+
+/* Стили для поля названия - чтобы текст не обрезался */
+.prayer-title-field :deep(.v-field__input) {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+  text-overflow: unset !important;
+  overflow: visible !important;
+}
+
+.prayer-title-field :deep(input) {
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+}
+</style>
 

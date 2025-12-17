@@ -78,6 +78,7 @@ import { useAppBar } from '@/composables/useAppBar'
 const route = useRoute()
 const router = useRouter()
 const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar()
+// Инициализируем с валидной датой
 const selectedDate = ref(new Date())
 
 const currentRouteDate = computed(() => {
@@ -85,7 +86,10 @@ const currentRouteDate = computed(() => {
     return moment().startOf('day')
   }
   if (route.params.day) {
-    return moment(route.params.day, 'YYYY-MM-DD').startOf('day')
+    const mDate = moment(route.params.day, 'YYYY-MM-DD')
+    if (mDate.isValid()) {
+      return mDate.startOf('day')
+    }
   }
   return moment().startOf('day')
 })
@@ -126,17 +130,45 @@ function navigateTo(path) {
 
 watch(isCalendarDialogOpen, (isOpen) => {
   if (isOpen) {
-    selectedDate.value = currentRouteDate.value.toDate()
+    try {
+      const date = currentRouteDate.value
+      if (date && date.isValid()) {
+        const dateObj = date.toDate()
+        // Проверяем, что дата валидна
+        if (dateObj && !isNaN(dateObj.getTime())) {
+          selectedDate.value = dateObj
+        } else {
+          selectedDate.value = new Date()
+        }
+      } else {
+        selectedDate.value = new Date()
+      }
+    } catch (error) {
+      console.error('[BottomNav] Ошибка при установке даты в календарь:', error)
+      selectedDate.value = new Date()
+    }
   }
 })
 
 function loadDay() {
   toggleCalendarDialog()
-  const dateString = moment(selectedDate.value).format('YYYY-MM-DD')
-  if (moment(selectedDate.value).isSame(today.value, 'day')) {
-    router.push('/')
-  } else {
-    router.push(`/day/${dateString}`)
+  const date = selectedDate.value
+  if (!date) {
+    return
+  }
+  try {
+    const mDate = moment(date)
+    if (!mDate.isValid()) {
+      return
+    }
+    const dateString = mDate.format('YYYY-MM-DD')
+    if (mDate.isSame(today.value, 'day')) {
+      router.push('/')
+    } else {
+      router.push(`/day/${dateString}`)
+    }
+  } catch (error) {
+    console.error('[BottomNav] Ошибка при загрузке дня:', error)
   }
 }
 </script>
