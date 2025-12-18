@@ -39,3 +39,5 @@ export function initTelegramWebApp() {
   return null;
 }
 
+
+

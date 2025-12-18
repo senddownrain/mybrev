@@ -17,7 +17,7 @@
           Цыкл: {{ readingCycle }}
         </v-chip>
         <v-chip v-if="readingSource" size="x-small" variant="outlined" class="mr-1">
-          {{ readingSource === 'readings' ? 'Новая база' : 'Старая база' }}
+          {{ readingSource === 'new' || readingSource === 'newReadings' || readingSource === 'readings' ? 'Новая база' : 'Старая база' }}
         </v-chip>
       </div>
       
@@ -39,8 +39,8 @@
 import { onMounted, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useReadings } from '@/composables/useReadings';
-import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
-import { getLiturgicalYear, getCycleForDate } from '@/utils/liturgicalCycle';
+import { useLiturgicalReadings } from '@/composables/useLiturgicalReadings';
+import { useReadingsStore } from '@/stores/readings';
 import { logger } from '@/utils/logger';
 import moment from 'moment';
 
@@ -51,9 +51,11 @@ const {
   hasReading, 
   isLoading, 
   error, 
-  loadReadingsForDate,
   currentReading
 } = useReadings();
+
+const readingsStore = useReadingsStore();
+const { getLiturgicalReadingsForDate } = useLiturgicalReadings();
 
 // Информация о чтении для отображения
 const readingInfo = computed(() => {
@@ -64,37 +66,31 @@ const readingSource = computed(() => {
   return currentReading.value?._source || null;
 });
 
-const { getLiturgicalOptionsForDate } = useLiturgicalDay();
-
 /**
  * Загрузить чтения для текущей даты
+ * Использует ту же логику, что и для литургических дней:
+ * - По периоду (periodType, periodWeekNumber, dayOfWeek)
+ * - По дате (фиксированные праздники)
+ * - По ключевому слову (динамические праздники: Пасха, Пятидесятница и т.д.)
  */
 async function loadReadings() {
   // Поддержка параметра date из роута или query
   const dateParam = route.params.date || route.query.date;
   const date = dateParam ? moment(dateParam, 'YYYY-MM-DD').toDate() : moment().toDate();
   
-  logger.log('[ReadingsView] Загрузка чытанняў для даты:', moment(date).format('YYYY-MM-DD'));
+  logger.log('[ReadingsView] Загрузка чытанняў для літургічнага дня:', moment(date).format('YYYY-MM-DD'));
   
   try {
-    // Получаем литургический контекст для даты
-    const liturgicalData = await getLiturgicalOptionsForDate(date);
-    const context = liturgicalData?.context || {};
+    readingsStore.setLoading(true);
     
-    // Определяем цикл (используем calendarStore для точности)
-    const liturgicalYear = await getLiturgicalYear(date, { useCalendarStore: true });
-    const cycle = await getCycleForDate(date, liturgicalYear, context.dayOfWeek, { useCalendarStore: true });
+    // Используем новый composable, который работает аналогично useLiturgicalDay
+    const liturgicalReadings = await getLiturgicalReadingsForDate(date);
     
-    // Загружаем чтения с контекстом
-    await loadReadingsForDate(date, {
-      cycle,
-      periodType: context.periodType,
-      periodWeekNumber: context.periodWeek,
-      dayOfWeek: context.dayOfWeek,
-      feastId: liturgicalData?.items?.[0]?._feastId,
-    });
+    // Обновляем store с найденными чтениями (метод сам выберет наиболее подходящее)
+    readingsStore.setReadingsFromResults(liturgicalReadings.items);
   } catch (err) {
     logger.error('[ReadingsView] Памылка загрузкі чытанняў:', err);
+    readingsStore.setReadingsFromResults([]); // Устанавливаем пустой массив при ошибке
   }
 }
 
