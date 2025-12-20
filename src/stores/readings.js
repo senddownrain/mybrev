@@ -31,18 +31,18 @@ export const useReadingsStore = defineStore('readings', () => {
         // Если несколько, выбираем наиболее подходящее:
         // 1. Приоритет чтениям из новой коллекции readings
         // 2. Затем чтениям с точной датой (_date или day)
-        // 3. Затем чтениям по празднику (feastId)
+        // 3. Затем чтениям по празднику (_feast)
         // 4. Затем чтениям по периоду
         const prioritized = results.sort((a, b) => {
-          // Сначала по источнику (readings > readingsData)
-          if (a._source === 'readings' && b._source === 'readingsData') return -1;
-          if (a._source === 'readingsData' && b._source === 'readings') return 1;
+          // Сначала по источнику ('new' > readingsData)
+          if ((a._source === 'new' || a._source === 'newReadings' || a._source === 'readings') && b._source === 'readingsData') return -1;
+          if (a._source === 'readingsData' && (b._source === 'new' || b._source === 'newReadings' || b._source === 'readings')) return 1;
           // Затем по точной дате
           if ((a._date || a.day) && !(b._date || b.day)) return -1;
           if (!(a._date || a.day) && (b._date || b.day)) return 1;
-          // Затем по празднику
-          if (a.feastId && !b.feastId) return -1;
-          if (!a.feastId && b.feastId) return 1;
+          // Затем по празднику (_feast)
+          if (a._feast && !b._feast) return -1;
+          if (!a._feast && b._feast) return 1;
           return 0;
         });
         currentReading.value = prioritized[0];
@@ -127,6 +127,46 @@ export const useReadingsStore = defineStore('readings', () => {
     readings.value = [];
   }
 
+  /**
+   * Установить состояние загрузки
+   * @param {boolean} loading - Состояние загрузки
+   */
+  function setLoading(loading) {
+    isLoading.value = loading;
+  }
+
+  /**
+   * Установить чтения из результатов поиска
+   * Используется для установки чтений, найденных через useLiturgicalReadings
+   * @param {Array} results - Массив найденных чтений
+   */
+  function setReadingsFromResults(results) {
+    readings.value = results;
+    isLoading.value = false;
+    error.value = null;
+    
+    if (results.length === 1) {
+      currentReading.value = results[0];
+      logger.log('[readingsStore] Выбрана адно чытанне:', results[0].id, 'з крыніцы:', results[0]._source);
+    } else if (results.length > 1) {
+          // Приоритет: 'new' > readingsData, затем по точной дате, затем по празднику (_feast)
+          const prioritized = results.sort((a, b) => {
+            if ((a._source === 'new' || a._source === 'newReadings' || a._source === 'readings') && b._source === 'readingsData') return -1;
+            if (a._source === 'readingsData' && (b._source === 'new' || b._source === 'newReadings' || b._source === 'readings')) return 1;
+        if ((a._date || a.day) && !(b._date || b.day)) return -1;
+        if (!(a._date || a.day) && (b._date || b.day)) return 1;
+        if (a._feast && !b._feast) return -1;
+        if (!a._feast && b._feast) return 1;
+        return 0;
+      });
+      currentReading.value = prioritized[0];
+      logger.log('[readingsStore] Знойдзена некалькі чытанняў, выбрана:', prioritized[0].id, 'з крыніцы:', prioritized[0]._source);
+    } else {
+      currentReading.value = null;
+      logger.log('[readingsStore] Чытанні не знойдзены');
+    }
+  }
+
   return {
     readings: computed(() => readings.value),
     currentReading: computed(() => currentReading.value),
@@ -138,6 +178,8 @@ export const useReadingsStore = defineStore('readings', () => {
     updateReading,
     deleteReading,
     clearCurrentReading,
+    setReadingsFromResults,
+    setLoading,
   };
 });
 

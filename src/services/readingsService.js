@@ -18,8 +18,9 @@ import { validateReading, normalizeReading } from '@/utils/readingsValidator';
 import { getCachedReadings, cacheReadings } from '@/utils/readingsCache';
 import moment from 'moment';
 
-const READINGS_COLLECTION = 'readings';
-const READINGS_DATA_COLLECTION = 'readingsData'; // Старая коллекция с существующими данными
+const READINGS_COLLECTION = 'new'; // Новая коллекция с мигрированными данными (используется)
+const READINGS_DATA_COLLECTION = 'readingsData'; // Старая коллекция с существующими данными (fallback, используется)
+const OLD_READINGS_COLLECTION = 'readings'; // Старая коллекция readings (НЕ используется, оставлена для обратной совместимости в проверках _source)
 
 /**
  * Получить коллекцию readings
@@ -54,9 +55,11 @@ export function getReadingsByPeriodQuery(periodType, periodWeekNumber, dayOfWeek
 
 /**
  * Поиск чтений по дате
+ * Формат _date: D.M (день.месяц), унифицирован с коллекцией days
  */
 export function getReadingsByDateQuery(date, cycle) {
-  const dateStr = moment(date).format('YYYY-MM-DD');
+  const dateStr = moment(date).format('D.M'); // Формат D.M вместо YYYY-MM-DD
+  logger.log(`[readingsService] Поиск по дате: _date="${dateStr}", cycle="${cycle}"`);
   const conditions = [where('_date', '==', dateStr)];
   
   if (cycle) {
@@ -67,13 +70,15 @@ export function getReadingsByDateQuery(date, cycle) {
 }
 
 /**
- * Поиск чтений по празднику
+ * Поиск чтений по празднику (динамический праздник)
+ * Использует поле _feast (унифицировано с коллекцией days)
+ * @param {string} _feast - Значение поля _feast (например, 'eastersunday', 'pentecost')
+ * @param {string} cycle - Цикл (A/B/C/1/2)
  */
-export function getReadingsByFeastQuery(feastId, feastDate, cycle) {
-  const dateStr = moment(feastDate).format('YYYY-MM-DD');
+export function getReadingsByFeastQuery(_feast, cycle) {
+  logger.log(`[readingsService] Поиск по празднику: _feast="${_feast}", cycle="${cycle}"`);
   const conditions = [
-    where('feastId', '==', feastId),
-    where('feastDate', '==', dateStr),
+    where('_feast', '==', _feast),
   ];
   
   if (cycle) {
@@ -167,22 +172,26 @@ export async function searchReadingsDataByDate(dateStr) {
 
 /**
  * Комплексный поиск чтений для конкретной даты
- * Сначала ищет в новой коллекции readings, затем в старой readingsData
+ * 
+ * Приоритет коллекций:
+ * 1. 'new' (приоритет) - поиск по периоду, дате (D.M), празднику (_feast)
+ * 2. readingsData (fallback) - поиск по дате с годом (DD.MM.YYYY), только если в 'new' ничего не найдено
+ * 
  * @param {Date|moment.Moment|string} date - Дата
  * @param {Object} options - Опции поиска
  * @param {string} options.cycle - Цикл (A/B/C/1/2)
  * @param {string} options.periodType - Тип периода
  * @param {number} options.periodWeekNumber - Номер недели в периоде
  * @param {number} options.dayOfWeek - День недели (1-7)
- * @param {string} options.feastId - ID праздника
+ * @param {string} options._feast - Значение поля _feast для динамических праздников
  * @param {boolean} options.useCache - Использовать кэш (по умолчанию true)
  * @param {boolean} options.includeReadingsData - Искать также в readingsData (по умолчанию true)
  * @returns {Promise<Array>} Массив найденных чтений
  */
 export async function getReadingsForDate(date, options = {}) {
-  const { cycle, periodType, periodWeekNumber, dayOfWeek, feastId, useCache = true, includeReadingsData = true } = options;
+  const { cycle, periodType, periodWeekNumber, dayOfWeek, _feast, useCache = true, includeReadingsData = true } = options;
   const mDate = moment(date).startOf('day');
-  const dateStr = mDate.format('YYYY-MM-DD');
+  const dateStr = mDate.format('YYYY-MM-DD'); // Для кэша и readingsData
   
   // Проверяем кэш
   if (useCache) {
@@ -195,18 +204,44 @@ export async function getReadingsForDate(date, options = {}) {
   
   const queries = [];
   
-  // 1. Поиск в новой коллекции readings
-  // 1.1. По дате
-  queries.push(getReadingsByDateQuery(dateStr, cycle));
+  // 1. Поиск в новой коллекции 'new' (БЕЗ года, только D.M)
+  logger.log(`[readingsService] ========== Поиск в коллекции 'new' для даты ${mDate.format('YYYY-MM-DD')} ==========`);
+  logger.log(`[readingsService] Параметры поиска:`, {
+    cycle,
+    periodType,
+    periodWeekNumber,
+    dayOfWeek,
+    _feast,
+    dateFormatted: moment(date).format('D.M')
+  });
   
-  // 1.2. По периоду (если указаны параметры)
-  if (periodType && periodWeekNumber !== undefined && dayOfWeek) {
-    queries.push(getReadingsByPeriodQuery(periodType, periodWeekNumber, dayOfWeek, cycle));
+  // 1.1. По дате (формат D.M, без года) - С cycle и БЕЗ cycle
+  if (cycle) {
+    queries.push(getReadingsByDateQuery(date, cycle)); // Сначала с cycle (более точный поиск)
+  }
+  queries.push(getReadingsByDateQuery(date, null)); // Затем без cycle (более широкий поиск)
+  logger.log(`[readingsService] ✓ Запросы по дате: _date="${moment(date).format('D.M')}" (с cycle="${cycle}" и без)`);
+  
+  // 1.2. По периоду (если указаны параметры) - БЕЗ cycle и С cycle
+  if (periodType && periodWeekNumber !== undefined && dayOfWeek !== undefined) {
+    // Сначала ищем с cycle (если указан)
+    if (cycle) {
+      queries.push(getReadingsByPeriodQuery(periodType, periodWeekNumber, dayOfWeek, cycle));
+    }
+    // Затем ищем без cycle (более широкий поиск)
+    queries.push(getReadingsByPeriodQuery(periodType, periodWeekNumber, dayOfWeek, null));
+    logger.log(`[readingsService] ✓ Запросы по периоду: ${periodType}, неделя ${periodWeekNumber}, день недели ${dayOfWeek} (с cycle="${cycle}" и без)`);
+  } else {
+    logger.log(`[readingsService] ⚠️ Параметры периода неполные: periodType="${periodType}", periodWeekNumber="${periodWeekNumber}", dayOfWeek="${dayOfWeek}"`);
   }
   
-  // 1.3. По празднику (если указан)
-  if (feastId) {
-    queries.push(getReadingsByFeastQuery(feastId, dateStr, cycle));
+  // 1.3. По празднику (если указан _feast) - С cycle и БЕЗ cycle
+  if (_feast) {
+    if (cycle) {
+      queries.push(getReadingsByFeastQuery(_feast, cycle)); // Сначала с cycle (более точный поиск)
+    }
+    queries.push(getReadingsByFeastQuery(_feast, null)); // Затем без cycle (более широкий поиск)
+    logger.log(`[readingsService] ✓ Запросы по празднику: _feast="${_feast}" (с cycle="${cycle}" и без)`);
   }
   
   try {
@@ -215,27 +250,73 @@ export async function getReadingsForDate(date, options = {}) {
     );
     
     const results = [];
-    querySnapshots.forEach(snapshot => {
+    let newCount = 0;
+    const seenIds = new Set(); // Для отслеживания дубликатов
+    
+    // Описываем типы запросов для логирования
+    const queryTypes = [];
+    if (cycle) queryTypes.push(`дата с cycle="${cycle}"`);
+    queryTypes.push('дата без cycle');
+    if (periodType && periodWeekNumber !== undefined && dayOfWeek !== undefined) {
+      if (cycle) queryTypes.push(`период с cycle="${cycle}"`);
+      queryTypes.push('период без cycle');
+    }
+    if (_feast) {
+      if (cycle) queryTypes.push(`праздник с cycle="${cycle}"`);
+      queryTypes.push('праздник без cycle');
+    }
+    
+    querySnapshots.forEach((snapshot, queryIndex) => {
+      const queryType = queryTypes[queryIndex] || `запрос #${queryIndex + 1}`;
+      const queryResults = [];
       snapshot.forEach(doc => {
-        results.push({
-          id: doc.id,
-          _source: 'readings', // Метка источника
-          ...doc.data()
-        });
+        if (!seenIds.has(doc.id)) {
+          seenIds.add(doc.id);
+          newCount++;
+          const docData = doc.data();
+          queryResults.push({
+            id: doc.id,
+            _source: 'new',
+            ...docData
+          });
+          logger.log(`[readingsService] ✓ Найден документ ${doc.id} (${queryType}):`, {
+            _date: docData._date || 'нет',
+            _periodType: docData._periodType || 'нет',
+            _periodWeekNumber: docData._periodWeekNumber ?? 'нет',
+            _dayOfWeek: docData._dayOfWeek ?? 'нет',
+            _feast: docData._feast || 'нет',
+            cycle: docData.cycle || 'нет'
+          });
+        }
       });
+      if (queryResults.length === 0) {
+        logger.log(`[readingsService] ✗ ${queryType}: документов не найдено`);
+      } else {
+        logger.log(`[readingsService] ✓ ${queryType}: найдено ${queryResults.length} документов`);
+      }
+      results.push(...queryResults);
     });
     
-    // 2. Поиск в старой коллекции readingsData (если включено)
-    if (includeReadingsData) {
+    logger.log(`[readingsService] ========== Всего найдено в 'new': ${newCount} уникальных документов ==========`);
+    
+    // 2. Поиск в старой коллекции readingsData как fallback
+    // Если в 'new' ничего не найдено, ищем в readingsData
+    if (newCount === 0 && includeReadingsData) {
+      logger.log('[readingsService] ⚠️ В коллекции "new" ничего не найдено, ищем в readingsData как fallback');
       try {
         const readingsDataResults = await searchReadingsDataByDate(dateStr);
-        logger.log('[readingsService] Вынікі з readingsData:', readingsDataResults.length);
+        logger.log('[readingsService] Вынікі з readingsData (fallback):', readingsDataResults.length);
         if (readingsDataResults.length > 0) {
           results.push(...readingsDataResults);
+          logger.log('[readingsService] ✓ Найдено чтений в readingsData, используем их');
         }
       } catch (error) {
         logger.warn('[readingsService] Памылка пошуку ў readingsData:', error);
       }
+    } else if (newCount > 0) {
+      logger.log('[readingsService] ✓ Найдено чтений в коллекции "new", readingsData не используется');
+    } else {
+      logger.log('[readingsService] Поиск в readingsData отключен (includeReadingsData=false)');
     }
     
     logger.log('[readingsService] Усяго знойдзена да аб\'яднання:', results.length);
@@ -247,12 +328,12 @@ export async function getReadingsForDate(date, options = {}) {
     
     logger.log('[readingsService] Пасля аб\'яднання:', uniqueResults.length, 'чытанняў');
     
-    // Приоритет: readings (новая коллекция) > readingsData (старая)
-    // НО если есть readingsData и нет readings, используем readingsData
-    // Сортируем так, чтобы readings были первыми, но readingsData тоже учитывались
+    // Приоритет: 'new' (новая коллекция) > readingsData (старая)
+    // НО если есть readingsData и нет 'new', используем readingsData
+    // Сортируем так, чтобы 'new' были первыми, но readingsData тоже учитывались
     uniqueResults.sort((a, b) => {
-      if (a._source === 'readings' && b._source === 'readingsData') return -1;
-      if (a._source === 'readingsData' && b._source === 'readings') return 1;
+      if ((a._source === 'new' || a._source === 'newReadings' || a._source === 'readings') && b._source === 'readingsData') return -1;
+      if (a._source === 'readingsData' && (b._source === 'new' || b._source === 'newReadings' || b._source === 'readings')) return 1;
       return 0;
     });
     
@@ -262,6 +343,11 @@ export async function getReadingsForDate(date, options = {}) {
     }
     
     logger.log('[readingsService] Фінальны вынік для даты', dateStr, ':', uniqueResults.length, 'чытанняў');
+    if (uniqueResults.length > 0) {
+      const sources = uniqueResults.map(r => r._source);
+      logger.log('[readingsService] Источники:', [...new Set(sources)].join(', '));
+      logger.log('[readingsService] Первый результат из:', uniqueResults[0]._source);
+    }
     
     return uniqueResults;
   } catch (error) {

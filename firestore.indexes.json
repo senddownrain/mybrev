@@ -41,11 +41,57 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "feastId",
+          "fieldPath": "_feast",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "feastDate",
+          "fieldPath": "cycle",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "new",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_periodType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_periodWeekNumber",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "_dayOfWeek",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "cycle",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "new",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_date",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "cycle",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "new",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_feast",
           "order": "ASCENDING"
         },
         {

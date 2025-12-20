@@ -3,7 +3,7 @@
  */
 
 import { PERIOD_TYPES, CYCLES, FEAST_NAME_MAP, DAY_OF_WEEK } from '@/constants/readings';
-import moment from 'moment';
+import { logger } from '@/utils/logger';
 
 /**
  * Валидировать структуру чтения
@@ -44,7 +44,7 @@ export function validateReading(data, options = {}) {
   if (!partial) {
     const hasPeriod = data._periodType && data._periodWeekNumber !== undefined && data._dayOfWeek;
     const hasDate = !!data._date;
-    const hasFeast = !!(data.feastId && data.feastName && data.feastDate);
+    const hasFeast = !!data._feast; // Используем _feast вместо feastId/feastName/feastDate
 
     if (!hasPeriod && !hasDate && !hasFeast) {
       return 'Павінен быць зададзены адзін з спосабаў ідэнтыфікацыі: перыяд, дата або свята';
@@ -52,6 +52,7 @@ export function validateReading(data, options = {}) {
   }
 
   // Валидация варианта 1: по периоду
+  const hasPeriod = data._periodType && data._periodWeekNumber !== undefined && data._dayOfWeek;
   if (hasPeriod) {
     if (!Object.values(PERIOD_TYPES).includes(data._periodType)) {
       return `Няверны тып перыяду: ${data._periodType}`;
@@ -65,26 +66,33 @@ export function validateReading(data, options = {}) {
   }
 
   // Валидация варианта 2: по дате
+  const hasDate = !!data._date;
   if (hasDate) {
-    if (!moment(data._date, 'YYYY-MM-DD', true).isValid()) {
-      return `Няверны фармат даты: ${data._date}. Павінен быць YYYY-MM-DD`;
+    // Формат D.M (день.месяц), унифицирован с коллекцией days
+    if (!/^\d{1,2}\.\d{1,2}$/.test(data._date)) {
+      return `Няверны фармат даты: ${data._date}. Павінен быць D.M (напрыклад, 25.12)`;
+    }
+    // Проверяем, что дата валидна (месяц от 1 до 12, день от 1 до 31)
+    const [day, month] = data._date.split('.').map(Number);
+    if (month < 1 || month > 12) {
+      return `Няверны месяц у даце: ${data._date}. Месяц павінен быць ад 1 да 12`;
+    }
+    if (day < 1 || day > 31) {
+      return `Няверны дзень у даце: ${data._date}. Дзень павінен быць ад 1 да 31`;
     }
   }
 
-  // Валидация варианта 3: по празднику
+  // Валидация варианта 3: по празднику (динамический праздник)
+  const hasFeast = !!data._feast;
   if (hasFeast) {
-    if (!data.feastId || typeof data.feastId !== 'string') {
-      return 'feastId павінен быць радком';
+    if (typeof data._feast !== 'string' || data._feast.trim().length === 0) {
+      return '_feast павінен быць непустым радком';
     }
-    if (!data.feastName || typeof data.feastName !== 'string') {
-      return 'feastName павінен быць радком';
-    }
-    if (!moment(data.feastDate, 'YYYY-MM-DD', true).isValid()) {
-      return `Няверны фармат feastDate: ${data.feastDate}. Павінен быць YYYY-MM-DD`;
-    }
-    // Проверка соответствия feastName маппингу (опционально)
-    if (FEAST_NAME_MAP[data.feastId] && FEAST_NAME_MAP[data.feastId] !== data.feastName) {
-      return `feastName не адпавядае маппінгу для ${data.feastId}. Чакаецца: ${FEAST_NAME_MAP[data.feastId]}`;
+    // Проверяем, что значение _feast соответствует одному из известных праздников
+    const validFeasts = Object.values(FEAST_NAME_MAP);
+    if (!validFeasts.includes(data._feast.toLowerCase())) {
+      logger.warn(`[readingsValidator] Невядомае значэнне _feast: ${data._feast}`);
+      // Не возвращаем ошибку, так как могут быть новые праздники
     }
   }
 
@@ -99,12 +107,35 @@ export function validateReading(data, options = {}) {
 export function normalizeReading(data) {
   const normalized = { ...data };
 
-  // Нормализация даты
+  // Нормализация даты: формат D.M (день.месяц)
   if (normalized._date) {
-    normalized._date = moment(normalized._date).format('YYYY-MM-DD');
+    // Если дата в формате YYYY-MM-DD или другом, преобразуем в D.M
+    if (normalized._date.includes('-')) {
+      const mDate = moment(normalized._date);
+      if (mDate.isValid()) {
+        normalized._date = mDate.format('D.M'); // Формат D.M
+      }
+    } else if (/^\d{1,2}\.\d{1,2}$/.test(normalized._date)) {
+      // Уже в правильном формате, но убираем ведущие нули для единообразия
+      const [day, month] = normalized._date.split('.').map(Number);
+      normalized._date = `${day}.${month}`;
+    }
   }
-  if (normalized.feastDate) {
-    normalized.feastDate = moment(normalized.feastDate).format('YYYY-MM-DD');
+
+  // Удаляем старые поля feastId, feastName, feastDate (если есть)
+  if (normalized.feastId !== undefined) {
+    delete normalized.feastId;
+  }
+  if (normalized.feastName !== undefined) {
+    delete normalized.feastName;
+  }
+  if (normalized.feastDate !== undefined) {
+    delete normalized.feastDate;
+  }
+
+  // Нормализация _feast (если есть)
+  if (normalized._feast) {
+    normalized._feast = normalized._feast.toLowerCase().trim();
   }
 
   // Нормализация числовых полей
