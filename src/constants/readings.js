@@ -9,6 +9,7 @@ export const PERIOD_TYPES = {
   ORDINARY: 'ordinary',
   LENT: 'lent',
   EASTER: 'easter',
+  HOLYWEEK: 'holyweek',
 };
 
 // Циклы чтений

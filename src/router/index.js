@@ -167,6 +167,33 @@ const routes = [
           topNav: OraBarVue,
         },
       },
+
+      // новый маршрут для чтений
+    {
+      path: 'reading/:readingId',
+      name: 'reading',
+      components: {
+        default: () => import('@/components/readings/Reading.vue'),
+        topNav: OraBarVue,
+      },
+      props: {
+        default: true,
+        topNav: false,
+      },
+    },
+     {
+      path: 'reading/:readingId/edit',
+      name: 'ReadingEditor',
+      components: {
+        default: () => import('@/components/readings/ReadingForm.vue'),
+        topNav: OraBarVue,
+      },
+      props: {
+        default: true,
+        topNav: false,
+      },
+    },
+    
       { path: 'vesper', name: 'vesper', components: { default: () => import('@/components/oras/Vesper.vue'), topNav: OraBarVue } },
       { path: 'invitatorium', name: 'invitatorium', components: { default: () => import('@/components/oras/Invit.vue'), topNav: OraBarVue } },
       { path: 'laudes', name: 'laudes', components: { default: () => import('@/components/oras/Laudes.vue'), topNav: OraBarVue } },

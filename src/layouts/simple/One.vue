@@ -7,7 +7,7 @@
   >
     <v-main>
       <router-view name="topNav" />
-      <router-view />
+      <router-view /> 
 
       <TextSettingsSheet />
       
