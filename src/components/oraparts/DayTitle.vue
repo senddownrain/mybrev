@@ -37,13 +37,11 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useDocument } from 'vuefire';
 import { doc, getFirestore } from 'firebase/firestore';
-import moment from 'moment';
-import 'moment/dist/locale/be'; // Убедимся, что локаль подключена
+import moment from '@/utils/moment-be'; // Кастомная белорусская локаль
 import { db } from '@/plugins/firebase'; 
 // --- Инициализация ---
 const route = useRoute();
 //const db = getFirestore();
-moment.locale('be'); // Активируем белорусскую локаль
 
 // --- Загрузка данных дня ---
 // Получаем ID дня из URL
@@ -60,7 +58,7 @@ const formattedDate = computed(() => {
   const mDate = moment(route.params.day, ['YYYY-MM-DD', 'DD-MM-YYYY']);
   if (!mDate.isValid()) return '';
   // Форматируем в красивый вид, например, "18 верасня 2025 г."
-  const dateStr = mDate.format('D MMMM YYYY г.');
+  const dateStr = mDate.format('D MMM YYYY г.');
   return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 });
 
@@ -113,19 +111,41 @@ const getPeriodTitle = (day) => {
   pointer-events: none;
 }
 
+/* Масштабирование текста заголовка дня */
+.day-title-container,
+.day-title-container * {
+  font-family: var(--app-font-family, sans-serif) !important;
+}
+
+.day-title-container h1,
+.day-title-container .text-h4 {
+  font-size: calc(2rem * var(--font-size-multiplier, 1)) !important;
+  line-height: 1.3 !important;
+}
+
+.day-title-container .text-subtitle-1 {
+  font-size: calc(0.875rem * var(--font-size-multiplier, 1)) !important;
+}
+
+.day-title-content div,
+.day-title-content p {
+  font-size: calc(0.875rem * var(--font-size-multiplier, 1)) !important;
+}
+
 @media (max-width: 600px) {
   .day-title-container {
     padding: 0 8px;
     margin-bottom: 16px;
   }
 
-  .day-title-container h1 {
-    font-size: 1.3rem !important;
+  .day-title-container h1,
+  .day-title-container .text-h4 {
+    font-size: calc(1.3rem * var(--font-size-multiplier, 1)) !important;
     line-height: 1.3 !important;
   }
 
   .day-title-container .text-subtitle-1 {
-    font-size: 0.85rem !important;
+    font-size: calc(0.85rem * var(--font-size-multiplier, 1)) !important;
   }
 }
 </style>

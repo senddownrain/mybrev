@@ -69,7 +69,7 @@ import { ref, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useDocument } from 'vuefire';
 import { doc } from 'firebase/firestore';
-import moment from 'moment';
+import moment from '@/utils/moment-be';
 
 import { db } from '@/plugins/firebase';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';

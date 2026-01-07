@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { logger } from '@/utils/logger';
 import * as readingsService from '@/services/readingsService';
-import moment from 'moment';
+import moment from '@/utils/moment-be';
 
 export const useReadingsStore = defineStore('readings', () => {
   const readings = ref([]);

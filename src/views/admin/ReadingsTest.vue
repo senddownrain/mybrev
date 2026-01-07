@@ -210,7 +210,7 @@ import { useReadings } from '@/composables/useReadings';
 import { useNotifier } from '@/composables/useNotifier';
 import { FEAST_NAME_MAP } from '@/constants/readings';
 import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
-import moment from 'moment';
+import moment from '@/utils/moment-be';
 
 const { addReading, loadReadingsForDate, deleteReading } = useReadings();
 const { notifySuccess, notifyError } = useNotifier();

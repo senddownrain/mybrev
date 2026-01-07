@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment from '@/utils/moment-be';
 import { useCalendarStore } from '@/stores/calendar';
 
 /**

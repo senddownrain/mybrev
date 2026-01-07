@@ -42,7 +42,7 @@ import { useReadings } from '@/composables/useReadings';
 import { useLiturgicalReadings } from '@/composables/useLiturgicalReadings';
 import { useReadingsStore } from '@/stores/readings';
 import { logger } from '@/utils/logger';
-import moment from 'moment';
+import moment from '@/utils/moment-be';
 
 const route = useRoute();
 const { 
@@ -110,6 +110,16 @@ watch(() => route.params.date || route.query.date, () => {
 
 .readings-content {
   width: 100%;
+  text-align: left !important;
+}
+
+.readings-content :deep(*) {
+  text-align: left !important;
+}
+
+.readings-content :deep([style*="text-align: justify"]),
+.readings-content :deep([style*="text-align:justify"]) {
+  text-align: left !important;
 }
 </style>
 

@@ -26,8 +26,7 @@
 <script setup>
 
 import { ref } from 'vue'
-import moment from 'moment';
-import 'moment/dist/locale/be';
+import moment from '@/utils/moment-be';
 
 import { useRoute } from 'vue-router'
 import { useCollection, useFirestore, useDocument } from 'vuefire'

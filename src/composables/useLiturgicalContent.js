@@ -1,13 +1,11 @@
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import moment from 'moment';
-import 'moment/dist/locale/be';
+import moment from '@/utils/moment-be';
 
 import { db } from '@/plugins/firebase';
 import { retryFirestore } from '@/utils/retry';
 import { logger } from '@/utils/logger';
 import { useCalendarStore } from '@/stores/calendar';
 
-moment.locale('be');
 
 const feastNameMap = {
   holyFamily: 'holyfamily',

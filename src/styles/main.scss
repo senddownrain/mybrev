@@ -133,12 +133,113 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   word-break: break-word;
   overflow-x: hidden;
   max-width: 100%;
+  text-align: left !important;
+}
+
+// Стили для заголовков карточек - масштабирование вместе с текстом
+.ora-title,
+.ora-header {
+  font-size: calc(1.1rem * var(--font-size-multiplier, 1)) !important;
+  font-family: var(--app-font-family, sans-serif) !important;
+  line-height: 1.4 !important;
+}
+
+.prayer-content-area .ora-title,
+.prayer-content-area .ora-header,
+.ora .ora-title,
+.ora .ora-header {
+  font-size: calc(1.1rem * var(--font-size-multiplier, 1)) !important;
+  font-family: var(--app-font-family, sans-serif) !important;
 }
 
 .ora-text * {
   max-width: 100%;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  text-align: left !important;
+}
+
+// Переопределяем text-align: justify на left для всех текстовых элементов
+.prayer-content-area,
+.prayer-content-area *,
+.prayer-text,
+.prayer-text *,
+.ora-text,
+.ora-text *,
+.readings-content,
+.readings-content * {
+  text-align: left !important;
+}
+
+// Переопределяем inline стили text-align: justify из базы данных
+.prayer-content-area [style*="text-align: justify"],
+.prayer-content-area [style*="text-align:justify"],
+.prayer-text [style*="text-align: justify"],
+.prayer-text [style*="text-align:justify"],
+.ora-text [style*="text-align: justify"],
+.ora-text [style*="text-align:justify"],
+.readings-content [style*="text-align: justify"],
+.readings-content [style*="text-align:justify"] {
+  text-align: left !important;
+}
+
+// Также переопределяем для всех p, div, span внутри этих контейнеров
+.prayer-content-area p,
+.prayer-content-area div,
+.prayer-content-area span,
+.prayer-text p,
+.prayer-text div,
+.prayer-text span,
+.ora-text p,
+.ora-text div,
+.ora-text span,
+.ora-ant,
+.ora-ant *,
+.ora-psalm,
+.ora-psalm *,
+.readings-content p,
+.readings-content div,
+.readings-content span {
+  text-align: left !important;
+}
+
+// Переопределяем для всех v-card-text внутри этих контейнеров
+.prayer-content-area .v-card-text,
+.ora-text .v-card-text,
+.readings-content .v-card-text {
+  text-align: left !important;
+}
+
+.prayer-content-area .v-card-text *,
+.ora-text .v-card-text *,
+.readings-content .v-card-text * {
+  text-align: left !important;
+}
+
+// Глобальные стили для всех компонентов oraparts
+.ora .v-card-text,
+.ora .ora-text,
+.ora .ora-ant,
+.ora .ora-psalm {
+  text-align: left !important;
+}
+
+.ora .v-card-text *,
+.ora .ora-text *,
+.ora .ora-ant *,
+.ora .ora-psalm * {
+  text-align: left !important;
+}
+
+.ora [style*="text-align: justify"],
+.ora [style*="text-align:justify"],
+.ora-text [style*="text-align: justify"],
+.ora-text [style*="text-align:justify"],
+.ora-ant [style*="text-align: justify"],
+.ora-ant [style*="text-align:justify"],
+.ora-psalm [style*="text-align: justify"],
+.ora-psalm [style*="text-align:justify"] {
+  text-align: left !important;
 }
 
 // Исправление двойного скролла на страницах с ora (гадинками)

@@ -2,7 +2,7 @@ import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { getReadingsForDate } from '@/services/readingsService';
 import { getLiturgicalYear, getCycleForDate } from '@/utils/liturgicalCycle';
 import { logger } from '@/utils/logger';
-import moment from 'moment';
+import moment from '@/utils/moment-be';
 
 /**
  * Composable для работы с литургическими чтениями

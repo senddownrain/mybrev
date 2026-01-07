@@ -3,14 +3,30 @@
     <h1 class="text-h5 font-weight-light mb-4">Літургічны каляндар на год {{ selectedYear }}</h1>
 
     <!-- Блок выбора года -->
+    <div class="d-flex align-center mb-4">
+      <div class="text-h6 mr-2">Год {{ selectedYear }}</div>
+      <v-btn
+        icon="mdi-pencil"
+        size="small"
+        variant="text"
+        @click="isYearEditing = !isYearEditing"
+        :color="isYearEditing ? 'primary' : 'default'"
+      >
+        <v-icon size="small">mdi-pencil</v-icon>
+      </v-btn>
+    </div>
+
+    <!-- Дропдаун выбора года (показывается только в режиме редактирования) -->
     <v-select
+      v-if="isYearEditing"
       v-model="selectedYear"
       :items="availableYears"
-      label="Год"
+      label="Выберите год"
       variant="outlined"
       density="compact"
       class="mb-4"
       hide-details
+      @update:model-value="isYearEditing = false"
     ></v-select>
 
     <!-- Вкладки -->
@@ -45,16 +61,15 @@ import { useRouter } from 'vue-router';
 import { useCalendarStore } from '@/stores/calendar';
 import PeriodPicker from '@/components/liturgical/PeriodPicker.vue';
 import FeastsPicker from '@/components/liturgical/FeastsPicker.vue';
-import moment from 'moment';
-import 'moment/dist/locale/be';
+import moment from '@/utils/moment-be';
 
-moment.locale('be');
 
 const router = useRouter();
 const calendarStore = useCalendarStore();
 
 const selectedYear = ref(new Date().getFullYear());
 const activeTab = ref('period');
+const isYearEditing = ref(false);
 
 // Вычисляем текущий литургический год
 const currentLiturgicalYear = computed(() => {

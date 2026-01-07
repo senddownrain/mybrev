@@ -17,29 +17,6 @@
       :disabled="loading"
     ></v-text-field>
 
-    <!-- Фильтры -->
-    <div class="mb-6">
-      <v-chip-group
-        v-model="feastTypeFilter"
-        mandatory
-        column
-        class="feast-filter-chip-group"
-      >
-        <v-chip value="all" filter variant="outlined" size="large" class="ma-2 feast-filter-chip">Усе</v-chip>
-        <v-chip value="dynamic" filter variant="outlined" size="large" class="ma-2 feast-filter-chip">Рухомыя</v-chip>
-        <v-chip value="fixed" filter variant="outlined" size="large" class="ma-2 feast-filter-chip">Нерухомыя</v-chip>
-      </v-chip-group>
-    </div>
-
-    <!-- Фильтр по рангу (опционально) -->
-    <v-select
-      v-model="rankFilter"
-      :items="rankOptions"
-      label="Ранг"
-      variant="outlined"
-      hide-details
-      class="mb-6 rank-select"
-    ></v-select>
 
     <!-- Список святых -->
     <div v-if="loading" class="text-center pa-8">
@@ -104,8 +81,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { useCalendarStore } from '@/stores/calendar';
 import { logger } from '@/utils/logger';
-import moment from 'moment';
-import 'moment/dist/locale/be';
+import moment from '@/utils/moment-be';
 
 const props = defineProps({
   year: {
@@ -120,17 +96,8 @@ const { getAllFeasts, feastNameMap } = useLiturgicalDay();
 const calendarStore = useCalendarStore();
 
 const searchQuery = ref('');
-const feastTypeFilter = ref('all');
-const rankFilter = ref('all');
 const allFeasts = ref([]);
 const loading = ref(false);
-
-const rankOptions = [
-  { value: 'all', title: 'Усе рангі' },
-  { value: 'solemnity', title: 'Урачыстасць' },
-  { value: 'feast', title: 'Свята' },
-  { value: 'memorial', title: 'Успамін' },
-];
 
 // Загружаем все праздники при монтировании
 onMounted(async () => {
@@ -156,18 +123,6 @@ const filteredFeasts = computed(() => {
   if (!allFeasts.value || !Array.isArray(allFeasts.value)) return [];
   let filtered = [...allFeasts.value];
 
-  // Фильтр по типу
-  if (feastTypeFilter.value === 'dynamic') {
-    filtered = filtered.filter(f => f.isDynamic);
-  } else if (feastTypeFilter.value === 'fixed') {
-    filtered = filtered.filter(f => f.isFixed);
-  }
-
-  // Фильтр по рангу
-  if (rankFilter.value !== 'all') {
-    filtered = filtered.filter(f => f._feastType === rankFilter.value);
-  }
-
   // Поиск (работает даже во время загрузки)
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase().trim();
@@ -177,9 +132,9 @@ const filteredFeasts = computed(() => {
       const name = nameHtml.replace(/<[^>]*>/g, '').toLowerCase();
       const dayName = (feast._dayName || '').toLowerCase();
       const date = feast._date || '';
-      
-      return name.includes(query) || 
-             dayName.includes(query) || 
+
+      return name.includes(query) ||
+             dayName.includes(query) ||
              date.includes(query);
     });
   }
@@ -188,11 +143,11 @@ const filteredFeasts = computed(() => {
   filtered.sort((a, b) => {
     const dateA = getFeastDate(a);
     const dateB = getFeastDate(b);
-    
+
     if (dateA && dateB) {
       return moment(dateA, 'DD.MM.YYYY').valueOf() - moment(dateB, 'DD.MM.YYYY').valueOf();
     }
-    
+
     const nameA = (a._feastName || '').toLowerCase();
     const nameB = (b._feastName || '').toLowerCase();
     return nameA.localeCompare(nameB);
@@ -273,45 +228,6 @@ function selectFeast(feast) {
   overflow: visible !important;
   max-width: 100% !important;
   line-height: 1.4 !important;
-}
-
-/* Увеличение размера текста в чипах фильтров */
-.feast-filter-chip {
-  font-size: 1.1rem !important;
-  font-weight: 500 !important;
-  min-height: 48px !important;
-  padding: 12px 20px !important;
-  letter-spacing: 0.02em;
-}
-
-.feast-filter-chip-group {
-  gap: 8px;
-}
-
-/* Увеличение размера текста в селекте ранга */
-.rank-select :deep(.v-field__input),
-.rank-select :deep(.v-select__selection) {
-  font-size: 1.1rem !important;
-  min-height: 48px !important;
-}
-
-.rank-select :deep(.v-field__label) {
-  font-size: 1rem !important;
-}
-
-/* Увеличение размера чипов на мобильных */
-@media (max-width: 600px) {
-  .feast-filter-chip {
-    font-size: 1.05rem !important;
-    min-height: 44px !important;
-    padding: 10px 16px !important;
-  }
-  
-  .rank-select :deep(.v-field__input),
-  .rank-select :deep(.v-select__selection) {
-    font-size: 1.05rem !important;
-    min-height: 44px !important;
-  }
 }
 </style>
 

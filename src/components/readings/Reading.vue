@@ -11,9 +11,7 @@
         />
 
        <div>
-        <v-card class="mb-2 ora" flat>
-           <v-card-title class="ora-title">
-            </v-card-title>
+        <v-card class="ora" flat>
             <v-card-text class="ora-text">
                 <div v-html="readingData.text"></div>
             </v-card-text>
@@ -40,15 +38,13 @@
 <script setup>
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import moment from 'moment';
-import 'moment/dist/locale/be';
+import moment from '@/utils/moment-be';
 
 import { useFirestore, useDocument } from 'vuefire';
 import { doc } from 'firebase/firestore';
 
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 
-moment.locale('be');
 
 const route = useRoute();
 const db = useFirestore();
@@ -70,6 +66,16 @@ const nowDate = computed(() => {
 </script>
 
 <style scoped>
-/* Нічога асаблівага тут не трэба,
-   асноўныя шрыфты/стылі ідуць з DayTitle / Intro / oraparts/Reading */
+.ora-text {
+  text-align: left !important;
+}
+
+.ora-text :deep(*) {
+  text-align: left !important;
+}
+
+.ora-text :deep([style*="text-align: justify"]),
+.ora-text :deep([style*="text-align:justify"]) {
+  text-align: left !important;
+}
 </style>

@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useReadingsStore } from '@/stores/readings';
-import moment from 'moment';
+import moment from '@/utils/moment-be';
 
 /**
  * Composable для работы с чтениями (readings)

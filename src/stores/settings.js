@@ -18,7 +18,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') === 'true');
 
   watch(currentTheme, (newTheme) => {
-    theme.global.name.value = newTheme;
+    theme.change(newTheme);
     localStorage.setItem('theme', newTheme);
   }, { immediate: true });
 

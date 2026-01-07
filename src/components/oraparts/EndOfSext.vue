@@ -1,9 +1,7 @@
 <template>
     <div>
 
-        <v-card class="mb-2 ora" flat>
-            <v-card-title class="ora-title">
-            </v-card-title>
+        <v-card class="ora" flat>
             <v-card-text class="ora-text">
                 <span style="color:red">К.</span> <span>
                         Благаславім Пана.
@@ -26,8 +24,7 @@
 
 
 // import { ref } from 'vue'
-// import moment from 'moment';
-// import 'moment/dist/locale/be';
+// import moment from '@/utils/moment-be';
 
 // import { useRoute } from 'vue-router'
 // import { useCollection, useFirestore, useDocument } from 'vuefire'

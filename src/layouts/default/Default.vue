@@ -33,9 +33,9 @@
         @click.stop="isDrawerOpen = !isDrawerOpen"
       ></v-app-bar-nav-icon>
 
-      <v-app-bar-title 
-        v-if="(!isPrayersPage || (!isSearchExpanded && !isFilterExpanded)) && !(isPrayerViewPage && prayerIsEditing) && !isPrayerEditPage" 
-        @click="goHome()" 
+      <v-app-bar-title
+        v-if="!isPrayerEditPage && !(isPrayerViewPage && prayerIsEditing)"
+        @click="goHome()"
         class="app-title-clickable"
       >
         Малітоўнік
@@ -46,48 +46,11 @@
         Рэдагаванне малітвы
       </v-app-bar-title>
 
-      <!-- Поиск в Appbar для страницы Prayers -->
-      <v-expand-x-transition>
-        <v-text-field
-          v-if="isPrayersPage && isSearchExpanded && !isPrayerEditPage"
-          v-model="searchQuery"
-          label="Пошук малітваў"
-          prepend-inner-icon="mdi-magnify"
-          variant="solo-inverted"
-          flat
-          hide-details
-          density="compact"
-          class="mr-2"
-          autofocus
-          clearable
-          @click:clear="searchQuery = ''"
-          @blur="handleSearchBlur"
-        ></v-text-field>
-      </v-expand-x-transition>
+      <!-- Поиск теперь в виде bottom sheet -->
+      <!-- Фильтр теперь в виде bottom sheet -->
 
-      <!-- Фильтр в Appbar для страницы Prayers -->
-      <v-expand-x-transition>
-        <v-combobox
-          v-if="isPrayersPage && isFilterExpanded && !isPrayerEditPage"
-          v-model="selectedTags"
-          :items="allTags"
-          label="Фільтр па тэгах"
-          multiple
-          chips
-          clearable
-          variant="solo-inverted"
-          flat
-          hide-details
-          density="compact"
-          class="mr-2"
-          @blur="handleFilterBlur"
-        ></v-combobox>
-      </v-expand-x-transition>
-
-      <v-spacer></v-spacer>
-
-      <!-- Кнопки поиска и фильтра для страницы Prayers (только не в режиме редактирования молитвы) -->
-      <template v-if="isPrayersPage && !isSearchExpanded && !isFilterExpanded && !(isPrayerViewPage && prayerIsEditing) && !isPrayerEditPage">
+      <!-- Кнопки поиска и фильтра для страницы списка молитв (только не в режиме редактирования молитвы) -->
+      <template v-if="isPrayersListPage && !isSearchExpanded && !isFilterExpanded && !(isPrayerViewPage && prayerIsEditing) && !isPrayerEditPage">
         <v-btn
           icon
           :color="searchQuery ? 'primary' : 'default'"
@@ -97,7 +60,7 @@
         >
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
-        
+
         <v-btn
           icon
           :color="selectedTags.length > 0 ? 'primary' : 'default'"
@@ -109,9 +72,9 @@
         </v-btn>
       </template>
 
-      <!-- Кнопка закрытия для поиска/фильтра -->
+      <!-- Кнопки закрытия для поиска и фильтра -->
       <v-btn
-        v-if="isPrayersPage && (isSearchExpanded || isFilterExpanded) && !(isPrayerViewPage && prayerIsEditing) && !isPrayerEditPage"
+        v-if="isPrayersListPage && (isSearchExpanded || isFilterExpanded) && !(isPrayerViewPage && prayerIsEditing) && !isPrayerEditPage"
         icon
         variant="text"
         @click="closeSearchAndFilter"
@@ -180,7 +143,64 @@
     <router-view name="bottomNav" />
     
     <TextSettingsSheet />
-    
+
+    <!-- Bottom sheet для фильтра -->
+    <v-bottom-sheet v-model="isFilterExpanded" :scrim="false">
+      <v-card rounded="t-lg">
+        <v-card-title class="d-flex align-center justify-space-between pa-4">
+          <span class="text-h6">Фільтр па тэгах</span>
+          <v-btn icon="mdi-close" variant="text" size="small" @click="closeFilter"></v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="pa-4">
+          <v-combobox
+            v-model="selectedTags"
+            :items="allTags"
+            label="Выберыце тэгі"
+            multiple
+            chips
+            clearable
+            variant="outlined"
+            hide-details
+            class="mb-4"
+          ></v-combobox>
+          <div class="d-flex justify-end ga-2">
+            <v-btn variant="text" @click="clearFilter">Ачысціць</v-btn>
+            <v-btn color="primary" variant="flat" @click="applyFilter">Ужыць</v-btn>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-bottom-sheet>
+
+    <!-- Bottom sheet для поиска -->
+    <v-bottom-sheet v-model="isSearchExpanded" :scrim="false">
+      <v-card rounded="t-lg">
+        <v-card-title class="d-flex align-center justify-space-between pa-4">
+          <span class="text-h6">Пошук малітваў</span>
+          <v-btn icon="mdi-close" variant="text" size="small" @click="closeSearch"></v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="pa-4">
+          <v-text-field
+            v-model="searchQuery"
+            label="Увядзіце тэкст для пошуку"
+            prepend-inner-icon="mdi-magnify"
+            variant="outlined"
+            hide-details
+            density="comfortable"
+            autofocus
+            clearable
+            @click:clear="searchQuery = ''"
+            @keydown.enter="closeSearch"
+          ></v-text-field>
+          <div class="d-flex justify-end ga-2 mt-4">
+            <v-btn variant="text" @click="clearSearch">Ачысціць</v-btn>
+            <v-btn color="primary" variant="flat" @click="closeSearch">Шукаць</v-btn>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-bottom-sheet>
+
     <NotificationSnackbar />
   </v-app>
 </template>
@@ -209,6 +229,10 @@ const { allTags } = usePrayers();
 
 const isPrayersPage = computed(() => {
   return route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView' || route.name === 'PrayerEdit';
+});
+
+const isPrayersListPage = computed(() => {
+  return route.name === 'Prayers' || route.name === 'PrayersList';
 });
 
 const isPrayerViewPage = computed(() => {
@@ -287,14 +311,31 @@ const handleSearchBlur = () => {
   }
 };
 
-const handleFilterBlur = () => {
-  if (selectedTags.value.length === 0) {
-    isFilterExpanded.value = false;
-  }
-};
 
 const goHome = function(){
-  router.push('/')
+  //router.push('/')
+}
+
+const closeFilter = () => {
+  isFilterExpanded.value = false;
+}
+
+const clearFilter = () => {
+  selectedTags.value = [];
+  isFilterExpanded.value = false;
+}
+
+const applyFilter = () => {
+  isFilterExpanded.value = false;
+}
+
+const closeSearch = () => {
+  isSearchExpanded.value = false;
+}
+
+const clearSearch = () => {
+  searchQuery.value = '';
+  isSearchExpanded.value = false;
 }
 </script>
 

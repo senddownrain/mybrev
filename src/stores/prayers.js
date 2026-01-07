@@ -91,13 +91,20 @@ export const usePrayersStore = defineStore('prayers', () => {
 
   function getText(prayer) {
     if (!prayer) return '';
+    let text = '';
     if (prayer.text) {
-      return prayer.text;
+      text = prayer.text;
+    } else if (prayer.textVersions) {
+      text = prayer.textVersions.be || prayer.textVersions.ru || Object.values(prayer.textVersions)[0] || '';
     }
-    if (prayer.textVersions) {
-      return prayer.textVersions.be || prayer.textVersions.ru || Object.values(prayer.textVersions)[0] || '';
+
+    // Убираем inline стили цвета rgb(64, 64, 64)
+    if (text) {
+      text = text.replace(/style="color:\s*rgb\(64,\s*64,\s*64\)"/gi, '');
+      text = text.replace(/style="color:\s*rgb\(64,64,64\)"/gi, '');
     }
-    return '';
+
+    return text;
   }
 
   function cleanup() {

@@ -5,13 +5,13 @@
       <v-col cols="12" md="6" lg="5">
         <div class="sticky-panel">
           <h1 class="text-h5 font-weight-light mb-4">Выберыце дату</h1>
-          <v-date-picker 
-            v-model="selectedDate" 
-            @update:model-value="runTest" 
-            color="primary" 
-            show-adjacent-months 
-            hide-header
-          ></v-date-picker>
+          <CustomDatePicker
+            v-model="selectedDate"
+            @update:model-value="runTest"
+            color="primary"
+            :show-adjacent-months="true"
+            :hide-header="true"
+          ></CustomDatePicker>
 <!-- КАРТОЧКА АУДИТА -->
           <v-card variant="tonal" class="mt-6">
             <v-card-text>
@@ -135,14 +135,13 @@
 </template>
 
 <script setup>
-// ✅ Весь <script setup> остается без изменений с прошлого раза.
-// Он корректно запускает тесты и передает данные.
 import { ref, computed, reactive } from 'vue';
-import moment from 'moment';
+import moment from '@/utils/moment-be';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import ResultCard from '@/components/admin/ResultCard.vue';
 import { useNotifier } from '@/composables/useNotifier';
 import { logger } from '@/utils/logger';
+import CustomDatePicker from '@/components/common/CustomDatePicker.vue';
 
 const { runLiturgicalDiagnostics, getLiturgicalOptionsForDate, auditYear } = useLiturgicalDay();
 const selectedDate = ref(new Date());

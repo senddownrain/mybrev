@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import moment from 'moment';
+import moment from '@/utils/moment-be';
 
 const props = defineProps({
   items: Array,

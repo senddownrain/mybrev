@@ -1,8 +1,6 @@
 <template>
     <div>
-        <v-card class="mb-2 ora" flat>
-           <v-card-title class="ora-title">
-            </v-card-title>
+        <v-card class="ora" flat>
             <v-card-text class="ora-text">
                 <div v-html="text"></div>
             </v-card-text>
@@ -16,8 +14,7 @@ const props = defineProps({
   text: String,
 })
 // import { ref } from 'vue'
-// import moment from 'moment';
-// import 'moment/dist/locale/be';
+// import moment from '@/utils/moment-be';
 
 // import { useRoute } from 'vue-router'
 // import { useCollection, useFirestore, useDocument } from 'vuefire'
@@ -35,3 +32,18 @@ const props = defineProps({
 // const nowDate = moment(Date.now()).format('LL') 
 
 </script>
+
+<style scoped>
+.ora-text {
+  text-align: left !important;
+}
+
+.ora-text :deep(*) {
+  text-align: left !important;
+}
+
+.ora-text :deep([style*="text-align: justify"]),
+.ora-text :deep([style*="text-align:justify"]) {
+  text-align: left !important;
+}
+</style>

@@ -50,12 +50,12 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pa-0">
-          <v-date-picker 
-            v-model="selectedDate" 
+          <CustomDatePicker
+            v-model="selectedDate"
             color="primary"
-            hide-header
+            :hide-header="true"
             :first-day-of-week="1"
-          ></v-date-picker>
+          ></CustomDatePicker>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions class="pa-3">
@@ -69,11 +69,11 @@
 </template>
 
 <script setup>
-import moment from 'moment'
-import 'moment/dist/locale/be'
+import moment from '@/utils/moment-be'
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAppBar } from '@/composables/useAppBar'
+import CustomDatePicker from '@/components/common/CustomDatePicker.vue'
 
 const route = useRoute()
 const router = useRouter()

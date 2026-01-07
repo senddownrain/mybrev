@@ -293,6 +293,7 @@ watch([isLoading, prayer], ([loading, foundPrayer]) => {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  text-align: left !important;
 }
 
 .prayer-text :deep(p) {
@@ -300,6 +301,16 @@ watch([isLoading, prayer], ([loading, foundPrayer]) => {
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
+  text-align: left !important;
+}
+
+.prayer-text :deep(*) {
+  text-align: left !important;
+}
+
+.prayer-text :deep([style*="text-align: justify"]),
+.prayer-text :deep([style*="text-align:justify"]) {
+  text-align: left !important;
 }
 
 .prayer-text :deep(p:last-child) {

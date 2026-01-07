@@ -4,12 +4,12 @@
 
     <v-card variant="outlined" class="mb-4">
       <v-card-text class="pa-0">
-        <v-date-picker 
-          v-model="selectedDate" 
+        <CustomDatePicker
+          v-model="selectedDate"
           color="primary"
           :first-day-of-week="1"
           @update:model-value="onDateSelected"
-        ></v-date-picker>
+        ></CustomDatePicker>
       </v-card-text>
     </v-card>
 
@@ -32,10 +32,9 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import moment from 'moment';
-import 'moment/dist/locale/be';
+import moment from '@/utils/moment-be';
+import CustomDatePicker from '@/components/common/CustomDatePicker.vue';
 
-moment.locale('be');
 
 const router = useRouter();
 const selectedDate = ref(new Date());

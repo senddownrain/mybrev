@@ -1,14 +1,12 @@
 import { defineStore } from 'pinia';
 import { ref, computed  } from 'vue';
 import { collection, query, where, getDocs, getFirestore } from 'firebase/firestore';
-import moment from 'moment';
-import 'moment/dist/locale/be';
+import moment from '@/utils/moment-be';
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
 
 export const useCalendarStore = defineStore('calendar', () => {
     const db = getFirestore();
-    moment.locale('be');
 
     const yearOptionsCache = ref({});
     const dynamicDatesCache = ref({});

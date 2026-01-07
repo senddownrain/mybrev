@@ -126,8 +126,7 @@ import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { useAuthStore } from '@/stores/auth';
 import { useCalendarStore } from '@/stores/calendar';
 import { logger } from '@/utils/logger';
-import moment from 'moment';
-import 'moment/dist/locale/be';
+import moment from '@/utils/moment-be';
 
 const props = defineProps({
   year: {

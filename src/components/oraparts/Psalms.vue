@@ -38,8 +38,7 @@ const props = defineProps({
     ps3: String,
 })
 // import { ref } from 'vue'
-// import moment from 'moment';
-// import 'moment/dist/locale/be';
+// import moment from '@/utils/moment-be';
 
 // import { useRoute } from 'vue-router'
 // import { useCollection, useFirestore, useDocument } from 'vuefire'
@@ -57,3 +56,22 @@ const props = defineProps({
 // const nowDate = moment(Date.now()).format('LL') 
 
 </script>
+
+<style scoped>
+.ora-ant,
+.ora-psalm {
+  text-align: left !important;
+}
+
+.ora-ant :deep(*),
+.ora-psalm :deep(*) {
+  text-align: left !important;
+}
+
+.ora-ant :deep([style*="text-align: justify"]),
+.ora-ant :deep([style*="text-align:justify"]),
+.ora-psalm :deep([style*="text-align: justify"]),
+.ora-psalm :deep([style*="text-align:justify"]) {
+  text-align: left !important;
+}
+</style>

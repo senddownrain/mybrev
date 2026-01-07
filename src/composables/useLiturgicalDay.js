@@ -1,8 +1,7 @@
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 import { useCalendarStore } from '@/stores/calendar';
-import moment from 'moment';
-import 'moment/dist/locale/be';
+import moment from '@/utils/moment-be';
 import { db } from '@/plugins/firebase';
 import { retryFirestore } from '@/utils/retry';
 import { logger } from '@/utils/logger';
@@ -11,7 +10,6 @@ import { getLiturgicalOptionsFromCache, saveLiturgicalOptionsToCache } from '@/u
 export function useLiturgicalDay() {
     const calendarStore = useCalendarStore();
     const daysCollection = collection(db, 'days');
-    moment.locale('be');
     
     const feastsCache = {};
 

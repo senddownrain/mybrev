@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-card class="mb-2 ora" flat>
+        <v-card class="ora" flat>
             <v-card-title class="ora-title">
                 ПЕСНЯ З ЕВАНГЕЛЛЯ
             </v-card-title>
@@ -74,8 +74,7 @@ const mag = `
 і на векі вечныя. Амэн.
 </p>`
 // import { ref } from 'vue'
-// import moment from 'moment';
-// import 'moment/dist/locale/be';
+// import moment from '@/utils/moment-be';
 
 // import { useRoute } from 'vue-router'
 // import { useCollection, useFirestore, useDocument } from 'vuefire'

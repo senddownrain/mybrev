@@ -5,7 +5,7 @@
     
     <div class="text-center flex-grow-1 mx-2" @click="toggleCalendarDialog" style="cursor: pointer;">
       <h2 class="text-h6 font-weight-regular text-wrap">
-        {{ currentDate.format('D MMMM YYYY') }}
+        {{ currentDate.format('D MMM YYYY') }}
       </h2>
     </div>
     
@@ -60,15 +60,13 @@
   <script setup>
 import { ref, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import moment from 'moment';
-import 'moment/locale/be';
+import moment from '@/utils/moment-be';
 
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent'; // новый composable
 import { useAppBar } from '@/composables/useAppBar';
 import { logger } from '@/utils/logger';
 import { useNotifier } from '@/composables/useNotifier';
 
-moment.locale('be');
 
 const route = useRoute();
 const router = useRouter();

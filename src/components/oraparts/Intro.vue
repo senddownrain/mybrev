@@ -34,8 +34,7 @@ const props = defineProps({
 
 
 // import { ref } from 'vue'
-// import moment from 'moment';
-// import 'moment/dist/locale/be';
+// import moment from '@/utils/moment-be';
 
 // import { useRoute } from 'vue-router'
 // import { useCollection, useFirestore, useDocument } from 'vuefire'
@@ -56,5 +55,20 @@ const props = defineProps({
 <style>
 .ora-header{
     font-weight: 700;
+    font-size: calc(1.1rem * var(--font-size-multiplier, 1)) !important;
+    font-family: var(--app-font-family, sans-serif) !important;
+}
+
+.ora-text {
+  text-align: left !important;
+}
+
+.ora-text * {
+  text-align: left !important;
+}
+
+.ora-text [style*="text-align: justify"],
+.ora-text [style*="text-align:justify"] {
+  text-align: left !important;
 }
 </style>

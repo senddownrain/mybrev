@@ -19,8 +19,6 @@
                 </v-card>
 
                 <v-card class="ora" flat>
-                    <v-card-title class="ora-title">
-                    </v-card-title>
                     <v-card-text class="ora-text">
                         <div class="ora-ant" v-html="day.invitatoriumAnt"></div>
                         <br>
@@ -60,8 +58,7 @@
 <script setup>
 
 import { ref } from 'vue'
-import moment from 'moment';
-import 'moment/dist/locale/be';
+import moment from '@/utils/moment-be';
 
 import { useRoute } from 'vue-router'
 import { useCollection, useFirestore, useDocument } from 'vuefire'
