@@ -10,8 +10,6 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
-import { warmupLiturgicalCache } from '@/utils/liturgicalCache';
 import { logger } from '@/utils/logger';
 import { isTelegramWebApp as checkTelegramWebApp, initTelegramWebApp } from '@/utils/telegram';
 import LoadingScreen from '@/components/LoadingScreen.vue';
@@ -30,19 +28,7 @@ onMounted(async () => {
   const startTime = Date.now();
   
   try {
-    // Для Telegram: прогреваем только на 7 дней и в фоне
-    // Для обычного браузера: прогреваем на 30 дней, но не блокируем загрузку
-    const { computeLiturgicalOptionsForDate } = useLiturgicalDay();
-    const daysToWarmup = isTelegramWebApp.value ? 7 : 30;
-    
-    // Прогрев кэша в фоне - не блокируем загрузку приложения
-    setTimeout(() => {
-      warmupLiturgicalCache(computeLiturgicalOptionsForDate, daysToWarmup).then(() => {
-        logger.log(`[App] Прагрэў кэшу літургічных дзён завершаны (фонавы, ${daysToWarmup} дзён)`);
-      }).catch(err => {
-        logger.error('[App] Памылка пры прагрэве кэшу (фонавы):', err);
-      });
-    }, 50); // Небольшая задержка, чтобы не мешать основной загрузке
+    // Warmup cache будет инициализирован в main.js
   } catch (error) {
     logger.error('[App] Памылка пры ініцыялізацыі:', error);
   } finally {

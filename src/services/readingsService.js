@@ -15,7 +15,6 @@ import {
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
 import { validateReading, normalizeReading } from '@/utils/readingsValidator';
-import { getCachedReadings, cacheReadings } from '@/utils/readingsCache';
 import moment from 'moment';
 
 const READINGS_COLLECTION = 'new'; // Новая коллекция с мигрированными данными (используется)
@@ -193,14 +192,7 @@ export async function getReadingsForDate(date, options = {}) {
   const mDate = moment(date).startOf('day');
   const dateStr = mDate.format('YYYY-MM-DD'); // Для кэша и readingsData
   
-  // Проверяем кэш
-  if (useCache) {
-    const cached = getCachedReadings(date, options);
-    if (cached !== null) {
-      logger.log('[readingsService] Выкарыстаны кэш для даты:', dateStr);
-      return cached;
-    }
-  }
+  // Firebase persistent cache автоматически кэширует все запросы
   
   const queries = [];
   
@@ -337,10 +329,7 @@ export async function getReadingsForDate(date, options = {}) {
       return 0;
     });
     
-    // Сохраняем в кэш
-    if (useCache) {
-      cacheReadings(date, options, uniqueResults);
-    }
+    // Firebase persistent cache автоматически сохраняет результаты
     
     logger.log('[readingsService] Фінальны вынік для даты', dateStr, ':', uniqueResults.length, 'чытанняў');
     if (uniqueResults.length > 0) {

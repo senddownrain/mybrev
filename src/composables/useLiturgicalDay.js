@@ -5,7 +5,6 @@ import moment from '@/utils/moment-be';
 import { db } from '@/plugins/firebase';
 import { retryFirestore } from '@/utils/retry';
 import { logger } from '@/utils/logger';
-import { getLiturgicalOptionsFromCache, saveLiturgicalOptionsToCache } from '@/utils/liturgicalCache'; 
 
 export function useLiturgicalDay() {
     const calendarStore = useCalendarStore();
@@ -105,6 +104,140 @@ export function useLiturgicalDay() {
         return null;
     };
 
+    /**
+     * Вычисляет литургический контекст для даты без запросов к коллекции days
+     * Использует только yearOptions и вычисления дат
+     * @param {Date|moment.Moment|string} currentDate - Дата
+     * @returns {Promise<Object>} Объект с контекстом {periodType, periodWeek, dayOfWeek, _feast}
+     */
+    async function computeLiturgicalContextForDate(currentDate) {
+        const mDate = moment(currentDate).startOf('day');
+        const year = mDate.year();
+
+        await calendarStore.getYearOptions(year);
+        await calendarStore.getYearOptions(year + 1);
+        await calendarStore.getDynamicDates(year);
+
+        const opts = calendarStore.optionsForYear(year).value;
+        const nextYearOpts = calendarStore.optionsForYear(year + 1).value;
+        if (!opts) {
+            return {
+                periodType: 'ordinary',
+                periodWeek: -1,
+                dayOfWeek: mDate.isoWeekday(),
+                _feast: null
+            };
+        }
+
+        const context = {
+            periodType: 'ordinary',
+            periodWeek: -1,
+            dayOfWeek: mDate.isoWeekday(),
+            _feast: null
+        };
+
+        const fa = getMoment(opts.firstAdventSunday);
+        const christmas = moment(`${year}-12-25`, "YYYY-MM-DD");
+        const easter = getMoment(opts.easterSunday);
+        const ash = getMoment(opts.ashWednesday);
+        const pentecost = getMoment(opts.pentecost);
+
+        // Проверяем динамические праздники
+        const dynamicDates = calendarStore.dynamicDatesForYear(year).value || {};
+        for (const feastKey in feastNameMap) {
+            if (dynamicDates[feastKey] && dynamicDates[feastKey].isSame(mDate, 'day')) {
+                context._feast = feastNameMap[feastKey];
+                break;
+            }
+        }
+
+        // --- Advent ---
+        if (mDate.isSameOrAfter(fa) && mDate.isBefore(christmas)) {
+            const diff = mDate.diff(fa, "days");
+            context.periodType = "advent";
+            context.periodWeek = Math.floor(diff / 7) + 1;
+            context.dayOfWeek = (diff % 7) + 1;
+            return context;
+        }
+
+        // --- Christmas Time ---
+        if (nextYearOpts && mDate.isSameOrAfter(christmas)) {
+            const flNext = getMoment(nextYearOpts.ordintaryStart1);
+            const weeksBefore = parseInt(nextYearOpts.ordintaryWeeks1);
+            const lastChristmas = flNext.clone().subtract(weeksBefore, 'weeks').subtract(2, 'days');
+            if (mDate.isSameOrBefore(lastChristmas)) {
+                const diff = mDate.diff(christmas, "days");
+                context.periodType = "christmas";
+                context.periodWeek = Math.floor(diff / 7) + 1;
+                context.dayOfWeek = (diff % 7) + 1;
+                return context;
+            }
+        }
+
+        // --- Lent & Holy Week ---
+        if (mDate.isSameOrAfter(ash) && mDate.isBefore(easter)) {
+            const firstLentSunday = ash.clone().add(4, "days");
+            const lastLentSunday = easter.clone().subtract(1, "week");
+            const startDiff = mDate.diff(firstLentSunday, "days");
+            const endDiff = mDate.diff(lastLentSunday, "days");
+
+            if (startDiff < 0) {
+                context.periodType = 'lent';
+                context.periodWeek = 0;
+                context.dayOfWeek = 7 + startDiff + 1;
+                return context;
+            }
+            if (endDiff > 0 && endDiff < 8) {
+                context.periodType = 'holyweek';
+                context.periodWeek = 1;
+                context.dayOfWeek = endDiff + 1;
+                return context;
+            }
+            if (endDiff === 0) {
+                context.periodType = 'holyweek';
+                context.periodWeek = 1;
+                context.dayOfWeek = 1;
+                context._feast = 'palmSunday';
+                return context;
+            }
+            context.periodType = 'lent';
+            context.periodWeek = Math.floor(startDiff / 7) + 1;
+            context.dayOfWeek = (startDiff % 7) + 1;
+            return context;
+        }
+
+        // --- Easter Time ---
+        if (mDate.isSameOrAfter(easter) && mDate.isSameOrBefore(pentecost)) {
+            const diff = mDate.diff(easter, "days");
+            context.periodType = "easter";
+            context.periodWeek = Math.floor(diff / 7) + 1;
+            context.dayOfWeek = (diff % 7) + 1;
+            return context;
+        }
+
+        // --- Ordinary Time ---
+        const weeksBeforeOrd = parseInt(opts.ordintaryWeeks1) - 1;
+        const fo = ash.clone().subtract(2, "days").subtract(weeksBeforeOrd, "weeks");
+        if (mDate.isSameOrAfter(fo) && mDate.isBefore(ash)) {
+            const diff = mDate.diff(fo, "days");
+            context.periodType = "ordinary";
+            context.periodWeek = Math.floor(diff / 7) + 1;
+            context.dayOfWeek = (diff % 7) + 1;
+            return context;
+        }
+
+        if (mDate.isAfter(pentecost) && mDate.isBefore(fa)) {
+            const diff = mDate.diff(pentecost, "days");
+            const startWeek = parseInt(opts.ordintaryWeeks2);
+            context.periodType = "ordinary";
+            context.periodWeek = Math.floor(diff / 7) + startWeek;
+            context.dayOfWeek = (diff % 7) + 1;
+            return context;
+        }
+
+        return context;
+    }
+
     async function computeLiturgicalOptionsForDate(currentDate) {
         const mDate = moment(currentDate).startOf('day');
         const year = mDate.year();
@@ -153,21 +286,10 @@ export function useLiturgicalDay() {
 
     async function getLiturgicalOptionsForDate(currentDate) {
         const mDate = moment(currentDate).startOf('day');
-        const dateObj = mDate.toDate();
-        
-        const cachedOptions = await getLiturgicalOptionsFromCache(dateObj);
-        if (cachedOptions) {
-            return cachedOptions;
-        }
         
         logger.log(`[LiturgicalDay] Вылічэнне опцый для ${mDate.format('YYYY-MM-DD')}`);
-        const options = await computeLiturgicalOptionsForDate(currentDate);
-        
-        saveLiturgicalOptionsToCache(dateObj, options).catch(error => {
-            logger.error(`[LiturgicalDay] Не ўдалося захаваць у кэш:`, error);
-        });
-        
-        return options;
+        // Firebase persistent cache автоматически кэширует результаты запросов
+        return await computeLiturgicalOptionsForDate(currentDate);
     }
 
     const getFixedFeastQuery = (mDate) => {
@@ -393,6 +515,7 @@ export function useLiturgicalDay() {
     return { 
         getLiturgicalOptionsForDate, 
         computeLiturgicalOptionsForDate,
+        computeLiturgicalContextForDate,
         runLiturgicalDiagnostics, 
         auditYear,
         findDayByPeriod,

@@ -10,7 +10,7 @@ import moment from '@/utils/moment-be';
  * Использует ту же логику поиска: по периоду, по дате, по ключевому слову (динамические праздники)
  */
 export function useLiturgicalReadings() {
-  const { getLiturgicalOptionsForDate, feastNameMap } = useLiturgicalDay();
+  const { computeLiturgicalContextForDate, feastNameMap } = useLiturgicalDay();
 
   /**
    * Получить чтения для литургического дня (аналогично getLiturgicalOptionsForDate)
@@ -32,9 +32,8 @@ export function useLiturgicalReadings() {
     logger.log(`[LiturgicalReadings] Пошук чытанняў для ${mDate.format('YYYY-MM-DD')}`);
     
     try {
-      // 1. Получаем литургический контекст для даты (используем ту же логику, что и для дней)
-      const liturgicalData = await getLiturgicalOptionsForDate(currentDate);
-      const context = liturgicalData?.context || {};
+      // 1. Вычисляем литургический контекст для даты без запросов к коллекции days
+      const context = await computeLiturgicalContextForDate(currentDate);
       
       // 2. Определяем цикл
       const liturgicalYear = await getLiturgicalYear(currentDate, { useCalendarStore: true });
@@ -45,20 +44,10 @@ export function useLiturgicalReadings() {
         { useCalendarStore: true }
       );
       
-      // 3. Определяем _feast для динамических праздников
-      // Проверяем, есть ли в найденных днях динамический праздник
-      let _feast = null;
+      // 3. Используем _feast из контекста (уже вычислен в computeLiturgicalContextForDate)
+      const _feast = context._feast || null;
       
-      if (liturgicalData?.items && liturgicalData.items.length > 0) {
-        // Ищем первый день с _feast (динамический праздник)
-        const feastDay = liturgicalData.items.find(item => item._feast);
-        if (feastDay && feastDay._feast) {
-          _feast = feastDay._feast; // Используем значение _feast напрямую (например, 'eastersunday', 'pentecost')
-          logger.log(`[LiturgicalReadings] Знойдзены дынамічны свята: ${_feast}`);
-        }
-      }
-      
-      // 4. Ищем чтения с использованием той же логики, что и для дней
+      // 4. Ищем чтения с использованием вычисленного контекста
       logger.log(`[LiturgicalReadings] Контекст литургического дня:`, {
         periodType: context.periodType,
         periodWeek: context.periodWeek,
@@ -70,9 +59,9 @@ export function useLiturgicalReadings() {
       const readingsOptions = {
         cycle,
         periodType: context.periodType,
-        periodWeekNumber: context.periodWeek, // periodWeek из context
+        periodWeekNumber: context.periodWeek,
         dayOfWeek: context.dayOfWeek || mDate.isoWeekday(),
-        _feast: _feast, // Используем _feast вместо feastId
+        _feast: _feast,
         useCache,
         includeReadingsData: true, // Включаем fallback на readingsData, если в 'new' ничего не найдено
       };
