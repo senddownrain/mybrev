@@ -1,11 +1,12 @@
+// src/composables/useLiturgicalContent.js
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import moment from '@/utils/moment-be';
-
 import { db } from '@/plugins/firebase';
 import { retryFirestore } from '@/utils/retry';
 import { logger } from '@/utils/logger';
 import { useCalendarStore } from '@/stores/calendar';
 
+const contentCache = new Map();
 
 const feastNameMap = {
   holyFamily: 'holyfamily',
@@ -22,6 +23,11 @@ const feastNameMap = {
   corpusChristi: 'corpuschristi',
   ascension: 'ascension',
 };
+
+function getCacheKeyForDate(date) {
+  // date может быть Date или moment — нормализуем к YYYY-MM-DD
+  return moment(date).startOf('day').format('YYYY-MM-DD');
+}
 
 export function useLiturgicalContent() {
   const calendarStore = useCalendarStore();
@@ -55,6 +61,7 @@ export function useLiturgicalContent() {
   const getPeriodQueries = (mDate, year) => {
     const opts = calendarStore.optionsForYear(year).value;
     const nextYearOpts = calendarStore.optionsForYear(year + 1).value;
+
     if (!opts) return null;
 
     const fa = getMoment(opts.firstAdventSunday);
@@ -65,6 +72,7 @@ export function useLiturgicalContent() {
       const diff = mDate.diff(fa, 'days');
       const dayOfWeek = (diff % 7) + 1;
       const week = Math.floor(diff / 7) + 1;
+
       return {
         periodType: 'advent',
         periodWeek: week,
@@ -87,6 +95,7 @@ export function useLiturgicalContent() {
         const diff = mDate.diff(christmas, 'days');
         const dayOfWeek = (diff % 7) + 1;
         const week = Math.floor(diff / 7) + 1;
+
         return {
           periodType: 'christmas',
           periodWeek: week,
@@ -111,6 +120,7 @@ export function useLiturgicalContent() {
       if (startDiff < 0) {
         const dayOfWeek = 7 + startDiff + 1;
         const week = 0;
+
         return {
           periodType: 'lent',
           periodWeek: week,
@@ -123,6 +133,7 @@ export function useLiturgicalContent() {
       if (endDiff > 0 && endDiff < 8) {
         const dayOfWeek = endDiff + 1;
         const week = 1;
+
         return {
           periodType: 'holyweek',
           periodWeek: week,
@@ -148,6 +159,7 @@ export function useLiturgicalContent() {
 
       const dayOfWeek = (startDiff % 7) + 1;
       const week = Math.floor(startDiff / 7) + 1;
+
       return {
         periodType: 'lent',
         periodWeek: week,
@@ -164,6 +176,7 @@ export function useLiturgicalContent() {
       const diff = mDate.diff(easter, 'days');
       const dayOfWeek = (diff % 7) + 1;
       const week = Math.floor(diff / 7) + 1;
+
       return {
         periodType: 'easter',
         periodWeek: week,
@@ -175,6 +188,7 @@ export function useLiturgicalContent() {
 
     // --- Ordinary Time ---
     const weeksBeforeOrd = parseInt(opts.ordintaryWeeks1) - 1;
+
     const fo = ash.clone()
       .subtract(2, 'days')
       .subtract(weeksBeforeOrd, 'weeks');
@@ -183,6 +197,7 @@ export function useLiturgicalContent() {
       const diff = mDate.diff(fo, 'days');
       const dayOfWeek = (diff % 7) + 1;
       const week = Math.floor(diff / 7) + 1;
+
       return {
         periodType: 'ordinary',
         periodWeek: week,
@@ -197,6 +212,7 @@ export function useLiturgicalContent() {
       const startWeek = parseInt(opts.ordintaryWeeks2);
       const dayOfWeek = (diff % 7) + 1;
       const week = Math.floor(diff / 7) + startWeek;
+
       return {
         periodType: 'ordinary',
         periodWeek: week,
@@ -258,7 +274,20 @@ export function useLiturgicalContent() {
     return queries;
   };
 
+  function getCachedLiturgicalContentForDate(currentDate) {
+    const cacheKey = getCacheKeyForDate(currentDate);
+    return contentCache.get(cacheKey) || null;
+  }
+
   async function getLiturgicalContentForDate(currentDate) {
+    const cacheKey = getCacheKeyForDate(currentDate);
+
+    // 1. Сначала пробуем кэш (на случай, если кто-то уже считал до нас)
+    if (contentCache.has(cacheKey)) {
+      logger.log(`[LiturgicalContent] Кэш хаты для ${cacheKey}`);
+      return contentCache.get(cacheKey);
+    }
+
     const mDate = moment(currentDate).startOf('day');
     const year = mDate.year();
 
@@ -266,6 +295,7 @@ export function useLiturgicalContent() {
       `[LiturgicalContent] Вылічэнне для ${mDate.format('YYYY-MM-DD')}`,
     );
 
+    // Гарантируем, что yearOptions и dynamicDates прогреты
     await calendarStore.getYearOptions(year);
     await calendarStore.getYearOptions(year + 1);
     await calendarStore.getDynamicDates(year);
@@ -318,15 +348,21 @@ export function useLiturgicalContent() {
       });
     });
 
-    return {
+    const result = {
       context,
       itemsDays: Array.from(daysResults.values()),
       itemsReadings: Array.from(readingsResults.values()),
     };
+
+    // 2. Кладём в кэш, чтобы следующие вызовы по этой дате были мгновенными
+    contentCache.set(cacheKey, result);
+
+    return result;
   }
 
   return {
     getLiturgicalContentForDate,
+    getCachedLiturgicalContentForDate,
     feastNameMap,
   };
 }

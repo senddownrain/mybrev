@@ -22,11 +22,10 @@ export function useLiturgicalReadings() {
    * @param {Date|moment.Moment|string} currentDate - Дата
    * @param {Object} options - Дополнительные опции
    * @param {boolean} options.useCache - Использовать кэш (по умолчанию true)
-   * @param {boolean} options.includeReadingsData - Искать также в readingsData (по умолчанию true)
    * @returns {Promise<{items: Array, context: Object}>} Объект с найденными чтениями и контекстом
    */
   async function getLiturgicalReadingsForDate(currentDate, options = {}) {
-    const { useCache = true, includeReadingsData = true } = options;
+    const { useCache = true, } = options;
     const mDate = moment(currentDate).startOf('day');
     
     logger.log(`[LiturgicalReadings] Пошук чытанняў для ${mDate.format('YYYY-MM-DD')}`);
@@ -63,8 +62,7 @@ export function useLiturgicalReadings() {
         dayOfWeek: context.dayOfWeek || mDate.isoWeekday(),
         _feast: _feast,
         useCache,
-        includeReadingsData: true, // Включаем fallback на readingsData, если в 'new' ничего не найдено
-      };
+    };
       
       logger.log(`[LiturgicalReadings] Параметры поиска чтений:`, readingsOptions);
       

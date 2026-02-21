@@ -34,17 +34,22 @@ export const useReadingsStore = defineStore('readings', () => {
         // 3. Затем чтениям по празднику (_feast)
         // 4. Затем чтениям по периоду
         const prioritized = results.sort((a, b) => {
-          // Сначала по источнику ('new' > readingsData)
-          if ((a._source === 'new' || a._source === 'newReadings' || a._source === 'readings') && b._source === 'readingsData') return -1;
-          if (a._source === 'readingsData' && (b._source === 'new' || b._source === 'newReadings' || b._source === 'readings')) return 1;
-          // Затем по точной дате
-          if ((a._date || a.day) && !(b._date || b.day)) return -1;
-          if (!(a._date || a.day) && (b._date || b.day)) return 1;
-          // Затем по празднику (_feast)
-          if (a._feast && !b._feast) return -1;
-          if (!a._feast && b._feast) return 1;
-          return 0;
-        });
+  const aPrimary = (a._source === 'readings' || a._source === 'new' || a._source === 'newReadings');
+  const bPrimary = (b._source === 'readings' || b._source === 'new' || b._source === 'newReadings');
+
+  if (aPrimary && !bPrimary) return -1;
+  if (!aPrimary && bPrimary) return 1;
+
+  // затем по точной дате
+  if ((a._date || a.day) && !(b._date || b.day)) return -1;
+  if (!(a._date || a.day) && (b._date || b.day)) return 1;
+
+  // затем по празднику
+  if (a._feast && !b._feast) return -1;
+  if (!a._feast && b._feast) return 1;
+
+  return 0;
+});
         currentReading.value = prioritized[0];
         logger.log('[readingsStore] Знойдзена некалькі чытанняў для даты:', date, results.length, 'Выбрана:', prioritized[0].id, 'з крыніцы:', prioritized[0]._source);
       } else {

@@ -186,7 +186,6 @@ export async function warmupReadings(startDate, endDate, prioritizeNear = true) 
               dayOfWeek: context.dayOfWeek,
               _feast: context._feast,
               useCache: true,
-              includeReadingsData: true,
             });
             
             // Отмечаем как загруженную

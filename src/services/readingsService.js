@@ -16,10 +16,7 @@ import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
 import { validateReading, normalizeReading } from '@/utils/readingsValidator';
 import moment from 'moment';
-
-const READINGS_COLLECTION = 'new'; // Новая коллекция с мигрированными данными (используется)
-const READINGS_DATA_COLLECTION = 'readingsData'; // Старая коллекция с существующими данными (fallback, используется)
-const OLD_READINGS_COLLECTION = 'readings'; // Старая коллекция readings (НЕ используется, оставлена для обратной совместимости в проверках _source)
+const READINGS_COLLECTION = 'readings'; // Старая коллекция readings (НЕ используется, оставлена для обратной совместимости в проверках _source)
 
 /**
  * Получить коллекцию readings
@@ -28,12 +25,6 @@ export function getReadingsCollection() {
   return collection(db, READINGS_COLLECTION);
 }
 
-/**
- * Получить коллекцию readingsData (старая коллекция)
- */
-export function getReadingsDataCollection() {
-  return collection(db, READINGS_DATA_COLLECTION);
-}
 
 /**
  * Поиск чтений по периоду и дню недели
@@ -87,87 +78,6 @@ export function getReadingsByFeastQuery(_feast, cycle) {
   return query(getReadingsCollection(), ...conditions);
 }
 
-/**
- * Получить все чтения из коллекции readingsData
- * @returns {Promise<Array>} Массив всех чтений из readingsData
- */
-export async function getAllReadingsData() {
-  try {
-    const snapshot = await retryFirestore(() => getDocs(getReadingsDataCollection()));
-    const results = [];
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      results.push({
-        id: doc.id,
-        text: data.text || data.content || '', // Поддержка разных полей
-        _source: 'readingsData', // Метка источника
-        ...data
-      });
-    });
-    return results;
-  } catch (error) {
-    logger.error('[readingsService] Памылка атрымання readingsData:', error);
-    return [];
-  }
-}
-
-/**
- * Поиск в readingsData по дате (поле day в формате DD.MM.YYYY)
- * @param {string} dateStr - Дата в формате YYYY-MM-DD
- * @returns {Promise<Array>} Массив найденных чтений
- */
-export async function searchReadingsDataByDate(dateStr) {
-  try {
-    // Преобразуем YYYY-MM-DD в разные форматы для поиска в readingsData
-    const mDate = moment(dateStr, 'YYYY-MM-DD');
-    if (!mDate.isValid()) {
-      logger.error('[readingsService] Няверны фармат даты для пошуку ў readingsData:', dateStr);
-      return [];
-    }
-    
-    // Пробуем оба формата: с ведущими нулями и без
-    const dayFormatWithZeros = mDate.format('DD.MM.YYYY'); // 23.04.2022
-    const dayFormatWithoutZeros = mDate.format('D.M.YYYY'); // 23.4.2022
-    
-    logger.log('[readingsService] Пошук ў readingsData па даце:', dayFormatWithZeros, 'або', dayFormatWithoutZeros, '(з', dateStr, ')');
-    
-    // Пробуем найти по обоим форматам
-    const queries = [
-      query(getReadingsDataCollection(), where('day', '==', dayFormatWithZeros)),
-      query(getReadingsDataCollection(), where('day', '==', dayFormatWithoutZeros))
-    ];
-    
-    const snapshots = await Promise.all(
-      queries.map(q => retryFirestore(() => getDocs(q)))
-    );
-    
-    const results = [];
-    const seenIds = new Set();
-    
-    snapshots.forEach((snapshot, index) => {
-      snapshot.forEach(doc => {
-        if (!seenIds.has(doc.id)) {
-          seenIds.add(doc.id);
-          const data = doc.data();
-          results.push({
-            id: doc.id,
-            text: data.text || data.content || '',
-            _source: 'readingsData',
-            day: data.day, // Сохраняем оригинальную дату
-            ...data
-          });
-        }
-      });
-    });
-    
-    logger.log('[readingsService] Знойдзена ў readingsData:', results.length, 'чытанняў для даты', dayFormatWithZeros);
-    return results;
-  } catch (error) {
-    // Если поле day не существует или запрос не удался
-    logger.error('[readingsService] Памылка пошуку ў readingsData:', error.message, error);
-    return [];
-  }
-}
 
 /**
  * Комплексный поиск чтений для конкретной даты
@@ -184,11 +94,10 @@ export async function searchReadingsDataByDate(dateStr) {
  * @param {number} options.dayOfWeek - День недели (1-7)
  * @param {string} options._feast - Значение поля _feast для динамических праздников
  * @param {boolean} options.useCache - Использовать кэш (по умолчанию true)
- * @param {boolean} options.includeReadingsData - Искать также в readingsData (по умолчанию true)
  * @returns {Promise<Array>} Массив найденных чтений
  */
 export async function getReadingsForDate(date, options = {}) {
-  const { cycle, periodType, periodWeekNumber, dayOfWeek, _feast, useCache = true, includeReadingsData = true } = options;
+  const { cycle, periodType, periodWeekNumber, dayOfWeek, _feast, useCache = true, } = options;
   const mDate = moment(date).startOf('day');
   const dateStr = mDate.format('YYYY-MM-DD'); // Для кэша и readingsData
   
@@ -268,7 +177,7 @@ export async function getReadingsForDate(date, options = {}) {
           const docData = doc.data();
           queryResults.push({
             id: doc.id,
-            _source: 'new',
+            _source: 'readings',
             ...docData
           });
           logger.log(`[readingsService] ✓ Найден документ ${doc.id} (${queryType}):`, {
@@ -291,28 +200,6 @@ export async function getReadingsForDate(date, options = {}) {
     
     logger.log(`[readingsService] ========== Всего найдено в 'new': ${newCount} уникальных документов ==========`);
     
-    // 2. Поиск в старой коллекции readingsData как fallback
-    // Если в 'new' ничего не найдено, ищем в readingsData
-    if (newCount === 0 && includeReadingsData) {
-      logger.log('[readingsService] ⚠️ В коллекции "new" ничего не найдено, ищем в readingsData как fallback');
-      try {
-        const readingsDataResults = await searchReadingsDataByDate(dateStr);
-        logger.log('[readingsService] Вынікі з readingsData (fallback):', readingsDataResults.length);
-        if (readingsDataResults.length > 0) {
-          results.push(...readingsDataResults);
-          logger.log('[readingsService] ✓ Найдено чтений в readingsData, используем их');
-        }
-      } catch (error) {
-        logger.warn('[readingsService] Памылка пошуку ў readingsData:', error);
-      }
-    } else if (newCount > 0) {
-      logger.log('[readingsService] ✓ Найдено чтений в коллекции "new", readingsData не используется');
-    } else {
-      logger.log('[readingsService] Поиск в readingsData отключен (includeReadingsData=false)');
-    }
-    
-    logger.log('[readingsService] Усяго знойдзена да аб\'яднання:', results.length);
-    
     // Удаляем дубликаты по ID
     const uniqueResults = Array.from(
       new Map(results.map(item => [item.id, item])).values()
@@ -323,11 +210,14 @@ export async function getReadingsForDate(date, options = {}) {
     // Приоритет: 'new' (новая коллекция) > readingsData (старая)
     // НО если есть readingsData и нет 'new', используем readingsData
     // Сортируем так, чтобы 'new' были первыми, но readingsData тоже учитывались
-    uniqueResults.sort((a, b) => {
-      if ((a._source === 'new' || a._source === 'newReadings' || a._source === 'readings') && b._source === 'readingsData') return -1;
-      if (a._source === 'readingsData' && (b._source === 'new' || b._source === 'newReadings' || b._source === 'readings')) return 1;
-      return 0;
-    });
+ uniqueResults.sort((a, b) => {
+  // если хочешь дать приоритет документам явно помеченным как 'readings'/'new'
+  const aIsPrimary = (a._source === 'readings' || a._source === 'new' || a._source === 'newReadings');
+  const bIsPrimary = (b._source === 'readings' || b._source === 'new' || b._source === 'newReadings');
+  if (aIsPrimary && !bIsPrimary) return -1;
+  if (!aIsPrimary && bIsPrimary) return 1;
+  return 0;
+});
     
     // Firebase persistent cache автоматически сохраняет результаты
     
@@ -364,11 +254,11 @@ export async function addReading(data) {
     // Нормализация данных
     const normalizedData = normalizeReading(data);
     
-    const docRef = await retryFirestore(() => addDoc(getReadingsCollection(), {
-      ...normalizedData,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    }));
+ const docRef = await retryFirestore(() => addDoc(getReadingsCollection(), {
+  ...normalizedData,
+  createdAt: serverTimestamp(),
+  updatedAt: serverTimestamp(),
+}));
     logger.log('[readingsService] Чытанне дададзена:', docRef.id);
     return docRef;
   } catch (error) {
