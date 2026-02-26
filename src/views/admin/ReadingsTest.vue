@@ -389,7 +389,7 @@ async function addTestReading() {
   } catch (error) {
     notifyError('Памылка пры захаванні чытання: ' + (error.message || error));
   } finally {
-    adding.value = false;
+    loadingExisting.value = false;
   }
 }
 
