@@ -89,7 +89,7 @@ export function useLiturgicalDay() {
 
         // --- Ordinary Time ---
         const weeksBeforeOrd = parseInt(opts.ordintaryWeeks1) - 1;
-        const fo = ash.clone().subtract(2, "days").subtract(weeksBeforeOrd, "weeks");
+        const fo = ash.clone().subtract(3, "days").subtract(weeksBeforeOrd, "weeks");
         if (mDate.isSameOrAfter(fo) && mDate.isBefore(ash)) {
             const diff = mDate.diff(fo, "days");
             return getItemsForPeriodQuery("ordinary", diff % 7 + 1, Math.floor(diff / 7) + 1);
@@ -124,7 +124,7 @@ export function useLiturgicalDay() {
             return {
                 periodType: 'ordinary',
                 periodWeek: -1,
-                dayOfWeek: mDate.isoWeekday(),
+                dayOfWeek: mDate.isoWeekday() === 7 ? 1 : mDate.isoWeekday() + 1,
                 _feast: null
             };
         }
@@ -132,7 +132,7 @@ export function useLiturgicalDay() {
         const context = {
             periodType: 'ordinary',
             periodWeek: -1,
-            dayOfWeek: mDate.isoWeekday(),
+            dayOfWeek: mDate.isoWeekday() === 7 ? 1 : mDate.isoWeekday() + 1,
             _feast: null
         };
 
@@ -217,7 +217,7 @@ export function useLiturgicalDay() {
 
         // --- Ordinary Time ---
         const weeksBeforeOrd = parseInt(opts.ordintaryWeeks1) - 1;
-        const fo = ash.clone().subtract(2, "days").subtract(weeksBeforeOrd, "weeks");
+        const fo = ash.clone().subtract(3, "days").subtract(weeksBeforeOrd, "weeks");
         if (mDate.isSameOrAfter(fo) && mDate.isBefore(ash)) {
             const diff = mDate.diff(fo, "days");
             context.periodType = "ordinary";
@@ -253,7 +253,7 @@ export function useLiturgicalDay() {
         const context = {
             periodType: 'ordinary',
             periodWeek: -1,
-            dayOfWeek: mDate.isoWeekday()
+            dayOfWeek: mDate.isoWeekday() === 7 ? 1 : mDate.isoWeekday() + 1
         };
 
         if (periodQuery && periodQuery._query) {
@@ -449,7 +449,7 @@ export function useLiturgicalDay() {
             baseDate = easter.clone();
         } else if (periodType === 'ordinary') {
             const weeksBeforeOrd = parseInt(opts.ordintaryWeeks1) - 1;
-            const fo = ash.clone().subtract(2, "days").subtract(weeksBeforeOrd, "weeks");
+            const fo = ash.clone().subtract(3, "days").subtract(weeksBeforeOrd, "weeks");
             const startWeek2 = parseInt(opts.ordintaryWeeks2);
             
             if (periodWeekNumber < parseInt(opts.ordintaryWeeks1)) {
@@ -462,7 +462,8 @@ export function useLiturgicalDay() {
 
         if (!baseDate) return null;
 
-        const baseDayOfWeek = baseDate.isoWeekday();
+        const baseIsoWeekday = baseDate.isoWeekday();
+        const baseDayOfWeek = baseIsoWeekday === 7 ? 1 : baseIsoWeekday + 1;
         const daysToAdd = (periodWeekNumber - 1) * 7 + (dayOfWeek - baseDayOfWeek);
         targetDate = baseDate.clone().add(daysToAdd, 'days');
 
