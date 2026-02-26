@@ -60,26 +60,37 @@
       </v-col>
     </v-row>
 
-    <!-- Есть дни -->
-    <v-row v-else-if="days.length > 0">
+    <v-row v-else-if="dayOptions.length">
       <v-col>
-        <v-list lines="two" bg-color="transparent">
+        <v-list lines="three" bg-color="transparent">
           <v-list-item
-            v-for="day in sortedDays"
-            :key="day.id"
-            :to="`/day/${currentDate.format('YYYY-MM-DD')}/ora/${day.id}`"
+            v-for="option in dayOptions"
+            :key="option.key"
+            :to="optionRoute(option)"
             class="mb-2"
             border
             rounded
           >
             <template #prepend>
-              <v-icon :icon="getIcon(day)" :color="getColor(day)"></v-icon>
+              <v-icon :icon="getOptionIcon(option)" :color="getOptionColor(option)"></v-icon>
             </template>
 
-            <v-list-item-title v-html="getTitle(day)"></v-list-item-title>
-            <v-list-item-subtitle v-html="getSubtitle(day)"></v-list-item-subtitle>
+            <v-list-item-title>{{ option.title }}</v-list-item-title>
+            <v-list-item-subtitle>{{ option.subtitle }}</v-list-item-subtitle>
+
+            <template #append>
+              <div class="d-flex flex-column align-end ga-1">
+                <v-chip size="small" :color="option.hasLiturgicalDay ? 'success' : 'grey'" variant="tonal">
+                  {{ option.hasLiturgicalDay ? 'Літургія: ёсць' : 'Літургія: няма' }}
+                </v-chip>
+                <v-chip size="small" :color="option.hasReadings ? 'deep-purple' : 'grey'" variant="tonal">
+                  {{ option.hasReadings ? 'Чытанні: ёсць' : 'Чытанні: няма' }}
+                </v-chip>
+              </div>
+            </template>
           </v-list-item>
         </v-list>
+
       </v-col>
     </v-row>
 
@@ -87,8 +98,11 @@
     <v-row v-else class="text-center text-grey mt-10">
       <v-col>
         <v-icon size="48">mdi-book-remove-outline</v-icon>
-        <p class="mt-2">Малітвы не знойдзены.</p>
-        <p class="text-caption">Магчыма, іх не хапае ў базе.</p>
+        <p class="mt-2">Нічога не знойдзена.</p>
+        <p class="text-caption">
+          Для {{ currentDate.format('D MMM YYYY') }} не знойдзены ні чытанні, ні літургічны дзень
+          (ні па перыядзе, ні па фіксаванай даце).
+        </p>
       </v-col>
     </v-row>
   </v-container>
@@ -102,6 +116,7 @@ import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { useAppBar } from '@/composables/useAppBar';
 import { logger } from '@/utils/logger';
 import { useNotifier } from '@/composables/useNotifier';
+import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
 const router = useRouter();
@@ -113,9 +128,12 @@ const {
 
 const { toggleCalendarDialog } = useAppBar();
 const { error: notifyError } = useNotifier();
+const authStore = useAuthStore();
+const isAdmin = computed(() => authStore.isAdmin);
 
 const days = ref([]);
 const readings = ref([]); // если пригодится дальше
+const dayOptions = ref([]);
 const loading = ref(true);      // используется для самого первого экрана
 const softLoading = ref(false); // мягкая загрузка при перелистывании
 const error = ref(null);
@@ -133,6 +151,7 @@ const fetchItemsForDate = async (date) => {
     readings.value = Array.isArray(cached.itemsReadings)
       ? cached.itemsReadings
       : [];
+    dayOptions.value = Array.isArray(cached.dayOptions) ? cached.dayOptions : [];
     loading.value = false;
     softLoading.value = false;
     return;
@@ -162,9 +181,11 @@ const fetchItemsForDate = async (date) => {
       readings.value = Array.isArray(result.itemsReadings)
         ? result.itemsReadings
         : [];
+      dayOptions.value = Array.isArray(result.dayOptions) ? result.dayOptions : [];
     } else {
       days.value = [];
       readings.value = [];
+      dayOptions.value = [];
     }
 
     if (days.value.length === 0) {
@@ -198,72 +219,23 @@ const goToNextDay = () =>
 const goToPrevDay = () =>
   navigateToDate(currentDate.value.clone().subtract(1, 'day'));
 
-const rankOrder = { solemnity: 1, feast: 2, memorial: 3 };
-
-const sortedDays = computed(() => {
-  if (!days.value || !Array.isArray(days.value)) return [];
-  return [...days.value].sort((a, b) => {
-    const rankA = a._feastType ? rankOrder[a._feastType] || 99 : 100;
-    const rankB = b._feastType ? rankOrder[b._feastType] || 99 : 100;
-    return rankA - rankB;
-  });
-});
-
-const getTitle = (day) => {
-  if (day.title) return day.title;
-  if (day._feastName) return day._feastName;
-
-  const periodMap = {
-    ordinary: 'звычайны',
-    advent: 'адвэнту',
-    lent: 'вялікага посту',
-    easter: 'у велікодны перыяд',
-    christmas: 'Божага нараджэння',
-  };
-
-  const periodName = periodMap[day._periodType] || 'Перыяд';
-
-  const dayOfWeekMap = {
-    1: 'Нядзеля',
-    2: 'Панядзелак',
-    3: 'Аўторак',
-    4: 'Серада',
-    5: 'Чацвер',
-    6: 'Пятніца',
-    7: 'Субота',
-  };
-
-  const dayName = dayOfWeekMap[day._dayOfWeek] || '';
-
-  return `${day._periodWeekNumber} тыдзень ${periodName}, ${dayName}`;
+const optionRoute = (option) => {
+  const targetId = option.dayId || `missing-${option.key}`;
+  return `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${targetId}`;
 };
 
-const getSubtitle = (day) => {
-  const rankMap = {
-    solemnity: 'Урачыстасць',
-    feast: 'Свята',
-    memorial: 'Успамін',
-  };
-
-  if (day._feastType) return rankMap[day._feastType] || 'Свята';
-  return day._psalmWeek ? `${day._psalmWeek}` : '';
-};
-
-const getIcon = (day) => {
-  if (day._feastType === 'solemnity') return 'mdi-star-circle';
-  if (day._feastType === 'feast') return 'mdi-star';
-  if (day._feastType === 'memorial') return 'mdi-label';
+const getOptionIcon = (option) => {
+  if (option.source === 'dynamic') return 'mdi-star-four-points';
+  if (option.source === 'fixed') return 'mdi-calendar-star';
   return 'mdi-calendar-blank';
 };
 
-const getColor = (day) => {
-  if (day._feastType === 'solemnity') return 'red-darken-2';
-  if (day._periodType === 'advent' || day._periodType === 'lent')
-    return 'purple-darken-3';
-  if (day._periodType === 'easter' || day._periodType === 'christmas')
-    return 'yellow-darken-3';
-  if (day._periodType === 'ordinary') return 'green-darken-2';
-  return 'grey';
+const getOptionColor = (option) => {
+  const periodType = option.day?._periodType || option.contextPeriodType;
+  if (periodType === 'advent' || periodType === 'lent') return 'purple-darken-3';
+  if (periodType === 'easter' || periodType === 'christmas') return 'yellow-darken-3';
+  if (periodType === 'ordinary') return 'green-darken-2';
+  return 'red-darken-2';
 };
 
 watch(
