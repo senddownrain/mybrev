@@ -44,6 +44,29 @@ export function getReadingsByPeriodQuery(periodType, periodWeekNumber, dayOfWeek
 }
 
 /**
+ * Построить варианты запросов по периоду для смешанных типов данных (number/string)
+ * В базе встречаются оба формата, поэтому формируем все уникальные комбинации.
+ */
+function getReadingsByPeriodQueries(periodType, periodWeekNumber, dayOfWeek, cycle) {
+  const weekVariants = [periodWeekNumber, `${periodWeekNumber}`];
+  const dayVariants = [dayOfWeek, `${dayOfWeek}`];
+  const queryKeys = new Set();
+  const periodQueries = [];
+
+  weekVariants.forEach((week) => {
+    dayVariants.forEach((day) => {
+      const key = `${typeof week}:${week}|${typeof day}:${day}|${cycle || 'no-cycle'}`;
+      if (!queryKeys.has(key)) {
+        queryKeys.add(key);
+        periodQueries.push(getReadingsByPeriodQuery(periodType, week, day, cycle));
+      }
+    });
+  });
+
+  return periodQueries;
+}
+
+/**
  * Поиск чтений по дате
  * Формат _date: D.M (день.месяц), унифицирован с коллекцией days
  */
@@ -127,10 +150,10 @@ export async function getReadingsForDate(date, options = {}) {
   if (periodType && periodWeekNumber !== undefined && dayOfWeek !== undefined) {
     // Сначала ищем с cycle (если указан)
     if (cycle) {
-      queries.push(getReadingsByPeriodQuery(periodType, periodWeekNumber, dayOfWeek, cycle));
+      queries.push(...getReadingsByPeriodQueries(periodType, periodWeekNumber, dayOfWeek, cycle));
     }
     // Затем ищем без cycle (более широкий поиск)
-    queries.push(getReadingsByPeriodQuery(periodType, periodWeekNumber, dayOfWeek, null));
+    queries.push(...getReadingsByPeriodQueries(periodType, periodWeekNumber, dayOfWeek, null));
     logger.log(`[readingsService] ✓ Запросы по периоду: ${periodType}, неделя ${periodWeekNumber}, день недели ${dayOfWeek} (с cycle="${cycle}" и без)`);
   } else {
     logger.log(`[readingsService] ⚠️ Параметры периода неполные: periodType="${periodType}", periodWeekNumber="${periodWeekNumber}", dayOfWeek="${dayOfWeek}"`);
@@ -159,8 +182,14 @@ export async function getReadingsForDate(date, options = {}) {
     if (cycle) queryTypes.push(`дата с cycle="${cycle}"`);
     queryTypes.push('дата без cycle');
     if (periodType && periodWeekNumber !== undefined && dayOfWeek !== undefined) {
-      if (cycle) queryTypes.push(`период с cycle="${cycle}"`);
-      queryTypes.push('период без cycle');
+      const periodQueriesWithCycle = cycle ? getReadingsByPeriodQueries(periodType, periodWeekNumber, dayOfWeek, cycle).length : 0;
+      const periodQueriesWithoutCycle = getReadingsByPeriodQueries(periodType, periodWeekNumber, dayOfWeek, null).length;
+      for (let i = 0; i < periodQueriesWithCycle; i++) {
+        queryTypes.push(`период с cycle="${cycle}"`);
+      }
+      for (let i = 0; i < periodQueriesWithoutCycle; i++) {
+        queryTypes.push('период без cycle');
+      }
     }
     if (_feast) {
       if (cycle) queryTypes.push(`праздник с cycle="${cycle}"`);
@@ -332,4 +361,3 @@ export async function getReadingById(id) {
     throw error;
   }
 }
-
