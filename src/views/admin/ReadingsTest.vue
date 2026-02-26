@@ -119,9 +119,18 @@
             />
           </div>
 
-          <v-btn type="submit" color="primary" :loading="adding" block>
-            {{ formData.existingId ? 'Захаваць змены' : 'Стварыць чытанне' }}
+          <v-btn type="submit" color="primary" :loading="adding" :disabled="adding" block>
+            {{ adding ? 'Захаванне...' : (formData.existingId ? 'Захаваць змены' : 'Стварыць чытанне') }}
           </v-btn>
+
+          <v-alert
+            v-if="saveState.message"
+            :type="saveState.type"
+            variant="tonal"
+            class="mt-3"
+          >
+            {{ saveState.message }}
+          </v-alert>
         </v-form>
       </v-card-text>
     </v-card>
@@ -159,6 +168,7 @@
 </template>
 
 <script setup>
+import { collection, doc, getDocs, query, setDoc, where, serverTimestamp } from 'firebase/firestore';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useReadings } from '@/composables/useReadings';
@@ -177,6 +187,7 @@ const searchingMissing = ref(false);
 const searchedMissing = ref(false);
 const missingPeriodReadings = ref([]);
 const selectedMissingKey = ref(null);
+const saveState = ref({ type: '', message: '' });
 
 const formData = ref({
   cycle: null,
@@ -253,6 +264,7 @@ function onTypeChange() {
   formData.value.feastId = 'holyFamily';
   formData.value.feastName = 'holyfamily';
   formData.value.existingId = null;
+  saveState.value = { type: '', message: '' };
 }
 
 function onFeastIdChange() {
@@ -368,7 +380,10 @@ function getPeriodKey(item) {
 
 
 async function addTestReading() {
+  if (adding.value) return;
+
   adding.value = true;
+  saveState.value = { type: 'info', message: 'Захоўваем чытанне ў базу...' };
 
   try {
     const data = {
@@ -390,22 +405,30 @@ async function addTestReading() {
       data._feast = formData.value.feastName?.toLowerCase().trim();
     }
 
+    const isUpdate = Boolean(formData.value.existingId);
     const docId = formData.value.existingId || buildReadingId(data);
     const payload = {
       ...data,
       createdAt: serverTimestamp(),
     };
 
-    if (formData.value.existingId) {
+    if (isUpdate) {
       delete payload.createdAt;
     }
 
-    await setDoc(doc(db, 'readings', docId), payload, { merge: !!formData.value.existingId });
+    await setDoc(doc(db, 'readings', docId), payload, { merge: isUpdate });
     formData.value.existingId = docId;
 
-    notifySuccess(formData.value.existingId ? 'Чытанне абноўлена' : `Чытанне створана: ${docId}`);
+    const successMessage = isUpdate
+      ? `Чытанне абноўлена (${docId}). Можна захоўваць далей.`
+      : `Чытанне створана (${docId}). Цяпер можна працягваць рэдагаванне.`;
+
+    saveState.value = { type: 'success', message: successMessage };
+    notifySuccess(successMessage);
   } catch (error) {
-    notifyError('Памылка пры захаванні чытання: ' + (error.message || error));
+    const errMessage = 'Памылка пры захаванні чытання: ' + (error.message || error);
+    saveState.value = { type: 'error', message: errMessage };
+    notifyError(errMessage);
   } finally {
     loadingExisting.value = false;
   }
