@@ -205,7 +205,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import { useReadings } from '@/composables/useReadings';
 import { useNotifier } from '@/composables/useNotifier';
 import { FEAST_NAME_MAP } from '@/constants/readings';
@@ -214,6 +215,7 @@ import moment from '@/utils/moment-be';
 
 const { addReading, loadReadingsForDate, deleteReading } = useReadings();
 const { notifySuccess, notifyError } = useNotifier();
+const route = useRoute();
 
 const adding = ref(false);
 const searching = ref(false);
@@ -233,6 +235,22 @@ const formData = ref({
   feastName: 'holyfamily',
   feastDate: moment().format('YYYY-MM-DD'),
   text: '<h2>Тэставае чытанне</h2><p>Гэта тэставы тэкст для праверкі сістэмы чытанняў.</p>',
+});
+
+onMounted(() => {
+  const q = route.query;
+  if (q.type && ['period', 'date', 'feast'].includes(q.type)) {
+    formData.value.type = String(q.type);
+  }
+
+  if (q._periodType) formData.value._periodType = String(q._periodType);
+  if (q._periodWeekNumber) formData.value._periodWeekNumber = Number(q._periodWeekNumber);
+  if (q._dayOfWeek) formData.value._dayOfWeek = Number(q._dayOfWeek);
+  if (q._date) formData.value._date = String(q._date);
+
+  if (formData.value.type === 'period' && !formData.value._periodType) {
+    formData.value.type = 'date';
+  }
 });
 
 const cycleOptions = [
@@ -388,4 +406,3 @@ function getResultSubtitle(result) {
   line-height: 1.6;
 }
 </style>
-
