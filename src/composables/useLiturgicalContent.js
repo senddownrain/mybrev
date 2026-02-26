@@ -5,24 +5,13 @@ import { db } from '@/plugins/firebase';
 import { retryFirestore } from '@/utils/retry';
 import { logger } from '@/utils/logger';
 import { useCalendarStore } from '@/stores/calendar';
+import {
+  PERIOD_LABEL_MAP,
+  WEEKDAY_LABEL_MAP,
+  FEAST_NAME_MAP,
+} from '@/constants/liturgical';
 
 const contentCache = new Map();
-
-const feastNameMap = {
-  holyFamily: 'holyfamily',
-  baptismOfLord: 'buptismofthelord',
-  holyTrinity: 'trinity',
-  christKing: 'christking',
-  sacredHeartOfJesus: 'heartofjesus',
-  immaculateHeartOfMary: 'heartofmary',
-  christTheHighPriest: 'christthehighpriest',
-  ashWednesday: 'ash',
-  easterSunday: 'eastersunday',
-  pentecost: 'pentecost',
-  palmsSnday: 'palmsunday',
-  corpusChristi: 'corpuschristi',
-  ascension: 'ascension',
-};
 
 function getCacheKeyForDate(date) {
   // date может быть Date или moment — нормализуем к YYYY-MM-DD
@@ -241,12 +230,13 @@ export function useLiturgicalContent() {
 
     for (const feastKey in dynamicDates) {
       if (
-        feastNameMap[feastKey] &&
+        FEAST_NAME_MAP[feastKey] &&
         dynamicDates[feastKey].isSame(mDate, 'day')
       ) {
-        queries.push(
-          query(daysCollection, where('_feast', '==', feastNameMap[feastKey])),
-        );
+        queries.push({
+          feastKey: FEAST_NAME_MAP[feastKey],
+          query: query(daysCollection, where('_feast', '==', FEAST_NAME_MAP[feastKey])),
+        });
       }
     }
 
@@ -259,15 +249,16 @@ export function useLiturgicalContent() {
 
     for (const feastKey in dynamicDates) {
       if (
-        feastNameMap[feastKey] &&
+        FEAST_NAME_MAP[feastKey] &&
         dynamicDates[feastKey].isSame(mDate, 'day')
       ) {
-        queries.push(
-          query(
+        queries.push({
+          feastKey: FEAST_NAME_MAP[feastKey],
+          query: query(
             readingsCollection,
-            where('_feast', '==', feastNameMap[feastKey]),
+            where('_feast', '==', FEAST_NAME_MAP[feastKey]),
           ),
-        );
+        });
       }
     }
 
@@ -278,6 +269,26 @@ export function useLiturgicalContent() {
     const cacheKey = getCacheKeyForDate(currentDate);
     return contentCache.get(cacheKey) || null;
   }
+
+  const snapshotToDocs = (snapshot) => {
+    const docs = [];
+    snapshot.forEach((docEntry) => {
+      docs.push({ id: docEntry.id, ...docEntry.data() });
+    });
+    return docs;
+  };
+
+  const buildPeriodTitle = (context) => {
+    const periodName = PERIOD_LABEL_MAP[context.periodType] || 'Літургічны перыяд';
+    const weekDayName = WEEKDAY_LABEL_MAP[context.dayOfWeek] || '';
+    const weekChunk = context.periodWeek > -1 ? `${context.periodWeek} тыдз.` : '';
+    return [periodName, weekChunk, weekDayName].filter(Boolean).join(', ');
+  };
+
+  const pickReadingWithoutPlace = (readings) => {
+    if (!readings.length) return null;
+    return readings.find((reading) => !reading.place) || readings[0];
+  };
 
   async function getLiturgicalContentForDate(currentDate) {
     const cacheKey = getCacheKeyForDate(currentDate);
@@ -308,27 +319,40 @@ export function useLiturgicalContent() {
       dayOfWeek: mDate.isoWeekday(),
     };
 
-    const queriesDays = [];
-    const queriesReadings = [];
+    const dynamicDayQueries = getDynamicFeastsDaysQueries(mDate, year);
+    const dynamicReadingQueries = getDynamicFeastsReadingsQueries(mDate, year);
 
-    if (periodInfo) {
-      queriesDays.push(periodInfo.queryDays);
-      queriesReadings.push(periodInfo.queryReadings);
-    }
-
-    // фиксированная дата
-    queriesDays.push(getFixedFeastDaysQuery(mDate));
-    queriesReadings.push(getFixedFeastReadingsQuery(mDate));
-
-    // динамические празнікі
-    queriesDays.push(...getDynamicFeastsDaysQueries(mDate, year));
-    queriesReadings.push(...getDynamicFeastsReadingsQueries(mDate, year));
-
-    // выполняем параллельно
-    const [daySnapshots, readingSnapshots] = await Promise.all([
-      Promise.all(queriesDays.map((q) => retryFirestore(() => getDocs(q)))),
-      Promise.all(queriesReadings.map((q) => retryFirestore(() => getDocs(q)))),
+    const [
+      periodDaysSnapshot,
+      periodReadingsSnapshot,
+      fixedDaysSnapshot,
+      fixedReadingsSnapshot,
+      dynamicDaySnapshots,
+      dynamicReadingSnapshots,
+    ] = await Promise.all([
+      periodInfo
+        ? retryFirestore(() => getDocs(periodInfo.queryDays))
+        : Promise.resolve(null),
+      periodInfo
+        ? retryFirestore(() => getDocs(periodInfo.queryReadings))
+        : Promise.resolve(null),
+      retryFirestore(() => getDocs(getFixedFeastDaysQuery(mDate))),
+      retryFirestore(() => getDocs(getFixedFeastReadingsQuery(mDate))),
+      Promise.all(dynamicDayQueries.map((item) => retryFirestore(() => getDocs(item.query)))),
+      Promise.all(dynamicReadingQueries.map((item) => retryFirestore(() => getDocs(item.query)))),
     ]);
+
+    const daySnapshots = [
+      ...(periodDaysSnapshot ? [periodDaysSnapshot] : []),
+      fixedDaysSnapshot,
+      ...dynamicDaySnapshots,
+    ];
+
+    const readingSnapshots = [
+      ...(periodReadingsSnapshot ? [periodReadingsSnapshot] : []),
+      fixedReadingsSnapshot,
+      ...dynamicReadingSnapshots,
+    ];
 
     const daysResults = new Map();
     daySnapshots.forEach((snap) => {
@@ -348,10 +372,121 @@ export function useLiturgicalContent() {
       });
     });
 
+    const periodDaysDocs = periodDaysSnapshot ? snapshotToDocs(periodDaysSnapshot) : [];
+    const periodReadingsDocs = periodReadingsSnapshot
+      ? snapshotToDocs(periodReadingsSnapshot)
+      : [];
+    const fixedDaysDocs = snapshotToDocs(fixedDaysSnapshot);
+    const fixedReadingsDocs = snapshotToDocs(fixedReadingsSnapshot);
+
+    const dynamicDayDocsByFeast = new Map();
+    dynamicDayQueries.forEach((dynamicItem, index) => {
+      dynamicDayDocsByFeast.set(
+        dynamicItem.feastKey,
+        snapshotToDocs(dynamicDaySnapshots[index]),
+      );
+    });
+
+    const dynamicReadingsDocsByFeast = new Map();
+    dynamicReadingQueries.forEach((dynamicItem, index) => {
+      dynamicReadingsDocsByFeast.set(
+        dynamicItem.feastKey,
+        snapshotToDocs(dynamicReadingSnapshots[index]),
+      );
+    });
+
+    const liturgicalOptions = [];
+    const periodDay = periodDaysDocs[0] || null;
+    const periodReading = periodReadingsDocs[0] || null;
+
+    liturgicalOptions.push({
+      key: `period-${context.periodType}-${context.periodWeek}-${context.dayOfWeek}`,
+      source: 'period',
+      title: periodDay?._feastName || periodDay?.title || buildPeriodTitle(context),
+      subtitle: 'Літургічны дзень па перыядзе',
+      day: periodDay,
+      reading: periodReading,
+      order: 1,
+      contextPeriodType: context.periodType,
+    });
+
+    const dynamicFeastKeys = [...new Set([
+      ...dynamicDayDocsByFeast.keys(),
+      ...dynamicReadingsDocsByFeast.keys(),
+    ])];
+
+    dynamicFeastKeys.forEach((feastKey) => {
+      const day = dynamicDayDocsByFeast.get(feastKey)?.[0] || null;
+      const reading = dynamicReadingsDocsByFeast.get(feastKey)?.[0] || null;
+      if (!day && !reading) return;
+      liturgicalOptions.push({
+        key: `dynamic-${feastKey}`,
+        source: 'dynamic',
+        title: day?._feastName || day?.title || reading?.title || feastKey,
+        subtitle: 'Рухомае свята',
+        day,
+        reading,
+        order: 2,
+        contextPeriodType: context.periodType,
+      });
+    });
+
+    const fixedReadingsPool = [...fixedReadingsDocs];
+
+    fixedDaysDocs.forEach((day) => {
+      let reading = fixedReadingsPool.find((item) => item.id === day.id) || null;
+      if (!reading) {
+        reading = pickReadingWithoutPlace(fixedReadingsPool);
+      }
+      if (reading) {
+        const readingIndex = fixedReadingsPool.findIndex((item) => item.id === reading.id);
+        if (readingIndex > -1) {
+          fixedReadingsPool.splice(readingIndex, 1);
+        }
+      }
+
+      liturgicalOptions.push({
+        key: `fixed-${day.id}`,
+        source: 'fixed',
+        title: day._feastName || day.title || `Дата ${day._date}`,
+        subtitle: 'Свята па фіксаванай даце',
+        day,
+        reading,
+        order: 3,
+        contextPeriodType: context.periodType,
+      });
+    });
+
+    (fixedDaysDocs.length === 0 ? fixedReadingsPool : [])
+      .forEach((reading) => {
+        liturgicalOptions.push({
+          key: `fixed-reading-only-${reading.id}`,
+          source: 'fixed',
+          title: reading.title || `Дата ${reading._date}`,
+          subtitle: 'Свята па фіксаванай даце',
+          day: null,
+          reading,
+          order: 3,
+          contextPeriodType: context.periodType,
+        });
+      });
+
+    const dayOptions = liturgicalOptions
+      .sort((a, b) => a.order - b.order)
+      .map((option) => ({
+        ...option,
+        dayId: option.day?.id || null,
+        readingId: option.reading?.id || null,
+        hasLiturgicalDay: Boolean(option.day),
+        hasReadings: Boolean(option.reading),
+        disabled: false,
+      }));
+
     const result = {
       context,
       itemsDays: Array.from(daysResults.values()),
       itemsReadings: Array.from(readingsResults.values()),
+      dayOptions,
     };
 
     // 2. Кладём в кэш, чтобы следующие вызовы по этой дате были мгновенными
@@ -363,6 +498,6 @@ export function useLiturgicalContent() {
   return {
     getLiturgicalContentForDate,
     getCachedLiturgicalContentForDate,
-    feastNameMap,
+    feastNameMap: FEAST_NAME_MAP,
   };
 }

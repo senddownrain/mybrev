@@ -204,6 +204,26 @@ const routes = [
       { path: 'lectionis', name: 'lectionis', components: { default: () => import('@/components/oras/Lectionis.vue'), topNav: OraBarVue } },
     ],
   },
+
+  {
+    path: '/day/:day/ora/reading/:readingId',
+    component: OneVue,
+    props: true,
+    children: [
+      {
+        path: '',
+        name: 'readingByDate',
+        components: {
+          default: () => import('@/components/readings/Reading.vue'),
+          topNav: OraBarVue,
+        },
+        props: {
+          default: true,
+          topNav: false,
+        },
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
