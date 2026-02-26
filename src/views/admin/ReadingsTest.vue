@@ -15,7 +15,9 @@
                 :items="cycleOptions"
                 label="Цыкл"
                 variant="outlined"
-                required
+                clearable
+                hint="Апцыянальна. Калі не выбраны — чытанне будзе без цыкла"
+                persistent-hint
               ></v-select>
             </v-col>
             
@@ -125,14 +127,23 @@
             </v-col>
           </v-row>
 
-          <v-btn
-            type="submit"
-            color="primary"
-            :loading="adding"
-            block
-          >
-            Дадаць чытанне
-          </v-btn>
+          <v-row>
+            <v-col cols="12" md="6">
+              <v-btn color="secondary" variant="outlined" block :loading="loadingExisting" @click="loadByParams">
+                Загрузіць па параметрах
+              </v-btn>
+            </v-col>
+            <v-col cols="12" md="6">
+              <v-btn
+                type="submit"
+                color="primary"
+                :loading="adding"
+                block
+              >
+                {{ formData.existingId ? 'Захаваць змены' : 'Стварыць чытанне' }}
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-form>
       </v-card-text>
     </v-card>
@@ -206,16 +217,19 @@
 
 <script setup>
 import { ref } from 'vue';
+import { collection, doc, getDocs, query, setDoc, where, serverTimestamp } from 'firebase/firestore';
 import { useReadings } from '@/composables/useReadings';
 import { useNotifier } from '@/composables/useNotifier';
 import { FEAST_NAME_MAP } from '@/constants/readings';
 import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
 import moment from '@/utils/moment-be';
+import { db } from '@/plugins/firebase';
 
-const { addReading, loadReadingsForDate, deleteReading } = useReadings();
+const { loadReadingsForDate, deleteReading } = useReadings();
 const { notifySuccess, notifyError } = useNotifier();
 
 const adding = ref(false);
+const loadingExisting = ref(false);
 const searching = ref(false);
 const searched = ref(false);
 const searchResults = ref([]);
@@ -223,7 +237,7 @@ const selectedReading = ref(null);
 const searchDate = ref(moment().format('YYYY-MM-DD'));
 
 const formData = ref({
-  cycle: 'A',
+  cycle: null,
   type: 'period',
   _periodType: 'ordinary',
   _periodWeekNumber: 1,
@@ -232,6 +246,7 @@ const formData = ref({
   feastId: 'holyFamily',
   feastName: 'holyfamily',
   feastDate: moment().format('YYYY-MM-DD'),
+  existingId: null,
   text: '<h2>Тэставае чытанне</h2><p>Гэта тэставы тэкст для праверкі сістэмы чытанняў.</p>',
 });
 
@@ -281,6 +296,7 @@ function onTypeChange() {
   formData.value.feastId = 'holyFamily';
   formData.value.feastName = 'holyfamily';
   formData.value.feastDate = moment().format('YYYY-MM-DD');
+  formData.value.existingId = null;
 }
 
 function onFeastIdChange() {
@@ -295,9 +311,13 @@ async function addTestReading() {
   
   try {
     const data = {
-      cycle: formData.value.cycle,
       text: formData.value.text,
+      updatedAt: serverTimestamp(),
     };
+
+    if (formData.value.cycle) {
+      data.cycle = formData.value.cycle;
+    }
 
     // Добавляем поля в зависимости от типа
     if (formData.value.type === 'period') {
@@ -305,15 +325,23 @@ async function addTestReading() {
       data._periodWeekNumber = formData.value._periodWeekNumber;
       data._dayOfWeek = formData.value._dayOfWeek;
     } else if (formData.value.type === 'date') {
-      data._date = formData.value._date;
+      data._date = moment(formData.value._date).format('D.M');
     } else if (formData.value.type === 'feast') {
-      data.feastId = formData.value.feastId;
-      data.feastName = formData.value.feastName;
-      data.feastDate = formData.value.feastDate;
+      data._feast = formData.value.feastName?.toLowerCase().trim();
     }
 
-    await addReading(data);
-    notifySuccess('Чытанне дададзена паспяхова');
+    const docId = formData.value.existingId || buildReadingId(data);
+    const payload = {
+      ...data,
+      createdAt: serverTimestamp(),
+    };
+    if (formData.value.existingId) {
+      delete payload.createdAt;
+    }
+
+    await setDoc(doc(db, 'readings', docId), payload, { merge: !!formData.value.existingId });
+    notifySuccess(formData.value.existingId ? 'Чытанне абноўлена' : `Чытанне створана: ${docId}`);
+    formData.value.existingId = docId;
     
     // Очистка формы
     formData.value.text = '<h2>Тэставае чытанне</h2><p>Гэта тэставы тэкст для праверкі сістэмы чытанняў.</p>';
@@ -321,6 +349,68 @@ async function addTestReading() {
     notifyError('Памылка пры даданні чытання: ' + (error.message || error));
   } finally {
     adding.value = false;
+  }
+}
+
+function buildReadingId(data) {
+  if (data._periodType && data._periodWeekNumber && data._dayOfWeek) {
+    return `${data._periodType}-w${data._periodWeekNumber}-d${data._dayOfWeek}`;
+  }
+
+  if (data._feast) {
+    return `feast-${data._feast}`;
+  }
+
+  if (data._date) {
+    const normalizedDate = moment(data._date, 'D.M').format('DD.MM');
+    const uid = Math.random().toString(36).slice(2, 8);
+    return `${normalizedDate}-${uid}`;
+  }
+
+  throw new Error('Не атрымалася сфармаваць ID для чытання');
+}
+
+async function loadByParams() {
+  loadingExisting.value = true;
+
+  try {
+    const conditions = [];
+
+    if (formData.value.cycle) {
+      conditions.push(where('cycle', '==', formData.value.cycle));
+    }
+
+    if (formData.value.type === 'period') {
+      conditions.push(where('_periodType', '==', formData.value._periodType));
+      conditions.push(where('_periodWeekNumber', '==', Number(formData.value._periodWeekNumber)));
+      conditions.push(where('_dayOfWeek', '==', Number(formData.value._dayOfWeek)));
+    }
+
+    if (formData.value.type === 'date') {
+      conditions.push(where('_date', '==', moment(formData.value._date).format('D.M')));
+    }
+
+    if (formData.value.type === 'feast') {
+      conditions.push(where('_feast', '==', formData.value.feastName?.toLowerCase().trim()));
+    }
+
+    const snapshot = await getDocs(query(collection(db, 'readings'), ...conditions));
+    if (snapshot.empty) {
+      formData.value.existingId = null;
+      notifyError('Па гэтых параметрах чытанне не знойдзена. Можна стварыць новае.');
+      return;
+    }
+
+    const firstDoc = snapshot.docs[0];
+    const data = firstDoc.data();
+    formData.value.existingId = firstDoc.id;
+    formData.value.text = data.text || '';
+    formData.value.cycle = data.cycle || null;
+    notifySuccess(`Загружана чытанне: ${firstDoc.id}`);
+  } catch (error) {
+    notifyError('Памылка загрузкі: ' + (error.message || error));
+  } finally {
+    loadingExisting.value = false;
   }
 }
 
@@ -374,8 +464,8 @@ function getResultSubtitle(result) {
   if (result._date) {
     parts.push(`Дата: ${result._date}`);
   }
-  if (result.feastName) {
-    parts.push(`Свята: ${result.feastName}`);
+  if (result._feast || result.feastName) {
+    parts.push(`Свята: ${result._feast || result.feastName}`);
   }
   
   return parts.join(' | ') || 'Без дадатковых параметраў';
@@ -388,4 +478,3 @@ function getResultSubtitle(result) {
   line-height: 1.6;
 }
 </style>
-
