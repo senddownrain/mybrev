@@ -168,7 +168,6 @@
 </template>
 
 <script setup>
-import { collection, doc, getDocs, query, setDoc, where, serverTimestamp } from 'firebase/firestore';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useReadings } from '@/composables/useReadings';

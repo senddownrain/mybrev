@@ -91,24 +91,6 @@
           </v-list-item>
         </v-list>
 
-        <div v-if="isAdmin && dayOptions.some((option) => !option.hasLiturgicalDay || !option.hasReadings)" class="mt-3 d-flex flex-wrap ga-2">
-          <v-btn
-            color="primary"
-            variant="tonal"
-            prepend-icon="mdi-plus-box"
-            @click="goToCreateDay"
-          >
-            Стварыць літургічны дзень
-          </v-btn>
-          <v-btn
-            color="deep-purple"
-            variant="tonal"
-            prepend-icon="mdi-book-plus"
-            @click="goToCreateReading"
-          >
-            Стварыць чытанне
-          </v-btn>
-        </div>
       </v-col>
     </v-row>
 
@@ -238,35 +220,8 @@ const goToPrevDay = () =>
   navigateToDate(currentDate.value.clone().subtract(1, 'day'));
 
 const optionRoute = (option) => {
-  if (option.hasLiturgicalDay && option.dayId) {
-    return `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${option.dayId}`;
-  }
-  return undefined;
-};
-
-const goToCreateDay = () => {
-  router.push({
-    name: 'AdminDayEditor',
-    params: { id: 'new' },
-    query: {
-      _periodType: dayOptions.value[0]?.day?._periodType || '',
-      _periodWeekNumber: dayOptions.value[0]?.day?._periodWeekNumber || '',
-      _dayOfWeek: dayOptions.value[0]?.day?._dayOfWeek || currentDate.value.isoWeekday(),
-    },
-  });
-};
-
-const goToCreateReading = () => {
-  router.push({
-    name: 'ReadingsTest',
-    query: {
-      type: 'period',
-      _periodType: dayOptions.value[0]?.day?._periodType || '',
-      _periodWeekNumber: dayOptions.value[0]?.day?._periodWeekNumber || '',
-      _dayOfWeek: dayOptions.value[0]?.day?._dayOfWeek || currentDate.value.isoWeekday(),
-      _date: currentDate.value.format('YYYY-MM-DD'),
-    },
-  });
+  const targetId = option.dayId || `missing-${option.key}`;
+  return `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${targetId}`;
 };
 
 const getOptionIcon = (option) => {
