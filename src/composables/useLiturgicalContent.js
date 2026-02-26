@@ -5,6 +5,7 @@ import { db } from '@/plugins/firebase';
 import { retryFirestore } from '@/utils/retry';
 import { logger } from '@/utils/logger';
 import { useCalendarStore } from '@/stores/calendar';
+import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
 
 const contentCache = new Map();
 
@@ -281,25 +282,6 @@ export function useLiturgicalContent() {
     return contentCache.get(cacheKey) || null;
   }
 
-  const periodLabelMap = {
-    ordinary: 'Звычайны перыяд',
-    advent: 'Адвэнт',
-    lent: 'Вялікі пост',
-    easter: 'Велікодны перыяд',
-    christmas: 'Перыяд Божага Нараджэння',
-    holyweek: 'Вялікі тыдзень',
-  };
-
-  const weekDayLabelMap = {
-    1: 'Нядзеля',
-    2: 'Панядзелак',
-    3: 'Аўторак',
-    4: 'Серада',
-    5: 'Чацвер',
-    6: 'Пятніца',
-    7: 'Субота',
-  };
-
   const snapshotToDocs = (snapshot) => {
     const docs = [];
     snapshot.forEach((docEntry) => {
@@ -309,8 +291,8 @@ export function useLiturgicalContent() {
   };
 
   const buildPeriodTitle = (context) => {
-    const periodName = periodLabelMap[context.periodType] || 'Літургічны перыяд';
-    const weekDayName = weekDayLabelMap[context.dayOfWeek] || '';
+    const periodName = PERIOD_LABEL_MAP[context.periodType] || 'Літургічны перыяд';
+    const weekDayName = WEEKDAY_LABEL_MAP[context.dayOfWeek] || '';
     const weekChunk = context.periodWeek > -1 ? `${context.periodWeek} тыдз.` : '';
     return [periodName, weekChunk, weekDayName].filter(Boolean).join(', ');
   };
@@ -489,7 +471,7 @@ export function useLiturgicalContent() {
         readingId: option.reading?.id || null,
         hasLiturgicalDay: Boolean(option.day),
         hasReadings: Boolean(option.reading),
-        disabled: !option.day && !option.reading,
+        disabled: !option.day || !option.reading,
       }));
 
     const result = {

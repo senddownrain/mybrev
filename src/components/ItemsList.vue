@@ -239,11 +239,8 @@ const goToPrevDay = () =>
   navigateToDate(currentDate.value.clone().subtract(1, 'day'));
 
 const optionRoute = (option) => {
-  if (option.hasLiturgicalDay && option.dayId) {
-    return `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${option.dayId}`;
-  }
-  if (option.hasReadings) {
-    return `/readings/${currentDate.value.format('YYYY-MM-DD')}`;
+  if (option.hasLiturgicalDay && option.dayId && option.hasReadings && option.readingId) {
+    return `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${option.dayId}/reading/${option.readingId}`;
   }
   return undefined;
 };
