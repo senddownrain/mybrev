@@ -116,6 +116,7 @@ import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { useAppBar } from '@/composables/useAppBar';
 import { logger } from '@/utils/logger';
 import { useNotifier } from '@/composables/useNotifier';
+import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
 const router = useRouter();
@@ -127,6 +128,8 @@ const {
 
 const { toggleCalendarDialog } = useAppBar();
 const { error: notifyError } = useNotifier();
+const authStore = useAuthStore();
+const isAdmin = computed(() => authStore.isAdmin);
 
 const days = ref([]);
 const readings = ref([]); // если пригодится дальше
