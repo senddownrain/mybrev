@@ -67,7 +67,6 @@
             v-for="option in dayOptions"
             :key="option.key"
             :to="optionRoute(option)"
-            :disabled="option.disabled"
             class="mb-2"
             border
             rounded
@@ -92,7 +91,7 @@
           </v-list-item>
         </v-list>
 
-        <div v-if="isAdmin && dayOptions.some((option) => option.disabled)" class="mt-3 d-flex flex-wrap ga-2">
+        <div v-if="isAdmin && dayOptions.some((option) => !option.hasLiturgicalDay || !option.hasReadings)" class="mt-3 d-flex flex-wrap ga-2">
           <v-btn
             color="primary"
             variant="tonal"
@@ -239,8 +238,8 @@ const goToPrevDay = () =>
   navigateToDate(currentDate.value.clone().subtract(1, 'day'));
 
 const optionRoute = (option) => {
-  if (option.hasLiturgicalDay && option.dayId && option.hasReadings && option.readingId) {
-    return `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${option.dayId}/reading/${option.readingId}`;
+  if (option.hasLiturgicalDay && option.dayId) {
+    return `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${option.dayId}`;
   }
   return undefined;
 };
@@ -250,15 +249,24 @@ const goToCreateDay = () => {
     name: 'AdminDayEditor',
     params: { id: 'new' },
     query: {
-      periodType: dayOptions.value[0]?.day?._periodType || '',
-      periodWeek: dayOptions.value[0]?.day?._periodWeekNumber || '',
-      dayOfWeek: dayOptions.value[0]?.day?._dayOfWeek || currentDate.value.isoWeekday(),
+      _periodType: dayOptions.value[0]?.day?._periodType || '',
+      _periodWeekNumber: dayOptions.value[0]?.day?._periodWeekNumber || '',
+      _dayOfWeek: dayOptions.value[0]?.day?._dayOfWeek || currentDate.value.isoWeekday(),
     },
   });
 };
 
 const goToCreateReading = () => {
-  router.push({ name: 'ReadingsTest' });
+  router.push({
+    name: 'ReadingsTest',
+    query: {
+      type: 'period',
+      _periodType: dayOptions.value[0]?.day?._periodType || '',
+      _periodWeekNumber: dayOptions.value[0]?.day?._periodWeekNumber || '',
+      _dayOfWeek: dayOptions.value[0]?.day?._dayOfWeek || currentDate.value.isoWeekday(),
+      _date: currentDate.value.format('YYYY-MM-DD'),
+    },
+  });
 };
 
 const getOptionIcon = (option) => {
@@ -268,9 +276,11 @@ const getOptionIcon = (option) => {
 };
 
 const getOptionColor = (option) => {
-  if (option.source === 'dynamic') return 'amber-darken-2';
-  if (option.source === 'fixed') return 'red-darken-2';
-  return 'green-darken-2';
+  const periodType = option.day?._periodType || option.contextPeriodType;
+  if (periodType === 'advent' || periodType === 'lent') return 'purple-darken-3';
+  if (periodType === 'easter' || periodType === 'christmas') return 'yellow-darken-3';
+  if (periodType === 'ordinary') return 'green-darken-2';
+  return 'red-darken-2';
 };
 
 watch(

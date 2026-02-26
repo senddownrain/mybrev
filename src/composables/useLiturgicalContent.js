@@ -297,6 +297,11 @@ export function useLiturgicalContent() {
     return [periodName, weekChunk, weekDayName].filter(Boolean).join(', ');
   };
 
+  const pickReadingWithoutPlace = (readings) => {
+    if (!readings.length) return null;
+    return readings.find((reading) => !reading.place) || readings[0];
+  };
+
   async function getLiturgicalContentForDate(currentDate) {
     const cacheKey = getCacheKeyForDate(currentDate);
 
@@ -414,6 +419,7 @@ export function useLiturgicalContent() {
       day: periodDay,
       reading: periodReading,
       order: 1,
+      contextPeriodType: context.periodType,
     });
 
     const dynamicFeastKeys = [...new Set([
@@ -433,11 +439,24 @@ export function useLiturgicalContent() {
         day,
         reading,
         order: 2,
+        contextPeriodType: context.periodType,
       });
     });
 
+    const fixedReadingsPool = [...fixedReadingsDocs];
+
     fixedDaysDocs.forEach((day) => {
-      const reading = fixedReadingsDocs.find((item) => item.id === day.id) || null;
+      let reading = fixedReadingsPool.find((item) => item.id === day.id) || null;
+      if (!reading) {
+        reading = pickReadingWithoutPlace(fixedReadingsPool);
+      }
+      if (reading) {
+        const readingIndex = fixedReadingsPool.findIndex((item) => item.id === reading.id);
+        if (readingIndex > -1) {
+          fixedReadingsPool.splice(readingIndex, 1);
+        }
+      }
+
       liturgicalOptions.push({
         key: `fixed-${day.id}`,
         source: 'fixed',
@@ -446,11 +465,11 @@ export function useLiturgicalContent() {
         day,
         reading,
         order: 3,
+        contextPeriodType: context.periodType,
       });
     });
 
-    fixedReadingsDocs
-      .filter((reading) => !fixedDaysDocs.find((day) => day.id === reading.id))
+    (fixedDaysDocs.length === 0 ? fixedReadingsPool : [])
       .forEach((reading) => {
         liturgicalOptions.push({
           key: `fixed-reading-only-${reading.id}`,
@@ -460,6 +479,7 @@ export function useLiturgicalContent() {
           day: null,
           reading,
           order: 3,
+          contextPeriodType: context.periodType,
         });
       });
 
@@ -471,7 +491,7 @@ export function useLiturgicalContent() {
         readingId: option.reading?.id || null,
         hasLiturgicalDay: Boolean(option.day),
         hasReadings: Boolean(option.reading),
-        disabled: !option.day || !option.reading,
+        disabled: false,
       }));
 
     const result = {

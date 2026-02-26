@@ -265,11 +265,32 @@ const loadReadings = async () => {
 const goToCreateDay = () => {
   const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
   const weekDay = mDate.isoWeekday();
-  router.push({ name: 'AdminDayEditor', params: { id: 'new' }, query: { dayOfWeek: weekDay } });
+  const periodCandidate = readings.value.find((item) => item._periodType);
+  router.push({
+    name: 'AdminDayEditor',
+    params: { id: 'new' },
+    query: {
+      _periodType: periodCandidate?._periodType || '',
+      _periodWeekNumber: periodCandidate?._periodWeekNumber || '',
+      _dayOfWeek: periodCandidate?._dayOfWeek || weekDay,
+    },
+  });
 };
 
 const goToCreateReading = () => {
-  router.push({ name: 'ReadingsTest' });
+  const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
+  const periodCandidate = dayData.value || null;
+
+  router.push({
+    name: 'ReadingsTest',
+    query: {
+      type: periodCandidate?._periodType ? 'period' : 'date',
+      _periodType: periodCandidate?._periodType || '',
+      _periodWeekNumber: periodCandidate?._periodWeekNumber || '',
+      _dayOfWeek: periodCandidate?._dayOfWeek || mDate.isoWeekday(),
+      _date: mDate.format('YYYY-MM-DD'),
+    },
+  });
 };
 
 watch(dateParam, (newDateParam) => {
