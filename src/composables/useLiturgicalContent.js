@@ -191,7 +191,7 @@ export function useLiturgicalContent() {
     const weeksBeforeOrd = parseInt(opts.ordintaryWeeks1) - 1;
 
     const fo = ash.clone()
-      .subtract(2, 'days')
+      .subtract(3, 'days')
       .subtract(weeksBeforeOrd, 'weeks');
 
     if (mDate.isSameOrAfter(fo) && mDate.isBefore(ash)) {
@@ -323,7 +323,7 @@ export function useLiturgicalContent() {
     const context = {
       periodType: periodInfo ? periodInfo.periodType : 'ordinary',
       periodWeek: periodInfo ? periodInfo.periodWeek : -1,
-      dayOfWeek: mDate.isoWeekday(),
+      dayOfWeek: mDate.isoWeekday() === 7 ? 1 : mDate.isoWeekday() + 1,
     };
 
     const dynamicDayQueries = getDynamicFeastsDaysQueries(mDate, year);
