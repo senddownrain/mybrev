@@ -119,8 +119,8 @@
             />
           </div>
 
-          <v-btn type="submit" color="primary" :loading="adding" :disabled="adding" block>
-            {{ adding ? 'Захаванне...' : (formData.existingId ? 'Захаваць змены' : 'Стварыць чытанне') }}
+          <v-btn type="submit" color="primary" :loading="isSavePending" :disabled="isSavePending" block>
+            {{ isSavePending ? 'Захаванне...' : (formData.existingId ? 'Захаваць змены' : 'Стварыць чытанне') }}
           </v-btn>
 
           <v-alert
@@ -168,7 +168,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { collection, doc, getDocs, query, setDoc, where, serverTimestamp } from 'firebase/firestore';
+import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useReadings } from '@/composables/useReadings';
 import { useNotifier } from '@/composables/useNotifier';
@@ -187,6 +188,7 @@ const searchedMissing = ref(false);
 const missingPeriodReadings = ref([]);
 const selectedMissingKey = ref(null);
 const saveState = ref({ type: '', message: '' });
+const isSavePending = computed(() => saveState.value.type === 'info');
 
 const formData = ref({
   cycle: null,
@@ -379,7 +381,7 @@ function getPeriodKey(item) {
 
 
 async function addTestReading() {
-  if (adding.value) return;
+  if (isSavePending.value) return;
 
   adding.value = true;
   saveState.value = { type: 'info', message: 'Захоўваем чытанне ў базу...' };
@@ -422,14 +424,19 @@ async function addTestReading() {
       ? `Чытанне абноўлена (${docId}). Можна захоўваць далей.`
       : `Чытанне створана (${docId}). Цяпер можна працягваць рэдагаванне.`;
 
+    adding.value = false;
     saveState.value = { type: 'success', message: successMessage };
     notifySuccess(successMessage);
   } catch (error) {
     const errMessage = 'Памылка пры захаванні чытання: ' + (error.message || error);
+    adding.value = false;
     saveState.value = { type: 'error', message: errMessage };
     notifyError(errMessage);
   } finally {
-    loadingExisting.value = false;
+    adding.value = false;
+    if (saveState.value.type === 'info') {
+      saveState.value = { type: 'success', message: 'Захаванне завершана. Можна працягваць.' };
+    }
   }
 }
 
