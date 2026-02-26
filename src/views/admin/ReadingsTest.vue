@@ -32,7 +32,7 @@
             </v-col>
 
             <v-col cols="12" md="4" class="d-flex align-center">
-              <v-btn color="secondary" variant="outlined" block :loading="loadingExisting" @click="loadByParams">
+              <v-btn type="button" color="secondary" variant="outlined" block :loading="loadingExisting" @click="loadByParams()">
                 Загрузіць па параметрах
               </v-btn>
             </v-col>
@@ -143,7 +143,13 @@
             :key="item.key"
             :title="`${item._periodType}, тыдзень ${item._periodWeekNumber}, дзень ${item._dayOfWeek}`"
             :subtitle="item._dayName || item._date || item.id"
-          />
+            :active="selectedMissingKey === item.key"
+            @click="selectMissingPeriodItem(item)"
+          >
+            <template #append>
+              <v-icon icon="mdi-arrow-up-bold-circle-outline" />
+            </template>
+          </v-list-item>
         </v-list>
       </v-card-text>
     </v-card>
@@ -168,6 +174,7 @@ const loadingExisting = ref(false);
 const searchingMissing = ref(false);
 const searchedMissing = ref(false);
 const missingPeriodReadings = ref([]);
+const selectedMissingKey = ref(null);
 
 const formData = ref({
   cycle: null,
@@ -254,7 +261,8 @@ function buildReadingId(data) {
   throw new Error('Не атрымалася сфармаваць ID для чытання');
 }
 
-async function loadByParams() {
+async function loadByParams(options = {}) {
+  const { silentNotFound = false } = options;
   loadingExisting.value = true;
 
   try {
@@ -265,10 +273,40 @@ async function loadByParams() {
     }
 
     if (formData.value.type === 'period') {
-      conditions.push(where('_periodType', '==', formData.value._periodType));
-      conditions.push(where('_periodWeekNumber', '==', Number(formData.value._periodWeekNumber)));
-      conditions.push(where('_dayOfWeek', '==', Number(formData.value._dayOfWeek)));
-    } else if (formData.value.type === 'date') {
+      const week = Number(formData.value._periodWeekNumber);
+      const day = Number(formData.value._dayOfWeek);
+      const baseConditions = [
+        where('_periodType', '==', formData.value._periodType),
+      ];
+
+      const queryVariants = [
+        query(collection(db, 'readings'), ...baseConditions, where('_periodWeekNumber', '==', week), where('_dayOfWeek', '==', day), ...conditions),
+        query(collection(db, 'readings'), ...baseConditions, where('_periodWeekNumber', '==', String(week)), where('_dayOfWeek', '==', String(day)), ...conditions),
+        query(collection(db, 'readings'), ...baseConditions, where('_periodWeekNumber', '==', week), where('_dayOfWeek', '==', String(day)), ...conditions),
+        query(collection(db, 'readings'), ...baseConditions, where('_periodWeekNumber', '==', String(week)), where('_dayOfWeek', '==', day), ...conditions),
+      ];
+
+      for (const periodQuery of queryVariants) {
+        const snapshot = await getDocs(periodQuery);
+        if (!snapshot.empty) {
+          const firstDoc = snapshot.docs[0];
+          const data = firstDoc.data();
+          formData.value.existingId = firstDoc.id;
+          formData.value.text = data.text || '';
+          formData.value.cycle = data.cycle || null;
+          notifySuccess(`Загружана чытанне: ${firstDoc.id}`);
+          return true;
+        }
+      }
+
+      formData.value.existingId = null;
+      if (!silentNotFound) {
+        notifyError('Па гэтых параметрах чытанне не знойдзена. Можна стварыць новае.');
+      }
+      return false;
+    }
+
+    if (formData.value.type === 'date') {
       conditions.push(where('_date', '==', moment(formData.value._date).format('D.M')));
     } else if (formData.value.type === 'feast') {
       conditions.push(where('_feast', '==', formData.value.feastName?.toLowerCase().trim()));
@@ -277,8 +315,10 @@ async function loadByParams() {
     const snapshot = await getDocs(query(collection(db, 'readings'), ...conditions));
     if (snapshot.empty) {
       formData.value.existingId = null;
-      notifyError('Па гэтых параметрах чытанне не знойдзена. Можна стварыць новае.');
-      return;
+      if (!silentNotFound) {
+        notifyError('Па гэтых параметрах чытанне не знойдзена. Можна стварыць новае.');
+      }
+      return false;
     }
 
     const firstDoc = snapshot.docs[0];
@@ -287,12 +327,27 @@ async function loadByParams() {
     formData.value.text = data.text || '';
     formData.value.cycle = data.cycle || null;
     notifySuccess(`Загружана чытанне: ${firstDoc.id}`);
+    return true;
   } catch (error) {
     notifyError('Памылка загрузкі: ' + (error.message || error));
+    return false;
   } finally {
     loadingExisting.value = false;
   }
 }
+
+function getPeriodKey(item) {
+  const periodType = String(item?._periodType || '').trim().toLowerCase();
+  const week = Number(item?._periodWeekNumber);
+  const day = Number(item?._dayOfWeek);
+
+  if (!periodType || !Number.isFinite(week) || !Number.isFinite(day) || week < 1 || day < 1) {
+    return null;
+  }
+
+  return `${periodType}|${week}|${day}`;
+}
+
 
 async function addTestReading() {
   adding.value = true;
@@ -334,7 +389,22 @@ async function addTestReading() {
   } catch (error) {
     notifyError('Памылка пры захаванні чытання: ' + (error.message || error));
   } finally {
-    adding.value = false;
+    loadingExisting.value = false;
+  }
+}
+
+
+async function selectMissingPeriodItem(item) {
+  selectedMissingKey.value = item.key;
+  formData.value.type = 'period';
+  formData.value._periodType = item._periodType;
+  formData.value._periodWeekNumber = Number(item._periodWeekNumber);
+  formData.value._dayOfWeek = Number(item._dayOfWeek);
+  formData.value.existingId = null;
+
+  const found = await loadByParams({ silentNotFound: true });
+  if (!found) {
+    notifyError('Для выбранага перыяду чытанне сапраўды адсутнічае. Можна дадаць уручную.');
   }
 }
 
@@ -358,8 +428,8 @@ async function findMissingPeriodReadings() {
 
     const expectedMap = new Map();
     allPeriodDays.forEach((day) => {
-      if (!day._periodType || !day._periodWeekNumber || !day._dayOfWeek) return;
-      const key = `${day._periodType}|${day._periodWeekNumber}|${day._dayOfWeek}`;
+      const key = getPeriodKey(day);
+      if (!key) return;
       if (!expectedMap.has(key)) {
         expectedMap.set(key, { ...day, key });
       }
@@ -375,8 +445,9 @@ async function findMissingPeriodReadings() {
     readingSnapshots.forEach((snapshot) => {
       snapshot.docs.forEach((docSnap) => {
         const reading = docSnap.data();
-        if (!reading._periodType || !reading._periodWeekNumber || !reading._dayOfWeek) return;
-        existingKeys.add(`${reading._periodType}|${reading._periodWeekNumber}|${reading._dayOfWeek}`);
+        const key = getPeriodKey(reading);
+        if (!key) return;
+        existingKeys.add(key);
       });
     });
 
