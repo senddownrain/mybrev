@@ -82,6 +82,7 @@ import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { useCalendarStore } from '@/stores/calendar';
 import { logger } from '@/utils/logger';
 import moment from '@/utils/moment-be';
+import { FEAST_TYPE_LABEL_MAP } from '@/constants/liturgical';
 
 const props = defineProps({
   year: {
@@ -188,12 +189,7 @@ function formatFixedDate(dateStr) {
 }
 
 function getRankName(rank) {
-  const rankMap = {
-    solemnity: 'Урачыстасць',
-    feast: 'Свята',
-    memorial: 'Успамін'
-  };
-  return rankMap[rank] || rank;
+  return FEAST_TYPE_LABEL_MAP[rank] || rank;
 }
 
 function selectFeast(feast) {

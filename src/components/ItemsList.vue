@@ -117,6 +117,7 @@ import { useAppBar } from '@/composables/useAppBar';
 import { logger } from '@/utils/logger';
 import { useNotifier } from '@/composables/useNotifier';
 import { useAuthStore } from '@/stores/auth';
+import { LITURGICAL_OPTION_SOURCE } from '@/constants/liturgical';
 
 const route = useRoute();
 const router = useRouter();
@@ -225,8 +226,8 @@ const optionRoute = (option) => {
 };
 
 const getOptionIcon = (option) => {
-  if (option.source === 'dynamic') return 'mdi-star-four-points';
-  if (option.source === 'fixed') return 'mdi-calendar-star';
+  if (option.source === LITURGICAL_OPTION_SOURCE.DYNAMIC) return 'mdi-star-four-points';
+  if (option.source === LITURGICAL_OPTION_SOURCE.FIXED) return 'mdi-calendar-star';
   return 'mdi-calendar-blank';
 };
 

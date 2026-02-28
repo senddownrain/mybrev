@@ -5,6 +5,7 @@ import moment from '@/utils/moment-be';
 import { db } from '@/plugins/firebase';
 import { retryFirestore } from '@/utils/retry';
 import { logger } from '@/utils/logger';
+import { FEAST_NAME_MAP } from '@/constants/liturgicalFeastsMap';
 
 export function useLiturgicalDay() {
     const calendarStore = useCalendarStore();
@@ -12,21 +13,7 @@ export function useLiturgicalDay() {
     
     const feastsCache = {};
 
-    const feastNameMap = {
-        holyFamily: 'holyfamily',
-        baptismOfLord: 'buptismofthelord',
-        holyTrinity: 'trinity',
-        christKing: 'christking',
-        sacredHeartOfJesus: 'heartofjesus',
-        immaculateHeartOfMary: 'heartofmary',
-        christTheHighPriest: 'christthehighpriest',
-        ashWednesday: 'ash',
-        easterSunday: 'eastersunday',
-        pentecost: 'pentecost',
-        palmsSnday: 'palmsunday',
-        corpusChristi: 'palmsunday',
-        ascension: 'ascension'
-    };
+    const feastNameMap = FEAST_NAME_MAP;
 
     const getMoment = (isoDateStr) => moment(isoDateStr, 'YYYY-MM-DD');
 
@@ -75,7 +62,7 @@ export function useLiturgicalDay() {
 
             if (startDiff < 0) return getItemsForPeriodQuery('lent', 7 + startDiff + 1, 0);
             if (endDiff > 0 && endDiff < 8) return getItemsForPeriodQuery('holyweek', endDiff + 1, 1);
-            if (endDiff === 0) return query(daysCollection, where('_feast', '==', 'palmSunday'));
+            if (endDiff === 0) return query(daysCollection, where('_feast', '==', 'palmsunday'));
             return getItemsForPeriodQuery('lent', startDiff % 7 + 1, Math.floor(startDiff / 7) + 1);
         }
 
@@ -197,7 +184,7 @@ export function useLiturgicalDay() {
                 context.periodType = 'holyweek';
                 context.periodWeek = 1;
                 context.dayOfWeek = 1;
-                context._feast = 'palmSunday';
+                context._feast = 'palmsunday';
                 return context;
             }
             context.periodType = 'lent';

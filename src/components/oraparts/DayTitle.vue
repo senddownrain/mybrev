@@ -37,9 +37,9 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useDocument } from 'vuefire';
 import { doc, getFirestore } from 'firebase/firestore';
-import moment from '@/utils/moment-be'; // Кастомная белорусская локаль
-import { db } from '@/plugins/firebase'; 
-// --- Инициализация ---
+import moment from '@/utils/moment-be';
+import { db } from '@/plugins/firebase';
+import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP, FEAST_TYPE_LABEL_MAP } from '@/constants/liturgical';
 const route = useRoute();
 //const db = getFirestore();
 
@@ -62,33 +62,15 @@ const formattedDate = computed(() => {
   return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 });
 
-// --- Вспомогательные функции для отображения ---
-
 // Перевод ранга на белорусский
-const getRankName = (rank) => {
-  const rankMap = {
-    solemnity: 'Урачыстасць',
-    feast: 'Свята',
-    memorial: 'Успамін'
-  };
-  return rankMap[rank] || rank;
-};
+const getRankName = (rank) => FEAST_TYPE_LABEL_MAP[rank] || rank;
 
 // Формирование заголовка для дня периода
 const getPeriodTitle = (day) => {
   if (!day || !day._periodType) return 'Літургія Гадзінаў';
 
-  const periodMap = {
-    ordinary: 'Звычайны перыяд',
-    advent: 'Адвэнт',
-    lent: 'Вялікі Пост',
-    easter: 'Велікодны перыяд',
-    christmas: 'Перыяд Нараджэння Пана',
-    holyweek: 'Вялікі тыдзень'
-  };
-  const periodName = periodMap[day._periodType] || 'Перыяд';
-  const dayOfWeekMap = { '1': 'Нядзеля', '2': 'Панядзелак', '3': 'Аўторак', '4': 'Серада', '5': 'Чацвер', '6': 'Пятніца', '7': 'Субота' };
-  const dayName = dayOfWeekMap[day._dayOfWeek] || '';
+  const periodName = PERIOD_LABEL_MAP[day._periodType] || 'Перыяд';
+  const dayName = WEEKDAY_LABEL_MAP[day._dayOfWeek] || '';
 
   return `${periodName}, ${day._periodWeekNumber} тыдзень, ${dayName}`;
 };

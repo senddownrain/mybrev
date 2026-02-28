@@ -28,28 +28,18 @@ export const useReadingsStore = defineStore('readings', () => {
         currentReading.value = results[0];
         logger.log('[readingsStore] Выбрана адно чытанне:', results[0].id, 'з крыніцы:', results[0]._source);
       } else if (results.length > 1) {
-        // Если несколько, выбираем наиболее подходящее:
-        // 1. Приоритет чтениям из новой коллекции readings
-        // 2. Затем чтениям с точной датой (_date или day)
-        // 3. Затем чтениям по празднику (_feast)
-        // 4. Затем чтениям по периоду
+        // Приоритет: чтения из коллекции readings, затем по точной дате, празднику, периоду
         const prioritized = results.sort((a, b) => {
-  const aPrimary = (a._source === 'readings' || a._source === 'new' || a._source === 'newReadings');
-  const bPrimary = (b._source === 'readings' || b._source === 'new' || b._source === 'newReadings');
-
-  if (aPrimary && !bPrimary) return -1;
-  if (!aPrimary && bPrimary) return 1;
-
-  // затем по точной дате
-  if ((a._date || a.day) && !(b._date || b.day)) return -1;
-  if (!(a._date || a.day) && (b._date || b.day)) return 1;
-
-  // затем по празднику
-  if (a._feast && !b._feast) return -1;
-  if (!a._feast && b._feast) return 1;
-
-  return 0;
-});
+          const aPrimary = (a._source === 'readings');
+          const bPrimary = (b._source === 'readings');
+          if (aPrimary && !bPrimary) return -1;
+          if (!aPrimary && bPrimary) return 1;
+          if ((a._date || a.day) && !(b._date || b.day)) return -1;
+          if (!(a._date || a.day) && (b._date || b.day)) return 1;
+          if (a._feast && !b._feast) return -1;
+          if (!a._feast && b._feast) return 1;
+          return 0;
+        });
         currentReading.value = prioritized[0];
         logger.log('[readingsStore] Знойдзена некалькі чытанняў для даты:', date, results.length, 'Выбрана:', prioritized[0].id, 'з крыніцы:', prioritized[0]._source);
       } else {
@@ -154,16 +144,16 @@ export const useReadingsStore = defineStore('readings', () => {
       currentReading.value = results[0];
       logger.log('[readingsStore] Выбрана адно чытанне:', results[0].id, 'з крыніцы:', results[0]._source);
     } else if (results.length > 1) {
-          // Приоритет: 'new' > readingsData, затем по точной дате, затем по празднику (_feast)
-          const prioritized = results.sort((a, b) => {
-            if ((a._source === 'new' || a._source === 'newReadings' || a._source === 'readings') && b._source === 'readingsData') return -1;
-            if (a._source === 'readingsData' && (b._source === 'new' || b._source === 'newReadings' || b._source === 'readings')) return 1;
-        if ((a._date || a.day) && !(b._date || b.day)) return -1;
-        if (!(a._date || a.day) && (b._date || b.day)) return 1;
-        if (a._feast && !b._feast) return -1;
-        if (!a._feast && b._feast) return 1;
-        return 0;
-      });
+        // Приоритет: readings, затем по точной дате, празднику
+        const prioritized = results.sort((a, b) => {
+          if ((a._source === 'readings') && b._source !== 'readings') return -1;
+          if ((a._source !== 'readings') && (b._source === 'readings')) return 1;
+          if ((a._date || a.day) && !(b._date || b.day)) return -1;
+          if (!(a._date || a.day) && (b._date || b.day)) return 1;
+          if (a._feast && !b._feast) return -1;
+          if (!a._feast && b._feast) return 1;
+          return 0;
+        });
       currentReading.value = prioritized[0];
       logger.log('[readingsStore] Знойдзена некалькі чытанняў, выбрана:', prioritized[0].id, 'з крыніцы:', prioritized[0]._source);
     } else {

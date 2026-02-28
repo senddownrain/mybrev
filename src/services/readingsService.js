@@ -16,7 +16,7 @@ import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
 import { validateReading, normalizeReading } from '@/utils/readingsValidator';
 import moment from 'moment';
-const READINGS_COLLECTION = 'readings'; // Старая коллекция readings (НЕ используется, оставлена для обратной совместимости в проверках _source)
+const READINGS_COLLECTION = 'readings';
 
 /**
  * Получить коллекцию readings
@@ -104,11 +104,8 @@ export function getReadingsByFeastQuery(_feast, cycle) {
 
 /**
  * Комплексный поиск чтений для конкретной даты
- * 
- * Приоритет коллекций:
- * 1. 'new' (приоритет) - поиск по периоду, дате (D.M), празднику (_feast)
- * 2. readingsData (fallback) - поиск по дате с годом (DD.MM.YYYY), только если в 'new' ничего не найдено
- * 
+ * Коллекция readings: поиск по периоду, дате (D.M), празднику (_feast).
+ *
  * @param {Date|moment.Moment|string} date - Дата
  * @param {Object} options - Опции поиска
  * @param {string} options.cycle - Цикл (A/B/C/1/2)
@@ -122,15 +119,11 @@ export function getReadingsByFeastQuery(_feast, cycle) {
 export async function getReadingsForDate(date, options = {}) {
   const { cycle, periodType, periodWeekNumber, dayOfWeek, _feast, useCache = true, } = options;
   const mDate = moment(date).startOf('day');
-  const dateStr = mDate.format('YYYY-MM-DD'); // Для кэша и readingsData
-  
-  // Firebase persistent cache автоматически кэширует все запросы
-  
+  const dateStr = mDate.format('YYYY-MM-DD');
+
   const queries = [];
-  
-  // 1. Поиск в новой коллекции 'new' (БЕЗ года, только D.M)
-  logger.log(`[readingsService] ========== Поиск в коллекции 'new' для даты ${mDate.format('YYYY-MM-DD')} ==========`);
-  logger.log(`[readingsService] Параметры поиска:`, {
+
+  logger.log(`[readingsService] Поиск чтений для даты ${mDate.format('YYYY-MM-DD')}`, {
     cycle,
     periodType,
     periodWeekNumber,
@@ -138,34 +131,32 @@ export async function getReadingsForDate(date, options = {}) {
     _feast,
     dateFormatted: moment(date).format('D.M')
   });
-  
-  // 1.1. По дате (формат D.M, без года) - С cycle и БЕЗ cycle
+
+  // По дате (формат D.M)
   if (cycle) {
     queries.push(getReadingsByDateQuery(date, cycle)); // Сначала с cycle (более точный поиск)
   }
-  queries.push(getReadingsByDateQuery(date, null)); // Затем без cycle (более широкий поиск)
-  logger.log(`[readingsService] ✓ Запросы по дате: _date="${moment(date).format('D.M')}" (с cycle="${cycle}" и без)`);
-  
-  // 1.2. По периоду (если указаны параметры) - БЕЗ cycle и С cycle
+  queries.push(getReadingsByDateQuery(date, null));
+  logger.log(`[readingsService] Запросы по дате: _date="${moment(date).format('D.M')}" (с cycle и без)`);
+
+  // По периоду
   if (periodType && periodWeekNumber !== undefined && dayOfWeek !== undefined) {
-    // Сначала ищем с cycle (если указан)
     if (cycle) {
       queries.push(...getReadingsByPeriodQueries(periodType, periodWeekNumber, dayOfWeek, cycle));
     }
-    // Затем ищем без cycle (более широкий поиск)
     queries.push(...getReadingsByPeriodQueries(periodType, periodWeekNumber, dayOfWeek, null));
-    logger.log(`[readingsService] ✓ Запросы по периоду: ${periodType}, неделя ${periodWeekNumber}, день недели ${dayOfWeek} (с cycle="${cycle}" и без)`);
+    logger.log(`[readingsService] Запросы по периоду: ${periodType}, неделя ${periodWeekNumber}, день ${dayOfWeek}`);
   } else {
-    logger.log(`[readingsService] ⚠️ Параметры периода неполные: periodType="${periodType}", periodWeekNumber="${periodWeekNumber}", dayOfWeek="${dayOfWeek}"`);
+    logger.log(`[readingsService] Параметры периода неполные: periodType="${periodType}", periodWeekNumber="${periodWeekNumber}", dayOfWeek="${dayOfWeek}"`);
   }
-  
-  // 1.3. По празднику (если указан _feast) - С cycle и БЕЗ cycle
+
+  // По празднику
   if (_feast) {
     if (cycle) {
       queries.push(getReadingsByFeastQuery(_feast, cycle)); // Сначала с cycle (более точный поиск)
     }
-    queries.push(getReadingsByFeastQuery(_feast, null)); // Затем без cycle (более широкий поиск)
-    logger.log(`[readingsService] ✓ Запросы по празднику: _feast="${_feast}" (с cycle="${cycle}" и без)`);
+    queries.push(getReadingsByFeastQuery(_feast, null));
+    logger.log(`[readingsService] Запросы по празднику: _feast="${_feast}"`);
   }
   
   try {
@@ -174,8 +165,8 @@ export async function getReadingsForDate(date, options = {}) {
     );
     
     const results = [];
-    let newCount = 0;
-    const seenIds = new Set(); // Для отслеживания дубликатов
+    let foundCount = 0;
+    const seenIds = new Set();
     
     // Описываем типы запросов для логирования
     const queryTypes = [];
@@ -202,7 +193,7 @@ export async function getReadingsForDate(date, options = {}) {
       snapshot.forEach(doc => {
         if (!seenIds.has(doc.id)) {
           seenIds.add(doc.id);
-          newCount++;
+          foundCount++;
           const docData = doc.data();
           queryResults.push({
             id: doc.id,
@@ -227,26 +218,22 @@ export async function getReadingsForDate(date, options = {}) {
       results.push(...queryResults);
     });
     
-    logger.log(`[readingsService] ========== Всего найдено в 'new': ${newCount} уникальных документов ==========`);
-    
-    // Удаляем дубликаты по ID
+    logger.log(`[readingsService] Найдено документов: ${foundCount}`);
+
     const uniqueResults = Array.from(
       new Map(results.map(item => [item.id, item])).values()
     );
     
     logger.log('[readingsService] Пасля аб\'яднання:', uniqueResults.length, 'чытанняў');
-    
-    // Приоритет: 'new' (новая коллекция) > readingsData (старая)
-    // НО если есть readingsData и нет 'new', используем readingsData
-    // Сортируем так, чтобы 'new' были первыми, но readingsData тоже учитывались
- uniqueResults.sort((a, b) => {
-  // если хочешь дать приоритет документам явно помеченным как 'readings'/'new'
-  const aIsPrimary = (a._source === 'readings' || a._source === 'new' || a._source === 'newReadings');
-  const bIsPrimary = (b._source === 'readings' || b._source === 'new' || b._source === 'newReadings');
-  if (aIsPrimary && !bIsPrimary) return -1;
-  if (!aIsPrimary && bIsPrimary) return 1;
-  return 0;
-});
+
+    // Приоритет: readings > readingsData (если когда-то будет fallback)
+    uniqueResults.sort((a, b) => {
+      const aPrimary = (a._source === 'readings');
+      const bPrimary = (b._source === 'readings');
+      if (aPrimary && !bPrimary) return -1;
+      if (!aPrimary && bPrimary) return 1;
+      return 0;
+    });
     
     // Firebase persistent cache автоматически сохраняет результаты
     

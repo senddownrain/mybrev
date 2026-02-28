@@ -46,6 +46,7 @@
 
 <script setup>
 import moment from '@/utils/moment-be';
+import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP, PERIOD_COLORS } from '@/constants/liturgical';
 
 const props = defineProps({
   items: Array,
@@ -58,37 +59,15 @@ const props = defineProps({
 const getTitle = (day) => {
   if (day.title) return day.title;
   if (day._feastName) return `Свята: ${day._feastName}`;
-  
-  const periodMap = {
-    ordinary: 'Звычайны перыяд',
-    advent: 'Адвэнт',
-    lent: 'Вялікі Пост',
-    easter: 'Велікодны перыяд',
-    christmas: 'Перыяд Божага Нараджэння',
-    holyweek: 'Вялікі тыдзень',
-  };
-  const periodName = periodMap[day._periodType] || 'Перыяд';
-  
-  const dayOfWeekMap = { 1: 'нядзеля', 2: 'панядзелак', 3: 'аўторак', 4: 'серада', 5: 'чацвер', 6: 'пятніца', 7: 'субота' };
-  // Используем isoWeekday(), который соответствует формату moment: Пн=1, Вс=7
-  const dayName = dayOfWeekMap[day._dayOfWeek] || '';
+
+  const periodName = PERIOD_LABEL_MAP[day._periodType] || 'Перыяд';
+  const dayName = (WEEKDAY_LABEL_MAP[day._dayOfWeek] || '').toLowerCase();
 
   return `${periodName}, ${day._periodWeekNumber} тыдзень, ${dayName}`;
 };
 
 // ✅ ЛОГИКА ЦВЕТА - ТЕПЕРЬ ЗДЕСЬ И РАБОТАЕТ
-const getColor = (item) => {
-  const period = item._periodType;
-  const colors = { 
-    advent: 'purple', 
-    lent: 'purple', 
-    holyweek: 'purple-darken-2', 
-    easter: 'amber', 
-    christmas: 'amber', 
-    ordinary: 'green' 
-  };
-  return colors[period] || 'grey-darken-1';
-};
+const getColor = (item) => PERIOD_COLORS[item._periodType] || 'grey-darken-1';
 
 const getLink = (id) => {
   const dateStr = moment(props.currentDate).format('YYYY-MM-DD');

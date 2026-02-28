@@ -127,6 +127,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useCalendarStore } from '@/stores/calendar';
 import { logger } from '@/utils/logger';
 import moment from '@/utils/moment-be';
+import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP, FEAST_TYPE_LABEL_MAP, PERIOD_COLORS } from '@/constants/liturgical';
 
 const props = defineProps({
   year: {
@@ -150,24 +151,16 @@ const selectedDayOfWeek = ref(null);
 const foundDay = ref(null);
 const loading = ref(false);
 
-const periodOptions = [
-  { value: 'ordinary', title: 'Звычайны перыяд', color: 'success' }, // Зеленый
-  { value: 'advent', title: 'Адвэнт', color: 'purple' }, // Фиолетовый
-  { value: 'christmas', title: 'Перыяд Божага Нараджэння', color: 'amber' }, // Золотой/желтый
-  { value: 'lent', title: 'Вялікі Пост', color: 'purple' }, // Фиолетовый
-  { value: 'holyweek', title: 'Вялікі тыдзень', color: 'purple' }, // Фиолетовый
-  { value: 'easter', title: 'Велікодны перыяд', color: 'amber' }, // Золотой/желтый
-];
+const periodOptions = Object.entries(PERIOD_LABEL_MAP).map(([value, title]) => ({
+  value,
+  title,
+  color: PERIOD_COLORS[value] || 'grey',
+}));
 
-const dayOfWeekOptions = [
-  { value: 1, title: 'Нядзеля' },
-  { value: 2, title: 'Панядзелак' },
-  { value: 3, title: 'Аўторак' },
-  { value: 4, title: 'Серада' },
-  { value: 5, title: 'Чацвер' },
-  { value: 6, title: 'Пятніца' },
-  { value: 7, title: 'Субота' },
-];
+const dayOfWeekOptions = Object.entries(WEEKDAY_LABEL_MAP).map(([value, title]) => ({
+  value: parseInt(value, 10),
+  title,
+}));
 
 // Максимальное количество недель для каждого периода
 const maxWeeksForPeriod = {
@@ -220,26 +213,13 @@ async function searchDay(periodType, periodWeekNumber, dayOfWeek) {
 }
 
 function getPeriodTitle(day) {
-  const periodMap = {
-    ordinary: 'Звычайны перыяд',
-    advent: 'Адвэнт',
-    lent: 'Вялікі Пост',
-    easter: 'Велікодны перыяд',
-    christmas: 'Перыяд Нараджэння Пана',
-    holyweek: 'Вялікі тыдзень'
-  };
-  const periodName = periodMap[day._periodType] || 'Перыяд';
-  const dayName = dayOfWeekOptions.find(d => d.value === parseInt(day._dayOfWeek))?.title || '';
+  const periodName = PERIOD_LABEL_MAP[day._periodType] || 'Перыяд';
+  const dayName = dayOfWeekOptions.find(d => d.value === parseInt(day._dayOfWeek, 10))?.title || '';
   return `${periodName}, ${day._periodWeekNumber} тыдзень, ${dayName}`;
 }
 
 function getRankName(rank) {
-  const rankMap = {
-    solemnity: 'Урачыстасць',
-    feast: 'Свята',
-    memorial: 'Успамін'
-  };
-  return rankMap[rank] || rank;
+  return FEAST_TYPE_LABEL_MAP[rank] || rank;
 }
 
 async function openDay() {

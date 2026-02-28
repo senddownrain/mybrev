@@ -98,6 +98,7 @@ import moment from '@/utils/moment-be';
 import { db } from '@/plugins/firebase';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { logger } from '@/utils/logger';
+import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP, FEAST_TYPE_LABEL_MAP } from '@/constants/liturgical';
 import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
@@ -207,40 +208,13 @@ const readingItem = computed(() => {
   };
 });
 
-const getRankName = (rank) => {
-  const rankMap = {
-    solemnity: 'Урачыстасць',
-    feast: 'Свята',
-    memorial: 'Успамін',
-  };
-  return rankMap[rank] || rank;
-};
+const getRankName = (rank) => FEAST_TYPE_LABEL_MAP[rank] || rank;
 
 const getPeriodTitle = (day) => {
   if (!day || !day._periodType) return 'Літургія Гадзінаў';
 
-  const periodMap = {
-    ordinary: 'Звычайны перыяд',
-    advent: 'Адвэнт',
-    lent: 'Вялікі Пост',
-    easter: 'Велікодны перыяд',
-    christmas: 'Перыяд Нараджэння Пана',
-    holyweek: 'Вялікі тыдзень',
-  };
-
-  const periodName = periodMap[day._periodType] || 'Перыяд';
-
-  const dayOfWeekMap = {
-    1: 'Нядзеля',
-    2: 'Панядзелак',
-    3: 'Аўторак',
-    4: 'Серада',
-    5: 'Чацвер',
-    6: 'Пятніца',
-    7: 'Субота',
-  };
-
-  const dayName = dayOfWeekMap[day._dayOfWeek] || '';
+  const periodName = PERIOD_LABEL_MAP[day._periodType] || 'Перыяд';
+  const dayName = WEEKDAY_LABEL_MAP[day._dayOfWeek] || '';
 
   return `${periodName}, ${day._periodWeekNumber} тыдзень, ${dayName}`;
 };

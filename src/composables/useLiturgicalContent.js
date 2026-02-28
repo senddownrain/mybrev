@@ -5,25 +5,10 @@ import { db } from '@/plugins/firebase';
 import { retryFirestore } from '@/utils/retry';
 import { logger } from '@/utils/logger';
 import { useCalendarStore } from '@/stores/calendar';
-import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
+import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP, LITURGICAL_OPTION_SOURCE } from '@/constants/liturgical';
+import { FEAST_NAME_MAP as feastNameMap } from '@/constants/liturgicalFeastsMap';
 
 const contentCache = new Map();
-
-const feastNameMap = {
-  holyFamily: 'holyfamily',
-  baptismOfLord: 'buptismofthelord',
-  holyTrinity: 'trinity',
-  christKing: 'christking',
-  sacredHeartOfJesus: 'heartofjesus',
-  immaculateHeartOfMary: 'heartofmary',
-  christTheHighPriest: 'christthehighpriest',
-  ashWednesday: 'ash',
-  easterSunday: 'eastersunday',
-  pentecost: 'pentecost',
-  palmsSnday: 'palmsunday',
-  corpusChristi: 'corpuschristi',
-  ascension: 'ascension',
-};
 
 function getCacheKeyForDate(date) {
   // date может быть Date или moment — нормализуем к YYYY-MM-DD
@@ -413,7 +398,7 @@ export function useLiturgicalContent() {
 
     liturgicalOptions.push({
       key: `period-${context.periodType}-${context.periodWeek}-${context.dayOfWeek}`,
-      source: 'period',
+      source: LITURGICAL_OPTION_SOURCE.PERIOD,
       title: periodDay?._feastName || periodDay?.title || buildPeriodTitle(context),
       subtitle: 'Літургічны дзень па перыядзе',
       day: periodDay,
@@ -433,7 +418,7 @@ export function useLiturgicalContent() {
       if (!day && !reading) return;
       liturgicalOptions.push({
         key: `dynamic-${feastKey}`,
-        source: 'dynamic',
+        source: LITURGICAL_OPTION_SOURCE.DYNAMIC,
         title: day?._feastName || day?.title || reading?.title || feastKey,
         subtitle: 'Рухомае свята',
         day,
@@ -459,7 +444,7 @@ export function useLiturgicalContent() {
 
       liturgicalOptions.push({
         key: `fixed-${day.id}`,
-        source: 'fixed',
+        source: LITURGICAL_OPTION_SOURCE.FIXED,
         title: day._feastName || day.title || `Дата ${day._date}`,
         subtitle: 'Свята па фіксаванай даце',
         day,
@@ -473,7 +458,7 @@ export function useLiturgicalContent() {
       .forEach((reading) => {
         liturgicalOptions.push({
           key: `fixed-reading-only-${reading.id}`,
-          source: 'fixed',
+          source: LITURGICAL_OPTION_SOURCE.FIXED,
           title: reading.title || `Дата ${reading._date}`,
           subtitle: 'Свята па фіксаванай даце',
           day: null,

@@ -2,6 +2,9 @@
  * Константы для системы чтений (readings)
  */
 
+// Карта праздников — единый источник в constants/liturgicalFeastsMap.js
+export { FEAST_NAME_MAP } from './liturgicalFeastsMap';
+
 // Типы периодов литургического года
 export const PERIOD_TYPES = {
   ADVENT: 'advent',
@@ -19,23 +22,6 @@ export const CYCLES = {
   SUNDAY_C: 'C',
   WEEKDAY_1: '1',
   WEEKDAY_2: '2',
-};
-
-// Маппинг праздников
-export const FEAST_NAME_MAP = {
-  holyFamily: 'holyfamily',
-  baptismOfLord: 'buptismofthelord',
-  holyTrinity: 'trinity',
-  christKing: 'christking',
-  sacredHeartOfJesus: 'heartofjesus',
-  immaculateHeartOfMary: 'heartofmary',
-  christTheHighPriest: 'christthehighpriest',
-  ashWednesday: 'ash',
-  easterSunday: 'eastersunday',
-  pentecost: 'pentecost',
-  palmsSnday: 'palmsunday',
-  corpusChristi: 'corpuschristi',
-  ascension: 'ascension',
 };
 
 // Дни недели (1 = воскресенье, 7 = суббота)

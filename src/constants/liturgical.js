@@ -16,3 +16,27 @@ export const WEEKDAY_LABEL_MAP = {
   6: 'Пятніца',
   7: 'Субота',
 };
+
+/** Ранг свята (_feastType) → подпіс для UI */
+export const FEAST_TYPE_LABEL_MAP = {
+  solemnity: 'Урачыстасць',
+  feast: 'Свята',
+  memorial: 'Успамін',
+};
+
+/** Крыніца опцыі літургічнага дня (period / dynamic / fixed) */
+export const LITURGICAL_OPTION_SOURCE = {
+  PERIOD: 'period',
+  DYNAMIC: 'dynamic',
+  FIXED: 'fixed',
+};
+
+/** Колеры перыядаў для UI (chips, borders) */
+export const PERIOD_COLORS = {
+  ordinary: 'success',
+  advent: 'purple',
+  christmas: 'amber',
+  lent: 'purple',
+  holyweek: 'purple',
+  easter: 'amber',
+};

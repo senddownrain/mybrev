@@ -173,13 +173,13 @@ const years = computed(() => {
 
 // Обработка изменения месяца
 const onMonthChange = (monthIndex) => {
-  currentMonth.value.month(monthIndex)
+  currentMonth.value = currentMonth.value.clone().month(monthIndex)
   selectedMonth.value = monthIndex
 }
 
 // Обработка изменения года
 const onYearChange = (year) => {
-  currentMonth.value.year(year)
+  currentMonth.value = currentMonth.value.clone().year(year)
   selectedYear.value = year
 }
 
@@ -301,13 +301,13 @@ const selectDate = (day) => {
 
 // Навигация по месяцам
 const previousMonth = () => {
-  currentMonth.value.subtract(1, 'month')
+  currentMonth.value = currentMonth.value.clone().subtract(1, 'month')
   selectedMonth.value = currentMonth.value.month()
   selectedYear.value = currentMonth.value.year()
 }
 
 const nextMonth = () => {
-  currentMonth.value.add(1, 'month')
+  currentMonth.value = currentMonth.value.clone().add(1, 'month')
   selectedMonth.value = currentMonth.value.month()
   selectedYear.value = currentMonth.value.year()
 }
