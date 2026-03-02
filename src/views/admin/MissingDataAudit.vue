@@ -2,7 +2,7 @@
   <v-container>
     <h1 class="text-h4 mb-2">Пошук недастаючых дадзеных</h1>
     <p class="text-body-2 text-medium-emphasis mb-4">
-      Арыенцір для фіксаваных дат: поўны набор дат з <code>readings</code>. Для чытанняў падсвечваюцца запісы з запаўняльнікам тэксту («чтения ...»).
+      Арыенцір для фіксаваных дат: поўны набор дат з <code>readings</code>. У чытаннях шукаюцца запісы без тэксту або з запаўняльнікам («чтения ...»).
     </p>
 
     <v-card class="mb-6" variant="outlined">
@@ -14,24 +14,42 @@
           Недастаючых чытанняў не знойдзена.
         </v-alert>
 
-        <template v-if="missingReadings.length">
-          <div v-for="group in groupedReadingsConfig" :key="`readings-${group.type}`" class="mt-4">
-            <div class="text-subtitle-1 font-weight-medium mb-2">{{ group.title }} ({{ readingsGrouped[group.type].length }})</div>
-            <v-list v-if="readingsGrouped[group.type].length" density="compact" class="border rounded">
-              <v-list-item
-                v-for="item in readingsGrouped[group.type]"
-                :key="item.key"
-                :title="item.title"
-                :subtitle="item.subtitle"
-              >
-                <template #append>
-                  <v-btn size="small" color="primary" :to="item.createLink">Стварыць</v-btn>
-                </template>
-              </v-list-item>
-            </v-list>
-            <div v-else class="text-body-2 text-medium-emphasis">Няма недастаючых элементаў у гэтай групе.</div>
-          </div>
-        </template>
+        <v-expansion-panels v-if="scannedReadings" v-model="expandedReadings" multiple class="mt-4">
+          <v-expansion-panel v-for="group in groupedConfig" :key="`readings-missing-${group.type}`">
+            <v-expansion-panel-title>
+              Недастаючыя: {{ group.title }} ({{ readingsMissingGrouped[group.type].length }})
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-list v-if="readingsMissingGrouped[group.type].length" density="compact" class="border rounded">
+                <v-list-item v-for="item in readingsMissingGrouped[group.type]" :key="item.key" :title="item.title">
+                  <template #subtitle>
+                    <div class="item-subtitle">{{ item.subtitle }}</div>
+                  </template>
+                  <template #append>
+                    <v-btn size="small" color="primary" :to="item.createLink">Стварыць</v-btn>
+                  </template>
+                </v-list-item>
+              </v-list>
+              <div v-else class="text-body-2 text-medium-emphasis">Няма недастаючых элементаў.</div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
+          <v-expansion-panel v-for="group in groupedConfig" :key="`readings-existing-${group.type}`">
+            <v-expansion-panel-title>
+              Ёсць у базе: {{ group.title }} ({{ readingsExistingGrouped[group.type].length }})
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-list v-if="readingsExistingGrouped[group.type].length" density="compact" class="border rounded">
+                <v-list-item v-for="item in readingsExistingGrouped[group.type].slice(0, 100)" :key="item.key" :title="item.title">
+                  <template #subtitle>
+                    <div class="item-subtitle">{{ item.subtitle }}</div>
+                  </template>
+                </v-list-item>
+              </v-list>
+              <div v-else class="text-body-2 text-medium-emphasis">Няма запісаў у гэтай групе.</div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-card-text>
     </v-card>
 
@@ -44,24 +62,42 @@
           Недастаючых літургічных дзён не знойдзена.
         </v-alert>
 
-        <template v-if="missingDays.length">
-          <div v-for="group in groupedDaysConfig" :key="`days-${group.type}`" class="mt-4">
-            <div class="text-subtitle-1 font-weight-medium mb-2">{{ group.title }} ({{ daysGrouped[group.type].length }})</div>
-            <v-list v-if="daysGrouped[group.type].length" density="compact" class="border rounded">
-              <v-list-item
-                v-for="item in daysGrouped[group.type]"
-                :key="item.key"
-                :title="item.title"
-                :subtitle="item.subtitle"
-              >
-                <template #append>
-                  <v-btn size="small" color="primary" :to="item.createLink">Стварыць</v-btn>
-                </template>
-              </v-list-item>
-            </v-list>
-            <div v-else class="text-body-2 text-medium-emphasis">Няма недастаючых элементаў у гэтай групе.</div>
-          </div>
-        </template>
+        <v-expansion-panels v-if="scannedDays" v-model="expandedDays" multiple class="mt-4">
+          <v-expansion-panel v-for="group in groupedConfig" :key="`days-missing-${group.type}`">
+            <v-expansion-panel-title>
+              Недастаючыя: {{ group.title }} ({{ daysMissingGrouped[group.type].length }})
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-list v-if="daysMissingGrouped[group.type].length" density="compact" class="border rounded">
+                <v-list-item v-for="item in daysMissingGrouped[group.type]" :key="item.key" :title="item.title">
+                  <template #subtitle>
+                    <div class="item-subtitle">{{ item.subtitle }}</div>
+                  </template>
+                  <template #append>
+                    <v-btn size="small" color="primary" :to="item.createLink">Стварыць</v-btn>
+                  </template>
+                </v-list-item>
+              </v-list>
+              <div v-else class="text-body-2 text-medium-emphasis">Няма недастаючых элементаў.</div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+
+          <v-expansion-panel v-for="group in groupedConfig" :key="`days-existing-${group.type}`">
+            <v-expansion-panel-title>
+              Ёсць у базе: {{ group.title }} ({{ daysExistingGrouped[group.type].length }})
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-list v-if="daysExistingGrouped[group.type].length" density="compact" class="border rounded">
+                <v-list-item v-for="item in daysExistingGrouped[group.type].slice(0, 100)" :key="item.key" :title="item.title">
+                  <template #subtitle>
+                    <div class="item-subtitle">{{ item.subtitle }}</div>
+                  </template>
+                </v-list-item>
+              </v-list>
+              <div v-else class="text-body-2 text-medium-emphasis">Няма запісаў у гэтай групе.</div>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-card-text>
     </v-card>
 
@@ -81,13 +117,11 @@ import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { useNotifier } from '@/composables/useNotifier';
 import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
 
-const groupedReadingsConfig = [
+const groupedConfig = [
   { type: 'dynamic', title: 'Дынамічныя святы' },
   { type: 'date', title: 'Фіксаваныя даты' },
   { type: 'period', title: 'Перыяды' },
 ];
-
-const groupedDaysConfig = groupedReadingsConfig;
 
 const { notifyError, notifySuccess } = useNotifier();
 const calendarStore = useCalendarStore();
@@ -99,9 +133,15 @@ const scannedReadings = ref(false);
 const scannedDays = ref(false);
 const missingReadings = ref([]);
 const missingDays = ref([]);
+const existingReadings = ref([]);
+const existingDays = ref([]);
+const expandedReadings = ref([0]);
+const expandedDays = ref([0]);
 
-const readingsGrouped = computed(() => groupByType(missingReadings.value));
-const daysGrouped = computed(() => groupByType(missingDays.value));
+const readingsMissingGrouped = computed(() => groupByType(missingReadings.value));
+const daysMissingGrouped = computed(() => groupByType(missingDays.value));
+const readingsExistingGrouped = computed(() => groupByType(existingReadings.value));
+const daysExistingGrouped = computed(() => groupByType(existingDays.value));
 
 function groupByType(items) {
   return {
@@ -121,7 +161,7 @@ function normalizePeriodKey(item) {
   const periodType = String(item?._periodType || '').trim().toLowerCase();
   const week = Number(item?._periodWeekNumber);
   const day = Number(item?._dayOfWeek);
-  if (!periodType || !Number.isFinite(week) || !Number.isFinite(day) || week < 0 || day < 1) return null;
+  if (!periodType || !Number.isFinite(week) || !Number.isFinite(day) || week < 1 || day < 1) return null;
   return `${periodType}|${week}|${day}`;
 }
 
@@ -157,7 +197,15 @@ function periodSubtitle(periodType, week, day) {
 function readingLinkFor(item) {
   if (item._feast) return { name: 'ReadingsTest', query: { type: 'feast', feastName: item._feast } };
   if (item._date) return { name: 'ReadingsTest', query: { type: 'date', _date: moment(item._date, 'D.M').format('YYYY-MM-DD') } };
-  return { name: 'ReadingsTest', query: { type: 'period', _periodType: item._periodType, _periodWeekNumber: String(item._periodWeekNumber), _dayOfWeek: String(item._dayOfWeek) } };
+  return {
+    name: 'ReadingsTest',
+    query: {
+      type: 'period',
+      _periodType: item._periodType,
+      _periodWeekNumber: String(item._periodWeekNumber),
+      _dayOfWeek: String(item._dayOfWeek),
+    },
+  };
 }
 
 function dayLinkFor(item) {
@@ -165,11 +213,11 @@ function dayLinkFor(item) {
     name: 'AdminDayEditor',
     params: { id: 'new' },
     query: {
-      _periodType: item._periodType || '',
-      _periodWeekNumber: item._periodWeekNumber ? String(item._periodWeekNumber) : '',
-      _dayOfWeek: item._dayOfWeek ? String(item._dayOfWeek) : '',
-      _date: item._date || '',
-      _feast: item._feast || '',
+      _periodType: item._periodType ? String(item._periodType) : undefined,
+      _periodWeekNumber: item._periodWeekNumber ? String(item._periodWeekNumber) : undefined,
+      _dayOfWeek: item._dayOfWeek ? String(item._dayOfWeek) : undefined,
+      _date: item._date ? String(item._date) : undefined,
+      _feast: item._feast ? String(item._feast) : undefined,
     },
   };
 }
@@ -184,11 +232,21 @@ async function buildExpectedPeriodKeys(year) {
     const current = start.clone().add(i, 'days');
     const ctx = await computeLiturgicalContextForDate(current);
     if (!ctx?.periodType || !ctx?.periodWeek || !ctx?.dayOfWeek) continue;
+    if (Number(ctx.periodWeek) < 1) continue;
 
-    if (ctx.periodType === 'ordinary' && ctx.dayOfWeek === 1 && (Number(ctx.periodWeek) === 1 || Number(ctx.periodWeek) === 34)) continue;
+    if (ctx.periodType === 'ordinary' && ctx.dayOfWeek === 1 && (Number(ctx.periodWeek) === 1 || Number(ctx.periodWeek) === 34)) {
+      continue;
+    }
 
     const key = `${ctx.periodType}|${Number(ctx.periodWeek)}|${Number(ctx.dayOfWeek)}`;
-    if (!expected.has(key)) expected.set(key, { key, _periodType: ctx.periodType, _periodWeekNumber: Number(ctx.periodWeek), _dayOfWeek: Number(ctx.dayOfWeek) });
+    if (!expected.has(key)) {
+      expected.set(key, {
+        key,
+        _periodType: ctx.periodType,
+        _periodWeekNumber: Number(ctx.periodWeek),
+        _dayOfWeek: Number(ctx.dayOfWeek),
+      });
+    }
   }
 
   return expected;
@@ -200,13 +258,20 @@ function isMissingReadingText(reading) {
 }
 
 function buildFixedCalendarFromReadings(readingsDocs) {
-  return readingsDocs.filter((doc) => normalizeDate(doc._date)).map((doc) => ({ ...doc, _date: normalizeDate(doc._date) }));
+  return readingsDocs
+    .filter((doc) => normalizeDate(doc._date))
+    .map((doc) => ({ ...doc, _date: normalizeDate(doc._date) }));
+}
+
+function pushResult(target, payload) {
+  target.push(payload);
 }
 
 async function scanReadings() {
   loadingReadings.value = true;
   scannedReadings.value = true;
   missingReadings.value = [];
+  existingReadings.value = [];
 
   try {
     const year = moment().year();
@@ -226,53 +291,64 @@ async function scanReadings() {
       if (pKey) byPeriod.set(pKey, doc);
     });
 
-    const result = [];
+    const missing = [];
+    const existing = [];
 
     Object.entries(FEAST_NAME_MAP).forEach(([feastKey, feastValue]) => {
-      const existing = byFeast.get(String(feastValue).toLowerCase());
-      if (!existing || isMissingReadingText(existing)) {
-        result.push({
-          key: `readings-feast-${feastValue}`,
-          type: 'dynamic',
-          title: `Дынамічнае свята: ${feastValue}`,
-          subtitle: dynamicSubtitle(feastKey, feastValue, year),
-          _feast: feastValue,
-          createLink: readingLinkFor({ _feast: feastValue }),
-        });
-      }
+      const found = byFeast.get(String(feastValue).toLowerCase());
+      const base = {
+        key: `readings-feast-${feastValue}`,
+        type: 'dynamic',
+        title: `Дынамічнае свята: ${feastValue}`,
+        subtitle: dynamicSubtitle(feastKey, feastValue, year),
+        _feast: feastValue,
+        createLink: readingLinkFor({ _feast: feastValue }),
+      };
+
+      if (!found || isMissingReadingText(found)) pushResult(missing, base);
+      else pushResult(existing, base);
     });
 
     const fixedCalendar = buildFixedCalendarFromReadings(readingsDocs);
     fixedCalendar.forEach((item) => {
+      const base = {
+        key: `readings-date-${item.id}`,
+        type: 'date',
+        title: `Фіксаваная дата: ${item._date}`,
+        subtitle: buildDateSubtitle(item._date, item),
+        _date: item._date,
+        createLink: readingLinkFor({ _date: item._date }),
+      };
+
       if (isMissingReadingText(item)) {
-        result.push({
-          key: `readings-date-${item.id}`,
-          type: 'date',
-          title: `Фіксаваная дата: ${item._date}`,
-          subtitle: `${buildDateSubtitle(item._date, item)} • Статус: няма поўнага тэксту`,
-          _date: item._date,
-          createLink: readingLinkFor({ _date: item._date }),
-        });
+        pushResult(missing, { ...base, subtitle: `${base.subtitle} • Статус: няма поўнага тэксту` });
+      } else {
+        pushResult(existing, { ...base, subtitle: `${base.subtitle} • Статус: ёсць` });
       }
     });
 
     const expectedPeriods = await buildExpectedPeriodKeys(year);
     expectedPeriods.forEach((value, key) => {
-      const existing = byPeriod.get(key);
-      if (!existing || isMissingReadingText(existing)) {
-        result.push({
-          key: `readings-period-${key}`,
-          type: 'period',
-          title: `${value._periodType}: тыдзень ${value._periodWeekNumber}, дзень ${value._dayOfWeek}`,
-          subtitle: `${periodSubtitle(value._periodType, value._periodWeekNumber, value._dayOfWeek)} • ${existing ? 'ёсць запіс, але тэкст-запаўняльнік' : 'няма запісу'}`,
-          ...value,
-          createLink: readingLinkFor(value),
-        });
+      const found = byPeriod.get(key);
+      const base = {
+        key: `readings-period-${key}`,
+        type: 'period',
+        title: `${value._periodType}: тыдзень ${value._periodWeekNumber}, дзень ${value._dayOfWeek}`,
+        subtitle: periodSubtitle(value._periodType, value._periodWeekNumber, value._dayOfWeek),
+        ...value,
+        createLink: readingLinkFor(value),
+      };
+
+      if (!found || isMissingReadingText(found)) {
+        pushResult(missing, { ...base, subtitle: `${base.subtitle} • ${found ? 'тэкст-запаўняльнік' : 'няма запісу'}` });
+      } else {
+        pushResult(existing, { ...base, subtitle: `${base.subtitle} • ёсць` });
       }
     });
 
-    missingReadings.value = result;
-    notifySuccess(`Знойдзена недастаючых чытанняў: ${result.length}`);
+    missingReadings.value = missing;
+    existingReadings.value = existing;
+    notifySuccess(`Знойдзена недастаючых чытанняў: ${missing.length}`);
   } catch (error) {
     notifyError(`Памылка пры пошуку недастаючых чытанняў: ${error.message || error}`);
   } finally {
@@ -284,6 +360,7 @@ async function scanDays() {
   loadingDays.value = true;
   scannedDays.value = true;
   missingDays.value = [];
+  existingDays.value = [];
 
   try {
     const year = moment().year();
@@ -291,7 +368,11 @@ async function scanDays() {
     await calendarStore.getYearOptions(year + 1);
     await calendarStore.getDynamicDates(year);
 
-    const [daysSnap, readingsSnap] = await Promise.all([getDocs(collection(db, 'days')), getDocs(collection(db, 'readings'))]);
+    const [daysSnap, readingsSnap] = await Promise.all([
+      getDocs(collection(db, 'days')),
+      getDocs(collection(db, 'readings')),
+    ]);
+
     const daysDocs = daysSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
     const readingsDocs = readingsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
@@ -310,53 +391,57 @@ async function scanDays() {
       }
     });
 
-    const result = [];
+    const missing = [];
+    const existing = [];
 
     Object.entries(FEAST_NAME_MAP).forEach(([feastKey, feastValue]) => {
-      if (!byFeast.has(String(feastValue).toLowerCase())) {
-        result.push({
-          key: `days-feast-${feastValue}`,
-          type: 'dynamic',
-          title: `Дынамічнае свята: ${feastValue}`,
-          subtitle: dynamicSubtitle(feastKey, feastValue, year),
-          _feast: feastValue,
-          createLink: dayLinkFor({ _feast: feastValue }),
-        });
-      }
+      const base = {
+        key: `days-feast-${feastValue}`,
+        type: 'dynamic',
+        title: `Дынамічнае свята: ${feastValue}`,
+        subtitle: dynamicSubtitle(feastKey, feastValue, year),
+        _feast: feastValue,
+        createLink: dayLinkFor({ _feast: feastValue }),
+      };
+      if (!byFeast.has(String(feastValue).toLowerCase())) pushResult(missing, base);
+      else pushResult(existing, base);
     });
 
     const fixedCalendar = buildFixedCalendarFromReadings(readingsDocs);
     fixedCalendar.forEach((item) => {
       const meta = extractMeta(item);
       const sig = `${item._date}|${meta.title}|${meta.rank}|${meta.place}`;
-      if (!dayDateKeys.has(sig)) {
-        result.push({
-          key: `days-date-${item.id}`,
-          type: 'date',
-          title: `Фіксаваная дата: ${item._date}`,
-          subtitle: `${buildDateSubtitle(item._date, item)} • Няма адпаведніка ў days`,
-          _date: item._date,
-          createLink: dayLinkFor({ _date: item._date }),
-        });
-      }
+      const base = {
+        key: `days-date-${item.id}`,
+        type: 'date',
+        title: `Фіксаваная дата: ${item._date}`,
+        subtitle: buildDateSubtitle(item._date, item),
+        _date: item._date,
+        createLink: dayLinkFor({ _date: item._date }),
+      };
+
+      if (!dayDateKeys.has(sig)) pushResult(missing, { ...base, subtitle: `${base.subtitle} • Няма адпаведніка ў days` });
+      else pushResult(existing, { ...base, subtitle: `${base.subtitle} • ёсць` });
     });
 
     const expectedPeriods = await buildExpectedPeriodKeys(year);
     expectedPeriods.forEach((value, key) => {
-      if (!byPeriod.has(key)) {
-        result.push({
-          key: `days-period-${key}`,
-          type: 'period',
-          title: `${value._periodType}: тыдзень ${value._periodWeekNumber}, дзень ${value._dayOfWeek}`,
-          subtitle: `${periodSubtitle(value._periodType, value._periodWeekNumber, value._dayOfWeek)} • Няма запісу ў days`,
-          ...value,
-          createLink: dayLinkFor(value),
-        });
-      }
+      const base = {
+        key: `days-period-${key}`,
+        type: 'period',
+        title: `${value._periodType}: тыдзень ${value._periodWeekNumber}, дзень ${value._dayOfWeek}`,
+        subtitle: periodSubtitle(value._periodType, value._periodWeekNumber, value._dayOfWeek),
+        ...value,
+        createLink: dayLinkFor(value),
+      };
+
+      if (!byPeriod.has(key)) pushResult(missing, { ...base, subtitle: `${base.subtitle} • Няма запісу ў days` });
+      else pushResult(existing, { ...base, subtitle: `${base.subtitle} • ёсць` });
     });
 
-    missingDays.value = result;
-    notifySuccess(`Знойдзена недастаючых літургічных дзён: ${result.length}`);
+    missingDays.value = missing;
+    existingDays.value = existing;
+    notifySuccess(`Знойдзена недастаючых літургічных дзён: ${missing.length}`);
   } catch (error) {
     notifyError(`Памылка пры пошуку недастаючых дзён: ${error.message || error}`);
   } finally {
@@ -364,3 +449,11 @@ async function scanDays() {
   }
 }
 </script>
+
+<style scoped>
+.item-subtitle {
+  white-space: normal;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+</style>

@@ -211,10 +211,22 @@ function applyQueryParamsToSimpleFields() {
   const periodWeekNumber = route.query._periodWeekNumber;
   const dayOfWeek = route.query._dayOfWeek;
   if (!periodType || periodWeekNumber == null || dayOfWeek == null) return;
+
+  const parsedWeek = parseInt(periodWeekNumber, 10);
+  const parsedDay = parseInt(dayOfWeek, 10);
+
   isUpdatingFromWatch.value = true;
   simpleFields.period = periodType;
-  simpleFields.weekNumber = parseInt(periodWeekNumber, 10);
-  simpleFields.dayOfWeek = parseInt(dayOfWeek, 10);
+  simpleFields.weekNumber = parsedWeek;
+  simpleFields.dayOfWeek = parsedDay;
+
+  // Явно применяем в dayData, т.к. watcher simpleFields игнорируется при isUpdatingFromWatch=true
+  if (dayData.value) {
+    dayData.value._periodType = periodType;
+    dayData.value._periodWeekNumber = parsedWeek;
+    dayData.value._dayOfWeek = parsedDay;
+  }
+
   nextTick(() => { isUpdatingFromWatch.value = false; });
 }
 
@@ -303,7 +315,7 @@ onMounted(async () => {
           }
         }
         applyQueryParamsToSimpleFields();
-      applyQueryParamsToDayData();
+        applyQueryParamsToDayData();
       } finally {
         loadingDuplicate.value = false;
       }
