@@ -154,7 +154,7 @@ function groupByType(items) {
 function normalizeDate(value) {
   if (!value) return null;
   const m = moment(String(value), ['D.M', 'DD.MM'], true);
-  return m.isValid() ? m.format('D.M') : null;
+  return m.isValid() ? m.format('DD.MM') : null;
 }
 
 function normalizePeriodKey(item) {
@@ -201,7 +201,7 @@ function periodSubtitle(periodType, week, day) {
 
 function readingLinkFor(item) {
   if (item._feast) return { name: 'ReadingsTest', query: { type: 'feast', feastName: item._feast } };
-  if (item._date) return { name: 'ReadingsTest', query: { type: 'date', _date: moment(item._date, 'D.M').format('YYYY-MM-DD') } };
+  if (item._date) return { name: 'ReadingsTest', query: { type: 'date', _date: moment(item._date, ['DD.MM', 'D.M']).format('YYYY-MM-DD') } };
   return {
     name: 'ReadingsTest',
     query: {
