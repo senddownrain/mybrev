@@ -1,6 +1,9 @@
 <template>
   <v-container>
-    <h1 class="text-h4 mb-4">Пошук недастаючых дадзеных</h1>
+    <h1 class="text-h4 mb-2">Пошук недастаючых дадзеных</h1>
+    <p class="text-body-2 text-medium-emphasis mb-4">
+      Арыенцір для фіксаваных дат: поўны набор дат з <code>readings</code>. Для чытанняў падсвечваюцца запісы з запаўняльнікам тэксту («чтения ...»).
+    </p>
 
     <v-card class="mb-6" variant="outlined">
       <v-card-title>Недастаючыя чытанні (readings)</v-card-title>
@@ -11,18 +14,24 @@
           Недастаючых чытанняў не знойдзена.
         </v-alert>
 
-        <v-list v-if="missingReadings.length" class="mt-4">
-          <v-list-item
-            v-for="item in missingReadings"
-            :key="item.key"
-            :title="item.title"
-            :subtitle="item.subtitle"
-          >
-            <template #append>
-              <v-btn size="small" color="primary" :to="item.createLink">Стварыць</v-btn>
-            </template>
-          </v-list-item>
-        </v-list>
+        <template v-if="missingReadings.length">
+          <div v-for="group in groupedReadingsConfig" :key="`readings-${group.type}`" class="mt-4">
+            <div class="text-subtitle-1 font-weight-medium mb-2">{{ group.title }} ({{ readingsGrouped[group.type].length }})</div>
+            <v-list v-if="readingsGrouped[group.type].length" density="compact" class="border rounded">
+              <v-list-item
+                v-for="item in readingsGrouped[group.type]"
+                :key="item.key"
+                :title="item.title"
+                :subtitle="item.subtitle"
+              >
+                <template #append>
+                  <v-btn size="small" color="primary" :to="item.createLink">Стварыць</v-btn>
+                </template>
+              </v-list-item>
+            </v-list>
+            <div v-else class="text-body-2 text-medium-emphasis">Няма недастаючых элементаў у гэтай групе.</div>
+          </div>
+        </template>
       </v-card-text>
     </v-card>
 
@@ -35,18 +44,24 @@
           Недастаючых літургічных дзён не знойдзена.
         </v-alert>
 
-        <v-list v-if="missingDays.length" class="mt-4">
-          <v-list-item
-            v-for="item in missingDays"
-            :key="item.key"
-            :title="item.title"
-            :subtitle="item.subtitle"
-          >
-            <template #append>
-              <v-btn size="small" color="primary" :to="item.createLink">Стварыць</v-btn>
-            </template>
-          </v-list-item>
-        </v-list>
+        <template v-if="missingDays.length">
+          <div v-for="group in groupedDaysConfig" :key="`days-${group.type}`" class="mt-4">
+            <div class="text-subtitle-1 font-weight-medium mb-2">{{ group.title }} ({{ daysGrouped[group.type].length }})</div>
+            <v-list v-if="daysGrouped[group.type].length" density="compact" class="border rounded">
+              <v-list-item
+                v-for="item in daysGrouped[group.type]"
+                :key="item.key"
+                :title="item.title"
+                :subtitle="item.subtitle"
+              >
+                <template #append>
+                  <v-btn size="small" color="primary" :to="item.createLink">Стварыць</v-btn>
+                </template>
+              </v-list-item>
+            </v-list>
+            <div v-else class="text-body-2 text-medium-emphasis">Няма недастаючых элементаў у гэтай групе.</div>
+          </div>
+        </template>
       </v-card-text>
     </v-card>
 
@@ -56,14 +71,23 @@
 
 <script setup>
 import { collection, getDocs } from 'firebase/firestore';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import moment from '@/utils/moment-be';
 import { db } from '@/plugins/firebase';
 import { useCalendarStore } from '@/stores/calendar';
 import { FEAST_NAME_MAP } from '@/constants/liturgicalFeastsMap';
+import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { useNotifier } from '@/composables/useNotifier';
 import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
+
+const groupedReadingsConfig = [
+  { type: 'dynamic', title: 'Дынамічныя святы' },
+  { type: 'date', title: 'Фіксаваныя даты' },
+  { type: 'period', title: 'Перыяды' },
+];
+
+const groupedDaysConfig = groupedReadingsConfig;
 
 const { notifyError, notifySuccess } = useNotifier();
 const calendarStore = useCalendarStore();
@@ -75,6 +99,17 @@ const scannedReadings = ref(false);
 const scannedDays = ref(false);
 const missingReadings = ref([]);
 const missingDays = ref([]);
+
+const readingsGrouped = computed(() => groupByType(missingReadings.value));
+const daysGrouped = computed(() => groupByType(missingDays.value));
+
+function groupByType(items) {
+  return {
+    dynamic: items.filter((i) => i.type === 'dynamic'),
+    date: items.filter((i) => i.type === 'date'),
+    period: items.filter((i) => i.type === 'period'),
+  };
+}
 
 function normalizeDate(value) {
   if (!value) return null;
@@ -90,18 +125,39 @@ function normalizePeriodKey(item) {
   return `${periodType}|${week}|${day}`;
 }
 
+function extractMeta(item) {
+  return {
+    title: String(item?.title || item?._feastName || item?._dayName || item?.name || '').trim(),
+    rank: String(item?.rank || item?._rank || item?._feastType || '').trim(),
+    place: String(item?.place || item?._place || '').trim(),
+  };
+}
+
+function buildDateSubtitle(date, item) {
+  const meta = extractMeta(item);
+  const chunks = [`Дата: ${date}`];
+  if (meta.title) chunks.push(`Назва: ${meta.title}`);
+  if (meta.rank) chunks.push(`Ранг: ${meta.rank}`);
+  if (meta.place) chunks.push(`Place: ${meta.place}`);
+  return chunks.join(' • ');
+}
+
+function dynamicSubtitle(feastKey, feastValue, year) {
+  const dynamicDate = calendarStore.dynamicDatesForYear(year).value?.[feastKey];
+  const date = dynamicDate ? dynamicDate.format('DD.MM.YYYY') : 'Дата не вылічаная';
+  return `Ключ: ${feastKey} • Код: ${feastValue} • Дата: ${date}`;
+}
+
+function periodSubtitle(periodType, week, day) {
+  const periodName = PERIOD_LABEL_MAP[periodType] || periodType;
+  const dayName = WEEKDAY_LABEL_MAP[day] || `дзень ${day}`;
+  return `Перыяд: ${periodName} • Тыдзень: ${week} • Дзень: ${dayName}`;
+}
+
 function readingLinkFor(item) {
   if (item._feast) return { name: 'ReadingsTest', query: { type: 'feast', feastName: item._feast } };
   if (item._date) return { name: 'ReadingsTest', query: { type: 'date', _date: moment(item._date, 'D.M').format('YYYY-MM-DD') } };
-  return {
-    name: 'ReadingsTest',
-    query: {
-      type: 'period',
-      _periodType: item._periodType,
-      _periodWeekNumber: String(item._periodWeekNumber),
-      _dayOfWeek: String(item._dayOfWeek),
-    },
-  };
+  return { name: 'ReadingsTest', query: { type: 'period', _periodType: item._periodType, _periodWeekNumber: String(item._periodWeekNumber), _dayOfWeek: String(item._dayOfWeek) } };
 }
 
 function dayLinkFor(item) {
@@ -129,40 +185,22 @@ async function buildExpectedPeriodKeys(year) {
     const ctx = await computeLiturgicalContextForDate(current);
     if (!ctx?.periodType || !ctx?.periodWeek || !ctx?.dayOfWeek) continue;
 
-    if (ctx.periodType === 'ordinary' && ctx.dayOfWeek === 1 && (Number(ctx.periodWeek) === 1 || Number(ctx.periodWeek) === 34)) {
-      continue;
-    }
+    if (ctx.periodType === 'ordinary' && ctx.dayOfWeek === 1 && (Number(ctx.periodWeek) === 1 || Number(ctx.periodWeek) === 34)) continue;
 
     const key = `${ctx.periodType}|${Number(ctx.periodWeek)}|${Number(ctx.dayOfWeek)}`;
-    if (!expected.has(key)) {
-      expected.set(key, {
-        key,
-        _periodType: ctx.periodType,
-        _periodWeekNumber: Number(ctx.periodWeek),
-        _dayOfWeek: Number(ctx.dayOfWeek),
-      });
-    }
+    if (!expected.has(key)) expected.set(key, { key, _periodType: ctx.periodType, _periodWeekNumber: Number(ctx.periodWeek), _dayOfWeek: Number(ctx.dayOfWeek) });
   }
 
   return expected;
 }
 
-function fillFixedDateExpectations(daysDocs, readingsDocs) {
-  const dateSet = new Set();
-  daysDocs.forEach((item) => {
-    const d = normalizeDate(item._date);
-    if (d) dateSet.add(d);
-  });
-  readingsDocs.forEach((item) => {
-    const d = normalizeDate(item._date);
-    if (d) dateSet.add(d);
-  });
-  return Array.from(dateSet.values()).sort((a, b) => moment(a, 'D.M').diff(moment(b, 'D.M')));
-}
-
 function isMissingReadingText(reading) {
   const text = String(reading?.text || '').trim().toLowerCase();
-  return !text || text === 'чтения' || text === '<p>чтения</p>';
+  return !text || text === 'чтения' || text === '<p>чтения</p>' || text.includes('чтения пока нету');
+}
+
+function buildFixedCalendarFromReadings(readingsDocs) {
+  return readingsDocs.filter((doc) => normalizeDate(doc._date)).map((doc) => ({ ...doc, _date: normalizeDate(doc._date) }));
 }
 
 async function scanReadings() {
@@ -176,22 +214,14 @@ async function scanReadings() {
     await calendarStore.getYearOptions(year + 1);
     await calendarStore.getDynamicDates(year);
 
-    const [daysSnap, readingsSnap] = await Promise.all([
-      getDocs(collection(db, 'days')),
-      getDocs(collection(db, 'readings')),
-    ]);
-
-    const daysDocs = daysSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    const readingsSnap = await getDocs(collection(db, 'readings'));
     const readingsDocs = readingsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
     const byFeast = new Map();
-    const byDate = new Map();
     const byPeriod = new Map();
 
     readingsDocs.forEach((doc) => {
       if (doc._feast) byFeast.set(String(doc._feast).toLowerCase(), doc);
-      const date = normalizeDate(doc._date);
-      if (date) byDate.set(date, doc);
       const pKey = normalizePeriodKey(doc);
       if (pKey) byPeriod.set(pKey, doc);
     });
@@ -199,29 +229,29 @@ async function scanReadings() {
     const result = [];
 
     Object.entries(FEAST_NAME_MAP).forEach(([feastKey, feastValue]) => {
-      const dynamicDate = calendarStore.dynamicDatesForYear(year).value?.[feastKey];
       const existing = byFeast.get(String(feastValue).toLowerCase());
       if (!existing || isMissingReadingText(existing)) {
         result.push({
           key: `readings-feast-${feastValue}`,
+          type: 'dynamic',
           title: `Дынамічнае свята: ${feastValue}`,
-          subtitle: dynamicDate ? dynamicDate.format('DD.MM.YYYY') : 'Дата не вылічаная',
+          subtitle: dynamicSubtitle(feastKey, feastValue, year),
           _feast: feastValue,
           createLink: readingLinkFor({ _feast: feastValue }),
         });
       }
     });
 
-    const fixedDates = fillFixedDateExpectations(daysDocs, readingsDocs);
-    fixedDates.forEach((date) => {
-      const existing = byDate.get(date);
-      if (!existing || isMissingReadingText(existing)) {
+    const fixedCalendar = buildFixedCalendarFromReadings(readingsDocs);
+    fixedCalendar.forEach((item) => {
+      if (isMissingReadingText(item)) {
         result.push({
-          key: `readings-date-${date}`,
-          title: `Фіксаваная дата: ${date}`,
-          subtitle: existing ? 'Ёсць запіс, але адсутнічае тэкст' : 'Няма запісу ў readings',
-          _date: date,
-          createLink: readingLinkFor({ _date: date }),
+          key: `readings-date-${item.id}`,
+          type: 'date',
+          title: `Фіксаваная дата: ${item._date}`,
+          subtitle: `${buildDateSubtitle(item._date, item)} • Статус: няма поўнага тэксту`,
+          _date: item._date,
+          createLink: readingLinkFor({ _date: item._date }),
         });
       }
     });
@@ -232,8 +262,9 @@ async function scanReadings() {
       if (!existing || isMissingReadingText(existing)) {
         result.push({
           key: `readings-period-${key}`,
+          type: 'period',
           title: `${value._periodType}: тыдзень ${value._periodWeekNumber}, дзень ${value._dayOfWeek}`,
-          subtitle: existing ? 'Ёсць запіс, але адсутнічае тэкст' : 'Няма запісу ў readings',
+          subtitle: `${periodSubtitle(value._periodType, value._periodWeekNumber, value._dayOfWeek)} • ${existing ? 'ёсць запіс, але тэкст-запаўняльнік' : 'няма запісу'}`,
           ...value,
           createLink: readingLinkFor(value),
         });
@@ -260,50 +291,52 @@ async function scanDays() {
     await calendarStore.getYearOptions(year + 1);
     await calendarStore.getDynamicDates(year);
 
-    const [daysSnap, readingsSnap] = await Promise.all([
-      getDocs(collection(db, 'days')),
-      getDocs(collection(db, 'readings')),
-    ]);
-
+    const [daysSnap, readingsSnap] = await Promise.all([getDocs(collection(db, 'days')), getDocs(collection(db, 'readings'))]);
     const daysDocs = daysSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
     const readingsDocs = readingsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
     const byFeast = new Map();
-    const byDate = new Map();
     const byPeriod = new Map();
+    const dayDateKeys = new Set();
 
     daysDocs.forEach((doc) => {
       if (doc._feast) byFeast.set(String(doc._feast).toLowerCase(), doc);
-      const date = normalizeDate(doc._date);
-      if (date) byDate.set(date, doc);
       const pKey = normalizePeriodKey(doc);
       if (pKey) byPeriod.set(pKey, doc);
+      const date = normalizeDate(doc._date);
+      if (date) {
+        const meta = extractMeta(doc);
+        dayDateKeys.add(`${date}|${meta.title}|${meta.rank}|${meta.place}`);
+      }
     });
 
     const result = [];
 
     Object.entries(FEAST_NAME_MAP).forEach(([feastKey, feastValue]) => {
-      const dynamicDate = calendarStore.dynamicDatesForYear(year).value?.[feastKey];
       if (!byFeast.has(String(feastValue).toLowerCase())) {
         result.push({
           key: `days-feast-${feastValue}`,
+          type: 'dynamic',
           title: `Дынамічнае свята: ${feastValue}`,
-          subtitle: dynamicDate ? dynamicDate.format('DD.MM.YYYY') : 'Дата не вылічаная',
+          subtitle: dynamicSubtitle(feastKey, feastValue, year),
           _feast: feastValue,
           createLink: dayLinkFor({ _feast: feastValue }),
         });
       }
     });
 
-    const fixedDates = fillFixedDateExpectations(daysDocs, readingsDocs);
-    fixedDates.forEach((date) => {
-      if (!byDate.has(date)) {
+    const fixedCalendar = buildFixedCalendarFromReadings(readingsDocs);
+    fixedCalendar.forEach((item) => {
+      const meta = extractMeta(item);
+      const sig = `${item._date}|${meta.title}|${meta.rank}|${meta.place}`;
+      if (!dayDateKeys.has(sig)) {
         result.push({
-          key: `days-date-${date}`,
-          title: `Фіксаваная дата: ${date}`,
-          subtitle: 'Няма запісу ў days',
-          _date: date,
-          createLink: dayLinkFor({ _date: date }),
+          key: `days-date-${item.id}`,
+          type: 'date',
+          title: `Фіксаваная дата: ${item._date}`,
+          subtitle: `${buildDateSubtitle(item._date, item)} • Няма адпаведніка ў days`,
+          _date: item._date,
+          createLink: dayLinkFor({ _date: item._date }),
         });
       }
     });
@@ -313,8 +346,9 @@ async function scanDays() {
       if (!byPeriod.has(key)) {
         result.push({
           key: `days-period-${key}`,
+          type: 'period',
           title: `${value._periodType}: тыдзень ${value._periodWeekNumber}, дзень ${value._dayOfWeek}`,
-          subtitle: 'Няма запісу ў days',
+          subtitle: `${periodSubtitle(value._periodType, value._periodWeekNumber, value._dayOfWeek)} • Няма запісу ў days`,
           ...value,
           createLink: dayLinkFor(value),
         });
