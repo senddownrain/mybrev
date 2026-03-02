@@ -211,11 +211,36 @@ function applyQueryParamsToSimpleFields() {
   const periodWeekNumber = route.query._periodWeekNumber;
   const dayOfWeek = route.query._dayOfWeek;
   if (!periodType || periodWeekNumber == null || dayOfWeek == null) return;
+
+  const parsedWeek = parseInt(periodWeekNumber, 10);
+  const parsedDay = parseInt(dayOfWeek, 10);
+
   isUpdatingFromWatch.value = true;
   simpleFields.period = periodType;
-  simpleFields.weekNumber = parseInt(periodWeekNumber, 10);
-  simpleFields.dayOfWeek = parseInt(dayOfWeek, 10);
+  simpleFields.weekNumber = parsedWeek;
+  simpleFields.dayOfWeek = parsedDay;
+
+  // Явно применяем в dayData, т.к. watcher simpleFields игнорируется при isUpdatingFromWatch=true
+  if (dayData.value) {
+    dayData.value._periodType = periodType;
+    dayData.value._periodWeekNumber = parsedWeek;
+    dayData.value._dayOfWeek = parsedDay;
+  }
+
   nextTick(() => { isUpdatingFromWatch.value = false; });
+}
+
+
+function applyQueryParamsToDayData() {
+  if (!dayData.value) return;
+
+  if (route.query._date) {
+    dayData.value._date = String(route.query._date);
+  }
+
+  if (route.query._feast) {
+    dayData.value._feast = String(route.query._feast);
+  }
 }
 
 /** Инициализация для нового дня: копия из sessionStorage или пустой день + query. */
@@ -235,12 +260,13 @@ function initializeNewDay() {
     } catch (e) {
       logger.error('Памылка пры загрузцы копіі:', e);
       createEmptyDay();
-      applyQueryParamsToSimpleFields();
     }
   } else {
     createEmptyDay();
-    applyQueryParamsToSimpleFields();
   }
+
+  applyQueryParamsToSimpleFields();
+  applyQueryParamsToDayData();
 }
 
 /** Синхронизирует simpleFields из загруженного dayData (режим редактирования). */
@@ -289,6 +315,7 @@ onMounted(async () => {
           }
         }
         applyQueryParamsToSimpleFields();
+        applyQueryParamsToDayData();
       } finally {
         loadingDuplicate.value = false;
       }
