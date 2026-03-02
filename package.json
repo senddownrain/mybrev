@@ -10,7 +10,8 @@
     "db:import-prayers": "node import-prayers-from-molitwy.js",
     "db:import-readings": "node import-readings-to-newreadings.js",
     "db:migrate-readings": "node migrate-readings-to-new.js",
-    "db:export-liturgical-samples": "node patchs/export-liturgical-samples.js"
+    "db:export-liturgical-samples": "node patchs/export-liturgical-samples.js",
+    "db:migrate-liturgical-normalization": "node patchs/migrate-liturgical-normalization.js"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
