@@ -218,6 +218,19 @@ function applyQueryParamsToSimpleFields() {
   nextTick(() => { isUpdatingFromWatch.value = false; });
 }
 
+
+function applyQueryParamsToDayData() {
+  if (!dayData.value) return;
+
+  if (route.query._date) {
+    dayData.value._date = String(route.query._date);
+  }
+
+  if (route.query._feast) {
+    dayData.value._feast = String(route.query._feast);
+  }
+}
+
 /** Инициализация для нового дня: копия из sessionStorage или пустой день + query. */
 function initializeNewDay() {
   const copyDataStr = sessionStorage.getItem(SESSION_KEY_COPY);
@@ -235,12 +248,13 @@ function initializeNewDay() {
     } catch (e) {
       logger.error('Памылка пры загрузцы копіі:', e);
       createEmptyDay();
-      applyQueryParamsToSimpleFields();
     }
   } else {
     createEmptyDay();
-    applyQueryParamsToSimpleFields();
   }
+
+  applyQueryParamsToSimpleFields();
+  applyQueryParamsToDayData();
 }
 
 /** Синхронизирует simpleFields из загруженного dayData (режим редактирования). */
@@ -289,6 +303,7 @@ onMounted(async () => {
           }
         }
         applyQueryParamsToSimpleFields();
+      applyQueryParamsToDayData();
       } finally {
         loadingDuplicate.value = false;
       }

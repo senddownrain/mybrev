@@ -151,6 +151,11 @@ const routes = [
         name: 'ReadingsTest',
         component: () => import('@/views/admin/ReadingsTest.vue'),
       },
+      {
+        path: 'missing-data',
+        name: 'AdminMissingData',
+        component: () => import('@/views/admin/MissingDataAudit.vue'),
+      },
     ]
   },
 
