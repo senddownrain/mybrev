@@ -2,8 +2,10 @@
 
 const fs = require('fs');
 const path = require('path');
+const admin = require('firebase-admin');
 
-const INPUT_PATH = path.resolve(__dirname, 'liturgical-samples-fixed.json');
+const DEFAULT_LOCAL_SOURCE = path.resolve(__dirname, 'liturgical-samples-fixed.json');
+const serviceAccount = require('./serviceAccountKey.json');
 
 const FIELD_GROUPS = {
   complete: [
@@ -87,35 +89,6 @@ function buildSignature(day, fields) {
   return JSON.stringify(fields.map((field) => normalize(day[field])));
 }
 
-function extractUniqueDays(samples) {
-  const buckets = ['periodSamples', 'dateSamples', 'feastSamples'];
-  const allDays = [];
-
-  for (const bucketName of buckets) {
-    const bucket = Array.isArray(samples[bucketName]) ? samples[bucketName] : [];
-    for (const sample of bucket) {
-      const days = Array.isArray(sample.days) ? sample.days : [];
-      allDays.push(...days);
-    }
-  }
-
-  const uniqueById = new Map();
-  for (const day of allDays) {
-    if (!day || typeof day !== 'object') {
-      continue;
-    }
-    const key = day.id || `${normalize(day._date)}|${normalize(day._feast)}|${normalize(day._dayOfWeek)}`;
-    if (!uniqueById.has(key)) {
-      uniqueById.set(key, day);
-    }
-  }
-
-  return {
-    allDays,
-    uniqueDays: Array.from(uniqueById.values()),
-  };
-}
-
 function collectGroupStats(days, fields) {
   const map = new Map();
 
@@ -145,6 +118,7 @@ function printStats(title, stats) {
   console.log(`\n=== ${title} ===`);
   console.log(`Одинаковых записей: ${stats.duplicateItemsCount} из ${stats.total}`);
   console.log(`Уникальных комбинаций: ${stats.uniqueSignatures}`);
+
   if (!stats.duplicateGroups.length) {
     console.log('Повторов не найдено.');
     return;
@@ -165,29 +139,98 @@ function printStats(title, stats) {
     });
 }
 
-function main() {
-  const raw = fs.readFileSync(INPUT_PATH, 'utf8');
+function extractDaysFromSampleFile(inputPath) {
+  const raw = fs.readFileSync(inputPath, 'utf8');
   const data = JSON.parse(raw);
-  const { allDays, uniqueDays } = extractUniqueDays(data);
 
-  console.log(`Источник: ${INPUT_PATH}`);
-  console.log(`Всего day записей в сэмпле: ${allDays.length}`);
-  console.log(`Уникальных day записей (по id): ${uniqueDays.length}`);
+  const buckets = ['periodSamples', 'dateSamples', 'feastSamples'];
+  const allDays = [];
+
+  for (const bucketName of buckets) {
+    const bucket = Array.isArray(data[bucketName]) ? data[bucketName] : [];
+    for (const sample of bucket) {
+      const days = Array.isArray(sample.days) ? sample.days : [];
+      allDays.push(...days);
+    }
+  }
+
+  const uniqueById = new Map();
+  for (const day of allDays) {
+    if (!day || typeof day !== 'object') {
+      continue;
+    }
+    const key = day.id || `${normalize(day._date)}|${normalize(day._feast)}|${normalize(day._dayOfWeek)}`;
+    if (!uniqueById.has(key)) {
+      uniqueById.set(key, day);
+    }
+  }
+
+  return {
+    sourceLabel: `sample file: ${inputPath}`,
+    allCount: allDays.length,
+    uniqueDays: Array.from(uniqueById.values()),
+  };
+}
+
+async function extractDaysFromFirestore() {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+
+  const db = admin.firestore();
+  const snap = await db.collection('days').get();
+  const days = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+  return {
+    sourceLabel: 'Firestore collection: days (full DB)',
+    allCount: days.length,
+    uniqueDays: days,
+  };
+}
+
+function parseModeArg() {
+  const arg = process.argv.find((x) => x.startsWith('--source='));
+  if (!arg) return 'firestore';
+  const mode = arg.split('=')[1];
+  if (!['firestore', 'sample'].includes(mode)) {
+    throw new Error('Неверный --source. Используйте --source=firestore или --source=sample');
+  }
+  return mode;
+}
+
+async function main() {
+  const mode = parseModeArg();
+  const source = mode === 'sample'
+    ? extractDaysFromSampleFile(DEFAULT_LOCAL_SOURCE)
+    : await extractDaysFromFirestore();
+
+  console.log(`Источник: ${source.sourceLabel}`);
+  console.log(`Всего day записей: ${source.allCount}`);
+  console.log(`Уникальных day записей для анализа: ${source.uniqueDays.length}`);
 
   for (const [name, fields] of Object.entries(FIELD_GROUPS)) {
-    const stats = collectGroupStats(uniqueDays, fields);
+    const stats = collectGroupStats(source.uniqueDays, fields);
     printStats(name, stats);
   }
 
   for (const [name, fields] of Object.entries(SINGLE_FIELDS)) {
-    const stats = collectGroupStats(uniqueDays, fields);
+    const stats = collectGroupStats(source.uniqueDays, fields);
     printStats(`${name} (отдельно)`, stats);
   }
 
   for (const [name, fields] of Object.entries(PSALM_GROUPS)) {
-    const stats = collectGroupStats(uniqueDays, fields);
+    const stats = collectGroupStats(source.uniqueDays, fields);
     printStats(`${name} (группа псалмов)`, stats);
   }
 }
 
-main();
+main()
+  .catch((error) => {
+    console.error('Ошибка выполнения анализа:', error);
+    process.exitCode = 1;
+  })
+  .finally(async () => {
+    if (admin.apps.length > 0) {
+      await Promise.all(admin.apps.map((app) => app.delete()));
+    }
+  });
