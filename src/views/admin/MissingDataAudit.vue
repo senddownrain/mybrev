@@ -182,10 +182,15 @@ function buildDateSubtitle(date, item) {
   return chunks.join(' • ');
 }
 
-function dynamicSubtitle(feastKey, feastValue, year) {
+function dynamicSubtitle(feastKey, feastValue, year, item = null) {
   const dynamicDate = calendarStore.dynamicDatesForYear(year).value?.[feastKey];
   const date = dynamicDate ? dynamicDate.format('DD.MM.YYYY') : 'Дата не вылічаная';
-  return `Ключ: ${feastKey} • Код: ${feastValue} • Дата: ${date}`;
+  const meta = item ? extractMeta(item) : { title: '', rank: '', place: '' };
+  const chunks = [`Ключ: ${feastKey}`, `Код: ${feastValue}`, `Дата: ${date}`];
+  if (meta.title) chunks.push(`Назва: ${meta.title}`);
+  if (meta.rank) chunks.push(`Ранг: ${meta.rank}`);
+  if (meta.place) chunks.push(`Place: ${meta.place}`);
+  return chunks.join(' • ');
 }
 
 function periodSubtitle(periodType, week, day) {
@@ -300,7 +305,7 @@ async function scanReadings() {
         key: `readings-feast-${feastValue}`,
         type: 'dynamic',
         title: `Дынамічнае свята: ${feastValue}`,
-        subtitle: dynamicSubtitle(feastKey, feastValue, year),
+        subtitle: dynamicSubtitle(feastKey, feastValue, year, found),
         _feast: feastValue,
         createLink: readingLinkFor({ _feast: feastValue }),
       };
@@ -378,16 +383,15 @@ async function scanDays() {
 
     const byFeast = new Map();
     const byPeriod = new Map();
-    const dayDateKeys = new Set();
+    const dayDates = new Map();
 
     daysDocs.forEach((doc) => {
       if (doc._feast) byFeast.set(String(doc._feast).toLowerCase(), doc);
       const pKey = normalizePeriodKey(doc);
       if (pKey) byPeriod.set(pKey, doc);
       const date = normalizeDate(doc._date);
-      if (date) {
-        const meta = extractMeta(doc);
-        dayDateKeys.add(`${date}|${meta.title}|${meta.rank}|${meta.place}`);
+      if (date && !dayDates.has(date)) {
+        dayDates.set(date, doc);
       }
     });
 
@@ -395,22 +399,22 @@ async function scanDays() {
     const existing = [];
 
     Object.entries(FEAST_NAME_MAP).forEach(([feastKey, feastValue]) => {
+      const found = byFeast.get(String(feastValue).toLowerCase()) || null;
       const base = {
         key: `days-feast-${feastValue}`,
         type: 'dynamic',
         title: `Дынамічнае свята: ${feastValue}`,
-        subtitle: dynamicSubtitle(feastKey, feastValue, year),
+        subtitle: dynamicSubtitle(feastKey, feastValue, year, found),
         _feast: feastValue,
         createLink: dayLinkFor({ _feast: feastValue }),
       };
-      if (!byFeast.has(String(feastValue).toLowerCase())) pushResult(missing, base);
+      if (!found) pushResult(missing, base);
       else pushResult(existing, base);
     });
 
     const fixedCalendar = buildFixedCalendarFromReadings(readingsDocs);
     fixedCalendar.forEach((item) => {
-      const meta = extractMeta(item);
-      const sig = `${item._date}|${meta.title}|${meta.rank}|${meta.place}`;
+      const matchedDay = dayDates.get(item._date) || null;
       const base = {
         key: `days-date-${item.id}`,
         type: 'date',
@@ -420,7 +424,7 @@ async function scanDays() {
         createLink: dayLinkFor({ _date: item._date }),
       };
 
-      if (!dayDateKeys.has(sig)) pushResult(missing, { ...base, subtitle: `${base.subtitle} • Няма адпаведніка ў days` });
+      if (!matchedDay) pushResult(missing, { ...base, subtitle: `${base.subtitle} • Няма адпаведніка ў days` });
       else pushResult(existing, { ...base, subtitle: `${base.subtitle} • ёсць` });
     });
 
