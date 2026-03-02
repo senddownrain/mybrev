@@ -213,6 +213,11 @@ onMounted(() => {
   if (q._periodWeekNumber) formData.value._periodWeekNumber = Number(q._periodWeekNumber);
   if (q._dayOfWeek) formData.value._dayOfWeek = Number(q._dayOfWeek);
   if (q._date) formData.value._date = String(q._date);
+  if (q.feastName) formData.value.feastName = String(q.feastName);
+
+  if (formData.value.type === 'feast' && q.feastName) {
+    formData.value.feastId = Object.keys(FEAST_NAME_MAP).find((key) => FEAST_NAME_MAP[key] === formData.value.feastName) || formData.value.feastId;
+  }
 
   if (formData.value.type === 'period' && !formData.value._periodType) {
     formData.value.type = 'date';
