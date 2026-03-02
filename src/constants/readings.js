@@ -15,14 +15,6 @@ export const PERIOD_TYPES = {
   HOLYWEEK: 'holyweek',
 };
 
-// Циклы чтений
-export const CYCLES = {
-  SUNDAY_A: 'A',
-  SUNDAY_B: 'B',
-  SUNDAY_C: 'C',
-  WEEKDAY_1: '1',
-  WEEKDAY_2: '2',
-};
 
 // Дни недели (1 = воскресенье, 7 = суббота)
 export const DAY_OF_WEEK = {
