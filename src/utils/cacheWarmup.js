@@ -5,13 +5,10 @@ import { retryFirestore } from '@/utils/retry';
 import { useCalendarStore } from '@/stores/calendar';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { getReadingsForDate } from '@/services/readingsService';
-import { getLiturgicalYear, getCycleForDate } from '@/utils/liturgicalCycle';
 import moment from '@/utils/moment-be';
 
 // Глобальный кэш для отслеживания уже загруженных дней в этом сеансе
 const loadedDaysCache = new Set();
-const cycleCache = new Map(); // Кэш для циклов: ключ = `${year}-${dayOfWeek}`
-
 /**
  * Прогрев кэша для коллекции yearOptions
  * Загружает всю коллекцию для кэширования в Firebase persistent cache
@@ -87,25 +84,6 @@ function markDateAsLoaded(mDate) {
 }
 
 /**
- * Получает цикл с кэшированием
- * @param {Date} date - Дата
- * @param {number} liturgicalYear - Литургический год
- * @param {number} dayOfWeek - День недели
- * @returns {Promise<string>} Цикл
- */
-async function getCycleCached(date, liturgicalYear, dayOfWeek) {
-  const cacheKey = `${liturgicalYear}-${dayOfWeek}`;
-  
-  if (cycleCache.has(cacheKey)) {
-    return cycleCache.get(cacheKey);
-  }
-  
-  const cycle = await getCycleForDate(date, liturgicalYear, dayOfWeek, { useCalendarStore: true });
-  cycleCache.set(cacheKey, cycle);
-  return cycle;
-}
-
-/**
  * Прогрев кэша для коллекции readings на указанный период
  * С приоритизацией: сначала ближайшие дни, потом дальние
  * @param {Date|moment.Moment|string} startDate - Начальная дата
@@ -174,13 +152,8 @@ export async function warmupReadings(startDate, endDate, prioritizeNear = true) 
               }
             }
             
-            // Определяем цикл с кэшированием
-            const liturgicalYear = await getLiturgicalYear(currentDate.toDate(), { useCalendarStore: true });
-            const cycle = await getCycleCached(currentDate.toDate(), liturgicalYear, context.dayOfWeek);
-            
             // Загружаем чтения для этой даты
             await getReadingsForDate(currentDate.toDate(), {
-              cycle,
               periodType: context.periodType,
               periodWeekNumber: context.periodWeek,
               dayOfWeek: context.dayOfWeek,

@@ -23,50 +23,5 @@ export function useReadings() {
     return currentReading.value.text || currentReading.value.content || '';
   });
 
-  /**
-   * Получить цикл текущего чтения
-   */
-  const readingCycle = computed(() => {
-    return currentReading.value?.cycle || null;
-  });
-
-  /**
-   * Проверить, есть ли чтение для текущей даты
-   */
-  const hasReading = computed(() => {
-    return !!currentReading.value;
-  });
-
-  /**
-   * Загрузить чтения для даты
-   */
-  async function loadReadingsForDate(date, options = {}) {
-    return await readingsStore.getReadingsForDate(date, options);
-  }
-
-  /**
-   * Получить чтения для сегодняшнего дня
-   */
-  async function loadReadingsForToday(options = {}) {
-    return await loadReadingsForDate(moment().toDate(), options);
-  }
-
-  return {
-    readings,
-    currentReading,
-    readingText,
-    readingCycle,
-    hasReading,
-    isLoading,
-    error,
-    
-    loadReadingsForDate,
-    loadReadingsForToday,
-    
-    addReading: readingsStore.addReading,
-    updateReading: readingsStore.updateReading,
-    deleteReading: readingsStore.deleteReading,
-    clearCurrentReading: readingsStore.clearCurrentReading,
-  };
 }
 
