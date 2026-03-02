@@ -7,56 +7,7 @@ const admin = require('firebase-admin');
 const DEFAULT_LOCAL_SOURCE = path.resolve(__dirname, 'liturgical-samples-fixed.json');
 const serviceAccount = require('./serviceAccountKey.json');
 
-const FIELD_GROUPS = {
-  complete: [
-    'compHymn',
-    'compAnt1',
-    'compAnt2',
-    'compPs1',
-    'compPs2',
-    'compR',
-    'compResp',
-    'compAntS',
-    'compPr',
-    'compAntM',
-  ],
-  vespers: [
-    'vesperHymn',
-    'vesperAnt1',
-    'vesperAnt2',
-    'vesperAnt3',
-    'vesperPs1',
-    'vesperPs2',
-    'vesperPs3',
-    'vesperR',
-    'vesperAntMag',
-    'vesperInter',
-    'vesperPr',
-  ],
-  sext2: [
-    'sext2Hymn',
-    'sext2Ant1',
-    'sext2Ant2',
-    'sext2Ant3',
-    'sext2Ps1',
-    'sext2Ps2',
-    'sext2Ps3',
-    'sext2R',
-    'sext2Pr',
-  ],
-  laudes: [
-    'laudesHymn',
-    'laudesAnt1',
-    'laudesAnt2',
-    'laudesAnt3',
-    'laudesPs1',
-    'laudesPs2',
-    'laudesPs3',
-    'laudesR',
-    'laudesAntBen',
-    'laudesInter',
-    'laudesPr',
-  ],
+const ANALYSES = {
   invitatorium: [
     'invitatoriumAnt',
     'invitatoriumPs1',
@@ -66,77 +17,26 @@ const FIELD_GROUPS = {
     'invitatoriumPs5',
     'invitatoriumPs6',
   ],
-};
-
-const SINGLE_FIELDS = {
   laudesHymn: ['laudesHymn'],
   vesperHymn: ['vesperHymn'],
-};
-
-const PSALM_GROUPS = {
   vesperPsalms: ['vesperPs1', 'vesperPs2', 'vesperPs3'],
   laudesPsalms: ['laudesPs1', 'laudesPs2', 'laudesPs3'],
 };
 
 function normalize(value) {
-  if (value === undefined || value === null) {
-    return '';
-  }
+  if (value === undefined || value === null) return '';
   return String(value).trim();
 }
 
-function buildSignature(day, fields) {
-  return JSON.stringify(fields.map((field) => normalize(day[field])));
-}
-
-function collectGroupStats(days, fields) {
-  const map = new Map();
-
-  for (const day of days) {
-    const signature = buildSignature(day, fields);
-    if (!map.has(signature)) {
-      map.set(signature, []);
-    }
-    map.get(signature).push(day);
+function buildSignatureAndValues(day, fields) {
+  const values = {};
+  for (const field of fields) {
+    values[field] = normalize(day[field]);
   }
-
-  const duplicateGroups = Array.from(map.values())
-    .filter((group) => group.length > 1)
-    .sort((a, b) => b.length - a.length);
-
-  const duplicateItemsCount = duplicateGroups.reduce((acc, group) => acc + group.length, 0);
-
   return {
-    total: days.length,
-    uniqueSignatures: map.size,
-    duplicateGroups,
-    duplicateItemsCount,
+    signature: JSON.stringify(values),
+    values,
   };
-}
-
-function printStats(title, stats) {
-  console.log(`\n=== ${title} ===`);
-  console.log(`Одинаковых записей: ${stats.duplicateItemsCount} из ${stats.total}`);
-  console.log(`Уникальных комбинаций: ${stats.uniqueSignatures}`);
-
-  if (!stats.duplicateGroups.length) {
-    console.log('Повторов не найдено.');
-    return;
-  }
-
-  console.log('Размеры групп повторов (сколько записей в каждой одинаковой группе):');
-  const groupSizes = stats.duplicateGroups.map((group) => group.length);
-  const summary = groupSizes.reduce((acc, size) => {
-    acc[size] = (acc[size] || 0) + 1;
-    return acc;
-  }, {});
-
-  Object.keys(summary)
-    .map(Number)
-    .sort((a, b) => b - a)
-    .forEach((size) => {
-      console.log(`  - ${summary[size]} групп по ${size}`);
-    });
 }
 
 function extractDaysFromSampleFile(inputPath) {
@@ -156,13 +56,9 @@ function extractDaysFromSampleFile(inputPath) {
 
   const uniqueById = new Map();
   for (const day of allDays) {
-    if (!day || typeof day !== 'object') {
-      continue;
-    }
+    if (!day || typeof day !== 'object') continue;
     const key = day.id || `${normalize(day._date)}|${normalize(day._feast)}|${normalize(day._dayOfWeek)}`;
-    if (!uniqueById.has(key)) {
-      uniqueById.set(key, day);
-    }
+    if (!uniqueById.has(key)) uniqueById.set(key, day);
   }
 
   return {
@@ -188,40 +84,117 @@ async function extractDaysFromFirestore() {
   };
 }
 
-function parseModeArg() {
-  const arg = process.argv.find((x) => x.startsWith('--source='));
-  if (!arg) return 'firestore';
-  const mode = arg.split('=')[1];
-  if (!['firestore', 'sample'].includes(mode)) {
+function parseArgs() {
+  const options = {
+    source: 'firestore',
+    out: '',
+  };
+
+  for (const arg of process.argv.slice(2)) {
+    if (arg.startsWith('--source=')) {
+      options.source = arg.split('=')[1];
+      continue;
+    }
+    if (arg.startsWith('--out=')) {
+      options.out = path.resolve(arg.split('=')[1]);
+    }
+  }
+
+  if (!['firestore', 'sample'].includes(options.source)) {
     throw new Error('Неверный --source. Используйте --source=firestore или --source=sample');
   }
-  return mode;
+
+  return options;
+}
+
+function analyzeGroups(days, analyses) {
+  const output = {};
+
+  for (const [analysisName, fields] of Object.entries(analyses)) {
+    const bySignature = new Map();
+
+    for (const day of days) {
+      const { signature, values } = buildSignatureAndValues(day, fields);
+      if (!bySignature.has(signature)) {
+        bySignature.set(signature, {
+          values,
+          ids: [],
+        });
+      }
+      bySignature.get(signature).ids.push(day.id || null);
+    }
+
+    const allGroups = Array.from(bySignature.values())
+      .map((item) => ({
+        values: item.values,
+        count: item.ids.length,
+        ids: item.ids,
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    const repeatingGroups = allGroups.filter((g) => g.count > 1);
+    const uniqueGroups = allGroups.filter((g) => g.count === 1);
+
+    const repeatingRecords = repeatingGroups.reduce((acc, g) => acc + g.count, 0);
+    const uniqueRecords = uniqueGroups.length;
+
+    const byGroupSizeMap = new Map();
+    for (const group of repeatingGroups) {
+      const current = byGroupSizeMap.get(group.count) || 0;
+      byGroupSizeMap.set(group.count, current + 1);
+    }
+
+    const byGroupSize = Array.from(byGroupSizeMap.entries())
+      .sort((a, b) => b[0] - a[0])
+      .map(([size, groups]) => ({ size, groups }));
+
+    output[analysisName] = {
+      fields,
+      totalRecords: days.length,
+      repeating: {
+        records: repeatingRecords,
+        groups: repeatingGroups.length,
+        byGroupSize,
+        combinations: repeatingGroups,
+      },
+      unique: {
+        records: uniqueRecords,
+        groups: uniqueGroups.length,
+        combinations: uniqueGroups,
+      },
+    };
+  }
+
+  return output;
 }
 
 async function main() {
-  const mode = parseModeArg();
-  const source = mode === 'sample'
+  const options = parseArgs();
+
+  const source = options.source === 'sample'
     ? extractDaysFromSampleFile(DEFAULT_LOCAL_SOURCE)
     : await extractDaysFromFirestore();
 
-  console.log(`Источник: ${source.sourceLabel}`);
-  console.log(`Всего day записей: ${source.allCount}`);
-  console.log(`Уникальных day записей для анализа: ${source.uniqueDays.length}`);
+  const report = {
+    generatedAt: new Date().toISOString(),
+    source: {
+      mode: options.source,
+      label: source.sourceLabel,
+      allRecords: source.allCount,
+      analyzedRecords: source.uniqueDays.length,
+    },
+    analyses: analyzeGroups(source.uniqueDays, ANALYSES),
+  };
 
-  for (const [name, fields] of Object.entries(FIELD_GROUPS)) {
-    const stats = collectGroupStats(source.uniqueDays, fields);
-    printStats(name, stats);
+  const json = JSON.stringify(report, null, 2);
+  if (options.out) {
+    fs.mkdirSync(path.dirname(options.out), { recursive: true });
+    fs.writeFileSync(options.out, json, 'utf8');
+    console.log(`JSON отчет сохранен: ${options.out}`);
+    return;
   }
 
-  for (const [name, fields] of Object.entries(SINGLE_FIELDS)) {
-    const stats = collectGroupStats(source.uniqueDays, fields);
-    printStats(`${name} (отдельно)`, stats);
-  }
-
-  for (const [name, fields] of Object.entries(PSALM_GROUPS)) {
-    const stats = collectGroupStats(source.uniqueDays, fields);
-    printStats(`${name} (группа псалмов)`, stats);
-  }
+  console.log(json);
 }
 
 main()
