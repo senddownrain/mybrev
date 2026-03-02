@@ -11,7 +11,7 @@
     "db:import-readings": "node import-readings-to-newreadings.js",
     "db:migrate-readings": "node migrate-readings-to-new.js",
     "db:export-liturgical-samples": "node patchs/export-liturgical-samples.js",
-    "db:analyze-day-prenormalization": "node patchs/analyze-day-pre-normalization.js"
+    "db:analyze-day-prenormalization": "node patchs/analyze-day-pre-normalization.js",
     "db:migrate-liturgical-normalization": "node patchs/migrate-liturgical-normalization.js"
   },
   "dependencies": {
