@@ -131,7 +131,6 @@ function buildCandidates(items) {
       if (!canonA || !canonB) continue;
 
       const similarity = canonA === canonB ? 1 : jaccardSimilarity(canonA, canonB);
-      if (similarity < 0.985) continue;
 
       list.push({ left, right, score: similarity });
     }
@@ -165,6 +164,8 @@ async function updateDaysHymnText(loser, winnerHymn) {
   let batch = writeBatch(db);
   let opCount = 0;
   let updatedDays = 0;
+  let updatedFieldsCount = 0;
+  const touchedFields = new Set();
 
   for (const dayId of ids) {
     const dayRef = doc(db, 'days', dayId);
@@ -177,6 +178,8 @@ async function updateDaysHymnText(loser, winnerHymn) {
     oras.forEach((oraField) => {
       if (String(data[oraField] || '') === String(loser.hymn || '')) {
         payload[oraField] = winnerHymn;
+        touchedFields.add(oraField);
+        updatedFieldsCount += 1;
       }
     });
 
@@ -197,7 +200,11 @@ async function updateDaysHymnText(loser, winnerHymn) {
     await batch.commit();
   }
 
-  return updatedDays;
+  return {
+    updatedDays,
+    updatedFieldsCount,
+    touchedFields: Array.from(touchedFields).sort(),
+  };
 }
 
 async function resolvePair(choice) {
@@ -208,7 +215,7 @@ async function resolvePair(choice) {
     const winner = choice === 'left' ? currentPair.value.left : currentPair.value.right;
     const loser = choice === 'left' ? currentPair.value.right : currentPair.value.left;
 
-    const updatedDays = await updateDaysHymnText(loser, winner.hymn);
+    const dayUpdateResult = await updateDaysHymnText(loser, winner.hymn);
 
     const merged = {
       hymn: winner.hymn,
@@ -230,7 +237,9 @@ async function resolvePair(choice) {
       currentIndex.value = Math.max(0, candidates.value.length - 1);
     }
 
-    notifySuccess(`Гатова. Абноўлена days: ${updatedDays}. Дубль гімна аб’яднаны.`);
+    notifySuccess(
+      `Гатова. Абноўлена days: ${dayUpdateResult.updatedDays}; зменаў палёў: ${dayUpdateResult.updatedFieldsCount}; палі: ${dayUpdateResult.touchedFields.join(', ') || 'няма'}. Дубль гімна аб’яднаны.`
+    );
 
     if (!candidates.value.length) {
       notifySuccess('Усе пары апрацаваны паспяхова.');
