@@ -131,6 +131,8 @@ function buildCandidates(items) {
       if (!canonA || !canonB) continue;
 
       const similarity = canonA === canonB ? 1 : jaccardSimilarity(canonA, canonB);
+      
+if( jaccardSimilarity(canonA, canonB) < 0.5) continue; // Фільтр па падобнасці
 
       list.push({ left, right, score: similarity });
     }
