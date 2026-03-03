@@ -24,12 +24,12 @@ export function useLiturgicalContent() {
   const getMoment = (isoDateStr) => moment(isoDateStr, 'YYYY-MM-DD');
 
   const getItemsForPeriodQueryDays = (type, day, week) => {
-    // В days поля недели/дня хранятся как строки
+    // В days поля недели/дня хранятся как числа
     return query(
       daysCollection,
       where('_periodType', '==', type),
-      where('_dayOfWeek', '==', `${day}`),
-      where('_periodWeekNumber', '==', `${week}`),
+      where('_dayOfWeek', '==', Number(day)),
+      where('_periodWeekNumber', '==', Number(week)),
     );
   };
 
@@ -212,8 +212,8 @@ export function useLiturgicalContent() {
   };
 
   const getFixedFeastDaysQuery = (mDate) => {
-    // days: _date = 'D.M'
-    return query(daysCollection, where('_date', '==', mDate.format('D.M')));
+    // days: _date = 'DD.MM'
+    return query(daysCollection, where('_date', '==', mDate.format('DD.MM')));
   };
 
   const getFixedFeastReadingsQuery = (mDate) => {
