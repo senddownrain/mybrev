@@ -8,6 +8,7 @@
     <v-card class="mb-4" variant="outlined">
       <v-card-text class="d-flex ga-3 align-center flex-wrap">
         <v-btn color="primary" :loading="loading" @click="loadCandidates">Абнавіць пары</v-btn>
+        <v-btn color="deep-purple-darken-2" variant="outlined" :loading="autoMerging" :disabled="loading || saving" @click="autoMergeExact">Аўта-мэрж 100%</v-btn>
         <div class="text-body-2">Усяго шаблонаў: <b>{{ completoriums.length }}</b></div>
         <div class="text-body-2">Пары для праверкі: <b>{{ candidates.length }}</b></div>
         <div class="text-body-2" v-if="currentPair">Пара {{ currentIndex + 1 }} / {{ candidates.length }}</div>
@@ -56,7 +57,7 @@
 
     <v-card v-if="currentPair" class="mt-4" variant="outlined">
       <v-card-text class="d-flex ga-3 flex-wrap align-center">
-        <v-btn variant="outlined" :disabled="saving" @click="skipPair">Прапусціць пару</v-btn>
+        <v-btn variant="outlined" :disabled="saving || autoMerging" @click="skipPair">Прапусціць пару</v-btn>
         <div class="text-caption">Падобнасць: {{ (currentPair.score * 100).toFixed(1) }}%</div>
       </v-card-text>
     </v-card>
@@ -79,6 +80,7 @@ const { notifyError, notifyInfo, notifySuccess } = useNotifier();
 
 const loading = ref(false);
 const saving = ref(false);
+const autoMerging = ref(false);
 const completoriums = ref([]);
 const candidates = ref([]);
 const currentIndex = ref(0);
@@ -196,28 +198,42 @@ async function updateDaysCompletorium(loser, winner) {
   };
 }
 
+function pickWinner(left, right) {
+  const leftDays = (left.ids || []).length;
+  const rightDays = (right.ids || []).length;
+  if (leftDays >= rightDays) return { winner: left, loser: right };
+  return { winner: right, loser: left };
+}
+
+async function mergePair(left, right) {
+  const { winner, loser } = pickWinner(left, right);
+  const dayUpdateResult = await updateDaysCompletorium(loser, winner);
+
+  const merged = {
+    ...winner,
+    usagePeriods: unionArray(winner.usagePeriods || [], loser.usagePeriods || []),
+    usageFeasts: unionArray(winner.usageFeasts || [], loser.usageFeasts || []),
+    usageDates: unionArray(winner.usageDates || [], loser.usageDates || []),
+    usagedayOfWeek: unionArray(winner.usagedayOfWeek || [], loser.usagedayOfWeek || []),
+    ids: unionArray(winner.ids || [], loser.ids || []),
+  };
+
+  const batch = writeBatch(db);
+  batch.set(doc(db, 'completoriums', winner.id), merged, { merge: true });
+  batch.delete(doc(db, 'completoriums', loser.id));
+  await batch.commit();
+
+  return dayUpdateResult;
+}
+
 async function resolvePair(choice) {
   if (!currentPair.value) return;
   saving.value = true;
   try {
-    const winner = choice === 'left' ? currentPair.value.left : currentPair.value.right;
-    const loser = choice === 'left' ? currentPair.value.right : currentPair.value.left;
+    const left = choice === 'left' ? currentPair.value.left : currentPair.value.right;
+    const right = choice === 'left' ? currentPair.value.right : currentPair.value.left;
 
-    const dayUpdateResult = await updateDaysCompletorium(loser, winner);
-
-    const merged = {
-      ...winner,
-      usagePeriods: unionArray(winner.usagePeriods || [], loser.usagePeriods || []),
-      usageFeasts: unionArray(winner.usageFeasts || [], loser.usageFeasts || []),
-      usageDates: unionArray(winner.usageDates || [], loser.usageDates || []),
-      usagedayOfWeek: unionArray(winner.usagedayOfWeek || [], loser.usagedayOfWeek || []),
-      ids: unionArray(winner.ids || [], loser.ids || []),
-    };
-
-    const batch = writeBatch(db);
-    batch.set(doc(db, 'completoriums', winner.id), merged, { merge: true });
-    batch.delete(doc(db, 'completoriums', loser.id));
-    await batch.commit();
+    const dayUpdateResult = await mergePair(left, right);
 
     candidates.value.splice(currentIndex.value, 1);
     if (currentIndex.value >= candidates.value.length) {
@@ -231,6 +247,58 @@ async function resolvePair(choice) {
     notifyError(`Памылка аб’яднання: ${error.message}`);
   } finally {
     saving.value = false;
+  }
+}
+
+async function autoMergeExact() {
+  autoMerging.value = true;
+  try {
+    const snap = await getDocs(collection(db, 'completoriums'));
+    const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+    const groups = new Map();
+    for (const item of items) {
+      const key = canonicalTextForFields(item, COMP_COMPARE_FIELDS);
+      if (!key) continue;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(item);
+    }
+
+    let mergedCount = 0;
+    let totalUpdatedDays = 0;
+    let totalUpdatedFields = 0;
+
+    for (const groupItems of groups.values()) {
+      if (groupItems.length < 2) continue;
+
+      groupItems.sort((a, b) => (b.ids || []).length - (a.ids || []).length);
+      let winner = groupItems[0];
+
+      for (let i = 1; i < groupItems.length; i += 1) {
+        const loser = groupItems[i];
+        const result = await mergePair(winner, loser);
+        totalUpdatedDays += result.updatedDays;
+        totalUpdatedFields += result.updatedFieldsCount;
+        mergedCount += 1;
+
+        // refresh winner ids weight in memory for next merges
+        winner = {
+          ...winner,
+          ids: unionArray(winner.ids || [], loser.ids || []),
+          usagePeriods: unionArray(winner.usagePeriods || [], loser.usagePeriods || []),
+          usageFeasts: unionArray(winner.usageFeasts || [], loser.usageFeasts || []),
+          usageDates: unionArray(winner.usageDates || [], loser.usageDates || []),
+          usagedayOfWeek: unionArray(winner.usagedayOfWeek || [], loser.usagedayOfWeek || []),
+        };
+      }
+    }
+
+    await loadCandidates();
+    notifySuccess(`Аўта-мэрж завершаны. Аб’яднана: ${mergedCount}. Абноўлена days: ${totalUpdatedDays}. Зменаў палёў: ${totalUpdatedFields}.`);
+  } catch (error) {
+    notifyError(`Памылка аўта-мэржу: ${error.message}`);
+  } finally {
+    autoMerging.value = false;
   }
 }
 
