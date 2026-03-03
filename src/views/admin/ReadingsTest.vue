@@ -10,18 +10,6 @@
           <v-row>
             <v-col cols="12" md="4">
               <v-select
-                v-model="formData.cycle"
-                :items="cycleOptions"
-                label="Цыкл"
-                variant="outlined"
-                clearable
-                hint="Апцыянальна. Па змоўчанні — без цыкла"
-                persistent-hint
-              ></v-select>
-            </v-col>
-
-            <v-col cols="12" md="4">
-              <v-select
                 v-model="formData.type"
                 :items="typeOptions"
                 label="Тып ідэнтыфікацыі"
@@ -191,7 +179,6 @@ const saveState = ref({ type: '', message: '' });
 const isSavePending = computed(() => saveState.value.type === 'info');
 
 const formData = ref({
-  cycle: null,
   type: 'period',
   _periodType: 'ordinary',
   _periodWeekNumber: 1,
@@ -223,14 +210,6 @@ onMounted(() => {
     formData.value.type = 'date';
   }
 });
-
-const cycleOptions = [
-  { title: 'A (нядзелі)', value: 'A' },
-  { title: 'B (нядзелі)', value: 'B' },
-  { title: 'C (нядзелі)', value: 'C' },
-  { title: '1 (будні)', value: '1' },
-  { title: '2 (будні)', value: '2' },
-];
 
 const typeOptions = [
   { title: 'Па перыядзе і дню', value: 'period' },
@@ -289,7 +268,7 @@ function buildReadingId(data) {
   }
 
   if (data._date) {
-    const normalizedDate = moment(data._date, 'D.M').format('DD.MM');
+    const normalizedDate = moment(data._date, ['DD.MM', 'D.M']).format('DD.MM');
     const uid = Math.random().toString(36).slice(2, 8);
     return `${normalizedDate}-${uid}`;
   }
@@ -303,10 +282,6 @@ async function loadByParams(options = {}) {
 
   try {
     const conditions = [];
-
-    if (formData.value.cycle) {
-      conditions.push(where('cycle', '==', formData.value.cycle));
-    }
 
     if (formData.value.type === 'period') {
       const week = Number(formData.value._periodWeekNumber);
@@ -329,7 +304,6 @@ async function loadByParams(options = {}) {
           const data = firstDoc.data();
           formData.value.existingId = firstDoc.id;
           formData.value.text = data.text || '';
-          formData.value.cycle = data.cycle || null;
           notifySuccess(`Загружана чытанне: ${firstDoc.id}`);
           return true;
         }
@@ -343,7 +317,7 @@ async function loadByParams(options = {}) {
     }
 
     if (formData.value.type === 'date') {
-      conditions.push(where('_date', '==', moment(formData.value._date).format('D.M')));
+      conditions.push(where('_date', '==', moment(formData.value._date).format('DD.MM')));
     } else if (formData.value.type === 'feast') {
       conditions.push(where('_feast', '==', formData.value.feastName?.toLowerCase().trim()));
     }
@@ -361,7 +335,6 @@ async function loadByParams(options = {}) {
     const data = firstDoc.data();
     formData.value.existingId = firstDoc.id;
     formData.value.text = data.text || '';
-    formData.value.cycle = data.cycle || null;
     notifySuccess(`Загружана чытанне: ${firstDoc.id}`);
     return true;
   } catch (error) {
@@ -397,16 +370,12 @@ async function addTestReading() {
       updatedAt: serverTimestamp(),
     };
 
-    if (formData.value.cycle) {
-      data.cycle = formData.value.cycle;
-    }
-
     if (formData.value.type === 'period') {
       data._periodType = formData.value._periodType;
       data._periodWeekNumber = Number(formData.value._periodWeekNumber);
       data._dayOfWeek = Number(formData.value._dayOfWeek);
     } else if (formData.value.type === 'date') {
-      data._date = moment(formData.value._date).format('D.M');
+      data._date = moment(formData.value._date).format('DD.MM');
     } else if (formData.value.type === 'feast') {
       data._feast = formData.value.feastName?.toLowerCase().trim();
     }

@@ -17,11 +17,21 @@ export function useLiturgicalDay() {
 
     const getMoment = (isoDateStr) => moment(isoDateStr, 'YYYY-MM-DD');
 
+    const getFilterNumericValue = (filter, fallback = -1) => {
+        const raw = filter?.value?.integerValue ?? filter?.value?.stringValue;
+        const parsed = Number.parseInt(raw ?? fallback, 10);
+        return Number.isFinite(parsed) ? parsed : fallback;
+    };
+
+    const getFilterStringValue = (filter, fallback = null) => {
+        return filter?.value?.stringValue ?? fallback;
+    };
+
     const getItemsForPeriodQuery = (type, day, week) => {
         return query(daysCollection,
             where("_periodType", "==", type),
-            where("_dayOfWeek", "==", `${day}`),
-            where("_periodWeekNumber", "==", `${week}`)
+            where("_dayOfWeek", "==", Number(day)),
+            where("_periodWeekNumber", "==", Number(week))
         );
     };
 
@@ -247,8 +257,8 @@ export function useLiturgicalDay() {
             const typeFilter = periodQuery._query.filters.find(f => f.field.segments.includes('_periodType'));
             const weekFilter = periodQuery._query.filters.find(f => f.field.segments.includes('_periodWeekNumber'));
             
-            context.periodType = typeFilter?.value.stringValue || 'ordinary';
-            context.periodWeek = parseInt(weekFilter?.value.stringValue || '-1');
+            context.periodType = getFilterStringValue(typeFilter, 'ordinary');
+            context.periodWeek = getFilterNumericValue(weekFilter, -1);
         }
 
         const queryPromises = [periodQuery, fixedFeastQuery, ...dynamicFeastsQueries].filter(p => p);
@@ -280,7 +290,7 @@ export function useLiturgicalDay() {
     }
 
     const getFixedFeastQuery = (mDate) => {
-        return query(daysCollection, where('_date', '==', mDate.format('D.M')));
+        return query(daysCollection, where('_date', '==', mDate.format('DD.MM')));
     };
 
      function getDynamicFeastsQueries(mDate, year) {
@@ -306,9 +316,9 @@ export function useLiturgicalDay() {
         const periodQuery = getPeriodQuery(mDate, year);
         if (periodQuery) {
             diagnostics.periodParams = {
-                periodType: periodQuery._query.filters.find(f => f.field.segments.includes('_periodType'))?.value.stringValue,
-                periodWeek: parseInt(periodQuery._query.filters.find(f => f.field.segments.includes('_periodWeekNumber'))?.value.stringValue),
-                dayOfWeek: parseInt(periodQuery._query.filters.find(f => f.field.segments.includes('_dayOfWeek'))?.value.stringValue)
+                periodType: getFilterStringValue(periodQuery._query.filters.find(f => f.field.segments.includes('_periodType'))),
+                periodWeek: getFilterNumericValue(periodQuery._query.filters.find(f => f.field.segments.includes('_periodWeekNumber'))),
+                dayOfWeek: getFilterNumericValue(periodQuery._query.filters.find(f => f.field.segments.includes('_dayOfWeek')))
             };
             const periodSnapshot = await getDocs(periodQuery);
             diagnostics.periodResult = periodSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -377,9 +387,9 @@ export function useLiturgicalDay() {
                 if (snapshot.empty) {
                     const params = {
                         date: currentDate.format('DD.MM.YYYY (dddd)'),
-                        type: periodQuery._query.filters.find(f => f.field.segments.includes('_periodType'))?.value,
-                        week: periodQuery._query.filters.find(f => f.field.segments.includes('_periodWeekNumber'))?.value,
-                        day: periodQuery._query.filters.find(f => f.field.segments.includes('_dayOfWeek'))?.value,
+                        type: getFilterStringValue(periodQuery._query.filters.find(f => f.field.segments.includes('_periodType'))),
+                        week: getFilterNumericValue(periodQuery._query.filters.find(f => f.field.segments.includes('_periodWeekNumber'))),
+                        day: getFilterNumericValue(periodQuery._query.filters.find(f => f.field.segments.includes('_dayOfWeek'))),
                     };
                     logger.warn(`[Audit] НЕ ЗНАЙДЗЕНЫ ДЗЕНЬ ПЕРЫЯДУ:`, params);
                     missing.periodDays.push(params);

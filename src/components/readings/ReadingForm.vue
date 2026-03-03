@@ -196,7 +196,7 @@ function normalizeDate(dateValue) {
   const trimmed = String(dateValue).trim();
   const match = trimmed.match(/^(\d{1,2})\.(\d{1,2})$/);
   if (!match) return trimmed;
-  return `${Number(match[1])}.${Number(match[2])}`;
+  return `${String(Number(match[1])).padStart(2, '0')}.${String(Number(match[2])).padStart(2, '0')}`;
 }
 
 function buildReadingId(model, fallbackId) {
@@ -242,6 +242,7 @@ const saveChanges = async () => {
 
     if (!payload._date) payload._date = null;
     if (!payload._feast) payload._feast = null;
+    if (payload.cycle !== undefined) delete payload.cycle;
 
     const newDocRef = doc(db, 'readings', newReadingId);
 
