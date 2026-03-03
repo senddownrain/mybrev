@@ -166,6 +166,11 @@ const routes = [
         name: 'AdminNormalizeCompletorium',
         component: () => import('@/views/admin/CompletoriumNormalization.vue'),
       },
+      {
+        path: 'normalize-psalms',
+        name: 'AdminNormalizePsalms',
+        component: () => import('@/views/admin/PsalmTemplatesNormalization.vue'),
+      },
     ]
   },
 

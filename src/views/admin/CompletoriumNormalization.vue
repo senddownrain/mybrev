@@ -30,6 +30,12 @@
               <div class="text-caption text-medium-emphasis">{{ field }}</div>
               <div v-html="currentPair.left[field]"></div>
             </div>
+            <v-divider class="my-3" />
+            <div class="text-caption text-medium-emphasis mb-1">Дадатковая інфармацыя</div>
+            <div class="text-caption">usagePeriods: {{ (currentPair.left.usagePeriods || []).join(', ') || '—' }}</div>
+            <div class="text-caption">usageFeasts: {{ (currentPair.left.usageFeasts || []).join(', ') || '—' }}</div>
+            <div class="text-caption">usageDates: {{ (currentPair.left.usageDates || []).join(', ') || '—' }}</div>
+            <div class="text-caption">usagedayOfWeek: {{ (currentPair.left.usagedayOfWeek || []).join(', ') || '—' }}</div>
           </v-card-text>
           <v-card-actions>
             <v-btn color="success" :loading="saving" @click="resolvePair('left')">Пакінуць A</v-btn>
@@ -47,6 +53,12 @@
               <div class="text-caption text-medium-emphasis">{{ field }}</div>
               <div v-html="currentPair.right[field]"></div>
             </div>
+            <v-divider class="my-3" />
+            <div class="text-caption text-medium-emphasis mb-1">Дадатковая інфармацыя</div>
+            <div class="text-caption">usagePeriods: {{ (currentPair.right.usagePeriods || []).join(', ') || '—' }}</div>
+            <div class="text-caption">usageFeasts: {{ (currentPair.right.usageFeasts || []).join(', ') || '—' }}</div>
+            <div class="text-caption">usageDates: {{ (currentPair.right.usageDates || []).join(', ') || '—' }}</div>
+            <div class="text-caption">usagedayOfWeek: {{ (currentPair.right.usagedayOfWeek || []).join(', ') || '—' }}</div>
           </v-card-text>
           <v-card-actions>
             <v-btn color="success" :loading="saving" @click="resolvePair('right')">Пакінуць B</v-btn>
