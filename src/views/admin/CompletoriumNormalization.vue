@@ -1,0 +1,257 @@
+<template>
+  <v-container>
+    <h1 class="text-h4 mb-2">Нармалізацыя комплеторыя</h1>
+    <p class="text-body-2 text-medium-emphasis mb-4">
+      Параўнанне падобных запісаў комплеторыя (Jaccard > 50%). Поле <code>compAntM</code> ў параўнанні не ўлічваецца.
+    </p>
+
+    <v-card class="mb-4" variant="outlined">
+      <v-card-text class="d-flex ga-3 align-center flex-wrap">
+        <v-btn color="primary" :loading="loading" @click="loadCandidates">Абнавіць пары</v-btn>
+        <div class="text-body-2">Усяго шаблонаў: <b>{{ completoriums.length }}</b></div>
+        <div class="text-body-2">Пары для праверкі: <b>{{ candidates.length }}</b></div>
+        <div class="text-body-2" v-if="currentPair">Пара {{ currentIndex + 1 }} / {{ candidates.length }}</div>
+      </v-card-text>
+    </v-card>
+
+    <v-alert v-if="!loading && !currentPair" type="success" class="mb-4">
+      Няма пар для апрацоўкі.
+    </v-alert>
+
+    <v-row v-if="currentPair">
+      <v-col cols="12" md="6">
+        <v-card variant="outlined" class="h-100">
+          <v-card-title>Варыянт A</v-card-title>
+          <v-card-subtitle>id: {{ currentPair.left.id }}</v-card-subtitle>
+          <v-card-text>
+            <div class="mb-2 text-caption">Выкарыстанняў (days): {{ currentPair.left.ids?.length || 0 }}</div>
+            <div class="field-box" v-for="field in COMP_FIELDS" :key="`left-${field}`">
+              <div class="text-caption text-medium-emphasis">{{ field }}</div>
+              <div v-html="currentPair.left[field]"></div>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="success" :loading="saving" @click="resolvePair('left')">Пакінуць A</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+
+      <v-col cols="12" md="6">
+        <v-card variant="outlined" class="h-100">
+          <v-card-title>Варыянт B</v-card-title>
+          <v-card-subtitle>id: {{ currentPair.right.id }}</v-card-subtitle>
+          <v-card-text>
+            <div class="mb-2 text-caption">Выкарыстанняў (days): {{ currentPair.right.ids?.length || 0 }}</div>
+            <div class="field-box" v-for="field in COMP_FIELDS" :key="`right-${field}`">
+              <div class="text-caption text-medium-emphasis">{{ field }}</div>
+              <div v-html="currentPair.right[field]"></div>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="success" :loading="saving" @click="resolvePair('right')">Пакінуць B</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-card v-if="currentPair" class="mt-4" variant="outlined">
+      <v-card-text class="d-flex ga-3 flex-wrap align-center">
+        <v-btn variant="outlined" :disabled="saving" @click="skipPair">Прапусціць пару</v-btn>
+        <div class="text-caption">Падобнасць: {{ (currentPair.score * 100).toFixed(1) }}%</div>
+      </v-card-text>
+    </v-card>
+
+    <NotificationSnackbar />
+  </v-container>
+</template>
+
+<script setup>
+import { collection, doc, getDoc, getDocs, writeBatch } from 'firebase/firestore';
+import { computed, onMounted, ref } from 'vue';
+import { db } from '@/plugins/firebase';
+import { useNotifier } from '@/composables/useNotifier';
+import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
+
+const COMP_FIELDS = ['compHymn', 'compAnt1', 'compAnt2', 'compPs1', 'compPs2', 'compR', 'compResp', 'compAntS', 'compPr', 'compAntM'];
+const COMP_COMPARE_FIELDS = ['compHymn', 'compAnt1', 'compAnt2', 'compPs1', 'compPs2', 'compR', 'compResp', 'compAntS', 'compPr'];
+
+const { notifyError, notifyInfo, notifySuccess } = useNotifier();
+
+const loading = ref(false);
+const saving = ref(false);
+const completoriums = ref([]);
+const candidates = ref([]);
+const currentIndex = ref(0);
+
+const currentPair = computed(() => candidates.value[currentIndex.value] || null);
+
+function htmlToText(html = '') {
+  const el = document.createElement('div');
+  el.innerHTML = String(html || '');
+  return (el.textContent || el.innerText || '').trim();
+}
+
+function canonicalTextForFields(item, fields) {
+  return fields
+    .map((field) => htmlToText(item[field] || ''))
+    .join(' ')
+    .toLowerCase()
+    .replace(/ё/g, 'е')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function jaccardSimilarity(a, b) {
+  const setA = new Set(a.split(' ').filter((x) => x.length > 2));
+  const setB = new Set(b.split(' ').filter((x) => x.length > 2));
+  if (setA.size === 0 && setB.size === 0) return 1;
+  const inter = new Set([...setA].filter((x) => setB.has(x))).size;
+  const union = new Set([...setA, ...setB]).size;
+  return union ? inter / union : 0;
+}
+
+function buildCandidates(items) {
+  const list = [];
+
+  for (let i = 0; i < items.length; i += 1) {
+    for (let j = i + 1; j < items.length; j += 1) {
+      const left = items[i];
+      const right = items[j];
+      const canonA = canonicalTextForFields(left, COMP_COMPARE_FIELDS);
+      const canonB = canonicalTextForFields(right, COMP_COMPARE_FIELDS);
+      if (!canonA || !canonB) continue;
+
+      const score = jaccardSimilarity(canonA, canonB);
+      if (score <= 0.5) continue;
+
+      list.push({ left, right, score });
+    }
+  }
+
+  return list.sort((a, b) => b.score - a.score);
+}
+
+async function loadCandidates() {
+  loading.value = true;
+  try {
+    const snap = await getDocs(collection(db, 'completoriums'));
+    completoriums.value = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    candidates.value = buildCandidates(completoriums.value);
+    currentIndex.value = 0;
+    notifyInfo(`Знойдзена пар для апрацоўкі: ${candidates.value.length}`);
+  } catch (error) {
+    notifyError(`Не атрымалася загрузіць completoriums: ${error.message}`);
+  } finally {
+    loading.value = false;
+  }
+}
+
+function unionArray(...arrs) {
+  return Array.from(new Set(arrs.flat().filter(Boolean))).sort();
+}
+
+async function updateDaysCompletorium(loser, winner) {
+  const ids = loser.ids || [];
+  let batch = writeBatch(db);
+  let opCount = 0;
+  let updatedDays = 0;
+  let updatedFieldsCount = 0;
+  const touchedFields = new Set();
+
+  for (const dayId of ids) {
+    const dayRef = doc(db, 'days', dayId);
+    const daySnap = await getDoc(dayRef);
+    if (!daySnap.exists()) continue;
+    const data = daySnap.data();
+    const payload = {};
+
+    COMP_FIELDS.forEach((field) => {
+      if (String(data[field] || '') === String(loser[field] || '')) {
+        payload[field] = winner[field] || '';
+        touchedFields.add(field);
+        updatedFieldsCount += 1;
+      }
+    });
+
+    if (!Object.keys(payload).length) continue;
+
+    batch.update(dayRef, payload);
+    opCount += 1;
+    updatedDays += 1;
+
+    if (opCount >= 400) {
+      await batch.commit();
+      batch = writeBatch(db);
+      opCount = 0;
+    }
+  }
+
+  if (opCount > 0) await batch.commit();
+
+  return {
+    updatedDays,
+    updatedFieldsCount,
+    touchedFields: Array.from(touchedFields).sort(),
+  };
+}
+
+async function resolvePair(choice) {
+  if (!currentPair.value) return;
+  saving.value = true;
+  try {
+    const winner = choice === 'left' ? currentPair.value.left : currentPair.value.right;
+    const loser = choice === 'left' ? currentPair.value.right : currentPair.value.left;
+
+    const dayUpdateResult = await updateDaysCompletorium(loser, winner);
+
+    const merged = {
+      ...winner,
+      usagePeriods: unionArray(winner.usagePeriods || [], loser.usagePeriods || []),
+      usageFeasts: unionArray(winner.usageFeasts || [], loser.usageFeasts || []),
+      usageDates: unionArray(winner.usageDates || [], loser.usageDates || []),
+      usagedayOfWeek: unionArray(winner.usagedayOfWeek || [], loser.usagedayOfWeek || []),
+      ids: unionArray(winner.ids || [], loser.ids || []),
+    };
+
+    const batch = writeBatch(db);
+    batch.set(doc(db, 'completoriums', winner.id), merged, { merge: true });
+    batch.delete(doc(db, 'completoriums', loser.id));
+    await batch.commit();
+
+    candidates.value.splice(currentIndex.value, 1);
+    if (currentIndex.value >= candidates.value.length) {
+      currentIndex.value = Math.max(0, candidates.value.length - 1);
+    }
+
+    notifySuccess(
+      `Гатова. Абноўлена days: ${dayUpdateResult.updatedDays}; зменаў палёў: ${dayUpdateResult.updatedFieldsCount}; палі: ${dayUpdateResult.touchedFields.join(', ') || 'няма'}. Дубль комплеторыя аб’яднаны.`
+    );
+  } catch (error) {
+    notifyError(`Памылка аб’яднання: ${error.message}`);
+  } finally {
+    saving.value = false;
+  }
+}
+
+function skipPair() {
+  if (!currentPair.value) return;
+  candidates.value.splice(currentIndex.value, 1);
+  if (currentIndex.value >= candidates.value.length) {
+    currentIndex.value = Math.max(0, candidates.value.length - 1);
+  }
+}
+
+onMounted(loadCandidates);
+</script>
+
+<style scoped>
+.field-box {
+  max-height: 180px;
+  overflow: auto;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+</style>
