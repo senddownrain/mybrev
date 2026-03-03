@@ -156,6 +156,11 @@ const routes = [
         name: 'AdminMissingData',
         component: () => import('@/views/admin/MissingDataAudit.vue'),
       },
+      {
+        path: 'normalize-hymns',
+        name: 'AdminNormalizeHymns',
+        component: () => import('@/views/admin/HymnsNormalization.vue'),
+      },
     ]
   },
 
