@@ -25,12 +25,70 @@ const db = admin.firestore();
 const DAYS_COLLECTION = 'days';
 
 // === НАСТРОЙКИ ===
-const PERIOD_TYPE = 'lent';
+const PERIOD_TYPE = 'easter';
 
 const FIELDS_TO_CHECK = [
+ 'officeOfReadingsHymn',
+  'officeOfReadingsAnt1',
+  'officeOfReadingsAnt2',
+  'officeOfReadingsAnt3',
+  'officeOfReadingsPs1',
+  'officeOfReadingsPs2',
+  'officeOfReadingsPs3',
+  'officeOfReadingsVers',
+  'officeOfReadingsR1',
+  'officeOfReadingsR2',
+  'officeOfReadingsTeDeum',
+  'officeOfReadingsPr',
+  'laudesHymn',
+  'laudesAnt1',
+  'laudesAnt2',
+  'laudesAnt3',
+  'laudesPs1',
+  'laudesPs2',
+  'laudesPs3',
+  'laudesR',
+  'laudesAntBen',
+  'laudesInter',
+  'laudesPr',
+  'sext1Hymn',
+  'sext1Ant1',
+  'sext1Ant2',
+  'sext1Ant3',
+  'sext1Ps1',
+  'sext1Ps2',
+  'sext1Ps3',
+  'sext1R',
+  'sext1Pr',
+  'sext2Hymn',
+  'sext2Ant1',
+  'sext2Ant2',
+  'sext2Ant3',
   'sext2Ps1',
   'sext2Ps2',
   'sext2Ps3',
+  'sext2R',
+  'sext2Pr',
+  'sext3Hymn',
+  'sext3Ant1',
+  'sext3Ant2',
+  'sext3Ant3',
+  'sext3Ps1',
+  'sext3Ps2',
+  'sext3Ps3',
+  'sext3R',
+  'sext3Pr',
+  'vesperHymn',
+  'vesperAnt1',
+  'vesperAnt2',
+  'vesperAnt3',
+  'vesperPs1',
+  'vesperPs2',
+  'vesperPs3',
+  'vesperR',
+  'vesperAntMag',
+  'vesperInter',
+  'vesperPr',
 ];
 
 const WEEKDAY_LABEL_MAP = {
@@ -93,6 +151,7 @@ async function main() {
 
     return {
       docId: doc.id,
+      psalmWeek: data._psalmWeek,
       periodType: data._periodType,
       periodWeekNumber,
       dayOfWeek,
@@ -111,7 +170,7 @@ async function main() {
   });
 
   rows.forEach((row) => {
-    const base = `${row.periodWeekNumber} ${row.periodType} ${row.dayLabel}`;
+    const base = `${row.psalmWeek} ${row.periodWeekNumber} ${row.periodType} ${row.dayLabel}`;
 
     if (row.missingFields.length === 0) {
       const line = `${base} - []`;

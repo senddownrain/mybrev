@@ -87,7 +87,7 @@ async function extractDaysFromFirestore() {
 function parseArgs() {
   const options = {
     source: 'firestore',
-    out: '',
+    out: './patchs/groups-and-uniques.json',
   };
 
   for (const arg of process.argv.slice(2)) {
