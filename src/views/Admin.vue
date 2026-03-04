@@ -28,6 +28,7 @@
       <v-col cols="12" md="4"><v-card :to="{ name: 'AdminNormalizeHymns' }" hover color="orange-darken-2"><v-card-title>Нармалізацыя гімнаў</v-card-title><v-card-subtitle>Ручное аб'яднанне дубляў у hymns + абнаўленне days</v-card-subtitle></v-card></v-col>
       <v-col cols="12" md="4"><v-card :to="{ name: 'AdminNormalizeCompletorium' }" hover color="teal-darken-2"><v-card-title>Нармалізацыя комплеторыя</v-card-title><v-card-subtitle>Ручное аб'яднанне дубляў completorium</v-card-subtitle></v-card></v-col>
       <v-col cols="12" md="4"><v-card :to="{ name: 'AdminNormalizePsalms' }" hover color="cyan-darken-2"><v-card-title>Нармалізацыя псальмаў</v-card-title><v-card-subtitle>Ручное/аўта аб'яднанне дубляў psalmTemplates</v-card-subtitle></v-card></v-col>
+      <v-col cols="12" md="4"><v-card :to="{ name: 'AdminCompletoriumTemplates' }" hover color="indigo-darken-2"><v-card-title>Шаблоны комплеты</v-card-title><v-card-subtitle>Стварэнне, пошук, рэдагаванне і выдаленне completoriumTemplates</v-card-subtitle></v-card></v-col>
       <v-col cols="12" md="4"><v-card :to="{ name: 'AdminDayTemplatesList' }" hover color="indigo-darken-2"><v-card-title>Шаблоны дзён</v-card-title><v-card-subtitle>Стварэнне, групоўка і рэдагаванне dayTemplates</v-card-subtitle></v-card></v-col>
 
     </v-row>
