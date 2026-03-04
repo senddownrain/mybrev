@@ -199,6 +199,11 @@ const routes = [
         props: true,
         meta: { hideLayoutAppBar: true },
       },
+      {
+        path: 'calendar-map',
+        name: 'AdminCalendarMap',
+        component: () => import('@/views/admin/CalendarMapManager.vue'),
+      },
     ]
   },
 
