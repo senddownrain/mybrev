@@ -91,7 +91,7 @@ async function main() {
     if (!TARGET_PERIODS.includes(day._periodType)) continue;
 
     const dayOfWeek = Number(day._dayOfWeek);
-    const periodWeek = Number(day._periodWeekNumber ?? day._weekNum);
+    const periodWeek = Number(day._periodWeekNumber);
     const psalmWeek = parsePsalmWeek(day._psalmWeek);
 
     const template = templateByPeriodDayPsalm.get(`${day._periodType}|${dayOfWeek}|${psalmWeek}`);
