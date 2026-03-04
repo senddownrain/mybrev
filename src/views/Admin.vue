@@ -30,6 +30,7 @@
       <v-col cols="12" md="4"><v-card :to="{ name: 'AdminNormalizePsalms' }" hover color="cyan-darken-2"><v-card-title>Нармалізацыя псальмаў</v-card-title><v-card-subtitle>Ручное/аўта аб'яднанне дубляў psalmTemplates</v-card-subtitle></v-card></v-col>
       <v-col cols="12" md="4"><v-card :to="{ name: 'AdminCompletoriumTemplates' }" hover color="indigo-darken-2"><v-card-title>Шаблоны комплеты</v-card-title><v-card-subtitle>Стварэнне, пошук, рэдагаванне і выдаленне completoriumTemplates</v-card-subtitle></v-card></v-col>
       <v-col cols="12" md="4"><v-card :to="{ name: 'AdminDayTemplatesList' }" hover color="indigo-darken-2"><v-card-title>Шаблоны дзён</v-card-title><v-card-subtitle>Стварэнне, групоўка і рэдагаванне dayTemplates</v-card-subtitle></v-card></v-col>
+      <v-col cols="12" md="4"><v-card :to="{ name: 'AdminCalendarMap' }" hover color="indigo-darken-1"><v-card-title>Карта календара</v-card-title><v-card-subtitle>Калекцыя calendarMap: прагляд, рэдагаванне і пабудова літургічнага дня</v-card-subtitle></v-card></v-col>
 
     </v-row>
   </v-container>
