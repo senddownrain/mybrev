@@ -76,10 +76,6 @@
             <InlineEditor v-model="templateData.officeOfReadingsAnt3" field-title="Антыфона 3 (ГЧ)" />
             <InlineEditor v-model="templateData.officeOfReadingsPs3" field-title="Псалом 3 (ГЧ)" />
             <InlineEditor v-model="templateData.officeOfReadingsVers" field-title="Верш (ГЧ)" />
-            <InlineEditor v-model="templateData.officeOfReadingsR1" field-title="Чытанне 1 (ГЧ)" />
-            <InlineEditor v-model="templateData.officeOfReadingsR2" field-title="Чытанне 2 (ГЧ)" />
-            <InlineEditor v-model="templateData.officeOfReadingsTeDeum" field-title="Te Deum" />
-            <InlineEditor v-model="templateData.officeOfReadingsPr" field-title="Малітва (ГЧ)" />
           </v-row></v-expansion-panel-text>
         </v-expansion-panel>
 

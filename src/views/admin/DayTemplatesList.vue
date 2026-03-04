@@ -23,6 +23,19 @@
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
+
+    <v-card class="mt-6" variant="tonal">
+      <v-card-title>Недастаючыя дні тыдня</v-card-title>
+      <v-card-text>
+        <v-list v-if="missingWeekdaysReport.length" density="compact" lines="two">
+          <v-list-item v-for="item in missingWeekdaysReport" :key="item.key">
+            <template #title>{{ item.periodTitle }} • Тыдзень псалтыра: {{ item.weekNumber }}</template>
+            <template #subtitle>{{ item.missingDayLabels.join(', ') }}</template>
+          </v-list-item>
+        </v-list>
+        <div v-else class="text-medium-emphasis">Для ўсіх знойдзеных тыдняў ёсць усе 7 дзён тыдня.</div>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
@@ -38,6 +51,17 @@ const db = useFirestore();
 const router = useRouter();
 const { success, error } = useNotifier();
 const templates = useCollection(collection(db, 'dayTemplates'));
+const WEEKDAY_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
+
+function parseWeekNumber(value) {
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+}
+
+function parseDayOfWeek(value) {
+  const parsed = Number(value);
+  return WEEKDAY_NUMBERS.includes(parsed) ? parsed : null;
+}
 
 function sortItems(items) {
   return [...items].sort((a, b) => {
@@ -73,6 +97,50 @@ const groupedTemplates = computed(() => {
     title: key === '__no_period__' ? 'Без перыяду' : PERIOD_LABEL_MAP[key] || key,
     items: sortItems(groups.get(key)),
   }));
+});
+
+const missingWeekdaysReport = computed(() => {
+  const periods = new Map();
+
+  templates.value.forEach((item) => {
+    const weekNumber = parseWeekNumber(item._psalmWeekNumber);
+    if (weekNumber == null) return;
+
+    const periodKey = item._periodType || '__no_period__';
+    const dayOfWeek = parseDayOfWeek(item._dayOfWeek);
+
+    if (!periods.has(periodKey)) periods.set(periodKey, new Map());
+    const weeks = periods.get(periodKey);
+    if (!weeks.has(weekNumber)) weeks.set(weekNumber, new Set());
+    if (dayOfWeek != null) weeks.get(weekNumber).add(dayOfWeek);
+  });
+
+  const sortedPeriodKeys = [...periods.keys()].sort((a, b) => {
+    if (a === '__no_period__') return 1;
+    if (b === '__no_period__') return -1;
+    return (PERIOD_LABEL_MAP[a] || a).localeCompare(PERIOD_LABEL_MAP[b] || b);
+  });
+
+  const rows = [];
+  sortedPeriodKeys.forEach((periodKey) => {
+    const weeks = periods.get(periodKey);
+    const sortedWeekNumbers = [...weeks.keys()].sort((a, b) => a - b);
+
+    sortedWeekNumbers.forEach((weekNumber) => {
+      const existingDays = weeks.get(weekNumber);
+      const missingDays = WEEKDAY_NUMBERS.filter((day) => !existingDays.has(day));
+      if (!missingDays.length) return;
+
+      rows.push({
+        key: `${periodKey}-${weekNumber}`,
+        periodTitle: periodKey === '__no_period__' ? 'Без перыяду' : PERIOD_LABEL_MAP[periodKey] || periodKey,
+        weekNumber,
+        missingDayLabels: missingDays.map((day) => WEEKDAY_LABEL_MAP[day] || String(day)),
+      });
+    });
+  });
+
+  return rows;
 });
 
 function buildSubtitle(item) {
