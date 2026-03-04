@@ -23,14 +23,26 @@
     <v-expansion-panels variant="accordion" multiple>
       <v-expansion-panel title="Па перыядзе">
         <v-expansion-panel-text>
-          <v-list density="compact">
-            <v-list-item v-for="item in periodItems" :key="item.id" @click="openItem(item.id)">
-              <v-list-item-title>
-                {{ item._periodType }} • {{ item._periodWeekNumber ?? '—' }} • {{ weekdayLabel(item._dayOfWeek) }}
-              </v-list-item-title>
-              <v-list-item-subtitle>{{ item._feastName || item._date || item.id }}</v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item v-if="!periodItems.length">
+          <v-expansion-panels variant="accordion" multiple>
+            <v-expansion-panel
+              v-for="group in periodGroups"
+              :key="group.periodType"
+              :title="`${group.periodLabel} (${group.items.length})`"
+            >
+              <v-expansion-panel-text>
+                <v-list density="compact">
+                  <v-list-item v-for="item in group.items" :key="item.id" @click="openItem(item.id)">
+                    <v-list-item-title>
+                      {{ item._periodWeekNumber ?? '—' }} • {{ weekdayLabel(item._dayOfWeek) }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>{{ item._feastName || item._date || item.id }}</v-list-item-subtitle>
+                  </v-list-item>
+                </v-list>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+          <v-list v-if="!periodItems.length" density="compact">
+            <v-list-item>
               <v-list-item-title class="text-medium-emphasis">Няма элементаў з _periodType</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -203,6 +215,31 @@ const periodItems = computed(() => items.value
     || Number(a._periodWeekNumber || 0) - Number(b._periodWeekNumber || 0)
     || Number(a._dayOfWeek || 0) - Number(b._dayOfWeek || 0)
     || (a.id || '').localeCompare(b.id || '')));
+
+const periodGroups = computed(() => {
+  const grouped = new Map();
+
+  periodItems.value.forEach((item) => {
+    const periodType = item._periodType || '__unknown__';
+    if (!grouped.has(periodType)) {
+      grouped.set(periodType, []);
+    }
+    grouped.get(periodType).push(item);
+  });
+
+  return [...grouped.entries()]
+    .sort((a, b) => {
+      const labelA = PERIOD_LABEL_MAP[a[0]] || a[0];
+      const labelB = PERIOD_LABEL_MAP[b[0]] || b[0];
+      return labelA.localeCompare(labelB);
+    })
+    .map(([periodType, groupItems]) => ({
+      periodType,
+      periodLabel: PERIOD_LABEL_MAP[periodType] || periodType,
+      items: groupItems,
+    }));
+});
+
 const dateItems = computed(() => items.value.filter((item) => item._date));
 const dynamicItems = computed(() => items.value.filter((item) => item._feast));
 const selectedItem = computed(() => items.value.find((item) => item.id === selectedId.value));
