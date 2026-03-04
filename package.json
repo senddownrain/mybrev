@@ -16,7 +16,8 @@
     "db:generate-day-templates": "node patchs/generate-day-templates.js",
     "db:generate-day-templates-todo": "node patchs/generate-day-templates-todo.js",
     "db:remove-day-templates-office-readings-fields": "node patchs/remove-office-of-readings-fields-from-day-templates.js",
-    "db:generate-completorium-templates": "node patchs/generate-completorium-templates.js"
+    "db:generate-completorium-templates": "node patchs/generate-completorium-templates.js",
+    "db:generate-calendar-map": "node patchs/generate-calendar-map.js"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
