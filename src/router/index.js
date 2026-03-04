@@ -171,6 +171,18 @@ const routes = [
         name: 'AdminNormalizePsalms',
         component: () => import('@/views/admin/PsalmTemplatesNormalization.vue'),
       },
+
+      {
+        path: 'day-templates',
+        name: 'AdminDayTemplatesList',
+        component: () => import('@/views/admin/DayTemplatesList.vue'),
+      },
+      {
+        path: 'day-templates/:id',
+        name: 'AdminDayTemplateEditor',
+        component: () => import('@/views/admin/DayTemplateEditor.vue'),
+        props: true,
+      },
     ]
   },
 
