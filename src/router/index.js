@@ -130,6 +130,7 @@ const routes = [
         name: 'AdminDayEditor',
         component: () => import('@/views/admin/DayEditor.vue'),
         props: true,
+        meta: { hideLayoutAppBar: true },
       },
       {
         path: 'year-options',
@@ -196,6 +197,7 @@ const routes = [
         name: 'AdminDayTemplateEditor',
         component: () => import('@/views/admin/DayTemplateEditor.vue'),
         props: true,
+        meta: { hideLayoutAppBar: true },
       },
     ]
   },

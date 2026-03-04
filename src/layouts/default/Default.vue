@@ -5,7 +5,7 @@
       '--font-size-multiplier': settings.fontSizeMultiplier 
     }"
   >
-    <v-app-bar flat class="app-bar-border">
+    <v-app-bar v-if="!hideLayoutAppBar" flat class="app-bar-border">
       <!-- Кнопка назад для страницы редактирования молитвы (PrayerEdit) -->
       <v-app-bar-nav-icon 
         v-if="isPrayerEditPage"
@@ -247,6 +247,9 @@ const isPrayerEditPage = computed(() => {
 const prayerIsEditing = ref(false);
 const prayerSaving = ref(false);
 const prayerFormSaving = ref(false);
+
+const hideLayoutAppBar = computed(() => route.matched.some((record) => record.meta?.hideLayoutAppBar));
+
 
 function handlePrayerStateUpdate(e) {
   prayerIsEditing.value = e.detail.isEditing;

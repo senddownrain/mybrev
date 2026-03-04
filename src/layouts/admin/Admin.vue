@@ -5,7 +5,7 @@
       '--font-size-multiplier': settings.fontSizeMultiplier 
     }"
   >
-    <v-app-bar flat class="app-bar-border">
+    <v-app-bar v-if="!hideLayoutAppBar" flat class="app-bar-border">
       <v-app-bar-nav-icon @click="goBack">
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
@@ -26,13 +26,17 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
+import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import TextSettingsSheet from '@/components/TextSettingsSheet.vue';
 import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
 import { useSettingsStore } from '@/stores/settings.js';
 
 const settings = useSettingsStore();
+const route = useRoute();
 const router = useRouter();
+
+const hideLayoutAppBar = computed(() => route.matched.some((record) => record.meta?.hideLayoutAppBar));
 
 const goBack = () => {
   if (window.history.length > 1) {
@@ -48,4 +52,3 @@ const goBack = () => {
   border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 </style>
-
