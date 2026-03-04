@@ -4,7 +4,8 @@ const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
 
 const TARGET_PERIODS = ['ordinary', 'lent', 'easter', 'advent', 'christmas'];
-const META_FIELDS = ['_dayOfWeek', '_periodType', '_periodWeekNumber', '_date', '_feast', '_psalmWeek', '_feastName', '_feastType'];
+const REQUIRED_PERIOD_FIELDS = ['_dayOfWeek', '_periodType', '_periodWeekNumber'];
+const META_FIELDS = [...REQUIRED_PERIOD_FIELDS, '_date', '_feast', '_psalmWeek', '_feastName', '_feastType'];
 const CALENDAR_FIELDS = [
   '_dayOfWeek', '_periodType', '_periodWeekNumber', '_date', '_feast', '_psalmWeek', '_feastName', '_feastType',
   'invitatoriumAnt', 'feastComment',
@@ -52,6 +53,11 @@ function indexBy(items, keyBuilder) {
   return index;
 }
 
+function toIntOrNull(value) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 async function main() {
   admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
   const db = admin.firestore();
@@ -90,8 +96,8 @@ async function main() {
   for (const day of days) {
     if (!TARGET_PERIODS.includes(day._periodType)) continue;
 
-    const dayOfWeek = Number(day._dayOfWeek);
-    const periodWeek = Number(day._periodWeekNumber);
+    const dayOfWeek = toIntOrNull(day._dayOfWeek);
+    const periodWeek = toIntOrNull(day._periodWeekNumber ?? day._weekNum);
     const psalmWeek = parsePsalmWeek(day._psalmWeek);
 
     const template = templateByPeriodDayPsalm.get(`${day._periodType}|${dayOfWeek}|${psalmWeek}`);
@@ -102,13 +108,20 @@ async function main() {
       templateRef: template?.id || null,
       compRef: comp?.id || null,
       readingRef: reading?.id || null,
+      // Эти поля НИКОГДА не должны зануляться логикой шаблона.
+      _dayOfWeek: dayOfWeek,
+      _periodType: day._periodType ?? null,
+      _periodWeekNumber: periodWeek,
     };
 
     for (const field of CALENDAR_FIELDS) {
       const dayValue = day[field] ?? null;
-      if (field === '_periodWeekNumber') {
-        payload[field] = Number.isFinite(periodWeek) ? periodWeek : null;
-      } else if (META_FIELDS.includes(field)) {
+      if (REQUIRED_PERIOD_FIELDS.includes(field)) {
+        // Уже проставлены выше и не зависят от dayTemplates.
+        continue;
+      }
+
+      if (META_FIELDS.includes(field)) {
         payload[field] = dayValue;
       } else if (template && hasValue(template[field])) {
         payload[field] = null;
