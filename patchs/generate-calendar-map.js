@@ -4,6 +4,7 @@ const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
 
 const TARGET_PERIODS = ['ordinary', 'lent', 'easter', 'advent', 'christmas'];
+const META_FIELDS = ['_dayOfWeek', '_periodType', '_periodWeekNumber', '_date', '_feast', '_psalmWeek', '_feastName', '_feastType'];
 const CALENDAR_FIELDS = [
   '_dayOfWeek', '_periodType', '_periodWeekNumber', '_date', '_feast', '_psalmWeek', '_feastName', '_feastType',
   'invitatoriumAnt', 'feastComment',
@@ -105,7 +106,11 @@ async function main() {
 
     for (const field of CALENDAR_FIELDS) {
       const dayValue = day[field] ?? null;
-      if (template && hasValue(template[field])) {
+      if (field === '_periodWeekNumber') {
+        payload[field] = Number.isFinite(periodWeek) ? periodWeek : null;
+      } else if (META_FIELDS.includes(field)) {
+        payload[field] = dayValue;
+      } else if (template && hasValue(template[field])) {
         payload[field] = null;
       } else {
         payload[field] = dayValue;

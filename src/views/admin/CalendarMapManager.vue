@@ -6,6 +6,13 @@
       <v-btn color="primary" prepend-icon="mdi-plus" @click="createNew">Новы элемент</v-btn>
     </div>
 
+    <v-alert type="info" variant="tonal" class="mb-4">
+      Загружана элементаў calendarMap: <b>{{ items.length }}</b>
+      · Па перыядзе: <b>{{ periodItems.length }}</b>
+      · Па даце: <b>{{ dateItems.length }}</b>
+      · Дынамічныя: <b>{{ dynamicItems.length }}</b>
+    </v-alert>
+
     <v-card v-if="isLoading" class="mb-4" variant="outlined">
       <v-card-text>
         <div class="mb-2">{{ loadingText }}</div>
@@ -13,154 +20,147 @@
       </v-card-text>
     </v-card>
 
-    <v-row>
-      <v-col cols="12" md="4">
-        <v-expansion-panels variant="accordion" multiple>
-          <v-expansion-panel title="Па перыядзе">
-            <v-expansion-panel-text>
-              <v-list density="compact">
-                <v-list-item
-                  v-for="item in periodItems"
-                  :key="item.id"
-                  :active="selectedId === item.id"
-                  @click="selectItem(item.id)"
-                >
-                  <v-list-item-title>{{ item._periodType }} • {{ item._periodWeekNumber || '—' }} • {{ weekdayLabel(item._dayOfWeek) }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ item._feastName || item._date || item.id }}</v-list-item-subtitle>
-                </v-list-item>
-              </v-list>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
+    <v-expansion-panels variant="accordion" multiple>
+      <v-expansion-panel title="Па перыядзе">
+        <v-expansion-panel-text>
+          <v-list density="compact">
+            <v-list-item v-for="item in periodItems" :key="item.id" @click="openItem(item.id)">
+              <v-list-item-title>
+                {{ item._periodType }} • {{ item._periodWeekNumber ?? '—' }} • {{ weekdayLabel(item._dayOfWeek) }}
+              </v-list-item-title>
+              <v-list-item-subtitle>{{ item._feastName || item._date || item.id }}</v-list-item-subtitle>
+            </v-list-item>
+            <v-list-item v-if="!periodItems.length">
+              <v-list-item-title class="text-medium-emphasis">Няма элементаў з _periodType</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
 
-          <v-expansion-panel title="Па даце">
-            <v-expansion-panel-text>
-              <v-list density="compact">
-                <v-list-item
-                  v-for="item in dateItems"
-                  :key="item.id"
-                  :active="selectedId === item.id"
-                  @click="selectItem(item.id)"
-                >
-                  <v-list-item-title>{{ item._date }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ item._feastName || item._periodType || item.id }}</v-list-item-subtitle>
-                </v-list-item>
-              </v-list>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
+      <v-expansion-panel title="Па даце">
+        <v-expansion-panel-text>
+          <v-list density="compact">
+            <v-list-item v-for="item in dateItems" :key="item.id" @click="openItem(item.id)">
+              <v-list-item-title>{{ item._date }}</v-list-item-title>
+              <v-list-item-subtitle>{{ item._feastName || item._periodType || item.id }}</v-list-item-subtitle>
+            </v-list-item>
+            <v-list-item v-if="!dateItems.length">
+              <v-list-item-title class="text-medium-emphasis">Няма элементаў з _date</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
 
-          <v-expansion-panel title="Дынамічныя дні">
-            <v-expansion-panel-text>
-              <v-list density="compact">
-                <v-list-item
-                  v-for="item in dynamicItems"
-                  :key="item.id"
-                  :active="selectedId === item.id"
-                  @click="selectItem(item.id)"
-                >
-                  <v-list-item-title>{{ item._feast }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ item._feastName || item._periodType || item.id }}</v-list-item-subtitle>
-                </v-list-item>
-              </v-list>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-col>
+      <v-expansion-panel title="Дынамічныя дні">
+        <v-expansion-panel-text>
+          <v-list density="compact">
+            <v-list-item v-for="item in dynamicItems" :key="item.id" @click="openItem(item.id)">
+              <v-list-item-title>{{ item._feast }}</v-list-item-title>
+              <v-list-item-subtitle>{{ item._feastName || item._periodType || item.id }}</v-list-item-subtitle>
+            </v-list-item>
+            <v-list-item v-if="!dynamicItems.length">
+              <v-list-item-title class="text-medium-emphasis">Няма элементаў з _feast</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
 
-      <v-col cols="12" md="8">
-        <v-card v-if="selectedItem" variant="outlined">
-          <v-toolbar color="primary" density="comfortable">
-            <v-toolbar-title>{{ selectedItem._feastName || selectedItem._date || selectedItem.id }}</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn-toggle v-model="mode" mandatory density="compact" variant="outlined">
-              <v-btn value="view">Прагляд</v-btn>
-              <v-btn value="edit">Рэдагаванне</v-btn>
-              <v-btn value="build">Пабудова</v-btn>
-            </v-btn-toggle>
-          </v-toolbar>
+    <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition">
+      <v-card>
+        <v-toolbar color="primary">
+          <v-btn icon="mdi-close" @click="dialog = false"></v-btn>
+          <v-toolbar-title>{{ dialogTitle }}</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn-toggle v-model="mode" mandatory density="compact" variant="outlined">
+            <v-btn value="view" :disabled="isNewItem">Прагляд</v-btn>
+            <v-btn value="edit">Рэдагаванне</v-btn>
+            <v-btn value="build" :disabled="isNewItem">Пабудова</v-btn>
+          </v-btn-toggle>
+        </v-toolbar>
 
-          <v-card-text>
-            <template v-if="mode === 'view'">
-              <v-alert type="info" variant="tonal" class="mb-3">
-                Шаблон дня: <b>{{ selectedTemplateTitle }}</b> · Чытанне: <b>{{ selectedReadingTitle }}</b> · Комплета: <b>{{ selectedCompTitle }}</b>
-              </v-alert>
+        <v-card-text>
+          <template v-if="mode === 'view' && selectedItem">
+            <v-alert type="info" variant="tonal" class="mb-3">
+              Шаблон дня: <b>{{ selectedTemplateTitle }}</b> · Чытанне: <b>{{ selectedReadingTitle }}</b> · Комплета: <b>{{ selectedCompTitle }}</b>
+            </v-alert>
 
-              <v-expansion-panels variant="accordion">
-                <v-expansion-panel v-for="group in groupedFilledFields" :key="group.title" :title="group.title">
-                  <v-expansion-panel-text>
-                    <div v-for="row in group.items" :key="row.field" class="mb-2">
-                      <div class="text-caption text-medium-emphasis">{{ row.field }}</div>
-                      <div v-html="row.value"></div>
-                    </div>
-                  </v-expansion-panel-text>
-                </v-expansion-panel>
-              </v-expansion-panels>
-            </template>
+            <v-expansion-panels variant="accordion">
+              <v-expansion-panel v-for="group in groupedFilledFields" :key="group.title" :title="group.title">
+                <v-expansion-panel-text>
+                  <div v-for="row in group.items" :key="row.field" class="mb-2">
+                    <div class="text-caption text-medium-emphasis">{{ row.field }}</div>
+                    <div v-html="row.value"></div>
+                  </div>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </template>
 
-            <template v-else-if="mode === 'edit'">
-              <v-row>
-                <v-col cols="12" md="4"><v-select v-model="form._periodType" :items="periodOptions" label="_periodType" clearable /></v-col>
-                <v-col cols="12" md="4"><v-text-field v-model.number="form._periodWeekNumber" type="number" label="_periodWeekNumber" /></v-col>
-                <v-col cols="12" md="4"><v-select v-model.number="form._dayOfWeek" :items="dayOfWeekOptions" label="_dayOfWeek" clearable /></v-col>
-                <v-col cols="12" md="4"><v-text-field v-model="form._date" label="_date" /></v-col>
-                <v-col cols="12" md="4"><v-text-field v-model="form._feast" label="_feast" /></v-col>
-                <v-col cols="12" md="4"><v-text-field v-model="form._psalmWeek" label="_psalmWeek" /></v-col>
-                <v-col cols="12" md="6"><v-text-field v-model="form._feastName" label="_feastName" /></v-col>
-                <v-col cols="12" md="6"><v-text-field v-model="form._feastType" label="_feastType" /></v-col>
+          <template v-else-if="mode === 'edit'">
+            <v-row>
+              <v-col cols="12" md="4"><v-select v-model="form._periodType" :items="periodOptions" label="_periodType" clearable /></v-col>
+              <v-col cols="12" md="4"><v-text-field v-model.number="form._periodWeekNumber" type="number" label="_periodWeekNumber" /></v-col>
+              <v-col cols="12" md="4"><v-select v-model.number="form._dayOfWeek" :items="dayOfWeekOptions" label="_dayOfWeek" clearable /></v-col>
+              <v-col cols="12" md="4"><v-text-field v-model="form._date" label="_date" /></v-col>
+              <v-col cols="12" md="4"><v-text-field v-model="form._feast" label="_feast" /></v-col>
+              <v-col cols="12" md="4"><v-text-field v-model="form._psalmWeek" label="_psalmWeek" /></v-col>
+              <v-col cols="12" md="6"><v-text-field v-model="form._feastName" label="_feastName" /></v-col>
+              <v-col cols="12" md="6"><v-text-field v-model="form._feastType" label="_feastType" /></v-col>
 
-                <v-col cols="12" md="4">
-                  <v-autocomplete v-model="form.templateRef" :items="templateOptions" item-title="label" item-value="id" label="templateRef" clearable />
-                </v-col>
-                <v-col cols="12" md="4">
-                  <v-autocomplete v-model="form.readingRef" :items="readingOptions" item-title="label" item-value="id" label="readingRef" clearable />
-                </v-col>
-                <v-col cols="12" md="4">
-                  <v-autocomplete v-model="form.compRef" :items="compOptions" item-title="label" item-value="id" label="compRef" clearable />
-                </v-col>
-              </v-row>
+              <v-col cols="12" md="4">
+                <v-autocomplete v-model="form.templateRef" :items="templateOptions" item-title="label" item-value="id" label="templateRef" clearable />
+              </v-col>
+              <v-col cols="12" md="4">
+                <v-autocomplete v-model="form.readingRef" :items="readingOptions" item-title="label" item-value="id" label="readingRef" clearable />
+              </v-col>
+              <v-col cols="12" md="4">
+                <v-autocomplete v-model="form.compRef" :items="compOptions" item-title="label" item-value="id" label="compRef" clearable />
+              </v-col>
+            </v-row>
 
-              <v-expansion-panels variant="accordion">
-                <v-expansion-panel v-for="group in fieldGroups" :key="group.title" :title="group.title">
-                  <v-expansion-panel-text class="pa-1">
-                    <v-row no-gutters>
-                      <InlineEditor v-for="field in group.fields" :key="field" v-model="form[field]" :field-title="field" />
-                    </v-row>
-                  </v-expansion-panel-text>
-                </v-expansion-panel>
-              </v-expansion-panels>
+            <v-expansion-panels variant="accordion">
+              <v-expansion-panel v-for="group in fieldGroups" :key="group.title" :title="group.title">
+                <v-expansion-panel-text class="pa-1">
+                  <v-row no-gutters>
+                    <InlineEditor v-for="field in group.fields" :key="field" v-model="form[field]" :field-title="field" />
+                  </v-row>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </v-expansion-panels>
 
-              <div class="mt-3">
-                <v-btn color="primary" :loading="saving" @click="saveItem">Захаваць</v-btn>
-                <v-btn color="error" variant="text" class="ml-2" @click="removeItem">Выдаліць</v-btn>
-              </div>
-            </template>
+            <div class="mt-3">
+              <v-btn color="primary" :loading="saving" @click="saveItem">Захаваць</v-btn>
+              <v-btn v-if="!isNewItem" color="error" variant="text" class="ml-2" @click="removeItem">Выдаліць</v-btn>
+            </div>
+          </template>
 
-            <template v-else>
-              <v-alert type="info" variant="tonal" class="mb-3">У гэтай зборцы пустыя палі бяруцца з dayTemplates.</v-alert>
-              <div class="mb-4">
-                <div class="text-subtitle-1">Чытанне</div>
-                <div v-html="resolvedReadingText"></div>
-              </div>
-              <v-expansion-panels variant="accordion">
-                <v-expansion-panel v-for="group in resolvedGroups" :key="group.title" :title="group.title">
-                  <v-expansion-panel-text>
-                    <div v-for="row in group.items" :key="row.field" class="mb-2">
-                      <div class="text-caption text-medium-emphasis">{{ row.field }} <span v-if="row.fromTemplate">(з шаблона)</span></div>
-                      <div v-html="row.value"></div>
-                    </div>
-                  </v-expansion-panel-text>
-                </v-expansion-panel>
-              </v-expansion-panels>
-            </template>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+          <template v-else-if="selectedItem">
+            <v-alert type="info" variant="tonal" class="mb-3">У гэтай зборцы пустыя палі бяруцца з dayTemplates.</v-alert>
+            <div class="mb-4">
+              <div class="text-subtitle-1">Чытанне</div>
+              <div v-html="resolvedReadingText"></div>
+            </div>
+            <v-expansion-panels variant="accordion">
+              <v-expansion-panel v-for="group in resolvedGroups" :key="group.title" :title="group.title">
+                <v-expansion-panel-text>
+                  <div v-for="row in group.items" :key="row.field" class="mb-2">
+                    <div class="text-caption text-medium-emphasis">{{ row.field }} <span v-if="row.fromTemplate">(з шаблона)</span></div>
+                    <div v-html="row.value"></div>
+                  </div>
+                </v-expansion-panel-text>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </template>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
-import { collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 import InlineEditor from '@/components/admin/InlineEditor.vue';
 import { useNotifier } from '@/composables/useNotifier';
@@ -170,6 +170,7 @@ import { CALENDAR_MAP_FIELDS } from '@/constants/calendarMap';
 const db = useFirestore();
 const { success, error } = useNotifier();
 
+const dialog = ref(false);
 const mode = ref('view');
 const isLoading = ref(false);
 const loadingText = ref('Загрузка...');
@@ -182,6 +183,7 @@ const readings = ref([]);
 const completoriums = ref([]);
 
 const selectedId = ref(null);
+const isNewItem = ref(false);
 const form = reactive(getEmptyItem());
 
 const periodOptions = Object.entries(PERIOD_LABEL_MAP).map(([value, title]) => ({ value, title }));
@@ -195,10 +197,20 @@ const fieldGroups = [
   { title: 'Нешпары', fields: ['vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr'] },
 ];
 
-const periodItems = computed(() => items.value.filter((item) => item._periodType));
+const periodItems = computed(() => items.value
+  .filter((item) => item._periodType)
+  .sort((a, b) => (a._periodType || '').localeCompare(b._periodType || '')
+    || Number(a._periodWeekNumber || 0) - Number(b._periodWeekNumber || 0)
+    || Number(a._dayOfWeek || 0) - Number(b._dayOfWeek || 0)
+    || (a.id || '').localeCompare(b.id || '')));
 const dateItems = computed(() => items.value.filter((item) => item._date));
 const dynamicItems = computed(() => items.value.filter((item) => item._feast));
 const selectedItem = computed(() => items.value.find((item) => item.id === selectedId.value));
+
+const dialogTitle = computed(() => {
+  if (isNewItem.value) return 'Новы элемент calendarMap';
+  return selectedItem.value?._feastName || selectedItem.value?._date || selectedItem.value?.id || 'calendarMap';
+});
 
 const templateOptions = computed(() => templates.value.map((item) => ({ id: item.id, label: item._title || item.id })));
 const readingOptions = computed(() => readings.value.map((item) => ({ id: item.id, label: item._title || item.title || item._date || item.id })));
@@ -293,10 +305,6 @@ async function loadAll() {
       target.value = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
       loadingProgress.value = Math.round(((i + 1) / steps.length) * 100);
     }
-
-    if (!selectedId.value && items.value.length) {
-      selectItem(items.value[0].id);
-    }
   } catch (e) {
     error(`Не атрымалася загрузіць даныя: ${e?.message || e}`);
   } finally {
@@ -304,16 +312,20 @@ async function loadAll() {
   }
 }
 
-function selectItem(id) {
+function openItem(id) {
   selectedId.value = id;
+  isNewItem.value = false;
   assignToForm(items.value.find((item) => item.id === id));
   mode.value = 'view';
+  dialog.value = true;
 }
 
 function createNew() {
   selectedId.value = null;
+  isNewItem.value = true;
   assignToForm();
   mode.value = 'edit';
+  dialog.value = true;
 }
 
 function buildPayload() {
@@ -327,10 +339,15 @@ function buildPayload() {
 async function saveItem() {
   saving.value = true;
   try {
-    const id = selectedId.value || crypto.randomUUID();
-    await setDoc(doc(db, 'calendarMap', id), buildPayload(), { merge: true });
+    if (isNewItem.value) {
+      const docRef = await addDoc(collection(db, 'calendarMap'), buildPayload());
+      selectedId.value = docRef.id;
+      isNewItem.value = false;
+    } else {
+      await setDoc(doc(db, 'calendarMap', selectedId.value), buildPayload(), { merge: true });
+    }
+
     success('Элемент карты календаря захаваны.');
-    selectedId.value = id;
     await loadAll();
     mode.value = 'view';
   } catch (e) {
@@ -347,7 +364,7 @@ async function removeItem() {
   try {
     await deleteDoc(doc(db, 'calendarMap', selectedId.value));
     success('Элемент выдалены.');
-    createNew();
+    dialog.value = false;
     await loadAll();
   } catch (e) {
     error(`Памылка выдалення: ${e?.message || e}`);
