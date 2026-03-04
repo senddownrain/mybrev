@@ -171,7 +171,21 @@ const routes = [
         name: 'AdminNormalizePsalms',
         component: () => import('@/views/admin/PsalmTemplatesNormalization.vue'),
       },
-
+      {
+        path: 'completorium-templates',
+        name: 'AdminCompletoriumTemplates',
+        component: () => import('@/views/admin/CompletoriumTemplatesList.vue'),
+      },
+      {
+        path: 'completorium-templates/create',
+        name: 'AdminCompletoriumTemplateCreate',
+        component: () => import('@/views/admin/CompletoriumTemplateForm.vue'),
+      },
+      {
+        path: 'completorium-templates/:id/edit',
+        name: 'AdminCompletoriumTemplateEdit',
+        component: () => import('@/views/admin/CompletoriumTemplateForm.vue'),
+      },
       {
         path: 'day-templates',
         name: 'AdminDayTemplatesList',
