@@ -6,7 +6,7 @@
     }"
   >
     <v-main>
-      <router-view name="topNav" />
+      <router-view v-if="!hideLayoutTopNav" name="topNav" />
       <router-view /> 
 
       <TextSettingsSheet />
@@ -17,11 +17,15 @@
 </template>
 
 <script setup>
+  import { computed } from 'vue';
+  import { useRoute } from 'vue-router';
   import TextSettingsSheet from '@/components/TextSettingsSheet.vue';
   import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
   import { useSettingsStore } from '@/stores/settings.js';
   
   const settings = useSettingsStore();
+  const route = useRoute();
+  const hideLayoutTopNav = computed(() => route.matched.some((record) => record.meta?.hideLayoutTopNav));
 </script>
 
 <style>
