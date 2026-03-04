@@ -6,6 +6,13 @@
       <v-btn color="primary" prepend-icon="mdi-plus" @click="createNew">Новы элемент</v-btn>
     </div>
 
+    <v-alert type="info" variant="tonal" class="mb-4">
+      Загружана элементаў calendarMap: <b>{{ items.length }}</b>
+      · Па перыядзе: <b>{{ periodItems.length }}</b>
+      · Па даце: <b>{{ dateItems.length }}</b>
+      · Дынамічныя: <b>{{ dynamicItems.length }}</b>
+    </v-alert>
+
     <v-card v-if="isLoading" class="mb-4" variant="outlined">
       <v-card-text>
         <div class="mb-2">{{ loadingText }}</div>
@@ -19,9 +26,12 @@
           <v-list density="compact">
             <v-list-item v-for="item in periodItems" :key="item.id" @click="openItem(item.id)">
               <v-list-item-title>
-                {{ item._periodType }} • {{ item._periodWeekNumber ?? item._weekNum ?? '—' }} • {{ weekdayLabel(item._dayOfWeek) }}
+                {{ item._periodType }} • {{ item._periodWeekNumber ?? '—' }} • {{ weekdayLabel(item._dayOfWeek) }}
               </v-list-item-title>
               <v-list-item-subtitle>{{ item._feastName || item._date || item.id }}</v-list-item-subtitle>
+            </v-list-item>
+            <v-list-item v-if="!periodItems.length">
+              <v-list-item-title class="text-medium-emphasis">Няма элементаў з _periodType</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-expansion-panel-text>
@@ -34,6 +44,9 @@
               <v-list-item-title>{{ item._date }}</v-list-item-title>
               <v-list-item-subtitle>{{ item._feastName || item._periodType || item.id }}</v-list-item-subtitle>
             </v-list-item>
+            <v-list-item v-if="!dateItems.length">
+              <v-list-item-title class="text-medium-emphasis">Няма элементаў з _date</v-list-item-title>
+            </v-list-item>
           </v-list>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -44,6 +57,9 @@
             <v-list-item v-for="item in dynamicItems" :key="item.id" @click="openItem(item.id)">
               <v-list-item-title>{{ item._feast }}</v-list-item-title>
               <v-list-item-subtitle>{{ item._feastName || item._periodType || item.id }}</v-list-item-subtitle>
+            </v-list-item>
+            <v-list-item v-if="!dynamicItems.length">
+              <v-list-item-title class="text-medium-emphasis">Няма элементаў з _feast</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-expansion-panel-text>
@@ -181,7 +197,12 @@ const fieldGroups = [
   { title: 'Нешпары', fields: ['vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr'] },
 ];
 
-const periodItems = computed(() => items.value.filter((item) => item._periodType).sort((a, b) => Number(a._periodWeekNumber || 0) - Number(b._periodWeekNumber || 0) || Number(a._dayOfWeek || 0) - Number(b._dayOfWeek || 0)));
+const periodItems = computed(() => items.value
+  .filter((item) => item._periodType)
+  .sort((a, b) => (a._periodType || '').localeCompare(b._periodType || '')
+    || Number(a._periodWeekNumber || 0) - Number(b._periodWeekNumber || 0)
+    || Number(a._dayOfWeek || 0) - Number(b._dayOfWeek || 0)
+    || (a.id || '').localeCompare(b.id || '')));
 const dateItems = computed(() => items.value.filter((item) => item._date));
 const dynamicItems = computed(() => items.value.filter((item) => item._feast));
 const selectedItem = computed(() => items.value.find((item) => item.id === selectedId.value));
