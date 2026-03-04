@@ -13,7 +13,8 @@
     "db:export-liturgical-samples": "node patchs/export-liturgical-samples.js",
     "db:analyze-day-prenormalization": "node patchs/analyze-day-pre-normalization.js",
     "db:normalize-day-entities": "node patchs/normalize-day-entities.js",
-    "db:generate-day-templates": "node patchs/generate-day-templates.js"
+    "db:generate-day-templates": "node patchs/generate-day-templates.js",
+    "db:generate-completorium-templates": "node patchs/generate-completorium-templates.js"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
