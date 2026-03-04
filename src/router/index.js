@@ -186,6 +186,8 @@ const routes = [
         path: 'completorium-templates/:id/edit',
         name: 'AdminCompletoriumTemplateEdit',
         component: () => import('@/views/admin/CompletoriumTemplateForm.vue'),
+      },
+      {
         path: 'day-templates',
         name: 'AdminDayTemplatesList',
         component: () => import('@/views/admin/DayTemplatesList.vue'),
