@@ -128,6 +128,63 @@ function mergeComment(uspamin, svyatText) {
   return a || b;
 }
 
+
+function parseRomanNumeral(input) {
+  const source = normalizeText(input);
+  if (!source) return null;
+
+  const latin = source
+    .toUpperCase()
+    .replace(/І/g, 'I')
+    .replace(/Х/g, 'X')
+    .replace(/Ⅴ/g, 'V')
+    .replace(/Ⅹ/g, 'X');
+
+  if (/^\d+$/.test(latin)) {
+    const n = Number.parseInt(latin, 10);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  if (!/^[IVXLCDM]+$/.test(latin)) return null;
+
+  const values = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
+  let total = 0;
+  for (let i = 0; i < latin.length; i += 1) {
+    const cur = values[latin[i]];
+    const next = values[latin[i + 1]] || 0;
+    total += cur < next ? -cur : cur;
+  }
+  return total > 0 ? total : null;
+}
+
+function extractPeriodInfoFromDayText(dayText) {
+  const text = normalizeText(dayText);
+  if (!text) return { periodType: null, periodWeekNumber: null };
+
+  const lower = text.toLowerCase();
+  let periodType = null;
+  if (lower.includes('велікод')) periodType = 'easter';
+  else if (lower.includes('вялікага пост')) periodType = 'lent';
+  else if (lower.includes('адвэнт') || lower.includes('адвэнту') || lower.includes('адвент')) periodType = 'advent';
+  else if (lower.includes('звычайн')) periodType = 'ordinary';
+  else if (lower.includes('нараджэн')) periodType = 'christmas';
+
+  const normalized = text
+    .replace(/І/g, 'I')
+    .replace(/Х/g, 'X')
+    .replace(/VІІІ/g, 'VIII')
+    .replace(/VІІ/g, 'VII')
+    .replace(/VІ/g, 'VI')
+    .replace(/ІV/g, 'IV')
+    .replace(/ІІІ/g, 'III')
+    .replace(/ІІ/g, 'II');
+
+  const token = (normalized.match(/^\s*([0-9IVXLCDM]+)/i) || [null, null])[1];
+  const periodWeekNumber = parseRomanNumeral(token);
+
+  return { periodType, periodWeekNumber };
+}
+
 function legacyPeriodToCurrent(value) {
   const v = normalizeText(value)?.toLowerCase();
   if (!v) return null;
@@ -166,8 +223,13 @@ function buildDayRecord(bridgeRow, indexes, stats) {
 
   day._date = _date;
   day._dayOfWeek = normalizeWeekDayToNumber(bridgeRow.Bridge_DayName);
-  day._periodType = legacyPeriodToCurrent(bridgeRow.Bridge_Period);
-  day._periodWeekNumber = normalizeText(bridgeRow.Bridge_Week) ? Number.parseInt(bridgeRow.Bridge_Week, 10) || null : null;
+
+  const parsedFromDayText = extractPeriodInfoFromDayText(bridgeRow.Day);
+  const periodTypeFromBridge = legacyPeriodToCurrent(bridgeRow.Bridge_Period);
+  const weekFromBridge = normalizeText(bridgeRow.Bridge_Week) ? Number.parseInt(bridgeRow.Bridge_Week, 10) || null : null;
+
+  day._periodType = parsedFromDayText.periodType || periodTypeFromBridge;
+  day._periodWeekNumber = parsedFromDayText.periodWeekNumber || weekFromBridge;
   day._weekDay = normalizeText(bridgeRow.Bridge_DayName);
   day._weekNum = normalizeText(bridgeRow.Bridge_Week);
   day._dayName = normalizeText(bridgeRow.Day);
@@ -296,6 +358,19 @@ function buildDayRecord(bridgeRow, indexes, stats) {
     });
   }
 
+  const dayText = normalizeText(bridgeRow.Day);
+  const looksLikePeriodWeek = dayText ? dayText.toLowerCase().includes('тыдз') : false;
+  if (looksLikePeriodWeek && (day._periodType === null || day._periodWeekNumber === null)) {
+    stats.unresolvedPeriod.push({
+      bridgeDayId,
+      bridgePeriod: normalizeText(bridgeRow.Bridge_Period),
+      bridgeWeek: normalizeText(bridgeRow.Bridge_Week),
+      dayText,
+      resolvedPeriodType: day._periodType,
+      resolvedPeriodWeekNumber: day._periodWeekNumber,
+    });
+  }
+
   return {
     id: docId,
     bridgeDayId,
@@ -392,6 +467,7 @@ function main() {
   const stats = {
     totalBridgeRows: bridgeRows.length,
     unresolvedDayOfWeek: [],
+    unresolvedPeriod: [],
   };
 
   const records = bridgeRows.map((row) => buildDayRecord(row, indexes, stats));
@@ -401,6 +477,7 @@ function main() {
     source: 'src/json',
     total: records.length,
     unresolvedDayOfWeek: stats.unresolvedDayOfWeek,
+    unresolvedPeriod: stats.unresolvedPeriod,
     sample: records.slice(0, 10),
     records,
   };
@@ -416,6 +493,7 @@ function main() {
   console.log(`Saved preview JSON: ${outputPath}`);
   console.log(`Prepared records: ${records.length}`);
   console.log(`Unresolved _dayOfWeek: ${stats.unresolvedDayOfWeek.length}`);
+  console.log(`Unresolved _periodType/_periodWeekNumber: ${stats.unresolvedPeriod.length}`);
 
   if (writeMode) {
     const written = await writeToFirestore(records);
