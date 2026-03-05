@@ -6,7 +6,7 @@ export default [
   js.configs.recommended,
 
   // Vue 3 essential rules
-  ...pluginVue.configs['flat/vue3-essential'],
+  ...pluginVue.configs['flat/essential'],
 
   {
     languageOptions: {
