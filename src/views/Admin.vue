@@ -4,34 +4,190 @@
     <p class="mb-6">Сардэчна запрашаем! Выберыце раздзел для кіравання.</p>
 
     <v-row>
-      
-      <v-col cols="12" md="6">
-        <v-card to="/admin/year-options" hover><v-card-title>Налады года (YearOptions)</v-card-title><v-card-subtitle>Кіраванне рухомымі святамі і перыядамі</v-card-subtitle></v-card>
-      </v-col>
-      <v-col cols="12" md="6">
-        <v-card to="/admin/logic-tester" hover color="blue-grey-darken-3">
-          <v-card-title>Тэстар літургічнай логікі</v-card-title>
-          <v-card-subtitle>Праверка разлікаў для любой даты</v-card-subtitle>
-        </v-card>
-      </v-col>
+      <template v-for="item in activeItems" :key="item.id">
+        <v-col cols="12" :md="item.md ?? 4">
+          <v-card :to="item.to" hover :color="item.color">
+            <v-card-item>
+              <template #append>
+                <v-btn
+                  icon="mdi-archive-outline"
+                  size="small"
+                  variant="text"
+                  :title="`Архіваваць «${item.title}»`"
+                  @click.prevent.stop="archiveItem(item.id)"
+                />
+              </template>
+              <v-card-title>{{ item.title }}</v-card-title>
+              <v-card-subtitle v-if="item.subtitle">{{ item.subtitle }}</v-card-subtitle>
+            </v-card-item>
+          </v-card>
+        </v-col>
+      </template>
 
-      <!-- Временные/технические разделы -->
-      <v-col cols="12">
-        <v-divider class="my-4"></v-divider>
-        <h2 class="text-h6 font-weight-light mb-3">Тэхнічныя раздзелы</h2>
+      <v-col cols="12" v-if="archivedItems.length">
+        <v-expansion-panels class="mt-4" variant="accordion">
+          <v-expansion-panel>
+            <v-expansion-panel-title>
+              Архіў ({{ archivedItems.length }})
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <v-row>
+                <v-col v-for="item in archivedItems" :key="item.id" cols="12" :md="item.md ?? 4">
+                  <v-card :to="item.to" hover :color="item.color">
+                    <v-card-item>
+                      <template #append>
+                        <v-btn
+                          icon="mdi-archive-arrow-up-outline"
+                          size="small"
+                          variant="text"
+                          :title="`Вярнуць «${item.title}» з архіва`"
+                          @click.prevent.stop="restoreItem(item.id)"
+                        />
+                      </template>
+                      <v-card-title>{{ item.title }}</v-card-title>
+                      <v-card-subtitle v-if="item.subtitle">{{ item.subtitle }}</v-card-subtitle>
+                    </v-card-item>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-col>
-      <v-col cols="12" md="4"><v-card to="/admin/db-day-list" hover><v-card-title>DbDayList</v-card-title></v-card></v-col>
-      <v-col cols="12" md="4"><v-card to="/admin/backup" hover><v-card-title>Backup</v-card-title></v-card></v-col>
-      <v-col cols="12" md="4"><v-card :to="{ name: 'AdminCategories' }" hover><v-card-title>Катэгорыі малітваў</v-card-title><v-card-subtitle>Кіраванне катэгорыямі ў меню</v-card-subtitle></v-card></v-col>
-      <v-col cols="12" md="4"><v-card :to="{ name: 'ReadingsTest' }" hover color="green-darken-2"><v-card-title>Чытанні</v-card-title><v-card-subtitle>Даданне і кіраванне літургічнымі чытаннямі</v-card-subtitle></v-card></v-col>
-      <v-col cols="12" md="4"><v-card :to="{ name: 'AdminMissingData' }" hover color="deep-purple-darken-2"><v-card-title>Пошук недастаючых дадзеных</v-card-title><v-card-subtitle>Праверка readings і days + хуткі пераход на стварэнне</v-card-subtitle></v-card></v-col>
-      <v-col cols="12" md="4"><v-card :to="{ name: 'AdminNormalizeHymns' }" hover color="orange-darken-2"><v-card-title>Нармалізацыя гімнаў</v-card-title><v-card-subtitle>Ручное аб'яднанне дубляў у hymns + абнаўленне days</v-card-subtitle></v-card></v-col>
-      <v-col cols="12" md="4"><v-card :to="{ name: 'AdminNormalizeCompletorium' }" hover color="teal-darken-2"><v-card-title>Нармалізацыя комплеторыя</v-card-title><v-card-subtitle>Ручное аб'яднанне дубляў completorium</v-card-subtitle></v-card></v-col>
-      <v-col cols="12" md="4"><v-card :to="{ name: 'AdminNormalizePsalms' }" hover color="cyan-darken-2"><v-card-title>Нармалізацыя псальмаў</v-card-title><v-card-subtitle>Ручное/аўта аб'яднанне дубляў psalmTemplates</v-card-subtitle></v-card></v-col>
-      <v-col cols="12" md="4"><v-card :to="{ name: 'AdminCompletoriumTemplates' }" hover color="indigo-darken-2"><v-card-title>Шаблоны комплеты</v-card-title><v-card-subtitle>Стварэнне, пошук, рэдагаванне і выдаленне completoriumTemplates</v-card-subtitle></v-card></v-col>
-      <v-col cols="12" md="4"><v-card :to="{ name: 'AdminDayTemplatesList' }" hover color="indigo-darken-2"><v-card-title>Шаблоны дзён</v-card-title><v-card-subtitle>Стварэнне, групоўка і рэдагаванне dayTemplates</v-card-subtitle></v-card></v-col>
-      <v-col cols="12" md="4"><v-card :to="{ name: 'AdminCalendarMap' }" hover color="indigo-darken-1"><v-card-title>Карта календара</v-card-title><v-card-subtitle>Калекцыя calendarMap: прагляд, рэдагаванне і пабудова літургічнага дня</v-card-subtitle></v-card></v-col>
-
     </v-row>
   </v-container>
 </template>
+
+<script setup>
+import { computed, ref, watch } from 'vue';
+
+const STORAGE_KEY = 'adminArchivedButtons';
+
+const adminItems = [
+  {
+    id: 'year-options',
+    title: 'Налады года (YearOptions)',
+    subtitle: 'Кіраванне рухомымі святамі і перыядамі',
+    to: '/admin/year-options',
+    md: 6
+  },
+  {
+    id: 'logic-tester',
+    title: 'Тэстар літургічнай логікі',
+    subtitle: 'Праверка разлікаў для любой даты',
+    to: '/admin/logic-tester',
+    color: 'blue-grey-darken-3',
+    md: 6
+  },
+  {
+    id: 'db-day-list',
+    title: 'DbDayList',
+    to: '/admin/db-day-list'
+  },
+  {
+    id: 'backup',
+    title: 'Backup',
+    to: '/admin/backup'
+  },
+  {
+    id: 'categories',
+    title: 'Катэгорыі малітваў',
+    subtitle: 'Кіраванне катэгорыямі ў меню',
+    to: { name: 'AdminCategories' }
+  },
+  {
+    id: 'readings-test',
+    title: 'Чытанні',
+    subtitle: 'Даданне і кіраванне літургічнымі чытаннямі',
+    to: { name: 'ReadingsTest' },
+    color: 'green-darken-2'
+  },
+  {
+    id: 'missing-data',
+    title: 'Пошук недастаючых дадзеных',
+    subtitle: 'Праверка readings і days + хуткі пераход на стварэнне',
+    to: { name: 'AdminMissingData' },
+    color: 'deep-purple-darken-2'
+  },
+  {
+    id: 'normalize-hymns',
+    title: 'Нармалізацыя гімнаў',
+    subtitle: "Ручное аб'яднанне дубляў у hymns + абнаўленне days",
+    to: { name: 'AdminNormalizeHymns' },
+    color: 'orange-darken-2'
+  },
+  {
+    id: 'normalize-completorium',
+    title: 'Нармалізацыя комплеторыя',
+    subtitle: 'Ручное аб\'яднанне дубляў completorium',
+    to: { name: 'AdminNormalizeCompletorium' },
+    color: 'teal-darken-2'
+  },
+  {
+    id: 'normalize-psalms',
+    title: 'Нармалізацыя псальмаў',
+    subtitle: 'Ручное/аўта аб\'яднанне дубляў psalmTemplates',
+    to: { name: 'AdminNormalizePsalms' },
+    color: 'cyan-darken-2'
+  },
+  {
+    id: 'completorium-templates',
+    title: 'Шаблоны комплеты',
+    subtitle: 'Стварэнне, пошук, рэдагаванне і выдаленне completoriumTemplates',
+    to: { name: 'AdminCompletoriumTemplates' },
+    color: 'indigo-darken-2'
+  },
+  {
+    id: 'day-templates',
+    title: 'Шаблоны дзён',
+    subtitle: 'Стварэнне, групоўка і рэдагаванне dayTemplates',
+    to: { name: 'AdminDayTemplatesList' },
+    color: 'indigo-darken-2'
+  },
+  {
+    id: 'calendar-map',
+    title: 'Карта календара',
+    subtitle: 'Калекцыя calendarMap: прагляд, рэдагаванне і пабудова літургічнага дня',
+    to: { name: 'AdminCalendarMap' },
+    color: 'indigo-darken-1'
+  }
+];
+
+const archivedIds = ref(loadArchivedIds());
+
+const archivedSet = computed(() => new Set(archivedIds.value));
+
+const activeItems = computed(() => adminItems.filter((item) => !archivedSet.value.has(item.id)));
+const archivedItems = computed(() => adminItems.filter((item) => archivedSet.value.has(item.id)));
+
+watch(archivedIds, (value) => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+}, { deep: true });
+
+function loadArchivedIds() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+
+  if (!raw) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function archiveItem(itemId) {
+  if (archivedSet.value.has(itemId)) {
+    return;
+  }
+
+  archivedIds.value = [...archivedIds.value, itemId];
+}
+
+function restoreItem(itemId) {
+  archivedIds.value = archivedIds.value.filter((id) => id !== itemId);
+}
+</script>
