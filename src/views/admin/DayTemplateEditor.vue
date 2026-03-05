@@ -22,6 +22,9 @@
             <v-col cols="12" md="3" class="d-flex align-center">
               <v-btn block prepend-icon="mdi-auto-fix" @click="setAutoTitle">Аўтаназва</v-btn>
             </v-col>
+            <v-col cols="12" md="3" class="d-flex align-center">
+              <v-checkbox v-model="templateData._isChecked" label="Праверана" color="success" density="compact" hide-details />
+            </v-col>
           </v-row>
         </v-card-text>
       </v-card>
@@ -185,7 +188,7 @@ const periodOptions = Object.entries(PERIOD_LABEL_MAP).map(([value, title]) => (
 const dayOfWeekOptions = Object.entries(WEEKDAY_LABEL_MAP).map(([value, title]) => ({ value: Number(value), title }));
 
 function getEmptyTemplate() {
-  const data = { _title: '', _psalmWeekNumber: null };
+  const data = { _title: '', _psalmWeekNumber: null, _isChecked: false, _checkedAt: null };
   DAY_TEMPLATE_FIELDS.forEach((field) => {
     data[field] = null;
   });
@@ -265,6 +268,8 @@ function buildPayload() {
   const payload = {
     _title: templateData._title || '',
     _psalmWeekNumber: templateData._psalmWeekNumber != null ? Number(templateData._psalmWeekNumber) : null,
+    _isChecked: templateData._isChecked === true,
+    _checkedAt: templateData._isChecked === true ? (templateData._checkedAt || new Date().toISOString()) : null,
   };
 
   DAY_TEMPLATE_FIELDS.forEach((field) => {
@@ -281,6 +286,10 @@ async function saveTemplate() {
     if (!payload._title) {
       error('Назва шаблона абавязковая.');
       return;
+    }
+
+    if (payload._isChecked && !templateData._checkedAt) {
+      templateData._checkedAt = new Date().toISOString();
     }
 
     if (isNew.value) {
