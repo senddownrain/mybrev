@@ -5,6 +5,7 @@ import { VueFire, VueFireAuth } from 'vuefire'
 import { firebaseApp } from './firebase'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import { initSentry } from './sentry';
 
 import VCalendar from 'v-calendar';
 import 'v-calendar/style.css';
@@ -16,6 +17,7 @@ const pinia = createPinia()
 
 export function registerPlugins (app) {
   loadFonts()
+  initSentry(app, router)
   app
     .use(pinia)
     .use(vuetify)

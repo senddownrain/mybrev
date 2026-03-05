@@ -35,7 +35,7 @@
 
     <!-- Большой спиннер только для самого первого экрана, когда вообще нет данных -->
     <v-row
-      v-if="loading && !days.length && !error"
+      v-if="loading && !dayOptions.length && !error"
       class="justify-center mt-16"
     >
       <v-progress-circular
@@ -54,8 +54,17 @@
           border="start"
           icon="mdi-alert-circle-outline"
         >
-          <div class="text-h6">Ошибка при загрузке</div>
+          <div class="text-h6">Памылка пры загрузцы</div>
           <p>{{ error }}</p>
+          <v-btn
+            variant="tonal"
+            color="white"
+            class="mt-2"
+            prepend-icon="mdi-refresh"
+            @click="retryFetch"
+          >
+            Паўтарыць
+          </v-btn>
         </v-alert>
       </v-col>
     </v-row>
@@ -109,14 +118,13 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import moment from '@/utils/moment-be';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { useAppBar } from '@/composables/useAppBar';
 import { logger } from '@/utils/logger';
 import { useNotifier } from '@/composables/useNotifier';
-import { useAuthStore } from '@/stores/auth';
 import { LITURGICAL_OPTION_SOURCE } from '@/constants/liturgical';
 
 const route = useRoute();
@@ -129,47 +137,42 @@ const {
 
 const { toggleCalendarDialog } = useAppBar();
 const { error: notifyError } = useNotifier();
-const authStore = useAuthStore();
-const isAdmin = computed(() => authStore.isAdmin);
 
-const days = ref([]);
-const readings = ref([]); // если пригодится дальше
 const dayOptions = ref([]);
-const loading = ref(true);      // используется для самого первого экрана
-const softLoading = ref(false); // мягкая загрузка при перелистывании
+const loading = ref(true);      // первый экран — большой спиннер
+const softLoading = ref(false); // перелистывание — полоска
 const error = ref(null);
 
 const currentDate = ref(moment().startOf('day'));
 
+// Monotonically-increasing counter used to detect stale responses.
+// When the user navigates to another date before a fetch completes,
+// the old promise resolves but its fetchId no longer matches _currentFetchId,
+// so the result is discarded (prevents race condition).
+let _currentFetchId = 0;
+
 const fetchItemsForDate = async (date) => {
+  const fetchId = ++_currentFetchId;
   const key = date.format('YYYY-MM-DD');
 
-  // 1. Пробуем кэш без каких-либо индикаторов
+  // 1. Try cache first — no spinners needed
   const cached = getCachedLiturgicalContentForDate(date.toDate());
   if (cached) {
-    logger.log(`[ItemsList] Используем кэш для даты: ${key}`);
-    days.value = Array.isArray(cached.itemsDays) ? cached.itemsDays : [];
-    readings.value = Array.isArray(cached.itemsReadings)
-      ? cached.itemsReadings
-      : [];
+    logger.log(`[ItemsList] Cache hit for date: ${key}`);
     dayOptions.value = Array.isArray(cached.dayOptions) ? cached.dayOptions : [];
     loading.value = false;
     softLoading.value = false;
     return;
   }
 
-  logger.log(`[ItemsList] Нет кэша, запускаем загрузку для даты: ${key}`);
+  logger.log(`[ItemsList] Cache miss, fetching data for date: ${key}`);
 
   error.value = null;
 
-  // 2. Определяем тип загрузки
-  // Если вообще ещё ничего не загружено (первый экран) — показываем большой спиннер
-  // Иначе — мягкая загрузка: оставляем старый список, включаем только полоску
-  if (!days.value.length && !readings.value.length && loading.value === true) {
-    // первый запуск, оставляем loading=true (большой спиннер)
-    softLoading.value = false;
+  // 2. Decide spinner type
+  if (!dayOptions.value.length && loading.value === true) {
+    softLoading.value = false; // keep big spinner for first load
   } else {
-    // уже что-то показываем, не хотим гасить список
     softLoading.value = true;
     loading.value = false;
   }
@@ -177,37 +180,39 @@ const fetchItemsForDate = async (date) => {
   try {
     const result = await getLiturgicalContentForDate(date.toDate());
 
+    // Discard stale response if another fetch was started while we waited
+    if (fetchId !== _currentFetchId) {
+      logger.log(`[ItemsList] Discarding stale response for date: ${key}`);
+      return;
+    }
+
     if (result) {
-      days.value = Array.isArray(result.itemsDays) ? result.itemsDays : [];
-      readings.value = Array.isArray(result.itemsReadings)
-        ? result.itemsReadings
-        : [];
       dayOptions.value = Array.isArray(result.dayOptions) ? result.dayOptions : [];
     } else {
-      days.value = [];
-      readings.value = [];
       dayOptions.value = [];
     }
 
-    if (days.value.length === 0) {
-      logger.warn(
-        `[ItemsList] Для даты ${key} не найдено ни одного литургического элемента.`,
-      );
+    if (dayOptions.value.length === 0) {
+      logger.warn(`[ItemsList] No liturgical items found for date: ${key}`);
     }
   } catch (e) {
-    logger.error('Произошла критическая ошибка при загрузке данных:', e);
-    const errorMessage =
-      e && e.message
-        ? e.message
-        : 'Не удалось загрузить данные. Попробуйте обновить страницу.';
+    if (fetchId !== _currentFetchId) return; // stale — ignore
+
+    logger.error('[ItemsList] Critical error loading data:', e);
+    const errorMessage = e?.message || 'Не атрымалася загрузіць дадзеныя. Паспрабуйце абнавіць старонку.';
     error.value = errorMessage;
     notifyError(errorMessage);
   } finally {
-    // после первой успешной загрузки больше не используем "глобальный" спиннер
-    loading.value = false;
-    softLoading.value = false;
+    if (fetchId === _currentFetchId) {
+      loading.value = false;
+      softLoading.value = false;
+    }
   }
 };
+
+function retryFetch() {
+  fetchItemsForDate(currentDate.value);
+}
 
 function navigateToDate(date) {
   const dateString = date.format('YYYY-MM-DD');
@@ -305,7 +310,7 @@ watch(
   }
 }
 
-/* Глобальные стили для v-list-item-title и subtitle - чтобы текст не обрезался */
+/* Prevent text truncation in list items */
 :deep(.v-list-item-title),
 :deep(.v-list-item-subtitle) {
   white-space: normal !important;

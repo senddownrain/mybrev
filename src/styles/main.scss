@@ -458,6 +458,16 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
+// ── Utility classes ───────────────────────────────────────────────────────
+// Reusable word-wrap helper; use instead of repeating the same 3 properties
+// in every component's <style scoped>.
+.text-break-word {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+// ── List item text ────────────────────────────────────────────────────────
 // Исправление обрезки текста в списках (v-list-item-title и subtitle)
 .v-list-item-title,
 .v-list-item-subtitle {

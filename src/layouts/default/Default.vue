@@ -1,56 +1,52 @@
 <template>
-  <v-app 
-    :style="{ 
+  <v-app
+    :style="{
       '--app-font-family': settings.fontFamily,
-      '--font-size-multiplier': settings.fontSizeMultiplier 
+      '--font-size-multiplier': settings.fontSizeMultiplier
     }"
   >
     <v-app-bar v-if="!hideLayoutAppBar" flat class="app-bar-border">
       <!-- Кнопка назад для страницы редактирования молитвы (PrayerEdit) -->
-      <v-app-bar-nav-icon 
+      <v-app-bar-nav-icon
         v-if="isPrayerEditPage"
         @click="goBack"
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
       <!-- Кнопка назад для страницы просмотра молитвы в режиме редактирования -->
-      <v-app-bar-nav-icon 
-        v-else-if="isPrayerViewPage && prayerIsEditing"
+      <v-app-bar-nav-icon
+        v-else-if="isPrayerViewPage && uiStore.prayerIsEditing"
         @click="cancelEdit"
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
       <!-- Кнопка назад для страницы просмотра молитвы (не в режиме редактирования) -->
-      <v-app-bar-nav-icon 
+      <v-app-bar-nav-icon
         v-else-if="isPrayerViewPage"
         @click="goBack"
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
       <!-- Меню для остальных страниц -->
-      <v-app-bar-nav-icon 
+      <v-app-bar-nav-icon
         v-else
         @click.stop="isDrawerOpen = !isDrawerOpen"
       ></v-app-bar-nav-icon>
 
       <v-app-bar-title
-        v-if="!isPrayerEditPage && !(isPrayerViewPage && prayerIsEditing)"
-        @click="goHome()"
+        v-if="!isPrayerEditPage && !(isPrayerViewPage && uiStore.prayerIsEditing)"
         class="app-title-clickable"
       >
         Малітоўнік
       </v-app-bar-title>
-      
+
       <!-- Заголовок при редактировании молитвы -->
-      <v-app-bar-title v-if="(isPrayerViewPage && prayerIsEditing) || isPrayerEditPage" class="prayer-edit-title">
+      <v-app-bar-title v-if="(isPrayerViewPage && uiStore.prayerIsEditing) || isPrayerEditPage" class="prayer-edit-title">
         Рэдагаванне малітвы
       </v-app-bar-title>
 
-      <!-- Поиск теперь в виде bottom sheet -->
-      <!-- Фильтр теперь в виде bottom sheet -->
-
-      <!-- Кнопки поиска и фильтра для страницы списка молитв (только не в режиме редактирования молитвы) -->
-      <template v-if="isPrayersListPage && !isSearchExpanded && !isFilterExpanded && !(isPrayerViewPage && prayerIsEditing) && !isPrayerEditPage">
+      <!-- Кнопки поиска и фильтра для страницы списка молитв -->
+      <template v-if="isPrayersListPage && !isSearchExpanded && !isFilterExpanded && !(isPrayerViewPage && uiStore.prayerIsEditing) && !isPrayerEditPage">
         <v-btn
           icon
           :color="searchQuery ? 'primary' : 'default'"
@@ -74,7 +70,7 @@
 
       <!-- Кнопки закрытия для поиска и фильтра -->
       <v-btn
-        v-if="isPrayersListPage && (isSearchExpanded || isFilterExpanded) && !(isPrayerViewPage && prayerIsEditing) && !isPrayerEditPage"
+        v-if="isPrayersListPage && (isSearchExpanded || isFilterExpanded) && !(isPrayerViewPage && uiStore.prayerIsEditing) && !isPrayerEditPage"
         icon
         variant="text"
         @click="closeSearchAndFilter"
@@ -85,46 +81,46 @@
 
       <!-- Кнопки для страницы редактирования молитвы (PrayerEdit) -->
       <template v-if="isPrayerEditPage">
-        <v-btn 
-          icon 
+        <v-btn
+          icon
           variant="text"
           @click="savePrayerForm"
-          :loading="prayerFormSaving"
+          :loading="uiStore.prayerFormSaving"
           aria-label="Захаваць"
         >
           <v-icon>mdi-check</v-icon>
         </v-btn>
       </template>
-      
+
       <!-- Кнопки для страницы просмотра молитвы в режиме редактирования -->
-      <template v-else-if="isPrayerViewPage && prayerIsEditing">
-        <v-btn 
-          icon 
+      <template v-else-if="isPrayerViewPage && uiStore.prayerIsEditing">
+        <v-btn
+          icon
           variant="text"
-          @click="savePrayer"
-          :loading="prayerSaving"
+          @click="uiStore.triggerPrayerSave()"
+          :loading="uiStore.prayerSaving"
           aria-label="Захаваць"
         >
           <v-icon>mdi-check</v-icon>
         </v-btn>
       </template>
-      
+
       <!-- Кнопки для страницы просмотра молитвы (не в режиме редактирования) -->
       <template v-else-if="isPrayerViewPage">
-        <v-btn 
-          icon 
+        <v-btn
+          icon
           variant="text"
           @click="toggleSettingsSheet"
           aria-label="Налады тэксту"
         >
           <v-icon>mdi-format-font</v-icon>
         </v-btn>
-        
-        <v-btn 
+
+        <v-btn
           v-if="authStore.isAdmin"
-          icon 
+          icon
           variant="text"
-          @click="togglePrayerEdit"
+          @click="uiStore.triggerPrayerToggleEdit()"
           aria-label="Рэдагаваць"
         >
           <v-icon>mdi-pencil-outline</v-icon>
@@ -132,7 +128,7 @@
       </template>
 
     </v-app-bar>
-    
+
     <NavigationDrawer />
 
     <v-main>
@@ -141,7 +137,7 @@
     </v-main>
 
     <router-view name="bottomNav" />
-    
+
     <TextSettingsSheet />
 
     <!-- Bottom sheet для фильтра -->
@@ -206,19 +202,20 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useAppBar } from '@/composables/useAppBar.js';
+import { useUiStore } from '@/stores/ui.js';
 import NavigationDrawer from './NavigationDrawer.vue';
 import TextSettingsSheet from '@/components/TextSettingsSheet.vue';
 import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
 import { useSettingsStore } from '@/stores/settings.js';
-import { useRouter } from 'vue-router';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { usePrayers } from '@/composables/usePrayers.js';
 import { useAuthStore } from '@/stores/auth.js';
 
 const { isDrawerOpen, toggleSettingsSheet } = useAppBar();
+const uiStore = useUiStore();
 const settings = useSettingsStore();
 const router = useRouter();
 const route = useRoute();
@@ -226,10 +223,6 @@ const authStore = useAuthStore();
 
 const { searchQuery, selectedTags, isSearchExpanded, isFilterExpanded, toggleSearch, toggleFilter } = usePrayersFilters();
 const { allTags } = usePrayers();
-
-const isPrayersPage = computed(() => {
-  return route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView' || route.name === 'PrayerEdit';
-});
 
 const isPrayersListPage = computed(() => {
   return route.name === 'Prayers' || route.name === 'PrayersList';
@@ -243,56 +236,20 @@ const isPrayerEditPage = computed(() => {
   return route.name === 'PrayerEdit';
 });
 
-// Состояние редактирования молитвы (синхронизируется с PrayerView через события)
-const prayerIsEditing = ref(false);
-const prayerSaving = ref(false);
-const prayerFormSaving = ref(false);
-
 const hideLayoutAppBar = computed(() => route.matched.some((record) => record.meta?.hideLayoutAppBar));
 
 
-function handlePrayerStateUpdate(e) {
-  prayerIsEditing.value = e.detail.isEditing;
-  prayerSaving.value = e.detail.saving;
-}
-
-function handlePrayerFormStateUpdate(e) {
-  prayerFormSaving.value = e.detail.saving;
-}
-
-onMounted(() => {
-  window.addEventListener('prayer-state-update', handlePrayerStateUpdate);
-  window.addEventListener('prayer-form-state-update', handlePrayerFormStateUpdate);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('prayer-state-update', handlePrayerStateUpdate);
-  window.removeEventListener('prayer-form-state-update', handlePrayerFormStateUpdate);
-});
-
-const togglePrayerEdit = () => {
-  window.dispatchEvent(new CustomEvent('prayer-toggle-edit'));
-};
-
 const cancelEdit = () => {
-  if (prayerIsEditing.value) {
-    // Отменяем редактирование
-    window.dispatchEvent(new CustomEvent('prayer-cancel-edit'));
+  if (uiStore.prayerIsEditing) {
+    uiStore.triggerPrayerCancelEdit();
   } else {
     goBack();
   }
 };
 
-const savePrayer = () => {
-  if (prayerIsEditing.value) {
-    // Сохраняем изменения
-    window.dispatchEvent(new CustomEvent('prayer-save'));
-  }
-};
-
+// prayerFormSaving is read directly from the Pinia store (written by PrayerForm on mount)
 const savePrayerForm = () => {
-  // Сохраняем изменения в PrayerForm
-  window.dispatchEvent(new CustomEvent('prayer-form-save'));
+  uiStore.triggerPrayerFormSave();
 };
 
 const goBack = () => {
@@ -308,38 +265,27 @@ const closeSearchAndFilter = () => {
   isFilterExpanded.value = false;
 };
 
-const handleSearchBlur = () => {
-  if (!searchQuery.value) {
-    isSearchExpanded.value = false;
-  }
-};
-
-
-const goHome = function(){
-  //router.push('/')
-}
-
 const closeFilter = () => {
   isFilterExpanded.value = false;
-}
+};
 
 const clearFilter = () => {
   selectedTags.value = [];
   isFilterExpanded.value = false;
-}
+};
 
 const applyFilter = () => {
   isFilterExpanded.value = false;
-}
+};
 
 const closeSearch = () => {
   isSearchExpanded.value = false;
-}
+};
 
 const clearSearch = () => {
   searchQuery.value = '';
   isSearchExpanded.value = false;
-}
+};
 </script>
 
 <style scoped>
@@ -348,15 +294,11 @@ const clearSearch = () => {
 }
 
 .app-title-clickable {
-  cursor: pointer;
+  cursor: default;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-}
-
-.app-title-clickable:active {
-  opacity: 0.7;
 }
 
 .prayer-edit-title {
@@ -375,7 +317,7 @@ const clearSearch = () => {
     font-size: 1.1rem !important;
     padding: 0 8px !important;
   }
-  
+
   .prayer-edit-title {
     font-size: 0.95rem !important;
     line-height: 1.3 !important;

@@ -1,21 +1,20 @@
-import { ref } from 'vue';
-
-const isSettingsSheetOpen = ref(false);
-const isDrawerOpen = ref(false);
-const isCalendarDialogOpen = ref(false);
+/**
+ * @deprecated Use `useUiStore` from `@/stores/ui` directly.
+ * This composable is kept for backward compatibility.
+ * All state is now managed in the Pinia `ui` store.
+ */
+import { storeToRefs } from 'pinia';
+import { useUiStore } from '@/stores/ui';
 
 export function useAppBar() {
-  const toggleSettingsSheet = () => {
-    isSettingsSheetOpen.value = !isSettingsSheetOpen.value;
-  };
-  const toggleCalendarDialog = () => {
-    isCalendarDialogOpen.value = !isCalendarDialogOpen.value;
-  };
+  const uiStore = useUiStore();
+  const { isDrawerOpen, isSettingsSheetOpen, isCalendarDialogOpen } = storeToRefs(uiStore);
+
   return {
     isDrawerOpen,
     isSettingsSheetOpen,
     isCalendarDialogOpen,
-    toggleSettingsSheet,
-    toggleCalendarDialog
+    toggleSettingsSheet: uiStore.toggleSettingsSheet,
+    toggleCalendarDialog: uiStore.toggleCalendarDialog,
   };
 }

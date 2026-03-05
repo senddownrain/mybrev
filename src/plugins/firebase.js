@@ -1,21 +1,23 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, persistentLocalCache, 
-  CACHE_SIZE_UNLIMITED  } from "firebase/firestore";
+import { initializeFirestore, persistentLocalCache } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDmdP5MpLLIX0RWuYXbYsDDgPqbLHCi_sM",
-  authDomain: "ibreviaryby.firebaseapp.com",
-  projectId: "ibreviaryby",
-  storageBucket: "ibreviaryby.appspot.com",
-  messagingSenderId: "344097781816",
-  appId: "1:344097781816:web:d94141222905f629fd8ecd",
-  measurementId: "G-GP0WJ4705G",
-  databaseUrl:"https://ibreviaryby.firebaseio.com",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  databaseUrl: import.meta.env.VITE_FIREBASE_DATABASE_URL,
 };
 
 export const firebaseApp = initializeApp(firebaseConfig);
+
+// Persistent local cache limited to 100MB to prevent excessive memory usage.
+// CACHE_SIZE_UNLIMITED is intentionally avoided.
 export const db = initializeFirestore(firebaseApp, {
   localCache: persistentLocalCache({
-    cacheSizeBytes: CACHE_SIZE_UNLIMITED
-  })
+    cacheSizeBytes: 100 * 1024 * 1024, // 100MB
+  }),
 });

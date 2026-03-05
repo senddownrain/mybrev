@@ -270,11 +270,28 @@ const router = createRouter({
   },
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  if (requiresAuth && !authStore.isAdmin) {
-    next({ name: 'Login' });
+
+  if (requiresAuth) {
+    // Wait for auth + admin check to finish before evaluating access
+    if (authStore.loading) {
+      await new Promise(resolve => {
+        const interval = setInterval(() => {
+          if (!authStore.loading) {
+            clearInterval(interval);
+            resolve();
+          }
+        }, 50);
+      });
+    }
+
+    if (!authStore.isAdmin) {
+      next({ name: 'Login' });
+    } else {
+      next();
+    }
   } else {
     next();
   }

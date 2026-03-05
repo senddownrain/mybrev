@@ -26,11 +26,13 @@ import { ref, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAppBar } from '@/composables/useAppBar';
 import { useAuthStore } from '@/stores/auth.js';
+import { useUiStore } from '@/stores/ui';
 
 const router = useRouter();
 const route = useRoute();
 const { toggleSettingsSheet } = useAppBar();
 const auth = useAuthStore();
+const uiStore = useUiStore();
 
 const isEditingReading = ref(false);
 
@@ -79,7 +81,7 @@ const onEditClick = () => {
 
     // если уже в ReadingEditor и флаг true — это клик по галочке: шлём сигнал "сохранить"
     if (currentName === 'ReadingEditor' && isEditingReading.value) {
-      window.dispatchEvent(new CustomEvent('reading-save-request'));
+      uiStore.triggerReadingSave();
       // флаг сбросится, когда роут вернётся с ReadingEditor на reading (watch выше)
       return;
     }

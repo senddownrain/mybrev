@@ -51,12 +51,14 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
+import { useUiStore } from '@/stores/ui';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 
 const route = useRoute();
 const router = useRouter();
 const { prayers, addPrayer, updatePrayer, allTags } = usePrayers();
 const { notifySuccess, notifyError } = useNotifier();
+const uiStore = useUiStore();
 
 const isEditMode = computed(() => !!route.params.id);
 const saving = ref(false);
@@ -92,27 +94,18 @@ onMounted(() => {
     form.value.tags = prayer.tags || [];
   }
   
-  // Слушаем событие сохранения из AppBar
-  window.addEventListener('prayer-form-save', handleSave);
-  
-  // Отправляем начальное состояние
-  updateFormState();
+  // Register save handler with Pinia store so Default.vue AppBar can trigger it
+  uiStore.registerPrayerFormActions({ save: handleSave });
+  uiStore.prayerFormSaving = saving.value;
 });
 
 onUnmounted(() => {
-  window.removeEventListener('prayer-form-save', handleSave);
+  uiStore.clearPrayerFormActions();
 });
 
-function updateFormState() {
-  window.dispatchEvent(new CustomEvent('prayer-form-state-update', {
-    detail: {
-      saving: saving.value
-    }
-  }));
-}
-
-watch(saving, () => {
-  updateFormState();
+// Keep store in sync with local saving state
+watch(saving, (val) => {
+  uiStore.prayerFormSaving = val;
 });
 
 async function handleSave() {

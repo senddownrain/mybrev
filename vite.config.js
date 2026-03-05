@@ -188,6 +188,42 @@ export default defineConfig({
   
   // Настройки сервера для разработки
   server: {
-    port: 3000, // Указываем, что сервер должен запускаться на порту 3000
+    port: 3000,
+  },
+
+  build: {
+    rollupOptions: {
+      output: {
+        // Split the main bundle into smaller vendor chunks to improve
+        // initial load time. Each chunk is loaded on-demand by the router.
+        manualChunks(id) {
+          // Firebase SDK (~400 kB)
+          if (id.includes('node_modules/firebase') || id.includes('node_modules/@firebase')) {
+            return 'vendor-firebase';
+          }
+          // Vuetify components & styles (~600 kB)
+          if (id.includes('node_modules/vuetify')) {
+            return 'vendor-vuetify';
+          }
+          // Quill rich-text editor (~200 kB) — only used in edit forms
+          if (id.includes('node_modules/quill') || id.includes('node_modules/@vueup/vue-quill')) {
+            return 'vendor-quill';
+          }
+          // moment.js with locales (~300 kB)
+          if (id.includes('node_modules/moment')) {
+            return 'vendor-moment';
+          }
+          // Vue ecosystem (vue, vue-router, pinia, vuefire)
+          if (
+            id.includes('node_modules/vue') ||
+            id.includes('node_modules/@vue') ||
+            id.includes('node_modules/pinia') ||
+            id.includes('node_modules/vuefire')
+          ) {
+            return 'vendor-vue';
+          }
+        },
+      },
+    },
   },
 })

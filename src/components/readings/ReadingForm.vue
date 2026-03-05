@@ -132,10 +132,15 @@ import { useFirestore, useDocument } from 'vuefire';
 import { doc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 
 import { useAuthStore } from '@/stores/auth.js';
+import { useNotifier } from '@/composables/useNotifier';
+import { useUiStore } from '@/stores/ui';
+import { logger } from '@/utils/logger';
 import { FEAST_NAME_MAP, PERIOD_TYPES } from '@/constants/readings';
 
 const auth = useAuthStore();
 const isAdmin = computed(() => auth && auth.isAdmin);
+const { notifyError } = useNotifier();
+const uiStore = useUiStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -257,13 +262,14 @@ const saveChanges = async () => {
     await setDoc(newDocRef, payload, { merge: true });
     goBack(newReadingId);
   } catch (err) {
-    console.error('[ReadingForm] Памылка пры захаванні чытання:', err);
+    logger.error('[ReadingForm] Error saving reading:', err);
+    notifyError('Памылка пры захаванні чытання');
   } finally {
     saving.value = false;
   }
 };
 
-// слушаем глобальный сигнал от OraBar
+// Register save handler with Pinia store so OraBar can trigger it
 const onSaveRequest = () => {
   if (!saving.value) {
     saveChanges();
@@ -271,10 +277,10 @@ const onSaveRequest = () => {
 };
 
 onMounted(() => {
-  window.addEventListener('reading-save-request', onSaveRequest);
+  uiStore.registerReadingActions({ save: onSaveRequest });
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('reading-save-request', onSaveRequest);
+  uiStore.clearReadingActions();
 });
 </script>

@@ -8,6 +8,15 @@
     <v-alert v-else-if="error" type="error" class="mb-4">
       <div class="text-h6">Памылка загрузкі чытанняў</div>
       <p>{{ error.message || error }}</p>
+      <v-btn
+        variant="tonal"
+        color="white"
+        class="mt-2"
+        prepend-icon="mdi-refresh"
+        @click="loadReadings"
+      >
+        Паўтарыць
+      </v-btn>
     </v-alert>
 
     <div v-else-if="hasReading" class="readings-content">
@@ -57,7 +66,7 @@ async function loadReadings() {
   const dateParam = route.params.date || route.query.date;
   const date = dateParam ? moment(dateParam, 'YYYY-MM-DD').toDate() : moment().toDate();
   
-  logger.log('[ReadingsView] Загрузка чытанняў для літургічнага дня:', moment(date).format('YYYY-MM-DD'));
+  logger.log('[ReadingsView] Loading readings for liturgical day:', moment(date).format('YYYY-MM-DD'));
   
   try {
     readingsStore.setLoading(true);
@@ -68,7 +77,7 @@ async function loadReadings() {
     // Обновляем store с найденными чтениями (метод сам выберет наиболее подходящее)
     readingsStore.setReadingsFromResults(liturgicalReadings.items);
   } catch (err) {
-    logger.error('[ReadingsView] Памылка загрузкі чытанняў:', err);
+    logger.error('[ReadingsView] Error loading readings:', err);
     readingsStore.setReadingsFromResults([]); // Устанавливаем пустой массив при ошибке
   }
 }

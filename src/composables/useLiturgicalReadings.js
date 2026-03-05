@@ -1,53 +1,45 @@
-import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
-import { getReadingsForDate } from '@/services/readingsService';
+/**
+ * Facade composable for the liturgical-readings scenario.
+ *
+ * UI contract (public API — unchanged):
+ *   getLiturgicalReadingsForDate(date, options?) → { items, context }
+ *   getLiturgicalReadingsForToday(options?)      → { items, context }
+ *   feastNameMap                                 → FEAST_NAME_MAP constant
+ *
+ * Flow:
+ *   composable → liturgicalStore.fetchReadingsByDate
+ *              → calendarStore (context) + readingsService (data)
+ *
+ * Cycle determination and context computation are now handled inside the store.
+ */
+import { useLiturgicalStore } from '@/stores/liturgical';
+import { FEAST_NAME_MAP as feastNameMap } from '@/constants/liturgicalFeastsMap';
 import { logger } from '@/utils/logger';
 import moment from '@/utils/moment-be';
-
-/**
- * Composable для работы с литургическими чтениями
- */
 export function useLiturgicalReadings() {
-  const { computeLiturgicalContextForDate, feastNameMap } = useLiturgicalDay();
+  const liturgicalStore = useLiturgicalStore();
 
+  /**
+   * Fetch liturgical readings for a given date.
+   * Context (period, week, dayOfWeek, feast, cycle) is resolved inside the store.
+   *
+   * @param {Date|import('moment').Moment|string} currentDate
+   * @param {Object} [options] - reserved for future use
+   * @returns {Promise<{ items: Object[], context: Object }>}
+   */
   async function getLiturgicalReadingsForDate(currentDate, options = {}) {
-    const { useCache = true } = options;
     const mDate = moment(currentDate).startOf('day');
-
-    logger.log(`[LiturgicalReadings] Пошук чытанняў для ${mDate.format('YYYY-MM-DD')}`);
-
-    try {
-      const context = await computeLiturgicalContextForDate(currentDate);
-      const _feast = context._feast || null;
-
-      const readingsOptions = {
-        periodType: context.periodType,
-        periodWeekNumber: context.periodWeek,
-        dayOfWeek: context.dayOfWeek || mDate.isoWeekday(),
-        _feast,
-        useCache,
-      };
-
-      logger.log('[LiturgicalReadings] Параметры поиска чтений:', readingsOptions);
-
-      const readings = await getReadingsForDate(currentDate, readingsOptions);
-
-      logger.log(`[LiturgicalReadings] Знойдзена чытанняў: ${readings.length} для ${mDate.format('YYYY-MM-DD')}`);
-
-      return {
-        items: readings,
-        context: {
-          ...context,
-          _feast,
-        },
-      };
-    } catch (error) {
-      logger.error(`[LiturgicalReadings] Памылка пошуку чытанняў для ${mDate.format('YYYY-MM-DD')}:`, error);
-      throw error;
-    }
+    logger.log(`[useLiturgicalReadings] Fetching readings for ${mDate.format('YYYY-MM-DD')}`);
+    return liturgicalStore.fetchReadingsByDate(currentDate);
   }
 
+  /**
+   * Fetch liturgical readings for today.
+   * @param {Object} [options] - reserved for future use
+   * @returns {Promise<{ items: Object[], context: Object }>}
+   */
   async function getLiturgicalReadingsForToday(options = {}) {
-    return await getLiturgicalReadingsForDate(moment().toDate(), options);
+    return getLiturgicalReadingsForDate(moment().toDate(), options);
   }
 
   return {

@@ -14,7 +14,7 @@
 
 
     <div v-if="isLoading">
-      <v-skeleton-loader v-for="n in 3" :key="n" type="card" class="mb-4"></v-skeleton-loader>
+      <v-skeleton-loader v-for="n in 10" :key="n" type="text" class="mb-4"></v-skeleton-loader>
     </div>
     
     <v-alert v-else-if="error" type="error" class="mb-4">
@@ -104,8 +104,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn variant="text" @click="closeDeleteDialog">Скасаваць</v-btn>
-          <v-btn color="error" variant="flat" @click="confirmDelete">Выдаліць</v-btn>
+          <v-btn variant="text" :disabled="isDeleting" @click="closeDeleteDialog">Скасаваць</v-btn>
+          <v-btn color="error" variant="flat" :loading="isDeleting" @click="confirmDelete">Выдаліць</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -130,6 +130,7 @@ const { debouncedSearchQuery, selectedTags, selectedCategory } = usePrayersFilte
 
 const deleteDialogOpen = ref(false);
 const prayerToDelete = ref(null);
+const isDeleting = ref(false);
 
 const filteredPrayers = computed(() => {
   if (isLoading.value) return [];
@@ -142,7 +143,7 @@ const filteredPrayers = computed(() => {
   let filtered = [...prayersArray];
   
   // Фильтр по тегам категории
-  if (selectedTags.value.length > 0) {
+  if (selectedTags.value && selectedTags.value.length > 0) {
     filtered = filtered.filter(prayer => {
       const prayerTags = prayer.tags || [];
       return selectedTags.value.every(tag => prayerTags.includes(tag));
@@ -150,7 +151,7 @@ const filteredPrayers = computed(() => {
   }
   
   // Поиск
-  if (debouncedSearchQuery.value.trim()) {
+  if (debouncedSearchQuery.value && debouncedSearchQuery.value.trim()) {
     const query = debouncedSearchQuery.value.toLowerCase().trim();
     filtered = filtered.filter(prayer => {
       const title = getTitle(prayer).toLowerCase();
@@ -201,14 +202,17 @@ function closeDeleteDialog() {
 }
 
 async function confirmDelete() {
-  if (!prayerToDelete.value) return;
-  
+  if (!prayerToDelete.value || isDeleting.value) return;
+
+  isDeleting.value = true;
   try {
     await deletePrayer(prayerToDelete.value.id);
     notifySuccess('Малітва выдалена');
     closeDeleteDialog();
   } catch (error) {
     notifyError('Памылка пры выдаленні малітвы');
+  } finally {
+    isDeleting.value = false;
   }
 }
 </script>

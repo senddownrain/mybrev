@@ -5,40 +5,91 @@ import moment from '@/utils/moment-be';
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
 
+/**
+ * @typedef {Object} YearOptions
+ * @property {number} year - Calendar year (e.g. 2026)
+ * @property {string} easterSunday - ISO date string for Easter Sunday (YYYY-MM-DD)
+ * @property {string} pentecost - ISO date string for Pentecost (YYYY-MM-DD)
+ * @property {string} firstAdventSunday - ISO date string for the first Sunday of Advent (YYYY-MM-DD)
+ * @property {string} ashWednesday - ISO date string for Ash Wednesday (YYYY-MM-DD)
+ * @property {string} holyFamily - ISO date string for the Feast of the Holy Family (YYYY-MM-DD)
+ * @property {string} baptismOfLord - ISO date string for the Baptism of the Lord (YYYY-MM-DD)
+ * @property {string} ordintaryStart1 - ISO date string for the start of the first Ordinary Time segment (YYYY-MM-DD)
+ * @property {string|number} ordintaryWeeks1 - Number of Ordinary Time weeks before Lent
+ * @property {string|number} ordintaryWeeks2 - Ordinary Time week number from which the post-Pentecost segment begins
+ */
+
+/**
+ * @typedef {Object} DynamicDates
+ * @property {import('moment').Moment} ashWednesday - Ash Wednesday
+ * @property {import('moment').Moment} palmSunday - Palm Sunday (7 days before Easter)
+ * @property {import('moment').Moment} easterSunday - Easter Sunday
+ * @property {import('moment').Moment} pentecost - Pentecost Sunday
+ * @property {import('moment').Moment} ascension - Ascension (7th Sunday of Easter, 7 days before Pentecost)
+ * @property {import('moment').Moment} holyTrinity - Holy Trinity Sunday (7 days after Pentecost)
+ * @property {import('moment').Moment} corpusChristi - Corpus Christi (Thursday after Trinity Sunday)
+ * @property {import('moment').Moment} holyFamily - Feast of the Holy Family
+ * @property {import('moment').Moment} baptismOfLord - Baptism of the Lord
+ * @property {import('moment').Moment} christKing - Christ the King Sunday (Sunday before Advent)
+ * @property {import('moment').Moment} sacredHeartOfJesus - Sacred Heart of Jesus (19 days after Pentecost)
+ * @property {import('moment').Moment} immaculateHeartOfMary - Immaculate Heart of Mary (day after Sacred Heart)
+ * @property {import('moment').Moment} christTheHighPriest - Christ the High Priest (11 days before Pentecost)
+ */
+
 export const useCalendarStore = defineStore('calendar', () => {
     const db = getFirestore();
 
     const yearOptionsCache = ref({});
     const dynamicDatesCache = ref({});
 
+    /**
+     * Fetch liturgical year options for the given year from Firestore.
+     * Results are cached in memory; subsequent calls for the same year return the cached value.
+     *
+     * @param {number|string} year - The calendar year to fetch options for
+     * @returns {Promise<YearOptions|null>} Year options object, or null if not found in Firestore
+     */
     async function getYearOptions(year) {
         if (yearOptionsCache.value[year]) {
             return yearOptionsCache.value[year];
         }
         
-        logger.log(`[CalendarStore] Пошук наладаў для ${year} года ў Firestore...`);
+        logger.log(`[CalendarStore] Fetching options for year ${year} from Firestore...`);
         const q = query(collection(db, 'yearOptions'), where('year', '==', Number(year)));
         
         const querySnapshot = await retryFirestore(() => getDocs(q));
         
         if (querySnapshot.empty) {
-            logger.error(`[CalendarStore] Налады для года ${year} не знойдзены!`);
+            logger.error(`[CalendarStore] Options for year ${year} not found!`);
             return null;
         }
         
         const options = querySnapshot.docs[0].data();
         yearOptionsCache.value[year] = options;
-        logger.log(`[CalendarStore] Налады для года ${year} паспяхова загружаны.`);
+        logger.log(`[CalendarStore] Options for year ${year} loaded successfully.`);
         return options;
     }
 
+    /**
+     * Compute all dynamic liturgical feast dates for the given year.
+     * Depends on {@link getYearOptions} to retrieve the base dates from Firestore.
+     * Results are cached in memory; subsequent calls for the same year return the cached value.
+     *
+     * @param {number|string} year - The calendar year to compute dates for
+     * @returns {Promise<DynamicDates|{}>} Object mapping feast keys to moment date objects,
+     *   or an empty object if year options are unavailable
+     */
     async function getDynamicDates(year) {
-    logger.log(`[CalendarStore] Вычисление динамических дат для ${year} года...`);
-    
-    await getYearOptions(year); 
+    if (dynamicDatesCache.value[year]) {
+        return dynamicDatesCache.value[year];
+    }
+
+    logger.log(`[CalendarStore] Computing dynamic dates for year ${year}...`);
+
+    await getYearOptions(year);
     const opts = yearOptionsCache.value[year];
     if (!opts) {
-        logger.error(`[CalendarStore] Не удалось получить опции для ${year} года. Вычисление дат прервано.`);
+        logger.error(`[CalendarStore] Failed to get options for year ${year}. Date computation aborted.`);
         return {};
     }
     const dates = {};
@@ -46,31 +97,37 @@ export const useCalendarStore = defineStore('calendar', () => {
     const easter = getMoment(opts.easterSunday);
     const pentecost = getMoment(opts.pentecost);
     const firstAdventSunday = getMoment(opts.firstAdventSunday);
-    // Расчет дат до Пасхи
+    // Расчёт дат да Вялікадня
     dates.ashWednesday = getMoment(opts.ashWednesday);
-    dates.palmSunday = easter.clone().subtract(7, 'days'); // ✅ ВЕРБНОЕ ВОСКРЕСЕНЬЕ
-    // Расчет дат после Пасхи
+    dates.palmSunday = easter.clone().subtract(7, 'days'); // ✅ PALM SUNDAY
+    // Расчёт дат пасля Вялікадня
     dates.easterSunday = easter;
     dates.pentecost = pentecost;
-    dates.ascension = pentecost.clone().subtract(7, 'days'); // ✅ ВОЗНЕСЕНИЕ (7-е воскресенье Пасхи)
+    dates.ascension = pentecost.clone().subtract(7, 'days'); // ✅ ASCENSION (7th Sunday of Easter)
     
     const holyTrinitySunday = pentecost.clone().add(7, 'days');
     dates.holyTrinity = holyTrinitySunday;
-    dates.corpusChristi = holyTrinitySunday.clone().add(4, 'days'); // ✅ ТЕЛО И КРОВЬ ХРИСТА (четверг после Троицы)
-    // Расчет дат в "обычное время"
+    dates.corpusChristi = holyTrinitySunday.clone().add(4, 'days'); // ✅ CORPUS CHRISTI (Thursday after Trinity)
+    // Расчёт дат у "звычайны час"
     dates.holyFamily = getMoment(opts.holyFamily);
     dates.baptismOfLord = getMoment(opts.baptismOfLord);
     dates.christKing = firstAdventSunday.clone().subtract(7, 'days');
     const sacredHeartOfJesus = pentecost.clone().add(19, 'days');
     dates.sacredHeartOfJesus = sacredHeartOfJesus;
-    dates.immaculateHeartOfMary = sacredHeartOfJesus.clone().add(1, 'day'); // Следующий день
-    dates.christTheHighPriest = pentecost.clone().subtract(11, 'days'); // Пн после Пятидесятницы - уточнить если нужно
+    dates.immaculateHeartOfMary = sacredHeartOfJesus.clone().add(1, 'day'); // Next day
+    dates.christTheHighPriest = pentecost.clone().subtract(11, 'days'); // Mon after Pentecost — clarify if needed
     dynamicDatesCache.value[year] = dates;
-    logger.log(`[CalendarStore] Динамические даты для ${year} года вычислены.`);
+    logger.log(`[CalendarStore] Dynamic dates for year ${year} computed.`);
     return dates;
 }
 
-    // --- Функция для получения всех доступных годов из Firestore ---
+    // --- Функцыя для атрымання ўсіх даступных гадоў з Firestore ---
+    /**
+     * Fetch all years that have liturgical options stored in Firestore.
+     * Returns years sorted in descending order (most recent first).
+     *
+     * @returns {Promise<number[]>} Sorted array of available years, or an empty array on error
+     */
     async function getAvailableYears() {
         try {
             const q = query(collection(db, 'yearOptions'));
@@ -82,9 +139,9 @@ export const useCalendarStore = defineStore('calendar', () => {
                     years.push(data.year);
                 }
             });
-            return years.sort((a, b) => b - a); // Сортируем по убыванию (новые первыми)
+            return years.sort((a, b) => b - a); // Sort descending (newest first)
         } catch (error) {
-            logger.error('[CalendarStore] Памылка пры атрыманні спісу гадоў:', error);
+            logger.error('[CalendarStore] Error fetching available years list:', error);
             return [];
         }
     }

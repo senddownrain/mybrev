@@ -38,8 +38,9 @@
 
       <!-- Режим просмотра -->
       <template v-else>
-        <h1 class="text-h4 font-weight-light mb-4 prayer-title" v-html="getTitle(prayer)"></h1>
-        
+        <!-- Plain text interpolation — no v-html, no XSS risk -->
+        <h1 class="text-h4 font-weight-light mb-4 prayer-title">{{ getTitle(prayer) }}</h1>
+
         <div v-if="prayer.tags && prayer.tags.length > 0" class="mb-4">
           <v-chip
             v-for="tag in prayer.tags"
@@ -53,16 +54,17 @@
           </v-chip>
         </div>
 
+        <!-- Prayer body is trusted rich HTML from the database -->
         <div v-html="getText(prayer)" class="prayer-text"></div>
       </template>
     </div>
   </v-container>
-  
+
   <v-container v-else-if="isLoading" class="text-center">
     <v-progress-circular indeterminate color="primary"></v-progress-circular>
     <p class="mt-4">Загрузка малітвы...</p>
   </v-container>
-  
+
   <v-container v-else class="text-center">
     <v-icon size="64" class="mb-4" color="grey">mdi-file-question-outline</v-icon>
     <h2 class="text-h5 mb-4">Малітва не знойдзена</h2>
@@ -72,19 +74,18 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onUnmounted, onMounted, provide } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, computed, watch, onUnmounted, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
-import { useAuthStore } from '@/stores/auth';
+import { useUiStore } from '@/stores/ui';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 import { logger } from '@/utils/logger';
 
 const route = useRoute();
-const router = useRouter();
 const { prayers, isLoading, getTitle, getText, updatePrayer, allTags } = usePrayers();
 const { notifySuccess, notifyError } = useNotifier();
-const authStore = useAuthStore();
+const uiStore = useUiStore();
 
 const prayer = computed(() => {
   return prayers.value.find(p => p.id === route.params.id);
@@ -92,6 +93,8 @@ const prayer = computed(() => {
 
 const isEditing = ref(false);
 const saving = ref(false);
+const copySuccess = ref(false);
+let copyTimeoutId = null;
 
 const editForm = ref({
   title: '',
@@ -99,11 +102,10 @@ const editForm = ref({
   tags: []
 });
 
-// Предоставляем функции для PrayerBar
-provide('prayerView', {
-  isEditing,
-  toggleEdit: () => toggleEdit(),
-  saving
+// Sync local edit state to store so Default.vue and PrayerBar can observe it reactively
+watch([isEditing, saving], ([editing, isSaving]) => {
+  uiStore.prayerIsEditing = editing;
+  uiStore.prayerSaving = isSaving;
 });
 
 watch(prayer, (newPrayer) => {
@@ -112,72 +114,55 @@ watch(prayer, (newPrayer) => {
   }
 }, { immediate: true });
 
-// Слушаем события от AppBar и отправляем обновления состояния
+// Register action handlers with the Pinia store on mount — replaces window events
 onMounted(() => {
-  window.addEventListener('prayer-toggle-edit', toggleEdit);
-  window.addEventListener('prayer-cancel-edit', cancelEdit);
-  window.addEventListener('prayer-save', savePrayer);
-  
-  // Отправляем начальное состояние
-  updatePrayerBarState();
+  uiStore.registerPrayerActions({
+    toggleEdit,
+    cancelEdit,
+    save: savePrayer,
+  });
+  // Sync initial state
+  uiStore.prayerIsEditing = isEditing.value;
+  uiStore.prayerSaving = saving.value;
 });
 
 onUnmounted(() => {
-  window.removeEventListener('prayer-toggle-edit', toggleEdit);
-  window.removeEventListener('prayer-cancel-edit', cancelEdit);
-  window.removeEventListener('prayer-save', savePrayer);
+  uiStore.clearPrayerActions();
+  if (copyTimeoutId) {
+    clearTimeout(copyTimeoutId);
+  }
 });
-
-// Отслеживаем изменения состояния и отправляем в PrayerBar
-watch([isEditing, saving], () => {
-  updatePrayerBarState();
-});
-
-function updatePrayerBarState() {
-  window.dispatchEvent(new CustomEvent('prayer-state-update', {
-    detail: {
-      isEditing: isEditing.value,
-      saving: saving.value
-    }
-  }));
-}
 
 function loadPrayerData() {
   if (!prayer.value) return;
-  
+
   if (prayer.value.titleVersions) {
     editForm.value.title = prayer.value.titleVersions.be || prayer.value.titleVersions.ru || Object.values(prayer.value.titleVersions)[0] || '';
   } else {
     editForm.value.title = prayer.value.title || '';
   }
-  
+
   if (prayer.value.textVersions) {
     editForm.value.text = prayer.value.textVersions.be || prayer.value.textVersions.ru || Object.values(prayer.value.textVersions)[0] || '';
   } else {
     editForm.value.text = prayer.value.text || '';
   }
-  
+
   editForm.value.tags = prayer.value.tags || [];
 }
 
 function toggleEdit() {
   if (isEditing.value) {
-    // Сохраняем изменения
     savePrayer();
   } else {
-    // Включаем режим редактирования
     loadPrayerData();
     isEditing.value = true;
-    // Сразу отправляем обновление состояния
-    updatePrayerBarState();
   }
 }
 
 function cancelEdit() {
   if (isEditing.value) {
-    // Отменяем редактирование без сохранения
     isEditing.value = false;
-    // Восстанавливаем исходные данные
     loadPrayerData();
   }
 }
@@ -185,12 +170,12 @@ function cancelEdit() {
 async function savePrayer() {
   const titleValidation = validatePrayerTitle(editForm.value.title);
   const textValidation = validatePrayerText(editForm.value.text);
-  
+
   if (titleValidation !== true) {
     notifyError(titleValidation);
     return;
   }
-  
+
   if (textValidation !== true) {
     notifyError(textValidation);
     return;
@@ -209,38 +194,32 @@ async function savePrayer() {
   }
 }
 
-// Экспортируем для использования в PrayerBar
-defineExpose({
-  isEditing,
-  toggleEdit
-});
-
-let copyTimeoutId = null;
-
 async function copyText() {
   if (!prayer.value) return;
-  
+
   if (copyTimeoutId) {
     clearTimeout(copyTimeoutId);
   }
-  
+
   const title = getTitle(prayer.value);
   const text = getText(prayer.value);
-  
+
   const doc = new DOMParser().parseFromString(text, 'text/html');
   const plainText = doc.body.textContent || text;
-  
+
   const textToCopy = `${title}\n\n${plainText}`;
-  
+
+  const resetCopySuccess = () => {
+    copySuccess.value = false;
+    copyTimeoutId = null;
+  };
+
   try {
     await navigator.clipboard.writeText(textToCopy);
     copySuccess.value = true;
     notifySuccess('Тэкст скапіяваны');
-    copyTimeoutId = setTimeout(() => {
-      copySuccess.value = false;
-      copyTimeoutId = null;
-    }, 2000);
-  } catch (error) {
+    copyTimeoutId = setTimeout(resetCopySuccess, 2000);
+  } catch {
     const textArea = document.createElement('textarea');
     textArea.value = textToCopy;
     textArea.style.position = 'fixed';
@@ -251,27 +230,21 @@ async function copyText() {
       document.execCommand('copy');
       copySuccess.value = true;
       notifySuccess('Тэкст скапіяваны');
-      copyTimeoutId = setTimeout(() => {
-        copySuccess.value = false;
-        copyTimeoutId = null;
-      }, 2000);
+      copyTimeoutId = setTimeout(resetCopySuccess, 2000);
     } catch (err) {
-      logger.error('Не атрымалася скапіяваць тэкст:', err);
+      logger.error('Failed to copy prayer text:', err);
     } finally {
       document.body.removeChild(textArea);
     }
   }
 }
 
-onUnmounted(() => {
-  if (copyTimeoutId) {
-    clearTimeout(copyTimeoutId);
-  }
-});
-
-watch([isLoading, prayer], ([loading, foundPrayer]) => {
-  if (!loading && !foundPrayer && prayers.value.length > 0) {
-  }
+// Expose for parent components that may use template refs
+defineExpose({
+  isEditing,
+  toggleEdit,
+  copyText,
+  copySuccess,
 });
 </script>
 
@@ -391,7 +364,7 @@ watch([isLoading, prayer], ([loading, foundPrayer]) => {
   font-size: 1rem;
 }
 
-/* Стили для поля названия - чтобы текст не обрезался */
+/* Поле названия — текст не должен обрезаться */
 .prayer-title-field :deep(.v-field__input) {
   white-space: normal !important;
   word-wrap: break-word !important;
@@ -408,4 +381,3 @@ watch([isLoading, prayer], ([loading, foundPrayer]) => {
   word-break: break-word !important;
 }
 </style>
-

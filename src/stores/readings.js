@@ -11,7 +11,7 @@ export const useReadingsStore = defineStore('readings', () => {
   const error = ref(null);
 
   /**
-   * Получить чтения для конкретной даты
+   * Атрымаць чытанні для канкрэтнай даты
    */
   async function getReadingsForDate(date, options = {}) {
     isLoading.value = true;
@@ -21,14 +21,14 @@ export const useReadingsStore = defineStore('readings', () => {
       const results = await readingsService.getReadingsForDate(date, options);
       readings.value = results;
       
-      logger.log('[readingsStore] Атрымана чытанняў:', results.length);
+      logger.log('[readingsStore] Readings received:', results.length);
       
-      // Если найдено одно чтение, сохраняем его как текущее
+      // Калі знойдзена адно чытанне, захоўваем яго як бягучае
       if (results.length === 1) {
         currentReading.value = results[0];
-        logger.log('[readingsStore] Выбрана адно чытанне:', results[0].id, 'з крыніцы:', results[0]._source);
+        logger.log('[readingsStore] Single reading selected:', results[0].id, 'from source:', results[0]._source);
       } else if (results.length > 1) {
-        // Приоритет: чтения из коллекции readings, затем по точной дате, празднику, периоду
+        // Прыярытэт: чытанні з калекцыі readings, затым па дакладнай даце, свяце, перыядзе
         const prioritized = results.sort((a, b) => {
           const aPrimary = (a._source === 'readings');
           const bPrimary = (b._source === 'readings');
@@ -41,15 +41,15 @@ export const useReadingsStore = defineStore('readings', () => {
           return 0;
         });
         currentReading.value = prioritized[0];
-        logger.log('[readingsStore] Знойдзена некалькі чытанняў для даты:', date, results.length, 'Выбрана:', prioritized[0].id, 'з крыніцы:', prioritized[0]._source);
+        logger.log('[readingsStore] Multiple readings found for date:', date, results.length, 'Selected:', prioritized[0].id, 'from source:', prioritized[0]._source);
       } else {
         currentReading.value = null;
-        logger.log('[readingsStore] Чытанні не знойдзены для даты:', date);
+        logger.log('[readingsStore] No readings found for date:', date);
       }
       
       return results;
     } catch (err) {
-      logger.error('[readingsStore] Памылка загрузкі чытанняў:', err);
+      logger.error('[readingsStore] Error loading readings:', err);
       error.value = err;
       currentReading.value = null;
       return [];
@@ -59,12 +59,12 @@ export const useReadingsStore = defineStore('readings', () => {
   }
 
   /**
-   * Добавить чтение
+   * Дадаць чытанне
    */
   async function addReading(data) {
     try {
       const docRef = await readingsService.addReading(data);
-      // Обновляем список после добавления
+      // Абнаўляем спіс пасля дадання
       if (currentReading.value) {
         await getReadingsForDate(
           currentReading.value._date || 
@@ -73,49 +73,49 @@ export const useReadingsStore = defineStore('readings', () => {
       }
       return docRef;
     } catch (err) {
-      logger.error('[readingsStore] Памылка дадавання чытання:', err);
+      logger.error('[readingsStore] Error adding reading:', err);
       error.value = err;
       throw err;
     }
   }
 
   /**
-   * Обновить чтение
+   * Абнавіць чытанне
    */
   async function updateReading(id, data) {
     try {
       await readingsService.updateReading(id, data);
-      // Обновляем текущее чтение если это оно
+      // Абнаўляем бягучае чытанне, калі гэта яно
       if (currentReading.value && currentReading.value.id === id) {
         currentReading.value = { ...currentReading.value, ...data };
       }
     } catch (err) {
-      logger.error('[readingsStore] Памылка абнаўлення чытання:', err);
+      logger.error('[readingsStore] Error updating reading:', err);
       error.value = err;
       throw err;
     }
   }
 
   /**
-   * Удалить чтение
+   * Выдаліць чытанне
    */
   async function deleteReading(id) {
     try {
       await readingsService.deleteReading(id);
-      // Удаляем из списка
+      // Выдаляем са спісу
       readings.value = readings.value.filter(r => r.id !== id);
       if (currentReading.value && currentReading.value.id === id) {
         currentReading.value = null;
       }
     } catch (err) {
-      logger.error('[readingsStore] Памылка выдалення чытання:', err);
+      logger.error('[readingsStore] Error deleting reading:', err);
       error.value = err;
       throw err;
     }
   }
 
   /**
-   * Очистить текущее чтение
+   * Ачысціць бягучае чытанне
    */
   function clearCurrentReading() {
     currentReading.value = null;
@@ -123,17 +123,17 @@ export const useReadingsStore = defineStore('readings', () => {
   }
 
   /**
-   * Установить состояние загрузки
-   * @param {boolean} loading - Состояние загрузки
+   * Усталяваць стан загрузкі
+   * @param {boolean} loading - Стан загрузкі
    */
   function setLoading(loading) {
     isLoading.value = loading;
   }
 
   /**
-   * Установить чтения из результатов поиска
-   * Используется для установки чтений, найденных через useLiturgicalReadings
-   * @param {Array} results - Массив найденных чтений
+   * Усталяваць чытанні з вынікаў пошуку
+   * Выкарыстоўваецца для ўсталёўкі чытанняў, знойдзеных праз useLiturgicalReadings
+   * @param {Array} results - Масіў знойдзеных чытанняў
    */
   function setReadingsFromResults(results) {
     readings.value = results;
@@ -142,9 +142,9 @@ export const useReadingsStore = defineStore('readings', () => {
     
     if (results.length === 1) {
       currentReading.value = results[0];
-      logger.log('[readingsStore] Выбрана адно чытанне:', results[0].id, 'з крыніцы:', results[0]._source);
+      logger.log('[readingsStore] Single reading selected:', results[0].id, 'from source:', results[0]._source);
     } else if (results.length > 1) {
-        // Приоритет: readings, затем по точной дате, празднику
+        // Прыярытэт: readings, затым па дакладнай даце, свяце
         const prioritized = results.sort((a, b) => {
           if ((a._source === 'readings') && b._source !== 'readings') return -1;
           if ((a._source !== 'readings') && (b._source === 'readings')) return 1;
@@ -155,10 +155,10 @@ export const useReadingsStore = defineStore('readings', () => {
           return 0;
         });
       currentReading.value = prioritized[0];
-      logger.log('[readingsStore] Знойдзена некалькі чытанняў, выбрана:', prioritized[0].id, 'з крыніцы:', prioritized[0]._source);
+      logger.log('[readingsStore] Multiple readings found, selected:', prioritized[0].id, 'from source:', prioritized[0]._source);
     } else {
       currentReading.value = null;
-      logger.log('[readingsStore] Чытанні не знойдзены');
+      logger.log('[readingsStore] No readings found');
     }
   }
 
@@ -177,4 +177,3 @@ export const useReadingsStore = defineStore('readings', () => {
     setLoading,
   };
 });
-

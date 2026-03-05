@@ -19,10 +19,10 @@ prayersStore.init()
 
 app.mount('#app')
 
-// Инициализируем warmup cache в фоне после монтирования приложения
-// Не блокируем UI, warmup идет параллельно
-setTimeout(() => {
+// Warmup cache in the background after the app is mounted.
+// queueMicrotask defers execution after the current task without an arbitrary timeout.
+queueMicrotask(() => {
   warmupCache().catch(error => {
-    console.error('[main] Памылка пры прагрэве кэшу:', error)
-  })
-}, 100) // Небольшая задержка, чтобы не мешать первоначальной загрузке UI
+    console.error('[main] Cache warmup error:', error);
+  });
+});

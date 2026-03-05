@@ -7,7 +7,8 @@ export async function retry(fn, options = {}) {
     delay = 1000,
     backoff = 2,
     onRetry = null,
-    shouldRetry = (error) => true,
+    shouldRetry = () => true,
+    timeout = 0, // 0 = no per-attempt timeout
   } = options;
 
   let lastError;
@@ -15,7 +16,18 @@ export async function retry(fn, options = {}) {
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      return await fn();
+      const result = timeout > 0
+        ? await Promise.race([
+            fn(),
+            new Promise((_, reject) =>
+              setTimeout(
+                () => reject(new Error(`Operation timed out after ${timeout}ms`)),
+                timeout,
+              )
+            ),
+          ])
+        : await fn();
+      return result;
     } catch (error) {
       lastError = error;
 
@@ -44,22 +56,27 @@ export async function retry(fn, options = {}) {
 }
 
 /**
- * Retry with exponential backoff for Firestore operations
+ * Retry with exponential backoff for Firestore operations.
+ * Adds a 10 s per-attempt timeout so a hung network request
+ * doesn't block the retry loop indefinitely.
  */
 export async function retryFirestore(fn, options = {}) {
   return retry(fn, {
     maxAttempts: 3,
-    delay: 300, // Уменьшено с 500ms для более быстрого retry
+    delay: 300,
     backoff: 2,
+    timeout: 10_000, // 10 s per attempt
     shouldRetry: (error) => {
-      // Retry on network errors or rate limit errors
       const code = error?.code;
-      return code === 'unavailable' || 
-             code === 'deadline-exceeded' || 
-             code === 'resource-exhausted' ||
-             code === 'aborted';
+      return (
+        code === 'unavailable' ||
+        code === 'deadline-exceeded' ||
+        code === 'resource-exhausted' ||
+        code === 'aborted' ||
+        // Also retry our own timeout sentinel
+        error?.message?.startsWith('Operation timed out')
+      );
     },
     ...options,
   });
 }
-

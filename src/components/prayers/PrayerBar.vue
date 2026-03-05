@@ -7,49 +7,33 @@
     <v-app-bar-title></v-app-bar-title>
 
     <v-spacer></v-spacer>
- 
+
     <v-btn icon @click="toggleSettingsSheet">
       <v-icon>mdi-format-font</v-icon>
     </v-btn>
 
-    <v-btn 
-      v-if="auth && auth.isAdmin" 
-      icon 
-      @click="toggleEdit"
-      :loading="saving"
+    <v-btn
+      v-if="auth && auth.isAdmin"
+      icon
+      @click="uiStore.triggerPrayerToggleEdit()"
+      :loading="uiStore.prayerSaving"
     >
-      <v-icon>{{ isEditing ? 'mdi-check' : 'mdi-pencil-outline' }}</v-icon>
+      <v-icon>{{ uiStore.prayerIsEditing ? 'mdi-check' : 'mdi-pencil-outline' }}</v-icon>
     </v-btn>
-    
+
   </v-app-bar>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAppBar } from '@/composables/useAppBar';
+import { useUiStore } from '@/stores/ui';
 import { useAuthStore } from '@/stores/auth.js';
 
 const router = useRouter();
 const { toggleSettingsSheet } = useAppBar();
+const uiStore = useUiStore();
 const auth = useAuthStore();
-
-// Используем глобальное событие для связи с PrayerView
-const isEditing = ref(false);
-const saving = ref(false);
-
-function handleStateUpdate(e) {
-  isEditing.value = e.detail.isEditing;
-  saving.value = e.detail.saving;
-}
-
-onMounted(() => {
-  window.addEventListener('prayer-state-update', handleStateUpdate);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('prayer-state-update', handleStateUpdate);
-});
 
 const goBack = () => {
   if (window.history.length > 1) {
@@ -57,9 +41,5 @@ const goBack = () => {
   } else {
     router.push({ name: 'PrayersList' });
   }
-};
-
-const toggleEdit = () => {
-  window.dispatchEvent(new CustomEvent('prayer-toggle-edit'));
 };
 </script>

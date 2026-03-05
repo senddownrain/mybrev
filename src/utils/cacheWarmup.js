@@ -7,75 +7,76 @@ import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { getReadingsForDate } from '@/services/readingsService';
 import moment from '@/utils/moment-be';
 
-// Глобальный кэш для отслеживания уже загруженных дней в этом сеансе
+// Глобальны кэш для адсочвання ўжо загружаных дзён у гэтым сеансе
 const loadedDaysCache = new Set();
+
 /**
- * Прогрев кэша для коллекции yearOptions
- * Загружает всю коллекцию для кэширования в Firebase persistent cache
+ * Прагрэў кэшу для калекцыі yearOptions
+ * Загружае ўсю калекцыю для кэшавання ў Firebase persistent cache
  */
 export async function warmupYearOptions() {
   try {
-    logger.log('[CacheWarmup] Пачатак прагрэву yearOptions...');
+    logger.log('[CacheWarmup] Starting yearOptions warmup...');
     const calendarStore = useCalendarStore();
     
-    // Загружаем все доступные годы
+    // Загружаем усе даступныя гады
     const years = await calendarStore.getAvailableYears();
     
-    // Загружаем опции для каждого года
+    // Загружаем апцыі для кожнага года
     const promises = years.map(year => calendarStore.getYearOptions(year));
     await Promise.all(promises);
     
-    // Загружаем динамические даты для текущего и следующего года
+    // Загружаем дынамічныя даты для бягучага і наступнага года
     const currentYear = moment().year();
     await calendarStore.getDynamicDates(currentYear);
     await calendarStore.getDynamicDates(currentYear + 1);
     
-    logger.log(`[CacheWarmup] Прагрэў yearOptions завершаны (${years.length} гадоў)`);
+    logger.log(`[CacheWarmup] yearOptions warmup complete (${years.length} years)`);
   } catch (error) {
-    logger.error('[CacheWarmup] Памылка пры прагрэве yearOptions:', error);
+    logger.error('[CacheWarmup] Error during yearOptions warmup:', error);
   }
 }
 
 /**
- * Прогрев кэша для коллекции prayers
- * prayersStore уже использует onSnapshot, который автоматически кэширует данные
- * Эта функция просто проверяет, что данные загружены
+ * Прагрэў кэшу для калекцыі prayers
+ * prayersStore ужо выкарыстоўвае onSnapshot, які аўтаматычна кэшуе даныя
+ * Гэта функцыя проста правярае, што даныя загружаны
  */
 export async function warmupPrayers() {
   try {
-    logger.log('[CacheWarmup] Пачатак прагрэву prayers...');
+    logger.log('[CacheWarmup] Starting prayers warmup...');
     
-    // prayersStore уже использует onSnapshot при инициализации в main.js
-    // Просто делаем один запрос для прогрева кэша, если еще не загружено
+    // prayersStore ужо выкарыстоўвае onSnapshot пры ініцыялізацыі ў main.js
+    // Проста робім адзін запыт для прагрэву кэшу, калі яшчэ не загружана
     const prayersCollection = collection(db, 'prayers');
     const snapshot = await retryFirestore(() => getDocs(prayersCollection));
     
-    logger.log(`[CacheWarmup] Прагрэў prayers завершаны (${snapshot.size} малітваў)`);
+    logger.log(`[CacheWarmup] Prayers warmup complete (${snapshot.size} prayers)`);
   } catch (error) {
-    logger.error('[CacheWarmup] Памылка пры прагрэве prayers:', error);
+    logger.error('[CacheWarmup] Error during prayers warmup:', error);
   }
 }
 
 /**
- * Проверяет, есть ли данные для даты в кэше Firebase
+ * Правярае, ці ёсць даныя для даты ў кэшы Firebase
  * @param {moment.Moment} mDate - Дата
- * @returns {Promise<boolean>} true если данные есть в кэше
+ * @returns {Promise<boolean>} true калі даныя ёсць у кэшы
  */
 async function isDateCached(mDate) {
   const dateKey = mDate.format('YYYY-MM-DD');
   
-  // Проверяем наш внутренний кэш загруженных дней
+  // Правяраем наш унутраны кэш загружаных дзён
   if (loadedDaysCache.has(dateKey)) {
     return true;
   }
   
-  // Firebase persistent cache автоматически использует кэш при повторных запросах
-  // Мы полагаемся на это, так как прямого доступа к IndexedDB нет
+  // Firebase persistent cache аўтаматычна выкарыстоўвае кэш пры паўторных запытах
+  // Мы абапіраемся на гэта, паколькі прамога доступу да IndexedDB няма
   return false;
 }
 
 /**
- * Отмечает дату как загруженную в кэш
+ * Адзначае дату як загружаную ў кэш
  * @param {moment.Moment} mDate - Дата
  */
 function markDateAsLoaded(mDate) {
@@ -84,15 +85,15 @@ function markDateAsLoaded(mDate) {
 }
 
 /**
- * Прогрев кэша для коллекции readings на указанный период
- * С приоритизацией: сначала ближайшие дни, потом дальние
- * @param {Date|moment.Moment|string} startDate - Начальная дата
- * @param {Date|moment.Moment|string} endDate - Конечная дата
- * @param {boolean} prioritizeNear - Приоритизировать ближайшие дни (по умолчанию true)
+ * Warmup cache for the readings collection over a date range.
+ * Prioritizes nearest days first.
+ * @param {Date|moment.Moment|string} startDate - Start date
+ * @param {Date|moment.Moment|string} endDate - End date
+ * @param {boolean} prioritizeNear - Prioritize nearest days (default true)
  */
 export async function warmupReadings(startDate, endDate, prioritizeNear = true) {
   try {
-    logger.log(`[CacheWarmup] Пачатак прагрэву readings з ${moment(startDate).format('YYYY-MM-DD')} па ${moment(endDate).format('YYYY-MM-DD')}...`);
+    logger.log(`[CacheWarmup] Starting readings warmup from ${moment(startDate).format('YYYY-MM-DD')} to ${moment(endDate).format('YYYY-MM-DD')}...`);
     
     const { computeLiturgicalContextForDate } = useLiturgicalDay();
     
@@ -104,17 +105,17 @@ export async function warmupReadings(startDate, endDate, prioritizeNear = true) 
     let skipped = 0;
     const batchSize = 10;
     
-    // Кэш для вычисленных контекстов одного года
+    // Кэш для вылічаных кантэкстаў аднаго года
     const contextCache = new Map();
     const currentYear = mStart.year();
     
-    // Создаем массив дат с приоритизацией
+    // Ствараем масіў дат з прыярытызацыяй
     const dates = [];
     for (let i = 0; i < totalDays; i++) {
       dates.push(mStart.clone().add(i, 'days'));
     }
     
-    // Приоритизируем: сначала ближайшие дни (сегодня и вперед), потом дальние
+    // Прыярытызуем: спачатку бліжэйшыя дні (сёння і наперад), потым далёкія
     if (prioritizeNear) {
       const today = moment().startOf('day');
       dates.sort((a, b) => {
@@ -135,13 +136,13 @@ export async function warmupReadings(startDate, endDate, prioritizeNear = true) 
           try {
             const dateKey = currentDate.format('YYYY-MM-DD');
             
-            // Проверяем, не загружена ли уже эта дата
+            // Правяраем, ці не загружана ўжо гэта дата
             if (await isDateCached(currentDate)) {
               skipped++;
               return;
             }
             
-            // Вычисляем контекст для даты (кэшируем для одного года)
+            // Вылічаем кантэкст для даты (кэшуем для аднаго года)
             let context;
             if (currentDate.year() === currentYear && contextCache.has(dateKey)) {
               context = contextCache.get(dateKey);
@@ -152,7 +153,7 @@ export async function warmupReadings(startDate, endDate, prioritizeNear = true) 
               }
             }
             
-            // Загружаем чтения для этой даты
+            // Load readings for this date
             await getReadingsForDate(currentDate.toDate(), {
               periodType: context.periodType,
               periodWeekNumber: context.periodWeek,
@@ -161,15 +162,15 @@ export async function warmupReadings(startDate, endDate, prioritizeNear = true) 
               useCache: true,
             });
             
-            // Отмечаем как загруженную
+            // Адзначаем як загружаную
             markDateAsLoaded(currentDate);
             
             processed++;
             if (processed % 20 === 0) {
-              logger.log(`[CacheWarmup] Прагрэў readings: ${processed}/${totalDays} дзён (прапушчана: ${skipped})`);
+              logger.log(`[CacheWarmup] Readings warmup progress: ${processed}/${totalDays} days (skipped: ${skipped})`);
             }
           } catch (error) {
-            logger.error(`[CacheWarmup] Памылка пры прагрэве readings для ${currentDate.format('YYYY-MM-DD')}:`, error);
+            logger.error(`[CacheWarmup] Error during readings warmup for ${currentDate.format('YYYY-MM-DD')}:`, error);
             processed++;
           }
         })();
@@ -180,22 +181,22 @@ export async function warmupReadings(startDate, endDate, prioritizeNear = true) 
       await Promise.all(batch);
     }
     
-    logger.log(`[CacheWarmup] Прагрэў readings завершаны (${processed}/${totalDays} дзён, прапушчана: ${skipped})`);
+    logger.log(`[CacheWarmup] Readings warmup complete (${processed}/${totalDays} days, skipped: ${skipped})`);
   } catch (error) {
-    logger.error('[CacheWarmup] Памылка пры прагрэве readings:', error);
+    logger.error('[CacheWarmup] Error during readings warmup:', error);
   }
 }
 
 /**
- * Прогрев кэша для коллекции days на указанный период
- * С приоритизацией: сначала ближайшие дни, потом дальние
- * @param {Date|moment.Moment|string} startDate - Начальная дата
- * @param {Date|moment.Moment|string} endDate - Конечная дата
- * @param {boolean} prioritizeNear - Приоритизировать ближайшие дни (по умолчанию true)
+ * Прагрэў кэшу для калекцыі days на ўказаны перыяд
+ * З прыярытызацыяй: спачатку бліжэйшыя дні, потым далёкія
+ * @param {Date|moment.Moment|string} startDate - Пачатковая дата
+ * @param {Date|moment.Moment|string} endDate - Канечная дата
+ * @param {boolean} prioritizeNear - Прыярытызаваць бліжэйшыя дні (па змаўчанні true)
  */
 export async function warmupDays(startDate, endDate, prioritizeNear = true) {
   try {
-    logger.log(`[CacheWarmup] Пачатак прагрэву days з ${moment(startDate).format('YYYY-MM-DD')} па ${moment(endDate).format('YYYY-MM-DD')}...`);
+    logger.log(`[CacheWarmup] Starting days warmup from ${moment(startDate).format('YYYY-MM-DD')} to ${moment(endDate).format('YYYY-MM-DD')}...`);
     
     const { getLiturgicalOptionsForDate } = useLiturgicalDay();
     
@@ -207,13 +208,13 @@ export async function warmupDays(startDate, endDate, prioritizeNear = true) {
     let skipped = 0;
     const batchSize = 10;
     
-    // Создаем массив дат с приоритизацией
+    // Ствараем масіў дат з прыярытызацыяй
     const dates = [];
     for (let i = 0; i < totalDays; i++) {
       dates.push(mStart.clone().add(i, 'days'));
     }
     
-    // Приоритизируем: сначала ближайшие дни (сегодня и вперед), потом дальние
+    // Прыярытызуем: спачатку бліжэйшыя дні (сёння і наперад), потым далёкія
     if (prioritizeNear) {
       const today = moment().startOf('day');
       dates.sort((a, b) => {
@@ -232,25 +233,25 @@ export async function warmupDays(startDate, endDate, prioritizeNear = true) {
         
         const task = (async () => {
           try {
-            // Проверяем, не загружена ли уже эта дата
+            // Правяраем, ці не загружана ўжо гэта дата
             if (await isDateCached(currentDate)) {
               skipped++;
               return;
             }
             
-            // Загружаем литургические опции для даты (это автоматически кэширует days)
-            // Firebase persistent cache автоматически использует кэш при повторных запросах
+            // Загружаем літургічныя апцыі для даты (гэта аўтаматычна кэшуе days)
+            // Firebase persistent cache аўтаматычна выкарыстоўвае кэш пры паўторных запытах
             await getLiturgicalOptionsForDate(currentDate.toDate());
             
-            // Отмечаем как загруженную
+            // Адзначаем як загружаную
             markDateAsLoaded(currentDate);
             
             processed++;
             if (processed % 20 === 0) {
-              logger.log(`[CacheWarmup] Прагрэў days: ${processed}/${totalDays} дзён (прапушчана: ${skipped})`);
+              logger.log(`[CacheWarmup] Days warmup progress: ${processed}/${totalDays} days (skipped: ${skipped})`);
             }
           } catch (error) {
-            logger.error(`[CacheWarmup] Памылка пры прагрэве days для ${currentDate.format('YYYY-MM-DD')}:`, error);
+            logger.error(`[CacheWarmup] Error during days warmup for ${currentDate.format('YYYY-MM-DD')}:`, error);
             processed++;
           }
         })();
@@ -261,16 +262,16 @@ export async function warmupDays(startDate, endDate, prioritizeNear = true) {
       await Promise.all(batch);
     }
     
-    logger.log(`[CacheWarmup] Прагрэў days завершаны (${processed}/${totalDays} дзён, прапушчана: ${skipped})`);
+    logger.log(`[CacheWarmup] Days warmup complete (${processed}/${totalDays} days, skipped: ${skipped})`);
   } catch (error) {
-    logger.error('[CacheWarmup] Памылка пры прагрэве days:', error);
+    logger.error('[CacheWarmup] Error during days warmup:', error);
   }
 }
 
 /**
- * Проверяет покрытие кэша days на неделю вперед
- * Использует getDocFromCache для проверки наличия данных в кэше
- * @returns {Promise<boolean>} true если есть данные на неделю вперед, false если нет
+ * Правярае пакрыццё кэшу days на тыдзень наперад
+ * Выкарыстоўвае getDocFromCache для праверкі наяўнасці даных у кэшы
+ * @returns {Promise<boolean>} true калі ёсць даныя на тыдзень наперад, false калі няма
  */
 export async function checkDaysCacheCoverage() {
   try {
@@ -279,99 +280,98 @@ export async function checkDaysCacheCoverage() {
     
     const { computeLiturgicalContextForDate } = useLiturgicalDay();
     
-    // Вычисляем контекст для проверки
+    // Вылічаем кантэкст для праверкі
     const context = await computeLiturgicalContextForDate(weekAhead.toDate());
     
-    // Проверяем наличие данных в кэше через попытку загрузки
-    // Firebase persistent cache автоматически использует кэш при повторных запросах
-    // Если данные есть в кэше, запрос будет мгновенным
+    // Правяраем наяўнасць даных у кэшы праз спробу загрузкі
+    // Firebase persistent cache аўтаматычна выкарыстоўвае кэш пры паўторных запытах
+    // Калі даныя ёсць у кэшы, запыт будзе імгненным
     const startCheck = Date.now();
     try {
       const { getLiturgicalOptionsForDate } = useLiturgicalDay();
       await getLiturgicalOptionsForDate(weekAhead.toDate());
       const duration = Date.now() - startCheck;
       
-      // Если запрос выполнился очень быстро (< 50ms), вероятно данные были в кэше
+      // Калі запыт выканаўся вельмі хутка (< 50ms), верагодна даныя былі ў кэшы
       if (duration < 50) {
-        logger.log('[CacheWarmup] Пакрыццё days кэшу на тыдзень наперад: ёсць (хуткі доступ)');
+        logger.log('[CacheWarmup] Days cache coverage for week ahead: present (fast access)');
         return true;
       } else {
-        // Данные загрузились, но не из кэша - значит кэша не было
-        logger.log('[CacheWarmup] Пакрыццё days кэшу на тыдзень наперад: няма (патрабавалася загрузка)');
+        // Даныя загрузіліся, але не з кэшу — значыць кэшу не было
+        logger.log('[CacheWarmup] Days cache coverage for week ahead: absent (load was required)');
         return false;
       }
     } catch (error) {
-      logger.log('[CacheWarmup] Пакрыццё days кэшу на тыдзень наперад: няма (памылка)');
+      logger.log('[CacheWarmup] Days cache coverage for week ahead: absent (error)');
       return false;
     }
   } catch (error) {
-    logger.error('[CacheWarmup] Памылка пры праверцы пакрыцця days кэшу:', error);
+    logger.error('[CacheWarmup] Error checking days cache coverage:', error);
     return false;
   }
 }
 
 /**
- * Обеспечивает покрытие кэша days на неделю вперед
- * Если данных нет, загружает еще 30 дней вперед
+ * Забяспечвае пакрыццё кэшу days на тыдзень наперад
+ * Калі даных няма, загружае яшчэ 30 дзён наперад
  */
 export async function ensureDaysCacheCoverage() {
   try {
     const hasCoverage = await checkDaysCacheCoverage();
     
     if (!hasCoverage) {
-      logger.log('[CacheWarmup] Пакрыцця days кэшу недастаткова, загружаем яшчэ 30 дзён наперад...');
+      logger.log('[CacheWarmup] Days cache coverage insufficient, loading 30 more days ahead...');
       
       const today = moment().startOf('day');
-      const startDate = today.clone().add(30, 'days'); // Начинаем с 30-го дня от сегодня
-      const endDate = today.clone().add(60, 'days'); // Загружаем до 60-го дня
+      const startDate = today.clone().add(30, 'days'); // Пачынаем з 30-га дня ад сёння
+      const endDate = today.clone().add(60, 'days'); // Загружаем да 60-га дня
       
       await warmupDays(startDate.toDate(), endDate.toDate());
-      logger.log('[CacheWarmup] Дадатковае пакрыццё days кэшу завершана');
+      logger.log('[CacheWarmup] Additional days cache coverage complete');
     } else {
-      logger.log('[CacheWarmup] Пакрыццё days кэшу дастатковае');
+      logger.log('[CacheWarmup] Days cache coverage is sufficient');
     }
   } catch (error) {
-    logger.error('[CacheWarmup] Памылка пры забеспячэнні пакрыцця days кэшу:', error);
+    logger.error('[CacheWarmup] Error ensuring days cache coverage:', error);
   }
 }
 
 /**
- * Главная функция прогрева кэша
- * Запускает предзагрузку всех коллекций в фоне
- * Оптимизирована для параллельной загрузки и пропуска уже закэшированных данных
- * Использует приоритизацию: сначала ближайшие дни, потом дальние
+ * Галоўная функцыя прагрэву кэшу
+ * Запускае перадзагрузку ўсіх калекцый у фоне
+ * Аптымізавана для паралельнай загрузкі і прапуску ўжо закэшаваных даных
+ * Выкарыстоўвае прыярытызацыю: спачатку бліжэйшыя дні, потым далёкія
  */
 export async function warmupCache() {
   try {
-    logger.log('[CacheWarmup] Пачатак прагрэву кэшу...');
+    logger.log('[CacheWarmup] Starting cache warmup...');
     const startTime = Date.now();
     
     const today = moment().startOf('day');
-    const endDate = today.clone().add(30, 'days'); // Загружаем на месяц вперед
+    const endDate = today.clone().add(30, 'days'); // Загружаем на месяц наперад
     
-    // Шаг 1: Загружаем базовые коллекции параллельно (они независимы)
-    logger.log('[CacheWarmup] Крок 1: Загрузка yearOptions і prayers...');
+    // Крок 1: Загружаем базавыя калекцыі паралельна (яны незалежныя)
+    logger.log('[CacheWarmup] Step 1: Loading yearOptions and prayers...');
     await Promise.all([
       warmupYearOptions(),
       warmupPrayers(),
     ]);
     
-    // Шаг 2: Загружаем readings и days параллельно с приоритизацией ближайших дней
-    // Приоритизация: сначала сегодня и ближайшие дни, потом дальние
-    logger.log('[CacheWarmup] Крок 2: Загрузка readings і days (з прыярытэтам бліжэйшых дзён)...');
+    // Крок 2: Загружаем readings і days паралельна з прыярытызацыяй бліжэйшых дзён
+    // Прыярытызацыя: спачатку сёння і бліжэйшыя дні, потым далёкія
+    logger.log('[CacheWarmup] Step 2: Loading readings and days (prioritizing nearest days)...');
     await Promise.all([
       warmupReadings(today.toDate(), endDate.toDate(), true),
       warmupDays(today.toDate(), endDate.toDate(), true),
     ]);
     
-    // Шаг 3: Проверяем и обновляем покрытие days кэша
-    logger.log('[CacheWarmup] Крок 3: Праверка пакрыцця days кэшу...');
+    // Крок 3: Правяраем і абнаўляем пакрыццё days кэшу
+    logger.log('[CacheWarmup] Step 3: Checking days cache coverage...');
     await ensureDaysCacheCoverage();
     
     const duration = Date.now() - startTime;
-    logger.log(`[CacheWarmup] ✅ Прагрэў кэшу завершаны за ${(duration / 1000).toFixed(2)} секунд`);
+    logger.log(`[CacheWarmup] Cache warmup complete in ${(duration / 1000).toFixed(2)} seconds`);
   } catch (error) {
-    logger.error('[CacheWarmup] Памылка пры прагрэве кэшу:', error);
+    logger.error('[CacheWarmup] Error during cache warmup:', error);
   }
 }
-
