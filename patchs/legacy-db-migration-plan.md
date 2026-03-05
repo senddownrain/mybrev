@@ -96,7 +96,7 @@
 2. Для каждой строки сделать lookup по ID в соответствующих таблицах.
 3. Собрать нормализованный объект `day` в нашей схеме.
 4. Нормализовать `_date` в `DD.MM`, пустые строки в `null`, `Alleluia` в boolean.
-5. Сохранить в промежуточный JSON для ручной проверки, затем импорт в Firestore `days`.
+5. Сохранить в промежуточный JSON для ручной проверки, затем импорт в Firestore `oldDays`.
 
 ## 5) Инструмент анализа
 
@@ -109,3 +109,18 @@ node patchs/legacy-json-migration-analysis.mjs
 ```
 
 Он формирует `patchs/json/legacy-db-analysis-report.json` со сводкой таблиц/колонок и проверкой связей `Bridge -> справочники`.
+
+
+## 6) Готовый скрипт миграции в `oldDays`
+
+Добавлен скрипт: `patchs/migrate-legacy-json-to-olddays.mjs`
+
+```bash
+# 1) Собрать промежуточный JSON для ручной проверки
+node patchs/migrate-legacy-json-to-olddays.mjs
+
+# 2) (Опционально) сразу импортировать в Firestore collection oldDays
+node patchs/migrate-legacy-json-to-olddays.mjs --write
+```
+
+По умолчанию промежуточный файл создается в `patchs/json/oldDays-migration-preview.json`.
