@@ -14,6 +14,14 @@ const writeMode = args.includes('--write');
 const outArg = args.find((a) => a.startsWith('--out='));
 const outputPath = outArg ? path.resolve(outArg.slice('--out='.length)) : DEFAULT_OUT;
 
+const batchSizeArg = args.find((a) => a.startsWith('--batch-size='));
+const maxRetriesArg = args.find((a) => a.startsWith('--max-retries='));
+const retryDelayArg = args.find((a) => a.startsWith('--retry-delay-ms='));
+
+const batchSize = Math.max(1, Number.parseInt(batchSizeArg?.slice('--batch-size='.length) || '40', 10) || 40);
+const maxRetries = Math.max(0, Number.parseInt(maxRetriesArg?.slice('--max-retries='.length) || '5', 10) || 5);
+const retryDelayMs = Math.max(50, Number.parseInt(retryDelayArg?.slice('--retry-delay-ms='.length) || '1000', 10) || 1000);
+
 const WEEKDAY_MAP = new Map([
   ['нядзеля', 1],
   ['нядзелю', 1],
@@ -36,6 +44,43 @@ const WEEKDAY_MAP = new Map([
   ['суббота', 7],
   ['сб', 7],
 ]);
+
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+function isRetryableFirestoreError(error) {
+  const code = Number(error?.code);
+  const msg = String(error?.message || '').toUpperCase();
+  return code === 4 || code === 14 || msg.includes('DEADLINE_EXCEEDED') || msg.includes('UNAVAILABLE');
+}
+
+async function commitWithRetry(batch, meta) {
+  let attempt = 0;
+  while (true) {
+    attempt += 1;
+    try {
+      await batch.commit();
+      if (attempt > 1) {
+        console.log(`[oldDays import] batch ${meta.batchNumber} succeeded on retry #${attempt - 1}`);
+      }
+      return;
+    } catch (error) {
+      const retryable = isRetryableFirestoreError(error);
+      if (!retryable || attempt > (maxRetries + 1)) {
+        throw error;
+      }
+      const delay = retryDelayMs * (2 ** (attempt - 1));
+      console.warn(
+        `[oldDays import] batch ${meta.batchNumber} failed (attempt ${attempt}/${maxRetries + 1}) with ${error?.code || 'unknown'}: ${error?.message || error}. Retrying in ${delay}ms...`,
+      );
+      await sleep(delay);
+    }
+  }
+}
 
 function parsePhpMyAdminJson(filePath) {
   const raw = fs.readFileSync(filePath, 'utf8');
@@ -391,6 +436,7 @@ async function writeToFirestore(records) {
   let batch = db.batch();
   let ops = 0;
   let written = 0;
+  let batchNumber = 0;
 
   for (const record of records) {
     if (!record.id) continue;
@@ -399,14 +445,21 @@ async function writeToFirestore(records) {
     ops += 1;
     written += 1;
 
-    if (ops >= 400) {
-      await batch.commit();
+    if (ops >= batchSize) {
+      batchNumber += 1;
+      await commitWithRetry(batch, { batchNumber });
       batch = db.batch();
       ops = 0;
+      console.log(`[oldDays import] committed batch ${batchNumber}, total written: ${written}`);
     }
   }
 
-  if (ops > 0) await batch.commit();
+  if (ops > 0) {
+    batchNumber += 1;
+    await commitWithRetry(batch, { batchNumber });
+    console.log(`[oldDays import] committed batch ${batchNumber}, total written: ${written}`);
+  }
+
   return written;
 }
 
@@ -496,10 +549,12 @@ function main() {
   console.log(`Unresolved _periodType/_periodWeekNumber: ${stats.unresolvedPeriod.length}`);
 
   if (writeMode) {
+    console.log(`Write settings: batchSize=${batchSize}, maxRetries=${maxRetries}, retryDelayMs=${retryDelayMs}`);
     const written = await writeToFirestore(records);
     console.log(`Firestore write done. Collection: oldDays, docs written: ${written}`);
   } else {
     console.log('Dry-run mode. Use --write to import into Firestore collection oldDays.');
+    console.log(`Write settings: batchSize=${batchSize}, maxRetries=${maxRetries}, retryDelayMs=${retryDelayMs}`);
   }
 })().catch((error) => {
   console.error('Migration script failed:', error);

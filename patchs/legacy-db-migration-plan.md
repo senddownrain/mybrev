@@ -122,6 +122,11 @@ node patchs/migrate-legacy-json-to-olddays.mjs
 
 # 2) (Опционально) сразу импортировать в Firestore collection oldDays
 node patchs/migrate-legacy-json-to-olddays.mjs --write
+
+# 3) Если сеть нестабильная — уменьшить batch и включить ретраи
+node patchs/migrate-legacy-json-to-olddays.mjs --write --batch-size=20 --max-retries=7 --retry-delay-ms=1500
 ```
 
 По умолчанию промежуточный файл создается в `patchs/json/oldDays-migration-preview.json`.
+Для записи в Firestore по умолчанию используются параметры: `batchSize=40`, `maxRetries=5`, `retryDelayMs=1000`
+(скрипт автоматически повторяет `DEADLINE_EXCEEDED/UNAVAILABLE`).
