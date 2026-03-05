@@ -10,7 +10,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
 
-      <v-app-bar-title>
+      <v-app-bar-title class="admin-title" @click="goToAdminHome">
         Адмін-панель
       </v-app-bar-title>
 
@@ -45,10 +45,18 @@ const goBack = () => {
     router.push('/');
   }
 };
+
+const goToAdminHome = () => {
+  router.push('/admin');
+};
 </script>
 
 <style scoped>
 .app-bar-border {
   border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+}
+
+.admin-title {
+  cursor: pointer;
 }
 </style>
