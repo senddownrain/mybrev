@@ -13,6 +13,16 @@
       · Дынамічныя: <b>{{ dynamicItems.length }}</b>
     </v-alert>
 
+    <v-card class="mb-4" variant="tonal">
+      <v-card-text class="py-3">
+        <div class="d-flex align-center justify-space-between flex-wrap ga-2 mb-2">
+          <div class="text-subtitle-2">Праверана элементаў карты календара</div>
+          <div class="text-body-2">{{ checkedItemsCount }} / {{ items.length }} ({{ checkedItemsPercent }}%)</div>
+        </div>
+        <v-progress-linear :model-value="checkedItemsPercent" color="success" height="10" rounded />
+      </v-card-text>
+    </v-card>
+
     <v-card v-if="isLoading" class="mb-4" variant="outlined">
       <v-card-text>
         <div class="mb-2">{{ loadingText }}</div>
@@ -31,11 +41,20 @@
             >
               <v-expansion-panel-text>
                 <v-list density="compact">
-                  <v-list-item v-for="item in group.items" :key="item.id" @click="openItem(item.id)">
+                  <v-list-item v-for="item in group.items" :key="item.id" :class="{ 'checked-item': isChecked(item) }" @click="openItem(item.id)">
                     <v-list-item-title>
                       {{ item._periodWeekNumber ?? '—' }} • {{ weekdayLabel(item._dayOfWeek) }}
                     </v-list-item-title>
                     <v-list-item-subtitle>{{ item._feastName || item._date || item.id }}</v-list-item-subtitle>
+                    <template #append>
+                      <v-checkbox-btn
+                        :model-value="isChecked(item)"
+                        color="success"
+                        class="mr-1"
+                        @click.stop
+                        @update:model-value="toggleChecked(item, $event)"
+                      />
+                    </template>
                   </v-list-item>
                 </v-list>
               </v-expansion-panel-text>
@@ -52,9 +71,18 @@
       <v-expansion-panel title="Па даце">
         <v-expansion-panel-text>
           <v-list density="compact">
-            <v-list-item v-for="item in dateItems" :key="item.id" @click="openItem(item.id)">
+            <v-list-item v-for="item in dateItems" :key="item.id" :class="{ 'checked-item': isChecked(item) }" @click="openItem(item.id)">
               <v-list-item-title>{{ item._date }}</v-list-item-title>
               <v-list-item-subtitle>{{ item._feastName || item._periodType || item.id }}</v-list-item-subtitle>
+              <template #append>
+                <v-checkbox-btn
+                  :model-value="isChecked(item)"
+                  color="success"
+                  class="mr-1"
+                  @click.stop
+                  @update:model-value="toggleChecked(item, $event)"
+                />
+              </template>
             </v-list-item>
             <v-list-item v-if="!dateItems.length">
               <v-list-item-title class="text-medium-emphasis">Няма элементаў з _date</v-list-item-title>
@@ -66,9 +94,18 @@
       <v-expansion-panel title="Дынамічныя дні">
         <v-expansion-panel-text>
           <v-list density="compact">
-            <v-list-item v-for="item in dynamicItems" :key="item.id" @click="openItem(item.id)">
+            <v-list-item v-for="item in dynamicItems" :key="item.id" :class="{ 'checked-item': isChecked(item) }" @click="openItem(item.id)">
               <v-list-item-title>{{ item._feast }}</v-list-item-title>
               <v-list-item-subtitle>{{ item._feastName || item._periodType || item.id }}</v-list-item-subtitle>
+              <template #append>
+                <v-checkbox-btn
+                  :model-value="isChecked(item)"
+                  color="success"
+                  class="mr-1"
+                  @click.stop
+                  @update:model-value="toggleChecked(item, $event)"
+                />
+              </template>
             </v-list-item>
             <v-list-item v-if="!dynamicItems.length">
               <v-list-item-title class="text-medium-emphasis">Няма элементаў з _feast</v-list-item-title>
@@ -119,6 +156,9 @@
               <v-col cols="12" md="4"><v-text-field v-model="form._psalmWeek" label="_psalmWeek" /></v-col>
               <v-col cols="12" md="6"><v-text-field v-model="form._feastName" label="_feastName" /></v-col>
               <v-col cols="12" md="6"><v-text-field v-model="form._feastType" label="_feastType" /></v-col>
+              <v-col cols="12" md="4" class="d-flex align-center">
+                <v-checkbox v-model="form._isChecked" label="Праверана" color="success" hide-details />
+              </v-col>
 
               <v-col cols="12" md="4">
                 <v-autocomplete v-model="form.templateRef" :items="templateOptions" item-title="label" item-value="id" label="templateRef" clearable />
@@ -172,7 +212,7 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
-import { addDoc, collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useFirestore } from 'vuefire';
 import InlineEditor from '@/components/admin/InlineEditor.vue';
 import { useNotifier } from '@/composables/useNotifier';
@@ -243,6 +283,11 @@ const periodGroups = computed(() => {
 const dateItems = computed(() => items.value.filter((item) => item._date));
 const dynamicItems = computed(() => items.value.filter((item) => item._feast));
 const selectedItem = computed(() => items.value.find((item) => item.id === selectedId.value));
+const checkedItemsCount = computed(() => items.value.filter((item) => isChecked(item)).length);
+const checkedItemsPercent = computed(() => {
+  if (!items.value.length) return 0;
+  return Math.round((checkedItemsCount.value / items.value.length) * 100);
+});
 
 const dialogTitle = computed(() => {
   if (isNewItem.value) return 'Новы элемент calendarMap';
@@ -297,6 +342,10 @@ function hasValue(value) {
   return value !== null && value !== undefined && String(value).trim() !== '';
 }
 
+function isChecked(item) {
+  return item?._isChecked === true;
+}
+
 function weekdayLabel(day) {
   return WEEKDAY_LABEL_MAP[day] || day || '—';
 }
@@ -311,6 +360,8 @@ function getEmptyItem() {
     _psalmWeek: '',
     _feastName: '',
     _feastType: '',
+    _isChecked: false,
+    _checkedAt: null,
     templateRef: null,
     compRef: null,
     readingRef: null,
@@ -367,10 +418,26 @@ function createNew() {
 
 function buildPayload() {
   const payload = {};
-  [...CALENDAR_MAP_FIELDS, 'templateRef', 'readingRef', 'compRef'].forEach((field) => {
+  [...CALENDAR_MAP_FIELDS, 'templateRef', 'readingRef', 'compRef', '_isChecked', '_checkedAt'].forEach((field) => {
     payload[field] = form[field] ?? null;
   });
+  payload._isChecked = form._isChecked === true;
+  payload._checkedAt = form._isChecked ? (form._checkedAt || new Date().toISOString()) : null;
   return payload;
+}
+
+async function toggleChecked(item, checkedValue) {
+  try {
+    await setDoc(doc(db, 'calendarMap', item.id), {
+      _isChecked: checkedValue,
+      _checkedAt: checkedValue ? serverTimestamp() : null,
+    }, { merge: true });
+    item._isChecked = checkedValue;
+    item._checkedAt = checkedValue ? new Date().toISOString() : null;
+    success(checkedValue ? 'Элемент пазначаны як правераны.' : 'Пазнака праверкі знятая.');
+  } catch (e) {
+    error(`Не атрымалася абнавіць пазнаку праверкі: ${e?.message || e}`);
+  }
 }
 
 async function saveItem() {
@@ -410,3 +477,9 @@ async function removeItem() {
 
 onMounted(loadAll);
 </script>
+
+<style scoped>
+.checked-item {
+  background-color: rgba(var(--v-theme-success), 0.12);
+}
+</style>

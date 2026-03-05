@@ -8,13 +8,34 @@
       </v-btn>
     </div>
 
+    <v-card class="mb-4" variant="tonal">
+      <v-card-text class="py-3">
+        <div class="d-flex align-center justify-space-between flex-wrap ga-2 mb-2">
+          <div class="text-subtitle-2">Праверана шаблонаў</div>
+          <div class="text-body-2">{{ checkedTemplatesCount }} / {{ templates.length }} ({{ checkedTemplatesPercent }}%)</div>
+        </div>
+        <v-progress-linear :model-value="checkedTemplatesPercent" color="success" height="10" rounded />
+      </v-card-text>
+    </v-card>
+
     <v-expansion-panels variant="accordion">
       <v-expansion-panel v-for="group in groupedTemplates" :key="group.key" :title="group.title">
         <v-expansion-panel-text>
           <v-list lines="two">
-            <v-list-item v-for="item in group.items" :key="item.id" :subtitle="buildSubtitle(item)">
+            <v-list-item
+              v-for="item in group.items"
+              :key="item.id"
+              :subtitle="buildSubtitle(item)"
+              :class="{ 'checked-item': isChecked(item) }"
+            >
               <template #title>{{ item._title || '(без назвы)' }}</template>
               <template #append>
+                <v-checkbox-btn
+                  :model-value="isChecked(item)"
+                  color="success"
+                  class="mr-1"
+                  @update:model-value="toggleChecked(item, $event)"
+                />
                 <v-btn icon="mdi-pencil" size="small" variant="text" @click="editTemplate(item.id)"></v-btn>
                 <v-btn icon="mdi-delete" size="small" variant="text" color="error" @click="deleteTemplate(item.id)"></v-btn>
               </template>
@@ -43,7 +64,7 @@
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCollection, useFirestore } from 'vuefire';
-import { collection, deleteDoc, doc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
 import { useNotifier } from '@/composables/useNotifier';
 
@@ -52,6 +73,12 @@ const router = useRouter();
 const { success, error } = useNotifier();
 const templates = useCollection(collection(db, 'dayTemplates'));
 const WEEKDAY_NUMBERS = [1, 2, 3, 4, 5, 6, 7];
+
+const checkedTemplatesCount = computed(() => templates.value.filter((item) => isChecked(item)).length);
+const checkedTemplatesPercent = computed(() => {
+  if (!templates.value.length) return 0;
+  return Math.round((checkedTemplatesCount.value / templates.value.length) * 100);
+});
 
 function parseWeekNumber(value) {
   const parsed = Number(value);
@@ -149,6 +176,10 @@ function buildSubtitle(item) {
   return `${week} • Дзень: ${day}`;
 }
 
+function isChecked(item) {
+  return item?._isChecked === true;
+}
+
 function editTemplate(id) {
   router.push({ name: 'AdminDayTemplateEditor', params: { id } });
 }
@@ -162,4 +193,22 @@ async function deleteTemplate(id) {
     error(`Не атрымалася выдаліць шаблон: ${e?.message || e}`);
   }
 }
+
+async function toggleChecked(item, checkedValue) {
+  try {
+    await updateDoc(doc(db, 'dayTemplates', item.id), {
+      _isChecked: checkedValue,
+      _checkedAt: checkedValue ? serverTimestamp() : null,
+    });
+    success(checkedValue ? 'Шаблон пазначаны як правераны.' : 'Пазнака праверкі знятая.');
+  } catch (e) {
+    error(`Не атрымалася абнавіць пазнаку праверкі: ${e?.message || e}`);
+  }
+}
 </script>
+
+<style scoped>
+.checked-item {
+  background-color: rgba(var(--v-theme-success), 0.12);
+}
+</style>

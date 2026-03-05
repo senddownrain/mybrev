@@ -62,6 +62,9 @@
             variant="outlined"
           />
         </v-col>
+        <v-col cols="12" md="6" class="d-flex align-center">
+          <v-checkbox v-model="form._isChecked" label="Праверана" color="success" hide-details />
+        </v-col>
 
         <v-col v-for="field in contentFields" :key="field" cols="12" md="6">
           <v-textarea
@@ -123,6 +126,8 @@ const form = ref({
   title: '',
   _dayOfWeek: null,
   _periodType: null,
+  _isChecked: false,
+  _checkedAt: null,
   compHymn: '',
   compAnt1: '',
   compAnt2: '',
@@ -222,6 +227,8 @@ async function saveTemplate() {
       title: form.value.title,
       _dayOfWeek: form.value._dayOfWeek,
       _periodType: form.value._periodType,
+      _isChecked: form.value._isChecked === true,
+      _checkedAt: form.value._isChecked ? (form.value._checkedAt || new Date().toISOString()) : null,
       updatedAt: serverTimestamp(),
     };
 
