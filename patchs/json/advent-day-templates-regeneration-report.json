@@ -1,7 +1,6 @@
 {
   "sourceCollection": "oldDays",
-  "fallbackUsed": true,
-  "deletedTemplates": 14,
+  "deletedTemplates": 20,
   "yearsScanned": [
     2025,
     2024,
@@ -11,102 +10,8 @@
     2020,
     2019
   ],
-  "windows": [
-    {
-      "year": 2025,
-      "from": "2025-11-30",
-      "to": "2025-12-16"
-    },
-    {
-      "year": 2024,
-      "from": "2024-12-01",
-      "to": "2024-12-16"
-    },
-    {
-      "year": 2023,
-      "from": "2023-12-03",
-      "to": "2023-12-16"
-    },
-    {
-      "year": 2022,
-      "from": "2022-11-27",
-      "to": "2022-12-16"
-    },
-    {
-      "year": 2021,
-      "from": "2021-11-28",
-      "to": "2021-12-16"
-    },
-    {
-      "year": 2020,
-      "from": "2020-11-29",
-      "to": "2020-12-16"
-    },
-    {
-      "year": 2019,
-      "from": "2019-12-01",
-      "to": "2019-12-16"
-    }
-  ],
   "stats": {
-    "totalRowsLoaded": 2090,
     "createdTemplates": 20,
-    "missingTemplateSlots": [
-      "advent-psalmweek-3-day-7",
-      "advent-psalmweek-4-day-1",
-      "advent-psalmweek-4-day-2",
-      "advent-psalmweek-4-day-3",
-      "advent-psalmweek-4-day-4",
-      "advent-psalmweek-4-day-5",
-      "advent-psalmweek-4-day-6",
-      "advent-psalmweek-4-day-7"
-    ],
-    "missingAdventDaysByYear": {
-      "2019": [
-        "2019-12-03",
-        "2019-12-07",
-        "2019-12-09",
-        "2019-12-13",
-        "2019-12-14"
-      ],
-      "2020": [
-        "2020-12-01",
-        "2020-12-07",
-        "2020-12-08",
-        "2020-12-14"
-      ],
-      "2021": [
-        "2021-12-07",
-        "2021-12-08",
-        "2021-12-13",
-        "2021-12-14"
-      ],
-      "2022": [
-        "2022-11-30",
-        "2022-12-03",
-        "2022-12-07",
-        "2022-12-08",
-        "2022-12-13",
-        "2022-12-14"
-      ],
-      "2023": [
-        "2023-12-08",
-        "2023-12-13",
-        "2023-12-14"
-      ],
-      "2024": [
-        "2024-12-03",
-        "2024-12-07",
-        "2024-12-09",
-        "2024-12-13",
-        "2024-12-14"
-      ],
-      "2025": [
-        "2025-12-03",
-        "2025-12-08",
-        "2025-12-13"
-      ]
-    },
     "missingPsalmWeek": [
       {
         "date": "2023-12-07",
@@ -130,6 +35,16 @@
       }
     ],
     "missingSaturdayForVesper1": [],
+    "missingTemplateSlots": [
+      "advent-psalmweek-3-day-7",
+      "advent-psalmweek-4-day-1",
+      "advent-psalmweek-4-day-2",
+      "advent-psalmweek-4-day-3",
+      "advent-psalmweek-4-day-4",
+      "advent-psalmweek-4-day-5",
+      "advent-psalmweek-4-day-6",
+      "advent-psalmweek-4-day-7"
+    ],
     "filledFrom": {
       "advent-psalmweek-1-day-1": {
         "year": 2025,
