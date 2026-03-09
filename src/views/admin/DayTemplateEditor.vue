@@ -69,6 +69,12 @@
           <v-expansion-panel-text class="pa-1"><v-row no-gutters><InlineEditor v-model="templateData.feastComment" field-title="Каментар" /></v-row></v-expansion-panel-text>
         </v-expansion-panel>
 
+        <v-expansion-panel title="Інвітаторый">
+          <v-expansion-panel-text class="pa-1"><v-row no-gutters>
+            <InlineEditor v-model="templateData.invitatoriumAnt" field-title="Антыфона (Інвітаторый)" />
+          </v-row></v-expansion-panel-text>
+        </v-expansion-panel>
+
         <v-expansion-panel title="Гадзіна Чытанняў">
           <v-expansion-panel-text class="pa-1"><v-row no-gutters>
             <InlineEditor v-model="templateData.officeOfReadingsHymn" field-title="Гімн (ГЧ)" />
@@ -138,24 +144,29 @@
 
         <v-expansion-panel title="Нешпары">
           <v-expansion-panel-text class="pa-1"><v-row no-gutters>
-            <InlineEditor v-model="templateData.vesperHymn" field-title="Гімн (Нешпары)" />
+            <InlineEditor v-model="templateData.vesper1Hymn" field-title="Гімн (Першыя Нешпары)" />
             <InlineEditor v-model="templateData.vesper1Ant1" field-title="Антыфона 1 (Першыя Нешпары)" />
             <InlineEditor v-model="templateData.vesper1Ps1" field-title="Псалом 1 (Першыя Нешпары)" />
             <InlineEditor v-model="templateData.vesper1Ant2" field-title="Антыфона 2 (Першыя Нешпары)" />
             <InlineEditor v-model="templateData.vesper1Ps2" field-title="Псалом 2 (Першыя Нешпары)" />
             <InlineEditor v-model="templateData.vesper1Ant3" field-title="Антыфона 3 (Першыя Нешпары)" />
             <InlineEditor v-model="templateData.vesper1Ps3" field-title="Псалом 3 (Першыя Нешпары)" />
+            <InlineEditor v-model="templateData.vesper1R" field-title="Кароткае чытанне (Першыя Нешпары)" />
+            <InlineEditor v-model="templateData.vesper1AntMag" field-title="Антыфона да Песні Марыі (Першыя Нешпары)" />
+            <InlineEditor v-model="templateData.vesper1Inter" field-title="Просьбы (Першыя Нешпары)" />
+            <InlineEditor v-model="templateData.vesper1Pr" field-title="Малітва (Першыя Нешпары)" />
 
+            <InlineEditor v-model="templateData.vesperHymn" field-title="Гімн (Другія Нешпары)" />
             <InlineEditor v-model="templateData.vesperAnt1" field-title="Антыфона 1 (Другія Нешпары)" />
             <InlineEditor v-model="templateData.vesperPs1" field-title="Псалом 1 (Другія Нешпары)" />
             <InlineEditor v-model="templateData.vesperAnt2" field-title="Антыфона 2 (Другія Нешпары)" />
             <InlineEditor v-model="templateData.vesperPs2" field-title="Псалом 2 (Другія Нешпары)" />
             <InlineEditor v-model="templateData.vesperAnt3" field-title="Антыфона 3 (Другія Нешпары)" />
             <InlineEditor v-model="templateData.vesperPs3" field-title="Псалом 3 (Другія Нешпары)" />
-            <InlineEditor v-model="templateData.vesperR" field-title="Кароткае чытанне (Нешпары)" />
-            <InlineEditor v-model="templateData.vesperAntMag" field-title="Антыфона да Песні Марыі" />
-            <InlineEditor v-model="templateData.vesperInter" field-title="Просьбы (Нешпары)" />
-            <InlineEditor v-model="templateData.vesperPr" field-title="Малітва (Нешпары)" />
+            <InlineEditor v-model="templateData.vesperR" field-title="Кароткае чытанне (Другія Нешпары)" />
+            <InlineEditor v-model="templateData.vesperAntMag" field-title="Антыфона да Песні Марыі (Другія Нешпары)" />
+            <InlineEditor v-model="templateData.vesperInter" field-title="Просьбы (Другія Нешпары)" />
+            <InlineEditor v-model="templateData.vesperPr" field-title="Малітва (Другія Нешпары)" />
           </v-row></v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
