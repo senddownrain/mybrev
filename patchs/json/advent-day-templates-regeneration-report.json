@@ -1,0 +1,131 @@
+{
+  "sourceCollection": "oldDays",
+  "deletedTemplates": 20,
+  "yearsScanned": [
+    2025,
+    2024,
+    2023,
+    2022,
+    2021,
+    2020,
+    2019
+  ],
+  "stats": {
+    "createdTemplates": 20,
+    "missingPsalmWeek": [
+      {
+        "date": "2023-12-07",
+        "feastName": "СВ.АМБРОЗІЯ,<br>БІСКУПА І ДОКТАРА КАСЦЁЛА"
+      },
+      {
+        "date": "2021-11-30",
+        "feastName": "СВ.АНДРЭЯ, АПОСТАЛА"
+      },
+      {
+        "date": "2021-12-03",
+        "feastName": "СВ.ФРАНЦІШКА КСАВЭРЫЯ,<br>ПРЭЗБІТЭРА"
+      },
+      {
+        "date": "2020-11-30",
+        "feastName": "СВ.АНДРЭЯ, АПОСТАЛА"
+      },
+      {
+        "date": "2020-12-03",
+        "feastName": "СВ.ФРАНЦІШКА КСАВЭРЫЯ,<br>ПРЭЗБІТЭРА"
+      }
+    ],
+    "missingSaturdayForVesper1": [],
+    "missingTemplateSlots": [
+      "advent-psalmweek-3-day-7",
+      "advent-psalmweek-4-day-1",
+      "advent-psalmweek-4-day-2",
+      "advent-psalmweek-4-day-3",
+      "advent-psalmweek-4-day-4",
+      "advent-psalmweek-4-day-5",
+      "advent-psalmweek-4-day-6",
+      "advent-psalmweek-4-day-7"
+    ],
+    "filledFrom": {
+      "advent-psalmweek-1-day-1": {
+        "year": 2025,
+        "date": "2025-11-30"
+      },
+      "advent-psalmweek-1-day-2": {
+        "year": 2025,
+        "date": "2025-12-01"
+      },
+      "advent-psalmweek-1-day-3": {
+        "year": 2025,
+        "date": "2025-12-02"
+      },
+      "advent-psalmweek-1-day-5": {
+        "year": 2025,
+        "date": "2025-12-04"
+      },
+      "advent-psalmweek-1-day-6": {
+        "year": 2025,
+        "date": "2025-12-05"
+      },
+      "advent-psalmweek-1-day-7": {
+        "year": 2025,
+        "date": "2025-12-06"
+      },
+      "advent-psalmweek-2-day-1": {
+        "year": 2025,
+        "date": "2025-12-07"
+      },
+      "advent-psalmweek-2-day-3": {
+        "year": 2025,
+        "date": "2025-12-09"
+      },
+      "advent-psalmweek-2-day-4": {
+        "year": 2025,
+        "date": "2025-12-10"
+      },
+      "advent-psalmweek-2-day-5": {
+        "year": 2025,
+        "date": "2025-12-11"
+      },
+      "advent-psalmweek-2-day-6": {
+        "year": 2025,
+        "date": "2025-12-12"
+      },
+      "advent-psalmweek-3-day-1": {
+        "year": 2025,
+        "date": "2025-12-14"
+      },
+      "advent-psalmweek-3-day-2": {
+        "year": 2025,
+        "date": "2025-12-15"
+      },
+      "advent-psalmweek-3-day-3": {
+        "year": 2025,
+        "date": "2025-12-16"
+      },
+      "advent-psalmweek-1-day-4": {
+        "year": 2024,
+        "date": "2024-12-04"
+      },
+      "advent-psalmweek-2-day-2": {
+        "year": 2023,
+        "date": "2023-12-11"
+      },
+      "advent-psalmweek-2-day-7": {
+        "year": 2023,
+        "date": "2023-12-16"
+      },
+      "advent-psalmweek-3-day-5": {
+        "year": 2022,
+        "date": "2022-12-15"
+      },
+      "advent-psalmweek-3-day-6": {
+        "year": 2022,
+        "date": "2022-12-16"
+      },
+      "advent-psalmweek-3-day-4": {
+        "year": 2021,
+        "date": "2021-12-15"
+      }
+    }
+  }
+}
