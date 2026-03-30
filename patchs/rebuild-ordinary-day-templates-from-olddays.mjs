@@ -2,7 +2,7 @@ import { writeFile } from 'node:fs/promises';
 import admin from 'firebase-admin';
 import serviceAccount from './serviceAccountKey.json' with { type: 'json' };
 
-const SOURCE_COLLECTION = 'oldDays';
+const SOURCE_COLLECTION_PRIMARY = 'oldDays';
 const TARGET_COLLECTION = 'dayTemplates';
 
 const ORDINARY_RANGES = [
@@ -14,17 +14,20 @@ const ORDINARY_RANGES = [
   { year: 2024, ordinary: [['2024-01-08', '2024-02-13'], ['2024-05-20', '2024-11-30']] },
   { year: 2025, ordinary: [['2025-01-13', '2025-03-04'], ['2025-06-09', '2025-11-29']] },
 ];
-const SEARCH_PHASES = [{ name: 'primary', min: 2, max: 5 }, { name: 'fallback', min: 10, max: 33 }];
+const SEARCH_PHASES = [
+  { name: 'primary', periodWeekMin: 2, periodWeekMax: 5 },
+  { name: 'fallback', periodWeekMin: 10, periodWeekMax: 33 },
+];
 const YEARS_DESC = ORDINARY_RANGES.map((x) => x.year).sort((a, b) => b - a);
 const WEEKDAY_LABELS = { 1: 'Нядзеля', 2: 'Панядзелак', 3: 'Аўторак', 4: 'Серада', 5: 'Чацвер', 6: 'Пятніца', 7: 'Субота' };
 
 const FIELDS = [
-  'invitatoriumAnt','laudesHymn','laudesAnt1','laudesAnt2','laudesAnt3','laudesPs1','laudesPs2','laudesPs3','laudesR','laudesInter','laudesPr',
+  'invitatoriumAnt','laudesHymn','laudesAnt1','laudesAnt2','laudesAnt3','laudesPs1','laudesPs2','laudesPs3','laudesR','laudesAntBen','laudesInter','laudesPr',
   'sext1Hymn','sext1Ant1','sext1Ant2','sext1Ant3','sext1Ps1','sext1Ps2','sext1Ps3','sext1R','sext1Pr',
   'sext2Hymn','sext2Ant1','sext2Ant2','sext2Ant3','sext2Ps1','sext2Ps2','sext2Ps3','sext2R','sext2Pr',
   'sext3Hymn','sext3Ant1','sext3Ant2','sext3Ant3','sext3Ps1','sext3Ps2','sext3Ps3','sext3R','sext3Pr',
-  'vesperHymn','vesperAnt1','vesperAnt2','vesperAnt3','vesperPs1','vesperPs2','vesperPs3','vesperR','vesperInter','vesperPr',
-  'vesper1Hymn','vesper1Ant1','vesper1Ant2','vesper1Ant3','vesper1Ps1','vesper1Ps2','vesper1Ps3','vesper1R','vesper1Inter','vesper1Pr',
+  'vesperHymn','vesperAnt1','vesperAnt2','vesperAnt3','vesperPs1','vesperPs2','vesperPs3','vesperR','vesperAntMag','vesperInter','vesperPr',
+  'vesper1Hymn','vesper1Ant1','vesper1Ant2','vesper1Ant3','vesper1Ps1','vesper1Ps2','vesper1Ps3','vesper1R','vesper1AntMag','vesper1Inter','vesper1Pr',
 ];
 
 const chunk=(arr,size=400)=>Array.from({length:Math.ceil(arr.length/size)},(_,i)=>arr.slice(i*size,(i+1)*size));
@@ -55,21 +58,37 @@ function payload(row, byDate, dateStr, psalmWeekNumber, dayOfWeek, report){
       p.vesper1Hymn=asNullable(sat.vesperHymn); p.vesper1Ant1=asNullable(sat.vesperAnt1); p.vesper1Ant2=asNullable(sat.vesperAnt2); p.vesper1Ant3=asNullable(sat.vesperAnt3);
       p.vesper1Ps1=asNullable(sat.vesperPs1); p.vesper1Ps2=asNullable(sat.vesperPs2); p.vesper1Ps3=asNullable(sat.vesperPs3); p.vesper1R=asNullable(sat.vesperR);
       p.vesper1Inter=asNullable(sat.vesperInter); p.vesper1Pr=asNullable(sat.vesperPr);
+
+      p.officeOfReadingsHymn=asNullable(sat.vesper1Hymn);
+      p.officeOfReadingsAnt1=asNullable(sat.vesper1Ant1);
+      p.officeOfReadingsAnt2=asNullable(sat.vesper1Ant2);
+      p.officeOfReadingsAnt3=asNullable(sat.vesper1Ant3);
+      p.officeOfReadingsPs1=asNullable(sat.vesper1Ps1);
+      p.officeOfReadingsPs2=asNullable(sat.vesper1Ps2);
+      p.officeOfReadingsPs3=asNullable(sat.vesper1Ps3);
+      p.officeOfReadingsVers=asNullable(sat.vesper1R);
     }
   }
+
+  if(dayOfWeek===1){
+    p.laudesAntBen=null;
+    p.vesperAntMag=null;
+    p.vesper1AntMag=null;
+  }
+
   return p;
 }
 
 async function main(){
   admin.initializeApp({credential:admin.credential.cert(serviceAccount)}); const db=admin.firestore();
-  const snap=await db.collection(SOURCE_COLLECTION).where(admin.firestore.FieldPath.documentId(),'>=','2019-01-01').where(admin.firestore.FieldPath.documentId(),'<=','2025-11-29').orderBy(admin.firestore.FieldPath.documentId()).get();
+  const snap=await db.collection(SOURCE_COLLECTION_PRIMARY).where(admin.firestore.FieldPath.documentId(),'>=','2019-01-01').where(admin.firestore.FieldPath.documentId(),'<=','2025-11-29').orderBy(admin.firestore.FieldPath.documentId()).get();
   const byDate=new Map(snap.docs.map(d=>[d.id,{id:d.id,...d.data()}]));
 
   const existing=await db.collection(TARGET_COLLECTION).where('_periodType','==','ordinary').get();
   for(const c of chunk(existing.docs)){const b=db.batch(); for(const d of c)b.delete(d.ref); await b.commit();}
 
   const filled=new Map();
-  const report={sourceCollection:SOURCE_COLLECTION,deletedTemplates:existing.size,yearsScanned:YEARS_DESC,searchPhases:SEARCH_PHASES,totalRowsLoaded:snap.size,stats:{createdTemplates:0,missingPsalmWeek:[],missingSaturdayForVesper1:[],missingTemplateSlots:[],filledFrom:{}}};
+  const report={sourceCollectionPrimary:SOURCE_COLLECTION_PRIMARY,targetCollection:TARGET_COLLECTION,targetPeriod:'ordinary',deletedTemplates:existing.size,yearsScanned:YEARS_DESC,searchPhases:SEARCH_PHASES,totalRowsLoaded:snap.size,stats:{createdTemplates:0,missingPsalmWeek:[],missingSaturdayForVesper1:[],missingTemplateSlots:[],filledFrom:{}}};
 
   const mapByYear=new Map(ORDINARY_RANGES.map(r=>[r.year,r]));
   for(const phase of SEARCH_PHASES){
@@ -77,7 +96,7 @@ async function main(){
       const dates=mapByYear.get(year).ordinary.flatMap(([a,b])=>dateRange(a,b));
       for(const ds of dates){
         const row=byDate.get(ds); if(!row||row._periodType!=='ordinary') continue;
-        const pw=Number(row._periodWeekNumber); if(!Number.isInteger(pw)||pw<phase.min||pw>phase.max) continue;
+        const pw=Number(row._periodWeekNumber); if(!Number.isInteger(pw)||pw<phase.periodWeekMin||pw>phase.periodWeekMax) continue;
         const ps=derivePsalm(row); if(!ps.value){report.stats.missingPsalmWeek.push({date:ds,phase:phase.name,periodWeekNumber:row._periodWeekNumber??null,feastName:row._feastName??null}); continue;}
         const day=Number(row._dayOfWeek)||dow(ds); const id=`ordinary-psalmweek-${ps.value}-day-${day}`; if(filled.has(id)) continue;
         filled.set(id,{id,payload:payload(row,byDate,ds,ps.value,day,report)});
