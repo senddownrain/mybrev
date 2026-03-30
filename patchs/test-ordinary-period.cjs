@@ -20,7 +20,7 @@ const REQUIRED_CALENDAR_FIELDS = [
   'compRef',
   '_psalmWeek',
 ];
-const REQUIRED_CALENDAR_SUNDAY_ONLY_FIELDS = ['vesper1AntMag'];
+const REQUIRED_CALENDAR_SUNDAY_ONLY_FIELDS = ['vesper1AntMag','vesperAntMag', 'laudesAntBen'];
 
 const REQUIRED_COMPLETORIUM_FIELDS = [
   '_dayOfWeek',
