@@ -113,6 +113,8 @@ import { db } from '@/plugins/firebase';
 import { useCalendarStore } from '@/stores/calendar';
 import { FEAST_NAME_MAP } from '@/constants/liturgicalFeastsMap';
 import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
+import { DAY_EDITOR_FIELDS } from '@/constants/days';
+import { CANONICAL_FIXED_CALENDAR_DATES } from '@/constants/liturgicalFixedCalendarDates';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { useNotifier } from '@/composables/useNotifier';
 import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
@@ -121,7 +123,17 @@ const groupedConfig = [
   { type: 'dynamic', title: 'Дынамічныя святы' },
   { type: 'date', title: 'Фіксаваныя даты' },
   { type: 'period', title: 'Перыяды' },
+  { type: 'fields', title: 'Палі блокаў (days)' },
 ];
+
+const DAY_REQUIRED_IDENTITY_FIELDS = ['_dayOfWeek', '_periodType', '_periodWeekNumber', '_date', '_feast'];
+const DAY_REQUIRED_METADATA_FIELDS = ['_psalmWeek', '_dayName', '_weekDay', '_weekNum', '_feastName', '_feastType', 'allowedAlleluia'];
+const DAY_REQUIRED_CONTENT_FIELDS = DAY_EDITOR_FIELDS.filter((field) => ![
+  ...DAY_REQUIRED_IDENTITY_FIELDS,
+  ...DAY_REQUIRED_METADATA_FIELDS,
+  'feastComment',
+].includes(field));
+const HOLIDAY_FEAST_TYPES = new Set(['solemnity', 'feast', 'memorial']);
 
 const { notifyError, notifySuccess } = useNotifier();
 const calendarStore = useCalendarStore();
@@ -148,6 +160,7 @@ function groupByType(items) {
     dynamic: items.filter((i) => i.type === 'dynamic'),
     date: items.filter((i) => i.type === 'date'),
     period: items.filter((i) => i.type === 'period'),
+    fields: items.filter((i) => i.type === 'fields'),
   };
 }
 
@@ -180,6 +193,43 @@ function buildDateSubtitle(date, item) {
   if (meta.rank) chunks.push(`Ранг: ${meta.rank}`);
   if (meta.place) chunks.push(`Place: ${meta.place}`);
   return chunks.join(' • ');
+}
+
+function collectMissingNameRankForReadings(items) {
+  const missing = [];
+  items.forEach((item) => {
+    const title = String(item?.title || '').trim();
+    const hasRankField = Object.prototype.hasOwnProperty.call(item || {}, 'rank');
+    if (!title || !hasRankField) {
+      missing.push(item.id || 'без-id');
+    }
+  });
+  return missing;
+}
+
+function collectMissingNameRankForDays(items) {
+  const missing = [];
+  items.forEach((item) => {
+    const name = String(item?._feastName || item?.title || '').trim();
+    const hasRankField = Object.prototype.hasOwnProperty.call(item || {}, '_feastType')
+      || Object.prototype.hasOwnProperty.call(item || {}, 'rank');
+    if (!name || !hasRankField) {
+      missing.push(item.id || 'без-id');
+    }
+  });
+  return missing;
+}
+
+function hasNonEmptyValue(value) {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string') return value.trim().length > 0;
+  if (Array.isArray(value)) return value.length > 0;
+  return true;
+}
+
+function isHolidayDay(item) {
+  const feastType = String(item?._feastType || '').trim().toLowerCase();
+  return Boolean(item?._feast) || HOLIDAY_FEAST_TYPES.has(feastType);
 }
 
 function dynamicSubtitle(feastKey, feastValue, year, item = null) {
@@ -262,10 +312,16 @@ function isMissingReadingText(reading) {
   return !text || text === 'чтения' || text === '<p>чтения</p>' || text.includes('чтения пока нету');
 }
 
-function buildFixedCalendarFromReadings(readingsDocs) {
-  return readingsDocs
-    .filter((doc) => normalizeDate(doc._date))
-    .map((doc) => ({ ...doc, _date: normalizeDate(doc._date) }));
+function buildReadingsByDateMap(readingsDocs) {
+  const byDate = new Map();
+  readingsDocs.forEach((doc) => {
+    const normalized = normalizeDate(doc._date);
+    if (!normalized) return;
+    const list = byDate.get(normalized) || [];
+    list.push({ ...doc, _date: normalized });
+    byDate.set(normalized, list);
+  });
+  return byDate;
 }
 
 function pushResult(target, payload) {
@@ -289,6 +345,7 @@ async function scanReadings() {
 
     const byFeast = new Map();
     const byPeriod = new Map();
+    const readingsByDate = buildReadingsByDateMap(readingsDocs);
 
     readingsDocs.forEach((doc) => {
       if (doc._feast) byFeast.set(String(doc._feast).toLowerCase(), doc);
@@ -314,21 +371,31 @@ async function scanReadings() {
       else pushResult(existing, base);
     });
 
-    const fixedCalendar = buildFixedCalendarFromReadings(readingsDocs);
-    fixedCalendar.forEach((item) => {
+    CANONICAL_FIXED_CALENDAR_DATES.forEach((dateKey) => {
+      const dateReadings = readingsByDate.get(dateKey) || [];
+      const firstDoc = dateReadings[0] || null;
+      const hasValidText = dateReadings.some((item) => !isMissingReadingText(item));
+      const missingNameRankIds = collectMissingNameRankForReadings(dateReadings);
       const base = {
-        key: `readings-date-${item.id}`,
+        key: `readings-date-${dateKey}`,
         type: 'date',
-        title: `Фіксаваная дата: ${item._date}`,
-        subtitle: buildDateSubtitle(item._date, item),
-        _date: item._date,
-        createLink: readingLinkFor({ _date: item._date }),
+        title: `Фіксаваная дата: ${dateKey}`,
+        subtitle: firstDoc ? buildDateSubtitle(dateKey, firstDoc) : `Дата: ${dateKey}`,
+        _date: dateKey,
+        createLink: readingLinkFor({ _date: dateKey }),
       };
 
-      if (isMissingReadingText(item)) {
+      if (!dateReadings.length) {
+        pushResult(missing, { ...base, subtitle: `${base.subtitle} • Статус: няма запісу` });
+      } else if (missingNameRankIds.length) {
+        pushResult(
+          missing,
+          { ...base, subtitle: `${base.subtitle} • Статус: не для ўсіх запісаў ёсць title і поле rank (${missingNameRankIds.length})` },
+        );
+      } else if (!hasValidText) {
         pushResult(missing, { ...base, subtitle: `${base.subtitle} • Статус: няма поўнага тэксту` });
       } else {
-        pushResult(existing, { ...base, subtitle: `${base.subtitle} • Статус: ёсць` });
+        pushResult(existing, { ...base, subtitle: `${base.subtitle} • Статус: ёсць (${dateReadings.length})` });
       }
     });
 
@@ -373,13 +440,8 @@ async function scanDays() {
     await calendarStore.getYearOptions(year + 1);
     await calendarStore.getDynamicDates(year);
 
-    const [daysSnap, readingsSnap] = await Promise.all([
-      getDocs(collection(db, 'days')),
-      getDocs(collection(db, 'readings')),
-    ]);
-
+    const daysSnap = await getDocs(collection(db, 'days'));
     const daysDocs = daysSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
-    const readingsDocs = readingsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
     const byFeast = new Map();
     const byPeriod = new Map();
@@ -390,9 +452,10 @@ async function scanDays() {
       const pKey = normalizePeriodKey(doc);
       if (pKey) byPeriod.set(pKey, doc);
       const date = normalizeDate(doc._date);
-      if (date && !dayDates.has(date)) {
-        dayDates.set(date, doc);
-      }
+      if (!date) return;
+      const list = dayDates.get(date) || [];
+      list.push(doc);
+      dayDates.set(date, list);
     });
 
     const missing = [];
@@ -412,20 +475,29 @@ async function scanDays() {
       else pushResult(existing, base);
     });
 
-    const fixedCalendar = buildFixedCalendarFromReadings(readingsDocs);
-    fixedCalendar.forEach((item) => {
-      const matchedDay = dayDates.get(item._date) || null;
+    CANONICAL_FIXED_CALENDAR_DATES.forEach((dateKey) => {
+      const matchedDays = dayDates.get(dateKey) || [];
+      const matchedDay = matchedDays[0] || null;
+      const missingNameRankIds = collectMissingNameRankForDays(matchedDays);
       const base = {
-        key: `days-date-${item.id}`,
+        key: `days-date-${dateKey}`,
         type: 'date',
-        title: `Фіксаваная дата: ${item._date}`,
-        subtitle: buildDateSubtitle(item._date, item),
-        _date: item._date,
-        createLink: dayLinkFor({ _date: item._date }),
+        title: `Фіксаваная дата: ${dateKey}`,
+        subtitle: matchedDay ? buildDateSubtitle(dateKey, matchedDay) : `Дата: ${dateKey}`,
+        _date: dateKey,
+        createLink: dayLinkFor({ _date: dateKey }),
       };
 
-      if (!matchedDay) pushResult(missing, { ...base, subtitle: `${base.subtitle} • Няма адпаведніка ў days` });
-      else pushResult(existing, { ...base, subtitle: `${base.subtitle} • ёсць` });
+      if (!matchedDay) {
+        pushResult(missing, { ...base, subtitle: `${base.subtitle} • Няма адпаведніка ў days` });
+      } else if (missingNameRankIds.length) {
+        pushResult(
+          missing,
+          { ...base, subtitle: `${base.subtitle} • Статус: не для ўсіх запісаў ёсць _feastName і поле _feastType (${missingNameRankIds.length})` },
+        );
+      } else {
+        pushResult(existing, { ...base, subtitle: `${base.subtitle} • ёсць (${matchedDays.length})` });
+      }
     });
 
     const expectedPeriods = await buildExpectedPeriodKeys(year);
@@ -441,6 +513,35 @@ async function scanDays() {
 
       if (!byPeriod.has(key)) pushResult(missing, { ...base, subtitle: `${base.subtitle} • Няма запісу ў days` });
       else pushResult(existing, { ...base, subtitle: `${base.subtitle} • ёсць` });
+    });
+
+    daysDocs.forEach((dayDoc) => {
+      const missingIdentity = DAY_REQUIRED_IDENTITY_FIELDS.filter((field) => !hasNonEmptyValue(dayDoc[field]));
+      const missingMetadata = DAY_REQUIRED_METADATA_FIELDS.filter((field) => !hasNonEmptyValue(dayDoc[field]));
+      const missingContent = DAY_REQUIRED_CONTENT_FIELDS.filter((field) => !hasNonEmptyValue(dayDoc[field]));
+      const hasInvalidFeastComment = !isHolidayDay(dayDoc) && hasNonEmptyValue(dayDoc.feastComment);
+      const dateLabel = normalizeDate(dayDoc?._date) || 'без _date';
+      const periodLabel = normalizePeriodKey(dayDoc) || 'без period-key';
+
+      const details = [];
+      if (missingIdentity.length) details.push(`ідэнтыфікатары: ${missingIdentity.join(', ')}`);
+      if (missingMetadata.length) details.push(`метаданыя: ${missingMetadata.join(', ')}`);
+      if (missingContent.length) details.push(`блокі: ${missingContent.join(', ')}`);
+      if (hasInvalidFeastComment) details.push('feastComment запоўнены, але дзень не з\'яўляецца святам');
+
+      const base = {
+        key: `days-fields-${dayDoc.id}`,
+        type: 'fields',
+        title: `days/${dayDoc.id}`,
+        subtitle: `Дата: ${dateLabel} • Ключ: ${periodLabel}`,
+        createLink: { name: 'AdminDayEditor', params: { id: dayDoc.id } },
+      };
+
+      if (details.length) {
+        pushResult(missing, { ...base, subtitle: `${base.subtitle} • ${details.join(' • ')}` });
+      } else {
+        pushResult(existing, { ...base, subtitle: `${base.subtitle} • усе абавязковыя палі запоўнены` });
+      }
     });
 
     missingDays.value = missing;

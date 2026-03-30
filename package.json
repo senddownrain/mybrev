@@ -19,6 +19,8 @@
     "db:remove-day-templates-office-readings-fields": "node patchs/remove-office-of-readings-fields-from-day-templates.js",
     "db:generate-completorium-templates": "node patchs/generate-completorium-templates.js",
     "db:generate-calendar-map": "node patchs/generate-calendar-map.js",
+    "audit:cli": "node scripts/audit-liturgical-data.mjs",
+    "test:audit": "node --test tests/liturgical-audit.test.mjs"
     "test:ordinary": "node patchs/test-ordinary-period.cjs"
   },
   "dependencies": {
