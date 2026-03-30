@@ -22,6 +22,7 @@ const YEARS_DESC = ORDINARY_RANGES.map((x) => x.year).sort((a, b) => b - a);
 const WEEKDAY_LABELS = { 1: 'Нядзеля', 2: 'Панядзелак', 3: 'Аўторак', 4: 'Серада', 5: 'Чацвер', 6: 'Пятніца', 7: 'Субота' };
 
 const FIELDS = [
+  'officeOfReadingsHymn','officeOfReadingsAnt1','officeOfReadingsAnt2','officeOfReadingsAnt3','officeOfReadingsPs1','officeOfReadingsPs2','officeOfReadingsPs3','officeOfReadingsVers',
   'invitatoriumAnt','laudesHymn','laudesAnt1','laudesAnt2','laudesAnt3','laudesPs1','laudesPs2','laudesPs3','laudesR','laudesAntBen','laudesInter','laudesPr',
   'sext1Hymn','sext1Ant1','sext1Ant2','sext1Ant3','sext1Ps1','sext1Ps2','sext1Ps3','sext1R','sext1Pr',
   'sext2Hymn','sext2Ant1','sext2Ant2','sext2Ant3','sext2Ps1','sext2Ps2','sext2Ps3','sext2R','sext2Pr',
@@ -54,20 +55,10 @@ function payload(row, byDate, dateStr, psalmWeekNumber, dayOfWeek, report){
   for(const f of FIELDS) p[f]=asNullable(row[f]);
   if(dayOfWeek===1){
     const sat=byDate.get(addDays(dateStr,-1));
-    if(!sat){report.stats.missingSaturdayForVesper1.push({sunday:dateStr,saturdayExpected:addDays(dateStr,-1)});} else {
-      p.vesper1Hymn=asNullable(sat.vesperHymn); p.vesper1Ant1=asNullable(sat.vesperAnt1); p.vesper1Ant2=asNullable(sat.vesperAnt2); p.vesper1Ant3=asNullable(sat.vesperAnt3);
-      p.vesper1Ps1=asNullable(sat.vesperPs1); p.vesper1Ps2=asNullable(sat.vesperPs2); p.vesper1Ps3=asNullable(sat.vesperPs3); p.vesper1R=asNullable(sat.vesperR);
-      p.vesper1Inter=asNullable(sat.vesperInter); p.vesper1Pr=asNullable(sat.vesperPr);
-
-      p.officeOfReadingsHymn=asNullable(sat.vesper1Hymn);
-      p.officeOfReadingsAnt1=asNullable(sat.vesper1Ant1);
-      p.officeOfReadingsAnt2=asNullable(sat.vesper1Ant2);
-      p.officeOfReadingsAnt3=asNullable(sat.vesper1Ant3);
-      p.officeOfReadingsPs1=asNullable(sat.vesper1Ps1);
-      p.officeOfReadingsPs2=asNullable(sat.vesper1Ps2);
-      p.officeOfReadingsPs3=asNullable(sat.vesper1Ps3);
-      p.officeOfReadingsVers=asNullable(sat.vesper1R);
-    }
+    if(!sat){report.stats.missingSaturdayForVesper1.push({sunday:dateStr,saturdayExpected:addDays(dateStr,-1)});}
+    p.vesper1Hymn=asNullable(sat?.vesperHymn); p.vesper1Ant1=asNullable(sat?.vesperAnt1); p.vesper1Ant2=asNullable(sat?.vesperAnt2); p.vesper1Ant3=asNullable(sat?.vesperAnt3);
+    p.vesper1Ps1=asNullable(sat?.vesperPs1); p.vesper1Ps2=asNullable(sat?.vesperPs2); p.vesper1Ps3=asNullable(sat?.vesperPs3); p.vesper1R=asNullable(sat?.vesperR);
+    p.vesper1Inter=asNullable(sat?.vesper1Inter);
   }
 
   if(dayOfWeek===1){
