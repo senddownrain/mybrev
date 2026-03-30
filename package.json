@@ -21,7 +21,6 @@
     "db:generate-calendar-map": "node patchs/generate-calendar-map.js",
     "audit:cli": "node scripts/audit-liturgical-data.mjs",
     "test:audit": "node --test tests/liturgical-audit.test.mjs"
-    "test:ordinary": "node patchs/test-ordinary-period.cjs"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
