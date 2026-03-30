@@ -18,7 +18,8 @@
     "db:generate-day-templates-todo": "node patchs/generate-day-templates-todo.js",
     "db:remove-day-templates-office-readings-fields": "node patchs/remove-office-of-readings-fields-from-day-templates.js",
     "db:generate-completorium-templates": "node patchs/generate-completorium-templates.js",
-    "db:generate-calendar-map": "node patchs/generate-calendar-map.js"
+    "db:generate-calendar-map": "node patchs/generate-calendar-map.js",
+    "test:ordinary": "node patchs/test-ordinary-period.cjs"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -55,7 +56,12 @@
     "type": "git",
     "url": "git+https://github.com/senddownrain/mybrev.git"
   },
-  "keywords": ["prayer", "catholic", "belarusian", "pwa"],
+  "keywords": [
+    "prayer",
+    "catholic",
+    "belarusian",
+    "pwa"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
