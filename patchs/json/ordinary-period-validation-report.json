@@ -1,0 +1,2394 @@
+{
+  "dayTemplates": {
+    "count": 28,
+    "psalmWeeks": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "weekCoverage": [
+      {
+        "week": 1,
+        "days": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "week": 2,
+        "days": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "week": 3,
+        "days": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "week": 4,
+        "days": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    ],
+    "invalidDocs": [
+      {
+        "id": "ordinary-psalmweek-1-day-1",
+        "psalmWeek": 1,
+        "dayOfWeek": 1,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr",
+          "laudesAntBen",
+          "vesperAntMag"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-1-day-2",
+        "psalmWeek": 1,
+        "dayOfWeek": 2,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-1-day-3",
+        "psalmWeek": 1,
+        "dayOfWeek": 3,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-1-day-4",
+        "psalmWeek": 1,
+        "dayOfWeek": 4,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-1-day-5",
+        "psalmWeek": 1,
+        "dayOfWeek": 5,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-1-day-6",
+        "psalmWeek": 1,
+        "dayOfWeek": 6,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-1-day-7",
+        "psalmWeek": 1,
+        "dayOfWeek": 7,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-2-day-1",
+        "psalmWeek": 2,
+        "dayOfWeek": 1,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr",
+          "laudesAntBen",
+          "vesperAntMag"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-2-day-2",
+        "psalmWeek": 2,
+        "dayOfWeek": 2,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-2-day-3",
+        "psalmWeek": 2,
+        "dayOfWeek": 3,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-2-day-4",
+        "psalmWeek": 2,
+        "dayOfWeek": 4,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-2-day-5",
+        "psalmWeek": 2,
+        "dayOfWeek": 5,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-2-day-6",
+        "psalmWeek": 2,
+        "dayOfWeek": 6,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-2-day-7",
+        "psalmWeek": 2,
+        "dayOfWeek": 7,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-3-day-1",
+        "psalmWeek": 3,
+        "dayOfWeek": 1,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr",
+          "laudesAntBen",
+          "vesperAntMag"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-3-day-2",
+        "psalmWeek": 3,
+        "dayOfWeek": 2,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-3-day-3",
+        "psalmWeek": 3,
+        "dayOfWeek": 3,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-3-day-4",
+        "psalmWeek": 3,
+        "dayOfWeek": 4,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-3-day-5",
+        "psalmWeek": 3,
+        "dayOfWeek": 5,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-3-day-6",
+        "psalmWeek": 3,
+        "dayOfWeek": 6,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-3-day-7",
+        "psalmWeek": 3,
+        "dayOfWeek": 7,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-4-day-1",
+        "psalmWeek": 4,
+        "dayOfWeek": 1,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr",
+          "laudesAntBen",
+          "vesperAntMag"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-4-day-2",
+        "psalmWeek": 4,
+        "dayOfWeek": 2,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-4-day-3",
+        "psalmWeek": 4,
+        "dayOfWeek": 3,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-4-day-4",
+        "psalmWeek": 4,
+        "dayOfWeek": 4,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-4-day-5",
+        "psalmWeek": 4,
+        "dayOfWeek": 5,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-4-day-6",
+        "psalmWeek": 4,
+        "dayOfWeek": 6,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ordinary-psalmweek-4-day-7",
+        "psalmWeek": 4,
+        "dayOfWeek": 7,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsR1",
+          "officeOfReadingsR2",
+          "officeOfReadingsPr"
+        ]
+      }
+    ],
+    "expectedWeeksOk": true
+  },
+  "completorium": {
+    "count": 7,
+    "weekdays": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "missingWeekdays": [],
+    "duplicates": [],
+    "invalidDocs": [
+      {
+        "id": "KH5RzZ6Mr1MlHC5AAbq7",
+        "dayOfWeek": 6,
+        "missing": [
+          "compAnt2",
+          "compPs2"
+        ]
+      },
+      {
+        "id": "VcLpaACCt1LL4rkHZ9gt",
+        "dayOfWeek": 2,
+        "missing": [
+          "compAnt2",
+          "compPs2"
+        ]
+      },
+      {
+        "id": "mCXw0imJfqbzt79N5bWy",
+        "dayOfWeek": 5,
+        "missing": [
+          "compAnt2",
+          "compPs2"
+        ]
+      },
+      {
+        "id": "tPwl42YZHUZB7KqcAyhV",
+        "dayOfWeek": 3,
+        "missing": [
+          "compAnt2",
+          "compPs2"
+        ]
+      },
+      {
+        "id": "zhj9PxhN2NTOmD2TnXSD",
+        "dayOfWeek": 1,
+        "missing": [
+          "compAnt2",
+          "compPs2"
+        ]
+      }
+    ]
+  },
+  "readings": {
+    "count": 236,
+    "coveredWeeks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "missingSlots": []
+  },
+  "calendarMap": {
+    "count": 232,
+    "coveredWeeks": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "missingSlots": [
+      {
+        "week": 8,
+        "day": 5
+      },
+      {
+        "week": 20,
+        "day": 7
+      },
+      {
+        "week": 24,
+        "day": 2
+      },
+      {
+        "week": 24,
+        "day": 4
+      }
+    ],
+    "invalidDocs": [
+      {
+        "id": "0RcgyimYC0AcwNEdUHh5",
+        "week": 7,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "0jPRg5mA84C4jCpkVROb",
+        "week": 3,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "0qTyadMPnazaqohNaN9i",
+        "week": 13,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "1VqzNg6QHv86wDZB5gNZ",
+        "week": 24,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "1Wb6LRzqElon9oHly0IR",
+        "week": 12,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "2DR4OXHPcoV8jVp5MqGS",
+        "week": 17,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "2ZKMLsxj853LsMjNUWGm",
+        "week": 30,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "2i1iKixkCSmBdV3MVLvO",
+        "week": 32,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "355EjmObeCuIqcUnrP1C",
+        "week": 23,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "38KnwDmGJZMmtd2MYCi4",
+        "week": 13,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "38TDODVDExkltLQRux60",
+        "week": 15,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "3Fv0NyNzpPV3ATjgTwAc",
+        "week": 30,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "3o8aDY56zAHjJaKn1MpJ",
+        "week": 21,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "4XkCgjqMZOtzCOTQHKS1",
+        "week": 6,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "4og198w2QjVpQthMXAo1",
+        "week": 10,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "4pvXFTzaui1GvtAvelR4",
+        "week": 14,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "4vn3MsmHcZcY2hRmm51M",
+        "week": 1,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "5pdPvMpP20JwHi4gZgaf",
+        "week": 23,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "5rGQBOcXggDEx7EzimgT",
+        "week": 3,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "5t3XwFvVszTvQXBfOWf2",
+        "week": 32,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "5wdKM5XLax1FOd75VeqN",
+        "week": 26,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "5wlmBghGywW8FJfC8kk5",
+        "week": 7,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "6Tb6leQUDHFkuwAGUnc2",
+        "week": 9,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "7I7hnhMVSrPTOwkeFXSg",
+        "week": 22,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "800sr1Ow06yc9Qi2Vkt4",
+        "week": 2,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "82Fqvv6Uoq3s2A3brHWW",
+        "week": 8,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "8HDbd74jtmDiR55zUygb",
+        "week": 11,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "8p3KfTOMXF0CgpnUIpsF",
+        "week": 28,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "8txHKhvCnQOeg2Rbigte",
+        "week": 14,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "8u8p0ckdugHADvXPnKtK",
+        "week": 15,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "8xdjVrKDjF7FKyQtb5si",
+        "week": 33,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "8xf1dfDNqYtlwV4P5YCF",
+        "week": 4,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "9HkEpA3kCwGd8RjGFcC5",
+        "week": 10,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "9NsoWqhChpluNn4YH9eA",
+        "week": 31,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "9nsDf6Gh2NTw07oMLvhH",
+        "week": 5,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "A08mShvnBhl4fwa3ZRev",
+        "week": 13,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "A1DFNzZW1DikoWlLLOiw",
+        "week": 4,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "A4YZEvjSAyN9woPJ1ABn",
+        "week": 6,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "ALwaYKpm78zLYkjUowCw",
+        "week": 28,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "AMifUXU1MtCiLqMWY1lR",
+        "week": 11,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "AQiW6mEoyORyAGK9eN4U",
+        "week": 2,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "AiSyWLPtZRnNeyoSPVKt",
+        "week": 2,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "ApZ4Py9vg4KbQQofXhPX",
+        "week": 3,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "AsXTw8sEKotmwxIAXOnX",
+        "week": 12,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "BTz9Qo1D6SXT7r7fYbxw",
+        "week": 31,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "BWFcEJCaM5GOWYRaoe5y",
+        "week": 26,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "BmNwYCsUZJWGu8VFbr5W",
+        "week": 19,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "BowqFxu44O6i5MkvVoFW",
+        "week": 25,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "C02KTP7P64ZiQXfLkPAe",
+        "week": 23,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "CVQWDqPvH5aDtUXBU2IX",
+        "week": 3,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "DJGkS06x1J3yaG1u0pXC",
+        "week": 26,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "DQK3qBXsajQrKITGerFU",
+        "week": 30,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "EBlMVieR4UBrSDx72cuc",
+        "week": 32,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "EPqUSec3P2I4L8h1weWM",
+        "week": 14,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "Em6xG4luqEG948pwNopX",
+        "week": 12,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "EqAiIilrPA8N6YSskk8m",
+        "week": 7,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "ErzkcYgx7N583kaZl1UW",
+        "week": 7,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "F7uK8mVT84MIj5a5CfPt",
+        "week": 3,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "FQACYbSRSJQBOuiMRGXL",
+        "week": 22,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "FqJqEX76307brDgAsJsH",
+        "week": 25,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "GKcPwttsDwpbfjnYG2cY",
+        "week": 29,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "H3MOPM0bumvXY5hvLoPM",
+        "week": 17,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "H3WpyNLCTC6ziS06mnjx",
+        "week": 17,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "H3YQ4ZJfCllKGJe7Cs10",
+        "week": 33,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "HEPMordO3pGC5pYaTmL4",
+        "week": 5,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "IRhWZblJridy1YRdmQ2M",
+        "week": 10,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "IU9LKNx5iU2Maw6GrJYT",
+        "week": 7,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "IkYKiaejjNmCbLpN9Cbi",
+        "week": 19,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "JhSfF7yzQjYObfinNBRq",
+        "week": 17,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "JyAYFhPHjSKPuyQjnFW7",
+        "week": 34,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "K4h0j9m6KSLieanLbktS",
+        "week": 18,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "KdCNGPw9gRtei9JMt5vG",
+        "week": 20,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "KkO0li3QSGAaxkNyLqiI",
+        "week": 8,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "KsS7Bp2kLxRYswo8xaeG",
+        "week": 9,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "KwONUeQUPFs7qe7l8JPh",
+        "week": 33,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "KzuB8pSsSyLAlGmKqlph",
+        "week": 29,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "L4DfGnpaYrS8ZtiuBElT",
+        "week": 13,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "L7s9yPemYZXVsiouTrYx",
+        "week": 18,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "LC3omuoHZ5QomrEg32bI",
+        "week": 21,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "LK1I4hHd63AyBPwF339D",
+        "week": 26,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "Lwd33LIPtk4oq2D7p8pz",
+        "week": 25,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "M8FVDaI7yJXfAE9c5S9i",
+        "week": 11,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "MPgUq2lMBzWhy4RTuuU4",
+        "week": 9,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "MUr1tsL0RjdaVSuk2bcI",
+        "week": 32,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "MralKIkkCQK8eGrrZjV6",
+        "week": 7,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "MurEERmZJql9pKBeLuNV",
+        "week": 3,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "OBDVnfbnM9gt1Jh36bvT",
+        "week": 8,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "OvYWJ4RY4pQjNBgTY8CO",
+        "week": 21,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "PRyKNusMZfnR0aMb3wHl",
+        "week": 26,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "PdIsXg64NEEmxby4XwPH",
+        "week": 16,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "QClqEK4AY9xtNFTfZe9n",
+        "week": 22,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "QESiHoGaRu9jq8E2uH5n",
+        "week": 14,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "QPn7ywGK6sxzZLUDptyE",
+        "week": 30,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "QcZWJReHFagXIFCzC7rv",
+        "week": 24,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "QqsT0k5YZVOAXQCNDlST",
+        "week": 25,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "RhNZEomyrIM8O4ko82dF",
+        "week": 3,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "SP8DUPxo5ckhUMr0UR7A",
+        "week": 12,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "STanEvVwwER7Desp9Hkz",
+        "week": 33,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "SjMFpavFRbg8MXYbLeZX",
+        "week": 21,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "Sx1IZtecpaCMxbDrnwkj",
+        "week": 17,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "TFp7qDT06YBlh2h4FTjb",
+        "week": 20,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "TL0cIwftk0FTpybnDYjm",
+        "week": 28,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "TW4v4jHmodigpI4oA0fk",
+        "week": 31,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "Tnx0fnQMSPJ6RvInNHXy",
+        "week": 10,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "U0qKve5dA17SKVmyn6L7",
+        "week": 6,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "U1GgUpRNC6uWarljrIAl",
+        "week": 30,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "UPRz4xK6spkeQGkCEKfG",
+        "week": 6,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "UVM9Ee4Icp71zYREYJ6g",
+        "week": 27,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "VBTvHisP233io5fdOdvR",
+        "week": 1,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "VBdPFyhliH6rJsbuNtv3",
+        "week": 18,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "Vuj93sEnZn9GWfZBXpQF",
+        "week": 34,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "WN3yYWkXVL7mj9UjUS6I",
+        "week": 29,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "WjFjqtra5R1cC305WxHX",
+        "week": 31,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "WmlVcc3IWyzEgDfQIapv",
+        "week": 22,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "Wumq6vDcQbKsdKeuxWP9",
+        "week": 31,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "Wz4Y2cvs8QeqFwAxboVC",
+        "week": 16,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "XGFtPRtBmw2FfEYCO4ns",
+        "week": 21,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "XXatiiHhDZn8l5ppaQIc",
+        "week": 16,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "Xr9EmZYJBOyiRr1rrUio",
+        "week": 19,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "YDQGGfuzGDZQDzu9mzyI",
+        "week": 10,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "YO5o5mlRNR1Ycau6rqbW",
+        "week": 34,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "YYi8PfFeAxEiFJqgEP7N",
+        "week": 23,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "Ync5ow9YtkMMqnV9reay",
+        "week": 32,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "Ynt2yDUAJ9JNq3Km94fY",
+        "week": 5,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "YzxWI4kfAzgFHdpgpF7K",
+        "week": 11,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "ZCZ6TFEVcPm3hJqkk6xS",
+        "week": 11,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "a7gIqzdwJAZ7XxaXHlem",
+        "week": 10,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "aD0qFFYFVWyBLriDBe7g",
+        "week": 23,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "aVWpiLjaHiAD4SZcuFJ4",
+        "week": 9,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "aX5bTmtD9freAhuvsnfc",
+        "week": 28,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "aXn8VmeQx0wzaJljbEuy",
+        "week": 13,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "amZXMnv93MKalvWDwQXo",
+        "week": 12,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "amliWIRTkqf2gXj8HNoo",
+        "week": 34,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "b4RKVnwHZckmoR8zUSxj",
+        "week": 24,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "baaxeE5HGR6EXfzBMIJh",
+        "week": 29,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "buKrMxjT2eFhwYW72jrW",
+        "week": 27,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "byAWrIkvUK3UZ3tB93mJ",
+        "week": 4,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "cA8rd5CeqmKp8W8OLZFP",
+        "week": 30,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "cFIZKu6l3ICoCGxi5T2V",
+        "week": 16,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "cT8oxxZ9RMayFlJ73REz",
+        "week": 33,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "chTcfmu7dHCaONqB1BAE",
+        "week": 15,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "crriGs1abTwHVYa8YHto",
+        "week": 5,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "d5e5muc91kGod4Me3nXX",
+        "week": 21,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "dXdwCZVulbWzVJ9vR4FW",
+        "week": 15,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "dbhLBXDJRsax78QpENTJ",
+        "week": 5,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "e4CuAovIToG3rSg2fnOR",
+        "week": 9,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "e9cVSXMPpAXh0R0B25Ni",
+        "week": 18,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "eYukyIjDxfEq6jTxCnEE",
+        "week": 7,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "edNDQsPEQ4wLgiFymDxv",
+        "week": 1,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "ehZ4Sem5fvHmvUVpHBAK",
+        "week": 27,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "etetm6I1Vr2dEiDsoVoG",
+        "week": 33,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "f130z07SQdtM6G9dnwNb",
+        "week": 29,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "fXb2FBO8GkGEXffy4WQf",
+        "week": 17,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "fYGw6mHXLiGkVUzwaoiY",
+        "week": 14,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "fa19mVUJb2OTAhlMn1TJ",
+        "week": 16,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "fpXPAzaJVu7VTD5vCxxi",
+        "week": 22,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "fsuYDlQGAo7j9iPOUD4c",
+        "week": 19,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "ft5jF2lKferjG27pcv43",
+        "week": 15,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "g2vZU7OJP8mLbjv0J1XZ",
+        "week": 18,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers",
+          "officeOfReadingsPr"
+        ]
+      },
+      {
+        "id": "gIc8axp8m47QZeIwTDYY",
+        "week": 31,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "gZiy5nC3hbyr8aFLwFqX",
+        "week": 17,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "hBVBieyGF2it4AdA8kFP",
+        "week": 32,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "hMfBF4wqllBG65ZFOiby",
+        "week": 20,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "hsqbFyQAUHtcfuBynz4e",
+        "week": 10,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "iIVENzoy28jyuY2UEhe2",
+        "week": 15,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "iIjaOd7wYNiSdHAZaEJA",
+        "week": 30,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "iLa5S87NvEZNKIMFRNVf",
+        "week": 19,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "iO0UTCMVaP0hVXCy36Eu",
+        "week": 6,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "ilnjRJxibSX948JatOMD",
+        "week": 11,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "k2tmZ4G9CHZtK2vu2Xmg",
+        "week": 20,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "kfTw8g9IPCSzgJMQQFsn",
+        "week": 19,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "klsjpHe8Z8x3NTuOzf4x",
+        "week": 8,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "lPL9XjKIazKtGkb8f7tB",
+        "week": 26,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "lWl62CbdGWA9Bpdy632g",
+        "week": 25,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "ljaCDHmYZJSJiyBv9xCx",
+        "week": 18,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "lkHnifkjZTtZBtjaxx3e",
+        "week": 13,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "lm48Z2HnW09A89Cp51Ys",
+        "week": 19,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "luBwIMlT7h7g8C3rhhJ2",
+        "week": 31,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "m2zGETPQ0N3p6MVs4Rkh",
+        "week": 13,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "nJtBCFZqf9t6udI5mATV",
+        "week": 23,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "nMje6lw0WsoNYoIrwAwn",
+        "week": 4,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "nqZnHTSoFhRGEZTHIOPl",
+        "week": 22,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "oBZGZsVd7tZEpTmpFben",
+        "week": 9,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "p9fX1zbgrLIaH2lodtGj",
+        "week": 32,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "pCAr9PMgycDsQ5gicRTs",
+        "week": 24,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "pIMAXUHIGcFHo2mXtchQ",
+        "week": 22,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "pL5ICkTIUv9jSWW9wkQJ",
+        "week": 5,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "pdLL3g6r1n816qYfcfpp",
+        "week": 25,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "peepSKpvN9nhfJNNeBvd",
+        "week": 14,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "q4AvfMSkW0bccF7hdrs6",
+        "week": 16,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "qrWoVYyw5RCo9Oz8cIIz",
+        "week": 27,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "qxOHzjV2Krn0W5vC4t4m",
+        "week": 2,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "qz1JxSH7K4wYrMrtsY4x",
+        "week": 6,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "r8arVZWhrdl88S9P00ph",
+        "week": 4,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "rd8Ka9NGWb7lVmlG3wbP",
+        "week": 4,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "riPL0rkcMFB8PtqgujZO",
+        "week": 2,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "rvWsowDZDyiIzt4Pyq7v",
+        "week": 26,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "s22OnDCN9liy8vqeSNFB",
+        "week": 12,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "sGj7BPVspUrcl5kN6LcH",
+        "week": 25,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "t3AtMFhIAcUULrYr5Qqp",
+        "week": 23,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "tIZccXDjsa8GBCidNnRy",
+        "week": 5,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "tqvCatVqWsNalXJTVshq",
+        "week": 16,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "uKM6PGWociUhadSwi0jT",
+        "week": 28,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "uPjlICW3nKr9RuSg3sOv",
+        "week": 6,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "uXR2dDmgr5ARBJNJLGKn",
+        "week": 15,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "uvbi5YFEkTl2wsqzGTXy",
+        "week": 27,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "vAQCRN74BupojSWjqMfr",
+        "week": 34,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "vCi0ZtmYuGkOdirtZ40n",
+        "week": 2,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "vLQTFYlpvOeHlNR5XivV",
+        "week": 28,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "vMe9bAe27xef1BQcqUTN",
+        "week": 27,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "vT5OQdOZSkme6ZX9sg2q",
+        "week": 9,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "vkxbetmdMK4fFIzK6EZv",
+        "week": 1,
+        "day": 2,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "vz0dlMyoYJNPrS6PC6yY",
+        "week": 29,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "w3UXpwpVBKtN7wOi6dGR",
+        "week": 21,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "wEX2gMH5eGr2svcdxo1Z",
+        "week": 33,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "wWJv9zi37iZLEn87zFgs",
+        "week": 1,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "wq1AtW8fpAcxwHW1XXzP",
+        "week": 29,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "x605xmHFd7Um2xt24mEZ",
+        "week": 11,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "x8LAVbdZm8JwlYoVi66P",
+        "week": 14,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "xZic3fWPxmZdORHCt82c",
+        "week": 8,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "y5oXjLpCFq3rPhwz5CIo",
+        "week": 27,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "yCdQ2qbTQePpl07IjikW",
+        "week": 20,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "yiCi4CBJphi5TM6lHevE",
+        "week": 24,
+        "day": 6,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "ypw1uXEmrBfhZH05Og8u",
+        "week": 20,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "z0eMUP78U0a248Rz64hv",
+        "week": 4,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "z3sqAJKgXu3h9hQe0yIS",
+        "week": 1,
+        "day": 7,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "z6xNopwVy2jdZDk4eg1O",
+        "week": 28,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "zHVxQnUFiXi5ZYAQyZmW",
+        "week": 2,
+        "day": 3,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "zT4IYwjj3lQrgQMIxV6R",
+        "week": 34,
+        "day": 4,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "zf8IHuBagOwKN8fYZ4GH",
+        "week": 18,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "zsYpQPkKPa9HiVAgxVtO",
+        "week": 8,
+        "day": 1,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      },
+      {
+        "id": "zvaESbti32wLNLmWctGt",
+        "week": 12,
+        "day": 5,
+        "missing": [
+          "officeOfReadingsVers"
+        ]
+      }
+    ]
+  }
+}
