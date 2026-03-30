@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+const fs = require('node:fs');
+const path = require('node:path');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
 
@@ -74,10 +76,37 @@ const TEMPLATE_CONTROLLED_FIELDS = [
   'vesper1AntMag',
 ];
 
+const RECOVERABLE_OFFICE_FIELDS = [
+  'officeOfReadingsHymn',
+  'officeOfReadingsAnt1',
+  'officeOfReadingsAnt2',
+  'officeOfReadingsAnt3',
+  'officeOfReadingsPs1',
+  'officeOfReadingsPs2',
+  'officeOfReadingsPs3',
+  'officeOfReadingsVers',
+  'officeOfReadingsR1',
+  'officeOfReadingsR2',
+  'officeOfReadingsTeDeum',
+  'officeOfReadingsPr',
+];
+
+const SUNDAY_ONLY_FIELDS = [
+  'vesperAntMag',
+  'vesper1AntMag',
+  'laudesAntBen',
+];
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 function ymdToDate(ymd) {
   return new Date(`${ymd}T00:00:00Z`);
+}
+
+function addDays(ymd, diffDays) {
+  const date = ymdToDate(ymd);
+  date.setUTCDate(date.getUTCDate() + diffDays);
+  return dateToYmd(date);
 }
 
 function dateToYmd(date) {
@@ -152,19 +181,35 @@ function chunk(arr, size = 400) {
   return out;
 }
 
+function hasValue(value) {
+  if (value === undefined || value === null) return false;
+  if (typeof value === 'string') return value.trim() !== '';
+  if (Array.isArray(value)) return value.length > 0;
+  return true;
+}
+
+function firstNonEmpty(...values) {
+  for (const value of values) {
+    if (hasValue(value)) return value;
+  }
+  return null;
+}
+
 async function main() {
   admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
   const db = admin.firestore();
 
-  const [templatesSnap, completoriumSnap, readingsSnap] = await Promise.all([
+  const [templatesSnap, completoriumSnap, readingsSnap, daysSnap] = await Promise.all([
     db.collection('dayTemplates').where('_periodType', '==', 'ordinary').get(),
     db.collection('completoriumTemplates').where('_periodType', '==', 'ordinary').get(),
     db.collection('readings').where('_periodType', '==', 'ordinary').get(),
+    db.collection('days').where('_periodType', '==', 'ordinary').get(),
   ]);
 
   const templates = templatesSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
   const completoriums = completoriumSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
   const readings = readingsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  const days = daysSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
   const templateByDayPsalm = indexBy(templates, (item) => {
     if (item._dayOfWeek == null || item._psalmWeekNumber == null) return null;
@@ -180,20 +225,37 @@ async function main() {
     if (item._periodWeekNumber == null || item._dayOfWeek == null) return null;
     return `${Number(item._periodWeekNumber)}|${Number(item._dayOfWeek)}`;
   });
+  const dayByDate = indexBy(days, (item) => item.id || item._date || null);
 
   const ordinaryDays = ordinaryRanges
     .slice()
     .sort((a, b) => b.year - a.year)
     .flatMap((entry) => buildOrdinaryDaysForYear(entry));
+  const ordinaryDayMetaByDate = new Map(ordinaryDays.map((d) => [d.dateStr, d]));
 
   const updates = [];
   const missing = { template: 0, comp: 0, reading: 0 };
+  const report = {
+    years: {},
+    invalidDocs: [],
+    sundayFieldIssues: [],
+  };
 
   for (const day of ordinaryDays) {
     const psalmWeek = psalmWeekFromPeriodWeek(day._periodWeekNumber);
-    const templateRef = templateByDayPsalm.get(`${day._dayOfWeek}|${psalmWeek}`)?.id || null;
+    const template = templateByDayPsalm.get(`${day._dayOfWeek}|${psalmWeek}`) || null;
+    const templateRef = template?.id || null;
     const compRef = compByDay.get(`${day._dayOfWeek}`)?.id || null;
-    const readingRef = readingByWeekDay.get(`${day._periodWeekNumber}|${day._dayOfWeek}`)?.id || null;
+    const reading = readingByWeekDay.get(`${day._periodWeekNumber}|${day._dayOfWeek}`) || null;
+    const readingRef = reading?.id || null;
+    const dayDoc = dayByDate.get(day.dateStr) || null;
+    const prevDateStr = addDays(day.dateStr, -1);
+    const prevDayDoc = dayByDate.get(prevDateStr) || null;
+    const prevMeta = ordinaryDayMetaByDate.get(prevDateStr) || null;
+    const prevPsalmWeek = prevMeta ? psalmWeekFromPeriodWeek(prevMeta._periodWeekNumber) : null;
+    const prevTemplate = prevMeta
+      ? (templateByDayPsalm.get(`${prevMeta._dayOfWeek}|${prevPsalmWeek}`) || null)
+      : null;
 
     if (!templateRef) missing.template += 1;
     if (!compRef) missing.comp += 1;
@@ -213,6 +275,76 @@ async function main() {
       payload[field] = null;
     }
 
+    const unresolvedFields = [];
+    for (const field of RECOVERABLE_OFFICE_FIELDS) {
+      const value = firstNonEmpty(reading?.[field], dayDoc?.[field], template?.[field]);
+      payload[field] = value;
+      if (!hasValue(value)) unresolvedFields.push(field);
+    }
+
+    const isSunday = day._dayOfWeek === 1;
+    const sundayMissing = [];
+    for (const field of SUNDAY_ONLY_FIELDS) {
+      if (isSunday) {
+        let sundayValue;
+        if (field === 'vesper1AntMag') {
+          // Воскресная I Вячэрня: берем антифон Магніфікат із суботы.
+          sundayValue = firstNonEmpty(
+            prevDayDoc?.vesperAntMag,
+            prevTemplate?.vesperAntMag,
+            dayDoc?.vesper1AntMag,
+            template?.vesper1AntMag,
+            reading?.vesper1AntMag
+          );
+        } else {
+          sundayValue = firstNonEmpty(dayDoc?.[field], template?.[field], reading?.[field]);
+        }
+        payload[field] = sundayValue;
+        if (!hasValue(sundayValue)) {
+          sundayMissing.push(field);
+        }
+      } else {
+        payload[field] = null;
+      }
+    }
+
+    if (!report.years[day.year]) {
+      report.years[day.year] = {
+        total: 0,
+        missingRefs: { template: 0, comp: 0, reading: 0 },
+        unresolvedFields: 0,
+        sundayMissingFields: 0,
+      };
+    }
+    report.years[day.year].total += 1;
+    if (!templateRef) report.years[day.year].missingRefs.template += 1;
+    if (!compRef) report.years[day.year].missingRefs.comp += 1;
+    if (!readingRef) report.years[day.year].missingRefs.reading += 1;
+    report.years[day.year].unresolvedFields += unresolvedFields.length;
+    report.years[day.year].sundayMissingFields += sundayMissing.length;
+
+    if (unresolvedFields.length > 0) {
+      report.invalidDocs.push({
+        id: readingRef || day.dateStr,
+        date: day.dateStr,
+        year: day.year,
+        week: day._periodWeekNumber,
+        day: day._dayOfWeek,
+        missing: unresolvedFields,
+      });
+    }
+
+    if (sundayMissing.length > 0) {
+      report.sundayFieldIssues.push({
+        id: readingRef || day.dateStr,
+        date: day.dateStr,
+        year: day.year,
+        week: day._periodWeekNumber,
+        day: day._dayOfWeek,
+        missing: sundayMissing,
+      });
+    }
+
     updates.push({ id: day.dateStr, payload });
   }
 
@@ -227,7 +359,16 @@ async function main() {
     console.log(`saved ${saved}/${updates.length}`);
   }
 
-  console.log('done', { total: updates.length, missing });
+  const reportPath = path.resolve(__dirname, 'json/ordinary-calendar-map-update-report.json');
+  fs.writeFileSync(reportPath, JSON.stringify(report, null, 2), 'utf8');
+
+  console.log('done', {
+    total: updates.length,
+    missing,
+    reportPath,
+    invalidDocs: report.invalidDocs.length,
+    sundayFieldIssues: report.sundayFieldIssues.length,
+  });
 }
 
 main().catch((err) => {
