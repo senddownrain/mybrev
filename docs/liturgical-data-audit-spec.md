@@ -280,7 +280,7 @@ interface AuditReport {
 Базовый этап уже реализован:
 
 1. Добавлены pure-функции аудита fixed dates в `src/utils/liturgicalAudit.js`.
-2. Добавлен CLI-скрипт `npm run audit:cli -- --readings <file> --days <file>`.
+2. Добавлен CLI-скрипт `npm run audit:cli -- --readings <file> --days <file> --out <report.md>`.
 3. Добавлен автотест `npm run test:audit` и подключение в CI.
 
 Дальше расширяем до полного yearly-аудита:
