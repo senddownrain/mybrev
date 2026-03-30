@@ -18,7 +18,9 @@
     "db:generate-day-templates-todo": "node patchs/generate-day-templates-todo.js",
     "db:remove-day-templates-office-readings-fields": "node patchs/remove-office-of-readings-fields-from-day-templates.js",
     "db:generate-completorium-templates": "node patchs/generate-completorium-templates.js",
-    "db:generate-calendar-map": "node patchs/generate-calendar-map.js"
+    "db:generate-calendar-map": "node patchs/generate-calendar-map.js",
+    "audit:cli": "node scripts/audit-liturgical-data.mjs",
+    "test:audit": "node --test tests/liturgical-audit.test.mjs"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
