@@ -9,6 +9,10 @@ import serviceAccount from './serviceAccountKey.json' with { type: 'json' };
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const SOURCE_COLLECTION_PRIMARY = 'oldDays';
+const TARGET_COLLECTION = 'calendarMap';
+const TARGET_PERIOD = 'ordinary';
+
 const ordinaryRanges = [
   {
     year: 2019,
@@ -101,6 +105,8 @@ const SUNDAY_ONLY_FIELDS = [
   'laudesAntBen',
 ];
 
+const SUNDAY_WEEKS_EXCLUDED_FROM_VALIDATION = new Set([1, 34]);
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 function ymdToDate(ymd) {
@@ -150,7 +156,7 @@ function buildOrdinaryDaysForYear({ year, ordinary }) {
     if (index > 0 && dow === 1) {
       week += 1;
     }
-    days.push({ year, dateStr, _periodType: 'ordinary', _periodWeekNumber: week, _dayOfWeek: dow });
+    days.push({ year, dateStr, _periodType: TARGET_PERIOD, _periodWeekNumber: week, _dayOfWeek: dow });
   });
 
   const secondStartWeek = week + 2;
@@ -161,7 +167,7 @@ function buildOrdinaryDaysForYear({ year, ordinary }) {
     if (index > 0 && dow === 1) {
       week += 1;
     }
-    days.push({ year, dateStr, _periodType: 'ordinary', _periodWeekNumber: week, _dayOfWeek: dow });
+    days.push({ year, dateStr, _periodType: TARGET_PERIOD, _periodWeekNumber: week, _dayOfWeek: dow });
   });
 
   return days;
@@ -204,10 +210,10 @@ async function main() {
   const db = admin.firestore();
 
   const [templatesSnap, completoriumSnap, readingsSnap, daysSnap] = await Promise.all([
-    db.collection('dayTemplates').where('_periodType', '==', 'ordinary').get(),
-    db.collection('completoriumTemplates').where('_periodType', '==', 'ordinary').get(),
-    db.collection('readings').where('_periodType', '==', 'ordinary').get(),
-    db.collection('days').where('_periodType', '==', 'ordinary').get(),
+    db.collection('dayTemplates').where('_periodType', '==', TARGET_PERIOD).get(),
+    db.collection('completoriumTemplates').where('_periodType', '==', TARGET_PERIOD).get(),
+    db.collection('readings').where('_periodType', '==', TARGET_PERIOD).get(),
+    db.collection(SOURCE_COLLECTION_PRIMARY).where('_periodType', '==', TARGET_PERIOD).get(),
   ]);
 
   const templates = templatesSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -268,7 +274,7 @@ async function main() {
     const payload = {
       _date: day.dateStr,
       _dayOfWeek: day._dayOfWeek,
-      _periodType: 'ordinary',
+      _periodType: TARGET_PERIOD,
       _periodWeekNumber: day._periodWeekNumber,
       templateRef,
       compRef,
@@ -287,6 +293,8 @@ async function main() {
     }
 
     const isSunday = day._dayOfWeek === 1;
+    const shouldValidateSundayFields =
+      isSunday && !SUNDAY_WEEKS_EXCLUDED_FROM_VALIDATION.has(day._periodWeekNumber);
     const sundayMissing = [];
     for (const field of SUNDAY_ONLY_FIELDS) {
       if (isSunday) {
@@ -304,7 +312,7 @@ async function main() {
           sundayValue = firstNonEmpty(dayDoc?.[field], template?.[field], reading?.[field]);
         }
         payload[field] = sundayValue;
-        if (!hasValue(sundayValue)) {
+        if (shouldValidateSundayFields && !hasValue(sundayValue)) {
           sundayMissing.push(field);
         }
       } else {
@@ -356,7 +364,7 @@ async function main() {
   for (const items of chunk(updates)) {
     const batch = db.batch();
     for (const item of items) {
-      batch.set(db.collection('calendarMap').doc(item.id), item.payload, { merge: true });
+      batch.set(db.collection(TARGET_COLLECTION).doc(item.id), item.payload, { merge: true });
     }
     await batch.commit();
     saved += items.length;
