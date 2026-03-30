@@ -11,16 +11,16 @@ const REPORT_MD_PATH = path.resolve(__dirname, '../reports/ordinary-period-valid
 const REPORT_JSON_PATH = path.resolve(__dirname, './json/ordinary-period-validation-report.json');
 
 const REQUIRED_CALENDAR_FIELDS = [
-  'officeOfReadingsVers',
   'officeOfReadingsR1',
   'officeOfReadingsR2',
+  'officeOfReadingsTeDeum',
   'officeOfReadingsPr',
   'readingRef',
   'templateRef',
   'compRef',
   '_psalmWeek',
 ];
-const REQUIRED_CALENDAR_SUNDAY_ONLY_FIELDS = ['laudesAntBen', 'vesperAntMag'];
+const REQUIRED_CALENDAR_SUNDAY_ONLY_FIELDS = ['vesper1AntMag','vesperAntMag', 'laudesAntBen'];
 
 const REQUIRED_COMPLETORIUM_FIELDS = [
   '_dayOfWeek',
@@ -38,6 +38,14 @@ const REQUIRED_DAY_TEMPLATE_FIELDS = [
   '_dayOfWeek',
   '_periodType',
   '_psalmWeekNumber',
+  'officeOfReadingsHymn',
+  'officeOfReadingsAnt1',
+  'officeOfReadingsAnt2',
+  'officeOfReadingsAnt3',
+  'officeOfReadingsPs1',
+  'officeOfReadingsPs2',
+  'officeOfReadingsPs3',
+  'officeOfReadingsVers',
   'laudesHymn',
   'laudesAnt1',
   'laudesAnt2',
@@ -86,6 +94,18 @@ const REQUIRED_DAY_TEMPLATE_FIELDS = [
   'vesperInter',
   'vesperPr',
 ];
+const REQUIRED_DAY_TEMPLATE_SUNDAY_ONLY_FIELDS = [
+  'vesper1Hymn',
+  'vesper1Ant1',
+  'vesper1Ant2',
+  'vesper1Ant3',
+  'vesper1Ps1',
+  'vesper1Ps2',
+  'vesper1Ps3',
+  'vesper1R',
+  'vesper1Inter',
+  'vesper1Pr',
+];
 
 function isEmptyValue(value) {
   if (value == null) return true;
@@ -127,7 +147,12 @@ async function checkDayTemplates(db) {
     }
     byPsalmWeek.get(psalmWeek).add(dayOfWeek);
 
-    const missing = getMissingFields(doc, REQUIRED_DAY_TEMPLATE_FIELDS);
+    const requiredFieldsForDoc = [...REQUIRED_DAY_TEMPLATE_FIELDS];
+    if (dayOfWeek === 1) {
+      requiredFieldsForDoc.push(...REQUIRED_DAY_TEMPLATE_SUNDAY_ONLY_FIELDS);
+    }
+
+    const missing = getMissingFields(doc, requiredFieldsForDoc);
     if (missing.length) {
       invalidDocs.push({ id: doc.id, psalmWeek, dayOfWeek, missing });
     }
@@ -299,6 +324,8 @@ function buildReport(results) {
     ...results.dayTemplates.weekCoverage.map((w) => `  - week ${w.week}: [${w.days.join(', ')}]`),
     `- Проверенные поля (${REQUIRED_DAY_TEMPLATE_FIELDS.length}):`,
     markdownList(REQUIRED_DAY_TEMPLATE_FIELDS),
+    `- Дополнительно только для воскресенья (${REQUIRED_DAY_TEMPLATE_SUNDAY_ONLY_FIELDS.length}):`,
+    markdownList(REQUIRED_DAY_TEMPLATE_SUNDAY_ONLY_FIELDS),
     `- Документы с незаполненными полями: **${results.dayTemplates.invalidDocs.length}**`,
     '',
     '## 2) completoriumTemplates',
