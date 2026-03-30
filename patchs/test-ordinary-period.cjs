@@ -20,6 +20,7 @@ const REQUIRED_CALENDAR_FIELDS = [
   'compRef',
   '_psalmWeek',
 ];
+const REQUIRED_CALENDAR_SUNDAY_ONLY_FIELDS = ['laudesAntBen', 'vesperAntMag'];
 
 const REQUIRED_COMPLETORIUM_FIELDS = [
   '_dayOfWeek',
@@ -45,7 +46,6 @@ const REQUIRED_DAY_TEMPLATE_FIELDS = [
   'laudesPs2',
   'laudesPs3',
   'laudesR',
-  'laudesAntBen',
   'laudesInter',
   'laudesPr',
   'sext1Hymn',
@@ -83,7 +83,6 @@ const REQUIRED_DAY_TEMPLATE_FIELDS = [
   'vesperPs2',
   'vesperPs3',
   'vesperR',
-  'vesperAntMag',
   'vesperInter',
   'vesperPr',
 ];
@@ -230,7 +229,12 @@ async function checkCalendarMap(db) {
     if (!slotMap.has(key)) slotMap.set(key, []);
     slotMap.get(key).push(doc.id);
 
-    const missing = getMissingFields(doc, REQUIRED_CALENDAR_FIELDS);
+    const requiredFieldsForDoc = [...REQUIRED_CALENDAR_FIELDS];
+    if (day === 1) {
+      requiredFieldsForDoc.push(...REQUIRED_CALENDAR_SUNDAY_ONLY_FIELDS);
+    }
+
+    const missing = getMissingFields(doc, requiredFieldsForDoc);
     if (missing.length) {
       invalidDocs.push({ id: doc.id, week, day, missing });
     }
@@ -320,6 +324,8 @@ function buildReport(results) {
     `- Пропущенные слоты (week/day): **${results.calendarMap.missingSlots.length}**`,
     `- Поля, которые должны быть заполнены (${REQUIRED_CALENDAR_FIELDS.length}):`,
     markdownList(REQUIRED_CALENDAR_FIELDS),
+    `- Дополнительно только для воскресенья (${REQUIRED_CALENDAR_SUNDAY_ONLY_FIELDS.length}):`,
+    markdownList(REQUIRED_CALENDAR_SUNDAY_ONLY_FIELDS),
     `- Документы calendarMap с незаполненными полями: **${results.calendarMap.invalidDocs.length}**`,
     '',
     '## Детали ошибок',
