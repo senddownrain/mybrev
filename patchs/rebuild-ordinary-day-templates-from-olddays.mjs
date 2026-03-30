@@ -2,7 +2,7 @@ import { writeFile } from 'node:fs/promises';
 import admin from 'firebase-admin';
 import serviceAccount from './serviceAccountKey.json' with { type: 'json' };
 
-const SOURCE_COLLECTION = 'oldDays';
+const SOURCE_COLLECTION_PRIMARY = 'oldDays';
 const TARGET_COLLECTION = 'dayTemplates';
 
 const ORDINARY_RANGES = [
@@ -19,6 +19,7 @@ const YEARS_DESC = ORDINARY_RANGES.map((x) => x.year).sort((a, b) => b - a);
 const WEEKDAY_LABELS = { 1: 'Нядзеля', 2: 'Панядзелак', 3: 'Аўторак', 4: 'Серада', 5: 'Чацвер', 6: 'Пятніца', 7: 'Субота' };
 
 const FIELDS = [
+  'officeOfReadingsHymn','officeOfReadingsAnt1','officeOfReadingsAnt2','officeOfReadingsAnt3','officeOfReadingsPs1','officeOfReadingsPs2','officeOfReadingsPs3','officeOfReadingsVers',
   'invitatoriumAnt','laudesHymn','laudesAnt1','laudesAnt2','laudesAnt3','laudesPs1','laudesPs2','laudesPs3','laudesR','laudesAntBen','laudesInter','laudesPr',
   'sext1Hymn','sext1Ant1','sext1Ant2','sext1Ant3','sext1Ps1','sext1Ps2','sext1Ps3','sext1R','sext1Pr',
   'sext2Hymn','sext2Ant1','sext2Ant2','sext2Ant3','sext2Ps1','sext2Ps2','sext2Ps3','sext2R','sext2Pr',
@@ -51,11 +52,10 @@ function payload(row, byDate, dateStr, psalmWeekNumber, dayOfWeek, report){
   for(const f of FIELDS) p[f]=asNullable(row[f]);
   if(dayOfWeek===1){
     const sat=byDate.get(addDays(dateStr,-1));
-    if(!sat){report.stats.missingSaturdayForVesper1.push({sunday:dateStr,saturdayExpected:addDays(dateStr,-1)});} else {
-      p.vesper1Hymn=asNullable(sat.vesperHymn); p.vesper1Ant1=asNullable(sat.vesperAnt1); p.vesper1Ant2=asNullable(sat.vesperAnt2); p.vesper1Ant3=asNullable(sat.vesperAnt3);
-      p.vesper1Ps1=asNullable(sat.vesperPs1); p.vesper1Ps2=asNullable(sat.vesperPs2); p.vesper1Ps3=asNullable(sat.vesperPs3); p.vesper1R=asNullable(sat.vesperR);
-      p.vesper1Inter=asNullable(sat.vesperInter); p.vesper1Pr=asNullable(sat.vesperPr);
-    }
+    if(!sat){report.stats.missingSaturdayForVesper1.push({sunday:dateStr,saturdayExpected:addDays(dateStr,-1)});}
+    p.vesper1Hymn=asNullable(sat?.vesperHymn); p.vesper1Ant1=asNullable(sat?.vesperAnt1); p.vesper1Ant2=asNullable(sat?.vesperAnt2); p.vesper1Ant3=asNullable(sat?.vesperAnt3);
+    p.vesper1Ps1=asNullable(sat?.vesperPs1); p.vesper1Ps2=asNullable(sat?.vesperPs2); p.vesper1Ps3=asNullable(sat?.vesperPs3); p.vesper1R=asNullable(sat?.vesperR);
+    p.vesper1Inter=asNullable(sat?.vesperInter); p.vesper1Pr=asNullable(sat?.vesperPr);
   }
 
   if(dayOfWeek===1){
@@ -69,14 +69,14 @@ function payload(row, byDate, dateStr, psalmWeekNumber, dayOfWeek, report){
 
 async function main(){
   admin.initializeApp({credential:admin.credential.cert(serviceAccount)}); const db=admin.firestore();
-  const snap=await db.collection(SOURCE_COLLECTION).where(admin.firestore.FieldPath.documentId(),'>=','2019-01-01').where(admin.firestore.FieldPath.documentId(),'<=','2025-11-29').orderBy(admin.firestore.FieldPath.documentId()).get();
+  const snap=await db.collection(SOURCE_COLLECTION_PRIMARY).where(admin.firestore.FieldPath.documentId(),'>=','2019-01-01').where(admin.firestore.FieldPath.documentId(),'<=','2025-11-29').orderBy(admin.firestore.FieldPath.documentId()).get();
   const byDate=new Map(snap.docs.map(d=>[d.id,{id:d.id,...d.data()}]));
 
   const existing=await db.collection(TARGET_COLLECTION).where('_periodType','==','ordinary').get();
   for(const c of chunk(existing.docs)){const b=db.batch(); for(const d of c)b.delete(d.ref); await b.commit();}
 
   const filled=new Map();
-  const report={sourceCollection:SOURCE_COLLECTION,deletedTemplates:existing.size,yearsScanned:YEARS_DESC,searchPhases:SEARCH_PHASES,totalRowsLoaded:snap.size,stats:{createdTemplates:0,missingPsalmWeek:[],missingSaturdayForVesper1:[],missingTemplateSlots:[],filledFrom:{}}};
+  const report={sourceCollectionPrimary:SOURCE_COLLECTION_PRIMARY,targetCollection:TARGET_COLLECTION,targetPeriod:'ordinary',deletedTemplates:existing.size,yearsScanned:YEARS_DESC,searchPhases:SEARCH_PHASES,totalRowsLoaded:snap.size,stats:{createdTemplates:0,missingPsalmWeek:[],missingSaturdayForVesper1:[],missingTemplateSlots:[],filledFrom:{}}};
 
   const mapByYear=new Map(ORDINARY_RANGES.map(r=>[r.year,r]));
   for(const phase of SEARCH_PHASES){
