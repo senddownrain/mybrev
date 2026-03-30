@@ -205,21 +205,27 @@ function firstNonEmpty(...values) {
   return null;
 }
 
+function weekDayKey(week, day) {
+  return `${Number(week)}|${Number(day)}`;
+}
+
 async function main() {
   admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
   const db = admin.firestore();
 
-  const [templatesSnap, completoriumSnap, readingsSnap, daysSnap] = await Promise.all([
+  const [templatesSnap, completoriumSnap, readingsSnap, daysSnap, calendarMapSnap] = await Promise.all([
     db.collection('dayTemplates').where('_periodType', '==', TARGET_PERIOD).get(),
     db.collection('completoriumTemplates').where('_periodType', '==', TARGET_PERIOD).get(),
     db.collection('readings').where('_periodType', '==', TARGET_PERIOD).get(),
     db.collection(SOURCE_COLLECTION_PRIMARY).where('_periodType', '==', TARGET_PERIOD).get(),
+    db.collection(TARGET_COLLECTION).where('_periodType', '==', TARGET_PERIOD).get(),
   ]);
 
   const templates = templatesSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
   const completoriums = completoriumSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
   const readings = readingsSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
   const days = daysSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  const calendarMapDocs = calendarMapSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
   const templateByDayPsalm = indexBy(templates, (item) => {
     if (item._dayOfWeek == null || item._psalmWeekNumber == null) return null;
@@ -236,60 +242,67 @@ async function main() {
     return `${Number(item._periodWeekNumber)}|${Number(item._dayOfWeek)}`;
   });
   const dayByDate = indexBy(days, (item) => item.id || item._date || null);
-
-  const ordinaryDays = ordinaryRanges
-    .slice()
-    .sort((a, b) => b.year - a.year)
-    .flatMap((entry) => buildOrdinaryDaysForYear(entry));
-  const ordinaryDayMetaByDate = new Map(ordinaryDays.map((d) => [d.dateStr, d]));
+  const calendarMapByDate = indexBy(calendarMapDocs, (item) => item.id || item._date || null);
+  calendarMapDocs.sort((a, b) => String(b._date || b.id || '').localeCompare(String(a._date || a.id || '')));
 
   const updates = [];
   const missing = { template: 0, comp: 0, reading: 0 };
+  const resolvedFieldCacheByWeekDay = new Map();
   const report = {
     years: {},
     invalidDocs: [],
     sundayFieldIssues: [],
   };
 
-  for (const day of ordinaryDays) {
+  for (const day of calendarMapDocs) {
+    if (Number(day._periodWeekNumber) < 1 || Number(day._periodWeekNumber) > 34) continue;
     const psalmWeek = psalmWeekFromPeriodWeek(day._periodWeekNumber);
     const template = templateByDayPsalm.get(`${day._dayOfWeek}|${psalmWeek}`) || null;
     const templateRef = template?.id || null;
     const compRef = compByDay.get(`${day._dayOfWeek}`)?.id || null;
-    const reading = readingByWeekDay.get(`${day._periodWeekNumber}|${day._dayOfWeek}`) || null;
+    const weekDay = weekDayKey(day._periodWeekNumber, day._dayOfWeek);
+    const reading = readingByWeekDay.get(weekDay) || null;
     const readingRef = reading?.id || null;
-    const dayDoc = dayByDate.get(day.dateStr) || null;
-    const prevDateStr = addDays(day.dateStr, -1);
+    const dateStr = day._date || day.id;
+    const dayDoc = dayByDate.get(dateStr) || null;
+    const prevDateStr = addDays(dateStr, -1);
     const prevDayDoc = dayByDate.get(prevDateStr) || null;
-    const prevMeta = ordinaryDayMetaByDate.get(prevDateStr) || null;
-    const prevPsalmWeek = prevMeta ? psalmWeekFromPeriodWeek(prevMeta._periodWeekNumber) : null;
-    const prevTemplate = prevMeta
-      ? (templateByDayPsalm.get(`${prevMeta._dayOfWeek}|${prevPsalmWeek}`) || null)
+    const prevCalendarDay = calendarMapByDate.get(prevDateStr) || null;
+    const prevPsalmWeek = prevCalendarDay ? psalmWeekFromPeriodWeek(prevCalendarDay._periodWeekNumber) : null;
+    const prevTemplate = prevCalendarDay
+      ? (templateByDayPsalm.get(`${prevCalendarDay._dayOfWeek}|${prevPsalmWeek}`) || null)
       : null;
 
     if (!templateRef) missing.template += 1;
     if (!compRef) missing.comp += 1;
     if (!readingRef) missing.reading += 1;
 
-    const payload = {
-      _date: day.dateStr,
-      _dayOfWeek: day._dayOfWeek,
-      _periodType: TARGET_PERIOD,
-      _periodWeekNumber: day._periodWeekNumber,
-      templateRef,
-      compRef,
-      readingRef,
-    };
-
-    for (const field of TEMPLATE_CONTROLLED_FIELDS) {
-      payload[field] = null;
-    }
+    const payload = {};
+    if (!hasValue(day.templateRef) && hasValue(templateRef)) payload.templateRef = templateRef;
+    if (!hasValue(day.compRef) && hasValue(compRef)) payload.compRef = compRef;
+    if (!hasValue(day.readingRef) && hasValue(readingRef)) payload.readingRef = readingRef;
 
     const unresolvedFields = [];
+    const cachedFields = resolvedFieldCacheByWeekDay.get(weekDay) || {};
+    const resolvedForWeekDay = { ...cachedFields };
+
     for (const field of RECOVERABLE_OFFICE_FIELDS) {
-      const value = firstNonEmpty(reading?.[field], dayDoc?.[field], template?.[field]);
-      payload[field] = value;
-      if (!hasValue(value)) unresolvedFields.push(field);
+      if (hasValue(day[field])) {
+        resolvedForWeekDay[field] = day[field];
+        continue;
+      }
+      const value = firstNonEmpty(
+        cachedFields[field],
+        reading?.[field],
+        dayDoc?.[field],
+        template?.[field]
+      );
+      if (hasValue(value)) {
+        payload[field] = value;
+        resolvedForWeekDay[field] = value;
+      } else {
+        unresolvedFields.push(field);
+      }
     }
 
     const isSunday = day._dayOfWeek === 1;
@@ -298,10 +311,15 @@ async function main() {
     const sundayMissing = [];
     for (const field of SUNDAY_ONLY_FIELDS) {
       if (isSunday) {
+        if (hasValue(day[field])) {
+          resolvedForWeekDay[field] = day[field];
+          continue;
+        }
         let sundayValue;
         if (field === 'vesper1AntMag') {
           // Воскресная I Вячэрня: берем антифон Магніфікат із суботы.
           sundayValue = firstNonEmpty(
+            cachedFields[field],
             prevDayDoc?.vesperAntMag,
             prevTemplate?.vesperAntMag,
             dayDoc?.vesper1AntMag,
@@ -309,37 +327,39 @@ async function main() {
             reading?.vesper1AntMag
           );
         } else {
-          sundayValue = firstNonEmpty(dayDoc?.[field], template?.[field], reading?.[field]);
+          sundayValue = firstNonEmpty(cachedFields[field], dayDoc?.[field], template?.[field], reading?.[field]);
         }
-        payload[field] = sundayValue;
+        if (hasValue(sundayValue)) {
+          payload[field] = sundayValue;
+          resolvedForWeekDay[field] = sundayValue;
+        }
         if (shouldValidateSundayFields && !hasValue(sundayValue)) {
           sundayMissing.push(field);
         }
-      } else {
-        payload[field] = null;
       }
     }
 
-    if (!report.years[day.year]) {
-      report.years[day.year] = {
+    const year = Number(String(dateStr).slice(0, 4));
+    if (!report.years[year]) {
+      report.years[year] = {
         total: 0,
         missingRefs: { template: 0, comp: 0, reading: 0 },
         unresolvedFields: 0,
         sundayMissingFields: 0,
       };
     }
-    report.years[day.year].total += 1;
-    if (!templateRef) report.years[day.year].missingRefs.template += 1;
-    if (!compRef) report.years[day.year].missingRefs.comp += 1;
-    if (!readingRef) report.years[day.year].missingRefs.reading += 1;
-    report.years[day.year].unresolvedFields += unresolvedFields.length;
-    report.years[day.year].sundayMissingFields += sundayMissing.length;
+    report.years[year].total += 1;
+    if (!templateRef) report.years[year].missingRefs.template += 1;
+    if (!compRef) report.years[year].missingRefs.comp += 1;
+    if (!readingRef) report.years[year].missingRefs.reading += 1;
+    report.years[year].unresolvedFields += unresolvedFields.length;
+    report.years[year].sundayMissingFields += sundayMissing.length;
 
     if (unresolvedFields.length > 0) {
       report.invalidDocs.push({
-        id: readingRef || day.dateStr,
-        date: day.dateStr,
-        year: day.year,
+        id: readingRef || dateStr,
+        date: dateStr,
+        year: Number(String(dateStr).slice(0, 4)),
         week: day._periodWeekNumber,
         day: day._dayOfWeek,
         missing: unresolvedFields,
@@ -348,16 +368,19 @@ async function main() {
 
     if (sundayMissing.length > 0) {
       report.sundayFieldIssues.push({
-        id: readingRef || day.dateStr,
-        date: day.dateStr,
-        year: day.year,
+        id: readingRef || dateStr,
+        date: dateStr,
+        year: Number(String(dateStr).slice(0, 4)),
         week: day._periodWeekNumber,
         day: day._dayOfWeek,
         missing: sundayMissing,
       });
     }
 
-    updates.push({ id: day.dateStr, payload });
+    resolvedFieldCacheByWeekDay.set(weekDay, resolvedForWeekDay);
+    if (Object.keys(payload).length > 0) {
+      updates.push({ id: dateStr, payload });
+    }
   }
 
   let saved = 0;
