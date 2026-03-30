@@ -23,3 +23,7 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# generated validation reports
+patchs/json/ordinary-period-validation-report.json
+reports/ordinary-period-validation-report.md
