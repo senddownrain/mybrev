@@ -1,6 +1,6 @@
 # Ordinary Period Validation Report
 
-Дата: 2026-03-30T08:28:26.923Z
+Дата: 2026-03-30T08:33:36.355Z
 
 Общий статус: <span style="color:#d93025;font-weight:700">❌ FAIL</span>
 
