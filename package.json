@@ -57,7 +57,12 @@
     "type": "git",
     "url": "git+https://github.com/senddownrain/mybrev.git"
   },
-  "keywords": ["prayer", "catholic", "belarusian", "pwa"],
+  "keywords": [
+    "prayer",
+    "catholic",
+    "belarusian",
+    "pwa"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
