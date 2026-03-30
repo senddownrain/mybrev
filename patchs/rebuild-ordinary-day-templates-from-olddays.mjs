@@ -14,7 +14,10 @@ const ORDINARY_RANGES = [
   { year: 2024, ordinary: [['2024-01-08', '2024-02-13'], ['2024-05-20', '2024-11-30']] },
   { year: 2025, ordinary: [['2025-01-13', '2025-03-04'], ['2025-06-09', '2025-11-29']] },
 ];
-const SEARCH_PHASES = [{ name: 'primary', min: 2, max: 5 }, { name: 'fallback', min: 10, max: 33 }];
+const SEARCH_PHASES = [
+  { name: 'primary', periodWeekMin: 2, periodWeekMax: 5 },
+  { name: 'fallback', periodWeekMin: 10, periodWeekMax: 33 },
+];
 const YEARS_DESC = ORDINARY_RANGES.map((x) => x.year).sort((a, b) => b - a);
 const WEEKDAY_LABELS = { 1: 'Нядзеля', 2: 'Панядзелак', 3: 'Аўторак', 4: 'Серада', 5: 'Чацвер', 6: 'Пятніца', 7: 'Субота' };
 
@@ -84,7 +87,7 @@ async function main(){
       const dates=mapByYear.get(year).ordinary.flatMap(([a,b])=>dateRange(a,b));
       for(const ds of dates){
         const row=byDate.get(ds); if(!row||row._periodType!=='ordinary') continue;
-        const pw=Number(row._periodWeekNumber); if(!Number.isInteger(pw)||pw<phase.min||pw>phase.max) continue;
+        const pw=Number(row._periodWeekNumber); if(!Number.isInteger(pw)||pw<phase.periodWeekMin||pw>phase.periodWeekMax) continue;
         const ps=derivePsalm(row); if(!ps.value){report.stats.missingPsalmWeek.push({date:ds,phase:phase.name,periodWeekNumber:row._periodWeekNumber??null,feastName:row._feastName??null}); continue;}
         const day=Number(row._dayOfWeek)||dow(ds); const id=`ordinary-psalmweek-${ps.value}-day-${day}`; if(filled.has(id)) continue;
         filled.set(id,{id,payload:payload(row,byDate,ds,ps.value,day,report)});
