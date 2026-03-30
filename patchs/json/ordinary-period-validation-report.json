@@ -63,78 +63,8 @@
         "psalmWeek": 1,
         "dayOfWeek": 1,
         "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr",
           "laudesAntBen",
           "vesperAntMag"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-1-day-2",
-        "psalmWeek": 1,
-        "dayOfWeek": 2,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-1-day-3",
-        "psalmWeek": 1,
-        "dayOfWeek": 3,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-1-day-4",
-        "psalmWeek": 1,
-        "dayOfWeek": 4,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-1-day-5",
-        "psalmWeek": 1,
-        "dayOfWeek": 5,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-1-day-6",
-        "psalmWeek": 1,
-        "dayOfWeek": 6,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-1-day-7",
-        "psalmWeek": 1,
-        "dayOfWeek": 7,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
         ]
       },
       {
@@ -142,78 +72,8 @@
         "psalmWeek": 2,
         "dayOfWeek": 1,
         "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr",
           "laudesAntBen",
           "vesperAntMag"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-2-day-2",
-        "psalmWeek": 2,
-        "dayOfWeek": 2,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-2-day-3",
-        "psalmWeek": 2,
-        "dayOfWeek": 3,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-2-day-4",
-        "psalmWeek": 2,
-        "dayOfWeek": 4,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-2-day-5",
-        "psalmWeek": 2,
-        "dayOfWeek": 5,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-2-day-6",
-        "psalmWeek": 2,
-        "dayOfWeek": 6,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-2-day-7",
-        "psalmWeek": 2,
-        "dayOfWeek": 7,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
         ]
       },
       {
@@ -221,78 +81,8 @@
         "psalmWeek": 3,
         "dayOfWeek": 1,
         "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr",
           "laudesAntBen",
           "vesperAntMag"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-3-day-2",
-        "psalmWeek": 3,
-        "dayOfWeek": 2,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-3-day-3",
-        "psalmWeek": 3,
-        "dayOfWeek": 3,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-3-day-4",
-        "psalmWeek": 3,
-        "dayOfWeek": 4,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-3-day-5",
-        "psalmWeek": 3,
-        "dayOfWeek": 5,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-3-day-6",
-        "psalmWeek": 3,
-        "dayOfWeek": 6,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-3-day-7",
-        "psalmWeek": 3,
-        "dayOfWeek": 7,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
         ]
       },
       {
@@ -300,78 +90,8 @@
         "psalmWeek": 4,
         "dayOfWeek": 1,
         "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr",
           "laudesAntBen",
           "vesperAntMag"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-4-day-2",
-        "psalmWeek": 4,
-        "dayOfWeek": 2,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-4-day-3",
-        "psalmWeek": 4,
-        "dayOfWeek": 3,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-4-day-4",
-        "psalmWeek": 4,
-        "dayOfWeek": 4,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-4-day-5",
-        "psalmWeek": 4,
-        "dayOfWeek": 5,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-4-day-6",
-        "psalmWeek": 4,
-        "dayOfWeek": 6,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
-        ]
-      },
-      {
-        "id": "ordinary-psalmweek-4-day-7",
-        "psalmWeek": 4,
-        "dayOfWeek": 7,
-        "missing": [
-          "officeOfReadingsVers",
-          "officeOfReadingsR1",
-          "officeOfReadingsR2",
-          "officeOfReadingsPr"
         ]
       }
     ],
