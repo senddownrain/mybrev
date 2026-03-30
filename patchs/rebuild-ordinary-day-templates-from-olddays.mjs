@@ -58,7 +58,7 @@ function payload(row, byDate, dateStr, psalmWeekNumber, dayOfWeek, report){
     if(!sat){report.stats.missingSaturdayForVesper1.push({sunday:dateStr,saturdayExpected:addDays(dateStr,-1)});}
     p.vesper1Hymn=asNullable(sat?.vesperHymn); p.vesper1Ant1=asNullable(sat?.vesperAnt1); p.vesper1Ant2=asNullable(sat?.vesperAnt2); p.vesper1Ant3=asNullable(sat?.vesperAnt3);
     p.vesper1Ps1=asNullable(sat?.vesperPs1); p.vesper1Ps2=asNullable(sat?.vesperPs2); p.vesper1Ps3=asNullable(sat?.vesperPs3); p.vesper1R=asNullable(sat?.vesperR);
-    p.vesper1Inter=asNullable(sat?.vesper1Inter);
+    p.vesper1Inter=asNullable(sat?.vesperInter); p.vesper1Pr=asNullable(sat?.vesperPr);
   }
 
   if(dayOfWeek===1){
