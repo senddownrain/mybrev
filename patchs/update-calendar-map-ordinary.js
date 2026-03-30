@@ -110,22 +110,34 @@ const SUNDAY_WEEKS_EXCLUDED_FROM_VALIDATION = new Set([1, 34]);
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 function ymdToDate(ymd) {
-  return new Date(`${ymd}T00:00:00Z`);
+  const date = new Date(`${ymd}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) return null;
+  return date;
 }
 
 function addDays(ymd, diffDays) {
   const date = ymdToDate(ymd);
+  if (!date) return null;
   date.setUTCDate(date.getUTCDate() + diffDays);
   return dateToYmd(date);
 }
 
 function dateToYmd(date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return null;
   return date.toISOString().slice(0, 10);
 }
 
 function dayOfWeek(ymd) {
-  const day = ymdToDate(ymd).getUTCDay();
+  const parsed = ymdToDate(ymd);
+  if (!parsed) return null;
+  const day = parsed.getUTCDay();
   return day === 0 ? 1 : day + 1;
+}
+
+function isValidYmd(ymd) {
+  if (typeof ymd !== 'string') return false;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return false;
+  return ymdToDate(ymd) !== null;
 }
 
 function psalmWeekFromPeriodWeek(periodWeekNumber) {
@@ -263,9 +275,21 @@ async function main() {
     const weekDay = weekDayKey(day._periodWeekNumber, day._dayOfWeek);
     const reading = readingByWeekDay.get(weekDay) || null;
     const readingRef = reading?.id || null;
-    const dateStr = day._date || day.id;
+    const dateStr = isValidYmd(day._date) ? day._date : (isValidYmd(day.id) ? day.id : null);
+    if (!dateStr) {
+      report.invalidDocs.push({
+        id: day.id || null,
+        date: day._date || null,
+        year: null,
+        week: day._periodWeekNumber,
+        day: day._dayOfWeek,
+        missing: ['_date'],
+      });
+      continue;
+    }
     const dayDoc = dayByDate.get(dateStr) || null;
     const prevDateStr = addDays(dateStr, -1);
+    if (!prevDateStr) continue;
     const prevDayDoc = dayByDate.get(prevDateStr) || null;
     const prevCalendarDay = calendarMapByDate.get(prevDateStr) || null;
     const prevPsalmWeek = prevCalendarDay ? psalmWeekFromPeriodWeek(prevCalendarDay._periodWeekNumber) : null;
