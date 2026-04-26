@@ -145,7 +145,9 @@ const PERIOD_RANGES = [
   { start: '2025-12-25', end: '2026-01-11', period: 'christmas' },
 ];
 
-const BATCH_SIZE = 400;
+const BATCH_SIZE = 200;
+const MAX_COMMIT_RETRIES = 5;
+const BASE_RETRY_DELAY_MS = 1_000;
 
 function getPeriodByDate(dateId) {
   const match = PERIOD_RANGES.find(({ start, end }) => dateId >= start && dateId <= end);
@@ -182,8 +184,61 @@ async function migrate() {
 
   let migrated = 0;
   let skipped = 0;
-  let batch = db.batch();
-  let batchOps = 0;
+  let committed = 0;
+  const pendingWrites = [];
+
+  const isDeadlineError = (error) =>
+    error?.code === 4 || String(error?.details ?? '').includes('Deadline exceeded');
+
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const commitChunk = async (writes, depth = 0) => {
+    let attempt = 0;
+    while (attempt <= MAX_COMMIT_RETRIES) {
+      try {
+        const batch = db.batch();
+        for (const write of writes) {
+          batch.set(write.ref, write.payload, { merge: false });
+        }
+        await batch.commit();
+        committed += writes.length;
+        return;
+      } catch (error) {
+        const canRetry = isDeadlineError(error) && attempt < MAX_COMMIT_RETRIES;
+        if (canRetry) {
+          const delay = BASE_RETRY_DELAY_MS * 2 ** attempt;
+          console.warn(
+            `Commit retry ${attempt + 1}/${MAX_COMMIT_RETRIES} for ${writes.length} docs after deadline. Waiting ${delay}ms...`,
+          );
+          await sleep(delay);
+          attempt += 1;
+          continue;
+        }
+
+        const canSplit = isDeadlineError(error) && writes.length > 1 && depth < 6;
+        if (canSplit) {
+          const middle = Math.ceil(writes.length / 2);
+          const left = writes.slice(0, middle);
+          const right = writes.slice(middle);
+          console.warn(`Splitting timed-out chunk (${writes.length}) into ${left.length} + ${right.length}.`);
+          await commitChunk(left, depth + 1);
+          await commitChunk(right, depth + 1);
+          return;
+        }
+
+        throw error;
+      }
+    }
+  };
+
+  const flushPendingWrites = async () => {
+    if (pendingWrites.length === 0) {
+      return;
+    }
+
+    const writesToCommit = pendingWrites.splice(0, pendingWrites.length);
+    await commitChunk(writesToCommit);
+  };
 
   for (const doc of sourceSnapshot.docs) {
     const dateId = doc.id;
@@ -203,22 +258,17 @@ async function migrate() {
     const payload = buildPayload(doc.data(), period);
     const targetRef = db.collection(targetCollection).doc(dateId);
 
-    batch.set(targetRef, payload, { merge: false });
-    batchOps += 1;
+    pendingWrites.push({ ref: targetRef, payload });
     migrated += 1;
 
-    if (batchOps >= BATCH_SIZE) {
-      await batch.commit();
-      batch = db.batch();
-      batchOps = 0;
+    if (pendingWrites.length >= BATCH_SIZE) {
+      await flushPendingWrites();
     }
   }
 
-  if (batchOps > 0) {
-    await batch.commit();
-  }
+  await flushPendingWrites();
 
-  console.log(JSON.stringify({ sourceDocs: sourceSnapshot.size, migrated, skipped }, null, 2));
+  console.log(JSON.stringify({ sourceDocs: sourceSnapshot.size, migrated, committed, skipped }, null, 2));
 }
 
 migrate().catch((error) => {
