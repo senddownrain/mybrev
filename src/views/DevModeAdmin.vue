@@ -174,7 +174,7 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 import { db } from '@/plugins/firebase'
 import { WEEKDAY_LABEL_MAP } from '@/constants/liturgical'
 
@@ -247,9 +247,8 @@ onMounted(async () => {
 })
 
 async function loadIndexData() {
-  const ordinaryQ = query(collection(db, 'ordinaryTmp'), where('_periodType', '==', 'ordinary'))
   const fixedSnap = await getDocs(collection(db, 'fixedDays'))
-  const ordinarySnap = await getDocs(ordinaryQ)
+  const ordinarySnap = await getDocs(collection(db, 'ordinaryTmp'))
 
   allOrdinaryDocs.value = ordinarySnap.docs.map((item) => ({ id: item.id, ...item.data() }))
   fixedDaysMap.value = new Map(fixedSnap.docs.map((item) => [item.id, item.data()]))
@@ -274,19 +273,56 @@ function closeDay() {
 }
 
 function normalizeYear(item) {
-  const raw = Number(item?._year ?? item?.year ?? item?._liturgicalYear ?? 0)
+  const raw = Number(item?._year ?? item?.year ?? item?._liturgicalYear ?? parseDayId(item?.id)?.year ?? 0)
   if (raw >= 19 && raw <= 25) return raw + 2000
   return raw
 }
 
+function parseDayId(id) {
+  const value = String(id ?? '').trim()
+
+  const ordinaryMatch = value.match(/^ordinary-w(\d{1,2})-d(\d{1,2})$/i)
+  if (ordinaryMatch) {
+    return {
+      periodType: 'ordinary',
+      week: Number(ordinaryMatch[1]),
+      day: Number(ordinaryMatch[2]),
+      year: null,
+    }
+  }
+
+  const yearWeekDayMatch = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)
+  if (yearWeekDayMatch) {
+    return {
+      periodType: 'ordinary',
+      year: Number(yearWeekDayMatch[1]),
+      week: Number(yearWeekDayMatch[2]),
+      day: Number(yearWeekDayMatch[3]),
+    }
+  }
+
+  return null
+}
+
+function getDocMeta(item) {
+  const fromId = parseDayId(item?.id)
+  return {
+    periodType: item?._periodType ?? fromId?.periodType ?? 'ordinary',
+    week: Number(item?._periodWeekNumber ?? fromId?.week ?? 0),
+    day: Number(item?._dayOfWeek ?? fromId?.day ?? 0),
+    year: normalizeYear(item),
+  }
+}
+
 function findDayBySlot(year) {
   if (!selectedSlot.value) return null
-  return allOrdinaryDocs.value.find((item) => (
-    item?._periodType === 'ordinary'
-    && Number(item?._periodWeekNumber) === Number(selectedSlot.value.week)
-    && Number(item?._dayOfWeek) === Number(selectedSlot.value.day)
-    && normalizeYear(item) === Number(year)
-  )) || null
+  return allOrdinaryDocs.value.find((item) => {
+    const meta = getDocMeta(item)
+    return meta.periodType === 'ordinary'
+      && meta.week === Number(selectedSlot.value.week)
+      && meta.day === Number(selectedSlot.value.day)
+      && meta.year === Number(year)
+  }) || null
 }
 
 function mergeWithDefaults(source) {
