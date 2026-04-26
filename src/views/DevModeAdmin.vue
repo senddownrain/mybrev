@@ -1,119 +1,251 @@
 <template>
-  <main class="ordinary-admin">
-    <header class="topbar">
+  <v-container fluid class="pa-4 ordinary-admin">
+    <v-toolbar density="comfortable" rounded="lg" class="mb-4">
       <template v-if="!selectedSlot">
-        <h1>Полный Ordinary</h1>
+        <v-toolbar-title>Полный Ordinary</v-toolbar-title>
       </template>
       <template v-else>
-        <button type="button" class="topbar-btn" @click="closeDay">Закрыть</button>
-        <h1>{{ selectedSlotLabel }}</h1>
-        <button type="button" class="topbar-btn primary" :disabled="saving" @click="saveDay">
-          {{ saving ? 'Сохранение...' : 'Сохранить' }}
-        </button>
+        <v-btn variant="text" prepend-icon="mdi-arrow-left" @click="closeDay">Закрыть</v-btn>
+        <v-toolbar-title>{{ selectedSlotLabel }}</v-toolbar-title>
+        <v-btn color="primary" :loading="saving" @click="saveDay">Сохранить</v-btn>
       </template>
-    </header>
+    </v-toolbar>
 
-    <section v-if="!selectedSlot" class="list-view">
-      <p class="hint">34 недели, без воскресенья 1-й и 34-й недели.</p>
+    <v-card v-if="!selectedSlot" rounded="lg" class="pa-4">
+      <v-alert type="info" variant="tonal" class="mb-4">
+        34 недели, без воскресенья 1-й и 34-й недели.
+      </v-alert>
 
-      <details
-        v-for="week in weekGroups"
-        :key="week.week"
-        class="week-group"
-        :open="week.week === 1"
-      >
-        <summary>Неделя {{ week.week }}</summary>
-        <ul>
-          <li
-            v-for="item in week.days"
-            :key="item.key"
-            class="day-item"
-            :class="item.checked ? 'checked' : 'unchecked'"
-            @click="openDay(item)"
+      <v-expansion-panels multiple>
+        <v-expansion-panel v-for="week in weekGroups" :key="week.week" :value="week.week">
+          <v-expansion-panel-title>Неделя {{ week.week }}</v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <v-list density="comfortable">
+              <v-list-item
+                v-for="item in week.days"
+                :key="item.key"
+                :title="item.label"
+                :active="item.checked"
+                rounded="lg"
+                @click="openDay(item)"
+              >
+                <template #prepend>
+                  <v-icon :color="item.checked ? 'success' : 'error'">
+                    {{ item.checked ? 'mdi-check-circle' : 'mdi-close-circle' }}
+                  </v-icon>
+                </template>
+                <template #append>
+                  <v-checkbox-btn :model-value="item.checked" disabled />
+                </template>
+              </v-list-item>
+            </v-list>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </v-card>
+
+    <v-card v-else rounded="lg" class="pa-4">
+      <v-row class="mb-3" align="center" dense>
+        <v-col cols="12" md="3">
+          <v-select
+            v-model="selectedCompareYear"
+            :items="compareYears"
+            label="Год для сравнения"
+            density="comfortable"
+            variant="outlined"
+          />
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-checkbox v-model="editableChecked" label="Проверен (fixedDays)" hide-details />
+        </v-col>
+        <v-col cols="12" md="6" class="d-flex flex-wrap ga-2 justify-md-end">
+          <v-btn color="secondary" variant="outlined" @click="copyAllFromCompare">Копировать всё</v-btn>
+          <v-btn color="indigo" variant="outlined" @click="openSaveTemplateDialog">Сохранить шаблон</v-btn>
+          <v-btn color="teal" variant="outlined" @click="openLoadTemplateDialog">Подгрузить шаблон</v-btn>
+          <v-btn
+            color="deep-orange"
+            variant="outlined"
+            :disabled="!templateAppliedSnapshot"
+            @click="rollbackTemplateApply"
           >
-            <span>{{ item.label }}</span>
-            <input type="checkbox" :checked="item.checked" disabled>
-          </li>
-        </ul>
-      </details>
-    </section>
+            Откатить шаблон
+          </v-btn>
+          <v-btn color="warning" variant="outlined" @click="undoAllChanges">Отменить всё</v-btn>
+          <v-btn color="primary" :loading="saving" @click="saveDay">Сохранить</v-btn>
+        </v-col>
+      </v-row>
 
-    <section v-else class="detail-view">
-      <div class="bulk-actions">
-        <label>
-          Год для сравнения:
-          <select v-model.number="selectedCompareYear" @change="loadDayData">
-            <option v-for="year in compareYears" :key="year" :value="year">{{ year }}</option>
-          </select>
-        </label>
-        <button type="button" @click="copyAllFromCompare">Копировать всё</button>
-        <button type="button" @click="undoAllChanges">Отменить всё</button>
-      </div>
+      <v-alert type="info" variant="tonal" class="mb-3">
+        Скролл общий: поля слева и справа всегда напротив друг друга.
+      </v-alert>
 
-      <div class="columns">
-        <article class="column">
-          <h2>Источник 2025 (редактируемый)</h2>
-          <label class="checked-toggle">
-            <input v-model="editableChecked" type="checkbox">
-            Проверен
-          </label>
+      <div class="compare-table-wrapper">
+        <v-row class="header-row" no-gutters>
+          <v-col cols="6" class="px-1">
+            <v-card color="primary" variant="tonal" class="pa-2 text-subtitle-1 font-weight-bold">
+              Источник (fixedDays/2025) — редактируемый
+            </v-card>
+          </v-col>
+          <v-col cols="6" class="px-1">
+            <v-card color="secondary" variant="tonal" class="pa-2 text-subtitle-1 font-weight-bold">
+              Сравнение: {{ selectedCompareYear }}
+            </v-card>
+          </v-col>
+        </v-row>
 
-          <div v-for="field in FIELDS" :key="`left-${field}`" class="field-card" :class="{ empty: isEmpty(leftDraft[field]) }">
-            <div class="field-head">
-              <strong>{{ field }}</strong>
-              <button
-                v-if="!READ_ONLY_FIELDS.has(field)"
-                type="button"
-                class="mini"
-                @click="openEditDialog(field)"
-              >
-                ✏️
-              </button>
-            </div>
-            <p class="field-value two-lines">{{ formatValue(leftDraft[field]) }}</p>
-          </div>
+        <div class="compare-scroll">
+          <v-row
+            v-for="field in FIELDS"
+            :key="field"
+            class="field-row"
+            no-gutters
+          >
+            <v-col cols="6" class="px-1 py-1">
+              <v-card :color="isEmpty(leftDraft[field]) ? 'error' : undefined" :variant="isEmpty(leftDraft[field]) ? 'tonal' : 'outlined'">
+                <v-card-item>
+                  <div class="d-flex align-center justify-space-between ga-2">
+                    <div class="text-body-2 font-weight-bold">{{ field }}</div>
+                    <v-btn
+                      v-if="!READ_ONLY_FIELDS.has(field)"
+                      size="small"
+                      variant="text"
+                      icon="mdi-pencil"
+                      @click="openEditDialog(field)"
+                    />
+                  </div>
+                  <div class="field-value mt-2 line-clamp-2">{{ formatValue(leftDraft[field]) }}</div>
+                </v-card-item>
+              </v-card>
+            </v-col>
 
-          <button type="button" class="save-bottom" :disabled="saving" @click="saveDay">
-            {{ saving ? 'Сохранение...' : 'Сохранить' }}
-          </button>
-        </article>
-
-        <article class="column">
-          <h2>Сравнение: {{ selectedCompareYear }}</h2>
-          <div v-for="field in FIELDS" :key="`right-${field}`" class="field-card">
-            <div class="field-head">
-              <strong>{{ field }}</strong>
-              <button
-                v-if="!READ_ONLY_FIELDS.has(field)"
-                type="button"
-                class="mini"
-                @click="copyField(field)"
-              >
-                ⬅️
-              </button>
-            </div>
-            <p class="field-value two-lines">{{ formatValue(compareDay[field]) }}</p>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <dialog :open="Boolean(editField)" class="edit-dialog">
-      <form method="dialog" class="edit-form" @submit.prevent="applyEdit">
-        <h3>Редактировать {{ editField }}</h3>
-        <textarea v-model="editValue" rows="8" />
-        <div class="edit-actions">
-          <button type="button" @click="closeEditDialog">Отмена</button>
-          <button type="submit" class="primary">Применить</button>
+            <v-col cols="6" class="px-1 py-1">
+              <v-card variant="outlined">
+                <v-card-item>
+                  <div class="d-flex align-center justify-space-between ga-2">
+                    <div class="text-body-2 font-weight-bold">{{ field }}</div>
+                    <v-btn
+                      v-if="!READ_ONLY_FIELDS.has(field)"
+                      size="small"
+                      variant="text"
+                      icon="mdi-arrow-left"
+                      @click="copyField(field)"
+                    />
+                  </div>
+                  <div class="field-value mt-2 line-clamp-2">{{ formatValue(compareDay[field]) }}</div>
+                </v-card-item>
+              </v-card>
+            </v-col>
+          </v-row>
         </div>
-      </form>
-    </dialog>
-  </main>
+      </div>
+    </v-card>
+
+    <v-dialog v-model="editDialogOpen" fullscreen>
+      <v-card>
+        <v-toolbar>
+          <v-toolbar-title>Редактировать {{ editField }}</v-toolbar-title>
+          <v-spacer />
+          <v-btn icon="mdi-close" variant="text" @click="closeEditDialog" />
+        </v-toolbar>
+
+        <v-card-text class="pa-4">
+          <v-btn-toggle v-model="editMode" mandatory color="primary" class="mb-4">
+            <v-btn value="html">HTML</v-btn>
+            <v-btn value="quill">Quill</v-btn>
+          </v-btn-toggle>
+
+          <v-textarea
+            v-if="editMode === 'html'"
+            v-model="editValue"
+            label="HTML"
+            auto-grow
+            rows="16"
+            variant="outlined"
+          />
+
+          <quill-editor
+            v-else
+            v-model:content="editValue"
+            content-type="html"
+            theme="snow"
+            class="quill-full"
+          />
+        </v-card-text>
+
+        <v-card-actions class="px-4 pb-4">
+          <v-spacer />
+          <v-btn variant="outlined" @click="closeEditDialog">Отмена</v-btn>
+          <v-btn color="primary" @click="applyEdit">Применить</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="saveTemplateDialogOpen" fullscreen>
+      <v-card>
+        <v-toolbar>
+          <v-toolbar-title>Сохранить шаблон</v-toolbar-title>
+          <v-spacer />
+          <v-btn icon="mdi-close" variant="text" @click="closeSaveTemplateDialog" />
+        </v-toolbar>
+        <v-card-text class="pa-4">
+          <v-text-field
+            v-model="templateTitleInput"
+            label="Название шаблона"
+            variant="outlined"
+            hint="Можно изменить автосгенерированное название перед сохранением"
+            persistent-hint
+          />
+        </v-card-text>
+        <v-card-actions class="px-4 pb-4">
+          <v-spacer />
+          <v-btn variant="outlined" @click="closeSaveTemplateDialog">Отмена</v-btn>
+          <v-btn color="primary" :loading="templateSaving" @click="saveTemplate">Сохранить</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="loadTemplateDialogOpen" fullscreen>
+      <v-card>
+        <v-toolbar>
+          <v-toolbar-title>Подгрузить шаблон</v-toolbar-title>
+          <v-spacer />
+          <v-btn icon="mdi-close" variant="text" @click="closeLoadTemplateDialog" />
+        </v-toolbar>
+        <v-card-text class="pa-4">
+          <v-list v-if="templatesList.length" lines="two" density="comfortable">
+            <v-list-item
+              v-for="template in templatesList"
+              :key="template.id"
+              :title="template.title || template.id"
+              :subtitle="`ID: ${template.id}`"
+              :active="selectedTemplateId === template.id"
+              rounded="lg"
+              @click="selectedTemplateId = template.id"
+            >
+              <template #append>
+                <v-icon v-if="selectedTemplateId === template.id" color="primary">mdi-check-circle</v-icon>
+              </template>
+            </v-list-item>
+          </v-list>
+          <v-alert v-else type="info" variant="tonal">
+            В коллекции <code>tmpTemplates</code> пока нет шаблонов.
+          </v-alert>
+        </v-card-text>
+        <v-card-actions class="px-4 pb-4">
+          <v-spacer />
+          <v-btn variant="outlined" @click="closeLoadTemplateDialog">Отмена</v-btn>
+          <v-btn color="primary" :disabled="!selectedTemplateId" @click="applySelectedTemplate">
+            Применить шаблон
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import { computed, onMounted, ref, watch } from 'vue'
+import { addDoc, collection, doc, getDocs, setDoc } from 'firebase/firestore'
 import { db } from '@/plugins/firebase'
 import { WEEKDAY_LABEL_MAP } from '@/constants/liturgical'
 
@@ -132,6 +264,18 @@ const FIELDS = [
 ]
 
 const READ_ONLY_FIELDS = new Set(['_dayOfWeek', '_periodType', '_periodWeekNumber'])
+const TEMPLATE_FIELDS = [
+  '_dayOfWeek', '_periodType',
+  'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
+  'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers',
+  'laudesHymn', 'laudesAnt1', 'laudesAnt2', 'laudesAnt3', 'laudesPs1', 'laudesPs2', 'laudesPs3',
+  'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
+  'sext1Hymn', 'sext1Ant1', 'sext1Ant2', 'sext1Ant3', 'sext1Ps1', 'sext1Ps2', 'sext1Ps3', 'sext1R', 'sext1Pr',
+  'sext2Hymn', 'sext2Ant1', 'sext2Ant2', 'sext2Ant3', 'sext2Ps1', 'sext2Ps2', 'sext2Ps3', 'sext2R', 'sext2Pr',
+  'sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr',
+  'vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3',
+  'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr',
+]
 
 const selectedSlot = ref(null)
 const selectedCompareYear = ref(2024)
@@ -145,9 +289,18 @@ const leftOriginal = ref(buildEmptyDay())
 const compareDay = ref(buildEmptyDay())
 const editableChecked = ref(false)
 
+const editDialogOpen = ref(false)
 const editField = ref('')
 const editValue = ref('')
+const editMode = ref('html')
 const saving = ref(false)
+const saveTemplateDialogOpen = ref(false)
+const loadTemplateDialogOpen = ref(false)
+const templateTitleInput = ref('')
+const templateSaving = ref(false)
+const templatesList = ref([])
+const selectedTemplateId = ref('')
+const templateAppliedSnapshot = ref(null)
 
 const selectedSlotLabel = computed(() => {
   if (!selectedSlot.value) return ''
@@ -175,19 +328,20 @@ const weekGroups = computed(() => {
   return groups
 })
 
+watch(selectedCompareYear, () => {
+  if (selectedSlot.value) loadDayData()
+})
+
 onMounted(async () => {
   await loadIndexData()
 })
 
 async function loadIndexData() {
-  const ordinaryQ = query(collection(db, 'ordinaryTmp'), where('_periodType', '==', 'ordinary'))
   const fixedSnap = await getDocs(collection(db, 'fixedDays'))
-  const ordinarySnap = await getDocs(ordinaryQ)
+  const ordinarySnap = await getDocs(collection(db, 'ordinaryTmp'))
 
   allOrdinaryDocs.value = ordinarySnap.docs.map((item) => ({ id: item.id, ...item.data() }))
-  fixedDaysMap.value = new Map(
-    fixedSnap.docs.map((item) => [item.id, item.data()]),
-  )
+  fixedDaysMap.value = new Map(fixedSnap.docs.map((item) => [item.id, item.data()]))
 }
 
 function buildDayId(periodType, week, day) {
@@ -201,6 +355,7 @@ function buildEmptyDay() {
 function openDay(slot) {
   selectedSlot.value = slot
   selectedCompareYear.value = 2024
+  templateAppliedSnapshot.value = null
   loadDayData()
 }
 
@@ -209,17 +364,56 @@ function closeDay() {
 }
 
 function normalizeYear(item) {
-  return Number(item?._year || item?.year || item?._liturgicalYear || 0)
+  const raw = Number(item?._year ?? item?.year ?? item?._liturgicalYear ?? parseDayId(item?.id)?.year ?? 0)
+  if (raw >= 19 && raw <= 25) return raw + 2000
+  return raw
+}
+
+function parseDayId(id) {
+  const value = String(id ?? '').trim()
+
+  const ordinaryMatch = value.match(/^ordinary-w(\d{1,2})-d(\d{1,2})$/i)
+  if (ordinaryMatch) {
+    return {
+      periodType: 'ordinary',
+      week: Number(ordinaryMatch[1]),
+      day: Number(ordinaryMatch[2]),
+      year: null,
+    }
+  }
+
+  const yearWeekDayMatch = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)
+  if (yearWeekDayMatch) {
+    return {
+      periodType: 'ordinary',
+      year: Number(yearWeekDayMatch[1]),
+      week: Number(yearWeekDayMatch[2]),
+      day: Number(yearWeekDayMatch[3]),
+    }
+  }
+
+  return null
+}
+
+function getDocMeta(item) {
+  const fromId = parseDayId(item?.id)
+  return {
+    periodType: item?._periodType ?? fromId?.periodType ?? 'ordinary',
+    week: Number(item?._periodWeekNumber ?? fromId?.week ?? 0),
+    day: Number(item?._dayOfWeek ?? fromId?.day ?? 0),
+    year: normalizeYear(item),
+  }
 }
 
 function findDayBySlot(year) {
   if (!selectedSlot.value) return null
-  return allOrdinaryDocs.value.find((item) => (
-    item?._periodType === 'ordinary'
-    && Number(item?._periodWeekNumber) === Number(selectedSlot.value.week)
-    && Number(item?._dayOfWeek) === Number(selectedSlot.value.day)
-    && normalizeYear(item) === Number(year)
-  )) || null
+  return allOrdinaryDocs.value.find((item) => {
+    const meta = getDocMeta(item)
+    return meta.periodType === 'ordinary'
+      && meta.week === Number(selectedSlot.value.week)
+      && meta.day === Number(selectedSlot.value.day)
+      && meta.year === Number(year)
+  }) || null
 }
 
 function mergeWithDefaults(source) {
@@ -234,20 +428,26 @@ function loadDayData() {
   const selected = selectedSlot.value
   if (!selected) return
 
+  const fixedId = buildDayId('ordinary', selected.week, selected.day)
+  const fixedDoc = fixedDaysMap.value.get(fixedId) || null
+
   const doc2025 = findDayBySlot(2025)
   const fallback = {
     _periodType: 'ordinary',
     _periodWeekNumber: selected.week,
     _dayOfWeek: selected.day,
   }
-  leftDraft.value = mergeWithDefaults(doc2025 || fallback)
-  leftOriginal.value = mergeWithDefaults(doc2025 || fallback)
 
-  const fixedId = buildDayId('ordinary', selected.week, selected.day)
-  editableChecked.value = Boolean(fixedDaysMap.value.get(fixedId)?.checked)
+  const leftSource = fixedDoc || doc2025 || fallback
+  leftDraft.value = mergeWithDefaults(leftSource)
+  leftOriginal.value = mergeWithDefaults(leftSource)
+  editableChecked.value = Boolean(fixedDoc?.checked)
 
-  const compare = findDayBySlot(selectedCompareYear.value)
-  compareDay.value = mergeWithDefaults(compare || fallback)
+  const compareSource = selectedCompareYear.value === 2025
+    ? (fixedDoc || doc2025 || fallback)
+    : (findDayBySlot(selectedCompareYear.value) || fallback)
+
+  compareDay.value = mergeWithDefaults(compareSource)
 }
 
 function formatValue(value) {
@@ -262,9 +462,12 @@ function isEmpty(value) {
 function openEditDialog(field) {
   editField.value = field
   editValue.value = String(leftDraft.value[field] ?? '')
+  editMode.value = 'html'
+  editDialogOpen.value = true
 }
 
 function closeEditDialog() {
+  editDialogOpen.value = false
   editField.value = ''
   editValue.value = ''
 }
@@ -289,6 +492,69 @@ function copyAllFromCompare() {
 
 function undoAllChanges() {
   leftDraft.value = { ...leftOriginal.value }
+  templateAppliedSnapshot.value = null
+}
+
+function defaultTemplateTitle() {
+  const period = leftDraft.value._periodType || 'ordinary'
+  const day = leftDraft.value._dayOfWeek || selectedSlot.value?.day || ''
+  const week = leftDraft.value._periodWeekNumber || selectedSlot.value?.week || ''
+  return `${period} | day ${day} | week ${week}`
+}
+
+function openSaveTemplateDialog() {
+  templateTitleInput.value = defaultTemplateTitle()
+  saveTemplateDialogOpen.value = true
+}
+
+function closeSaveTemplateDialog() {
+  saveTemplateDialogOpen.value = false
+  templateTitleInput.value = ''
+}
+
+async function saveTemplate() {
+  if (templateSaving.value) return
+  templateSaving.value = true
+  try {
+    const payload = {
+      title: String(templateTitleInput.value || defaultTemplateTitle()).trim(),
+      ...Object.fromEntries(TEMPLATE_FIELDS.map((field) => [field, leftDraft.value[field] ?? ''])),
+    }
+    await addDoc(collection(db, 'tmpTemplates'), payload)
+    closeSaveTemplateDialog()
+  } finally {
+    templateSaving.value = false
+  }
+}
+
+async function openLoadTemplateDialog() {
+  const snap = await getDocs(collection(db, 'tmpTemplates'))
+  templatesList.value = snap.docs.map((item) => ({ id: item.id, ...item.data() }))
+  selectedTemplateId.value = templatesList.value[0]?.id || ''
+  loadTemplateDialogOpen.value = true
+}
+
+function closeLoadTemplateDialog() {
+  loadTemplateDialogOpen.value = false
+  selectedTemplateId.value = ''
+}
+
+function applySelectedTemplate() {
+  const selected = templatesList.value.find((item) => item.id === selectedTemplateId.value)
+  if (!selected) return
+  if (!templateAppliedSnapshot.value) {
+    templateAppliedSnapshot.value = { ...leftDraft.value }
+  }
+  TEMPLATE_FIELDS.forEach((field) => {
+    leftDraft.value[field] = selected[field] ?? ''
+  })
+  closeLoadTemplateDialog()
+}
+
+function rollbackTemplateApply() {
+  if (!templateAppliedSnapshot.value) return
+  leftDraft.value = { ...templateAppliedSnapshot.value }
+  templateAppliedSnapshot.value = null
 }
 
 async function saveDay() {
@@ -305,7 +571,6 @@ async function saveDay() {
       _periodWeekNumber: week,
       _dayOfWeek: day,
       checked: Boolean(editableChecked.value),
-      _year: 2025,
     }
 
     const id = buildDayId(periodType, week, day)
@@ -319,39 +584,46 @@ async function saveDay() {
 </script>
 
 <style scoped>
-.ordinary-admin { padding: 16px; }
-.topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
-.topbar-btn { border: 1px solid #ccc; border-radius: 8px; padding: 8px 12px; }
-.topbar-btn.primary, .primary { background: #1f7a1f; color: #fff; border-color: #1f7a1f; }
-.hint { margin-bottom: 12px; }
-.week-group { margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; padding: 8px; }
-.week-group summary { cursor: pointer; font-weight: 600; }
-.week-group ul { list-style: none; padding: 8px 0 0; margin: 0; display: grid; gap: 6px; }
-.day-item { border: 1px solid #ccc; border-radius: 8px; padding: 8px; display: flex; justify-content: space-between; cursor: pointer; }
-.day-item.checked { background: #dff3df; border-color: #60b060; }
-.day-item.unchecked { background: #fde1e1; border-color: #c75b5b; }
-.bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
-.columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.column { border: 1px solid #ddd; border-radius: 10px; padding: 12px; max-height: calc(100vh - 160px); overflow: auto; }
-.checked-toggle { display: block; margin: 8px 0 12px; }
-.field-card { border: 1px solid #d9d9d9; border-radius: 8px; padding: 8px; margin-bottom: 8px; }
-.field-card.empty { border-color: #c75b5b; background: #fff1f1; }
-.field-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-.field-value { margin: 6px 0 0; white-space: pre-wrap; }
-.two-lines {
-  overflow: hidden;
+.ordinary-admin {
+  min-height: 100%;
+}
+
+.compare-table-wrapper {
+  width: 100%;
+}
+
+.compare-scroll {
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+}
+
+.field-value {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.line-clamp-2 {
   display: -webkit-box;
+  overflow: hidden;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
-.mini { border: 1px solid #ccc; border-radius: 6px; padding: 2px 8px; }
-.save-bottom { width: 100%; margin-top: 8px; padding: 9px; border-radius: 8px; }
-.edit-dialog { border: 1px solid #ddd; border-radius: 10px; max-width: 760px; width: min(760px, 95vw); }
-.edit-form { display: grid; gap: 10px; }
-.edit-form textarea { width: 100%; }
-.edit-actions { display: flex; justify-content: flex-end; gap: 8px; }
 
-@media (max-width: 900px) {
-  .columns { grid-template-columns: 1fr; }
+.quill-full :deep(.ql-editor) {
+  min-height: calc(100vh - 260px);
+}
+
+@media (max-width: 960px) {
+  .header-row {
+    display: none;
+  }
+
+  .field-row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
 }
 </style>
