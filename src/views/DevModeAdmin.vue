@@ -87,6 +87,28 @@
           <v-btn color="primary" size="small" :loading="saving" @click="saveDay">Сохранить</v-btn>
         </v-col>
       </v-row>
+      <v-alert
+        v-if="emptyHighlightFields.length"
+        type="warning"
+        variant="tonal"
+        density="comfortable"
+        class="mb-3"
+      >
+        <div class="font-weight-medium mb-1">
+          Есть пустые поля (кроме исключений): {{ emptyHighlightFields.length }}
+        </div>
+        <div class="d-flex flex-wrap ga-1">
+          <v-chip
+            v-for="field in emptyHighlightFields"
+            :key="`empty-${field}`"
+            size="small"
+            color="warning"
+            variant="outlined"
+          >
+            {{ field }}
+          </v-chip>
+        </div>
+      </v-alert>
 
       <div class="compare-table-wrapper">
         <v-row class="header-row" no-gutters>
@@ -103,48 +125,64 @@
         </v-row>
 
         <div class="compare-scroll">
-          <v-row
-            v-for="field in FIELDS"
-            :key="field"
-            class="field-row"
-            no-gutters
-          >
-            <v-col cols="6" class="px-1 py-1">
-              <v-card :color="isEmpty(leftDraft[field]) ? 'error' : undefined" :variant="isEmpty(leftDraft[field]) ? 'tonal' : 'outlined'">
-                <v-card-item>
-                  <div class="d-flex align-center justify-space-between ga-2">
-                    <div class="text-body-2 font-weight-bold">{{ field }}</div>
-                    <v-btn
-                      v-if="!READ_ONLY_FIELDS.has(field)"
-                      size="small"
-                      variant="text"
-                      icon="mdi-pencil"
-                      @click="openEditDialog(field)"
-                    />
-                  </div>
-                  <div class="field-value mt-2 line-clamp-2">{{ formatPreviewValue(leftDraft[field]) }}</div>
-                </v-card-item>
-              </v-card>
-            </v-col>
+          <v-expansion-panels v-model="openedGroupKeys" multiple>
+            <v-expansion-panel
+              v-for="group in FIELD_GROUPS"
+              :key="group.key"
+              :value="group.key"
+            >
+              <v-expansion-panel-title>
+                <div class="d-flex align-center justify-space-between w-100 pr-2">
+                  <span>{{ group.title }}</span>
+                  <v-chip size="x-small" color="primary" variant="tonal">{{ groupDiffCount(group.fields) }} отличий</v-chip>
+                </div>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <v-row
+                  v-for="field in group.fields"
+                  :key="field"
+                  class="field-row"
+                  no-gutters
+                >
+                  <v-col cols="6" class="px-1 py-1">
+                    <v-card :color="leftCardColor(field)" :variant="leftCardVariant(field)">
+                      <v-card-item>
+                        <div class="d-flex align-center justify-space-between ga-2">
+                          <div class="text-body-2 font-weight-bold">{{ field }}</div>
+                          <v-btn
+                            v-if="!READ_ONLY_FIELDS.has(field)"
+                            size="small"
+                            variant="text"
+                            icon="mdi-pencil"
+                            @click="openEditDialog(field)"
+                          />
+                        </div>
+                        <div class="field-value mt-2 line-clamp-2">{{ formatPreviewValue(leftDraft[field]) }}</div>
+                      </v-card-item>
+                    </v-card>
+                  </v-col>
 
-            <v-col cols="6" class="px-1 py-1">
-              <v-card variant="outlined">
-                <v-card-item>
-                  <div class="d-flex align-center justify-space-between ga-2">
-                    <div class="text-body-2 font-weight-bold">{{ field }}</div>
-                    <v-btn
-                      v-if="!READ_ONLY_FIELDS.has(field)"
-                      size="small"
-                      variant="text"
-                      icon="mdi-arrow-left"
-                      @click="copyField(field)"
-                    />
-                  </div>
-                  <div class="field-value mt-2 line-clamp-2">{{ formatPreviewValue(compareDay[field]) }}</div>
-                </v-card-item>
-              </v-card>
-            </v-col>
-          </v-row>
+                  <v-col cols="6" class="px-1 py-1">
+                    <v-card :color="isDifferent(field) ? 'warning' : undefined" :variant="isDifferent(field) ? 'tonal' : 'outlined'">
+                      <v-card-item>
+                        <div class="d-flex align-center justify-space-between ga-2">
+                          <div class="text-body-2 font-weight-bold">{{ field }}</div>
+                          <v-btn
+                            v-if="!READ_ONLY_FIELDS.has(field)"
+                            size="small"
+                            variant="text"
+                            icon="mdi-arrow-left"
+                            @click="copyField(field)"
+                          />
+                        </div>
+                        <div class="field-value mt-2 line-clamp-2">{{ formatPreviewValue(compareDay[field]) }}</div>
+                      </v-card-item>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
         </div>
       </div>
     </v-card>
@@ -273,6 +311,20 @@ const FIELDS = [
 ]
 
 const READ_ONLY_FIELDS = new Set(['_dayOfWeek', '_periodType', '_periodWeekNumber'])
+const EMPTY_HIGHLIGHT_EXCLUDED = new Set([
+  'officeOfReadingsTeDeum',
+  'vesper1Hymn',
+  'vesper1Ant1',
+  'vesper1Ant2',
+  'vesper1Ant3',
+  'vesper1Ps1',
+  'vesper1Ps2',
+  'vesper1Ps3',
+  'vesper1R',
+  'vesper1AntMag',
+  'vesper1Inter',
+  'vesper1Pr',
+])
 const TEMPLATE_FIELDS = [
   '_dayOfWeek', '_periodType',
   'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
@@ -284,6 +336,60 @@ const TEMPLATE_FIELDS = [
   'sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr',
   'vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3',
   'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr',
+]
+const FIELD_GROUPS = [
+  {
+    key: 'base',
+    title: 'Базовые поля',
+    fields: ['_periodType', '_periodWeekNumber', '_dayOfWeek', '_dayName'],
+  },
+  {
+    key: 'invitatorium',
+    title: 'Инвитаторий',
+    fields: ['invitatoriumAnt'],
+  },
+  {
+    key: 'readings',
+    title: 'Час чтений',
+    fields: [
+      'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
+      'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers', 'officeOfReadingsR1',
+      'officeOfReadingsR2', 'officeOfReadingsTeDeum', 'officeOfReadingsPr',
+    ],
+  },
+  {
+    key: 'laudes',
+    title: 'Лауды',
+    fields: [
+      'laudesHymn', 'laudesAnt1', 'laudesAnt2', 'laudesAnt3', 'laudesPs1', 'laudesPs2', 'laudesPs3',
+      'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
+    ],
+  },
+  {
+    key: 'sext1',
+    title: 'Терция',
+    fields: ['sext1Hymn', 'sext1Ant1', 'sext1Ant2', 'sext1Ant3', 'sext1Ps1', 'sext1Ps2', 'sext1Ps3', 'sext1R', 'sext1Pr'],
+  },
+  {
+    key: 'sext2',
+    title: 'Секста',
+    fields: ['sext2Hymn', 'sext2Ant1', 'sext2Ant2', 'sext2Ant3', 'sext2Ps1', 'sext2Ps2', 'sext2Ps3', 'sext2R', 'sext2Pr'],
+  },
+  {
+    key: 'sext3',
+    title: 'Нона',
+    fields: ['sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr'],
+  },
+  {
+    key: 'vesper',
+    title: 'Вечерня',
+    fields: ['vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr'],
+  },
+  {
+    key: 'vesper1',
+    title: 'Первая вечерня',
+    fields: ['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr'],
+  },
 ]
 
 const selectedSlot = ref(null)
@@ -310,10 +416,19 @@ const templateSaving = ref(false)
 const templatesList = ref([])
 const selectedTemplateId = ref('')
 const templateAppliedSnapshot = ref(null)
+const openedGroupKeys = ref(FIELD_GROUPS.map((group) => group.key))
 
 const selectedSlotLabel = computed(() => {
   if (!selectedSlot.value) return ''
   return `${selectedSlot.value.week} неделя — ${WEEKDAY_LABEL_MAP[selectedSlot.value.day] || ''}`
+})
+
+const emptyHighlightFields = computed(() => {
+  if (!selectedSlot.value) return []
+  return FIELDS.filter((field) => (
+    !EMPTY_HIGHLIGHT_EXCLUDED.has(field)
+    && isEmpty(leftDraft.value[field])
+  ))
 })
 
 const weekGroups = computed(() => {
@@ -465,6 +580,29 @@ function formatPreviewValue(value) {
   return stripped || '— пусто —'
 }
 
+function normalizedCompare(value) {
+  return formatPreviewValue(value)
+}
+
+function isDifferent(field) {
+  return normalizedCompare(leftDraft.value[field]) !== normalizedCompare(compareDay.value[field])
+}
+
+function groupDiffCount(fields) {
+  return fields.filter((field) => isDifferent(field)).length
+}
+
+function leftCardColor(field) {
+  if (isEmpty(leftDraft.value[field]) && !EMPTY_HIGHLIGHT_EXCLUDED.has(field)) return 'error'
+  if (isDifferent(field)) return 'warning'
+  return undefined
+}
+
+function leftCardVariant(field) {
+  if ((isEmpty(leftDraft.value[field]) && !EMPTY_HIGHLIGHT_EXCLUDED.has(field)) || isDifferent(field)) return 'tonal'
+  return 'outlined'
+}
+
 function isEmpty(value) {
   return value === null || value === undefined || String(value).trim() === ''
 }
@@ -508,8 +646,8 @@ function undoAllChanges() {
 function defaultTemplateTitle() {
   const period = leftDraft.value._periodType || 'ordinary'
   const day = leftDraft.value._dayOfWeek || selectedSlot.value?.day || ''
-  const week = leftDraft.value._periodWeekNumber || selectedSlot.value?.week || ''
-  return `${period} | day ${day} | week ${week}`
+  const dayLabel = WEEKDAY_LABEL_MAP[Number(day)] || day || 'День'
+  return `${dayLabel}-${period}`
 }
 
 function openSaveTemplateDialog() {
