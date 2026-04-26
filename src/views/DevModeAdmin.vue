@@ -16,9 +16,20 @@
         34 недели, без воскресенья 1-й и 34-й недели.
       </v-alert>
 
-      <v-expansion-panels multiple>
+      <v-expansion-panels v-model="openedWeeks" multiple>
         <v-expansion-panel v-for="week in weekGroups" :key="week.week" :value="week.week">
-          <v-expansion-panel-title>Неделя {{ week.week }}</v-expansion-panel-title>
+          <v-expansion-panel-title>
+            <div class="d-flex align-center justify-space-between w-100 pr-2">
+              <span :class="week.allChecked ? 'text-success font-weight-bold' : ''">Неделя {{ week.week }}</span>
+              <v-chip
+                size="x-small"
+                :color="week.allChecked ? 'success' : 'default'"
+                :variant="week.allChecked ? 'tonal' : 'outlined'"
+              >
+                {{ week.checkedCount }}/{{ week.totalCount }}
+              </v-chip>
+            </div>
+          </v-expansion-panel-title>
           <v-expansion-panel-text>
             <v-list density="comfortable">
               <v-list-item
@@ -47,13 +58,22 @@
     <v-card v-else rounded="lg" class="pa-4">
       <v-row class="mb-3" align="center" dense>
         <v-col cols="12" md="4" lg="3">
-          <v-select
-            v-model="selectedCompareYear"
-            :items="compareYears"
-            label="Год для сравнения"
-            density="compact"
-            variant="outlined"
-          />
+          <v-select v-model="selectedCompareYear" :items="compareYears" label="Год для сравнения" density="compact" variant="outlined">
+            <template #item="{ props, item }">
+              <v-list-item v-bind="props">
+                <template #append>
+                  <v-chip
+                    v-if="selectedSlot && yearDiffCount(item.raw)"
+                    size="x-small"
+                    color="warning"
+                    variant="tonal"
+                  >
+                    {{ yearDiffCount(item.raw) }}
+                  </v-chip>
+                </template>
+              </v-list-item>
+            </template>
+          </v-select>
         </v-col>
         <v-col cols="12" md="4" lg="3">
           <v-checkbox v-model="editableChecked" label="Проверен (fixedDays)" hide-details />
@@ -168,7 +188,7 @@
                         <div class="d-flex align-center justify-space-between ga-2">
                           <div class="text-body-2 font-weight-bold">{{ field }}</div>
                           <v-btn
-                            v-if="!READ_ONLY_FIELDS.has(field)"
+                            v-if="canCopyField(field)"
                             size="small"
                             variant="text"
                             icon="mdi-arrow-left"
@@ -416,7 +436,8 @@ const templateSaving = ref(false)
 const templatesList = ref([])
 const selectedTemplateId = ref('')
 const templateAppliedSnapshot = ref(null)
-const openedGroupKeys = ref(FIELD_GROUPS.map((group) => group.key))
+const openedGroupKeys = ref([])
+const openedWeeks = ref(Array.from({ length: 34 }, (_, i) => i + 1))
 
 const selectedSlotLabel = computed(() => {
   if (!selectedSlot.value) return ''
@@ -435,19 +456,28 @@ const weekGroups = computed(() => {
   const groups = []
   for (let week = 1; week <= 34; week += 1) {
     const days = []
+    let checkedCount = 0
     for (let day = 1; day <= 7; day += 1) {
       if ((week === 1 || week === 34) && day === 1) continue
       const key = buildDayId('ordinary', week, day)
       const fixedDoc = fixedDaysMap.value.get(key)
+      const checked = Boolean(fixedDoc?.checked)
+      if (checked) checkedCount += 1
       days.push({
         key,
         week,
         day,
         label: `${week} неделя — ${WEEKDAY_LABEL_MAP[day] || day}`,
-        checked: Boolean(fixedDoc?.checked),
+        checked,
       })
     }
-    groups.push({ week, days })
+    groups.push({
+      week,
+      days,
+      checkedCount,
+      totalCount: days.length,
+      allChecked: days.length > 0 && checkedCount === days.length,
+    })
   }
   return groups
 })
@@ -480,6 +510,7 @@ function openDay(slot) {
   selectedSlot.value = slot
   selectedCompareYear.value = 2024
   templateAppliedSnapshot.value = null
+  openedGroupKeys.value = []
   loadDayData()
 }
 
@@ -630,6 +661,10 @@ function copyField(field) {
   leftDraft.value[field] = compareDay.value[field]
 }
 
+function canCopyField(field) {
+  return FIELDS.includes(field)
+}
+
 function copyAllFromCompare() {
   FIELDS.forEach((field) => {
     if (!READ_ONLY_FIELDS.has(field)) {
@@ -664,9 +699,23 @@ async function saveTemplate() {
   if (templateSaving.value) return
   templateSaving.value = true
   try {
+    const dayOfWeek = Number(leftDraft.value._dayOfWeek || selectedSlot.value?.day || 0)
+    const skipFields = new Set()
+    if (dayOfWeek === 7) {
+      skipFields.add('vesperAntMag')
+    }
+    if (dayOfWeek === 1) {
+      skipFields.add('vesperAntMag')
+      skipFields.add('laudesAntBen')
+    }
+
     const payload = {
       title: String(templateTitleInput.value || defaultTemplateTitle()).trim(),
-      ...Object.fromEntries(TEMPLATE_FIELDS.map((field) => [field, leftDraft.value[field] ?? ''])),
+      ...Object.fromEntries(
+        TEMPLATE_FIELDS
+          .filter((field) => !skipFields.has(field))
+          .map((field) => [field, leftDraft.value[field] ?? '']),
+      ),
     }
     await addDoc(collection(db, 'tmpTemplates'), payload)
     closeSaveTemplateDialog()
@@ -703,6 +752,31 @@ function rollbackTemplateApply() {
   if (!templateAppliedSnapshot.value) return
   leftDraft.value = { ...templateAppliedSnapshot.value }
   templateAppliedSnapshot.value = null
+}
+
+function getFallbackBySlot() {
+  if (!selectedSlot.value) return null
+  return {
+    _periodType: 'ordinary',
+    _periodWeekNumber: selectedSlot.value.week,
+    _dayOfWeek: selectedSlot.value.day,
+  }
+}
+
+function getCompareSourceByYear(year) {
+  if (!selectedSlot.value) return null
+  const fixedId = buildDayId('ordinary', selectedSlot.value.week, selectedSlot.value.day)
+  const fixedDoc = fixedDaysMap.value.get(fixedId) || null
+  const doc2025 = findDayBySlot(2025)
+  const fallback = getFallbackBySlot()
+  if (Number(year) === 2025) return fixedDoc || doc2025 || fallback
+  return findDayBySlot(Number(year)) || fallback
+}
+
+function yearDiffCount(year) {
+  if (!selectedSlot.value) return 0
+  const source = mergeWithDefaults(getCompareSourceByYear(year) || {})
+  return FIELDS.filter((field) => normalizedCompare(leftDraft.value[field]) !== normalizedCompare(source[field])).length
 }
 
 async function saveDay() {
