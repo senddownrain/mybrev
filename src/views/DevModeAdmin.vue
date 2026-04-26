@@ -46,38 +46,47 @@
 
     <v-card v-else rounded="lg" class="pa-4">
       <v-row class="mb-3" align="center" dense>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4" lg="3">
           <v-select
             v-model="selectedCompareYear"
             :items="compareYears"
             label="Год для сравнения"
-            density="comfortable"
+            density="compact"
             variant="outlined"
           />
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4" lg="3">
           <v-checkbox v-model="editableChecked" label="Проверен (fixedDays)" hide-details />
         </v-col>
-        <v-col cols="12" md="6" class="d-flex flex-wrap ga-2 justify-md-end">
-          <v-btn color="secondary" variant="outlined" @click="copyAllFromCompare">Копировать всё</v-btn>
-          <v-btn color="indigo" variant="outlined" @click="openSaveTemplateDialog">Сохранить шаблон</v-btn>
-          <v-btn color="teal" variant="outlined" @click="openLoadTemplateDialog">Подгрузить шаблон</v-btn>
-          <v-btn
-            color="deep-orange"
-            variant="outlined"
-            :disabled="!templateAppliedSnapshot"
-            @click="rollbackTemplateApply"
-          >
-            Откатить шаблон
-          </v-btn>
-          <v-btn color="warning" variant="outlined" @click="undoAllChanges">Отменить всё</v-btn>
-          <v-btn color="primary" :loading="saving" @click="saveDay">Сохранить</v-btn>
+        <v-col cols="12" md="4" lg="6" class="d-flex ga-2 justify-md-end">
+          <v-menu location="bottom end">
+            <template #activator="{ props }">
+              <v-btn
+                v-bind="props"
+                size="small"
+                color="secondary"
+                variant="outlined"
+                prepend-icon="mdi-dots-horizontal"
+              >
+                Действия
+              </v-btn>
+            </template>
+            <v-list density="compact">
+              <v-list-item prepend-icon="mdi-content-copy" title="Копировать всё" @click="copyAllFromCompare" />
+              <v-list-item prepend-icon="mdi-content-save" title="Сохранить шаблон" @click="openSaveTemplateDialog" />
+              <v-list-item prepend-icon="mdi-database-import" title="Подгрузить шаблон" @click="openLoadTemplateDialog" />
+              <v-list-item
+                prepend-icon="mdi-restore"
+                title="Откатить шаблон"
+                :disabled="!templateAppliedSnapshot"
+                @click="rollbackTemplateApply"
+              />
+              <v-list-item prepend-icon="mdi-undo" title="Отменить всё" @click="undoAllChanges" />
+            </v-list>
+          </v-menu>
+          <v-btn color="primary" size="small" :loading="saving" @click="saveDay">Сохранить</v-btn>
         </v-col>
       </v-row>
-
-      <v-alert type="info" variant="tonal" class="mb-3">
-        Скролл общий: поля слева и справа всегда напротив друг друга.
-      </v-alert>
 
       <div class="compare-table-wrapper">
         <v-row class="header-row" no-gutters>
@@ -113,7 +122,7 @@
                       @click="openEditDialog(field)"
                     />
                   </div>
-                  <div class="field-value mt-2 line-clamp-2">{{ formatValue(leftDraft[field]) }}</div>
+                  <div class="field-value mt-2 line-clamp-2">{{ formatPreviewValue(leftDraft[field]) }}</div>
                 </v-card-item>
               </v-card>
             </v-col>
@@ -131,7 +140,7 @@
                       @click="copyField(field)"
                     />
                   </div>
-                  <div class="field-value mt-2 line-clamp-2">{{ formatValue(compareDay[field]) }}</div>
+                  <div class="field-value mt-2 line-clamp-2">{{ formatPreviewValue(compareDay[field]) }}</div>
                 </v-card-item>
               </v-card>
             </v-col>
@@ -450,9 +459,10 @@ function loadDayData() {
   compareDay.value = mergeWithDefaults(compareSource)
 }
 
-function formatValue(value) {
+function formatPreviewValue(value) {
   if (value === null || value === undefined || value === '') return '— пусто —'
-  return String(value)
+  const stripped = String(value).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+  return stripped || '— пусто —'
 }
 
 function isEmpty(value) {
