@@ -1,7 +1,9 @@
 <template>
   <div>
+    <DevModeAdmin v-if="DEV_ADMIN_MODE" />
+
     <!-- Экран загрузки -->
-    <LoadingScreen v-if="isLoading" />
+    <LoadingScreen v-else-if="isLoading" />
     
     <!-- Основное приложение -->
     <router-view v-else />
@@ -13,6 +15,8 @@ import { ref, computed, onMounted } from 'vue';
 import { logger } from '@/utils/logger';
 import { isTelegramWebApp as checkTelegramWebApp, initTelegramWebApp } from '@/utils/telegram';
 import LoadingScreen from '@/components/LoadingScreen.vue';
+import DevModeAdmin from '@/views/DevModeAdmin.vue'
+import { DEV_ADMIN_MODE } from '@/config/devMode'
 
 const isLoading = ref(true);
 
@@ -20,6 +24,11 @@ const isLoading = ref(true);
 const isTelegramWebApp = computed(() => checkTelegramWebApp());
 
 onMounted(async () => {
+  if (DEV_ADMIN_MODE) {
+    isLoading.value = false
+    return
+  }
+
   // Инициализируем Telegram WebApp (если доступен)
   initTelegramWebApp();
   
