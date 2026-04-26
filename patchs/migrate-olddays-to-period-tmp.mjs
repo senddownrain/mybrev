@@ -146,6 +146,7 @@ const PERIOD_RANGES = [
 ];
 
 const BATCH_SIZE = 200;
+const MAX_BATCH_BYTES = 8 * 1024 * 1024;
 const MAX_COMMIT_RETRIES = 5;
 const BASE_RETRY_DELAY_MS = 1_000;
 
@@ -186,9 +187,12 @@ async function migrate() {
   let skipped = 0;
   let committed = 0;
   const pendingWrites = [];
+  let pendingBytes = 0;
 
   const isDeadlineError = (error) =>
     error?.code === 4 || String(error?.details ?? '').includes('Deadline exceeded');
+  const isPayloadTooLargeError = (error) =>
+    error?.code === 3 || String(error?.details ?? '').includes('Request payload size exceeds the limit');
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -215,12 +219,12 @@ async function migrate() {
           continue;
         }
 
-        const canSplit = isDeadlineError(error) && writes.length > 1 && depth < 6;
+        const canSplit = (isDeadlineError(error) || isPayloadTooLargeError(error)) && writes.length > 1 && depth < 10;
         if (canSplit) {
           const middle = Math.ceil(writes.length / 2);
           const left = writes.slice(0, middle);
           const right = writes.slice(middle);
-          console.warn(`Splitting timed-out chunk (${writes.length}) into ${left.length} + ${right.length}.`);
+          console.warn(`Splitting failed chunk (${writes.length}) into ${left.length} + ${right.length}.`);
           await commitChunk(left, depth + 1);
           await commitChunk(right, depth + 1);
           return;
@@ -237,6 +241,7 @@ async function migrate() {
     }
 
     const writesToCommit = pendingWrites.splice(0, pendingWrites.length);
+    pendingBytes = 0;
     await commitChunk(writesToCommit);
   };
 
@@ -257,11 +262,13 @@ async function migrate() {
 
     const payload = buildPayload(doc.data(), period);
     const targetRef = db.collection(targetCollection).doc(dateId);
+    const payloadSize = Buffer.byteLength(JSON.stringify(payload)) + Buffer.byteLength(dateId) + 256;
 
     pendingWrites.push({ ref: targetRef, payload });
+    pendingBytes += payloadSize;
     migrated += 1;
 
-    if (pendingWrites.length >= BATCH_SIZE) {
+    if (pendingWrites.length >= BATCH_SIZE || pendingBytes >= MAX_BATCH_BYTES) {
       await flushPendingWrites();
     }
   }
