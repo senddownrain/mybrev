@@ -60,6 +60,16 @@
         </v-col>
         <v-col cols="12" md="6" class="d-flex flex-wrap ga-2 justify-md-end">
           <v-btn color="secondary" variant="outlined" @click="copyAllFromCompare">Копировать всё</v-btn>
+          <v-btn color="indigo" variant="outlined" @click="openSaveTemplateDialog">Сохранить шаблон</v-btn>
+          <v-btn color="teal" variant="outlined" @click="openLoadTemplateDialog">Подгрузить шаблон</v-btn>
+          <v-btn
+            color="deep-orange"
+            variant="outlined"
+            :disabled="!templateAppliedSnapshot"
+            @click="rollbackTemplateApply"
+          >
+            Откатить шаблон
+          </v-btn>
           <v-btn color="warning" variant="outlined" @click="undoAllChanges">Отменить всё</v-btn>
           <v-btn color="primary" :loading="saving" @click="saveDay">Сохранить</v-btn>
         </v-col>
@@ -103,7 +113,7 @@
                       @click="openEditDialog(field)"
                     />
                   </div>
-                  <div class="field-value mt-2">{{ formatValue(leftDraft[field]) }}</div>
+                  <div class="field-value mt-2 line-clamp-2">{{ formatValue(leftDraft[field]) }}</div>
                 </v-card-item>
               </v-card>
             </v-col>
@@ -121,7 +131,7 @@
                       @click="copyField(field)"
                     />
                   </div>
-                  <div class="field-value mt-2">{{ formatValue(compareDay[field]) }}</div>
+                  <div class="field-value mt-2 line-clamp-2">{{ formatValue(compareDay[field]) }}</div>
                 </v-card-item>
               </v-card>
             </v-col>
@@ -169,12 +179,73 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="saveTemplateDialogOpen" fullscreen>
+      <v-card>
+        <v-toolbar>
+          <v-toolbar-title>Сохранить шаблон</v-toolbar-title>
+          <v-spacer />
+          <v-btn icon="mdi-close" variant="text" @click="closeSaveTemplateDialog" />
+        </v-toolbar>
+        <v-card-text class="pa-4">
+          <v-text-field
+            v-model="templateTitleInput"
+            label="Название шаблона"
+            variant="outlined"
+            hint="Можно изменить автосгенерированное название перед сохранением"
+            persistent-hint
+          />
+        </v-card-text>
+        <v-card-actions class="px-4 pb-4">
+          <v-spacer />
+          <v-btn variant="outlined" @click="closeSaveTemplateDialog">Отмена</v-btn>
+          <v-btn color="primary" :loading="templateSaving" @click="saveTemplate">Сохранить</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="loadTemplateDialogOpen" fullscreen>
+      <v-card>
+        <v-toolbar>
+          <v-toolbar-title>Подгрузить шаблон</v-toolbar-title>
+          <v-spacer />
+          <v-btn icon="mdi-close" variant="text" @click="closeLoadTemplateDialog" />
+        </v-toolbar>
+        <v-card-text class="pa-4">
+          <v-list v-if="templatesList.length" lines="two" density="comfortable">
+            <v-list-item
+              v-for="template in templatesList"
+              :key="template.id"
+              :title="template.title || template.id"
+              :subtitle="`ID: ${template.id}`"
+              :active="selectedTemplateId === template.id"
+              rounded="lg"
+              @click="selectedTemplateId = template.id"
+            >
+              <template #append>
+                <v-icon v-if="selectedTemplateId === template.id" color="primary">mdi-check-circle</v-icon>
+              </template>
+            </v-list-item>
+          </v-list>
+          <v-alert v-else type="info" variant="tonal">
+            В коллекции <code>tmpTemplates</code> пока нет шаблонов.
+          </v-alert>
+        </v-card-text>
+        <v-card-actions class="px-4 pb-4">
+          <v-spacer />
+          <v-btn variant="outlined" @click="closeLoadTemplateDialog">Отмена</v-btn>
+          <v-btn color="primary" :disabled="!selectedTemplateId" @click="applySelectedTemplate">
+            Применить шаблон
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
+import { addDoc, collection, doc, getDocs, setDoc } from 'firebase/firestore'
 import { db } from '@/plugins/firebase'
 import { WEEKDAY_LABEL_MAP } from '@/constants/liturgical'
 
@@ -193,6 +264,18 @@ const FIELDS = [
 ]
 
 const READ_ONLY_FIELDS = new Set(['_dayOfWeek', '_periodType', '_periodWeekNumber'])
+const TEMPLATE_FIELDS = [
+  '_dayOfWeek', '_periodType',
+  'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
+  'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers',
+  'laudesHymn', 'laudesAnt1', 'laudesAnt2', 'laudesAnt3', 'laudesPs1', 'laudesPs2', 'laudesPs3',
+  'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
+  'sext1Hymn', 'sext1Ant1', 'sext1Ant2', 'sext1Ant3', 'sext1Ps1', 'sext1Ps2', 'sext1Ps3', 'sext1R', 'sext1Pr',
+  'sext2Hymn', 'sext2Ant1', 'sext2Ant2', 'sext2Ant3', 'sext2Ps1', 'sext2Ps2', 'sext2Ps3', 'sext2R', 'sext2Pr',
+  'sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr',
+  'vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3',
+  'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr',
+]
 
 const selectedSlot = ref(null)
 const selectedCompareYear = ref(2024)
@@ -211,6 +294,13 @@ const editField = ref('')
 const editValue = ref('')
 const editMode = ref('html')
 const saving = ref(false)
+const saveTemplateDialogOpen = ref(false)
+const loadTemplateDialogOpen = ref(false)
+const templateTitleInput = ref('')
+const templateSaving = ref(false)
+const templatesList = ref([])
+const selectedTemplateId = ref('')
+const templateAppliedSnapshot = ref(null)
 
 const selectedSlotLabel = computed(() => {
   if (!selectedSlot.value) return ''
@@ -265,6 +355,7 @@ function buildEmptyDay() {
 function openDay(slot) {
   selectedSlot.value = slot
   selectedCompareYear.value = 2024
+  templateAppliedSnapshot.value = null
   loadDayData()
 }
 
@@ -401,6 +492,69 @@ function copyAllFromCompare() {
 
 function undoAllChanges() {
   leftDraft.value = { ...leftOriginal.value }
+  templateAppliedSnapshot.value = null
+}
+
+function defaultTemplateTitle() {
+  const period = leftDraft.value._periodType || 'ordinary'
+  const day = leftDraft.value._dayOfWeek || selectedSlot.value?.day || ''
+  const week = leftDraft.value._periodWeekNumber || selectedSlot.value?.week || ''
+  return `${period} | day ${day} | week ${week}`
+}
+
+function openSaveTemplateDialog() {
+  templateTitleInput.value = defaultTemplateTitle()
+  saveTemplateDialogOpen.value = true
+}
+
+function closeSaveTemplateDialog() {
+  saveTemplateDialogOpen.value = false
+  templateTitleInput.value = ''
+}
+
+async function saveTemplate() {
+  if (templateSaving.value) return
+  templateSaving.value = true
+  try {
+    const payload = {
+      title: String(templateTitleInput.value || defaultTemplateTitle()).trim(),
+      ...Object.fromEntries(TEMPLATE_FIELDS.map((field) => [field, leftDraft.value[field] ?? ''])),
+    }
+    await addDoc(collection(db, 'tmpTemplates'), payload)
+    closeSaveTemplateDialog()
+  } finally {
+    templateSaving.value = false
+  }
+}
+
+async function openLoadTemplateDialog() {
+  const snap = await getDocs(collection(db, 'tmpTemplates'))
+  templatesList.value = snap.docs.map((item) => ({ id: item.id, ...item.data() }))
+  selectedTemplateId.value = templatesList.value[0]?.id || ''
+  loadTemplateDialogOpen.value = true
+}
+
+function closeLoadTemplateDialog() {
+  loadTemplateDialogOpen.value = false
+  selectedTemplateId.value = ''
+}
+
+function applySelectedTemplate() {
+  const selected = templatesList.value.find((item) => item.id === selectedTemplateId.value)
+  if (!selected) return
+  if (!templateAppliedSnapshot.value) {
+    templateAppliedSnapshot.value = { ...leftDraft.value }
+  }
+  TEMPLATE_FIELDS.forEach((field) => {
+    leftDraft.value[field] = selected[field] ?? ''
+  })
+  closeLoadTemplateDialog()
+}
+
+function rollbackTemplateApply() {
+  if (!templateAppliedSnapshot.value) return
+  leftDraft.value = { ...templateAppliedSnapshot.value }
+  templateAppliedSnapshot.value = null
 }
 
 async function saveDay() {
@@ -448,6 +602,13 @@ async function saveDay() {
 .field-value {
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .quill-full :deep(.ql-editor) {
