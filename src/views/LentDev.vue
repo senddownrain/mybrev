@@ -502,7 +502,7 @@ const weekGroups = computed(() => {
         key,
         week,
         day,
-        label: `${week} неделя — ${WEEKDAY_LABEL_MAP[day] || day}`,
+        label: `${week} неделя — ${weekDayLabel(week, day)}`,
         checked,
       })
     }
@@ -554,6 +554,13 @@ async function loadIndexData() {
 
 function buildDayId(periodType, week, day) {
   return `${periodType}-w${week}-d${day}`
+}
+
+function weekDayLabel(week, day) {
+  if (Number(week) === 0) {
+    return WEEKDAY_LABEL_MAP[Number(day) + 1] || day
+  }
+  return WEEKDAY_LABEL_MAP[day] || day
 }
 
 function buildEmptyDay() {
@@ -802,6 +809,7 @@ function applySelectedTemplate() {
     templateAppliedSnapshot.value = { ...leftDraft.value }
   }
   TEMPLATE_FIELDS.forEach((field) => {
+    if (field === '_periodWeekNumber') return
     leftDraft.value[field] = selected[field] ?? ''
   })
   closeLoadTemplateDialog()
