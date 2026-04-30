@@ -280,19 +280,22 @@
         </v-toolbar>
         <v-card-text class="pa-4">
           <v-list v-if="templatesList.length" lines="two" density="comfortable">
-            <v-list-item
-              v-for="template in templatesList"
-              :key="template.id"
-              :title="template.title || template.id"
-              :subtitle="`ID: ${template.id}`"
-              :active="selectedTemplateId === template.id"
-              rounded="lg"
-              @click="selectedTemplateId = template.id"
-            >
-              <template #append>
-                <v-icon v-if="selectedTemplateId === template.id" color="primary">mdi-check-circle</v-icon>
-              </template>
-            </v-list-item>
+            <template v-for="group in groupedTemplates" :key="group.period">
+              <v-list-subheader>{{ group.period }}</v-list-subheader>
+              <v-list-item
+                v-for="template in group.items"
+                :key="template.id"
+                :title="template.title || template.id"
+                :subtitle="`нед. ${template._periodWeekNumber ?? '-'} • день ${template._dayOfWeek ?? '-'} • ID: ${template.id}`"
+                :active="selectedTemplateId === template.id"
+                rounded="lg"
+                @click="selectedTemplateId = template.id"
+              >
+                <template #append>
+                  <v-icon v-if="selectedTemplateId === template.id" color="primary">mdi-check-circle</v-icon>
+                </template>
+              </v-list-item>
+            </template>
           </v-list>
           <v-alert v-else type="info" variant="tonal">
             В коллекции <code>tmpTemplates</code> пока нет шаблонов.
@@ -346,16 +349,21 @@ const EMPTY_HIGHLIGHT_EXCLUDED = new Set([
   'vesper1Pr',
 ])
 const TEMPLATE_FIELDS = [
-  '_dayOfWeek', '_periodType',
-  'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
-  'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers',
-  'laudesHymn', 'laudesAnt1', 'laudesAnt2', 'laudesAnt3', 'laudesPs1', 'laudesPs2', 'laudesPs3',
-  'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
-  'sext1Hymn', 'sext1Ant1', 'sext1Ant2', 'sext1Ant3', 'sext1Ps1', 'sext1Ps2', 'sext1Ps3', 'sext1R', 'sext1Pr',
-  'sext2Hymn', 'sext2Ant1', 'sext2Ant2', 'sext2Ant3', 'sext2Ps1', 'sext2Ps2', 'sext2Ps3', 'sext2R', 'sext2Pr',
-  'sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr',
-  'vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3',
-  'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr',
+  '_dayOfWeek', '_periodType', '_periodWeekNumber',
+  '_weekDay',
+  'invitatoriumAnt',
+  'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
+  'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3',
+  'laudesHymn', 'laudesAnt1', 'laudesAnt2', 'laudesAnt3',
+  'laudesPs1', 'laudesPs2', 'laudesPs3',
+  'sext1Hymn',
+  'sext1Ps1', 'sext1Ps2', 'sext1Ps3',
+  'sext2Hymn',
+  'sext2Ps1', 'sext2Ps2', 'sext2Ps3',
+  'sext3Hymn',
+  'sext3Ps1', 'sext3Ps2', 'sext3Ps3',
+  'vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3',
+  'vesperPs1', 'vesperPs2', 'vesperPs3',
 ]
 const FIELD_GROUPS = [
   {
@@ -415,9 +423,18 @@ const FIELD_GROUPS = [
 const selectedSlot = ref(null)
 const selectedCompareYear = ref(2024)
 const compareYears = [2025, 2024, 2023, 2022, 2021, 2020]
+const LENT_WEEK_ZERO_STARTS = {
+  2020: '2020-02-26',
+  2021: '2021-02-17',
+  2022: '2022-03-02',
+  2023: '2023-02-22',
+  2024: '2024-02-14',
+  2025: '2025-03-05',
+}
 
 const allOrdinaryDocs = ref([])
 const fixedDaysMap = ref(new Map())
+const weekZeroByYear = ref(new Map())
 
 const leftDraft = ref(buildEmptyDay())
 const leftOriginal = ref(buildEmptyDay())
@@ -434,6 +451,24 @@ const loadTemplateDialogOpen = ref(false)
 const templateTitleInput = ref('')
 const templateSaving = ref(false)
 const templatesList = ref([])
+const groupedTemplates = computed(() => {
+  const groups = new Map()
+  templatesList.value.forEach((item) => {
+    const period = String(item?._periodType || 'without-period')
+    const list = groups.get(period) || []
+    list.push(item)
+    groups.set(period, list)
+  })
+
+  return Array.from(groups.entries()).map(([period, items]) => ({
+    period,
+    items: items.slice().sort((a, b) => {
+      const w = Number(a?._periodWeekNumber || 0) - Number(b?._periodWeekNumber || 0)
+      if (w !== 0) return w
+      return Number(a?._dayOfWeek || 0) - Number(b?._dayOfWeek || 0)
+    }),
+  }))
+})
 const selectedTemplateId = ref('')
 const templateAppliedSnapshot = ref(null)
 const openedGroupKeys = ref([])
@@ -458,7 +493,7 @@ const weekGroups = computed(() => {
     const days = []
     let checkedCount = 0
     for (let day = 1; day <= 7; day += 1) {
-      if ((week === 0 && day === 3) || (week === 5 && day === 1)) continue
+      if ((week === 0 && (day < 3 || day > 6)) || (week === 5 && day === 1)) continue
       const key = buildDayId('lent', week, day)
       const fixedDoc = fixedDaysMap.value.get(key)
       const checked = Boolean(fixedDoc?.checked)
@@ -496,6 +531,25 @@ async function loadIndexData() {
 
   allOrdinaryDocs.value = ordinarySnap.docs.map((item) => ({ id: item.id, ...item.data() }))
   fixedDaysMap.value = new Map(fixedSnap.docs.map((item) => [item.id, item.data()]))
+
+  const byYear = new Map()
+  allOrdinaryDocs.value
+    .filter((item) => /^\d{4}-\d{2}-\d{2}$/.test(String(item.id || '')))
+    .forEach((item) => {
+      const year = Number(String(item.id).slice(0, 4))
+      const startDate = LENT_WEEK_ZERO_STARTS[year]
+      if (!startDate || item.id < startDate) return
+      const list = byYear.get(year) || []
+      list.push(item)
+      byYear.set(year, list)
+    })
+
+  const resolved = new Map()
+  byYear.forEach((items, year) => {
+    const sorted = items.slice().sort((a, b) => String(a.id).localeCompare(String(b.id)))
+    resolved.set(year, sorted.slice(0, 4))
+  })
+  weekZeroByYear.value = resolved
 }
 
 function buildDayId(periodType, week, day) {
@@ -562,6 +616,11 @@ function getDocMeta(item) {
 
 function findDayBySlot(year) {
   if (!selectedSlot.value) return null
+  if (Number(selectedSlot.value.week) === 0) {
+    const items = weekZeroByYear.value.get(Number(year)) || []
+    const idx = Number(selectedSlot.value.day) - 3
+    return items[idx] || null
+  }
   return allOrdinaryDocs.value.find((item) => {
     const meta = getDocMeta(item)
     return meta.periodType === 'lent'
@@ -727,7 +786,7 @@ async function saveTemplate() {
 async function openLoadTemplateDialog() {
   const snap = await getDocs(collection(db, 'tmpTemplates'))
   templatesList.value = snap.docs.map((item) => ({ id: item.id, ...item.data() }))
-  selectedTemplateId.value = templatesList.value[0]?.id || ''
+  selectedTemplateId.value = groupedTemplates.value[0]?.items?.[0]?.id || ''
   loadTemplateDialogOpen.value = true
 }
 
