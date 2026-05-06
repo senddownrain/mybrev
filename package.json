@@ -22,7 +22,8 @@
     "audit:cli": "node scripts/audit-liturgical-data.mjs",
     "test:audit": "node --test tests/liturgical-audit.test.mjs",
     "test:ordinary": "node patchs/test-ordinary-period.cjs",
-    "test:lent": "node patchs/test-lent-period.cjs"
+    "test:lent": "node patchs/test-lent-period.cjs",
+    "db:migrate-olddays-fixed": "node patchs/migrate-olddays-to-daystmp-fixed.js"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
