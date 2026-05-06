@@ -13,7 +13,7 @@
 
     <v-card v-if="!selectedSlot" rounded="lg" class="pa-4">
       <v-alert type="info" variant="tonal" class="mb-4">
-        5 недель + нулевая неделя. Пепельная среда и Вербное воскресенье исключены.
+        5 недель + нулевая неделя. Нулевая неделя — первые 4 дня Великого поста: с Пепельной среды по субботу. Вербное воскресенье исключено.
       </v-alert>
 
       <v-expansion-panels v-model="openedWeeks" multiple>
@@ -334,7 +334,17 @@ const FIELDS = [
 ]
 
 const READ_ONLY_FIELDS = new Set(['_dayOfWeek', '_periodType', '_periodWeekNumber'])
+const OPTIONAL_SEXT_ANT_FIELDS = [
+  'sext1Ant2',
+  'sext1Ant3',
+  'sext2Ant2',
+  'sext2Ant3',
+  'sext3Ant2',
+  'sext3Ant3',
+]
+const COMPARE_IGNORED_FIELDS = new Set(OPTIONAL_SEXT_ANT_FIELDS)
 const EMPTY_HIGHLIGHT_EXCLUDED = new Set([
+  ...OPTIONAL_SEXT_ANT_FIELDS,
   'officeOfReadingsTeDeum',
   'vesper1Hymn',
   'vesper1Ant1',
@@ -493,7 +503,7 @@ const weekGroups = computed(() => {
     const days = []
     let checkedCount = 0
     for (let day = 1; day <= 7; day += 1) {
-      if ((week === 0 && (day < 3 || day > 6)) || (week === 5 && day === 1)) continue
+      if ((week === 0 && day < 4) || (week === 5 && day === 1)) continue
       const key = buildDayId('lent', week, day)
       const fixedDoc = fixedDaysMap.value.get(key)
       const checked = Boolean(fixedDoc?.checked)
@@ -557,9 +567,6 @@ function buildDayId(periodType, week, day) {
 }
 
 function weekDayLabel(week, day) {
-  if (Number(week) === 0) {
-    return WEEKDAY_LABEL_MAP[Number(day) + 1] || day
-  }
   return WEEKDAY_LABEL_MAP[day] || day
 }
 
@@ -625,7 +632,7 @@ function findDayBySlot(year) {
   if (!selectedSlot.value) return null
   if (Number(selectedSlot.value.week) === 0) {
     const items = weekZeroByYear.value.get(Number(year)) || []
-    const idx = Number(selectedSlot.value.day) - 3
+    const idx = Number(selectedSlot.value.day) - 4
     return items[idx] || null
   }
   return allOrdinaryDocs.value.find((item) => {
@@ -637,11 +644,18 @@ function findDayBySlot(year) {
   }) || null
 }
 
-function mergeWithDefaults(source) {
+function mergeWithDefaults(source, slot = null) {
   const day = buildEmptyDay()
   FIELDS.forEach((field) => {
     day[field] = source?.[field] ?? ''
   })
+
+  if (slot) {
+    day._periodType = 'lent'
+    day._periodWeekNumber = Number(slot.week)
+    day._dayOfWeek = Number(slot.day)
+  }
+
   return day
 }
 
@@ -660,15 +674,15 @@ function loadDayData() {
   }
 
   const leftSource = fixedDoc || doc2025 || fallback
-  leftDraft.value = mergeWithDefaults(leftSource)
-  leftOriginal.value = mergeWithDefaults(leftSource)
+  leftDraft.value = mergeWithDefaults(leftSource, selected)
+  leftOriginal.value = mergeWithDefaults(leftSource, selected)
   editableChecked.value = Boolean(fixedDoc?.checked)
 
   const compareSource = selectedCompareYear.value === 2025
     ? (fixedDoc || doc2025 || fallback)
     : (findDayBySlot(selectedCompareYear.value) || fallback)
 
-  compareDay.value = mergeWithDefaults(compareSource)
+  compareDay.value = mergeWithDefaults(compareSource, selected)
 }
 
 function formatPreviewValue(value) {
@@ -682,6 +696,7 @@ function normalizedCompare(value) {
 }
 
 function isDifferent(field) {
+  if (COMPARE_IGNORED_FIELDS.has(field)) return false
   return normalizedCompare(leftDraft.value[field]) !== normalizedCompare(compareDay.value[field])
 }
 
@@ -809,7 +824,7 @@ function applySelectedTemplate() {
     templateAppliedSnapshot.value = { ...leftDraft.value }
   }
   TEMPLATE_FIELDS.forEach((field) => {
-    if (field === '_periodWeekNumber') return
+    if (READ_ONLY_FIELDS.has(field)) return
     leftDraft.value[field] = selected[field] ?? ''
   })
   closeLoadTemplateDialog()
@@ -842,17 +857,20 @@ function getCompareSourceByYear(year) {
 
 function yearDiffCount(year) {
   if (!selectedSlot.value) return 0
-  const source = mergeWithDefaults(getCompareSourceByYear(year) || {})
-  return FIELDS.filter((field) => normalizedCompare(leftDraft.value[field]) !== normalizedCompare(source[field])).length
+  const source = mergeWithDefaults(getCompareSourceByYear(year) || {}, selectedSlot.value)
+  return FIELDS.filter((field) => (
+    !COMPARE_IGNORED_FIELDS.has(field)
+    && normalizedCompare(leftDraft.value[field]) !== normalizedCompare(source[field])
+  )).length
 }
 
 async function saveDay() {
   if (!selectedSlot.value || saving.value) return
   saving.value = true
   try {
-    const week = Number(leftDraft.value._periodWeekNumber || selectedSlot.value.week)
-    const day = Number(leftDraft.value._dayOfWeek || selectedSlot.value.day)
-    const periodType = leftDraft.value._periodType || 'lent'
+    const week = Number(selectedSlot.value.week)
+    const day = Number(selectedSlot.value.day)
+    const periodType = 'lent'
 
     const payload = {
       ...Object.fromEntries(FIELDS.map((field) => [field, leftDraft.value[field] ?? ''])),
