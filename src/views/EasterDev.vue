@@ -331,7 +331,17 @@ const FIELDS = [
 ]
 
 const READ_ONLY_FIELDS = new Set(['_dayOfWeek', '_periodType', '_periodWeekNumber'])
+const OPTIONAL_SEXT_ANT_FIELDS = [
+  'sext1Ant2',
+  'sext1Ant3',
+  'sext2Ant2',
+  'sext2Ant3',
+  'sext3Ant2',
+  'sext3Ant3',
+]
+const COMPARE_IGNORED_FIELDS = new Set(OPTIONAL_SEXT_ANT_FIELDS)
 const EMPTY_HIGHLIGHT_EXCLUDED = new Set([
+  ...OPTIONAL_SEXT_ANT_FIELDS,
   'officeOfReadingsTeDeum',
   'vesper1Hymn',
   'vesper1Ant1',
@@ -418,6 +428,7 @@ const compareYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019]
 
 const allPeriodDocs = ref([])
 const fixedDaysMap = ref(new Map())
+const periodDaysByYear = ref(new Map())
 
 const leftDraft = ref(buildEmptyDay())
 const leftOriginal = ref(buildEmptyDay())
@@ -437,7 +448,7 @@ const templatesList = ref([])
 const selectedTemplateId = ref('')
 const templateAppliedSnapshot = ref(null)
 const openedGroupKeys = ref([])
-const openedWeeks = ref(Array.from({ length: 34 }, (_, i) => i + 1))
+const openedWeeks = ref(Array.from({ length: 7 }, (_, i) => i + 1))
 
 const selectedSlotLabel = computed(() => {
   if (!selectedSlot.value) return ''
@@ -458,7 +469,7 @@ const weekGroups = computed(() => {
     const days = []
     let checkedCount = 0
     for (let day = 1; day <= 7; day += 1) {
-            const key = buildDayId('easter', week, day)
+      const key = buildDayId('easter', week, day)
       const fixedDoc = fixedDaysMap.value.get(key)
       const checked = Boolean(fixedDoc?.checked)
       if (checked) checkedCount += 1
@@ -495,6 +506,22 @@ async function loadIndexData() {
 
   allPeriodDocs.value = ordinarySnap.docs.map((item) => ({ id: item.id, ...item.data() }))
   fixedDaysMap.value = new Map(fixedSnap.docs.map((item) => [item.id, item.data()]))
+
+  const byYear = new Map()
+  allPeriodDocs.value
+    .filter((item) => /^\d{4}-\d{2}-\d{2}$/.test(String(item.id || '')))
+    .forEach((item) => {
+      const year = Number(String(item.id).slice(0, 4))
+      const list = byYear.get(year) || []
+      list.push(item)
+      byYear.set(year, list)
+    })
+
+  const resolved = new Map()
+  byYear.forEach((items, year) => {
+    resolved.set(year, items.slice().sort((a, b) => String(a.id).localeCompare(String(b.id))))
+  })
+  periodDaysByYear.value = resolved
 }
 
 function buildDayId(periodType, week, day) {
@@ -561,6 +588,11 @@ function getDocMeta(item) {
 
 function findDayBySlot(year) {
   if (!selectedSlot.value) return null
+
+  const items = periodDaysByYear.value.get(Number(year)) || []
+  const periodIndex = (Number(selectedSlot.value.week) - 1) * 7 + (Number(selectedSlot.value.day) - 1)
+  if (items[periodIndex]) return items[periodIndex]
+
   return allPeriodDocs.value.find((item) => {
     const meta = getDocMeta(item)
     return meta.periodType === 'easter'
@@ -570,11 +602,18 @@ function findDayBySlot(year) {
   }) || null
 }
 
-function mergeWithDefaults(source) {
+function mergeWithDefaults(source, slot = null) {
   const day = buildEmptyDay()
   FIELDS.forEach((field) => {
     day[field] = source?.[field] ?? ''
   })
+
+  if (slot) {
+    day._periodType = 'easter'
+    day._periodWeekNumber = Number(slot.week)
+    day._dayOfWeek = Number(slot.day)
+  }
+
   return day
 }
 
@@ -593,15 +632,15 @@ function loadDayData() {
   }
 
   const leftSource = fixedDoc || doc2025 || fallback
-  leftDraft.value = mergeWithDefaults(leftSource)
-  leftOriginal.value = mergeWithDefaults(leftSource)
+  leftDraft.value = mergeWithDefaults(leftSource, selected)
+  leftOriginal.value = mergeWithDefaults(leftSource, selected)
   editableChecked.value = Boolean(fixedDoc?.checked)
 
   const compareSource = selectedCompareYear.value === 2025
     ? (fixedDoc || doc2025 || fallback)
     : (findDayBySlot(selectedCompareYear.value) || fallback)
 
-  compareDay.value = mergeWithDefaults(compareSource)
+  compareDay.value = mergeWithDefaults(compareSource, selected)
 }
 
 function formatPreviewValue(value) {
@@ -615,6 +654,7 @@ function normalizedCompare(value) {
 }
 
 function isDifferent(field) {
+  if (COMPARE_IGNORED_FIELDS.has(field)) return false
   return normalizedCompare(leftDraft.value[field]) !== normalizedCompare(compareDay.value[field])
 }
 
@@ -774,8 +814,11 @@ function getCompareSourceByYear(year) {
 
 function yearDiffCount(year) {
   if (!selectedSlot.value) return 0
-  const source = mergeWithDefaults(getCompareSourceByYear(year) || {})
-  return FIELDS.filter((field) => normalizedCompare(leftDraft.value[field]) !== normalizedCompare(source[field])).length
+  const source = mergeWithDefaults(getCompareSourceByYear(year) || {}, selectedSlot.value)
+  return FIELDS.filter((field) => (
+    !COMPARE_IGNORED_FIELDS.has(field)
+    && normalizedCompare(leftDraft.value[field]) !== normalizedCompare(source[field])
+  )).length
 }
 
 async function saveDay() {
