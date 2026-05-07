@@ -329,7 +329,7 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { addDoc, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
 import { db } from '@/plugins/firebase'
 import { fixedCalendar } from '@/constants/fixedCalendar'
 
@@ -518,7 +518,7 @@ function itemLabel(item) {
   return `${item.date} — ${item.title}${item.rank ? ` (${item.rank})` : ''}${item.place ? ` [${item.place}]` : ''}`
 }
 
-function buildIsoDate(year, date) {
+function buildDaysTmpId(year, date) {
   return `${year}-${date.slice(3, 5)}-${date.slice(0, 2)}`
 }
 
@@ -573,7 +573,7 @@ async function loadDateData() {
   compareByYear.value = byYear
 
   const doc2025 = byYear.get(2025)
-  const fallback = buildFallback(selected, 2025)
+  const fallback = buildFallback(selected)
   const leftSource = fixedDoc || doc2025 || fallback
 
   leftDraft.value = mergeWithDefaults(leftSource)
@@ -584,21 +584,23 @@ async function loadDateData() {
 
 async function loadDaysTmpForSelectedDate(date) {
   const entries = await Promise.all(compareYears.map(async (year) => {
-    const isoDate = buildIsoDate(year, date)
-    const dateQuery = query(
-      collection(db, 'daysTmp'),
-      where('_date', '>=', isoDate),
-      where('_date', '<=', `${isoDate}T23:59:59`),
-    )
-    const snap = await getDocs(dateQuery)
-    return [year, snap.docs[0] ? { id: snap.docs[0].id, ...snap.docs[0].data() } : null]
+    const id = buildDaysTmpId(year, date)
+    const snap = await getDoc(doc(db, 'daysTmp', id))
+    if (snap.exists()) {
+      return [year, { id: snap.id, ...snap.data() }]
+    }
+
+    const dateQuery = query(collection(db, 'daysTmp'), where('_date', '==', date))
+    const byDateSnap = await getDocs(dateQuery)
+    const matchingDoc = byDateSnap.docs.find((item) => item.id === id)
+    return [year, matchingDoc ? { id: matchingDoc.id, ...matchingDoc.data() } : null]
   }))
   return new Map(entries)
 }
 
-function buildFallback(item, year) {
+function buildFallback(item) {
   return {
-    _date: buildIsoDate(year, item.date),
+    _date: item.date || '',
     _feastName: item.title || '',
     _feastType: item.rank || '',
     _feast: idFor(item),
@@ -617,7 +619,7 @@ function getCompareSourceByYear(year) {
   const fixedId = idFor(selectedItem.value)
   const fixedDoc = fixedDaysMap.value.get(fixedId) || null
   const doc2025 = compareByYear.value.get(2025)
-  const fallback = buildFallback(selectedItem.value, Number(year))
+  const fallback = buildFallback(selectedItem.value)
   if (Number(year) === 2025) return fixedDoc || doc2025 || fallback
   return compareByYear.value.get(Number(year)) || fallback
 }
