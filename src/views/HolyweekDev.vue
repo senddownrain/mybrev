@@ -536,13 +536,13 @@ function parseDayId(id) {
     }
   }
 
-  const yearWeekDayMatch = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)
-  if (yearWeekDayMatch) {
+  const dateIdMatch = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)
+  if (dateIdMatch) {
     return {
       periodType: 'holyweek',
-      year: Number(yearWeekDayMatch[1]),
-      week: Number(yearWeekDayMatch[2]),
-      day: Number(yearWeekDayMatch[3]),
+      year: Number(dateIdMatch[1]),
+      month: Number(dateIdMatch[2]),
+      date: Number(dateIdMatch[3]),
     }
   }
 
@@ -551,9 +551,12 @@ function parseDayId(id) {
 
 function getDocMeta(item) {
   const fromId = parseDayId(item?.id)
+  const periodType = item?._periodType ?? fromId?.periodType ?? 'holyweek'
+  const fallbackWeek = periodType === 'holyweek' ? 1 : 0
+
   return {
-    periodType: item?._periodType ?? fromId?.periodType ?? 'holyweek',
-    week: Number(item?._periodWeekNumber ?? fromId?.week ?? 0),
+    periodType,
+    week: Number(item?._periodWeekNumber ?? fromId?.week ?? fallbackWeek),
     day: Number(item?._dayOfWeek ?? fromId?.day ?? 0),
     year: normalizeYear(item),
   }
