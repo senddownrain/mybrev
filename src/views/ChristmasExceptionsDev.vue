@@ -321,6 +321,7 @@ import { WEEKDAY_LABEL_MAP } from '@/constants/liturgical'
 
 const FIELDS = [
   '_dayOfWeek', '_periodType', '_periodWeekNumber', '_dayName',
+  '_date', '_feast', '_feastName', '_feastType', 'feastComment',
   'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
   'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers', 'officeOfReadingsR1',
   'officeOfReadingsR2', 'officeOfReadingsTeDeum', 'officeOfReadingsPr', 'laudesHymn', 'laudesAnt1', 'laudesAnt2',
@@ -427,6 +428,7 @@ const selectedCompareYear = ref(2024)
 const compareYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019]
 
 const allPeriodDocs = ref([])
+const exceptionsById = ref(new Map())
 const fixedDaysMap = ref(new Map())
 
 const leftDraft = ref(buildEmptyDay())
@@ -499,6 +501,7 @@ async function loadIndexData() {
   const ordinarySnap = await getDocs(collection(db, 'exceptionsTmp'))
 
   allPeriodDocs.value = ordinarySnap.docs.map((item) => ({ id: item.id, ...item.data() }))
+  exceptionsById.value = new Map(ordinarySnap.docs.map((item) => [item.id, { id: item.id, ...item.data() }]))
   fixedDaysMap.value = new Map(fixedSnap.docs.map((item) => [item.id, item.data()]))
 }
 
@@ -517,7 +520,9 @@ function buildDateSlots() {
 }
 
 function findDocByDate(date) {
-  return allPeriodDocs.value.find((item) => String(item?._date || item?.id || '') === date) || null
+  return exceptionsById.value.get(date)
+    || allPeriodDocs.value.find((item) => String(item?._date || item?.id || '') === date)
+    || null
 }
 
 function getListSource(slot) {
@@ -612,7 +617,11 @@ function getDocMeta(item) {
 
 function findDayBySlot(year) {
   if (!selectedSlot.value) return null
-  const selectedMonthDay = String(selectedSlot.value.date || '').slice(5)
+  const selectedDate = String(selectedSlot.value.date || '')
+  const selectedMonthDay = selectedDate.slice(5)
+  if (Number(year) === 2025) {
+    return findDocByDate(selectedDate)
+  }
   return allPeriodDocs.value.find((item) => {
     const meta = getDocMeta(item)
     return meta.monthDay === selectedMonthDay
