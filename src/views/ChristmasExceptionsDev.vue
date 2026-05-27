@@ -455,8 +455,19 @@ const emptyHighlightFields = computed(() => {
 
 const weekGroups = computed(() => {
   const days = buildDateSlots()
-  const checkedCount = days.filter((d) => Boolean(fixedDaysMap.value.get(d.id)?.checked)).length
-  return [{ week: '17.12-11.01', days: days.map((d) => ({...d, key:d.id, checked:Boolean(fixedDaysMap.value.get(d.id)?.checked)})), checkedCount, totalCount: days.length, allChecked: checkedCount===days.length }]
+  const checkedCount = days.filter((d) => Boolean(fixedDaysMap.value.get(buildFixedDayId(d.date))?.checked)).length
+  return [{
+    week: '17.12-11.01',
+    days: days.map((d) => ({
+      ...d,
+      key: d.id,
+      label: buildSlotListLabel(d),
+      checked: Boolean(fixedDaysMap.value.get(buildFixedDayId(d.date))?.checked),
+    })),
+    checkedCount,
+    totalCount: days.length,
+    allChecked: checkedCount === days.length,
+  }]
 })
 
 watch(selectedCompareYear, () => {
@@ -491,6 +502,18 @@ function buildDateSlots() {
   }
   const uniq = new Map(out.map((i)=>[i.id,i]))
   return Array.from(uniq.values())
+}
+
+function findDocByDate(date) {
+  return allPeriodDocs.value.find((item) => String(item?._date || item?.id || '') === date) || null
+}
+
+function buildSlotListLabel(slot) {
+  const source = findDocByDate(slot.date) || {}
+  const dayName = source._dayName || ''
+  const periodType = source._periodType || ''
+  const feastName = source._feastName || ''
+  return `${slot.label} - '${dayName}' - [${periodType}] - [${periodType}] - [${feastName}]`
 }
 
 function buildFixedDayId(dateStr) {
@@ -554,21 +577,24 @@ function parseDayId(id) {
 
 function getDocMeta(item) {
   const fromId = parseDayId(item?.id)
+  const dateValue = String(item?._date || item?.id || '')
+  const dateMatch = dateValue.match(/^(\d{4})-(\d{2})-(\d{2})$/)
   return {
     periodType: item?._periodType ?? fromId?.periodType ?? 'advent',
     week: Number(item?._periodWeekNumber ?? fromId?.week ?? 0),
     day: Number(item?._dayOfWeek ?? fromId?.day ?? 0),
-    year: normalizeYear(item),
+    year: normalizeYear(item) || (dateMatch ? Number(dateMatch[1]) : 0),
+    month: dateMatch ? Number(dateMatch[2]) : 0,
+    monthDay: dateMatch ? `${dateMatch[2]}-${dateMatch[3]}` : '',
   }
 }
 
 function findDayBySlot(year) {
   if (!selectedSlot.value) return null
+  const selectedMonthDay = String(selectedSlot.value.date || '').slice(5)
   return allPeriodDocs.value.find((item) => {
     const meta = getDocMeta(item)
-    return meta.periodType === 'advent'
-      && meta.week === Number(selectedSlot.value.week)
-      && meta.day === Number(selectedSlot.value.day)
+    return meta.monthDay === selectedMonthDay
       && meta.year === Number(year)
   }) || null
 }
@@ -585,19 +611,22 @@ function loadDayData() {
   const selected = selectedSlot.value
   if (!selected) return
 
-  const fixedId = buildDayId('advent', selected.week, selected.day)
+  const fixedId = buildFixedDayId(selected.date)
   const fixedDoc = fixedDaysMap.value.get(fixedId) || null
 
   const doc2025 = findDayBySlot(2025)
+  const leftSource = fixedDoc || doc2025 || {}
   const fallback = {
+    _date: selected.date,
     _periodType: leftSource?._periodType || '',
     _periodWeekNumber: leftSource?._periodWeekNumber || '',
     _dayOfWeek: leftSource?._dayOfWeek || '',
+    _dayName: leftSource?._dayName || '',
+    _feastName: leftSource?._feastName || '',
   }
 
-  const leftSource = fixedDoc || doc2025 || fallback
-  leftDraft.value = mergeWithDefaults(leftSource)
-  leftOriginal.value = mergeWithDefaults(leftSource)
+  leftDraft.value = mergeWithDefaults(fixedDoc || doc2025 || fallback)
+  leftOriginal.value = mergeWithDefaults(fixedDoc || doc2025 || fallback)
   editableChecked.value = Boolean(fixedDoc?.checked)
 
   const compareSource = selectedCompareYear.value === 2025
@@ -759,15 +788,16 @@ function rollbackTemplateApply() {
 function getFallbackBySlot() {
   if (!selectedSlot.value) return null
   return {
-    _periodType: 'advent',
-    _periodWeekNumber: selectedSlot.value.week,
-    _dayOfWeek: selectedSlot.value.day,
+    _date: selectedSlot.value.date,
+    _periodType: '',
+    _periodWeekNumber: '',
+    _dayOfWeek: '',
   }
 }
 
 function getCompareSourceByYear(year) {
   if (!selectedSlot.value) return null
-  const fixedId = selectedSlot.value.id
+  const fixedId = buildFixedDayId(selectedSlot.value.date)
   const fixedDoc = fixedDaysMap.value.get(fixedId) || null
   const doc2025 = findDayBySlot(2025)
   const fallback = getFallbackBySlot()
