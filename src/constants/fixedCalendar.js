@@ -276,4 +276,49 @@ export const fixedCalendar = [
   { date: '31.12', title: 'Св. Сільвэстра І, папы', rank: '', place: '' },
 ];
 
+export const FIXED_CALENDAR_RANK_MAP = {
+  урачыстасць: 'solemnity',
+  свята: 'feast',
+  успамін: 'memorial',
+};
+
+export const FIXED_CALENDAR_RANK_REVERSE_MAP = Object.fromEntries(
+  Object.entries(FIXED_CALENDAR_RANK_MAP).map(([from, to]) => [to, from]),
+);
+
+export const FIXED_CALENDAR_PLACE_MAP = {
+  'гродзенская дыяцэзія': 'grodno',
+  'віцебская дыяцэзія': 'vitebsk',
+  'пінская дыяцэзія': 'pinsk',
+  'мінска-магілёўская архідыяцэзія': 'minsk-mogilev',
+};
+
+export const FIXED_CALENDAR_PLACE_REVERSE_MAP = Object.fromEntries(
+  Object.entries(FIXED_CALENDAR_PLACE_MAP).map(([from, to]) => [to, from]),
+);
+
+export function normalizeFixedRank(value) {
+  const key = String(value || '').trim().toLowerCase();
+  if (!key) return '';
+  return FIXED_CALENDAR_RANK_MAP[key] || key;
+}
+
+export function denormalizeFixedRank(value) {
+  const key = String(value || '').trim().toLowerCase();
+  if (!key) return '';
+  return FIXED_CALENDAR_RANK_REVERSE_MAP[key] || value;
+}
+
+export function normalizeFixedPlace(value) {
+  const key = String(value || '').trim().toLowerCase();
+  if (!key) return '';
+  return FIXED_CALENDAR_PLACE_MAP[key] || key;
+}
+
+export function denormalizeFixedPlace(value) {
+  const key = String(value || '').trim().toLowerCase();
+  if (!key) return '';
+  return FIXED_CALENDAR_PLACE_REVERSE_MAP[key] || value;
+}
+
 export const FIXED_CALENDAR_DATES = [...new Set(fixedCalendar.map((item) => item.date))];
