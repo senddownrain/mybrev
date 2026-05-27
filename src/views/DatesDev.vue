@@ -334,20 +334,15 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
 import { db } from '@/plugins/firebase'
-import { fixedCalendar } from '@/constants/fixedCalendar'
+import {
+  fixedCalendar,
+  denormalizeFixedPlace,
+  denormalizeFixedRank,
+  normalizeFixedPlace,
+  normalizeFixedRank,
+} from '@/constants/fixedCalendar'
 
 const compareYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019]
-const rankMap = {
-  'урачыстасць': 'solemnity',
-  'свята': 'feast',
-  'успамін': 'memorial',
-}
-const placeMap = {
-  'гродзенская дыяцэзія': 'grodno',
-  'віцебская дыяцэзія': 'vitebsk',
-  'пінская дыяцэзія': 'pinsk',
-  'мінска-магілёўская архідыяцэзія': 'minsk-mogilev',
-}
 
 const FIELDS = [
   '_date', '_feastName', '_rank', '_place', '_dayName', 'feastComment',
@@ -521,13 +516,9 @@ async function loadIndexData() {
   fixedDaysMap.value = new Map(snap.docs.map((item) => [item.id, item.data()]))
 }
 
-function norm(value) {
-  return String(value || '').trim().toLowerCase()
-}
-
 function idFor(item) {
-  const rank = rankMap[norm(item.rank)] || norm(item.rank) || 'none'
-  const place = placeMap[norm(item.place)] || norm(item.place) || 'none'
+  const rank = normalizeFixedRank(item.rank) || 'none'
+  const place = normalizeFixedPlace(item.place) || 'none'
   return `${item.date}-${rank}-${place}`.toLowerCase()
 }
 
@@ -569,8 +560,8 @@ async function openDate(item) {
   fixedParamsDraft.value = {
     date: item.date || '',
     title: item.title || '',
-    rank: item.rank || '',
-    place: item.place || '',
+    rank: denormalizeFixedRank(item.rank || ''),
+    place: denormalizeFixedPlace(item.place || ''),
   }
   fixedParamsOriginal.value = { ...fixedParamsDraft.value }
   await loadDateData()
@@ -788,18 +779,23 @@ async function saveDate() {
   saving.value = true
   try {
     const fixedParams = { ...fixedParamsDraft.value }
+    const normalizedFixedParams = {
+      ...fixedParams,
+      rank: normalizeFixedRank(fixedParams.rank),
+      place: normalizeFixedPlace(fixedParams.place),
+    }
     const fieldsToSave = saveVesper1.value ? [...SAVE_BASE_FIELDS, ...VESPER1_FIELDS] : SAVE_BASE_FIELDS
     const payload = {
       ...Object.fromEntries(fieldsToSave.map((field) => [field, leftDraft.value[field] ?? ''])),
-      ...fixedParams,
+      ...normalizedFixedParams,
       checked: Boolean(editableChecked.value),
     }
 
-    const id = idFor(fixedParams)
+    const id = idFor(normalizedFixedParams)
     await setDoc(doc(db, 'fixedDays', id), payload)
     fixedDaysMap.value.set(id, payload)
-    selectedItem.value = { ...selectedItem.value, ...fixedParams, id }
-    fixedParamsOriginal.value = { ...fixedParams }
+    selectedItem.value = { ...selectedItem.value, ...normalizedFixedParams, id }
+    fixedParamsOriginal.value = { ...normalizedFixedParams }
     leftOriginal.value = { ...leftDraft.value }
   } finally {
     saving.value = false
