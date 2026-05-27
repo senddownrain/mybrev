@@ -456,7 +456,18 @@ const emptyHighlightFields = computed(() => {
 const weekGroups = computed(() => {
   const days = buildDateSlots()
   const checkedCount = days.filter((d) => Boolean(fixedDaysMap.value.get(d.id)?.checked)).length
-  return [{ week: '17.12-11.01', days: days.map((d) => ({...d, key:d.id, checked:Boolean(fixedDaysMap.value.get(d.id)?.checked)})), checkedCount, totalCount: days.length, allChecked: checkedCount===days.length }]
+  return [{
+    week: '17.12-11.01',
+    days: days.map((d) => ({
+      ...d,
+      key: d.id,
+      label: buildSlotListLabel(d),
+      checked: Boolean(fixedDaysMap.value.get(d.id)?.checked),
+    })),
+    checkedCount,
+    totalCount: days.length,
+    allChecked: checkedCount === days.length,
+  }]
 })
 
 watch(selectedCompareYear, () => {
@@ -491,6 +502,18 @@ function buildDateSlots() {
   }
   const uniq = new Map(out.map((i)=>[i.id,i]))
   return Array.from(uniq.values())
+}
+
+function findDocByDate(date) {
+  return allPeriodDocs.value.find((item) => String(item?._date || item?.id || '') === date) || null
+}
+
+function buildSlotListLabel(slot) {
+  const source = findDocByDate(slot.date) || {}
+  const dayName = source._dayName || ''
+  const periodType = source._periodType || ''
+  const feastName = source._feastName || ''
+  return `${slot.label} - '${dayName}' - [${periodType}] - [${periodType}] - [${feastName}]`
 }
 
 function buildFixedDayId(dateStr) {
