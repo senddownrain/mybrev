@@ -620,9 +620,8 @@ function buildAdventHook(dateStr) {
   if (month !== 12 || day < 17 || day > 24) return null
   const keys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
   const weekday = keys[weekdayIndex]
-  const content = ADVENT_DEC17_24_HOOK[weekday]
-  if (!content) return null
-  return { weekday, content, byWeekday: ADVENT_DEC17_24_HOOK }
+  if (!ADVENT_DEC17_24_HOOK[weekday]) return null
+  return ADVENT_DEC17_24_HOOK
 }
 function buildEmptyDay() {
   return Object.fromEntries(FIELDS.map((field) => [field, '']))
@@ -960,9 +959,12 @@ async function saveDay() {
 
     const hook = buildAdventHook(dateForSave)
     if (hook) {
-      payload.adventDec17to24HookWeekday = hook.weekday
-      payload.adventDec17to24HookContent = hook.content
-      payload.adventDec17to24HookByWeekday = hook.byWeekday
+      payload.monday = hook.monday
+      payload.tuesday = hook.tuesday
+      payload.wednesday = hook.wednesday
+      payload.thursday = hook.thursday
+      payload.friday = hook.friday
+      payload.saturday = hook.saturday
     }
 
     console.log('[ChristmasExceptionsDev.saveDay] start', { id, dateForSave, miniMode: miniMode.value, checked: editableChecked.value })
