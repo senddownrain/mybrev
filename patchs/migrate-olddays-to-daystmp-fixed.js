@@ -2,14 +2,27 @@
 
 import admin from 'firebase-admin';
 import serviceAccount from './serviceAccountKey.json' with { type: 'json' };
-import { FIXED_CALENDAR_DATES } from '../src/constants/fixedCalendar.js';
+import { fixedCalendar } from '../src/constants/fixedCalendar.js';
 
 const YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025];
 const READ_CHUNK_SIZE = 50;
 const WRITE_BATCH_SIZE = 50;
 const MAX_RETRIES = 5;
 const RETRY_BASE_DELAY_MS = 1000;
-const FIELDS = ['_date','_feastName','_feastType','_feast','feastComment','invitatoriumAnt','officeOfReadingsHymn','officeOfReadingsAnt1','officeOfReadingsAnt2','officeOfReadingsAnt3','officeOfReadingsPs1','officeOfReadingsPs2','officeOfReadingsPs3','officeOfReadingsVers','officeOfReadingsR1','officeOfReadingsR2','officeOfReadingsTeDeum','officeOfReadingsPr','laudesHymn','laudesAnt1','laudesAnt2','laudesAnt3','laudesPs1','laudesPs2','laudesPs3','laudesR','laudesAntBen','laudesInter','laudesPr','sext1Hymn','sext1Ant1','sext1Ant2','sext1Ant3','sext1Ps1','sext1Ps2','sext1Ps3','sext1R','sext1Pr','sext2Hymn','sext2Ant1','sext2Ant2','sext2Ant3','sext2Ps1','sext2Ps2','sext2Ps3','sext2R','sext2Pr','sext3Hymn','sext3Ant1','sext3Ant2','sext3Ant3','sext3Ps1','sext3Ps2','sext3Ps3','sext3R','sext3Pr','vesperHymn','vesperAnt1','vesperAnt2','vesperAnt3','vesperPs1','vesperPs2','vesperPs3','vesperR','vesperAntMag','vesperInter','vesperPr','vesper1Hymn','vesper1Ant1','vesper1Ant2','vesper1Ant3','vesper1Ps1','vesper1Ps2','vesper1Ps3','vesper1R','vesper1AntMag','vesper1Inter','vesper1Pr'];
+const FIELDS = ['_date','_feastName','_rank','_place','_dayName','feastComment','invitatoriumAnt','officeOfReadingsHymn','officeOfReadingsAnt1','officeOfReadingsAnt2','officeOfReadingsAnt3','officeOfReadingsPs1','officeOfReadingsPs2','officeOfReadingsPs3','officeOfReadingsVers','officeOfReadingsR1','officeOfReadingsR2','officeOfReadingsTeDeum','officeOfReadingsPr','laudesHymn','laudesAnt1','laudesAnt2','laudesAnt3','laudesPs1','laudesPs2','laudesPs3','laudesR','laudesAntBen','laudesInter','laudesPr','sext1Hymn','sext1Ant1','sext1Ant2','sext1Ant3','sext1Ps1','sext1Ps2','sext1Ps3','sext1R','sext1Pr','sext2Hymn','sext2Ant1','sext2Ant2','sext2Ant3','sext2Ps1','sext2Ps2','sext2Ps3','sext2R','sext2Pr','sext3Hymn','sext3Ant1','sext3Ant2','sext3Ant3','sext3Ps1','sext3Ps2','sext3Ps3','sext3R','sext3Pr','vesperHymn','vesperAnt1','vesperAnt2','vesperAnt3','vesperPs1','vesperPs2','vesperPs3','vesperR','vesperAntMag','vesperInter','vesperPr','vesper1Hymn','vesper1Ant1','vesper1Ant2','vesper1Ant3','vesper1Ps1','vesper1Ps2','vesper1Ps3','vesper1R','vesper1AntMag','vesper1Inter','vesper1Pr'];
+const PREV_VESPER_MAPPING = [
+  ['vesperHymn', 'vesper1Hymn'],
+  ['vesperAnt1', 'vesper1Ant1'],
+  ['vesperAnt2', 'vesper1Ant2'],
+  ['vesperAnt3', 'vesper1Ant3'],
+  ['vesperPs1', 'vesper1Ps1'],
+  ['vesperPs2', 'vesper1Ps2'],
+  ['vesperPs3', 'vesper1Ps3'],
+  ['vesperR', 'vesper1R'],
+  ['vesperAntMag', 'vesper1AntMag'],
+  ['vesperInter', 'vesper1Inter'],
+  ['vesperPr', 'vesper1Pr'],
+];
 
 function parseIdDate(id) {
   const match = String(id || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -83,11 +96,12 @@ async function getOldDaysDocs(db, refs, from, to, total) {
 async function main() {
   admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
   const db = admin.firestore();
-  const allowedDates = [...FIXED_CALENDAR_DATES].sort();
+  const fixedByDate = new Map(fixedCalendar.map((item) => [item.date, item]));
+  const allowedDates = [...fixedByDate.keys()].sort();
 
   console.log('Миграция fixed-calendar oldDays -> daysTmp');
   console.log(`Годы: ${YEARS.join(', ')}`);
-  console.log(`Фиксированных дат для отбора: ${allowedDates.length}`);
+  console.log(`\x1b[36m[INFO]\x1b[0m Фиксированных дат для отбора: ${allowedDates.length}`);
 
   const sourceIds = YEARS.flatMap((year) => (
     allowedDates.map((date) => {
@@ -111,7 +125,7 @@ async function main() {
 
   for (let i = 0; i < sourceIds.length; i += READ_CHUNK_SIZE) {
     const chunkIds = sourceIds.slice(i, i + READ_CHUNK_SIZE);
-    console.log(`Читаю oldDays ${i + 1}-${i + chunkIds.length} из ${sourceIds.length}...`);
+    console.log(`\x1b[34m[READ]\x1b[0m oldDays ${i + 1}-${i + chunkIds.length} из ${sourceIds.length}...`);
     const refs = chunkIds.map((id) => db.collection('oldDays').doc(id));
     const docs = await getOldDaysDocs(db, refs, i + 1, i + chunkIds.length, sourceIds.length);
 
@@ -133,6 +147,23 @@ async function main() {
       found += 1;
       const payload = {};
       FIELDS.forEach((field) => { payload[field] = item[field] ?? null; });
+      const fixedItem = fixedByDate.get(idDate.ddmm);
+      payload._date = fixedItem?.date ?? item._date ?? null;
+      payload._feastName = fixedItem?.title ?? item._feastName ?? null;
+      payload._rank = fixedItem?.rank ?? item._rank ?? null;
+      payload._place = fixedItem?.place ?? item._place ?? null;
+      payload._dayName = fixedItem?.dayName ?? item._dayName ?? null;
+
+      const prevDate = new Date(`${idDate.year}-${sourceDoc.id.slice(5, 7)}-${sourceDoc.id.slice(8, 10)}T00:00:00Z`);
+      prevDate.setUTCDate(prevDate.getUTCDate() - 1);
+      const prevId = `${prevDate.getUTCFullYear()}-${String(prevDate.getUTCMonth() + 1).padStart(2, '0')}-${String(prevDate.getUTCDate()).padStart(2, '0')}`;
+      const prevDoc = await withRetry(`Read prev oldDays ${prevId}`, async () => db.collection('oldDays').doc(prevId).get());
+      if (prevDoc.exists) {
+        const prevItem = prevDoc.data() || {};
+        PREV_VESPER_MAPPING.forEach(([fromKey, toKey]) => {
+          payload[toKey] = prevItem[fromKey] ?? payload[toKey] ?? null;
+        });
+      }
       payload._source = 'oldDays-fixed-calendar';
       payload._sourceId = sourceDoc.id;
       payload._sourceYear = idDate.year;
@@ -147,7 +178,7 @@ async function main() {
       }
     }
 
-    console.log(`  Прогресс: проверено=${checked}; найдено=${found}; missing=${skippedMissing}; пустой _date=${skippedEmptyDateField}; ожидает записи=${pendingWrites.length}`);
+    console.log(`\x1b[35m[STEP]\x1b[0m Прогресс: проверено=${checked}; найдено=${found}; missing=${skippedMissing}; пустой _date=${skippedEmptyDateField}; ожидает записи=${pendingWrites.length}`);
   }
 
   committed = await commitWrites(db, pendingWrites, committed);
