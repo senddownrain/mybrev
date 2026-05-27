@@ -422,6 +422,14 @@ const MINI_FIELDS = new Set([
   'sext1Hymn', 'sext1R', 'sext1Pr', 'sext2Hymn', 'sext2R', 'sext2Pr', 'sext3Hymn', 'sext3R', 'sext3Pr',
   'vesperHymn', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr',
 ])
+const ADVENT_DEC17_24_HOOK = {
+  monday: '<p><span style="color: #ff0000;">1 ант.</span> Вось прыйдзе Пан, першы сярод зямных валадароў. <span style="color: #ff0000;">*</span> Шчаслівы, хто гатовы выйсці Яму насустрач.</p><p><span style="color: #ff0000;">2 ант.</span> Спявайце Пану новую песню, <span style="color: #ff0000;">*</span> слава Яго аж да межаў зямлі.</p><p><span style="color: #ff0000;">3 ант.</span> Калі прыйдзе Сын Чалавечы, <span style="color: #ff0000;">*</span> ці знойдзе веру на зямлі?</p>',
+  tuesday: '<p><span style="color: #ff0000;">1 ант.</span> Пан выйдзе са сваёй святыні. <span style="color: #ff0000;">*</span> Ён прыйдзе збавіць свой народ.</p><p><span style="color: #ff0000;">2 ант.</span> Наша цвярдыня — Сіён, <span style="color: #ff0000;">*</span> Збаўца будзе яго ўмацаваннем і абаронай; <span style="color: #ff0000;">/</span> адчыніце брамы, бо з намі Бог, <span style="color: #ff0000;">/</span> аллелюя.</p><p><span style="color: #ff0000;">3 ант.</span> Пане, дай пазнаць Тваю дарогу <span style="color: #ff0000;">*</span> і між усіх народаў Тваё збаўленне.</p>',
+  wednesday: '<p><span style="color: #ff0000;">1 ант.</span> З Сіёна прыйдзе ўсемагутны Пан, <span style="color: #ff0000;">*</span> каб збавіць свой народ.</p><p><span style="color: #ff0000;">2 ант.</span> Дзеля Сіёна не буду маўчаць, <span style="color: #ff0000;">*</span> пакуль не ўзыдзе, як святло, яго Справядлівы.</p><p><span style="color: #ff0000;">3 ант.</span> Дух Пана на Мне, <span style="color: #ff0000;">*</span> Ён паслаў Мяне абвяшчаць Добрую Навіну ўбогім.</p>',
+  thursday: '<p><span style="color: #ff0000;">1 ант.</span> Да Цябе, Пане, я ўзношу душу маю. <span style="color: #ff0000;">*</span> Прыйдзі і ўратуй мяне, <span style="color: #ff0000;">/</span> бо я на Цябе спадзяюся.</p><p><span style="color: #ff0000;">2 ант.</span> Пане, дай узнагароду тым, хто чакае Цябе, <span style="color: #ff0000;">*</span> каб пацвердзіліся словы Тваіх прарокаў.</p><p><span style="color: #ff0000;">3 ант.</span> Паглядзі на нас, Пане, <span style="color: #ff0000;">*</span> і без спазнення прыйдзі да сваіх слугаў.</p>',
+  friday: '<p><span style="color: #ff0000;">1 ант.</span> З Сіёна прыйдзе той, хто павінен валадарыць: <span style="color: #ff0000;">*</span> Пан, Эммануэль — Яго вялікае імя.</p><p><span style="color: #ff0000;">2 ант.</span> Будзьце вернымі — <span style="color: #ff0000;">*</span> і ўбачыце дапамогу Пана.</p><p><span style="color: #ff0000;">3 ант.</span> Скірую свой позірк да Пана <span style="color: #ff0000;">*</span> і буду чакаць Бога, майго Збаўцу.</p>',
+  saturday: '<p><span style="color: #ff0000;">1 ант.</span> Бог прыйдзе з Лівана, <span style="color: #ff0000;">*</span> і бляск Ягонай славы заззяе, нібы святло.</p><p><span style="color: #ff0000;">2 ант.</span> Крапіце, нябёсы, з вышыняў, <span style="color: #ff0000;">*</span> і хмары няхай пральюць справядлівасць; <span style="color: #ff0000;">/</span> няхай адкрыецца зямля і народзіць Збаўцу.</p><p><span style="color: #ff0000;">3 ант.</span> Падрыхтуйся, Ізраэль, да сустрэчы з Панам, <span style="color: #ff0000;">*</span> бо Ён прыходзіць.</p>',
+}
 
 const selectedSlot = ref(null)
 const selectedCompareYear = ref(2024)
@@ -562,6 +570,18 @@ function buildFixedDayId(dateStr) {
   const m = dt.getUTCMonth()+1
   const prefix = m === 12 && d >= 17 && d <= 24 ? 'advent' : 'christmas'
   return `${prefix}-${String(d).padStart(2,'0')}-${String(m).padStart(2,'0')}`
+}
+
+function buildAdventHook(dateStr) {
+  const dt = new Date(`${dateStr}T00:00:00Z`)
+  const day = dt.getUTCDate()
+  const month = dt.getUTCMonth() + 1
+  if (month !== 12 || day < 17 || day > 24) return null
+  const keys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+  const weekday = keys[dt.getUTCDay()]
+  const content = ADVENT_DEC17_24_HOOK[weekday]
+  if (!content) return null
+  return { weekday, content, byWeekday: ADVENT_DEC17_24_HOOK }
 }
 function buildEmptyDay() {
   return Object.fromEntries(FIELDS.map((field) => [field, '']))
@@ -864,8 +884,9 @@ async function saveDay() {
   if (!selectedSlot.value || saving.value) return
   saving.value = true
   try {
-    const week = Number(leftDraft.value._periodWeekNumber || selectedSlot.value.week)
-    const day = Number(leftDraft.value._dayOfWeek || selectedSlot.value.day)
+    const dateForSave = String(leftDraft.value._date || selectedSlot.value?.date || '')
+    const week = leftDraft.value._periodWeekNumber ?? ''
+    const day = leftDraft.value._dayOfWeek ?? ''
     const periodType = leftDraft.value._periodType || 'advent'
 
     const payload = {
@@ -877,8 +898,15 @@ async function saveDay() {
       savedMini: Boolean(miniMode.value),
       miniSavedAt: miniMode.value ? new Date().toISOString() : null,
     }
+    payload._date = dateForSave
+    const hook = buildAdventHook(dateForSave)
+    if (hook) {
+      payload.adventDec17to24HookWeekday = hook.weekday
+      payload.adventDec17to24HookContent = hook.content
+      payload.adventDec17to24HookByWeekday = hook.byWeekday
+    }
 
-    const id = buildFixedDayId(leftDraft.value._date || selectedSlot.value?.date)
+    const id = buildFixedDayId(dateForSave)
     await setDoc(doc(db, 'fixedDays', id), payload)
     fixedDaysMap.value.set(id, payload)
     leftOriginal.value = { ...leftDraft.value }
