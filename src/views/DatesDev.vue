@@ -94,6 +94,9 @@
         <v-col cols="12" md="4" lg="3">
           <v-checkbox v-model="editableChecked" label="Проверен (fixedDays)" hide-details />
         </v-col>
+        <v-col cols="12" md="4" lg="3">
+          <v-checkbox v-model="saveVesper1" label="Сохранять I вечерню" hide-details />
+        </v-col>
         <v-col cols="12" md="4" lg="6" class="d-flex ga-2 justify-md-end">
           <v-menu location="bottom end">
             <template #activator="{ props }">
@@ -347,7 +350,7 @@ const placeMap = {
 }
 
 const FIELDS = [
-  '_date', '_feastName', '_feastType', '_feast', 'feastComment',
+  '_date', '_feastName', '_rank', '_place', '_dayName', 'feastComment',
   'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
   'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers', 'officeOfReadingsR1',
   'officeOfReadingsR2', 'officeOfReadingsTeDeum', 'officeOfReadingsPr', 'laudesHymn', 'laudesAnt1', 'laudesAnt2',
@@ -375,12 +378,25 @@ const EMPTY_HIGHLIGHT_EXCLUDED = new Set([
   'vesper1Inter',
   'vesper1Pr',
 ])
-const TEMPLATE_FIELDS = FIELDS.filter((field) => !['_date', '_feastName', '_feastType', '_feast', 'feastComment'].includes(field))
+const TEMPLATE_FIELDS = FIELDS.filter((field) => !['_date', '_feastName', '_rank', '_place', '_dayName', 'feastComment'].includes(field))
+const SAVE_BASE_FIELDS = [
+  '_date', '_feastName', '_rank', '_place', '_dayName', 'invitatoriumAnt', 'feastComment',
+  'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
+  'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers', 'officeOfReadingsR1',
+  'officeOfReadingsR2', 'officeOfReadingsTeDeum', 'officeOfReadingsPr', 'laudesHymn', 'laudesAnt1', 'laudesAnt2',
+  'laudesAnt3', 'laudesPs1', 'laudesPs2', 'laudesPs3', 'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
+  'sext1Hymn', 'sext1Ant1', 'sext1Ant2', 'sext1Ant3', 'sext1Ps1', 'sext1Ps2', 'sext1Ps3', 'sext1R', 'sext1Pr',
+  'sext2Hymn', 'sext2Ant1', 'sext2Ant2', 'sext2Ant3', 'sext2Ps1', 'sext2Ps2', 'sext2Ps3', 'sext2R', 'sext2Pr',
+  'sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr',
+  'vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR',
+  'vesperAntMag', 'vesperInter', 'vesperPr',
+]
+const VESPER1_FIELDS = ['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr']
 const FIELD_GROUPS = [
   {
     key: 'base',
     title: 'Базовые поля даты',
-    fields: ['_date', '_feastName', '_feastType', '_feast', 'feastComment'],
+    fields: ['_date', '_feastName', '_rank', '_place', '_dayName', 'feastComment'],
   },
   {
     key: 'invitatorium',
@@ -442,6 +458,7 @@ const leftDraft = ref(buildEmptyDay())
 const leftOriginal = ref(buildEmptyDay())
 const compareDay = ref(buildEmptyDay())
 const editableChecked = ref(false)
+const saveVesper1 = ref(false)
 
 const editDialogOpen = ref(false)
 const editField = ref('')
@@ -602,8 +619,9 @@ function buildFallback(item) {
   return {
     _date: item.date || '',
     _feastName: item.title || '',
-    _feastType: item.rank || '',
-    _feast: idFor(item),
+    _rank: item.rank || '',
+    _place: item.place || '',
+    _dayName: idFor(item),
     feastComment: item.place || '',
   }
 }
@@ -770,8 +788,9 @@ async function saveDate() {
   saving.value = true
   try {
     const fixedParams = { ...fixedParamsDraft.value }
+    const fieldsToSave = saveVesper1.value ? [...SAVE_BASE_FIELDS, ...VESPER1_FIELDS] : SAVE_BASE_FIELDS
     const payload = {
-      ...Object.fromEntries(FIELDS.map((field) => [field, leftDraft.value[field] ?? ''])),
+      ...Object.fromEntries(fieldsToSave.map((field) => [field, leftDraft.value[field] ?? ''])),
       ...fixedParams,
       checked: Boolean(editableChecked.value),
     }
