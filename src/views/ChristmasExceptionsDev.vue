@@ -423,7 +423,7 @@ const MINI_FIELDS = new Set([
   'vesperHymn', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr',
 ])
 const MINI_SAVE_FIELDS = [
-  '_periodType', '_periodWeekNumber', '_date',
+  '_periodType', '_date',
   'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsVers', 'officeOfReadingsR1', 'officeOfReadingsR2',
   'officeOfReadingsTeDeum', 'officeOfReadingsPr', 'laudesHymn', 'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
   'sext1Hymn', 'sext1R', 'sext1Pr', 'sext2Hymn', 'sext2R', 'sext2Pr', 'sext3Hymn', 'sext3R', 'sext3Pr',
@@ -594,12 +594,32 @@ function buildFixedDayId(dateStr) {
 }
 
 function buildAdventHook(dateStr) {
-  const dt = new Date(`${dateStr}T00:00:00Z`)
-  const day = dt.getUTCDate()
-  const month = dt.getUTCMonth() + 1
+  const value = String(dateStr || '').trim()
+  let day = NaN
+  let month = NaN
+  let weekdayIndex = NaN
+
+  const iso = value.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (iso) {
+    month = Number(iso[2])
+    day = Number(iso[3])
+    weekdayIndex = new Date(`${iso[1]}-${iso[2]}-${iso[3]}T00:00:00Z`).getUTCDay()
+  } else {
+    const dm = value.match(/^(\d{2})\.(\d{2})$/)
+    if (dm) {
+      day = Number(dm[1])
+      month = Number(dm[2])
+      // Для формата DD.MM используем базовый литургический год 2025 для декабря
+      // (для нашего хука это диапазон 17..24 декабря).
+      const baseYear = 2025
+      weekdayIndex = new Date(`${baseYear}-${dm[2]}-${dm[1]}T00:00:00Z`).getUTCDay()
+    }
+  }
+
+  if (!Number.isFinite(day) || !Number.isFinite(month) || !Number.isFinite(weekdayIndex)) return null
   if (month !== 12 || day < 17 || day > 24) return null
   const keys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
-  const weekday = keys[dt.getUTCDay()]
+  const weekday = keys[weekdayIndex]
   const content = ADVENT_DEC17_24_HOOK[weekday]
   if (!content) return null
   return { weekday, content, byWeekday: ADVENT_DEC17_24_HOOK }
@@ -929,12 +949,14 @@ async function saveDay() {
     const payload = miniMode.value
       ? {
           ...Object.fromEntries(MINI_SAVE_FIELDS.map((field) => [field, fullPayload[field] ?? ''])),
-          _dayOfWeek: fullPayload._dayOfWeek ?? '',
           checked: fullPayload.checked,
           savedMini: fullPayload.savedMini,
           miniSavedAt: fullPayload.miniSavedAt,
         }
       : fullPayload
+
+    delete payload._dayOfWeek
+    delete payload._periodWeekNumber
 
     const hook = buildAdventHook(dateForSave)
     if (hook) {
