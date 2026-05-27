@@ -784,12 +784,13 @@ async function saveDate() {
       rank: normalizeFixedRank(fixedParams.rank),
       place: normalizeFixedPlace(fixedParams.place),
     }
+    const { date: _dateToSkip, ...normalizedFixedParamsWithoutDate } = normalizedFixedParams
     const fieldsToSave = saveVesper1.value ? [...SAVE_BASE_FIELDS, ...VESPER1_FIELDS] : SAVE_BASE_FIELDS
     const payload = {
       ...Object.fromEntries(fieldsToSave.map((field) => [field, leftDraft.value[field] ?? ''])),
       _rank: normalizedFixedParams.rank || '',
       _place: normalizedFixedParams.place || '',
-      ...normalizedFixedParams,
+      ...normalizedFixedParamsWithoutDate,
       checked: Boolean(editableChecked.value),
     }
 
