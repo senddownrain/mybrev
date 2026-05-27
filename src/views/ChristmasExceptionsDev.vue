@@ -78,6 +78,9 @@
         <v-col cols="12" md="4" lg="3">
           <v-checkbox v-model="editableChecked" label="Проверен (fixedDays)" hide-details />
         </v-col>
+        <v-col cols="12" md="4" lg="3">
+          <v-checkbox v-model="miniMode" label="Режим мини" hide-details />
+        </v-col>
         <v-col cols="12" md="4" lg="6" class="d-flex ga-2 justify-md-end">
           <v-menu location="bottom end">
             <template #activator="{ props }">
@@ -147,7 +150,7 @@
         <div class="compare-scroll">
           <v-expansion-panels v-model="openedGroupKeys" multiple>
             <v-expansion-panel
-              v-for="group in FIELD_GROUPS"
+              v-for="group in visibleFieldGroups"
               :key="group.key"
               :value="group.key"
             >
@@ -411,6 +414,13 @@ const FIELD_GROUPS = [
     fields: ['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr'],
   },
 ]
+const MINI_FIELDS = new Set([
+  '_periodType', '_periodWeekNumber', '_dayName', '_date',
+  'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsVers', 'officeOfReadingsR1', 'officeOfReadingsR2',
+  'officeOfReadingsTeDeum', 'officeOfReadingsPr', 'laudesHymn', 'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
+  'sext1Hymn', 'sext1R', 'sext1Pr', 'sext2Hymn', 'sext2R', 'sext2Pr', 'sext3Hymn', 'sext3R', 'sext3Pr',
+  'vesperHymn', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr',
+])
 
 const selectedSlot = ref(null)
 const selectedCompareYear = ref(2024)
@@ -455,8 +465,25 @@ const emptyHighlightFields = computed(() => {
 
 const weekGroups = computed(() => {
   const days = buildDateSlots()
-  const checkedCount = days.filter((d) => Boolean(fixedDaysMap.value.get(d.id)?.checked)).length
-  return [{ week: '17.12-11.01', days: days.map((d) => ({...d, key:d.id, checked:Boolean(fixedDaysMap.value.get(d.id)?.checked)})), checkedCount, totalCount: days.length, allChecked: checkedCount===days.length }]
+  const checkedCount = days.filter((d) => Boolean(fixedDaysMap.value.get(buildFixedDayId(d.date))?.checked)).length
+  return [{
+    week: '17.12-11.01',
+    days: days.map((d) => ({
+      ...d,
+      key: d.id,
+      label: buildSlotListLabel(d),
+      checked: Boolean(fixedDaysMap.value.get(buildFixedDayId(d.date))?.checked),
+    })),
+    checkedCount,
+    totalCount: days.length,
+    allChecked: checkedCount === days.length,
+  }]
+})
+const visibleFieldGroups = computed(() => {
+  if (!miniMode.value) return FIELD_GROUPS
+  return FIELD_GROUPS
+    .map((group) => ({ ...group, fields: group.fields.filter((field) => MINI_FIELDS.has(field)) }))
+    .filter((group) => group.fields.length > 0)
 })
 
 watch(selectedCompareYear, () => {
@@ -478,19 +505,40 @@ async function loadIndexData() {
 
 function buildDateSlots() {
   const out = []
-  for (let year = 2019; year <= 2025; year += 1) {
-    for (const [m, dStart, dEnd] of [[12,17,31],[1,1,11]]) {
-      const y = m === 12 ? year : year + 1
-      for (let d = dStart; d <= dEnd; d += 1) {
-        const mm = String(m).padStart(2, '0')
-        const dd = String(d).padStart(2, '0')
-        const date = `${y}-${mm}-${dd}`
-        out.push({ id: date, date, label: `${dd}.${mm}` })
-      }
+  for (const [y, m, dStart, dEnd] of [[2025, 12, 17, 31], [2026, 1, 1, 11]]) {
+    for (let d = dStart; d <= dEnd; d += 1) {
+      const mm = String(m).padStart(2, '0')
+      const dd = String(d).padStart(2, '0')
+      const date = `${y}-${mm}-${dd}`
+      out.push({ id: date, date, label: `${dd}.${mm}` })
     }
   }
-  const uniq = new Map(out.map((i)=>[i.id,i]))
-  return Array.from(uniq.values())
+  return out
+}
+
+function findDocByDate(date) {
+  return allPeriodDocs.value.find((item) => String(item?._date || item?.id || '') === date) || null
+}
+
+function getListSource(slot) {
+  const fixedDoc = fixedDaysMap.value.get(buildFixedDayId(slot.date))
+  if (fixedDoc) return fixedDoc
+  return findDocByDate(slot.date)
+}
+
+function hasMiniVersion(docItem) {
+  if (!docItem) return false
+  return Boolean(docItem.miniSavedAt || docItem.isMiniVersion || docItem.savedMini === true)
+}
+
+function buildSlotListLabel(slot) {
+  const source = getListSource(slot) || {}
+  const dayName = source._dayName || ''
+  const periodType = source._periodType || ''
+  const feastName = source._feastName || ''
+  const suffixChecked = source.checked ? ' [✓]' : ''
+  const suffixMini = hasMiniVersion(source) ? ' [mini]' : ''
+  return `${slot.label} - '${dayName}' - [${periodType}] - [${periodType}] - [${feastName}]${suffixChecked}${suffixMini}`
 }
 
 function buildFixedDayId(dateStr) {
@@ -500,10 +548,6 @@ function buildFixedDayId(dateStr) {
   const prefix = m === 12 && d >= 17 && d <= 24 ? 'advent' : 'christmas'
   return `${prefix}-${String(d).padStart(2,'0')}-${String(m).padStart(2,'0')}`
 }
-function buildDayId(periodType, week, day) {
-  return `${periodType}-w${week}-d${day}`
-}
-
 function buildEmptyDay() {
   return Object.fromEntries(FIELDS.map((field) => [field, '']))
 }
@@ -554,21 +598,24 @@ function parseDayId(id) {
 
 function getDocMeta(item) {
   const fromId = parseDayId(item?.id)
+  const dateValue = String(item?._date || item?.id || '')
+  const dateMatch = dateValue.match(/^(\d{4})-(\d{2})-(\d{2})$/)
   return {
     periodType: item?._periodType ?? fromId?.periodType ?? 'advent',
     week: Number(item?._periodWeekNumber ?? fromId?.week ?? 0),
     day: Number(item?._dayOfWeek ?? fromId?.day ?? 0),
-    year: normalizeYear(item),
+    year: normalizeYear(item) || (dateMatch ? Number(dateMatch[1]) : 0),
+    month: dateMatch ? Number(dateMatch[2]) : 0,
+    monthDay: dateMatch ? `${dateMatch[2]}-${dateMatch[3]}` : '',
   }
 }
 
 function findDayBySlot(year) {
   if (!selectedSlot.value) return null
+  const selectedMonthDay = String(selectedSlot.value.date || '').slice(5)
   return allPeriodDocs.value.find((item) => {
     const meta = getDocMeta(item)
-    return meta.periodType === 'advent'
-      && meta.week === Number(selectedSlot.value.week)
-      && meta.day === Number(selectedSlot.value.day)
+    return meta.monthDay === selectedMonthDay
       && meta.year === Number(year)
   }) || null
 }
@@ -585,20 +632,24 @@ function loadDayData() {
   const selected = selectedSlot.value
   if (!selected) return
 
-  const fixedId = buildDayId('advent', selected.week, selected.day)
+  const fixedId = buildFixedDayId(selected.date)
   const fixedDoc = fixedDaysMap.value.get(fixedId) || null
 
   const doc2025 = findDayBySlot(2025)
+  const leftSource = fixedDoc || doc2025 || {}
   const fallback = {
+    _date: selected.date,
     _periodType: leftSource?._periodType || '',
     _periodWeekNumber: leftSource?._periodWeekNumber || '',
     _dayOfWeek: leftSource?._dayOfWeek || '',
+    _dayName: leftSource?._dayName || '',
+    _feastName: leftSource?._feastName || '',
   }
 
-  const leftSource = fixedDoc || doc2025 || fallback
-  leftDraft.value = mergeWithDefaults(leftSource)
-  leftOriginal.value = mergeWithDefaults(leftSource)
+  leftDraft.value = mergeWithDefaults(fixedDoc || doc2025 || fallback)
+  leftOriginal.value = mergeWithDefaults(fixedDoc || doc2025 || fallback)
   editableChecked.value = Boolean(fixedDoc?.checked)
+  miniMode.value = Boolean(fixedDoc?.savedMini || fixedDoc?.isMiniVersion)
 
   const compareSource = selectedCompareYear.value === 2025
     ? (fixedDoc || doc2025 || fallback)
@@ -759,15 +810,16 @@ function rollbackTemplateApply() {
 function getFallbackBySlot() {
   if (!selectedSlot.value) return null
   return {
-    _periodType: 'advent',
-    _periodWeekNumber: selectedSlot.value.week,
-    _dayOfWeek: selectedSlot.value.day,
+    _date: selectedSlot.value.date,
+    _periodType: '',
+    _periodWeekNumber: '',
+    _dayOfWeek: '',
   }
 }
 
 function getCompareSourceByYear(year) {
   if (!selectedSlot.value) return null
-  const fixedId = selectedSlot.value.id
+  const fixedId = buildFixedDayId(selectedSlot.value.date)
   const fixedDoc = fixedDaysMap.value.get(fixedId) || null
   const doc2025 = findDayBySlot(2025)
   const fallback = getFallbackBySlot()
@@ -795,6 +847,8 @@ async function saveDay() {
       _periodWeekNumber: week,
       _dayOfWeek: day,
       checked: Boolean(editableChecked.value),
+      savedMini: Boolean(miniMode.value),
+      miniSavedAt: miniMode.value ? new Date().toISOString() : null,
     }
 
     const id = buildFixedDayId(leftDraft.value._date || selectedSlot.value?.date)
