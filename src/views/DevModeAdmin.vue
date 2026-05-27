@@ -33,6 +33,7 @@ import HolyweekDev from '@/views/HolyweekDev.vue'
 import AdventDev from '@/views/AdventDev.vue'
 import ChristmasDev from '@/views/ChristmasDev.vue'
 import DatesDev from '@/views/DatesDev.vue'
+import ChristmasExceptionsDev from '@/views/ChristmasExceptionsDev.vue'
 
 const activePage = ref('menu')
 
@@ -44,6 +45,7 @@ const pageButtons = [
   { key: 'advent', label: 'AdventDev' },
   { key: 'christmas', label: 'ChristmasDev' },
   { key: 'dates', label: 'DatesDev' },
+  { key: 'christmas-exceptions-dev', label: 'christmas-exceptions-dev' },
 ]
 
 const pageTitles = {
@@ -54,6 +56,7 @@ const pageTitles = {
   advent: 'AdventDev',
   christmas: 'ChristmasDev',
   dates: 'DatesDev',
+  'christmas-exceptions-dev': 'christmas-exceptions-dev',
 }
 
 const componentMap = {
@@ -64,6 +67,7 @@ const componentMap = {
   advent: AdventDev,
   christmas: ChristmasDev,
   dates: DatesDev,
+  'christmas-exceptions-dev': ChristmasExceptionsDev,
 }
 
 const activeComponent = computed(() => componentMap[activePage.value] || null)
