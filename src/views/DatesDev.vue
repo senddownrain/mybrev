@@ -787,6 +787,8 @@ async function saveDate() {
     const fieldsToSave = saveVesper1.value ? [...SAVE_BASE_FIELDS, ...VESPER1_FIELDS] : SAVE_BASE_FIELDS
     const payload = {
       ...Object.fromEntries(fieldsToSave.map((field) => [field, leftDraft.value[field] ?? ''])),
+      _rank: normalizedFixedParams.rank || '',
+      _place: normalizedFixedParams.place || '',
       ...normalizedFixedParams,
       checked: Boolean(editableChecked.value),
     }
