@@ -94,6 +94,9 @@
         <v-col cols="12" md="4" lg="3">
           <v-checkbox v-model="editableChecked" label="Проверен (fixedDays)" hide-details />
         </v-col>
+        <v-col cols="12" md="4" lg="3">
+          <v-checkbox v-model="saveVesper1" label="Сохранять I вечерню" hide-details />
+        </v-col>
         <v-col cols="12" md="4" lg="6" class="d-flex ga-2 justify-md-end">
           <v-menu location="bottom end">
             <template #activator="{ props }">
@@ -331,23 +334,18 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore'
 import { db } from '@/plugins/firebase'
-import { fixedCalendar } from '@/constants/fixedCalendar'
+import {
+  fixedCalendar,
+  denormalizeFixedPlace,
+  denormalizeFixedRank,
+  normalizeFixedPlace,
+  normalizeFixedRank,
+} from '@/constants/fixedCalendar'
 
 const compareYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019]
-const rankMap = {
-  'урачыстасць': 'solemnity',
-  'свята': 'feast',
-  'успамін': 'memorial',
-}
-const placeMap = {
-  'гродзенская дыяцэзія': 'grodno',
-  'віцебская дыяцэзія': 'vitebsk',
-  'пінская дыяцэзія': 'pinsk',
-  'мінска-магілёўская архідыяцэзія': 'minsk-mogilev',
-}
 
 const FIELDS = [
-  '_date', '_feastName', '_feastType', '_feast', 'feastComment',
+  '_date', '_feastName', '_rank', '_place', '_dayName', 'feastComment',
   'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
   'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers', 'officeOfReadingsR1',
   'officeOfReadingsR2', 'officeOfReadingsTeDeum', 'officeOfReadingsPr', 'laudesHymn', 'laudesAnt1', 'laudesAnt2',
@@ -375,12 +373,25 @@ const EMPTY_HIGHLIGHT_EXCLUDED = new Set([
   'vesper1Inter',
   'vesper1Pr',
 ])
-const TEMPLATE_FIELDS = FIELDS.filter((field) => !['_date', '_feastName', '_feastType', '_feast', 'feastComment'].includes(field))
+const TEMPLATE_FIELDS = FIELDS.filter((field) => !['_date', '_feastName', '_rank', '_place', '_dayName', 'feastComment'].includes(field))
+const SAVE_BASE_FIELDS = [
+  '_date', '_feastName', '_rank', '_place', '_dayName', 'invitatoriumAnt', 'feastComment',
+  'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
+  'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers', 'officeOfReadingsR1',
+  'officeOfReadingsR2', 'officeOfReadingsTeDeum', 'officeOfReadingsPr', 'laudesHymn', 'laudesAnt1', 'laudesAnt2',
+  'laudesAnt3', 'laudesPs1', 'laudesPs2', 'laudesPs3', 'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
+  'sext1Hymn', 'sext1Ant1', 'sext1Ant2', 'sext1Ant3', 'sext1Ps1', 'sext1Ps2', 'sext1Ps3', 'sext1R', 'sext1Pr',
+  'sext2Hymn', 'sext2Ant1', 'sext2Ant2', 'sext2Ant3', 'sext2Ps1', 'sext2Ps2', 'sext2Ps3', 'sext2R', 'sext2Pr',
+  'sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr',
+  'vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR',
+  'vesperAntMag', 'vesperInter', 'vesperPr',
+]
+const VESPER1_FIELDS = ['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr']
 const FIELD_GROUPS = [
   {
     key: 'base',
     title: 'Базовые поля даты',
-    fields: ['_date', '_feastName', '_feastType', '_feast', 'feastComment'],
+    fields: ['_date', '_feastName', '_rank', '_place', '_dayName', 'feastComment'],
   },
   {
     key: 'invitatorium',
@@ -442,6 +453,7 @@ const leftDraft = ref(buildEmptyDay())
 const leftOriginal = ref(buildEmptyDay())
 const compareDay = ref(buildEmptyDay())
 const editableChecked = ref(false)
+const saveVesper1 = ref(false)
 
 const editDialogOpen = ref(false)
 const editField = ref('')
@@ -504,13 +516,9 @@ async function loadIndexData() {
   fixedDaysMap.value = new Map(snap.docs.map((item) => [item.id, item.data()]))
 }
 
-function norm(value) {
-  return String(value || '').trim().toLowerCase()
-}
-
 function idFor(item) {
-  const rank = rankMap[norm(item.rank)] || norm(item.rank) || 'none'
-  const place = placeMap[norm(item.place)] || norm(item.place) || 'none'
+  const rank = normalizeFixedRank(item.rank) || 'none'
+  const place = normalizeFixedPlace(item.place) || 'none'
   return `${item.date}-${rank}-${place}`.toLowerCase()
 }
 
@@ -552,8 +560,8 @@ async function openDate(item) {
   fixedParamsDraft.value = {
     date: item.date || '',
     title: item.title || '',
-    rank: item.rank || '',
-    place: item.place || '',
+    rank: denormalizeFixedRank(item.rank || ''),
+    place: denormalizeFixedPlace(item.place || ''),
   }
   fixedParamsOriginal.value = { ...fixedParamsDraft.value }
   await loadDateData()
@@ -602,8 +610,9 @@ function buildFallback(item) {
   return {
     _date: item.date || '',
     _feastName: item.title || '',
-    _feastType: item.rank || '',
-    _feast: idFor(item),
+    _rank: item.rank || '',
+    _place: item.place || '',
+    _dayName: idFor(item),
     feastComment: item.place || '',
   }
 }
@@ -770,17 +779,26 @@ async function saveDate() {
   saving.value = true
   try {
     const fixedParams = { ...fixedParamsDraft.value }
-    const payload = {
-      ...Object.fromEntries(FIELDS.map((field) => [field, leftDraft.value[field] ?? ''])),
+    const normalizedFixedParams = {
       ...fixedParams,
+      rank: normalizeFixedRank(fixedParams.rank),
+      place: normalizeFixedPlace(fixedParams.place),
+    }
+    const { date: _dateToSkip, ...normalizedFixedParamsWithoutDate } = normalizedFixedParams
+    const fieldsToSave = saveVesper1.value ? [...SAVE_BASE_FIELDS, ...VESPER1_FIELDS] : SAVE_BASE_FIELDS
+    const payload = {
+      ...Object.fromEntries(fieldsToSave.map((field) => [field, leftDraft.value[field] ?? ''])),
+      _rank: normalizedFixedParams.rank || '',
+      _place: normalizedFixedParams.place || '',
+      ...normalizedFixedParamsWithoutDate,
       checked: Boolean(editableChecked.value),
     }
 
-    const id = idFor(fixedParams)
+    const id = idFor(normalizedFixedParams)
     await setDoc(doc(db, 'fixedDays', id), payload)
     fixedDaysMap.value.set(id, payload)
-    selectedItem.value = { ...selectedItem.value, ...fixedParams, id }
-    fixedParamsOriginal.value = { ...fixedParams }
+    selectedItem.value = { ...selectedItem.value, ...normalizedFixedParams, id }
+    fixedParamsOriginal.value = { ...normalizedFixedParams }
     leftOriginal.value = { ...leftDraft.value }
   } finally {
     saving.value = false
