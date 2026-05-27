@@ -558,9 +558,7 @@ function getListSource(slot) {
 
 function hasMiniVersion(docItem) {
   if (!docItem) return false
-  if (docItem.savedMini === true || docItem.isMiniVersion || docItem.miniSavedAt) return true
-  const savedFields = Array.isArray(docItem.miniSavedFields) ? docItem.miniSavedFields : []
-  return savedFields.length > 0
+  return Boolean(docItem.savedMini === true || docItem.isMiniVersion || docItem.miniSavedAt)
 }
 
 function buildSlotListLabel(slot) {
@@ -574,9 +572,23 @@ function buildSlotListLabel(slot) {
 }
 
 function buildFixedDayId(dateStr) {
-  const dt = new Date(`${dateStr}T00:00:00Z`)
-  const d = dt.getUTCDate()
-  const m = dt.getUTCMonth()+1
+  const value = String(dateStr || '').trim()
+  let d = NaN
+  let m = NaN
+  const iso = value.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (iso) {
+    m = Number(iso[2])
+    d = Number(iso[3])
+  } else {
+    const dm = value.match(/^(\d{2})\.(\d{2})$/)
+    if (dm) {
+      d = Number(dm[1])
+      m = Number(dm[2])
+    }
+  }
+  if (!Number.isFinite(d) || !Number.isFinite(m)) {
+    return ''
+  }
   const prefix = m === 12 && d >= 17 && d <= 24 ? 'advent' : 'christmas'
   return `${prefix}-${String(d).padStart(2,'0')}-${String(m).padStart(2,'0')}`
 }
@@ -894,6 +906,11 @@ async function saveDay() {
   saving.value = true
   try {
     const dateForSave = String(leftDraft.value._date || selectedSlot.value?.date || '')
+    const id = buildFixedDayId(dateForSave)
+    if (!id) {
+      console.error('[ChristmasExceptionsDev.saveDay] invalid date for fixedDays id', { dateForSave, slot: selectedSlot.value })
+      throw new Error(`Invalid date for fixedDays id: ${dateForSave}`)
+    }
     const week = leftDraft.value._periodWeekNumber ?? ''
     const day = leftDraft.value._dayOfWeek ?? ''
     const periodType = leftDraft.value._periodType || 'advent'
@@ -906,7 +923,6 @@ async function saveDay() {
       checked: Boolean(editableChecked.value),
       savedMini: Boolean(miniMode.value),
       miniSavedAt: miniMode.value ? new Date().toISOString() : null,
-      miniSavedFields: miniMode.value ? MINI_SAVE_FIELDS : [],
     }
     fullPayload._date = dateForSave
 
@@ -917,7 +933,6 @@ async function saveDay() {
           checked: fullPayload.checked,
           savedMini: fullPayload.savedMini,
           miniSavedAt: fullPayload.miniSavedAt,
-          miniSavedFields: fullPayload.miniSavedFields,
         }
       : fullPayload
 
@@ -928,7 +943,6 @@ async function saveDay() {
       payload.adventDec17to24HookByWeekday = hook.byWeekday
     }
 
-    const id = buildFixedDayId(dateForSave)
     console.log('[ChristmasExceptionsDev.saveDay] start', { id, dateForSave, miniMode: miniMode.value, checked: editableChecked.value })
     console.log('[ChristmasExceptionsDev.saveDay] payload keys', Object.keys(payload))
     await setDoc(doc(db, 'fixedDays', id), payload)
