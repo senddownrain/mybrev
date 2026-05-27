@@ -416,7 +416,7 @@ const FIELD_GROUPS = [
   },
 ]
 const MINI_FIELDS = new Set([
-  '_periodType', '_periodWeekNumber', '_dayName', '_date',
+  '_periodType', '_periodWeekNumber', '_date',
   'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsVers', 'officeOfReadingsR1', 'officeOfReadingsR2',
   'officeOfReadingsTeDeum', 'officeOfReadingsPr', 'laudesHymn', 'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
   'sext1Hymn', 'sext1R', 'sext1Pr', 'sext2Hymn', 'sext2R', 'sext2Pr', 'sext3Hymn', 'sext3R', 'sext3Pr',
@@ -425,7 +425,7 @@ const MINI_FIELDS = new Set([
 
 const selectedSlot = ref(null)
 const selectedCompareYear = ref(2024)
-const compareYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019]
+const compareYears = [2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019]
 
 const allPeriodDocs = ref([])
 const exceptionsById = ref(new Map())
@@ -628,17 +628,22 @@ function getDocMeta(item) {
 function findDayBySlot(year) {
   if (!selectedSlot.value) return null
   const selectedDate = String(selectedSlot.value.date || '')
-  const selectedMonthDay = selectedDate.slice(5)
+  const selectedMonthDay = selectedDate.slice(5) // MM-DD
+  const [monthStr, dayStr] = selectedMonthDay.split('-')
+  const month = Number(monthStr)
+  const day = Number(dayStr)
+  const targetYear = Number(year) + (month === 1 ? 1 : 0)
+  const targetDate = `${targetYear}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+
   if (Number(year) === 2025) {
     return findDocByDate(selectedDate) || allPeriodDocs.value.find((item) => {
       const date = String(item?._date || item?.id || '')
       return date.endsWith(selectedMonthDay) && (date.startsWith('2025-') || date.startsWith('2026-'))
     }) || null
   }
-  return allPeriodDocs.value.find((item) => {
-    const meta = getDocMeta(item)
-    return meta.monthDay === selectedMonthDay
-      && meta.year === Number(year)
+  return findDocByDate(targetDate) || allPeriodDocs.value.find((item) => {
+    const date = String(item?._date || item?.id || '')
+    return date === targetDate
   }) || null
 }
 
