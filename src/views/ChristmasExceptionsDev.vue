@@ -422,6 +422,13 @@ const MINI_FIELDS = new Set([
   'sext1Hymn', 'sext1R', 'sext1Pr', 'sext2Hymn', 'sext2R', 'sext2Pr', 'sext3Hymn', 'sext3R', 'sext3Pr',
   'vesperHymn', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr',
 ])
+const MINI_SAVE_FIELDS = [
+  '_periodType', '_periodWeekNumber', '_date',
+  'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsVers', 'officeOfReadingsR1', 'officeOfReadingsR2',
+  'officeOfReadingsTeDeum', 'officeOfReadingsPr', 'laudesHymn', 'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
+  'sext1Hymn', 'sext1R', 'sext1Pr', 'sext2Hymn', 'sext2R', 'sext2Pr', 'sext3Hymn', 'sext3R', 'sext3Pr',
+  'vesperHymn', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr',
+]
 const ADVENT_DEC17_24_HOOK = {
   monday: '<p><span style="color: #ff0000;">1 ант.</span> Вось прыйдзе Пан, першы сярод зямных валадароў. <span style="color: #ff0000;">*</span> Шчаслівы, хто гатовы выйсці Яму насустрач.</p><p><span style="color: #ff0000;">2 ант.</span> Спявайце Пану новую песню, <span style="color: #ff0000;">*</span> слава Яго аж да межаў зямлі.</p><p><span style="color: #ff0000;">3 ант.</span> Калі прыйдзе Сын Чалавечы, <span style="color: #ff0000;">*</span> ці знойдзе веру на зямлі?</p>',
   tuesday: '<p><span style="color: #ff0000;">1 ант.</span> Пан выйдзе са сваёй святыні. <span style="color: #ff0000;">*</span> Ён прыйдзе збавіць свой народ.</p><p><span style="color: #ff0000;">2 ант.</span> Наша цвярдыня — Сіён, <span style="color: #ff0000;">*</span> Збаўца будзе яго ўмацаваннем і абаронай; <span style="color: #ff0000;">/</span> адчыніце брамы, бо з намі Бог, <span style="color: #ff0000;">/</span> аллелюя.</p><p><span style="color: #ff0000;">3 ант.</span> Пане, дай пазнаць Тваю дарогу <span style="color: #ff0000;">*</span> і між усіх народаў Тваё збаўленне.</p>',
@@ -551,7 +558,9 @@ function getListSource(slot) {
 
 function hasMiniVersion(docItem) {
   if (!docItem) return false
-  return Boolean(docItem.miniSavedAt || docItem.isMiniVersion || docItem.savedMini === true)
+  if (docItem.savedMini === true || docItem.isMiniVersion || docItem.miniSavedAt) return true
+  const savedFields = Array.isArray(docItem.miniSavedFields) ? docItem.miniSavedFields : []
+  return savedFields.length > 0
 }
 
 function buildSlotListLabel(slot) {
@@ -889,7 +898,7 @@ async function saveDay() {
     const day = leftDraft.value._dayOfWeek ?? ''
     const periodType = leftDraft.value._periodType || 'advent'
 
-    const payload = {
+    const fullPayload = {
       ...Object.fromEntries(FIELDS.map((field) => [field, leftDraft.value[field] ?? ''])),
       _periodType: periodType,
       _periodWeekNumber: week,
@@ -897,8 +906,21 @@ async function saveDay() {
       checked: Boolean(editableChecked.value),
       savedMini: Boolean(miniMode.value),
       miniSavedAt: miniMode.value ? new Date().toISOString() : null,
+      miniSavedFields: miniMode.value ? MINI_SAVE_FIELDS : [],
     }
-    payload._date = dateForSave
+    fullPayload._date = dateForSave
+
+    const payload = miniMode.value
+      ? {
+          ...Object.fromEntries(MINI_SAVE_FIELDS.map((field) => [field, fullPayload[field] ?? ''])),
+          _dayOfWeek: fullPayload._dayOfWeek ?? '',
+          checked: fullPayload.checked,
+          savedMini: fullPayload.savedMini,
+          miniSavedAt: fullPayload.miniSavedAt,
+          miniSavedFields: fullPayload.miniSavedFields,
+        }
+      : fullPayload
+
     const hook = buildAdventHook(dateForSave)
     if (hook) {
       payload.adventDec17to24HookWeekday = hook.weekday
@@ -907,9 +929,16 @@ async function saveDay() {
     }
 
     const id = buildFixedDayId(dateForSave)
+    console.log('[ChristmasExceptionsDev.saveDay] start', { id, dateForSave, miniMode: miniMode.value, checked: editableChecked.value })
+    console.log('[ChristmasExceptionsDev.saveDay] payload keys', Object.keys(payload))
     await setDoc(doc(db, 'fixedDays', id), payload)
     fixedDaysMap.value.set(id, payload)
+    console.log('[ChristmasExceptionsDev.saveDay] saved to fixedDays', { id })
     leftOriginal.value = { ...leftDraft.value }
+    editableChecked.value = true
+  } catch (error) {
+    console.error('[ChristmasExceptionsDev.saveDay] failed', error)
+    throw error
   } finally {
     saving.value = false
   }
