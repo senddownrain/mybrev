@@ -508,13 +508,13 @@ async function loadIndexData() {
 
 function buildDateSlots() {
   const out = []
-  for (const [y, m, dStart, dEnd] of [[2025, 12, 17, 31], [2026, 1, 1, 11]]) {
-    for (let d = dStart; d <= dEnd; d += 1) {
-      const mm = String(m).padStart(2, '0')
-      const dd = String(d).padStart(2, '0')
-      const date = `${y}-${mm}-${dd}`
-      out.push({ id: date, date, label: `${dd}.${mm}` })
-    }
+  for (let d = 17; d <= 31; d += 1) {
+    const dd = String(d).padStart(2, '0')
+    out.push({ month: 12, day: d, label: `${dd}.12`, date: resolveBaseDate(12, d), id: `12-${dd}` })
+  }
+  for (let d = 1; d <= 11; d += 1) {
+    const dd = String(d).padStart(2, '0')
+    out.push({ month: 1, day: d, label: `${dd}.01`, date: resolveBaseDate(1, d), id: `01-${dd}` })
   }
   return out
 }
@@ -523,6 +523,16 @@ function findDocByDate(date) {
   return exceptionsById.value.get(date)
     || allPeriodDocs.value.find((item) => String(item?._date || item?.id || '') === date)
     || null
+}
+
+function resolveBaseDate(month, day) {
+  const mm = String(month).padStart(2, '0')
+  const dd = String(day).padStart(2, '0')
+  const candidates = month === 12
+    ? [`2025-${mm}-${dd}`]
+    : [`2026-${mm}-${dd}`, `2025-${mm}-${dd}`]
+  const existing = candidates.find((id) => exceptionsById.value.has(id))
+  return existing || candidates[0]
 }
 
 function getListSource(slot) {
@@ -620,7 +630,10 @@ function findDayBySlot(year) {
   const selectedDate = String(selectedSlot.value.date || '')
   const selectedMonthDay = selectedDate.slice(5)
   if (Number(year) === 2025) {
-    return findDocByDate(selectedDate)
+    return findDocByDate(selectedDate) || allPeriodDocs.value.find((item) => {
+      const date = String(item?._date || item?.id || '')
+      return date.endsWith(selectedMonthDay) && (date.startsWith('2025-') || date.startsWith('2026-'))
+    }) || null
   }
   return allPeriodDocs.value.find((item) => {
     const meta = getDocMeta(item)
