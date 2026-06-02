@@ -52,25 +52,32 @@
     </v-card>
 
     <v-card v-else rounded="lg" class="pa-4">
-      <v-card color="info" variant="tonal" class="mb-4">
-        <v-card-title>Параметры fixedCalendar на эту дату</v-card-title>
-        <v-card-text>
-          <v-row dense>
-            <v-col cols="12" md="2">
-              <v-text-field v-model="fixedParamsDraft.date" label="date" density="compact" variant="outlined" />
-            </v-col>
-            <v-col cols="12" md="4">
-              <v-text-field v-model="fixedParamsDraft.title" label="title" density="compact" variant="outlined" />
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field v-model="fixedParamsDraft.rank" label="rank" density="compact" variant="outlined" />
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field v-model="fixedParamsDraft.place" label="place" density="compact" variant="outlined" />
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
+      <v-expansion-panels v-model="fixedParamsPanel" class="mb-4">
+        <v-expansion-panel value="fixed-params">
+          <v-expansion-panel-title>
+            <div class="d-flex align-center justify-space-between w-100 pr-2">
+              <span>Параметры fixedCalendar на эту дату</span>
+              <v-chip size="x-small" color="info" variant="tonal">{{ fixedParamsSummary }}</v-chip>
+            </div>
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <v-row dense>
+              <v-col cols="12" md="2">
+                <v-text-field v-model="fixedParamsDraft.date" label="date" density="compact" variant="outlined" />
+              </v-col>
+              <v-col cols="12" md="4">
+                <v-text-field v-model="fixedParamsDraft.title" label="title" density="compact" variant="outlined" />
+              </v-col>
+              <v-col cols="12" md="3">
+                <v-text-field v-model="fixedParamsDraft.rank" label="rank" density="compact" variant="outlined" />
+              </v-col>
+              <v-col cols="12" md="3">
+                <v-text-field v-model="fixedParamsDraft.place" label="place" density="compact" variant="outlined" />
+              </v-col>
+            </v-row>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
 
       <v-row class="mb-3" align="center" dense>
         <v-col cols="12" md="4" lg="3">
@@ -174,7 +181,21 @@
               <v-expansion-panel-title>
                 <div class="d-flex align-center justify-space-between w-100 pr-2">
                   <span>{{ group.title }}</span>
-                  <v-chip size="x-small" color="primary" variant="tonal">{{ groupDiffCount(group.fields) }} отличий</v-chip>
+                  <div class="d-flex align-center ga-2 flex-wrap justify-end">
+                    <template v-if="group.flags">
+                      <v-checkbox-btn
+                        v-for="flag in group.flags"
+                        :key="`${group.key}-${flag.field}`"
+                        v-model="leftDraft[flag.field]"
+                        :label="flag.label"
+                        density="compact"
+                        :true-value="true"
+                        :false-value="false"
+                        @click.stop
+                      />
+                    </template>
+                    <v-chip size="x-small" color="primary" variant="tonal">{{ groupDiffCount(group.allFields || group.fields) }} отличий</v-chip>
+                  </div>
                 </div>
               </v-expansion-panel-title>
               <v-expansion-panel-text>
@@ -275,13 +296,85 @@
           <v-btn icon="mdi-close" variant="text" @click="closeSaveTemplateDialog" />
         </v-toolbar>
         <v-card-text class="pa-4">
-          <v-text-field
-            v-model="templateTitleInput"
-            label="Название шаблона"
-            variant="outlined"
-            hint="Можно изменить автосгенерированное название перед сохранением"
-            persistent-hint
-          />
+          <v-card variant="outlined" class="mb-4">
+            <v-card-title>1. Название</v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="templateTitleInput"
+                label="Название шаблона"
+                variant="outlined"
+                hint="Можно изменить автосгенерированное название перед сохранением"
+                persistent-hint
+              />
+            </v-card-text>
+          </v-card>
+
+          <v-card variant="outlined" class="mb-4">
+            <v-card-title class="d-flex align-center justify-space-between ga-2">
+              <span>2. Поля шаблона</span>
+              <v-checkbox
+                v-model="allTemplateFieldsSelected"
+                label="Выбрать все"
+                density="compact"
+                hide-details
+              />
+            </v-card-title>
+            <v-card-text>
+              <v-alert type="info" variant="tonal" density="compact" class="mb-3">
+                Будут сохранены только отмеченные поля: {{ selectedTemplateFields.length }}/{{ TEMPLATE_FIELDS.length }}.
+              </v-alert>
+              <v-row dense>
+                <v-col
+                  v-for="field in TEMPLATE_FIELDS"
+                  :key="`template-field-${field}`"
+                  cols="12"
+                  sm="6"
+                  md="4"
+                  lg="3"
+                >
+                  <v-checkbox
+                    v-model="selectedTemplateFields"
+                    :label="field"
+                    :value="field"
+                    density="compact"
+                    hide-details
+                  />
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+
+          <v-card variant="outlined">
+            <v-card-title>3. Смержить с другим шаблоном</v-card-title>
+            <v-card-text>
+              <v-select
+                v-model="mergeTemplateId"
+                :items="mergeTemplateItems"
+                item-title="title"
+                item-value="id"
+                label="Шаблон для merge"
+                variant="outlined"
+                clearable
+                :loading="templatesLoading"
+                :hint="templatePeriodType ? `Исключены шаблоны с _periodType: ${templatePeriodType}` : 'Можно сохранить без merge'"
+                persistent-hint
+              />
+              <v-alert v-if="mergeOverwriteFields.length" type="warning" variant="tonal" density="comfortable" class="mt-3">
+                <div class="font-weight-medium mb-2">При сохранении будут перетерты поля из выбранного шаблона:</div>
+                <div class="d-flex flex-wrap ga-1">
+                  <v-chip
+                    v-for="field in mergeOverwriteFields"
+                    :key="`merge-overwrite-${field}`"
+                    size="small"
+                    color="warning"
+                    variant="outlined"
+                  >
+                    {{ field }}
+                  </v-chip>
+                </div>
+              </v-alert>
+            </v-card-text>
+          </v-card>
         </v-card-text>
         <v-card-actions class="px-4 pb-4">
           <v-spacer />
@@ -315,7 +408,7 @@
             </v-list-item>
           </v-list>
           <v-alert v-else type="info" variant="tonal">
-            В коллекции <code>tmpTemplates</code> пока нет шаблонов.
+            Подходящих шаблонов нет: шаблоны с текущим <code>_periodType</code> исключены.
           </v-alert>
         </v-card-text>
         <v-card-actions class="px-4 pb-4">
@@ -344,6 +437,26 @@ import {
 
 const compareYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019]
 
+const DAY_SOURCE_FLAG_LABELS = {
+  antAllday: 'Антифон с будня',
+  psalmAllday: 'Псальмы с будня',
+}
+const DAY_SOURCE_FLAG_GROUPS = [
+  { key: 'readings', prefix: 'officeOfReadings' },
+  { key: 'laudes', prefix: 'laudes' },
+  { key: 'sext1', prefix: 'sext1' },
+  { key: 'sext2', prefix: 'sext2' },
+  { key: 'sext3', prefix: 'sext3' },
+  { key: 'vesper', prefix: 'vesper' },
+  { key: 'vesper1', prefix: 'vesper1' },
+]
+const DAY_SOURCE_FLAGS = DAY_SOURCE_FLAG_GROUPS.flatMap(({ key, prefix }) => [
+  { groupKey: key, field: `${prefix}AntAllday`, label: DAY_SOURCE_FLAG_LABELS.antAllday },
+  { groupKey: key, field: `${prefix}PsalmAllday`, label: DAY_SOURCE_FLAG_LABELS.psalmAllday },
+])
+const DAY_SOURCE_FLAG_FIELDS = DAY_SOURCE_FLAGS.map((item) => item.field)
+const BOOLEAN_FIELDS = new Set(DAY_SOURCE_FLAG_FIELDS)
+
 const FIELDS = [
   '_date', '_feastName', '_rank', '_place', '_dayName', 'feastComment',
   'invitatoriumAnt', 'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
@@ -356,6 +469,7 @@ const FIELDS = [
   'vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR',
   'vesperAntMag', 'vesperInter', 'vesperPr', 'vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3',
   'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr',
+  ...DAY_SOURCE_FLAG_FIELDS,
 ]
 
 const READ_ONLY_FIELDS = new Set(['_date'])
@@ -375,7 +489,7 @@ const EMPTY_HIGHLIGHT_EXCLUDED = new Set([
 ])
 const TEMPLATE_FIELDS = FIELDS.filter((field) => !['_date', '_feastName', '_rank', '_place', '_dayName', 'feastComment'].includes(field))
 const SAVE_BASE_FIELDS = [
-  '_date', '_feastName', '_rank', '_place', '_dayName', 'invitatoriumAnt', 'feastComment',
+  '_date', '_feastName', '_rank', '_place', 'invitatoriumAnt', 'feastComment',
   'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
   'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers', 'officeOfReadingsR1',
   'officeOfReadingsR2', 'officeOfReadingsTeDeum', 'officeOfReadingsPr', 'laudesHymn', 'laudesAnt1', 'laudesAnt2',
@@ -385,8 +499,9 @@ const SAVE_BASE_FIELDS = [
   'sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr',
   'vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR',
   'vesperAntMag', 'vesperInter', 'vesperPr',
+  ...DAY_SOURCE_FLAG_FIELDS.filter((field) => !field.startsWith('vesper1')),
 ]
-const VESPER1_FIELDS = ['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr']
+const VESPER1_FIELDS = ['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr', ...DAY_SOURCE_FLAG_FIELDS.filter((field) => field.startsWith('vesper1'))]
 const FIELD_GROUPS = [
   {
     key: 'base',
@@ -406,6 +521,12 @@ const FIELD_GROUPS = [
       'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers', 'officeOfReadingsR1',
       'officeOfReadingsR2', 'officeOfReadingsTeDeum', 'officeOfReadingsPr',
     ],
+    flags: flagsForGroup('readings'),
+    allFields: fieldsWithFlags([
+      'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
+      'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers', 'officeOfReadingsR1',
+      'officeOfReadingsR2', 'officeOfReadingsTeDeum', 'officeOfReadingsPr',
+    ], 'readings'),
   },
   {
     key: 'laudes',
@@ -414,31 +535,46 @@ const FIELD_GROUPS = [
       'laudesHymn', 'laudesAnt1', 'laudesAnt2', 'laudesAnt3', 'laudesPs1', 'laudesPs2', 'laudesPs3',
       'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
     ],
+    flags: flagsForGroup('laudes'),
+    allFields: fieldsWithFlags([
+      'laudesHymn', 'laudesAnt1', 'laudesAnt2', 'laudesAnt3', 'laudesPs1', 'laudesPs2', 'laudesPs3',
+      'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
+    ], 'laudes'),
   },
   {
     key: 'sext1',
     title: 'Терция',
     fields: ['sext1Hymn', 'sext1Ant1', 'sext1Ant2', 'sext1Ant3', 'sext1Ps1', 'sext1Ps2', 'sext1Ps3', 'sext1R', 'sext1Pr'],
+    flags: flagsForGroup('sext1'),
+    allFields: fieldsWithFlags(['sext1Hymn', 'sext1Ant1', 'sext1Ant2', 'sext1Ant3', 'sext1Ps1', 'sext1Ps2', 'sext1Ps3', 'sext1R', 'sext1Pr'], 'sext1'),
   },
   {
     key: 'sext2',
     title: 'Секста',
     fields: ['sext2Hymn', 'sext2Ant1', 'sext2Ant2', 'sext2Ant3', 'sext2Ps1', 'sext2Ps2', 'sext2Ps3', 'sext2R', 'sext2Pr'],
+    flags: flagsForGroup('sext2'),
+    allFields: fieldsWithFlags(['sext2Hymn', 'sext2Ant1', 'sext2Ant2', 'sext2Ant3', 'sext2Ps1', 'sext2Ps2', 'sext2Ps3', 'sext2R', 'sext2Pr'], 'sext2'),
   },
   {
     key: 'sext3',
     title: 'Нона',
     fields: ['sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr'],
+    flags: flagsForGroup('sext3'),
+    allFields: fieldsWithFlags(['sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr'], 'sext3'),
   },
   {
     key: 'vesper',
     title: 'Вечерня',
     fields: ['vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr'],
+    flags: flagsForGroup('vesper'),
+    allFields: fieldsWithFlags(['vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr'], 'vesper'),
   },
   {
     key: 'vesper1',
     title: 'Первая вечерня',
     fields: ['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr'],
+    flags: flagsForGroup('vesper1'),
+    allFields: fieldsWithFlags(['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr'], 'vesper1'),
   },
 ]
 
@@ -466,11 +602,40 @@ const templateTitleInput = ref('')
 const templateSaving = ref(false)
 const templatesList = ref([])
 const selectedTemplateId = ref('')
+const selectedTemplateFields = ref([...TEMPLATE_FIELDS])
+const mergeTemplateId = ref(null)
+const templatesLoading = ref(false)
+const fixedParamsPanel = ref(null)
 const templateAppliedSnapshot = ref(null)
 const openedGroupKeys = ref([])
 const openedMonths = ref(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'])
 
 const selectedDateLabel = computed(() => (selectedItem.value ? itemLabel({ ...selectedItem.value, ...fixedParamsDraft.value }) : ''))
+const fixedParamsSummary = computed(() => {
+  const params = fixedParamsDraft.value
+  return [params.date, params.title, params.rank, params.place].filter(Boolean).join(' · ') || 'пусто'
+})
+const templatePeriodType = computed(() => String(leftDraft.value._periodType || selectedItem.value?._periodType || '').trim())
+const filteredTemplatesList = computed(() => filterTemplatesByPeriod(templatesList.value))
+const mergeTemplateItems = computed(() => filteredTemplatesList.value.map((item) => ({
+  ...item,
+  title: item.title || item.id,
+})))
+const selectedMergeTemplate = computed(() => templatesList.value.find((item) => item.id === mergeTemplateId.value) || null)
+const mergeOverwriteFields = computed(() => {
+  const mergeTemplate = selectedMergeTemplate.value
+  if (!mergeTemplate) return []
+  return selectedTemplateFields.value.filter((field) => (
+    mergeTemplate[field] !== undefined
+    && normalizedCompare(mergeTemplate[field]) !== normalizedCompare(templateFieldValue(field))
+  ))
+})
+const allTemplateFieldsSelected = computed({
+  get: () => selectedTemplateFields.value.length === TEMPLATE_FIELDS.length,
+  set: (value) => {
+    selectedTemplateFields.value = value ? [...TEMPLATE_FIELDS] : []
+  },
+})
 
 const grouped = computed(() => {
   const months = new Map()
@@ -531,7 +696,7 @@ function buildDaysTmpId(year, date) {
 }
 
 function buildEmptyDay() {
-  return Object.fromEntries(FIELDS.map((field) => [field, '']))
+  return Object.fromEntries(FIELDS.map((field) => [field, BOOLEAN_FIELDS.has(field) ? false : '']))
 }
 
 function buildEmptyFixedParams() {
@@ -546,8 +711,9 @@ function buildEmptyFixedParams() {
 function mergeWithDefaults(source) {
   const day = buildEmptyDay()
   FIELDS.forEach((field) => {
-    day[field] = source?.[field] ?? ''
+    day[field] = source?.[field] ?? (BOOLEAN_FIELDS.has(field) ? false : '')
   })
+  if (source?._periodType) day._periodType = source._periodType
   return day
 }
 
@@ -634,6 +800,7 @@ function getCompareSourceByYear(year) {
 }
 
 function formatPreviewValue(value) {
+  if (typeof value === 'boolean') return value ? 'Да' : 'Нет'
   if (value === null || value === undefined || value === '') return '— пусто —'
   const stripped = String(value).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
   return stripped || '— пусто —'
@@ -669,6 +836,7 @@ function leftCardVariant(field) {
 }
 
 function isEmpty(value) {
+  if (typeof value === 'boolean') return false
   return value === null || value === undefined || String(value).trim() === ''
 }
 
@@ -719,24 +887,63 @@ function defaultTemplateTitle() {
   return `${date}-${title}`
 }
 
-function openSaveTemplateDialog() {
+function flagsForGroup(groupKey) {
+  return DAY_SOURCE_FLAGS.filter((item) => item.groupKey === groupKey)
+}
+
+function fieldsWithFlags(fields, groupKey) {
+  return [...fields, ...flagsForGroup(groupKey).map((item) => item.field)]
+}
+
+function templateFieldValue(field) {
+  return leftDraft.value[field] ?? (BOOLEAN_FIELDS.has(field) ? false : '')
+}
+
+function templatePayloadFrom(source, fields) {
+  return Object.fromEntries(fields.map((field) => [field, source?.[field] ?? (BOOLEAN_FIELDS.has(field) ? false : '')]))
+}
+
+function filterTemplatesByPeriod(templates) {
+  if (!templatePeriodType.value) return templates
+  return templates.filter((item) => item._periodType !== templatePeriodType.value)
+}
+
+async function loadTemplatesList() {
+  templatesLoading.value = true
+  try {
+    const snap = await getDocs(collection(db, 'tmpTemplates'))
+    templatesList.value = snap.docs.map((item) => ({ id: item.id, ...item.data() }))
+  } finally {
+    templatesLoading.value = false
+  }
+}
+
+async function openSaveTemplateDialog() {
   templateTitleInput.value = defaultTemplateTitle()
+  selectedTemplateFields.value = [...TEMPLATE_FIELDS]
+  mergeTemplateId.value = null
+  await loadTemplatesList()
   saveTemplateDialogOpen.value = true
 }
 
 function closeSaveTemplateDialog() {
   saveTemplateDialogOpen.value = false
   templateTitleInput.value = ''
+  mergeTemplateId.value = null
 }
+
 
 async function saveTemplate() {
   if (templateSaving.value) return
   templateSaving.value = true
   try {
+    const mergeTemplate = selectedMergeTemplate.value
     const payload = {
+      ...(mergeTemplate ? templatePayloadFrom(mergeTemplate, TEMPLATE_FIELDS) : {}),
       title: String(templateTitleInput.value || defaultTemplateTitle()).trim(),
-      ...Object.fromEntries(TEMPLATE_FIELDS.map((field) => [field, leftDraft.value[field] ?? ''])),
+      ...templatePayloadFrom(leftDraft.value, selectedTemplateFields.value),
     }
+    if (templatePeriodType.value) payload._periodType = templatePeriodType.value
     await addDoc(collection(db, 'tmpTemplates'), payload)
     closeSaveTemplateDialog()
   } finally {
@@ -745,8 +952,8 @@ async function saveTemplate() {
 }
 
 async function openLoadTemplateDialog() {
-  const snap = await getDocs(collection(db, 'tmpTemplates'))
-  templatesList.value = snap.docs.map((item) => ({ id: item.id, ...item.data() }))
+  await loadTemplatesList()
+  templatesList.value = filteredTemplatesList.value
   selectedTemplateId.value = templatesList.value[0]?.id || ''
   loadTemplateDialogOpen.value = true
 }
@@ -763,8 +970,9 @@ function applySelectedTemplate() {
     templateAppliedSnapshot.value = { ...leftDraft.value }
   }
   TEMPLATE_FIELDS.forEach((field) => {
-    leftDraft.value[field] = selected[field] ?? ''
+    leftDraft.value[field] = selected[field] ?? (BOOLEAN_FIELDS.has(field) ? false : '')
   })
+  if (selected._periodType) leftDraft.value._periodType = selected._periodType
   closeLoadTemplateDialog()
 }
 
@@ -787,7 +995,7 @@ async function saveDate() {
     const { date: _dateToSkip, ...normalizedFixedParamsWithoutDate } = normalizedFixedParams
     const fieldsToSave = saveVesper1.value ? [...SAVE_BASE_FIELDS, ...VESPER1_FIELDS] : SAVE_BASE_FIELDS
     const payload = {
-      ...Object.fromEntries(fieldsToSave.map((field) => [field, leftDraft.value[field] ?? ''])),
+      ...Object.fromEntries(fieldsToSave.map((field) => [field, leftDraft.value[field] ?? (BOOLEAN_FIELDS.has(field) ? false : '')])),
       _rank: normalizedFixedParams.rank || '',
       _place: normalizedFixedParams.place || '',
       ...normalizedFixedParamsWithoutDate,
