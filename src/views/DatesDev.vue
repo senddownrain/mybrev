@@ -182,19 +182,7 @@
                 <div class="d-flex align-center justify-space-between w-100 pr-2">
                   <span>{{ group.title }}</span>
                   <div class="d-flex align-center ga-2 flex-wrap justify-end">
-                    <template v-if="group.flags">
-                      <v-checkbox-btn
-                        v-for="flag in group.flags"
-                        :key="`${group.key}-${flag.field}`"
-                        v-model="leftDraft[flag.field]"
-                        :label="flag.label"
-                        density="compact"
-                        :true-value="true"
-                        :false-value="false"
-                        @click.stop
-                      />
-                    </template>
-                    <v-chip size="x-small" color="primary" variant="tonal">{{ groupDiffCount(group.allFields || group.fields) }} отличий</v-chip>
+                    <v-chip size="x-small" color="primary" variant="tonal">{{ groupDiffCount(group.fields) }} отличий</v-chip>
                   </div>
                 </div>
               </v-expansion-panel-title>
@@ -210,13 +198,23 @@
                       <v-card-item>
                         <div class="d-flex align-center justify-space-between ga-2">
                           <div class="text-body-2 font-weight-bold">{{ field }}</div>
-                          <v-btn
-                            v-if="!READ_ONLY_FIELDS.has(field)"
-                            size="small"
-                            variant="text"
-                            icon="mdi-pencil"
-                            @click="openEditDialog(field)"
-                          />
+                          <div class="d-flex align-center ga-1">
+                            <v-btn
+                              v-if="canSetFromDay(field)"
+                              size="small"
+                              variant="text"
+                              icon="mdi-calendar-import"
+                              title="Поставить [from-day]"
+                              @click="setFromDay(field)"
+                            />
+                            <v-btn
+                              v-if="!READ_ONLY_FIELDS.has(field)"
+                              size="small"
+                              variant="text"
+                              icon="mdi-pencil"
+                              @click="openEditDialog(field)"
+                            />
+                          </div>
                         </div>
                         <div class="field-value mt-2 line-clamp-2">{{ formatPreviewValue(leftDraft[field]) }}</div>
                       </v-card-item>
@@ -392,21 +390,41 @@
           <v-btn icon="mdi-close" variant="text" @click="closeLoadTemplateDialog" />
         </v-toolbar>
         <v-card-text class="pa-4">
-          <v-list v-if="templatesList.length" lines="two" density="comfortable">
-            <v-list-item
-              v-for="template in templatesList"
-              :key="template.id"
-              :title="template.title || template.id"
-              :subtitle="`ID: ${template.id}`"
-              :active="selectedTemplateId === template.id"
-              rounded="lg"
-              @click="selectedTemplateId = template.id"
+          <v-expansion-panels
+            v-if="templatesList.length"
+            v-model="openedTemplatePeriodGroups"
+            multiple
+          >
+            <v-expansion-panel
+              v-for="group in templatePeriodGroups"
+              :key="group.key"
+              :value="group.key"
             >
-              <template #append>
-                <v-icon v-if="selectedTemplateId === template.id" color="primary">mdi-check-circle</v-icon>
-              </template>
-            </v-list-item>
-          </v-list>
+              <v-expansion-panel-title>
+                <div class="d-flex align-center justify-space-between w-100 pr-2">
+                  <span>{{ group.title }}</span>
+                  <v-chip size="x-small" color="primary" variant="tonal">{{ group.items.length }}</v-chip>
+                </div>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <v-list lines="two" density="comfortable">
+                  <v-list-item
+                    v-for="template in group.items"
+                    :key="template.id"
+                    :title="template.title || template.id"
+                    :subtitle="templateSubtitle(template)"
+                    :active="selectedTemplateId === template.id"
+                    rounded="lg"
+                    @click="selectedTemplateId = template.id"
+                  >
+                    <template #append>
+                      <v-icon v-if="selectedTemplateId === template.id" color="primary">mdi-check-circle</v-icon>
+                    </template>
+                  </v-list-item>
+                </v-list>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
           <v-alert v-else type="info" variant="tonal">
             Подходящих шаблонов нет: шаблоны с текущим <code>_periodType</code> исключены.
           </v-alert>
@@ -437,25 +455,7 @@ import {
 
 const compareYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019]
 
-const DAY_SOURCE_FLAG_LABELS = {
-  antAllday: 'Антифон с будня',
-  psalmAllday: 'Псальмы с будня',
-}
-const DAY_SOURCE_FLAG_GROUPS = [
-  { key: 'readings', prefix: 'officeOfReadings' },
-  { key: 'laudes', prefix: 'laudes' },
-  { key: 'sext1', prefix: 'sext1' },
-  { key: 'sext2', prefix: 'sext2' },
-  { key: 'sext3', prefix: 'sext3' },
-  { key: 'vesper', prefix: 'vesper' },
-  { key: 'vesper1', prefix: 'vesper1' },
-]
-const DAY_SOURCE_FLAGS = DAY_SOURCE_FLAG_GROUPS.flatMap(({ key, prefix }) => [
-  { groupKey: key, field: `${prefix}AntAllday`, label: DAY_SOURCE_FLAG_LABELS.antAllday },
-  { groupKey: key, field: `${prefix}PsalmAllday`, label: DAY_SOURCE_FLAG_LABELS.psalmAllday },
-])
-const DAY_SOURCE_FLAG_FIELDS = DAY_SOURCE_FLAGS.map((item) => item.field)
-const BOOLEAN_FIELDS = new Set(DAY_SOURCE_FLAG_FIELDS)
+const BOOLEAN_FIELDS = new Set()
 
 const FIELDS = [
   '_date', '_feastName', '_rank', '_place', '_dayName', 'feastComment',
@@ -469,10 +469,10 @@ const FIELDS = [
   'vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR',
   'vesperAntMag', 'vesperInter', 'vesperPr', 'vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3',
   'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr',
-  ...DAY_SOURCE_FLAG_FIELDS,
 ]
 
 const READ_ONLY_FIELDS = new Set(['_date'])
+const FROM_DAY_EXCLUDED_FIELDS = new Set(['_date', '_feastName', '_rank', '_place', '_dayName'])
 const EMPTY_HIGHLIGHT_EXCLUDED = new Set([
   'officeOfReadingsTeDeum',
   'vesper1Hymn',
@@ -499,9 +499,8 @@ const SAVE_BASE_FIELDS = [
   'sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr',
   'vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR',
   'vesperAntMag', 'vesperInter', 'vesperPr',
-  ...DAY_SOURCE_FLAG_FIELDS.filter((field) => !field.startsWith('vesper1')),
 ]
-const VESPER1_FIELDS = ['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr', ...DAY_SOURCE_FLAG_FIELDS.filter((field) => field.startsWith('vesper1'))]
+const VESPER1_FIELDS = ['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr']
 const FIELD_GROUPS = [
   {
     key: 'base',
@@ -521,12 +520,6 @@ const FIELD_GROUPS = [
       'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers', 'officeOfReadingsR1',
       'officeOfReadingsR2', 'officeOfReadingsTeDeum', 'officeOfReadingsPr',
     ],
-    flags: flagsForGroup('readings'),
-    allFields: fieldsWithFlags([
-      'officeOfReadingsHymn', 'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
-      'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers', 'officeOfReadingsR1',
-      'officeOfReadingsR2', 'officeOfReadingsTeDeum', 'officeOfReadingsPr',
-    ], 'readings'),
   },
   {
     key: 'laudes',
@@ -535,46 +528,31 @@ const FIELD_GROUPS = [
       'laudesHymn', 'laudesAnt1', 'laudesAnt2', 'laudesAnt3', 'laudesPs1', 'laudesPs2', 'laudesPs3',
       'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
     ],
-    flags: flagsForGroup('laudes'),
-    allFields: fieldsWithFlags([
-      'laudesHymn', 'laudesAnt1', 'laudesAnt2', 'laudesAnt3', 'laudesPs1', 'laudesPs2', 'laudesPs3',
-      'laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr',
-    ], 'laudes'),
   },
   {
     key: 'sext1',
     title: 'Терция',
     fields: ['sext1Hymn', 'sext1Ant1', 'sext1Ant2', 'sext1Ant3', 'sext1Ps1', 'sext1Ps2', 'sext1Ps3', 'sext1R', 'sext1Pr'],
-    flags: flagsForGroup('sext1'),
-    allFields: fieldsWithFlags(['sext1Hymn', 'sext1Ant1', 'sext1Ant2', 'sext1Ant3', 'sext1Ps1', 'sext1Ps2', 'sext1Ps3', 'sext1R', 'sext1Pr'], 'sext1'),
   },
   {
     key: 'sext2',
     title: 'Секста',
     fields: ['sext2Hymn', 'sext2Ant1', 'sext2Ant2', 'sext2Ant3', 'sext2Ps1', 'sext2Ps2', 'sext2Ps3', 'sext2R', 'sext2Pr'],
-    flags: flagsForGroup('sext2'),
-    allFields: fieldsWithFlags(['sext2Hymn', 'sext2Ant1', 'sext2Ant2', 'sext2Ant3', 'sext2Ps1', 'sext2Ps2', 'sext2Ps3', 'sext2R', 'sext2Pr'], 'sext2'),
   },
   {
     key: 'sext3',
     title: 'Нона',
     fields: ['sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr'],
-    flags: flagsForGroup('sext3'),
-    allFields: fieldsWithFlags(['sext3Hymn', 'sext3Ant1', 'sext3Ant2', 'sext3Ant3', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3', 'sext3R', 'sext3Pr'], 'sext3'),
   },
   {
     key: 'vesper',
     title: 'Вечерня',
     fields: ['vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr'],
-    flags: flagsForGroup('vesper'),
-    allFields: fieldsWithFlags(['vesperHymn', 'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR', 'vesperAntMag', 'vesperInter', 'vesperPr'], 'vesper'),
   },
   {
     key: 'vesper1',
     title: 'Первая вечерня',
     fields: ['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr'],
-    flags: flagsForGroup('vesper1'),
-    allFields: fieldsWithFlags(['vesper1Hymn', 'vesper1Ant1', 'vesper1Ant2', 'vesper1Ant3', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1R', 'vesper1AntMag', 'vesper1Inter', 'vesper1Pr'], 'vesper1'),
   },
 ]
 
@@ -609,6 +587,7 @@ const fixedParamsPanel = ref(null)
 const templateAppliedSnapshot = ref(null)
 const openedGroupKeys = ref([])
 const openedMonths = ref(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'])
+const openedTemplatePeriodGroups = ref([])
 
 const selectedDateLabel = computed(() => (selectedItem.value ? itemLabel({ ...selectedItem.value, ...fixedParamsDraft.value }) : ''))
 const fixedParamsSummary = computed(() => {
@@ -621,6 +600,7 @@ const mergeTemplateItems = computed(() => filteredTemplatesList.value.map((item)
   ...item,
   title: item.title || item.id,
 })))
+const templatePeriodGroups = computed(() => groupTemplatesByPeriod(templatesList.value))
 const selectedMergeTemplate = computed(() => templatesList.value.find((item) => item.id === mergeTemplateId.value) || null)
 const mergeOverwriteFields = computed(() => {
   const mergeTemplate = selectedMergeTemplate.value
@@ -859,6 +839,15 @@ function applyEdit() {
   closeEditDialog()
 }
 
+function canSetFromDay(field) {
+  return FIELDS.includes(field) && !FROM_DAY_EXCLUDED_FIELDS.has(field)
+}
+
+function setFromDay(field) {
+  if (!canSetFromDay(field)) return
+  leftDraft.value[field] = '[from-day]'
+}
+
 function copyField(field) {
   leftDraft.value[field] = compareDay.value[field]
 }
@@ -887,13 +876,6 @@ function defaultTemplateTitle() {
   return `${date}-${title}`
 }
 
-function flagsForGroup(groupKey) {
-  return DAY_SOURCE_FLAGS.filter((item) => item.groupKey === groupKey)
-}
-
-function fieldsWithFlags(fields, groupKey) {
-  return [...fields, ...flagsForGroup(groupKey).map((item) => item.field)]
-}
 
 function templateFieldValue(field) {
   return leftDraft.value[field] ?? (BOOLEAN_FIELDS.has(field) ? false : '')
@@ -901,6 +883,33 @@ function templateFieldValue(field) {
 
 function templatePayloadFrom(source, fields) {
   return Object.fromEntries(fields.map((field) => [field, source?.[field] ?? (BOOLEAN_FIELDS.has(field) ? false : '')]))
+}
+
+function templatePeriodKey(template) {
+  const period = String(template?._periodType || '').trim()
+  return period || 'without-period'
+}
+
+function templatePeriodTitle(template) {
+  const period = String(template?._periodType || '').trim()
+  return period ? `Период: ${period}` : 'Без периода'
+}
+
+function templateSubtitle(template) {
+  const period = String(template?._periodType || '').trim()
+  return period ? `ID: ${template.id} · _periodType: ${period}` : `ID: ${template.id}`
+}
+
+function groupTemplatesByPeriod(templates) {
+  const groups = new Map()
+  templates.forEach((template) => {
+    const key = templatePeriodKey(template)
+    if (!groups.has(key)) {
+      groups.set(key, { key, title: templatePeriodTitle(template), items: [] })
+    }
+    groups.get(key).items.push(template)
+  })
+  return [...groups.values()].sort((a, b) => a.title.localeCompare(b.title))
 }
 
 function filterTemplatesByPeriod(templates) {
@@ -955,12 +964,14 @@ async function openLoadTemplateDialog() {
   await loadTemplatesList()
   templatesList.value = filteredTemplatesList.value
   selectedTemplateId.value = templatesList.value[0]?.id || ''
+  openedTemplatePeriodGroups.value = templatePeriodGroups.value.map((group) => group.key)
   loadTemplateDialogOpen.value = true
 }
 
 function closeLoadTemplateDialog() {
   loadTemplateDialogOpen.value = false
   selectedTemplateId.value = ''
+  openedTemplatePeriodGroups.value = []
 }
 
 function applySelectedTemplate() {
