@@ -190,7 +190,7 @@
           </v-col>
         </v-row>
 
-        <div class="compare-scroll">
+        <div>
           <v-expansion-panels v-model="openedGroupKeys" multiple>
             <v-expansion-panel
               v-for="group in FIELD_GROUPS"
@@ -1051,13 +1051,6 @@ async function saveDate() {
 
 .compare-table-wrapper {
   width: 100%;
-}
-
-.compare-scroll {
-  max-height: calc(100vh - 390px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 4px;
 }
 
 .field-value {
