@@ -52,110 +52,129 @@
     </v-card>
 
     <v-card v-else rounded="lg" class="pa-4">
-      <v-expansion-panels v-model="fixedParamsPanel" class="mb-4">
-        <v-expansion-panel value="fixed-params">
+      <v-expansion-panels v-model="topControlsPanel" class="mb-4">
+        <v-expansion-panel value="top-controls">
           <v-expansion-panel-title>
-            <div class="d-flex align-center justify-space-between w-100 pr-2">
-              <span>Параметры fixedCalendar на эту дату</span>
-              <v-chip size="x-small" color="info" variant="tonal">{{ fixedParamsSummary }}</v-chip>
+            <div class="d-flex align-center justify-space-between w-100 pr-2 ga-2">
+              <span>Параметры, действия и предупреждения</span>
+              <div class="d-flex align-center ga-2 flex-wrap justify-end">
+                <v-chip size="x-small" color="secondary" variant="tonal">
+                  Сравнение: {{ selectedCompareYear }}
+                </v-chip>
+                <v-chip size="x-small" color="info" variant="tonal">
+                  {{ fixedParamsSummary }}
+                </v-chip>
+                <v-chip
+                  v-if="emptyHighlightFields.length"
+                  size="x-small"
+                  color="warning"
+                  variant="tonal"
+                >
+                  Пустые: {{ emptyHighlightFields.length }}
+                </v-chip>
+              </div>
             </div>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <v-row dense>
-              <v-col cols="12" md="2">
-                <v-text-field v-model="fixedParamsDraft.date" label="date" density="compact" variant="outlined" />
+            <v-card variant="outlined" class="mb-4">
+              <v-card-title class="text-subtitle-1">Параметры fixedCalendar на эту дату</v-card-title>
+              <v-card-text>
+                <v-row dense>
+                  <v-col cols="12" md="2">
+                    <v-text-field v-model="fixedParamsDraft.date" label="date" density="compact" variant="outlined" />
+                  </v-col>
+                  <v-col cols="12" md="4">
+                    <v-text-field v-model="fixedParamsDraft.title" label="title" density="compact" variant="outlined" />
+                  </v-col>
+                  <v-col cols="12" md="3">
+                    <v-text-field v-model="fixedParamsDraft.rank" label="rank" density="compact" variant="outlined" />
+                  </v-col>
+                  <v-col cols="12" md="3">
+                    <v-text-field v-model="fixedParamsDraft.place" label="place" density="compact" variant="outlined" />
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+
+            <v-row class="mb-3" align="center" dense>
+              <v-col cols="12" md="4" lg="3">
+                <v-select v-model="selectedCompareYear" :items="compareYears" label="Год для сравнения" density="compact" variant="outlined">
+                  <template #item="{ props, item }">
+                    <v-list-item v-bind="props">
+                      <template #append>
+                        <v-chip
+                          v-if="selectedItem && yearDiffCount(item.raw)"
+                          size="x-small"
+                          color="warning"
+                          variant="tonal"
+                        >
+                          {{ yearDiffCount(item.raw) }}
+                        </v-chip>
+                      </template>
+                    </v-list-item>
+                  </template>
+                </v-select>
               </v-col>
-              <v-col cols="12" md="4">
-                <v-text-field v-model="fixedParamsDraft.title" label="title" density="compact" variant="outlined" />
+              <v-col cols="12" md="4" lg="3">
+                <v-checkbox v-model="editableChecked" label="Проверен (fixedDays)" hide-details />
               </v-col>
-              <v-col cols="12" md="3">
-                <v-text-field v-model="fixedParamsDraft.rank" label="rank" density="compact" variant="outlined" />
+              <v-col cols="12" md="4" lg="3">
+                <v-checkbox v-model="saveVesper1" label="Сохранять I вечерню" hide-details />
               </v-col>
-              <v-col cols="12" md="3">
-                <v-text-field v-model="fixedParamsDraft.place" label="place" density="compact" variant="outlined" />
+              <v-col cols="12" md="4" lg="3" class="d-flex ga-2 justify-md-end">
+                <v-menu location="bottom end">
+                  <template #activator="{ props }">
+                    <v-btn
+                      v-bind="props"
+                      size="small"
+                      color="secondary"
+                      variant="outlined"
+                      prepend-icon="mdi-dots-horizontal"
+                    >
+                      Действия
+                    </v-btn>
+                  </template>
+                  <v-list density="compact">
+                    <v-list-item prepend-icon="mdi-content-copy" title="Копировать всё" @click="copyAllFromCompare" />
+                    <v-list-item prepend-icon="mdi-content-save" title="Сохранить шаблон" @click="openSaveTemplateDialog" />
+                    <v-list-item prepend-icon="mdi-database-import" title="Подгрузить шаблон" @click="openLoadTemplateDialog" />
+                    <v-list-item
+                      prepend-icon="mdi-restore"
+                      title="Откатить шаблон"
+                      :disabled="!templateAppliedSnapshot"
+                      @click="rollbackTemplateApply"
+                    />
+                    <v-list-item prepend-icon="mdi-undo" title="Отменить всё" @click="undoAllChanges" />
+                  </v-list>
+                </v-menu>
+                <v-btn color="primary" size="small" :loading="saving" @click="saveDate">Сохранить</v-btn>
               </v-col>
             </v-row>
+
+            <v-alert
+              v-if="emptyHighlightFields.length"
+              type="warning"
+              variant="tonal"
+              density="comfortable"
+            >
+              <div class="font-weight-medium mb-1">
+                Есть пустые поля (кроме исключений): {{ emptyHighlightFields.length }}
+              </div>
+              <div class="d-flex flex-wrap ga-1">
+                <v-chip
+                  v-for="field in emptyHighlightFields"
+                  :key="`empty-${field}`"
+                  size="small"
+                  color="warning"
+                  variant="outlined"
+                >
+                  {{ field }}
+                </v-chip>
+              </div>
+            </v-alert>
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
-
-      <v-row class="mb-3" align="center" dense>
-        <v-col cols="12" md="4" lg="3">
-          <v-select v-model="selectedCompareYear" :items="compareYears" label="Год для сравнения" density="compact" variant="outlined">
-            <template #item="{ props, item }">
-              <v-list-item v-bind="props">
-                <template #append>
-                  <v-chip
-                    v-if="selectedItem && yearDiffCount(item.raw)"
-                    size="x-small"
-                    color="warning"
-                    variant="tonal"
-                  >
-                    {{ yearDiffCount(item.raw) }}
-                  </v-chip>
-                </template>
-              </v-list-item>
-            </template>
-          </v-select>
-        </v-col>
-        <v-col cols="12" md="4" lg="3">
-          <v-checkbox v-model="editableChecked" label="Проверен (fixedDays)" hide-details />
-        </v-col>
-        <v-col cols="12" md="4" lg="3">
-          <v-checkbox v-model="saveVesper1" label="Сохранять I вечерню" hide-details />
-        </v-col>
-        <v-col cols="12" md="4" lg="6" class="d-flex ga-2 justify-md-end">
-          <v-menu location="bottom end">
-            <template #activator="{ props }">
-              <v-btn
-                v-bind="props"
-                size="small"
-                color="secondary"
-                variant="outlined"
-                prepend-icon="mdi-dots-horizontal"
-              >
-                Действия
-              </v-btn>
-            </template>
-            <v-list density="compact">
-              <v-list-item prepend-icon="mdi-content-copy" title="Копировать всё" @click="copyAllFromCompare" />
-              <v-list-item prepend-icon="mdi-content-save" title="Сохранить шаблон" @click="openSaveTemplateDialog" />
-              <v-list-item prepend-icon="mdi-database-import" title="Подгрузить шаблон" @click="openLoadTemplateDialog" />
-              <v-list-item
-                prepend-icon="mdi-restore"
-                title="Откатить шаблон"
-                :disabled="!templateAppliedSnapshot"
-                @click="rollbackTemplateApply"
-              />
-              <v-list-item prepend-icon="mdi-undo" title="Отменить всё" @click="undoAllChanges" />
-            </v-list>
-          </v-menu>
-          <v-btn color="primary" size="small" :loading="saving" @click="saveDate">Сохранить</v-btn>
-        </v-col>
-      </v-row>
-
-      <v-alert
-        v-if="emptyHighlightFields.length"
-        type="warning"
-        variant="tonal"
-        density="comfortable"
-        class="mb-3"
-      >
-        <div class="font-weight-medium mb-1">
-          Есть пустые поля (кроме исключений): {{ emptyHighlightFields.length }}
-        </div>
-        <div class="d-flex flex-wrap ga-1">
-          <v-chip
-            v-for="field in emptyHighlightFields"
-            :key="`empty-${field}`"
-            size="small"
-            color="warning"
-            variant="outlined"
-          >
-            {{ field }}
-          </v-chip>
-        </div>
-      </v-alert>
 
       <div class="compare-table-wrapper">
         <v-row class="header-row" no-gutters>
@@ -583,7 +602,7 @@ const selectedTemplateId = ref('')
 const selectedTemplateFields = ref([...TEMPLATE_FIELDS])
 const mergeTemplateId = ref(null)
 const templatesLoading = ref(false)
-const fixedParamsPanel = ref(null)
+const topControlsPanel = ref(null)
 const templateAppliedSnapshot = ref(null)
 const openedGroupKeys = ref([])
 const openedMonths = ref(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'])
