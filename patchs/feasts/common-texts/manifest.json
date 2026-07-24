@@ -1,0 +1,18 @@
+{
+  "source": "SOURCES/АГУЛЬНЫЯ ТЭКСТЫ.docx",
+  "sections": [
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ НА ПАСВЯЧЭННЕ КАСЦЁЛА","file":"church-dedication.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА НАЙСВЯЦЕЙШУЮ ПАННУ МАРЫЮ","file":"blessed-virgin-mary.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА АПОСТАЛАЎ","file":"apostles.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА МУЧАНІКАЎ (ПРА НЕКАЛЬКІХ МУЧАНІКАЎ)","file":"martyrs-many.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА АДНАГО МУЧАНІКА","file":"martyr-one.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА ПАСТЫРАЎ","file":"pastors.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА ДОКТАРАЎ КАСЦЁЛА","file":"doctors-of-church.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА ПАННАЎ","file":"virgins.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА СВЯТЫХ МУЖЧЫН","file":"holy-men.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА СВЯТЫХ ЖАНЧЫН","file":"holy-women.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА ЗАКОННІКАЎ І ЗАКОННІЦ","file":"religious.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА СВЯТЫХ, ЯКІЯ ЗДЗЯЙСНЯЛІ ЎЧЫНКІ МІЛАСЭРНАСЦІ","file":"works-of-mercy.json"},
+    {"title":"АГУЛЬНЫЯ ТЭКСТЫ ПРА ВЫХАВАЦЕЛЯЎ","file":"educators.json"}
+  ]
+}
