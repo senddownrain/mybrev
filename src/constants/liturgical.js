@@ -17,12 +17,47 @@ export const WEEKDAY_LABEL_MAP = {
   7: 'Субота',
 };
 
-/** Ранг свята (_feastType) → подпіс для UI */
-export const FEAST_TYPE_LABEL_MAP = {
+/** Кананічныя значэнні поля _rank. */
+export const LITURGICAL_RANK = Object.freeze({
+  SOLEMNITY: 'solemnitas',
+  FEAST: 'festum',
+  MEMORIAL: 'memoria',
+  OPTIONAL_MEMORIAL: 'memoria-ad-libitum',
+});
+
+/** Ранг (_rank, а таксама стары _feastType) → подпіс для UI. */
+export const RANK_LABEL_MAP = Object.freeze({
+  [LITURGICAL_RANK.SOLEMNITY]: 'Урачыстасць',
+  [LITURGICAL_RANK.FEAST]: 'Свята',
+  [LITURGICAL_RANK.MEMORIAL]: 'Успамін',
+  [LITURGICAL_RANK.OPTIONAL_MEMORIAL]: 'Неабавязковы ўспамін',
+  // Часовая сумяшчальнасць са старымі дакументамі days.
   solemnity: 'Урачыстасць',
   feast: 'Свята',
   memorial: 'Успамін',
-};
+});
+
+/** @deprecated Новы код павінен выкарыстоўваць RANK_LABEL_MAP. */
+export const FEAST_TYPE_LABEL_MAP = RANK_LABEL_MAP;
+
+/** Назва дыяцэзіі/мясцовага календара → стабільны код для _place і ID. */
+export const PLACE_CODE_MAP = Object.freeze({
+  'гродзенская дыяцэзія': 'grodno',
+  'віцебская дыяцэзія': 'vitebsk',
+  'пінская дыяцэзія': 'pinsk',
+  'мінска-магілёўская архідыяцэзія': 'minsk-mohilev',
+});
+
+export const PLACE_LABEL_MAP = Object.freeze(
+  Object.fromEntries(Object.entries(PLACE_CODE_MAP).map(([label, code]) => [code, label])),
+);
+
+/** Службовыя інструкцыі, якія resolver замяняе тэкстамі з іншай крыніцы. */
+export const LITURGICAL_VALUE_REFERENCE = Object.freeze({
+  FROM_DAY: 'from-day',
+  FROM_FIRST_WEEK: 'from-first-week',
+  FROM_OWN_TEXTS: 'from-own-texts',
+});
 
 /** Крыніца опцыі літургічнага дня (period / dynamic / fixed) */
 export const LITURGICAL_OPTION_SOURCE = {
