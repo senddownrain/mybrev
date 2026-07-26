@@ -40,6 +40,21 @@ test('builds comparison key only from date, rank, and place', () => {
   );
 });
 
+test('treats the same place set as equal regardless of input order', () => {
+  const base = { _date: '26.08', _rank: 'memoria' };
+  const first = ['grodno', 'minsk-mohilev', 'pinsk'];
+  const second = ['pinsk', 'grodno', 'minsk-mohilev'];
+
+  assert.equal(
+    buildFixedComparisonKey({ ...base, _place: first }),
+    buildFixedComparisonKey({ ...base, _place: second }),
+  );
+  assert.equal(
+    buildFixedDayId({ ...base, _place: first }, 'our-lady-czestochowa'),
+    buildFixedDayId({ ...base, _place: second }, 'our-lady-czestochowa'),
+  );
+});
+
 test('builds unique fixed-day id with optional place and required slug', () => {
   assert.equal(
     buildFixedDayId({ _date: '20.01', _rank: 'memoria-ad-libitum' }, 'sv-sebastian'),
