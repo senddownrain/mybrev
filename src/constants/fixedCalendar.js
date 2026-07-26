@@ -4,6 +4,7 @@ export const fixedCalendar = [
   { date: '02.01', title: 'Св. Базыля Вялікага і Грыгорыя Назіянзскага, біскупаў і доктараў Касцёла', rank: 'Успамін', place: '' },
   { date: '03.01', title: 'Найсвяцейшага Імя Езуса', rank: '', place: '' },
   { date: '06.01', title: 'Аб’яўленне Пана', rank: 'Урачыстасць', place: '' },
+  { date: '07.01', title: 'Св. Раймунда Пеньяфорцкага, прэзбітэра', rank: '', place: '' },
   { date: '13.01', title: 'Св. Гілярыя, біскупа і доктара Касцёла', rank: '', place: '' },
   { date: '17.01', title: 'Св. Антонія, абата', rank: 'Успамін', place: '' },
   { date: '20.01', title: 'Св. Фабіяна, папы і мучаніка', rank: '', place: '' },
@@ -89,6 +90,7 @@ export const fixedCalendar = [
   { date: '25.05', title: 'Св. Марыі Магдалены Паццы, панны', rank: '', place: '' },
   { date: '26.05', title: 'Св. Філіпа Нэры, прэзбітэра', rank: 'Успамін', place: '' },
   { date: '27.05', title: 'Св. Аўгустына Кэнтэрберыйскага, біскупа', rank: '', place: '' },
+  { date: '29.05', title: 'Св. Паўла VI, папы', rank: '', place: '' },
   { date: '31.05', title: 'Адведзіны Найсв. Панны Марыі', rank: 'Свята', place: '' },
 
   // JUN
@@ -277,9 +279,9 @@ export const fixedCalendar = [
 ];
 
 export const FIXED_CALENDAR_RANK_MAP = {
-  урачыстасць: 'solemnity',
-  свята: 'feast',
-  успамін: 'memorial',
+  урачыстасць: 'solemnitas',
+  свята: 'festum',
+  успамін: 'memoria',
 };
 
 export const FIXED_CALENDAR_RANK_REVERSE_MAP = Object.fromEntries(
@@ -290,7 +292,7 @@ export const FIXED_CALENDAR_PLACE_MAP = {
   'гродзенская дыяцэзія': 'grodno',
   'віцебская дыяцэзія': 'vitebsk',
   'пінская дыяцэзія': 'pinsk',
-  'мінска-магілёўская архідыяцэзія': 'minsk-mogilev',
+  'мінска-магілёўская архідыяцэзія': 'minsk-mohilev',
 };
 
 export const FIXED_CALENDAR_PLACE_REVERSE_MAP = Object.fromEntries(
@@ -299,13 +301,14 @@ export const FIXED_CALENDAR_PLACE_REVERSE_MAP = Object.fromEntries(
 
 export function normalizeFixedRank(value) {
   const key = String(value || '').trim().toLowerCase();
-  if (!key) return '';
+  if (!key) return 'memoria-ad-libitum';
   return FIXED_CALENDAR_RANK_MAP[key] || key;
 }
 
 export function denormalizeFixedRank(value) {
   const key = String(value || '').trim().toLowerCase();
   if (!key) return '';
+  if (key === 'memoria-ad-libitum') return '';
   return FIXED_CALENDAR_RANK_REVERSE_MAP[key] || value;
 }
 

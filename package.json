@@ -20,7 +20,9 @@
     "db:generate-completorium-templates": "node patchs/generate-completorium-templates.js",
     "db:generate-calendar-map": "node patchs/generate-calendar-map.js",
     "audit:cli": "node scripts/audit-liturgical-data.mjs",
+    "audit:fixed-feasts": "node scripts/audit-fixed-feasts.mjs",
     "test:audit": "node --test tests/liturgical-audit.test.mjs",
+    "test:fixed-feasts": "node --test tests/fixed-feasts-audit.test.mjs",
     "test:ordinary": "node patchs/test-ordinary-period.cjs",
     "test:lent": "node patchs/test-lent-period.cjs",
     "db:migrate-olddays-fixed": "node patchs/migrate-olddays-to-daystmp-fixed.js"
