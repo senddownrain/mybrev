@@ -17,7 +17,7 @@
 
 ### Fixed-date day
 
-Абавязковыя: `_source: "fixed"`, `_date` (`DD.MM`), `_rank`, `_templates`, `_title`. Апцыянальныя: `_place` і `comment`.
+Абавязковыя: `_source: "fixed"`, `_date` (`DD.MM`), `_rank`, `_templates`, `_title`. Апцыянальныя: `_place` і `comment`. `_place` захоўваецца як адзін slug або як масіў slug-кодаў, калі адзін і той жа дакумент з аднолькавым рангам дзейнічае ў некалькіх мясцовых календарах.
 
 ID мае выгляд `DD.MM-_rank[-_place]-slug`. Пошук усіх варыянтаў дня робіцца па `_source` і `_date`, а не па ID.
 

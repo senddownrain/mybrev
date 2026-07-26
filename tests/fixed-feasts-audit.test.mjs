@@ -6,6 +6,7 @@ import {
   normalizeFixedDate,
   normalizeFixedFeast,
   normalizePlace,
+  normalizePlaces,
   normalizeRank,
 } from '../src/utils/fixedFeasts.js';
 
@@ -14,6 +15,14 @@ test('normalizes canonical fixed-day dimensions', () => {
   assert.equal(normalizeRank(''), 'memoria-ad-libitum');
   assert.equal(normalizeRank('Урачыстасць'), 'solemnitas');
   assert.equal(normalizePlace('Гродзенская дыяцэзія'), 'grodno');
+  assert.deepEqual(
+    normalizePlaces(['Мінска-Магілёўская архідыяцэзія', 'Пінская дыяцэзія']),
+    ['minsk-mohilev', 'pinsk'],
+  );
+  assert.deepEqual(
+    normalizePlaces('У Мінска-Магілёўскай архідыяцэзіі і Пінскай дыяцэзіі'),
+    ['minsk-mohilev', 'pinsk'],
+  );
 });
 
 test('builds comparison key only from date, rank, and place', () => {
@@ -21,12 +30,43 @@ test('builds comparison key only from date, rank, and place', () => {
     buildFixedComparisonKey({ date: '4.3', rank: 'Успамін', place: 'Віцебская дыяцэзія' }),
     '04.03|memoria|vitebsk',
   );
+  assert.equal(
+    buildFixedComparisonKey({
+      date: '26.08',
+      rank: 'Успамін',
+      place: ['Пінская дыяцэзія', 'Гродзенская дыяцэзія'],
+    }),
+    '26.08|memoria|grodno,pinsk',
+  );
+});
+
+test('treats the same place set as equal regardless of input order', () => {
+  const base = { _date: '26.08', _rank: 'memoria' };
+  const first = ['grodno', 'minsk-mohilev', 'pinsk'];
+  const second = ['pinsk', 'grodno', 'minsk-mohilev'];
+
+  assert.equal(
+    buildFixedComparisonKey({ ...base, _place: first }),
+    buildFixedComparisonKey({ ...base, _place: second }),
+  );
+  assert.equal(
+    buildFixedDayId({ ...base, _place: first }, 'our-lady-czestochowa'),
+    buildFixedDayId({ ...base, _place: second }, 'our-lady-czestochowa'),
+  );
 });
 
 test('builds unique fixed-day id with optional place and required slug', () => {
   assert.equal(
     buildFixedDayId({ _date: '20.01', _rank: 'memoria-ad-libitum' }, 'sv-sebastian'),
     '20.01-memoria-ad-libitum-sv-sebastian',
+  );
+  assert.equal(
+    buildFixedDayId({
+      _date: '26.08',
+      _rank: 'memoria',
+      _place: ['minsk-mohilev', 'pinsk', 'grodno'],
+    }, 'our-lady-czestochowa'),
+    '26.08-memoria-grodno-minsk-mohilev-pinsk-our-lady-czestochowa',
   );
   assert.equal(
     buildFixedDayId({ _date: '04.03', _rank: 'festum', _place: 'grodno' }, 'sv-casimir'),

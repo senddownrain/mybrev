@@ -43,14 +43,21 @@ export const FEAST_TYPE_LABEL_MAP = RANK_LABEL_MAP;
 /** Назва дыяцэзіі/мясцовага календара → стабільны код для _place і ID. */
 export const PLACE_CODE_MAP = Object.freeze({
   'гродзенская дыяцэзія': 'grodno',
+  'гродзенскай дыяцэзіі': 'grodno',
   'віцебская дыяцэзія': 'vitebsk',
+  'віцебскай дыяцэзіі': 'vitebsk',
   'пінская дыяцэзія': 'pinsk',
+  'пінскай дыяцэзіі': 'pinsk',
   'мінска-магілёўская архідыяцэзія': 'minsk-mohilev',
+  'мінска-магілёўскай архідыяцэзіі': 'minsk-mohilev',
 });
 
-export const PLACE_LABEL_MAP = Object.freeze(
-  Object.fromEntries(Object.entries(PLACE_CODE_MAP).map(([label, code]) => [code, label])),
-);
+export const PLACE_LABEL_MAP = Object.freeze({
+  grodno: 'Гродзенская дыяцэзія',
+  vitebsk: 'Віцебская дыяцэзія',
+  pinsk: 'Пінская дыяцэзія',
+  'minsk-mohilev': 'Мінска-Магілёўская архідыяцэзія',
+});
 
 /** Службовыя інструкцыі, якія resolver замяняе тэкстамі з іншай крыніцы. */
 export const LITURGICAL_VALUE_REFERENCE = Object.freeze({

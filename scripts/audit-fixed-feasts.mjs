@@ -8,7 +8,7 @@ import {
   buildFixedComparisonKey,
   buildFixedDayId,
   normalizeFixedFeast,
-  normalizePlace,
+  normalizePlaces,
   normalizeRank,
 } from '../src/utils/fixedFeasts.js';
 
@@ -16,20 +16,41 @@ const ROOT = process.cwd();
 const FEASTS_DIR = path.join(ROOT, 'patchs/feasts');
 const TEMPLATES_DIR = path.join(FEASTS_DIR, 'common-texts');
 
-function countBy(items, getKey) {
+function countBy(items, getKey, getTitle) {
   const result = new Map();
   items.forEach((item) => {
     const key = getKey(item);
-    result.set(key, (result.get(key) || 0) + 1);
+    const current = result.get(key) || { count: 0, _feastName: getTitle(item) };
+    current.count += 1;
+    result.set(key, current);
   });
   return result;
 }
 
 function multisetDifference(left, right) {
-  return [...left.entries()].flatMap(([key, count]) => {
-    const difference = count - (right.get(key) || 0);
-    return difference > 0 ? [{ key, count: difference }] : [];
+  return [...left.entries()].flatMap(([key, entry]) => {
+    const difference = entry.count - (right.get(key)?.count || 0);
+    return difference > 0 ? [{ key, count: difference, _feastName: entry._feastName }] : [];
   });
+}
+
+function normalizedTitle(item) {
+  return String(item._title ?? item._feastName ?? item.title ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ');
+}
+
+function aggregateCalendarPlaces(items) {
+  const groups = new Map();
+  items.forEach((item) => {
+    const identity = [item.date, normalizeRank(item.rank), normalizedTitle(item)].join('|');
+    const current = groups.get(identity) || { ...item, _place: [] };
+    current._place.push(...normalizePlaces(item.place));
+    current._place = [...new Set(current._place)].sort();
+    groups.set(identity, current);
+  });
+  return [...groups.values()];
 }
 
 async function readJson(filePath) {
@@ -51,8 +72,17 @@ async function main() {
       .map((name) => path.basename(name, '.json')),
   );
 
-  const calendarCounts = countBy(fixedCalendar, buildFixedComparisonKey);
-  const feastCounts = countBy(feasts, ({ raw }) => buildFixedComparisonKey(raw));
+  const calendarEntries = aggregateCalendarPlaces(fixedCalendar);
+  const calendarCounts = countBy(
+    calendarEntries,
+    buildFixedComparisonKey,
+    (item) => item.title,
+  );
+  const feastCounts = countBy(
+    feasts,
+    ({ raw }) => buildFixedComparisonKey(raw),
+    ({ raw }) => raw._title ?? raw._feastName ?? '',
+  );
   const invalid = [];
   const ids = new Map();
   const missingTemplates = [];
@@ -64,7 +94,7 @@ async function main() {
     const errors = [];
     if (!normalized._date) errors.push('invalid _date');
     if (!normalizeRank(raw._rank)) errors.push(`unknown _rank: ${raw._rank}`);
-    if (raw._place && !normalizePlace(raw._place)) errors.push(`unknown _place: ${raw._place}`);
+    if (raw._place && !normalizePlaces(raw._place).length) errors.push(`unknown _place: ${raw._place}`);
     if (!normalized._title) errors.push('missing _title/_feastName');
     if (!id) errors.push('cannot build id');
     if (errors.length) invalid.push({ file, errors });
@@ -80,6 +110,7 @@ async function main() {
   const report = {
     summary: {
       calendarEntries: fixedCalendar.length,
+      aggregatedCalendarEntries: calendarEntries.length,
       feastFiles: feasts.length,
       templateFiles: templateNames.size,
     },

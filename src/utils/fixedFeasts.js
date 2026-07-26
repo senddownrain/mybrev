@@ -39,24 +39,39 @@ export function normalizeRank(value) {
 }
 
 export function normalizePlace(value) {
-  const key = String(value ?? '').trim().toLowerCase();
-  if (!key) return '';
-  if (Object.values(PLACE_CODE_MAP).includes(key)) return key;
-  return PLACE_CODE_MAP[key] || '';
+  return normalizePlaces(value)[0] || '';
+}
+
+/**
+ * _place можа быць адным кодам або масівам кодаў, калі адзін тэкст
+ * выкарыстоўваецца ў некалькіх мясцовых календарах.
+ */
+export function normalizePlaces(value) {
+  const values = Array.isArray(value) ? value : [value];
+  const codes = values.flatMap((item) => {
+    const key = String(item ?? '').trim().toLowerCase();
+    if (!key) return [];
+    if (Object.values(PLACE_CODE_MAP).includes(key)) return [key];
+
+    return Object.entries(PLACE_CODE_MAP)
+      .filter(([label]) => key.includes(label))
+      .map(([, code]) => code);
+  });
+  return [...new Set(codes)].sort();
 }
 
 export function buildFixedComparisonKey({ _date, date, _rank, rank, _place, place }) {
   return [
     normalizeFixedDate(_date ?? date),
     normalizeRank(_rank ?? rank),
-    normalizePlace(_place ?? place),
+    normalizePlaces(_place ?? place).join(','),
   ].join('|');
 }
 
 export function buildFixedDayId(day, slug) {
   const date = normalizeFixedDate(day?._date ?? day?.date);
   const rank = normalizeRank(day?._rank ?? day?.rank);
-  const place = normalizePlace(day?._place ?? day?.place);
+  const place = normalizePlaces(day?._place ?? day?.place).join('-');
   const normalizedSlug = String(slug ?? '').trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
   if (!date || !rank || !normalizedSlug) return '';
   return [date, rank, place, normalizedSlug].filter(Boolean).join('-');
@@ -71,9 +86,10 @@ export function normalizeFixedFeast(source) {
     _title: String(source?._title ?? source?._feastName ?? '').trim(),
   };
 
-  const place = normalizePlace(source?._place);
+  const places = normalizePlaces(source?._place);
   const comment = String(source?.comment ?? source?.feastComment ?? '').trim();
-  if (place) normalized._place = place;
+  if (places.length === 1) normalized._place = places[0];
+  else if (places.length > 1) normalized._place = places;
   else delete normalized._place;
   if (comment) normalized.comment = comment;
   else delete normalized.comment;
