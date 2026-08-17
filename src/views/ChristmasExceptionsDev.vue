@@ -932,7 +932,7 @@ async function saveDay() {
     }
     const week = leftDraft.value._periodWeekNumber ?? ''
     const day = leftDraft.value._dayOfWeek ?? ''
-    const periodType = leftDraft.value._periodType || 'advent'
+    const periodType = leftDraft.value._periodType || 'christmas'
 
     const fullPayload = {
       ...Object.fromEntries(FIELDS.map((field) => [field, leftDraft.value[field] ?? ''])),

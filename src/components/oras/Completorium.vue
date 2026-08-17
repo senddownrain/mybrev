@@ -1,9 +1,14 @@
 <template>
-    <v-container  class="prayer-content-area">
-        <v-row lign="center"
-      justify="center">
-      <v-col md="6" lg="6" sm="8" v-if="!pending">
-                <day-title :day="day.weekDay" :date="nowDate"/>
+    <v-container class="prayer-content-area">
+      <v-row align="center" justify="center">
+        <v-col v-if="pending" md="6" lg="6" sm="8" class="text-center py-12">
+          <v-progress-circular indeterminate color="primary" />
+        </v-col>
+        <v-col v-else-if="error" md="6" lg="6" sm="8">
+          <v-alert type="error" variant="tonal">{{ error }}</v-alert>
+        </v-col>
+        <v-col v-else-if="day" md="6" lg="6" sm="8">
+                <day-title />
                 <intro :title="title"    />
                 <exam />
                 <hymnus :text="day.compHymn" />
@@ -14,22 +19,20 @@
                 <nunc :ant="day.compAntS" />
                 <last-prayer :text="day.compPr" />
                 <end-of-compline :ant="day.compAntM" />
-            </v-col>
+        </v-col>
         </v-row>
     </v-container>
-    <div>
-
-
-    </div>
 </template>
 <script setup>
-
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue';
 import moment from '@/utils/moment-be';
+import { useRoute } from 'vue-router';
+import { useDocument } from 'vuefire';
+import { doc } from 'firebase/firestore';
 
-import { useRoute } from 'vue-router'
-import { useCollection, useFirestore, useDocument } from 'vuefire'
-import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import { db } from '@/plugins/firebase';
+import { useCompletorium } from '@/composables/useCompletorium';
+import { logger } from '@/utils/logger';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
 import Intro from '@/components/oraparts/Intro.vue';
 import Psalms from '@/components/oraparts/Psalms.vue';
@@ -41,18 +44,49 @@ import EndOfCompline from '@/components/oraparts/EndOfCompline.vue';
 import Exam from '@/components/oraparts/Exam.vue';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 
-const db = useFirestore()
+const route = useRoute();
+const { getCompletoriumForDate } = useCompletorium();
 
-//const days = useCollection(query(collection(db, 'days')))
-//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
+const selectedDayRef = computed(() => doc(db, 'days', String(route.params.id)));
+const { data: selectedDay, pending: selectedDayPending } = useDocument(selectedDayRef);
 
-const route = useRoute()
-const docRef = doc(db, "days", route.params.id);
-var { data: day, pending } = useDocument(docRef)
+const day = ref(null);
+const loadingCompletorium = ref(false);
+const error = ref('');
+const pending = computed(() => selectedDayPending.value || loadingCompletorium.value);
+const title = 'КАМПЛЕТА';
 
-let [d, m, y] = route.params.day.split('-').map(Number);
-const originDate = new Date(y, m - 1, d) 
-const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
-const title = "КАМПЛЕТА"
+let loadSequence = 0;
+
+watch(
+  [() => route.params.day, selectedDay, selectedDayPending],
+  async ([dateParam, currentDay, isDayPending]) => {
+    if (!dateParam || isDayPending) return;
+
+    const sequence = ++loadSequence;
+    const currentDate = moment(String(dateParam), ['YYYY-MM-DD', 'DD-MM-YYYY'], true);
+    day.value = null;
+    error.value = '';
+
+    if (!currentDate.isValid()) {
+      error.value = 'Няправільная дата для камплеты.';
+      return;
+    }
+
+    loadingCompletorium.value = true;
+    try {
+      const result = await getCompletoriumForDate(currentDate.toDate(), currentDay || null);
+      if (sequence === loadSequence) day.value = result;
+    } catch (loadError) {
+      logger.error('[Completorium] Памылка загрузкі:', loadError);
+      if (sequence === loadSequence) {
+        error.value = loadError?.message || 'Не атрымалася загрузіць камплету.';
+      }
+    } finally {
+      if (sequence === loadSequence) loadingCompletorium.value = false;
+    }
+  },
+  { immediate: true },
+);
 
 </script>

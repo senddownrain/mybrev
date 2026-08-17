@@ -1,0 +1,5191 @@
+{
+  "generatedAt": "2026-08-17T16:47:04.368Z",
+  "counts": {
+    "readingDocuments": 658,
+    "parsedDocuments": 742,
+    "readingSelectors": 586,
+    "parsedSelectors": 427,
+    "selectorsInBoth": 427,
+    "selectorsOnlyInReadings": 159,
+    "selectorsOnlyInParsedData": 0,
+    "parsedDocumentsLinkedBySourceId": 742,
+    "readingDocumentsWithGospelHeading": 427
+  },
+  "candidates": {
+    "readingsWithoutParsedData": [
+      {
+        "selector": "date:01.05",
+        "readingDocuments": [
+          "01.05-mm3ohd3d4904321c7ab1",
+          "01.05-mm3ohd3da6aa15f52ef9"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Гадавіна пасвячэння катэдральнага касцёла",
+          "Св. Юзафа рамесніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:01.06",
+        "readingDocuments": [
+          "01.06-mm3ohd3f878e01628c9f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Юстына, мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:01.08",
+        "readingDocuments": [
+          "01.08-mm3ohd3g28211369afa5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Альфонса Марыі Лігуоры, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:01.10",
+        "readingDocuments": [
+          "01.10-mm3ohd3i6644342aa426"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Тэрэзы ад Дзіцятка Езус, панны і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:02.04",
+        "readingDocuments": [
+          "02.04-mm3ohd3c9ad0295304b7"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Францішка з Паолы, пустэльніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:02.05",
+        "readingDocuments": [
+          "02.05-mm3ohd3de79a42598ad5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Атаназія, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:02.06",
+        "readingDocuments": [
+          "02.06-mm3ohd3ffdb49673c266"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марцэліна і Пятра, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:02.08",
+        "readingDocuments": [
+          "02.08-mm3ohd3g3d4b81ab3748",
+          "02.08-mm3ohd3gda9f6af5d556"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Эўзэбія Вэрчэльскага, біскупа",
+          "Св. Пятра Юліяна Эймарда, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:02.10",
+        "readingDocuments": [
+          "02.10-mm3ohd3ib320d7108930"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Анёлаў Ахоўнікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:03.02",
+        "readingDocuments": [
+          "03.02-mm3ohd3b8bfe4110b5cc",
+          "03.02-mm3ohd3bb94da2c6626f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Блажэя, біскупа і мучаніка",
+          "Св. Анзгара (Аскара), біскупа"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:03.06",
+        "readingDocuments": [
+          "03.06-mm3ohd3f31f2330ee238"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Караля Луангі і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:03.09",
+        "readingDocuments": [
+          "03.09-mm3ohd3i48b06b92b01a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Грыгорыя Вялікага, папы і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:03.11",
+        "readingDocuments": [
+          "03.11-mm3ohd3jaa66c1706a23"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марціна дэ Порэса, законніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:03.12",
+        "readingDocuments": [
+          "03.12-mm3ohd3k104696878364"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Францішка Ксавэрыя, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.03",
+        "readingDocuments": [
+          "04.03-mm3ohd3c22ee1df79404",
+          "04.03-mm3ohd3cdd42b61c50d0"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Казіміра, дадатковага апекуна дыяцэзіі",
+          "Св. Казіміра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.04",
+        "readingDocuments": [
+          "04.04-mm3ohd3ce41bca29125e"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ізыдора, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.07",
+        "readingDocuments": [
+          "04.07-mm3ohd3g14cac6182e94"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Альжбеты Партугальскай"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.08",
+        "readingDocuments": [
+          "04.08-mm3ohd3h4dccaa7b796f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Марыі Віянэя, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.09",
+        "readingDocuments": [
+          "04.09-mm3ohd3i8398cfa2dabc"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.10",
+        "readingDocuments": [
+          "04.10-mm3ohd3i45f94c457881"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Францішка Асізскага"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.11",
+        "readingDocuments": [
+          "04.11-mm3ohd3j462a9af3faf7"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Караля Барамэя, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.12",
+        "readingDocuments": [
+          "04.12-mm3ohd3k8c679e254d3b",
+          "04.12-mm3ohd3k9a205d3d43f5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Дамаскіна, прэзбітэра і доктара Касцёла",
+          "Гадавіна пасвячэння катэдральнага касцёла"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.02",
+        "readingDocuments": [
+          "05.02-mm3ohd3b3cf35e6d2cab"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Агаты, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.04",
+        "readingDocuments": [
+          "05.04-mm3ohd3cf98bbb248f51"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Вінцэнта Фэрэра, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.06",
+        "readingDocuments": [
+          "05.06-mm3ohd3fd234909d590a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Баніфацыя, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.07",
+        "readingDocuments": [
+          "05.07-mm3ohd3g76db60ecb58e",
+          "05.07-mm3ohd3ga5efc33ebc12"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Антонія Марыі Дзаккарыя, прэзбітэра",
+          "Найсв. Панны Марыі Тракельскай"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.08",
+        "readingDocuments": [
+          "05.08-mm3ohd3h33b0de4663f2",
+          "05.08-mm3ohd3hc5dfabd28511"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі Кангрэгацкай (Студэнцкай)",
+          "Гадавіна пасвячэння рымскай базылікі Найсв. Панны Марыі"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.02",
+        "readingDocuments": [
+          "06.02-mm3ohd3b8dd24c4f4510"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Паўла Мікі і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.06",
+        "readingDocuments": [
+          "06.06-mm3ohd3f6f0c2a585c8b",
+          "06.06-mm3ohd3fcb0371fd4082"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Баніфацыя, біскупа і мучаніка",
+          "Св. Норбэрта, біскупа"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.07",
+        "readingDocuments": [
+          "06.07-mm3ohd3gafc74afffb94"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марыі Гарэцці, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.10",
+        "readingDocuments": [
+          "06.10-mm3ohd3ifc7a64456cbe"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Бруна, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.12",
+        "readingDocuments": [
+          "06.12-mm3ohd3kc5e1cd4f9638"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Мікалая, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:07.03",
+        "readingDocuments": [
+          "07.03-mm3ohd3c52ace9dd8cc2"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пэрпэтуі і Фэліцыты, мучаніц"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:07.04",
+        "readingDocuments": [
+          "07.04-mm3ohd3cb3289a085efe"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Жана Батыста Сальскага, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:07.08",
+        "readingDocuments": [
+          "07.08-mm3ohd3h5ccdd5c692ff",
+          "07.08-mm3ohd3h8910c7833250"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Сікста ІІ, папы, і паплечнікаў, мучанікаў",
+          "Св. Каятана, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:07.10",
+        "readingDocuments": [
+          "07.10-mm3ohd3i58756989557d"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі Ружанцовай"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:07.12",
+        "readingDocuments": [
+          "07.12-mm3ohd3ka2fd61c4bfa9"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Амброзія, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:08.02",
+        "readingDocuments": [
+          "08.02-mm3ohd3c9d2b66845769",
+          "08.02-mm3ohd3cf25b0c8fc7d7"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Гераніма Эміліяні",
+          "Св. Жазэфіны Бакіты, панны"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:08.03",
+        "readingDocuments": [
+          "08.03-mm3ohd3cf5172ee1a00d"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Божага, законніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:08.08",
+        "readingDocuments": [
+          "08.08-mm3ohd3hf1d19c710a17"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Дамініка, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.03",
+        "readingDocuments": [
+          "09.03-mm3ohd3c0e3ea4e021ca"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Францішкі Рымскай, законніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.06",
+        "readingDocuments": [
+          "09.06-mm3ohd3f6dd3e89bdabe"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Эфрэма, дыякана і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.07",
+        "readingDocuments": [
+          "09.07-mm3ohd3gd3a15354fabb"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Аўгустына Джао Жонга, прэзбітэра, і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.08",
+        "readingDocuments": [
+          "09.08-mm3ohd3h280f900ab135"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Тэрэзы Бэнэдыкты ад Крыжа (Эдыты Штайн), панны і мучаніцы, апякункі Еўропы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.09",
+        "readingDocuments": [
+          "09.09-mm3ohd3i74cf7159eb0c"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пятра Клявэра, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.10",
+        "readingDocuments": [
+          "09.10-mm3ohd3i5c732323a793",
+          "09.10-mm3ohd3jc64f4a08d20f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Дыянісія, біскупа, і паплечнікаў, мучанікаў",
+          "Св. Яна Леанардзі, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:10.02",
+        "readingDocuments": [
+          "10.02-mm3ohd3ce8a43d99e50a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Схалястыкі, панны"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:10.10",
+        "readingDocuments": [
+          "10.10-mm3ohd3j3d2cc38106cf"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Гадавіна пасвячэння катэдральнага касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:10.11",
+        "readingDocuments": [
+          "10.11-mm3ohd3jbfd265d07c7c"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Льва Вялікага, папы і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.02",
+        "readingDocuments": [
+          "11.02-mm3ohd3cfccad93f381e"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі з Люрда"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.04",
+        "readingDocuments": [
+          "11.04-mm3ohd3cb9d4f6468846"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Станіслава, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.06",
+        "readingDocuments": [
+          "11.06-mm3ohd3fdabf46abb186"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Барнабы, апостала"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.08",
+        "readingDocuments": [
+          "11.08-mm3ohd3he08fd38a3ff2"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Клары, панны"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.11",
+        "readingDocuments": [
+          "11.11-mm3ohd3j89394f8ee4d5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марціна Турскага, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.12",
+        "readingDocuments": [
+          "11.12-mm3ohd3k2c20b651cae1"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Дамаса І, папы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:12.05",
+        "readingDocuments": [
+          "12.05-mm3ohd3dcaa3ccb63306",
+          "12.05-mm3ohd3defe43c059cee"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Нэрэя і Ахіла, мучанікаў",
+          "Св. Панкрата, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:12.06",
+        "readingDocuments": [
+          "12.06-mm3ohd3f671b3620cc9e"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Бл. Генрыха Глябовіча, прэзбітэра, і паплечнікаў, мучанікаў другой сусветнай вайны"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:12.08",
+        "readingDocuments": [
+          "12.08-mm3ohd3h156d07a61af7"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Жаны Франсуазы дэ Шанталь, законніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:12.09",
+        "readingDocuments": [
+          "12.09-mm3ohd3i4012ef05cf75",
+          "12.09-mm3ohd3i985f08bb1d6f",
+          "12.09-mm3ohd3id2d4de18ebcf"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсвяцейшага Імя Марыі"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.01",
+        "readingDocuments": [
+          "13.01-mm3ohd3acdbc5182d36b"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Гілярыя, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.04",
+        "readingDocuments": [
+          "13.04-mm3ohd3d6e379b602581"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марціна І, папы і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.05",
+        "readingDocuments": [
+          "13.05-mm3ohd3d99b159109171"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі з Фацімы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.06",
+        "readingDocuments": [
+          "13.06-mm3ohd3f573fb228e552"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Антонія Падуанскага, прэзбітэра і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.07",
+        "readingDocuments": [
+          "13.07-mm3ohd3g6d70b442b6f4"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Генрыха"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.08",
+        "readingDocuments": [
+          "13.08-mm3ohd3hb251b13e8980"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пантыяна, папы, і Гіпаліта, прэзбітэра, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.09",
+        "readingDocuments": [
+          "13.09-mm3ohd3i1a9199978a61"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Залатавуснага (Хрызастома), біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.12",
+        "readingDocuments": [
+          "13.12-mm3ohd3k2f029fe14c84"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Люцыі, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:14.07",
+        "readingDocuments": [
+          "14.07-mm3ohd3g3f2273dbec7c"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Каміла Леліскага, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:14.08",
+        "readingDocuments": [
+          "14.08-mm3ohd3h198a86ee9778",
+          "14.08-mm3ohd3h35d2b0d3d854"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Максімільяна Марыі Кольбэ, прэзбітэра і мучаніка, дадатковага апекуна дыяцэзіі",
+          "Св. Максімільяна Марыі Кольбэ, прэзбітэра і мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:14.10",
+        "readingDocuments": [
+          "14.10-mm3ohd3je27a0659c5cf"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Калікста І, папы і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:14.12",
+        "readingDocuments": [
+          "14.12-mm3ohd3k44aa103d4e3f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна ад Крыжа, прэзбітэра і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:15.02",
+        "readingDocuments": [
+          "15.02-mm3ohd3cec20a7abb779"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Бл. Міхала Сапоцькі, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:15.07",
+        "readingDocuments": [
+          "15.07-mm3ohd3gb0706d9bcd83"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Бонавэнтуры, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:15.09",
+        "readingDocuments": [
+          "15.09-mm3ohd3i99d4472b5c64"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі Балеснай"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:15.10",
+        "readingDocuments": [
+          "15.10-mm3ohd3j6ecf0b8a3a99"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Тэрэзы ад Езуса, панны і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:15.11",
+        "readingDocuments": [
+          "15.11-mm3ohd3j8f8cd41d95e3"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Альбэрта Вялікага, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.03",
+        "readingDocuments": [
+          "16.03-mm3ohd3c27920091d883"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Гадавіна пасвячэння катэдральнага касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.05",
+        "readingDocuments": [
+          "16.05-mm3ohd3d2d095100142b",
+          "16.05-mm3ohd3d54097530e6b8",
+          "16.05-mm3ohd3db7b15f5d4898",
+          "16.05-mm3ohd3efdc2f755339e"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Андрэя Баболі, прэзбітэра і мучаніка, апекуна дыяцэзіі",
+          "Св. Андрэя Баболі, прэзбітэра і мучаніка"
+        ],
+        "readingDocumentsWithText": 4,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.07",
+        "readingDocuments": [
+          "16.07-mm3ohd3g4931497d1f06",
+          "16.07-mm3ohd3g4e5b9495d56c",
+          "16.07-mm3ohd3g50aa60772d02"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі з гары Кармэль"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.08",
+        "readingDocuments": [
+          "16.08-mm3ohd3he5ce5ffbfa67"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Стэфана Венгерскага"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.09",
+        "readingDocuments": [
+          "16.09-mm3ohd3i941e40328f9a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Карнэлія, папы, і Кіпрыяна, біскупа, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.10",
+        "readingDocuments": [
+          "16.10-mm3ohd3j598e6bf3ef96",
+          "16.10-mm3ohd3jb272df5d19fa"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ядвігі, законніцы",
+          "Св. Маргарыты Марыі Алякок, панны"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.11",
+        "readingDocuments": [
+          "16.11-mm3ohd3j278c3b0db805",
+          "16.11-mm3ohd3j3982ddbbb762",
+          "16.11-mm3ohd3j9ece9b5aff0a",
+          "16.11-mm3ohd3jd4bf2ecfca24",
+          "16.11-mm3ohd3jdacffe045999",
+          "16.11-mm3ohd3k326ed09f74ff"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Гертруды, панны",
+          "Св. Маргарыты Шатландскай",
+          "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай), галоўнай апякункі дыяцэзіі",
+          "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)"
+        ],
+        "readingDocumentsWithText": 6,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.01",
+        "readingDocuments": [
+          "17.01-mm3ohd3a2d180a627663"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Антонія, абата"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.02",
+        "readingDocuments": [
+          "17.02-mm3ohd3c7da622d10d16"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. сямі Заснавальнікаў ордэна Слугаў Найсв. Панны Марыі (сэрвітаў)"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.03",
+        "readingDocuments": [
+          "17.03-mm3ohd3cb7343cf93849"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Патрыка, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.09",
+        "readingDocuments": [
+          "17.09-mm3ohd3i2df69f599167"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Робэрта Бэлярміна, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.10",
+        "readingDocuments": [
+          "17.10-mm3ohd3jaa1ebfe7a4c4"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ігнацыя з Антыёхіі, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.11",
+        "readingDocuments": [
+          "17.11-mm3ohd3k3895d9a27777"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Альжбеты Венгерскай, законніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:18.03",
+        "readingDocuments": [
+          "18.03-mm3ohd3c6b728d13e670"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Кірыла Ерузалемскага, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:18.05",
+        "readingDocuments": [
+          "18.05-mm3ohd3ef642c74972e6"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна І, папы і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:18.09",
+        "readingDocuments": [
+          "18.09-mm3ohd3i3db2a4203ec1",
+          "18.09-mm3ohd3i46d32b096568",
+          "18.09-mm3ohd3ib161a029ce97"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Станіслава Косткі, законніка"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:18.11",
+        "readingDocuments": [
+          "18.11-mm3ohd3k11deb1e709e4"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Гадавіна пасвячэння рымскіх базылік св. апосталаў Пятра і Паўла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:19.06",
+        "readingDocuments": [
+          "19.06-mm3ohd3f19499ffb1045"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Рамуальда, абата"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:19.08",
+        "readingDocuments": [
+          "19.08-mm3ohd3h8da170948e3d"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Эда, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:19.09",
+        "readingDocuments": [
+          "19.09-mm3ohd3i66b21b63667e"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Януарыя, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:19.10",
+        "readingDocuments": [
+          "19.10-mm3ohd3j59985044458f",
+          "19.10-mm3ohd3j8fb24333c1fa"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Жана дэ Брэбёфа і Ісаака Жога, прэзбітэраў, і паплечнікаў, мучанікаў",
+          "Св. Паўла ад Крыжа, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.01",
+        "readingDocuments": [
+          "20.01-mm3ohd3a105d3a3ebd44",
+          "20.01-mm3ohd3b457aa9dfcc23"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Фабіяна, папы і мучаніка",
+          "Св. Себасцьяна, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.05",
+        "readingDocuments": [
+          "20.05-mm3ohd3e6b788917eb56"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Бэрнардына Сіенскага, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.07",
+        "readingDocuments": [
+          "20.07-mm3ohd3g890265b2865a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Апалінарыя, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.08",
+        "readingDocuments": [
+          "20.08-mm3ohd3h48244a4ed86c"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Бэрнарда, абата і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.09",
+        "readingDocuments": [
+          "20.09-mm3ohd3id79c197612a5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Андрэя Кім Таэгона, прэзбітэра, і Паўла Чон Хасана, і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.11",
+        "readingDocuments": [
+          "20.11-mm3ohd3k1aef6a997ac9"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Рафала Каліноўскага, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.01",
+        "readingDocuments": [
+          "21.01-mm3ohd3b45e662548e12"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Агнешкі, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.02",
+        "readingDocuments": [
+          "21.02-mm3ohd3ce95c8ae9d6a0"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пятра Дам’яна, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.04",
+        "readingDocuments": [
+          "21.04-mm3ohd3d8f572a4af23c"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Анзэльма, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.05",
+        "readingDocuments": [
+          "21.05-mm3ohd3e14a32236145a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Хрыстафора Магалана, прэзбітэра, і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.06",
+        "readingDocuments": [
+          "21.06-mm3ohd3fc7cf7227510f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Алаізія Ганзагі, законніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.07",
+        "readingDocuments": [
+          "21.07-mm3ohd3gbb2ae8f6ae16"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Лаўрэнція з Брындызі, прэзбітэра і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.08",
+        "readingDocuments": [
+          "21.08-mm3ohd3h82578548614b"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пія Х, папы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.11",
+        "readingDocuments": [
+          "21.11-mm3ohd3k352ea71df77a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Ахвяраванне Найсв. Панны Марыі"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.01",
+        "readingDocuments": [
+          "22.01-mm3ohd3b85eeb935c420"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Вінцэнта, дыякана і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.05",
+        "readingDocuments": [
+          "22.05-mm3ohd3e5ebbdc2300a5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Рыты з Касіі, законніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.06",
+        "readingDocuments": [
+          "22.06-mm3ohd3f156e4a84fd18",
+          "22.06-mm3ohd3fe7959597c9ca"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Паўліна Нольскага, біскупа",
+          "Св. Джона Фішара, біскупа, і Томаса Мора, мучанікаў"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.08",
+        "readingDocuments": [
+          "22.08-mm3ohd3h74557984aa70"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі Каралевы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.10",
+        "readingDocuments": [
+          "22.10-mm3ohd3je40219b7f8bb"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Паўла ІІ, папы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.11",
+        "readingDocuments": [
+          "22.11-mm3ohd3kaf0637da2832"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Цэцыліі, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.02",
+        "readingDocuments": [
+          "23.02-mm3ohd3c40c3cf801969"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Палікарпа, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.03",
+        "readingDocuments": [
+          "23.03-mm3ohd3c2546ef5b1d00"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Турыбія Мангравэха, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.04",
+        "readingDocuments": [
+          "23.04-mm3ohd3d24bf1bf26ff4",
+          "23.04-mm3ohd3d5619db032a0b"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Адальбэрта (Войцеха), біскупа і мучаніка",
+          "Св. Юрыя, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.08",
+        "readingDocuments": [
+          "23.08-mm3ohd3h2b75902caaee"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ружы Лімскай, панны"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.09",
+        "readingDocuments": [
+          "23.09-mm3ohd3ib45bf126a2f4"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Піо з П’етрэльчыны, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.10",
+        "readingDocuments": [
+          "23.10-mm3ohd3j53355078bd7b"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Капістрана, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.11",
+        "readingDocuments": [
+          "23.11-mm3ohd3k4bf31b975d40",
+          "23.11-mm3ohd3kb93de3a28bb2"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Клімэнта І, папы і мучаніка",
+          "Св. Калюмбана, абата"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:24.01",
+        "readingDocuments": [
+          "24.01-mm3ohd3b7031eb92d2ee"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Францішка Сальскага, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:24.04",
+        "readingDocuments": [
+          "24.04-mm3ohd3de92354ecbfdd"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Фідэля Сігмарынгенскага, прэзбітэра і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:24.07",
+        "readingDocuments": [
+          "24.07-mm3ohd3g77f049af80f1"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Шарбэля Маклуфа, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:24.10",
+        "readingDocuments": [
+          "24.10-mm3ohd3j7b452d101d90"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Антонія Марыі Клярэта, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:24.11",
+        "readingDocuments": [
+          "24.11-mm3ohd3k856a10c00700"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Андрэя Зунг Лака, прэзбітэра, і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:25.05",
+        "readingDocuments": [
+          "25.05-mm3ohd3e2c0ded698717",
+          "25.05-mm3ohd3ecfba381c8c67",
+          "25.05-mm3ohd3ee19a6df7de77"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марыі Магдалены Паццы, панны",
+          "Св. Бэды Вялебнага, прэзбітэра і доктара Касцёла",
+          "Св. Грыгорыя VII, папы"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:25.08",
+        "readingDocuments": [
+          "25.08-mm3ohd3h51e5b68ce66a",
+          "25.08-mm3ohd3h8596f5f28f62"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Людвіка",
+          "Св. Юзафа Каласанса, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:25.11",
+        "readingDocuments": [
+          "25.11-mm3ohd3keb48cf6c3ab1"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Кацярыны Александрыйскай, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.01",
+        "readingDocuments": [
+          "26.01-mm3ohd3b34d2adc616cf"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Цімафея і Ціта, біскупаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.05",
+        "readingDocuments": [
+          "26.05-mm3ohd3efc3d761dcb49"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Філіпа Нэры, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.07",
+        "readingDocuments": [
+          "26.07-mm3ohd3g52352b5dc00a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яўхіма і Ганны, бацькоў Найсв. Панны Марыі"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.08",
+        "readingDocuments": [
+          "26.08-mm3ohd3h1e28dbc4ac04",
+          "26.08-mm3ohd3i1db836654548",
+          "26.08-mm3ohd3i5b1a41514185"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі Чэнстахоўскай"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.09",
+        "readingDocuments": [
+          "26.09-mm3ohd3i66aac69b6ea6"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Космы і Дам’яна, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.10",
+        "readingDocuments": [
+          "26.10-mm3ohd3j8836643012a8"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Бл. Цэліны Бажэцкай"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:27.01",
+        "readingDocuments": [
+          "27.01-mm3ohd3b328256a8830e",
+          "27.01-mm3ohd3b52a997fb43d5",
+          "27.01-mm3ohd3bf3f1b503be55"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Анжэлы Мэрычы, панны",
+          "Бл. Юрыя Матулевіча, біскупа"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:27.05",
+        "readingDocuments": [
+          "27.05-mm3ohd3ec112273fdea7"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Аўгустына Кэнтэрберыйскага, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:27.06",
+        "readingDocuments": [
+          "27.06-mm3ohd3f7d6072e48a0a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Кірыла Александрыйскага, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:27.08",
+        "readingDocuments": [
+          "27.08-mm3ohd3i8a7ef357e9d1"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Монікі"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:27.09",
+        "readingDocuments": [
+          "27.09-mm3ohd3ieb94f65eafba"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Вінцэнта дэ Поля, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.01",
+        "readingDocuments": [
+          "28.01-mm3ohd3bf116315eae27"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Тамаша Аквінскага, прэзбітэра і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.04",
+        "readingDocuments": [
+          "28.04-mm3ohd3d378bf642473c",
+          "28.04-mm3ohd3d9e623a06f73a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Людвіка Марыі Грыньён дэ Манфора, прэзбітэра",
+          "Св. Пятра Шанэля, прэзбітэра і мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.06",
+        "readingDocuments": [
+          "28.06-mm3ohd3f92c8a9371cb8"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ірэнэя, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.08",
+        "readingDocuments": [
+          "28.08-mm3ohd3i226ed9a11198"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Аўгустына, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.09",
+        "readingDocuments": [
+          "28.09-mm3ohd3i1b2044d7df95",
+          "28.09-mm3ohd3ia7d1aac20703"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Лаўрэнція Руіса і паплечнікаў, мучанікаў",
+          "Св. Вацлава, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:29.01",
+        "readingDocuments": [
+          "29.01-mm3ohd3b37b19e5bef6a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Бл. Баляславы Марыі Лямэнт, панны"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:29.07",
+        "readingDocuments": [
+          "29.07-mm3ohd3gc937ef31d83b"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марты"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:29.08",
+        "readingDocuments": [
+          "29.08-mm3ohd3id399ad3449ef"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Мучаніцтва св. Яна Хрысціцеля"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:29.12",
+        "readingDocuments": [
+          "29.12-mm3ohd3k985e9d2785ff"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Томаса Бэкета, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:30.04",
+        "readingDocuments": [
+          "30.04-mm3ohd3d09c167d7f6df"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пія V, папы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:30.06",
+        "readingDocuments": [
+          "30.06-mm3ohd3f982bc1966dd5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Першамучанікаў Рымскага Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:30.07",
+        "readingDocuments": [
+          "30.07-mm3ohd3gd6f1514bb2f5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пятра Хрызалога, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:30.09",
+        "readingDocuments": [
+          "30.09-mm3ohd3if6ba3ac86584"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Гераніма, прэзбітэра і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:31.01",
+        "readingDocuments": [
+          "31.01-mm3ohd3b95efffb34a63"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Боска, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:31.07",
+        "readingDocuments": [
+          "31.07-mm3ohd3gc908de5e8093"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ігнацыя Лаёлы, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:31.12",
+        "readingDocuments": [
+          "31.12-mm3ohd3k0a928d5da6ed"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Сільвэстра І, папы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      }
+    ],
+    "parsedDataWithoutReadings": [],
+    "selectorsWithMultipleReadingTitles": [
+      {
+        "selector": "date:01.05",
+        "readingDocuments": [
+          "01.05-mm3ohd3d4904321c7ab1",
+          "01.05-mm3ohd3da6aa15f52ef9"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Гадавіна пасвячэння катэдральнага касцёла",
+          "Св. Юзафа рамесніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:02.02",
+        "readingDocuments": [
+          "02.02-mm3ohd3b14a9b8fbe91a",
+          "02.02-mm3ohd3k23d84cd59e91"
+        ],
+        "parsedDocuments": [
+          "02.02-mm3ohd3k23d84cd59e91"
+        ],
+        "parsedSourceIds": [
+          "02.02-mm3ohd3k23d84cd59e91"
+        ],
+        "titles": [
+          "Ахвяраванне Пана",
+          "2 лютага — свята Ахвяравання Пана"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:02.07",
+        "readingDocuments": [
+          "02.07-mm3ohd3f251b23aeca74",
+          "02.07-mm3ohd3f603dcdff9584",
+          "02.07-mm3ohd3f7e2ad1a44fe0",
+          "02.07-mm3ohd3l49e0f1feee3e"
+        ],
+        "parsedDocuments": [
+          "02.07-mm3ohd3l49e0f1feee3e"
+        ],
+        "parsedSourceIds": [
+          "02.07-mm3ohd3l49e0f1feee3e"
+        ],
+        "titles": [
+          "Найсв. Панны Марыі Будслаўскай",
+          "Найсв. Панны Марыі Будслаўскай, апякункі архідыяцэзіі",
+          "2 ліпеня — урачыстасць Маці Божай Будслаўскай"
+        ],
+        "readingDocumentsWithText": 4,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:02.08",
+        "readingDocuments": [
+          "02.08-mm3ohd3g3d4b81ab3748",
+          "02.08-mm3ohd3gda9f6af5d556"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Эўзэбія Вэрчэльскага, біскупа",
+          "Св. Пятра Юліяна Эймарда, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:03.01",
+        "readingDocuments": [
+          "03.01-mm3ohd3ac2c0c03c6d2d",
+          "03.01-mm3ohd3l0174af98c5b3"
+        ],
+        "parsedDocuments": [
+          "03.01-mm3ohd3l0174af98c5b3"
+        ],
+        "parsedSourceIds": [
+          "03.01-mm3ohd3l0174af98c5b3"
+        ],
+        "titles": [
+          "Найсвяцейшага Імя Езуса",
+          "3 студзеня — будзень"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:03.02",
+        "readingDocuments": [
+          "03.02-mm3ohd3b8bfe4110b5cc",
+          "03.02-mm3ohd3bb94da2c6626f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Блажэя, біскупа і мучаніка",
+          "Св. Анзгара (Аскара), біскупа"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.03",
+        "readingDocuments": [
+          "04.03-mm3ohd3c22ee1df79404",
+          "04.03-mm3ohd3cdd42b61c50d0"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Казіміра, дадатковага апекуна дыяцэзіі",
+          "Св. Казіміра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.12",
+        "readingDocuments": [
+          "04.12-mm3ohd3k8c679e254d3b",
+          "04.12-mm3ohd3k9a205d3d43f5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Дамаскіна, прэзбітэра і доктара Касцёла",
+          "Гадавіна пасвячэння катэдральнага касцёла"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.07",
+        "readingDocuments": [
+          "05.07-mm3ohd3g76db60ecb58e",
+          "05.07-mm3ohd3ga5efc33ebc12"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Антонія Марыі Дзаккарыя, прэзбітэра",
+          "Найсв. Панны Марыі Тракельскай"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.08",
+        "readingDocuments": [
+          "05.08-mm3ohd3h33b0de4663f2",
+          "05.08-mm3ohd3hc5dfabd28511"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі Кангрэгацкай (Студэнцкай)",
+          "Гадавіна пасвячэння рымскай базылікі Найсв. Панны Марыі"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.01",
+        "readingDocuments": [
+          "06.01-mm3ohd3a16b43ae19f64",
+          "06.01-mm3ohd3l36fa6a364b01"
+        ],
+        "parsedDocuments": [
+          "06.01-mm3ohd3l36fa6a364b01"
+        ],
+        "parsedSourceIds": [
+          "06.01-mm3ohd3l36fa6a364b01"
+        ],
+        "titles": [
+          "Аб’яўленне Пана",
+          "6 студзеня — урачыстасць Аб'яўлення Пана"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:06.06",
+        "readingDocuments": [
+          "06.06-mm3ohd3f6f0c2a585c8b",
+          "06.06-mm3ohd3fcb0371fd4082"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Баніфацыя, біскупа і мучаніка",
+          "Св. Норбэрта, біскупа"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.08",
+        "readingDocuments": [
+          "06.08-mm3ohd3he3995a0bd3cc",
+          "06.08-mm3ohd3l8a67d9a125d1"
+        ],
+        "parsedDocuments": [
+          "06.08-mm3ohd3l8a67d9a125d1_A",
+          "06.08-mm3ohd3l8a67d9a125d1_B",
+          "06.08-mm3ohd3l8a67d9a125d1_C"
+        ],
+        "parsedSourceIds": [
+          "06.08-mm3ohd3l8a67d9a125d1"
+        ],
+        "titles": [
+          "Перамяненне Пана",
+          "6 жніўня — свята Перамянення Пана"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:07.08",
+        "readingDocuments": [
+          "07.08-mm3ohd3h5ccdd5c692ff",
+          "07.08-mm3ohd3h8910c7833250"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Сікста ІІ, папы, і паплечнікаў, мучанікаў",
+          "Св. Каятана, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:08.02",
+        "readingDocuments": [
+          "08.02-mm3ohd3c9d2b66845769",
+          "08.02-mm3ohd3cf25b0c8fc7d7"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Гераніма Эміліяні",
+          "Св. Жазэфіны Бакіты, панны"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:08.09",
+        "readingDocuments": [
+          "08.09-mm3ohd3i56191fe143df",
+          "08.09-mm3ohd3id003ebb29c98",
+          "08.09-mm3ohd3l5a40ceac2abf"
+        ],
+        "parsedDocuments": [
+          "08.09-mm3ohd3l5a40ceac2abf"
+        ],
+        "parsedSourceIds": [
+          "08.09-mm3ohd3l5a40ceac2abf"
+        ],
+        "titles": [
+          "Нараджэнне Найсв. Панны Марыі",
+          "Найсв. Панны Марыі Браслаўскай",
+          "8 верасня — свята Нараджэння Найсвяцейшай Панны Марыі"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:08.12",
+        "readingDocuments": [
+          "08.12-mm3ohd3k1d2cce8463c7",
+          "08.12-mm3ohd3l9d9751a6cc58"
+        ],
+        "parsedDocuments": [
+          "08.12-mm3ohd3l9d9751a6cc58"
+        ],
+        "parsedSourceIds": [
+          "08.12-mm3ohd3l9d9751a6cc58"
+        ],
+        "titles": [
+          "Беззаганнага Зачацця Найсв. Панны Марыі",
+          "8 снежня — урачыстасць Беззаганнага Зачацця Найсвяцейшай Панны Марыі"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:09.10",
+        "readingDocuments": [
+          "09.10-mm3ohd3i5c732323a793",
+          "09.10-mm3ohd3jc64f4a08d20f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Дыянісія, біскупа, і паплечнікаў, мучанікаў",
+          "Св. Яна Леанардзі, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.11",
+        "readingDocuments": [
+          "09.11-mm3ohd3jd5eea39c093b",
+          "09.11-mm3ohd3lf036b5a7668e"
+        ],
+        "parsedDocuments": [
+          "09.11-mm3ohd3lf036b5a7668e"
+        ],
+        "parsedSourceIds": [
+          "09.11-mm3ohd3lf036b5a7668e"
+        ],
+        "titles": [
+          "Гадавіна пасвячэння Латэранскай базылікі",
+          "9 лістапада — свята гадавіны пасвячэння Латэранскай базылікі"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:12.05",
+        "readingDocuments": [
+          "12.05-mm3ohd3dcaa3ccb63306",
+          "12.05-mm3ohd3defe43c059cee"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Нэрэя і Ахіла, мучанікаў",
+          "Св. Панкрата, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:12.11",
+        "readingDocuments": [
+          "12.11-mm3ohd3j69ce4811bdcb",
+          "12.11-mm3ohd3j74bb5eee6112",
+          "12.11-mm3ohd3jb0e8d87392fd",
+          "12.11-mm3ohd3je618281aba99"
+        ],
+        "parsedDocuments": [
+          "12.11-mm3ohd3j69ce4811bdcb"
+        ],
+        "parsedSourceIds": [
+          "12.11-mm3ohd3j69ce4811bdcb"
+        ],
+        "titles": [
+          "Св. Язафата, біскупа і мучаніка",
+          "Св. Язафата, біскупа і мучаніка, галоўнага апекуна дыяцэзіі"
+        ],
+        "readingDocumentsWithText": 4,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:14.02",
+        "readingDocuments": [
+          "14.02-mm3ohd3cc952c25346f7",
+          "14.02-mm3ohd3l3fdc4c0f1ae7"
+        ],
+        "parsedDocuments": [
+          "14.02-mm3ohd3l3fdc4c0f1ae7"
+        ],
+        "parsedSourceIds": [
+          "14.02-mm3ohd3l3fdc4c0f1ae7"
+        ],
+        "titles": [
+          "Св. Кірыла, манаха, і Мятода, біскупа, апекуноў Еўропы",
+          "14 лютага — свята св. Кірыла, мніха, і Мятода, біскупа, апекуноў Еўропы"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:14.08",
+        "readingDocuments": [
+          "14.08-mm3ohd3h198a86ee9778",
+          "14.08-mm3ohd3h35d2b0d3d854"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Максімільяна Марыі Кольбэ, прэзбітэра і мучаніка, дадатковага апекуна дыяцэзіі",
+          "Св. Максімільяна Марыі Кольбэ, прэзбітэра і мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:14.09",
+        "readingDocuments": [
+          "14.09-mm3ohd3ib8487c795495",
+          "14.09-mm3ohd3le9cd9240f55c"
+        ],
+        "parsedDocuments": [
+          "14.09-mm3ohd3le9cd9240f55c"
+        ],
+        "parsedSourceIds": [
+          "14.09-mm3ohd3le9cd9240f55c"
+        ],
+        "titles": [
+          "Узвышэнне Святога Крыжа",
+          "14 верасня — свята Узвышэння Святога Крыжа"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:15.08",
+        "readingDocuments": [
+          "15.08-mm3ohd3hcb18a9ac228f",
+          "15.08-mm3ohd3ld319b7682b7c"
+        ],
+        "parsedDocuments": [
+          "15.08-mm3ohd3ld319b7682b7c_1",
+          "15.08-mm3ohd3ld319b7682b7c_2"
+        ],
+        "parsedSourceIds": [
+          "15.08-mm3ohd3ld319b7682b7c"
+        ],
+        "titles": [
+          "Унебаўзяцце Найсв. Панны Марыі",
+          "15 жніўня — урачыстасць Унебаўзяцця Найсвяцейшай Панны Марыі"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:16.05",
+        "readingDocuments": [
+          "16.05-mm3ohd3d2d095100142b",
+          "16.05-mm3ohd3d54097530e6b8",
+          "16.05-mm3ohd3db7b15f5d4898",
+          "16.05-mm3ohd3efdc2f755339e"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Андрэя Баболі, прэзбітэра і мучаніка, апекуна дыяцэзіі",
+          "Св. Андрэя Баболі, прэзбітэра і мучаніка"
+        ],
+        "readingDocumentsWithText": 4,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.10",
+        "readingDocuments": [
+          "16.10-mm3ohd3j598e6bf3ef96",
+          "16.10-mm3ohd3jb272df5d19fa"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ядвігі, законніцы",
+          "Св. Маргарыты Марыі Алякок, панны"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.11",
+        "readingDocuments": [
+          "16.11-mm3ohd3j278c3b0db805",
+          "16.11-mm3ohd3j3982ddbbb762",
+          "16.11-mm3ohd3j9ece9b5aff0a",
+          "16.11-mm3ohd3jd4bf2ecfca24",
+          "16.11-mm3ohd3jdacffe045999",
+          "16.11-mm3ohd3k326ed09f74ff"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Гертруды, панны",
+          "Св. Маргарыты Шатландскай",
+          "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай), галоўнай апякункі дыяцэзіі",
+          "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)"
+        ],
+        "readingDocumentsWithText": 6,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:19.03",
+        "readingDocuments": [
+          "19.03-mm3ohd3c8e4a66c76d34",
+          "19.03-mm3ohd3l0918cf0cefba"
+        ],
+        "parsedDocuments": [
+          "19.03-mm3ohd3l0918cf0cefba"
+        ],
+        "parsedSourceIds": [
+          "19.03-mm3ohd3l0918cf0cefba"
+        ],
+        "titles": [
+          "Св. Юзафа, абранніка Найсв. Панны Марыі",
+          "19 сакавіка — урачыстасць св. Юзафа, абранніка Найсвяцейшай Панны Марыі"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:19.10",
+        "readingDocuments": [
+          "19.10-mm3ohd3j59985044458f",
+          "19.10-mm3ohd3j8fb24333c1fa"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Жана дэ Брэбёфа і Ісаака Жога, прэзбітэраў, і паплечнікаў, мучанікаў",
+          "Св. Паўла ад Крыжа, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.01",
+        "readingDocuments": [
+          "20.01-mm3ohd3a105d3a3ebd44",
+          "20.01-mm3ohd3b457aa9dfcc23"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Фабіяна, папы і мучаніка",
+          "Св. Себасцьяна, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.12",
+        "readingDocuments": [
+          "21.12-mm3ohd3kb4a42e8818d2",
+          "21.12-mm3ohd3ldb5ba62241fb"
+        ],
+        "parsedDocuments": [
+          "21.12-mm3ohd3ldb5ba62241fb"
+        ],
+        "parsedSourceIds": [
+          "21.12-mm3ohd3ldb5ba62241fb"
+        ],
+        "titles": [
+          "Св. Пятра Канізія, прэзбітэра і доктара Касцёла",
+          "21 снежня — звычайны дзень Адвэнту"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:22.06",
+        "readingDocuments": [
+          "22.06-mm3ohd3f156e4a84fd18",
+          "22.06-mm3ohd3fe7959597c9ca"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Паўліна Нольскага, біскупа",
+          "Св. Джона Фішара, біскупа, і Томаса Мора, мучанікаў"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.04",
+        "readingDocuments": [
+          "23.04-mm3ohd3d24bf1bf26ff4",
+          "23.04-mm3ohd3d5619db032a0b"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Адальбэрта (Войцеха), біскупа і мучаніка",
+          "Св. Юрыя, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.11",
+        "readingDocuments": [
+          "23.11-mm3ohd3k4bf31b975d40",
+          "23.11-mm3ohd3kb93de3a28bb2"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Клімэнта І, папы і мучаніка",
+          "Св. Калюмбана, абата"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.12",
+        "readingDocuments": [
+          "23.12-mm3ohd3kf4479dc4b664",
+          "23.12-mm3ohd3lef7bca7cffaf"
+        ],
+        "parsedDocuments": [
+          "23.12-mm3ohd3lef7bca7cffaf"
+        ],
+        "parsedSourceIds": [
+          "23.12-mm3ohd3lef7bca7cffaf"
+        ],
+        "titles": [
+          "Св. Яна Кенцкага, прэзбітэра",
+          "23 снежня — звычайны дзень Адвэнту"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:24.06",
+        "readingDocuments": [
+          "24.06-mm3ohd3fe008ec12cf9e",
+          "24.06-mm3ohd3lb3b206322731"
+        ],
+        "parsedDocuments": [
+          "24.06-mm3ohd3lb3b206322731"
+        ],
+        "parsedSourceIds": [
+          "24.06-mm3ohd3lb3b206322731"
+        ],
+        "titles": [
+          "Нараджэнне св. Яна Хрысціцеля",
+          "24 чэрвеня — урачыстасць Нараджэння св. Яна Хрысціцеля"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:25.01",
+        "readingDocuments": [
+          "25.01-mm3ohd3bd34809ba9cd3",
+          "25.01-mm3ohd3le5aaacb5b951"
+        ],
+        "parsedDocuments": [
+          "25.01-mm3ohd3le5aaacb5b951"
+        ],
+        "parsedSourceIds": [
+          "25.01-mm3ohd3le5aaacb5b951"
+        ],
+        "titles": [
+          "Навяртанне св. Паўла, апостала",
+          "25 студзеня — свята навяртання св. Паўла, апостала"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:25.03",
+        "readingDocuments": [
+          "25.03-mm3ohd3c495750c79aba",
+          "25.03-mm3ohd3l33b4b770c099"
+        ],
+        "parsedDocuments": [
+          "25.03-mm3ohd3l33b4b770c099"
+        ],
+        "parsedSourceIds": [
+          "25.03-mm3ohd3l33b4b770c099"
+        ],
+        "titles": [
+          "Звеставанне Пана",
+          "25 сакавіка — урачыстасць Звеставання Пана"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:25.05",
+        "readingDocuments": [
+          "25.05-mm3ohd3e2c0ded698717",
+          "25.05-mm3ohd3ecfba381c8c67",
+          "25.05-mm3ohd3ee19a6df7de77"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марыі Магдалены Паццы, панны",
+          "Св. Бэды Вялебнага, прэзбітэра і доктара Касцёла",
+          "Св. Грыгорыя VII, папы"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:25.08",
+        "readingDocuments": [
+          "25.08-mm3ohd3h51e5b68ce66a",
+          "25.08-mm3ohd3h8596f5f28f62"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Людвіка",
+          "Св. Юзафа Каласанса, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:25.12",
+        "readingDocuments": [
+          "25.12-mm3ohd3kbf7f8643b272",
+          "25.12-mm3ohd3ldb891976ec4c"
+        ],
+        "parsedDocuments": [
+          "25.12-mm3ohd3ldb891976ec4c"
+        ],
+        "parsedSourceIds": [
+          "25.12-mm3ohd3ldb891976ec4c"
+        ],
+        "titles": [
+          "Нараджэнне Пана",
+          "25 снежня — урачыстасць Нараджэння Пана"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:27.01",
+        "readingDocuments": [
+          "27.01-mm3ohd3b328256a8830e",
+          "27.01-mm3ohd3b52a997fb43d5",
+          "27.01-mm3ohd3bf3f1b503be55"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Анжэлы Мэрычы, панны",
+          "Бл. Юрыя Матулевіча, біскупа"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.04",
+        "readingDocuments": [
+          "28.04-mm3ohd3d378bf642473c",
+          "28.04-mm3ohd3d9e623a06f73a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Людвіка Марыі Грыньён дэ Манфора, прэзбітэра",
+          "Св. Пятра Шанэля, прэзбітэра і мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.09",
+        "readingDocuments": [
+          "28.09-mm3ohd3i1b2044d7df95",
+          "28.09-mm3ohd3ia7d1aac20703"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Лаўрэнція Руіса і паплечнікаў, мучанікаў",
+          "Св. Вацлава, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.12",
+        "readingDocuments": [
+          "28.12-mm3ohd3k11ad6b3d00fd",
+          "28.12-mm3ohd3l0f01d7962bb0"
+        ],
+        "parsedDocuments": [
+          "28.12-mm3ohd3l0f01d7962bb0"
+        ],
+        "parsedSourceIds": [
+          "28.12-mm3ohd3l0f01d7962bb0"
+        ],
+        "titles": [
+          "Св. Немаўлят, мучанікаў",
+          "28 снежня — свята святых Немаўлят"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:29.04",
+        "readingDocuments": [
+          "29.04-mm3ohd3d56ec72e3f3dc",
+          "29.04-mm3ohd3m74e338dfbc9e"
+        ],
+        "parsedDocuments": [
+          "29.04-mm3ohd3m74e338dfbc9e"
+        ],
+        "parsedSourceIds": [
+          "29.04-mm3ohd3m74e338dfbc9e"
+        ],
+        "titles": [
+          "Св. Кацярыны Сіенскай, панны і доктара Касцёла, апякункі Еўропы",
+          "29 красавіка — свята св. Кацярыны Сіенскай, панны і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:29.06",
+        "readingDocuments": [
+          "29.06-mm3ohd3f008500eca3f8",
+          "29.06-mm3ohd3md4561ea67335"
+        ],
+        "parsedDocuments": [
+          "29.06-mm3ohd3md4561ea67335_1",
+          "29.06-mm3ohd3md4561ea67335_2"
+        ],
+        "parsedSourceIds": [
+          "29.06-mm3ohd3md4561ea67335"
+        ],
+        "titles": [
+          "Св. Пятра і Паўла, апосталаў",
+          "29 чэрвеня — урачыстасць святых Пятра и Паўла, апосталаў"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:29.09",
+        "readingDocuments": [
+          "29.09-mm3ohd3ib8c684c30d18",
+          "29.09-mm3ohd3mcd126ca10d90"
+        ],
+        "parsedDocuments": [
+          "29.09-mm3ohd3mcd126ca10d90"
+        ],
+        "parsedSourceIds": [
+          "29.09-mm3ohd3mcd126ca10d90"
+        ],
+        "titles": [
+          "Св. Міхала Архангёла, Св. Габрыэля і Рафаіла, архангёлаў",
+          "29 верасня — свята св. Міхала Арханёла (апекуна Мінска-Магілёўскай правінцыі Касцёла), св. Габрыэля і Рафала, арханёлаў"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:30.11",
+        "readingDocuments": [
+          "30.11-mm3ohd3kca67abb4aa94",
+          "30.11-mm3ohd3mca2c2b7ccb35"
+        ],
+        "parsedDocuments": [
+          "30.11-mm3ohd3mca2c2b7ccb35"
+        ],
+        "parsedSourceIds": [
+          "30.11-mm3ohd3mca2c2b7ccb35"
+        ],
+        "titles": [
+          "Св. Андрэя, апостала",
+          "30 лістапада — свята св. Андрэя Апостала"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      },
+      {
+        "selector": "date:31.05",
+        "readingDocuments": [
+          "31.05-mm3ohd3e0f77d92ec49f",
+          "31.05-mm3ohd3m8eabdb500a2f"
+        ],
+        "parsedDocuments": [
+          "31.05-mm3ohd3m8eabdb500a2f"
+        ],
+        "parsedSourceIds": [
+          "31.05-mm3ohd3m8eabdb500a2f"
+        ],
+        "titles": [
+          "Адведзіны Найсв. Панны Марыі",
+          "31 мая — свята Адведзінаў Найсвяцейшай Панны Марыі"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 1
+      }
+    ],
+    "selectorsWithReadingTextButNoParsedData": [
+      {
+        "selector": "date:01.05",
+        "readingDocuments": [
+          "01.05-mm3ohd3d4904321c7ab1",
+          "01.05-mm3ohd3da6aa15f52ef9"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Гадавіна пасвячэння катэдральнага касцёла",
+          "Св. Юзафа рамесніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:01.06",
+        "readingDocuments": [
+          "01.06-mm3ohd3f878e01628c9f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Юстына, мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:01.08",
+        "readingDocuments": [
+          "01.08-mm3ohd3g28211369afa5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Альфонса Марыі Лігуоры, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:01.10",
+        "readingDocuments": [
+          "01.10-mm3ohd3i6644342aa426"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Тэрэзы ад Дзіцятка Езус, панны і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:02.04",
+        "readingDocuments": [
+          "02.04-mm3ohd3c9ad0295304b7"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Францішка з Паолы, пустэльніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:02.05",
+        "readingDocuments": [
+          "02.05-mm3ohd3de79a42598ad5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Атаназія, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:02.06",
+        "readingDocuments": [
+          "02.06-mm3ohd3ffdb49673c266"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марцэліна і Пятра, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:02.08",
+        "readingDocuments": [
+          "02.08-mm3ohd3g3d4b81ab3748",
+          "02.08-mm3ohd3gda9f6af5d556"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Эўзэбія Вэрчэльскага, біскупа",
+          "Св. Пятра Юліяна Эймарда, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:02.10",
+        "readingDocuments": [
+          "02.10-mm3ohd3ib320d7108930"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Анёлаў Ахоўнікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:03.02",
+        "readingDocuments": [
+          "03.02-mm3ohd3b8bfe4110b5cc",
+          "03.02-mm3ohd3bb94da2c6626f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Блажэя, біскупа і мучаніка",
+          "Св. Анзгара (Аскара), біскупа"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:03.06",
+        "readingDocuments": [
+          "03.06-mm3ohd3f31f2330ee238"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Караля Луангі і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:03.09",
+        "readingDocuments": [
+          "03.09-mm3ohd3i48b06b92b01a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Грыгорыя Вялікага, папы і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:03.11",
+        "readingDocuments": [
+          "03.11-mm3ohd3jaa66c1706a23"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марціна дэ Порэса, законніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:03.12",
+        "readingDocuments": [
+          "03.12-mm3ohd3k104696878364"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Францішка Ксавэрыя, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.03",
+        "readingDocuments": [
+          "04.03-mm3ohd3c22ee1df79404",
+          "04.03-mm3ohd3cdd42b61c50d0"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Казіміра, дадатковага апекуна дыяцэзіі",
+          "Св. Казіміра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.04",
+        "readingDocuments": [
+          "04.04-mm3ohd3ce41bca29125e"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ізыдора, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.07",
+        "readingDocuments": [
+          "04.07-mm3ohd3g14cac6182e94"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Альжбеты Партугальскай"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.08",
+        "readingDocuments": [
+          "04.08-mm3ohd3h4dccaa7b796f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Марыі Віянэя, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.09",
+        "readingDocuments": [
+          "04.09-mm3ohd3i8398cfa2dabc"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.10",
+        "readingDocuments": [
+          "04.10-mm3ohd3i45f94c457881"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Францішка Асізскага"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.11",
+        "readingDocuments": [
+          "04.11-mm3ohd3j462a9af3faf7"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Караля Барамэя, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:04.12",
+        "readingDocuments": [
+          "04.12-mm3ohd3k8c679e254d3b",
+          "04.12-mm3ohd3k9a205d3d43f5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Дамаскіна, прэзбітэра і доктара Касцёла",
+          "Гадавіна пасвячэння катэдральнага касцёла"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.02",
+        "readingDocuments": [
+          "05.02-mm3ohd3b3cf35e6d2cab"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Агаты, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.04",
+        "readingDocuments": [
+          "05.04-mm3ohd3cf98bbb248f51"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Вінцэнта Фэрэра, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.06",
+        "readingDocuments": [
+          "05.06-mm3ohd3fd234909d590a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Баніфацыя, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.07",
+        "readingDocuments": [
+          "05.07-mm3ohd3g76db60ecb58e",
+          "05.07-mm3ohd3ga5efc33ebc12"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Антонія Марыі Дзаккарыя, прэзбітэра",
+          "Найсв. Панны Марыі Тракельскай"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:05.08",
+        "readingDocuments": [
+          "05.08-mm3ohd3h33b0de4663f2",
+          "05.08-mm3ohd3hc5dfabd28511"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі Кангрэгацкай (Студэнцкай)",
+          "Гадавіна пасвячэння рымскай базылікі Найсв. Панны Марыі"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.02",
+        "readingDocuments": [
+          "06.02-mm3ohd3b8dd24c4f4510"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Паўла Мікі і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.06",
+        "readingDocuments": [
+          "06.06-mm3ohd3f6f0c2a585c8b",
+          "06.06-mm3ohd3fcb0371fd4082"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Баніфацыя, біскупа і мучаніка",
+          "Св. Норбэрта, біскупа"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.07",
+        "readingDocuments": [
+          "06.07-mm3ohd3gafc74afffb94"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марыі Гарэцці, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.10",
+        "readingDocuments": [
+          "06.10-mm3ohd3ifc7a64456cbe"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Бруна, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:06.12",
+        "readingDocuments": [
+          "06.12-mm3ohd3kc5e1cd4f9638"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Мікалая, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:07.03",
+        "readingDocuments": [
+          "07.03-mm3ohd3c52ace9dd8cc2"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пэрпэтуі і Фэліцыты, мучаніц"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:07.04",
+        "readingDocuments": [
+          "07.04-mm3ohd3cb3289a085efe"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Жана Батыста Сальскага, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:07.08",
+        "readingDocuments": [
+          "07.08-mm3ohd3h5ccdd5c692ff",
+          "07.08-mm3ohd3h8910c7833250"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Сікста ІІ, папы, і паплечнікаў, мучанікаў",
+          "Св. Каятана, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:07.10",
+        "readingDocuments": [
+          "07.10-mm3ohd3i58756989557d"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі Ружанцовай"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:07.12",
+        "readingDocuments": [
+          "07.12-mm3ohd3ka2fd61c4bfa9"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Амброзія, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:08.02",
+        "readingDocuments": [
+          "08.02-mm3ohd3c9d2b66845769",
+          "08.02-mm3ohd3cf25b0c8fc7d7"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Гераніма Эміліяні",
+          "Св. Жазэфіны Бакіты, панны"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:08.03",
+        "readingDocuments": [
+          "08.03-mm3ohd3cf5172ee1a00d"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Божага, законніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:08.08",
+        "readingDocuments": [
+          "08.08-mm3ohd3hf1d19c710a17"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Дамініка, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.03",
+        "readingDocuments": [
+          "09.03-mm3ohd3c0e3ea4e021ca"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Францішкі Рымскай, законніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.06",
+        "readingDocuments": [
+          "09.06-mm3ohd3f6dd3e89bdabe"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Эфрэма, дыякана і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.07",
+        "readingDocuments": [
+          "09.07-mm3ohd3gd3a15354fabb"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Аўгустына Джао Жонга, прэзбітэра, і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.08",
+        "readingDocuments": [
+          "09.08-mm3ohd3h280f900ab135"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Тэрэзы Бэнэдыкты ад Крыжа (Эдыты Штайн), панны і мучаніцы, апякункі Еўропы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.09",
+        "readingDocuments": [
+          "09.09-mm3ohd3i74cf7159eb0c"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пятра Клявэра, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:09.10",
+        "readingDocuments": [
+          "09.10-mm3ohd3i5c732323a793",
+          "09.10-mm3ohd3jc64f4a08d20f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Дыянісія, біскупа, і паплечнікаў, мучанікаў",
+          "Св. Яна Леанардзі, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:10.02",
+        "readingDocuments": [
+          "10.02-mm3ohd3ce8a43d99e50a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Схалястыкі, панны"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:10.10",
+        "readingDocuments": [
+          "10.10-mm3ohd3j3d2cc38106cf"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Гадавіна пасвячэння катэдральнага касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:10.11",
+        "readingDocuments": [
+          "10.11-mm3ohd3jbfd265d07c7c"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Льва Вялікага, папы і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.02",
+        "readingDocuments": [
+          "11.02-mm3ohd3cfccad93f381e"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі з Люрда"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.04",
+        "readingDocuments": [
+          "11.04-mm3ohd3cb9d4f6468846"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Станіслава, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.06",
+        "readingDocuments": [
+          "11.06-mm3ohd3fdabf46abb186"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Барнабы, апостала"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.08",
+        "readingDocuments": [
+          "11.08-mm3ohd3he08fd38a3ff2"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Клары, панны"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.11",
+        "readingDocuments": [
+          "11.11-mm3ohd3j89394f8ee4d5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марціна Турскага, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:11.12",
+        "readingDocuments": [
+          "11.12-mm3ohd3k2c20b651cae1"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Дамаса І, папы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:12.05",
+        "readingDocuments": [
+          "12.05-mm3ohd3dcaa3ccb63306",
+          "12.05-mm3ohd3defe43c059cee"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Нэрэя і Ахіла, мучанікаў",
+          "Св. Панкрата, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:12.06",
+        "readingDocuments": [
+          "12.06-mm3ohd3f671b3620cc9e"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Бл. Генрыха Глябовіча, прэзбітэра, і паплечнікаў, мучанікаў другой сусветнай вайны"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:12.08",
+        "readingDocuments": [
+          "12.08-mm3ohd3h156d07a61af7"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Жаны Франсуазы дэ Шанталь, законніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:12.09",
+        "readingDocuments": [
+          "12.09-mm3ohd3i4012ef05cf75",
+          "12.09-mm3ohd3i985f08bb1d6f",
+          "12.09-mm3ohd3id2d4de18ebcf"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсвяцейшага Імя Марыі"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.01",
+        "readingDocuments": [
+          "13.01-mm3ohd3acdbc5182d36b"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Гілярыя, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.04",
+        "readingDocuments": [
+          "13.04-mm3ohd3d6e379b602581"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марціна І, папы і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.05",
+        "readingDocuments": [
+          "13.05-mm3ohd3d99b159109171"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі з Фацімы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.06",
+        "readingDocuments": [
+          "13.06-mm3ohd3f573fb228e552"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Антонія Падуанскага, прэзбітэра і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.07",
+        "readingDocuments": [
+          "13.07-mm3ohd3g6d70b442b6f4"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Генрыха"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.08",
+        "readingDocuments": [
+          "13.08-mm3ohd3hb251b13e8980"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пантыяна, папы, і Гіпаліта, прэзбітэра, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.09",
+        "readingDocuments": [
+          "13.09-mm3ohd3i1a9199978a61"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Залатавуснага (Хрызастома), біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:13.12",
+        "readingDocuments": [
+          "13.12-mm3ohd3k2f029fe14c84"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Люцыі, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:14.07",
+        "readingDocuments": [
+          "14.07-mm3ohd3g3f2273dbec7c"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Каміла Леліскага, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:14.08",
+        "readingDocuments": [
+          "14.08-mm3ohd3h198a86ee9778",
+          "14.08-mm3ohd3h35d2b0d3d854"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Максімільяна Марыі Кольбэ, прэзбітэра і мучаніка, дадатковага апекуна дыяцэзіі",
+          "Св. Максімільяна Марыі Кольбэ, прэзбітэра і мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:14.10",
+        "readingDocuments": [
+          "14.10-mm3ohd3je27a0659c5cf"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Калікста І, папы і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:14.12",
+        "readingDocuments": [
+          "14.12-mm3ohd3k44aa103d4e3f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна ад Крыжа, прэзбітэра і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:15.02",
+        "readingDocuments": [
+          "15.02-mm3ohd3cec20a7abb779"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Бл. Міхала Сапоцькі, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:15.07",
+        "readingDocuments": [
+          "15.07-mm3ohd3gb0706d9bcd83"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Бонавэнтуры, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:15.09",
+        "readingDocuments": [
+          "15.09-mm3ohd3i99d4472b5c64"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі Балеснай"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:15.10",
+        "readingDocuments": [
+          "15.10-mm3ohd3j6ecf0b8a3a99"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Тэрэзы ад Езуса, панны і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:15.11",
+        "readingDocuments": [
+          "15.11-mm3ohd3j8f8cd41d95e3"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Альбэрта Вялікага, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.03",
+        "readingDocuments": [
+          "16.03-mm3ohd3c27920091d883"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Гадавіна пасвячэння катэдральнага касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.05",
+        "readingDocuments": [
+          "16.05-mm3ohd3d2d095100142b",
+          "16.05-mm3ohd3d54097530e6b8",
+          "16.05-mm3ohd3db7b15f5d4898",
+          "16.05-mm3ohd3efdc2f755339e"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Андрэя Баболі, прэзбітэра і мучаніка, апекуна дыяцэзіі",
+          "Св. Андрэя Баболі, прэзбітэра і мучаніка"
+        ],
+        "readingDocumentsWithText": 4,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.07",
+        "readingDocuments": [
+          "16.07-mm3ohd3g4931497d1f06",
+          "16.07-mm3ohd3g4e5b9495d56c",
+          "16.07-mm3ohd3g50aa60772d02"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі з гары Кармэль"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.08",
+        "readingDocuments": [
+          "16.08-mm3ohd3he5ce5ffbfa67"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Стэфана Венгерскага"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.09",
+        "readingDocuments": [
+          "16.09-mm3ohd3i941e40328f9a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Карнэлія, папы, і Кіпрыяна, біскупа, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.10",
+        "readingDocuments": [
+          "16.10-mm3ohd3j598e6bf3ef96",
+          "16.10-mm3ohd3jb272df5d19fa"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ядвігі, законніцы",
+          "Св. Маргарыты Марыі Алякок, панны"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:16.11",
+        "readingDocuments": [
+          "16.11-mm3ohd3j278c3b0db805",
+          "16.11-mm3ohd3j3982ddbbb762",
+          "16.11-mm3ohd3j9ece9b5aff0a",
+          "16.11-mm3ohd3jd4bf2ecfca24",
+          "16.11-mm3ohd3jdacffe045999",
+          "16.11-mm3ohd3k326ed09f74ff"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Гертруды, панны",
+          "Св. Маргарыты Шатландскай",
+          "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай), галоўнай апякункі дыяцэзіі",
+          "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)"
+        ],
+        "readingDocumentsWithText": 6,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.01",
+        "readingDocuments": [
+          "17.01-mm3ohd3a2d180a627663"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Антонія, абата"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.02",
+        "readingDocuments": [
+          "17.02-mm3ohd3c7da622d10d16"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. сямі Заснавальнікаў ордэна Слугаў Найсв. Панны Марыі (сэрвітаў)"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.03",
+        "readingDocuments": [
+          "17.03-mm3ohd3cb7343cf93849"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Патрыка, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.09",
+        "readingDocuments": [
+          "17.09-mm3ohd3i2df69f599167"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Робэрта Бэлярміна, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.10",
+        "readingDocuments": [
+          "17.10-mm3ohd3jaa1ebfe7a4c4"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ігнацыя з Антыёхіі, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:17.11",
+        "readingDocuments": [
+          "17.11-mm3ohd3k3895d9a27777"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Альжбеты Венгерскай, законніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:18.03",
+        "readingDocuments": [
+          "18.03-mm3ohd3c6b728d13e670"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Кірыла Ерузалемскага, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:18.05",
+        "readingDocuments": [
+          "18.05-mm3ohd3ef642c74972e6"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна І, папы і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:18.09",
+        "readingDocuments": [
+          "18.09-mm3ohd3i3db2a4203ec1",
+          "18.09-mm3ohd3i46d32b096568",
+          "18.09-mm3ohd3ib161a029ce97"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Станіслава Косткі, законніка"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:18.11",
+        "readingDocuments": [
+          "18.11-mm3ohd3k11deb1e709e4"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Гадавіна пасвячэння рымскіх базылік св. апосталаў Пятра і Паўла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:19.06",
+        "readingDocuments": [
+          "19.06-mm3ohd3f19499ffb1045"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Рамуальда, абата"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:19.08",
+        "readingDocuments": [
+          "19.08-mm3ohd3h8da170948e3d"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Эда, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:19.09",
+        "readingDocuments": [
+          "19.09-mm3ohd3i66b21b63667e"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Януарыя, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:19.10",
+        "readingDocuments": [
+          "19.10-mm3ohd3j59985044458f",
+          "19.10-mm3ohd3j8fb24333c1fa"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Жана дэ Брэбёфа і Ісаака Жога, прэзбітэраў, і паплечнікаў, мучанікаў",
+          "Св. Паўла ад Крыжа, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.01",
+        "readingDocuments": [
+          "20.01-mm3ohd3a105d3a3ebd44",
+          "20.01-mm3ohd3b457aa9dfcc23"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Фабіяна, папы і мучаніка",
+          "Св. Себасцьяна, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.05",
+        "readingDocuments": [
+          "20.05-mm3ohd3e6b788917eb56"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Бэрнардына Сіенскага, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.07",
+        "readingDocuments": [
+          "20.07-mm3ohd3g890265b2865a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Апалінарыя, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.08",
+        "readingDocuments": [
+          "20.08-mm3ohd3h48244a4ed86c"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Бэрнарда, абата і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.09",
+        "readingDocuments": [
+          "20.09-mm3ohd3id79c197612a5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Андрэя Кім Таэгона, прэзбітэра, і Паўла Чон Хасана, і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:20.11",
+        "readingDocuments": [
+          "20.11-mm3ohd3k1aef6a997ac9"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Рафала Каліноўскага, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.01",
+        "readingDocuments": [
+          "21.01-mm3ohd3b45e662548e12"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Агнешкі, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.02",
+        "readingDocuments": [
+          "21.02-mm3ohd3ce95c8ae9d6a0"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пятра Дам’яна, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.04",
+        "readingDocuments": [
+          "21.04-mm3ohd3d8f572a4af23c"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Анзэльма, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.05",
+        "readingDocuments": [
+          "21.05-mm3ohd3e14a32236145a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Хрыстафора Магалана, прэзбітэра, і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.06",
+        "readingDocuments": [
+          "21.06-mm3ohd3fc7cf7227510f"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Алаізія Ганзагі, законніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.07",
+        "readingDocuments": [
+          "21.07-mm3ohd3gbb2ae8f6ae16"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Лаўрэнція з Брындызі, прэзбітэра і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.08",
+        "readingDocuments": [
+          "21.08-mm3ohd3h82578548614b"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пія Х, папы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:21.11",
+        "readingDocuments": [
+          "21.11-mm3ohd3k352ea71df77a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Ахвяраванне Найсв. Панны Марыі"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.01",
+        "readingDocuments": [
+          "22.01-mm3ohd3b85eeb935c420"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Вінцэнта, дыякана і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.05",
+        "readingDocuments": [
+          "22.05-mm3ohd3e5ebbdc2300a5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Рыты з Касіі, законніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.06",
+        "readingDocuments": [
+          "22.06-mm3ohd3f156e4a84fd18",
+          "22.06-mm3ohd3fe7959597c9ca"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Паўліна Нольскага, біскупа",
+          "Св. Джона Фішара, біскупа, і Томаса Мора, мучанікаў"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.08",
+        "readingDocuments": [
+          "22.08-mm3ohd3h74557984aa70"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі Каралевы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.10",
+        "readingDocuments": [
+          "22.10-mm3ohd3je40219b7f8bb"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Паўла ІІ, папы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:22.11",
+        "readingDocuments": [
+          "22.11-mm3ohd3kaf0637da2832"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Цэцыліі, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.02",
+        "readingDocuments": [
+          "23.02-mm3ohd3c40c3cf801969"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Палікарпа, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.03",
+        "readingDocuments": [
+          "23.03-mm3ohd3c2546ef5b1d00"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Турыбія Мангравэха, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.04",
+        "readingDocuments": [
+          "23.04-mm3ohd3d24bf1bf26ff4",
+          "23.04-mm3ohd3d5619db032a0b"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Адальбэрта (Войцеха), біскупа і мучаніка",
+          "Св. Юрыя, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.08",
+        "readingDocuments": [
+          "23.08-mm3ohd3h2b75902caaee"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ружы Лімскай, панны"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.09",
+        "readingDocuments": [
+          "23.09-mm3ohd3ib45bf126a2f4"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Піо з П’етрэльчыны, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.10",
+        "readingDocuments": [
+          "23.10-mm3ohd3j53355078bd7b"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Капістрана, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:23.11",
+        "readingDocuments": [
+          "23.11-mm3ohd3k4bf31b975d40",
+          "23.11-mm3ohd3kb93de3a28bb2"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Клімэнта І, папы і мучаніка",
+          "Св. Калюмбана, абата"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:24.01",
+        "readingDocuments": [
+          "24.01-mm3ohd3b7031eb92d2ee"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Францішка Сальскага, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:24.04",
+        "readingDocuments": [
+          "24.04-mm3ohd3de92354ecbfdd"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Фідэля Сігмарынгенскага, прэзбітэра і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:24.07",
+        "readingDocuments": [
+          "24.07-mm3ohd3g77f049af80f1"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Шарбэля Маклуфа, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:24.10",
+        "readingDocuments": [
+          "24.10-mm3ohd3j7b452d101d90"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Антонія Марыі Клярэта, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:24.11",
+        "readingDocuments": [
+          "24.11-mm3ohd3k856a10c00700"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Андрэя Зунг Лака, прэзбітэра, і паплечнікаў, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:25.05",
+        "readingDocuments": [
+          "25.05-mm3ohd3e2c0ded698717",
+          "25.05-mm3ohd3ecfba381c8c67",
+          "25.05-mm3ohd3ee19a6df7de77"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марыі Магдалены Паццы, панны",
+          "Св. Бэды Вялебнага, прэзбітэра і доктара Касцёла",
+          "Св. Грыгорыя VII, папы"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:25.08",
+        "readingDocuments": [
+          "25.08-mm3ohd3h51e5b68ce66a",
+          "25.08-mm3ohd3h8596f5f28f62"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Людвіка",
+          "Св. Юзафа Каласанса, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:25.11",
+        "readingDocuments": [
+          "25.11-mm3ohd3keb48cf6c3ab1"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Кацярыны Александрыйскай, панны і мучаніцы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.01",
+        "readingDocuments": [
+          "26.01-mm3ohd3b34d2adc616cf"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Цімафея і Ціта, біскупаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.05",
+        "readingDocuments": [
+          "26.05-mm3ohd3efc3d761dcb49"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Філіпа Нэры, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.07",
+        "readingDocuments": [
+          "26.07-mm3ohd3g52352b5dc00a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яўхіма і Ганны, бацькоў Найсв. Панны Марыі"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.08",
+        "readingDocuments": [
+          "26.08-mm3ohd3h1e28dbc4ac04",
+          "26.08-mm3ohd3i1db836654548",
+          "26.08-mm3ohd3i5b1a41514185"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Найсв. Панны Марыі Чэнстахоўскай"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.09",
+        "readingDocuments": [
+          "26.09-mm3ohd3i66aac69b6ea6"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Космы і Дам’яна, мучанікаў"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:26.10",
+        "readingDocuments": [
+          "26.10-mm3ohd3j8836643012a8"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Бл. Цэліны Бажэцкай"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:27.01",
+        "readingDocuments": [
+          "27.01-mm3ohd3b328256a8830e",
+          "27.01-mm3ohd3b52a997fb43d5",
+          "27.01-mm3ohd3bf3f1b503be55"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Анжэлы Мэрычы, панны",
+          "Бл. Юрыя Матулевіча, біскупа"
+        ],
+        "readingDocumentsWithText": 3,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:27.05",
+        "readingDocuments": [
+          "27.05-mm3ohd3ec112273fdea7"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Аўгустына Кэнтэрберыйскага, біскупа"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:27.06",
+        "readingDocuments": [
+          "27.06-mm3ohd3f7d6072e48a0a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Кірыла Александрыйскага, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:27.08",
+        "readingDocuments": [
+          "27.08-mm3ohd3i8a7ef357e9d1"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Монікі"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:27.09",
+        "readingDocuments": [
+          "27.09-mm3ohd3ieb94f65eafba"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Вінцэнта дэ Поля, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.01",
+        "readingDocuments": [
+          "28.01-mm3ohd3bf116315eae27"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Тамаша Аквінскага, прэзбітэра і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.04",
+        "readingDocuments": [
+          "28.04-mm3ohd3d378bf642473c",
+          "28.04-mm3ohd3d9e623a06f73a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Людвіка Марыі Грыньён дэ Манфора, прэзбітэра",
+          "Св. Пятра Шанэля, прэзбітэра і мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.06",
+        "readingDocuments": [
+          "28.06-mm3ohd3f92c8a9371cb8"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ірэнэя, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.08",
+        "readingDocuments": [
+          "28.08-mm3ohd3i226ed9a11198"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Аўгустына, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:28.09",
+        "readingDocuments": [
+          "28.09-mm3ohd3i1b2044d7df95",
+          "28.09-mm3ohd3ia7d1aac20703"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Лаўрэнція Руіса і паплечнікаў, мучанікаў",
+          "Св. Вацлава, мучаніка"
+        ],
+        "readingDocumentsWithText": 2,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:29.01",
+        "readingDocuments": [
+          "29.01-mm3ohd3b37b19e5bef6a"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Бл. Баляславы Марыі Лямэнт, панны"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:29.07",
+        "readingDocuments": [
+          "29.07-mm3ohd3gc937ef31d83b"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Марты"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:29.08",
+        "readingDocuments": [
+          "29.08-mm3ohd3id399ad3449ef"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Мучаніцтва св. Яна Хрысціцеля"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:29.12",
+        "readingDocuments": [
+          "29.12-mm3ohd3k985e9d2785ff"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Томаса Бэкета, біскупа і мучаніка"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:30.04",
+        "readingDocuments": [
+          "30.04-mm3ohd3d09c167d7f6df"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пія V, папы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:30.06",
+        "readingDocuments": [
+          "30.06-mm3ohd3f982bc1966dd5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Першамучанікаў Рымскага Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:30.07",
+        "readingDocuments": [
+          "30.07-mm3ohd3gd6f1514bb2f5"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Пятра Хрызалога, біскупа і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:30.09",
+        "readingDocuments": [
+          "30.09-mm3ohd3if6ba3ac86584"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Гераніма, прэзбітэра і доктара Касцёла"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:31.01",
+        "readingDocuments": [
+          "31.01-mm3ohd3b95efffb34a63"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Яна Боска, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:31.07",
+        "readingDocuments": [
+          "31.07-mm3ohd3gc908de5e8093"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Ігнацыя Лаёлы, прэзбітэра"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      },
+      {
+        "selector": "date:31.12",
+        "readingDocuments": [
+          "31.12-mm3ohd3k0a928d5da6ed"
+        ],
+        "parsedDocuments": [],
+        "parsedSourceIds": [],
+        "titles": [
+          "Св. Сільвэстра І, папы"
+        ],
+        "readingDocumentsWithText": 1,
+        "readingDocumentsWithGospelHeading": 0
+      }
+    ],
+    "parsedDocumentsWithUnknownSourceId": []
+  },
+  "withoutSelector": {
+    "readings": [],
+    "parsedData": []
+  }
+}

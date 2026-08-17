@@ -1,0 +1,89 @@
+{
+  "generatedAt": "2026-08-17T22:10:50.660Z",
+  "collection": "fixedDays",
+  "mode": "write",
+  "overwrite": false,
+  "documentCount": 13,
+  "fieldsPerDocument": 77,
+  "existingIdsBefore": [],
+  "verification": [
+    {
+      "id": "feast-ascension",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-ash",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-buptismofthelord",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-christking",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-christthehighpriest",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-corpuschristi",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-eastersunday",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-heartofjesus",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-heartofmary",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-holyfamily",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-palmsunday",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-pentecost",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    },
+    {
+      "id": "feast-trinity",
+      "existsBefore": false,
+      "existsAfter": true,
+      "matchesLocal": true
+    }
+  ]
+}

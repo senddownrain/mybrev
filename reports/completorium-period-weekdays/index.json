@@ -1,0 +1,66 @@
+{
+  "generatedAt": "2026-08-17T19:03:12.680Z",
+  "sourceReport": "C:\\Users\\User\\Documents\\GitHub\\mybrev\\reports\\completorium-variations.json",
+  "outputDirectory": "C:\\Users\\User\\Documents\\GitHub\\mybrev\\reports\\completorium-period-weekdays",
+  "reviewFile": "review.json",
+  "reviewItems": 32,
+  "duplicatePeriodKeys": 3,
+  "files": [
+    {
+      "file": "day-1-sunday.json",
+      "periodDocuments": 48,
+      "periods": 4,
+      "variants": 12,
+      "reviewVariants": 8,
+      "duplicatePeriodKeys": 2
+    },
+    {
+      "file": "day-2-monday.json",
+      "periodDocuments": 48,
+      "periods": 5,
+      "variants": 10,
+      "reviewVariants": 5,
+      "duplicatePeriodKeys": 0
+    },
+    {
+      "file": "day-3-tuesday.json",
+      "periodDocuments": 48,
+      "periods": 5,
+      "variants": 8,
+      "reviewVariants": 3,
+      "duplicatePeriodKeys": 0
+    },
+    {
+      "file": "day-4-wednesday.json",
+      "periodDocuments": 46,
+      "periods": 6,
+      "variants": 11,
+      "reviewVariants": 4,
+      "duplicatePeriodKeys": 0
+    },
+    {
+      "file": "day-5-thursday.json",
+      "periodDocuments": 49,
+      "periods": 6,
+      "variants": 10,
+      "reviewVariants": 4,
+      "duplicatePeriodKeys": 0
+    },
+    {
+      "file": "day-6-friday.json",
+      "periodDocuments": 51,
+      "periods": 6,
+      "variants": 11,
+      "reviewVariants": 4,
+      "duplicatePeriodKeys": 0
+    },
+    {
+      "file": "day-7-saturday.json",
+      "periodDocuments": 51,
+      "periods": 6,
+      "variants": 10,
+      "reviewVariants": 4,
+      "duplicatePeriodKeys": 1
+    }
+  ]
+}
