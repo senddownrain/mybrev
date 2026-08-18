@@ -96,7 +96,8 @@ export function normalizeReading(data) {
   if (normalized.feastDate !== undefined) delete normalized.feastDate;
 
   if (normalized._feast) {
-    normalized._feast = normalized._feast.toLowerCase().trim();
+    const feast = normalized._feast.toLowerCase().trim();
+    normalized._feast = feast.startsWith('feast-') ? feast : `feast-${feast}`;
   }
 
   if (normalized._periodWeekNumber !== undefined) {

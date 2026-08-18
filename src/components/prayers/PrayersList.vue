@@ -126,7 +126,7 @@ const { prayers, isLoading, getTitle, getText, error, deletePrayer } = usePrayer
 const authStore = useAuthStore();
 const settings = useSettingsStore();
 const { notifySuccess, notifyError } = useNotifier();
-const { debouncedSearchQuery, selectedTags, selectedCategory } = usePrayersFilters();
+const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory } = usePrayersFilters();
 
 const deleteDialogOpen = ref(false);
 const prayerToDelete = ref(null);

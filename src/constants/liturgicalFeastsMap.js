@@ -5,21 +5,21 @@
  */
 
 export const FEAST_NAME_MAP = {
-  holyFamily: 'holyfamily',
-  baptismOfLord: 'buptismofthelord',
-  holyTrinity: 'trinity',
-  christKing: 'christking',
-  sacredHeartOfJesus: 'heartofjesus',
-  immaculateHeartOfMary: 'heartofmary',
-  christTheHighPriest: 'christthehighpriest',
-  ashWednesday: 'ash',
-  easterSunday: 'eastersunday',
-  pentecost: 'pentecost',
-  palmSunday: 'palmsunday',
+  holyFamily: 'feast-holyfamily',
+  baptismOfLord: 'feast-buptismofthelord',
+  holyTrinity: 'feast-trinity',
+  christKing: 'feast-christking',
+  sacredHeartOfJesus: 'feast-heartofjesus',
+  immaculateHeartOfMary: 'feast-heartofmary',
+  christTheHighPriest: 'feast-christthehighpriest',
+  ashWednesday: 'feast-ash',
+  easterSunday: 'feast-eastersunday',
+  pentecost: 'feast-pentecost',
+  palmSunday: 'feast-palmsunday',
   /** @deprecated используйте palmSunday (совпадает с calendar store) */
-  palmsSnday: 'palmsunday',
-  corpusChristi: 'corpuschristi',
-  ascension: 'ascension',
+  palmsSnday: 'feast-palmsunday',
+  corpusChristi: 'feast-corpuschristi',
+  ascension: 'feast-ascension',
 };
 
 /** Алиас для совместимости с кодом, ожидающим feastNameMap */

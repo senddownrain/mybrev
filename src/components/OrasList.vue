@@ -1,15 +1,30 @@
 <template>
   <v-container>
     <div v-if="dayData" class="mb-5">
-      <h1 class="text-h4 font-weight-light text-center mb-1">
-        {{ dayData._feastName || getPeriodTitle(dayData) }}
-      </h1>
-      <p
-        v-if="dayData._feastType || dayData._psalmWeek"
-        class="text-subtitle-1 text-grey text-center"
-      >
-        {{ dayData._feastType ? `Ранг: ${getRankName(dayData._feastType)}` : `Псалтыр: ${dayData._psalmWeek} тыдз.` }}
-      </p>
+      <day-title :day-data="dayData" />
+      <div v-if="templateOptions.length > 1" class="mt-4">
+        <div class="text-caption text-medium-emphasis mb-1">
+          Шаблон літургіі дня
+        </div>
+        <v-btn-toggle
+          :model-value="dayId"
+          color="primary"
+          variant="outlined"
+          mandatory
+          divided
+          class="template-toggle"
+          @update:model-value="selectTemplate"
+        >
+          <v-btn
+            v-for="template in templateOptions"
+            :key="template.id"
+            :value="template.id"
+            class="text-none"
+          >
+            {{ template.label }}
+          </v-btn>
+        </v-btn-toggle>
+      </div>
     </div>
 
     <div v-if="loadingOra" class="text-center mt-16">
@@ -23,13 +38,25 @@
         :to="readingItem ? readingItem.path : undefined"
         :disabled="!readingItem"
         class="mb-4 reading-card"
+        :class="{ 'reading-card--celebration': isCelebration }"
+        :style="readingCardStyle"
         rounded="lg"
         border
       >
         <template #prepend>
-          <v-avatar color="deep-purple-lighten-4" size="40">
-            <v-icon :color="readingItem ? 'deep-purple-darken-3' : 'grey'">mdi-book-open-variant</v-icon>
-          </v-avatar>
+          <div class="reading-avatar-wrap">
+            <v-avatar :color="readingTheme.avatarColor" size="40">
+              <v-icon :color="readingItem ? readingTheme.iconColor : 'grey'">mdi-book-open-variant</v-icon>
+            </v-avatar>
+            <v-icon
+              v-if="isCelebration"
+              class="reading-celebration-mark"
+              color="amber-darken-3"
+              icon="mdi-star-four-points"
+              size="16"
+              :title="celebrationLabel"
+            ></v-icon>
+          </div>
         </template>
         <v-list-item-title class="reading-title">
           Чытанні
@@ -91,15 +118,14 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useDocument } from 'vuefire';
-import { doc } from 'firebase/firestore';
 import moment from '@/utils/moment-be';
 
-import { db } from '@/plugins/firebase';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
+import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { logger } from '@/utils/logger';
-import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP, FEAST_TYPE_LABEL_MAP } from '@/constants/liturgical';
 import { useAuthStore } from '@/stores/auth';
+import DayTitle from '@/components/oraparts/DayTitle.vue';
+import { RANK_LABEL_MAP } from '@/constants/liturgical';
 
 const route = useRoute();
 const router = useRouter();
@@ -110,13 +136,76 @@ const isAdmin = computed(() => authStore.isAdmin);
 const dayId = computed(() => route.params.id);
 const dateParam = computed(() => route.params.day);
 
-const dayDocRef = computed(() => doc(db, 'days', dayId.value));
-const { data: dayData, pending: loadingDay } = useDocument(dayDocRef);
+const { day: dayData, pending: loadingDay } = useResolvedLiturgicalDay();
 
 const readings = ref([]);
+const dayOptions = ref([]);
 const loadingReadings = ref(true);
+const templateOptions = computed(() => (
+  dayOptions.value.find((option) => option.templates?.some((item) => item.id === dayId.value))?.templates || []
+));
 
 const loadingOra = computed(() => loadingDay.value || loadingReadings.value);
+
+const READING_THEMES = Object.freeze({
+  ordinary: {
+    color: '#2e7d32',
+    rgb: '46, 125, 50',
+    avatarColor: 'green-lighten-4',
+    iconColor: 'green-darken-3',
+  },
+  advent: {
+    color: '#6a1b9a',
+    rgb: '106, 27, 154',
+    avatarColor: 'purple-lighten-4',
+    iconColor: 'purple-darken-3',
+  },
+  lent: {
+    color: '#6a1b9a',
+    rgb: '106, 27, 154',
+    avatarColor: 'purple-lighten-4',
+    iconColor: 'purple-darken-3',
+  },
+  holyweek: {
+    color: '#4a148c',
+    rgb: '74, 20, 140',
+    avatarColor: 'purple-lighten-4',
+    iconColor: 'purple-darken-4',
+  },
+  christmas: {
+    color: '#a66f00',
+    rgb: '166, 111, 0',
+    avatarColor: 'amber-lighten-4',
+    iconColor: 'amber-darken-4',
+  },
+  easter: {
+    color: '#a66f00',
+    rgb: '166, 111, 0',
+    avatarColor: 'amber-lighten-4',
+    iconColor: 'amber-darken-4',
+  },
+  default: {
+    color: '#455a64',
+    rgb: '69, 90, 100',
+    avatarColor: 'blue-grey-lighten-4',
+    iconColor: 'blue-grey-darken-2',
+  },
+});
+
+const readingTheme = computed(() => (
+  READING_THEMES[dayData.value?._periodType] || READING_THEMES.default
+));
+
+const celebrationRank = computed(() => dayData.value?._rank || dayData.value?._feastType || '');
+const isCelebration = computed(() => (
+  ['solemnitas', 'solemnity', 'festum', 'feast'].includes(celebrationRank.value)
+));
+const celebrationLabel = computed(() => RANK_LABEL_MAP[celebrationRank.value] || 'Свята');
+
+const readingCardStyle = computed(() => ({
+  '--reading-color': readingTheme.value.color,
+  '--reading-color-rgb': readingTheme.value.rgb,
+}));
 
 const oras = computed(() => [
   {
@@ -127,6 +216,15 @@ const oras = computed(() => [
     path: `/day/${dateParam.value}/ora/${dayId.value}/invitatorium`,
     tag: 'Уступ',
     tagColor: 'blue-grey',
+  },
+  {
+    name: 'morning',
+    title: 'Раніца',
+    subtitle: 'Заклік, Гадзіна чытанняў і Ютрань у адной ранішняй малітве.',
+    icon: 'mdi-weather-sunset-up',
+    path: `/day/${dateParam.value}/ora/${dayId.value}/morning`,
+    tag: 'Раніца',
+    tagColor: 'orange-darken-3',
   },
   {
     name: 'laudes',
@@ -208,15 +306,9 @@ const readingItem = computed(() => {
   };
 });
 
-const getRankName = (rank) => FEAST_TYPE_LABEL_MAP[rank] || rank;
-
-const getPeriodTitle = (day) => {
-  if (!day || !day._periodType) return 'Літургія Гадзінаў';
-
-  const periodName = PERIOD_LABEL_MAP[day._periodType] || 'Перыяд';
-  const dayName = WEEKDAY_LABEL_MAP[day._dayOfWeek] || '';
-
-  return `${periodName}, ${day._periodWeekNumber} тыдзень, ${dayName}`;
+const selectTemplate = (id) => {
+  if (!id || id === dayId.value) return;
+  router.replace({ name: 'oras', params: { day: dateParam.value, id } });
 };
 
 const loadReadings = async () => {
@@ -225,6 +317,7 @@ const loadReadings = async () => {
     readings.value = [];
     const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
     const result = await getLiturgicalContentForDate(mDate.toDate());
+    dayOptions.value = Array.isArray(result.dayOptions) ? result.dayOptions : [];
     readings.value = Array.isArray(result.itemsReadings)
       ? result.itemsReadings
       : [];
@@ -276,16 +369,48 @@ watch(dateParam, (newDateParam) => {
 
 <style scoped>
 .reading-card {
-  background-color: rgba(103, 58, 183, 0.04); /* лёгкі фіялетавы фон */
+  border-inline-start: 3px solid var(--reading-color) !important;
+  background-color: rgba(var(--reading-color-rgb), 0.045);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .reading-card:hover {
-  background-color: rgba(103, 58, 183, 0.08);
+  background-color: rgba(var(--reading-color-rgb), 0.09);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
+.reading-card--celebration {
+  border-color: rgba(183, 128, 0, 0.5) !important;
+  border-inline-start-color: var(--reading-color) !important;
+  background: linear-gradient(
+    120deg,
+    rgba(var(--reading-color-rgb), 0.07),
+    rgba(255, 193, 7, 0.12)
+  );
+  box-shadow: inset 0 0 0 1px rgba(255, 193, 7, 0.12);
+}
+
+.reading-card--celebration:hover {
+  background: linear-gradient(
+    120deg,
+    rgba(var(--reading-color-rgb), 0.12),
+    rgba(255, 193, 7, 0.17)
+  );
+}
+
+.reading-avatar-wrap {
+  position: relative;
+}
+
+.reading-celebration-mark {
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+}
+
 .reading-title {
+  color: var(--reading-color);
   font-weight: 500;
   font-size: 1.05rem;
 }
@@ -293,6 +418,27 @@ watch(dateParam, (newDateParam) => {
 .reading-subtitle {
   font-size: 0.9rem;
   opacity: 0.8;
+}
+
+.template-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: auto !important;
+}
+
+.template-toggle :deep(.v-btn) {
+  flex: 1 1 auto;
+  min-height: 46px;
+  height: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.template-toggle :deep(.v-btn__content) {
+  line-height: 1.35;
+  white-space: normal;
+  text-align: center;
 }
 
 /* на маленьких экранах чуть компактнее */

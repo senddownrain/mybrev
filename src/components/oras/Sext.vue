@@ -2,15 +2,14 @@
     <v-container  class="prayer-content-area">
         <v-row lign="center"
       justify="center">
-      <v-col md="6" lg="6" sm="8" v-if="!pending">
-                <day-title :day="day.weekDay" :date="nowDate"/>
+      <v-col md="6" lg="6" sm="8" v-if="!pending && day">
+                <day-title :day-data="day" />
                 <intro :title="name" />
-                <hymnus :text="day[`sext${num}Hymn`]" />
-                <psalms :ant1="day[`sext${psalmDb}Ant1`]" :ant2="day[`sext${psalmDb}Ant2`]" :ant3="day[`sext${psalmDb}Ant3`]" 
-                :ps1="day[`sext${psalmDb}Ps1`]"
-                    :ps2="day[`sext${psalmDb}Ps2`]" :ps3="day[`sext${psalmDb}Ps3`]" />
-                <reading :text="day[`sext${num}R`]" />
-                <last-prayer :text="day[`sext${num}Pr`]" />
+                <hymnus :text="daytimeField('Hymn')" />
+                <psalms :ant1="daytimeField('Ant1')" :ant2="daytimeField('Ant2')" :ant3="daytimeField('Ant3')"
+                    :ps1="daytimeField('Ps1')" :ps2="daytimeField('Ps2')" :ps3="daytimeField('Ps3')" />
+                <reading :text="daytimeField('R')" />
+                <last-prayer :text="daytimeField('Pr')" />
                 <end-of-sext/>
             </v-col>
         </v-row>
@@ -22,12 +21,7 @@
 </template>
 <script setup>
 
-import { ref } from 'vue'
-import moment from '@/utils/moment-be';
-
-import { useRoute } from 'vue-router'
-import { useCollection, useFirestore, useDocument } from 'vuefire'
-import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
 import Intro from '@/components/oraparts/Intro.vue';
 import Psalms from '@/components/oraparts/Psalms.vue';
@@ -35,22 +29,12 @@ import Reading from '@/components/oraparts/Reading.vue';
 import LastPrayer from '@/components/oraparts/LastPrayer.vue';
 import EndOfSext from '@/components/oraparts/EndOfSext.vue';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
+import { getDaytimeHourField } from '@/utils/liturgicalDayResolution';
 
-const db = useFirestore()
-
-//const days = useCollection(query(collection(db, 'days')))
-//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
-
-const route = useRoute()
-const docRef = doc(db, "days", route.params.id);
-var { data: day, pending } = useDocument(docRef)
-
-let [d, m, y] = route.params.day.split('-').map(Number);
-const originDate = new Date(y, m - 1, d) 
-const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+const { day, pending } = useResolvedLiturgicalDay();
 
 const name = "МАЛІТВА АПОЎДНІ"
 const num = 2 // нумар палудневай малітвы
-const psalmDb = 1 // все псальмы одинаковые, храняться в первом из дневных часов
+const daytimeField = (suffix) => getDaytimeHourField(day.value, num, suffix);
 
 </script>

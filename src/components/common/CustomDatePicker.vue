@@ -1,27 +1,26 @@
 <template>
   <div class="custom-date-picker">
-    <!-- Header с месяцем и годом -->
-    <v-sheet :color="color" class="d-flex align-center justify-space-between pa-2">
+    <div class="calendar-header">
       <v-btn
         v-if="!hideHeader"
-        icon
+        icon="mdi-chevron-left"
         variant="text"
-        size="small"
+        size="default"
+        class="month-nav-btn"
+        aria-label="Папярэдні месяц"
         @click="previousMonth"
-      >
-        <v-icon>mdi-chevron-left</v-icon>
-      </v-btn>
-      <div v-else></div>
+      />
+      <div v-else aria-hidden="true"></div>
       
-      <div class="d-flex align-center justify-center gap-1 flex-1">
+      <div class="calendar-period">
         <v-select
           v-model="selectedMonth"
           :items="months"
           variant="plain"
           density="compact"
           hide-details
-          class="month-select text-h6"
-          style="max-width: 140px;"
+          class="month-select"
+          aria-label="Месяц"
           @update:model-value="onMonthChange"
         ></v-select>
         
@@ -31,63 +30,66 @@
           variant="plain"
           density="compact"
           hide-details
-          class="year-select text-h6"
-          style="max-width: 80px;"
+          class="year-select"
+          aria-label="Год"
           @update:model-value="onYearChange"
         ></v-select>
       </div>
       
       <v-btn
         v-if="!hideHeader"
-        icon
+        icon="mdi-chevron-right"
         variant="text"
-        size="small"
+        size="default"
+        class="month-nav-btn"
+        aria-label="Наступны месяц"
         @click="nextMonth"
-      >
-        <v-icon>mdi-chevron-right</v-icon>
-      </v-btn>
-      <div v-else></div>
-    </v-sheet>
+      />
+      <div v-else aria-hidden="true"></div>
+    </div>
 
-    <!-- Дни недели -->
-    <v-sheet class="d-flex">
+    <div class="weekday-row">
       <div
-        v-for="day in weekDays"
-        :key="day"
+        v-for="(day, index) in weekDays"
+        :key="`${day}-${index}`"
         class="weekday-header text-center"
-        :style="{ width: `${100/7}%` }"
+        :class="{ 'weekend': index > 4 }"
       >
-        <div class="text-caption font-weight-medium pa-2">{{ day }}</div>
+        {{ day }}
       </div>
-    </v-sheet>
+    </div>
 
-    <!-- Календарная сетка -->
-    <v-sheet>
+    <div class="calendar-grid">
       <div
         v-for="(week, weekIndex) in calendarWeeks"
         :key="weekIndex"
-        class="d-flex"
+        class="calendar-week"
       >
         <div
           v-for="(day, dayIndex) in week"
-          :key="dayIndex"
+          :key="day ? day.format('YYYY-MM-DD') : dayIndex"
           class="calendar-day text-center"
-          :style="{ width: `${100/7}%` }"
         >
           <v-btn
             v-if="day"
-            :variant="isSelected(day) ? 'flat' : 'text'"
+            variant="text"
             :color="isSelected(day) ? color : undefined"
-            :class="{ 'today': isToday(day), 'other-month': !isCurrentMonth(day) }"
-            size="small"
+            :class="{
+              'is-selected': isSelected(day),
+              'is-today': isToday(day),
+              'is-adjacent': !isCurrentMonth(day),
+              'is-weekend': dayIndex > 4
+            }"
+            :aria-label="day.format('D MMMM YYYY')"
+            :aria-pressed="isSelected(day)"
             class="day-btn"
             @click="selectDate(day)"
           >
-            {{ day.date() }}
+            <span>{{ day.date() }}</span>
           </v-btn>
         </div>
       </div>
-    </v-sheet>
+    </div>
   </div>
 </template>
 
@@ -183,19 +185,10 @@ const onYearChange = (year) => {
   selectedYear.value = year
 }
 
-// Текущий месяц и год для заголовка
-const currentMonthText = computed(() => {
-  return currentMonth.value.format('MMMM')
-})
-
-const currentYear = computed(() => {
-  return currentMonth.value.format('YYYY')
-})
-
 // Дни недели на белорусском
 const weekDays = computed(() => {
   const days = []
-  const startDay = props.firstDayOfWeek || 1 // 0 = воскресенье, 1 = понедельник
+  const startDay = props.firstDayOfWeek ?? 1 // 0 = воскресенье, 1 = понедельник
   
   // Moment.js использует: 0 = воскресенье, 1 = понедельник, ..., 6 = суббота
   // Если firstDayOfWeek = 1 (понедельник), начинаем с понедельника (day = 1)
@@ -213,12 +206,11 @@ const weekDays = computed(() => {
 const calendarWeeks = computed(() => {
   const weeks = []
   const start = currentMonth.value.clone().startOf('month')
-  const end = currentMonth.value.clone().endOf('month')
   
   // Находим первый день недели для отображения
   // Moment.js: day() возвращает 0 (воскресенье) до 6 (суббота)
   // firstDayOfWeek: 0 = воскресенье, 1 = понедельник
-  const firstDayOfWeek = props.firstDayOfWeek || 1
+  const firstDayOfWeek = props.firstDayOfWeek ?? 1
   let currentDay = start.clone()
   
   // Переходим к первому дню недели для отображения
@@ -237,20 +229,18 @@ const calendarWeeks = computed(() => {
   
   currentDay.subtract(diff, 'days')
   
-  // Генерируем недели (максимум 6 недель)
-  let weekCount = 0
-  while (weekCount < 6) {
+  // Отрисовываем только недели, которые действительно занимает месяц.
+  const daysInMonth = currentMonth.value.daysInMonth()
+  const weekCount = Math.ceil((diff + daysInMonth) / 7)
+
+  for (let weekIndex = 0; weekIndex < weekCount; weekIndex++) {
     const week = []
-    let hasCurrentMonthDay = false
     
     for (let i = 0; i < 7; i++) {
       const isCurrentMonth = currentDay.isSame(currentMonth.value, 'month')
       
       if (props.showAdjacentMonths || isCurrentMonth) {
         week.push(currentDay.clone())
-        if (isCurrentMonth) {
-          hasCurrentMonthDay = true
-        }
       } else {
         week.push(null)
       }
@@ -258,17 +248,6 @@ const calendarWeeks = computed(() => {
     }
     
     weeks.push(week)
-    weekCount++
-    
-    // Останавливаемся, если не показываем соседние месяцы и прошли весь месяц
-    if (!props.showAdjacentMonths && !hasCurrentMonthDay && currentDay.isAfter(end)) {
-      break
-    }
-    
-    // Останавливаемся, если показываем соседние месяцы и прошли все нужные недели
-    if (props.showAdjacentMonths && weekCount >= 6) {
-      break
-    }
   }
   
   return weeks
@@ -296,6 +275,9 @@ const isCurrentMonth = (day) => {
 // Выбор даты
 const selectDate = (day) => {
   if (!day) return
+  if (!isCurrentMonth(day)) {
+    currentMonth.value = day.clone().startOf('month')
+  }
   emit('update:modelValue', day.toDate())
 }
 
@@ -315,42 +297,125 @@ const nextMonth = () => {
 
 <style scoped>
 .custom-date-picker {
+  width: min(100%, 390px);
   min-width: 300px;
+  padding: 8px 16px 16px;
+  color: rgb(var(--v-theme-on-surface));
 }
 
-.weekday-header {
-  border-bottom: 1px solid rgba(var(--v-border-opacity), var(--v-border-opacity));
+.calendar-header {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 4px;
+  min-height: 64px;
 }
 
-.calendar-day {
-  min-height: 40px;
+.calendar-period {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-right: 1px solid rgba(var(--v-border-opacity), var(--v-border-opacity));
+  gap: 2px;
+  min-width: 0;
 }
 
-.calendar-day:last-child {
-  border-right: none;
+.month-nav-btn {
+  color: rgb(var(--v-theme-primary));
+  background: rgba(var(--v-theme-primary), 0.08);
+}
+
+.weekday-row,
+.calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.weekday-row {
+  margin: 2px 0 6px;
+}
+
+.weekday-header {
+  padding: 8px 0;
+  color: rgba(var(--v-theme-on-surface), 0.56);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.weekday-header.weekend {
+  color: rgba(var(--v-theme-primary), 0.75);
+}
+
+.calendar-grid {
+  display: grid;
+  gap: 2px;
+}
+
+.calendar-week {
+  min-height: 44px;
+}
+
+.calendar-day {
+  min-width: 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .day-btn {
-  min-width: 36px;
-  height: 36px;
+  min-width: 40px !important;
+  width: 40px;
+  height: 40px;
+  padding: 0 !important;
+  border-radius: 50%;
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
-.day-btn.today {
-  font-weight: bold;
+.day-btn:hover {
+  background: rgba(var(--v-theme-primary), 0.09);
+  transform: translateY(-1px);
 }
 
-.day-btn.other-month {
-  opacity: 0.4;
+.day-btn.is-selected {
+  color: rgb(var(--v-theme-on-primary)) !important;
+  background: rgb(var(--v-theme-primary));
+  box-shadow: 0 5px 14px rgba(var(--v-theme-primary), 0.28);
+  font-weight: 700;
+}
+
+.day-btn.is-today:not(.is-selected) {
+  color: rgb(var(--v-theme-primary));
+  background: rgba(var(--v-theme-primary), 0.08);
+  box-shadow: inset 0 0 0 1px rgba(var(--v-theme-primary), 0.48);
+  font-weight: 700;
+}
+
+.day-btn.is-weekend:not(.is-selected):not(.is-today) {
+  color: rgb(var(--v-theme-primary));
+}
+
+.day-btn.is-adjacent {
+  opacity: 0.34;
 }
 
 .month-select,
 .year-select {
   flex: 0 0 auto;
   text-align: center;
+}
+
+.month-select {
+  width: 132px;
+}
+
+.year-select {
+  width: 82px;
 }
 
 .month-select :deep(.v-field),
@@ -367,8 +432,8 @@ const nextMonth = () => {
 
 .month-select :deep(.v-select__selection),
 .year-select :deep(.v-select__selection) {
-  font-size: 1.25rem !important;
-  font-weight: 500 !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
   margin: 0 !important;
   text-align: center !important;
   justify-content: center !important;
@@ -396,6 +461,37 @@ const nextMonth = () => {
   width: 100% !important;
   display: flex !important;
   justify-content: center !important;
+}
+
+.month-select :deep(.v-field__append-inner),
+.year-select :deep(.v-field__append-inner) {
+  opacity: 0.45;
+  padding-inline-start: 2px;
+}
+
+@media (max-width: 360px) {
+  .custom-date-picker {
+    min-width: 280px;
+    padding-inline: 10px;
+  }
+
+  .calendar-header {
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+  }
+
+  .month-select {
+    width: 120px;
+  }
+
+  .year-select {
+    width: 76px;
+  }
+
+  .day-btn {
+    min-width: 36px !important;
+    width: 36px;
+    height: 36px;
+  }
 }
 </style>
 

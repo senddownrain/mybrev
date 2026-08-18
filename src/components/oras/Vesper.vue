@@ -2,8 +2,8 @@
     <v-container  class="prayer-content-area">
         <v-row lign="center"
       justify="center">
-      <v-col md="6" lg="6" sm="8" v-if="!pending">
-                <day-title :day="day.weekDay" :date="nowDate" :feastComment="day.feastComment"/>
+      <v-col md="6" lg="6" sm="8" v-if="!pending && day">
+                <day-title :day-data="day" />
                 <intro title="НЕШПАРЫ" />
                 <hymnus :text="day.vesperHymn" />
                 <psalms :ant1="day.vesperAnt1" :ant2="day.vesperAnt2" :ant3="day.vesperAnt3" :ps1="day.vesperPs1"
@@ -24,12 +24,7 @@
 </template>
 <script setup>
 
-import { ref } from 'vue'
-import moment from '@/utils/moment-be';
-
-import { useRoute } from 'vue-router'
-import { useCollection, useFirestore, useDocument } from 'vuefire'
-import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
 import Intro from '@/components/oraparts/Intro.vue';
 import Psalms from '@/components/oraparts/Psalms.vue';
@@ -42,17 +37,6 @@ import LastPrayer from '@/components/oraparts/LastPrayer.vue';
 import EndOfVesper from '@/components/oraparts/EndOfVesper.vue';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 
-const db = useFirestore()
-
-//const days = useCollection(query(collection(db, 'days')))
-//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
-
-const route = useRoute()
-const docRef = doc(db, "days", route.params.id);
-var { data: day, pending } = useDocument(docRef)
-
-let [d, m, y] = route.params.day.split('-').map(Number);
-const originDate = new Date(y, m - 1, d) 
-const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+const { day, pending } = useResolvedLiturgicalDay();
 
 </script>

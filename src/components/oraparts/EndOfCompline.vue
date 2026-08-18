@@ -14,7 +14,7 @@
 <br>
                 <p><span style="color:red">АНТЫФОНЫ НА ЗАКАНЧЭННЕ ДА НАЙСВЯЦЕЙШАЙ ПАННЫ МАРЫІ</span> </p>
                 <br>
-                <div v-html="ant"></div>
+                <alternative-text :text="ant" aria-label="Выбар антыфоны да Найсвяцейшай Панны Марыі" />
             </v-card-text>
         </v-card>
     </div>
@@ -22,28 +22,9 @@
 
 
 <script setup>
-const props = defineProps({
+import AlternativeText from '@/components/oraparts/AlternativeText.vue';
+
+defineProps({
   ant: String,
-})
-
-
-
-// import { ref } from 'vue'
-// import moment from '@/utils/moment-be';
-
-// import { useRoute } from 'vue-router'
-// import { useCollection, useFirestore, useDocument } from 'vuefire'
-// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
-
-//const db = useFirestore()
-
-//const days = useCollection(query(collection(db, 'days')))
-//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
-
-// const route = useRoute()
-// const docRef = doc(db, "days", route.params.id);
-// var { data: day, pending } = useDocument(docRef)
-
-// const nowDate = moment(Date.now()).format('LL') 
-
+});
 </script>

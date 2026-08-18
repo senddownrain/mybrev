@@ -249,6 +249,7 @@ const routes = [
     
       { path: 'vesper', name: 'vesper', components: { default: () => import('@/components/oras/Vesper.vue'), topNav: OraBarVue } },
       { path: 'invitatorium', name: 'invitatorium', components: { default: () => import('@/components/oras/Invit.vue'), topNav: OraBarVue } },
+      { path: 'morning', name: 'morning', components: { default: () => import('@/components/oras/Morning.vue'), topNav: OraBarVue } },
       { path: 'laudes', name: 'laudes', components: { default: () => import('@/components/oras/Laudes.vue'), topNav: OraBarVue } },
       { path: 'sext', name: 'sext', components: { default: () => import('@/components/oras/Sext.vue'), topNav: OraBarVue } },
       { path: 'non', name: 'non', components: { default: () => import('@/components/oras/Non.vue'), topNav: OraBarVue } },

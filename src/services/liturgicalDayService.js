@@ -1,26 +1,22 @@
-/**
- * Data-access layer for the 'days' Firestore collection.
- * Only Firestore queries and document normalization — no calendar math, no stores.
- */
-import { collection, query, where, getDocs } from 'firebase/firestore';
+/** Firestore access for normalized liturgical days in `fixedDays`. */
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
+import { LITURGICAL_DAYS_COLLECTION } from '@/constants/days';
 import { retryFirestore } from '@/utils/retry';
 import { logger } from '@/utils/logger';
-
-const DAYS_COLLECTION = 'days';
+import {
+  applySeasonalWeekdayAntiphons,
+  getSeasonalDateExceptionId,
+  isChristmasDateExceptionExclusion,
+  isSeasonalDateException,
+  isSeasonalDateDocumentId,
+  resolveDayAgainstPeriod,
+} from '@/utils/liturgicalDayResolution';
 
 function getDaysCollection() {
-  return collection(db, DAYS_COLLECTION);
+  return collection(db, LITURGICAL_DAYS_COLLECTION);
 }
 
-// ---------------------------------------------------------------------------
-// Query builders
-// ---------------------------------------------------------------------------
-
-/**
- * Query days by liturgical period.
- * In 'days', _periodWeekNumber and _dayOfWeek are stored as strings.
- */
 export function getDaysByPeriodQuery(periodType, dayOfWeek, periodWeekNumber) {
   return query(
     getDaysCollection(),
@@ -30,110 +26,129 @@ export function getDaysByPeriodQuery(periodType, dayOfWeek, periodWeekNumber) {
   );
 }
 
-/**
- * Query days by fixed calendar date.
- * @param {string} dateStr - 'D.M' format (e.g. '25.12')
- */
 export function getDaysByFixedDateQuery(dateStr) {
   return query(getDaysCollection(), where('_date', '==', dateStr));
 }
 
-/**
- * Query days by dynamic feast code.
- * @param {string} feastCode - e.g. 'eastersunday', 'pentecost'
- */
 export function getDaysByFeastQuery(feastCode) {
   return query(getDaysCollection(), where('_feast', '==', feastCode));
 }
 
-// ---------------------------------------------------------------------------
-// Service methods
-// ---------------------------------------------------------------------------
+function snapshotToDocs(snapshot) {
+  return snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+}
 
-/**
- * Find a single day document by exact period / week / dayOfWeek.
- * @returns {Promise<Object|null>}
- */
+async function queryDocs(q) {
+  return snapshotToDocs(await retryFirestore(() => getDocs(q)));
+}
+
+async function queryAll(queries) {
+  const results = await Promise.all(queries.map(queryDocs));
+  const merged = new Map();
+  results.flat().forEach((item) => merged.set(item.id, item));
+  return [...merged.values()];
+}
+
 export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
-  const q = getDaysByPeriodQuery(periodType, dayOfWeek, periodWeekNumber);
-  const snapshot = await retryFirestore(() => getDocs(q));
-  if (snapshot.empty) return null;
-  const docSnap = snapshot.docs[0];
-  return { id: docSnap.id, ...docSnap.data() };
+  const variants = await queryAll([
+    getDaysByPeriodQuery(periodType, dayOfWeek, periodWeekNumber),
+    query(
+      getDaysCollection(),
+      where('_periodType', '==', periodType),
+      where('_dayOfWeek', '==', Number(dayOfWeek)),
+      where('_periodWeekNumber', '==', Number(periodWeekNumber)),
+    ),
+  ]);
+  return resolveDayAgainstPeriod(variants[0] || null, null);
 }
 
-/**
- * Fetch all documents in 'days' that have feast data (_feast or _feastType).
- * Used to build the feasts list.
- * @returns {Promise<Object[]>}
- */
 export async function getAllFeastDays() {
-  logger.log('[liturgicalDayService] Loading all feast days');
+  logger.log(`[liturgicalDayService] Loading ${LITURGICAL_DAYS_COLLECTION}`);
   const snapshot = await retryFirestore(() => getDocs(getDaysCollection()));
-  const result = [];
-  const seen = new Set();
-  snapshot.forEach((docSnap) => {
-    const data = docSnap.data();
-    if ((data._feast || data._feastType) && !seen.has(docSnap.id)) {
-      seen.add(docSnap.id);
-      result.push({ id: docSnap.id, ...data });
-    }
-  });
-  logger.log(`[liturgicalDayService] Feast days found: ${result.length}`);
-  return result;
+  return snapshotToDocs(snapshot)
+    .filter((item) => item._feast || item._rank || item._date)
+    .map((item) => resolveDayAgainstPeriod(item, null));
 }
 
-/**
- * Fetch all days matching a date — period, fixed, and dynamic feasts.
- *
- * @param {moment.Moment} mDate
- * @param {{ periodType: string, periodWeek: number, dayOfWeek: number }} context
- * @param {string[]} dynamicFeastCodes - feast codes active on mDate
- * @returns {Promise<{ periodDays: Object[], fixedDays: Object[], dynamicDaysByFeast: Map<string, Object[]> }>}
- */
+async function getSeasonalException(mDate, periodType) {
+  const id = getSeasonalDateExceptionId(mDate, periodType);
+  if (!id) return null;
+  const snapshot = await retryFirestore(() => getDoc(doc(db, LITURGICAL_DAYS_COLLECTION, id)));
+  return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
+}
+
+function dynamicFeastVariants(code) {
+  const normalized = String(code || '').replace(/^feast-/, '');
+  return [...new Set([normalized, `feast-${normalized}`])];
+}
+
+const normalizedFeastCode = (code) => String(code || '').replace(/^feast-/, '');
+
+/** Fetch and resolve all day variants for a calendar date. */
 export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = []) {
-  const queryItems = [];
-
-  if (context.periodType && context.periodWeek !== undefined && context.dayOfWeek) {
-    queryItems.push({
-      type: 'period',
-      q: getDaysByPeriodQuery(context.periodType, context.dayOfWeek, context.periodWeek),
-    });
-  }
-
-  queryItems.push({
-    type: 'fixed',
-    q: getDaysByFixedDateQuery(mDate.format('D.M')),
+  const hasPeriod = context.periodType && context.periodWeek !== undefined && context.dayOfWeek;
+  const exclusiveFeastCode = dynamicFeastCodes
+    .map(normalizedFeastCode)
+    .find((code) => code === 'holyfamily' || code === 'buptismofthelord') || null;
+  const exclusiveFixedDate = isChristmasDateExceptionExclusion(mDate);
+  const periodPromise = hasPeriod
+    ? findDayByPeriod(context.periodType, context.periodWeek, context.dayOfWeek)
+    : Promise.resolve(null);
+  const fixedDateVariants = [...new Set([mDate.format('DD.MM'), mDate.format('D.M')])];
+  const fixedPromise = exclusiveFeastCode
+    ? Promise.resolve([])
+    : queryAll(fixedDateVariants.map(getDaysByFixedDateQuery));
+  const seasonalPromise = exclusiveFeastCode
+    ? Promise.resolve(null)
+    : getSeasonalException(mDate, context.periodType);
+  const dynamicPromises = dynamicFeastCodes.map(async (code) => {
+    const docs = await queryAll(dynamicFeastVariants(code).map(getDaysByFeastQuery));
+    return [code, docs];
   });
 
-  dynamicFeastCodes.forEach((feastCode) => {
-    queryItems.push({ type: 'dynamic', feastCode, q: getDaysByFeastQuery(feastCode) });
-  });
+  const [periodDay, fixedDocs, seasonalDay, dynamicEntries] = await Promise.all([
+    periodPromise,
+    fixedPromise,
+    seasonalPromise,
+    Promise.all(dynamicPromises),
+  ]);
+  const withCalendarContext = (day) => day ? {
+    ...day,
+    _periodType: context.periodType || day._periodType,
+    _periodWeekNumber: context.periodWeek ?? day._periodWeekNumber,
+    _dayOfWeek: context.dayOfWeek ?? day._dayOfWeek,
+  } : null;
+  const resolvedPeriodDay = withCalendarContext(resolveDayAgainstPeriod(periodDay, null));
 
-  const snapshots = await Promise.all(
-    queryItems.map(({ q }) => retryFirestore(() => getDocs(q))),
-  );
+  const hasSeasonalException = isSeasonalDateException(mDate, context.periodType)
+    && Boolean(seasonalDay);
+  const seasonal = hasSeasonalException
+    ? applySeasonalWeekdayAntiphons(
+      withCalendarContext(resolveDayAgainstPeriod(seasonalDay, resolvedPeriodDay, { fillMissing: true })),
+      context.dayOfWeek,
+    )
+    : null;
+  const resolvedFixed = fixedDocs
+    .filter((item) => item.id !== seasonalDay?.id && !isSeasonalDateDocumentId(item.id))
+    .map((item) => withCalendarContext(resolveDayAgainstPeriod(item, resolvedPeriodDay)));
+  if (seasonal) resolvedFixed.unshift(seasonal);
 
-  const result = {
-    periodDays: [],
-    fixedDays: [],
-    dynamicDaysByFeast: new Map(),
+  const resolvedDynamicDays = new Map(dynamicEntries
+    .filter(([code]) => !exclusiveFeastCode || normalizedFeastCode(code) === exclusiveFeastCode)
+    .map(([code, docs]) => [
+      code,
+      docs.map((item) => withCalendarContext(resolveDayAgainstPeriod(item, resolvedPeriodDay))),
+    ]));
+
+  return {
+    periodDays: exclusiveFeastCode || exclusiveFixedDate || hasSeasonalException
+      ? []
+      : (resolvedPeriodDay ? [resolvedPeriodDay] : []),
+    periodFallback: resolvedPeriodDay,
+    fixedDays: exclusiveFeastCode ? [] : resolvedFixed,
+    dynamicDaysByFeast: resolvedDynamicDays,
+    seasonalException: exclusiveFeastCode ? null : seasonal,
+    exclusiveFeastCode,
+    exclusiveFixedDate,
   };
-
-  queryItems.forEach(({ type, feastCode }, i) => {
-    const docs = [];
-    snapshots[i].forEach((docSnap) => {
-      docs.push({ id: docSnap.id, ...docSnap.data() });
-    });
-
-    if (type === 'period') {
-      result.periodDays = docs;
-    } else if (type === 'fixed') {
-      result.fixedDays = docs;
-    } else {
-      result.dynamicDaysByFeast.set(feastCode, docs);
-    }
-  });
-
-  return result;
 }

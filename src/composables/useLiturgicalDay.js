@@ -30,6 +30,7 @@ import {
 } from '@/utils/liturgicalCalendar';
 
 import { FEAST_NAME_MAP } from '@/constants/liturgicalFeastsMap';
+import { LITURGICAL_DAYS_COLLECTION } from '@/constants/days';
 
 // Service query-builders reused in admin diagnostics
 import {
@@ -147,7 +148,7 @@ export function useLiturgicalDay() {
       diagnostics.periodResult = [];
     }
 
-    const fixedSnap = await getDocs(getDaysByFixedDateQuery(mDate.format('D.M')));
+    const fixedSnap = await getDocs(getDaysByFixedDateQuery(mDate.format('DD.MM')));
     diagnostics.fixedFeastResult = fixedSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
     diagnostics.dynamicFeastsResults = [];
@@ -176,7 +177,7 @@ export function useLiturgicalDay() {
     const opts         = calendarStore.optionsForYear(year).value;
     const nextYearOpts = calendarStore.optionsForYear(year + 1).value;
     const dynamicDates = calendarStore.dynamicDatesForYear(year).value || {};
-    const daysCol      = collection(db, 'days');
+    const daysCol      = collection(db, LITURGICAL_DAYS_COLLECTION);
 
     const missing = { periodDays: [], feasts: [] };
 

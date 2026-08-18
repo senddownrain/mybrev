@@ -2,10 +2,49 @@
  * Pure liturgical calendar computation utilities.
  * No Firestore or Pinia store dependencies — all inputs passed as arguments.
  */
-import moment from '@/utils/moment-be';
-import { FEAST_NAME_MAP } from '@/constants/liturgicalFeastsMap';
+import moment from './moment-be.js';
+import { FEAST_NAME_MAP } from '../constants/liturgicalFeastsMap.js';
 
 const getMoment = (isoDateStr) => moment(isoDateStr, 'YYYY-MM-DD');
+
+/**
+ * Feast of the Holy Family: the first Sunday after Christmas. When Christmas
+ * itself is Sunday, January 1 occupies the following Sunday, so the feast is
+ * celebrated on December 30 instead.
+ */
+export function calculateHolyFamilyDate(year) {
+  const christmas = moment(`${year}-12-25`, 'YYYY-MM-DD');
+  if (christmas.isoWeekday() === 7) return christmas.clone().date(30);
+  return christmas.clone().add(7 - christmas.isoWeekday(), 'days');
+}
+
+/** Baptism of the Lord: the first Sunday after January 6. */
+export function calculateBaptismOfLordDate(year) {
+  const epiphany = moment(`${year}-01-06`, 'YYYY-MM-DD');
+  const daysToSunday = epiphany.isoWeekday() === 7 ? 7 : 7 - epiphany.isoWeekday();
+  return epiphany.add(daysToSunday, 'days');
+}
+
+function firstSundayAfterChristmas(christmas) {
+  const daysToSunday = christmas.isoWeekday() === 7 ? 7 : 7 - christmas.isoWeekday();
+  return christmas.clone().add(daysToSunday, 'days');
+}
+
+function christmasSeasonBounds(mDate, opts, nextYearOpts) {
+  const year = mDate.year();
+  const currentChristmas = moment(`${year}-12-25`, 'YYYY-MM-DD');
+  const startsThisYear = mDate.isSameOrAfter(currentChristmas, 'day');
+  const startsPreviousYear = mDate.month() === 0;
+  if (!startsThisYear && !startsPreviousYear) return null;
+
+  const start = startsThisYear
+    ? currentChristmas
+    : moment(`${year - 1}-12-25`, 'YYYY-MM-DD');
+  // Christmas ends with the Baptism of the Lord, always the first Sunday
+  // after January 6. Stored ordinary-time settings must not extend it.
+  const end = calculateBaptismOfLordDate(start.year() + 1);
+  return { start, end, firstSunday: firstSundayAfterChristmas(start) };
+}
 
 /**
  * @typedef {Object} LiturgicalContext
@@ -16,7 +55,7 @@ const getMoment = (isoDateStr) => moment(isoDateStr, 'YYYY-MM-DD');
  *   -1 indicates the value could not be determined.
  * @property {number} dayOfWeek - Day of week in liturgical numbering (1 = Sunday, 2 = Monday, … 7 = Saturday)
  * @property {string|null} _feast - Feast code from {@link FEAST_NAME_MAP} if the date coincides
- *   with a dynamic feast (e.g. 'eastersunday', 'palmsunday'), otherwise null
+ *   with a dynamic feast (e.g. 'feast-eastersunday', 'feast-palmsunday'), otherwise null
  */
 
 /**
@@ -66,17 +105,13 @@ export function computeLiturgicalContext(mDate, opts, nextYearOpts, dynamicDates
   }
 
   // --- Christmas ---
-  if (nextYearOpts && mDate.isSameOrAfter(christmas)) {
-    const flNext      = getMoment(nextYearOpts.ordintaryStart1);
-    const weeksBefore = parseInt(nextYearOpts.ordintaryWeeks1);
-    const lastChristmas = flNext.clone().subtract(weeksBefore, 'weeks').subtract(2, 'days');
-    if (mDate.isSameOrBefore(lastChristmas)) {
-      const diff = mDate.diff(christmas, 'days');
-      context.periodType = 'christmas';
-      context.periodWeek = Math.floor(diff / 7) + 1;
-      context.dayOfWeek  = (diff % 7) + 1;
-      return context;
-    }
+  const christmasBounds = christmasSeasonBounds(mDate, opts, nextYearOpts);
+  if (christmasBounds && mDate.isSameOrBefore(christmasBounds.end, 'day')) {
+    context.periodType = 'christmas';
+    context.periodWeek = mDate.month() === 11 ? 1 : 2;
+    // dayOfWeek was initialized from the actual calendar weekday. Christmas
+    // does not necessarily fall on Sunday, so it must not be anchored to 25.12.
+    return context;
   }
 
   // --- Lent & Holy Week ---
@@ -102,7 +137,7 @@ export function computeLiturgicalContext(mDate, opts, nextYearOpts, dynamicDates
       context.periodType = 'holyweek';
       context.periodWeek = 1;
       context.dayOfWeek  = 1;
-      context._feast     = 'palmsunday';
+      context._feast     = FEAST_NAME_MAP.palmSunday;
       return context;
     }
     context.periodType = 'lent';
@@ -174,7 +209,15 @@ export function calculateDateForContext(year, periodType, periodWeekNumber, dayO
   if (periodType === 'advent') {
     baseDate = fa.clone();
   } else if (periodType === 'christmas') {
-    baseDate = christmas.clone();
+    const firstSunday = firstSundayAfterChristmas(christmas);
+    const targetIsoWeekday = dayOfWeek === 1 ? 7 : dayOfWeek - 1;
+    if (periodWeekNumber === 1) {
+      const offset = (targetIsoWeekday - christmas.isoWeekday() + 7) % 7;
+      return christmas.clone().add(offset, 'days').format('YYYY-MM-DD');
+    }
+    return firstSunday.clone()
+      .add(targetIsoWeekday === 7 ? 7 : targetIsoWeekday, 'days')
+      .format('YYYY-MM-DD');
   } else if (periodType === 'lent') {
     baseDate = ash.clone().add(4, 'days');
   } else if (periodType === 'holyweek') {
@@ -207,7 +250,7 @@ export function calculateDateForContext(year, periodType, periodWeekNumber, dayO
  * @param {import('moment').Moment} mDate - Moment date to check against dynamic feast dates
  * @param {Object.<string, import('moment').Moment>} dynamicDates - Dynamic feast dates keyed by feast key
  *   (e.g. { easterSunday: moment(...), pentecost: moment(...) })
- * @returns {string[]} Array of matching feast code strings (e.g. ['eastersunday']).
+ * @returns {string[]} Array of matching feast code strings (e.g. ['feast-eastersunday']).
  *   Returns an empty array if no feast matches the date.
  */
 export function getDynamicFeastCodesForDate(mDate, dynamicDates) {

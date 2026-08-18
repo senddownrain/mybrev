@@ -185,7 +185,7 @@ const formData = ref({
   _dayOfWeek: 1,
   _date: moment().format('YYYY-MM-DD'),
   feastId: 'holyFamily',
-  feastName: 'holyfamily',
+  feastName: 'feast-holyfamily',
   existingId: null,
   text: '<h2>Тэставае чытанне</h2><p>Гэта тэставы тэкст для праверкі сістэмы чытанняў.</p>',
 });
@@ -247,7 +247,7 @@ function onTypeChange() {
   formData.value._dayOfWeek = 1;
   formData.value._date = moment().format('YYYY-MM-DD');
   formData.value.feastId = 'holyFamily';
-  formData.value.feastName = 'holyfamily';
+  formData.value.feastName = 'feast-holyfamily';
   formData.value.existingId = null;
   saveState.value = { type: '', message: '' };
 }
@@ -264,7 +264,7 @@ function buildReadingId(data) {
   }
 
   if (data._feast) {
-    return `feast-${data._feast}`;
+    return data._feast.startsWith('feast-') ? data._feast : `feast-${data._feast}`;
   }
 
   if (data._date) {

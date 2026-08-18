@@ -4,6 +4,10 @@ import { collection, query, where, getDocs, getFirestore } from 'firebase/firest
 import moment from '@/utils/moment-be';
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
+import {
+    calculateBaptismOfLordDate,
+    calculateHolyFamilyDate,
+} from '@/utils/liturgicalCalendar';
 
 /**
  * @typedef {Object} YearOptions
@@ -25,7 +29,7 @@ import { retryFirestore } from '@/utils/retry';
  * @property {import('moment').Moment} palmSunday - Palm Sunday (7 days before Easter)
  * @property {import('moment').Moment} easterSunday - Easter Sunday
  * @property {import('moment').Moment} pentecost - Pentecost Sunday
- * @property {import('moment').Moment} ascension - Ascension (7th Sunday of Easter, 7 days before Pentecost)
+ * @property {import('moment').Moment} ascension - Ascension
  * @property {import('moment').Moment} holyTrinity - Holy Trinity Sunday (7 days after Pentecost)
  * @property {import('moment').Moment} corpusChristi - Corpus Christi (Thursday after Trinity Sunday)
  * @property {import('moment').Moment} holyFamily - Feast of the Holy Family
@@ -33,7 +37,7 @@ import { retryFirestore } from '@/utils/retry';
  * @property {import('moment').Moment} christKing - Christ the King Sunday (Sunday before Advent)
  * @property {import('moment').Moment} sacredHeartOfJesus - Sacred Heart of Jesus (19 days after Pentecost)
  * @property {import('moment').Moment} immaculateHeartOfMary - Immaculate Heart of Mary (day after Sacred Heart)
- * @property {import('moment').Moment} christTheHighPriest - Christ the High Priest (11 days before Pentecost)
+ * @property {import('moment').Moment} christTheHighPriest - Christ the High Priest (Thursday after Pentecost)
  */
 
 export const useCalendarStore = defineStore('calendar', () => {
@@ -103,19 +107,25 @@ export const useCalendarStore = defineStore('calendar', () => {
     // Расчёт дат пасля Вялікадня
     dates.easterSunday = easter;
     dates.pentecost = pentecost;
-    dates.ascension = pentecost.clone().subtract(7, 'days'); // ✅ ASCENSION (7th Sunday of Easter)
+    const configuredAscension = getMoment(opts.ascension);
+    dates.ascension = configuredAscension.isValid()
+        ? configuredAscension
+        : pentecost.clone().subtract(7, 'days');
     
     const holyTrinitySunday = pentecost.clone().add(7, 'days');
     dates.holyTrinity = holyTrinitySunday;
-    dates.corpusChristi = holyTrinitySunday.clone().add(4, 'days'); // ✅ CORPUS CHRISTI (Thursday after Trinity)
+    const configuredCorpusChristi = getMoment(opts.corpusChristi);
+    dates.corpusChristi = configuredCorpusChristi.isValid()
+        ? configuredCorpusChristi
+        : holyTrinitySunday.clone().add(4, 'days');
     // Расчёт дат у "звычайны час"
-    dates.holyFamily = getMoment(opts.holyFamily);
-    dates.baptismOfLord = getMoment(opts.baptismOfLord);
+    dates.holyFamily = calculateHolyFamilyDate(Number(year));
+    dates.baptismOfLord = calculateBaptismOfLordDate(Number(year));
     dates.christKing = firstAdventSunday.clone().subtract(7, 'days');
     const sacredHeartOfJesus = pentecost.clone().add(19, 'days');
     dates.sacredHeartOfJesus = sacredHeartOfJesus;
     dates.immaculateHeartOfMary = sacredHeartOfJesus.clone().add(1, 'day'); // Next day
-    dates.christTheHighPriest = pentecost.clone().subtract(11, 'days'); // Mon after Pentecost — clarify if needed
+    dates.christTheHighPriest = pentecost.clone().add(4, 'days');
     dynamicDatesCache.value[year] = dates;
     logger.log(`[CalendarStore] Dynamic dates for year ${year} computed.`);
     return dates;

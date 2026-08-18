@@ -36,32 +36,32 @@
 
     <v-dialog 
       v-model="isCalendarDialogOpen" 
-      width="auto" 
-      max-width="400"
-      :scrim="false"
-      location="top"
+      width="calc(100% - 24px)" 
+      max-width="420"
+      scrim="black"
       :persistent="false"
-      :z-index="99"
+      :z-index="110"
     >
-      <v-card rounded="lg">
-        <v-card-title class="d-flex justify-space-between align-center pa-4">
-          <span class="text-h6">Выбраць дату</span>
-          <v-btn icon="mdi-close" variant="text" size="small" @click="toggleCalendarDialog"></v-btn>
+      <v-card class="date-dialog-card" rounded="xl" elevation="18">
+        <v-card-title class="date-dialog-title">
+          <div>
+            <div class="date-dialog-eyebrow">Каляндар</div>
+            <div class="date-dialog-heading">Выбраць дату</div>
+          </div>
+          <v-btn icon="mdi-close" variant="text" size="small" aria-label="Закрыць" @click="toggleCalendarDialog"></v-btn>
         </v-card-title>
-        <v-divider></v-divider>
         <v-card-text class="pa-0">
           <CustomDatePicker
             v-model="selectedDate"
             color="primary"
-            :hide-header="true"
             :first-day-of-week="1"
+            show-adjacent-months
           ></CustomDatePicker>
         </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions class="pa-3">
-          <v-spacer></v-spacer>
-          <v-btn variant="text" @click="toggleCalendarDialog">Адмена</v-btn>
-          <v-btn color="primary" variant="flat" @click="loadDay">Выбраць</v-btn>
+        <v-card-actions class="date-dialog-actions">
+          <v-btn variant="text" prepend-icon="mdi-calendar-today" @click="selectToday">Сёння</v-btn>
+          <v-spacer />
+          <v-btn color="primary" variant="flat" rounded="lg" class="select-date-btn" @click="loadDay">Выбраць</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -124,6 +124,10 @@ function navigateTo(path) {
   router.push(path)
 }
 
+function selectToday() {
+  selectedDate.value = new Date()
+}
+
 watch(isCalendarDialogOpen, (isOpen) => {
   if (isOpen) {
     const date = currentRouteDate.value
@@ -171,6 +175,45 @@ function loadDay() {
 .bottom-nav-btn :deep(.v-btn__content) {
   flex-direction: column;
   gap: 4px;
+}
+
+.date-dialog-card {
+  overflow: hidden;
+  border: 1px solid rgba(var(--v-border-color), 0.14);
+  background: rgb(var(--v-theme-surface));
+}
+
+.date-dialog-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 8px !important;
+}
+
+.date-dialog-eyebrow {
+  color: rgb(var(--v-theme-primary));
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.date-dialog-heading {
+  margin-top: 3px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.date-dialog-actions {
+  padding: 10px 16px 16px !important;
+  border-top: 1px solid rgba(var(--v-border-color), 0.1);
+}
+
+.select-date-btn {
+  min-width: 112px;
+  box-shadow: 0 5px 14px rgba(var(--v-theme-primary), 0.24);
 }
 </style>
 

@@ -1,12 +1,11 @@
 <template>
     <div>
         <v-card class="ora" flat>
-            <!-- <v-card-title :style="{ fontSize: fonts.header + 'px' }"> -->
             <v-card-title class="ora-title">
                 ГІМН
             </v-card-title >
             <v-card-text class="ora-text">
-                <div v-html="text"></div>
+                <alternative-text :text="text" aria-label="Выбар гімна" />
             </v-card-text>
         </v-card>
     </div>
@@ -14,25 +13,9 @@
 
 
 <script setup>
-const props = defineProps({
+import AlternativeText from '@/components/oraparts/AlternativeText.vue';
+
+defineProps({
   text: String,
-})
-// import { ref } from 'vue'
-// import moment from '@/utils/moment-be';
-
-// import { useRoute } from 'vue-router'
-// import { useCollection, useFirestore, useDocument } from 'vuefire'
-// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
-
-//const db = useFirestore()
-
-//const days = useCollection(query(collection(db, 'days')))
-//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
-
-// const route = useRoute()
-// const docRef = doc(db, "days", route.params.id);
-// var { data: day, pending } = useDocument(docRef)
-
-// const nowDate = moment(Date.now()).format('LL') 
-
+});
 </script>

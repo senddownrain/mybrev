@@ -29,6 +29,7 @@
                 <v-col cols="6" sm="4"><v-text-field v-model="newItem.pentecost" label="Спасланне Духа" type="date" density="compact"></v-text-field></v-col>
                 <v-col cols="6" sm="4"><v-text-field v-model="newItem.ascension" label="Унебаўшэсце" type="date" density="compact"></v-text-field></v-col>
                 <v-col cols="6" sm="4"><v-text-field v-model="newItem.corpusChristi" label="Божае Цела" type="date" density="compact"></v-text-field></v-col>
+                <v-col cols="6" sm="4"><v-text-field v-model="newItem.baptismOfLord" label="Хрост Пана" type="date" density="compact"></v-text-field></v-col>
                 <v-col cols="6" sm="4"><v-text-field v-model="newItem.firstAdventSunday" label="1-я ндз. Адвэнту" type="date" density="compact"></v-text-field></v-col>
                 <v-col cols="12"><v-divider class="my-2"></v-divider></v-col>
                 <!-- Поля для рядовых периодов -->
@@ -78,6 +79,7 @@ const headers = [
   { title: 'Унеба­ў­шэсце', key: 'ascension' },
   { title: 'Спасланне Духа', key: 'pentecost' },
   { title: 'Божае Цела', key: 'corpusChristi' },
+  { title: 'Хрост Пана', key: 'baptismOfLord' },
   { title: 'Пачатак 1-га звыч.', key: 'ordintaryStart1' },
   { title: 'Тыдняў 1', key: 'ordintaryWeeks1' },
   { title: 'Пачатак 2-га звыч.', key: 'ordintaryStart2' },
@@ -87,7 +89,7 @@ const headers = [
 ];
 
 // --- Форма добавления ---
-const defaultItem = { year: new Date().getFullYear() + 1, ashWednesday: "", easterSunday: "", ascension: '', pentecost: "", corpusChristi: "", firstAdventSunday: "", ordintaryStart1: "", ordintaryWeeks1: "", ordintaryStart2: '', ordintaryWeeks2: "" };
+const defaultItem = { year: new Date().getFullYear() + 1, ashWednesday: "", easterSunday: "", ascension: '', pentecost: "", corpusChristi: "", baptismOfLord: "", firstAdventSunday: "", ordintaryStart1: "", ordintaryWeeks1: "", ordintaryStart2: '', ordintaryWeeks2: "" };
 const newItem = reactive({ ...defaultItem });
 
 const isNewItemValid = computed(() => newItem.year && newItem.easterSunday);
@@ -144,6 +146,7 @@ const calculateAllDates = () => {
   if (baptismLord.getUTCMonth() === 0 && baptismLord.getUTCDate() < 7) {
       baptismLord = addDays(baptismLord, 7); // Если крещение слишком рано, переносим на неделю
   }
+  newItem.baptismOfLord = formatDate(baptismLord);
   
   const ordinaryStart1Date = addDays(baptismLord, 1); // Начало 1-го периода
   newItem.ordintaryStart1 = formatDate(ordinaryStart1Date);

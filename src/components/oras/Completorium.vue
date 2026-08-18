@@ -8,7 +8,7 @@
           <v-alert type="error" variant="tonal">{{ error }}</v-alert>
         </v-col>
         <v-col v-else-if="day" md="6" lg="6" sm="8">
-                <day-title />
+                <day-title :day-data="selectedDay" />
                 <intro :title="title"    />
                 <exam />
                 <hymnus :text="day.compHymn" />
@@ -16,7 +16,7 @@
                    />
                 <reading :text="day.compR" />
                 <resp :text="day.compResp" />
-                <nunc :ant="day.compAntS" />
+                <  :ant="day.compAntS" />
                 <last-prayer :text="day.compPr" />
                 <end-of-compline :ant="day.compAntM" />
         </v-col>
@@ -27,11 +27,8 @@
 import { computed, ref, watch } from 'vue';
 import moment from '@/utils/moment-be';
 import { useRoute } from 'vue-router';
-import { useDocument } from 'vuefire';
-import { doc } from 'firebase/firestore';
-
-import { db } from '@/plugins/firebase';
 import { useCompletorium } from '@/composables/useCompletorium';
+import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { logger } from '@/utils/logger';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
 import Intro from '@/components/oraparts/Intro.vue';
@@ -47,8 +44,7 @@ import DayTitle from '@/components/oraparts/DayTitle.vue';
 const route = useRoute();
 const { getCompletoriumForDate } = useCompletorium();
 
-const selectedDayRef = computed(() => doc(db, 'days', String(route.params.id)));
-const { data: selectedDay, pending: selectedDayPending } = useDocument(selectedDayRef);
+const { day: selectedDay, pending: selectedDayPending } = useResolvedLiturgicalDay();
 
 const day = ref(null);
 const loadingCompletorium = ref(false);

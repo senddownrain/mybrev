@@ -76,3 +76,26 @@ export const DAY_TEMPLATE_FIELDS = [
   'vesperInter',
   'vesperPr',
 ];
+
+/** Кароткія беларускія подпісы агульных шаблонаў для runtime UI. */
+export const DAY_TEMPLATE_LABEL_MAP = Object.freeze({
+  apostles: 'Апосталы',
+  'blessed-virgin-mary': 'Найсвяцейшая Панна Марыя',
+  'church-dedication': 'Пасвячэнне касцёла',
+  'doctors-of-church': 'Доктары Касцёла',
+  educators: 'Выхавальнікі',
+  'holy-men': 'Святыя мужчыны',
+  'holy-women': 'Святыя жанчыны',
+  'martyr-one': 'Адзін мучанік',
+  'martyrs-many': 'Некалькі мучанікаў',
+  'office-for-dead': 'За памерлых',
+  pastors: 'Пастыры',
+  religious: 'Законнікі',
+  virgins: 'Панны',
+  'works-of-mercy': 'Справы міласэрнасці',
+});
+
+export function getDayTemplateLabel(value) {
+  const key = String(value || '').trim().toLowerCase();
+  return DAY_TEMPLATE_LABEL_MAP[key] || value || 'Асноўны';
+}

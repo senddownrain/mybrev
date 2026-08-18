@@ -2,8 +2,8 @@
     <v-container class="prayer-content-area">
         <v-row lign="center"
       justify="center">
-            <v-col md="6" lg="6" sm="8" v-if="!pending">
-                <day-title :date="nowDate" :psalms="day._psalmWeek" :feastType="day._feastType" :feastComment="day.feastComment" :dayName="day._feastName ? day._feastName : day._dayName"/>
+            <v-col md="6" lg="6" sm="8" v-if="!pending && day">
+                <day-title :day-data="day" />
                 <intro title="ЮТРАНЬ" />
                 <hymnus :text="day.laudesHymn" />
                 <psalms :ant1="day.laudesAnt1" :ant2="day.laudesAnt2" :ant3="day.laudesAnt3" :ps1="day.laudesPs1"
@@ -25,12 +25,7 @@
 </template>
 <script setup>
 
-import { ref } from 'vue'
-import moment from '@/utils/moment-be';
-
-import { useRoute } from 'vue-router'
-import { useCollection, useFirestore, useDocument } from 'vuefire'
-import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
 import Intro from '@/components/oraparts/Intro.vue';
 import Psalms from '@/components/oraparts/Psalms.vue';
@@ -43,15 +38,7 @@ import LastPrayer from '@/components/oraparts/LastPrayer.vue';
 import EndOfVesper from '@/components/oraparts/EndOfVesper.vue';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 
-const db = useFirestore()
-
-const route = useRoute()
-const docRef = doc(db, "days", route.params.id);
-var { data: day, pending } = useDocument(docRef)
-
-let [d, m, y] = route.params.day.split('-').map(Number);
-const originDate = new Date(y, m - 1, d) 
-const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+const { day, pending } = useResolvedLiturgicalDay();
 
 </script>
 

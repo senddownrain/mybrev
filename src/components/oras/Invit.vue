@@ -1,8 +1,20 @@
 <template>
     <v-container  class="prayer-content-area">
         <v-row lign="center" justify="center">
-            <v-col md="6" lg="6" sm="8" v-if="!pending">
-                <day-title :day="day.weekDay" :date="nowDate" />
+            <v-col md="6" lg="6" sm="8" v-if="!pending && displayedDay">
+                <day-title :day-data="day" />
+
+                <v-select
+                    v-if="invitatoriumOptions.length > 1"
+                    v-model="selectedInvitatoriumId"
+                    :items="invitatoriumOptions"
+                    item-title="label"
+                    item-value="id"
+                    label="Псальм інвітаторыя"
+                    variant="outlined"
+                    density="comfortable"
+                    class="mb-4"
+                />
 
                 <v-card class="ora" flat>
                     <v-card-title class="ora-header">
@@ -20,32 +32,32 @@
 
                 <v-card class="ora" flat>
                     <v-card-text class="ora-text">
-                        <div class="ora-ant" v-html="day.invitatoriumAnt"></div>
+                        <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
                         <br>
-                        <div class="ora-psalm" v-html="day.invitatoriumPs1"></div>
+                        <div class="ora-psalm" v-html="displayedDay.invitatoriumPs1"></div>
                         <br>
-                        <div class="ora-ant" v-html="day.invitatoriumAnt"></div>
+                        <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
                         <br>
-                        <div class="ora-psalm" v-html="day.invitatoriumPs2"></div>
+                        <div class="ora-psalm" v-html="displayedDay.invitatoriumPs2"></div>
                         <br>
-                        <div class="ora-ant" v-html="day.invitatoriumAnt"></div>
+                        <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
                         <br>
-                        <div class="ora-psalm" v-html="day.invitatoriumPs3"></div>
+                        <div class="ora-psalm" v-html="displayedDay.invitatoriumPs3"></div>
                         <br>
-                        <div class="ora-ant" v-html="day.invitatoriumAnt"></div>
+                        <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
                         <br>
-                        <div class="ora-psalm" v-html="day.invitatoriumPs4"></div>
+                        <div class="ora-psalm" v-html="displayedDay.invitatoriumPs4"></div>
                         <br>
-                        <div class="ora-ant" v-html="day.invitatoriumAnt"></div>
-                        <br v-if="day.invitatoriumPs5">
-                        <div class="ora-psalm" v-if="day.invitatoriumPs5" v-html="day.invitatoriumPs5"></div>
-                        <br v-if="day.invitatoriumPs5">
-                        <div class="ora-ant" v-if="day.invitatoriumPs5" v-html="day.invitatoriumAnt"></div>
-                        <br v-if="day.invitatoriumPs6">
-                        <div class="ora-psalm" v-if="day.invitatoriumPs6" v-html="day.invitatoriumPs6"></div>
-                        <br v-if="day.invitatoriumPs6">
-                        <div class="ora-ant" v-if="day.invitatoriumPs6" v-html="day.invitatoriumAnt"></div>
-                        <br v-if="day.invitatoriumPs6">
+                        <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
+                        <br v-if="displayedDay.invitatoriumPs5">
+                        <div class="ora-psalm" v-if="displayedDay.invitatoriumPs5" v-html="displayedDay.invitatoriumPs5"></div>
+                        <br v-if="displayedDay.invitatoriumPs5">
+                        <div class="ora-ant" v-if="displayedDay.invitatoriumPs5" v-html="displayedDay.invitatoriumAnt"></div>
+                        <br v-if="displayedDay.invitatoriumPs6">
+                        <div class="ora-psalm" v-if="displayedDay.invitatoriumPs6" v-html="displayedDay.invitatoriumPs6"></div>
+                        <br v-if="displayedDay.invitatoriumPs6">
+                        <div class="ora-ant" v-if="displayedDay.invitatoriumPs6" v-html="displayedDay.invitatoriumAnt"></div>
+                        <br v-if="displayedDay.invitatoriumPs6">
                     </v-card-text>
                 </v-card>
 
@@ -57,23 +69,37 @@
 
 <script setup>
 
-import { ref } from 'vue'
-import moment from '@/utils/moment-be';
-
-import { useRoute } from 'vue-router'
-import { useCollection, useFirestore, useDocument } from 'vuefire'
-import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
+import { computed, onMounted, ref } from 'vue';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/plugins/firebase';
+import { retryFirestore } from '@/utils/retry';
+import { logger } from '@/utils/logger';
+import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 
-const db = useFirestore()
+const { day, pending } = useResolvedLiturgicalDay();
+const invitatoriums = ref([]);
+const selectedInvitatoriumId = ref('');
+const optionLabel = (item, index) => {
+  const text = String(item.invitatoriumPs1 || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  return item.title || item.name || text.match(/Псальм\s+\d+(?:\s*\(\d+\))?/i)?.[0] || `Псальм ${index + 1}`;
+};
+const invitatoriumOptions = computed(() => invitatoriums.value.map((item, index) => ({
+  id: item.id,
+  label: optionLabel(item, index),
+})));
+const selectedInvitatorium = computed(() => invitatoriums.value.find((item) => item.id === selectedInvitatoriumId.value));
+const displayedDay = computed(() => ({ ...(day.value || {}), ...(selectedInvitatorium.value || {}) }));
 
-const route = useRoute()
-const docRef = doc(db, "days", route.params.id);
-var { data: day, pending } = useDocument(docRef)
-
-let [d, m, y] = route.params.day.split('-').map(Number);
-const originDate = new Date(y, m - 1, d)
-const nowDate = `${moment(originDate).format('dddd')}, ${moment(originDate).format('LL')} `
+onMounted(async () => {
+  try {
+    const snapshot = await retryFirestore(() => getDocs(collection(db, 'invitatoriums')));
+    invitatoriums.value = snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+    selectedInvitatoriumId.value = invitatoriums.value[0]?.id || '';
+  } catch (error) {
+    logger.error('[Invit] Не атрымалася загрузіць варыянты інвітаторыя:', error);
+  }
+});
 const title = "ЗАКЛІК"
 
 </script>

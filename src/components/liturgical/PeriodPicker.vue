@@ -111,7 +111,7 @@
             Стварыць гэты дзень
           </v-btn>
           <p v-else class="text-caption mt-2">
-            Для абранага перыяду і дня няма запісу. Звярніцеся да адміністратара, каб дадаць гэты дзень.
+            Звярніцеся да адміністратара, каб дадаць гэты дзень.
           </p>
         </v-card-text>
       </v-card>
@@ -139,7 +139,7 @@ const props = defineProps({
 const emit = defineEmits(['day-selected']);
 
 const router = useRouter();
-const { findDayByPeriod, calculateDateForPeriod } = useLiturgicalDay();
+const { findDayByPeriod, calculateDateForPeriod, getLiturgicalOptionsForDate } = useLiturgicalDay();
 const authStore = useAuthStore();
 const calendarStore = useCalendarStore();
 
@@ -204,7 +204,28 @@ async function searchDay(periodType, periodWeekNumber, dayOfWeek) {
   
   try {
     const day = await findDayByPeriod(periodType, periodWeekNumber, dayOfWeek);
-    foundDay.value = day;
+    if (day) {
+      foundDay.value = day;
+      return;
+    }
+
+    // Some calendar positions are always replaced by a movable celebration
+    // and therefore have no standalone period document. Resolve the selected
+    // position through the same date-aware path as the main calendar (for
+    // example ordinary week 34 Sunday -> Christ the King).
+    const date = await calculateDateForPeriod(
+      props.year,
+      periodType,
+      periodWeekNumber,
+      dayOfWeek
+    );
+    if (!date) return;
+
+    const result = await getLiturgicalOptionsForDate(date);
+    const feastCode = String(result?.context?._feast || '').replace(/^feast-/, '');
+    foundDay.value = result?.items?.find((item) => (
+      feastCode && String(item?._feast || '').replace(/^feast-/, '') === feastCode
+    )) || result?.items?.[0] || null;
   } catch (error) {
     logger.error('Памылка пры пошуку дня:', error);
   } finally {

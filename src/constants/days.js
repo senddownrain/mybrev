@@ -1,6 +1,52 @@
+/** Runtime collection for all liturgical-day entities. */
+export const LITURGICAL_DAYS_COLLECTION = 'fixedDays';
+
 /**
- * Список полей документа дня (days) для формы редактирования.
- * Используется в DayEditor для создания пустого дня и при копировании.
+ * The collection contains three intentionally different entity shapes.
+ * Keeping the selectors here prevents date feasts, period days and movable
+ * feasts from being treated as interchangeable documents.
+ */
+export const LITURGICAL_DAY_KIND = Object.freeze({
+  PERIOD: 'period',
+  FIXED: 'fixed',
+  DYNAMIC: 'dynamic',
+});
+
+export const LITURGICAL_DAY_SELECTOR_FIELDS = Object.freeze({
+  [LITURGICAL_DAY_KIND.PERIOD]: ['_periodType', '_periodWeekNumber', '_dayOfWeek'],
+  [LITURGICAL_DAY_KIND.FIXED]: ['_date', '_rank', '_place'],
+  [LITURGICAL_DAY_KIND.DYNAMIC]: ['_feast'],
+});
+
+export const LITURGICAL_DAY_META_FIELDS = Object.freeze([
+  '_date',
+  '_periodType',
+  '_periodWeekNumber',
+  '_dayOfWeek',
+  '_feast',
+  '_feastName',
+  '_rank',
+  '_place',
+  '_templates',
+  '_currentVersion',
+]);
+
+/** Canonical content reference accepted with or without legacy brackets. */
+export function isFromDayReference(value) {
+  const normalized = String(value ?? '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .trim()
+    .toLowerCase()
+    .replace(/^\[|\]$/g, '')
+    .trim();
+  return normalized === 'from-day';
+}
+
+/**
+ * Список полей документа дня для формы редактирования.
+ * Форма пока сохраняет общий superset; runtime использует типизированные
+ * selectors выше и не предполагает, что каждый тип содержит все meta-поля.
  */
 export const DAY_EDITOR_FIELDS = [
   '_dayOfWeek',
@@ -14,6 +60,10 @@ export const DAY_EDITOR_FIELDS = [
   '_weekNum',
   '_feastName',
   '_feastType',
+  '_rank',
+  '_place',
+  '_templates',
+  '_currentVersion',
   'allowedAlleluia',
   'invitatoriumAnt',
   'invitatoriumPs1',

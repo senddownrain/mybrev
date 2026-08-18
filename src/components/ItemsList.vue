@@ -71,7 +71,7 @@
 
     <v-row v-else-if="dayOptions.length">
       <v-col>
-        <v-list lines="three" bg-color="transparent">
+        <v-list bg-color="transparent">
           <v-list-item
             v-for="option in dayOptions"
             :key="option.key"
@@ -84,19 +84,9 @@
               <v-icon :icon="getOptionIcon(option)" :color="getOptionColor(option)"></v-icon>
             </template>
 
-            <v-list-item-title>{{ option.title }}</v-list-item-title>
-            <v-list-item-subtitle>{{ option.subtitle }}</v-list-item-subtitle>
-
-            <template #append>
-              <div class="d-flex flex-column align-end ga-1">
-                <v-chip size="small" :color="option.hasLiturgicalDay ? 'success' : 'grey'" variant="tonal">
-                  {{ option.hasLiturgicalDay ? 'Літургія: ёсць' : 'Літургія: няма' }}
-                </v-chip>
-                <v-chip size="small" :color="option.hasReadings ? 'deep-purple' : 'grey'" variant="tonal">
-                  {{ option.hasReadings ? 'Чытанні: ёсць' : 'Чытанні: няма' }}
-                </v-chip>
-              </div>
-            </template>
+            <v-list-item-title>
+              {{ getOptionDisplayTitle(option) }}
+            </v-list-item-title>
           </v-list-item>
         </v-list>
 
@@ -144,6 +134,16 @@ const softLoading = ref(false); // перелистывание — полоск
 const error = ref(null);
 
 const currentDate = ref(moment().startOf('day'));
+
+const getOptionDisplayTitle = (option) => {
+  const title = String(option?.title || '').trim();
+  const weekday = currentDate.value.format('dddd');
+  const titleAlreadyContainsWeekday = title
+    .toLocaleLowerCase('be-BY')
+    .includes(weekday.toLocaleLowerCase('be-BY'));
+
+  return titleAlreadyContainsWeekday ? title : `${title}, ${weekday}`;
+};
 
 // Monotonically-increasing counter used to detect stale responses.
 // When the user navigates to another date before a fetch completes,
@@ -299,20 +299,10 @@ watch(
     overflow: visible !important;
   }
 
-  .v-list-item-subtitle {
-    font-size: 0.85rem !important;
-    white-space: normal !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-    word-break: break-word !important;
-    text-overflow: unset !important;
-    overflow: visible !important;
-  }
 }
 
 /* Prevent text truncation in list items */
-:deep(.v-list-item-title),
-:deep(.v-list-item-subtitle) {
+:deep(.v-list-item-title) {
   white-space: normal !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;

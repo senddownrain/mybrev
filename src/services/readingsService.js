@@ -24,10 +24,11 @@ const CANONICAL_FEAST_VALUES = new Set(Object.values(FEAST_NAME_MAP));
 function normalizeFeastValue(value) {
   const normalized = String(value || '').trim().toLowerCase();
   if (!normalized) return null;
+  const documentId = normalized.startsWith('feast-') ? normalized : `feast-${normalized}`;
   for (const feast of CANONICAL_FEAST_VALUES) {
-    if (feast.toLowerCase() === normalized) return feast;
+    if (feast.toLowerCase() === documentId) return feast;
   }
-  return normalized;
+  return documentId;
 }
 
 function toCanonicalDateString(date) {
@@ -39,7 +40,7 @@ function toCanonicalDateString(date) {
  * @property {string} id - Firestore document ID
  * @property {string} [_source] - Internal source tag, e.g. 'readings'
  * @property {string} [_date] - Fixed calendar date in D.M format (e.g. '25.12')
- * @property {string} [_feast] - Dynamic feast key (e.g. 'eastersunday', 'pentecost')
+ * @property {string} [_feast] - Dynamic feast key (e.g. 'feast-eastersunday', 'feast-pentecost')
  * @property {string} [_periodType] - Liturgical period type (e.g. 'ordinary', 'lent', 'easter')
  * @property {number|string} [_periodWeekNumber] - Week number within the period
  * @property {number|string} [_dayOfWeek] - Day of week within the period (1 = Sunday)
@@ -92,7 +93,7 @@ export function getReadingsByDateQuery(date) {
 /**
  * Build a Firestore query to search readings by dynamic feast key.
  *
- * @param {string} _feast - Feast key matching the `_feast` field (e.g. 'eastersunday', 'pentecost')
+ * @param {string} _feast - Feast key matching the `_feast` field (e.g. 'feast-eastersunday', 'feast-pentecost')
  * @returns {import('firebase/firestore').Query} Firestore query
  */
 export function getReadingsByFeastQuery(_feast) {

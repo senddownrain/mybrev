@@ -76,37 +76,34 @@ export default createVuetify({
     messages: {
       be: {
         ...beLocale,
-        $vuetify: {
-          datePicker: {
-            ariaLabel: {
-              selectDate: 'Выбраць дату',
-              selectMonth: 'Выбраць месяц',
-              selectYear: 'Выбраць год',
-              nextMonth: 'Наступны месяц',
-              prevMonth: 'Папярэдні месяц',
-              nextYear: 'Наступны год',
-              prevYear: 'Папярэдні год',
-              currentDate: 'Бягучая дата',
-            },
-            monthTable: {
-              jan: 'студ',
-              feb: 'лют',
-              mar: 'сак',
-              apr: 'крас',
-              may: 'трав',
-              jun: 'чэрв',
-              jul: 'ліп',
-              aug: 'жн',
-              sep: 'вер',
-              oct: 'кастр',
-              nov: 'ліст',
-              dec: 'снеж',
-            }
+        loading: 'Загрузка...',
+        datePicker: {
+          ...beLocale.datePicker,
+          ariaLabel: {
+            selectDate: 'Выбраць дату',
+            selectMonth: 'Выбраць месяц',
+            selectYear: 'Выбраць год',
+            nextMonth: 'Наступны месяц',
+            previousMonth: 'Папярэдні месяц',
+            nextYear: 'Наступны год',
+            previousYear: 'Папярэдні год',
+            currentDate: 'Бягучая дата: {0}',
           },
-          dataTable: {
-            // Добавим пустые объекты для других компонентов
+          monthTable: {
+            jan: 'студ',
+            feb: 'лют',
+            mar: 'сак',
+            apr: 'крас',
+            may: 'трав',
+            jun: 'чэрв',
+            jul: 'ліп',
+            aug: 'жн',
+            sep: 'вер',
+            oct: 'кастр',
+            nov: 'ліст',
+            dec: 'снеж',
           }
-        }
+        },
       },
     },
   },

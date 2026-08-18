@@ -106,3 +106,9 @@ const ben = `<p>Благаслаўлёны Пан, Бог Ізраэля, *<br>
 // const nowDate = moment(Date.now()).format('LL') 
 
 </script>
+
+<style scoped>
+.ora-psalm :deep(p:nth-child(even of p:not([style]))) {
+    margin-left: 1rem;
+}
+</style>
