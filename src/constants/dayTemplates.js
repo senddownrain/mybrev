@@ -80,19 +80,19 @@ export const DAY_TEMPLATE_FIELDS = [
 /** Кароткія беларускія подпісы агульных шаблонаў для runtime UI. */
 export const DAY_TEMPLATE_LABEL_MAP = Object.freeze({
   apostles: 'Апосталы',
-  'blessed-virgin-mary': 'Найсвяцейшая Панна Марыя',
-  'church-dedication': 'Пасвячэнне касцёла',
-  'doctors-of-church': 'Доктары Касцёла',
-  educators: 'Выхавальнікі',
-  'holy-men': 'Святыя мужчыны',
-  'holy-women': 'Святыя жанчыны',
-  'martyr-one': 'Адзін мучанік',
-  'martyrs-many': 'Некалькі мучанікаў',
+  'blessed-virgin-mary': 'Пра Найсвяцейшую Панну Марыю',
+  'church-dedication': 'Пра пасвячэнне касцёла',
+  'doctors-of-church': 'Пра доктараў касцёла',
+  educators: 'Пра выхавацёлящ',
+  'holy-men': 'Пра святых мужчыны',
+  'holy-women': 'Пра святых жанчыны',
+  'martyr-one': 'Пра аднаго мучаніка',
+  'martyrs-many': 'Пра некалькіх мучанікаў',
   'office-for-dead': 'За памерлых',
-  pastors: 'Пастыры',
-  religious: 'Законнікі',
-  virgins: 'Панны',
-  'works-of-mercy': 'Справы міласэрнасці',
+  pastors: 'Пра пастыраў',
+  religious: 'Пра законнікаў',
+  virgins: 'Пра паннаў',
+  'works-of-mercy': 'Пра справы міласэрнасці',
 });
 
 export function getDayTemplateLabel(value) {
