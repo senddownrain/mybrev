@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "@phosphor-icons/vue": "^2.2.1",
     "@sentry/vue": "^10.41.0",
     "@vueup/vue-quill": "^1.2.0",
     "date-fns": "^2.30.0",
