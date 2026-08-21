@@ -1,0 +1,4755 @@
+{
+  "generatedAt": "2026-08-19T20:25:28.706Z",
+  "totals": {
+    "missingFromParsedData": 158,
+    "byDifficulty": {
+      "auto": 0,
+      "manual-refs": 157,
+      "needs-source": 1
+    },
+    "byRank": {
+      "(пусты)": 81,
+      "Успамін": 68,
+      "Свята": 7,
+      "Урачыстасць": 2
+    }
+  },
+  "entries": [
+    {
+      "date": "13.01",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Гілярыя, біскупа і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "13.01-mm3ohd3acdbc5182d36b",
+          "title": "Св. Гілярыя, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "17.01",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Антонія, абата",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "17.01-mm3ohd3a2d180a627663",
+          "title": "Св. Антонія, абата",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "20.01",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Фабіяна, папы і мучаніка",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Себасцьяна, мучаніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "20.01-mm3ohd3a105d3a3ebd44",
+          "title": "Св. Фабіяна, папы і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "20.01-mm3ohd3b457aa9dfcc23",
+          "title": "Св. Себасцьяна, мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "21.01",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Агнешкі, панны і мучаніцы",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "21.01-mm3ohd3b45e662548e12",
+          "title": "Св. Агнешкі, панны і мучаніцы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "22.01",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Вінцэнта, дыякана і мучаніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "22.01-mm3ohd3b85eeb935c420",
+          "title": "Св. Вінцэнта, дыякана і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "24.01",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Францішка Сальскага, біскупа і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "24.01-mm3ohd3b7031eb92d2ee",
+          "title": "Св. Францішка Сальскага, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "26.01",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Цімафея і Ціта, біскупаў",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "26.01-mm3ohd3b34d2adc616cf",
+          "title": "Св. Цімафея і Ціта, біскупаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "27.01",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [
+        "Віцебская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Св. Анжэлы Мэрычы, панны",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Бл. Юрыя Матулевіча, біскупа",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Бл. Юрыя Матулевіча, біскупа",
+          "rank": "Успамін",
+          "place": "Віцебская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "27.01-mm3ohd3b328256a8830e",
+          "title": "Св. Анжэлы Мэрычы, панны",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "27.01-mm3ohd3b52a997fb43d5",
+          "title": "Бл. Юрыя Матулевіча, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "27.01-mm3ohd3bf3f1b503be55",
+          "title": "Бл. Юрыя Матулевіча, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "28.01",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Тамаша Аквінскага, прэзбітэра і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "28.01-mm3ohd3bf116315eae27",
+          "title": "Св. Тамаша Аквінскага, прэзбітэра і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "29.01",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Бл. Баляславы Марыі Лямэнт, панны",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "29.01-mm3ohd3b37b19e5bef6a",
+          "title": "Бл. Баляславы Марыі Лямэнт, панны",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "31.01",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Яна Боска, прэзбітэра",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "31.01-mm3ohd3b95efffb34a63",
+          "title": "Св. Яна Боска, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "03.02",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Блажэя, біскупа і мучаніка",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Анзгара (Аскара), біскупа",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "03.02-mm3ohd3b8bfe4110b5cc",
+          "title": "Св. Блажэя, біскупа і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "03.02-mm3ohd3bb94da2c6626f",
+          "title": "Св. Анзгара (Аскара), біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "05.02",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Агаты, панны і мучаніцы",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "05.02-mm3ohd3b3cf35e6d2cab",
+          "title": "Св. Агаты, панны і мучаніцы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "06.02",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Паўла Мікі і паплечнікаў, мучанікаў",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "06.02-mm3ohd3b8dd24c4f4510",
+          "title": "Св. Паўла Мікі і паплечнікаў, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "08.02",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Гераніма Эміліяні",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Жазэфіны Бакіты, панны",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "08.02-mm3ohd3c9d2b66845769",
+          "title": "Св. Гераніма Эміліяні",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "08.02-mm3ohd3cf25b0c8fc7d7",
+          "title": "Св. Жазэфіны Бакіты, панны",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "10.02",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Схалястыкі, панны",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "10.02-mm3ohd3ce8a43d99e50a",
+          "title": "Св. Схалястыкі, панны",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "11.02",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Найсв. Панны Марыі з Люрда",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "11.02-mm3ohd3cfccad93f381e",
+          "title": "Найсв. Панны Марыі з Люрда",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "15.02",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [
+        "Гродзенская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Бл. Міхала Сапоцькі, прэзбітэра",
+          "rank": "",
+          "place": "Гродзенская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "15.02-mm3ohd3cec20a7abb779",
+          "title": "Бл. Міхала Сапоцькі, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "17.02",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. сямі Заснавальнікаў ордэна Слугаў Найсв. Панны Марыі (сэрвітаў)",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "17.02-mm3ohd3c7da622d10d16",
+          "title": "Св. сямі Заснавальнікаў ордэна Слугаў Найсв. Панны Марыі (сэрвітаў)",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "21.02",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Пятра Дам’яна, біскупа і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "21.02-mm3ohd3ce95c8ae9d6a0",
+          "title": "Св. Пятра Дам’яна, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "23.02",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Палікарпа, біскупа і мучаніка",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "23.02-mm3ohd3c40c3cf801969",
+          "title": "Св. Палікарпа, біскупа і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "04.03",
+      "rank": "Свята",
+      "_rank": "festum",
+      "dioceses": [
+        "Гродзенская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Св. Казіміра",
+          "rank": "Успамін",
+          "place": ""
+        },
+        {
+          "title": "Св. Казіміра, дадатковага апекуна дыяцэзіі",
+          "rank": "Свята",
+          "place": "Гродзенская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "04.03-mm3ohd3c22ee1df79404",
+          "title": "Св. Казіміра, дадатковага апекуна дыяцэзіі",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "04.03-mm3ohd3cdd42b61c50d0",
+          "title": "Св. Казіміра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "07.03",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Пэрпэтуі і Фэліцыты, мучаніц",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "07.03-mm3ohd3c52ace9dd8cc2",
+          "title": "Св. Пэрпэтуі і Фэліцыты, мучаніц",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "08.03",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Яна Божага, законніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "08.03-mm3ohd3cf5172ee1a00d",
+          "title": "Св. Яна Божага, законніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "09.03",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Францішкі Рымскай, законніцы",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "09.03-mm3ohd3c0e3ea4e021ca",
+          "title": "Св. Францішкі Рымскай, законніцы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "16.03",
+      "rank": "Свята",
+      "_rank": "festum",
+      "dioceses": [
+        "Мінска-Магілёўская архідыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Гадавіна пасвячэння катэдральнага касцёла",
+          "rank": "Свята",
+          "place": "Мінска-Магілёўская архідыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "16.03-mm3ohd3c27920091d883",
+          "title": "Гадавіна пасвячэння катэдральнага касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "17.03",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Патрыка, біскупа",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "17.03-mm3ohd3cb7343cf93849",
+          "title": "Св. Патрыка, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "18.03",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Кірыла Ерузалемскага, біскупа і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "18.03-mm3ohd3c6b728d13e670",
+          "title": "Св. Кірыла Ерузалемскага, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "23.03",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Турыбія Мангравэха, біскупа",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "23.03-mm3ohd3c2546ef5b1d00",
+          "title": "Св. Турыбія Мангравэха, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "02.04",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Францішка з Паолы, пустэльніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "02.04-mm3ohd3c9ad0295304b7",
+          "title": "Св. Францішка з Паолы, пустэльніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "04.04",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Ізыдора, біскупа і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "04.04-mm3ohd3ce41bca29125e",
+          "title": "Св. Ізыдора, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "05.04",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Вінцэнта Фэрэра, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "05.04-mm3ohd3cf98bbb248f51",
+          "title": "Св. Вінцэнта Фэрэра, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "07.04",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Жана Батыста Сальскага, прэзбітэра",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "07.04-mm3ohd3cb3289a085efe",
+          "title": "Св. Жана Батыста Сальскага, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "11.04",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Станіслава, біскупа і мучаніка",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "11.04-mm3ohd3cb9d4f6468846",
+          "title": "Св. Станіслава, біскупа і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "13.04",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Марціна І, папы і мучаніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "13.04-mm3ohd3d6e379b602581",
+          "title": "Св. Марціна І, папы і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "21.04",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Анзэльма, біскупа і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "21.04-mm3ohd3d8f572a4af23c",
+          "title": "Св. Анзэльма, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "23.04",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Юрыя, мучаніка",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Адальбэрта (Войцеха), біскупа і мучаніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "23.04-mm3ohd3d24bf1bf26ff4",
+          "title": "Св. Адальбэрта (Войцеха), біскупа і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "23.04-mm3ohd3d5619db032a0b",
+          "title": "Св. Юрыя, мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "24.04",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Фідэля Сігмарынгенскага, прэзбітэра і мучаніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "24.04-mm3ohd3de92354ecbfdd",
+          "title": "Св. Фідэля Сігмарынгенскага, прэзбітэра і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "28.04",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Пятра Шанэля, прэзбітэра і мучаніка",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Людвіка Марыі Грыньён дэ Манфора, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "28.04-mm3ohd3d378bf642473c",
+          "title": "Св. Людвіка Марыі Грыньён дэ Манфора, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "28.04-mm3ohd3d9e623a06f73a",
+          "title": "Св. Пятра Шанэля, прэзбітэра і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "30.04",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Пія V, папы",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "30.04-mm3ohd3d09c167d7f6df",
+          "title": "Св. Пія V, папы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "01.05",
+      "rank": "Свята",
+      "_rank": "festum",
+      "dioceses": [
+        "Пінская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Св. Юзафа рамесніка",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Гадавіна пасвячэння катэдральнага касцёла",
+          "rank": "Свята",
+          "place": "Пінская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "01.05-mm3ohd3d4904321c7ab1",
+          "title": "Гадавіна пасвячэння катэдральнага касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "01.05-mm3ohd3da6aa15f52ef9",
+          "title": "Св. Юзафа рамесніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "02.05",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Атаназія, біскупа і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "02.05-mm3ohd3de79a42598ad5",
+          "title": "Св. Атаназія, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "12.05",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Нэрэя і Ахіла, мучанікаў",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Панкрата, мучаніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "12.05-mm3ohd3dcaa3ccb63306",
+          "title": "Св. Нэрэя і Ахіла, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "12.05-mm3ohd3defe43c059cee",
+          "title": "Св. Панкрата, мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "13.05",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Найсв. Панны Марыі з Фацімы",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "13.05-mm3ohd3d99b159109171",
+          "title": "Найсв. Панны Марыі з Фацімы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "16.05",
+      "rank": "Урачыстасць",
+      "_rank": "solemnitas",
+      "dioceses": [
+        "Пінская дыяцэзія",
+        "Мінска-Магілёўская архідыяцэзія",
+        "Віцебская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Св. Андрэя Баболі, прэзбітэра і мучаніка",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Андрэя Баболі, прэзбітэра і мучаніка, апекуна дыяцэзіі",
+          "rank": "Урачыстасць",
+          "place": "Пінская дыяцэзія"
+        },
+        {
+          "title": "Св. Андрэя Баболі, прэзбітэра і мучаніка",
+          "rank": "Успамін",
+          "place": "Мінска-Магілёўская архідыяцэзія"
+        },
+        {
+          "title": "Св. Андрэя Баболі, прэзбітэра і мучаніка",
+          "rank": "Успамін",
+          "place": "Віцебская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "16.05-mm3ohd3d2d095100142b",
+          "title": "Св. Андрэя Баболі, прэзбітэра і мучаніка, апекуна дыяцэзіі",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "16.05-mm3ohd3d54097530e6b8",
+          "title": "Св. Андрэя Баболі, прэзбітэра і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "16.05-mm3ohd3db7b15f5d4898",
+          "title": "Св. Андрэя Баболі, прэзбітэра і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "16.05-mm3ohd3efdc2f755339e",
+          "title": "Св. Андрэя Баболі, прэзбітэра і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "18.05",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Яна І, папы і мучаніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "18.05-mm3ohd3ef642c74972e6",
+          "title": "Св. Яна І, папы і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "20.05",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Бэрнардына Сіенскага, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "20.05-mm3ohd3e6b788917eb56",
+          "title": "Св. Бэрнардына Сіенскага, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "21.05",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Хрыстафора Магалана, прэзбітэра, і паплечнікаў, мучанікаў",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "21.05-mm3ohd3e14a32236145a",
+          "title": "Св. Хрыстафора Магалана, прэзбітэра, і паплечнікаў, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "22.05",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Рыты з Касіі, законніцы",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "22.05-mm3ohd3e5ebbdc2300a5",
+          "title": "Св. Рыты з Касіі, законніцы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "25.05",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Бэды Вялебнага, прэзбітэра і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Грыгорыя VII, папы",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Марыі Магдалены Паццы, панны",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "25.05-mm3ohd3e2c0ded698717",
+          "title": "Св. Марыі Магдалены Паццы, панны",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "25.05-mm3ohd3ecfba381c8c67",
+          "title": "Св. Бэды Вялебнага, прэзбітэра і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "25.05-mm3ohd3ee19a6df7de77",
+          "title": "Св. Грыгорыя VII, папы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "26.05",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Філіпа Нэры, прэзбітэра",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "26.05-mm3ohd3efc3d761dcb49",
+          "title": "Св. Філіпа Нэры, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "27.05",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Аўгустына Кэнтэрберыйскага, біскупа",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "27.05-mm3ohd3ec112273fdea7",
+          "title": "Св. Аўгустына Кэнтэрберыйскага, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "29.05",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Паўла VI, папы",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [],
+      "difficulty": "needs-source",
+      "action": "fetch-from-catholic-by"
+    },
+    {
+      "date": "01.06",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Юстына, мучаніка",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "01.06-mm3ohd3f878e01628c9f",
+          "title": "Св. Юстына, мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "02.06",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Марцэліна і Пятра, мучанікаў",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "02.06-mm3ohd3ffdb49673c266",
+          "title": "Св. Марцэліна і Пятра, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "03.06",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Караля Луангі і паплечнікаў, мучанікаў",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "03.06-mm3ohd3f31f2330ee238",
+          "title": "Св. Караля Луангі і паплечнікаў, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "05.06",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Баніфацыя, біскупа і мучаніка",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "05.06-mm3ohd3fd234909d590a",
+          "title": "Св. Баніфацыя, біскупа і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "06.06",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [
+        "Віцебская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Св. Норбэрта, біскупа",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Баніфацыя, біскупа і мучаніка",
+          "rank": "",
+          "place": "Віцебская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "06.06-mm3ohd3f6f0c2a585c8b",
+          "title": "Св. Баніфацыя, біскупа і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "06.06-mm3ohd3fcb0371fd4082",
+          "title": "Св. Норбэрта, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "09.06",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Эфрэма, дыякана і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "09.06-mm3ohd3f6dd3e89bdabe",
+          "title": "Св. Эфрэма, дыякана і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "11.06",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Барнабы, апостала",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "11.06-mm3ohd3fdabf46abb186",
+          "title": "Св. Барнабы, апостала",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "12.06",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [
+        "Гродзенская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Бл. Генрыха Глябовіча, прэзбітэра, і паплечнікаў, мучанікаў другой сусветнай вайны",
+          "rank": "Успамін",
+          "place": "Гродзенская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "12.06-mm3ohd3f671b3620cc9e",
+          "title": "Бл. Генрыха Глябовіча, прэзбітэра, і паплечнікаў, мучанікаў другой сусветнай вайны",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "13.06",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Антонія Падуанскага, прэзбітэра і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "13.06-mm3ohd3f573fb228e552",
+          "title": "Св. Антонія Падуанскага, прэзбітэра і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "19.06",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Рамуальда, абата",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "19.06-mm3ohd3f19499ffb1045",
+          "title": "Св. Рамуальда, абата",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "21.06",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Алаізія Ганзагі, законніка",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "21.06-mm3ohd3fc7cf7227510f",
+          "title": "Св. Алаізія Ганзагі, законніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "22.06",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Паўліна Нольскага, біскупа",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Джона Фішара, біскупа, і Томаса Мора, мучанікаў",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "22.06-mm3ohd3f156e4a84fd18",
+          "title": "Св. Паўліна Нольскага, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "22.06-mm3ohd3fe7959597c9ca",
+          "title": "Св. Джона Фішара, біскупа, і Томаса Мора, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "27.06",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Кірыла Александрыйскага, біскупа і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "27.06-mm3ohd3f7d6072e48a0a",
+          "title": "Св. Кірыла Александрыйскага, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "28.06",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Ірэнэя, біскупа і мучаніка",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "28.06-mm3ohd3f92c8a9371cb8",
+          "title": "Св. Ірэнэя, біскупа і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "30.06",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Першамучанікаў Рымскага Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "30.06-mm3ohd3f982bc1966dd5",
+          "title": "Св. Першамучанікаў Рымскага Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "04.07",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Альжбеты Партугальскай",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "04.07-mm3ohd3g14cac6182e94",
+          "title": "Св. Альжбеты Партугальскай",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "05.07",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [
+        "Гродзенская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Св. Антонія Марыі Дзаккарыя, прэзбітэра",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Найсв. Панны Марыі Тракельскай",
+          "rank": "",
+          "place": "Гродзенская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "05.07-mm3ohd3g76db60ecb58e",
+          "title": "Св. Антонія Марыі Дзаккарыя, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "05.07-mm3ohd3ga5efc33ebc12",
+          "title": "Найсв. Панны Марыі Тракельскай",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "06.07",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Марыі Гарэцці, панны і мучаніцы",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "06.07-mm3ohd3gafc74afffb94",
+          "title": "Св. Марыі Гарэцці, панны і мучаніцы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "09.07",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Аўгустына Джао Жонга, прэзбітэра, і паплечнікаў, мучанікаў",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "09.07-mm3ohd3gd3a15354fabb",
+          "title": "Св. Аўгустына Джао Жонга, прэзбітэра, і паплечнікаў, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "13.07",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Генрыха",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "13.07-mm3ohd3g6d70b442b6f4",
+          "title": "Св. Генрыха",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "14.07",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Каміла Леліскага, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "14.07-mm3ohd3g3f2273dbec7c",
+          "title": "Св. Каміла Леліскага, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "15.07",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Бонавэнтуры, біскупа і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "15.07-mm3ohd3gb0706d9bcd83",
+          "title": "Св. Бонавэнтуры, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "16.07",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [
+        "Мінска-Магілёўская архідыяцэзія",
+        "Пінская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Найсв. Панны Марыі з гары Кармэль",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Найсв. Панны Марыі з гары Кармэль",
+          "rank": "Успамін",
+          "place": "Мінска-Магілёўская архідыяцэзія"
+        },
+        {
+          "title": "Найсв. Панны Марыі з гары Кармэль",
+          "rank": "Успамін",
+          "place": "Пінская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "16.07-mm3ohd3g4931497d1f06",
+          "title": "Найсв. Панны Марыі з гары Кармэль",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "16.07-mm3ohd3g4e5b9495d56c",
+          "title": "Найсв. Панны Марыі з гары Кармэль",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "16.07-mm3ohd3g50aa60772d02",
+          "title": "Найсв. Панны Марыі з гары Кармэль",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "20.07",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Апалінарыя, біскупа і мучаніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "20.07-mm3ohd3g890265b2865a",
+          "title": "Св. Апалінарыя, біскупа і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "21.07",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Лаўрэнція з Брындызі, прэзбітэра і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "21.07-mm3ohd3gbb2ae8f6ae16",
+          "title": "Св. Лаўрэнція з Брындызі, прэзбітэра і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "24.07",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Шарбэля Маклуфа, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "24.07-mm3ohd3g77f049af80f1",
+          "title": "Св. Шарбэля Маклуфа, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "26.07",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Яўхіма і Ганны, бацькоў Найсв. Панны Марыі",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "26.07-mm3ohd3g52352b5dc00a",
+          "title": "Св. Яўхіма і Ганны, бацькоў Найсв. Панны Марыі",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "29.07",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Марты",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "29.07-mm3ohd3gc937ef31d83b",
+          "title": "Св. Марты",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "30.07",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Пятра Хрызалога, біскупа і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "30.07-mm3ohd3gd6f1514bb2f5",
+          "title": "Св. Пятра Хрызалога, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "31.07",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Ігнацыя Лаёлы, прэзбітэра",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "31.07-mm3ohd3gc908de5e8093",
+          "title": "Св. Ігнацыя Лаёлы, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "01.08",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Альфонса Марыі Лігуоры, біскупа і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "01.08-mm3ohd3g28211369afa5",
+          "title": "Св. Альфонса Марыі Лігуоры, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "02.08",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Эўзэбія Вэрчэльскага, біскупа",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Пятра Юліяна Эймарда, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "02.08-mm3ohd3g3d4b81ab3748",
+          "title": "Св. Эўзэбія Вэрчэльскага, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "02.08-mm3ohd3gda9f6af5d556",
+          "title": "Св. Пятра Юліяна Эймарда, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "04.08",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Яна Марыі Віянэя, прэзбітэра",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "04.08-mm3ohd3h4dccaa7b796f",
+          "title": "Св. Яна Марыі Віянэя, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "05.08",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [
+        "Гродзенская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Гадавіна пасвячэння рымскай базылікі Найсв. Панны Марыі",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Найсв. Панны Марыі Кангрэгацкай (Студэнцкай)",
+          "rank": "",
+          "place": "Гродзенская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "05.08-mm3ohd3h33b0de4663f2",
+          "title": "Найсв. Панны Марыі Кангрэгацкай (Студэнцкай)",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "05.08-mm3ohd3hc5dfabd28511",
+          "title": "Гадавіна пасвячэння рымскай базылікі Найсв. Панны Марыі",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "07.08",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Сікста ІІ, папы, і паплечнікаў, мучанікаў",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Каятана, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "07.08-mm3ohd3h5ccdd5c692ff",
+          "title": "Св. Сікста ІІ, папы, і паплечнікаў, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "07.08-mm3ohd3h8910c7833250",
+          "title": "Св. Каятана, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "08.08",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Дамініка, прэзбітэра",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "08.08-mm3ohd3hf1d19c710a17",
+          "title": "Св. Дамініка, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "09.08",
+      "rank": "Свята",
+      "_rank": "festum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Тэрэзы Бэнэдыкты ад Крыжа (Эдыты Штайн), панны і мучаніцы, апякункі Еўропы",
+          "rank": "Свята",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "09.08-mm3ohd3h280f900ab135",
+          "title": "Св. Тэрэзы Бэнэдыкты ад Крыжа (Эдыты Штайн), панны і мучаніцы, апякункі Еўропы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "11.08",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Клары, панны",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "11.08-mm3ohd3he08fd38a3ff2",
+          "title": "Св. Клары, панны",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "12.08",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Жаны Франсуазы дэ Шанталь, законніцы",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "12.08-mm3ohd3h156d07a61af7",
+          "title": "Св. Жаны Франсуазы дэ Шанталь, законніцы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "13.08",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Пантыяна, папы, і Гіпаліта, прэзбітэра, мучанікаў",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "13.08-mm3ohd3hb251b13e8980",
+          "title": "Св. Пантыяна, папы, і Гіпаліта, прэзбітэра, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "14.08",
+      "rank": "Свята",
+      "_rank": "festum",
+      "dioceses": [
+        "Гродзенская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Св. Максімільяна Марыі Кольбэ, прэзбітэра і мучаніка",
+          "rank": "Успамін",
+          "place": ""
+        },
+        {
+          "title": "Св. Максімільяна Марыі Кольбэ, прэзбітэра і мучаніка, дадатковага апекуна дыяцэзіі",
+          "rank": "Свята",
+          "place": "Гродзенская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "14.08-mm3ohd3h198a86ee9778",
+          "title": "Св. Максімільяна Марыі Кольбэ, прэзбітэра і мучаніка, дадатковага апекуна дыяцэзіі",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "14.08-mm3ohd3h35d2b0d3d854",
+          "title": "Св. Максімільяна Марыі Кольбэ, прэзбітэра і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "16.08",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Стэфана Венгерскага",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "16.08-mm3ohd3he5ce5ffbfa67",
+          "title": "Св. Стэфана Венгерскага",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "19.08",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Яна Эда, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "19.08-mm3ohd3h8da170948e3d",
+          "title": "Св. Яна Эда, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "20.08",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Бэрнарда, абата і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "20.08-mm3ohd3h48244a4ed86c",
+          "title": "Св. Бэрнарда, абата і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "21.08",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Пія Х, папы",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "21.08-mm3ohd3h82578548614b",
+          "title": "Св. Пія Х, папы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "22.08",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Найсв. Панны Марыі Каралевы",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "22.08-mm3ohd3h74557984aa70",
+          "title": "Найсв. Панны Марыі Каралевы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "23.08",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Ружы Лімскай, панны",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "23.08-mm3ohd3h2b75902caaee",
+          "title": "Св. Ружы Лімскай, панны",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "25.08",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Людвіка",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Юзафа Каласанса, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "25.08-mm3ohd3h51e5b68ce66a",
+          "title": "Св. Людвіка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "25.08-mm3ohd3h8596f5f28f62",
+          "title": "Св. Юзафа Каласанса, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "26.08",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [
+        "Мінска-Магілёўская архідыяцэзія",
+        "Пінская дыяцэзія",
+        "Гродзенская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Найсв. Панны Марыі Чэнстахоўскай",
+          "rank": "Успамін",
+          "place": "Мінска-Магілёўская архідыяцэзія"
+        },
+        {
+          "title": "Найсв. Панны Марыі Чэнстахоўскай",
+          "rank": "Успамін",
+          "place": "Пінская дыяцэзія"
+        },
+        {
+          "title": "Найсв. Панны Марыі Чэнстахоўскай",
+          "rank": "Успамін",
+          "place": "Гродзенская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "26.08-mm3ohd3h1e28dbc4ac04",
+          "title": "Найсв. Панны Марыі Чэнстахоўскай",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "26.08-mm3ohd3i1db836654548",
+          "title": "Найсв. Панны Марыі Чэнстахоўскай",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "26.08-mm3ohd3i5b1a41514185",
+          "title": "Найсв. Панны Марыі Чэнстахоўскай",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "27.08",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Монікі",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "27.08-mm3ohd3i8a7ef357e9d1",
+          "title": "Св. Монікі",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "28.08",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Аўгустына, біскупа і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "28.08-mm3ohd3i226ed9a11198",
+          "title": "Св. Аўгустына, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "29.08",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Мучаніцтва св. Яна Хрысціцеля",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "29.08-mm3ohd3id399ad3449ef",
+          "title": "Мучаніцтва св. Яна Хрысціцеля",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "03.09",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Грыгорыя Вялікага, папы і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "03.09-mm3ohd3i48b06b92b01a",
+          "title": "Св. Грыгорыя Вялікага, папы і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "04.09",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [
+        "Гродзенская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц",
+          "rank": "Успамін",
+          "place": "Гродзенская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "04.09-mm3ohd3i8398cfa2dabc",
+          "title": "Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "09.09",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Пятра Клявэра, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "09.09-mm3ohd3i74cf7159eb0c",
+          "title": "Св. Пятра Клявэра, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "12.09",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [
+        "Мінска-Магілёўская архідыяцэзія",
+        "Пінская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Найсвяцейшага Імя Марыі",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Найсвяцейшага Імя Марыі",
+          "rank": "Успамін",
+          "place": "Мінска-Магілёўская архідыяцэзія"
+        },
+        {
+          "title": "Найсвяцейшага Імя Марыі",
+          "rank": "Успамін",
+          "place": "Пінская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "12.09-mm3ohd3i4012ef05cf75",
+          "title": "Найсвяцейшага Імя Марыі",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "12.09-mm3ohd3i985f08bb1d6f",
+          "title": "Найсвяцейшага Імя Марыі",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "12.09-mm3ohd3id2d4de18ebcf",
+          "title": "Найсвяцейшага Імя Марыі",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "13.09",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Яна Залатавуснага (Хрызастома), біскупа і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "13.09-mm3ohd3i1a9199978a61",
+          "title": "Св. Яна Залатавуснага (Хрызастома), біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "15.09",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Найсв. Панны Марыі Балеснай",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "15.09-mm3ohd3i99d4472b5c64",
+          "title": "Найсв. Панны Марыі Балеснай",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "16.09",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Карнэлія, папы, і Кіпрыяна, біскупа, мучанікаў",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "16.09-mm3ohd3i941e40328f9a",
+          "title": "Св. Карнэлія, папы, і Кіпрыяна, біскупа, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "17.09",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Робэрта Бэлярміна, біскупа і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "17.09-mm3ohd3i2df69f599167",
+          "title": "Св. Робэрта Бэлярміна, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "18.09",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [
+        "Мінска-Магілёўская архідыяцэзія",
+        "Пінская дыяцэзія",
+        "Гродзенская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Св. Станіслава Косткі, законніка",
+          "rank": "Успамін",
+          "place": "Мінска-Магілёўская архідыяцэзія"
+        },
+        {
+          "title": "Св. Станіслава Косткі, законніка",
+          "rank": "Успамін",
+          "place": "Пінская дыяцэзія"
+        },
+        {
+          "title": "Св. Станіслава Косткі, законніка",
+          "rank": "Успамін",
+          "place": "Гродзенская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "18.09-mm3ohd3i3db2a4203ec1",
+          "title": "Св. Станіслава Косткі, законніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "18.09-mm3ohd3i46d32b096568",
+          "title": "Св. Станіслава Косткі, законніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "18.09-mm3ohd3ib161a029ce97",
+          "title": "Св. Станіслава Косткі, законніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "19.09",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Януарыя, біскупа і мучаніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "19.09-mm3ohd3i66b21b63667e",
+          "title": "Св. Януарыя, біскупа і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "20.09",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Андрэя Кім Таэгона, прэзбітэра, і Паўла Чон Хасана, і паплечнікаў, мучанікаў",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "20.09-mm3ohd3id79c197612a5",
+          "title": "Св. Андрэя Кім Таэгона, прэзбітэра, і Паўла Чон Хасана, і паплечнікаў, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "23.09",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Піо з П’етрэльчыны, прэзбітэра",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "23.09-mm3ohd3ib45bf126a2f4",
+          "title": "Св. Піо з П’етрэльчыны, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "26.09",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Космы і Дам’яна, мучанікаў",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "26.09-mm3ohd3i66aac69b6ea6",
+          "title": "Св. Космы і Дам’яна, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "27.09",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Вінцэнта дэ Поля, прэзбітэра",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "27.09-mm3ohd3ieb94f65eafba",
+          "title": "Св. Вінцэнта дэ Поля, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "28.09",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Вацлава, мучаніка",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Лаўрэнція Руіса і паплечнікаў, мучанікаў",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "28.09-mm3ohd3i1b2044d7df95",
+          "title": "Св. Лаўрэнція Руіса і паплечнікаў, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "28.09-mm3ohd3ia7d1aac20703",
+          "title": "Св. Вацлава, мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "30.09",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Гераніма, прэзбітэра і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "30.09-mm3ohd3if6ba3ac86584",
+          "title": "Св. Гераніма, прэзбітэра і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "01.10",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Тэрэзы ад Дзіцятка Езус, панны і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "01.10-mm3ohd3i6644342aa426",
+          "title": "Св. Тэрэзы ад Дзіцятка Езус, панны і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "02.10",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Анёлаў Ахоўнікаў",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "02.10-mm3ohd3ib320d7108930",
+          "title": "Св. Анёлаў Ахоўнікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "04.10",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Францішка Асізскага",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "04.10-mm3ohd3i45f94c457881",
+          "title": "Св. Францішка Асізскага",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "06.10",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Бруна, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "06.10-mm3ohd3ifc7a64456cbe",
+          "title": "Св. Бруна, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "07.10",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Найсв. Панны Марыі Ружанцовай",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "07.10-mm3ohd3i58756989557d",
+          "title": "Найсв. Панны Марыі Ружанцовай",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "09.10",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Дыянісія, біскупа, і паплечнікаў, мучанікаў",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Яна Леанардзі, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "09.10-mm3ohd3i5c732323a793",
+          "title": "Св. Дыянісія, біскупа, і паплечнікаў, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "09.10-mm3ohd3jc64f4a08d20f",
+          "title": "Св. Яна Леанардзі, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "10.10",
+      "rank": "Свята",
+      "_rank": "festum",
+      "dioceses": [
+        "Віцебская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Гадавіна пасвячэння катэдральнага касцёла",
+          "rank": "Свята",
+          "place": "Віцебская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "10.10-mm3ohd3j3d2cc38106cf",
+          "title": "Гадавіна пасвячэння катэдральнага касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "14.10",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Калікста І, папы і мучаніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "14.10-mm3ohd3je27a0659c5cf",
+          "title": "Св. Калікста І, папы і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "15.10",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Тэрэзы ад Езуса, панны і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "15.10-mm3ohd3j6ecf0b8a3a99",
+          "title": "Св. Тэрэзы ад Езуса, панны і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "16.10",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Ядвігі, законніцы",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Маргарыты Марыі Алякок, панны",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "16.10-mm3ohd3j598e6bf3ef96",
+          "title": "Св. Ядвігі, законніцы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "16.10-mm3ohd3jb272df5d19fa",
+          "title": "Св. Маргарыты Марыі Алякок, панны",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "17.10",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Ігнацыя з Антыёхіі, біскупа і мучаніка",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "17.10-mm3ohd3jaa1ebfe7a4c4",
+          "title": "Св. Ігнацыя з Антыёхіі, біскупа і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "19.10",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Жана дэ Брэбёфа і Ісаака Жога, прэзбітэраў, і паплечнікаў, мучанікаў",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Паўла ад Крыжа, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "19.10-mm3ohd3j59985044458f",
+          "title": "Св. Жана дэ Брэбёфа і Ісаака Жога, прэзбітэраў, і паплечнікаў, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "19.10-mm3ohd3j8fb24333c1fa",
+          "title": "Св. Паўла ад Крыжа, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "22.10",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Яна Паўла ІІ, папы",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "22.10-mm3ohd3je40219b7f8bb",
+          "title": "Св. Яна Паўла ІІ, папы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "23.10",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Яна Капістрана, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "23.10-mm3ohd3j53355078bd7b",
+          "title": "Св. Яна Капістрана, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "24.10",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Антонія Марыі Клярэта, біскупа",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "24.10-mm3ohd3j7b452d101d90",
+          "title": "Св. Антонія Марыі Клярэта, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "26.10",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [
+        "Гродзенская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Бл. Цэліны Бажэцкай",
+          "rank": "",
+          "place": "Гродзенская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "26.10-mm3ohd3j8836643012a8",
+          "title": "Бл. Цэліны Бажэцкай",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "03.11",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Марціна дэ Порэса, законніка",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "03.11-mm3ohd3jaa66c1706a23",
+          "title": "Св. Марціна дэ Порэса, законніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "04.11",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Караля Барамэя, біскупа",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "04.11-mm3ohd3j462a9af3faf7",
+          "title": "Св. Караля Барамэя, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "10.11",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Льва Вялікага, папы і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "10.11-mm3ohd3jbfd265d07c7c",
+          "title": "Св. Льва Вялікага, папы і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "11.11",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Марціна Турскага, біскупа",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "11.11-mm3ohd3j89394f8ee4d5",
+          "title": "Св. Марціна Турскага, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "15.11",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Альбэрта Вялікага, біскупа і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "15.11-mm3ohd3j8f8cd41d95e3",
+          "title": "Св. Альбэрта Вялікага, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "16.11",
+      "rank": "Урачыстасць",
+      "_rank": "solemnitas",
+      "dioceses": [
+        "Гродзенская дыяцэзія",
+        "Мінска-Магілёўская архідыяцэзія",
+        "Пінская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Маргарыты Шатландскай",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Гертруды, панны",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай), галоўнай апякункі дыяцэзіі",
+          "rank": "Урачыстасць",
+          "place": "Гродзенская дыяцэзія"
+        },
+        {
+          "title": "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)",
+          "rank": "Успамін",
+          "place": "Мінска-Магілёўская архідыяцэзія"
+        },
+        {
+          "title": "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)",
+          "rank": "Успамін",
+          "place": "Пінская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "16.11-mm3ohd3j278c3b0db805",
+          "title": "Св. Гертруды, панны",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "16.11-mm3ohd3j3982ddbbb762",
+          "title": "Св. Маргарыты Шатландскай",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "16.11-mm3ohd3j9ece9b5aff0a",
+          "title": "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай), галоўнай апякункі дыяцэзіі",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "16.11-mm3ohd3jd4bf2ecfca24",
+          "title": "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "16.11-mm3ohd3jdacffe045999",
+          "title": "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "16.11-mm3ohd3k326ed09f74ff",
+          "title": "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "17.11",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Альжбеты Венгерскай, законніцы",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "17.11-mm3ohd3k3895d9a27777",
+          "title": "Св. Альжбеты Венгерскай, законніцы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "18.11",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Гадавіна пасвячэння рымскіх базылік св. апосталаў Пятра і Паўла",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "18.11-mm3ohd3k11deb1e709e4",
+          "title": "Гадавіна пасвячэння рымскіх базылік св. апосталаў Пятра і Паўла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "20.11",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Рафала Каліноўскага, прэзбітэра",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "20.11-mm3ohd3k1aef6a997ac9",
+          "title": "Св. Рафала Каліноўскага, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "21.11",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Ахвяраванне Найсв. Панны Марыі",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "21.11-mm3ohd3k352ea71df77a",
+          "title": "Ахвяраванне Найсв. Панны Марыі",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "22.11",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Цэцыліі, панны і мучаніцы",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "22.11-mm3ohd3kaf0637da2832",
+          "title": "Св. Цэцыліі, панны і мучаніцы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "23.11",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Клімэнта І, папы і мучаніка",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Св. Калюмбана, абата",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "23.11-mm3ohd3k4bf31b975d40",
+          "title": "Св. Клімэнта І, папы і мучаніка",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "23.11-mm3ohd3kb93de3a28bb2",
+          "title": "Св. Калюмбана, абата",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "24.11",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Андрэя Зунг Лака, прэзбітэра, і паплечнікаў, мучанікаў",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "24.11-mm3ohd3k856a10c00700",
+          "title": "Св. Андрэя Зунг Лака, прэзбітэра, і паплечнікаў, мучанікаў",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "25.11",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Кацярыны Александрыйскай, панны і мучаніцы",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "25.11-mm3ohd3keb48cf6c3ab1",
+          "title": "Св. Кацярыны Александрыйскай, панны і мучаніцы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "03.12",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Францішка Ксавэрыя, прэзбітэра",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "03.12-mm3ohd3k104696878364",
+          "title": "Св. Францішка Ксавэрыя, прэзбітэра",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "04.12",
+      "rank": "Свята",
+      "_rank": "festum",
+      "dioceses": [
+        "Гродзенская дыяцэзія"
+      ],
+      "celebrations": [
+        {
+          "title": "Св. Яна Дамаскіна, прэзбітэра і доктара Касцёла",
+          "rank": "",
+          "place": ""
+        },
+        {
+          "title": "Гадавіна пасвячэння катэдральнага касцёла",
+          "rank": "Свята",
+          "place": "Гродзенская дыяцэзія"
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "04.12-mm3ohd3k8c679e254d3b",
+          "title": "Св. Яна Дамаскіна, прэзбітэра і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        },
+        {
+          "id": "04.12-mm3ohd3k9a205d3d43f5",
+          "title": "Гадавіна пасвячэння катэдральнага касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "06.12",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Мікалая, біскупа",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "06.12-mm3ohd3kc5e1cd4f9638",
+          "title": "Св. Мікалая, біскупа",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "07.12",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Амброзія, біскупа і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "07.12-mm3ohd3ka2fd61c4bfa9",
+          "title": "Св. Амброзія, біскупа і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "11.12",
+      "rank": "",
+      "_rank": "memoria-ad-libitum",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Дамаса І, папы",
+          "rank": "",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "11.12-mm3ohd3k2c20b651cae1",
+          "title": "Св. Дамаса І, папы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "13.12",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Люцыі, панны і мучаніцы",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "13.12-mm3ohd3k2f029fe14c84",
+          "title": "Св. Люцыі, панны і мучаніцы",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    },
+    {
+      "date": "14.12",
+      "rank": "Успамін",
+      "_rank": "memoria",
+      "dioceses": [],
+      "celebrations": [
+        {
+          "title": "Св. Яна ад Крыжа, прэзбітэра і доктара Касцёла",
+          "rank": "Успамін",
+          "place": ""
+        }
+      ],
+      "readingsInOldCollection": [
+        {
+          "id": "14.12-mm3ohd3k44aa103d4e3f",
+          "title": "Св. Яна ад Крыжа, прэзбітэра і доктара Касцёла",
+          "type": "fixed",
+          "format": "plain",
+          "bibleRefs": [],
+          "hasText": true,
+          "hasBibleRefs": false
+        }
+      ],
+      "difficulty": "manual-refs",
+      "action": "check-and-migrate"
+    }
+  ]
+}

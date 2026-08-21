@@ -13,15 +13,19 @@
         color="white"
         class="mt-2"
         prepend-icon="mdi-refresh"
-        @click="loadReadings"
+        @click="load"
       >
         Паўтарыць
       </v-btn>
     </v-alert>
 
-    <div v-else-if="hasReading" class="readings-content">
-      <!-- Текст чтения (включает заголовок) -->
-      <div class="prayer-content-area" v-html="readingText"></div>
+    <div v-else-if="hasReadings" class="readings-content">
+      <ParsedReadingCard
+        v-for="reading in items"
+        :key="reading.id"
+        :reading="reading"
+        class="mb-6"
+      />
     </div>
 
     <div v-else class="text-center py-16">
@@ -37,58 +41,24 @@
 <script setup>
 import { onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useReadings } from '@/composables/useReadings';
-import { useLiturgicalReadings } from '@/composables/useLiturgicalReadings';
-import { useReadingsStore } from '@/stores/readings';
-import { logger } from '@/utils/logger';
+import { useParsedReadings } from '@/composables/useParsedReadings';
+import ParsedReadingCard from '@/components/readings/ParsedReadingCard.vue';
 import moment from '@/utils/moment-be';
 
 const route = useRoute();
-const { 
-  readingText, 
-  hasReading, 
-  isLoading, 
-  error,
-} = useReadings();
+const { items, isLoading, error, hasReadings, loadForDate, loadForToday } = useParsedReadings();
 
-const readingsStore = useReadingsStore();
-const { getLiturgicalReadingsForDate } = useLiturgicalReadings();
-
-/**
- * Загрузить чтения для текущей даты
- * Использует ту же логику, что и для литургических дней:
- * - По периоду (periodType, periodWeekNumber, dayOfWeek)
- * - По дате (фиксированные праздники)
- * - По ключевому слову (динамические праздники: Пасха, Пятидесятница и т.д.)
- */
-async function loadReadings() {
-  // Поддержка параметра date из роута или query
+function load() {
   const dateParam = route.params.date || route.query.date;
-  const date = dateParam ? moment(dateParam, 'YYYY-MM-DD').toDate() : moment().toDate();
-  
-  logger.log('[ReadingsView] Loading readings for liturgical day:', moment(date).format('YYYY-MM-DD'));
-  
-  try {
-    readingsStore.setLoading(true);
-    
-    // Используем новый composable, который работает аналогично useLiturgicalDay
-    const liturgicalReadings = await getLiturgicalReadingsForDate(date);
-    
-    // Обновляем store с найденными чтениями (метод сам выберет наиболее подходящее)
-    readingsStore.setReadingsFromResults(liturgicalReadings.items);
-  } catch (err) {
-    logger.error('[ReadingsView] Error loading readings:', err);
-    readingsStore.setReadingsFromResults([]); // Устанавливаем пустой массив при ошибке
+  if (dateParam) {
+    loadForDate(moment(dateParam, 'YYYY-MM-DD').toDate());
+  } else {
+    loadForToday();
   }
 }
 
-onMounted(() => {
-  loadReadings();
-});
-
-watch(() => route.params.date || route.query.date, () => {
-  loadReadings();
-});
+onMounted(load);
+watch(() => route.params.date || route.query.date, load);
 </script>
 
 <style scoped>
@@ -98,15 +68,5 @@ watch(() => route.params.date || route.query.date, () => {
 
 .readings-content {
   width: 100%;
-  text-align: left !important;
-}
-
-.readings-content :deep(*) {
-  text-align: left !important;
-}
-
-.readings-content :deep([style*="text-align: justify"]),
-.readings-content :deep([style*="text-align:justify"]) {
-  text-align: left !important;
 }
 </style>

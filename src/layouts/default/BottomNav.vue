@@ -1,42 +1,67 @@
 <template>
-  <div>
-    <v-bottom-navigation 
-      :model-value="activeIndex" 
-      color="primary" 
-      bg-color="surface"
-      elevation="4"
-      height="64"
-    >
-      <v-btn 
-        v-for="(m, i) in menu" 
-        :key="i" 
-        :value="i"
-        :active="activeIndex === i"
-        @click="navigateTo(m.to)"
-        variant="text"
-        size="large"
-        class="bottom-nav-btn"
-      >
-        <v-icon size="24">{{ m.icon }}</v-icon>
-        <span class="text-caption font-weight-medium">{{ m.title }}</span>
-      </v-btn>
-      
-      <v-btn 
-        :value="2" 
-        :active="activeIndex === 2"
-        @click="toggleCalendarDialog()"
-        variant="text"
-        size="large"
-        class="bottom-nav-btn"
-      >
-        <v-icon size="24">mdi-calendar-month</v-icon>
-        <span class="text-caption font-weight-medium">Дзень</span>
-      </v-btn>
-    </v-bottom-navigation>
+  <!-- Outer safe-area wrapper -->
+  <div class="pill-nav-outer">
+    <div class="pill-nav-row">
 
-    <v-dialog 
-      v-model="isCalendarDialogOpen" 
-      width="calc(100% - 24px)" 
+      <!-- Prev-day arrow (day routes only) -->
+      <button
+        v-if="showArrows"
+        class="arrow-btn"
+        aria-label="Папярэдні дзень"
+        @click="goToPrevDay"
+      >
+        <PhCaretLeft :size="20" />
+      </button>
+
+      <!-- Dark pill -->
+      <div class="pill">
+        <!-- Picker -->
+        <button
+          class="pill-item"
+          :class="{ 'pill-item--active': activeIndex === 0 }"
+          aria-label="Выбраць"
+          @click="navigateTo('/picker')"
+        >
+          <PhListBullets :size="23" />
+        </button>
+
+        <!-- Today / Home -->
+        <button
+          class="pill-item"
+          :class="{ 'pill-item--active': activeIndex === 1 }"
+          aria-label="Сёння"
+          @click="goHome"
+        >
+          <PhSunHorizon :size="23" />
+        </button>
+
+        <!-- Calendar picker -->
+        <button
+          class="pill-item"
+          :class="{ 'pill-item--active': activeIndex === 2 }"
+          aria-label="Каляндар"
+          @click="toggleCalendarDialog"
+        >
+          <PhCalendarBlank :size="23" />
+        </button>
+      </div>
+
+      <!-- Next-day arrow (day routes only) -->
+      <button
+        v-if="showArrows"
+        class="arrow-btn"
+        aria-label="Наступны дзень"
+        @click="goToNextDay"
+      >
+        <PhCaretRight :size="20" />
+      </button>
+
+    </div>
+
+    <!-- Calendar dialog -->
+    <v-dialog
+      v-model="isCalendarDialogOpen"
+      width="calc(100% - 24px)"
       max-width="420"
       scrim="black"
       :persistent="false"
@@ -48,7 +73,7 @@
             <div class="date-dialog-eyebrow">Каляндар</div>
             <div class="date-dialog-heading">Выбраць дату</div>
           </div>
-          <v-btn icon="mdi-close" variant="text" size="small" aria-label="Закрыць" @click="toggleCalendarDialog"></v-btn>
+          <v-btn icon="mdi-close" variant="text" size="small" aria-label="Закрыць" @click="toggleCalendarDialog" />
         </v-card-title>
         <v-card-text class="pa-0">
           <CustomDatePicker
@@ -56,7 +81,7 @@
             color="primary"
             :first-day-of-week="1"
             show-adjacent-months
-          ></CustomDatePicker>
+          />
         </v-card-text>
         <v-card-actions class="date-dialog-actions">
           <v-btn variant="text" prepend-icon="mdi-calendar-today" @click="selectToday">Сёння</v-btn>
@@ -69,134 +94,164 @@
 </template>
 
 <script setup>
-import moment from '@/utils/moment-be'
-import { ref, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useAppBar } from '@/composables/useAppBar'
-import CustomDatePicker from '@/components/common/CustomDatePicker.vue'
+import { ref, computed, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useAppBar } from '@/composables/useAppBar';
+import CustomDatePicker from '@/components/common/CustomDatePicker.vue';
+import moment from '@/utils/moment-be';
+import { PhListBullets, PhSunHorizon, PhCalendarBlank, PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue';
 
-const route = useRoute()
-const router = useRouter()
-const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar()
-// Инициализируем с валидной датой
-const selectedDate = ref(new Date())
+const route  = useRoute();
+const router = useRouter();
+const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar();
+
+const selectedDate = ref(new Date());
+
+// Routes where date arrows appear
+const DAY_ROUTES = new Set(['Today', 'SelectedDay']);
+const showArrows = computed(() => DAY_ROUTES.has(route.name));
 
 const currentRouteDate = computed(() => {
-  if (route.name === 'Today' || route.path === '/') {
-    return moment().startOf('day')
-  }
+  if (route.name === 'Today' || route.path === '/') return moment().startOf('day');
   if (route.params.day) {
-    const mDate = moment(route.params.day, 'YYYY-MM-DD')
-    if (mDate.isValid()) {
-      return mDate.startOf('day')
-    }
+    const m = moment(route.params.day, 'YYYY-MM-DD');
+    if (m.isValid()) return m.startOf('day');
   }
-  return moment().startOf('day')
-})
+  return moment().startOf('day');
+});
 
-const today = computed(() => moment().startOf('day'))
-
-const menu = computed(() => [
-  {
-    title: "Выбраць",
-    to: "/picker",
-    icon: "mdi-calendar-search"
-  },
-  {
-    title: "Сёння",
-    to: "/",
-    icon: "mdi-calendar-today"
-  },
-])
+const today = computed(() => moment().startOf('day'));
 
 const activeIndex = computed(() => {
-  if (route.name === 'LiturgicalPicker') {
-    return 0
-  }
-  
-  const routeDate = currentRouteDate.value
-  const todayDate = today.value
-  
-  if (routeDate.isSame(todayDate, 'day')) {
-    return 1
+  if (route.name === 'LiturgicalPicker') return 0;
+  if (currentRouteDate.value.isSame(today.value, 'day')) return 1;
+  return 2;
+});
+
+function navigateTo(path) { router.push(path); }
+
+function goHome() {
+  router.push('/');
+}
+
+function goToPrevDay() {
+  const prev = currentRouteDate.value.clone().subtract(1, 'day');
+  navigateToDate(prev);
+}
+
+function goToNextDay() {
+  const next = currentRouteDate.value.clone().add(1, 'day');
+  navigateToDate(next);
+}
+
+function navigateToDate(m) {
+  if (m.isSame(today.value, 'day')) {
+    router.push('/');
   } else {
-    return 2
+    router.push(`/day/${m.format('YYYY-MM-DD')}`);
   }
-})
-
-function navigateTo(path) {
-  router.push(path)
 }
 
-function selectToday() {
-  selectedDate.value = new Date()
-}
+function selectToday() { selectedDate.value = new Date(); }
 
-watch(isCalendarDialogOpen, (isOpen) => {
-  if (isOpen) {
-    try {
-      const date = currentRouteDate.value
-      if (date && date.isValid()) {
-        const dateObj = date.toDate()
-        // Проверяем, что дата валидна
-        if (dateObj && !isNaN(dateObj.getTime())) {
-          selectedDate.value = dateObj
-        } else {
-          selectedDate.value = new Date()
-        }
-      } else {
-        selectedDate.value = new Date()
-      }
-    } catch (error) {
-      console.error('[BottomNav] Ошибка при установке даты в календарь:', error)
-      selectedDate.value = new Date()
-    }
+watch(isCalendarDialogOpen, (open) => {
+  if (!open) return;
+  try {
+    const d = currentRouteDate.value;
+    selectedDate.value = d.isValid() ? d.toDate() : new Date();
+  } catch {
+    selectedDate.value = new Date();
   }
-})
+});
 
 function loadDay() {
-  toggleCalendarDialog()
-  const date = selectedDate.value
-  if (!date) {
-    return
-  }
-  try {
-    const mDate = moment(date)
-    if (!mDate.isValid()) {
-      return
-    }
-    const dateString = mDate.format('YYYY-MM-DD')
-    if (mDate.isSame(today.value, 'day')) {
-      router.push('/')
-    } else {
-      router.push(`/day/${dateString}`)
-    }
-  } catch (error) {
-    console.error('[BottomNav] Ошибка при загрузке дня:', error)
-  }
+  toggleCalendarDialog();
+  if (!selectedDate.value) return;
+  const m = moment(selectedDate.value);
+  if (!m.isValid()) return;
+  navigateToDate(m.startOf('day'));
 }
 </script>
 
 <style scoped>
-:deep(.v-bottom-navigation) {
-  position: fixed !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  z-index: 100 !important;
+/* ── outer wrapper ── */
+.pill-nav-outer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+  pointer-events: none; /* let clicks through where no interactive child */
 }
 
-.bottom-nav-btn {
-  min-width: 80px;
-  flex-direction: column;
-  gap: 4px;
+/* ── row containing arrows + pill ── */
+.pill-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 16px 12px;
+  pointer-events: none;
 }
 
-.bottom-nav-btn :deep(.v-btn__content) {
-  flex-direction: column;
-  gap: 4px;
+/* ── dark pill ── */
+.pill {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  background: #1A1A1A;
+  border-radius: 30px;
+  padding: 0 4px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+  pointer-events: auto;
 }
 
+/* ── each icon slot inside pill ── */
+.pill-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 48px;
+  border: none;
+  background: transparent;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.pill-item:active { opacity: 0.7; }
+
+.pill-item--active {
+  background: #FFFFFF;
+  color: #111111;
+}
+
+.pill-item .v-icon { transition: color 0.18s ease; }
+
+/* ── arrow buttons ── */
+.arrow-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: #1A1A1A;
+  border-radius: 50%;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+  transition: opacity 0.15s;
+  pointer-events: auto;
+}
+
+.arrow-btn:active { opacity: 0.6; }
+
+/* ── calendar dialog ── */
 .date-dialog-card {
   overflow: hidden;
   border: 1px solid rgba(var(--v-border-color), 0.14);

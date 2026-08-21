@@ -9,70 +9,100 @@
     </div>
 
     <v-list>
-      <v-list-item 
-        prepend-icon="mdi-home-outline" 
-        title="Літургія" 
+      <v-list-item
+        title="Літургія"
         :to="{ name: 'Today' }"
         :active="route.name === 'Today' || route.name === 'SelectedDay'"
-      ></v-list-item>
-      <!-- <v-list-item 
-        prepend-icon="mdi-book-open-variant-outline" 
-        title="Чытанні" 
-        :to="{ name: 'Readings' }"
-        :active="route.name === 'Readings' || route.name === 'ReadingsByDate' || route.name === 'ReadingsPicker'"
-      ></v-list-item> -->
-      <v-list-item 
-        prepend-icon="mdi-book-heart-outline" 
-        title="Малітвы" 
+      >
+        <template #prepend>
+          <PhCross :size="22" weight="light" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
+      <v-list-item
+        title="Малітвы"
         :to="{ name: 'Prayers' }"
         :active="route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView'"
-      ></v-list-item>
+      >
+        <template #prepend>
+          <PhBookBookmark :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
 
       <v-divider class="my-2"></v-divider>
+
       <v-list-item
-        prepend-icon="mdi-heart"
         title="Абраныя малітвы"
         :to="{ name: 'FavoritePrayers' }"
         :active="route.name === 'FavoritePrayers'"
-      ></v-list-item>
+      >
+        <template #prepend>
+          <PhHeart :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
       <v-list-item
-        prepend-icon="mdi-format-list-text"
         title="Марыйныя"
         @click="selectCategoryByName('Марыйныя')"
         :active="selectedCategory?.name === 'Марыйныя'"
-      ></v-list-item>
+      >
+        <template #prepend>
+          <PhBookmark :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
       <v-list-item
-        prepend-icon="mdi-format-list-text"
         title="Літаніі"
         @click="selectCategoryByName('Літаніі')"
         :active="selectedCategory?.name === 'Літаніі'"
-      ></v-list-item>
+      >
+        <template #prepend>
+          <PhBookmark :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
       <v-list-item
-        prepend-icon="mdi-format-list-text"
         title="Навэнны"
         @click="selectCategoryByName('Навэнны')"
         :active="selectedCategory?.name === 'Навэнны'"
-      ></v-list-item>
-      
+      >
+        <template #prepend>
+          <PhBookmark :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
       <v-divider class="my-2"></v-divider>
-      
-      <v-list-item 
-        prepend-icon="mdi-cog-outline" 
-        title="Налады" 
+
+      <v-list-item
+        title="Налады"
         :to="{ name: 'Settings' }"
         :active="route.name === 'Settings'"
-      ></v-list-item>
-      
+      >
+        <template #prepend>
+          <PhGear :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
       <v-divider class="my-2"></v-divider>
 
-      <v-list-item v-if="!auth.user" prepend-icon="mdi-login" title="Уваход" to="/login"></v-list-item>
-      
-      <template v-if="auth.user">
-        <v-list-item v-if="auth.isAdmin" prepend-icon="mdi-shield-account-outline" title="Панэль адміністратара" to="/admin"></v-list-item>
-        
-        <v-list-item prepend-icon="mdi-logout" title="Выйсці" @click="auth.logout"></v-list-item>
-      </template>
+      <v-list-item v-if="!auth.user" title="Уваход" to="/login">
+        <template #prepend>
+          <PhSignIn :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
 
+      <template v-if="auth.user">
+        <v-list-item v-if="auth.isAdmin" title="Панэль адміністратара" to="/admin">
+          <template #prepend>
+            <PhShieldCheck :size="22" class="drawer-icon" />
+          </template>
+        </v-list-item>
+        <v-list-item title="Выйсці" @click="auth.logout">
+          <template #prepend>
+            <PhSignOut :size="22" class="drawer-icon" />
+          </template>
+        </v-list-item>
+      </template>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -84,6 +114,10 @@ import { useAuthStore } from '@/stores/auth.js';
 import { useRoute, useRouter } from 'vue-router';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
+import {
+  PhCross, PhBookBookmark, PhHeart, PhBookmark,
+  PhGear, PhSignIn, PhSignOut, PhShieldCheck,
+} from '@phosphor-icons/vue';
 
 const { isDrawerOpen } = useAppBar();
 const auth = useAuthStore();
@@ -92,23 +126,28 @@ const router = useRouter();
 const settings = useSettingsStore();
 const { selectedCategory, setSelectedCategory } = usePrayersFilters();
 
-const isPrayersPage = computed(() => {
-  return route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView';
-});
+const isPrayersPage = computed(() =>
+  route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView',
+);
 
 const selectCategory = (category) => {
   setSelectedCategory(category);
-  // Закрываем drawer после выбора категории
   isDrawerOpen.value = false;
 };
 
 const selectCategoryByName = (categoryName) => {
-  // Находим категорию по имени в settings.menuCategories
   const category = settings.menuCategories.find(cat => cat.name === categoryName);
   if (category) {
     selectCategory(category);
-    // Переходим на страницу молитв
     router.push({ name: 'Prayers' });
   }
 };
 </script>
+
+<style scoped>
+.drawer-icon {
+  margin-right: 16px;
+  flex-shrink: 0;
+  color: rgba(var(--v-theme-on-surface), 0.7);
+}
+</style>

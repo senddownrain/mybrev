@@ -1,27 +1,13 @@
 <template>
   <v-container class="items-list-container">
-    <div class="d-flex align-center justify-space-between pa-2 mb-2 date-selector">
-      <v-btn
-        icon="mdi-chevron-left"
-        @click="goToPrevDay"
-        :disabled="softLoading"
-      ></v-btn>
-
-      <div
-        class="text-center flex-grow-1 mx-2"
-        @click="toggleCalendarDialog"
-        style="cursor: pointer;"
-      >
-        <h2 class="text-h6 font-weight-regular text-wrap">
-          {{ currentDate.format('D MMM YYYY') }}
-        </h2>
+    <div class="date-header pa-2 mb-2" @click="toggleCalendarDialog">
+      <h2 class="text-h6 font-weight-bold text-primary text-wrap text-center">
+        {{ currentDate.format('dddd') }}
+      </h2>
+      <div class="text-body-2 text-medium-emphasis text-center">
+        {{ currentDate.format('D MMMM') }}
+        <span v-if="isToday" class="today-badge">сёння</span>
       </div>
-
-      <v-btn
-        icon="mdi-chevron-right"
-        @click="goToNextDay"
-        :disabled="softLoading"
-      ></v-btn>
     </div>
 
     <!-- Мягкий индикатор загрузки (полоска сверху) -->
@@ -108,7 +94,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import moment from '@/utils/moment-be';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
@@ -134,6 +120,7 @@ const softLoading = ref(false); // перелистывание — полоск
 const error = ref(null);
 
 const currentDate = ref(moment().startOf('day'));
+const isToday = computed(() => currentDate.value.isSame(moment().startOf('day'), 'day'));
 
 const getOptionDisplayTitle = (option) => {
   const title = String(option?.title || '').trim();
@@ -263,24 +250,28 @@ watch(
   max-width: 100%;
 }
 
-.date-selector h2 {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  font-size: 1rem;
+.date-header {
+  cursor: pointer;
+  user-select: none;
+  padding-top: 8px !important;
+  padding-bottom: 4px !important;
+}
+
+.today-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(var(--v-theme-primary), 0.12);
+  color: rgb(var(--v-theme-primary));
+  vertical-align: middle;
 }
 
 @media (max-width: 600px) {
   .items-list-container {
     padding: 8px 4px !important;
-  }
-
-  .date-selector {
-    padding: 8px 4px !important;
-    margin-bottom: 8px !important;
-  }
-
-  .date-selector h2 {
-    font-size: 0.9rem !important;
   }
 
   .v-list-item {

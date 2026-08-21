@@ -1,0 +1,132 @@
+[
+  {
+    "id": "feast-paulvi",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-01.05",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-04.09",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-12.06",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-14.08",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-15.02",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-18.09-grodno",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-18.09-minsk-mohilev",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-18.09-pinsk",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-26.08-grodno",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-26.08-minsk-mohilev",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-26.08-pinsk",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  },
+  {
+    "id": "fixed-26.10",
+    "readings_exists": false,
+    "readings_has_text": false,
+    "readings_text_fields": [],
+    "readings_raw": null,
+    "parsedData_exists": true,
+    "parsedData_has_text": false,
+    "parsedData_sections_with_content": []
+  }
+]

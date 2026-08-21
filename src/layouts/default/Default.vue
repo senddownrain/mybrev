@@ -131,7 +131,7 @@
 
     <NavigationDrawer />
 
-    <v-main>
+    <v-main style="padding-bottom: 92px;">
       <router-view name="topNav" />
       <router-view />
     </v-main>

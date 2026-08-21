@@ -291,18 +291,13 @@ const oras = computed(() => [
   },
 ]);
 
-// первый найденный reading (если есть)
+// Always link to parsedData readings view for the current date
 const readingItem = computed(() => {
-  if (!readings.value || readings.value.length === 0) return null;
-
-  // Можно выбрать первый, либо по какому-то приоритету
-  const reading = readings.value[0];
-
-  // ссылка на маршрут чтений
+  if (!dateParam.value) return null;
   return {
-    id: reading.id,
-    title: reading.title || 'Чытанні',
-    path: `/day/${dateParam.value}/ora/${dayId.value}/reading/${reading.id}`,
+    id: dateParam.value,
+    title: 'Чытанні',
+    path: `/readings/${dateParam.value}`,
   };
 });
 

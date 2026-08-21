@@ -18,10 +18,18 @@ export function useReadings() {
    */
   const readingText = computed(() => {
     if (!currentReading.value) return '';
-    
-    // Поддержка разных полей для текста (text, content)
     return currentReading.value.text || currentReading.value.content || '';
   });
 
+  const hasReading = computed(() => Boolean(currentReading.value));
+
+  return {
+    readings,
+    currentReading,
+    isLoading,
+    error,
+    readingText,
+    hasReading,
+  };
 }
 

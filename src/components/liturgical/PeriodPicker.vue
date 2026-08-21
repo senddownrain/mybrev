@@ -82,7 +82,7 @@
           {{ getPeriodTitle(foundDay) }}
         </v-card-title>
         <v-card-subtitle>
-          <div v-if="foundDay._feastName">{{ foundDay._feastName }}</div>
+          <div v-if="foundDay._feastName || foundDay._title">{{ foundDay._feastName || foundDay._title }}</div>
           <div v-if="foundDay._feastType">{{ getRankName(foundDay._feastType) }}</div>
           <div v-if="foundDay._psalmWeek">{{ foundDay._psalmWeek }}</div>
         </v-card-subtitle>

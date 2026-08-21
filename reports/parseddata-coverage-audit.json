@@ -1,0 +1,2758 @@
+{
+  "stats": {
+    "total": 882,
+    "noSections": 0,
+    "missingText": 14,
+    "missingBible": 138,
+    "complete": 730
+  },
+  "issues": [
+    {
+      "id": "advent-4597",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 92
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-4598",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 87
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-4599",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 87
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-4600",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 114
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-4601",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 77
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-4602",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 93
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-4603",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 93
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-4604",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 117
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-w1-d3",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 65
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-w1-d4",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 92
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-w1-d6",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 63
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-w2-d2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 57
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-w2-d3",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 53
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-w2-d4",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 94
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-w2-d5",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 124
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-w2-d6",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 53
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-w3-d3",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 59
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "advent-w3-d6",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 87
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "bn-4568",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 101
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "bn-4571",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 103
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "christmas-05-01",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 99
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "christmas-30-12",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 97
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "christmas-w1-d6",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 97
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "easter-w1-d1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 88
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "easter-w2-d7",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 65
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "easter-w3-d1_C",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 65
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "easter-w7-d1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 81
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "easter-w7-d7",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 81
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "feast-paulvi",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "1Кар 9,16–19.22–23"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 96(95),1–2a.2b–3.7–8a.10"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Мц 16,13–19"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "feast-pentecost",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 79
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-01.05",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "Быц 1,26–2,3 або Клс 3,14–15.17.23–24"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 90(89),2.3–4.12–13.14і16"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Мц 13,54–58"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-04.09",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "2 Мак 7, 1–2. 9–14"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 31 (30), 3cd–4. 5–6. 14. 15–16 (Р.: 6a)"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Мц 25, 1–13"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-12.06",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "Рым 8, 35. 37–39"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 34 (33), 2–3. 4–5. 6–7 (Р.: 18b)"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Лк 9, 23–26"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-14.08",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "2 Цім 2,22b–26"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 37(36),3–4.5–6.30–31"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Ян 17,20–26"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-15.02",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "Сір 39, 6–10"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 37 (36), 3–4. 5–6. 23–24. 39–40 (Р.: 39a)"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Ін 10, 11–16"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-16.11",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 70
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-18.09-grodno",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "Прм 4, 7–14"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 116 (115), 12–13. 14–15. 16–17 (Р.: 15)"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Мц 18, 1–5"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-18.09-minsk-mohilev",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "Прм 4, 7–14"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 116 (115), 12–13. 14–15. 16–17 (Р.: 15)"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Мц 18, 1–5"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-18.09-pinsk",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "Прм 4, 7–14"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 116 (115), 12–13. 14–15. 16–17 (Р.: 15)"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Мц 18, 1–5"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-26.08-grodno",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "Ап 11, 19а; 12, 1–6а. 10аб"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 45 (44), 10bc. 11. 12аб. 16 (Р.: 10b)"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Лк 1, 39–56"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-26.08-minsk-mohilev",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "Ап 11, 19а; 12, 1–6а. 10аб"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 45 (44), 10bc. 11. 12аб. 16 (Р.: 10b)"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Лк 1, 39–56"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-26.08-pinsk",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "Ап 11, 19а; 12, 1–6а. 10аб"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 45 (44), 10bc. 11. 12аб. 16 (Р.: 10b)"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Лк 1, 39–56"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "fixed-26.10",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_text",
+          "bible": "Пр 31, 10–13. 19–20. 30–31"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 128 (127), 1–2. 3. 4–5 (Р.: 1)"
+        },
+        {
+          "sec": "gospel",
+          "problem": "no_text",
+          "bible": "Лк 10, 38–42"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "gospel"
+      ]
+    },
+    {
+      "id": "holyweek-w1-d1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 88
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "holyweek-w1-d2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 69
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "holyweek-w1-d4",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 165
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "holyweek-w3-d3",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 90
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "holyweek-w6-d5",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 133
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "holyweek-wX-d6",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 197
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w1-d2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 117
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w1-d3",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 145
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w1-d4",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 136
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w1-d5",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 146
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w1-d6",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 152
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w1-d7",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 117
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w2-d1_A",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 128
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w2-d1_B",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 128
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w2-d1_C",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 128
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w2-d2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 139
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w2-d3",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 152
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w2-d4",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 137
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w2-d5",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 162
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w2-d6",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 166
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w2-d7",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 150
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w3-d1_A",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 143
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w3-d1_B",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 166
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w3-d1_C",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 122
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w3-d2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 158
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w3-d3",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 144
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w3-d4",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 139
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w3-d5",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 144
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w3-d6",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 122
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w4-d1_A",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 137
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w4-d1_B",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 162
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w4-d1_C",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 150
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w4-d2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 123
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w4-d3",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 143
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w4-d4",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 142
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w4-d5",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 166
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w4-d6",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 145
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w4-d7",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 157
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w5-d1_A",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 142
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w5-d1_B",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 151
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w5-d1_C",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 144
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w5-d2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 143
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w5-d3",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 138
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w5-d4",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 157
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w5-d5",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 136
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w5-d7",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 152
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w6-d1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 859
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w6-d2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 125
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w6-d3",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 146
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-w6-d4",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 221
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-wX-d4",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 136
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-wX-d6",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 128
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "lent-wX-d7",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 143
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w11-d1_B",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 82
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w15-d1_A",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 90
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w16-d4_1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 90
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w16-d4_2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 90
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w17-d3_1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 90
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w17-d3_2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 90
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w19-d4_1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 75
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w19-d4_2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 75
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w20-d3_1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 103
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w20-d3_2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 103
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w21-d4_1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 77
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w21-d4_2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 77
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w23-d1_A",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 75
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w25-d1_B",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 97
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w26-d1_B",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 71
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w27-d1_B",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 92
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w28-d1_A",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 131
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w3-d4_1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 87
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w3-d4_2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 87
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w30-d1_B",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 91
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w30-d3_1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 101
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w30-d3_2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 101
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w30-d4_1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 94
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w30-d4_2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 94
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w31-d4_1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 88
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w31-d4_2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 88
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w32-d4_2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 83
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w33-d3_1",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 88
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "ordinary-w33-d3_2",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 88
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-17068",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 153
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-4946",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 94
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-4993",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 82
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-4994_A",
+      "type": "missing_text",
+      "sections": [
+        {
+          "sec": "reading2",
+          "problem": "no_text",
+          "bible": "Клс 3, 12–21"
+        },
+        {
+          "sec": "psalm",
+          "problem": "no_text",
+          "bible": "Пс 128 (127), 1–2. 3. 4–5 (Р.: пар. 1)"
+        },
+        {
+          "sec": "alleluia",
+          "problem": "no_text",
+          "bible": "Клс 3, 15а. 16а"
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-4995",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 84
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-5001",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 82
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-5014",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 81
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-5015",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 82
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-5016",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 102
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-5017",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 92
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-5020",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 87
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "sviaty-7500",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "reading1",
+          "problem": "no_bible",
+          "textLen": 2044
+        }
+      ],
+      "presentSections": [
+        "reading1"
+      ]
+    },
+    {
+      "id": "sviaty-8471",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 90
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "urachystasci-5023",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 87
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "urachystasci-5024",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 102
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "urachystasci-5027",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 140
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "urachystasci-5028",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 131
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "urachystasci-5043",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 44
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "reading2",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "uspaminy-4922",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 92
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "uspaminy-4931",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 88
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "uspaminy-4934",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 109
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "uspaminy-4938",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 114
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "uspaminy-4962",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 114
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "uspaminy-4963",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 108
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "uspaminy-4964",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 79
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "uspaminy-4980",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 92
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    },
+    {
+      "id": "uspaminy-8105",
+      "type": "missing_bible",
+      "sections": [
+        {
+          "sec": "alleluia",
+          "problem": "no_bible",
+          "textLen": 119
+        }
+      ],
+      "presentSections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ]
+    }
+  ]
+}

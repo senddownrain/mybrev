@@ -47,7 +47,7 @@
         </template>
 
         <v-list-item-title>
-          <span v-html="feast._feastName || feast._dayName || 'Свята'"></span>
+          <span v-html="feast._feastName || feast._title || feast._dayName || 'Свята'"></span>
         </v-list-item-title>
 
         <v-list-item-subtitle>
@@ -129,7 +129,7 @@ const filteredFeasts = computed(() => {
     const query = searchQuery.value.toLowerCase().trim();
     filtered = filtered.filter(feast => {
       // Убираем HTML теги для поиска
-      const nameHtml = feast._feastName || '';
+      const nameHtml = feast._feastName || feast._title || '';
       const name = nameHtml.replace(/<[^>]*>/g, '').toLowerCase();
       const dayName = (feast._dayName || '').toLowerCase();
       const date = feast._date || '';

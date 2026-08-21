@@ -1,0 +1,1129 @@
+{
+  "alleluiaRefMixed": [],
+  "alleluiaEmpty": [],
+  "psalmEmpty": [
+    {
+      "id": "christmas-01-01",
+      "selector": "date:01.01",
+      "title": "Святой Багародзіцы Марыі",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-02-01",
+      "selector": "date:02.01",
+      "title": "Другі дзень у актаве Нараджэння Пана",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-03-01",
+      "selector": "date:03.01",
+      "title": "Трэці дзень у актаве Нараджэння Пана",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-04-01",
+      "selector": "date:04.01",
+      "title": "Чацвёрты дзень у актаве Нараджэння Пана",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-05-01",
+      "selector": "date:05.01",
+      "title": "Пяты дзень у актаве Нараджэння Пана",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-06-01",
+      "selector": "date:06.01",
+      "title": "Аб'яўленне Пана",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-07-01",
+      "selector": "date:07.01",
+      "title": "7 студзеня — будзень у Калядным часе",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-08-01",
+      "selector": "date:08.01",
+      "title": "8 студзеня — будзень у Калядным часе",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-09-01",
+      "selector": "date:09.01",
+      "title": "9 студзеня — будзень у Калядным часе",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-10-01",
+      "selector": "date:10.01",
+      "title": "10 студзеня — будзень у Калядным часе",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-11-01",
+      "selector": "date:11.01",
+      "title": "11 студзеня — будзень у Калядным часе",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-12-01",
+      "selector": "date:12.01",
+      "title": "12 студзеня — будзень у Калядным часе",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-29-12",
+      "selector": "date:29.12",
+      "title": "Пяты дзень у актаве Нараджэння Пана",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-30-12",
+      "selector": "date:30.12",
+      "title": "Шосты дзень у актаве Нараджэння Пана",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-31-12",
+      "selector": "date:31.12",
+      "title": "Сёмы дзень Актавы Нараджэння Пана",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_A",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_B",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_C",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-paulvi",
+      "selector": "feast:paulvi",
+      "title": "Св. Паўла VI, папа",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-01.05",
+      "selector": "date:01.05",
+      "title": "Св. Юзаф Работнік",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-04.03",
+      "selector": "date:04.03",
+      "title": "Св. Казімір",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-04.09",
+      "selector": "date:04.09",
+      "title": "Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-04.12",
+      "selector": "date:04.12",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-09.08",
+      "selector": "date:09.08",
+      "title": "Св. Тэрэза Бэнэдыкта ад Крыжа (Эдыта Штайн), панна і мучаніца, апякунка Еўропы",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-10.10",
+      "selector": "date:10.10",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-12.06",
+      "selector": "date:12.06",
+      "title": "Бл. Генрыха Глябовіча, прэзбітэра, і паплечнікаў, мучанікаў другой сусветнай вайны",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-14.08",
+      "selector": "date:14.08",
+      "title": "Св. Максімільян Марыя Кольбэ, прэзбітэр і мучанік",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-15.02",
+      "selector": "date:15.02",
+      "title": "Бл. Міхала Сапоцькі, прэзбітэра",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-16.03",
+      "selector": "date:16.03",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-16.05",
+      "selector": "date:16.05",
+      "title": "Св. Андрэй Бабаля, святар і мучанік, апякун Беларусі",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-16.11",
+      "selector": "date:16.11",
+      "title": "Найсв. Панна Марыя, Маці Міласэрнасці (Маці Божая Вастрабрамская)",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-18.09-grodno",
+      "selector": "date:18.09",
+      "title": "Св. Станіслава Косткі, законніка",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-18.09-minsk-mohilev",
+      "selector": "date:18.09",
+      "title": "Св. Станіслава Косткі, законніка",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-18.09-pinsk",
+      "selector": "date:18.09",
+      "title": "Св. Станіслава Косткі, законніка",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.08-grodno",
+      "selector": "date:26.08",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.08-minsk-mohilev",
+      "selector": "date:26.08",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.08-pinsk",
+      "selector": "date:26.08",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.10",
+      "selector": "date:26.10",
+      "title": "Бл. Цэліны Бажэцкай",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "sviaty-4994_A",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям’і: Езуса, Марыі і Юзафа",
+      "psalm_keys": [
+        "bible",
+        "text"
+      ]
+    }
+  ],
+  "gospelNoText": [
+    {
+      "id": "christmas-01-01",
+      "selector": "date:01.01",
+      "title": "Святой Багародзіцы Марыі",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-02-01",
+      "selector": "date:02.01",
+      "title": "Другі дзень у актаве Нараджэння Пана",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-03-01",
+      "selector": "date:03.01",
+      "title": "Трэці дзень у актаве Нараджэння Пана",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-04-01",
+      "selector": "date:04.01",
+      "title": "Чацвёрты дзень у актаве Нараджэння Пана",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-05-01",
+      "selector": "date:05.01",
+      "title": "Пяты дзень у актаве Нараджэння Пана",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-06-01",
+      "selector": "date:06.01",
+      "title": "Аб'яўленне Пана",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-07-01",
+      "selector": "date:07.01",
+      "title": "7 студзеня — будзень у Калядным часе",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-08-01",
+      "selector": "date:08.01",
+      "title": "8 студзеня — будзень у Калядным часе",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-09-01",
+      "selector": "date:09.01",
+      "title": "9 студзеня — будзень у Калядным часе",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-10-01",
+      "selector": "date:10.01",
+      "title": "10 студзеня — будзень у Калядным часе",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-11-01",
+      "selector": "date:11.01",
+      "title": "11 студзеня — будзень у Калядным часе",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-12-01",
+      "selector": "date:12.01",
+      "title": "12 студзеня — будзень у Калядным часе",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-29-12",
+      "selector": "date:29.12",
+      "title": "Пяты дзень у актаве Нараджэння Пана",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-30-12",
+      "selector": "date:30.12",
+      "title": "Шосты дзень у актаве Нараджэння Пана",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-31-12",
+      "selector": "date:31.12",
+      "title": "Сёмы дзень Актавы Нараджэння Пана",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_A",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_B",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_C",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-paulvi",
+      "selector": "feast:paulvi",
+      "title": "Св. Паўла VI, папа",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-01.05",
+      "selector": "date:01.05",
+      "title": "Св. Юзаф Работнік",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-04.03",
+      "selector": "date:04.03",
+      "title": "Св. Казімір",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-04.09",
+      "selector": "date:04.09",
+      "title": "Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-04.12",
+      "selector": "date:04.12",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-09.08",
+      "selector": "date:09.08",
+      "title": "Св. Тэрэза Бэнэдыкта ад Крыжа (Эдыта Штайн), панна і мучаніца, апякунка Еўропы",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-10.10",
+      "selector": "date:10.10",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-12.06",
+      "selector": "date:12.06",
+      "title": "Бл. Генрыха Глябовіча, прэзбітэра, і паплечнікаў, мучанікаў другой сусветнай вайны",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-14.08",
+      "selector": "date:14.08",
+      "title": "Св. Максімільян Марыя Кольбэ, прэзбітэр і мучанік",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-15.02",
+      "selector": "date:15.02",
+      "title": "Бл. Міхала Сапоцькі, прэзбітэра",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-16.03",
+      "selector": "date:16.03",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-16.05",
+      "selector": "date:16.05",
+      "title": "Св. Андрэй Бабаля, святар і мучанік, апякун Беларусі",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-16.11",
+      "selector": "date:16.11",
+      "title": "Найсв. Панна Марыя, Маці Міласэрнасці (Маці Божая Вастрабрамская)",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-18.09-grodno",
+      "selector": "date:18.09",
+      "title": "Св. Станіслава Косткі, законніка",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-18.09-minsk-mohilev",
+      "selector": "date:18.09",
+      "title": "Св. Станіслава Косткі, законніка",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-18.09-pinsk",
+      "selector": "date:18.09",
+      "title": "Св. Станіслава Косткі, законніка",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.08-grodno",
+      "selector": "date:26.08",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.08-minsk-mohilev",
+      "selector": "date:26.08",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.08-pinsk",
+      "selector": "date:26.08",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.10",
+      "selector": "date:26.10",
+      "title": "Бл. Цэліны Бажэцкай",
+      "gospel_keys": [
+        "bible",
+        "text"
+      ]
+    }
+  ],
+  "reading1NoText": [
+    {
+      "id": "christmas-01-01",
+      "selector": "date:01.01",
+      "title": "Святой Багародзіцы Марыі",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-02-01",
+      "selector": "date:02.01",
+      "title": "Другі дзень у актаве Нараджэння Пана",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-03-01",
+      "selector": "date:03.01",
+      "title": "Трэці дзень у актаве Нараджэння Пана",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-04-01",
+      "selector": "date:04.01",
+      "title": "Чацвёрты дзень у актаве Нараджэння Пана",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-05-01",
+      "selector": "date:05.01",
+      "title": "Пяты дзень у актаве Нараджэння Пана",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-06-01",
+      "selector": "date:06.01",
+      "title": "Аб'яўленне Пана",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-07-01",
+      "selector": "date:07.01",
+      "title": "7 студзеня — будзень у Калядным часе",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-08-01",
+      "selector": "date:08.01",
+      "title": "8 студзеня — будзень у Калядным часе",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-09-01",
+      "selector": "date:09.01",
+      "title": "9 студзеня — будзень у Калядным часе",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-10-01",
+      "selector": "date:10.01",
+      "title": "10 студзеня — будзень у Калядным часе",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-11-01",
+      "selector": "date:11.01",
+      "title": "11 студзеня — будзень у Калядным часе",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-12-01",
+      "selector": "date:12.01",
+      "title": "12 студзеня — будзень у Калядным часе",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-29-12",
+      "selector": "date:29.12",
+      "title": "Пяты дзень у актаве Нараджэння Пана",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-30-12",
+      "selector": "date:30.12",
+      "title": "Шосты дзень у актаве Нараджэння Пана",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-31-12",
+      "selector": "date:31.12",
+      "title": "Сёмы дзень Актавы Нараджэння Пана",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_A",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_B",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_C",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-paulvi",
+      "selector": "feast:paulvi",
+      "title": "Св. Паўла VI, папа",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-01.05",
+      "selector": "date:01.05",
+      "title": "Св. Юзаф Работнік",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-04.03",
+      "selector": "date:04.03",
+      "title": "Св. Казімір",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-04.09",
+      "selector": "date:04.09",
+      "title": "Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-04.12",
+      "selector": "date:04.12",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-09.08",
+      "selector": "date:09.08",
+      "title": "Св. Тэрэза Бэнэдыкта ад Крыжа (Эдыта Штайн), панна і мучаніца, апякунка Еўропы",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-10.10",
+      "selector": "date:10.10",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-12.06",
+      "selector": "date:12.06",
+      "title": "Бл. Генрыха Глябовіча, прэзбітэра, і паплечнікаў, мучанікаў другой сусветнай вайны",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-14.08",
+      "selector": "date:14.08",
+      "title": "Св. Максімільян Марыя Кольбэ, прэзбітэр і мучанік",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-15.02",
+      "selector": "date:15.02",
+      "title": "Бл. Міхала Сапоцькі, прэзбітэра",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-16.03",
+      "selector": "date:16.03",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-16.05",
+      "selector": "date:16.05",
+      "title": "Св. Андрэй Бабаля, святар і мучанік, апякун Беларусі",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-16.11",
+      "selector": "date:16.11",
+      "title": "Найсв. Панна Марыя, Маці Міласэрнасці (Маці Божая Вастрабрамская)",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-18.09-grodno",
+      "selector": "date:18.09",
+      "title": "Св. Станіслава Косткі, законніка",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-18.09-minsk-mohilev",
+      "selector": "date:18.09",
+      "title": "Св. Станіслава Косткі, законніка",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-18.09-pinsk",
+      "selector": "date:18.09",
+      "title": "Св. Станіслава Косткі, законніка",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.08-grodno",
+      "selector": "date:26.08",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.08-minsk-mohilev",
+      "selector": "date:26.08",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.08-pinsk",
+      "selector": "date:26.08",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-26.10",
+      "selector": "date:26.10",
+      "title": "Бл. Цэліны Бажэцкай",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    }
+  ],
+  "reading2NoText": [
+    {
+      "id": "christmas-01-01",
+      "selector": "date:01.01",
+      "title": "Святой Багародзіцы Марыі",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "christmas-06-01",
+      "selector": "date:06.01",
+      "title": "Аб'яўленне Пана",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_A",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_B",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "feast-holyfamily_C",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям'і: Езуса, Марыі і Юзафа",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-04.12",
+      "selector": "date:04.12",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-10.10",
+      "selector": "date:10.10",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "fixed-16.03",
+      "selector": "date:16.03",
+      "title": "Гадавіна пасвячэння катэдральнага касцёла",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    },
+    {
+      "id": "sviaty-4994_A",
+      "selector": "date:29.12",
+      "title": "Нядзеля ў актаве Нараджэння Пана. Свята Святой Сям’і: Езуса, Марыі і Юзафа",
+      "keys": [
+        "bible",
+        "text"
+      ]
+    }
+  ],
+  "noSections": []
+}

@@ -1,42 +1,63 @@
 <template>
-  <div>
-    <v-bottom-navigation 
-      :model-value="activeIndex" 
-      color="primary" 
-      bg-color="surface"
-      elevation="4"
-      height="64"
-    >
-      <v-btn 
-        v-for="(m, i) in menu" 
-        :key="i" 
-        :value="i"
-        :active="activeIndex === i"
-        @click="navigateTo(m.to)"
-        variant="text"
-        size="large"
-        class="bottom-nav-btn"
-      >
-        <v-icon size="24">{{ m.icon }}</v-icon>
-        <span class="text-caption font-weight-medium">{{ m.title }}</span>
-      </v-btn>
-      
-      <v-btn 
-        :value="2" 
-        :active="activeIndex === 2"
-        @click="toggleCalendarDialog()"
-        variant="text"
-        size="large"
-        class="bottom-nav-btn"
-      >
-        <v-icon size="24">mdi-calendar-month</v-icon>
-        <span class="text-caption font-weight-medium">Дзень</span>
-      </v-btn>
-    </v-bottom-navigation>
+  <div class="pill-nav-outer">
+    <div class="pill-nav-row">
 
-    <v-dialog 
-      v-model="isCalendarDialogOpen" 
-      width="calc(100% - 24px)" 
+      <!-- Prev-day arrow (readings date routes only) -->
+      <button
+        v-if="showArrows"
+        class="arrow-btn"
+        aria-label="Папярэдні дзень"
+        @click="goToPrevDay"
+      >
+        <PhCaretLeft :size="20" />
+      </button>
+
+      <!-- Dark pill -->
+      <div class="pill">
+        <button
+          class="pill-item"
+          :class="{ 'pill-item--active': activeIndex === 0 }"
+          aria-label="Выбраць"
+          @click="navigateTo('/readings/picker')"
+        >
+          <PhListBullets :size="23" />
+        </button>
+
+        <button
+          class="pill-item"
+          :class="{ 'pill-item--active': activeIndex === 1 }"
+          aria-label="Сёння"
+          @click="navigateTo('/readings')"
+        >
+          <PhSunHorizon :size="23" />
+        </button>
+
+        <button
+          class="pill-item"
+          :class="{ 'pill-item--active': activeIndex === 2 }"
+          aria-label="Каляндар"
+          @click="toggleCalendarDialog"
+        >
+          <PhCalendarBlank :size="23" />
+        </button>
+      </div>
+
+      <!-- Next-day arrow -->
+      <button
+        v-if="showArrows"
+        class="arrow-btn"
+        aria-label="Наступны дзень"
+        @click="goToNextDay"
+      >
+        <PhCaretRight :size="20" />
+      </button>
+
+    </div>
+
+    <!-- Calendar dialog -->
+    <v-dialog
+      v-model="isCalendarDialogOpen"
+      width="calc(100% - 24px)"
       max-width="420"
       scrim="black"
       :persistent="false"
@@ -48,7 +69,7 @@
             <div class="date-dialog-eyebrow">Каляндар</div>
             <div class="date-dialog-heading">Выбраць дату</div>
           </div>
-          <v-btn icon="mdi-close" variant="text" size="small" aria-label="Закрыць" @click="toggleCalendarDialog"></v-btn>
+          <v-btn icon="mdi-close" variant="text" size="small" aria-label="Закрыць" @click="toggleCalendarDialog" />
         </v-card-title>
         <v-card-text class="pa-0">
           <CustomDatePicker
@@ -56,7 +77,7 @@
             color="primary"
             :first-day-of-week="1"
             show-adjacent-months
-          ></CustomDatePicker>
+          />
         </v-card-text>
         <v-card-actions class="date-dialog-actions">
           <v-btn variant="text" prepend-icon="mdi-calendar-today" @click="selectToday">Сёння</v-btn>
@@ -69,127 +90,149 @@
 </template>
 
 <script setup>
-import moment from '@/utils/moment-be'
-import { ref, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useAppBar } from '@/composables/useAppBar'
-import CustomDatePicker from '@/components/common/CustomDatePicker.vue'
+import { ref, computed, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useAppBar } from '@/composables/useAppBar';
+import CustomDatePicker from '@/components/common/CustomDatePicker.vue';
+import moment from '@/utils/moment-be';
+import { PhListBullets, PhSunHorizon, PhCalendarBlank, PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue';
 
-const route = useRoute()
-const router = useRouter()
-const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar()
-const selectedDate = ref(new Date())
+const route  = useRoute();
+const router = useRouter();
+const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar();
+const selectedDate = ref(new Date());
+
+const ARROW_ROUTES = new Set(['Readings', 'ReadingsByDate']);
+const showArrows = computed(() => ARROW_ROUTES.has(route.name));
 
 const currentRouteDate = computed(() => {
-  if (route.name === 'Readings') {
-    return moment().startOf('day')
-  }
+  if (route.name === 'Readings') return moment().startOf('day');
   if (route.params.date) {
-    return moment(route.params.date, 'YYYY-MM-DD').startOf('day')
+    const m = moment(route.params.date, 'YYYY-MM-DD');
+    if (m.isValid()) return m.startOf('day');
   }
-  return moment().startOf('day')
-})
+  return moment().startOf('day');
+});
 
-const today = computed(() => moment().startOf('day'))
-
-const menu = computed(() => [
-  {
-    title: "Выбраць",
-    to: "/readings/picker",
-    icon: "mdi-calendar-search"
-  },
-  {
-    title: "Сёння",
-    to: "/readings",
-    icon: "mdi-calendar-today"
-  },
-])
+const today = computed(() => moment().startOf('day'));
 
 const activeIndex = computed(() => {
-  if (route.name === 'ReadingsPicker') {
-    return 0
-  }
-  
-  const routeDate = currentRouteDate.value
-  const todayDate = today.value
-  
-  if (routeDate.isSame(todayDate, 'day')) {
-    return 1
+  if (route.name === 'ReadingsPicker') return 0;
+  if (currentRouteDate.value.isSame(today.value, 'day')) return 1;
+  return 2;
+});
+
+function navigateTo(path) { router.push(path); }
+
+function goToPrevDay() {
+  navigateToDate(currentRouteDate.value.clone().subtract(1, 'day'));
+}
+function goToNextDay() {
+  navigateToDate(currentRouteDate.value.clone().add(1, 'day'));
+}
+function navigateToDate(m) {
+  if (m.isSame(today.value, 'day')) {
+    router.push('/readings');
   } else {
-    return 2
+    router.push(`/readings/${m.format('YYYY-MM-DD')}`);
   }
-})
-
-function navigateTo(path) {
-  router.push(path)
 }
 
-function selectToday() {
-  selectedDate.value = new Date()
-}
+function selectToday() { selectedDate.value = new Date(); }
 
-watch(isCalendarDialogOpen, (isOpen) => {
-  if (isOpen) {
-    const date = currentRouteDate.value
-    if (date && date.isValid()) {
-      selectedDate.value = date.toDate()
-    } else {
-      selectedDate.value = new Date()
-    }
-  }
-})
+watch(isCalendarDialogOpen, (open) => {
+  if (!open) return;
+  const d = currentRouteDate.value;
+  selectedDate.value = d.isValid() ? d.toDate() : new Date();
+});
 
 function loadDay() {
-  toggleCalendarDialog()
-  if (!selectedDate.value) {
-    return
-  }
-  const mDate = moment(selectedDate.value)
-  if (!mDate.isValid()) {
-    return
-  }
-  const dateString = mDate.format('YYYY-MM-DD')
-  if (mDate.isSame(today.value, 'day')) {
-    router.push('/readings')
-  } else {
-    router.push(`/readings/${dateString}`)
-  }
+  toggleCalendarDialog();
+  if (!selectedDate.value) return;
+  const m = moment(selectedDate.value);
+  if (!m.isValid()) return;
+  navigateToDate(m.startOf('day'));
 }
 </script>
 
 <style scoped>
-:deep(.v-bottom-navigation) {
-  position: fixed !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  z-index: 100 !important;
+.pill-nav-outer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+  pointer-events: none;
 }
 
-.bottom-nav-btn {
-  min-width: 80px;
-  flex-direction: column;
-  gap: 4px;
+.pill-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 16px 12px;
+  pointer-events: none;
 }
 
-.bottom-nav-btn :deep(.v-btn__content) {
-  flex-direction: column;
-  gap: 4px;
+.pill {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  background: #1A1A1A;
+  border-radius: 30px;
+  padding: 0 4px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+  pointer-events: auto;
 }
+
+.pill-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 48px;
+  border: none;
+  background: transparent;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+  color: rgba(255, 255, 255, 0.45);
+}
+.pill-item:active { opacity: 0.7; }
+.pill-item--active {
+  background: #FFFFFF;
+  color: #111111;
+}
+
+.arrow-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: #1A1A1A;
+  border-radius: 50%;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+  transition: opacity 0.15s;
+  pointer-events: auto;
+}
+.arrow-btn:active { opacity: 0.6; }
 
 .date-dialog-card {
   overflow: hidden;
   border: 1px solid rgba(var(--v-border-color), 0.14);
   background: rgb(var(--v-theme-surface));
 }
-
 .date-dialog-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px 20px 8px !important;
 }
-
 .date-dialog-eyebrow {
   color: rgb(var(--v-theme-primary));
   font-size: 0.7rem;
@@ -198,25 +241,18 @@ function loadDay() {
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-
 .date-dialog-heading {
   margin-top: 3px;
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.3;
 }
-
 .date-dialog-actions {
   padding: 10px 16px 16px !important;
   border-top: 1px solid rgba(var(--v-border-color), 0.1);
 }
-
 .select-date-btn {
   min-width: 112px;
   box-shadow: 0 5px 14px rgba(var(--v-theme-primary), 0.24);
 }
 </style>
-
-
-
-
