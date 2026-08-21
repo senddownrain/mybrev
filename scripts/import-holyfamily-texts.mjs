@@ -25,6 +25,7 @@ const YEAR_DOCS = {
   'feast-holyfamily_A': 'A',
   'feast-holyfamily_B': 'B',
   'feast-holyfamily_C': 'C',
+  'sviaty-4994_A': 'A', // same page, same year A content
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -346,15 +347,27 @@ async function main() {
 
   for (let i = 0; i < yearOrder.length; i++) {
     const year = yearOrder[i];
-    const docId = `feast-holyfamily_${year}`;
     const start = yearBounds[year];
     const end = i + 1 < yearOrder.length ? yearBounds[yearOrder[i + 1]] : articleHtml.length;
     const yearHtml = articleHtml.slice(start, end);
 
-    console.log(`\n══ ${docId} (Год ${year}) ══`);
-    try {
-      const parsed = parseSections(yearHtml);
+    // Усе docId якія адпавядаюць гэтаму году
+    const docIds = Object.entries(YEAR_DOCS).filter(([, y]) => y === year).map(([id]) => id);
 
+    let parsed;
+    try {
+      parsed = parseSections(yearHtml);
+    } catch (e) {
+      for (const docId of docIds) {
+        console.error(`  ❌ [${docId}] Памылка парсінгу: ${e.message}`);
+        report.push({ id: docId, year, error: e.message });
+        errors++;
+      }
+      continue;
+    }
+
+    for (const docId of docIds) {
+      console.log(`\n══ ${docId} (Год ${year}) ══`);
       for (const [sec, data] of Object.entries(parsed)) {
         const textLen = data.text?.length || data.verse?.length
           || (data.verses ? data.verses.reduce((a, v) => a + v.length, 0) : 0);
@@ -369,23 +382,24 @@ async function main() {
       report.push({ id: docId, year, sections: Object.keys(parsed), parsed });
 
       if (APPLY) {
-        const updateData = {};
-        for (const [sec, data] of Object.entries(parsed)) {
-          for (const [field, val] of Object.entries(data)) {
-            if (val === undefined) continue;
-            const norm = (typeof val === 'string' && val === '') ? null : val;
-            if (field === 'bible' && norm === null) continue; // не перазапісваем bible пустатой
-            updateData[`${sec}.${field}`] = norm;
+        try {
+          const updateData = {};
+          for (const [sec, data] of Object.entries(parsed)) {
+            for (const [field, val] of Object.entries(data)) {
+              if (val === undefined) continue;
+              const norm = (typeof val === 'string' && val === '') ? null : val;
+              if (field === 'bible' && norm === null) continue;
+              updateData[`${sec}.${field}`] = norm;
+            }
           }
+          await db.collection('parsedData').doc(docId).update(updateData);
+          console.log(`  ✅ Запісана ў Firestore`);
+          updated++;
+        } catch (e) {
+          console.error(`  ❌ Памылка запісу: ${e.message}`);
+          errors++;
         }
-        await db.collection('parsedData').doc(docId).update(updateData);
-        console.log(`  ✅ Запісана ў Firestore`);
-        updated++;
       }
-    } catch (e) {
-      console.error(`  ❌ Памылка: ${e.message}`);
-      report.push({ id: docId, year, error: e.message });
-      errors++;
     }
   }
 
