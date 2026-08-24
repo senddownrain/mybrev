@@ -13,6 +13,7 @@
  */
 import { useLiturgicalStore } from '@/stores/liturgical';
 import { FEAST_NAME_MAP as feastNameMap } from '@/constants/liturgicalFeastsMap';
+import { logger } from '@/utils/logger';
 
 export function useLiturgicalContent() {
   const liturgicalStore = useLiturgicalStore();
@@ -36,7 +37,15 @@ export function useLiturgicalContent() {
    * @returns {{ context, itemsDays, itemsReadings, dayOptions } | null}
    */
   function getCachedLiturgicalContentForDate(currentDate) {
-    return liturgicalStore.getCachedContent(currentDate);
+    const cached = liturgicalStore.getCachedContent(currentDate);
+    if (cached) {
+      // A fresh entry returns immediately; a stale entry is also returned
+      // immediately and the store refreshes it in the background when online.
+      liturgicalStore.fetchContentByDate(currentDate).catch((error) => {
+        logger.error('[useLiturgicalContent] background refresh failed:', error);
+      });
+    }
+    return cached;
   }
 
   return {

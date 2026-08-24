@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref, computed  } from 'vue';
-import { collection, query, where, getDocs, getFirestore } from 'firebase/firestore';
+import { collection, query, where, getFirestore } from 'firebase/firestore';
 import moment from '@/utils/moment-be';
 import { logger } from '@/utils/logger';
-import { retryFirestore } from '@/utils/retry';
+import { getDocsOfflineAware } from '@/utils/firestoreRead';
 import {
     calculateBaptismOfLordDate,
     calculateHolyFamilyDate,
@@ -46,6 +46,8 @@ export const useCalendarStore = defineStore('calendar', () => {
 
     const yearOptionsCache = ref({});
     const dynamicDatesCache = ref({});
+    const yearOptionsRequests = new Map();
+    const dynamicDatesRequests = new Map();
 
     /**
      * Fetch liturgical year options for the given year from Firestore.
@@ -58,21 +60,32 @@ export const useCalendarStore = defineStore('calendar', () => {
         if (yearOptionsCache.value[year]) {
             return yearOptionsCache.value[year];
         }
-        
-        logger.log(`[CalendarStore] Fetching options for year ${year} from Firestore...`);
-        const q = query(collection(db, 'yearOptions'), where('year', '==', Number(year)));
-        
-        const querySnapshot = await retryFirestore(() => getDocs(q));
-        
-        if (querySnapshot.empty) {
-            logger.error(`[CalendarStore] Options for year ${year} not found!`);
-            return null;
+
+        if (yearOptionsRequests.has(year)) return yearOptionsRequests.get(year);
+
+        const request = (async () => {
+            logger.log(`[CalendarStore] Fetching options for year ${year} from Firestore...`);
+            const q = query(collection(db, 'yearOptions'), where('year', '==', Number(year)));
+
+            const querySnapshot = await getDocsOfflineAware(q);
+
+            if (querySnapshot.empty) {
+                logger.error(`[CalendarStore] Options for year ${year} not found!`);
+                return null;
+            }
+
+            const options = querySnapshot.docs[0].data();
+            yearOptionsCache.value[year] = options;
+            logger.log(`[CalendarStore] Options for year ${year} loaded successfully.`);
+            return options;
+        })();
+
+        yearOptionsRequests.set(year, request);
+        try {
+            return await request;
+        } finally {
+            yearOptionsRequests.delete(year);
         }
-        
-        const options = querySnapshot.docs[0].data();
-        yearOptionsCache.value[year] = options;
-        logger.log(`[CalendarStore] Options for year ${year} loaded successfully.`);
-        return options;
     }
 
     /**
@@ -88,6 +101,10 @@ export const useCalendarStore = defineStore('calendar', () => {
     if (dynamicDatesCache.value[year]) {
         return dynamicDatesCache.value[year];
     }
+
+    if (dynamicDatesRequests.has(year)) return dynamicDatesRequests.get(year);
+
+    const request = (async () => {
 
     logger.log(`[CalendarStore] Computing dynamic dates for year ${year}...`);
 
@@ -131,6 +148,14 @@ export const useCalendarStore = defineStore('calendar', () => {
     dynamicDatesCache.value[year] = dates;
     logger.log(`[CalendarStore] Dynamic dates for year ${year} computed.`);
     return dates;
+    })();
+
+    dynamicDatesRequests.set(year, request);
+    try {
+        return await request;
+    } finally {
+        dynamicDatesRequests.delete(year);
+    }
 }
 
     // --- Функцыя для атрымання ўсіх даступных гадоў з Firestore ---
@@ -143,7 +168,7 @@ export const useCalendarStore = defineStore('calendar', () => {
     async function getAvailableYears() {
         try {
             const q = query(collection(db, 'yearOptions'));
-            const snapshot = await retryFirestore(() => getDocs(q));
+            const snapshot = await getDocsOfflineAware(q);
             const years = [];
             snapshot.forEach(doc => {
                 const data = doc.data();

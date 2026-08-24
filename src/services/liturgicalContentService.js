@@ -1,7 +1,7 @@
 /** Assemble liturgical days from fixedDays with the still-separate readings. */
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, query, where } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
-import { retryFirestore } from '@/utils/retry';
+import { getDocsOfflineAware } from '@/utils/firestoreRead';
 import { logger } from '@/utils/logger';
 import {
   PERIOD_LABEL_MAP,
@@ -39,7 +39,7 @@ const readingDateQuery = (value) => query(readingsCollection(), where('_date', '
 const readingFeastQuery = (value) => query(readingsCollection(), where('_feast', '==', value));
 
 async function queryDocuments(queries) {
-  const snapshots = await Promise.all(queries.map((item) => retryFirestore(() => getDocs(item))));
+  const snapshots = await Promise.all(queries.map((item) => getDocsOfflineAware(item)));
   const result = new Map();
   snapshots.forEach((snapshot) => snapshot.forEach((item) => result.set(item.id, { id: item.id, ...item.data() })));
   return [...result.values()];

@@ -1,8 +1,8 @@
 /** Firestore access for normalized liturgical days in `fixedDays`. */
-import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, query, where } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import { LITURGICAL_DAYS_COLLECTION } from '@/constants/days';
-import { retryFirestore } from '@/utils/retry';
+import { getDocOfflineAware, getDocsOfflineAware } from '@/utils/firestoreRead';
 import { logger } from '@/utils/logger';
 import {
   applySeasonalWeekdayAntiphons,
@@ -39,7 +39,7 @@ function snapshotToDocs(snapshot) {
 }
 
 async function queryDocs(q) {
-  return snapshotToDocs(await retryFirestore(() => getDocs(q)));
+  return snapshotToDocs(await getDocsOfflineAware(q));
 }
 
 async function queryAll(queries) {
@@ -64,7 +64,7 @@ export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
 
 export async function getAllFeastDays() {
   logger.log(`[liturgicalDayService] Loading ${LITURGICAL_DAYS_COLLECTION}`);
-  const snapshot = await retryFirestore(() => getDocs(getDaysCollection()));
+  const snapshot = await getDocsOfflineAware(getDaysCollection());
   return snapshotToDocs(snapshot)
     .filter((item) => (item._feast || item._rank || item._date) && !isSeasonalDateDocumentId(item.id))
     .map((item) => resolveDayAgainstPeriod(item, null));
@@ -73,7 +73,7 @@ export async function getAllFeastDays() {
 async function getSeasonalException(mDate) {
   const id = getSeasonalDateExceptionId(mDate);
   if (!id) return null;
-  const snapshot = await retryFirestore(() => getDoc(doc(db, LITURGICAL_DAYS_COLLECTION, id)));
+  const snapshot = await getDocOfflineAware(doc(db, LITURGICAL_DAYS_COLLECTION, id));
   return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
 }
 

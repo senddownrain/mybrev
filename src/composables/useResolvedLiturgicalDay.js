@@ -11,7 +11,10 @@ import { logger } from '@/utils/logger';
  */
 export function useResolvedLiturgicalDay() {
   const route = useRoute();
-  const { getLiturgicalContentForDate } = useLiturgicalContent();
+  const {
+    getLiturgicalContentForDate,
+    getCachedLiturgicalContentForDate,
+  } = useLiturgicalContent();
   const day = ref(null);
   const pending = ref(true);
   const error = ref('');
@@ -29,13 +32,24 @@ export function useResolvedLiturgicalDay() {
       pending.value = false;
       return;
     }
+
+    const resolveDay = (content) => content.itemsDays?.find((item) => item.id === id)
+      || content.dayOptions?.find((item) => item.templates?.some((template) => template.id === id))
+        ?.templates.find((template) => template.id === id)?.day
+      || null;
+
+    const cached = getCachedLiturgicalContentForDate(date.toDate());
+    if (cached) {
+      day.value = resolveDay(cached);
+      if (!day.value) error.value = 'Літургічны дзень не знойдзены.';
+      pending.value = false;
+      return;
+    }
+
     try {
       const content = await getLiturgicalContentForDate(date.toDate());
       if (currentSequence !== sequence) return;
-      day.value = content.itemsDays?.find((item) => item.id === id)
-        || content.dayOptions?.find((item) => item.templates?.some((template) => template.id === id))
-          ?.templates.find((template) => template.id === id)?.day
-        || null;
+      day.value = resolveDay(content);
       if (!day.value) error.value = 'Літургічны дзень не знойдзены.';
     } catch (loadError) {
       logger.error('[useResolvedLiturgicalDay] load failed:', loadError);

@@ -76,11 +76,9 @@
 <script setup>
 
 import { computed, onMounted, ref } from 'vue';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/plugins/firebase';
-import { retryFirestore } from '@/utils/retry';
 import { logger } from '@/utils/logger';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
+import { getInvitatoriums } from '@/services/staticLiturgicalService';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
 
@@ -101,8 +99,7 @@ const formatPsalm = removeBreakAfterAsterisk;
 
 onMounted(async () => {
   try {
-    const snapshot = await retryFirestore(() => getDocs(collection(db, 'invitatoriums')));
-    invitatoriums.value = snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+    invitatoriums.value = await getInvitatoriums();
     selectedInvitatoriumId.value = invitatoriums.value[0]?.id || '';
   } catch (error) {
     logger.error('[Invit] Не атрымалася загрузіць варыянты інвітаторыя:', error);

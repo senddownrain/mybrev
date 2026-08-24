@@ -10,7 +10,7 @@
       <header class="drawer-header">
         <div class="drawer-brand">
           <div class="drawer-logo-wrap">
-            <img src="/favicon.svg" alt="" class="drawer-logo" />
+            <img src="/maria-menu-logo.svg" alt="" class="drawer-logo" />
           </div>
           <div>
             <div class="drawer-title">Малітоўнік</div>
@@ -192,6 +192,7 @@ const selectCategoryByName = (categoryName) => {
 .drawer-shell {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   height: 100%;
   padding: 12px;
 }
@@ -269,8 +270,10 @@ const selectCategoryByName = (categoryName) => {
   flex: 1;
   min-height: 0;
   padding: 0 !important;
-  overflow-y: auto;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
   overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 
 .drawer-list :deep(.v-list-item) {

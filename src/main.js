@@ -22,12 +22,18 @@ if (!DEV_ADMIN_MODE) {
 
 app.mount('#app')
 
-// Warmup cache in the background after the app is mounted.
-// queueMicrotask defers execution after the current task without an arbitrary timeout.
+// Warm the navigation window after the first screen gets a chance to render.
+// The timeout keeps prefetch from being postponed indefinitely on busy devices.
 if (!DEV_ADMIN_MODE) {
-  queueMicrotask(() => {
+  const startCacheWarmup = () => {
     warmupCache().catch(error => {
       console.error('[main] Cache warmup error:', error)
     })
-  })
+  }
+
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(startCacheWarmup, { timeout: 1500 })
+  } else {
+    window.setTimeout(startCacheWarmup, 0)
+  }
 }

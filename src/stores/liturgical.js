@@ -24,11 +24,11 @@ import { fetchDaysForDate, findDayByPeriod, getAllFeastDays } from '@/services/l
 import { getReadingsForDate }                       from '@/services/readingsService';
 import { getParsedReadingsForDate }                 from '@/services/parsedReadingsService';
 
-/** Cache TTL constants (milliseconds) */
+/** Freshness windows. Expired entries stay readable and refresh in background. */
 const TTL = {
-  CONTENT:  60 * 60 * 1000,      // 1 hour
-  DAYS:     60 * 60 * 1000,      // 1 hour
-  READINGS: 30 * 60 * 1000,      // 30 minutes
+  CONTENT:  24 * 60 * 60 * 1000, // 24 hours
+  DAYS:     24 * 60 * 60 * 1000, // 24 hours
+  READINGS: 24 * 60 * 60 * 1000, // 24 hours
   FEASTS:   24 * 60 * 60 * 1000, // 24 hours
 };
 
@@ -41,6 +41,27 @@ const TTL = {
 function _isCacheValid(entry, ttl) {
   if (!entry) return false;
   return Date.now() - entry.cachedAt < ttl;
+}
+
+function _parsedReadingsCacheKey(date, options = {}) {
+  const resultMode = options.includeAlternatives ? 'alternatives' : 'active';
+  return `${moment(date).startOf('day').format('YYYY-MM-DD')}|${options.dayId || '*'}|${resultMode}`;
+}
+
+function _runOnce(requests, key, loader) {
+  const activeRequest = requests.get(key);
+  if (activeRequest) {
+    logger.log(`[liturgicalStore] joining active request: ${key}`);
+    return activeRequest;
+  }
+
+  const request = loader().finally(() => requests.delete(key));
+  requests.set(key, request);
+  return request;
+}
+
+function _canRefreshFromNetwork() {
+  return typeof navigator === 'undefined' || navigator.onLine !== false;
 }
 
 export const useLiturgicalStore = defineStore('liturgical', () => {
@@ -59,6 +80,11 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   const parsedReadingsCache = ref(new Map());
   /** @type {import('vue').Ref<Map<string, { data: Object, cachedAt: number }>>} */
   const bundleCache = ref(new Map());
+
+  // In-flight requests are intentionally non-reactive. Background warmup and
+  // a screen opening the same date share one Firestore round-trip.
+  const contentRequests = new Map();
+  const parsedReadingsRequests = new Map();
 
   const isLoading = ref(false);
   const error     = ref(null);
@@ -103,22 +129,36 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
       return cachedContent.data;
     }
 
-    isLoading.value = true;
-    error.value     = null;
+    const loadFreshContent = () => _runOnce(contentRequests, `content:${key}`, async () => {
+      isLoading.value = true;
+      error.value     = null;
 
-    try {
-      const { context, dynamicFeastCodes } = await _resolveContext(mDate);
-      const result = await fetchContentForDate(mDate, context, dynamicFeastCodes);
-      contentCache.value.set(key, { data: result, cachedAt: Date.now() });
-      logger.log(`[liturgicalStore] content loaded for ${key}`);
-      return result;
-    } catch (err) {
-      logger.error(`[liturgicalStore] fetchContentByDate error (${key}):`, err);
-      error.value = err;
-      throw err;
-    } finally {
-      isLoading.value = false;
+      try {
+        const { context, dynamicFeastCodes } = await _resolveContext(mDate);
+        const result = await fetchContentForDate(mDate, context, dynamicFeastCodes);
+        contentCache.value.set(key, { data: result, cachedAt: Date.now() });
+        logger.log(`[liturgicalStore] content loaded for ${key}`);
+        return result;
+      } catch (err) {
+        logger.error(`[liturgicalStore] fetchContentByDate error (${key}):`, err);
+        error.value = err;
+        throw err;
+      } finally {
+        isLoading.value = false;
+      }
+    });
+
+    if (cachedContent) {
+      logger.log(`[liturgicalStore] stale content cache hit: ${key}`);
+      if (_canRefreshFromNetwork()) {
+        loadFreshContent().catch((err) => {
+          logger.error(`[liturgicalStore] background content refresh failed (${key}):`, err);
+        });
+      }
+      return cachedContent.data;
     }
+
+    return loadFreshContent();
   }
 
   /**
@@ -274,15 +314,14 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
 
   /**
    * Fetch parsed readings (parsedData collection) for a date.
-   * Cached 30 minutes per date key.
+   * Cached per date key and served stale while a refresh runs in background.
    *
    * @param {Date|moment.Moment|string} date
    * @returns {Promise<{ context: Object, items: Object[] }>}
    */
   async function fetchParsedReadingsByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
-    const resultMode = options.includeAlternatives ? 'alternatives' : 'active';
-    const key   = `${mDate.format('YYYY-MM-DD')}|${options.dayId || '*'}|${resultMode}`;
+    const key = _parsedReadingsCacheKey(mDate, options);
 
     const cached = parsedReadingsCache.value.get(key);
     if (_isCacheValid(cached, TTL.READINGS)) {
@@ -290,29 +329,43 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
       return cached.data;
     }
 
-    isLoading.value = true;
-    error.value     = null;
+    const loadFreshReadings = () => _runOnce(parsedReadingsRequests, `parsed:${key}`, async () => {
+      isLoading.value = true;
+      error.value     = null;
 
-    try {
-      const { context, dynamicFeastCodes } = await _resolveContext(mDate);
-      const liturgicalYear = await getLiturgicalYear(date, { useCalendarStore: true });
-      const cycle          = await getCycleForDate(date, liturgicalYear, context.dayOfWeek, { useCalendarStore: true });
-      const sundayCycle    = await getCycleForDate(date, liturgicalYear, 1, { useCalendarStore: true });
-      const fullContext    = { ...context, cycle, sundayCycle };
+      try {
+        const { context, dynamicFeastCodes } = await _resolveContext(mDate);
+        const liturgicalYear = await getLiturgicalYear(date, { useCalendarStore: true });
+        const cycle          = await getCycleForDate(date, liturgicalYear, context.dayOfWeek, { useCalendarStore: true });
+        const sundayCycle    = await getCycleForDate(date, liturgicalYear, 1, { useCalendarStore: true });
+        const fullContext    = { ...context, cycle, sundayCycle };
 
-      const items = await getParsedReadingsForDate(mDate, fullContext, dynamicFeastCodes, options);
+        const items = await getParsedReadingsForDate(mDate, fullContext, dynamicFeastCodes, options);
 
-      const result = { context: fullContext, items };
-      parsedReadingsCache.value.set(key, { data: result, cachedAt: Date.now() });
-      logger.log(`[liturgicalStore] parsedReadings loaded for ${key}: ${items.length}`);
-      return result;
-    } catch (err) {
-      logger.error(`[liturgicalStore] fetchParsedReadingsByDate error (${key}):`, err);
-      error.value = err;
-      throw err;
-    } finally {
-      isLoading.value = false;
+        const result = { context: fullContext, items };
+        parsedReadingsCache.value.set(key, { data: result, cachedAt: Date.now() });
+        logger.log(`[liturgicalStore] parsedReadings loaded for ${key}: ${items.length}`);
+        return result;
+      } catch (err) {
+        logger.error(`[liturgicalStore] fetchParsedReadingsByDate error (${key}):`, err);
+        error.value = err;
+        throw err;
+      } finally {
+        isLoading.value = false;
+      }
+    });
+
+    if (cached) {
+      logger.log(`[liturgicalStore] stale parsedReadings cache hit: ${key}`);
+      if (_canRefreshFromNetwork()) {
+        loadFreshReadings().catch((err) => {
+          logger.error(`[liturgicalStore] background readings refresh failed (${key}):`, err);
+        });
+      }
+      return cached.data;
     }
+
+    return loadFreshReadings();
   }
 
   /**
@@ -410,7 +463,14 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   function getCachedContent(date) {
     const key = moment(date).startOf('day').format('YYYY-MM-DD');
     const entry = contentCache.value.get(key);
-    return _isCacheValid(entry, TTL.CONTENT) ? entry.data : null;
+    return entry?.data || null;
+  }
+
+  /** Return parsed readings synchronously so date swipes never flash a loader. */
+  function getCachedParsedReadings(date, options = {}) {
+    const key = _parsedReadingsCacheKey(date, options);
+    const entry = parsedReadingsCache.value.get(key);
+    return entry?.data || null;
   }
 
   /**
@@ -422,7 +482,9 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
       contentCache.value.delete(dateKey);
       daysCache.value.delete(dateKey);
       readingsCache.value.delete(dateKey);
-      parsedReadingsCache.value.delete(dateKey);
+      for (const key of parsedReadingsCache.value.keys()) {
+        if (key.startsWith(`${dateKey}|`)) parsedReadingsCache.value.delete(key);
+      }
       bundleCache.value.delete(dateKey);
     } else {
       contentCache.value.clear();
@@ -452,6 +514,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
 
     // sync helpers
     getCachedContent,
+    getCachedParsedReadings,
     clearCache,
   };
 });

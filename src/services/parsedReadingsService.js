@@ -1,6 +1,6 @@
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
-import { retryFirestore } from '@/utils/retry';
+import { getDocsOfflineAware } from '@/utils/firestoreRead';
 import { logger } from '@/utils/logger';
 import {
   isSeasonalDateException,
@@ -29,7 +29,7 @@ function feastCodeVariants(code) {
 }
 
 async function queryDocs(q) {
-  const snapshot = await retryFirestore(() => getDocs(q));
+  const snapshot = await getDocsOfflineAware(q);
   return snapshot.docs
     .map((d) => ({ id: d.id, ...d.data() }))
     .filter(hasReadingDocumentContent);

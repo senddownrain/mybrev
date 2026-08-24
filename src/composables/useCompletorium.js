@@ -1,11 +1,7 @@
-import { doc, getDoc } from 'firebase/firestore';
-
 import { LITURGICAL_RANK } from '@/constants/liturgical';
-import { db } from '@/plugins/firebase';
-import { retryFirestore } from '@/utils/retry';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
+import { getCompletoriumById } from '@/services/staticLiturgicalService';
 
-const COMPLETORIUM_COLLECTION = 'completoriums';
 const SUNDAY = 1;
 
 // Holy Week has no separate templates in the normalized 35-document
@@ -62,18 +58,13 @@ export function useCompletorium() {
       throw new Error('Не атрымалася вызначыць перыяд або дзень тыдня для камплеты.');
     }
 
-    const snapshot = await retryFirestore(() => (
-      getDoc(doc(db, COMPLETORIUM_COLLECTION, id))
-    ));
+    const completorium = await getCompletoriumById(id);
 
-    if (!snapshot.exists()) {
-      throw new Error(`Камплета ${id} не знойдзена ў калекцыі ${COMPLETORIUM_COLLECTION}.`);
+    if (!completorium) {
+      throw new Error(`Камплета ${id} не знойдзена ў калекцыі completoriums.`);
     }
 
-    return {
-      id: snapshot.id,
-      ...snapshot.data(),
-    };
+    return completorium;
   }
 
   return { getCompletoriumForDate };

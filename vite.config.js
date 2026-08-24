@@ -43,14 +43,20 @@ export default defineConfig({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       strategies: 'generateSW',
-      includeAssets: ['favicon.ico', 'favicon.svg', 'favicon-96x96.png', 'apple-touch-icon.png'],
+      includeAssets: [
+        'favicon.ico',
+        'favicon-96x96.png',
+        'apple-touch-icon.png',
+        'app-icon-master.png',
+        'maria-menu-logo.svg',
+      ],
       manifestFilename: 'manifest.webmanifest',
       manifest: {
         name: 'Каталіцкі малітоўнік',
         short_name: 'Малітоўнік',
         description: 'Каталіцкі малітоўнік для штодзённай малітвы',
-        theme_color: '#1867C0',
-        background_color: '#ffffff',
+        theme_color: '#F5A000',
+        background_color: '#FFF8E8',
         display: 'standalone',
         orientation: 'portrait',
         lang: 'be',
@@ -69,7 +75,7 @@ export default defineConfig({
             purpose: 'any'
           },
           {
-            src: 'web-app-manifest-512x512.png',
+            src: 'web-app-manifest-maskable-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable'
