@@ -70,8 +70,8 @@ export async function getAllFeastDays() {
     .map((item) => resolveDayAgainstPeriod(item, null));
 }
 
-async function getSeasonalException(mDate, periodType) {
-  const id = getSeasonalDateExceptionId(mDate, periodType);
+async function getSeasonalException(mDate) {
+  const id = getSeasonalDateExceptionId(mDate);
   if (!id) return null;
   const snapshot = await retryFirestore(() => getDoc(doc(db, LITURGICAL_DAYS_COLLECTION, id)));
   return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
@@ -100,7 +100,7 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = []) {
     : queryAll(fixedDateVariants.map(getDaysByFixedDateQuery));
   const seasonalPromise = exclusiveFeastCode
     ? Promise.resolve(null)
-    : getSeasonalException(mDate, context.periodType);
+    : getSeasonalException(mDate);
   const dynamicPromises = dynamicFeastCodes.map(async (code) => {
     const docs = await queryAll(dynamicFeastVariants(code).map(getDaysByFeastQuery));
     return [code, docs];
@@ -112,19 +112,28 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = []) {
     seasonalPromise,
     Promise.all(dynamicPromises),
   ]);
-  const withCalendarContext = (day) => day ? {
+  const withCalendarContext = (day, overrides = {}) => day ? {
     ...day,
-    _periodType: context.periodType || day._periodType,
-    _periodWeekNumber: context.periodWeek ?? day._periodWeekNumber,
+    _periodType: overrides.periodType || context.periodType || day._periodType,
+    _periodWeekNumber: overrides.periodWeek ?? context.periodWeek ?? day._periodWeekNumber,
     _dayOfWeek: context.dayOfWeek ?? day._dayOfWeek,
   } : null;
   const resolvedPeriodDay = withCalendarContext(resolveDayAgainstPeriod(periodDay, null));
 
-  const hasSeasonalException = isSeasonalDateException(mDate, context.periodType)
+  const hasSeasonalException = isSeasonalDateException(mDate)
     && Boolean(seasonalDay);
+  const seasonalPeriodType = mDate.month() === 11 && mDate.date() <= 24
+    ? 'advent'
+    : 'christmas';
+  const seasonalPeriodWeek = seasonalPeriodType === 'christmas'
+    ? (mDate.month() === 11 ? 1 : 2)
+    : context.periodWeek;
   const seasonal = hasSeasonalException
     ? applySeasonalWeekdayAntiphons(
-      withCalendarContext(resolveDayAgainstPeriod(seasonalDay, resolvedPeriodDay, { fillMissing: true })),
+      withCalendarContext(
+        resolveDayAgainstPeriod(seasonalDay, resolvedPeriodDay, { fillMissing: true }),
+        { periodType: seasonalPeriodType, periodWeek: seasonalPeriodWeek },
+      ),
       context.dayOfWeek,
     )
     : null;

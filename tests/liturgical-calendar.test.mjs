@@ -48,6 +48,14 @@ test('uses Firestore document IDs as canonical dynamic feast codes', () => {
   assert.deepEqual(getDynamicFeastCodesForDate(date, dynamicDates), ['feast-ascension']);
 });
 
+test('maps the four opening days of Lent to week zero', () => {
+  const opts = optionsFor(2026, '2026-01-11');
+  assert.equal(calculateDateForContext(2026, 'lent', 0, 4, opts, null), '2026-02-18');
+  assert.equal(calculateDateForContext(2026, 'lent', 0, 5, opts, null), '2026-02-19');
+  assert.equal(calculateDateForContext(2026, 'lent', 0, 6, opts, null), '2026-02-20');
+  assert.equal(calculateDateForContext(2026, 'lent', 0, 7, opts, null), '2026-02-21');
+});
+
 test('resolves Mary, Mother of the Church through the dynamic feast map', () => {
   const date = moment('2026-05-25', 'YYYY-MM-DD');
   assert.deepEqual(

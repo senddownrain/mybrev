@@ -88,6 +88,9 @@
             <v-list-item-title class="day-option__title">
               {{ getOptionDisplayTitle(option) }}
             </v-list-item-title>
+            <v-list-item-subtitle v-if="getOptionMeta(option)" class="day-option__subtitle">
+              {{ getOptionMeta(option) }}
+            </v-list-item-subtitle>
 
             <template #append>
               <v-icon class="day-option__arrow" icon="mdi-chevron-right" size="24"></v-icon>
@@ -123,6 +126,8 @@ import { useNotifier } from '@/composables/useNotifier';
 import {
   LITURGICAL_OPTION_SOURCE,
   LITURGICAL_THEME_MAP,
+  PLACE_LABEL_MAP,
+  RANK_LABEL_MAP,
 } from '@/constants/liturgical';
 import { formatDateDayMonth } from '@/utils/date';
 
@@ -172,6 +177,20 @@ const getOptionDisplayTitle = (option) => {
     .includes(weekday.toLocaleLowerCase('be-BY'));
 
   return titleAlreadyContainsWeekday ? title : `${title}, ${weekday}`;
+};
+
+const getOptionMeta = (option) => {
+  const day = option?.day || {};
+  const rank = day._rank || day._feastType;
+  const places = Array.isArray(day._place) ? day._place : [day._place];
+  const chunks = [];
+
+  if (rank) chunks.push(RANK_LABEL_MAP[rank] || rank);
+  chunks.push(...places
+    .filter(Boolean)
+    .map((place) => PLACE_LABEL_MAP[place] || place));
+
+  return [...new Set(chunks)].join(' · ');
 };
 
 // Monotonically-increasing counter used to detect stale responses.
@@ -436,6 +455,14 @@ watch(
   letter-spacing: -0.01em;
 }
 
+.day-option__subtitle {
+  padding: 3px 8px 0 4px;
+  color: var(--nav-muted);
+  font-size: 0.82rem !important;
+  font-weight: 540;
+  line-height: 1.3 !important;
+}
+
 .day-option__arrow {
   color: var(--nav-muted);
 }
@@ -468,6 +495,14 @@ watch(
   text-overflow: unset !important;
   overflow: visible !important;
   max-width: 100% !important;
+}
+
+:deep(.day-option .v-list-item-subtitle) {
+  display: block !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  text-overflow: clip !important;
+  -webkit-line-clamp: unset !important;
 }
 
 :deep(.day-option .v-list-item__prepend) {

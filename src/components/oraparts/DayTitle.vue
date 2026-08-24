@@ -32,10 +32,39 @@
         </p>
       </template>
 
+      <div v-if="isHero && dayComment" class="day-title-comment-disclosure">
+        <button
+          type="button"
+          class="day-title-comment-toggle"
+          :aria-expanded="commentExpanded"
+          aria-controls="day-title-comment-content"
+          @click="commentExpanded = !commentExpanded"
+        >
+          <span class="day-title-comment-toggle__label">
+            <v-icon icon="mdi-text-box-outline" size="20"></v-icon>
+            Заўвага да дня
+          </span>
+          <v-icon
+            class="day-title-comment-toggle__chevron"
+            :class="{ 'day-title-comment-toggle__chevron--open': commentExpanded }"
+            icon="mdi-chevron-down"
+            size="22"
+          ></v-icon>
+        </button>
+        <v-expand-transition>
+          <div
+            v-show="commentExpanded"
+            id="day-title-comment-content"
+            class="day-title-comment day-title-comment--hero ora-text text-start"
+            v-html="dayComment"
+          ></div>
+        </v-expand-transition>
+      </div>
+
       <div
-        v-if="resolvedDay.feastComment || resolvedDay.comment"
+        v-else-if="dayComment"
         class="day-title-comment ora-text text-start mt-5"
-        v-html="resolvedDay.feastComment || resolvedDay.comment"
+        v-html="dayComment"
       ></div>
      
     </div>
@@ -48,7 +77,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
 import {
@@ -70,6 +99,15 @@ const routeDay = props.dayData ? null : useResolvedLiturgicalDay();
 const resolvedDay = computed(() => props.dayData || routeDay?.day.value || null);
 const loading = computed(() => props.dayData ? false : routeDay?.pending.value);
 const isHero = computed(() => props.variant === 'hero');
+const commentExpanded = ref(false);
+const dayComment = computed(() => (
+  resolvedDay.value?.feastComment || resolvedDay.value?.comment || ''
+));
+
+watch(
+  () => resolvedDay.value?.id,
+  () => { commentExpanded.value = false; },
+);
 const displayTitle = computed(() => {
   const day = resolvedDay.value;
   if (!day) return '';
@@ -237,6 +275,70 @@ const getPeriodTitle = (day) => {
   font-weight: 750;
   line-height: 1.2;
   white-space: nowrap;
+}
+
+.day-title-comment-disclosure {
+  margin-top: 12px;
+  pointer-events: auto !important;
+}
+
+.day-title-comment-toggle {
+  display: flex;
+  width: 100%;
+  min-height: 54px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border: 1px solid var(--nav-border);
+  border-radius: 18px;
+  background: var(--nav-surface);
+  color: var(--nav-on-surface);
+  box-shadow: 0 3px 14px var(--nav-button-shadow);
+  cursor: pointer;
+  font: inherit;
+  pointer-events: auto !important;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.16s ease, transform 0.16s ease;
+}
+
+.day-title-comment-toggle:hover {
+  border-color: rgba(var(--liturgical-rgb), 0.3);
+}
+
+.day-title-comment-toggle:active {
+  transform: scale(0.99);
+}
+
+.day-title-comment-toggle:focus-visible {
+  outline: 3px solid rgba(var(--liturgical-rgb), 0.25);
+  outline-offset: 2px;
+}
+
+.day-title-comment-toggle__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--liturgical-color);
+  font-size: 0.9rem !important;
+  font-weight: 700;
+}
+
+.day-title-comment-toggle__chevron {
+  color: var(--nav-muted);
+  transition: transform 0.2s ease;
+}
+
+.day-title-comment-toggle__chevron--open {
+  transform: rotate(180deg);
+}
+
+.day-title-comment--hero {
+  margin-top: 8px;
+  padding: 16px;
+  border: 1px solid var(--nav-border);
+  border-radius: 18px;
+  background: rgba(var(--liturgical-rgb), 0.055);
+  pointer-events: auto !important;
 }
 
 /* Масштабирование текста заголовка дня */

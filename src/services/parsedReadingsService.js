@@ -49,6 +49,66 @@ export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes
   const { periodType, periodWeek, dayOfWeek, cycle, sundayCycle = cycle } = context;
   const selectVariants = (documents) => selectReadingLectionaryVariants(documents, { cycle, sundayCycle });
   const dateStr = ddmm(mDate);
+  // Early Lent was imported in two shapes: canonical week 0 and legacy null.
+  const periodWeekValues = Number(periodWeek) === 0 ? [0, null] : [Number(periodWeek)];
+
+  // The readings screen needs the complete set for a date so it can present
+  // alternative celebrations and lectionary years without stacking every
+  // document in the article. Other callers keep the old, active-only result.
+  if (options.includeAlternatives) {
+    const linkedIds = new Set();
+    const candidates = [];
+
+    if (options.dayId) {
+      const linked = (await Promise.all([
+        queryDocs(query(col(), where('_dayId', '==', options.dayId))),
+        queryDocs(query(col(), where('_dayIds', 'array-contains', options.dayId))),
+      ])).flat();
+      linked.forEach((document) => {
+        linkedIds.add(document.id);
+        candidates.push(document);
+      });
+    }
+
+    if (dynamicFeastCodes.length > 0) {
+      const feastQueries = dynamicFeastCodes.flatMap((code) => feastCodeVariants(code).map((value) =>
+        queryDocs(query(col(), where('_feast', '==', value))),
+      ));
+      candidates.push(...(await Promise.all(feastQueries)).flat());
+    }
+
+    const isFixedDateOnly =
+      isSeasonalDateException(mDate, periodType) || isChristmasDateExceptionExclusion(mDate);
+
+    candidates.push(...await queryDocs(query(col(), where('_date', '==', dateStr))));
+
+    if (!isFixedDateOnly
+      && periodType && periodWeek !== undefined && dayOfWeek !== undefined) {
+      candidates.push(...(await Promise.all(periodWeekValues.map((weekValue) => queryDocs(
+        query(
+          col(),
+          where('_periodType', '==', periodType),
+          where('_periodWeekNumber', '==', weekValue),
+          where('_dayOfWeek', '==', Number(dayOfWeek)),
+        ),
+      )))).flat());
+    }
+
+    const unique = [...new Map(candidates.map((document) => [document.id, document])).values()];
+    const sourceRank = (document) => {
+      if (linkedIds.has(document.id)) return 0;
+      if (document._feast) return 1;
+      if (document._date) return 2;
+      if (document._periodType) return 3;
+      return 4;
+    };
+
+    return unique
+      .map((document, index) => ({ document, index }))
+      .sort((left, right) => sourceRank(left.document) - sourceRank(right.document)
+        || left.index - right.index)
+      .map(({ document }) => document);
+  }
 
   // An explicitly selected fixedDays template is the strongest link. During
   // migration both singular and array forms are supported.
@@ -85,7 +145,7 @@ export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes
   // 2. Seasonal exceptions (Advent Dec 17–24, Christmas Jan dates)
   //    and Christmas fixed-date exclusions (25.12, 26.12, etc.) — query by _date only
   const isFixedDateOnly =
-    isSeasonalDateException(mDate, periodType) || isChristmasDateExceptionExclusion(mDate);
+    isSeasonalDateException(mDate) || isChristmasDateExceptionExclusion(mDate);
 
   if (isFixedDateOnly) {
     const docs = await queryDocs(query(col(), where('_date', '==', dateStr)));
@@ -102,30 +162,30 @@ export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes
   if (periodType && periodWeek !== undefined && dayOfWeek !== undefined) {
     // Try with cycle; weekdays have year '1'/'2', Sundays have A/B/C
     if (cycle) {
-      queries.push(
+      periodWeekValues.forEach((weekValue) => queries.push(
         queryDocs(
           query(
             col(),
             where('_periodType', '==', periodType),
-            where('_periodWeekNumber', '==', Number(periodWeek)),
+            where('_periodWeekNumber', '==', weekValue),
             where('_dayOfWeek', '==', Number(dayOfWeek)),
             where('year', '==', cycle),
           ),
         ),
-      );
+      ));
     }
     // Also fetch docs with year == null (shared across cycles)
-    queries.push(
+    periodWeekValues.forEach((weekValue) => queries.push(
       queryDocs(
         query(
           col(),
           where('_periodType', '==', periodType),
-          where('_periodWeekNumber', '==', Number(periodWeek)),
+          where('_periodWeekNumber', '==', weekValue),
           where('_dayOfWeek', '==', Number(dayOfWeek)),
           where('year', '==', null),
         ),
       ),
-    );
+    ));
   }
 
   // Fixed date query (saints' days, memorials)

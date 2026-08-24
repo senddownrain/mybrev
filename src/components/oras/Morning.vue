@@ -1,7 +1,7 @@
 <template>
   <v-container class="prayer-content-area">
     <v-row align="center" justify="center">
-      <v-col v-if="!pending && displayedDay" md="6" lg="6" sm="8">
+      <v-col v-if="!pending && displayedDay" class="liturgical-hour-column">
         <day-title :day-data="day" />
         <intro :title="title" />
 

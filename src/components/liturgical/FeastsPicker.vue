@@ -244,7 +244,12 @@ function rankWeight(rank) {
 }
 
 function selectFeast(feast) {
-  emit('feast-selected', { dayId: feast.id, date: feast.calendarDate });
+  // Readings are resolved independently from parsedData by calendar date.
+  // Do not leak a fixedDays document id into that query path.
+  emit('feast-selected', {
+    dayId: props.mode === 'readings' ? '' : feast.id,
+    date: feast.calendarDate,
+  });
 }
 
 function resetFilters() {

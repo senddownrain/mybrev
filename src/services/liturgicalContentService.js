@@ -62,9 +62,14 @@ function buildPeriodTitle(context) {
 
 function buildDayTitle(day, context) {
   const hasCelebrationIdentity = day?._feast || day?._rank || day?._feastType;
-  const isChristmasDateDay = day?._periodType === 'christmas'
-    && (isSeasonalDateDocumentId(day?.id) || !hasCelebrationIdentity);
-  if (isChristmasDateDay) {
+  // Seasonal date documents were imported with headings from a particular
+  // source year (for example a 21 December document may say "IV Sunday").
+  // Their identity is the calendar date, so render the current calendar
+  // context instead of leaking a stale weekday/title into another year.
+  const isSeasonalCalendarDay = isSeasonalDateDocumentId(day?.id)
+    && ['advent', 'christmas'].includes(day?._periodType);
+  const isUntitledChristmasDay = day?._periodType === 'christmas' && !hasCelebrationIdentity;
+  if (isSeasonalCalendarDay || isUntitledChristmasDay) {
     return buildPeriodTitle({
       ...context,
       periodType: day._periodType,
@@ -90,8 +95,8 @@ function fixedSubtitle(day, count) {
   if (day?._rank) chunks.push(RANK_LABEL_MAP[day._rank] || day._rank);
   const places = Array.isArray(day?._place) ? day._place : [day?._place];
   chunks.push(...places.filter(Boolean).map((place) => PLACE_LABEL_MAP[place] || place));
-  if (count > 1) chunks.push(`${count} варыянты шаблону`);
-  return chunks.length ? chunks.join(' · ') : 'Свята па фіксаванай даце';
+  if (count > 1) chunks.push(`${count} варыянты`);
+  return chunks.length ? chunks.join(' · ') : 'Літургічны дзень';
 }
 
 function groupFixedDays(days) {
@@ -166,7 +171,7 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     key: `period-${day.id}`,
     source: LITURGICAL_OPTION_SOURCE.PERIOD,
     title: buildDayTitle(day, context),
-    subtitle: 'Літургічны дзень па перыядзе',
+    subtitle: 'Літургічны дзень',
     day,
     templates: [{ id: day.id, label: 'Перыяд', day }],
     reading: periodReadings[0] || null,
@@ -183,7 +188,7 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
       key: `dynamic-${day.id}`,
       source: LITURGICAL_OPTION_SOURCE.DYNAMIC,
       title: buildDayTitle(day, context) || code,
-      subtitle: 'Рухомае свята',
+      subtitle: 'Свята',
       day,
       templates: [{ id: day.id, label: getTemplateLabel(day), day }],
       reading: matchingReading(day, dynamicReadings),

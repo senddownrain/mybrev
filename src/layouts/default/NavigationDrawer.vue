@@ -40,6 +40,16 @@
       </v-list-item>
 
       <v-list-item
+        title="Чытанні"
+        :to="{ name: 'Readings' }"
+        :active="route.name === 'Readings' || route.name === 'ReadingsByDate' || route.name === 'ReadingsPicker' || (route.name === 'LiturgicalPicker' && route.query.mode === 'readings')"
+      >
+        <template #prepend>
+          <PhBookOpenText :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
+      <v-list-item
         title="Малітвы"
         :to="{ name: 'Prayers' }"
         :active="route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView'"
@@ -134,7 +144,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import {
-  PhCross, PhBookBookmark, PhHeart, PhBookmark,
+  PhCross, PhBookOpenText, PhBookBookmark, PhHeart, PhBookmark,
   PhGear, PhSignIn, PhSignOut, PhShieldCheck, PhX,
 } from '@phosphor-icons/vue';
 

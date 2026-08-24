@@ -281,7 +281,8 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
    */
   async function fetchParsedReadingsByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
-    const key   = `${mDate.format('YYYY-MM-DD')}|${options.dayId || '*'}`;
+    const resultMode = options.includeAlternatives ? 'alternatives' : 'active';
+    const key   = `${mDate.format('YYYY-MM-DD')}|${options.dayId || '*'}|${resultMode}`;
 
     const cached = parsedReadingsCache.value.get(key);
     if (_isCacheValid(cached, TTL.READINGS)) {

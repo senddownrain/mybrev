@@ -63,8 +63,8 @@
         <v-list-item-title class="reading-title">
           Чытанні
         </v-list-item-title>
-        <v-list-item-subtitle v-if="!readingItem">
-          Чытанні для гэтай даты не знойдзены
+        <v-list-item-subtitle v-if="readingSubtitle" class="reading-subtitle">
+          {{ readingSubtitle }}
         </v-list-item-subtitle>
         <template #append>
           <v-icon
@@ -87,6 +87,9 @@
             <v-list-item-title class="ora-card__title">
               {{ ora.title }}
             </v-list-item-title>
+            <v-list-item-subtitle v-if="ora.subtitle" class="ora-card__subtitle">
+              {{ ora.subtitle }}
+            </v-list-item-subtitle>
             <template v-slot:append>
               <v-icon class="ora-card__arrow" icon="mdi-chevron-right" size="24"></v-icon>
             </template>
@@ -123,6 +126,7 @@ import { useRoute, useRouter } from 'vue-router';
 import moment from '@/utils/moment-be';
 
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
+import { useParsedReadings } from '@/composables/useParsedReadings';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { logger } from '@/utils/logger';
 import { useAuthStore } from '@/stores/auth';
@@ -132,6 +136,11 @@ import { LITURGICAL_THEME_MAP, RANK_LABEL_MAP } from '@/constants/liturgical';
 const route = useRoute();
 const router = useRouter();
 const { getLiturgicalContentForDate } = useLiturgicalContent();
+const {
+  items: parsedReadings,
+  isLoading: loadingParsedReadings,
+  loadForDate: loadParsedReadingsForDate,
+} = useParsedReadings();
 const authStore = useAuthStore();
 const isAdmin = computed(() => authStore.isAdmin);
 
@@ -147,7 +156,9 @@ const templateOptions = computed(() => (
   dayOptions.value.find((option) => option.templates?.some((item) => item.id === dayId.value))?.templates || []
 ));
 
-const loadingOra = computed(() => loadingDay.value || loadingReadings.value);
+const loadingOra = computed(() => (
+  loadingDay.value || loadingReadings.value || loadingParsedReadings.value
+));
 
 const READING_THEMES = Object.freeze({
   ordinary: {
@@ -205,8 +216,8 @@ const readingCardStyle = computed(() => ({
 const oras = computed(() => [
   {
     name: 'invitatorium',
-    title: 'Заклік (Invitatorium)',
-    subtitle: 'Уступная малітва, якая папярэднічае першай малітоўнай гадзіне дня.',
+    title: 'Заклік',
+    subtitle: 'Invitatorium',
     icon: 'mdi-weather-sunset-up',
     path: `/day/${dateParam.value}/ora/${dayId.value}/invitatorium`,
     tag: 'Уступ',
@@ -215,7 +226,7 @@ const oras = computed(() => [
   {
     name: 'morning',
     title: 'Агульная гадзіна',
-    subtitle: 'Заклік, Гадзіна чытанняў і Ютрань у адной ранішняй малітве.',
+    subtitle: 'Invitatorium · Officium lectionis · Laudes',
     icon: 'mdi-weather-sunset-up',
     path: `/day/${dateParam.value}/ora/${dayId.value}/morning`,
     tag: 'Раніца',
@@ -223,8 +234,8 @@ const oras = computed(() => [
   },
   {
     name: 'laudes',
-    title: 'Ютрань (Laudes)',
-    subtitle: 'Ранішняя хвала, якая асвячае пачатак дня.',
+    title: 'Ютрань',
+    subtitle: 'Laudes matutinae',
     icon: 'mdi-weather-sunny',
     path: `/day/${dateParam.value}/ora/${dayId.value}/laudes`,
     tag: 'Галоўная',
@@ -232,8 +243,8 @@ const oras = computed(() => [
   },
   {
     name: 'lectionis',
-    title: 'Гадзіна Чытанняў',
-    subtitle: 'Разважанне над Святым Пісаннем і творамі Айцоў Касцёла.',
+    title: 'Гадзіна чытанняў',
+    subtitle: 'Officium lectionis',
     icon: 'mdi-book-open-page-variant',
     path: `/day/${dateParam.value}/ora/${dayId.value}/lectionis`,
     tag: 'Разважанне',
@@ -241,8 +252,8 @@ const oras = computed(() => [
   },
   {
     name: 'terz',
-    title: 'Трэцяя гадзіна',
-    subtitle: 'Кароткая малітва сярод раніцы.',
+    title: 'Малітва перад поўднем',
+    subtitle: 'Tertia',
     icon: 'mdi-clock-time-nine-outline',
     path: `/day/${dateParam.value}/ora/${dayId.value}/terz`,
     tag: 'Малая',
@@ -250,8 +261,8 @@ const oras = computed(() => [
   },
   {
     name: 'sext',
-    title: 'Шостая гадзіна',
-    subtitle: 'Кароткая малітва апоўдні.',
+    title: 'Малітва апоўдні',
+    subtitle: 'Sexta',
     icon: 'mdi-clock-time-twelve-outline',
     path: `/day/${dateParam.value}/ora/${dayId.value}/sext`,
     tag: 'Малая',
@@ -259,8 +270,8 @@ const oras = computed(() => [
   },
   {
     name: 'non',
-    title: 'Дзевятая гадзіна',
-    subtitle: 'Кароткая малітва пасля поўдня.',
+    title: 'Малітва пасля поўдня',
+    subtitle: 'Nona',
     icon: 'mdi-clock-time-three-outline',
     path: `/day/${dateParam.value}/ora/${dayId.value}/non`,
     tag: 'Малая',
@@ -268,8 +279,8 @@ const oras = computed(() => [
   },
   {
     name: 'vesper',
-    title: 'Нешпары (Vesper)',
-    subtitle: 'Вячэрняя хвала, падзяка за пражыты дзень.',
+    title: 'Нешпары',
+    subtitle: 'Vesperae',
     icon: 'mdi-weather-night',
     path: `/day/${dateParam.value}/ora/${dayId.value}/vesper`,
     tag: 'Галоўная',
@@ -277,14 +288,29 @@ const oras = computed(() => [
   },
   {
     name: 'completorium',
-    title: 'Камплета (Completorium)',
-    subtitle: 'Малітва перад сном, рахунак сумлення.',
+    title: 'Камплета',
+    subtitle: 'Completorium',
     icon: 'mdi-bed-clock',
     path: `/day/${dateParam.value}/ora/${dayId.value}/completorium`,
     tag: 'Завяршэнне',
     tagColor: 'deep-purple',
   },
 ]);
+
+const readingReferences = computed(() => {
+  const references = parsedReadings.value.flatMap((reading) => (
+    ['reading1', 'reading2', 'gospel']
+      .map((section) => String(reading?.[section]?.bible || '').trim())
+      .filter(Boolean)
+  ));
+  return [...new Set(references)];
+});
+
+const readingSubtitle = computed(() => {
+  if (readingReferences.value.length) return readingReferences.value.join(' · ');
+  if (!readingItem.value) return 'Чытанні для гэтай даты не знойдзены';
+  return 'Чытанні і Евангелле';
+});
 
 // Always link to parsedData readings view for the current date
 const readingItem = computed(() => {
@@ -306,7 +332,10 @@ const loadReadings = async () => {
     loadingReadings.value = true;
     readings.value = [];
     const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
-    const result = await getLiturgicalContentForDate(mDate.toDate());
+    const [result] = await Promise.all([
+      getLiturgicalContentForDate(mDate.toDate()),
+      loadParsedReadingsForDate(mDate.toDate(), { dayId: dayId.value || '' }),
+    ]);
     dayOptions.value = Array.isArray(result.dayOptions) ? result.dayOptions : [];
     readings.value = Array.isArray(result.itemsReadings)
       ? result.itemsReadings
@@ -449,8 +478,9 @@ watch(dateParam, (newDateParam) => {
 }
 
 .reading-subtitle {
-  font-size: 0.9rem;
-  opacity: 0.8;
+  font-size: 0.82rem;
+  color: var(--nav-muted);
+  opacity: 1;
 }
 
 .template-toggle {
@@ -485,6 +515,24 @@ watch(dateParam, (newDateParam) => {
   font-weight: 650;
   line-height: 1.36 !important;
   letter-spacing: -0.01em;
+}
+
+.ora-card__subtitle {
+  padding: 3px 8px 0 4px;
+  color: var(--nav-muted);
+  font-size: 0.82rem !important;
+  font-weight: 520;
+  line-height: 1.3 !important;
+  letter-spacing: 0.01em;
+}
+
+:deep(.reading-card .v-list-item-subtitle),
+:deep(.ora-card .v-list-item-subtitle) {
+  display: block !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  text-overflow: clip !important;
+  -webkit-line-clamp: unset !important;
 }
 
 .ora-card__arrow {
