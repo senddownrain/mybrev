@@ -4,12 +4,11 @@ import { db } from '@/plugins/firebase';
 import { getDocsOfflineAware } from '@/utils/firestoreRead';
 import { logger } from '@/utils/logger';
 import {
-  PERIOD_LABEL_MAP,
   PLACE_LABEL_MAP,
   RANK_LABEL_MAP,
-  WEEKDAY_LABEL_MAP,
   LITURGICAL_OPTION_SOURCE,
 } from '@/constants/liturgical';
+import { formatLiturgicalPeriodTitle } from '@/utils/liturgicalPeriodTitle';
 import { fetchDaysForDate } from '@/services/liturgicalDayService';
 import {
   getFixedCelebrationKey,
@@ -46,18 +45,11 @@ async function queryDocuments(queries) {
 }
 
 function buildPeriodTitle(context) {
-  const dayName = WEEKDAY_LABEL_MAP[context.dayOfWeek] || '';
-  if (context.periodType === 'christmas' && Number(context.periodWeek) === 1) {
-    return `${dayName} у Актаве Нараджэння Пана`;
-  }
-  const inlineDayName = dayName
-    ? `${dayName.charAt(0).toLowerCase()}${dayName.slice(1)}`
-    : '';
-  return [
-    PERIOD_LABEL_MAP[context.periodType] || 'Літургічны перыяд',
-    context.periodWeek > -1 ? `${context.periodWeek} тыдзень` : '',
-    inlineDayName,
-  ].filter(Boolean).join(', ');
+  return formatLiturgicalPeriodTitle({
+    periodType: context.periodType,
+    periodWeek: context.periodWeek,
+    dayOfWeek: context.dayOfWeek,
+  });
 }
 
 function buildDayTitle(day, context) {
@@ -69,7 +61,8 @@ function buildDayTitle(day, context) {
   const isSeasonalCalendarDay = isSeasonalDateDocumentId(day?.id)
     && ['advent', 'christmas'].includes(day?._periodType);
   const isUntitledChristmasDay = day?._periodType === 'christmas' && !hasCelebrationIdentity;
-  if (isSeasonalCalendarDay || isUntitledChristmasDay) {
+  const isPeriodDay = day?._periodType && !hasCelebrationIdentity;
+  if (isPeriodDay || isSeasonalCalendarDay || isUntitledChristmasDay) {
     return buildPeriodTitle({
       ...context,
       periodType: day._periodType,

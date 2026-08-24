@@ -84,13 +84,13 @@ import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
 import {
   PERIOD_LABEL_MAP,
-  WEEKDAY_LABEL_MAP,
   FEAST_TYPE_LABEL_MAP,
   LITURGICAL_THEME_MAP,
 } from '@/constants/liturgical';
 import { formatDateLong } from '@/utils/date';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { isSeasonalDateDocumentId } from '@/utils/liturgicalDayResolution';
+import { formatLiturgicalPeriodTitle } from '@/utils/liturgicalPeriodTitle';
 
 const props = defineProps({
   dayData: { type: Object, default: null },
@@ -113,9 +113,10 @@ watch(
 const displayTitle = computed(() => {
   const day = resolvedDay.value;
   if (!day) return '';
+  const hasCelebrationIdentity = day._feast || day._rank || day._feastType;
   const isChristmasDateDay = day._periodType === 'christmas'
     && (isSeasonalDateDocumentId(day.id) || (!day._feast && !day._rank && !day._feastType));
-  if (isChristmasDateDay) {
+  if ((day._periodType && !hasCelebrationIdentity) || isChristmasDateDay) {
     return getPeriodTitle(day);
   }
   if (day._feastName) return day._feastName;
@@ -165,19 +166,11 @@ const getPeriodTitle = (day) => {
   const periodWeek = day._periodWeekNumber
     ?? (day._periodType === 'christmas' && routeDate.isValid() ? (routeDate.month() === 11 ? 1 : 2) : null);
   const dayOfWeek = day._dayOfWeek ?? routeDayOfWeek;
-  const periodName = PERIOD_LABEL_MAP[day._periodType] || 'Перыяд';
-  const dayName = WEEKDAY_LABEL_MAP[dayOfWeek] || '';
-
-  if (day._periodType === 'christmas' && Number(periodWeek) === 1) {
-    return `${dayName} у Актаве Нараджэння Пана`;
-  }
-
-  const inlineDayName = dayName
-    ? `${dayName.charAt(0).toLowerCase()}${dayName.slice(1)}`
-    : '';
-  return [periodName, periodWeek ? `${periodWeek} тыдзень` : '', inlineDayName]
-    .filter(Boolean)
-    .join(', ');
+  return formatLiturgicalPeriodTitle({
+    periodType: day._periodType,
+    periodWeek,
+    dayOfWeek,
+  });
 };
 </script>
 
