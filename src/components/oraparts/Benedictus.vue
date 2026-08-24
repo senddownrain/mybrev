@@ -13,7 +13,7 @@
                 <br>
                 <span style="color:red">Месія і Яго папярэднік</span>
                 </p>
-                <div class="ora-psalm" v-html="ben"></div>        
+                <div class="ora-psalm" v-html="formatPsalm(ben)"></div>        
                
                 <div  class="ora-ant" v-html="ant"></div>
             </v-card-text>
@@ -23,9 +23,12 @@
 
 
 <script setup>
+import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
+
 const props = defineProps({
     ant: String,
 })
+const formatPsalm = removeBreakAfterAsterisk;
 
 const ben = `<p>Благаслаўлёны Пан, Бог Ізраэля, *<br>
 бо наведаў і адкупіў народ свой,

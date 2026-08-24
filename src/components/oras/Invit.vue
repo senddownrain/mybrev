@@ -4,17 +4,23 @@
             <v-col class="liturgical-hour-column" v-if="!pending && displayedDay">
                 <day-title :day-data="day" />
 
-                <v-select
-                    v-if="invitatoriumOptions.length > 1"
+                <div v-if="invitatoriumOptions.length > 1" class="hour-option-picker mb-5">
+                  <div class="hour-option-picker__label">Выбар тэксту</div>
+                  <v-select
                     v-model="selectedInvitatoriumId"
                     :items="invitatoriumOptions"
                     item-title="label"
                     item-value="id"
-                    label="Псальм інвітаторыя"
-                    variant="outlined"
+                    aria-label="Псальм інвітаторыя"
+                    variant="solo-filled"
                     density="comfortable"
-                    class="mb-4"
+                    hide-details
+                    prepend-inner-icon="mdi-book-open-variant-outline"
+                    menu-icon="mdi-chevron-down"
+                    class="hour-option-select"
+                    :menu-props="{ contentClass: 'hour-option-menu' }"
                 />
+                </div>
 
                 <v-card class="ora" flat>
                     <v-card-title class="ora-header">
@@ -34,27 +40,27 @@
                     <v-card-text class="ora-text">
                         <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
                         <br>
-                        <div class="ora-psalm" v-html="displayedDay.invitatoriumPs1"></div>
+                        <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs1)"></div>
                         <br>
                         <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
                         <br>
-                        <div class="ora-psalm" v-html="displayedDay.invitatoriumPs2"></div>
+                        <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs2)"></div>
                         <br>
                         <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
                         <br>
-                        <div class="ora-psalm" v-html="displayedDay.invitatoriumPs3"></div>
+                        <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs3)"></div>
                         <br>
                         <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
                         <br>
-                        <div class="ora-psalm" v-html="displayedDay.invitatoriumPs4"></div>
+                        <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs4)"></div>
                         <br>
                         <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
                         <br v-if="displayedDay.invitatoriumPs5">
-                        <div class="ora-psalm" v-if="displayedDay.invitatoriumPs5" v-html="displayedDay.invitatoriumPs5"></div>
+                        <div class="ora-psalm" v-if="displayedDay.invitatoriumPs5" v-html="formatPsalm(displayedDay.invitatoriumPs5)"></div>
                         <br v-if="displayedDay.invitatoriumPs5">
                         <div class="ora-ant" v-if="displayedDay.invitatoriumPs5" v-html="displayedDay.invitatoriumAnt"></div>
                         <br v-if="displayedDay.invitatoriumPs6">
-                        <div class="ora-psalm" v-if="displayedDay.invitatoriumPs6" v-html="displayedDay.invitatoriumPs6"></div>
+                        <div class="ora-psalm" v-if="displayedDay.invitatoriumPs6" v-html="formatPsalm(displayedDay.invitatoriumPs6)"></div>
                         <br v-if="displayedDay.invitatoriumPs6">
                         <div class="ora-ant" v-if="displayedDay.invitatoriumPs6" v-html="displayedDay.invitatoriumAnt"></div>
                         <br v-if="displayedDay.invitatoriumPs6">
@@ -76,6 +82,7 @@ import { retryFirestore } from '@/utils/retry';
 import { logger } from '@/utils/logger';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
+import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
 
 const { day, pending } = useResolvedLiturgicalDay();
 const invitatoriums = ref([]);
@@ -90,6 +97,7 @@ const invitatoriumOptions = computed(() => invitatoriums.value.map((item, index)
 })));
 const selectedInvitatorium = computed(() => invitatoriums.value.find((item) => item.id === selectedInvitatoriumId.value));
 const displayedDay = computed(() => ({ ...(day.value || {}), ...(selectedInvitatorium.value || {}) }));
+const formatPsalm = removeBreakAfterAsterisk;
 
 onMounted(async () => {
   try {

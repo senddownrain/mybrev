@@ -38,24 +38,28 @@
 
       <!-- Режим просмотра -->
       <template v-else>
-        <!-- Plain text interpolation — no v-html, no XSS risk -->
-        <h1 class="text-h4 font-weight-light mb-4 prayer-title">{{ getTitle(prayer) }}</h1>
+        <article class="prayer-reading-surface">
+          <header class="prayer-reading-header">
+            <div class="prayer-reading-eyebrow">Малітва</div>
+            <!-- Plain text interpolation — no v-html, no XSS risk -->
+            <h1 class="prayer-title">{{ getTitle(prayer) }}</h1>
 
-        <div v-if="prayer.tags && prayer.tags.length > 0" class="mb-4">
-          <v-chip
-            v-for="tag in prayer.tags"
-            :key="tag"
-            size="small"
-            color="primary"
-            variant="tonal"
-            class="mr-2 mb-2"
-          >
-            {{ tag }}
-          </v-chip>
-        </div>
+            <div v-if="prayer.tags && prayer.tags.length > 0" class="prayer-tags">
+              <v-chip
+                v-for="tag in prayer.tags"
+                :key="tag"
+                size="small"
+                color="primary"
+                variant="tonal"
+              >
+                {{ tag }}
+              </v-chip>
+            </div>
+          </header>
 
-        <!-- Prayer body is trusted rich HTML from the database -->
-        <div v-html="getText(prayer)" class="prayer-text"></div>
+          <!-- Prayer body is trusted rich HTML from the database -->
+          <div v-html="getText(prayer)" class="prayer-text"></div>
+        </article>
       </template>
     </div>
   </v-container>
@@ -250,27 +254,79 @@ defineExpose({
 
 <style scoped>
 .prayer-view-container {
-  max-width: 100%;
+  width: min(100%, 960px);
+  max-width: 960px;
+  padding-top: 12px;
 }
 
 .prayer-title {
+  max-width: 760px;
+  margin: 0;
+  color: rgb(var(--v-theme-on-surface));
+  font-size: calc(clamp(1.55rem, 5.6vw, 2.05rem) * var(--font-size-multiplier, 1));
+  font-weight: 720;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  line-height: 1.3;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+}
+
+.prayer-reading-surface {
+  margin: 0 12px;
+  overflow: hidden;
+  border: 1px solid var(--nav-border);
+  border-radius: 28px;
+  background: var(--nav-surface);
+  color: var(--nav-on-surface);
+  box-shadow: 0 5px 20px var(--nav-button-shadow);
+  font-family: var(--app-font-family, sans-serif);
+}
+
+.prayer-reading-header {
+  padding: 24px 26px 22px;
+  border-bottom: 1px solid var(--nav-border);
+  background:
+    radial-gradient(circle at 92% 18%, rgba(var(--v-theme-primary), 0.13) 0, rgba(var(--v-theme-primary), 0.13) 44px, transparent 45px),
+    linear-gradient(145deg, rgba(var(--v-theme-primary), 0.08), transparent 62%);
+}
+
+.prayer-reading-eyebrow {
+  margin-bottom: 8px;
+  color: rgb(var(--v-theme-primary));
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.prayer-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 14px;
 }
 
 .prayer-text {
-  line-height: 1.8;
+  padding: 28px 26px 32px;
+  color: rgb(var(--v-theme-on-surface));
+  font-family: var(--app-font-family, sans-serif);
+  font-size: calc(1.04rem * var(--font-size-multiplier, 1));
+  line-height: 1.78;
   word-wrap: break-word;
   overflow-wrap: break-word;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
   text-align: left !important;
+  hanging-punctuation: first last;
+  hyphens: auto;
+  text-wrap: pretty;
 }
 
 .prayer-text :deep(p) {
   margin-bottom: 1em;
+  font-size: inherit;
+  line-height: inherit;
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
@@ -311,8 +367,21 @@ defineExpose({
 
 @media (max-width: 600px) {
   .prayer-view-container {
-    padding: 12px 16px !important;
+    padding: 8px 4px !important;
     max-width: 100% !important;
+  }
+
+  .prayer-reading-surface {
+    margin-inline: 8px;
+    border-radius: 24px;
+  }
+
+  .prayer-reading-header {
+    padding: 21px 20px 19px;
+  }
+
+  .prayer-text {
+    padding: 24px 20px 28px;
   }
 
   .prayer-content-area {
@@ -322,22 +391,21 @@ defineExpose({
   }
 
   .prayer-title {
-    font-size: calc(1.4rem * var(--font-size-multiplier, 1)) !important;
-    margin-bottom: 16px !important;
+    font-size: calc(1.55rem * var(--font-size-multiplier, 1)) !important;
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.3 !important;
   }
 
   .prayer-text {
-    font-size: calc(1rem * var(--font-size-multiplier, 1));
+    font-size: calc(1.04rem * var(--font-size-multiplier, 1));
     width: 100%;
     max-width: 100%;
   }
 
   .prayer-text :deep(p) {
-    font-size: calc(1rem * var(--font-size-multiplier, 1));
-    line-height: 1.8;
+    font-size: inherit;
+    line-height: inherit;
   }
 }
 

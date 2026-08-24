@@ -1,34 +1,33 @@
 <template>
   <v-container class="items-list-container">
     <h1 class="section-page-title">Літургія</h1>
-    <button
-      type="button"
-      class="date-header"
-      :style="dateHeaderStyle"
-      aria-label="Адкрыць каляндар і выбраць дату"
-      @click="toggleCalendarDialog"
-    >
-      <span class="date-header__eyebrow">
-        <v-icon icon="mdi-calendar-blank-outline" size="16"></v-icon>
-        {{ isToday ? 'Сёння' : 'Выбраная дата' }}
-      </span>
-      <h2 class="date-header__weekday">
-        {{ currentDate.format('dddd') }}
-      </h2>
-      <span class="date-header__date">
-        {{ displayDate }}
-        <v-icon class="date-header__caret" icon="mdi-chevron-down" size="20"></v-icon>
-      </span>
-    </button>
-
-    <!-- Мягкий индикатор загрузки (полоска сверху) -->
-    <v-progress-linear
-      v-if="softLoading"
-      indeterminate
-      color="primary"
-      height="3"
-      class="mb-2"
-    ></v-progress-linear>
+    <div class="date-header-shell" :style="dateHeaderStyle">
+      <button
+        type="button"
+        class="date-header"
+        aria-label="Адкрыць каляндар і выбраць дату"
+        :aria-busy="softLoading"
+        @click="toggleCalendarDialog"
+      >
+        <span class="date-header__eyebrow">
+          <v-icon icon="mdi-calendar-blank-outline" size="16"></v-icon>
+          {{ isToday ? 'Сёння' : 'Выбраная дата' }}
+        </span>
+        <h2 class="date-header__weekday">
+          {{ currentDate.format('dddd') }}
+        </h2>
+        <span class="date-header__date">
+          {{ displayDate }}
+          <v-icon class="date-header__caret" icon="mdi-chevron-down" size="20"></v-icon>
+        </span>
+      </button>
+      <v-progress-linear
+        v-if="softLoading"
+        indeterminate
+        height="4"
+        class="date-loading-bar"
+      ></v-progress-linear>
+    </div>
 
     <!-- Большой спиннер только для самого первого экрана, когда вообще нет данных -->
     <v-row
@@ -68,7 +67,12 @@
 
     <v-row v-else-if="dayOptions.length" class="options-row">
       <v-col class="options-column">
-        <v-list bg-color="transparent" class="day-options-list">
+        <v-list
+          bg-color="transparent"
+          class="day-options-list"
+          :class="{ 'day-options-list--loading': softLoading }"
+          :aria-busy="softLoading"
+        >
           <v-list-item
             v-for="option in dayOptions"
             :key="option.key"
@@ -322,15 +326,21 @@ watch(
   letter-spacing: -0.025em;
 }
 
+.date-header-shell {
+  position: relative;
+  width: calc(100% - 24px);
+  margin: 0 12px 22px;
+}
+
 .date-header {
   position: relative;
   display: flex;
-  width: calc(100% - 24px);
+  width: 100%;
   min-height: 166px;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-end;
-  margin: 0 12px 22px;
+  margin: 0;
   padding: 22px 24px;
   overflow: hidden;
   border: 1px solid var(--nav-border);
@@ -347,6 +357,24 @@ watch(
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.date-loading-bar {
+  position: absolute !important;
+  right: 20px;
+  bottom: 0;
+  left: 20px;
+  z-index: 2;
+  width: auto !important;
+  overflow: hidden;
+  border-radius: 999px 999px 0 0;
+  color: var(--liturgical-color) !important;
+  pointer-events: none;
+}
+
+.date-loading-bar :deep(.v-progress-linear__background),
+.date-loading-bar :deep(.v-progress-linear__indeterminate) {
+  background-color: var(--liturgical-color) !important;
 }
 
 .date-header:hover {
@@ -414,6 +442,13 @@ watch(
   display: grid;
   gap: 12px;
   padding: 0 !important;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.day-options-list--loading {
+  opacity: 0.48;
+  transform: translateY(2px);
+  pointer-events: none;
 }
 
 .day-option {
@@ -515,10 +550,13 @@ watch(
 }
 
 @media (max-width: 359px) {
-  .date-header {
+  .date-header-shell {
     width: calc(100% - 16px);
-    min-height: 148px;
     margin-inline: 8px;
+  }
+
+  .date-header {
+    min-height: 148px;
     padding: 18px;
     border-radius: 24px;
   }

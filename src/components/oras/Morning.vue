@@ -3,22 +3,26 @@
     <v-row align="center" justify="center">
       <v-col v-if="!pending && displayedDay" class="liturgical-hour-column">
         <day-title :day-data="day" />
-        <intro :title="title" />
-
-        <v-select
-          v-if="invitatoriumOptions.length > 1"
-          v-model="selectedInvitatoriumId"
-          :items="invitatoriumOptions"
-          item-title="label"
-          item-value="id"
-          label="Псальм інвітаторыя"
-          variant="outlined"
-          density="comfortable"
-          class="mb-4"
-        />
+        <intro :title="title" hide-text />
 
         <v-card class="ora" flat>
-          <v-card-title class="ora-header">ЗАКЛІК</v-card-title>
+          <div v-if="invitatoriumOptions.length > 1" class="hour-option-picker mx-4 mb-5">
+            <div class="hour-option-picker__label">Выбар тэксту</div>
+            <v-select
+              v-model="selectedInvitatoriumId"
+              :items="invitatoriumOptions"
+              item-title="label"
+              item-value="id"
+              aria-label="Псальм інвітаторыя"
+              variant="solo-filled"
+              density="comfortable"
+              hide-details
+              prepend-inner-icon="mdi-book-open-variant-outline"
+              menu-icon="mdi-chevron-down"
+              class="hour-option-select"
+              :menu-props="{ contentClass: 'hour-option-menu' }"
+            />
+          </div>
           <v-card-text class="ora-text">
             <span style="color: red">
               Заклік з’яўляецца пачаткам штодзённай літургічнай малітвы. Ён
@@ -36,7 +40,7 @@
             <template v-for="(psalm, index) in invitatoriumPsalms" :key="index">
               <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
               <br>
-              <div class="ora-psalm" v-html="psalm"></div>
+              <div class="ora-psalm" v-html="formatPsalm(psalm)"></div>
               <br>
             </template>
             <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
@@ -95,11 +99,13 @@ import PaterNoster from '@/components/oraparts/PaterNoster.vue';
 import Psalms from '@/components/oraparts/Psalms.vue';
 import Reading from '@/components/oraparts/Reading.vue';
 import Resp from '@/components/oraparts/Resp.vue';
+import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
 
-const title = 'РАНІЦА';
+const title = 'Агульная гадзіна';
 const { day, pending } = useResolvedLiturgicalDay();
 const invitatoriums = ref([]);
 const selectedInvitatoriumId = ref('');
+const formatPsalm = removeBreakAfterAsterisk;
 
 const optionLabel = (item, index) => {
   const text = String(item.invitatoriumPs1 || '')

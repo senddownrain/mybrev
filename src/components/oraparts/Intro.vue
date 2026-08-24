@@ -5,7 +5,7 @@
         {{ title }}
       </v-card-title>
 
-      <v-card-text class="ora-text">
+      <v-card-text v-if="!hideText" class="ora-text">
         <div>
           <span style="color: red">К.</span> Божа, прыйдзі мне на дапамогу.<br>
           <span style="color: red">Н.</span> Пане, паспяшы да мяне на паратунак.<br>
@@ -22,5 +22,9 @@
 <script setup>
 defineProps({
   title: String,
+  hideText: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>

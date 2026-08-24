@@ -14,7 +14,7 @@
                 <span style="color:red">Радасць душы ў Пану</span>
                 </p>
                <p>
-                <div class="ora-psalm" v-html="mag"></div>
+                <div class="ora-psalm" v-html="formatPsalm(mag)"></div>
                </p>
                <div class="ora-ant" v-html="ant"></div>
             </v-card-text>
@@ -24,9 +24,12 @@
 
 
 <script setup>
+import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
+
 const props = defineProps({
     ant: String,
 })
+const formatPsalm = removeBreakAfterAsterisk;
 
 const mag = `
 <p>

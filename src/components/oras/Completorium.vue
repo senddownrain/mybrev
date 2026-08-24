@@ -1,13 +1,13 @@
 <template>
     <v-container class="prayer-content-area">
       <v-row align="center" justify="center">
-        <v-col v-if="pending" md="6" lg="6" sm="8" class="text-center py-12">
+        <v-col v-if="pending" class="liturgical-hour-column text-center py-12">
           <v-progress-circular indeterminate color="primary" />
         </v-col>
-        <v-col v-else-if="error" md="6" lg="6" sm="8">
+        <v-col v-else-if="error" class="liturgical-hour-column">
           <v-alert type="error" variant="tonal">{{ error }}</v-alert>
         </v-col>
-        <v-col v-else-if="day" md="6" lg="6" sm="8">
+        <v-col v-else-if="day" class="liturgical-hour-column">
                 <day-title :day-data="selectedDay" />
                 <intro :title="title"    />
                 <exam />
@@ -16,7 +16,7 @@
                    />
                 <reading :text="day.compR" />
                 <resp :text="day.compResp" />
-                <  :ant="day.compAntS" />
+                <nunc :ant="day.compAntS" />
                 <last-prayer :text="day.compPr" />
                 <end-of-compline :ant="day.compAntM" />
         </v-col>

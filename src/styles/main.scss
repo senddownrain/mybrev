@@ -7,16 +7,24 @@
   --nav-border: rgba(14, 14, 14, 0.08);
   --nav-shadow: rgba(14, 14, 14, 0.18);
   --nav-button-shadow: rgba(14, 14, 14, 0.08);
+  --rubric-color: #b3261e;
+  --app-background: #FAFAFA;
 }
 
 .v-theme--dark {
-  --nav-surface: #0E0E0E;
-  --nav-active: #171733;
-  --nav-on-surface: #FEFEFE;
-  --nav-muted: rgba(254, 254, 254, 0.58);
-  --nav-border: rgba(254, 254, 254, 0.08);
-  --nav-shadow: rgba(0, 0, 0, 0.42);
-  --nav-button-shadow: rgba(0, 0, 0, 0.34);
+  // Keep the background dark, but separate it clearly from cards and controls.
+  // The subtle cool glow echoes the alarm screen without reducing text contrast.
+  --nav-surface: #202229;
+  --nav-active: #35384A;
+  --nav-on-surface: #F6F5F8;
+  --nav-muted: rgba(246, 245, 248, 0.72);
+  --nav-border: rgba(246, 245, 248, 0.13);
+  --nav-shadow: rgba(0, 0, 0, 0.52);
+  --nav-button-shadow: rgba(0, 0, 0, 0.38);
+  --rubric-color: #FF9B94;
+  --app-background:
+    radial-gradient(circle at 50% -8rem, rgba(89, 82, 156, 0.18), transparent 34rem),
+    #12141C;
 }
 
 // Один нативный scroll-контейнер для всех страниц. Не переносим вертикальный
@@ -78,12 +86,21 @@ html::-webkit-scrollbar-thumb:hover {
   position: relative !important;
 }
 
+.v-application {
+  background: var(--app-background) !important;
+}
+
 
 // Определяем базовый размер шрифта для контента
 $base-content-font-size: 1rem; // 16px по умолчанию
 
 // Создаем специальный класс, который будет применяться к контейнерам с текстом молитв
 .prayer-content-area {
+  width: min(100%, 960px);
+  max-width: 960px;
+  margin-inline: auto;
+  padding-inline: 12px;
+
   // Применяем кастомный шрифт из нашего store
   font-family: var(--app-font-family, sans-serif);
 
@@ -146,6 +163,171 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   overflow-y: visible;
   max-width: 100%;
   text-align: left !important;
+}
+
+// All canonical hours use the full reading column. Previously every hour was
+// constrained to half of Vuetify's desktop grid (md/lg=6), leaving most of the
+// screen empty and making long psalms unnecessarily narrow.
+.prayer-content-area > .v-row {
+  width: 100%;
+  margin-inline: 0;
+}
+
+.prayer-content-area .liturgical-hour-column {
+  width: 100%;
+  max-width: 100%;
+  flex: 0 0 100%;
+  padding-inline: 12px;
+}
+
+// A single calm surface gives the hours the same section rhythm as readings,
+// while keeping the existing ora components and data contract intact.
+.liturgical-hour-column {
+  color: var(--nav-on-surface);
+}
+
+.liturgical-hour-column > .ora,
+.liturgical-hour-column > div > .ora {
+  overflow: visible;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: inherit;
+}
+
+.liturgical-hour-column > .ora + .ora,
+.liturgical-hour-column > div + div > .ora,
+.liturgical-hour-column > div > .ora + .ora {
+  border-top: 1px solid var(--nav-border);
+}
+
+.liturgical-hour-column .ora-title,
+.liturgical-hour-column .ora-header {
+  padding: 26px 20px 8px !important;
+  color: var(--nav-on-surface);
+  font-size: calc(0.8rem * var(--font-size-multiplier, 1)) !important;
+  font-weight: 850 !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0.11em !important;
+  text-transform: uppercase;
+  white-space: normal;
+}
+
+.liturgical-hour-column .ora-text {
+  padding: 12px 20px 24px !important;
+  color: var(--nav-on-surface);
+  font-size: calc(1.04rem * var(--font-size-multiplier, 1));
+  line-height: 1.78;
+  hanging-punctuation: first last;
+  hyphens: auto;
+  text-wrap: pretty;
+}
+
+.liturgical-hour-column .ora-text p {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.liturgical-hour-column .ora:not(:has(.ora-title, .ora-header)) .ora-text {
+  padding-top: 24px !important;
+}
+
+.liturgical-hour-column .ora-ant {
+  margin-block: 0 18px;
+  padding: 10px 13px;
+  border-left: 3px solid var(--nav-on-surface);
+  border-radius: 0 12px 12px 0;
+  background: rgba(var(--v-theme-on-surface), 0.055);
+  font-weight: 720;
+  line-height: 1.5;
+}
+
+.liturgical-hour-column .ora-ant + .ora-psalm {
+  margin-top: 20px;
+}
+
+.hour-option-picker {
+  margin-inline: 12px;
+  padding: 14px 16px 16px;
+  border: 1px solid var(--nav-border);
+  border-radius: 20px;
+  background: var(--nav-surface);
+  box-shadow: 0 3px 14px var(--nav-button-shadow);
+}
+
+.hour-option-picker__label {
+  margin: 0 0 7px 4px;
+  color: var(--nav-on-surface);
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hour-option-select .v-field {
+  border: 0 !important;
+  border-radius: 14px !important;
+  background: rgba(var(--v-theme-on-surface), 0.06) !important;
+  box-shadow: none !important;
+}
+
+.hour-option-select .v-field__overlay,
+.hour-option-select .v-field__outline {
+  display: none;
+}
+
+.hour-option-select .v-field__input {
+  min-height: 52px;
+  padding-block: 10px;
+  color: var(--nav-on-surface);
+  font-weight: 680;
+}
+
+.hour-option-select .v-icon {
+  color: var(--nav-on-surface);
+}
+
+.hour-option-menu {
+  border: 1px solid var(--nav-border);
+  border-radius: 18px !important;
+  background: var(--nav-surface) !important;
+  box-shadow: 0 10px 30px var(--nav-shadow) !important;
+}
+
+.hour-option-menu .v-list {
+  padding: 6px;
+  border-radius: inherit;
+  background: transparent !important;
+}
+
+.hour-option-menu .v-list-item {
+  min-height: 48px;
+  border-radius: 12px;
+}
+
+.hour-option-menu .v-list-item--active {
+  background: var(--nav-active);
+  color: var(--nav-on-surface);
+}
+
+// Rubrics arrive as rich HTML. Preserve their semantic red accent without
+// letting inline database colours fight the active light/dark theme.
+.prayer-content-area :is(.ora-text, .ora-ant, .ora-psalm) :is(
+  [style*="color:red"],
+  [style*="color: red"],
+  [style*="color:#ff0000"],
+  [style*="color: #ff0000"],
+  font[color="red"]
+),
+.prayer-text :is(
+  [style*="color:red"],
+  [style*="color: red"],
+  [style*="color:#ff0000"],
+  [style*="color: #ff0000"],
+  font[color="red"]
+) {
+  color: var(--rubric-color) !important;
+  font-weight: inherit;
 }
 
 // Стили для заголовков карточек - масштабирование вместе с текстом
@@ -384,7 +566,7 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   }
 
   .prayer-content-area {
-    padding: 0 4px;
+    padding: 0;
     width: 100%;
     max-width: 100%;
     overflow-x: clip;
@@ -397,6 +579,25 @@ $base-content-font-size: 1rem; // 16px по умолчанию
       overflow-wrap: break-word;
       max-width: 100%;
     }
+  }
+
+  .prayer-content-area .liturgical-hour-column {
+    padding-inline: 0;
+  }
+
+  .liturgical-hour-column .ora-title,
+  .liturgical-hour-column .ora-header {
+    padding-inline: 16px !important;
+  }
+
+  .liturgical-hour-column .ora-text {
+    padding-inline: 16px !important;
+  }
+
+  .hour-option-picker {
+    margin-inline: 8px;
+    padding: 12px;
+    border-radius: 18px;
   }
 
   .v-list-item {

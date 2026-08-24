@@ -1,6 +1,6 @@
 <template>
   <!-- Используем наш глобальный класс для автоматического применения стилей -->
-  <div class="prayer-content-area text-center mb-6 day-title-container">
+  <div class="mb-6 day-title-container">
     
     <!-- Индикатор загрузки -->
     <v-skeleton-loader v-if="loading" type="heading, subtitle"></v-skeleton-loader>
@@ -22,15 +22,17 @@
         </div>
       </div>
 
-      <template v-else>
-        <div class="day-title-meta text-grey-darken-1">{{ formattedDate }}</div>
-        <h1 class="text-h4 font-weight-light mt-1">
+      <div v-else class="day-title-standard" :style="heroStyle">
+        <div class="day-title-standard__eyebrow">{{ periodLabel }}</div>
+        <h1>
           {{ displayTitle }}
         </h1>
-        <p v-if="dayMeta" class="day-title-meta text-grey-darken-1 mt-1">
-          {{ dayMeta }}
-        </p>
-      </template>
+        <div class="day-title-standard__meta">
+          <span class="day-title-standard__marker" aria-hidden="true"></span>
+          <span>{{ formattedDate }}</span>
+          <span v-if="dayMeta" class="day-title-standard__rank">{{ dayMeta }}</span>
+        </div>
+      </div>
 
       <div v-if="isHero && dayComment" class="day-title-comment-disclosure">
         <button
@@ -203,6 +205,70 @@ const getPeriodTitle = (day) => {
   pointer-events: none;
 }
 
+.day-title-standard {
+  position: relative;
+  padding: 24px 26px 22px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--liturgical-rgb), 0.2);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 92% 18%, rgba(var(--liturgical-rgb), 0.16) 0, rgba(var(--liturgical-rgb), 0.16) 44px, transparent 45px),
+    linear-gradient(145deg, rgba(var(--liturgical-rgb), 0.1), transparent 62%),
+    var(--nav-surface);
+  box-shadow: 0 5px 20px var(--nav-button-shadow);
+  text-align: left;
+}
+
+.day-title-standard__eyebrow {
+  margin-bottom: 8px;
+  color: var(--liturgical-color);
+  font-size: 0.68rem !important;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.day-title-container .day-title-standard h1 {
+  max-width: 100%;
+  margin: 0;
+  color: rgb(var(--v-theme-on-surface));
+  font-size: calc(clamp(1.85rem, 6vw, 2.35rem) * var(--font-size-multiplier, 1)) !important;
+  font-weight: 700 !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+  text-align: left !important;
+}
+
+.day-title-standard__meta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 10px;
+  color: var(--nav-muted);
+  font-size: calc(0.92rem * var(--font-size-multiplier, 1)) !important;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.day-title-standard__marker {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border: 2px solid rgba(var(--liturgical-rgb), 0.28);
+  border-radius: 50%;
+  background: var(--liturgical-color);
+  box-shadow: 0 0 0 4px rgba(var(--liturgical-rgb), 0.09);
+}
+
+.day-title-standard__rank {
+  margin-left: auto;
+  color: var(--nav-muted);
+  font-size: 0.78em !important;
+  font-weight: 650;
+  text-align: right !important;
+}
+
 .day-title-hero {
   position: relative;
   display: flex;
@@ -365,8 +431,30 @@ const getPeriodTitle = (day) => {
 
 @media (max-width: 600px) {
   .day-title-container {
-    padding: 0 8px;
+    padding: 0;
     margin-bottom: 16px;
+  }
+
+  .day-title-standard {
+    margin-inline: 8px;
+    padding: 21px 20px 19px;
+    border-radius: 24px;
+  }
+
+  .day-title-container .day-title-standard h1 {
+    font-size: calc(clamp(1.55rem, 7vw, 2rem) * var(--font-size-multiplier, 1)) !important;
+    line-height: 1.16 !important;
+  }
+
+  .day-title-standard__meta {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .day-title-standard__rank {
+    width: 100%;
+    margin-left: 18px;
+    text-align: left !important;
   }
 
   .day-title-container h1,

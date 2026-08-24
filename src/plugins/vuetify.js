@@ -68,7 +68,21 @@ export default createVuetify({
   components: {
   },
   theme: {
-    themes: {},
+    themes: {
+      dark: {
+        dark: true,
+        colors: {
+          background: '#12141C',
+          surface: '#202229',
+          'surface-bright': '#2B2E38',
+          'surface-light': '#2B2E38',
+          'surface-variant': '#343747',
+          'on-background': '#F6F5F8',
+          'on-surface': '#F6F5F8',
+          'on-surface-variant': '#D4D3DA',
+        },
+      },
+    },
   },
   locale: {
     locale: 'be',

@@ -194,7 +194,19 @@ const isPrayerEditPage = computed(() => {
 
 const showTextScaleControl = computed(() => {
   if (isPrayerViewPage.value) return !uiStore.prayerIsEditing;
-  return route.name === 'Readings' || route.name === 'ReadingsByDate';
+  return [
+    'Readings',
+    'ReadingsByDate',
+    'invitatorium',
+    'morning',
+    'laudes',
+    'lectionis',
+    'terz',
+    'sext',
+    'non',
+    'vesper',
+    'completorium',
+  ].includes(route.name);
 });
 
 const layoutTitle = computed(() => {

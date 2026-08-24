@@ -1,7 +1,7 @@
 <template>
   <v-container class="prayers-list-container">
-    <div class="d-flex align-center justify-space-between mb-4">
-      <h1 class="text-h5 font-weight-light mb-0">Абраныя малітвы</h1>
+    <div class="favorites-page-header">
+      <h1 class="favorites-page-title">Абраныя малітвы</h1>
       <v-chip 
         v-if="!isLoading && favoritePrayers.length > 0" 
         size="small" 
@@ -12,72 +12,65 @@
       </v-chip>
     </div>
 
-    <v-select
-      v-if="!isLoading && favoritePrayers.length > 0"
-      v-model="sortBy"
-      :items="sortOptions"
-      label="Сартаваць"
-      variant="outlined"
-      density="compact"
-      hide-details
-      class="mb-4"
-    ></v-select>
-
-    <div v-if="isLoading" class="text-center mt-16">
-      <v-progress-circular indeterminate color="primary"></v-progress-circular>
-      <p class="mt-4 text-grey">Загрузка...</p>
+    <div v-if="!isLoading && favoritePrayers.length > 0" class="favorites-sort-panel">
+      <v-icon icon="mdi-sort-variant" size="22" class="favorites-sort-icon"></v-icon>
+      <v-select
+        v-model="sortBy"
+        :items="sortOptions"
+        label="Сартаваць"
+        variant="plain"
+        density="compact"
+        hide-details
+        class="favorites-sort-select"
+      ></v-select>
     </div>
 
-    <div v-else-if="favoritePrayers.length === 0" class="text-center text-grey-darken-1 mt-16">
-      <v-icon size="48" class="mb-2">mdi-heart-outline</v-icon>
-      <p>Няма абраных малітваў</p>
-      <p class="text-caption mt-2">Дадайце малітвы ў абраныя, націснуўшы на сэрца</p>
+    <div v-if="isLoading" class="favorite-prayers-list">
+      <v-skeleton-loader
+        v-for="n in 5"
+        :key="n"
+        type="list-item-avatar"
+        class="prayer-list-skeleton"
+      ></v-skeleton-loader>
+    </div>
+
+    <div v-else-if="favoritePrayers.length === 0" class="favorites-empty-state">
+      <span class="favorites-empty-icon">
+        <v-icon size="32">mdi-heart-outline</v-icon>
+      </span>
+      <h2>Няма абраных малітваў</h2>
+      <p>Дадайце малітвы ў абраныя, націснуўшы на сэрца</p>
     </div>
 
     <div v-else>
-      <v-list lines="two" bg-color="transparent">
+      <v-list lines="one" bg-color="transparent" class="favorite-prayers-list">
         <v-list-item
           v-for="prayer in favoritePrayers"
           :key="prayer.id"
-          :title="getTitle(prayer)"
-          :subtitle="getPreviewText(prayer)"
           @click="viewPrayer(prayer.id)"
           class="prayer-list-item"
         >
           <template v-slot:prepend>
-            <v-btn
-              icon
-              variant="text"
-              size="small"
-              @click.stop="toggleFavorite(prayer.id)"
-              color="red"
-              aria-label="Выдаліць з абраных"
-            >
-              <v-icon>mdi-heart</v-icon>
-            </v-btn>
+            <span class="prayer-list-item__icon-wrap">
+              <v-btn
+                icon
+                variant="text"
+                size="small"
+                @click.stop="toggleFavorite(prayer.id)"
+                color="red"
+                aria-label="Выдаліць з абраных"
+              >
+                <v-icon>mdi-heart</v-icon>
+              </v-btn>
+            </span>
           </template>
 
+          <v-list-item-title class="prayer-list-item__title">
+            {{ getTitle(prayer) }}
+          </v-list-item-title>
+
           <template v-slot:append>
-            <div class="d-flex align-center ga-2">
-              <div v-if="prayer.tags && prayer.tags.length > 0" class="d-flex flex-wrap ga-1">
-                <v-chip 
-                  v-for="tag in prayer.tags.slice(0, 2)" 
-                  :key="tag" 
-                  size="x-small" 
-                  color="primary" 
-                  variant="tonal"
-                >
-                  {{ tag }}
-                </v-chip>
-                <v-chip 
-                  v-if="prayer.tags.length > 2"
-                  size="x-small" 
-                  color="grey" 
-                  variant="tonal"
-                >
-                  +{{ prayer.tags.length - 2 }}
-                </v-chip>
-              </div>
+            <div class="prayer-list-item__actions">
               <v-btn
                 v-if="authStore.isAdmin"
                 icon="mdi-pencil"
@@ -86,6 +79,7 @@
                 @click.stop="router.push({ name: 'PrayerEdit', params: { id: prayer.id } })"
                 aria-label="Рэдагаваць малітву"
               ></v-btn>
+              <v-icon class="prayer-list-item__arrow" icon="mdi-chevron-right" size="24"></v-icon>
             </div>
           </template>
         </v-list-item>
@@ -100,10 +94,9 @@ import { useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useAuthStore } from '@/stores/auth';
 import { useSettingsStore } from '@/stores/settings';
-import { getPrayerPreview } from '@/composables/usePrayerPreview';
 
 const router = useRouter();
-const { prayers, isLoading, getTitle, getText } = usePrayers();
+const { prayers, isLoading, getTitle } = usePrayers();
 const authStore = useAuthStore();
 const settings = useSettingsStore();
 
@@ -146,11 +139,6 @@ const favoritePrayers = computed(() => {
   return filtered;
 });
 
-function getPreviewText(prayer) {
-  const text = getText(prayer);
-  return getPrayerPreview(text);
-}
-
 function viewPrayer(id) {
   router.push({ name: 'PrayerView', params: { id } });
 }
@@ -162,52 +150,199 @@ function toggleFavorite(prayerId) {
 
 <style scoped>
 .prayers-list-container {
-  max-width: 100%;
-  width: 100%;
+  width: min(100%, 760px);
+  max-width: 760px;
+  padding-top: 12px;
+  padding-bottom: 32px !important;
+}
+
+.favorites-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 12px 22px;
+}
+
+.favorites-page-title {
+  margin: 8px 0 0;
+  color: rgb(var(--v-theme-on-surface));
+  font-size: clamp(1.85rem, 8vw, 2.35rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.favorites-sort-panel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  margin: 0 12px 18px;
+  padding: 4px 14px;
+  border: 1px solid var(--nav-border);
+  border-radius: 20px;
+  background: var(--nav-surface);
+  color: var(--nav-on-surface);
+  box-shadow: 0 3px 14px var(--nav-button-shadow);
+}
+
+.favorites-sort-icon {
+  flex: 0 0 auto;
+  color: rgb(var(--v-theme-primary));
+}
+
+.favorites-sort-select {
+  min-width: 0;
+}
+
+.favorite-prayers-list {
+  display: grid;
+  gap: 12px;
+  padding: 0 12px !important;
+}
+
+.prayer-list-skeleton {
+  min-height: 80px;
+  overflow: hidden;
+  border: 1px solid var(--nav-border);
+  border-radius: 22px;
+  background: var(--nav-surface);
 }
 
 .prayer-list-item {
+  min-height: 80px;
+  padding: 14px 14px 14px 16px !important;
+  border: 1px solid var(--nav-border);
+  border-radius: 22px !important;
+  background: var(--nav-surface);
+  color: var(--nav-on-surface);
+  box-shadow: 0 3px 14px var(--nav-button-shadow);
   cursor: pointer;
-  transition: background-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
 
 .prayer-list-item:hover {
-  background-color: rgba(var(--v-theme-on-surface), 0.04);
+  border-color: rgba(var(--v-theme-primary), 0.2);
+  box-shadow: 0 7px 22px var(--nav-button-shadow);
 }
 
-.prayer-list-item :deep(.v-list-item-title) {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  line-height: 1.4;
+.prayer-list-item:active {
+  transform: scale(0.988);
 }
 
-.prayer-list-item :deep(.v-list-item-subtitle) {
+.prayer-list-item__icon-wrap {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid rgba(var(--v-theme-error), 0.2);
+  border-radius: 16px;
+  background: rgba(var(--v-theme-error), 0.08);
+}
+
+.prayer-list-item__title {
+  padding-inline: 4px 8px;
+  font-size: clamp(1.04rem, 4vw, 1.17rem) !important;
+  font-weight: 650;
+  line-height: 1.36 !important;
+  letter-spacing: -0.01em;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.prayer-list-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.prayer-list-item__arrow {
+  color: var(--nav-muted);
+}
+
+.favorites-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 42px 12px 0;
+  padding: 36px 24px;
+  border: 1px solid var(--nav-border);
+  border-radius: 24px;
+  background: var(--nav-surface);
+  color: var(--nav-muted);
+  text-align: center;
+  box-shadow: 0 3px 14px var(--nav-button-shadow);
+}
+
+.favorites-empty-state h2 {
+  margin: 16px 0 5px;
+  color: var(--nav-on-surface);
+  font-size: 1.15rem;
+}
+
+.favorites-empty-state p {
+  max-width: 360px;
+  margin: 0;
   line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.favorites-empty-icon {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border-radius: 20px;
+  background: rgba(var(--v-theme-error), 0.08);
+  color: rgb(var(--v-theme-error));
+}
+
+:deep(.prayer-list-item .v-list-item__prepend) {
+  align-self: center;
+  margin-inline-end: 12px;
+}
+
+:deep(.prayer-list-item .v-list-item__append) {
+  align-self: center;
 }
 
 @media (max-width: 600px) {
   .prayers-list-container {
-    padding: 12px 8px !important;
+    padding: 8px 4px 28px !important;
   }
 
+  .favorites-page-header {
+    margin-inline: 12px;
+  }
+
+  .favorites-sort-panel {
+    margin-inline: 8px;
+  }
+
+  .favorite-prayers-list {
+    padding-inline: 8px !important;
+  }
+
+  .favorites-empty-state {
+    margin-inline: 8px;
+  }
+}
+
+@media (max-width: 359px) {
   .prayer-list-item {
-    padding: 12px 8px !important;
+    padding-inline: 12px 10px !important;
+    border-radius: 20px !important;
   }
 
-  .prayer-list-item :deep(.v-list-item-title) {
-    font-size: 0.95rem !important;
+  .prayer-list-item__icon-wrap {
+    width: 44px;
+    height: 44px;
   }
 
-  .prayer-list-item :deep(.v-list-item-subtitle) {
-    font-size: 0.85rem !important;
-    -webkit-line-clamp: 2;
+  :deep(.prayer-list-item .v-list-item__prepend) {
+    margin-inline-end: 8px;
   }
 }
 </style>
