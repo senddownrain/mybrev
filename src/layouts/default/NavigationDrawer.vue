@@ -1,14 +1,34 @@
 <template>
-  <v-navigation-drawer v-model="isDrawerOpen" temporary>
-    <div v-if="auth.loading" class="text-center py-4">
-      <v-progress-circular indeterminate color="primary"></v-progress-circular>
-    </div>
+  <v-navigation-drawer
+    v-model="isDrawerOpen"
+    temporary
+    :width="320"
+    class="app-drawer"
+    scrim="black"
+  >
+    <div class="drawer-shell">
+      <header class="drawer-header">
+        <div class="drawer-brand">
+          <div class="drawer-logo-wrap">
+            <img src="/favicon.svg" alt="" class="drawer-logo" />
+          </div>
+          <div>
+            <div class="drawer-title">Малітоўнік</div>
+            <div class="drawer-subtitle">Літургія і малітвы</div>
+          </div>
+        </div>
 
-    <div class="text-center py-4">
-      <img src="/favicon.svg" alt="Logo" style="height: 180px; width: auto;" />
-    </div>
+        <button class="drawer-close-btn" type="button" aria-label="Закрыць меню" @click="isDrawerOpen = false">
+          <PhX :size="20" />
+        </button>
+      </header>
 
-    <v-list>
+      <div v-if="auth.loading" class="drawer-loading">
+        <v-progress-circular indeterminate color="primary" size="24"></v-progress-circular>
+      </div>
+
+      <v-list nav class="drawer-list">
+      <div class="drawer-section-label">Асноўнае</div>
       <v-list-item
         title="Літургія"
         :to="{ name: 'Today' }"
@@ -29,7 +49,7 @@
         </template>
       </v-list-item>
 
-      <v-divider class="my-2"></v-divider>
+      <div class="drawer-section-label drawer-section-label--spaced">Малітоўныя зборнікі</div>
 
       <v-list-item
         title="Абраныя малітвы"
@@ -71,7 +91,7 @@
         </template>
       </v-list-item>
 
-      <v-divider class="my-2"></v-divider>
+      <div class="drawer-section-label drawer-section-label--spaced">Праграма</div>
 
       <v-list-item
         title="Налады"
@@ -82,8 +102,6 @@
           <PhGear :size="22" class="drawer-icon" />
         </template>
       </v-list-item>
-
-      <v-divider class="my-2"></v-divider>
 
       <v-list-item v-if="!auth.user" title="Уваход" to="/login">
         <template #prepend>
@@ -103,7 +121,8 @@
           </template>
         </v-list-item>
       </template>
-    </v-list>
+      </v-list>
+    </div>
   </v-navigation-drawer>
 </template>
 
@@ -116,7 +135,7 @@ import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import {
   PhCross, PhBookBookmark, PhHeart, PhBookmark,
-  PhGear, PhSignIn, PhSignOut, PhShieldCheck,
+  PhGear, PhSignIn, PhSignOut, PhShieldCheck, PhX,
 } from '@phosphor-icons/vue';
 
 const { isDrawerOpen } = useAppBar();
@@ -145,9 +164,161 @@ const selectCategoryByName = (categoryName) => {
 </script>
 
 <style scoped>
+.app-drawer {
+  top: 12px !important;
+  bottom: 12px !important;
+  left: 12px !important;
+  height: calc(100% - 24px) !important;
+  max-width: calc(100vw - 24px) !important;
+  border: 1px solid rgba(var(--v-border-color), 0.12) !important;
+  border-radius: 28px !important;
+  background: rgb(var(--v-theme-surface)) !important;
+  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.24) !important;
+  overflow: hidden;
+}
+
+.drawer-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 2px 14px 6px;
+}
+
+.drawer-brand {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 12px;
+}
+
+.drawer-logo-wrap {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  border-radius: 16px;
+  background: rgba(var(--v-theme-on-surface), 0.055);
+}
+
+.drawer-logo {
+  display: block;
+  width: 34px;
+  height: 34px;
+}
+
+.drawer-title {
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.drawer-subtitle {
+  margin-top: 2px;
+  color: rgba(var(--v-theme-on-surface), 0.52);
+  font-size: 0.75rem;
+  line-height: 1.25;
+}
+
+.drawer-close-btn {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border: 0;
+  border-radius: 50%;
+  background: #1f1f1f;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.drawer-close-btn:active {
+  opacity: 0.7;
+  transform: scale(0.94);
+}
+
+.drawer-loading {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 10px;
+}
+
+.drawer-list {
+  flex: 1;
+  min-height: 0;
+  padding: 0 !important;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.drawer-list :deep(.v-list-item) {
+  min-height: 50px;
+  margin-bottom: 4px;
+  padding-inline: 14px !important;
+  border-radius: 17px !important;
+  color: rgba(var(--v-theme-on-surface), 0.78);
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.drawer-list :deep(.v-list-item__prepend) {
+  width: 38px;
+}
+
+.drawer-list :deep(.v-list-item-title) {
+  font-size: 0.94rem;
+  font-weight: 560;
+}
+
+.drawer-list :deep(.v-list-item--active) {
+  background: #1f1f1f !important;
+  color: #fff !important;
+}
+
+.drawer-list :deep(.v-list-item--active .v-list-item__overlay) {
+  opacity: 0 !important;
+}
+
+.drawer-list :deep(.v-list-item--active .drawer-icon) {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.drawer-section-label {
+  padding: 8px 14px 7px;
+  color: rgba(var(--v-theme-on-surface), 0.42);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.drawer-section-label--spaced {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(var(--v-border-color), 0.1);
+}
+
 .drawer-icon {
-  margin-right: 16px;
   flex-shrink: 0;
-  color: rgba(var(--v-theme-on-surface), 0.7);
+  color: rgba(var(--v-theme-on-surface), 0.58);
+}
+
+@media (max-width: 359px) {
+  .drawer-shell {
+    padding: 10px;
+  }
+
+  .drawer-subtitle {
+    display: none;
+  }
 }
 </style>

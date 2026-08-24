@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import moment from '../src/utils/moment-be.js';
 import {
   calculateBaptismOfLordDate,
+  calculateDateForContext,
   calculateHolyFamilyDate,
   computeLiturgicalContext,
   getDynamicFeastCodesForDate,
@@ -37,6 +38,7 @@ test('places Baptism of the Lord on the first Sunday after January 6', () => {
 
 test('uses Firestore document IDs as canonical dynamic feast codes', () => {
   assert.ok(Object.values(FEAST_NAME_MAP).every((code) => code.startsWith('feast-')));
+  assert.equal(FEAST_NAME_MAP.maryMotherChurch, 'feast-marymotherchurch');
 
   const date = moment('2026-05-14');
   const dynamicDates = { ascension: date.clone() };
@@ -44,6 +46,14 @@ test('uses Firestore document IDs as canonical dynamic feast codes', () => {
 
   assert.equal(context._feast, 'feast-ascension');
   assert.deepEqual(getDynamicFeastCodesForDate(date, dynamicDates), ['feast-ascension']);
+});
+
+test('resolves Mary, Mother of the Church through the dynamic feast map', () => {
+  const date = moment('2026-05-25', 'YYYY-MM-DD');
+  assert.deepEqual(
+    getDynamicFeastCodesForDate(date, { maryMotherChurch: date }),
+    ['feast-marymotherchurch'],
+  );
 });
 
 test('uses actual weekdays, the December octave, and Christmas week 2 in January', () => {
@@ -115,4 +125,26 @@ test('ends Christmas with Baptism even when stored ordinary start is later', () 
 
   const monday = computeLiturgicalContext(moment('2027-01-11'), opts, nextOpts, dynamicDates);
   assert.equal(monday.periodType, 'ordinary');
+});
+
+test('counts the final Ordinary Time weeks backward from Advent', () => {
+  const options = {
+    ...optionsFor(2023, '2023-01-09'),
+    firstAdventSunday: '2023-12-03',
+    easterSunday: '2023-04-09',
+    ashWednesday: '2023-02-22',
+    pentecost: '2023-05-28',
+    ordintaryWeeks2: 9,
+  };
+  const week33 = computeLiturgicalContext(moment('2023-11-19'), options, null, {});
+  const week34 = computeLiturgicalContext(moment('2023-11-27'), options, null, {});
+  assert.deepEqual(
+    { period: week33.periodType, week: week33.periodWeek, day: week33.dayOfWeek },
+    { period: 'ordinary', week: 33, day: 1 },
+  );
+  assert.deepEqual(
+    { period: week34.periodType, week: week34.periodWeek, day: week34.dayOfWeek },
+    { period: 'ordinary', week: 34, day: 2 },
+  );
+  assert.equal(calculateDateForContext(2023, 'ordinary', 34, 2, options, null), '2023-11-27');
 });

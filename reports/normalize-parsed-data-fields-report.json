@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-08-24T16:23:59.859Z",
+  "mode": "dry-run",
+  "stats": {
+    "scannedDocuments": 822,
+    "affectedDocuments": 0,
+    "fieldChanges": 0,
+    "changesByKind": {},
+    "updatedDocuments": 0
+  },
+  "documents": []
+}

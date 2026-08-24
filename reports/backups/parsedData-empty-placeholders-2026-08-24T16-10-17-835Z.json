@@ -1,0 +1,253 @@
+{
+  "generatedAt": "2026-08-24T16:10:17.844Z",
+  "collection": "parsedData",
+  "documents": [
+    {
+      "id": "feast-paulvi",
+      "_feast": "paulvi",
+      "title": "Св. Паўла VI, папа",
+      "_rank": "memoria",
+      "_place": "",
+      "reading1": {
+        "bible": "1Кар 9,16–19.22–23",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 96(95),1–2a.2b–3.7–8a.10",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Мц 16,13–19",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-01.05",
+      "_date": "01.05",
+      "title": "Св. Юзаф Работнік",
+      "_rank": "festum",
+      "_place": "",
+      "reading1": {
+        "bible": "Быц 1,26–2,3 або Клс 3,14–15.17.23–24",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 90(89),2.3–4.12–13.14і16",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Мц 13,54–58",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-04.09",
+      "_date": "04.09",
+      "_rank": "memoria",
+      "_place": "grodno",
+      "title": "Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц",
+      "reading1": {
+        "bible": "2 Мак 7, 1–2. 9–14",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 31 (30), 3cd–4. 5–6. 14. 15–16 (Р.: 6a)",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Мц 25, 1–13",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-12.06",
+      "_date": "12.06",
+      "_rank": "memoria",
+      "_place": "grodno",
+      "title": "Бл. Генрыха Глябовіча, прэзбітэра, і паплечнікаў, мучанікаў другой сусветнай вайны",
+      "reading1": {
+        "bible": "Рым 8, 35. 37–39",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 34 (33), 2–3. 4–5. 6–7 (Р.: 18b)",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Лк 9, 23–26",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-14.08",
+      "_date": "14.08",
+      "title": "Св. Максімільян Марыя Кольбэ, прэзбітэр і мучанік",
+      "_rank": "memoria",
+      "_place": "",
+      "reading1": {
+        "bible": "2 Цім 2,22b–26",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 37(36),3–4.5–6.30–31",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Ян 17,20–26",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-15.02",
+      "_date": "15.02",
+      "_rank": "memoria-ad-libitum",
+      "_place": "grodno",
+      "title": "Бл. Міхала Сапоцькі, прэзбітэра",
+      "reading1": {
+        "bible": "Сір 39, 6–10",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 37 (36), 3–4. 5–6. 23–24. 39–40 (Р.: 39a)",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Ін 10, 11–16",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-18.09-grodno",
+      "_date": "18.09",
+      "_rank": "memoria",
+      "_place": "grodno",
+      "title": "Св. Станіслава Косткі, законніка",
+      "reading1": {
+        "bible": "Прм 4, 7–14",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 116 (115), 12–13. 14–15. 16–17 (Р.: 15)",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Мц 18, 1–5",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-18.09-minsk-mohilev",
+      "_date": "18.09",
+      "_rank": "memoria",
+      "_place": "minsk-mohilev",
+      "title": "Св. Станіслава Косткі, законніка",
+      "reading1": {
+        "bible": "Прм 4, 7–14",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 116 (115), 12–13. 14–15. 16–17 (Р.: 15)",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Мц 18, 1–5",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-18.09-pinsk",
+      "_date": "18.09",
+      "_rank": "memoria",
+      "_place": "pinsk",
+      "title": "Св. Станіслава Косткі, законніка",
+      "reading1": {
+        "bible": "Прм 4, 7–14",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 116 (115), 12–13. 14–15. 16–17 (Р.: 15)",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Мц 18, 1–5",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-26.08-grodno",
+      "_date": "26.08",
+      "_rank": "memoria",
+      "_place": "grodno",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "reading1": {
+        "bible": "Ап 11, 19а; 12, 1–6а. 10аб",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 45 (44), 10bc. 11. 12аб. 16 (Р.: 10b)",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Лк 1, 39–56",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-26.08-minsk-mohilev",
+      "_date": "26.08",
+      "_rank": "memoria",
+      "_place": "minsk-mohilev",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "reading1": {
+        "bible": "Ап 11, 19а; 12, 1–6а. 10аб",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 45 (44), 10bc. 11. 12аб. 16 (Р.: 10b)",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Лк 1, 39–56",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-26.08-pinsk",
+      "_date": "26.08",
+      "_rank": "memoria",
+      "_place": "pinsk",
+      "title": "Найсв. Панны Марыі Чэнстахоўскай",
+      "reading1": {
+        "bible": "Ап 11, 19а; 12, 1–6а. 10аб",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 45 (44), 10bc. 11. 12аб. 16 (Р.: 10b)",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Лк 1, 39–56",
+        "text": null
+      }
+    },
+    {
+      "id": "fixed-26.10",
+      "_date": "26.10",
+      "_rank": "memoria-ad-libitum",
+      "_place": "grodno",
+      "title": "Бл. Цэліны Бажэцкай",
+      "reading1": {
+        "bible": "Пр 31, 10–13. 19–20. 30–31",
+        "text": null
+      },
+      "psalm": {
+        "bible": "Пс 128 (127), 1–2. 3. 4–5 (Р.: 1)",
+        "text": null
+      },
+      "gospel": {
+        "bible": "Лк 10, 38–42",
+        "text": null
+      }
+    }
+  ]
+}

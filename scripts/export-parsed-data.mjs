@@ -8,6 +8,7 @@ import admin from 'firebase-admin';
 import { fixedCalendar } from '../src/constants/fixedCalendar.js';
 import { FEAST_NAME_MAP } from '../src/constants/liturgicalFeastsMap.js';
 import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '../src/constants/liturgical.js';
+import { normalizeFeastCode } from '../src/utils/parsedReadingsIdentity.js';
 
 const require = createRequire(import.meta.url);
 const serviceAccount = require('../patchs/serviceAccountKey.json');
@@ -49,7 +50,7 @@ function present(value) {
 
 function selectorKey(item) {
   if (present(item._date)) return `date:${String(item._date).trim()}`;
-  if (present(item._feast)) return `feast:${String(item._feast).trim().toLowerCase()}`;
+  if (present(item._feast)) return `feast:${normalizeFeastCode(item._feast)}`;
   if (present(item._periodType)) {
     const week = present(item._periodWeekNumber) ? Number(item._periodWeekNumber) : 0;
     const day = present(item._dayOfWeek) ? Number(item._dayOfWeek) : 0;
@@ -83,6 +84,7 @@ function pickExportFields(documentId, data) {
   }
 
   if (Object.hasOwn(data, 'year')) result.year = data.year;
+  if (Object.hasOwn(data, 'title')) result.title = data.title;
 
   if (data.gospel && typeof data.gospel === 'object') {
     const gospel = {};
@@ -182,12 +184,16 @@ function buildFixedItems(parsedData, readingDocuments = []) {
 function buildMovableItems(parsedData, titleDocuments) {
   const readingsByFeast = groupBy(
     parsedData.filter((item) => item._feast),
-    (item) => item._feast,
+    (item) => normalizeFeastCode(item._feast),
   );
-  const titlesByFeast = groupBy(titleDocuments, (item) => item._feast);
+  const titlesByFeast = groupBy(
+    titleDocuments.filter((item) => item._feast),
+    (item) => normalizeFeastCode(item._feast),
+  );
   const feastKeysByCode = new Map();
 
-  for (const [key, code] of Object.entries(FEAST_NAME_MAP)) {
+  for (const [key, rawCode] of Object.entries(FEAST_NAME_MAP)) {
+    const code = normalizeFeastCode(rawCode);
     if (!feastKeysByCode.has(code)) feastKeysByCode.set(code, []);
     feastKeysByCode.get(code).push(key);
   }
@@ -417,7 +423,9 @@ function buildReport(parsedData, fixedItems, movableItems, periodItems, readingD
         parsedData.filter((item) => item._date && !fixedDates.has(item._date)).map((item) => item._date),
       )].sort(),
       parsedMovableFeastsOutsideMap: [...new Set(
-        parsedData.filter((item) => item._feast && !movableFeasts.has(item._feast)).map((item) => item._feast),
+        parsedData
+          .filter((item) => item._feast && !movableFeasts.has(normalizeFeastCode(item._feast)))
+          .map((item) => normalizeFeastCode(item._feast)),
       )].sort(),
       parsedDocumentsWithoutSelector: parsedData
         .filter((item) => !item._date && !item._feast && !item._periodType)

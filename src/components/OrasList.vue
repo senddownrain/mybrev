@@ -31,32 +31,34 @@
       <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
     </div>
 
-    <!-- Блок чтений и список литургических часов -->
+    <!-- Чытанні — першы, вылучаны пункт агульнага спісу літургічных гадзін -->
     <v-list v-else lines="three" bg-color="transparent">
-      <!-- Блок "Чытанні" -->
       <v-list-item
         :to="readingItem ? readingItem.path : undefined"
         :disabled="!readingItem"
-        class="mb-4 reading-card"
+        class="reading-card"
         :class="{ 'reading-card--celebration': isCelebration }"
         :style="readingCardStyle"
-        rounded="lg"
-        border
       >
         <template #prepend>
-          <div class="reading-avatar-wrap">
+          <v-badge
+            :model-value="isCelebration"
+            color="transparent"
+            location="top end"
+          >
+            <template #badge>
+              <v-icon
+                class="reading-celebration-mark"
+                color="amber-darken-3"
+                icon="mdi-star-four-points"
+                size="16"
+                :title="celebrationLabel"
+              ></v-icon>
+            </template>
             <v-avatar :color="readingTheme.avatarColor" size="40">
               <v-icon :color="readingItem ? readingTheme.iconColor : 'grey'">mdi-book-open-variant</v-icon>
             </v-avatar>
-            <v-icon
-              v-if="isCelebration"
-              class="reading-celebration-mark"
-              color="amber-darken-3"
-              icon="mdi-star-four-points"
-              size="16"
-              :title="celebrationLabel"
-            ></v-icon>
-          </div>
+          </v-badge>
         </template>
         <v-list-item-title class="reading-title">
           Чытанні
@@ -75,17 +77,6 @@
       </v-list-item>
       <v-divider class="mb-2"></v-divider>
 
-      <div v-if="isAdmin && !readingItem" class="mb-4">
-        <v-btn
-          color="deep-purple"
-          variant="tonal"
-          prepend-icon="mdi-book-plus"
-          @click="goToCreateReading"
-        >
-          Стварыць чытанне
-        </v-btn>
-      </div>
-
       <template v-if="dayData">
         <div v-for="(ora, index) in oras" :key="ora.name">
           <v-list-item :to="ora.path">
@@ -102,6 +93,17 @@
           <v-divider v-if="index < oras.length - 1"></v-divider>
         </div>
       </template>
+
+      <div v-if="isAdmin && !readingItem" class="mt-4">
+        <v-btn
+          color="deep-purple"
+          variant="tonal"
+          prepend-icon="mdi-book-plus"
+          @click="goToCreateReading"
+        >
+          Стварыць чытанне
+        </v-btn>
+      </div>
 
       <v-alert v-else type="info" variant="tonal" border="start" class="mt-2">
         Літургічныя гадзіны для гэтага дня не знойдзены.
@@ -219,7 +221,7 @@ const oras = computed(() => [
   },
   {
     name: 'morning',
-    title: 'Раніца',
+    title: 'Агульная гадзіна',
     subtitle: 'Заклік, Гадзіна чытанняў і Ютрань у адной ранішняй малітве.',
     icon: 'mdi-weather-sunset-up',
     path: `/day/${dateParam.value}/ora/${dayId.value}/morning`,
@@ -297,7 +299,7 @@ const readingItem = computed(() => {
   return {
     id: dateParam.value,
     title: 'Чытанні',
-    path: `/readings/${dateParam.value}`,
+    path: `/readings/${dateParam.value}?dayId=${encodeURIComponent(dayId.value || '')}`,
   };
 });
 
@@ -366,23 +368,20 @@ watch(dateParam, (newDateParam) => {
 .reading-card {
   border-inline-start: 3px solid var(--reading-color) !important;
   background-color: rgba(var(--reading-color-rgb), 0.045);
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .reading-card:hover {
   background-color: rgba(var(--reading-color-rgb), 0.09);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .reading-card--celebration {
-  border-color: rgba(183, 128, 0, 0.5) !important;
   border-inline-start-color: var(--reading-color) !important;
   background: linear-gradient(
     120deg,
     rgba(var(--reading-color-rgb), 0.07),
     rgba(255, 193, 7, 0.12)
   );
-  box-shadow: inset 0 0 0 1px rgba(255, 193, 7, 0.12);
 }
 
 .reading-card--celebration:hover {
@@ -393,14 +392,7 @@ watch(dateParam, (newDateParam) => {
   );
 }
 
-.reading-avatar-wrap {
-  position: relative;
-}
-
 .reading-celebration-mark {
-  position: absolute;
-  top: -5px;
-  right: -6px;
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
 }
 

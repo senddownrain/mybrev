@@ -29,6 +29,7 @@ import {
  * @property {import('moment').Moment} palmSunday - Palm Sunday (7 days before Easter)
  * @property {import('moment').Moment} easterSunday - Easter Sunday
  * @property {import('moment').Moment} pentecost - Pentecost Sunday
+ * @property {import('moment').Moment} maryMotherChurch - Mary, Mother of the Church (Monday after Pentecost)
  * @property {import('moment').Moment} ascension - Ascension
  * @property {import('moment').Moment} holyTrinity - Holy Trinity Sunday (7 days after Pentecost)
  * @property {import('moment').Moment} corpusChristi - Corpus Christi (Thursday after Trinity Sunday)
@@ -107,6 +108,7 @@ export const useCalendarStore = defineStore('calendar', () => {
     // Расчёт дат пасля Вялікадня
     dates.easterSunday = easter;
     dates.pentecost = pentecost;
+    dates.maryMotherChurch = pentecost.clone().add(1, 'day');
     const configuredAscension = getMoment(opts.ascension);
     dates.ascension = configuredAscension.isValid()
         ? configuredAscension

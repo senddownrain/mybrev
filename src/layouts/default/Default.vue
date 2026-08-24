@@ -5,10 +5,16 @@
       '--font-size-multiplier': settings.fontSizeMultiplier
     }"
   >
-    <v-app-bar v-if="!hideLayoutAppBar" flat class="app-bar-border">
+    <v-app-bar
+      v-if="!hideLayoutAppBar"
+      flat
+      color="transparent"
+      class="floating-app-bar"
+    >
       <!-- Кнопка назад для страницы редактирования молитвы (PrayerEdit) -->
       <v-app-bar-nav-icon
         v-if="isPrayerEditPage"
+        class="top-circle-btn"
         @click="goBack"
       >
         <v-icon>mdi-arrow-left</v-icon>
@@ -16,6 +22,7 @@
       <!-- Кнопка назад для страницы просмотра молитвы в режиме редактирования -->
       <v-app-bar-nav-icon
         v-else-if="isPrayerViewPage && uiStore.prayerIsEditing"
+        class="top-circle-btn"
         @click="cancelEdit"
       >
         <v-icon>mdi-arrow-left</v-icon>
@@ -23,6 +30,7 @@
       <!-- Кнопка назад для страницы просмотра молитвы (не в режиме редактирования) -->
       <v-app-bar-nav-icon
         v-else-if="isPrayerViewPage"
+        class="top-circle-btn"
         @click="goBack"
       >
         <v-icon>mdi-arrow-left</v-icon>
@@ -30,27 +38,33 @@
       <!-- Меню для остальных страниц -->
       <v-app-bar-nav-icon
         v-else
+        class="top-circle-btn"
         @click.stop="isDrawerOpen = !isDrawerOpen"
-      ></v-app-bar-nav-icon>
+        aria-label="Адкрыць меню"
+      >
+        <v-icon>mdi-menu</v-icon>
+      </v-app-bar-nav-icon>
 
       <v-app-bar-title
         v-if="!isPrayerEditPage && !(isPrayerViewPage && uiStore.prayerIsEditing)"
         class="app-title-clickable"
       >
-        Малітоўнік
+        {{ layoutTitle }}
       </v-app-bar-title>
 
       <!-- Заголовок при редактировании молитвы -->
       <v-app-bar-title v-if="(isPrayerViewPage && uiStore.prayerIsEditing) || isPrayerEditPage" class="prayer-edit-title">
-        Рэдагаванне малітвы
+        {{ layoutTitle }}
       </v-app-bar-title>
 
       <!-- Кнопки поиска и фильтра для страницы списка молитв -->
       <template v-if="isPrayersListPage && !isSearchExpanded && !isFilterExpanded && !(isPrayerViewPage && uiStore.prayerIsEditing) && !isPrayerEditPage">
         <v-btn
           icon
+          class="top-circle-btn top-action-start"
+          :class="{ 'top-circle-btn--active': searchQuery }"
           :color="searchQuery ? 'primary' : 'default'"
-          variant="text"
+          variant="flat"
           @click="toggleSearch"
           aria-label="Пошук"
         >
@@ -59,8 +73,10 @@
 
         <v-btn
           icon
+          class="top-circle-btn"
+          :class="{ 'top-circle-btn--active': selectedTags.length > 0 }"
           :color="selectedTags.length > 0 ? 'primary' : 'default'"
-          variant="text"
+          variant="flat"
           @click="toggleFilter"
           aria-label="Фільтр"
         >
@@ -72,7 +88,8 @@
       <v-btn
         v-if="isPrayersListPage && (isSearchExpanded || isFilterExpanded) && !(isPrayerViewPage && uiStore.prayerIsEditing) && !isPrayerEditPage"
         icon
-        variant="text"
+        class="top-circle-btn top-action-start"
+        variant="flat"
         @click="closeSearchAndFilter"
         aria-label="Закрыць"
       >
@@ -83,7 +100,8 @@
       <template v-if="isPrayerEditPage">
         <v-btn
           icon
-          variant="text"
+          class="top-circle-btn top-circle-btn--confirm top-action-start"
+          variant="flat"
           @click="savePrayerForm"
           :loading="uiStore.prayerFormSaving"
           aria-label="Захаваць"
@@ -96,7 +114,8 @@
       <template v-else-if="isPrayerViewPage && uiStore.prayerIsEditing">
         <v-btn
           icon
-          variant="text"
+          class="top-circle-btn top-circle-btn--confirm top-action-start"
+          variant="flat"
           @click="uiStore.triggerPrayerSave()"
           :loading="uiStore.prayerSaving"
           aria-label="Захаваць"
@@ -109,7 +128,8 @@
       <template v-else-if="isPrayerViewPage">
         <v-btn
           icon
-          variant="text"
+          class="top-circle-btn top-action-start"
+          variant="flat"
           @click="toggleSettingsSheet"
           aria-label="Налады тэксту"
         >
@@ -119,7 +139,8 @@
         <v-btn
           v-if="authStore.isAdmin"
           icon
-          variant="text"
+          class="top-circle-btn"
+          variant="flat"
           @click="uiStore.triggerPrayerToggleEdit()"
           aria-label="Рэдагаваць"
         >
@@ -221,7 +242,7 @@ const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 
-const { searchQuery, selectedTags, isSearchExpanded, isFilterExpanded, toggleSearch, toggleFilter } = usePrayersFilters();
+const { searchQuery, selectedTags, selectedCategory, isSearchExpanded, isFilterExpanded, toggleSearch, toggleFilter } = usePrayersFilters();
 const { allTags } = usePrayers();
 
 const isPrayersListPage = computed(() => {
@@ -233,7 +254,41 @@ const isPrayerViewPage = computed(() => {
 });
 
 const isPrayerEditPage = computed(() => {
-  return route.name === 'PrayerEdit';
+  return route.name === 'PrayerEdit' || route.name === 'PrayerAdd';
+});
+
+const layoutTitle = computed(() => {
+  if (isPrayerViewPage.value && uiStore.prayerIsEditing) return 'Рэдагаванне малітвы';
+
+  switch (route.name) {
+    case 'Today':
+    case 'SelectedDay':
+      return 'Літургія';
+    case 'LiturgicalPicker':
+      return 'Выбраць перыяд';
+    case 'Prayers':
+    case 'PrayersList':
+      return selectedCategory.value?.name || 'Малітвы';
+    case 'FavoritePrayers':
+      return 'Абраныя';
+    case 'PrayerView':
+      return 'Малітва';
+    case 'PrayerAdd':
+      return 'Новая малітва';
+    case 'PrayerEdit':
+      return 'Рэдагаванне малітвы';
+    case 'Readings':
+    case 'ReadingsByDate':
+      return 'Чытанні';
+    case 'ReadingsPicker':
+      return 'Каляндар чытанняў';
+    case 'Settings':
+      return 'Налады';
+    case 'Login':
+      return 'Уваход';
+    default:
+      return 'Малітоўнік';
+  }
 });
 
 const hideLayoutAppBar = computed(() => route.matched.some((record) => record.meta?.hideLayoutAppBar));
@@ -289,12 +344,73 @@ const clearSearch = () => {
 </script>
 
 <style scoped>
-.app-bar-border {
-  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+.floating-app-bar {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.floating-app-bar :deep(.v-toolbar__content) {
+  gap: 8px;
+  padding: 10px 16px;
+}
+
+.floating-app-bar :deep(.v-toolbar__prepend) {
+  margin-inline-start: 0;
+}
+
+.floating-app-bar :deep(.v-toolbar__append) {
+  gap: 8px;
+  margin-inline-end: 0;
+}
+
+.top-circle-btn {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  flex: 0 0 48px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 50% !important;
+  background: #1f1f1f !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
+  transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease !important;
+}
+
+.top-circle-btn:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) !important;
+}
+
+.top-circle-btn:active {
+  opacity: 0.72;
+  transform: scale(0.94);
+}
+
+.top-circle-btn--confirm {
+  background: rgb(var(--v-theme-primary)) !important;
+  color: rgb(var(--v-theme-on-primary)) !important;
+}
+
+.top-circle-btn--active {
+  background: rgb(var(--v-theme-primary)) !important;
+  color: rgb(var(--v-theme-on-primary)) !important;
+}
+
+.top-action-start {
+  margin-left: auto !important;
 }
 
 .app-title-clickable {
+  position: absolute;
+  left: 50%;
+  width: auto;
+  max-width: calc(100% - 152px);
+  margin-inline-start: 0 !important;
   cursor: default;
+  font-size: 1.15rem;
+  font-weight: 650;
+  text-align: center;
+  transform: translateX(-50%);
+  pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -313,9 +429,13 @@ const clearSearch = () => {
 }
 
 @media (max-width: 600px) {
+  .floating-app-bar :deep(.v-toolbar__content) {
+    padding: 8px 12px;
+  }
+
   .v-app-bar-title {
     font-size: 1.1rem !important;
-    padding: 0 8px !important;
+    padding: 0 4px !important;
   }
 
   .prayer-edit-title {
@@ -324,7 +444,26 @@ const clearSearch = () => {
   }
 
   .v-app-bar-nav-icon {
-    margin-left: 4px !important;
+    margin-left: 0 !important;
+  }
+}
+
+@media (max-width: 359px) {
+  .floating-app-bar :deep(.v-toolbar__content) {
+    gap: 6px;
+    padding-inline: 10px;
+  }
+
+  .top-circle-btn {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    flex-basis: 44px !important;
+  }
+
+  .app-title-clickable {
+    max-width: calc(100% - 148px);
+    font-size: 1rem;
   }
 }
 </style>

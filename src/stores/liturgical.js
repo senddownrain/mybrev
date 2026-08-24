@@ -273,9 +273,9 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
    * @param {Date|moment.Moment|string} date
    * @returns {Promise<{ context: Object, items: Object[] }>}
    */
-  async function fetchParsedReadingsByDate(date) {
+  async function fetchParsedReadingsByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
-    const key   = mDate.format('YYYY-MM-DD');
+    const key   = `${mDate.format('YYYY-MM-DD')}|${options.dayId || '*'}`;
 
     const cached = parsedReadingsCache.value.get(key);
     if (_isCacheValid(cached, TTL.READINGS)) {
@@ -290,9 +290,10 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
       const { context, dynamicFeastCodes } = await _resolveContext(mDate);
       const liturgicalYear = await getLiturgicalYear(date, { useCalendarStore: true });
       const cycle          = await getCycleForDate(date, liturgicalYear, context.dayOfWeek, { useCalendarStore: true });
-      const fullContext    = { ...context, cycle };
+      const sundayCycle    = await getCycleForDate(date, liturgicalYear, 1, { useCalendarStore: true });
+      const fullContext    = { ...context, cycle, sundayCycle };
 
-      const items = await getParsedReadingsForDate(mDate, fullContext, dynamicFeastCodes);
+      const items = await getParsedReadingsForDate(mDate, fullContext, dynamicFeastCodes, options);
 
       const result = { context: fullContext, items };
       parsedReadingsCache.value.set(key, { data: result, cachedAt: Date.now() });

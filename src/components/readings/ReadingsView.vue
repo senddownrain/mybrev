@@ -51,14 +51,14 @@ const { items, isLoading, error, hasReadings, loadForDate, loadForToday } = useP
 function load() {
   const dateParam = route.params.date || route.query.date;
   if (dateParam) {
-    loadForDate(moment(dateParam, 'YYYY-MM-DD').toDate());
+    loadForDate(moment(dateParam, 'YYYY-MM-DD').toDate(), { dayId: route.query.dayId || '' });
   } else {
     loadForToday();
   }
 }
 
 onMounted(load);
-watch(() => route.params.date || route.query.date, load);
+watch(() => [route.params.date || route.query.date, route.query.dayId], load);
 </script>
 
 <style scoped>

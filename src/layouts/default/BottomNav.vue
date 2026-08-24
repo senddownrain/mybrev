@@ -190,7 +190,7 @@ function loadDay() {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   padding: 10px 16px 12px;
   pointer-events: none;
 }
@@ -199,11 +199,12 @@ function loadDay() {
 .pill {
   display: flex;
   align-items: center;
-  height: 60px;
-  background: #1A1A1A;
-  border-radius: 30px;
+  height: 64px;
+  background: #1f1f1f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 32px;
   padding: 0 4px;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
   pointer-events: auto;
 }
 
@@ -214,16 +215,19 @@ function loadDay() {
   align-items: center;
   justify-content: center;
   width: 56px;
-  height: 48px;
+  height: 52px;
   border: none;
   background: transparent;
-  border-radius: 24px;
+  border-radius: 26px;
   cursor: pointer;
-  transition: background 0.18s ease;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.16s ease;
   color: rgba(255, 255, 255, 0.45);
 }
 
-.pill-item:active { opacity: 0.7; }
+.pill-item:active {
+  opacity: 0.72;
+  transform: scale(0.94);
+}
 
 .pill-item--active {
   background: #FFFFFF;
@@ -237,19 +241,37 @@ function loadDay() {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
   border: none;
-  background: #1A1A1A;
+  background: #1f1f1f;
   border-radius: 50%;
   cursor: pointer;
   color: rgba(255, 255, 255, 0.75);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
-  transition: opacity 0.15s;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  transition: opacity 0.15s ease, transform 0.15s ease;
   pointer-events: auto;
 }
 
-.arrow-btn:active { opacity: 0.6; }
+.arrow-btn:active {
+  opacity: 0.68;
+  transform: scale(0.94);
+}
+
+@media (max-width: 359px) {
+  .pill-nav-row {
+    gap: 8px;
+    padding-inline: 8px;
+  }
+
+  .arrow-btn {
+    width: 52px;
+    height: 52px;
+    flex-basis: 52px;
+  }
+}
 
 /* ── calendar dialog ── */
 .date-dialog-card {

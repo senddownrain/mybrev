@@ -82,7 +82,4 @@ const singleAntiphon = computed(() => hasSingleAntiphonPsalmody(props));
   text-align: left !important;
 }
 
-.ora-psalm :deep(p:nth-child(even of p:not([style]))) {
-  margin-left: 1rem;
-}
 </style>

@@ -15,6 +15,7 @@ export const FEAST_NAME_MAP = {
   ashWednesday: 'feast-ash',
   easterSunday: 'feast-eastersunday',
   pentecost: 'feast-pentecost',
+  maryMotherChurch: 'feast-marymotherchurch',
   palmSunday: 'feast-palmsunday',
   /** @deprecated используйте palmSunday (совпадает с calendar store) */
   palmsSnday: 'feast-palmsunday',

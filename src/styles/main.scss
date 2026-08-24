@@ -243,6 +243,12 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   text-align: left !important;
 }
 
+// Небольшой отступ у каждой второй строфы псалма.
+// Абзацы с inline-стилями (заголовки и пояснения) не учитываются.
+.ora-psalm > p:nth-child(even of p:not([style])) {
+  margin-left: 1rem;
+}
+
 // Исправление двойного скролла на страницах с ora (гадинками)
 // Убираем фиксированную высоту у v-main
 .v-main {

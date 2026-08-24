@@ -16,7 +16,7 @@ export function useParsedReadings() {
   // The primary (highest-priority) reading document for the current date
   const primaryReading = computed(() => items.value[0] ?? null);
 
-  async function loadForDate(date) {
+  async function loadForDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
     logger.log(`[useParsedReadings] loading ${mDate.format('YYYY-MM-DD')}`);
 
@@ -24,7 +24,7 @@ export function useParsedReadings() {
     error.value     = null;
 
     try {
-      const result = await liturgicalStore.fetchParsedReadingsByDate(date);
+      const result = await liturgicalStore.fetchParsedReadingsByDate(date, options);
       items.value   = result.items;
       context.value = result.context;
     } catch (err) {

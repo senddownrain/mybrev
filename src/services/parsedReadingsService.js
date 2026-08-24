@@ -6,6 +6,12 @@ import {
   isSeasonalDateException,
   isChristmasDateExceptionExclusion,
 } from '@/utils/liturgicalDayResolution';
+import {
+  hasReadingDocumentContent,
+  normalizeFeastCode,
+  selectCalendarDayVariants,
+  selectReadingLectionaryVariants,
+} from '@/utils/parsedReadingsIdentity';
 
 const COLLECTION = 'parsedData';
 
@@ -17,13 +23,16 @@ function ddmm(mDate) {
   return mDate.format('DD.MM');
 }
 
-function stripFeastPrefix(code) {
-  return String(code || '').replace(/^feast-/, '');
+function feastCodeVariants(code) {
+  const canonical = normalizeFeastCode(code);
+  return canonical ? [canonical, canonical.replace(/^feast-/, '')] : [];
 }
 
 async function queryDocs(q) {
   const snapshot = await retryFirestore(() => getDocs(q));
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  return snapshot.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .filter(hasReadingDocumentContent);
 }
 
 /**
@@ -36,21 +45,33 @@ async function queryDocs(q) {
  * @param {string[]} dynamicFeastCodes - feast codes from getDynamicFeastCodesForDate (format: 'feast-xxx')
  * @returns {Promise<Object[]>}
  */
-export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes = []) {
-  const { periodType, periodWeek, dayOfWeek, cycle } = context;
+export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes = [], options = {}) {
+  const { periodType, periodWeek, dayOfWeek, cycle, sundayCycle = cycle } = context;
+  const selectVariants = (documents) => selectReadingLectionaryVariants(documents, { cycle, sundayCycle });
   const dateStr = ddmm(mDate);
+
+  // An explicitly selected fixedDays template is the strongest link. During
+  // migration both singular and array forms are supported.
+  if (options.dayId) {
+    const linked = (await Promise.all([
+      queryDocs(query(col(), where('_dayId', '==', options.dayId))),
+      queryDocs(query(col(), where('_dayIds', 'array-contains', options.dayId))),
+    ])).flat();
+    const uniqueLinked = [...new Map(linked.map((document) => [document.id, document])).values()];
+    const selected = selectVariants(uniqueLinked);
+    if (selected.length) return selected;
+  }
 
   // 1. Dynamic feasts — highest priority
   if (dynamicFeastCodes.length > 0) {
-    const feastQueries = dynamicFeastCodes.map((code) =>
-      queryDocs(query(col(), where('_feast', '==', stripFeastPrefix(code)))),
-    );
+    const feastQueries = dynamicFeastCodes.flatMap((code) => feastCodeVariants(code).map((value) =>
+      queryDocs(query(col(), where('_feast', '==', value))),
+    ));
     const all = (await Promise.all(feastQueries)).flat();
     // Deduplicate
     const unique = [...new Map(all.map((d) => [d.id, d])).values()];
     // Filter by cycle if the feast has cycle variants, otherwise take all
-    const withCycle = cycle ? unique.filter((d) => d.year === cycle) : [];
-    const result = withCycle.length > 0 ? withCycle : unique.filter((d) => !d.year);
+    const result = selectVariants(unique);
     if (result.length > 0) {
       logger.log(`[parsedReadingsService] feast match (${dynamicFeastCodes}): ${result.length}`);
       return result;
@@ -70,16 +91,9 @@ export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes
     const docs = await queryDocs(query(col(), where('_date', '==', dateStr)));
     // Sunday feasts in the Christmas octave have year set (A/B/C); they take priority
     // over weekday octave docs (year=null) and suppress them for that Sunday.
-    if (cycle) {
-      const yearMatch = docs.filter((d) => d.year === cycle);
-      if (yearMatch.length > 0) {
-        logger.log(`[parsedReadingsService] fixed/seasonal ${dateStr} year=${cycle}: ${yearMatch.length}`);
-        return yearMatch;
-      }
-    }
-    const yearless = docs.filter((d) => !d.year);
-    logger.log(`[parsedReadingsService] fixed/seasonal ${dateStr}: ${yearless.length}`);
-    return yearless;
+    const selected = selectVariants(selectCalendarDayVariants(docs, dayOfWeek));
+    logger.log(`[parsedReadingsService] fixed/seasonal ${dateStr} year=${cycle}: ${selected.length}`);
+    if (selected.length) return selected;
   }
 
   // 3. General case: query period + fixed date in parallel, merge with priority
@@ -121,8 +135,8 @@ export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes
   const unique = [...new Map(results.map((d) => [d.id, d])).values()];
 
   // Fixed date docs take priority over period docs
-  const fixed = unique.filter((d) => d._date);
-  const period = unique.filter((d) => !d._date);
+  const fixed = selectVariants(selectCalendarDayVariants(unique.filter((d) => d._date), dayOfWeek));
+  const period = selectVariants(unique.filter((d) => !d._date));
   const sorted = [...fixed, ...period];
 
   logger.log(

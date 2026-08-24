@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-08-24T16:24:18.009Z",
+  "auditGeneratedAt": "2026-08-24T16:23:31.298Z",
+  "mode": "dry-run",
+  "stats": {
+    "auditDocuments": 822,
+    "mappedMigrationCandidates": 0,
+    "skippedCollisionDocuments": 0,
+    "plannedOperations": 0,
+    "plannedMoves": 0,
+    "plannedMetadataOnly": 0,
+    "missingSources": 0,
+    "existingTargetConflicts": 0,
+    "appliedOperations": 0
+  },
+  "missingSources": [],
+  "existingTargets": [],
+  "operations": []
+}

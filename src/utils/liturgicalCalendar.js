@@ -168,11 +168,11 @@ export function computeLiturgicalContext(mDate, opts, nextYearOpts, dynamicDates
 
   // --- Ordinary Time (after Pentecost) ---
   if (mDate.isAfter(pentecost) && mDate.isBefore(fa)) {
-    const diff      = mDate.diff(pentecost, 'days');
-    const startWeek = parseInt(opts.ordintaryWeeks2);
+    const lastOrdinarySunday = fa.clone().subtract(7, 'days');
+    const currentSunday = mDate.clone().subtract(context.dayOfWeek - 1, 'days');
+    const weeksBeforeWeek34 = lastOrdinarySunday.diff(currentSunday, 'weeks');
     context.periodType = 'ordinary';
-    context.periodWeek = Math.floor(diff / 7) + startWeek;
-    context.dayOfWeek  = (diff % 7) + 1;
+    context.periodWeek = 34 - weeksBeforeWeek34;
     return context;
   }
 
@@ -227,12 +227,12 @@ export function calculateDateForContext(year, periodType, periodWeekNumber, dayO
   } else if (periodType === 'ordinary') {
     const weeksBeforeOrd = parseInt(opts.ordintaryWeeks1) - 1;
     const fo = ash.clone().subtract(3, 'days').subtract(weeksBeforeOrd, 'weeks');
-    const startWeek2 = parseInt(opts.ordintaryWeeks2);
     if (periodWeekNumber < parseInt(opts.ordintaryWeeks1)) {
       baseDate = fo.clone();
     } else {
-      baseDate     = pentecost.clone();
-      adjustedWeek = periodWeekNumber - startWeek2 + 1;
+      const lastOrdinarySunday = fa.clone().subtract(7, 'days');
+      baseDate = lastOrdinarySunday.clone().subtract(34 - periodWeekNumber, 'weeks');
+      adjustedWeek = 1;
     }
   }
 

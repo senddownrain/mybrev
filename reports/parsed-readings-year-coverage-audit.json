@@ -1,0 +1,99 @@
+{
+  "generatedAt": "2026-08-24T16:24:01.743Z",
+  "state": "virtual canonical metadata with empty placeholders excluded",
+  "counts": {
+    "parsedDocuments": 822,
+    "usableDocuments": 822,
+    "years": 6,
+    "calendarDays": 2192,
+    "coveredDays": 2192,
+    "missingDays": 0,
+    "selectedCycleMismatches": 0
+  },
+  "years": [
+    {
+      "year": 2023,
+      "totalDays": 365,
+      "coveredDays": 365,
+      "coveragePercent": 100,
+      "sourceCounts": {
+        "seasonal-date": 21,
+        "dynamic": 14,
+        "fixed-date+period": 102,
+        "period": 228
+      },
+      "missing": [],
+      "selectedCycleMismatches": []
+    },
+    {
+      "year": 2024,
+      "totalDays": 366,
+      "coveredDays": 366,
+      "coveragePercent": 100,
+      "sourceCounts": {
+        "seasonal-date": 20,
+        "dynamic": 14,
+        "fixed-date+period": 102,
+        "period": 230
+      },
+      "missing": [],
+      "selectedCycleMismatches": []
+    },
+    {
+      "year": 2025,
+      "totalDays": 365,
+      "coveredDays": 365,
+      "coveragePercent": 100,
+      "sourceCounts": {
+        "seasonal-date": 25,
+        "dynamic": 14,
+        "period": 228,
+        "fixed-date+period": 98
+      },
+      "missing": [],
+      "selectedCycleMismatches": []
+    },
+    {
+      "year": 2026,
+      "totalDays": 365,
+      "coveredDays": 365,
+      "coveragePercent": 100,
+      "sourceCounts": {
+        "seasonal-date": 24,
+        "dynamic": 14,
+        "fixed-date+period": 97,
+        "period": 230
+      },
+      "missing": [],
+      "selectedCycleMismatches": []
+    },
+    {
+      "year": 2027,
+      "totalDays": 365,
+      "coveredDays": 365,
+      "coveragePercent": 100,
+      "sourceCounts": {
+        "seasonal-date": 23,
+        "dynamic": 14,
+        "fixed-date+period": 98,
+        "period": 230
+      },
+      "missing": [],
+      "selectedCycleMismatches": []
+    },
+    {
+      "year": 2028,
+      "totalDays": 366,
+      "coveredDays": 366,
+      "coveragePercent": 100,
+      "sourceCounts": {
+        "seasonal-date": 22,
+        "dynamic": 14,
+        "fixed-date+period": 101,
+        "period": 229
+      },
+      "missing": [],
+      "selectedCycleMismatches": []
+    }
+  ]
+}
