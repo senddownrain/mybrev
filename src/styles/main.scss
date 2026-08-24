@@ -1,55 +1,66 @@
-// Исправления для мобильных устройств
+// Shared navigation palette. Components inherit these tokens from v-app.
+.v-theme--light {
+  --nav-surface: #FEFEFE;
+  --nav-active: #DEDEDE;
+  --nav-on-surface: #0E0E0E;
+  --nav-muted: rgba(14, 14, 14, 0.55);
+  --nav-border: rgba(14, 14, 14, 0.08);
+  --nav-shadow: rgba(14, 14, 14, 0.18);
+  --nav-button-shadow: rgba(14, 14, 14, 0.08);
+}
+
+.v-theme--dark {
+  --nav-surface: #0E0E0E;
+  --nav-active: #171733;
+  --nav-on-surface: #FEFEFE;
+  --nav-muted: rgba(254, 254, 254, 0.58);
+  --nav-border: rgba(254, 254, 254, 0.08);
+  --nav-shadow: rgba(0, 0, 0, 0.42);
+  --nav-button-shadow: rgba(0, 0, 0, 0.34);
+}
+
+// Один нативный scroll-контейнер для всех страниц. Не переносим вертикальный
+// скролл на body: вложенные overflow-контейнеры могут съедать первый touch-жест.
 html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  overflow: hidden !important;
-  overflow-y: hidden !important;
-  overflow-x: hidden !important;
-  height: 100% !important;
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-body {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  height: 100vh !important;
-  width: 100% !important;
-  position: relative !important;
-  -webkit-overflow-scrolling: touch;
-  margin: 0;
-  padding: 0;
-  /* Тонкий скроллбар для Firefox */
+  min-height: 100%;
+  overflow-x: clip;
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
+body {
+  min-height: 100%;
+  width: 100%;
+  overflow-x: clip;
+  margin: 0;
+  padding: 0;
+}
+
 /* Тонкий скроллбар для WebKit браузеров (Chrome, Safari) */
-body::-webkit-scrollbar {
+html::-webkit-scrollbar {
   width: 4px;
 }
 
-body::-webkit-scrollbar-track {
+html::-webkit-scrollbar-track {
   background: transparent;
 }
 
-body::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 2px;
 }
 
-body::-webkit-scrollbar-thumb:hover {
+html::-webkit-scrollbar-thumb:hover {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
 #app {
   width: 100%;
   overflow: visible !important;
-  overflow-x: hidden !important;
+  overflow-x: clip !important;
   overflow-y: visible !important;
   height: auto !important;
   min-height: 100vh !important;
@@ -60,7 +71,7 @@ body::-webkit-scrollbar-thumb:hover {
 .v-application__wrap {
   overflow: visible !important;
   overflow-y: visible !important;
-  overflow-x: hidden !important;
+  overflow-x: clip !important;
   height: auto !important;
   min-height: 100vh !important;
   width: 100% !important;
@@ -88,7 +99,7 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-word;
-  overflow-x: hidden;
+  overflow-x: clip;
 
   // Чтобы заголовки внутри тоже масштабировались
   h1, h2, h3, h4, h5, h6 {
@@ -277,55 +288,10 @@ $base-content-font-size: 1rem; // 16px по умолчанию
 
 // Адаптивные стили для мобильных устройств
 @media (max-width: 600px) {
-  // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: только body скроллится на мобильных
-  html {
-    overflow: hidden !important;
-    overflow-y: hidden !important;
-    overflow-x: hidden !important;
-    height: 100% !important;
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-
-body {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  height: 100vh !important;
-  width: 100% !important;
-  position: relative !important;
-  -webkit-overflow-scrolling: touch;
-  margin: 0;
-  padding: 0;
-  /* Тонкий скроллбар для Firefox */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-}
-
-/* Тонкий скроллбар для WebKit браузеров (Chrome, Safari) */
-body::-webkit-scrollbar {
-  width: 4px;
-}
-
-body::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-body::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-}
-
-body::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.3);
-}
-  
   #app {
     overflow: visible !important;
     overflow-y: visible !important;
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
     height: auto !important;
     min-height: 100vh !important;
     width: 100% !important;
@@ -336,7 +302,7 @@ body::-webkit-scrollbar-thumb:hover {
   .v-application__wrap {
     overflow: visible !important;
     overflow-y: visible !important;
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
     height: auto !important;
     min-height: 100vh !important;
     width: 100% !important;
@@ -346,7 +312,7 @@ body::-webkit-scrollbar-thumb:hover {
   .v-main {
     overflow: visible !important;
     overflow-y: visible !important;
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
     height: auto !important;
     min-height: 100% !important;
     width: 100% !important;
@@ -356,7 +322,7 @@ body::-webkit-scrollbar-thumb:hover {
   .v-main__wrap {
     overflow: visible !important;
     overflow-y: visible !important;
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
     height: auto !important;
     min-height: 100% !important;
     width: 100% !important;
@@ -370,7 +336,7 @@ body::-webkit-scrollbar-thumb:hover {
     width: 100% !important;
     overflow: visible !important;
     overflow-y: visible !important;
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
     height: auto !important;
     max-height: none !important;
     position: relative !important;
@@ -380,7 +346,7 @@ body::-webkit-scrollbar-thumb:hover {
   .v-col {
     overflow: visible !important;
     overflow-y: visible !important;
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
     height: auto !important;
     max-height: none !important;
     position: relative !important;
@@ -421,7 +387,7 @@ body::-webkit-scrollbar-thumb:hover {
     padding: 0 4px;
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
     box-sizing: border-box;
     
     h1 {

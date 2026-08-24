@@ -82,3 +82,14 @@ export const PERIOD_COLORS = {
   holyweek: 'purple',
   easter: 'amber',
 };
+
+/** Адзіная палітра перыядаў для вялікіх UI-блокаў і каляровых акцэнтаў. */
+export const LITURGICAL_THEME_MAP = Object.freeze({
+  ordinary: { color: '#4d8a5b', rgb: '77, 138, 91' },
+  advent: { color: '#7a57a7', rgb: '122, 87, 167' },
+  lent: { color: '#6f4a92', rgb: '111, 74, 146' },
+  holyweek: { color: '#5b3b83', rgb: '91, 59, 131' },
+  christmas: { color: '#b07a1e', rgb: '176, 122, 30' },
+  easter: { color: '#bd8a24', rgb: '189, 138, 36' },
+  default: { color: '#55707c', rgb: '85, 112, 124' },
+});

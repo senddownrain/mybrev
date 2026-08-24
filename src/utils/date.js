@@ -54,6 +54,15 @@ export function formatDateLong(date) {
 }
 
 /**
+ * Format a date without the year: "3 сакавіка".
+ * @param {Date|string} date
+ * @returns {string}
+ */
+export function formatDateDayMonth(date) {
+  return format(toDate(date), 'd MMMM', { locale: be });
+}
+
+/**
  * Format a date in short Belarusian format: "3 сак 2026".
  * @param {Date|string} date
  * @returns {string}

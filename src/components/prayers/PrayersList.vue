@@ -1,7 +1,7 @@
 <template>
   <v-container class="prayers-list-container">
     <div class="d-flex align-center justify-space-between mb-4">
-      <h1 class="text-h5 font-weight-light mb-0">{{ selectedCategory?.name || 'Малітвы' }}</h1>
+      <h1 class="prayers-page-title">{{ selectedCategory?.name || 'Малітвы' }}</h1>
       <v-chip 
         v-if="!isLoading && filteredPrayers.length > 0" 
         size="small" 
@@ -83,6 +83,39 @@
       </div>
     </div>
 
+    <form class="prayer-search-dock" role="search" @submit.prevent>
+      <PhMagnifyingGlass :size="23" class="prayer-search-icon" aria-hidden="true" />
+      <input
+        v-model="searchQuery"
+        type="search"
+        class="prayer-search-input"
+        placeholder="Пошук малітваў"
+        aria-label="Пошук малітваў"
+        autocomplete="off"
+        enterkeyhint="search"
+        @keydown.esc="searchQuery = ''"
+      />
+      <button
+        v-if="searchQuery"
+        type="button"
+        class="search-dock-action"
+        aria-label="Ачысціць пошук"
+        @click="searchQuery = ''"
+      >
+        <PhX :size="19" />
+      </button>
+      <button
+        type="button"
+        class="search-dock-action filter-dock-action"
+        :class="{ 'search-dock-action--active': selectedTags.length > 0 }"
+        :aria-label="selectedTags.length ? `Фільтр: выбрана ${selectedTags.length}` : 'Адкрыць фільтр'"
+        @click="toggleFilter"
+      >
+        <PhSlidersHorizontal :size="21" />
+        <span v-if="selectedTags.length" class="filter-count">{{ selectedTags.length }}</span>
+      </button>
+    </form>
+
     <v-btn
       v-if="authStore.isAdmin"
       icon="mdi-plus"
@@ -120,13 +153,14 @@ import { useAuthStore } from '@/stores/auth';
 import { useSettingsStore } from '@/stores/settings';
 import { useNotifier } from '@/composables/useNotifier';
 import { usePrayersFilters } from '@/composables/usePrayersFilters';
+import { PhMagnifyingGlass, PhSlidersHorizontal, PhX } from '@phosphor-icons/vue';
 
 const router = useRouter();
 const { prayers, isLoading, getTitle, getText, error, deletePrayer } = usePrayers();
 const authStore = useAuthStore();
 const settings = useSettingsStore();
 const { notifySuccess, notifyError } = useNotifier();
-const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory } = usePrayersFilters();
+const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, toggleFilter } = usePrayersFilters();
 
 const deleteDialogOpen = ref(false);
 const prayerToDelete = ref(null);
@@ -221,12 +255,102 @@ async function confirmDelete() {
 .prayers-list-container {
   max-width: 100%;
   width: 100%;
+  padding-bottom: 104px !important;
 }
 
-.search-field,
-.filter-field {
-  width: 100%;
-  max-width: 100%;
+.prayers-page-title {
+  margin: 8px 8px 0;
+  color: rgb(var(--v-theme-on-surface));
+  font-size: clamp(1.85rem, 8vw, 2.35rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.prayer-search-dock {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  left: 16px;
+  z-index: 95;
+  display: flex;
+  align-items: center;
+  width: calc(100% - 32px);
+  max-width: 480px;
+  height: 58px;
+  margin-inline: auto;
+  padding: 0 8px 0 18px;
+  border: 1px solid var(--nav-border);
+  border-radius: 29px;
+  background: var(--nav-surface);
+  color: var(--nav-on-surface);
+  box-shadow: 0 9px 28px var(--nav-shadow);
+}
+
+.prayer-search-icon {
+  flex: 0 0 auto;
+  color: var(--nav-muted);
+}
+
+.prayer-search-input {
+  min-width: 0;
+  flex: 1;
+  height: 100%;
+  padding: 0 12px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--nav-on-surface);
+  font: inherit;
+  font-size: 0.98rem;
+}
+
+.prayer-search-input::placeholder {
+  color: var(--nav-muted);
+  opacity: 1;
+}
+
+.prayer-search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search-dock-action {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--nav-muted);
+  cursor: pointer;
+}
+
+.search-dock-action:active {
+  background: var(--nav-active);
+}
+
+.search-dock-action--active {
+  background: var(--nav-active);
+  color: var(--nav-on-surface);
+}
+
+.filter-count {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  display: grid;
+  place-items: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--nav-on-surface);
+  color: var(--nav-surface);
+  font-size: 0.62rem;
+  font-weight: 750;
 }
 
 .prayer-list-item {
@@ -252,7 +376,7 @@ async function confirmDelete() {
 
 @media (max-width: 600px) {
   .prayers-list-container {
-    padding: 12px 4px !important;
+    padding: 12px 4px 104px !important;
   }
 
   .prayer-list-item {
@@ -265,22 +389,22 @@ async function confirmDelete() {
     padding-left: 4px;
   }
 
-  .search-field,
-  .filter-field {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
   .add-prayer-btn {
     margin: 16px !important;
-    bottom: 80px !important;
+    bottom: 76px !important;
   }
 }
 
 @media (max-width: 400px) {
+  .prayer-search-dock {
+    right: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+  }
+
   .add-prayer-btn {
     margin: 12px !important;
-    bottom: 76px !important;
+    bottom: 74px !important;
   }
 }
 </style>

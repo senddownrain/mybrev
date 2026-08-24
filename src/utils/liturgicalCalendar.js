@@ -209,15 +209,23 @@ export function calculateDateForContext(year, periodType, periodWeekNumber, dayO
   if (periodType === 'advent') {
     baseDate = fa.clone();
   } else if (periodType === 'christmas') {
-    const firstSunday = firstSundayAfterChristmas(christmas);
     const targetIsoWeekday = dayOfWeek === 1 ? 7 : dayOfWeek - 1;
     if (periodWeekNumber === 1) {
       const offset = (targetIsoWeekday - christmas.isoWeekday() + 7) % 7;
       return christmas.clone().add(offset, 'days').format('YYYY-MM-DD');
     }
-    return firstSunday.clone()
-      .add(targetIsoWeekday === 7 ? 7 : targetIsoWeekday, 'days')
-      .format('YYYY-MM-DD');
+    if (periodWeekNumber !== 2) return null;
+
+    // In this calendar model Christmas week 1 is the December octave and
+    // week 2 starts on 1 January. Anchor the requested weekday inside January
+    // instead of adding it to the first Sunday after Christmas (which could
+    // incorrectly return a December date for Monday–Thursday).
+    const januaryFirst = moment(`${year + 1}-01-01`, 'YYYY-MM-DD');
+    const offset = (targetIsoWeekday - januaryFirst.isoWeekday() + 7) % 7;
+    const result = januaryFirst.clone().add(offset, 'days');
+    return result.isSameOrBefore(calculateBaptismOfLordDate(year + 1), 'day')
+      ? result.format('YYYY-MM-DD')
+      : null;
   } else if (periodType === 'lent') {
     baseDate = ash.clone().add(4, 'days');
   } else if (periodType === 'holyweek') {
@@ -225,14 +233,20 @@ export function calculateDateForContext(year, periodType, periodWeekNumber, dayO
   } else if (periodType === 'easter') {
     baseDate = easter.clone();
   } else if (periodType === 'ordinary') {
-    const weeksBeforeOrd = parseInt(opts.ordintaryWeeks1) - 1;
+    const firstSegmentLastWeek = parseInt(opts.ordintaryWeeks1);
+    const secondSegmentFirstWeek = parseInt(opts.ordintaryWeeks2);
+    const weeksBeforeOrd = firstSegmentLastWeek - 1;
     const fo = ash.clone().subtract(3, 'days').subtract(weeksBeforeOrd, 'weeks');
-    if (periodWeekNumber < parseInt(opts.ordintaryWeeks1)) {
+    if (periodWeekNumber <= firstSegmentLastWeek) {
       baseDate = fo.clone();
-    } else {
+    } else if (periodWeekNumber >= secondSegmentFirstWeek) {
       const lastOrdinarySunday = fa.clone().subtract(7, 'days');
       baseDate = lastOrdinarySunday.clone().subtract(34 - periodWeekNumber, 'weeks');
       adjustedWeek = 1;
+    } else {
+      // These week numbers are skipped when Ordinary Time is interrupted by
+      // Lent and Easter; they do not have a calendar date in the given year.
+      return null;
     }
   }
 

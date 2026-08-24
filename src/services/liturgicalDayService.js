@@ -66,7 +66,7 @@ export async function getAllFeastDays() {
   logger.log(`[liturgicalDayService] Loading ${LITURGICAL_DAYS_COLLECTION}`);
   const snapshot = await retryFirestore(() => getDocs(getDaysCollection()));
   return snapshotToDocs(snapshot)
-    .filter((item) => item._feast || item._rank || item._date)
+    .filter((item) => (item._feast || item._rank || item._date) && !isSeasonalDateDocumentId(item.id))
     .map((item) => resolveDayAgainstPeriod(item, null));
 }
 

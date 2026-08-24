@@ -1,14 +1,25 @@
 <template>
   <v-container class="items-list-container">
-    <div class="date-header pa-2 mb-2" @click="toggleCalendarDialog">
-      <h2 class="text-h6 font-weight-bold text-primary text-wrap text-center">
+    <h1 class="section-page-title">Літургія</h1>
+    <button
+      type="button"
+      class="date-header"
+      :style="dateHeaderStyle"
+      aria-label="Адкрыць каляндар і выбраць дату"
+      @click="toggleCalendarDialog"
+    >
+      <span class="date-header__eyebrow">
+        <v-icon icon="mdi-calendar-blank-outline" size="16"></v-icon>
+        {{ isToday ? 'Сёння' : 'Выбраная дата' }}
+      </span>
+      <h2 class="date-header__weekday">
         {{ currentDate.format('dddd') }}
       </h2>
-      <div class="text-body-2 text-medium-emphasis text-center">
-        {{ currentDate.format('D MMMM') }}
-        <span v-if="isToday" class="today-badge">сёння</span>
-      </div>
-    </div>
+      <span class="date-header__date">
+        {{ displayDate }}
+        <v-icon class="date-header__caret" icon="mdi-chevron-down" size="20"></v-icon>
+      </span>
+    </button>
 
     <!-- Мягкий индикатор загрузки (полоска сверху) -->
     <v-progress-linear
@@ -55,24 +66,32 @@
       </v-col>
     </v-row>
 
-    <v-row v-else-if="dayOptions.length">
-      <v-col>
-        <v-list bg-color="transparent">
+    <v-row v-else-if="dayOptions.length" class="options-row">
+      <v-col class="options-column">
+        <v-list bg-color="transparent" class="day-options-list">
           <v-list-item
             v-for="option in dayOptions"
             :key="option.key"
             :to="optionRoute(option)"
-            class="mb-2"
-            border
-            rounded
+            class="day-option"
           >
             <template #prepend>
-              <v-icon :icon="getOptionIcon(option)" :color="getOptionColor(option)"></v-icon>
+              <span class="day-option__icon-wrap">
+                <v-icon
+                  :icon="getOptionIcon(option)"
+                  :color="getOptionColor(option)"
+                  size="25"
+                ></v-icon>
+              </span>
             </template>
 
-            <v-list-item-title>
+            <v-list-item-title class="day-option__title">
               {{ getOptionDisplayTitle(option) }}
             </v-list-item-title>
+
+            <template #append>
+              <v-icon class="day-option__arrow" icon="mdi-chevron-right" size="24"></v-icon>
+            </template>
           </v-list-item>
         </v-list>
 
@@ -101,7 +120,11 @@ import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { useAppBar } from '@/composables/useAppBar';
 import { logger } from '@/utils/logger';
 import { useNotifier } from '@/composables/useNotifier';
-import { LITURGICAL_OPTION_SOURCE } from '@/constants/liturgical';
+import {
+  LITURGICAL_OPTION_SOURCE,
+  LITURGICAL_THEME_MAP,
+} from '@/constants/liturgical';
+import { formatDateDayMonth } from '@/utils/date';
 
 const route = useRoute();
 const router = useRouter();
@@ -121,6 +144,25 @@ const error = ref(null);
 
 const currentDate = ref(moment().startOf('day'));
 const isToday = computed(() => currentDate.value.isSame(moment().startOf('day'), 'day'));
+const displayDate = computed(() => formatDateDayMonth(currentDate.value.toDate()));
+const currentPeriodType = computed(() => {
+  const optionWithContext = dayOptions.value.find((option) => option?.contextPeriodType);
+  const periodOption = dayOptions.value.find((option) => (
+    option?.source === LITURGICAL_OPTION_SOURCE.PERIOD && option?.day?._periodType
+  ));
+
+  return optionWithContext?.contextPeriodType
+    || periodOption?.day?._periodType
+    || dayOptions.value.find((option) => option?.day?._periodType)?.day?._periodType
+    || 'default';
+});
+const dateHeaderStyle = computed(() => {
+  const theme = LITURGICAL_THEME_MAP[currentPeriodType.value] || LITURGICAL_THEME_MAP.default;
+  return {
+    '--liturgical-color': theme.color,
+    '--liturgical-rgb': theme.rgb,
+  };
+});
 
 const getOptionDisplayTitle = (option) => {
   const title = String(option?.title || '').trim();
@@ -247,26 +289,155 @@ watch(
 
 <style scoped>
 .items-list-container {
-  max-width: 100%;
+  width: min(100%, 760px);
+  max-width: 760px;
+  padding-top: 12px;
+}
+
+.section-page-title {
+  margin: 8px 12px 22px;
+  color: rgb(var(--v-theme-on-surface));
+  font-size: clamp(1.85rem, 8vw, 2.35rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
 }
 
 .date-header {
+  position: relative;
+  display: flex;
+  width: calc(100% - 24px);
+  min-height: 166px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  margin: 0 12px 22px;
+  padding: 22px 24px;
+  overflow: hidden;
+  border: 1px solid var(--nav-border);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 92% 14%, rgba(var(--liturgical-rgb), 0.28) 0, rgba(var(--liturgical-rgb), 0.28) 42px, transparent 43px),
+    linear-gradient(145deg, rgba(var(--liturgical-rgb), 0.13), rgba(var(--liturgical-rgb), 0.035) 66%),
+    var(--nav-surface);
+  color: var(--nav-on-surface);
+  box-shadow: 0 8px 28px var(--nav-button-shadow);
   cursor: pointer;
+  font: inherit;
+  text-align: left;
   user-select: none;
-  padding-top: 8px !important;
-  padding-bottom: 4px !important;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
 
-.today-badge {
-  display: inline-block;
-  margin-left: 6px;
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  background: rgba(var(--v-theme-primary), 0.12);
-  color: rgb(var(--v-theme-primary));
-  vertical-align: middle;
+.date-header:hover {
+  border-color: rgba(var(--liturgical-rgb), 0.34);
+  box-shadow: 0 10px 32px var(--nav-shadow);
+}
+
+.date-header:active {
+  transform: scale(0.985);
+}
+
+.date-header:focus-visible {
+  outline: 3px solid rgba(var(--liturgical-rgb), 0.28);
+  outline-offset: 3px;
+}
+
+.date-header__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  color: var(--liturgical-color);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.date-header__weekday {
+  max-width: 100%;
+  margin: 0;
+  font-size: clamp(2.15rem, 9vw, 3.25rem);
+  font-weight: 730;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  overflow-wrap: anywhere;
+}
+
+.date-header__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: 10px;
+  color: var(--nav-muted);
+  font-size: clamp(1.08rem, 4.6vw, 1.28rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.date-header__caret {
+  margin-left: 2px;
+  color: var(--liturgical-color);
+}
+
+.options-row {
+  margin-inline: 0 !important;
+}
+
+.options-column {
+  padding: 0 12px !important;
+}
+
+.day-options-list {
+  display: grid;
+  gap: 12px;
+  padding: 0 !important;
+}
+
+.day-option {
+  min-height: 82px;
+  padding: 14px 14px 14px 16px !important;
+  border: 1px solid var(--nav-border);
+  border-radius: 22px !important;
+  background: var(--nav-surface);
+  color: var(--nav-on-surface);
+  box-shadow: 0 3px 14px var(--nav-button-shadow);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.day-option:hover {
+  border-color: rgba(var(--v-theme-primary), 0.2);
+  box-shadow: 0 7px 22px var(--nav-button-shadow);
+}
+
+.day-option:active {
+  transform: scale(0.988);
+}
+
+.day-option__icon-wrap {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid var(--nav-border);
+  border-radius: 16px;
+  background: var(--nav-active);
+}
+
+.day-option__title {
+  padding-inline: 4px 8px;
+  font-size: clamp(1.04rem, 4vw, 1.17rem) !important;
+  font-weight: 650;
+  line-height: 1.36 !important;
+  letter-spacing: -0.01em;
+}
+
+.day-option__arrow {
+  color: var(--nav-muted);
 }
 
 @media (max-width: 600px) {
@@ -274,26 +445,22 @@ watch(
     padding: 8px 4px !important;
   }
 
-  .v-list-item {
-    padding: 12px 8px !important;
-    margin-bottom: 8px !important;
+  .section-page-title {
+    margin: 10px 12px 22px;
   }
 
-  .v-list-item-title {
-    font-size: 0.95rem !important;
-    line-height: 1.4 !important;
-    white-space: normal !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-    word-break: break-word !important;
-    text-overflow: unset !important;
-    overflow: visible !important;
+  .date-header {
+    min-height: 158px;
+    padding: 20px;
   }
 
+  .day-option {
+    min-height: 80px;
+  }
 }
 
 /* Prevent text truncation in list items */
-:deep(.v-list-item-title) {
+:deep(.day-option .v-list-item-title) {
   white-space: normal !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
@@ -301,5 +468,43 @@ watch(
   text-overflow: unset !important;
   overflow: visible !important;
   max-width: 100% !important;
+}
+
+:deep(.day-option .v-list-item__prepend) {
+  align-self: center;
+  margin-inline-end: 12px;
+}
+
+:deep(.day-option .v-list-item__append) {
+  align-self: center;
+}
+
+@media (max-width: 359px) {
+  .date-header {
+    width: calc(100% - 16px);
+    min-height: 148px;
+    margin-inline: 8px;
+    padding: 18px;
+    border-radius: 24px;
+  }
+
+  .options-column {
+    padding-inline: 8px !important;
+  }
+
+  .day-option {
+    padding-inline: 12px 10px !important;
+    border-radius: 20px !important;
+  }
+
+  .day-option__icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  :deep(.day-option .v-list-item__prepend) {
+    margin-inline-end: 8px;
+  }
 }
 </style>

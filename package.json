@@ -16,6 +16,9 @@
     "audit:parsed-readings-db": "node scripts/audit-parsed-readings-database.mjs",
     "audit:parsed-readings-years": "node scripts/audit-parsed-readings-year-coverage.mjs",
     "audit:parsed-readings-collisions": "node scripts/audit-parsed-data-collisions.mjs",
+    "audit:parsed-readings-content": "node scripts/audit-parsed-readings-content-integrity.mjs",
+    "db:repair-parsed-readings-content": "node scripts/repair-parsed-readings-content-integrity.mjs",
+    "db:repair-parsed-readings-cycles": "node scripts/repair-parsed-readings-cycle-variants.mjs",
     "db:resolve-parsed-readings-collisions": "node scripts/resolve-parsed-data-collisions.mjs",
     "db:normalize-parsed-readings": "node scripts/normalize-parsed-data-fields.mjs",
     "db:prune-empty-parsed-readings": "node scripts/prune-empty-parsed-data.mjs",
@@ -36,7 +39,7 @@
     "audit:fixed-feasts": "node scripts/audit-fixed-feasts.mjs",
     "test:audit": "node --test tests/liturgical-audit.test.mjs",
     "test:fixed-feasts": "node --test tests/fixed-feasts-audit.test.mjs",
-    "test:parsed-readings": "node --test tests/parsed-readings-identity.test.mjs",
+    "test:parsed-readings": "node --test tests/parsed-readings-identity.test.mjs tests/parsed-readings-content-integrity.test.mjs",
     "test:ordinary": "node patchs/test-ordinary-period.cjs",
     "test:lent": "node patchs/test-lent-period.cjs",
     "db:migrate-olddays-fixed": "node patchs/migrate-olddays-to-daystmp-fixed.js"

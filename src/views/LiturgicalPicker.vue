@@ -1,54 +1,71 @@
 <template>
-  <v-container>
-    <h1 class="text-h5 font-weight-light mb-4">Літургічны каляндар на год {{ selectedYear }}</h1>
+  <v-container class="picker-page">
+    <header class="picker-hero">
+      <div class="picker-eyebrow">Літургічны каляндар</div>
+      <h1>Знайсці дзень</h1>
+      <p>
+        Выберыце месца ў літургічным годзе або канкрэтнае свята.
+        <span v-if="readingMode">Адкрыем чытанні для знойдзенай даты.</span>
+      </p>
+    </header>
 
-    <!-- Блок выбора года -->
-    <div class="d-flex align-center mb-4">
-      <div class="text-h6 mr-2">Год {{ selectedYear }}</div>
-      <v-btn
-        icon="mdi-pencil"
-        size="small"
-        variant="text"
-        @click="isYearEditing = !isYearEditing"
-        :color="isYearEditing ? 'primary' : 'default'"
+    <section class="picker-controls" aria-label="Налады пошуку">
+      <div class="year-control">
+        <div>
+          <span class="control-label">Каляндарны год</span>
+          <strong>{{ selectedYear }}</strong>
+        </div>
+        <v-select
+          v-model="selectedYear"
+          :items="availableYears"
+          variant="solo"
+          flat
+          hide-details
+          density="compact"
+          aria-label="Выбраць каляндарны год"
+          class="year-select"
+        />
+      </div>
+
+      <div class="mode-note" :class="{ 'mode-note--readings': readingMode }">
+        <PhBookOpenText v-if="readingMode" :size="20" />
+        <PhHandsPraying v-else :size="20" />
+        <span>{{ readingMode ? 'Рэжым чытанняў' : 'Рэжым літургічных гадзін' }}</span>
+      </div>
+    </section>
+
+    <nav class="picker-tabs" aria-label="Спосаб пошуку">
+      <button
+        type="button"
+        :class="{ 'picker-tab--active': activeTab === 'period' }"
+        @click="activeTab = 'period'"
       >
-        <v-icon size="small">mdi-pencil</v-icon>
-      </v-btn>
-    </div>
+        <PhCalendarDots :size="20" />
+        Па перыядзе
+      </button>
+      <button
+        type="button"
+        :class="{ 'picker-tab--active': activeTab === 'feasts' }"
+        @click="activeTab = 'feasts'"
+      >
+        <PhStarFour :size="20" />
+        Па свяце
+      </button>
+    </nav>
 
-    <!-- Дропдаун выбора года (показывается только в режиме редактирования) -->
-    <v-select
-      v-if="isYearEditing"
-      v-model="selectedYear"
-      :items="availableYears"
-      label="Выберите год"
-      variant="outlined"
-      density="compact"
-      class="mb-4"
-      hide-details
-      @update:model-value="isYearEditing = false"
-    ></v-select>
-
-    <!-- Вкладки -->
-    <v-tabs v-model="activeTab" class="mb-4">
-      <v-tab value="period">Перыяд</v-tab>
-      <v-tab value="feasts">Святы</v-tab>
-    </v-tabs>
-
-    <!-- Вкладка Период -->
-    <v-window v-model="activeTab">
+    <v-window v-model="activeTab" class="picker-window">
       <v-window-item value="period">
         <PeriodPicker
           :year="selectedYear"
-          @day-selected="handleDaySelected"
+          :mode="readingMode ? 'readings' : 'oras'"
+          @day-selected="openSelection"
         />
       </v-window-item>
-
-      <!-- Вкладка Святы -->
       <v-window-item value="feasts">
         <FeastsPicker
           :year="selectedYear"
-          @feast-selected="handleFeastSelected"
+          :mode="readingMode ? 'readings' : 'oras'"
+          @feast-selected="openSelection"
         />
       </v-window-item>
     </v-window>
@@ -56,63 +73,216 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useCalendarStore } from '@/stores/calendar';
 import PeriodPicker from '@/components/liturgical/PeriodPicker.vue';
 import FeastsPicker from '@/components/liturgical/FeastsPicker.vue';
 import moment from '@/utils/moment-be';
+import {
+  PhBookOpenText,
+  PhCalendarDots,
+  PhHandsPraying,
+  PhStarFour,
+} from '@phosphor-icons/vue';
 
-
+const route = useRoute();
 const router = useRouter();
 const calendarStore = useCalendarStore();
 
 const selectedYear = ref(new Date().getFullYear());
 const activeTab = ref('period');
-const isYearEditing = ref(false);
-
-// Вычисляем текущий литургический год
-const currentLiturgicalYear = computed(() => {
-  const now = moment();
-  const year = now.year();
-  // Литургический год начинается с первого воскресенья Адвента
-  // Упрощенно: если мы после сентября, то литургический год уже начался
-  if (now.month() >= 8) { // Сентябрь = 8
-    return year + 1;
-  }
-  return year;
-});
-
-// Получаем доступные годы из Firestore
 const availableYears = ref([]);
+const readingMode = computed(() => route.query.mode === 'readings');
+
+watch(
+  () => route.query.tab,
+  (tab) => {
+    if (tab === 'period' || tab === 'feasts') activeTab.value = tab;
+  },
+  { immediate: true },
+);
 
 onMounted(async () => {
-  selectedYear.value = currentLiturgicalYear.value;
-  // Загружаем доступные годы из Firestore
+  const currentYear = new Date().getFullYear();
   const years = await calendarStore.getAvailableYears();
-  if (years.length > 0) {
-    availableYears.value = years;
-    // Если текущий литургический год не в списке, добавляем его
-    if (!years.includes(currentLiturgicalYear.value)) {
-      availableYears.value.unshift(currentLiturgicalYear.value);
-    }
-  } else {
-    // Fallback: если нет годов в базе, используем диапазон
-    const currentYear = new Date().getFullYear();
-    availableYears.value = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
-  }
+  availableYears.value = [...new Set([currentYear, ...years])].sort((a, b) => b - a);
+  selectedYear.value = availableYears.value.includes(currentYear)
+    ? currentYear
+    : availableYears.value[0];
 });
 
-function handleDaySelected({ dayId, date }) {
-  if (dayId && date) {
-    router.push(`/day/${date}/ora/${dayId}`);
-  }
-}
+function openSelection({ dayId, date }) {
+  if (!date || (!readingMode.value && !dayId)) return;
 
-function handleFeastSelected({ dayId, date }) {
-  if (dayId && date) {
-    router.push(`/day/${date}/ora/${dayId}`);
+  if (readingMode.value) {
+    const isToday = moment(date, 'YYYY-MM-DD').isSame(moment(), 'day');
+    router.push({
+      name: isToday ? 'Readings' : 'ReadingsByDate',
+      params: isToday ? {} : { date },
+      query: dayId ? { dayId } : {},
+    });
+    return;
   }
+
+  router.push({ name: 'oras', params: { day: date, id: dayId } });
 }
 </script>
 
+<style scoped>
+.picker-page {
+  width: min(100%, 780px);
+  padding: 10px 18px 36px;
+}
+
+.picker-hero {
+  padding: 8px 4px 20px;
+}
+
+.picker-eyebrow,
+.control-label {
+  color: var(--nav-muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.picker-hero h1 {
+  margin: 5px 0 8px;
+  color: rgb(var(--v-theme-on-surface));
+  font-size: clamp(2rem, 9vw, 2.7rem);
+  font-weight: 750;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+}
+
+.picker-hero p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--nav-muted);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.picker-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.year-control,
+.mode-note {
+  min-height: 66px;
+  border: 1px solid var(--nav-border);
+  background: var(--nav-surface);
+  box-shadow: 0 5px 20px var(--nav-button-shadow);
+}
+
+.year-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 10px 10px 18px;
+  border-radius: 22px;
+}
+
+.year-control > div:first-child {
+  display: grid;
+  gap: 1px;
+}
+
+.year-control strong {
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.year-select {
+  max-width: 112px;
+}
+
+.year-select :deep(.v-field) {
+  border-radius: 16px;
+  background: var(--nav-active) !important;
+  box-shadow: none !important;
+}
+
+.year-select :deep(.v-field__input) {
+  min-height: 44px;
+  padding-inline-start: 14px;
+  font-weight: 700;
+}
+
+.mode-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px;
+  border-radius: 22px;
+  color: var(--nav-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.mode-note--readings {
+  color: var(--nav-on-surface);
+}
+
+.picker-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--nav-border);
+  border-radius: 22px;
+  background: var(--nav-surface);
+  box-shadow: 0 5px 20px var(--nav-button-shadow);
+}
+
+.picker-tabs button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  border: 0;
+  border-radius: 17px;
+  background: transparent;
+  color: var(--nav-muted);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 720;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.16s ease;
+}
+
+.picker-tabs button:active {
+  transform: scale(0.98);
+}
+
+.picker-tabs .picker-tab--active {
+  background: var(--nav-active);
+  color: var(--nav-on-surface);
+}
+
+.picker-window {
+  margin-top: 18px;
+  overflow: visible;
+}
+
+@media (max-width: 560px) {
+  .picker-page {
+    padding-inline: 14px;
+  }
+
+  .picker-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .mode-note {
+    min-height: 48px;
+  }
+}
+</style>

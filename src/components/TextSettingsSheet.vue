@@ -1,9 +1,15 @@
 <template>
   <v-bottom-sheet v-model="isSettingsSheetOpen" inset>
-    <v-card class="pa-2" rounded="t-xl">
-      <v-list lines="one" subheader>
-        <v-list-subheader class="text-center text-h6 font-weight-regular">Налады выгляду</v-list-subheader>
+    <v-card class="text-settings-card" rounded="t-xl">
+      <div class="text-settings-header">
+        <div>
+          <div class="text-settings-eyebrow">Чытанне</div>
+          <div class="text-settings-title">Выгляд тэксту</div>
+        </div>
+        <v-btn icon="mdi-close" variant="text" size="small" aria-label="Закрыць налады" @click="toggleSettingsSheet" />
+      </div>
 
+      <v-list lines="one" subheader>
         <v-list-item title="Цёмная тэма">
           <template v-slot:prepend>
             <v-icon>mdi-theme-light-dark</v-icon>
@@ -25,20 +31,22 @@
           <template v-slot:prepend>
             <v-icon>mdi-format-font-size-increase</v-icon>
           </template>
-          <div class="d-flex align-center">
+          <div class="sheet-scale-control">
             <v-btn 
               icon="mdi-minus" 
-              variant="text" 
+              variant="flat"
+              class="sheet-scale-button"
               size="small" 
               @click="settings.decreaseFontSize" 
               :disabled="settings.fontSizeMultiplier <= 0.7"
             ></v-btn>
-            <span class="mx-2 font-weight-bold" style="width: 50px; text-align: center;">
+            <span class="sheet-scale-value">
               {{ Math.round(settings.fontSizeMultiplier * 100) }}%
             </span>
             <v-btn 
               icon="mdi-plus" 
-              variant="text" 
+              variant="flat"
+              class="sheet-scale-button"
               size="small" 
               @click="settings.increaseFontSize" 
               :disabled="settings.fontSizeMultiplier >= 1.8"
@@ -68,7 +76,7 @@
               :key="font.value" 
               :value="font.value" 
               filter 
-              variant="outlined" 
+              variant="flat"
               class="ma-1"
               :style="{ fontFamily: font.value }"
             >
@@ -98,3 +106,73 @@ const fontOptions = ref([
   { title: 'Comfortaa', value: 'Comfortaa, sans-serif' },
 ]);
 </script>
+
+<style scoped>
+.text-settings-card {
+  padding: 10px 12px 16px;
+  border: 1px solid var(--nav-border);
+  background: var(--nav-surface) !important;
+  color: var(--nav-on-surface);
+  box-shadow: 0 -12px 40px var(--nav-shadow) !important;
+}
+
+.text-settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 10px 14px;
+}
+
+.text-settings-eyebrow {
+  color: var(--nav-muted);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.text-settings-title {
+  margin-top: 2px;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.text-settings-card :deep(.v-list) {
+  background: transparent !important;
+  color: inherit;
+}
+
+.text-settings-card :deep(.v-list-item) {
+  border-radius: 16px;
+}
+
+.sheet-scale-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sheet-scale-button {
+  background: var(--nav-active) !important;
+  color: var(--nav-on-surface) !important;
+}
+
+.sheet-scale-value {
+  width: 50px;
+  color: var(--nav-on-surface);
+  font-weight: 750;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.text-settings-card :deep(.v-chip) {
+  background: transparent !important;
+  color: var(--nav-on-surface) !important;
+  box-shadow: inset 0 0 0 1px var(--nav-border);
+}
+
+.text-settings-card :deep(.v-chip--selected) {
+  background: var(--nav-active) !important;
+  box-shadow: none;
+}
+</style>

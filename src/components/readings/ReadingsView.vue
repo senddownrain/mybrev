@@ -1,5 +1,6 @@
 <template>
   <v-container class="readings-container">
+    <h1 class="section-page-title">Чытанні</h1>
     <div v-if="isLoading" class="text-center py-8">
       <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
       <p class="mt-4 text-grey">Загрузка чытанняў...</p>
@@ -64,6 +65,15 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
 <style scoped>
 .readings-container {
   max-width: 100%;
+}
+
+.section-page-title {
+  margin: 8px 12px 22px;
+  color: rgb(var(--v-theme-on-surface));
+  font-size: clamp(1.85rem, 8vw, 2.35rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
 }
 
 .readings-content {

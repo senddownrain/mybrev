@@ -157,6 +157,23 @@ test('uses the Sunday cycle for A/B/C feasts celebrated on weekdays', () => {
   );
 });
 
+test('keeps an independent rite variant alongside the selected feast cycle', () => {
+  const documents = [
+    { id: 'palms-A', _feast: 'feast-palmsunday', year: 'A' },
+    { id: 'palms-B', _feast: 'feast-palmsunday', year: 'B' },
+    {
+      id: 'palms-procession',
+      _feast: 'feast-palmsunday',
+      _variant: 'procession',
+      year: null,
+    },
+  ];
+  assert.deepEqual(
+    selectReadingLectionaryVariants(documents, { cycle: '2', sundayCycle: 'A' }).map((item) => item.id),
+    ['palms-A', 'palms-procession'],
+  );
+});
+
 test('selects an exact calendar-weekday variant before a generic date reading', () => {
   const documents = [
     { id: 'weekday', _date: '05.01' },

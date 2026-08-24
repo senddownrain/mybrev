@@ -10,6 +10,7 @@
       flat
       color="transparent"
       class="floating-app-bar"
+      :class="{ 'floating-app-bar--behind-drawer': isDrawerOpen }"
     >
       <!-- Кнопка назад для страницы редактирования молитвы (PrayerEdit) -->
       <v-app-bar-nav-icon
@@ -48,6 +49,7 @@
       <v-app-bar-title
         v-if="!isPrayerEditPage && !(isPrayerViewPage && uiStore.prayerIsEditing)"
         class="app-title-clickable"
+        :class="{ 'app-title-clickable--visible': isAppBarTitleVisible }"
       >
         {{ layoutTitle }}
       </v-app-bar-title>
@@ -57,44 +59,10 @@
         {{ layoutTitle }}
       </v-app-bar-title>
 
-      <!-- Кнопки поиска и фильтра для страницы списка молитв -->
-      <template v-if="isPrayersListPage && !isSearchExpanded && !isFilterExpanded && !(isPrayerViewPage && uiStore.prayerIsEditing) && !isPrayerEditPage">
-        <v-btn
-          icon
-          class="top-circle-btn top-action-start"
-          :class="{ 'top-circle-btn--active': searchQuery }"
-          :color="searchQuery ? 'primary' : 'default'"
-          variant="flat"
-          @click="toggleSearch"
-          aria-label="Пошук"
-        >
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-
-        <v-btn
-          icon
-          class="top-circle-btn"
-          :class="{ 'top-circle-btn--active': selectedTags.length > 0 }"
-          :color="selectedTags.length > 0 ? 'primary' : 'default'"
-          variant="flat"
-          @click="toggleFilter"
-          aria-label="Фільтр"
-        >
-          <v-icon>mdi-filter</v-icon>
-        </v-btn>
-      </template>
-
-      <!-- Кнопки закрытия для поиска и фильтра -->
-      <v-btn
-        v-if="isPrayersListPage && (isSearchExpanded || isFilterExpanded) && !(isPrayerViewPage && uiStore.prayerIsEditing) && !isPrayerEditPage"
-        icon
-        class="top-circle-btn top-action-start"
-        variant="flat"
-        @click="closeSearchAndFilter"
-        aria-label="Закрыць"
-      >
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
+      <TextScaleControl
+        v-if="showTextScaleControl"
+        class="top-action-start"
+      />
 
       <!-- Кнопки для страницы редактирования молитвы (PrayerEdit) -->
       <template v-if="isPrayerEditPage">
@@ -127,16 +95,6 @@
       <!-- Кнопки для страницы просмотра молитвы (не в режиме редактирования) -->
       <template v-else-if="isPrayerViewPage">
         <v-btn
-          icon
-          class="top-circle-btn top-action-start"
-          variant="flat"
-          @click="toggleSettingsSheet"
-          aria-label="Налады тэксту"
-        >
-          <v-icon>mdi-format-font</v-icon>
-        </v-btn>
-
-        <v-btn
           v-if="authStore.isAdmin"
           icon
           class="top-circle-btn"
@@ -161,58 +119,33 @@
 
     <TextSettingsSheet />
 
-    <!-- Bottom sheet для фильтра -->
+    <!-- Compact tag filter used by the prayer search dock -->
     <v-bottom-sheet v-model="isFilterExpanded" :scrim="false">
-      <v-card rounded="t-lg">
-        <v-card-title class="d-flex align-center justify-space-between pa-4">
-          <span class="text-h6">Фільтр па тэгах</span>
-          <v-btn icon="mdi-close" variant="text" size="small" @click="closeFilter"></v-btn>
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-card-text class="pa-4">
-          <v-combobox
-            v-model="selectedTags"
-            :items="allTags"
-            label="Выберыце тэгі"
-            multiple
-            chips
-            clearable
-            variant="outlined"
-            hide-details
-            class="mb-4"
-          ></v-combobox>
-          <div class="d-flex justify-end ga-2">
-            <v-btn variant="text" @click="clearFilter">Ачысціць</v-btn>
-            <v-btn color="primary" variant="flat" @click="applyFilter">Ужыць</v-btn>
+      <v-card rounded="t-xl" class="prayer-filter-sheet">
+        <v-card-title class="filter-sheet-header">
+          <div>
+            <div class="filter-sheet-eyebrow">Малітвы</div>
+            <div class="filter-sheet-title">Фільтр па тэгах</div>
           </div>
-        </v-card-text>
-      </v-card>
-    </v-bottom-sheet>
-
-    <!-- Bottom sheet для поиска -->
-    <v-bottom-sheet v-model="isSearchExpanded" :scrim="false">
-      <v-card rounded="t-lg">
-        <v-card-title class="d-flex align-center justify-space-between pa-4">
-          <span class="text-h6">Пошук малітваў</span>
-          <v-btn icon="mdi-close" variant="text" size="small" @click="closeSearch"></v-btn>
+          <v-btn icon="mdi-close" variant="text" size="small" aria-label="Закрыць фільтр" @click="closeFilter"></v-btn>
         </v-card-title>
-        <v-divider></v-divider>
-        <v-card-text class="pa-4">
-          <v-text-field
-            v-model="searchQuery"
-            label="Увядзіце тэкст для пошуку"
-            prepend-inner-icon="mdi-magnify"
-            variant="outlined"
-            hide-details
-            density="comfortable"
-            autofocus
-            clearable
-            @click:clear="searchQuery = ''"
-            @keydown.enter="closeSearch"
-          ></v-text-field>
-          <div class="d-flex justify-end ga-2 mt-4">
-            <v-btn variant="text" @click="clearSearch">Ачысціць</v-btn>
-            <v-btn color="primary" variant="flat" @click="closeSearch">Шукаць</v-btn>
+        <v-card-text class="filter-sheet-content">
+          <p class="filter-sheet-hint">Можна выбраць некалькі тэгаў</p>
+          <v-chip-group v-model="selectedTags" multiple column class="filter-chip-group">
+            <v-chip
+              v-for="tag in filterTags"
+              :key="tag"
+              :value="tag"
+              filter
+              variant="flat"
+              class="filter-chip"
+            >
+              {{ tag }}
+            </v-chip>
+          </v-chip-group>
+          <div class="filter-sheet-actions">
+            <v-btn variant="text" rounded="pill" :disabled="selectedTags.length === 0" @click="clearFilter">Ачысціць</v-btn>
+            <v-btn color="primary" variant="flat" rounded="pill" min-width="112" @click="applyFilter">Гатова</v-btn>
           </div>
         </v-card-text>
       </v-card>
@@ -229,25 +162,27 @@ import { useAppBar } from '@/composables/useAppBar.js';
 import { useUiStore } from '@/stores/ui.js';
 import NavigationDrawer from './NavigationDrawer.vue';
 import TextSettingsSheet from '@/components/TextSettingsSheet.vue';
+import TextScaleControl from '@/components/TextScaleControl.vue';
 import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { usePrayers } from '@/composables/usePrayers.js';
 import { useAuthStore } from '@/stores/auth.js';
+import { useCollapsingAppBar } from '@/composables/useCollapsingAppBar.js';
 
-const { isDrawerOpen, toggleSettingsSheet } = useAppBar();
+const { isDrawerOpen } = useAppBar();
 const uiStore = useUiStore();
 const settings = useSettingsStore();
 const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
 
-const { searchQuery, selectedTags, selectedCategory, isSearchExpanded, isFilterExpanded, toggleSearch, toggleFilter } = usePrayersFilters();
+const { selectedTags, selectedCategory, isFilterExpanded } = usePrayersFilters();
 const { allTags } = usePrayers();
-
-const isPrayersListPage = computed(() => {
-  return route.name === 'Prayers' || route.name === 'PrayersList';
-});
+const { isAppBarTitleVisible } = useCollapsingAppBar();
+const filterTags = computed(() => (
+  [...new Set(allTags.value || [])].sort((a, b) => a.localeCompare(b, 'be', { sensitivity: 'base' }))
+));
 
 const isPrayerViewPage = computed(() => {
   return route.name === 'PrayerView' || route.name === 'PrayerEdit';
@@ -255,6 +190,11 @@ const isPrayerViewPage = computed(() => {
 
 const isPrayerEditPage = computed(() => {
   return route.name === 'PrayerEdit' || route.name === 'PrayerAdd';
+});
+
+const showTextScaleControl = computed(() => {
+  if (isPrayerViewPage.value) return !uiStore.prayerIsEditing;
+  return route.name === 'Readings' || route.name === 'ReadingsByDate';
 });
 
 const layoutTitle = computed(() => {
@@ -265,7 +205,7 @@ const layoutTitle = computed(() => {
     case 'SelectedDay':
       return 'Літургія';
     case 'LiturgicalPicker':
-      return 'Выбраць перыяд';
+      return route.query.mode === 'readings' ? 'Знайсці чытанні' : 'Знайсці дзень';
     case 'Prayers':
     case 'PrayersList':
       return selectedCategory.value?.name || 'Малітвы';
@@ -315,38 +255,31 @@ const goBack = () => {
   }
 };
 
-const closeSearchAndFilter = () => {
-  isSearchExpanded.value = false;
-  isFilterExpanded.value = false;
-};
-
 const closeFilter = () => {
   isFilterExpanded.value = false;
 };
 
 const clearFilter = () => {
   selectedTags.value = [];
-  isFilterExpanded.value = false;
 };
 
 const applyFilter = () => {
   isFilterExpanded.value = false;
 };
 
-const closeSearch = () => {
-  isSearchExpanded.value = false;
-};
-
-const clearSearch = () => {
-  searchQuery.value = '';
-  isSearchExpanded.value = false;
-};
 </script>
 
 <style scoped>
 .floating-app-bar {
   background: transparent !important;
   box-shadow: none !important;
+  transition: opacity 0.16s ease;
+}
+
+.floating-app-bar--behind-drawer {
+  z-index: 1 !important;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .floating-app-bar :deep(.v-toolbar__content) {
@@ -368,16 +301,16 @@ const clearSearch = () => {
   height: 48px !important;
   min-width: 48px !important;
   flex: 0 0 48px !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid var(--nav-border) !important;
   border-radius: 50% !important;
-  background: #1f1f1f !important;
-  color: rgba(255, 255, 255, 0.9) !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
+  background: var(--nav-surface) !important;
+  color: var(--nav-on-surface) !important;
+  box-shadow: 0 2px 9px var(--nav-button-shadow) !important;
   transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease !important;
 }
 
 .top-circle-btn:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 3px 12px var(--nav-button-shadow) !important;
 }
 
 .top-circle-btn:active {
@@ -386,13 +319,13 @@ const clearSearch = () => {
 }
 
 .top-circle-btn--confirm {
-  background: rgb(var(--v-theme-primary)) !important;
-  color: rgb(var(--v-theme-on-primary)) !important;
+  background: var(--nav-active) !important;
+  color: var(--nav-on-surface) !important;
 }
 
 .top-circle-btn--active {
-  background: rgb(var(--v-theme-primary)) !important;
-  color: rgb(var(--v-theme-on-primary)) !important;
+  background: var(--nav-active) !important;
+  color: var(--nav-on-surface) !important;
 }
 
 .top-action-start {
@@ -411,6 +344,14 @@ const clearSearch = () => {
   text-align: center;
   transform: translateX(-50%);
   pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.app-title-clickable--visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -446,6 +387,66 @@ const clearSearch = () => {
   .v-app-bar-nav-icon {
     margin-left: 0 !important;
   }
+}
+
+.prayer-filter-sheet {
+  border: 1px solid var(--nav-border);
+  background: var(--nav-surface) !important;
+  color: var(--nav-on-surface);
+  box-shadow: 0 -12px 40px var(--nav-shadow) !important;
+}
+
+.filter-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 8px !important;
+}
+
+.filter-sheet-eyebrow {
+  color: var(--nav-muted);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.filter-sheet-title {
+  margin-top: 2px;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.filter-sheet-content {
+  padding: 8px 20px 18px !important;
+}
+
+.filter-sheet-hint {
+  margin: 0 0 10px;
+  color: var(--nav-muted);
+  font-size: 0.82rem;
+}
+
+.filter-chip-group {
+  max-height: min(42vh, 320px);
+  overflow-y: auto;
+}
+
+.filter-chip {
+  background: var(--nav-active) !important;
+  color: var(--nav-on-surface) !important;
+}
+
+.filter-chip:not(.v-chip--selected) {
+  background: transparent !important;
+  box-shadow: inset 0 0 0 1px var(--nav-border);
+}
+
+.filter-sheet-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 @media (max-width: 359px) {

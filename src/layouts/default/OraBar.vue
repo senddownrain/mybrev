@@ -4,18 +4,27 @@
       <PhArrowLeft :size="21" />
     </v-app-bar-nav-icon>
 
-    <v-app-bar-title class="ora-bar-title">{{ topBarTitle }}</v-app-bar-title>
+    <v-app-bar-title
+      class="ora-bar-title"
+      :class="{ 'ora-bar-title--visible': isAppBarTitleVisible }"
+    >
+      {{ topBarTitle }}
+    </v-app-bar-title>
 
-    <v-btn icon variant="flat" class="ora-circle-btn ora-action-start" aria-label="Налады тэксту" @click="toggleSettingsSheet">
-      <PhTextAa :size="21" />
-    </v-btn>
+    <TextScaleControl
+      v-if="showTextScaleControl"
+      class="ora-action-start"
+    />
 
     <v-btn
       v-if="auth && auth.isAdmin"
       icon
       variant="flat"
       class="ora-circle-btn"
-      :class="{ 'ora-circle-btn--confirm': isEditingReading }"
+      :class="{
+        'ora-circle-btn--confirm': isEditingReading,
+        'ora-action-start': !showTextScaleControl,
+      }"
       :aria-label="isEditingReading ? 'Захаваць' : 'Рэдагаваць'"
       @click="onEditClick"
     >
@@ -28,18 +37,20 @@
 <script setup>
 import { computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useAppBar } from '@/composables/useAppBar';
 import { useAuthStore } from '@/stores/auth.js';
 import { useUiStore } from '@/stores/ui';
-import { PhArrowLeft, PhCheck, PhPencilSimple, PhTextAa } from '@phosphor-icons/vue';
+import { useCollapsingAppBar } from '@/composables/useCollapsingAppBar.js';
+import { PhArrowLeft, PhCheck, PhPencilSimple } from '@phosphor-icons/vue';
+import TextScaleControl from '@/components/TextScaleControl.vue';
 
 const router = useRouter();
 const route = useRoute();
-const { toggleSettingsSheet } = useAppBar();
 const auth = useAuthStore();
 const uiStore = useUiStore();
+const { isAppBarTitleVisible } = useCollapsingAppBar();
 
 const isEditingReading = computed(() => route.name === 'ReadingEditor');
+const showTextScaleControl = computed(() => route.name !== 'oras' && route.name !== 'ReadingEditor');
 
 const isOnReadingRoute = computed(() => {
   const name = route.name;
@@ -132,11 +143,11 @@ const onEditClick = () => {
   height: 48px !important;
   min-width: 48px !important;
   flex: 0 0 48px !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid var(--nav-border) !important;
   border-radius: 50% !important;
-  background: #1f1f1f !important;
-  color: rgba(255, 255, 255, 0.9) !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
+  background: var(--nav-surface) !important;
+  color: var(--nav-on-surface) !important;
+  box-shadow: 0 2px 9px var(--nav-button-shadow) !important;
   transition: transform 0.16s ease, opacity 0.16s ease !important;
 }
 
@@ -146,8 +157,8 @@ const onEditClick = () => {
 }
 
 .ora-circle-btn--confirm {
-  background: rgb(var(--v-theme-primary)) !important;
-  color: rgb(var(--v-theme-on-primary)) !important;
+  background: var(--nav-active) !important;
+  color: var(--nav-on-surface) !important;
 }
 
 .ora-action-start {
@@ -168,6 +179,14 @@ const onEditClick = () => {
   white-space: nowrap;
   transform: translateX(-50%);
   pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ora-bar-title--visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 @media (max-width: 359px) {

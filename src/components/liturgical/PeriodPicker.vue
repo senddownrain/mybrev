@@ -1,323 +1,554 @@
 <template>
-  <div>
-    <!-- Блок выбора периода -->
-    <div class="mb-8">
-      <h3 class="text-h6 mb-4 font-weight-medium">Літургічны перыяд</h3>
-      <v-chip-group
-        v-model="selectedPeriod"
-        mandatory
-        column
-        class="period-chip-group"
-      >
-        <v-chip
+  <div class="period-picker">
+    <section class="picker-step">
+      <div class="step-heading">
+        <span>01</span>
+        <div>
+          <h2>Літургічны перыяд</h2>
+          <p>Спачатку выберыце частку літургічнага года</p>
+        </div>
+      </div>
+      <div class="choice-grid choice-grid--periods">
+        <button
           v-for="period in periodOptions"
           :key="period.value"
-          :value="period.value"
-          :color="period.color"
-          filter
-          variant="outlined"
-          size="large"
-          class="ma-2 period-chip"
+          type="button"
+          class="choice-button period-button"
+          :class="[
+            `period-button--${period.value}`,
+            { 'choice-button--active': selectedPeriod === period.value },
+          ]"
+          @click="selectedPeriod = period.value"
         >
+          <span class="period-dot" />
           {{ period.title }}
-        </v-chip>
-      </v-chip-group>
-    </div>
+        </button>
+      </div>
+    </section>
 
-    <!-- Блок выбора недели -->
-    <div v-if="selectedPeriod" class="mb-8">
-      <h3 class="text-h6 mb-4 font-weight-medium">Тыдзень</h3>
-      <v-chip-group
-        v-model="selectedWeek"
-        mandatory
-        column
-        class="week-chip-group"
-      >
-        <v-chip
+    <section v-if="selectedPeriod" class="picker-step">
+      <div class="step-heading">
+        <span>02</span>
+        <div>
+          <h2>Тыдзень</h2>
+          <p>Нумар тыдня ў абраным перыядзе</p>
+        </div>
+      </div>
+      <div class="choice-grid choice-grid--numbers">
+        <button
           v-for="week in availableWeeks"
           :key="week"
-          :value="week"
-          filter
-          variant="outlined"
-          size="large"
-          class="ma-2 week-chip"
+          type="button"
+          class="choice-button number-button"
+          :class="{ 'choice-button--active': selectedWeek === week }"
+          @click="selectedWeek = week"
         >
           {{ week }}
-        </v-chip>
-      </v-chip-group>
-    </div>
+        </button>
+      </div>
+    </section>
 
-    <!-- Блок выбора дня недели -->
-    <div v-if="selectedPeriod && selectedWeek" class="mb-8">
-      <h3 class="text-h6 mb-4 font-weight-medium">Дзень тыдня</h3>
-      <v-chip-group
-        v-model="selectedDayOfWeek"
-        mandatory
-        column
-        class="day-chip-group"
-      >
-        <v-chip
+    <section v-if="selectedPeriod && selectedWeek" class="picker-step">
+      <div class="step-heading">
+        <span>03</span>
+        <div>
+          <h2>Дзень тыдня</h2>
+          <p>Пакажам сапраўдную дату ў {{ year }} годзе</p>
+        </div>
+      </div>
+      <div class="choice-grid choice-grid--weekdays">
+        <button
           v-for="day in dayOfWeekOptions"
           :key="day.value"
-          :value="day.value"
-          filter
-          variant="outlined"
-          size="large"
-          class="ma-2 day-chip"
+          type="button"
+          class="choice-button weekday-button"
+          :class="{ 'choice-button--active': selectedDayOfWeek === day.value }"
+          @click="selectedDayOfWeek = day.value"
         >
-          {{ day.title }}
-        </v-chip>
-      </v-chip-group>
-    </div>
+          <span>{{ day.short }}</span>
+          <small>{{ day.title }}</small>
+        </button>
+      </div>
+    </section>
 
-    <!-- Результат -->
-    <div v-if="selectedPeriod && selectedWeek && selectedDayOfWeek">
-      <v-card v-if="loading" class="pa-4">
-        <v-progress-circular indeterminate color="primary"></v-progress-circular>
-        <span class="ml-3">Пошук...</span>
-      </v-card>
+    <section v-if="hasCompleteSelection" class="result-section" aria-live="polite">
+      <div v-if="loading" class="result-state">
+        <v-progress-circular indeterminate color="primary" size="28" width="3" />
+        <span>Правяраем каляндарную дату…</span>
+      </div>
 
-      <v-card v-else-if="foundDay" variant="outlined" class="pa-4">
-        <v-card-title class="text-h6 mb-2">
-          {{ getPeriodTitle(foundDay) }}
-        </v-card-title>
-        <v-card-subtitle>
-          <div v-if="foundDay._feastName || foundDay._title">{{ foundDay._feastName || foundDay._title }}</div>
-          <div v-if="foundDay._feastType">{{ getRankName(foundDay._feastType) }}</div>
-          <div v-if="foundDay._psalmWeek">{{ foundDay._psalmWeek }}</div>
-        </v-card-subtitle>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            variant="flat"
-            @click="openDay"
+      <template v-else-if="dayOptions.length">
+        <div class="result-date">
+          <div class="result-date-icon"><PhCalendarCheck :size="22" /></div>
+          <div>
+            <span>Знойдзеная дата</span>
+            <strong>{{ formattedDate }}</strong>
+          </div>
+        </div>
+
+        <div class="result-list">
+          <button
+            v-for="option in dayOptions"
+            :key="option.key"
+            type="button"
+            class="result-card"
+            :disabled="mode === 'oras' && !option.dayId"
+            @click="selectOption(option)"
           >
-            Адкрыць малітвы
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+            <div class="result-card-copy">
+              <span class="result-source">{{ option.subtitle }}</span>
+              <strong>{{ option.title }}</strong>
+              <div class="result-badges">
+                <span v-if="option.hasReadings"><PhBookOpenText :size="14" /> ёсць чытанні</span>
+                <span v-if="option.templates?.length > 1">{{ option.templates.length }} варыянты</span>
+              </div>
+            </div>
+            <span class="result-arrow"><PhArrowRight :size="19" /></span>
+          </button>
+        </div>
+      </template>
 
-      <v-card v-else variant="outlined" class="pa-4">
-        <v-card-text>
-          <p>Для абранага перыяду і дня няма запісу ў базе.</p>
-          <v-btn
-            v-if="isAdmin"
-            color="primary"
-            variant="outlined"
-            class="mt-2"
-            @click="createDay"
-          >
-            Стварыць гэты дзень
-          </v-btn>
-          <p v-else class="text-caption mt-2">
-            Звярніцеся да адміністратара, каб дадаць гэты дзень.
-          </p>
-        </v-card-text>
-      </v-card>
-    </div>
+      <div v-else class="empty-state">
+        <PhCalendarX :size="34" />
+        <strong>{{ resultMessage }}</strong>
+        <p>Паспрабуйце іншы тыдзень або дзень.</p>
+        <v-btn
+          v-if="isAdmin"
+          variant="tonal"
+          rounded="pill"
+          class="mt-3"
+          @click="createDay"
+        >
+          Стварыць шаблон дня
+        </v-btn>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
+import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { useAuthStore } from '@/stores/auth';
-import { useCalendarStore } from '@/stores/calendar';
 import { logger } from '@/utils/logger';
 import moment from '@/utils/moment-be';
-import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP, FEAST_TYPE_LABEL_MAP, PERIOD_COLORS } from '@/constants/liturgical';
+import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
+import {
+  PhArrowRight,
+  PhBookOpenText,
+  PhCalendarCheck,
+  PhCalendarX,
+} from '@phosphor-icons/vue';
 
 const props = defineProps({
-  year: {
-    type: Number,
-    required: true
-  }
+  year: { type: Number, required: true },
+  mode: { type: String, default: 'oras' },
 });
 
 const emit = defineEmits(['day-selected']);
-
 const router = useRouter();
-const { findDayByPeriod, calculateDateForPeriod, getLiturgicalOptionsForDate } = useLiturgicalDay();
+const { calculateDateForPeriod } = useLiturgicalDay();
+const { getLiturgicalContentForDate } = useLiturgicalContent();
 const authStore = useAuthStore();
-const calendarStore = useCalendarStore();
-
-const isAdmin = computed(() => authStore.isAdmin);
 
 const selectedPeriod = ref(null);
 const selectedWeek = ref(null);
 const selectedDayOfWeek = ref(null);
-const foundDay = ref(null);
+const dayOptions = ref([]);
+const calculatedDate = ref('');
 const loading = ref(false);
+const resultMessage = ref('Для гэтай пазіцыі няма каляндарнай даты.');
+let searchSequence = 0;
 
-const periodOptions = Object.entries(PERIOD_LABEL_MAP).map(([value, title]) => ({
-  value,
-  title,
-  color: PERIOD_COLORS[value] || 'grey',
-}));
+const isAdmin = computed(() => authStore.isAdmin);
+const hasCompleteSelection = computed(() => Boolean(
+  selectedPeriod.value && selectedWeek.value && selectedDayOfWeek.value,
+));
 
+const periodOptions = Object.entries(PERIOD_LABEL_MAP).map(([value, title]) => ({ value, title }));
+const weekdayShort = { 1: 'Нд', 2: 'Пн', 3: 'Аў', 4: 'Ср', 5: 'Чц', 6: 'Пт', 7: 'Сб' };
 const dayOfWeekOptions = Object.entries(WEEKDAY_LABEL_MAP).map(([value, title]) => ({
-  value: parseInt(value, 10),
+  value: Number(value),
   title,
+  short: weekdayShort[value],
 }));
 
-// Максимальное количество недель для каждого периода
 const maxWeeksForPeriod = {
   ordinary: 34,
   advent: 4,
-  christmas: 6,
-  lent: 6,
+  christmas: 2,
+  lent: 5,
   holyweek: 1,
   easter: 7,
 };
 
-const availableWeeks = computed(() => {
-  if (!selectedPeriod.value) return [];
-  const maxWeeks = maxWeeksForPeriod[selectedPeriod.value] || 10;
-  return Array.from({ length: maxWeeks }, (_, i) => i + 1);
-});
+const availableWeeks = computed(() => Array.from(
+  { length: maxWeeksForPeriod[selectedPeriod.value] || 0 },
+  (_, index) => index + 1,
+));
 
-// Сбрасываем неделю и день при смене периода
+const formattedDate = computed(() => (
+  calculatedDate.value
+    ? moment(calculatedDate.value, 'YYYY-MM-DD').format('dddd, D MMMM YYYY')
+    : ''
+));
+
 watch(selectedPeriod, () => {
   selectedWeek.value = null;
   selectedDayOfWeek.value = null;
-  foundDay.value = null;
+  resetResult();
 });
 
-// Сбрасываем день при смене недели
 watch(selectedWeek, () => {
   selectedDayOfWeek.value = null;
-  foundDay.value = null;
+  resetResult();
 });
 
-// Ищем день при выборе всех параметров
-watch([selectedPeriod, selectedWeek, selectedDayOfWeek], async ([period, week, day]) => {
-  if (period && week && day) {
-    await searchDay(period, week, day);
-  }
-});
+watch(
+  [() => props.year, selectedPeriod, selectedWeek, selectedDayOfWeek],
+  async ([year, period, week, day]) => {
+    if (!period || !week || !day) return;
+    await searchDay(year, period, week, day);
+  },
+);
 
-async function searchDay(periodType, periodWeekNumber, dayOfWeek) {
+function resetResult() {
+  searchSequence += 1;
+  dayOptions.value = [];
+  calculatedDate.value = '';
+  loading.value = false;
+}
+
+async function searchDay(year, periodType, periodWeekNumber, dayOfWeek) {
+  const sequence = ++searchSequence;
   loading.value = true;
-  foundDay.value = null;
-  
+  dayOptions.value = [];
+  calculatedDate.value = '';
+
   try {
-    const day = await findDayByPeriod(periodType, periodWeekNumber, dayOfWeek);
-    if (day) {
-      foundDay.value = day;
+    const date = await calculateDateForPeriod(year, periodType, periodWeekNumber, dayOfWeek);
+    if (sequence !== searchSequence) return;
+    if (!date) {
+      resultMessage.value = 'Такога тыдня ў выбраным годзе няма.';
       return;
     }
 
-    // Some calendar positions are always replaced by a movable celebration
-    // and therefore have no standalone period document. Resolve the selected
-    // position through the same date-aware path as the main calendar (for
-    // example ordinary week 34 Sunday -> Christ the King).
-    const date = await calculateDateForPeriod(
-      props.year,
-      periodType,
-      periodWeekNumber,
-      dayOfWeek
-    );
-    if (!date) return;
+    const result = await getLiturgicalContentForDate(date);
+    if (sequence !== searchSequence) return;
 
-    const result = await getLiturgicalOptionsForDate(date);
-    const feastCode = String(result?.context?._feast || '').replace(/^feast-/, '');
-    foundDay.value = result?.items?.find((item) => (
-      feastCode && String(item?._feast || '').replace(/^feast-/, '') === feastCode
-    )) || result?.items?.[0] || null;
+    const matchesSelection = result?.context?.periodType === periodType
+      && Number(result?.context?.periodWeek) === Number(periodWeekNumber)
+      && Number(result?.context?.dayOfWeek) === Number(dayOfWeek);
+
+    if (!matchesSelection) {
+      resultMessage.value = 'Гэтая пазіцыя выходзіць за межы перыяду ў выбраным годзе.';
+      return;
+    }
+
+    calculatedDate.value = date;
+    dayOptions.value = Array.isArray(result?.dayOptions) ? result.dayOptions : [];
+    if (!dayOptions.value.length) {
+      resultMessage.value = 'Дата існуе, але літургічны дзень яшчэ не дададзены.';
+    }
   } catch (error) {
     logger.error('Памылка пры пошуку дня:', error);
+    resultMessage.value = 'Не атрымалася праверыць каляндар. Паспрабуйце яшчэ раз.';
   } finally {
-    loading.value = false;
+    if (sequence === searchSequence) loading.value = false;
   }
 }
 
-function getPeriodTitle(day) {
-  const periodName = PERIOD_LABEL_MAP[day._periodType] || 'Перыяд';
-  const dayName = dayOfWeekOptions.find(d => d.value === parseInt(day._dayOfWeek, 10))?.title || '';
-  return `${periodName}, ${day._periodWeekNumber} тыдзень, ${dayName}`;
-}
-
-function getRankName(rank) {
-  return FEAST_TYPE_LABEL_MAP[rank] || rank;
-}
-
-async function openDay() {
-  if (!foundDay.value) return;
-  
-  // Вычисляем дату для этого дня
-  const date = await getDateForPeriod();
-  
-  emit('day-selected', {
-    dayId: foundDay.value.id,
-    date: date
-  });
-}
-
-async function getDateForPeriod() {
-  const date = await calculateDateForPeriod(
-    props.year,
-    selectedPeriod.value,
-    selectedWeek.value,
-    selectedDayOfWeek.value
-  );
-  return date || moment().format('YYYY-MM-DD');
+function selectOption(option) {
+  if (!calculatedDate.value) return;
+  const dayId = option.dayId || option.templates?.[0]?.id || '';
+  if (props.mode === 'oras' && !dayId) return;
+  emit('day-selected', { dayId, date: calculatedDate.value });
 }
 
 function createDay() {
-  const queryParams = {
-    _periodType: selectedPeriod.value,
-    _periodWeekNumber: selectedWeek.value,
-    _dayOfWeek: selectedDayOfWeek.value,
-  };
-  
   router.push({
     name: 'AdminDayEditor',
     params: { id: 'new' },
-    query: queryParams
+    query: {
+      _periodType: selectedPeriod.value,
+      _periodWeekNumber: selectedWeek.value,
+      _dayOfWeek: selectedDayOfWeek.value,
+    },
   });
 }
 </script>
 
 <style scoped>
-/* Увеличение размера текста в чипах для лучшей читаемости */
-.period-chip,
-.week-chip,
-.day-chip {
-  font-size: 1.1rem !important;
-  font-weight: 500 !important;
-  min-height: 48px !important;
-  padding: 12px 20px !important;
-  letter-spacing: 0.02em;
+.period-picker {
+  display: grid;
+  gap: 16px;
 }
 
-/* Увеличение размера заголовков */
-.text-h6 {
-  font-size: 1.25rem !important;
-  font-weight: 600 !important;
+.picker-step,
+.result-section {
+  padding: 18px;
+  border: 1px solid var(--nav-border);
+  border-radius: 26px;
+  background: var(--nav-surface);
+  box-shadow: 0 7px 24px var(--nav-button-shadow);
 }
 
-/* Улучшение визуального восприятия для людей постарше */
-.period-chip-group,
-.week-chip-group,
-.day-chip-group {
+.step-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.step-heading > span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--nav-active);
+  color: var(--nav-on-surface);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.step-heading h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.step-heading p {
+  margin: 3px 0 0;
+  color: var(--nav-muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.choice-grid {
+  display: grid;
   gap: 8px;
 }
 
-/* Увеличение размера чипов на мобильных */
-@media (max-width: 600px) {
-  .period-chip,
-  .week-chip,
-  .day-chip {
-    font-size: 1.05rem !important;
-    min-height: 44px !important;
-    padding: 10px 16px !important;
+.choice-grid--periods {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.choice-grid--numbers {
+  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+}
+
+.choice-grid--weekdays {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.choice-button {
+  min-height: 48px;
+  border: 1px solid var(--nav-border);
+  border-radius: 15px;
+  background: transparent;
+  color: var(--nav-muted);
+  font: inherit;
+  font-weight: 680;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease, transform 0.14s ease;
+}
+
+.choice-button:active {
+  transform: scale(0.97);
+}
+
+.choice-button--active {
+  background: var(--nav-active);
+  color: var(--nav-on-surface);
+}
+
+.period-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.period-dot {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  border-radius: 50%;
+  background: #4f8a55;
+}
+
+.period-button--advent .period-dot,
+.period-button--lent .period-dot,
+.period-button--holyweek .period-dot { background: #76528d; }
+.period-button--christmas .period-dot,
+.period-button--easter .period-dot { background: #c7952f; }
+
+.weekday-button {
+  display: grid;
+  min-width: 0;
+  padding: 7px 2px;
+  place-items: center;
+}
+
+.weekday-button span {
+  font-size: 0.86rem;
+}
+
+.weekday-button small {
+  display: none;
+}
+
+.result-state,
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  color: var(--nav-muted);
+}
+
+.result-state {
+  gap: 12px;
+}
+
+.result-date {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.result-date-icon,
+.result-arrow {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--nav-active);
+  color: var(--nav-on-surface);
+}
+
+.result-date-icon {
+  width: 46px;
+  height: 46px;
+}
+
+.result-date > div:last-child {
+  display: grid;
+}
+
+.result-date span,
+.result-source {
+  color: var(--nav-muted);
+  font-size: 0.72rem;
+  font-weight: 760;
+  letter-spacing: 0.04em;
+}
+
+.result-date strong {
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.result-list {
+  display: grid;
+  gap: 8px;
+}
+
+.result-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid var(--nav-border);
+  border-radius: 19px;
+  background: rgb(var(--v-theme-background));
+  color: rgb(var(--v-theme-on-surface));
+  text-align: left;
+  cursor: pointer;
+}
+
+.result-card:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.result-card-copy {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.result-card-copy > strong {
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.result-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.result-badges span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--nav-muted);
+  font-size: 0.72rem;
+}
+
+.result-arrow {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+}
+
+.empty-state {
+  flex-direction: column;
+  padding: 16px;
+  text-align: center;
+}
+
+.empty-state strong {
+  margin-top: 10px;
+  color: var(--nav-on-surface);
+}
+
+.empty-state p {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+}
+
+@media (min-width: 620px) {
+  .weekday-button small {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.64rem;
+    font-weight: 600;
   }
-  
-  .text-h6 {
-    font-size: 1.15rem !important;
+}
+
+@media (max-width: 430px) {
+  .picker-step,
+  .result-section {
+    padding: 15px;
+    border-radius: 23px;
+  }
+
+  .choice-grid--periods {
+    grid-template-columns: 1fr;
+  }
+
+  .choice-grid--numbers {
+    grid-template-columns: repeat(6, 1fr);
   }
 }
 </style>
-

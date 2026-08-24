@@ -200,11 +200,11 @@ function loadDay() {
   display: flex;
   align-items: center;
   height: 64px;
-  background: #1f1f1f;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--nav-surface);
+  border: 1px solid var(--nav-border);
   border-radius: 32px;
   padding: 0 4px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 10px 30px var(--nav-shadow);
   pointer-events: auto;
 }
 
@@ -221,7 +221,7 @@ function loadDay() {
   border-radius: 26px;
   cursor: pointer;
   transition: background 0.18s ease, color 0.18s ease, transform 0.16s ease;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--nav-muted);
 }
 
 .pill-item:active {
@@ -230,8 +230,8 @@ function loadDay() {
 }
 
 .pill-item--active {
-  background: #FFFFFF;
-  color: #111111;
+  background: var(--nav-active);
+  color: var(--nav-on-surface);
 }
 
 .pill-item .v-icon { transition: color 0.18s ease; }
@@ -245,12 +245,12 @@ function loadDay() {
   height: 56px;
   flex: 0 0 56px;
   border: none;
-  background: #1f1f1f;
+  background: var(--nav-surface);
   border-radius: 50%;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  color: var(--nav-on-surface);
+  border: 1px solid var(--nav-border);
+  box-shadow: 0 8px 24px var(--nav-shadow);
   transition: opacity 0.15s ease, transform 0.15s ease;
   pointer-events: auto;
 }

@@ -1,9 +1,9 @@
 <template>
-  <v-container>
-    <div v-if="dayData" class="mb-5">
-      <day-title :day-data="dayData" />
-      <div v-if="templateOptions.length > 1" class="mt-4">
-        <div class="text-caption text-medium-emphasis mb-1">
+  <v-container class="oras-list-container">
+    <div v-if="dayData" class="oras-hero-block">
+      <day-title :day-data="dayData" variant="hero" />
+      <div v-if="templateOptions.length > 1" class="template-panel">
+        <div class="template-label">
           Шаблон літургіі дня
         </div>
         <v-btn-toggle
@@ -32,7 +32,7 @@
     </div>
 
     <!-- Чытанні — першы, вылучаны пункт агульнага спісу літургічных гадзін -->
-    <v-list v-else lines="three" bg-color="transparent">
+    <v-list v-else bg-color="transparent" class="ora-options-list" :style="readingCardStyle">
       <v-list-item
         :to="readingItem ? readingItem.path : undefined"
         :disabled="!readingItem"
@@ -55,7 +55,7 @@
                 :title="celebrationLabel"
               ></v-icon>
             </template>
-            <v-avatar :color="readingTheme.avatarColor" size="40">
+            <v-avatar class="reading-icon-wrap" :color="readingTheme.avatarColor" size="48">
               <v-icon :color="readingItem ? readingTheme.iconColor : 'grey'">mdi-book-open-variant</v-icon>
             </v-avatar>
           </v-badge>
@@ -71,26 +71,26 @@
             v-if="readingItem"
             icon="mdi-chevron-right"
             size="large"
-            class="ml-1"
+            class="ora-card__arrow"
           ></v-icon>
         </template>
       </v-list-item>
-      <v-divider class="mb-2"></v-divider>
 
       <template v-if="dayData">
-        <div v-for="(ora, index) in oras" :key="ora.name">
-          <v-list-item :to="ora.path">
+        <div v-for="ora in oras" :key="ora.name">
+          <v-list-item :to="ora.path" class="ora-card">
             <template v-slot:prepend>
-              <v-icon :icon="ora.icon" size="large"></v-icon>
+              <span class="ora-card__icon-wrap">
+                <v-icon :icon="ora.icon" size="25"></v-icon>
+              </span>
             </template>
-            <v-list-item-title class="text-h6 font-weight-regular mb-1">
+            <v-list-item-title class="ora-card__title">
               {{ ora.title }}
             </v-list-item-title>
             <template v-slot:append>
-              <v-icon icon="mdi-chevron-right" size="large"></v-icon>
+              <v-icon class="ora-card__arrow" icon="mdi-chevron-right" size="24"></v-icon>
             </template>
           </v-list-item>
-          <v-divider v-if="index < oras.length - 1"></v-divider>
         </div>
       </template>
 
@@ -105,7 +105,7 @@
         </v-btn>
       </div>
 
-      <v-alert v-else type="info" variant="tonal" border="start" class="mt-2">
+      <v-alert v-if="!dayData" type="info" variant="tonal" border="start" class="mt-2">
         Літургічныя гадзіны для гэтага дня не знойдзены.
         <div v-if="isAdmin" class="mt-3">
           <v-btn color="primary" variant="tonal" prepend-icon="mdi-plus-box" @click="goToCreateDay">
@@ -127,7 +127,7 @@ import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay
 import { logger } from '@/utils/logger';
 import { useAuthStore } from '@/stores/auth';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
-import { RANK_LABEL_MAP } from '@/constants/liturgical';
+import { LITURGICAL_THEME_MAP, RANK_LABEL_MAP } from '@/constants/liturgical';
 
 const route = useRoute();
 const router = useRouter();
@@ -151,44 +151,37 @@ const loadingOra = computed(() => loadingDay.value || loadingReadings.value);
 
 const READING_THEMES = Object.freeze({
   ordinary: {
-    color: '#2e7d32',
-    rgb: '46, 125, 50',
+    ...LITURGICAL_THEME_MAP.ordinary,
     avatarColor: 'green-lighten-4',
     iconColor: 'green-darken-3',
   },
   advent: {
-    color: '#6a1b9a',
-    rgb: '106, 27, 154',
+    ...LITURGICAL_THEME_MAP.advent,
     avatarColor: 'purple-lighten-4',
     iconColor: 'purple-darken-3',
   },
   lent: {
-    color: '#6a1b9a',
-    rgb: '106, 27, 154',
+    ...LITURGICAL_THEME_MAP.lent,
     avatarColor: 'purple-lighten-4',
     iconColor: 'purple-darken-3',
   },
   holyweek: {
-    color: '#4a148c',
-    rgb: '74, 20, 140',
+    ...LITURGICAL_THEME_MAP.holyweek,
     avatarColor: 'purple-lighten-4',
     iconColor: 'purple-darken-4',
   },
   christmas: {
-    color: '#a66f00',
-    rgb: '166, 111, 0',
+    ...LITURGICAL_THEME_MAP.christmas,
     avatarColor: 'amber-lighten-4',
     iconColor: 'amber-darken-4',
   },
   easter: {
-    color: '#a66f00',
-    rgb: '166, 111, 0',
+    ...LITURGICAL_THEME_MAP.easter,
     avatarColor: 'amber-lighten-4',
     iconColor: 'amber-darken-4',
   },
   default: {
-    color: '#455a64',
-    rgb: '69, 90, 100',
+    ...LITURGICAL_THEME_MAP.default,
     avatarColor: 'blue-grey-lighten-4',
     iconColor: 'blue-grey-darken-2',
   },
@@ -365,31 +358,84 @@ watch(dateParam, (newDateParam) => {
 </script>
 
 <style scoped>
-.reading-card {
-  border-inline-start: 3px solid var(--reading-color) !important;
-  background-color: rgba(var(--reading-color-rgb), 0.045);
-  transition: background-color 0.2s ease;
+.oras-list-container {
+  width: min(100%, 760px);
+  max-width: 760px;
+  padding-top: 10px;
 }
 
+.oras-hero-block {
+  margin: 0 12px 22px;
+}
+
+.template-panel {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid var(--nav-border);
+  border-radius: 20px;
+  background: var(--nav-surface);
+}
+
+.template-label {
+  margin: 0 4px 9px;
+  color: var(--nav-muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ora-options-list {
+  display: grid;
+  gap: 12px;
+  padding: 0 12px !important;
+}
+
+.ora-card,
+.reading-card {
+  min-height: 80px;
+  padding: 14px 14px 14px 16px !important;
+  border: 1px solid var(--nav-border);
+  border-radius: 22px !important;
+  background: var(--nav-surface);
+  color: var(--nav-on-surface);
+  box-shadow: 0 3px 14px var(--nav-button-shadow);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.ora-card:hover,
 .reading-card:hover {
-  background-color: rgba(var(--reading-color-rgb), 0.09);
+  border-color: rgba(var(--reading-color-rgb, 85, 112, 124), 0.25);
+  box-shadow: 0 7px 22px var(--nav-button-shadow);
+}
+
+.ora-card:active,
+.reading-card:active {
+  transform: scale(0.988);
+}
+
+.reading-card {
+  border-color: rgba(var(--reading-color-rgb), 0.24);
+  background:
+    linear-gradient(120deg, rgba(var(--reading-color-rgb), 0.13), rgba(var(--reading-color-rgb), 0.025) 70%),
+    var(--nav-surface);
 }
 
 .reading-card--celebration {
-  border-inline-start-color: var(--reading-color) !important;
   background: linear-gradient(
     120deg,
-    rgba(var(--reading-color-rgb), 0.07),
-    rgba(255, 193, 7, 0.12)
-  );
+    rgba(var(--reading-color-rgb), 0.15),
+    rgba(255, 193, 7, 0.1)
+  ), var(--nav-surface);
 }
 
 .reading-card--celebration:hover {
   background: linear-gradient(
     120deg,
-    rgba(var(--reading-color-rgb), 0.12),
-    rgba(255, 193, 7, 0.17)
-  );
+    rgba(var(--reading-color-rgb), 0.19),
+    rgba(255, 193, 7, 0.13)
+  ), var(--nav-surface);
 }
 
 .reading-celebration-mark {
@@ -398,8 +444,8 @@ watch(dateParam, (newDateParam) => {
 
 .reading-title {
   color: var(--reading-color);
-  font-weight: 500;
-  font-size: 1.05rem;
+  font-weight: 700;
+  font-size: clamp(1.04rem, 4vw, 1.17rem);
 }
 
 .reading-subtitle {
@@ -422,6 +468,40 @@ watch(dateParam, (newDateParam) => {
   padding-bottom: 10px;
 }
 
+.ora-card__icon-wrap {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border: 1px solid rgba(var(--reading-color-rgb), 0.18);
+  border-radius: 16px;
+  background: rgba(var(--reading-color-rgb), 0.13);
+  color: var(--reading-color);
+}
+
+.ora-card__title {
+  padding-inline: 4px 8px;
+  font-size: clamp(1.04rem, 4vw, 1.17rem) !important;
+  font-weight: 650;
+  line-height: 1.36 !important;
+  letter-spacing: -0.01em;
+}
+
+.ora-card__arrow {
+  color: var(--nav-muted);
+}
+
+:deep(.ora-card .v-list-item__prepend),
+:deep(.reading-card .v-list-item__prepend) {
+  align-self: center;
+  margin-inline-end: 12px;
+}
+
+:deep(.ora-card .v-list-item__append),
+:deep(.reading-card .v-list-item__append) {
+  align-self: center;
+}
+
 .template-toggle :deep(.v-btn__content) {
   line-height: 1.35;
   white-space: normal;
@@ -430,11 +510,42 @@ watch(dateParam, (newDateParam) => {
 
 /* на маленьких экранах чуть компактнее */
 @media (max-width: 600px) {
+  .oras-list-container {
+    padding: 8px 4px !important;
+  }
+
+  .oras-hero-block {
+    margin-inline: 8px;
+  }
+
+  .ora-options-list {
+    padding-inline: 8px !important;
+  }
+
   .reading-title {
-    font-size: 1rem;
+    font-size: 1.04rem;
   }
   .reading-subtitle {
     font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 359px) {
+  .ora-card,
+  .reading-card {
+    padding-inline: 12px 10px !important;
+    border-radius: 20px !important;
+  }
+
+  .ora-card__icon-wrap,
+  .reading-icon-wrap {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  :deep(.ora-card .v-list-item__prepend),
+  :deep(.reading-card .v-list-item__prepend) {
+    margin-inline-end: 8px;
   }
 }
 </style>

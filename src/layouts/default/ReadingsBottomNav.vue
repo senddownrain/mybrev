@@ -18,7 +18,7 @@
           class="pill-item"
           :class="{ 'pill-item--active': activeIndex === 0 }"
           aria-label="Выбраць"
-          @click="navigateTo('/readings/picker')"
+          @click="openLiturgicalPicker"
         >
           <PhListBullets :size="23" />
         </button>
@@ -102,13 +102,14 @@ const router = useRouter();
 const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar();
 const selectedDate = ref(new Date());
 
-const ARROW_ROUTES = new Set(['Readings', 'ReadingsByDate']);
+const ARROW_ROUTES = new Set(['Readings', 'ReadingsByDate', 'reading']);
 const showArrows = computed(() => ARROW_ROUTES.has(route.name));
 
 const currentRouteDate = computed(() => {
   if (route.name === 'Readings') return moment().startOf('day');
-  if (route.params.date) {
-    const m = moment(route.params.date, 'YYYY-MM-DD');
+  const dateParam = route.params.date || route.params.day;
+  if (dateParam) {
+    const m = moment(dateParam, 'YYYY-MM-DD');
     if (m.isValid()) return m.startOf('day');
   }
   return moment().startOf('day');
@@ -123,6 +124,10 @@ const activeIndex = computed(() => {
 });
 
 function navigateTo(path) { router.push(path); }
+
+function openLiturgicalPicker() {
+  router.push({ name: 'LiturgicalPicker', query: { mode: 'readings' } });
+}
 
 function goToPrevDay() {
   navigateToDate(currentRouteDate.value.clone().subtract(1, 'day'));
@@ -179,11 +184,11 @@ function loadDay() {
   display: flex;
   align-items: center;
   height: 64px;
-  background: #1f1f1f;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--nav-surface);
+  border: 1px solid var(--nav-border);
   border-radius: 32px;
   padding: 0 4px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 10px 30px var(--nav-shadow);
   pointer-events: auto;
 }
 
@@ -198,15 +203,15 @@ function loadDay() {
   border-radius: 26px;
   cursor: pointer;
   transition: background 0.18s ease, color 0.18s ease, transform 0.16s ease;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--nav-muted);
 }
 .pill-item:active {
   opacity: 0.72;
   transform: scale(0.94);
 }
 .pill-item--active {
-  background: #FFFFFF;
-  color: #111111;
+  background: var(--nav-active);
+  color: var(--nav-on-surface);
 }
 
 .arrow-btn {
@@ -217,12 +222,12 @@ function loadDay() {
   height: 56px;
   flex: 0 0 56px;
   border: none;
-  background: #1f1f1f;
+  background: var(--nav-surface);
   border-radius: 50%;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  color: var(--nav-on-surface);
+  border: 1px solid var(--nav-border);
+  box-shadow: 0 8px 24px var(--nav-shadow);
   transition: opacity 0.15s ease, transform 0.15s ease;
   pointer-events: auto;
 }

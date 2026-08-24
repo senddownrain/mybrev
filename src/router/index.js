@@ -70,10 +70,7 @@ const routes = [
       {
         path: 'readings/picker',
         name: 'ReadingsPicker',
-        components: { 
-          default: () => import('@/views/ReadingsPicker.vue'),
-          bottomNav: ReadingsBottomNavVue
-        },
+        redirect: { name: 'LiturgicalPicker', query: { mode: 'readings' } },
       },
       {
         path: 'prayer/:id',
@@ -228,11 +225,13 @@ const routes = [
       components: {
         default: () => import('@/components/readings/Reading.vue'),
         topNav: OraBarVue,
+        bottomNav: ReadingsBottomNavVue,
       },
       props: {
         default: true,
         topNav: false,
       },
+      meta: { hasBottomNav: true },
     },
      {
       path: 'reading/:readingId/edit',
@@ -267,7 +266,9 @@ const router = createRouter({
     if (savedPosition) {
       return savedPosition;
     }
-    return { top: 0, left: 0, behavior: 'smooth' };
+    // Не оставляем активную scroll-анимацию после перехода: на мобильных
+    // первый жест пользователя иначе может только остановить эту анимацию.
+    return { top: 0, left: 0 };
   },
 });
 

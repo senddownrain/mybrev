@@ -250,16 +250,22 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
 
     const allFeastDays = await getAllFeastDays();
 
+    const normalizedFeastCode = (value) => String(value || '').replace(/^feast-/, '');
     const result = allFeastDays.map((feast) => {
-      const isDynamic = Object.keys(FEAST_NAME_MAP).some(
-        (key) => FEAST_NAME_MAP[key] === feast._feast && dynamicDates[key],
+      const dynamicEntry = Object.entries(FEAST_NAME_MAP).find(
+        ([key, code]) => normalizedFeastCode(code) === normalizedFeastCode(feast._feast)
+          && dynamicDates[key],
       );
+      const dynamicDate = dynamicEntry ? dynamicDates[dynamicEntry[0]] : null;
+      const isDynamic = Boolean(dynamicDate);
+      const isFixed = !isDynamic && Boolean(feast._date);
       return {
         ...feast,
         isDynamic,
-        isFixed: !isDynamic && feast._date,
+        isFixed,
+        calendarDate: dynamicDate?.format('YYYY-MM-DD') || null,
       };
-    });
+    }).filter((feast) => feast.isDynamic || feast.isFixed);
 
     feastsCache.value.set(cacheKey, { data: result, cachedAt: Date.now() });
     logger.log(`[liturgicalStore] feasts loaded for ${year}: ${result.length}`);

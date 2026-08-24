@@ -164,18 +164,21 @@ export function readingTitleSimilarity(left, right) {
 }
 
 export function readingCelebrationKey(data) {
+  const variant = String(data?._variant ?? '').trim().toLowerCase();
+  const variantSuffix = variant ? `|variant:${variant}` : '';
   const explicit = String(data?._dayId ?? '').trim();
-  if (explicit) return `day:${explicit}`;
+  if (explicit) return `day:${explicit}${variantSuffix}`;
   if (Array.isArray(data?._dayIds) && data._dayIds.length) {
-    return `days:${[...data._dayIds].map(String).sort().join(',')}`;
+    return `days:${[...data._dayIds].map(String).sort().join(',')}${variantSuffix}`;
   }
   const selector = readingSelector(data);
-  if (!selector.startsWith('date:')) return selector;
+  if (!selector.startsWith('date:')) return `${selector}${variantSuffix}`;
   return [
     selector,
     normalizeReadingTitle(data?.title),
     normalizeRank(data?._rank),
     normalizeDayPlaces(data?._place),
+    variant,
   ].join('|');
 }
 

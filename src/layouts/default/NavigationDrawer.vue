@@ -165,15 +165,17 @@ const selectCategoryByName = (categoryName) => {
 
 <style scoped>
 .app-drawer {
-  top: 12px !important;
-  bottom: 12px !important;
-  left: 12px !important;
-  height: calc(100% - 24px) !important;
-  max-width: calc(100vw - 24px) !important;
-  border: 1px solid rgba(var(--v-border-color), 0.12) !important;
-  border-radius: 28px !important;
-  background: rgb(var(--v-theme-surface)) !important;
-  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.24) !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  height: 100% !important;
+  max-width: min(320px, 88vw) !important;
+  border: 0 !important;
+  border-right: 1px solid var(--nav-border) !important;
+  border-radius: 0 !important;
+  background: var(--nav-surface) !important;
+  color: var(--nav-on-surface) !important;
+  box-shadow: 10px 0 32px var(--nav-shadow) !important;
   overflow: hidden;
 }
 
@@ -205,8 +207,8 @@ const selectCategoryByName = (categoryName) => {
   width: 48px;
   height: 48px;
   flex: 0 0 48px;
-  border-radius: 16px;
-  background: rgba(var(--v-theme-on-surface), 0.055);
+  border-radius: 14px;
+  background: var(--nav-active);
 }
 
 .drawer-logo {
@@ -223,7 +225,7 @@ const selectCategoryByName = (categoryName) => {
 
 .drawer-subtitle {
   margin-top: 2px;
-  color: rgba(var(--v-theme-on-surface), 0.52);
+  color: var(--nav-muted);
   font-size: 0.75rem;
   line-height: 1.25;
 }
@@ -236,8 +238,8 @@ const selectCategoryByName = (categoryName) => {
   flex: 0 0 42px;
   border: 0;
   border-radius: 50%;
-  background: #1f1f1f;
-  color: rgba(255, 255, 255, 0.9);
+  background: transparent;
+  color: var(--nav-on-surface);
   cursor: pointer;
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
@@ -266,7 +268,7 @@ const selectCategoryByName = (categoryName) => {
   margin-bottom: 4px;
   padding-inline: 14px !important;
   border-radius: 17px !important;
-  color: rgba(var(--v-theme-on-surface), 0.78);
+  color: var(--nav-on-surface);
   transition: background 0.16s ease, color 0.16s ease;
 }
 
@@ -280,8 +282,8 @@ const selectCategoryByName = (categoryName) => {
 }
 
 .drawer-list :deep(.v-list-item--active) {
-  background: #1f1f1f !important;
-  color: #fff !important;
+  background: var(--nav-active) !important;
+  color: var(--nav-on-surface) !important;
 }
 
 .drawer-list :deep(.v-list-item--active .v-list-item__overlay) {
@@ -289,12 +291,12 @@ const selectCategoryByName = (categoryName) => {
 }
 
 .drawer-list :deep(.v-list-item--active .drawer-icon) {
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--nav-on-surface);
 }
 
 .drawer-section-label {
   padding: 8px 14px 7px;
-  color: rgba(var(--v-theme-on-surface), 0.42);
+  color: var(--nav-muted);
   font-size: 0.68rem;
   font-weight: 750;
   letter-spacing: 0.08em;
@@ -304,12 +306,12 @@ const selectCategoryByName = (categoryName) => {
 .drawer-section-label--spaced {
   margin-top: 8px;
   padding-top: 12px;
-  border-top: 1px solid rgba(var(--v-border-color), 0.1);
+  border-top: 1px solid var(--nav-border);
 }
 
 .drawer-icon {
   flex-shrink: 0;
-  color: rgba(var(--v-theme-on-surface), 0.58);
+  color: var(--nav-muted);
 }
 
 @media (max-width: 359px) {

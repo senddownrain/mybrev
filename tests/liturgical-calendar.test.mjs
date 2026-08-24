@@ -148,3 +148,63 @@ test('counts the final Ordinary Time weeks backward from Advent', () => {
   );
   assert.equal(calculateDateForContext(2023, 'ordinary', 34, 2, options, null), '2023-11-27');
 });
+
+test('calculates Christmas week 2 inside January and rejects dates after Baptism', () => {
+  const options = optionsFor(2026, '2026-01-11');
+
+  assert.equal(calculateDateForContext(2026, 'christmas', 2, 2, options, null), '2027-01-04');
+  assert.equal(calculateDateForContext(2026, 'christmas', 2, 7, options, null), '2027-01-02');
+  assert.equal(calculateDateForContext(2026, 'christmas', 3, 1, options, null), null);
+});
+
+test('does not invent Ordinary Time weeks skipped by Lent and Easter', () => {
+  const options = {
+    ...optionsFor(2023, '2023-01-09'),
+    firstAdventSunday: '2023-12-03',
+    ordintaryWeeks1: 6,
+    ordintaryWeeks2: 9,
+  };
+
+  assert.equal(calculateDateForContext(2023, 'ordinary', 6, 1, options, null), '2023-02-12');
+  assert.equal(calculateDateForContext(2023, 'ordinary', 7, 1, options, null), null);
+  assert.equal(calculateDateForContext(2023, 'ordinary', 8, 1, options, null), null);
+  assert.equal(calculateDateForContext(2023, 'ordinary', 9, 1, options, null), '2023-06-04');
+});
+
+test('round-trips valid picker positions through calendar dates', () => {
+  const options = {
+    ...optionsFor(2023, '2023-01-09'),
+    firstAdventSunday: '2023-12-03',
+    easterSunday: '2023-04-09',
+    ashWednesday: '2023-02-22',
+    pentecost: '2023-05-28',
+    ordintaryWeeks1: 6,
+    ordintaryWeeks2: 9,
+  };
+
+  const positions = [
+    ['ordinary', 6, 1],
+    ['ordinary', 9, 1],
+    ['ordinary', 34, 2],
+    ['advent', 2, 4],
+    ['lent', 3, 6],
+    ['holyweek', 1, 5],
+    ['easter', 4, 3],
+    ['christmas', 1, 7],
+    ['christmas', 2, 2],
+  ];
+
+  positions.forEach(([periodType, periodWeek, dayOfWeek]) => {
+    const isoDate = calculateDateForContext(2023, periodType, periodWeek, dayOfWeek, options, null);
+    assert.ok(isoDate, `${periodType} ${periodWeek}/${dayOfWeek} should have a date`);
+    const actualOptions = moment(isoDate).year() === 2023
+      ? options
+      : { ...optionsFor(2024, '2024-01-08'), ordintaryWeeks1: 6, ordintaryWeeks2: 9 };
+    const context = computeLiturgicalContext(moment(isoDate), actualOptions, null, {});
+    assert.deepEqual(
+      [context.periodType, context.periodWeek, context.dayOfWeek],
+      [periodType, periodWeek, dayOfWeek],
+      isoDate,
+    );
+  });
+});
