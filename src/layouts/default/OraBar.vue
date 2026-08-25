@@ -4,13 +4,6 @@
       <PhArrowLeft :size="21" />
     </v-app-bar-nav-icon>
 
-    <v-app-bar-title
-      class="ora-bar-title"
-      :class="{ 'ora-bar-title--visible': isAppBarTitleVisible }"
-    >
-      {{ topBarTitle }}
-    </v-app-bar-title>
-
     <TextScaleControl
       v-if="showTextScaleControl"
       class="ora-action-start"
@@ -39,7 +32,6 @@ import { computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
 import { useUiStore } from '@/stores/ui';
-import { useCollapsingAppBar } from '@/composables/useCollapsingAppBar.js';
 import { PhArrowLeft, PhCheck, PhPencilSimple } from '@phosphor-icons/vue';
 import TextScaleControl from '@/components/TextScaleControl.vue';
 
@@ -47,33 +39,12 @@ const router = useRouter();
 const route = useRoute();
 const auth = useAuthStore();
 const uiStore = useUiStore();
-const { isAppBarTitleVisible } = useCollapsingAppBar();
-
 const isEditingReading = computed(() => route.name === 'ReadingEditor');
 const showTextScaleControl = computed(() => route.name !== 'oras' && route.name !== 'ReadingEditor');
 
 const isOnReadingRoute = computed(() => {
   const name = route.name;
   return name === 'reading' || name === 'ReadingEditor';
-});
-
-const topBarTitle = computed(() => {
-  const titles = {
-    oras: 'Літургія дня',
-    reading: 'Чытанні',
-    ReadingEditor: 'Рэдагаванне чытання',
-    invitatorium: 'Заклік',
-    morning: 'Агульная гадзіна',
-    laudes: 'Ютрань',
-    lectionis: 'Гадзіна чытанняў',
-    terz: 'Малітва перад поўднем',
-    sext: 'Малітва апоўдні',
-    non: 'Малітва пасля поўдня',
-    vesper: 'Нешпары',
-    completorium: 'Камплета',
-  };
-
-  return titles[route.name] || 'Літургія';
 });
 
 const goBack = () => {
@@ -165,30 +136,6 @@ const onEditClick = () => {
   margin-left: auto !important;
 }
 
-.ora-bar-title {
-  position: absolute;
-  left: 50%;
-  width: auto;
-  max-width: calc(100% - 176px);
-  margin-inline-start: 0 !important;
-  overflow: hidden;
-  font-size: 1rem;
-  font-weight: 650;
-  text-align: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transform: translateX(-50%);
-  pointer-events: none;
-  opacity: 0;
-  transform: translate(-50%, -6px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.ora-bar-title--visible {
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
-
 @media (max-width: 359px) {
   .floating-ora-bar :deep(.v-toolbar__content) {
     gap: 6px;
@@ -202,9 +149,5 @@ const onEditClick = () => {
     flex-basis: 44px !important;
   }
 
-  .ora-bar-title {
-    max-width: calc(100% - 176px);
-    font-size: 0.92rem;
-  }
 }
 </style>

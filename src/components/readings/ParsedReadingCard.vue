@@ -172,7 +172,7 @@ function cycleLabel(value) {
 
 <style scoped>
 .parsed-reading {
-  margin: 0 12px;
+  margin: 0;
   overflow: hidden;
   border: 1px solid var(--nav-border);
   border-radius: 28px;
@@ -184,7 +184,7 @@ function cycleLabel(value) {
 
 .reading-header {
   position: relative;
-  padding: 24px 26px 22px;
+  padding: 24px 20px 22px;
   border-bottom: 1px solid var(--nav-border);
   background:
     radial-gradient(circle at 92% 18%, rgba(var(--v-theme-primary), 0.13) 0, rgba(var(--v-theme-primary), 0.13) 44px, transparent 45px),
@@ -201,7 +201,7 @@ function cycleLabel(value) {
 }
 
 .reading-day-title {
-  max-width: 580px;
+  max-width: 760px;
   margin: 0;
   color: rgb(var(--v-theme-on-surface));
   font-size: calc(clamp(1.45rem, 5.3vw, 1.86rem) * var(--font-size-multiplier, 1));
@@ -223,7 +223,7 @@ function cycleLabel(value) {
 }
 
 .reading-sections {
-  padding: 8px 26px 30px;
+  padding: 8px 20px 30px;
 }
 
 .reading-section {
@@ -318,11 +318,11 @@ function cycleLabel(value) {
   color: rgba(var(--v-theme-on-surface), 0.72);
 }
 
-.psalm-refrain {
+.psalm-refrain,
+.alleluia-acclamation {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 9px;
-  align-items: baseline;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
   margin: 2px 0 21px;
   padding: 10px 13px;
   border-left: 3px solid rgb(var(--v-theme-primary));
@@ -334,7 +334,10 @@ function cycleLabel(value) {
   line-height: 1.5;
 }
 
-.psalm-refrain__label {
+.psalm-refrain__label,
+.alleluia-acclamation__label {
+  display: block;
+  margin: 0;
   color: rgb(var(--v-theme-primary));
   font-size: 0.72em;
   font-weight: 900;
@@ -369,15 +372,6 @@ function cycleLabel(value) {
 
 .alleluia-acclamation {
   margin: 2px 0 20px;
-  color: rgb(var(--v-theme-on-surface));
-  font-size: calc(1rem * var(--font-size-multiplier, 1));
-  line-height: 1.65;
-}
-
-.alleluia-acclamation__label {
-  margin-right: 0.28em;
-  color: rgb(var(--v-theme-on-surface));
-  font-weight: 800;
 }
 
 .alleluia-acclamation--closing {
@@ -396,16 +390,19 @@ function cycleLabel(value) {
 
 @media (max-width: 600px) {
   .parsed-reading {
-    margin-inline: 8px;
-    border-radius: 24px;
+    margin-inline: 0;
+    border-inline: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .reading-header {
-    padding: 21px 20px 19px;
+    padding: 21px 16px 19px;
   }
 
   .reading-sections {
-    padding: 4px 20px 26px;
+    padding: 4px 16px 26px;
   }
 
   .reading-section {
@@ -428,7 +425,7 @@ function cycleLabel(value) {
 @media (max-width: 359px) {
   .reading-header,
   .reading-sections {
-    padding-inline: 16px;
+    padding-inline: 12px;
   }
 
   .section-text,

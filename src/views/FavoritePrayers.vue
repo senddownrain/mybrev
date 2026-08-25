@@ -2,27 +2,6 @@
   <v-container class="prayers-list-container">
     <div class="favorites-page-header">
       <h1 class="favorites-page-title">Абраныя малітвы</h1>
-      <v-chip 
-        v-if="!isLoading && favoritePrayers.length > 0" 
-        size="small" 
-        color="primary" 
-        variant="tonal"
-      >
-        {{ favoritePrayers.length }} {{ favoritePrayers.length === 1 ? 'малітва' : 'малітваў' }}
-      </v-chip>
-    </div>
-
-    <div v-if="!isLoading && favoritePrayers.length > 0" class="favorites-sort-panel">
-      <v-icon icon="mdi-sort-variant" size="22" class="favorites-sort-icon"></v-icon>
-      <v-select
-        v-model="sortBy"
-        :items="sortOptions"
-        label="Сартаваць"
-        variant="plain"
-        density="compact"
-        hide-details
-        class="favorites-sort-select"
-      ></v-select>
     </div>
 
     <div v-if="isLoading" class="favorite-prayers-list">
@@ -89,7 +68,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useAuthStore } from '@/stores/auth';
@@ -100,41 +79,12 @@ const { prayers, isLoading, getTitle } = usePrayers();
 const authStore = useAuthStore();
 const settings = useSettingsStore();
 
-const sortBy = ref('alphabet');
-
-const sortOptions = [
-  { title: 'Па алфавіце', value: 'alphabet' },
-  { title: 'Па даце (новыя першымі)', value: 'date-desc' },
-  { title: 'Па даце (старыя першымі)', value: 'date-asc' },
-];
-
 const favoritePrayers = computed(() => {
   if (!prayers.value || !Array.isArray(prayers.value)) return [];
   if (!settings.favoritePrayers || !Array.isArray(settings.favoritePrayers)) return [];
   
-  let filtered = prayers.value.filter(prayer => settings.favoritePrayers.includes(prayer.id));
-  
-  filtered.sort((a, b) => {
-    switch (sortBy.value) {
-      case 'alphabet':
-        const titleA = getTitle(a).toLowerCase();
-        const titleB = getTitle(b).toLowerCase();
-        return titleA.localeCompare(titleB, 'be', { sensitivity: 'base' });
-      
-      case 'date-desc':
-        const dateA = a.createdAt?.toDate?.() || new Date(a.createdAt || 0);
-        const dateB = b.createdAt?.toDate?.() || new Date(b.createdAt || 0);
-        return dateB - dateA;
-      
-      case 'date-asc':
-        const dateA2 = a.createdAt?.toDate?.() || new Date(a.createdAt || 0);
-        const dateB2 = b.createdAt?.toDate?.() || new Date(b.createdAt || 0);
-        return dateA2 - dateB2;
-      
-      default:
-        return 0;
-    }
-  });
+  const filtered = prayers.value.filter(prayer => settings.favoritePrayers.includes(prayer.id));
+  filtered.sort((a, b) => getTitle(a).localeCompare(getTitle(b), 'be', { sensitivity: 'base' }));
   
   return filtered;
 });
@@ -159,8 +109,6 @@ function toggleFavorite(prayerId) {
 .favorites-page-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
   margin: 0 12px 22px;
 }
 
@@ -171,29 +119,6 @@ function toggleFavorite(prayerId) {
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.025em;
-}
-
-.favorites-sort-panel {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 58px;
-  margin: 0 12px 18px;
-  padding: 4px 14px;
-  border: 1px solid var(--nav-border);
-  border-radius: 20px;
-  background: var(--nav-surface);
-  color: var(--nav-on-surface);
-  box-shadow: 0 3px 14px var(--nav-button-shadow);
-}
-
-.favorites-sort-icon {
-  flex: 0 0 auto;
-  color: rgb(var(--v-theme-primary));
-}
-
-.favorites-sort-select {
-  min-width: 0;
 }
 
 .favorite-prayers-list {
@@ -315,10 +240,6 @@ function toggleFavorite(prayerId) {
 
   .favorites-page-header {
     margin-inline: 12px;
-  }
-
-  .favorites-sort-panel {
-    margin-inline: 8px;
   }
 
   .favorite-prayers-list {

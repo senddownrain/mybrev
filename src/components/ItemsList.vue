@@ -1,6 +1,6 @@
 <template>
   <v-container class="items-list-container">
-    <h1 class="section-page-title">Літургія</h1>
+    <h1 class="section-page-title">Літургія гадзін</h1>
     <div class="date-header-shell" :style="dateHeaderStyle">
       <button
         type="button"
@@ -78,6 +78,11 @@
             :key="option.key"
             :to="optionRoute(option)"
             class="day-option"
+            :class="{
+              'day-option--themed': isThemedOption(option),
+              'day-option--requiem': isOfficeForDead(option),
+            }"
+            :style="getOptionStyle(option)"
           >
             <template #prepend>
               <span class="day-option__icon-wrap">
@@ -129,9 +134,10 @@ import { logger } from '@/utils/logger';
 import { useNotifier } from '@/composables/useNotifier';
 import {
   LITURGICAL_OPTION_SOURCE,
-  LITURGICAL_THEME_MAP,
   PLACE_LABEL_MAP,
   RANK_LABEL_MAP,
+  getLiturgicalCelebrationThemeKey,
+  getLiturgicalTheme,
 } from '@/constants/liturgical';
 import { formatDateDayMonth } from '@/utils/date';
 
@@ -166,7 +172,8 @@ const currentPeriodType = computed(() => {
     || 'default';
 });
 const dateHeaderStyle = computed(() => {
-  const theme = LITURGICAL_THEME_MAP[currentPeriodType.value] || LITURGICAL_THEME_MAP.default;
+  const firstDay = dayOptions.value[0]?.day || null;
+  const theme = getLiturgicalTheme(firstDay, currentPeriodType.value);
   return {
     '--liturgical-color': theme.color,
     '--liturgical-rgb': theme.rgb,
@@ -175,6 +182,7 @@ const dateHeaderStyle = computed(() => {
 
 const getOptionDisplayTitle = (option) => {
   const title = String(option?.title || '').trim();
+  if (isOfficeForDead(option)) return title;
   const weekday = currentDate.value.format('dddd');
   const titleAlreadyContainsWeekday = title
     .toLocaleLowerCase('be-BY')
@@ -184,6 +192,7 @@ const getOptionDisplayTitle = (option) => {
 };
 
 const getOptionMeta = (option) => {
+  if (isOfficeForDead(option)) return option.subtitle || 'Памінальны афіцый';
   const day = option?.day || {};
   const rank = day._rank || day._feastType;
   const places = Array.isArray(day._place) ? day._place : [day._place];
@@ -282,13 +291,34 @@ const optionRoute = (option) => {
   return `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${targetId}`;
 };
 
+const isOfficeForDead = (option) => (
+  option?.source === LITURGICAL_OPTION_SOURCE.OFFICE_FOR_DEAD
+);
+
+const isThemedOption = (option) => (
+  isOfficeForDead(option) || Boolean(getLiturgicalCelebrationThemeKey(option?.day))
+);
+
+const getOptionStyle = (option) => {
+  if (!isThemedOption(option)) return undefined;
+  const theme = getLiturgicalTheme(option?.day, option?.contextPeriodType);
+  return {
+    '--option-color': theme.color,
+    '--option-rgb': theme.rgb,
+  };
+};
+
 const getOptionIcon = (option) => {
+  if (isOfficeForDead(option)) return 'mdi-candle';
   if (option.source === LITURGICAL_OPTION_SOURCE.DYNAMIC) return 'mdi-star-four-points';
   if (option.source === LITURGICAL_OPTION_SOURCE.FIXED) return 'mdi-calendar-star';
   return 'mdi-calendar-blank';
 };
 
 const getOptionColor = (option) => {
+  if (isThemedOption(option)) {
+    return getLiturgicalTheme(option?.day, option?.contextPeriodType).color;
+  }
   const periodType = option.day?._periodType || option.contextPeriodType;
   if (periodType === 'advent' || periodType === 'lent') return 'purple-darken-3';
   if (periodType === 'easter' || periodType === 'christmas') return 'yellow-darken-3';
@@ -466,6 +496,23 @@ watch(
 .day-option:hover {
   border-color: rgba(var(--v-theme-primary), 0.2);
   box-shadow: 0 7px 22px var(--nav-button-shadow);
+}
+
+.day-option--themed {
+  border-color: rgba(var(--option-rgb), 0.28);
+  background:
+    linear-gradient(120deg, rgba(var(--option-rgb), 0.14), rgba(var(--option-rgb), 0.025) 72%),
+    var(--nav-surface);
+}
+
+.day-option--themed:hover {
+  border-color: rgba(var(--option-rgb), 0.42);
+}
+
+.day-option--themed .day-option__icon-wrap {
+  border-color: rgba(var(--option-rgb), 0.22);
+  background: rgba(var(--option-rgb), 0.14);
+  color: var(--option-color);
 }
 
 .day-option:active {

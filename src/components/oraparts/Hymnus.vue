@@ -5,7 +5,7 @@
                 ГІМН
             </v-card-title >
             <v-card-text class="ora-text">
-                <alternative-text :text="text" aria-label="Выбар гімна" />
+                <alternative-text :text="text" aria-label="Выбар варыянта гімна" />
             </v-card-text>
         </v-card>
     </div>

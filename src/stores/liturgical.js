@@ -32,6 +32,10 @@ const TTL = {
   FEASTS:   24 * 60 * 60 * 1000, // 24 hours
 };
 
+// Increment when assembled day semantics change. This prevents an in-memory
+// result produced before a `from-day` fix from surviving HMR for another day.
+const CONTENT_RESOLUTION_VERSION = 4;
+
 /**
  * Check whether a cache entry is still valid.
  * @param {{ data: unknown, cachedAt: number } | undefined} entry
@@ -124,7 +128,8 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     const key   = mDate.format('YYYY-MM-DD');
 
     const cachedContent = contentCache.value.get(key);
-    if (_isCacheValid(cachedContent, TTL.CONTENT)) {
+    const isCompatibleContent = cachedContent?.resolutionVersion === CONTENT_RESOLUTION_VERSION;
+    if (isCompatibleContent && _isCacheValid(cachedContent, TTL.CONTENT)) {
       logger.log(`[liturgicalStore] content cache hit: ${key}`);
       return cachedContent.data;
     }
@@ -136,7 +141,11 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
       try {
         const { context, dynamicFeastCodes } = await _resolveContext(mDate);
         const result = await fetchContentForDate(mDate, context, dynamicFeastCodes);
-        contentCache.value.set(key, { data: result, cachedAt: Date.now() });
+        contentCache.value.set(key, {
+          data: result,
+          cachedAt: Date.now(),
+          resolutionVersion: CONTENT_RESOLUTION_VERSION,
+        });
         logger.log(`[liturgicalStore] content loaded for ${key}`);
         return result;
       } catch (err) {
@@ -148,7 +157,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
       }
     });
 
-    if (cachedContent) {
+    if (cachedContent && isCompatibleContent) {
       logger.log(`[liturgicalStore] stale content cache hit: ${key}`);
       if (_canRefreshFromNetwork()) {
         loadFreshContent().catch((err) => {
@@ -463,7 +472,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   function getCachedContent(date) {
     const key = moment(date).startOf('day').format('YYYY-MM-DD');
     const entry = contentCache.value.get(key);
-    return entry?.data || null;
+    return entry?.resolutionVersion === CONTENT_RESOLUTION_VERSION ? entry.data : null;
   }
 
   /** Return parsed readings synchronously so date swipes never flash a loader. */

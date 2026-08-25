@@ -34,6 +34,7 @@
 
 <script setup>
 import { computed, getCurrentInstance, ref, watch } from 'vue';
+import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
 
 const props = defineProps({
   text: { type: String, default: '' },
@@ -57,11 +58,35 @@ function firstLine(html, index) {
   return plainText(line) || `Варыянт ${index + 1}`;
 }
 
-const options = computed(() => String(props.text || '')
-  .split(alternativeSeparator)
-  .map((html) => html.trim())
-  .filter(Boolean)
-  .map((html, index) => ({ html, title: firstLine(html, index) })));
+function structuredOptions(html) {
+  const root = document.createElement('div');
+  root.innerHTML = html;
+  const blocks = [...root.children].filter((element) => element.hasAttribute('data-alternative-title'));
+  if (blocks.length < 2) return null;
+
+  const suffixBlocks = [...root.children].filter((element) => element.hasAttribute('data-alternative-suffix'));
+  const suffixHtml = suffixBlocks.map((element) => element.innerHTML.trim()).join('\n');
+  suffixBlocks.forEach((block) => block.remove());
+  blocks.forEach((block) => block.remove());
+  const sharedHtml = root.innerHTML.trim();
+  return blocks.map((block, index) => ({
+    html: removeBreakAfterAsterisk([
+      sharedHtml,
+      block.innerHTML.trim(),
+      suffixHtml,
+    ].filter(Boolean).join('\n')),
+    title: block.getAttribute('data-alternative-title') || firstLine(block.innerHTML, index),
+  }));
+}
+
+const options = computed(() => {
+  const text = String(props.text || '');
+  return structuredOptions(text) || text
+    .split(alternativeSeparator)
+    .map((html) => html.trim())
+    .filter(Boolean)
+    .map((html, index) => ({ html, title: firstLine(html, index) }));
+});
 
 const activeOption = computed(() => options.value[activeIndex.value] || options.value[0] || null);
 

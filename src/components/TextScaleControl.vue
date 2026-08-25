@@ -12,15 +12,6 @@
 
     <button
       type="button"
-      class="text-scale-value"
-      aria-label="Адкрыць налады выгляду"
-      @click="toggleSettingsSheet"
-    >
-      {{ Math.round(settings.fontSizeMultiplier * 100) }}%
-    </button>
-
-    <button
-      type="button"
       class="text-scale-button"
       aria-label="Павялічыць тэкст"
       :disabled="settings.fontSizeMultiplier >= 1.8"
@@ -34,10 +25,8 @@
 <script setup>
 import { PhMinus, PhPlus } from '@phosphor-icons/vue';
 import { useSettingsStore } from '@/stores/settings.js';
-import { useAppBar } from '@/composables/useAppBar.js';
 
 const settings = useSettingsStore();
-const { toggleSettingsSheet } = useAppBar();
 </script>
 
 <style scoped>
@@ -53,36 +42,35 @@ const { toggleSettingsSheet } = useAppBar();
   box-shadow: 0 2px 9px var(--nav-button-shadow);
 }
 
-.text-scale-button,
-.text-scale-value {
+.text-scale-button {
   display: grid;
   place-items: center;
+  width: 38px;
+  flex: 0 0 38px;
   height: 40px;
   border: 0;
+  border-radius: 50%;
   background: transparent;
   color: inherit;
   cursor: pointer;
 }
 
-.text-scale-button {
-  width: 38px;
-  flex: 0 0 38px;
-  border-radius: 50%;
-}
-
-.text-scale-value {
-  min-width: 44px;
-  padding: 0 4px;
-  border-radius: 12px;
-  color: var(--nav-muted);
-  font-size: 0.72rem;
-  font-weight: 750;
-  font-variant-numeric: tabular-nums;
-}
-
-.text-scale-button:active,
-.text-scale-value:active {
+.text-scale-button:active {
   background: var(--nav-active);
+}
+
+.text-scale-button + .text-scale-button {
+  position: relative;
+}
+
+.text-scale-button + .text-scale-button::before {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 0;
+  width: 1px;
+  background: var(--nav-border);
+  content: '';
 }
 
 .text-scale-button:disabled {
@@ -96,19 +84,10 @@ const { toggleSettingsSheet } = useAppBar();
     padding-inline: 2px;
   }
 
-  .text-scale-button,
-  .text-scale-value {
-    height: 38px;
-  }
-
   .text-scale-button {
     width: 34px;
     flex-basis: 34px;
-  }
-
-  .text-scale-value {
-    min-width: 38px;
-    font-size: 0.67rem;
+    height: 38px;
   }
 }
 </style>

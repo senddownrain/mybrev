@@ -71,6 +71,7 @@ export const LITURGICAL_OPTION_SOURCE = {
   PERIOD: 'period',
   DYNAMIC: 'dynamic',
   FIXED: 'fixed',
+  OFFICE_FOR_DEAD: 'office-for-dead',
 };
 
 /** Колеры перыядаў для UI (chips, borders) */
@@ -91,5 +92,95 @@ export const LITURGICAL_THEME_MAP = Object.freeze({
   holyweek: { color: '#5b3b83', rgb: '91, 59, 131' },
   christmas: { color: '#b07a1e', rgb: '176, 122, 30' },
   easter: { color: '#bd8a24', rgb: '189, 138, 36' },
+  gold: { color: '#b88719', rgb: '218, 174, 70' },
+  white: { color: '#8f7d52', rgb: '246, 243, 234' },
+  red: { color: '#b33a3a', rgb: '179, 58, 58' },
+  requiem: { color: '#67546b', rgb: '103, 84, 107' },
   default: { color: '#55707c', rgb: '85, 112, 124' },
 });
+
+const SOLEMNITY_RANKS = new Set([
+  LITURGICAL_RANK.SOLEMNITY,
+  'solemnity',
+  'урачыстасць',
+  'ўрачыстасць',
+]);
+
+const FEAST_RANKS = new Set([
+  LITURGICAL_RANK.FEAST,
+  'feast',
+  'свята',
+]);
+
+const RED_FEAST_CODES = new Set([
+  'pentecost',
+  'heartofjesus',
+]);
+
+const normalizeRank = (day) => String(day?._rank || day?._feastType || day?.rank || '')
+  .trim()
+  .toLocaleLowerCase('be-BY');
+
+const normalizeFeastCode = (day) => String(day?._feast || '')
+  .trim()
+  .toLowerCase()
+  .replace(/^feast-/, '');
+
+const celebrationText = (day) => [
+  day?._feastName,
+  day?._title,
+  day?.title,
+  day?._currentVersion,
+  ...(Array.isArray(day?._templates) ? day._templates : []),
+]
+  .filter(Boolean)
+  .join(' ')
+  .toLocaleLowerCase('be-BY');
+
+/** Return the celebration rank group used by ordering and visual themes. */
+export function getLiturgicalCelebrationRank(day) {
+  const rank = normalizeRank(day);
+  if (SOLEMNITY_RANKS.has(rank)) return 'solemnity';
+  if (FEAST_RANKS.has(rank)) return 'feast';
+  return '';
+}
+
+/**
+ * Resolve the visual family of a liturgical celebration.
+ * Red has precedence over rank colors for martyrs, apostles, Pentecost and Sacred Heart.
+ */
+export function getLiturgicalCelebrationThemeKey(day) {
+  if (!day) return '';
+  const text = celebrationText(day);
+  const feastCode = normalizeFeastCode(day);
+  const isMartyr = /мучан/u.test(text) || /(?:^|\s)martyrs?(?:\s|$)/u.test(text);
+  const isApostle = /апостал/u.test(text) || /(?:^|\s)apostles?(?:\s|$)/u.test(text);
+  const isRedSolemnity = RED_FEAST_CODES.has(feastCode)
+    || /спасланн\p{L}*\s+(?:святога\s+духа|духа\s+святога)/u.test(text)
+    || /сэрц\p{L}*\s+(?:пана\s+)?езус/u.test(text);
+
+  if (isMartyr || isApostle || isRedSolemnity) return 'red';
+  const rank = getLiturgicalCelebrationRank(day);
+  if (rank === 'solemnity') return 'gold';
+  if (rank === 'feast') return 'white';
+  return '';
+}
+
+/** Celebration-aware theme with the regular period as fallback. */
+export function getLiturgicalTheme(day, fallbackPeriodType = 'default') {
+  if (day?._theme === 'requiem' || day?._kind === 'office-for-dead') {
+    return LITURGICAL_THEME_MAP.requiem;
+  }
+  const celebrationTheme = getLiturgicalCelebrationThemeKey(day);
+  return LITURGICAL_THEME_MAP[celebrationTheme]
+    || LITURGICAL_THEME_MAP[day?._periodType || fallbackPeriodType]
+    || LITURGICAL_THEME_MAP.default;
+}
+
+/** Lower values are displayed first; other liturgical days keep their source order. */
+export function getLiturgicalCelebrationPriority(day) {
+  const rank = getLiturgicalCelebrationRank(day);
+  if (rank === 'solemnity') return 0;
+  if (rank === 'feast') return 1;
+  return 2;
+}

@@ -11,10 +11,15 @@
                 <div class="ora-ant ora-ant--separated" v-if="!singleAntiphon && ant2" v-html="ant2"></div>
                 <div class="ora-psalm" v-if="ps2" v-html="formatPsalm(ps2)"></div>
                 <div class="ora-ant" v-if="!singleAntiphon && ant2" v-html="ant2"></div>
-                <div class="ora-ant ora-ant--separated" v-if="!singleAntiphon && ant3" v-html="ant3"></div>
-                <div class="ora-psalm" v-if="ps3" v-html="formatPsalm(ps3)"></div>
+                <div class="ora-ant ora-ant--separated" v-if="!singleAntiphon && ant3 && !hasThirdPsalmAlternatives" v-html="ant3"></div>
+                <alternative-text
+                  v-if="hasThirdPsalmAlternatives"
+                  :text="ps3"
+                  aria-label="Выбар трэцяга псальма"
+                />
+                <div class="ora-psalm" v-else-if="ps3" v-html="formatPsalm(ps3)"></div>
                 <div class="ora-ant" v-if="singleAntiphon" v-html="ant1"></div>
-                <div class="ora-ant" v-else-if="ant3" v-html="ant3"></div>
+                <div class="ora-ant" v-else-if="ant3 && !hasThirdPsalmAlternatives" v-html="ant3"></div>
                 <!-- <p><span style="color:red">1 ант.</span> <span> {{ ant1 }}</span></p>
                 <p>{{ ps1 }}</p>
                 <p><span style="color:red">2 ант.</span> <span> {{ ant2 }}</span></p>
@@ -31,6 +36,7 @@
 import { computed } from 'vue';
 import { hasSingleAntiphonPsalmody } from '@/utils/liturgicalDayResolution';
 import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
+import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 
 const props = defineProps({
     ant1: String,
@@ -41,6 +47,9 @@ const props = defineProps({
     ps3: String,
 })
 const singleAntiphon = computed(() => hasSingleAntiphonPsalmody(props));
+const hasThirdPsalmAlternatives = computed(() => (
+  String(props.ps3 || '').includes('data-alternative-title=')
+));
 const formatPsalm = removeBreakAfterAsterisk;
 // import { ref } from 'vue'
 // import moment from '@/utils/moment-be';

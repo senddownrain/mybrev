@@ -13,7 +13,7 @@ const WEEKDAY_FIELD = Object.freeze({
 
 const IDENTITY_FIELDS = new Set([
   'id', '_date', '_feast', '_feastName', '_rank', '_place', '_templates',
-  '_currentVersion', '_periodType', '_periodWeekNumber', '_dayOfWeek',
+  '_currentVersion', '_periodType', '_periodWeekNumber', '_dayOfWeek', '_fromDayFields',
 ]);
 
 const CHRISTMAS_DATE_EXCEPTION_EXCLUSIONS = new Set([
@@ -30,6 +30,34 @@ export function isChristmasDateExceptionExclusion(mDate) {
 
 export function isSeasonalDateDocumentId(value) {
   return /^(?:advent|christmas)-\d{2}-\d{2}$/.test(String(value || ''));
+}
+
+/**
+ * Canonical ID of a regular period day in `fixedDays`.
+ *
+ * Period documents are normally found through their selector fields. The ID
+ * is a fallback for legacy imports that stored a selector in another type.
+ */
+export function getPeriodDayDocumentId(periodType, periodWeekNumber, dayOfWeek) {
+  const period = String(periodType || '').trim();
+  const week = Number(periodWeekNumber);
+  const day = Number(dayOfWeek);
+  if (!period || !Number.isInteger(week) || week < 0 || !Number.isInteger(day) || day < 1 || day > 7) {
+    return '';
+  }
+  return `${period}-w${week}-d${day}`;
+}
+
+/** Canonical `dayTemplates` ID for a period week in the four-week psalter. */
+export function getPeriodDayTemplateDocumentId(periodType, periodWeekNumber, dayOfWeek) {
+  const period = String(periodType || '').trim();
+  const week = Number(periodWeekNumber);
+  const day = Number(dayOfWeek);
+  if (!period || !Number.isInteger(week) || week < 1 || !Number.isInteger(day) || day < 1 || day > 7) {
+    return '';
+  }
+  const psalmWeek = ((week - 1) % 4) + 1;
+  return `${period}-psalmweek-${psalmWeek}-day-${day}`;
 }
 
 export function isSeasonalDateException(mDate, periodType = null) {
@@ -82,10 +110,20 @@ export function resolveDayAgainstPeriod(day, periodDay, { fillMissing = false } 
   if (!day && !periodDay) return null;
 
   const resolved = { ...(periodDay || {}), ...(day || {}) };
-  const keys = new Set([...Object.keys(periodDay || {}), ...Object.keys(day || {})]);
+  const fromDayFields = new Set(
+    Array.isArray(day?._fromDayFields) ? day._fromDayFields : [],
+  );
+  Object.entries(day || {}).forEach(([field, value]) => {
+    if (isFromDayReference(value)) fromDayFields.add(field);
+  });
+  const keys = new Set([
+    ...Object.keys(periodDay || {}),
+    ...Object.keys(day || {}),
+    ...fromDayFields,
+  ]);
   keys.forEach((field) => {
     const value = day?.[field];
-    if (isFromDayReference(value)) {
+    if (fromDayFields.has(field)) {
       const fallback = IDENTITY_FIELDS.has(field) ? '' : periodDay?.[field];
       resolved[field] = isFromDayReference(fallback) ? '' : (fallback ?? '');
     } else if (!IDENTITY_FIELDS.has(field) && fillMissing && isMissing(value)) {
@@ -100,6 +138,8 @@ export function resolveDayAgainstPeriod(day, periodDay, { fillMissing = false } 
   Object.keys(resolved).forEach((field) => {
     if (isFromDayReference(resolved[field])) resolved[field] = '';
   });
+  if (fromDayFields.size) resolved._fromDayFields = [...fromDayFields];
+  else delete resolved._fromDayFields;
   return resolved;
 }
 

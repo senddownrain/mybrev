@@ -83,7 +83,7 @@ export const DAY_TEMPLATE_LABEL_MAP = Object.freeze({
   'blessed-virgin-mary': 'Пра Найсвяцейшую Панну Марыю',
   'church-dedication': 'Пра пасвячэнне касцёла',
   'doctors-of-church': 'Пра доктараў касцёла',
-  educators: 'Пра выхавацёлящ',
+  educators: 'Пра выхавацеляў',
   'holy-men': 'Пра святых мужчыны',
   'holy-women': 'Пра святых жанчыны',
   'martyr-one': 'Пра аднаго мучаніка',

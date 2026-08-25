@@ -28,6 +28,7 @@
     "export:completorium-period-weekdays": "node scripts/export-completorium-period-weekdays.mjs",
     "generate:completorium-clean-35": "node scripts/generate-clean-completorium-35.mjs",
     "db:replace-completoriums": "node scripts/replace-completoriums-collection.mjs",
+    "db:import-office-for-dead": "node scripts/import-office-for-dead.mjs --apply",
     "db:analyze-day-prenormalization": "node patchs/analyze-day-pre-normalization.js",
     "db:normalize-day-entities": "node patchs/normalize-day-entities.js",
     "db:generate-day-templates": "node patchs/generate-day-templates.js",

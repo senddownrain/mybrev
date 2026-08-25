@@ -73,7 +73,6 @@
           <v-btn
             v-if="day"
             variant="text"
-            :color="isSelected(day) ? color : undefined"
             :class="{
               'is-selected': isSelected(day),
               'is-today': isToday(day),
@@ -299,29 +298,39 @@ const nextMonth = () => {
 .custom-date-picker {
   width: min(100%, 390px);
   min-width: 300px;
-  padding: 8px 16px 16px;
-  color: rgb(var(--v-theme-on-surface));
+  padding: 6px 16px 18px;
+  color: var(--nav-on-surface);
 }
 
 .calendar-header {
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  grid-template-columns: 46px minmax(0, 1fr) 46px;
   align-items: center;
-  gap: 4px;
-  min-height: 64px;
+  gap: 8px;
+  min-height: 68px;
 }
 
 .calendar-period {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 6px;
   min-width: 0;
 }
 
 .month-nav-btn {
-  color: rgb(var(--v-theme-primary));
-  background: rgba(var(--v-theme-primary), 0.08);
+  width: 46px !important;
+  min-width: 46px !important;
+  height: 46px !important;
+  border: 1px solid var(--nav-border);
+  color: var(--nav-on-surface);
+  background: var(--nav-active);
+  box-shadow: 0 2px 8px var(--nav-button-shadow);
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+
+.month-nav-btn:active {
+  transform: scale(0.92);
 }
 
 .weekday-row,
@@ -331,12 +340,14 @@ const nextMonth = () => {
 }
 
 .weekday-row {
-  margin: 2px 0 6px;
+  margin: 2px 0 7px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--nav-border);
 }
 
 .weekday-header {
   padding: 8px 0;
-  color: rgba(var(--v-theme-on-surface), 0.56);
+  color: var(--nav-muted);
   font-size: 0.72rem;
   font-weight: 700;
   line-height: 1;
@@ -345,7 +356,7 @@ const nextMonth = () => {
 }
 
 .weekday-header.weekend {
-  color: rgba(var(--v-theme-primary), 0.75);
+  color: var(--nav-on-surface);
 }
 
 .calendar-grid {
@@ -372,41 +383,43 @@ const nextMonth = () => {
   padding: 0 !important;
   border-radius: 50%;
   font-size: 0.92rem;
-  font-weight: 500;
+  color: var(--nav-on-surface);
+  font-weight: 620;
   letter-spacing: 0;
   transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .day-btn:hover {
-  background: rgba(var(--v-theme-primary), 0.09);
+  background: var(--nav-active);
   transform: translateY(-1px);
 }
 
 .day-btn.is-selected {
-  color: rgb(var(--v-theme-on-primary)) !important;
-  background: rgb(var(--v-theme-primary));
-  box-shadow: 0 5px 14px rgba(var(--v-theme-primary), 0.28);
+  color: var(--nav-surface) !important;
+  background: var(--nav-on-surface);
+  box-shadow: 0 6px 16px var(--nav-shadow);
   font-weight: 700;
 }
 
 .day-btn.is-today:not(.is-selected) {
-  color: rgb(var(--v-theme-primary));
-  background: rgba(var(--v-theme-primary), 0.08);
-  box-shadow: inset 0 0 0 1px rgba(var(--v-theme-primary), 0.48);
+  color: var(--nav-on-surface);
+  background: var(--nav-active);
+  box-shadow: inset 0 0 0 1.5px var(--nav-on-surface);
   font-weight: 700;
 }
 
 .day-btn.is-weekend:not(.is-selected):not(.is-today) {
-  color: rgb(var(--v-theme-primary));
+  color: var(--nav-on-surface);
 }
 
 .day-btn.is-adjacent {
-  opacity: 0.34;
+  opacity: 0.28;
 }
 
 .month-select,
 .year-select {
   flex: 0 0 auto;
+  margin-bottom: 0 !important;
   text-align: center;
 }
 
@@ -420,20 +433,26 @@ const nextMonth = () => {
 
 .month-select :deep(.v-field),
 .year-select :deep(.v-field) {
-  padding: 0 !important;
-  min-height: auto !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  padding: 0 7px !important;
+  border: 1px solid var(--nav-border);
+  border-radius: 14px;
+  background: var(--nav-active);
+  color: var(--nav-on-surface);
 }
 
 .month-select :deep(.v-field__input),
 .year-select :deep(.v-field__input) {
-  min-height: auto !important;
+  min-height: 44px !important;
   padding: 0 !important;
 }
 
 .month-select :deep(.v-select__selection),
 .year-select :deep(.v-select__selection) {
-  font-size: 1.05rem !important;
-  font-weight: 700 !important;
+  color: var(--nav-on-surface);
+  font-size: 1rem !important;
+  font-weight: 760 !important;
   margin: 0 !important;
   text-align: center !important;
   justify-content: center !important;
@@ -465,7 +484,8 @@ const nextMonth = () => {
 
 .month-select :deep(.v-field__append-inner),
 .year-select :deep(.v-field__append-inner) {
-  opacity: 0.45;
+  color: var(--nav-on-surface);
+  opacity: 0.52;
   padding-inline-start: 2px;
 }
 
@@ -476,7 +496,24 @@ const nextMonth = () => {
   }
 
   .calendar-header {
-    grid-template-columns: 40px minmax(0, 1fr) 40px;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+  }
+
+  .month-nav-btn {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+  }
+
+  .month-select :deep(.v-field),
+  .year-select :deep(.v-field) {
+    height: 44px !important;
+    min-height: 44px !important;
+  }
+
+  .month-select :deep(.v-field__input),
+  .year-select :deep(.v-field__input) {
+    min-height: 42px !important;
   }
 
   .month-select {

@@ -36,6 +36,26 @@
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
+      <!-- Меню і вяртанне да літургіі як адзін падзелены кантрол -->
+      <div v-else-if="isReadingsPage" class="readings-nav-group">
+        <v-btn
+          icon
+          variant="text"
+          class="readings-nav-segment readings-nav-segment--menu"
+          aria-label="Адкрыць меню"
+          @click.stop="isDrawerOpen = !isDrawerOpen"
+        >
+          <v-icon>mdi-menu</v-icon>
+        </v-btn>
+        <v-btn
+          :to="readingsLiturgyRoute"
+          variant="text"
+          class="readings-nav-segment readings-nav-segment--liturgy text-none"
+          prepend-icon="mdi-cross"
+        >
+          Літургія
+        </v-btn>
+      </div>
       <!-- Меню для остальных страниц -->
       <v-app-bar-nav-icon
         v-else
@@ -45,14 +65,6 @@
       >
         <v-icon>mdi-menu</v-icon>
       </v-app-bar-nav-icon>
-
-      <v-app-bar-title
-        v-if="!isPrayerEditPage && !(isPrayerViewPage && uiStore.prayerIsEditing)"
-        class="app-title-clickable"
-        :class="{ 'app-title-clickable--visible': isAppBarTitleVisible }"
-      >
-        {{ layoutTitle }}
-      </v-app-bar-title>
 
       <!-- Заголовок при редактировании молитвы -->
       <v-app-bar-title v-if="(isPrayerViewPage && uiStore.prayerIsEditing) || isPrayerEditPage" class="prayer-edit-title">
@@ -168,7 +180,7 @@ import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { usePrayers } from '@/composables/usePrayers.js';
 import { useAuthStore } from '@/stores/auth.js';
-import { useCollapsingAppBar } from '@/composables/useCollapsingAppBar.js';
+import moment from '@/utils/moment-be';
 
 const { isDrawerOpen } = useAppBar();
 const uiStore = useUiStore();
@@ -179,7 +191,6 @@ const authStore = useAuthStore();
 
 const { selectedTags, selectedCategory, isFilterExpanded } = usePrayersFilters();
 const { allTags } = usePrayers();
-const { isAppBarTitleVisible } = useCollapsingAppBar();
 const filterTags = computed(() => (
   [...new Set(allTags.value || [])].sort((a, b) => a.localeCompare(b, 'be', { sensitivity: 'base' }))
 ));
@@ -190,6 +201,24 @@ const isPrayerViewPage = computed(() => {
 
 const isPrayerEditPage = computed(() => {
   return route.name === 'PrayerEdit' || route.name === 'PrayerAdd';
+});
+
+const isReadingsPage = computed(() => {
+  return route.name === 'Readings' || route.name === 'ReadingsByDate';
+});
+
+const readingsLiturgyRoute = computed(() => {
+  const dateParam = route.params.date || route.query.date;
+  const selectedDate = dateParam
+    ? moment(dateParam, 'YYYY-MM-DD', true)
+    : moment().startOf('day');
+  const validDate = selectedDate.isValid() ? selectedDate : moment().startOf('day');
+  const date = validDate.format('YYYY-MM-DD');
+  const dayId = String(route.query.returnDayId || route.query.dayId || '');
+
+  if (dayId) return { name: 'oras', params: { day: date, id: dayId } };
+  if (validDate.isSame(moment().startOf('day'), 'day')) return { name: 'Today' };
+  return { name: 'SelectedDay', params: { day: date } };
 });
 
 const showTextScaleControl = computed(() => {
@@ -340,34 +369,42 @@ const applyFilter = () => {
   color: var(--nav-on-surface) !important;
 }
 
+.readings-nav-group {
+  display: flex;
+  height: 48px;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border: 1px solid var(--nav-border);
+  border-radius: 24px;
+  background: var(--nav-surface);
+  color: var(--nav-on-surface);
+  box-shadow: 0 2px 9px var(--nav-button-shadow);
+}
+
+.readings-nav-segment {
+  height: 46px !important;
+  border-radius: 0 !important;
+  color: var(--nav-on-surface) !important;
+}
+
+.readings-nav-segment--menu {
+  width: 48px !important;
+  min-width: 48px !important;
+}
+
+.readings-nav-segment--liturgy {
+  min-width: 112px !important;
+  padding-inline: 12px 16px !important;
+  border-left: 1px solid var(--nav-border) !important;
+  font-weight: 650;
+}
+
+.readings-nav-segment:active {
+  background: var(--nav-active) !important;
+}
+
 .top-action-start {
   margin-left: auto !important;
-}
-
-.app-title-clickable {
-  position: absolute;
-  left: 50%;
-  width: auto;
-  max-width: calc(100% - 152px);
-  margin-inline-start: 0 !important;
-  cursor: default;
-  font-size: 1.15rem;
-  font-weight: 650;
-  text-align: center;
-  transform: translateX(-50%);
-  pointer-events: none;
-  opacity: 0;
-  transform: translate(-50%, -6px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.app-title-clickable--visible {
-  opacity: 1;
-  transform: translate(-50%, 0);
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
 }
 
 .prayer-edit-title {
@@ -474,9 +511,24 @@ const applyFilter = () => {
     flex-basis: 44px !important;
   }
 
-  .app-title-clickable {
-    max-width: calc(100% - 148px);
-    font-size: 1rem;
+  .readings-nav-group {
+    height: 44px;
+    border-radius: 22px;
   }
+
+  .readings-nav-segment {
+    height: 42px !important;
+  }
+
+  .readings-nav-segment--menu {
+    width: 44px !important;
+    min-width: 44px !important;
+  }
+
+  .readings-nav-segment--liturgy {
+    min-width: 104px !important;
+    padding-inline: 10px 13px !important;
+  }
+
 }
 </style>

@@ -7,6 +7,7 @@ import {
   PLACE_LABEL_MAP,
   RANK_LABEL_MAP,
   LITURGICAL_OPTION_SOURCE,
+  getLiturgicalCelebrationPriority,
 } from '@/constants/liturgical';
 import { formatLiturgicalPeriodTitle } from '@/utils/liturgicalPeriodTitle';
 import { fetchDaysForDate } from '@/services/liturgicalDayService';
@@ -61,7 +62,8 @@ function buildDayTitle(day, context) {
   const isSeasonalCalendarDay = isSeasonalDateDocumentId(day?.id)
     && ['advent', 'christmas'].includes(day?._periodType);
   const isUntitledChristmasDay = day?._periodType === 'christmas' && !hasCelebrationIdentity;
-  const isPeriodDay = day?._periodType && !hasCelebrationIdentity;
+  const isOfficeForDead = day?._kind === 'office-for-dead';
+  const isPeriodDay = day?._periodType && !hasCelebrationIdentity && !isOfficeForDead;
   if (isPeriodDay || isSeasonalCalendarDay || isUntitledChristmasDay) {
     return buildPeriodTitle({
       ...context,
@@ -151,6 +153,7 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     // the user, while `dayOptions` below still exposes only the date's canonical
     // seasonal option.
     daysResult.periodFallback,
+    daysResult.officeForDead,
   ].filter(Boolean);
   const dayMap = new Map(allDays.map((item) => [item.id, item]));
   const readingMap = new Map([
@@ -203,6 +206,22 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     contextPeriodType: context.periodType,
   }));
 
+  if (daysResult.officeForDead) options.push({
+    key: 'office-for-dead',
+    source: LITURGICAL_OPTION_SOURCE.OFFICE_FOR_DEAD,
+    title: daysResult.officeForDead._feastName || 'Афіцый за памерлых',
+    subtitle: 'Памінальны афіцый',
+    day: daysResult.officeForDead,
+    templates: [{
+      id: daysResult.officeForDead.id,
+      label: 'Афіцый за памерлых',
+      day: daysResult.officeForDead,
+    }],
+    reading: periodReadings[0] || fixedReadings[0] || null,
+    order: 99,
+    contextPeriodType: context.periodType,
+  });
+
   if (!options.length
     && !daysResult.exclusiveFeastCode
     && !daysResult.exclusiveFixedDate
@@ -218,7 +237,10 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     contextPeriodType: context.periodType,
   });
 
-  const dayOptions = options.sort((a, b) => a.order - b.order).map((option) => ({
+  const dayOptions = options.sort((a, b) => (
+    getLiturgicalCelebrationPriority(a.day) - getLiturgicalCelebrationPriority(b.day)
+      || a.order - b.order
+  )).map((option) => ({
     ...option,
     dayId: option.day?.id || null,
     readingId: option.reading?.id || null,

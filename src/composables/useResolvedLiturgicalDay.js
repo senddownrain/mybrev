@@ -3,6 +3,10 @@ import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { logger } from '@/utils/logger';
+import {
+  getPeriodDayDocumentId,
+  resolveDayAgainstPeriod,
+} from '@/utils/liturgicalDayResolution';
 
 /**
  * Resolve the route's day from the date-aware service instead of reading a raw
@@ -33,10 +37,25 @@ export function useResolvedLiturgicalDay() {
       return;
     }
 
-    const resolveDay = (content) => content.itemsDays?.find((item) => item.id === id)
-      || content.dayOptions?.find((item) => item.templates?.some((template) => template.id === id))
-        ?.templates.find((template) => template.id === id)?.day
-      || null;
+    const resolveDay = (content) => {
+      const selected = content.itemsDays?.find((item) => item.id === id)
+        || content.dayOptions?.find((item) => item.templates?.some((template) => template.id === id))
+          ?.templates.find((template) => template.id === id)?.day
+        || null;
+      if (!selected) return null;
+
+      // A fixed celebration may have been loaded before its regular period
+      // day. `_fromDayFields` preserves the exact references, so if that day
+      // is already present in the assembled content we can safely reapply it
+      // without filling fields that were intentionally left empty.
+      const periodId = getPeriodDayDocumentId(
+        content.context?.periodType,
+        content.context?.periodWeek,
+        content.context?.dayOfWeek,
+      );
+      const periodDay = content.itemsDays?.find((item) => item.id === periodId) || null;
+      return periodDay ? resolveDayAgainstPeriod(selected, periodDay) : selected;
+    };
 
     const cached = getCachedLiturgicalContentForDate(date.toDate());
     if (cached) {

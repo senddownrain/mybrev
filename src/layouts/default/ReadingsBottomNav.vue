@@ -69,7 +69,7 @@
             <div class="date-dialog-eyebrow">Каляндар</div>
             <div class="date-dialog-heading">Выбраць дату</div>
           </div>
-          <v-btn icon="mdi-close" variant="text" size="small" aria-label="Закрыць" @click="toggleCalendarDialog" />
+          <v-btn class="date-dialog-close" icon="mdi-close" variant="text" size="small" aria-label="Закрыць" @click="toggleCalendarDialog" />
         </v-card-title>
         <v-card-text class="pa-0">
           <CustomDatePicker
@@ -80,9 +80,9 @@
           />
         </v-card-text>
         <v-card-actions class="date-dialog-actions">
-          <v-btn variant="text" prepend-icon="mdi-calendar-today" @click="selectToday">Сёння</v-btn>
+          <v-btn class="today-date-btn" variant="text" prepend-icon="mdi-calendar-today" @click="selectToday">Сёння</v-btn>
           <v-spacer />
-          <v-btn color="primary" variant="flat" rounded="lg" class="select-date-btn" @click="loadDay">Выбраць</v-btn>
+          <v-btn variant="flat" rounded="lg" class="select-date-btn" @click="loadDay">Выбраць</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -250,18 +250,21 @@ function loadDay() {
 }
 
 .date-dialog-card {
-  overflow: hidden;
-  border: 1px solid rgba(var(--v-border-color), 0.14);
-  background: rgb(var(--v-theme-surface));
+  overflow: hidden !important;
+  border: 1px solid var(--nav-border);
+  border-radius: 28px !important;
+  background: var(--nav-surface) !important;
+  color: var(--nav-on-surface);
+  box-shadow: 0 22px 60px var(--nav-shadow) !important;
 }
 .date-dialog-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 20px 8px !important;
+  padding: 20px 20px 9px !important;
 }
 .date-dialog-eyebrow {
-  color: rgb(var(--v-theme-primary));
+  color: var(--nav-muted);
   font-size: 0.7rem;
   font-weight: 800;
   line-height: 1.2;
@@ -271,15 +274,40 @@ function loadDay() {
 .date-dialog-heading {
   margin-top: 3px;
   font-size: 1.25rem;
-  font-weight: 700;
+  color: var(--nav-on-surface);
+  font-weight: 760;
   line-height: 1.3;
 }
 .date-dialog-actions {
-  padding: 10px 16px 16px !important;
-  border-top: 1px solid rgba(var(--v-border-color), 0.1);
+  padding: 11px 16px 16px !important;
+  border-top: 1px solid var(--nav-border);
 }
+
+.date-dialog-close,
+.today-date-btn {
+  color: var(--nav-on-surface) !important;
+}
+
+.date-dialog-close {
+  color: var(--nav-on-surface) !important;
+  background: var(--nav-active);
+}
+
 .select-date-btn {
   min-width: 112px;
-  box-shadow: 0 5px 14px rgba(var(--v-theme-primary), 0.24);
+  background: var(--nav-on-surface) !important;
+  color: var(--nav-surface) !important;
+  box-shadow: 0 5px 14px var(--nav-shadow);
+}
+
+@media (max-height: 620px) {
+  .date-dialog-card {
+    overflow-y: auto !important;
+    scrollbar-width: none;
+  }
+
+  .date-dialog-card::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>

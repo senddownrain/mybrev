@@ -131,7 +131,12 @@ import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay
 import { logger } from '@/utils/logger';
 import { useAuthStore } from '@/stores/auth';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
-import { LITURGICAL_THEME_MAP, RANK_LABEL_MAP } from '@/constants/liturgical';
+import {
+  LITURGICAL_THEME_MAP,
+  RANK_LABEL_MAP,
+  getLiturgicalCelebrationThemeKey,
+  getLiturgicalTheme,
+} from '@/constants/liturgical';
 
 const route = useRoute();
 const router = useRouter();
@@ -199,7 +204,25 @@ const READING_THEMES = Object.freeze({
 });
 
 const readingTheme = computed(() => (
-  READING_THEMES[dayData.value?._periodType] || READING_THEMES.default
+  dayData.value?._theme === 'requiem'
+    ? {
+      ...LITURGICAL_THEME_MAP.requiem,
+      avatarColor: 'blue-grey-lighten-4',
+      iconColor: 'blue-grey-darken-3',
+    }
+    : {
+      ...(READING_THEMES[dayData.value?._periodType] || READING_THEMES.default),
+      ...getLiturgicalTheme(dayData.value, dayData.value?._periodType),
+      ...(getLiturgicalCelebrationThemeKey(dayData.value) === 'red'
+        ? { avatarColor: 'red-lighten-4', iconColor: 'red-darken-3' }
+        : {}),
+      ...(getLiturgicalCelebrationThemeKey(dayData.value) === 'gold'
+        ? { avatarColor: 'amber-lighten-4', iconColor: 'amber-darken-4' }
+        : {}),
+      ...(getLiturgicalCelebrationThemeKey(dayData.value) === 'white'
+        ? { avatarColor: 'grey-lighten-4', iconColor: 'brown-darken-2' }
+        : {}),
+    }
 ));
 
 const celebrationRank = computed(() => dayData.value?._rank || dayData.value?._feastType || '');
@@ -318,7 +341,9 @@ const readingItem = computed(() => {
   return {
     id: dateParam.value,
     title: 'Чытанні',
-    path: `/readings/${dateParam.value}?dayId=${encodeURIComponent(dayId.value || '')}`,
+    path: dayData.value?._readingsFromDay
+      ? `/readings/${dateParam.value}?returnDayId=${encodeURIComponent(dayId.value || '')}`
+      : `/readings/${dateParam.value}?dayId=${encodeURIComponent(dayId.value || '')}`,
   };
 });
 
@@ -334,7 +359,9 @@ const loadReadings = async () => {
     const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
     const [result] = await Promise.all([
       getLiturgicalContentForDate(mDate.toDate()),
-      loadParsedReadingsForDate(mDate.toDate(), { dayId: dayId.value || '' }),
+      loadParsedReadingsForDate(mDate.toDate(), {
+        dayId: dayId.value === 'office-for-dead' ? '' : dayId.value || '',
+      }),
     ]);
     dayOptions.value = Array.isArray(result.dayOptions) ? result.dayOptions : [];
     readings.value = Array.isArray(result.itemsReadings)

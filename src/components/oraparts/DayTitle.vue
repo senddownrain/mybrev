@@ -85,7 +85,7 @@ import moment from '@/utils/moment-be';
 import {
   PERIOD_LABEL_MAP,
   FEAST_TYPE_LABEL_MAP,
-  LITURGICAL_THEME_MAP,
+  getLiturgicalTheme,
 } from '@/constants/liturgical';
 import { formatDateLong } from '@/utils/date';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
@@ -114,6 +114,7 @@ const displayTitle = computed(() => {
   const day = resolvedDay.value;
   if (!day) return '';
   const hasCelebrationIdentity = day._feast || day._rank || day._feastType;
+  if (day._kind === 'office-for-dead') return day._feastName || day._title || 'Афіцый за памерлых';
   const isChristmasDateDay = day._periodType === 'christmas'
     && (isSeasonalDateDocumentId(day.id) || (!day._feast && !day._rank && !day._feastType));
   if ((day._periodType && !hasCelebrationIdentity) || isChristmasDateDay) {
@@ -140,15 +141,17 @@ const getRankName = (rank) => FEAST_TYPE_LABEL_MAP[rank] || rank;
 const dayMeta = computed(() => {
   const day = resolvedDay.value;
   if (!day) return '';
+  if (day._kind === 'office-for-dead') return '';
   const rank = day._rank || day._feastType;
   return rank ? getRankName(rank) : (day._psalmWeek || '');
 });
 const periodLabel = computed(() => (
-  PERIOD_LABEL_MAP[resolvedDay.value?._periodType] || 'Літургічны дзень'
+  resolvedDay.value?._kind === 'office-for-dead'
+    ? 'Памінальны афіцый'
+    : PERIOD_LABEL_MAP[resolvedDay.value?._periodType] || 'Літургічны дзень'
 ));
 const heroStyle = computed(() => {
-  const theme = LITURGICAL_THEME_MAP[resolvedDay.value?._periodType]
-    || LITURGICAL_THEME_MAP.default;
+  const theme = getLiturgicalTheme(resolvedDay.value, resolvedDay.value?._periodType);
   return {
     '--liturgical-color': theme.color,
     '--liturgical-rgb': theme.rgb,

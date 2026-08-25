@@ -2,14 +2,6 @@
   <v-container class="prayers-list-container">
     <div class="prayers-page-header">
       <h1 class="prayers-page-title">{{ selectedCategory?.name || 'Малітвы' }}</h1>
-      <v-chip 
-        v-if="!isLoading && filteredPrayers.length > 0" 
-        size="small" 
-        color="primary" 
-        variant="tonal"
-      >
-        {{ filteredPrayers.length }} {{ filteredPrayers.length === 1 ? 'малітва' : 'малітваў' }}
-      </v-chip>
     </div>
 
 
@@ -273,8 +265,6 @@ async function confirmDelete() {
 .prayers-page-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
   margin: 0 12px 22px;
 }
 

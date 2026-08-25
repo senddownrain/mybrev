@@ -30,7 +30,7 @@
       <v-list nav class="drawer-list">
       <div class="drawer-section-label">Асноўнае</div>
       <v-list-item
-        title="Літургія"
+        title="Літургія гадзін"
         :to="{ name: 'Today' }"
         :active="route.name === 'Today' || route.name === 'SelectedDay'"
       >
@@ -51,8 +51,8 @@
 
       <v-list-item
         title="Малітвы"
-        :to="{ name: 'Prayers' }"
-        :active="route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView'"
+        :active="isPrayersPage && !selectedCategory"
+        @click="showAllPrayers"
       >
         <template #prepend>
           <PhBookBookmark :size="22" class="drawer-icon" />
@@ -164,6 +164,12 @@ const selectCategory = (category) => {
   isDrawerOpen.value = false;
 };
 
+const showAllPrayers = () => {
+  setSelectedCategory(null);
+  isDrawerOpen.value = false;
+  router.push({ name: 'Prayers' });
+};
+
 const selectCategoryByName = (categoryName) => {
   const category = settings.menuCategories.find(cat => cat.name === categoryName);
   if (category) {
@@ -270,10 +276,14 @@ const selectCategoryByName = (categoryName) => {
   flex: 1;
   min-height: 0;
   padding: 0 !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  overscroll-behavior: contain;
-  touch-action: pan-y;
+}
+
+@media (min-width: 960px) {
+  .drawer-list {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+  }
 }
 
 .drawer-list :deep(.v-list-item) {

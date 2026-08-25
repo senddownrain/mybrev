@@ -256,7 +256,11 @@ defineExpose({
 .prayer-view-container {
   width: min(100%, 960px);
   max-width: 960px;
-  padding-top: 12px;
+  padding: 0 !important;
+}
+
+.prayer-content-area {
+  padding-inline: 0;
 }
 
 .prayer-title {
@@ -272,7 +276,8 @@ defineExpose({
 }
 
 .prayer-reading-surface {
-  margin: 0 12px;
+  width: 100%;
+  margin: 0;
   overflow: hidden;
   border: 1px solid var(--nav-border);
   border-radius: 28px;
@@ -283,7 +288,7 @@ defineExpose({
 }
 
 .prayer-reading-header {
-  padding: 24px 26px 22px;
+  padding: 24px 20px 22px;
   border-bottom: 1px solid var(--nav-border);
   background:
     radial-gradient(circle at 92% 18%, rgba(var(--v-theme-primary), 0.13) 0, rgba(var(--v-theme-primary), 0.13) 44px, transparent 45px),
@@ -307,7 +312,7 @@ defineExpose({
 }
 
 .prayer-text {
-  padding: 28px 26px 32px;
+  padding: 24px 20px 30px;
   color: rgb(var(--v-theme-on-surface));
   font-family: var(--app-font-family, sans-serif);
   font-size: calc(1.04rem * var(--font-size-multiplier, 1));
@@ -367,21 +372,23 @@ defineExpose({
 
 @media (max-width: 600px) {
   .prayer-view-container {
-    padding: 8px 4px !important;
+    padding: 0 !important;
     max-width: 100% !important;
   }
 
   .prayer-reading-surface {
-    margin-inline: 8px;
-    border-radius: 24px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .prayer-reading-header {
-    padding: 21px 20px 19px;
+    padding: 21px 16px 19px;
   }
 
   .prayer-text {
-    padding: 24px 20px 28px;
+    padding: 22px 16px 28px;
   }
 
   .prayer-content-area {

@@ -8,15 +8,6 @@
           {{ displayDate }}
         </p>
       </div>
-      <v-btn
-        :to="liturgyRoute"
-        variant="tonal"
-        rounded="pill"
-        prepend-icon="mdi-arrow-left"
-        class="readings-back-button text-none"
-      >
-        Да літургіі
-      </v-btn>
     </header>
 
     <div v-if="isLoading" class="text-center py-8">
@@ -130,7 +121,7 @@ import {
   normalizeReadingCycle,
   readingCelebrationKey,
 } from '@/utils/parsedReadingsIdentity';
-import { LITURGICAL_THEME_MAP } from '@/constants/liturgical';
+import { getLiturgicalTheme } from '@/constants/liturgical';
 import moment from '@/utils/moment-be';
 
 const route = useRoute();
@@ -150,8 +141,10 @@ const displayDate = computed(() => {
 });
 
 const readingsPageStyle = computed(() => {
-  const periodType = context.value?.periodType || 'default';
-  const theme = LITURGICAL_THEME_MAP[periodType] || LITURGICAL_THEME_MAP.default;
+  const periodType = route.query.returnDayId === 'office-for-dead'
+    ? 'requiem'
+    : context.value?.periodType || 'default';
+  const theme = getLiturgicalTheme(activeReading.value, periodType);
   return {
     '--reading-period-color': theme.color,
     '--reading-period-rgb': theme.rgb,
@@ -223,20 +216,6 @@ const activeReading = computed(() => {
   return documents.find((document) => !normalizeReadingCycle(document.year)) || documents[0];
 });
 
-const liturgyRoute = computed(() => {
-  const date = selectedDate.value.format('YYYY-MM-DD');
-  const dayId = String(
-    route.query.dayId
-      || activeReading.value?._dayId
-      || activeReading.value?._dayIds?.[0]
-      || '',
-  );
-
-  if (dayId) return { name: 'oras', params: { day: date, id: dayId } };
-  if (selectedDate.value.isSame(moment().startOf('day'), 'day')) return { name: 'Today' };
-  return { name: 'SelectedDay', params: { day: date } };
-});
-
 function groupIcon(group) {
   const reading = group.documents[0] || {};
   if (reading._feast) return 'mdi-star-four-points';
@@ -302,25 +281,17 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
 
 <style scoped>
 .readings-container {
-  width: min(100%, 760px);
-  max-width: 760px;
-  padding-top: 12px;
+  width: min(100%, 960px);
+  max-width: 960px;
+  margin-inline: auto;
+  padding: 12px;
 }
 
 .readings-page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
   margin: 8px 12px 24px;
-}
-
-.readings-back-button {
-  flex: 0 0 auto;
-  min-height: 42px;
-  padding-inline: 16px !important;
-  color: rgb(var(--v-theme-primary)) !important;
-  font-weight: 700;
 }
 
 .section-page-title {
@@ -341,7 +312,7 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
   font-size: calc(1.02rem * var(--font-size-multiplier, 1));
   font-weight: 680;
   line-height: 1.4;
-  text-transform: capitalize;
+  text-transform: none;
 }
 
 .readings-date__marker {
@@ -578,14 +549,5 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
     flex: 1 1 0;
   }
 
-  .readings-page-header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .readings-back-button {
-    align-self: flex-start;
-  }
 }
 </style>

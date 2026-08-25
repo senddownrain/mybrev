@@ -5,6 +5,8 @@ import {
   applySeasonalWeekdayAntiphons,
   getFixedCelebrationKey,
   getDaytimeHourField,
+  getPeriodDayDocumentId,
+  getPeriodDayTemplateDocumentId,
   getSeasonalDateExceptionId,
   hasSingleAntiphonPsalmody,
   isSeasonalDateDocumentId,
@@ -28,6 +30,25 @@ test('builds deterministic Advent and Christmas exception IDs', () => {
   assert.equal(isSeasonalDateDocumentId('28-12-holy-innocents'), false);
 });
 
+test('builds a canonical period ID for a from-day fallback', () => {
+  assert.equal(getPeriodDayDocumentId('ordinary', 21, 3), 'ordinary-w21-d3');
+  assert.equal(getPeriodDayDocumentId('lent', '0', '4'), 'lent-w0-d4');
+  assert.equal(getPeriodDayDocumentId('', 21, 3), '');
+  assert.equal(getPeriodDayDocumentId('ordinary', 21, 8), '');
+});
+
+test('maps a period week to its four-week psalter template', () => {
+  assert.equal(
+    getPeriodDayTemplateDocumentId('ordinary', 21, 3),
+    'ordinary-psalmweek-1-day-3',
+  );
+  assert.equal(
+    getPeriodDayTemplateDocumentId('ordinary', 22, 3),
+    'ordinary-psalmweek-2-day-3',
+  );
+  assert.equal(getPeriodDayTemplateDocumentId('ordinary', 0, 3), '');
+});
+
 test('resolves legacy and canonical from-day markers without replacing identity', () => {
   const resolved = resolveDayAgainstPeriod({
     id: 'fixed',
@@ -47,6 +68,37 @@ test('resolves legacy and canonical from-day markers without replacing identity'
   assert.equal(resolved.laudesAnt1, '<p>1</p>');
   assert.equal(resolved.laudesAnt2, '<p>2</p>');
   assert.equal(resolved.laudesPr, '<p>Уласная</p>');
+});
+
+test('can reapply an already loaded period day to preserved from-day fields', () => {
+  const unresolved = resolveDayAgainstPeriod({
+    id: '25-08-sv-joseph-calasanz--educators',
+    laudesHymn: 'from-day',
+    laudesAnt1: '[from-day]',
+    laudesPs1: 'from-day',
+    laudesPr: '<p>Уласная малітва</p>',
+  }, null);
+
+  assert.deepEqual(unresolved._fromDayFields, [
+    'laudesHymn',
+    'laudesAnt1',
+    'laudesPs1',
+  ]);
+  assert.equal(unresolved.laudesHymn, '');
+
+  const resolved = resolveDayAgainstPeriod(unresolved, {
+    id: 'ordinary-w21-d3',
+    laudesHymn: '<p>Гімн дня</p>',
+    laudesAnt1: '<p>Антыфона дня</p>',
+    laudesPs1: '<p>Псальм дня</p>',
+    laudesPr: '<p>Малітва дня</p>',
+  });
+
+  assert.equal(resolved.id, '25-08-sv-joseph-calasanz--educators');
+  assert.equal(resolved.laudesHymn, '<p>Гімн дня</p>');
+  assert.equal(resolved.laudesAnt1, '<p>Антыфона дня</p>');
+  assert.equal(resolved.laudesPs1, '<p>Псальм дня</p>');
+  assert.equal(resolved.laudesPr, '<p>Уласная малітва</p>');
 });
 
 test('never leaves unresolved from-day markers in assembled fields', () => {

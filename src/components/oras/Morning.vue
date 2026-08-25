@@ -47,7 +47,7 @@
           </v-card-text>
         </v-card>
 
-        <hymnus :text="day.laudesHymn" />
+        <hymnus :text="day.officeOfReadingsHymn" />
 
         <psalms
           :ant1="day.officeOfReadingsAnt1"
@@ -61,6 +61,7 @@
         <lectio :text="day.officeOfReadingsR1" />
         <lectio :text="day.officeOfReadingsR2" />
 
+        <hymnus :text="day.laudesHymn" />
         <psalms
           :ant1="day.laudesAnt1"
           :ant2="day.laudesAnt2"
