@@ -97,6 +97,7 @@ const routes = [
         path: 'login',
         name: 'Login',
         component: () => import('@/views/Login.vue'),
+        meta: { hideLayoutAppBar: true },
       },
 
     ],
@@ -290,7 +291,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (!authStore.isAdmin) {
-      next({ name: 'Login' });
+      next({ name: 'Login', query: { redirect: to.fullPath } });
     } else {
       next();
     }

@@ -1,13 +1,12 @@
 /** Firestore access for normalized liturgical days in `fixedDays`. */
 import { collection, doc, query, where } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
-import { isFromDayReference, LITURGICAL_DAYS_COLLECTION } from '@/constants/days';
+import { LITURGICAL_DAYS_COLLECTION } from '@/constants/days';
 import { getDocOfflineAware, getDocsOfflineAware } from '@/utils/firestoreRead';
 import { logger } from '@/utils/logger';
 import {
   applySeasonalWeekdayAntiphons,
   getPeriodDayDocumentId,
-  getPeriodDayTemplateDocumentId,
   getSeasonalDateExceptionId,
   isChristmasDateExceptionExclusion,
   isSeasonalDateException,
@@ -19,56 +18,6 @@ export const OFFICE_FOR_DEAD_ID = 'office-for-dead';
 
 function getDaysCollection() {
   return collection(db, LITURGICAL_DAYS_COLLECTION);
-}
-
-function getDayTemplatesCollection() {
-  return collection(db, 'dayTemplates');
-}
-
-const PERIOD_CORE_FIELDS = Object.freeze([
-  'officeOfReadingsHymn',
-  'officeOfReadingsPs1',
-  'officeOfReadingsPs2',
-  'officeOfReadingsPs3',
-  'laudesHymn',
-  'laudesPs1',
-  'laudesPs2',
-  'laudesPs3',
-]);
-
-function hasPeriodCoreContent(day) {
-  return PERIOD_CORE_FIELDS.every((field) => {
-    const value = day?.[field];
-    return value !== null
-      && value !== undefined
-      && String(value).trim() !== ''
-      && !isFromDayReference(value);
-  });
-}
-
-async function findPeriodDayTemplate(periodType, periodWeekNumber, dayOfWeek) {
-  const templateId = getPeriodDayTemplateDocumentId(
-    periodType,
-    periodWeekNumber,
-    dayOfWeek,
-  );
-  if (!templateId) return null;
-  const snapshot = await getDocOfflineAware(doc(getDayTemplatesCollection(), templateId));
-  return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
-}
-
-async function completePeriodDay(day, periodType, periodWeekNumber, dayOfWeek) {
-  if (day && hasPeriodCoreContent(day)) return resolveDayAgainstPeriod(day, null);
-  const template = await findPeriodDayTemplate(periodType, periodWeekNumber, dayOfWeek);
-  if (!template) return day ? resolveDayAgainstPeriod(day, null) : null;
-
-  const identity = day || {
-    id: getPeriodDayDocumentId(periodType, periodWeekNumber, dayOfWeek),
-    _periodType: periodType,
-    _periodWeekNumber: Number(periodWeekNumber),
-    _dayOfWeek: Number(dayOfWeek),
-  };
-  return resolveDayAgainstPeriod(identity, template, { fillMissing: true });
 }
 
 export function getDaysByPeriodQuery(periodType, dayOfWeek, periodWeekNumber) {
@@ -115,12 +64,7 @@ export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
       const snapshot = await getDocOfflineAware(doc(getDaysCollection(), canonicalId));
       if (snapshot.exists()) {
         canonicalDay = { id: snapshot.id, ...snapshot.data() };
-        return await completePeriodDay(
-          canonicalDay,
-          periodType,
-          periodWeekNumber,
-          dayOfWeek,
-        );
+        return resolveDayAgainstPeriod(canonicalDay, null);
       }
     } catch (error) {
       canonicalError = error;
@@ -143,28 +87,7 @@ export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
     queryError = error;
   }
   if (variants[0]) {
-    try {
-      return await completePeriodDay(
-        variants[0],
-        periodType,
-        periodWeekNumber,
-        dayOfWeek,
-      );
-    } catch (error) {
-      if (!canonicalError) canonicalError = error;
-    }
-  }
-
-  try {
-    const templateOnlyDay = await completePeriodDay(
-      null,
-      periodType,
-      periodWeekNumber,
-      dayOfWeek,
-    );
-    if (templateOnlyDay) return templateOnlyDay;
-  } catch (templateError) {
-    if (!canonicalError) canonicalError = templateError;
+    return resolveDayAgainstPeriod(variants[0], null);
   }
   if (canonicalDay) return resolveDayAgainstPeriod(canonicalDay, null);
   if (canonicalError) throw canonicalError;

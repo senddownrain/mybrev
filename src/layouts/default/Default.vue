@@ -222,6 +222,7 @@ const readingsLiturgyRoute = computed(() => {
 });
 
 const showTextScaleControl = computed(() => {
+  if (isPrayerEditPage.value) return false;
   if (isPrayerViewPage.value) return !uiStore.prayerIsEditing;
   return [
     'Readings',

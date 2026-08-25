@@ -121,14 +121,16 @@
 
     <v-btn
       v-if="authStore.isAdmin"
-      icon="mdi-plus"
-      color="primary"
+      prepend-icon="mdi-plus"
       position="fixed"
       location="bottom right"
       size="large"
-      class="add-prayer-btn"
+      rounded="pill"
+      class="add-prayer-btn text-none"
       @click="router.push({ name: 'PrayerAdd' })"
-    ></v-btn>
+    >
+      Новая малітва
+    </v-btn>
 
     <!-- Диалог подтверждения удаления -->
     <v-dialog v-model="deleteDialogOpen" max-width="400">
@@ -260,6 +262,18 @@ async function confirmDelete() {
   max-width: 760px;
   padding-top: 12px;
   padding-bottom: 104px !important;
+}
+
+.add-prayer-btn {
+  z-index: 96;
+  min-height: 54px;
+  margin: 16px !important;
+  padding-inline: 20px !important;
+  border: 1px solid var(--nav-border);
+  background: var(--nav-on-surface) !important;
+  color: var(--nav-surface) !important;
+  font-weight: 720;
+  box-shadow: 0 9px 28px var(--nav-shadow) !important;
 }
 
 .prayers-page-header {
@@ -470,6 +484,18 @@ async function confirmDelete() {
   .add-prayer-btn {
     margin: 16px !important;
     bottom: 76px !important;
+    width: 54px !important;
+    min-width: 54px !important;
+    padding: 0 !important;
+    font-size: 0;
+  }
+
+  .add-prayer-btn :deep(.v-btn__prepend) {
+    margin: 0;
+  }
+
+  .add-prayer-btn :deep(.v-icon) {
+    font-size: 24px;
   }
 }
 

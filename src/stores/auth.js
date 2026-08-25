@@ -3,10 +3,10 @@ import { ref } from 'vue';
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
-import router from '@/router';
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
 import { ADMIN_UIDS } from '@/constants/admin';
+import router from '@/router';
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null);
@@ -37,6 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
   const init = () => {
     const auth = getAuth();
     onAuthStateChanged(auth, async (firebaseUser) => {
+      loading.value = true;
       user.value = firebaseUser;
 
       if (firebaseUser) {
@@ -52,14 +53,25 @@ export const useAuthStore = defineStore('auth', () => {
 
   const login = async (email, password) => {
     const auth = getAuth();
+    loading.value = true;
     try {
-      await retryFirestore(
+      const credential = await retryFirestore(
         () => signInWithEmailAndPassword(auth, email, password)
       );
-      await router.push('/');
+      const hasAdminAccess = await checkIsAdmin(credential.user.uid);
+      if (!hasAdminAccess) {
+        await signOut(auth);
+        const accessError = new Error('Admin access required');
+        accessError.code = 'auth/not-admin';
+        throw accessError;
+      }
+      user.value = credential.user;
+      isAdmin.value = true;
     } catch (error) {
       logger.error('[auth] Login error:', error);
       throw error;
+    } finally {
+      loading.value = false;
     }
   };
 

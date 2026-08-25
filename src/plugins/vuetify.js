@@ -90,7 +90,14 @@ export default createVuetify({
     messages: {
       be: {
         ...beLocale,
+        open: 'Адкрыць',
+        close: 'Закрыць',
         loading: 'Загрузка...',
+        input: {
+          clear: 'Ачысціць',
+          prependAction: 'Дадатковае дзеянне перад полем',
+          appendAction: 'Дадатковае дзеянне пасля поля',
+        },
         datePicker: {
           ...beLocale.datePicker,
           ariaLabel: {
