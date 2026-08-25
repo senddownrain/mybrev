@@ -1,17 +1,17 @@
 {
-  "generatedAt": "2026-08-24T19:27:33.169Z",
-  "mode": "local-reconstructed-dry-run",
+  "generatedAt": "2026-08-25T17:55:14.164Z",
+  "mode": "apply",
   "counts": {
-    "documents": 812,
+    "documents": 822,
     "duplicatePairs": 3,
     "safeDuplicateDocumentsToDelete": 3,
     "unsafeDuplicatePairs": 0,
     "palmProcessionMovePlanned": 1,
     "ascensionBaseMergePlanned": 1,
     "vigilCycleMergesPlanned": 3,
-    "appliedDeletes": 0,
-    "appliedMoves": 0,
-    "appliedMerges": 0
+    "appliedDeletes": 3,
+    "appliedMoves": 1,
+    "appliedMerges": 4
   },
   "comparisons": [
     {
@@ -66,5 +66,6 @@
       "holyweek-w1-d7--C"
     ],
     "safe": true
-  }
+  },
+  "backupPath": "C:\\Users\\User\\Documents\\GitHub\\mybrev\\reports\\backups\\parsedData-before-cycle-variant-repair-2026-08-25T17-55-14-165Z.json"
 }
