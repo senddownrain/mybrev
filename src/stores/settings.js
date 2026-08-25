@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { useTheme } from 'vuetify';
-import { SYSTEM_FONT } from '@/constants/fonts';
+import { normalizeReaderFont, SYSTEM_FONT } from '@/constants/fonts';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { validateCategory } from '@/utils/validators';
 import { logger } from '@/utils/logger';
@@ -11,7 +11,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme();
 
   const currentTheme = ref(localStorage.getItem('theme') || 'light');
-  const fontFamily = ref(localStorage.getItem('fontFamily') || SYSTEM_FONT);
+  const fontFamily = ref(normalizeReaderFont(localStorage.getItem('fontFamily')));
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
   const menuCategories = ref(JSON.parse(localStorage.getItem('menuCategories') || JSON.stringify(DEFAULT_CATEGORIES)));
   const favoritePrayers = ref(JSON.parse(localStorage.getItem('favoritePrayers') || '[]'));
@@ -23,7 +23,7 @@ export const useSettingsStore = defineStore('settings', () => {
   }, { immediate: true });
 
   watch(fontFamily, (newFont) => {
-    document.documentElement.style.setProperty('--app-font-family', newFont);
+    document.documentElement.style.setProperty('--reader-font-family', newFont);
     localStorage.setItem('fontFamily', newFont);
   }, { immediate: true });
 
@@ -66,7 +66,7 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   function setFontFamily(font) {
-    fontFamily.value = font;
+    fontFamily.value = normalizeReaderFont(font);
   }
 
   function increaseFontSize() {

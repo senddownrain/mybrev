@@ -395,7 +395,7 @@ onBeforeUnmount(() => {
 .prayer-text-editor:focus-within { border-color: rgb(var(--v-theme-primary)); border-width: 2px; }
 .prayer-text-editor--error { border-color: rgb(var(--v-theme-error)); }
 .prayer-text-editor :deep(.ql-toolbar.ql-snow) { display: flex; flex-wrap: wrap; gap: 2px; border: 0; border-bottom: 1px solid var(--nav-border); padding: 10px 12px; background: var(--nav-active); }
-.prayer-text-editor :deep(.ql-container.ql-snow) { min-height: 310px; border: 0; font-family: var(--app-font-family, sans-serif); }
+.prayer-text-editor :deep(.ql-container.ql-snow) { min-height: 310px; border: 0; font-family: var(--reader-font-family); }
 .prayer-text-editor :deep(.ql-editor) { min-height: 310px; padding: 20px; color: var(--nav-on-surface); font-size: 1rem; line-height: 1.7; }
 .prayer-text-editor :deep(.ql-editor.ql-blank::before) { color: var(--nav-muted); font-style: normal; }
 .prayer-text-editor :deep(.ql-stroke) { stroke: var(--nav-on-surface); }
@@ -414,7 +414,7 @@ onBeforeUnmount(() => {
 .preview-heading h2 { margin: 0; font-size: 1rem; font-weight: 720; }
 .prayer-preview { padding: 26px 24px 28px; }
 .prayer-preview h3 { margin: 0 0 22px; font-size: 1.65rem; font-weight: 740; line-height: 1.18; letter-spacing: -0.025em; overflow-wrap: anywhere; }
-.prayer-preview__text { font-family: var(--app-font-family, sans-serif); font-size: 1rem; line-height: 1.72; overflow-wrap: anywhere; }
+.prayer-preview__text { font-family: var(--reader-font-family); font-size: 1rem; line-height: 1.72; overflow-wrap: anywhere; }
 .prayer-preview__text :deep(p) { margin: 0 0 1em; }
 .prayer-preview__text :deep(p:last-child) { margin-bottom: 0; }
 .preview-placeholder { margin: 0; color: var(--nav-muted); font-style: italic; line-height: 1.6; }

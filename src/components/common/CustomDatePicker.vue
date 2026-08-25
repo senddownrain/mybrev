@@ -395,16 +395,16 @@ const nextMonth = () => {
 }
 
 .day-btn.is-selected {
-  color: var(--nav-surface) !important;
-  background: var(--nav-on-surface);
+  color: var(--on-chrome-accent) !important;
+  background: var(--chrome-accent);
   box-shadow: 0 6px 16px var(--nav-shadow);
   font-weight: 700;
 }
 
 .day-btn.is-today:not(.is-selected) {
-  color: var(--nav-on-surface);
-  background: var(--nav-active);
-  box-shadow: inset 0 0 0 1.5px var(--nav-on-surface);
+  color: var(--chrome-accent);
+  background: rgba(var(--chrome-accent-rgb), 0.1);
+  box-shadow: inset 0 0 0 1.5px var(--chrome-accent);
   font-weight: 700;
 }
 

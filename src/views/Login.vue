@@ -150,8 +150,8 @@ const handleLogin = async () => {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(circle at 18% 12%, rgba(var(--v-theme-primary), 0.12), transparent 28rem),
-    radial-gradient(circle at 88% 88%, rgba(var(--v-theme-primary), 0.07), transparent 24rem);
+    radial-gradient(circle at 18% 12%, rgba(var(--chrome-accent-rgb), 0.14), transparent 28rem),
+    radial-gradient(circle at 88% 88%, rgba(var(--devotional-rgb), 0.08), transparent 24rem);
   content: '';
   pointer-events: none;
 }
@@ -198,7 +198,7 @@ const handleLogin = async () => {
 
 .login-eyebrow {
   margin: 0 0 8px;
-  color: var(--nav-muted);
+  color: var(--chrome-accent);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -209,6 +209,7 @@ const handleLogin = async () => {
   max-width: 430px;
   margin: 0;
   font-size: clamp(2.15rem, 5vw, 3.6rem);
+  font-family: var(--reader-display-font-family);
   font-weight: 750;
   line-height: 1.02;
   letter-spacing: -0.045em;

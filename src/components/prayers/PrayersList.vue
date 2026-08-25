@@ -1,6 +1,7 @@
 <template>
   <v-container class="prayers-list-container">
     <div class="prayers-page-header">
+      <div class="prayers-page-eyebrow">Малітоўнік</div>
       <h1 class="prayers-page-title">{{ selectedCategory?.name || 'Малітвы' }}</h1>
     </div>
 
@@ -134,7 +135,7 @@
 
     <!-- Диалог подтверждения удаления -->
     <v-dialog v-model="deleteDialogOpen" max-width="400">
-      <v-card>
+      <v-card class="confirmation-dialog-card">
         <v-card-title class="text-h6">Выдаліць малітву?</v-card-title>
         <v-card-text>
           <p>Вы ўпэўнены, што хочаце выдаліць малітву "{{ prayerToDelete ? getTitle(prayerToDelete) : '' }}"?</p>
@@ -258,10 +259,28 @@ async function confirmDelete() {
 
 <style scoped>
 .prayers-list-container {
+  position: relative;
+  isolation: isolate;
   width: min(100%, 760px);
   max-width: 760px;
   padding-top: 12px;
   padding-bottom: 104px !important;
+}
+
+.prayers-list-container::before {
+  position: absolute;
+  z-index: -1;
+  inset: -24px -20px auto;
+  height: 300px;
+  border-radius: 48px;
+  background: radial-gradient(
+    ellipse at 82% 12%,
+    rgba(var(--devotional-rgb), var(--ambient-strength)),
+    transparent 68%
+  );
+  content: "";
+  filter: blur(12px);
+  pointer-events: none;
 }
 
 .add-prayer-btn {
@@ -278,14 +297,25 @@ async function confirmDelete() {
 
 .prayers-page-header {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   margin: 0 12px 22px;
+}
+
+.prayers-page-eyebrow {
+  margin-bottom: 8px;
+  color: var(--devotional-accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
 }
 
 .prayers-page-title {
   margin: 8px 0 0;
   color: rgb(var(--v-theme-on-surface));
   font-size: clamp(1.85rem, 8vw, 2.35rem);
+  font-family: var(--reader-display-font-family);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.025em;
@@ -320,14 +350,21 @@ async function confirmDelete() {
   padding: 0 8px 0 18px;
   border: 1px solid var(--nav-border);
   border-radius: 29px;
-  background: var(--nav-surface);
+  background: var(--overlay-surface);
   color: var(--nav-on-surface);
   box-shadow: 0 9px 28px var(--nav-shadow);
+  backdrop-filter: blur(20px) saturate(1.08);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.prayer-search-dock:focus-within {
+  border-color: rgba(var(--devotional-rgb), 0.42);
+  box-shadow: 0 9px 28px var(--nav-shadow), 0 0 0 3px rgba(var(--devotional-rgb), 0.11);
 }
 
 .prayer-search-icon {
   flex: 0 0 auto;
-  color: var(--nav-muted);
+  color: var(--devotional-accent);
 }
 
 .prayer-search-input {
@@ -371,8 +408,8 @@ async function confirmDelete() {
 }
 
 .search-dock-action--active {
-  background: var(--nav-active);
-  color: var(--nav-on-surface);
+  background: var(--devotional-soft);
+  color: var(--devotional-accent);
 }
 
 .filter-count {
@@ -385,8 +422,8 @@ async function confirmDelete() {
   height: 17px;
   padding: 0 4px;
   border-radius: 9px;
-  background: var(--nav-on-surface);
-  color: var(--nav-surface);
+  background: var(--devotional-accent);
+  color: var(--on-devotional-accent);
   font-size: 0.62rem;
   font-weight: 750;
 }
@@ -396,7 +433,9 @@ async function confirmDelete() {
   padding: 14px 14px 14px 16px !important;
   border: 1px solid var(--nav-border);
   border-radius: 22px !important;
-  background: var(--nav-surface);
+  background:
+    linear-gradient(120deg, rgba(var(--devotional-rgb), 0.055), transparent 62%),
+    var(--nav-surface);
   color: var(--nav-on-surface);
   box-shadow: 0 3px 14px var(--nav-button-shadow);
   cursor: pointer;
@@ -405,7 +444,7 @@ async function confirmDelete() {
 }
 
 .prayer-list-item:hover {
-  border-color: rgba(var(--v-theme-primary), 0.2);
+  border-color: rgba(var(--devotional-rgb), 0.28);
   box-shadow: 0 7px 22px var(--nav-button-shadow);
 }
 
@@ -418,10 +457,10 @@ async function confirmDelete() {
   width: 48px;
   height: 48px;
   place-items: center;
-  border: 1px solid var(--nav-border);
+  border: 1px solid rgba(var(--devotional-rgb), 0.18);
   border-radius: 16px;
-  background: var(--nav-active);
-  color: var(--nav-muted);
+  background: var(--devotional-soft);
+  color: var(--devotional-accent);
   transition: border-color 0.16s ease, background-color 0.16s ease;
 }
 
@@ -449,6 +488,26 @@ async function confirmDelete() {
 
 .prayer-list-item__arrow {
   color: var(--nav-muted);
+}
+
+.confirmation-dialog-card {
+  overflow: hidden;
+  border: 1px solid var(--nav-border);
+  border-radius: 24px !important;
+  background:
+    radial-gradient(circle at 92% 0, rgba(var(--devotional-rgb), 0.1), transparent 190px),
+    var(--overlay-surface) !important;
+}
+
+.confirmation-dialog-card :deep(.v-card-title) {
+  padding: 20px 20px 8px;
+  font-family: var(--reader-display-font-family);
+  font-weight: 700;
+}
+
+.confirmation-dialog-card :deep(.v-card-actions) {
+  padding: 10px 16px 16px;
+  border-top: 1px solid var(--nav-border);
 }
 
 :deep(.prayer-list-item .v-list-item__prepend) {

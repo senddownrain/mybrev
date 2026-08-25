@@ -131,8 +131,22 @@ function openSelection({ dayId, date }) {
 
 <style scoped>
 .picker-page {
+  position: relative;
+  isolation: isolate;
   width: min(100%, 780px);
   padding: 10px 18px 36px;
+}
+
+.picker-page::before {
+  position: absolute;
+  z-index: -1;
+  inset: -28px -24px auto;
+  height: 320px;
+  border-radius: 52px;
+  background: radial-gradient(ellipse at 82% 10%, rgba(var(--chrome-accent-rgb), var(--ambient-strength)), transparent 68%);
+  content: "";
+  filter: blur(12px);
+  pointer-events: none;
 }
 
 .picker-hero {
@@ -148,13 +162,18 @@ function openSelection({ dayId, date }) {
   text-transform: uppercase;
 }
 
+.picker-eyebrow {
+  color: var(--chrome-accent);
+}
+
 .picker-hero h1 {
   margin: 5px 0 8px;
   color: rgb(var(--v-theme-on-surface));
   font-size: clamp(2rem, 9vw, 2.7rem);
+  font-family: var(--reader-display-font-family);
   font-weight: 750;
   line-height: 1.02;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.025em;
 }
 
 .picker-hero p {
@@ -227,7 +246,9 @@ function openSelection({ dayId, date }) {
 }
 
 .mode-note--readings {
-  color: var(--nav-on-surface);
+  border-color: rgba(var(--chrome-accent-rgb), 0.2);
+  background: rgba(var(--chrome-accent-rgb), 0.075);
+  color: var(--chrome-accent);
 }
 
 .picker-tabs {
@@ -263,8 +284,8 @@ function openSelection({ dayId, date }) {
 }
 
 .picker-tabs .picker-tab--active {
-  background: var(--nav-active);
-  color: var(--nav-on-surface);
+  background: rgba(var(--chrome-accent-rgb), 0.12);
+  color: var(--chrome-accent);
 }
 
 .picker-window {

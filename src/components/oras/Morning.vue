@@ -6,7 +6,7 @@
         <intro :title="title" hide-text />
 
         <v-card class="ora" flat>
-          <div v-if="invitatoriumOptions.length > 1" class="hour-option-picker mx-4 mb-5">
+          <div v-if="invitatoriumOptions.length > 1" class="hour-option-picker mx-4 mt-4 mb-5">
             <div class="hour-option-picker__label">Выбар тэксту</div>
             <v-select
               v-model="selectedInvitatoriumId"

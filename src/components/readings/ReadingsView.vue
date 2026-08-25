@@ -281,6 +281,12 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
 
 <style scoped>
 .readings-container {
+  --reading-visible-color: var(--reading-period-color);
+  --reading-visible-color: color-mix(
+    in srgb,
+    var(--reading-period-color) var(--period-accent-weight),
+    var(--period-accent-target)
+  );
   width: min(100%, 960px);
   max-width: 960px;
   margin-inline: auto;
@@ -298,6 +304,7 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
   margin: 0;
   color: rgb(var(--v-theme-on-surface));
   font-size: clamp(1.85rem, 8vw, 2.35rem);
+  font-family: var(--reader-display-font-family);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.025em;
@@ -308,7 +315,7 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
   align-items: center;
   gap: 9px;
   margin: 8px 0 0;
-  color: var(--reading-period-color);
+  color: var(--reading-visible-color);
   font-size: calc(1.02rem * var(--font-size-multiplier, 1));
   font-weight: 680;
   line-height: 1.4;
@@ -321,7 +328,7 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
   flex: 0 0 9px;
   border: 2px solid rgba(var(--reading-period-rgb), 0.28);
   border-radius: 50%;
-  background: var(--reading-period-color);
+  background: var(--reading-visible-color);
   box-shadow: 0 0 0 4px rgba(var(--reading-period-rgb), 0.09);
 }
 
@@ -362,12 +369,12 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
 }
 
 .reading-choice__summary:hover {
-  background: rgba(var(--v-theme-primary), 0.05);
+  background: rgba(var(--reading-period-rgb), 0.05);
 }
 
 .reading-choice__eyebrow,
 .cycle-choice__label {
-  color: rgb(var(--v-theme-primary));
+  color: var(--reading-visible-color);
   font-size: 0.68rem;
   font-weight: 800;
   line-height: 1.2;
@@ -421,7 +428,7 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
 
 .reading-choice__option:hover,
 .reading-choice__option--active {
-  background: rgba(var(--v-theme-primary), 0.075);
+  background: rgba(var(--reading-period-rgb), 0.075);
 }
 
 .reading-choice__option-icon {
@@ -430,8 +437,8 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
   height: 38px;
   place-items: center;
   border-radius: 13px;
-  background: rgba(var(--v-theme-primary), 0.1);
-  color: rgb(var(--v-theme-primary));
+  background: rgba(var(--reading-period-rgb), 0.1);
+  color: var(--reading-visible-color);
 }
 
 .reading-choice__summary .reading-choice__option-icon {
@@ -471,7 +478,7 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
 }
 
 .reading-choice__option--active .reading-choice__option-end {
-  color: rgb(var(--v-theme-primary));
+  color: var(--reading-visible-color);
 }
 
 .cycle-choice {
@@ -510,9 +517,9 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
 }
 
 .cycle-choice__button--active {
-  border-color: rgba(var(--v-theme-primary), 0.3);
-  background: rgba(var(--v-theme-primary), 0.11);
-  color: rgb(var(--v-theme-primary));
+  border-color: rgba(var(--reading-period-rgb), 0.3);
+  background: rgba(var(--reading-period-rgb), 0.11);
+  color: var(--reading-visible-color);
 }
 
 .cycle-choice__dot {
@@ -522,7 +529,7 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: rgb(var(--v-theme-primary));
+  background: var(--reading-visible-color);
 }
 
 @media (max-width: 600px) {

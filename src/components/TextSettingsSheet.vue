@@ -58,7 +58,7 @@
 
         <v-list-item>
           <template v-slot:title>
-              Сямейства шрыфтоў
+              Шрыфт чытання
           </template>
           <template v-slot:prepend>
             <v-icon>mdi-format-font</v-icon>
@@ -91,27 +91,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { useAppBar } from '@/composables/useAppBar.js';
+import { READER_FONT_OPTIONS } from '@/constants/fonts';
 
 const settings = useSettingsStore();
 const { isSettingsSheetOpen, toggleSettingsSheet } = useAppBar();
 
-const fontOptions = ref([
-  { title: 'Сістэмны', value: settings.systemFont },
- { title: 'Kurale', value: 'Kurale, serif' },
-  { title: 'Old Standard TT', value: "'Old Standard TT', serif" },
-  { title: 'Pacifico', value: 'Pacifico, cursive' },
-  { title: 'Comfortaa', value: 'Comfortaa, sans-serif' },
-]);
+const fontOptions = READER_FONT_OPTIONS;
 </script>
 
 <style scoped>
 .text-settings-card {
   padding: 10px 12px 16px;
   border: 1px solid var(--nav-border);
-  background: var(--nav-surface) !important;
+  background:
+    radial-gradient(circle at 88% 0, rgba(var(--chrome-accent-rgb), 0.13), transparent 240px),
+    var(--overlay-surface) !important;
   color: var(--nav-on-surface);
   box-shadow: 0 -12px 40px var(--nav-shadow) !important;
 }
@@ -124,7 +120,7 @@ const fontOptions = ref([
 }
 
 .text-settings-eyebrow {
-  color: var(--nav-muted);
+  color: var(--chrome-accent);
   font-size: 0.68rem;
   font-weight: 750;
   letter-spacing: 0.08em;
@@ -134,6 +130,7 @@ const fontOptions = ref([
 .text-settings-title {
   margin-top: 2px;
   font-size: 1.25rem;
+  font-family: var(--reader-display-font-family);
   font-weight: 700;
 }
 

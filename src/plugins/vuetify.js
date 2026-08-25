@@ -69,9 +69,18 @@ export default createVuetify({
   },
   theme: {
     themes: {
+      light: {
+        dark: false,
+        colors: {
+          primary: '#644B72',
+          'on-primary': '#FFFDF9',
+        },
+      },
       dark: {
         dark: true,
         colors: {
+          primary: '#CFB3DC',
+          'on-primary': '#241C27',
           background: '#12141C',
           surface: '#202229',
           'surface-bright': '#2B2E38',

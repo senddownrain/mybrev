@@ -174,26 +174,26 @@ function cycleLabel(value) {
 .parsed-reading {
   margin: 0;
   overflow: hidden;
-  border: 1px solid var(--nav-border);
+  border: 1px solid var(--reader-border);
   border-radius: 28px;
-  background: var(--nav-surface);
-  color: var(--nav-on-surface);
-  box-shadow: 0 5px 20px var(--nav-button-shadow);
-  font-family: var(--app-font-family, sans-serif);
+  background: var(--reader-surface);
+  color: var(--reader-ink);
+  box-shadow: var(--reader-shadow);
+  font-family: var(--reader-font-family);
 }
 
 .reading-header {
   position: relative;
   padding: 24px 20px 22px;
-  border-bottom: 1px solid var(--nav-border);
+  border-bottom: 1px solid var(--reader-border);
   background:
-    radial-gradient(circle at 92% 18%, rgba(var(--v-theme-primary), 0.13) 0, rgba(var(--v-theme-primary), 0.13) 44px, transparent 45px),
-    linear-gradient(145deg, rgba(var(--v-theme-primary), 0.08), transparent 62%);
+    radial-gradient(circle at 92% 18%, rgba(var(--reading-period-rgb), 0.13) 0, rgba(var(--reading-period-rgb), 0.13) 44px, transparent 45px),
+    linear-gradient(145deg, rgba(var(--reading-period-rgb), 0.08), transparent 62%);
 }
 
 .reading-header__eyebrow {
   margin-bottom: 8px;
-  color: rgb(var(--v-theme-primary));
+  color: var(--reading-visible-color);
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.11em;
@@ -205,7 +205,8 @@ function cycleLabel(value) {
   margin: 0;
   color: rgb(var(--v-theme-on-surface));
   font-size: calc(clamp(1.45rem, 5.3vw, 1.86rem) * var(--font-size-multiplier, 1));
-  font-weight: 720;
+  font-family: var(--reader-display-font-family);
+  font-weight: 700;
   line-height: 1.28;
   letter-spacing: -0.018em;
 }
@@ -214,10 +215,10 @@ function cycleLabel(value) {
   display: inline-flex;
   margin-top: 12px;
   padding: 5px 9px;
-  border: 1px solid rgba(var(--v-theme-primary), 0.18);
+  border: 1px solid rgba(var(--reading-period-rgb), 0.18);
   border-radius: 999px;
-  background: rgba(var(--v-theme-primary), 0.075);
-  color: rgb(var(--v-theme-primary));
+  background: rgba(var(--reading-period-rgb), 0.075);
+  color: var(--reading-visible-color);
   font-size: 0.7rem;
   font-weight: 750;
 }
@@ -245,9 +246,10 @@ function cycleLabel(value) {
 
 .section-label {
   margin: 0;
-  color: rgb(var(--v-theme-primary));
+  color: var(--reading-visible-color);
   font-size: calc(0.8rem * var(--font-size-multiplier, 1));
-  font-weight: 850;
+  font-family: var(--reader-display-font-family);
+  font-weight: 700;
   line-height: 1.3;
   letter-spacing: 0.11em;
   text-transform: uppercase;
@@ -279,14 +281,15 @@ function cycleLabel(value) {
 }
 
 .gospel-rubric::first-letter {
-  color: rgb(var(--v-theme-primary));
+  color: var(--reading-visible-color);
 }
 
 .section-text,
 .alleluia-verse {
-  color: rgb(var(--v-theme-on-surface));
+  color: var(--reader-ink);
   font-size: calc(1.04rem * var(--font-size-multiplier, 1));
   font-weight: 400;
+  font-optical-sizing: auto;
   line-height: 1.78;
   hanging-punctuation: first last;
   hyphens: auto;
@@ -325,9 +328,9 @@ function cycleLabel(value) {
   gap: 4px;
   margin: 2px 0 21px;
   padding: 10px 13px;
-  border-left: 3px solid rgb(var(--v-theme-primary));
+  border-left: 3px solid var(--reading-visible-color);
   border-radius: 0 12px 12px 0;
-  background: rgba(var(--v-theme-primary), 0.065);
+  background: rgba(var(--reading-period-rgb), 0.065);
   color: rgb(var(--v-theme-on-surface));
   font-size: calc(1.02rem * var(--font-size-multiplier, 1));
   font-weight: 720;
@@ -338,7 +341,7 @@ function cycleLabel(value) {
 .alleluia-acclamation__label {
   display: block;
   margin: 0;
-  color: rgb(var(--v-theme-primary));
+  color: var(--reading-visible-color);
   font-size: 0.72em;
   font-weight: 900;
   letter-spacing: 0.08em;

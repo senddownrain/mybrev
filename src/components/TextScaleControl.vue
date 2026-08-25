@@ -37,9 +37,10 @@ const settings = useSettingsStore();
   padding: 0 4px;
   border: 1px solid var(--nav-border);
   border-radius: 24px;
-  background: var(--nav-surface);
+  background: var(--overlay-surface);
   color: var(--nav-on-surface);
   box-shadow: 0 2px 9px var(--nav-button-shadow);
+  backdrop-filter: blur(18px);
 }
 
 .text-scale-button {
@@ -56,7 +57,8 @@ const settings = useSettingsStore();
 }
 
 .text-scale-button:active {
-  background: var(--nav-active);
+  background: rgba(var(--chrome-accent-rgb), 0.12);
+  color: var(--chrome-accent);
 }
 
 .text-scale-button + .text-scale-button {

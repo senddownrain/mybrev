@@ -280,6 +280,16 @@ function resetFilters() {
   background: var(--nav-surface);
   color: var(--nav-muted);
   box-shadow: 0 6px 22px var(--nav-button-shadow);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.search-field:focus-within {
+  border-color: rgba(var(--chrome-accent-rgb), 0.42);
+  box-shadow: 0 6px 22px var(--nav-button-shadow), 0 0 0 3px var(--focus-ring);
+}
+
+.search-field > svg {
+  color: var(--chrome-accent);
 }
 
 .search-field input {
@@ -335,8 +345,9 @@ function resetFilters() {
 }
 
 .source-filters .source-filter--active {
-  background: var(--nav-active);
-  color: var(--nav-on-surface);
+  border-color: rgba(var(--chrome-accent-rgb), 0.24);
+  background: rgba(var(--chrome-accent-rgb), 0.11);
+  color: var(--chrome-accent);
 }
 
 .list-summary {
@@ -363,7 +374,9 @@ function resetFilters() {
   padding: 12px;
   border: 1px solid var(--nav-border);
   border-radius: 22px;
-  background: var(--nav-surface);
+  background:
+    linear-gradient(120deg, rgba(var(--chrome-accent-rgb), 0.04), transparent 64%),
+    var(--nav-surface);
   color: var(--nav-on-surface);
   box-shadow: 0 5px 19px var(--nav-button-shadow);
   text-align: left;
@@ -387,7 +400,9 @@ function resetFilters() {
 }
 
 .date-tile--dynamic {
-  box-shadow: inset 0 0 0 1px rgba(var(--v-theme-primary), 0.24);
+  background: rgba(var(--chrome-accent-rgb), 0.11);
+  color: var(--chrome-accent);
+  box-shadow: inset 0 0 0 1px rgba(var(--chrome-accent-rgb), 0.24);
 }
 
 .date-tile strong {

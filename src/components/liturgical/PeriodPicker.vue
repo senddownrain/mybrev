@@ -301,7 +301,14 @@ const resultMessage = ref('Для гэтага дня нічога не зной
 let searchSequence = 0;
 
 const isAdmin = computed(() => authStore.isAdmin);
-const periodOptions = Object.entries(PERIOD_LABEL_MAP).map(([value, title]) => ({ value, title }));
+const periodOptions = [
+  'advent',
+  'christmas',
+  'ordinary',
+  'lent',
+  'holyweek',
+  'easter',
+].map((value) => ({ value, title: PERIOD_LABEL_MAP[value] }));
 const weekdayShort = { 1: 'Нд', 2: 'Пн', 3: 'Аў', 4: 'Ср', 5: 'Чц', 6: 'Пт', 7: 'Сб' };
 const dayOfWeekOptions = Object.entries(WEEKDAY_LABEL_MAP).map(([value, title]) => ({
   value: Number(value),
@@ -521,7 +528,8 @@ function createDay() {
 .step-heading { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
 .step-heading > span {
   display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center;
-  border-radius: 12px; background: var(--nav-active); color: var(--nav-on-surface);
+  border: 1px solid rgba(var(--chrome-accent-rgb), 0.18);
+  border-radius: 12px; background: rgba(var(--chrome-accent-rgb), 0.1); color: var(--chrome-accent);
   font-size: 0.72rem; font-weight: 800;
 }
 .step-heading h2 { margin: 0; font-size: 1.05rem; font-weight: 750; line-height: 1.25; }
@@ -538,7 +546,7 @@ function createDay() {
   cursor: pointer; transition: background 0.16s ease, color 0.16s ease, transform 0.14s ease;
 }
 .choice-button:active { transform: scale(0.97); }
-.choice-button--active { background: var(--nav-active); color: var(--nav-on-surface); }
+.choice-button--active { border-color: rgba(var(--chrome-accent-rgb), 0.24); background: rgba(var(--chrome-accent-rgb), 0.11); color: var(--chrome-accent); }
 .choice-button:disabled { opacity: 0.38; cursor: not-allowed; }
 
 .period-button { display: flex; align-items: center; gap: 10px; padding: 10px 12px; text-align: left; }
@@ -571,7 +579,7 @@ function createDay() {
 :deep(.date-choice-button strong) { color: var(--nav-on-surface); font-size: 1rem; line-height: 1; }
 :deep(.date-choice-button span) { font-size: 0.63rem; font-weight: 760; text-transform: uppercase; }
 :deep(.date-choice-button small) { font-size: 0.62rem; }
-:deep(.date-choice-button--active) { background: var(--nav-active); color: var(--nav-on-surface); }
+:deep(.date-choice-button--active) { border-color: rgba(var(--chrome-accent-rgb), 0.24); background: rgba(var(--chrome-accent-rgb), 0.11); color: var(--chrome-accent); }
 
 .lent-opening-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .lent-opening-button { display: grid; gap: 3px; padding: 9px 10px; text-align: left; }
@@ -597,7 +605,7 @@ function createDay() {
 .result-card {
   display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%;
   padding: 15px; border: 1px solid var(--nav-border); border-radius: 19px;
-  background: rgb(var(--v-theme-background)); color: rgb(var(--v-theme-on-surface)); text-align: left; cursor: pointer;
+  background: var(--reader-surface); color: var(--nav-on-surface); text-align: left; cursor: pointer;
 }
 .result-card:disabled { opacity: 0.55; cursor: default; }
 .result-card-copy { display: grid; min-width: 0; gap: 4px; }

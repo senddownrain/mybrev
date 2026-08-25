@@ -189,7 +189,9 @@ const selectCategoryByName = (categoryName) => {
   border: 0 !important;
   border-right: 1px solid var(--nav-border) !important;
   border-radius: 0 !important;
-  background: var(--nav-surface) !important;
+  background:
+    radial-gradient(circle at 14% 4%, rgba(var(--chrome-accent-rgb), 0.13), transparent 210px),
+    var(--nav-surface) !important;
   color: var(--nav-on-surface) !important;
   box-shadow: 10px 0 32px var(--nav-shadow) !important;
   overflow: hidden;
@@ -225,7 +227,8 @@ const selectCategoryByName = (categoryName) => {
   height: 48px;
   flex: 0 0 48px;
   border-radius: 14px;
-  background: var(--nav-active);
+  border: 1px solid rgba(var(--chrome-accent-rgb), 0.2);
+  background: rgba(var(--chrome-accent-rgb), 0.1);
 }
 
 .drawer-logo {
@@ -236,6 +239,7 @@ const selectCategoryByName = (categoryName) => {
 
 .drawer-title {
   font-size: 1rem;
+  font-family: var(--reader-display-font-family);
   font-weight: 750;
   line-height: 1.25;
 }
@@ -305,8 +309,8 @@ const selectCategoryByName = (categoryName) => {
 }
 
 .drawer-list :deep(.v-list-item--active) {
-  background: var(--nav-active) !important;
-  color: var(--nav-on-surface) !important;
+  background: rgba(var(--chrome-accent-rgb), 0.13) !important;
+  color: var(--chrome-accent) !important;
 }
 
 .drawer-list :deep(.v-list-item--active .v-list-item__overlay) {
@@ -314,7 +318,7 @@ const selectCategoryByName = (categoryName) => {
 }
 
 .drawer-list :deep(.v-list-item--active .drawer-icon) {
-  color: var(--nav-on-surface);
+  color: var(--chrome-accent);
 }
 
 .drawer-section-label {

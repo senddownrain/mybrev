@@ -116,10 +116,11 @@ const onEditClick = () => {
   flex: 0 0 48px !important;
   border: 1px solid var(--nav-border) !important;
   border-radius: 50% !important;
-  background: var(--nav-surface) !important;
+  background: var(--overlay-surface) !important;
   color: var(--nav-on-surface) !important;
   box-shadow: 0 2px 9px var(--nav-button-shadow) !important;
   transition: transform 0.16s ease, opacity 0.16s ease !important;
+  backdrop-filter: blur(18px);
 }
 
 .ora-circle-btn:active {
@@ -128,8 +129,8 @@ const onEditClick = () => {
 }
 
 .ora-circle-btn--confirm {
-  background: var(--nav-active) !important;
-  color: var(--nav-on-surface) !important;
+  background: rgba(var(--chrome-accent-rgb), 0.13) !important;
+  color: var(--chrome-accent) !important;
 }
 
 .ora-action-start {

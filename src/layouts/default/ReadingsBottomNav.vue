@@ -184,12 +184,13 @@ function loadDay() {
   display: flex;
   align-items: center;
   height: 64px;
-  background: var(--nav-surface);
+  background: var(--overlay-surface);
   border: 1px solid var(--nav-border);
   border-radius: 32px;
   padding: 0 4px;
   box-shadow: 0 10px 30px var(--nav-shadow);
   pointer-events: auto;
+  backdrop-filter: blur(20px) saturate(1.08);
 }
 
 .pill-item {
@@ -210,8 +211,8 @@ function loadDay() {
   transform: scale(0.94);
 }
 .pill-item--active {
-  background: var(--nav-active);
-  color: var(--nav-on-surface);
+  background: rgba(var(--chrome-accent-rgb), 0.12);
+  color: var(--chrome-accent);
 }
 
 .arrow-btn {
@@ -222,7 +223,7 @@ function loadDay() {
   height: 56px;
   flex: 0 0 56px;
   border: none;
-  background: var(--nav-surface);
+  background: var(--overlay-surface);
   border-radius: 50%;
   cursor: pointer;
   color: var(--nav-on-surface);
@@ -230,6 +231,7 @@ function loadDay() {
   box-shadow: 0 8px 24px var(--nav-shadow);
   transition: opacity 0.15s ease, transform 0.15s ease;
   pointer-events: auto;
+  backdrop-filter: blur(18px);
 }
 .arrow-btn:active {
   opacity: 0.68;
@@ -253,7 +255,9 @@ function loadDay() {
   overflow: hidden !important;
   border: 1px solid var(--nav-border);
   border-radius: 28px !important;
-  background: var(--nav-surface) !important;
+  background:
+    radial-gradient(circle at 92% 0, rgba(var(--chrome-accent-rgb), 0.14), transparent 210px),
+    var(--overlay-surface) !important;
   color: var(--nav-on-surface);
   box-shadow: 0 22px 60px var(--nav-shadow) !important;
 }
@@ -264,7 +268,7 @@ function loadDay() {
   padding: 20px 20px 9px !important;
 }
 .date-dialog-eyebrow {
-  color: var(--nav-muted);
+  color: var(--chrome-accent);
   font-size: 0.7rem;
   font-weight: 800;
   line-height: 1.2;
@@ -274,6 +278,7 @@ function loadDay() {
 .date-dialog-heading {
   margin-top: 3px;
   font-size: 1.25rem;
+  font-family: var(--reader-display-font-family);
   color: var(--nav-on-surface);
   font-weight: 760;
   line-height: 1.3;
@@ -295,8 +300,8 @@ function loadDay() {
 
 .select-date-btn {
   min-width: 112px;
-  background: var(--nav-on-surface) !important;
-  color: var(--nav-surface) !important;
+  background: var(--chrome-accent) !important;
+  color: var(--on-chrome-accent) !important;
   box-shadow: 0 5px 14px var(--nav-shadow);
 }
 

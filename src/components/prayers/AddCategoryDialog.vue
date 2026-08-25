@@ -115,7 +115,9 @@ function onAddCategory() {
   overflow: hidden;
   border: 1px solid var(--nav-border);
   border-radius: 26px !important;
-  background: var(--nav-surface);
+  background:
+    radial-gradient(circle at 92% 0, rgba(var(--devotional-rgb), 0.14), transparent 220px),
+    var(--overlay-surface);
   color: var(--nav-on-surface);
   box-shadow: 0 22px 60px var(--nav-shadow);
 }
@@ -146,7 +148,9 @@ function onAddCategory() {
   width: 46px;
   height: 46px;
   border-radius: 15px;
-  background: var(--nav-active);
+  border: 1px solid rgba(var(--devotional-rgb), 0.18);
+  background: var(--devotional-soft);
+  color: var(--devotional-accent);
 }
 
 .dialog-eyebrow,
@@ -158,9 +162,14 @@ function onAddCategory() {
   text-transform: uppercase;
 }
 
+.dialog-eyebrow {
+  color: var(--devotional-accent);
+}
+
 .dialog-heading h2 {
   margin: 2px 0 0;
   font-size: 1.25rem;
+  font-family: var(--reader-display-font-family);
   font-weight: 780;
   line-height: 1.15;
   letter-spacing: -.025em;
@@ -201,8 +210,8 @@ function onAddCategory() {
 }
 
 .category-field :deep(.v-field--focused) {
-  border-color: rgba(var(--v-theme-primary), .7);
-  box-shadow: 0 0 0 3px rgba(var(--v-theme-primary), .1) !important;
+  border-color: rgba(var(--devotional-rgb), .72);
+  box-shadow: 0 0 0 3px rgba(var(--devotional-rgb), .12) !important;
 }
 
 .category-field :deep(.v-field__input) { min-height: 52px; padding-inline: 15px; font-size: .9rem; }
@@ -226,7 +235,7 @@ function onAddCategory() {
 }
 
 .cancel-button { background: var(--nav-active); color: var(--nav-on-surface); }
-.submit-button { display: flex; align-items: center; justify-content: center; gap: 7px; background: rgb(var(--v-theme-primary)); color: rgb(var(--v-theme-on-primary)); }
+.submit-button { display: flex; align-items: center; justify-content: center; gap: 7px; background: var(--devotional-accent); color: var(--on-devotional-accent); }
 .submit-button:disabled { opacity: .38; cursor: default; }
 
 @media (max-width: 600px) {

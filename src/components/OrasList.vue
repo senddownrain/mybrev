@@ -442,6 +442,12 @@ watch(dateParam, (newDateParam) => {
 }
 
 .ora-options-list {
+  --reading-visible-color: var(--reading-color);
+  --reading-visible-color: color-mix(
+    in srgb,
+    var(--reading-color) var(--period-accent-weight),
+    var(--period-accent-target)
+  );
   display: grid;
   gap: 12px;
   padding: 0 12px !important;
@@ -499,7 +505,7 @@ watch(dateParam, (newDateParam) => {
 }
 
 .reading-title {
-  color: var(--reading-color);
+  color: var(--reading-visible-color);
   font-weight: 700;
   font-size: clamp(1.04rem, 4vw, 1.17rem);
 }
@@ -533,7 +539,7 @@ watch(dateParam, (newDateParam) => {
   border: 1px solid rgba(var(--reading-color-rgb), 0.18);
   border-radius: 16px;
   background: rgba(var(--reading-color-rgb), 0.13);
-  color: var(--reading-color);
+  color: var(--reading-visible-color);
 }
 
 .ora-card__title {

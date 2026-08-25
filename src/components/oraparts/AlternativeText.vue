@@ -144,8 +144,9 @@ watch(() => props.text, () => {
 }
 
 .alternative-tab--active {
-  border-color: rgba(var(--v-theme-on-surface), 0.24);
-  background: var(--nav-active);
+  border-color: rgba(var(--chrome-accent-rgb), 0.24);
+  background: rgba(var(--chrome-accent-rgb), 0.1);
+  color: var(--chrome-accent);
   font-weight: 680;
 }
 
@@ -162,8 +163,8 @@ watch(() => props.text, () => {
 }
 
 .alternative-tab--active .alternative-tab__number {
-  background: var(--nav-on-surface);
-  color: var(--nav-surface);
+  background: var(--chrome-accent);
+  color: var(--on-chrome-accent);
 }
 
 .alternative-tab__title {
@@ -172,14 +173,14 @@ watch(() => props.text, () => {
 }
 
 .alternative-tab__check {
-  color: var(--nav-on-surface);
+  color: var(--chrome-accent);
   font-size: 1rem;
   font-weight: 800;
   text-align: center;
 }
 
 .alternative-tab:focus-visible {
-  outline: 2px solid var(--nav-on-surface);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
 }
 </style>

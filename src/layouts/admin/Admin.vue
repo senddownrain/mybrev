@@ -1,7 +1,7 @@
 <template>
   <v-app 
     :style="{ 
-      '--app-font-family': settings.fontFamily,
+      '--reader-font-family': settings.fontFamily,
       '--font-size-multiplier': settings.fontSizeMultiplier 
     }"
   >

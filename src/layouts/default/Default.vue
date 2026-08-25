@@ -1,7 +1,7 @@
 <template>
   <v-app
     :style="{
-      '--app-font-family': settings.fontFamily,
+      '--reader-font-family': settings.fontFamily,
       '--font-size-multiplier': settings.fontSizeMultiplier
     }"
   >
@@ -345,10 +345,11 @@ const applyFilter = () => {
   flex: 0 0 48px !important;
   border: 1px solid var(--nav-border) !important;
   border-radius: 50% !important;
-  background: var(--nav-surface) !important;
+  background: var(--overlay-surface) !important;
   color: var(--nav-on-surface) !important;
   box-shadow: 0 2px 9px var(--nav-button-shadow) !important;
   transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease !important;
+  backdrop-filter: blur(18px);
 }
 
 .top-circle-btn:hover {
@@ -361,13 +362,13 @@ const applyFilter = () => {
 }
 
 .top-circle-btn--confirm {
-  background: var(--nav-active) !important;
-  color: var(--nav-on-surface) !important;
+  background: rgba(var(--chrome-accent-rgb), 0.13) !important;
+  color: var(--chrome-accent) !important;
 }
 
 .top-circle-btn--active {
-  background: var(--nav-active) !important;
-  color: var(--nav-on-surface) !important;
+  background: rgba(var(--chrome-accent-rgb), 0.13) !important;
+  color: var(--chrome-accent) !important;
 }
 
 .readings-nav-group {
@@ -377,9 +378,10 @@ const applyFilter = () => {
   overflow: hidden;
   border: 1px solid var(--nav-border);
   border-radius: 24px;
-  background: var(--nav-surface);
+  background: var(--overlay-surface);
   color: var(--nav-on-surface);
   box-shadow: 0 2px 9px var(--nav-button-shadow);
+  backdrop-filter: blur(18px);
 }
 
 .readings-nav-segment {
@@ -441,7 +443,9 @@ const applyFilter = () => {
 
 .prayer-filter-sheet {
   border: 1px solid var(--nav-border);
-  background: var(--nav-surface) !important;
+  background:
+    radial-gradient(circle at 90% 0, rgba(var(--devotional-rgb), 0.13), transparent 240px),
+    var(--overlay-surface) !important;
   color: var(--nav-on-surface);
   box-shadow: 0 -12px 40px var(--nav-shadow) !important;
 }
@@ -454,7 +458,7 @@ const applyFilter = () => {
 }
 
 .filter-sheet-eyebrow {
-  color: var(--nav-muted);
+  color: var(--devotional-accent);
   font-size: 0.68rem;
   font-weight: 750;
   letter-spacing: 0.08em;
@@ -464,6 +468,7 @@ const applyFilter = () => {
 .filter-sheet-title {
   margin-top: 2px;
   font-size: 1.25rem;
+  font-family: var(--reader-display-font-family);
   font-weight: 700;
 }
 
@@ -483,8 +488,8 @@ const applyFilter = () => {
 }
 
 .filter-chip {
-  background: var(--nav-active) !important;
-  color: var(--nav-on-surface) !important;
+  background: var(--devotional-soft) !important;
+  color: var(--devotional-accent) !important;
 }
 
 .filter-chip:not(.v-chip--selected) {
@@ -497,6 +502,11 @@ const applyFilter = () => {
   justify-content: flex-end;
   gap: 8px;
   margin-top: 16px;
+}
+
+.filter-sheet-actions :deep(.v-btn:last-child) {
+  background: var(--devotional-accent) !important;
+  color: var(--on-devotional-accent) !important;
 }
 
 @media (max-width: 359px) {

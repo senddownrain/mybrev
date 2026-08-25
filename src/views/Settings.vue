@@ -27,8 +27,8 @@
         <div><h2 id="text-title">Тэкст</h2><p>Шрыфт і памер для чытання</p></div>
       </div>
       <div class="font-picker">
-        <span class="control-label">Шрыфт праграмы</span>
-        <div class="font-options" role="radiogroup" aria-label="Шрыфт праграмы">
+        <span class="control-label">Шрыфт чытання</span>
+        <div class="font-options" role="radiogroup" aria-label="Шрыфт чытання">
           <button v-for="font in fontOptions" :key="font.value" type="button" role="radio"
             :aria-checked="font.value === settings.fontFamily"
             :class="{ 'font-option--active': font.value === settings.fontFamily }"
@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="text-preview" :style="{ fontFamily: settings.fontFamily, fontSize: `${settings.fontSizeMultiplier}em` }">
-        <span>Прыклад</span><p>Так будзе выглядаць асноўны тэкст вашай нататкі.</p>
+        <span>Прыклад</span><p>Божа, прыйдзі мне на дапамогу. Пане, паспяшы да мяне на паратунак.</p>
       </div>
     </section>
 
@@ -74,16 +74,12 @@ import { PhCheck, PhFolders, PhMinus, PhPlus, PhSlidersHorizontal, PhTextAa, PhT
 import { useSettingsStore } from '@/stores/settings.js';
 import { useNotifier } from '@/composables/useNotifier';
 import AddCategoryDialog from '@/components/prayers/AddCategoryDialog.vue';
-import { SYSTEM_FONT } from '@/constants/fonts';
+import { READER_FONT_OPTIONS } from '@/constants/fonts';
 
 const settings = useSettingsStore();
 const { notifySuccess } = useNotifier();
 const showAddCategoryDialog = ref(false);
-const fontOptions = [
-  { title: 'Сістэмны', value: SYSTEM_FONT }, { title: 'Kurale', value: 'Kurale, serif' },
-  { title: 'Old Standard TT', value: "'Old Standard TT', serif" }, { title: 'Pacifico', value: 'Pacifico, cursive' },
-  { title: 'Comfortaa', value: 'Comfortaa, sans-serif' }, { title: 'Yeseva One', value: "'Yeseva One', cursive" },
-];
+const fontOptions = READER_FONT_OPTIONS;
 function removeCategory(index) { settings.removeCategory(index); notifySuccess('Катэгорыя выдалена'); }
 </script>
 
@@ -91,11 +87,12 @@ function removeCategory(index) { settings.removeCategory(index); notifySuccess('
 .settings-page { width: min(100%, 780px); padding: 10px 18px 48px; }
 .settings-hero { padding: 8px 4px 20px; }
 .settings-eyebrow, .control-label, .text-preview > span { color: var(--nav-muted); font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-.settings-hero h1 { margin: 5px 0 8px; color: var(--nav-on-surface); font-size: clamp(2rem, 9vw, 2.7rem); font-weight: 750; line-height: 1.02; letter-spacing: -.045em; }
+.settings-eyebrow { color: var(--chrome-accent); }
+.settings-hero h1 { margin: 5px 0 8px; color: var(--nav-on-surface); font-size: clamp(2rem, 9vw, 2.7rem); font-family: var(--reader-display-font-family); font-weight: 750; line-height: 1.02; letter-spacing: -.025em; }
 .settings-hero p { max-width: 620px; margin: 0; color: var(--nav-muted); font-size: .98rem; line-height: 1.55; }
 .settings-section { margin-bottom: 14px; overflow: hidden; border: 1px solid var(--nav-border); border-radius: 24px; background: var(--nav-surface); box-shadow: 0 5px 20px var(--nav-button-shadow); }
 .section-heading { display: flex; align-items: center; gap: 12px; padding: 18px 20px 14px; }
-.section-icon { display: grid; flex: 0 0 42px; width: 42px; height: 42px; place-items: center; border-radius: 14px; background: var(--nav-active); color: var(--nav-on-surface); }
+.section-icon { display: grid; flex: 0 0 42px; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(var(--chrome-accent-rgb), .16); border-radius: 14px; background: rgba(var(--chrome-accent-rgb), .09); color: var(--chrome-accent); }
 .section-heading h2 { margin: 0; color: var(--nav-on-surface); font-size: 1rem; font-weight: 780; letter-spacing: -.01em; }
 .section-heading p { margin: 2px 0 0; color: var(--nav-muted); font-size: .78rem; line-height: 1.35; }
 .setting-row, .text-size-control, .category-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 70px; margin-inline: 20px; border-top: 1px solid var(--nav-border); }
@@ -109,15 +106,16 @@ function removeCategory(index) { settings.removeCategory(index); notifySuccess('
 .font-options button, .stepper button, .delete-button, .add-category-button { border: 0; font: inherit; cursor: pointer; }
 .font-options button { display: flex; align-items: center; gap: 6px; min-height: 38px; padding: 8px 13px; border: 1px solid var(--nav-border); border-radius: 13px; background: transparent; color: var(--nav-muted); font-size: .8rem; transition: background .18s ease, color .18s ease, transform .16s ease; }
 .font-options button:active, .stepper button:active, .add-category-button:active { transform: scale(.97); }
-.font-options .font-option--active { background: var(--nav-active); color: var(--nav-on-surface); }
+.font-options .font-option--active { border-color: rgba(var(--chrome-accent-rgb), .24); background: rgba(var(--chrome-accent-rgb), .11); color: var(--chrome-accent); }
 .text-size-control { padding-block: 14px; }
 .stepper { display: grid; flex: 0 0 auto; grid-template-columns: 38px 60px 38px; align-items: center; padding: 3px; border-radius: 15px; background: var(--nav-active); text-align: center; }
 .stepper button { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; background: var(--nav-surface); color: var(--nav-on-surface); }
 .stepper button:disabled { opacity: .35; cursor: default; }
 .stepper strong { color: var(--nav-on-surface); font-size: .8rem; }
 .text-preview { margin: 4px 20px 20px; padding: 17px 18px; border-radius: 17px; background: var(--nav-active); color: var(--nav-on-surface); }
-.text-preview > span { display: block; margin-bottom: 8px; font-family: var(--app-font-family, sans-serif); }
+.text-preview > span { display: block; margin-bottom: 8px; font-family: var(--ui-font-family); }
 .text-preview p { margin: 0; line-height: 1.65; }
+.text-preview p { font-optical-sizing: auto; }
 .category-row { min-height: 64px; }
 .delete-button { display: grid; flex: 0 0 40px; width: 40px; height: 40px; place-items: center; border-radius: 13px; background: transparent; color: var(--rubric-color); transition: background .18s ease; }
 .delete-button:hover { background: rgba(var(--v-theme-error), .08); }

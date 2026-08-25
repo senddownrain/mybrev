@@ -1,13 +1,13 @@
 <template>
   <!-- Используем наш глобальный класс для автоматического применения стилей -->
-  <div class="mb-6 day-title-container">
+  <div class="mb-6 day-title-container" :style="heroStyle">
     
     <!-- Индикатор загрузки -->
     <v-skeleton-loader v-if="loading" type="heading, subtitle"></v-skeleton-loader>
 
     <!-- Основной контент, когда данные загружены -->
     <div v-else-if="resolvedDay" class="day-title-content">
-      <div v-if="isHero" class="day-title-hero" :style="heroStyle">
+      <div v-if="isHero" class="day-title-hero">
         <div class="day-title-hero__eyebrow">
           <v-icon icon="mdi-circle-slice-8" size="14"></v-icon>
           {{ periodLabel }}
@@ -22,7 +22,7 @@
         </div>
       </div>
 
-      <div v-else class="day-title-standard" :style="heroStyle">
+      <div v-else class="day-title-standard">
         <div class="day-title-standard__eyebrow">{{ periodLabel }}</div>
         <h1>
           {{ displayTitle }}
@@ -180,6 +180,14 @@ const getPeriodTitle = (day) => {
 <style scoped>
 /* Запрещаем выделение текста и появление каретки в заголовке дня */
 .day-title-container {
+  position: relative;
+  isolation: isolate;
+  --liturgical-visible-color: var(--liturgical-color);
+  --liturgical-visible-color: color-mix(
+    in srgb,
+    var(--liturgical-color) var(--period-accent-weight),
+    var(--period-accent-target)
+  );
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -193,7 +201,24 @@ const getPeriodTitle = (day) => {
   overflow-y: visible;
 }
 
+.day-title-container::before {
+  position: absolute;
+  z-index: -1;
+  inset: -42px -34px -54px;
+  border-radius: 48px;
+  background: radial-gradient(
+    ellipse at 76% 24%,
+    rgba(var(--liturgical-rgb), var(--ambient-strength, 0.14)),
+    transparent 68%
+  );
+  content: "";
+  filter: blur(10px);
+  pointer-events: none;
+}
+
 .day-title-content {
+  position: relative;
+  z-index: 1;
   pointer-events: none;
 }
 
@@ -217,7 +242,7 @@ const getPeriodTitle = (day) => {
 
 .day-title-standard__eyebrow {
   margin-bottom: 8px;
-  color: var(--liturgical-color);
+  color: var(--liturgical-visible-color);
   font-size: 0.68rem !important;
   font-weight: 800;
   letter-spacing: 0.11em;
@@ -229,9 +254,10 @@ const getPeriodTitle = (day) => {
   margin: 0;
   color: rgb(var(--v-theme-on-surface));
   font-size: calc(clamp(1.85rem, 6vw, 2.35rem) * var(--font-size-multiplier, 1)) !important;
+  font-family: var(--reader-display-font-family) !important;
   font-weight: 700 !important;
-  line-height: 1.12 !important;
-  letter-spacing: -0.025em;
+  line-height: 1.08 !important;
+  letter-spacing: -0.012em;
   overflow-wrap: anywhere;
   text-align: left !important;
 }
@@ -253,7 +279,7 @@ const getPeriodTitle = (day) => {
   flex: 0 0 9px;
   border: 2px solid rgba(var(--liturgical-rgb), 0.28);
   border-radius: 50%;
-  background: var(--liturgical-color);
+  background: var(--liturgical-visible-color);
   box-shadow: 0 0 0 4px rgba(var(--liturgical-rgb), 0.09);
 }
 
@@ -290,7 +316,7 @@ const getPeriodTitle = (day) => {
   align-items: center;
   gap: 7px;
   margin-bottom: 10px;
-  color: var(--liturgical-color);
+  color: var(--liturgical-visible-color);
   font-size: 0.72rem !important;
   font-weight: 800;
   line-height: 1;
@@ -302,9 +328,10 @@ const getPeriodTitle = (day) => {
   max-width: 100%;
   margin: 0;
   font-size: clamp(1.65rem, 6.6vw, 2.55rem) !important;
-  font-weight: 720 !important;
-  line-height: 1.08 !important;
-  letter-spacing: -0.035em;
+  font-family: var(--reader-display-font-family) !important;
+  font-weight: 700 !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.016em;
   overflow-wrap: anywhere;
   text-align: left !important;
 }
@@ -332,7 +359,7 @@ const getPeriodTitle = (day) => {
   border: 1px solid rgba(var(--liturgical-rgb), 0.2);
   border-radius: 999px;
   background: rgba(var(--liturgical-rgb), 0.12);
-  color: var(--liturgical-color);
+  color: var(--liturgical-visible-color);
   font-size: 0.72rem !important;
   font-weight: 750;
   line-height: 1.2;
@@ -380,7 +407,7 @@ const getPeriodTitle = (day) => {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  color: var(--liturgical-color);
+  color: var(--liturgical-visible-color);
   font-size: 0.9rem !important;
   font-weight: 700;
 }
@@ -406,7 +433,11 @@ const getPeriodTitle = (day) => {
 /* Масштабирование текста заголовка дня */
 .day-title-container,
 .day-title-container * {
-  font-family: var(--app-font-family, sans-serif) !important;
+  font-family: var(--ui-font-family) !important;
+}
+
+.day-title-container :is(.day-title-standard, .day-title-hero) h1 {
+  font-family: var(--reader-display-font-family) !important;
 }
 
 .day-title-container h1,

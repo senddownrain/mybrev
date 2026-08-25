@@ -1,6 +1,7 @@
 <template>
   <v-container class="prayers-list-container">
     <div class="favorites-page-header">
+      <div class="favorites-page-eyebrow">Малітоўнік</div>
       <h1 class="favorites-page-title">Абраныя малітвы</h1>
     </div>
 
@@ -100,22 +101,51 @@ function toggleFavorite(prayerId) {
 
 <style scoped>
 .prayers-list-container {
+  position: relative;
+  isolation: isolate;
   width: min(100%, 760px);
   max-width: 760px;
   padding-top: 12px;
   padding-bottom: 32px !important;
 }
 
+.prayers-list-container::before {
+  position: absolute;
+  z-index: -1;
+  inset: -24px -20px auto;
+  height: 280px;
+  border-radius: 48px;
+  background: radial-gradient(
+    ellipse at 82% 12%,
+    rgba(var(--devotional-rgb), var(--ambient-strength)),
+    transparent 68%
+  );
+  content: "";
+  filter: blur(12px);
+  pointer-events: none;
+}
+
 .favorites-page-header {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   margin: 0 12px 22px;
+}
+
+.favorites-page-eyebrow {
+  margin-bottom: 8px;
+  color: var(--devotional-accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
 }
 
 .favorites-page-title {
   margin: 8px 0 0;
   color: rgb(var(--v-theme-on-surface));
   font-size: clamp(1.85rem, 8vw, 2.35rem);
+  font-family: var(--reader-display-font-family);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.025em;
@@ -140,7 +170,9 @@ function toggleFavorite(prayerId) {
   padding: 14px 14px 14px 16px !important;
   border: 1px solid var(--nav-border);
   border-radius: 22px !important;
-  background: var(--nav-surface);
+  background:
+    linear-gradient(120deg, rgba(var(--devotional-rgb), 0.055), transparent 62%),
+    var(--nav-surface);
   color: var(--nav-on-surface);
   box-shadow: 0 3px 14px var(--nav-button-shadow);
   cursor: pointer;
@@ -149,7 +181,7 @@ function toggleFavorite(prayerId) {
 }
 
 .prayer-list-item:hover {
-  border-color: rgba(var(--v-theme-primary), 0.2);
+  border-color: rgba(var(--devotional-rgb), 0.28);
   box-shadow: 0 7px 22px var(--nav-button-shadow);
 }
 
@@ -196,7 +228,9 @@ function toggleFavorite(prayerId) {
   padding: 36px 24px;
   border: 1px solid var(--nav-border);
   border-radius: 24px;
-  background: var(--nav-surface);
+  background:
+    linear-gradient(145deg, var(--devotional-soft), transparent 64%),
+    var(--nav-surface);
   color: var(--nav-muted);
   text-align: center;
   box-shadow: 0 3px 14px var(--nav-button-shadow);

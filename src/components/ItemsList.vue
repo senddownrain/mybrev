@@ -351,6 +351,7 @@ watch(
   margin: 8px 12px 22px;
   color: rgb(var(--v-theme-on-surface));
   font-size: clamp(1.85rem, 8vw, 2.35rem);
+  font-family: var(--reader-display-font-family);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.025em;
@@ -363,6 +364,12 @@ watch(
 }
 
 .date-header {
+  --liturgical-visible-color: var(--liturgical-color);
+  --liturgical-visible-color: color-mix(
+    in srgb,
+    var(--liturgical-color) var(--period-accent-weight),
+    var(--period-accent-target)
+  );
   position: relative;
   display: flex;
   width: 100%;
@@ -426,7 +433,7 @@ watch(
   align-items: center;
   gap: 6px;
   margin-bottom: 10px;
-  color: var(--liturgical-color);
+  color: var(--liturgical-visible-color);
   font-size: 0.72rem;
   font-weight: 800;
   line-height: 1;
@@ -438,7 +445,8 @@ watch(
   max-width: 100%;
   margin: 0;
   font-size: clamp(2.15rem, 9vw, 3.25rem);
-  font-weight: 730;
+  font-family: var(--reader-display-font-family);
+  font-weight: 700;
   line-height: 0.98;
   letter-spacing: -0.045em;
   overflow-wrap: anywhere;
@@ -457,7 +465,7 @@ watch(
 
 .date-header__caret {
   margin-left: 2px;
-  color: var(--liturgical-color);
+  color: var(--liturgical-visible-color);
 }
 
 .options-row {
@@ -499,6 +507,12 @@ watch(
 }
 
 .day-option--themed {
+  --option-visible-color: var(--option-color);
+  --option-visible-color: color-mix(
+    in srgb,
+    var(--option-color) var(--period-accent-weight),
+    var(--period-accent-target)
+  );
   border-color: rgba(var(--option-rgb), 0.28);
   background:
     linear-gradient(120deg, rgba(var(--option-rgb), 0.14), rgba(var(--option-rgb), 0.025) 72%),
@@ -512,7 +526,7 @@ watch(
 .day-option--themed .day-option__icon-wrap {
   border-color: rgba(var(--option-rgb), 0.22);
   background: rgba(var(--option-rgb), 0.14);
-  color: var(--option-color);
+  color: var(--option-visible-color);
 }
 
 .day-option:active {
