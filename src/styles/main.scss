@@ -30,6 +30,7 @@
   --nav-border: rgba(55, 47, 38, 0.1);
   --nav-shadow: rgba(46, 38, 29, 0.18);
   --nav-button-shadow: rgba(46, 38, 29, 0.09);
+  --hero-shadow: 0 8px 28px var(--nav-button-shadow);
   --reader-surface: rgba(255, 254, 250, 0.9);
   --reader-ink: #211f1b;
   --reader-muted: #756e64;
@@ -66,6 +67,7 @@
   --nav-border: rgba(244, 237, 225, 0.13);
   --nav-shadow: rgba(0, 0, 0, 0.52);
   --nav-button-shadow: rgba(0, 0, 0, 0.38);
+  --hero-shadow: 0 8px 28px var(--nav-button-shadow);
   --reader-surface: rgba(29, 29, 31, 0.91);
   --reader-ink: #eeeae2;
   --reader-muted: #aaa49b;
@@ -78,6 +80,20 @@
   --app-background:
     radial-gradient(circle at 50% -10rem, rgba(115, 92, 132, 0.17), transparent 36rem),
     #131315;
+}
+
+// On narrow screens the hero sits close to the viewport edge. Tighten the
+// elevation and ambient wash so neither turns into a clipped vertical band.
+@media (max-width: 600px) {
+  .v-theme--light {
+    --hero-shadow: 0 6px 20px rgba(61, 48, 34, 0.075);
+    --ambient-strength: 0.11;
+  }
+
+  .v-theme--dark {
+    --hero-shadow: 0 7px 22px rgba(0, 0, 0, 0.3);
+    --ambient-strength: 0.17;
+  }
 }
 
 // Один нативный scroll-контейнер для всех страниц. Не переносим вертикальный

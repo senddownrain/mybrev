@@ -11,7 +11,11 @@
 
       <section class="ora-ending__section ora-ending__antiphons">
         <h2 class="ora-ending__title">Антыфоны на заканчэнне да Найсвяцейшай Панны Марыі</h2>
-        <alternative-text :text="ant" aria-label="Выбар антыфоны да Найсвяцейшай Панны Марыі" />
+        <alternative-text
+          :text="ant"
+          kind="marian-antiphon"
+          aria-label="Выбар антыфоны да Найсвяцейшай Панны Марыі"
+        />
       </section>
     </v-card-text>
   </v-card>

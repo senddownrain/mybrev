@@ -268,6 +268,12 @@ function toggleFavorite(prayerId) {
 }
 
 @media (max-width: 600px) {
+  .prayers-list-container::before {
+    inset-inline: 0;
+    height: 250px;
+    filter: blur(10px);
+  }
+
   .prayers-list-container {
     padding: 8px 4px 28px !important;
   }

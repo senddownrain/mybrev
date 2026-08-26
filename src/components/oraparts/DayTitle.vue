@@ -307,7 +307,7 @@ const getPeriodTitle = (day) => {
     linear-gradient(145deg, rgba(var(--liturgical-rgb), 0.16), rgba(var(--liturgical-rgb), 0.04) 66%),
     var(--nav-surface);
   color: var(--nav-on-surface);
-  box-shadow: 0 8px 28px var(--nav-button-shadow);
+  box-shadow: var(--hero-shadow);
   text-align: left;
 }
 
@@ -457,6 +457,12 @@ const getPeriodTitle = (day) => {
 }
 
 @media (max-width: 600px) {
+  .day-title-container::before {
+    inset: -26px -6px -38px;
+    border-radius: 34px;
+    filter: blur(8px);
+  }
+
   .day-title-container {
     padding: 0;
     margin-bottom: 16px;

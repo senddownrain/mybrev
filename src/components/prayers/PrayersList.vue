@@ -520,6 +520,12 @@ async function confirmDelete() {
 }
 
 @media (max-width: 600px) {
+  .prayers-list-container::before {
+    inset-inline: 0;
+    height: 260px;
+    filter: blur(10px);
+  }
+
   .prayers-list-container {
     padding: 8px 4px 104px !important;
   }

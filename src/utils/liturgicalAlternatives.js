@@ -162,6 +162,10 @@ function optionTitle(option, index, kind) {
     const firstLine = firstVerseLine(option.html);
     if (firstLine) return shorten(firstLine);
   }
+  if (kind === 'marian-antiphon') {
+    const firstLine = firstVerseLine(option.html);
+    if (firstLine) return shorten(firstLine);
+  }
   if (kind === 'prayer' || paragraphs.some((text) => INSTRUCTION_MARKER.test(text))) {
     return `Варыянт ${index + 1}`;
   }

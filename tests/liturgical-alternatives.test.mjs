@@ -45,6 +45,22 @@ test('keeps category names but never uses a prayer or instruction as a tab title
   });
 });
 
+test('names alternative Marian antiphons by their first verse line', () => {
+  const antiphons = [
+    '<p>Дзева, Маці Адкупіцеля,<br />брама раю нябеснага.</p>',
+    '<p><span>Або:</span></p><p>Вітай, неба Уладарка,<br />Вітай, Панна анёлаў.</p>',
+    '<p><span>Або:</span></p><p>Вітай, Каралева,<br />Маці міласэрнасці.</p>',
+  ].join('<hr />');
+
+  const options = getLiturgicalAlternatives(antiphons, 'marian-antiphon');
+
+  assert.deepEqual(options.map(({ title }) => title), [
+    'Дзева, Маці Адкупіцеля',
+    'Вітай, неба Уладарка',
+    'Вітай, Каралева',
+  ]);
+});
+
 test('recognizes structured choices and preserves shared content and suffixes', () => {
   const dead = loadTemplate('office-for-dead.json');
   const options = getLiturgicalAlternatives(dead.officeOfReadingsR1, 'reading');

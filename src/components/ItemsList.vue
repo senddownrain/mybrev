@@ -387,7 +387,7 @@ watch(
     linear-gradient(145deg, rgba(var(--liturgical-rgb), 0.13), rgba(var(--liturgical-rgb), 0.035) 66%),
     var(--nav-surface);
   color: var(--nav-on-surface);
-  box-shadow: 0 8px 28px var(--nav-button-shadow);
+  box-shadow: var(--hero-shadow);
   cursor: pointer;
   font: inherit;
   text-align: left;

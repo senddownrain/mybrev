@@ -294,6 +294,12 @@ function openSelection({ dayId, date }) {
 }
 
 @media (max-width: 560px) {
+  .picker-page::before {
+    inset-inline: 0;
+    height: 280px;
+    filter: blur(10px);
+  }
+
   .picker-page {
     padding-inline: 14px;
   }
