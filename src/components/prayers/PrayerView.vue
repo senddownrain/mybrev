@@ -1,38 +1,7 @@
 <template>
   <v-container v-if="prayer" class="prayer-view-container">
     <div class="prayer-content-area">
-      <!-- Режим редактирования -->
-      <template v-if="isEditing">
-        <v-text-field
-          v-model="editForm.title"
-          label="Назва"
-          variant="outlined"
-          class="mb-4 prayer-title-field"
-          :rules="[validatePrayerTitle]"
-          counter="200"
-          required
-        ></v-text-field>
-
-        <div class="mb-4">
-          <label class="text-caption text-medium-emphasis mb-2 d-block">Тэкст малітвы</label>
-          <PrayerMarkdownEditor v-model="editForm.text" />
-        </div>
-
-        <v-combobox
-          v-model="editForm.tags"
-          :items="allTags"
-          label="Тэгі"
-          multiple
-          chips
-          clearable
-          variant="outlined"
-          class="mb-4"
-        ></v-combobox>
-      </template>
-
-      <!-- Режим просмотра -->
-      <template v-else>
-        <article class="prayer-reading-surface" :class="{ 'prayer-reading-surface--mass': isMassOrder }">
+      <article class="prayer-reading-surface" :class="{ 'prayer-reading-surface--mass': isMassOrder }">
           <header class="prayer-reading-header">
             <div class="prayer-reading-eyebrow">{{ isMassOrder ? 'Літургія' : 'Малітва' }}</div>
             <!-- Plain text interpolation — no v-html, no XSS risk -->
@@ -65,8 +34,7 @@
           </nav>
 
           <div ref="prayerTextElement" v-html="prayerHtml" class="prayer-text"></div>
-        </article>
-      </template>
+      </article>
     </div>
   </v-container>
 
@@ -85,23 +53,20 @@
 
 <script setup>
 import { ref, computed, watch, nextTick, onUnmounted, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
-import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 import { logger } from '@/utils/logger';
-import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue';
 import {
   prayerMarkdownToPlainText,
-  prayerTextFields,
   renderPrayerMarkdown,
-  toPrayerMarkdown,
 } from '@/utils/prayerMarkdown';
 
 const route = useRoute();
-const { prayers, isLoading, getTitle, getText, updatePrayer, allTags } = usePrayers();
-const { notifySuccess, notifyError } = useNotifier();
+const router = useRouter();
+const { prayers, isLoading, getTitle, getText } = usePrayers();
+const { notifySuccess } = useNotifier();
 const uiStore = useUiStore();
 const MASS_ORDER_PRAYER_ID = 'eMmCtxwyJ75ogmL5rwye';
 const prayerTextElement = ref(null);
@@ -113,39 +78,14 @@ const prayer = computed(() => {
 const isMassOrder = computed(() => route.params.id === MASS_ORDER_PRAYER_ID);
 const prayerHtml = computed(() => renderPrayerMarkdown(getText(prayer.value), prayer.value?.textFormat));
 
-const isEditing = ref(false);
-const saving = ref(false);
 const copySuccess = ref(false);
 let copyTimeoutId = null;
 
-const editForm = ref({
-  title: '',
-  text: '',
-  tags: []
-});
-
-// Sync local edit state to store so Default.vue and PrayerBar can observe it reactively
-watch([isEditing, saving], ([editing, isSaving]) => {
-  uiStore.prayerIsEditing = editing;
-  uiStore.prayerSaving = isSaving;
-});
-
-watch(prayer, (newPrayer) => {
-  if (newPrayer && isEditing.value) {
-    loadPrayerData();
-  }
-}, { immediate: true });
-
-// Register action handlers with the Pinia store on mount — replaces window events
+// Editing always opens the full form, which includes the live preview column.
 onMounted(() => {
-  uiStore.registerPrayerActions({
-    toggleEdit,
-    cancelEdit,
-    save: savePrayer,
-  });
-  // Sync initial state
-  uiStore.prayerIsEditing = isEditing.value;
-  uiStore.prayerSaving = saving.value;
+  uiStore.registerPrayerActions({ toggleEdit });
+  uiStore.prayerIsEditing = false;
+  uiStore.prayerSaving = false;
   updateMassSections();
 });
 
@@ -160,72 +100,8 @@ onUnmounted(() => {
   }
 });
 
-function loadPrayerData() {
-  if (!prayer.value) return;
-
-  if (prayer.value.titleVersions) {
-    editForm.value.title = prayer.value.titleVersions.be || prayer.value.titleVersions.ru || Object.values(prayer.value.titleVersions)[0] || '';
-  } else {
-    editForm.value.title = prayer.value.title || '';
-  }
-
-  if (prayer.value.textVersions) {
-    editForm.value.text = toPrayerMarkdown(
-      prayer.value.textVersions.be || prayer.value.textVersions.ru || Object.values(prayer.value.textVersions)[0] || '',
-      prayer.value.textFormat,
-    );
-  } else {
-    editForm.value.text = toPrayerMarkdown(prayer.value.text || '', prayer.value.textFormat);
-  }
-
-  editForm.value.tags = prayer.value.tags || [];
-}
-
 function toggleEdit() {
-  if (isEditing.value) {
-    savePrayer();
-  } else {
-    loadPrayerData();
-    isEditing.value = true;
-  }
-}
-
-function cancelEdit() {
-  if (isEditing.value) {
-    isEditing.value = false;
-    loadPrayerData();
-  }
-}
-
-async function savePrayer() {
-  const titleValidation = validatePrayerTitle(editForm.value.title);
-  const textValidation = validatePrayerText(editForm.value.text);
-
-  if (titleValidation !== true) {
-    notifyError(titleValidation);
-    return;
-  }
-
-  if (textValidation !== true) {
-    notifyError(textValidation);
-    return;
-  }
-
-  saving.value = true;
-  try {
-    await updatePrayer(route.params.id, {
-      title: editForm.value.title.trim(),
-      ...prayerTextFields(editForm.value.text),
-      tags: [...editForm.value.tags],
-    });
-    notifySuccess('Малітва абноўлена');
-    isEditing.value = false;
-  } catch (error) {
-    notifyError('Памылка пры абнаўленні малітвы');
-    logger.error('Error updating prayer:', error);
-  } finally {
-    saving.value = false;
-  }
+  router.push({ name: 'PrayerEdit', params: { id: route.params.id } });
 }
 
 async function copyText() {
@@ -342,7 +218,6 @@ function markStandaloneMassRubrics() {
 
 // Expose for parent components that may use template refs
 defineExpose({
-  isEditing,
   toggleEdit,
   copyText,
   copySuccess,
@@ -675,20 +550,4 @@ defineExpose({
   }
 }
 
-/* Поле названия — текст не должен обрезаться */
-.prayer-title-field :deep(.v-field__input) {
-  white-space: normal !important;
-  word-wrap: break-word !important;
-  overflow-wrap: break-word !important;
-  word-break: break-word !important;
-  text-overflow: unset !important;
-  overflow: visible !important;
-}
-
-.prayer-title-field :deep(input) {
-  white-space: normal !important;
-  word-wrap: break-word !important;
-  overflow-wrap: break-word !important;
-  word-break: break-word !important;
-}
 </style>

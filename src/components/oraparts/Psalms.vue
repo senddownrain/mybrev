@@ -92,6 +92,11 @@ const formatPsalm = (psalm, antiphon) => formatPsalmHtml(psalm, {
   margin-top: 22px;
 }
 
+/* Keep consecutive psalms readable when one antiphon surrounds the group. */
+.ora-psalm + .ora-psalm {
+  margin-top: 14px;
+}
+
 .ora-ant :deep(*),
 .ora-psalm :deep(*) {
   text-align: left !important;

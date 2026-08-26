@@ -1,11 +1,28 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  autoFixPrayerMarkdown,
   htmlToPrayerMarkdown,
   prayerMarkdownToPlainText,
   renderPrayerMarkdown,
   validatePrayerMarkdown,
 } from '../src/utils/prayerMarkdown.js';
+
+test('autofix repairs common Markdown and Word artifacts', () => {
+  const result = autoFixPrayerMarkdown('#Загаловак\u00a0  \n\n• Першы пункт\n2)Другі пункт\n\n::: rubric\nУсе ўстаюць.');
+  assert.equal(
+    result.markdown,
+    '# Загаловак\n\n- Першы пункт\n2. Другі пункт\n\n:::rubric\nУсе ўстаюць.\n:::',
+  );
+  assert.equal(result.changed, true);
+  assert.deepEqual(validatePrayerMarkdown(result.markdown), []);
+});
+
+test('autofix removes orphan rubric closers and closes nested rubric blocks', () => {
+  const result = autoFixPrayerMarkdown('::: \nТэкст\n\n:::rubric\nПершая\n:::rubric\nДругая\n:::');
+  assert.equal(result.markdown, 'Тэкст\n\n:::rubric\nПершая\n:::\n:::rubric\nДругая\n:::');
+  assert.deepEqual(validatePrayerMarkdown(result.markdown), []);
+});
 
 test('renders CommonMark and the MyBrev rubric block', () => {
   const html = renderPrayerMarkdown('**Памолімся.**\n\n:::rubric\nУсе ўстаюць.\n:::');

@@ -36,9 +36,13 @@
         <v-icon icon="mdi-format-color-text" size="17" />
         Рубрыка
       </button>
-      <span v-if="pasteNotice" class="markdown-editor__paste-notice" role="status">
+      <button type="button" class="markdown-editor__autofix-button" title="Аўтаматычна выправіць Markdown" @click="autoFixMarkdown">
+        <v-icon icon="mdi-auto-fix" size="17" />
+        MD autofix
+      </button>
+      <span v-if="editorNotice" class="markdown-editor__paste-notice" role="status">
         <v-icon icon="mdi-check-circle-outline" size="16" />
-        Тэкст пераўтвораны
+        {{ editorNotice }}
       </span>
       <span v-else class="markdown-editor__hint">
         {{ editorMode === 'visual' ? 'Можна ўставіць з Word або сайта' : 'Ctrl+Space — падказкі' }}
@@ -62,6 +66,7 @@ import {
 import { markdown } from '@codemirror/lang-markdown';
 import { autocompletion, completionKeymap } from '@codemirror/autocomplete';
 import {
+  autoFixPrayerMarkdown,
   htmlToPrayerMarkdown,
   normalizePrayerMarkdown,
   validatePrayerMarkdown,
@@ -75,7 +80,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue']);
 const editorHost = ref(null);
 const editorMode = ref('visual');
-const pasteNotice = ref(false);
+const editorNotice = ref('');
 const modeCompartment = new Compartment();
 let view = null;
 let pasteNoticeTimeout = null;
@@ -157,11 +162,11 @@ const visualModeExtension = ViewPlugin.fromClass(class {
   }
 }, { decorations: (plugin) => plugin.decorations });
 
-function showPasteNotice() {
-  pasteNotice.value = true;
+function showEditorNotice(message) {
+  editorNotice.value = message;
   if (pasteNoticeTimeout) clearTimeout(pasteNoticeTimeout);
   pasteNoticeTimeout = setTimeout(() => {
-    pasteNotice.value = false;
+    editorNotice.value = '';
     pasteNoticeTimeout = null;
   }, 2400);
 }
@@ -186,7 +191,7 @@ function insertPastedContent(event, editorView) {
     changes: { from: range.from, to: range.to, insert },
     selection: { anchor: range.from + before.length + content.length },
   });
-  showPasteNotice();
+  showEditorNotice('Тэкст пераўтвораны');
   return true;
 }
 
@@ -278,6 +283,26 @@ function insertRubric() {
   replaceSelection(block, ':::rubric\n'.length, ':::rubric\n'.length + selected.length);
 }
 
+function autoFixMarkdown() {
+  if (!view) return;
+  const source = view.state.doc.toString();
+  const result = autoFixPrayerMarkdown(source);
+
+  if (!result.changed) {
+    showEditorNotice('Памылак не знойдзена');
+    view.focus();
+    return;
+  }
+
+  const cursor = Math.min(view.state.selection.main.head, result.markdown.length);
+  view.dispatch({
+    changes: { from: 0, to: view.state.doc.length, insert: result.markdown },
+    selection: { anchor: cursor },
+  });
+  showEditorNotice(`Выпраўлена: ${result.fixes.length}`);
+  view.focus();
+}
+
 watch(() => props.modelValue, (value) => {
   if (!view || value === view.state.doc.toString()) return;
   view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: value } });
@@ -307,6 +332,7 @@ onBeforeUnmount(() => {
 .markdown-editor__toolbar button { display: inline-flex; min-width: 34px; min-height: 34px; align-items: center; justify-content: center; gap: 6px; padding: 5px 9px; border: 0; border-radius: 8px; background: transparent; color: var(--nav-on-surface); font: inherit; font-size: 0.82rem; cursor: pointer; }
 .markdown-editor__toolbar button:hover, .markdown-editor__toolbar button:focus-visible { background: rgba(var(--v-theme-primary), 0.12); outline: none; }
 .markdown-editor__rubric-button { color: var(--rubric-color) !important; font-weight: 700 !important; }
+.markdown-editor__autofix-button { color: rgb(var(--v-theme-primary)) !important; font-weight: 700 !important; }
 .markdown-editor__divider { width: 1px; height: 24px; margin-inline: 3px; background: var(--nav-border); }
 .markdown-editor__hint { margin-left: auto; color: var(--nav-muted); font-size: 0.68rem; }
 .markdown-editor__paste-notice { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; color: rgb(var(--v-theme-primary)); font-size: 0.7rem; font-weight: 700; }

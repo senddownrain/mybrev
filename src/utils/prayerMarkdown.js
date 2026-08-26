@@ -111,6 +111,82 @@ export function normalizePrayerMarkdown(value = '') {
     .trim();
 }
 
+export function autoFixPrayerMarkdown(value = '') {
+  const original = String(value ?? '');
+  const fixes = [];
+  let source = original;
+
+  if (looksLikeHtml(source)) {
+    source = htmlToPrayerMarkdown(source);
+    fixes.push('HTML пераўтвораны ў Markdown');
+  }
+
+  const cleaned = source
+    .replace(/\r\n?/g, '\n')
+    .replace(/\u00a0/g, ' ')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/[ \t]+$/gm, '');
+  if (cleaned !== source) fixes.push('прыбраны службовыя прабелы і сімвалы');
+  source = cleaned;
+
+  const normalizedLines = source.split('\n').map((line) => {
+    const trimmed = line.trim();
+
+    if (/^:{2,3}\s*rubric\s*$/i.test(trimmed)) return ':::rubric';
+    if (/^:{2,3}\s*$/.test(trimmed)) return ':::';
+
+    return line
+      .replace(/^(\s{0,3})(#{1,6})([^\s#])/, '$1$2 $3')
+      .replace(/^(\s*)[•●▪◦]\s*/, '$1- ')
+      .replace(/^(\s*)(\d+)[.)]\s*(?=\S)/, '$1$2. ');
+  });
+  if (normalizedLines.join('\n') !== source) fixes.push('выпраўлены загалоўкі, спісы і маркеры рубрык');
+
+  const balancedLines = [];
+  let rubricOpen = false;
+  let rubricPairsFixed = false;
+
+  normalizedLines.forEach((line) => {
+    const marker = line.trim();
+    if (marker === ':::rubric') {
+      if (rubricOpen) {
+        balancedLines.push(':::');
+        rubricPairsFixed = true;
+      }
+      balancedLines.push(':::rubric');
+      rubricOpen = true;
+      return;
+    }
+
+    if (marker === ':::') {
+      if (!rubricOpen) {
+        rubricPairsFixed = true;
+        return;
+      }
+      balancedLines.push(':::');
+      rubricOpen = false;
+      return;
+    }
+
+    balancedLines.push(line);
+  });
+
+  if (rubricOpen) {
+    balancedLines.push(':::');
+    rubricPairsFixed = true;
+  }
+  if (rubricPairsFixed) fixes.push('адноўлены пары рубрык');
+
+  const markdown = normalizePrayerMarkdown(balancedLines.join('\n'));
+  if (markdown !== balancedLines.join('\n')) fixes.push('нармалізаваны пустыя радкі');
+
+  return {
+    markdown,
+    changed: markdown !== original,
+    fixes: [...new Set(fixes)],
+  };
+}
+
 export function looksLikeHtml(value = '') {
   return /<\/?[a-z][\s\S]*?>/i.test(String(value));
 }

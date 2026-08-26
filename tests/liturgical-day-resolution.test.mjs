@@ -7,13 +7,16 @@ import {
   getFixedDayTemplateKey,
   getDaytimeHourField,
   getPeriodDayDocumentId,
+  getPeriodPsalterDayDocumentId,
   getPeriodDayTemplateDocumentId,
   getSeasonalDateExceptionId,
   groupFixedCelebrationDays,
+  hasMissingDaytimeFields,
   hasSingleAntiphonPsalmody,
   isSeasonalDateDocumentId,
   resolveDateDayAgainstPeriod,
   resolveDayAgainstPeriod,
+  resolvePeriodDayAgainstPsalter,
 } from '../src/utils/liturgicalDayResolution.js';
 
 test('builds deterministic Advent and Christmas exception IDs', () => {
@@ -50,6 +53,36 @@ test('maps a period week to its four-week psalter template', () => {
     'ordinary-psalmweek-2-day-3',
   );
   assert.equal(getPeriodDayTemplateDocumentId('ordinary', 0, 3), '');
+  assert.equal(getPeriodPsalterDayDocumentId('ordinary', 21, 4), 'ordinary-w1-d4');
+  assert.equal(getPeriodPsalterDayDocumentId('ordinary', 22, 4), 'ordinary-w2-d4');
+  assert.equal(getPeriodPsalterDayDocumentId('ordinary', 0, 4), '');
+});
+
+test('repairs empty period daytime fields from the matching psalter day only', () => {
+  const periodDay = {
+    id: 'ordinary-w21-d4',
+    _periodWeekNumber: 21,
+    sext1Hymn: null,
+    sext1Ps1: '',
+    sext1R: '<p>Уласнае чытанне 21 тыдня</p>',
+    officeOfReadingsR1: '',
+  };
+  const psalterDay = {
+    id: 'ordinary-w1-d4',
+    sext1Hymn: '<p>Гімн псалтыра</p>',
+    sext1Ps1: '<p>Псальм псалтыра</p>',
+    sext1R: '<p>Чытанне псалтыра</p>',
+    officeOfReadingsR1: '<p>Чытанне 1 тыдня</p>',
+  };
+
+  assert.equal(hasMissingDaytimeFields(periodDay), true);
+  const resolved = resolvePeriodDayAgainstPsalter(periodDay, psalterDay);
+  assert.equal(resolved.id, 'ordinary-w21-d4');
+  assert.equal(resolved._periodWeekNumber, 21);
+  assert.equal(resolved.sext1Hymn, '<p>Гімн псалтыра</p>');
+  assert.equal(resolved.sext1Ps1, '<p>Псальм псалтыра</p>');
+  assert.equal(resolved.sext1R, '<p>Уласнае чытанне 21 тыдня</p>');
+  assert.equal(resolved.officeOfReadingsR1, '');
 });
 
 test('resolves legacy and canonical from-day markers without replacing identity', () => {

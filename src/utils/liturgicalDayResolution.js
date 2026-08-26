@@ -25,6 +25,13 @@ const CHRISTMAS_DATE_EXCEPTION_EXCLUSIONS = new Set([
   '06.01',
 ]);
 
+const DAYTIME_SUFFIXES = Object.freeze([
+  'Hymn', 'Ant1', 'Ant2', 'Ant3', 'Ps1', 'Ps2', 'Ps3', 'R', 'Pr',
+]);
+const DAYTIME_FIELDS = Object.freeze([1, 2, 3].flatMap((hour) => (
+  DAYTIME_SUFFIXES.map((suffix) => `sext${hour}${suffix}`)
+)));
+
 export function isChristmasDateExceptionExclusion(mDate) {
   return CHRISTMAS_DATE_EXCEPTION_EXCLUSIONS.has(mDate.format('DD.MM'));
 }
@@ -59,6 +66,13 @@ export function getPeriodDayTemplateDocumentId(periodType, periodWeekNumber, day
   }
   const psalmWeek = ((week - 1) % 4) + 1;
   return `${period}-psalmweek-${psalmWeek}-day-${day}`;
+}
+
+/** Canonical period document carrying the same slot in the four-week psalter. */
+export function getPeriodPsalterDayDocumentId(periodType, periodWeekNumber, dayOfWeek) {
+  const week = Number(periodWeekNumber);
+  if (!Number.isInteger(week) || week < 1) return '';
+  return getPeriodDayDocumentId(periodType, ((week - 1) % 4) + 1, dayOfWeek);
 }
 
 export function isSeasonalDateException(mDate, periodType = null) {
@@ -130,6 +144,22 @@ export function getDaytimeHourField(day, hour, suffix) {
   if (!isMissing(value) && !isFromDayReference(value)) return value;
   const fallback = day?.[`sext1${suffix}`];
   return isMissing(fallback) || isFromDayReference(fallback) ? '' : fallback;
+}
+
+export function hasMissingDaytimeFields(day) {
+  return DAYTIME_FIELDS.some((field) => isMissing(day?.[field]) || isFromDayReference(day?.[field]));
+}
+
+/** Fill missing daytime-hour texts from the matching four-week psalter day. */
+export function resolvePeriodDayAgainstPsalter(day, psalterDay) {
+  if (!day || !psalterDay) return day;
+  const resolved = { ...day };
+  DAYTIME_FIELDS.forEach((field) => {
+    if (!isMissing(day[field]) && !isFromDayReference(day[field])) return;
+    const fallback = psalterDay[field];
+    resolved[field] = isMissing(fallback) || isFromDayReference(fallback) ? '' : fallback;
+  });
+  return resolved;
 }
 
 /** A single antiphon surrounds the complete group of three psalms. */

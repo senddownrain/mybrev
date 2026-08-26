@@ -34,7 +34,7 @@ const TTL = {
 
 // Increment when assembled day semantics change. This prevents an in-memory
 // result produced before a `from-day` fix from surviving HMR for another day.
-const CONTENT_RESOLUTION_VERSION = 4;
+const CONTENT_RESOLUTION_VERSION = 5;
 
 /**
  * Check whether a cache entry is still valid.

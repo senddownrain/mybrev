@@ -7,12 +7,15 @@ import { logger } from '@/utils/logger';
 import {
   applySeasonalWeekdayAntiphons,
   getPeriodDayDocumentId,
+  getPeriodPsalterDayDocumentId,
   getSeasonalDateExceptionId,
+  hasMissingDaytimeFields,
   isChristmasDateExceptionExclusion,
   isSeasonalDateException,
   isSeasonalDateDocumentId,
   resolveDateDayAgainstPeriod,
   resolveDayAgainstPeriod,
+  resolvePeriodDayAgainstPsalter,
 } from '@/utils/liturgicalDayResolution';
 
 export const OFFICE_FOR_DEAD_ID = 'office-for-dead';
@@ -53,6 +56,22 @@ async function queryAll(queries) {
   return [...merged.values()];
 }
 
+async function withPeriodPsalterFallback(day, periodType, periodWeekNumber, dayOfWeek) {
+  const resolved = resolveDayAgainstPeriod(day, null);
+  if (!resolved || !hasMissingDaytimeFields(resolved)) return resolved;
+
+  const fallbackId = getPeriodPsalterDayDocumentId(periodType, periodWeekNumber, dayOfWeek);
+  if (!fallbackId || fallbackId === resolved.id) return resolved;
+  try {
+    const snapshot = await getDocOfflineAware(doc(getDaysCollection(), fallbackId));
+    if (!snapshot.exists()) return resolved;
+    return resolvePeriodDayAgainstPsalter(resolved, { id: snapshot.id, ...snapshot.data() });
+  } catch (error) {
+    logger.error(`[liturgicalDayService] psalter fallback failed (${fallbackId}):`, error);
+    return resolved;
+  }
+}
+
 export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
   // Prefer the canonical document. Besides being cheaper than two compound
   // queries, this can read a day that is already present in IndexedDB while
@@ -65,7 +84,9 @@ export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
       const snapshot = await getDocOfflineAware(doc(getDaysCollection(), canonicalId));
       if (snapshot.exists()) {
         canonicalDay = { id: snapshot.id, ...snapshot.data() };
-        return resolveDayAgainstPeriod(canonicalDay, null);
+        return withPeriodPsalterFallback(
+          canonicalDay, periodType, periodWeekNumber, dayOfWeek,
+        );
       }
     } catch (error) {
       canonicalError = error;
@@ -88,9 +109,15 @@ export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
     queryError = error;
   }
   if (variants[0]) {
-    return resolveDayAgainstPeriod(variants[0], null);
+    return withPeriodPsalterFallback(
+      variants[0], periodType, periodWeekNumber, dayOfWeek,
+    );
   }
-  if (canonicalDay) return resolveDayAgainstPeriod(canonicalDay, null);
+  if (canonicalDay) {
+    return withPeriodPsalterFallback(
+      canonicalDay, periodType, periodWeekNumber, dayOfWeek,
+    );
+  }
   if (canonicalError) throw canonicalError;
   if (queryError) throw queryError;
   return null;
