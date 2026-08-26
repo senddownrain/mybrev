@@ -122,7 +122,6 @@ function selectOption(index) {
   border-color: rgba(var(--chrome-accent-rgb), 0.24);
   background: rgba(var(--chrome-accent-rgb), 0.1);
   color: var(--chrome-accent);
-  font-weight: 680;
 }
 
 .alternative-tab__number {
