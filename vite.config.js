@@ -218,6 +218,9 @@ export default defineConfig({
           if (id.includes('node_modules/quill') || id.includes('node_modules/@vueup/vue-quill')) {
             return 'vendor-quill';
           }
+          if (id.includes('node_modules/@codemirror') || id.includes('node_modules/codemirror')) {
+            return 'vendor-markdown-editor';
+          }
           // moment.js with locales (~300 kB)
           if (id.includes('node_modules/moment')) {
             return 'vendor-moment';

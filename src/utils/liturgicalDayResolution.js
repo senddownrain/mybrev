@@ -84,6 +84,42 @@ function isMissing(value) {
   return value === null || value === undefined || (typeof value === 'string' && value.trim() === '');
 }
 
+function singleAntiphonFallbackExclusions(day) {
+  const excluded = new Set();
+  const isEmptyOrFallback = (value) => isMissing(value) || isFromDayReference(value);
+  const prefixes = new Set(Object.keys(day || {}).flatMap((field) => {
+    const match = field.match(/^(.*)Ant[123]$/);
+    return match ? [match[1]] : [];
+  }));
+
+  prefixes.forEach((prefix) => {
+    const ant1 = day?.[`${prefix}Ant1`];
+    const ant2 = day?.[`${prefix}Ant2`];
+    const ant3 = day?.[`${prefix}Ant3`];
+    if (!isMissing(ant1)
+      && !isFromDayReference(ant1)
+      && isEmptyOrFallback(ant2)
+      && isEmptyOrFallback(ant3)) {
+      excluded.add(`${prefix}Ant2`);
+      excluded.add(`${prefix}Ant3`);
+    }
+  });
+
+  // Daytime prayers may store one antiphon once under Terce (`sext1`) and
+  // share it with Sext and None. Keep those later hours empty so the runtime
+  // resolver continues to use the common antiphon.
+  if (excluded.has('sext1Ant2') && excluded.has('sext1Ant3')) {
+    [2, 3].forEach((hour) => {
+      const fields = [1, 2, 3].map((index) => `sext${hour}Ant${index}`);
+      if (fields.every((field) => isEmptyOrFallback(day?.[field]))) {
+        fields.forEach((field) => excluded.add(field));
+      }
+    });
+  }
+
+  return excluded;
+}
+
 /**
  * The three daytime hours may omit fields that are shared with Terce
  * (`sext1`). Resolve each field independently so an hour can still keep its
@@ -117,6 +153,9 @@ export function resolveDayAgainstPeriod(day, periodDay, { fillMissing = false } 
   Object.entries(day || {}).forEach(([field, value]) => {
     if (isFromDayReference(value)) fromDayFields.add(field);
   });
+  const antiphonFallbackExclusions = fillMissing
+    ? singleAntiphonFallbackExclusions(day)
+    : new Set();
   const keys = new Set([
     ...Object.keys(periodDay || {}),
     ...Object.keys(day || {}),
@@ -124,7 +163,10 @@ export function resolveDayAgainstPeriod(day, periodDay, { fillMissing = false } 
   ]);
   keys.forEach((field) => {
     const value = day?.[field];
-    if (fromDayFields.has(field)) {
+    if (antiphonFallbackExclusions.has(field)) {
+      resolved[field] = '';
+      fromDayFields.delete(field);
+    } else if (fromDayFields.has(field)) {
       const fallback = IDENTITY_FIELDS.has(field) ? '' : periodDay?.[field];
       resolved[field] = isFromDayReference(fallback) ? '' : (fallback ?? '');
     } else if (!IDENTITY_FIELDS.has(field) && fillMissing && isMissing(value)) {
@@ -142,6 +184,11 @@ export function resolveDayAgainstPeriod(day, periodDay, { fillMissing = false } 
   if (fromDayFields.size) resolved._fromDayFields = [...fromDayFields];
   else delete resolved._fromDayFields;
   return resolved;
+}
+
+/** Date documents inherit every missing non-identity field from the period day. */
+export function resolveDateDayAgainstPeriod(day, periodDay) {
+  return resolveDayAgainstPeriod(day, periodDay, { fillMissing: true });
 }
 
 function splitAntiphons(html) {
@@ -174,6 +221,80 @@ export function getFixedCelebrationKey(day) {
     String(day?._feastName || day?._title || '').trim().toLowerCase(),
     String(day?._rank || day?._feastType || '').trim().toLowerCase(),
   ].join('|');
+}
+
+function normalizedTemplateReferences(day) {
+  return [...new Set((Array.isArray(day?._templates) ? day._templates : [])
+    .map((template) => String(template || '').trim())
+    .filter(Boolean))].sort();
+}
+
+/** Stable identity of the common-text template represented by a fixed day. */
+export function getFixedDayTemplateKey(day) {
+  const currentVersion = String(day?._currentVersion || '').trim();
+  if (currentVersion) return `template:${currentVersion}`;
+
+  const references = normalizedTemplateReferences(day);
+  if (references.length === 1) return `template:${references[0]}`;
+  if (references.length) return `templates:${references.join('|')}`;
+
+  // Without explicit template metadata, separate documents may contain
+  // genuinely different own texts. Do not merge them only because their IDs
+  // happen to have similar suffixes.
+  return `document:${String(day?.id || '')}`;
+}
+
+function mergedPlaces(days) {
+  return [...new Set(days.flatMap((day) => (
+    Array.isArray(day?._place) ? day._place : [day?._place]
+  )).map((place) => String(place || '').trim()).filter(Boolean))].sort();
+}
+
+function withMergedPlaces(day, days) {
+  const result = { ...day };
+  const places = mergedPlaces(days);
+  if (places.length === 1) [result._place] = places;
+  else if (places.length > 1) result._place = places;
+  else delete result._place;
+  return result;
+}
+
+/**
+ * Group fixed celebrations by rank, then expose one selector per actual
+ * common-text template. Diocese-specific copies remain addressable through
+ * `dayIds`, but do not create duplicate template buttons.
+ */
+export function groupFixedCelebrationDays(days = []) {
+  const celebrations = new Map();
+  days.forEach((day) => {
+    const key = getFixedCelebrationKey(day);
+    const group = celebrations.get(key) || [];
+    group.push(day);
+    celebrations.set(key, group);
+  });
+
+  return [...celebrations.values()].map((variants) => {
+    const templates = new Map();
+    variants.forEach((variant) => {
+      const key = getFixedDayTemplateKey(variant);
+      const group = templates.get(key) || [];
+      group.push(variant);
+      templates.set(key, group);
+    });
+
+    return {
+      day: withMergedPlaces(variants[0], variants),
+      templates: [...templates.values()].map((templateVariants) => {
+        const day = withMergedPlaces(templateVariants[0], templateVariants);
+        return {
+          id: day.id,
+          dayIds: [...new Set(templateVariants.map((item) => item.id).filter(Boolean))],
+          label: getTemplateLabel(day),
+          day,
+        };
+      }),
+    };
+  });
 }
 
 export function getTemplateLabel(day) {

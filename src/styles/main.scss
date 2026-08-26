@@ -16,6 +16,11 @@
   --chrome-accent: #644b72;
   --chrome-accent-rgb: 100, 75, 114;
   --on-chrome-accent: #fffdf9;
+  // Calendar controls use the application accent; liturgical day colours
+  // remain separate and continue to describe the actual period or feast.
+  --calendar-accent: var(--chrome-accent);
+  --calendar-accent-soft: rgba(var(--chrome-accent-rgb), 0.12);
+  --calendar-on-accent: var(--on-chrome-accent);
   --overlay-surface: rgba(255, 254, 251, 0.97);
   --focus-ring: rgba(100, 75, 114, 0.34);
   --nav-surface: rgba(255, 254, 251, 0.94);
@@ -49,6 +54,9 @@
   --chrome-accent: #cfb3dc;
   --chrome-accent-rgb: 207, 179, 220;
   --on-chrome-accent: #241c27;
+  --calendar-accent: var(--chrome-accent);
+  --calendar-accent-soft: rgba(var(--chrome-accent-rgb), 0.16);
+  --calendar-on-accent: var(--on-chrome-accent);
   --overlay-surface: rgba(31, 31, 34, 0.97);
   --focus-ring: rgba(207, 179, 220, 0.38);
   --nav-surface: rgba(31, 31, 33, 0.94);
@@ -585,6 +593,12 @@ $base-content-font-size: 1rem; // 16px по умолчанию
 
 .ora-psalm > p:not([style]) {
   margin-left: 0;
+}
+
+// Alternate actual strophes in psalms and Gospel canticles. Headings and
+// subtitles are not marked as strophes, so they do not affect parity.
+.ora-psalm p[data-psalm-strophe]:nth-child(even of p[data-psalm-strophe]) {
+  margin-left: 1rem;
 }
 
 // Исправление двойного скролла на страницах с ora (гадинками)

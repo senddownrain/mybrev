@@ -70,20 +70,12 @@
               <span class="section-number">2</span>
               <div>
                 <h2>Тэкст малітвы</h2>
-                <p>Выкарыстоўвайце абзацы і вылучэнне толькі там, дзе гэта дапамагае чытанню.</p>
+                <p>Markdown для структуры, рубрыкі — праз кнопку або блок :::rubric.</p>
               </div>
               <span class="text-count">{{ plainTextLength }} сімв.</span>
             </div>
 
-            <div class="prayer-text-editor" :class="{ 'prayer-text-editor--error': textError }">
-              <quill-editor
-                v-model:content="form.text"
-                content-type="html"
-                theme="snow"
-                toolbar="essential"
-                placeholder="Увядзіце тэкст малітвы…"
-              />
-            </div>
+            <PrayerMarkdownEditor v-model="form.text" :error="Boolean(textError)" />
             <p v-if="textError" class="field-error">{{ textError }}</p>
           </section>
 
@@ -152,7 +144,7 @@
           </div>
           <div class="prayer-preview">
             <h3>{{ form.title.trim() || 'Назва малітвы' }}</h3>
-            <div v-if="plainTextLength" class="prayer-preview__text" v-html="form.text" />
+            <div v-if="plainTextLength" class="prayer-preview__text" v-html="previewHtml" />
             <p v-else class="preview-placeholder">Тэкст з’явіцца тут падчас рэдагавання.</p>
             <div v-if="form.tags.length" class="preview-tags">
               <span v-for="tag in form.tags" :key="tag">{{ tag }}</span>
@@ -171,6 +163,13 @@ import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
+import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue';
+import {
+  prayerMarkdownToPlainText,
+  prayerTextFields,
+  renderPrayerMarkdown,
+  toPrayerMarkdown,
+} from '@/utils/prayerMarkdown';
 
 const route = useRoute();
 const router = useRouter();
@@ -191,8 +190,9 @@ const form = ref({ title: '', text: '', tags: [] });
 
 const isEditMode = computed(() => Boolean(route.params.id));
 const loadingPrayer = computed(() => isEditMode.value && isLoading.value && !hydrated.value);
-const plainText = computed(() => (form.value.text || '').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim());
+const plainText = computed(() => prayerMarkdownToPlainText(form.value.text));
 const plainTextLength = computed(() => plainText.value.length);
+const previewHtml = computed(() => renderPrayerMarkdown(form.value.text));
 const textError = computed(() => {
   if (!saveAttempted.value) return '';
   const result = validatePrayerText(form.value.text);
@@ -227,9 +227,12 @@ const hydrateForm = () => {
     title: prayer.titleVersions
       ? prayer.titleVersions.be || prayer.titleVersions.ru || Object.values(prayer.titleVersions)[0] || ''
       : prayer.title || '',
-    text: prayer.textVersions
-      ? prayer.textVersions.be || prayer.textVersions.ru || Object.values(prayer.textVersions)[0] || ''
-      : prayer.text || '',
+    text: toPrayerMarkdown(
+      prayer.textVersions
+        ? prayer.textVersions.be || prayer.textVersions.ru || Object.values(prayer.textVersions)[0] || ''
+        : prayer.text || '',
+      prayer.textFormat,
+    ),
     tags: [...(prayer.tags || [])],
   };
   hydrated.value = true;
@@ -279,7 +282,7 @@ async function handleSave() {
   try {
     const payload = {
       title: form.value.title,
-      text: form.value.text,
+      ...prayerTextFields(form.value.text),
       tags: [...form.value.tags],
     };
     if (isEditMode.value) {
@@ -384,23 +387,6 @@ onBeforeUnmount(() => {
 .tags-field :deep(.v-field) { border-radius: 16px; background: rgba(var(--v-theme-on-surface), 0.025); }
 .prayer-title-field :deep(textarea) { line-height: 1.45; }
 
-.prayer-text-editor {
-  overflow: hidden;
-  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-radius: 17px;
-  background: rgba(var(--v-theme-on-surface), 0.02);
-  transition: border-color 0.2s ease;
-}
-
-.prayer-text-editor:focus-within { border-color: rgb(var(--v-theme-primary)); border-width: 2px; }
-.prayer-text-editor--error { border-color: rgb(var(--v-theme-error)); }
-.prayer-text-editor :deep(.ql-toolbar.ql-snow) { display: flex; flex-wrap: wrap; gap: 2px; border: 0; border-bottom: 1px solid var(--nav-border); padding: 10px 12px; background: var(--nav-active); }
-.prayer-text-editor :deep(.ql-container.ql-snow) { min-height: 310px; border: 0; font-family: var(--reader-font-family); }
-.prayer-text-editor :deep(.ql-editor) { min-height: 310px; padding: 20px; color: var(--nav-on-surface); font-size: 1rem; line-height: 1.7; }
-.prayer-text-editor :deep(.ql-editor.ql-blank::before) { color: var(--nav-muted); font-style: normal; }
-.prayer-text-editor :deep(.ql-stroke) { stroke: var(--nav-on-surface); }
-.prayer-text-editor :deep(.ql-fill) { fill: var(--nav-on-surface); }
-.prayer-text-editor :deep(.ql-picker) { color: var(--nav-on-surface); }
 .field-error { margin: 7px 16px 0; color: rgb(var(--v-theme-error)); font-size: 0.75rem; }
 
 .tag-suggestions { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 13px; color: var(--nav-muted); font-size: 0.74rem; }
@@ -417,6 +403,8 @@ onBeforeUnmount(() => {
 .prayer-preview__text { font-family: var(--reader-font-family); font-size: 1rem; line-height: 1.72; overflow-wrap: anywhere; }
 .prayer-preview__text :deep(p) { margin: 0 0 1em; }
 .prayer-preview__text :deep(p:last-child) { margin-bottom: 0; }
+.prayer-preview__text :deep(.prayer-rubric) { margin: 1em 0; padding-left: 0.8em; border-left: 3px solid var(--rubric-color); color: var(--rubric-color); font-size: 0.88em; line-height: 1.45; }
+.prayer-preview__text :deep(.prayer-rubric p) { margin-bottom: 0.45em; }
 .preview-placeholder { margin: 0; color: var(--nav-muted); font-style: italic; line-height: 1.6; }
 .preview-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--nav-border); }
 .preview-tags span { padding: 5px 9px; border-radius: 999px; background: var(--nav-active); font-size: 0.7rem; }
@@ -438,8 +426,6 @@ onBeforeUnmount(() => {
   .section-heading { align-items: flex-start; }
   .section-heading p { font-size: 0.76rem; }
   .text-count { position: absolute; right: 28px; margin-top: 42px; }
-  .prayer-text-editor :deep(.ql-container.ql-snow),
-  .prayer-text-editor :deep(.ql-editor) { min-height: 280px; }
   .form-actions { position: sticky; bottom: 8px; z-index: 4; margin: 10px 4px 0; padding: 8px; border: 1px solid var(--nav-border); border-radius: 999px; background: color-mix(in srgb, var(--nav-surface) 92%, transparent); box-shadow: 0 8px 28px var(--nav-shadow); backdrop-filter: blur(16px); }
   .form-actions .save-prayer-button { flex: 1; }
   .prayer-preview { padding: 22px 20px; }

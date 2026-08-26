@@ -4,12 +4,15 @@ import moment from '../src/utils/moment-be.js';
 import {
   applySeasonalWeekdayAntiphons,
   getFixedCelebrationKey,
+  getFixedDayTemplateKey,
   getDaytimeHourField,
   getPeriodDayDocumentId,
   getPeriodDayTemplateDocumentId,
   getSeasonalDateExceptionId,
+  groupFixedCelebrationDays,
   hasSingleAntiphonPsalmody,
   isSeasonalDateDocumentId,
+  resolveDateDayAgainstPeriod,
   resolveDayAgainstPeriod,
 } from '../src/utils/liturgicalDayResolution.js';
 
@@ -150,6 +153,106 @@ test('seasonal resolution fills gaps and expands weekday antiphons', () => {
   assert.equal(resolved.vesperAnt3, '<p>Ант. 3</p>');
 });
 
+test('date documents inherit every missing text from the period day', () => {
+  const resolved = resolveDateDayAgainstPeriod({
+    id: '26-08-our-lady-czestochowa--grodno',
+    _date: '26.08',
+    laudesPr: '<p>Уласная малітва</p>',
+    laudesHymn: '',
+  }, {
+    id: 'ordinary-w21-d4',
+    _periodType: 'ordinary',
+    laudesHymn: '<p>Гімн дня</p>',
+    laudesPs1: '<p>Псальм дня</p>',
+    laudesPr: '<p>Малітва дня</p>',
+  });
+
+  assert.equal(resolved.id, '26-08-our-lady-czestochowa--grodno');
+  assert.equal(resolved._date, '26.08');
+  assert.equal(resolved.laudesHymn, '<p>Гімн дня</p>');
+  assert.equal(resolved.laudesPs1, '<p>Псальм дня</p>');
+  assert.equal(resolved.laudesPr, '<p>Уласная малітва</p>');
+});
+
+test('date documents keep one antiphon around three inherited psalms', () => {
+  const resolved = resolveDateDayAgainstPeriod({
+    id: 'fixed',
+    laudesAnt1: '<p>Адна ўласная антыфона</p>',
+    laudesAnt2: 'from-day',
+    laudesAnt3: '[from-day]',
+  }, {
+    id: 'period',
+    laudesAnt1: '<p>Антыфона дня 1</p>',
+    laudesAnt2: '<p>Антыфона дня 2</p>',
+    laudesAnt3: '<p>Антыфона дня 3</p>',
+    laudesPs1: '<p>Псальм 1</p>',
+    laudesPs2: '<p>Псальм 2</p>',
+    laudesPs3: '<p>Псальм 3</p>',
+  });
+
+  assert.equal(resolved.laudesAnt1, '<p>Адна ўласная антыфона</p>');
+  assert.equal(resolved.laudesAnt2, '');
+  assert.equal(resolved.laudesAnt3, '');
+  assert.equal(resolved.laudesPs1, '<p>Псальм 1</p>');
+  assert.equal(resolved.laudesPs2, '<p>Псальм 2</p>');
+  assert.equal(resolved.laudesPs3, '<p>Псальм 3</p>');
+  assert.equal(resolved._fromDayFields, undefined);
+  assert.equal(hasSingleAntiphonPsalmody({
+    ant1: resolved.laudesAnt1,
+    ant2: resolved.laudesAnt2,
+    ant3: resolved.laudesAnt3,
+    ps1: resolved.laudesPs1,
+    ps2: resolved.laudesPs2,
+    ps3: resolved.laudesPs3,
+  }), true);
+});
+
+test('each daytime hour keeps its one antiphon while hymns and psalms inherit', () => {
+  const fixed = {
+    id: '26-08-our-lady-czestochowa--grodno',
+    _date: '26.08',
+  };
+  const period = { id: 'ordinary-w21-d4' };
+  [1, 2, 3].forEach((hour) => {
+    fixed[`sext${hour}Hymn`] = 'from-day';
+    fixed[`sext${hour}Ant1`] = `<p>Уласная антыфона ${hour}</p>`;
+    fixed[`sext${hour}Ant2`] = 'from-day';
+    fixed[`sext${hour}Ant3`] = 'from-day';
+    fixed[`sext${hour}Ps1`] = 'from-day';
+    fixed[`sext${hour}Ps2`] = 'from-day';
+    fixed[`sext${hour}Ps3`] = 'from-day';
+    period[`sext${hour}Hymn`] = `<p>Гімн ${hour}</p>`;
+    period[`sext${hour}Ant1`] = `<p>Антыфона дня ${hour}.1</p>`;
+    period[`sext${hour}Ant2`] = `<p>Антыфона дня ${hour}.2</p>`;
+    period[`sext${hour}Ant3`] = `<p>Антыфона дня ${hour}.3</p>`;
+    period[`sext${hour}Ps1`] = `<p>Псальм ${hour}.1</p>`;
+    period[`sext${hour}Ps2`] = `<p>Псальм ${hour}.2</p>`;
+    period[`sext${hour}Ps3`] = `<p>Псальм ${hour}.3</p>`;
+  });
+
+  const resolved = resolveDateDayAgainstPeriod(fixed, period);
+  [1, 2, 3].forEach((hour) => {
+    assert.equal(getDaytimeHourField(resolved, hour, 'Hymn'), `<p>Гімн ${hour}</p>`);
+    assert.equal(getDaytimeHourField(resolved, hour, 'Ant1'), `<p>Уласная антыфона ${hour}</p>`);
+    assert.equal(getDaytimeHourField(resolved, hour, 'Ant2'), '');
+    assert.equal(getDaytimeHourField(resolved, hour, 'Ant3'), '');
+    assert.equal(getDaytimeHourField(resolved, hour, 'Ps1'), `<p>Псальм ${hour}.1</p>`);
+    assert.equal(getDaytimeHourField(resolved, hour, 'Ps2'), `<p>Псальм ${hour}.2</p>`);
+    assert.equal(getDaytimeHourField(resolved, hour, 'Ps3'), `<p>Псальм ${hour}.3</p>`);
+  });
+  assert.deepEqual(resolved._fromDayFields.sort(), [
+    'sext1Hymn', 'sext1Ps1', 'sext1Ps2', 'sext1Ps3',
+    'sext2Hymn', 'sext2Ps1', 'sext2Ps2', 'sext2Ps3',
+    'sext3Hymn', 'sext3Ps1', 'sext3Ps2', 'sext3Ps3',
+  ]);
+
+  const rerendered = resolveDayAgainstPeriod(resolved, period);
+  [1, 2, 3].forEach((hour) => {
+    assert.equal(getDaytimeHourField(rerendered, hour, 'Ant2'), '');
+    assert.equal(getDaytimeHourField(rerendered, hour, 'Ant3'), '');
+  });
+});
+
 test('groups templates and dioceses by celebration rank', () => {
   const base = {
     _date: '02.01',
@@ -167,6 +270,49 @@ test('groups templates and dioceses by celebration rank', () => {
   assert.notEqual(
     getFixedCelebrationKey(base),
     getFixedCelebrationKey({ ...base, _rank: 'festum' }),
+  );
+});
+
+test('deduplicates identical templates across dioceses within the same rank', () => {
+  const base = {
+    _date: '26.08',
+    _feastName: 'Найсв. Панны Марыі Чэнстахоўскай',
+    _rank: 'memoria',
+    _templates: ['blessed-virgin-mary'],
+  };
+  const days = [
+    { ...base, id: 'czestochowa--grodno', _place: 'grodno' },
+    { ...base, id: 'czestochowa--minsk-mohilev', _place: 'minsk-mohilev' },
+    { ...base, id: 'czestochowa--pinsk', _place: 'pinsk' },
+  ];
+
+  const groups = groupFixedCelebrationDays(days);
+  assert.equal(groups.length, 1);
+  assert.deepEqual(groups[0].day._place, ['grodno', 'minsk-mohilev', 'pinsk']);
+  assert.equal(groups[0].templates.length, 1);
+  assert.deepEqual(groups[0].templates[0].dayIds, days.map((day) => day.id));
+  assert.deepEqual(groups[0].templates[0].day._place, ['grodno', 'minsk-mohilev', 'pinsk']);
+});
+
+test('keeps distinct templates and ranks as distinct choices', () => {
+  const base = {
+    _date: '02.01',
+    _feastName: 'Св. Базыля і Грыгорыя',
+  };
+  const days = [
+    { ...base, id: 'memoria-pastors', _rank: 'memoria', _currentVersion: 'pastors' },
+    { ...base, id: 'memoria-doctors', _rank: 'memoria', _currentVersion: 'doctors-of-church' },
+    { ...base, id: 'festum-pastors', _rank: 'festum', _currentVersion: 'pastors' },
+  ];
+
+  const groups = groupFixedCelebrationDays(days);
+  assert.equal(groups.length, 2);
+  assert.deepEqual(groups.map((group) => group.templates.length), [2, 1]);
+  assert.notEqual(getFixedDayTemplateKey(days[0]), getFixedDayTemplateKey(days[1]));
+  assert.equal(getFixedDayTemplateKey(days[0]), getFixedDayTemplateKey(days[2]));
+  assert.equal(
+    getFixedDayTemplateKey(days[0]),
+    getFixedDayTemplateKey({ _templates: ['pastors'] }),
   );
 });
 

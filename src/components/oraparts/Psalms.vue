@@ -6,16 +6,16 @@
             </v-card-title>
             <v-card-text class="ora-text">
                 <alternative-text v-model="ant1Option" class="ora-ant" :text="ant1" aria-label="Выбар першай антыфоны" />
-                <alternative-text class="ora-psalm" :text="formatPsalm(ps1)" aria-label="Выбар першага псальма" />
+                <alternative-text class="ora-psalm" :text="formatPsalm(ps1, ant1)" aria-label="Выбар першага псальма" />
                 <alternative-text v-if="!singleAntiphon" v-model="ant1Option" class="ora-ant" :text="ant1" :show-picker="false" />
                 <alternative-text v-if="!singleAntiphon && ant2" v-model="ant2Option" class="ora-ant ora-ant--separated" :text="ant2" aria-label="Выбар другой антыфоны" />
-                <alternative-text v-if="ps2" class="ora-psalm" :text="formatPsalm(ps2)" aria-label="Выбар другога псальма" />
+                <alternative-text v-if="ps2" class="ora-psalm" :text="formatPsalm(ps2, singleAntiphon ? ant1 : ant2)" aria-label="Выбар другога псальма" />
                 <alternative-text v-if="!singleAntiphon && ant2" v-model="ant2Option" class="ora-ant" :text="ant2" :show-picker="false" />
                 <alternative-text v-if="!singleAntiphon && ant3 && !hasEmbeddedThirdPsalmAlternatives" v-model="ant3Option" class="ora-ant ora-ant--separated" :text="ant3" aria-label="Выбар трэцяй антыфоны" />
                 <alternative-text
                   v-if="ps3"
                   class="ora-psalm"
-                  :text="formatPsalm(ps3)"
+                  :text="formatPsalm(ps3, singleAntiphon ? ant1 : ant3)"
                   aria-label="Выбар трэцяга псальма"
                 />
                 <alternative-text v-if="singleAntiphon" v-model="ant1Option" class="ora-ant" :text="ant1" :show-picker="false" />
@@ -35,7 +35,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { hasSingleAntiphonPsalmody } from '@/utils/liturgicalDayResolution';
-import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
+import { formatPsalmHtml } from '@/utils/liturgicalHtml';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 
 const props = defineProps({
@@ -53,7 +53,9 @@ const hasEmbeddedThirdPsalmAlternatives = computed(() => (
 const ant1Option = ref(0);
 const ant2Option = ref(0);
 const ant3Option = ref(0);
-const formatPsalm = removeBreakAfterAsterisk;
+const formatPsalm = (psalm, antiphon) => formatPsalmHtml(psalm, {
+  stripEmbeddedAntiphon: Boolean(antiphon),
+});
 // import { ref } from 'vue'
 // import moment from '@/utils/moment-be';
 
@@ -100,11 +102,6 @@ const formatPsalm = removeBreakAfterAsterisk;
 .ora-psalm :deep([style*="text-align: justify"]),
 .ora-psalm :deep([style*="text-align:justify"]) {
   text-align: left !important;
-}
-
-/* Headings and subtitles carry inline styles and are not strophes. */
-.ora-psalm :deep(p:nth-child(even of p:not([style]))) {
-  margin-left: 1rem;
 }
 
 </style>

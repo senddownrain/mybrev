@@ -25,12 +25,12 @@
 <script setup>
 import { ref } from 'vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
-import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
+import { formatPsalmHtml } from '@/utils/liturgicalHtml';
 
 const props = defineProps({
     ant: String,
 })
-const formatPsalm = removeBreakAfterAsterisk;
+const formatPsalm = formatPsalmHtml;
 const antOption = ref(0);
 
 const nunc = `

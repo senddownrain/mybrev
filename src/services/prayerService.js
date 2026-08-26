@@ -32,7 +32,8 @@ export async function addPrayer(data) {
   try {
     const docRef = await retryFirestore(() => addDoc(getPrayersCollection(), {
       ...data,
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
     }));
     logger.log('[prayerService] Малітва дададзена:', docRef.id);
     return docRef;
@@ -56,6 +57,7 @@ export async function updatePrayer(id, data) {
   try {
     const dataToUpdate = { ...data };
     delete dataToUpdate.id;
+    dataToUpdate.updatedAt = serverTimestamp();
     await retryFirestore(() => updateDoc(doc(db, PRAYERS_COLLECTION, id), dataToUpdate));
     logger.log('[prayerService] Малітва абноўлена:', id);
   } catch (error) {

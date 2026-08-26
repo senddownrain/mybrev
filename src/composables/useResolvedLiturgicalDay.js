@@ -39,8 +39,11 @@ export function useResolvedLiturgicalDay() {
 
     const resolveDay = (content) => {
       const selected = content.itemsDays?.find((item) => item.id === id)
-        || content.dayOptions?.find((item) => item.templates?.some((template) => template.id === id))
-          ?.templates.find((template) => template.id === id)?.day
+        || content.dayOptions?.find((item) => item.templates?.some((template) => (
+          template.id === id || template.dayIds?.includes(id)
+        )))?.templates.find((template) => (
+          template.id === id || template.dayIds?.includes(id)
+        ))?.day
         || null;
       if (!selected) return null;
 

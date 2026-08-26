@@ -10,7 +10,8 @@
                     :ps2="day.officeOfReadingsPs2" :ps3="day.officeOfReadingsPs3" />
                 <resp :text="day.officeOfReadingsVers"/>
                 <lectio :text="day.officeOfReadingsR1" />
-                <lectio :text="day.officeOfReadingsR2" />   
+                <lectio :text="day.officeOfReadingsR2" />
+                <te-deum v-if="showTeDeum" />
                 <last-prayer :text="day.officeOfReadingsPr" />
                 <end-of-sext/>
             </v-col>
@@ -23,6 +24,7 @@
 </template>
 <script setup>
 
+import { computed } from 'vue';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
 import Intro from '@/components/oraparts/Intro.vue';
@@ -36,8 +38,11 @@ import LastPrayer from '@/components/oraparts/LastPrayer.vue';
 import EndOfSext from '@/components/oraparts/EndOfSext.vue';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 import Lectio from '@/components/oraparts/Lectio.vue';
+import TeDeum from '@/components/oraparts/TeDeum.vue';
+import { shouldShowTeDeum } from '@/utils/liturgicalOffice';
 
 const { day, pending } = useResolvedLiturgicalDay();
+const showTeDeum = computed(() => shouldShowTeDeum(day.value));
 
 const title = "ГАДЗІНА ЧЫТАННЯЎ"
 

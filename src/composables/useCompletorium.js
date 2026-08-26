@@ -1,6 +1,6 @@
-import { LITURGICAL_RANK } from '@/constants/liturgical';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { getCompletoriumById } from '@/services/staticLiturgicalService';
+import { usesSundayCompletorium } from '@/utils/liturgicalOffice';
 
 const SUNDAY = 1;
 
@@ -9,29 +9,6 @@ const SUNDAY = 1;
 const COMPLETORIUM_PERIOD_ALIASES = Object.freeze({
   holyweek: 'lent',
 });
-
-const SUNDAY_RANKS = new Set([
-  LITURGICAL_RANK.SOLEMNITY,
-  LITURGICAL_RANK.FEAST,
-  'solemnity',
-  'feast',
-  'урачыстасць',
-  'свята',
-  'торжество',
-  'праздник',
-]);
-
-function normalizeRank(value) {
-  return String(value || '').trim().toLowerCase();
-}
-
-/** Whether the selected celebration uses the Sunday compline. */
-export function usesSundayCompletorium(day) {
-  if (day?._kind === 'office-for-dead') return true;
-
-  const rank = day?._rank || day?._feastType || day?.rank || day?.feastComment;
-  return SUNDAY_RANKS.has(normalizeRank(rank));
-}
 
 /** Build the deterministic ID used by the normalized collection. */
 export function getCompletoriumId(periodType, dayOfWeek, day) {
@@ -49,8 +26,8 @@ export function useCompletorium() {
   const { computeLiturgicalContextForDate } = useLiturgicalDay();
 
   /**
-   * Load compline for the date's period and weekday. Solemnities and feasts
-   * and the Office for the Dead always use Sunday (d1) within the same period.
+   * Load compline for the date's period and weekday. Solemnities and the
+   * Office for the Dead use Sunday (d1); feasts keep the actual weekday.
    */
   async function getCompletoriumForDate(date, selectedDay = null) {
     const context = await computeLiturgicalContextForDate(date);

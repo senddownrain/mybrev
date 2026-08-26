@@ -12,7 +12,7 @@
                 <intro :title="title"    />
                 <exam />
                 <hymnus :text="day.compHymn" />
-                <psalms :ant1="day.compAnt1" :ant2="day.compAnt2" :ant3="day.compAnt3" :ps1="day.compPs1"
+                <psalms :ant1="day.compAnt1" :ant2="day.compAnt2" :ant3="day.compAnt3" :ps1="day.compPs1" :ps2="day.compPs2"
                    />
                 <reading :text="day.compR" />
                 <resp :text="day.compResp" />

@@ -15,13 +15,7 @@
 
         <div class="mb-4">
           <label class="text-caption text-medium-emphasis mb-2 d-block">Тэкст малітвы</label>
-          <quill-editor
-            v-model:content="editForm.text"
-            contentType="html"
-            theme="snow"
-            toolbar="essential"
-            class="prayer-text-editor"
-          />
+          <PrayerMarkdownEditor v-model="editForm.text" />
         </div>
 
         <v-combobox
@@ -70,8 +64,7 @@
             </button>
           </nav>
 
-          <!-- Prayer body is trusted rich HTML from the database -->
-          <div ref="prayerTextElement" v-html="getText(prayer)" class="prayer-text"></div>
+          <div ref="prayerTextElement" v-html="prayerHtml" class="prayer-text"></div>
         </article>
       </template>
     </div>
@@ -98,6 +91,13 @@ import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 import { logger } from '@/utils/logger';
+import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue';
+import {
+  prayerMarkdownToPlainText,
+  prayerTextFields,
+  renderPrayerMarkdown,
+  toPrayerMarkdown,
+} from '@/utils/prayerMarkdown';
 
 const route = useRoute();
 const { prayers, isLoading, getTitle, getText, updatePrayer, allTags } = usePrayers();
@@ -111,6 +111,7 @@ const prayer = computed(() => {
   return prayers.value.find(p => p.id === route.params.id);
 });
 const isMassOrder = computed(() => route.params.id === MASS_ORDER_PRAYER_ID);
+const prayerHtml = computed(() => renderPrayerMarkdown(getText(prayer.value), prayer.value?.textFormat));
 
 const isEditing = ref(false);
 const saving = ref(false);
@@ -169,9 +170,12 @@ function loadPrayerData() {
   }
 
   if (prayer.value.textVersions) {
-    editForm.value.text = prayer.value.textVersions.be || prayer.value.textVersions.ru || Object.values(prayer.value.textVersions)[0] || '';
+    editForm.value.text = toPrayerMarkdown(
+      prayer.value.textVersions.be || prayer.value.textVersions.ru || Object.values(prayer.value.textVersions)[0] || '',
+      prayer.value.textFormat,
+    );
   } else {
-    editForm.value.text = prayer.value.text || '';
+    editForm.value.text = toPrayerMarkdown(prayer.value.text || '', prayer.value.textFormat);
   }
 
   editForm.value.tags = prayer.value.tags || [];
@@ -209,7 +213,11 @@ async function savePrayer() {
 
   saving.value = true;
   try {
-    await updatePrayer(route.params.id, editForm.value);
+    await updatePrayer(route.params.id, {
+      title: editForm.value.title.trim(),
+      ...prayerTextFields(editForm.value.text),
+      tags: [...editForm.value.tags],
+    });
     notifySuccess('Малітва абноўлена');
     isEditing.value = false;
   } catch (error) {
@@ -228,10 +236,7 @@ async function copyText() {
   }
 
   const title = getTitle(prayer.value);
-  const text = getText(prayer.value);
-
-  const doc = new DOMParser().parseFromString(text, 'text/html');
-  const plainText = doc.body.textContent || text;
+  const plainText = prayerMarkdownToPlainText(getText(prayer.value), prayer.value.textFormat);
 
   const textToCopy = `${title}\n\n${plainText}`;
 
@@ -491,6 +496,18 @@ defineExpose({
   margin-bottom: 0;
 }
 
+.prayer-text :deep(.prayer-rubric) {
+  margin: 1.05em 0;
+  padding: 0.08em 0 0.08em 0.85em;
+  border-left: 3px solid var(--rubric-color);
+  color: var(--rubric-color);
+  font-size: 0.86em;
+  line-height: 1.45;
+}
+
+.prayer-text :deep(.prayer-rubric p) { margin: 0 0 0.45em; }
+.prayer-text :deep(.prayer-rubric p:last-child) { margin-bottom: 0; }
+
 .prayer-text :deep(*) {
   max-width: 100% !important;
   word-wrap: break-word;
@@ -656,29 +673,6 @@ defineExpose({
     font-size: inherit;
     line-height: inherit;
   }
-}
-
-/* Стили для QuillEditor */
-.prayer-text-editor :deep(.ql-toolbar.ql-snow) {
-  border-top: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-left: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-right: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-radius: 4px 4px 0 0;
-}
-
-.prayer-text-editor :deep(.ql-container.ql-snow) {
-  border-left: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-right: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
-  border-top: none;
-  border-radius: 0 0 4px 4px;
-  min-height: 200px;
-}
-
-.prayer-text-editor :deep(.ql-editor) {
-  min-height: 200px;
-  font-size: 1rem;
 }
 
 /* Поле названия — текст не должен обрезаться */

@@ -7,7 +7,7 @@
           Шаблон літургіі дня
         </div>
         <v-btn-toggle
-          :model-value="dayId"
+          :model-value="selectedTemplateId"
           color="primary"
           variant="outlined"
           mandatory
@@ -157,8 +157,17 @@ const { day: dayData, pending: loadingDay } = useResolvedLiturgicalDay();
 const readings = ref([]);
 const dayOptions = ref([]);
 const loadingReadings = ref(true);
+const templateContainsDay = (template, id) => (
+  template?.id === id || template?.dayIds?.includes(id)
+);
 const templateOptions = computed(() => (
-  dayOptions.value.find((option) => option.templates?.some((item) => item.id === dayId.value))?.templates || []
+  dayOptions.value.find((option) => (
+    option.templates?.some((template) => templateContainsDay(template, dayId.value))
+  ))?.templates || []
+));
+const selectedTemplateId = computed(() => (
+  templateOptions.value.find((template) => templateContainsDay(template, dayId.value))?.id
+    || dayId.value
 ));
 
 const loadingOra = computed(() => (

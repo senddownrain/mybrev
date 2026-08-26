@@ -11,7 +11,7 @@
       </v-app-bar-nav-icon>
 
       <v-app-bar-title class="admin-title" @click="goToAdminHome">
-        Налады года
+        Панэль адміністратара
       </v-app-bar-title>
 
       <v-spacer></v-spacer>

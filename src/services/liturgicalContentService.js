@@ -13,6 +13,7 @@ import { formatLiturgicalPeriodTitle } from '@/utils/liturgicalPeriodTitle';
 import { fetchDaysForDate } from '@/services/liturgicalDayService';
 import {
   getFixedCelebrationKey,
+  groupFixedCelebrationDays,
   getTemplateLabel,
   isSeasonalDateDocumentId,
 } from '@/utils/liturgicalDayResolution';
@@ -92,34 +93,6 @@ function fixedSubtitle(day, count) {
   chunks.push(...places.filter(Boolean).map((place) => PLACE_LABEL_MAP[place] || place));
   if (count > 1) chunks.push(`${count} варыянты`);
   return chunks.length ? chunks.join(' · ') : 'Літургічны дзень';
-}
-
-function groupFixedDays(days) {
-  const groups = new Map();
-  days.forEach((day) => {
-    const key = getFixedCelebrationKey(day);
-    const group = groups.get(key) || [];
-    group.push(day);
-    groups.set(key, group);
-  });
-  return [...groups.values()].map((variants) => {
-    const places = [...new Set(variants.flatMap((item) => (
-      Array.isArray(item._place) ? item._place : [item._place]
-    )).filter(Boolean))].sort();
-    const day = { ...variants[0] };
-    if (places.length === 1) [day._place] = places;
-    else if (places.length > 1) day._place = places;
-    else delete day._place;
-
-    return {
-      day,
-      templates: variants.map((item) => ({
-        id: item.id,
-        label: getTemplateLabel(item),
-        day: item,
-      })),
-    };
-  });
 }
 
 export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []) {
@@ -203,7 +176,7 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     }));
     });
 
-  groupFixedDays(daysResult.fixedDays).forEach(({ day, templates }) => options.push({
+  groupFixedCelebrationDays(daysResult.fixedDays).forEach(({ day, templates }) => options.push({
     key: `fixed-${getFixedCelebrationKey(day)}`,
     source: LITURGICAL_OPTION_SOURCE.FIXED,
     title: buildDayTitle(day, context) || `Дата ${day._date}`,

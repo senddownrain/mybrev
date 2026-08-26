@@ -12,6 +12,8 @@ import * as prayerService from '@/services/prayerService';
  * @property {Object.<string, string>} [titleVersions] - Localized title versions keyed by locale (e.g. 'be', 'ru')
  * @property {string} [text] - Plain text of the prayer (legacy field)
  * @property {Object.<string, string>} [textVersions] - Localized text versions keyed by locale
+ * @property {'mybrev-markdown'} [textFormat] - Canonical prayer text format
+ * @property {number} [textFormatVersion] - MyBrev Markdown schema version
  * @property {string[]} [tags] - List of tags associated with the prayer
  * @property {import('firebase/firestore').Timestamp} [createdAt] - Firestore server timestamp of creation
  */
@@ -137,7 +139,8 @@ export const usePrayersStore = defineStore('prayers', () => {
   }
 
   /**
-   * Resolve display text from a prayer object, stripping inline colour styles.
+   * Resolve the canonical prayer source. Legacy HTML is intentionally returned
+   * unchanged here and converted at the rendering/editing boundary.
    * Prefers `text`, then falls back to `textVersions` (Belarusian → Russian → first available).
    *
    * @param {Prayer} prayer - The prayer object
@@ -150,12 +153,6 @@ export const usePrayersStore = defineStore('prayers', () => {
       text = prayer.text;
     } else if (prayer.textVersions) {
       text = prayer.textVersions.be || prayer.textVersions.ru || Object.values(prayer.textVersions)[0] || '';
-    }
-
-    // Strip inline color styles rgb(64, 64, 64)
-    if (text) {
-      text = text.replace(/style="color:\s*rgb\(64,\s*64,\s*64\)"/gi, '');
-      text = text.replace(/style="color:\s*rgb\(64,64,64\)"/gi, '');
     }
 
     return text;

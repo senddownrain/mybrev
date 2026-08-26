@@ -11,6 +11,7 @@ import {
   isChristmasDateExceptionExclusion,
   isSeasonalDateException,
   isSeasonalDateDocumentId,
+  resolveDateDayAgainstPeriod,
   resolveDayAgainstPeriod,
 } from '@/utils/liturgicalDayResolution';
 
@@ -179,7 +180,7 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = []) {
     : null;
   const resolvedFixed = fixedDocs
     .filter((item) => item.id !== seasonalDay?.id && !isSeasonalDateDocumentId(item.id))
-    .map((item) => withCalendarContext(resolveDayAgainstPeriod(item, resolvedPeriodDay)));
+    .map((item) => withCalendarContext(resolveDateDayAgainstPeriod(item, resolvedPeriodDay)));
   if (seasonal) resolvedFixed.unshift(seasonal);
 
   const resolvedDynamicDays = new Map(dynamicEntries

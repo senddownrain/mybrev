@@ -58,7 +58,7 @@
           </v-card-text>
         </v-card>
 
-        <hymnus :text="day.officeOfReadingsHymn" />
+        <hymnus :text="day.laudesHymn" />
 
         <psalms
           :ant1="day.officeOfReadingsAnt1"
@@ -71,8 +71,8 @@
         <resp :text="day.officeOfReadingsVers" />
         <lectio :text="day.officeOfReadingsR1" />
         <lectio :text="day.officeOfReadingsR2" />
+        <te-deum v-if="showTeDeum" />
 
-        <hymnus :text="day.laudesHymn" />
         <psalms
           :ant1="day.laudesAnt1"
           :ant2="day.laudesAnt2"
@@ -110,7 +110,9 @@ import PaterNoster from '@/components/oraparts/PaterNoster.vue';
 import Psalms from '@/components/oraparts/Psalms.vue';
 import Reading from '@/components/oraparts/Reading.vue';
 import Resp from '@/components/oraparts/Resp.vue';
+import TeDeum from '@/components/oraparts/TeDeum.vue';
 import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
+import { shouldShowTeDeum } from '@/utils/liturgicalOffice';
 
 const title = 'Агульная гадзіна';
 const { day, pending } = useResolvedLiturgicalDay();
@@ -118,6 +120,7 @@ const invitatoriums = ref([]);
 const selectedInvitatoriumId = ref('');
 const invitatoriumAntOption = ref(0);
 const formatPsalm = removeBreakAfterAsterisk;
+const showTeDeum = computed(() => shouldShowTeDeum(day.value));
 
 const optionLabel = (item, index) => {
   const text = String(item.invitatoriumPs1 || '')

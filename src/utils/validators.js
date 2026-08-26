@@ -1,3 +1,5 @@
+import { prayerMarkdownToPlainText, validatePrayerMarkdown } from '@/utils/prayerMarkdown';
+
 export function validatePrayerTitle(title) {
   if (!title || !title.trim()) {
     return 'Назва абавязковая';
@@ -12,10 +14,13 @@ export function validatePrayerText(text) {
   if (!text || !text.trim()) {
     return 'Тэкст малітвы абавязковы';
   }
-  // Удаляем HTML теги для проверки длины реального текста
-  const textWithoutHtml = text.replace(/<[^>]*>/g, '').trim();
-  if (textWithoutHtml.length < 10) {
+  const textWithoutMarkup = prayerMarkdownToPlainText(text);
+  if (textWithoutMarkup.length < 10) {
     return 'Тэкст павінен быць не менш за 10 сімвалаў';
+  }
+  const markdownErrors = validatePrayerMarkdown(text);
+  if (markdownErrors.length) {
+    return `Радок ${markdownErrors[0].line}: ${markdownErrors[0].message}`;
   }
   return true;
 }
