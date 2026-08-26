@@ -1,6 +1,6 @@
 <template>
   <div class="alternative-text">
-    <div v-if="options.length > 1" class="alternative-picker mb-5">
+    <div v-if="showPicker && options.length > 1" class="alternative-picker mb-5">
       <div class="alternative-picker__label">{{ ariaLabel }}</div>
       <div class="alternative-tabs" role="tablist" :aria-label="ariaLabel">
         <button
@@ -13,7 +13,7 @@
           :class="{ 'alternative-tab--active': activeIndex === index }"
           :aria-selected="activeIndex === index"
           :aria-controls="`${instanceId}-panel`"
-          @click="activeIndex = index"
+          @click="selectOption(index)"
         >
           <span class="alternative-tab__number">{{ index + 1 }}</span>
           <span class="alternative-tab__title">{{ option.title }}</span>
@@ -26,73 +26,48 @@
       v-if="activeOption"
       :id="`${instanceId}-panel`"
       role="tabpanel"
-      :aria-labelledby="options.length > 1 ? `${instanceId}-tab-${activeIndex}` : undefined"
-      v-html="activeOption.html"
+      :aria-labelledby="showPicker && options.length > 1 ? `${instanceId}-tab-${activeIndex}` : undefined"
+      :class="{ 'intercessions': kind === 'intercession' }"
+      v-html="displayedHtml"
     ></div>
   </div>
 </template>
 
 <script setup>
 import { computed, getCurrentInstance, ref, watch } from 'vue';
-import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
+import { formatIntercessions, getLiturgicalAlternatives } from '@/utils/liturgicalAlternatives';
 
 const props = defineProps({
   text: { type: String, default: '' },
   ariaLabel: { type: String, default: 'Выбар варыянта' },
+  kind: { type: String, default: 'generic' },
+  modelValue: { type: Number, default: undefined },
+  showPicker: { type: Boolean, default: true },
 });
-
-const alternativeSeparator = /<p\b[^>]*>(?:(?!<\/p>)[\s\S])*?Або:\s*(?:(?!<\/p>)[\s\S])*?<\/p>/giu;
-const activeIndex = ref(0);
+const emit = defineEmits(['update:modelValue']);
+const internalIndex = ref(0);
+const activeIndex = computed(() => (
+  Number.isInteger(props.modelValue) ? props.modelValue : internalIndex.value
+));
 const instanceId = `alternative-${getCurrentInstance()?.uid ?? 0}`;
 
-function plainText(html) {
-  if (!html) return '';
-  const element = document.createElement('div');
-  element.innerHTML = html;
-  return String(element.textContent || '').replace(/\s+/g, ' ').trim();
-}
-
-function firstLine(html, index) {
-  const firstParagraph = html.match(/<p\b[^>]*>([\s\S]*?)<\/p>/iu)?.[1] || html;
-  const line = firstParagraph.split(/<br\s*\/?\s*>/iu)[0];
-  return plainText(line) || `Варыянт ${index + 1}`;
-}
-
-function structuredOptions(html) {
-  const root = document.createElement('div');
-  root.innerHTML = html;
-  const blocks = [...root.children].filter((element) => element.hasAttribute('data-alternative-title'));
-  if (blocks.length < 2) return null;
-
-  const suffixBlocks = [...root.children].filter((element) => element.hasAttribute('data-alternative-suffix'));
-  const suffixHtml = suffixBlocks.map((element) => element.innerHTML.trim()).join('\n');
-  suffixBlocks.forEach((block) => block.remove());
-  blocks.forEach((block) => block.remove());
-  const sharedHtml = root.innerHTML.trim();
-  return blocks.map((block, index) => ({
-    html: removeBreakAfterAsterisk([
-      sharedHtml,
-      block.innerHTML.trim(),
-      suffixHtml,
-    ].filter(Boolean).join('\n')),
-    title: block.getAttribute('data-alternative-title') || firstLine(block.innerHTML, index),
-  }));
-}
-
-const options = computed(() => {
-  const text = String(props.text || '');
-  return structuredOptions(text) || text
-    .split(alternativeSeparator)
-    .map((html) => html.trim())
-    .filter(Boolean)
-    .map((html, index) => ({ html, title: firstLine(html, index) }));
-});
+const options = computed(() => getLiturgicalAlternatives(props.text, props.kind));
 
 const activeOption = computed(() => options.value[activeIndex.value] || options.value[0] || null);
+const displayedHtml = computed(() => {
+  const html = activeOption.value?.html || '';
+  return props.kind === 'intercession' ? formatIntercessions(html) : html;
+});
 
 watch(() => props.text, () => {
-  activeIndex.value = 0;
+  internalIndex.value = 0;
+  if (Number.isInteger(props.modelValue)) emit('update:modelValue', 0);
 });
+
+function selectOption(index) {
+  internalIndex.value = index;
+  emit('update:modelValue', index);
+}
 </script>
 
 <style scoped>

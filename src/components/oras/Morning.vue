@@ -38,12 +38,23 @@
         <v-card class="ora" flat>
           <v-card-text class="ora-text">
             <template v-for="(psalm, index) in invitatoriumPsalms" :key="index">
-              <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
+              <alternative-text
+                v-model="invitatoriumAntOption"
+                class="ora-ant"
+                :text="displayedDay.invitatoriumAnt"
+                :show-picker="index === 0"
+                aria-label="Выбар антыфоны закліку"
+              />
               <br>
               <div class="ora-psalm" v-html="formatPsalm(psalm)"></div>
               <br>
             </template>
-            <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
+            <alternative-text
+              v-model="invitatoriumAntOption"
+              class="ora-ant"
+              :text="displayedDay.invitatoriumAnt"
+              :show-picker="false"
+            />
           </v-card-text>
         </v-card>
 
@@ -87,6 +98,7 @@ import { logger } from '@/utils/logger';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { getInvitatoriums } from '@/services/staticLiturgicalService';
 import Benedictus from '@/components/oraparts/Benedictus.vue';
+import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 import EndOfVesper from '@/components/oraparts/EndOfVesper.vue';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
@@ -104,6 +116,7 @@ const title = 'Агульная гадзіна';
 const { day, pending } = useResolvedLiturgicalDay();
 const invitatoriums = ref([]);
 const selectedInvitatoriumId = ref('');
+const invitatoriumAntOption = ref(0);
 const formatPsalm = removeBreakAfterAsterisk;
 
 const optionLabel = (item, index) => {

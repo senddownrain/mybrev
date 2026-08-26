@@ -1,4 +1,5 @@
 import moment from './moment-be.js';
+import { calculateBaptismOfLordDate } from './liturgicalCalendar.js';
 
 const pad = (value) => String(value).padStart(2, '0');
 
@@ -21,11 +22,15 @@ export function buildAdventDateOptions(year) {
   return Array.from({ length: 8 }, (_, index) => makeOption(Number(year), 12, 17 + index));
 }
 
-/** The database stores the Christmas season as 25 Dec–12 Jan date entities. */
+/** Christmas ends with the Baptism of the Lord, not on a fixed January date. */
 export function buildChristmasDateOptions(year) {
-  const december = Array.from({ length: 7 }, (_, index) => makeOption(Number(year), 12, 25 + index));
-  const january = Array.from({ length: 12 }, (_, index) => makeOption(Number(year) + 1, 1, index + 1));
-  return [...december, ...january];
+  const start = moment(`${Number(year)}-12-25`, 'YYYY-MM-DD');
+  const end = calculateBaptismOfLordDate(Number(year) + 1);
+  const options = [];
+  for (const date = start.clone(); date.isSameOrBefore(end, 'day'); date.add(1, 'day')) {
+    options.push(makeOption(date.year(), date.month() + 1, date.date()));
+  }
+  return options;
 }
 
 export function buildDateOptionsForPeriod(year, periodType) {

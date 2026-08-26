@@ -116,18 +116,17 @@ async function main() {
     const liveRanked = beforeSnapshot.docs.filter((document) => hasField(document.data(), '_rank'));
     const protectedDynamic = liveRanked.filter((document) => hasField(document.data(), '_feast'));
     const liveStaticRanked = liveRanked.filter((document) => !hasField(document.data(), '_feast'));
-    const cachedStaticSet = new Set(cachedStaticIds);
-    const deleteIds = cachedStaticIds.filter((id) => {
+    const cachedDeleteIds = cachedStaticIds.filter((id) => {
       const data = beforeById.get(id);
       return data && hasField(data, '_rank') && !hasField(data, '_feast');
     });
-    const skippedCachedIds = cachedStaticIds.filter((id) => !deleteIds.includes(id));
-    const untouchedStaticRankedIds = liveStaticRanked
-      .map((document) => document.id)
-      .filter((id) => !cachedStaticSet.has(id))
-      .sort();
     const targetIds = localDocuments.map(({ id }) => id);
     const targetIdSet = new Set(targetIds);
+    const obsoleteStaticIds = liveStaticRanked
+      .map((document) => document.id)
+      .filter((id) => !targetIdSet.has(id));
+    const deleteIds = [...new Set([...cachedDeleteIds, ...obsoleteStaticIds])].sort();
+    const skippedCachedIds = cachedStaticIds.filter((id) => !deleteIds.includes(id));
     const dynamicTargetConflicts = protectedDynamic
       .map((document) => document.id)
       .filter((id) => targetIdSet.has(id));
@@ -151,7 +150,7 @@ async function main() {
       deleteIds,
       skippedCachedIds,
       protectedDynamicIds: [...protectedBefore.keys()].sort(),
-      untouchedStaticRankedIds,
+      obsoleteStaticIds,
       existingTargetIds,
       writeChunks: chunks(localDocuments, WRITE_CHUNK_SIZE).length,
     };

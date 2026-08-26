@@ -145,7 +145,7 @@ export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes
   // 2. Seasonal exceptions (Advent Dec 17–24, Christmas Jan dates)
   //    and Christmas fixed-date exclusions (25.12, 26.12, etc.) — query by _date only
   const isFixedDateOnly =
-    isSeasonalDateException(mDate) || isChristmasDateExceptionExclusion(mDate);
+    isSeasonalDateException(mDate, periodType) || isChristmasDateExceptionExclusion(mDate);
 
   if (isFixedDateOnly) {
     const docs = await queryDocs(query(col(), where('_date', '==', dateStr)));

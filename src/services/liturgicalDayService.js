@@ -103,8 +103,8 @@ export async function getAllFeastDays() {
     .map((item) => resolveDayAgainstPeriod(item, null));
 }
 
-async function getSeasonalException(mDate) {
-  const id = getSeasonalDateExceptionId(mDate);
+async function getSeasonalException(mDate, periodType) {
+  const id = getSeasonalDateExceptionId(mDate, periodType);
   if (!id) return null;
   const snapshot = await getDocOfflineAware(doc(db, LITURGICAL_DAYS_COLLECTION, id));
   return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
@@ -138,7 +138,9 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = []) {
     : queryAll(fixedDateVariants.map(getDaysByFixedDateQuery));
   const seasonalPromise = exclusiveFeastCode
     ? Promise.resolve(null)
-    : getSeasonalException(mDate);
+    : (context.periodType === 'advent' || context.periodType === 'christmas'
+      ? getSeasonalException(mDate, context.periodType)
+      : Promise.resolve(null));
   const officeForDeadPromise = getOfficeForDead();
   const dynamicPromises = dynamicFeastCodes.map(async (code) => {
     const docs = await queryAll(dynamicFeastVariants(code).map(getDaysByFeastQuery));
@@ -160,14 +162,12 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = []) {
   } : null;
   const resolvedPeriodDay = withCalendarContext(resolveDayAgainstPeriod(periodDay, null));
 
-  const hasSeasonalException = isSeasonalDateException(mDate)
+  const hasSeasonalException = isSeasonalDateException(mDate, context.periodType)
     && Boolean(seasonalDay);
   const seasonalPeriodType = mDate.month() === 11 && mDate.date() <= 24
     ? 'advent'
     : 'christmas';
-  const seasonalPeriodWeek = seasonalPeriodType === 'christmas'
-    ? (mDate.month() === 11 ? 1 : 2)
-    : context.periodWeek;
+  const seasonalPeriodWeek = context.periodWeek;
   const seasonal = hasSeasonalException
     ? applySeasonalWeekdayAntiphons(
       withCalendarContext(

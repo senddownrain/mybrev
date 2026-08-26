@@ -1,71 +1,94 @@
 {
-  "generatedAt": "2026-08-25T17:55:14.164Z",
+  "generatedAt": "2026-08-25T18:34:34.707Z",
   "mode": "apply",
   "counts": {
-    "documents": 822,
-    "duplicatePairs": 3,
-    "safeDuplicateDocumentsToDelete": 3,
+    "documents": 817,
+    "duplicatePairs": 5,
+    "safeDuplicateDocumentsToDelete": 2,
     "unsafeDuplicatePairs": 0,
-    "palmProcessionMovePlanned": 1,
-    "ascensionBaseMergePlanned": 1,
-    "vigilCycleMergesPlanned": 3,
-    "appliedDeletes": 3,
-    "appliedMoves": 1,
-    "appliedMerges": 4
+    "palmProcessionMovePlanned": 0,
+    "ascensionBaseMergePlanned": 0,
+    "vigilCycleMergesPlanned": 0,
+    "appliedDeletes": 2,
+    "appliedMoves": 0,
+    "appliedMerges": 0
   },
   "comparisons": [
     {
       "duplicateId": "feast-eastersunday--A",
       "keeperId": "holyweek-w1-d7--A",
-      "duplicateExists": true,
-      "keeperExists": true,
+      "duplicateExists": false,
+      "keeperExists": false,
       "sameContent": false,
-      "sameBibleReferences": true,
-      "duplicateFingerprint": "gospel:Мц 28, 1–10|psalm:Пс 118 (117), 1–2. 16–17. 22–23|reading1:Быц 1, 1. 26–31а|reading2:Быц 22, 1–2. 9а. 10–13.15–18",
-      "keeperFingerprint": "gospel:Мц 28, 1–10|psalm:Пс 118 (117), 1–2. 16–17. 22–23|reading1:Быц 1, 1. 26–31а|reading2:Быц 22, 1–2. 9а. 10–13.15–18"
+      "sameBibleReferences": false,
+      "duplicateFingerprint": null,
+      "keeperFingerprint": null
     },
     {
       "duplicateId": "feast-eastersunday--B",
       "keeperId": "holyweek-w1-d7--B",
-      "duplicateExists": true,
-      "keeperExists": true,
+      "duplicateExists": false,
+      "keeperExists": false,
       "sameContent": false,
-      "sameBibleReferences": true,
-      "duplicateFingerprint": "gospel:Мк 16, 1–7|psalm:Пс 118 (117), 1–2. 16–17. 22–23|reading1:Быц 1, 1. 26–31а|reading2:Быц 22, 1–2. 9а. 10–13.15–18",
-      "keeperFingerprint": "gospel:Мк 16, 1–7|psalm:Пс 118 (117), 1–2. 16–17. 22–23|reading1:Быц 1, 1. 26–31а|reading2:Быц 22, 1–2. 9а. 10–13.15–18"
+      "sameBibleReferences": false,
+      "duplicateFingerprint": null,
+      "keeperFingerprint": null
     },
     {
       "duplicateId": "feast-eastersunday--C",
       "keeperId": "holyweek-w1-d7--C",
+      "duplicateExists": false,
+      "keeperExists": false,
+      "sameContent": false,
+      "sameBibleReferences": false,
+      "duplicateFingerprint": null,
+      "keeperFingerprint": null
+    },
+    {
+      "duplicateId": "ordinary-w5-d6",
+      "keeperId": "easter-w1-d6",
       "duplicateExists": true,
       "keeperExists": true,
       "sameContent": false,
       "sameBibleReferences": true,
-      "duplicateFingerprint": "gospel:Лк 24, 1–12|psalm:Пс 118 (117), 1–2. 16–17. 22–23|reading1:Быц 1, 1. 26–31а|reading2:Быц 22, 1–2. 9а. 10–13.15–18",
-      "keeperFingerprint": "gospel:Лк 24, 1–12|psalm:Пс 118 (117), 1–2. 16–17. 22–23|reading1:Быц 1, 1. 26–31а|reading2:Быц 22, 1–2. 9а. 10–13.15–18"
+      "duplicateFingerprint": "alleluia:Пс 118 (117), 24|gospel:Ян 21, 1–14|psalm:Пс 118 (117), 1–2 і 4. 22–24. 25–27а (пар. 22)|reading1:Дз 4, 1–12",
+      "keeperFingerprint": "alleluia:Пс 118 (117), 24|gospel:Ян 21, 1–14|psalm:Пс 118 (117), 1–2 і 4. 22–24. 25–27а (пар. 22)|reading1:Дз 4, 1–12"
+    },
+    {
+      "duplicateId": "ordinary-w9-d1",
+      "keeperId": "ordinary-w9-d1--B",
+      "duplicateExists": true,
+      "keeperExists": true,
+      "sameContent": false,
+      "sameBibleReferences": true,
+      "duplicateFingerprint": "alleluia:пар. Ян 17, 17ba|gospel:Мк 2, 23–28|psalm:Пс 81 (80), 3–4. 5–6аb. 6c–8а. 10–11аb (Р.: 2а)|reading1:Дрг 5, 12–15|reading2:2 Кар 4, 6–11",
+      "keeperFingerprint": "alleluia:пар. Ян 17, 17ba|gospel:Мк 2, 23–28|psalm:Пс 81 (80), 3–4. 5–6аb. 6c–8а. 10–11аb (Р.: 2а)|reading1:Дрг 5, 12–15|reading2:2 Кар 4, 6–11"
     }
   ],
   "unsafeDuplicates": [],
   "palmProcession": {
     "sourceId": "feast-palmsunday",
     "targetId": "feast-palmsunday--procession",
-    "sourceExists": true,
-    "targetExists": false,
-    "safe": true
+    "sourceExists": false,
+    "targetExists": true,
+    "safe": false,
+    "alreadyApplied": true
   },
   "ascensionMerge": {
     "sourceId": "feast-ascension",
     "targetId": "feast-ascension--A",
-    "safe": true
+    "safe": false,
+    "alreadyApplied": true
   },
   "vigilMerge": {
     "sourceId": "holyweek-w1-d7--vigil",
     "targetIds": [
-      "holyweek-w1-d7--A",
-      "holyweek-w1-d7--B",
-      "holyweek-w1-d7--C"
+      "holyweek-w1-d7--A-vigil",
+      "holyweek-w1-d7--B-vigil",
+      "holyweek-w1-d7--C-vigil"
     ],
-    "safe": true
+    "safe": false,
+    "alreadyApplied": true
   },
-  "backupPath": "C:\\Users\\User\\Documents\\GitHub\\mybrev\\reports\\backups\\parsedData-before-cycle-variant-repair-2026-08-25T17-55-14-165Z.json"
+  "backupPath": "C:\\Users\\User\\Documents\\GitHub\\mybrev\\reports\\backups\\parsedData-before-cycle-variant-repair-2026-08-25T18-34-34-707Z.json"
 }

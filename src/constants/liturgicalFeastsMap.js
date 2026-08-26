@@ -17,8 +17,6 @@ export const FEAST_NAME_MAP = {
   pentecost: 'feast-pentecost',
   maryMotherChurch: 'feast-marymotherchurch',
   palmSunday: 'feast-palmsunday',
-  /** @deprecated используйте palmSunday (совпадает с calendar store) */
-  palmsSnday: 'feast-palmsunday',
   corpusChristi: 'feast-corpuschristi',
   ascension: 'feast-ascension',
 };

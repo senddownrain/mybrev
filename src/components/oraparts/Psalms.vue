@@ -5,21 +5,21 @@
                 ПСАЛМОДЫЯ
             </v-card-title>
             <v-card-text class="ora-text">
-                <div class="ora-ant" v-html="ant1"></div>
-                <div class="ora-psalm" v-html="formatPsalm(ps1)"></div>
-                <div class="ora-ant" v-if="!singleAntiphon" v-html="ant1"></div>
-                <div class="ora-ant ora-ant--separated" v-if="!singleAntiphon && ant2" v-html="ant2"></div>
-                <div class="ora-psalm" v-if="ps2" v-html="formatPsalm(ps2)"></div>
-                <div class="ora-ant" v-if="!singleAntiphon && ant2" v-html="ant2"></div>
-                <div class="ora-ant ora-ant--separated" v-if="!singleAntiphon && ant3 && !hasThirdPsalmAlternatives" v-html="ant3"></div>
+                <alternative-text v-model="ant1Option" class="ora-ant" :text="ant1" aria-label="Выбар першай антыфоны" />
+                <alternative-text class="ora-psalm" :text="formatPsalm(ps1)" aria-label="Выбар першага псальма" />
+                <alternative-text v-if="!singleAntiphon" v-model="ant1Option" class="ora-ant" :text="ant1" :show-picker="false" />
+                <alternative-text v-if="!singleAntiphon && ant2" v-model="ant2Option" class="ora-ant ora-ant--separated" :text="ant2" aria-label="Выбар другой антыфоны" />
+                <alternative-text v-if="ps2" class="ora-psalm" :text="formatPsalm(ps2)" aria-label="Выбар другога псальма" />
+                <alternative-text v-if="!singleAntiphon && ant2" v-model="ant2Option" class="ora-ant" :text="ant2" :show-picker="false" />
+                <alternative-text v-if="!singleAntiphon && ant3 && !hasEmbeddedThirdPsalmAlternatives" v-model="ant3Option" class="ora-ant ora-ant--separated" :text="ant3" aria-label="Выбар трэцяй антыфоны" />
                 <alternative-text
-                  v-if="hasThirdPsalmAlternatives"
-                  :text="ps3"
+                  v-if="ps3"
+                  class="ora-psalm"
+                  :text="formatPsalm(ps3)"
                   aria-label="Выбар трэцяга псальма"
                 />
-                <div class="ora-psalm" v-else-if="ps3" v-html="formatPsalm(ps3)"></div>
-                <div class="ora-ant" v-if="singleAntiphon" v-html="ant1"></div>
-                <div class="ora-ant" v-else-if="ant3 && !hasThirdPsalmAlternatives" v-html="ant3"></div>
+                <alternative-text v-if="singleAntiphon" v-model="ant1Option" class="ora-ant" :text="ant1" :show-picker="false" />
+                <alternative-text v-else-if="ant3 && !hasEmbeddedThirdPsalmAlternatives" v-model="ant3Option" class="ora-ant" :text="ant3" :show-picker="false" />
                 <!-- <p><span style="color:red">1 ант.</span> <span> {{ ant1 }}</span></p>
                 <p>{{ ps1 }}</p>
                 <p><span style="color:red">2 ант.</span> <span> {{ ant2 }}</span></p>
@@ -33,7 +33,7 @@
 
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { hasSingleAntiphonPsalmody } from '@/utils/liturgicalDayResolution';
 import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
@@ -47,9 +47,12 @@ const props = defineProps({
     ps3: String,
 })
 const singleAntiphon = computed(() => hasSingleAntiphonPsalmody(props));
-const hasThirdPsalmAlternatives = computed(() => (
+const hasEmbeddedThirdPsalmAlternatives = computed(() => (
   String(props.ps3 || '').includes('data-alternative-title=')
 ));
+const ant1Option = ref(0);
+const ant2Option = ref(0);
+const ant3Option = ref(0);
 const formatPsalm = removeBreakAfterAsterisk;
 // import { ref } from 'vue'
 // import moment from '@/utils/moment-be';
@@ -81,6 +84,12 @@ const formatPsalm = removeBreakAfterAsterisk;
   margin-top: 12px;
 }
 
+/* Give a repeated antiphon the same breathing room above that the
+   opening antiphon has below. This also covers one-antiphon psalmody. */
+.ora-psalm + .ora-ant {
+  margin-top: 22px;
+}
+
 .ora-ant :deep(*),
 .ora-psalm :deep(*) {
   text-align: left !important;
@@ -91,6 +100,11 @@ const formatPsalm = removeBreakAfterAsterisk;
 .ora-psalm :deep([style*="text-align: justify"]),
 .ora-psalm :deep([style*="text-align:justify"]) {
   text-align: left !important;
+}
+
+/* Headings and subtitles carry inline styles and are not strophes. */
+.ora-psalm :deep(p:nth-child(even of p:not([style]))) {
+  margin-left: 1rem;
 }
 
 </style>

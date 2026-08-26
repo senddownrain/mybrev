@@ -102,14 +102,24 @@ function groupFixedDays(days) {
     group.push(day);
     groups.set(key, group);
   });
-  return [...groups.values()].map((templates) => ({
-    day: templates[0],
-    templates: templates.map((item) => ({
-      id: item.id,
-      label: getTemplateLabel(item),
-      day: item,
-    })),
-  }));
+  return [...groups.values()].map((variants) => {
+    const places = [...new Set(variants.flatMap((item) => (
+      Array.isArray(item._place) ? item._place : [item._place]
+    )).filter(Boolean))].sort();
+    const day = { ...variants[0] };
+    if (places.length === 1) [day._place] = places;
+    else if (places.length > 1) day._place = places;
+    else delete day._place;
+
+    return {
+      day,
+      templates: variants.map((item) => ({
+        id: item.id,
+        label: getTemplateLabel(item),
+        day: item,
+      })),
+    };
+  });
 }
 
 export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []) {

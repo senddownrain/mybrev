@@ -5,7 +5,7 @@
                 ПЕСНЯ З ЕВАНГЕЛЛЯ
             </v-card-title>
             <v-card-text class="ora-text">
-                <div class="ora-ant" v-html="ant"></div>
+                <alternative-text v-model="antOption" class="ora-ant" :text="ant" aria-label="Выбар антыфоны" />
                 
                 <!-- <div v-html="ps1"></div> -->
                 <p class="ora-sub">
@@ -16,7 +16,7 @@
                <p>
                 <div class="ora-psalm" v-html="formatPsalm(mag)"></div>
                </p>
-               <div class="ora-ant" v-html="ant"></div>
+               <alternative-text v-model="antOption" class="ora-ant" :text="ant" :show-picker="false" />
             </v-card-text>
         </v-card>
     </div>
@@ -24,12 +24,15 @@
 
 
 <script setup>
+import { ref } from 'vue';
+import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
 
 const props = defineProps({
     ant: String,
 })
 const formatPsalm = removeBreakAfterAsterisk;
+const antOption = ref(0);
 
 const mag = `
 <p>

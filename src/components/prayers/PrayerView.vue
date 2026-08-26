@@ -38,9 +38,9 @@
 
       <!-- Режим просмотра -->
       <template v-else>
-        <article class="prayer-reading-surface">
+        <article class="prayer-reading-surface" :class="{ 'prayer-reading-surface--mass': isMassOrder }">
           <header class="prayer-reading-header">
-            <div class="prayer-reading-eyebrow">Малітва</div>
+            <div class="prayer-reading-eyebrow">{{ isMassOrder ? 'Літургія' : 'Малітва' }}</div>
             <!-- Plain text interpolation — no v-html, no XSS risk -->
             <h1 class="prayer-title">{{ getTitle(prayer) }}</h1>
 
@@ -57,8 +57,21 @@
             </div>
           </header>
 
+          <nav v-if="isMassOrder && massSections.length" class="mass-sections" aria-label="Раздзелы святой Імшы">
+            <span class="mass-sections__label">Перайсці да раздзела</span>
+            <button
+              v-for="section in massSections"
+              :key="section.id"
+              type="button"
+              class="mass-sections__link"
+              @click="scrollToMassSection(section.id)"
+            >
+              {{ section.title }}
+            </button>
+          </nav>
+
           <!-- Prayer body is trusted rich HTML from the database -->
-          <div v-html="getText(prayer)" class="prayer-text"></div>
+          <div ref="prayerTextElement" v-html="getText(prayer)" class="prayer-text"></div>
         </article>
       </template>
     </div>
@@ -78,7 +91,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onUnmounted, onMounted } from 'vue';
+import { ref, computed, watch, nextTick, onUnmounted, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
@@ -90,10 +103,14 @@ const route = useRoute();
 const { prayers, isLoading, getTitle, getText, updatePrayer, allTags } = usePrayers();
 const { notifySuccess, notifyError } = useNotifier();
 const uiStore = useUiStore();
+const MASS_ORDER_PRAYER_ID = 'eMmCtxwyJ75ogmL5rwye';
+const prayerTextElement = ref(null);
+const massSections = ref([]);
 
 const prayer = computed(() => {
   return prayers.value.find(p => p.id === route.params.id);
 });
+const isMassOrder = computed(() => route.params.id === MASS_ORDER_PRAYER_ID);
 
 const isEditing = ref(false);
 const saving = ref(false);
@@ -128,7 +145,12 @@ onMounted(() => {
   // Sync initial state
   uiStore.prayerIsEditing = isEditing.value;
   uiStore.prayerSaving = saving.value;
+  updateMassSections();
 });
+
+watch([() => route.params.id, prayer], () => {
+  updateMassSections();
+}, { flush: 'post' });
 
 onUnmounted(() => {
   uiStore.clearPrayerActions();
@@ -243,6 +265,76 @@ async function copyText() {
   }
 }
 
+async function updateMassSections() {
+  await nextTick();
+  if (!isMassOrder.value || !prayerTextElement.value) {
+    massSections.value = [];
+    return;
+  }
+
+  massSections.value = Array.from(prayerTextElement.value.querySelectorAll('h2, h3'))
+    .map((heading, index) => {
+      const title = heading.textContent.trim();
+      if (!title) return null;
+      const id = `mass-section-${index}`;
+      heading.id = id;
+      heading.tabIndex = -1;
+      return { id, title };
+    })
+    .filter(Boolean);
+
+  markMassSpeakerLabels();
+  markStandaloneMassRubrics();
+}
+
+function scrollToMassSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function markMassSpeakerLabels() {
+  const root = prayerTextElement.value;
+  if (!root) return;
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  let currentNode = walker.nextNode();
+
+  while (currentNode) {
+    if (!currentNode.parentElement?.matches('.mass-speaker, .mass-rubric-inline')) {
+      textNodes.push(currentNode);
+    }
+    currentNode = walker.nextNode();
+  }
+
+  textNodes.forEach((textNode) => {
+    const parts = textNode.nodeValue.split(/([СCН]\.:|Альбо:)/g);
+    if (parts.length === 1) return;
+
+    const fragment = document.createDocumentFragment();
+    parts.forEach((part) => {
+      if (/^[СCН]\.:$/.test(part) || part === 'Альбо:') {
+        const label = document.createElement('span');
+        label.className = part === 'Альбо:' ? 'mass-rubric-inline' : 'mass-speaker';
+        label.textContent = part;
+        fragment.appendChild(label);
+      } else if (part) {
+        fragment.appendChild(document.createTextNode(part));
+      }
+    });
+    textNode.replaceWith(fragment);
+  });
+}
+
+function markStandaloneMassRubrics() {
+  const rubricPattern = /^(Святар|Народ|Усе|Дыякан|Біскуп|Цэлебрант|Лектар|Псальміст|Кантар)[^.!?]*:$/;
+
+  prayerTextElement.value?.querySelectorAll('p').forEach((paragraph) => {
+    if (rubricPattern.test(paragraph.textContent.trim())) {
+      paragraph.classList.add('mass-rubric-line');
+    }
+  });
+}
+
 // Expose for parent components that may use template refs
 defineExpose({
   isEditing,
@@ -288,6 +380,10 @@ defineExpose({
   font-family: var(--reader-font-family);
 }
 
+.prayer-reading-surface--mass {
+  --mass-rubric-font-size: calc(0.83rem * var(--font-size-multiplier, 1));
+}
+
 .prayer-reading-header {
   padding: 24px 20px 22px;
   border-bottom: 1px solid var(--reader-border);
@@ -316,6 +412,42 @@ defineExpose({
   border-color: rgba(var(--devotional-rgb), 0.18) !important;
   background: var(--devotional-soft) !important;
   color: var(--devotional-accent) !important;
+}
+
+.mass-sections {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--reader-border);
+  background: color-mix(in srgb, var(--reader-surface) 90%, var(--devotional-soft));
+}
+
+.mass-sections__label {
+  margin-right: 2px;
+  color: var(--devotional-accent);
+  font-size: 0.73rem;
+  font-weight: 750;
+}
+
+.mass-sections__link {
+  padding: 6px 10px;
+  border: 1px solid rgba(var(--devotional-rgb), 0.25);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--reader-ink);
+  font: inherit;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.mass-sections__link:hover,
+.mass-sections__link:focus-visible {
+  border-color: var(--devotional-accent);
+  background: var(--devotional-soft);
+  outline: none;
 }
 
 .prayer-text {
@@ -378,6 +510,99 @@ defineExpose({
   word-wrap: break-word;
 }
 
+/* Rubrics in the Mass order are marked up as emphasis in the source. */
+.prayer-reading-surface--mass .prayer-text :deep(h2),
+.prayer-reading-surface--mass .prayer-text :deep(h3) {
+  scroll-margin-top: 18px;
+  margin: 1em 0 0.42em;
+  padding: 0 0 0.42em 0.7em;
+  border-bottom: 1px solid var(--reader-border);
+  border-left: 3px solid var(--rubric-color);
+  color: var(--rubric-color);
+  font-family: var(--reader-display-font-family);
+  font-size: 1.08em;
+  line-height: 1.3;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(h2:first-child),
+.prayer-reading-surface--mass .prayer-text :deep(h3:first-child) {
+  margin-top: 0;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(em) {
+  display: block;
+  margin: 0.06em 0 0;
+  color: var(--rubric-color);
+  font-size: var(--mass-rubric-font-size) !important;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(em *) {
+  font-size: var(--mass-rubric-font-size) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(p) {
+  margin-top: 0;
+  margin-bottom: 0.16em;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(p:empty),
+.prayer-reading-surface--mass .prayer-text :deep(p:has(> br:only-child)) {
+  display: none;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(br + br) {
+  display: none;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(em + br) {
+  display: none;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(span:has(> em:only-child) + br),
+.prayer-reading-surface--mass .prayer-text :deep(span:has(> em:only-child) + span:has(> br:only-child)) {
+  display: none;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(.mass-rubric-inline),
+.prayer-reading-surface--mass .prayer-text :deep(.mass-speaker) {
+  color: var(--rubric-color);
+  font-size: var(--mass-rubric-font-size);
+  font-weight: 400;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(.mass-rubric-line) {
+  margin: 0;
+  color: var(--rubric-color);
+  font-size: var(--mass-rubric-font-size);
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(.mass-speaker) {
+  display: inline-block;
+  min-width: 1.65em;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(strong) {
+  color: var(--reader-ink);
+  font-weight: 760;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(p:has(> strong:only-child)) {
+  margin-top: 0.35em;
+  color: var(--rubric-color);
+  font-family: var(--reader-display-font-family);
+  font-size: 0.94em;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
 @media (max-width: 600px) {
   .prayer-view-container {
     padding: 0 !important;
@@ -393,6 +618,15 @@ defineExpose({
 
   .prayer-reading-header {
     padding: 21px 16px 19px;
+  }
+
+  .mass-sections {
+    padding: 13px 16px;
+    gap: 7px;
+  }
+
+  .mass-sections__label {
+    width: 100%;
   }
 
   .prayer-text {

@@ -161,30 +161,38 @@ const preparedFeasts = computed(() => {
     const title = cleanText(feast._title || feast._feastName || feast._dayName || 'Свята');
     const rank = feast._rank || feast._feastType || '';
     const rankLabel = RANK_LABEL_MAP[rank] || cleanText(rank);
-    const places = (Array.isArray(feast._place) ? feast._place : [feast._place]).filter(Boolean);
+    const places = normalizePlaces(feast._place);
     const placeLabels = places.map((place) => PLACE_LABEL_MAP[place] || cleanText(place));
-    const groupKey = [calendarDate, title.toLocaleLowerCase('be-BY'), rank, places.join(',')].join('|');
+    const groupKey = [
+      feast.isDynamic ? 'dynamic' : 'fixed',
+      calendarDate,
+      title.toLocaleLowerCase('be-BY'),
+      rank,
+    ].join('|');
+    const date = moment(calendarDate, 'YYYY-MM-DD', true);
     const existing = groups.get(groupKey);
 
     if (existing) {
       existing.variantCount += 1;
+      existing.places = [...new Set([...existing.places, ...places])].sort();
+      existing.placeLabels = existing.places
+        .map((place) => PLACE_LABEL_MAP[place] || cleanText(place));
+      existing.searchText = buildSearchText(existing, date);
       return;
     }
 
-    const date = moment(calendarDate, 'YYYY-MM-DD', true);
     groups.set(groupKey, {
       ...feast,
       key: groupKey,
       title,
       rankLabel,
+      places,
       placeLabels,
       calendarDate,
       dayLabel: date.format('DD'),
       monthLabel: date.format('MMM').replace('.', ''),
       variantCount: 1,
-      searchText: [title, rankLabel, ...placeLabels, date.format('DD.MM.YYYY')]
-        .join(' ')
-        .toLocaleLowerCase('be-BY'),
+      searchText: buildSearchText({ title, rankLabel, placeLabels }, date),
     });
   });
 
@@ -229,6 +237,18 @@ function cleanText(value) {
     .replace(/&amp;/gi, '&')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function normalizePlaces(value) {
+  return [...new Set((Array.isArray(value) ? value : [value])
+    .map((place) => String(place || '').trim())
+    .filter(Boolean))].sort();
+}
+
+function buildSearchText(feast, date) {
+  return [feast.title, feast.rankLabel, ...feast.placeLabels, date.format('DD.MM.YYYY')]
+    .join(' ')
+    .toLocaleLowerCase('be-BY');
 }
 
 function rankWeight(rank) {

@@ -2,7 +2,7 @@
     <div>
         <v-card class="ora" flat>
             <v-card-text class="ora-text">
-                <div v-html="text"></div>
+                <alternative-text :text="text" aria-label="Выбар верша" />
             </v-card-text>
         </v-card>
     </div>
@@ -10,7 +10,9 @@
 
 
 <script setup>
-const props = defineProps({
+import AlternativeText from '@/components/oraparts/AlternativeText.vue';
+
+defineProps({
   text: String,
 })
 // import { ref } from 'vue'

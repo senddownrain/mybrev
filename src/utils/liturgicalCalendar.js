@@ -25,6 +25,22 @@ export function calculateBaptismOfLordDate(year) {
   return epiphany.add(daysToSunday, 'days');
 }
 
+/**
+ * Christmas uses the octave through 1 January as week 1. From 2 January the
+ * psalter advances on Sunday, so the remaining season can use week 2 and,
+ * when the calendar permits it, week 3 templates before the Baptism.
+ */
+export function calculateChristmasPeriodWeek(mDate) {
+  if (mDate.month() === 11 || (mDate.month() === 0 && mDate.date() === 1)) return 1;
+  if (mDate.month() !== 0 || mDate.date() < 2) return -1;
+
+  const januarySecond = moment(`${mDate.year()}-01-02`, 'YYYY-MM-DD');
+  const sundayOffset = (date) => date.isoWeekday() % 7;
+  const baseWeekStart = januarySecond.clone().subtract(sundayOffset(januarySecond), 'days');
+  const currentWeekStart = mDate.clone().subtract(sundayOffset(mDate), 'days');
+  return 2 + currentWeekStart.diff(baseWeekStart, 'weeks');
+}
+
 function firstSundayAfterChristmas(christmas) {
   const daysToSunday = christmas.isoWeekday() === 7 ? 7 : 7 - christmas.isoWeekday();
   return christmas.clone().add(daysToSunday, 'days');
@@ -108,7 +124,7 @@ export function computeLiturgicalContext(mDate, opts, nextYearOpts, dynamicDates
   const christmasBounds = christmasSeasonBounds(mDate, opts, nextYearOpts);
   if (christmasBounds && mDate.isSameOrBefore(christmasBounds.end, 'day')) {
     context.periodType = 'christmas';
-    context.periodWeek = mDate.month() === 11 ? 1 : 2;
+    context.periodWeek = calculateChristmasPeriodWeek(mDate);
     // dayOfWeek was initialized from the actual calendar weekday. Christmas
     // does not necessarily fall on Sunday, so it must not be anchored to 25.12.
     return context;
@@ -214,15 +230,13 @@ export function calculateDateForContext(year, periodType, periodWeekNumber, dayO
       const offset = (targetIsoWeekday - christmas.isoWeekday() + 7) % 7;
       return christmas.clone().add(offset, 'days').format('YYYY-MM-DD');
     }
-    if (periodWeekNumber !== 2) return null;
+    if (periodWeekNumber !== 2 && periodWeekNumber !== 3) return null;
 
-    // In this calendar model Christmas week 1 is the December octave and
-    // week 2 starts on 1 January. Anchor the requested weekday inside January
-    // instead of adding it to the first Sunday after Christmas (which could
-    // incorrectly return a December date for Monday–Thursday).
-    const januaryFirst = moment(`${year + 1}-01-01`, 'YYYY-MM-DD');
-    const offset = (targetIsoWeekday - januaryFirst.isoWeekday() + 7) % 7;
-    const result = januaryFirst.clone().add(offset, 'days');
+    const januarySecond = moment(`${year + 1}-01-02`, 'YYYY-MM-DD');
+    const baseSunday = januarySecond.clone().subtract(januarySecond.isoWeekday() % 7, 'days');
+    const weekStart = baseSunday.clone().add(periodWeekNumber - 2, 'weeks');
+    const result = weekStart.clone().add(targetIsoWeekday % 7, 'days');
+    if (result.isBefore(januarySecond, 'day')) return null;
     return result.isSameOrBefore(calculateBaptismOfLordDate(year + 1), 'day')
       ? result.format('YYYY-MM-DD')
       : null;

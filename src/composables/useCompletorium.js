@@ -27,6 +27,8 @@ function normalizeRank(value) {
 
 /** Whether the selected celebration uses the Sunday compline. */
 export function usesSundayCompletorium(day) {
+  if (day?._kind === 'office-for-dead') return true;
+
   const rank = day?._rank || day?._feastType || day?.rank || day?.feastComment;
   return SUNDAY_RANKS.has(normalizeRank(rank));
 }
@@ -48,7 +50,7 @@ export function useCompletorium() {
 
   /**
    * Load compline for the date's period and weekday. Solemnities and feasts
-   * always use Sunday (d1) within the same period.
+   * and the Office for the Dead always use Sunday (d1) within the same period.
    */
   async function getCompletoriumForDate(date, selectedDay = null) {
     const context = await computeLiturgicalContextForDate(date);

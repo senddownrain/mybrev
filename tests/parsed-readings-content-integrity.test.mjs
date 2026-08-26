@@ -79,3 +79,42 @@ test('validates every additional readingN section when present', () => {
   assert.ok(issues.some((issue) => issue.section === 'reading3'
     && issue.field === 'comment' && issue.problem === 'missing-required-field'));
 });
+
+test('detects swapped and duplicated psalm refrains', () => {
+  const swapped = structuredClone(completeDocument);
+  swapped.psalm.chorus = '1. Першы сапраўдны верш псальма.';
+  swapped.psalm.verses = ['Правільны рэфрэн псальма.', '2. Другі верш псальма.'];
+  assert.ok(documentIssues(swapped).some((issue) => issue.problem === 'swapped-psalm-chorus'));
+
+  const duplicated = structuredClone(completeDocument);
+  duplicated.psalm.verses.unshift(duplicated.psalm.chorus);
+  assert.ok(documentIssues(duplicated).some((issue) => issue.problem === 'duplicated-psalm-chorus-in-verses'));
+
+  const alternate = structuredClone(completeDocument);
+  alternate.psalm.chorus = 'Асноўны рэфрэн. Або: Аллелюя.';
+  assert.ok(documentIssues(alternate).some((issue) => issue.problem === 'embedded-alternate-psalm-chorus'));
+
+  const contaminated = structuredClone(completeDocument);
+  contaminated.psalm.verses.push('ПЕРШАЕ ЧЫТАННЕ');
+  assert.ok(documentIssues(contaminated).some((issue) => issue.problem === 'parser-marker-in-psalm-verses'));
+});
+
+test('allows an explicit null Bible reference for non-biblical acclamations', () => {
+  const document = structuredClone(completeDocument);
+  document.alleluia.bible = null;
+  assert.deepEqual(documentIssues(document), []);
+});
+
+test('accepts the Paschal Vigil alleluia as the final psalm refrain', () => {
+  const document = structuredClone(completeDocument);
+  document._variant = 'vigil';
+  document.psalm.chorus = 'Аллелюя, аллелюя, аллелюя.';
+  delete document.alleluia;
+  assert.deepEqual(documentIssues(document), []);
+});
+
+test('detects liturgical response wrappers embedded in the alleluia verse', () => {
+  const document = structuredClone(completeDocument);
+  document.alleluia.verse = 'Хвала Табе, слова Божае. Ян 10, 27 Авечкі мае слухаюць Мой голас. Хвала Табе, слова Божае.';
+  assert.ok(documentIssues(document).some((issue) => issue.problem === 'acclamation-wrapper-in-verse'));
+});

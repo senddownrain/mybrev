@@ -17,7 +17,7 @@ test('builds deterministic Advent and Christmas exception IDs', () => {
   assert.equal(getSeasonalDateExceptionId(moment('2026-12-19')), 'advent-19-12');
   assert.equal(getSeasonalDateExceptionId(moment('2026-12-25')), null);
   assert.equal(getSeasonalDateExceptionId(moment('2026-12-26')), null);
-  assert.equal(getSeasonalDateExceptionId(moment('2026-12-27')), 'christmas-27-12');
+  assert.equal(getSeasonalDateExceptionId(moment('2026-12-27')), null);
   assert.equal(getSeasonalDateExceptionId(moment('2026-12-28')), null);
   assert.equal(getSeasonalDateExceptionId(moment('2027-01-01')), null);
   assert.equal(getSeasonalDateExceptionId(moment('2027-01-06')), null);
@@ -150,7 +150,7 @@ test('seasonal resolution fills gaps and expands weekday antiphons', () => {
   assert.equal(resolved.vesperAnt3, '<p>Ант. 3</p>');
 });
 
-test('groups templates by celebration rank and place', () => {
+test('groups templates and dioceses by celebration rank', () => {
   const base = {
     _date: '02.01',
     _feastName: 'Св. Базыля і Грыгорыя',
@@ -160,9 +160,13 @@ test('groups templates by celebration rank and place', () => {
     getFixedCelebrationKey({ ...base, _currentVersion: 'pastors' }),
     getFixedCelebrationKey({ ...base, _currentVersion: 'doctors-of-church' }),
   );
-  assert.notEqual(
+  assert.equal(
     getFixedCelebrationKey(base),
     getFixedCelebrationKey({ ...base, _place: 'vitebsk' }),
+  );
+  assert.notEqual(
+    getFixedCelebrationKey(base),
+    getFixedCelebrationKey({ ...base, _rank: 'festum' }),
   );
 });
 

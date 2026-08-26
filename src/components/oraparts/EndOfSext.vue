@@ -1,44 +1,27 @@
 <template>
-    <div>
-
-        <v-card class="ora" flat>
-            <v-card-text class="ora-text">
-                <span style="color:red">К.</span> <span>
-                        Благаславім Пана.
-                    </span><br>
-                
-                <span style="color:red">Н.</span> <span> Дзякуем Пану Богу.</span>
-                
-
-            </v-card-text>
-        </v-card>
-    </div>
+  <v-card class="ora" flat>
+    <v-card-text class="ora-text ora-ending">
+      <div class="ora-ending__dialogue">
+        <p><span class="ora-ending__speaker">К.</span> Благаславім Пана.</p>
+        <p><span class="ora-ending__speaker">Н.</span> Дзякуем Пану Богу.</p>
+      </div>
+    </v-card-text>
+  </v-card>
 </template>
 
+<style scoped>
+.ora-ending__dialogue p {
+  margin: 0;
+}
 
-<script setup>
-// const props = defineProps({
-//   title: String,
-// })
+.ora-ending__dialogue p + p {
+  margin-top: 0.5rem;
+}
 
-
-
-// import { ref } from 'vue'
-// import moment from '@/utils/moment-be';
-
-// import { useRoute } from 'vue-router'
-// import { useCollection, useFirestore, useDocument } from 'vuefire'
-// import { collection, orderBy, query, doc, updateDoc } from 'firebase/firestore'
-
-//const db = useFirestore()
-
-//const days = useCollection(query(collection(db, 'days')))
-//const notes = useCollection(query(collection(db, 'days'), orderBy('id')))
-
-// const route = useRoute()
-// const docRef = doc(db, "days", route.params.id);
-// var { data: day, pending } = useDocument(docRef)
-
-// const nowDate = moment(Date.now()).format('LL') 
-
-</script>
+.ora-ending__speaker {
+  display: inline-block;
+  min-width: 1.55rem;
+  color: var(--rubric-color);
+  font-weight: 700;
+}
+</style>

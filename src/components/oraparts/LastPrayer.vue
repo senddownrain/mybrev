@@ -5,7 +5,7 @@
             МАЛІТВА
             </v-card-title>
             <v-card-text class="ora-text">
-                <alternative-text :text="text" aria-label="Выбар малітвы" />
+                <alternative-text :text="text" kind="prayer" aria-label="Выбар малітвы" />
             </v-card-text>
         </v-card>
     </div>

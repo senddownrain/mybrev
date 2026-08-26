@@ -3,6 +3,7 @@
 import { createRequire } from 'node:module';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import admin from 'firebase-admin';
 import { load } from 'cheerio';
 import {
@@ -24,6 +25,25 @@ const FROM_BACKUPS = process.argv.includes('--from-backups');
 const FETCH_SOURCES = process.argv.includes('--fetch-sources');
 const OUTPUT = path.resolve('reports/parsed-readings-content-repair-report.json');
 const READING_SECTIONS = ['reading1', 'reading2', 'gospel'];
+const EXACT_PSALM_DONOR_TARGETS = new Set([
+  '01-01-holy-mary-mother-of-god',
+  '04-12-grodno-cathedral-dedication',
+  '10-10-vitebsk-cathedral-dedication',
+  'christmas-31-12',
+]);
+const PSALM_VERSE_OVERRIDES = new Map([
+  ['06-01-epiphany-lord', [
+    '1. Божа, дай суд Твой каралю * і сыну караля Тваю справядлівасць. 2. Няхай судзіць народ Твой справядліва * і прыгнечаных Тваіх паводле права.',
+    '7. У дні Ягоныя закрасуе справядлівасць, * і вялікі спакой, аж пакуль не знікне месяц. 8. І будзе Ён панаваць ад мора да мора, * і ад ракі аж да краю зямлі.',
+    '10. Каралі Тарсісу і астравоў прынясуць Яму дары, * каралі Аравіі і Сабы складуць даніну. 11. І паклоняцца Яму ўсе каралі, * усе народы будуць служыць Яму.',
+    '12. Бо Ён вызваліць убогага, які Яго кліча, * і прыгнечанага, які дапамогі не мае. 13. Змілуецца Ён над бедным і ўбогім, * і душы бедных уратуе.',
+  ]],
+  ['feast-holyfamily--C', [
+    '2. Якія мілыя Твае шатры, Пане Магуццяў! † 3. Знемагае і імкнецца душа мая * ў двары Пана. Сэрца маё і цела радасна клічуць * да Бога жывога.',
+    '5. Шчаслівыя, хто жыве ў доме Тваім, * яны вечна спяваюць Табе. 6. Шчаслівы чалавек, сіла якога ў Табе.',
+    '9. Пане, Божа Магуццяў, пачуй маю малітву, * прыслухайся, Божа Якуба. 10. Божа, наша абарона, паглядзі, * паглядзі на твар памазаніка Твайго.',
+  ]],
+]);
 
 function textSectionNames(document) {
   return [...new Set([...readingSectionNames(document), 'gospel'])];
@@ -36,6 +56,21 @@ function timestamp() {
 function normalized(value) {
   return String(value ?? '').normalize('NFKC').toLocaleLowerCase('be')
     .replace(/[‐‑‒—−]/g, '–').replace(/\s+/g, ' ').trim();
+}
+
+function escapeRegExp(value) {
+  return String(value ?? '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function cleanAcclamationVerse(value, bible) {
+  let cleaned = String(value ?? '').trim()
+    .replace(/^Хвала\s+Табе,\s+слова\s+Божае\.\s*/iu, '')
+    .replace(/\s*Хвала\s+Табе,\s+слова\s+Божае\.?\s*$/iu, '')
+    .trim();
+  if (present(bible)) {
+    cleaned = cleaned.replace(new RegExp(`^${escapeRegExp(String(bible).trim())}\\s*`, 'iu'), '').trim();
+  }
+  return cleaned;
 }
 
 function sectionToPlainText(html) {
@@ -54,6 +89,36 @@ function sourceBible(sectionHtml) {
     if (value) return value;
   }
   return null;
+}
+
+function splitRefrainValue(value) {
+  const raw = String(value ?? '').replace(/\s+/g, ' ').trim();
+  const alternateMatch = raw.match(/^(.*?)\s*Або:\s*(.+)$/iu);
+  const splitTrailingVerse = (item) => {
+    const match = item.match(/^(.*?[.!?])\s*(\d+[а-яёіўa-z]?\.\s*.+)$/iu);
+    return { text: (match?.[1] ?? item).trim(), trailingVerse: match?.[2]?.trim() ?? null };
+  };
+  if (!alternateMatch) {
+    const parsed = splitTrailingVerse(raw);
+    return { chorus: parsed.text, altChorus: null, trailingVerse: parsed.trailingVerse };
+  }
+  const primary = alternateMatch[1].trim();
+  const alternateAndVerse = alternateMatch[2].trim();
+  const parsedAlternate = splitTrailingVerse(alternateAndVerse);
+  return {
+    chorus: primary,
+    altChorus: parsedAlternate.text,
+    trailingVerse: parsedAlternate.trailingVerse,
+  };
+}
+
+function cleanPsalmVerses(verses) {
+  if (!Array.isArray(verses)) return verses;
+  const standaloneMarker = /^(?:Год\s+[ІI1VХX]+|ПЕРШАЕ ЧЫТАННЕ|ДРУГОЕ ЧЫТАННЕ|РЭСПАНСАРЫЙНЫ ПСАЛЬМ|СПЕЎ ПЕРАД ЕВАНГЕЛЛЕМ|ЕВАНГЕЛЛЕ|Гэта слова Божае\.?|[аa]?РЭСПАНСАРЫЙНЫ ПСАЛЬМ|Рэфрэн:?\s*)$/iu;
+  return verses.map((item) => String(item ?? '').trim())
+    .filter((item) => item && !standaloneMarker.test(item))
+    .map((item) => item.replace(/\s*Рэфрэн:?\s*[аa]?\s*$/iu, '').trim())
+    .filter(Boolean);
 }
 
 function extractYearSection(articleHtml, year) {
@@ -87,40 +152,40 @@ function parseSourcePsalm(sectionHtml) {
   const $ = load(`<div>${sectionHtml}</div>`);
   const verses = [];
   let chorus = null;
-  let nextIsChorus = false;
+  let altChorus = null;
   $('p').each((index, element) => {
     const text = $(element).text().replace(/\s+/g, ' ').trim();
     if (!text) return;
-    const bold = $(element).find('b').first().text().replace(/\s+/g, ' ').trim();
-    if (/^Рэфрэн:$/iu.test(bold)) {
+    if (/^Рэфрэн:/iu.test(text)) {
       const after = text.replace(/^Рэфрэн:\s*/iu, '').trim();
-      if (after) chorus ??= after;
-      else nextIsChorus = true;
-      return;
-    }
-    if (nextIsChorus) {
-      chorus ??= text;
-      nextIsChorus = false;
+      if (after) {
+        const parsed = splitRefrainValue(after);
+        chorus ??= parsed.chorus;
+        altChorus ??= parsed.altChorus;
+        if (parsed.trailingVerse) verses.push(parsed.trailingVerse);
+      }
       return;
     }
     if (/^Рэфрэн:?$/iu.test(text)) return;
-    const cleaned = text.replace(/\s*Рэфрэн:?\s*$/iu, '').trim();
-    if (/^\d+[а-яёіўa-z]?\.\s/iu.test(cleaned)) verses.push(cleaned);
+    const cleaned = text.replace(/\s*Рэфрэн:?\s*[аa]?\s*$/iu, '').trim();
+    if (/^\d+[а-яёіўa-z]?\.\s/iu.test(cleaned) || cleaned.includes('*')) verses.push(cleaned);
   });
   if (!verses.length) {
     const plain = sectionToPlainText(sectionHtml);
     for (const line of plain.split('\n').map((item) => item.replace(/\s+/g, ' ').trim()).filter(Boolean)) {
-      if (/^\d+[а-яёіўa-z]?\.\s/iu.test(line)) verses.push(line);
+      const cleaned = line.replace(/\s*Рэфрэн:?\s*[аa]?\s*$/iu, '').trim();
+      if (/^\d+[а-яёіўa-z]?\.\s/iu.test(cleaned) || cleaned.includes('*')) verses.push(cleaned);
     }
   }
   return {
     bible: sourceBible(sectionHtml),
     chorus,
+    altChorus,
     verses: verses.length ? verses : null,
   };
 }
 
-function parseSourcePage(html, year) {
+export function parseSourcePage(html, year) {
   const $ = load(html);
   const articleHtml = $('div.article').first().html();
   if (!articleHtml) throw new Error('div.article not found');
@@ -156,6 +221,21 @@ function bibleKey(section) {
   return normalized(section?.bible);
 }
 
+function psalmPassageKey(section) {
+  return bibleKey(section).replace(/\s*\(р\.:.*$/u, '').trim();
+}
+
+function cleanPsalmDonor(section) {
+  const firstVerse = Array.isArray(section?.verses) ? section.verses[0] : null;
+  return present(section?.chorus)
+    && Array.isArray(section?.verses)
+    && section.verses.length
+    && !/^\s*\d+[а-яёіўa-z]?\.\s/iu.test(section.chorus)
+    && normalized(section.chorus) !== normalized(firstVerse)
+    && !/Або:/iu.test(section.chorus)
+    && JSON.stringify(cleanPsalmVerses(section.verses)) === JSON.stringify(section.verses);
+}
+
 function bibleBookKey(section) {
   return bibleKey(section).match(/^(?:[123]\s*)?[\p{L}.]+/u)?.[0] ?? '';
 }
@@ -180,6 +260,10 @@ function readingSetKey(document) {
   return ['reading1', 'reading2', 'psalm', 'alleluia', 'gospel']
     .map((sectionName) => bibleKey(document[sectionName]))
     .join('|');
+}
+
+function coreReadingKey(document) {
+  return ['reading1', 'reading2', 'gospel'].map((sectionName) => bibleKey(document[sectionName])).join('|');
 }
 
 function sectionQuality(sectionName, section) {
@@ -269,6 +353,39 @@ function buildOperations(documents) {
       || (document.psalm.altChorus !== null && !present(document.psalm.altChorus)))) {
       addChange(operation, 'psalm.altChorus', null, 'nullable-alt-chorus');
     }
+    if (document.psalm && /Або:/iu.test(document.psalm.chorus ?? '')) {
+      const parsed = splitRefrainValue(document.psalm.chorus);
+      addChange(operation, 'psalm.chorus', parsed.chorus, 'split-embedded-alternate-psalm-chorus');
+      addChange(operation, 'psalm.altChorus', parsed.altChorus, 'split-embedded-alternate-psalm-chorus');
+      if (parsed.trailingVerse && Array.isArray(document.psalm.verses)) {
+        addChange(operation, 'psalm.verses', [parsed.trailingVerse, ...document.psalm.verses], 'restore-verse-embedded-in-psalm-chorus');
+      }
+    }
+    if (document.psalm && Array.isArray(document.psalm.verses) && document.psalm.verses.length) {
+      const firstVerse = document.psalm.verses[0];
+      const chorus = document.psalm.chorus;
+      const numberedChorus = /^\s*\d+[а-яёіўa-z]?\.\s/iu.test(chorus ?? '');
+      const numberedFirstVerse = /^\s*\d+[а-яёіўa-z]?\.\s/iu.test(firstVerse ?? '');
+      if (numberedChorus && present(firstVerse) && !numberedFirstVerse) {
+        addChange(operation, 'psalm.chorus', firstVerse.replace(/^\s*Рэфрэн:\s*/iu, '').trim(), 'restore-swapped-psalm-chorus');
+        addChange(operation, 'psalm.verses', [chorus, ...document.psalm.verses.slice(1)], 'restore-swapped-psalm-verses');
+      } else if (!present(chorus) && /^\s*Рэфрэн:\s*\S/iu.test(firstVerse ?? '')) {
+        addChange(operation, 'psalm.chorus', firstVerse.replace(/^\s*Рэфрэн:\s*/iu, '').trim(), 'move-embedded-psalm-chorus');
+        addChange(operation, 'psalm.verses', document.psalm.verses.slice(1), 'remove-embedded-psalm-chorus-from-verses');
+      } else if (present(chorus) && normalized(chorus) === normalized(firstVerse)) {
+        addChange(operation, 'psalm.verses', document.psalm.verses.slice(1), 'remove-duplicated-psalm-chorus-from-verses');
+      }
+
+      const updatedFirstVerse = operation.document.psalm.verses?.[0];
+      if (!present(operation.document.psalm.bible) && /^\s*Пс\s+\S/iu.test(updatedFirstVerse ?? '')) {
+        addChange(operation, 'psalm.bible', updatedFirstVerse.trim(), 'move-embedded-psalm-bible');
+        addChange(operation, 'psalm.verses', operation.document.psalm.verses.slice(1), 'remove-embedded-psalm-bible-from-verses');
+      }
+      const cleanedVerses = cleanPsalmVerses(operation.document.psalm.verses);
+      if (JSON.stringify(cleanedVerses) !== JSON.stringify(operation.document.psalm.verses)) {
+        addChange(operation, 'psalm.verses', cleanedVerses, 'remove-parser-markers-from-psalm-verses');
+      }
+    }
 
     const sameSet = groups.get(readingSetKey(operation.original)) ?? [];
     for (const sectionName of textSectionNames(document)) {
@@ -330,14 +447,46 @@ function buildOperations(documents) {
       }
     }
 
+    if (EXACT_PSALM_DONOR_TARGETS.has(document.id)
+      && document.psalm && psalmPassageKey(document.psalm)) {
+      const currentVerses = operation.document.psalm?.verses;
+      const donor = documents.filter((item) => item.id !== document.id
+        && psalmPassageKey(item.psalm) === psalmPassageKey(document.psalm)
+        && cleanPsalmDonor(item.psalm)
+        && item.psalm.verses.length > (Array.isArray(currentVerses) ? currentVerses.length : 0))
+        .sort((left, right) => right.psalm.verses.length - left.psalm.verses.length)[0];
+      if (donor) {
+        addChange(operation, 'psalm.verses', donor.psalm.verses, 'fill-truncated-psalm-verses-from-exact-passage', donor.id);
+      }
+    }
+    if (PSALM_VERSE_OVERRIDES.has(document.id)) {
+      addChange(operation, 'psalm.verses', PSALM_VERSE_OVERRIDES.get(document.id), 'restore-curated-psalm-verses');
+    }
+
     if (document.alleluia) {
+      const cleanedVerse = cleanAcclamationVerse(document.alleluia.verse, document.alleluia.bible);
+      if (present(cleanedVerse) && cleanedVerse !== document.alleluia.verse) {
+        addChange(operation, 'alleluia.verse', cleanedVerse, 'remove-acclamation-wrapper-and-bible-prefix');
+      }
+      if (!Object.hasOwn(document.alleluia, 'bible')
+        || (document.alleluia.bible !== null && !present(document.alleluia.bible))) {
+        addChange(operation, 'alleluia.bible', null, 'nullable-nonbiblical-acclamation');
+      }
       if (!present(document.alleluia.bible) && present(document.alleluia.verse)) {
         const donor = documents.find((item) => normalized(item.alleluia?.verse) === normalized(document.alleluia.verse)
           && present(item.alleluia?.bible));
         if (donor) addChange(operation, 'alleluia.bible', donor.alleluia.bible, 'fill-alleluia-bible-from-exact-verse', donor.id);
       }
-    } else if (bestSetDonor?.alleluia) {
-      addChange(operation, 'alleluia', bestSetDonor.alleluia, 'fill-missing-alleluia-from-reading-set', bestSetDonor.id);
+    } else {
+      const coreDonor = documents.find((item) => item.id !== document.id
+        && coreReadingKey(item) === coreReadingKey(document)
+        && present(item.alleluia?.verse));
+      const alleluiaDonor = coreDonor ?? (bestSetDonor?.alleluia ? bestSetDonor : null);
+      if (alleluiaDonor?.alleluia) {
+        const donorAlleluia = structuredClone(alleluiaDonor.alleluia);
+        donorAlleluia.verse = cleanAcclamationVerse(donorAlleluia.verse, donorAlleluia.bible);
+        addChange(operation, 'alleluia', donorAlleluia, 'fill-missing-alleluia-from-reading-set', alleluiaDonor.id);
+      }
     }
   }
   return operations;
@@ -359,11 +508,12 @@ async function mapWithConcurrency(items, limit, mapper) {
 async function enrichFromSources(operations) {
   const verifiedOfficiallyEmptyFields = [];
   const candidates = operations.filter((operation) => operation.document._sourceUrl
-    && documentIssues(operation.document).some((issue) => (
-      issue.problem === 'non-lectionary-title'
-      || issue.problem === 'missing-required-field'
-      || issue.problem === 'missing-section'
-    )));
+    && (operation.changes.some((change) => /psalm-(?:chorus|verses|bible)/u.test(change.reason))
+      || documentIssues(operation.document).some((issue) => (
+        issue.problem === 'non-lectionary-title'
+        || issue.problem === 'missing-required-field'
+        || issue.problem === 'missing-section'
+      ))));
   const keys = [...new Map(candidates.map((operation) => [
     `${operation.document._sourceUrl}\u0000${normalizeReadingCycle(operation.document.year)}`,
     { url: operation.document._sourceUrl, year: operation.document.year },
@@ -414,12 +564,26 @@ async function enrichFromSources(operations) {
       }, 'fill-alleluia-section-from-source-url');
     }
     if (operation.document.psalm && source.psalm) {
+      const replacePsalmShape = operation.changes.some((change) => /psalm-(?:chorus|verses)/u.test(change.reason))
+        && present(source.psalm.chorus)
+        && Array.isArray(source.psalm.verses)
+        && source.psalm.verses.length;
       for (const field of ['bible', 'chorus', 'verses']) {
         const current = operation.document.psalm[field];
         const missing = field === 'verses' ? !Array.isArray(current) || !current.length : !present(current);
-        if (missing && (field === 'verses' ? Array.isArray(source.psalm[field]) && source.psalm[field].length : present(source.psalm[field]))) {
-          addChange(operation, `psalm.${field}`, source.psalm[field], 'fill-psalm-from-source-url');
+        const sourcePresent = field === 'verses'
+          ? Array.isArray(source.psalm[field]) && source.psalm[field].length
+          : present(source.psalm[field]);
+        if ((missing || replacePsalmShape) && sourcePresent) {
+          addChange(operation, `psalm.${field}`, source.psalm[field], replacePsalmShape
+            ? 'replace-malformed-psalm-from-source-url'
+            : 'fill-psalm-from-source-url');
         }
+      }
+      if (replacePsalmShape) {
+        addChange(operation, 'psalm.altChorus', source.psalm.altChorus ?? null, 'replace-malformed-psalm-from-source-url');
+      } else if (!present(operation.document.psalm.altChorus) && present(source.psalm.altChorus)) {
+        addChange(operation, 'psalm.altChorus', source.psalm.altChorus, 'fill-psalm-from-source-url');
       }
     }
   }
@@ -534,7 +698,9 @@ async function main() {
   if (!FROM_BACKUPS) await admin.app().delete();
 }
 
-main().catch((error) => {
-  console.error('parsedData content-integrity repair failed:', error);
-  process.exitCode = 1;
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    console.error('parsedData content-integrity repair failed:', error);
+    process.exitCode = 1;
+  });
+}

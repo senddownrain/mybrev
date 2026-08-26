@@ -50,6 +50,16 @@
       </v-list-item>
 
       <v-list-item
+        title="Святая Імша"
+        :to="{ name: 'PrayerView', params: { id: MASS_ORDER_PRAYER_ID } }"
+        :active="route.name === 'PrayerView' && route.params.id === MASS_ORDER_PRAYER_ID"
+      >
+        <template #prepend>
+          <PhChurch :size="22" weight="regular" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
+      <v-list-item
         title="Малітвы"
         :active="isPrayersPage && !selectedCategory"
         @click="showAllPrayers"
@@ -145,9 +155,10 @@ import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import {
   PhCross, PhBookOpenText, PhBookBookmark, PhHeart, PhBookmark,
-  PhGear, PhSignIn, PhSignOut, PhShieldCheck, PhX,
+  PhChurch, PhGear, PhSignIn, PhSignOut, PhShieldCheck, PhX,
 } from '@phosphor-icons/vue';
 
+const MASS_ORDER_PRAYER_ID = 'eMmCtxwyJ75ogmL5rwye';
 const { isDrawerOpen } = useAppBar();
 const auth = useAuthStore();
 const route = useRoute();

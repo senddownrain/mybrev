@@ -252,11 +252,14 @@ function loadDay() {
 }
 
 .date-dialog-card {
+  --calendar-accent: var(--nav-on-surface);
+  --calendar-on-accent: var(--nav-surface);
+  --calendar-accent-soft: color-mix(in srgb, var(--nav-on-surface) 9%, transparent);
   overflow: hidden !important;
   border: 1px solid var(--nav-border);
   border-radius: 28px !important;
   background:
-    radial-gradient(circle at 92% 0, rgba(var(--chrome-accent-rgb), 0.14), transparent 210px),
+    radial-gradient(circle at 92% 0, color-mix(in srgb, var(--nav-on-surface) 8%, transparent), transparent 210px),
     var(--overlay-surface) !important;
   color: var(--nav-on-surface);
   box-shadow: 0 22px 60px var(--nav-shadow) !important;
@@ -268,7 +271,7 @@ function loadDay() {
   padding: 20px 20px 9px !important;
 }
 .date-dialog-eyebrow {
-  color: var(--chrome-accent);
+  color: var(--calendar-accent);
   font-size: 0.7rem;
   font-weight: 800;
   line-height: 1.2;
@@ -300,8 +303,8 @@ function loadDay() {
 
 .select-date-btn {
   min-width: 112px;
-  background: var(--chrome-accent) !important;
-  color: var(--on-chrome-accent) !important;
+  background: var(--calendar-accent) !important;
+  color: var(--calendar-on-accent) !important;
   box-shadow: 0 5px 14px var(--nav-shadow);
 }
 

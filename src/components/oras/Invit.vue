@@ -38,31 +38,31 @@
 
                 <v-card class="ora" flat>
                     <v-card-text class="ora-text">
-                        <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
+                        <alternative-text v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" aria-label="Выбар антыфоны закліку" />
                         <br>
                         <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs1)"></div>
                         <br>
-                        <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
+                        <alternative-text v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
                         <br>
                         <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs2)"></div>
                         <br>
-                        <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
+                        <alternative-text v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
                         <br>
                         <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs3)"></div>
                         <br>
-                        <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
+                        <alternative-text v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
                         <br>
                         <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs4)"></div>
                         <br>
-                        <div class="ora-ant" v-html="displayedDay.invitatoriumAnt"></div>
+                        <alternative-text v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
                         <br v-if="displayedDay.invitatoriumPs5">
                         <div class="ora-psalm" v-if="displayedDay.invitatoriumPs5" v-html="formatPsalm(displayedDay.invitatoriumPs5)"></div>
                         <br v-if="displayedDay.invitatoriumPs5">
-                        <div class="ora-ant" v-if="displayedDay.invitatoriumPs5" v-html="displayedDay.invitatoriumAnt"></div>
+                        <alternative-text v-if="displayedDay.invitatoriumPs5" v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
                         <br v-if="displayedDay.invitatoriumPs6">
                         <div class="ora-psalm" v-if="displayedDay.invitatoriumPs6" v-html="formatPsalm(displayedDay.invitatoriumPs6)"></div>
                         <br v-if="displayedDay.invitatoriumPs6">
-                        <div class="ora-ant" v-if="displayedDay.invitatoriumPs6" v-html="displayedDay.invitatoriumAnt"></div>
+                        <alternative-text v-if="displayedDay.invitatoriumPs6" v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
                         <br v-if="displayedDay.invitatoriumPs6">
                     </v-card-text>
                 </v-card>
@@ -80,11 +80,13 @@ import { logger } from '@/utils/logger';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { getInvitatoriums } from '@/services/staticLiturgicalService';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
+import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
 
 const { day, pending } = useResolvedLiturgicalDay();
 const invitatoriums = ref([]);
 const selectedInvitatoriumId = ref('');
+const antOption = ref(0);
 const optionLabel = (item, index) => {
   const text = String(item.invitatoriumPs1 || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   return item.title || item.name || text.match(/Псальм\s+\d+(?:\s*\(\d+\))?/i)?.[0] || `Псальм ${index + 1}`;

@@ -215,16 +215,48 @@ function validatePsalm(document, issues) {
   } else if (section.altChorus !== null && !present(section.altChorus)) {
     issues.push({ section: 'psalm', field: 'altChorus', problem: 'invalid-nullable-field' });
   }
+  const firstVerse = Array.isArray(section.verses) ? section.verses[0] : null;
+  if (/^\s*\d+[а-яёіўa-z]?\.\s/iu.test(section.chorus ?? '')
+    && present(firstVerse) && !/^\s*\d+[а-яёіўa-z]?\.\s/iu.test(firstVerse)) {
+    issues.push({ section: 'psalm', field: 'chorus', problem: 'swapped-psalm-chorus' });
+  }
+  if (present(section.chorus) && normalizedLabel(section.chorus) === normalizedLabel(firstVerse)) {
+    issues.push({ section: 'psalm', field: 'verses', problem: 'duplicated-psalm-chorus-in-verses' });
+  }
+  if (!present(section.chorus) && /^\s*Рэфрэн:\s*\S/iu.test(firstVerse ?? '')) {
+    issues.push({ section: 'psalm', field: 'verses', problem: 'embedded-psalm-chorus' });
+  }
+  if (!present(section.bible) && /^\s*Пс\s+\S/iu.test(firstVerse ?? '')) {
+    issues.push({ section: 'psalm', field: 'verses', problem: 'embedded-psalm-bible' });
+  }
+  if (/Або:/iu.test(section.chorus ?? '')) {
+    issues.push({ section: 'psalm', field: 'chorus', problem: 'embedded-alternate-psalm-chorus' });
+  }
+  if (Array.isArray(section.verses) && section.verses.some((item) => (
+    /^(?:Год\s+[ІI1VХX]+|ПЕРШАЕ ЧЫТАННЕ|ДРУГОЕ ЧЫТАННЕ|РЭСПАНСАРЫЙНЫ ПСАЛЬМ|СПЕЎ ПЕРАД ЕВАНГЕЛЛЕМ|ЕВАНГЕЛЛЕ|Гэта слова Божае\.?|[аa]?РЭСПАНСАРЫЙНЫ ПСАЛЬМ|Рэфрэн:?\s*)$/iu.test(String(item ?? '').trim())
+    || /Рэфрэн:?\s*[аa]?\s*$/iu.test(String(item ?? '').trim())
+  ))) {
+    issues.push({ section: 'psalm', field: 'verses', problem: 'parser-marker-in-psalm-verses' });
+  }
 }
 
 function validateAlleluia(document, issues) {
   const section = document.alleluia;
   if (!section || typeof section !== 'object') {
+    const vigilPsalm = String(document?._variant ?? '').toLowerCase() === 'vigil'
+      && /^Аллелюя(?:,\s*аллелюя)*[.!]?$/iu.test(String(document?.psalm?.chorus ?? '').trim());
+    if (vigilPsalm) return;
     issues.push({ section: 'alleluia', field: null, problem: 'missing-section' });
     return;
   }
-  for (const field of ['verse', 'bible']) {
-    if (!present(section[field])) issues.push({ section: 'alleluia', field, problem: 'missing-required-field' });
+  if (!present(section.verse)) issues.push({ section: 'alleluia', field: 'verse', problem: 'missing-required-field' });
+  if (!hasOwn(section, 'bible')) {
+    issues.push({ section: 'alleluia', field: 'bible', problem: 'missing-nullable-field' });
+  } else if (section.bible !== null && !present(section.bible)) {
+    issues.push({ section: 'alleluia', field: 'bible', problem: 'invalid-nullable-field' });
+  }
+  if (/^Хвала\s+Табе,\s+слова\s+Божае\.|Хвала\s+Табе,\s+слова\s+Божае\.?\s*$/iu.test(section.verse ?? '')) {
+    issues.push({ section: 'alleluia', field: 'verse', problem: 'acclamation-wrapper-in-verse' });
   }
 }
 

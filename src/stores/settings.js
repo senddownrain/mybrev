@@ -20,6 +20,11 @@ export const useSettingsStore = defineStore('settings', () => {
   watch(currentTheme, (newTheme) => {
     theme.change(newTheme);
     localStorage.setItem('theme', newTheme);
+    // Keep the Android browser/status bar aligned with the selected appearance.
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) {
+      themeColor.setAttribute('content', newTheme === 'dark' ? '#12141C' : '#644B72');
+    }
   }, { immediate: true });
 
   watch(fontFamily, (newFont) => {

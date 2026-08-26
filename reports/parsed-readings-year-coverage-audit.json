@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-08-24T16:24:01.743Z",
+  "generatedAt": "2026-08-25T18:35:13.456Z",
   "state": "virtual canonical metadata with empty placeholders excluded",
   "counts": {
-    "parsedDocuments": 822,
-    "usableDocuments": 822,
+    "parsedDocuments": 815,
+    "usableDocuments": 815,
     "years": 6,
     "calendarDays": 2192,
     "coveredDays": 2192,

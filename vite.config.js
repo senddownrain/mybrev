@@ -55,8 +55,11 @@ export default defineConfig({
         name: 'Каталіцкі малітоўнік',
         short_name: 'Малітоўнік',
         description: 'Каталіцкі малітоўнік для штодзённай малітвы',
-        theme_color: '#F5A000',
-        background_color: '#FFF8E8',
+        // These colours are used by Android before the app JavaScript starts.
+        // They must stay static: the browser reads the manifest before it can
+        // determine the current liturgical period or the saved user theme.
+        theme_color: '#644B72',
+        background_color: '#FFFDF9',
         display: 'standalone',
         orientation: 'portrait',
         lang: 'be',

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import moment from '../src/utils/moment-be.js';
 import {
   calculateBaptismOfLordDate,
+  calculateChristmasPeriodWeek,
   calculateDateForContext,
   calculateHolyFamilyDate,
   computeLiturgicalContext,
@@ -81,6 +82,14 @@ test('uses actual weekdays, the December octave, and Christmas week 2 in January
   assert.equal(octaveTuesday.periodWeek, 1);
   assert.equal(octaveTuesday.dayOfWeek, 3);
 
+  const octaveEnd = computeLiturgicalContext(
+    moment('2027-01-01'),
+    optionsFor(2027, '2027-01-11'),
+    nextOpts,
+    {},
+  );
+  assert.equal(octaveEnd.periodWeek, 1);
+
   const secondWeek = computeLiturgicalContext(
     moment('2027-01-02'),
     optionsFor(2027, '2027-01-11'),
@@ -114,11 +123,20 @@ test('keeps early January in the Christmas season of the previous year', () => {
 
   const january = computeLiturgicalContext(moment('2027-01-09'), opts, nextOpts, {});
   assert.equal(january.periodType, 'christmas');
-  assert.equal(january.periodWeek, 2);
+  assert.equal(january.periodWeek, 3);
   assert.equal(january.dayOfWeek, 7);
 
   const ordinary = computeLiturgicalContext(moment('2027-01-11'), opts, nextOpts, {});
   assert.notEqual(ordinary.periodType, 'christmas');
+});
+
+test('advances the Christmas psalter from week 2 to week 3 on Sunday', () => {
+  assert.equal(calculateChristmasPeriodWeek(moment('2020-01-02')), 2);
+  assert.equal(calculateChristmasPeriodWeek(moment('2020-01-04')), 2);
+  assert.equal(calculateChristmasPeriodWeek(moment('2020-01-05')), 3);
+  assert.equal(calculateChristmasPeriodWeek(moment('2022-01-02')), 2);
+  assert.equal(calculateChristmasPeriodWeek(moment('2022-01-08')), 2);
+  assert.equal(calculateChristmasPeriodWeek(moment('2022-01-09')), 3);
 });
 
 test('ends Christmas with Baptism even when stored ordinary start is later', () => {
@@ -160,9 +178,11 @@ test('counts the final Ordinary Time weeks backward from Advent', () => {
 test('calculates Christmas week 2 inside January and rejects dates after Baptism', () => {
   const options = optionsFor(2026, '2026-01-11');
 
-  assert.equal(calculateDateForContext(2026, 'christmas', 2, 2, options, null), '2027-01-04');
   assert.equal(calculateDateForContext(2026, 'christmas', 2, 7, options, null), '2027-01-02');
-  assert.equal(calculateDateForContext(2026, 'christmas', 3, 1, options, null), null);
+  assert.equal(calculateDateForContext(2026, 'christmas', 2, 2, options, null), null);
+  assert.equal(calculateDateForContext(2019, 'christmas', 3, 1, optionsFor(2019, '2019-01-07'), null), '2020-01-05');
+  assert.equal(calculateDateForContext(2021, 'christmas', 3, 1, optionsFor(2021, '2021-01-11'), null), '2022-01-09');
+  assert.equal(calculateDateForContext(2026, 'christmas', 3, 2, options, null), '2027-01-04');
 });
 
 test('does not invent Ordinary Time weeks skipped by Lent and Easter', () => {
@@ -199,7 +219,7 @@ test('round-trips valid picker positions through calendar dates', () => {
     ['holyweek', 1, 5],
     ['easter', 4, 3],
     ['christmas', 1, 7],
-    ['christmas', 2, 2],
+    ['christmas', 2, 3],
   ];
 
   positions.forEach(([periodType, periodWeek, dayOfWeek]) => {

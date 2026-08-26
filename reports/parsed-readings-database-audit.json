@@ -1,29 +1,31 @@
 {
-  "generatedAt": "2026-08-24T16:23:31.298Z",
+  "generatedAt": "2026-08-25T18:37:16.326Z",
   "counts": {
-    "parsedDocuments": 822,
-    "fixedDayDocuments": 742,
+    "parsedDocuments": 815,
+    "fixedDayDocuments": 743,
     "parsedBySelectorType": {
       "date": 130,
-      "period": 657,
-      "feast": 35
+      "period": 654,
+      "feast": 31
     },
     "fixedDaysBySelectorType": {
       "date": 371,
       "period": 358,
-      "feast": 13
+      "feast": 13,
+      "(none)": 1
     },
     "mappings": {
-      "mapped": 822
+      "mapped": 814,
+      "unmapped": 1
     },
-    "canonicalIds": 822,
+    "canonicalIds": 814,
     "documentsNeedingMetadataChanges": 0,
     "documentsWithIdentityProblems": 0,
     "documentsWithSectionProblems": 0,
     "sectionProblems": {},
     "idCollisions": 0,
     "fixedDayDocumentsMapped": 521,
-    "fixedDayDocumentsUnmapped": 221
+    "fixedDayDocumentsUnmapped": 222
   },
   "coverage": {
     "fixedSelectorsWithoutParsedData": [
@@ -2793,11 +2795,53 @@
         "_rank": null,
         "_place": null,
         "title": null
+      },
+      {
+        "id": "office-for-dead",
+        "selector": "",
+        "_date": null,
+        "_feast": null,
+        "_periodType": null,
+        "_periodWeekNumber": null,
+        "_dayOfWeek": null,
+        "_rank": null,
+        "_place": null,
+        "title": "Афіцый за памерлых"
       }
     ]
   },
   "idCollisions": [],
-  "unmapped": [],
+  "unmapped": [
+    {
+      "id": "christmas-12-01",
+      "selector": "date:12.01",
+      "canonicalSelector": "date:12.01",
+      "mapping": "unmapped",
+      "proposedId": null,
+      "idMatches": false,
+      "metadataChanges": {},
+      "candidates": [],
+      "linkedDayIds": [],
+      "identityProblems": [],
+      "sectionProblems": [],
+      "contentHash": "43d5b469850dad37f953abb812b0b34f81d52948ed826d52e1853d927d2da72b",
+      "qualityScore": 53,
+      "sections": [
+        "reading1",
+        "psalm",
+        "alleluia",
+        "gospel"
+      ],
+      "source": {
+        "title": "12 студзеня — будзень",
+        "category": null,
+        "url": "https://catholic.by/3/liturgy/lectionary/bn/4574-12-studzenya-budzen",
+        "year": null,
+        "_rank": null,
+        "_place": null
+      }
+    }
+  ],
   "ambiguous": [],
   "identityIssues": [],
   "fieldIssues": [],

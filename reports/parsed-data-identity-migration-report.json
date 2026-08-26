@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-08-24T16:24:18.009Z",
-  "auditGeneratedAt": "2026-08-24T16:23:31.298Z",
+  "generatedAt": "2026-08-25T18:37:30.629Z",
+  "auditGeneratedAt": "2026-08-25T18:37:16.326Z",
   "mode": "dry-run",
   "stats": {
-    "auditDocuments": 822,
+    "auditDocuments": 815,
     "mappedMigrationCandidates": 0,
     "skippedCollisionDocuments": 0,
     "plannedOperations": 0,

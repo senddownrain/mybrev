@@ -298,6 +298,7 @@ const nextMonth = () => {
 .custom-date-picker {
   width: min(100%, 390px);
   min-width: 300px;
+  box-sizing: border-box;
   padding: 6px 16px 18px;
   color: var(--nav-on-surface);
 }
@@ -311,9 +312,9 @@ const nextMonth = () => {
 }
 
 .calendar-period {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 82px;
   align-items: center;
-  justify-content: center;
   gap: 6px;
   min-width: 0;
 }
@@ -395,16 +396,16 @@ const nextMonth = () => {
 }
 
 .day-btn.is-selected {
-  color: var(--on-chrome-accent) !important;
-  background: var(--chrome-accent);
+  color: var(--calendar-on-accent, var(--nav-surface)) !important;
+  background: var(--calendar-accent, var(--nav-on-surface));
   box-shadow: 0 6px 16px var(--nav-shadow);
   font-weight: 700;
 }
 
 .day-btn.is-today:not(.is-selected) {
-  color: var(--chrome-accent);
-  background: rgba(var(--chrome-accent-rgb), 0.1);
-  box-shadow: inset 0 0 0 1.5px var(--chrome-accent);
+  color: var(--calendar-accent, var(--nav-on-surface));
+  background: var(--calendar-accent-soft, var(--nav-active));
+  box-shadow: inset 0 0 0 1.5px var(--calendar-accent, var(--nav-on-surface));
   font-weight: 700;
 }
 
@@ -418,17 +419,10 @@ const nextMonth = () => {
 
 .month-select,
 .year-select {
-  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
   margin-bottom: 0 !important;
   text-align: center;
-}
-
-.month-select {
-  width: 132px;
-}
-
-.year-select {
-  width: 82px;
 }
 
 .month-select :deep(.v-field),
@@ -450,6 +444,7 @@ const nextMonth = () => {
 
 .month-select :deep(.v-select__selection),
 .year-select :deep(.v-select__selection) {
+  min-width: 0;
   color: var(--nav-on-surface);
   font-size: 1rem !important;
   font-weight: 760 !important;
@@ -476,6 +471,8 @@ const nextMonth = () => {
 
 .month-select :deep(.v-select__selection-text),
 .year-select :deep(.v-select__selection-text) {
+  min-width: 0;
+  overflow: visible;
   text-align: center !important;
   width: 100% !important;
   display: flex !important;
@@ -489,20 +486,26 @@ const nextMonth = () => {
   padding-inline-start: 2px;
 }
 
-@media (max-width: 360px) {
+@media (max-width: 400px) {
   .custom-date-picker {
-    min-width: 280px;
-    padding-inline: 10px;
+    min-width: 0;
+    padding-inline: 12px;
   }
 
   .calendar-header {
-    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+    gap: 6px;
+  }
+
+  .calendar-period {
+    grid-template-columns: minmax(0, 1fr) 80px;
+    gap: 4px;
   }
 
   .month-nav-btn {
-    width: 44px !important;
-    min-width: 44px !important;
-    height: 44px !important;
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
   }
 
   .month-select :deep(.v-field),
@@ -514,14 +517,6 @@ const nextMonth = () => {
   .month-select :deep(.v-field__input),
   .year-select :deep(.v-field__input) {
     min-height: 42px !important;
-  }
-
-  .month-select {
-    width: 120px;
-  }
-
-  .year-select {
-    width: 76px;
   }
 
   .day-btn {

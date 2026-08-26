@@ -19,6 +19,7 @@ const IDENTITY_FIELDS = new Set([
 const CHRISTMAS_DATE_EXCEPTION_EXCLUSIONS = new Set([
   '25.12',
   '26.12',
+  '27.12',
   '28.12',
   '01.01',
   '06.01',
@@ -167,20 +168,11 @@ export function applySeasonalWeekdayAntiphons(day, dayOfWeek) {
   return resolved;
 }
 
-function normalizedPlaces(value) {
-  return (Array.isArray(value) ? value : [value])
-    .map((item) => String(item ?? '').trim().toLowerCase())
-    .filter(Boolean)
-    .sort()
-    .join(',');
-}
-
 export function getFixedCelebrationKey(day) {
   return [
     day?._date,
     String(day?._feastName || day?._title || '').trim().toLowerCase(),
     String(day?._rank || day?._feastType || '').trim().toLowerCase(),
-    normalizedPlaces(day?._place),
   ].join('|');
 }
 

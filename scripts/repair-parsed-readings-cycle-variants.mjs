@@ -17,11 +17,14 @@ const DUPLICATE_PAIRS = [
   ['feast-eastersunday--A', 'holyweek-w1-d7--A'],
   ['feast-eastersunday--B', 'holyweek-w1-d7--B'],
   ['feast-eastersunday--C', 'holyweek-w1-d7--C'],
+  ['ordinary-w5-d6', 'easter-w1-d6'],
+  ['ordinary-w9-d1', 'ordinary-w9-d1--B'],
 ];
 const ASCENSION_BASE_ID = 'feast-ascension';
 const ASCENSION_A_ID = 'feast-ascension--A';
 const VIGIL_BASE_ID = 'holyweek-w1-d7--vigil';
-const VIGIL_CYCLE_IDS = ['holyweek-w1-d7--A', 'holyweek-w1-d7--B', 'holyweek-w1-d7--C'];
+const VIGIL_LEGACY_CYCLE_IDS = ['holyweek-w1-d7--A', 'holyweek-w1-d7--B', 'holyweek-w1-d7--C'];
+const VIGIL_CANONICAL_CYCLE_IDS = ['holyweek-w1-d7--A-vigil', 'holyweek-w1-d7--B-vigil', 'holyweek-w1-d7--C-vigil'];
 const PALM_SOURCE_ID = 'feast-palmsunday';
 const PALM_TARGET_ID = 'feast-palmsunday--procession';
 
@@ -81,12 +84,16 @@ async function main() {
   const palmSource = byId.get(PALM_SOURCE_ID);
   const palmTarget = byId.get(PALM_TARGET_ID);
   const palmMoveSafe = Boolean(palmSource && !palmTarget);
+  const palmAlreadyApplied = Boolean(!palmSource && palmTarget);
   const ascensionBase = byId.get(ASCENSION_BASE_ID);
   const ascensionA = byId.get(ASCENSION_A_ID);
   const ascensionMergeSafe = Boolean(ascensionBase && ascensionA);
+  const ascensionAlreadyApplied = Boolean(!ascensionBase && ascensionA);
   const vigilBase = byId.get(VIGIL_BASE_ID);
-  const vigilTargets = VIGIL_CYCLE_IDS.map((id) => byId.get(id));
+  const vigilTargets = VIGIL_LEGACY_CYCLE_IDS.map((id) => byId.get(id));
+  const canonicalVigilTargets = VIGIL_CANONICAL_CYCLE_IDS.map((id) => byId.get(id));
   const vigilMergeSafe = Boolean(vigilBase && vigilTargets.every(Boolean));
+  const vigilAlreadyApplied = Boolean(!vigilBase && canonicalVigilTargets.every(Boolean));
 
   const report = {
     generatedAt: new Date().toISOString(),
@@ -98,7 +105,7 @@ async function main() {
       unsafeDuplicatePairs: unsafeDuplicates.length,
       palmProcessionMovePlanned: Number(palmMoveSafe),
       ascensionBaseMergePlanned: Number(ascensionMergeSafe),
-      vigilCycleMergesPlanned: vigilMergeSafe ? VIGIL_CYCLE_IDS.length : 0,
+      vigilCycleMergesPlanned: vigilMergeSafe ? VIGIL_LEGACY_CYCLE_IDS.length : 0,
       appliedDeletes: 0,
       appliedMoves: 0,
       appliedMerges: 0,
@@ -111,21 +118,27 @@ async function main() {
       sourceExists: Boolean(palmSource),
       targetExists: Boolean(palmTarget),
       safe: palmMoveSafe,
+      alreadyApplied: palmAlreadyApplied,
     },
     ascensionMerge: {
       sourceId: ASCENSION_BASE_ID,
       targetId: ASCENSION_A_ID,
       safe: ascensionMergeSafe,
+      alreadyApplied: ascensionAlreadyApplied,
     },
     vigilMerge: {
       sourceId: VIGIL_BASE_ID,
-      targetIds: VIGIL_CYCLE_IDS,
+      targetIds: vigilAlreadyApplied ? VIGIL_CANONICAL_CYCLE_IDS : VIGIL_LEGACY_CYCLE_IDS,
       safe: vigilMergeSafe,
+      alreadyApplied: vigilAlreadyApplied,
     },
   };
 
   if (APPLY) {
-    if (unsafeDuplicates.length || !palmMoveSafe || !ascensionMergeSafe || !vigilMergeSafe) {
+    if (unsafeDuplicates.length
+      || (!palmMoveSafe && !palmAlreadyApplied)
+      || (!ascensionMergeSafe && !ascensionAlreadyApplied)
+      || (!vigilMergeSafe && !vigilAlreadyApplied)) {
       throw new Error('Cycle-variant preflight failed; no writes were performed');
     }
     const affectedIds = [...new Set([
@@ -134,50 +147,57 @@ async function main() {
       ASCENSION_BASE_ID,
       ASCENSION_A_ID,
       VIGIL_BASE_ID,
-      ...VIGIL_CYCLE_IDS,
+      ...VIGIL_LEGACY_CYCLE_IDS,
+      ...VIGIL_CANONICAL_CYCLE_IDS,
     ])];
     const backupPath = path.resolve('reports/backups', `parsedData-before-cycle-variant-repair-${timestamp()}.json`);
     await mkdir(path.dirname(backupPath), { recursive: true });
     await writeFile(backupPath, `${JSON.stringify({
       generatedAt: new Date().toISOString(),
       collection: 'parsedData',
-      documents: affectedIds.map((id) => byId.get(id)),
+      documents: affectedIds.map((id) => byId.get(id)).filter(Boolean),
     }, null, 2)}\n`, 'utf8');
     const batch = admin.firestore().batch();
     const collection = admin.firestore().collection('parsedData');
     for (const item of safeDuplicates) batch.delete(collection.doc(item.duplicateId));
 
-    const ascensionData = structuredClone(ascensionBase);
-    delete ascensionData.id;
-    ascensionData.year = 'A';
-    ascensionData._feast = 'feast-ascension';
-    ascensionData._dayId = 'feast-ascension';
-    batch.set(collection.doc(ASCENSION_A_ID), ascensionData);
-    batch.delete(collection.doc(ASCENSION_BASE_ID));
-
-    for (const [index, targetId] of VIGIL_CYCLE_IDS.entries()) {
-      const cycleData = structuredClone(vigilBase);
-      delete cycleData.id;
-      cycleData.year = ['A', 'B', 'C'][index];
-      delete cycleData._variant;
-      cycleData._periodType = 'holyweek';
-      cycleData._periodWeekNumber = 1;
-      cycleData._dayOfWeek = 7;
-      cycleData._dayId = 'holyweek-w1-d7';
-      cycleData.gospel = structuredClone(vigilTargets[index].gospel);
-      batch.set(collection.doc(targetId), cycleData);
+    if (ascensionMergeSafe) {
+      const ascensionData = structuredClone(ascensionBase);
+      delete ascensionData.id;
+      ascensionData.year = 'A';
+      ascensionData._feast = 'feast-ascension';
+      ascensionData._dayId = 'feast-ascension';
+      batch.set(collection.doc(ASCENSION_A_ID), ascensionData);
+      batch.delete(collection.doc(ASCENSION_BASE_ID));
     }
-    batch.delete(collection.doc(VIGIL_BASE_ID));
 
-    const palmData = structuredClone(palmSource);
-    delete palmData.id;
-    palmData._variant = 'procession';
-    batch.create(collection.doc(PALM_TARGET_ID), palmData);
-    batch.delete(collection.doc(PALM_SOURCE_ID));
+    if (vigilMergeSafe) {
+      for (const [index, targetId] of VIGIL_LEGACY_CYCLE_IDS.entries()) {
+        const cycleData = structuredClone(vigilBase);
+        delete cycleData.id;
+        cycleData.year = ['A', 'B', 'C'][index];
+        delete cycleData._variant;
+        cycleData._periodType = 'holyweek';
+        cycleData._periodWeekNumber = 1;
+        cycleData._dayOfWeek = 7;
+        cycleData._dayId = 'holyweek-w1-d7';
+        cycleData.gospel = structuredClone(vigilTargets[index].gospel);
+        batch.set(collection.doc(targetId), cycleData);
+      }
+      batch.delete(collection.doc(VIGIL_BASE_ID));
+    }
+
+    if (palmMoveSafe) {
+      const palmData = structuredClone(palmSource);
+      delete palmData.id;
+      palmData._variant = 'procession';
+      batch.create(collection.doc(PALM_TARGET_ID), palmData);
+      batch.delete(collection.doc(PALM_SOURCE_ID));
+    }
     await batch.commit();
     report.counts.appliedDeletes = safeDuplicates.length;
-    report.counts.appliedMoves = 1;
-    report.counts.appliedMerges = 4;
+    report.counts.appliedMoves = Number(palmMoveSafe);
+    report.counts.appliedMerges = Number(ascensionMergeSafe) + (vigilMergeSafe ? 3 : 0);
     report.backupPath = backupPath;
   }
 

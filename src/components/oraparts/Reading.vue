@@ -2,7 +2,7 @@
     <div>
         <v-card class="ora" flat>
             <v-card-text class="ora-text">
-                <alternative-text :text="text" aria-label="Выбар чытання або рэспансорыя" />
+                <alternative-text :text="text" kind="reading" aria-label="Выбар чытання або рэспансорыя" />
             </v-card-text>
         </v-card>
     </div>
