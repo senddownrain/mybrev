@@ -17,6 +17,18 @@ test('celebration themes follow rank and red exceptions', () => {
   assert.equal(getLiturgicalCelebrationThemeKey({ _rank: 'solemnitas' }), 'gold');
   assert.equal(getLiturgicalCelebrationThemeKey({ _rank: 'festum' }), 'white');
   assert.equal(getLiturgicalCelebrationThemeKey({
+    _rank: 'memoria',
+    _templates: ['blessed-virgin-mary'],
+  }), 'marian');
+  assert.equal(getLiturgicalCelebrationThemeKey({
+    _rank: 'festum',
+    _templates: ['blessed-virgin-mary'],
+  }), 'marian');
+  assert.equal(getLiturgicalCelebrationThemeKey({
+    _rank: 'solemnitas',
+    _templates: ['blessed-virgin-mary'],
+  }), 'gold');
+  assert.equal(getLiturgicalCelebrationThemeKey({
     _rank: 'festum',
     _feastName: 'Св. Стэфана, першамучаніка',
   }), 'red');

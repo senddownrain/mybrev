@@ -95,6 +95,7 @@ export const LITURGICAL_THEME_MAP = Object.freeze({
   gold: { color: '#b88719', rgb: '218, 174, 70' },
   white: { color: '#8f7d52', rgb: '246, 243, 234' },
   red: { color: '#b33a3a', rgb: '179, 58, 58' },
+  marian: { color: '#5e9ec5', rgb: '94, 158, 197' },
   requiem: { color: '#67546b', rgb: '103, 84, 107' },
   default: { color: '#55707c', rgb: '85, 112, 124' },
 });
@@ -117,6 +118,8 @@ const RED_FEAST_CODES = new Set([
   'heartofjesus',
 ]);
 
+const MARIAN_TEMPLATE = 'blessed-virgin-mary';
+
 const normalizeRank = (day) => String(day?._rank || day?._feastType || day?.rank || '')
   .trim()
   .toLocaleLowerCase('be-BY');
@@ -125,6 +128,9 @@ const normalizeFeastCode = (day) => String(day?._feast || '')
   .trim()
   .toLowerCase()
   .replace(/^feast-/, '');
+
+const hasMarianTemplate = (day) => (Array.isArray(day?._templates) ? day._templates : [])
+  .some((template) => String(template).trim().toLowerCase() === MARIAN_TEMPLATE);
 
 const celebrationText = (day) => [
   day?._feastName,
@@ -162,6 +168,7 @@ export function getLiturgicalCelebrationThemeKey(day) {
   if (isMartyr || isApostle || isRedSolemnity) return 'red';
   const rank = getLiturgicalCelebrationRank(day);
   if (rank === 'solemnity') return 'gold';
+  if (normalizeRank(day) && hasMarianTemplate(day)) return 'marian';
   if (rank === 'feast') return 'white';
   return '';
 }

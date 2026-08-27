@@ -16,14 +16,20 @@ function parseArgs(argv) {
     output: DEFAULT_BACKUP_OUTPUT,
     serviceAccount: DEFAULT_SERVICE_ACCOUNT,
     projectId: null,
+    collections: [],
+    outputExplicit: false,
     help: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
-    if (arg === '--output') options.output = path.resolve(argv[++index]);
+    if (arg === '--output') {
+      options.output = path.resolve(argv[++index]);
+      options.outputExplicit = true;
+    }
     else if (arg === '--service-account') options.serviceAccount = path.resolve(argv[++index]);
     else if (arg === '--project-id') options.projectId = argv[++index];
+    else if (arg === '--collection') options.collections.push(argv[++index]);
     else if (arg === '--help' || arg === '-h') options.help = true;
     else throw new Error(`Unknown argument: ${arg}`);
   }
@@ -41,6 +47,7 @@ Options:
   --output <dir>            Override output directory
   --service-account <file>  Firebase service-account JSON
   --project-id <id>         Override Firebase project id
+  --collection <path>       Export only this top-level collection (repeatable; requires --output)
   --help                    Show this message
 
 This creates a private, complete backup under backups/ by default.
@@ -81,7 +88,7 @@ function sha256(content) {
   return createHash('sha256').update(content).digest('hex');
 }
 
-async function exportCollection(collectionRef, output, manifestCollections) {
+async function exportCollection(collectionRef, output, manifestCollections, { includeSubcollections = true } = {}) {
   const snapshot = await collectionRef.get();
   const documents = snapshot.docs.map((document) => ({
     id: document.id,
@@ -104,10 +111,12 @@ async function exportCollection(collectionRef, output, manifestCollections) {
   };
   console.log(`${collectionRef.path}: ${documents.length} documents`);
 
-  for (const document of snapshot.docs) {
-    const subcollections = await document.ref.listCollections();
-    for (const subcollection of subcollections) {
-      await exportCollection(subcollection, output, manifestCollections);
+  if (includeSubcollections) {
+    for (const document of snapshot.docs) {
+      const subcollections = await document.ref.listCollections();
+      for (const subcollection of subcollections) {
+        await exportCollection(subcollection, output, manifestCollections);
+      }
     }
   }
 }
@@ -127,6 +136,9 @@ async function main() {
     return;
   }
   assertSafeOutput(options.output);
+  if (options.collections.length && !options.outputExplicit) {
+    throw new Error('A filtered snapshot requires an explicit --output directory');
+  }
 
   const serviceAccount = JSON.parse(await readFile(options.serviceAccount, 'utf8'));
   const app = admin.initializeApp({
@@ -136,14 +148,18 @@ async function main() {
 
   try {
     const db = admin.firestore(app);
-    const topLevelCollections = await db.listCollections();
+    const topLevelCollections = options.collections.length
+      ? [...new Set(options.collections)].map((collectionPath) => db.collection(collectionPath))
+      : await db.listCollections();
     const tempOutput = `${options.output}.tmp`;
     await rm(tempOutput, { recursive: true, force: true });
     await mkdir(tempOutput, { recursive: true });
 
     const collections = {};
     for (const collectionRef of topLevelCollections.sort((a, b) => a.id.localeCompare(b.id))) {
-      await exportCollection(collectionRef, tempOutput, collections);
+      await exportCollection(collectionRef, tempOutput, collections, {
+        includeSubcollections: !options.collections.length,
+      });
     }
 
     const exportedAt = new Date().toISOString();
@@ -151,7 +167,8 @@ async function main() {
       schemaVersion: SNAPSHOT_SCHEMA_VERSION,
       snapshotVersion: exportedAt.replace(/[-:.TZ]/g, ''),
       projectId: options.projectId || serviceAccount.project_id,
-      scope: 'complete-backup',
+      scope: options.collections.length ? 'selected-collections' : 'complete-backup',
+      selectedCollections: options.collections.length ? [...new Set(options.collections)].sort() : undefined,
       exportedAt,
       collections,
       totalDocuments: Object.values(collections)
