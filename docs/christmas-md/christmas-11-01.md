@@ -260,20 +260,20 @@ null
 
 ## sext1Ant1
 
-```text
-
+```html
+<p><span style="color: #ff0000;">Ант.</span> Таямніца, схаваная ад вякоў і ад пакаленняў, <span style="color: #ff0000;">*</span> цяпер аб&rsquo;явілася.</p>
 ```
 
 ## sext1Ant2
 
-```text
-
+```html
+<p><span style="color: #ff0000;">Ант.</span> Прыйшоўшы, Хрыстус абвясціў спакой вам, якія далёка, <span style="color: #ff0000;">*</span> і спакой тым, якія блізка.</p>
 ```
 
 ## sext1Ant3
 
-```text
-
+```html
+<p><span style="color: #ff0000;">Ант.</span> Я зраблю цябе святлом народаў, <span style="color: #ff0000;">*</span> каб збаўленне Маё дасягнула межаў зямлі.</p>
 ```
 
 ## sext1Ps1

@@ -188,7 +188,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCollection, useFirestore } from 'vuefire'
-import { collection, query, orderBy } from 'firebase/firestore'
+import { collection } from 'firebase/firestore'
+import { LITURGICAL_DAYS_COLLECTION } from '@/constants/days'
 
 // DayEditPage removed - using DayEditor.vue instead
 
@@ -210,7 +211,7 @@ function edit(item) {
 }
 
 const db = useFirestore()
-const days = useCollection(query(collection(db, 'days'), orderBy('_weekNum')))
+const days = useCollection(collection(db, LITURGICAL_DAYS_COLLECTION))
 
 function updateItem() {
     dayStore.updateDay(currentItem.value)

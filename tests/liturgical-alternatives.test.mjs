@@ -74,6 +74,19 @@ test('recognizes structured choices and preserves shared content and suffixes', 
   assert.ok(options.every(({ html }) => html.includes('Першае чытанне')));
 });
 
+test('does not split a reading at the narrative phrase "У тыя дні"', () => {
+  const holyInnocents = [
+    '<p><span>Першае чытанне</span><br />Кніга Зыходу<br />1, 8-16. 22</p>',
+    '<p><em>Забойства габрэйскіх немаўлятаў у Егіпце</em></p>',
+    '<p>У тыя дні: Над Егіптам пачаў валадарыць новы кароль.</p>',
+    '<p><span>Рэспансорый</span><br />Больш не будзе чутны голас плачу.</p>',
+  ].join('');
+
+  const options = getLiturgicalAlternatives(holyInnocents, 'reading');
+  assert.equal(options.length, 1);
+  assert.match(options[0].html, /У тыя дні/u);
+});
+
 test('all common-template rule-separated fields become selectable with short safe titles', () => {
   for (const filename of fs.readdirSync(templatesDirectory).filter((name) => name.endsWith('.json'))) {
     const template = loadTemplate(filename);
@@ -101,13 +114,54 @@ test('formats intercessions as intro, highlighted refrain and alternating petiti
   assert.ok(root.querySelector('.intercessions__response'));
 });
 
-test('formats line-broken intercessions with an indented continuation', () => {
+test('normalizes line-broken intercessions into the standard petition and response paragraphs', () => {
   const dedication = loadTemplate('church-dedication.json');
   const [option] = getLiturgicalAlternatives(dedication.laudesInter, 'intercession');
   const html = formatIntercessions(option.html);
   const root = parse(html);
 
   assert.equal(root.querySelector('.intercessions__refrain')?.text.trim(), 'Гэта Божы дом і брама нябёсаў.');
-  assert.ok(root.querySelector('.intercessions__continuation'));
+  assert.ok(root.querySelector('.intercessions__response'));
+  assert.equal(root.querySelector('.intercessions__continuation'), null);
   assert.ok(root.querySelector('.intercessions__conclusion'));
+});
+
+test('gives all supported intercession source shapes the same paragraph structure', () => {
+  const lineBroken = [
+    '<p>Молімся да Бога:<br><em>Пане, ахоўвай свой народ.</em></p>',
+    '<p>Божа, захавай нас,<br><span style="color: #ff0000;">–</span>&nbsp;ахоўвай свой Касцёл.</p>',
+  ].join('');
+  const separateWithDash = [
+    '<p>Разам вызнаём Збаўцу і клічам:</p>',
+    '<p>Прыйдзі, Пане Езу.</p>',
+    '<p>Пане Езу, Ты нас палюбіў,</p>',
+    '<p>–даруй нам нашыя грахі.</p>',
+  ].join('');
+  const separateWithoutDash = [
+    '<p>Узнясём нашыя малітвы:</p>',
+    '<p><em>Пане, выслухай нас.</em></p>',
+    '<p>Езу, Сонца справядлівасці,</p>',
+    '<p>дапамажы нам жыць у Тваім святле.</p>',
+  ].join('');
+
+  for (const source of [lineBroken, separateWithDash, separateWithoutDash]) {
+    const root = parse(formatIntercessions(source));
+    const paragraphs = root.querySelectorAll('p');
+
+    assert.equal(paragraphs.length, 4);
+    assert.ok(paragraphs[0].classList.contains('intercessions__intro'));
+    assert.ok(paragraphs[1].classList.contains('intercessions__refrain'));
+    assert.ok(paragraphs[2].classList.contains('intercessions__petition'));
+    assert.ok(paragraphs[3].classList.contains('intercessions__response'));
+  }
+
+  const dashedResponse = parse(formatIntercessions(separateWithDash))
+    .querySelector('.intercessions__response');
+  assert.equal(dashedResponse.querySelector('.intercessions__marker')?.text, '–');
+  assert.match(dashedResponse.innerHTML, /<\/span>&nbsp;даруй/u);
+
+  const initialResponse = parse(formatIntercessions(separateWithoutDash))
+    .querySelector('.intercessions__response');
+  assert.equal(initialResponse.querySelector('.intercessions__marker'), null);
+  assert.match(initialResponse.text, /^дапамажы/u);
 });

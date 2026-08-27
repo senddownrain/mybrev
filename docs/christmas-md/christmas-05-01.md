@@ -86,37 +86,37 @@ null
 ## officeOfReadingsAnt1
 
 ```text
-
+from-day
 ```
 
 ## officeOfReadingsAnt2
 
 ```text
-
+from-day
 ```
 
 ## officeOfReadingsAnt3
 
 ```text
-
+from-day
 ```
 
 ## officeOfReadingsPs1
 
 ```text
-
+from-day
 ```
 
 ## officeOfReadingsPs2
 
 ```text
-
+from-day
 ```
 
 ## officeOfReadingsPs3
 
 ```text
-
+from-day
 ```
 
 ## officeOfReadingsVers
@@ -158,7 +158,7 @@ null
 ## officeOfReadingsTeDeum
 
 ```text
-
+from-day
 ```
 
 ## officeOfReadingsPr
@@ -184,37 +184,37 @@ null
 ## laudesAnt1
 
 ```text
-
+from-day
 ```
 
 ## laudesAnt2
 
 ```text
-
+from-day
 ```
 
 ## laudesAnt3
 
 ```text
-
+from-day
 ```
 
 ## laudesPs1
 
 ```text
-
+from-day
 ```
 
 ## laudesPs2
 
 ```text
-
+from-day
 ```
 
 ## laudesPs3
 
 ```text
-
+from-day
 ```
 
 ## laudesR
@@ -259,7 +259,7 @@ null
 ## sext1Ant1
 
 ```text
-
+from-day
 ```
 
 ## sext1Ant2
@@ -277,19 +277,19 @@ null
 ## sext1Ps1
 
 ```text
-
+from-day
 ```
 
 ## sext1Ps2
 
 ```text
-
+from-day
 ```
 
 ## sext1Ps3
 
 ```text
-
+from-day
 ```
 
 ## sext1R
@@ -318,7 +318,7 @@ null
 ## sext2Ant1
 
 ```text
-
+from-day
 ```
 
 ## sext2Ant2
@@ -336,19 +336,19 @@ null
 ## sext2Ps1
 
 ```text
-
+from-day
 ```
 
 ## sext2Ps2
 
 ```text
-
+from-day
 ```
 
 ## sext2Ps3
 
 ```text
-
+from-day
 ```
 
 ## sext2R
@@ -377,7 +377,7 @@ null
 ## sext3Ant1
 
 ```text
-
+from-day
 ```
 
 ## sext3Ant2
@@ -395,19 +395,19 @@ null
 ## sext3Ps1
 
 ```text
-
+from-day
 ```
 
 ## sext3Ps2
 
 ```text
-
+from-day
 ```
 
 ## sext3Ps3
 
 ```text
-
+from-day
 ```
 
 ## sext3R

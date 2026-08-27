@@ -111,6 +111,52 @@ export function normalizePrayerMarkdown(value = '') {
     .trim();
 }
 
+function repairStandaloneStrongMarkers(lines) {
+  const repaired = [];
+  let changed = false;
+  let index = 0;
+
+  while (index < lines.length) {
+    if (lines[index].trim() !== '**') {
+      repaired.push(lines[index]);
+      index += 1;
+      continue;
+    }
+
+    const closingIndex = lines.findIndex((line, candidateIndex) => (
+      candidateIndex > index && line.trim() === '**'
+    ));
+    const content = closingIndex > index ? lines.slice(index + 1, closingIndex) : [];
+    const hasText = content.some((line) => line.trim());
+    const containsList = content.some((line) => /^\s*(?:[-+*]|\d+[.)])\s+/.test(line));
+
+    if (closingIndex === -1 || !hasText || containsList) {
+      repaired.push(lines[index]);
+      index += 1;
+      continue;
+    }
+
+    let paragraphStart = -1;
+    content.forEach((line, contentIndex) => {
+      if (line.trim() && paragraphStart === -1) paragraphStart = contentIndex;
+      const paragraphEnds = paragraphStart !== -1
+        && (!line.trim() || contentIndex === content.length - 1);
+      if (!paragraphEnds) return;
+
+      const paragraphEnd = line.trim() ? contentIndex : contentIndex - 1;
+      content[paragraphStart] = content[paragraphStart].replace(/^(\s*)/, '$1**');
+      content[paragraphEnd] = `${content[paragraphEnd]}**`;
+      paragraphStart = -1;
+    });
+
+    repaired.push(...content);
+    changed = true;
+    index = closingIndex + 1;
+  }
+
+  return { lines: repaired, changed };
+}
+
 export function autoFixPrayerMarkdown(value = '') {
   const original = String(value ?? '');
   const fixes = [];
@@ -142,11 +188,14 @@ export function autoFixPrayerMarkdown(value = '') {
   });
   if (normalizedLines.join('\n') !== source) fixes.push('выпраўлены загалоўкі, спісы і маркеры рубрык');
 
+  const strongRepair = repairStandaloneStrongMarkers(normalizedLines);
+  if (strongRepair.changed) fixes.push('выпраўлены парныя маркеры тлустага тэксту');
+
   const balancedLines = [];
   let rubricOpen = false;
   let rubricPairsFixed = false;
 
-  normalizedLines.forEach((line) => {
+  strongRepair.lines.forEach((line) => {
     const marker = line.trim();
     if (marker === ':::rubric') {
       if (rubricOpen) {

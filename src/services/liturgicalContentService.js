@@ -46,15 +46,16 @@ async function queryDocuments(queries) {
   return [...result.values()];
 }
 
-function buildPeriodTitle(context) {
+function buildPeriodTitle(context, date) {
   return formatLiturgicalPeriodTitle({
     periodType: context.periodType,
     periodWeek: context.periodWeek,
     dayOfWeek: context.dayOfWeek,
+    date,
   });
 }
 
-function buildDayTitle(day, context) {
+function buildDayTitle(day, context, date) {
   const hasCelebrationIdentity = day?._feast || day?._rank || day?._feastType;
   // Seasonal date documents were imported with headings from a particular
   // source year (for example a 21 December document may say "IV Sunday").
@@ -71,10 +72,10 @@ function buildDayTitle(day, context) {
       periodType: day._periodType,
       periodWeek: day._periodWeekNumber ?? context.periodWeek,
       dayOfWeek: day._dayOfWeek ?? context.dayOfWeek,
-    });
+    }, date);
   }
   if (day?._feastName) return day._feastName;
-  return day?._title || day?._dayName || buildPeriodTitle(context);
+  return day?._title || day?._dayName || buildPeriodTitle(context, date);
 }
 
 function matchingReading(day, readings) {
@@ -149,7 +150,7 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
   daysResult.periodDays.forEach((day) => options.push({
     key: `period-${day.id}`,
     source: LITURGICAL_OPTION_SOURCE.PERIOD,
-    title: buildDayTitle(day, context),
+    title: buildDayTitle(day, context, mDate.format('YYYY-MM-DD')),
     subtitle: 'Літургічны дзень',
     day,
     templates: [{ id: day.id, label: 'Перыяд', day }],
@@ -166,7 +167,7 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     days.forEach((day) => options.push({
       key: `dynamic-${day.id}`,
       source: LITURGICAL_OPTION_SOURCE.DYNAMIC,
-      title: buildDayTitle(day, context) || code,
+      title: buildDayTitle(day, context, mDate.format('YYYY-MM-DD')) || code,
       subtitle: 'Свята',
       day,
       templates: [{ id: day.id, label: getTemplateLabel(day), day }],
@@ -179,7 +180,7 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
   groupFixedCelebrationDays(daysResult.fixedDays).forEach(({ day, templates }) => options.push({
     key: `fixed-${getFixedCelebrationKey(day)}`,
     source: LITURGICAL_OPTION_SOURCE.FIXED,
-    title: buildDayTitle(day, context) || `Дата ${day._date}`,
+    title: buildDayTitle(day, context, mDate.format('YYYY-MM-DD')) || `Дата ${day._date}`,
     titleIncludesWeekday: isSeasonalDateDocumentId(day.id),
     subtitle: fixedSubtitle(day, templates.length),
     day,
@@ -211,7 +212,7 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     && periodReadings.length) options.push({
     key: `period-reading-${mDate.format('YYYY-MM-DD')}`,
     source: LITURGICAL_OPTION_SOURCE.PERIOD,
-    title: buildPeriodTitle(context),
+    title: buildPeriodTitle(context, mDate.format('YYYY-MM-DD')),
     subtitle: 'Ёсць толькі чытанні',
     day: null,
     templates: [],

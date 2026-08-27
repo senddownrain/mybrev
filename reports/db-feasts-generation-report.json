@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-17T22:20:04.134Z",
+  "generatedAt": "2026-08-27T18:21:44.244Z",
   "rules": {
     "sourcePriority": "feast -> selected common-text -> empty string",
     "fromFirstWeek": "resolved from fixedDays/ordinary-w5-d1 using the same field",
@@ -17,8 +17,8 @@
   "summary": {
     "fixedCalendarEntries": 254,
     "calendarEntriesComparedIndividually": 254,
-    "availableFeastSourceFiles": 229,
-    "feastSourceFiles": 228,
+    "availableFeastSourceFiles": 228,
+    "feastSourceFiles": 227,
     "excludedSourceFiles": 1,
     "logicalSourceVariants": 256,
     "syntheticVariants": 4,
@@ -28,7 +28,7 @@
     "commonTextTemplates": 14,
     "generatedFiles": 345,
     "multipleTemplateSources": 85,
-    "multiplePlaceSources": 6,
+    "multiplePlaceSources": 7,
     "missingInFeasts": 1,
     "missingInFeastsKeys": 1,
     "extraInFeasts": 3,
@@ -2661,19 +2661,37 @@
       "source": "fixedDays/ordinary-w5-d1"
     },
     {
-      "file": "16-05-sv-andrei-bobola-minsk-mohilev.json",
+      "file": "16-05-sv-andrei-bobola-minsk-mohilev--minsk-mohilev.json",
       "field": "laudesPs1",
       "reference": "from-first-week",
       "source": "fixedDays/ordinary-w5-d1"
     },
     {
-      "file": "16-05-sv-andrei-bobola-minsk-mohilev.json",
+      "file": "16-05-sv-andrei-bobola-minsk-mohilev--minsk-mohilev.json",
       "field": "laudesPs2",
       "reference": "from-first-week",
       "source": "fixedDays/ordinary-w5-d1"
     },
     {
-      "file": "16-05-sv-andrei-bobola-minsk-mohilev.json",
+      "file": "16-05-sv-andrei-bobola-minsk-mohilev--minsk-mohilev.json",
+      "field": "laudesPs3",
+      "reference": "from-first-week",
+      "source": "fixedDays/ordinary-w5-d1"
+    },
+    {
+      "file": "16-05-sv-andrei-bobola-minsk-mohilev--vitebsk.json",
+      "field": "laudesPs1",
+      "reference": "from-first-week",
+      "source": "fixedDays/ordinary-w5-d1"
+    },
+    {
+      "file": "16-05-sv-andrei-bobola-minsk-mohilev--vitebsk.json",
+      "field": "laudesPs2",
+      "reference": "from-first-week",
+      "source": "fixedDays/ordinary-w5-d1"
+    },
+    {
+      "file": "16-05-sv-andrei-bobola-minsk-mohilev--vitebsk.json",
       "field": "laudesPs3",
       "reference": "from-first-week",
       "source": "fixedDays/ordinary-w5-d1"
@@ -2692,24 +2710,6 @@
     },
     {
       "file": "16-05-sv-andrei-bobola-pinsk.json",
-      "field": "laudesPs3",
-      "reference": "from-first-week",
-      "source": "fixedDays/ordinary-w5-d1"
-    },
-    {
-      "file": "16-05-sv-andrei-bobola-vitebsk.json",
-      "field": "laudesPs1",
-      "reference": "from-first-week",
-      "source": "fixedDays/ordinary-w5-d1"
-    },
-    {
-      "file": "16-05-sv-andrei-bobola-vitebsk.json",
-      "field": "laudesPs2",
-      "reference": "from-first-week",
-      "source": "fixedDays/ordinary-w5-d1"
-    },
-    {
-      "file": "16-05-sv-andrei-bobola-vitebsk.json",
       "field": "laudesPs3",
       "reference": "from-first-week",
       "source": "fixedDays/ordinary-w5-d1"
@@ -11829,7 +11829,30 @@
       ]
     },
     {
-      "file": "16-05-sv-andrei-bobola-minsk-mohilev.json",
+      "file": "16-05-sv-andrei-bobola-minsk-mohilev--minsk-mohilev.json",
+      "fields": [
+        "sext1Hymn",
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Hymn",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Hymn",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "file": "16-05-sv-andrei-bobola-minsk-mohilev--vitebsk.json",
       "fields": [
         "sext1Hymn",
         "sext1Ant2",
@@ -11853,29 +11876,6 @@
     },
     {
       "file": "16-05-sv-andrei-bobola-pinsk.json",
-      "fields": [
-        "sext1Hymn",
-        "sext1Ant2",
-        "sext1Ant3",
-        "sext1Ps1",
-        "sext1Ps2",
-        "sext1Ps3",
-        "sext2Hymn",
-        "sext2Ant2",
-        "sext2Ant3",
-        "sext2Ps1",
-        "sext2Ps2",
-        "sext2Ps3",
-        "sext3Hymn",
-        "sext3Ant2",
-        "sext3Ant3",
-        "sext3Ps1",
-        "sext3Ps2",
-        "sext3Ps3"
-      ]
-    },
-    {
-      "file": "16-05-sv-andrei-bobola-vitebsk.json",
       "fields": [
         "sext1Hymn",
         "sext1Ant2",

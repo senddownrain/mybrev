@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   getLiturgicalCelebrationPriority,
   getLiturgicalCelebrationThemeKey,
+  getLiturgicalPeriodTheme,
   getLiturgicalTheme,
 } from '../src/constants/liturgical.js';
 
@@ -28,6 +29,8 @@ test('celebration themes follow rank and red exceptions', () => {
     _rank: 'solemnitas',
     _templates: ['blessed-virgin-mary'],
   }), 'gold');
+  assert.equal(getLiturgicalCelebrationThemeKey({ _rank: 'memoria' }), 'white');
+  assert.equal(getLiturgicalCelebrationThemeKey({ _rank: 'memoria-ad-libitum' }), 'white');
   assert.equal(getLiturgicalCelebrationThemeKey({
     _rank: 'festum',
     _feastName: 'Св. Стэфана, першамучаніка',
@@ -48,4 +51,10 @@ test('celebration themes follow rank and red exceptions', () => {
 
 test('regular days keep their period theme', () => {
   assert.equal(getLiturgicalTheme({ _periodType: 'ordinary' }).color, '#4d8a5b');
+});
+
+test('the calendar day keeps its period theme beneath lower-rank celebrations', () => {
+  const memorial = { _rank: 'memoria', _contextPeriodType: 'ordinary' };
+  assert.equal(getLiturgicalTheme(memorial).color, '#8f7d52');
+  assert.equal(getLiturgicalPeriodTheme(memorial).color, '#4d8a5b');
 });

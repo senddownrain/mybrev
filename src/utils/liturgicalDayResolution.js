@@ -75,6 +75,20 @@ export function getPeriodPsalterDayDocumentId(periodType, periodWeekNumber, dayO
   return getPeriodDayDocumentId(periodType, ((week - 1) % 4) + 1, dayOfWeek);
 }
 
+/** A complete Ordinary Time document representing a four-week psalter slot. */
+export function getOrdinaryPsalterDayDocumentId(periodWeekNumber, dayOfWeek) {
+  const week = Number(periodWeekNumber);
+  const day = Number(dayOfWeek);
+  if (!Number.isInteger(week) || week < 1 || !Number.isInteger(day) || day < 1 || day > 7) {
+    return '';
+  }
+  const psalterWeek = ((week - 1) % 4) + 1;
+  // Ordinary week I has no regular Sunday office in the stored calendar.
+  // Week V is the next occurrence of exactly the same psalter week.
+  const sourceWeek = psalterWeek === 1 && day === 1 ? 5 : psalterWeek;
+  return getPeriodDayDocumentId('ordinary', sourceWeek, day);
+}
+
 export function isSeasonalDateException(mDate, periodType = null) {
   const month = mDate.month() + 1;
   const day = mDate.date();
@@ -219,6 +233,18 @@ export function resolveDayAgainstPeriod(day, periodDay, { fillMissing = false } 
 /** Date documents inherit every missing non-identity field from the period day. */
 export function resolveDateDayAgainstPeriod(day, periodDay) {
   return resolveDayAgainstPeriod(day, periodDay, { fillMissing: true });
+}
+
+/**
+ * The second Sunday after Christmas is a proper Sunday office.  Its few
+ * `from-day` fields come from the matching dated Christmas document, while
+ * all other proper Sunday fields must win over that weekday document.
+ */
+export function resolveChristmasDateAgainstPeriod(dateDay, periodDay) {
+  if (periodDay?.id === 'christmas-w2-d1') {
+    return resolveDayAgainstPeriod(periodDay, dateDay, { fillMissing: true });
+  }
+  return resolveDateDayAgainstPeriod(dateDay, periodDay);
 }
 
 function splitAntiphons(html) {

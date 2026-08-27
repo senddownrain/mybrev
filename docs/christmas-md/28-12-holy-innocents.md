@@ -36,7 +36,7 @@ festum
 ## _templates
 
 ```text
-[]
+[martyrs-many]
 ```
 
 # Invitatorium
@@ -81,25 +81,19 @@ festum
 ## officeOfReadingsPs1
 
 ```text
-[
-  "Псальмы з Агульных тэкстаў пра мучанікаў"
-]
+from-template
 ```
 
 ## officeOfReadingsPs2
 
 ```text
-[
-  "Псальмы з Агульных тэкстаў пра мучанікаў"
-]
+from-template
 ```
 
 ## officeOfReadingsPs3
 
 ```text
-[
-  "Псальмы з Агульных тэкстаў пра мучанікаў"
-]
+from-template
 ```
 
 ## officeOfReadingsVers
@@ -301,9 +295,7 @@ from-day
 ## sext1Ps1
 
 ```text
-[
-  "Псальмы з бягучага дня з антыфонай"
-]
+from-day
 ```
 
 ## sext1Ps2
@@ -347,21 +339,17 @@ from-day
 ## sext2Ant2
 
 ```text
-from-day
 ```
 
 ## sext2Ant3
 
 ```text
-from-day
 ```
 
 ## sext2Ps1
 
 ```text
-[
-  "Псальмы з бягучага дня з антыфонай"
-]
+from-day
 ```
 
 ## sext2Ps2
@@ -405,21 +393,17 @@ from-day
 ## sext3Ant2
 
 ```text
-from-day
 ```
 
 ## sext3Ant3
 
 ```text
-from-day
 ```
 
 ## sext3Ps1
 
 ```text
-[
-  "Псальмы з бягучага дня з антыфонай"
-]
+from-day
 ```
 
 ## sext3Ps2
@@ -451,9 +435,7 @@ from-day
 ## vesperHymn
 
 ```text
-[
-  "Усё бярэцца з актавы Нараджэння Пана, з 28 снежня"
-]
+from-day
 ```
 
 ## vesperAnt1
@@ -521,5 +503,4 @@ from-day
 ## feastComment
 
 ```text
-from-day
 ```

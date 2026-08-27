@@ -36,7 +36,7 @@ festum
 ## _templates
 
 ```text
-[]
+["martyr-one"]
 ```
 
 # Invitatorium
@@ -80,25 +80,19 @@ festum
 ## officeOfReadingsPs1
 
 ```text
-[
-  "Псальмы з Агульных тэкстаў пра аднаго мучаніка"
-]
+from-template
 ```
 
 ## officeOfReadingsPs2
 
 ```text
-[
-  "Псальмы з Агульных тэкстаў пра аднаго мучаніка"
-]
+from-template
 ```
 
 ## officeOfReadingsPs3
 
 ```text
-[
-  "Псальмы з Агульных тэкстаў пра аднаго мучаніка"
-]
+from-template
 ```
 
 ## officeOfReadingsVers
@@ -306,9 +300,7 @@ from-day
 ## sext1Ps1
 
 ```text
-[
-  "Псальмы з бягучага дня з антыфонай"
-]
+from-day
 ```
 
 ## sext1Ps2
@@ -364,9 +356,7 @@ from-day
 ## sext2Ps1
 
 ```text
-[
-  "Псальмы з бягучага дня з антыфонай"
-]
+from-day
 ```
 
 ## sext2Ps2
@@ -422,9 +412,7 @@ from-day
 ## sext3Ps1
 
 ```text
-[
-  "Псальмы з бягучага дня з антыфонай"
-]
+from-day
 ```
 
 ## sext3Ps2
@@ -456,9 +444,7 @@ from-day
 ## vesperHymn
 
 ```text
-[
-  "Усё бярэцца з актавы Нараджэння Пана, з 26 снежня"
-]
+from-day
 ```
 
 ## vesperAnt1

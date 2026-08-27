@@ -224,13 +224,17 @@ const hydrateForm = () => {
   }
 
   form.value = {
-    title: prayer.titleVersions
-      ? prayer.titleVersions.be || prayer.titleVersions.ru || Object.values(prayer.titleVersions)[0] || ''
-      : prayer.title || '',
+    title: prayer.title
+      || prayer.titleVersions?.be
+      || prayer.titleVersions?.ru
+      || Object.values(prayer.titleVersions || {})[0]
+      || '',
     text: toPrayerMarkdown(
-      prayer.textVersions
-        ? prayer.textVersions.be || prayer.textVersions.ru || Object.values(prayer.textVersions)[0] || ''
-        : prayer.text || '',
+      prayer.text
+        || prayer.textVersions?.be
+        || prayer.textVersions?.ru
+        || Object.values(prayer.textVersions || {})[0]
+        || '',
       prayer.textFormat,
     ),
     tags: [...(prayer.tags || [])],
@@ -294,7 +298,9 @@ async function handleSave() {
     }
     initialSnapshot.value = currentSnapshot.value;
     allowNavigation.value = true;
-    await router.push({ name: 'PrayersList' });
+    await router.push(isEditMode.value
+      ? { name: 'PrayerView', params: { id: route.params.id } }
+      : { name: 'PrayersList' });
   } catch (error) {
     const { handleFirestoreError } = await import('@/utils/errorHandler');
     handleFirestoreError(error, 'PrayerForm');

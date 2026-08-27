@@ -10,9 +10,11 @@
       <div v-if="isHero" class="day-title-hero">
         <div class="day-title-hero__eyebrow">
           <v-icon icon="mdi-circle-slice-8" size="14"></v-icon>
-          {{ periodLabel }}
+          <span>{{ periodLabel }}</span>
+          <span v-if="psalterWeekLabel" class="day-title__eyebrow-separator" aria-hidden="true">·</span>
+          <span v-if="psalterWeekLabel">{{ psalterWeekLabel }}</span>
         </div>
-        <h1>{{ displayTitle }}</h1>
+        <h1 v-html="displayTitleHtml"></h1>
         <div class="day-title-hero__footer">
           <span class="day-title-hero__date">
             <v-icon icon="mdi-calendar-blank-outline" size="17"></v-icon>
@@ -23,10 +25,12 @@
       </div>
 
       <div v-else class="day-title-standard">
-        <div class="day-title-standard__eyebrow">{{ periodLabel }}</div>
-        <h1>
-          {{ displayTitle }}
-        </h1>
+        <div class="day-title-standard__eyebrow">
+          <span>{{ periodLabel }}</span>
+          <span v-if="psalterWeekLabel" class="day-title__eyebrow-separator" aria-hidden="true">·</span>
+          <span v-if="psalterWeekLabel">{{ psalterWeekLabel }}</span>
+        </div>
+        <h1 v-html="displayTitleHtml"></h1>
         <div class="day-title-standard__meta">
           <span class="day-title-standard__marker" aria-hidden="true"></span>
           <span>{{ formattedDate }}</span>
@@ -85,12 +89,13 @@ import moment from '@/utils/moment-be';
 import {
   PERIOD_LABEL_MAP,
   FEAST_TYPE_LABEL_MAP,
-  getLiturgicalTheme,
+  getLiturgicalPeriodTheme,
 } from '@/constants/liturgical';
 import { formatDateLong } from '@/utils/date';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { isSeasonalDateDocumentId } from '@/utils/liturgicalDayResolution';
 import { formatLiturgicalPeriodTitle } from '@/utils/liturgicalPeriodTitle';
+import { calculatePsalterWeek, formatPsalterWeekLabel } from '@/utils/liturgicalPsalter';
 
 const props = defineProps({
   dayData: { type: Object, default: null },
@@ -124,6 +129,15 @@ const displayTitle = computed(() => {
   return day._title || getPeriodTitle(day);
 });
 
+// Названия дней хранятся в данных и не должны вставляться как произвольный HTML.
+// Разрешаем только <br> для многострочных названий, например праздника Святой Сям'і.
+const displayTitleHtml = computed(() => String(displayTitle.value || '')
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/\\?&lt;br\s*\/?&gt;/gi, '<br>')
+  .replace(/\r?\n/g, '<br>'));
+
 // --- Форматирование даты ---
 // Берем полную дату из параметра URL (:day) и форматируем ее
 const formattedDate = computed(() => {
@@ -143,15 +157,21 @@ const dayMeta = computed(() => {
   if (!day) return '';
   if (day._kind === 'office-for-dead') return '';
   const rank = day._rank || day._feastType;
-  return rank ? getRankName(rank) : (day._psalmWeek || '');
+  return rank ? getRankName(rank) : '';
 });
+const psalterWeek = computed(() => calculatePsalterWeek({
+  date: route.params.day,
+  periodType: resolvedDay.value?._periodType,
+  periodWeek: resolvedDay.value?._periodWeekNumber,
+}));
+const psalterWeekLabel = computed(() => formatPsalterWeekLabel(psalterWeek.value));
 const periodLabel = computed(() => (
   resolvedDay.value?._kind === 'office-for-dead'
     ? 'Памінальны афіцый'
     : PERIOD_LABEL_MAP[resolvedDay.value?._periodType] || 'Літургічны дзень'
 ));
 const heroStyle = computed(() => {
-  const theme = getLiturgicalTheme(resolvedDay.value, resolvedDay.value?._periodType);
+  const theme = getLiturgicalPeriodTheme(resolvedDay.value, resolvedDay.value?._periodType);
   return {
     '--liturgical-color': theme.color,
     '--liturgical-rgb': theme.rgb,
@@ -173,6 +193,7 @@ const getPeriodTitle = (day) => {
     periodType: day._periodType,
     periodWeek,
     dayOfWeek,
+    date: route.params.day,
   });
 };
 </script>
@@ -241,12 +262,20 @@ const getPeriodTitle = (day) => {
 }
 
 .day-title-standard__eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
   margin-bottom: 8px;
   color: var(--liturgical-visible-color);
   font-size: 0.68rem !important;
   font-weight: 800;
   letter-spacing: 0.11em;
   text-transform: uppercase;
+}
+
+.day-title__eyebrow-separator {
+  opacity: 0.55;
 }
 
 .day-title-container .day-title-standard h1 {

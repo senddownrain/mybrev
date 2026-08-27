@@ -3,7 +3,10 @@ import { removeBreakAfterAsterisk } from './liturgicalHtml.js';
 
 const MAX_TITLE_LENGTH = 56;
 const ALTERNATIVE_MARKER = /^\s*А\s*бо(?:\s+(?:інш(?:ае|ая|ыя)|яшчэ))?\s*:/iu;
-const CATEGORY_MARKER = /^\s*(?:(?:Пра|За|Для)\s+[^:]{1,72}|У\s+[^:]{1,72})\s*:/iu;
+// Category headings in the common texts use "Пра", "За" or "Для". Treating
+// every "У …:" paragraph as a heading also caught the narrative Scripture
+// phrase "У тыя дні:" and split the Holy Innocents reading in two.
+const CATEGORY_MARKER = /^\s*(?:Пра|За|Для)\s+[^:]{1,72}\s*:/iu;
 const INSTRUCTION_MARKER = /^(?:Калі\s+няма\s+ўласнай|Чытаецца\s+на\s+выбар|На\s+выбар)\b/iu;
 const REPEATED_SECTION_MARKER = /^(?:Кароткае\s+чытанне|Гімн)\b/iu;
 
@@ -199,7 +202,22 @@ export function getLiturgicalAlternatives(html, kind = 'generic') {
 }
 
 export function formatIntercessions(html) {
-  const root = parse(String(html || ''));
+  const sourceRoot = parse(String(html || ''));
+  const normalizedHtml = sourceRoot.childNodes.flatMap((node) => {
+    if (node.nodeType !== 1 || node.rawTagName !== 'p' || !node.querySelector('br')) {
+      return [node.toString()];
+    }
+
+    return node.innerHTML
+      .split(/<br\s*\/?\s*>/giu)
+      .filter((line) => textOf(line))
+      .map((line) => {
+        const paragraph = parse(node.toString()).querySelector('p');
+        paragraph.innerHTML = line;
+        return paragraph.toString();
+      });
+  }).join('\n');
+  const root = parse(normalizedHtml);
   const paragraphs = root.querySelectorAll('p');
   if (!paragraphs.length) return String(html || '');
 
@@ -215,25 +233,30 @@ export function formatIntercessions(html) {
     });
   }
   const anchor = refrainIndex >= 0 ? refrainIndex : Math.min(1, paragraphs.length - 1);
+  const introIndex = Math.max(0, anchor - 1);
+  const refrainText = textOf(paragraphs[anchor].toString());
   let separateLineIndex = 0;
   paragraphs.forEach((paragraph, index) => {
-    if (index === 0) paragraph.classList.add('intercessions__intro');
+    if (index === introIndex) paragraph.classList.add('intercessions__intro');
     if (index === anchor) paragraph.classList.add('intercessions__refrain');
     if (index > anchor) {
       const paragraphText = textOf(paragraph.toString());
       if (/^Ойча\s+наш\.?$/iu.test(paragraphText)) {
         paragraph.classList.add('intercessions__conclusion');
-      } else if (paragraph.querySelector('br')) {
-        paragraph.classList.add('intercessions__petition');
-        const lines = paragraph.innerHTML.split(/<br\s*\/?\s*>/giu);
-        paragraph.innerHTML = lines.map((line, lineIndex) => (
-          lineIndex === 0 ? line : `<span class="intercessions__continuation">${line}</span>`
-        )).join('');
+      } else if (paragraphText === refrainText) {
+        paragraph.classList.add('intercessions__refrain', 'intercessions__refrain--repeat');
       } else {
         separateLineIndex += 1;
-        paragraph.classList.add(separateLineIndex % 2 === 1
+        const className = separateLineIndex % 2 === 1
           ? 'intercessions__petition'
-          : 'intercessions__response');
+          : 'intercessions__response';
+        paragraph.classList.add(className);
+        if (className === 'intercessions__response') {
+          paragraph.innerHTML = paragraph.innerHTML.replace(
+            /^\s*(?:<span\b[^>]*>\s*)?(?:–|&ndash;|—|-)(?:\s*<\/span>)?\s*(?:&nbsp;|&#x0*20;|\s)*/iu,
+            '<span class="intercessions__marker">–</span>&nbsp;',
+          );
+        }
       }
     }
   });

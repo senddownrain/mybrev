@@ -84,7 +84,11 @@ const onEditClick = () => {
   // не чтение — редактируем сам "day" как раньше
   const dayId = route.params.id;
   if (dayId) {
-    router.push({ name: 'AdminDayEditor', params: { id: dayId } });
+    router.push({
+      name: 'AdminDayEditor',
+      params: { id: dayId },
+      query: route.params.day ? { date: route.params.day } : {},
+    });
   }
 };
 </script>

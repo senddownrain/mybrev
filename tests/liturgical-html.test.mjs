@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { formatPsalmHtml, removeBreakAfterAsterisk } from '../src/utils/liturgicalHtml.js';
+import { formatPsalmHtml, markPsalmCadenceSigns, removeBreakAfterAsterisk } from '../src/utils/liturgicalHtml.js';
 
 test('removes a line break immediately after a psalm asterisk', () => {
   assert.equal(
@@ -24,13 +24,20 @@ test('preserves all other line breaks', () => {
   );
 });
 
+test('marks asterisks and daggers with the rubric class', () => {
+  assert.equal(
+    markPsalmCadenceSigns('Першая * палова † заканчэнне.'),
+    'Першая <span class="psalm-marker">*</span> палова <span class="psalm-marker">†</span> заканчэнне.',
+  );
+});
+
 test('marks ordinary psalm paragraphs as strophes without marking headings', () => {
   const html = '<p style="text-align: center;">Псальм 1</p><p>Першая *<br>палова.</p><p>Другая *<br>палова.</p>';
   const formatted = formatPsalmHtml(html);
 
   assert.equal(
     formatted,
-    '<p style="text-align: center;">Псальм 1</p><p data-psalm-strophe>Першая * палова.</p><p data-psalm-strophe>Другая * палова.</p>',
+    '<p style="text-align: center;">Псальм 1</p><p data-psalm-strophe>Першая <span class="psalm-marker">*</span> палова.</p><p data-psalm-strophe>Другая <span class="psalm-marker">*</span> палова.</p>',
   );
 });
 
@@ -40,7 +47,7 @@ test('splits a legacy single-paragraph psalm into marked strophes', () => {
 
   assert.equal(
     formatted,
-    '<p data-psalm-strophe>Радок †<br>сярэдзіна * канец.</p><p data-psalm-strophe>Наступны * канец.</p>',
+    '<p data-psalm-strophe>Радок <span class="psalm-marker">†</span><br>сярэдзіна <span class="psalm-marker">*</span> канец.</p><p data-psalm-strophe>Наступны <span class="psalm-marker">*</span> канец.</p>',
   );
 });
 
@@ -49,7 +56,7 @@ test('removes a trailing antiphon embedded in psalm HTML', () => {
 
   assert.equal(
     formatPsalmHtml(html, { stripEmbeddedAntiphon: true }),
-    '<p data-psalm-strophe>Страфа * канец.</p>\n',
+    '<p data-psalm-strophe>Страфа <span class="psalm-marker">*</span> канец.</p>\n',
   );
 });
 

@@ -39,32 +39,20 @@
                 <v-card class="ora" flat>
                     <v-card-text class="ora-text">
                         <alternative-text v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" aria-label="Выбар антыфоны закліку" />
-                        <br>
+                      
                         <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs1)"></div>
-                        <br>
                         <alternative-text v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
-                        <br>
                         <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs2)"></div>
-                        <br>
                         <alternative-text v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
-                        <br>
                         <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs3)"></div>
-                        <br>
                         <alternative-text v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
-                        <br>
                         <div class="ora-psalm" v-html="formatPsalm(displayedDay.invitatoriumPs4)"></div>
-                        <br>
                         <alternative-text v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
-                        <br v-if="displayedDay.invitatoriumPs5">
                         <div class="ora-psalm" v-if="displayedDay.invitatoriumPs5" v-html="formatPsalm(displayedDay.invitatoriumPs5)"></div>
-                        <br v-if="displayedDay.invitatoriumPs5">
                         <alternative-text v-if="displayedDay.invitatoriumPs5" v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
-                        <br v-if="displayedDay.invitatoriumPs6">
                         <div class="ora-psalm" v-if="displayedDay.invitatoriumPs6" v-html="formatPsalm(displayedDay.invitatoriumPs6)"></div>
-                        <br v-if="displayedDay.invitatoriumPs6">
                         <alternative-text v-if="displayedDay.invitatoriumPs6" v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
-                        <br v-if="displayedDay.invitatoriumPs6">
-                    </v-card-text>
+                      </v-card-text>
                 </v-card>
 
             </v-col>
@@ -75,15 +63,16 @@
 
 <script setup>
 
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { logger } from '@/utils/logger';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { getInvitatoriums } from '@/services/staticLiturgicalService';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
-import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
+import { markPsalmCadenceSigns, removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
+import { getDefaultInvitatoriumId } from '@/utils/invitatorium';
 
-const { day, pending } = useResolvedLiturgicalDay();
+const { day, context, pending } = useResolvedLiturgicalDay();
 const invitatoriums = ref([]);
 const selectedInvitatoriumId = ref('');
 const antOption = ref(0);
@@ -97,12 +86,16 @@ const invitatoriumOptions = computed(() => invitatoriums.value.map((item, index)
 })));
 const selectedInvitatorium = computed(() => invitatoriums.value.find((item) => item.id === selectedInvitatoriumId.value));
 const displayedDay = computed(() => ({ ...(day.value || {}), ...(selectedInvitatorium.value || {}) }));
-const formatPsalm = removeBreakAfterAsterisk;
+const formatPsalm = (psalm) => markPsalmCadenceSigns(removeBreakAfterAsterisk(psalm));
+const periodType = computed(() => day.value?._periodType || context.value?.periodType);
+
+watch([invitatoriums, periodType], () => {
+  selectedInvitatoriumId.value = getDefaultInvitatoriumId(invitatoriums.value, periodType.value);
+}, { immediate: true });
 
 onMounted(async () => {
   try {
     invitatoriums.value = await getInvitatoriums();
-    selectedInvitatoriumId.value = invitatoriums.value[0]?.id || '';
   } catch (error) {
     logger.error('[Invit] Не атрымалася загрузіць варыянты інвітаторыя:', error);
   }
@@ -110,3 +103,10 @@ onMounted(async () => {
 const title = "ЗАКЛІК"
 
 </script>
+
+<style scoped>
+/* Separate each repeated antiphon from the psalm above it. */
+.ora-psalm + .ora-ant {
+  margin-top: 12px;
+}
+</style>

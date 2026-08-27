@@ -1,8 +1,9 @@
 // stores/fonts.js
 import { defineStore } from 'pinia'
 
-import { useCollection, useFirestore } from 'vuefire'
-import { collection, orderBy, query, doc, updateDoc, deleteDoc, setDoc, addDoc } from 'firebase/firestore'
+import { useFirestore } from 'vuefire'
+import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
+import { LITURGICAL_DAYS_COLLECTION } from '@/constants/days'
 
 export const useDayStore = defineStore('day', {
     state: () => {
@@ -19,7 +20,7 @@ export const useDayStore = defineStore('day', {
             this.dayToEdit = dte;
             
             const db = useFirestore()
-            const docRef = doc(db, "days", `${dte.id}`);
+            const docRef = doc(db, LITURGICAL_DAYS_COLLECTION, `${dte.id}`);
 
             await updateDoc(docRef, {
                 ...dte
@@ -29,7 +30,7 @@ export const useDayStore = defineStore('day', {
             this.dayToDelete = dte;
             
             const db = useFirestore()
-            const docRef = doc(db, "days", `${dte.id}`);
+            const docRef = doc(db, LITURGICAL_DAYS_COLLECTION, `${dte.id}`);
 
             await deleteDoc(docRef, {
                 ...dte

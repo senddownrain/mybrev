@@ -1,0 +1,2550 @@
+{
+  "generatedAt": "2026-08-27T21:49:15.626Z",
+  "mode": "apply",
+  "analysisSource": "local-firestore-snapshot",
+  "snapshot": {
+    "directory": "C:\\Users\\User\\Documents\\GitHub\\mybrev\\backups\\firestore-snapshot",
+    "version": "20260827124414214",
+    "exportedAt": "2026-08-27T12:44:14.214Z"
+  },
+  "collection": "fixedDays",
+  "coverage": {
+    "years": "2020-2047",
+    "scenarios": 780,
+    "gaps": []
+  },
+  "markdownDocuments": 33,
+  "writeIds": [
+    "02-01-sv-basil-gregory-nazianzen--doctors-of-church",
+    "02-01-sv-basil-gregory-nazianzen--pastors",
+    "07-01-sv-raymond-penyafort",
+    "26-12-sv-stephen-protomartyr",
+    "27-12-sv-john-apostle-evangelist",
+    "28-12-holy-innocents",
+    "29-12-sv-thomas-becket",
+    "31-12-sv-sylvester-i",
+    "christmas-02-01",
+    "christmas-03-01",
+    "christmas-04-01",
+    "christmas-05-01",
+    "christmas-07-01",
+    "christmas-08-01",
+    "christmas-09-01",
+    "christmas-10-01",
+    "christmas-11-01",
+    "christmas-12-01",
+    "christmas-29-12",
+    "christmas-30-12",
+    "christmas-31-12",
+    "christmas-w2-d1"
+  ],
+  "unchangedIds": [
+    "01-01-holy-mary-mother-of-god",
+    "06-01-epiphany-lord",
+    "25-12-naradzhenne-pana",
+    "christmas-01-01",
+    "christmas-06-01",
+    "christmas-25-12",
+    "christmas-26-12",
+    "christmas-27-12",
+    "christmas-28-12",
+    "feast-buptismofthelord",
+    "feast-holyfamily"
+  ],
+  "changes": [
+    {
+      "id": "02-01-sv-basil-gregory-nazianzen--doctors-of-church",
+      "filename": "02-01-sv-basil-gregory-nazianzen--doctors-of-church.md",
+      "changedFields": [
+        "sext1Hymn",
+        "sext2Hymn",
+        "sext3Hymn"
+      ],
+      "bytes": 67019
+    },
+    {
+      "id": "02-01-sv-basil-gregory-nazianzen--pastors",
+      "filename": "02-01-sv-basil-gregory-nazianzen--pastors.md",
+      "changedFields": [
+        "sext1Hymn",
+        "sext2Hymn",
+        "sext3Hymn"
+      ],
+      "bytes": 95935
+    },
+    {
+      "id": "07-01-sv-raymond-penyafort",
+      "filename": "07-01-sv-raymond-penyafort.md",
+      "changedFields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Hymn",
+        "sext2Hymn",
+        "sext3Hymn"
+      ],
+      "bytes": 96532
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "filename": "26-12-sv-stephen-protomartyr.md",
+      "changedFields": [
+        "_templates",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "sext1Ant1",
+        "sext1Hymn",
+        "sext1Ps1",
+        "sext2Ant1",
+        "sext2Hymn",
+        "sext2Ps1",
+        "sext3Ant1",
+        "sext3Hymn",
+        "sext3Ps1",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperAntMag",
+        "vesperHymn",
+        "vesperInter",
+        "vesperPr",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesperR"
+      ],
+      "bytes": 52822
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "filename": "27-12-sv-john-apostle-evangelist.md",
+      "changedFields": [
+        "feastComment",
+        "sext1Ant1",
+        "sext1Hymn",
+        "sext1Ps1",
+        "sext2Ant1",
+        "sext2Hymn",
+        "sext2Ps1",
+        "sext3Ant1",
+        "sext3Hymn",
+        "sext3Ps1",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperAntMag",
+        "vesperHymn",
+        "vesperInter",
+        "vesperPr",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesperR"
+      ],
+      "bytes": 47498
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "filename": "28-12-holy-innocents.md",
+      "changedFields": [
+        "_templates",
+        "feastComment",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "sext1Ant1",
+        "sext1Hymn",
+        "sext1Ps1",
+        "sext2Ant1",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Hymn",
+        "sext2Ps1",
+        "sext3Ant1",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Hymn",
+        "sext3Ps1",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperAntMag",
+        "vesperHymn",
+        "vesperInter",
+        "vesperPr",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesperR"
+      ],
+      "bytes": 46999
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "filename": "29-12-sv-thomas-becket.md",
+      "changedFields": [
+        "invitatoriumAnt",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesHymn",
+        "laudesInter",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "laudesR",
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsHymn",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsR1",
+        "officeOfReadingsVers",
+        "sext1Ant1",
+        "sext1Hymn",
+        "sext1Pr",
+        "sext1R",
+        "sext2Ant1",
+        "sext2Hymn",
+        "sext2Pr",
+        "sext2R",
+        "sext3Ant1",
+        "sext3Hymn",
+        "sext3Pr",
+        "sext3R",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperHymn",
+        "vesperInter",
+        "vesperPr",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesperR"
+      ],
+      "bytes": 51398
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "filename": "31-12-sv-sylvester-i.md",
+      "changedFields": [
+        "invitatoriumAnt",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesHymn",
+        "laudesInter",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "laudesR",
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsHymn",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsR1",
+        "officeOfReadingsVers",
+        "sext1Ant1",
+        "sext1Hymn",
+        "sext1Pr",
+        "sext1R",
+        "sext2Ant1",
+        "sext2Hymn",
+        "sext2Pr",
+        "sext2R",
+        "sext3Ant1",
+        "sext3Hymn",
+        "sext3Pr",
+        "sext3R",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperAntMag",
+        "vesperHymn",
+        "vesperInter",
+        "vesperPr",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesperR"
+      ],
+      "bytes": 49809
+    },
+    {
+      "id": "christmas-02-01",
+      "filename": "christmas-02-01.md",
+      "changedFields": [
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "sext1Ant1",
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ],
+      "bytes": 29050
+    },
+    {
+      "id": "christmas-03-01",
+      "filename": "christmas-03-01.md",
+      "changedFields": [
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "sext1Ant1",
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ],
+      "bytes": 29324
+    },
+    {
+      "id": "christmas-04-01",
+      "filename": "christmas-04-01.md",
+      "changedFields": [
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "sext1Ant1",
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ],
+      "bytes": 27976
+    },
+    {
+      "id": "christmas-05-01",
+      "filename": "christmas-05-01.md",
+      "changedFields": [
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsTeDeum",
+        "sext1Ant1",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ],
+      "bytes": 36539
+    },
+    {
+      "id": "christmas-07-01",
+      "filename": "christmas-07-01.md",
+      "changedFields": [
+        "sext1Ant1",
+        "sext1Ant2",
+        "sext1Ant3"
+      ],
+      "bytes": 32316
+    },
+    {
+      "id": "christmas-08-01",
+      "filename": "christmas-08-01.md",
+      "changedFields": [
+        "sext1Ant1",
+        "sext1Ant2",
+        "sext1Ant3"
+      ],
+      "bytes": 30237
+    },
+    {
+      "id": "christmas-09-01",
+      "filename": "christmas-09-01.md",
+      "changedFields": [
+        "sext1Ant1",
+        "sext1Ant2",
+        "sext1Ant3"
+      ],
+      "bytes": 29739
+    },
+    {
+      "id": "christmas-10-01",
+      "filename": "christmas-10-01.md",
+      "changedFields": [
+        "sext1Ant1",
+        "sext1Ant2",
+        "sext1Ant3"
+      ],
+      "bytes": 29768
+    },
+    {
+      "id": "christmas-11-01",
+      "filename": "christmas-11-01.md",
+      "changedFields": [
+        "sext1Ant1",
+        "sext1Ant2",
+        "sext1Ant3"
+      ],
+      "bytes": 37317
+    },
+    {
+      "id": "christmas-12-01",
+      "filename": "christmas-12-01.md",
+      "changedFields": [
+        "_date",
+        "_dayName",
+        "_feast",
+        "_feastName",
+        "_feastType",
+        "_periodType",
+        "checked",
+        "feastComment",
+        "invitatoriumAnt",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesAntBen",
+        "laudesHymn",
+        "laudesInter",
+        "laudesPr",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "laudesR",
+        "miniSavedAt",
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsHymn",
+        "officeOfReadingsPr",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsR1",
+        "officeOfReadingsR2",
+        "officeOfReadingsTeDeum",
+        "officeOfReadingsVers",
+        "savedMini",
+        "sext1Ant1",
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Hymn",
+        "sext1Pr",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext1R",
+        "sext2Ant1",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Hymn",
+        "sext2Pr",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext2R",
+        "sext3Ant1",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Hymn",
+        "sext3Pr",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3",
+        "sext3R",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1AntMag",
+        "vesper1Hymn",
+        "vesper1Inter",
+        "vesper1Pr",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperAntMag",
+        "vesperHymn",
+        "vesperInter",
+        "vesperPr",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesperR"
+      ],
+      "bytes": 36651
+    },
+    {
+      "id": "christmas-29-12",
+      "filename": "christmas-29-12.md",
+      "changedFields": [
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ],
+      "bytes": 55212
+    },
+    {
+      "id": "christmas-30-12",
+      "filename": "christmas-30-12.md",
+      "changedFields": [
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ],
+      "bytes": 54915
+    },
+    {
+      "id": "christmas-31-12",
+      "filename": "christmas-31-12.md",
+      "changedFields": [
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ],
+      "bytes": 54689
+    },
+    {
+      "id": "christmas-w2-d1",
+      "filename": "christmas-w2-d1.md",
+      "changedFields": [
+        "_dayName",
+        "_dayOfWeek",
+        "_periodType",
+        "_periodWeekNumber",
+        "checked",
+        "invitatoriumAnt",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesAntBen",
+        "laudesHymn",
+        "laudesInter",
+        "laudesPr",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "laudesR",
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsHymn",
+        "officeOfReadingsPr",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsR1",
+        "officeOfReadingsR2",
+        "officeOfReadingsTeDeum",
+        "officeOfReadingsVers",
+        "sext1Ant1",
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Hymn",
+        "sext1Pr",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext1R",
+        "sext2Ant1",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Hymn",
+        "sext2Pr",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext2R",
+        "sext3Ant1",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Hymn",
+        "sext3Pr",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3",
+        "sext3R",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1AntMag",
+        "vesper1Hymn",
+        "vesper1Inter",
+        "vesper1Pr",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperAntMag",
+        "vesperHymn",
+        "vesperInter",
+        "vesperPr",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesperR"
+      ],
+      "bytes": 75362
+    }
+  ],
+  "materializedFields": [
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "officeOfReadingsPs1",
+      "source": "template:martyr-one"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "officeOfReadingsPs2",
+      "source": "template:martyr-one"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "officeOfReadingsPs3",
+      "source": "template:martyr-one"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "officeOfReadingsPs1",
+      "source": "template:martyrs-many"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "officeOfReadingsPs2",
+      "source": "template:martyrs-many"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "officeOfReadingsPs3",
+      "source": "template:martyrs-many"
+    },
+    {
+      "id": "02-01-sv-basil-gregory-nazianzen--doctors-of-church",
+      "field": "sext1Hymn",
+      "source": "christmas-02-01"
+    },
+    {
+      "id": "02-01-sv-basil-gregory-nazianzen--doctors-of-church",
+      "field": "sext2Hymn",
+      "source": "christmas-02-01"
+    },
+    {
+      "id": "02-01-sv-basil-gregory-nazianzen--doctors-of-church",
+      "field": "sext3Hymn",
+      "source": "christmas-02-01"
+    },
+    {
+      "id": "02-01-sv-basil-gregory-nazianzen--pastors",
+      "field": "sext1Hymn",
+      "source": "christmas-02-01"
+    },
+    {
+      "id": "02-01-sv-basil-gregory-nazianzen--pastors",
+      "field": "sext2Hymn",
+      "source": "christmas-02-01"
+    },
+    {
+      "id": "02-01-sv-basil-gregory-nazianzen--pastors",
+      "field": "sext3Hymn",
+      "source": "christmas-02-01"
+    },
+    {
+      "id": "07-01-sv-raymond-penyafort",
+      "field": "sext1Hymn",
+      "source": "christmas-07-01"
+    },
+    {
+      "id": "07-01-sv-raymond-penyafort",
+      "field": "sext1Ant2",
+      "source": "christmas-07-01"
+    },
+    {
+      "id": "07-01-sv-raymond-penyafort",
+      "field": "sext1Ant3",
+      "source": "christmas-07-01"
+    },
+    {
+      "id": "07-01-sv-raymond-penyafort",
+      "field": "sext2Hymn",
+      "source": "christmas-07-01"
+    },
+    {
+      "id": "07-01-sv-raymond-penyafort",
+      "field": "sext3Hymn",
+      "source": "christmas-07-01"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "sext1Hymn",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "sext1Ant1",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "sext2Hymn",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "sext2Ant1",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "sext3Hymn",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "sext3Ant1",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "vesperHymn",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "vesperAnt1",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "vesperAnt2",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "vesperAnt3",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "vesperPs1",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "vesperPs2",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "vesperPs3",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "vesperR",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "vesperAntMag",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "vesperInter",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "field": "vesperPr",
+      "source": "christmas-26-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "sext1Hymn",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "sext1Ant1",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "sext2Hymn",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "sext2Ant1",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "sext3Hymn",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "sext3Ant1",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "vesperHymn",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "vesperAnt1",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "vesperAnt2",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "vesperAnt3",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "vesperPs1",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "vesperPs2",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "vesperPs3",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "vesperR",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "vesperAntMag",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "vesperInter",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "field": "vesperPr",
+      "source": "christmas-27-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "sext1Hymn",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "sext1Ant1",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "sext2Hymn",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "sext2Ant1",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "sext3Hymn",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "sext3Ant1",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "vesperHymn",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "vesperAnt1",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "vesperAnt2",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "vesperAnt3",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "vesperPs1",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "vesperPs2",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "vesperPs3",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "vesperR",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "vesperAntMag",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "vesperInter",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "field": "vesperPr",
+      "source": "christmas-28-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "invitatoriumAnt",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "officeOfReadingsHymn",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "officeOfReadingsAnt1",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "officeOfReadingsAnt2",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "officeOfReadingsAnt3",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "officeOfReadingsPs1",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "officeOfReadingsPs2",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "officeOfReadingsPs3",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "officeOfReadingsVers",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "officeOfReadingsR1",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "laudesHymn",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "laudesAnt1",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "laudesAnt2",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "laudesAnt3",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "laudesPs1",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "laudesPs2",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "laudesPs3",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "laudesR",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "laudesInter",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext1Hymn",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext1Ant1",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext1R",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext1Pr",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext2Hymn",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext2Ant1",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext2R",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext2Pr",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext3Hymn",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext3Ant1",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext3R",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "sext3Pr",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "vesperHymn",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "vesperAnt1",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "vesperAnt2",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "vesperAnt3",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "vesperPs1",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "vesperPs2",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "vesperPs3",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "vesperR",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "vesperInter",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "field": "vesperPr",
+      "source": "christmas-29-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "invitatoriumAnt",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "officeOfReadingsHymn",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "officeOfReadingsAnt1",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "officeOfReadingsAnt2",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "officeOfReadingsAnt3",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "officeOfReadingsPs1",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "officeOfReadingsPs2",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "officeOfReadingsPs3",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "officeOfReadingsVers",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "officeOfReadingsR1",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "laudesHymn",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "laudesAnt1",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "laudesAnt2",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "laudesAnt3",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "laudesPs1",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "laudesPs2",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "laudesPs3",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "laudesR",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "laudesInter",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext1Hymn",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext1Ant1",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext1R",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext1Pr",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext2Hymn",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext2Ant1",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext2R",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext2Pr",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext3Hymn",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext3Ant1",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext3R",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "sext3Pr",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "vesperHymn",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "vesperAnt1",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "vesperAnt2",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "vesperAnt3",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "vesperPs1",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "vesperPs2",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "vesperPs3",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "vesperR",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "vesperAntMag",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "vesperInter",
+      "source": "christmas-31-12"
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "field": "vesperPr",
+      "source": "christmas-31-12"
+    }
+  ],
+  "runtimeFromDay": [
+    {
+      "id": "01-01-holy-mary-mother-of-god",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3"
+      ]
+    },
+    {
+      "id": "02-01-sv-basil-gregory-nazianzen--doctors-of-church",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "02-01-sv-basil-gregory-nazianzen--pastors",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "06-01-epiphany-lord",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3"
+      ]
+    },
+    {
+      "id": "07-01-sv-raymond-penyafort",
+      "fields": [
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "25-12-naradzhenne-pana",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3"
+      ]
+    },
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "christmas-02-01",
+      "fields": [
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "sext1Ant1",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "christmas-03-01",
+      "fields": [
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "sext1Ant1",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "christmas-04-01",
+      "fields": [
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "sext1Ant1",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "christmas-05-01",
+      "fields": [
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsTeDeum",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "sext1Ant1",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "christmas-29-12",
+      "fields": [
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "christmas-30-12",
+      "fields": [
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "christmas-31-12",
+      "fields": [
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3"
+      ]
+    },
+    {
+      "id": "christmas-w2-d1",
+      "fields": [
+        "officeOfReadingsVers",
+        "officeOfReadingsR1",
+        "officeOfReadingsR2"
+      ]
+    }
+  ],
+  "emptyContent": [
+    {
+      "id": "26-12-sv-stephen-protomartyr",
+      "fields": [
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "27-12-sv-john-apostle-evangelist",
+      "fields": [
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "28-12-holy-innocents",
+      "fields": [
+        "sext2Ant3",
+        "sext3Ant3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "29-12-sv-thomas-becket",
+      "fields": [
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "31-12-sv-sylvester-i",
+      "fields": [
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-01-01",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-02-01",
+      "fields": [
+        "officeOfReadingsTeDeum",
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-03-01",
+      "fields": [
+        "officeOfReadingsTeDeum",
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-04-01",
+      "fields": [
+        "officeOfReadingsTeDeum",
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-05-01",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-06-01",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-07-01",
+      "fields": [
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsTeDeum",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-08-01",
+      "fields": [
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsTeDeum",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-09-01",
+      "fields": [
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsTeDeum",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-10-01",
+      "fields": [
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsTeDeum",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3",
+        "vesperAnt1",
+        "vesperAnt2",
+        "vesperAnt3",
+        "vesperPs1",
+        "vesperPs2",
+        "vesperPs3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-11-01",
+      "fields": [
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsTeDeum",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant1",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant1",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-12-01",
+      "fields": [
+        "officeOfReadingsAnt1",
+        "officeOfReadingsAnt2",
+        "officeOfReadingsAnt3",
+        "officeOfReadingsPs1",
+        "officeOfReadingsPs2",
+        "officeOfReadingsPs3",
+        "officeOfReadingsTeDeum",
+        "laudesAnt1",
+        "laudesAnt2",
+        "laudesAnt3",
+        "laudesPs1",
+        "laudesPs2",
+        "laudesPs3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-25-12",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-26-12",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-27-12",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-28-12",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext1Ps1",
+        "sext1Ps2",
+        "sext1Ps3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext2Ps1",
+        "sext2Ps2",
+        "sext2Ps3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "sext3Ps1",
+        "sext3Ps2",
+        "sext3Ps3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-29-12",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-30-12",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-31-12",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3",
+        "vesper1Hymn",
+        "vesper1Ant1",
+        "vesper1Ant2",
+        "vesper1Ant3",
+        "vesper1Ps1",
+        "vesper1Ps2",
+        "vesper1Ps3",
+        "vesper1R",
+        "vesper1AntMag",
+        "vesper1Inter",
+        "vesper1Pr"
+      ]
+    },
+    {
+      "id": "christmas-w2-d1",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3"
+      ]
+    },
+    {
+      "id": "feast-buptismofthelord",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3"
+      ]
+    },
+    {
+      "id": "feast-holyfamily",
+      "fields": [
+        "sext1Ant2",
+        "sext1Ant3",
+        "sext2Ant2",
+        "sext2Ant3",
+        "sext3Ant2",
+        "sext3Ant3"
+      ]
+    }
+  ],
+  "backupPath": "C:\\Users\\User\\Documents\\GitHub\\mybrev\\reports\\backups\\fixedDays-before-christmas-markdown-2026-08-27T21-49-37-139Z.json",
+  "writtenDocuments": 22,
+  "verifiedDocuments": 22,
+  "verification": "passed"
+}

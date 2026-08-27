@@ -24,6 +24,20 @@ test('autofix removes orphan rubric closers and closes nested rubric blocks', ()
   assert.deepEqual(validatePrayerMarkdown(result.markdown), []);
 });
 
+test('autofix attaches standalone strong markers to the enclosed text', () => {
+  const result = autoFixPrayerMarkdown('Пачатак\n\n**\nВажная фраза\nна дзвюх радках\n**\n\nКанец');
+  assert.equal(
+    result.markdown,
+    'Пачатак\n\n**Важная фраза\nна дзвюх радках**\n\nКанец',
+  );
+  assert.match(renderPrayerMarkdown(result.markdown), /<strong>Важная фраза<br>\nна дзвюх радках<\/strong>/);
+});
+
+test('autofix formats separate paragraphs between standalone strong markers', () => {
+  const result = autoFixPrayerMarkdown('**\nПершы абзац\n\nДругі абзац\n**');
+  assert.equal(result.markdown, '**Першы абзац**\n\n**Другі абзац**');
+});
+
 test('renders CommonMark and the MyBrev rubric block', () => {
   const html = renderPrayerMarkdown('**Памолімся.**\n\n:::rubric\nУсе ўстаюць.\n:::');
   assert.match(html, /<strong>Памолімся\.<\/strong>/);

@@ -5,7 +5,7 @@
         <day-title :day-data="day" />
         <intro :title="title" hide-text />
 
-        <v-card class="ora" flat>
+        <v-card class="ora invitatorium-call" flat>
           <div v-if="invitatoriumOptions.length > 1" class="hour-option-picker mx-4 mt-4 mb-5">
             <div class="hour-option-picker__label">Выбар тэксту</div>
             <v-select
@@ -42,12 +42,10 @@
                 v-model="invitatoriumAntOption"
                 class="ora-ant"
                 :text="displayedDay.invitatoriumAnt"
-                :show-picker="index === 0"
-                aria-label="Выбар антыфоны закліку"
-              />
-              <br>
+              :show-picker="index === 0"
+              aria-label="Выбар антыфоны закліку"
+            />
               <div class="ora-psalm" v-html="formatPsalm(psalm)"></div>
-              <br>
             </template>
             <alternative-text
               v-model="invitatoriumAntOption"
@@ -93,7 +91,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { logger } from '@/utils/logger';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { getInvitatoriums } from '@/services/staticLiturgicalService';
@@ -113,9 +111,10 @@ import Resp from '@/components/oraparts/Resp.vue';
 import TeDeum from '@/components/oraparts/TeDeum.vue';
 import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
 import { shouldShowTeDeum } from '@/utils/liturgicalOffice';
+import { getDefaultInvitatoriumId } from '@/utils/invitatorium';
 
 const title = 'Агульная гадзіна';
-const { day, pending } = useResolvedLiturgicalDay();
+const { day, context, pending } = useResolvedLiturgicalDay();
 const invitatoriums = ref([]);
 const selectedInvitatoriumId = ref('');
 const invitatoriumAntOption = ref(0);
@@ -153,13 +152,27 @@ const invitatoriumPsalms = computed(() => (
     .map((number) => displayedDay.value?.[`invitatoriumPs${number}`])
     .filter(Boolean)
 ));
+const periodType = computed(() => day.value?._periodType || context.value?.periodType);
+
+watch([invitatoriums, periodType], () => {
+  selectedInvitatoriumId.value = getDefaultInvitatoriumId(invitatoriums.value, periodType.value);
+}, { immediate: true });
 
 onMounted(async () => {
   try {
     invitatoriums.value = await getInvitatoriums();
-    selectedInvitatoriumId.value = invitatoriums.value[0]?.id || '';
   } catch (error) {
     logger.error('[Morning] Не атрымалася загрузіць варыянты інвітаторыя:', error);
   }
 });
 </script>
+
+<style scoped>
+.invitatorium-call .ora-text {
+  padding-block: 12px !important;
+}
+
+.ora-psalm + .ora-ant {
+  margin-top: 12px;
+}
+</style>

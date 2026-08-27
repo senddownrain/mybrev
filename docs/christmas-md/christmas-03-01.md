@@ -59,6 +59,42 @@ true
 <p>Разам з анёламі мы заспяваем,<br />Гімны хвалы ўзнясём да нябёсаў,<br />Славячы Бога Айца, як і Духа,<br />З Сынам у любові роўным. Амэн.</p>
 ```
 
+## officeOfReadingsAnt1
+
+```text
+from-day
+```
+
+## officeOfReadingsAnt2
+
+```text
+from-day
+```
+
+## officeOfReadingsAnt3
+
+```text
+from-day
+```
+
+## officeOfReadingsPs1
+
+```text
+from-day
+```
+
+## officeOfReadingsPs2
+
+```text
+from-day
+```
+
+## officeOfReadingsPs3
+
+```text
+from-day
+```
+
 ## officeOfReadingsVers
 
 ```html
@@ -119,6 +155,43 @@ true
 <p>Цябе мы просім, Пане Езу,<br />Народжаны з Марыі Дзевы,<br />Хвала Табе, Айцу і Духу<br />Няхай гучыць навекі. Амэн.</p>
 ```
 
+
+## laudesAnt1
+
+```text
+from-day
+```
+
+## laudesAnt2
+
+```text
+from-day
+```
+
+## laudesAnt3
+
+```text
+from-day
+```
+
+## laudesPs1
+
+```text
+from-day
+```
+
+## laudesPs2
+
+```text
+from-day
+```
+
+## laudesPs3
+
+```text
+from-day
+```
+
 ## laudesR
 
 ```html
@@ -158,6 +231,43 @@ true
 <p>Дай праз Цябе пазнаць Айца нам<br />І Сына, што з Яго паходзіць,<br />Каб шчырай верай вызнавалі,<br />Што Ты адзіны ў Святой Тройцы. Амэн.</p>
 ```
 
+
+## sext1Ant1
+
+```text
+from-day
+```
+
+## sext1Ant2
+
+```text
+
+```
+
+## sext1Ant3
+
+```text
+
+```
+
+## sext1Ps1
+
+```text
+from-day
+```
+
+## sext1Ps2
+
+```text
+from-day
+```
+
+## sext1Ps3
+
+```text
+from-day
+```
+
 ## sext1R
 
 ```html
@@ -181,6 +291,44 @@ true
 <p>Дай нам гэта, добры Ойча, <br />У адзінстве з Тваім Сынам,<br />Разам з Духам Суцяшэння,<br />Бо Ты валадарыш вечна. Амэн.</p>
 ```
 
+
+## sext2Ant1
+
+```text
+from-day
+```
+
+## sext2Ant2
+
+```text
+
+```
+
+## sext2Ant3
+
+```text
+
+```
+
+## sext2Ps1
+
+```text
+from-day
+```
+
+## sext2Ps2
+
+```text
+from-day
+```
+
+## sext2Ps3
+
+```text
+from-day
+```
+
+
 ## sext2R
 
 ```html
@@ -202,6 +350,43 @@ true
 <p>Божа моцны, ўсё стварэнне<br />У Тваіх руках трывае.<br />Дзённага святла гадзінаў<br />Ты парадак вызначаеш.</p>
 <p>Вечар наш напоўні ззяннем,<br />Каб святло жыцця не згасла,<br />І пасля зямной вандроўкі<br />Мы прыйшлі да вечнай славы.</p>
 <p>Дай нам гэта, добры Ойча, <br />У адзінстве з Тваім Сынам,<br />Разам з Духам Суцяшэння,<br />Ты, што валадарыш вечна. Амэн.</p>
+```
+
+
+## sext3Ant1
+
+```text
+from-day
+```
+
+## sext3Ant2
+
+```text
+
+```
+
+## sext3Ant3
+
+```text
+
+```
+
+## sext3Ps1
+
+```text
+from-day
+```
+
+## sext3Ps2
+
+```text
+from-day
+```
+
+## sext3Ps3
+
+```text
+from-day
 ```
 
 ## sext3R

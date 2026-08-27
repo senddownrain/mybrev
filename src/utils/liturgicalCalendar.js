@@ -26,19 +26,20 @@ export function calculateBaptismOfLordDate(year) {
 }
 
 /**
- * Christmas uses the octave through 1 January as week 1. From 2 January the
- * psalter advances on Sunday, so the remaining season can use week 2 and,
- * when the calendar permits it, week 3 templates before the Baptism.
+ * Christmas week I begins on the first Sunday after Christmas. Dates before
+ * that Sunday still use week I as their seasonal fallback; the octave itself
+ * remains a separate date-based observance through 1 January.
  */
 export function calculateChristmasPeriodWeek(mDate) {
-  if (mDate.month() === 11 || (mDate.month() === 0 && mDate.date() === 1)) return 1;
-  if (mDate.month() !== 0 || mDate.date() < 2) return -1;
+  if (mDate.month() !== 11 && mDate.month() !== 0) return -1;
 
-  const januarySecond = moment(`${mDate.year()}-01-02`, 'YYYY-MM-DD');
-  const sundayOffset = (date) => date.isoWeekday() % 7;
-  const baseWeekStart = januarySecond.clone().subtract(sundayOffset(januarySecond), 'days');
-  const currentWeekStart = mDate.clone().subtract(sundayOffset(mDate), 'days');
-  return 2 + currentWeekStart.diff(baseWeekStart, 'weeks');
+  const christmasYear = mDate.month() === 0 ? mDate.year() - 1 : mDate.year();
+  const christmas = moment(`${christmasYear}-12-25`, 'YYYY-MM-DD');
+  if (mDate.isBefore(christmas, 'day')) return -1;
+
+  const firstSunday = firstSundayAfterChristmas(christmas);
+  if (mDate.isBefore(firstSunday, 'day')) return 1;
+  return mDate.diff(firstSunday, 'weeks') + 1;
 }
 
 function firstSundayAfterChristmas(christmas) {
@@ -226,20 +227,11 @@ export function calculateDateForContext(year, periodType, periodWeekNumber, dayO
     baseDate = fa.clone();
   } else if (periodType === 'christmas') {
     const targetIsoWeekday = dayOfWeek === 1 ? 7 : dayOfWeek - 1;
-    if (periodWeekNumber === 1) {
-      const offset = (targetIsoWeekday - christmas.isoWeekday() + 7) % 7;
-      return christmas.clone().add(offset, 'days').format('YYYY-MM-DD');
-    }
-    if (periodWeekNumber !== 2 && periodWeekNumber !== 3) return null;
-
-    const januarySecond = moment(`${year + 1}-01-02`, 'YYYY-MM-DD');
-    const baseSunday = januarySecond.clone().subtract(januarySecond.isoWeekday() % 7, 'days');
-    const weekStart = baseSunday.clone().add(periodWeekNumber - 2, 'weeks');
+    if (periodWeekNumber !== 1 && periodWeekNumber !== 2) return null;
+    const baptism = calculateBaptismOfLordDate(year + 1);
+    const weekStart = firstSundayAfterChristmas(christmas).add(periodWeekNumber - 1, 'weeks');
     const result = weekStart.clone().add(targetIsoWeekday % 7, 'days');
-    if (result.isBefore(januarySecond, 'day')) return null;
-    return result.isSameOrBefore(calculateBaptismOfLordDate(year + 1), 'day')
-      ? result.format('YYYY-MM-DD')
-      : null;
+    return result.isBefore(baptism, 'day') ? result.format('YYYY-MM-DD') : null;
   } else if (periodType === 'lent') {
     baseDate = ash.clone().add(4, 'days');
   } else if (periodType === 'holyweek') {

@@ -137,6 +137,7 @@ import {
   PLACE_LABEL_MAP,
   RANK_LABEL_MAP,
   getLiturgicalCelebrationThemeKey,
+  getLiturgicalPeriodTheme,
   getLiturgicalTheme,
 } from '@/constants/liturgical';
 import { formatDateDayMonth } from '@/utils/date';
@@ -173,7 +174,7 @@ const currentPeriodType = computed(() => {
 });
 const dateHeaderStyle = computed(() => {
   const firstDay = dayOptions.value[0]?.day || null;
-  const theme = getLiturgicalTheme(firstDay, currentPeriodType.value);
+  const theme = getLiturgicalPeriodTheme(firstDay, currentPeriodType.value);
   return {
     '--liturgical-color': theme.color,
     '--liturgical-rgb': theme.rgb,

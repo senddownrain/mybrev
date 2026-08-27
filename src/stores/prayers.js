@@ -26,6 +26,11 @@ export const usePrayersStore = defineStore('prayers', () => {
 
   let unsubscribe = null;
 
+  function refreshAllTags() {
+    const tagsArray = prayers.value.flatMap(prayer => prayer.tags || []);
+    allTags.value = [...new Set(tagsArray)].sort();
+  }
+
   /**
    * Initialize the Firestore real-time subscription for prayers.
    * Cleans up any existing subscription before creating a new one.
@@ -50,8 +55,7 @@ export const usePrayersStore = defineStore('prayers', () => {
             id: doc.id,
             ...doc.data()
           }));
-          const tagsArray = (prayers.value || []).flatMap(prayer => prayer.tags || []);
-          allTags.value = [...new Set(tagsArray)].sort();
+          refreshAllTags();
           isLoading.value = false;
           error.value = null;
           logger.log('[prayersStore] Prayers loaded:', prayers.value.length);
@@ -114,6 +118,12 @@ export const usePrayersStore = defineStore('prayers', () => {
   async function updatePrayerAction(id, data) {
     try {
       await prayerService.updatePrayer(id, data);
+      // Do not wait for the next Firestore snapshot before showing the saved
+      // value. The listener will reconcile timestamps and remote changes later.
+      prayers.value = prayers.value.map((prayer) => (
+        prayer.id === id ? { ...prayer, ...data, id } : prayer
+      ));
+      refreshAllTags();
     } catch (err) {
       error.value = err;
       throw err;

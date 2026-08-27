@@ -617,6 +617,12 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   margin-left: 1rem;
 }
 
+// Cadence signs in every psalter use the same colour as liturgical rubrics.
+.ora-psalm .psalm-marker,
+.ora-intro .psalm-marker {
+  color: var(--rubric-color);
+}
+
 // Исправление двойного скролла на страницах с ora (гадинками)
 // Убираем фиксированную высоту у v-main
 .v-main {

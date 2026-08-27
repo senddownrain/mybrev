@@ -11,9 +11,25 @@ export function removeBreakAfterAsterisk(html) {
 }
 
 const ASTERISK_PATTERN = /(?:\*|&#0*42;|&ast;)/iu;
+const PSALM_MARKER_PATTERN = /(?:\*|&#0*42;|&ast;|†|&#0*8224;|&dagger;)/giu;
 const PARAGRAPH_PATTERN = /<p\b([^>]*)>([\s\S]*?)<\/p>/giu;
 const BREAK_PATTERN = /(<br\s*\/?>)/giu;
 const TRAILING_ANTIPHON_PATTERN = /<p\b[^>]*>(?=(?:\s|&nbsp;|<[^>]+>)*(?:\d+\s*)?Ант\.)[\s\S]*?<\/p>\s*$/iu;
+
+/**
+ * Highlight the psalmody cadence signs without changing the source text.
+ * Splitting around tags keeps any existing inline markup intact.
+ */
+export function markPsalmCadenceSigns(html) {
+  return String(html || '')
+    .split(/(<[^>]*>)/u)
+    .map((part) => (
+      part.startsWith('<')
+        ? part
+        : part.replace(PSALM_MARKER_PATTERN, '<span class="psalm-marker">$&</span>')
+    ))
+    .join('');
+}
 
 function markAsPsalmStrophe(attributes) {
   if (/\bdata-psalm-strophe(?:\s*=|\s|$)/iu.test(attributes)) return attributes;
@@ -63,7 +79,7 @@ export function formatPsalmHtml(html, { stripEmbeddedAntiphon = false } = {}) {
     }
   }
 
-  return removeBreakAfterAsterisk(formatted).replace(
+  return markPsalmCadenceSigns(removeBreakAfterAsterisk(formatted)).replace(
     PARAGRAPH_PATTERN,
     (_paragraph, attributes, content) => splitPsalmParagraph(attributes, content),
   );

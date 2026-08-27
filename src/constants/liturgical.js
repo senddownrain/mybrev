@@ -113,6 +113,15 @@ const FEAST_RANKS = new Set([
   'свята',
 ]);
 
+const MEMORIAL_RANKS = new Set([
+  LITURGICAL_RANK.MEMORIAL,
+  LITURGICAL_RANK.OPTIONAL_MEMORIAL,
+  'memorial',
+  'memory',
+  'успамін',
+  'неабавязковы ўспамін',
+]);
+
 const RED_FEAST_CODES = new Set([
   'pentecost',
   'heartofjesus',
@@ -169,7 +178,7 @@ export function getLiturgicalCelebrationThemeKey(day) {
   const rank = getLiturgicalCelebrationRank(day);
   if (rank === 'solemnity') return 'gold';
   if (normalizeRank(day) && hasMarianTemplate(day)) return 'marian';
-  if (rank === 'feast') return 'white';
+  if (rank === 'feast' || MEMORIAL_RANKS.has(normalizeRank(day))) return 'white';
   return '';
 }
 
@@ -181,6 +190,15 @@ export function getLiturgicalTheme(day, fallbackPeriodType = 'default') {
   const celebrationTheme = getLiturgicalCelebrationThemeKey(day);
   return LITURGICAL_THEME_MAP[celebrationTheme]
     || LITURGICAL_THEME_MAP[day?._periodType || fallbackPeriodType]
+    || LITURGICAL_THEME_MAP.default;
+}
+
+/** Theme for the calendar day itself, without a lower-rank celebration accent. */
+export function getLiturgicalPeriodTheme(day, fallbackPeriodType = 'default') {
+  if (day?._theme === 'requiem' || day?._kind === 'office-for-dead') {
+    return LITURGICAL_THEME_MAP.requiem;
+  }
+  return LITURGICAL_THEME_MAP[day?._contextPeriodType || day?._periodType || fallbackPeriodType]
     || LITURGICAL_THEME_MAP.default;
 }
 

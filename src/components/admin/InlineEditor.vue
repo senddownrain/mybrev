@@ -6,15 +6,34 @@
           {{ fieldTitle }}
         </v-toolbar-title>
         <v-spacer></v-spacer>
+        <v-chip
+          v-if="sourceLabel"
+          :color="sourceColor"
+          size="small"
+          variant="tonal"
+          class="mr-2"
+        >
+          {{ sourceLabel }}
+        </v-chip>
         <!-- Кнопки управления: видны только если мы не в режиме редактирования -->
-        <v-btn v-if="!isEditing" @click="startEditing" variant="text" size="small" prepend-icon="mdi-pencil">Рэдагаваць</v-btn>
+        <v-btn
+          v-if="!isEditing && sourceActionLabel"
+          @click="$emit('source-action')"
+          variant="text"
+          size="small"
+          prepend-icon="mdi-source-branch"
+        >
+          {{ sourceActionLabel }}
+        </v-btn>
+        <v-btn v-if="!isEditing && !readOnly" @click="startEditing" variant="text" size="small" prepend-icon="mdi-pencil">Рэдагаваць</v-btn>
       </v-toolbar>
       <v-divider></v-divider>
 
       <!-- Режим Просмотра -->
       <v-card-text v-if="!isEditing" class="pt-2">
-        <p v-if="!modelValue" class="text-grey-darken-1 text-body-2">Тэкст адсутнічае</p>
-        <div v-else v-html="modelValue" class="ora-text"></div>
+        <p v-if="hint" class="text-medium-emphasis text-caption mb-2">{{ hint }}</p>
+        <p v-if="!previewValue" class="text-grey-darken-1 text-body-2">{{ emptyText }}</p>
+        <div v-else v-html="previewValue" class="ora-text"></div>
       </v-card-text>
 
       <!-- Режим Редактирования -->
@@ -36,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
@@ -45,10 +64,31 @@ const modelValue = defineModel();
 
 const props = defineProps({
   fieldTitle: String,
+  displayValue: {
+    type: String,
+    default: undefined,
+  },
+  sourceLabel: String,
+  sourceColor: {
+    type: String,
+    default: 'default',
+  },
+  sourceActionLabel: String,
+  hint: String,
+  emptyText: {
+    type: String,
+    default: 'Тэкст адсутнічае',
+  },
+  readOnly: Boolean,
 });
+
+defineEmits(['source-action']);
 
 const isEditing = ref(false);
 const editableContent = ref('');
+const previewValue = computed(() => (
+  props.displayValue === undefined ? modelValue.value : props.displayValue
+));
 
 const startEditing = () => {
   // Копируем текущее значение во временную переменную для редактирования

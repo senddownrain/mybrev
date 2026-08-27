@@ -4,9 +4,11 @@ import { db } from '@/plugins/firebase';
 import { LITURGICAL_DAYS_COLLECTION } from '@/constants/days';
 import { getDocOfflineAware, getDocsOfflineAware } from '@/utils/firestoreRead';
 import { logger } from '@/utils/logger';
+import { calculatePsalterWeek } from '@/utils/liturgicalPsalter';
 import {
   applySeasonalWeekdayAntiphons,
   getPeriodDayDocumentId,
+  getOrdinaryPsalterDayDocumentId,
   getPeriodPsalterDayDocumentId,
   getSeasonalDateExceptionId,
   hasMissingDaytimeFields,
@@ -14,6 +16,7 @@ import {
   isSeasonalDateException,
   isSeasonalDateDocumentId,
   resolveDateDayAgainstPeriod,
+  resolveChristmasDateAgainstPeriod,
   resolveDayAgainstPeriod,
   resolvePeriodDayAgainstPsalter,
 } from '@/utils/liturgicalDayResolution';
@@ -58,14 +61,20 @@ async function queryAll(queries) {
 
 async function withPeriodPsalterFallback(day, periodType, periodWeekNumber, dayOfWeek) {
   const resolved = resolveDayAgainstPeriod(day, null);
-  if (!resolved || !hasMissingDaytimeFields(resolved)) return resolved;
+  if (!resolved || periodType === 'christmas') return resolved;
+  if (periodType !== 'advent' && !hasMissingDaytimeFields(resolved)) return resolved;
 
-  const fallbackId = getPeriodPsalterDayDocumentId(periodType, periodWeekNumber, dayOfWeek);
+  const fallbackId = periodType === 'ordinary'
+    ? getPeriodPsalterDayDocumentId(periodType, periodWeekNumber, dayOfWeek)
+    : getOrdinaryPsalterDayDocumentId(periodWeekNumber, dayOfWeek);
   if (!fallbackId || fallbackId === resolved.id) return resolved;
   try {
     const snapshot = await getDocOfflineAware(doc(getDaysCollection(), fallbackId));
     if (!snapshot.exists()) return resolved;
-    return resolvePeriodDayAgainstPsalter(resolved, { id: snapshot.id, ...snapshot.data() });
+    const psalterDay = { id: snapshot.id, ...snapshot.data() };
+    return periodType === 'advent'
+      ? resolveDayAgainstPeriod(resolved, psalterDay, { fillMissing: true })
+      : resolvePeriodDayAgainstPsalter(resolved, psalterDay);
   } catch (error) {
     logger.error(`[liturgicalDayService] psalter fallback failed (${fallbackId}):`, error);
     return resolved;
@@ -159,6 +168,17 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = []) {
   const exclusiveFixedDate = isChristmasDateExceptionExclusion(mDate);
   const periodPromise = hasPeriod
     ? findDayByPeriod(context.periodType, context.periodWeek, context.dayOfWeek)
+      .then(async (day) => {
+        if (day || context.periodType !== 'christmas') return day;
+        const psalterWeek = calculatePsalterWeek({
+          date: mDate,
+          periodType: 'christmas',
+          periodWeek: context.periodWeek,
+        });
+        return psalterWeek > 0
+          ? findDayByPeriod('advent', psalterWeek, context.dayOfWeek)
+          : null;
+      })
     : Promise.resolve(null);
   const fixedDateVariants = [...new Set([mDate.format('DD.MM'), mDate.format('D.M')])];
   const fixedPromise = exclusiveFeastCode
@@ -199,7 +219,9 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = []) {
   const seasonal = hasSeasonalException
     ? applySeasonalWeekdayAntiphons(
       withCalendarContext(
-        resolveDayAgainstPeriod(seasonalDay, resolvedPeriodDay, { fillMissing: true }),
+        context.periodType === 'christmas'
+          ? resolveChristmasDateAgainstPeriod(seasonalDay, resolvedPeriodDay)
+          : resolveDayAgainstPeriod(seasonalDay, resolvedPeriodDay, { fillMissing: true }),
         { periodType: seasonalPeriodType, periodWeek: seasonalPeriodWeek },
       ),
       context.dayOfWeek,

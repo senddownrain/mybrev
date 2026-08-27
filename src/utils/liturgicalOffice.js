@@ -1,4 +1,5 @@
 import { LITURGICAL_RANK } from '../constants/liturgical.js';
+import { isChristmasOctaveDate } from './liturgicalPeriodTitle.js';
 
 const SOLEMNITY_RANKS = new Set([
   LITURGICAL_RANK.SOLEMNITY,
@@ -25,6 +26,15 @@ const MEMORIAL_RANKS = new Set([
 
 const TE_DEUM_EXCLUDED_SUNDAY_PERIODS = new Set(['lent', 'holyweek']);
 
+const normalizePeriodType = (day) => String(day?._periodType || '')
+  .trim()
+  .toLowerCase();
+
+const normalizeFeastCode = (day) => String(day?._feast || '')
+  .trim()
+  .toLowerCase()
+  .replace(/^feast-/, '');
+
 function normalizeRank(day) {
   return String(day?._rank || day?._feastType || day?.rank || '')
     .trim()
@@ -40,17 +50,34 @@ export function usesSundayCompletorium(day) {
 /**
  * Te Deum follows the rank/calendar rule rather than a content field:
  * - solemnities and feasts: always;
+ * - every day in the Christmas and Easter octaves;
  * - Sundays: except Lent and Holy Week;
- * - memorials and weekdays: never.
+ * - memorials and weekdays outside those octaves: never.
  */
 export function shouldShowTeDeum(day) {
   if (!day || day._kind === 'office-for-dead') return false;
+
+  const periodType = normalizePeriodType(day);
+  const periodWeek = Number(day._periodWeekNumber);
+  const dayOfWeek = Number(day._dayOfWeek);
+  const feastCode = normalizeFeastCode(day);
+
+  // The Office follows special Proper-of-Seasons rubrics during the Paschal
+  // Triduum. Palm Sunday is likewise a Sunday of Lent, even if a legacy
+  // document happens to carry a feast rank.
+  const isPaschalTriduum = periodType === 'holyweek' && dayOfWeek >= 5;
+  if (isPaschalTriduum || feastCode === 'palmsunday') return false;
 
   const rank = normalizeRank(day);
   if (MEMORIAL_RANKS.has(rank)) return false;
   if (SOLEMNITY_RANKS.has(rank) || FEAST_RANKS.has(rank)) return true;
 
-  const isSunday = Number(day._dayOfWeek) === 1;
-  const periodType = String(day._periodType || '').trim().toLowerCase();
+  const hasCalendarDate = Boolean(day._calendarDate);
+  const isWithinChristmasOctave = periodType === 'christmas'
+    && (hasCalendarDate ? isChristmasOctaveDate(day._calendarDate) : periodWeek === 1);
+  const isWithinEasterOctave = periodType === 'easter' && periodWeek === 1;
+  if (isWithinChristmasOctave || isWithinEasterOctave) return true;
+
+  const isSunday = dayOfWeek === 1;
   return isSunday && !TE_DEUM_EXCLUDED_SUNDAY_PERIODS.has(periodType);
 }

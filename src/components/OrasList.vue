@@ -90,6 +90,19 @@
             <v-list-item-subtitle v-if="ora.subtitle" class="ora-card__subtitle">
               {{ ora.subtitle }}
             </v-list-item-subtitle>
+            <v-chip
+              v-if="ora.rubric"
+              class="mt-2 vespers-rubric-chip"
+              :class="`vespers-rubric-chip--${ora.rubric.kind}`"
+              density="compact"
+              :prepend-icon="ora.rubric.icon || undefined"
+              size="small"
+              :style="ora.rubricStyle"
+              variant="tonal"
+            >
+              <span class="vespers-rubric__line" aria-hidden="true"></span>
+              <span class="vespers-rubric__label" v-html="ora.rubric.labelHtml"></span>
+            </v-chip>
             <template v-slot:append>
               <v-icon class="ora-card__arrow" icon="mdi-chevron-right" size="24"></v-icon>
             </template>
@@ -133,10 +146,18 @@ import { useAuthStore } from '@/stores/auth';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 import {
   LITURGICAL_THEME_MAP,
+  PLACE_LABEL_MAP,
   RANK_LABEL_MAP,
   getLiturgicalCelebrationThemeKey,
+  getLiturgicalPeriodTheme,
   getLiturgicalTheme,
 } from '@/constants/liturgical';
+import {
+  findTomorrowRegularVespers,
+  getTomorrowFirstVespersOptions,
+  isLocalFirstVespers,
+  isSolemnity,
+} from '@/utils/liturgicalVespers';
 
 const route = useRoute();
 const router = useRouter();
@@ -156,6 +177,8 @@ const { day: dayData, pending: loadingDay } = useResolvedLiturgicalDay();
 
 const readings = ref([]);
 const dayOptions = ref([]);
+const tomorrowFirstVespers = ref(null);
+const localTomorrowFirstVespers = ref([]);
 const loadingReadings = ref(true);
 const templateContainsDay = (template, id) => (
   template?.id === id || template?.dayIds?.includes(id)
@@ -221,7 +244,7 @@ const readingTheme = computed(() => (
     }
     : {
       ...(READING_THEMES[dayData.value?._periodType] || READING_THEMES.default),
-      ...getLiturgicalTheme(dayData.value, dayData.value?._periodType),
+      ...getLiturgicalPeriodTheme(dayData.value, dayData.value?._periodType),
       ...(getLiturgicalCelebrationThemeKey(dayData.value) === 'red'
         ? { avatarColor: 'red-lighten-4', iconColor: 'red-darken-3' }
         : {}),
@@ -245,6 +268,48 @@ const readingCardStyle = computed(() => ({
   '--reading-color-rgb': readingTheme.value.rgb,
 }));
 
+function getVespersRubricStyle(rubricDay) {
+  const theme = getLiturgicalTheme(rubricDay, rubricDay?._periodType);
+  return {
+    '--vespers-rubric-color': theme.color,
+    '--vespers-rubric-rgb': theme.rgb,
+  };
+}
+
+const vespersRubricStyle = computed(() => (
+  getVespersRubricStyle(tomorrowFirstVespers.value?.day || dayData.value)
+));
+
+const vespersRubric = computed(() => {
+  if (tomorrowFirstVespers.value) return {
+    labelHtml: formatTitleHtml(`I Нешпары · ${tomorrowFirstVespers.value.title}`),
+    kind: 'first',
+    icon: '',
+  };
+  const currentDate = moment(String(dateParam.value), ['YYYY-MM-DD', 'DD-MM-YYYY'], true);
+  if (currentDate.isoWeekday() === 7 || isSolemnity(dayData.value)) return {
+    labelHtml: 'II Нешпары',
+    kind: 'second',
+    icon: '',
+  };
+  return null;
+});
+
+// Назва свята надходзіць з даных: дазваляем толькі <br>, а іншыя тэгі экраніруем.
+function formatTitleHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\\?&lt;br\s*\/?&gt;/gi, '<br>')
+    .replace(/\r?\n/g, '<br>');
+}
+
+function localFirstVespersLabel(item) {
+  const places = (item.places || []).map((place) => PLACE_LABEL_MAP[place] || place);
+  return ['I Нешпары', item.title, ...places].filter(Boolean).join(' · ');
+}
+
 const oras = computed(() => [
   {
     name: 'invitatorium',
@@ -259,19 +324,10 @@ const oras = computed(() => [
     name: 'morning',
     title: 'Агульная гадзіна',
     subtitle: 'Invitatorium · Officium lectionis · Laudes',
-    icon: 'mdi-weather-sunset-up',
+    icon: 'mdi-sun-clock-outline',
     path: `/day/${dateParam.value}/ora/${dayId.value}/morning`,
     tag: 'Раніца',
     tagColor: 'orange-darken-3',
-  },
-  {
-    name: 'laudes',
-    title: 'Ютрань',
-    subtitle: 'Laudes matutinae',
-    icon: 'mdi-weather-sunny',
-    path: `/day/${dateParam.value}/ora/${dayId.value}/laudes`,
-    tag: 'Галоўная',
-    tagColor: 'amber-darken-3',
   },
   {
     name: 'lectionis',
@@ -281,6 +337,15 @@ const oras = computed(() => [
     path: `/day/${dateParam.value}/ora/${dayId.value}/lectionis`,
     tag: 'Разважанне',
     tagColor: 'brown',
+  },
+  {
+    name: 'laudes',
+    title: 'Ютрань',
+    subtitle: 'Laudes matutinae',
+    icon: 'mdi-weather-sunny',
+    path: `/day/${dateParam.value}/ora/${dayId.value}/laudes`,
+    tag: 'Галоўная',
+    tagColor: 'amber-darken-3',
   },
   {
     name: 'terz',
@@ -317,7 +382,28 @@ const oras = computed(() => [
     path: `/day/${dateParam.value}/ora/${dayId.value}/vesper`,
     tag: 'Галоўная',
     tagColor: 'indigo-darken-3',
+    rubric: vespersRubric.value,
+    rubricStyle: vespersRubricStyle.value,
   },
+  ...localTomorrowFirstVespers.value.map((item, index) => ({
+    name: `vesper-first-${item.sourceDayId || index}`,
+    title: 'Нешпары',
+    subtitle: 'Vesperae',
+    icon: 'mdi-weather-night-partly-cloudy',
+    path: {
+      name: 'vesper',
+      params: { day: dateParam.value, id: dayId.value },
+      query: { firstVespersDayId: item.sourceDayId },
+    },
+    tag: 'Галоўная',
+    tagColor: 'indigo-darken-3',
+    rubric: {
+      labelHtml: formatTitleHtml(localFirstVespersLabel(item)),
+      kind: 'first',
+      icon: '',
+    },
+    rubricStyle: getVespersRubricStyle(item.day),
+  })),
   {
     name: 'completorium',
     title: 'Камплета',
@@ -366,12 +452,19 @@ const loadReadings = async () => {
     loadingReadings.value = true;
     readings.value = [];
     const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
-    const [result] = await Promise.all([
+    tomorrowFirstVespers.value = null;
+    localTomorrowFirstVespers.value = [];
+    const [result, , tomorrowContent] = await Promise.all([
       getLiturgicalContentForDate(mDate.toDate()),
       loadParsedReadingsForDate(mDate.toDate(), {
         dayId: dayId.value === 'office-for-dead' ? '' : dayId.value || '',
       }),
+      getLiturgicalContentForDate(mDate.clone().add(1, 'day').toDate()),
     ]);
+    const firstVespersOptions = getTomorrowFirstVespersOptions(tomorrowContent);
+    localTomorrowFirstVespers.value = firstVespersOptions.filter(isLocalFirstVespers);
+    tomorrowFirstVespers.value = firstVespersOptions.find((item) => !isLocalFirstVespers(item))
+      || (mDate.isoWeekday() === 6 ? findTomorrowRegularVespers(tomorrowContent) : null);
     dayOptions.value = Array.isArray(result.dayOptions) ? result.dayOptions : [];
     readings.value = Array.isArray(result.itemsReadings)
       ? result.itemsReadings
@@ -566,6 +659,39 @@ watch(dateParam, (newDateParam) => {
   font-weight: 520;
   line-height: 1.3 !important;
   letter-spacing: 0.01em;
+}
+
+.vespers-rubric-chip {
+  width: fit-content;
+  max-width: 100%;
+  height: auto !important;
+  min-height: 22px;
+  padding-inline: 2px !important;
+  white-space: normal;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: color-mix(in srgb, var(--vespers-rubric-color) 34%, var(--nav-muted)) !important;
+  font-size: 0.68rem !important;
+  font-weight: 750;
+  letter-spacing: 0.03em;
+}
+
+.vespers-rubric-chip :deep(.v-chip__content) {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+.vespers-rubric__line {
+  width: 16px;
+  height: 1px;
+  flex: 0 0 16px;
+  margin-right: 7px;
+  background: rgba(var(--vespers-rubric-rgb), 0.26);
 }
 
 :deep(.reading-card .v-list-item-subtitle),

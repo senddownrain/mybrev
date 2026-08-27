@@ -21,6 +21,7 @@
           hide-details
           class="month-select"
           aria-label="Месяц"
+          :menu-props="selectMenuProps"
           @update:model-value="onMonthChange"
         ></v-select>
         
@@ -32,6 +33,7 @@
           hide-details
           class="year-select"
           aria-label="Год"
+          :menu-props="selectMenuProps"
           @update:model-value="onYearChange"
         ></v-select>
       </div>
@@ -120,6 +122,13 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
+
+// Глобальные стили меню скрывают overflow у всех v-select. Для календаря
+// длинные списки (12 месяцев и диапазон лет) должны оставаться прокручиваемыми.
+const selectMenuProps = {
+  contentClass: 'date-picker-select-menu',
+  maxHeight: 320
+}
 
 // Текущий месяц для отображения
 const currentMonth = ref(moment())
@@ -484,6 +493,12 @@ const nextMonth = () => {
   color: var(--nav-on-surface);
   opacity: 0.52;
   padding-inline-start: 2px;
+}
+
+:global(.v-menu > .date-picker-select-menu.v-overlay__content > .v-list) {
+  max-height: min(320px, calc(100vh - 32px));
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
 }
 
 @media (max-width: 400px) {

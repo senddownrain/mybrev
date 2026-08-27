@@ -79,4 +79,9 @@ defineProps({
   color: var(--rubric-color);
   font-weight: 800;
 }
+
+.ora-text :deep(.intercessions__marker) {
+  color: var(--rubric-color);
+  font-weight: 800;
+}
 </style>

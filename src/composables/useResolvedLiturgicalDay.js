@@ -20,6 +20,7 @@ export function useResolvedLiturgicalDay() {
     getCachedLiturgicalContentForDate,
   } = useLiturgicalContent();
   const day = ref(null);
+  const context = ref(null);
   const pending = ref(true);
   const error = ref('');
   let sequence = 0;
@@ -31,6 +32,7 @@ export function useResolvedLiturgicalDay() {
     pending.value = true;
     error.value = '';
     day.value = null;
+    context.value = null;
     if (!date.isValid()) {
       error.value = 'Няправільная дата літургічнага дня.';
       pending.value = false;
@@ -38,6 +40,7 @@ export function useResolvedLiturgicalDay() {
     }
 
     const resolveDay = (content) => {
+      context.value = content.context || null;
       const selected = content.itemsDays?.find((item) => item.id === id)
         || content.dayOptions?.find((item) => item.templates?.some((template) => (
           template.id === id || template.dayIds?.includes(id)
@@ -57,7 +60,12 @@ export function useResolvedLiturgicalDay() {
         content.context?.dayOfWeek,
       );
       const periodDay = content.itemsDays?.find((item) => item.id === periodId) || null;
-      return periodDay ? resolveDayAgainstPeriod(selected, periodDay) : selected;
+      const resolved = periodDay ? resolveDayAgainstPeriod(selected, periodDay) : selected;
+      return {
+        ...resolved,
+        _calendarDate: date.format('YYYY-MM-DD'),
+        _contextPeriodType: content.context?.periodType || '',
+      };
     };
 
     const cached = getCachedLiturgicalContentForDate(date.toDate());
@@ -82,5 +90,11 @@ export function useResolvedLiturgicalDay() {
   }
 
   watch([() => route.params.day, () => route.params.id], load, { immediate: true });
-  return { day, pending: computed(() => pending.value), error: computed(() => error.value), reload: load };
+  return {
+    day,
+    context: computed(() => context.value),
+    pending: computed(() => pending.value),
+    error: computed(() => error.value),
+    reload: load,
+  };
 }

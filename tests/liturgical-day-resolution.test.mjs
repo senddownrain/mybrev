@@ -7,6 +7,7 @@ import {
   getFixedDayTemplateKey,
   getDaytimeHourField,
   getPeriodDayDocumentId,
+  getOrdinaryPsalterDayDocumentId,
   getPeriodPsalterDayDocumentId,
   getPeriodDayTemplateDocumentId,
   getSeasonalDateExceptionId,
@@ -15,6 +16,7 @@ import {
   hasSingleAntiphonPsalmody,
   isSeasonalDateDocumentId,
   resolveDateDayAgainstPeriod,
+  resolveChristmasDateAgainstPeriod,
   resolveDayAgainstPeriod,
   resolvePeriodDayAgainstPsalter,
 } from '../src/utils/liturgicalDayResolution.js';
@@ -56,6 +58,9 @@ test('maps a period week to its four-week psalter template', () => {
   assert.equal(getPeriodPsalterDayDocumentId('ordinary', 21, 4), 'ordinary-w1-d4');
   assert.equal(getPeriodPsalterDayDocumentId('ordinary', 22, 4), 'ordinary-w2-d4');
   assert.equal(getPeriodPsalterDayDocumentId('ordinary', 0, 4), '');
+  assert.equal(getOrdinaryPsalterDayDocumentId(4, 7), 'ordinary-w4-d7');
+  assert.equal(getOrdinaryPsalterDayDocumentId(1, 2), 'ordinary-w1-d2');
+  assert.equal(getOrdinaryPsalterDayDocumentId(1, 1), 'ordinary-w5-d1');
 });
 
 test('repairs empty period daytime fields from the matching psalter day only', () => {
@@ -205,6 +210,25 @@ test('date documents inherit every missing text from the period day', () => {
   assert.equal(resolved.laudesHymn, '<p>Гімн дня</p>');
   assert.equal(resolved.laudesPs1, '<p>Псальм дня</p>');
   assert.equal(resolved.laudesPr, '<p>Уласная малітва</p>');
+});
+
+test('second Christmas Sunday keeps its proper office and takes only from-day texts from the date', () => {
+  const resolved = resolveChristmasDateAgainstPeriod({
+    id: 'christmas-03-01',
+    officeOfReadingsR1: '<p>Чытанне 3 студзеня</p>',
+    laudesHymn: '<p>Гімн 3 студзеня</p>',
+  }, {
+    id: 'christmas-w2-d1',
+    _dayName: 'ІІ нядзеля пасля Нараджэння Пана',
+    officeOfReadingsR1: 'from-day',
+    laudesHymn: '<p>Уласны нядзельны гімн</p>',
+    vesper1Hymn: '<p>Гімн першых Нешпараў</p>',
+  });
+
+  assert.equal(resolved.id, 'christmas-w2-d1');
+  assert.equal(resolved.officeOfReadingsR1, '<p>Чытанне 3 студзеня</p>');
+  assert.equal(resolved.laudesHymn, '<p>Уласны нядзельны гімн</p>');
+  assert.equal(resolved.vesper1Hymn, '<p>Гімн першых Нешпараў</p>');
 });
 
 test('date documents keep one antiphon around three inherited psalms', () => {
