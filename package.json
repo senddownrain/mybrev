@@ -14,6 +14,7 @@
     "db:import-readings": "node import-readings-to-newreadings.js",
     "db:backup": "node scripts/export-firestore-snapshot.mjs",
     "db:snapshot:query": "node scripts/query-firestore-snapshot.mjs",
+    "db:import-christmas-markdown": "node scripts/import-christmas-markdown.mjs",
     "db:migrate-readings": "node migrate-readings-to-new.js",
     "db:migrate-prayers-markdown": "node scripts/migrate-prayers-to-markdown.mjs",
     "db:repair-mass-rubrics": "node scripts/repair-mass-order-rubrics.mjs",
