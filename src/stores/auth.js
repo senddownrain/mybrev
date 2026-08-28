@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import { logger } from '@/utils/logger';
@@ -14,6 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
   const loading = ref(true);
   /** Reactive admin flag — updated asynchronously after auth state change */
   const isAdmin = ref(false);
+  let authReadyPromise = null;
 
   /**
    * Check admin status: Firestore `admins/{uid}` first, fallback to hardcoded ADMIN_UIDS.
@@ -35,23 +35,40 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const init = () => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, async (firebaseUser) => {
-      loading.value = true;
-      user.value = firebaseUser;
+    if (authReadyPromise) return authReadyPromise;
 
-      if (firebaseUser) {
-        // Keep loading = true until admin check resolves so router guard waits
-        isAdmin.value = await checkIsAdmin(firebaseUser.uid);
-      } else {
-        isAdmin.value = false;
-      }
+    loading.value = true;
+    authReadyPromise = import('firebase/auth').then(({ getAuth, onAuthStateChanged }) => (
+      new Promise((resolve) => {
+        let firstStateResolved = false;
+        onAuthStateChanged(getAuth(), async (firebaseUser) => {
+          loading.value = true;
+          user.value = firebaseUser;
 
+          if (firebaseUser) {
+            isAdmin.value = await checkIsAdmin(firebaseUser.uid);
+          } else {
+            isAdmin.value = false;
+          }
+
+          loading.value = false;
+          if (!firstStateResolved) {
+            firstStateResolved = true;
+            resolve();
+          }
+        });
+      })
+    )).catch((error) => {
       loading.value = false;
+      authReadyPromise = null;
+      throw error;
     });
+
+    return authReadyPromise;
   };
 
   const login = async (email, password) => {
+    const { getAuth, signInWithEmailAndPassword, signOut } = await import('firebase/auth');
     const auth = getAuth();
     loading.value = true;
     try {
@@ -76,6 +93,7 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const logout = async () => {
+    const { getAuth, signOut } = await import('firebase/auth');
     const auth = getAuth();
     await signOut(auth);
     await router.push('/');

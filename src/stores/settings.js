@@ -6,6 +6,7 @@ import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { validateCategory } from '@/utils/validators';
 import { logger } from '@/utils/logger';
 import { requestWakeLock, releaseWakeLock } from '@/composables/useWakeLock';
+import { ensureReaderFontLoaded } from '@/utils/fonts';
 
 export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme();
@@ -34,6 +35,7 @@ export const useSettingsStore = defineStore('settings', () => {
   }, { immediate: true });
 
   watch(fontFamily, (newFont) => {
+    ensureReaderFontLoaded(newFont);
     document.documentElement.style.setProperty('--reader-font-family', newFont);
     localStorage.setItem('fontFamily', newFont);
   }, { immediate: true });

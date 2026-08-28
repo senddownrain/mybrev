@@ -4,7 +4,7 @@
  * - In production: only errors are logged, and they are also sent to Sentry.
  */
 
-import * as Sentry from '@sentry/vue';
+import { reportToSentry } from '@/plugins/sentry';
 
 const isDev = import.meta.env.DEV;
 
@@ -28,9 +28,9 @@ export const logger = {
       const [message, ...rest] = args;
       const err = rest.find(a => a instanceof Error);
       if (err) {
-        Sentry.captureException(err, { extra: { message } });
+        reportToSentry('exception', err, { extra: { message } });
       } else {
-        Sentry.captureMessage(String(message), { level: 'error', extra: { details: rest } });
+        reportToSentry('message', String(message), { level: 'error', extra: { details: rest } });
       }
     }
   },

@@ -213,7 +213,7 @@
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { collection, doc, getDoc, getDocs, writeBatch } from 'firebase/firestore';
-import { useFirestore } from 'vuefire';
+import { db } from '@/plugins/firebase';
 import InlineEditor from '@/components/admin/InlineEditor.vue';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { useNotifier } from '@/composables/useNotifier';
@@ -248,7 +248,6 @@ const COMPLETORIUM_COLLECTION = 'completoriums';
 
 const route = useRoute();
 const router = useRouter();
-const db = useFirestore();
 const { computeLiturgicalContextForDate } = useLiturgicalDay();
 const { success, error: notifyError } = useNotifier();
 

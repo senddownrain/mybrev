@@ -12,6 +12,7 @@ export function usePrayers() {
     allTags,
     isLoading,
     error,
+    init: prayersStore.init,
     addPrayer: prayersStore.addPrayer,
     deletePrayer: prayersStore.deletePrayer,
     updatePrayer: prayersStore.updatePrayer,
