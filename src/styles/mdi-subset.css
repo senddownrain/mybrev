@@ -71,6 +71,7 @@
 .mdi-eye-outline::before { content: "\F06D0"; }
 .mdi-eyedropper::before { content: "\F020A"; }
 .mdi-file-question-outline::before { content: "\F1036"; }
+.mdi-folder-cog-outline::before { content: "\F1080"; }
 .mdi-format-color-text::before { content: "\F069E"; }
 .mdi-format-font::before { content: "\F06D6"; }
 .mdi-format-font-size-increase::before { content: "\F09F4"; }

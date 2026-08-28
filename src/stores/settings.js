@@ -15,7 +15,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const fontFamily = ref(normalizeReaderFont(localStorage.getItem('fontFamily')));
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
   const menuCategories = ref(JSON.parse(localStorage.getItem('menuCategories') || JSON.stringify(DEFAULT_CATEGORIES)));
-  const defaultPrayerCategoryNames = ref(JSON.parse(localStorage.getItem('defaultPrayerCategoryNames') || '[]')));
+  const defaultPrayerCategoryNames = ref(JSON.parse(localStorage.getItem('defaultPrayerCategoryNames') || '[]'));
   const defaultPrayerTags = computed(() => [...new Set(
     menuCategories.value
       .filter((category) => defaultPrayerCategoryNames.value.includes(category.name))
