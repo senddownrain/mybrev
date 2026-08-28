@@ -3,6 +3,7 @@ import test from 'node:test';
 import {
   autoFixPrayerMarkdown,
   htmlToPrayerMarkdown,
+  promotePrayerRubrics,
   prayerMarkdownToPlainText,
   renderPrayerMarkdown,
   validatePrayerMarkdown,
@@ -59,6 +60,29 @@ test('prayer autofix migration repairs legacy localized text and sets its Markdo
     { field: 'textVersions', before: { be: '#Загаловак' }, after: { be: '# Загаловак' } },
     { field: 'textFormat', before: undefined, after: 'mybrev-markdown' },
     { field: 'textFormatVersion', before: undefined, after: 1 },
+  ]);
+});
+
+test('promotes clear liturgical directions to rubric blocks', () => {
+  const result = promotePrayerRubrics('Пасля кароткага маўчання цэлебрант кажа:\n\nБожа, пачуй нас.\n\nСвятар робіць знак крыжа.');
+  assert.equal(
+    result.markdown,
+    ':::rubric\nПасля кароткага маўчання цэлебрант кажа:\n:::\n\nБожа, пачуй нас.\n\n:::rubric\nСвятар робіць знак крыжа.\n:::',
+  );
+  assert.equal(result.rubricsAdded, 2);
+});
+
+test('does not promote speaker labels, spoken lines, quotations, or litany responses', () => {
+  const source = 'Святар:\n\nЦ.: Молімся: Божа, пачуй нас.\n\n_«Пан кажа: любіце адзін аднаго»_\n\n– _змілуйся над намі._';
+  assert.deepEqual(promotePrayerRubrics(source), { markdown: source, changed: false, rubricsAdded: 0 });
+});
+
+test('prayer autofix migration can include action-direction rubric promotion', () => {
+  const plan = buildPrayerAutofixPlan([
+    { id: 'rubrics', text: 'Святар кажа:\n\nПамолімся.', textFormat: 'mybrev-markdown', textFormatVersion: 1 },
+  ], { rubrics: true });
+  assert.deepEqual(plan[0].updates, [
+    { field: 'text', before: 'Святар кажа:\n\nПамолімся.', after: ':::rubric\nСвятар кажа:\n:::\n\nПамолімся.' },
   ]);
 });
 

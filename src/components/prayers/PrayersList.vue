@@ -249,7 +249,7 @@ async function confirmDelete() {
     await deletePrayer(prayerToDelete.value.id);
     notifySuccess('Малітва выдалена');
     closeDeleteDialog();
-  } catch (error) {
+  } catch {
     notifyError('Памылка пры выдаленні малітвы');
   } finally {
     isDeleting.value = false;

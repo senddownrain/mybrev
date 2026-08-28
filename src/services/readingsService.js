@@ -36,7 +36,7 @@ async function queryDocs(q) {
 }
 
 /**
- * Fetch parsed readings for a liturgical date.
+ * Fetch structured readings for a liturgical date.
  *
  * Priority: dynamic feast > seasonal/fixed date > period (weekday year 1/2 or Sunday A/B/C)
  *
@@ -45,7 +45,7 @@ async function queryDocs(q) {
  * @param {string[]} dynamicFeastCodes - feast codes from getDynamicFeastCodesForDate (format: 'feast-xxx')
  * @returns {Promise<Object[]>}
  */
-export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes = [], options = {}) {
+export async function getReadingsForDate(mDate, context, dynamicFeastCodes = [], options = {}) {
   const { periodType, periodWeek, dayOfWeek, cycle, sundayCycle = cycle } = context;
   const selectVariants = (documents) => selectReadingLectionaryVariants(documents, { cycle, sundayCycle });
   const dateStr = ddmm(mDate);
@@ -133,11 +133,11 @@ export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes
     // Filter by cycle if the feast has cycle variants, otherwise take all
     const result = selectVariants(unique);
     if (result.length > 0) {
-      logger.log(`[parsedReadingsService] feast match (${dynamicFeastCodes}): ${result.length}`);
+      logger.log(`[readingsService] feast match (${dynamicFeastCodes}): ${result.length}`);
       return result;
     }
     if (unique.length > 0) {
-      logger.log(`[parsedReadingsService] feast match (no cycle filter): ${unique.length}`);
+      logger.log(`[readingsService] feast match (no cycle filter): ${unique.length}`);
       return unique;
     }
   }
@@ -152,7 +152,7 @@ export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes
     // Sunday feasts in the Christmas octave have year set (A/B/C); they take priority
     // over weekday octave docs (year=null) and suppress them for that Sunday.
     const selected = selectVariants(selectCalendarDayVariants(docs, dayOfWeek));
-    logger.log(`[parsedReadingsService] fixed/seasonal ${dateStr} year=${cycle}: ${selected.length}`);
+    logger.log(`[readingsService] fixed/seasonal ${dateStr} year=${cycle}: ${selected.length}`);
     if (selected.length) return selected;
   }
 
@@ -200,7 +200,7 @@ export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes
   const sorted = [...fixed, ...period];
 
   logger.log(
-    `[parsedReadingsService] ${dateStr} period=${periodType} w${periodWeek} d${dayOfWeek} cycle=${cycle}: ${sorted.length} (fixed=${fixed.length} period=${period.length})`,
+    `[readingsService] ${dateStr} period=${periodType} w${periodWeek} d${dayOfWeek} cycle=${cycle}: ${sorted.length} (fixed=${fixed.length} period=${period.length})`,
   );
   return sorted;
 }

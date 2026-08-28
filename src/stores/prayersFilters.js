@@ -6,8 +6,7 @@ import { ref, watch } from 'vue';
  * Replaces module-level refs in usePrayersFilters composable so state is
  * visible in Pinia DevTools and properly SSR-safe.
  *
- * Note: debounce is implemented inline with watch() instead of useDebounce()
- * because useDebounce() calls onUnmounted() which requires a component context
+ * Debounce is implemented inline because this store has no component lifecycle.
  * and would throw a Vue warning inside a Pinia store setup function.
  */
 export const usePrayersFiltersStore = defineStore('prayersFilters', () => {

@@ -139,7 +139,7 @@ import { useRoute, useRouter } from 'vue-router';
 import moment from '@/utils/moment-be';
 
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
-import { useParsedReadings } from '@/composables/useParsedReadings';
+import { useReadings } from '@/composables/useReadings';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { logger } from '@/utils/logger';
 import { useAuthStore } from '@/stores/auth';
@@ -163,10 +163,10 @@ const route = useRoute();
 const router = useRouter();
 const { getLiturgicalContentForDate } = useLiturgicalContent();
 const {
-  items: parsedReadings,
-  isLoading: loadingParsedReadings,
-  loadForDate: loadParsedReadingsForDate,
-} = useParsedReadings();
+  items: readings,
+  isLoading: loadingMassReadings,
+  loadForDate: loadReadingsForDate,
+} = useReadings();
 const authStore = useAuthStore();
 const isAdmin = computed(() => authStore.isAdmin);
 
@@ -175,11 +175,10 @@ const dateParam = computed(() => route.params.day);
 
 const { day: dayData, pending: loadingDay } = useResolvedLiturgicalDay();
 
-const readings = ref([]);
 const dayOptions = ref([]);
 const tomorrowFirstVespers = ref(null);
 const localTomorrowFirstVespers = ref([]);
-const loadingReadings = ref(true);
+const loadingContent = ref(true);
 const templateContainsDay = (template, id) => (
   template?.id === id || template?.dayIds?.includes(id)
 );
@@ -194,7 +193,7 @@ const selectedTemplateId = computed(() => (
 ));
 
 const loadingOra = computed(() => (
-  loadingDay.value || loadingReadings.value || loadingParsedReadings.value
+  loadingDay.value || loadingContent.value || loadingMassReadings.value
 ));
 
 const READING_THEMES = Object.freeze({
@@ -416,7 +415,7 @@ const oras = computed(() => [
 ]);
 
 const readingReferences = computed(() => {
-  const references = parsedReadings.value.flatMap((reading) => (
+  const references = readings.value.flatMap((reading) => (
     ['reading1', 'reading2', 'gospel']
       .map((section) => String(reading?.[section]?.bible || '').trim())
       .filter(Boolean)
@@ -449,14 +448,13 @@ const selectTemplate = (id) => {
 
 const loadReadings = async () => {
   try {
-    loadingReadings.value = true;
-    readings.value = [];
+    loadingContent.value = true;
     const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
     tomorrowFirstVespers.value = null;
     localTomorrowFirstVespers.value = [];
     const [result, , tomorrowContent] = await Promise.all([
       getLiturgicalContentForDate(mDate.toDate()),
-      loadParsedReadingsForDate(mDate.toDate(), {
+      loadReadingsForDate(mDate.toDate(), {
         dayId: dayId.value === 'office-for-dead' ? '' : dayId.value || '',
       }),
       getLiturgicalContentForDate(mDate.clone().add(1, 'day').toDate()),
@@ -466,21 +464,19 @@ const loadReadings = async () => {
     tomorrowFirstVespers.value = firstVespersOptions.find((item) => !isLocalFirstVespers(item))
       || (mDate.isoWeekday() === 6 ? findTomorrowRegularVespers(tomorrowContent) : null);
     dayOptions.value = Array.isArray(result.dayOptions) ? result.dayOptions : [];
-    readings.value = Array.isArray(result.itemsReadings)
-      ? result.itemsReadings
-      : [];
   } catch (e) {
     logger.error('[OrasList] Памылка пры загрузцы чытанняў:', e);
-    readings.value = [];
   } finally {
-    loadingReadings.value = false;
+    loadingContent.value = false;
   }
 };
 
 const goToCreateDay = () => {
   const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
   const weekDay = mDate.isoWeekday();
-  const periodCandidate = readings.value.find((item) => item._periodType);
+  const periodCandidate = dayData.value
+    || dayOptions.value.find((option) => option.day?._periodType)?.day
+    || null;
   router.push({
     name: 'AdminDayEditor',
     params: { id: 'new' },

@@ -290,6 +290,11 @@ const savePrayerForm = () => {
 };
 
 const goBack = () => {
+  if (route.name === 'PrayerView') {
+    router.push({ name: 'PrayersList' });
+    return;
+  }
+
   if (window.history.length > 1) {
     router.go(-1);
   } else {

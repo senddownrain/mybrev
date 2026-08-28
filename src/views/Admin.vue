@@ -38,6 +38,12 @@ const editors = [
     icon: 'mdi-book-open-page-variant',
     to: { name: 'AdminParsedReadingEditor', params: { id: 'new' } },
   },
+  {
+    title: 'Стварыць малітву',
+    description: 'Стварыць новую малітву ў калекцыі prayers.',
+    icon: 'mdi-hands-pray',
+    to: { name: 'PrayerAdd' },
+  },
 ];
 </script>
 

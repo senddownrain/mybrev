@@ -53,7 +53,7 @@ console.warn = (...args) => {
   const message = args.map(arg => {
     try {
       return typeof arg === 'string' ? arg : String(arg)
-    } catch (e) {
+    } catch {
       return '[object]'
     }
   }).join(' ')
@@ -99,6 +99,7 @@ export default createVuetify({
     messages: {
       be: {
         ...beLocale,
+        badge: 'Значок',
         open: 'Адкрыць',
         close: 'Закрыць',
         loading: 'Загрузка...',

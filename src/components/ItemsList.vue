@@ -116,7 +116,7 @@
         <v-icon size="48">mdi-book-remove-outline</v-icon>
         <p class="mt-2">Нічога не знойдзена.</p>
         <p class="text-caption">
-          Для {{ currentDate.format('D MMM YYYY') }} не знойдзены ні чытанні, ні літургічны дзень
+          Для {{ currentDate.format('D MMM YYYY') }} не знойдзены літургічны дзень
           (ні па перыядзе, ні па фіксаванай даце).
         </p>
       </v-col>
@@ -126,7 +126,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { useAppBar } from '@/composables/useAppBar';
@@ -143,7 +143,6 @@ import {
 import { formatDateDayMonth } from '@/utils/date';
 
 const route = useRoute();
-const router = useRouter();
 
 const {
   getLiturgicalContentForDate,
@@ -275,17 +274,6 @@ const fetchItemsForDate = async (date) => {
 function retryFetch() {
   fetchItemsForDate(currentDate.value);
 }
-
-function navigateToDate(date) {
-  const dateString = date.format('YYYY-MM-DD');
-  router.push({ name: 'SelectedDay', params: { day: dateString } });
-}
-
-const goToNextDay = () =>
-  navigateToDate(currentDate.value.clone().add(1, 'day'));
-
-const goToPrevDay = () =>
-  navigateToDate(currentDate.value.clone().subtract(1, 'day'));
 
 const optionRoute = (option) => {
   const targetId = option.dayId || `missing-${option.key}`;

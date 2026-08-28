@@ -5,7 +5,12 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
-import { autoFixPrayerMarkdown, PRAYER_TEXT_FORMAT, PRAYER_TEXT_FORMAT_VERSION } from '../src/utils/prayerMarkdown.js';
+import {
+  autoFixPrayerMarkdown,
+  promotePrayerRubrics,
+  PRAYER_TEXT_FORMAT,
+  PRAYER_TEXT_FORMAT_VERSION,
+} from '../src/utils/prayerMarkdown.js';
 import { openFirestoreSnapshot } from './lib/firestore-snapshot.mjs';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -20,6 +25,7 @@ const WRITE_CHUNK_SIZE = 40;
 function parseArgs(argv) {
   const options = {
     apply: false,
+    rubrics: false,
     snapshot: DEFAULT_SNAPSHOT_DIR,
     report: DEFAULT_REPORT_PATH,
     serviceAccount: DEFAULT_SERVICE_ACCOUNT_PATH,
@@ -28,6 +34,7 @@ function parseArgs(argv) {
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === '--apply') options.apply = true;
+    else if (argument === '--rubrics') options.rubrics = true;
     else if (argument === '--snapshot') options.snapshot = path.resolve(argv[++index]);
     else if (argument.startsWith('--snapshot=')) options.snapshot = path.resolve(argument.slice('--snapshot='.length));
     else if (argument === '--report') options.report = path.resolve(argv[++index]);
@@ -47,12 +54,14 @@ Dry-run reads only a local snapshot. Firestore is contacted only with --apply.
 
 Usage:
   node scripts/autofix-prayer-markdown.mjs
+  node scripts/autofix-prayer-markdown.mjs --rubrics
   node scripts/autofix-prayer-markdown.mjs --apply
 
 Options:
   --snapshot <dir>          Local snapshot containing the prayers collection
   --report <file>           Dry-run/apply report path
   --apply                   Verify, back up, write, and verify again
+  --rubrics                 Also promote high-confidence action directions to rubric blocks
   --service-account <file>  Firebase service account used only with --apply`);
 }
 
@@ -74,13 +83,26 @@ function chunks(items, size) {
   return result;
 }
 
-export function buildPrayerAutofixPlan(documents) {
+function fixText(value, { rubrics }) {
+  const technical = autoFixPrayerMarkdown(value);
+  const semantic = rubrics ? promotePrayerRubrics(technical.markdown) : null;
+  return {
+    markdown: semantic?.markdown ?? technical.markdown,
+    changed: technical.changed || Boolean(semantic?.changed),
+    fixes: [
+      ...technical.fixes,
+      ...(semantic?.rubricsAdded ? [`дадзены рубрыкі: ${semantic.rubricsAdded}`] : []),
+    ],
+  };
+}
+
+export function buildPrayerAutofixPlan(documents, { rubrics = false } = {}) {
   return documents.flatMap((document) => {
     const updates = [];
     const fixes = new Set();
 
     if (typeof document.text === 'string') {
-      const result = autoFixPrayerMarkdown(document.text);
+      const result = fixText(document.text, { rubrics });
       if (result.changed) {
         updates.push({ field: 'text', before: document.text, after: result.markdown });
         result.fixes.forEach((fix) => fixes.add(fix));
@@ -92,7 +114,7 @@ export function buildPrayerAutofixPlan(documents) {
       let textVersionsChanged = false;
       Object.entries(document.textVersions).forEach(([locale, value]) => {
         if (typeof value !== 'string') return;
-        const result = autoFixPrayerMarkdown(value);
+        const result = fixText(value, { rubrics });
         if (!result.changed) return;
         afterTextVersions[locale] = result.markdown;
         textVersionsChanged = true;
@@ -206,7 +228,7 @@ async function main() {
   const snapshot = await openFirestoreSnapshot(options.snapshot);
   const documents = await snapshot.collection(COLLECTION);
   if (!documents) throw new Error(`Snapshot does not contain ${COLLECTION}: ${snapshot.root}`);
-  const changes = buildPrayerAutofixPlan(documents);
+  const changes = buildPrayerAutofixPlan(documents, options);
   const report = {
     generatedAt: new Date().toISOString(),
     mode: options.apply ? 'apply' : 'dry-run',
@@ -220,6 +242,7 @@ async function main() {
     scannedDocuments: documents.length,
     affectedDocuments: changes.length,
     affectedFields: changes.reduce((sum, change) => sum + change.updates.length, 0),
+    rubricPromotion: options.rubrics,
     changes: reportChanges(changes),
   };
   if (options.apply && changes.length) Object.assign(report, await applyPlan(changes, options));

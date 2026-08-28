@@ -45,7 +45,7 @@ export async function warmupDateWindow(baseDate = new Date()) {
       const key = date.format('YYYY-MM-DD');
       const results = await Promise.allSettled([
         liturgicalStore.fetchContentByDate(date.toDate()),
-        liturgicalStore.fetchParsedReadingsByDate(date.toDate(), {
+        liturgicalStore.fetchReadingsByDate(date.toDate(), {
           includeAlternatives: true,
         }),
       ]);

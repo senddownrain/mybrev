@@ -29,6 +29,10 @@ test('local snapshot supports collection, document, and filtered reads', async (
 
   const snapshot = await openFirestoreSnapshot(directory);
   assert.deepEqual(snapshot.collectionPaths, ['days']);
+  assert.deepEqual((await snapshot.collectionEntries('days'))[0], {
+    id: 'one',
+    data: { _date: '26.08', _dayIds: ['linked'] },
+  });
   assert.equal((await snapshot.document('days', 'two'))._date, '27.08');
   assert.deepEqual(
     (await snapshot.query('days', [{ field: '_date', value: '26.08' }])).map(item => item.id),

@@ -47,7 +47,7 @@ function firstSundayAfterChristmas(christmas) {
   return christmas.clone().add(daysToSunday, 'days');
 }
 
-function christmasSeasonBounds(mDate, opts, nextYearOpts) {
+function christmasSeasonBounds(mDate, _opts, _nextYearOpts) {
   const year = mDate.year();
   const currentChristmas = moment(`${year}-12-25`, 'YYYY-MM-DD');
   const startsThisYear = mDate.isSameOrAfter(currentChristmas, 'day');
@@ -211,14 +211,13 @@ export function computeLiturgicalContext(mDate, opts, nextYearOpts, dynamicDates
  * @returns {string|null} Date string in 'YYYY-MM-DD' format, or null if the period type is
  *   unrecognised or opts is null
  */
-export function calculateDateForContext(year, periodType, periodWeekNumber, dayOfWeek, opts, nextYearOpts) {
+export function calculateDateForContext(year, periodType, periodWeekNumber, dayOfWeek, opts, _nextYearOpts) {
   if (!opts) return null;
 
   const fa        = getMoment(opts.firstAdventSunday);
   const christmas = moment(`${year}-12-25`, 'YYYY-MM-DD');
   const easter    = getMoment(opts.easterSunday);
   const ash       = getMoment(opts.ashWednesday);
-  const pentecost = getMoment(opts.pentecost);
 
   let baseDate     = null;
   let adjustedWeek = periodWeekNumber;

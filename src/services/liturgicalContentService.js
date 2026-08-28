@@ -1,4 +1,4 @@
-/** Assemble liturgical days with readings from the canonical readings service. */
+/** Assemble liturgical-day options without querying the independent readings collection. */
 import { logger } from '@/utils/logger';
 import {
   PLACE_LABEL_MAP,
@@ -8,7 +8,6 @@ import {
 } from '@/constants/liturgical';
 import { formatLiturgicalPeriodTitle } from '@/utils/liturgicalPeriodTitle';
 import { fetchDaysForDate } from '@/services/liturgicalDayService';
-import { getParsedReadingsForDate } from '@/services/parsedReadingsService';
 import {
   getFixedCelebrationKey,
   groupFixedCelebrationDays,
@@ -48,17 +47,6 @@ function buildDayTitle(day, context, date) {
   return day?._title || day?._dayName || buildPeriodTitle(context, date);
 }
 
-function matchingReading(day, readings) {
-  return readings.find((item) => item.id === day?.id)
-    || readings.find((item) => item._dayId === day?.id)
-    || readings.find((item) => Array.isArray(item._dayIds) && item._dayIds.includes(day?.id))
-    || readings.find((item) => normalizedFeastCode(item._feast) === normalizedFeastCode(day?._feast))
-    || readings.find((item) => item._date && item._date === day?._date)
-    || readings.find((item) => !item.place && !item._place)
-    || readings[0]
-    || null;
-}
-
 const normalizedFeastCode = (code) => String(code || '').replace(/^feast-/, '');
 
 function fixedSubtitle(day, count) {
@@ -72,25 +60,7 @@ function fixedSubtitle(day, count) {
 
 export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []) {
   logger.log(`[liturgicalContentService] Fetching ${mDate.format('YYYY-MM-DD')}`);
-  const [daysResult, readings] = await Promise.all([
-    fetchDaysForDate(mDate, context, dynamicFeastCodes),
-    getParsedReadingsForDate(mDate, context, dynamicFeastCodes, { includeAlternatives: true }),
-  ]);
-
-  const periodReadings = readings.filter((item) => item._periodType && !item._date && !item._feast);
-  const fixedReadings = readings.filter((item) => item._date);
-  const dynamicReadings = readings.filter((item) => item._feast && (
-    !daysResult.exclusiveFeastCode
-      || normalizedFeastCode(item._feast) === daysResult.exclusiveFeastCode
-  ));
-  const visiblePeriodReadings = daysResult.exclusiveFeastCode || daysResult.exclusiveFixedDate
-    ? []
-    : periodReadings;
-  const visibleFixedReadings = daysResult.exclusiveFeastCode
-    ? []
-    : fixedReadings.filter((item) => (
-      !daysResult.exclusiveFixedDate || !isSeasonalDateDocumentId(item.id)
-    ));
+  const daysResult = await fetchDaysForDate(mDate, context, dynamicFeastCodes);
   const allDays = [
     ...daysResult.periodDays,
     ...daysResult.fixedDateDays,
@@ -104,11 +74,6 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     daysResult.officeForDead,
   ].filter(Boolean);
   const dayMap = new Map(allDays.map((item) => [item.id, item]));
-  const readingMap = new Map([
-    ...visiblePeriodReadings,
-    ...visibleFixedReadings,
-    ...dynamicReadings,
-  ].map((item) => [item.id, item]));
   const options = [];
 
   daysResult.periodDays.forEach((day) => options.push({
@@ -118,7 +83,6 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     subtitle: 'Літургічны дзень',
     day,
     templates: [{ id: day.id, label: 'Перыяд', day }],
-    reading: periodReadings[0] || null,
     order: 1,
     contextPeriodType: context.periodType,
   }));
@@ -135,7 +99,6 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
       subtitle: 'Свята',
       day,
       templates: [{ id: day.id, label: getTemplateLabel(day), day }],
-      reading: matchingReading(day, dynamicReadings),
       order: 2,
       contextPeriodType: context.periodType,
     }));
@@ -149,7 +112,6 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     subtitle: fixedSubtitle(day, templates.length),
     day,
     templates,
-    reading: matchingReading(day, fixedReadings),
     order: 3,
     contextPeriodType: context.periodType,
   }));
@@ -165,23 +127,7 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
       label: 'Афіцый за памерлых',
       day: daysResult.officeForDead,
     }],
-    reading: periodReadings[0] || fixedReadings[0] || null,
     order: 99,
-    contextPeriodType: context.periodType,
-  });
-
-  if (!options.length
-    && !daysResult.exclusiveFeastCode
-    && !daysResult.exclusiveFixedDate
-    && periodReadings.length) options.push({
-    key: `period-reading-${mDate.format('YYYY-MM-DD')}`,
-    source: LITURGICAL_OPTION_SOURCE.PERIOD,
-    title: buildPeriodTitle(context, mDate.format('YYYY-MM-DD')),
-    subtitle: 'Ёсць толькі чытанні',
-    day: null,
-    templates: [],
-    reading: periodReadings[0],
-    order: 4,
     contextPeriodType: context.periodType,
   });
 
@@ -191,16 +137,13 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
   )).map((option) => ({
     ...option,
     dayId: option.day?.id || null,
-    readingId: option.reading?.id || null,
     hasLiturgicalDay: Boolean(option.day),
-    hasReadings: Boolean(option.reading),
     disabled: false,
   }));
 
   return {
     context,
     itemsDays: [...dayMap.values()],
-    itemsReadings: [...readingMap.values()],
     dayOptions,
   };
 }

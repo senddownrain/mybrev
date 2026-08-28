@@ -5,6 +5,8 @@ export const PRAYER_TEXT_FORMAT = 'mybrev-markdown';
 export const PRAYER_TEXT_FORMAT_VERSION = 1;
 
 const RUBRIC_LINE_PATTERN = /^(?:Святар|Народ|Усе|Дыякан|Біскуп|Цэлебрант|Лектар|Псальміст|Кантар)\b[^.!?]*:$/i;
+const RUBRIC_ACTOR_PATTERN = /(?:^|[^\p{L}])(?:святар|народ|усе|дыякан|біскуп|цэлебрант|лектар|псальміст|кантар|міністрант|пэнітэнт|вернікі|священник|диакон|епископ|чтец|псаломщик|верующие)(?=$|[^\p{L}])/iu;
+const RUBRIC_ACTION_PATTERN = /(?:ўста(?:е|юць)|садзяц|кленчац|моляц|адказва|спява|прамаўля|чытае|каж[аыуе]|робіць|заахвочвае|просіць|акрапляе|уваходз|завяршае|маўчыць|пакланяецца|стаіць|бярэ|падае|благаслаўляе|садзіцца|стоят|садятся|кланяется|молится|отвечает|поет|говорит|читает|делает|призывает|просит|окропляет|благословляет)/iu;
 
 function rubricPlugin(md) {
   md.block.ruler.before('fence', 'rubric', (state, startLine, endLine, silent) => {
@@ -234,6 +236,72 @@ export function autoFixPrayerMarkdown(value = '') {
     changed: markdown !== original,
     fixes: [...new Set(fixes)],
   };
+}
+
+function stripStandaloneEmphasis(value) {
+  let result = value.trim();
+  let changed = true;
+  while (changed) {
+    changed = false;
+    if (result.startsWith('**') && result.endsWith('**') && result.length > 4) {
+      result = result.slice(2, -2).trim();
+      changed = true;
+    } else if (result.startsWith('_') && result.endsWith('_') && result.length > 2) {
+      result = result.slice(1, -1).trim();
+      changed = true;
+    }
+  }
+  return result;
+}
+
+function isRubricInstruction(line) {
+  const text = stripStandaloneEmphasis(line);
+  if (!text || text.length > 650 || /[«»]/u.test(text)) return false;
+  // Abbreviated speaker labels introduce spoken text. They are styled inline
+  // by the prayer view and must not turn an entire spoken line into a rubric.
+  if (/^[СCЦН]\.:/u.test(text)) return false;
+  if (!RUBRIC_ACTOR_PATTERN.test(text)) return false;
+
+  return RUBRIC_ACTION_PATTERN.test(text);
+}
+
+/**
+ * Promotes only high-confidence liturgical directions to MyBrev rubric blocks.
+ * Biblical quotations, prayers, litany responses, and abbreviated speaker lines
+ * are deliberately preserved as authored text.
+ */
+export function promotePrayerRubrics(value = '') {
+  const source = normalizePrayerMarkdown(value);
+  const lines = source.split('\n');
+  const result = [];
+  let rubricOpen = false;
+  let rubricsAdded = 0;
+
+  lines.forEach((line, index) => {
+    const marker = line.trim();
+    if (marker === ':::rubric') {
+      rubricOpen = true;
+      result.push(line);
+      return;
+    }
+    if (marker === ':::') {
+      rubricOpen = false;
+      result.push(line);
+      return;
+    }
+    if (rubricOpen || !isRubricInstruction(line)) {
+      result.push(line);
+      return;
+    }
+
+    if (result.length && result.at(-1).trim()) result.push('');
+    result.push(':::rubric', stripStandaloneEmphasis(line), ':::');
+    if (index < lines.length - 1 && lines[index + 1].trim()) result.push('');
+    rubricsAdded += 1;
+  });
+
+  const markdown = normalizePrayerMarkdown(result.join('\n'));
+  return { markdown, changed: markdown !== source, rubricsAdded };
 }
 
 export function looksLikeHtml(value = '') {

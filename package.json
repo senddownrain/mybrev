@@ -15,7 +15,6 @@
     "db:migrate-core-collections": "node scripts/migrate-core-collections.mjs",
     "db:autofix-prayers": "node scripts/autofix-prayer-markdown.mjs",
     "db:remove-rank-feast-comments": "node scripts/remove-rank-feast-comments.mjs",
-    "db:import-christmas-markdown": "node scripts/import-christmas-markdown.mjs",
     "audit:parsed-readings-content": "node scripts/audit-parsed-readings-content-integrity.mjs",
     "generate:fixed-feasts": "node patchs/generate-db-feasts.mjs",
     "audit:cli": "node scripts/audit-liturgical-data.mjs",

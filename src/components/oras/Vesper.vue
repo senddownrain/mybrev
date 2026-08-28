@@ -52,7 +52,6 @@ import Hymnus from '@/components/oraparts/Hymnus.vue';
 import Intro from '@/components/oraparts/Intro.vue';
 import Psalms from '@/components/oraparts/Psalms.vue';
 import Reading from '@/components/oraparts/Reading.vue';
-import Resp from '@/components/oraparts/Resp.vue';
 import Inters from '@/components/oraparts/Inters.vue';
 import Magnificat from '@/components/oraparts/Magnificat.vue';
 import PaterNoster from '@/components/oraparts/PaterNoster.vue';

@@ -438,7 +438,7 @@ async function searchSelection() {
     }
 
     if (props.mode === 'readings') {
-      const result = await liturgicalStore.fetchParsedReadingsByDate(date);
+      const result = await liturgicalStore.fetchReadingsByDate(date);
       if (sequence !== searchSequence) return;
       if (!exactDateSelection.value && !contextMatches(result?.context)) {
         resultMessage.value = 'Гэтая пазіцыя выходзіць за межы перыяду ў выбраным годзе.';

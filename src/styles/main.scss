@@ -396,6 +396,14 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   line-height: inherit;
 }
 
+// Psalm and reading records can start with one or two short subtitles, such
+// as the source and its theme. Keep them visibly secondary to the sacred text.
+.liturgical-hour-column :is(.ora-psalm, .ora-text) p[data-liturgical-subheading] {
+  margin-bottom: 0.45em;
+  font-size: 0.84em;
+  line-height: 1.45;
+}
+
 .liturgical-hour-column .ora:not(:has(.ora-title, .ora-header)) .ora-text {
   padding-top: 24px !important;
 }

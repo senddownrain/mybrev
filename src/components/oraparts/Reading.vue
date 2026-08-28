@@ -2,7 +2,7 @@
     <div>
         <v-card class="ora" flat>
             <v-card-text class="ora-text">
-                <alternative-text :text="text" kind="reading" aria-label="Выбар чытання або рэспансорыя" />
+                <alternative-text :text="formattedText" kind="reading" aria-label="Выбар чытання або рэспансорыя" />
             </v-card-text>
         </v-card>
     </div>
@@ -10,11 +10,15 @@
 
 
 <script setup>
+import { computed } from 'vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
+import { markLeadingLiturgicalSubheadings } from '@/utils/liturgicalHtml';
 
-defineProps({
+const props = defineProps({
   text: String,
 })
+
+const formattedText = computed(() => markLeadingLiturgicalSubheadings(props.text));
 </script>
 
 <style scoped>

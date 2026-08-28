@@ -36,6 +36,40 @@ function markAsPsalmStrophe(attributes) {
   return `${attributes} data-psalm-strophe`;
 }
 
+function markAsLiturgicalSubheading(attributes) {
+  if (/\bdata-liturgical-subheading(?:\s*=|\s|$)/iu.test(attributes)) return attributes;
+  return `${attributes} data-liturgical-subheading`;
+}
+
+function isLiturgicalSubheading(attributes, content) {
+  return /text-align\s*:\s*center/iu.test(attributes)
+    || /color\s*:\s*(?:#ff0000|red)/iu.test(content)
+    || /<(?:em|i|strong|b)\b/iu.test(content);
+}
+
+/**
+ * Psalm and reading records may begin with one or two short red or italic
+ * subtitles (reference, theme, or biblical quotation). They are metadata for
+ * the following text, rather than part of the psalm or reading itself.
+ */
+export function markLeadingLiturgicalSubheadings(html) {
+  let remaining = 2;
+  let canMark = true;
+
+  return String(html || '').replace(
+    PARAGRAPH_PATTERN,
+    (paragraph, attributes, content) => {
+      if (!canMark || remaining === 0 || !isLiturgicalSubheading(attributes, content)) {
+        canMark = false;
+        return paragraph;
+      }
+
+      remaining -= 1;
+      return `<p${markAsLiturgicalSubheading(attributes)}>${content}</p>`;
+    },
+  );
+}
+
 function splitPsalmParagraph(attributes, content) {
   if (!ASTERISK_PATTERN.test(content)) return `<p${attributes}>${content}</p>`;
 
@@ -79,8 +113,10 @@ export function formatPsalmHtml(html, { stripEmbeddedAntiphon = false } = {}) {
     }
   }
 
-  return markPsalmCadenceSigns(removeBreakAfterAsterisk(formatted)).replace(
+  const withStrophes = markPsalmCadenceSigns(removeBreakAfterAsterisk(formatted)).replace(
     PARAGRAPH_PATTERN,
     (_paragraph, attributes, content) => splitPsalmParagraph(attributes, content),
   );
+
+  return markLeadingLiturgicalSubheadings(withStrophes);
 }

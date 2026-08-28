@@ -5,7 +5,7 @@ import { ref } from 'vue';
  * UI state store — manages global UI visibility flags and edit state.
  * Replaces module-level refs in useAppBar composable.
  * Acts as a communication bus for:
- *   PrayerView  ↔ Default.vue ↔ PrayerBar  (prayer view edit)
+ *   PrayerView  ↔ Default.vue               (prayer view edit)
  *   PrayerForm  ↔ Default.vue               (prayer add/edit form)
  */
 export const useUiStore = defineStore('ui', () => {
@@ -74,7 +74,6 @@ export const useUiStore = defineStore('ui', () => {
 
   function triggerPrayerFormSave() { _savePrayerForm?.(); }
 
-  // ── Reading form state (ReadingForm ↔ OraBar) ────────────────────────────
   return {
     // Navigation
     isDrawerOpen,
@@ -84,7 +83,7 @@ export const useUiStore = defineStore('ui', () => {
     toggleSettingsSheet,
     toggleCalendarDialog,
     closeAll,
-    // Prayer view edit (PrayerView ↔ Default.vue ↔ PrayerBar)
+    // Prayer view edit (PrayerView ↔ Default.vue)
     prayerIsEditing,
     prayerSaving,
     registerPrayerActions,

@@ -36,6 +36,11 @@ const auth = useAuthStore();
 const showTextScaleControl = computed(() => route.name !== 'oras');
 
 const goBack = () => {
+  if (route.name === 'oras') {
+    router.push({ name: 'Today' });
+    return;
+  }
+
   if (window.history.length > 1) {
     router.go(-1);
   } else {

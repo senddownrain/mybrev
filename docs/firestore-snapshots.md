@@ -30,6 +30,27 @@ Node audit scripts can import `openFirestoreSnapshot` from
 `scripts/lib/firestore-snapshot.mjs`. They should do all analysis and migration-payload generation
 locally; a separate explicit `--apply` phase may write the prepared changes to Firestore later.
 
+## Core collection replacement
+
+The one-time migration copies `fixedDays` to `days` and `parsedData` to `readings`. Its snapshot
+only needs to cover the two source collections. Existing `days` and `readings` data is obsolete
+and is deliberately dropped during apply:
+
+```powershell
+npm run db:backup -- --output backups/core-collections-migration --collection fixedDays --collection parsedData
+npm run db:migrate-core-collections -- --snapshot backups/core-collections-migration
+```
+
+After reviewing the generated plan, the explicit apply command is:
+
+```powershell
+npm run db:migrate-core-collections -- --snapshot backups/core-collections-migration --apply --confirm replace-core-collections
+```
+
+The apply phase first verifies that both live source collections still match the snapshot. It then
+drops the obsolete target collections and recreates them from the snapshot. The source collections
+`fixedDays` and `parsedData` are retained as a rollback source for now.
+
 ## Publication workflow
 
 1. After quota resets, create the private backup once: `npm run db:backup`.

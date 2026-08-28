@@ -124,7 +124,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useParsedReadings } from '@/composables/useParsedReadings';
+import { useReadings } from '@/composables/useReadings';
 import ParsedReadingCard from '@/components/readings/ParsedReadingCard.vue';
 import { useAuthStore } from '@/stores/auth';
 import {
@@ -137,7 +137,7 @@ import moment from '@/utils/moment-be';
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
-const { items, context, isLoading, error, loadForDate } = useParsedReadings();
+const { items, context, isLoading, error, loadForDate } = useReadings();
 const readingChoiceDetails = ref(null);
 
 const selectedDate = computed(() => {

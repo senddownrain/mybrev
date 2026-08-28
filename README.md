@@ -29,7 +29,6 @@ npm run deploy:hosting
 - `src/` — приложение: маршруты, компоненты, stores, composables и литургическая логика.
 - `tests/` — модульные тесты литургической логики, Markdown и локального Firestore snapshot.
 - `scripts/` — действующие аудиты, импорты и миграции. Запись в Firestore должна быть отдельной фазой `--apply`.
-- `docs/advent-md/`, `docs/christmas-md/` — редактируемые источники сезонных литургических текстов.
 - `patchs/feasts/` — исходные тексты фиксированных праздников.
 - `patchs/db-feasts/` — подготовленные документы фиксированных праздников.
 - `backups/firestore-snapshot/` — приватный локальный snapshot; каталог не входит в Git.

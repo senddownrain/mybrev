@@ -3,7 +3,7 @@ import { useLiturgicalStore } from '@/stores/liturgical';
 import { logger } from '@/utils/logger';
 import moment from '@/utils/moment-be';
 
-export function useParsedReadings() {
+export function useReadings() {
   const liturgicalStore = useLiturgicalStore();
 
   const items    = ref([]);
@@ -20,17 +20,17 @@ export function useParsedReadings() {
   async function loadForDate(date, options = {}) {
     const sequence = ++loadSequence;
     const mDate = moment(date).startOf('day');
-    logger.log(`[useParsedReadings] loading ${mDate.format('YYYY-MM-DD')}`);
+    logger.log(`[useReadings] loading ${mDate.format('YYYY-MM-DD')}`);
 
-    const cached = liturgicalStore.getCachedParsedReadings(date, options);
+    const cached = liturgicalStore.getCachedReadings(date, options);
     if (cached) {
       items.value = cached.items;
       context.value = cached.context;
       isLoading.value = false;
       error.value = null;
-      logger.log(`[useParsedReadings] cache hit ${mDate.format('YYYY-MM-DD')}`);
-      liturgicalStore.fetchParsedReadingsByDate(date, options).catch((refreshError) => {
-        logger.error('[useParsedReadings] background refresh failed:', refreshError);
+      logger.log(`[useReadings] cache hit ${mDate.format('YYYY-MM-DD')}`);
+      liturgicalStore.fetchReadingsByDate(date, options).catch((refreshError) => {
+        logger.error('[useReadings] background refresh failed:', refreshError);
       });
       return cached;
     }
@@ -39,14 +39,14 @@ export function useParsedReadings() {
     error.value     = null;
 
     try {
-      const result = await liturgicalStore.fetchParsedReadingsByDate(date, options);
+      const result = await liturgicalStore.fetchReadingsByDate(date, options);
       if (sequence !== loadSequence) return null;
       items.value   = result.items;
       context.value = result.context;
       return result;
     } catch (err) {
       if (sequence !== loadSequence) return null;
-      logger.error('[useParsedReadings] error:', err);
+      logger.error('[useReadings] error:', err);
       error.value = err;
       items.value  = [];
       context.value = null;

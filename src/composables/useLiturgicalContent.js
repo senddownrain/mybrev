@@ -1,8 +1,8 @@
 /**
- * Facade composable for the combined liturgical-content scenario (day + readings).
+ * Facade composable for assembled liturgical-day options.
  *
  * UI contract (public API — unchanged):
- *   getLiturgicalContentForDate(date)     → { context, itemsDays, itemsReadings, dayOptions }
+ *   getLiturgicalContentForDate(date)     → { context, itemsDays, dayOptions }
  *   getCachedLiturgicalContentForDate(date) → same | null (sync, no fetch)
  *   feastNameMap                          → FEAST_NAME_MAP constant
  *
@@ -19,11 +19,11 @@ export function useLiturgicalContent() {
   const liturgicalStore = useLiturgicalStore();
 
   /**
-   * Fetch combined liturgical content for a date.
+   * Fetch liturgical-day content for a date.
    * Results are cached inside liturgicalStore (keyed by YYYY-MM-DD).
    *
    * @param {Date|import('moment').Moment|string} currentDate
-   * @returns {Promise<{ context, itemsDays, itemsReadings, dayOptions }>}
+   * @returns {Promise<{ context, itemsDays, dayOptions }>}
    */
   async function getLiturgicalContentForDate(currentDate) {
     return liturgicalStore.fetchContentByDate(currentDate);
@@ -34,7 +34,7 @@ export function useLiturgicalContent() {
    * Returns null if the data has not been fetched yet.
    *
    * @param {Date|import('moment').Moment|string} currentDate
-   * @returns {{ context, itemsDays, itemsReadings, dayOptions } | null}
+   * @returns {{ context, itemsDays, dayOptions } | null}
    */
   function getCachedLiturgicalContentForDate(currentDate) {
     const cached = liturgicalStore.getCachedContent(currentDate);
