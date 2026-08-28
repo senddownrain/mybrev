@@ -146,9 +146,20 @@ const routes = [
         component: () => import('@/views/admin/CategoriesManagement.vue'),
       },
       {
+        path: 'reading-editor/:id',
+        name: 'AdminParsedReadingEditor',
+        component: () => import('@/views/admin/ParsedReadingEditor.vue'),
+        props: true,
+        meta: { hideLayoutAppBar: true },
+      },
+      {
         path: 'readings-test',
         name: 'ReadingsTest',
-        component: () => import('@/views/admin/ReadingsTest.vue'),
+        redirect: (to) => ({
+          name: 'AdminParsedReadingEditor',
+          params: { id: 'new' },
+          query: to.query,
+        }),
       },
       {
         path: 'missing-data',

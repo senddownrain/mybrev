@@ -8,6 +8,15 @@
           {{ displayDate }}
         </p>
       </div>
+      <v-btn
+        v-if="authStore.isAdmin"
+        :icon="activeReading ? 'mdi-pencil-outline' : 'mdi-plus'"
+        variant="tonal"
+        color="primary"
+        :aria-label="activeReading ? 'Рэдагаваць гэтыя чытанні' : 'Дадаць чытанні'"
+        :disabled="isLoading"
+        @click="openReadingEditor"
+      />
     </header>
 
     <div v-if="isLoading" class="text-center py-8">
@@ -117,6 +126,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useParsedReadings } from '@/composables/useParsedReadings';
 import ParsedReadingCard from '@/components/readings/ParsedReadingCard.vue';
+import { useAuthStore } from '@/stores/auth';
 import {
   normalizeReadingCycle,
   readingCelebrationKey,
@@ -126,6 +136,7 @@ import moment from '@/utils/moment-be';
 
 const route = useRoute();
 const router = useRouter();
+const authStore = useAuthStore();
 const { items, context, isLoading, error, loadForDate } = useParsedReadings();
 const readingChoiceDetails = ref(null);
 
@@ -266,6 +277,35 @@ function selectReadingGroup(group) {
 function selectCycle(cycle) {
   if (!cycle || cycle === activeCycle.value) return;
   router.replace({ query: { ...route.query, year: cycle } });
+}
+
+function openReadingEditor() {
+  const query = {
+    date: selectedDate.value.format('YYYY-MM-DD'),
+  };
+  const dayId = String(route.query.dayId || route.query.returnDayId || '');
+  if (dayId) query.dayId = dayId;
+
+  if (!activeReading.value) {
+    if (dayId) {
+      query.type = 'linked';
+    } else if (context.value?.periodType) {
+      query.type = 'period';
+      query.periodType = context.value.periodType;
+      query.periodWeekNumber = context.value.periodWeek;
+      query.dayOfWeek = context.value.dayOfWeek;
+      query.year = currentCycle.value || '';
+    } else {
+      query.type = 'date';
+      query._date = selectedDate.value.format('DD.MM');
+    }
+  }
+
+  router.push({
+    name: 'AdminParsedReadingEditor',
+    params: { id: activeReading.value?.id || 'new' },
+    query,
+  });
 }
 
 function load() {

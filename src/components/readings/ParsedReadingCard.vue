@@ -20,7 +20,7 @@
           <div v-if="section.data.bible" class="section-ref">{{ section.data.bible }}</div>
         </div>
 
-        <template v-if="section.key === 'reading1' || section.key === 'reading2'">
+        <template v-if="/^reading\d+$/.test(section.key)">
           <div v-if="section.data.comment" class="section-comment">{{ section.data.comment }}</div>
           <div v-if="section.data.title" class="reading-rubric">{{ section.data.title }}</div>
           <div
@@ -108,19 +108,37 @@ const props = defineProps({
   reading: { type: Object, required: true },
 });
 
-const SECTION_LABELS = {
-  reading1: 'Першае чытанне',
-  psalm: 'Рэспансарыйны псальм',
-  reading2: 'Другое чытанне',
-  alleluia: 'Спеў перад Евангеллем',
-  gospel: 'Евангелле',
-};
+function readingLabel(key) {
+  const number = Number(key.replace('reading', ''));
+  if (number === 1) return 'Першае чытанне';
+  if (number === 2) return 'Другое чытанне';
+  return `Чытанне ${number}`;
+}
 
-const sections = computed(() =>
-  Object.entries(SECTION_LABELS)
-    .map(([key, label]) => ({ key, label, data: props.reading[key] }))
-    .filter((section) => section.data),
-);
+const sections = computed(() => {
+  const readingKeys = Object.keys(props.reading)
+    .filter((key) => /^reading\d+$/.test(key) && props.reading[key])
+    .sort((left, right) => Number(left.replace('reading', '')) - Number(right.replace('reading', '')));
+  const firstReading = readingKeys.filter((key) => key === 'reading1');
+  const laterReadings = readingKeys.filter((key) => key !== 'reading1');
+  const ordered = [
+    ...firstReading,
+    ...(props.reading.psalm ? ['psalm'] : []),
+    ...laterReadings,
+    ...(props.reading.alleluia ? ['alleluia'] : []),
+    ...(props.reading.gospel ? ['gospel'] : []),
+  ];
+  const labels = {
+    psalm: 'Рэспансарыйны псальм',
+    alleluia: 'Спеў перад Евангеллем',
+    gospel: 'Евангелле',
+  };
+  return ordered.map((key) => ({
+    key,
+    label: key.startsWith('reading') ? readingLabel(key) : labels[key],
+    data: props.reading[key],
+  }));
+});
 
 const hasSections = computed(() => sections.value.length > 0);
 const BIBLE_REF_LEAD = /^[А-ЯA-Z][а-яa-z]{0,4}\.?\s+\d+[\d\s,.\-–()абвabcABC]*\s*/;

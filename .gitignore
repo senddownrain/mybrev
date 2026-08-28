@@ -2,9 +2,8 @@
 node_modules
 /dist
 /.firebase/
-package-lock.json
 project-code.txt
-package-lock.json
+project_code.txt
 
 # local env files
 .env.local
@@ -25,9 +24,8 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-# generated validation reports
-patchs/json/ordinary-period-validation-report.json
-reports/ordinary-period-validation-report.md
-
-# private Firestore backups (never publish or commit)
+# generated artifacts and private Firestore data
 /backups/
+/reports/
+/outputs/
+/patchs/serviceAccountKey.json
