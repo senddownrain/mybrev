@@ -109,19 +109,9 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: 'backup',
-        name: 'AdminBackup',
-        component: () => import('@/views/admin/Backup.vue'),
-      },
-      {
         path: '',
         name: 'Admin',
         component: () => import('@/views/Admin.vue'),
-      },
-      {
-        path: 'logic-tester',
-        name: 'AdminLogicTester',
-        component: () => import('@/components/admin/LogicTester.vue'),
       },
       {
         path: 'day-editor/:id',
@@ -131,87 +121,11 @@ const routes = [
         meta: { hideLayoutAppBar: true },
       },
       {
-        path: 'year-options',
-        name: 'AdminYearOptions',
-        component: () => import('@/components/admin/YearOptions.vue'),
-      },
-      {
-        path: 'db-day-list',
-        name: 'AdminDbDayList',
-        component: () => import('@/components/admin/DbDayList.vue')
-      },
-      {
-        path: 'categories',
-        name: 'AdminCategories',
-        component: () => import('@/views/admin/CategoriesManagement.vue'),
-      },
-      {
         path: 'reading-editor/:id',
         name: 'AdminParsedReadingEditor',
         component: () => import('@/views/admin/ParsedReadingEditor.vue'),
         props: true,
         meta: { hideLayoutAppBar: true },
-      },
-      {
-        path: 'readings-test',
-        name: 'ReadingsTest',
-        redirect: (to) => ({
-          name: 'AdminParsedReadingEditor',
-          params: { id: 'new' },
-          query: to.query,
-        }),
-      },
-      {
-        path: 'missing-data',
-        name: 'AdminMissingData',
-        component: () => import('@/views/admin/MissingDataAudit.vue'),
-      },
-      {
-        path: 'normalize-hymns',
-        name: 'AdminNormalizeHymns',
-        component: () => import('@/views/admin/HymnsNormalization.vue'),
-      },
-      {
-        path: 'normalize-completorium',
-        name: 'AdminNormalizeCompletorium',
-        component: () => import('@/views/admin/CompletoriumNormalization.vue'),
-      },
-      {
-        path: 'normalize-psalms',
-        name: 'AdminNormalizePsalms',
-        component: () => import('@/views/admin/PsalmTemplatesNormalization.vue'),
-      },
-      {
-        path: 'completorium-templates',
-        name: 'AdminCompletoriumTemplates',
-        component: () => import('@/views/admin/CompletoriumTemplatesList.vue'),
-      },
-      {
-        path: 'completorium-templates/create',
-        name: 'AdminCompletoriumTemplateCreate',
-        component: () => import('@/views/admin/CompletoriumTemplateForm.vue'),
-      },
-      {
-        path: 'completorium-templates/:id/edit',
-        name: 'AdminCompletoriumTemplateEdit',
-        component: () => import('@/views/admin/CompletoriumTemplateForm.vue'),
-      },
-      {
-        path: 'day-templates',
-        name: 'AdminDayTemplatesList',
-        component: () => import('@/views/admin/DayTemplatesList.vue'),
-      },
-      {
-        path: 'day-templates/:id',
-        name: 'AdminDayTemplateEditor',
-        component: () => import('@/views/admin/DayTemplateEditor.vue'),
-        props: true,
-        meta: { hideLayoutAppBar: true },
-      },
-      {
-        path: 'calendar-map',
-        name: 'AdminCalendarMap',
-        component: () => import('@/views/admin/CalendarMapManager.vue'),
       },
     ]
   },
@@ -229,35 +143,6 @@ const routes = [
           topNav: OraBarVue,
         },
       },
-
-      // новый маршрут для чтений
-    {
-      path: 'reading/:readingId',
-      name: 'reading',
-      components: {
-        default: () => import('@/components/readings/Reading.vue'),
-        topNav: OraBarVue,
-        bottomNav: ReadingsBottomNavVue,
-      },
-      props: {
-        default: true,
-        topNav: false,
-      },
-      meta: { hasBottomNav: true },
-    },
-     {
-      path: 'reading/:readingId/edit',
-      name: 'ReadingEditor',
-      components: {
-        default: () => import('@/components/readings/ReadingForm.vue'),
-        topNav: OraBarVue,
-      },
-      props: {
-        default: true,
-        topNav: false,
-      },
-    },
-    
       { path: 'vesper', name: 'vesper', components: { default: () => import('@/components/oras/Vesper.vue'), topNav: OraBarVue } },
       { path: 'invitatorium', name: 'invitatorium', components: { default: () => import('@/components/oras/Invit.vue'), topNav: OraBarVue } },
       { path: 'morning', name: 'morning', components: { default: () => import('@/components/oras/Morning.vue'), topNav: OraBarVue } },

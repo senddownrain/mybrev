@@ -7,6 +7,7 @@ import {
   renderPrayerMarkdown,
   validatePrayerMarkdown,
 } from '../src/utils/prayerMarkdown.js';
+import { buildPrayerAutofixPlan } from '../scripts/autofix-prayer-markdown.mjs';
 
 test('autofix repairs common Markdown and Word artifacts', () => {
   const result = autoFixPrayerMarkdown('#Загаловак\u00a0  \n\n• Першы пункт\n2)Другі пункт\n\n::: rubric\nУсе ўстаюць.');
@@ -36,6 +37,29 @@ test('autofix attaches standalone strong markers to the enclosed text', () => {
 test('autofix formats separate paragraphs between standalone strong markers', () => {
   const result = autoFixPrayerMarkdown('**\nПершы абзац\n\nДругі абзац\n**');
   assert.equal(result.markdown, '**Першы абзац**\n\n**Другі абзац**');
+});
+
+test('prayer autofix migration updates text fields without exposing untouched documents', () => {
+  const plan = buildPrayerAutofixPlan([
+    { id: 'changed', text: '**\nВажна\n**', textFormat: 'mybrev-markdown', textFormatVersion: 1 },
+    { id: 'unchanged', text: 'Звычайны тэкст', textFormat: 'mybrev-markdown', textFormatVersion: 1 },
+  ]);
+  assert.equal(plan.length, 1);
+  assert.equal(plan[0].id, 'changed');
+  assert.deepEqual(plan[0].updates, [
+    { field: 'text', before: '**\nВажна\n**', after: '**Важна**' },
+  ]);
+});
+
+test('prayer autofix migration repairs legacy localized text and sets its Markdown format', () => {
+  const plan = buildPrayerAutofixPlan([
+    { id: 'legacy', textVersions: { be: '#Загаловак' } },
+  ]);
+  assert.deepEqual(plan[0].updates, [
+    { field: 'textVersions', before: { be: '#Загаловак' }, after: { be: '# Загаловак' } },
+    { field: 'textFormat', before: undefined, after: 'mybrev-markdown' },
+    { field: 'textFormatVersion', before: undefined, after: 1 },
+  ]);
 });
 
 test('renders CommonMark and the MyBrev rubric block', () => {

@@ -12,6 +12,7 @@
     "lint": "eslint . --fix",
     "db:backup": "node scripts/export-firestore-snapshot.mjs",
     "db:snapshot:query": "node scripts/query-firestore-snapshot.mjs",
+    "db:autofix-prayers": "node scripts/autofix-prayer-markdown.mjs",
     "db:remove-rank-feast-comments": "node scripts/remove-rank-feast-comments.mjs",
     "db:import-christmas-markdown": "node scripts/import-christmas-markdown.mjs",
     "audit:parsed-readings-content": "node scripts/audit-parsed-readings-content-integrity.mjs",

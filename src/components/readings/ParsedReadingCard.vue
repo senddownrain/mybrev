@@ -28,6 +28,12 @@
             class="section-text"
             v-html="formatText(strippedText(section.data))"
           ></div>
+          <div
+            v-if="strippedText(section.data) && !hasAcclamation(strippedText(section.data))"
+            class="reading-acclamation"
+          >
+            Гэта Слова Божае.
+          </div>
         </template>
 
         <template v-else-if="section.key === 'psalm'">
@@ -87,6 +93,12 @@
             {{ section.data.title }}
           </div>
           <div v-if="section.data.text" class="section-text" v-html="formatText(section.data.text)"></div>
+          <div
+            v-if="section.data.text && !hasAcclamation(section.data.text)"
+            class="reading-acclamation"
+          >
+            Гэта Слова Пана.
+          </div>
         </template>
 
         <template v-else>
@@ -175,6 +187,12 @@ function formatText(text) {
       return `<p${className}>${safe}</p>`;
     })
     .join('');
+}
+
+function hasAcclamation(text) {
+  return /Гэта\s+слова\s+(?:Пана|Божае)\.?/iu.test(
+    String(text || '').replace(/<[^>]*>/g, ' '),
+  );
 }
 
 function cleanChorus(value) {
@@ -324,6 +342,7 @@ function cycleLabel(value) {
   margin-bottom: 0;
 }
 
+.reading-acclamation,
 .section-text :deep(.reading-acclamation) {
   margin-top: 1.35em;
   font-weight: 700;

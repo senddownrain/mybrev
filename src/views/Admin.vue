@@ -1,43 +1,54 @@
 <template>
   <v-container class="admin-home">
-    <section class="admin-home__hero">
+    <header class="admin-home__header">
       <p class="admin-home__eyebrow">Адміністраванне</p>
-      <h1>Панэль адміністратара</h1>
-      <p class="admin-home__description">
-        Выберыце раздзел, які хочаце наладзіць.
-      </p>
-    </section>
+      <h1>Рэдактары літургічных даных</h1>
+    </header>
 
-    <v-card class="admin-home__card" elevation="0">
-      <div class="admin-home__icon">
-        <v-icon icon="mdi-calendar-cog-outline" size="28" />
-      </div>
-      <div class="admin-home__content">
-        <h2>Налады года</h2>
-        <p>Разлічвайце і захоўвайце даты рухомых святаў для літургічных гадоў.</p>
-      </div>
-      <v-btn
-        :to="{ name: 'AdminYearOptions' }"
-        color="primary"
-        rounded="pill"
-        class="text-none"
-        append-icon="mdi-arrow-right"
+    <div class="admin-home__grid">
+      <v-card
+        v-for="item in editors"
+        :key="item.title"
+        :to="item.to"
+        class="admin-home__card"
+        elevation="0"
       >
-        Адкрыць
-      </v-btn>
-    </v-card>
+        <v-icon :icon="item.icon" size="30" color="primary" />
+        <div>
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.description }}</p>
+        </div>
+        <v-icon icon="mdi-arrow-right" class="admin-home__arrow" />
+      </v-card>
+    </div>
   </v-container>
 </template>
 
+<script setup>
+const editors = [
+  {
+    title: 'Літургічны дзень',
+    description: 'Стварыць новы дакумент гадзінаў у калекцыі days.',
+    icon: 'mdi-calendar-edit',
+    to: { name: 'AdminDayEditor', params: { id: 'new' } },
+  },
+  {
+    title: 'Імшальныя чытанні',
+    description: 'Стварыць новы дакумент чытанняў у калекцыі readings.',
+    icon: 'mdi-book-open-page-variant',
+    to: { name: 'AdminParsedReadingEditor', params: { id: 'new' } },
+  },
+];
+</script>
+
 <style scoped>
 .admin-home {
-  width: min(100%, 1180px);
+  width: min(100%, 980px);
   padding: 42px 20px 80px !important;
-  color: var(--nav-on-surface);
 }
 
-.admin-home__hero {
-  margin: 0 6px 30px;
+.admin-home__header {
+  margin-bottom: 28px;
 }
 
 .admin-home__eyebrow {
@@ -55,23 +66,15 @@
   margin-top: 0;
 }
 
-.admin-home h1 {
-  margin-bottom: 8px;
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  line-height: 1.1;
-}
-
-.admin-home__description,
-.admin-home__content p {
-  color: var(--nav-muted);
-}
-
-.admin-home__description {
-  margin-bottom: 0;
+.admin-home__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
 }
 
 .admin-home__card {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 18px;
   padding: 22px;
@@ -80,37 +83,17 @@
   background: var(--nav-surface);
 }
 
-.admin-home__icon {
-  display: grid;
-  flex: 0 0 auto;
-  width: 52px;
-  height: 52px;
-  place-items: center;
-  border-radius: 16px;
-  color: rgb(var(--v-theme-primary));
-  background: color-mix(in srgb, rgb(var(--v-theme-primary)) 13%, transparent);
-}
-
-.admin-home__content {
-  flex: 1;
-}
-
-.admin-home__content h2 {
+.admin-home__card h2 {
   margin-bottom: 5px;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 
-.admin-home__content p {
+.admin-home__card p {
   margin-bottom: 0;
+  color: var(--nav-muted);
 }
 
-@media (max-width: 600px) {
-  .admin-home__card {
-    flex-wrap: wrap;
-  }
-
-  .admin-home__card .v-btn {
-    width: 100%;
-  }
+.admin-home__arrow {
+  color: var(--nav-muted);
 }
 </style>
