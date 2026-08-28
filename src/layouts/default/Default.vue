@@ -168,7 +168,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAppBar } from '@/composables/useAppBar.js';
 import { useUiStore } from '@/stores/ui.js';
@@ -190,7 +190,23 @@ const route = useRoute();
 const authStore = useAuthStore();
 
 const { selectedTags, selectedCategory, isFilterExpanded } = usePrayersFilters();
-const { allTags } = usePrayers();
+const { allTags, init: initPrayers } = usePrayers();
+const prayerRouteNames = new Set([
+  'Prayers',
+  'PrayersList',
+  'FavoritePrayers',
+  'PrayerView',
+  'PrayerAdd',
+  'PrayerEdit',
+]);
+
+watch(
+  () => route.name,
+  (routeName) => {
+    if (prayerRouteNames.has(routeName)) initPrayers();
+  },
+  { immediate: true },
+);
 const filterTags = computed(() => (
   [...new Set(allTags.value || [])].sort((a, b) => a.localeCompare(b, 'be', { sensitivity: 'base' }))
 ));

@@ -2,12 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
 import DefaultVue from '@/layouts/default/Default.vue';
-import OneVue from '@/layouts/simple/One.vue';
-import AdminVue from '@/layouts/admin/Admin.vue';
 import ItemsListVue from '@/components/ItemsList.vue';
 import BottomNavVue from '@/layouts/default/BottomNav.vue';
-import ReadingsBottomNavVue from '@/layouts/default/ReadingsBottomNav.vue';
-import OraBarVue from '@/layouts/default/OraBar.vue';
 
 const routes = [
   {
@@ -55,7 +51,7 @@ const routes = [
         name: 'Readings',
         components: { 
           default: () => import('@/components/readings/ReadingsView.vue'),
-          bottomNav: ReadingsBottomNavVue
+          bottomNav: () => import('@/layouts/default/ReadingsBottomNav.vue')
         },
       },
       {
@@ -63,7 +59,7 @@ const routes = [
         name: 'ReadingsByDate',
         components: { 
           default: () => import('@/components/readings/ReadingsView.vue'),
-          bottomNav: ReadingsBottomNavVue
+          bottomNav: () => import('@/layouts/default/ReadingsBottomNav.vue')
         },
         props: { default: true },
       },
@@ -105,7 +101,7 @@ const routes = [
 
   {
     path: '/admin',
-    component: AdminVue,
+    component: () => import('@/layouts/admin/Admin.vue'),
     meta: { requiresAuth: true },
     children: [
       {
@@ -132,7 +128,7 @@ const routes = [
 
   {
     path: '/day/:day/ora/:id',
-    component: OneVue,
+    component: () => import('@/layouts/simple/One.vue'),
     props: true,
     children: [
       {
@@ -140,18 +136,18 @@ const routes = [
         name: 'oras',
         components: {
           default: () => import('@/components/OrasList.vue'),
-          topNav: OraBarVue,
+          topNav: () => import('@/layouts/default/OraBar.vue'),
         },
       },
-      { path: 'vesper', name: 'vesper', components: { default: () => import('@/components/oras/Vesper.vue'), topNav: OraBarVue } },
-      { path: 'invitatorium', name: 'invitatorium', components: { default: () => import('@/components/oras/Invit.vue'), topNav: OraBarVue } },
-      { path: 'morning', name: 'morning', components: { default: () => import('@/components/oras/Morning.vue'), topNav: OraBarVue } },
-      { path: 'laudes', name: 'laudes', components: { default: () => import('@/components/oras/Laudes.vue'), topNav: OraBarVue } },
-      { path: 'sext', name: 'sext', components: { default: () => import('@/components/oras/Sext.vue'), topNav: OraBarVue } },
-      { path: 'non', name: 'non', components: { default: () => import('@/components/oras/Non.vue'), topNav: OraBarVue } },
-      { path: 'terz', name: 'terz', components: { default: () => import('@/components/oras/Terz.vue'), topNav: OraBarVue } },
-      { path: 'completorium', name: 'completorium', components: { default: () => import('@/components/oras/Completorium.vue'), topNav: OraBarVue } },
-      { path: 'lectionis', name: 'lectionis', components: { default: () => import('@/components/oras/Lectionis.vue'), topNav: OraBarVue } },
+      { path: 'vesper', name: 'vesper', components: { default: () => import('@/components/oras/Vesper.vue'), topNav: () => import('@/layouts/default/OraBar.vue') } },
+      { path: 'invitatorium', name: 'invitatorium', components: { default: () => import('@/components/oras/Invit.vue'), topNav: () => import('@/layouts/default/OraBar.vue') } },
+      { path: 'morning', name: 'morning', components: { default: () => import('@/components/oras/Morning.vue'), topNav: () => import('@/layouts/default/OraBar.vue') } },
+      { path: 'laudes', name: 'laudes', components: { default: () => import('@/components/oras/Laudes.vue'), topNav: () => import('@/layouts/default/OraBar.vue') } },
+      { path: 'sext', name: 'sext', components: { default: () => import('@/components/oras/Sext.vue'), topNav: () => import('@/layouts/default/OraBar.vue') } },
+      { path: 'non', name: 'non', components: { default: () => import('@/components/oras/Non.vue'), topNav: () => import('@/layouts/default/OraBar.vue') } },
+      { path: 'terz', name: 'terz', components: { default: () => import('@/components/oras/Terz.vue'), topNav: () => import('@/layouts/default/OraBar.vue') } },
+      { path: 'completorium', name: 'completorium', components: { default: () => import('@/components/oras/Completorium.vue'), topNav: () => import('@/layouts/default/OraBar.vue') } },
+      { path: 'lectionis', name: 'lectionis', components: { default: () => import('@/components/oras/Lectionis.vue'), topNav: () => import('@/layouts/default/OraBar.vue') } },
     ],
   },
 ];
@@ -174,17 +170,7 @@ router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
   if (requiresAuth) {
-    // Wait for auth + admin check to finish before evaluating access
-    if (authStore.loading) {
-      await new Promise(resolve => {
-        const interval = setInterval(() => {
-          if (!authStore.loading) {
-            clearInterval(interval);
-            resolve();
-          }
-        }, 50);
-      });
-    }
+    await authStore.init();
 
     if (!authStore.isAdmin) {
       next({ name: 'Login', query: { redirect: to.fullPath } });

@@ -19,7 +19,7 @@ export default defineConfig({
     }),
     // visualizer только для production build (фильтруем false значения)
     ...(process.env.NODE_ENV === 'production' ? [visualizer({
-      filename: 'dist/stats.html',
+      filename: 'reports/bundle-stats.html',
       open: false,
       gzipSize: true,
       brotliSize: true,
@@ -43,13 +43,6 @@ export default defineConfig({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       strategies: 'generateSW',
-      includeAssets: [
-        'favicon.ico',
-        'favicon-96x96.png',
-        'apple-touch-icon.png',
-        'app-icon-master.png',
-        'maria-menu-logo.svg',
-      ],
       manifestFilename: 'manifest.webmanifest',
       manifest: {
         name: 'Каталіцкі малітоўнік',
@@ -88,6 +81,7 @@ export default defineConfig({
       workbox: {
         cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2,webmanifest}'],
+        globIgnores: ['app-icon-master.png', 'maria-menu-logo.svg'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -206,14 +200,6 @@ export default defineConfig({
         // Split the main bundle into smaller vendor chunks to improve
         // initial load time. Each chunk is loaded on-demand by the router.
         manualChunks(id) {
-          // Firebase SDK (~400 kB)
-          if (id.includes('node_modules/firebase') || id.includes('node_modules/@firebase')) {
-            return 'vendor-firebase';
-          }
-          // Vuetify components & styles (~600 kB)
-          if (id.includes('node_modules/vuetify')) {
-            return 'vendor-vuetify';
-          }
           // Quill rich-text editor (~200 kB) — only used in edit forms
           if (id.includes('node_modules/quill') || id.includes('node_modules/@vueup/vue-quill')) {
             return 'vendor-quill';

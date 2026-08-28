@@ -10,7 +10,15 @@
       <header class="drawer-header">
         <div class="drawer-brand">
           <div class="drawer-logo-wrap">
-            <img src="/maria-menu-logo.svg" alt="" class="drawer-logo" />
+            <img
+              src="/maria-menu-logo-96.png"
+              alt=""
+              class="drawer-logo"
+              width="34"
+              height="34"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
           <div>
             <div class="drawer-title">Малітоўнік</div>
