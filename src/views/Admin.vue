@@ -44,6 +44,12 @@ const editors = [
     icon: 'mdi-hands-pray',
     to: { name: 'PrayerAdd' },
   },
+  {
+    title: 'Катэгорыі малітваў',
+    description: 'Праглядзець, дадаць, выдаліць і выбраць катэгорыі па змаўчанні.',
+    icon: 'mdi-folder-cog-outline',
+    to: { name: 'AdminPrayerCategories' },
+  },
 ];
 </script>
 

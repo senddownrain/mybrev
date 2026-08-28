@@ -127,6 +127,11 @@ const routes = [
         props: true,
         meta: { hideLayoutAppBar: true },
       },
+      {
+        path: 'prayer-categories',
+        name: 'AdminPrayerCategories',
+        component: () => import('@/views/admin/PrayerCategories.vue'),
+      },
     ]
   },
 

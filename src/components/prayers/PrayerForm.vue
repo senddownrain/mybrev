@@ -162,6 +162,7 @@ import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
+import { useSettingsStore } from '@/stores/settings';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue';
 import {
@@ -176,6 +177,7 @@ const router = useRouter();
 const { prayers, isLoading, addPrayer, updatePrayer, allTags } = usePrayers();
 const { notifySuccess, notifyError } = useNotifier();
 const uiStore = useUiStore();
+const settings = useSettingsStore();
 
 const formRef = ref(null);
 const saving = ref(false);
@@ -186,7 +188,7 @@ const showPreview = ref(true);
 const initialSnapshot = ref('');
 const allowNavigation = ref(false);
 
-const form = ref({ title: '', text: '', tags: [] });
+const form = ref({ title: '', text: '', tags: [...settings.defaultPrayerTags] });
 
 const isEditMode = computed(() => Boolean(route.params.id));
 const loadingPrayer = computed(() => isEditMode.value && isLoading.value && !hydrated.value);
@@ -211,6 +213,7 @@ const hydrateForm = () => {
   if (hydrated.value) return;
 
   if (!isEditMode.value) {
+    form.value.tags = [...settings.defaultPrayerTags];
     hydrated.value = true;
     initialSnapshot.value = currentSnapshot.value;
     return;

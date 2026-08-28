@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useTheme } from 'vuetify';
 import { normalizeReaderFont, SYSTEM_FONT } from '@/constants/fonts';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
@@ -14,6 +14,12 @@ export const useSettingsStore = defineStore('settings', () => {
   const fontFamily = ref(normalizeReaderFont(localStorage.getItem('fontFamily')));
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
   const menuCategories = ref(JSON.parse(localStorage.getItem('menuCategories') || JSON.stringify(DEFAULT_CATEGORIES)));
+  const defaultPrayerCategoryNames = ref(JSON.parse(localStorage.getItem('defaultPrayerCategoryNames') || '[]')));
+  const defaultPrayerTags = computed(() => [...new Set(
+    menuCategories.value
+      .filter((category) => defaultPrayerCategoryNames.value.includes(category.name))
+      .flatMap((category) => category.tags || []),
+  )]);
   const favoritePrayers = ref(JSON.parse(localStorage.getItem('favoritePrayers') || '[]'));
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') === 'true');
 
@@ -38,6 +44,7 @@ export const useSettingsStore = defineStore('settings', () => {
   }, { immediate: true });
 
   watch(menuCategories, (v) => localStorage.setItem('menuCategories', JSON.stringify(v)), { deep: true });
+  watch(defaultPrayerCategoryNames, (v) => localStorage.setItem('defaultPrayerCategoryNames', JSON.stringify(v)), { deep: true });
   watch(favoritePrayers, (v) => localStorage.setItem('favoritePrayers', JSON.stringify(v)), { deep: true });
   
   watch(keepScreenOn, async (newValue) => {
@@ -93,7 +100,18 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   function removeCategory(index) {
-    menuCategories.value.splice(index, 1);
+    const [removedCategory] = menuCategories.value.splice(index, 1);
+    if (removedCategory) {
+      defaultPrayerCategoryNames.value = defaultPrayerCategoryNames.value
+        .filter((name) => name !== removedCategory.name);
+    }
+  }
+
+  function setDefaultPrayerCategory(name, enabled) {
+    if (!menuCategories.value.some((category) => category.name === name)) return;
+    defaultPrayerCategoryNames.value = enabled
+      ? [...new Set([...defaultPrayerCategoryNames.value, name])]
+      : defaultPrayerCategoryNames.value.filter((item) => item !== name);
   }
 
   function toggleFavoritePrayer(prayerId) {
@@ -115,6 +133,8 @@ export const useSettingsStore = defineStore('settings', () => {
     systemFont: SYSTEM_FONT,
     fontSizeMultiplier,
     menuCategories,
+    defaultPrayerCategoryNames,
+    defaultPrayerTags,
     favoritePrayers,
     keepScreenOn,
     toggleTheme,
@@ -124,6 +144,7 @@ export const useSettingsStore = defineStore('settings', () => {
     decreaseFontSize,
     addCategory,
     removeCategory,
+    setDefaultPrayerCategory,
     toggleFavoritePrayer,
     isFavoritePrayer,
     setKeepScreenOn,

@@ -82,29 +82,11 @@
       </v-list-item>
 
       <v-list-item
-        title="Марыйныя"
-        @click="selectCategoryByName('Марыйныя')"
-        :active="selectedCategory?.name === 'Марыйныя'"
-      >
-        <template #prepend>
-          <PhBookmark :size="22" class="drawer-icon" />
-        </template>
-      </v-list-item>
-
-      <v-list-item
-        title="Літаніі"
-        @click="selectCategoryByName('Літаніі')"
-        :active="selectedCategory?.name === 'Літаніі'"
-      >
-        <template #prepend>
-          <PhBookmark :size="22" class="drawer-icon" />
-        </template>
-      </v-list-item>
-
-      <v-list-item
-        title="Навэнны"
-        @click="selectCategoryByName('Навэнны')"
-        :active="selectedCategory?.name === 'Навэнны'"
+        v-for="category in settings.menuCategories"
+        :key="category.name"
+        :title="category.name"
+        @click="selectCategory(category)"
+        :active="selectedCategory?.name === category.name"
       >
         <template #prepend>
           <PhBookmark :size="22" class="drawer-icon" />
@@ -173,6 +155,7 @@ const isPrayersPage = computed(() =>
 const selectCategory = (category) => {
   setSelectedCategory(category);
   isDrawerOpen.value = false;
+  router.push({ name: 'Prayers' });
 };
 
 const showAllPrayers = () => {
@@ -181,13 +164,6 @@ const showAllPrayers = () => {
   router.push({ name: 'Prayers' });
 };
 
-const selectCategoryByName = (categoryName) => {
-  const category = settings.menuCategories.find(cat => cat.name === categoryName);
-  if (category) {
-    selectCategory(category);
-    router.push({ name: 'Prayers' });
-  }
-};
 </script>
 
 <style scoped>
