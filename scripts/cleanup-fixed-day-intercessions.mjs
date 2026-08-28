@@ -13,7 +13,7 @@ const DEFAULT_SNAPSHOT_DIR = path.join(ROOT, 'backups', 'firestore-snapshot');
 const DEFAULT_REPORT_PATH = path.join(ROOT, 'reports', 'fixed-days-intercessions-cleanup-report.json');
 const DEFAULT_SERVICE_ACCOUNT_PATH = path.join(ROOT, 'patchs', 'serviceAccountKey.json');
 const BACKUP_DIR = path.join(ROOT, 'backups', 'firestore-migrations');
-const COLLECTION = 'fixedDays';
+const COLLECTION = 'days';
 const WRITE_CHUNK_SIZE = 40;
 
 function parseArgs(argv) {
@@ -41,7 +41,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`Remove UI-owned headings and Lord's Prayer conclusions from fixedDays intercessions.
+  console.log(`Remove UI-owned headings and Lord's Prayer conclusions from days intercessions.
 
 Dry-run reads only the local Firestore snapshot. Firestore is contacted only with --apply.
 
@@ -183,7 +183,7 @@ async function applyPlan(changes, options) {
     }
 
     await fs.mkdir(BACKUP_DIR, { recursive: true });
-    const backupPath = path.join(BACKUP_DIR, `fixedDays-intercessions-${timestamp()}.json`);
+    const backupPath = path.join(BACKUP_DIR, `days-intercessions-${timestamp()}.json`);
     const backup = currentSnapshots.map((snapshot) => ({ id: snapshot.id, data: snapshot.data() }));
     await fs.writeFile(backupPath, `${JSON.stringify({
       createdAt: new Date().toISOString(),

@@ -6,7 +6,7 @@ export default [
   js.configs.recommended,
 
   // Vue 3 essential rules
-  ...pluginVue.configs['flat/vue3-essential'],
+  ...pluginVue.configs['flat/essential'],
 
   {
     languageOptions: {
@@ -26,8 +26,13 @@ export default [
         fetch: 'readonly',
         URL: 'readonly',
         URLSearchParams: 'readonly',
+        localStorage: 'readonly',
+        sessionStorage: 'readonly',
+        NodeFilter: 'readonly',
+        structuredClone: 'readonly',
         // Node globals (for scripts)
         process: 'readonly',
+        Buffer: 'readonly',
         __dirname: 'readonly',
         __filename: 'readonly',
       },

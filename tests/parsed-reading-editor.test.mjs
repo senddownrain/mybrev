@@ -38,7 +38,7 @@ function completeDraft() {
   return draft;
 }
 
-test('creates a human-facing draft from a linked parsedData document', () => {
+test('creates a human-facing draft from a linked readings document', () => {
   const draft = createParsedReadingDraft({
     _dayId: 'feast-example',
     year: 'a',

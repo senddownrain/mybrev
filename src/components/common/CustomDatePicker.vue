@@ -223,17 +223,10 @@ const calendarWeeks = computed(() => {
   
   // Переходим к первому дню недели для отображения
   const dayOfWeek = currentDay.day() // 0-6, где 0 = воскресенье
-  let diff = 0
-  
-  if (firstDayOfWeek === 1) {
-    // Если начинаем с понедельника (1)
-    // Нужно отступить назад до понедельника
-    // dayOfWeek: 0 (вс) -> diff = 6, 1 (пн) -> diff = 0, 2 (вт) -> diff = 1, ...
-    diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1
-  } else {
-    // Если начинаем с воскресенья (0)
-    diff = dayOfWeek
-  }
+  // Monday calendars shift Sunday by six cells; Sunday calendars use day() directly.
+  const diff = firstDayOfWeek === 1
+    ? (dayOfWeek === 0 ? 6 : dayOfWeek - 1)
+    : dayOfWeek
   
   currentDay.subtract(diff, 'days')
   

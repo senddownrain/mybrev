@@ -40,9 +40,10 @@ export async function openFirestoreSnapshot(snapshotDirectory) {
   }
 
   const cache = new Map();
+  const entryCache = new Map();
 
-  async function collection(collectionPath) {
-    if (cache.has(collectionPath)) return cache.get(collectionPath);
+  async function collectionEntries(collectionPath) {
+    if (entryCache.has(collectionPath)) return entryCache.get(collectionPath);
     const descriptor = manifest.collections?.[collectionPath];
     if (!descriptor) return null;
 
@@ -64,10 +65,19 @@ export async function openFirestoreSnapshot(snapshotDirectory) {
       throw new Error(`Snapshot document count mismatch: ${collectionPath}`);
     }
 
-    const documents = payload.documents.map((item) => ({
+    const entries = payload.documents.map((item) => ({
       id: item.id,
-      ...decodeValue(item.data),
+      data: decodeValue(item.data),
     }));
+    entryCache.set(collectionPath, entries);
+    return entries;
+  }
+
+  async function collection(collectionPath) {
+    if (cache.has(collectionPath)) return cache.get(collectionPath);
+    const entries = await collectionEntries(collectionPath);
+    if (!entries) return null;
+    const documents = entries.map((item) => ({ id: item.id, ...item.data }));
     cache.set(collectionPath, documents);
     return documents;
   }
@@ -86,6 +96,7 @@ export async function openFirestoreSnapshot(snapshotDirectory) {
     root,
     manifest,
     collectionPaths: Object.keys(manifest.collections || {}).sort(),
+    collectionEntries,
     collection,
     document,
     query,

@@ -1,5 +1,5 @@
 {
-  "collection": "fixedDays",
+  "collection": "days",
   "query": "_rank != null",
   "documents": [
     {

@@ -14,15 +14,11 @@
       icon
       variant="flat"
       class="ora-circle-btn"
-      :class="{
-        'ora-circle-btn--confirm': isEditingReading,
-        'ora-action-start': !showTextScaleControl,
-      }"
-      :aria-label="isEditingReading ? 'Захаваць' : 'Рэдагаваць'"
+      :class="{ 'ora-action-start': !showTextScaleControl }"
+      aria-label="Рэдагаваць"
       @click="onEditClick"
     >
-      <PhCheck v-if="isEditingReading" :size="21" />
-      <PhPencilSimple v-else :size="21" />
+      <PhPencilSimple :size="21" />
     </v-btn>
   </v-app-bar>
 </template>
@@ -31,21 +27,13 @@
 import { computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
-import { useUiStore } from '@/stores/ui';
-import { PhArrowLeft, PhCheck, PhPencilSimple } from '@phosphor-icons/vue';
+import { PhArrowLeft, PhPencilSimple } from '@phosphor-icons/vue';
 import TextScaleControl from '@/components/TextScaleControl.vue';
 
 const router = useRouter();
 const route = useRoute();
 const auth = useAuthStore();
-const uiStore = useUiStore();
-const isEditingReading = computed(() => route.name === 'ReadingEditor');
-const showTextScaleControl = computed(() => route.name !== 'oras' && route.name !== 'ReadingEditor');
-
-const isOnReadingRoute = computed(() => {
-  const name = route.name;
-  return name === 'reading' || name === 'ReadingEditor';
-});
+const showTextScaleControl = computed(() => route.name !== 'oras');
 
 const goBack = () => {
   if (window.history.length > 1) {
@@ -56,32 +44,6 @@ const goBack = () => {
 };
 
 const onEditClick = () => {
-  const currentName = route.name;
-
-  // режим работы с чтением
-  if (isOnReadingRoute.value) {
-    const { day, id, readingId } = route.params;
-    if (!day || !id || !readingId) return;
-
-    // если сейчас просмотр чтения или ещё не вошли в режим редактирования —
-    // идём в форму
-    if (currentName === 'reading') {
-      router.push({
-        name: 'ReadingEditor',
-        params: { day, id, readingId },
-      });
-      return;
-    }
-
-    // если уже в ReadingEditor и флаг true — это клик по галочке: шлём сигнал "сохранить"
-    if (currentName === 'ReadingEditor') {
-      uiStore.triggerReadingSave();
-      // флаг сбросится, когда роут вернётся с ReadingEditor на reading (watch выше)
-      return;
-    }
-  }
-
-  // не чтение — редактируем сам "day" как раньше
   const dayId = route.params.id;
   if (dayId) {
     router.push({

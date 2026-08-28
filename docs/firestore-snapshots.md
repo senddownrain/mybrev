@@ -21,9 +21,9 @@ npm run db:snapshot:query -- --list
 Find a document or filter a collection:
 
 ```powershell
-npm run db:snapshot:query -- --collection fixedDays --id office-for-dead
-npm run db:snapshot:query -- --collection parsedData --where _date:==:26.08
-npm run db:snapshot:query -- --collection parsedData --where _dayIds:array-contains:some-day-id
+npm run db:snapshot:query -- --collection days --id office-for-dead
+npm run db:snapshot:query -- --collection readings --where _date:==:26.08
+npm run db:snapshot:query -- --collection readings --where _dayIds:array-contains:some-day-id
 ```
 
 Node audit scripts can import `openFirestoreSnapshot` from

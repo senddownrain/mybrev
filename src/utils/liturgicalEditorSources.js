@@ -12,7 +12,7 @@ const hasText = (value) => value !== null
   && (typeof value !== 'string' || value.trim() !== '');
 
 /**
- * Explain a raw fixedDays field in language useful to an editor. The editor
+ * Explain a raw days field in language useful to an editor. The editor
  * can render the assembled value while keeping inherited sources read-only.
  */
 export function getDayEditorFieldSource(day, field) {

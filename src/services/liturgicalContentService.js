@@ -1,7 +1,4 @@
-/** Assemble liturgical days from fixedDays with the still-separate readings. */
-import { collection, query, where } from 'firebase/firestore';
-import { db } from '@/plugins/firebase';
-import { getDocsOfflineAware } from '@/utils/firestoreRead';
+/** Assemble liturgical days with readings from the canonical readings service. */
 import { logger } from '@/utils/logger';
 import {
   PLACE_LABEL_MAP,
@@ -11,40 +8,13 @@ import {
 } from '@/constants/liturgical';
 import { formatLiturgicalPeriodTitle } from '@/utils/liturgicalPeriodTitle';
 import { fetchDaysForDate } from '@/services/liturgicalDayService';
+import { getParsedReadingsForDate } from '@/services/parsedReadingsService';
 import {
   getFixedCelebrationKey,
   groupFixedCelebrationDays,
   getTemplateLabel,
   isSeasonalDateDocumentId,
 } from '@/utils/liturgicalDayResolution';
-
-const READINGS_COLLECTION = 'readings';
-const readingsCollection = () => collection(db, READINGS_COLLECTION);
-
-function readingPeriodQueries(periodType, dayOfWeek, week) {
-  const result = [];
-  for (const dayValue of [dayOfWeek, `${dayOfWeek}`]) {
-    for (const weekValue of [week, `${week}`]) {
-      result.push(query(
-        readingsCollection(),
-        where('_periodType', '==', periodType),
-        where('_dayOfWeek', '==', dayValue),
-        where('_periodWeekNumber', '==', weekValue),
-      ));
-    }
-  }
-  return result;
-}
-
-const readingDateQuery = (value) => query(readingsCollection(), where('_date', '==', value));
-const readingFeastQuery = (value) => query(readingsCollection(), where('_feast', '==', value));
-
-async function queryDocuments(queries) {
-  const snapshots = await Promise.all(queries.map((item) => getDocsOfflineAware(item)));
-  const result = new Map();
-  snapshots.forEach((snapshot) => snapshot.forEach((item) => result.set(item.id, { id: item.id, ...item.data() })));
-  return [...result.values()];
-}
 
 function buildPeriodTitle(context, date) {
   return formatLiturgicalPeriodTitle({
@@ -80,6 +50,10 @@ function buildDayTitle(day, context, date) {
 
 function matchingReading(day, readings) {
   return readings.find((item) => item.id === day?.id)
+    || readings.find((item) => item._dayId === day?.id)
+    || readings.find((item) => Array.isArray(item._dayIds) && item._dayIds.includes(day?.id))
+    || readings.find((item) => normalizedFeastCode(item._feast) === normalizedFeastCode(day?._feast))
+    || readings.find((item) => item._date && item._date === day?._date)
     || readings.find((item) => !item.place && !item._place)
     || readings[0]
     || null;
@@ -98,27 +72,17 @@ function fixedSubtitle(day, count) {
 
 export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []) {
   logger.log(`[liturgicalContentService] Fetching ${mDate.format('YYYY-MM-DD')}`);
-  const hasPeriod = context.periodType && context.periodWeek !== undefined && context.dayOfWeek;
-  const periodReadingQueries = hasPeriod
-    ? readingPeriodQueries(context.periodType, context.dayOfWeek, context.periodWeek)
-    : [];
-  const dateReadingQueries = [...new Set([mDate.format('DD.MM'), mDate.format('D.M')])].map(readingDateQuery);
-  const feastCodes = [...new Set(dynamicFeastCodes.flatMap((code) => {
-    const normalized = String(code).replace(/^feast-/, '');
-    return [normalized, `feast-${normalized}`];
-  }))];
-
-  const [daysResult, periodReadings, fixedReadings, dynamicReadingEntries] = await Promise.all([
+  const [daysResult, readings] = await Promise.all([
     fetchDaysForDate(mDate, context, dynamicFeastCodes),
-    queryDocuments(periodReadingQueries),
-    queryDocuments(dateReadingQueries),
-    Promise.all(feastCodes.map(async (code) => [code, await queryDocuments([readingFeastQuery(code)])])),
+    getParsedReadingsForDate(mDate, context, dynamicFeastCodes, { includeAlternatives: true }),
   ]);
 
-  const visibleDynamicReadingEntries = daysResult.exclusiveFeastCode
-    ? dynamicReadingEntries.filter(([code]) => normalizedFeastCode(code) === daysResult.exclusiveFeastCode)
-    : dynamicReadingEntries;
-  const dynamicReadings = visibleDynamicReadingEntries.flatMap(([, docs]) => docs);
+  const periodReadings = readings.filter((item) => item._periodType && !item._date && !item._feast);
+  const fixedReadings = readings.filter((item) => item._date);
+  const dynamicReadings = readings.filter((item) => item._feast && (
+    !daysResult.exclusiveFeastCode
+      || normalizedFeastCode(item._feast) === daysResult.exclusiveFeastCode
+  ));
   const visiblePeriodReadings = daysResult.exclusiveFeastCode || daysResult.exclusiveFixedDate
     ? []
     : periodReadings;
@@ -129,7 +93,7 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     ));
   const allDays = [
     ...daysResult.periodDays,
-    ...daysResult.fixedDays,
+    ...daysResult.fixedDateDays,
     ...[...daysResult.dynamicDaysByFeast.values()].flat(),
     // Keep the period document addressable by an explicit route ID even when
     // a seasonal date exception (for example Advent 17–24) replaces it in the
@@ -177,7 +141,7 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     }));
     });
 
-  groupFixedCelebrationDays(daysResult.fixedDays).forEach(({ day, templates }) => options.push({
+  groupFixedCelebrationDays(daysResult.fixedDateDays).forEach(({ day, templates }) => options.push({
     key: `fixed-${getFixedCelebrationKey(day)}`,
     source: LITURGICAL_OPTION_SOURCE.FIXED,
     title: buildDayTitle(day, context, mDate.format('YYYY-MM-DD')) || `Дата ${day._date}`,

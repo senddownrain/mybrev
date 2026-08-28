@@ -477,7 +477,7 @@ async function load() {
         draft.value.sourceType = seed.date ? 'date' : 'period';
       }
     } else {
-      const snapshot = await getDoc(doc(db, 'parsedData', documentId.value));
+      const snapshot = await getDoc(doc(db, 'readings', documentId.value));
       if (!snapshot.exists()) throw new Error('Гэты набор чытанняў не знойдзены.');
       original.value = snapshot.data();
       draft.value = createParsedReadingDraft(original.value);
@@ -540,8 +540,8 @@ async function save() {
 
     if (isNew.value) {
       targetId = suggestParsedReadingDocumentId(draft.value)
-        || doc(collection(db, 'parsedData')).id;
-      const existing = await getDoc(doc(db, 'parsedData', targetId));
+        || doc(collection(db, 'readings')).id;
+      const existing = await getDoc(doc(db, 'readings', targetId));
       if (existing.exists()) {
         throw new Error('Чытанні для гэтага дня і цыкла ўжо існуюць. Адкрыйце іх з экрана чытанняў.');
       }
@@ -549,7 +549,7 @@ async function save() {
     }
 
     payload.updatedAt = serverTimestamp();
-    await setDoc(doc(db, 'parsedData', targetId), payload);
+    await setDoc(doc(db, 'readings', targetId), payload);
     notifySuccess('Чытанні захаваны');
     await router.push(readingsRoute(targetId));
   } catch (error) {

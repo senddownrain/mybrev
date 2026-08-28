@@ -264,8 +264,8 @@ function rankWeight(rank) {
 }
 
 function selectFeast(feast) {
-  // Readings are resolved independently from parsedData by calendar date.
-  // Do not leak a fixedDays document id into that query path.
+  // Readings are resolved independently by calendar date.
+  // Do not leak a days document id into that query path.
   emit('feast-selected', {
     dayId: props.mode === 'readings' ? '' : feast.id,
     date: feast.calendarDate,

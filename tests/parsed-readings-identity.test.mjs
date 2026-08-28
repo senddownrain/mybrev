@@ -23,7 +23,7 @@ import {
   removeTrailingParserStub,
 } from '../src/utils/parsedReadingsIdentity.js';
 
-test('normalizes parsedData selectors to the fixedDays vocabulary', () => {
+test('normalizes readings selectors to the days vocabulary', () => {
   assert.equal(normalizeFeastCode('holyfamily'), 'feast-holyfamily');
   assert.equal(normalizeFeastCode('feast-HolyFamily'), 'feast-holyfamily');
   assert.equal(readingSelector({ _date: '4.3' }), 'date:04.03');
@@ -34,7 +34,7 @@ test('normalizes parsedData selectors to the fixedDays vocabulary', () => {
   );
 });
 
-test('builds IDs from the fixedDays base and a normalized lectionary cycle', () => {
+test('builds IDs from the days base and a normalized lectionary cycle', () => {
   assert.equal(buildPeriodDayId({ _periodType: 'lent', _periodWeekNumber: 2, _dayOfWeek: 4 }), 'lent-w2-d4');
   assert.equal(buildReadingDocumentId('lent-w2-d1', { year: 'a' }), 'lent-w2-d1--A');
   assert.equal(buildReadingDocumentId('ordinary-w12-d3', { year: 2 }), 'ordinary-w12-d3--2');
@@ -183,7 +183,7 @@ test('selects an exact calendar-weekday variant before a generic date reading', 
   assert.deepEqual(selectCalendarDayVariants(documents, 2).map((item) => item.id), ['weekday']);
 });
 
-test('maps period and feast readings directly to fixedDays', () => {
+test('maps period and feast readings directly to days', () => {
   const days = [
     { id: 'ordinary-w2-d3', _periodType: 'ordinary', _periodWeekNumber: 2, _dayOfWeek: 3 },
     { id: 'feast-ash', _feast: 'feast-ash' },

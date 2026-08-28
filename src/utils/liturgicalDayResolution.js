@@ -1,5 +1,26 @@
 import { isFromDayReference } from '../constants/days.js';
-import { getDayTemplateLabel } from '../constants/dayTemplates.js';
+
+const DAY_TEMPLATE_LABELS = Object.freeze({
+  apostles: 'Апосталы',
+  'blessed-virgin-mary': 'Пра Найсвяцейшую Панну Марыю',
+  'church-dedication': 'Пра пасвячэнне касцёла',
+  'doctors-of-church': 'Пра доктараў касцёла',
+  educators: 'Пра выхавацеляў',
+  'holy-men': 'Пра святых мужчынаў',
+  'holy-women': 'Пра святых жанчынаў',
+  'martyr-one': 'Пра аднаго мучаніка',
+  'martyrs-many': 'Пра некалькіх мучанікаў',
+  'office-for-dead': 'За памерлых',
+  pastors: 'Пра пастыраў',
+  religious: 'Пра законнікаў',
+  virgins: 'Пра паннаў',
+  'works-of-mercy': 'Пра справы міласэрнасці',
+});
+
+function getDayTemplateLabel(value) {
+  const key = String(value || '').trim().toLowerCase();
+  return DAY_TEMPLATE_LABELS[key] || value || 'Асноўны';
+}
 
 const WEEKDAY_FIELD = Object.freeze({
   1: 'sunday',
@@ -41,7 +62,7 @@ export function isSeasonalDateDocumentId(value) {
 }
 
 /**
- * Canonical ID of a regular period day in `fixedDays`.
+ * Canonical ID of a regular period day in `days`.
  *
  * Period documents are normally found through their selector fields. The ID
  * is a fallback for legacy imports that stored a selector in another type.
@@ -56,7 +77,7 @@ export function getPeriodDayDocumentId(periodType, periodWeekNumber, dayOfWeek) 
   return `${period}-w${week}-d${day}`;
 }
 
-/** Canonical `dayTemplates` ID for a period week in the four-week psalter. */
+/** Canonical template ID for a period week in the four-week psalter. */
 export function getPeriodDayTemplateDocumentId(periodType, periodWeekNumber, dayOfWeek) {
   const period = String(periodType || '').trim();
   const week = Number(periodWeekNumber);

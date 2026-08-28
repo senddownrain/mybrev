@@ -27,7 +27,7 @@ const SERVICE_ACCOUNT_PATH = path.join(ROOT, 'patchs', 'serviceAccountKey.json')
 const REPORT_PATH = path.join(ROOT, 'reports', 'christmas-markdown-import-report.json');
 const BACKUP_DIR = path.join(ROOT, 'reports', 'backups');
 const DEFAULT_SNAPSHOT_DIR = path.join(ROOT, 'backups', 'firestore-snapshot');
-const COLLECTION = 'fixedDays';
+const COLLECTION = 'days';
 const WRITE_CHUNK_SIZE = 40;
 const APPLY = process.argv.includes('--apply');
 const ONLY_ID = process.argv.find((argument) => argument.startsWith('--id='))?.slice('--id='.length) || '';
@@ -126,7 +126,7 @@ function parseTextValue(raw, filename, field) {
       return JSON.parse(value);
     } catch (error) {
       if (value.startsWith('[') && value.endsWith(']')) return parseLooseArray(value, filename, field);
-      throw new Error(`${filename}:${field}: invalid JSON (${error.message})`);
+      throw new Error(`${filename}:${field}: invalid JSON (${error.message})`, { cause: error });
     }
   }
   return value;
@@ -150,7 +150,7 @@ function parseMarkdown(filename, markdown) {
     throw new Error(`${filename}: _templates must be an array`);
   }
   // `id` is an export/review aid. Firestore already owns the document ID and
-  // existing fixedDays payloads do not duplicate it as a stored field.
+  // existing days payloads do not duplicate it as a stored field.
   delete payload.id;
   return { id, filename, payload };
 }
@@ -319,7 +319,7 @@ function auditCompiledCoverage(documents, documentsById, snapshotById) {
 }
 
 function backupName() {
-  return `fixedDays-before-christmas-markdown-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+  return `days-before-christmas-markdown-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
 }
 
 async function getSnapshots(db, ids) {

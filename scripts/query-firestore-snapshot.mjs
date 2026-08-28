@@ -60,9 +60,9 @@ function printHelp() {
 
 Usage:
   npm run db:snapshot:query -- --list
-  npm run db:snapshot:query -- --collection fixedDays --id <document-id>
-  npm run db:snapshot:query -- --collection parsedData --where _date:==:26.08
-  npm run db:snapshot:query -- --collection parsedData --where _dayIds:array-contains:<id>
+  npm run db:snapshot:query -- --collection days --id <document-id>
+  npm run db:snapshot:query -- --collection readings --where _date:==:26.08
+  npm run db:snapshot:query -- --collection readings --where _dayIds:array-contains:<id>
 
 Options:
   --snapshot <dir>       Snapshot directory (default: backups/firestore-snapshot)

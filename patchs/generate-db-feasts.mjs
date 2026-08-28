@@ -223,8 +223,8 @@ async function fetchFirstWeekDay() {
     : admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
   try {
-    const snapshot = await app.firestore().collection('fixedDays').doc('ordinary-w5-d1').get();
-    if (!snapshot.exists) throw new Error('fixedDays/ordinary-w5-d1 does not exist');
+    const snapshot = await app.firestore().collection('days').doc('ordinary-w5-d1').get();
+    if (!snapshot.exists) throw new Error('days/ordinary-w5-d1 does not exist');
     return { _id: snapshot.id, ...snapshot.data() };
   } finally {
     await app.delete();
@@ -257,7 +257,7 @@ async function fetchRankedFixedDays() {
     : admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
   try {
-    const snapshot = await app.firestore().collection('fixedDays').where('_rank', '!=', null).get();
+    const snapshot = await app.firestore().collection('days').where('_rank', '!=', null).get();
     return snapshot.docs
       .map((doc) => ({ _firestoreId: doc.id, ...doc.data() }))
       .sort((left, right) => left._firestoreId.localeCompare(right._firestoreId));
@@ -280,7 +280,7 @@ async function loadRankedFixedDays() {
   const documents = await fetchRankedFixedDays();
   await fs.mkdir(path.dirname(RANKED_FIXED_DAYS_CACHE), { recursive: true });
   await fs.writeFile(RANKED_FIXED_DAYS_CACHE, `${JSON.stringify({
-    collection: 'fixedDays',
+    collection: 'days',
     query: '_rank != null',
     documents,
   }, null, 2)}\n`, 'utf8');
@@ -327,10 +327,10 @@ function selectMissingRankedFixedDays(documents, missingEntries) {
       || normalizeRank(document._rank);
     const outputStem = [datePart, feastSlug, placePart].filter(Boolean).join('-');
     const variant = {
-      file: `fixedDays/${document._firestoreId}`,
+      file: `days/${document._firestoreId}`,
       outputStem,
       raw: document,
-      kind: 'fixedDays',
+      kind: 'days',
       firestoreId: document._firestoreId,
     };
     if (count > 0) {
@@ -447,7 +447,7 @@ function resolveField({
         file: outputFile,
         field,
         reference: value,
-        source: 'fixedDays/ordinary-w5-d1',
+        source: 'days/ordinary-w5-d1',
       });
       return replacement;
     }
@@ -615,11 +615,11 @@ async function main() {
     generatedAt: new Date().toISOString(),
     rules: {
       sourcePriority: 'feast -> selected common-text -> empty string',
-      fromFirstWeek: 'resolved from fixedDays/ordinary-w5-d1 using the same field',
+      fromFirstWeek: 'resolved from days/ordinary-w5-d1 using the same field',
       fromOwnTexts: 'resolved from the feast own laudesPr when the exact field is absent',
       fromApostles: 'from-apostles and the legacy typo from-apostels are resolved from the same field in common-texts/apostles',
       currentDayPsalms: 'Belarusian instructions beginning with “Антыфоны і псальмы з бягучага дня” become from-day',
-      fixedDayFallback: 'missing content fields may be copied from the fixedDays document named by _copyFromFixedDay',
+      fixedDayFallback: 'missing content fields may be copied from the days document named by _copyFromFixedDay',
       teDeum: 'every non-empty and non-zero value becomes boolean true',
       fromDay: 'every still-empty required content field becomes from-day; first-vesper fields remain conditional',
       multipleTemplates: 'one output per template with _currentVersion',

@@ -13,7 +13,7 @@ import {
   selectReadingLectionaryVariants,
 } from '@/utils/parsedReadingsIdentity';
 
-const COLLECTION = 'parsedData';
+const COLLECTION = 'readings';
 
 function col() {
   return collection(db, COLLECTION);
@@ -110,7 +110,7 @@ export async function getParsedReadingsForDate(mDate, context, dynamicFeastCodes
       .map(({ document }) => document);
   }
 
-  // An explicitly selected fixedDays template is the strongest link. During
+  // An explicitly selected day template is the strongest link. During
   // migration both singular and array forms are supported.
   if (options.dayId) {
     const linked = (await Promise.all([

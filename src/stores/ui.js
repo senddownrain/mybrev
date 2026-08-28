@@ -7,7 +7,6 @@ import { ref } from 'vue';
  * Acts as a communication bus for:
  *   PrayerView  ↔ Default.vue ↔ PrayerBar  (prayer view edit)
  *   PrayerForm  ↔ Default.vue               (prayer add/edit form)
- *   ReadingForm ↔ OraBar                    (reading edit form)
  */
 export const useUiStore = defineStore('ui', () => {
   // ── App bar / navigation ─────────────────────────────────────────────────
@@ -76,18 +75,6 @@ export const useUiStore = defineStore('ui', () => {
   function triggerPrayerFormSave() { _savePrayerForm?.(); }
 
   // ── Reading form state (ReadingForm ↔ OraBar) ────────────────────────────
-  let _saveReading = null;
-
-  function registerReadingActions({ save } = {}) {
-    _saveReading = save ?? null;
-  }
-
-  function clearReadingActions() {
-    _saveReading = null;
-  }
-
-  function triggerReadingSave() { _saveReading?.(); }
-
   return {
     // Navigation
     isDrawerOpen,
@@ -110,9 +97,5 @@ export const useUiStore = defineStore('ui', () => {
     registerPrayerFormActions,
     clearPrayerFormActions,
     triggerPrayerFormSave,
-    // Reading form (ReadingForm ↔ OraBar)
-    registerReadingActions,
-    clearReadingActions,
-    triggerReadingSave,
   };
 });

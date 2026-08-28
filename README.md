@@ -39,7 +39,7 @@ npm run deploy:hosting
 Для анализа сначала используется локальный snapshot:
 
 ```sh
-npm run db:snapshot:query -- collection fixedDays
+npm run db:snapshot:query -- --collection days
 ```
 
 Не обновляйте snapshot и не запускайте live-аудит без подтверждения доступной квоты. Локальный service account хранится в `patchs/serviceAccountKey.json`, но исключён из Git.

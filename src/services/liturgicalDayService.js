@@ -1,4 +1,4 @@
-/** Firestore access for normalized liturgical days in `fixedDays`. */
+/** Firestore access for normalized liturgical days in `days`. */
 import { collection, doc, query, where } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import { LITURGICAL_DAYS_COLLECTION } from '@/constants/days';
@@ -247,7 +247,7 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = []) {
       ? []
       : (resolvedPeriodDay ? [resolvedPeriodDay] : []),
     periodFallback: resolvedPeriodDay,
-    fixedDays: exclusiveFeastCode ? [] : resolvedFixed,
+    fixedDateDays: exclusiveFeastCode ? [] : resolvedFixed,
     dynamicDaysByFeast: resolvedDynamicDays,
     seasonalException: exclusiveFeastCode ? null : seasonal,
     exclusiveFeastCode,

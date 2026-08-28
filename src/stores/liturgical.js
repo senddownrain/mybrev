@@ -3,10 +3,10 @@
  *
  * Canonical flow:  view/component → composable → this store → service → Firestore
  *
- * Covers three runtime scenarios:
+ * Covers the runtime scenarios:
  *   1. fetchContentByDate  — day + readings together (main screen)
  *   2. fetchDaysByDate     — only liturgical hours / days
- *   3. fetchReadingsByDate — only readings in liturgical context
+ *   3. fetchParsedReadingsByDate — Mass readings in liturgical context
  */
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
@@ -21,7 +21,6 @@ import { FEAST_NAME_MAP } from '@/constants/liturgicalFeastsMap';
 
 import { fetchContentForDate }                     from '@/services/liturgicalContentService';
 import { fetchDaysForDate, findDayByPeriod, getAllFeastDays } from '@/services/liturgicalDayService';
-import { getReadingsForDate }                       from '@/services/readingsService';
 import { getParsedReadingsForDate }                 from '@/services/parsedReadingsService';
 
 /** Freshness windows. Expired entries stay readable and refresh in background. */
@@ -76,8 +75,6 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   const contentCache  = ref(new Map());
   /** @type {import('vue').Ref<Map<string, { data: Object, cachedAt: number }>>} */
   const daysCache     = ref(new Map());
-  /** @type {import('vue').Ref<Map<string, { data: Object, cachedAt: number }>>} */
-  const readingsCache = ref(new Map());
   /** @type {import('vue').Ref<Map<string, { data: Object[], cachedAt: number }>>} */
   const feastsCache        = ref(new Map());
   /** @type {import('vue').Ref<Map<string, { data: Object, cachedAt: number }>>} */
@@ -192,7 +189,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
 
     try {
       const { context, dynamicFeastCodes } = await _resolveContext(mDate);
-      const { periodDays, fixedDays, dynamicDaysByFeast } = await fetchDaysForDate(
+      const { periodDays, fixedDateDays, dynamicDaysByFeast } = await fetchDaysForDate(
         mDate, context, dynamicFeastCodes,
       );
 
@@ -200,7 +197,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
       const seen  = new Set();
       const items = [
         ...periodDays,
-        ...fixedDays,
+        ...fixedDateDays,
         ...Array.from(dynamicDaysByFeast.values()).flat(),
       ].filter((d) => {
         if (seen.has(d.id)) return false;
@@ -214,55 +211,6 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
       return result;
     } catch (err) {
       logger.error(`[liturgicalStore] fetchDaysByDate error (${key}):`, err);
-      error.value = err;
-      throw err;
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  /**
-   * Fetch liturgical readings for a date (with cycle determination).
-   * Result is cached by date key.
-   *
-   * @param {Date|moment.Moment|string} date
-   * @returns {Promise<{ context: Object, items: Object[] }>}
-   */
-  async function fetchReadingsByDate(date) {
-    const mDate = moment(date).startOf('day');
-    const key   = mDate.format('YYYY-MM-DD');
-
-    const cachedReadings = readingsCache.value.get(key);
-    if (_isCacheValid(cachedReadings, TTL.READINGS)) {
-      logger.log(`[liturgicalStore] readings cache hit: ${key}`);
-      return cachedReadings.data;
-    }
-
-    isLoading.value = true;
-    error.value     = null;
-
-    try {
-      const { context } = await _resolveContext(mDate);
-
-      // Determine liturgical cycle
-      const liturgicalYear = await getLiturgicalYear(date, { useCalendarStore: true });
-      const cycle          = await getCycleForDate(date, liturgicalYear, context.dayOfWeek, { useCalendarStore: true });
-
-      const items = await getReadingsForDate(date, {
-        cycle,
-        periodType:        context.periodType,
-        periodWeekNumber:  context.periodWeek,
-        dayOfWeek:         context.dayOfWeek,
-        _feast:            context._feast,
-      });
-
-      const fullContext = { ...context, cycle };
-      const result      = { context: fullContext, items };
-      readingsCache.value.set(key, { data: result, cachedAt: Date.now() });
-      logger.log(`[liturgicalStore] readings loaded for ${key}: ${items.length}`);
-      return result;
-    } catch (err) {
-      logger.error(`[liturgicalStore] fetchReadingsByDate error (${key}):`, err);
       error.value = err;
       throw err;
     } finally {
@@ -322,7 +270,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   }
 
   /**
-   * Fetch parsed readings (parsedData collection) for a date.
+   * Fetch structured readings from the canonical `readings` collection.
    * Cached per date key and served stale while a refresh runs in background.
    *
    * @param {Date|moment.Moment|string} date
@@ -380,7 +328,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   /**
    * Fetch liturgical hours AND parsed readings for a date in a single round.
    *
-   * Resolves context once, then fetches fixedDays and parsedData in parallel.
+   * Resolves context once, then fetches days and readings in parallel.
    * Populates daysCache and parsedReadingsCache as a side-effect so that
    * independent calls to fetchDaysByDate / fetchParsedReadingsByDate are free
    * on the same date.
@@ -418,7 +366,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
       const seen  = new Set();
       const hours = [
         ...hoursResult.periodDays,
-        ...hoursResult.fixedDays,
+        ...hoursResult.fixedDateDays,
         ...Array.from(hoursResult.dynamicDaysByFeast.values()).flat(),
       ].filter((d) => {
         if (seen.has(d.id)) return false;
@@ -490,7 +438,6 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     if (dateKey) {
       contentCache.value.delete(dateKey);
       daysCache.value.delete(dateKey);
-      readingsCache.value.delete(dateKey);
       for (const key of parsedReadingsCache.value.keys()) {
         if (key.startsWith(`${dateKey}|`)) parsedReadingsCache.value.delete(key);
       }
@@ -498,7 +445,6 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     } else {
       contentCache.value.clear();
       daysCache.value.clear();
-      readingsCache.value.clear();
       feastsCache.value.clear();
       parsedReadingsCache.value.clear();
       bundleCache.value.clear();
@@ -514,7 +460,6 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     // actions
     fetchContentByDate,
     fetchDaysByDate,
-    fetchReadingsByDate,
     fetchParsedReadingsByDate,
     fetchDayBundle,
     fetchToday,

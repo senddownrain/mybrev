@@ -61,7 +61,7 @@
       />
     </section>
 
-    <!-- Christmas is date-only in both fixedDays and parsedData. -->
+    <!-- Christmas is date-only in both days and readings. -->
     <section v-else-if="selectedPeriod === 'christmas'" class="picker-step">
       <div class="step-heading">
         <span>02</span>

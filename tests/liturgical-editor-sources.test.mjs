@@ -39,7 +39,7 @@ test('explains daytime fallback without duplicating the shared text', () => {
   assert.equal(getDayEditorFieldValue(day, day, 'sext2Ps1'), day.sext1Ps1);
 });
 
-test('editor layout keeps separate shared sources out of fixedDays fields', () => {
+test('editor layout keeps separate shared sources out of days fields', () => {
   assert.ok(ALL_DIRECT_DAY_EDITOR_FIELDS.includes('vesper1AntMag'));
   assert.ok(!ALL_DIRECT_DAY_EDITOR_FIELDS.includes('compHymn'));
   assert.ok(!ALL_DIRECT_DAY_EDITOR_FIELDS.includes('invitatoriumPs1'));

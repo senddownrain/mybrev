@@ -430,7 +430,7 @@ const readingSubtitle = computed(() => {
   return 'Чытанні і Евангелле';
 });
 
-// Always link to parsedData readings view for the current date
+// Always link to the readings view for the current date.
 const readingItem = computed(() => {
   if (!dateParam.value) return null;
   return {
@@ -497,7 +497,8 @@ const goToCreateReading = () => {
   const periodCandidate = dayData.value || null;
 
   router.push({
-    name: 'ReadingsTest',
+    name: 'AdminParsedReadingEditor',
+    params: { id: 'new' },
     query: {
       type: periodCandidate?._periodType ? 'period' : 'date',
       _periodType: periodCandidate?._periodType || '',

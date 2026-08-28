@@ -1,31 +1,21 @@
 #!/usr/bin/env node
 
-import { createRequire } from 'node:module';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import admin from 'firebase-admin';
+import { openFirestoreSnapshot } from './lib/firestore-snapshot.mjs';
 import {
-  READING_SECTIONS,
-  canonicalizeLegacyReadingMetadata,
   normalizeFeastCode,
   normalizeReadingCycle,
   readingSelector,
-  removeDuplicatedBiblePrefix,
-  removeTrailingParserStub,
 } from '../src/utils/parsedReadingsIdentity.js';
 
-const require = createRequire(import.meta.url);
-const serviceAccount = require('../patchs/serviceAccountKey.json');
 const OUTPUT = path.resolve('reports/parsed-readings-content-integrity-audit.json');
 const VALID_YEARS = new Set(['A', 'B', 'C', '1', '2']);
-const FROM_BACKUPS = process.argv.includes('--from-backups');
-const FIELD_BACKUP = path.resolve('reports/backups/parsedData-before-field-normalization-2026-08-24T16-09-38-998Z.json');
-const COLLISION_BACKUP = path.resolve('reports/backups/parsedData-before-collision-resolution-2026-08-24T16-16-03-353Z.json');
-const COLLISION_REPORT = path.resolve('reports/parsed-data-collision-resolution-report.json');
-const IDENTITY_BACKUP = path.resolve('reports/backups/parsedData-before-identity-migration-2026-08-24T16-19-52-518Z.json');
-const CATALOG = path.resolve('reports/parsed-data-catalog.json');
-let locallyMissingDocuments = 0;
+const snapshotArgumentIndex = process.argv.indexOf('--snapshot');
+const SNAPSHOT_DIRECTORY = snapshotArgumentIndex >= 0
+  ? path.resolve(process.argv[snapshotArgumentIndex + 1])
+  : path.resolve('backups/firestore-snapshot');
 
 function hasOwn(value, key) {
   return Object.prototype.hasOwnProperty.call(value ?? {}, key);
@@ -40,132 +30,9 @@ export function present(value) {
   return typeof value === 'string' && value.trim().length > 0;
 }
 
-function normalizeContentFields(document) {
-  const result = structuredClone(document);
-  const sectionNames = [...new Set([...READING_SECTIONS, ...readingSectionNames(result)])];
-  for (const sectionName of sectionNames) {
-    const section = result[sectionName];
-    if (!section || typeof section !== 'object') continue;
-    for (const [field, value] of Object.entries(section)) {
-      if (Array.isArray(value)) {
-        section[field] = value.map(removeTrailingParserStub).filter((item) => item !== null);
-      } else if (typeof value === 'string') {
-        let cleaned = removeTrailingParserStub(value);
-        if (field === (sectionName === 'alleluia' ? 'verse' : 'text')) {
-          cleaned = removeDuplicatedBiblePrefix(cleaned, section.bible);
-        }
-        section[field] = cleaned;
-      }
-    }
-  }
-  return result;
-}
-
 function normalizedLabel(value) {
   return String(value ?? '').normalize('NFKC').toLocaleLowerCase('be')
     .replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
-}
-
-function placeKey(value) {
-  return (Array.isArray(value) ? value : [value]).filter(Boolean).map(String).sort().join(',');
-}
-
-function selectorKey(document) {
-  if (document._date) return `date:${document._date}`;
-  if (document._feast) return `feast:${normalizeFeastCode(document._feast)}`;
-  return `period:${document._periodType ?? ''}:${document._periodWeekNumber ?? ''}:${document._dayOfWeek ?? ''}`;
-}
-
-function catalogMatchScore(document, candidate) {
-  if (normalizeReadingCycle(document.year) !== normalizeReadingCycle(candidate.year)) return -1;
-  if (selectorKey(document) !== selectorKey(candidate)) return -1;
-  let score = 0;
-  if (document._sourceUrl && candidate._sourceUrl === document._sourceUrl) score += 100;
-  if (normalizedLabel(document.title) === normalizedLabel(candidate.title)) score += 20;
-  if (document._rank && document._rank === candidate._rank) score += 5;
-  if (placeKey(document._place) === placeKey(candidate._place)) score += 5;
-  return score;
-}
-
-function applyCatalogIds(documents, catalog) {
-  const readings = catalog.flatMap((item) => item.readings ?? []);
-  return documents.map((document) => {
-    const matches = readings.map((candidate) => ({
-      candidate,
-      score: catalogMatchScore(document, candidate),
-    })).filter((item) => item.score >= 20)
-      .sort((left, right) => right.score - left.score);
-    if (!matches.length || (matches[1] && matches[1].score === matches[0].score)) return document;
-    return { ...document, id: matches[0].candidate._id };
-  });
-}
-
-export async function loadReconstructedDocuments() {
-  const [fieldBackup, collisionBackup, collisionReport, identityBackup, catalog] = await Promise.all([
-    readFile(FIELD_BACKUP, 'utf8').then(JSON.parse),
-    readFile(COLLISION_BACKUP, 'utf8').then(JSON.parse),
-    readFile(COLLISION_REPORT, 'utf8').then(JSON.parse),
-    readFile(IDENTITY_BACKUP, 'utf8').then(JSON.parse),
-    readFile(CATALOG, 'utf8').then(JSON.parse),
-  ]);
-  const collisionSources = new Map(collisionBackup.documents.map((item) => [item.id, item]));
-  const collisionTargets = [];
-  for (const operation of collisionReport.operations) {
-    const winner = collisionSources.get(operation.winnerId);
-    if (!winner) throw new Error(`Collision backup is missing winner ${operation.winnerId}`);
-    const data = { ...structuredClone(winner), id: operation.targetId };
-    if (operation.dayId) {
-      data._dayId = operation.dayId;
-      delete data._dayIds;
-    } else if (operation.dayIds?.length) {
-      data._dayIds = operation.dayIds;
-      delete data._dayId;
-    }
-    if (operation.variant) data._variant = operation.variant;
-    collisionTargets.push(data);
-  }
-
-  const canonicalIdentityDocuments = identityBackup.documents.map((item) => ({
-    id: item.id,
-    ...canonicalizeLegacyReadingMetadata(item.data),
-  }));
-  const mappedIdentityDocuments = applyCatalogIds(canonicalIdentityDocuments, catalog);
-  const documents = new Map(mappedIdentityDocuments.map((item) => [item.id, item]));
-  if (documents.size !== identityBackup.documents.length) {
-    throw new Error('Catalog matching produced duplicate IDs for identity-backup documents');
-  }
-
-  const fieldCandidates = fieldBackup.documents.map((item) => ({
-    id: item.id,
-    ...canonicalizeLegacyReadingMetadata(normalizeContentFields(item.data)),
-  }));
-  const candidatePool = [...collisionTargets, ...fieldCandidates];
-  const catalogReadings = catalog.flatMap((item) => item.readings ?? []);
-  const missingCatalogReadings = catalogReadings.filter((item) => !documents.has(item._id));
-  let partialReconstructions = 0;
-  for (const catalogReading of missingCatalogReadings) {
-    const candidates = candidatePool.map((candidate) => ({
-      candidate,
-      score: (candidate.id === catalogReading._id ? 1000 : 0)
-        + catalogMatchScore(candidate, catalogReading),
-    })).filter((item) => item.score >= 20)
-      .sort((left, right) => right.score - left.score);
-    if (!candidates.length || (candidates[1] && candidates[1].score === candidates[0].score)) {
-      documents.set(catalogReading._id, {
-        ...catalogReading,
-        id: catalogReading._id,
-        _localReconstruction: 'catalog-partial',
-      });
-      partialReconstructions++;
-      continue;
-    }
-    documents.set(catalogReading._id, { ...candidates[0].candidate, id: catalogReading._id });
-  }
-  locallyMissingDocuments = Math.max(0, 822 - documents.size);
-  if (partialReconstructions) {
-    console.warn(`Local reconstruction used catalog-only payloads for ${partialReconstructions} unchanged documents.`);
-  }
-  return [...documents.values()];
 }
 
 export function validTitle(sectionName, value) {
@@ -342,14 +209,10 @@ function mixedCycleGroups(documents) {
 }
 
 async function main() {
-  let documents;
-  if (FROM_BACKUPS) {
-    documents = await loadReconstructedDocuments();
-  } else {
-    admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-    const db = admin.firestore();
-    const snapshot = await db.collection('parsedData').get();
-    documents = snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+  const snapshot = await openFirestoreSnapshot(SNAPSHOT_DIRECTORY);
+  const documents = await snapshot.collection('readings');
+  if (!documents) {
+    throw new Error(`Snapshot does not contain readings: ${snapshot.root}`);
   }
   const documentReports = documents.map((document) => ({
     id: document.id,
@@ -373,8 +236,6 @@ async function main() {
       movableFeasts: movableFeasts.length,
       movableFeastsWithDuplicateCycles: duplicateMovableCycles.length,
       obsoleteSourceCategoryFields: documents.filter((item) => hasOwn(item, '_sourceCategory')).length,
-      locallyPartialDocuments: documents.filter((item) => item._localReconstruction === 'catalog-partial').length,
-      locallyMissingDocuments,
       unqualifiedAlongsideCycleGroups: unqualifiedAlongsideCycles.length,
     },
     duplicateMovableCycles,
@@ -387,12 +248,11 @@ async function main() {
   await writeFile(OUTPUT, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
   console.log(JSON.stringify(report.counts, null, 2));
   console.log(`Wrote ${OUTPUT}`);
-  if (!FROM_BACKUPS) await admin.app().delete();
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch((error) => {
-    console.error('parsedData content-integrity audit failed:', error);
+    console.error('readings content-integrity audit failed:', error);
     process.exitCode = 1;
   });
 }

@@ -7,7 +7,7 @@ import { openFirestoreSnapshot } from './lib/firestore-snapshot.mjs';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, '..');
-const COLLECTION = 'fixedDays';
+const COLLECTION = 'days';
 const DEFAULT_SNAPSHOT_DIR = path.join(ROOT, 'backups', 'firestore-snapshot');
 const REPORT_PATH = path.join(ROOT, 'reports', 'feast-comment-rank-cleanup-report.json');
 const SERVICE_ACCOUNT_PATH = path.join(ROOT, 'patchs', 'serviceAccountKey.json');
@@ -29,7 +29,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`Remove standalone rank labels accidentally stored in fixedDays.feastComment.
+  console.log(`Remove standalone rank labels accidentally stored in days.feastComment.
 
 This script uses the local Firestore snapshot for analysis. It is a dry run by default.
 

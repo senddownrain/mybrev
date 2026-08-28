@@ -333,20 +333,20 @@ export function rankFromSourceCategory(value) {
 }
 
 /**
- * Resolve a parsedData document to fixedDays candidates without relying on its
+ * Resolve a readings document to days candidates without relying on its
  * legacy Firestore ID. The result is intentionally conservative: ambiguous
  * fixed-date celebrations stay ambiguous and must not be migrated blindly.
  */
-export function findReadingDayCandidates(reading, fixedDays) {
+export function findReadingDayCandidates(reading, days) {
   const explicitDayIds = Array.isArray(reading?._dayIds)
     ? reading._dayIds
     : [reading?._dayId].filter(Boolean);
   if (explicitDayIds.length) {
-    return fixedDays.filter((day) => explicitDayIds.includes(day.id));
+    return days.filter((day) => explicitDayIds.includes(day.id));
   }
 
   const selector = readingSelector(reading);
-  let candidates = fixedDays.filter((day) => readingSelector(day) === selector);
+  let candidates = days.filter((day) => readingSelector(day) === selector);
   if (candidates.length <= 1 || !selector.startsWith('date:')) return candidates;
 
   const byTitle = candidates.filter((day) => exactTitleMatch(reading, day));
@@ -399,9 +399,9 @@ function commonBaseId(baseIds) {
 }
 
 /** Resolve one reading to one or more office templates and a shared ID base. */
-export function resolveReadingDayLink(reading, fixedDays) {
+export function resolveReadingDayLink(reading, days) {
   const canonical = canonicalizeLegacyReadingMetadata(reading);
-  let candidates = findReadingDayCandidates(canonical, fixedDays);
+  let candidates = findReadingDayCandidates(canonical, days);
   if (!candidates.length) {
     const periodBase = buildPeriodDayId(canonical);
     if (periodBase) return { status: 'mapped', canonical, dayIds: [], baseId: periodBase };

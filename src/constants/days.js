@@ -1,5 +1,5 @@
 /** Runtime collection for all liturgical-day entities. */
-export const LITURGICAL_DAYS_COLLECTION = 'fixedDays';
+export const LITURGICAL_DAYS_COLLECTION = 'days';
 
 /**
  * The collection contains three intentionally different entity shapes.

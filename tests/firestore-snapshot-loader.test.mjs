@@ -11,7 +11,7 @@ test('local snapshot supports collection, document, and filtered reads', async (
 
   const collectionPayload = {
     schemaVersion: 1,
-    collectionPath: 'fixedDays',
+    collectionPath: 'days',
     documents: [
       { id: 'one', data: { _date: '26.08', _dayIds: ['linked'] } },
       { id: 'two', data: { _date: '27.08' } },
@@ -23,19 +23,19 @@ test('local snapshot supports collection, document, and filtered reads', async (
     exportedAt: '2026-08-26T00:00:00.000Z',
     totalDocuments: 2,
     collections: {
-      fixedDays: { file: 'fixed-days.json', documentCount: 2 },
+      days: { file: 'fixed-days.json', documentCount: 2 },
     },
   }));
 
   const snapshot = await openFirestoreSnapshot(directory);
-  assert.deepEqual(snapshot.collectionPaths, ['fixedDays']);
-  assert.equal((await snapshot.document('fixedDays', 'two'))._date, '27.08');
+  assert.deepEqual(snapshot.collectionPaths, ['days']);
+  assert.equal((await snapshot.document('days', 'two'))._date, '27.08');
   assert.deepEqual(
-    (await snapshot.query('fixedDays', [{ field: '_date', value: '26.08' }])).map(item => item.id),
+    (await snapshot.query('days', [{ field: '_date', value: '26.08' }])).map(item => item.id),
     ['one'],
   );
   assert.deepEqual(
-    (await snapshot.query('fixedDays', [
+    (await snapshot.query('days', [
       { field: '_dayIds', op: 'array-contains', value: 'linked' },
     ])).map(item => item.id),
     ['one'],
