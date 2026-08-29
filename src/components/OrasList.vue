@@ -149,7 +149,6 @@ import {
   PLACE_LABEL_MAP,
   RANK_LABEL_MAP,
   getLiturgicalCelebrationThemeKey,
-  getLiturgicalPeriodTheme,
   getLiturgicalTheme,
 } from '@/constants/liturgical';
 import {
@@ -157,6 +156,7 @@ import {
   getTomorrowFirstVespersOptions,
   isLocalFirstVespers,
   isSolemnity,
+  usesOwnVespers,
 } from '@/utils/liturgicalVespers';
 
 const route = useRoute();
@@ -243,7 +243,7 @@ const readingTheme = computed(() => (
     }
     : {
       ...(READING_THEMES[dayData.value?._periodType] || READING_THEMES.default),
-      ...getLiturgicalPeriodTheme(dayData.value, dayData.value?._periodType),
+      ...getLiturgicalTheme(dayData.value, dayData.value?._periodType),
       ...(getLiturgicalCelebrationThemeKey(dayData.value) === 'red'
         ? { avatarColor: 'red-lighten-4', iconColor: 'red-darken-3' }
         : {}),
@@ -459,10 +459,12 @@ const loadReadings = async () => {
       }),
       getLiturgicalContentForDate(mDate.clone().add(1, 'day').toDate()),
     ]);
-    const firstVespersOptions = getTomorrowFirstVespersOptions(tomorrowContent);
-    localTomorrowFirstVespers.value = firstVespersOptions.filter(isLocalFirstVespers);
-    tomorrowFirstVespers.value = firstVespersOptions.find((item) => !isLocalFirstVespers(item))
-      || (mDate.isoWeekday() === 6 ? findTomorrowRegularVespers(tomorrowContent) : null);
+    if (!usesOwnVespers(dayData.value) && dayId.value !== 'office-for-dead') {
+      const firstVespersOptions = getTomorrowFirstVespersOptions(tomorrowContent);
+      localTomorrowFirstVespers.value = firstVespersOptions.filter(isLocalFirstVespers);
+      tomorrowFirstVespers.value = firstVespersOptions.find((item) => !isLocalFirstVespers(item))
+        || (mDate.isoWeekday() === 6 ? findTomorrowRegularVespers(tomorrowContent) : null);
+    }
     dayOptions.value = Array.isArray(result.dayOptions) ? result.dayOptions : [];
   } catch (e) {
     logger.error('[OrasList] Памылка пры загрузцы чытанняў:', e);

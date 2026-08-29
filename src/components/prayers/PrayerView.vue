@@ -371,6 +371,36 @@ defineExpose({
   margin-bottom: 0;
 }
 
+/* Keep list markers inside the reading column: the default browser indentation
+   places them outside and they get clipped on narrow screens. */
+.prayer-text :deep(ul),
+.prayer-text :deep(ol) {
+  max-width: 100%;
+  margin: 0.7em 0 1em;
+  padding-inline-start: 1.55em;
+  list-style-position: outside;
+}
+
+.prayer-text :deep(li) {
+  min-width: 0;
+  padding-inline-start: 0.2em;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.prayer-text :deep(li::marker) {
+  color: var(--reader-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.prayer-text :deep(ul ul),
+.prayer-text :deep(ul ol),
+.prayer-text :deep(ol ul),
+.prayer-text :deep(ol ol) {
+  margin-block: 0.35em;
+  padding-inline-start: 1.3em;
+}
+
 .prayer-text :deep(.prayer-rubric) {
   margin: 1.05em 0;
   padding: 0.08em 0 0.08em 0.85em;
@@ -547,6 +577,11 @@ defineExpose({
   .prayer-text :deep(p) {
     font-size: inherit;
     line-height: inherit;
+  }
+
+  .prayer-text :deep(ul),
+  .prayer-text :deep(ol) {
+    padding-inline-start: 1.4em;
   }
 }
 

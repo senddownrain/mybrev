@@ -74,6 +74,22 @@ test('recognizes structured choices and preserves shared content and suffixes', 
   assert.ok(options.every(({ html }) => html.includes('Першае чытанне')));
 });
 
+test('turns Gospel antiphons for years A, B, and C into selectable alternatives', () => {
+  const antiphons = [
+    '<p style="text-align: justify;"><strong>Ант. да песні Марыі</strong><br>',
+    '<strong>Год А: Прыйдзе Сын Чалавечы ў славе.</strong><br>',
+    '<strong>Год В: Слухайце і разумейце наказы.</strong><br>',
+    '<strong>Год С: Калі наладжваеш гасціну, кліч убогіх.</strong></p>',
+  ].join('');
+
+  const options = getLiturgicalAlternatives(antiphons, 'gospel-antiphon');
+
+  assert.deepEqual(options.map(({ title }) => title), ['Год А', 'Год В', 'Год С']);
+  assert.match(options[0].html, /Прыйдзе Сын/u);
+  assert.doesNotMatch(options[0].html, /Слухайце/u);
+  assert.ok(options.every(({ html }) => html.includes('Ант. да песні Марыі')));
+});
+
 test('does not split a reading at the narrative phrase "У тыя дні"', () => {
   const holyInnocents = [
     '<p><span>Першае чытанне</span><br />Кніга Зыходу<br />1, 8-16. 22</p>',

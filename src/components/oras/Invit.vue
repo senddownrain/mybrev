@@ -27,7 +27,7 @@
                         {{ title }}
                     </v-card-title>
                     <v-card-text class="ora-text">
-                        <span style="color:red">Заклік з’яўляецца пачаткам штодзённай літургічнай малітвы. Ён
+                        <span class="liturgical-rubric" style="color:red">Заклік з’яўляецца пачаткам штодзённай літургічнай малітвы. Ён
                             папярэднічае Гадзіне чытанняў або Ютрані, у залежнасці ад таго, якая з гэтых літургічных
                             гадзінаў распачынае малітву дня.</span> <br>
                         <br>
@@ -69,7 +69,7 @@ import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay
 import { getInvitatoriums } from '@/services/staticLiturgicalService';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
-import { markPsalmCadenceSigns, removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
+import { formatPsalmHtml } from '@/utils/liturgicalHtml';
 import { getDefaultInvitatoriumId } from '@/utils/invitatorium';
 
 const { day, context, pending } = useResolvedLiturgicalDay();
@@ -86,7 +86,7 @@ const invitatoriumOptions = computed(() => invitatoriums.value.map((item, index)
 })));
 const selectedInvitatorium = computed(() => invitatoriums.value.find((item) => item.id === selectedInvitatoriumId.value));
 const displayedDay = computed(() => ({ ...(day.value || {}), ...(selectedInvitatorium.value || {}) }));
-const formatPsalm = (psalm) => markPsalmCadenceSigns(removeBreakAfterAsterisk(psalm));
+const formatPsalm = formatPsalmHtml;
 const periodType = computed(() => day.value?._periodType || context.value?.periodType);
 
 watch([invitatoriums, periodType], () => {

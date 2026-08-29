@@ -45,9 +45,10 @@ import {
   getTomorrowFirstVespersOptions,
   isLocalFirstVespers,
   isSolemnity,
+  usesOwnVespers,
 } from '@/utils/liturgicalVespers';
 import { logger } from '@/utils/logger';
-import { getLiturgicalPeriodTheme, PLACE_LABEL_MAP } from '@/constants/liturgical';
+import { getLiturgicalTheme, PLACE_LABEL_MAP } from '@/constants/liturgical';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
 import Intro from '@/components/oraparts/Intro.vue';
 import Psalms from '@/components/oraparts/Psalms.vue';
@@ -69,7 +70,7 @@ let requestVersion = 0;
 const vesperDay = computed(() => tomorrowFirstVespers.value?.day || day.value);
 const isLoading = computed(() => pending.value || checkingTomorrow.value);
 const vespersRubricStyle = computed(() => {
-  const theme = getLiturgicalPeriodTheme(vesperDay.value, vesperDay.value?._periodType);
+  const theme = getLiturgicalTheme(vesperDay.value, vesperDay.value?._periodType);
   return { '--vespers-rubric-color': theme.color, '--vespers-rubric-rgb': theme.rgb };
 });
 const routeDate = computed(() => moment(String(route.params.day), ['YYYY-MM-DD', 'DD-MM-YYYY'], true));
@@ -110,6 +111,7 @@ watch(
     tomorrowFirstVespers.value = null;
     const date = moment(String(routeDate), ['YYYY-MM-DD', 'DD-MM-YYYY'], true);
     if (!date.isValid()) return;
+    if (usesOwnVespers(day.value) || String(route.params.id) === 'office-for-dead') return;
     checkingTomorrow.value = true;
     try {
       const content = await getLiturgicalContentForDate(date.clone().add(1, 'day').toDate());

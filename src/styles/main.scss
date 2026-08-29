@@ -404,6 +404,14 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   line-height: 1.45;
 }
 
+// Explicit rubrics and fixed Gospel-canticle captions are metadata too.
+// Keep the selector semantic so ordinary red response markers never shrink
+// the surrounding prayer, reading, or psalm strophe.
+.liturgical-hour-column .ora-text :is(.liturgical-rubric, .ora-sub, .ora-ending__rubric) {
+  font-size: 0.84em;
+  line-height: 1.45;
+}
+
 .liturgical-hour-column .ora:not(:has(.ora-title, .ora-header)) .ora-text {
   padding-top: 24px !important;
 }

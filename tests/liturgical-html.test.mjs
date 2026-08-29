@@ -88,3 +88,29 @@ test('marks matching subtitles at the beginning of a reading only', () => {
     '<p style="text-align: center;" data-liturgical-subheading>Чытанне</p><p data-liturgical-subheading><em>Кароткі ўступ</em></p><p><em>Сам тэкст чытання.</em></p>',
   );
 });
+
+test('does not shrink a reading paragraph just because its heading is red', () => {
+  const html = '<p style="text-align: justify;"><span style="color: #ff0000;">КАРОТКАЕ ЧЫТАННЕ 2 Тэс 2, 13-14</span><br>Мы заўсёды павінны дзякаваць Богу за вас.</p>';
+
+  assert.equal(markLeadingLiturgicalSubheadings(html), html);
+});
+
+test('marks a centred reading theme after the mixed reading heading', () => {
+  const html = '<p><span style="color: red;">ДРУГОЕ ЧЫТАННЕ</span><br>Гамілія святога Яна</p><p style="text-align: center;"><span style="color: red;">(Hom. 50, 3-4)</span><br><em>Аздабляючы святыню</em></p><p>Сам тэкст чытання.</p>';
+  const formatted = markLeadingLiturgicalSubheadings(html);
+
+  assert.doesNotMatch(formatted.split('</p>')[0], /data-liturgical-subheading/u);
+  assert.match(formatted.split('</p>')[1], /data-liturgical-subheading/u);
+});
+
+test('does not shrink a psalm strophe containing red response markers', () => {
+  const html = '<p style="text-align: justify;">Аллелюя.<br>Збаўленне і слава Богу, <span class="psalm-marker">*</span> <span style="color: #ff0000;">(Н.</span> Аллелюя.<span style="color: #ff0000;">)</span></p>';
+
+  assert.equal(markLeadingLiturgicalSubheadings(html), html);
+});
+
+test('marks a paragraph whose complete content is rubric-coloured', () => {
+  const html = '<p><span style="color: red;">Песня Марыі</span><br><span style="color: #ff0000;">Радасць душы ў Пану</span></p>';
+
+  assert.match(markLeadingLiturgicalSubheadings(html), /data-liturgical-subheading/u);
+});

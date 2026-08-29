@@ -9,6 +9,7 @@ const ALTERNATIVE_MARKER = /^\s*А\s*бо(?:\s+(?:інш(?:ае|ая|ыя)|яш�
 const CATEGORY_MARKER = /^\s*(?:Пра|За|Для)\s+[^:]{1,72}\s*:/iu;
 const INSTRUCTION_MARKER = /^(?:Калі\s+няма\s+ўласнай|Чытаецца\s+на\s+выбар|На\s+выбар)\b/iu;
 const REPEATED_SECTION_MARKER = /^(?:Кароткае\s+чытанне|Гімн)\b/iu;
+const GOSPEL_CYCLE_MARKER = /^Год\s+([АAВBСC])\s*:/iu;
 
 function textOf(value) {
   return parse(String(value || '')).text
@@ -74,6 +75,47 @@ function structuredAlternatives(root) {
   return blocks.map((block) => ({
     explicitTitle: block.getAttribute('data-alternative-title') || '',
     html: [sharedHtml, block.innerHTML.trim(), suffixHtml].filter(Boolean).join('\n'),
+  }));
+}
+
+function gospelCycleAlternatives(root) {
+  const shared = [];
+  const options = [];
+  let current = null;
+
+  directElements(root).forEach((element) => {
+    if (element.rawTagName !== 'p') {
+      const html = element.toString();
+      if (current) current.parts.push(html);
+      else shared.push(html);
+      return;
+    }
+
+    const attributes = element.rawAttrs ? ` ${element.rawAttrs}` : '';
+    const lines = element.innerHTML.split(/<br\s*\/?>/giu).filter((line) => textOf(line));
+    lines.forEach((line) => {
+      const text = textOf(line);
+      const cycle = text.match(GOSPEL_CYCLE_MARKER);
+      const html = `<p${attributes}>${line.trim()}</p>`;
+      if (cycle) {
+        current = {
+          explicitTitle: `Год ${cycle[1].toLocaleUpperCase('be')}`,
+          parts: [html],
+        };
+        options.push(current);
+      } else if (current) {
+        current.parts.push(html);
+      } else {
+        shared.push(html);
+      }
+    });
+  });
+
+  if (options.length < 2) return null;
+  const sharedHtml = shared.join('\n');
+  return options.map((option) => ({
+    explicitTitle: option.explicitTitle,
+    html: [sharedHtml, ...option.parts].filter(Boolean).join('\n'),
   }));
 }
 
@@ -186,7 +228,9 @@ export function getLiturgicalAlternatives(html, kind = 'generic') {
   const source = String(html || '').trim();
   if (!source) return [];
   const root = parse(source);
-  const structured = structuredAlternatives(root);
+  const structured = kind === 'gospel-antiphon'
+    ? gospelCycleAlternatives(root) || structuredAlternatives(root)
+    : structuredAlternatives(root);
   const rawOptions = structured || splitAtRules(root).map((optionHtml) => ({ html: optionHtml }));
   const options = uniqueOptions(rawOptions).map((option, index) => ({
     html: removeBreakAfterAsterisk(option.html),

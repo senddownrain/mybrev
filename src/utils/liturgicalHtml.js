@@ -41,10 +41,41 @@ function markAsLiturgicalSubheading(attributes) {
   return `${attributes} data-liturgical-subheading`;
 }
 
+function visibleText(html) {
+  return String(html || '')
+    .replace(/<[^>]*>/gu, ' ')
+    .replace(/&nbsp;|&#x0*20;/giu, ' ')
+    .replace(/\s+/gu, ' ')
+    .trim();
+}
+
+function unwrapFullyStyledContent(content, tagPattern) {
+  let remaining = String(content || '')
+    .replace(/<br\s*\/?>/giu, '')
+    .replace(/&nbsp;|&#x0*20;/giu, ' ')
+    .trim();
+
+  remaining = remaining.replace(tagPattern, '');
+  return visibleText(remaining).length === 0;
+}
+
 function isLiturgicalSubheading(attributes, content) {
-  return /text-align\s*:\s*center/iu.test(attributes)
-    || /color\s*:\s*(?:#ff0000|red)/iu.test(content)
-    || /<(?:em|i|strong|b)\b/iu.test(content);
+  if (/text-align\s*:\s*center/iu.test(attributes)) return true;
+
+  const fullyEmphasized = unwrapFullyStyledContent(
+    content,
+    /<(?:em|i|strong|b)\b[^>]*>[\s\S]*?<\/(?:em|i|strong|b)>/giu,
+  );
+  if (fullyEmphasized) return true;
+
+  return unwrapFullyStyledContent(
+    content,
+    /<(?:span|font)\b[^>]*(?:color\s*:\s*(?:#ff0000|red)|color\s*=\s*["']?red)[^>]*>[\s\S]*?<\/(?:span|font)>/giu,
+  );
+}
+
+function isReadingHeading(content) {
+  return /^(?:ПЕРШАЕ|ДРУГОЕ|КАРОТКАЕ)\s+ЧЫТАННЕ(?:\s|$)/iu.test(visibleText(content));
 }
 
 /**
@@ -60,7 +91,9 @@ export function markLeadingLiturgicalSubheadings(html) {
     PARAGRAPH_PATTERN,
     (paragraph, attributes, content) => {
       if (!canMark || remaining === 0 || !isLiturgicalSubheading(attributes, content)) {
-        canMark = false;
+        // A lection begins with a mixed-size heading (reading label plus book
+        // or author), followed by its centred source/theme caption.
+        if (!isReadingHeading(content)) canMark = false;
         return paragraph;
       }
 

@@ -5,7 +5,7 @@
                 ПЕСНЯ З ЕВАНГЕЛЛЯ
             </v-card-title>
             <v-card-text class="ora-text">
-                <alternative-text v-model="antOption" class="ora-ant" :text="ant" aria-label="Выбар антыфоны" />
+                <alternative-text v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" aria-label="Выбар антыфоны" />
                 
                 <!-- <div v-html="ps1"></div> -->
                 <p class="ora-sub">
@@ -14,7 +14,7 @@
                 <span style="color:red">Радасць душы ў Пану</span>
                 </p>
                <div class="ora-psalm" v-html="formatPsalm(mag)"></div>
-               <alternative-text v-model="antOption" class="ora-ant" :text="ant" :show-picker="false" />
+               <alternative-text v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" :show-picker="false" />
             </v-card-text>
         </v-card>
     </div>

@@ -36,6 +36,10 @@ test('celebration themes follow rank and red exceptions', () => {
     _feastName: 'Св. Стэфана, першамучаніка',
   }), 'red');
   assert.equal(getLiturgicalCelebrationThemeKey({
+    _rank: 'memoria',
+    _feastName: 'МУЧАНІЦТВА СВ. ЯНА ХРЫСЦІЦЕЛЯ',
+  }), 'red');
+  assert.equal(getLiturgicalCelebrationThemeKey({
     _rank: 'festum',
     _feastName: 'Святых апосталаў Пятра і Паўла',
   }), 'red');

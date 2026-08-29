@@ -9,6 +9,7 @@ import {
   isLocalFirstVespers,
   isSolemnity,
   normalizeFirstVespers,
+  usesOwnVespers,
 } from '../src/utils/liturgicalVespers.js';
 
 test('recognizes and normalizes the first Vespers fields', () => {
@@ -72,4 +73,9 @@ test('never takes first Vespers from a memorial', () => {
   assert.equal(isLocalFirstVespers(options[0]), true);
   assert.equal(hasFirstVespersRank(content.dayOptions[0].day), false);
   assert.equal(hasFirstVespersRank(content.dayOptions[1].day), true);
+});
+
+test('office for the dead retains its own Vespers', () => {
+  assert.equal(usesOwnVespers({ _kind: 'office-for-dead' }), true);
+  assert.equal(usesOwnVespers({ _kind: 'period' }), false);
 });
