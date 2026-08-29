@@ -27,6 +27,11 @@ const routes = [
         component: () => import('@/views/Settings.vue'),
       },
       {
+        path: 'about',
+        name: 'About',
+        component: () => import('@/views/About.vue'),
+      },
+      {
         path: 'picker',
         name: 'LiturgicalPicker',
         components: { default: () => import('@/views/LiturgicalPicker.vue'), bottomNav: BottomNavVue },

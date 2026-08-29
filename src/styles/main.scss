@@ -404,6 +404,40 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   line-height: 1.45;
 }
 
+.liturgical-hour-column :is(.ora-psalm, .ora-text) p[data-liturgical-subheading]:has(
+  + p[data-liturgical-subheading]
+) {
+  margin-bottom: 0;
+}
+
+.liturgical-hour-column .ora-psalm p[data-liturgical-subheading]:not(
+  :has(+ p[data-liturgical-subheading])
+) {
+  margin-bottom: 1.15em;
+}
+
+.liturgical-hour-column .ora-text p[data-liturgical-heading] {
+  margin: 0 0 0.8em;
+  color: var(--rubric-color);
+  font-family: var(--reader-display-font-family);
+  font-size: calc(0.94rem * var(--font-size-multiplier, 1));
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.liturgical-hour-column .ora-text [data-liturgical-reference] {
+  font-size: 0.84em;
+  line-height: 1.45;
+}
+
+.liturgical-hour-column .ora-text p:has([data-liturgical-reference]):has(
+  + p[data-liturgical-subheading]
+) {
+  margin-bottom: 0;
+}
+
 // Explicit rubrics and fixed Gospel-canticle captions are metadata too.
 // Keep the selector semantic so ordinary red response markers never shrink
 // the surrounding prayer, reading, or psalm strophe.
@@ -417,7 +451,7 @@ $base-content-font-size: 1rem; // 16px по умолчанию
 }
 
 .liturgical-hour-column .ora-ant {
-  margin-block: 0 22px;
+  margin-block: 12px 22px;
   padding: 11px 14px;
   border-left: 3px solid var(--rubric-color);
   border-radius: 0 13px 13px 0;

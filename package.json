@@ -17,6 +17,7 @@
     "db:snapshot:query": "node scripts/query-firestore-snapshot.mjs",
     "db:migrate-core-collections": "node scripts/migrate-core-collections.mjs",
     "db:autofix-prayers": "node scripts/autofix-prayer-markdown.mjs",
+    "db:migrate-prayer-sources": "node scripts/migrate-prayer-sources.mjs",
     "db:remove-rank-feast-comments": "node scripts/remove-rank-feast-comments.mjs",
     "audit:parsed-readings-content": "node scripts/audit-parsed-readings-content-integrity.mjs",
     "generate:fixed-feasts": "node patchs/generate-db-feasts.mjs",

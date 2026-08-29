@@ -14,6 +14,7 @@ import * as prayerService from '@/services/prayerService';
  * @property {Object.<string, string>} [textVersions] - Localized text versions keyed by locale
  * @property {'mybrev-markdown'} [textFormat] - Canonical prayer text format
  * @property {number} [textFormatVersion] - MyBrev Markdown schema version
+ * @property {string} [source] - Optional attribution or publication source
  * @property {string[]} [tags] - List of tags associated with the prayer
  * @property {import('firebase/firestore').Timestamp} [createdAt] - Firestore server timestamp of creation
  */

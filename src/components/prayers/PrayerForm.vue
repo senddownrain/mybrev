@@ -85,6 +85,29 @@
             <div class="section-heading">
               <span class="section-number">3</span>
               <div>
+                <h2>Крыніца</h2>
+                <p>Неабавязковая крыніца або аўтар тэксту.</p>
+              </div>
+            </div>
+            <v-textarea
+              v-model="form.source"
+              label="Крыніца"
+              variant="outlined"
+              rows="1"
+              auto-grow
+              counter="500"
+              maxlength="500"
+              class="prayer-source-field"
+              @blur="form.source = form.source.trim()"
+            />
+          </section>
+
+          <v-divider />
+
+          <section class="editor-section">
+            <div class="section-heading">
+              <span class="section-number">4</span>
+              <div>
                 <h2>Тэгі</h2>
                 <p>Дапамагаюць знаходзіць малітву праз катэгорыі і фільтры.</p>
               </div>
@@ -146,6 +169,9 @@
             <h3>{{ form.title.trim() || 'Назва малітвы' }}</h3>
             <div v-if="plainTextLength" class="prayer-preview__text" v-html="previewHtml" />
             <p v-else class="preview-placeholder">Тэкст з’явіцца тут падчас рэдагавання.</p>
+            <p v-if="form.source.trim()" class="preview-source">
+              <span>Крыніца:</span> {{ form.source.trim() }}
+            </p>
             <div v-if="form.tags.length" class="preview-tags">
               <span v-for="tag in form.tags" :key="tag">{{ tag }}</span>
             </div>
@@ -158,11 +184,12 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
-import { useSettingsStore } from '@/stores/settings';
+import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue';
 import {
@@ -177,7 +204,9 @@ const router = useRouter();
 const { prayers, isLoading, addPrayer, updatePrayer, allTags } = usePrayers();
 const { notifySuccess, notifyError } = useNotifier();
 const uiStore = useUiStore();
-const settings = useSettingsStore();
+const prayerCategories = usePrayerCategoriesStore();
+const { defaultPrayerTags, isLoading: areCategoriesLoading } = storeToRefs(prayerCategories);
+prayerCategories.init();
 
 const formRef = ref(null);
 const saving = ref(false);
@@ -188,7 +217,7 @@ const showPreview = ref(true);
 const initialSnapshot = ref('');
 const allowNavigation = ref(false);
 
-const form = ref({ title: '', text: '', tags: [...settings.defaultPrayerTags] });
+const form = ref({ title: '', text: '', source: '', tags: [] });
 
 const isEditMode = computed(() => Boolean(route.params.id));
 const loadingPrayer = computed(() => isEditMode.value && isLoading.value && !hydrated.value);
@@ -205,6 +234,7 @@ const suggestedTags = computed(() => availableTags.value.filter((tag) => !form.v
 const currentSnapshot = computed(() => JSON.stringify({
   title: form.value.title.trim(),
   text: form.value.text || '',
+  source: form.value.source.trim(),
   tags: [...form.value.tags].sort(),
 }));
 const isDirty = computed(() => hydrated.value && currentSnapshot.value !== initialSnapshot.value);
@@ -213,7 +243,8 @@ const hydrateForm = () => {
   if (hydrated.value) return;
 
   if (!isEditMode.value) {
-    form.value.tags = [...settings.defaultPrayerTags];
+    if (areCategoriesLoading.value) return;
+    form.value.tags = [...defaultPrayerTags.value];
     hydrated.value = true;
     initialSnapshot.value = currentSnapshot.value;
     return;
@@ -240,13 +271,14 @@ const hydrateForm = () => {
         || '',
       prayer.textFormat,
     ),
+    source: prayer.source || '',
     tags: [...(prayer.tags || [])],
   };
   hydrated.value = true;
   initialSnapshot.value = currentSnapshot.value;
 };
 
-watch([isLoading, prayers], hydrateForm, { immediate: true });
+watch([isLoading, prayers, areCategoriesLoading, defaultPrayerTags], hydrateForm, { immediate: true });
 watch(saving, (value) => { uiStore.prayerFormSaving = value; });
 
 const normalizeTags = () => {
@@ -271,6 +303,7 @@ async function handleSave() {
   saveAttempted.value = true;
   normalizeTags();
   form.value.title = form.value.title.trim();
+  form.value.source = form.value.source.trim();
 
   const validation = await formRef.value?.validate();
   const titleValidation = validatePrayerTitle(form.value.title);
@@ -290,6 +323,7 @@ async function handleSave() {
     const payload = {
       title: form.value.title,
       ...prayerTextFields(form.value.text),
+      source: form.value.source,
       tags: [...form.value.tags],
     };
     if (isEditMode.value) {
@@ -393,6 +427,7 @@ onBeforeUnmount(() => {
 .text-count { margin-left: auto; color: var(--nav-muted); font-size: 0.72rem; white-space: nowrap; }
 
 .prayer-title-field :deep(.v-field),
+.prayer-source-field :deep(.v-field),
 .tags-field :deep(.v-field) { border-radius: 16px; background: rgba(var(--v-theme-on-surface), 0.025); }
 .prayer-title-field :deep(textarea) { line-height: 1.45; }
 
@@ -419,6 +454,8 @@ onBeforeUnmount(() => {
 .prayer-preview__text :deep(.prayer-rubric) { margin: 1em 0; padding-left: 0.8em; border-left: 3px solid var(--rubric-color); color: var(--rubric-color); font-size: 0.88em; line-height: 1.45; }
 .prayer-preview__text :deep(.prayer-rubric p) { margin-bottom: 0.45em; }
 .preview-placeholder { margin: 0; color: var(--nav-muted); font-style: italic; line-height: 1.6; }
+.preview-source { margin: 22px 0 0; color: var(--nav-muted); font-size: 0.7rem; line-height: 1.4; overflow-wrap: anywhere; }
+.preview-source span { font-weight: 600; }
 .preview-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--nav-border); }
 .preview-tags span { padding: 5px 9px; border-radius: 999px; background: var(--nav-active); font-size: 0.7rem; }
 .form-loading, .load-alert { max-width: 820px; margin-inline: auto; border-radius: 24px; }

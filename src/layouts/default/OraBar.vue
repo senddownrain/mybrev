@@ -29,15 +29,28 @@ import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
 import { PhArrowLeft, PhPencilSimple } from '@phosphor-icons/vue';
 import TextScaleControl from '@/components/TextScaleControl.vue';
+import moment from '@/utils/moment-be';
 
 const router = useRouter();
 const route = useRoute();
 const auth = useAuthStore();
 const showTextScaleControl = computed(() => route.name !== 'oras');
+const dateHomeRoute = computed(() => {
+  const selectedDate = moment(route.params.day, 'YYYY-MM-DD', true);
+
+  if (!selectedDate.isValid() || selectedDate.isSame(moment().startOf('day'), 'day')) {
+    return { name: 'Today' };
+  }
+
+  return {
+    name: 'SelectedDay',
+    params: { day: selectedDate.format('YYYY-MM-DD') },
+  };
+});
 
 const goBack = () => {
   if (route.name === 'oras') {
-    router.push({ name: 'Today' });
+    router.push(dateHomeRoute.value);
     return;
   }
 

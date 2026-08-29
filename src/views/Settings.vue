@@ -53,7 +53,7 @@
     <section class="settings-section" aria-labelledby="categories-title">
       <div class="section-heading">
         <span class="section-icon"><PhFolders :size="22" /></span>
-        <div><h2 id="categories-title">Катэгорыі малітваў</h2><p>Вашы ўласныя фільтры па тэгах</p></div>
+        <div><h2 id="categories-title">Асабістыя катэгорыі</h2><p>Толькі вашы ўласныя фільтры па тэгах</p></div>
       </div>
       <div v-if="settings.menuCategories.length" class="category-list">
         <div v-for="(category, index) in settings.menuCategories" :key="`${category.name}-${index}`" class="category-row">

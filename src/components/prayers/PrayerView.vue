@@ -34,6 +34,9 @@
           </nav>
 
           <div ref="prayerTextElement" v-html="prayerHtml" class="prayer-text"></div>
+          <footer v-if="prayer.source" class="prayer-source">
+            <span>Крыніца:</span> {{ prayer.source }}
+          </footer>
       </article>
     </div>
   </v-container>
@@ -432,6 +435,21 @@ defineExpose({
   word-wrap: break-word;
 }
 
+.prayer-source {
+  margin: 0 20px;
+  padding: 0 0 18px;
+  color: color-mix(in srgb, var(--reader-ink) 52%, transparent);
+  font-family: var(--reader-font-family);
+  font-size: calc(0.7rem * var(--font-size-multiplier, 1));
+  font-weight: 400;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.prayer-source span {
+  font-weight: 600;
+}
+
 /* Rubrics in the Mass order are marked up as emphasis in the source. */
 .prayer-reading-surface--mass .prayer-text :deep(h2),
 .prayer-reading-surface--mass .prayer-text :deep(h3) {
@@ -553,6 +571,10 @@ defineExpose({
 
   .prayer-text {
     padding: 22px 16px 28px;
+  }
+
+  .prayer-source {
+    margin-inline: 16px;
   }
 
   .prayer-content-area {
