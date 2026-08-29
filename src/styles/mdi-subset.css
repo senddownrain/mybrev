@@ -84,6 +84,7 @@
 .mdi-keyboard-return::before { content: "\F0311"; }
 .mdi-keyboard-space::before { content: "\F1050"; }
 .mdi-lock-outline::before { content: "\F0341"; }
+.mdi-magnify::before { content: "\F0349"; }
 .mdi-menu::before { content: "\F035C"; }
 .mdi-menu-down::before { content: "\F035D"; }
 .mdi-menu-right::before { content: "\F035F"; }
@@ -103,6 +104,7 @@
 .mdi-radiobox-blank::before { content: "\F043D"; }
 .mdi-radiobox-marked::before { content: "\F043E"; }
 .mdi-refresh::before { content: "\F0450"; }
+.mdi-restore::before { content: "\F099B"; }
 .mdi-source-branch::before { content: "\F062C"; }
 .mdi-star::before { content: "\F04CE"; }
 .mdi-star-four-points::before { content: "\F0AE2"; }

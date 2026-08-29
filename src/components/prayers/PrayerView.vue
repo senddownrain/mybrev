@@ -35,7 +35,8 @@
 
           <div ref="prayerTextElement" v-html="prayerHtml" class="prayer-text"></div>
           <footer v-if="prayer.source" class="prayer-source">
-            <span>Крыніца:</span> {{ prayer.source }}
+            <span class="prayer-source__label">Крыніца:</span>
+            <span class="prayer-source__content" v-html="sourceHtml" />
           </footer>
       </article>
     </div>
@@ -80,6 +81,7 @@ const prayer = computed(() => {
 });
 const isMassOrder = computed(() => route.params.id === MASS_ORDER_PRAYER_ID);
 const prayerHtml = computed(() => renderPrayerMarkdown(getText(prayer.value), prayer.value?.textFormat));
+const sourceHtml = computed(() => renderPrayerMarkdown(prayer.value?.source || ''));
 
 const copySuccess = ref(false);
 let copyTimeoutId = null;
@@ -446,8 +448,23 @@ defineExpose({
   overflow-wrap: anywhere;
 }
 
-.prayer-source span {
+.prayer-source__label {
   font-weight: 600;
+}
+
+.prayer-source__content {
+  margin-left: 0.28em;
+}
+
+.prayer-source__content :deep(p) {
+  display: inline;
+  margin: 0;
+}
+
+.prayer-source__content :deep(a) {
+  color: inherit;
+  text-decoration-color: currentColor;
+  text-underline-offset: 0.16em;
 }
 
 /* Rubrics in the Mass order are marked up as emphasis in the source. */

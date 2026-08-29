@@ -43,7 +43,7 @@ export const useSettingsStore = defineStore('settings', () => {
     // Keep the Android browser/status bar aligned with the selected appearance.
     const themeColor = document.querySelector('meta[name="theme-color"]');
     if (themeColor) {
-      themeColor.setAttribute('content', newTheme === 'dark' ? '#12141C' : '#644B72');
+      themeColor.setAttribute('content', newTheme === 'dark' ? '#17130F' : '#6B4A32');
     }
   }, { immediate: true });
 

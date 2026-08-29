@@ -79,11 +79,25 @@
       <!-- Кнопки для страницы редактирования молитвы (PrayerEdit) -->
       <template v-if="isPrayerEditPage">
         <v-btn
+          v-if="canCopyPrayer"
           icon
-          class="top-circle-btn top-circle-btn--confirm top-action-start"
+          class="top-copy-btn top-action-start"
+          variant="flat"
+          @click="uiStore.triggerPrayerFormCopy()"
+          :loading="uiStore.prayerFormCopying"
+          :disabled="uiStore.prayerFormSaving"
+          aria-label="Стварыць копію"
+        >
+          <v-icon>mdi-content-copy</v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          class="top-circle-btn top-circle-btn--confirm"
+          :class="{ 'top-action-start': !canCopyPrayer }"
           variant="flat"
           @click="savePrayerForm"
           :loading="uiStore.prayerFormSaving"
+          :disabled="uiStore.prayerFormCopying"
           aria-label="Захаваць"
         >
           <v-icon>mdi-check</v-icon>
@@ -218,6 +232,8 @@ const isPrayerViewPage = computed(() => {
 const isPrayerEditPage = computed(() => {
   return route.name === 'PrayerEdit' || route.name === 'PrayerAdd';
 });
+
+const canCopyPrayer = computed(() => route.name === 'PrayerEdit');
 
 const isReadingsPage = computed(() => {
   return route.name === 'Readings' || route.name === 'ReadingsByDate';
@@ -392,6 +408,30 @@ const applyFilter = () => {
   color: var(--chrome-accent) !important;
 }
 
+.top-copy-btn {
+  width: 42px !important;
+  height: 48px !important;
+  min-width: 42px !important;
+  flex: 0 0 42px !important;
+  margin-right: -4px !important;
+  border: 1px solid var(--nav-border) !important;
+  border-radius: 24px 8px 8px 24px !important;
+  background: var(--overlay-surface) !important;
+  color: var(--nav-on-surface) !important;
+  box-shadow: 0 2px 9px var(--nav-button-shadow) !important;
+  transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease !important;
+  backdrop-filter: blur(18px);
+}
+
+.top-copy-btn:hover {
+  box-shadow: 0 3px 12px var(--nav-button-shadow) !important;
+}
+
+.top-copy-btn:active {
+  opacity: 0.72;
+  transform: scale(0.94);
+}
+
 .readings-nav-group {
   display: flex;
   height: 48px;
@@ -541,6 +581,14 @@ const applyFilter = () => {
     height: 44px !important;
     min-width: 44px !important;
     flex-basis: 44px !important;
+  }
+
+  .top-copy-btn {
+    width: 38px !important;
+    height: 44px !important;
+    min-width: 38px !important;
+    flex-basis: 38px !important;
+    border-radius: 22px 7px 7px 22px !important;
   }
 
   .readings-nav-group {

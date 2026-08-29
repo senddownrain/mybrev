@@ -5,13 +5,13 @@ import {
   doc,
   onSnapshot,
   serverTimestamp,
-  setDoc,
   updateDoc,
   writeBatch,
 } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { retryFirestore } from '@/utils/retry';
+import { buildPrayerTagRemovalPlan } from '@/utils/prayerCategoryAdmin';
 
 export const PRAYER_CATEGORIES_COLLECTION = 'prayerCategories';
 const MAX_BATCH_OPERATIONS = 400;
@@ -102,33 +102,26 @@ async function commitOperations(operations) {
 }
 
 export async function deletePrayerTagEverywhere(tag, prayers, categories) {
-  const normalizedTag = String(tag || '').trim();
-  if (!normalizedTag) throw new Error('Тэг не пазначаны');
-
-  const affectedPrayers = prayers.filter((prayer) => prayer.tags?.includes(normalizedTag));
-  const affectedCategories = categories.filter((category) => category.tags?.includes(normalizedTag));
-  const operations = affectedPrayers.map((prayer) => ({
+  const plan = buildPrayerTagRemovalPlan(tag, prayers, categories);
+  const operations = plan.prayerUpdates.map((prayer) => ({
     type: 'update',
     collection: 'prayers',
     id: prayer.id,
     data: {
-      tags: prayer.tags.filter((item) => item !== normalizedTag),
+      tags: prayer.tags,
       updatedAt: serverTimestamp(),
     },
   }));
 
-  let deletedCategories = 0;
-  affectedCategories.forEach((category) => {
-    const tags = category.tags.filter((item) => item !== normalizedTag);
-    if (tags.length) {
+  plan.categoryChanges.forEach((category) => {
+    if (category.type === 'update') {
       operations.push({
         type: 'update',
         collection: PRAYER_CATEGORIES_COLLECTION,
         id: category.id,
-        data: { tags, updatedAt: serverTimestamp() },
+        data: { tags: category.tags, updatedAt: serverTimestamp() },
       });
     } else {
-      deletedCategories += 1;
       operations.push({
         type: 'delete',
         collection: PRAYER_CATEGORIES_COLLECTION,
@@ -139,8 +132,8 @@ export async function deletePrayerTagEverywhere(tag, prayers, categories) {
 
   await commitOperations(operations);
   return {
-    prayers: affectedPrayers.length,
-    categories: affectedCategories.length,
-    deletedCategories,
+    prayers: plan.prayerUpdates.length,
+    categories: plan.categoryChanges.length,
+    deletedCategories: plan.deletedCategories,
   };
 }

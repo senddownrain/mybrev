@@ -51,8 +51,8 @@ export default defineConfig({
         // These colours are used by Android before the app JavaScript starts.
         // They must stay static: the browser reads the manifest before it can
         // determine the current liturgical period or the saved user theme.
-        theme_color: '#644B72',
-        background_color: '#FFFDF9',
+        theme_color: '#6B4A32',
+        background_color: '#F5F1E8',
         display: 'standalone',
         orientation: 'portrait',
         lang: 'be',
