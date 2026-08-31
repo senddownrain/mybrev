@@ -201,10 +201,21 @@ const filteredPrayers = computed(() => {
     });
   }
   
-  // Единый алфавитный порядок независимо от статуса «абраная».
-  filtered.sort((a, b) => (
-    getTitle(a).localeCompare(getTitle(b), 'be', { sensitivity: 'base' })
-  ));
+  // Сортировка: избранные молитвы вверху, затем по алфавиту
+  filtered.sort((a, b) => {
+    const aIsFavorite = isFavorite(a.id);
+    const bIsFavorite = isFavorite(b.id);
+
+    // Если один избранный, а другой нет - избранный вверх
+    if (aIsFavorite && !bIsFavorite) return -1;
+    if (!aIsFavorite && bIsFavorite) return 1;
+
+    // Если оба избранные или оба не избранные - сортировка по алфавиту
+    // Legacy titles may contain leading spaces invisible in the rendered list.
+    const titleA = getTitle(a).trim().toLowerCase();
+    const titleB = getTitle(b).trim().toLowerCase();
+    return titleA.localeCompare(titleB, 'be', { sensitivity: 'base' });
+  });
   
   return filtered;
 });

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { useTheme } from 'vuetify';
 import { normalizeReaderFont, SYSTEM_FONT } from '@/constants/fonts';
+import { APP_STATUS_BAR_COLORS } from '@/constants/appearance';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { validateCategory } from '@/utils/validators';
 import { logger } from '@/utils/logger';
@@ -30,7 +31,7 @@ function loadPersonalCategories() {
 export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme();
 
-  const currentTheme = ref(localStorage.getItem('theme') || 'light');
+  const currentTheme = ref(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
   const fontFamily = ref(normalizeReaderFont(localStorage.getItem('fontFamily')));
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
   const menuCategories = ref(loadPersonalCategories());
@@ -40,10 +41,11 @@ export const useSettingsStore = defineStore('settings', () => {
   watch(currentTheme, (newTheme) => {
     theme.change(newTheme);
     localStorage.setItem('theme', newTheme);
+    document.documentElement.dataset.appearance = newTheme;
     // Keep the Android browser/status bar aligned with the selected appearance.
     const themeColor = document.querySelector('meta[name="theme-color"]');
     if (themeColor) {
-      themeColor.setAttribute('content', newTheme === 'dark' ? '#17130F' : '#6B4A32');
+      themeColor.setAttribute('content', APP_STATUS_BAR_COLORS[newTheme]);
     }
   }, { immediate: true });
 

@@ -85,7 +85,14 @@ export const usePrayersStore = defineStore('prayers', () => {
    */
   async function addPrayerAction(data) {
     try {
-      return await prayerService.addPrayer(data);
+      const docRef = await prayerService.addPrayer(data);
+      // The copy editor must be able to load the new prayer immediately,
+      // even if the real-time listener has not delivered it yet.
+      if (!prayers.value.some((prayer) => prayer.id === docRef.id)) {
+        prayers.value = [{ ...data, tags: [...(data.tags || [])], id: docRef.id }, ...prayers.value];
+        refreshAllTags();
+      }
+      return docRef;
     } catch (err) {
       error.value = err;
       throw err;

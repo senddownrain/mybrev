@@ -13,10 +13,17 @@
   <!-- PWA и установка на iOS + Android -->
   <!-- Манифест будет добавлен автоматически vite-plugin-pwa -->
   <meta id="theme-color" name="theme-color" content="#6B4A32">
+  <style>
+    /* First paint and the area beneath a translucent mobile status bar.
+       Kept in sync with constants/appearance.js by the appearance tests. */
+    :root { color-scheme: light; background: #F5F1E8; }
+    :root[data-appearance="dark"] { color-scheme: dark; background: #17130F; }
+  </style>
   <script>
     // Apply the saved appearance immediately, before Vue finishes loading.
     // This controls the browser/status-bar colour, not the PWA splash screen.
     if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.dataset.appearance = 'dark'
       document.querySelector('meta[name="theme-color"]').setAttribute('content', '#17130F')
     }
   </script>

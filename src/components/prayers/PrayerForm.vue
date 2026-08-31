@@ -85,29 +85,6 @@
             <div class="section-heading">
               <span class="section-number">3</span>
               <div>
-                <h2>Крыніца</h2>
-                <p>Неабавязковая крыніца або аўтар тэксту.</p>
-              </div>
-            </div>
-            <v-textarea
-              v-model="form.source"
-              label="Крыніца"
-              variant="outlined"
-              rows="1"
-              auto-grow
-              counter="500"
-              maxlength="500"
-              class="prayer-source-field"
-              @blur="form.source = form.source.trim()"
-            />
-          </section>
-
-          <v-divider />
-
-          <section class="editor-section">
-            <div class="section-heading">
-              <span class="section-number">4</span>
-              <div>
                 <h2>Тэгі</h2>
                 <p>Дапамагаюць знаходзіць малітву праз катэгорыі і фільтры.</p>
               </div>
@@ -136,6 +113,29 @@
                 + {{ tag }}
               </button>
             </div>
+          </section>
+
+          <v-divider />
+
+          <section class="editor-section">
+            <div class="section-heading">
+              <span class="section-number">4</span>
+              <div>
+                <h2>Крыніца</h2>
+                <p>Неабавязковая крыніца або аўтар тэксту.</p>
+              </div>
+            </div>
+            <v-textarea
+              v-model="form.source"
+              label="Крыніца"
+              variant="outlined"
+              rows="1"
+              auto-grow
+              counter="500"
+              maxlength="500"
+              class="prayer-source-field"
+              @blur="form.source = form.source.trim()"
+            />
           </section>
         </v-card>
 
@@ -200,7 +200,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
@@ -292,11 +292,21 @@ const hydrateForm = () => {
     source: prayer.source || '',
     tags: [...(prayer.tags || [])],
   };
+  loadError.value = '';
   hydrated.value = true;
   initialSnapshot.value = currentSnapshot.value;
 };
 
 watch([isLoading, prayers, areCategoriesLoading, defaultPrayerTags], hydrateForm, { immediate: true });
+// Vue reuses this component when switching from the original to its copy.
+watch(() => route.params.id, () => {
+  hydrated.value = false;
+  loadError.value = '';
+  saveAttempted.value = false;
+  allowNavigation.value = false;
+  form.value = { title: '', text: '', source: '', tags: [] };
+  hydrateForm();
+});
 watch(saving, (value) => { uiStore.prayerFormSaving = value; });
 watch(copying, (value) => { uiStore.prayerFormCopying = value; });
 
@@ -345,12 +355,11 @@ async function validateAndBuildPayload() {
 }
 
 async function handleSave() {
-  if (isSubmitting.value || loadError.value) return;
-  const payload = await validateAndBuildPayload();
-  if (!payload) return;
-
+  if (isSubmitting.value || loadError.value || !hydrated.value) return;
   saving.value = true;
   try {
+    const payload = await validateAndBuildPayload();
+    if (!payload) return;
     if (isEditMode.value) {
       await updatePrayer(route.params.id, payload);
       notifySuccess('Малітва абноўлена');
@@ -367,25 +376,28 @@ async function handleSave() {
     const { handleFirestoreError } = await import('@/utils/errorHandler');
     handleFirestoreError(error, 'PrayerForm');
   } finally {
+    allowNavigation.value = false;
     saving.value = false;
   }
 }
 
 async function handleCreateCopy() {
-  if (!isEditMode.value || isSubmitting.value || loadError.value) return;
-  const payload = await validateAndBuildPayload();
-  if (!payload) return;
-
+  if (!isEditMode.value || isSubmitting.value || loadError.value || !hydrated.value) return;
   copying.value = true;
   try {
+    const payload = await validateAndBuildPayload();
+    if (!payload) return;
+    const suffix = ' (копія)';
+    payload.title = `${payload.title.slice(0, 200 - suffix.length).trimEnd()}${suffix}`;
     const copyRef = await addPrayer(payload);
-    notifySuccess('Копія малітвы створана');
     allowNavigation.value = true;
-    await router.push({ name: 'PrayerView', params: { id: copyRef.id } });
+    await router.push({ name: 'PrayerEdit', params: { id: copyRef.id } });
+    notifySuccess('Копія створана. Цяпер вы рэдагуеце копію малітвы.');
   } catch (error) {
     const { handleFirestoreError } = await import('@/utils/errorHandler');
     handleFirestoreError(error, 'PrayerFormCopy');
   } finally {
+    allowNavigation.value = false;
     copying.value = false;
   }
 }
@@ -396,10 +408,14 @@ const handleBeforeUnload = (event) => {
   event.returnValue = '';
 };
 
-onBeforeRouteLeave(() => {
+function confirmNavigation() {
+  if (isSubmitting.value && !allowNavigation.value) return false;
   if (!isDirty.value || allowNavigation.value) return true;
   return window.confirm('Ёсць незахаваныя змены. Выйсці без захавання?');
-});
+}
+
+onBeforeRouteLeave(confirmNavigation);
+onBeforeRouteUpdate(confirmNavigation);
 
 onMounted(() => {
   uiStore.registerPrayerFormActions({ save: handleSave, copy: handleCreateCopy });
@@ -454,7 +470,8 @@ onBeforeUnmount(() => {
 .preview-toggle { flex: 0 0 auto; color: var(--nav-on-surface); }
 .editor-layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr); align-items: start; gap: 18px; }
 .editor-layout--without-preview { grid-template-columns: minmax(0, 820px); justify-content: center; }
-.editor-card { overflow: hidden; border: 1px solid var(--nav-border); border-radius: 28px !important; background: var(--nav-surface) !important; color: var(--nav-on-surface); box-shadow: 0 10px 34px var(--nav-button-shadow) !important; }
+/* Keep the page as the scroll container for the sticky formatting toolbar. */
+.editor-card { overflow: visible; border: 1px solid var(--nav-border); border-radius: 28px !important; background: var(--nav-surface) !important; color: var(--nav-on-surface); box-shadow: 0 10px 34px var(--nav-button-shadow) !important; }
 .editor-section { padding: 26px 28px 28px; }
 
 .section-heading {

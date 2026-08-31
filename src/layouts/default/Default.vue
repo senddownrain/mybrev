@@ -77,32 +77,38 @@
       />
 
       <!-- Кнопки для страницы редактирования молитвы (PrayerEdit) -->
-      <template v-if="isPrayerEditPage">
+      <div
+        v-if="isPrayerEditPage"
+        class="prayer-form-top-actions top-action-start"
+        role="group"
+        aria-label="Дзеянні з малітвай"
+      >
         <v-btn
           v-if="canCopyPrayer"
           icon
-          class="top-copy-btn top-action-start"
+          class="prayer-form-top-actions__button prayer-form-top-actions__copy"
           variant="flat"
           @click="uiStore.triggerPrayerFormCopy()"
           :loading="uiStore.prayerFormCopying"
           :disabled="uiStore.prayerFormSaving"
           aria-label="Стварыць копію"
+          title="Стварыць копію"
         >
           <v-icon>mdi-content-copy</v-icon>
         </v-btn>
         <v-btn
           icon
-          class="top-circle-btn top-circle-btn--confirm"
-          :class="{ 'top-action-start': !canCopyPrayer }"
+          class="prayer-form-top-actions__button prayer-form-top-actions__save"
           variant="flat"
           @click="savePrayerForm"
           :loading="uiStore.prayerFormSaving"
           :disabled="uiStore.prayerFormCopying"
           aria-label="Захаваць"
+          title="Захаваць"
         >
           <v-icon>mdi-check</v-icon>
         </v-btn>
-      </template>
+      </div>
 
       <!-- Кнопки для страницы просмотра молитвы в режиме редактирования -->
       <template v-else-if="isPrayerViewPage && uiStore.prayerIsEditing">
@@ -408,28 +414,35 @@ const applyFilter = () => {
   color: var(--chrome-accent) !important;
 }
 
-.top-copy-btn {
-  width: 42px !important;
-  height: 48px !important;
-  min-width: 42px !important;
-  flex: 0 0 42px !important;
-  margin-right: -4px !important;
-  border: 1px solid var(--nav-border) !important;
-  border-radius: 24px 8px 8px 24px !important;
-  background: var(--overlay-surface) !important;
-  color: var(--nav-on-surface) !important;
-  box-shadow: 0 2px 9px var(--nav-button-shadow) !important;
-  transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease !important;
+.prayer-form-top-actions {
+  display: flex;
+  flex: 0 0 auto;
+  height: 48px;
+  overflow: hidden;
+  border: 1px solid var(--nav-border);
+  border-radius: 24px;
+  background: var(--overlay-surface);
+  box-shadow: 0 2px 9px var(--nav-button-shadow);
   backdrop-filter: blur(18px);
 }
 
-.top-copy-btn:hover {
-  box-shadow: 0 3px 12px var(--nav-button-shadow) !important;
+.prayer-form-top-actions__button {
+  width: 46px !important;
+  min-width: 46px !important;
+  height: 46px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--nav-on-surface) !important;
+  box-shadow: none !important;
 }
 
-.top-copy-btn:active {
-  opacity: 0.72;
-  transform: scale(0.94);
+.prayer-form-top-actions__copy {
+  border-right: 1px solid var(--nav-border) !important;
+}
+
+.prayer-form-top-actions__save {
+  background: rgba(var(--chrome-accent-rgb), 0.13) !important;
+  color: var(--chrome-accent) !important;
 }
 
 .readings-nav-group {
@@ -583,12 +596,15 @@ const applyFilter = () => {
     flex-basis: 44px !important;
   }
 
-  .top-copy-btn {
-    width: 38px !important;
-    height: 44px !important;
-    min-width: 38px !important;
-    flex-basis: 38px !important;
-    border-radius: 22px 7px 7px 22px !important;
+  .prayer-form-top-actions {
+    height: 44px;
+    border-radius: 22px;
+  }
+
+  .prayer-form-top-actions__button {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
   }
 
   .readings-nav-group {

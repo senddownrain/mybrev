@@ -88,7 +88,6 @@
               <span class="day-option__icon-wrap">
                 <v-icon
                   :icon="getOptionIcon(option)"
-                  :color="getOptionColor(option)"
                   size="25"
                 ></v-icon>
               </span>
@@ -289,7 +288,6 @@ const isThemedOption = (option) => (
 );
 
 const getOptionStyle = (option) => {
-  if (!isThemedOption(option)) return undefined;
   const theme = getLiturgicalTheme(option?.day, option?.contextPeriodType);
   return {
     '--option-color': theme.color,
@@ -302,17 +300,6 @@ const getOptionIcon = (option) => {
   if (option.source === LITURGICAL_OPTION_SOURCE.DYNAMIC) return 'mdi-star-four-points';
   if (option.source === LITURGICAL_OPTION_SOURCE.FIXED) return 'mdi-calendar-star';
   return 'mdi-calendar-blank';
-};
-
-const getOptionColor = (option) => {
-  if (isThemedOption(option)) {
-    return getLiturgicalTheme(option?.day, option?.contextPeriodType).color;
-  }
-  const periodType = option.day?._periodType || option.contextPeriodType;
-  if (periodType === 'advent' || periodType === 'lent') return 'purple-darken-3';
-  if (periodType === 'easter' || periodType === 'christmas') return 'yellow-darken-3';
-  if (periodType === 'ordinary') return 'green-darken-2';
-  return 'red-darken-2';
 };
 
 watch(
@@ -479,6 +466,12 @@ watch(
 }
 
 .day-option {
+  --option-visible-color: var(--option-color);
+  --option-visible-color: color-mix(
+    in srgb,
+    var(--option-color) var(--period-accent-weight),
+    var(--period-accent-target)
+  );
   min-height: 82px;
   padding: 14px 14px 14px 16px !important;
   border: 1px solid var(--nav-border);
@@ -496,12 +489,6 @@ watch(
 }
 
 .day-option--themed {
-  --option-visible-color: var(--option-color);
-  --option-visible-color: color-mix(
-    in srgb,
-    var(--option-color) var(--period-accent-weight),
-    var(--period-accent-target)
-  );
   border-color: rgba(var(--option-rgb), 0.28);
   background:
     linear-gradient(120deg, rgba(var(--option-rgb), 0.14), rgba(var(--option-rgb), 0.025) 72%),
@@ -523,6 +510,7 @@ watch(
 }
 
 .day-option__icon-wrap {
+  color: var(--option-visible-color);
   display: grid;
   width: 48px;
   height: 48px;
