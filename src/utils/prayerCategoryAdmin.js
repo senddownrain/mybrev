@@ -8,15 +8,18 @@ export function buildPrayerTagStats(prayers = [], categories = []) {
     }
     return stats.get(normalizedName);
   };
+  const normalizedTags = (tags) => [...new Set(
+    (tags || []).map((tag) => String(tag || '').trim()).filter(Boolean),
+  )];
 
   prayers.forEach((prayer) => {
-    [...new Set(prayer.tags || [])].forEach((tag) => {
+    normalizedTags(prayer.tags).forEach((tag) => {
       const stat = ensureTag(tag);
       if (stat) stat.prayerCount += 1;
     });
   });
   categories.forEach((category) => {
-    [...new Set(category.tags || [])].forEach((tag) => {
+    normalizedTags(category.tags).forEach((tag) => {
       const stat = ensureTag(tag);
       if (stat) stat.categoryCount += 1;
     });
@@ -30,18 +33,19 @@ export function buildPrayerTagStats(prayers = [], categories = []) {
 export function buildPrayerTagRemovalPlan(tag, prayers = [], categories = []) {
   const normalizedTag = String(tag || '').trim();
   if (!normalizedTag) throw new Error('Тэг не пазначаны');
+  const matchesTag = (value) => String(value || '').trim() === normalizedTag;
 
   const prayerUpdates = prayers
-    .filter((prayer) => prayer.tags?.includes(normalizedTag))
+    .filter((prayer) => prayer.tags?.some(matchesTag))
     .map((prayer) => ({
       id: prayer.id,
-      tags: prayer.tags.filter((item) => item !== normalizedTag),
+      tags: prayer.tags.filter((item) => !matchesTag(item)),
     }));
 
   const categoryChanges = categories
-    .filter((category) => category.tags?.includes(normalizedTag))
+    .filter((category) => category.tags?.some(matchesTag))
     .map((category) => {
-      const tags = category.tags.filter((item) => item !== normalizedTag);
+      const tags = category.tags.filter((item) => !matchesTag(item));
       return { id: category.id, type: tags.length ? 'update' : 'delete', tags };
     });
 

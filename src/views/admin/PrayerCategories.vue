@@ -1,149 +1,208 @@
 <template>
-  <v-container class="categories-page">
-    <header class="categories-page__header">
-      <p>Адміністраванне</p>
-      <h1>Катэгорыі і тэгі малітваў</h1>
-      <span>Глабальныя катэгорыі захоўваюцца ў базе і бачныя ўсім. Асабістыя катэгорыі карыстальнікаў тут не змяняюцца.</span>
+  <v-container class="category-admin">
+    <header class="page-hero">
+      <div>
+        <p class="eyebrow">Адміністраванне · Малітвы</p>
+        <h1>Катэгорыі і тэгі</h1>
+        <p class="page-description">
+          Кіруйце спісам катэгорый, які карыстальнікі бачаць у меню пры першым запуску.
+        </p>
+      </div>
+      <v-btn
+        color="primary"
+        size="large"
+        rounded="pill"
+        prepend-icon="mdi-plus"
+        class="hero-action text-none"
+        @click="openCreateDialog"
+      >
+        Новая катэгорыя
+      </v-btn>
     </header>
 
-    <v-card class="categories-card" elevation="0">
-      <div class="categories-card__heading categories-card__heading--actions">
-        <div>
-          <h2>Глабальныя катэгорыі</h2>
-          <p>{{ categories.length }} катэгорый у базе</p>
-        </div>
-        <v-btn
-          variant="tonal"
-          rounded="pill"
-          class="text-none"
-          prepend-icon="mdi-restore"
-          :loading="restoringDefaults"
-          @click="restoreDefaults"
-        >
-          Аднавіць базавыя
-        </v-btn>
+    <section class="summary-grid" aria-label="Зводка">
+      <article class="summary-card">
+        <span class="summary-icon"><v-icon icon="mdi-folder-outline" /></span>
+        <div><strong>{{ categories.length }}</strong><span>Катэгорый</span></div>
+      </article>
+      <article class="summary-card">
+        <span class="summary-icon"><v-icon icon="mdi-tag-multiple-outline" /></span>
+        <div><strong>{{ tagStats.length }}</strong><span>Унікальных тэгаў</span></div>
+      </article>
+    </section>
+
+    <v-card class="workspace-card" elevation="0">
+      <div class="workspace-tabs">
+        <v-tabs v-model="activeTab" color="primary" density="comfortable">
+          <v-tab value="categories" class="text-none">
+            <v-icon icon="mdi-folder-multiple-outline" start />Катэгорыі
+          </v-tab>
+          <v-tab value="tags" class="text-none">
+            <v-icon icon="mdi-tag-multiple-outline" start />Тэгі
+          </v-tab>
+        </v-tabs>
       </div>
 
-      <div v-if="categoriesLoading" class="loading-state">
-        <v-progress-circular indeterminate color="primary" size="28" />
-        <span>Загрузка катэгорый…</span>
-      </div>
-      <div v-else-if="categories.length" class="categories-list">
-        <div v-for="category in categories" :key="category.id" class="category-row">
-          <v-checkbox-btn
-            :model-value="category.addToNewPrayers"
-            :disabled="savingCategoryId === category.id"
-            :aria-label="`Дадаваць тэгі катэгорыі ${category.name} да новых малітваў`"
-            color="primary"
-            @update:model-value="setDefaultCategory(category, $event)"
-          />
-          <div class="category-row__copy">
-            <strong>{{ category.name }}</strong>
-            <span>{{ category.tags.join(' · ') }}</span>
+      <v-window v-model="activeTab" :touch="false">
+        <v-window-item value="categories">
+          <div class="workspace-toolbar">
+            <v-text-field
+              v-model="categoryQuery"
+              label="Пошук па назве або тэгу"
+              prepend-inner-icon="mdi-magnify"
+              clearable
+              variant="outlined"
+              density="comfortable"
+              hide-details
+              class="search-field"
+            />
+            <v-btn
+              variant="text"
+              rounded="pill"
+              prepend-icon="mdi-restore"
+              class="restore-button text-none"
+              :loading="restoringDefaults"
+              @click="restoreDefaults"
+            >
+              Аднавіць базавыя
+            </v-btn>
           </div>
-          <span v-if="category.addToNewPrayers" class="default-badge">Для новых малітваў</span>
-          <v-btn
-            icon="mdi-delete-outline"
-            variant="text"
-            color="error"
-            :aria-label="`Выдаліць катэгорыю ${category.name}`"
-            @click="categoryToDelete = category"
-          />
-        </div>
-      </div>
-      <div v-else class="empty-state">
-        <strong>У базе пакуль няма катэгорый</strong>
-        <span>Аднавіце тры базавыя катэгорыі або стварыце ўласную ніжэй.</span>
-      </div>
-    </v-card>
 
-    <v-card class="categories-card" elevation="0">
-      <div class="categories-card__heading">
-        <h2>Новая глабальная катэгорыя</h2>
-        <p>Аб’яднайце адзін або некалькі існуючых тэгаў ці стварыце новы.</p>
-      </div>
-      <v-form class="category-form" @submit.prevent="addCategory">
-        <v-text-field
-          v-model="newCategory.name"
-          label="Назва катэгорыі"
-          variant="outlined"
-          hide-details="auto"
-        />
-        <v-combobox
-          v-model="newCategory.tags"
-          :items="availableTagNames"
-          label="Тэгі"
-          multiple
-          chips
-          closable-chips
-          variant="outlined"
-          hide-details="auto"
-        />
-        <v-checkbox
-          v-model="newCategory.addToNewPrayers"
-          label="Дадаваць гэтыя тэгі да кожнай новай малітвы"
-          color="primary"
-          hide-details
-        />
-        <v-btn
-          type="submit"
-          color="primary"
-          rounded="pill"
-          class="text-none category-submit"
-          prepend-icon="mdi-plus"
-          :loading="creatingCategory"
-        >
-          Дадаць катэгорыю
-        </v-btn>
-      </v-form>
-    </v-card>
-
-    <v-card class="categories-card" elevation="0">
-      <div class="categories-card__heading">
-        <h2>Усе тэгі</h2>
-        <p>{{ tagStats.length }} тэгаў у малітвах і глабальных катэгорыях</p>
-      </div>
-
-      <v-text-field
-        v-model="tagQuery"
-        class="tag-search"
-        label="Знайсці тэг"
-        prepend-inner-icon="mdi-magnify"
-        clearable
-        variant="outlined"
-        hide-details
-      />
-
-      <div v-if="prayersLoading" class="loading-state">
-        <v-progress-circular indeterminate color="primary" size="28" />
-        <span>Загрузка тэгаў…</span>
-      </div>
-      <div v-else-if="filteredTagStats.length" class="tags-list">
-        <div v-for="tag in filteredTagStats" :key="tag.name" class="tag-row">
-          <div class="tag-row__copy">
-            <strong>{{ tag.name }}</strong>
-            <span>
-              {{ pluralize(tag.prayerCount, 'малітва', 'малітвы', 'малітваў') }}
-              <template v-if="tag.categoryCount"> · {{ pluralize(tag.categoryCount, 'катэгорыя', 'катэгорыі', 'катэгорый') }}</template>
-            </span>
+          <div v-if="categoriesLoading" class="state-panel">
+            <v-progress-circular indeterminate color="primary" size="30" />
+            <span>Загрузка катэгорый…</span>
           </div>
-          <v-btn
-            icon="mdi-delete-outline"
-            variant="text"
-            color="error"
-            :aria-label="`Выдаліць тэг ${tag.name} з усіх малітваў`"
-            @click="tagToDelete = tag"
-          />
-        </div>
-      </div>
-      <p v-else class="empty-message">{{ tagQuery ? 'Нічога не знойдзена.' : 'Тэгаў пакуль няма.' }}</p>
+          <div v-else-if="categoriesError" class="state-panel state-panel--empty state-panel--error">
+            <span class="empty-icon"><v-icon icon="mdi-alert-circle-outline" /></span>
+            <strong>Не ўдалося загрузіць катэгорыі</strong>
+            <span>{{ errorMessage(categoriesError, 'Праверце злучэнне і паспрабуйце яшчэ раз.') }}</span>
+            <v-btn variant="tonal" rounded="pill" prepend-icon="mdi-refresh" class="text-none" @click="retryCategories">Паўтарыць</v-btn>
+          </div>
+          <div v-else-if="filteredCategories.length" class="category-list">
+            <article v-for="category in filteredCategories" :key="category.id" class="category-item">
+              <span class="category-icon"><v-icon icon="mdi-folder-outline" /></span>
+              <div class="category-main">
+                <div class="category-title-row">
+                  <h2>{{ category.name }}</h2>
+                </div>
+                <div class="tag-chips">
+                  <span v-for="tag in category.tags" :key="tag">{{ tag }}</span>
+                </div>
+              </div>
+              <v-btn
+                icon="mdi-delete-outline"
+                variant="text"
+                color="error"
+                :aria-label="`Выдаліць катэгорыю ${category.name}`"
+                @click="categoryToDelete = category"
+              />
+            </article>
+          </div>
+          <div v-else class="state-panel state-panel--empty">
+            <span class="empty-icon"><v-icon :icon="categoryQuery ? 'mdi-folder-search-outline' : 'mdi-folder-plus-outline'" /></span>
+            <strong>{{ categoryQuery ? 'Катэгорыі не знойдзены' : 'Пакуль няма катэгорый' }}</strong>
+            <span>{{ categoryQuery ? 'Паспрабуйце змяніць запыт.' : 'Стварыце першую катэгорыю або аднавіце базавыя.' }}</span>
+          </div>
+        </v-window-item>
+
+        <v-window-item value="tags">
+          <div class="workspace-toolbar workspace-toolbar--tags">
+            <v-text-field
+              v-model="tagQuery"
+              label="Знайсці тэг"
+              prepend-inner-icon="mdi-magnify"
+              clearable
+              variant="outlined"
+              density="comfortable"
+              hide-details
+              class="search-field"
+            />
+            <p>Выдаленне тэга прыбярэ яго з усіх малітваў і катэгорый.</p>
+          </div>
+
+          <div v-if="prayersLoading" class="state-panel">
+            <v-progress-circular indeterminate color="primary" size="30" />
+            <span>Загрузка тэгаў…</span>
+          </div>
+          <div v-else-if="prayersError" class="state-panel state-panel--empty state-panel--error">
+            <span class="empty-icon"><v-icon icon="mdi-alert-circle-outline" /></span>
+            <strong>Не ўдалося загрузіць тэгі</strong>
+            <span>{{ errorMessage(prayersError, 'Праверце злучэнне і абнавіце старонку.') }}</span>
+          </div>
+          <div v-else-if="filteredTagStats.length" class="tag-list">
+            <article v-for="tag in filteredTagStats" :key="tag.name" class="tag-item">
+              <span class="tag-icon"><v-icon icon="mdi-tag-outline" /></span>
+              <div class="tag-main">
+                <strong>{{ tag.name }}</strong>
+                <span>
+                  {{ pluralize(tag.prayerCount, 'малітва', 'малітвы', 'малітваў') }}
+                  <template v-if="tag.categoryCount"> · {{ pluralize(tag.categoryCount, 'катэгорыя', 'катэгорыі', 'катэгорый') }}</template>
+                </span>
+              </div>
+              <v-btn
+                icon="mdi-delete-outline"
+                variant="text"
+                color="error"
+                size="small"
+                :aria-label="`Выдаліць тэг ${tag.name} з усіх малітваў`"
+                @click="tagToDelete = tag"
+              />
+            </article>
+          </div>
+          <div v-else class="state-panel state-panel--empty">
+            <span class="empty-icon"><v-icon icon="mdi-tag-search-outline" /></span>
+            <strong>{{ tagQuery ? 'Тэгі не знойдзены' : 'Тэгаў пакуль няма' }}</strong>
+            <span>{{ tagQuery ? 'Паспрабуйце змяніць запыт.' : 'Тэгі з’явяцца пасля дадання іх да малітваў або катэгорый.' }}</span>
+          </div>
+        </v-window-item>
+      </v-window>
     </v-card>
+
+    <v-dialog v-model="categoryDialogOpen" max-width="560" persistent>
+      <v-card class="dialog-card">
+        <v-card-title>Новая катэгорыя</v-card-title>
+        <v-card-subtitle>Катэгорыя стане часткай меню па змаўчанні для ўсіх карыстальнікаў.</v-card-subtitle>
+        <v-form ref="categoryFormRef" @submit.prevent="saveCategory">
+          <v-card-text class="dialog-fields">
+            <v-text-field
+              v-model="categoryDraft.name"
+              label="Назва катэгорыі"
+              variant="outlined"
+              maxlength="80"
+              counter="80"
+              autofocus
+              :rules="[value => Boolean(value?.trim()) || 'Увядзіце назву']"
+            />
+            <v-combobox
+              v-model="categoryDraft.tags"
+              :items="availableTagNames"
+              label="Тэгі"
+              hint="Можна выбраць існуючыя або ўвесці новыя"
+              persistent-hint
+              multiple
+              chips
+              closable-chips
+              variant="outlined"
+              :rules="[value => Boolean(value?.length) || 'Дадайце хаця б адзін тэг']"
+            />
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn variant="text" class="text-none" :disabled="savingDialog" @click="closeCategoryDialog">Скасаваць</v-btn>
+            <v-btn type="submit" color="primary" variant="flat" class="text-none" :loading="savingDialog">
+              Стварыць
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </v-card>
+    </v-dialog>
 
     <v-dialog :model-value="Boolean(categoryToDelete)" max-width="440" @update:model-value="!$event && (categoryToDelete = null)">
-      <v-card class="confirm-card">
+      <v-card class="dialog-card confirm-card">
         <v-card-title>Выдаліць катэгорыю?</v-card-title>
         <v-card-text>
-          Катэгорыя «{{ categoryToDelete?.name }}» знікне ва ўсіх карыстальнікаў. Самі тэгі і малітвы застануцца.
+          Катэгорыя «{{ categoryToDelete?.name }}» знікне ва ўсіх карыстальнікаў.
+          Малітвы і іх тэгі застануцца без зменаў.
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -154,11 +213,11 @@
     </v-dialog>
 
     <v-dialog :model-value="Boolean(tagToDelete)" max-width="480" @update:model-value="!$event && (tagToDelete = null)">
-      <v-card class="confirm-card">
+      <v-card class="dialog-card confirm-card">
         <v-card-title>Выдаліць тэг усюды?</v-card-title>
         <v-card-text>
           <p>Тэг «{{ tagToDelete?.name }}» будзе выдалены з {{ pluralize(tagToDelete?.prayerCount || 0, 'малітвы', 'малітваў', 'малітваў') }}.</p>
-          <p v-if="tagToDelete?.categoryCount">Ён таксама будзе прыбраны з {{ pluralize(tagToDelete.categoryCount, 'катэгорыі', 'катэгорый', 'катэгорый') }}. Катэгорыі без іншых тэгаў будуць выдалены.</p>
+          <p v-if="tagToDelete?.categoryCount">Таксама зменяцца {{ pluralize(tagToDelete.categoryCount, 'катэгорыя', 'катэгорыі', 'катэгорый') }}. Катэгорыі без тэгаў будуць выдалены.</p>
           <strong>Гэта дзеянне нельга адмяніць.</strong>
         </v-card-text>
         <v-card-actions>
@@ -181,37 +240,54 @@ import { validateCategory } from '@/utils/validators';
 import { buildPrayerTagStats } from '@/utils/prayerCategoryAdmin';
 
 const prayerCategories = usePrayerCategoriesStore();
-const { categories, isLoading: categoriesLoading } = storeToRefs(prayerCategories);
-const { prayers, isLoading: prayersLoading, init: initPrayers } = usePrayers();
+const { categories, isLoading: categoriesLoading, error: categoriesError } = storeToRefs(prayerCategories);
+const { prayers, isLoading: prayersLoading, error: prayersError, init: initPrayers } = usePrayers();
 const { notifyError, notifySuccess } = useNotifier();
 
-const newCategory = ref({ name: '', tags: [], addToNewPrayers: false });
+const activeTab = ref('categories');
+const categoryQuery = ref('');
 const tagQuery = ref('');
+const categoryDialogOpen = ref(false);
+const categoryFormRef = ref(null);
+const categoryDraft = ref(emptyCategory());
 const categoryToDelete = ref(null);
 const tagToDelete = ref(null);
-const creatingCategory = ref(false);
+const savingDialog = ref(false);
 const deletingCategory = ref(false);
 const deletingTag = ref(false);
 const restoringDefaults = ref(false);
-const savingCategoryId = ref('');
 
 prayerCategories.init();
 initPrayers();
 
 const tagStats = computed(() => buildPrayerTagStats(prayers.value, categories.value));
-
 const availableTagNames = computed(() => tagStats.value.map((tag) => tag.name));
+const filteredCategories = computed(() => {
+  const query = normalizeQuery(categoryQuery.value);
+  if (!query) return categories.value;
+  return categories.value.filter((category) => (
+    normalizeQuery(category.name).includes(query)
+    || category.tags.some((tag) => normalizeQuery(tag).includes(query))
+  ));
+});
 const filteredTagStats = computed(() => {
-  const query = String(tagQuery.value || '').trim().toLocaleLowerCase('be');
+  const query = normalizeQuery(tagQuery.value);
   if (!query) return tagStats.value;
-  return tagStats.value.filter((tag) => tag.name.toLocaleLowerCase('be').includes(query));
+  return tagStats.value.filter((tag) => normalizeQuery(tag.name).includes(query));
 });
 
-function normalizedCategory() {
+function emptyCategory() {
+  return { name: '', tags: [] };
+}
+
+function normalizeQuery(value) {
+  return String(value || '').trim().toLocaleLowerCase('be');
+}
+
+function normalizedDraft() {
   return {
-    name: newCategory.value.name.trim(),
-    tags: [...new Set(newCategory.value.tags.map((tag) => String(tag).trim()).filter(Boolean))],
-    addToNewPrayers: newCategory.value.addToNewPrayers,
+    name: categoryDraft.value.name.trim(),
+    tags: [...new Set(categoryDraft.value.tags.map((tag) => String(tag).trim()).filter(Boolean))],
   };
 }
 
@@ -219,23 +295,44 @@ function errorMessage(error, fallback) {
   return error?.message || fallback;
 }
 
-async function addCategory() {
-  const category = normalizedCategory();
-  const validation = validateCategory(category);
-  if (validation !== true) return notifyError(validation);
-  if (categories.value.some((item) => item.name.localeCompare(category.name, 'be', { sensitivity: 'base' }) === 0)) {
-    return notifyError('Катэгорыя з такой назвай ужо існуе');
-  }
+function openCreateDialog() {
+  categoryDraft.value = emptyCategory();
+  categoryDialogOpen.value = true;
+}
 
-  creatingCategory.value = true;
+function closeCategoryDialog() {
+  categoryDialogOpen.value = false;
+  categoryDraft.value = emptyCategory();
+  categoryFormRef.value?.resetValidation();
+}
+
+function retryCategories() {
+  prayerCategories.cleanup();
+  prayerCategories.init();
+}
+
+async function saveCategory() {
+  if (savingDialog.value) return;
+  const formValidation = await categoryFormRef.value?.validate();
+  const category = normalizedDraft();
+  const validation = validateCategory(category);
+  if (formValidation && !formValidation.valid) return;
+  if (validation !== true) return notifyError(validation);
+
+  const duplicate = categories.value.some((item) => (
+    item.name.localeCompare(category.name, 'be', { sensitivity: 'base' }) === 0
+  ));
+  if (duplicate) return notifyError('Катэгорыя з такой назвай ужо існуе');
+
+  savingDialog.value = true;
   try {
     await prayerCategories.addCategory(category);
-    newCategory.value = { name: '', tags: [], addToNewPrayers: false };
-    notifySuccess('Глабальная катэгорыя дададзена');
+    notifySuccess('Катэгорыя дададзена');
+    closeCategoryDialog();
   } catch (error) {
-    notifyError(errorMessage(error, 'Не ўдалося дадаць катэгорыю'));
+    notifyError(errorMessage(error, 'Не ўдалося захаваць катэгорыю'));
   } finally {
-    creatingCategory.value = false;
+    savingDialog.value = false;
   }
 }
 
@@ -253,19 +350,8 @@ async function removeCategory() {
   }
 }
 
-async function setDefaultCategory(category, enabled) {
-  savingCategoryId.value = category.id;
-  try {
-    await prayerCategories.setAddToNewPrayers(category.id, enabled);
-    notifySuccess(enabled ? 'Тэгі будуць дадавацца да новых малітваў' : 'Аўтададаванне тэгаў выключана');
-  } catch (error) {
-    notifyError(errorMessage(error, 'Не ўдалося абнавіць катэгорыю'));
-  } finally {
-    savingCategoryId.value = '';
-  }
-}
-
 async function restoreDefaults() {
+  if (restoringDefaults.value) return;
   restoringDefaults.value = true;
   try {
     const restored = await prayerCategories.restoreDefaults();
@@ -300,45 +386,76 @@ function pluralize(count, one, few, many) {
 </script>
 
 <style scoped>
-.categories-page { width: min(100%, 860px); padding: 34px 20px 72px !important; }
-.categories-page__header { margin: 0 4px 24px; }
-.categories-page__header p { margin: 0 0 8px; color: var(--chrome-accent); font-size: .72rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
-.categories-page__header h1 { margin: 0 0 9px; color: var(--nav-on-surface); font-family: var(--reader-display-font-family); font-size: clamp(1.9rem, 7vw, 2.5rem); line-height: 1.05; }
-.categories-page__header span { display: block; max-width: 720px; color: var(--nav-muted); line-height: 1.5; }
-.categories-card { margin-bottom: 16px; padding: 20px; border: 1px solid var(--nav-border); border-radius: 22px; background: var(--nav-surface); color: var(--nav-on-surface); }
-.categories-card__heading h2 { margin: 0; color: var(--nav-on-surface); font-size: 1.08rem; }
-.categories-card__heading p,
-.empty-message { margin: 5px 0 0; color: var(--nav-muted); font-size: .84rem; }
-.categories-card__heading--actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.categories-list { margin-top: 16px; border-top: 1px solid var(--nav-border); }
-.category-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 10px; min-height: 68px; border-bottom: 1px solid var(--nav-border); }
-.category-row__copy,
-.tag-row__copy { display: grid; gap: 3px; min-width: 0; }
-.category-row__copy strong,
-.tag-row__copy strong { color: var(--nav-on-surface); }
-.category-row__copy span,
-.tag-row__copy span { overflow-wrap: anywhere; color: var(--nav-muted); font-size: .8rem; }
-.default-badge { padding: 4px 8px; border-radius: 99px; background: var(--nav-active); color: var(--chrome-accent); font-size: .69rem; font-weight: 750; white-space: nowrap; }
-.category-form { display: grid; gap: 12px; margin-top: 18px; }
-.category-submit { justify-self: start; }
-.loading-state,
-.empty-state { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 110px; margin-top: 16px; border-radius: 16px; background: var(--nav-active); color: var(--nav-muted); font-size: .84rem; }
-.empty-state { flex-direction: column; text-align: center; }
-.empty-state strong { color: var(--nav-on-surface); }
-.tag-search { margin-top: 18px; }
-.tags-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
-.tag-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-width: 0; min-height: 62px; padding: 8px 8px 8px 14px; border: 1px solid var(--nav-border); border-radius: 15px; background: var(--nav-active); }
-.confirm-card { border: 1px solid var(--nav-border); border-radius: 22px !important; background: var(--overlay-surface); color: var(--nav-on-surface); }
-.confirm-card .v-card-text { color: var(--nav-muted); line-height: 1.55; }
-.confirm-card .v-card-text p { margin: 0 0 10px; }
-.confirm-card .v-card-text strong { color: var(--rubric-color); }
-@media (max-width: 600px) {
-  .categories-page { padding: 22px 14px 56px !important; }
-  .categories-card { padding: 16px; }
-  .categories-card__heading--actions { align-items: flex-start; flex-direction: column; }
-  .category-row { grid-template-columns: auto minmax(0, 1fr) auto; }
-  .default-badge { display: none; }
-  .tags-list { grid-template-columns: 1fr; }
-  .category-submit { width: 100%; }
+.category-admin { width: min(100%, 980px); padding: 38px 22px 80px !important; color: var(--nav-on-surface); }
+.page-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin: 0 4px 26px; }
+.eyebrow { margin: 0 0 8px; color: var(--chrome-accent); font-size: .72rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+.page-hero h1 { margin: 0 0 10px; font-family: var(--reader-display-font-family); font-size: clamp(2rem, 6vw, 2.7rem); line-height: 1.04; letter-spacing: -.025em; }
+.page-description { max-width: 660px; margin: 0; color: var(--nav-muted); font-size: .95rem; line-height: 1.55; }
+.hero-action { flex: 0 0 auto; }
+.summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+.summary-card { display: flex; align-items: center; gap: 13px; min-width: 0; padding: 16px 18px; border: 1px solid var(--nav-border); border-radius: 18px; background: var(--nav-surface); box-shadow: 0 4px 16px var(--nav-button-shadow); }
+.summary-icon, .category-icon, .tag-icon, .empty-icon { display: grid; place-items: center; flex: 0 0 auto; border-radius: 13px; background: var(--nav-active); color: var(--chrome-accent); }
+.summary-icon { width: 42px; height: 42px; }
+.summary-card div { display: grid; min-width: 0; }
+.summary-card strong { font-size: 1.22rem; line-height: 1.1; }
+.summary-card div span { overflow: hidden; color: var(--nav-muted); font-size: .76rem; text-overflow: ellipsis; white-space: nowrap; }
+.workspace-card { overflow: hidden; border: 1px solid var(--nav-border); border-radius: 24px; background: var(--nav-surface); color: var(--nav-on-surface); box-shadow: 0 8px 28px var(--nav-button-shadow); }
+.workspace-tabs { padding-inline: 14px; border-bottom: 1px solid var(--nav-border); }
+.workspace-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 20px; border-bottom: 1px solid var(--nav-border); }
+.search-field { max-width: 430px; }
+.restore-button { color: var(--nav-muted); }
+.workspace-toolbar--tags p { max-width: 370px; margin: 0; color: var(--nav-muted); font-size: .78rem; line-height: 1.4; text-align: right; }
+.category-list { padding: 0 20px 8px; }
+.category-item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 18px; min-height: 88px; border-bottom: 1px solid var(--nav-border); }
+.category-item:last-child { border-bottom: 0; }
+.category-icon { width: 44px; height: 44px; }
+.category-main { min-width: 0; }
+.category-title-row { display: flex; align-items: center; gap: 9px; }
+.category-title-row h2 { overflow: hidden; margin: 0; font-size: .98rem; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+.tag-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.tag-chips span { padding: 3px 7px; border: 1px solid var(--nav-border); border-radius: 8px; color: var(--nav-muted); font-size: .7rem; line-height: 1.2; }
+.state-panel { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 220px; color: var(--nav-muted); }
+.state-panel--empty { flex-direction: column; text-align: center; }
+.state-panel--empty strong { color: var(--nav-on-surface); }
+.state-panel--empty > span:last-child { font-size: .82rem; }
+.state-panel--error strong { color: rgb(var(--v-theme-error)); }
+.empty-icon { width: 54px; height: 54px; margin-bottom: 4px; font-size: 1.55rem; }
+.tag-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 18px 20px 22px; }
+.tag-item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 11px; min-width: 0; min-height: 68px; padding: 10px 10px 10px 13px; border: 1px solid var(--nav-border); border-radius: 16px; background: var(--nav-active); }
+.tag-icon { width: 36px; height: 36px; }
+.tag-main { display: grid; min-width: 0; gap: 3px; }
+.tag-main strong { overflow: hidden; font-size: .87rem; text-overflow: ellipsis; white-space: nowrap; }
+.tag-main span { color: var(--nav-muted); font-size: .71rem; }
+.dialog-card { overflow: hidden; border: 1px solid var(--nav-border); border-radius: 24px !important; background: var(--overlay-surface); color: var(--nav-on-surface); }
+.dialog-card :deep(.v-card-title) { padding: 22px 24px 5px; font-family: var(--reader-display-font-family); font-size: 1.32rem; font-weight: 750; }
+.dialog-card :deep(.v-card-subtitle) { padding: 0 24px 18px; color: var(--nav-muted); opacity: 1; }
+.dialog-fields { display: grid; gap: 5px; padding: 8px 24px 10px !important; }
+.dialog-card :deep(.v-card-actions) { padding: 14px 18px 18px; }
+.confirm-card :deep(.v-card-text) { color: var(--nav-muted); line-height: 1.55; }
+.confirm-card :deep(.v-card-text p) { margin: 0 0 10px; }
+.confirm-card :deep(.v-card-text strong) { color: rgb(var(--v-theme-error)); }
+@media (max-width: 720px) {
+  .category-admin { padding: 26px 14px 60px !important; }
+  .page-hero { align-items: stretch; flex-direction: column; gap: 18px; }
+  .hero-action { align-self: flex-start; }
+  .summary-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .summary-card { justify-content: center; padding: 13px 8px; text-align: center; }
+  .summary-icon { display: none; }
+  .summary-card div span { font-size: .66rem; }
+  .workspace-toolbar { align-items: stretch; flex-direction: column; }
+  .search-field { max-width: none; }
+  .restore-button { align-self: flex-start; }
+  .workspace-toolbar--tags p { max-width: none; text-align: left; }
+  .category-item { grid-template-columns: auto minmax(0, 1fr) auto; padding-block: 14px; }
+  .tag-list { grid-template-columns: 1fr; }
+}
+@media (max-width: 430px) {
+  .page-hero h1 { font-size: 2rem; }
+  .hero-action { width: 100%; }
+  .summary-card strong { font-size: 1.05rem; }
+  .category-list { padding-inline: 14px; }
+  .category-item { gap: 10px; }
+  .category-icon { width: 38px; height: 38px; }
+  .tag-list { padding-inline: 14px; }
 }
 </style>

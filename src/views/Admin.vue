@@ -27,13 +27,7 @@
 <script setup>
 const editors = [
   {
-    title: 'Літургічны дзень',
-    description: 'Стварыць новы дакумент гадзінаў у калекцыі days.',
-    icon: 'mdi-calendar-edit',
-    to: { name: 'AdminDayEditor', params: { id: 'new' } },
-  },
-  {
-    title: 'Імшальныя чытанні',
+    title: 'Стварыць чытанне',
     description: 'Стварыць новы дакумент чытанняў у калекцыі readings.',
     icon: 'mdi-book-open-page-variant',
     to: { name: 'AdminParsedReadingEditor', params: { id: 'new' } },

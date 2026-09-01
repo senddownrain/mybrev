@@ -53,14 +53,24 @@
     <section class="settings-section" aria-labelledby="categories-title">
       <div class="section-heading">
         <span class="section-icon"><PhFolders :size="22" /></span>
-        <div><h2 id="categories-title">Асабістыя катэгорыі</h2><p>Толькі вашы ўласныя фільтры па тэгах</p></div>
+        <div><h2 id="categories-title">Катэгорыі ў меню</h2><p>Ваш асабісты спіс катэгорый малітваў</p></div>
       </div>
-      <div v-if="settings.menuCategories.length" class="category-list">
-        <div v-for="(category, index) in settings.menuCategories" :key="`${category.name}-${index}`" class="category-row">
-          <div class="category-copy"><strong>{{ category.name }}</strong><span>{{ category.tags.join(' · ') }}</span></div>
-          <button type="button" class="delete-button" :aria-label="`Выдаліць катэгорыю ${category.name}`" @click="removeCategory(index)"><PhTrash :size="19" /></button>
+      <div v-if="visibleCategories.length" class="category-list">
+        <div v-for="category in visibleCategories" :key="category.key" class="category-row">
+          <div class="category-copy">
+            <div class="category-title-line">
+              <strong>{{ category.name }}</strong>
+              <span v-if="category.scope === 'global'" class="global-badge">Па змаўчанні</span>
+            </div>
+            <span>{{ category.tags.join(' · ') }}</span>
+          </div>
+          <button type="button" class="delete-button" :aria-label="`Прыбраць катэгорыю ${category.name} з меню`" @click="removeCategory(category)"><PhTrash :size="19" /></button>
         </div>
       </div>
+      <p v-else class="categories-empty">У меню няма катэгорый.</p>
+      <button v-if="settings.hiddenGlobalPrayerCategoryIds.length" type="button" class="restore-categories-button" @click="restoreGlobalCategories">
+        Аднавіць катэгорыі па змаўчанні
+      </button>
       <button type="button" class="add-category-button" @click="showAddCategoryDialog = true"><PhPlus :size="19" weight="bold" />Дадаць катэгорыю</button>
     </section>
 
@@ -69,18 +79,44 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { PhCheck, PhFolders, PhMinus, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
 import { useSettingsStore } from '@/stores/settings.js';
+import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
+import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { useNotifier } from '@/composables/useNotifier';
 import AddCategoryDialog from '@/components/prayers/AddCategoryDialog.vue';
 import { READER_FONT_OPTIONS } from '@/constants/fonts';
 
 const settings = useSettingsStore();
+const prayerCategories = usePrayerCategoriesStore();
 const { notifySuccess } = useNotifier();
 const showAddCategoryDialog = ref(false);
 const fontOptions = READER_FONT_OPTIONS;
-function removeCategory(index) { settings.removeCategory(index); notifySuccess('Катэгорыя выдалена'); }
+prayerCategories.init();
+
+const visibleCategories = computed(() => {
+  return buildPrayerCategoryMenu(
+    prayerCategories.categories,
+    settings.personalPrayerCategories,
+    settings.hiddenGlobalPrayerCategoryIds,
+  );
+});
+
+function removeCategory(category) {
+  if (category.scope === 'global') {
+    settings.hideGlobalPrayerCategory(category.id);
+    notifySuccess('Катэгорыя схавана толькі для вас');
+    return;
+  }
+  settings.removeCategory(category.personalIndex);
+  notifySuccess('Катэгорыя выдалена');
+}
+
+function restoreGlobalCategories() {
+  settings.restoreGlobalPrayerCategories();
+  notifySuccess('Катэгорыі па змаўчанні адноўлены');
+}
 </script>
 
 <style scoped>
@@ -97,6 +133,7 @@ function removeCategory(index) { settings.removeCategory(index); notifySuccess('
 .section-heading p { margin: 2px 0 0; color: var(--nav-muted); font-size: .78rem; line-height: 1.35; }
 .setting-row, .text-size-control, .category-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 70px; margin-inline: 20px; border-top: 1px solid var(--nav-border); }
 .setting-copy, .category-copy { display: grid; min-width: 0; gap: 3px; }
+.category-title-line { display: flex; align-items: center; gap: 7px; min-width: 0; }
 .setting-copy strong, .category-copy strong { color: var(--nav-on-surface); font-size: .9rem; font-weight: 720; }
 .setting-copy span, .category-copy span { overflow-wrap: anywhere; color: var(--nav-muted); font-size: .76rem; line-height: 1.4; }
 .setting-row :deep(.v-switch) { flex: 0 0 auto; }
@@ -117,8 +154,11 @@ function removeCategory(index) { settings.removeCategory(index); notifySuccess('
 .text-preview p { margin: 0; line-height: 1.65; }
 .text-preview p { font-optical-sizing: auto; }
 .category-row { min-height: 64px; }
+.global-badge { padding: 3px 7px; border-radius: 99px; background: var(--nav-active); color: var(--chrome-accent) !important; font-size: .62rem !important; font-weight: 750; white-space: nowrap; }
+.categories-empty { margin: 8px 20px 0; padding: 14px 0; border-top: 1px solid var(--nav-border); color: var(--nav-muted); font-size: .8rem; text-align: center; }
 .delete-button { display: grid; flex: 0 0 40px; width: 40px; height: 40px; place-items: center; border-radius: 13px; background: transparent; color: var(--rubric-color); transition: background .18s ease; }
 .delete-button:hover { background: rgba(var(--v-theme-error), .08); }
+.restore-categories-button { display: block; margin: 12px auto 0; border: 0; background: transparent; color: var(--chrome-accent); font: inherit; font-size: .76rem; font-weight: 720; cursor: pointer; }
 .add-category-button { display: flex; align-items: center; justify-content: center; gap: 8px; width: calc(100% - 40px); min-height: 48px; margin: 14px 20px 20px; border-radius: 16px; background: var(--nav-active); color: var(--nav-on-surface); font-size: .86rem; font-weight: 750; transition: transform .16s ease; }
 @media (max-width: 560px) {
   .settings-page { padding-inline: 14px !important; padding-bottom: 36px !important; }

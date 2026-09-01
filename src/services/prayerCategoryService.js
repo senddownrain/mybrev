@@ -5,7 +5,6 @@ import {
   doc,
   onSnapshot,
   serverTimestamp,
-  updateDoc,
   writeBatch,
 } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
@@ -28,7 +27,6 @@ function categoryPayload(category) {
   return {
     name: String(category.name || '').trim(),
     tags: cleanTags(category.tags),
-    addToNewPrayers: Boolean(category.addToNewPrayers),
     order: Number.isFinite(category.order) ? category.order : Date.now(),
   };
 }
@@ -52,16 +50,6 @@ export async function createPrayerCategory(category) {
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
-}
-
-export async function updatePrayerCategory(categoryId, changes) {
-  const payload = { ...changes, updatedAt: serverTimestamp() };
-  if ('tags' in payload) payload.tags = cleanTags(payload.tags);
-  if ('name' in payload) payload.name = String(payload.name || '').trim();
-  return retryFirestore(() => updateDoc(
-    doc(db, PRAYER_CATEGORIES_COLLECTION, categoryId),
-    payload,
-  ));
 }
 
 export async function deletePrayerCategory(categoryId) {

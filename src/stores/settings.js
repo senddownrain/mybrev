@@ -10,6 +10,7 @@ import { requestWakeLock, releaseWakeLock } from '@/composables/useWakeLock';
 import { ensureReaderFontLoaded } from '@/utils/fonts';
 
 const PERSONAL_CATEGORIES_KEY = 'personalPrayerCategories';
+const HIDDEN_GLOBAL_CATEGORIES_KEY = 'hiddenGlobalPrayerCategoryIds';
 
 function categoryMatchesDefault(category) {
   return DEFAULT_CATEGORIES.some((defaultCategory) => (
@@ -35,6 +36,9 @@ export const useSettingsStore = defineStore('settings', () => {
   const fontFamily = ref(normalizeReaderFont(localStorage.getItem('fontFamily')));
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
   const menuCategories = ref(loadPersonalCategories());
+  const hiddenGlobalPrayerCategoryIds = ref(JSON.parse(
+    localStorage.getItem(HIDDEN_GLOBAL_CATEGORIES_KEY) || '[]',
+  ));
   const favoritePrayers = ref(JSON.parse(localStorage.getItem('favoritePrayers') || '[]'));
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') === 'true');
 
@@ -61,6 +65,9 @@ export const useSettingsStore = defineStore('settings', () => {
   }, { immediate: true });
 
   watch(menuCategories, (v) => localStorage.setItem(PERSONAL_CATEGORIES_KEY, JSON.stringify(v)), { deep: true });
+  watch(hiddenGlobalPrayerCategoryIds, (v) => {
+    localStorage.setItem(HIDDEN_GLOBAL_CATEGORIES_KEY, JSON.stringify(v));
+  }, { deep: true });
   watch(favoritePrayers, (v) => localStorage.setItem('favoritePrayers', JSON.stringify(v)), { deep: true });
   
   watch(keepScreenOn, async (newValue) => {
@@ -119,6 +126,17 @@ export const useSettingsStore = defineStore('settings', () => {
     menuCategories.value.splice(index, 1);
   }
 
+  function hideGlobalPrayerCategory(categoryId) {
+    hiddenGlobalPrayerCategoryIds.value = [...new Set([
+      ...hiddenGlobalPrayerCategoryIds.value,
+      categoryId,
+    ])];
+  }
+
+  function restoreGlobalPrayerCategories() {
+    hiddenGlobalPrayerCategoryIds.value = [];
+  }
+
   function toggleFavoritePrayer(prayerId) {
     const index = favoritePrayers.value.indexOf(prayerId);
     if (index > -1) {
@@ -139,6 +157,7 @@ export const useSettingsStore = defineStore('settings', () => {
     fontSizeMultiplier,
     menuCategories,
     personalPrayerCategories: menuCategories,
+    hiddenGlobalPrayerCategoryIds,
     favoritePrayers,
     keepScreenOn,
     toggleTheme,
@@ -148,6 +167,8 @@ export const useSettingsStore = defineStore('settings', () => {
     decreaseFontSize,
     addCategory,
     removeCategory,
+    hideGlobalPrayerCategory,
+    restoreGlobalPrayerCategories,
     toggleFavoritePrayer,
     isFavoritePrayer,
     setKeepScreenOn,

@@ -50,3 +50,16 @@ test('buildPrayerTagRemovalPlan updates prayers and deletes categories left empt
 test('buildPrayerTagRemovalPlan rejects an empty tag', () => {
   assert.throws(() => buildPrayerTagRemovalPlan('  '), /Тэг не пазначаны/);
 });
+
+test('removes a displayed normalized tag even when stored values contain spaces', () => {
+  const plan = buildPrayerTagRemovalPlan(
+    'Айчына',
+    [{ id: 'p1', tags: [' Айчына ', 'За сям’ю'] }],
+    [{ id: 'c1', tags: ['Айчына ', 'У розных патрэбах'] }],
+  );
+
+  assert.deepEqual(plan.prayerUpdates, [{ id: 'p1', tags: ['За сям’ю'] }]);
+  assert.deepEqual(plan.categoryChanges, [
+    { id: 'c1', type: 'update', tags: ['У розных патрэбах'] },
+  ]);
+});

@@ -40,7 +40,6 @@
 .mdi-calendar::before { content: "\F00ED"; }
 .mdi-calendar-blank::before { content: "\F00EE"; }
 .mdi-calendar-blank-outline::before { content: "\F0B66"; }
-.mdi-calendar-edit::before { content: "\F08A7"; }
 .mdi-calendar-star::before { content: "\F09D3"; }
 .mdi-calendar-today::before { content: "\F00F6"; }
 .mdi-candle::before { content: "\F05E2"; }
@@ -72,6 +71,10 @@
 .mdi-eyedropper::before { content: "\F020A"; }
 .mdi-file-question-outline::before { content: "\F1036"; }
 .mdi-folder-cog-outline::before { content: "\F1080"; }
+.mdi-folder-multiple-outline::before { content: "\F0255"; }
+.mdi-folder-outline::before { content: "\F0256"; }
+.mdi-folder-plus-outline::before { content: "\F0B9D"; }
+.mdi-folder-search-outline::before { content: "\F0969"; }
 .mdi-format-color-text::before { content: "\F069E"; }
 .mdi-format-font::before { content: "\F06D6"; }
 .mdi-format-font-size-increase::before { content: "\F09F4"; }
@@ -111,6 +114,9 @@
 .mdi-star-half-full::before { content: "\F04D0"; }
 .mdi-star-outline::before { content: "\F04D2"; }
 .mdi-sun-clock-outline::before { content: "\F1A78"; }
+.mdi-tag-multiple-outline::before { content: "\F12F7"; }
+.mdi-tag-outline::before { content: "\F04FC"; }
+.mdi-tag-search-outline::before { content: "\F1908"; }
 .mdi-text-box-outline::before { content: "\F09ED"; }
 .mdi-theme-light-dark::before { content: "\F050E"; }
 .mdi-unfold-more-horizontal::before { content: "\F054F"; }

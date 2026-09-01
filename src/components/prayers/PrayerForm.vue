@@ -199,12 +199,10 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { storeToRefs } from 'pinia';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
-import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue';
 import {
@@ -219,9 +217,6 @@ const router = useRouter();
 const { prayers, isLoading, addPrayer, updatePrayer, allTags } = usePrayers();
 const { notifySuccess, notifyError } = useNotifier();
 const uiStore = useUiStore();
-const prayerCategories = usePrayerCategoriesStore();
-const { defaultPrayerTags, isLoading: areCategoriesLoading } = storeToRefs(prayerCategories);
-prayerCategories.init();
 
 const formRef = ref(null);
 const saving = ref(false);
@@ -261,8 +256,6 @@ const hydrateForm = () => {
   if (hydrated.value) return;
 
   if (!isEditMode.value) {
-    if (areCategoriesLoading.value) return;
-    form.value.tags = [...defaultPrayerTags.value];
     hydrated.value = true;
     initialSnapshot.value = currentSnapshot.value;
     return;
@@ -297,7 +290,7 @@ const hydrateForm = () => {
   initialSnapshot.value = currentSnapshot.value;
 };
 
-watch([isLoading, prayers, areCategoriesLoading, defaultPrayerTags], hydrateForm, { immediate: true });
+watch([isLoading, prayers], hydrateForm, { immediate: true });
 // Vue reuses this component when switching from the original to its copy.
 watch(() => route.params.id, () => {
   hydrated.value = false;

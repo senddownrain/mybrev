@@ -25,11 +25,12 @@ export const APP_THEME_COLORS = Object.freeze({
     'on-primary': '#281B12',
     secondary: '#B89570',
     'on-secondary': '#281B12',
-    background: '#17130F',
-    surface: '#211C18',
-    'surface-bright': '#302720',
-    'surface-light': '#302720',
-    'surface-variant': '#3A3028',
+    // Near-black espresso is the material; walnut and bronze stay accents.
+    background: '#0F0E0C',
+    surface: '#171512',
+    'surface-bright': '#211E1A',
+    'surface-light': '#211E1A',
+    'surface-variant': '#2A2621',
     'on-background': '#F2EBDD',
     'on-surface': '#F2EBDD',
     'on-surface-variant': '#C5B8A7',
@@ -37,7 +38,7 @@ export const APP_THEME_COLORS = Object.freeze({
     devotional: '#D39A83',
     'on-devotional': '#2A1913',
     rubric: '#EF9188',
-    ambient: '#6F4D30',
+    ambient: '#4A3A2D',
   }),
 });
 

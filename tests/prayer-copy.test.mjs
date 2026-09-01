@@ -82,7 +82,6 @@ function createEditor(t, options = {}) {
     }),
     useNotifier: () => ({ notifySuccess: (message) => notices.push(message), notifyError: (message) => errors.push(message) }),
     useUiStore: () => ui,
-    usePrayerCategoriesStore: () => ({ defaultPrayerTags: ref([]), isLoading: ref(false), init() {} }),
     validatePrayerTitle: (title) => title.trim() && title.length <= 200 ? true : 'Invalid title',
     validatePrayerText: (text) => text.trim().length >= 10 ? true : 'Invalid text',
     onMounted: (callback) => callback(),

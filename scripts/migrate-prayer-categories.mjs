@@ -86,7 +86,6 @@ async function applyPlan(options) {
       await collection.doc(category.id).set({
         name: category.name,
         tags: category.tags,
-        addToNewPrayers: category.addToNewPrayers,
         order: category.order,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),

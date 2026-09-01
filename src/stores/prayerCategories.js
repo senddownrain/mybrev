@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import {
   createPrayerCategory,
@@ -6,7 +6,6 @@ import {
   deletePrayerTagEverywhere,
   restoreDefaultPrayerCategories,
   subscribePrayerCategories,
-  updatePrayerCategory,
 } from '@/services/prayerCategoryService';
 import { logger } from '@/utils/logger';
 
@@ -15,12 +14,6 @@ export const usePrayerCategoriesStore = defineStore('prayerCategories', () => {
   const isLoading = ref(true);
   const error = ref(null);
   let unsubscribe = null;
-
-  const defaultPrayerTags = computed(() => [...new Set(
-    categories.value
-      .filter((category) => category.addToNewPrayers)
-      .flatMap((category) => category.tags || []),
-  )]);
 
   function init() {
     if (unsubscribe) return;
@@ -57,15 +50,6 @@ export const usePrayerCategoriesStore = defineStore('prayerCategories', () => {
     }
   }
 
-  async function setAddToNewPrayers(categoryId, enabled) {
-    try {
-      await updatePrayerCategory(categoryId, { addToNewPrayers: Boolean(enabled) });
-    } catch (actionError) {
-      error.value = actionError;
-      throw actionError;
-    }
-  }
-
   async function restoreDefaults() {
     try {
       return await restoreDefaultPrayerCategories(categories.value);
@@ -93,12 +77,10 @@ export const usePrayerCategoriesStore = defineStore('prayerCategories', () => {
     categories,
     isLoading,
     error,
-    defaultPrayerTags,
     init,
     cleanup,
     addCategory,
     removeCategory,
-    setAddToNewPrayers,
     restoreDefaults,
     removeTagEverywhere,
   };

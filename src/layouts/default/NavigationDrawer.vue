@@ -153,6 +153,7 @@ import { useAuthStore } from '@/stores/auth.js';
 import { useRoute, useRouter } from 'vue-router';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
+import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import {
   PhCross, PhBookOpenText, PhBookBookmark, PhHeart, PhBookmark,
@@ -170,15 +171,11 @@ const { selectedCategory, setSelectedCategory } = usePrayersFilters();
 prayerCategories.init();
 
 const menuCategories = computed(() => {
-  const categoriesByName = new Map();
-  prayerCategories.categories.forEach((category) => {
-    categoriesByName.set(category.name.toLocaleLowerCase('be'), category);
-  });
-  settings.personalPrayerCategories.forEach((category) => {
-    const key = category.name.toLocaleLowerCase('be');
-    if (!categoriesByName.has(key)) categoriesByName.set(key, category);
-  });
-  return [...categoriesByName.values()];
+  return buildPrayerCategoryMenu(
+    prayerCategories.categories,
+    settings.personalPrayerCategories,
+    settings.hiddenGlobalPrayerCategoryIds,
+  );
 });
 
 const isPrayersPage = computed(() =>
