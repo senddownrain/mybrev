@@ -1,134 +1,34 @@
-import {
-  collection,
-  getDocs,
-  getDocsFromCache,
-} from 'firebase/firestore';
-
+import { collection } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
-import { logger } from '@/utils/logger';
-import { retryFirestore } from '@/utils/retry';
+import { getDocsOfflineAware } from '@/utils/firestoreRead';
+import { createReadSession } from '@/utils/contentCache';
+import { publicContentCache, publicContentKey } from '@/utils/publicContentCache';
 
-const INVITATORIUM_COLLECTION = 'invitatoriums';
-const COMPLETORIUM_COLLECTION = 'completoriums';
-
-let invitatoriumsCache = null;
-let completoriumsCache = null;
-let invitatoriumsRequest = null;
-let completoriumsRequest = null;
-let invitatoriumsRefreshStarted = false;
-let completoriumsRefreshStarted = false;
-
-function snapshotItems(snapshot) {
-  return snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
-}
-
-async function readCachedCollection(collectionName) {
-  try {
-    const snapshot = await getDocsFromCache(collection(db, collectionName));
-    return snapshot.empty ? null : snapshotItems(snapshot);
-  } catch {
-    logger.log(`[staticLiturgicalService] ${collectionName} is not in persistent cache yet`);
-    return null;
+/** Cache only a confirmed complete public collection, never a partial SDK query. */
+export async function getStaticCollection(collectionName, options = {}) {
+  if (!['invitatoriums', 'completoriums'].includes(collectionName)) {
+    throw new Error('Unsupported public static collection');
   }
+  const loader = async () => {
+    const session = createReadSession();
+    const snapshot = await getDocsOfflineAware(collection(db, collectionName), session);
+    return { data: snapshot.docs.map((item) => ({ id: item.id, ...item.data() })), complete: session.complete };
+  };
+  const entry = options.bypassCache
+    ? await loader()
+    : await publicContentCache.read(publicContentKey('static', collectionName), loader, options);
+  if (options.requireFresh && !entry.complete) throw new Error('Не атрымалася абнавіць агульныя тэксты.');
+  return entry.data;
 }
 
-async function readServerCollection(collectionName) {
-  const snapshot = await retryFirestore(() => getDocs(collection(db, collectionName)));
-  return snapshotItems(snapshot);
-}
+export const getInvitatoriums = (options) => getStaticCollection('invitatoriums', options);
+export const getCompletoriums = (options) => getStaticCollection('completoriums', options);
 
-function refreshInBackground(collectionName, assign) {
-  readServerCollection(collectionName)
-    .then((items) => {
-      assign(items);
-      logger.log(`[staticLiturgicalService] refreshed ${collectionName}: ${items.length}`);
-    })
-    .catch((error) => {
-      logger.error(`[staticLiturgicalService] failed to refresh ${collectionName}:`, error);
-    });
-}
-
-async function loadCacheFirst({
-  collectionName,
-  getMemoryCache,
-  assignMemoryCache,
-  getRequest,
-  assignRequest,
-  hasRefreshStarted,
-  markRefreshStarted,
-}) {
-  const memoryCache = getMemoryCache();
-  if (memoryCache) return memoryCache;
-
-  const activeRequest = getRequest();
-  if (activeRequest) return activeRequest;
-
-  const request = (async () => {
-    const cachedItems = await readCachedCollection(collectionName);
-    if (cachedItems) {
-      assignMemoryCache(cachedItems);
-      if (!hasRefreshStarted()) {
-        markRefreshStarted();
-        refreshInBackground(collectionName, assignMemoryCache);
-      }
-      return cachedItems;
-    }
-
-    const serverItems = await readServerCollection(collectionName);
-    assignMemoryCache(serverItems);
-    return serverItems;
-  })();
-
-  assignRequest(request);
-  try {
-    return await request;
-  } finally {
-    assignRequest(null);
-  }
-}
-
-/** Load the complete, small invitatorium collection into memory. */
-export function getInvitatoriums() {
-  return loadCacheFirst({
-    collectionName: INVITATORIUM_COLLECTION,
-    getMemoryCache: () => invitatoriumsCache,
-    assignMemoryCache: (items) => { invitatoriumsCache = items; },
-    getRequest: () => invitatoriumsRequest,
-    assignRequest: (request) => { invitatoriumsRequest = request; },
-    hasRefreshStarted: () => invitatoriumsRefreshStarted,
-    markRefreshStarted: () => { invitatoriumsRefreshStarted = true; },
-  });
-}
-
-/** Load the complete, small compline collection into memory. */
-export function getCompletoriums() {
-  return loadCacheFirst({
-    collectionName: COMPLETORIUM_COLLECTION,
-    getMemoryCache: () => completoriumsCache,
-    assignMemoryCache: (items) => { completoriumsCache = items; },
-    getRequest: () => completoriumsRequest,
-    assignRequest: (request) => { completoriumsRequest = request; },
-    hasRefreshStarted: () => completoriumsRefreshStarted,
-    markRefreshStarted: () => { completoriumsRefreshStarted = true; },
-  });
-}
-
-export async function getCompletoriumById(id) {
-  const items = await getCompletoriums();
+export async function getCompletoriumById(id, options) {
+  const items = await getCompletoriums(options);
   return items.find((item) => item.id === id) || null;
 }
 
-/** Warm both static collections without blocking the caller's UI. */
 export async function warmupStaticLiturgicalCollections() {
-  const results = await Promise.allSettled([
-    getInvitatoriums(),
-    getCompletoriums(),
-  ]);
-
-  results.forEach((result, index) => {
-    if (result.status === 'rejected') {
-      const collectionName = index === 0 ? INVITATORIUM_COLLECTION : COMPLETORIUM_COLLECTION;
-      logger.error(`[staticLiturgicalService] warmup failed for ${collectionName}:`, result.reason);
-    }
-  });
+  return Promise.allSettled([getInvitatoriums(), getCompletoriums()]);
 }

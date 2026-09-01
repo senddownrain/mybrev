@@ -58,9 +58,9 @@ function fixedSubtitle(day, count) {
   return chunks.length ? chunks.join(' · ') : 'Літургічны дзень';
 }
 
-export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []) {
+export async function fetchContentForDate(mDate, context, dynamicFeastCodes = [], session) {
   logger.log(`[liturgicalContentService] Fetching ${mDate.format('YYYY-MM-DD')}`);
-  const daysResult = await fetchDaysForDate(mDate, context, dynamicFeastCodes);
+  const daysResult = await fetchDaysForDate(mDate, context, dynamicFeastCodes, session);
   const allDays = [
     ...daysResult.periodDays,
     ...daysResult.fixedDateDays,

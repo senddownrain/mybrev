@@ -28,13 +28,6 @@ function feastCodeVariants(code) {
   return canonical ? [canonical, canonical.replace(/^feast-/, '')] : [];
 }
 
-async function queryDocs(q) {
-  const snapshot = await getDocsOfflineAware(q);
-  return snapshot.docs
-    .map((d) => ({ id: d.id, ...d.data() }))
-    .filter(hasReadingDocumentContent);
-}
-
 /**
  * Fetch structured readings for a liturgical date.
  *
@@ -46,6 +39,10 @@ async function queryDocs(q) {
  * @returns {Promise<Object[]>}
  */
 export async function getReadingsForDate(mDate, context, dynamicFeastCodes = [], options = {}) {
+  async function queryDocs(q) {
+    const snapshot = await getDocsOfflineAware(q, options.readSession);
+    return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).filter(hasReadingDocumentContent);
+  }
   const { periodType, periodWeek, dayOfWeek, cycle, sundayCycle = cycle } = context;
   const selectVariants = (documents) => selectReadingLectionaryVariants(documents, { cycle, sundayCycle });
   const dateStr = ddmm(mDate);

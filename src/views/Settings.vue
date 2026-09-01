@@ -64,6 +64,15 @@
       <button type="button" class="add-category-button" @click="showAddCategoryDialog = true"><PhPlus :size="19" weight="bold" />Дадаць катэгорыю</button>
     </section>
 
+    <section class="settings-section" aria-labelledby="saved-content-title">
+      <div class="section-heading">
+        <span class="section-icon"><PhFolders :size="22" /></span>
+        <div><h2 id="saved-content-title">Захаваныя тэксты</h2><p>Адкрываюцца з прылады без паўторнай загрузкі</p></div>
+      </div>
+      <p class="cache-description">Для рэдкіх выпраўленняў можна абнавіць ужо захаваныя дні, чытанні і малітвы. Патрэбны інтэрнэт. Пры памылцы захаваная копія не выдаляецца.</p>
+      <v-btn class="cache-refresh-button" variant="tonal" color="primary" :loading="refreshingContent" :disabled="refreshingContent" @click="refreshContent">Абнавіць захаваныя тэксты</v-btn>
+      <p v-if="refreshStatus" class="cache-description" role="status" aria-live="polite">{{ refreshStatus }}</p>
+    </section>
     <AddCategoryDialog v-model="showAddCategoryDialog" @category-added="showAddCategoryDialog = false" />
   </v-container>
 </template>
@@ -80,11 +89,29 @@ const settings = useSettingsStore();
 const { notifySuccess } = useNotifier();
 const showAddCategoryDialog = ref(false);
 const fontOptions = READER_FONT_OPTIONS;
+const refreshingContent = ref(false);
+const refreshStatus = ref('');
+async function refreshContent() {
+  if (refreshingContent.value) return;
+  refreshingContent.value = true;
+  refreshStatus.value = '';
+  try {
+    const { refreshSavedContent } = await import('@/utils/refreshSavedContent');
+    const { refreshed, failed } = await refreshSavedContent();
+    refreshStatus.value = failed
+      ? `Абноўлена: ${refreshed}. Не ўдалося абнавіць: ${failed}. Папярэднія копіі захаваныя; можна паўтарыць.`
+      : refreshed ? 'Захаваныя тэксты абноўлены. Адкрыйце патрэбны дзень або малітву зноў.' : 'Пакуль няма захаваных тэкстаў. Яны захаваюцца пры адкрыцці.';
+  } catch (error) {
+    refreshStatus.value = error.message || 'Не атрымалася абнавіць тэксты. Захаваныя копіі засталіся даступнымі.';
+  } finally { refreshingContent.value = false; }
+}
 function removeCategory(index) { settings.removeCategory(index); notifySuccess('Катэгорыя выдалена'); }
 </script>
 
 <style scoped>
 .settings-page { width: min(100%, 780px); padding: 10px 18px 48px; }
+.cache-description { margin: 0 20px 16px; color: var(--nav-muted); font-size: .85rem; line-height: 1.5; }
+.cache-refresh-button { margin: 0 20px 20px; max-width: calc(100% - 40px); }
 .settings-hero { padding: 8px 4px 20px; }
 .settings-eyebrow, .control-label, .text-preview > span { color: var(--nav-muted); font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
 .settings-eyebrow { color: var(--chrome-accent); }

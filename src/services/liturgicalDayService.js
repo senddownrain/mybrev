@@ -48,18 +48,18 @@ function snapshotToDocs(snapshot) {
   return snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
 }
 
-async function queryDocs(q) {
-  return snapshotToDocs(await getDocsOfflineAware(q));
+async function queryDocs(q, session) {
+  return snapshotToDocs(await getDocsOfflineAware(q, session));
 }
 
-async function queryAll(queries) {
-  const results = await Promise.all(queries.map(queryDocs));
+async function queryAll(queries, session) {
+  const results = await Promise.all(queries.map((q) => queryDocs(q, session)));
   const merged = new Map();
   results.flat().forEach((item) => merged.set(item.id, item));
   return [...merged.values()];
 }
 
-async function withPeriodPsalterFallback(day, periodType, periodWeekNumber, dayOfWeek) {
+async function withPeriodPsalterFallback(day, periodType, periodWeekNumber, dayOfWeek, session) {
   const resolved = resolveDayAgainstPeriod(day, null);
   if (!resolved || periodType === 'christmas') return resolved;
   if (periodType !== 'advent' && !hasMissingDaytimeFields(resolved)) return resolved;
@@ -69,7 +69,7 @@ async function withPeriodPsalterFallback(day, periodType, periodWeekNumber, dayO
     : getOrdinaryPsalterDayDocumentId(periodWeekNumber, dayOfWeek);
   if (!fallbackId || fallbackId === resolved.id) return resolved;
   try {
-    const snapshot = await getDocOfflineAware(doc(getDaysCollection(), fallbackId));
+    const snapshot = await getDocOfflineAware(doc(getDaysCollection(), fallbackId), session);
     if (!snapshot.exists()) return resolved;
     const psalterDay = { id: snapshot.id, ...snapshot.data() };
     return periodType === 'advent'
@@ -81,7 +81,7 @@ async function withPeriodPsalterFallback(day, periodType, periodWeekNumber, dayO
   }
 }
 
-export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
+export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek, session) {
   // Prefer the canonical document. Besides being cheaper than two compound
   // queries, this can read a day that is already present in IndexedDB while
   // Firestore is temporarily unavailable or its quota is exhausted.
@@ -90,11 +90,11 @@ export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
   let canonicalDay = null;
   if (canonicalId) {
     try {
-      const snapshot = await getDocOfflineAware(doc(getDaysCollection(), canonicalId));
+      const snapshot = await getDocOfflineAware(doc(getDaysCollection(), canonicalId), session);
       if (snapshot.exists()) {
         canonicalDay = { id: snapshot.id, ...snapshot.data() };
         return withPeriodPsalterFallback(
-          canonicalDay, periodType, periodWeekNumber, dayOfWeek,
+          canonicalDay, periodType, periodWeekNumber, dayOfWeek, session,
         );
       }
     } catch (error) {
@@ -113,18 +113,18 @@ export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
         where('_dayOfWeek', '==', Number(dayOfWeek)),
         where('_periodWeekNumber', '==', Number(periodWeekNumber)),
       ),
-    ]);
+    ], session);
   } catch (error) {
     queryError = error;
   }
   if (variants[0]) {
     return withPeriodPsalterFallback(
-      variants[0], periodType, periodWeekNumber, dayOfWeek,
+      variants[0], periodType, periodWeekNumber, dayOfWeek, session,
     );
   }
   if (canonicalDay) {
     return withPeriodPsalterFallback(
-      canonicalDay, periodType, periodWeekNumber, dayOfWeek,
+      canonicalDay, periodType, periodWeekNumber, dayOfWeek, session,
     );
   }
   if (canonicalError) throw canonicalError;
@@ -132,23 +132,23 @@ export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
   return null;
 }
 
-export async function getAllFeastDays() {
+export async function getAllFeastDays(session) {
   logger.log(`[liturgicalDayService] Loading ${LITURGICAL_DAYS_COLLECTION}`);
-  const snapshot = await getDocsOfflineAware(getDaysCollection());
+  const snapshot = await getDocsOfflineAware(getDaysCollection(), session);
   return snapshotToDocs(snapshot)
     .filter((item) => (item._feast || item._rank || item._date) && !isSeasonalDateDocumentId(item.id))
     .map((item) => resolveDayAgainstPeriod(item, null));
 }
 
-async function getSeasonalException(mDate, periodType) {
+async function getSeasonalException(mDate, periodType, session) {
   const id = getSeasonalDateExceptionId(mDate, periodType);
   if (!id) return null;
-  const snapshot = await getDocOfflineAware(doc(db, LITURGICAL_DAYS_COLLECTION, id));
+  const snapshot = await getDocOfflineAware(doc(db, LITURGICAL_DAYS_COLLECTION, id), session);
   return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
 }
 
-async function getOfficeForDead() {
-  const snapshot = await getDocOfflineAware(doc(db, LITURGICAL_DAYS_COLLECTION, OFFICE_FOR_DEAD_ID));
+async function getOfficeForDead(session) {
+  const snapshot = await getDocOfflineAware(doc(db, LITURGICAL_DAYS_COLLECTION, OFFICE_FOR_DEAD_ID), session);
   return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
 }
 
@@ -160,14 +160,14 @@ function dynamicFeastVariants(code) {
 const normalizedFeastCode = (code) => String(code || '').replace(/^feast-/, '');
 
 /** Fetch and resolve all day variants for a calendar date. */
-export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = []) {
+export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = [], session) {
   const hasPeriod = context.periodType && context.periodWeek !== undefined && context.dayOfWeek;
   const exclusiveFeastCode = dynamicFeastCodes
     .map(normalizedFeastCode)
     .find((code) => code === 'holyfamily' || code === 'buptismofthelord') || null;
   const exclusiveFixedDate = isChristmasDateExceptionExclusion(mDate);
   const periodPromise = hasPeriod
-    ? findDayByPeriod(context.periodType, context.periodWeek, context.dayOfWeek)
+    ? findDayByPeriod(context.periodType, context.periodWeek, context.dayOfWeek, session)
       .then(async (day) => {
         if (day || context.periodType !== 'christmas') return day;
         const psalterWeek = calculatePsalterWeek({
@@ -176,22 +176,22 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = []) {
           periodWeek: context.periodWeek,
         });
         return psalterWeek > 0
-          ? findDayByPeriod('advent', psalterWeek, context.dayOfWeek)
+          ? findDayByPeriod('advent', psalterWeek, context.dayOfWeek, session)
           : null;
       })
     : Promise.resolve(null);
   const fixedDateVariants = [...new Set([mDate.format('DD.MM'), mDate.format('D.M')])];
   const fixedPromise = exclusiveFeastCode
     ? Promise.resolve([])
-    : queryAll(fixedDateVariants.map(getDaysByFixedDateQuery));
+    : queryAll(fixedDateVariants.map(getDaysByFixedDateQuery), session);
   const seasonalPromise = exclusiveFeastCode
     ? Promise.resolve(null)
     : (context.periodType === 'advent' || context.periodType === 'christmas'
-      ? getSeasonalException(mDate, context.periodType)
+      ? getSeasonalException(mDate, context.periodType, session)
       : Promise.resolve(null));
-  const officeForDeadPromise = getOfficeForDead();
+  const officeForDeadPromise = getOfficeForDead(session);
   const dynamicPromises = dynamicFeastCodes.map(async (code) => {
-    const docs = await queryAll(dynamicFeastVariants(code).map(getDaysByFeastQuery));
+    const docs = await queryAll(dynamicFeastVariants(code).map(getDaysByFeastQuery), session);
     return [code, docs];
   });
 

@@ -4,6 +4,8 @@ import { collection, query, where, getFirestore } from 'firebase/firestore';
 import moment from '@/utils/moment-be';
 import { logger } from '@/utils/logger';
 import { getDocsOfflineAware } from '@/utils/firestoreRead';
+import { publicContentCache, publicContentKey } from '@/utils/publicContentCache';
+import { createReadSession } from '@/utils/contentCache';
 import {
     calculateBaptismOfLordDate,
     calculateHolyFamilyDate,
@@ -46,7 +48,6 @@ export const useCalendarStore = defineStore('calendar', () => {
 
     const yearOptionsCache = ref({});
     const dynamicDatesCache = ref({});
-    const yearOptionsRequests = new Map();
     const dynamicDatesRequests = new Map();
 
     /**
@@ -56,36 +57,19 @@ export const useCalendarStore = defineStore('calendar', () => {
      * @param {number|string} year - The calendar year to fetch options for
      * @returns {Promise<YearOptions|null>} Year options object, or null if not found in Firestore
      */
-    async function getYearOptions(year) {
-        if (yearOptionsCache.value[year]) {
-            return yearOptionsCache.value[year];
-        }
-
-        if (yearOptionsRequests.has(year)) return yearOptionsRequests.get(year);
-
-        const request = (async () => {
-            logger.log(`[CalendarStore] Fetching options for year ${year} from Firestore...`);
+    async function getYearOptions(year, session) {
+        const entry = await publicContentCache.read(publicContentKey('year', Number(year)), async () => {
+            const readSession = createReadSession();
             const q = query(collection(db, 'yearOptions'), where('year', '==', Number(year)));
-
-            const querySnapshot = await getDocsOfflineAware(q);
-
-            if (querySnapshot.empty) {
-                logger.error(`[CalendarStore] Options for year ${year} not found!`);
-                return null;
-            }
-
-            const options = querySnapshot.docs[0].data();
-            yearOptionsCache.value[year] = options;
-            logger.log(`[CalendarStore] Options for year ${year} loaded successfully.`);
-            return options;
-        })();
-
-        yearOptionsRequests.set(year, request);
-        try {
-            return await request;
-        } finally {
-            yearOptionsRequests.delete(year);
+            const snapshot = await getDocsOfflineAware(q, readSession);
+            return { data: snapshot.empty ? null : snapshot.docs[0].data(), complete: readSession.complete };
+        }, { fresh: Boolean(session) });
+        if (session && !entry.complete) session.complete = false;
+        if (JSON.stringify(yearOptionsCache.value[year]) !== JSON.stringify(entry.data)) {
+            delete dynamicDatesCache.value[year];
         }
+        yearOptionsCache.value[year] = entry.data;
+        return entry.data;
     }
 
     /**
@@ -97,7 +81,8 @@ export const useCalendarStore = defineStore('calendar', () => {
      * @returns {Promise<DynamicDates|{}>} Object mapping feast keys to moment date objects,
      *   or an empty object if year options are unavailable
      */
-    async function getDynamicDates(year) {
+    async function getDynamicDates(year, session) {
+    await getYearOptions(year, session);
     if (dynamicDatesCache.value[year]) {
         return dynamicDatesCache.value[year];
     }
@@ -108,7 +93,6 @@ export const useCalendarStore = defineStore('calendar', () => {
 
     logger.log(`[CalendarStore] Computing dynamic dates for year ${year}...`);
 
-    await getYearOptions(year);
     const opts = yearOptionsCache.value[year];
     if (!opts) {
         logger.error(`[CalendarStore] Failed to get options for year ${year}. Date computation aborted.`);
@@ -165,10 +149,12 @@ export const useCalendarStore = defineStore('calendar', () => {
      *
      * @returns {Promise<number[]>} Sorted array of available years, or an empty array on error
      */
-    async function getAvailableYears() {
+    async function getAvailableYears(options = {}) {
         try {
+            const entry = await publicContentCache.read(publicContentKey('years'), async () => {
+            const session = createReadSession();
             const q = query(collection(db, 'yearOptions'));
-            const snapshot = await getDocsOfflineAware(q);
+            const snapshot = await getDocsOfflineAware(q, session);
             const years = [];
             snapshot.forEach(doc => {
                 const data = doc.data();
@@ -176,8 +162,12 @@ export const useCalendarStore = defineStore('calendar', () => {
                     years.push(data.year);
                 }
             });
-            return years.sort((a, b) => b - a); // Sort descending (newest first)
+            return { data: years.sort((a, b) => b - a), complete: session.complete };
+            }, options);
+            if (options.requireFresh && !entry.complete) throw new Error('Не атрымалася абнавіць спіс гадоў.');
+            return entry.data;
         } catch (error) {
+            if (options.requireFresh) throw error;
             logger.error('[CalendarStore] Error fetching available years list:', error);
             return [];
         }

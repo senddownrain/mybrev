@@ -11,6 +11,9 @@ import {
 } from 'firebase/firestore';
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
+import { getDocsOfflineAware } from '@/utils/firestoreRead';
+import { createReadSession } from '@/utils/contentCache';
+import { publicContentCache, publicContentKey } from '@/utils/publicContentCache';
 
 const PRAYERS_COLLECTION = 'prayers';
 
@@ -26,6 +29,17 @@ export function getPrayersQuery() {
     // Fallback: если нет индекса, возвращаем запрос без сортировки
     return query(getPrayersCollection());
   }
+}
+
+/** Public reading mode. Editors keep their real-time subscription. */
+export async function getSavedPrayers(options = {}) {
+  const entry = await publicContentCache.read(publicContentKey('prayers'), async () => {
+    const session = createReadSession();
+    const snapshot = await getDocsOfflineAware(getPrayersQuery(), session);
+    return { data: snapshot.docs.map((item) => ({ id: item.id, ...item.data() })), complete: session.complete };
+  }, options);
+  if (options.requireFresh && !entry.complete) throw new Error('Не атрымалася абнавіць малітвы. Захаваная копія засталася даступнай.');
+  return entry.data;
 }
 
 export async function addPrayer(data) {

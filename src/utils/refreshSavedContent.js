@@ -1,0 +1,44 @@
+import { publicContentCache, isContentOnline, requestContentRefresh } from './publicContentCache.js';
+import { createReadSession } from './contentCache.js';
+
+/** Explicit user action. Refresh only previously saved resources, never a full DB audit. */
+export async function refreshSavedContent() {
+  if (!isContentOnline()) throw new Error('Для абнаўлення патрэбны інтэрнэт. Захаваныя тэксты даступныя без сеткі.');
+  const keys = await publicContentCache.keys();
+  requestContentRefresh();
+  const [{ useLiturgicalStore }, { useCalendarStore }, { getStaticCollection }, { getSavedPrayers }] = await Promise.all([
+    import('../stores/liturgical.js'), import('../stores/calendar.js'),
+    import('../services/staticLiturgicalService.js'), import('../services/prayerService.js'),
+  ]);
+  const liturgical = useLiturgicalStore();
+  const calendar = useCalendarStore();
+  const options = { fresh: true, requireFresh: true };
+  let refreshed = 0;
+  let failed = 0;
+  // Small batches avoid a burst of reads. Failed entries are retained as stale.
+  for (let index = 0; index < keys.length; index += 2) {
+    await Promise.all(keys.slice(index, index + 2).map(async (key) => {
+      try {
+        const [type, value, dayId, includeAlternatives] = JSON.parse(key);
+        switch (type) {
+          case 'content': await liturgical.fetchContentByDate(value, options); break;
+          case 'days': await liturgical.fetchDaysByDate(value, options); break;
+          case 'readings': await liturgical.fetchReadingsByDate(value, { ...options, dayId, includeAlternatives }); break;
+          case 'feasts': await liturgical.fetchAllFeasts(value, options); break;
+          case 'static': await getStaticCollection(value, options); break;
+          case 'prayers': await getSavedPrayers(options); break;
+          case 'year': {
+            const session = createReadSession();
+            await calendar.getYearOptions(value, session);
+            if (!session.complete) throw new Error('Calendar refresh incomplete');
+            break;
+          }
+          case 'years': await calendar.getAvailableYears(options); break;
+          default: return;
+        }
+        refreshed += 1;
+      } catch { failed += 1; }
+    }));
+  }
+  return { refreshed, failed };
+}

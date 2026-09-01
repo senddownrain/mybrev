@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "icons:generate": "node scripts/generate-mdi-subset.mjs",
+    "content:version:bump": "node scripts/bump-content-revision.mjs",
     "predev": "npm run icons:generate",
     "dev": "node --no-deprecation ./node_modules/vite/bin/vite.js",
     "prebuild": "npm run icons:generate",

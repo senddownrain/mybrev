@@ -22,7 +22,16 @@ export function useReadings() {
     const mDate = moment(date).startOf('day');
     logger.log(`[useReadings] loading ${mDate.format('YYYY-MM-DD')}`);
 
-    const cached = liturgicalStore.getCachedReadings(date, options);
+    let cached = liturgicalStore.getCachedReadings(date, options);
+    if (!cached) {
+      const cacheWaitTimer = setTimeout(() => {
+        if (sequence === loadSequence) isLoading.value = true;
+      }, 100);
+      await liturgicalStore.primeReadings(date, options);
+      clearTimeout(cacheWaitTimer);
+      if (sequence !== loadSequence) return null;
+      cached = liturgicalStore.getCachedReadings(date, options);
+    }
     if (cached) {
       items.value = cached.items;
       context.value = cached.context;

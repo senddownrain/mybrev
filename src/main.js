@@ -2,12 +2,15 @@ import App from './App.vue'
 import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 import './styles/main.scss'
+import { primeContentCache } from '@/utils/primeContentCache'
 
 const app = createApp(App)
 
 registerPlugins(app)
 
-app.mount('#app')
+// Restore only the initial screen's local records before creating its loading
+// state. No network is allowed here; unavailable storage falls back gracefully.
+primeContentCache().catch(error => console.warn('[main] Local cache unavailable:', error.message)).finally(() => app.mount('#app'))
 
 function runAfterLoadAndIdle(task, { delay = 0, idleTimeout = 2000 } = {}) {
   const schedule = () => {

@@ -1,388 +1,131 @@
-/**
- * Orchestration store for liturgical reading scenarios.
- *
- * Canonical flow:  view/component → composable → this store → service → Firestore
- *
- * Covers the runtime scenarios:
- *   1. fetchContentByDate  — assembled liturgical-day options
- *   2. fetchDaysByDate     — only liturgical hours / days
- *   3. fetchReadingsByDate — Mass readings in liturgical context
- */
+/** Persistent, versioned public content. Auth and editor document reads bypass it. */
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import moment from '@/utils/moment-be';
-import { logger } from '@/utils/logger';
-
 import { useCalendarStore } from '@/stores/calendar';
-
 import { computeLiturgicalContext, getDynamicFeastCodesForDate } from '@/utils/liturgicalCalendar';
 import { getLiturgicalYear, getCycleForDate } from '@/utils/liturgicalCycle';
 import { FEAST_NAME_MAP } from '@/constants/liturgicalFeastsMap';
-
-import { fetchContentForDate }                     from '@/services/liturgicalContentService';
+import { fetchContentForDate } from '@/services/liturgicalContentService';
 import { fetchDaysForDate, findDayByPeriod, getAllFeastDays } from '@/services/liturgicalDayService';
-import { getReadingsForDate }                       from '@/services/readingsService';
+import { getReadingsForDate } from '@/services/readingsService';
+import { createReadSession } from '@/utils/contentCache';
+import {
+  publicContentCache, publicContentKey, contentKey, readingsKey, requestContentRefresh,
+} from '@/utils/publicContentCache';
 
-/** Freshness windows. Expired entries stay readable and refresh in background. */
-const TTL = {
-  CONTENT:  24 * 60 * 60 * 1000, // 24 hours
-  DAYS:     24 * 60 * 60 * 1000, // 24 hours
-  READINGS: 24 * 60 * 60 * 1000, // 24 hours
-  FEASTS:   24 * 60 * 60 * 1000, // 24 hours
-};
-
-// Increment when assembled day semantics change. This prevents an in-memory
-// result produced before a `from-day` fix from surviving HMR for another day.
-const CONTENT_RESOLUTION_VERSION = 5;
-
-/**
- * Check whether a cache entry is still valid.
- * @param {{ data: unknown, cachedAt: number } | undefined} entry
- * @param {number} ttl - milliseconds
- * @returns {boolean}
- */
-function _isCacheValid(entry, ttl) {
-  if (!entry) return false;
-  return Date.now() - entry.cachedAt < ttl;
-}
-
-function _readingsCacheKey(date, options = {}) {
-  const resultMode = options.includeAlternatives ? 'alternatives' : 'active';
-  return `${moment(date).startOf('day').format('YYYY-MM-DD')}|${options.dayId || '*'}|${resultMode}`;
-}
-
-function _runOnce(requests, key, loader) {
-  const activeRequest = requests.get(key);
-  if (activeRequest) {
-    logger.log(`[liturgicalStore] joining active request: ${key}`);
-    return activeRequest;
-  }
-
-  const request = loader().finally(() => requests.delete(key));
-  requests.set(key, request);
-  return request;
-}
-
-function _canRefreshFromNetwork() {
-  return typeof navigator === 'undefined' || navigator.onLine !== false;
-}
+const dateKey = (date) => moment(date).startOf('day').format('YYYY-MM-DD');
 
 export const useLiturgicalStore = defineStore('liturgical', () => {
   const calendarStore = useCalendarStore();
-
-  // ----- per-date caches (each entry: { data, cachedAt }) -----
-  /** @type {import('vue').Ref<Map<string, { data: Object, cachedAt: number }>>} */
-  const contentCache  = ref(new Map());
-  /** @type {import('vue').Ref<Map<string, { data: Object, cachedAt: number }>>} */
-  const daysCache     = ref(new Map());
-  /** @type {import('vue').Ref<Map<string, { data: Object[], cachedAt: number }>>} */
-  const feastsCache        = ref(new Map());
-  /** @type {import('vue').Ref<Map<string, { data: Object, cachedAt: number }>>} */
-  const readingsCache = ref(new Map());
-
-  // In-flight requests are intentionally non-reactive. Background warmup and
-  // a screen opening the same date share one Firestore round-trip.
-  const contentRequests = new Map();
-  const readingsRequests = new Map();
-
   const isLoading = ref(false);
-  const error     = ref(null);
+  const error = ref(null);
+  let pending = 0;
 
-  // ---------------------------------------------------------------------------
-  // Private helper — load calendar options and compute context for a date
-  // ---------------------------------------------------------------------------
-  async function _resolveContext(mDate) {
+  async function resolveContext(mDate, session) {
     const year = mDate.year();
-    await calendarStore.getYearOptions(year);
-    await calendarStore.getYearOptions(year + 1);
-    await calendarStore.getDynamicDates(year);
-
-    const opts         = calendarStore.optionsForYear(year).value;
-    const nextYearOpts = calendarStore.optionsForYear(year + 1).value;
+    await Promise.all([
+      calendarStore.getYearOptions(year, session),
+      calendarStore.getYearOptions(year + 1, session),
+    ]);
+    await calendarStore.getDynamicDates(year, session);
+    const opts = calendarStore.optionsForYear(year).value;
+    const nextOpts = calendarStore.optionsForYear(year + 1).value;
     const dynamicDates = calendarStore.dynamicDatesForYear(year).value || {};
-
-    const context          = computeLiturgicalContext(mDate, opts, nextYearOpts, dynamicDates);
-    const dynamicFeastCodes = getDynamicFeastCodesForDate(mDate, dynamicDates);
-
-    return { opts, nextYearOpts, dynamicDates, context, dynamicFeastCodes };
+    return {
+      context: computeLiturgicalContext(mDate, opts, nextOpts, dynamicDates),
+      dynamicFeastCodes: getDynamicFeastCodesForDate(mDate, dynamicDates),
+    };
   }
 
-  // ---------------------------------------------------------------------------
-  // Public actions
-  // ---------------------------------------------------------------------------
-
-  /**
-   * Fetch assembled liturgical-day content for a date.
-   * Result is cached by date key.
-   *
-   * @param {Date|moment.Moment|string} date
-   * @returns {Promise<{ context, itemsDays, dayOptions }>}
-   */
-  async function fetchContentByDate(date) {
-    const mDate = moment(date).startOf('day');
-    const key   = mDate.format('YYYY-MM-DD');
-
-    const cachedContent = contentCache.value.get(key);
-    const isCompatibleContent = cachedContent?.resolutionVersion === CONTENT_RESOLUTION_VERSION;
-    if (isCompatibleContent && _isCacheValid(cachedContent, TTL.CONTENT)) {
-      logger.log(`[liturgicalStore] content cache hit: ${key}`);
-      return cachedContent.data;
-    }
-
-    const loadFreshContent = () => _runOnce(contentRequests, `content:${key}`, async () => {
-      isLoading.value = true;
-      error.value     = null;
-
+  async function readResource(key, loader, options = {}) {
+    const entry = await publicContentCache.read(key, async () => {
+      const blocking = publicContentCache.peek(key) === undefined;
+      if (blocking) { pending += 1; isLoading.value = true; error.value = null; }
+      const session = createReadSession();
       try {
-        const { context, dynamicFeastCodes } = await _resolveContext(mDate);
-        const result = await fetchContentForDate(mDate, context, dynamicFeastCodes);
-        contentCache.value.set(key, {
-          data: result,
-          cachedAt: Date.now(),
-          resolutionVersion: CONTENT_RESOLUTION_VERSION,
-        });
-        logger.log(`[liturgicalStore] content loaded for ${key}`);
-        return result;
+        const data = await loader(session);
+        return { data, complete: session.complete };
       } catch (err) {
-        logger.error(`[liturgicalStore] fetchContentByDate error (${key}):`, err);
-        error.value = err;
+        if (blocking) error.value = err;
         throw err;
       } finally {
-        isLoading.value = false;
+        if (blocking) { pending -= 1; isLoading.value = pending > 0; }
       }
-    });
-
-    if (cachedContent && isCompatibleContent) {
-      logger.log(`[liturgicalStore] stale content cache hit: ${key}`);
-      if (_canRefreshFromNetwork()) {
-        loadFreshContent().catch((err) => {
-          logger.error(`[liturgicalStore] background content refresh failed (${key}):`, err);
-        });
-      }
-      return cachedContent.data;
-    }
-
-    return loadFreshContent();
+    }, options);
+    if (options.requireFresh && !entry.complete) throw new Error('Не атрымалася атрымаць поўныя абноўленыя даныя. Захаваная копія засталася даступнай.');
+    return entry.data;
   }
 
-  /**
-   * Fetch liturgical days (hours) for a date.
-   * Result is cached by date key.
-   *
-   * @param {Date|moment.Moment|string} date
-   * @returns {Promise<{ context, items: Object[] }>}
-   */
-  async function fetchDaysByDate(date) {
+  async function fetchContentByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
-    const key   = mDate.format('YYYY-MM-DD');
+    return readResource(contentKey(dateKey(date)), async (session) => {
+      const { context, dynamicFeastCodes } = await resolveContext(mDate, session);
+      return fetchContentForDate(mDate, context, dynamicFeastCodes, session);
+    }, options);
+  }
 
-    const cachedDays = daysCache.value.get(key);
-    if (_isCacheValid(cachedDays, TTL.DAYS)) {
-      logger.log(`[liturgicalStore] days cache hit: ${key}`);
-      return cachedDays.data;
-    }
-
-    isLoading.value = true;
-    error.value     = null;
-
-    try {
-      const { context, dynamicFeastCodes } = await _resolveContext(mDate);
+  async function fetchDaysByDate(date, options = {}) {
+    const mDate = moment(date).startOf('day');
+    return readResource(publicContentKey('days', dateKey(date)), async (session) => {
+      const { context, dynamicFeastCodes } = await resolveContext(mDate, session);
       const { periodDays, fixedDateDays, dynamicDaysByFeast } = await fetchDaysForDate(
-        mDate, context, dynamicFeastCodes,
+        mDate, context, dynamicFeastCodes, session,
       );
-
-      // Deduplicate
-      const seen  = new Set();
-      const items = [
-        ...periodDays,
-        ...fixedDateDays,
-        ...Array.from(dynamicDaysByFeast.values()).flat(),
-      ].filter((d) => {
-        if (seen.has(d.id)) return false;
-        seen.add(d.id);
-        return true;
-      });
-
-      const result = { context, items };
-      daysCache.value.set(key, { data: result, cachedAt: Date.now() });
-      logger.log(`[liturgicalStore] days loaded for ${key}: ${items.length}`);
-      return result;
-    } catch (err) {
-      logger.error(`[liturgicalStore] fetchDaysByDate error (${key}):`, err);
-      error.value = err;
-      throw err;
-    } finally {
-      isLoading.value = false;
-    }
+      const all = [...periodDays, ...fixedDateDays, ...[...dynamicDaysByFeast.values()].flat()];
+      return { context, items: [...new Map(all.map((item) => [item.id, item])).values()] };
+    }, options);
   }
 
-  /**
-   * Get all feast day documents (with isDynamic / isFixed flags) for a year.
-   * Cached by year.
-   *
-   * @param {number} year
-   * @returns {Promise<Object[]>}
-   */
-  async function fetchAllFeasts(year) {
-    const cacheKey = `year_${year}`;
-    const cachedFeasts = feastsCache.value.get(cacheKey);
-    if (_isCacheValid(cachedFeasts, TTL.FEASTS)) {
-      logger.log(`[liturgicalStore] feasts cache hit: ${year}`);
-      return cachedFeasts.data;
-    }
-
-    await calendarStore.getYearOptions(year);
-    await calendarStore.getDynamicDates(year);
-    const dynamicDates = calendarStore.dynamicDatesForYear(year).value || {};
-
-    const allFeastDays = await getAllFeastDays();
-
-    const normalizedFeastCode = (value) => String(value || '').replace(/^feast-/, '');
-    const result = allFeastDays.map((feast) => {
-      const dynamicEntry = Object.entries(FEAST_NAME_MAP).find(
-        ([key, code]) => normalizedFeastCode(code) === normalizedFeastCode(feast._feast)
-          && dynamicDates[key],
-      );
-      const dynamicDate = dynamicEntry ? dynamicDates[dynamicEntry[0]] : null;
-      const isDynamic = Boolean(dynamicDate);
-      const isFixed = !isDynamic && Boolean(feast._date);
-      return {
-        ...feast,
-        isDynamic,
-        isFixed,
-        calendarDate: dynamicDate?.format('YYYY-MM-DD') || null,
-      };
-    }).filter((feast) => feast.isDynamic || feast.isFixed);
-
-    feastsCache.value.set(cacheKey, { data: result, cachedAt: Date.now() });
-    logger.log(`[liturgicalStore] feasts loaded for ${year}: ${result.length}`);
-    return result;
+  async function fetchAllFeasts(year, options = {}) {
+    return readResource(publicContentKey('feasts', Number(year)), async (session) => {
+      await calendarStore.getDynamicDates(year, session);
+      const dynamicDates = calendarStore.dynamicDatesForYear(year).value || {};
+      const allFeastDays = await getAllFeastDays(session);
+      const normalize = (value) => String(value || '').replace(/^feast-/, '');
+      return allFeastDays.map((feast) => {
+        const dynamicEntry = Object.entries(FEAST_NAME_MAP).find(([key, code]) => (
+          normalize(code) === normalize(feast._feast) && dynamicDates[key]
+        ));
+        const dynamicDate = dynamicEntry ? dynamicDates[dynamicEntry[0]] : null;
+        const isDynamic = Boolean(dynamicDate);
+        return {
+          ...feast,
+          isDynamic,
+          isFixed: !isDynamic && Boolean(feast._date),
+          calendarDate: dynamicDate?.format('YYYY-MM-DD') || null,
+        };
+      }).filter((feast) => feast.isDynamic || feast.isFixed);
+    }, options);
   }
 
-  /**
-   * Fetch structured readings from the canonical `readings` collection.
-   * Cached per date key and served stale while a refresh runs in background.
-   *
-   * @param {Date|moment.Moment|string} date
-   * @returns {Promise<{ context: Object, items: Object[] }>}
-   */
   async function fetchReadingsByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
-    const key = _readingsCacheKey(mDate, options);
-
-    const cached = readingsCache.value.get(key);
-    if (_isCacheValid(cached, TTL.READINGS)) {
-      logger.log(`[liturgicalStore] readings cache hit: ${key}`);
-      return cached.data;
-    }
-
-    const loadFreshReadings = () => _runOnce(readingsRequests, `readings:${key}`, async () => {
-      isLoading.value = true;
-      error.value     = null;
-
-      try {
-        const { context, dynamicFeastCodes } = await _resolveContext(mDate);
-        const liturgicalYear = await getLiturgicalYear(date, { useCalendarStore: true });
-        const cycle          = await getCycleForDate(date, liturgicalYear, context.dayOfWeek, { useCalendarStore: true });
-        const sundayCycle    = await getCycleForDate(date, liturgicalYear, 1, { useCalendarStore: true });
-        const fullContext    = { ...context, cycle, sundayCycle };
-
-        const items = await getReadingsForDate(mDate, fullContext, dynamicFeastCodes, options);
-
-        const result = { context: fullContext, items };
-        readingsCache.value.set(key, { data: result, cachedAt: Date.now() });
-        logger.log(`[liturgicalStore] readings loaded for ${key}: ${items.length}`);
-        return result;
-      } catch (err) {
-        logger.error(`[liturgicalStore] fetchReadingsByDate error (${key}):`, err);
-        error.value = err;
-        throw err;
-      } finally {
-        isLoading.value = false;
-      }
-    });
-
-    if (cached) {
-      logger.log(`[liturgicalStore] stale readings cache hit: ${key}`);
-      if (_canRefreshFromNetwork()) {
-        loadFreshReadings().catch((err) => {
-          logger.error(`[liturgicalStore] background readings refresh failed (${key}):`, err);
-        });
-      }
-      return cached.data;
-    }
-
-    return loadFreshReadings();
+    return readResource(readingsKey(dateKey(date), options), async (session) => {
+      const { context, dynamicFeastCodes } = await resolveContext(mDate, session);
+      // resolveContext has already restored/refreshed calendar dependencies.
+      const liturgicalYear = await getLiturgicalYear(date, { useCalendarStore: true });
+      const cycle = await getCycleForDate(date, liturgicalYear, context.dayOfWeek);
+      const sundayCycle = await getCycleForDate(date, liturgicalYear, 1);
+      const fullContext = { ...context, cycle, sundayCycle };
+      const items = await getReadingsForDate(mDate, fullContext, dynamicFeastCodes, {
+        ...options, readSession: session,
+      });
+      return { context: fullContext, items };
+    }, options);
   }
 
-  /**
-   * Find a single day document by period / week / dayOfWeek.
-   * Delegates directly to the service (no cache — used for editor/picker).
-   *
-   * @param {string} periodType
-   * @param {number} periodWeekNumber
-   * @param {number} dayOfWeek
-   * @returns {Promise<Object|null>}
-   */
-  async function fetchDayByPeriod(periodType, periodWeekNumber, dayOfWeek) {
-    return findDayByPeriod(periodType, periodWeekNumber, dayOfWeek);
-  }
-
-  /**
-   * Return cached content for a date synchronously (null if not cached yet).
-   * Used by getCachedLiturgicalContentForDate in the composable.
-   *
-   * @param {Date|moment.Moment|string} date
-   * @returns {Object|null}
-   */
-  function getCachedContent(date) {
-    const key = moment(date).startOf('day').format('YYYY-MM-DD');
-    const entry = contentCache.value.get(key);
-    return entry?.resolutionVersion === CONTENT_RESOLUTION_VERSION ? entry.data : null;
-  }
-
-  /** Return readings synchronously so date swipes never flash a loader. */
-  function getCachedReadings(date, options = {}) {
-    const key = _readingsCacheKey(date, options);
-    const entry = readingsCache.value.get(key);
-    return entry?.data || null;
-  }
-
-  /**
-   * Clear cached data.
-   * @param {string|null} dateKey - specific YYYY-MM-DD key, or null to wipe all
-   */
-  function clearCache(dateKey = null) {
-    if (dateKey) {
-      contentCache.value.delete(dateKey);
-      daysCache.value.delete(dateKey);
-      for (const key of readingsCache.value.keys()) {
-        if (key.startsWith(`${dateKey}|`)) readingsCache.value.delete(key);
-      }
-    } else {
-      contentCache.value.clear();
-      daysCache.value.clear();
-      feastsCache.value.clear();
-      readingsCache.value.clear();
-    }
-    logger.log(`[liturgicalStore] cache cleared${dateKey ? ` for ${dateKey}` : ''}`);
-  }
+  // Used by editor/picker: intentional online-first access, not immutable cache.
+  const fetchDayByPeriod = (type, week, day) => findDayByPeriod(type, week, day);
 
   return {
-    // state
-    isLoading,
-    error,
-
-    // actions
-    fetchContentByDate,
-    fetchDaysByDate,
-    fetchReadingsByDate,
-    fetchAllFeasts,
-    fetchDayByPeriod,
-
-    // sync helpers
-    getCachedContent,
-    getCachedReadings,
-    clearCache,
+    isLoading, error,
+    fetchContentByDate, fetchDaysByDate, fetchAllFeasts, fetchReadingsByDate, fetchDayByPeriod,
+    getCachedContent: (date) => publicContentCache.peek(contentKey(dateKey(date))) ?? null,
+    getCachedReadings: (date, options) => publicContentCache.peek(readingsKey(dateKey(date), options)) ?? null,
+    primeContent: (date) => publicContentCache.prime([contentKey(dateKey(date))]),
+    primeReadings: (date, options) => publicContentCache.prime([readingsKey(dateKey(date), options)]),
+    // Compatibility: invalidate instead of deleting precious offline content.
+    clearCache: requestContentRefresh,
   };
 });

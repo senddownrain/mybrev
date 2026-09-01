@@ -147,13 +147,14 @@ const route = useRoute();
 const {
   getLiturgicalContentForDate,
   getCachedLiturgicalContentForDate,
+  restoreCachedLiturgicalContentForDate,
 } = useLiturgicalContent();
 
 const { toggleCalendarDialog } = useAppBar();
 const { error: notifyError } = useNotifier();
 
 const dayOptions = ref([]);
-const loading = ref(true);      // первый экран — большой спиннер
+const loading = ref(false);     // включается только после промаха постоянного кэша
 const softLoading = ref(false); // перелистывание — полоска
 const error = ref(null);
 
@@ -217,7 +218,16 @@ const fetchItemsForDate = async (date) => {
   const key = date.format('YYYY-MM-DD');
 
   // 1. Try cache first — no spinners needed
-  const cached = getCachedLiturgicalContentForDate(date.toDate());
+  let cached = getCachedLiturgicalContentForDate(date.toDate());
+  let cacheWaitTimer;
+  if (!cached) {
+    cacheWaitTimer = setTimeout(() => {
+      if (fetchId === _currentFetchId && !dayOptions.value.length) loading.value = true;
+    }, 100);
+    cached = await restoreCachedLiturgicalContentForDate(date.toDate());
+    clearTimeout(cacheWaitTimer);
+  }
+  if (fetchId !== _currentFetchId) return;
   if (cached) {
     logger.log(`[ItemsList] Cache hit for date: ${key}`);
     dayOptions.value = Array.isArray(cached.dayOptions) ? cached.dayOptions : [];
@@ -231,8 +241,9 @@ const fetchItemsForDate = async (date) => {
   error.value = null;
 
   // 2. Decide spinner type
-  if (!dayOptions.value.length && loading.value === true) {
-    softLoading.value = false; // keep big spinner for first load
+  if (!dayOptions.value.length) {
+    loading.value = true;
+    softLoading.value = false;
   } else {
     softLoading.value = true;
     loading.value = false;

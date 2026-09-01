@@ -18,10 +18,11 @@ export function useResolvedLiturgicalDay() {
   const {
     getLiturgicalContentForDate,
     getCachedLiturgicalContentForDate,
+    restoreCachedLiturgicalContentForDate,
   } = useLiturgicalContent();
   const day = ref(null);
   const context = ref(null);
-  const pending = ref(true);
+  const pending = ref(false);
   const error = ref('');
   let sequence = 0;
 
@@ -29,7 +30,7 @@ export function useResolvedLiturgicalDay() {
     const currentSequence = ++sequence;
     const date = moment(String(route.params.day), ['YYYY-MM-DD', 'DD-MM-YYYY'], true);
     const id = String(route.params.id || '');
-    pending.value = true;
+    pending.value = false;
     error.value = '';
     day.value = null;
     context.value = null;
@@ -68,7 +69,16 @@ export function useResolvedLiturgicalDay() {
       };
     };
 
-    const cached = getCachedLiturgicalContentForDate(date.toDate());
+    let cached = getCachedLiturgicalContentForDate(date.toDate());
+    let cacheWaitTimer;
+    if (!cached) {
+      cacheWaitTimer = setTimeout(() => {
+        if (currentSequence === sequence) pending.value = true;
+      }, 100);
+      cached = await restoreCachedLiturgicalContentForDate(date.toDate());
+      clearTimeout(cacheWaitTimer);
+    }
+    if (currentSequence !== sequence) return;
     if (cached) {
       day.value = resolveDay(cached);
       if (!day.value) error.value = 'Літургічны дзень не знойдзены.';
@@ -76,6 +86,7 @@ export function useResolvedLiturgicalDay() {
       return;
     }
 
+    pending.value = true;
     try {
       const content = await getLiturgicalContentForDate(date.toDate());
       if (currentSequence !== sequence) return;

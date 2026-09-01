@@ -164,7 +164,6 @@ const router = useRouter();
 const { getLiturgicalContentForDate } = useLiturgicalContent();
 const {
   items: readings,
-  isLoading: loadingMassReadings,
   loadForDate: loadReadingsForDate,
 } = useReadings();
 const authStore = useAuthStore();
@@ -178,7 +177,6 @@ const { day: dayData, pending: loadingDay } = useResolvedLiturgicalDay();
 const dayOptions = ref([]);
 const tomorrowFirstVespers = ref(null);
 const localTomorrowFirstVespers = ref([]);
-const loadingContent = ref(true);
 const templateContainsDay = (template, id) => (
   template?.id === id || template?.dayIds?.includes(id)
 );
@@ -192,9 +190,9 @@ const selectedTemplateId = computed(() => (
     || dayId.value
 ));
 
-const loadingOra = computed(() => (
-  loadingDay.value || loadingContent.value || loadingMassReadings.value
-));
+// The selected day is the only render-blocking resource. Readings and
+// tomorrow's first Vespers enrich the screen after its saved content appears.
+const loadingOra = computed(() => loadingDay.value);
 
 const READING_THEMES = Object.freeze({
   ordinary: {
@@ -446,28 +444,32 @@ const selectTemplate = (id) => {
   router.replace({ name: 'oras', params: { day: dateParam.value, id } });
 };
 
+let contentLoadSequence = 0;
 const loadReadings = async () => {
-  try {
-    loadingContent.value = true;
-    const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
-    tomorrowFirstVespers.value = null;
-    localTomorrowFirstVespers.value = [];
-    const [result, , tomorrowContent] = await Promise.all([
-      getLiturgicalContentForDate(mDate.toDate()),
-      loadReadingsForDate(mDate.toDate(), {
-        dayId: dayId.value === 'office-for-dead' ? '' : dayId.value || '',
-      }),
-      getLiturgicalContentForDate(mDate.clone().add(1, 'day').toDate()),
-    ]);
+  const sequence = ++contentLoadSequence;
+  const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
+  tomorrowFirstVespers.value = null;
+  localTomorrowFirstVespers.value = [];
+
+  getLiturgicalContentForDate(mDate.clone().add(1, 'day').toDate()).then((tomorrowContent) => {
+    if (sequence !== contentLoadSequence) return;
     const firstVespersOptions = getTomorrowFirstVespersOptions(tomorrowContent);
     localTomorrowFirstVespers.value = firstVespersOptions.filter(isLocalFirstVespers);
     tomorrowFirstVespers.value = firstVespersOptions.find((item) => !isLocalFirstVespers(item))
       || (mDate.isoWeekday() === 6 ? findTomorrowRegularVespers(tomorrowContent) : null);
+  }).catch((error) => logger.error('[OrasList] Памылка загрузкі заўтрашняга дня:', error));
+
+  try {
+    const [result] = await Promise.all([
+      getLiturgicalContentForDate(mDate.toDate()),
+      loadReadingsForDate(mDate.toDate(), {
+        dayId: dayId.value === 'office-for-dead' ? '' : dayId.value || '',
+      }),
+    ]);
+    if (sequence !== contentLoadSequence) return;
     dayOptions.value = Array.isArray(result.dayOptions) ? result.dayOptions : [];
   } catch (e) {
     logger.error('[OrasList] Памылка пры загрузцы чытанняў:', e);
-  } finally {
-    loadingContent.value = false;
   }
 };
 

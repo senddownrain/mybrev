@@ -48,9 +48,15 @@ export function useLiturgicalContent() {
     return cached;
   }
 
+  async function restoreCachedLiturgicalContentForDate(currentDate) {
+    await liturgicalStore.primeContent(currentDate);
+    return getCachedLiturgicalContentForDate(currentDate);
+  }
+
   return {
     getLiturgicalContentForDate,
     getCachedLiturgicalContentForDate,
+    restoreCachedLiturgicalContentForDate,
     feastNameMap,
   };
 }

@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { onSnapshot } from 'firebase/firestore';
 import { logger } from '@/utils/logger';
 import { getPrayersQuery } from '@/services/prayerService';
 import * as prayerService from '@/services/prayerService';
+import { useAuthStore } from '@/stores/auth';
+import { publicContentCache, publicContentKey, requestContentRefresh } from '@/utils/publicContentCache';
 
 /**
  * @typedef {Object} Prayer
@@ -19,12 +21,14 @@ import * as prayerService from '@/services/prayerService';
  */
 
 export const usePrayersStore = defineStore('prayers', () => {
-  const prayers = ref([]);
+  const prayers = ref(publicContentCache.peek(publicContentKey('prayers')) || []);
   const allTags = ref([]);
   const isLoading = ref(true);
   const error = ref(null);
 
   let unsubscribe = null;
+  let stopAuthWatch = null;
+  let loadSequence = 0;
 
   function refreshAllTags() {
     const tagsArray = prayers.value.flatMap(prayer => prayer.tags || []);
@@ -38,7 +42,7 @@ export const usePrayersStore = defineStore('prayers', () => {
    *
    * @returns {void}
    */
-  function init() {
+  function startLiveSubscription() {
     if (unsubscribe) {
       unsubscribe();
     }
@@ -75,6 +79,41 @@ export const usePrayersStore = defineStore('prayers', () => {
     }
   }
 
+  async function loadPublicPrayers() {
+      const sequence = ++loadSequence;
+      if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+      const cached = publicContentCache.peek(publicContentKey('prayers'));
+      if (cached) { prayers.value = cached; refreshAllTags(); }
+      isLoading.value = !cached;
+      try {
+        const items = await prayerService.getSavedPrayers();
+        if (sequence !== loadSequence) return;
+        prayers.value = items;
+        refreshAllTags();
+        error.value = null;
+      } catch (err) {
+        if (sequence === loadSequence) error.value = err;
+      } finally {
+        if (sequence === loadSequence) isLoading.value = false;
+      }
+  }
+
+  function init() {
+    const authStore = useAuthStore();
+    if (stopAuthWatch) {
+      if (!authStore.isAdmin) loadPublicPrayers();
+      return;
+    }
+    stopAuthWatch = watch(() => authStore.isAdmin, (isAdmin) => {
+      if (isAdmin) {
+        loadSequence += 1;
+        startLiveSubscription();
+      } else {
+        loadPublicPrayers();
+      }
+    }, { immediate: true });
+  }
+
   /**
    * Add a new prayer document to Firestore.
    *
@@ -84,7 +123,9 @@ export const usePrayersStore = defineStore('prayers', () => {
    */
   async function addPrayerAction(data) {
     try {
-      return await prayerService.addPrayer(data);
+      const result = await prayerService.addPrayer(data);
+      requestContentRefresh();
+      return result;
     } catch (err) {
       error.value = err;
       throw err;
@@ -101,6 +142,7 @@ export const usePrayersStore = defineStore('prayers', () => {
   async function deletePrayerAction(id) {
     try {
       await prayerService.deletePrayer(id);
+      requestContentRefresh();
     } catch (err) {
       error.value = err;
       throw err;
@@ -118,6 +160,7 @@ export const usePrayersStore = defineStore('prayers', () => {
   async function updatePrayerAction(id, data) {
     try {
       await prayerService.updatePrayer(id, data);
+      requestContentRefresh();
       // Do not wait for the next Firestore snapshot before showing the saved
       // value. The listener will reconcile timestamps and remote changes later.
       prayers.value = prayers.value.map((prayer) => (
@@ -174,6 +217,8 @@ export const usePrayersStore = defineStore('prayers', () => {
    * @returns {void}
    */
   function cleanup() {
+    loadSequence += 1;
+    if (stopAuthWatch) { stopAuthWatch(); stopAuthWatch = null; }
     if (unsubscribe) {
       unsubscribe();
       unsubscribe = null;
