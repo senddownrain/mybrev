@@ -1,6 +1,7 @@
 // Импортируем утилиты из стандартных пакетов
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
+import { APP_THEME_COLORS, APP_STATUS_BAR_COLORS } from './src/constants/appearance.js'
 
 // Импортируем плагины для Vue и Vuetify
 import vue from '@vitejs/plugin-vue'
@@ -51,8 +52,8 @@ export default defineConfig({
         // These colours are used by Android before the app JavaScript starts.
         // They must stay static: the browser reads the manifest before it can
         // determine the current liturgical period or the saved user theme.
-        theme_color: '#644B72',
-        background_color: '#FFFDF9',
+        theme_color: APP_STATUS_BAR_COLORS.light,
+        background_color: APP_THEME_COLORS.light.background,
         display: 'standalone',
         orientation: 'portrait',
         lang: 'be',
@@ -204,12 +205,49 @@ export default defineConfig({
           if (id.includes('node_modules/quill') || id.includes('node_modules/@vueup/vue-quill')) {
             return 'vendor-quill';
           }
-          if (id.includes('node_modules/@codemirror') || id.includes('node_modules/codemirror')) {
+          if (
+            id.includes('node_modules/@codemirror/state') ||
+            id.includes('node_modules/@codemirror/view') ||
+            id.includes('node_modules/@codemirror/commands') ||
+            id.includes('node_modules/@codemirror/search') ||
+            id.includes('node_modules/@codemirror/autocomplete')
+          ) {
+            return 'vendor-markdown-editor-core';
+          }
+          if (id.includes('node_modules/@codemirror/lang') || id.includes('node_modules/@lezer')) {
+            return 'vendor-markdown-editor-languages';
+          }
+          if (id.includes('node_modules/codemirror')) {
             return 'vendor-markdown-editor';
           }
           // moment.js with locales (~300 kB)
           if (id.includes('node_modules/moment')) {
             return 'vendor-moment';
+          }
+          // The component library is used on the first screen, but separating it
+          // from Vue lets the browser cache the two libraries independently.
+          if (id.includes('node_modules/vuetify')) {
+            return 'vendor-vuetify';
+          }
+          // Firebase services are sizeable and have different loading paths:
+          // authentication is deferred, while Firestore is used by the public app.
+          if (id.includes('node_modules/@firebase/auth') || id.includes('node_modules/firebase/auth')) {
+            return 'vendor-firebase-auth';
+          }
+          if (id.includes('node_modules/@firebase/firestore') || id.includes('node_modules/firebase/firestore')) {
+            return 'vendor-firebase-firestore';
+          }
+          if (id.includes('node_modules/@firebase') || id.includes('node_modules/firebase')) {
+            return 'vendor-firebase-core';
+          }
+          if (id.includes('node_modules/@sentry')) {
+            return 'vendor-sentry';
+          }
+          if (id.includes('node_modules/date-fns')) {
+            return 'vendor-date-fns';
+          }
+          if (id.includes('node_modules/markdown-it') || id.includes('node_modules/entities')) {
+            return 'vendor-markdown';
           }
           // Vue ecosystem (vue, vue-router, pinia, vuefire)
           if (

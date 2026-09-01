@@ -34,6 +34,10 @@
           </nav>
 
           <div ref="prayerTextElement" v-html="prayerHtml" class="prayer-text"></div>
+          <footer v-if="prayer.source" class="prayer-source">
+            <span class="prayer-source__label">Крыніца:</span>
+            <span class="prayer-source__content" v-html="sourceHtml" />
+          </footer>
       </article>
     </div>
   </v-container>
@@ -77,6 +81,7 @@ const prayer = computed(() => {
 });
 const isMassOrder = computed(() => route.params.id === MASS_ORDER_PRAYER_ID);
 const prayerHtml = computed(() => renderPrayerMarkdown(getText(prayer.value), prayer.value?.textFormat));
+const sourceHtml = computed(() => renderPrayerMarkdown(prayer.value?.source || ''));
 
 const copySuccess = ref(false);
 let copyTimeoutId = null;
@@ -371,6 +376,36 @@ defineExpose({
   margin-bottom: 0;
 }
 
+/* Keep list markers inside the reading column: the default browser indentation
+   places them outside and they get clipped on narrow screens. */
+.prayer-text :deep(ul),
+.prayer-text :deep(ol) {
+  max-width: 100%;
+  margin: 0.7em 0 1em;
+  padding-inline-start: 1.55em;
+  list-style-position: outside;
+}
+
+.prayer-text :deep(li) {
+  min-width: 0;
+  padding-inline-start: 0.2em;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.prayer-text :deep(li::marker) {
+  color: var(--reader-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.prayer-text :deep(ul ul),
+.prayer-text :deep(ul ol),
+.prayer-text :deep(ol ul),
+.prayer-text :deep(ol ol) {
+  margin-block: 0.35em;
+  padding-inline-start: 1.3em;
+}
+
 .prayer-text :deep(.prayer-rubric) {
   margin: 1.05em 0;
   padding: 0.08em 0 0.08em 0.85em;
@@ -400,6 +435,36 @@ defineExpose({
   max-width: 100% !important;
   table-layout: fixed;
   word-wrap: break-word;
+}
+
+.prayer-source {
+  margin: 0 20px;
+  padding: 0 0 18px;
+  color: color-mix(in srgb, var(--reader-ink) 52%, transparent);
+  font-family: var(--reader-font-family);
+  font-size: calc(0.7rem * var(--font-size-multiplier, 1));
+  font-weight: 400;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.prayer-source__label {
+  font-weight: 600;
+}
+
+.prayer-source__content {
+  margin-left: 0.28em;
+}
+
+.prayer-source__content :deep(p) {
+  display: inline;
+  margin: 0;
+}
+
+.prayer-source__content :deep(a) {
+  color: inherit;
+  text-decoration-color: currentColor;
+  text-underline-offset: 0.16em;
 }
 
 /* Rubrics in the Mass order are marked up as emphasis in the source. */
@@ -525,6 +590,10 @@ defineExpose({
     padding: 22px 16px 28px;
   }
 
+  .prayer-source {
+    margin-inline: 16px;
+  }
+
   .prayer-content-area {
     width: 100%;
     max-width: 100%;
@@ -547,6 +616,11 @@ defineExpose({
   .prayer-text :deep(p) {
     font-size: inherit;
     line-height: inherit;
+  }
+
+  .prayer-text :deep(ul),
+  .prayer-text :deep(ol) {
+    padding-inline-start: 1.4em;
   }
 }
 

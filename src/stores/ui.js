@@ -61,18 +61,24 @@ export const useUiStore = defineStore('ui', () => {
   // ── Prayer form state (PrayerForm ↔ Default.vue) ─────────────────────────
   // prayerFormSaving is written by PrayerForm and read by Default.vue AppBar.
   const prayerFormSaving = ref(false);
+  const prayerFormCopying = ref(false);
   let _savePrayerForm = null;
+  let _copyPrayerForm = null;
 
-  function registerPrayerFormActions({ save } = {}) {
+  function registerPrayerFormActions({ save, copy } = {}) {
     _savePrayerForm = save ?? null;
+    _copyPrayerForm = copy ?? null;
   }
 
   function clearPrayerFormActions() {
     _savePrayerForm = null;
+    _copyPrayerForm = null;
     prayerFormSaving.value = false;
+    prayerFormCopying.value = false;
   }
 
   function triggerPrayerFormSave() { _savePrayerForm?.(); }
+  function triggerPrayerFormCopy() { _copyPrayerForm?.(); }
 
   return {
     // Navigation
@@ -93,8 +99,10 @@ export const useUiStore = defineStore('ui', () => {
     triggerPrayerSave,
     // Prayer form (PrayerForm ↔ Default.vue)
     prayerFormSaving,
+    prayerFormCopying,
     registerPrayerFormActions,
     clearPrayerFormActions,
     triggerPrayerFormSave,
+    triggerPrayerFormCopy,
   };
 });

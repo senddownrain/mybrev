@@ -24,7 +24,7 @@
             />
           </div>
           <v-card-text class="ora-text">
-            <span style="color: red">
+            <span class="liturgical-rubric" style="color: red">
               Заклік з’яўляецца пачаткам штодзённай літургічнай малітвы. Ён
               папярэднічае Гадзіне чытанняў або Ютрані, у залежнасці ад таго,
               якая з гэтых літургічных гадзінаў распачынае малітву дня.
@@ -67,8 +67,8 @@
           :ps3="day.officeOfReadingsPs3"
         />
         <resp :text="day.officeOfReadingsVers" />
-        <lectio :text="day.officeOfReadingsR1" />
-        <lectio :text="day.officeOfReadingsR2" />
+        <lectio title="Першае чытанне" :text="day.officeOfReadingsR1" />
+        <lectio title="Другое чытанне" :text="day.officeOfReadingsR2" />
         <te-deum v-if="showTeDeum" />
 
         <psalms
@@ -109,7 +109,7 @@ import Psalms from '@/components/oraparts/Psalms.vue';
 import Reading from '@/components/oraparts/Reading.vue';
 import Resp from '@/components/oraparts/Resp.vue';
 import TeDeum from '@/components/oraparts/TeDeum.vue';
-import { removeBreakAfterAsterisk } from '@/utils/liturgicalHtml';
+import { formatPsalmHtml } from '@/utils/liturgicalHtml';
 import { shouldShowTeDeum } from '@/utils/liturgicalOffice';
 import { getDefaultInvitatoriumId } from '@/utils/invitatorium';
 
@@ -118,7 +118,7 @@ const { day, context, pending } = useResolvedLiturgicalDay();
 const invitatoriums = ref([]);
 const selectedInvitatoriumId = ref('');
 const invitatoriumAntOption = ref(0);
-const formatPsalm = removeBreakAfterAsterisk;
+const formatPsalm = formatPsalmHtml;
 const showTeDeum = computed(() => shouldShowTeDeum(day.value));
 
 const optionLabel = (item, index) => {

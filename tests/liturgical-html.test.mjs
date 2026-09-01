@@ -5,6 +5,7 @@ import {
   formatPsalmHtml,
   markLeadingLiturgicalSubheadings,
   markPsalmCadenceSigns,
+  removeLectionSectionHeading,
   removeBreakAfterAsterisk,
 } from '../src/utils/liturgicalHtml.js';
 
@@ -87,4 +88,87 @@ test('marks matching subtitles at the beginning of a reading only', () => {
     markLeadingLiturgicalSubheadings(html),
     '<p style="text-align: center;" data-liturgical-subheading>Чытанне</p><p data-liturgical-subheading><em>Кароткі ўступ</em></p><p><em>Сам тэкст чытання.</em></p>',
   );
+});
+
+test('does not shrink a reading paragraph just because its heading is red', () => {
+  const html = '<p style="text-align: justify;"><span style="color: #ff0000;">КАРОТКАЕ ЧЫТАННЕ 2 Тэс 2, 13-14</span><br>Мы заўсёды павінны дзякаваць Богу за вас.</p>';
+
+  assert.equal(markLeadingLiturgicalSubheadings(html), html);
+});
+
+test('marks a centred reading theme after the mixed reading heading', () => {
+  const html = '<p><span style="color: red;">ДРУГОЕ ЧЫТАННЕ</span><br>Гамілія святога Яна</p><p style="text-align: center;"><span style="color: red;">(Hom. 50, 3-4)</span><br><em>Аздабляючы святыню</em></p><p>Сам тэкст чытання.</p>';
+  const formatted = markLeadingLiturgicalSubheadings(html);
+
+  assert.doesNotMatch(formatted.split('</p>')[0], /data-liturgical-subheading/u);
+  assert.match(formatted.split('</p>')[1], /data-liturgical-subheading/u);
+});
+
+test('does not shrink a psalm strophe containing red response markers', () => {
+  const html = '<p style="text-align: justify;">Аллелюя.<br>Збаўленне і слава Богу, <span class="psalm-marker">*</span> <span style="color: #ff0000;">(Н.</span> Аллелюя.<span style="color: #ff0000;">)</span></p>';
+
+  assert.equal(markLeadingLiturgicalSubheadings(html), html);
+});
+
+test('marks a paragraph whose complete content is rubric-coloured', () => {
+  const html = '<p><span style="color: red;">Песня Марыі</span><br><span style="color: #ff0000;">Радасць душы ў Пану</span></p>';
+
+  assert.match(markLeadingLiturgicalSubheadings(html), /data-liturgical-subheading/u);
+});
+
+test('marks centred psalm part and theme captions even after earlier subtitles', () => {
+  const html = [
+    '<p style="text-align: center;">Псальм 1</p>',
+    '<p><em>Біблійная цытата</em></p>',
+    '<p style="text-align: center;"><span style="color: red;">І (1-10)</span></p>',
+    '<p style="text-align: center;"><span style="color: red; font-style: italic;">Тэма</span></p>',
+    '<p>Тэкст псальма.</p>',
+  ].join('');
+  const formatted = markLeadingLiturgicalSubheadings(html);
+
+  assert.equal((formatted.match(/data-liturgical-subheading/gu) || []).length, 4);
+});
+
+test('promotes standalone first and second reading labels to section headings', () => {
+  const html = '<p data-liturgical-subheading=""><span style="color: red;">Першае чытанне</span></p><p>Тэкст.</p>';
+  const formatted = markLeadingLiturgicalSubheadings(html);
+
+  assert.match(formatted, /data-liturgical-heading/u);
+  assert.doesNotMatch(formatted, /data-liturgical-subheading/u);
+});
+
+test('removes a standalone legacy lection heading before structural rendering', () => {
+  const html = '<p><span style="color: red;">Першае чытанне</span></p><p>Тэкст.</p>';
+
+  assert.equal(
+    removeLectionSectionHeading(html, 'Першае чытанне'),
+    '<p>Тэкст.</p>',
+  );
+});
+
+test('removes only the legacy label from a mixed lection heading', () => {
+  const html = [
+    '<p style="text-align: justify;"><span style="color: #ff0000;">Другое чытанне</span><br />',
+    'Гамілія св. Бэды Вялебнага<br />',
+    '<span style="color: #ff0000;">(Hom. 23)</span></p>',
+    '<p>Тэкст.</p>',
+  ].join('');
+
+  const formatted = removeLectionSectionHeading(html, 'Другое чытанне');
+  assert.doesNotMatch(formatted, /Другое чытанне/iu);
+  assert.match(formatted, /Гамілія св\. Бэды/iu);
+  assert.match(formatted, /\(Hom\. 23\)/u);
+});
+
+test('marks an inline bibliography in a mixed reading heading', () => {
+  const html = [
+    '<p style="text-align: justify;"><span style="color: red;">Другое чытанне</span><br>',
+    'Гамілія св. Бэды Вялебнага<br>',
+    '<span style="color: red;">(Hom. 23: CCL 122, 354. 356-357)</span></p>',
+    '<p style="text-align: center;"><em>Вястун нараджэння і смерці Хрыста</em></p>',
+  ].join('');
+  const formatted = markLeadingLiturgicalSubheadings(html);
+
+  assert.match(formatted, /data-liturgical-reference/u);
+  assert.match(formatted, /data-liturgical-subheading/u);
 });

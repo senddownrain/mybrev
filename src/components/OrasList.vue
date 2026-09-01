@@ -55,8 +55,8 @@
                 :title="celebrationLabel"
               ></v-icon>
             </template>
-            <v-avatar class="reading-icon-wrap" :color="readingTheme.avatarColor" size="48">
-              <v-icon :color="readingItem ? readingTheme.iconColor : 'grey'">mdi-book-open-variant</v-icon>
+            <v-avatar class="reading-icon-wrap" size="48">
+              <v-icon>mdi-book-open-variant</v-icon>
             </v-avatar>
           </v-badge>
         </template>
@@ -112,7 +112,7 @@
 
       <div v-if="isAdmin && !readingItem" class="mt-4">
         <v-btn
-          color="deep-purple"
+          color="primary"
           variant="tonal"
           prepend-icon="mdi-book-plus"
           @click="goToCreateReading"
@@ -145,11 +145,8 @@ import { logger } from '@/utils/logger';
 import { useAuthStore } from '@/stores/auth';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 import {
-  LITURGICAL_THEME_MAP,
   PLACE_LABEL_MAP,
   RANK_LABEL_MAP,
-  getLiturgicalCelebrationThemeKey,
-  getLiturgicalPeriodTheme,
   getLiturgicalTheme,
 } from '@/constants/liturgical';
 import {
@@ -157,6 +154,7 @@ import {
   getTomorrowFirstVespersOptions,
   isLocalFirstVespers,
   isSolemnity,
+  usesOwnVespers,
 } from '@/utils/liturgicalVespers';
 
 const route = useRoute();
@@ -194,64 +192,10 @@ const selectedTemplateId = computed(() => (
 // tomorrow's first Vespers enrich the screen after its saved content appears.
 const loadingOra = computed(() => loadingDay.value);
 
-const READING_THEMES = Object.freeze({
-  ordinary: {
-    ...LITURGICAL_THEME_MAP.ordinary,
-    avatarColor: 'green-lighten-4',
-    iconColor: 'green-darken-3',
-  },
-  advent: {
-    ...LITURGICAL_THEME_MAP.advent,
-    avatarColor: 'purple-lighten-4',
-    iconColor: 'purple-darken-3',
-  },
-  lent: {
-    ...LITURGICAL_THEME_MAP.lent,
-    avatarColor: 'purple-lighten-4',
-    iconColor: 'purple-darken-3',
-  },
-  holyweek: {
-    ...LITURGICAL_THEME_MAP.holyweek,
-    avatarColor: 'purple-lighten-4',
-    iconColor: 'purple-darken-4',
-  },
-  christmas: {
-    ...LITURGICAL_THEME_MAP.christmas,
-    avatarColor: 'amber-lighten-4',
-    iconColor: 'amber-darken-4',
-  },
-  easter: {
-    ...LITURGICAL_THEME_MAP.easter,
-    avatarColor: 'amber-lighten-4',
-    iconColor: 'amber-darken-4',
-  },
-  default: {
-    ...LITURGICAL_THEME_MAP.default,
-    avatarColor: 'blue-grey-lighten-4',
-    iconColor: 'blue-grey-darken-2',
-  },
-});
-
+// The icon and the card must follow the same celebration override. A second
+// period-only icon palette could leave a Marian feast in Lent looking purple.
 const readingTheme = computed(() => (
-  dayData.value?._theme === 'requiem'
-    ? {
-      ...LITURGICAL_THEME_MAP.requiem,
-      avatarColor: 'blue-grey-lighten-4',
-      iconColor: 'blue-grey-darken-3',
-    }
-    : {
-      ...(READING_THEMES[dayData.value?._periodType] || READING_THEMES.default),
-      ...getLiturgicalPeriodTheme(dayData.value, dayData.value?._periodType),
-      ...(getLiturgicalCelebrationThemeKey(dayData.value) === 'red'
-        ? { avatarColor: 'red-lighten-4', iconColor: 'red-darken-3' }
-        : {}),
-      ...(getLiturgicalCelebrationThemeKey(dayData.value) === 'gold'
-        ? { avatarColor: 'amber-lighten-4', iconColor: 'amber-darken-4' }
-        : {}),
-      ...(getLiturgicalCelebrationThemeKey(dayData.value) === 'white'
-        ? { avatarColor: 'grey-lighten-4', iconColor: 'brown-darken-2' }
-        : {}),
-    }
+  getLiturgicalTheme(dayData.value, dayData.value?._periodType)
 ));
 
 const celebrationRank = computed(() => dayData.value?._rank || dayData.value?._feastType || '');
@@ -315,7 +259,6 @@ const oras = computed(() => [
     icon: 'mdi-weather-sunset-up',
     path: `/day/${dateParam.value}/ora/${dayId.value}/invitatorium`,
     tag: 'Уступ',
-    tagColor: 'blue-grey',
   },
   {
     name: 'morning',
@@ -324,7 +267,6 @@ const oras = computed(() => [
     icon: 'mdi-sun-clock-outline',
     path: `/day/${dateParam.value}/ora/${dayId.value}/morning`,
     tag: 'Раніца',
-    tagColor: 'orange-darken-3',
   },
   {
     name: 'lectionis',
@@ -333,7 +275,6 @@ const oras = computed(() => [
     icon: 'mdi-book-open-page-variant',
     path: `/day/${dateParam.value}/ora/${dayId.value}/lectionis`,
     tag: 'Разважанне',
-    tagColor: 'brown',
   },
   {
     name: 'laudes',
@@ -342,7 +283,6 @@ const oras = computed(() => [
     icon: 'mdi-weather-sunny',
     path: `/day/${dateParam.value}/ora/${dayId.value}/laudes`,
     tag: 'Галоўная',
-    tagColor: 'amber-darken-3',
   },
   {
     name: 'terz',
@@ -351,7 +291,6 @@ const oras = computed(() => [
     icon: 'mdi-clock-time-nine-outline',
     path: `/day/${dateParam.value}/ora/${dayId.value}/terz`,
     tag: 'Малая',
-    tagColor: 'teal',
   },
   {
     name: 'sext',
@@ -360,7 +299,6 @@ const oras = computed(() => [
     icon: 'mdi-clock-time-twelve-outline',
     path: `/day/${dateParam.value}/ora/${dayId.value}/sext`,
     tag: 'Малая',
-    tagColor: 'teal',
   },
   {
     name: 'non',
@@ -369,7 +307,6 @@ const oras = computed(() => [
     icon: 'mdi-clock-time-three-outline',
     path: `/day/${dateParam.value}/ora/${dayId.value}/non`,
     tag: 'Малая',
-    tagColor: 'teal',
   },
   {
     name: 'vesper',
@@ -378,7 +315,6 @@ const oras = computed(() => [
     icon: 'mdi-weather-night',
     path: `/day/${dateParam.value}/ora/${dayId.value}/vesper`,
     tag: 'Галоўная',
-    tagColor: 'indigo-darken-3',
     rubric: vespersRubric.value,
     rubricStyle: vespersRubricStyle.value,
   },
@@ -393,7 +329,6 @@ const oras = computed(() => [
       query: { firstVespersDayId: item.sourceDayId },
     },
     tag: 'Галоўная',
-    tagColor: 'indigo-darken-3',
     rubric: {
       labelHtml: formatTitleHtml(localFirstVespersLabel(item)),
       kind: 'first',
@@ -408,7 +343,6 @@ const oras = computed(() => [
     icon: 'mdi-bed-clock',
     path: `/day/${dateParam.value}/ora/${dayId.value}/completorium`,
     tag: 'Завяршэнне',
-    tagColor: 'deep-purple',
   },
 ]);
 
@@ -452,7 +386,11 @@ const loadReadings = async () => {
   localTomorrowFirstVespers.value = [];
 
   getLiturgicalContentForDate(mDate.clone().add(1, 'day').toDate()).then((tomorrowContent) => {
-    if (sequence !== contentLoadSequence) return;
+    if (
+      sequence !== contentLoadSequence
+      || usesOwnVespers(dayData.value)
+      || dayId.value === 'office-for-dead'
+    ) return;
     const firstVespersOptions = getTomorrowFirstVespersOptions(tomorrowContent);
     localTomorrowFirstVespers.value = firstVespersOptions.filter(isLocalFirstVespers);
     tomorrowFirstVespers.value = firstVespersOptions.find((item) => !isLocalFirstVespers(item))
@@ -609,6 +547,11 @@ watch(dateParam, (newDateParam) => {
   color: var(--reading-visible-color);
   font-weight: 700;
   font-size: clamp(1.04rem, 4vw, 1.17rem);
+}
+
+.reading-icon-wrap {
+  background: rgba(var(--reading-color-rgb), 0.14);
+  color: var(--reading-visible-color);
 }
 
 .reading-subtitle {

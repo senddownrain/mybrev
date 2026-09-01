@@ -105,3 +105,8 @@ export function findTomorrowRegularVespers(content) {
 export function isSolemnity(day) {
   return ['solemnitas', 'solemnity', 'урачыстасць', 'ўрачыстасць'].includes(normalizedRank(day));
 }
+
+/** Offices for the dead always retain their own Vespers. */
+export function usesOwnVespers(day) {
+  return day?._kind === 'office-for-dead';
+}

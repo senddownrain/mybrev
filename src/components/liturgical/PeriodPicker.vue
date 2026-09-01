@@ -20,7 +20,7 @@
           ]"
           @click="selectPeriod(period.value)"
         >
-          <span class="period-dot" />
+          <span class="period-dot" :style="{ background: LITURGICAL_THEME_MAP[period.value]?.color }" />
           {{ period.title }}
         </button>
       </div>
@@ -230,7 +230,7 @@ import { useAuthStore } from '@/stores/auth';
 import { logger } from '@/utils/logger';
 import moment from '@/utils/moment-be';
 import { buildAdventDateOptions, buildChristmasDateOptions } from '@/utils/liturgicalPicker';
-import { PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
+import { LITURGICAL_THEME_MAP, PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
 import { PhArrowRight, PhBookOpenText, PhCalendarCheck, PhCalendarX } from '@phosphor-icons/vue';
 
 const DateChoiceGrid = defineComponent({
@@ -550,12 +550,7 @@ function createDay() {
 .choice-button:disabled { opacity: 0.38; cursor: not-allowed; }
 
 .period-button { display: flex; align-items: center; gap: 10px; padding: 10px 12px; text-align: left; }
-.period-dot { width: 10px; height: 10px; flex: 0 0 10px; border-radius: 50%; background: #4f8a55; }
-.period-button--advent .period-dot,
-.period-button--lent .period-dot,
-.period-button--holyweek .period-dot { background: #76528d; }
-.period-button--christmas .period-dot,
-.period-button--easter .period-dot { background: #c7952f; }
+.period-dot { width: 10px; height: 10px; flex: 0 0 10px; border-radius: 50%; background: var(--chrome-accent); }
 
 .subsection-label { margin: 0 0 8px 2px; color: var(--nav-muted); font-size: 0.72rem; font-weight: 780; text-transform: uppercase; }
 .advent-weeks { grid-template-columns: repeat(4, minmax(56px, 1fr)); }

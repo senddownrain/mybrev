@@ -211,8 +211,9 @@ const filteredPrayers = computed(() => {
     if (!aIsFavorite && bIsFavorite) return 1;
 
     // Если оба избранные или оба не избранные - сортировка по алфавиту
-    const titleA = getTitle(a).toLowerCase();
-    const titleB = getTitle(b).toLowerCase();
+    // Legacy titles may contain leading spaces invisible in the rendered list.
+    const titleA = getTitle(a).trim().toLowerCase();
+    const titleB = getTitle(b).trim().toLowerCase();
     return titleA.localeCompare(titleB, 'be', { sensitivity: 'base' });
   });
   

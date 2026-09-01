@@ -21,7 +21,7 @@
         {{ editorMode === 'visual' ? 'Фарматаванне паказваецца без службовых знакаў' : 'Дакладнае рэдагаванне зыходнага тэксту' }}
       </span>
     </div>
-    <div class="markdown-editor__toolbar" role="toolbar" aria-label="Фарматаванне малітвы">
+    <div class="markdown-editor__toolbar" role="toolbar" aria-label="Фарматаванне малітвы" @mousedown.prevent>
       <button type="button" title="Тлусты тэкст" @click="wrapSelection('**', '**', 'тэкст')">
         <strong>B</strong>
       </button>
@@ -320,15 +320,15 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.markdown-editor { overflow: hidden; border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); border-radius: 17px; background: rgba(var(--v-theme-on-surface), 0.02); transition: border-color 0.2s ease; }
+.markdown-editor { overflow: visible; border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity)); border-radius: 17px; background: rgba(var(--v-theme-on-surface), 0.02); transition: border-color 0.2s ease; }
 .markdown-editor:focus-within { border-color: rgb(var(--v-theme-primary)); box-shadow: inset 0 0 0 1px rgb(var(--v-theme-primary)); }
 .markdown-editor--error { border-color: rgb(var(--v-theme-error)); }
-.markdown-editor__mode-bar { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-bottom: 1px solid var(--nav-border); background: color-mix(in srgb, var(--nav-surface) 94%, var(--nav-active)); }
+.markdown-editor__mode-bar { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 16px 16px 0 0; border-bottom: 1px solid var(--nav-border); background: color-mix(in srgb, var(--nav-surface) 94%, var(--nav-active)); }
 .markdown-editor__mode-switch { display: inline-flex; flex: 0 0 auto; padding: 3px; border-radius: 10px; background: var(--nav-active); }
 .markdown-editor__mode-switch button { min-height: 30px; padding: 4px 10px; border: 0; border-radius: 8px; background: transparent; color: var(--nav-muted); font: inherit; font-size: 0.72rem; font-weight: 700; cursor: pointer; }
 .markdown-editor__mode-switch button.is-active { background: var(--nav-surface); color: var(--nav-on-surface); box-shadow: 0 2px 8px var(--nav-button-shadow); }
 .markdown-editor__mode-description { min-width: 0; color: var(--nav-muted); font-size: 0.7rem; line-height: 1.3; }
-.markdown-editor__toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; min-height: 48px; padding: 7px 10px; border-bottom: 1px solid var(--nav-border); background: var(--nav-active); }
+.markdown-editor__toolbar { position: sticky; top: calc(var(--v-layout-top, 64px) + 8px); z-index: 5; display: flex; align-items: center; flex-wrap: wrap; gap: 4px; min-height: 48px; padding: 7px 10px; border-bottom: 1px solid var(--nav-border); background: var(--nav-surface, rgb(var(--v-theme-surface))); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); }
 .markdown-editor__toolbar button { display: inline-flex; min-width: 34px; min-height: 34px; align-items: center; justify-content: center; gap: 6px; padding: 5px 9px; border: 0; border-radius: 8px; background: transparent; color: var(--nav-on-surface); font: inherit; font-size: 0.82rem; cursor: pointer; }
 .markdown-editor__toolbar button:hover, .markdown-editor__toolbar button:focus-visible { background: rgba(var(--v-theme-primary), 0.12); outline: none; }
 .markdown-editor__rubric-button { color: var(--rubric-color) !important; font-weight: 700 !important; }

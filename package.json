@@ -1,6 +1,6 @@
 {
   "name": "mybrev",
-  "version": "0.0.0",
+  "version": "4.5.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -17,7 +17,10 @@
     "db:backup": "node scripts/export-firestore-snapshot.mjs",
     "db:snapshot:query": "node scripts/query-firestore-snapshot.mjs",
     "db:migrate-core-collections": "node scripts/migrate-core-collections.mjs",
+    "db:migrate-prayer-categories": "node scripts/migrate-prayer-categories.mjs",
     "db:autofix-prayers": "node scripts/autofix-prayer-markdown.mjs",
+    "db:migrate-prayer-sources": "node scripts/migrate-prayer-sources.mjs",
+    "db:fix-imported-prayer-sources": "node scripts/fix-imported-prayer-sources.mjs",
     "db:remove-rank-feast-comments": "node scripts/remove-rank-feast-comments.mjs",
     "audit:parsed-readings-content": "node scripts/audit-parsed-readings-content-integrity.mjs",
     "generate:fixed-feasts": "node patchs/generate-db-feasts.mjs",

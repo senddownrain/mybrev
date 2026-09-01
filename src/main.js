@@ -34,7 +34,6 @@ runAfterLoadAndIdle(() => {
     console.error('[main] Auth initialization error:', error)
   })
 }, { delay: 1500, idleTimeout: 2000 })
-
 // Navigation prefetch is intentionally delayed until the document has loaded,
 // so it cannot compete with the first screen's critical requests.
 runAfterLoadAndIdle(() => {

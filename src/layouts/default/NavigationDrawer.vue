@@ -90,29 +90,11 @@
       </v-list-item>
 
       <v-list-item
-        title="Марыйныя"
-        @click="selectCategoryByName('Марыйныя')"
-        :active="selectedCategory?.name === 'Марыйныя'"
-      >
-        <template #prepend>
-          <PhBookmark :size="22" class="drawer-icon" />
-        </template>
-      </v-list-item>
-
-      <v-list-item
-        title="Літаніі"
-        @click="selectCategoryByName('Літаніі')"
-        :active="selectedCategory?.name === 'Літаніі'"
-      >
-        <template #prepend>
-          <PhBookmark :size="22" class="drawer-icon" />
-        </template>
-      </v-list-item>
-
-      <v-list-item
-        title="Навэнны"
-        @click="selectCategoryByName('Навэнны')"
-        :active="selectedCategory?.name === 'Навэнны'"
+        v-for="category in menuCategories"
+        :key="category.id || category.name"
+        :title="category.name"
+        @click="selectCategory(category)"
+        :active="selectedCategory?.name === category.name"
       >
         <template #prepend>
           <PhBookmark :size="22" class="drawer-icon" />
@@ -128,6 +110,16 @@
       >
         <template #prepend>
           <PhGear :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
+      <v-list-item
+        title="Інфармацыя"
+        :to="{ name: 'About' }"
+        :active="route.name === 'About'"
+      >
+        <template #prepend>
+          <PhInfo :size="22" class="drawer-icon" />
         </template>
       </v-list-item>
 
@@ -160,10 +152,12 @@ import { useAppBar } from '@/composables/useAppBar.js';
 import { useAuthStore } from '@/stores/auth.js';
 import { useRoute, useRouter } from 'vue-router';
 import { useSettingsStore } from '@/stores/settings.js';
+import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
+import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import {
   PhCross, PhBookOpenText, PhBookBookmark, PhHeart, PhBookmark,
-  PhChurch, PhGear, PhSignIn, PhSignOut, PhShieldCheck, PhX,
+  PhChurch, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX,
 } from '@phosphor-icons/vue';
 
 const MASS_ORDER_PRAYER_ID = 'eMmCtxwyJ75ogmL5rwye';
@@ -172,7 +166,17 @@ const auth = useAuthStore();
 const route = useRoute();
 const router = useRouter();
 const settings = useSettingsStore();
+const prayerCategories = usePrayerCategoriesStore();
 const { selectedCategory, setSelectedCategory } = usePrayersFilters();
+prayerCategories.init();
+
+const menuCategories = computed(() => {
+  return buildPrayerCategoryMenu(
+    prayerCategories.categories,
+    settings.personalPrayerCategories,
+    settings.hiddenGlobalPrayerCategoryIds,
+  );
+});
 
 const isPrayersPage = computed(() =>
   route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView',
@@ -181,6 +185,7 @@ const isPrayersPage = computed(() =>
 const selectCategory = (category) => {
   setSelectedCategory(category);
   isDrawerOpen.value = false;
+  router.push({ name: 'Prayers' });
 };
 
 const showAllPrayers = () => {
@@ -189,13 +194,6 @@ const showAllPrayers = () => {
   router.push({ name: 'Prayers' });
 };
 
-const selectCategoryByName = (categoryName) => {
-  const category = settings.menuCategories.find(cat => cat.name === categoryName);
-  if (category) {
-    selectCategory(category);
-    router.push({ name: 'Prayers' });
-  }
-};
 </script>
 
 <style scoped>
@@ -204,6 +202,8 @@ const selectCategoryByName = (categoryName) => {
   bottom: 0 !important;
   left: 0 !important;
   height: 100% !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
   max-width: min(320px, 88vw) !important;
   border: 0 !important;
   border-right: 1px solid var(--nav-border) !important;
@@ -221,7 +221,11 @@ const selectCategoryByName = (categoryName) => {
   flex-direction: column;
   box-sizing: border-box;
   height: 100%;
-  padding: 12px;
+  min-height: 0;
+  padding:
+    max(12px, env(safe-area-inset-top, 0px))
+    12px
+    max(12px, env(safe-area-inset-bottom, 0px));
 }
 
 .drawer-header {
@@ -299,14 +303,11 @@ const selectCategoryByName = (categoryName) => {
   flex: 1;
   min-height: 0;
   padding: 0 !important;
-}
-
-@media (min-width: 960px) {
-  .drawer-list {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    overscroll-behavior: contain;
-  }
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .drawer-list :deep(.v-list-item) {

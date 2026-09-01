@@ -114,11 +114,47 @@
               </button>
             </div>
           </section>
+
+          <v-divider />
+
+          <section class="editor-section">
+            <div class="section-heading">
+              <span class="section-number">4</span>
+              <div>
+                <h2>Крыніца</h2>
+                <p>Неабавязковая крыніца або аўтар тэксту.</p>
+              </div>
+            </div>
+            <v-textarea
+              v-model="form.source"
+              label="Крыніца"
+              variant="outlined"
+              rows="1"
+              auto-grow
+              counter="500"
+              maxlength="500"
+              class="prayer-source-field"
+              @blur="form.source = form.source.trim()"
+            />
+          </section>
         </v-card>
 
         <div class="form-actions">
-          <v-btn variant="text" rounded="pill" class="text-none" :disabled="saving" @click="cancel">
+          <v-btn variant="text" rounded="pill" class="text-none" :disabled="isSubmitting" @click="cancel">
             Скасаваць
+          </v-btn>
+          <v-btn
+            v-if="isEditMode"
+            type="button"
+            variant="tonal"
+            rounded="pill"
+            prepend-icon="mdi-content-copy"
+            class="copy-prayer-button text-none"
+            :loading="copying"
+            :disabled="isSubmitting"
+            @click="handleCreateCopy"
+          >
+            Стварыць копію
           </v-btn>
           <v-btn
             type="submit"
@@ -127,6 +163,7 @@
             prepend-icon="mdi-check"
             class="save-prayer-button text-none"
             :loading="saving"
+            :disabled="isSubmitting"
           >
             {{ isEditMode ? 'Захаваць змены' : 'Дадаць малітву' }}
           </v-btn>
@@ -146,6 +183,10 @@
             <h3>{{ form.title.trim() || 'Назва малітвы' }}</h3>
             <div v-if="plainTextLength" class="prayer-preview__text" v-html="previewHtml" />
             <p v-else class="preview-placeholder">Тэкст з’явіцца тут падчас рэдагавання.</p>
+            <div v-if="form.source.trim()" class="preview-source">
+              <span class="preview-source__label">Крыніца:</span>
+              <span class="preview-source__content" v-html="previewSourceHtml" />
+            </div>
             <div v-if="form.tags.length" class="preview-tags">
               <span v-for="tag in form.tags" :key="tag">{{ tag }}</span>
             </div>
@@ -158,7 +199,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
@@ -179,6 +220,7 @@ const uiStore = useUiStore();
 
 const formRef = ref(null);
 const saving = ref(false);
+const copying = ref(false);
 const hydrated = ref(false);
 const loadError = ref('');
 const saveAttempted = ref(false);
@@ -186,13 +228,15 @@ const showPreview = ref(true);
 const initialSnapshot = ref('');
 const allowNavigation = ref(false);
 
-const form = ref({ title: '', text: '', tags: [] });
+const form = ref({ title: '', text: '', source: '', tags: [] });
 
 const isEditMode = computed(() => Boolean(route.params.id));
+const isSubmitting = computed(() => saving.value || copying.value);
 const loadingPrayer = computed(() => isEditMode.value && isLoading.value && !hydrated.value);
 const plainText = computed(() => prayerMarkdownToPlainText(form.value.text));
 const plainTextLength = computed(() => plainText.value.length);
 const previewHtml = computed(() => renderPrayerMarkdown(form.value.text));
+const previewSourceHtml = computed(() => renderPrayerMarkdown(form.value.source.trim()));
 const textError = computed(() => {
   if (!saveAttempted.value) return '';
   const result = validatePrayerText(form.value.text);
@@ -203,6 +247,7 @@ const suggestedTags = computed(() => availableTags.value.filter((tag) => !form.v
 const currentSnapshot = computed(() => JSON.stringify({
   title: form.value.title.trim(),
   text: form.value.text || '',
+  source: form.value.source.trim(),
   tags: [...form.value.tags].sort(),
 }));
 const isDirty = computed(() => hydrated.value && currentSnapshot.value !== initialSnapshot.value);
@@ -237,14 +282,26 @@ const hydrateForm = () => {
         || '',
       prayer.textFormat,
     ),
+    source: prayer.source || '',
     tags: [...(prayer.tags || [])],
   };
+  loadError.value = '';
   hydrated.value = true;
   initialSnapshot.value = currentSnapshot.value;
 };
 
 watch([isLoading, prayers], hydrateForm, { immediate: true });
+// Vue reuses this component when switching from the original to its copy.
+watch(() => route.params.id, () => {
+  hydrated.value = false;
+  loadError.value = '';
+  saveAttempted.value = false;
+  allowNavigation.value = false;
+  form.value = { title: '', text: '', source: '', tags: [] };
+  hydrateForm();
+});
 watch(saving, (value) => { uiStore.prayerFormSaving = value; });
+watch(copying, (value) => { uiStore.prayerFormCopying = value; });
 
 const normalizeTags = () => {
   form.value.tags = [...new Set(
@@ -263,32 +320,39 @@ const cancel = () => {
   else router.push({ name: 'PrayersList' });
 };
 
-async function handleSave() {
-  if (saving.value || loadError.value) return;
+async function validateAndBuildPayload() {
   saveAttempted.value = true;
   normalizeTags();
   form.value.title = form.value.title.trim();
+  form.value.source = form.value.source.trim();
 
   const validation = await formRef.value?.validate();
   const titleValidation = validatePrayerTitle(form.value.title);
   const textValidation = validatePrayerText(form.value.text);
-  if (validation && !validation.valid) return;
+  if (validation && !validation.valid) return null;
   if (titleValidation !== true) {
     notifyError(titleValidation);
-    return;
+    return null;
   }
   if (textValidation !== true) {
     notifyError(textValidation);
-    return;
+    return null;
   }
 
+  return {
+    title: form.value.title,
+    ...prayerTextFields(form.value.text),
+    source: form.value.source,
+    tags: [...form.value.tags],
+  };
+}
+
+async function handleSave() {
+  if (isSubmitting.value || loadError.value || !hydrated.value) return;
   saving.value = true;
   try {
-    const payload = {
-      title: form.value.title,
-      ...prayerTextFields(form.value.text),
-      tags: [...form.value.tags],
-    };
+    const payload = await validateAndBuildPayload();
+    if (!payload) return;
     if (isEditMode.value) {
       await updatePrayer(route.params.id, payload);
       notifySuccess('Малітва абноўлена');
@@ -305,7 +369,29 @@ async function handleSave() {
     const { handleFirestoreError } = await import('@/utils/errorHandler');
     handleFirestoreError(error, 'PrayerForm');
   } finally {
+    allowNavigation.value = false;
     saving.value = false;
+  }
+}
+
+async function handleCreateCopy() {
+  if (!isEditMode.value || isSubmitting.value || loadError.value || !hydrated.value) return;
+  copying.value = true;
+  try {
+    const payload = await validateAndBuildPayload();
+    if (!payload) return;
+    const suffix = ' (копія)';
+    payload.title = `${payload.title.slice(0, 200 - suffix.length).trimEnd()}${suffix}`;
+    const copyRef = await addPrayer(payload);
+    allowNavigation.value = true;
+    await router.push({ name: 'PrayerEdit', params: { id: copyRef.id } });
+    notifySuccess('Копія створана. Цяпер вы рэдагуеце копію малітвы.');
+  } catch (error) {
+    const { handleFirestoreError } = await import('@/utils/errorHandler');
+    handleFirestoreError(error, 'PrayerFormCopy');
+  } finally {
+    allowNavigation.value = false;
+    copying.value = false;
   }
 }
 
@@ -315,13 +401,17 @@ const handleBeforeUnload = (event) => {
   event.returnValue = '';
 };
 
-onBeforeRouteLeave(() => {
+function confirmNavigation() {
+  if (isSubmitting.value && !allowNavigation.value) return false;
   if (!isDirty.value || allowNavigation.value) return true;
   return window.confirm('Ёсць незахаваныя змены. Выйсці без захавання?');
-});
+}
+
+onBeforeRouteLeave(confirmNavigation);
+onBeforeRouteUpdate(confirmNavigation);
 
 onMounted(() => {
-  uiStore.registerPrayerFormActions({ save: handleSave });
+  uiStore.registerPrayerFormActions({ save: handleSave, copy: handleCreateCopy });
   window.addEventListener('beforeunload', handleBeforeUnload);
 });
 
@@ -373,7 +463,8 @@ onBeforeUnmount(() => {
 .preview-toggle { flex: 0 0 auto; color: var(--nav-on-surface); }
 .editor-layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr); align-items: start; gap: 18px; }
 .editor-layout--without-preview { grid-template-columns: minmax(0, 820px); justify-content: center; }
-.editor-card { overflow: hidden; border: 1px solid var(--nav-border); border-radius: 28px !important; background: var(--nav-surface) !important; color: var(--nav-on-surface); box-shadow: 0 10px 34px var(--nav-button-shadow) !important; }
+/* Keep the page as the scroll container for the sticky formatting toolbar. */
+.editor-card { overflow: visible; border: 1px solid var(--nav-border); border-radius: 28px !important; background: var(--nav-surface) !important; color: var(--nav-on-surface); box-shadow: 0 10px 34px var(--nav-button-shadow) !important; }
 .editor-section { padding: 26px 28px 28px; }
 
 .section-heading {
@@ -390,6 +481,7 @@ onBeforeUnmount(() => {
 .text-count { margin-left: auto; color: var(--nav-muted); font-size: 0.72rem; white-space: nowrap; }
 
 .prayer-title-field :deep(.v-field),
+.prayer-source-field :deep(.v-field),
 .tags-field :deep(.v-field) { border-radius: 16px; background: rgba(var(--v-theme-on-surface), 0.025); }
 .prayer-title-field :deep(textarea) { line-height: 1.45; }
 
@@ -400,6 +492,7 @@ onBeforeUnmount(() => {
 .tag-suggestions button:hover { background: var(--nav-active); }
 
 .form-actions { display: flex; align-items: center; justify-content: flex-end; gap: 9px; padding: 18px 4px 0; }
+.copy-prayer-button { color: var(--nav-on-surface); }
 .save-prayer-button { min-height: 52px; padding-inline: 24px !important; background: var(--nav-on-surface) !important; color: var(--nav-surface) !important; font-weight: 720; }
 .preview-sticky { position: sticky; top: 84px; overflow: hidden; border: 1px solid var(--nav-border); border-radius: 26px; background: var(--nav-surface); box-shadow: 0 8px 28px var(--nav-button-shadow); }
 .preview-heading { display: flex; align-items: center; justify-content: space-between; padding: 20px 22px 16px; border-bottom: 1px solid var(--nav-border); }
@@ -409,9 +502,18 @@ onBeforeUnmount(() => {
 .prayer-preview__text { font-family: var(--reader-font-family); font-size: 1rem; line-height: 1.72; overflow-wrap: anywhere; }
 .prayer-preview__text :deep(p) { margin: 0 0 1em; }
 .prayer-preview__text :deep(p:last-child) { margin-bottom: 0; }
+.prayer-preview__text :deep(ul), .prayer-preview__text :deep(ol) { max-width: 100%; margin: 0.65em 0 1em; padding-inline-start: 1.45em; list-style-position: outside; }
+.prayer-preview__text :deep(li) { min-width: 0; padding-inline-start: 0.16em; overflow-wrap: anywhere; }
+.prayer-preview__text :deep(li::marker) { font-variant-numeric: tabular-nums; }
+.prayer-preview__text :deep(ul ul), .prayer-preview__text :deep(ul ol), .prayer-preview__text :deep(ol ul), .prayer-preview__text :deep(ol ol) { margin-block: 0.3em; padding-inline-start: 1.2em; }
 .prayer-preview__text :deep(.prayer-rubric) { margin: 1em 0; padding-left: 0.8em; border-left: 3px solid var(--rubric-color); color: var(--rubric-color); font-size: 0.88em; line-height: 1.45; }
 .prayer-preview__text :deep(.prayer-rubric p) { margin-bottom: 0.45em; }
 .preview-placeholder { margin: 0; color: var(--nav-muted); font-style: italic; line-height: 1.6; }
+.preview-source { margin: 22px 0 0; color: var(--nav-muted); font-size: 0.7rem; line-height: 1.4; overflow-wrap: anywhere; }
+.preview-source__label { font-weight: 600; }
+.preview-source__content { margin-left: 0.28em; }
+.preview-source__content :deep(p) { display: inline; margin: 0; }
+.preview-source__content :deep(a) { color: inherit; text-underline-offset: 0.16em; }
 .preview-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--nav-border); }
 .preview-tags span { padding: 5px 9px; border-radius: 999px; background: var(--nav-active); font-size: 0.7rem; }
 .form-loading, .load-alert { max-width: 820px; margin-inline: auto; border-radius: 24px; }
@@ -432,8 +534,9 @@ onBeforeUnmount(() => {
   .section-heading { align-items: flex-start; }
   .section-heading p { font-size: 0.76rem; }
   .text-count { position: absolute; right: 28px; margin-top: 42px; }
-  .form-actions { position: sticky; bottom: 8px; z-index: 4; margin: 10px 4px 0; padding: 8px; border: 1px solid var(--nav-border); border-radius: 999px; background: color-mix(in srgb, var(--nav-surface) 92%, transparent); box-shadow: 0 8px 28px var(--nav-shadow); backdrop-filter: blur(16px); }
-  .form-actions .save-prayer-button { flex: 1; }
+  .form-actions { position: sticky; bottom: 8px; z-index: 4; flex-wrap: wrap; margin: 10px 4px 0; padding: 8px; border: 1px solid var(--nav-border); border-radius: 24px; background: color-mix(in srgb, var(--nav-surface) 92%, transparent); box-shadow: 0 8px 28px var(--nav-shadow); backdrop-filter: blur(16px); }
+  .form-actions .copy-prayer-button { flex: 1; }
+  .form-actions .save-prayer-button { flex: 1 1 100%; }
   .prayer-preview { padding: 22px 20px; }
 }
 </style>

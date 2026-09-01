@@ -85,7 +85,7 @@ const favoritePrayers = computed(() => {
   if (!settings.favoritePrayers || !Array.isArray(settings.favoritePrayers)) return [];
   
   const filtered = prayers.value.filter(prayer => settings.favoritePrayers.includes(prayer.id));
-  filtered.sort((a, b) => getTitle(a).localeCompare(getTitle(b), 'be', { sensitivity: 'base' }));
+  filtered.sort((a, b) => getTitle(a).trim().localeCompare(getTitle(b).trim(), 'be', { sensitivity: 'base' }));
   
   return filtered;
 });

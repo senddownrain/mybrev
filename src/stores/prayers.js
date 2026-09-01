@@ -16,6 +16,7 @@ import { publicContentCache, publicContentKey, requestContentRefresh } from '@/u
  * @property {Object.<string, string>} [textVersions] - Localized text versions keyed by locale
  * @property {'mybrev-markdown'} [textFormat] - Canonical prayer text format
  * @property {number} [textFormatVersion] - MyBrev Markdown schema version
+ * @property {string} [source] - Optional attribution or publication source
  * @property {string[]} [tags] - List of tags associated with the prayer
  * @property {import('firebase/firestore').Timestamp} [createdAt] - Firestore server timestamp of creation
  */
@@ -123,9 +124,15 @@ export const usePrayersStore = defineStore('prayers', () => {
    */
   async function addPrayerAction(data) {
     try {
-      const result = await prayerService.addPrayer(data);
+      const docRef = await prayerService.addPrayer(data);
       requestContentRefresh();
-      return result;
+      // The copy editor must be able to load the new prayer immediately,
+      // even if the real-time listener has not delivered it yet.
+      if (!prayers.value.some((prayer) => prayer.id === docRef.id)) {
+        prayers.value = [{ ...data, tags: [...(data.tags || [])], id: docRef.id }, ...prayers.value];
+        refreshAllTags();
+      }
+      return docRef;
     } catch (err) {
       error.value = err;
       throw err;

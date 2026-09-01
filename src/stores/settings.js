@@ -2,29 +2,54 @@ import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { useTheme } from 'vuetify';
 import { normalizeReaderFont, SYSTEM_FONT } from '@/constants/fonts';
+import { APP_STATUS_BAR_COLORS } from '@/constants/appearance';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { validateCategory } from '@/utils/validators';
 import { logger } from '@/utils/logger';
 import { requestWakeLock, releaseWakeLock } from '@/composables/useWakeLock';
 import { ensureReaderFontLoaded } from '@/utils/fonts';
 
+const PERSONAL_CATEGORIES_KEY = 'personalPrayerCategories';
+const HIDDEN_GLOBAL_CATEGORIES_KEY = 'hiddenGlobalPrayerCategoryIds';
+
+function categoryMatchesDefault(category) {
+  return DEFAULT_CATEGORIES.some((defaultCategory) => (
+    category?.name === defaultCategory.name
+    && JSON.stringify(category?.tags || []) === JSON.stringify(defaultCategory.tags)
+  ));
+}
+
+function loadPersonalCategories() {
+  const personal = localStorage.getItem(PERSONAL_CATEGORIES_KEY);
+  if (personal !== null) return JSON.parse(personal);
+
+  // One-time migration: the old key mixed three app-wide defaults with the
+  // user's own categories. Only carry the genuinely personal entries forward.
+  const legacy = JSON.parse(localStorage.getItem('menuCategories') || '[]');
+  return legacy.filter((category) => !categoryMatchesDefault(category));
+}
+
 export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme();
 
-  const currentTheme = ref(localStorage.getItem('theme') || 'light');
+  const currentTheme = ref(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
   const fontFamily = ref(normalizeReaderFont(localStorage.getItem('fontFamily')));
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
-  const menuCategories = ref(JSON.parse(localStorage.getItem('menuCategories') || JSON.stringify(DEFAULT_CATEGORIES)));
+  const menuCategories = ref(loadPersonalCategories());
+  const hiddenGlobalPrayerCategoryIds = ref(JSON.parse(
+    localStorage.getItem(HIDDEN_GLOBAL_CATEGORIES_KEY) || '[]',
+  ));
   const favoritePrayers = ref(JSON.parse(localStorage.getItem('favoritePrayers') || '[]'));
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') === 'true');
 
   watch(currentTheme, (newTheme) => {
     theme.change(newTheme);
     localStorage.setItem('theme', newTheme);
+    document.documentElement.dataset.appearance = newTheme;
     // Keep the Android browser/status bar aligned with the selected appearance.
     const themeColor = document.querySelector('meta[name="theme-color"]');
     if (themeColor) {
-      themeColor.setAttribute('content', newTheme === 'dark' ? '#12141C' : '#644B72');
+      themeColor.setAttribute('content', APP_STATUS_BAR_COLORS[newTheme]);
     }
   }, { immediate: true });
 
@@ -39,7 +64,10 @@ export const useSettingsStore = defineStore('settings', () => {
     localStorage.setItem('fontSizeMultiplier', String(newMultiplier));
   }, { immediate: true });
 
-  watch(menuCategories, (v) => localStorage.setItem('menuCategories', JSON.stringify(v)), { deep: true });
+  watch(menuCategories, (v) => localStorage.setItem(PERSONAL_CATEGORIES_KEY, JSON.stringify(v)), { deep: true });
+  watch(hiddenGlobalPrayerCategoryIds, (v) => {
+    localStorage.setItem(HIDDEN_GLOBAL_CATEGORIES_KEY, JSON.stringify(v));
+  }, { deep: true });
   watch(favoritePrayers, (v) => localStorage.setItem('favoritePrayers', JSON.stringify(v)), { deep: true });
   
   watch(keepScreenOn, async (newValue) => {
@@ -98,6 +126,17 @@ export const useSettingsStore = defineStore('settings', () => {
     menuCategories.value.splice(index, 1);
   }
 
+  function hideGlobalPrayerCategory(categoryId) {
+    hiddenGlobalPrayerCategoryIds.value = [...new Set([
+      ...hiddenGlobalPrayerCategoryIds.value,
+      categoryId,
+    ])];
+  }
+
+  function restoreGlobalPrayerCategories() {
+    hiddenGlobalPrayerCategoryIds.value = [];
+  }
+
   function toggleFavoritePrayer(prayerId) {
     const index = favoritePrayers.value.indexOf(prayerId);
     if (index > -1) {
@@ -117,6 +156,8 @@ export const useSettingsStore = defineStore('settings', () => {
     systemFont: SYSTEM_FONT,
     fontSizeMultiplier,
     menuCategories,
+    personalPrayerCategories: menuCategories,
+    hiddenGlobalPrayerCategoryIds,
     favoritePrayers,
     keepScreenOn,
     toggleTheme,
@@ -126,6 +167,8 @@ export const useSettingsStore = defineStore('settings', () => {
     decreaseFontSize,
     addCategory,
     removeCategory,
+    hideGlobalPrayerCategory,
+    restoreGlobalPrayerCategories,
     toggleFavoritePrayer,
     isFavoritePrayer,
     setKeepScreenOn,

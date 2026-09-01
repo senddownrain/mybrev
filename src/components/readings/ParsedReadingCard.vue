@@ -283,7 +283,7 @@ function cycleLabel(value) {
 .section-label {
   margin: 0;
   color: var(--reading-visible-color);
-  font-size: calc(0.8rem * var(--font-size-multiplier, 1));
+  font-size: calc(1rem * var(--font-size-multiplier, 1));
   font-family: var(--reader-display-font-family);
   font-weight: 700;
   line-height: 1.3;

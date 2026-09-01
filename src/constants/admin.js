@@ -5,5 +5,5 @@
  *
  * These UIDs act as emergency/bootstrap access and should not be removed.
  */
-export const ADMIN_UIDS = ['64MeSP56IWVotVFG7bu8YKeLis12'];
+export const ADMIN_UIDS = ['64MeSP56IWVotVFG7bu8YKeLis12', '7mszX2IiXHgjWxj0ZE5vEqdkmoD2'];
 

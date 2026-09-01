@@ -41,10 +41,100 @@ function markAsLiturgicalSubheading(attributes) {
   return `${attributes} data-liturgical-subheading`;
 }
 
+function markAsLiturgicalHeading(attributes) {
+  const withoutSubheading = attributes.replace(
+    /\s+data-liturgical-subheading(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?/giu,
+    '',
+  );
+  if (/\bdata-liturgical-heading(?:\s*=|\s|$)/iu.test(withoutSubheading)) return withoutSubheading;
+  return `${withoutSubheading} data-liturgical-heading`;
+}
+
+function visibleText(html) {
+  return String(html || '')
+    .replace(/<[^>]*>/gu, ' ')
+    .replace(/&nbsp;|&#x0*20;/giu, ' ')
+    .replace(/\s+/gu, ' ')
+    .trim();
+}
+
+function unwrapFullyStyledContent(content, tagPattern) {
+  let remaining = String(content || '')
+    .replace(/<br\s*\/?>/giu, '')
+    .replace(/&nbsp;|&#x0*20;/giu, ' ')
+    .trim();
+
+  remaining = remaining.replace(tagPattern, '');
+  return visibleText(remaining).length === 0;
+}
+
 function isLiturgicalSubheading(attributes, content) {
-  return /text-align\s*:\s*center/iu.test(attributes)
-    || /color\s*:\s*(?:#ff0000|red)/iu.test(content)
-    || /<(?:em|i|strong|b)\b/iu.test(content);
+  if (/text-align\s*:\s*center/iu.test(attributes)) return true;
+
+  const fullyEmphasized = unwrapFullyStyledContent(
+    content,
+    /<(?:em|i|strong|b)\b[^>]*>[\s\S]*?<\/(?:em|i|strong|b)>/giu,
+  );
+  if (fullyEmphasized) return true;
+
+  return unwrapFullyStyledContent(
+    content,
+    /<(?:span|font)\b[^>]*(?:color\s*:\s*(?:#ff0000|red)|color\s*=\s*["']?red)[^>]*>[\s\S]*?<\/(?:span|font)>/giu,
+  );
+}
+
+function isReadingHeading(content) {
+  return /^(?:ПЕРШАЕ|ДРУГОЕ|КАРОТКАЕ)\s+ЧЫТАННЕ(?:\s|$)/iu.test(visibleText(content));
+}
+
+function isLectionSectionHeading(content) {
+  return /^(?:ПЕРШАЕ|ДРУГОЕ)\s+ЧЫТАННЕ\s*$/iu.test(visibleText(content));
+}
+
+function escapePattern(value) {
+  return String(value || '').replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+}
+
+/**
+ * The Office of Readings owns its first/second-reading labels in the page
+ * structure. Older records often repeat the same label at the beginning of
+ * their HTML, either in a standalone paragraph or before the source line.
+ * Remove that legacy copy so the structural heading is displayed once.
+ */
+export function removeLectionSectionHeading(html, heading) {
+  const expected = String(heading || '').trim();
+  if (!expected) return String(html || '');
+
+  const headingPattern = new RegExp(
+    `^\\s*(?:<(?:span|font|strong|b|em|i)\\b[^>]*>\\s*)*${escapePattern(expected)}\\s*`
+      + '(?:<\\/(?:span|font|strong|b|em|i)>\\s*)*(?:<br\\s*\\/?>\\s*)?',
+    'iu',
+  );
+
+  return String(html || '').replace(
+    PARAGRAPH_PATTERN,
+    (paragraph, attributes, content) => {
+      if (!visibleText(content).toLocaleLowerCase('be').startsWith(expected.toLocaleLowerCase('be'))) {
+        return paragraph;
+      }
+
+      const withoutHeading = content.replace(headingPattern, '');
+      if (withoutHeading === content) return paragraph;
+      if (!visibleText(withoutHeading)) return '';
+      return `<p${attributes}>${withoutHeading}</p>`;
+    },
+  );
+}
+
+function markInlineReadingReference(content) {
+  return String(content || '').replace(
+    /<span\b([^>]*)>(\s*\([^<]*\)\s*)<\/span>/giu,
+    (span, attributes, reference) => {
+      if (!/^(?:\s|&nbsp;)*\(/iu.test(reference)) return span;
+      if (/\bdata-liturgical-reference(?:\s*=|\s|$)/iu.test(attributes)) return span;
+      return `<span${attributes} data-liturgical-reference>${reference}</span>`;
+    },
+  );
 }
 
 /**
@@ -59,8 +149,29 @@ export function markLeadingLiturgicalSubheadings(html) {
   return String(html || '').replace(
     PARAGRAPH_PATTERN,
     (paragraph, attributes, content) => {
+      if (isLectionSectionHeading(content)) {
+        return `<p${markAsLiturgicalHeading(attributes)}>${content}</p>`;
+      }
+
+      // Centred lines in the source are structural captions (psalm parts,
+      // references, and themes), including captions after the first two
+      // leading metadata paragraphs.
+      if (/text-align\s*:\s*center/iu.test(attributes)) {
+        if (canMark && remaining > 0) remaining -= 1;
+        return `<p${markAsLiturgicalSubheading(attributes)}>${content}</p>`;
+      }
+
+      if (isReadingHeading(content)) {
+        const markedContent = markInlineReadingReference(content);
+        if (markedContent !== content) {
+          return `<p${attributes}>${markedContent}</p>`;
+        }
+      }
+
       if (!canMark || remaining === 0 || !isLiturgicalSubheading(attributes, content)) {
-        canMark = false;
+        // A lection begins with a mixed-size heading (reading label plus book
+        // or author), followed by its centred source/theme caption.
+        if (!isReadingHeading(content)) canMark = false;
         return paragraph;
       }
 

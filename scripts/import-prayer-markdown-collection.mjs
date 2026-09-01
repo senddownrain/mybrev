@@ -19,7 +19,7 @@ const DEFAULT_SERVICE_ACCOUNT = path.join(ROOT, 'patchs', 'serviceAccountKey.jso
 const DEFAULT_REPORT = path.join(ROOT, 'reports', 'prayer-markdown-import-report.json');
 const COLLECTION = 'prayers';
 
-const SOURCES = [
+export const SOURCES = [
   ['01_malitvy_na_kozhny_dzen_tydnya.md', 'На кожны дзень'],
   ['02_agulny_katekhizis.md', 'Катэхізіс'],
   ['03_sakrament_pakayannya_spovedz.md', 'Споведзь'],
@@ -98,17 +98,29 @@ async function unzipText(entry, name) {
   return data.toString('utf8');
 }
 
+export function extractEmbeddedSource(markdown) {
+  const match = /^>\s*Крыніца:\s*(https?:\/\/\S+)\s*$/mu.exec(markdown);
+  if (!match) return { text: markdown, source: '' };
+  const url = match[1];
+  const text = `${markdown.slice(0, match.index)}${markdown.slice(match.index + match[0].length)}`
+    .replace(/^\n+|\s*$/g, '');
+  return { text, source: `[${url}](${url})` };
+}
+
 function sourceToPrayer(id, markdown, tags) {
   const normalized = markdown.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n');
   const match = /^#\s+(.+?)\s*\n(?:\n|$)/m.exec(normalized);
   if (!match) throw new Error(`${id} does not contain a level-one Markdown title`);
   const titleLineStart = match.index;
   const titleLineEnd = titleLineStart + match[0].length;
+  const extracted = extractEmbeddedSource(
+    `${normalized.slice(0, titleLineStart)}${normalized.slice(titleLineEnd)}`.replace(/^\n+|\s*$/g, ''),
+  );
   return {
     id: `import-${id.replace(/\.md$/, '').replace(/[^a-z0-9]+/gi, '-')}`.toLowerCase(),
-    source: id,
+    source: extracted.source,
     title: match[1].trim(),
-    text: `${normalized.slice(0, titleLineStart)}${normalized.slice(titleLineEnd)}`.replace(/^\n+|\s*$/g, ''),
+    text: extracted.text,
     tags,
     textFormat: PRAYER_TEXT_FORMAT,
     textFormatVersion: PRAYER_TEXT_FORMAT_VERSION,

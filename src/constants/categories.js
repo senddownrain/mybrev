@@ -1,6 +1,6 @@
 export const DEFAULT_CATEGORIES = [
-  { name: 'Марыйныя', tags: ['Марыя'] },
-  { name: 'Літаніі', tags: ['Літанія'] },
-  { name: 'Навэнны', tags: ['Навэнна'] }
+  { id: 'mary', name: 'Марыйныя', tags: ['Марыя'], order: 10 },
+  { id: 'litanies', name: 'Літаніі', tags: ['Літанія'], order: 20 },
+  { id: 'novenas', name: 'Навэнны', tags: ['Навэнна'], order: 30 },
 ];
 

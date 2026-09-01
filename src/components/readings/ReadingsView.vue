@@ -131,7 +131,7 @@ import {
   normalizeReadingCycle,
   readingCelebrationKey,
 } from '@/utils/parsedReadingsIdentity';
-import { getLiturgicalPeriodTheme } from '@/constants/liturgical';
+import { getLiturgicalTheme } from '@/constants/liturgical';
 import moment from '@/utils/moment-be';
 
 const route = useRoute();
@@ -155,7 +155,7 @@ const readingsPageStyle = computed(() => {
   const periodType = route.query.returnDayId === 'office-for-dead'
     ? 'requiem'
     : context.value?.periodType || 'default';
-  const theme = getLiturgicalPeriodTheme(activeReading.value, periodType);
+  const theme = getLiturgicalTheme(activeReading.value, periodType);
   return {
     '--reading-period-color': theme.color,
     '--reading-period-rgb': theme.rgb,

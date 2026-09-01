@@ -89,7 +89,7 @@ import moment from '@/utils/moment-be';
 import {
   PERIOD_LABEL_MAP,
   FEAST_TYPE_LABEL_MAP,
-  getLiturgicalPeriodTheme,
+  getLiturgicalTheme,
 } from '@/constants/liturgical';
 import { formatDateLong } from '@/utils/date';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
@@ -171,7 +171,7 @@ const periodLabel = computed(() => (
     : PERIOD_LABEL_MAP[resolvedDay.value?._periodType] || 'Літургічны дзень'
 ));
 const heroStyle = computed(() => {
-  const theme = getLiturgicalPeriodTheme(resolvedDay.value, resolvedDay.value?._periodType);
+  const theme = getLiturgicalTheme(resolvedDay.value, resolvedDay.value?._periodType);
   return {
     '--liturgical-color': theme.color,
     '--liturgical-rgb': theme.rgb,
