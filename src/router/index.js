@@ -74,6 +74,11 @@ const routes = [
         redirect: { name: 'LiturgicalPicker', query: { mode: 'readings' } },
       },
       {
+        path: 'bible/:language?/:bookId?/:chapter?',
+        name: 'Bible',
+        component: () => import('@/views/Bible.vue'),
+      },
+      {
         path: 'prayer/:id',
         name: 'PrayerView',
         components: { 

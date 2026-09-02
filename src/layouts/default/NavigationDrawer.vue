@@ -68,6 +68,16 @@
       </v-list-item>
 
       <v-list-item
+        title="Біблія"
+        :to="{ name: 'Bible' }"
+        :active="route.name === 'Bible'"
+      >
+        <template #prepend>
+          <PhBookOpen :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
+      <v-list-item
         title="Малітвы"
         :active="isPrayersPage && !selectedCategory"
         @click="showAllPrayers"
@@ -156,7 +166,7 @@ import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import {
-  PhCross, PhBookOpenText, PhBookBookmark, PhHeart, PhBookmark,
+  PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart, PhBookmark,
   PhChurch, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX,
 } from '@phosphor-icons/vue';
 

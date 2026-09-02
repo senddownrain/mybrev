@@ -265,6 +265,7 @@ const showTextScaleControl = computed(() => {
   return [
     'Readings',
     'ReadingsByDate',
+    'Bible',
     'invitatorium',
     'morning',
     'laudes',
@@ -302,6 +303,8 @@ const layoutTitle = computed(() => {
       return 'Чытанні';
     case 'ReadingsPicker':
       return 'Каляндар чытанняў';
+    case 'Bible':
+      return 'Біблія';
     case 'Settings':
       return 'Налады';
     case 'Login':
