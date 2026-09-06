@@ -196,6 +196,9 @@ export default defineConfig({
   },
 
   build: {
+    // The Markdown editor is route-lazy and intentionally kept in one chunk:
+    // CodeMirror and Lezer contain cycles that break when manually separated.
+    chunkSizeWarningLimit: 650,
     rollupOptions: {
       output: {
         // Split the main bundle into smaller vendor chunks to improve
@@ -205,19 +208,14 @@ export default defineConfig({
           if (id.includes('node_modules/quill') || id.includes('node_modules/@vueup/vue-quill')) {
             return 'vendor-quill';
           }
+          // CodeMirror packages and Lezer parsers have circular dependencies.
+          // Splitting them into separate manual chunks can make an imported
+          // binding execute before it is initialized in production builds.
           if (
-            id.includes('node_modules/@codemirror/state') ||
-            id.includes('node_modules/@codemirror/view') ||
-            id.includes('node_modules/@codemirror/commands') ||
-            id.includes('node_modules/@codemirror/search') ||
-            id.includes('node_modules/@codemirror/autocomplete')
+            id.includes('node_modules/codemirror') ||
+            id.includes('node_modules/@codemirror') ||
+            id.includes('node_modules/@lezer')
           ) {
-            return 'vendor-markdown-editor-core';
-          }
-          if (id.includes('node_modules/@codemirror/lang') || id.includes('node_modules/@lezer')) {
-            return 'vendor-markdown-editor-languages';
-          }
-          if (id.includes('node_modules/codemirror')) {
             return 'vendor-markdown-editor';
           }
           // moment.js with locales (~300 kB)

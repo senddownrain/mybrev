@@ -3,6 +3,7 @@ import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 import './styles/main.scss'
 import { primeContentCache } from '@/utils/primeContentCache'
+import { useAuthStore } from '@/stores/auth'
 
 const app = createApp(App)
 
@@ -30,7 +31,7 @@ function runAfterLoadAndIdle(task, { delay = 0, idleTimeout = 2000 } = {}) {
 // Authentication only affects admin affordances on public routes. Protected
 // routes initialise it synchronously in the router guard.
 runAfterLoadAndIdle(() => {
-  import('./stores/auth').then(({ useAuthStore }) => useAuthStore().init()).catch(error => {
+  useAuthStore().init().catch(error => {
     console.error('[main] Auth initialization error:', error)
   })
 }, { delay: 1500, idleTimeout: 2000 })

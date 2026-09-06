@@ -159,6 +159,7 @@ import { useAuthStore } from '@/stores/auth';
 import { useSettingsStore } from '@/stores/settings';
 import { useNotifier } from '@/composables/useNotifier';
 import { usePrayersFilters } from '@/composables/usePrayersFilters';
+import { matchesPrayerTags } from '@/utils/prayerTagFilter';
 import { PhMagnifyingGlass, PhSlidersHorizontal, PhX } from '@phosphor-icons/vue';
 
 const router = useRouter();
@@ -182,12 +183,9 @@ const filteredPrayers = computed(() => {
   
   let filtered = [...prayersArray];
   
-  // Фильтр по тегам категории
+  // Малітва ўваходзіць у катэгорыю, калі мае хаця б адзін яе тэг.
   if (selectedTags.value && selectedTags.value.length > 0) {
-    filtered = filtered.filter(prayer => {
-      const prayerTags = prayer.tags || [];
-      return selectedTags.value.every(tag => prayerTags.includes(tag));
-    });
+    filtered = filtered.filter((prayer) => matchesPrayerTags(prayer.tags, selectedTags.value));
   }
   
   // Поиск

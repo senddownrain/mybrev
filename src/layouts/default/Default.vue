@@ -66,6 +66,20 @@
         <v-icon>mdi-menu</v-icon>
       </v-app-bar-nav-icon>
 
+      <v-btn
+        v-if="route.name === 'PrayerView' && !uiStore.prayerIsEditing"
+        class="prayer-share-action text-none"
+        variant="flat"
+        :loading="sharingPrayerLink"
+        :disabled="!currentPrayer"
+        aria-label="Падзяліцца малітвай"
+        title="Падзяліцца малітвай"
+        @click="shareCurrentPrayer"
+      >
+        <PhShareNetwork :size="20" weight="bold" aria-hidden="true" />
+        <span class="prayer-share-action__label">Падзяліцца</span>
+      </v-btn>
+
       <!-- Заголовок при редактировании молитвы -->
       <v-app-bar-title v-if="(isPrayerViewPage && uiStore.prayerIsEditing) || isPrayerEditPage" class="prayer-edit-title">
         {{ layoutTitle }}
@@ -188,9 +202,11 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { PhShareNetwork } from '@phosphor-icons/vue';
 import { useAppBar } from '@/composables/useAppBar.js';
+import { useNotifier } from '@/composables/useNotifier.js';
 import { useUiStore } from '@/stores/ui.js';
 import NavigationDrawer from './NavigationDrawer.vue';
 import TextSettingsSheet from '@/components/TextSettingsSheet.vue';
@@ -200,6 +216,8 @@ import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { usePrayers } from '@/composables/usePrayers.js';
 import { useAuthStore } from '@/stores/auth.js';
+import { buildPrayerShareUrl, sharePrayerLink } from '@/utils/prayerShare.js';
+import { logger } from '@/utils/logger.js';
 import moment from '@/utils/moment-be';
 
 const { isDrawerOpen } = useAppBar();
@@ -208,9 +226,11 @@ const settings = useSettingsStore();
 const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
+const { notifySuccess, notifyError } = useNotifier();
+const sharingPrayerLink = ref(false);
 
 const { selectedTags, selectedCategory, isFilterExpanded } = usePrayersFilters();
-const { allTags, init: initPrayers } = usePrayers();
+const { prayers, allTags, getTitle, init: initPrayers } = usePrayers();
 const prayerRouteNames = new Set([
   'Prayers',
   'PrayersList',
@@ -229,6 +249,9 @@ watch(
 );
 const filterTags = computed(() => (
   [...new Set(allTags.value || [])].sort((a, b) => a.localeCompare(b, 'be', { sensitivity: 'base' }))
+));
+const currentPrayer = computed(() => (
+  prayers.value.find((prayer) => prayer.id === route.params.id) || null
 ));
 
 const isPrayerViewPage = computed(() => {
@@ -330,6 +353,31 @@ const savePrayerForm = () => {
   uiStore.triggerPrayerFormSave();
 };
 
+const shareCurrentPrayer = async () => {
+  if (!currentPrayer.value || sharingPrayerLink.value) return;
+
+  const routeHref = router.resolve({
+    name: 'PrayerView',
+    params: { id: currentPrayer.value.id },
+  }).href;
+  const url = buildPrayerShareUrl(routeHref, window.location.href);
+  if (!url) return;
+
+  sharingPrayerLink.value = true;
+  try {
+    const result = await sharePrayerLink({
+      title: getTitle(currentPrayer.value),
+      url,
+    });
+    if (result === 'copied') notifySuccess('Спасылка на малітву скапіявана');
+  } catch (error) {
+    logger.error('Failed to share prayer link:', error);
+    notifyError('Не ўдалося падзяліцца спасылкай');
+  } finally {
+    sharingPrayerLink.value = false;
+  }
+};
+
 const goBack = () => {
   if (route.name === 'PrayerView') {
     router.push({ name: 'PrayersList' });
@@ -415,6 +463,29 @@ const applyFilter = () => {
 .top-circle-btn--active {
   background: rgba(var(--chrome-accent-rgb), 0.13) !important;
   color: var(--chrome-accent) !important;
+}
+
+.prayer-share-action {
+  height: 48px !important;
+  min-width: 0 !important;
+  padding-inline: 15px !important;
+  border: 1px solid var(--nav-border) !important;
+  border-radius: 24px !important;
+  background: var(--overlay-surface) !important;
+  color: var(--nav-on-surface) !important;
+  box-shadow: 0 2px 9px var(--nav-button-shadow) !important;
+  font-weight: 650;
+  letter-spacing: 0;
+  backdrop-filter: blur(18px);
+}
+
+.prayer-share-action :deep(.v-btn__content) {
+  gap: 8px;
+}
+
+.prayer-share-action:active {
+  opacity: 0.72;
+  transform: scale(0.96);
 }
 
 .prayer-form-top-actions {
@@ -597,6 +668,18 @@ const applyFilter = () => {
     height: 44px !important;
     min-width: 44px !important;
     flex-basis: 44px !important;
+  }
+
+  .prayer-share-action {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    padding-inline: 0 !important;
+    border-radius: 50% !important;
+  }
+
+  .prayer-share-action__label {
+    display: none;
   }
 
   .prayer-form-top-actions {
