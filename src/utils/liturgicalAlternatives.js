@@ -1,5 +1,5 @@
 import { parse } from 'node-html-parser';
-import { removeBreakAfterAsterisk } from './liturgicalHtml.js';
+import { removeBreakAfterPsalmCadenceSign } from './liturgicalHtml.js';
 
 const MAX_TITLE_LENGTH = 56;
 const ALTERNATIVE_MARKER = /^\s*А\s*бо(?:\s+(?:інш(?:ае|ая|ыя)|яшчэ))?\s*:/iu;
@@ -233,7 +233,7 @@ export function getLiturgicalAlternatives(html, kind = 'generic') {
     : structuredAlternatives(root);
   const rawOptions = structured || splitAtRules(root).map((optionHtml) => ({ html: optionHtml }));
   const options = uniqueOptions(rawOptions).map((option, index) => ({
-    html: removeBreakAfterAsterisk(option.html),
+    html: removeBreakAfterPsalmCadenceSign(option.html),
     title: optionTitle(option, index, kind),
   }));
   const titleCounts = new Map();
@@ -242,7 +242,7 @@ export function getLiturgicalAlternatives(html, kind = 'generic') {
     titleCounts.set(option.title, count);
     if (count > 1) option.title = shorten(`${option.title} · ${count}`);
   });
-  return options.length ? options : [{ html: removeBreakAfterAsterisk(source), title: 'Варыянт 1' }];
+  return options.length ? options : [{ html: removeBreakAfterPsalmCadenceSign(source), title: 'Варыянт 1' }];
 }
 
 export function formatIntercessions(html) {

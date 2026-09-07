@@ -1,3 +1,8 @@
+export function buildPrayerSharePath(prayerId) {
+  if (!prayerId) return '';
+  return `/p/${encodeURIComponent(String(prayerId))}`;
+}
+
 export function buildPrayerShareUrl(routeHref, baseHref = globalThis.location?.href) {
   if (!routeHref || !baseHref) return '';
   return new URL(routeHref, baseHref).href;

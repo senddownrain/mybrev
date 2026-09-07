@@ -1,17 +1,20 @@
 /**
- * The asterisk marks the middle of a psalm verse. Source texts often contain
- * a legacy <br> immediately after it; in the reading layout both halves of
- * the verse should remain on the same line and wrap naturally.
+ * Cadence signs mark pauses inside a psalm verse. Source texts often contain
+ * a legacy <br> immediately after them; in the reading layout the text should
+ * remain on the same line and wrap naturally.
  */
-export function removeBreakAfterAsterisk(html) {
+export function removeBreakAfterPsalmCadenceSign(html) {
   return String(html || '').replace(
-    /((?:\*|&#0*42;|&ast;)(?:\s|&nbsp;)*(?:<\/(?:span|font|strong|b|em|i)>\s*)*)(?:<br\s*\/?>\s*)+/giu,
+    /((?:\*|&#0*42;|&ast;|†|&#0*8224;|&#x0*2020;|&dagger;)(?:\s|&nbsp;)*(?:<\/(?:span|font|strong|b|em|i)>\s*)*)(?:<br\s*\/?>\s*)+/giu,
     '$1 ',
   );
 }
 
+// Kept for callers outside this repository that imported the old name.
+export const removeBreakAfterAsterisk = removeBreakAfterPsalmCadenceSign;
+
 const ASTERISK_PATTERN = /(?:\*|&#0*42;|&ast;)/iu;
-const PSALM_MARKER_PATTERN = /(?:\*|&#0*42;|&ast;|†|&#0*8224;|&dagger;)/giu;
+const PSALM_MARKER_PATTERN = /(?:\*|&#0*42;|&ast;|†|&#0*8224;|&#x0*2020;|&dagger;)/giu;
 const PARAGRAPH_PATTERN = /<p\b([^>]*)>([\s\S]*?)<\/p>/giu;
 const BREAK_PATTERN = /(<br\s*\/?>)/giu;
 const TRAILING_ANTIPHON_PATTERN = /<p\b[^>]*>(?=(?:\s|&nbsp;|<[^>]+>)*(?:\d+\s*)?Ант\.)[\s\S]*?<\/p>\s*$/iu;
@@ -224,7 +227,7 @@ export function formatPsalmHtml(html, { stripEmbeddedAntiphon = false } = {}) {
     }
   }
 
-  const withStrophes = markPsalmCadenceSigns(removeBreakAfterAsterisk(formatted)).replace(
+  const withStrophes = markPsalmCadenceSigns(removeBreakAfterPsalmCadenceSign(formatted)).replace(
     PARAGRAPH_PATTERN,
     (_paragraph, attributes, content) => splitPsalmParagraph(attributes, content),
   );

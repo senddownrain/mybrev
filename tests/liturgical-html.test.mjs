@@ -6,26 +6,33 @@ import {
   markLeadingLiturgicalSubheadings,
   markPsalmCadenceSigns,
   removeLectionSectionHeading,
-  removeBreakAfterAsterisk,
+  removeBreakAfterPsalmCadenceSign,
 } from '../src/utils/liturgicalHtml.js';
 
 test('removes a line break immediately after a psalm asterisk', () => {
   assert.equal(
-    removeBreakAfterAsterisk('Пане, пачуй мяне, *<br /> і адкажы мне.'),
+    removeBreakAfterPsalmCadenceSign('Пане, пачуй мяне, *<br /> і адкажы мне.'),
     'Пане, пачуй мяне, * і адкажы мне.',
   );
 });
 
 test('handles an asterisk wrapped in a rubric span', () => {
   assert.equal(
-    removeBreakAfterAsterisk('слова <span style="color:red">*</span><br> працяг'),
+    removeBreakAfterPsalmCadenceSign('слова <span style="color:red">*</span><br> працяг'),
     'слова <span style="color:red">*</span> працяг',
+  );
+});
+
+test('removes a line break after literal and encoded dagger signs', () => {
+  assert.equal(
+    removeBreakAfterPsalmCadenceSign('радок †<br>працяг; радок &#8224;<br />працяг; радок &#x2020;</span><br>працяг'),
+    'радок † працяг; радок &#8224; працяг; радок &#x2020;</span> працяг',
   );
 });
 
 test('preserves all other line breaks', () => {
   assert.equal(
-    removeBreakAfterAsterisk('Першы радок<br>Другі радок'),
+    removeBreakAfterPsalmCadenceSign('Першы радок<br>Другі радок'),
     'Першы радок<br>Другі радок',
   );
 });
@@ -53,7 +60,7 @@ test('splits a legacy single-paragraph psalm into marked strophes', () => {
 
   assert.equal(
     formatted,
-    '<p data-psalm-strophe>Радок <span class="psalm-marker">†</span><br>сярэдзіна <span class="psalm-marker">*</span> канец.</p><p data-psalm-strophe>Наступны <span class="psalm-marker">*</span> канец.</p>',
+    '<p data-psalm-strophe>Радок <span class="psalm-marker">†</span> сярэдзіна <span class="psalm-marker">*</span> канец.</p><p data-psalm-strophe>Наступны <span class="psalm-marker">*</span> канец.</p>',
   );
 });
 

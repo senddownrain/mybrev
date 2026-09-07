@@ -80,6 +80,7 @@ const routes = [
       },
       {
         path: 'prayer/:id',
+        alias: 'p/:id',
         name: 'PrayerView',
         components: { 
           default: () => import('@/components/prayers/PrayerView.vue')

@@ -1,11 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildPrayerShareUrl, sharePrayerLink } from '../src/utils/prayerShare.js';
+import {
+  buildPrayerSharePath,
+  buildPrayerShareUrl,
+  sharePrayerLink,
+} from '../src/utils/prayerShare.js';
+
+test('builds the compact public route and safely encodes its id', () => {
+  assert.equal(buildPrayerSharePath('abc 123'), '/p/abc%20123');
+});
 
 test('builds a direct absolute URL for the selected prayer route', () => {
   assert.equal(
-    buildPrayerShareUrl('/prayer/abc123', 'https://malitounik.example/prayers?tag=ранiца'),
-    'https://malitounik.example/prayer/abc123',
+    buildPrayerShareUrl('/p/abc123', 'https://malitounik.example/prayers?tag=ранiца'),
+    'https://malitounik.example/p/abc123',
   );
 });
 

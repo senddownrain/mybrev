@@ -29,6 +29,7 @@
     "audit:alternatives": "node scripts/audit-liturgical-alternatives.mjs",
     "audit:intercessions": "node scripts/cleanup-fixed-day-intercessions.mjs",
     "db:cleanup-intercessions": "node scripts/cleanup-fixed-day-intercessions.mjs",
+    "db:cleanup-psalm-breaks": "node scripts/cleanup-psalm-cadence-breaks.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:audit": "node --test tests/liturgical-audit.test.mjs",
     "test:fixed-feasts": "node --test tests/fixed-feasts-audit.test.mjs",
