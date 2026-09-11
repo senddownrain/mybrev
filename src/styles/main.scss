@@ -661,6 +661,22 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   margin-left: 0;
 }
 
+// Short rubrics introducing a psalm or Gospel canticle are captions, not a
+// strophe. They retain their source emphasis (red, italic, etc.) but sit
+// centred above the text. This includes the fixed Magnificat caption used at
+// the end of Vespers.
+.liturgical-hour-column :is(.ora-psalm, .ora-text) p[data-liturgical-subheading],
+.liturgical-hour-column .ora-sub {
+  text-align: center !important;
+}
+
+.liturgical-hour-column :is(
+  .ora-psalm p[data-liturgical-subheading],
+  .ora-sub
+) * {
+  text-align: center !important;
+}
+
 // Alternate actual strophes in psalms and Gospel canticles. Headings and
 // subtitles are not marked as strophes, so they do not affect parity.
 .ora-psalm p[data-psalm-strophe]:nth-child(even of p[data-psalm-strophe]) {
