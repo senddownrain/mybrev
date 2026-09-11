@@ -12,7 +12,8 @@ export const BIBLE_LANGUAGES = Object.freeze({
     shortLabel: 'БЕЛ',
     label: 'Беларуская',
     collection: 'bible_bel',
-    translation: 'А. Бокун · catholic.by',
+    oldTestamentTranslation: 'А. Бокун',
+    newTestamentTranslation: 'catholic.by - афіцыйны пераклад',
   }),
   ru: Object.freeze({
     id: 'ru',

@@ -98,6 +98,8 @@ function escapePattern(value) {
   return String(value || '').replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
 }
 
+const HTML_SPACE_PATTERN = '(?:\\s|&nbsp;|&#0*32;|&#x0*20;)*';
+
 /**
  * The Office of Readings owns its first/second-reading labels in the page
  * structure. Older records often repeat the same label at the beginning of
@@ -109,8 +111,10 @@ export function removeLectionSectionHeading(html, heading) {
   if (!expected) return String(html || '');
 
   const headingPattern = new RegExp(
-    `^\\s*(?:<(?:span|font|strong|b|em|i)\\b[^>]*>\\s*)*${escapePattern(expected)}\\s*`
-      + '(?:<\\/(?:span|font|strong|b|em|i)>\\s*)*(?:<br\\s*\\/?>\\s*)?',
+    `^${HTML_SPACE_PATTERN}(?:<(?:span|font|strong|b|em|i)\\b[^>]*>${HTML_SPACE_PATTERN})*`
+      + `${escapePattern(expected)}${HTML_SPACE_PATTERN}`
+      + `(?:<\\/(?:span|font|strong|b|em|i)>${HTML_SPACE_PATTERN})*`
+      + `(?:<br\\s*\\/?>${HTML_SPACE_PATTERN})?`,
     'iu',
   );
 

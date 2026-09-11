@@ -153,6 +153,14 @@ test('removes a standalone legacy lection heading before structural rendering', 
   );
 });
 
+test('treats encoded spaces after a legacy lection heading as whitespace', () => {
+  const first = '<p><span style="color: red;">Першае чытанне &#x20;</span></p><p>Тэкст.</p>';
+  const second = '<p><span style="color: red;">Другое чытанне &#32;</span></p><p>Тэкст.</p>';
+
+  assert.equal(removeLectionSectionHeading(first, 'Першае чытанне'), '<p>Тэкст.</p>');
+  assert.equal(removeLectionSectionHeading(second, 'Другое чытанне'), '<p>Тэкст.</p>');
+});
+
 test('removes only the legacy label from a mixed lection heading', () => {
   const html = [
     '<p style="text-align: justify;"><span style="color: #ff0000;">Другое чытанне</span><br />',
