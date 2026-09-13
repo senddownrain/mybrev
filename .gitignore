@@ -29,3 +29,7 @@ pnpm-debug.log*
 /reports/
 /outputs/
 /patchs/serviceAccountKey.json
+
+# local bible scraper cache and nested app checkout
+scripts/bible/.cache*/
+ibreviarybyapp/
