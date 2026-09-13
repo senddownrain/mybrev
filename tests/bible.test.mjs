@@ -9,12 +9,22 @@ import {
 import { bibleVerseKey, normalizeBibleVerse } from '../src/utils/bible.js';
 
 test('Bible catalogues contain the expected canon sizes', () => {
-  assert.equal(BIBLE_BOOKS.bel.length, 66);
+  assert.equal(BIBLE_BOOKS.bel.length, 73);
   assert.equal(BIBLE_BOOKS.ru.length, 73);
   assert.equal(BIBLE_BOOKS.bel.filter((book) => book.testament === 'new').length, 27);
   assert.equal(BIBLE_BOOKS.ru.filter((book) => book.testament === 'new').length, 27);
   assert.ok(BIBLE_BOOKS.bel.every((book) => book.shortName.length <= 6));
   assert.ok(BIBLE_BOOKS.ru.every((book) => book.shortName.length <= 6));
+});
+
+test('Belarusian catalogue follows the Chernyavski translation', () => {
+  assert.equal(getBibleBook('bel', 'tob').chapterCount, 14);
+  assert.equal(getBibleBook('bel', 'sir').chapterCount, 51);
+  assert.equal(getBibleBook('bel', 'dn').chapterCount, 14);
+  assert.equal(
+    getParallelBibleBook('ru', 'wis', 'bel').id,
+    'wis',
+  );
 });
 
 test('Russian catalogue includes the supplied extended chapters', () => {

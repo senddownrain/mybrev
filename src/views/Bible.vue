@@ -261,11 +261,7 @@ const books = computed(() => BIBLE_BOOKS[language.value]);
 const currentBook = computed(() => getBibleBook(language.value, route.params.bookId));
 const chapter = computed(() => Number(route.params.chapter) || 1);
 const testamentLabel = computed(() => currentBook.value?.testament === 'new' ? 'Новы Запавет' : 'Стары Запавет');
-const translationLabel = computed(() => (
-  currentBook.value?.testament === 'new'
-    ? languageConfig.value.newTestamentTranslation || languageConfig.value.translation
-    : languageConfig.value.oldTestamentTranslation || languageConfig.value.translation
-));
+const translationLabel = computed(() => languageConfig.value.translation);
 
 const rawChapters = computed(() => bookDocument.value?.chapters || {});
 const verses = computed(() => {
