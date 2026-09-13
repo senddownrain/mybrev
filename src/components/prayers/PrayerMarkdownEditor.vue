@@ -32,6 +32,10 @@
         H2
       </button>
       <span class="markdown-editor__divider" />
+      <button type="button" title="Спасылка на іншую малітву" @click="openPrayerLink">
+        <v-icon icon="mdi-link-variant" size="17" />
+        Спасылка
+      </button>
       <button type="button" class="markdown-editor__rubric-button" @click="insertRubric">
         <v-icon icon="mdi-format-color-text" size="17" />
         Рубрыка
@@ -49,11 +53,40 @@
       </span>
     </div>
     <div ref="editorHost" class="markdown-editor__surface" />
+    <v-dialog v-model="linkDialog" max-width="560" @after-leave="view?.focus()">
+      <v-card :title="editingLink ? 'Рэдагаванне спасылкі' : 'Спасылка на малітву'">
+        <v-card-text>
+          <v-autocomplete
+            v-model="linkPrayer"
+            :items="prayerLinkItems"
+            :loading="prayersLoading"
+            item-title="title"
+            item-value="id"
+            return-object
+            autofocus
+            clearable
+            label="Знайсці малітву па назве"
+            no-data-text="Малітвы не знойдзены"
+            variant="outlined"
+            @update:model-value="updateLinkLabel"
+          />
+          <v-text-field v-model="linkLabel" label="Тэкст спасылкі" variant="outlined" @keydown.enter.prevent="insertPrayerLink" />
+          <p class="markdown-editor__link-help">Спасылка захоўваецца без дамена: /prayer/ідэнтыфікатар.</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn @click="linkDialog = false">Скасаваць</v-btn>
+          <v-btn color="primary" :disabled="!linkPrayer || !linkLabel.trim()" @click="insertPrayerLink">{{ editingLink ? 'Змяніць' : 'Уставіць' }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { parsePrayerLink, prayerLinkMarkdown } from '@/utils/prayerLink';
+import { ensureSyntaxTree } from '@codemirror/language';
 import { basicSetup } from 'codemirror';
 import { Compartment, EditorState } from '@codemirror/state';
 import {
@@ -76,6 +109,8 @@ const props = defineProps({
   modelValue: { type: String, default: '' },
   placeholder: { type: String, default: 'Увядзіце тэкст малітвы…' },
   error: { type: Boolean, default: false },
+  prayers: { type: Array, default: () => [] },
+  prayersLoading: { type: Boolean, default: false },
 });
 const emit = defineEmits(['update:modelValue']);
 const editorHost = ref(null);
@@ -84,6 +119,63 @@ const editorNotice = ref('');
 const modeCompartment = new Compartment();
 let view = null;
 let pasteNoticeTimeout = null;
+const linkDialog = ref(false);
+const linkPrayer = ref(null);
+const linkLabel = ref('');
+const editingLink = ref(false);
+let linkSelection = null;
+let originalLinkLabel = '';
+const prayerLinkItems = computed(() => props.prayers.filter((prayer) => prayer.id).map((prayer) => ({
+  id: prayer.id,
+  title: prayer.title || prayer.titleVersions?.be || prayer.titleVersions?.ru
+    || Object.values(prayer.titleVersions || {})[0] || 'Без назвы',
+})).sort((a, b) => a.title.localeCompare(b.title, 'be')));
+
+function openPrayerLink() {
+  if (!view) return;
+  const { from, to } = view.state.selection.main;
+  let existing = null;
+  // Syntax nodes prevent treating text inside code blocks or images as links.
+  ensureSyntaxTree(view.state, to, 100)?.iterate({
+    from: Math.max(0, from - 1),
+    to: Math.min(view.state.doc.length, to + 1),
+    enter(node) {
+      if (node.name !== 'Link' || node.from > from || node.to < to) return;
+      const parsed = parsePrayerLink(view.state.sliceDoc(node.from, node.to));
+      if (parsed) existing = { ...parsed, from: node.from, to: node.to };
+    },
+  });
+  editingLink.value = Boolean(existing);
+  if (existing) {
+    linkSelection = { from: existing.from, to: existing.to };
+    originalLinkLabel = existing.label;
+    linkLabel.value = existing.label;
+    linkPrayer.value = prayerLinkItems.value.find((prayer) => prayer.id === existing.id)
+      || { id: existing.id, title: existing.label || 'Малітва не знойдзена' };
+    linkDialog.value = true;
+    return;
+  }
+  linkSelection = { from, to };
+  originalLinkLabel = view.state.sliceDoc(from, to);
+  linkLabel.value = originalLinkLabel;
+  linkPrayer.value = null;
+  linkDialog.value = true;
+}
+
+function updateLinkLabel(prayer) {
+  if (!originalLinkLabel) linkLabel.value = prayer?.title || '';
+}
+
+function insertPrayerLink() {
+  if (!view || !linkSelection || !linkPrayer.value || !linkLabel.value.trim()) return;
+  const insert = prayerLinkMarkdown(linkPrayer.value.id, linkLabel.value);
+  view.dispatch({
+    changes: { ...linkSelection, insert },
+    selection: { anchor: linkSelection.from + insert.length },
+  });
+  linkDialog.value = false;
+  showEditorNotice(editingLink.value ? 'Спасылка зменена' : 'Спасылка ўстаўлена');
+}
 
 const rubricCompletions = [
   { label: '/rubric', displayLabel: 'Рубрыка', detail: 'літургічная заўвага', apply: ':::rubric\nТэкст рубрыкі\n:::' },
@@ -305,6 +397,7 @@ function autoFixMarkdown() {
 
 watch(() => props.modelValue, (value) => {
   if (!view || value === view.state.doc.toString()) return;
+  linkDialog.value = false;
   view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: value } });
 });
 
@@ -337,6 +430,7 @@ onBeforeUnmount(() => {
 .markdown-editor__hint { margin-left: auto; color: var(--nav-muted); font-size: 0.68rem; }
 .markdown-editor__paste-notice { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; color: rgb(var(--v-theme-primary)); font-size: 0.7rem; font-weight: 700; }
 .markdown-editor__surface { color: var(--nav-on-surface); font-size: 1rem; }
+.markdown-editor__link-help { color: var(--nav-muted); font-size: 0.8rem; overflow-wrap: anywhere; }
 @media (max-width: 600px) {
   .markdown-editor__mode-description, .markdown-editor__hint { display: none; }
   .markdown-editor__mode-bar { justify-content: center; }

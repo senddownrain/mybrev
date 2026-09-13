@@ -29,13 +29,24 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
       <!-- Кнопка назад для страницы просмотра молитвы (не в режиме редактирования) -->
-      <v-app-bar-nav-icon
-        v-else-if="isPrayerViewPage"
-        class="top-circle-btn"
-        @click="goBack"
-      >
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-app-bar-nav-icon>
+      <div v-else-if="isPrayerViewPage" class="readings-nav-group">
+        <v-btn
+          icon
+          variant="text"
+          class="readings-nav-segment readings-nav-segment--menu"
+          aria-label="Назад"
+          @click="goBack"
+        >
+          <v-icon>mdi-arrow-left</v-icon>
+        </v-btn>
+        <v-btn
+          :to="{ name: 'PrayersList' }"
+          variant="text"
+          class="readings-nav-segment readings-nav-segment--liturgy text-none"
+        >
+          Усе малітвы
+        </v-btn>
+      </div>
       <!-- Меню і вяртанне да літургіі як адзін падзелены кантрол -->
       <div v-else-if="isReadingsPage" class="readings-nav-group">
         <v-btn
@@ -377,7 +388,11 @@ const shareCurrentPrayer = async () => {
 
 const goBack = () => {
   if (route.name === 'PrayerView') {
-    router.push({ name: 'PrayersList' });
+    if (router.options.history.state.back) {
+      router.back();
+    } else {
+      router.push({ name: 'PrayersList' });
+    }
     return;
   }
 

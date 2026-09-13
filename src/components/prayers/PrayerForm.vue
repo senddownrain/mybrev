@@ -75,7 +75,7 @@
               <span class="text-count">{{ plainTextLength }} сімв.</span>
             </div>
 
-            <PrayerMarkdownEditor v-model="form.text" :error="Boolean(textError)" />
+            <PrayerMarkdownEditor v-model="form.text" :error="Boolean(textError)" :prayers="prayers" :prayers-loading="isLoading" />
             <p v-if="textError" class="field-error">{{ textError }}</p>
           </section>
 

@@ -45,7 +45,7 @@
             <div v-for="(verse, index) in section.data.verses" :key="index" class="psalm-strophe">
               <div
                 class="section-text psalm-verse-text"
-                v-html="formatText(typeof verse === 'string' ? verse : (verse.text || ''))"
+                v-html="formatPsalmText(typeof verse === 'string' ? verse : (verse.text || ''))"
               ></div>
               <div
                 v-if="section.data.chorus && index < section.data.verses.length - 1"
@@ -67,7 +67,7 @@
           <div
             v-else-if="section.data.text"
             class="section-text psalm-verse-text"
-            v-html="formatText(section.data.text)"
+            v-html="formatPsalmText(section.data.text)"
           ></div>
         </template>
 
@@ -187,6 +187,20 @@ function formatText(text) {
       return `<p${className}>${safe}</p>`;
     })
     .join('');
+}
+
+function formatPsalmText(text) {
+  // Work on text only so verse numbers never alter HTML attributes.
+  return formatText(text)
+    .split(/(<[^>]+>)/g)
+    .map((part) => {
+      if (part.startsWith('<')) return part;
+      return part
+        .replace(/(?<=\S)(?:\s|&nbsp;|&#160;|&#xA0;)+(?=\d+\.\s)/gi, '<br>')
+        .replace(/\*(?:\s|&nbsp;|&#160;|&#xA0;)*/gi, '*<br>');
+    })
+    .join('')
+    .replace(/\*(?:<br\s*\/?>(?:\s|&nbsp;|&#160;|&#xA0;)*)+/gi, '*<br>');
 }
 
 function hasAcclamation(text) {

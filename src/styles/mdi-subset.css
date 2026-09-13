@@ -86,6 +86,7 @@
 .mdi-information::before { content: "\F02FC"; }
 .mdi-keyboard-return::before { content: "\F0311"; }
 .mdi-keyboard-space::before { content: "\F1050"; }
+.mdi-link-variant::before { content: "\F0339"; }
 .mdi-lock-outline::before { content: "\F0341"; }
 .mdi-magnify::before { content: "\F0349"; }
 .mdi-menu::before { content: "\F035C"; }

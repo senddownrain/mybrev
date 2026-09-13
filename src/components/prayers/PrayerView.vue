@@ -1,6 +1,6 @@
 <template>
   <v-container v-if="prayer" class="prayer-view-container">
-    <div class="prayer-content-area">
+    <div class="prayer-content-area" @click="navigatePrayerLink">
       <article class="prayer-reading-surface" :class="{ 'prayer-reading-surface--mass': isMassOrder }">
           <header class="prayer-reading-header">
             <div class="prayer-reading-eyebrow">{{ isMassOrder ? 'Літургія' : 'Малітва' }}</div>
@@ -107,6 +107,18 @@ onUnmounted(() => {
 
 function toggleEdit() {
   router.push({ name: 'PrayerEdit', params: { id: route.params.id } });
+}
+
+function navigatePrayerLink(event) {
+  if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+  const link = event.target.closest?.('a[href]');
+  if (!link || link.hasAttribute('download') || (link.target && link.target !== '_self')) return;
+  const url = new URL(link.href, window.location.href);
+  if (url.origin !== window.location.origin) return;
+  const destination = router.resolve(`${url.pathname}${url.search}${url.hash}`);
+  if (destination.name !== 'PrayerView') return;
+  event.preventDefault();
+  router.push(destination.fullPath);
 }
 
 async function copyText() {
