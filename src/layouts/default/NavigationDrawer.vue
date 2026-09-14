@@ -77,6 +77,10 @@
         </template>
       </v-list-item>
 
+      <v-list-item title="Спеўнік" :to="{ name: 'Songs' }" :active="route.name === 'Songs' || route.name === 'SongView'">
+        <template #prepend><PhMusicNotes :size="22" class="drawer-icon" /></template>
+      </v-list-item>
+
       <v-list-item
         title="Малітвы"
         :active="isPrayersPage && !selectedCategory"
@@ -167,7 +171,7 @@ import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import {
   PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart, PhBookmark,
-  PhChurch, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX,
+  PhChurch, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes,
 } from '@phosphor-icons/vue';
 
 const MASS_ORDER_PRAYER_ID = 'eMmCtxwyJ75ogmL5rwye';

@@ -40,6 +40,10 @@ export const useSettingsStore = defineStore('settings', () => {
     localStorage.getItem(HIDDEN_GLOBAL_CATEGORIES_KEY) || '[]',
   ));
   const favoritePrayers = ref(JSON.parse(localStorage.getItem('favoritePrayers') || '[]'));
+  const favoriteSongs = ref(JSON.parse(localStorage.getItem('favoriteSongs') || '[]'));
+  const songCompactList = ref(localStorage.getItem('songCompactList') === 'true');
+  const songShowChords = ref(localStorage.getItem('songShowChords') === 'true');
+  const songChordLayout = ref(['left', 'right'].includes(localStorage.getItem('songChordLayout')) ? 'left' : 'above');
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') === 'true');
 
   watch(currentTheme, (newTheme) => {
@@ -69,6 +73,10 @@ export const useSettingsStore = defineStore('settings', () => {
     localStorage.setItem(HIDDEN_GLOBAL_CATEGORIES_KEY, JSON.stringify(v));
   }, { deep: true });
   watch(favoritePrayers, (v) => localStorage.setItem('favoritePrayers', JSON.stringify(v)), { deep: true });
+  watch(favoriteSongs, (v) => localStorage.setItem('favoriteSongs', JSON.stringify(v)), { deep: true });
+  watch(songCompactList, (v) => localStorage.setItem('songCompactList', String(v)));
+  watch(songShowChords, (v) => localStorage.setItem('songShowChords', String(v)));
+  watch(songChordLayout, (v) => localStorage.setItem('songChordLayout', v));
   
   watch(keepScreenOn, async (newValue) => {
     localStorage.setItem('keepScreenOn', String(newValue));
@@ -150,6 +158,11 @@ export const useSettingsStore = defineStore('settings', () => {
     return favoritePrayers.value.includes(prayerId);
   }
 
+  function toggleFavoriteSong(id) {
+    favoriteSongs.value = favoriteSongs.value.includes(id)
+      ? favoriteSongs.value.filter((item) => item !== id) : [...favoriteSongs.value, id];
+  }
+
   return {
     currentTheme,
     fontFamily,
@@ -159,6 +172,11 @@ export const useSettingsStore = defineStore('settings', () => {
     personalPrayerCategories: menuCategories,
     hiddenGlobalPrayerCategoryIds,
     favoritePrayers,
+    favoriteSongs,
+    songCompactList,
+    songShowChords,
+    songChordLayout,
+    toggleFavoriteSong,
     keepScreenOn,
     toggleTheme,
     setTheme,

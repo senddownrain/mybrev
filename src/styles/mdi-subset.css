@@ -60,6 +60,7 @@
 .mdi-close::before { content: "\F0156"; }
 .mdi-close-circle::before { content: "\F0159"; }
 .mdi-cloud-upload::before { content: "\F0167"; }
+.mdi-cog-outline::before { content: "\F08BB"; }
 .mdi-content-copy::before { content: "\F018F"; }
 .mdi-content-save-outline::before { content: "\F0818"; }
 .mdi-cross::before { content: "\F0953"; }
@@ -94,6 +95,7 @@
 .mdi-menu-right::before { content: "\F035F"; }
 .mdi-minus::before { content: "\F0374"; }
 .mdi-minus-box::before { content: "\F0375"; }
+.mdi-music-note::before { content: "\F0387"; }
 .mdi-note-off-outline::before { content: "\F1784"; }
 .mdi-page-first::before { content: "\F0600"; }
 .mdi-page-last::before { content: "\F0601"; }
@@ -103,6 +105,7 @@
 .mdi-pencil::before { content: "\F03EB"; }
 .mdi-pencil-outline::before { content: "\F0CB6"; }
 .mdi-play::before { content: "\F040A"; }
+.mdi-playlist-music::before { content: "\F0CB8"; }
 .mdi-plus::before { content: "\F0415"; }
 .mdi-plus-box::before { content: "\F0416"; }
 .mdi-radiobox-blank::before { content: "\F043D"; }

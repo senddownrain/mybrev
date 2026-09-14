@@ -26,6 +26,8 @@
 
 <script setup>
 const editors = [
+  { title: 'Стварыць спеў', description: 'Тэкст, акорды і тэгі для пілігрымкавага спеўніка.', icon: 'mdi-music-note', to: { name: 'AdminSongAdd' } },
+  { title: 'Спеўнік', description: 'Знайсці спеў і адкрыць яго асобны рэдактар.', icon: 'mdi-playlist-music', to: { name: 'Songs' } },
   {
     title: 'Стварыць чытанне',
     description: 'Стварыць новы дакумент чытанняў у калекцыі readings.',

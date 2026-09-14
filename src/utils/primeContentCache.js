@@ -1,4 +1,5 @@
 import moment from './moment-be.js';
+import { SONGS_CACHE_VERSION } from '../constants/songTags.js';
 import { publicContentCache, contentKey, readingsKey, publicContentKey } from './publicContentCache.js';
 
 /** Read a small set of local records only. Never waits for Firestore or network. */
@@ -17,6 +18,7 @@ export async function primeContentCache(location = window.location) {
     publicContentKey('year', date.year()), publicContentKey('year', date.year() + 1),
   ];
   if (/prayer/.test(url.pathname)) keys.push(publicContentKey('prayers'));
+  if (/\/songs?(?:\/|$)/.test(url.pathname)) keys.push(publicContentKey('songs', SONGS_CACHE_VERSION));
   if (/completorium|invit/.test(url.pathname)) {
     keys.push(publicContentKey('static', 'completoriums'), publicContentKey('static', 'invitatoriums'));
   }

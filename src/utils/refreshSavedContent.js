@@ -27,6 +27,7 @@ export async function refreshSavedContent() {
           case 'feasts': await liturgical.fetchAllFeasts(value, options); break;
           case 'static': await getStaticCollection(value, options); break;
           case 'prayers': await getSavedPrayers(options); break;
+          case 'songs': await (await import('../services/songService.js')).getSavedSongs(options); break;
           case 'year': {
             const session = createReadSession();
             await calendar.getYearOptions(value, session);

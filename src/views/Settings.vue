@@ -50,6 +50,11 @@
       </div>
     </section>
 
+    <section class="settings-section" aria-labelledby="songs-title">
+      <div class="section-heading"><span class="section-icon"><PhMusicNotes :size="22" /></span><div><h2 id="songs-title">Спеўнік</h2><p>Выгляд тэксту і акордаў</p></div></div>
+      <SongSettings />
+    </section>
+
     <section class="settings-section" aria-labelledby="categories-title">
       <div class="section-heading">
         <span class="section-icon"><PhFolders :size="22" /></span>
@@ -89,7 +94,8 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import { PhCheck, PhFolders, PhMinus, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
+import { PhCheck, PhFolders, PhMinus, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash, PhMusicNotes } from '@phosphor-icons/vue';
+import SongSettings from '@/components/songs/SongSettings.vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';

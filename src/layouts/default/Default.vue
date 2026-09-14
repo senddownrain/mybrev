@@ -10,7 +10,7 @@
       flat
       color="transparent"
       class="floating-app-bar"
-      :class="{ 'floating-app-bar--behind-drawer': isDrawerOpen }"
+      :class="{ 'floating-app-bar--behind-drawer': isDrawerOpen, 'floating-app-bar--song-view': isSongViewPage }"
     >
       <!-- Кнопка назад для страницы редактирования молитвы (PrayerEdit) -->
       <v-app-bar-nav-icon
@@ -46,6 +46,10 @@
         >
           Усе малітвы
         </v-btn>
+      </div>
+      <div v-else-if="isSongViewPage" class="readings-nav-group songs-nav-group">
+        <v-btn icon variant="text" class="readings-nav-segment readings-nav-segment--menu" aria-label="Назад" :to="{ name: 'Songs' }"><v-icon>mdi-arrow-left</v-icon></v-btn>
+        <v-btn :to="{ name: 'Songs' }" variant="text" class="readings-nav-segment readings-nav-segment--liturgy text-none">Усе спевы</v-btn>
       </div>
       <!-- Меню і вяртанне да літургіі як адзін падзелены кантрол -->
       <div v-else-if="isReadingsPage" class="readings-nav-group">
@@ -86,6 +90,12 @@
         v-if="showTextScaleControl"
         class="top-action-start"
       />
+
+      <v-btn v-if="route.name === 'Songs'" icon="mdi-cog-outline" class="top-circle-btn top-action-start" variant="flat" aria-label="Налады спеўніка" @click="uiStore.songSettingsOpen = true" />
+      <template v-if="isSongViewPage">
+        <v-btn :icon="settings.favoriteSongs.includes(route.params.id) ? 'mdi-heart' : 'mdi-heart-outline'" :color="settings.favoriteSongs.includes(route.params.id) ? 'red' : undefined" class="top-circle-btn" variant="flat" :aria-label="settings.favoriteSongs.includes(route.params.id) ? 'Выдаліць з абраных' : 'Дадаць у абраныя'" @click="settings.toggleFavoriteSong(route.params.id)" />
+        <v-btn v-if="authStore.isAdmin" icon="mdi-pencil-outline" class="top-circle-btn" variant="flat" aria-label="Рэдагаваць" :to="{ name: 'AdminSongEdit', params: { id: route.params.id } }" />
+      </template>
 
       <!-- Кнопки для страницы редактирования молитвы (PrayerEdit) -->
       <div
@@ -276,6 +286,7 @@ const canCopyPrayer = computed(() => route.name === 'PrayerEdit');
 const isReadingsPage = computed(() => {
   return route.name === 'Readings' || route.name === 'ReadingsByDate';
 });
+const isSongViewPage = computed(() => route.name === 'SongView');
 
 const readingsLiturgyRoute = computed(() => {
   const dateParam = route.params.date || route.query.date;
@@ -295,6 +306,7 @@ const showTextScaleControl = computed(() => {
   if (isPrayerEditPage.value) return false;
   if (isPrayerViewPage.value) return !uiStore.prayerIsEditing;
   return [
+    'SongView',
     'Readings',
     'ReadingsByDate',
     'Bible',
@@ -689,5 +701,19 @@ const applyFilter = () => {
     padding-inline: 10px 13px !important;
   }
 
+}
+@media (max-width: 600px) {
+  .songs-nav-group .readings-nav-segment--liturgy { min-width: 96px !important; padding-inline: 8px 10px !important; font-size: .8rem; }
+}
+@media (max-width: 400px) {
+  .floating-app-bar--song-view :deep(.v-toolbar__content) { gap: 6px; padding-inline: 10px; }
+  .floating-app-bar--song-view .top-circle-btn { width: 44px !important; height: 44px !important; min-width: 44px !important; flex-basis: 44px !important; }
+  .songs-nav-group .readings-nav-segment--menu { width: 44px !important; min-width: 44px !important; }
+  .songs-nav-group .readings-nav-segment--liturgy { min-width: 88px !important; padding-inline: 6px 8px !important; }
+}
+@media (max-width: 359px) {
+  .floating-app-bar--song-view :deep(.v-toolbar__content) { gap: 4px; }
+  .songs-nav-group .readings-nav-segment--menu { width: 40px !important; min-width: 40px !important; }
+  .songs-nav-group .readings-nav-segment--liturgy { min-width: 82px !important; padding-inline: 5px 7px !important; font-size: .75rem; }
 }
 </style>

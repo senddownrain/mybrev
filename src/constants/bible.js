@@ -12,7 +12,7 @@ export const BIBLE_LANGUAGES = Object.freeze({
     shortLabel: 'БЕЛ',
     label: 'Беларуская',
     collection: 'bible_bel',
-    translation: 'Пераклад Ўладзіслава Чарняўскага (2017)',
+    translation: 'Пераклад кс. Ўладзіслава Чарняўскага MIC',
   }),
   ru: Object.freeze({
     id: 'ru',

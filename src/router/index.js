@@ -36,6 +36,8 @@ const routes = [
         name: 'LiturgicalPicker',
         components: { default: () => import('@/views/LiturgicalPicker.vue'), bottomNav: BottomNavVue },
       },
+      { path: 'songs', name: 'Songs', component: () => import('@/views/Songs.vue') },
+      { path: 'song/:id', name: 'SongView', component: () => import('@/views/Song.vue'), props: true },
       {
         path: 'prayers',
         name: 'Prayers',
@@ -139,6 +141,8 @@ const routes = [
         name: 'AdminPrayerCategories',
         component: () => import('@/views/admin/PrayerCategories.vue'),
       },
+      { path: 'songs/new', name: 'AdminSongAdd', component: () => import('@/views/admin/SongEditor.vue') },
+      { path: 'songs/:id/edit', name: 'AdminSongEdit', component: () => import('@/views/admin/SongEditor.vue'), props: true },
     ]
   },
 
