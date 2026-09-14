@@ -6,6 +6,17 @@ import {
 } from 'firebase/firestore';
 
 import { retryFirestore } from '@/utils/retry';
+import { firestoreCacheRecovery } from '@/plugins/firebase';
+import { isFirestoreCacheError } from './firestoreCacheRecovery.js';
+
+async function readWithCacheRecovery(read) {
+  try {
+    return await read();
+  } catch (error) {
+    firestoreCacheRecovery.recover(error);
+    throw error;
+  }
+}
 
 function isKnownOffline() {
   return typeof navigator !== 'undefined' && navigator.onLine === false;
@@ -20,15 +31,16 @@ export async function getDocsOfflineAware(queryRef, session) {
   const observe = (snapshot) => session ? session.observe(snapshot) : snapshot;
   if (isKnownOffline()) {
     if (session) session.complete = false;
-    return getDocsFromCache(queryRef).then(observe);
+    return readWithCacheRecovery(() => getDocsFromCache(queryRef)).then(observe);
   }
 
   try {
-    return observe(await retryFirestore(() => getDocs(queryRef)));
+    return observe(await readWithCacheRecovery(() => retryFirestore(() => getDocs(queryRef))));
   } catch (networkError) {
     if (session) session.complete = false;
+    if (isFirestoreCacheError(networkError)) throw networkError;
     try {
-      return await getDocsFromCache(queryRef);
+      return await readWithCacheRecovery(() => getDocsFromCache(queryRef));
     } catch {
       throw networkError;
     }
@@ -40,15 +52,16 @@ export async function getDocOfflineAware(documentRef, session) {
   const observe = (snapshot) => session ? session.observe(snapshot) : snapshot;
   if (isKnownOffline()) {
     if (session) session.complete = false;
-    return getDocFromCache(documentRef).then(observe);
+    return readWithCacheRecovery(() => getDocFromCache(documentRef)).then(observe);
   }
 
   try {
-    return observe(await retryFirestore(() => getDoc(documentRef)));
+    return observe(await readWithCacheRecovery(() => retryFirestore(() => getDoc(documentRef))));
   } catch (networkError) {
     if (session) session.complete = false;
+    if (isFirestoreCacheError(networkError)) throw networkError;
     try {
-      return await getDocFromCache(documentRef);
+      return await readWithCacheRecovery(() => getDocFromCache(documentRef));
     } catch {
       throw networkError;
     }

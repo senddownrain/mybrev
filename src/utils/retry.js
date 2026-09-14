@@ -1,6 +1,8 @@
 /**
  * Retry utility for async operations
  */
+import { isFirestoreCacheError } from './firestoreCacheRecovery.js';
+
 export async function retry(fn, options = {}) {
   const {
     maxAttempts = 3,
@@ -67,6 +69,8 @@ export async function retryFirestore(fn, options = {}) {
     backoff: 2,
     timeout: 10_000, // 10 s per attempt
     shouldRetry: (error) => {
+      // Repeating a query against broken local persistence cannot repair it.
+      if (isFirestoreCacheError(error)) return false;
       const code = error?.code;
       return (
         code === 'unavailable' ||

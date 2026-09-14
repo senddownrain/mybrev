@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, persistentLocalCache } from "firebase/firestore";
+import { initializeFirestore, memoryLocalCache, persistentLocalCache } from "firebase/firestore";
+import { createFirestoreCacheRecovery } from '../utils/firestoreCacheRecovery';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,10 +15,17 @@ const firebaseConfig = {
 
 export const firebaseApp = initializeApp(firebaseConfig);
 
+export const firestoreCacheRecovery = createFirestoreCacheRecovery({
+  projectId: firebaseConfig.projectId,
+  storage: () => typeof window !== 'undefined' ? window.sessionStorage : undefined,
+  reload: () => window.location.reload(),
+  isOnline: () => typeof navigator !== 'undefined' && navigator.onLine !== false,
+});
+
 // Persistent local cache limited to 100MB to prevent excessive memory usage.
 // CACHE_SIZE_UNLIMITED is intentionally avoided.
 export const db = initializeFirestore(firebaseApp, {
-  localCache: persistentLocalCache({
+  localCache: firestoreCacheRecovery.usesMemoryCache() ? memoryLocalCache() : persistentLocalCache({
     cacheSizeBytes: 100 * 1024 * 1024, // 100MB
   }),
 });
