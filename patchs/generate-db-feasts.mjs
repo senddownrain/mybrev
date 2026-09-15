@@ -172,6 +172,13 @@ function isCurrentDayPsalmsInstruction(value) {
     && item.toLocaleLowerCase('be').includes('антыфоны і псальмы з бягучага дня'));
 }
 
+function getSingleInstruction(value) {
+  const instruction = Array.isArray(value) && value.length === 1 ? value[0] : value;
+  return typeof instruction === 'string'
+    ? instruction.trim().replace(/\s+/g, ' ').toLocaleLowerCase('be')
+    : '';
+}
+
 function applyFixedDayFallback(source, rankedFixedDays) {
   const firestoreId = source.raw._copyFromFixedDay;
   if (!firestoreId) return { ...source, fallback: null };
@@ -416,6 +423,35 @@ function resolveField({
       return true;
     }
     return '';
+  }
+
+  const instruction = getSingleInstruction(value);
+  if (/^(?:просьбы )?з агульных тэкстаў пра найсв\. панну марыю$/.test(instruction)) {
+    const replacement = template[field];
+    if (!isEmpty(replacement)) {
+      report.resolvedReferences.push({
+        file: outputFile,
+        field,
+        reference: value,
+        source: `common-texts/${currentVersion}`,
+      });
+      value = replacement;
+    }
+  } else if (instruction === 'з нядзелі і тыдня') {
+    value = 'from-first-week';
+  } else if (instruction === 'з бягучага дня' && /^sext[123]Ps[123]$/.test(field)) {
+    value = 'from-day';
+  } else if (instruction === 'ты гонар з нешпараў' && field === 'officeOfReadingsHymn') {
+    const replacement = source.vesper1Hymn;
+    if (!isEmpty(replacement)) {
+      report.resolvedReferences.push({
+        file: outputFile,
+        field,
+        reference: value,
+        source: 'feast/vesper1Hymn',
+      });
+      value = replacement;
+    }
   }
 
   if (isCurrentDayPsalmsInstruction(value)) {

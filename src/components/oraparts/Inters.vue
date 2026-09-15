@@ -42,7 +42,6 @@ defineProps({
 
 .ora-text :deep(.intercessions__response) {
   margin: 0 0 0.95rem 1.35rem;
-  color: var(--reader-muted);
 }
 
 .ora-text :deep(.intercessions__continuation) {
