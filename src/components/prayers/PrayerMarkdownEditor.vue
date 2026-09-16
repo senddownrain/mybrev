@@ -22,10 +22,10 @@
       </span>
     </div>
     <div class="markdown-editor__toolbar" role="toolbar" aria-label="Фарматаванне малітвы" @mousedown.prevent>
-      <button type="button" title="Тлусты тэкст" @click="wrapSelection('**', '**', 'тэкст')">
+      <button type="button" title="Тлусты тэкст" @click="toggleInlineFormat('**', '**', 'тэкст')">
         <strong>B</strong>
       </button>
-      <button type="button" title="Курсіў" @click="wrapSelection('_', '_', 'тэкст')">
+      <button type="button" title="Курсіў" @click="toggleInlineFormat('_', '_', 'тэкст')">
         <em>I</em>
       </button>
       <button type="button" title="Загаловак раздзела" @click="prefixLines('## ')">
@@ -104,6 +104,7 @@ import {
   normalizePrayerMarkdown,
   validatePrayerMarkdown,
 } from '@/utils/prayerMarkdown';
+import { toggleMarkdownInlineFormat } from '@/utils/markdownInlineFormat';
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
@@ -350,11 +351,18 @@ function replaceSelection(text, selectionStart = null, selectionEnd = null) {
   view.focus();
 }
 
-function wrapSelection(before, after, fallback) {
+function toggleInlineFormat(before, after, fallback) {
   if (!view) return;
   const range = view.state.selection.main;
-  const selected = view.state.sliceDoc(range.from, range.to) || fallback;
-  replaceSelection(`${before}${selected}${after}`, before.length, before.length + selected.length);
+  const transaction = toggleMarkdownInlineFormat(
+    view.state.doc.toString(),
+    range,
+    before,
+    after,
+    fallback,
+  );
+  view.dispatch({ changes: transaction.changes, selection: transaction.selection });
+  view.focus();
 }
 
 function prefixLines(prefix) {
