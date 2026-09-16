@@ -18,6 +18,7 @@ import { publicContentCache, publicContentKey, requestContentRefresh } from '@/u
  * @property {number} [textFormatVersion] - MyBrev Markdown schema version
  * @property {string} [source] - Optional attribution or publication source
  * @property {string[]} [tags] - List of tags associated with the prayer
+ * @property {boolean} [verified] - Whether an administrator has reviewed the prayer
  * @property {import('firebase/firestore').Timestamp} [createdAt] - Firestore server timestamp of creation
  */
 

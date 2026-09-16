@@ -50,7 +50,17 @@
           </template>
 
           <v-list-item-title class="prayer-title-text">
-            {{ getTitle(prayer) }}
+            <span>{{ getTitle(prayer) }}</span>
+            <v-chip
+              v-if="authStore.isAdmin && prayer.verified === true"
+              color="success"
+              variant="tonal"
+              size="x-small"
+              prepend-icon="mdi-check-decagram"
+              class="prayer-verified-chip"
+            >
+              Праверана
+            </v-chip>
           </v-list-item-title>
 
           <template v-slot:append>

@@ -46,6 +46,7 @@
 .mdi-check::before { content: "\F012C"; }
 .mdi-check-circle::before { content: "\F05E0"; }
 .mdi-check-circle-outline::before { content: "\F05E1"; }
+.mdi-check-decagram::before { content: "\F0791"; }
 .mdi-checkbox-blank-outline::before { content: "\F0131"; }
 .mdi-checkbox-marked::before { content: "\F0132"; }
 .mdi-chevron-down::before { content: "\F0140"; }

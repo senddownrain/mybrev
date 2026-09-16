@@ -210,6 +210,10 @@
 }
 
 .prayer-title-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
   word-wrap: break-word;
   overflow-wrap: break-word;
   font-size: clamp(1.04rem, 4vw, 1.17rem) !important;
@@ -218,6 +222,13 @@
   letter-spacing: -0.01em;
   white-space: normal;
   padding-inline: 4px 8px;
+}
+
+.prayer-verified-chip {
+  flex: 0 0 auto;
+  font-size: 0.64rem !important;
+  font-weight: 720;
+  letter-spacing: 0.01em;
 }
 
 .prayer-list-item__actions {

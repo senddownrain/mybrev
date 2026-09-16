@@ -46,7 +46,17 @@
           </template>
 
           <v-list-item-title class="prayer-list-item__title">
-            {{ getTitle(prayer) }}
+            <span>{{ getTitle(prayer) }}</span>
+            <v-chip
+              v-if="authStore.isAdmin && prayer.verified === true"
+              color="success"
+              variant="tonal"
+              size="x-small"
+              prepend-icon="mdi-check-decagram"
+              class="prayer-verified-chip"
+            >
+              Праверана
+            </v-chip>
           </v-list-item-title>
 
           <template v-slot:append>
@@ -200,6 +210,10 @@ function toggleFavorite(prayerId) {
 }
 
 .prayer-list-item__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
   padding-inline: 4px 8px;
   font-size: clamp(1.04rem, 4vw, 1.17rem) !important;
   font-weight: 650;
@@ -208,6 +222,13 @@ function toggleFavorite(prayerId) {
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: normal;
+}
+
+.prayer-verified-chip {
+  flex: 0 0 auto;
+  font-size: 0.64rem !important;
+  font-weight: 720;
+  letter-spacing: 0.01em;
 }
 
 .prayer-list-item__actions {

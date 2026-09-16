@@ -89,29 +89,62 @@
                 <p>Дапамагаюць знаходзіць малітву праз катэгорыі і фільтры.</p>
               </div>
             </div>
-            <v-combobox
-              v-model="form.tags"
-              :items="availableTags"
-              label="Дадаць або выбраць тэгі"
-              multiple
-              chips
-              closable-chips
-              clearable
-              variant="outlined"
-              hide-details="auto"
-              class="tags-field"
-              @update:model-value="normalizeTags"
-            />
-            <div v-if="suggestedTags.length" class="tag-suggestions">
-              <span>Хуткі выбар:</span>
-              <button
-                v-for="tag in suggestedTags"
-                :key="tag"
-                type="button"
-                @click="addTag(tag)"
+            <div class="tags-editor">
+              <div v-if="form.tags.length" class="selected-tags" aria-label="Выбраныя тэгі">
+                <v-chip
+                  v-for="tag in form.tags"
+                  :key="tag"
+                  closable
+                  size="small"
+                  variant="tonal"
+                  @click:close="removeTag(tag)"
+                >
+                  {{ tag }}
+                </v-chip>
+              </div>
+              <v-text-field
+                v-model="tagQuery"
+                label="Знайсці або дадаць тэг"
+                placeholder="Пачніце ўводзіць назву"
+                variant="outlined"
+                hide-details
+                class="tags-field"
+                autocomplete="off"
+                @focus="tagInputFocused = true"
+                @blur="tagInputFocused = false"
+                @keydown.enter.prevent="addTagQuery"
+                @keydown.esc="tagQuery = ''"
               >
-                + {{ tag }}
-              </button>
+                <template #append-inner>
+                  <v-btn
+                    icon="mdi-plus"
+                    variant="text"
+                    size="small"
+                    :disabled="!tagQuery.trim()"
+                    aria-label="Дадаць тэг"
+                    @mousedown.prevent
+                    @click="addTagQuery"
+                  />
+                </template>
+              </v-text-field>
+              <div
+                v-if="tagInputFocused && tagQuery.trim() && filteredTagOptions.length"
+                class="tag-options"
+                role="listbox"
+                aria-label="Знойдзеныя тэгі"
+              >
+                <button
+                  v-for="tag in filteredTagOptions"
+                  :key="tag"
+                  type="button"
+                  role="option"
+                  @mousedown.prevent="selectTag(tag)"
+                >
+                  <v-icon icon="mdi-tag-outline" size="16" />
+                  <span>{{ tag }}</span>
+                </button>
+              </div>
+              <p class="tags-hint">Выберыце падказку або націсніце Enter, каб дадаць новы тэг.</p>
             </div>
           </section>
 
@@ -137,6 +170,27 @@
               @blur="form.source = form.source.trim()"
             />
           </section>
+
+          <template v-if="isEditMode">
+            <v-divider />
+
+            <section class="editor-section verification-section">
+              <div class="section-heading">
+                <span class="section-number">5</span>
+                <div>
+                  <h2>Праверка</h2>
+                  <p>Адзначце пасля праверкі назвы, тэксту, крыніцы і тэгаў.</p>
+                </div>
+              </div>
+              <v-checkbox
+                v-model="form.verified"
+                label="Малітва праверана"
+                color="success"
+                hide-details
+                class="verified-checkbox"
+              />
+            </section>
+          </template>
         </v-card>
 
         <div class="form-actions">
@@ -228,7 +282,9 @@ const showPreview = ref(true);
 const initialSnapshot = ref('');
 const allowNavigation = ref(false);
 
-const form = ref({ title: '', text: '', source: '', tags: [] });
+const form = ref({ title: '', text: '', source: '', tags: [], verified: false });
+const tagQuery = ref('');
+const tagInputFocused = ref(false);
 
 const isEditMode = computed(() => Boolean(route.params.id));
 const isSubmitting = computed(() => saving.value || copying.value);
@@ -243,12 +299,19 @@ const textError = computed(() => {
   return result === true ? '' : result;
 });
 const availableTags = computed(() => [...new Set(allTags.value || [])].sort((a, b) => a.localeCompare(b, 'be')));
-const suggestedTags = computed(() => availableTags.value.filter((tag) => !form.value.tags.includes(tag)).slice(0, 6));
+const filteredTagOptions = computed(() => {
+  const query = tagQuery.value.trim().toLocaleLowerCase('be');
+  if (!query) return [];
+  return availableTags.value
+    .filter((tag) => !form.value.tags.includes(tag) && tag.toLocaleLowerCase('be').includes(query))
+    .slice(0, 6);
+});
 const currentSnapshot = computed(() => JSON.stringify({
   title: form.value.title.trim(),
   text: form.value.text || '',
   source: form.value.source.trim(),
   tags: [...form.value.tags].sort(),
+  verified: form.value.verified,
 }));
 const isDirty = computed(() => hydrated.value && currentSnapshot.value !== initialSnapshot.value);
 
@@ -284,6 +347,7 @@ const hydrateForm = () => {
     ),
     source: prayer.source || '',
     tags: [...(prayer.tags || [])],
+    verified: prayer.verified === true,
   };
   loadError.value = '';
   hydrated.value = true;
@@ -297,7 +361,8 @@ watch(() => route.params.id, () => {
   loadError.value = '';
   saveAttempted.value = false;
   allowNavigation.value = false;
-  form.value = { title: '', text: '', source: '', tags: [] };
+  form.value = { title: '', text: '', source: '', tags: [], verified: false };
+  tagQuery.value = '';
   hydrateForm();
 });
 watch(saving, (value) => { uiStore.prayerFormSaving = value; });
@@ -312,7 +377,27 @@ const normalizeTags = () => {
 };
 
 const addTag = (tag) => {
-  form.value.tags = [...new Set([...form.value.tags, tag])];
+  const normalizedTag = String(tag).trim();
+  if (!normalizedTag) return;
+  form.value.tags = [...new Set([...form.value.tags, normalizedTag])];
+};
+
+const removeTag = (tag) => {
+  form.value.tags = form.value.tags.filter((item) => item !== tag);
+};
+
+const selectTag = (tag) => {
+  addTag(tag);
+  tagQuery.value = '';
+};
+
+const addTagQuery = () => {
+  const query = tagQuery.value.trim();
+  const existingTag = availableTags.value.find(
+    (tag) => tag.toLocaleLowerCase('be') === query.toLocaleLowerCase('be'),
+  );
+  addTag(existingTag || query);
+  tagQuery.value = '';
 };
 
 const cancel = () => {
@@ -344,6 +429,7 @@ async function validateAndBuildPayload() {
     ...prayerTextFields(form.value.text),
     source: form.value.source,
     tags: [...form.value.tags],
+    verified: form.value.verified === true,
   };
 }
 
@@ -382,6 +468,7 @@ async function handleCreateCopy() {
     if (!payload) return;
     const suffix = ' (копія)';
     payload.title = `${payload.title.slice(0, 200 - suffix.length).trimEnd()}${suffix}`;
+    payload.verified = false;
     const copyRef = await addPrayer(payload);
     allowNavigation.value = true;
     await router.push({ name: 'PrayerEdit', params: { id: copyRef.id } });
@@ -487,9 +574,16 @@ onBeforeUnmount(() => {
 
 .field-error { margin: 7px 16px 0; color: rgb(var(--v-theme-error)); font-size: 0.75rem; }
 
-.tag-suggestions { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 13px; color: var(--nav-muted); font-size: 0.74rem; }
-.tag-suggestions button { padding: 6px 10px; border: 1px solid var(--nav-border); border-radius: 999px; background: transparent; color: var(--nav-on-surface); font: inherit; cursor: pointer; }
-.tag-suggestions button:hover { background: var(--nav-active); }
+.tags-editor { position: relative; }
+.selected-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+.tag-options { display: grid; max-height: 240px; margin-top: 6px; overflow-y: auto; padding: 6px; border: 1px solid var(--nav-border); border-radius: 14px; background: var(--overlay-surface); box-shadow: 0 8px 22px var(--nav-button-shadow); }
+.tag-options button { display: flex; align-items: center; gap: 9px; width: 100%; padding: 10px 12px; border: 0; border-radius: 10px; background: transparent; color: var(--nav-on-surface); font: inherit; font-size: 0.86rem; text-align: left; cursor: pointer; }
+.tag-options button:hover, .tag-options button:focus-visible { outline: 0; background: var(--nav-active); }
+.tag-options .v-icon { color: var(--nav-muted); }
+.tags-hint { margin: 8px 12px 0; color: var(--nav-muted); font-size: 0.72rem; line-height: 1.4; }
+.verification-section { background: color-mix(in srgb, rgb(var(--v-theme-success)) 5%, transparent); }
+.verified-checkbox { margin: -6px 0 -8px 49px; }
+.verified-checkbox :deep(.v-label) { color: var(--nav-on-surface); font-weight: 620; opacity: 1; }
 
 .form-actions { display: flex; align-items: center; justify-content: flex-end; gap: 9px; padding: 18px 4px 0; }
 .copy-prayer-button { color: var(--nav-on-surface); }
@@ -534,6 +628,7 @@ onBeforeUnmount(() => {
   .section-heading { align-items: flex-start; }
   .section-heading p { font-size: 0.76rem; }
   .text-count { position: absolute; right: 28px; margin-top: 42px; }
+  .verified-checkbox { margin-left: 0; }
   .form-actions { position: sticky; bottom: 8px; z-index: 4; flex-wrap: wrap; margin: 10px 4px 0; padding: 8px; border: 1px solid var(--nav-border); border-radius: 24px; background: color-mix(in srgb, var(--nav-surface) 92%, transparent); box-shadow: 0 8px 28px var(--nav-shadow); backdrop-filter: blur(16px); }
   .form-actions .copy-prayer-button { flex: 1; }
   .form-actions .save-prayer-button { flex: 1 1 100%; }

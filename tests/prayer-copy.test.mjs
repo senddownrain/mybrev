@@ -33,7 +33,7 @@ function createEditor(t, options = {}) {
     id: 'original', title: options.title || 'Малітва',
     text: 'Гэта дастаткова доўгі тэкст малітвы.',
     textFormat: 'mybrev-markdown', textFormatVersion: 1,
-    source: 'Крыніца', tags: ['Тэг'],
+    source: 'Крыніца', tags: ['Тэг'], verified: true,
   };
   const writes = [];
   const notices = [];
@@ -112,7 +112,9 @@ test('copy stays in the editor, gets a marked title, and is available before the
   assert.equal(editor.form.value.text, 'Новы тэкст, які яшчэ не быў захаваны.');
   assert.equal(editor.form.value.source, 'Іншая крыніца');
   assert.deepEqual([...editor.form.value.tags], ['Тэг', 'Новы тэг']);
+  assert.equal(editor.form.value.verified, false);
   assert.deepEqual({ ...editor.store.prayers.find((prayer) => prayer.id === 'original') }, editor.original);
+  assert.equal(editor.store.prayers.find((prayer) => prayer.id === 'copy-1').verified, false);
   assert.equal(editor.store.prayers.length, 2);
   assert.ok(editor.store.allTags.includes('Новы тэг'));
   assert.equal(editor.isDirty.value, false);
@@ -133,6 +135,16 @@ test('saving edits after copying updates only the copy and retains dirty navigat
   assert.equal(editor.writes[1].id, 'copy-1');
   assert.equal(editor.writes[1].data.title, 'Другая малітва');
   assert.equal(editor.store.prayers.find((prayer) => prayer.id === 'original').title, 'Малітва');
+});
+
+test('saving an edited prayer persists its verification flag', async (t) => {
+  const editor = createEditor(t);
+  editor.form.value.verified = false;
+  await editor.handleSave();
+
+  assert.equal(editor.writes[0].operation, 'update');
+  assert.equal(editor.writes[0].id, 'original');
+  assert.equal(editor.writes[0].data.verified, false);
 });
 
 test('returning to the original rehydrates the reused form', async (t) => {
