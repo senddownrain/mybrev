@@ -1,0 +1,220 @@
+/* Compendium additions. Everything else comes from prayers-list.css and
+   prayer-reading.css; only existing theme tokens are used here. */
+
+.compendium-number {
+  flex: 0 0 auto;
+  font-size: 0.86rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.compendium-row__context,
+.compendium-range {
+  padding-inline: 4px 8px;
+  color: var(--nav-muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.compendium-empty {
+  margin: 8px 20px;
+  color: var(--nav-muted);
+}
+
+.compendium-section {
+  margin: 0 0 26px;
+}
+
+.compendium-section__label,
+.compendium-chapter__label {
+  margin: 0 20px 6px;
+  color: var(--devotional-accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.compendium-section__title {
+  margin: 0 20px 14px;
+  color: rgb(var(--v-theme-on-surface));
+  font-family: var(--reader-display-font-family);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.compendium-chapter {
+  margin: 18px 0 10px;
+}
+
+.compendium-chapter__title {
+  margin: 0 20px 10px;
+  color: rgb(var(--v-theme-on-surface));
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.compendium-parent-title {
+  margin: 4px 8px -4px;
+  color: var(--nav-muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+}
+
+.compendium-source-note {
+  margin: 28px 20px 0;
+}
+
+/* Topic reader: expandable question rows inside the reading surface. */
+.compendium-questions {
+  padding: 8px 0;
+}
+
+.compendium-subtopic {
+  margin: 18px 20px 4px;
+  color: var(--devotional-accent);
+  font-family: var(--reader-display-font-family);
+  font-size: calc(0.98rem * var(--font-size-multiplier, 1));
+  font-style: italic;
+  font-weight: 700;
+}
+
+.compendium-question {
+  border-bottom: 1px solid var(--reader-border);
+}
+
+.compendium-question:last-child {
+  border-bottom: 0;
+}
+
+.compendium-question__toggle {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 56px;
+  gap: 12px;
+  padding: 14px 20px;
+  border: 0;
+  background: transparent;
+  color: var(--reader-ink);
+  font: inherit;
+  font-family: var(--reader-font-family);
+  font-size: calc(1.02rem * var(--font-size-multiplier, 1));
+  font-weight: 650;
+  line-height: 1.45;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.compendium-question__toggle:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+
+.compendium-question__number {
+  flex: 0 0 auto;
+  min-width: 2.2em;
+  color: var(--devotional-accent);
+  font-size: 0.82em;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.8;
+}
+
+.compendium-question__text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.compendium-question__caret {
+  flex: 0 0 auto;
+  margin-top: 3px;
+  color: var(--nav-muted);
+  transition: transform 0.16s ease;
+}
+
+.compendium-question--open .compendium-question__caret {
+  transform: rotate(180deg);
+}
+
+.compendium-question__body {
+  padding: 0 20px 18px calc(20px + 2.2em + 12px);
+}
+
+.compendium-question__link {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--devotional-accent);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.compendium-answer p {
+  margin: 0 0 0.8em;
+}
+
+.compendium-answer .compendium-refs {
+  color: var(--reader-muted);
+  font-size: 0.8em;
+  font-variant-numeric: tabular-nums;
+}
+
+.compendium-citation {
+  margin: 1em 0 0.4em;
+  padding: 0.1em 0 0.1em 0.85em;
+  border-left: 3px solid rgba(var(--devotional-rgb), 0.4);
+  color: var(--reader-muted);
+  font-size: 0.92em;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.compendium-lead {
+  padding: 16px 20px 0;
+  font-family: var(--reader-font-family);
+  font-size: calc(0.98rem * var(--font-size-multiplier, 1));
+}
+
+.compendium-trail {
+  margin-top: 12px;
+  color: var(--reader-muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.compendium-pager {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 0 20px 20px;
+}
+
+.compendium-pager .v-btn {
+  min-width: 0;
+  max-width: 48%;
+}
+
+@media (max-width: 600px) {
+  .compendium-question__toggle {
+    padding-inline: 16px;
+  }
+
+  .compendium-question__body {
+    padding-inline: 16px;
+  }
+
+  .compendium-subtopic,
+  .compendium-lead {
+    margin-inline: 16px;
+    padding-inline: 0;
+  }
+
+  .compendium-pager {
+    padding-inline: 16px;
+  }
+}

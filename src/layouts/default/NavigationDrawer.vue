@@ -77,6 +77,16 @@
         </template>
       </v-list-item>
 
+      <v-list-item
+        title="Кампендый"
+        :to="{ name: 'Compendium' }"
+        :active="COMPENDIUM_ROUTE_NAMES.has(route.name)"
+      >
+        <template #prepend>
+          <PhScroll :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
       <v-list-item title="Спеўнік" :to="{ name: 'Songs' }" :active="route.name === 'Songs' || route.name === 'SongView'">
         <template #prepend><PhMusicNotes :size="22" class="drawer-icon" /></template>
       </v-list-item>
@@ -171,8 +181,10 @@ import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import {
   PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart, PhBookmark,
-  PhChurch, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes,
+  PhChurch, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll,
 } from '@phosphor-icons/vue';
+
+const COMPENDIUM_ROUTE_NAMES = new Set(['Compendium', 'CompendiumPart', 'CompendiumTopic', 'CompendiumQuestion']);
 
 const MASS_ORDER_PRAYER_ID = 'eMmCtxwyJ75ogmL5rwye';
 const { isDrawerOpen } = useAppBar();
