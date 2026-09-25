@@ -103,6 +103,142 @@
   outline: none;
 }
 
+.mass-sections__link--active {
+  border-color: var(--devotional-accent);
+  background: var(--devotional-soft);
+  color: var(--devotional-accent);
+  font-weight: 700;
+}
+
+.mass-sections__sub {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  padding-top: 2px;
+}
+
+.mass-sections__link--sub {
+  padding: 4px 9px;
+  border-style: dashed;
+  font-size: 0.74rem;
+}
+
+.mass-reading-bar {
+  position: fixed;
+  z-index: 5;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  max-width: min(calc(100vw - 32px), 520px);
+  padding: 4px;
+  border: 1px solid var(--reader-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--reader-surface) 94%, transparent);
+  box-shadow: var(--reader-shadow);
+  transform: translateX(-50%);
+  backdrop-filter: blur(12px);
+}
+
+.mass-reading-bar__section {
+  min-width: 0;
+  min-height: 36px;
+  padding: 4px 12px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--devotional-accent);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.mass-reading-bar__divider {
+  flex: none;
+  width: 1px;
+  height: 20px;
+  margin: 0 2px;
+  background: var(--reader-border);
+}
+
+.mass-reading-bar__language {
+  flex: none;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--reader-ink);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.mass-reading-bar__section:hover,
+.mass-reading-bar__section:focus-visible,
+.mass-reading-bar__language:hover,
+.mass-reading-bar__language:focus-visible {
+  background: var(--devotional-soft);
+  outline: none;
+}
+
+.mass-reading-bar__language--active,
+.mass-reading-bar__language--active:hover,
+.mass-reading-bar__language--active:focus-visible {
+  background: var(--devotional-accent);
+  color: rgb(var(--v-theme-surface));
+}
+
+.mass-languages {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 14px;
+  padding: 3px;
+  border: 1px solid rgba(var(--devotional-rgb), 0.22);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--reader-surface) 82%, transparent);
+}
+
+.mass-languages__option {
+  min-height: 32px;
+  padding: 4px 13px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--reader-ink);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.mass-languages__option:hover,
+.mass-languages__option:focus-visible {
+  background: var(--devotional-soft);
+  outline: none;
+}
+
+.mass-languages__option--active {
+  background: var(--devotional-accent);
+  color: rgb(var(--v-theme-surface));
+}
+
+.mass-languages__option--active:hover,
+.mass-languages__option--active:focus-visible {
+  background: var(--devotional-accent);
+}
+
 .prayer-text {
   padding: 24px 20px 30px;
   color: var(--reader-ink);
@@ -326,6 +462,55 @@
   font-size: 0.94em;
   font-weight: 400;
   line-height: 1.35;
+}
+
+/* In variants where bold marks the people's part (English source), a fully
+   bold paragraph is a response, not a subheading. */
+.prayer-reading-surface--mass-strong-responses .prayer-text :deep(p:has(> strong:only-child)) {
+  margin-top: 0;
+  color: var(--reader-ink);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(h4) {
+  margin: 0.9em 0 0.3em;
+  color: var(--rubric-color);
+  font-size: 0.86em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(hr) {
+  width: 42%;
+  margin: 0.9em 0;
+  border: 0;
+  border-top: 1px solid var(--reader-border);
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(.mass-section-anchor--major) {
+  margin: 1.1em 0 0.42em;
+  padding: 0 0 0.42em 0.7em;
+  border-bottom: 1px solid var(--reader-border);
+  border-left: 3px solid var(--rubric-color);
+  color: var(--rubric-color);
+  font-family: var(--reader-display-font-family);
+  font-size: 1.08em;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep(.mass-section-anchor--major p) {
+  margin: 0;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep([data-mass-section]) {
+  scroll-margin-top: 76px;
+}
+
+.prayer-reading-surface--mass .prayer-text :deep([data-mass-section]:focus) {
+  outline: none;
 }
 
 @media (max-width: 600px) {
