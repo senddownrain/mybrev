@@ -220,10 +220,9 @@ const onEditClick = () => {
 
 <style scoped>
 .floating-ora-bar {
-  border-bottom: 1px solid var(--nav-border) !important;
-  background: color-mix(in srgb, var(--nav-surface) 96%, transparent) !important;
-  box-shadow: 0 3px 16px var(--nav-button-shadow) !important;
-  backdrop-filter: blur(14px);
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .floating-ora-bar :deep(.v-toolbar__content) {
@@ -247,9 +246,9 @@ const onEditClick = () => {
   flex: 0 0 48px !important;
   border: 1px solid var(--nav-border) !important;
   border-radius: 50% !important;
-  background: var(--overlay-surface) !important;
+  background: color-mix(in srgb, var(--nav-surface) 78%, transparent) !important;
   color: var(--nav-on-surface) !important;
-  box-shadow: 0 2px 9px var(--nav-button-shadow) !important;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--nav-button-shadow) 72%, transparent) !important;
   transition: transform 0.16s ease, opacity 0.16s ease !important;
   backdrop-filter: blur(18px);
 }
@@ -274,11 +273,14 @@ const onEditClick = () => {
   align-items: center;
   min-width: 0;
   max-width: min(48vw, 360px);
-  padding: 5px 10px;
-  border: 0;
-  border-radius: 12px;
-  background: transparent;
+  min-height: 48px;
+  padding: 5px 12px;
+  border: 1px solid var(--nav-border);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--nav-surface) 78%, transparent);
   color: var(--nav-on-surface);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--nav-button-shadow) 72%, transparent);
+  backdrop-filter: blur(18px);
   font: inherit;
   text-align: left;
   cursor: pointer;
@@ -290,6 +292,11 @@ const onEditClick = () => {
 .ora-location__section { grid-column: 1; color: var(--nav-muted); font-size: .68rem; }
 .ora-location > svg { grid-column: 2; grid-row: 1 / span 2; }
 .ora-section-menu { max-height: min(60vh, 420px); overflow-y: auto; }
+
+.floating-ora-bar :deep(.text-scale-control) {
+  background: color-mix(in srgb, var(--nav-surface) 78%, transparent);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--nav-button-shadow) 72%, transparent);
+}
 
 :global(.liturgical-hour-column [data-reader-section]) {
   scroll-margin-top: 84px;
@@ -308,7 +315,7 @@ const onEditClick = () => {
     flex-basis: 44px !important;
   }
 
-  .ora-location { max-width: 42vw; padding-inline: 6px; }
+  .ora-location { min-height: 44px; max-width: 42vw; padding-inline: 9px; }
 
 }
 </style>
