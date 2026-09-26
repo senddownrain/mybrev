@@ -15,9 +15,19 @@
         <div class="setting-copy"><strong>Не выключаць экран</strong><span>Карысна падчас малітвы або доўгага чытання</span></div>
         <v-switch :model-value="settings.keepScreenOn" color="primary" hide-details inset aria-label="Не выключаць экран" @update:model-value="settings.setKeepScreenOn" />
       </div>
-      <div class="setting-row">
-        <div class="setting-copy"><strong>Цёмная тэма</strong><span>Прыглушаны выгляд для вечара і ночы</span></div>
-        <v-switch :model-value="settings.currentTheme === 'dark'" color="primary" hide-details inset aria-label="Цёмная тэма" @update:model-value="settings.setTheme" />
+      <div class="setting-row setting-row--theme">
+        <div class="setting-copy"><strong>Тэма</strong><span>Сістэмная аўтаматычна сочыць за наладамі прылады</span></div>
+        <div class="theme-options" role="radiogroup" aria-label="Тэма праграмы">
+          <button
+            v-for="option in themeOptions"
+            :key="option.value"
+            type="button"
+            role="radio"
+            :aria-checked="settings.themePreference === option.value"
+            :class="{ 'theme-option--active': settings.themePreference === option.value }"
+            @click="settings.setThemePreference(option.value)"
+          >{{ option.label }}</button>
+        </div>
       </div>
     </section>
 
@@ -108,6 +118,11 @@ const prayerCategories = usePrayerCategoriesStore();
 const { notifySuccess } = useNotifier();
 const showAddCategoryDialog = ref(false);
 const fontOptions = READER_FONT_OPTIONS;
+const themeOptions = [
+  { value: 'system', label: 'Сістэмная' },
+  { value: 'light', label: 'Светлая' },
+  { value: 'dark', label: 'Цёмная' },
+];
 const refreshingContent = ref(false);
 const refreshStatus = ref('');
 async function refreshContent() {
@@ -175,7 +190,10 @@ function restoreGlobalCategories() {
 .font-picker { padding: 4px 20px 20px; border-top: 1px solid var(--nav-border); }
 .control-label { display: block; margin: 15px 0 11px; }
 .font-options { display: flex; flex-wrap: wrap; gap: 8px; }
-.font-options button, .stepper button, .delete-button, .add-category-button { border: 0; font: inherit; cursor: pointer; }
+.font-options button, .theme-options button, .stepper button, .delete-button, .add-category-button { border: 0; font: inherit; cursor: pointer; }
+.theme-options { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+.theme-options button { min-height: 36px; padding: 7px 10px; border: 1px solid var(--nav-border); border-radius: 12px; background: transparent; color: var(--nav-muted); font-size: .72rem; font-weight: 700; }
+.theme-options .theme-option--active { border-color: rgba(var(--chrome-accent-rgb), .24); background: var(--nav-active); color: var(--chrome-accent); }
 .font-options button { display: flex; align-items: center; gap: 6px; min-height: 38px; padding: 8px 13px; border: 1px solid var(--nav-border); border-radius: 13px; background: transparent; color: var(--nav-muted); font-size: .8rem; transition: background .18s ease, color .18s ease, transform .16s ease; }
 .font-options button:active, .stepper button:active, .add-category-button:active { transform: scale(.97); }
 .font-options .font-option--active { border-color: rgba(var(--chrome-accent-rgb), .24); background: rgba(var(--chrome-accent-rgb), .11); color: var(--chrome-accent); }
@@ -202,6 +220,9 @@ function restoreGlobalCategories() {
   .section-heading { padding-inline: 16px; }
   .song-settings-in-page { padding-inline: 16px; }
   .setting-row, .text-size-control, .category-row { margin-inline: 16px; }
+  .setting-row--theme { align-items: flex-start; flex-direction: column; padding-block: 14px; }
+  .theme-options { width: 100%; justify-content: stretch; }
+  .theme-options button { flex: 1; }
   .font-picker { padding-inline: 16px; }
   .text-size-control { align-items: flex-start; flex-direction: column; }
   .stepper { width: 100%; grid-template-columns: 42px 1fr 42px; }

@@ -11,6 +11,9 @@ import { db } from '@/plugins/firebase';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { retryFirestore } from '@/utils/retry';
 import { buildPrayerTagRemovalPlan } from '@/utils/prayerCategoryAdmin';
+import { getDocsOfflineAware } from '@/utils/firestoreRead';
+import { createReadSession } from '@/utils/contentCache';
+import { publicContentCache, publicContentKey, requestContentRefresh } from '@/utils/publicContentCache';
 
 export const PRAYER_CATEGORIES_COLLECTION = 'prayerCategories';
 const MAX_BATCH_OPERATIONS = 400;
@@ -31,29 +34,49 @@ function categoryPayload(category) {
   };
 }
 
+function normalizeCategories(snapshot) {
+  return snapshot.docs
+    .map((categoryDoc) => ({ id: categoryDoc.id, ...categoryDoc.data() }))
+    .map((category) => ({ ...category, tags: cleanTags(category.tags) }))
+    .sort((left, right) => (
+      (left.order ?? Number.MAX_SAFE_INTEGER) - (right.order ?? Number.MAX_SAFE_INTEGER)
+      || left.name.localeCompare(right.name, 'be', { sensitivity: 'base' })
+    ));
+}
+
+/** Public reading mode. Admin editors keep the real-time subscription below. */
+export async function getSavedPrayerCategories(options = {}) {
+  const entry = await publicContentCache.read(publicContentKey('prayerCategories'), async () => {
+    const session = createReadSession();
+    const snapshot = await getDocsOfflineAware(categoryCollection(), session);
+    return { data: normalizeCategories(snapshot), complete: session.complete };
+  }, options);
+  if (options.requireFresh && !entry.complete) {
+    throw new Error('Не атрымалася абнавіць катэгорыі. Захаваная копія засталася даступнай.');
+  }
+  return entry.data;
+}
+
 export function subscribePrayerCategories(onData, onError) {
   return onSnapshot(categoryCollection(), (snapshot) => {
-    const categories = snapshot.docs
-      .map((categoryDoc) => ({ id: categoryDoc.id, ...categoryDoc.data() }))
-      .map((category) => ({ ...category, tags: cleanTags(category.tags) }))
-      .sort((left, right) => (
-        (left.order ?? Number.MAX_SAFE_INTEGER) - (right.order ?? Number.MAX_SAFE_INTEGER)
-        || left.name.localeCompare(right.name, 'be', { sensitivity: 'base' })
-      ));
-    onData(categories);
+    onData(normalizeCategories(snapshot));
   }, onError);
 }
 
 export async function createPrayerCategory(category) {
-  return retryFirestore(() => addDoc(categoryCollection(), {
+  const result = await retryFirestore(() => addDoc(categoryCollection(), {
     ...categoryPayload(category),
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   }));
+  requestContentRefresh();
+  return result;
 }
 
 export async function deletePrayerCategory(categoryId) {
-  return retryFirestore(() => deleteDoc(doc(db, PRAYER_CATEGORIES_COLLECTION, categoryId)));
+  const result = await retryFirestore(() => deleteDoc(doc(db, PRAYER_CATEGORIES_COLLECTION, categoryId)));
+  requestContentRefresh();
+  return result;
 }
 
 export async function restoreDefaultPrayerCategories(existingCategories = []) {
@@ -74,6 +97,7 @@ export async function restoreDefaultPrayerCategories(existingCategories = []) {
     });
   });
   await retryFirestore(() => batch.commit());
+  requestContentRefresh();
   return missing.length;
 }
 
@@ -87,6 +111,7 @@ async function commitOperations(operations) {
     });
     await retryFirestore(() => batch.commit());
   }
+  if (operations.length) requestContentRefresh();
 }
 
 export async function deletePrayerTagEverywhere(tag, prayers, categories) {

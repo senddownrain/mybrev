@@ -17,6 +17,8 @@ export default [
         window: 'readonly',
         document: 'readonly',
         navigator: 'readonly',
+        performance: 'readonly',
+        getComputedStyle: 'readonly',
         console: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
@@ -49,6 +51,8 @@ export default [
   {
     ignores: [
       'dist/**',
+      'outputs/**',
+      'reports/**',
       'node_modules/**',
       '*.min.js',
       'import-*.js',

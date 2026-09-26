@@ -10,18 +10,23 @@
       </div>
 
       <v-list lines="one" subheader>
-        <v-list-item title="Цёмная тэма">
+        <v-list-item title="Тэма">
           <template v-slot:prepend>
             <v-icon>mdi-theme-light-dark</v-icon>
           </template>
           <template v-slot:append>
-            <v-switch
-              :model-value="settings.currentTheme === 'dark'"
-              @update:model-value="settings.toggleTheme"
-              inset
-              color="primary"
-              hide-details
-            ></v-switch>
+            <v-btn-toggle
+              :model-value="settings.themePreference"
+              mandatory
+              density="compact"
+              variant="outlined"
+              aria-label="Тэма праграмы"
+              @update:model-value="settings.setThemePreference"
+            >
+              <v-btn value="system" aria-label="Сістэмная тэма">Аўта</v-btn>
+              <v-btn value="light" aria-label="Светлая тэма">Светлая</v-btn>
+              <v-btn value="dark" aria-label="Цёмная тэма">Цёмная</v-btn>
+            </v-btn-toggle>
           </template>
         </v-list-item>
 
