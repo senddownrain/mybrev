@@ -10,7 +10,7 @@
       flat
       color="transparent"
       class="floating-app-bar"
-      :class="{ 'floating-app-bar--behind-drawer': isDrawerOpen, 'floating-app-bar--song-view': isSongViewPage }"
+      :class="{ 'floating-app-bar--behind-drawer': isDrawerOpen, 'floating-app-bar--song-view': isSongViewPage || isCompendiumSubPage }"
     >
       <!-- Кнопка назад для страницы редактирования молитвы (PrayerEdit) -->
       <v-app-bar-nav-icon
@@ -50,6 +50,10 @@
       <div v-else-if="isSongViewPage" class="readings-nav-group songs-nav-group">
         <v-btn icon variant="text" class="readings-nav-segment readings-nav-segment--menu" aria-label="Назад" :to="{ name: 'Songs' }"><v-icon>mdi-arrow-left</v-icon></v-btn>
         <v-btn :to="{ name: 'Songs' }" variant="text" class="readings-nav-segment readings-nav-segment--liturgy text-none">Усе спевы</v-btn>
+      </div>
+      <div v-else-if="isCompendiumSubPage" class="readings-nav-group songs-nav-group">
+        <v-btn icon variant="text" class="readings-nav-segment readings-nav-segment--menu" aria-label="Назад" @click="goBackInCompendium"><v-icon>mdi-arrow-left</v-icon></v-btn>
+        <v-btn :to="{ name: 'Compendium' }" variant="text" class="readings-nav-segment readings-nav-segment--liturgy text-none">Кампендый</v-btn>
       </div>
       <!-- Меню і вяртанне да літургіі як адзін падзелены кантрол -->
       <div v-else-if="isReadingsPage" class="readings-nav-group">
@@ -287,6 +291,17 @@ const isReadingsPage = computed(() => {
   return route.name === 'Readings' || route.name === 'ReadingsByDate';
 });
 const isSongViewPage = computed(() => route.name === 'SongView');
+const isCompendiumSubPage = computed(() => ['CompendiumPart', 'CompendiumTopic', 'CompendiumQuestion'].includes(route.name));
+// Back inside the Compendium: history when it exists (keeps search and scroll),
+// otherwise the logical parent, e.g. after opening a deep link directly.
+const goBackInCompendium = () => {
+  if (router.options.history.state.back) {
+    router.back();
+    return;
+  }
+  const partId = route.name === 'CompendiumTopic' ? String(route.params.topicId).match(/^p\d+/)?.[0] : null;
+  router.push(partId ? { name: 'CompendiumPart', params: { partId } } : { name: 'Compendium' });
+};
 
 const readingsLiturgyRoute = computed(() => {
   const dateParam = route.params.date || route.query.date;
@@ -307,6 +322,8 @@ const showTextScaleControl = computed(() => {
   if (isPrayerViewPage.value) return !uiStore.prayerIsEditing;
   return [
     'SongView',
+    'CompendiumTopic',
+    'CompendiumQuestion',
     'Readings',
     'ReadingsByDate',
     'Bible',

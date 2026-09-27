@@ -37,6 +37,10 @@ const routes = [
         name: 'LiturgicalPicker',
         components: { default: () => import('@/views/LiturgicalPicker.vue'), bottomNav: BottomNavVue },
       },
+      { path: 'compendium', name: 'Compendium', component: () => import('@/views/Compendium.vue') },
+      { path: 'compendium/part/:partId', name: 'CompendiumPart', component: () => import('@/views/CompendiumPart.vue'), props: true },
+      { path: 'compendium/topic/:topicId', name: 'CompendiumTopic', component: () => import('@/views/CompendiumTopic.vue'), props: true },
+      { path: 'compendium/question/:number', name: 'CompendiumQuestion', component: () => import('@/views/CompendiumQuestion.vue'), props: true },
       { path: 'songs', name: 'Songs', component: () => import('@/views/Songs.vue') },
       { path: 'song/:id', name: 'SongView', component: () => import('@/views/Song.vue'), props: true },
       {
