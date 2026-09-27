@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { getMassVariantByPrayerId, MASS_ORDER_PRAYER_ID } from '@/utils/massRitual';
 
 import DefaultVue from '@/layouts/default/Default.vue';
 import ItemsListVue from '@/components/ItemsList.vue';
@@ -88,6 +89,19 @@ const routes = [
           default: () => import('@/components/prayers/PrayerView.vue')
         },
         props: { default: true },
+        // Raw Latin/English Mass variants are addressable prayers, but they
+        // open inside the single Holy Mass reader with that language selected.
+        beforeEnter(to) {
+          const variant = getMassVariantByPrayerId(to.params.id);
+          if (!variant || to.params.id === MASS_ORDER_PRAYER_ID) return true;
+          return {
+            name: 'PrayerView',
+            params: { id: MASS_ORDER_PRAYER_ID },
+            query: { ...to.query, lang: variant.language },
+            hash: to.hash,
+            replace: true,
+          };
+        },
       },
       {
         path: 'prayer/add',
@@ -178,6 +192,12 @@ const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition;
+    }
+    // Switching the Mass language only rewrites `?lang`; the reader restores
+    // the semantic section itself instead of jumping to the top.
+    if (to.name === 'PrayerView' && from.name === 'PrayerView'
+      && to.params.id === from.params.id && to.hash === from.hash) {
+      return false;
     }
     // Не оставляем активную scroll-анимацию после перехода: на мобильных
     // первый жест пользователя иначе может только остановить эту анимацию.
