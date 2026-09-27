@@ -1,5 +1,6 @@
 <template>
   <v-navigation-drawer
+    ref="drawer"
     v-model="isDrawerOpen"
     temporary
     :width="320"
@@ -38,6 +39,7 @@
       <v-list nav class="drawer-list">
       <div class="drawer-section-label">Асноўнае</div>
       <v-list-item
+        tabindex="0"
         title="Літургія гадзін"
         :to="{ name: 'Today' }"
         :active="route.name === 'Today' || route.name === 'SelectedDay'"
@@ -48,6 +50,7 @@
       </v-list-item>
 
       <v-list-item
+        tabindex="0"
         title="Чытанні"
         :to="{ name: 'Readings' }"
         :active="route.name === 'Readings' || route.name === 'ReadingsByDate' || route.name === 'ReadingsPicker' || (route.name === 'LiturgicalPicker' && route.query.mode === 'readings')"
@@ -58,6 +61,7 @@
       </v-list-item>
 
       <v-list-item
+        tabindex="0"
         title="Святая Імша"
         :to="{ name: 'PrayerView', params: { id: MASS_ORDER_PRAYER_ID } }"
         :active="route.name === 'PrayerView' && route.params.id === MASS_ORDER_PRAYER_ID"
@@ -68,6 +72,7 @@
       </v-list-item>
 
       <v-list-item
+        tabindex="0"
         title="Біблія"
         :to="{ name: 'Bible' }"
         :active="route.name === 'Bible'"
@@ -77,11 +82,13 @@
         </template>
       </v-list-item>
 
-      <v-list-item title="Спеўнік" :to="{ name: 'Songs' }" :active="route.name === 'Songs' || route.name === 'SongView'">
+      <v-list-item tabindex="0" title="Спеўнік" :to="{ name: 'Songs' }" :active="route.name === 'Songs' || route.name === 'SongView'">
         <template #prepend><PhMusicNotes :size="22" class="drawer-icon" /></template>
       </v-list-item>
 
       <v-list-item
+        tag="button"
+        tabindex="0"
         title="Малітвы"
         :active="isPrayersPage && !selectedCategory"
         @click="showAllPrayers"
@@ -94,6 +101,7 @@
       <div class="drawer-section-label drawer-section-label--spaced">Малітоўныя зборнікі</div>
 
       <v-list-item
+        tabindex="0"
         title="Абраныя малітвы"
         :to="{ name: 'FavoritePrayers' }"
         :active="route.name === 'FavoritePrayers'"
@@ -107,6 +115,8 @@
         v-for="category in menuCategories"
         :key="category.id || category.name"
         :title="category.name"
+        tag="button"
+        tabindex="0"
         @click="selectCategory(category)"
         :active="selectedCategory?.name === category.name"
       >
@@ -118,6 +128,7 @@
       <div class="drawer-section-label drawer-section-label--spaced">Праграма</div>
 
       <v-list-item
+        tabindex="0"
         title="Налады"
         :to="{ name: 'Settings' }"
         :active="route.name === 'Settings'"
@@ -128,6 +139,7 @@
       </v-list-item>
 
       <v-list-item
+        tabindex="0"
         title="Інфармацыя"
         :to="{ name: 'About' }"
         :active="route.name === 'About'"
@@ -137,19 +149,19 @@
         </template>
       </v-list-item>
 
-      <v-list-item v-if="!auth.user" title="Уваход" to="/login">
+      <v-list-item v-if="!auth.user" tabindex="0" title="Уваход" to="/login">
         <template #prepend>
           <PhSignIn :size="22" class="drawer-icon" />
         </template>
       </v-list-item>
 
       <template v-if="auth.user">
-        <v-list-item v-if="auth.isAdmin" title="Панэль адміністратара" to="/admin">
+        <v-list-item v-if="auth.isAdmin" tabindex="0" title="Панэль адміністратара" to="/admin">
           <template #prepend>
             <PhShieldCheck :size="22" class="drawer-icon" />
           </template>
         </v-list-item>
-        <v-list-item title="Выйсці" @click="auth.logout">
+        <v-list-item tag="button" tabindex="0" title="Выйсці" @click="auth.logout">
           <template #prepend>
             <PhSignOut :size="22" class="drawer-icon" />
           </template>
@@ -161,7 +173,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
 import { useAppBar } from '@/composables/useAppBar.js';
 import { useAuthStore } from '@/stores/auth.js';
 import { useRoute, useRouter } from 'vue-router';
@@ -176,6 +188,9 @@ import {
 
 const MASS_ORDER_PRAYER_ID = 'eMmCtxwyJ75ogmL5rwye';
 const { isDrawerOpen } = useAppBar();
+const drawer = ref(null);
+let returnFocusTo = null;
+let inertElements = [];
 const auth = useAuthStore();
 const route = useRoute();
 const router = useRouter();
@@ -207,6 +222,71 @@ const showAllPrayers = () => {
   isDrawerOpen.value = false;
   router.push({ name: 'Prayers' });
 };
+
+const focusableSelector = [
+  'a[href]',
+  'button:not([disabled])',
+  '[tabindex]:not([tabindex="-1"]):not([disabled])',
+].join(',');
+
+function drawerRoot() {
+  return drawer.value?.$el || null;
+}
+
+function setBackgroundInert(value) {
+  if (value) {
+    const root = drawerRoot();
+    inertElements = [...document.querySelectorAll('.v-main > *, .v-app-bar, .v-bottom-navigation')]
+      .filter((element) => root && !root.contains(element) && !element.contains(root));
+    inertElements.forEach((element) => { element.inert = true; });
+  } else {
+    inertElements.forEach((element) => { element.inert = false; });
+    inertElements = [];
+  }
+}
+
+function handleDrawerKeydown(event) {
+  if (!isDrawerOpen.value) return;
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    isDrawerOpen.value = false;
+    return;
+  }
+  if (event.key !== 'Tab') return;
+  const focusable = [...(drawerRoot()?.querySelectorAll(focusableSelector) || [])]
+    .filter((element) => element.getClientRects().length > 0);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+watch(isDrawerOpen, async (open, wasOpen) => {
+  if (open) {
+    returnFocusTo = document.activeElement;
+    setBackgroundInert(true);
+    window.addEventListener('keydown', handleDrawerKeydown, true);
+    await nextTick();
+    drawerRoot()?.querySelector('.drawer-close-btn')?.focus();
+  } else if (wasOpen) {
+    window.removeEventListener('keydown', handleDrawerKeydown, true);
+    setBackgroundInert(false);
+    await nextTick();
+    if (returnFocusTo?.isConnected) returnFocusTo.focus();
+    returnFocusTo = null;
+  }
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleDrawerKeydown, true);
+  setBackgroundInert(false);
+});
 
 </script>
 
