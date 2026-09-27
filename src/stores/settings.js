@@ -31,8 +31,21 @@ function loadPersonalCategories() {
 
 export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme();
+  const colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
+  const savedThemePreference = localStorage.getItem('themePreference');
+  // Existing explicit light/dark choices remain explicit after migration.
+  const legacyTheme = localStorage.getItem('theme');
+  const themePreference = ref(
+    ['system', 'light', 'dark'].includes(savedThemePreference)
+      ? savedThemePreference
+      : ['light', 'dark'].includes(legacyTheme) ? legacyTheme : 'system',
+  );
 
-  const currentTheme = ref(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
+  const currentTheme = ref(
+    themePreference.value === 'system'
+      ? colorScheme.matches ? 'dark' : 'light'
+      : themePreference.value,
+  );
   const fontFamily = ref(normalizeReaderFont(localStorage.getItem('fontFamily')));
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
   const menuCategories = ref(loadPersonalCategories());
@@ -46,8 +59,26 @@ export const useSettingsStore = defineStore('settings', () => {
   const songChordLayout = ref(['left', 'right'].includes(localStorage.getItem('songChordLayout')) ? 'left' : 'above');
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') === 'true');
 
+  function applyThemePreference() {
+    currentTheme.value = themePreference.value === 'system'
+      ? colorScheme.matches ? 'dark' : 'light'
+      : themePreference.value;
+  }
+
+  watch(themePreference, (newPreference) => {
+    localStorage.setItem('themePreference', newPreference);
+    applyThemePreference();
+  }, { immediate: true });
+
+  const handleColorSchemeChange = () => {
+    if (themePreference.value === 'system') applyThemePreference();
+  };
+  if (colorScheme.addEventListener) colorScheme.addEventListener('change', handleColorSchemeChange);
+  else colorScheme.addListener(handleColorSchemeChange);
+
   watch(currentTheme, (newTheme) => {
     theme.change(newTheme);
+    // Keep the legacy key synchronized for older installed app versions.
     localStorage.setItem('theme', newTheme);
     document.documentElement.dataset.appearance = newTheme;
     // Keep the Android browser/status bar aligned with the selected appearance.
@@ -101,11 +132,17 @@ export const useSettingsStore = defineStore('settings', () => {
 
 
   function toggleTheme() {
-    currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
+    themePreference.value = currentTheme.value === 'light' ? 'dark' : 'light';
   }
 
   function setTheme(isDark) {
-    currentTheme.value = isDark ? 'dark' : 'light';
+    themePreference.value = isDark ? 'dark' : 'light';
+  }
+
+  function setThemePreference(preference) {
+    if (['system', 'light', 'dark'].includes(preference)) {
+      themePreference.value = preference;
+    }
   }
 
   function setFontFamily(font) {
@@ -165,6 +202,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   return {
     currentTheme,
+    themePreference,
     fontFamily,
     systemFont: SYSTEM_FONT,
     fontSizeMultiplier,
@@ -180,6 +218,7 @@ export const useSettingsStore = defineStore('settings', () => {
     keepScreenOn,
     toggleTheme,
     setTheme,
+    setThemePreference,
     setFontFamily,
     increaseFontSize,
     decreaseFontSize,

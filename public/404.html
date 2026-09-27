@@ -6,7 +6,12 @@
     <title>Старонка не знойдзена — Малітоўнік</title>
     <meta name="theme-color" content="#6B4A32">
     <script>
-      if (localStorage.getItem('theme') === 'dark') {
+      const savedThemePreference = localStorage.getItem('themePreference') || localStorage.getItem('theme') || 'system';
+      const initialTheme = savedThemePreference === 'system'
+        && globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : savedThemePreference === 'dark' ? 'dark' : 'light';
+      if (initialTheme === 'dark') {
         document.documentElement.dataset.appearance = 'dark';
         document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0F0E0C');
       }

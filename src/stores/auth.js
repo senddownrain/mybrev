@@ -9,8 +9,8 @@ import router from '@/router';
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null);
-  /** True until both auth state and admin check are resolved */
-  const loading = ref(true);
+  /** True while an explicitly requested auth/admin check is resolving. */
+  const loading = ref(false);
   /** Reactive admin flag — updated asynchronously after auth state change */
   const isAdmin = ref(false);
   let authReadyPromise = null;

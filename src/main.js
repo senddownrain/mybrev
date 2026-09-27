@@ -3,7 +3,6 @@ import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 import './styles/main.scss'
 import { primeContentCache } from '@/utils/primeContentCache'
-import { useAuthStore } from '@/stores/auth'
 
 const app = createApp(App)
 
@@ -28,13 +27,6 @@ function runAfterLoadAndIdle(task, { delay = 0, idleTimeout = 2000 } = {}) {
   else window.addEventListener('load', schedule, { once: true })
 }
 
-// Authentication only affects admin affordances on public routes. Protected
-// routes initialise it synchronously in the router guard.
-runAfterLoadAndIdle(() => {
-  useAuthStore().init().catch(error => {
-    console.error('[main] Auth initialization error:', error)
-  })
-}, { delay: 1500, idleTimeout: 2000 })
 // Navigation prefetch is intentionally delayed until the document has loaded,
 // so it cannot compete with the first screen's critical requests.
 runAfterLoadAndIdle(() => {

@@ -7,7 +7,8 @@
   >
     <v-main :class="{ 'has-bottom-nav': hasBottomNav }">
       <router-view v-if="!hideLayoutTopNav" name="topNav" />
-      <router-view /> 
+      <router-view />
+      <NextHourLink />
 
       <router-view name="bottomNav" />
 
@@ -23,6 +24,7 @@
   import { useRoute } from 'vue-router';
   import TextSettingsSheet from '@/components/TextSettingsSheet.vue';
   import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
+  import NextHourLink from '@/components/liturgical/NextHourLink.vue';
   import { useSettingsStore } from '@/stores/settings.js';
   
   const settings = useSettingsStore();

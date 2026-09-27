@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   
   <!-- Favicon и иконки -->
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
@@ -22,7 +22,12 @@
   <script>
     // Apply the saved appearance immediately, before Vue finishes loading.
     // This controls the browser/status-bar colour, not the PWA splash screen.
-    if (localStorage.getItem('theme') === 'dark') {
+    const savedThemePreference = localStorage.getItem('themePreference') || localStorage.getItem('theme') || 'system'
+    const initialTheme = savedThemePreference === 'system'
+      && globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : savedThemePreference === 'dark' ? 'dark' : 'light'
+    if (initialTheme === 'dark') {
       document.documentElement.dataset.appearance = 'dark'
       document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0F0E0C')
     }

@@ -82,7 +82,16 @@ export default defineConfig({
       workbox: {
         cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2,webmanifest}'],
-        globIgnores: ['app-icon-master.png', 'maria-menu-logo.svg'],
+        // Admin/login code remains route-lazy and network-loaded. It must not
+        // consume every reader's offline install budget.
+        globIgnores: [
+          'app-icon-master.png',
+          'maria-menu-logo.svg',
+          '**/vendor-firebase-auth-*.js',
+          '**/vendor-quill-*.{js,css}',
+          '**/vendor-markdown-editor-*.js',
+          '**/{Admin,DayEditor,ParsedReadingEditor,SongEditor,PrayerCategories,PrayerForm,Login}-*.{js,css}',
+        ],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
