@@ -101,6 +101,8 @@ export const romanNumeral = (value) => romanNumerals[value] || String(value ?? '
 /**
  * Build lookup structures once per dataset: a flat ordered question list, a
  * number index and "reading groups" (topics, or a unit's untitled lead-in).
+ * Reading groups are internal (reader grouping, citations, legacy links); the
+ * visible hierarchy is built by `compendiumNavigation.js`.
  */
 export function indexCompendium(dataset) {
   const questions = [];
@@ -168,43 +170,6 @@ export function indexCompendium(dataset) {
     getGroup: (id) => groups.get(id) || null,
     getPart: (id) => partsById.get(id) || dataset.parts.find((part) => String(part.number) === String(id)) || null,
   };
-}
-
-/**
- * Part outline for navigation: sections → chapters → reading groups.
- * Section/chapter levels without a heading are represented with `title: null`.
- */
-export function buildPartOutline(index, partId) {
-  const part = index.getPart(partId);
-  if (!part) return null;
-  const sections = [];
-  for (const groupId of index.groupOrder) {
-    const group = index.groups.get(groupId);
-    const { unit } = group;
-    if (unit.partId !== part.id) continue;
-    let section = sections.find((item) => item.number === unit.sectionNumber);
-    if (!section) {
-      section = { id: `${part.id}-s${unit.sectionNumber}`, number: unit.sectionNumber, label: unit.sectionLabel, title: unit.sectionTitle, chapters: [] };
-      sections.push(section);
-    }
-    let chapter = section.chapters.find((item) => item.number === unit.chapterNumber);
-    if (!chapter) {
-      chapter = { id: unit.id, number: unit.chapterNumber, label: unit.chapterLabel, title: unit.chapterTitle, groups: [] };
-      section.chapters.push(chapter);
-    }
-    chapter.groups.push(group);
-  }
-  return { part, sections };
-}
-
-/** Breadcrumb labels for a question or group (visible Belarusian source titles only). */
-export function contextTrail(index, item) {
-  const unit = item?.unit || index.units.find((candidate) => candidate.id === item?.unitId);
-  if (!unit) return [];
-  const trail = [unit.partLabel, unit.sectionTitle, unit.chapterTitle];
-  const topicTitle = item.topic?.title ?? item.topicTitle;
-  if (topicTitle) trail.push(topicTitle);
-  return trail.filter(Boolean);
 }
 
 /** Split an answer into paragraphs of styled runs using `answerEmphasis`. */
