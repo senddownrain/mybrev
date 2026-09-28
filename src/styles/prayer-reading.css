@@ -363,6 +363,8 @@
 .prayer-source__content :deep(p) {
   display: inline;
   margin: 0;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .prayer-source__content :deep(a) {
