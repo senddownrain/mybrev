@@ -20,26 +20,28 @@ test('drawer: «Кампендый» with a Phosphor icon, between Bible and son
   assert.match(drawer, /COMPENDIUM_ROUTE_NAMES = new Set\(\['Compendium', 'CompendiumPart', 'CompendiumTopic', 'CompendiumQuestion'\]\)/);
 });
 
-test('routes: root, part, topic and deep-linkable question', () => {
+test('routes: root, part, topic and deep-linkable question inside one shell', () => {
   const router = read('src/router/index.js');
+  const shell = router.slice(router.indexOf("path: 'compendium',"), router.indexOf("path: 'songs'"));
+  assert.match(shell, /component: \(\) => import\('@\/views\/CompendiumShell\.vue'\)/);
   for (const [path, name] of [
-    ['compendium', 'Compendium'],
-    ['compendium/part/:partId', 'CompendiumPart'],
-    ['compendium/topic/:topicId', 'CompendiumTopic'],
-    ['compendium/question/:number', 'CompendiumQuestion'],
-  ]) assert.match(router, new RegExp(`path: '${path.replace(/[/:]/g, '\\$&')}', name: '${name}'`));
+    ['', 'Compendium'],
+    ['part/:partId', 'CompendiumPart'],
+    ['topic/:topicId', 'CompendiumTopic'],
+    ['question/:number', 'CompendiumQuestion'],
+  ]) assert.match(shell, new RegExp(`path: '${path.replace(/[/:]/g, '\\$&')}', name: '${name}'`));
   // Question pages resolve data from the store after a reload (lazy dataset + init()).
   const question = read('src/views/CompendiumQuestion.vue');
   assert.match(question, /store\.init\(\)/);
   assert.match(question, /Пытанне \{\{ number \}\} не знойдзена/);
 });
 
-test('root screen: title, four parts, search dock and results', () => {
+test('root screen: title and four parts; search lives in the shell', () => {
   const root = read('src/views/Compendium.vue');
   assert.match(root, /COMPENDIUM_TITLE/);
   assert.match(root, /name: 'CompendiumPart'/);
-  assert.match(root, /<CompendiumSearchDock \/>/);
-  assert.match(root, /<CompendiumSearchResults v-if="store\.searchQuery\.trim\(\)"/);
+  const shell = read('src/views/CompendiumShell.vue');
+  assert.match(shell, /<CompendiumSearchResults v-if="store\.ready" :results="store\.searchResults" \/>/);
   const results = read('src/components/compendium/CompendiumSearchResults.vue');
   assert.match(results, /name: 'CompendiumQuestion'/);
   assert.match(results, /Нічога не знойдзена/);

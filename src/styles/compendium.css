@@ -1,6 +1,26 @@
 /* Compendium additions. Everything else comes from prayers-list.css and
    prayer-reading.css; only existing theme tokens are used here. */
 
+/* Every Compendium level shows the shell's fixed search dock (58px high,
+   16px above the safe area): keep the last content above it. */
+.prayers-list-container.compendium-container {
+  padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+.prayer-view-container.compendium-reader {
+  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* Section/chapter headings are anchors for context and legacy links. */
+.compendium-anchor {
+  scroll-margin-top: 84px;
+}
+
+.compendium-node-lead {
+  margin: 0 20px 10px;
+  font-family: var(--reader-font-family);
+}
+
 .compendium-number {
   flex: 0 0 auto;
   font-size: 0.86rem;
@@ -14,6 +34,11 @@
   color: var(--nav-muted);
   font-size: 0.78rem;
   line-height: 1.35;
+}
+
+.compendium-results__count {
+  margin-inline: 20px;
+  color: var(--nav-muted);
 }
 
 .compendium-empty {
