@@ -130,9 +130,12 @@ unit documents that are no longer listed. Public read rules for `compendium` and
   the downloaded units pass `validateCompendiumDataset` does it fetch the `compendium`
   collection in a single query and swap it in. If the refresh fails or the data is
   invalid, whatever is already displayed stays.
-- `src/utils/compendiumData.js` holds validation, the question/number index, reading
-  groups (a topic, or a unit's questions that come before its first topic), the part
-  outline and answer paragraphs.
+- `src/utils/compendiumData.js` holds validation, the question/number index, internal
+  reading groups (a topic, or a unit's questions that come before its first topic) and
+  answer paragraphs.
+- `src/utils/compendiumNavigation.js` derives the visible source hierarchy from that
+  index (see "Source hierarchy vs reading groups" below). The canonical schema is
+  unchanged.
 
 ## Search
 
@@ -170,17 +173,71 @@ Hidden Russian aliases (`groups: [{ ru: [stems], be: [prefixes] }]`) work like t
 
 | Route | Screen |
 | --- | --- |
-| `/compendium` | Root screen: the four parts, the search dock (existing `prayer-search-dock`) and the search results |
-| `/compendium/part/:partId` | Sections → chapters → reading groups |
-| `/compendium/topic/:topicId` | Expandable question rows inside the existing reading surface, with prev/next group |
+| `/compendium` | Root screen: the four parts |
+| `/compendium/part/:partId` | Sections → direct questions, named topics, chapters (→ direct questions, named topics) |
+| `/compendium/topic/:topicId` | A named topic: expandable question rows inside the existing reading surface, with prev/next |
 | `/compendium/question/:number` | One question with its context trail and prev/next; deep-linkable |
+
+All four are children of `CompendiumShell` (see "Persistent search" below).
 
 Other details:
 
 - The drawer item «Кампендый» (Phosphor `PhScroll`) sits between «Біблія» and «Спеўнік».
 - On sub-pages the app bar shows the divided back / «Кампендый» capsule, the same one
   the song view uses. It also shows the existing text-scale control.
-- The search query and expanded rows are kept in the store for the session. The
-  router's saved scroll position restores the scroll on Back.
+- Expanded rows are kept in the store for the session. The router's saved scroll
+  position restores the scroll on Back.
 - Styles reuse `prayers-list.css` and `prayer-reading.css`. `compendium.css` only adds
   small row, number and citation rules built on the existing theme tokens.
+
+### Source hierarchy vs reading groups
+
+Units and reading groups are technical: they split content for storage, the topic
+reader and search. They are not what the user navigates. `compendiumNavigation.js`
+builds a derived tree in which only headings printed on Catholic.by are nodes:
+
+```text
+part (ЧАСТКА) → section (РАЗДЗЕЛ) → chapter (ГЛАВА) → topic (named heading)
+node: { id, kind, label, title, sourceHeading: true, leadCitations,
+        directQuestions: [questions], topics: [topic nodes], chapters: [chapter nodes] }
+```
+
+- Visible labels come from the source (`partLabel`, `sectionLabel`, `chapterLabel`);
+  `section`/`chapter` are code names only. РАЗДЗЕЛ and ГЛАВА stay distinct.
+- Questions printed under a heading before its first child heading are that node's
+  `directQuestions` and render as plain numbered question rows (the search-result row
+  style). Example: question 1 sits directly under РАЗДЗЕЛ ПЕРШЫ «ВЕРУ» — «ВЕРЫМ»,
+  before ГЛАВА ПЕРШАЯ; questions 79–80 sit in ГЛАВА ДРУГАЯ before its first topic.
+  A node without a real title is never created, so there is no «Пытанне 1» or
+  «Пытанні 25–27» heading. Ranges only appear as secondary metadata under a real title.
+- A chapter's lead quotation (`leadCitations`) is shown under its heading.
+- Italic subheadings stay in the topic reader (`subtopics` on the topic node).
+- The topic pager walks `sequence`: named topics and direct questions in source order.
+- Context trails and result contexts use real headings only: part label, section,
+  chapter and topic titles, without consecutive duplicates.
+- Legacy links to technical groups (`/compendium/topic/p1-s1-intro`, `…/p1-s1-ch1`)
+  still work. `resolveLegacyTopicRoute` replaces them with the question when the group
+  has one question, and otherwise with the part screen scrolled to the real parent
+  heading (`/compendium/part/p1#p1-s1-ch1`), where those questions are listed. Named
+  topic routes are unchanged.
+
+### Persistent search
+
+`CompendiumShell` wraps every Compendium level. It mounts the only
+`CompendiumSearchDock` (the existing `prayer-search-dock`) and a global results layer,
+and `createCompendiumSearchSync` (`src/utils/compendiumSearchRoute.js`) controls them:
+
+- The query text lives in the store for the session, so it stays in the dock after a
+  result is opened.
+- Results are open when the current route carries `?q=`. The first keystroke pushes
+  `?q=` onto the current page, and further typing only replaces it. So Back from an
+  opened question returns to the results, and Back from the results returns to the page.
+- The page stays mounted (hidden) under the results. Clearing the query (✕, Esc or
+  deleting the text) closes the results and restores the page and its scroll.
+  Focusing the dock with a kept query reopens its results.
+- Search is always global (`searchCompendium` over the whole index). Numbers, Belarusian
+  words and hidden Russian aliases behave as described above.
+- The router does not scroll when only `?q` changes, and a `#heading` hash scrolls to
+  that section or chapter.
+- Every Compendium container reserves the dock height plus the safe-area inset at the
+  bottom, so the dock never covers the last question, the pager or the source line.
