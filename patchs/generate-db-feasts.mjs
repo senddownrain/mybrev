@@ -560,6 +560,10 @@ function buildOutput({
   }
 
   BASE_FIELDS.forEach((field) => {
+    if (field === 'officeOfReadingsTeDeum' && source._omitTeDeum) {
+      output[field] = false;
+      return;
+    }
     output[field] = resolveField({
       field,
       source,
@@ -572,7 +576,7 @@ function buildOutput({
     });
   });
 
-  const hasFirstVespers = FIRST_VESPER_FIELDS.some((field) => (
+  const hasFirstVespers = !source._omitFirstVespers && FIRST_VESPER_FIELDS.some((field) => (
     !isEmpty(source[field]) || Object.hasOwn(template, field) && !isEmpty(template[field])
   ));
   if (hasFirstVespers) {
