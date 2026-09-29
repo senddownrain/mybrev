@@ -40,7 +40,78 @@ export function normalizeFirstVespers(day) {
   return result;
 }
 
-/** Only feasts and solemnities may replace the preceding evening's office. */
+/**
+ * I Vespers assembled for a celebration that has them by liturgical right:
+ * field by field `vesper1*` (Proper) → the celebration's own Vespers fields
+ * (Proper completed with its Common when the document was built). Having
+ * I Vespers is decided by the Ordo, not by the presence of `vesper1*`.
+ */
+export function assembleFirstVespers(day) {
+  if (!day) return null;
+  const result = { ...day };
+  let own = 0;
+  VESPER_FIELDS.forEach((field) => {
+    const first = day[`vesper1${field}`];
+    if (hasText(first)) own += 1;
+    result[`vesper${field}`] = hasText(first) ? first : (day[`vesper${field}`] || '');
+  });
+  result._firstVespersSource = own === VESPER_FIELDS.length ? 'vesper1'
+    : own ? 'vesper1+proper' : 'proper';
+  return result;
+}
+
+/** Tomorrow's option that owns I Vespers tonight (by celebration id). */
+export function findFirstVespersOption(tomorrowContent, celebrationId) {
+  const options = tomorrowContent?.dayOptions || [];
+  return options.find((option) => option.ordo?.optionId === celebrationId)
+    || options.find((option) => option.ordo?.role === 'primary')
+    || null;
+}
+
+/**
+ * Evening model shared by the hours list and the Vespers screen.
+ * With an Ordo descriptor (`day._ordo.vespers`) the engine decides II Vespers
+ * vs I Vespers of tomorrow by precedence (GNLYC 61); legacy days fall back to
+ * the old rank + `vesper1*` heuristics.
+ *
+ * @returns {{ firstVespers: object|null, local: object[], second: boolean }}
+ */
+export function eveningVespersModel(day, tomorrowContent, { isoWeekday, requestedDayId = '' } = {}) {
+  const none = { firstVespers: null, local: [], second: false };
+  if (!day || usesOwnVespers(day)) return none;
+  if (day._ordo?.vespers) {
+    const { vespers } = day._ordo;
+    if (vespers.type === 'first') {
+      const option = findFirstVespersOption(tomorrowContent, vespers.celebrationId);
+      if (!option?.day) return none;
+      return {
+        ...none,
+        firstVespers: {
+          day: assembleFirstVespers(option.day),
+          sourceDayId: option.day.id || '',
+          title: option.title || vespers.title || 'заўтрашняга дня',
+          places: [],
+        },
+      };
+    }
+    return { ...none, second: vespers.type === 'second' };
+  }
+  const options = getTomorrowFirstVespersOptions(tomorrowContent);
+  const requested = requestedDayId ? options.find((item) => item.sourceDayId === String(requestedDayId)) : null;
+  const universal = options.find((item) => !isLocalFirstVespers(item));
+  return {
+    firstVespers: requested || universal
+      || (Number(isoWeekday) === 6 ? findTomorrowRegularVespers(tomorrowContent) : null),
+    local: options.filter(isLocalFirstVespers),
+    second: Number(isoWeekday) === 7 || isSolemnity(day),
+  };
+}
+
+/**
+ * Legacy heuristic for documents without an Ordo descriptor: only feasts and
+ * solemnities may replace the preceding evening's office. The Ordo grants
+ * I Vespers to a feast only when it is a feast of the Lord on a Sunday.
+ */
 export function hasFirstVespersRank(day) {
   return FIRST_VESPERS_RANKS.has(normalizedRank(day));
 }

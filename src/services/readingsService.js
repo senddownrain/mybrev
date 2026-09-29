@@ -3,15 +3,11 @@ import { db } from '@/plugins/firebase';
 import { getDocsOfflineAware } from '@/utils/firestoreRead';
 import { logger } from '@/utils/logger';
 import {
-  isSeasonalDateException,
-  isChristmasDateExceptionExclusion,
-} from '@/utils/liturgicalDayResolution';
-import {
   hasReadingDocumentContent,
-  normalizeFeastCode,
   selectCalendarDayVariants,
   selectReadingLectionaryVariants,
 } from '@/utils/parsedReadingsIdentity';
+import { orderReadingsByPlan, readingQueriesOfPlan } from '@/utils/ordo/readingsPlan';
 
 const COLLECTION = 'readings';
 
@@ -19,185 +15,56 @@ function col() {
   return collection(db, COLLECTION);
 }
 
-function ddmm(mDate) {
-  return mDate.format('DD.MM');
-}
-
-function feastCodeVariants(code) {
-  const canonical = normalizeFeastCode(code);
-  return canonical ? [canonical, canonical.replace(/^feast-/, '')] : [];
+function firestoreQuery(spec) {
+  switch (spec.field) {
+    case '_feast': return query(col(), where('_feast', '==', spec.value));
+    case '_date': return query(col(), where('_date', '==', spec.value));
+    case '_dayId': return query(col(), where('_dayId', '==', spec.value));
+    case '_dayIds': return query(col(), where('_dayIds', 'array-contains', spec.value));
+    case 'period': return query(
+      col(),
+      where('_periodType', '==', spec.value._periodType),
+      where('_periodWeekNumber', '==', spec.value._periodWeekNumber),
+      where('_dayOfWeek', '==', Number(spec.value._dayOfWeek)),
+    );
+    default: return null;
+  }
 }
 
 /**
  * Fetch structured readings for a liturgical date.
  *
- * Priority: dynamic feast > seasonal/fixed date > period (weekday year 1/2 or Sunday A/B/C)
+ * The celebration identity, the lectionary cycles and the lookup order come
+ * from the Ordo engine (`planReadings` on the SAME ResolvedLiturgicalDay as
+ * the Hours). This service only runs the planned Firestore queries; it has no
+ * priority logic of its own.
  *
  * @param {import('moment').Moment} mDate
- * @param {Object} context - from liturgicalStore._resolveContext: { periodType, periodWeek, dayOfWeek, cycle, _feast }
- * @param {string[]} dynamicFeastCodes - feast codes from getDynamicFeastCodesForDate (format: 'feast-xxx')
+ * @param {{ cycle: string, sundayCycle: string, dayOfWeek: number }} context
+ * @param {object} plan   `planReadings(resolvedDay, { dayId })`
+ * @param {{ dayId?: string, includeAlternatives?: boolean, readSession?: object }} options
  * @returns {Promise<Object[]>}
  */
-export async function getReadingsForDate(mDate, context, dynamicFeastCodes = [], options = {}) {
+export async function getReadingsForDate(mDate, context, plan, options = {}) {
   async function queryDocs(q) {
     const snapshot = await getDocsOfflineAware(q, options.readSession);
     return snapshot.docs.map((d) => ({ id: d.id, ...d.data() })).filter(hasReadingDocumentContent);
   }
-  const { periodType, periodWeek, dayOfWeek, cycle, sundayCycle = cycle } = context;
-  const selectVariants = (documents) => selectReadingLectionaryVariants(documents, { cycle, sundayCycle });
-  const dateStr = ddmm(mDate);
-  // Early Lent was imported in two shapes: canonical week 0 and legacy null.
-  const periodWeekValues = Number(periodWeek) === 0 ? [0, null] : [Number(periodWeek)];
-
-  // The readings screen needs the complete set for a date so it can present
-  // alternative celebrations and lectionary years without stacking every
-  // document in the article. Other callers keep the old, active-only result.
-  if (options.includeAlternatives) {
-    const linkedIds = new Set();
-    const candidates = [];
-
-    if (options.dayId) {
-      const linked = (await Promise.all([
-        queryDocs(query(col(), where('_dayId', '==', options.dayId))),
-        queryDocs(query(col(), where('_dayIds', 'array-contains', options.dayId))),
-      ])).flat();
-      linked.forEach((document) => {
-        linkedIds.add(document.id);
-        candidates.push(document);
-      });
-    }
-
-    if (dynamicFeastCodes.length > 0) {
-      const feastQueries = dynamicFeastCodes.flatMap((code) => feastCodeVariants(code).map((value) =>
-        queryDocs(query(col(), where('_feast', '==', value))),
-      ));
-      candidates.push(...(await Promise.all(feastQueries)).flat());
-    }
-
-    const isFixedDateOnly =
-      isSeasonalDateException(mDate, periodType) || isChristmasDateExceptionExclusion(mDate);
-
-    candidates.push(...await queryDocs(query(col(), where('_date', '==', dateStr))));
-
-    if (!isFixedDateOnly
-      && periodType && periodWeek !== undefined && dayOfWeek !== undefined) {
-      candidates.push(...(await Promise.all(periodWeekValues.map((weekValue) => queryDocs(
-        query(
-          col(),
-          where('_periodType', '==', periodType),
-          where('_periodWeekNumber', '==', weekValue),
-          where('_dayOfWeek', '==', Number(dayOfWeek)),
-        ),
-      )))).flat());
-    }
-
-    const unique = [...new Map(candidates.map((document) => [document.id, document])).values()];
-    const sourceRank = (document) => {
-      if (linkedIds.has(document.id)) return 0;
-      if (document._feast) return 1;
-      if (document._date) return 2;
-      if (document._periodType) return 3;
-      return 4;
-    };
-
-    return unique
-      .map((document, index) => ({ document, index }))
-      .sort((left, right) => sourceRank(left.document) - sourceRank(right.document)
-        || left.index - right.index)
-      .map(({ document }) => document);
-  }
-
-  // An explicitly selected day template is the strongest link. During
-  // migration both singular and array forms are supported.
-  if (options.dayId) {
-    const linked = (await Promise.all([
-      queryDocs(query(col(), where('_dayId', '==', options.dayId))),
-      queryDocs(query(col(), where('_dayIds', 'array-contains', options.dayId))),
-    ])).flat();
-    const uniqueLinked = [...new Map(linked.map((document) => [document.id, document])).values()];
-    const selected = selectVariants(uniqueLinked);
-    if (selected.length) return selected;
-  }
-
-  // 1. Dynamic feasts — highest priority
-  if (dynamicFeastCodes.length > 0) {
-    const feastQueries = dynamicFeastCodes.flatMap((code) => feastCodeVariants(code).map((value) =>
-      queryDocs(query(col(), where('_feast', '==', value))),
-    ));
-    const all = (await Promise.all(feastQueries)).flat();
-    // Deduplicate
-    const unique = [...new Map(all.map((d) => [d.id, d])).values()];
-    // Filter by cycle if the feast has cycle variants, otherwise take all
-    const result = selectVariants(unique);
-    if (result.length > 0) {
-      logger.log(`[readingsService] feast match (${dynamicFeastCodes}): ${result.length}`);
-      return result;
-    }
-    if (unique.length > 0) {
-      logger.log(`[readingsService] feast match (no cycle filter): ${unique.length}`);
-      return unique;
-    }
-  }
-
-  // 2. Seasonal exceptions (Advent Dec 17–24, Christmas Jan dates)
-  //    and Christmas fixed-date exclusions (25.12, 26.12, etc.) — query by _date only
-  const isFixedDateOnly =
-    isSeasonalDateException(mDate, periodType) || isChristmasDateExceptionExclusion(mDate);
-
-  if (isFixedDateOnly) {
-    const docs = await queryDocs(query(col(), where('_date', '==', dateStr)));
-    // Sunday feasts in the Christmas octave have year set (A/B/C); they take priority
-    // over weekday octave docs (year=null) and suppress them for that Sunday.
-    const selected = selectVariants(selectCalendarDayVariants(docs, dayOfWeek));
-    logger.log(`[readingsService] fixed/seasonal ${dateStr} year=${cycle}: ${selected.length}`);
-    if (selected.length) return selected;
-  }
-
-  // 3. General case: query period + fixed date in parallel, merge with priority
-  const queries = [];
-
-  if (periodType && periodWeek !== undefined && dayOfWeek !== undefined) {
-    // Try with cycle; weekdays have year '1'/'2', Sundays have A/B/C
-    if (cycle) {
-      periodWeekValues.forEach((weekValue) => queries.push(
-        queryDocs(
-          query(
-            col(),
-            where('_periodType', '==', periodType),
-            where('_periodWeekNumber', '==', weekValue),
-            where('_dayOfWeek', '==', Number(dayOfWeek)),
-            where('year', '==', cycle),
-          ),
-        ),
-      ));
-    }
-    // Also fetch docs with year == null (shared across cycles)
-    periodWeekValues.forEach((weekValue) => queries.push(
-      queryDocs(
-        query(
-          col(),
-          where('_periodType', '==', periodType),
-          where('_periodWeekNumber', '==', weekValue),
-          where('_dayOfWeek', '==', Number(dayOfWeek)),
-          where('year', '==', null),
-        ),
-      ),
-    ));
-  }
-
-  // Fixed date query (saints' days, memorials)
-  queries.push(queryDocs(query(col(), where('_date', '==', dateStr))));
-
-  const results = (await Promise.all(queries)).flat();
-  const unique = [...new Map(results.map((d) => [d.id, d])).values()];
-
-  // Fixed date docs take priority over period docs
-  const fixed = selectVariants(selectCalendarDayVariants(unique.filter((d) => d._date), dayOfWeek));
-  const period = selectVariants(unique.filter((d) => !d._date));
-  const sorted = [...fixed, ...period];
-
+  const specs = readingQueriesOfPlan(plan, { dayId: options.dayId || '' });
+  const results = await Promise.all(specs.map(async (spec) => {
+    const q = firestoreQuery(spec);
+    return q ? queryDocs(q) : [];
+  }));
+  const documents = [...new Map(results.flat().map((document) => [document.id, document])).values()];
+  const ordered = orderReadingsByPlan(plan, documents, {
+    dayId: options.dayId || '',
+    includeAlternatives: Boolean(options.includeAlternatives),
+    selectCalendarDayVariants,
+    selectVariants: (list) => selectReadingLectionaryVariants(list, context),
+  });
   logger.log(
-    `[readingsService] ${dateStr} period=${periodType} w${periodWeek} d${dayOfWeek} cycle=${cycle}: ${sorted.length} (fixed=${fixed.length} period=${period.length})`,
+    `[readingsService] ${mDate.format('YYYY-MM-DD')} ${plan.diocese} option=${plan.selectedOptionId} `
+      + `cycle=${context.cycle}/${context.sundayCycle}: ${ordered.length}`,
   );
-  return sorted;
+  return ordered;
 }

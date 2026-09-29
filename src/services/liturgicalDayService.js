@@ -159,8 +159,12 @@ function dynamicFeastVariants(code) {
 
 const normalizedFeastCode = (code) => String(code || '').replace(/^feast-/, '');
 
-/** Fetch and resolve all day variants for a calendar date. */
-export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = [], session) {
+/**
+ * Fetch and resolve all day variants for a calendar date.
+ * `extraFixedDates` (`DD.MM`) loads fixed documents of celebrations that the
+ * Ordo placed on this date from another date (transfers, diocesan dates).
+ */
+export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = [], session, { extraFixedDates = [] } = {}) {
   const hasPeriod = context.periodType && context.periodWeek !== undefined && context.dayOfWeek;
   const exclusiveFeastCode = dynamicFeastCodes
     .map(normalizedFeastCode)
@@ -189,18 +193,22 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = [], s
     : (context.periodType === 'advent' || context.periodType === 'christmas'
       ? getSeasonalException(mDate, context.periodType, session)
       : Promise.resolve(null));
+  const extraFixedPromise = extraFixedDates.length
+    ? queryAll(extraFixedDates.map(getDaysByFixedDateQuery), session)
+    : Promise.resolve([]);
   const officeForDeadPromise = getOfficeForDead(session);
   const dynamicPromises = dynamicFeastCodes.map(async (code) => {
     const docs = await queryAll(dynamicFeastVariants(code).map(getDaysByFeastQuery), session);
     return [code, docs];
   });
 
-  const [periodDay, fixedDocs, seasonalDay, officeForDead, dynamicEntries] = await Promise.all([
+  const [periodDay, fixedDocs, seasonalDay, officeForDead, dynamicEntries, extraFixedDocs] = await Promise.all([
     periodPromise,
     fixedPromise,
     seasonalPromise,
     officeForDeadPromise,
     Promise.all(dynamicPromises),
+    extraFixedPromise,
   ]);
   const withCalendarContext = (day, overrides = {}) => day ? {
     ...day,
@@ -242,7 +250,12 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = [], s
     ? withCalendarContext(resolveDayAgainstPeriod(officeForDead, resolvedPeriodDay))
     : null;
 
+  const resolvedExtraFixed = extraFixedDocs
+    .filter((item) => !isSeasonalDateDocumentId(item.id))
+    .map((item) => withCalendarContext(resolveDateDayAgainstPeriod(item, resolvedPeriodDay)));
+
   return {
+    extraFixedDays: resolvedExtraFixed,
     periodDays: exclusiveFeastCode || exclusiveFixedDate || hasSeasonalException
       ? []
       : (resolvedPeriodDay ? [resolvedPeriodDay] : []),

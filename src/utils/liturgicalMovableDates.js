@@ -103,3 +103,27 @@ export function sundayCycleFor(date) {
 export function weekdayCycleFor(date) {
   return Number(lectionaryCyclesFor(isoOf(date)).weekday);
 }
+
+const YEAR_OPTION_FIELDS = Object.freeze([
+  'easterSunday', 'pentecost', 'firstAdventSunday', 'ashWednesday', 'holyFamily', 'baptismOfLord',
+  'ascension', 'corpusChristi', 'ordintaryStart1', 'ordintaryWeeks1', 'ordintaryWeeks2',
+]);
+
+/**
+ * Effective year options: computed by the engine, overridden field by field
+ * by a stored Firestore `yearOptions` document when one exists. Returns the
+ * differing fields so callers can log every discrepancy.
+ */
+export function mergeYearOptions(year, stored = null) {
+  const computed = buildYearOptions(Number(year));
+  if (!stored) return { options: computed, discrepancies: [], source: 'computed' };
+  const discrepancies = YEAR_OPTION_FIELDS
+    .filter((field) => stored[field] !== undefined && stored[field] !== null && stored[field] !== '')
+    .filter((field) => String(stored[field]) !== String(computed[field]))
+    .map((field) => ({ field, computed: computed[field], stored: stored[field] }));
+  const options = { ...computed };
+  YEAR_OPTION_FIELDS.forEach((field) => {
+    if (stored[field] !== undefined && stored[field] !== null && stored[field] !== '') options[field] = stored[field];
+  });
+  return { options, discrepancies, source: 'firestore' };
+}

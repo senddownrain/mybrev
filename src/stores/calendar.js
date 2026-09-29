@@ -6,10 +6,7 @@ import { logger } from '@/utils/logger';
 import { getDocsOfflineAware } from '@/utils/firestoreRead';
 import { publicContentCache, publicContentKey } from '@/utils/publicContentCache';
 import { createReadSession } from '@/utils/contentCache';
-import {
-    calculateBaptismOfLordDate,
-    calculateHolyFamilyDate,
-} from '@/utils/liturgicalCalendar';
+import { getMovableFeastDates, mergeYearOptions } from '@/utils/liturgicalMovableDates';
 
 /**
  * @typedef {Object} YearOptions
@@ -51,35 +48,45 @@ export const useCalendarStore = defineStore('calendar', () => {
     const dynamicDatesRequests = new Map();
 
     /**
-     * Fetch liturgical year options for the given year from Firestore.
-     * Results are cached in memory; subsequent calls for the same year return the cached value.
+     * Liturgical year options for the given year. They are computed by the
+     * Ordo engine (`mergeYearOptions`), so no stored document is required.
+     * A Firestore `yearOptions` document, when present, still overrides the
+     * computed values field by field; every discrepancy is logged.
      *
-     * @param {number|string} year - The calendar year to fetch options for
-     * @returns {Promise<YearOptions|null>} Year options object, or null if not found in Firestore
+     * @param {number|string} year - The calendar year
+     * @returns {Promise<YearOptions>} Effective year options (never null)
      */
     async function getYearOptions(year, session) {
-        const entry = await publicContentCache.read(publicContentKey('year', Number(year)), async () => {
-            const readSession = createReadSession();
-            const q = query(collection(db, 'yearOptions'), where('year', '==', Number(year)));
-            const snapshot = await getDocsOfflineAware(q, readSession);
-            return { data: snapshot.empty ? null : snapshot.docs[0].data(), complete: readSession.complete };
-        }, { fresh: Boolean(session) });
-        if (session && !entry.complete) session.complete = false;
-        if (JSON.stringify(yearOptionsCache.value[year]) !== JSON.stringify(entry.data)) {
+        let stored = null;
+        try {
+            const entry = await publicContentCache.read(publicContentKey('year', Number(year)), async () => {
+                const readSession = createReadSession();
+                const q = query(collection(db, 'yearOptions'), where('year', '==', Number(year)));
+                const snapshot = await getDocsOfflineAware(q, readSession);
+                return { data: snapshot.empty ? null : snapshot.docs[0].data(), complete: readSession.complete };
+            }, { fresh: Boolean(session) });
+            if (session && !entry.complete) session.complete = false;
+            stored = entry.data;
+        } catch (error) {
+            logger.warn(`[CalendarStore] yearOptions ${year} unavailable, using computed dates:`, error?.message || error);
+        }
+        const { options, discrepancies } = mergeYearOptions(year, stored);
+        if (discrepancies.length) {
+            logger.warn(`[CalendarStore] Firestore yearOptions ${year} overrides computed dates:`, discrepancies);
+        }
+        if (JSON.stringify(yearOptionsCache.value[year]) !== JSON.stringify(options)) {
             delete dynamicDatesCache.value[year];
         }
-        yearOptionsCache.value[year] = entry.data;
-        return entry.data;
+        yearOptionsCache.value[year] = options;
+        return options;
     }
 
     /**
-     * Compute all dynamic liturgical feast dates for the given year.
-     * Depends on {@link getYearOptions} to retrieve the base dates from Firestore.
-     * Results are cached in memory; subsequent calls for the same year return the cached value.
+     * Dynamic feast dates for the given year as moments, computed by the Ordo
+     * engine; anchors overridden by a stored `yearOptions` document follow it.
      *
      * @param {number|string} year - The calendar year to compute dates for
-     * @returns {Promise<DynamicDates|{}>} Object mapping feast keys to moment date objects,
-     *   or an empty object if year options are unavailable
+     * @returns {Promise<DynamicDates>} Object mapping feast keys to moment date objects
      */
     async function getDynamicDates(year, session) {
     await getYearOptions(year, session);
@@ -90,47 +97,30 @@ export const useCalendarStore = defineStore('calendar', () => {
     if (dynamicDatesRequests.has(year)) return dynamicDatesRequests.get(year);
 
     const request = (async () => {
-
-    logger.log(`[CalendarStore] Computing dynamic dates for year ${year}...`);
-
-    const opts = yearOptionsCache.value[year];
-    if (!opts) {
-        logger.error(`[CalendarStore] Failed to get options for year ${year}. Date computation aborted.`);
-        return {};
-    }
-    const dates = {};
+    const opts = yearOptionsCache.value[year] || mergeYearOptions(year).options;
+    const computed = getMovableFeastDates(Number(year));
     const getMoment = (isoDateStr) => moment(isoDateStr, 'YYYY-MM-DD');
+    const dates = Object.fromEntries(Object.entries(computed).map(([key, value]) => [key, getMoment(value)]));
+    // Stored anchors (if any) win; dates derived from them follow.
     const easter = getMoment(opts.easterSunday);
     const pentecost = getMoment(opts.pentecost);
     const firstAdventSunday = getMoment(opts.firstAdventSunday);
-    // Расчёт дат да Вялікадня
     dates.ashWednesday = getMoment(opts.ashWednesday);
-    dates.palmSunday = easter.clone().subtract(7, 'days'); // ✅ PALM SUNDAY
-    // Расчёт дат пасля Вялікадня
+    dates.palmSunday = easter.clone().subtract(7, 'days');
     dates.easterSunday = easter;
     dates.pentecost = pentecost;
     dates.maryMotherChurch = pentecost.clone().add(1, 'day');
-    const configuredAscension = getMoment(opts.ascension);
-    dates.ascension = configuredAscension.isValid()
-        ? configuredAscension
-        : pentecost.clone().subtract(7, 'days');
-    
-    const holyTrinitySunday = pentecost.clone().add(7, 'days');
-    dates.holyTrinity = holyTrinitySunday;
-    const configuredCorpusChristi = getMoment(opts.corpusChristi);
-    dates.corpusChristi = configuredCorpusChristi.isValid()
-        ? configuredCorpusChristi
-        : holyTrinitySunday.clone().add(4, 'days');
-    // Расчёт дат у "звычайны час"
-    dates.holyFamily = calculateHolyFamilyDate(Number(year));
-    dates.baptismOfLord = calculateBaptismOfLordDate(Number(year));
+    dates.ascension = getMoment(opts.ascension);
+    dates.holyTrinity = pentecost.clone().add(7, 'days');
+    dates.corpusChristi = getMoment(opts.corpusChristi);
+    dates.holyFamily = getMoment(opts.holyFamily);
+    dates.baptismOfLord = getMoment(opts.baptismOfLord);
     dates.christKing = firstAdventSunday.clone().subtract(7, 'days');
-    const sacredHeartOfJesus = pentecost.clone().add(19, 'days');
-    dates.sacredHeartOfJesus = sacredHeartOfJesus;
-    dates.immaculateHeartOfMary = sacredHeartOfJesus.clone().add(1, 'day'); // Next day
+    dates.sacredHeartOfJesus = pentecost.clone().add(19, 'days');
+    dates.immaculateHeartOfMary = dates.sacredHeartOfJesus.clone().add(1, 'day');
     dates.christTheHighPriest = pentecost.clone().add(4, 'days');
+    delete dates.firstAdventSunday;
     dynamicDatesCache.value[year] = dates;
-    logger.log(`[CalendarStore] Dynamic dates for year ${year} computed.`);
     return dates;
     })();
 
