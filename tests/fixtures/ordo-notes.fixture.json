@@ -1,0 +1,83 @@
+{
+  "note": "Small fixture in the planned src/data/ordo/notes.json shape (stages 1–2 will provide the real file).",
+  "notes": [
+    {
+      "id": "candles-presentation",
+      "scope": { "level": "universal" },
+      "selector": { "type": "celebration", "celebrationId": "presentation-lord" },
+      "category": "blessing",
+      "text": "Благаслаўленне грамніц перад Імшой.",
+      "source": { "file": "Liturg_kal-r_2026 Мінск.docx", "rawText": "Благаслаўленне грамніц" }
+    },
+    {
+      "id": "candles-fixed-date",
+      "scope": { "level": "universal" },
+      "selector": { "type": "fixed-date", "month": 2, "day": 2 },
+      "category": "blessing",
+      "text": "2 лютага — дзень кансэкраванага жыцця."
+    },
+    {
+      "id": "first-friday",
+      "scope": { "level": "belarus" },
+      "selector": {
+        "type": "all",
+        "selectors": [
+          { "type": "nth-weekday-of-month", "weekday": 5, "nth": 1 },
+          { "type": "not", "selector": { "type": "period-phase", "period": "holyweek", "phase": "triduum" } }
+        ]
+      },
+      "category": "devotion",
+      "text": "Першая пятніца месяца."
+    },
+    {
+      "id": "immaculate-novena-day-1",
+      "scope": { "level": "diocese", "dioceseId": "vitebsk" },
+      "selector": { "type": "relative-to-celebration", "celebrationId": "immaculate-conception", "offsetDays": -9 },
+      "category": "devotion",
+      "text": "Першы дзень навэнны да Беззаганнага Зачацця.",
+      "source": { "file": "Літургічны_каляндар_2025_2026_віцебск.docx", "paragraph": 762 }
+    },
+    {
+      "id": "lent-fasting",
+      "scope": { "level": "belarus" },
+      "selector": { "type": "period", "period": "lent" },
+      "category": "pastoral-note",
+      "text": "Час Вялікага посту."
+    },
+    {
+      "id": "o-antiphons",
+      "scope": { "level": "universal" },
+      "selector": { "type": "period-phase", "period": "advent", "phase": "dec17-24" },
+      "category": "office",
+      "text": "Вялікія антыфоны «O» да Magnificat."
+    },
+    {
+      "id": "vocations-sunday",
+      "scope": { "level": "universal" },
+      "selector": { "type": "period-day", "period": "easter", "week": 4, "dayOfWeek": 1 },
+      "category": "special-prayer-day",
+      "text": "Сусветны дзень малітвы аб пакліканнях."
+    },
+    {
+      "id": "one-off-2028",
+      "scope": { "level": "belarus" },
+      "selector": { "type": "exact-date", "date": "2028-04-08" },
+      "category": "announcement",
+      "text": "Аднаразовая падзея 2028 года."
+    },
+    {
+      "id": "grodno-only",
+      "scope": { "level": "diocese", "dioceseId": "grodno" },
+      "selector": { "type": "fixed-date", "month": 2, "day": 2 },
+      "category": "announcement",
+      "text": "Толькі для Гродзенскай дыяцэзіі."
+    },
+    {
+      "id": "ascension-novena",
+      "scope": { "level": "universal" },
+      "selector": { "type": "relative", "celebrationId": "feast-ascension", "offsetDays": 1 },
+      "category": "devotion",
+      "text": "Навэнна да Духа Святога."
+    }
+  ]
+}
