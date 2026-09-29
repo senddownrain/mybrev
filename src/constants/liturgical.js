@@ -23,6 +23,8 @@ export const LITURGICAL_RANK = Object.freeze({
   FEAST: 'festum',
   MEMORIAL: 'memoria',
   OPTIONAL_MEMORIAL: 'memoria-ad-libitum',
+  // Commemoration of All the Faithful Departed (2.11): row 3 of the Table.
+  ALL_SOULS: 'commemoratio-defunctorum',
 });
 
 /** Ранг (_rank, а таксама стары _feastType) → подпіс для UI. */
@@ -31,6 +33,7 @@ export const RANK_LABEL_MAP = Object.freeze({
   [LITURGICAL_RANK.FEAST]: 'Свята',
   [LITURGICAL_RANK.MEMORIAL]: 'Успамін',
   [LITURGICAL_RANK.OPTIONAL_MEMORIAL]: 'Неабавязковы ўспамін',
+  [LITURGICAL_RANK.ALL_SOULS]: 'Успамін усіх памерлых вернікаў',
   // Часовая сумяшчальнасць са старымі дакументамі days.
   solemnity: 'Урачыстасць',
   feast: 'Свята',

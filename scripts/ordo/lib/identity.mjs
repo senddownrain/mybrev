@@ -11,6 +11,7 @@ import path from 'node:path';
 import { fixedCalendar, normalizeFixedPlace, normalizeFixedRank } from '../../../src/constants/fixedCalendar.js';
 import { FEAST_NAME_MAP } from '../../../src/constants/liturgicalFeastsMap.js';
 import { normalizePlaces } from '../../../src/utils/fixedFeasts.js';
+import { fallbackFixedCelebrationId } from '../../../src/utils/ordo/fixedCelebrations.js';
 import { fold, similarity, strictSimilarity, titleStems } from './text.mjs';
 
 const PLACE_SUFFIX = /-(?:minsk-mohilev|minsk|vitebsk|grodno|pinsk|diocese)(?=$|-)/g;
@@ -48,17 +49,20 @@ export function loadFixedCatalog(root) {
     const rank = normalizeFixedRank(item.rank);
     const place = normalizeFixedPlace(item.place);
     const stems = titleStems(item.title);
-    const candidates = documents
-      .filter((doc) => doc.ddmm === item.date && doc.rank === rank)
+    const scoreDocs = (list) => list
       .map((doc) => ({ doc, score: similarity(stems, titleStems(doc.title)) + (place && doc.places.includes(place) ? 0.2 : 0) + (!place && !doc.places.length ? 0.1 : 0) }))
       .filter(({ score }) => score >= 0.3)
       .sort((a, b) => b.score - a.score);
+    const sameDate = documents.filter((doc) => doc.ddmm === item.date);
+    // A rank corrected in fixedCalendar.js (e.g. Mary Magdalene → feast) keeps
+    // its existing `days` document until the data is migrated.
+    let candidates = scoreDocs(sameDate.filter((doc) => doc.rank === rank));
+    if (!candidates.length) candidates = scoreDocs(sameDate).filter(({ score }) => score >= 0.6);
     const matches = candidates.length ? documents.filter((doc) => celebrationSlug(doc.dayId) === celebrationSlug(candidates[0].doc.dayId) && doc.ddmm === item.date) : [];
     matches.forEach((doc) => used.add(doc.dayId));
-    const [dd, mm] = item.date.split('.');
     return {
       kind: 'fixed',
-      id: matches.length ? celebrationSlug(matches[0].dayId) : `fixed-${mm}${dd}-${index}`,
+      id: matches.length ? celebrationSlug(matches[0].dayId) : fallbackFixedCelebrationId(item),
       ddmm: item.date,
       mmdd: mmddFromDdmm(item.date),
       title: item.title,

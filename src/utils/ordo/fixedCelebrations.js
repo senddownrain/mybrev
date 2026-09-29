@@ -28,15 +28,15 @@ const FIXED_METADATA = Object.freeze({
   '25.01|навяртанне': { id: 'conversion-saint-paul', category: 'saint', color: 'albus' },
   '02.02|ахвяраванне пана': { id: 'presentation-lord', category: 'lord', color: 'albus' },
   '22.02|катэдры': { id: 'chair-of-saint-peter', category: 'saint', color: 'albus' },
-  '04.03|св. казіміра': { id: 'sv-casimir', category: 'saint', layer: 'belarus' },
+  '04.03|св. казіміра': { id: 'sv-casimir', category: 'saint' },
   '19.03|св. юзафа': { id: 'sv-joseph', category: 'saint', color: 'albus' },
   '25.03|звеставанне пана': { id: 'annunciation-lord', category: 'lord', color: 'albus' },
   '01.05|св. юзафа рамесніка': { id: 'sv-joseph-worker', category: 'saint', color: 'albus' },
-  '16.05|св. андрэя баболі': { id: 'sv-andrei-bobola', category: 'saint', layer: 'belarus' },
+  '16.05|св. андрэя баболі': { id: 'sv-andrei-bobola', category: 'saint' },
   '31.05|адведзіны': { id: 'visitation-blessed-virgin-mary', category: 'mary' },
   '24.06|нараджэнне св. яна': { id: 'nativity-john-baptist', category: 'saint', color: 'albus' },
   '29.06|св. пятра і паўла': { id: 'sv-peter-paul-apostles', category: 'saint' },
-  '02.07|будслаўскай': { id: 'our-lady-budslav', category: 'mary', layer: 'belarus' },
+  '02.07|будслаўскай': { id: 'our-lady-budslav', category: 'mary' },
   '06.08|перамяненне пана': { id: 'transfiguration-lord', category: 'lord', color: 'albus' },
   '15.08|унебаўзяцце': { id: 'assumption-blessed-virgin-mary', category: 'mary' },
   '08.09|нараджэнне найсв': { id: 'nativity-blessed-virgin-mary', category: 'mary' },
@@ -49,11 +49,20 @@ const FIXED_METADATA = Object.freeze({
   // The dedication of the Lateran is kept on a Sunday of Ordinary Time like a feast of the Lord.
   '09.11|латэранскай': { id: 'dedication-lateran-basilica', category: 'lord', color: 'albus' },
   '12.11|св. язафата': { id: 'sv-josaphat', category: 'saint' },
-  '16.11|маці міласэрнасці': { id: 'our-lady-mother-mercy', category: 'mary', layer: 'belarus' },
-  '20.11|каліноўскага': { id: 'sv-raphael-kalinowski', category: 'saint', layer: 'belarus' },
-  '27.01|матулевіча': { id: 'bl-jurgis-matulaitis', category: 'saint', layer: 'belarus' },
-  '29.01|лямэнт': { id: 'bl-boleslawa-lament', category: 'saint', layer: 'belarus' },
+  '16.11|маці міласэрнасці': { id: 'our-lady-mother-mercy', category: 'mary' },
+  '20.11|каліноўскага': { id: 'sv-raphael-kalinowski', category: 'saint' },
+  '27.01|матулевіча': { id: 'bl-jurgis-matulaitis', category: 'saint' },
+  '29.01|лямэнт': { id: 'bl-boleslawa-lament', category: 'saint' },
   '08.12|беззаганнага зачацця': { id: 'immaculate-conception', category: 'mary' },
+  // Added to the General Calendar after the `days` import (no db-feasts slug yet).
+  '27.02|нарэцкага': { id: 'sv-gregory-narek', category: 'saint' },
+  '05.09|калькуты': { id: 'sv-teresa-calcutta', category: 'saint' },
+  '17.09|хільдэгарды': { id: 'sv-hildegard-bingen', category: 'saint' },
+  '05.10|фаўстыны': { id: 'sv-faustina-kowalska', category: 'saint' },
+  '11.10|яна xxiii': { id: 'sv-john-xxiii', category: 'saint' },
+  '09.12|куаўхтлатаацына': { id: 'sv-juan-diego', category: 'saint' },
+  '10.12|ларэтанскай': { id: 'our-lady-loreto', category: 'mary' },
+  '12.12|гвадэлупы': { id: 'our-lady-guadalupe', category: 'mary' },
   '25.12|нараджэнне пана': { id: 'nativity-lord', category: 'lord', precedence: 2 },
   '26.12|стэфана': { id: 'sv-stephen-protomartyr', category: 'saint', color: 'ruber' },
   '27.12|св. яна, апостала': { id: 'sv-john-apostle-evangelist', category: 'saint', color: 'albus' },
@@ -97,6 +106,15 @@ export function slugifyTitle(title, maxWords = 5) {
   return words.slice(0, maxWords).join('-');
 }
 
+/**
+ * Id of a fixedCalendar entry that has no generated identity (no `days`
+ * document yet): the metadata id or a transliterated title slug. Shared with
+ * the stage 2 parser so evidence and engine agree.
+ */
+export function fallbackFixedCelebrationId(entry) {
+  return findMetadata(entry.date, entry.title)?.id || slugifyTitle(entry.title);
+}
+
 function findMetadata(date, title) {
   const normalized = normalizeCelebrationTitle(title);
   const entry = Object.entries(FIXED_METADATA)
@@ -117,7 +135,7 @@ function inferCategory(title) {
   return 'saint';
 }
 
-function inferColor(title, category) {
+export function inferColor(title, category) {
   const text = normalizeCelebrationTitle(title);
   if (category === 'dead') return 'niger';
   if (MARTYR_RE.test(text) || /апостал|евангеліст/u.test(text)) return 'ruber';
@@ -134,7 +152,7 @@ export function inferProperKind(title) {
   return 'other';
 }
 
-function fixedParts(date) {
+export function fixedParts(date) {
   const [day, month] = date.split('.').map(Number);
   return { month, day };
 }

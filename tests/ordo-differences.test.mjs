@@ -21,15 +21,23 @@ test('diocesan proper and cathedral dedications are DIOCESAN', () => {
 });
 
 test('agreement of all sources against MyBrev is flagged as a MyBrev divergence', () => {
-  const magdalene = entry('sv-mary-magdalene').differences.find((d) => d.mybrevDivergence);
-  assert.equal(magdalene.type, 'BELARUS');
-  assert.equal(entry('sv-mary-magdalene').mybrev.rank, 'memoria');
+  // Stage 2 divergences fixed in fixedCalendar.js (Mary Magdalene feast, All Souls rank) are gone …
+  ['sv-mary-magdalene', 'all-faithful-departed'].forEach((id) => {
+    assert.ok(!(entry(id)?.differences || []).some((d) => d.mybrevDivergence), id);
+  });
+  // … while a celebration that no source prints is still reported against MyBrev.
+  const eymard = entry('sv-peter-julian-eymard').differences.find((d) => d.mybrevDivergence);
+  assert.equal(eymard.type, 'REAL_CONFLICT');
 });
 
 test('celebrations missing from MyBrev are listed with a scope guess', () => {
-  const faustina = differences.missingInMyBrev.find((e) => e.mmdd === '10-05');
-  assert.equal(faustina.type, 'UNIVERSAL');
-  assert.ok(faustina.dioceses.length >= 3);
+  // Faustina was missing in stage 2; it is now a universal optional memorial
+  // that Grodno keeps as obligatory.
+  assert.ok(!differences.missingInMyBrev.some((e) => e.mmdd === '10-05'));
+  assert.ok(types('sv-faustina-kowalska').includes('DIOCESAN'));
+  const barbara = differences.missingInMyBrev.find((e) => e.mmdd === '12-04');
+  assert.equal(barbara.type, 'BELARUS');
+  assert.ok(barbara.dioceses.length >= 2);
 });
 
 test('impediments of a particular year are YEAR_SPECIFIC, not conflicts', () => {

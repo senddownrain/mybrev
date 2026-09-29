@@ -29,7 +29,7 @@ test('coinciding solemnities: the solemnity of the Lord keeps the day', () => {
 });
 
 test('proper solemnity impeded by Pentecost moves only in its diocese', () => {
-  assert.ok(transfersOf(2027, { diocese: 'pinsk' }).includes('sv-andrei-bobola:2027-05-16->2027-05-17'));
+  assert.ok(transfersOf(2027, { diocese: 'pinsk' }).includes('sv-andrei-bobola:2027-05-16->2027-05-18'));
   assert.deepEqual(transfersOf(2027, { diocese: 'minsk' }).filter((item) => item.includes('bobola')), []);
 });
 

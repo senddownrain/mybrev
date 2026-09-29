@@ -52,7 +52,6 @@ export const FIXED_IDENTITIES = Object.freeze({
   "06.01|-|Аб’яўленне Пана": {"id":"epiphany-lord","dayIds":["06-01-epiphany-lord"]},
   "06.02|-|Св. Паўла Мікі і паплечнікаў, мучанікаў": {"id":"sv-paul-miki","dayIds":["06-02-sv-paul-miki"]},
   "06.06|-|Св. Норбэрта, біскупа": {"id":"sv-norbert","dayIds":["06-06-sv-norbert"]},
-  "06.06|vitebsk|Св. Баніфацыя, біскупа і мучаніка": {"id":"sv-boniface","dayIds":["06-06-sv-boniface-vitebsk--martyr-one","06-06-sv-boniface-vitebsk--pastors"]},
   "06.07|-|Св. Марыі Гарэцці, панны і мучаніцы": {"id":"sv-maria-goretti","dayIds":["06-07-sv-maria-goretti--martyr-one","06-07-sv-maria-goretti--virgins"]},
   "06.08|-|Перамяненне Пана": {"id":"transfiguration-lord","dayIds":["06-08-transfiguration-lord"]},
   "06.10|-|Св. Бруна, прэзбітэра": {"id":"sv-bruno","dayIds":["06-10-sv-bruno--pastors","06-10-sv-bruno--religious"]},

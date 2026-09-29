@@ -14,6 +14,8 @@ const RANK_ALIASES = Object.freeze({
   memorial: LITURGICAL_RANK.MEMORIAL,
   memoria: LITURGICAL_RANK.MEMORIAL,
   'memoria-ad-libitum': LITURGICAL_RANK.OPTIONAL_MEMORIAL,
+  'успамін усіх памерлых': LITURGICAL_RANK.ALL_SOULS,
+  'commemoratio-defunctorum': LITURGICAL_RANK.ALL_SOULS,
 });
 
 export const FIXED_DAY_REQUIRED_FIELDS = Object.freeze([

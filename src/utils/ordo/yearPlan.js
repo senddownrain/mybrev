@@ -11,6 +11,7 @@ import { celebrationPrecedence } from './precedence.js';
 import { computeSeason, temporalPrecedence } from './season.js';
 import { resolveTransfers } from './transfers.js';
 import { applyYearOverrides, selectYearOverrides } from './yearOverrides.js';
+import { YEAR_OVERRIDES } from '../../data/ordo/year-overrides.js';
 
 function isValidFixed(year, month, day) {
   const iso = isoFromParts(year, month, day);
@@ -33,6 +34,7 @@ export function contextKey(context = {}) {
     localChurch: context.localChurch || null,
     yearOverrides: context.yearOverrides || [],
     dioceseLayer: context.dioceseLayer || null,
+    dataYearOverrides: context.dataYearOverrides !== false,
   });
 }
 
@@ -59,7 +61,9 @@ export function buildYearPlan(year, context = {}) {
     else placements.push(placement);
   });
 
-  const overrides = selectYearOverrides(context.yearOverrides || [], year, context);
+  // Published one-year decisions (data) first, then the caller's overrides.
+  const dataOverrides = context.dataYearOverrides === false ? [] : YEAR_OVERRIDES;
+  const overrides = selectYearOverrides([...dataOverrides, ...(context.yearOverrides || [])], year, context);
   const overrideResult = applyYearOverrides(placements, overrides, { celebrations });
   placements = overrideResult.placements;
   removed.push(...overrideResult.removed);

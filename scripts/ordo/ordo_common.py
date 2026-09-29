@@ -136,6 +136,7 @@ RANK_SOLEMNITY = "solemnitas"
 RANK_FEAST = "festum"
 RANK_MEMORIAL = "memoria"
 RANK_OPTIONAL = "memoria-ad-libitum"
+RANK_ALL_SOULS = "commemoratio-defunctorum"
 
 
 def detect_rank(title: str, *, alternative: bool = False) -> str | None:
@@ -145,6 +146,9 @@ def detect_rank(title: str, *, alternative: bool = False) -> str | None:
     which every source uses for optional memorials.
     """
     text = fold(title)
+    # Commemoration of All the Faithful Departed: own row of the Table, not a memorial.
+    if re.search(r"(?:ус|ўс)іх\s+памерлых", text):
+        return RANK_ALL_SOULS
     if re.search(r"(^|[^а-яёіў])(урачыстасць|урачыстасці|урач\.)", text):
         return RANK_SOLEMNITY
     if re.search(r"неабавязков|ad libitum|ad lib", text):
