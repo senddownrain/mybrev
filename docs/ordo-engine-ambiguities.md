@@ -55,7 +55,8 @@ Decisions taken in stage 3 that need liturgical confirmation or source validatio
 18. **Vitebsk St Boniface** — *fixed*: the 06.06 Vitebsk variant was removed from
     `fixedCalendar.js` (the source keeps 5 June). Firestore still has `06-06-sv-boniface-vitebsk`
     and the stale `05-06-vitebsk-cathedral-dedication`; they are no longer offered (no candidate)
-    and can be deleted in a later data migration.
+    and can be deleted in a later data migration (planned as `mark-obsolete` by
+    `scripts/ordo-migrate-ranks.mjs`, see `docs/ordo-firestore-followups.md`).
 19. **Vitebsk Braslau (8 Sept)** replaces the Nativity of the BVM in that diocese
     (`DIOCESAN_REPLACES`), because titles differ.
 20. **Sources list memorials on 17–24 Dec as "будзень альбо ўспамін"** (e.g. Vitebsk 21.12);
@@ -85,7 +86,8 @@ Decisions taken in stage 3 that need liturgical confirmation or source validatio
     BVM. Alternatives without a document are not shown; a primary without one is shown with the
     texts of the day (`missingProper`). Firestore also still has the old ranks of Mary Magdalene
     (memoria) and All Souls (ad libitum); the runtime matches documents by id, so this only
-    affects the legacy rank heuristics.
+    affects the legacy rank heuristics. Follow-ups: `docs/ordo-missing-content.md` (generated list)
+    and `scripts/ordo-migrate-ranks.mjs` (rank plan), runbook `docs/ordo-firestore-followups.md`.
 26. **I Vespers without `vesper1*` texts** are assembled from the celebration's own Vespers
     fields (Proper, completed with its Common at import). The Laudate psalms that some calendars
     prescribe for I Vespers of the Common are not in the data.
