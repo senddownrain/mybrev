@@ -66,6 +66,15 @@ export function similarity(left, right) {
   return Math.max(dice, containment * 0.85);
 }
 
+/** Strict Dice on exact stems (for cross-date matching / transfers). */
+export function strictSimilarity(left, right) {
+  const a = new Set(left);
+  const b = new Set(right);
+  let common = 0;
+  a.forEach((item) => { if (b.has(item)) common += 1; });
+  return common >= 2 ? (2 * common) / (a.size + b.size) : 0;
+}
+
 function editDistance(a, b) {
   const dp = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
   for (let j = 1; j <= b.length; j += 1) dp[0][j] = j;
@@ -80,7 +89,9 @@ function editDistance(a, b) {
 /** Remove rubric tails from a printed celebration title before matching. */
 export function celebrationCore(title) {
   return clean(title)
-    .replace(/\([^)]*\)/g, ' ')
+    // Rubric parentheses ("(можна карыстацца толькі калектай)") go; name
+    // parentheses ("Адальбэрта (Войцеха)", "Анзгара (Аскара)") stay.
+    .replace(/\((?:[^)]*(?:можна|гл\.|з увагі|карыстацца|калект|№|\d))[^)]*\)/giu, ' ')
     .replace(/,?\s*гл\.\s*с\..*$/i, '')
     .replace(/\.\s+(?:Імша|Аф\.|Св\.\s+Імша)\b.*$/i, '')
     .replace(/\s+[–—-]\s+(?:Імша|ранішняя|вечаровая).*$/i, '')

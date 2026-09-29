@@ -11,7 +11,7 @@ import path from 'node:path';
 import { fixedCalendar, normalizeFixedPlace, normalizeFixedRank } from '../../../src/constants/fixedCalendar.js';
 import { FEAST_NAME_MAP } from '../../../src/constants/liturgicalFeastsMap.js';
 import { normalizePlaces } from '../../../src/utils/fixedFeasts.js';
-import { fold, similarity, titleStems } from './text.mjs';
+import { fold, similarity, strictSimilarity, titleStems } from './text.mjs';
 
 const PLACE_SUFFIX = /-(?:minsk-mohilev|minsk|vitebsk|grodno|pinsk|diocese)(?=$|-)/g;
 
@@ -106,7 +106,7 @@ export const DYNAMIC_PATTERNS = [
 
 export const DYNAMIC_CODES = Object.values(FEAST_NAME_MAP).map((code) => code.replace(/^feast-/, ''));
 
-const PERIOD_TITLE = /нядзел|будзень|звычайны дзень|звычайная$|актав|вялікі (?:панядзелак|аутора|чацвер)|вялікая (?:серада|пятніца|субота)|вялікі тыдзень|вялікага тыдня|пасхальная вігілія|вігілія|трыдуум|дзень адвенту|перыяду|імша хрызма|мукі пана|пасля папяльца|^(?:[іivx\d]+\s+)?(?:адвенту|вялікага посту|в\. посту|велікодная|звычайная)(?:\s|$)|^(?:вялікі|вялікая|велікодн\S*)$/;
+const PERIOD_TITLE = /нядзел|будзень|звычайны дзень|звычайная$|актав|вялікі (?:панядзелак|аутора|чацвер)|вялікая (?:серада|пятніца|субота)|вялікі тыдзень|вялікага тыдня|пасхальная вігілія|вігілія|трыдуум|дзень адвенту|перыяду|імша хрызма|мукі пана|пасля папяльца|пасля нарадж|^(?:[іivx\d]+\s+)?(?:адвенту|вялікага посту|в\. посту|велікодная|звычайная)(?:\s|$)|^(?:вялікі|вялікая|велікодн\S*)$/;
 
 /** Resolve one source title to an identity (or null). */
 export function resolveCelebration(title, align, catalog, diocese) {
@@ -140,9 +140,17 @@ export function resolveCelebration(title, align, catalog, diocese) {
   if (PERIOD_TITLE.test(text) && stems.length <= 4) {
     return periodIdentity(align);
   }
-  const global = preferred(scored(catalog));
+  const strict = catalog
+    .map((entry) => ({ entry, score: strictSimilarity(stems, entry.stems) }))
+    .sort((a, b) => b.score - a.score || (a.entry.place ? 1 : 0) - (b.entry.place ? 1 : 0));
+  const global = preferred(strict);
   if (global && global.score >= 0.7) {
-    return { ...fixedIdentity(global.entry, 'medium', catalog, diocese), transferredFrom: global.entry.mmdd };
+    const dayBefore = new Date(Date.UTC(2001, Number(global.entry.mmdd.slice(0, 2)) - 1, Number(global.entry.mmdd.slice(3)) - 1));
+    if (global.entry.rank === 'solemnitas' && dayBefore.toISOString().slice(5, 10) === align.mmdd) {
+      return { ...fixedIdentity(global.entry, 'medium', catalog, diocese), vigil: true };
+    }
+    const identity = fixedIdentity(global.entry, 'medium', catalog, diocese);
+    return global.entry.mmdd === align.mmdd ? identity : { ...identity, transferredFrom: global.entry.mmdd };
   }
   if (PERIOD_TITLE.test(text)) return periodIdentity(align);
   if (local && local.score >= 0.3) return fixedIdentity(local.entry, 'low', catalog, diocese);

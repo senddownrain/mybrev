@@ -40,6 +40,7 @@
     "ordo:extract": "python3 scripts/ordo/extract.py && node scripts/ordo/build.mjs",
     "ordo:build": "node scripts/ordo/build.mjs",
     "ordo:check": "node scripts/ordo/check.mjs",
+    "ordo:docs": "node scripts/ordo/render-differences-doc.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:audit": "node --test tests/liturgical-audit.test.mjs",
     "test:fixed-feasts": "node --test tests/fixed-feasts-audit.test.mjs",

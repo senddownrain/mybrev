@@ -180,7 +180,7 @@ def extract(path: str) -> dict:
             title = " – ".join(parts) if parts else (weekday or "")
             record = col.day(date, ev_of(p), {"weekday": weekday, "title": title, "sundayCycle": cycle})
             record["psalterWeek"] = psalter
-            if preview:
+            if preview and not record.get("duplicateHeaders"):
                 record["preview"] = True
             current_alt = None
             section = None
