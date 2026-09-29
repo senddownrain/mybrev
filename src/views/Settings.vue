@@ -29,6 +29,20 @@
           >{{ option.label }}</button>
         </div>
       </div>
+      <div class="setting-row setting-row--theme">
+        <div class="setting-copy"><strong>Дыяцэзія</strong><span>Уласны каляндар для Літургіі гадзін і чытанняў</span></div>
+        <div class="theme-options" role="radiogroup" aria-label="Дыяцэзія">
+          <button
+            v-for="option in dioceseOptions"
+            :key="option.value"
+            type="button"
+            role="radio"
+            :aria-checked="settings.diocese === option.value"
+            :class="{ 'theme-option--active': settings.diocese === option.value }"
+            @click="settings.setDiocese(option.value)"
+          >{{ option.label }}</button>
+        </div>
+      </div>
     </section>
 
     <section class="settings-section" aria-labelledby="text-title">
@@ -112,12 +126,14 @@ import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { useNotifier } from '@/composables/useNotifier';
 import AddCategoryDialog from '@/components/prayers/AddCategoryDialog.vue';
 import { READER_FONT_OPTIONS } from '@/constants/fonts';
+import { ORDO_DIOCESES } from '@/utils/ordoDiocese';
 
 const settings = useSettingsStore();
 const prayerCategories = usePrayerCategoriesStore();
 const { notifySuccess } = useNotifier();
 const showAddCategoryDialog = ref(false);
 const fontOptions = READER_FONT_OPTIONS;
+const dioceseOptions = ORDO_DIOCESES;
 const themeOptions = [
   { value: 'system', label: 'Сістэмная' },
   { value: 'light', label: 'Светлая' },
