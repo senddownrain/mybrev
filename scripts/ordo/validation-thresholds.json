@@ -1,0 +1,10 @@
+{
+  "comment": "Minimum MATCH rate per diocese for `npm run ordo:validate` (tests/ordo-validation.test.mjs). Raise when the generator improves; never lower to hide a regression.",
+  "matchRate": {
+    "minsk-mohilev": 0.95,
+    "vitebsk": 0.89,
+    "pinsk": 0.9,
+    "grodno": 0.85
+  },
+  "maxUnreviewedMismatches": 0
+}
