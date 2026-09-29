@@ -1,8 +1,8 @@
 # Ordo engine (stage 3)
 
 Pure ES modules in `src/utils/ordo/` that generate the liturgical calendar for any year from
-permanent rules and existing MyBrev identities. No Firestore, Pinia or UI; nothing in the
-current runtime calls it yet.
+permanent rules and existing MyBrev identities. No Firestore, Pinia or UI. Since stages 4–5 the
+Hours and Readings runtime resolve every date through it (see *Runtime* below).
 
 ## API
 
@@ -77,22 +77,48 @@ Celebration ids are the `patchs/db-feasts` slugs for the rule-relevant celebrati
 transliterated title slug otherwise. `toYearOptions(year)` reproduces the Firestore `yearOptions`
 document, so the engine can replace it.
 
-## Stages 4–6
+## Data layers (stage 6a)
 
-- **Stage 4 (Hours/`days`)**: in `liturgicalStore.resolveContext` use `resolveLiturgicalDate` (or
-  `computeSeason` + `toYearOptions`) instead of Firestore `yearOptions`; build `dayOptions` from
-  `options[]` only (no Office card for a suppressed weekday or for a fallback template); fetch
-  documents with `daysRef`/`fallbackDaysRefs`/`seasonalDateId`; let the component resolver read
-  `officeResolution.*.hours` for per-field chains, keep `allowedChoices` as UI choices, use
-  `evening` for Vespers/Compline and `firstVespers.chain` to assemble I Vespers without `vesper1*`
-  texts; replace `shouldShowTeDeum`, `usesSundayCompletorium`, `hasFirstVespersRank` with the
-  descriptor flags; show commemorations via `buildCommemorationDescriptor`.
-- **Stage 5 (Readings)**: `getReadingsForDate` takes `readingResolution` and runs its `lookup` in
-  order, applying `cycle`/`readingCycle` with `selectReadingLectionaryVariants`; drop the local
-  "dynamic > fixed > period" priority.
-- **Stage 6 (validation)**: load the stage 1–2 parser output, align by `celebrationId` / date,
-  compare with `generateLiturgicalYear(year, { diocese })` and classify
-  (`MATCH`, `EXPECTED_DIOCESAN_DIFFERENCE`, …). Parser rules/notes become `dioceseLayer`
-  (`add/modify/rules/notes`), `notes[]` (selectors in `notes.js`) or `yearOverrides`.
+| File | Content |
+| --- | --- |
+| `src/data/ordo/fixed-identities.js` | generated (`npm run ordo:identities`): `fixedCalendar` entry → stable celebration id (the `patchs/db-feasts` slug the evidence uses) + its `days` document ids |
+| `src/data/ordo/layers.js` | `BELARUS_LAYER` (national proper; Ostra Brama obligatory) and `DIOCESAN_LAYERS` (`add`/`modify` only, each entry with evidence item ids) — merged with the `_place` entries of `fixedCalendar.js` |
+| `src/data/ordo/year-overrides.js` | the four one-year decisions no rule computes (Minsk 2026 St Stanislaus, Grodno 2027 ×3) |
+| `src/data/ordo/notes.json` | parser notes; pass them as `context.notes` (the runtime does not load them — 1.3 MB) |
+
+Both `layers.js` and `year-overrides.js` are applied by default (`dataYearOverrides: false` turns
+the overrides off for a what-if comparison).
+
+## Runtime (stages 4–5)
+
+```
+liturgicalStore.resolveContext(date, diocese)
+  └─ resolveRuntimeDay(date, { diocese })            src/utils/ordo/runtime.js (memoized)
+       ├─ Hours:    fetchDaysForDate (+ extra fixed dates) → buildOrdoDayOptions()  src/utils/ordoDayOptions.js
+       │            cards = primary + legal alternatives only; Common variants = templates;
+       │            commemorations on the primary card; Office for the Dead = votive (ordinary weekdays)
+       │            every card carries `ordo` = optionDescriptor(): officeKind, teDeum, compline/complineDay,
+       │            vespers { first | second | of-the-day }, sourceFallbacks, allowedChoices
+       │            useResolvedLiturgicalDay → day._ordo; shouldShowTeDeum / getCompletoriumWeekday /
+       │            eveningVespersModel read it (legacy rank rules only for days without a descriptor)
+       └─ Readings: planReadings(day, { dayId }) → readingsService runs the queries,
+                    orderReadingsByPlan() keeps the engine lookup order (no own priority)
+```
+
+- The diocese comes from Settings (`src/utils/ordoDiocese.js`, default Minsk–Mahilioŭ) and is part
+  of the offline cache keys.
+- Year options come from `mergeYearOptions()`: computed by the engine; a Firestore `yearOptions`
+  document still overrides field by field and every discrepancy is logged. If the stored document
+  changes the period of a date, the store logs it and uses the stored period for `days` lookups.
+- I Vespers: whether a celebration has them is the engine's decision (`vespers.type === 'first'`);
+  the texts are `vesper1*` field by field, else the celebration's Proper/Common Vespers fields
+  (`assembleFirstVespers`).
+
+## Validation (stage 6b)
+
+`npm run ordo:validate` compares every published day with `generateLiturgicalYear(year, { diocese,
+notes })` and writes `docs/ordo-validation-report.md` (+ `reports/ordo-validation.json`). Reviewed
+differences are in `scripts/ordo/lib/validation-expectations.mjs`, thresholds in
+`scripts/ordo/validation-thresholds.json` (checked by `tests/ordo-validation.test.mjs`).
 
 Open questions are listed in `docs/ordo-engine-ambiguities.md`.

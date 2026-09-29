@@ -5,6 +5,12 @@
 (разделы 9–19, 30). Примеры расхождений взяты из извлечённых календарей
 (`src/data/ordo/evidence/*.json`).
 
+> **Состояние после этапов 4–6.** Описанный ниже pipeline — исходное состояние (этап 1).
+> Сейчас Hours и Readings получают один `ResolvedLiturgicalDay` движка (`src/utils/ordo/runtime.js`,
+> `src/utils/ordoDayOptions.js`), `yearOptions` вычисляются (Firestore только переопределяет),
+> расхождения A–E, G–J закрыты; см. `docs/ordo-engine.md` (Runtime) и
+> `docs/ordo-validation-report.md`.
+
 ## 1. Текущий pipeline
 
 ```text
