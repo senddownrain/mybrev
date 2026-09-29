@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "order-of-mass",
   "title": "Святая Імша",
   "primaryPrayerId": "eMmCtxwyJ75ogmL5rwye",
@@ -20,10 +20,10 @@
     { "id": "homily", "parent": "liturgy-of-the-word", "title": "Гамілія" },
     { "id": "creed", "parent": "liturgy-of-the-word", "title": "Вызнанне веры" },
     { "id": "prayer-of-the-faithful", "parent": "liturgy-of-the-word", "title": "Малітва вернікаў" },
-    { "id": "liturgy-of-the-eucharist", "title": "Эўхарыстычная літургія" },
-    { "id": "offertory", "parent": "liturgy-of-the-eucharist", "title": "Прынашэнне дароў" },
-    { "id": "prayer-over-the-offerings", "parent": "liturgy-of-the-eucharist", "title": "Малітва над дарамі" },
-    { "id": "eucharistic-prayer", "parent": "liturgy-of-the-eucharist", "title": "Эўхарыстычная малітва" },
+    { "id": "eucharistic-liturgy", "title": "Эўхарыстычная літургія" },
+    { "id": "offertory", "parent": "eucharistic-liturgy", "title": "Прынашэнне дароў" },
+    { "id": "prayer-over-the-offerings", "parent": "eucharistic-liturgy", "title": "Малітва над дарамі" },
+    { "id": "eucharistic-prayer", "parent": "eucharistic-liturgy", "title": "Эўхарыстычная малітва" },
     { "id": "communion-rite", "title": "Абрад Камуніі" },
     { "id": "lords-prayer", "parent": "communion-rite", "title": "Ойча наш" },
     { "id": "sign-of-peace", "parent": "communion-rite", "title": "Знак супакою" },
@@ -31,10 +31,30 @@
     { "id": "invitation-to-communion", "parent": "communion-rite", "title": "Запрашэнне да Камуніі" },
     { "id": "communion", "parent": "communion-rite", "title": "Камунія" },
     { "id": "prayer-after-communion", "parent": "communion-rite", "title": "Малітва пасля Камуніі" },
-    { "id": "concluding-rites", "title": "Абрад заканчэння" },
+    { "id": "concluding-rites", "title": "Заключныя абрады" },
     { "id": "blessing", "parent": "concluding-rites", "title": "Благаслаўленне" },
     { "id": "dismissal", "parent": "concluding-rites", "title": "Адпраўленне" }
   ],
+  "aliases": {
+    "liturgy-of-the-eucharist": "eucharistic-liturgy"
+  },
+  "blockTypes": [
+    "majorSection",
+    "subsection",
+    "heading",
+    "rubric",
+    "comment",
+    "posture",
+    "alternative",
+    "spoken",
+    "response",
+    "separator"
+  ],
+  "roles": ["priest", "celebrant", "deacon", "people", "all"],
+  "rolePolicy": {
+    "showSpeakerLabels": false,
+    "responseRoles": ["people", "all"]
+  },
   "variants": [
     {
       "language": "be",
@@ -49,10 +69,58 @@
         "collect": ["Малітва дня — Калекта"],
         "liturgy-of-the-word": ["Літургія слова"],
         "creed": ["Вызнанне веры"],
-        "liturgy-of-the-eucharist": ["Эўхарыстычная літургія"],
+        "eucharistic-liturgy": ["Эўхарыстычная літургія"],
         "eucharistic-prayer": ["II эўхарыстычная малітва"],
         "communion-rite": ["Абрад Камуніі"],
         "concluding-rites": ["Абрад заканчэння"]
+      },
+      "anchors": {
+        "sign-of-the-cross": ["Святар гаворыць:"],
+        "greeting": ["Затым святар з разведзенымі рукамі вітае народ, гаворачы:"],
+        "kyrie": ["Пасля гэтага гаворыцца Пане, змілуйся над намі:"],
+        "first-reading": ["Затым лектар ідзе да амбоны і чытае першае чытанне…"],
+        "psalm": ["Псальміст альбо кантар спявае ці чытае псальм…"],
+        "gospel": ["Потым спяваецца…"],
+        "homily": ["Потым прамаўляецца гамілія."],
+        "prayer-of-the-faithful": ["Затым адбываецца агульная малітва, альбо малітва вернікаў."],
+        "offertory": ["Пасля заканчэння літургіі слова прыслугоўваючыя…"],
+        "prayer-over-the-offerings": ["Потым святар, развёўшы рукі, прамаўляе малітву над дарамі…"],
+        "lords-prayer": ["Святар, звёўшы рукі, гаворыць:"],
+        "sign-of-peace": ["Пасля, развёўшы рукі, святар гучным голасам гаворыць:"],
+        "breaking-of-the-bread": ["У гэты час народ спявае альбо прамаўляе:"],
+        "invitation-to-communion": ["Святар укленчвае, бярэ Гостыю…"],
+        "communion": ["Павярнуўшыся да алтара, святар ціха гаворыць:"],
+        "prayer-after-communion": ["Пасля гэтага святар можа вярнуцца да свайго месца…"],
+        "blessing": ["Святар благаслаўляе народ са словамі:"],
+        "dismissal": ["Потым дыякан альбо сам святар, звёўшы рукі…"]
+      },
+      "classify": {
+        "alternative": ["Альбо:"]
+      },
+      "speakerLabels": {
+        "С.:": "priest",
+        "C.:": "priest",
+        "Н.:": "people",
+        "Цэлебрант:": "celebrant",
+        "Усе:": "all"
+      },
+      "roleCues": {
+        "people": [
+          "народ адказвае",
+          "народ устае і адказвае",
+          "народ завяршае малітву",
+          "народ можа адказаць",
+          "народ спявае",
+          "той, хто прымае Камунію, адказвае"
+        ],
+        "all": [
+          "усе адказваюць",
+          "усе разам",
+          "разам з народам",
+          "разам з вернікамі",
+          "гавораць",
+          "працягваюць"
+        ]
       }
     },
     {
@@ -65,10 +133,38 @@
         "introductory-rites": ["Вступительные обряды"],
         "liturgy-of-the-word": ["Литургия Слова"],
         "creed": ["Исповедание веры"],
-        "liturgy-of-the-eucharist": ["Евхаристическая Литургия"],
+        "eucharistic-liturgy": ["Евхаристическая Литургия"],
         "eucharistic-prayer": ["Вторая Евхаристическая молитва"],
         "communion-rite": ["Обряд причащения"],
         "concluding-rites": ["Заключительный обряд"]
+      },
+      "anchors": {
+        "sign-of-the-cross": ["V. In nomine Patris…"],
+        "greeting": ["V. Gratia Domini nostri Iesu Christi…"],
+        "penitential-act": ["V. Fratres, agnoscamus peccata nostra…"],
+        "kyrie": ["V. Kyrie eleison."],
+        "gloria": ["Gloria in excelsis Deo…"],
+        "collect": ["V. Oremus:"],
+        "first-reading": ["После чтения:"],
+        "gospel": ["Евангелие:"],
+        "offertory": ["V. Benedictus es, Domine, Deus universi…"],
+        "lords-prayer": ["V. Praeceptis salutaribus moniti…"],
+        "sign-of-peace": ["V. Domine Iesu Christe, qui dixisti…"],
+        "breaking-of-the-bread": ["V. Haec commixtio…"],
+        "invitation-to-communion": ["V. Ecce Agnus Dei…"],
+        "communion": ["V. Corpus Christi custodiat me…"],
+        "prayer-after-communion": ["V. Oremus…"],
+        "blessing": ["V. Benedicat vos…"],
+        "dismissal": ["V. Ite, missa est."]
+      },
+      "classify": {
+        "heading": ["ЧИН МЕССЫ НА ЛАТИНСКОМ ЯЗЫКЕ"],
+        "rubric": ["После чтения:", "Евангелие:"],
+        "alternative": ["Или:"]
+      },
+      "speakerLabels": {
+        "V.": "priest",
+        "R.": "people"
       }
     },
     {
@@ -95,7 +191,7 @@
         "homily": ["The Homily"],
         "creed": ["The Creed"],
         "prayer-of-the-faithful": ["The Prayer of the Faithful"],
-        "liturgy-of-the-eucharist": ["The Liturgy of the Eucharist"],
+        "eucharistic-liturgy": ["The Liturgy of the Eucharist"],
         "eucharistic-prayer": ["The Eucharistic Prayer"],
         "communion-rite": ["The Communion Rite"],
         "lords-prayer": ["The Lord’s Prayer"],
@@ -106,6 +202,22 @@
         "concluding-rites": ["The Concluding Rites"],
         "blessing": ["Blessing"],
         "dismissal": ["Dismissal"]
+      },
+      "anchors": {
+        "kyrie": ["The Kyrie, eleison (Lord, have mercy) may follow."],
+        "offertory": ["During the Offertory Song…"],
+        "prayer-over-the-offerings": ["Then the Priest says the Prayer over the Offerings…"],
+        "sign-of-peace": ["Lord Jesus Christ…"]
+      },
+      "classify": {
+        "comment": [
+          "The Introductory Rites help the faithful come together…",
+          "By hearing the word proclaimed in worship…",
+          "For Catholics, the Eucharist is the source and summit…",
+          "The Concluding Rites send the people forth…"
+        ],
+        "posture": ["all sit", "all stand", "all kneel"],
+        "alternative": ["Or:"]
       }
     }
   ]

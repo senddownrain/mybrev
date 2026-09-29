@@ -323,6 +323,16 @@ export function renderPrayerMarkdown(value = '', format = '') {
   return markdown.render(toPrayerMarkdown(value, format));
 }
 
+/** Block tokens of a prayer text, for readers that map blocks to semantics. */
+export function parsePrayerMarkdown(value = '', format = '') {
+  return markdown.parse(toPrayerMarkdown(value, format), {});
+}
+
+/** Renders one inline Markdown fragment (no paragraph wrapper). */
+export function renderPrayerInline(value = '') {
+  return markdown.renderInline(String(value));
+}
+
 export function prayerMarkdownToPlainText(value = '', format = '') {
   const source = toPrayerMarkdown(value, format)
     .replace(/^:::rubric\s*$/gm, '')
