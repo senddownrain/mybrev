@@ -17,13 +17,16 @@ export const DEFAULT_DIOCESE = 'minsk-mohilev';
 const runtimeCache = new Map();
 const RUNTIME_CACHE_LIMIT = 120;
 
-/** Resolved day for the runtime (memoized per date and diocese). */
-export function resolveRuntimeDay(date, { diocese = DEFAULT_DIOCESE } = {}) {
+/**
+ * Resolved day for the runtime (memoized per date, diocese and local
+ * church). `localChurch` is the optional LocalChurchContext from Settings.
+ */
+export function resolveRuntimeDay(date, { diocese = DEFAULT_DIOCESE, localChurch = null } = {}) {
   const dioceseId = normalizeDioceseId(diocese) || DEFAULT_DIOCESE;
   const iso = toIsoDate(typeof date === 'string' ? date.slice(0, 10) : date);
-  const key = `${iso}|${dioceseId}`;
+  const key = `${iso}|${dioceseId}|${localChurch ? JSON.stringify(localChurch) : ''}`;
   if (runtimeCache.has(key)) return runtimeCache.get(key);
-  const day = resolveLiturgicalDate(iso, { country: 'BY', diocese: dioceseId });
+  const day = resolveLiturgicalDate(iso, { country: 'BY', diocese: dioceseId, ...(localChurch ? { localChurch } : {}) });
   runtimeCache.set(key, day);
   if (runtimeCache.size > RUNTIME_CACHE_LIMIT) runtimeCache.delete(runtimeCache.keys().next().value);
   return day;
@@ -93,6 +96,7 @@ export function optionDescriptor(day, option) {
     role: option.role,
     title: option.title,
     rank: option.rank,
+    ...(option.localRole ? { localRole: option.localRole } : {}),
     kind: option.kind,
     officeKind: option.officeKind,
     color: option.color || day.color,

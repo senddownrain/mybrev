@@ -9,6 +9,7 @@ import {
   dynamicFeastCodesOf, legacyContextOf, planReadings, resolveRuntimeDay,
 } from '@/utils/ordo/runtime';
 import { currentOrdoDiocese } from '@/utils/ordoDiocese';
+import { currentOrdoLocalChurch, localChurchCacheKey } from '@/utils/ordoLocalChurch';
 import { FEAST_NAME_MAP } from '@/constants/liturgicalFeastsMap';
 import { fetchContentForDate } from '@/services/liturgicalContentService';
 import { fetchDaysForDate, findDayByPeriod, getAllFeastDays } from '@/services/liturgicalDayService';
@@ -32,9 +33,9 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
    * a stored `yearOptions` document may override it (the discrepancy is
    * logged), but never the resolved celebrations.
    */
-  async function resolveContext(mDate, session, diocese = currentOrdoDiocese()) {
+  async function resolveContext(mDate, session, diocese = currentOrdoDiocese(), localChurch = currentOrdoLocalChurch()) {
     const year = mDate.year();
-    const resolved = resolveRuntimeDay(mDate.format('YYYY-MM-DD'), { diocese });
+    const resolved = resolveRuntimeDay(mDate.format('YYYY-MM-DD'), { diocese, localChurch });
     const engineContext = legacyContextOf(resolved);
     let context = engineContext;
     try {
@@ -77,8 +78,9 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   async function fetchContentByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
     const diocese = options.diocese || currentOrdoDiocese();
-    return readResource(contentKey(dateKey(date), diocese), async (session) => {
-      const { context, dynamicFeastCodes, resolved } = await resolveContext(mDate, session, diocese);
+    const localChurch = currentOrdoLocalChurch();
+    return readResource(contentKey(dateKey(date), diocese, localChurch), async (session) => {
+      const { context, dynamicFeastCodes, resolved } = await resolveContext(mDate, session, diocese, localChurch);
       return fetchContentForDate(mDate, context, dynamicFeastCodes, session, { resolved, diocese });
     }, options);
   }
@@ -86,8 +88,10 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   async function fetchDaysByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
     const diocese = options.diocese || currentOrdoDiocese();
-    return readResource(publicContentKey('days', dateKey(date), diocese), async (session) => {
-      const { context, dynamicFeastCodes, resolved } = await resolveContext(mDate, session, diocese);
+    const localChurch = currentOrdoLocalChurch();
+    const localKey = localChurchCacheKey(localChurch);
+    return readResource(publicContentKey('days', dateKey(date), diocese, ...(localKey ? [localKey] : [])), async (session) => {
+      const { context, dynamicFeastCodes, resolved } = await resolveContext(mDate, session, diocese, localChurch);
       const { periodDays, fixedDateDays, dynamicDaysByFeast } = await fetchDaysForDate(
         mDate, context, dynamicFeastCodes, session,
       );
@@ -125,8 +129,9 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   async function fetchReadingsByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
     const diocese = options.diocese || currentOrdoDiocese();
-    return readResource(readingsKey(dateKey(date), { ...options, diocese }), async (session) => {
-      const { context, resolved } = await resolveContext(mDate, session, diocese);
+    const localChurch = currentOrdoLocalChurch();
+    return readResource(readingsKey(dateKey(date), { ...options, diocese, localChurch }), async (session) => {
+      const { context, resolved } = await resolveContext(mDate, session, diocese, localChurch);
       // The same ResolvedLiturgicalDay as the Hours: identity, cycles and
       // lookup order all come from the engine.
       const plan = planReadings(resolved, { dayId: options.dayId || '' });
@@ -152,7 +157,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     isLoading, error,
     fetchContentByDate, fetchDaysByDate, fetchAllFeasts, fetchReadingsByDate, fetchDayByPeriod,
     getCachedContent: (date) => publicContentCache.peek(contentKey(dateKey(date))) ?? null,
-    resolveOrdoDay: (date, diocese = currentOrdoDiocese()) => resolveRuntimeDay(dateKey(date), { diocese }),
+    resolveOrdoDay: (date, diocese = currentOrdoDiocese()) => resolveRuntimeDay(dateKey(date), { diocese, localChurch: currentOrdoLocalChurch() }),
     getCachedReadings: (date, options) => publicContentCache.peek(readingsKey(dateKey(date), options)) ?? null,
     primeContent: (date) => publicContentCache.prime([contentKey(dateKey(date))]),
     primeReadings: (date, options) => publicContentCache.prime([readingsKey(dateKey(date), options)]),

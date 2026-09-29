@@ -43,6 +43,48 @@
           >{{ option.label }}</button>
         </div>
       </div>
+      <div class="setting-row">
+        <div class="setting-copy"><strong>Мой касцёл</strong><span>Тытул і гадавіна пасвячэння становяцца ўрачыстасцямі ў каляндары, Літургіі гадзін і чытаннях</span></div>
+        <v-switch :model-value="localChurch.enabled" color="primary" hide-details inset aria-label="Мой касцёл" @update:model-value="(value) => settings.setLocalChurch({ enabled: Boolean(value) })" />
+      </div>
+      <div v-if="localChurch.enabled" class="local-church-fields">
+        <v-autocomplete
+          :model-value="localChurch.titleCelebrationId || null"
+          :items="titleOptions"
+          item-title="title"
+          item-value="value"
+          label="Тытул касцёла"
+          placeholder="Напрыклад, св. Антонія"
+          variant="outlined"
+          density="comfortable"
+          clearable
+          hide-details
+          no-data-text="Нічога не знойдзена"
+          class="local-church-title"
+          @update:model-value="(value) => settings.setLocalChurch({ titleCelebrationId: value || '' })"
+        >
+          <template #item="{ props: itemProps, item }">
+            <v-list-item v-bind="itemProps" :subtitle="item.raw.subtitle" />
+          </template>
+        </v-autocomplete>
+        <span class="control-label">Гадавіна пасвячэння</span>
+        <div class="theme-options theme-options--start" role="radiogroup" aria-label="Гадавіна пасвячэння касцёла">
+          <button
+            v-for="option in dedicationModes"
+            :key="option.value"
+            type="button"
+            role="radio"
+            :aria-checked="localChurch.dedicationMode === option.value"
+            :class="{ 'theme-option--active': localChurch.dedicationMode === option.value }"
+            @click="setDedicationMode(option.value)"
+          >{{ option.label }}</button>
+        </div>
+        <div v-if="localChurch.dedicationMode === 'date'" class="dedication-date">
+          <v-select :model-value="dedicationDay" :items="dayItems" label="Дзень" variant="outlined" density="comfortable" hide-details @update:model-value="(day) => setDedicationDate(day, dedicationMonth)" />
+          <v-select :model-value="dedicationMonth" :items="monthItems" label="Месяц" variant="outlined" density="comfortable" hide-details @update:model-value="(month) => setDedicationDate(dedicationDay, month)" />
+        </div>
+        <p v-if="localChurch.dedicationMode === 'unknown'" class="local-church-hint">Калі дата пасвячэння невядомая, гадавіна адзначаецца ў апошнюю нядзелю кастрычніка.</p>
+      </div>
     </section>
 
     <section class="settings-section" aria-labelledby="text-title">
@@ -127,6 +169,8 @@ import { useNotifier } from '@/composables/useNotifier';
 import AddCategoryDialog from '@/components/prayers/AddCategoryDialog.vue';
 import { READER_FONT_OPTIONS } from '@/constants/fonts';
 import { ORDO_DIOCESES } from '@/utils/ordoDiocese';
+import { listTitleCelebrations } from '@/utils/ordoScreen';
+import moment from '@/utils/moment-be';
 
 const settings = useSettingsStore();
 const prayerCategories = usePrayerCategoriesStore();
@@ -139,6 +183,29 @@ const themeOptions = [
   { value: 'light', label: 'Светлая' },
   { value: 'dark', label: 'Цёмная' },
 ];
+const localChurch = computed(() => settings.localChurch);
+const titleOptions = computed(() => listTitleCelebrations(settings.diocese));
+const dedicationModes = [
+  { value: 'none', label: 'Не ўлічваць' },
+  { value: 'date', label: 'Вядомая дата' },
+  { value: 'unknown', label: 'Дата невядомая' },
+];
+const dayItems = Array.from({ length: 31 }, (_, index) => index + 1);
+const monthItems = Array.from({ length: 12 }, (_, index) => ({ value: index + 1, title: moment().month(index).format('MMMM') }));
+const dedicationMonth = computed(() => Number(localChurch.value.dedicationDate.slice(0, 2)) || null);
+const dedicationDay = computed(() => Number(localChurch.value.dedicationDate.slice(3, 5)) || null);
+function setDedicationMode(mode) {
+  settings.setLocalChurch({ dedicationMode: mode });
+}
+function setDedicationDate(day, month) {
+  if (!day || !month) {
+    // Keep the half-filled choice visible until both parts are chosen.
+    settings.setLocalChurch({ dedicationDate: `${String(month || 1).padStart(2, '0')}-${String(day || 1).padStart(2, '0')}` });
+    return;
+  }
+  const lastDay = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+  settings.setLocalChurch({ dedicationDate: `${String(month).padStart(2, '0')}-${String(Math.min(day, lastDay)).padStart(2, '0')}` });
+}
 const refreshingContent = ref(false);
 const refreshStatus = ref('');
 async function refreshContent() {
@@ -223,6 +290,11 @@ function restoreGlobalCategories() {
 .text-preview p { margin: 0; line-height: 1.65; }
 .text-preview p { font-optical-sizing: auto; }
 .category-row { min-height: 64px; }
+.local-church-fields { display: grid; gap: 4px; margin: 0 20px; padding: 4px 0 18px; }
+.local-church-fields .control-label { margin: 14px 0 8px; }
+.theme-options--start { justify-content: flex-start; }
+.dedication-date { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; margin-top: 12px; }
+.local-church-hint { margin: 10px 0 0; color: var(--nav-muted); font-size: .76rem; line-height: 1.45; }
 .global-badge { padding: 3px 7px; border-radius: 99px; background: var(--nav-active); color: var(--chrome-accent) !important; font-size: .62rem !important; font-weight: 750; white-space: nowrap; }
 .categories-empty { margin: 8px 20px 0; padding: 14px 0; border-top: 1px solid var(--nav-border); color: var(--nav-muted); font-size: .8rem; text-align: center; }
 .delete-button { display: grid; flex: 0 0 40px; width: 40px; height: 40px; place-items: center; border-radius: 13px; background: transparent; color: var(--rubric-color); transition: background .18s ease; }
@@ -236,6 +308,7 @@ function restoreGlobalCategories() {
   .section-heading { padding-inline: 16px; }
   .song-settings-in-page { padding-inline: 16px; }
   .setting-row, .text-size-control, .category-row { margin-inline: 16px; }
+  .local-church-fields { margin-inline: 16px; }
   .setting-row--theme { align-items: flex-start; flex-direction: column; padding-block: 14px; }
   .theme-options { width: 100%; justify-content: stretch; }
   .theme-options button { flex: 1; }

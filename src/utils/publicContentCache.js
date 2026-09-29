@@ -2,6 +2,7 @@ import { CONTENT_REVISION, CONTENT_CACHE_SCHEMA } from '../constants/contentRevi
 import { createContentCache } from './contentCache.js';
 import { createContentCacheStorage } from './contentCacheStorage.js';
 import { currentOrdoDiocese } from './ordoDiocese.js';
+import { currentOrdoLocalChurch, localChurchCacheKey } from './ordoLocalChurch.js';
 
 const namespace = `mybrev-public-${import.meta.env.VITE_FIREBASE_PROJECT_ID || 'unconfigured'}-v${CONTENT_CACHE_SCHEMA}`;
 const refreshKey = `${namespace}:refresh`;
@@ -26,10 +27,19 @@ export function requestContentRefresh() {
   try { localStorage.setItem(refreshKey, localRevision); } catch { /* Session-only fallback. */ }
 }
 
-// Hours and Readings are resolved for a diocese (Ordo layers), so it is part of the key.
-export function contentKey(date, diocese = currentOrdoDiocese()) { return publicContentKey('content', date, diocese); }
+// Hours and Readings are resolved for a diocese (Ordo layers) and, when set,
+// for the user's own church, so both are part of the key. Without a local
+// church the key is unchanged (existing offline copies stay valid).
+const withLocalChurch = (parts, localChurch) => {
+  const local = localChurchCacheKey(localChurch);
+  return local ? [...parts, local] : parts;
+};
+export function contentKey(date, diocese = currentOrdoDiocese(), localChurch = currentOrdoLocalChurch()) {
+  return publicContentKey(...withLocalChurch(['content', date, diocese], localChurch));
+}
 export function readingsKey(date, options = {}) {
-  return publicContentKey(
+  const localChurch = options.localChurch === undefined ? currentOrdoLocalChurch() : options.localChurch;
+  return publicContentKey(...withLocalChurch([
     'readings', date, options.dayId || '', Boolean(options.includeAlternatives), options.diocese || currentOrdoDiocese(),
-  );
+  ], localChurch));
 }

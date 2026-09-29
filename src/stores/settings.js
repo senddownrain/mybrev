@@ -9,6 +9,7 @@ import { logger } from '@/utils/logger';
 import { requestWakeLock, releaseWakeLock } from '@/composables/useWakeLock';
 import { ensureReaderFontLoaded } from '@/utils/fonts';
 import { ordoDiocese, setOrdoDiocese } from '@/utils/ordoDiocese';
+import { ordoLocalChurch, setOrdoLocalChurch } from '@/utils/ordoLocalChurch';
 
 const PERSONAL_CATEGORIES_KEY = 'personalPrayerCategories';
 const HIDDEN_GLOBAL_CATEGORIES_KEY = 'hiddenGlobalPrayerCategoryIds';
@@ -136,6 +137,10 @@ export const useSettingsStore = defineStore('settings', () => {
     setOrdoDiocese(value);
   }
 
+  function setLocalChurch(patch) {
+    setOrdoLocalChurch(patch);
+  }
+
   function toggleTheme() {
     themePreference.value = currentTheme.value === 'light' ? 'dark' : 'light';
   }
@@ -223,6 +228,8 @@ export const useSettingsStore = defineStore('settings', () => {
     keepScreenOn,
     diocese: ordoDiocese,
     setDiocese,
+    localChurch: ordoLocalChurch,
+    setLocalChurch,
     toggleTheme,
     setTheme,
     setThemePreference,

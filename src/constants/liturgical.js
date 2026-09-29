@@ -196,6 +196,19 @@ export function getLiturgicalTheme(day, fallbackPeriodType = 'default') {
     || LITURGICAL_THEME_MAP.default;
 }
 
+/**
+ * Rubrical vestment colours of the Ordo engine (Latin names) → label, swatch
+ * for colour dots and the accent theme of the Ordo screen.
+ */
+export const LITURGICAL_VESTMENT_COLORS = Object.freeze({
+  albus: { label: 'Белы', swatch: '#f3ecd9', theme: LITURGICAL_THEME_MAP.gold },
+  ruber: { label: 'Чырвоны', swatch: '#b33a3a', theme: LITURGICAL_THEME_MAP.red },
+  viridis: { label: 'Зялёны', swatch: '#4d8a5b', theme: LITURGICAL_THEME_MAP.ordinary },
+  violaceus: { label: 'Фіялетавы', swatch: '#7a57a7', theme: LITURGICAL_THEME_MAP.advent },
+  rosaceus: { label: 'Ружовы', swatch: '#d88aa6', theme: { color: '#b5617f', rgb: '181, 97, 127' } },
+  niger: { label: 'Чорны', swatch: '#2f2a30', theme: LITURGICAL_THEME_MAP.requiem },
+});
+
 /** Theme for the calendar day itself, without a lower-rank celebration accent. */
 export function getLiturgicalPeriodTheme(day, fallbackPeriodType = 'default') {
   if (day?._theme === 'requiem' || day?._kind === 'office-for-dead') {

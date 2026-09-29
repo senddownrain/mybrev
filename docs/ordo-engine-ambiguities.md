@@ -77,8 +77,9 @@ Decisions taken in stage 3 that need liturgical confirmation or source validatio
     memorials — modelled in `src/data/ordo/layers.js` from a single calendar. St John of Nepomuk
     (21.05.2027, transferred from 16.05) is not modelled (no permanent date in the evidence).
 24. **Dedication of churches whose date is unknown** (Vitebsk/Pinsk 25.10.2026, Grodno
-    31.10.2027: last Sunday of October) is a local-church rule; it needs a `LocalChurchContext`
-    option (`dedicationDate: 'unknown'`) — not implemented.
+    31.10.2027: last Sunday of October) is a local-church rule — *implemented*:
+    `LocalChurchContext.dedicationDate: 'unknown'` places the local solemnity on the last Sunday
+    of October (Settings → Мой касцёл → «Дата невядомая»).
 25. **Missing `days` documents** for legal options: Holy Name of Jesus (3.01), the universal
     optional memorials added in stage 6 (Gregory of Narek, John of Avila, Teresa of Calcutta,
     Hildegard, Faustina, John XXIII, Juan Diego, OL of Loreto, OL of Guadalupe), the diocesan
