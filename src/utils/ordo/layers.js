@@ -128,10 +128,34 @@ export function buildDiocesanLayer(dioceseId, extra = null) {
   };
 }
 
+/** `dedicationDate: 'unknown'` — the church does not know its dedication date. */
+export const UNKNOWN_DEDICATION_DATE = 'unknown';
+
+export function isUnknownDedicationDate(value) {
+  return String(value || '').trim().toLowerCase() === UNKNOWN_DEDICATION_DATE;
+}
+
+function dedicationCelebration(localChurch) {
+  return {
+    id: 'local-church-dedication',
+    title: localChurch.dedicationTitle || 'Гадавіна пасвячэння ўласнага касцёла',
+    rank: LITURGICAL_RANK.SOLEMNITY,
+    category: 'dedication',
+    layer: 'local',
+    properKind: 'dedication-own-church',
+    localRole: 'dedication-own-church',
+    color: 'albus',
+    readingsRef: { common: 'church-dedication' },
+  };
+}
+
 /**
  * LocalChurchContext → local layer. Title, principal patron and the
  * dedication anniversary of the own church are proper solemnities (row 4);
  * in the cathedral the diocesan dedication feast is a solemnity too.
+ *
+ * `dedicationDate: 'unknown'` places the anniversary on the last Sunday of
+ * October.
  *
  * @param {{ id?: string, titleCelebrationId?: string, patronCelebrationId?: string,
  *   dedicationDate?: string|{month:number, day:number}, isCathedral?: boolean,
@@ -166,7 +190,16 @@ export function buildLocalLayer(localChurch, celebrations) {
         },
       }));
   }
-  if (localChurch.dedicationDate) {
+  if (isUnknownDedicationDate(localChurch.dedicationDate)) {
+    // Churches whose dedication date is unknown keep the anniversary on the
+    // last Sunday of October (Vitebsk/Pinsk 25.10.2026, Grodno 31.10.2027).
+    layer.add.push({
+      ...dedicationCelebration(localChurch),
+      date: { type: 'last-weekday-of-month', month: 10, isoWeekday: 7 },
+      dedicationDateUnknown: true,
+      daysRef: { source: 'template', template: 'church-dedication' },
+    });
+  } else if (localChurch.dedicationDate) {
     const parts = typeof localChurch.dedicationDate === 'string'
       ? localChurch.dedicationDate.split(/[-.]/).map(Number)
       : [localChurch.dedicationDate.month, localChurch.dedicationDate.day];
@@ -175,18 +208,10 @@ export function buildLocalLayer(localChurch, celebrations) {
       : parts;
     const date = `${String(day).padStart(2, '0')}.${String(month).padStart(2, '0')}`;
     layer.add.push({
-      id: 'local-church-dedication',
-      title: localChurch.dedicationTitle || 'Гадавіна пасвячэння ўласнага касцёла',
-      rank: LITURGICAL_RANK.SOLEMNITY,
-      category: 'dedication',
-      layer: 'local',
-      properKind: 'dedication-own-church',
-      localRole: 'dedication-own-church',
-      color: 'albus',
+      ...dedicationCelebration(localChurch),
       date: { type: 'fixed', month, day },
       // No fixed `days` document: the Common of the dedication of a church.
       daysRef: { source: 'template', template: 'church-dedication', _date: date },
-      readingsRef: { common: 'church-dedication' },
     });
   }
   return layer;

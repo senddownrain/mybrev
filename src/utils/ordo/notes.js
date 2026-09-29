@@ -158,9 +158,10 @@ export function noteInScope(note, context = {}) {
       return Boolean(context.diocese) && [scope.dioceseId, ...(scope.dioceseIds || [])]
         .some((id) => id && normalizeDioceseId(id) === normalizeDioceseId(context.diocese));
     case 'local':
-      if (context.localChurch) return !scope.localChurchId || scope.localChurchId === context.localChurch.id;
+      if (scope.localChurchId) return Boolean(context.localChurch) && scope.localChurchId === context.localChurch.id;
       // Parish-level notes printed by a diocesan calendar ("titular solemnity
-      // in X, Y") are shown to the whole diocese as display notes.
+      // in X, Y") are shown to the whole diocese as display notes — also when
+      // the user has a local church (they name other parishes of the diocese).
       return !scope.localChurchId && Boolean(context.diocese) && (scope.dioceseIds || [scope.dioceseId])
         .some((id) => id && normalizeDioceseId(id) === normalizeDioceseId(context.diocese));
     default:

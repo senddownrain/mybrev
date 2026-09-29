@@ -4,7 +4,7 @@
  * single date reads from this plan, so transfers are consistent for the
  * whole year and for both Hours and Readings.
  */
-import { isoFromParts } from './dates.js';
+import { addDays, isoFromParts, isoWeekday } from './dates.js';
 import { buildCalendarLayers, normalizeDioceseId } from './layers.js';
 import { computeYearAnchors, getCountryRules } from './movableFeasts.js';
 import { celebrationPrecedence } from './precedence.js';
@@ -24,6 +24,13 @@ function placeCelebration(celebration, year, anchors) {
     return isValidFixed(year, month, day) ? isoFromParts(year, month, day) : null;
   }
   if (celebration.date?.type === 'movable') return anchors[celebration.date.anchor] || null;
+  if (celebration.date?.type === 'last-weekday-of-month') {
+    // e.g. last Sunday of October: step back from the last day of the month.
+    const { month, isoWeekday: weekday } = celebration.date;
+    let iso = addDays(isoFromParts(year, month + 1, 1), -1);
+    while (isoWeekday(iso) !== Number(weekday)) iso = addDays(iso, -1);
+    return iso;
+  }
   return null;
 }
 
