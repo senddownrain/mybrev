@@ -17,7 +17,9 @@ class Line:
 
     @property
     def text(self) -> str:
-        return clean_text(" ".join(w["text"] for w in self.words))
+        value = clean_text(" ".join(w["text"] for w in self.words))
+        # Keep a trailing soft hyphen so join_hyphenated() can glue the word.
+        return value + "\u00ad" if self.words and self.words[-1]["text"].endswith("\u00ad") else value
 
     @property
     def x0(self) -> float:

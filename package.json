@@ -37,12 +37,16 @@
     "audit:intercessions": "node scripts/cleanup-fixed-day-intercessions.mjs",
     "db:cleanup-intercessions": "node scripts/cleanup-fixed-day-intercessions.mjs",
     "db:cleanup-psalm-breaks": "node scripts/cleanup-psalm-cadence-breaks.mjs",
+    "ordo:extract": "python3 scripts/ordo/extract.py && node scripts/ordo/build.mjs",
+    "ordo:build": "node scripts/ordo/build.mjs",
+    "ordo:check": "node scripts/ordo/check.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:audit": "node --test tests/liturgical-audit.test.mjs",
     "test:fixed-feasts": "node --test tests/fixed-feasts-audit.test.mjs",
     "test:alternatives": "node --test tests/liturgical-alternatives.test.mjs",
     "test:parsed-readings": "node --test tests/parsed-readings-identity.test.mjs tests/parsed-readings-content-integrity.test.mjs",
-    "test:prayer-markdown": "node --test tests/prayer-markdown.test.mjs"
+    "test:prayer-markdown": "node --test tests/prayer-markdown.test.mjs",
+    "test:ordo": "node --test tests/ordo-*.test.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",

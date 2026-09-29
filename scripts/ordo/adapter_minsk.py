@@ -25,7 +25,7 @@ import re
 from docx_reader import is_mostly_bold, read_paragraphs
 from ordo_common import (
     MONTHS_NOMINATIVE, WEEKDAY_ABBR, clean_text, color_from_letter, colors_in,
-    detect_rank, evidence, fold, roman_to_int,
+    detect_rank, evidence, fold, is_reading_line, roman_to_int,
 )
 from ordo_records import Collector
 
@@ -169,7 +169,7 @@ def extract(path: str) -> dict:
                                 color=color_from_letter(prefix.group(1)) if prefix else None)
             continue
         alt = ALT_RE.match(text)
-        if style == "Uspamin" or (alt and detect_rank(alt.group(1), alternative=True) and not re.search(r"\d+\s*,\s*\d", alt.group(1))):
+        if (style == "Uspamin" and not is_reading_line(alt.group(1) if alt else text)) or (alt and detect_rank(alt.group(1), alternative=True) and not re.search(r"\d+\s*,\s*\d", alt.group(1))):
             title = alt.group(1) if alt else text
             current_alt = len(record["celebrations"])
             col.add_celebration(record, title, detect_rank(title, alternative=True), "alternative", ev)

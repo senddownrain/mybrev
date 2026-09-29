@@ -36,16 +36,20 @@ def clean_text(value: str) -> str:
 def join_hyphenated(lines: list[str]) -> str:
     """Join visual lines, repairing words split by a trailing hyphen."""
     out = ""
+    glue = False
     for raw in lines:
         line = clean_text(raw)
         if not line:
             continue
-        if out.endswith("-") and not out.endswith(" -") and re.match(r"^[a-zа-яёіўʼ’]", line):
+        if glue:
+            out += line
+        elif out.endswith("-") and not out.endswith(" -") and re.match(r"^[a-zа-яёіўʼ’]", line):
             out = out[:-1] + line
         elif out:
             out += " " + line
         else:
             out = line
+        glue = str(raw).rstrip().endswith(SOFT_HYPHEN)
     return out
 
 
@@ -145,6 +149,8 @@ def detect_rank(title: str, *, alternative: bool = False) -> str | None:
         return RANK_SOLEMNITY
     if re.search(r"неабавязков|ad libitum|ad lib", text):
         return RANK_OPTIONAL
+    if re.search(r"(?:або|альбо)\s+(?:ў|у)спамін", text):
+        return RANK_OPTIONAL
     if re.search(r"(^|[^а-яёіў])(успамін|ўспамін|усп\.)", text):
         if "абавязков" in text:
             return RANK_MEMORIAL
@@ -191,6 +197,16 @@ def looks_like_clergy_list(text: str) -> bool:
 
 ABBREVIATION_END = re.compile(r"(?:^|[\s(,])(?:кс|а|св|свв|бл|бп|бпп|кан|інф|т|с|сс|гл|аг|рі|г|гадз|наб|прэф|чыт|усп|урач|благ|муч|м|мм|пн|п|пп|д-р|дк|д-рк|абр|імш|нпм|ап|апп|ев|пар|найсв|прэзб|дк|№)\.$", re.I)
 SENTENCE_SPLIT = re.compile(r"(?<=[.;!?])\s+(?=[«“\"(]?[А-ЯЁІЎA-Z0-9†+–—-])")
+
+
+def split_sentences(text: str) -> list[str]:
+    parts: list[str] = []
+    for piece in SENTENCE_SPLIT.split(clean_text(text)):
+        if parts and ABBREVIATION_END.search(parts[-1]):
+            parts[-1] = parts[-1] + " " + piece
+        else:
+            parts.append(piece)
+    return [p for p in parts if p]
 
 
 def scrub(text: str) -> tuple[str, list[str]]:

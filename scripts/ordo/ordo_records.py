@@ -11,9 +11,15 @@ import datetime as dt
 import re
 
 from ordo_common import (
-    categorize, clean_text, descriptor_kind, exclusion_category, is_reading_line,
+    categorize, clean_text, split_sentences, descriptor_kind, exclusion_category, is_reading_line,
     looks_like_clergy_list, scrub,
 )
+
+
+DISPLAY_CATEGORIES = {
+    "devotion", "blessing", "procession", "indulgence", "special-prayer-day",
+    "liturgical-rule", "local-church", "pastoral-note",
+}
 
 
 class Collector:
@@ -115,6 +121,17 @@ class Collector:
             item["descriptor"] = kind
         record["lines"].append(item)
         record["_last"] = item
+        if kind in ("mass", "office"):
+            # Descriptor paragraphs often end with an Ordo note
+            # ("… Афіцый з дня. Першы чацвер месяца."). Keep those sentences
+            # as separate note items so they can be generalised.
+            for sentence in split_sentences(value):
+                s_category, s_tags = categorize(sentence)
+                if s_category in DISPLAY_CATEGORIES and not descriptor_kind(sentence):
+                    record["lines"].append({
+                        "text": sentence, "category": s_category, "tags": s_tags,
+                        "evidence": ev, "extractedFrom": "descriptor",
+                    })
 
     # -- non-day content ----------------------------------------------------
     def section(self, title: str, ev: dict, *, scope_hint: str | None = None) -> dict:

@@ -145,7 +145,7 @@ def extract(path: str) -> dict:
             continue
         body_words = [w for w in words if w["top"] >= 26]
         numbers = sorted(
-            [w for w in body_words if w["text"].isdigit() and w["size"] >= 17 and w["x0"] < BOUNDARY and "Bold" in w["fontname"]],
+            [w for w in body_words if w["text"].isdigit() and w["size"] >= 17 and w["x0"] < BOUNDARY],
             key=lambda w: w["top"],
         )
         all_lines = build_lines(body_words, page_number)
@@ -203,6 +203,14 @@ def extract(path: str) -> dict:
         # --- calendar page -------------------------------------------------
         header_month, header_year = page_month(words)
         announce_split = next((l for l in all_lines if l.x0 < BOUNDARY and re.match(r"^Аб’явы", l.text)), None)
+        if announce_split is not None and announce_split.top < numbers[0]["top"]:
+            # Announcements printed above the first band of the page belong to
+            # the Sunday that opens the page ("Сёння, 4 студзеня, …").
+            flush_announcement()
+            pending_announcement = [l for l in all_lines if announce_split.top <= l.top < numbers[0]["top"] - 6]
+            announce_mode = False
+            flush_announcement()
+            announce_split = None
         cutoff = announce_split.top if announce_split else 10_000
         # Lines above the first band continue the previous page's announcement.
         if announce_mode:
@@ -291,8 +299,8 @@ def extract(path: str) -> dict:
             for group in paragraphs(right):
                 text = join_hyphenated([l.text for l in group])
                 gev = line_ev(group, text)
-                alt = re.match(r"^(?:Або|Альбо|Дазволена)\s*:\s*(.+?)(?:\.\s+Імша:(.*))?$", text)
-                if alt and detect_rank(alt.group(1), alternative=True):
+                alt = re.match(r"^(?:Або|Альбо|Дазволена)\s*:\s*(.+?)(?:\.\s+Імша\b:?(.*))?$", text)
+                if alt and detect_rank(alt.group(1), alternative=True) and not re.match(r"^(?:Імша|Св\.\s*Імша)", alt.group(1)):
                     col.add_celebration(record, alt.group(1), detect_rank(alt.group(1), alternative=True),
                                         "alternative" if not text.startswith("Дазволена") else "permitted", gev,
                                         color=(colors_in(text) or [None])[-1])
