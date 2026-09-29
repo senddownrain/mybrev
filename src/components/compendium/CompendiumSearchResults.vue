@@ -10,7 +10,7 @@
       >
         <template #prepend><span class="prayer-list-item__icon-wrap compendium-number">{{ result.question.number }}</span></template>
         <v-list-item-title class="prayer-title-text">{{ result.question.question }}</v-list-item-title>
-        <div class="compendium-row__context">{{ result.question.partLabel }}<template v-if="result.question.topicTitle || result.question.chapterTitle"> · {{ result.question.topicTitle || result.question.chapterTitle }}</template></div>
+        <div class="compendium-row__context">{{ questionContextLabel(result.question) }}</div>
         <template #append><v-icon class="prayer-list-item__arrow" icon="mdi-chevron-right" size="24" /></template>
       </v-list-item>
     </v-list>
@@ -18,6 +18,7 @@
   </section>
 </template>
 <script setup>
+import { questionContextLabel } from '@/utils/compendiumNavigation';
 defineProps({ results: { type: Array, required: true } });
 </script>
 <style scoped src="@/styles/prayers-list.css"></style>

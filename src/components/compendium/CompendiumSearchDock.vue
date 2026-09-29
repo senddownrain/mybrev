@@ -10,6 +10,7 @@
       autocomplete="off"
       enterkeyhint="search"
       @keydown.esc="store.searchQuery = ''"
+      @focus="emit('focus')"
     />
     <button v-if="store.searchQuery" type="button" class="search-dock-action" aria-label="Ачысціць пошук" @click="store.searchQuery = ''"><PhX :size="19" /></button>
   </form>
@@ -18,6 +19,9 @@
 import { PhMagnifyingGlass, PhX } from '@phosphor-icons/vue';
 import { useRouter } from 'vue-router';
 import { useCompendiumStore } from '@/stores/compendium';
+// Mounted once by CompendiumShell for every Compendium level; the shell turns
+// the query into the results layer. `focus` lets it reopen kept results.
+const emit = defineEmits(['focus']);
 const store = useCompendiumStore();
 const router = useRouter();
 // Enter on an exact question number jumps straight to it.

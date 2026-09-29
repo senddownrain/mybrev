@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { indexCompendium, buildPartOutline, answerParagraphs, compendiumFromDocuments } from '../src/utils/compendiumData.js';
+import { indexCompendium, answerParagraphs, compendiumFromDocuments } from '../src/utils/compendiumData.js';
+import { buildPartOutline } from '../src/utils/compendiumNavigation.js';
 import { createCompendiumSearchIndex, normalizeSearchText, searchCompendium } from '../src/utils/compendiumSearch.js';
 import { createCompendiumLoader, isNewerCompendium } from '../src/utils/compendiumLoader.js';
 
@@ -23,7 +24,7 @@ test('index: flat order, lookup by number/id and reading groups', () => {
   assert.equal(index.getGroup(index.getQuestion(252).groupId).title, 'САКРАМЭНТ ХРОСТУ');
   const outline = buildPartOutline(index, 'p2');
   assert.equal(outline.sections.length, 2);
-  assert.ok(outline.sections[1].chapters.some((chapter) => chapter.groups.some((group) => group.title === 'САКРАМЭНТ ЭЎХАРЫСТЫI')));
+  assert.ok(outline.sections[1].chapters.some((chapter) => chapter.topics.some((topic) => topic.title === 'САКРАМЭНТ ЭЎХАРЫСТЫI')));
 });
 
 test('answer paragraphs keep source text and emphasis', () => {
