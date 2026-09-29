@@ -36,3 +36,5 @@ ibreviarybyapp/
 
 # raw diocesan Ordo sources and parser scratch (never commit)
 /.ordo-sources/
+__pycache__/
+*.pyc
