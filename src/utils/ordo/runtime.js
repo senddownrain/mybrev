@@ -10,6 +10,7 @@ import { resolveLiturgicalDate } from './index.js';
 import { toIsoDate } from './dates.js';
 import { normalizeDioceseId } from './layers.js';
 import { readingTitleSimilarity } from '../parsedReadingsIdentity.js';
+import { withoutObsoleteDocuments } from '../liturgicalDayResolution.js';
 
 export const DEFAULT_DIOCESE = 'minsk-mohilev';
 
@@ -144,7 +145,8 @@ const placesOf = (doc) => (Array.isArray(doc?._place) ? doc._place : [doc?._plac
  * documents (`fallbackDaysRefs`), then a date + title match. Documents of
  * other dioceses are never returned.
  */
-export function selectFixedDocuments(option, docs, { diocese, claimedIds = new Set() } = {}) {
+export function selectFixedDocuments(option, allDocs, { diocese, claimedIds = new Set() } = {}) {
+  const docs = withoutObsoleteDocuments(allDocs);
   const ref = option.daysRef || {};
   const byIds = (ids) => docs.filter((doc) => ids?.includes(doc.id));
   const own = byIds(ref.dayIds);

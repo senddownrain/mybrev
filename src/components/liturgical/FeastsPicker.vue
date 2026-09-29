@@ -99,6 +99,7 @@ import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { logger } from '@/utils/logger';
 import moment from '@/utils/moment-be';
 import { PLACE_LABEL_MAP, RANK_LABEL_MAP } from '@/constants/liturgical';
+import { withoutObsoleteDocuments } from '@/utils/liturgicalDayResolution';
 import {
   PhArrowRight,
   PhBookOpenText,
@@ -154,7 +155,8 @@ async function loadFeasts() {
 const preparedFeasts = computed(() => {
   const groups = new Map();
 
-  allFeasts.value.forEach((feast) => {
+  // Cached feast lists may predate a migration that retired documents.
+  withoutObsoleteDocuments(allFeasts.value).forEach((feast) => {
     const calendarDate = getCalendarDate(feast);
     if (!calendarDate) return;
 

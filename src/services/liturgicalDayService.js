@@ -16,6 +16,7 @@ import {
   isSeasonalDateException,
   isSeasonalDateDocumentId,
   resolveDateDayAgainstPeriod,
+  withoutObsoleteDocuments,
   resolveChristmasDateAgainstPeriod,
   resolveDayAgainstPeriod,
   resolvePeriodDayAgainstPsalter,
@@ -44,8 +45,10 @@ export function getDaysByFeastQuery(feastCode) {
   return query(getDaysCollection(), where('_feast', '==', feastCode));
 }
 
+// Query results (the `_date`/`_feast` lookups and the feast list) skip
+// documents retired by a migration; single-document reads by id do not.
 function snapshotToDocs(snapshot) {
-  return snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+  return withoutObsoleteDocuments(snapshot.docs.map((item) => ({ id: item.id, ...item.data() })));
 }
 
 async function queryDocs(q, session) {
