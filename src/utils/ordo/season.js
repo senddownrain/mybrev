@@ -36,6 +36,14 @@ function lectionaryCycles(iso, anchors) {
 }
 
 /**
+ * Lectionary cycles of the liturgical year containing `iso`:
+ * `{ liturgicalYear, sunday: 'A'|'B'|'C', weekday: '1'|'2' }`.
+ */
+export function lectionaryCyclesFor(iso, countryRules = COUNTRY_RULES.BY) {
+  return lectionaryCycles(iso, computeYearAnchors(parseIso(iso).year, countryRules));
+}
+
+/**
  * @param {string} iso
  * @param {object} [countryRules]
  * @returns {{
