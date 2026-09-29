@@ -62,6 +62,17 @@
 
       <v-list-item
         tabindex="0"
+        title="Літургічны каляндар"
+        :to="{ name: 'Ordo' }"
+        :active="ORDO_ROUTE_NAMES.includes(route.name)"
+      >
+        <template #prepend>
+          <PhCalendarDots :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
+      <v-list-item
+        tabindex="0"
         title="Святая Імша"
         :to="{ name: 'PrayerView', params: { id: MASS_ORDER_PRAYER_ID } }"
         :active="route.name === 'PrayerView' && route.params.id === MASS_ORDER_PRAYER_ID"
@@ -194,8 +205,10 @@ import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import {
   PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart, PhBookmark,
-  PhChurch, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll,
+  PhChurch, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll, PhCalendarDots,
 } from '@phosphor-icons/vue';
+
+const ORDO_ROUTE_NAMES = ['Ordo', 'OrdoByDate'];
 
 const COMPENDIUM_ROUTE_NAMES = new Set(['Compendium', 'CompendiumPart', 'CompendiumTopic', 'CompendiumQuestion']);
 

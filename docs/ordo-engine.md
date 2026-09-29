@@ -14,7 +14,7 @@ resolveLiturgicalDate('2026-11-12', {
   diocese: 'vitebsk',            // grodno | minsk-mohilev (alias minsk) | pinsk | vitebsk
   localChurch: {                 // optional LocalChurchContext
     id: 'x', titleCelebrationId: 'sv-casimir', patronCelebrationId: '…',
-    dedicationDate: '09-20',     // MM-DD, DD.MM or { month, day }
+    dedicationDate: '09-20',     // MM-DD, DD.MM, { month, day } or 'unknown' (last Sunday of October)
     isCathedral: false,
   },
   yearOverrides: [],             // YearOverride[] (see yearOverrides.js)
@@ -84,7 +84,7 @@ document, so the engine can replace it.
 | `src/data/ordo/fixed-identities.js` | generated (`npm run ordo:identities`): `fixedCalendar` entry → stable celebration id (the `patchs/db-feasts` slug the evidence uses) + its `days` document ids |
 | `src/data/ordo/layers.js` | `BELARUS_LAYER` (national proper; Ostra Brama obligatory) and `DIOCESAN_LAYERS` (`add`/`modify` only, each entry with evidence item ids) — merged with the `_place` entries of `fixedCalendar.js` |
 | `src/data/ordo/year-overrides.js` | the four one-year decisions no rule computes (Minsk 2026 St Stanislaus, Grodno 2027 ×3) |
-| `src/data/ordo/notes.json` | parser notes; pass them as `context.notes` (the runtime does not load them — 1.3 MB) |
+| `src/data/ordo/notes.json` | parser notes; pass them as `context.notes` (the runtime does not load them — 1.3 MB; only the Ordo screen loads them as a lazy chunk) |
 
 Both `layers.js` and `year-overrides.js` are applied by default (`dataYearOverrides: false` turns
 the overrides off for a what-if comparison).
@@ -113,6 +113,21 @@ liturgicalStore.resolveContext(date, diocese)
 - I Vespers: whether a celebration has them is the engine's decision (`vespers.type === 'first'`);
   the texts are `vesper1*` field by field, else the celebration's Proper/Common Vespers fields
   (`assembleFirstVespers`).
+
+## Ordo screen (`/ordo`, `/ordo/:date`)
+
+- `src/views/Ordo.vue` + `src/layouts/default/OrdoBottomNav.vue` (day navigation and the shared
+  date dialog); drawer entry «Літургічны каляндар».
+- View model: `src/utils/ordoScreen.js` (pure): labels, `officeDirections`, `massSummary`,
+  `groupOrdoNotes` (category groups; period introductions apart; one-year notes and announcements
+  copied from another date are hidden), `buildMonthOverview` over the memoized
+  `getOrdoYear(year, context)`, `listTitleCelebrations(diocese)`.
+- Notes: `src/utils/ordoNotesLoader.js` — `import('../data/ordo/notes.json')`, a separate chunk
+  that the startup code never imports statically (`tests/ordo-screen.test.mjs`).
+- Local church: `src/utils/ordoLocalChurch.js` (localStorage `ordoLocalChurch`, off by default;
+  Settings → Мой касцёл). `toEngineLocalChurch()` gives the `localChurch` context for the Ordo
+  screen and for Hours/Readings (`resolveRuntimeDay(date, { diocese, localChurch })`); the
+  content cache keys get a local-church part only when it is set.
 
 ## Validation (stage 6b)
 

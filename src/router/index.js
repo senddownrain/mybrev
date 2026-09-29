@@ -81,6 +81,23 @@ const routes = [
         redirect: { name: 'LiturgicalPicker', query: { mode: 'readings' } },
       },
       {
+        path: 'ordo',
+        name: 'Ordo',
+        components: {
+          default: () => import('@/views/Ordo.vue'),
+          bottomNav: () => import('@/layouts/default/OrdoBottomNav.vue'),
+        },
+      },
+      {
+        path: 'ordo/:date',
+        name: 'OrdoByDate',
+        components: {
+          default: () => import('@/views/Ordo.vue'),
+          bottomNav: () => import('@/layouts/default/OrdoBottomNav.vue'),
+        },
+        props: { default: true },
+      },
+      {
         path: 'bible/:language?/:bookId?/:chapter?',
         name: 'Bible',
         component: () => import('@/views/Bible.vue'),
