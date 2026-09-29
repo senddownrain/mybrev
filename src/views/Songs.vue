@@ -1,5 +1,5 @@
 <template>
-  <v-container class="prayers-list-container songs-list-container" :class="{ 'songs-list-container--compact': settings.songCompactList }">
+  <v-container class="prayers-list-container songs-list-container">
     <header class="prayers-page-header"><div class="prayers-page-eyebrow">Пілігрымкавы</div><h1 class="prayers-page-title">Спеўнік</h1></header>
     <v-alert v-if="store.error" type="warning" variant="tonal" class="mb-4">
       Не атрымалася загрузіць змены. Даступная захаваная падборка.
@@ -11,7 +11,6 @@
       <v-list-item v-for="song in filtered" :key="song.id" :to="{ name: 'SongView', params: { id: song.id } }" class="prayer-list-item">
         <template #prepend><span class="prayer-list-item__icon-wrap song-favorite-wrap" :class="{ 'prayer-list-item__icon-wrap--favorite': settings.favoriteSongs.includes(song.id) }"><v-btn class="song-favorite-button" size="small" :icon="settings.favoriteSongs.includes(song.id) ? 'mdi-heart' : 'mdi-heart-outline'" :color="settings.favoriteSongs.includes(song.id) ? 'red' : undefined" variant="text" :aria-label="settings.favoriteSongs.includes(song.id) ? 'Выдаліць з абраных' : 'Дадаць у абраныя'" @click.stop.prevent="settings.toggleFavoriteSong(song.id)" /></span></template>
         <v-list-item-title class="prayer-title-text">{{ song.title }}</v-list-item-title>
-        <div v-if="!settings.songCompactList && getSongTags(song).length" class="song-tags"><v-chip v-for="tag in getSongTags(song)" :key="tag" class="prayer-tag" variant="tonal" size="x-small">{{ tag }}</v-chip></div>
         <template #append><div class="prayer-list-item__actions"><v-btn v-if="auth.isAdmin" icon="mdi-pencil" size="small" variant="text" aria-label="Рэдагаваць спеў" @click.stop.prevent="router.push({ name: 'AdminSongEdit', params: { id: song.id } })" /><v-icon class="prayer-list-item__arrow" icon="mdi-chevron-right" size="24" /></div></template>
       </v-list-item>
     </v-list>
@@ -30,7 +29,6 @@
         <v-chip-group v-model="tags" multiple column><v-chip v-for="tag in store.allTags" :key="tag" :value="tag" filter>{{ tag }}</v-chip></v-chip-group>
       </v-card-text><v-card-actions><v-btn @click="tags = []">Скінуць</v-btn><v-spacer /><v-btn variant="flat" @click="filterOpen = false">Паказаць спевы</v-btn></v-card-actions></v-card>
     </v-bottom-sheet>
-    <v-bottom-sheet v-model="ui.songSettingsOpen"><v-card class="songs-sheet songs-settings-sheet" rounded="t-xl"><v-card-title class="d-flex align-center">Налады спеўніка<v-spacer /><v-btn icon="mdi-close" variant="text" aria-label="Закрыць налады" @click="ui.songSettingsOpen = false" /></v-card-title><v-card-text><SongSettings /></v-card-text></v-card></v-bottom-sheet>
   </v-container>
 </template>
 <script setup>
@@ -41,15 +39,11 @@ import { PhMagnifyingGlass, PhPlus, PhSlidersHorizontal, PhX } from '@phosphor-i
 import { useSongsStore } from '@/stores/songs';
 import { useSettingsStore } from '@/stores/settings';
 import { useAuthStore } from '@/stores/auth';
-import { useUiStore } from '@/stores/ui';
-import { getSongTags } from '@/constants/songTags';
 import { filterSongs } from '@/utils/songChords';
-import SongSettings from '@/components/songs/SongSettings.vue';
 import '@/styles/songs.scss';
 const store = useSongsStore();
 const settings = useSettingsStore();
 const auth = useAuthStore();
-const ui = useUiStore();
 const router = useRouter();
 const { searchQuery: query, selectedTags: tags, favoritesOnly } = storeToRefs(store);
 const filterOpen = ref(false);
@@ -60,15 +54,12 @@ store.init();
 <style scoped src="@/styles/prayer-reading.css"></style>
 <style scoped>
 .song-favorite-wrap { display: flex; flex: 0 0 auto; align-items: center; justify-content: center; }
-.song-favorite-wrap :deep(.song-favorite-button) { width: 40px; height: 40px; min-width: 40px; padding: 0; }
-.songs-list-container--compact .prayer-options-list { gap: 6px; }
-.songs-list-container--compact .prayer-list-item { min-height: 54px; padding: 6px 10px !important; border-radius: 14px !important; background: var(--nav-surface); box-shadow: 0 2px 8px var(--nav-button-shadow); }
-.songs-list-container--compact .song-favorite-wrap { width: 38px; height: 38px; border-radius: 12px; }
-.songs-list-container--compact .song-favorite-wrap :deep(.song-favorite-button) { width: 34px; height: 34px; min-width: 34px; }
-.songs-list-container--compact .prayer-title-text { padding-inline: 2px 4px; font-size: .95rem !important; line-height: 1.3 !important; }
-.songs-list-container--compact :deep(.v-list-item__prepend) { align-self: center; margin-inline-end: 7px; }
-.songs-list-container--compact :deep(.v-list-item__append) { margin-inline-start: 4px; }
-.songs-list-container--compact .prayer-list-item__arrow { font-size: 20px !important; }
-.songs-settings-sheet :deep(.v-card-title) { padding: 12px 16px 6px 20px; font-size: 1rem; font-weight: 750; }
-.songs-settings-sheet :deep(.v-card-text) { padding: 8px 20px 20px; }
+.songs-list-container .prayer-options-list { gap: 6px; }
+.songs-list-container .prayer-list-item { min-height: 54px; padding: 6px 10px !important; border-radius: 14px !important; background: var(--nav-surface); box-shadow: 0 2px 8px var(--nav-button-shadow); }
+.songs-list-container .song-favorite-wrap { width: 38px; height: 38px; border-radius: 12px; }
+.songs-list-container .song-favorite-wrap :deep(.song-favorite-button) { width: 34px; height: 34px; min-width: 34px; padding: 0; }
+.songs-list-container .prayer-title-text { padding-inline: 2px 4px; font-size: .95rem !important; line-height: 1.3 !important; }
+.songs-list-container :deep(.v-list-item__prepend) { align-self: center; margin-inline-end: 7px; }
+.songs-list-container :deep(.v-list-item__append) { margin-inline-start: 4px; }
+.songs-list-container .prayer-list-item__arrow { font-size: 20px !important; }
 </style>

@@ -14,7 +14,6 @@ export const useUiStore = defineStore('ui', () => {
   const isDrawerOpen = ref(false);
   const isSettingsSheetOpen = ref(false);
   const isCalendarDialogOpen = ref(false);
-  const songSettingsOpen = ref(false);
 
   function toggleDrawer() {
     isDrawerOpen.value = !isDrawerOpen.value;
@@ -32,7 +31,6 @@ export const useUiStore = defineStore('ui', () => {
     isDrawerOpen.value = false;
     isSettingsSheetOpen.value = false;
     isCalendarDialogOpen.value = false;
-    songSettingsOpen.value = false;
   }
 
   // ── Prayer view edit state (PrayerView ↔ Default.vue ↔ PrayerBar) ────────
@@ -93,7 +91,6 @@ export const useUiStore = defineStore('ui', () => {
     isDrawerOpen,
     isSettingsSheetOpen,
     isCalendarDialogOpen,
-    songSettingsOpen,
     toggleDrawer,
     toggleSettingsSheet,
     toggleCalendarDialog,

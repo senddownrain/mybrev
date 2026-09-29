@@ -60,11 +60,6 @@
       </div>
     </section>
 
-    <section class="settings-section" aria-labelledby="songs-title">
-      <div class="section-heading"><span class="section-icon"><PhMusicNotes :size="22" /></span><div><h2 id="songs-title">Спеўнік</h2><p>Выгляд тэксту і акордаў</p></div></div>
-      <div class="song-settings-in-page"><SongSettings /></div>
-    </section>
-
     <section class="settings-section" aria-labelledby="categories-title">
       <div class="section-heading">
         <span class="section-icon"><PhFolders :size="22" /></span>
@@ -104,8 +99,7 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import { PhCheck, PhFolders, PhMinus, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash, PhMusicNotes } from '@phosphor-icons/vue';
-import SongSettings from '@/components/songs/SongSettings.vue';
+import { PhCheck, PhFolders, PhMinus, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
@@ -180,7 +174,6 @@ function restoreGlobalCategories() {
 .section-icon { display: grid; flex: 0 0 42px; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(var(--chrome-accent-rgb), .16); border-radius: 14px; background: rgba(var(--chrome-accent-rgb), .09); color: var(--chrome-accent); }
 .section-heading h2 { margin: 0; color: var(--nav-on-surface); font-size: 1rem; font-weight: 780; letter-spacing: -.01em; }
 .section-heading p { margin: 2px 0 0; color: var(--nav-muted); font-size: .78rem; line-height: 1.35; }
-.song-settings-in-page { padding: 4px 20px 20px; }
 .setting-row, .text-size-control, .category-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 70px; margin-inline: 20px; border-top: 1px solid var(--nav-border); }
 .setting-copy, .category-copy { display: grid; min-width: 0; gap: 3px; }
 .category-title-line { display: flex; align-items: center; gap: 7px; min-width: 0; }
@@ -218,7 +211,6 @@ function restoreGlobalCategories() {
   .settings-hero { padding-inline: 4px; }
   .settings-section { border-radius: 22px; }
   .section-heading { padding-inline: 16px; }
-  .song-settings-in-page { padding-inline: 16px; }
   .setting-row, .text-size-control, .category-row { margin-inline: 16px; }
   .setting-row--theme { align-items: flex-start; flex-direction: column; padding-block: 14px; }
   .theme-options { width: 100%; justify-content: stretch; }
