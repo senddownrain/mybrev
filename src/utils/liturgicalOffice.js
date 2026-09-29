@@ -41,14 +41,32 @@ function normalizeRank(day) {
     .toLocaleLowerCase('be-BY');
 }
 
-/** Solemnities use Sunday Compline; feasts use the actual weekday. */
+/**
+ * Weekday (1 = Sunday … 7 = Saturday) of the `completoriums` text for the
+ * selected Office. With an Ordo descriptor (`day._ordo`) this is the engine's
+ * decision: Sunday Compline after II Vespers (solemnities, Sundays, Triduum,
+ * Easter octave) → 1; after I Vespers of tomorrow's Sunday/solemnity → 7
+ * (Ps 4, 134); otherwise the current weekday. Without a descriptor the legacy
+ * rank rule applies.
+ */
+export function getCompletoriumWeekday(day, dayOfWeek) {
+  if (day?._ordo?.complineDay) return Number(day._ordo.complineDay);
+  return usesSundayCompletorium(day) ? 1 : Number(dayOfWeek);
+}
+
+/**
+ * Legacy rank rule (days without an Ordo descriptor, e.g. the admin editor):
+ * solemnities use Sunday Compline; feasts use the actual weekday.
+ */
 export function usesSundayCompletorium(day) {
+  if (day?._ordo?.complineDay) return Number(day._ordo.complineDay) === 1;
   if (day?._kind === 'office-for-dead') return true;
   return SOLEMNITY_RANKS.has(normalizeRank(day));
 }
 
 /**
- * Te Deum follows the rank/calendar rule rather than a content field:
+ * Te Deum: the Ordo descriptor flag (`day._ordo.teDeum`) when present.
+ * Legacy fallback — the rank/calendar rule rather than a content field:
  * - solemnities and feasts: always;
  * - every day in the Christmas and Easter octaves;
  * - Sundays: except Lent and Holy Week;
@@ -56,6 +74,8 @@ export function usesSundayCompletorium(day) {
  */
 export function shouldShowTeDeum(day) {
   if (!day || day._kind === 'office-for-dead') return false;
+  // The Ordo descriptor decides by the Office actually celebrated.
+  if (typeof day._ordo?.teDeum === 'boolean') return day._ordo.teDeum;
 
   const periodType = normalizePeriodType(day);
   const periodWeek = Number(day._periodWeekNumber);

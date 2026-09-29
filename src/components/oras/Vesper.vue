@@ -40,13 +40,7 @@ import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
-import {
-  findTomorrowRegularVespers,
-  getTomorrowFirstVespersOptions,
-  isLocalFirstVespers,
-  isSolemnity,
-  usesOwnVespers,
-} from '@/utils/liturgicalVespers';
+import { eveningVespersModel } from '@/utils/liturgicalVespers';
 import { logger } from '@/utils/logger';
 import { getLiturgicalTheme, PLACE_LABEL_MAP } from '@/constants/liturgical';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
@@ -63,7 +57,7 @@ import DayTitle from '@/components/oraparts/DayTitle.vue';
 const route = useRoute();
 const { day, pending } = useResolvedLiturgicalDay();
 const { getLiturgicalContentForDate } = useLiturgicalContent();
-const tomorrowFirstVespers = ref(null);
+const tomorrowContent = ref(null);
 const checkingTomorrow = ref(false);
 let requestVersion = 0;
 
@@ -74,6 +68,17 @@ const vespersRubricStyle = computed(() => {
   return { '--vespers-rubric-color': theme.color, '--vespers-rubric-rgb': theme.rgb };
 });
 const routeDate = computed(() => moment(String(route.params.day), ['YYYY-MM-DD', 'DD-MM-YYYY'], true));
+// II Vespers vs I Vespers of tomorrow: the Ordo descriptor of the selected
+// Office decides; without one, the legacy heuristics (and the explicit
+// `firstVespersDayId` of a local card) still apply.
+const eveningModel = computed(() => (
+  String(route.params.id) === 'office-for-dead' ? { firstVespers: null, local: [], second: false }
+    : eveningVespersModel(day.value, tomorrowContent.value, {
+      isoWeekday: routeDate.value.isoWeekday(),
+      requestedDayId: route.query.firstVespersDayId || '',
+    })
+));
+const tomorrowFirstVespers = computed(() => eveningModel.value.firstVespers);
 const firstVespersLabel = computed(() => {
   const source = tomorrowFirstVespers.value;
   if (!source) return '';
@@ -86,7 +91,7 @@ const vespersRubric = computed(() => {
     kind: 'first',
     icon: '',
   };
-  if (routeDate.value.isoWeekday() === 7 || isSolemnity(day.value)) return {
+  if (eveningModel.value.second) return {
     labelHtml: 'II Нешпары',
     kind: 'second',
     icon: '',
@@ -105,26 +110,16 @@ function formatTitleHtml(value) {
 }
 
 watch(
-  [() => route.params.day, () => route.query.firstVespersDayId],
-  async ([routeDate, requestedDayId]) => {
+  () => route.params.day,
+  async (routeDateParam) => {
     const version = ++requestVersion;
-    tomorrowFirstVespers.value = null;
-    const date = moment(String(routeDate), ['YYYY-MM-DD', 'DD-MM-YYYY'], true);
-    if (!date.isValid()) return;
-    if (usesOwnVespers(day.value) || String(route.params.id) === 'office-for-dead') return;
+    tomorrowContent.value = null;
+    const date = moment(String(routeDateParam), ['YYYY-MM-DD', 'DD-MM-YYYY'], true);
+    if (!date.isValid() || String(route.params.id) === 'office-for-dead') return;
     checkingTomorrow.value = true;
     try {
       const content = await getLiturgicalContentForDate(date.clone().add(1, 'day').toDate());
-      if (version !== requestVersion) return;
-      const firstVespersOptions = getTomorrowFirstVespersOptions(content);
-      const requested = requestedDayId
-        ? firstVespersOptions.find((item) => item.sourceDayId === String(requestedDayId))
-        : null;
-      // Local diocesan celebrations are opt-in from their separate ora card.
-      // Only a universal feast/solemnity may replace today's Vespers automatically.
-      const universal = firstVespersOptions.find((item) => !isLocalFirstVespers(item));
-      tomorrowFirstVespers.value = requested || universal
-        || (date.isoWeekday() === 6 ? findTomorrowRegularVespers(content) : null);
+      if (version === requestVersion) tomorrowContent.value = content;
     } catch (error) {
       // The current day's Vespers remain usable if preloading tomorrow failed.
       logger.error('[Vesper] tomorrow first-Vespers lookup failed:', error);
@@ -134,7 +129,6 @@ watch(
   },
   { immediate: true },
 );
-
 </script>
 
 <style scoped>

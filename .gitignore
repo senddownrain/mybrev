@@ -33,3 +33,8 @@ pnpm-debug.log*
 # local bible scraper cache and nested app checkout
 scripts/bible/.cache*/
 ibreviarybyapp/
+
+# raw diocesan Ordo sources and parser scratch (never commit)
+/.ordo-sources/
+__pycache__/
+*.pyc

@@ -19,11 +19,13 @@ export async function refreshSavedContent() {
   for (let index = 0; index < keys.length; index += 2) {
     await Promise.all(keys.slice(index, index + 2).map(async (key) => {
       try {
-        const [type, value, dayId, includeAlternatives] = JSON.parse(key);
+        const [type, value, dayId, includeAlternatives, readingsDiocese] = JSON.parse(key);
         switch (type) {
-          case 'content': await liturgical.fetchContentByDate(value, options); break;
-          case 'days': await liturgical.fetchDaysByDate(value, options); break;
-          case 'readings': await liturgical.fetchReadingsByDate(value, { ...options, dayId, includeAlternatives }); break;
+          case 'content': await liturgical.fetchContentByDate(value, { ...options, diocese: dayId }); break;
+          case 'days': await liturgical.fetchDaysByDate(value, { ...options, diocese: dayId }); break;
+          case 'readings': await liturgical.fetchReadingsByDate(value, {
+            ...options, dayId, includeAlternatives, diocese: readingsDiocese,
+          }); break;
           case 'feasts': await liturgical.fetchAllFeasts(value, options); break;
           case 'static': await getStaticCollection(value, options); break;
           case 'prayers': await getSavedPrayers(options); break;

@@ -3,8 +3,13 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import moment from '@/utils/moment-be';
 import { useCalendarStore } from '@/stores/calendar';
-import { computeLiturgicalContext, getDynamicFeastCodesForDate } from '@/utils/liturgicalCalendar';
-import { getLiturgicalYear, getCycleForDate } from '@/utils/liturgicalCycle';
+import { computeLiturgicalContext } from '@/utils/liturgicalCalendar';
+import { logger } from '@/utils/logger';
+import {
+  dynamicFeastCodesOf, legacyContextOf, planReadings, resolveRuntimeDay,
+} from '@/utils/ordo/runtime';
+import { currentOrdoDiocese } from '@/utils/ordoDiocese';
+import { currentOrdoLocalChurch, localChurchCacheKey } from '@/utils/ordoLocalChurch';
 import { FEAST_NAME_MAP } from '@/constants/liturgicalFeastsMap';
 import { fetchContentForDate } from '@/services/liturgicalContentService';
 import { fetchDaysForDate, findDayByPeriod, getAllFeastDays } from '@/services/liturgicalDayService';
@@ -22,20 +27,33 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   const error = ref(null);
   let pending = 0;
 
-  async function resolveContext(mDate, session) {
+  /**
+   * ONE ResolvedLiturgicalDay per (date, diocese) for Hours and Readings.
+   * The period context used for `days`/`readings` lookups is the engine's;
+   * a stored `yearOptions` document may override it (the discrepancy is
+   * logged), but never the resolved celebrations.
+   */
+  async function resolveContext(mDate, session, diocese = currentOrdoDiocese(), localChurch = currentOrdoLocalChurch()) {
     const year = mDate.year();
-    await Promise.all([
-      calendarStore.getYearOptions(year, session),
-      calendarStore.getYearOptions(year + 1, session),
-    ]);
-    await calendarStore.getDynamicDates(year, session);
-    const opts = calendarStore.optionsForYear(year).value;
-    const nextOpts = calendarStore.optionsForYear(year + 1).value;
-    const dynamicDates = calendarStore.dynamicDatesForYear(year).value || {};
-    return {
-      context: computeLiturgicalContext(mDate, opts, nextOpts, dynamicDates),
-      dynamicFeastCodes: getDynamicFeastCodesForDate(mDate, dynamicDates),
-    };
+    const resolved = resolveRuntimeDay(mDate.format('YYYY-MM-DD'), { diocese, localChurch });
+    const engineContext = legacyContextOf(resolved);
+    let context = engineContext;
+    try {
+      const [opts, nextOpts] = await Promise.all([
+        calendarStore.getYearOptions(year, session),
+        calendarStore.getYearOptions(year + 1, session),
+      ]);
+      const dynamicDates = await calendarStore.getDynamicDates(year, session);
+      const stored = computeLiturgicalContext(mDate, opts, nextOpts, dynamicDates);
+      const differs = ['periodType', 'periodWeek', 'dayOfWeek'].some((key) => stored[key] !== engineContext[key]);
+      if (differs) {
+        logger.warn(`[liturgicalStore] ${resolved.date}: stored yearOptions give ${stored.periodType}-w${stored.periodWeek}-d${stored.dayOfWeek}, engine ${engineContext.periodType}-w${engineContext.periodWeek}-d${engineContext.dayOfWeek}; using the stored override`);
+        context = { ...stored, _feast: engineContext._feast };
+      }
+    } catch (error) {
+      logger.warn('[liturgicalStore] year options unavailable, using the engine context:', error?.message || error);
+    }
+    return { context, resolved, diocese, dynamicFeastCodes: dynamicFeastCodesOf(resolved) };
   }
 
   async function readResource(key, loader, options = {}) {
@@ -59,21 +77,30 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
 
   async function fetchContentByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
-    return readResource(contentKey(dateKey(date)), async (session) => {
-      const { context, dynamicFeastCodes } = await resolveContext(mDate, session);
-      return fetchContentForDate(mDate, context, dynamicFeastCodes, session);
+    const diocese = options.diocese || currentOrdoDiocese();
+    const localChurch = currentOrdoLocalChurch();
+    return readResource(contentKey(dateKey(date), diocese, localChurch), async (session) => {
+      const { context, dynamicFeastCodes, resolved } = await resolveContext(mDate, session, diocese, localChurch);
+      return fetchContentForDate(mDate, context, dynamicFeastCodes, session, { resolved, diocese });
     }, options);
   }
 
   async function fetchDaysByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
-    return readResource(publicContentKey('days', dateKey(date)), async (session) => {
-      const { context, dynamicFeastCodes } = await resolveContext(mDate, session);
+    const diocese = options.diocese || currentOrdoDiocese();
+    const localChurch = currentOrdoLocalChurch();
+    const localKey = localChurchCacheKey(localChurch);
+    return readResource(publicContentKey('days', dateKey(date), diocese, ...(localKey ? [localKey] : [])), async (session) => {
+      const { context, dynamicFeastCodes, resolved } = await resolveContext(mDate, session, diocese, localChurch);
       const { periodDays, fixedDateDays, dynamicDaysByFeast } = await fetchDaysForDate(
         mDate, context, dynamicFeastCodes, session,
       );
       const all = [...periodDays, ...fixedDateDays, ...[...dynamicDaysByFeast.values()].flat()];
-      return { context, items: [...new Map(all.map((item) => [item.id, item])).values()] };
+      return {
+        context,
+        ordoPrimaryId: resolved.primary.id,
+        items: [...new Map(all.map((item) => [item.id, item])).values()],
+      };
     }, options);
   }
 
@@ -101,14 +128,22 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
 
   async function fetchReadingsByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
-    return readResource(readingsKey(dateKey(date), options), async (session) => {
-      const { context, dynamicFeastCodes } = await resolveContext(mDate, session);
-      // resolveContext has already restored/refreshed calendar dependencies.
-      const liturgicalYear = await getLiturgicalYear(date, { useCalendarStore: true });
-      const cycle = await getCycleForDate(date, liturgicalYear, context.dayOfWeek);
-      const sundayCycle = await getCycleForDate(date, liturgicalYear, 1);
-      const fullContext = { ...context, cycle, sundayCycle };
-      const items = await getReadingsForDate(mDate, fullContext, dynamicFeastCodes, {
+    const diocese = options.diocese || currentOrdoDiocese();
+    const localChurch = currentOrdoLocalChurch();
+    return readResource(readingsKey(dateKey(date), { ...options, diocese, localChurch }), async (session) => {
+      const { context, resolved } = await resolveContext(mDate, session, diocese, localChurch);
+      // The same ResolvedLiturgicalDay as the Hours: identity, cycles and
+      // lookup order all come from the engine.
+      const plan = planReadings(resolved, { dayId: options.dayId || '' });
+      const fullContext = {
+        ...context,
+        cycle: plan.cycle,
+        sundayCycle: plan.sundayCycle,
+        ordoPrimaryId: plan.primaryOptionId,
+        ordoSelectedId: plan.selectedOptionId,
+        diocese,
+      };
+      const items = await getReadingsForDate(mDate, fullContext, plan, {
         ...options, readSession: session,
       });
       return { context: fullContext, items };
@@ -122,6 +157,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     isLoading, error,
     fetchContentByDate, fetchDaysByDate, fetchAllFeasts, fetchReadingsByDate, fetchDayByPeriod,
     getCachedContent: (date) => publicContentCache.peek(contentKey(dateKey(date))) ?? null,
+    resolveOrdoDay: (date, diocese = currentOrdoDiocese()) => resolveRuntimeDay(dateKey(date), { diocese, localChurch: currentOrdoLocalChurch() }),
     getCachedReadings: (date, options) => publicContentCache.peek(readingsKey(dateKey(date), options)) ?? null,
     primeContent: (date) => publicContentCache.prime([contentKey(dateKey(date))]),
     primeReadings: (date, options) => publicContentCache.prime([readingsKey(dateKey(date), options)]),
