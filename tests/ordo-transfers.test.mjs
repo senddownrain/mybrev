@@ -49,7 +49,7 @@ test('year override: move, suppress, add and changeRank, in scope order', () => 
       year: 2028, scope: 'belarus', targetCelebrationId: 'sv-casimir', action: 'move', to: '2028-03-06', reason: 'test',
     },
     {
-      year: 2028, scope: 'diocese', dioceseId: 'vitebsk', targetCelebrationId: 'sv-yana-boska', action: 'suppress',
+      year: 2028, scope: 'diocese', dioceseId: 'vitebsk', targetCelebrationId: 'sv-john-bosco', action: 'suppress',
     },
     {
       year: 2028,
@@ -62,7 +62,7 @@ test('year override: move, suppress, add and changeRank, in scope order', () => 
       },
     },
     {
-      year: 2028, scope: 'diocese', dioceseId: 'grodno', targetCelebrationId: 'sv-tamasha-akvinskaha', action: 'changeRank', rank: 'festum',
+      year: 2028, scope: 'diocese', dioceseId: 'grodno', targetCelebrationId: 'sv-thomas-aquinas', action: 'changeRank', rank: 'festum',
     },
   ];
   const moved = resolveLiturgicalDate('2028-03-06', { yearOverrides });
@@ -70,9 +70,9 @@ test('year override: move, suppress, add and changeRank, in scope order', () => 
   assert.ok(moved.appliedRules.some((rule) => rule.rule === 'year-override' && rule.action === 'move'));
 
   const vitebsk = resolveLiturgicalDate('2028-01-31', { diocese: 'vitebsk', yearOverrides });
-  assert.equal(vitebsk.suppressed.find((item) => item.id === 'sv-yana-boska').reason, 'suppressed-by-year-override');
+  assert.equal(vitebsk.suppressed.find((item) => item.id === 'sv-john-bosco').reason, 'suppressed-by-year-override');
   const minsk = resolveLiturgicalDate('2028-01-31', { diocese: 'minsk', yearOverrides });
-  assert.equal(minsk.primary.id, 'sv-yana-boska');
+  assert.equal(minsk.primary.id, 'sv-john-bosco');
 
   const added = resolveLiturgicalDate('2028-07-07', { yearOverrides });
   assert.equal(added.primary.id, 'jubilee-day');

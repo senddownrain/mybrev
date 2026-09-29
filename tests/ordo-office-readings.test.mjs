@@ -8,7 +8,7 @@ test('solemnity: Proper → Common fallbacks, no user choices', () => {
   assert.deepEqual(office.hours.officeOfReadings.reading2.chain, ['proper', 'common']);
   assert.deepEqual(office.hours.lauds.psalmody.chain, ['sunday-week-1']);
   assert.equal(office.sources.sundayWeek1, 'ordinary-w5-d1');
-  assert.deepEqual(office.sources.proper, { source: 'fixed', _date: '15.08', _rank: 'solemnitas' });
+  assert.deepEqual(office.sources.proper, { source: 'fixed', _date: '15.08', _rank: 'solemnitas', dayIds: ['15-08-assumption-blessed-virgin-mary'] });
   assert.deepEqual(office.firstVespers.chain, ['proper.vesper1', 'common.vesper1', 'proper', 'common']);
   // Daytime Prayer of a solemnity on Sunday uses the Sunday psalms.
   const sunday = resolveLiturgicalDate('2027-08-15').officeResolution.primary;
@@ -70,7 +70,7 @@ test('Saturday memorial of the BVM is offered only without an obligatory memoria
 test('Immaculate Heart + another obligatory memorial: both become optional', () => {
   const day = resolveLiturgicalDate('2026-06-13');
   assert.equal(day.primary.kind, 'temporal');
-  assert.deepEqual(day.alternatives.filter((item) => item.demotedFrom).map((item) => item.id).sort(), ['immaculate-heart', 'sv-antoniya-paduanskaha']);
+  assert.deepEqual(day.alternatives.filter((item) => item.demotedFrom).map((item) => item.id).sort(), ['immaculate-heart', 'sv-anthony-padua']);
 });
 
 test('Advent 17–24 and Christmas keep their date-based documents', () => {

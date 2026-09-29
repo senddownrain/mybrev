@@ -26,19 +26,19 @@ test('01 ordinary weekday without a saint', () => {
 test('02 weekday + optional memorial: the weekday is primary, the memorial an alternative', () => {
   const day = resolve('2026-01-13');
   assert.equal(day.primary.kind, 'temporal');
-  assert.deepEqual(ids(day.alternatives), ['sv-hilyaryya']);
+  assert.deepEqual(ids(day.alternatives), ['sv-hilary']);
   assert.equal(day.officeResolution.alternatives[0].officeKind, 'optional-memorial');
 });
 
 test('03 several optional memorials are all legal alternatives', () => {
   const day = resolve('2026-01-20');
   assert.equal(day.primary.kind, 'temporal');
-  assert.deepEqual(ids(day.alternatives).sort(), ['sv-fabiyana', 'sv-sebastsyana']);
+  assert.deepEqual(ids(day.alternatives).sort(), ['sv-fabian', 'sv-sebastian']);
 });
 
 test('04 obligatory memorial: weekday is not an alternative Office', () => {
   const day = resolve('2026-01-28');
-  assert.equal(day.primary.id, 'sv-tamasha-akvinskaha');
+  assert.equal(day.primary.id, 'sv-thomas-aquinas');
   assert.equal(day.primary.officeKind, 'memorial');
   assert.deepEqual(day.alternatives, []);
   assert.equal(reasonOf(day, 'temporal:ordinary-w3-d4'), 'weekday-under-memorial');
@@ -56,7 +56,7 @@ test('04 obligatory memorial: weekday is not an alternative Office', () => {
 
 test('05 feast: no I Vespers, Sunday-week-I psalms at Lauds, weekday Compline, Te Deum', () => {
   const day = resolve('2026-07-03'); // St Thomas, Friday
-  assert.equal(day.primary.id, 'sv-tamasha');
+  assert.equal(day.primary.id, 'sv-thomas-apostle');
   assert.equal(day.primary.officeKind, 'feast');
   assert.deepEqual(day.alternatives, []);
   const office = day.officeResolution.primary;
@@ -103,7 +103,7 @@ test('08 Sundays of Advent, Lent and Easter outrank feasts and solemnities', () 
 
   const easter = resolve('2026-05-03');
   assert.equal(easter.primary.officeKind, 'sunday');
-  assert.equal(reasonOf(easter, 'sv-filipa-i-yakuba'), 'impeded-omitted');
+  assert.equal(reasonOf(easter, 'sv-philip-james-apostles'), 'impeded-omitted');
   assert.equal(easter.officeResolution.primary.teDeum, true);
 
   const advent = resolve('2026-11-29');
@@ -115,7 +115,7 @@ test('09 17–24 December + saint: commemoration only', () => {
   const day = resolve('2026-12-21');
   assert.equal(day.primary.kind, 'temporal');
   assert.equal(day.primary.daysRef.seasonalDateId, 'advent-21-12');
-  assert.deepEqual(ids(day.commemorations), ['sv-pyatra-kaniziya']);
+  assert.deepEqual(ids(day.commemorations), ['sv-peter-canisius']);
   assert.deepEqual(day.alternatives, []);
   assert.equal(day.officeResolution.commemorations[0].mode, 'commemoratio');
   assert.equal(day.readingResolution.primary.lookup[0].where._date, '21.12');
@@ -124,7 +124,7 @@ test('09 17–24 December + saint: commemoration only', () => {
 test('10 Lent weekday + memorial: commemoratio, but a diocesan feast is celebrated', () => {
   const perpetua = resolve('2026-03-07');
   assert.equal(perpetua.primary.kind, 'temporal');
-  assert.deepEqual(ids(perpetua.commemorations), ['sv-perpetui-i-felitsyty']);
+  assert.deepEqual(ids(perpetua.commemorations), ['sv-perpetua-felicity']);
   assert.equal(perpetua.readingResolution.commemorations[0].lookup[0].purpose, 'weekday');
 
   assert.deepEqual(ids(resolve('2026-03-04').commemorations), ['sv-casimir']);
@@ -140,7 +140,7 @@ test('11 Christmas octave', () => {
   const becket = resolve('2026-12-29');
   assert.equal(becket.primary.officeKind, 'christmas-octave');
   assert.equal(becket.officeResolution.primary.teDeum, true);
-  assert.deepEqual(ids(becket.commemorations), ['sv-tomasa-beketa']);
+  assert.deepEqual(ids(becket.commemorations), ['sv-thomas-becket']);
   assert.equal(becket.periodPhase, 'octave');
   const jan2 = resolve('2027-01-02');
   assert.equal(jan2.primary.officeKind, 'memorial'); // outside the octave
@@ -150,7 +150,7 @@ test('12 Easter octave: every day ranks as a solemnity, memorials omitted', () =
   const saturday = resolve('2026-04-11');
   assert.equal(saturday.primary.officeKind, 'easter-octave');
   assert.equal(saturday.primary.precedence, 2);
-  assert.equal(reasonOf(saturday, 'sv-stanislava'), 'impeded-omitted');
+  assert.equal(reasonOf(saturday, 'sv-stanislaus-bishop-martyr'), 'impeded-omitted');
   assert.equal(saturday.officeResolution.primary.teDeum, true);
   assert.equal(saturday.officeResolution.primary.compline, 'sunday-after-first-or-second-vespers');
   const divineMercy = resolve('2026-04-12');
@@ -220,14 +220,14 @@ test('17 diocesan rank override (St Josaphat, 12 November)', () => {
   assert.deepEqual([minsk.primary.officeKind, minsk.primary.precedence], ['feast', 8]);
   assert.deepEqual([grodno.primary.officeKind, grodno.primary.precedence], ['memorial', 10]);
   assert.equal(vitebsk.primary.daysRef._place, 'vitebsk');
-  assert.deepEqual(vitebsk.primary.fallbackDaysRefs[0], { source: 'fixed', _date: '12.11', _rank: 'memoria' });
+  assert.deepEqual(vitebsk.primary.fallbackDaysRefs[0], { source: 'fixed', _date: '12.11', _rank: 'memoria', dayIds: ['12-11-sv-josaphat--martyr-one', '12-11-sv-josaphat--pastors'] });
   assert.ok(vitebsk.appliedRules.some((rule) => rule.rule === 'layer-modification' && rule.id === 'sv-josaphat'));
   assert.equal(resolve('2026-11-11', { ...BY, diocese: 'vitebsk' }).officeResolution.evening.vespers.type, 'first');
 });
 
 test('18 cathedral dedication: feast in the diocese, solemnity in the cathedral', () => {
   const diocese = resolve('2026-10-10', { ...BY, diocese: 'vitebsk' });
-  assert.equal(diocese.primary.id, 'cathedral-dedication-vitebsk');
+  assert.equal(diocese.primary.id, 'vitebsk-cathedral-dedication');
   assert.equal(diocese.primary.officeKind, 'feast');
   const cathedral = resolve('2026-10-10', { ...BY, diocese: 'vitebsk', localChurch: { id: 'vitebsk-cathedral', isCathedral: true } });
   assert.equal(cathedral.primary.officeKind, 'solemnity');
@@ -236,8 +236,8 @@ test('18 cathedral dedication: feast in the diocese, solemnity in the cathedral'
 });
 
 test('19 local titular solemnity and dedication of the own church', () => {
-  const title = resolve('2027-06-13', { ...BY, diocese: 'minsk', localChurch: { titleCelebrationId: 'sv-antoniya-paduanskaha' } });
-  assert.equal(title.primary.id, 'sv-antoniya-paduanskaha');
+  const title = resolve('2027-06-13', { ...BY, diocese: 'minsk', localChurch: { titleCelebrationId: 'sv-anthony-padua' } });
+  assert.equal(title.primary.id, 'sv-anthony-padua');
   assert.equal(title.primary.localRole, 'title-own-church');
   assert.equal(title.primary.precedence, 4); // beats the Sunday of Ordinary Time (row 6)
   const lent = resolve('2026-03-04', { ...BY, localChurch: { titleCelebrationId: 'sv-casimir' } });

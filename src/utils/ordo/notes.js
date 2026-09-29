@@ -14,7 +14,9 @@
  *   { type: 'period-phase', period, phase }
  *   { type: 'period-day', period, week?, dayOfWeek? }          (dayOfWeek: 1 = Sunday)
  *   { type: 'relative' | 'relative-to-celebration', celebrationId, offsetDays }
- *   { type: 'nth-weekday-of-month', weekday, nth, month? }      (weekday: ISO 1 = Mon … 7 = Sun; nth: 1..5 or -1 = last)
+ *   { type: 'nth-weekday-of-month', weekday|isoWeekday, nth, month? } (ISO 1 = Mon … 7 = Sun; nth: 1..5 or -1 = last)
+ *   { type: 'day-of-month', day, months? }
+ *   { type: 'period', period, dayOfWeek? }
  *   { type: 'exact-date', date }
  *   { type: 'all' | 'any', selectors: [...] }, { type: 'not', selector }
  *
@@ -29,10 +31,18 @@ export const ORDO_NOTE_CATEGORIES = Object.freeze([
   'special-prayer-day', 'pastoral-note', 'announcement', 'other',
 ]);
 
+/**
+ * Parser (stage 2) identities that differ from engine ids. Movable codes
+ * (`ash`, `eastersunday` …) match through the candidate's `feastCode`.
+ */
+export const NOTE_CELEBRATION_ALIASES = Object.freeze({
+  'naradzhenne-pana': 'nativity-lord',
+});
+
 function nthWeekdayMatches(iso, selector) {
   const { month, day } = parseIso(iso);
   if (selector.month && Number(selector.month) !== month) return false;
-  if (isoWeekday(iso) !== Number(selector.weekday)) return false;
+  if (isoWeekday(iso) !== Number(selector.weekday ?? selector.isoWeekday)) return false;
   const nth = Number(selector.nth);
   if (nth === -1) return parseIso(addDays(iso, 7)).month !== month;
   return Math.ceil(day / 7) === nth;
@@ -43,7 +53,10 @@ function celebrationIds(day, role = 'celebrated') {
   const add = (item) => {
     if (!item) return;
     ids.add(item.id);
-    if (item.feastCode) ids.add(item.feastCode);
+    if (item.feastCode) {
+      ids.add(item.feastCode);
+      ids.add(String(item.feastCode).replace(/^feast-/, ''));
+    }
   };
   add(day.primary);
   if (role === 'celebrated' || role === 'any') {
@@ -68,10 +81,18 @@ export function matchesSelector(selector, day, dateOfCelebration = () => null) {
     }
     case 'exact-date':
       return selector.date === day.date;
-    case 'celebration':
-      return celebrationIds(day, selector.role).has(selector.celebrationId);
+    case 'celebration': {
+      const id = NOTE_CELEBRATION_ALIASES[selector.celebrationId] || selector.celebrationId;
+      return celebrationIds(day, selector.role).has(id);
+    }
     case 'period':
-      return selector.period === day.period;
+      return selector.period === day.period
+        && (selector.dayOfWeek === undefined || Number(selector.dayOfWeek) === Number(day.dayOfWeek));
+    case 'day-of-month': {
+      const { month, day: dom } = parseIso(day.date);
+      return Number(selector.day) === dom
+        && (!selector.months?.length || selector.months.map(Number).includes(month));
+    }
     case 'period-phase':
       return selector.period === day.period && selector.phase === day.periodPhase;
     case 'period-day':
@@ -80,9 +101,17 @@ export function matchesSelector(selector, day, dateOfCelebration = () => null) {
         && (selector.dayOfWeek === undefined || Number(selector.dayOfWeek) === Number(day.dayOfWeek));
     case 'relative':
     case 'relative-to-celebration': {
-      const found = dateOfCelebration(selector.celebrationId);
+      const id = NOTE_CELEBRATION_ALIASES[selector.celebrationId] || selector.celebrationId;
+      const found = dateOfCelebration(id);
       const dates = Array.isArray(found) ? found : [found].filter(Boolean);
-      return dates.some((date) => addDays(date, Number(selector.offsetDays) || 0) === day.date);
+      const from = Number(selector.offsetDays) || 0;
+      const through = selector.throughOffsetDays === undefined ? from : Number(selector.throughOffsetDays);
+      return dates.some((date) => {
+        for (let offset = Math.min(from, through); offset <= Math.max(from, through); offset += 1) {
+          if (addDays(date, offset) === day.date) return true;
+        }
+        return false;
+      });
     }
     case 'nth-weekday-of-month':
       return nthWeekdayMatches(day.date, selector);

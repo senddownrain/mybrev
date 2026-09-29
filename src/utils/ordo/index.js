@@ -52,13 +52,25 @@ function layerSummary(plan, involvedIds) {
   }));
 }
 
+/** Selector ids that name a day of the temporal cycle rather than a celebration. */
+const ANCHOR_ALIASES = Object.freeze({
+  divinemercy: 'divineMercySunday',
+  eastersunday: 'easterSunday',
+  'easter-sunday': 'easterSunday',
+  holythursday: 'holyThursday',
+  goodfriday: 'goodFriday',
+  holysaturday: 'holySaturday',
+});
+
 function dateOfCelebrationFactory(iso, context) {
   const { year } = parseIso(iso);
   return (celebrationId) => [year - 1, year, year + 1].flatMap((y) => {
     const plan = getYearPlan(y, context);
     const direct = plan.celebrationDates.get(celebrationId);
     if (direct) return [direct.date];
-    const byCode = [...plan.celebrations.values()].find((item) => item.feastCode === celebrationId);
+    if (ANCHOR_ALIASES[celebrationId]) return [plan.anchors[ANCHOR_ALIASES[celebrationId]]];
+    const byCode = [...plan.celebrations.values()].find((item) => item.feastCode === celebrationId
+      || String(item.feastCode || '').replace(/^feast-/, '') === celebrationId);
     const entry = byCode ? plan.celebrationDates.get(byCode.id) : null;
     return entry ? [entry.date] : [];
   });

@@ -9,7 +9,13 @@
  * with `place` form the diocesan layers as `add`/`modify` records.
  */
 import { fixedCalendar, normalizeFixedPlace } from '../../constants/fixedCalendar.js';
+import { FIXED_IDENTITIES } from '../../data/ordo/fixed-identities.js';
 import { normalizeRank } from '../fixedFeasts.js';
+
+/** Generated identity (`patchs/db-feasts` slug + `days` ids) of a fixedCalendar entry. */
+export function fixedIdentityOf(entry) {
+  return FIXED_IDENTITIES[`${entry.date}|${normalizeFixedPlace(entry.place) || '-'}|${entry.title}`] || null;
+}
 
 /**
  * Well-known ids (aligned with `patchs/db-feasts` slugs) and rule metadata.
@@ -135,6 +141,7 @@ function fixedParts(date) {
 
 function buildCelebration(entry, { id, layer, dioceseId, meta }) {
   const rank = meta?.rank || normalizeRank(entry.rank);
+  const dayIds = fixedIdentityOf(entry)?.dayIds || [];
   const category = meta?.category || inferCategory(entry.title);
   const place = normalizeFixedPlace(entry.place);
   return {
@@ -155,6 +162,7 @@ function buildCelebration(entry, { id, layer, dioceseId, meta }) {
       _date: entry.date,
       _rank: normalizeRank(entry.rank),
       ...(place ? { _place: place } : {}),
+      ...(dayIds.length ? { dayIds } : {}),
     },
     readingsRef: { _date: entry.date },
   };
@@ -173,7 +181,7 @@ function buildCatalog() {
   const universal = [];
   fixedCalendar.filter((entry) => !entry.place).forEach((entry) => {
     const meta = findMetadata(entry.date, entry.title);
-    const id = uniqueId(meta?.id || slugifyTitle(entry.title), used);
+    const id = uniqueId(meta?.id || fixedIdentityOf(entry)?.id || slugifyTitle(entry.title), used);
     const layer = meta?.layer || 'universal';
     universal.push(buildCelebration(entry, { id, layer, meta }));
   });
@@ -195,7 +203,10 @@ function buildCatalog() {
       const [date, fragment] = key.split('|');
       return date === entry.date && title.includes(fragment);
     });
-    const base = (replaced && universal.find((item) => item.id === replaced[1])) || sameDate.find((item) => {
+    const identity = fixedIdentityOf(entry);
+    const base = (replaced && universal.find((item) => item.id === replaced[1]))
+      || (identity && universal.find((item) => item.id === identity.id))
+      || sameDate.find((item) => {
       const universalTitle = normalizeCelebrationTitle(item.title).split(',')[0];
       return title === normalizeCelebrationTitle(item.title) || title.startsWith(universalTitle);
     }) || byNormalizedTitle.get(title.split(',')[0]) || null;
@@ -207,7 +218,11 @@ function buildCatalog() {
         title: entry.title,
         properKind,
         daysRef: {
-          source: 'fixed', _date: entry.date, _rank: normalizeRank(entry.rank), _place: dioceseId,
+          source: 'fixed',
+          _date: entry.date,
+          _rank: normalizeRank(entry.rank),
+          _place: dioceseId,
+          ...(identity?.dayIds?.length ? { dayIds: identity.dayIds } : {}),
         },
         fallbackDaysRefs: [base.daysRef],
       };
@@ -217,9 +232,12 @@ function buildCatalog() {
       }
       layer.modify.push({ id: base.id, changes, source: { file: 'src/constants/fixedCalendar.js', rawText: entry.title } });
     } else {
-      const id = uniqueId(properKind === 'cathedral-dedication'
-        ? `cathedral-dedication-${dioceseId}`
-        : `${meta?.id || slugifyTitle(entry.title)}-${dioceseId}`, used);
+      // The same proper celebration keeps one id in every diocese that adds it.
+      const layerIds = new Set(layer.add.map((item) => item.id));
+      const id = uniqueId(identity?.id
+        || (properKind === 'cathedral-dedication'
+          ? `cathedral-dedication-${dioceseId}`
+          : `${meta?.id || slugifyTitle(entry.title)}-${dioceseId}`), layerIds);
       layer.add.push({
         ...buildCelebration(entry, { id, layer: 'diocese', dioceseId, meta }),
         category: properKind === 'cathedral-dedication' ? 'dedication' : (meta?.category || inferCategory(entry.title)),
