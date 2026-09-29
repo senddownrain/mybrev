@@ -1,26 +1,51 @@
 <template>
-  <div class="song-text" :class="{ 'song-text--left': showChords && layout === 'left' }">
+  <div ref="root" class="song-text" :class="{ 'song-text--right': showChords && effectiveLayout === 'right' }" :data-chord-layout="showChords ? effectiveLayout : undefined">
     <div v-for="(line, index) in lines" :key="index" class="song-line">
-      <div v-if="showChords && line.chord" class="song-chords">{{ transposeChordLine(line.chord, transpose, notation, accidentals) }}</div>
       <div class="song-lyrics">{{ line.text || '\u00a0' }}</div>
+      <!-- In the right layout every line keeps its chord cell, so lyric and chord rows stay paired. -->
+      <div v-if="showChords && (line.chord || effectiveLayout === 'right')" class="song-chords">{{ transposeChordLine(line.chord, transpose, notation, accidentals) }}</div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { songLines, transposeChordLine } from '@/utils/songChords';
+import { resolveChordLayout, rightLayoutFits } from '@/utils/songDisplay';
 const props = defineProps({ song: { type: Object, required: true }, showChords: Boolean, layout: { type: String, default: 'above' }, notation: { type: String, default: 'lowercase' }, accidentals: { type: String, default: 'auto' }, transpose: { type: Number, default: 0 } });
+const emit = defineEmits(['right-fits']);
 const lines = computed(() => songLines(props.song));
+const root = ref(null);
+const rightFits = ref(true);
+// Narrow screens (or very large text) render "above" without touching the stored preference.
+const effectiveLayout = computed(() => resolveChordLayout(props.layout, rightFits.value));
+watch(rightFits, (value) => emit('right-fits', value), { immediate: true });
+
+let observer;
+function measure() {
+  const element = root.value;
+  if (!element) return;
+  rightFits.value = rightLayoutFits(element.clientWidth, parseFloat(getComputedStyle(element).fontSize));
+}
+onMounted(() => {
+  measure();
+  if (typeof window.ResizeObserver === 'function') {
+    observer = new window.ResizeObserver(measure);
+    observer.observe(root.value);
+  }
+});
+onBeforeUnmount(() => observer?.disconnect());
 </script>
 
 <style scoped>
 .song-text { font-family: var(--reader-font-family); font-size: calc(1.04rem * var(--font-size-multiplier, 1)); line-height: 1.78; }
-.song-line { min-width: 0; }
+.song-line { display: flex; flex-direction: column; min-width: 0; }
 .song-lyrics { white-space: pre-wrap; overflow-wrap: anywhere; }
-.song-chords { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--devotional-accent); font-family: ui-monospace, monospace; font-size: 0.85em; font-weight: 700; }
-.song-text--left .song-line { display: grid; grid-template-columns: minmax(0, .55fr) minmax(0, 1fr); gap: 16px; }
-.song-text--left .song-lyrics { grid-column: 2; grid-row: 1; }
-.song-text--left .song-chords { grid-column: 1; grid-row: 1; padding-top: 0.15em; }
-@media (max-width: 480px) { .song-text--left .song-line { gap: 10px; grid-template-columns: minmax(0, .65fr) minmax(0, 1fr); } }
+.song-chords { order: -1; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--devotional-accent); font-family: ui-monospace, monospace; font-size: 0.85em; font-weight: 700; }
+/* Right: one shared grid, so the chord column lines up down the whole song and each chord cell sits on its lyric row. */
+/* Lyrics column hugs the longest line (shrinking when space is short); chords follow it, capped at 38%. */
+.song-text--right { display: grid; grid-template-columns: minmax(0, max-content) fit-content(38%); justify-content: start; column-gap: clamp(1.5rem, 6%, 3rem); align-items: baseline; }
+.song-text--right .song-line { display: contents; }
+.song-text--right .song-lyrics { grid-column: 1; }
+.song-text--right .song-chords { order: 0; grid-column: 2; min-width: 0; opacity: .88; }
 </style>

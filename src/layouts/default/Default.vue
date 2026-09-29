@@ -95,7 +95,6 @@
         class="top-action-start"
       />
 
-      <v-btn v-if="route.name === 'Songs'" icon="mdi-cog-outline" class="top-circle-btn top-action-start" variant="flat" aria-label="Налады спеўніка" @click="uiStore.songSettingsOpen = true" />
       <template v-if="isSongViewPage">
         <v-btn :icon="settings.favoriteSongs.includes(route.params.id) ? 'mdi-heart' : 'mdi-heart-outline'" :color="settings.favoriteSongs.includes(route.params.id) ? 'red' : undefined" class="top-circle-btn" variant="flat" :aria-label="settings.favoriteSongs.includes(route.params.id) ? 'Выдаліць з абраных' : 'Дадаць у абраныя'" @click="settings.toggleFavoriteSong(route.params.id)" />
         <v-btn v-if="authStore.isAdmin" icon="mdi-pencil-outline" class="top-circle-btn" variant="flat" aria-label="Рэдагаваць" :to="{ name: 'AdminSongEdit', params: { id: route.params.id } }" />
