@@ -160,7 +160,8 @@ export function daySelector(note, day, catalog) {
     }
   }
   if (/фацімскі\s+дзень|13-ы\s+дзень\s+месяца/i.test(text)) {
-    return { selector: { type: 'day-of-month', day: 13, months: [5, 6, 7, 8, 9, 10] }, basis: 'recurring-pattern', markers };
+    // Pinsk prints the Fatima day on the 13th of every month, not only May–October.
+    return { selector: { type: 'day-of-month', day: 13 }, basis: 'recurring-pattern', markers };
   }
   const primary = day.celebrations.find((c) => c.role === 'primary' && c.identity && c.identity.kind !== 'period');
   if (align.dynamic.length) {

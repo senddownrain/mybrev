@@ -69,7 +69,7 @@ test('fixedCalendar fixes found by stage 2', () => {
   assert.equal(normalizeFixedRank(find('02.11', 'памерлых')[0].rank), 'commemoratio-defunctorum');
   [
     ['27.02', 'Нарэцкага'], ['05.09', 'Калькуты'], ['17.09', 'Хільдэгарды'], ['05.10', 'Фаўстыны'],
-    ['11.10', 'XXIII'], ['09.12', 'Куаўхтлатаацына'], ['10.12', 'Ларэтанскай'], ['12.12', 'Гвадэлупы'],
+    ['11.10', 'XXIII'], ['10.05', 'Авільскага'], ['29.07', 'Лазара'], ['09.12', 'Куаўхтлатаацына'], ['10.12', 'Ларэтанскай'], ['12.12', 'Гвадэлупы'],
   ].forEach(([date, fragment]) => assert.equal(find(date, fragment).length, 1, `${date} ${fragment}`));
   assert.equal(find('06.06', 'Баніфацыя').length, 0, 'Vitebsk keeps St Boniface on 5 June');
   const day = resolveLiturgicalDate('2026-07-22', { diocese: 'vitebsk' });
@@ -100,4 +100,11 @@ test('the real notes.json is accepted as context.notes', () => {
     || note.selector.type === 'fixed-date'));
   const firstFriday = resolveLiturgicalDate('2027-01-01', { diocese: 'vitebsk', notes });
   assert.ok(Array.isArray(firstFriday.ordoNotes));
+});
+
+test('Belarus layer changes are proven in every diocese that prints them', () => {
+  BELARUS_LAYER.modify.filter((entry) => entry.rank).forEach((entry) => {
+    assert.ok(entry.evidence.length >= 3, entry.id);
+    entry.evidence.forEach((itemId) => assert.equal(items.get(itemId)?.rank, entry.rank, itemId));
+  });
 });

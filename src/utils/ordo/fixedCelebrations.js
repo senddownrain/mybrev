@@ -44,7 +44,9 @@ const FIXED_METADATA = Object.freeze({
   '29.09|архангёл': { id: 'archangels-michael-gabriel-raphael', category: 'saint', color: 'albus' },
   '01.11|усіх святых': { id: 'all-saints', category: 'saint', color: 'albus' },
   '02.11|усіх памерлых': {
-    id: 'all-faithful-departed', category: 'dead', precedence: 3, rank: 'commemoratio-defunctorum', color: 'niger',
+    // All four calendars print violet; black is the alternative.
+    id: 'all-faithful-departed', category: 'dead', precedence: 3, rank: 'commemoratio-defunctorum', color: 'violaceus',
+    colorAlternatives: ['niger'],
   },
   // The dedication of the Lateran is kept on a Sunday of Ordinary Time like a feast of the Lord.
   '09.11|латэранскай': { id: 'dedication-lateran-basilica', category: 'lord', color: 'albus' },
@@ -56,6 +58,7 @@ const FIXED_METADATA = Object.freeze({
   '08.12|беззаганнага зачацця': { id: 'immaculate-conception', category: 'mary' },
   // Added to the General Calendar after the `days` import (no db-feasts slug yet).
   '27.02|нарэцкага': { id: 'sv-gregory-narek', category: 'saint' },
+  '10.05|авільскага': { id: 'sv-john-avila', category: 'saint' },
   '05.09|калькуты': { id: 'sv-teresa-calcutta', category: 'saint' },
   '17.09|хільдэгарды': { id: 'sv-hildegard-bingen', category: 'saint' },
   '05.10|фаўстыны': { id: 'sv-faustina-kowalska', category: 'saint' },
@@ -172,6 +175,7 @@ function buildCelebration(entry, { id, layer, dioceseId, meta }) {
     ...(layer !== 'universal' ? { properKind: inferProperKind(entry.title) } : {}),
     ...(meta?.precedence ? { precedence: meta.precedence } : {}),
     color: meta?.color || inferColor(entry.title, category),
+    ...(meta?.colorAlternatives ? { colorAlternatives: meta.colorAlternatives } : {}),
     date: { type: 'fixed', ...fixedParts(entry.date) },
     // Existing identities. `days` fixed documents are selected by
     // `_date` + `_rank` (+ `_place`); readings by `_date` (+ title/rank).

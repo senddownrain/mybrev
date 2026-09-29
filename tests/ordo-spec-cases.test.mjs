@@ -304,8 +304,11 @@ test('24 same date, different dioceses', () => {
   const vitebsk = resolve('2026-11-16', { ...BY, diocese: 'vitebsk' });
   assert.equal(grodno.primary.officeKind, 'solemnity');
   assert.equal(minsk.primary.officeKind, 'memorial');
-  assert.equal(vitebsk.primary.kind, 'temporal');
-  assert.ok(ids(vitebsk.alternatives).includes('our-lady-mother-mercy'));
+  // Ostra Brama is an obligatory memorial in every Belarusian diocese
+  // (Belarus layer, Vitebsk 2025/26), a solemnity in Grodno.
+  assert.equal(vitebsk.primary.id, 'our-lady-mother-mercy');
+  assert.equal(vitebsk.primary.officeKind, 'memorial');
+  assert.ok(resolve('2026-11-16', { country: 'universal' }).primary.kind === 'temporal');
 
   // Pentecost 16 May 2027 impedes the Pinsk patron (proper solemnity). In
   // Pinsk Mary, Mother of the Church is a feast (row 8, Pinsk 2026), which

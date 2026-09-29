@@ -31,7 +31,10 @@ export function temporalColor(season) {
 export function temporalColorAlternatives(season) {
   const rose = season.isSunday && ((season.period === 'advent' && season.periodWeek === 3)
     || (season.period === 'lent' && season.periodWeek === 4));
-  return rose ? ['rosaceus'] : [];
+  if (rose) return ['rosaceus'];
+  // Holy Saturday: the calendars print the colour of the Easter Vigil.
+  if (season.date === season.anchors.holySaturday) return ['albus'];
+  return [];
 }
 
 /** Existing `days` identities of the temporal day. */
@@ -91,6 +94,7 @@ export function celebrationCandidate(placement, status = 'active') {
     temporal: Boolean(celebration.temporal),
     precedence: placement.precedence,
     color: celebration.color || 'albus',
+    ...(celebration.colorAlternatives ? { colorAlternatives: celebration.colorAlternatives } : {}),
     daysRef: celebration.daysRef || null,
     ...(celebration.fallbackDaysRefs ? { fallbackDaysRefs: celebration.fallbackDaysRefs } : {}),
     readingsRef: celebration.readingsRef || null,

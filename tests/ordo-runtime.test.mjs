@@ -154,7 +154,8 @@ test('Compline and Te Deum follow the descriptor flags', () => {
   assert.equal(getCompletoriumWeekday(weekday('2026-04-02'), 5), 1); // Holy Thursday
   assert.equal(getCompletoriumWeekday(weekday('2026-04-07'), 3), 1); // Easter octave
   assert.equal(getCompletoriumWeekday(weekday('2026-07-22'), 4), 4); // feast → weekday
-  assert.equal(getCompletoriumWeekday(weekday('2026-12-29'), 3), 3); // Christmas octave weekday
+  assert.equal(getCompletoriumWeekday(weekday('2026-12-29'), 3), 1); // Christmas octave (Sunday Compline)
+  assert.equal(getCompletoriumWeekday(weekday('2026-11-18'), 4), 4); // ordinary weekday
   assert.equal(complineWeekday('current-weekday', 5), 5);
   assert.equal(shouldShowTeDeum(weekday('2026-01-28')), false); // memorial
   assert.equal(shouldShowTeDeum(weekday('2026-07-22')), true); // feast

@@ -60,9 +60,13 @@ export function hasFirstVespersByRight(candidate, season) {
   return false;
 }
 
+const inChristmasOctave = (season) => season.period === 'christmas' && season.periodPhase === 'octave';
+
 function complineFor(officeKind, season) {
   if (officeKind === 'solemnity' || officeKind === 'sunday' || officeKind === 'triduum') return 'sunday-after-second-vespers';
-  if (officeKind === 'easter-octave') return 'sunday-after-first-or-second-vespers';
+  // Both octaves: Sunday Compline after I or II Vespers (Minsk 26 and 30 Dec
+  // 2025: "Камплета – як пасля І або ІІ Нешпараў на нядзелю").
+  if (officeKind === 'easter-octave' || inChristmasOctave(season)) return 'sunday-after-first-or-second-vespers';
   if (officeKind === 'feast' && season.isSunday) return 'sunday-after-second-vespers';
   return 'current-weekday';
 }
@@ -262,10 +266,17 @@ export function resolveEvening(today, tomorrow) {
   const todayPrimary = today.display.primary;
   const tomorrowPrimary = tomorrow.display.primary;
   const tomorrowHasFirst = hasFirstVespersByRight(tomorrowPrimary, tomorrow.season);
-  const tomorrowWins = tomorrowHasFirst && tomorrowPrimary.precedence < todayPrimary.precedence;
+  // Equal rows: today's Vespers are kept, except that a Sunday always begins
+  // with its I Vespers against a weekday of the same row (Saturday of the
+  // Easter octave → II Sunday of Easter; Vitebsk and Pinsk 11.04.2026).
+  const sundayTie = tomorrowPrimary.precedence === todayPrimary.precedence
+    && tomorrow.season.isSunday && !today.season.isSunday;
+  const tomorrowWins = tomorrowHasFirst && (tomorrowPrimary.precedence < todayPrimary.precedence || sundayTie);
   const todayKind = todayPrimary.officeKind;
+  // Days of both octaves have II Vespers (Vitebsk/Grodno print "ІІ Нешпары"
+  // on 26–31 December; Minsk "Нешпары з актавы").
   const todaySecond = todayKind === 'solemnity' || todayKind === 'sunday' || todayKind === 'easter-octave'
-    || (todayKind === 'feast' && today.season.isSunday);
+    || (todayKind === 'feast' && today.season.isSunday) || inChristmasOctave(today.season);
   const conflict = tomorrowHasFirst
     ? { today: todayPrimary.id, tomorrow: tomorrowPrimary.id, winner: tomorrowWins ? 'tomorrow' : 'today', rule: 'GNLYC 61' }
     : null;

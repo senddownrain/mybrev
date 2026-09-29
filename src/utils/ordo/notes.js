@@ -48,6 +48,26 @@ function nthWeekdayMatches(iso, selector) {
   return Math.ceil(day / 7) === nth;
 }
 
+/**
+ * Period phases: the engine's names plus the stage 2 parser vocabulary
+ * (`before-dec17`, `after-octave`, `ash-wednesday-week`, `holy-thursday`,
+ * `triduum` = Friday/Saturday, `holy-week` = Palm Sunday–Wednesday).
+ */
+function phaseMatches(phase, day) {
+  if (phase === day.periodPhase) return true;
+  const dow = Number(day.dayOfWeek);
+  switch (`${day.period}:${phase}`) {
+    case 'advent:before-dec17': return day.periodPhase === 'advent-weekdays';
+    case 'christmas:after-octave': return day.periodPhase !== 'octave';
+    case 'lent:ash-wednesday-week': return day.periodPhase === 'ash-days';
+    case 'holyweek:holy-week': return dow <= 4 && day.periodPhase !== 'triduum';
+    case 'holyweek:holy-thursday': return dow === 5;
+    case 'holyweek:triduum': return day.periodPhase === 'triduum' && dow >= 6;
+    case 'easter:after-octave': return day.periodPhase !== 'octave';
+    default: return false;
+  }
+}
+
 function celebrationIds(day, role = 'celebrated') {
   const ids = new Set();
   const add = (item) => {
@@ -94,7 +114,7 @@ export function matchesSelector(selector, day, dateOfCelebration = () => null) {
         && (!selector.months?.length || selector.months.map(Number).includes(month));
     }
     case 'period-phase':
-      return selector.period === day.period && selector.phase === day.periodPhase;
+      return selector.period === day.period && phaseMatches(selector.phase, day);
     case 'period-day':
       return selector.period === day.period
         && (selector.week === undefined || Number(selector.week) === Number(day.week))
@@ -135,10 +155,14 @@ export function noteInScope(note, context = {}) {
     case 'belarus':
       return country === 'BY';
     case 'diocese':
-      return Boolean(context.diocese) && normalizeDioceseId(scope.dioceseId) === normalizeDioceseId(context.diocese);
+      return Boolean(context.diocese) && [scope.dioceseId, ...(scope.dioceseIds || [])]
+        .some((id) => id && normalizeDioceseId(id) === normalizeDioceseId(context.diocese));
     case 'local':
-      return Boolean(context.localChurch)
-        && (!scope.localChurchId || scope.localChurchId === context.localChurch.id);
+      if (context.localChurch) return !scope.localChurchId || scope.localChurchId === context.localChurch.id;
+      // Parish-level notes printed by a diocesan calendar ("titular solemnity
+      // in X, Y") are shown to the whole diocese as display notes.
+      return !scope.localChurchId && Boolean(context.diocese) && (scope.dioceseIds || [scope.dioceseId])
+        .some((id) => id && normalizeDioceseId(id) === normalizeDioceseId(context.diocese));
     default:
       return false;
   }

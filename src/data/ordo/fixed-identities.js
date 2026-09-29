@@ -244,7 +244,7 @@ export const FIXED_IDENTITIES = Object.freeze({
   "29.04|-|Св. Кацярыны Сіенскай, панны і доктара Касцёла, апякункі Еўропы": {"id":"sv-catherine-siena","dayIds":["29-04-sv-catherine-siena"]},
   "29.05|-|Св. Паўла VI, папы": {"id":"sv-paul-vi","dayIds":["29-05-sv-paul-vi"]},
   "29.06|-|Св. Пятра і Паўла, апосталаў": {"id":"sv-peter-paul-apostles","dayIds":["29-06-sv-peter-paul-apostles"]},
-  "29.07|-|Св. Марты": {"id":"sv-martha","dayIds":["29-07-sv-martha"]},
+  "29.07|-|Св. Марты, Марыі і Лазара": {"id":"sv-martha","dayIds":["29-07-sv-martha"]},
   "29.08|-|Мучаніцтва св. Яна Хрысціцеля": {"id":"beheading-john-baptist","dayIds":["29-08-beheading-john-baptist"]},
   "29.09|-|Св. Міхала Архангёла, Св. Габрыэля і Рафаіла, архангёлаў": {"id":"archangels-michael-gabriel-raphael","dayIds":["29-09-archangels-michael-gabriel-raphael"]},
   "29.12|-|Св. Томаса Бэкета, біскупа і мучаніка": {"id":"sv-thomas-becket","dayIds":["29-12-sv-thomas-becket"]},
