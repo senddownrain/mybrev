@@ -10,8 +10,7 @@
     </v-alert>
     <v-progress-linear v-else-if="!store.ready" indeterminate aria-label="Загрузка Кампендыя" />
     <template v-else>
-      <CompendiumSearchResults v-if="store.searchQuery.trim()" :results="store.searchResults" />
-      <v-list v-else lines="two" bg-color="transparent" class="prayer-options-list" aria-label="Часткі Кампендыя">
+      <v-list lines="two" bg-color="transparent" class="prayer-options-list" aria-label="Часткі Кампендыя">
         <v-list-item v-for="part in parts" :key="part.id" :to="{ name: 'CompendiumPart', params: { partId: part.id } }" class="prayer-list-item">
           <template #prepend><span class="prayer-list-item__icon-wrap compendium-number">{{ romanNumeral(part.number) }}</span></template>
           <div class="prayers-page-eyebrow compendium-part-label">{{ part.label }}</div>
@@ -22,7 +21,6 @@
       </v-list>
       <div class="compendium-source-note"><CompendiumSource /></div>
     </template>
-    <CompendiumSearchDock />
   </v-container>
 </template>
 <script setup>
@@ -30,8 +28,6 @@ import { computed } from 'vue';
 import { useCompendiumStore } from '@/stores/compendium';
 import { COMPENDIUM_TITLE } from '@/constants/compendium';
 import { romanNumeral } from '@/utils/compendiumData';
-import CompendiumSearchDock from '@/components/compendium/CompendiumSearchDock.vue';
-import CompendiumSearchResults from '@/components/compendium/CompendiumSearchResults.vue';
 import CompendiumSource from '@/components/compendium/CompendiumSource.vue';
 import { useCompendiumScroll } from '@/composables/useCompendiumScroll';
 const store = useCompendiumStore();

@@ -5,24 +5,16 @@
         <div class="prayers-page-eyebrow">{{ outline.part.label }}</div>
         <h1 class="prayers-page-title">{{ outline.part.title }}</h1>
       </header>
-      <section v-for="section in outline.sections" :key="section.id" class="compendium-section" :aria-label="section.title || outline.part.title">
-        <div v-if="section.label" class="compendium-section__label">{{ section.label }}</div>
-        <h2 v-if="section.title" class="compendium-section__title">{{ section.title }}</h2>
-        <div v-for="chapter in section.chapters" :key="chapter.id" class="compendium-chapter">
-          <template v-if="chapter.title">
-            <div class="compendium-chapter__label">{{ chapter.label }}</div>
-            <h3 class="compendium-chapter__title">{{ chapter.title }}</h3>
-          </template>
-          <v-list lines="two" bg-color="transparent" class="prayer-options-list">
-            <template v-for="group in chapter.groups" :key="group.id">
-              <div v-if="group.parentTitle" class="compendium-parent-title">{{ group.parentTitle }}</div>
-              <v-list-item :to="{ name: 'CompendiumTopic', params: { topicId: group.id } }" class="prayer-list-item">
-                <v-list-item-title class="prayer-title-text">{{ group.kind === 'topic' ? group.title : rangeLabel(group) }}</v-list-item-title>
-                <div v-if="group.kind === 'topic'" class="compendium-range">{{ rangeLabel(group) }}</div>
-                <template #append><v-icon class="prayer-list-item__arrow" icon="mdi-chevron-right" size="24" /></template>
-              </v-list-item>
-            </template>
-          </v-list>
+      <!-- Only real source headings are structural nodes; questions printed
+           directly under a heading are plain question rows. -->
+      <section v-for="section in outline.sections" :id="section.id" :key="section.id" class="compendium-section compendium-anchor" :aria-label="section.title">
+        <div class="compendium-section__label">{{ section.label }}</div>
+        <h2 class="compendium-section__title">{{ section.title }}</h2>
+        <CompendiumNodeList :node="section" />
+        <div v-for="chapter in section.chapters" :id="chapter.id" :key="chapter.id" class="compendium-chapter compendium-anchor">
+          <div class="compendium-chapter__label">{{ chapter.label }}</div>
+          <h3 class="compendium-chapter__title">{{ chapter.title }}</h3>
+          <CompendiumNodeList :node="chapter" />
         </div>
       </section>
       <div class="compendium-source-note"><CompendiumSource /></div>
@@ -32,17 +24,26 @@
   </v-container>
 </template>
 <script setup>
-import { computed } from 'vue';
+import { computed, nextTick, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { useCompendiumStore } from '@/stores/compendium';
-import { buildPartOutline } from '@/utils/compendiumData';
+import { buildPartOutline } from '@/utils/compendiumNavigation';
+import CompendiumNodeList from '@/components/compendium/CompendiumNodeList.vue';
 import CompendiumSource from '@/components/compendium/CompendiumSource.vue';
 import { useCompendiumScroll } from '@/composables/useCompendiumScroll';
 const props = defineProps({ partId: { type: String, required: true } });
 const store = useCompendiumStore();
+const route = useRoute();
 const outline = computed(() => (store.index ? buildPartOutline(store.index, props.partId) : null));
-const rangeLabel = (group) => (group.firstQuestion === group.lastQuestion ? `Пытанне ${group.firstQuestion}` : `Пытанні ${group.firstQuestion}–${group.lastQuestion}`);
 store.init();
 useCompendiumScroll();
+// A heading anchor (#p1-s1-ch1) from a context link or a legacy group link:
+// the router scrolls to it when it is rendered; this covers a cold load.
+watch(outline, async (value, previous) => {
+  if (!value || previous || !route.hash || window.history.state?.scroll) return;
+  await nextTick();
+  document.getElementById(route.hash.slice(1))?.scrollIntoView({ block: 'start' });
+}, { immediate: true });
 </script>
 <style scoped src="@/styles/prayers-list.css"></style>
 <style scoped src="@/styles/compendium.css"></style>

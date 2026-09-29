@@ -1,12 +1,12 @@
 <template>
   <v-container class="prayer-view-container compendium-reader">
-    <div v-if="group" class="prayer-content-area">
+    <div v-if="group && !legacyRoute" class="prayer-content-area">
       <article class="prayer-reading-surface">
         <header class="prayer-reading-header">
           <div class="prayer-reading-eyebrow">{{ eyebrow }}</div>
           <div v-if="group.parentTitle" class="compendium-trail">{{ group.parentTitle }}</div>
           <h1 class="prayer-title">{{ title }}</h1>
-          <div class="compendium-trail">{{ rangeLabel }}</div>
+          <div class="compendium-trail">{{ questionRangeLabel(group.firstQuestion, group.lastQuestion) }}</div>
         </header>
         <div v-if="group.leadCitations.length" class="compendium-lead compendium-answer">
           <blockquote v-for="(citation, index) in group.leadCitations" :key="index" class="compendium-citation">{{ citation.text }}</blockquote>
@@ -35,36 +35,44 @@
           </template>
         </div>
         <nav class="compendium-pager" aria-label="Суседнія тэмы">
-          <v-btn v-if="previous" variant="text" class="text-none" prepend-icon="mdi-chevron-left" :to="{ name: 'CompendiumTopic', params: { topicId: previous.id } }">{{ previous.firstQuestion }}–{{ previous.lastQuestion }}</v-btn><span v-else />
-          <v-btn v-if="next" variant="text" class="text-none" append-icon="mdi-chevron-right" :to="{ name: 'CompendiumTopic', params: { topicId: next.id } }">{{ next.firstQuestion }}–{{ next.lastQuestion }}</v-btn>
+          <v-btn v-if="previous" variant="text" class="text-none" prepend-icon="mdi-chevron-left" :to="readingItemRoute(previous)">{{ compactRangeLabel(previous.firstQuestion, previous.lastQuestion) }}</v-btn><span v-else />
+          <v-btn v-if="next" variant="text" class="text-none" append-icon="mdi-chevron-right" :to="readingItemRoute(next)">{{ compactRangeLabel(next.firstQuestion, next.lastQuestion) }}</v-btn>
         </nav>
         <CompendiumSource />
       </article>
     </div>
-    <v-progress-linear v-else-if="!store.ready && !store.error" indeterminate aria-label="Загрузка Кампендыя" />
+    <v-progress-linear v-else-if="legacyRoute || (!store.ready && !store.error)" indeterminate aria-label="Загрузка Кампендыя" />
     <v-alert v-else type="warning">Тэма не знойдзена. <router-link :to="{ name: 'Compendium' }">Да зместу</router-link></v-alert>
   </v-container>
 </template>
 <script setup>
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { PhCaretDown } from '@phosphor-icons/vue';
+import { useRouter } from 'vue-router';
 import { useCompendiumStore } from '@/stores/compendium';
+import { compactRangeLabel, questionRangeLabel, readingItemRoute, readingNeighbours, resolveLegacyTopicRoute } from '@/utils/compendiumNavigation';
 import CompendiumAnswer from '@/components/compendium/CompendiumAnswer.vue';
 import CompendiumSource from '@/components/compendium/CompendiumSource.vue';
 import { useCompendiumScroll } from '@/composables/useCompendiumScroll';
 const props = defineProps({ topicId: { type: String, required: true } });
 const store = useCompendiumStore();
+const router = useRouter();
 const group = computed(() => store.getGroup(props.topicId));
+// Untitled technical groups (`p1-s1-intro`, `p1-s1-ch1`, …) are not topics:
+// old links to them are sent to the question or to its real parent heading.
+const legacyRoute = computed(() => (store.index ? resolveLegacyTopicRoute(store.index, props.topicId) : null));
+watch(legacyRoute, (location) => { if (location) router.replace(location); }, { immediate: true });
 const unit = computed(() => group.value?.unit);
-const eyebrow = computed(() => [unit.value?.partLabel, group.value?.kind === 'topic' ? unit.value?.chapterTitle || unit.value?.sectionTitle : unit.value?.sectionTitle].filter(Boolean).join(' · '));
-const title = computed(() => (group.value?.kind === 'topic' ? group.value.title : unit.value?.chapterTitle || unit.value?.sectionTitle));
-const rangeLabel = computed(() => (group.value.firstQuestion === group.value.lastQuestion ? `Пытанне ${group.value.firstQuestion}` : `Пытанні ${group.value.firstQuestion}–${group.value.lastQuestion}`));
+// Eyebrow: part label · the real heading that contains this topic.
+const eyebrow = computed(() => [unit.value?.partLabel, unit.value?.chapterTitle || unit.value?.sectionTitle].filter(Boolean).join(' · '));
+const title = computed(() => group.value?.title);
 const subtopicStarts = computed(() => new Set((group.value?.questions || [])
   .filter((question, index, list) => question.subtopicTitle && question.subtopicTitle !== list[index - 1]?.subtopicTitle)
   .map((question) => question.number)));
-const position = computed(() => store.index?.groupOrder.indexOf(props.topicId) ?? -1);
-const previous = computed(() => (position.value > 0 ? store.getGroup(store.index.groupOrder[position.value - 1]) : null));
-const next = computed(() => (position.value >= 0 ? store.getGroup(store.index.groupOrder[position.value + 1]) : null));
+// Previous/next reading item: a named topic or a question printed directly under a heading.
+const neighbours = computed(() => (store.index ? readingNeighbours(store.index, props.topicId) : { previous: null, next: null }));
+const previous = computed(() => neighbours.value.previous);
+const next = computed(() => neighbours.value.next);
 store.init();
 useCompendiumScroll();
 </script>

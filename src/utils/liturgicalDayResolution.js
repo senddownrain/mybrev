@@ -32,6 +32,15 @@ const WEEKDAY_FIELD = Object.freeze({
   7: 'saturday',
 });
 
+/** `days` documents retired by a data migration (`_obsolete: true`) are never offered. */
+export function isObsoleteDocument(doc) {
+  return doc?._obsolete === true;
+}
+
+export function withoutObsoleteDocuments(docs) {
+  return (docs || []).filter((doc) => !isObsoleteDocument(doc));
+}
+
 const IDENTITY_FIELDS = new Set([
   'id', '_date', '_feast', '_feastName', '_rank', '_place', '_templates',
   '_currentVersion', '_periodType', '_periodWeekNumber', '_dayOfWeek', '_fromDayFields',

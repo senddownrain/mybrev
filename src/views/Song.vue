@@ -7,13 +7,8 @@
         <h1 class="prayer-title">{{ song.title }}</h1>
         <div v-if="getSongTags(song).length" class="prayer-tags"><v-chip v-for="tag in getSongTags(song)" :key="tag" class="prayer-tag" variant="tonal" size="small">{{ tag }}</v-chip></div>
       </header>
-      <div v-if="settings.songShowChords && song.chord" class="song-transpose-toolbar" role="group" aria-label="Транспанаванне акордаў">
-        <v-btn icon="mdi-minus" variant="tonal" size="small" :disabled="transpose <= -12" aria-label="Панізіць на паўтон" @click="transpose--" />
-        <span aria-live="polite">{{ transpose > 0 ? '+' : '' }}{{ transpose }} паўтонаў</span>
-        <v-btn icon="mdi-plus" variant="tonal" size="small" :disabled="transpose >= 12" aria-label="Павысіць на паўтон" @click="transpose++" />
-        <v-btn variant="text" :disabled="transpose === 0" @click="transpose = 0">Арыгінал</v-btn>
-      </div>
-      <div class="prayer-text"><SongText :song="song" :show-chords="settings.songShowChords && !!song.chord" :layout="settings.songChordLayout" :transpose="transpose" /></div>
+      <SongChordControls v-if="hasChords" v-model:show-chords="settings.songShowChords" v-model:layout="settings.songChordLayout" v-model:transpose="transpose" :layout-available="rightFits" />
+      <div class="prayer-text"><SongText :song="song" :show-chords="settings.songShowChords && hasChords" :layout="settings.songChordLayout" :transpose="transpose" @right-fits="rightFits = $event" /></div>
       <footer v-if="song.source" class="prayer-source"><span class="prayer-source__label">Крыніца:</span><span class="prayer-source__content">{{ song.source }}</span></footer>
       </article>
     </div>
@@ -26,13 +21,18 @@ import { computed, ref, watch } from 'vue';
 import { useSongsStore } from '@/stores/songs';
 import { useSettingsStore } from '@/stores/settings';
 import { getSongTags } from '@/constants/songTags';
+import SongChordControls from '@/components/songs/SongChordControls.vue';
 import SongText from '@/components/songs/SongText.vue';
 import '@/styles/songs.scss';
 const props = defineProps({ id: { type: String, required: true } });
 const store = useSongsStore();
 const settings = useSettingsStore();
 const song = computed(() => store.songs.find((item) => item.id === props.id));
+const hasChords = computed(() => !!song.value?.chord?.trim());
+// Transpose is a per-visit view offset; it is never written to song data.
 const transpose = ref(0);
+// Whether the text is wide enough for chords on the right; reported by SongText.
+const rightFits = ref(true);
 watch(() => props.id, () => { transpose.value = 0; });
 store.init();
 </script>

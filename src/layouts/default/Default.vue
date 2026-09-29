@@ -28,6 +28,15 @@
       >
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
+      <!-- Святая Імша — асобны раздзел праграмы: толькі кнопка меню, без «Назад» -->
+      <v-app-bar-nav-icon
+        v-else-if="isMassPage"
+        class="top-circle-btn"
+        @click.stop="isDrawerOpen = !isDrawerOpen"
+        aria-label="Адкрыць меню"
+      >
+        <v-icon>mdi-menu</v-icon>
+      </v-app-bar-nav-icon>
       <!-- Кнопка назад для страницы просмотра молитвы (не в режиме редактирования) -->
       <div v-else-if="isPrayerViewPage" class="readings-nav-group">
         <v-btn
@@ -95,7 +104,6 @@
         class="top-action-start"
       />
 
-      <v-btn v-if="route.name === 'Songs'" icon="mdi-cog-outline" class="top-circle-btn top-action-start" variant="flat" aria-label="Налады спеўніка" @click="uiStore.songSettingsOpen = true" />
       <template v-if="isSongViewPage">
         <v-btn :icon="settings.favoriteSongs.includes(route.params.id) ? 'mdi-heart' : 'mdi-heart-outline'" :color="settings.favoriteSongs.includes(route.params.id) ? 'red' : undefined" class="top-circle-btn" variant="flat" :aria-label="settings.favoriteSongs.includes(route.params.id) ? 'Выдаліць з абраных' : 'Дадаць у абраныя'" @click="settings.toggleFavoriteSong(route.params.id)" />
         <v-btn v-if="authStore.isAdmin" icon="mdi-pencil-outline" class="top-circle-btn" variant="flat" aria-label="Рэдагаваць" :to="{ name: 'AdminSongEdit', params: { id: route.params.id } }" />
@@ -151,6 +159,7 @@
 
       <!-- Кнопки для страницы просмотра молитвы (не в режиме редактирования) -->
       <template v-else-if="isPrayerViewPage">
+        <MassLanguageMenu v-if="isMassPage" />
         <v-btn
           v-if="authStore.isAdmin"
           icon
@@ -161,7 +170,9 @@
         >
           <v-icon>mdi-pencil-outline</v-icon>
         </v-btn>
+        <!-- Share is for ordinary prayers; the Mass screen has none -->
         <v-btn
+          v-if="!isMassPage"
           icon
           class="top-circle-btn"
           variant="flat"
@@ -234,6 +245,7 @@ import { useUiStore } from '@/stores/ui.js';
 import NavigationDrawer from './NavigationDrawer.vue';
 import TextSettingsSheet from '@/components/TextSettingsSheet.vue';
 import TextScaleControl from '@/components/TextScaleControl.vue';
+import MassLanguageMenu from '@/components/prayers/MassLanguageMenu.vue';
 import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
@@ -241,6 +253,7 @@ import { usePrayers } from '@/composables/usePrayers.js';
 import { useAuthStore } from '@/stores/auth.js';
 import { buildPrayerSharePath, buildPrayerShareUrl, sharePrayerLink } from '@/utils/prayerShare.js';
 import { logger } from '@/utils/logger.js';
+import { MASS_ORDER_PRAYER_ID } from '@/utils/massRitual.js';
 import moment from '@/utils/moment-be';
 
 const { isDrawerOpen } = useAppBar();
@@ -280,6 +293,12 @@ const currentPrayer = computed(() => (
 const isPrayerViewPage = computed(() => {
   return route.name === 'PrayerView' || route.name === 'PrayerEdit';
 });
+
+// The Holy Mass reader is opened from the drawer as its own screen, not as a
+// prayer from the list, so its header has no back/list navigation or Share.
+const isMassPage = computed(() => (
+  route.name === 'PrayerView' && route.params.id === MASS_ORDER_PRAYER_ID && !uiStore.prayerIsEditing
+));
 
 const isPrayerEditPage = computed(() => {
   return route.name === 'PrayerEdit' || route.name === 'PrayerAdd';

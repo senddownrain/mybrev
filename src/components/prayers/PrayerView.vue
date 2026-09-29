@@ -3,10 +3,7 @@
     <div class="prayer-content-area" @click="navigatePrayerLink">
       <article
         class="prayer-reading-surface"
-        :class="{
-          'prayer-reading-surface--mass': isMassOrder,
-          'prayer-reading-surface--mass-strong-responses': isMassOrder && massVariant?.strongMarksResponses,
-        }"
+        :class="{ 'prayer-reading-surface--mass': isMassOrder }"
       >
           <header class="prayer-reading-header">
             <div class="prayer-reading-eyebrow">{{ isMassOrder ? 'Літургія' : 'Малітва' }}</div>
@@ -24,61 +21,7 @@
                 {{ tag }}
               </v-chip>
             </div>
-
-            <div
-              v-if="isMassOrder"
-              class="mass-languages"
-              role="radiogroup"
-              aria-label="Мова святой Імшы"
-            >
-              <button
-                v-for="variant in MASS_RITUAL.variants"
-                :key="variant.language"
-                type="button"
-                role="radio"
-                class="mass-languages__option"
-                :class="{ 'mass-languages__option--active': variant.language === massLanguage }"
-                :aria-checked="variant.language === massLanguage"
-                :lang="variant.language"
-                @click="selectMassLanguage(variant.language)"
-              >
-                {{ variant.label }}
-              </button>
-            </div>
           </header>
-
-          <nav
-            v-if="isMassOrder && massMajorSections.length"
-            ref="massNavElement"
-            class="mass-sections"
-            aria-label="Раздзелы святой Імшы"
-          >
-            <span class="mass-sections__label">Перайсці да раздзела</span>
-            <button
-              v-for="section in massMajorSections"
-              :key="section.sectionId"
-              type="button"
-              class="mass-sections__link"
-              :class="{ 'mass-sections__link--active': section.sectionId === activeMajorSectionId }"
-              :aria-current="section.sectionId === activeMajorSectionId ? 'location' : undefined"
-              @click="scrollToMassSection(section.sectionId)"
-            >
-              {{ section.title }}
-            </button>
-            <div v-if="activeSubsections.length" class="mass-sections__sub" aria-label="Падраздзелы">
-              <button
-                v-for="section in activeSubsections"
-                :key="section.sectionId"
-                type="button"
-                class="mass-sections__link mass-sections__link--sub"
-                :class="{ 'mass-sections__link--active': section.sectionId === activeMassSectionId }"
-                :aria-current="section.sectionId === activeMassSectionId ? 'location' : undefined"
-                @click="scrollToMassSection(section.sectionId)"
-              >
-                {{ section.title }}
-              </button>
-            </div>
-          </nav>
 
           <div
             ref="prayerTextElement"
@@ -86,40 +29,35 @@
             class="prayer-text"
             :lang="isMassOrder && massLanguage !== 'be' ? massLanguage : undefined"
           ></div>
-          <div
-            v-if="isMassOrder && showMassReadingBar"
-            class="mass-reading-bar"
-            role="toolbar"
-            aria-label="Раздзел і мова святой Імшы"
-          >
-            <button
-              type="button"
-              class="mass-reading-bar__section"
-              :aria-label="`Раздзел: ${activeMassSectionTitle}. Паказаць усе раздзелы`"
-              @click="scrollToMassNavigation"
-            >
-              {{ activeMassSectionTitle }}
-            </button>
-            <span class="mass-reading-bar__divider" aria-hidden="true" />
-            <button
-              v-for="variant in MASS_RITUAL.variants"
-              :key="variant.language"
-              type="button"
-              class="mass-reading-bar__language"
-              :class="{ 'mass-reading-bar__language--active': variant.language === massLanguage }"
-              :aria-label="variant.label"
-              :aria-pressed="variant.language === massLanguage"
-              @click="selectMassLanguage(variant.language)"
-            >
-              {{ variant.shortLabel }}
-            </button>
-          </div>
           <footer v-if="displaySource" class="prayer-source">
             <span class="prayer-source__label">Крыніца:</span>
             <span class="prayer-source__content" v-html="sourceHtml" />
           </footer>
       </article>
     </div>
+
+    <!-- Primary navigation inside the Mass: the five canonical sections,
+         always titled in Belarusian whatever the language of the text. -->
+    <nav
+      v-if="isMassOrder"
+      class="mass-dock"
+      aria-label="Раздзелы святой Імшы"
+    >
+      <ol class="mass-dock__items">
+        <li v-for="section in MASS_MAJOR_SECTIONS" :key="section.id" class="mass-dock__cell">
+          <button
+            type="button"
+            class="mass-dock__item"
+            :class="{ 'mass-dock__item--active': section.id === activeMajorSectionId }"
+            :aria-current="section.id === activeMajorSectionId ? 'location' : undefined"
+            :disabled="!locatedMassSectionIds.has(section.id)"
+            @click="scrollToMassSection(section.id)"
+          >
+            <span class="mass-dock__label">{{ section.title }}</span>
+          </button>
+        </li>
+      </ol>
+    </nav>
   </v-container>
 
   <v-container v-else-if="isLoading" class="text-center">
@@ -149,15 +87,16 @@ import {
 } from '@/utils/prayerMarkdown';
 import {
   MASS_LANGUAGE_STORAGE_KEY,
+  MASS_MAJOR_SECTIONS,
   MASS_ORDER_PRAYER_ID,
-  MASS_RITUAL,
   activeMassSectionAt,
-  getMassSection,
+  getMassMajorSectionId,
   getMassVariant,
-  locateMassSections,
+  massSectionFromHash,
   resolveMassLanguage,
   resolveMassSectionTarget,
 } from '@/utils/massRitual';
+import { buildMassDocument, renderMassBlocks } from '@/utils/massContent';
 
 const route = useRoute();
 const router = useRouter();
@@ -165,17 +104,17 @@ const { prayers, isLoading, getTitle, getText } = usePrayers();
 const { notifySuccess } = useNotifier();
 const uiStore = useUiStore();
 const MASS_READING_LINE = 132;
+// Room taken by the fixed section dock when deciding what is still visible.
+const MASS_DOCK_CLEARANCE = 88;
 const bundledMassTexts = {
   'order-of-mass-en.md': () => import('@/data/mass/order-of-mass-en.md?raw'),
 };
 const prayerTextElement = ref(null);
-const massNavElement = ref(null);
-const showMassReadingBar = ref(false);
-const massSections = ref([]);
 const activeMassSectionId = ref(null);
 const massLanguage = ref(resolveMassLanguage(route.query.lang, readStoredMassLanguage()));
 const bundledMassText = ref({});
-let pendingMassSection = null;
+// A `#mass-<section>` link opens the reader at that section.
+let pendingMassSection = massSectionFromHash(route.hash);
 let scrollFrame = 0;
 
 const prayer = computed(() => {
@@ -208,20 +147,22 @@ const displaySource = computed(() => (
     ? massVariantPrayer.value?.source || massVariant.value.source || ''
     : prayer.value?.source || ''
 ));
-const prayerHtml = computed(() => renderPrayerMarkdown(displayText.value, textPrayer.value?.textFormat));
+// Every Mass language goes through the same semantic adapter and renderer, so
+// equal liturgical elements look the same in every language.
+const massDocument = computed(() => (
+  isMassOrder.value
+    ? buildMassDocument(displayText.value, massVariant.value, textPrayer.value?.textFormat)
+    : { blocks: [], sections: [] }
+));
+const prayerHtml = computed(() => (
+  isMassOrder.value
+    ? renderMassBlocks(massDocument.value.blocks, massVariant.value)
+    : renderPrayerMarkdown(displayText.value, textPrayer.value?.textFormat)
+));
 const sourceHtml = computed(() => renderPrayerMarkdown(displaySource.value));
-const massMajorSections = computed(() => massSections.value.filter(section => !section.parent));
-const activeMajorSectionId = computed(() => (
-  getMassSection(activeMassSectionId.value)?.parent || activeMassSectionId.value
-));
-const activeMassSectionTitle = computed(() => (
-  massSections.value.find(section => section.sectionId === activeMassSectionId.value)?.title
-  || massVariant.value?.title
-  || ''
-));
-const activeSubsections = computed(() => massSections.value.filter(section => (
-  section.parent && section.parent === activeMajorSectionId.value
-)));
+const massSections = computed(() => massDocument.value.sections);
+const locatedMassSectionIds = computed(() => new Set(massSections.value.map(section => section.sectionId)));
+const activeMajorSectionId = computed(() => getMassMajorSectionId(activeMassSectionId.value));
 
 const copySuccess = ref(false);
 let copyTimeoutId = null;
@@ -244,6 +185,14 @@ watch(() => route.query.lang, (lang) => {
   switchMassLanguage(lang);
 });
 
+watch(massLanguage, (language) => {
+  uiStore.massLanguage = isMassOrder.value ? language : null;
+}, { immediate: true });
+
+watch(isMassOrder, (isMass) => {
+  uiStore.massLanguage = isMass ? massLanguage.value : null;
+});
+
 watch(massVariant, (variant) => {
   if (!variant?.bundledText || bundledMassText.value[variant.bundledText]) return;
   if (variant.prayerId === MASS_ORDER_PRAYER_ID || massVariantPrayer.value) return;
@@ -257,6 +206,7 @@ onUnmounted(() => {
   window.removeEventListener('scroll', onReaderScroll);
   if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
   uiStore.clearPrayerActions();
+  uiStore.massLanguage = null;
   if (copyTimeoutId) {
     clearTimeout(copyTimeoutId);
   }
@@ -273,12 +223,6 @@ function readStoredMassLanguage() {
   } catch {
     return null;
   }
-}
-
-function selectMassLanguage(language) {
-  if (language === massLanguage.value) return;
-  switchMassLanguage(language);
-  router.replace({ query: { ...route.query, lang: language }, hash: route.hash });
 }
 
 function switchMassLanguage(language) {
@@ -348,32 +292,11 @@ async function copyText() {
 async function updateMassSections() {
   await nextTick();
   if (!isMassOrder.value || !prayerTextElement.value) {
-    massSections.value = [];
     activeMassSectionId.value = null;
     return;
   }
   // A bundled variant may still be loading; keep the pending section for it.
-  if (!displayText.value.trim()) {
-    massSections.value = [];
-    return;
-  }
-
-  const blocks = Array.from(prayerTextElement.value.querySelectorAll('h2, h3, h4, h5, h6, p, aside'));
-  const located = locateMassSections(massVariant.value, blocks.map(block => block.textContent));
-  massSections.value = located.map((section) => {
-    const element = blocks[section.blockIndex];
-    element.id = `mass-${section.sectionId}`;
-    element.tabIndex = -1;
-    element.dataset.massSection = section.sectionId;
-    // Some sources mark sections with a rubric rather than a heading.
-    if (!/^H[2-6]$/.test(element.tagName)) {
-      element.classList.add(section.parent ? 'mass-section-anchor' : 'mass-section-anchor--major');
-    }
-    return section;
-  });
-
-  markMassSpeakerLabels();
-  markStandaloneMassRubrics();
+  if (!displayText.value.trim()) return;
 
   const target = resolveMassSectionTarget(pendingMassSection, massSections.value.map(section => section.sectionId));
   pendingMassSection = null;
@@ -404,14 +327,7 @@ function onReaderScroll() {
   });
 }
 
-function scrollToMassNavigation() {
-  massNavElement.value?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
 function trackActiveMassSection() {
-  // The compact bar replaces the header controls once they leave the screen.
-  showMassReadingBar.value = Boolean(massNavElement.value)
-    && massNavElement.value.getBoundingClientRect().bottom < 0;
   if (!massSections.value.length) {
     activeMassSectionId.value = null;
     return;
@@ -420,51 +336,11 @@ function trackActiveMassSection() {
     sectionId: section.sectionId,
     top: massSectionElement(section.sectionId)?.getBoundingClientRect().top ?? Infinity,
   }));
-  activeMassSectionId.value = activeMassSectionAt(tops, MASS_READING_LINE);
-}
-
-function markMassSpeakerLabels() {
-  const root = prayerTextElement.value;
-  if (!root) return;
-
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-  const textNodes = [];
-  let currentNode = walker.nextNode();
-
-  while (currentNode) {
-    if (!currentNode.parentElement?.matches('.mass-speaker, .mass-rubric-inline')) {
-      textNodes.push(currentNode);
-    }
-    currentNode = walker.nextNode();
-  }
-
-  textNodes.forEach((textNode) => {
-    const parts = textNode.nodeValue.split(/([СCН]\.:|Альбо:|\bOr:)/g);
-    if (parts.length === 1) return;
-
-    const fragment = document.createDocumentFragment();
-    parts.forEach((part) => {
-      if (/^[СCН]\.:$/.test(part) || part === 'Альбо:' || part === 'Or:') {
-        const label = document.createElement('span');
-        label.className = part === 'Альбо:' || part === 'Or:' ? 'mass-rubric-inline' : 'mass-speaker';
-        label.textContent = part;
-        fragment.appendChild(label);
-      } else if (part) {
-        fragment.appendChild(document.createTextNode(part));
-      }
-    });
-    textNode.replaceWith(fragment);
-  });
-}
-
-function markStandaloneMassRubrics() {
-  const rubricPattern = /^(Святар|Народ|Усе|Дыякан|Біскуп|Цэлебрант|Лектар|Псальміст|Кантар)[^.!?]*:$/;
-
-  prayerTextElement.value?.querySelectorAll('p').forEach((paragraph) => {
-    if (rubricPattern.test(paragraph.textContent.trim())) {
-      paragraph.classList.add('mass-rubric-line');
-    }
-  });
+  // The last sections can be too short to reach the reading line; once the
+  // page cannot scroll further, the last heading on screen is the current one.
+  const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+  const readingLine = atBottom ? window.innerHeight - MASS_DOCK_CLEARANCE : MASS_READING_LINE;
+  activeMassSectionId.value = activeMassSectionAt(tops, readingLine);
 }
 
 // Expose for parent components that may use template refs

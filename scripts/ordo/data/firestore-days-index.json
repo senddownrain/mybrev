@@ -1,0 +1,1764 @@
+{
+ "source": {
+  "projectId": "ibreviaryby",
+  "snapshotVersion": "20260929135119096",
+  "scope": "public-rest-field-mask"
+ },
+ "documents": [
+  {
+   "id": "01-01-holy-mary-mother-of-god",
+   "date": "01.01",
+   "places": []
+  },
+  {
+   "id": "01-05-dedication-pinsk-cathedral-diocese",
+   "date": "01.05",
+   "places": [
+    "pinsk"
+   ]
+  },
+  {
+   "id": "01-05-sv-joseph-worker",
+   "date": "01.05",
+   "places": []
+  },
+  {
+   "id": "01-06-sv-justin",
+   "date": "01.06",
+   "places": []
+  },
+  {
+   "id": "01-08-sv-alphonsus-liguori--doctors-of-church",
+   "date": "01.08",
+   "places": []
+  },
+  {
+   "id": "01-08-sv-alphonsus-liguori--pastors",
+   "date": "01.08",
+   "places": []
+  },
+  {
+   "id": "01-10-sv-teresa-lisieux",
+   "date": "01.10",
+   "places": []
+  },
+  {
+   "id": "01-11-all-saints",
+   "date": "01.11",
+   "places": []
+  },
+  {
+   "id": "02-01-sv-basil-gregory-nazianzen--doctors-of-church",
+   "date": "02.01",
+   "places": []
+  },
+  {
+   "id": "02-01-sv-basil-gregory-nazianzen--pastors",
+   "date": "02.01",
+   "places": []
+  },
+  {
+   "id": "02-02-presentation-lord",
+   "date": "02.02",
+   "places": []
+  },
+  {
+   "id": "02-04-sv-francis-paola",
+   "date": "02.04",
+   "places": []
+  },
+  {
+   "id": "02-05-sv-athanasius",
+   "date": "02.05",
+   "places": []
+  },
+  {
+   "id": "02-06-sv-marcellinus-peter",
+   "date": "02.06",
+   "places": []
+  },
+  {
+   "id": "02-07-our-lady-budslav",
+   "date": "02.07",
+   "places": []
+  },
+  {
+   "id": "02-07-our-lady-budslav-minsk",
+   "date": "02.07",
+   "places": [
+    "minsk-mohilev"
+   ]
+  },
+  {
+   "id": "02-07-our-lady-budslav-vitebsk",
+   "date": "02.07",
+   "places": [
+    "vitebsk"
+   ]
+  },
+  {
+   "id": "02-08-sv-eusebius-vercelli",
+   "date": "02.08",
+   "places": []
+  },
+  {
+   "id": "02-08-sv-peter-julian-eymard--pastors",
+   "date": "02.08",
+   "places": []
+  },
+  {
+   "id": "02-08-sv-peter-julian-eymard--religious",
+   "date": "02.08",
+   "places": []
+  },
+  {
+   "id": "02-10-holy-guardian-angels",
+   "date": "02.10",
+   "places": []
+  },
+  {
+   "id": "02-11-all-faithful-departed",
+   "date": "02.11",
+   "places": []
+  },
+  {
+   "id": "03-02-sv-anzgar",
+   "date": "03.02",
+   "places": []
+  },
+  {
+   "id": "03-02-sv-blazej--martyr-one",
+   "date": "03.02",
+   "places": []
+  },
+  {
+   "id": "03-02-sv-blazej--pastors",
+   "date": "03.02",
+   "places": []
+  },
+  {
+   "id": "03-05-sv-philip-james-apostles",
+   "date": "03.05",
+   "places": []
+  },
+  {
+   "id": "03-06-sv-charles-lwanga-companions",
+   "date": "03.06",
+   "places": []
+  },
+  {
+   "id": "03-07-sv-thomas-apostle",
+   "date": "03.07",
+   "places": []
+  },
+  {
+   "id": "03-09-sv-gregory-great--doctors-of-church",
+   "date": "03.09",
+   "places": []
+  },
+  {
+   "id": "03-09-sv-gregory-great--pastors",
+   "date": "03.09",
+   "places": []
+  },
+  {
+   "id": "03-11-sv-martin-de-porres",
+   "date": "03.11",
+   "places": []
+  },
+  {
+   "id": "03-12-sv-francis-xavier",
+   "date": "03.12",
+   "places": []
+  },
+  {
+   "id": "04-03-sv-casimir",
+   "date": "04.03",
+   "places": []
+  },
+  {
+   "id": "04-03-sv-casimir-grodno",
+   "date": "04.03",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "04-04-sv-isidore-seville--doctors-of-church",
+   "date": "04.04",
+   "places": []
+  },
+  {
+   "id": "04-04-sv-isidore-seville--pastors",
+   "date": "04.04",
+   "places": []
+  },
+  {
+   "id": "04-07-sv-elizabeth-portugal",
+   "date": "04.07",
+   "places": []
+  },
+  {
+   "id": "04-08-sv-john-vianney",
+   "date": "04.08",
+   "places": []
+  },
+  {
+   "id": "04-09-bl-maria-stella-companions-grodno--martyrs-many",
+   "date": "04.09",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "04-09-bl-maria-stella-companions-grodno--virgins",
+   "date": "04.09",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "04-10-sv-francis-assisi",
+   "date": "04.10",
+   "places": []
+  },
+  {
+   "id": "04-11-sv-charles-borromeo",
+   "date": "04.11",
+   "places": []
+  },
+  {
+   "id": "04-12-grodno-cathedral-dedication",
+   "date": "04.12",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "04-12-sv-john-damascene--doctors-of-church",
+   "date": "04.12",
+   "places": []
+  },
+  {
+   "id": "04-12-sv-john-damascene--pastors",
+   "date": "04.12",
+   "places": []
+  },
+  {
+   "id": "05-02-sv-agata--martyr-one",
+   "date": "05.02",
+   "places": []
+  },
+  {
+   "id": "05-02-sv-agata--virgins",
+   "date": "05.02",
+   "places": []
+  },
+  {
+   "id": "05-04-sv-vincent-ferrer--educators",
+   "date": "05.04",
+   "places": []
+  },
+  {
+   "id": "05-04-sv-vincent-ferrer--pastors",
+   "date": "05.04",
+   "places": []
+  },
+  {
+   "id": "05-06-sv-boniface--martyr-one",
+   "date": "05.06",
+   "places": []
+  },
+  {
+   "id": "05-06-sv-boniface--pastors",
+   "date": "05.06",
+   "places": []
+  },
+  {
+   "id": "05-06-vitebsk-cathedral-dedication",
+   "date": "05.06",
+   "places": [
+    "vitebsk"
+   ]
+  },
+  {
+   "id": "05-07-our-lady-trakai-grodno",
+   "date": "05.07",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "05-07-our-lady-trakai-grodno-memoria-ad-libitum",
+   "date": "05.07",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "05-07-our-lady-trakai-sanctuary",
+   "date": "05.07",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "05-07-sv-anthony-mary-zaccaria--educators",
+   "date": "05.07",
+   "places": []
+  },
+  {
+   "id": "05-07-sv-anthony-mary-zaccaria--pastors",
+   "date": "05.07",
+   "places": []
+  },
+  {
+   "id": "05-07-sv-anthony-mary-zaccaria--religious",
+   "date": "05.07",
+   "places": []
+  },
+  {
+   "id": "05-08-dedication-st-mary-major",
+   "date": "05.08",
+   "places": []
+  },
+  {
+   "id": "05-08-our-lady-congregational-grodno",
+   "date": "05.08",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "06-01-epiphany-lord",
+   "date": "06.01",
+   "places": []
+  },
+  {
+   "id": "06-02-sv-paul-miki",
+   "date": "06.02",
+   "places": []
+  },
+  {
+   "id": "06-06-sv-boniface-vitebsk--martyr-one",
+   "date": "06.06",
+   "places": [
+    "vitebsk"
+   ]
+  },
+  {
+   "id": "06-06-sv-boniface-vitebsk--pastors",
+   "date": "06.06",
+   "places": [
+    "vitebsk"
+   ]
+  },
+  {
+   "id": "06-06-sv-norbert",
+   "date": "06.06",
+   "places": []
+  },
+  {
+   "id": "06-07-sv-maria-goretti--martyr-one",
+   "date": "06.07",
+   "places": []
+  },
+  {
+   "id": "06-07-sv-maria-goretti--virgins",
+   "date": "06.07",
+   "places": []
+  },
+  {
+   "id": "06-08-transfiguration-lord",
+   "date": "06.08",
+   "places": []
+  },
+  {
+   "id": "06-10-sv-bruno--pastors",
+   "date": "06.10",
+   "places": []
+  },
+  {
+   "id": "06-10-sv-bruno--religious",
+   "date": "06.10",
+   "places": []
+  },
+  {
+   "id": "06-12-sv-nicholas",
+   "date": "06.12",
+   "places": []
+  },
+  {
+   "id": "07-01-sv-raymond-penyafort",
+   "date": "07.01",
+   "places": []
+  },
+  {
+   "id": "07-03-sv-perpetua-felicity",
+   "date": "07.03",
+   "places": []
+  },
+  {
+   "id": "07-04-sv-jean-baptiste-de-la-salle--educators",
+   "date": "07.04",
+   "places": []
+  },
+  {
+   "id": "07-04-sv-jean-baptiste-de-la-salle--pastors",
+   "date": "07.04",
+   "places": []
+  },
+  {
+   "id": "07-08-sv-cajetan--pastors",
+   "date": "07.08",
+   "places": []
+  },
+  {
+   "id": "07-08-sv-cajetan--religious",
+   "date": "07.08",
+   "places": []
+  },
+  {
+   "id": "07-08-sv-sixtus-ii-companions",
+   "date": "07.08",
+   "places": []
+  },
+  {
+   "id": "07-10-our-lady-rosary",
+   "date": "07.10",
+   "places": []
+  },
+  {
+   "id": "07-12-sv-ambrose--doctors-of-church",
+   "date": "07.12",
+   "places": []
+  },
+  {
+   "id": "07-12-sv-ambrose--pastors",
+   "date": "07.12",
+   "places": []
+  },
+  {
+   "id": "08-02-sv-jerome-emiliani",
+   "date": "08.02",
+   "places": []
+  },
+  {
+   "id": "08-02-sv-josephine-bakhita",
+   "date": "08.02",
+   "places": []
+  },
+  {
+   "id": "08-03-sv-john-of-god--religious",
+   "date": "08.03",
+   "places": []
+  },
+  {
+   "id": "08-03-sv-john-of-god--works-of-mercy",
+   "date": "08.03",
+   "places": []
+  },
+  {
+   "id": "08-08-sv-dominic--pastors",
+   "date": "08.08",
+   "places": []
+  },
+  {
+   "id": "08-08-sv-dominic--religious",
+   "date": "08.08",
+   "places": []
+  },
+  {
+   "id": "08-09-nativity-blessed-virgin-mary",
+   "date": "08.09",
+   "places": []
+  },
+  {
+   "id": "08-09-our-lady-braslau-vitebsk",
+   "date": "08.09",
+   "places": [
+    "vitebsk"
+   ]
+  },
+  {
+   "id": "08-12-immaculate-conception",
+   "date": "08.12",
+   "places": []
+  },
+  {
+   "id": "09-03-sv-frances-of-rome",
+   "date": "09.03",
+   "places": []
+  },
+  {
+   "id": "09-06-sv-ephrem",
+   "date": "09.06",
+   "places": []
+  },
+  {
+   "id": "09-07-sv-augustine-zhao-rong-companions",
+   "date": "09.07",
+   "places": []
+  },
+  {
+   "id": "09-08-sv-teresa-benedicta-cross--martyrs-many",
+   "date": "09.08",
+   "places": []
+  },
+  {
+   "id": "09-08-sv-teresa-benedicta-cross--religious",
+   "date": "09.08",
+   "places": []
+  },
+  {
+   "id": "09-09-sv-peter-claver--pastors",
+   "date": "09.09",
+   "places": []
+  },
+  {
+   "id": "09-09-sv-peter-claver--works-of-mercy",
+   "date": "09.09",
+   "places": []
+  },
+  {
+   "id": "09-10-sv-denis-companions",
+   "date": "09.10",
+   "places": []
+  },
+  {
+   "id": "09-10-sv-john-leonardi--pastors",
+   "date": "09.10",
+   "places": []
+  },
+  {
+   "id": "09-10-sv-john-leonardi--works-of-mercy",
+   "date": "09.10",
+   "places": []
+  },
+  {
+   "id": "09-11-dedication-lateran-basilica",
+   "date": "09.11",
+   "places": []
+  },
+  {
+   "id": "10-02-sv-scholastica",
+   "date": "10.02",
+   "places": []
+  },
+  {
+   "id": "10-08-sv-laurentsiya-dyyakana-i-muchanika",
+   "date": "10.08",
+   "places": []
+  },
+  {
+   "id": "10-10-vitebsk-cathedral-dedication",
+   "date": "10.10",
+   "places": [
+    "vitebsk"
+   ]
+  },
+  {
+   "id": "10-11-sv-leo-great--doctors-of-church",
+   "date": "10.11",
+   "places": []
+  },
+  {
+   "id": "10-11-sv-leo-great--pastors",
+   "date": "10.11",
+   "places": []
+  },
+  {
+   "id": "11-02-our-lady-of-lourdes",
+   "date": "11.02",
+   "places": []
+  },
+  {
+   "id": "11-04-sv-stanislaus-bishop-martyr",
+   "date": "11.04",
+   "places": []
+  },
+  {
+   "id": "11-06-sv-barnabas",
+   "date": "11.06",
+   "places": []
+  },
+  {
+   "id": "11-07-sv-benedict",
+   "date": "11.07",
+   "places": []
+  },
+  {
+   "id": "11-08-sv-clare--religious",
+   "date": "11.08",
+   "places": []
+  },
+  {
+   "id": "11-08-sv-clare--virgins",
+   "date": "11.08",
+   "places": []
+  },
+  {
+   "id": "11-11-sv-martin-tours",
+   "date": "11.11",
+   "places": []
+  },
+  {
+   "id": "11-12-sv-damasus-i",
+   "date": "11.12",
+   "places": []
+  },
+  {
+   "id": "12-05-sv-nereus-achilleus",
+   "date": "12.05",
+   "places": []
+  },
+  {
+   "id": "12-05-sv-pancras",
+   "date": "12.05",
+   "places": []
+  },
+  {
+   "id": "12-06-bl-henryk-hlebowicz-grodno",
+   "date": "12.06",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "12-08-sv-jane-frances-de-chantal--holy-women",
+   "date": "12.08",
+   "places": []
+  },
+  {
+   "id": "12-08-sv-jane-frances-de-chantal--religious",
+   "date": "12.08",
+   "places": []
+  },
+  {
+   "id": "12-09-holy-name-mary",
+   "date": "12.09",
+   "places": []
+  },
+  {
+   "id": "12-09-holy-name-mary-minsk-mohilev-pinsk--minsk-mohilev",
+   "date": "12.09",
+   "places": [
+    "minsk-mohilev",
+    "pinsk"
+   ]
+  },
+  {
+   "id": "12-11-sv-josaphat--martyr-one",
+   "date": "12.11",
+   "places": []
+  },
+  {
+   "id": "12-11-sv-josaphat--pastors",
+   "date": "12.11",
+   "places": []
+  },
+  {
+   "id": "12-11-sv-josaphat-minsk-mohilev-pinsk--minsk-mohilev--martyr-one",
+   "date": "12.11",
+   "places": [
+    "minsk-mohilev",
+    "pinsk"
+   ]
+  },
+  {
+   "id": "12-11-sv-josaphat-minsk-mohilev-pinsk--minsk-mohilev--pastors",
+   "date": "12.11",
+   "places": [
+    "minsk-mohilev",
+    "pinsk"
+   ]
+  },
+  {
+   "id": "12-11-sv-josaphat-vitebsk--martyr-one",
+   "date": "12.11",
+   "places": [
+    "vitebsk"
+   ]
+  },
+  {
+   "id": "12-11-sv-josaphat-vitebsk--pastors",
+   "date": "12.11",
+   "places": [
+    "vitebsk"
+   ]
+  },
+  {
+   "id": "13-01-sv-hilary--doctors-of-church",
+   "date": "13.01",
+   "places": []
+  },
+  {
+   "id": "13-01-sv-hilary--pastors",
+   "date": "13.01",
+   "places": []
+  },
+  {
+   "id": "13-04-sv-martin-i-pope-martyr",
+   "date": "13.04",
+   "places": []
+  },
+  {
+   "id": "13-05-our-lady-of-fatima",
+   "date": "13.05",
+   "places": []
+  },
+  {
+   "id": "13-06-sv-anthony-padua--doctors-of-church",
+   "date": "13.06",
+   "places": []
+  },
+  {
+   "id": "13-06-sv-anthony-padua--pastors",
+   "date": "13.06",
+   "places": []
+  },
+  {
+   "id": "13-06-sv-anthony-padua--religious",
+   "date": "13.06",
+   "places": []
+  },
+  {
+   "id": "13-07-sv-henry",
+   "date": "13.07",
+   "places": []
+  },
+  {
+   "id": "13-08-sv-pontian-hippolytus--martyrs-many",
+   "date": "13.08",
+   "places": []
+  },
+  {
+   "id": "13-08-sv-pontian-hippolytus--pastors",
+   "date": "13.08",
+   "places": []
+  },
+  {
+   "id": "13-09-sv-john-chrysostom--doctors-of-church",
+   "date": "13.09",
+   "places": []
+  },
+  {
+   "id": "13-09-sv-john-chrysostom--pastors",
+   "date": "13.09",
+   "places": []
+  },
+  {
+   "id": "13-12-sv-lucy--martyrs-many",
+   "date": "13.12",
+   "places": []
+  },
+  {
+   "id": "13-12-sv-lucy--virgins",
+   "date": "13.12",
+   "places": []
+  },
+  {
+   "id": "14-02-sv-cyril-methodius",
+   "date": "14.02",
+   "places": []
+  },
+  {
+   "id": "14-05-sv-matthias",
+   "date": "14.05",
+   "places": []
+  },
+  {
+   "id": "14-07-sv-camillus-de-lellis",
+   "date": "14.07",
+   "places": []
+  },
+  {
+   "id": "14-08-sv-maximilian-kolbe--martyr-one",
+   "date": "14.08",
+   "places": []
+  },
+  {
+   "id": "14-08-sv-maximilian-kolbe--pastors",
+   "date": "14.08",
+   "places": []
+  },
+  {
+   "id": "14-08-sv-maximilian-kolbe-grodno--martyr-one",
+   "date": "14.08",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "14-08-sv-maximilian-kolbe-grodno--pastors",
+   "date": "14.08",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "14-09-exaltation-holy-cross",
+   "date": "14.09",
+   "places": []
+  },
+  {
+   "id": "14-10-sv-callistus-i--martyr-one",
+   "date": "14.10",
+   "places": []
+  },
+  {
+   "id": "14-10-sv-callistus-i--pastors",
+   "date": "14.10",
+   "places": []
+  },
+  {
+   "id": "14-12-sv-john-cross--doctors-of-church",
+   "date": "14.12",
+   "places": []
+  },
+  {
+   "id": "14-12-sv-john-cross--pastors",
+   "date": "14.12",
+   "places": []
+  },
+  {
+   "id": "15-02-bl-michal-sopocko-grodno",
+   "date": "15.02",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "15-07-sv-bonaventure--doctors-of-church",
+   "date": "15.07",
+   "places": []
+  },
+  {
+   "id": "15-07-sv-bonaventure--pastors",
+   "date": "15.07",
+   "places": []
+  },
+  {
+   "id": "15-08-assumption-blessed-virgin-mary",
+   "date": "15.08",
+   "places": []
+  },
+  {
+   "id": "15-09-our-lady-sorrows",
+   "date": "15.09",
+   "places": []
+  },
+  {
+   "id": "15-10-sv-teresa-of-jesus",
+   "date": "15.10",
+   "places": []
+  },
+  {
+   "id": "15-11-sv-albert-great--doctors-of-church",
+   "date": "15.11",
+   "places": []
+  },
+  {
+   "id": "15-11-sv-albert-great--pastors",
+   "date": "15.11",
+   "places": []
+  },
+  {
+   "id": "16-03-minsk-mohilev-cathedral-dedication",
+   "date": "16.03",
+   "places": [
+    "minsk-mohilev"
+   ]
+  },
+  {
+   "id": "16-05-sv-andrei-bobola",
+   "date": "16.05",
+   "places": []
+  },
+  {
+   "id": "16-05-sv-andrei-bobola-minsk-mohilev",
+   "date": "16.05",
+   "places": [
+    "minsk-mohilev",
+    "vitebsk"
+   ]
+  },
+  {
+   "id": "16-05-sv-andrei-bobola-pinsk",
+   "date": "16.05",
+   "places": [
+    "pinsk"
+   ]
+  },
+  {
+   "id": "16-07-our-lady-mount-carmel",
+   "date": "16.07",
+   "places": []
+  },
+  {
+   "id": "16-07-our-lady-mount-carmel--minsk-mohilev",
+   "date": "16.07",
+   "places": [
+    "minsk-mohilev",
+    "pinsk"
+   ]
+  },
+  {
+   "id": "16-08-sv-stephen-hungary",
+   "date": "16.08",
+   "places": []
+  },
+  {
+   "id": "16-09-sv-cornelius-cyprian--martyrs-many",
+   "date": "16.09",
+   "places": []
+  },
+  {
+   "id": "16-09-sv-cornelius-cyprian--pastors",
+   "date": "16.09",
+   "places": []
+  },
+  {
+   "id": "16-10-sv-hedwig--religious",
+   "date": "16.10",
+   "places": []
+  },
+  {
+   "id": "16-10-sv-hedwig--works-of-mercy",
+   "date": "16.10",
+   "places": []
+  },
+  {
+   "id": "16-10-sv-margaret-mary-alacoque--religious",
+   "date": "16.10",
+   "places": []
+  },
+  {
+   "id": "16-10-sv-margaret-mary-alacoque--virgins",
+   "date": "16.10",
+   "places": []
+  },
+  {
+   "id": "16-11-our-lady-mother-mercy",
+   "date": "16.11",
+   "places": []
+  },
+  {
+   "id": "16-11-our-lady-mother-mercy-grodno",
+   "date": "16.11",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "16-11-our-lady-mother-mercy-minsk-mohilev-pinsk--minsk-mohilev",
+   "date": "16.11",
+   "places": [
+    "minsk-mohilev",
+    "pinsk"
+   ]
+  },
+  {
+   "id": "16-11-sv-gertrude--religious",
+   "date": "16.11",
+   "places": []
+  },
+  {
+   "id": "16-11-sv-gertrude--virgins",
+   "date": "16.11",
+   "places": []
+  },
+  {
+   "id": "16-11-sv-margaret-scotland",
+   "date": "16.11",
+   "places": []
+  },
+  {
+   "id": "17-01-sv-antoni",
+   "date": "17.01",
+   "places": []
+  },
+  {
+   "id": "17-02-seven-servite-founders",
+   "date": "17.02",
+   "places": []
+  },
+  {
+   "id": "17-03-sv-patryk",
+   "date": "17.03",
+   "places": []
+  },
+  {
+   "id": "17-09-sv-robert-bellarmine--doctors-of-church",
+   "date": "17.09",
+   "places": []
+  },
+  {
+   "id": "17-09-sv-robert-bellarmine--pastors",
+   "date": "17.09",
+   "places": []
+  },
+  {
+   "id": "17-10-sv-ignatius-antioch--martyr-one",
+   "date": "17.10",
+   "places": []
+  },
+  {
+   "id": "17-10-sv-ignatius-antioch--pastors",
+   "date": "17.10",
+   "places": []
+  },
+  {
+   "id": "17-11-sv-elizabeth-hungary",
+   "date": "17.11",
+   "places": []
+  },
+  {
+   "id": "18-03-sv-cyril-jerusalem--doctors-of-church",
+   "date": "18.03",
+   "places": []
+  },
+  {
+   "id": "18-03-sv-cyril-jerusalem--pastors",
+   "date": "18.03",
+   "places": []
+  },
+  {
+   "id": "18-05-sv-john-i--martyr-one",
+   "date": "18.05",
+   "places": []
+  },
+  {
+   "id": "18-05-sv-john-i--pastors",
+   "date": "18.05",
+   "places": []
+  },
+  {
+   "id": "18-09-sv-stanislaus-kostka--grodno",
+   "date": "18.09",
+   "places": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk"
+   ]
+  },
+  {
+   "id": "18-10-sv-luke-evangelist",
+   "date": "18.10",
+   "places": []
+  },
+  {
+   "id": "18-11-dedication-basilicas-peter-paul",
+   "date": "18.11",
+   "places": []
+  },
+  {
+   "id": "19-03-sv-joseph",
+   "date": "19.03",
+   "places": []
+  },
+  {
+   "id": "19-06-sv-romuald",
+   "date": "19.06",
+   "places": []
+  },
+  {
+   "id": "19-08-sv-john-eudes--pastors",
+   "date": "19.08",
+   "places": []
+  },
+  {
+   "id": "19-08-sv-john-eudes--religious",
+   "date": "19.08",
+   "places": []
+  },
+  {
+   "id": "19-09-sv-januarius--martyr-one",
+   "date": "19.09",
+   "places": []
+  },
+  {
+   "id": "19-09-sv-januarius--pastors",
+   "date": "19.09",
+   "places": []
+  },
+  {
+   "id": "19-10-sv-jean-brebeuf-isaac-jogues-companions--martyrs-many",
+   "date": "19.10",
+   "places": []
+  },
+  {
+   "id": "19-10-sv-jean-brebeuf-isaac-jogues-companions--pastors",
+   "date": "19.10",
+   "places": []
+  },
+  {
+   "id": "19-10-sv-paul-of-cross--pastors",
+   "date": "19.10",
+   "places": []
+  },
+  {
+   "id": "19-10-sv-paul-of-cross--religious",
+   "date": "19.10",
+   "places": []
+  },
+  {
+   "id": "20-01-sv-fabian--martyr-one",
+   "date": "20.01",
+   "places": []
+  },
+  {
+   "id": "20-01-sv-fabian--pastors",
+   "date": "20.01",
+   "places": []
+  },
+  {
+   "id": "20-01-sv-sebastian",
+   "date": "20.01",
+   "places": []
+  },
+  {
+   "id": "20-05-sv-bernardine-of-siena--pastors",
+   "date": "20.05",
+   "places": []
+  },
+  {
+   "id": "20-05-sv-bernardine-of-siena--religious",
+   "date": "20.05",
+   "places": []
+  },
+  {
+   "id": "20-07-sv-apollinaris--martyr-one",
+   "date": "20.07",
+   "places": []
+  },
+  {
+   "id": "20-07-sv-apollinaris--pastors",
+   "date": "20.07",
+   "places": []
+  },
+  {
+   "id": "20-08-sv-bernard--doctors-of-church",
+   "date": "20.08",
+   "places": []
+  },
+  {
+   "id": "20-08-sv-bernard--religious",
+   "date": "20.08",
+   "places": []
+  },
+  {
+   "id": "20-09-sv-andrew-kim-taegon-paul-chong-hasang-companions",
+   "date": "20.09",
+   "places": []
+  },
+  {
+   "id": "20-11-sv-raphael-kalinowski",
+   "date": "20.11",
+   "places": []
+  },
+  {
+   "id": "21-01-sv-agnes--martyr-one",
+   "date": "21.01",
+   "places": []
+  },
+  {
+   "id": "21-01-sv-agnes--virgins",
+   "date": "21.01",
+   "places": []
+  },
+  {
+   "id": "21-02-sv-peter-damian--doctors-of-church",
+   "date": "21.02",
+   "places": []
+  },
+  {
+   "id": "21-02-sv-peter-damian--pastors",
+   "date": "21.02",
+   "places": []
+  },
+  {
+   "id": "21-04-sv-anselm--doctors-of-church",
+   "date": "21.04",
+   "places": []
+  },
+  {
+   "id": "21-04-sv-anselm--pastors",
+   "date": "21.04",
+   "places": []
+  },
+  {
+   "id": "21-05-sv-christopher-magallanes-companions--martyrs-many",
+   "date": "21.05",
+   "places": []
+  },
+  {
+   "id": "21-05-sv-christopher-magallanes-companions--pastors",
+   "date": "21.05",
+   "places": []
+  },
+  {
+   "id": "21-06-sv-aloysius-gonzaga",
+   "date": "21.06",
+   "places": []
+  },
+  {
+   "id": "21-07-sv-lawrence-brindisi--doctors-of-church",
+   "date": "21.07",
+   "places": []
+  },
+  {
+   "id": "21-07-sv-lawrence-brindisi--pastors",
+   "date": "21.07",
+   "places": []
+  },
+  {
+   "id": "21-08-sv-pius-x",
+   "date": "21.08",
+   "places": []
+  },
+  {
+   "id": "21-09-sv-matthew",
+   "date": "21.09",
+   "places": []
+  },
+  {
+   "id": "21-11-presentation-blessed-virgin-mary",
+   "date": "21.11",
+   "places": []
+  },
+  {
+   "id": "21-12-sv-peter-canisius",
+   "date": "21.12",
+   "places": []
+  },
+  {
+   "id": "22-01-sv-vincent",
+   "date": "22.01",
+   "places": []
+  },
+  {
+   "id": "22-02-chair-of-saint-peter",
+   "date": "22.02",
+   "places": []
+  },
+  {
+   "id": "22-05-sv-rita-cascia",
+   "date": "22.05",
+   "places": []
+  },
+  {
+   "id": "22-06-sv-john-fisher-thomas-more",
+   "date": "22.06",
+   "places": []
+  },
+  {
+   "id": "22-06-sv-paulinus-nola",
+   "date": "22.06",
+   "places": []
+  },
+  {
+   "id": "22-07-sv-mary-magdalene",
+   "date": "22.07",
+   "places": []
+  },
+  {
+   "id": "22-08-our-lady-queen",
+   "date": "22.08",
+   "places": []
+  },
+  {
+   "id": "22-10-sv-john-paul-ii",
+   "date": "22.10",
+   "places": []
+  },
+  {
+   "id": "22-11-sv-cecilia--martyr-one",
+   "date": "22.11",
+   "places": []
+  },
+  {
+   "id": "22-11-sv-cecilia--virgins",
+   "date": "22.11",
+   "places": []
+  },
+  {
+   "id": "23-02-sv-polycarp--martyr-one",
+   "date": "23.02",
+   "places": []
+  },
+  {
+   "id": "23-02-sv-polycarp--pastors",
+   "date": "23.02",
+   "places": []
+  },
+  {
+   "id": "23-03-sv-turybius-mongrovejo",
+   "date": "23.03",
+   "places": []
+  },
+  {
+   "id": "23-04-sv-adalbert-wojciech-bishop-martyr--martyr-one",
+   "date": "23.04",
+   "places": []
+  },
+  {
+   "id": "23-04-sv-adalbert-wojciech-bishop-martyr--pastors",
+   "date": "23.04",
+   "places": []
+  },
+  {
+   "id": "23-04-sv-george-martyr",
+   "date": "23.04",
+   "places": []
+  },
+  {
+   "id": "23-07-sv-bridget",
+   "date": "23.07",
+   "places": []
+  },
+  {
+   "id": "23-08-sv-rose-of-lima--religious",
+   "date": "23.08",
+   "places": []
+  },
+  {
+   "id": "23-08-sv-rose-of-lima--virgins",
+   "date": "23.08",
+   "places": []
+  },
+  {
+   "id": "23-09-sv-pio-pietrelcina--pastors",
+   "date": "23.09",
+   "places": []
+  },
+  {
+   "id": "23-09-sv-pio-pietrelcina--religious",
+   "date": "23.09",
+   "places": []
+  },
+  {
+   "id": "23-10-sv-john-capistrano",
+   "date": "23.10",
+   "places": []
+  },
+  {
+   "id": "23-11-sv-clement-i--martyr-one",
+   "date": "23.11",
+   "places": []
+  },
+  {
+   "id": "23-11-sv-clement-i--pastors",
+   "date": "23.11",
+   "places": []
+  },
+  {
+   "id": "23-11-sv-columban--pastors",
+   "date": "23.11",
+   "places": []
+  },
+  {
+   "id": "23-11-sv-columban--religious",
+   "date": "23.11",
+   "places": []
+  },
+  {
+   "id": "23-12-sv-john-kenty",
+   "date": "23.12",
+   "places": []
+  },
+  {
+   "id": "24-01-sv-francis-de-sales--doctors-of-church",
+   "date": "24.01",
+   "places": []
+  },
+  {
+   "id": "24-01-sv-francis-de-sales--pastors",
+   "date": "24.01",
+   "places": []
+  },
+  {
+   "id": "24-04-sv-fidel-sigmaringen--martyr-one",
+   "date": "24.04",
+   "places": []
+  },
+  {
+   "id": "24-04-sv-fidel-sigmaringen--pastors",
+   "date": "24.04",
+   "places": []
+  },
+  {
+   "id": "24-06-nativity-john-baptist",
+   "date": "24.06",
+   "places": []
+  },
+  {
+   "id": "24-07-sv-charbel-makhlouf--holy-men",
+   "date": "24.07",
+   "places": []
+  },
+  {
+   "id": "24-07-sv-charbel-makhlouf--pastors",
+   "date": "24.07",
+   "places": []
+  },
+  {
+   "id": "24-08-sv-bartholomew",
+   "date": "24.08",
+   "places": []
+  },
+  {
+   "id": "24-10-sv-anthony-mary-claret",
+   "date": "24.10",
+   "places": []
+  },
+  {
+   "id": "24-11-sv-andrew-dung-lac-companions",
+   "date": "24.11",
+   "places": []
+  },
+  {
+   "id": "25-01-conversion-saint-paul",
+   "date": "25.01",
+   "places": []
+  },
+  {
+   "id": "25-03-annunciation-lord",
+   "date": "25.03",
+   "places": []
+  },
+  {
+   "id": "25-04-sv-mark-evangelist",
+   "date": "25.04",
+   "places": []
+  },
+  {
+   "id": "25-05-sv-bede--doctors-of-church",
+   "date": "25.05",
+   "places": []
+  },
+  {
+   "id": "25-05-sv-bede--religious",
+   "date": "25.05",
+   "places": []
+  },
+  {
+   "id": "25-05-sv-gregory-vii",
+   "date": "25.05",
+   "places": []
+  },
+  {
+   "id": "25-05-sv-maria-magdalena-de-pazzi--religious",
+   "date": "25.05",
+   "places": []
+  },
+  {
+   "id": "25-05-sv-maria-magdalena-de-pazzi--virgins",
+   "date": "25.05",
+   "places": []
+  },
+  {
+   "id": "25-07-sv-james-apostle",
+   "date": "25.07",
+   "places": []
+  },
+  {
+   "id": "25-08-sv-joseph-calasanz--educators",
+   "date": "25.08",
+   "places": []
+  },
+  {
+   "id": "25-08-sv-joseph-calasanz--pastors",
+   "date": "25.08",
+   "places": []
+  },
+  {
+   "id": "25-08-sv-louis",
+   "date": "25.08",
+   "places": []
+  },
+  {
+   "id": "25-11-sv-catherine-alexandria--martyr-one",
+   "date": "25.11",
+   "places": []
+  },
+  {
+   "id": "25-11-sv-catherine-alexandria--virgins",
+   "date": "25.11",
+   "places": []
+  },
+  {
+   "id": "25-12-naradzhenne-pana",
+   "date": "25.12",
+   "places": []
+  },
+  {
+   "id": "26-01-sv-timothy-titus",
+   "date": "26.01",
+   "places": []
+  },
+  {
+   "id": "26-05-sv-philip-neri--pastors",
+   "date": "26.05",
+   "places": []
+  },
+  {
+   "id": "26-05-sv-philip-neri--religious",
+   "date": "26.05",
+   "places": []
+  },
+  {
+   "id": "26-07-sv-joachim-anne",
+   "date": "26.07",
+   "places": []
+  },
+  {
+   "id": "26-08-our-lady-czestochowa--grodno",
+   "date": "26.08",
+   "places": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk"
+   ]
+  },
+  {
+   "id": "26-09-sv-cosmas-damian",
+   "date": "26.09",
+   "places": []
+  },
+  {
+   "id": "26-10-bl-celina-borzecka-grodno",
+   "date": "26.10",
+   "places": [
+    "grodno"
+   ]
+  },
+  {
+   "id": "26-12-sv-stephen-protomartyr",
+   "date": "26.12",
+   "places": []
+  },
+  {
+   "id": "27-01-bl-jurgis-matulaitis",
+   "date": "27.01",
+   "places": []
+  },
+  {
+   "id": "27-01-bl-jurgis-matulaitis-vitebsk",
+   "date": "27.01",
+   "places": [
+    "vitebsk"
+   ]
+  },
+  {
+   "id": "27-01-sv-angela-merici--educators",
+   "date": "27.01",
+   "places": []
+  },
+  {
+   "id": "27-01-sv-angela-merici--virgins",
+   "date": "27.01",
+   "places": []
+  },
+  {
+   "id": "27-05-sv-augustine-of-canterbury",
+   "date": "27.05",
+   "places": []
+  },
+  {
+   "id": "27-06-sv-cyril-alexandrian--doctors-of-church",
+   "date": "27.06",
+   "places": []
+  },
+  {
+   "id": "27-06-sv-cyril-alexandrian--pastors",
+   "date": "27.06",
+   "places": []
+  },
+  {
+   "id": "27-08-sv-monica",
+   "date": "27.08",
+   "places": []
+  },
+  {
+   "id": "27-09-sv-vincent-de-paul--pastors",
+   "date": "27.09",
+   "places": []
+  },
+  {
+   "id": "27-09-sv-vincent-de-paul--works-of-mercy",
+   "date": "27.09",
+   "places": []
+  },
+  {
+   "id": "27-12-sv-john-apostle-evangelist",
+   "date": "27.12",
+   "places": []
+  },
+  {
+   "id": "28-01-sv-thomas-aquinas",
+   "date": "28.01",
+   "places": []
+  },
+  {
+   "id": "28-04-sv-louis-marie-grignion-de-montfort--holy-men",
+   "date": "28.04",
+   "places": []
+  },
+  {
+   "id": "28-04-sv-louis-marie-grignion-de-montfort--pastors",
+   "date": "28.04",
+   "places": []
+  },
+  {
+   "id": "28-04-sv-peter-chanel",
+   "date": "28.04",
+   "places": []
+  },
+  {
+   "id": "28-06-sv-irenaeus--martyr-one",
+   "date": "28.06",
+   "places": []
+  },
+  {
+   "id": "28-06-sv-irenaeus--pastors",
+   "date": "28.06",
+   "places": []
+  },
+  {
+   "id": "28-08-sv-augustine--doctors-of-church",
+   "date": "28.08",
+   "places": []
+  },
+  {
+   "id": "28-08-sv-augustine--pastors",
+   "date": "28.08",
+   "places": []
+  },
+  {
+   "id": "28-09-sv-laurence-ruiz-companions",
+   "date": "28.09",
+   "places": []
+  },
+  {
+   "id": "28-09-sv-wenceslaus",
+   "date": "28.09",
+   "places": []
+  },
+  {
+   "id": "28-10-sv-simon-jude-apostles",
+   "date": "28.10",
+   "places": []
+  },
+  {
+   "id": "28-12-holy-innocents",
+   "date": "28.12",
+   "places": []
+  },
+  {
+   "id": "29-01-bl-boleslawa-lament--martyr-one",
+   "date": "29.01",
+   "places": []
+  },
+  {
+   "id": "29-01-bl-boleslawa-lament--virgins",
+   "date": "29.01",
+   "places": []
+  },
+  {
+   "id": "29-04-sv-catherine-siena",
+   "date": "29.04",
+   "places": []
+  },
+  {
+   "id": "29-05-sv-paul-vi",
+   "date": "29.05",
+   "places": []
+  },
+  {
+   "id": "29-06-sv-peter-paul-apostles",
+   "date": "29.06",
+   "places": []
+  },
+  {
+   "id": "29-07-sv-martha",
+   "date": "29.07",
+   "places": []
+  },
+  {
+   "id": "29-08-beheading-john-baptist",
+   "date": "29.08",
+   "places": []
+  },
+  {
+   "id": "29-09-archangels-michael-gabriel-raphael",
+   "date": "29.09",
+   "places": []
+  },
+  {
+   "id": "29-12-sv-thomas-becket",
+   "date": "29.12",
+   "places": []
+  },
+  {
+   "id": "30-04-sv-pius-v-pope",
+   "date": "30.04",
+   "places": []
+  },
+  {
+   "id": "30-06-holy-roman-protomartyrs",
+   "date": "30.06",
+   "places": []
+  },
+  {
+   "id": "30-07-sv-peter-chrysologus--doctors-of-church",
+   "date": "30.07",
+   "places": []
+  },
+  {
+   "id": "30-07-sv-peter-chrysologus--pastors",
+   "date": "30.07",
+   "places": []
+  },
+  {
+   "id": "30-09-sv-jerome",
+   "date": "30.09",
+   "places": []
+  },
+  {
+   "id": "30-11-sv-andrew-apostle",
+   "date": "30.11",
+   "places": []
+  },
+  {
+   "id": "31-01-sv-john-bosco--educators",
+   "date": "31.01",
+   "places": []
+  },
+  {
+   "id": "31-01-sv-john-bosco--pastors",
+   "date": "31.01",
+   "places": []
+  },
+  {
+   "id": "31-05-visitation-blessed-virgin-mary",
+   "date": "31.05",
+   "places": []
+  },
+  {
+   "id": "31-07-sv-ignatius-loyola--pastors",
+   "date": "31.07",
+   "places": []
+  },
+  {
+   "id": "31-07-sv-ignatius-loyola--religious",
+   "date": "31.07",
+   "places": []
+  },
+  {
+   "id": "31-12-sv-sylvester-i",
+   "date": "31.12",
+   "places": []
+  }
+ ]
+}

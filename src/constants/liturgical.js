@@ -23,6 +23,8 @@ export const LITURGICAL_RANK = Object.freeze({
   FEAST: 'festum',
   MEMORIAL: 'memoria',
   OPTIONAL_MEMORIAL: 'memoria-ad-libitum',
+  // Commemoration of All the Faithful Departed (2.11): row 3 of the Table.
+  ALL_SOULS: 'commemoratio-defunctorum',
 });
 
 /** Ранг (_rank, а таксама стары _feastType) → подпіс для UI. */
@@ -31,6 +33,7 @@ export const RANK_LABEL_MAP = Object.freeze({
   [LITURGICAL_RANK.FEAST]: 'Свята',
   [LITURGICAL_RANK.MEMORIAL]: 'Успамін',
   [LITURGICAL_RANK.OPTIONAL_MEMORIAL]: 'Неабавязковы ўспамін',
+  [LITURGICAL_RANK.ALL_SOULS]: 'Успамін усіх памерлых вернікаў',
   // Часовая сумяшчальнасць са старымі дакументамі days.
   solemnity: 'Урачыстасць',
   feast: 'Свята',
@@ -192,6 +195,19 @@ export function getLiturgicalTheme(day, fallbackPeriodType = 'default') {
     || LITURGICAL_THEME_MAP[day?._periodType || fallbackPeriodType]
     || LITURGICAL_THEME_MAP.default;
 }
+
+/**
+ * Rubrical vestment colours of the Ordo engine (Latin names) → label, swatch
+ * for colour dots and the accent theme of the Ordo screen.
+ */
+export const LITURGICAL_VESTMENT_COLORS = Object.freeze({
+  albus: { label: 'Белы', swatch: '#f3ecd9', theme: LITURGICAL_THEME_MAP.gold },
+  ruber: { label: 'Чырвоны', swatch: '#b33a3a', theme: LITURGICAL_THEME_MAP.red },
+  viridis: { label: 'Зялёны', swatch: '#4d8a5b', theme: LITURGICAL_THEME_MAP.ordinary },
+  violaceus: { label: 'Фіялетавы', swatch: '#7a57a7', theme: LITURGICAL_THEME_MAP.advent },
+  rosaceus: { label: 'Ружовы', swatch: '#d88aa6', theme: { color: '#b5617f', rgb: '181, 97, 127' } },
+  niger: { label: 'Чорны', swatch: '#2f2a30', theme: LITURGICAL_THEME_MAP.requiem },
+});
 
 /** Theme for the calendar day itself, without a lower-rank celebration accent. */
 export function getLiturgicalPeriodTheme(day, fallbackPeriodType = 'default') {

@@ -7,6 +7,7 @@ import {
   getPeriodDayDocumentId,
   resolveDayAgainstPeriod,
 } from '@/utils/liturgicalDayResolution';
+import { findOptionByDayId } from '@/utils/ordoDayOptions';
 
 /**
  * Resolve the route's day from the date-aware service instead of reading a raw
@@ -62,10 +63,16 @@ export function useResolvedLiturgicalDay() {
       );
       const periodDay = content.itemsDays?.find((item) => item.id === periodId) || null;
       const resolved = periodDay ? resolveDayAgainstPeriod(selected, periodDay) : selected;
+      // Office descriptor of the legal option that owns this document
+      // (officeKind, Te Deum, Compline, I/II Vespers, fallbacks vs choices).
+      // A document reached by an old link that is not a legal Office keeps
+      // `_ordo: null` and the components use their legacy fallbacks.
+      const option = findOptionByDayId(content, id);
       return {
         ...resolved,
         _calendarDate: date.format('YYYY-MM-DD'),
         _contextPeriodType: content.context?.periodType || '',
+        _ordo: option?.ordo || null,
       };
     };
 

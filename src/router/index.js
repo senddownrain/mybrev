@@ -37,10 +37,18 @@ const routes = [
         name: 'LiturgicalPicker',
         components: { default: () => import('@/views/LiturgicalPicker.vue'), bottomNav: BottomNavVue },
       },
-      { path: 'compendium', name: 'Compendium', component: () => import('@/views/Compendium.vue') },
-      { path: 'compendium/part/:partId', name: 'CompendiumPart', component: () => import('@/views/CompendiumPart.vue'), props: true },
-      { path: 'compendium/topic/:topicId', name: 'CompendiumTopic', component: () => import('@/views/CompendiumTopic.vue'), props: true },
-      { path: 'compendium/question/:number', name: 'CompendiumQuestion', component: () => import('@/views/CompendiumQuestion.vue'), props: true },
+      {
+        // One shell for every Compendium level: it owns the persistent search dock
+        // and the global search results layer (see docs/compendium.md).
+        path: 'compendium',
+        component: () => import('@/views/CompendiumShell.vue'),
+        children: [
+          { path: '', name: 'Compendium', component: () => import('@/views/Compendium.vue') },
+          { path: 'part/:partId', name: 'CompendiumPart', component: () => import('@/views/CompendiumPart.vue'), props: true },
+          { path: 'topic/:topicId', name: 'CompendiumTopic', component: () => import('@/views/CompendiumTopic.vue'), props: true },
+          { path: 'question/:number', name: 'CompendiumQuestion', component: () => import('@/views/CompendiumQuestion.vue'), props: true },
+        ],
+      },
       { path: 'songs', name: 'Songs', component: () => import('@/views/Songs.vue') },
       { path: 'song/:id', name: 'SongView', component: () => import('@/views/Song.vue'), props: true },
       {
@@ -79,6 +87,23 @@ const routes = [
         path: 'readings/picker',
         name: 'ReadingsPicker',
         redirect: { name: 'LiturgicalPicker', query: { mode: 'readings' } },
+      },
+      {
+        path: 'ordo',
+        name: 'Ordo',
+        components: {
+          default: () => import('@/views/Ordo.vue'),
+          bottomNav: () => import('@/layouts/default/OrdoBottomNav.vue'),
+        },
+      },
+      {
+        path: 'ordo/:date',
+        name: 'OrdoByDate',
+        components: {
+          default: () => import('@/views/Ordo.vue'),
+          bottomNav: () => import('@/layouts/default/OrdoBottomNav.vue'),
+        },
+        props: { default: true },
       },
       {
         path: 'bible/:language?/:bookId?/:chapter?',
@@ -202,6 +227,14 @@ const router = createRouter({
     if (to.name === 'PrayerView' && from.name === 'PrayerView'
       && to.params.id === from.params.id && to.hash === from.hash) {
       return false;
+    }
+    // Compendium: opening/closing search only rewrites `?q` on the same page;
+    // the shell keeps the page scroll itself. A heading anchor scrolls to it.
+    if (to.path.startsWith('/compendium') && to.path === from.path && to.hash === from.hash) {
+      return false;
+    }
+    if (to.name === 'CompendiumPart' && to.hash) {
+      return { el: to.hash, top: 84 };
     }
     // Не оставляем активную scroll-анимацию после перехода: на мобильных
     // первый жест пользователя иначе может только остановить эту анимацию.

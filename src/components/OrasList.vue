@@ -149,13 +149,7 @@ import {
   RANK_LABEL_MAP,
   getLiturgicalTheme,
 } from '@/constants/liturgical';
-import {
-  findTomorrowRegularVespers,
-  getTomorrowFirstVespersOptions,
-  isLocalFirstVespers,
-  isSolemnity,
-  usesOwnVespers,
-} from '@/utils/liturgicalVespers';
+import { eveningVespersModel } from '@/utils/liturgicalVespers';
 
 const route = useRoute();
 const router = useRouter();
@@ -173,8 +167,17 @@ const dateParam = computed(() => route.params.day);
 const { day: dayData, pending: loadingDay } = useResolvedLiturgicalDay();
 
 const dayOptions = ref([]);
-const tomorrowFirstVespers = ref(null);
-const localTomorrowFirstVespers = ref([]);
+const tomorrowContent = ref(null);
+// II Vespers vs I Vespers of tomorrow: the Ordo descriptor of the selected
+// Office decides (legacy heuristics only for days without a descriptor).
+const eveningModel = computed(() => (
+  dayId.value === 'office-for-dead' ? { firstVespers: null, local: [], second: false }
+    : eveningVespersModel(dayData.value, tomorrowContent.value, {
+      isoWeekday: moment(String(dateParam.value), ['YYYY-MM-DD', 'DD-MM-YYYY'], true).isoWeekday(),
+    })
+));
+const tomorrowFirstVespers = computed(() => eveningModel.value.firstVespers);
+const localTomorrowFirstVespers = computed(() => eveningModel.value.local);
 const templateContainsDay = (template, id) => (
   template?.id === id || template?.dayIds?.includes(id)
 );
@@ -227,8 +230,7 @@ const vespersRubric = computed(() => {
     kind: 'first',
     icon: '',
   };
-  const currentDate = moment(String(dateParam.value), ['YYYY-MM-DD', 'DD-MM-YYYY'], true);
-  if (currentDate.isoWeekday() === 7 || isSolemnity(dayData.value)) return {
+  if (eveningModel.value.second) return {
     labelHtml: 'II Нешпары',
     kind: 'second',
     icon: '',
@@ -382,19 +384,11 @@ let contentLoadSequence = 0;
 const loadReadings = async () => {
   const sequence = ++contentLoadSequence;
   const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
-  tomorrowFirstVespers.value = null;
-  localTomorrowFirstVespers.value = [];
+  tomorrowContent.value = null;
 
-  getLiturgicalContentForDate(mDate.clone().add(1, 'day').toDate()).then((tomorrowContent) => {
-    if (
-      sequence !== contentLoadSequence
-      || usesOwnVespers(dayData.value)
-      || dayId.value === 'office-for-dead'
-    ) return;
-    const firstVespersOptions = getTomorrowFirstVespersOptions(tomorrowContent);
-    localTomorrowFirstVespers.value = firstVespersOptions.filter(isLocalFirstVespers);
-    tomorrowFirstVespers.value = firstVespersOptions.find((item) => !isLocalFirstVespers(item))
-      || (mDate.isoWeekday() === 6 ? findTomorrowRegularVespers(tomorrowContent) : null);
+  getLiturgicalContentForDate(mDate.clone().add(1, 'day').toDate()).then((content) => {
+    if (sequence !== contentLoadSequence) return;
+    tomorrowContent.value = content;
   }).catch((error) => logger.error('[OrasList] Памылка загрузкі заўтрашняга дня:', error));
 
   try {

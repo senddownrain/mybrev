@@ -7,13 +7,13 @@ import { ref } from 'vue';
  * Acts as a communication bus for:
  *   PrayerView  ↔ Default.vue               (prayer view edit)
  *   PrayerForm  ↔ Default.vue               (prayer add/edit form)
+ *   PrayerView  ↔ MassLanguageMenu          (Holy Mass text language)
  */
 export const useUiStore = defineStore('ui', () => {
   // ── App bar / navigation ─────────────────────────────────────────────────
   const isDrawerOpen = ref(false);
   const isSettingsSheetOpen = ref(false);
   const isCalendarDialogOpen = ref(false);
-  const songSettingsOpen = ref(false);
 
   function toggleDrawer() {
     isDrawerOpen.value = !isDrawerOpen.value;
@@ -31,7 +31,6 @@ export const useUiStore = defineStore('ui', () => {
     isDrawerOpen.value = false;
     isSettingsSheetOpen.value = false;
     isCalendarDialogOpen.value = false;
-    songSettingsOpen.value = false;
   }
 
   // ── Prayer view edit state (PrayerView ↔ Default.vue ↔ PrayerBar) ────────
@@ -60,6 +59,11 @@ export const useUiStore = defineStore('ui', () => {
   function triggerPrayerCancelEdit() { _cancelEdit?.(); }
   function triggerPrayerSave()       { _savePrayer?.(); }
 
+  // ── Holy Mass language (PrayerView ↔ MassLanguageMenu in the app bar) ─────
+  // PrayerView owns the choice; the app bar only shows it and asks for a
+  // change through the `?lang` query, which PrayerView already follows.
+  const massLanguage = ref(null);
+
   // ── Prayer form state (PrayerForm ↔ Default.vue) ─────────────────────────
   // prayerFormSaving is written by PrayerForm and read by Default.vue AppBar.
   const prayerFormSaving = ref(false);
@@ -87,7 +91,6 @@ export const useUiStore = defineStore('ui', () => {
     isDrawerOpen,
     isSettingsSheetOpen,
     isCalendarDialogOpen,
-    songSettingsOpen,
     toggleDrawer,
     toggleSettingsSheet,
     toggleCalendarDialog,
@@ -100,6 +103,8 @@ export const useUiStore = defineStore('ui', () => {
     triggerPrayerToggleEdit,
     triggerPrayerCancelEdit,
     triggerPrayerSave,
+    // Holy Mass
+    massLanguage,
     // Prayer form (PrayerForm ↔ Default.vue)
     prayerFormSaving,
     prayerFormCopying,

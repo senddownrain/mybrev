@@ -8,6 +8,9 @@ import { validateCategory } from '@/utils/validators';
 import { logger } from '@/utils/logger';
 import { requestWakeLock, releaseWakeLock } from '@/composables/useWakeLock';
 import { ensureReaderFontLoaded } from '@/utils/fonts';
+import { normalizeChordLayout } from '@/utils/songDisplay';
+import { ordoDiocese, setOrdoDiocese } from '@/utils/ordoDiocese';
+import { ordoLocalChurch, setOrdoLocalChurch } from '@/utils/ordoLocalChurch';
 
 const PERSONAL_CATEGORIES_KEY = 'personalPrayerCategories';
 const HIDDEN_GLOBAL_CATEGORIES_KEY = 'hiddenGlobalPrayerCategoryIds';
@@ -54,9 +57,12 @@ export const useSettingsStore = defineStore('settings', () => {
   ));
   const favoritePrayers = ref(JSON.parse(localStorage.getItem('favoritePrayers') || '[]'));
   const favoriteSongs = ref(JSON.parse(localStorage.getItem('favoriteSongs') || '[]'));
-  const songCompactList = ref(localStorage.getItem('songCompactList') === 'true');
   const songShowChords = ref(localStorage.getItem('songShowChords') === 'true');
-  const songChordLayout = ref(['left', 'right'].includes(localStorage.getItem('songChordLayout')) ? 'left' : 'above');
+  // Older versions stored "left"; it is migrated to "right" and saved back.
+  const songChordLayout = ref(normalizeChordLayout(localStorage.getItem('songChordLayout')));
+  if (localStorage.getItem('songChordLayout') !== null) localStorage.setItem('songChordLayout', songChordLayout.value);
+  // The song list is always compact now; drop the obsolete toggle.
+  localStorage.removeItem('songCompactList');
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') === 'true');
 
   function applyThemePreference() {
@@ -105,9 +111,12 @@ export const useSettingsStore = defineStore('settings', () => {
   }, { deep: true });
   watch(favoritePrayers, (v) => localStorage.setItem('favoritePrayers', JSON.stringify(v)), { deep: true });
   watch(favoriteSongs, (v) => localStorage.setItem('favoriteSongs', JSON.stringify(v)), { deep: true });
-  watch(songCompactList, (v) => localStorage.setItem('songCompactList', String(v)));
   watch(songShowChords, (v) => localStorage.setItem('songShowChords', String(v)));
-  watch(songChordLayout, (v) => localStorage.setItem('songChordLayout', v));
+  watch(songChordLayout, (v) => {
+    const layout = normalizeChordLayout(v);
+    if (layout !== v) songChordLayout.value = layout;
+    else localStorage.setItem('songChordLayout', layout);
+  });
   
   watch(keepScreenOn, async (newValue) => {
     localStorage.setItem('keepScreenOn', String(newValue));
@@ -130,6 +139,14 @@ export const useSettingsStore = defineStore('settings', () => {
     keepScreenOn.value = value;
   }
 
+
+  function setDiocese(value) {
+    setOrdoDiocese(value);
+  }
+
+  function setLocalChurch(patch) {
+    setOrdoLocalChurch(patch);
+  }
 
   function toggleTheme() {
     themePreference.value = currentTheme.value === 'light' ? 'dark' : 'light';
@@ -211,11 +228,14 @@ export const useSettingsStore = defineStore('settings', () => {
     hiddenGlobalPrayerCategoryIds,
     favoritePrayers,
     favoriteSongs,
-    songCompactList,
     songShowChords,
     songChordLayout,
     toggleFavoriteSong,
     keepScreenOn,
+    diocese: ordoDiocese,
+    setDiocese,
+    localChurch: ordoLocalChurch,
+    setLocalChurch,
     toggleTheme,
     setTheme,
     setThemePreference,
