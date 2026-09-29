@@ -48,6 +48,9 @@ node --test tests/ordo-data-followups.test.mjs
 - `reviews` — never written: single-calendar rank changes (`rank-single-source`, with `proposed`),
   unowned documents left in place, identities that point to missing documents
   (`identity-relink`, a code fix), layer date moves and `<br>` titles (`title-markup`).
+  Multi-diocese documents (`_place: [...]`) are resolved by the identity builder through
+  `scripts/ordo/data/firestore-days-index.json`; refresh it with
+  `node scripts/ordo/build-identities.mjs --live-index-from <snapshot or cache dir>` after imports.
 
 Check at least: every `update` against the fixedCalendar/layers entry named in `reason`; the
 `mark-obsolete` successors (`supersededBy`) exist and carry the same texts; nothing in `reviews`

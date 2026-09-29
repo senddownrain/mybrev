@@ -14,13 +14,32 @@ import {
 import { dynamicFeastCodesOf, extraFixedDatesOf, legacyContextOf } from '../../src/utils/ordo/runtime.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
-const DB_FEASTS = fs.readdirSync(path.join(ROOT, 'patchs', 'db-feasts'))
+const GENERATED = fs.readdirSync(path.join(ROOT, 'patchs', 'db-feasts'))
   .filter((name) => name.endsWith('.json'))
   .map((name) => {
     const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'patchs', 'db-feasts', name), 'utf8'));
     const { _id, ...rest } = data;
     return { id: _id || name.replace(/\.json$/, ''), ...rest };
   });
+
+/**
+ * Mirror Firestore with the live index (`scripts/ordo/data/firestore-days-index.json`):
+ * live ids and `_place` arrays win; a multi-diocese document that
+ * `patchs/db-feasts` splits (`…--pinsk`) takes the texts of its split sibling.
+ */
+function mirrorLive(generated) {
+  const file = path.join(ROOT, 'scripts', 'ordo', 'data', 'firestore-days-index.json');
+  if (!fs.existsSync(file)) return generated;
+  const live = JSON.parse(fs.readFileSync(file, 'utf8')).documents;
+  const byId = new Map(generated.map((doc) => [doc.id, doc]));
+  return live.map((entry) => {
+    const source = byId.get(entry.id) || generated.find((doc) => doc.id.startsWith(`${entry.id}--`));
+    if (!source) return null;
+    return { ...source, id: entry.id, _date: entry.date, _place: entry.places.length > 1 ? entry.places : entry.places[0] };
+  }).filter(Boolean);
+}
+
+const DB_FEASTS = mirrorLive(GENERATED);
 
 export function fixedDocsFor(ddmm) {
   return DB_FEASTS.filter((doc) => doc._date === ddmm);
