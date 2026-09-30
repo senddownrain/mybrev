@@ -203,6 +203,7 @@ import { useAppBar } from '@/composables/useAppBar';
 import { LITURGICAL_THEME_MAP, PLACE_LABEL_MAP } from '@/constants/liturgical';
 import { ordoDiocese } from '@/utils/ordoDiocese';
 import { loadOrdoNotes } from '@/utils/ordoNotesLoader';
+import { loadPublishedOrdoNotes } from '@/services/ordoCalendarService';
 import {
   buildMonthOverview, colorInfo, groupOrdoNotes, massSummary, officeDirections, officeKindLabel,
   optionBadges, ordoRouteFor, parseOrdoRouteDate, periodLabel, psalterLabel, rankLabel,
@@ -226,7 +227,7 @@ const notesState = ref('loading');
 async function loadNotes() {
   notesState.value = 'loading';
   try {
-    notes.value = await loadOrdoNotes();
+    notes.value = await loadOrdoNotes(loadPublishedOrdoNotes);
     notesState.value = 'ready';
   } catch (error) {
     logger.warn('[Ordo] notes unavailable:', error?.message || error);

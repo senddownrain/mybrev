@@ -1,5 +1,6 @@
 {
 "schemaVersion": 1,
+"revision": 1,
 "sources": [
 {"diocese":"minsk-mohilev","file":"Liturg_kal-r_2026 Мінск.docx","coverage":{"from":"2025-11-30","to":"2026-11-28"}},
 {"diocese":"vitebsk","file":"Літургічны_каляндар_2025_2026_віцебск.docx","coverage":{"from":"2025-11-30","to":"2026-12-31"}},

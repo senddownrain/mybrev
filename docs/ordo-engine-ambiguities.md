@@ -1,5 +1,9 @@
 # Ordo engine: ambiguous cases
 
+The cases an administrator may have to decide for a concrete year are also kept as structured
+data in `src/data/ordo/ambiguities.js` (status `needs-review`); the Year Overrides admin page
+shows a case when the selected year hits it. Nothing is turned into an override automatically.
+
 Decisions taken in stage 3 that need liturgical confirmation or source validation (stage 6).
 
 ## Rules
@@ -42,8 +46,8 @@ Decisions taken in stage 3 that need liturgical confirmation or source validatio
 
 ## Sources vs current MyBrev
 
-14. **Ascension** — Thursday (Minsk/Vitebsk 2026). *Resolved*: `calendarStore` now takes the
-    engine's dates; a stored `yearOptions` value still overrides and is logged.
+14. **Ascension** — Thursday (Minsk/Vitebsk 2026). *Resolved*: every year anchor is computed by
+    the engine; a Firestore `yearOptions` document is no longer read and cannot override it.
 15. **Immaculate Conception on an Advent Sunday** (2024, 2030) — *resolved*: `dayOptions` come
     from the engine (Sunday; the solemnity on Monday).
 16. **I Vespers of feasts** — *resolved*: the Hours follow the engine (a feast has I Vespers only
@@ -77,9 +81,9 @@ Decisions taken in stage 3 that need liturgical confirmation or source validatio
     memorials — modelled in `src/data/ordo/layers.js` from a single calendar. St John of Nepomuk
     (21.05.2027, transferred from 16.05) is not modelled (no permanent date in the evidence).
 24. **Dedication of churches whose date is unknown** (Vitebsk/Pinsk 25.10.2026, Grodno
-    31.10.2027: last Sunday of October) is a local-church rule — *implemented*:
-    `LocalChurchContext.dedicationDate: 'unknown'` places the local solemnity on the last Sunday
-    of October (Settings → Мой касцёл → «Дата невядомая»).
+    31.10.2027: last Sunday of October) is a rule of the individual church. The own-church level
+    («Мой касцёл») was removed, so the engine does not place it; the calendars' entry stays an
+    expected difference in the validation.
 25. **Missing `days` documents** for legal options: Holy Name of Jesus (3.01), the universal
     optional memorials added in stage 6 (Gregory of Narek, John of Avila, Teresa of Calcutta,
     Hildegard, Faustina, John XXIII, Juan Diego, OL of Loreto, OL of Guadalupe), the diocesan

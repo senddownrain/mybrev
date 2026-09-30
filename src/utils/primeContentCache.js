@@ -1,6 +1,7 @@
 import moment from './moment-be.js';
 import { SONGS_CACHE_VERSION } from '../constants/songTags.js';
 import { publicContentCache, contentKey, readingsKey, publicContentKey } from './publicContentCache.js';
+import { CALENDAR_CACHE_KEY, YEAR_OVERRIDES_CACHE_KEY, applyCachedCalendar } from './ordoCalendarCache.js';
 
 /** Read a small set of local records only. Never waits for Firestore or network. */
 export async function primeContentCache(location = window.location) {
@@ -15,12 +16,15 @@ export async function primeContentCache(location = window.location) {
     readingsKey(key), readingsKey(key, { includeAlternatives: true }),
     readingsKey(key, { dayId: routeDayId === 'office-for-dead' ? '' : routeDayId }),
     readingsKey(key, { dayId: url.searchParams.get('dayId'), includeAlternatives: true }),
-    publicContentKey('year', date.year()), publicContentKey('year', date.year() + 1),
   ];
   if (/prayer/.test(url.pathname)) keys.push(publicContentKey('prayers'));
   if (/\/songs?(?:\/|$)/.test(url.pathname)) keys.push(publicContentKey('songs', SONGS_CACHE_VERSION));
   if (/completorium|invit/.test(url.pathname)) {
     keys.push(publicContentKey('static', 'completoriums'), publicContentKey('static', 'invitatoriums'));
   }
+  // The cached calendar publication (newer revision, manual year overrides)
+  // must be active before anything is resolved for the first screen.
+  await publicContentCache.prime([CALENDAR_CACHE_KEY, YEAR_OVERRIDES_CACHE_KEY]);
+  applyCachedCalendar();
   await publicContentCache.prime([...new Set(keys)]);
 }

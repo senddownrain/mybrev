@@ -1,10 +1,10 @@
 /**
- * Rare decisions valid for one year only (spec §20).
+ * Manual decisions valid for one year only (`liturgicalYearOverrides`).
  *
  * YearOverride {
- *   year, scope: 'universal'|'belarus'|'diocese', dioceseId?,
- *   targetCelebrationId?, action: 'move'|'suppress'|'add'|'replace'|'changeRank'|'changeRule',
- *   from?, to?, rank?, celebration?, rule?, reason?, source?
+ *   id?, year, scope: 'universal'|'belarus'|'diocese', dioceseId?,
+ *   targetCelebrationId?, action: 'move'|'suppress'|'add'|'replace'|'changeRank'|'changeColor'|'changeRule',
+ *   from?, to?, rank?, color?, celebration?, rule?, reason?, source?, enabled?
  * }
  *
  * Order: universal permanent rules → Belarus proper → diocesan proper →
@@ -13,12 +13,14 @@
  */
 import { normalizeDioceseId } from './layers.js';
 
-export const YEAR_OVERRIDE_ACTIONS = Object.freeze(['move', 'suppress', 'add', 'replace', 'changeRank', 'changeRule']);
+export const YEAR_OVERRIDE_ACTIONS = Object.freeze(['move', 'suppress', 'add', 'replace', 'changeRank', 'changeColor', 'changeRule']);
+const COLORS = Object.freeze(['albus', 'ruber', 'viridis', 'violaceus', 'rosaceus', 'niger']);
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const SCOPE_ORDER = Object.freeze({ universal: 0, belarus: 1, diocese: 2 });
 
 export function validateYearOverride(override) {
   const errors = [];
-  if (!Number.isInteger(override?.year)) errors.push('year must be an integer');
+  if (!Number.isInteger(Number(override?.year)) || override?.year === '' || override?.year === null) errors.push('year must be an integer');
   if (!(override?.scope in SCOPE_ORDER)) errors.push('scope must be universal, belarus or diocese');
   if (override?.scope === 'diocese' && !override.dioceseId) errors.push('dioceseId is required for diocese scope');
   if (!YEAR_OVERRIDE_ACTIONS.includes(override?.action)) errors.push(`unknown action ${override?.action}`);
@@ -28,6 +30,13 @@ export function validateYearOverride(override) {
     errors.push('add requires `celebration.id` and ISO `to`');
   }
   if (override?.action === 'changeRank' && !(override.rank || override.to)) errors.push('changeRank requires `rank`');
+  if (override?.action === 'changeColor' && !COLORS.includes(override.color)) errors.push('changeColor requires a liturgical `color`');
+  if (override?.action === 'replace' && !override.celebration) errors.push('replace requires `celebration` changes');
+  ['from', 'to'].forEach((field) => {
+    const value = override?.[field];
+    if (value && ISO_DATE.test(String(value)) && Number(String(value).slice(0, 4)) !== Number(override.year)
+      && override.action !== 'changeRank') errors.push(`\`${field}\` must be a date of ${override.year}`);
+  });
   return errors;
 }
 
@@ -37,7 +46,7 @@ export function selectYearOverrides(overrides = [], year, context = {}) {
   const diocese = normalizeDioceseId(context.diocese);
   return overrides
     .map((override, index) => ({ override, index }))
-    .filter(({ override }) => override.year === year)
+    .filter(({ override }) => Number(override.year) === Number(year) && override.enabled !== false)
     .filter(({ override }) => override.scope !== 'belarus' || country === 'BY')
     .filter(({ override }) => override.scope !== 'diocese' || normalizeDioceseId(override.dioceseId) === diocese)
     .sort((a, b) => SCOPE_ORDER[a.override.scope] - SCOPE_ORDER[b.override.scope] || a.index - b.index)
@@ -92,6 +101,11 @@ export function applyYearOverrides(placements, overrides, { celebrations } = {})
             celebration: { ...placement.celebration, rank: override.rank || override.to, precedence: undefined },
             ...tag,
           }
+          : placement));
+        break;
+      case 'changeColor':
+        result = result.map((placement) => (matches(placement)
+          ? { ...placement, celebration: { ...placement.celebration, color: override.color, colorAlternatives: undefined }, ...tag }
           : placement));
         break;
       case 'changeRule':

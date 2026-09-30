@@ -20,6 +20,7 @@
 
 .mdi-alert-circle::before { content: "\F0028"; }
 .mdi-alert-circle-outline::before { content: "\F05D6"; }
+.mdi-alert-outline::before { content: "\F002A"; }
 .mdi-apple-keyboard-command::before { content: "\F0633"; }
 .mdi-apple-keyboard-control::before { content: "\F0634"; }
 .mdi-apple-keyboard-option::before { content: "\F0635"; }
@@ -38,6 +39,7 @@
 .mdi-book-remove-outline::before { content: "\F1699"; }
 .mdi-cached::before { content: "\F00E8"; }
 .mdi-calendar::before { content: "\F00ED"; }
+.mdi-calendar-alert::before { content: "\F0A31"; }
 .mdi-calendar-blank::before { content: "\F00EE"; }
 .mdi-calendar-blank-outline::before { content: "\F0B66"; }
 .mdi-calendar-star::before { content: "\F09D3"; }

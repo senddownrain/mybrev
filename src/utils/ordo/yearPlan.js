@@ -11,7 +11,7 @@ import { celebrationPrecedence } from './precedence.js';
 import { computeSeason, temporalPrecedence } from './season.js';
 import { resolveTransfers } from './transfers.js';
 import { applyYearOverrides, selectYearOverrides } from './yearOverrides.js';
-import { YEAR_OVERRIDES } from '../../data/ordo/year-overrides.js';
+import { getCalendarDefinitions, getDefinitionsEpoch } from './definitions.js';
 
 function isValidFixed(year, month, day) {
   const iso = isoFromParts(year, month, day);
@@ -23,7 +23,10 @@ function placeCelebration(celebration, year, anchors) {
     const { month, day } = celebration.date;
     return isValidFixed(year, month, day) ? isoFromParts(year, month, day) : null;
   }
-  if (celebration.date?.type === 'movable') return anchors[celebration.date.anchor] || null;
+  if (celebration.date?.type === 'movable') {
+    const anchor = anchors[celebration.date.anchor];
+    return anchor ? addDays(anchor, Number(celebration.date.offsetDays) || 0) : null;
+  }
   if (celebration.date?.type === 'last-weekday-of-month') {
     // e.g. last Sunday of October: step back from the last day of the month.
     const { month, isoWeekday: weekday } = celebration.date;
@@ -41,6 +44,7 @@ export function contextKey(context = {}) {
     yearOverrides: context.yearOverrides || [],
     dioceseLayer: context.dioceseLayer || null,
     dataYearOverrides: context.dataYearOverrides !== false,
+    definitions: getDefinitionsEpoch(),
   });
 }
 
@@ -67,8 +71,10 @@ export function buildYearPlan(year, context = {}) {
     else placements.push(placement);
   });
 
-  // Published one-year decisions (data) first, then the caller's overrides.
-  const dataOverrides = context.dataYearOverrides === false ? [] : YEAR_OVERRIDES;
+  // Stored one-year decisions (`liturgicalYearOverrides`) first, then the
+  // caller's overrides (admin preview, tests).
+  const dataOverrides = context.dataYearOverrides === false
+    ? [] : getCalendarDefinitions().yearOverrides.filter((override) => override.enabled !== false);
   const overrides = selectYearOverrides([...dataOverrides, ...(context.yearOverrides || [])], year, context);
   const overrideResult = applyYearOverrides(placements, overrides, { celebrations });
   placements = overrideResult.placements;

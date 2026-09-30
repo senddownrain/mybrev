@@ -186,6 +186,11 @@ const routes = [
         name: 'AdminPrayerCategories',
         component: () => import('@/views/admin/PrayerCategories.vue'),
       },
+      {
+        path: 'ordo/year-overrides',
+        name: 'AdminYearOverrides',
+        component: () => import('@/views/admin/YearOverrides.vue'),
+      },
       { path: 'songs/new', name: 'AdminSongAdd', component: () => import('@/views/admin/SongEditor.vue') },
       { path: 'songs/:id/edit', name: 'AdminSongEdit', component: () => import('@/views/admin/SongEditor.vue'), props: true },
     ]

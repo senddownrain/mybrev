@@ -14,6 +14,8 @@ import { fileURLToPath } from 'node:url';
 import { loadFixedCatalog } from './lib/identity.mjs';
 import { CLASSIFICATION, normalizeSource } from './lib/normalize.mjs';
 import { DIOCESE_ORDER, buildNotes } from './lib/notes.mjs';
+
+const NOTES_REVISION = 1;
 import { buildDifferences, properIds } from './lib/differences.mjs';
 import { alignDate } from './lib/calendar.mjs';
 
@@ -159,6 +161,8 @@ function main() {
 
   write(path.join(OUT_DIR, 'notes.json'), {
     schemaVersion: SCHEMA_VERSION,
+    // Publication number of `liturgicalOrdoNotes`; raise it when the notes change.
+    revision: NOTES_REVISION,
     sources: raws.map((raw) => ({ diocese: raw.source.diocese, file: raw.source.file, coverage: raw.source.coverage })),
     summary: {
       notes: notes.length,
