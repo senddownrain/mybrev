@@ -190,7 +190,7 @@ function buildCelebration(entry, { id, layer, dioceseId, meta }) {
       ...(dayIds.length ? { dayIds } : {}),
     },
     readingsRef: { _date: entry.date },
-    ...contentFields(content),
+    ...contentFields(content, id),
   };
 }
 
@@ -251,7 +251,7 @@ function buildCatalog() {
           ...(identity?.dayIds?.length ? { dayIds: identity.dayIds } : {}),
         },
         ...(feastContentOf({ id: base.id, date: entry.date, place: dioceseId, rank: normalizeRank(entry.rank) })
-          ? contentFields(feastContentOf({ id: base.id, date: entry.date, place: dioceseId, rank: normalizeRank(entry.rank) })) : {}),
+          ? contentFields(feastContentOf({ id: base.id, date: entry.date, place: dioceseId, rank: normalizeRank(entry.rank) }), base.id) : {}),
         fallbackDaysRefs: [base.daysRef],
       };
       if (base.daysRef._date !== entry.date) {

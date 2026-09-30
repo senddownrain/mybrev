@@ -7,7 +7,7 @@ import {
   selectCalendarDayVariants,
   selectReadingLectionaryVariants,
 } from '@/utils/parsedReadingsIdentity';
-import { orderReadingsByPlan, readingQueriesOfPlan } from '@/utils/ordo/readingsPlan';
+import { orderReadingsByPlan, readingQueriesOfPlan, readingsNotice } from '@/utils/ordo/readingsPlan';
 
 const COLLECTION = 'readings';
 
@@ -66,5 +66,7 @@ export async function getReadingsForDate(mDate, context, plan, options = {}) {
     `[readingsService] ${mDate.format('YYYY-MM-DD')} ${plan.diocese} option=${plan.selectedOptionId} `
       + `cycle=${context.cycle}/${context.sundayCycle}: ${ordered.length}`,
   );
+  // The array stays the result; the notice rides along for the caller.
+  ordered.notice = readingsNotice(plan, documents);
   return ordered;
 }

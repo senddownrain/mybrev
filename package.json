@@ -45,6 +45,7 @@
     "ordo:definitions": "node scripts/ordo/build-calendar-definitions.mjs",
     "ordo:import-calendar": "node scripts/ordo/import-calendar.mjs",
     "ordo:import-feasts": "node scripts/ordo/import-feasts.mjs",
+    "ordo:audit-readings": "node scripts/ordo/audit-readings.mjs",
     "ordo:docs": "node scripts/ordo/render-differences-doc.mjs",
     "ordo:validate": "node scripts/ordo/validate.mjs",
     "ordo:fetch-cache": "node scripts/ordo-fetch-public-cache.mjs",

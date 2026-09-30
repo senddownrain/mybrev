@@ -72,10 +72,35 @@ export function orderReadingsByPlan(plan, docs, {
   const selectedOption = plan.options.find((option) => option.optionId === plan.selectedOptionId) || plan.options[0];
   const chain = [selectedOption, ...plan.options.filter((option) => option !== selectedOption)];
   for (const option of chain) {
-    for (const list of optionReadings(plan, option, docs, { selectCalendarDayVariants })) {
+    const lists = optionReadings(plan, option, docs, { selectCalendarDayVariants });
+    for (const [index, list] of lists.entries()) {
+      // The proper readings of ANOTHER celebration are never substituted:
+      // from the other options only the weekday readings may be taken.
+      if (option !== selectedOption && option.lookup[index]?.purpose !== 'weekday') continue;
       const selected = selectVariants(list);
       if (selected.length) return selected;
     }
   }
   return [];
+}
+
+/**
+ * What to tell the reader when the selected celebration has no texts of its
+ * own readings: the known citation (`reference-only`) or nothing (`missing`).
+ * A memorial that keeps the weekday readings is normal and gives no notice.
+ */
+export function readingsNotice(plan, docs = []) {
+  const option = plan.options.find((item) => item.optionId === plan.selectedOptionId) || plan.options[0];
+  if (!option || option.kind === 'temporal') return null;
+  if (['memorial', 'optional-memorial'].includes(option.officeKind)) return null;
+  const proper = option.lookup
+    .filter((entry) => entry.purpose === 'proper')
+    .flatMap((entry) => selectReadingDocuments(entry, option, docs));
+  if (proper.length) return null;
+  return {
+    status: option.readingsReference ? 'reference-only' : 'missing',
+    optionId: option.optionId,
+    title: option.title,
+    ...(option.readingsReference ? { reference: option.readingsReference } : {}),
+  };
 }

@@ -23,7 +23,7 @@ import {
 import { MOVABLE_CELEBRATIONS, getCountryRules } from './movableFeasts.js';
 import { applyLayers, normalizeDioceseId } from './layers.js';
 import { CALENDAR_SCHEMA_VERSION, celebrationToDefinition, dateRuleOf } from './definitions.js';
-import { contentFields, feastContentOf } from './feastContentIndex.js';
+import { contentFields, feastContentOf, readingsStatusOf } from './feastContentIndex.js';
 
 function movableCelebration(item) {
   return {
@@ -31,6 +31,8 @@ function movableCelebration(item) {
     date: { type: 'movable', anchor: item.anchor },
     daysRef: { source: 'dynamic', _feast: item.feastCode },
     readingsRef: { _feast: item.feastCode },
+    ...(readingsStatusOf(item.id) ? { contentStatus: { readings: readingsStatusOf(item.id).readings } } : {}),
+    ...(readingsStatusOf(item.id)?.reference ? { readingsReference: readingsStatusOf(item.id).reference } : {}),
   };
 }
 
@@ -90,7 +92,7 @@ export function expandDataLayer(data, { level, dioceseId = null } = {}) {
         ...(content ? { dayIds: [content.dayId, ...(content.legacyIds || [])] } : {}),
       },
       readingsRef: { _date: date.key },
-      ...contentFields(content),
+      ...contentFields(content, entry.id),
       source: source(entry),
     };
   });

@@ -99,6 +99,7 @@ export function celebrationCandidate(placement, status = 'active') {
     ...(celebration.templates?.length ? { templates: celebration.templates } : {}),
     ...(celebration.defaultTemplate ? { defaultTemplate: celebration.defaultTemplate } : {}),
     ...(celebration.contentStatus ? { contentStatus: celebration.contentStatus } : {}),
+    ...(celebration.readingsReference ? { readingsReference: celebration.readingsReference } : {}),
     rules: celebration.rules || {},
     layerTrail: celebration.layerTrail || [],
     ...(celebration.inheritedFrom ? { inheritedFrom: celebration.inheritedFrom } : {}),

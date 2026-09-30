@@ -120,7 +120,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
       const items = await getReadingsForDate(mDate, fullContext, plan, {
         ...options, readSession: session,
       });
-      return { context: fullContext, items };
+      return { context: { ...fullContext, readingsNotice: items.notice || null }, items: [...items] };
     }, options);
   }
 
