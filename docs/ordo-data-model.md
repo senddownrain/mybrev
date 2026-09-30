@@ -1,5 +1,7 @@
 # Ordo: модель данных
 
+> **Обновление (этап «Ordo next stage»).** Уровень собственного костёла (`LocalChurchContext`, «Мой касцёл») удалён: слои — `universal → belarus → diocese → year overrides`. `YearOptions` — только вычисляемый DTO, Firestore `yearOptions` не читается. Постоянный календарь хранится как декларативные определения (`liturgicalCelebrations`, `liturgicalDioceseOverrides`), ручные исключения года — в `liturgicalYearOverrides`. Актуальное описание: `docs/ordo-next-stage.md`.
+
 Принцип: **постоянные правила + контекст года + епархия (+ local church) + редкие YearOverride
 = Ordo на дату**. Ordo не хранит тексты часов и чтений — только идентичности, по которым
 `days` / `readings` / `templates` отдают контент.

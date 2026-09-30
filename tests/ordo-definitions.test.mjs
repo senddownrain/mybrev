@@ -260,3 +260,34 @@ test('open cases are structured and shown only for the years that hit them', () 
   assert.equal(getCalendarDefinitions().yearOverrides.length, buildCalendarDefinitionsSeed().yearOverrides.length);
   assert.ok(ids(resolveLiturgicalDate('2035-03-17', { diocese: 'minsk' })).includes('sv-joseph'));
 });
+
+// ---------------------------------------------------------------------------
+// Date-based seasonal content is kept
+// ---------------------------------------------------------------------------
+
+test('Advent 17–24 December keeps its phase and date documents', () => {
+  for (let day = 17; day <= 24; day += 1) {
+    const resolved = resolveLiturgicalDate(`2026-12-${day}`, { diocese: 'minsk' });
+    assert.equal(resolved.period, 'advent', `2026-12-${day}`);
+    const temporal = resolved.candidates.find((item) => item.kind === 'temporal');
+    assert.equal(temporal.daysRef.seasonalDateId, `advent-${day}-12`);
+    assert.deepEqual(temporal.readingsRef, { _date: `${day}.12`, dateOnly: true });
+    assert.equal(resolved.periodPhase, 'dec17-24');
+  }
+  assert.equal(resolveLiturgicalDate('2026-12-16', { diocese: 'minsk' }).candidates[0].daysRef.seasonalDateId, null);
+});
+
+test('Christmas: the season ends with the Baptism, the date documents reach 12 January', () => {
+  // 2027: Baptism of the Lord on Sunday 10 January → Ordinary Time from the 11th.
+  assert.equal(resolveLiturgicalDate('2027-01-10', { diocese: 'minsk' }).primary.id, 'baptism-of-the-lord');
+  assert.equal(resolveLiturgicalDate('2027-01-11', { diocese: 'minsk' }).period, 'ordinary');
+  const temporalOf = (iso) => resolveLiturgicalDate(iso, { diocese: 'minsk' }).candidates.find((item) => item.kind === 'temporal');
+  assert.equal(temporalOf('2027-01-07').daysRef.seasonalDateId, 'christmas-07-01');
+  assert.equal(temporalOf('2027-01-11').daysRef.seasonalDateId, null, 'outside the season the date document is not used');
+  // 2029: Baptism on 7 January; 2030: on 13 January → 12 January is still Christmas time.
+  assert.equal(resolveLiturgicalDate('2030-01-12', { diocese: 'minsk' }).period, 'christmas');
+  assert.equal(temporalOf('2030-01-12').daysRef.seasonalDateId, 'christmas-12-01');
+  assert.equal(temporalOf('2026-12-29').daysRef.seasonalDateId, 'christmas-29-12');
+  // Boundary of the season ≠ storage key of the proper content.
+  assert.equal(temporalOf('2026-12-25').daysRef.fixedDateOnly, true);
+});

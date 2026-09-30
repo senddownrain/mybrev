@@ -185,3 +185,51 @@ _fieldRules: {
 `hours: proper | common-only | day-fallback | missing`,
 `readings: full | reference-only | missing`. Адсутнасць дакумента `days` не хавае
 празднаванне ні ў Ordo, ні ў спісе варыянтаў дня.
+
+## 7. Стан на 2026-09-30
+
+Зроблена ў галіне `feature/ordo-next-stage` (усе фазы A–J); у Firestore нічога не запісана.
+
+| Фаза | Вынік |
+|---|---|
+| B | `LocalChurch` / «Мой касцёл» выдалены; парафіяльныя заўвагі (149) не трапляюць у runtime |
+| C | `YearOptions` толькі вылічаюцца; `getAvailableYears()` не залежыць ад Firestore |
+| D | calendar definitions (241 празднаванне, 74 дыяцэзіяльныя адрозненні), date DSL, Firestore → cache → engine, bundled snapshot |
+| E | `/admin/ordo/year-overrides`: пераносы, калізіі, ручныя выключэнні, preview, «Патрабуе праверкі» |
+| F | sparse feast docs (256 + 34 scaffolds), 15 templates, Office assembly, пераключальнік «З дня ↔ З агульнага» |
+| G | аўдыт чытанняў (`docs/ordo-readings-audit.md`), reference-only на экране чытанняў |
+| H | Ordo: месяц, фільтр некалькіх дыяцэзій, кнопка з экрана Літургіі гадзін |
+| I | літургічны date picker: колеры (conic-gradient), варыянты дня пад сеткай |
+| J | валідацыя па чатырох календарах без змен: 95,6 / 89,3 / 90,8 / 86,0 % |
+
+Dry-run супраць Firestore (толькі чытанне, 2026-09-30):
+
+| Калекцыя | create | update | delete |
+|---|---|---|---|
+| `liturgicalCelebrations` | 241 | 0 | 0 |
+| `liturgicalDioceseOverrides` | 74 | 0 | 0 |
+| `liturgicalOrdoNotes` | 1200 | 0 | 0 |
+| `liturgicalYearOverrides` | 4 | 0 | 0 |
+| `liturgicalTemplates` | 15 | 0 | 0 |
+| `days` (sparse) | 130 | 160 | 0 (174 старыя копіі толькі пералічаны) |
+
+Каманды:
+
+```bash
+npm run ordo:check            # evidence, identities, calendar definitions
+npm run ordo:validate         # чатыры календары
+npm run generate:fixed-feasts # patchs/db-feasts, patchs/db-templates, report
+npm run ordo:audit-readings   # пасля node scripts/ordo-fetch-public-cache.mjs
+npm run ordo:import-calendar  # dry-run; -- --apply пасля правіл Firestore
+npm run ordo:import-feasts    # dry-run; -- --apply --only templates бяспечна,
+                              # days — толькі пасля рэлізу ўсіх кліентаў
+```
+
+Што застаецца па-за кодам:
+
+1. Firestore rules для шасці новых калекцый (read: усе, write: admin).
+2. Рэліз web; потым `ordo:import-calendar -- --apply` і `ordo:import-feasts -- --apply --only templates`.
+3. Sparse `days` — толькі калі Flutter навучыцца збіраць Office з templates.
+4. Адмін-рэдактар `DayEditor` не ведае пра `_fieldRules`: правіць sparse-дакументы
+   пакуль трэба праз `patchs/feasts` + генератар.
+5. Знаходкі аўдыту чытанняў: у дакументах 15.08 і 29.06 — чытанні Імшы вігіліі.

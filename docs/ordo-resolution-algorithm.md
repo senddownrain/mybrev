@@ -1,5 +1,7 @@
 # Ordo: алгоритм разрешения литургического дня
 
+> **Обновление (этап «Ordo next stage»).** Уровень собственного костёла (`LocalChurchContext`, «Мой касцёл») удалён: слои — `universal → belarus → diocese → year overrides`. `YearOptions` — только вычисляемый DTO, Firestore `yearOptions` не читается. Постоянный календарь хранится как декларативные определения (`liturgicalCelebrations`, `liturgicalDioceseOverrides`), ручные исключения года — в `liturgicalYearOverrides`. Актуальное описание: `docs/ordo-next-stage.md`.
+
 Целевой pipeline (этапы 3–5). Уровни не смешиваются: каждый получает результат предыдущего
 и ничего не «додумывает» за него.
 

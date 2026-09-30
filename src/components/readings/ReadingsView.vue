@@ -201,6 +201,14 @@ const activeGroup = computed(() => {
     if (linked) return linked;
   }
 
+  // Option chosen in the liturgical calendar: its own readings when it has
+  // them; a memorial without proper readings keeps the weekday ones.
+  const optionId = String(route.query.option || '');
+  if (optionId) {
+    const own = readingGroups.value.find((group) => group.documents.some((document) => document._ordoOptionId === optionId));
+    if (own) return own;
+  }
+
   return readingGroups.value[0] || null;
 });
 

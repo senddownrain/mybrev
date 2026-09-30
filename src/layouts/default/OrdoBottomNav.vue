@@ -75,6 +75,8 @@
             color="primary"
             :first-day-of-week="1"
             show-adjacent-months
+            liturgical
+            :diocese="ordoDioceseFilter[0]"
           />
         </v-card-text>
         <v-card-actions class="date-dialog-actions">
@@ -95,6 +97,7 @@ import CustomDatePicker from '@/components/common/CustomDatePicker.vue';
 import moment from '@/utils/moment-be';
 import { PhListBullets, PhSunHorizon, PhCalendarBlank, PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue';
 import { ordoMonthRoute, ordoRouteFor, parseOrdoMonth, shiftOrdoMonth } from '@/utils/ordoScreen';
+import { ordoDioceseFilter } from '@/utils/ordoMonthFilter';
 
 // Navigation of the Ordo screen: on `/ordo` the arrows page months, on
 // `/ordo/:date` days. The same pill and date dialog as the Hours and Readings.

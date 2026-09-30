@@ -61,9 +61,17 @@ export function orderReadingsByPlan(plan, docs, {
   const linked = dayId ? linkedTo(dayId, docs) : [];
   if (includeAlternatives) {
     const ordered = [...linked];
+    // Every document remembers the legal option it belongs to, so a screen
+    // can open the readings of the option chosen in the calendar.
     plan.options.forEach((option) => optionReadings(plan, option, docs, { selectCalendarDayVariants })
-      .forEach((list) => ordered.push(...list)));
-    return [...new Map(ordered.map((doc) => [doc.id, doc])).values()];
+      .forEach((list) => ordered.push(...list.map((doc) => ({ ...doc, _ordoOptionId: option.optionId })))));
+    const unique = new Map();
+    ordered.forEach((doc) => {
+      const known = unique.get(doc.id);
+      if (!known) unique.set(doc.id, doc);
+      else if (!known._ordoOptionId && doc._ordoOptionId) unique.set(doc.id, { ...known, _ordoOptionId: doc._ordoOptionId });
+    });
+    return [...unique.values()];
   }
   if (linked.length) {
     const selected = selectVariants(linked);

@@ -131,7 +131,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import moment from '@/utils/moment-be';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { useAppBar } from '@/composables/useAppBar';
@@ -149,6 +149,7 @@ import { formatDateDayMonth } from '@/utils/date';
 import { effectiveOrdoDiocese } from '@/utils/ordoDiocese';
 
 const route = useRoute();
+const router = useRouter();
 
 const {
   getLiturgicalContentForDate,
@@ -296,6 +297,14 @@ const fetchItemsForDate = async (date) => {
 function retryFetch() {
   fetchItemsForDate(currentDate.value);
 }
+
+// Option chosen in the liturgical calendar (`?option=`): open its Office as
+// soon as the day's options are known.
+watch([dayOptions, () => route.query.option], ([options, optionId]) => {
+  if (!optionId || !options.length) return;
+  const option = options.find((item) => item.ordo?.optionId === optionId);
+  if (option?.dayId) router.replace(optionRoute(option));
+});
 
 // Ordo detail of the date being viewed.
 const ordoRoute = computed(() => ({ name: 'OrdoByDate', params: { date: currentDate.value.format('YYYY-MM-DD') } }));
