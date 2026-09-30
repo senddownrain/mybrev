@@ -1,5 +1,7 @@
 import { parsePrayerMarkdown, renderPrayerInline } from './prayerMarkdown.js';
-import { MASS_RITUAL, locateMassSections, normalizeMassMarker, massMarkerMatches } from './massRitual.js';
+import {
+  MASS_RITUAL, getMassSection, locateMassSections, normalizeMassMarker, massMarkerMatches,
+} from './massRitual.js';
 
 // Deterministic adapter from a Mass variant's prayer Markdown to semantic
 // blocks. It never edits wording: it only regroups existing text into blocks,
@@ -73,11 +75,15 @@ function splitParagraph(text, variant) {
         runs.push({ response, lines: [content], source: [line.trim()] });
       }
     });
-    return runs.map((run) => ({
+    // A plain run answered by a bold one in the same paragraph is the call of
+    // a call-and-response pair; its role comes from cues or `callRole`.
+    return runs.map((run, index) => ({
       type: run.response ? 'response' : 'spoken',
       text: run.lines.join('\n'),
       source: run.source.join('\n'),
       role: run.response ? 'people' : null,
+      explicit: run.response || Boolean(runs[index + 1]?.response),
+      call: !run.response && Boolean(runs[index + 1]?.response),
     }));
   }
 
@@ -96,6 +102,7 @@ function splitParagraph(text, variant) {
         source: trimmed,
         role: variant.speakerLabels[speaker.label],
         label: speaker.label,
+        explicit: true,
       });
     } else if (current) {
       current.text = current.text ? `${current.text}\n${trimmed}` : trimmed;
@@ -128,7 +135,7 @@ function foldLabelOnlyBlocks(blocks) {
       return;
     }
     if (block.type === 'spoken' && pending && !block.label && !block.role) {
-      result.push({ ...block, role: pending.role, label: pending.label });
+      result.push({ ...block, role: pending.role, label: pending.label, explicit: true });
       pending = null;
       return;
     }
@@ -203,6 +210,45 @@ function applyRoleCues(blocks, variant) {
 }
 
 /**
+ * Roles the source expresses neither by a prefix nor by a rubric cue: texts
+ * listed in `roleMarkers` (Gloria, Credo…), then `callRole` for the call of a
+ * call-and-response paragraph.
+ */
+function applyRoleMarkers(blocks, variant) {
+  const markers = Object.entries(variant.roleMarkers || {});
+  return blocks.map((block) => {
+    if (block.type !== 'spoken' || block.role) return block;
+    const found = markers.find(([, list]) => list.some((marker) => massMarkerMatches(marker, plainText(block.source))));
+    if (found) return { ...block, role: found[0] };
+    return block.call && variant.callRole ? { ...block, role: variant.callRole } : block;
+  });
+}
+
+/**
+ * Label policy `dialogue`: a compact speaker label is shown only inside a real
+ * exchange — a call whose answer follows immediately, and that answer. Both
+ * roles must be explicit in the source (a prefix, or the bold convention);
+ * roles inferred from rubrics or markers never get a label, so long prayers,
+ * hymns and rubric-led lines stay clean.
+ */
+function applySpeakerLabels(blocks, variant) {
+  const policy = MASS_RITUAL.rolePolicy || {};
+  const labels = variant.roleLabels || {};
+  if (!policy.showSpeakerLabels) return blocks;
+  const voiced = (block) => Boolean(block && block.explicit && block.role
+    && (block.type === 'spoken' || block.type === 'response'));
+  return blocks.map((block, index) => {
+    if (!voiced(block) || !labels[block.role]) return block;
+    const inDialogue = policy.labelPolicy === 'dialogue'
+      ? (block.type === 'response'
+        ? voiced(blocks[index - 1]) && blocks[index - 1].type === 'spoken'
+        : voiced(blocks[index + 1]) && blocks[index + 1].type === 'response')
+      : true;
+    return inDialogue ? { ...block, speakerLabel: labels[block.role] } : block;
+  });
+}
+
+/**
  * Converts a Mass variant's text into semantic blocks and located sections.
  * @param {string} markdownText prayer text (mybrev-markdown)
  * @param {object} variant ritual variant from order-of-mass.ritual.json
@@ -224,9 +270,11 @@ export function buildMassDocument(markdownText, variant, format = '') {
   blocks = foldLabelOnlyBlocks(blocks);
   blocks = mergeQuotedRubrics(blocks);
   blocks = applyRoleCues(blocks, variant);
+  blocks = applyRoleMarkers(blocks, variant);
   blocks = blocks.map((block) => (
     block.type === 'spoken' && RESPONSE_ROLES.has(block.role) ? { ...block, type: 'response' } : block
   ));
+  blocks = applySpeakerLabels(blocks, variant);
 
   const sections = locateMassSections(variant, blocks.map((block) => plainText(block.source)));
   sections.forEach((section) => {
@@ -234,14 +282,17 @@ export function buildMassDocument(markdownText, variant, format = '') {
     block.sectionId = section.sectionId;
     if (section.heading) {
       block.type = section.parent ? 'subsection' : 'majorSection';
-      block.text = stripWrappingStrong(block.text);
+      // A major section always shows its canonical Belarusian name, whatever
+      // heading the source still carries.
+      block.text = section.parent ? stripWrappingStrong(block.text) : getMassSection(section.sectionId).title;
       block.role = null;
       delete block.parts;
+      delete block.speakerLabel;
     }
   });
 
   return {
-    blocks: blocks.map(({ source: _source, ...block }) => block),
+    blocks: blocks.map(({ source: _source, explicit: _explicit, call: _call, ...block }) => block),
     sections: sections.map(({ blockIndex, sectionId, parent, heading, title }) => ({
       blockIndex, sectionId, parent, heading, title,
     })),
@@ -277,7 +328,6 @@ const BLOCK_TAGS = {
 /** Renders semantic Mass blocks with one shared markup for every language. */
 export function renderMassBlocks(blocks, variant) {
   const alternatives = variant?.classify?.alternative || [];
-  const showLabels = Boolean(MASS_RITUAL.rolePolicy?.showSpeakerLabels);
   return blocks.map((block) => {
     if (block.type === 'separator') return '<hr class="mass-separator">';
     const [tag, className] = BLOCK_TAGS[block.type] || BLOCK_TAGS.spoken;
@@ -295,7 +345,7 @@ export function renderMassBlocks(blocks, variant) {
       }).join('')
       : renderPrayerInline(block.text);
     if (block.type === 'spoken' || block.type === 'response') inner = markInlineAlternatives(inner, alternatives);
-    if (showLabels && block.label) inner = `<span class="mass-speaker">${escapeHtml(block.label)}</span> ${inner}`;
+    if (block.speakerLabel) inner = `<span class="mass-speaker" aria-hidden="true">${escapeHtml(block.speakerLabel)}</span> ${inner}`;
     return `<${tag} ${attributes.join(' ')}>${inner}</${tag}>`;
   }).join('\n');
 }
