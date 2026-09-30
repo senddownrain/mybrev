@@ -21,9 +21,34 @@ import { toRomanNumeral } from './liturgicalPeriodTitle.js';
 
 export const ORDO_ROUTE_NAMES = Object.freeze(['Ordo', 'OrdoByDate']);
 
-/** Route of a date: today is `/ordo`, any other date `/ordo/YYYY-MM-DD`. */
-export function ordoRouteFor(iso, today) {
-  return !iso || iso === today ? { name: 'Ordo' } : { name: 'OrdoByDate', params: { date: iso } };
+/**
+ * `/ordo` is the month; a day is always `/ordo/YYYY-MM-DD` (today too).
+ * Without a date the month of today is opened.
+ */
+export function ordoRouteFor(iso) {
+  return iso ? { name: 'OrdoByDate', params: { date: iso } } : { name: 'Ordo' };
+}
+
+/** `?month=YYYY-MM` of the month route, or the month of `fallbackIso`. */
+export function parseOrdoMonth(value, fallbackIso) {
+  const match = /^(\d{4})-(\d{2})$/.exec(String(value || ''));
+  const month = match ? Number(match[2]) : 0;
+  if (match && month >= 1 && month <= 12) return { year: Number(match[1]), month };
+  const { year, month: fallbackMonth } = parseIso(fallbackIso);
+  return { year, month: fallbackMonth };
+}
+
+export const ordoMonthKey = ({ year, month }) => `${year}-${String(month).padStart(2, '0')}`;
+
+/** Route of a month; the current month needs no query. */
+export function ordoMonthRoute(cursor, todayIso) {
+  const key = ordoMonthKey(cursor);
+  return todayIso && key === todayIso.slice(0, 7) ? { name: 'Ordo' } : { name: 'Ordo', query: { month: key } };
+}
+
+export function shiftOrdoMonth({ year, month }, delta) {
+  const index = year * 12 + (month - 1) + delta;
+  return { year: Math.floor(index / 12), month: (index % 12) + 1 };
 }
 
 /** ISO date of the route parameter, or `fallback` for a missing/invalid one. */
@@ -404,4 +429,108 @@ export function listCalendarCelebrations(diocese) {
     })
     .sort((a, b) => a.sortKey - b.sortKey || a.title.localeCompare(b.title, 'be'))
     .map(({ sortKey: _sortKey, ...item }) => item);
+}
+
+// ---------------------------------------------------------------------------
+// Several dioceses at once (display filter of the Ordo screen)
+// ---------------------------------------------------------------------------
+
+export const ORDO_FILTER_DIOCESES = Object.freeze(['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno']);
+
+/** Short badge of a diocese in the month list. */
+export const DIOCESE_SHORT_LABELS = Object.freeze({
+  'minsk-mohilev': 'Мінск', vitebsk: 'Віцебск', pinsk: 'Пінск', grodno: 'Гродна',
+});
+
+/** Valid, ordered, non-empty list of dioceses for the display filter. */
+export function normalizeDioceseFilter(value, fallback = 'minsk-mohilev') {
+  const selected = new Set(Array.isArray(value) ? value : []);
+  const list = ORDO_FILTER_DIOCESES.filter((id) => selected.has(id));
+  return list.length ? list : [ORDO_FILTER_DIOCESES.includes(fallback) ? fallback : ORDO_FILTER_DIOCESES[0]];
+}
+
+const UNION_ROLES = Object.freeze(['primary', 'alternative', 'commemoration']);
+
+function unionRows(days, dioceses) {
+  const rows = new Map();
+  dioceses.forEach((diocese, index) => {
+    const day = days[index];
+    const add = (item, role) => {
+      const rank = rankLabel(item);
+      // The same celebration with the same rank and role is one row.
+      const key = `${role}|${item.id}|${item.rank || item.officeKind}|${item.color || ''}`;
+      const row = rows.get(key) || {
+        key, id: item.id, role, title: item.title, rank, rankKey: item.rank || '', color: item.color || day.color,
+        isCelebration: item.kind !== 'temporal' || ['solemnity', 'triduum'].includes(item.officeKind),
+        dioceses: [],
+      };
+      row.dioceses.push(diocese);
+      rows.set(key, row);
+    };
+    add(day.primary, 'primary');
+    day.alternatives.forEach((item) => add(item, 'alternative'));
+    day.commemorations.forEach((item) => add(item, 'commemoration'));
+  });
+  return [...rows.values()]
+    .map((row) => ({
+      ...row,
+      // Shared by every selected diocese: no badge.
+      shared: row.dioceses.length === dioceses.length,
+      badges: row.dioceses.length === dioceses.length ? [] : row.dioceses.map((id) => DIOCESE_SHORT_LABELS[id] || id),
+    }))
+    .sort((a, b) => UNION_ROLES.indexOf(a.role) - UNION_ROLES.indexOf(b.role));
+}
+
+/** Distinct liturgical colours of the legal options of a day (no suppressed). */
+export function legalColors(days) {
+  const colors = [];
+  (Array.isArray(days) ? days : [days]).forEach((day) => {
+    [day.primary, ...day.alternatives].forEach((item) => {
+      const color = item.color || day.color;
+      if (color && !colors.includes(color)) colors.push(color);
+    });
+  });
+  return colors;
+}
+
+/**
+ * One resolved date for several dioceses: shared rows once, differences with
+ * diocesan badges. Suppressed candidates are never rows.
+ */
+export function buildDayUnion(iso, dioceses) {
+  const list = normalizeDioceseFilter(dioceses);
+  const { year } = parseIso(iso);
+  const days = list.map((diocese) => getOrdoYear(year, { diocese }).find((day) => day.date === iso));
+  const rows = unionRows(days, list);
+  return {
+    date: iso,
+    dioceses: list,
+    rows,
+    differs: rows.some((row) => !row.shared),
+    colors: legalColors(days),
+    days,
+  };
+}
+
+/**
+ * Month of the Ordo for the selected dioceses: every date with all the
+ * legal variants that exist in at least one of them.
+ */
+export function buildMonthUnion(year, month, dioceses) {
+  const list = normalizeDioceseFilter(dioceses);
+  const prefix = `${year}-${String(month).padStart(2, '0')}-`;
+  const years = list.map((diocese) => getOrdoYear(year, { diocese }).filter((day) => day.date.startsWith(prefix)));
+  return (years[0] || []).map((first, index) => {
+    const days = years.map((days) => days[index]);
+    const rows = unionRows(days, list);
+    return {
+      date: first.date,
+      dayOfMonth: parseIso(first.date).day,
+      weekday: weekdayShort(first.date),
+      isSunday: Number(first.dayOfWeek) === 1,
+      rows,
+      differs: rows.some((row) => !row.shared),
+      colors: legalColors(days),
+    };
+  });
 }

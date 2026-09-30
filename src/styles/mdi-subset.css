@@ -43,6 +43,7 @@
 .mdi-calendar-blank::before { content: "\F00EE"; }
 .mdi-calendar-blank-outline::before { content: "\F0B66"; }
 .mdi-calendar-star::before { content: "\F09D3"; }
+.mdi-calendar-text-outline::before { content: "\F0C46"; }
 .mdi-calendar-today::before { content: "\F00F6"; }
 .mdi-candle::before { content: "\F05E2"; }
 .mdi-check::before { content: "\F012C"; }

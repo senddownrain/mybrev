@@ -1,3 +1,4 @@
+import { nextRouteDiocese, routeDiocese, setRouteDiocese } from '@/utils/ordoDiocese';
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { getMassVariantByPrayerId, MASS_ORDER_PRAYER_ID } from '@/utils/massRitual';
@@ -261,6 +262,11 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next();
   }
+});
+
+// Diocesan context of Hours / Readings opened from the Ordo (`?diocese=`).
+router.afterEach((to, from) => {
+  setRouteDiocese(nextRouteDiocese(to, from, routeDiocese.value));
 });
 
 export default router;

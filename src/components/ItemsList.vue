@@ -1,6 +1,12 @@
 <template>
   <v-container class="items-list-container">
-    <h1 class="section-page-title">Літургія гадзін</h1>
+    <div class="section-page-header">
+      <h1 class="section-page-title">Літургія гадзін</h1>
+      <router-link :to="ordoRoute" class="ordo-shortcut" aria-label="Літургічны каляндар гэтага дня">
+        <v-icon icon="mdi-calendar-text-outline" size="20"></v-icon>
+        <span>Каляндар</span>
+      </router-link>
+    </div>
     <div class="date-header-shell" :style="dateHeaderStyle">
       <button
         type="button"
@@ -140,7 +146,7 @@ import {
   getLiturgicalTheme,
 } from '@/constants/liturgical';
 import { formatDateDayMonth } from '@/utils/date';
-import { ordoDiocese } from '@/utils/ordoDiocese';
+import { effectiveOrdoDiocese } from '@/utils/ordoDiocese';
 
 const route = useRoute();
 
@@ -291,6 +297,9 @@ function retryFetch() {
   fetchItemsForDate(currentDate.value);
 }
 
+// Ordo detail of the date being viewed.
+const ordoRoute = computed(() => ({ name: 'OrdoByDate', params: { date: currentDate.value.format('YYYY-MM-DD') } }));
+
 const optionRoute = (option) => {
   const targetId = option.dayId || `missing-${option.key}`;
   return `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${targetId}`;
@@ -320,7 +329,7 @@ const getOptionIcon = (option) => {
 };
 
 // The legal Offices depend on the diocese and the own church (Settings).
-watch(ordoDiocese, () => fetchItemsForDate(currentDate.value));
+watch(effectiveOrdoDiocese, () => fetchItemsForDate(currentDate.value));
 
 watch(
   () => route.params.day,
@@ -343,8 +352,39 @@ watch(
   padding-top: 12px;
 }
 
-.section-page-title {
+.section-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin: 8px 12px 22px;
+}
+
+.ordo-shortcut {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid var(--nav-border);
+  border-radius: 999px;
+  background: var(--nav-surface);
+  color: var(--nav-on-surface);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ordo-shortcut:focus-visible {
+  outline: 3px solid rgba(var(--chrome-accent-rgb), 0.3);
+  outline-offset: 2px;
+}
+
+.section-page-title {
+  min-width: 0;
+  margin: 0;
   color: rgb(var(--v-theme-on-surface));
   font-size: clamp(1.85rem, 8vw, 2.35rem);
   font-family: var(--reader-display-font-family);
@@ -565,7 +605,7 @@ watch(
     padding: 8px 4px !important;
   }
 
-  .section-page-title {
+  .section-page-header {
     margin: 10px 12px 22px;
   }
 
