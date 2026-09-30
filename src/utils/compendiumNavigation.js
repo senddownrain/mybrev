@@ -7,7 +7,17 @@
 // that sit under a heading before its first child heading are that node's
 // `directQuestions`, rendered as plain question rows, never as a titled node.
 //
+// Browsing is a consistent drill-down: every structural node has its own
+// screen, and a question is listed on the screen of its nearest real owner.
+//
+//   part screen       → its sections (РАЗДЗЕЛ)
+//   section screen    → direct questions, its own named topics, subsections
+//   subsection screen → direct questions, named topics   (source: ГЛАВА)
+//   topic reader      → questions
+//
 // Pure module: no Vue or `@/` imports, shared with `node --test`.
+
+import { compendiumLevelLabel } from './compendiumLabels.js';
 
 const cache = new WeakMap();
 
@@ -24,14 +34,26 @@ export function questionRangeLabel(first, last) {
 /** Compact pager label: "6–10", or "6" for a single question. */
 export const compactRangeLabel = (first, last) => (first === last ? String(first) : `${first}–${last}`);
 
-function sourceNode(kind, { id, label = null, title, partId }) {
-  return { id, kind, label, title, partId, sourceHeading: true, leadCitations: [], directQuestions: [], topics: [], chapters: [] };
+/**
+ * `label` is the heading as printed in the source (e.g. "ГЛАВА ПЕРШАЯ");
+ * `uiLabel` is what the product shows (e.g. "ПАДРАЗДЗЕЛ ПЕРШЫ"). Named topics
+ * have neither: they are shown by their title only.
+ */
+function sourceNode(kind, { id, label = null, title, partId, parentId = null, number = null }) {
+  return {
+    id, kind, label, title, partId, parentId, number,
+    uiLabel: kind === 'topic' ? null : compendiumLevelLabel(kind, number, label),
+    sourceHeading: true, leadCitations: [], directQuestions: [], topics: [], chapters: [],
+  };
 }
 
 /**
  * Build (once per index) the source navigation tree:
  *
  *   part → sections → [directQuestions, topics, chapters → [directQuestions, topics]]
+ *
+ * `children` of a node are its structural child screens (a part's sections, a
+ * section's chapters); `topics` are its own named headings.
  *
  * plus a flat reading sequence (topics and direct questions in source order)
  * and the placement of every question in that tree.
@@ -45,15 +67,18 @@ export function buildCompendiumNavigation(index) {
   const add = (node) => { nodes.set(node.id, node); return node; };
 
   for (const part of index.parts) {
-    const partNode = add(sourceNode('part', { id: part.id, label: part.label, title: part.title, partId: part.id }));
+    const partNode = add(sourceNode('part', { id: part.id, label: part.label, title: part.title, partId: part.id, number: part.number }));
     partNode.sections = (part.sections || []).map((section) => {
-      const sectionNode = add({ ...sourceNode('section', { id: section.id, label: section.label, title: section.title, partId: part.id }), number: section.number });
-      sectionNode.chapters = (section.chapters || []).map((chapter) => add({
-        ...sourceNode('chapter', { id: chapter.id, label: chapter.label, title: chapter.title, partId: part.id }),
-        number: chapter.number,
+      const sectionNode = add(sourceNode('section', {
+        id: section.id, label: section.label, title: section.title, partId: part.id, parentId: part.id, number: section.number,
       }));
+      sectionNode.chapters = (section.chapters || []).map((chapter) => add(sourceNode('chapter', {
+        id: chapter.id, label: chapter.label, title: chapter.title, partId: part.id, parentId: section.id, number: chapter.number,
+      })));
+      sectionNode.children = sectionNode.chapters;
       return sectionNode;
     });
+    partNode.children = partNode.sections;
     parts.push(partNode);
   }
 
@@ -74,7 +99,7 @@ export function buildCompendiumNavigation(index) {
       const questions = entries.filter((question) => question.topicId === topic.id);
       if (!questions.length) continue;
       const topicNode = add({
-        ...sourceNode('topic', { id: topic.id, title: topic.title, partId: unit.partId }),
+        ...sourceNode('topic', { id: topic.id, title: topic.title, partId: unit.partId, parentId: owner.id }),
         parentTitle: topic.parentTitle || null,
         groupId: topic.id,
         subtopics: questions
@@ -136,6 +161,32 @@ export function buildPartOutline(index, partId) {
   return { part, sections: partNode.sections };
 }
 
+/**
+ * What one structural screen shows, in display order. Nothing below the
+ * node's own level is flattened into it:
+ *
+ *   part              → { children: sections }
+ *   section           → { questions: direct, topics: own named topics, children: subsections }
+ *   chapter (subsect.) → { questions: direct, topics: named topics, children: [] }
+ *
+ * `ancestors` are the real parent nodes (part, then section) for the header
+ * trail. Returns null for topics (they use the topic reader) and unknown ids.
+ */
+export function buildNodeScreen(index, nodeId) {
+  const navigation = buildCompendiumNavigation(index);
+  const node = navigation.getNode(index.getPart(nodeId)?.id || nodeId);
+  if (!node || node.kind === 'topic') return null;
+  const ancestors = [];
+  for (let parent = navigation.getNode(node.parentId); parent; parent = navigation.getNode(parent.parentId)) ancestors.unshift(parent);
+  return {
+    node,
+    ancestors,
+    questions: node.kind === 'part' ? [] : node.directQuestions,
+    topics: node.kind === 'part' ? [] : node.topics,
+    children: node.children || [],
+  };
+}
+
 /** Previous/next reading item (a named topic or a direct question) around a topic. */
 export function readingNeighbours(index, topicId) {
   const { sequence } = buildCompendiumNavigation(index);
@@ -152,12 +203,24 @@ export function readingItemRoute(item) {
     : { name: 'CompendiumQuestion', params: { number: String(item.number) } };
 }
 
-/** Router location of a real structural node: its part screen, scrolled to the heading. */
+/** Router location of a real node: part screen, section/subsection screen or topic reader. */
 export function nodeRoute(node) {
   if (!node) return null;
   if (node.kind === 'topic') return { name: 'CompendiumTopic', params: { topicId: node.id } };
   if (node.kind === 'part') return { name: 'CompendiumPart', params: { partId: node.id } };
-  return { name: 'CompendiumPart', params: { partId: node.partId }, hash: `#${node.id}` };
+  return { name: 'CompendiumNode', params: { nodeId: node.id } };
+}
+
+/**
+ * Old part-screen anchors (`/compendium/part/p1#p1-s1-ch1`), used when the
+ * part screen listed every section and chapter. Returns the screen of that
+ * section/subsection, or null when the hash is not such a heading of the part.
+ */
+export function resolveLegacyPartHash(index, partId, hash) {
+  const id = String(hash || '').replace(/^#/, '');
+  const node = id ? buildCompendiumNavigation(index).getNode(id) : null;
+  if (!node || (node.kind !== 'section' && node.kind !== 'chapter')) return null;
+  return node.partId === index.getPart(partId)?.id ? nodeRoute(node) : null;
 }
 
 /**
@@ -165,7 +228,8 @@ export function nodeRoute(node) {
  * `/compendium/topic/p1-s1-ch1`, …). Returns the location to redirect to, or
  * null when the id is a real named topic (rendered as is) or unknown.
  * - one question → that question;
- * - several → the part screen at the real parent heading, where they are listed.
+ * - several → the section/subsection screen of the real parent heading, where
+ *   they are listed.
  */
 export function resolveLegacyTopicRoute(index, id) {
   const navigation = buildCompendiumNavigation(index);

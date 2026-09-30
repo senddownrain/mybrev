@@ -13,7 +13,7 @@
       <v-list lines="two" bg-color="transparent" class="prayer-options-list" aria-label="Часткі Кампендыя">
         <v-list-item v-for="part in parts" :key="part.id" :to="{ name: 'CompendiumPart', params: { partId: part.id } }" class="prayer-list-item">
           <template #prepend><span class="prayer-list-item__icon-wrap compendium-number">{{ romanNumeral(part.number) }}</span></template>
-          <div class="prayers-page-eyebrow compendium-part-label">{{ part.label }}</div>
+          <div class="prayers-page-eyebrow compendium-level-label">{{ part.label }}</div>
           <v-list-item-title class="prayer-title-text">{{ part.title }}</v-list-item-title>
           <div class="compendium-range">Пытанні {{ part.first }}–{{ part.last }}</div>
           <template #append><v-icon class="prayer-list-item__arrow" icon="mdi-chevron-right" size="24" /></template>
@@ -41,6 +41,5 @@ useCompendiumScroll();
 <style scoped src="@/styles/prayers-list.css"></style>
 <style scoped src="@/styles/compendium.css"></style>
 <style scoped>
-.compendium-part-label { margin: 0 4px 2px; font-size: 0.64rem; }
 .compendium-source-note :deep(.prayer-source) { margin: 0; padding: 0; }
 </style>

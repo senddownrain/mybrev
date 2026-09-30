@@ -210,7 +210,7 @@ import {
 
 const ORDO_ROUTE_NAMES = ['Ordo', 'OrdoByDate'];
 
-const COMPENDIUM_ROUTE_NAMES = new Set(['Compendium', 'CompendiumPart', 'CompendiumTopic', 'CompendiumQuestion']);
+const COMPENDIUM_ROUTE_NAMES = new Set(['Compendium', 'CompendiumPart', 'CompendiumNode', 'CompendiumTopic', 'CompendiumQuestion']);
 
 const MASS_ORDER_PRAYER_ID = 'eMmCtxwyJ75ogmL5rwye';
 const { isDrawerOpen } = useAppBar();

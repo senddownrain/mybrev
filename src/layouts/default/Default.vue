@@ -254,6 +254,7 @@ import { useAuthStore } from '@/stores/auth.js';
 import { buildPrayerSharePath, buildPrayerShareUrl, sharePrayerLink } from '@/utils/prayerShare.js';
 import { logger } from '@/utils/logger.js';
 import { MASS_ORDER_PRAYER_ID } from '@/utils/massRitual.js';
+import { compendiumParentRoute } from '@/utils/compendiumBack.js';
 import moment from '@/utils/moment-be';
 
 const { isDrawerOpen } = useAppBar();
@@ -310,7 +311,7 @@ const isReadingsPage = computed(() => {
   return route.name === 'Readings' || route.name === 'ReadingsByDate';
 });
 const isSongViewPage = computed(() => route.name === 'SongView');
-const isCompendiumSubPage = computed(() => ['CompendiumPart', 'CompendiumTopic', 'CompendiumQuestion'].includes(route.name));
+const isCompendiumSubPage = computed(() => ['CompendiumPart', 'CompendiumNode', 'CompendiumTopic', 'CompendiumQuestion'].includes(route.name));
 // Back inside the Compendium: history when it exists (keeps search and scroll),
 // otherwise the logical parent, e.g. after opening a deep link directly.
 const goBackInCompendium = () => {
@@ -318,8 +319,7 @@ const goBackInCompendium = () => {
     router.back();
     return;
   }
-  const partId = route.name === 'CompendiumTopic' ? String(route.params.topicId).match(/^p\d+/)?.[0] : null;
-  router.push(partId ? { name: 'CompendiumPart', params: { partId } } : { name: 'Compendium' });
+  router.push(compendiumParentRoute(route.name, route.params));
 };
 
 const readingsLiturgyRoute = computed(() => {
