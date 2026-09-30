@@ -141,7 +141,6 @@ import {
 } from '@/constants/liturgical';
 import { formatDateDayMonth } from '@/utils/date';
 import { ordoDiocese } from '@/utils/ordoDiocese';
-import { ordoLocalChurch } from '@/utils/ordoLocalChurch';
 
 const route = useRoute();
 
@@ -193,12 +192,6 @@ const getOptionDisplayTitle = (option) => {
   return titleAlreadyContainsWeekday ? title : `${title}, ${weekday}`;
 };
 
-const LOCAL_ROLE_LABELS = {
-  'title-own-church': 'тытул касцёла',
-  'principal-patron-place': 'апякун месца',
-  'dedication-own-church': 'гадавіна пасвячэння касцёла',
-};
-
 const getOptionMeta = (option) => {
   if (isOfficeForDead(option)) return option.subtitle || 'Памінальны афіцый';
   const day = option?.day || {};
@@ -206,10 +199,7 @@ const getOptionMeta = (option) => {
   const places = Array.isArray(day._place) ? day._place : [day._place];
   const chunks = [];
 
-  // The own church's title/dedication is a solemnity here whatever the
-  // document's universal rank (Settings → Мой касцёл).
-  if (option?.ordo?.localRole) chunks.push(RANK_LABEL_MAP[option.ordo.rank] || '', LOCAL_ROLE_LABELS[option.ordo.localRole] || '');
-  else if (rank) chunks.push(RANK_LABEL_MAP[rank] || rank);
+  if (rank) chunks.push(RANK_LABEL_MAP[rank] || rank);
   else if (option?.ordo?.missingProper && option.ordo.rank) chunks.push(RANK_LABEL_MAP[option.ordo.rank] || '');
   chunks.push(...places
     .filter(Boolean)
@@ -330,7 +320,7 @@ const getOptionIcon = (option) => {
 };
 
 // The legal Offices depend on the diocese and the own church (Settings).
-watch([ordoDiocese, ordoLocalChurch], () => fetchItemsForDate(currentDate.value));
+watch(ordoDiocese, () => fetchItemsForDate(currentDate.value));
 
 watch(
   () => route.params.day,

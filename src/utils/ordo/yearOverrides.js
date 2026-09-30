@@ -8,8 +8,7 @@
  * }
  *
  * Order: universal permanent rules → Belarus proper → diocesan proper →
- * local church → global (universal, belarus) year overrides → diocesan year
- * overrides. A transfer that follows from a permanent rule is computed by
+ * global (universal, belarus) year overrides → diocesan year overrides. A transfer that follows from a permanent rule is computed by
  * `transfers.js` and must NOT be written as an override.
  */
 import { normalizeDioceseId } from './layers.js';

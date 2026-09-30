@@ -1,17 +1,15 @@
 import { publicContentCache, isContentOnline, requestContentRefresh } from './publicContentCache.js';
-import { createReadSession } from './contentCache.js';
 
 /** Explicit user action. Refresh only previously saved resources, never a full DB audit. */
 export async function refreshSavedContent() {
   if (!isContentOnline()) throw new Error('Для абнаўлення патрэбны інтэрнэт. Захаваныя тэксты даступныя без сеткі.');
   const keys = await publicContentCache.keys();
   requestContentRefresh();
-  const [{ useLiturgicalStore }, { useCalendarStore }, { getStaticCollection }, { getSavedPrayers }] = await Promise.all([
-    import('../stores/liturgical.js'), import('../stores/calendar.js'),
+  const [{ useLiturgicalStore }, { getStaticCollection }, { getSavedPrayers }] = await Promise.all([
+    import('../stores/liturgical.js'),
     import('../services/staticLiturgicalService.js'), import('../services/prayerService.js'),
   ]);
   const liturgical = useLiturgicalStore();
-  const calendar = useCalendarStore();
   const options = { fresh: true, requireFresh: true };
   let refreshed = 0;
   let failed = 0;
@@ -30,13 +28,9 @@ export async function refreshSavedContent() {
           case 'static': await getStaticCollection(value, options); break;
           case 'prayers': await getSavedPrayers(options); break;
           case 'songs': await (await import('../services/songService.js')).getSavedSongs(options); break;
-          case 'year': {
-            const session = createReadSession();
-            await calendar.getYearOptions(value, session);
-            if (!session.complete) throw new Error('Calendar refresh incomplete');
-            break;
-          }
-          case 'years': await calendar.getAvailableYears(options); break;
+          // Legacy keys: year options are computed now, nothing to refresh.
+          case 'year':
+          case 'years': break;
           default: return;
         }
         refreshed += 1;

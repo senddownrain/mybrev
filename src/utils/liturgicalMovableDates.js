@@ -110,20 +110,32 @@ const YEAR_OPTION_FIELDS = Object.freeze([
 ]);
 
 /**
- * Effective year options: computed by the engine, overridden field by field
- * by a stored Firestore `yearOptions` document when one exists. Returns the
- * differing fields so callers can log every discrepancy.
+ * Audit of a legacy Firestore `yearOptions` document. The effective options
+ * are ALWAYS the computed ones: a stored document can no longer override the
+ * calendar, it is only compared so that a discrepancy can be reported.
+ * One-year exceptions belong to `liturgicalYearOverrides`.
  */
-export function mergeYearOptions(year, stored = null) {
-  const computed = buildYearOptions(Number(year));
-  if (!stored) return { options: computed, discrepancies: [], source: 'computed' };
+export function compareStoredYearOptions(year, stored = null) {
+  const options = buildYearOptions(Number(year));
+  if (!stored) return { options, discrepancies: [], source: 'computed' };
   const discrepancies = YEAR_OPTION_FIELDS
     .filter((field) => stored[field] !== undefined && stored[field] !== null && stored[field] !== '')
-    .filter((field) => String(stored[field]) !== String(computed[field]))
-    .map((field) => ({ field, computed: computed[field], stored: stored[field] }));
-  const options = { ...computed };
-  YEAR_OPTION_FIELDS.forEach((field) => {
-    if (stored[field] !== undefined && stored[field] !== null && stored[field] !== '') options[field] = stored[field];
-  });
-  return { options, discrepancies, source: 'firestore' };
+    .filter((field) => String(stored[field]) !== String(options[field]))
+    .map((field) => ({ field, computed: options[field], stored: stored[field] }));
+  return { options, discrepancies, source: 'computed' };
+}
+
+/** Years the app offers in pickers. Any year of the range can be generated. */
+export const ORDO_MIN_YEAR = 1970;
+export const ORDO_MAX_YEAR = 2199;
+
+export function isSupportedOrdoYear(year) {
+  return Number.isInteger(Number(year)) && Number(year) >= ORDO_MIN_YEAR && Number(year) <= ORDO_MAX_YEAR;
+}
+
+/** Descending list of years around `currentYear` (no stored document needed). */
+export function getGeneratableYears(currentYear = new Date().getFullYear(), { past = 6, future = 10 } = {}) {
+  const from = Math.max(ORDO_MIN_YEAR, Number(currentYear) - past);
+  const to = Math.min(ORDO_MAX_YEAR, Number(currentYear) + future);
+  return Array.from({ length: to - from + 1 }, (_, index) => to - index);
 }

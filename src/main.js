@@ -3,8 +3,10 @@ import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 import './styles/main.scss'
 import { primeContentCache } from '@/utils/primeContentCache'
+import { removeLegacyStorageKeys } from '@/utils/legacyStorageCleanup'
 
 const app = createApp(App)
+removeLegacyStorageKeys()
 
 registerPlugins(app)
 

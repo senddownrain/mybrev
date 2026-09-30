@@ -38,7 +38,6 @@ export function contextKey(context = {}) {
   return JSON.stringify({
     country: String(context.country || 'BY').toUpperCase(),
     diocese: normalizeDioceseId(context.diocese),
-    localChurch: context.localChurch || null,
     yearOverrides: context.yearOverrides || [],
     dioceseLayer: context.dioceseLayer || null,
     dataYearOverrides: context.dataYearOverrides !== false,

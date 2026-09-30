@@ -83,7 +83,7 @@ export function validateNotes(notes, evidence) {
   notes.notes.forEach((note) => {
     if (!SELECTOR_TYPES.has(note.selector?.type)) problems.push(`${note.id}: bad selector ${note.selector?.type}`);
     if (!CLASSIFICATIONS.has(note.classification)) problems.push(`${note.id}: bad classification`);
-    if (!['universal', 'belarus', 'diocese', 'local'].includes(note.scope?.level)) problems.push(`${note.id}: bad scope`);
+    if (!['universal', 'belarus', 'diocese'].includes(note.scope?.level)) problems.push(`${note.id}: bad scope`);
     if (!note.observed?.length) problems.push(`${note.id}: no observations`);
     note.observed?.forEach((o) => {
       if (!o.evidence?.rawText && o.evidence?.rawText !== '') problems.push(`${note.id}: observation without evidence`);

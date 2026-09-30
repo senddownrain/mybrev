@@ -21,6 +21,12 @@ export function selectorKey(selector) {
   return [selector.type, ...Object.keys(selector).filter((k) => k !== 'type').sort().map((k) => `${k}=${JSON.stringify(selector[k])}`)].join('|');
 }
 
+/** Parish titles and local solemnities: everything `local-church` except plain cathedral notes. */
+export function isParishNote(category, tags = []) {
+  if (category !== 'local-church') return false;
+  return !(tags.includes('cathedral') && !tags.includes('titular'));
+}
+
 function effectFor(note) {
   const tags = new Set(note.tags || []);
   if (tags.has('no-obligation')) return { type: 'holy-day-of-obligation', value: false };
@@ -32,7 +38,6 @@ function effectFor(note) {
     return { type: 'suppressed-celebration', ...(match ? { celebrationTitle: match[1] } : {}), explainedBy: 'precedence' };
   }
   if (tags.has('transfer')) return { type: 'transfer' };
-  if (note.category === 'local-church') return { type: 'local-titular' };
   return null;
 }
 
@@ -275,11 +280,10 @@ export function buildNotes(sources, catalog) {
     const markers = [...new Set(occurrences.flatMap((o) => o.markers || []))];
     const entry = {
       id: `ordo-note-${String(index + 1).padStart(4, '0')}`,
-      scope: lead.category === 'local-church'
-        ? { level: 'local', dioceseIds: dioceses }
-        : dioceses.length >= 2 ? { level: 'belarus', dioceseIds: dioceses } : { level: 'diocese', dioceseId: dioceses[0] },
+      scope: dioceses.length >= 2 ? { level: 'belarus', dioceseIds: dioceses } : { level: 'diocese', dioceseId: dioceses[0] },
       selector: entries[0].selector,
-      category: lead.category,
+      // A cathedral note is diocesan; parish lists are dropped below.
+      category: isParishNote(lead.category, tags) || lead.category !== 'local-church' ? lead.category : 'liturgical-rule',
       tags,
       text: lead.text,
       ...(texts.length > 1 ? { variants: texts.slice(1, 6) } : {}),
@@ -308,7 +312,15 @@ export function buildNotes(sources, catalog) {
     occurrences.forEach((o) => { o.noteId = entry.id; });
     return entry;
   });
-  return { notes, candidates: perDiocese.flatMap((e) => e.occurrences) };
+  // Parish-level lists ("titular solemnity in X, Y") stay in the evidence
+  // only: the runtime Ordo has no parish / own-church level.
+  const parish = notes.filter((note) => isParishNote(note.category, note.tags));
+  return {
+    notes: notes.filter((note) => !isParishNote(note.category, note.tags)),
+    allNotes: notes,
+    excludedParishNotes: parish.length,
+    candidates: perDiocese.flatMap((e) => e.occurrences),
+  };
 }
 
 function syntheticDay(date) {

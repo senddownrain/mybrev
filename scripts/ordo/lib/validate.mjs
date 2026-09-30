@@ -329,9 +329,11 @@ export function compareDay(sourceDay, generated, context) {
   }
 
   // --- Ordo notes -----------------------------------------------------------
-  // Grodno prints parish notes of tomorrow's celebration on the eve
-  // (tag `tomorrow`): they belong to the next liturgical day.
-  const noteIds = (sourceDay.notes || []).map((note) => note.noteId).filter(Boolean);
+  // Notes printed for tomorrow's celebration on the eve (tag `tomorrow`)
+  // belong to the next liturgical day. Parish-title lists are not part of the
+  // runtime Ordo (no own-church level), so only indexed notes are expected.
+  const noteIds = (sourceDay.notes || []).map((note) => note.noteId)
+    .filter((id) => id && context.noteIndex.has(id));
   if (noteIds.length) {
     const returned = new Set([
       ...generated.ordoNotes.map((note) => note.id),

@@ -72,7 +72,6 @@ export function temporalReadingsRef(season) {
 
 function candidateKind(celebration) {
   if (celebration.layer === 'override') return 'override';
-  if (celebration.layer === 'local') return 'local';
   if (celebration.daysRef?.source === 'dynamic') return 'dynamic';
   return 'fixed';
 }
@@ -89,7 +88,6 @@ export function celebrationCandidate(placement, status = 'active') {
     layer: celebration.layer,
     ...(celebration.dioceseId ? { dioceseId: celebration.dioceseId } : {}),
     ...(celebration.properKind ? { properKind: celebration.properKind } : {}),
-    ...(celebration.localRole ? { localRole: celebration.localRole } : {}),
     ...(celebration.feastCode ? { feastCode: celebration.feastCode } : {}),
     temporal: Boolean(celebration.temporal),
     precedence: placement.precedence,

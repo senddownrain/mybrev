@@ -30,7 +30,7 @@
         {{ dayColorText }}
       </li>
       <li>
-        <router-link :to="{ name: 'Settings' }" class="ordo-facts__link">{{ dioceseLabel }}{{ localChurch ? ' · мой касцёл' : '' }}</router-link>
+        <router-link :to="{ name: 'Settings' }" class="ordo-facts__link">{{ dioceseLabel }}</router-link>
       </li>
     </ul>
 
@@ -180,8 +180,8 @@
             <span class="color-dot" :style="{ '--dot': colorInfo(item.color).swatch }" :title="item.colorLabel" aria-hidden="true"></span>
             <span class="month-day__copy">
               <span class="month-day__title">{{ item.title }}</span>
-              <small v-if="item.isCelebration || item.alternatives || item.local">
-                {{ [item.isCelebration ? item.rank : '', item.alternatives ? `+${item.alternatives} на выбар` : '', item.local ? 'мой касцёл' : ''].filter(Boolean).join(' · ') }}
+              <small v-if="item.isCelebration || item.alternatives">
+                {{ [item.isCelebration ? item.rank : '', item.alternatives ? `+${item.alternatives} на выбар` : ''].filter(Boolean).join(' · ') }}
               </small>
             </span>
           </router-link>
@@ -202,7 +202,6 @@ import moment from '@/utils/moment-be';
 import { useAppBar } from '@/composables/useAppBar';
 import { LITURGICAL_THEME_MAP, PLACE_LABEL_MAP } from '@/constants/liturgical';
 import { ordoDiocese } from '@/utils/ordoDiocese';
-import { ordoLocalChurch, toEngineLocalChurch } from '@/utils/ordoLocalChurch';
 import { loadOrdoNotes } from '@/utils/ordoNotesLoader';
 import {
   buildMonthOverview, colorInfo, groupOrdoNotes, massSummary, officeDirections, officeKindLabel,
@@ -218,8 +217,7 @@ const { toggleCalendarDialog } = useAppBar();
 const todayIso = () => moment().format('YYYY-MM-DD');
 const iso = computed(() => parseOrdoRouteDate(route.params.date, todayIso()));
 const isToday = computed(() => iso.value === todayIso());
-const localChurch = computed(() => toEngineLocalChurch(ordoLocalChurch.value));
-const engineOptions = computed(() => ({ diocese: ordoDiocese.value, localChurch: localChurch.value }));
+const engineOptions = computed(() => ({ diocese: ordoDiocese.value }));
 
 // Notes are a separate lazy chunk (~1.3 MB JSON); the day renders without
 // them and gains them when the chunk arrives.

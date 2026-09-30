@@ -11,7 +11,11 @@ import { orderReadingsByPlan, readingQueriesOfPlan } from '../src/utils/ordo/rea
 import { allowsOfficeForDead, buildOrdoDayOptions, findOptionByDayId } from '../src/utils/ordoDayOptions.js';
 import { assembleFirstVespers, eveningVespersModel } from '../src/utils/liturgicalVespers.js';
 import { getCompletoriumWeekday, shouldShowTeDeum } from '../src/utils/liturgicalOffice.js';
-import { mergeYearOptions } from '../src/utils/liturgicalMovableDates.js';
+import { readFileSync } from 'node:fs';
+import { generateLiturgicalYear } from '../src/utils/ordo/index.js';
+import {
+  buildYearOptions, compareStoredYearOptions, getGeneratableYears, isSupportedOrdoYear,
+} from '../src/utils/liturgicalMovableDates.js';
 import { daysFixture } from './helpers/ordo-days-fixture.mjs';
 
 const DIOCESES = ['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno'];
@@ -203,11 +207,33 @@ test('readings follow the engine lookup order (no independent priority)', () => 
   assert.equal(andrew.cycle, 'A');
 });
 
-test('Firestore yearOptions may override computed dates and every discrepancy is reported', () => {
-  assert.deepEqual(mergeYearOptions(2026).discrepancies, []);
-  const same = mergeYearOptions(2026, { year: 2026, easterSunday: '2026-04-05' });
+test('Firestore yearOptions never override computed dates; a discrepancy is only reported', () => {
+  assert.deepEqual(compareStoredYearOptions(2026).discrepancies, []);
+  const same = compareStoredYearOptions(2026, { year: 2026, easterSunday: '2026-04-05' });
   assert.deepEqual(same.discrepancies, []);
-  const overridden = mergeYearOptions(2026, { year: 2026, ascension: '2026-05-17' });
-  assert.equal(overridden.options.ascension, '2026-05-17');
-  assert.deepEqual(overridden.discrepancies, [{ field: 'ascension', computed: '2026-05-14', stored: '2026-05-17' }]);
+  const stale = compareStoredYearOptions(2026, { year: 2026, ascension: '2026-05-17' });
+  assert.equal(stale.options.ascension, '2026-05-14', 'computed value wins');
+  assert.equal(stale.source, 'computed');
+  assert.deepEqual(stale.discrepancies, [{ field: 'ascension', computed: '2026-05-14', stored: '2026-05-17' }]);
+});
+
+test('any future year is generated without a stored yearOptions document', () => {
+  for (const year of [2031, 2050, 2100, 2199]) {
+    const options = buildYearOptions(year);
+    assert.equal(options.year, year);
+    assert.match(options.easterSunday, /^\d{4}-\d{2}-\d{2}$/);
+    assert.ok(Number(options.ordintaryWeeks1) >= 4 && Number(options.ordintaryWeeks2) <= 34);
+    const days = generateLiturgicalYear(year, { diocese: 'minsk-mohilev' });
+    assert.equal(days.length, year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 366 : 365);
+    assert.equal(days.find((day) => day.date === options.easterSunday).primary.feastCode, 'feast-eastersunday');
+  }
+  const years = getGeneratableYears(2026);
+  assert.equal(years[0], 2036);
+  assert.ok(years.includes(2026) && years.includes(2020));
+  assert.equal(isSupportedOrdoYear(2150), true);
+  assert.equal(isSupportedOrdoYear(1500), false);
+  // Runtime stores do not read the legacy collection any more.
+  for (const file of ['src/stores/calendar.js', 'src/stores/liturgical.js', 'src/utils/refreshSavedContent.js']) {
+    assert.ok(!/['"]yearOptions['"]/.test(readFileSync(new URL(`../${file}`, import.meta.url), 'utf8')), file);
+  }
 });

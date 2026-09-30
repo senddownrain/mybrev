@@ -225,29 +225,17 @@ test('17 diocesan rank override (St Josaphat, 12 November)', () => {
   assert.equal(resolve('2026-11-11', { ...BY, diocese: 'vitebsk' }).officeResolution.evening.vespers.type, 'first');
 });
 
-test('18 cathedral dedication: feast in the diocese, solemnity in the cathedral', () => {
+test('18 cathedral dedication stays a diocesan feast (no own-church level)', () => {
   const diocese = resolve('2026-10-10', { ...BY, diocese: 'vitebsk' });
   assert.equal(diocese.primary.id, 'vitebsk-cathedral-dedication');
   assert.equal(diocese.primary.officeKind, 'feast');
-  const cathedral = resolve('2026-10-10', { ...BY, diocese: 'vitebsk', localChurch: { id: 'vitebsk-cathedral', isCathedral: true } });
-  assert.equal(cathedral.primary.officeKind, 'solemnity');
-  assert.equal(cathedral.primary.precedence, 4);
-  assert.equal(cathedral.officeResolution.firstVespers.celebratedOnEve, true);
+  assert.equal(diocese.primary.layer, 'diocese');
 });
 
-test('19 local titular solemnity and dedication of the own church', () => {
-  const title = resolve('2027-06-13', { ...BY, diocese: 'minsk', localChurch: { titleCelebrationId: 'sv-anthony-padua' } });
-  assert.equal(title.primary.id, 'sv-anthony-padua');
-  assert.equal(title.primary.localRole, 'title-own-church');
-  assert.equal(title.primary.precedence, 4); // beats the Sunday of Ordinary Time (row 6)
-  const lent = resolve('2026-03-04', { ...BY, localChurch: { titleCelebrationId: 'sv-casimir' } });
-  assert.equal(lent.primary.officeKind, 'solemnity');
-  const dedication = resolve('2026-09-20', { ...BY, localChurch: { dedicationDate: '09-20' } });
-  assert.equal(dedication.primary.id, 'local-church-dedication');
-  assert.equal(dedication.primary.daysRef.template, 'church-dedication');
-  // A General Calendar solemnity as title keeps row 3.
-  const joseph = resolve('2026-03-19', { ...BY, localChurch: { titleCelebrationId: 'sv-joseph' } });
-  assert.equal(joseph.primary.precedence, 3);
+test('19 there is no local titular solemnity: a saint on a Sunday stays impeded', () => {
+  const day = resolve('2027-06-13', { ...BY, diocese: 'minsk' });
+  assert.equal(day.primary.kind, 'temporal');
+  assert.ok(![day.primary, ...day.alternatives].some((item) => item.id === 'sv-anthony-padua'));
 });
 
 test('20 transferred solemnity (Annunciation 2027 → Monday after Divine Mercy)', () => {

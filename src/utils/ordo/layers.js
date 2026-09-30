@@ -1,5 +1,5 @@
 /**
- * Calendar layers: universal → belarus → diocese → local.
+ * Calendar layers: universal → belarus → diocese.
  *
  * A layer never copies the universal calendar. It only holds
  *   add     – new celebrations,
@@ -7,14 +7,13 @@
  *   rules   – structured effects (`suppress`, `set`),
  *   notes   – Ordo notes scoped to the layer.
  */
-import { LITURGICAL_RANK } from '../../constants/liturgical.js';
 import { BELARUS_LAYER, DIOCESAN_LAYERS } from '../../data/ordo/layers.js';
 import {
   getDiocesanFixedLayers, getUniversalFixedCelebrations, inferColor, inferProperKind,
 } from './fixedCelebrations.js';
 import { MOVABLE_CELEBRATIONS, getCountryRules } from './movableFeasts.js';
 
-export const LAYER_LEVELS = Object.freeze(['universal', 'belarus', 'diocese', 'local']);
+export const LAYER_LEVELS = Object.freeze(['universal', 'belarus', 'diocese']);
 
 export const DIOCESE_ALIASES = Object.freeze({
   minsk: 'minsk-mohilev',
@@ -128,95 +127,6 @@ export function buildDiocesanLayer(dioceseId, extra = null) {
   };
 }
 
-/** `dedicationDate: 'unknown'` — the church does not know its dedication date. */
-export const UNKNOWN_DEDICATION_DATE = 'unknown';
-
-export function isUnknownDedicationDate(value) {
-  return String(value || '').trim().toLowerCase() === UNKNOWN_DEDICATION_DATE;
-}
-
-function dedicationCelebration(localChurch) {
-  return {
-    id: 'local-church-dedication',
-    title: localChurch.dedicationTitle || 'Гадавіна пасвячэння ўласнага касцёла',
-    rank: LITURGICAL_RANK.SOLEMNITY,
-    category: 'dedication',
-    layer: 'local',
-    properKind: 'dedication-own-church',
-    localRole: 'dedication-own-church',
-    color: 'albus',
-    readingsRef: { common: 'church-dedication' },
-  };
-}
-
-/**
- * LocalChurchContext → local layer. Title, principal patron and the
- * dedication anniversary of the own church are proper solemnities (row 4);
- * in the cathedral the diocesan dedication feast is a solemnity too.
- *
- * `dedicationDate: 'unknown'` places the anniversary on the last Sunday of
- * October.
- *
- * @param {{ id?: string, titleCelebrationId?: string, patronCelebrationId?: string,
- *   dedicationDate?: string|{month:number, day:number}, isCathedral?: boolean,
- *   dedicationTitle?: string }} localChurch
- */
-export function buildLocalLayer(localChurch, celebrations) {
-  if (!localChurch) return null;
-  const layer = { id: `local:${localChurch.id || 'church'}`, level: 'local', add: [], modify: [], rules: [], notes: [] };
-  const upgrade = (celebrationId, properKind) => {
-    const base = celebrations.get(celebrationId);
-    if (!base) {
-      layer.rules.push({ type: 'warning', message: `Unknown local celebration ${celebrationId}` });
-      return;
-    }
-    // A solemnity of the General Calendar (row 3) already outranks row 4.
-    const changes = base.rank === LITURGICAL_RANK.SOLEMNITY && base.layer === 'universal'
-      ? { localRole: properKind, layer: base.layer }
-      : { rank: LITURGICAL_RANK.SOLEMNITY, properKind, localRole: properKind, layer: 'local', precedence: undefined };
-    layer.modify.push({ id: celebrationId, changes });
-  };
-  if (localChurch.titleCelebrationId) upgrade(localChurch.titleCelebrationId, 'title-own-church');
-  if (localChurch.patronCelebrationId && localChurch.patronCelebrationId !== localChurch.titleCelebrationId) {
-    upgrade(localChurch.patronCelebrationId, 'principal-patron-place');
-  }
-  if (localChurch.isCathedral) {
-    [...celebrations.values()]
-      .filter((item) => item.properKind === 'cathedral-dedication')
-      .forEach((item) => layer.modify.push({
-        id: item.id,
-        changes: {
-          rank: LITURGICAL_RANK.SOLEMNITY, properKind: 'dedication-own-church', localRole: 'dedication-own-church', layer: 'local',
-        },
-      }));
-  }
-  if (isUnknownDedicationDate(localChurch.dedicationDate)) {
-    // Churches whose dedication date is unknown keep the anniversary on the
-    // last Sunday of October (Vitebsk/Pinsk 25.10.2026, Grodno 31.10.2027).
-    layer.add.push({
-      ...dedicationCelebration(localChurch),
-      date: { type: 'last-weekday-of-month', month: 10, isoWeekday: 7 },
-      dedicationDateUnknown: true,
-      daysRef: { source: 'template', template: 'church-dedication' },
-    });
-  } else if (localChurch.dedicationDate) {
-    const parts = typeof localChurch.dedicationDate === 'string'
-      ? localChurch.dedicationDate.split(/[-.]/).map(Number)
-      : [localChurch.dedicationDate.month, localChurch.dedicationDate.day];
-    const [month, day] = typeof localChurch.dedicationDate === 'string' && localChurch.dedicationDate.includes('.')
-      ? [parts[1], parts[0]]
-      : parts;
-    const date = `${String(day).padStart(2, '0')}.${String(month).padStart(2, '0')}`;
-    layer.add.push({
-      ...dedicationCelebration(localChurch),
-      date: { type: 'fixed', month, day },
-      // No fixed `days` document: the Common of the dedication of a church.
-      daysRef: { source: 'template', template: 'church-dedication', _date: date },
-    });
-  }
-  return layer;
-}
-
 function applyChanges(target, changes) {
   const result = { ...target };
   Object.entries(changes || {}).forEach(([key, value]) => {
@@ -246,7 +156,7 @@ export function applyLayers(layers, initial = new Map()) {
         summary.warnings.push(`modify: unknown celebration ${id}`);
         return;
       }
-      const level = layer.level === 'local' ? 'local' : layer.level;
+      const { level } = layer;
       const next = applyChanges({ ...current, layer: changes.layer || level }, changes);
       if (layer.dioceseId && level === 'diocese') next.dioceseId = layer.dioceseId;
       next.layerTrail = [...(current.layerTrail || []), layer.id];
@@ -275,19 +185,10 @@ export function applyLayers(layers, initial = new Map()) {
 }
 
 /**
- * Full layered calendar for a context:
- * `{ country, diocese, localChurch, dioceseLayer? }`.
+ * Full layered calendar for a context: `{ country, diocese, dioceseLayer? }`.
  */
 export function buildCalendarLayers(context = {}) {
   const base = buildBaseLayers(context.country || 'BY');
   const diocese = context.diocese ? buildDiocesanLayer(context.diocese, context.dioceseLayer) : null;
-  const first = applyLayers([...base, diocese]);
-  const local = buildLocalLayer(context.localChurch, first.celebrations);
-  if (!local) return first;
-  const withLocal = applyLayers([local], first.celebrations);
-  return {
-    celebrations: withLocal.celebrations,
-    appliedLayers: [...first.appliedLayers, ...withLocal.appliedLayers],
-    layerNotes: [...first.layerNotes, ...withLocal.layerNotes],
-  };
+  return applyLayers([...base, diocese]);
 }

@@ -71,17 +71,10 @@ export function rankLabel(option) {
 
 export const officeKindLabel = (kind) => OFFICE_KIND_LABELS[kind] || '';
 
-const LOCAL_ROLE_LABELS = Object.freeze({
-  'title-own-church': 'Тытул уласнага касцёла',
-  'principal-patron-place': 'Галоўны апякун месца',
-  'dedication-own-church': 'Гадавіна пасвячэння касцёла',
-});
-
-/** Short badges for a resolved option: local role, diocese, transfer. */
+/** Short badges for a resolved option: diocese, transfer. */
 export function optionBadges(option) {
   if (!option) return [];
   const badges = [];
-  if (option.localRole && LOCAL_ROLE_LABELS[option.localRole]) badges.push(LOCAL_ROLE_LABELS[option.localRole]);
   if (option.dioceseId && PLACE_LABEL_MAP[option.dioceseId]) badges.push(PLACE_LABEL_MAP[option.dioceseId]);
   else if (option.layer === 'belarus') badges.push('Уласны каляндар Беларусі');
   if (option.transferredFrom) badges.push(`Перанесена з ${formatDayMonth(option.transferredFrom)}`);
@@ -228,7 +221,6 @@ export const NOTE_GROUPS = Object.freeze([
   { id: 'procession', label: 'Працэсіі', section: 'notes' },
   { id: 'indulgence', label: 'Адпусты', section: 'notes' },
   { id: 'special-prayer-day', label: 'Асаблівыя дні малітвы', section: 'notes' },
-  { id: 'local-church', label: 'Тытулы парафій і мясцовыя ўрачыстасці', section: 'notes' },
   { id: 'pastoral-note', label: 'Дыяцэзіяльныя і душпастырскія заўвагі', section: 'notes' },
   { id: 'announcement', label: 'Аб’явы', section: 'notes' },
   { id: 'other', label: 'Іншае', section: 'notes' },
@@ -338,13 +330,13 @@ export function groupOrdoNotes(notes = [], { date, diocese } = {}) {
 // Day and month
 // ---------------------------------------------------------------------------
 
-function engineContext({ diocese, localChurch } = {}) {
-  return { country: 'BY', diocese, ...(localChurch ? { localChurch } : {}) };
+function engineContext({ diocese } = {}) {
+  return { country: 'BY', diocese };
 }
 
 /** The resolved day for the screen (with the notes once they are loaded). */
-export function resolveOrdoDay(iso, { diocese, localChurch = null, notes = null } = {}) {
-  return resolveLiturgicalDate(iso, { ...engineContext({ diocese, localChurch }), ...(notes ? { notes } : {}) });
+export function resolveOrdoDay(iso, { diocese, notes = null } = {}) {
+  return resolveLiturgicalDate(iso, { ...engineContext({ diocese }), ...(notes ? { notes } : {}) });
 }
 
 const yearCache = new Map();
@@ -354,8 +346,8 @@ const YEAR_CACHE_LIMIT = 6;
  * Memoized `generateLiturgicalYear` (without notes) per year and context —
  * the month overview reads from it, so paging months never recomputes.
  */
-export function getOrdoYear(year, { diocese, localChurch = null } = {}) {
-  const context = engineContext({ diocese, localChurch });
+export function getOrdoYear(year, { diocese } = {}) {
+  const context = engineContext({ diocese });
   const key = `${year}|${contextKey(context)}`;
   if (yearCache.has(key)) return yearCache.get(key);
   const days = generateLiturgicalYear(Number(year), context);
@@ -387,15 +379,14 @@ export function buildMonthOverview(year, month, options = {}) {
       colorLabel: colorInfo(day.color).label,
       alternatives: day.alternatives.length,
       commemorations: day.commemorations.length,
-      local: Boolean(day.primary.localRole),
     }));
 }
 
 /**
- * Celebrations a church can take as its title: every non-temporal
- * celebration of the calendar (with the diocesan layer), ordered by date.
+ * Every non-temporal celebration of the calendar (with the diocesan layer),
+ * ordered by date — the celebration picker of the Year Overrides admin.
  */
-export function listTitleCelebrations(diocese) {
+export function listCalendarCelebrations(diocese) {
   const { celebrations } = buildCalendarLayers({ country: 'BY', diocese });
   return [...celebrations.values()]
     .filter((item) => item.id && item.title && item.date && !item.temporal)
