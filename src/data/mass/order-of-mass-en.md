@@ -1,4 +1,4 @@
-## The Introductory Rites
+## Уступныя абрады
 
 :::rubric
 The Introductory Rites help the faithful come together as one, establish communion and prepare themselves to listen to the Word of God and to celebrate the Eucharist worthily.
@@ -161,7 +161,7 @@ Then the Priest says the Collect prayer, at the end of which the people acclaim:
 
 **Amen.**
 
-## The Liturgy of the Word
+## Літургія слова
 
 :::rubric
 By hearing the word proclaimed in worship, the faithful again enter into the unending dialogue between God and the covenant people, a dialogue sealed in the sharing of the Eucharistic food and drink.
@@ -334,7 +334,7 @@ The Priest concludes the Prayer with a collect.
 When the Liturgy of the Word has been completed, the people sit.
 :::
 
-## The Liturgy of the Eucharist
+## Эўхарыстычная літургія
 
 :::rubric
 For Catholics, the Eucharist is the source and summit of the whole Christian life. It is the vital centre of all that the Church is and does, because at its heart is the real presence of the crucified, risen and glorified Lord, continuing and making available his saving work among us.
@@ -426,7 +426,7 @@ all glory and honour is yours,
 for ever and ever.
 **Amen.**
 
-## The Communion Rite
+## Абрад Камуніі
 
 ### The Lord’s Prayer
 
@@ -522,7 +522,7 @@ All pray in silence. Then the Priest says the Prayer after Communion, at the end
 
 **Amen.**
 
-## The Concluding Rites
+## Заключныя абрады
 
 :::rubric
 The Concluding Rites send the people forth to put into effect in their lives what they have received.

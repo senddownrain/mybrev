@@ -20,6 +20,7 @@
     "db:snapshot:query": "node scripts/query-firestore-snapshot.mjs",
     "db:import-songs": "node scripts/import-songs.mjs",
     "db:import-mass-english": "node scripts/import-mass-english.mjs",
+    "db:migrate-mass-content-v4": "node scripts/migrate-mass-content-v4.mjs",
     "compendium:build": "node scripts/build-compendium.mjs",
     "compendium:check": "node scripts/build-compendium.mjs --check",
     "db:import-compendium": "node scripts/import-compendium.mjs",

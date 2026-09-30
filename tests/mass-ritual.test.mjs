@@ -20,6 +20,7 @@ import {
 } from '../src/utils/massRitual.js';
 import { buildMassDocument, renderMassBlocks } from '../src/utils/massContent.js';
 import { prayerMarkdownToPlainText, renderPrayerMarkdown } from '../src/utils/prayerMarkdown.js';
+import { MASS_V4_MAJOR_HEADINGS } from '../scripts/lib/mass-content-v4.mjs';
 
 const englishText = readFileSync(new URL('../src/data/mass/order-of-mass-en.md', import.meta.url), 'utf8');
 
@@ -228,13 +229,16 @@ function compact(value) {
 }
 
 // Every visible character of the source must survive, in order; only markup,
-// whitespace and line-leading speaker prefixes (kept as role metadata) may go.
+// whitespace and line-leading speaker prefixes (kept as role metadata) may go,
+// and a major heading shows its canonical Belarusian name.
 function assertWordingPreserved(markdown, document, variant) {
-  const labels = Object.keys(variant.speakerLabels || {});
+  const labels = Object.keys(variant.speakerLabels || {}).sort((a, b) => b.length - a.length);
   const source = prayerMarkdownToPlainText(markdown)
     .replace(/^---$/gm, '')
     .split('\n')
     .map((line) => {
+      const major = MASS_V4_MAJOR_HEADINGS.find(({ title, former }) => [title, ...former].includes(line.trim()));
+      if (major) return major.title;
       const label = labels.find((item) => line.trim().startsWith(item));
       return label ? line.trim().slice(label.length) : line;
     })
@@ -244,8 +248,8 @@ function assertWordingPreserved(markdown, document, variant) {
   assert.ok(document.blocks.filter((block) => block.label).every((block) => labels.includes(block.label)));
 }
 
-test('ritual schema v2 has exactly the five canonical Belarusian major sections', () => {
-  assert.equal(MASS_RITUAL.schemaVersion, 2);
+test('ritual schema v3 has exactly the five canonical Belarusian major sections', () => {
+  assert.equal(MASS_RITUAL.schemaVersion, 3);
   assert.deepEqual(MASS_MAJOR_SECTIONS.map(({ id, title }) => [id, title]), [
     ['introductory-rites', 'Уступныя абрады'],
     ['liturgy-of-the-word', 'Літургія слова'],
@@ -292,7 +296,7 @@ test('English document keeps wording and uses the shared semantic types', () => 
   assert.deepEqual([...new Set(types('posture').map((block) => block.text))], ['all sit', 'all stand', 'all kneel']);
   assert.ok(types('alternative').every((block) => block.text === 'Or:'));
   const greeting = document.blocks.findIndex((block) => block.text === 'The Lord be with you.');
-  assert.deepEqual(document.blocks[greeting + 1], { type: 'response', text: 'And with your spirit.', role: 'people' });
+  assert.deepEqual(document.blocks[greeting + 1], { type: 'response', text: 'And with your spirit.', role: 'people', speakerLabel: 'R.' });
   assert.ok(document.sections.some((section) => section.sectionId === 'offertory' && !section.heading));
 });
 
@@ -316,33 +320,34 @@ test('Belarusian excerpt: headings, roles from labels and cues, quoted rubric wo
     ['spoken', '**Ён, калі дабравольна выдаў сябе на мукі,**', null, null],
     ['majorSection', 'Абрад Камуніі', null, 'communion-rite'],
     ['alternative', 'Альбо:', null, null],
-    ['majorSection', 'Абрад заканчэння', null, 'concluding-rites'],
+    ['majorSection', 'Заключныя абрады', null, 'concluding-rites'],
     ['spoken', 'Пан з вамі.', 'celebrant', null],
     ['response', 'І з духам тваім.', 'all', null],
   ]);
   const html = renderMassBlocks(document.blocks, getMassVariant('be'));
   assert.match(html, /<span class="mass-cited">Аллелюя<\/span> альбо/);
-  assert.doesNotMatch(html, /С\.:|Н\.:|Цэлебрант:/);
+  assert.doesNotMatch(html, /С\.:|Н\.:|Цэлебрант:|Усе:/);
+  assert.match(html, /<span class="mass-speaker" aria-hidden="true">С\.<\/span> Пане, змілуйся над намі\./);
 });
 
-test('Latin excerpt: Russian headings become sections, V./R. become roles', () => {
+test('Latin excerpt (pre-migration): Russian headings become canonical sections, V./R. become roles', () => {
   const document = buildMassDocument(latinExcerpt, getMassVariant('la'), 'mybrev-markdown');
   assertWordingPreserved(latinExcerpt, document, getMassVariant('la'));
   const summary = document.blocks.map(({ type, text, role, sectionId }) => [type, text, role || null, sectionId || null]);
   assert.deepEqual(summary, [
     ['heading', 'ЧИН МЕССЫ НА ЛАТИНСКОМ ЯЗЫКЕ', null, null],
-    ['majorSection', 'Вступительные обряды', null, 'introductory-rites'],
+    ['majorSection', 'Уступныя абрады', null, 'introductory-rites'],
     ['spoken', 'In nomine Patris, et Filii, et Spiritus Sancti.', 'priest', 'sign-of-the-cross'],
     ['response', 'Amen.', 'people', null],
     ['alternative', 'Или:', null, null],
-    ['majorSection', 'Литургия Слова', null, 'liturgy-of-the-word'],
+    ['majorSection', 'Літургія слова', null, 'liturgy-of-the-word'],
     ['rubric', 'После чтения:', null, 'first-reading'],
     ['rubric', '(После чтения)', null, null],
     ['spoken', 'Verbum Domini.', 'priest', null],
     ['response', 'Laus tibi, Christe.', 'people', null],
-    ['majorSection', 'Евхаристическая Литургия', null, 'eucharistic-liturgy'],
-    ['majorSection', 'Обряд причащения', null, 'communion-rite'],
-    ['majorSection', 'Заключительный обряд', null, 'concluding-rites'],
+    ['majorSection', 'Эўхарыстычная літургія', null, 'eucharistic-liturgy'],
+    ['majorSection', 'Абрад Камуніі', null, 'communion-rite'],
+    ['majorSection', 'Заключныя абрады', null, 'concluding-rites'],
     ['spoken', 'Ite, missa est.', 'priest', 'dismissal'],
   ]);
 });

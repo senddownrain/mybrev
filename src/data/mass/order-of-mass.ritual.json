@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "order-of-mass",
   "title": "Святая Імша",
   "primaryPrayerId": "eMmCtxwyJ75ogmL5rwye",
@@ -50,9 +50,10 @@
     "response",
     "separator"
   ],
-  "roles": ["priest", "celebrant", "deacon", "people", "all"],
+  "roles": ["priest", "celebrant", "deacon", "reader", "people", "all"],
   "rolePolicy": {
-    "showSpeakerLabels": false,
+    "showSpeakerLabels": true,
+    "labelPolicy": "dialogue",
     "responseRoles": ["people", "all"]
   },
   "variants": [
@@ -72,7 +73,7 @@
         "eucharistic-liturgy": ["Эўхарыстычная літургія"],
         "eucharistic-prayer": ["II эўхарыстычная малітва"],
         "communion-rite": ["Абрад Камуніі"],
-        "concluding-rites": ["Абрад заканчэння"]
+        "concluding-rites": ["Заключныя абрады", "Абрад заканчэння"]
       },
       "anchors": {
         "sign-of-the-cross": ["Святар гаворыць:"],
@@ -98,13 +99,23 @@
         "alternative": ["Альбо:"]
       },
       "speakerLabels": {
+        "С.": "priest",
+        "Н.": "people",
         "С.:": "priest",
         "C.:": "priest",
         "Н.:": "people",
         "Цэлебрант:": "celebrant",
         "Усе:": "all"
       },
+      "roleLabels": { "priest": "С.", "celebrant": "С.", "deacon": "Д.", "reader": "Л.", "people": "Н.", "all": "Н." },
+      "roleMarkers": {
+        "all": [
+          "І ўцелавіўся ад Духа Святога з Дзевы Марыі…",
+          "Веру ў адзіны святы каталіцкі і апостальскі Касцёл…"
+        ]
+      },
       "roleCues": {
+        "reader": ["лектар гаворыць"],
         "people": [
           "народ адказвае",
           "народ устае і адказвае",
@@ -118,6 +129,8 @@
           "усе разам",
           "разам з народам",
           "разам з вернікамі",
+          "спяваецца ці прамаўляецца гімн",
+          "сімвал альбо вызнанне веры",
           "гавораць",
           "працягваюць"
         ]
@@ -130,13 +143,13 @@
       "prayerId": "zdro66KYVuQ9p2KbqizD",
       "title": "Ordo Missae",
       "markers": {
-        "introductory-rites": ["Вступительные обряды"],
-        "liturgy-of-the-word": ["Литургия Слова"],
+        "introductory-rites": ["Уступныя абрады", "Вступительные обряды"],
+        "liturgy-of-the-word": ["Літургія слова", "Литургия Слова"],
         "creed": ["Исповедание веры"],
-        "eucharistic-liturgy": ["Евхаристическая Литургия"],
+        "eucharistic-liturgy": ["Эўхарыстычная літургія", "Евхаристическая Литургия"],
         "eucharistic-prayer": ["Вторая Евхаристическая молитва"],
-        "communion-rite": ["Обряд причащения"],
-        "concluding-rites": ["Заключительный обряд"]
+        "communion-rite": ["Абрад Камуніі", "Обряд причащения"],
+        "concluding-rites": ["Заключныя абрады", "Заключительный обряд"]
       },
       "anchors": {
         "sign-of-the-cross": ["V. In nomine Patris…"],
@@ -165,6 +178,14 @@
       "speakerLabels": {
         "V.": "priest",
         "R.": "people"
+      },
+      "roleLabels": { "priest": "V.", "celebrant": "V.", "deacon": "V.", "reader": "V.", "people": "R.", "all": "R." },
+      "roleMarkers": {
+        "all": [
+          "Gloria in excelsis Deo…",
+          "Credo in unum Deum…",
+          "Agnus Dei, qui tollis peccata mundi…"
+        ]
       }
     },
     {
@@ -177,13 +198,13 @@
       "strongMarksResponses": true,
       "source": "Excerpts from the English translation of The Roman Missal © 2010, International Commission on English in the Liturgy Corporation. All rights reserved. Compilation & layout © 2011 Catholic Bishops’ Conference of England and Wales. www.missal.org.uk",
       "markers": {
-        "introductory-rites": ["The Introductory Rites"],
+        "introductory-rites": ["Уступныя абрады", "The Introductory Rites"],
         "sign-of-the-cross": ["Sign of the Cross"],
         "greeting": ["Greeting"],
         "penitential-act": ["Penitential Act"],
         "gloria": ["The Gloria"],
         "collect": ["The Collect"],
-        "liturgy-of-the-word": ["The Liturgy of the Word"],
+        "liturgy-of-the-word": ["Літургія слова", "The Liturgy of the Word"],
         "first-reading": ["First Reading"],
         "psalm": ["Psalm"],
         "second-reading": ["Second Reading"],
@@ -191,15 +212,15 @@
         "homily": ["The Homily"],
         "creed": ["The Creed"],
         "prayer-of-the-faithful": ["The Prayer of the Faithful"],
-        "eucharistic-liturgy": ["The Liturgy of the Eucharist"],
+        "eucharistic-liturgy": ["Эўхарыстычная літургія", "The Liturgy of the Eucharist"],
         "eucharistic-prayer": ["The Eucharistic Prayer"],
-        "communion-rite": ["The Communion Rite"],
+        "communion-rite": ["Абрад Камуніі", "The Communion Rite"],
         "lords-prayer": ["The Lord’s Prayer"],
         "breaking-of-the-bread": ["Breaking of the Bread"],
         "invitation-to-communion": ["Invitation to Communion"],
         "communion": ["Communion"],
         "prayer-after-communion": ["Prayer after Communion"],
-        "concluding-rites": ["The Concluding Rites"],
+        "concluding-rites": ["Заключныя абрады", "The Concluding Rites"],
         "blessing": ["Blessing"],
         "dismissal": ["Dismissal"]
       },
@@ -218,6 +239,14 @@
         ],
         "posture": ["all sit", "all stand", "all kneel"],
         "alternative": ["Or:"]
+      },
+      "callRole": "priest",
+      "roleLabels": { "priest": "P.", "celebrant": "P.", "deacon": "D.", "reader": "L.", "people": "R.", "all": "R." },
+      "roleCues": {
+        "reader": ["the reader acclaims"]
+      },
+      "roleMarkers": {
+        "reader": ["Lord, in your mercy."]
       }
     }
   ]

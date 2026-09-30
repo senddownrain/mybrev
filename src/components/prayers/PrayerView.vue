@@ -36,28 +36,14 @@
       </article>
     </div>
 
-    <!-- Primary navigation inside the Mass: the five canonical sections,
-         always titled in Belarusian whatever the language of the text. -->
-    <nav
+    <!-- Primary navigation inside the Mass: one control showing the current
+         major section (always in Belarusian); tapping it opens the picker. -->
+    <MassSectionNav
       v-if="isMassOrder"
-      class="mass-dock"
-      aria-label="Раздзелы святой Імшы"
-    >
-      <ol class="mass-dock__items">
-        <li v-for="section in MASS_MAJOR_SECTIONS" :key="section.id" class="mass-dock__cell">
-          <button
-            type="button"
-            class="mass-dock__item"
-            :class="{ 'mass-dock__item--active': section.id === activeMajorSectionId }"
-            :aria-current="section.id === activeMajorSectionId ? 'location' : undefined"
-            :disabled="!locatedMassSectionIds.has(section.id)"
-            @click="scrollToMassSection(section.id)"
-          >
-            <span class="mass-dock__label">{{ section.title }}</span>
-          </button>
-        </li>
-      </ol>
-    </nav>
+      :section-ids="massSectionIds"
+      :active-section-id="activeMassSectionId"
+      @select="scrollToMassSection"
+    />
   </v-container>
 
   <v-container v-else-if="isLoading" class="text-center">
@@ -87,16 +73,15 @@ import {
 } from '@/utils/prayerMarkdown';
 import {
   MASS_LANGUAGE_STORAGE_KEY,
-  MASS_MAJOR_SECTIONS,
   MASS_ORDER_PRAYER_ID,
   activeMassSectionAt,
-  getMassMajorSectionId,
   getMassVariant,
   massSectionFromHash,
   resolveMassLanguage,
   resolveMassSectionTarget,
 } from '@/utils/massRitual';
 import { buildMassDocument, renderMassBlocks } from '@/utils/massContent';
+import MassSectionNav from '@/components/prayers/MassSectionNav.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -104,7 +89,7 @@ const { prayers, isLoading, getTitle, getText } = usePrayers();
 const { notifySuccess } = useNotifier();
 const uiStore = useUiStore();
 const MASS_READING_LINE = 132;
-// Room taken by the fixed section dock when deciding what is still visible.
+// Room taken by the floating section control when deciding what is still visible.
 const MASS_DOCK_CLEARANCE = 88;
 const bundledMassTexts = {
   'order-of-mass-en.md': () => import('@/data/mass/order-of-mass-en.md?raw'),
@@ -161,8 +146,7 @@ const prayerHtml = computed(() => (
 ));
 const sourceHtml = computed(() => renderPrayerMarkdown(displaySource.value));
 const massSections = computed(() => massDocument.value.sections);
-const locatedMassSectionIds = computed(() => new Set(massSections.value.map(section => section.sectionId)));
-const activeMajorSectionId = computed(() => getMassMajorSectionId(activeMassSectionId.value));
+const massSectionIds = computed(() => massSections.value.map(section => section.sectionId));
 
 const copySuccess = ref(false);
 let copyTimeoutId = null;
@@ -298,7 +282,7 @@ async function updateMassSections() {
   // A bundled variant may still be loading; keep the pending section for it.
   if (!displayText.value.trim()) return;
 
-  const target = resolveMassSectionTarget(pendingMassSection, massSections.value.map(section => section.sectionId));
+  const target = resolveMassSectionTarget(pendingMassSection, massSectionIds.value);
   pendingMassSection = null;
   if (target) {
     scrollToMassSection(target, 'auto');
@@ -332,6 +316,9 @@ function trackActiveMassSection() {
     activeMassSectionId.value = null;
     return;
   }
+  // An open sheet (section picker, text settings) locks page scrolling and
+  // reports a zero scroll position; the current section cannot change then.
+  if (document.documentElement.classList.contains('v-overlay-scroll-blocked')) return;
   const tops = massSections.value.map(section => ({
     sectionId: section.sectionId,
     top: massSectionElement(section.sectionId)?.getBoundingClientRect().top ?? Infinity,

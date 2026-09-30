@@ -172,3 +172,29 @@ export function activeMassSectionAt(sectionTops, readingLine) {
   }
   return active ?? sectionTops[0]?.sectionId ?? null;
 }
+
+/**
+ * Model of the section control and its picker. The five major sections are
+ * always listed, in ritual order, with their Belarusian titles; subsections
+ * found in the current text are secondary rows under their major section.
+ * @param {string[]} locatedSectionIds sections found in the current variant
+ * @param {string|null} activeSectionId section at the reading line
+ */
+export function buildMassSectionPicker(locatedSectionIds, activeSectionId) {
+  const located = new Set(locatedSectionIds);
+  const activeId = resolveMassSectionId(activeSectionId);
+  const activeMajorId = getMassMajorSectionId(activeId);
+  const total = MASS_MAJOR_SECTIONS.length;
+  const items = MASS_MAJOR_SECTIONS.map(({ id, title }, index) => ({
+    id,
+    title,
+    number: index + 1,
+    total,
+    active: id === activeMajorId,
+    available: located.has(id),
+    children: ritual.sections
+      .filter((section) => section.parent === id && located.has(section.id))
+      .map((section) => ({ id: section.id, title: section.title, active: section.id === activeId })),
+  }));
+  return { current: items.find((item) => item.active) || null, items };
+}
