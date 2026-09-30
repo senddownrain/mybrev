@@ -14,18 +14,19 @@
  *   common               Common texts (`templates`, via the doc's `_templates`)
  *   current-day          the temporal day (period doc / seasonal date doc,
  *                        completed from the four-week psalter doc)
- *   sunday-week-1        psalmody of Sunday, week I (`ordinary-w5-d1`)
+ *   sunday-week-1        psalmody of Sunday, week I (`liturgicalTemplates/sunday-week-1`)
  *   complementary        complementary (gradual) psalmody of Daytime Prayer
  *   proper-of-season     Proper of Seasons (Triduum, octaves)
  *   office-for-dead      the `office-for-dead` document
  */
-import { getOrdinaryPsalterDayDocumentId } from '../liturgicalDayResolution.js';
+import { SUNDAY_WEEK_1_TEMPLATE } from '../../constants/officeFields.js';
 
 const fallback = (...chain) => ({ chain });
 const choice = (chain, options, defaultOption = options[0]) => ({ chain, choice: { options, default: defaultOption } });
 const single = (source) => ({ chain: [source] });
 
-export const SUNDAY_WEEK_1_DAY_ID = getOrdinaryPsalterDayDocumentId(1, 1);
+/** Reusable source of «з нядзелі І тыдня»: `liturgicalTemplates/sunday-week-1`. */
+export const SUNDAY_WEEK_1_SOURCE = SUNDAY_WEEK_1_TEMPLATE;
 
 /** Te Deum by calendar rule (not by content fields). */
 export function teDeumFor(officeKind, season) {
@@ -106,7 +107,9 @@ function properHours(daytimePsalms, daytimeAntiphons) {
 }
 
 function memorialHours() {
-  const properOrChoice = () => choice(['proper'], ['common', 'current-day'], 'common');
+  // Own texts stay own; everything else is of the current day by default.
+  // Where the rubrics allow the Common, it is a quick user choice.
+  const properOrChoice = () => choice(['proper'], ['current-day', 'common'], 'current-day');
   const hour = () => ({
     hymn: properOrChoice(),
     psalmody: fallback('proper', 'current-day'),
@@ -126,7 +129,7 @@ function memorialHours() {
       versicle: fallback('proper', 'current-day'),
       // First (biblical) reading of the current day; second is hagiographic.
       reading1: single('current-day'),
-      reading2: choice(['proper'], ['common', 'current-day'], 'common'),
+      reading2: choice(['proper'], ['current-day', 'common'], 'current-day'),
       prayer: fallback('proper', 'common'),
     },
     lauds: hour(),
@@ -201,7 +204,7 @@ function sourcesFor(candidate, temporal) {
     ...(candidate.fallbackDaysRefs ? { properFallbacks: candidate.fallbackDaysRefs } : {}),
     common: proper ? { from: 'proper._templates', ...(proper.template ? { template: proper.template } : {}) } : null,
     currentDay: temporal?.daysRef || null,
-    sundayWeek1: SUNDAY_WEEK_1_DAY_ID,
+    sundayWeek1: { template: SUNDAY_WEEK_1_SOURCE },
     officeForDead: candidate.rankKind === 'all-souls' ? 'office-for-dead' : undefined,
   };
 }

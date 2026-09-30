@@ -1,0 +1,13 @@
+{
+  "_id": "03-01-holy-name-of-jesus",
+  "_schema": 2,
+  "_celebrationId": "holy-name-of-jesus",
+  "_date": "03.01",
+  "_rank": "memoria-ad-libitum",
+  "_feastName": "Найсвяцейшага Імя Езуса",
+  "_templates": [],
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "day-fallback"
+  }
+}

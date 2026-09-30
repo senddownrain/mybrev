@@ -1,0 +1,19 @@
+{
+  "_id": "13-11-five-martyred-brothers-grodno",
+  "_schema": 2,
+  "_celebrationId": "five-martyred-brothers",
+  "_date": "13.11",
+  "_rank": "memoria-ad-libitum",
+  "_place": "grodno",
+  "_feastName": "Свв. Бэнэдыкта, Яна, Мацвея, Ісаака і Крыстына, мучанікаў",
+  "_templates": [
+    "martyrs-many",
+    "martyr-one"
+  ],
+  "_defaultTemplate": "martyrs-many",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

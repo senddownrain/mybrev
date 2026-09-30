@@ -1,0 +1,19 @@
+{
+  "_id": "23-01-bl-vincent-lewoniuk-companions-grodno",
+  "_schema": 2,
+  "_celebrationId": "bl-vincent-lewoniuk-companions",
+  "_date": "23.01",
+  "_rank": "memoria-ad-libitum",
+  "_place": "grodno",
+  "_feastName": "Бл. Вінцэнта Леванюка і 12 паплечнікаў, мучанікаў з Пратуліна",
+  "_templates": [
+    "martyrs-many",
+    "martyr-one"
+  ],
+  "_defaultTemplate": "martyrs-many",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

@@ -23,6 +23,7 @@ import {
 import { MOVABLE_CELEBRATIONS, getCountryRules } from './movableFeasts.js';
 import { applyLayers, normalizeDioceseId } from './layers.js';
 import { CALENDAR_SCHEMA_VERSION, celebrationToDefinition, dateRuleOf } from './definitions.js';
+import { contentFields, feastContentOf } from './feastContentIndex.js';
 
 function movableCelebration(item) {
   return {
@@ -73,6 +74,7 @@ export function expandDataLayer(data, { level, dioceseId = null } = {}) {
   const add = (data?.add || []).map((entry) => {
     const date = mmddToFixedDate(entry.mmdd);
     const category = entry.category || 'saint';
+    const content = feastContentOf({ id: entry.id, date: date.key, place: dioceseId || '', rank: entry.rank });
     return {
       id: entry.id,
       title: entry.title,
@@ -85,8 +87,10 @@ export function expandDataLayer(data, { level, dioceseId = null } = {}) {
       date: { type: 'fixed', month: date.month, day: date.day },
       daysRef: {
         source: 'fixed', _date: date.key, _rank: entry.rank, ...(dioceseId ? { _place: dioceseId } : {}),
+        ...(content ? { dayIds: [content.dayId, ...(content.legacyIds || [])] } : {}),
       },
       readingsRef: { _date: date.key },
+      ...contentFields(content),
       source: source(entry),
     };
   });

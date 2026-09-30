@@ -35,14 +35,19 @@ export function loadFixedCatalog(root) {
   const documents = fs.existsSync(dir)
     ? fs.readdirSync(dir).filter((name) => name.endsWith('.json')).sort().map((name) => {
       const data = JSON.parse(fs.readFileSync(path.join(dir, name), 'utf8'));
-      return {
-        dayId: data._id || name.replace(/\.json$/, ''),
+      // One sparse document per celebration; the per-template copies it
+      // replaces (`_legacyIds`) stay addressable until the data migration.
+      // Scaffolds have no texts: they are linked through the content index,
+      // not matched by title like real documents.
+      if (data._scaffold) return [];
+      return [data._id || name.replace(/\.json$/, ''), ...(data._legacyIds || [])].map((dayId) => ({
+        dayId,
         ddmm: data._date,
         rank: data._rank,
         places: normalizePlaces(data._place),
         title: data._feastName || data._title || '',
-      };
-    })
+      }));
+    }).flat()
     : [];
   const used = new Set();
   const entries = fixedCalendar.map((item, index) => {

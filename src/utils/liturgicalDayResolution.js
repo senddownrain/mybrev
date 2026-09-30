@@ -6,6 +6,7 @@ const DAY_TEMPLATE_LABELS = Object.freeze({
   'church-dedication': 'Пра пасвячэнне касцёла',
   'doctors-of-church': 'Пра доктараў касцёла',
   educators: 'Пра выхавацеляў',
+  'current-day': 'З дня',
   'holy-men': 'Пра святых мужчынаў',
   'holy-women': 'Пра святых жанчынаў',
   'martyr-one': 'Пра аднаго мучаніка',
@@ -17,7 +18,7 @@ const DAY_TEMPLATE_LABELS = Object.freeze({
   'works-of-mercy': 'Пра справы міласэрнасці',
 });
 
-function getDayTemplateLabel(value) {
+export function getDayTemplateLabel(value) {
   const key = String(value || '').trim().toLowerCase();
   return DAY_TEMPLATE_LABELS[key] || value || 'Асноўны';
 }

@@ -1,0 +1,14 @@
+{
+  "_id": "08-06-sv-jadwiga-queen-grodno",
+  "_schema": 2,
+  "_celebrationId": "sv-jadwiga-queen",
+  "_date": "08.06",
+  "_rank": "memoria",
+  "_place": "grodno",
+  "_feastName": "Св. Ядвігі, каралевы",
+  "_templates": [],
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "day-fallback"
+  }
+}

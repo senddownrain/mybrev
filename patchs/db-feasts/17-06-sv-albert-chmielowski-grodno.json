@@ -1,0 +1,18 @@
+{
+  "_id": "17-06-sv-albert-chmielowski-grodno",
+  "_schema": 2,
+  "_celebrationId": "sv-albert-chmielowski",
+  "_date": "17.06",
+  "_rank": "memoria",
+  "_place": "grodno",
+  "_feastName": "Св. Брата Альберта Хмялёўскага, законніка",
+  "_templates": [
+    "religious"
+  ],
+  "_defaultTemplate": "religious",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

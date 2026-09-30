@@ -220,7 +220,7 @@ test('17 diocesan rank override (St Josaphat, 12 November)', () => {
   assert.deepEqual([minsk.primary.officeKind, minsk.primary.precedence], ['feast', 8]);
   assert.deepEqual([grodno.primary.officeKind, grodno.primary.precedence], ['memorial', 10]);
   assert.equal(vitebsk.primary.daysRef._place, 'vitebsk');
-  assert.deepEqual(vitebsk.primary.fallbackDaysRefs[0], { source: 'fixed', _date: '12.11', _rank: 'memoria', dayIds: ['12-11-sv-josaphat--martyr-one', '12-11-sv-josaphat--pastors'] });
+  assert.deepEqual(vitebsk.primary.fallbackDaysRefs[0], { source: 'fixed', _date: '12.11', _rank: 'memoria', dayIds: ['12-11-sv-josaphat', '12-11-sv-josaphat--martyr-one', '12-11-sv-josaphat--pastors'] });
   assert.ok(vitebsk.appliedRules.some((rule) => rule.rule === 'layer-modification' && rule.id === 'sv-josaphat'));
   assert.equal(resolve('2026-11-11', { ...BY, diocese: 'vitebsk' }).officeResolution.evening.vespers.type, 'first');
 });

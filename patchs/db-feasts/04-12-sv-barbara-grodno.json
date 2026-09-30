@@ -1,0 +1,19 @@
+{
+  "_id": "04-12-sv-barbara-grodno",
+  "_schema": 2,
+  "_celebrationId": "sv-barbara",
+  "_date": "04.12",
+  "_rank": "memoria-ad-libitum",
+  "_place": "grodno",
+  "_feastName": "Св. Барбары, панны і мучаніцы",
+  "_templates": [
+    "martyr-one",
+    "virgins"
+  ],
+  "_defaultTemplate": "martyr-one",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

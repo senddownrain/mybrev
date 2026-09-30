@@ -1,0 +1,17 @@
+{
+  "_id": "10-12-our-lady-loreto",
+  "_schema": 2,
+  "_celebrationId": "our-lady-loreto",
+  "_date": "10.12",
+  "_rank": "memoria-ad-libitum",
+  "_feastName": "Найсв. Панны Марыі Ларэтанскай",
+  "_templates": [
+    "blessed-virgin-mary"
+  ],
+  "_defaultTemplate": "blessed-virgin-mary",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

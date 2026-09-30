@@ -1,0 +1,18 @@
+{
+  "_id": "26-10-bl-celina-borzecka-vitebsk",
+  "_schema": 2,
+  "_celebrationId": "bl-celina-borzecka",
+  "_date": "26.10",
+  "_rank": "memoria-ad-libitum",
+  "_place": "vitebsk",
+  "_feastName": "Бл. Цэліны Бажэнцкай, законніцы",
+  "_templates": [
+    "religious"
+  ],
+  "_defaultTemplate": "religious",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

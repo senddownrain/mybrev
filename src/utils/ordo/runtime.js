@@ -11,6 +11,7 @@ import { toIsoDate } from './dates.js';
 import { normalizeDioceseId } from './layers.js';
 import { readingTitleSimilarity } from '../parsedReadingsIdentity.js';
 import { withoutObsoleteDocuments } from '../liturgicalDayResolution.js';
+import { isSparseDayDocument } from '../../constants/officeFields.js';
 
 export const DEFAULT_DIOCESE = 'minsk-mohilev';
 
@@ -69,6 +70,11 @@ export function complineWeekday(compline, dayOfWeek) {
   return COMPLINE_DAY[compline] || Number(dayOfWeek);
 }
 
+/** Full Office descriptor (with `hours`) of a legal option. */
+export function officeDescriptorOf(day, optionId) {
+  return officeOf(day, optionId);
+}
+
 function officeOf(day, optionId) {
   const { officeResolution } = day;
   return [officeResolution.primary, ...officeResolution.alternatives]
@@ -108,6 +114,7 @@ export function optionDescriptor(day, option) {
         date: day.date,
         title: option.title,
       },
+    ...(option.contentStatus ? { contentStatus: option.contentStatus } : {}),
     sourceFallbacks: office?.sourceFallbacks || [],
     allowedChoices: office?.allowedChoices || [],
     commemorations: option.role === 'primary'
@@ -148,7 +155,10 @@ const placesOf = (doc) => (Array.isArray(doc?._place) ? doc._place : [doc?._plac
 export function selectFixedDocuments(option, allDocs, { diocese, claimedIds = new Set() } = {}) {
   const docs = withoutObsoleteDocuments(allDocs);
   const ref = option.daysRef || {};
-  const byIds = (ids) => docs.filter((doc) => ids?.includes(doc.id));
+  // After the data migration the sparse document and the per-template
+  // copies it replaces can coexist: the sparse one is the celebration.
+  const preferSparse = (list) => (list.some(isSparseDayDocument) ? list.filter(isSparseDayDocument).slice(0, 1) : list);
+  const byIds = (ids) => preferSparse(docs.filter((doc) => ids?.includes(doc.id)));
   const own = byIds(ref.dayIds);
   if (own.length) return own;
   for (const fallback of option.fallbackDaysRefs || []) {

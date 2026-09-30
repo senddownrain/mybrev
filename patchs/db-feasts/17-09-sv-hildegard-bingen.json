@@ -1,0 +1,18 @@
+{
+  "_id": "17-09-sv-hildegard-bingen",
+  "_schema": 2,
+  "_celebrationId": "sv-hildegard-bingen",
+  "_date": "17.09",
+  "_rank": "memoria-ad-libitum",
+  "_feastName": "Св. Хільдэгарды Бінгенскай, панны і доктара Касцёла",
+  "_templates": [
+    "doctors-of-church",
+    "virgins"
+  ],
+  "_defaultTemplate": "doctors-of-church",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

@@ -79,10 +79,15 @@ export function fixedIdentityKey(entry) {
 function loadDocumentPlaces(root) {
   const dir = path.join(root, 'patchs', 'db-feasts');
   const places = new Map();
+  const canonical = new Set();
+  places.canonical = canonical;
   if (!fs.existsSync(dir)) return places;
   fs.readdirSync(dir).filter((name) => name.endsWith('.json')).forEach((name) => {
     const data = JSON.parse(fs.readFileSync(path.join(dir, name), 'utf8'));
-    places.set(data._id || name.replace(/\.json$/, ''), normalizePlaces(data._place));
+    if (data._scaffold) return;
+    [data._id || name.replace(/\.json$/, ''), ...(data._legacyIds || [])]
+      .forEach((id) => places.set(id, normalizePlaces(data._place)));
+    canonical.add(data._id || name.replace(/\.json$/, ''));
   });
   return places;
 }
@@ -101,7 +106,13 @@ export function buildFixedIdentities(root = ROOT, { live = loadLiveIndex(path.jo
       const places = documentPlaces.get(id) || [];
       return place ? places.includes(place) : !places.length;
     });
-    const dayIds = resolveLiveDayIds(own.length ? own : entry.dayIds, { date: source.date, place, live });
+    const selected = own.length ? own : entry.dayIds;
+    // The canonical sparse document first (it may not be live before the
+    // migration), then the live documents it replaces.
+    const canonical = selected.filter((id) => documentPlaces.canonical.has(id));
+    const legacy = selected.filter((id) => !documentPlaces.canonical.has(id));
+    const liveIds = resolveLiveDayIds(legacy.length ? legacy : selected, { date: source.date, place, live });
+    const dayIds = [...new Set([...canonical, ...liveIds])];
     identities[fixedIdentityKey(source)] = { id: entry.id, dayIds };
   });
   return identities;

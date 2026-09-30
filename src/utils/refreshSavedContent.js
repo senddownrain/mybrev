@@ -5,7 +5,7 @@ export async function refreshSavedContent() {
   if (!isContentOnline()) throw new Error('Для абнаўлення патрэбны інтэрнэт. Захаваныя тэксты даступныя без сеткі.');
   const keys = await publicContentCache.keys();
   requestContentRefresh();
-  const [{ useLiturgicalStore }, { getStaticCollection }, { getSavedPrayers }] = await Promise.all([
+  const [{ useLiturgicalStore }, { getStaticCollection, getLiturgicalTemplates }, { getSavedPrayers }] = await Promise.all([
     import('../stores/liturgical.js'),
     import('../services/staticLiturgicalService.js'), import('../services/prayerService.js'),
   ]);
@@ -25,7 +25,10 @@ export async function refreshSavedContent() {
             ...options, dayId, includeAlternatives, diocese: readingsDiocese,
           }); break;
           case 'feasts': await liturgical.fetchAllFeasts(value, options); break;
-          case 'static': await getStaticCollection(value, options); break;
+          case 'static':
+            if (value === 'liturgicalTemplates') await getLiturgicalTemplates(options);
+            else await getStaticCollection(value, options);
+            break;
           case 'prayers': await getSavedPrayers(options); break;
           case 'songs': await (await import('../services/songService.js')).getSavedSongs(options); break;
           // Legacy keys: year options are computed now, nothing to refresh.

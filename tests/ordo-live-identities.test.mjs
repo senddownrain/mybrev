@@ -3,7 +3,7 @@ import test from 'node:test';
 import { FIXED_IDENTITIES } from '../src/data/ordo/fixed-identities.js';
 import { claimedDayIds, resolveRuntimeDay, selectFixedDocuments } from '../src/utils/ordo/runtime.js';
 import { isObsoleteDocument, withoutObsoleteDocuments } from '../src/utils/liturgicalDayResolution.js';
-import { resolveLiveDayIds } from '../scripts/ordo/build-identities.mjs';
+import { loadLiveIndex, resolveLiveDayIds } from '../scripts/ordo/build-identities.mjs';
 
 // Firestore shape: one document serves several dioceses through `_place`.
 const DAYS = [
@@ -39,11 +39,16 @@ test('16.05 in Vitebsk resolves to the multi-place diocesan document, not the un
 
 test('generated identities point every diocese of a multi-place document to the live id', () => {
   assert.deepEqual(FIXED_IDENTITIES['16.11|pinsk|Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)'].dayIds,
-    ['16-11-our-lady-mother-mercy-minsk-mohilev-pinsk--minsk-mohilev']);
+    // The canonical sparse document of the diocese first, then the live one.
+    ['16-11-our-lady-mother-mercy-minsk-mohilev-pinsk--pinsk', '16-11-our-lady-mother-mercy-minsk-mohilev-pinsk--minsk-mohilev']);
   assert.deepEqual(FIXED_IDENTITIES['16.05|vitebsk|Св. Андрэя Баболі, прэзбітэра і мучаніка'].dayIds,
-    ['16-05-sv-andrei-bobola-minsk-mohilev']);
-  const ids = Object.values(FIXED_IDENTITIES).flatMap((item) => item.dayIds);
-  assert.ok(!ids.some((id) => /--(?:pinsk|vitebsk)(?:--|$)/.test(id) && !/-vitebsk--/.test(id)), 'no split-only ids remain');
+    ['16-05-sv-andrei-bobola-minsk-mohilev--vitebsk', '16-05-sv-andrei-bobola-minsk-mohilev']);
+  // Every identity still reaches a live document (the split id is only the
+  // canonical sparse document, never the only one).
+  const live = new Set(loadLiveIndex().map((doc) => doc.id));
+  Object.entries(FIXED_IDENTITIES).forEach(([key, item]) => {
+    assert.ok(item.dayIds.some((id) => live.has(id)) || item.dayIds.every((id) => !/--/.test(id)), key);
+  });
 });
 
 test('resolveLiveDayIds keeps live ids, keeps Common variants and leaves unknown ids alone', () => {

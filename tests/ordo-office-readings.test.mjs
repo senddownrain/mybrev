@@ -7,7 +7,7 @@ test('solemnity: Proper → Common fallbacks, no user choices', () => {
   assert.equal(office.allowedChoices.length, 0);
   assert.deepEqual(office.hours.officeOfReadings.reading2.chain, ['proper', 'common']);
   assert.deepEqual(office.hours.lauds.psalmody.chain, ['sunday-week-1']);
-  assert.equal(office.sources.sundayWeek1, 'ordinary-w5-d1');
+  assert.deepEqual(office.sources.sundayWeek1, { template: 'sunday-week-1' });
   assert.deepEqual(office.sources.proper, { source: 'fixed', _date: '15.08', _rank: 'solemnitas', dayIds: ['15-08-assumption-blessed-virgin-mary'] });
   assert.deepEqual(office.firstVespers.chain, ['proper.vesper1', 'common.vesper1', 'proper', 'common']);
   // Daytime Prayer of a solemnity on Sunday uses the Sunday psalms.
@@ -24,7 +24,8 @@ test('memorial: current Psalter, current first reading, hagiographic second read
   assert.deepEqual(office.hours.officeOfReadings.reading1.chain, ['current-day']);
   const reading2 = office.allowedChoices.find((item) => item.hour === 'officeOfReadings' && item.component === 'reading2');
   assert.deepEqual(reading2.after, ['proper']);
-  assert.deepEqual(reading2.options, ['common', 'current-day']);
+  assert.deepEqual(reading2.options, ['current-day', 'common']);
+  assert.equal(reading2.default, 'current-day');
   assert.deepEqual(office.hours.daytime.psalmody.chain, ['current-day']);
   assert.equal(office.compline, 'current-weekday');
   assert.equal(office.teDeum, false);

@@ -1,0 +1,18 @@
+{
+  "_id": "18-08-bl-sancja-szymkowiak-grodno",
+  "_schema": 2,
+  "_celebrationId": "bl-sancja-szymkowiak",
+  "_date": "18.08",
+  "_rank": "memoria-ad-libitum",
+  "_place": "grodno",
+  "_feastName": "Бл. Санцыі Шымкавяк, панны",
+  "_templates": [
+    "virgins"
+  ],
+  "_defaultTemplate": "virgins",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

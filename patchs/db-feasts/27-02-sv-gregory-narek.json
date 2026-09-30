@@ -1,0 +1,18 @@
+{
+  "_id": "27-02-sv-gregory-narek",
+  "_schema": 2,
+  "_celebrationId": "sv-gregory-narek",
+  "_date": "27.02",
+  "_rank": "memoria-ad-libitum",
+  "_feastName": "Св. Грыгорыя Нарэцкага, абата і доктара Касцёла",
+  "_templates": [
+    "doctors-of-church",
+    "religious"
+  ],
+  "_defaultTemplate": "doctors-of-church",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

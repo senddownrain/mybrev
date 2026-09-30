@@ -1,0 +1,18 @@
+{
+  "_id": "02-08-our-lady-of-angels-grodno",
+  "_schema": 2,
+  "_celebrationId": "our-lady-of-angels",
+  "_date": "02.08",
+  "_rank": "memoria-ad-libitum",
+  "_place": "grodno",
+  "_feastName": "Найсв. Панны Марыі Анёльскай",
+  "_templates": [
+    "blessed-virgin-mary"
+  ],
+  "_defaultTemplate": "blessed-virgin-mary",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}
