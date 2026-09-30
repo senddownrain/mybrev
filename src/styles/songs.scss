@@ -4,13 +4,10 @@
   color: var(--nav-on-surface);
   .songs-eyebrow { color: var(--nav-muted); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
   h1 { font-family: var(--reader-display-font-family); font-size: 2rem; line-height: 1.2; margin-bottom: 20px; overflow-wrap: anywhere; }
-  .songs-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .songs-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 22px; }
-  .songs-empty { padding: 42px 12px; text-align: center; color: var(--nav-muted); }
-  .song-source { margin-top: 30px; padding-top: 16px; border-top: 1px solid var(--nav-border); font-size: .875rem; color: var(--nav-muted); overflow-wrap: anywhere; }
-  .song-list-item { border: 1px solid var(--nav-border); border-radius: 18px !important; background: var(--nav-surface); margin-bottom: 8px; padding: 10px 12px; }
-  .song-list-title { white-space: normal; font-weight: 650; overflow-wrap: anywhere; }
 }
+// Shared by the song list (selected tag chips, empty state) and the song editor.
+.songs-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 22px; }
+.songs-empty { padding: 42px 12px; text-align: center; color: var(--nav-muted); }
 .songs-sheet { background: var(--nav-surface) !important; color: var(--nav-on-surface) !important; padding-bottom: max(16px, env(safe-area-inset-bottom, 0px)); max-height: 75dvh; overflow-y: auto; }
 .add-song-btn { right: 0 !important; left: auto !important; }
 .add-song-btn .v-btn__content { gap: 8px; }
