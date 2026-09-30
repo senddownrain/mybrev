@@ -101,8 +101,8 @@ test('transpose still works, within −12…+12, and resets to the original', as
   const html = await render(SongText, { song, showChords: true, layout: 'above', transpose: 2 });
   assert.match(html, />D A</);
   assert.match(html, />b G</);
-  assert.match(await render(SongChordControls, { showChords: true, transpose: 12 }), /aria-label="Павысіць на паўтон" disabled/);
-  assert.match(await render(SongChordControls, { showChords: true, transpose: -12 }), /aria-label="Панізіць на паўтон" disabled/);
+  assert.match(await render(SongChordControls, { showChords: true, transpose: 12 }), /aria-label="Павысіць на паўтон"[^>]* disabled>/);
+  assert.match(await render(SongChordControls, { showChords: true, transpose: -12 }), /aria-label="Панізіць на паўтон"[^>]* disabled>/);
   assert.doesNotMatch(read('src/views/Song.vue'), /updateSong|saveSong|transpose:/);
 });
 
@@ -115,16 +115,51 @@ test('the control keeps the same structure and fixed-width value for every offse
   // Strip text, state classes and attribute values: what remains is the geometry-bearing skeleton.
   const skeleton = (html) => html
     .replace(/>[^<]*</g, '><')
-    .replace(/ (aria-[a-z]+|title|disabled|style|d)(="[^"]*")?/g, '')
-    .replace(/song-[a-z_-]+--(on|active|shifted) /g, '');
+    .replace(/ (aria-[a-z]+|title|disabled|style|tabindex|d)(="[^"]*")?/g, '')
+    .replace(/class="[^"]*"/g, (classes) => classes.replace(/song-[a-z_-]+--(on|active|shifted|unavailable) ?/g, '').replace(/ "$/, '"'));
   const variants = await Promise.all([
     { showChords: true, transpose: 0 }, { showChords: true, transpose: 12 }, { showChords: true, transpose: -12 },
     { showChords: true, transpose: 5, layout: 'right' }, { showChords: false, transpose: 3 },
+    { showChords: true, transpose: -7, layout: 'right', layoutAvailable: false },
   ].map((props) => render(SongChordControls, props)));
+  assert.match(skeleton(variants[0]), /song-chord-toggle.*song-chord-layout.*song-transpose__step.*song-transpose__value.*song-transpose__step/s);
   for (const html of variants) assert.equal(skeleton(html), skeleton(variants[0]));
   const css = read('src/components/songs/SongChordControls.vue');
-  assert.match(css, /\.song-transpose__value \{\s*width: 3\.4rem;/);
+  assert.match(css, /\.song-transpose__value \{\s*width: 3\.9rem;/);
   assert.match(css, /font-variant-numeric: tabular-nums/);
+  // The reset mark is out of flow, so it cannot push the number or the neighbours.
+  assert.match(css, /\.song-transpose__reset \{ position: absolute;/);
+  assert.doesNotMatch(css, /v-if="layoutAvailable"|v-show="layoutAvailable"/);
+});
+
+test('reset to the original key is visible and labelled on the offset itself', async () => {
+  const shifted = await render(SongChordControls, { showChords: true, transpose: 3 });
+  const original = await render(SongChordControls, { showChords: true, transpose: 0 });
+  assert.match(shifted, /class="song-transpose__value--shifted song-transpose__value" aria-label="Танальнасць \+3\. Вярнуць арыгінальную" title="Вярнуць арыгінальную танальнасць"/);
+  assert.match(original, /class="song-transpose__value" aria-label="Арыгінальная танальнасць" title="Арыгінальная танальнасць"/);
+  assert.match(shifted, /<svg[^>]*class="song-transpose__reset"/);
+  assert.match(read('src/components/songs/SongChordControls.vue'), /\.song-transpose__value--shifted \.song-transpose__reset \{ opacity: \.7; \}/);
+});
+
+test('on narrow text the layout selector stays, shows the rendered layout and explains "right"', async () => {
+  const html = await render(SongChordControls, { showChords: true, layout: 'right', layoutAvailable: false });
+  const options = [...html.matchAll(/<button[^>]*role="radio"[^>]*>/g)].map(([tag]) => tag);
+  assert.equal(options.length, 2);
+  assert.match(options[0], /aria-checked="true" aria-label="Акорды над тэкстам"/);
+  assert.doesNotMatch(options[0], /aria-disabled/);
+  assert.match(options[1], /aria-checked="false" aria-label="Акорды справа ад тэксту" aria-disabled="true" title="Акорды справа ад тэксту: даступна на шырэйшым экране/);
+  assert.match(html, /role="radiogroup"[^>]*aria-describedby="song-chord-layout-note"/);
+  // One tab stop for the radio group; the unavailable option never emits a layout change.
+  assert.match(options[0], /tabindex="0"/);
+  assert.match(options[1], /tabindex="-1"/);
+  assert.match(read('src/components/songs/SongChordControls.vue'), /if \(isUnavailable\(value\) \|\| value === shownLayout\.value\) return false;/);
+});
+
+test('songs.scss has no classes left over from the removed songbook UI', () => {
+  const used = ['src/views/Songs.vue', 'src/views/Song.vue', 'src/views/admin/SongEditor.vue'].map(read).join('\n');
+  const classes = new Set([...read('src/styles/songs.scss').matchAll(/\.([a-z][\w-]*)/g)].map((match) => match[1]));
+  classes.delete('v-btn__content');
+  for (const name of classes) assert.match(used, new RegExp(`[" ]${name}[" ]`), name);
 });
 
 test('right layout places each chord cell beside its own lyric line', async () => {
