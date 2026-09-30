@@ -174,11 +174,13 @@ Hidden Russian aliases (`groups: [{ ru: [stems], be: [prefixes] }]`) work like t
 | Route | Screen |
 | --- | --- |
 | `/compendium` | Root screen: the four parts |
-| `/compendium/part/:partId` | Sections → direct questions, named topics, chapters (→ direct questions, named topics) |
+| `/compendium/part/:partId` | Part screen: only its РАЗДЗЕЛ rows (label, title, question range) |
+| `/compendium/node/:nodeId` | Section (`p1-s1`) or subsection (`p1-s1-ch1`) screen: what that node owns directly |
 | `/compendium/topic/:topicId` | A named topic: expandable question rows inside the existing reading surface, with prev/next |
 | `/compendium/question/:number` | One question with its context trail and prev/next; deep-linkable |
 
-All four are children of `CompendiumShell` (see "Persistent search" below).
+All five are children of `CompendiumShell` (see "Persistent search" below). The part
+route and the node route render the same view, `CompendiumNode.vue`.
 
 Other details:
 
@@ -198,28 +200,120 @@ builds a derived tree in which only headings printed on Catholic.by are nodes:
 
 ```text
 part (ЧАСТКА) → section (РАЗДЗЕЛ) → chapter (ГЛАВА) → topic (named heading)
-node: { id, kind, label, title, sourceHeading: true, leadCitations,
-        directQuestions: [questions], topics: [topic nodes], chapters: [chapter nodes] }
+node: { id, kind, number, parentId, label, uiLabel, title, sourceHeading: true, leadCitations,
+        directQuestions: [questions], topics: [topic nodes], chapters: [chapter nodes],
+        children: [structural child screens] }
 ```
 
-- Visible labels come from the source (`partLabel`, `sectionLabel`, `chapterLabel`);
-  `section`/`chapter` are code names only. РАЗДЗЕЛ and ГЛАВА stay distinct.
+- `label` is the heading as printed in the source (`ЧАСТКА ПЕРШАЯ`, `РАЗДЗЕЛ ПЕРШЫ`,
+  `ГЛАВА ПЕРШАЯ`). `uiLabel` is what the product shows (see "UI terminology").
+  `section`/`chapter` are code names only and are never displayed.
 - Questions printed under a heading before its first child heading are that node's
   `directQuestions` and render as plain numbered question rows (the search-result row
-  style). Example: question 1 sits directly under РАЗДЗЕЛ ПЕРШЫ «ВЕРУ» — «ВЕРЫМ»,
-  before ГЛАВА ПЕРШАЯ; questions 79–80 sit in ГЛАВА ДРУГАЯ before its first topic.
-  A node without a real title is never created, so there is no «Пытанне 1» or
+  style). A node without a real title is never created, so there is no «Пытанне 1» or
   «Пытанні 25–27» heading. Ranges only appear as secondary metadata under a real title.
 - A chapter's lead quotation (`leadCitations`) is shown under its heading.
 - Italic subheadings stay in the topic reader (`subtopics` on the topic node).
 - The topic pager walks `sequence`: named topics and direct questions in source order.
-- Context trails and result contexts use real headings only: part label, section,
-  chapter and topic titles, without consecutive duplicates.
-- Legacy links to technical groups (`/compendium/topic/p1-s1-intro`, `…/p1-s1-ch1`)
-  still work. `resolveLegacyTopicRoute` replaces them with the question when the group
-  has one question, and otherwise with the part screen scrolled to the real parent
-  heading (`/compendium/part/p1#p1-s1-ch1`), where those questions are listed. Named
-  topic routes are unchanged.
+
+### Navigation rule (hierarchy v2, shared with the Flutter app)
+
+> Each question is browsed under its nearest real structural owner. Part screens show
+> Sections; Section screens show their direct questions and Subsections; Subsection
+> screens show their direct questions and named Topics; Topic screens show questions.
+> Internal reading groups remain separate from visible navigation.
+
+Exactly, per screen and in this display order (`buildNodeScreen`):
+
+| Screen | Header | Rows, top to bottom |
+| --- | --- | --- |
+| Root | title | the 4 parts (label, title, range) |
+| Part | `ЧАСТКА …`, title | its РАЗДЗЕЛ rows only: label, title, range, chevron. No questions, no subsections, no topics |
+| Section | part label (link) · `РАЗДЗЕЛ …`, title, range | 1. its direct questions; 2. named topics owned directly by the section; 3. its ПАДРАЗДЗЕЛ rows (label, title, range) |
+| Subsection | part label · section title (links) · `ПАДРАЗДЗЕЛ …`, title, range, lead quotation | 1. its direct questions; 2. its named topics (title, range) |
+| Topic | unchanged reader | expandable questions under their italic subheadings |
+
+- A question row opens the question reader, a topic row opens the topic reader, and a
+  РАЗДЗЕЛ / ПАДРАЗДЗЕЛ row opens that node's own screen. Nothing below a node's own
+  level is flattened into it.
+- A named topic is shown by its title only, without a level word. A topic's
+  `parentTitle` stays a small caption above its row.
+- Question ranges (`Пытанне N` / `Пытанні N–M`) are metadata under a real title and
+  never a navigation node.
+- Rows on every screen are in source order.
+
+Audit of the 598-question dataset against this rule (pinned by
+`tests/compendium-hierarchy.test.mjs`):
+
+| | Count |
+| --- | --- |
+| Parts / sections / chapters (subsections) / named topics | 4 / 8 / 20 / 70 |
+| Structural screens (part + section + subsection) | 32 |
+| Questions listed directly on a section screen | 14: q1 (`p1-s1`), q218–220 (`p2-s1`), q357 (`p3-s1`), q434–441 (`p3-s2`), q534 (`p4-s1`) |
+| Questions listed directly on a subsection screen | 13: q2–5 (`p1-s1-ch1`), q79–80 (`p1-s2-ch2`), q251 (`p2-s2-ch1`), q295 (`p2-s2-ch2`), q321 (`p2-s2-ch3`), q535 (`p4-s1-ch1`), q557 (`p4-s1-ch2`), q567–568 (`p4-s1-ch3`) |
+| Questions inside named topics | 571 |
+| Topics owned directly by a section | 5: q250 «Сем сакрамэнтаў Касцёла» (`p2-s2`, before its four subsections) and the 4 topics of `p4-s2` МАЛІТВА ПАНСКАЯ (no chapters) |
+| Subsections without named topics | 1: `p1-s1-ch1` (q2–5) |
+| Questions on a part screen | 0 |
+
+Every question is listed on exactly one screen (14 + 13 + 571 = 598).
+
+### UI terminology: ЧАСТКА → РАЗДЗЕЛ → ПАДРАЗДЗЕЛ
+
+The canonical data is not changed: it keeps `chapter`, `chapterLabel: "ГЛАВА ПЕРШАЯ"`.
+The product derives its own labels in `src/utils/compendiumLabels.js`
+(`compendiumLevelLabel(kind, number, sourceLabel)`):
+
+| Level (code) | Visible label |
+| --- | --- |
+| `part` | the source label as printed: `ЧАСТКА ПЕРШАЯ` (feminine) |
+| `section` | `РАЗДЗЕЛ ` + masculine ordinal of `section.number` (equal to the source label) |
+| `chapter` | `ПАДРАЗДЗЕЛ ` + masculine ordinal of `chapter.number` |
+| `topic` | none: the title only |
+
+The label is generated from the **number**, never by replacing the word «ГЛАВА»
+(«ГЛАВА ПЕРШАЯ» → «ПАДРАЗДЗЕЛ ПЕРШАЯ» would have the wrong gender). Masculine
+ordinals:
+
+| n | Ordinal | n | Ordinal |
+| --- | --- | --- | --- |
+| 1 | ПЕРШЫ | 6 | ШОСТЫ |
+| 2 | ДРУГІ | 7 | СЁМЫ |
+| 3 | ТРЭЦІ | 8 | ВОСЬМЫ |
+| 4 | ЧАЦВЁРТЫ | 9 | ДЗЯВЯТЫ |
+| 5 | ПЯТЫ | 10 | ДЗЯСЯТЫ |
+
+Beyond 10 the plain number is used (`ПАДРАЗДЗЕЛ 11`); the dataset needs 1–4.
+
+### Context trails
+
+- Trails and result contexts use titles of real headings only: part label, then
+  section, chapter and topic **titles**, without consecutive duplicates. Example:
+  `ЧАСТКА ПЕРШАЯ · «ВЕРУ» — «ВЕРЫМ» · ЧАЛАВЕК — «СВЯТЫНЯ» БОГА`.
+- They never show a technical id, `intro`, a code word, a level word for
+  sections/subsections or a range used as a heading.
+- Each crumb links to that node's screen. «Да зместу» under a direct question opens
+  the section/subsection that lists it; «Уся тэма» opens the topic.
+
+### Routes, Back and legacy links
+
+- `nodeRoute(node)`: part → `/compendium/part/:partId`; section or chapter →
+  `/compendium/node/:nodeId`; topic → `/compendium/topic/:topicId`. Ids are the
+  deterministic dataset ids, so deep links and refresh work.
+- The shell keys the level by `route.path`, so each level is its own screen and `?q`
+  never remounts it. Back restores the scroll through the router's saved position.
+- Back without history (a deep link) goes to the logical parent
+  (`compendiumParentRoute`): topic → its subsection or section → part → root.
+- Legacy links keep working:
+  - `/compendium/part/:partId`, `/compendium/topic/:topicId` (named topics) and
+    `/compendium/question/:number` are unchanged.
+  - Technical groups (`/compendium/topic/p1-s1-intro`, `…/p1-s1-ch1`):
+    `resolveLegacyTopicRoute` replaces them with the question when the group has one
+    question, and otherwise with the screen of the real owner
+    (`/compendium/node/p1-s1-ch1`, `/compendium/node/p3-s2`).
+  - Old part anchors (`/compendium/part/p1#p1-s1-ch1`, `…/p3#p3-s2`):
+    `resolveLegacyPartHash` replaces them with `/compendium/node/<id>`. Any other hash
+    just shows the part.
 
 ### Persistent search
 
@@ -237,7 +331,7 @@ and `createCompendiumSearchSync` (`src/utils/compendiumSearchRoute.js`) controls
   Focusing the dock with a kept query reopens its results.
 - Search is always global (`searchCompendium` over the whole index). Numbers, Belarusian
   words and hidden Russian aliases behave as described above.
-- The router does not scroll when only `?q` changes, and a `#heading` hash scrolls to
-  that section or chapter.
+- The router does not scroll when only `?q` changes.
+- The dock is on every level: root, part, section, subsection, topic and question.
 - Every Compendium container reserves the dock height plus the safe-area inset at the
   bottom, so the dock never covers the last question, the pager or the source line.
