@@ -44,7 +44,9 @@ const routes = [
         component: () => import('@/views/CompendiumShell.vue'),
         children: [
           { path: '', name: 'Compendium', component: () => import('@/views/Compendium.vue') },
-          { path: 'part/:partId', name: 'CompendiumPart', component: () => import('@/views/CompendiumPart.vue'), props: true },
+          // Part, section and subsection share one structural-node screen.
+          { path: 'part/:partId', name: 'CompendiumPart', component: () => import('@/views/CompendiumNode.vue'), props: (route) => ({ nodeId: String(route.params.partId) }) },
+          { path: 'node/:nodeId', name: 'CompendiumNode', component: () => import('@/views/CompendiumNode.vue'), props: true },
           { path: 'topic/:topicId', name: 'CompendiumTopic', component: () => import('@/views/CompendiumTopic.vue'), props: true },
           { path: 'question/:number', name: 'CompendiumQuestion', component: () => import('@/views/CompendiumQuestion.vue'), props: true },
         ],
@@ -229,12 +231,9 @@ const router = createRouter({
       return false;
     }
     // Compendium: opening/closing search only rewrites `?q` on the same page;
-    // the shell keeps the page scroll itself. A heading anchor scrolls to it.
+    // the shell keeps the page scroll itself.
     if (to.path.startsWith('/compendium') && to.path === from.path && to.hash === from.hash) {
       return false;
-    }
-    if (to.name === 'CompendiumPart' && to.hash) {
-      return { el: to.hash, top: 84 };
     }
     // Не оставляем активную scroll-анимацию после перехода: на мобильных
     // первый жест пользователя иначе может только остановить эту анимацию.

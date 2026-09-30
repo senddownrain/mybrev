@@ -33,8 +33,8 @@ const store = useCompendiumStore();
 const question = computed(() => (/^\d{1,3}$/.test(props.number) ? store.getQuestion(props.number) : null));
 // Real source headings only (part · section · chapter · named topic), each linkable.
 const trail = computed(() => (question.value ? questionTrail(store.index, question.value) : []));
-// A question inside a named topic opens that topic; a question printed directly
-// under a section/chapter opens the part screen at that heading.
+// A question inside a named topic opens that topic; a question owned directly
+// by a section/subsection opens that node's screen, where it is listed.
 const context = computed(() => {
   const placement = buildCompendiumNavigation(store.index).getPlacement(question.value.number);
   const node = buildCompendiumNavigation(store.index).getNode(placement.nodeId);
