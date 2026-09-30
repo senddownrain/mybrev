@@ -26,6 +26,15 @@
         {{ loadError }}
       </v-alert>
 
+      <v-alert v-if="sparseInfo" type="info" variant="tonal" class="mb-4" data-test="sparse-day-notice">
+        <strong>Дакумент новага фармату.</strong>
+        Тут захоўваюцца толькі ўласныя тэксты. Пустое поле бярэцца з агульных тэкстаў
+        ({{ sparseInfo.templates || 'не зададзены' }}) або з бягучага дня.
+        <template v-if="sparseInfo.rules.length">
+          Правілы палёў: {{ sparseInfo.rules.join('; ') }}. Уласны тэкст у полі мае перавагу над правілам.
+        </template>
+      </v-alert>
+
       <v-card class="mb-6" variant="outlined">
         <v-card-title>Пра гэты дзень</v-card-title>
         <v-card-subtitle class="pb-2">
@@ -344,6 +353,20 @@ function createEmptyDay() {
     ...Object.fromEntries(DAY_EDITOR_SECTIONS.flatMap((section) => section.fields.map((field) => [field.key, '']))),
   };
 }
+
+// Sparse feast document (`_schema: 2`): own texts + structured rules.
+const RULE_LABELS = { 'current-day': 'з дня', 'sunday-week-1': 'з нядзелі І тыдня', common: 'з агульных тэкстаў' };
+const sparseInfo = computed(() => {
+  const day = dayData.value;
+  if (Number(day?._schema) !== 2) return null;
+  const rules = Object.entries(day._fieldRules || {}).map(([field, rule]) => {
+    if (rule?.omit) return `${field}: пустое`;
+    if (rule?.ref) return `${field} = ${[].concat(rule.ref).join(' / ')}`;
+    if (rule?.source === 'template') return `${field}: агульныя тэксты «${rule.template}»`;
+    return `${field}: ${RULE_LABELS[rule?.source] || rule?.source}`;
+  });
+  return { templates: (day._templates || []).join(', '), rules };
+});
 
 async function loadCalendarContext() {
   const date = moment(String(route.query.date || ''), 'YYYY-MM-DD', true);

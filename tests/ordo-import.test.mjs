@@ -53,7 +53,7 @@ test('dry runs write a local plan only; destructive options need a confirmation'
 test('feast targets: sparse documents, templates and the copies they replace', () => {
   const targets = buildFeastTargets();
   assert.ok(targets.templates.some((item) => item.id === 'sunday-week-1'));
-  assert.ok(targets.feasts.every((item) => item.data._schema === 2 && !('_legacyIds' in item.data) && !('_id' in item.data)));
+  assert.ok(targets.feasts.every((item) => item.data._schema === 2 && !('_id' in item.data)));
   assert.ok(targets.legacyIds.includes('01-08-sv-alphonsus-liguori--pastors'));
   const ids = new Set(targets.feasts.map((item) => item.id));
   assert.ok(targets.legacyIds.every((id) => !ids.has(id)), 'a legacy copy is never a target');

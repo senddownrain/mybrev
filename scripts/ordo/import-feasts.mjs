@@ -41,8 +41,9 @@ export function buildFeastTargets(root = ROOT) {
   const feasts = readDir(path.join(root, 'patchs', 'db-feasts'));
   return {
     templates: readDir(path.join(root, 'patchs', 'db-templates')).map(documentOf),
-    // `_legacyIds` is migration metadata, not content.
-    feasts: feasts.map(({ _legacyIds, ...doc }) => documentOf(doc)),
+    // `_legacyIds` stays on the document: the Flutter app hides the former
+    // per-template copies a sparse document replaces.
+    feasts: feasts.map(documentOf),
     legacyIds: [...new Set(feasts.flatMap((doc) => (doc._legacyIds || []).filter((id) => id !== doc._id)))].sort(),
   };
 }
