@@ -22,8 +22,11 @@ import {
   isSeasonalDateDocumentId,
 } from './liturgicalDayResolution.js';
 import {
-  claimedDayIds, optionDescriptor, selectFixedDocuments, summarizeOrdoDay,
+  claimedDayIds, officeDescriptorOf, optionDescriptor, selectFixedDocuments, summarizeOrdoDay,
 } from './ordo/runtime.js';
+import { isSparseDayDocument, SPARSE_DAY_SCHEMA } from '../constants/officeFields.js';
+import { CURRENT_DAY_CHOICE, assembleOffice, assemblyChoices } from './ordo/officeAssembly.js';
+import { getDayTemplateLabel } from './liturgicalDayResolution.js';
 
 function buildPeriodTitle(context, date) {
   return formatLiturgicalPeriodTitle({
@@ -88,6 +91,64 @@ function templatesFromFixed(docs, diocese) {
   return { day: groups[0]?.day || null, templates: groups.flatMap((group) => group.templates) };
 }
 
+export const CURRENT_DAY_LABEL = 'З дня';
+
+/** Day of the temporal cycle that completes an assembled Office. */
+function currentDayDocument(daysResult) {
+  return daysResult.seasonalException || daysResult.periodFallback || daysResult.periodDays?.[0] || null;
+}
+
+/** Identity-only document of a celebration that has no `days` document yet. */
+function scaffoldOf(option) {
+  const date = option.daysRef?._date || '';
+  return {
+    id: option.daysRef?.dayIds?.[0] || [date.replace('.', '-'), option.id].filter(Boolean).join('-'),
+    _schema: SPARSE_DAY_SCHEMA,
+    _scaffold: true,
+    _celebrationId: option.id,
+    ...(date ? { _date: date } : {}),
+    _rank: option.rank,
+    ...(option.dioceseId ? { _place: option.dioceseId } : {}),
+    _feastName: option.title,
+    _templates: option.templates || [],
+    ...(option.defaultTemplate ? { _defaultTemplate: option.defaultTemplate } : {}),
+    _contentStatus: option.contentStatus || { hours: option.templates?.length ? 'common-only' : 'day-fallback' },
+  };
+}
+
+/**
+ * Legal assemblies of a sparse celebration as the card's `templates`:
+ * the default first (its id is the document id, so plain links work), the
+ * other choices as `<id>--<template>` (the ids of the former copies) and
+ * `<id>--day` for «З дня».
+ */
+export function assembledTemplates({ proper, option, resolved, daysResult, templates }) {
+  const office = officeDescriptorOf(resolved, option.id);
+  const currentDay = currentDayDocument(daysResult);
+  const context = {
+    _periodType: currentDay?._periodType, _periodWeekNumber: currentDay?._periodWeekNumber, _dayOfWeek: currentDay?._dayOfWeek,
+  };
+  const choiceId = (choice) => `${proper.id}--${choice === CURRENT_DAY_CHOICE ? 'day' : choice}`;
+  return assemblyChoices(proper, office).map((choice, index) => {
+    const { day, missing } = assembleOffice({ proper, office, templates, choice, currentDay });
+    const id = index === 0 ? proper.id : choiceId(choice);
+    return {
+      id,
+      dayIds: index === 0 ? [proper.id, choiceId(choice)] : [id],
+      choice,
+      label: choice === CURRENT_DAY_CHOICE ? CURRENT_DAY_LABEL : getDayTemplateLabel(choice),
+      day: { ...context, ...day, id, ...(missing.length ? { _missingFields: missing } : {}) },
+    };
+  });
+}
+
+function contentHint(proper) {
+  const status = proper?._contentStatus?.hours;
+  if (status === 'common-only') return 'агульныя тэксты';
+  if (status === 'day-fallback') return 'тэксты дня';
+  return '';
+}
+
 /** May the Office for the Dead be offered as a votive Office today? */
 export function allowsOfficeForDead(resolved) {
   // Only on ordinary weekdays (row 13; with optional memorials allowed) and
@@ -107,7 +168,7 @@ export function allowsOfficeForDead(resolved) {
  * @param {string} params.diocese
  * @returns {{ dayOptions: object[], unavailable: object[], ordo: object }}
  */
-export function buildOrdoDayOptions({ resolved, daysResult, context, date, diocese }) {
+export function buildOrdoDayOptions({ resolved, daysResult, context, date, diocese, templates = new Map() }) {
   const fixedDocs = [
     ...(daysResult.fixedDateDays || []),
     ...(daysResult.extraFixedDays || []),
@@ -163,33 +224,44 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
       ? selectFixedDocuments(option, fixedDocs, { diocese, claimedIds: claimedDayIds(resolved, option.id) })
       : [];
     if (!docs.length && option.rankKind === 'all-souls' && daysResult.officeForDead) docs = [daysResult.officeForDead];
-    if (!docs.length) {
-      unavailable.push({ id: option.id, title: option.title, reason: 'no-days-document' });
-      if (option.role !== 'primary' || !temporal) return;
-      // The primary Office must stay reachable: its texts fall back to the
-      // current day (memorial psalmody is of the day anyway).
+
+    // Sparse document, or no document at all: the celebration stays visible
+    // and its Office is assembled (own texts → Common → the day).
+    const sparse = docs.find(isSparseDayDocument);
+    if (sparse || !docs.length) {
+      const hasCurrentDay = Boolean(currentDayDocument(daysResult));
+      // A votive memorial that lives only in a Common needs that Common.
+      const needsCommon = option.daysRef?.source === 'template';
+      if (!hasCurrentDay || (needsCommon && !templates.has(option.daysRef.template))) {
+        unavailable.push({ id: option.id, title: option.title, reason: 'no-days-document' });
+        return;
+      }
+      if (!sparse) unavailable.push({ id: option.id, title: option.title, reason: 'no-days-document' });
+      const proper = sparse || scaffoldOf(option);
+      const variants = assembledTemplates({ proper, option, resolved, daysResult, templates });
+      const day = variants[0].day;
       options.push({
         ...base,
-        ordo: { ...ordo, missingProper: true },
+        ordo: { ...ordo, ...(sparse ? {} : { missingProper: true }), contentStatus: proper._contentStatus || null },
         key: `fixed-${option.id}`,
         source: LITURGICAL_OPTION_SOURCE.FIXED,
-        title: option.title,
-        subtitle: [RANK_LABEL_MAP[option.rank] || '', 'тэксты дня'].filter(Boolean).join(' · '),
-        day: temporal,
-        templates: [{ id: temporal.id, label: 'Перыяд', day: temporal }],
+        title: option.title || buildDayTitle(day, context, date),
+        subtitle: [fixedSubtitle({ _rank: option.rank, _place: proper._place }, variants.length), contentHint(proper)].filter(Boolean).join(' · '),
+        day,
+        templates: variants,
         order: 3,
       });
       return;
     }
-    const { day, templates } = templatesFromFixed(docs, diocese);
+    const { day, templates: documentTemplates } = templatesFromFixed(docs, diocese);
     options.push({
       ...base,
       key: `fixed-${option.id}`,
       source: docs[0]?._kind === 'office-for-dead' ? LITURGICAL_OPTION_SOURCE.OFFICE_FOR_DEAD : LITURGICAL_OPTION_SOURCE.FIXED,
       title: buildDayTitle(day, context, date) || option.title,
-      subtitle: fixedSubtitle(day, templates.length),
+      subtitle: fixedSubtitle(day, documentTemplates.length),
       day,
-      templates,
+      templates: documentTemplates,
       order: 3,
     });
   });

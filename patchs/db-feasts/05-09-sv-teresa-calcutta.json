@@ -1,0 +1,17 @@
+{
+  "_id": "05-09-sv-teresa-calcutta",
+  "_schema": 2,
+  "_celebrationId": "sv-teresa-calcutta",
+  "_date": "05.09",
+  "_rank": "memoria-ad-libitum",
+  "_feastName": "Св. Тэрэзы з Калькуты, панны",
+  "_templates": [
+    "virgins"
+  ],
+  "_defaultTemplate": "virgins",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

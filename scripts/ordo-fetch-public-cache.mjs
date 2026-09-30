@@ -26,6 +26,8 @@ export const DAYS_FIELD_MASK = Object.freeze([
 export const READINGS_FIELD_MASK = Object.freeze([
   '_date', '_rank', '_place', '_feast', '_dayId', '_dayIds', 'title',
   '_periodType', '_periodWeekNumber', '_dayOfWeek', '_obsolete',
+  // Citations and the list of parsed sections (no texts) for the readings audit.
+  'year', 'sectionsFound', 'reading1.bible', 'reading2.bible', 'psalm.bible', 'gospel.bible',
 ]);
 
 function parseArgs(argv) {

@@ -77,12 +77,16 @@
             color="primary"
             :first-day-of-week="1"
             show-adjacent-months
+            liturgical
+            show-options
+            :diocese="effectiveOrdoDiocese"
+            @select-option="openOption"
           />
         </v-card-text>
         <v-card-actions class="date-dialog-actions">
           <v-btn class="today-date-btn" variant="text" prepend-icon="mdi-calendar-today" @click="selectToday">Сёння</v-btn>
           <v-spacer />
-          <v-btn variant="flat" rounded="lg" class="select-date-btn" @click="loadDay">Выбраць</v-btn>
+          <span class="date-dialog-hint">Выберыце дзень і варыянт</span>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -94,6 +98,8 @@ import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAppBar } from '@/composables/useAppBar';
 import CustomDatePicker from '@/components/common/CustomDatePicker.vue';
+import { effectiveOrdoDiocese, ordoDiocese } from '@/utils/ordoDiocese';
+import { pickerRouteFor } from '@/utils/ordoDatePicker';
 import moment from '@/utils/moment-be';
 import { PhListBullets, PhSunHorizon, PhCalendarBlank, PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue';
 
@@ -145,19 +151,20 @@ function navigateToDate(m) {
 
 function selectToday() { selectedDate.value = new Date(); }
 
+// A date alone does not navigate: the user picks one of its legal options,
+// resolved by the same engine as the screen it opens.
+function openOption({ option, date }) {
+  toggleCalendarDialog();
+  router.push(pickerRouteFor(option, date, 'readings', {
+    today: moment().format('YYYY-MM-DD'), diocese: effectiveOrdoDiocese.value, defaultDiocese: ordoDiocese.value,
+  }));
+}
+
 watch(isCalendarDialogOpen, (open) => {
   if (!open) return;
   const d = currentRouteDate.value;
   selectedDate.value = d.isValid() ? d.toDate() : new Date();
 });
-
-function loadDay() {
-  toggleCalendarDialog();
-  if (!selectedDate.value) return;
-  const m = moment(selectedDate.value);
-  if (!m.isValid()) return;
-  navigateToDate(m.startOf('day'));
-}
 </script>
 
 <style scoped>
@@ -317,5 +324,10 @@ function loadDay() {
   .date-dialog-card::-webkit-scrollbar {
     display: none;
   }
+}
+.date-dialog-hint {
+  padding-right: 8px;
+  color: var(--nav-muted);
+  font-size: 0.76rem;
 }
 </style>

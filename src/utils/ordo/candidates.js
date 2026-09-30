@@ -72,7 +72,6 @@ export function temporalReadingsRef(season) {
 
 function candidateKind(celebration) {
   if (celebration.layer === 'override') return 'override';
-  if (celebration.layer === 'local') return 'local';
   if (celebration.daysRef?.source === 'dynamic') return 'dynamic';
   return 'fixed';
 }
@@ -89,7 +88,6 @@ export function celebrationCandidate(placement, status = 'active') {
     layer: celebration.layer,
     ...(celebration.dioceseId ? { dioceseId: celebration.dioceseId } : {}),
     ...(celebration.properKind ? { properKind: celebration.properKind } : {}),
-    ...(celebration.localRole ? { localRole: celebration.localRole } : {}),
     ...(celebration.feastCode ? { feastCode: celebration.feastCode } : {}),
     temporal: Boolean(celebration.temporal),
     precedence: placement.precedence,
@@ -98,6 +96,10 @@ export function celebrationCandidate(placement, status = 'active') {
     daysRef: celebration.daysRef || null,
     ...(celebration.fallbackDaysRefs ? { fallbackDaysRefs: celebration.fallbackDaysRefs } : {}),
     readingsRef: celebration.readingsRef || null,
+    ...(celebration.templates?.length ? { templates: celebration.templates } : {}),
+    ...(celebration.defaultTemplate ? { defaultTemplate: celebration.defaultTemplate } : {}),
+    ...(celebration.contentStatus ? { contentStatus: celebration.contentStatus } : {}),
+    ...(celebration.readingsReference ? { readingsReference: celebration.readingsReference } : {}),
     rules: celebration.rules || {},
     layerTrail: celebration.layerTrail || [],
     ...(celebration.inheritedFrom ? { inheritedFrom: celebration.inheritedFrom } : {}),
@@ -149,6 +151,9 @@ export function saturdayMaryCandidate(season) {
     color: 'albus',
     daysRef: { source: 'template', template: 'blessed-virgin-mary' },
     readingsRef: { common: 'blessed-virgin-mary' },
+    templates: ['blessed-virgin-mary'],
+    defaultTemplate: 'blessed-virgin-mary',
+    contentStatus: { hours: 'common-only' },
     rules: { onlyWithoutObligatoryMemorial: true },
     layerTrail: ['universal'],
     order: 10000,

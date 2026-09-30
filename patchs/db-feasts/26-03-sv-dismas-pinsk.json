@@ -1,0 +1,14 @@
+{
+  "_id": "26-03-sv-dismas-pinsk",
+  "_schema": 2,
+  "_celebrationId": "sv-dismas",
+  "_date": "26.03",
+  "_rank": "memoria-ad-libitum",
+  "_place": "pinsk",
+  "_feastName": "Св. Дызмы, Добрага Злачынцы",
+  "_templates": [],
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "day-fallback"
+  }
+}

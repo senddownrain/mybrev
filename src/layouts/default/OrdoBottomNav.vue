@@ -5,8 +5,8 @@
       <!-- Prev-day arrow -->
       <button
         class="arrow-btn"
-        aria-label="Папярэдні дзень"
-        @click="goToPrevDay"
+        :aria-label="isMonth ? 'Папярэдні месяц' : 'Папярэдні дзень'"
+        @click="goToPrev"
       >
         <PhCaretLeft :size="20" />
       </button>
@@ -15,24 +15,25 @@
       <div class="pill">
         <button
           class="pill-item"
-          aria-label="Агляд месяца"
-          @click="scrollToMonth"
+          :class="{ 'pill-item--active': isMonth }"
+          aria-label="Месяц"
+          @click="openMonth"
         >
           <PhListBullets :size="23" />
         </button>
 
         <button
           class="pill-item"
-          :class="{ 'pill-item--active': activeIndex === 1 }"
+          :class="{ 'pill-item--active': !isMonth && activeIndex === 1 }"
           aria-label="Сёння"
-          @click="navigateToDate(today)"
+          @click="goToday"
         >
           <PhSunHorizon :size="23" />
         </button>
 
         <button
           class="pill-item"
-          :class="{ 'pill-item--active': activeIndex === 2 }"
+          :class="{ 'pill-item--active': !isMonth && activeIndex === 2 }"
           aria-label="Каляндар"
           @click="toggleCalendarDialog"
         >
@@ -43,8 +44,8 @@
       <!-- Next-day arrow -->
       <button
         class="arrow-btn"
-        aria-label="Наступны дзень"
-        @click="goToNextDay"
+        :aria-label="isMonth ? 'Наступны месяц' : 'Наступны дзень'"
+        @click="goToNext"
       >
         <PhCaretRight :size="20" />
       </button>
@@ -74,6 +75,8 @@
             color="primary"
             :first-day-of-week="1"
             show-adjacent-months
+            liturgical
+            :diocese="ordoDioceseFilter[0]"
           />
         </v-card-text>
         <v-card-actions class="date-dialog-actions">
@@ -87,15 +90,17 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, nextTick, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAppBar } from '@/composables/useAppBar';
 import CustomDatePicker from '@/components/common/CustomDatePicker.vue';
 import moment from '@/utils/moment-be';
 import { PhListBullets, PhSunHorizon, PhCalendarBlank, PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue';
+import { ordoMonthRoute, ordoRouteFor, parseOrdoMonth, shiftOrdoMonth } from '@/utils/ordoScreen';
+import { ordoDioceseFilter } from '@/utils/ordoMonthFilter';
 
-// Day navigation of the Ordo screen: the same pill and date dialog as the
-// Hours and Readings, on `/ordo` (today) and `/ordo/:date`.
+// Navigation of the Ordo screen: on `/ordo` the arrows page months, on
+// `/ordo/:date` days. The same pill and date dialog as the Hours and Readings.
 const route = useRoute();
 const router = useRouter();
 const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar();
@@ -110,16 +115,35 @@ const currentRouteDate = computed(() => {
 
 const activeIndex = computed(() => (currentRouteDate.value.isSame(today.value, 'day') ? 1 : 2));
 
+const isMonth = computed(() => route.name === 'Ordo');
+const todayIso = computed(() => today.value.format('YYYY-MM-DD'));
+const monthCursor = computed(() => parseOrdoMonth(route.query.month, todayIso.value));
+
 function navigateToDate(m) {
-  if (m.isSame(today.value, 'day')) router.push({ name: 'Ordo' });
-  else router.push({ name: 'OrdoByDate', params: { date: m.format('YYYY-MM-DD') } });
+  router.push(ordoRouteFor(m.format('YYYY-MM-DD')));
 }
 
-function goToPrevDay() { navigateToDate(currentRouteDate.value.clone().subtract(1, 'day')); }
-function goToNextDay() { navigateToDate(currentRouteDate.value.clone().add(1, 'day')); }
+function goToPrev() {
+  if (isMonth.value) router.push(ordoMonthRoute(shiftOrdoMonth(monthCursor.value, -1), todayIso.value));
+  else navigateToDate(currentRouteDate.value.clone().subtract(1, 'day'));
+}
+function goToNext() {
+  if (isMonth.value) router.push(ordoMonthRoute(shiftOrdoMonth(monthCursor.value, 1), todayIso.value));
+  else navigateToDate(currentRouteDate.value.clone().add(1, 'day'));
+}
 
-function scrollToMonth() {
-  document.getElementById('ordo-month')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+/** Month view: the current month, scrolled to today. Day view: today's detail. */
+async function goToday() {
+  if (!isMonth.value) { navigateToDate(today.value); return; }
+  await router.push({ name: 'Ordo' });
+  await nextTick();
+  document.querySelector('.month-day--today')?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+/** The month of the day being viewed (from the month view: back to today's). */
+function openMonth() {
+  const date = isMonth.value ? today.value : currentRouteDate.value;
+  router.push(ordoMonthRoute({ year: date.year(), month: date.month() + 1 }, todayIso.value));
 }
 
 function selectToday() { selectedDate.value = new Date(); }

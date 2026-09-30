@@ -1,0 +1,17 @@
+{
+  "_id": "11-10-sv-john-xxiii",
+  "_schema": 2,
+  "_celebrationId": "sv-john-xxiii",
+  "_date": "11.10",
+  "_rank": "memoria-ad-libitum",
+  "_feastName": "Св. Яна XXIII, папы",
+  "_templates": [
+    "pastors"
+  ],
+  "_defaultTemplate": "pastors",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

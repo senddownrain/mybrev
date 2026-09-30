@@ -1,5 +1,7 @@
 # Ordo: текущий pipeline MyBrev и расхождения с согласованным алгоритмом
 
+> **Обновление (этап «Ordo next stage»).** Уровень собственного костёла (`LocalChurchContext`, «Мой касцёл») удалён: слои — `universal → belarus → diocese → year overrides`. `YearOptions` — только вычисляемый DTO, Firestore `yearOptions` не читается. Постоянный календарь хранится как декларативные определения (`liturgicalCelebrations`, `liturgicalDioceseOverrides`), ручные исключения года — в `liturgicalYearOverrides`. Актуальное описание: `docs/ordo-next-stage.md`.
+
 Краткая карта того, как MyBrev сейчас решает «какой литургический день сегодня», и где это
 расходится с алгоритмом из `.ordo-sources/claude_mybrev_ordo_resolver_master_prompt.md`
 (разделы 9–19, 30). Примеры расхождений взяты из извлечённых календарей

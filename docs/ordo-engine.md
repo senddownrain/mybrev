@@ -1,5 +1,7 @@
 # Ordo engine (stage 3)
 
+> **Update (Ordo next stage).** The own-church level (`LocalChurchContext`, «Мой касцёл») was removed: layers are `universal → belarus → diocese → year overrides`. `YearOptions` is a computed DTO only; Firestore `yearOptions` is not read. The permanent calendar is stored as declarative definitions (`liturgicalCelebrations`, `liturgicalDioceseOverrides`), manual one-year decisions in `liturgicalYearOverrides`. Current description: `docs/ordo-next-stage.md`.
+
 Pure ES modules in `src/utils/ordo/` that generate the liturgical calendar for any year from
 permanent rules and existing MyBrev identities. No Firestore, Pinia or UI. Since stages 4–5 the
 Hours and Readings runtime resolve every date through it (see *Runtime* below).
@@ -12,11 +14,6 @@ import { resolveLiturgicalDate, generateLiturgicalYear } from '@/utils/ordo';
 resolveLiturgicalDate('2026-11-12', {
   country: 'BY',                 // default
   diocese: 'vitebsk',            // grodno | minsk-mohilev (alias minsk) | pinsk | vitebsk
-  localChurch: {                 // optional LocalChurchContext
-    id: 'x', titleCelebrationId: 'sv-casimir', patronCelebrationId: '…',
-    dedicationDate: '09-20',     // MM-DD, DD.MM, { month, day } or 'unknown' (last Sunday of October)
-    isCathedral: false,
-  },
   yearOverrides: [],             // YearOverride[] (see yearOverrides.js)
   notes: [],                     // OrdoNote[] (future src/data/ordo/notes.json)
   dioceseLayer: null,            // extra { add, modify, rules, notes } for the diocese
@@ -107,9 +104,8 @@ liturgicalStore.resolveContext(date, diocese)
 
 - The diocese comes from Settings (`src/utils/ordoDiocese.js`, default Minsk–Mahilioŭ) and is part
   of the offline cache keys.
-- Year options come from `mergeYearOptions()`: computed by the engine; a Firestore `yearOptions`
-  document still overrides field by field and every discrepancy is logged. If the stored document
-  changes the period of a date, the store logs it and uses the stored period for `days` lookups.
+- Year options are computed by the engine (`buildYearOptions`); `compareStoredYearOptions()` only
+  audits a legacy Firestore `yearOptions` document and never changes the calendar.
 - I Vespers: whether a celebration has them is the engine's decision (`vespers.type === 'first'`);
   the texts are `vesper1*` field by field, else the celebration's Proper/Common Vespers fields
   (`assembleFirstVespers`).
@@ -124,10 +120,7 @@ liturgicalStore.resolveContext(date, diocese)
   `getOrdoYear(year, context)`, `listTitleCelebrations(diocese)`.
 - Notes: `src/utils/ordoNotesLoader.js` — `import('../data/ordo/notes.json')`, a separate chunk
   that the startup code never imports statically (`tests/ordo-screen.test.mjs`).
-- Local church: `src/utils/ordoLocalChurch.js` (localStorage `ordoLocalChurch`, off by default;
-  Settings → Мой касцёл). `toEngineLocalChurch()` gives the `localChurch` context for the Ordo
-  screen and for Hours/Readings (`resolveRuntimeDay(date, { diocese, localChurch })`); the
-  content cache keys get a local-church part only when it is set.
+- Own church: removed. `src/utils/legacyStorageCleanup.js` deletes the stored setting once.
 
 ## Validation (stage 6b)
 

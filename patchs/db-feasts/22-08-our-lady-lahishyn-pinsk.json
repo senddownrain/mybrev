@@ -1,0 +1,18 @@
+{
+  "_id": "22-08-our-lady-lahishyn-pinsk",
+  "_schema": 2,
+  "_celebrationId": "our-lady-lahishyn",
+  "_date": "22.08",
+  "_rank": "solemnitas",
+  "_place": "pinsk",
+  "_feastName": "Найсв. Панны Марыі Лагішынскай, апякункі Пінскай дыяцэзіі",
+  "_templates": [
+    "blessed-virgin-mary"
+  ],
+  "_defaultTemplate": "blessed-virgin-mary",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

@@ -1,19 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { resolveLiturgicalDate } from '../src/utils/ordo/index.js';
-import { resolveRuntimeDay } from '../src/utils/ordo/runtime.js';
+import { LAYER_LEVELS } from '../src/utils/ordo/layers.js';
+import { contextKey } from '../src/utils/ordo/yearPlan.js';
+import { LEGACY_STORAGE_KEYS, removeLegacyStorageKeys } from '../src/utils/legacyStorageCleanup.js';
 import {
-  announcesOtherDate, buildMonthOverview, getOrdoYear, groupOrdoNotes, listTitleCelebrations,
-  massSummary, noteAppliesToYear, officeDirections, ordoRouteFor, parseOrdoRouteDate, resolveOrdoDay,
+  announcesOtherDate, buildMonthOverview, getOrdoYear, groupOrdoNotes, listCalendarCelebrations,
+  NOTE_GROUPS, buildDayUnion, buildMonthUnion, legalColors, massSummary, normalizeDioceseFilter, noteAppliesToYear,
+  officeDirections, ordoMonthRoute, ordoRouteFor, parseOrdoMonth, parseOrdoRouteDate, resolveOrdoDay, shiftOrdoMonth,
   suppressionReason,
 } from '../src/utils/ordoScreen.js';
-import {
-  DEFAULT_LOCAL_CHURCH, ORDO_LOCAL_CHURCH_STORAGE_KEY, localChurchCacheKey, normalizeLocalChurchSetting,
-  readStoredLocalChurch, toEngineLocalChurch, writeStoredLocalChurch,
-} from '../src/utils/ordoLocalChurch.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (path) => readFileSync(join(root, path), 'utf8');
@@ -43,9 +42,17 @@ test('drawer entry «Літургічны каляндар» with a Phosphor ico
   assert.match(drawer, /ORDO_ROUTE_NAMES = \['Ordo', 'OrdoByDate'\]/);
 });
 
-test('route helpers: today is /ordo, other dates /ordo/:date, invalid dates fall back', () => {
-  assert.deepEqual(ordoRouteFor('2026-09-29', '2026-09-29'), { name: 'Ordo' });
-  assert.deepEqual(ordoRouteFor('2026-12-29', '2026-09-29'), { name: 'OrdoByDate', params: { date: '2026-12-29' } });
+test('route helpers: /ordo is the month, a day is /ordo/:date, invalid dates fall back', () => {
+  assert.deepEqual(ordoRouteFor('2026-09-29'), { name: 'OrdoByDate', params: { date: '2026-09-29' } });
+  assert.deepEqual(ordoRouteFor(''), { name: 'Ordo' });
+  // Current month needs no query; another month is `?month=YYYY-MM`.
+  assert.deepEqual(parseOrdoMonth(undefined, '2026-09-29'), { year: 2026, month: 9 });
+  assert.deepEqual(parseOrdoMonth('2027-02', '2026-09-29'), { year: 2027, month: 2 });
+  assert.deepEqual(parseOrdoMonth('2027-13', '2026-09-29'), { year: 2026, month: 9 });
+  assert.deepEqual(ordoMonthRoute({ year: 2026, month: 9 }, '2026-09-29'), { name: 'Ordo' });
+  assert.deepEqual(ordoMonthRoute({ year: 2026, month: 12 }, '2026-09-29'), { name: 'Ordo', query: { month: '2026-12' } });
+  assert.deepEqual(shiftOrdoMonth({ year: 2026, month: 12 }, 1), { year: 2027, month: 1 });
+  assert.deepEqual(shiftOrdoMonth({ year: 2026, month: 1 }, -1), { year: 2025, month: 12 });
   assert.equal(parseOrdoRouteDate('2026-08-14', 'x'), '2026-08-14');
   assert.equal(parseOrdoRouteDate('2026-02-30', '2026-09-29'), '2026-09-29');
   assert.equal(parseOrdoRouteDate('nonsense', '2026-09-29'), '2026-09-29');
@@ -160,90 +167,58 @@ test('startup code never statically imports notes.json (lazy chunk of the Ordo s
 });
 
 // ---------------------------------------------------------------------------
-// Local church setting
+// No parish / own-church level
 // ---------------------------------------------------------------------------
 
-function memoryStorage() {
-  const map = new Map();
-  return { getItem: (key) => (map.has(key) ? map.get(key) : null), setItem: (key, value) => map.set(key, String(value)), map };
-}
+test('no LocalChurch anywhere in the runtime', () => {
+  const files = [];
+  const walk = (dir) => readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) walk(full);
+    else if (/\.(js|vue|mjs)$/.test(entry.name)) files.push(full);
+  });
+  walk(join(root, 'src'));
+  const pattern = /localChurch|LocalChurch|ordoLocalChurch|titleCelebrationId|patronCelebrationId|localRole|Мой касцёл|Тытулы парафій/;
+  const offenders = files.filter((file) => pattern.test(readFileSync(file, 'utf8')));
+  // The only mention left is the one-time removal of the stored setting.
+  assert.deepEqual(offenders.map((file) => file.slice(root.length + 1)), ['src/utils/legacyStorageCleanup.js']);
+  const stored = new Map([['ordoLocalChurch', '{"enabled":true}'], ['ordoDiocese', 'pinsk']]);
+  removeLegacyStorageKeys({ removeItem: (key) => stored.delete(key) });
+  assert.deepEqual([...stored.keys()], ['ordoDiocese']);
+  assert.ok(LEGACY_STORAGE_KEYS.includes('ordoLocalChurch'));
+  assert.ok(!LAYER_LEVELS.includes('local'));
 
-test('local church setting: default off, normalized and persisted', () => {
-  const storage = memoryStorage();
-  assert.deepEqual(readStoredLocalChurch(storage), DEFAULT_LOCAL_CHURCH);
-  assert.equal(toEngineLocalChurch(DEFAULT_LOCAL_CHURCH), null);
-  assert.equal(localChurchCacheKey(null), '');
-
-  const saved = writeStoredLocalChurch({
-    enabled: true, titleCelebrationId: ' sv-anthony-padua ', dedicationMode: 'date', dedicationDate: '20.09', junk: 1,
-  }, storage);
-  assert.deepEqual(saved, { enabled: true, titleCelebrationId: 'sv-anthony-padua', dedicationMode: 'date', dedicationDate: '09-20' });
-  assert.deepEqual(JSON.parse(storage.map.get(ORDO_LOCAL_CHURCH_STORAGE_KEY)), saved);
-  assert.deepEqual(readStoredLocalChurch(storage), saved);
-  assert.deepEqual(toEngineLocalChurch(saved), { id: 'own-church', titleCelebrationId: 'sv-anthony-padua', dedicationDate: '09-20' });
-  assert.equal(localChurchCacheKey(toEngineLocalChurch(saved)), 'title:sv-anthony-padua:dedication:09-20');
-
-  assert.deepEqual(toEngineLocalChurch({ ...saved, dedicationMode: 'unknown' }).dedicationDate, 'unknown');
-  assert.equal(toEngineLocalChurch({ ...saved, enabled: false }), null);
-  assert.equal(toEngineLocalChurch({ enabled: true }), null, 'enabled but empty is still off');
-  assert.equal(normalizeLocalChurchSetting({ dedicationMode: 'x', dedicationDate: '02-30' }).dedicationDate, '');
-  storage.setItem(ORDO_LOCAL_CHURCH_STORAGE_KEY, '{broken');
-  assert.deepEqual(readStoredLocalChurch(storage), DEFAULT_LOCAL_CHURCH);
+  // A stale `localChurch` in the context is ignored: same plan, same day.
+  const plain = resolveLiturgicalDate('2027-06-13', { diocese: 'minsk-mohilev' });
+  const stale = resolveLiturgicalDate('2027-06-13', { diocese: 'minsk-mohilev', localChurch: { titleCelebrationId: 'sv-anthony-padua' } });
+  assert.equal(stale.primary.id, plain.primary.id);
+  assert.equal(plain.primary.kind, 'temporal');
+  assert.equal(contextKey({ diocese: 'minsk' }), contextKey({ diocese: 'minsk', localChurch: { id: 'x' } }));
+  assert.ok(!('localChurch' in plain.context));
 });
 
-test('title and dedication become local solemnities in the engine', () => {
-  const setting = { enabled: true, titleCelebrationId: 'sv-anthony-padua', dedicationMode: 'date', dedicationDate: '09-20' };
-  const localChurch = toEngineLocalChurch(setting);
-  const plain = resolveOrdoDay('2027-06-13', { diocese: 'minsk-mohilev' });
-  assert.equal(plain.primary.kind, 'temporal'); // XI Sunday in Ordinary Time
-  const title = resolveOrdoDay('2027-06-13', { diocese: 'minsk-mohilev', localChurch });
-  assert.equal(title.primary.id, 'sv-anthony-padua');
-  assert.equal(title.primary.officeKind, 'solemnity');
-  assert.equal(title.primary.precedence, 4);
-  assert.equal(title.primary.localRole, 'title-own-church');
-  assert.equal(title.officeResolution.firstVespers.celebratedOnEve, true);
-
-  const dedication = resolveOrdoDay('2026-09-20', { diocese: 'minsk-mohilev', localChurch });
-  assert.equal(dedication.primary.id, 'local-church-dedication');
-  assert.equal(dedication.primary.officeKind, 'solemnity');
-  assert.equal(officeDirections(dedication).find((item) => item.id === 'te-deum').tone, 'accent');
-  assert.ok(dedication.suppressed.some((item) => item.kind === 'temporal'));
-
-  // Hours and Readings share the runtime day, keyed by the local church too.
-  assert.equal(resolveRuntimeDay('2027-06-13', { diocese: 'minsk', localChurch }).primary.id, 'sv-anthony-padua');
-  assert.equal(resolveRuntimeDay('2027-06-13', { diocese: 'minsk' }).primary.kind, 'temporal');
-});
-
-test('unknown dedication date → last Sunday of October', () => {
-  const localChurch = toEngineLocalChurch({ enabled: true, dedicationMode: 'unknown' });
-  for (const date of ['2026-10-25', '2027-10-31', '2028-10-29']) {
-    const day = resolveLiturgicalDate(date, { diocese: 'vitebsk', localChurch });
-    assert.equal(day.primary.id, 'local-church-dedication', date);
-    assert.equal(day.primary.precedence, 4);
-  }
-  assert.equal(resolveLiturgicalDate('2026-10-18', { diocese: 'vitebsk', localChurch }).primary.kind, 'temporal');
-  // 31.10.2027: All Saints (row 3) has I Vespers that evening.
-  assert.equal(resolveLiturgicalDate('2027-10-31', { diocese: 'grodno', localChurch }).officeResolution.evening.vespers.celebrationId, 'all-saints');
-});
-
-test('parish notes of the diocese stay diocesan when a local church is set', () => {
+test('parish-title notes are not part of the runtime Ordo', () => {
+  const data = JSON.parse(readFileSync(join(root, 'src/data/ordo/notes.json'), 'utf8'));
+  assert.ok(data.notes.length > 1000);
+  assert.ok(data.summary.excludedParishNotes > 100);
+  assert.deepEqual([...new Set(data.notes.map((note) => note.scope.level))].sort(), ['belarus', 'diocese']);
+  assert.ok(!data.notes.some((note) => note.category === 'local-church'));
+  assert.ok(!NOTE_GROUPS.some((group) => group.id === 'local-church'));
+  // A note with the removed `local` scope is never selected.
   const notes = [{
-    id: 'grodno-parish', scope: { level: 'local', dioceseIds: ['grodno'] }, category: 'local-church',
+    id: 'parish', scope: { level: 'local', dioceseIds: ['grodno'] }, category: 'other',
     selector: { type: 'fixed-date', month: 11, day: 1 }, text: 'Гродна — тыт. пар.',
   }];
-  const localChurch = { id: 'own-church', titleCelebrationId: 'sv-anthony-padua' };
-  assert.equal(resolveLiturgicalDate('2026-11-01', { diocese: 'minsk', localChurch, notes }).ordoNotes.length, 0);
-  assert.equal(resolveLiturgicalDate('2026-11-01', { diocese: 'grodno', localChurch, notes }).ordoNotes.length, 1);
+  assert.equal(resolveLiturgicalDate('2026-11-01', { diocese: 'grodno', notes }).ordoNotes.length, 0);
 });
 
-test('title celebrations list covers fixed, diocesan and movable celebrations', () => {
-  const items = listTitleCelebrations('vitebsk');
+test('celebration list covers fixed, diocesan and movable celebrations', () => {
+  const items = listCalendarCelebrations('vitebsk');
   const ids = new Set(items.map((item) => item.value));
   assert.ok(ids.has('sv-anthony-padua'));
   assert.ok(ids.has('sv-josaphat'));
   assert.ok(ids.has('ascension'));
   assert.equal(items[0].subtitle.slice(0, 5), '01.01');
-  assert.ok(!ids.has('local-church-dedication'));
 });
 
 // ---------------------------------------------------------------------------
@@ -285,9 +260,85 @@ test('month overview: one row per day with primary, rank and colour; year genera
   assert.equal(getOrdoYear(2026, { diocese: 'vitebsk' }), first, 'same array for the same year and context');
   assert.notEqual(getOrdoYear(2026, { diocese: 'grodno' }), first);
 
-  const localChurch = toEngineLocalChurch({ enabled: true, dedicationMode: 'unknown' });
-  const october = buildMonthOverview(2026, 10, { diocese: 'vitebsk', localChurch });
-  assert.equal(october.find((item) => item.date === '2026-10-25').local, true);
-  assert.equal(buildMonthOverview(2026, 10, { diocese: 'vitebsk' }).find((item) => item.date === '2026-10-25').local, false);
   assert.equal(buildMonthOverview(2028, 2, { diocese: 'pinsk' }).length, 29);
+});
+
+// ---------------------------------------------------------------------------
+// Month mode and several dioceses
+// ---------------------------------------------------------------------------
+
+const ALL_DIOCESES = ['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno'];
+
+test('the Ordo main page is one month; the Hours screen links to the Ordo', () => {
+  const view = read('src/views/Ordo.vue');
+  assert.match(view, /<OrdoDay v-if="route\.params\.date" \/>\s*<OrdoMonth v-else \/>/);
+  assert.match(view, /<OrdoDioceseFilter \/>/);
+  const month = read('src/components/ordo/OrdoMonth.vue');
+  assert.match(month, /parseOrdoMonth\(route\.query\.month, today\)/);
+  assert.match(month, /scrollToToday/);
+  assert.ok(!/generateLiturgicalYear|v-for="month in/.test(month), 'no year-long list');
+  const hours = read('src/components/ItemsList.vue');
+  assert.match(hours, /<router-link :to="ordoRoute" class="ordo-shortcut"/);
+  assert.match(hours, /name: 'OrdoByDate', params: \{ date: currentDate\.value\.format\('YYYY-MM-DD'\) \}/);
+  // The drawer entry stays.
+  assert.match(read('src/layouts/default/NavigationDrawer.vue'), /Літургічны каляндар/);
+});
+
+test('display filter: valid, ordered, never empty, stored separately from the Hours diocese', async () => {
+  assert.deepEqual(normalizeDioceseFilter(['grodno', 'minsk-mohilev', 'nope']), ['minsk-mohilev', 'grodno']);
+  assert.deepEqual(normalizeDioceseFilter([], 'pinsk'), ['pinsk']);
+  assert.deepEqual(normalizeDioceseFilter(null), ['minsk-mohilev']);
+  const filter = read('src/utils/ordoMonthFilter.js');
+  assert.match(filter, /ORDO_MONTH_FILTER_STORAGE_KEY = 'ordoMonthDioceses'/);
+  assert.ok(!/setOrdoDiocese\(/.test(filter), 'the filter never changes the diocese of Settings');
+});
+
+test('month union: the same result in every selected diocese is one row', () => {
+  const month = buildMonthUnion(2026, 11, ALL_DIOCESES);
+  assert.equal(month.length, 30);
+  const allSaints = month.find((item) => item.date === '2026-11-01');
+  assert.equal(allSaints.rows.length, 1);
+  assert.equal(allSaints.rows[0].shared, true);
+  assert.deepEqual(allSaints.rows[0].badges, []);
+  assert.equal(allSaints.differs, false);
+  // One diocese selected: never a badge.
+  buildMonthUnion(2026, 11, ['vitebsk']).forEach((item) => item.rows.forEach((row) => assert.deepEqual(row.badges, [])));
+  // Legal variants: primary, alternatives, commemorations — never suppressed.
+  const september = buildMonthUnion(2026, 9, ['minsk-mohilev']);
+  const wenceslaus = september.find((item) => item.date === '2026-09-28');
+  assert.deepEqual(wenceslaus.rows.map((row) => row.role), ['primary', 'alternative', 'alternative']);
+  const advent = buildMonthUnion(2026, 12, ['minsk-mohilev']).find((item) => item.date === '2026-12-21');
+  assert.ok(advent.rows.some((row) => row.role === 'commemoration'));
+  month.forEach((item) => item.rows.forEach((row) => assert.ok(['primary', 'alternative', 'commemoration'].includes(row.role))));
+});
+
+test('month union: different ranks are split by diocese', () => {
+  const day = buildMonthUnion(2026, 11, ALL_DIOCESES).find((item) => item.date === '2026-11-12');
+  assert.equal(day.differs, true);
+  const byRank = Object.fromEntries(day.rows.map((row) => [row.rank, row.badges]));
+  assert.deepEqual(byRank['Свята'], ['Мінск', 'Пінск']);
+  assert.deepEqual(byRank['Урачыстасць'], ['Віцебск']);
+  assert.deepEqual(byRank['Успамін'], ['Гродна']);
+  // Two dioceses with the same rank merge and need no badge.
+  const pair = buildMonthUnion(2026, 11, ['minsk-mohilev', 'pinsk']).find((item) => item.date === '2026-11-12');
+  assert.equal(pair.rows.length, 1);
+  assert.deepEqual(pair.rows[0].badges, []);
+  // A celebration only one diocese has is a badged row next to the shared one.
+  const grodno = buildMonthUnion(2027, 6, ['minsk-mohilev', 'grodno']).find((item) => item.date === '2027-06-08');
+  const jadwiga = grodno.rows.find((row) => row.id === 'sv-jadwiga-queen');
+  assert.deepEqual(jadwiga.badges, ['Гродна']);
+});
+
+test('day union: shared data once, differences with diocesan badges', () => {
+  const union = buildDayUnion('2026-11-12', ALL_DIOCESES);
+  assert.equal(union.differs, true);
+  assert.equal(union.rows.filter((row) => row.role === 'primary').length, 3);
+  assert.equal(union.days.length, 4);
+  assert.deepEqual(legalColors(union.days), ['ruber']);
+  assert.equal(buildDayUnion('2026-11-01', ALL_DIOCESES).differs, false);
+  const day = read('src/components/ordo/OrdoDay.vue');
+  assert.match(day, /v-if="union\.differs"/);
+  // Links carry the diocesan context without touching the stored setting.
+  assert.match(day, /contextDiocese\.value !== ordoDiocese\.value \? \{ diocese: contextDiocese\.value \} : \{\}/);
+  assert.ok(!/setOrdoDiocese|settings\.setDiocese/.test(day));
 });

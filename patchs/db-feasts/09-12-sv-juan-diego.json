@@ -1,0 +1,13 @@
+{
+  "_id": "09-12-sv-juan-diego",
+  "_schema": 2,
+  "_celebrationId": "sv-juan-diego",
+  "_date": "09.12",
+  "_rank": "memoria-ad-libitum",
+  "_feastName": "Св. Яна Дыега Куаўхтлатаацына",
+  "_templates": [],
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "day-fallback"
+  }
+}

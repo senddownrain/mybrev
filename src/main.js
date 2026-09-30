@@ -3,14 +3,23 @@ import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 import './styles/main.scss'
 import { primeContentCache } from '@/utils/primeContentCache'
+import { removeLegacyStorageKeys } from '@/utils/legacyStorageCleanup'
 
 const app = createApp(App)
+removeLegacyStorageKeys()
 
 registerPlugins(app)
 
 // Restore only the initial screen's local records before creating its loading
 // state. No network is allowed here; unavailable storage falls back gracefully.
-primeContentCache().catch(error => console.warn('[main] Local cache unavailable:', error.message)).finally(() => app.mount('#app'))
+primeContentCache().catch(error => console.warn('[main] Local cache unavailable:', error.message)).finally(() => {
+  app.mount('#app')
+  // Calendar definitions and manual year overrides: cached copy is already
+  // applied; this only checks Firestore in the background.
+  import('./services/ordoCalendarService')
+    .then(({ refreshCalendarDefinitions }) => refreshCalendarDefinitions())
+    .catch(error => console.warn('[main] Calendar refresh skipped:', error.message))
+})
 
 function runAfterLoadAndIdle(task, { delay = 0, idleTimeout = 2000 } = {}) {
   const schedule = () => {

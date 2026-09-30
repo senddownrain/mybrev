@@ -1,0 +1,18 @@
+{
+  "_id": "25-09-bl-ladislaus-gielniow-grodno",
+  "_schema": 2,
+  "_celebrationId": "bl-ladislaus-gielniow",
+  "_date": "25.09",
+  "_rank": "memoria-ad-libitum",
+  "_place": "grodno",
+  "_feastName": "Бл. Уладзіслава з Гельнёва, прэзбітэра",
+  "_templates": [
+    "pastors"
+  ],
+  "_defaultTemplate": "pastors",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

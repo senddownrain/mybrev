@@ -4,7 +4,7 @@
       <day-title :day-data="dayData" variant="hero" />
       <div v-if="templateOptions.length > 1" class="template-panel">
         <div class="template-label">
-          Шаблон літургіі дня
+          {{ templateLabel }}
         </div>
         <v-btn-toggle
           :model-value="selectedTemplateId"
@@ -185,6 +185,10 @@ const templateOptions = computed(() => (
   dayOptions.value.find((option) => (
     option.templates?.some((template) => templateContainsDay(template, dayId.value))
   ))?.templates || []
+));
+// A memorial may take the rest of its texts from the day or from a Common.
+const templateLabel = computed(() => (
+  templateOptions.value.some((template) => template.choice === 'current-day') ? 'Астатнія тэксты' : 'Шаблон літургіі дня'
 ));
 const selectedTemplateId = computed(() => (
   templateOptions.value.find((template) => templateContainsDay(template, dayId.value))?.id

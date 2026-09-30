@@ -1,0 +1,18 @@
+{
+  "_id": "13-10-bl-honorat-kozminski-grodno",
+  "_schema": 2,
+  "_celebrationId": "bl-honorat-kozminski",
+  "_date": "13.10",
+  "_rank": "memoria-ad-libitum",
+  "_place": "grodno",
+  "_feastName": "Бл. Ганарата Казмінскага, прэзбітэра",
+  "_templates": [
+    "pastors"
+  ],
+  "_defaultTemplate": "pastors",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "_id": "04-05-sv-florian-pinsk",
+  "_schema": 2,
+  "_celebrationId": "sv-florian",
+  "_date": "04.05",
+  "_rank": "memoria-ad-libitum",
+  "_place": "pinsk",
+  "_feastName": "Св. Фларыяна, мучаніка",
+  "_templates": [
+    "martyr-one"
+  ],
+  "_defaultTemplate": "martyr-one",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "_id": "01-09-bl-bronislawa-grodno",
+  "_schema": 2,
+  "_celebrationId": "bl-bronislawa",
+  "_date": "01.09",
+  "_rank": "memoria-ad-libitum",
+  "_place": "grodno",
+  "_feastName": "Бл. Браніславы, панны",
+  "_templates": [
+    "virgins"
+  ],
+  "_defaultTemplate": "virgins",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

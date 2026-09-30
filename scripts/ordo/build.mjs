@@ -14,6 +14,8 @@ import { fileURLToPath } from 'node:url';
 import { loadFixedCatalog } from './lib/identity.mjs';
 import { CLASSIFICATION, normalizeSource } from './lib/normalize.mjs';
 import { DIOCESE_ORDER, buildNotes } from './lib/notes.mjs';
+
+const NOTES_REVISION = 1;
 import { buildDifferences, properIds } from './lib/differences.mjs';
 import { alignDate } from './lib/calendar.mjs';
 
@@ -79,7 +81,7 @@ function main() {
   const sources = raws.map((raw) => normalizeSource(raw, { catalog, properSet: properSets[raw.source.diocese] }));
   sources.forEach((source) => properIds(source.rules, catalog, source.diocese));
 
-  const { notes, candidates } = buildNotes(sources, catalog);
+  const { notes, allNotes, excludedParishNotes, candidates } = buildNotes(sources, catalog);
   const noteByItem = new Map(candidates.map((c) => [c.itemId, c.noteId]));
   const differences = buildDifferences(sources, catalog, properSets);
 
@@ -91,7 +93,7 @@ function main() {
     const diocese = source.diocese;
     source.days.forEach((day) => day.notes.forEach((note) => {
       if (noteByItem.has(note.id)) note.noteId = noteByItem.get(note.id);
-      note.classification = notes.find((n) => n.id === note.noteId)?.classification || CLASSIFICATION.REVIEW;
+      note.classification = allNotes.find((n) => n.id === note.noteId)?.classification || CLASSIFICATION.REVIEW;
     }));
     source.announcements.forEach((item) => { if (noteByItem.has(item.id)) item.noteId = noteByItem.get(item.id); });
     source.rules.forEach((item) => { if (noteByItem.has(item.id)) item.noteId = noteByItem.get(item.id); });
@@ -159,9 +161,12 @@ function main() {
 
   write(path.join(OUT_DIR, 'notes.json'), {
     schemaVersion: SCHEMA_VERSION,
+    // Publication number of `liturgicalOrdoNotes`; raise it when the notes change.
+    revision: NOTES_REVISION,
     sources: raws.map((raw) => ({ diocese: raw.source.diocese, file: raw.source.file, coverage: raw.source.coverage })),
     summary: {
       notes: notes.length,
+      excludedParishNotes,
       byClassification: countBy(notes, 'classification'),
       byCategory: countBy(notes, 'category'),
       bySelector: countBy(notes, (n) => n.selector.type),

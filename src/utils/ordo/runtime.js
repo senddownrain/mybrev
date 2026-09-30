@@ -11,22 +11,20 @@ import { toIsoDate } from './dates.js';
 import { normalizeDioceseId } from './layers.js';
 import { readingTitleSimilarity } from '../parsedReadingsIdentity.js';
 import { withoutObsoleteDocuments } from '../liturgicalDayResolution.js';
+import { isSparseDayDocument } from '../../constants/officeFields.js';
 
 export const DEFAULT_DIOCESE = 'minsk-mohilev';
 
 const runtimeCache = new Map();
 const RUNTIME_CACHE_LIMIT = 120;
 
-/**
- * Resolved day for the runtime (memoized per date, diocese and local
- * church). `localChurch` is the optional LocalChurchContext from Settings.
- */
-export function resolveRuntimeDay(date, { diocese = DEFAULT_DIOCESE, localChurch = null } = {}) {
+/** Resolved day for the runtime (memoized per date and diocese). */
+export function resolveRuntimeDay(date, { diocese = DEFAULT_DIOCESE } = {}) {
   const dioceseId = normalizeDioceseId(diocese) || DEFAULT_DIOCESE;
   const iso = toIsoDate(typeof date === 'string' ? date.slice(0, 10) : date);
-  const key = `${iso}|${dioceseId}|${localChurch ? JSON.stringify(localChurch) : ''}`;
+  const key = `${iso}|${dioceseId}`;
   if (runtimeCache.has(key)) return runtimeCache.get(key);
-  const day = resolveLiturgicalDate(iso, { country: 'BY', diocese: dioceseId, ...(localChurch ? { localChurch } : {}) });
+  const day = resolveLiturgicalDate(iso, { country: 'BY', diocese: dioceseId });
   runtimeCache.set(key, day);
   if (runtimeCache.size > RUNTIME_CACHE_LIMIT) runtimeCache.delete(runtimeCache.keys().next().value);
   return day;
@@ -72,6 +70,11 @@ export function complineWeekday(compline, dayOfWeek) {
   return COMPLINE_DAY[compline] || Number(dayOfWeek);
 }
 
+/** Full Office descriptor (with `hours`) of a legal option. */
+export function officeDescriptorOf(day, optionId) {
+  return officeOf(day, optionId);
+}
+
 function officeOf(day, optionId) {
   const { officeResolution } = day;
   return [officeResolution.primary, ...officeResolution.alternatives]
@@ -96,7 +99,6 @@ export function optionDescriptor(day, option) {
     role: option.role,
     title: option.title,
     rank: option.rank,
-    ...(option.localRole ? { localRole: option.localRole } : {}),
     kind: option.kind,
     officeKind: option.officeKind,
     color: option.color || day.color,
@@ -112,6 +114,7 @@ export function optionDescriptor(day, option) {
         date: day.date,
         title: option.title,
       },
+    ...(option.contentStatus ? { contentStatus: option.contentStatus } : {}),
     sourceFallbacks: office?.sourceFallbacks || [],
     allowedChoices: office?.allowedChoices || [],
     commemorations: option.role === 'primary'
@@ -152,7 +155,10 @@ const placesOf = (doc) => (Array.isArray(doc?._place) ? doc._place : [doc?._plac
 export function selectFixedDocuments(option, allDocs, { diocese, claimedIds = new Set() } = {}) {
   const docs = withoutObsoleteDocuments(allDocs);
   const ref = option.daysRef || {};
-  const byIds = (ids) => docs.filter((doc) => ids?.includes(doc.id));
+  // After the data migration the sparse document and the per-template
+  // copies it replaces can coexist: the sparse one is the celebration.
+  const preferSparse = (list) => (list.some(isSparseDayDocument) ? list.filter(isSparseDayDocument).slice(0, 1) : list);
+  const byIds = (ids) => preferSparse(docs.filter((doc) => ids?.includes(doc.id)));
   const own = byIds(ref.dayIds);
   if (own.length) return own;
   for (const fallback of option.fallbackDaysRefs || []) {
@@ -221,6 +227,9 @@ export function planReadings(day, { dayId = '', dayIdToOption = null } = {}) {
       title: option.title,
       role: option.role,
       kind: option.kind,
+      officeKind: option.officeKind,
+      ...(option.contentStatus?.readings ? { readingsStatus: option.contentStatus.readings } : {}),
+      ...(option.readingsReference ? { readingsReference: option.readingsReference } : {}),
       daysRef: option.daysRef || null,
       readingsRef: option.readingsRef || null,
       lookup: (resolutions[index]?.lookup || []).filter((entry) => entry.purpose !== 'common'),

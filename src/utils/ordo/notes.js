@@ -2,7 +2,7 @@
  * Ordo notes: selector evaluation (spec §6–8).
  *
  * OrdoNote {
- *   id, scope: { level: 'universal'|'belarus'|'diocese'|'local', dioceseId?, localChurchId? },
+ *   id, scope: { level: 'universal'|'belarus'|'diocese', dioceseId?, dioceseIds? },
  *   selector, category, title?, text?, displayOnly?, effect?, source?,
  *   validFrom?: 'YYYY-MM-DD', validUntil?: 'YYYY-MM-DD'
  * }
@@ -156,13 +156,6 @@ export function noteInScope(note, context = {}) {
       return country === 'BY';
     case 'diocese':
       return Boolean(context.diocese) && [scope.dioceseId, ...(scope.dioceseIds || [])]
-        .some((id) => id && normalizeDioceseId(id) === normalizeDioceseId(context.diocese));
-    case 'local':
-      if (scope.localChurchId) return Boolean(context.localChurch) && scope.localChurchId === context.localChurch.id;
-      // Parish-level notes printed by a diocesan calendar ("titular solemnity
-      // in X, Y") are shown to the whole diocese as display notes — also when
-      // the user has a local church (they name other parishes of the diocese).
-      return !scope.localChurchId && Boolean(context.diocese) && (scope.dioceseIds || [scope.dioceseId])
         .some((id) => id && normalizeDioceseId(id) === normalizeDioceseId(context.diocese));
     default:
       return false;

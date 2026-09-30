@@ -1,0 +1,18 @@
+{
+  "_id": "19-11-bl-salomea-grodno",
+  "_schema": 2,
+  "_celebrationId": "bl-salomea",
+  "_date": "19.11",
+  "_rank": "memoria-ad-libitum",
+  "_place": "grodno",
+  "_feastName": "Бл. Саламеі, панны",
+  "_templates": [
+    "virgins"
+  ],
+  "_defaultTemplate": "virgins",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

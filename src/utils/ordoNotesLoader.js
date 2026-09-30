@@ -8,12 +8,24 @@
  */
 let pending = null;
 
-export function loadOrdoNotes() {
+/**
+ * `loadPublished(bundledRevision)` may return a newer publication of
+ * `liturgicalOrdoNotes` (the Ordo view passes the Firestore reader); without
+ * it, or when nothing newer is published, the bundled notes are used.
+ */
+export function loadOrdoNotes(loadPublished = null) {
   if (!pending) {
     pending = import('../data/ordo/notes.json')
-      .then((module) => {
+      .then(async (module) => {
         const data = module.default || module;
-        return Array.isArray(data?.notes) ? data.notes : [];
+        const bundled = Array.isArray(data?.notes) ? data.notes : [];
+        if (!loadPublished) return bundled;
+        try {
+          const published = await loadPublished(Number(data?.revision) || 0);
+          return Array.isArray(published) && published.length ? published : bundled;
+        } catch {
+          return bundled;
+        }
       })
       .catch((error) => {
         pending = null; // Offline without the chunk: allow a retry later.

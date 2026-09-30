@@ -1,7 +1,7 @@
 /**
  * MyBrev generative Ordo engine — public API (pure, no Firestore/Pinia).
  *
- *   resolveLiturgicalDate(date, { country: 'BY', diocese, localChurch, yearOverrides, notes })
+ *   resolveLiturgicalDate(date, { country: 'BY', diocese, yearOverrides, notes })
  *     → ResolvedLiturgicalDay
  *   generateLiturgicalYear(year, context) → ResolvedLiturgicalDay[]
  *
@@ -78,7 +78,7 @@ function dateOfCelebrationFactory(iso, context) {
 
 /**
  * @param {string|Date|import('moment').Moment} date
- * @param {{ country?: string, diocese?: string, localChurch?: object, yearOverrides?: object[],
+ * @param {{ country?: string, diocese?: string, yearOverrides?: object[],
  *   notes?: object[], dioceseLayer?: object }} [context]
  */
 export function resolveLiturgicalDate(date, context = {}, cache = null) {
@@ -130,7 +130,6 @@ export function resolveLiturgicalDate(date, context = {}, cache = null) {
     context: {
       country: String(context.country || 'BY').toUpperCase(),
       diocese: normalizeDioceseId(context.diocese) || null,
-      localChurch: context.localChurch || null,
     },
     period: season.period,
     periodPhase: season.periodPhase,

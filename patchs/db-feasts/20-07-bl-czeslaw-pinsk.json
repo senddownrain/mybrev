@@ -1,0 +1,18 @@
+{
+  "_id": "20-07-bl-czeslaw-pinsk",
+  "_schema": 2,
+  "_celebrationId": "bl-czeslaw",
+  "_date": "20.07",
+  "_rank": "memoria-ad-libitum",
+  "_place": "pinsk",
+  "_feastName": "Бл. Чэслава, прэзбітэра",
+  "_templates": [
+    "pastors"
+  ],
+  "_defaultTemplate": "pastors",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

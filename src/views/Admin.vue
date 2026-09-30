@@ -46,6 +46,12 @@ const editors = [
     icon: 'mdi-folder-cog-outline',
     to: { name: 'AdminPrayerCategories' },
   },
+  {
+    title: 'Каляндар: выключэнні на год',
+    description: 'Ручныя пераносы і змены на адзін год, калізіі і пытанні, што патрабуюць праверкі.',
+    icon: 'mdi-calendar-alert',
+    to: { name: 'AdminYearOverrides' },
+  },
 ];
 </script>
 

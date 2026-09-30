@@ -11,6 +11,7 @@
 import { fixedCalendar, normalizeFixedPlace } from '../../constants/fixedCalendar.js';
 import { FIXED_IDENTITIES } from '../../data/ordo/fixed-identities.js';
 import { normalizeRank } from '../fixedFeasts.js';
+import { contentFields, feastContentOf } from './feastContentIndex.js';
 
 /** Generated identity (`patchs/db-feasts` slug + `days` ids) of a fixedCalendar entry. */
 export function fixedIdentityOf(entry) {
@@ -162,9 +163,11 @@ export function fixedParts(date) {
 
 function buildCelebration(entry, { id, layer, dioceseId, meta }) {
   const rank = meta?.rank || normalizeRank(entry.rank);
-  const dayIds = fixedIdentityOf(entry)?.dayIds || [];
-  const category = meta?.category || inferCategory(entry.title);
   const place = normalizeFixedPlace(entry.place);
+  const content = feastContentOf({ id, date: entry.date, place, rank });
+  // A celebration without texts is carried by its scaffold document.
+  const dayIds = fixedIdentityOf(entry)?.dayIds || (content?.scaffold ? [content.dayId] : []);
+  const category = meta?.category || inferCategory(entry.title);
   return {
     id,
     title: entry.title,
@@ -187,6 +190,7 @@ function buildCelebration(entry, { id, layer, dioceseId, meta }) {
       ...(dayIds.length ? { dayIds } : {}),
     },
     readingsRef: { _date: entry.date },
+    ...contentFields(content, id),
   };
 }
 
@@ -246,6 +250,8 @@ function buildCatalog() {
           _place: dioceseId,
           ...(identity?.dayIds?.length ? { dayIds: identity.dayIds } : {}),
         },
+        ...(feastContentOf({ id: base.id, date: entry.date, place: dioceseId, rank: normalizeRank(entry.rank) })
+          ? contentFields(feastContentOf({ id: base.id, date: entry.date, place: dioceseId, rank: normalizeRank(entry.rank) }), base.id) : {}),
         fallbackDaysRefs: [base.daysRef],
       };
       if (base.daysRef._date !== entry.date) {

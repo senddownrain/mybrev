@@ -111,6 +111,13 @@
       <ParsedReadingCard :reading="activeReading" />
     </div>
 
+    <div v-else-if="readingsNotice" class="readings-notice text-center py-16">
+      <v-icon size="64" color="grey-lighten-1">mdi-book-open-variant-outline</v-icon>
+      <p class="text-h6 mt-4">{{ readingsNotice.title }}</p>
+      <p class="text-body-2 mt-2 text-grey-darken-1">Тэкст чытанняў пакуль недаступны</p>
+      <p v-if="readingsNotice.reference" class="readings-notice__reference mt-4">{{ readingsNotice.reference }}</p>
+    </div>
+
     <div v-else class="text-center py-16">
       <v-icon size="64" color="grey-lighten-1">mdi-book-open-variant-outline</v-icon>
       <p class="text-h6 mt-4 text-grey">Чытанні для гэтага дня не знойдзены</p>
@@ -138,6 +145,8 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const { items, context, isLoading, error, loadForDate } = useReadings();
+// The celebration is known but its readings have no text yet (citation only).
+const readingsNotice = computed(() => context.value?.readingsNotice || null);
 const readingChoiceDetails = ref(null);
 
 const selectedDate = computed(() => {
@@ -190,6 +199,14 @@ const activeGroup = computed(() => {
     const linked = readingGroups.value.find((group) => group.documents.some((document) =>
       document._dayId === dayId || document._dayIds?.includes(dayId)));
     if (linked) return linked;
+  }
+
+  // Option chosen in the liturgical calendar: its own readings when it has
+  // them; a memorial without proper readings keeps the weekday ones.
+  const optionId = String(route.query.option || '');
+  if (optionId) {
+    const own = readingGroups.value.find((group) => group.documents.some((document) => document._ordoOptionId === optionId));
+    if (own) return own;
   }
 
   return readingGroups.value[0] || null;
@@ -320,6 +337,13 @@ watch(() => [route.params.date || route.query.date, route.query.dayId], load);
 </script>
 
 <style scoped>
+.readings-notice__reference {
+  max-width: 34rem;
+  margin-inline: auto;
+  color: var(--nav-on-surface);
+  font-family: var(--reader-font-family);
+  line-height: 1.6;
+}
 .readings-container {
   --reading-visible-color: var(--reading-period-color);
   --reading-visible-color: color-mix(

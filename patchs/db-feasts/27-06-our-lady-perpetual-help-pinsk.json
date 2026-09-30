@@ -1,0 +1,18 @@
+{
+  "_id": "27-06-our-lady-perpetual-help-pinsk",
+  "_schema": 2,
+  "_celebrationId": "our-lady-perpetual-help",
+  "_date": "27.06",
+  "_rank": "memoria-ad-libitum",
+  "_place": "pinsk",
+  "_feastName": "Маці Божай Нястомнай Дапамогі",
+  "_templates": [
+    "blessed-virgin-mary"
+  ],
+  "_defaultTemplate": "blessed-virgin-mary",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

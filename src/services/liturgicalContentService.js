@@ -6,6 +6,7 @@
  */
 import { logger } from '@/utils/logger';
 import { fetchDaysForDate } from '@/services/liturgicalDayService';
+import { getLiturgicalTemplates } from '@/services/staticLiturgicalService';
 import { buildOrdoDayOptions } from '@/utils/ordoDayOptions';
 import { extraFixedDatesOf } from '@/utils/ordo/runtime';
 
@@ -19,9 +20,12 @@ import { extraFixedDatesOf } from '@/utils/ordo/runtime';
 export async function fetchContentForDate(mDate, context, dynamicFeastCodes = [], session, { resolved, diocese } = {}) {
   const date = mDate.format('YYYY-MM-DD');
   logger.log(`[liturgicalContentService] Fetching ${date} (${diocese})`);
-  const daysResult = await fetchDaysForDate(mDate, context, dynamicFeastCodes, session, {
-    extraFixedDates: extraFixedDatesOf(resolved, mDate.format('DD.MM')),
-  });
+  const [daysResult, templates] = await Promise.all([
+    fetchDaysForDate(mDate, context, dynamicFeastCodes, session, {
+      extraFixedDates: extraFixedDatesOf(resolved, mDate.format('DD.MM')),
+    }),
+    getLiturgicalTemplates(),
+  ]);
   const allDays = [
     ...daysResult.periodDays,
     ...daysResult.fixedDateDays,
@@ -35,8 +39,13 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
   ].filter(Boolean);
   const dayMap = new Map(allDays.map((item) => [item.id, item]));
   const { dayOptions, ordo, unavailable } = buildOrdoDayOptions({
-    resolved, daysResult, context, date, diocese,
+    resolved, daysResult, context, date, diocese, templates,
   });
+  // Assembled Offices (sparse documents, celebrations without a document)
+  // replace the raw documents under the same ids.
+  dayOptions.forEach((option) => (option.templates || []).forEach((template) => {
+    if (template.day?._assembly) dayMap.set(template.id, template.day);
+  }));
   if (unavailable.length) {
     logger.log(`[liturgicalContentService] ${date}: legal options without days documents`, unavailable);
   }

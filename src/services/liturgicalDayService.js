@@ -2,6 +2,7 @@
 import { collection, doc, query, where } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import { LITURGICAL_DAYS_COLLECTION } from '@/constants/days';
+import { isSparseDayDocument } from '@/constants/officeFields';
 import { getDocOfflineAware, getDocsOfflineAware } from '@/utils/firestoreRead';
 import { logger } from '@/utils/logger';
 import { calculatePsalterWeek } from '@/utils/liturgicalPsalter';
@@ -238,9 +239,14 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = [], s
       context.dayOfWeek,
     )
     : null;
+  // A sparse feast document (`_schema: 2`) is assembled field by field by the
+  // Office resolver (`officeAssembly.js`), not filled from the period day.
+  const resolveFixed = (item) => withCalendarContext(
+    isSparseDayDocument(item) ? item : resolveDateDayAgainstPeriod(item, resolvedPeriodDay),
+  );
   const resolvedFixed = fixedDocs
     .filter((item) => item.id !== seasonalDay?.id && !isSeasonalDateDocumentId(item.id))
-    .map((item) => withCalendarContext(resolveDateDayAgainstPeriod(item, resolvedPeriodDay)));
+    .map(resolveFixed);
   if (seasonal) resolvedFixed.unshift(seasonal);
 
   const resolvedDynamicDays = new Map(dynamicEntries
@@ -255,7 +261,7 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = [], s
 
   const resolvedExtraFixed = extraFixedDocs
     .filter((item) => !isSeasonalDateDocumentId(item.id))
-    .map((item) => withCalendarContext(resolveDateDayAgainstPeriod(item, resolvedPeriodDay)));
+    .map(resolveFixed);
 
   return {
     extraFixedDays: resolvedExtraFixed,

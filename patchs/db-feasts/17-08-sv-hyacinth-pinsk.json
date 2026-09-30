@@ -1,0 +1,18 @@
+{
+  "_id": "17-08-sv-hyacinth-pinsk",
+  "_schema": 2,
+  "_celebrationId": "sv-hyacinth",
+  "_date": "17.08",
+  "_rank": "memoria-ad-libitum",
+  "_place": "pinsk",
+  "_feastName": "Св. Яцэка, прэзбітэра",
+  "_templates": [
+    "pastors"
+  ],
+  "_defaultTemplate": "pastors",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

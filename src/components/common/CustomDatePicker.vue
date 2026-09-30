@@ -79,11 +79,13 @@
               'is-selected': isSelected(day),
               'is-today': isToday(day),
               'is-adjacent': !isCurrentMonth(day),
-              'is-weekend': dayIndex > 4
+              'is-weekend': dayIndex > 4,
+              'day-btn--liturgical': liturgical
             }"
-            :aria-label="day.format('D MMMM YYYY')"
+            :aria-label="dayLabel(day)"
             :aria-pressed="isSelected(day)"
             class="day-btn"
+            :style="liturgical ? { '--day-colors': dayGradient(day) } : undefined"
             @click="selectDate(day)"
           >
             <span>{{ day.date() }}</span>
@@ -91,12 +93,35 @@
         </div>
       </div>
     </div>
+
+    <!-- Legal options of the selected date: navigation happens only after
+         one of them is chosen. -->
+    <div v-if="liturgical && showOptions && selectedOptions.length" class="day-options" role="group" :aria-label="`Варыянты на ${selectedLabel}`">
+      <p class="day-options__title">{{ selectedLabel }}</p>
+      <button
+        v-for="option in selectedOptions"
+        :key="option.id"
+        type="button"
+        class="day-option"
+        @click="emit('select-option', { option, date: selectedIso })"
+      >
+        <span class="day-option__dot" :style="{ background: option.swatch }" :title="option.colorLabel" aria-hidden="true"></span>
+        <span class="day-option__copy">
+          <span class="day-option__title">{{ option.title }}</span>
+          <small v-if="option.rank">{{ option.rank }}</small>
+        </span>
+        <v-icon icon="mdi-chevron-right" size="18" class="day-option__arrow"></v-icon>
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from 'vue'
 import moment from '@/utils/moment-be'
+import { ordoCalendarEpoch } from '@/utils/ordoCalendarState'
+import { colorGradient, pickerColorsOf, pickerOptionsOf } from '@/utils/ordoDatePicker'
+import { colorInfo } from '@/utils/ordoScreen'
 
 const props = defineProps({
   modelValue: {
@@ -118,10 +143,38 @@ const props = defineProps({
   showAdjacentMonths: {
     type: Boolean,
     default: false
+  },
+  // Liturgical calendar: every date carries the colour(s) of its legal
+  // Offices, resolved for `diocese`.
+  liturgical: {
+    type: Boolean,
+    default: false
+  },
+  diocese: {
+    type: String,
+    default: ''
+  },
+  // List the legal options of the selected date under the grid.
+  showOptions: {
+    type: Boolean,
+    default: false
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'select-option'])
+
+const isoOf = (day) => day.format('YYYY-MM-DD')
+const dayColors = (day) => (ordoCalendarEpoch.value, pickerColorsOf(isoOf(day), props.diocese))
+const dayGradient = (day) => colorGradient(dayColors(day))
+const dayLabel = (day) => {
+  const date = day.format('D MMMM YYYY')
+  if (!props.liturgical) return date
+  return `${date}, ${dayColors(day).map((color) => colorInfo(color).label.toLowerCase()).join(' або ')}`
+}
+const selectedIso = computed(() => (props.modelValue && moment(props.modelValue).isValid() ? isoOf(moment(props.modelValue)) : ''))
+const selectedLabel = computed(() => (selectedIso.value ? moment(selectedIso.value, 'YYYY-MM-DD').format('D MMMM, dddd') : ''))
+const selectedOptions = computed(() => (props.liturgical && selectedIso.value
+  ? (ordoCalendarEpoch.value, pickerOptionsOf(selectedIso.value, props.diocese)) : []))
 
 // Глобальные стили меню скрывают overflow у всех v-select. Для календаря
 // длинные списки (12 месяцев и диапазон лет) должны оставаться прокручиваемыми.
@@ -409,6 +462,97 @@ const nextMonth = () => {
   background: var(--calendar-accent-soft, var(--nav-active));
   box-shadow: inset 0 0 0 1.5px var(--calendar-accent, var(--nav-on-surface));
   font-weight: 700;
+}
+
+/* Liturgical colour(s) of the date: a ring, so the number stays readable
+   for every colour; several legal colours become segments of the ring. */
+.day-btn--liturgical::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--day-colors, transparent);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3.5px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3.5px), #000 calc(100% - 3px));
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.day-btn--liturgical.is-selected::before {
+  inset: -3px;
+}
+
+.day-btn--liturgical.is-today:not(.is-selected) {
+  box-shadow: none;
+}
+
+.day-options {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--nav-border);
+}
+
+.day-options__title {
+  margin: 0 4px 6px;
+  color: var(--nav-muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.day-option {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--nav-on-surface);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.day-option:hover,
+.day-option:focus-visible {
+  background: var(--nav-active);
+  outline: none;
+}
+
+.day-option__dot {
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 50%;
+}
+
+.day-option__copy {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: 1px;
+}
+
+.day-option__title {
+  font-size: 0.88rem;
+  font-weight: 620;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.day-option__copy small {
+  color: var(--nav-muted);
+  font-size: 0.72rem;
+}
+
+.day-option__arrow {
+  color: var(--nav-muted);
 }
 
 .day-btn.is-weekend:not(.is-selected):not(.is-today) {

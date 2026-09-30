@@ -1,0 +1,19 @@
+{
+  "_id": "04-09-bl-maria-stella-companions-pinsk",
+  "_schema": 2,
+  "_celebrationId": "bl-maria-stella-companions",
+  "_date": "04.09",
+  "_rank": "memoria-ad-libitum",
+  "_place": "pinsk",
+  "_feastName": "Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц",
+  "_templates": [
+    "martyrs-many",
+    "virgins"
+  ],
+  "_defaultTemplate": "martyrs-many",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

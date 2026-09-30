@@ -1,3 +1,4 @@
+import { nextRouteDiocese, routeDiocese, setRouteDiocese } from '@/utils/ordoDiocese';
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { getMassVariantByPrayerId, MASS_ORDER_PRAYER_ID } from '@/utils/massRitual';
@@ -186,6 +187,11 @@ const routes = [
         name: 'AdminPrayerCategories',
         component: () => import('@/views/admin/PrayerCategories.vue'),
       },
+      {
+        path: 'ordo/year-overrides',
+        name: 'AdminYearOverrides',
+        component: () => import('@/views/admin/YearOverrides.vue'),
+      },
       { path: 'songs/new', name: 'AdminSongAdd', component: () => import('@/views/admin/SongEditor.vue') },
       { path: 'songs/:id/edit', name: 'AdminSongEdit', component: () => import('@/views/admin/SongEditor.vue'), props: true },
     ]
@@ -256,6 +262,11 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next();
   }
+});
+
+// Diocesan context of Hours / Readings opened from the Ordo (`?diocese=`).
+router.afterEach((to, from) => {
+  setRouteDiocese(nextRouteDiocese(to, from, routeDiocese.value));
 });
 
 export default router;

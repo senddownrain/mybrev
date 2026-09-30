@@ -5,7 +5,7 @@
  * prepared from. Changing it changes which diocesan layer the engine applies
  * to Hours and Readings (and the cache keys of both).
  */
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 export const ORDO_DIOCESE_STORAGE_KEY = 'ordoDiocese';
 export const DEFAULT_ORDO_DIOCESE = 'minsk-mohilev';
@@ -40,4 +40,36 @@ export function setOrdoDiocese(value) {
   } catch { /* Session-only fallback. */ }
 }
 
-export const currentOrdoDiocese = () => ordoDiocese.value;
+/**
+ * Diocesan context of the current route (`?diocese=pinsk`): a link from the
+ * Ordo opens Hours / Readings for another diocese without changing the
+ * stored setting. Empty = the user's diocese.
+ */
+export const routeDiocese = ref('');
+
+export function setRouteDiocese(value) {
+  routeDiocese.value = VALID.has(value) && value !== ordoDiocese.value ? value : '';
+}
+
+/** Diocese that Hours and Readings are resolved for right now. */
+export const effectiveOrdoDiocese = computed(() => routeDiocese.value || ordoDiocese.value);
+
+export const currentOrdoDiocese = () => effectiveOrdoDiocese.value;
+
+/**
+ * Route rule (pure): an explicit `?diocese=` sets the context; it stays while
+ * the user moves between the Hours / Readings screens of the same date and
+ * is dropped everywhere else.
+ */
+const CONTEXT_ROUTES = new Set([
+  'SelectedDay', 'ReadingsByDate', 'oras', 'vesper', 'invitatorium', 'morning', 'laudes', 'sext', 'non', 'terz',
+  'completorium', 'lectionis',
+]);
+const routeDate = (route) => String(route?.params?.day || route?.params?.date || '');
+
+export function nextRouteDiocese(to, from, current = '') {
+  const explicit = String(to?.query?.diocese || '');
+  if (explicit) return VALID.has(explicit) ? explicit : '';
+  const sameDate = routeDate(to) && routeDate(to) === routeDate(from);
+  return current && CONTEXT_ROUTES.has(to?.name) && CONTEXT_ROUTES.has(from?.name) && sameDate ? current : '';
+}

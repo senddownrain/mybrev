@@ -1,0 +1,18 @@
+{
+  "_id": "10-05-sv-john-avila",
+  "_schema": 2,
+  "_celebrationId": "sv-john-avila",
+  "_date": "10.05",
+  "_rank": "memoria-ad-libitum",
+  "_feastName": "Св. Яна Авільскага, прэзбітэра і доктара Касцёла",
+  "_templates": [
+    "doctors-of-church",
+    "pastors"
+  ],
+  "_defaultTemplate": "doctors-of-church",
+  "_templatesInferred": true,
+  "_scaffold": true,
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}

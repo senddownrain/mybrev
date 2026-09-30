@@ -1,4 +1,24 @@
 #!/usr/bin/env node
+/**
+ * Fixed feasts → sparse import artifacts.
+ *
+ *   patchs/feasts               proper texts (source of truth, never generated)
+ *   patchs/feasts/common-texts  reusable Common texts (source of truth)
+ *   calendar definitions        identity of every celebration
+ *        ↓
+ *   patchs/db-feasts            one sparse `days` document per celebration  (GENERATED)
+ *   patchs/db-templates         `liturgicalTemplates` documents             (GENERATED)
+ *   reports/db-feasts-generation-report.json, docs/ordo-feast-content-report.md
+ *
+ * A feast document keeps only its own texts and structured `_fieldRules`;
+ * the Common is not copied into it and no `from-day` placeholder is written.
+ * Several `_templates` do not create several documents: `_defaultTemplate`
+ * names the default and the runtime assembles the Office
+ * (`src/utils/ordo/officeAssembly.js`). Do not edit the generated folders.
+ *
+ *   npm run generate:fixed-feasts                          # from the cached Firestore reads
+ *   npm run generate:fixed-feasts -- --refresh-first-week  # re-read days/ordinary-w5-d1
+ */
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -10,11 +30,23 @@ import {
   normalizePlaces,
   normalizeRank,
 } from '../src/utils/fixedFeasts.js';
+import {
+  FIRST_VESPER_FIELDS, OFFICE_CONTENT_FIELDS, OFFICE_TEXT_FIELDS, SPARSE_DAY_SCHEMA, SUNDAY_WEEK_1_TEMPLATE, TE_DEUM_FIELD,
+} from '../src/constants/officeFields.js';
+import { hasFirstVespers, inferTemplates, isEmptyValue, splitSource } from '../scripts/lib/feast-content.mjs';
+
+const CONTENT_FIELDS = OFFICE_CONTENT_FIELDS;
+const CONTENT_FIELD_SET = new Set(CONTENT_FIELDS);
+const isEmpty = isEmptyValue;
 
 const ROOT = process.cwd();
 const FEASTS_DIR = path.join(ROOT, 'patchs', 'feasts');
 const COMMON_TEXTS_DIR = path.join(FEASTS_DIR, 'common-texts');
 const OUTPUT_DIR = path.join(ROOT, 'patchs', 'db-feasts');
+const TEMPLATES_OUTPUT_DIR = path.join(ROOT, 'patchs', 'db-templates');
+const DEFINITIONS_PATH = path.join(ROOT, 'src', 'data', 'ordo', 'calendar-definitions.json');
+const MARKDOWN_REPORT_PATH = path.join(ROOT, 'docs', 'ordo-feast-content-report.md');
+const CONTENT_INDEX_PATH = path.join(ROOT, 'src', 'data', 'ordo', 'feast-content-index.json');
 const FIRST_WEEK_CACHE = path.join(ROOT, 'patchs', 'json', 'ordinary-w5-d1-fixed-day.json');
 const RANKED_FIXED_DAYS_CACHE = path.join(ROOT, 'patchs', 'json', 'ranked-fixed-days.json');
 const REPORT_PATH = path.join(ROOT, 'reports', 'db-feasts-generation-report.json');
@@ -71,113 +103,6 @@ const FIXED_DAY_SLUGS = Object.freeze({
   '29.06-solemnity-none': 'sv-peter-paul-apostles',
   '31.05-feast-none': 'visitation-blessed-virgin-mary',
 });
-
-const BASE_FIELDS = Object.freeze([
-  'invitatoriumAnt',
-  'feastComment',
-  'officeOfReadingsHymn',
-  'officeOfReadingsAnt1',
-  'officeOfReadingsAnt2',
-  'officeOfReadingsAnt3',
-  'officeOfReadingsPs1',
-  'officeOfReadingsPs2',
-  'officeOfReadingsPs3',
-  'officeOfReadingsVers',
-  'officeOfReadingsR1',
-  'officeOfReadingsR2',
-  'officeOfReadingsTeDeum',
-  'officeOfReadingsPr',
-  'laudesHymn',
-  'laudesAnt1',
-  'laudesAnt2',
-  'laudesAnt3',
-  'laudesPs1',
-  'laudesPs2',
-  'laudesPs3',
-  'laudesR',
-  'laudesAntBen',
-  'laudesInter',
-  'laudesPr',
-  'sext1Hymn',
-  'sext1Ant1',
-  'sext1Ant2',
-  'sext1Ant3',
-  'sext1Ps1',
-  'sext1Ps2',
-  'sext1Ps3',
-  'sext1R',
-  'sext1Pr',
-  'sext2Hymn',
-  'sext2Ant1',
-  'sext2Ant2',
-  'sext2Ant3',
-  'sext2Ps1',
-  'sext2Ps2',
-  'sext2Ps3',
-  'sext2R',
-  'sext2Pr',
-  'sext3Hymn',
-  'sext3Ant1',
-  'sext3Ant2',
-  'sext3Ant3',
-  'sext3Ps1',
-  'sext3Ps2',
-  'sext3Ps3',
-  'sext3R',
-  'sext3Pr',
-  'vesperHymn',
-  'vesperAnt1',
-  'vesperAnt2',
-  'vesperAnt3',
-  'vesperPs1',
-  'vesperPs2',
-  'vesperPs3',
-  'vesperR',
-  'vesperAntMag',
-  'vesperInter',
-  'vesperPr',
-]);
-
-const FIRST_VESPER_FIELDS = Object.freeze([
-  'vesper1Hymn',
-  'vesper1Ant1',
-  'vesper1Ant2',
-  'vesper1Ant3',
-  'vesper1Ps1',
-  'vesper1Ps2',
-  'vesper1Ps3',
-  'vesper1R',
-  'vesper1AntMag',
-  'vesper1Inter',
-  'vesper1Pr',
-]);
-
-const CONTENT_FIELDS = Object.freeze([...BASE_FIELDS, ...FIRST_VESPER_FIELDS]);
-const CONTENT_FIELD_SET = new Set(CONTENT_FIELDS);
-
-function isEmpty(value) {
-  return value === undefined
-    || value === null
-    || value === ''
-    || (Array.isArray(value) && value.length === 0);
-}
-
-function containsFromReference(value) {
-  return typeof value === 'string' && /\bfrom(?:-[a-z]+)+\b/i.test(value);
-}
-
-function isCurrentDayPsalmsInstruction(value) {
-  const values = Array.isArray(value) ? value : [value];
-  return values.some((item) => typeof item === 'string'
-    && item.toLocaleLowerCase('be').includes('антыфоны і псальмы з бягучага дня'));
-}
-
-function getSingleInstruction(value) {
-  const instruction = Array.isArray(value) && value.length === 1 ? value[0] : value;
-  return typeof instruction === 'string'
-    ? instruction.trim().replace(/\s+/g, ' ').toLocaleLowerCase('be')
-    : '';
-}
 
 function applyFixedDayFallback(source, rankedFixedDays) {
   const firestoreId = source.raw._copyFromFixedDay;
@@ -402,210 +327,82 @@ function buildCalendarReport(calendarEntries, sourceVariants) {
   return { missingInFeasts, extraInFeasts };
 }
 
-function resolveField({
-  field,
-  source,
-  template,
-  apostlesTemplate,
-  firstWeekDay,
-  outputFile,
-  currentVersion,
-  report,
-}) {
-  const sourceValue = source[field];
-  const templateHasField = Object.hasOwn(template, field);
-  const origin = !isEmpty(sourceValue) ? 'feast' : templateHasField ? `common-texts/${currentVersion}` : 'empty';
-  let value = !isEmpty(sourceValue) ? sourceValue : templateHasField ? template[field] : '';
 
-  if (field === 'officeOfReadingsTeDeum') {
-    if (!isEmpty(value) && value !== 0 && value !== false) {
-      if (value !== true) report.teDeumNormalized.push({ file: outputFile, origin, previousType: typeof value });
-      return true;
-    }
-    return '';
-  }
+const TEMPLATE_TITLES = Object.freeze({
+  'sunday-week-1': 'Нядзеля І тыдня псалтыра',
+  'office-for-dead': 'Афіцый за памерлых',
+});
 
-  const instruction = getSingleInstruction(value);
-  if (/^(?:просьбы )?з агульных тэкстаў пра найсв\. панну марыю$/.test(instruction)) {
-    const replacement = template[field];
-    if (!isEmpty(replacement)) {
-      report.resolvedReferences.push({
-        file: outputFile,
-        field,
-        reference: value,
-        source: `common-texts/${currentVersion}`,
-      });
-      value = replacement;
-    }
-  } else if (instruction === 'з нядзелі і тыдня') {
-    value = 'from-first-week';
-  } else if (instruction === 'з бягучага дня' && /^sext[123]Ps[123]$/.test(field)) {
-    value = 'from-day';
-  } else if (instruction === 'ты гонар з нешпараў' && field === 'officeOfReadingsHymn') {
-    const replacement = source.vesper1Hymn;
-    if (!isEmpty(replacement)) {
-      report.resolvedReferences.push({
-        file: outputFile,
-        field,
-        reference: value,
-        source: 'feast/vesper1Hymn',
-      });
-      value = replacement;
-    }
-  }
+const PLACE_IN_STEM = /-(?:minsk-mohilev|minsk|vitebsk|grodno|pinsk|diocese)(?=$|-)/g;
 
-  if (isCurrentDayPsalmsInstruction(value)) {
-    report.normalizedReferences.push({
-      file: outputFile,
-      field,
-      previousValue: value,
-      value: 'from-day',
-      origin,
-    });
-    value = 'from-day';
-  }
-
-  if (value === '[from-day]') {
-    report.normalizedReferences.push({
-      file: outputFile,
-      field,
-      previousValue: value,
-      value: 'from-day',
-      origin,
-    });
-    value = 'from-day';
-  }
-
-  if (value === 'from-first-week') {
-    const replacement = firstWeekDay[field];
-    if (!isEmpty(replacement)) {
-      report.resolvedReferences.push({
-        file: outputFile,
-        field,
-        reference: value,
-        source: 'days/ordinary-w5-d1',
-      });
-      return replacement;
-    }
-  }
-
-  if (value === 'from-own-texts') {
-    const replacement = source.laudesPr;
-    if (!isEmpty(replacement) && !containsFromReference(replacement)) {
-      report.resolvedReferences.push({
-        file: outputFile,
-        field,
-        reference: value,
-        source: 'feast/laudesPr',
-      });
-      return replacement;
-    }
-  }
-
-  if (value === 'from-apostles' || value === 'from-apostels') {
-    const replacement = apostlesTemplate[field];
-    if (!isEmpty(replacement) && !containsFromReference(replacement)) {
-      report.resolvedReferences.push({
-        file: outputFile,
-        field,
-        reference: value,
-        source: 'common-texts/apostles',
-      });
-      return replacement;
-    }
-  }
-
-  if (containsFromReference(value)) {
-    report.unresolvedReferences.push({ file: outputFile, field, value, origin });
-  }
-  return value;
+/** Celebration id shared with the Ordo identities (`scripts/ordo/lib/identity.mjs`). */
+function celebrationIdOf(stem) {
+  return String(stem)
+    .replace(/^\d{2}-\d{2}-/, '')
+    .replace(/--.*$/, '')
+    .replace(/-memoria-ad-libitum$/, '')
+    .replace(PLACE_IN_STEM, '')
+    .replace(/-+$/, '');
 }
 
-function buildOutput({
-  sourceFile,
-  outputStem: requestedOutputStem,
-  source,
-  templateName,
-  template,
-  apostlesTemplate,
-  firstWeekDay,
-  report,
-}) {
-  const sourceStem = path.basename(sourceFile, '.json');
-  const baseOutputStem = requestedOutputStem || sourceStem;
-  const templates = Array.isArray(source._templates) ? source._templates : [];
-  const multipleVersions = templates.length > 1;
-  const outputStem = multipleVersions ? `${baseOutputStem}--${templateName}` : baseOutputStem;
+function mergeReports(target, source) {
+  ['normalized', 'unresolved'].forEach((key) => target[key].push(...source[key]));
+}
+
+/** One sparse document of a celebration. */
+function buildSparseOutput({ sourceFile, outputStem, source, kind, templates, report }) {
   const outputFile = `${outputStem}.json`;
   const places = normalizePlaces(source._place);
   const rank = normalizeRank(source._rank);
   const date = normalizeFixedDate(source._date);
+  const sourceTemplates = (Array.isArray(source._templates) ? source._templates : []).filter(Boolean);
+  sourceTemplates.filter((name) => !templates.has(name)).forEach((name) => report.missingTemplates.push({ file: sourceFile, template: name }));
+  const knownTemplates = sourceTemplates.filter((name) => templates.has(name));
+
+  // Documents recovered from `days` already carry their Common and legacy
+  // `from-day` markers: the markers are dropped, the texts stay as they are.
+  const { texts, rules, report: fieldReport } = splitSource(source, { file: outputFile });
+  mergeReports(report, fieldReport);
+  if (kind === 'days') {
+    const dropped = Object.entries(rules).filter(([, rule]) => rule.source === 'current-day').map(([field]) => field);
+    dropped.forEach((field) => delete rules[field]);
+    if (dropped.length) report.droppedPlaceholders.push({ file: outputFile, fields: dropped });
+  }
+  if (source._omitFirstVespers) FIRST_VESPER_FIELDS.forEach((field) => { delete texts[field]; delete rules[field]; });
+  if (source._omitTeDeum) delete texts[TE_DEUM_FIELD];
+
+  const ownTextFields = OFFICE_TEXT_FIELDS.filter((field) => field in texts);
+  const legacyIds = kind === 'days'
+    ? [source._firestoreId]
+    : (knownTemplates.length > 1 ? knownTemplates.map((name) => `${outputStem}--${name}`) : [outputStem]);
+  const defaultTemplate = knownTemplates.includes(source._currentVersion) ? source._currentVersion : knownTemplates[0];
 
   const output = {
     _id: outputStem,
+    _schema: SPARSE_DAY_SCHEMA,
+    _celebrationId: celebrationIdOf(outputStem),
     _date: date,
     _rank: rank,
     ...(places.length === 1 ? { _place: places[0] } : {}),
     ...(places.length > 1 ? { _place: places } : {}),
     _feastName: String(source._feastName ?? '').trim(),
+    _templates: knownTemplates,
+    ...(defaultTemplate ? { _defaultTemplate: defaultTemplate } : {}),
+    ...(legacyIds.some((id) => id !== outputStem) ? { _legacyIds: legacyIds.filter((id) => id !== outputStem) } : {}),
+    ...(source._omitFirstVespers ? { _omitFirstVespers: true } : {}),
+    ...(source._omitTeDeum ? { _omitTeDeum: true } : {}),
+    _contentStatus: {
+      hours: ownTextFields.length ? 'proper' : (knownTemplates.length ? 'common-only' : 'day-fallback'),
+    },
     ...(source.feastComment !== undefined ? { feastComment: source.feastComment } : {}),
-    _templates: templates,
-    ...(multipleVersions ? { _currentVersion: templateName } : {}),
   };
-
-  for (const [key, value] of Object.entries(source)) {
-    if (!key.startsWith('_') && key !== 'feastComment' && !CONTENT_FIELD_SET.has(key)) {
-      output[key] = value;
-    }
-  }
-
-  BASE_FIELDS.forEach((field) => {
-    if (field === 'officeOfReadingsTeDeum' && source._omitTeDeum) {
-      output[field] = false;
-      return;
-    }
-    output[field] = resolveField({
-      field,
-      source,
-      template,
-      apostlesTemplate,
-      firstWeekDay,
-      outputFile,
-      currentVersion: templateName,
-      report,
-    });
+  Object.entries(source).forEach(([key, value]) => {
+    if (!key.startsWith('_') && key !== 'feastComment' && !CONTENT_FIELD_SET.has(key)) output[key] = value;
   });
-
-  const hasFirstVespers = !source._omitFirstVespers && FIRST_VESPER_FIELDS.some((field) => (
-    !isEmpty(source[field]) || Object.hasOwn(template, field) && !isEmpty(template[field])
-  ));
-  if (hasFirstVespers) {
-    FIRST_VESPER_FIELDS.forEach((field) => {
-      output[field] = resolveField({
-        field,
-        source,
-        template,
-        apostlesTemplate,
-        firstWeekDay,
-        outputFile,
-        currentVersion: templateName,
-        report,
-      });
-    });
+  CONTENT_FIELDS.forEach((field) => { if (field in texts) output[field] = texts[field]; });
+  if (Object.keys(rules).length) {
+    output._fieldRules = Object.fromEntries(CONTENT_FIELDS.filter((field) => field in rules).map((field) => [field, rules[field]]));
   }
-
-  const fieldsDefaultedFromDay = [...BASE_FIELDS, ...(hasFirstVespers ? FIRST_VESPER_FIELDS : [])]
-    .filter((field) => isEmpty(output[field]));
-  if (fieldsDefaultedFromDay.length) {
-    fieldsDefaultedFromDay.forEach((field) => {
-      output[field] = 'from-day';
-    });
-    report.defaultedFromDay.push({ file: outputFile, fields: fieldsDefaultedFromDay });
-  }
-
-  const emptyFields = [...BASE_FIELDS, ...(hasFirstVespers ? FIRST_VESPER_FIELDS : [])]
-    .filter((field) => isEmpty(output[field]));
-  if (emptyFields.length) report.emptyFields.push({ file: outputFile, fields: emptyFields });
 
   if (!date || !rank || !output._feastName) {
     report.invalidOutputs.push({
@@ -617,8 +414,164 @@ function buildOutput({
       ],
     });
   }
-
+  report.documents.push({
+    file: outputFile,
+    source: kind,
+    celebrationId: output._celebrationId,
+    templates: knownTemplates,
+    ownFields: ownTextFields.length,
+    rules: Object.keys(rules).length,
+    firstVespers: hasFirstVespers(texts, rules),
+    hours: output._contentStatus.hours,
+  });
   return { outputFile, output };
+}
+
+/** `liturgicalTemplates` documents: the Commons and the Sunday, week I psalter. */
+function buildTemplateOutputs({ templates, firstWeekDay, manifest, report }) {
+  const titles = new Map((manifest.sections || []).map((item) => [item.file.replace(/\.json$/, ''), item.title]));
+  const outputs = [...templates.entries()].map(([id, raw]) => {
+    const { texts, rules, report: fieldReport } = splitSource(raw, { file: `common-texts/${id}.json` });
+    mergeReports(report, fieldReport);
+    return {
+      outputFile: `${id}.json`,
+      output: {
+        _id: id,
+        _schema: SPARSE_DAY_SCHEMA,
+        _kind: 'common',
+        title: titles.get(id) || TEMPLATE_TITLES[id] || id,
+        ...Object.fromEntries(CONTENT_FIELDS.filter((field) => field in texts).map((field) => [field, texts[field]])),
+        ...(Object.keys(rules).length ? { _fieldRules: Object.fromEntries(CONTENT_FIELDS.filter((field) => field in rules).map((field) => [field, rules[field]])) } : {}),
+      },
+    };
+  });
+  // «з нядзелі І тыдня»: an explicit reusable source, filled from the
+  // verified `days/ordinary-w5-d1` (the same slot of the four-week psalter).
+  const sunday = Object.fromEntries(CONTENT_FIELDS
+    .filter((field) => !isEmpty(firstWeekDay[field]) && splitSource({ [field]: firstWeekDay[field] }).texts[field] !== undefined)
+    .map((field) => [field, firstWeekDay[field]]));
+  outputs.push({
+    outputFile: `${SUNDAY_WEEK_1_TEMPLATE}.json`,
+    output: {
+      _id: SUNDAY_WEEK_1_TEMPLATE, _schema: SPARSE_DAY_SCHEMA, _kind: 'psalter', title: TEMPLATE_TITLES[SUNDAY_WEEK_1_TEMPLATE],
+      _source: { collection: 'days', id: firstWeekDay._id || 'ordinary-w5-d1' },
+      ...sunday,
+    },
+  });
+  return outputs;
+}
+
+/** Fixed-date days whose Office is the Proper of Seasons (no fixed feast document). */
+const PROPER_OF_SEASONS = new Set(['nativity-lord']);
+
+const ddmm = (rule) => `${String(rule.day).padStart(2, '0')}.${String(rule.month).padStart(2, '0')}`;
+
+/**
+ * Celebrations of the calendar without any source text get a scaffold:
+ * identity, date, rank, diocese, inferred Commons and `contentStatus` —
+ * never invented proper texts.
+ */
+function buildScaffolds({ definitions, outputs, report }) {
+  const covered = new Set();
+  const key = (date, place, id) => `${date}|${place || '-'}|${id}`;
+  outputs.forEach(({ output }) => {
+    const places = normalizePlaces(output._place);
+    (places.length ? places : ['']).forEach((place) => covered.add(key(output._date, place, output._celebrationId)));
+  });
+  // Texts kept under another date of the same diocese (a diocesan date change).
+  const coveredAnyDate = new Set(outputs.flatMap(({ output }) => {
+    const places = normalizePlaces(output._place);
+    return (places.length ? places : ['']).map((place) => `${place || '-'}|${output._celebrationId}`);
+  }));
+  const scaffolds = [];
+  const add = ({ id, title, rank, dateRule, place }) => {
+    if (dateRule?.type !== 'fixed' || PROPER_OF_SEASONS.has(id)) return;
+    const date = ddmm(dateRule);
+    if (covered.has(key(date, place, id)) || (place && coveredAnyDate.has(`${place}|${id}`))) return;
+    const templates = inferTemplates(title);
+    const stem = [date.replace('.', '-'), id, place].filter(Boolean).join('-');
+    covered.add(key(date, place, id));
+    scaffolds.push({
+      outputFile: `${stem}.json`,
+      output: {
+        _id: stem,
+        _schema: SPARSE_DAY_SCHEMA,
+        _celebrationId: id,
+        _date: date,
+        _rank: normalizeRank(rank),
+        ...(place ? { _place: place } : {}),
+        _feastName: title,
+        _templates: templates,
+        ...(templates.length ? { _defaultTemplate: templates[0], _templatesInferred: true } : {}),
+        _scaffold: true,
+        _contentStatus: { hours: templates.length ? 'common-only' : 'day-fallback' },
+      },
+    });
+    report.scaffolds.push({ file: `${stem}.json`, celebrationId: id, _date: date, _rank: normalizeRank(rank), ...(place ? { _place: place } : {}), _feastName: title, templates });
+  };
+  // Coverage is decided by the source material only (never by `dayIds`, which
+  // are derived from this output).
+  definitions.celebrations.filter((doc) => doc.daysRef?.source === 'fixed')
+    .forEach((doc) => add({ id: doc.id, title: doc.title, rank: doc.rank, dateRule: doc.dateRule, place: '' }));
+  definitions.dioceseOverrides.filter((doc) => doc.action === 'add' && doc.daysRef?.source === 'fixed')
+    .forEach((doc) => add({ id: doc.celebrationId, title: doc.title, rank: doc.rank, dateRule: doc.dateRule, place: doc.dioceseId }));
+  return scaffolds;
+}
+
+function renderMarkdownReport(report) {
+  const rows = (items, render) => (items.length ? items.map(render).join('\n') : '_няма_');
+  const statusOf = (item) => (item.templates.length ? 'common-only' : 'day-fallback');
+  const count = (status) => report.documents.filter((item) => item.hours === status).length
+    + report.scaffolds.filter((item) => statusOf(item) === status).length;
+  return `# Фіксаваныя святы: змест і прагалы
+
+Згенеравана \`npm run generate:fixed-feasts\` — не рэдагаваць уручную.
+
+| | |
+|---|---|
+| Крыніц у \`patchs/feasts\` | ${report.summary.feastSourceFiles} |
+| Sparse-дакументаў у \`patchs/db-feasts\` | ${report.summary.generatedFiles} |
+| з іх scaffolds (без уласных тэкстаў) | ${report.summary.scaffolds} |
+| Templates у \`patchs/db-templates\` | ${report.summary.templateDocuments} |
+| Дакументаў з некалькімі Commons (раней N копій) | ${report.summary.multipleTemplateSources} |
+| Старых копій, якія замяняюцца (\`_legacyIds\`) | ${report.summary.legacyIdsReplaced} |
+| Тэкставых указанняў → \`_fieldRules\` | ${report.summary.normalizedInstructions} |
+| \`from-day\` placeholders, якіх больш няма | ${report.summary.droppedPlaceholderValues} |
+| Нявырашаных спасылак | ${report.summary.unresolvedReferences} |
+
+## Наяўнасць тэкстаў Hours
+
+| Статус | Колькасць |
+|---|---|
+| \`proper\` — ёсць уласныя тэксты | ${count('proper')} |
+| \`common-only\` — толькі агульныя тэксты | ${count('common-only')} |
+| \`day-fallback\` — тэксты дня | ${count('day-fallback')} |
+
+## Трэба дапісаць уручную (scaffolds)
+
+Празднаванні, якія ёсць у календары, але не маюць файла ў \`patchs/feasts\`.
+Яны паказваюцца ў Ordo і ў спісе варыянтаў дня; Афіцый збіраецца з агульных тэкстаў
+або з дня.
+
+| Дата | Празднаванне | Ранг | Дыяцэзія | Commons (выведзена з назвы) |
+|---|---|---|---|---|
+${rows(report.scaffolds, (item) => `| ${item._date} | ${item._feastName} | ${item._rank} | ${item._place || '—'} | ${item.templates.join(', ') || '—'} |`)}
+
+## Нявырашаныя спасылкі ў крыніцах
+
+Значэнне не з'яўляецца тэкстам і не распазнана як структураванае ўказанне; поле
+лічыцца адсутным (дазволены fallback па Office descriptor).
+
+| Файл | Поле | Значэнне |
+|---|---|---|
+${rows(report.unresolved, (item) => `| ${item.file} | ${item.field} | ${JSON.stringify(item.value)} |`)}
+
+## Нармалізаваныя ўказанні
+
+| Указанне | Правіла | Разоў |
+|---|---|---|
+${rows(report.normalizedSummary, (item) => `| ${item.from} | \`${item.rule}\` | ${item.count} |`)}
+`;
 }
 
 async function main() {
@@ -626,9 +579,8 @@ async function main() {
     loadFirstWeekDay(),
     loadRankedFixedDays(),
   ]);
-  const allSourceFiles = (await fs.readdir(FEASTS_DIR))
-    .filter((name) => name.endsWith('.json'))
-    .sort();
+  const definitions = await readJson(DEFINITIONS_PATH);
+  const allSourceFiles = (await fs.readdir(FEASTS_DIR)).filter((name) => name.endsWith('.json')).sort();
   const sourceFiles = allSourceFiles.filter((name) => !EXCLUDED_SOURCE_FILES.has(name));
   const templateFiles = (await fs.readdir(COMMON_TEXTS_DIR))
     .filter((name) => name.endsWith('.json') && name !== 'manifest.json')
@@ -637,6 +589,7 @@ async function main() {
     path.basename(file, '.json'),
     await readJson(path.join(COMMON_TEXTS_DIR, file)),
   ])));
+  const manifest = await readJson(path.join(COMMON_TEXTS_DIR, 'manifest.json'));
   const rawSources = await Promise.all(sourceFiles.map(async (file) => ({
     file,
     raw: await readJson(path.join(FEASTS_DIR, file)),
@@ -646,158 +599,116 @@ async function main() {
 
   const calendarEntries = fixedCalendar;
   const feastOnlyCalendarReport = buildCalendarReport(calendarEntries, feastSourceVariants);
-  const rankedFixedDaySelection = selectMissingRankedFixedDays(
-    rankedFixedDays,
-    feastOnlyCalendarReport.missingInFeasts,
-  );
+  const rankedFixedDaySelection = selectMissingRankedFixedDays(rankedFixedDays, feastOnlyCalendarReport.missingInFeasts);
   const sourceVariants = [...feastSourceVariants, ...rankedFixedDaySelection.selected];
   const report = {
     generatedAt: new Date().toISOString(),
     rules: {
-      sourcePriority: 'feast -> selected common-text -> empty string',
-      fromFirstWeek: 'resolved from days/ordinary-w5-d1 using the same field',
-      fromOwnTexts: 'resolved from the feast own laudesPr when the exact field is absent',
-      fromApostles: 'from-apostles and the legacy typo from-apostels are resolved from the same field in common-texts/apostles',
-      currentDayPsalms: 'Belarusian instructions beginning with “Антыфоны і псальмы з бягучага дня” become from-day',
-      fixedDayFallback: 'missing content fields may be copied from the days document named by _copyFromFixedDay',
-      teDeum: 'every non-empty and non-zero value becomes boolean true',
-      fromDay: 'every still-empty required content field becomes from-day; first-vesper fields remain conditional',
-      multipleTemplates: 'one output per template with _currentVersion',
+      model: 'one sparse document per celebration (_schema 2): own texts + _fieldRules; the Common is never copied in',
+      templates: 'common-texts and the Sunday week I psalter are separate liturgicalTemplates documents',
+      multipleTemplates: 'one document with _templates and _defaultTemplate; former per-template copies are listed in _legacyIds',
+      instructions: 'Belarusian and legacy textual instructions become structured _fieldRules (ref / source / template)',
+      fromDay: 'no from-day placeholder is written: an absent field falls back through the Office descriptor',
+      teDeum: 'every non-empty value becomes boolean true; _omitTeDeum keeps the hymn away',
       multiplePlaces: 'one output per place; a place code is appended to the output filename',
       rankAndPlaceVariants: 'existing feast texts are copied into explicitly configured rank/place variants',
-      rankedFixedDays: 'documents with _rank are used only when their date/rank/place key is still missing',
+      rankedFixedDays: 'days documents with _rank are used only when their date/rank/place key has no feast source; their texts are kept as stored',
+      scaffolds: 'calendar celebrations without any source get identity + contentStatus, never invented texts',
     },
     summary: {},
     ...buildCalendarReport(calendarEntries, sourceVariants),
-    excludedSources: allSourceFiles
-      .filter((file) => EXCLUDED_SOURCE_FILES.has(file))
-      .map((file) => ({ file, reason: 'incomplete duplicate' })),
-    syntheticVariants: sourceVariants
-      .filter(({ kind }) => kind === 'synthetic')
-      .map(({ file, outputStem, reason, raw }) => ({
-        sourceFile: file,
-        outputFileBase: `${outputStem}.json`,
-        _date: normalizeFixedDate(raw._date),
-        _rank: normalizeRank(raw._rank),
-        ...(normalizePlaces(raw._place).length ? { _place: normalizePlaces(raw._place) } : {}),
-        reason,
-      })),
-    recoveredFromFixedDays: rankedFixedDaySelection.selected.map(({ firestoreId, outputStem, raw }) => ({
-      firestoreId,
-      outputFileBase: `${outputStem}.json`,
-      _date: normalizeFixedDate(raw._date),
-      _rank: normalizeRank(raw._rank),
-      ...(normalizePlaces(raw._place).length ? { _place: normalizePlaces(raw._place) } : {}),
-      _feastName: raw._feastName,
-    })),
-    rankedFixedDaysAlreadyCovered: rankedFixedDaySelection.alreadyCovered.map(({ firestoreId, raw }) => ({
-      firestoreId,
-      _date: normalizeFixedDate(raw._date),
-      _rank: normalizeRank(raw._rank),
-      ...(normalizePlaces(raw._place).length ? { _place: normalizePlaces(raw._place) } : {}),
-      _feastName: raw._feastName,
-    })),
-    fixedDayFallbacks: sources
-      .filter(({ fallback }) => fallback)
-      .map(({ file, fallback }) => ({ file, ...fallback })),
+    excludedSources: allSourceFiles.filter((file) => EXCLUDED_SOURCE_FILES.has(file)).map((file) => ({ file, reason: 'incomplete duplicate' })),
+    syntheticVariants: sourceVariants.filter(({ kind }) => kind === 'synthetic').map(({ file, outputStem, reason }) => ({ sourceFile: file, outputFileBase: `${outputStem}.json`, reason })),
+    recoveredFromFixedDays: rankedFixedDaySelection.selected.map(({ firestoreId, outputStem }) => ({ firestoreId, outputFileBase: `${outputStem}.json` })),
+    fixedDayFallbacks: sources.filter(({ fallback }) => fallback).map(({ file, fallback }) => ({ file, ...fallback })),
     missingTemplates: [],
-    resolvedReferences: [],
-    unresolvedReferences: [],
-    normalizedReferences: [],
-    defaultedFromDay: [],
-    teDeumNormalized: [],
-    emptyFields: [],
+    normalized: [],
+    unresolved: [],
+    droppedPlaceholders: [],
     invalidOutputs: [],
+    documents: [],
+    scaffolds: [],
   };
 
-  await fs.mkdir(OUTPUT_DIR, { recursive: true });
-  const oldGeneratedFiles = (await fs.readdir(OUTPUT_DIR)).filter((name) => name.endsWith('.json'));
-  await Promise.all(oldGeneratedFiles.map((name) => fs.unlink(path.join(OUTPUT_DIR, name))));
-
-  const outputs = [];
-  const apostlesTemplate = templates.get('apostles');
-  if (!apostlesTemplate) throw new Error('Required common-texts/apostles template is missing');
-  for (const { file, outputStem, raw } of sourceVariants) {
-    const sourceTemplates = Array.isArray(raw._templates) ? raw._templates : [];
-    const versions = sourceTemplates.length ? sourceTemplates : [null];
-    for (const templateName of versions) {
-      const template = templateName ? templates.get(templateName) : {};
-      if (templateName && !template) {
-        report.missingTemplates.push({ file, template: templateName });
-        continue;
-      }
-      outputs.push(buildOutput({
-        sourceFile: file,
-        outputStem,
-        source: raw,
-        templateName,
-        template,
-        apostlesTemplate,
-        firstWeekDay,
-        report,
-      }));
-    }
-  }
+  const outputs = sourceVariants.map(({ file, outputStem, raw, kind }) => buildSparseOutput({
+    sourceFile: file, outputStem, source: raw, kind, templates, report,
+  }));
+  const scaffolds = buildScaffolds({ definitions, outputs, report });
+  const templateOutputs = buildTemplateOutputs({ templates, firstWeekDay, manifest, report });
+  const allOutputs = [...outputs, ...scaffolds];
 
   const outputIds = new Map();
-  outputs.forEach(({ outputFile, output }) => {
-    const files = outputIds.get(output._id) || [];
-    files.push(outputFile);
-    outputIds.set(output._id, files);
+  allOutputs.forEach(({ outputFile, output }) => outputIds.set(output._id, [...(outputIds.get(output._id) || []), outputFile]));
+  report.duplicateIds = [...outputIds.entries()].filter(([, files]) => files.length > 1).map(([_id, files]) => ({ _id, files }));
+
+  for (const [dir, list] of [[OUTPUT_DIR, allOutputs], [TEMPLATES_OUTPUT_DIR, templateOutputs]]) {
+    await fs.mkdir(dir, { recursive: true });
+    const old = (await fs.readdir(dir)).filter((name) => name.endsWith('.json'));
+    await Promise.all(old.map((name) => fs.unlink(path.join(dir, name))));
+    await Promise.all(list.map(({ outputFile, output }) => (
+      fs.writeFile(path.join(dir, outputFile), `${JSON.stringify(output, null, 2)}\n`, 'utf8')
+    )));
+  }
+
+  // Placeholders of the legacy model that no longer exist: every content
+  // field a document does not carry itself.
+  const legacyPlaceholders = outputs.reduce((total, { output }) => total
+    + OFFICE_TEXT_FIELDS.filter((field) => !(field in output) && !(output._fieldRules && field in output._fieldRules)).length, 0);
+  const normalizedCounts = new Map();
+  report.normalized.forEach(({ from, rule }) => {
+    const key = `${Array.isArray(from) ? from.join(' | ') : from}\u0000${JSON.stringify(rule)}`;
+    normalizedCounts.set(key, (normalizedCounts.get(key) || 0) + 1);
   });
-  report.duplicateIds = [...outputIds.entries()]
-    .filter(([, files]) => files.length > 1)
-    .map(([_id, files]) => ({ _id, files }));
-
-  report.unresolvedReferenceCounts = Object.fromEntries(
-    [...report.unresolvedReferences.reduce((counts, { value }) => {
-      counts.set(value, (counts.get(value) || 0) + 1);
-      return counts;
-    }, new Map())].sort(([left], [right]) => left.localeCompare(right)),
-  );
-  report.emptyFieldCounts = Object.fromEntries(
-    [...report.emptyFields.reduce((counts, { fields }) => {
-      fields.forEach((field) => counts.set(field, (counts.get(field) || 0) + 1));
-      return counts;
-    }, new Map())].sort(([, left], [, right]) => right - left),
-  );
-
-  await Promise.all(outputs.map(({ outputFile, output }) => (
-    fs.writeFile(path.join(OUTPUT_DIR, outputFile), `${JSON.stringify(output, null, 2)}\n`, 'utf8')
-  )));
+  report.normalizedSummary = [...normalizedCounts.entries()]
+    .map(([key, count]) => ({ from: key.split('\u0000')[0], rule: key.split('\u0000')[1], count }))
+    .sort((a, b) => b.count - a.count || a.from.localeCompare(b.from));
 
   report.summary = {
     fixedCalendarEntries: fixedCalendar.length,
-    calendarEntriesComparedIndividually: calendarEntries.length,
     availableFeastSourceFiles: allSourceFiles.length,
     feastSourceFiles: sources.length,
-    excludedSourceFiles: report.excludedSources.length,
     logicalSourceVariants: sourceVariants.length,
     syntheticVariants: report.syntheticVariants.length,
-    rankedFixedDaysFound: rankedFixedDays.length,
     recoveredFromFixedDays: report.recoveredFromFixedDays.length,
-    rankedFixedDaysAlreadyCovered: report.rankedFixedDaysAlreadyCovered.length,
     commonTextTemplates: templates.size,
-    generatedFiles: outputs.length,
-    multipleTemplateSources: sources.filter(({ raw }) => (raw._templates || []).length > 1).length,
-    multiplePlaceSources: sources.filter(({ raw }) => normalizePlaces(raw._place).length > 1).length,
+    templateDocuments: templateOutputs.length,
+    generatedFiles: allOutputs.length,
+    scaffolds: scaffolds.length,
+    multipleTemplateSources: outputs.filter(({ output }) => output._templates.length > 1).length,
+    legacyIdsReplaced: outputs.reduce((total, { output }) => total + (output._legacyIds?.length || 0), 0),
     missingInFeasts: report.missingInFeasts.length,
-    missingInFeastsKeys: new Set(report.missingInFeasts.map(({ key }) => key)).size,
     extraInFeasts: report.extraInFeasts.length,
-    resolvedReferences: report.resolvedReferences.length,
-    unresolvedReferences: report.unresolvedReferences.length,
-    normalizedReferences: report.normalizedReferences.length,
-    outputsDefaultedFromDay: report.defaultedFromDay.length,
-    defaultedFromDayValues: report.defaultedFromDay.reduce((total, { fields }) => total + fields.length, 0),
-    outputsWithEmptyFields: report.emptyFields.length,
-    remainingEmptyValues: report.emptyFields.reduce((total, { fields }) => total + fields.length, 0),
+    normalizedInstructions: report.normalized.length,
+    unresolvedReferences: report.unresolved.length,
+    droppedPlaceholderValues: legacyPlaceholders,
     invalidOutputs: report.invalidOutputs.length,
     duplicateIds: report.duplicateIds.length,
   };
 
+  // Identity index for the calendar definitions: which document carries a
+  // celebration, its Commons and how much own content it has.
+  const index = {};
+  allOutputs.forEach(({ output }) => {
+    const places = normalizePlaces(output._place);
+    const record = {
+      dayId: output._id,
+      ...(output._legacyIds ? { legacyIds: output._legacyIds } : {}),
+      templates: output._templates,
+      ...(output._defaultTemplate ? { defaultTemplate: output._defaultTemplate } : {}),
+      hours: output._contentStatus.hours,
+      ...(output._scaffold ? { scaffold: true } : {}),
+    };
+    (places.length ? places : ['-']).forEach((place) => {
+      index[`${output._date}|${place}|${output._celebrationId}|${output._rank}`] = record;
+    });
+  });
+  const indexText = `{\n${Object.keys(index).sort().map((key) => ` ${JSON.stringify(key)}: ${JSON.stringify(index[key])}`).join(',\n')}\n}\n`;
+  await fs.writeFile(CONTENT_INDEX_PATH, indexText, 'utf8');
+
   await fs.mkdir(path.dirname(REPORT_PATH), { recursive: true });
   await fs.writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
-  console.log(JSON.stringify({ outputDir: OUTPUT_DIR, reportPath: REPORT_PATH, ...report.summary }, null, 2));
+  await fs.writeFile(MARKDOWN_REPORT_PATH, renderMarkdownReport(report), 'utf8');
+  console.log(JSON.stringify({ outputDir: OUTPUT_DIR, templatesDir: TEMPLATES_OUTPUT_DIR, reportPath: REPORT_PATH, ...report.summary }, null, 2));
 
   if (report.missingTemplates.length || report.invalidOutputs.length || report.duplicateIds.length) {
     process.exitCode = 1;

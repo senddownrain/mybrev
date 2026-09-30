@@ -1,0 +1,20 @@
+{
+  "_id": "21-05-sv-christopher-magallanes-companions",
+  "_schema": 2,
+  "_celebrationId": "sv-christopher-magallanes-companions",
+  "_date": "21.05",
+  "_rank": "memoria-ad-libitum",
+  "_feastName": "СВ. ХРЫСТАФОРА МАГАЛАНА, ПРЭЗБІТЭРА, І ПАПЛЕЧНІКАЎ, МУЧАНІКАЎ",
+  "_templates": [
+    "pastors",
+    "martyrs-many"
+  ],
+  "_defaultTemplate": "pastors",
+  "_legacyIds": [
+    "21-05-sv-christopher-magallanes-companions--pastors",
+    "21-05-sv-christopher-magallanes-companions--martyrs-many"
+  ],
+  "_contentStatus": {
+    "hours": "common-only"
+  }
+}
