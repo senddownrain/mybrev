@@ -7,7 +7,7 @@
 import { logger } from '@/utils/logger';
 import { fetchDaysForDate } from '@/services/liturgicalDayService';
 import { getLiturgicalTemplates } from '@/services/staticLiturgicalService';
-import { buildOrdoDayOptions } from '@/utils/ordoDayOptions';
+import { buildOrdoDayOptions, contentDayMap } from '@/utils/ordoDayOptions';
 import { extraFixedDatesOf } from '@/utils/ordo/runtime';
 
 /**
@@ -37,15 +37,12 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     daysResult.periodFallback,
     daysResult.officeForDead,
   ].filter(Boolean);
-  const dayMap = new Map(allDays.map((item) => [item.id, item]));
   const { dayOptions, ordo, unavailable } = buildOrdoDayOptions({
     resolved, daysResult, context, date, diocese, templates,
   });
-  // Assembled Offices (sparse documents, celebrations without a document)
-  // replace the raw documents under the same ids.
-  dayOptions.forEach((option) => (option.templates || []).forEach((template) => {
-    if (template.day?._assembly) dayMap.set(template.id, template.day);
-  }));
+  // The route resolves itemsDays first. Keep every legal Office there in its
+  // resolved form, including legacy documents with template placeholders.
+  const dayMap = contentDayMap(allDays, dayOptions);
   if (unavailable.length) {
     logger.log(`[liturgicalContentService] ${date}: legal options without days documents`, unavailable);
   }

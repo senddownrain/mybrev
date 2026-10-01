@@ -350,3 +350,12 @@ export function findOptionByDayId(content, dayId) {
   return (content?.dayOptions || []).find((option) => option.dayId === dayId
     || option.templates?.some((template) => template.id === dayId || template.dayIds?.includes(dayId))) || null;
 }
+
+/** Route lookup must see the same resolved document as the legal Office card. */
+export function contentDayMap(allDays, dayOptions) {
+  const dayMap = new Map(allDays.map((day) => [day.id, day]));
+  dayOptions.forEach((option) => (option.templates || []).forEach((template) => {
+    if (template.day) dayMap.set(template.id, template.day);
+  }));
+  return dayMap;
+}

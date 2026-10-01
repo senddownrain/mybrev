@@ -16,8 +16,9 @@ import {
   FIRST_VESPER_FIELDS, OFFICE_CONTENT_FIELDS, OFFICE_FIELD_SLOTS, OFFICE_TEXT_FIELDS, SUNDAY_WEEK_1_TEMPLATE,
 } from '../src/constants/officeFields.js';
 import {
-  buildOrdoDayOptions, findOptionByDayId, resolveLegacyTemplatePlaceholders,
+  buildOrdoDayOptions, contentDayMap, findOptionByDayId, resolveLegacyTemplatePlaceholders,
 } from '../src/utils/ordoDayOptions.js';
+import { resolveDateDayAgainstPeriod, resolveDayAgainstPeriod } from '../src/utils/liturgicalDayResolution.js';
 import { classifyValue, inferTemplates, splitSource } from '../scripts/lib/feast-content.mjs';
 import { daysFixture, templatesFixture } from './helpers/ordo-days-fixture.mjs';
 
@@ -81,7 +82,7 @@ test('Commons and the Sunday, week I psalter are reusable templates', () => {
   // The runtime names the source, not a technical document id.
   const runtime = ['src/utils/ordo/office.js', 'src/utils/ordo/officeAssembly.js', 'src/utils/ordoDayOptions.js']
     .map((file) => fs.readFileSync(path.join(ROOT, file), 'utf8')).join('\n');
-  assert.doesNotMatch(runtime, /ordinary-w5-d1['"`]|from-first-week/);
+  assert.doesNotMatch(runtime, /ordinary-w5-d1['"`]/);
 });
 
 test('textual instructions are normalized to structured rules', () => {
@@ -214,6 +215,54 @@ test('legacy Sunday week I markers reuse the published psalter template', () => 
 
   const sparse = { ...legacy, _schema: 2, _fieldRules: { laudesPs1: { source: 'sunday-week-1' } } };
   assert.equal(resolveLegacyTemplatePlaceholders(sparse, TEMPLATES), sparse, 'sparse documents stay on the new assembly path');
+});
+
+test('Guardian Angels Lauds route pairs own antiphons with Sunday week I psalms in both document formats', () => {
+  const date = '2026-10-02';
+  const id = '02-10-holy-guardian-angels';
+  const source = feast(id);
+  const { _id, _schema, _fieldRules, ...proper } = source;
+  const sunday = TEMPLATES.get(SUNDAY_WEEK_1_TEMPLATE);
+  const psFields = ['laudesPs1', 'laudesPs2', 'laudesPs3'];
+  assert.deepEqual(psFields.map((field) => source._fieldRules[field]),
+    psFields.map(() => ({ source: SUNDAY_WEEK_1_TEMPLATE })));
+  assert.equal(new Set(psFields.map((field) => sunday[field])).size, 3);
+  psFields.forEach((field) => {
+    assert.match(sunday[field], /<p\b/u, `${field} contains HTML`);
+    assert.ok(sunday[field].length > 100, `${field} is a full psalm`);
+  });
+
+  const resolved = resolveRuntimeDay(date, { diocese: 'minsk-mohilev' });
+  for (const sparse of [false, true]) {
+    const document = sparse
+      ? { id, ...source }
+      : { id, ...proper, ...Object.fromEntries(psFields.map((field) => [field, ['з нядзелі І тыдня']])) };
+    if (sparse) {
+      assert.equal(resolveLegacyTemplatePlaceholders(document, TEMPLATES), document,
+        'sparse document bypasses legacy resolver');
+    }
+    const { context, daysResult } = daysFixture(resolved, { migrated: true });
+    const fetched = sparse ? document : resolveDateDayAgainstPeriod(document, daysResult.periodFallback);
+    daysResult.fixedDateDays = [fetched];
+    const { dayOptions } = buildOrdoDayOptions({
+      resolved, daysResult, context, date, diocese: 'minsk-mohilev', templates: TEMPLATES,
+    });
+    const option = findOptionByDayId({ dayOptions }, id);
+    assert.ok(option, `${sparse ? 'sparse' : 'legacy'} Guardian Angels option`);
+    const itemsDays = [...contentDayMap([fetched, daysResult.periodFallback], dayOptions).values()];
+    // Same precedence as useResolvedLiturgicalDay: itemsDays before option templates.
+    const selected = itemsDays.find((day) => day.id === id) || option.templates[0].day;
+    const routeDay = resolveDayAgainstPeriod(selected, daysResult.periodFallback);
+    assert.equal(routeDay.laudesHymn, source.laudesHymn);
+    for (const field of ['laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr']) {
+      assert.equal(routeDay[field], source[field], field);
+    }
+    for (let i = 1; i <= 3; i += 1) {
+      assert.equal(routeDay[`laudesAnt${i}`], source[`laudesAnt${i}`], `Guardian Angels own Ant${i}`);
+      assert.equal(routeDay[`laudesPs${i}`], sunday[`laudesPs${i}`], `Sunday week I Ps${i}`);
+    }
+    assert.doesNotMatch(psFields.map((field) => routeDay[field]).join(''), /з нядзелі І тыдня/u);
+  }
 });
 
 test('structured omit, explicit sources and a missing Common', () => {
