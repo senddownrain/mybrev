@@ -1,0 +1,31 @@
+rules_version = '2';
+
+// Public content database. Every client (web, Flutter) reads anonymously;
+// only administrators write, from the web admin. Scripts with the service
+// account bypass these rules.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Keep in sync with src/constants/admin.js (bootstrap / emergency access).
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.uid in [
+          '64MeSP56IWVotVFG7bu8YKeLis12',
+          '7mszX2IiXHgjWxj0ZE5vEqdkmoD2'
+        ]
+        || exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // Who is an administrator: each user may check only their own entry;
+    // the list is managed in the Firebase console.
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    match /{collection}/{document=**} {
+      allow read: if collection != 'admins';
+      allow write: if collection != 'admins' && isAdmin();
+    }
+  }
+}

@@ -57,7 +57,8 @@
     "test:alternatives": "node --test tests/liturgical-alternatives.test.mjs",
     "test:parsed-readings": "node --test tests/parsed-readings-identity.test.mjs tests/parsed-readings-content-integrity.test.mjs",
     "test:prayer-markdown": "node --test tests/prayer-markdown.test.mjs",
-    "test:ordo": "node --test tests/ordo-*.test.mjs"
+    "test:ordo": "node --test tests/ordo-*.test.mjs",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-rules \"node tests/firestore-rules/rules-emulator.mjs\""
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",
