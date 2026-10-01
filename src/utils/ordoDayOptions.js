@@ -24,8 +24,8 @@ import {
 import {
   claimedDayIds, officeDescriptorOf, optionDescriptor, selectFixedDocuments, summarizeOrdoDay,
 } from './ordo/runtime.js';
-import { isSparseDayDocument, SPARSE_DAY_SCHEMA } from '../constants/officeFields.js';
-import { CURRENT_DAY_CHOICE, assembleOffice, assemblyChoices } from './ordo/officeAssembly.js';
+import {\n  isSparseDayDocument, OFFICE_TEXT_FIELDS, SPARSE_DAY_SCHEMA, SUNDAY_WEEK_1_TEMPLATE,\n} from '../constants/officeFields.js';
+import {\n  CURRENT_DAY_CHOICE, assembleOffice, assemblyChoices, isBlank,\n} from './ordo/officeAssembly.js';
 import { getDayTemplateLabel } from './liturgicalDayResolution.js';
 
 function buildPeriodTitle(context, date) {
@@ -89,6 +89,43 @@ function templatesFromFixed(docs, diocese) {
   const ordered = [...docs].sort((a, b) => Number(placesOf(b).includes(diocese)) - Number(placesOf(a).includes(diocese)));
   const groups = groupFixedCelebrationDays(ordered);
   return { day: groups[0]?.day || null, templates: groups.flatMap((group) => group.templates) };
+}
+
+const LEGACY_SUNDAY_WEEK_ONE_MARKERS = new Set([
+  'from-first-week',
+  'з нядзелі і тыдня',
+  'з нядзелі i тыдня',
+]);
+
+function legacyOfficeMarker(value) {
+  const raw = Array.isArray(value) && value.length === 1 ? value[0] : value;
+  return typeof raw === 'string' ? raw.trim().replace(/\s+/g, ' ').toLowerCase() : '';
+}
+
+/**
+ * Compatibility for materialized feast documents that predate sparse Office
+ * assembly.  Those documents stored instructions such as
+ * ["з нядзелі І тыдня"] inside a text field.  Reuse the published
+ * sunday-week-1 template instead of rendering/dropping the instruction.
+ *
+ * Sparse documents already carry _fieldRules and are resolved by
+ * assembleOffice(), so they deliberately bypass this bridge.
+ */
+export function resolveLegacyTemplatePlaceholders(day, templates = new Map()) {
+  if (!day || isSparseDayDocument(day)) return day;
+  const getTemplate = (id) => (templates instanceof Map ? templates.get(id) : templates?.[id]) || null;
+  const sundayWeek1 = getTemplate(SUNDAY_WEEK_1_TEMPLATE);
+  if (!sundayWeek1) return day;
+
+  let resolved = day;
+  OFFICE_TEXT_FIELDS.forEach((field) => {
+    if (!LEGACY_SUNDAY_WEEK_ONE_MARKERS.has(legacyOfficeMarker(day[field]))) return;
+    const replacement = sundayWeek1[field];
+    if (isBlank(replacement)) return;
+    if (resolved === day) resolved = { ...day };
+    resolved[field] = replacement;
+  });
+  return resolved;
 }
 
 export const CURRENT_DAY_LABEL = 'З дня';
@@ -253,6 +290,7 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
       });
       return;
     }
+    docs = docs.map((doc) => resolveLegacyTemplatePlaceholders(doc, templates));
     const { day, templates: documentTemplates } = templatesFromFixed(docs, diocese);
     options.push({
       ...base,
