@@ -11,9 +11,10 @@
 | `en` | `MCFL.pdf` (The Order of Mass, ICEL 2010 / CBCEW 2011) | `order-of-mass-en` |
 
 Англійскі тэкст захоўваецца ў `src/data/mass/order-of-mass-en.md` і перанесены з PDF
-без дапаўненняў (пяць галоўных загалоўкаў — кананічныя беларускія, гл. V4 ніжэй). Пакуль дакумент `prayers/order-of-mass-en` не апублікаваны, чытач бярэ
-ўбудаваны тэкст. Апублікаваць: `npm run db:import-mass-english` (dry run) і потым
-`-- --apply` (толькі стварае дакумент, не перазапісвае).
+без дапаўненняў (пяць галоўных загалоўкаў — кананічныя беларускія, гл. V4 ніжэй).
+Дакумент `prayers/order-of-mass-en` ужо апублікаваны; калі ён недаступны, чытач бярэ
+ўбудаваны тэкст. Скрыпт `npm run db:import-mass-english` стварае дакумент толькі калі
+яго яшчэ няма і ніколі не перазапісвае існуючы.
 
 ## Два слаі
 
@@ -138,6 +139,12 @@ Agnus Dei), рубрыкі і каментары застаюцца без `V.`/
 npm run db:migrate-mass-content-v4              # dry run: чытае 3 дакументы, нічога не піша
 npm run db:migrate-mass-content-v4 -- --apply   # запісвае тое, што спланаваў апошні dry run
 ```
+
+У PowerShell пры праверцы 2026-10-01 `npm run … -- --apply` не перадаў сцяг скрыпту
+і выканаў яшчэ адзін dry run. У такім выпадку запускайце сам скрыпт:
+`node scripts/migrate-mass-content-v4.mjs --apply` і правярайце `mode: "apply"` у вывадзе.
+V4 была ўжыта да BE і LA 2026-10-01; EN ужо меў кананічны тэкст. Паўторны live dry run
+паказаў `unchanged` для ўсіх трох дакументаў.
 
 Dry run: чытае `prayers/eMmCtxwyJ75ogmL5rwye`, `prayers/zdro66KYVuQ9p2KbqizD`,
 `prayers/order-of-mass-en`; кладзе некранутую копію ў `backups/mass-v4/<час>/<id>.json`;

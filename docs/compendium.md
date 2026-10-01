@@ -133,9 +133,8 @@ unit documents that are no longer listed. Public read rules for `compendium` and
 - `src/utils/compendiumData.js` holds validation, the question/number index, internal
   reading groups (a topic, or a unit's questions that come before its first topic) and
   answer paragraphs.
-- `src/utils/compendiumNavigation.js` derives the visible source hierarchy from that
-  index (see "Source hierarchy vs reading groups" below). The canonical schema is
-  unchanged.
+- `src/utils/compendiumNavigation.js` derives source headings and the inline Part
+  outline from that index (see "UI" below). The canonical schema is unchanged.
 
 ## Search
 
@@ -171,167 +170,83 @@ Hidden Russian aliases (`groups: [{ ru: [stems], be: [prefixes] }]`) work like t
 
 ## UI (mybrev)
 
-| Route | Screen |
-| --- | --- |
-| `/compendium` | Root screen: the four parts |
-| `/compendium/part/:partId` | Part screen: only its РАЗДЗЕЛ rows (label, title, question range) |
-| `/compendium/node/:nodeId` | Section (`p1-s1`) or subsection (`p1-s1-ch1`) screen: what that node owns directly |
-| `/compendium/topic/:topicId` | A named topic: expandable question rows inside the existing reading surface, with prev/next |
-| `/compendium/question/:number` | One question with its context trail and prev/next; deep-linkable |
+The normal path is `/compendium` → `/compendium/part/:partId` →
+`/compendium/question/:number`. The root keeps four part cards. Opening a
+part immediately renders every question of that part in canonical order. The
+question reader keeps adjacent question prev/next and its central **Да часткі**
+button links to the same part at the current question.
 
-All five are children of `CompendiumShell` (see "Persistent search" below). The part
-route and the node route render the same view, `CompendiumNode.vue`.
-
-Other details:
-
-- The drawer item «Кампендый» (Phosphor `PhScroll`) sits between «Біблія» and «Спеўнік».
-- On sub-pages the app bar shows the divided back / «Кампендый» capsule, the same one
-  the song view uses. It also shows the existing text-scale control.
-- Expanded rows are kept in the store for the session. The router's saved scroll
-  position restores the scroll on Back.
-- Styles reuse `prayers-list.css` and `prayer-reading.css`. `compendium.css` only adds
-  small row, number and citation rules built on the existing theme tokens.
-
-### Source hierarchy vs reading groups
-
-Units and reading groups are technical: they split content for storage, the topic
-reader and search. They are not what the user navigates. `compendiumNavigation.js`
-builds a derived tree in which only headings printed on Catholic.by are nodes:
+`buildCompendiumNavigation(index)` derives the source heading tree and question
+placements from the canonical dataset. `buildPartReadingOutline(index, partId)`
+then creates one display stream per part, cached by index and part id:
 
 ```text
-part (ЧАСТКА) → section (РАЗДЗЕЛ) → chapter (ГЛАВА) → topic (named heading)
-node: { id, kind, number, parentId, label, uiLabel, title, sourceHeading: true, leadCitations,
-        directQuestions: [questions], topics: [topic nodes], chapters: [chapter nodes],
-        children: [structural child screens] }
+sectionHeading → question → subsectionHeading → leadCitations → question
+→ topicHeading → subtopicHeading → question …
 ```
 
-- `label` is the heading as printed in the source (`ЧАСТКА ПЕРШАЯ`, `РАЗДЗЕЛ ПЕРШЫ`,
-  `ГЛАВА ПЕРШАЯ`). `uiLabel` is what the product shows (see "UI terminology").
-  `section`/`chapter` are code names only and are never displayed.
-- Questions printed under a heading before its first child heading are that node's
-  `directQuestions` and render as plain numbered question rows (the search-result row
-  style). A node without a real title is never created, so there is no «Пытанне 1» or
-  «Пытанні 25–27» heading. Ranges only appear as secondary metadata under a real title.
-- A chapter's lead quotation (`leadCitations`) is shown under its heading.
-- Italic subheadings stay in the topic reader (`subtopics` on the topic node).
-- The topic pager walks `sequence`: named topics and direct questions in source order.
+Only real source headings are displayed. `sectionHeading` uses
+`РАЗДЗЕЛ`; `subsectionHeading` uses `ПАДРАЗДЗЕЛ` generated from the
+chapter number through `compendiumLevelLabel`. The canonical
+`chapterLabel: "ГЛАВА ПЕРШАЯ"` remains untouched. Named topics have only
+their source title; `subtopicTitle` is emitted when its value changes.
+Technical `intro`, `unit`, and `group` IDs, and question ranges, are
+never visible headings. Unit and topic `leadCitations` remain immediately
+after their owning heading and before its first question. All questions
+use the same row component style and open the individual reader.
 
-### Navigation rule (hierarchy v2, shared with the Flutter app)
+The four streams have 217, 139, 177, and 65 questions. Together they contain
+all 598 canonical numbers exactly once. Only the selected part is rendered;
+other part streams are built on demand. No external search or virtualization
+library is used.
 
-> Each question is browsed under its nearest real structural owner. Part screens show
-> Sections; Section screens show their direct questions and Subsections; Subsection
-> screens show their direct questions and named Topics; Topic screens show questions.
-> Internal reading groups remain separate from visible navigation.
+### Anchors and old links
 
-Exactly, per screen and in this display order (`buildNodeScreen`):
+Headings use their deterministic source IDs, for example `#p1-s1`,
+`#p1-s1-ch1`, and `#p1-s1-ch2-t1`. Questions use the canonical
+`#q079` form. The Part view scrolls to the anchor once its lazy data has
+rendered. Its CSS `scroll-margin-top` keeps the target clear of the app bar.
+Part links with old heading hashes now open those inline headings directly.
 
-| Screen | Header | Rows, top to bottom |
-| --- | --- | --- |
-| Root | title | the 4 parts (label, title, range) |
-| Part | `ЧАСТКА …`, title | its РАЗДЗЕЛ rows only: label, title, range, chevron. No questions, no subsections, no topics |
-| Section | part label (link) · `РАЗДЗЕЛ …`, title, range | 1. its direct questions; 2. named topics owned directly by the section; 3. its ПАДРАЗДЗЕЛ rows (label, title, range) |
-| Subsection | part label · section title (links) · `ПАДРАЗДЗЕЛ …`, title, range, lead quotation | 1. its direct questions; 2. its named topics (title, range) |
-| Topic | unchanged reader | expandable questions under their italic subheadings |
+`/compendium/node/:nodeId` and `/compendium/topic/:topicId` remain
+registered solely for compatibility. `CompendiumLegacy.vue` replaces them
+with the relevant Part route and anchor, preserving the search query. Real
+section, subsection, and topic IDs target their heading. Technical groups
+target their first question; old topic hashes such as
+`#compendium-q-81` target that question when it belongs to the group.
+Unknown IDs show a not-found message. Reader context crumbs also point to
+these inline anchors; they never open another hierarchy screen.
 
-- A question row opens the question reader, a topic row opens the topic reader, and a
-  РАЗДЗЕЛ / ПАДРАЗДЗЕЛ row opens that node's own screen. Nothing below a node's own
-  level is flattened into it.
-- A named topic is shown by its title only, without a level word. A topic's
-  `parentTitle` stays a small caption above its row.
-- Question ranges (`Пытанне N` / `Пытанні N–M`) are metadata under a real title and
-  never a navigation node.
-- Rows on every screen are in source order.
+### Persistent search and Back
 
-Audit of the 598-question dataset against this rule (pinned by
-`tests/compendium-hierarchy.test.mjs`):
+`CompendiumShell` mounts one fixed search dock across root, Part, question,
+and compatibility redirects. Search remains global over all 598 questions,
+with numeric lookup and hidden RU→BE aliases. Query text lives in the store.
+Opening results adds `?q=` to the current route; subsequent typing replaces
+that entry. The underlying page stays mounted. A result opens the question;
+Back returns to results. Clearing the query closes results and restores the
+same Part page and scroll offset. The router does not reset scroll for a
+query-only change. Part and reader containers reserve bottom space for the dock.
 
-| | Count |
-| --- | --- |
-| Parts / sections / chapters (subsections) / named topics | 4 / 8 / 20 / 70 |
-| Structural screens (part + section + subsection) | 32 |
-| Questions listed directly on a section screen | 14: q1 (`p1-s1`), q218–220 (`p2-s1`), q357 (`p3-s1`), q434–441 (`p3-s2`), q534 (`p4-s1`) |
-| Questions listed directly on a subsection screen | 13: q2–5 (`p1-s1-ch1`), q79–80 (`p1-s2-ch2`), q251 (`p2-s2-ch1`), q295 (`p2-s2-ch2`), q321 (`p2-s2-ch3`), q535 (`p4-s1-ch1`), q557 (`p4-s1-ch2`), q567–568 (`p4-s1-ch3`) |
-| Questions inside named topics | 571 |
-| Topics owned directly by a section | 5: q250 «Сем сакрамэнтаў Касцёла» (`p2-s2`, before its four subsections) and the 4 topics of `p4-s2` МАЛІТВА ПАНСКАЯ (no chapters) |
-| Subsections without named topics | 1: `p1-s1-ch1` (q2–5) |
-| Questions on a part screen | 0 |
+The app bar uses browser history when available. For a direct legacy link
+without history, its fallback goes to the matching Part anchor. The reader's
+**Да часткі** button always links to the current question's Part anchor.
 
-Every question is listed on exactly one screen (14 + 13 + 571 = 598).
+### Styling
 
-### UI terminology: ЧАСТКА → РАЗДЗЕЛ → ПАДРАЗДЗЕЛ
+The Part stream uses existing Vuetify list items, `prayers-list.css`,
+`compendium.css`, theme tokens, and the app's spacing and radii.
+`РАЗДЗЕЛ` is the strongest inline divider, `ПАДРАЗДЗЕЛ` the second,
+named topics the third, and subtopics are smaller italic headings.
+Structural headings have no chevrons and are not links. Dark and light
+themes use the same existing tokens.
 
-The canonical data is not changed: it keeps `chapter`, `chapterLabel: "ГЛАВА ПЕРШАЯ"`.
-The product derives its own labels in `src/utils/compendiumLabels.js`
-(`compendiumLevelLabel(kind, number, sourceLabel)`):
+### Regression coverage
 
-| Level (code) | Visible label |
-| --- | --- |
-| `part` | the source label as printed: `ЧАСТКА ПЕРШАЯ` (feminine) |
-| `section` | `РАЗДЗЕЛ ` + masculine ordinal of `section.number` (equal to the source label) |
-| `chapter` | `ПАДРАЗДЗЕЛ ` + masculine ordinal of `chapter.number` |
-| `topic` | none: the title only |
-
-The label is generated from the **number**, never by replacing the word «ГЛАВА»
-(«ГЛАВА ПЕРШАЯ» → «ПАДРАЗДЗЕЛ ПЕРШАЯ» would have the wrong gender). Masculine
-ordinals:
-
-| n | Ordinal | n | Ordinal |
-| --- | --- | --- | --- |
-| 1 | ПЕРШЫ | 6 | ШОСТЫ |
-| 2 | ДРУГІ | 7 | СЁМЫ |
-| 3 | ТРЭЦІ | 8 | ВОСЬМЫ |
-| 4 | ЧАЦВЁРТЫ | 9 | ДЗЯВЯТЫ |
-| 5 | ПЯТЫ | 10 | ДЗЯСЯТЫ |
-
-Beyond 10 the plain number is used (`ПАДРАЗДЗЕЛ 11`); the dataset needs 1–4.
-
-### Context trails
-
-- Trails and result contexts use titles of real headings only: part label, then
-  section, chapter and topic **titles**, without consecutive duplicates. Example:
-  `ЧАСТКА ПЕРШАЯ · «ВЕРУ» — «ВЕРЫМ» · ЧАЛАВЕК — «СВЯТЫНЯ» БОГА`.
-- They never show a technical id, `intro`, a code word, a level word for
-  sections/subsections or a range used as a heading.
-- Each crumb links to that node's screen. «Да зместу» under a direct question opens
-  the section/subsection that lists it; «Уся тэма» opens the topic.
-
-### Routes, Back and legacy links
-
-- `nodeRoute(node)`: part → `/compendium/part/:partId`; section or chapter →
-  `/compendium/node/:nodeId`; topic → `/compendium/topic/:topicId`. Ids are the
-  deterministic dataset ids, so deep links and refresh work.
-- The shell keys the level by `route.path`, so each level is its own screen and `?q`
-  never remounts it. Back restores the scroll through the router's saved position.
-- Back without history (a deep link) goes to the logical parent
-  (`compendiumParentRoute`): topic → its subsection or section → part → root.
-- Legacy links keep working:
-  - `/compendium/part/:partId`, `/compendium/topic/:topicId` (named topics) and
-    `/compendium/question/:number` are unchanged.
-  - Technical groups (`/compendium/topic/p1-s1-intro`, `…/p1-s1-ch1`):
-    `resolveLegacyTopicRoute` replaces them with the question when the group has one
-    question, and otherwise with the screen of the real owner
-    (`/compendium/node/p1-s1-ch1`, `/compendium/node/p3-s2`).
-  - Old part anchors (`/compendium/part/p1#p1-s1-ch1`, `…/p3#p3-s2`):
-    `resolveLegacyPartHash` replaces them with `/compendium/node/<id>`. Any other hash
-    just shows the part.
-
-### Persistent search
-
-`CompendiumShell` wraps every Compendium level. It mounts the only
-`CompendiumSearchDock` (the existing `prayer-search-dock`) and a global results layer,
-and `createCompendiumSearchSync` (`src/utils/compendiumSearchRoute.js`) controls them:
-
-- The query text lives in the store for the session, so it stays in the dock after a
-  result is opened.
-- Results are open when the current route carries `?q=`. The first keystroke pushes
-  `?q=` onto the current page, and further typing only replaces it. So Back from an
-  opened question returns to the results, and Back from the results returns to the page.
-- The page stays mounted (hidden) under the results. Clearing the query (✕, Esc or
-  deleting the text) closes the results and restores the page and its scroll.
-  Focusing the dock with a kept query reopens its results.
-- Search is always global (`searchCompendium` over the whole index). Numbers, Belarusian
-  words and hidden Russian aliases behave as described above.
-- The router does not scroll when only `?q` changes.
-- The dock is on every level: root, part, section, subsection, topic and question.
-- Every Compendium container reserves the dock height plus the safe-area inset at the
-  bottom, so the dock never covers the last question, the pager or the source line.
+`tests/compendium-hierarchy.test.mjs` checks canonical flattening,
+all 598 numbers, heading order, labels, citations, subtopic transitions,
+legacy targets, reader links, and search restoration. It pins unusual
+placements including q1–5, q79–80, q218–220, q250–251, q295, q321,
+q357, q434–441, q534–535, q557, q567–568, and Part IV Section II
+without chapters. `tests/compendium-navigation.test.mjs` checks route
+wiring, shell, source attribution, Back fallback, and theme based styles.

@@ -10,7 +10,6 @@ export const useSongsStore = defineStore('songs', () => {
   const error = ref(null);
   const searchQuery = ref('');
   const selectedTags = ref([]);
-  const favoritesOnly = ref(false);
   let pending;
   let initialized = false;
   const allTags = computed(() => [...new Set(songs.value.flatMap(getSongTags))].sort((a, b) => a.localeCompare(b, 'be')));
@@ -31,5 +30,5 @@ export const useSongsStore = defineStore('songs', () => {
     songs.value = [...songs.value.filter((item) => item.id !== song.id), song];
     return song;
   }
-  return { songs, isLoading, error, allTags, searchQuery, selectedTags, favoritesOnly, init, save };
+  return { songs, isLoading, error, allTags, searchQuery, selectedTags, init, save };
 });

@@ -1,9 +1,8 @@
 <template>
   <div class="compendium-shell">
-    <!-- The current level stays mounted while results are shown, so closing the
+    <!-- The current page stays mounted while results are shown, so closing the
          search returns to exactly the same page state. -->
-    <!-- Keyed by path: part, section and subsection share one view, and each
-         level is its own screen instance (`?q` alone never remounts it). -->
+    <!-- Keyed by path: `?q` and an anchor never remount the Part page. -->
     <router-view v-slot="{ Component, route }">
       <component :is="Component" :key="route.path" v-show="!resultsOpen" />
     </router-view>

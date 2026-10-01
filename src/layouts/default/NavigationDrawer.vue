@@ -1,13 +1,12 @@
 <template>
   <v-navigation-drawer
-    ref="drawer"
     v-model="isDrawerOpen"
     temporary
     :width="320"
     class="app-drawer"
     scrim="black"
   >
-    <div class="drawer-shell">
+    <div ref="drawerShell" class="drawer-shell">
       <header class="drawer-header">
         <div class="drawer-brand">
           <div class="drawer-logo-wrap">
@@ -214,7 +213,7 @@ const COMPENDIUM_ROUTE_NAMES = new Set(['Compendium', 'CompendiumPart', 'Compend
 
 const MASS_ORDER_PRAYER_ID = 'eMmCtxwyJ75ogmL5rwye';
 const { isDrawerOpen } = useAppBar();
-const drawer = ref(null);
+const drawerShell = ref(null);
 let returnFocusTo = null;
 let inertElements = [];
 const auth = useAuthStore();
@@ -256,7 +255,7 @@ const focusableSelector = [
 ].join(',');
 
 function drawerRoot() {
-  return drawer.value?.$el || null;
+  return drawerShell.value?.closest('.app-drawer') || null;
 }
 
 function setBackgroundInert(value) {

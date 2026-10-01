@@ -108,7 +108,7 @@ async function main() {
 
   if (options.check) {
     const committed = await readFile(datasetPath, 'utf8').catch(() => '');
-    if (committed !== json) throw new Error(`${path.relative(ROOT, datasetPath)} is out of date. Run: npm run compendium:build`);
+    if (committed.replace(/\r\n/g, '\n') !== json) throw new Error(`${path.relative(ROOT, datasetPath)} is out of date. Run: npm run compendium:build`);
     console.log(JSON.stringify({ ...summary, check: 'ok' }));
     return;
   }

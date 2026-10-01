@@ -27,10 +27,13 @@ test('lyrics and chord columns keep blank lines and overflow chord rows', () => 
   assert.deepEqual(songLines({ text: 'Першы\r\n\r\nТрэці', chord: 'C\n\nG\nAm' }), [{ text: 'Першы', chord: 'C' }, { text: '', chord: '' }, { text: 'Трэці', chord: 'G' }, { text: '', chord: 'Am' }]);
 });
 test('song search, tags and favorites combine, with pinned songs first', () => {
-  const songs = [{ id: '1', title: 'А', text: 'Надзея', tags: ['Дух'] }, { id: '2', title: 'Б', text: 'Надзея', tags: ['Марыя'] }, { id: '3', title: 'В', text: 'Любоў', tags: ['Дух'] }];
+  const songs = [{ id: '1', title: 'А', text: 'Надзея', tags: ['Дух'] }, { id: '2', title: 'Б', text: 'Надзея', tags: ['Марыя'] }, { id: '3', title: 'В', text: 'Любоў', tags: ['Дух', 'Марыя'] }];
   assert.deepEqual(filterSongs(songs, { favorites: ['3'] }).map((song) => song.id), ['3', '1', '2']);
-  assert.deepEqual(filterSongs(songs, { query: 'НАДЗЕЯ', tags: ['Дух'], favorites: ['1'], favoritesOnly: true }).map((song) => song.id), ['1']);
-  assert.deepEqual(filterSongs(songs, { query: 'Марыя' }).map((song) => song.id), ['2']);
+  assert.deepEqual(filterSongs(songs, { query: 'НАДЗЕЯ', tags: ['Дух'], favorites: ['1'] }).map((song) => song.id), ['1']);
+  assert.deepEqual(filterSongs(songs, { tags: ['Дух', 'Марыя'], favorites: ['3'] }).map((song) => song.id), ['3', '1', '2']);
+  assert.deepEqual(filterSongs(songs, { tags: ['Марыя'], favorites: ['3'] }).map((song) => song.id), ['3', '2']);
+  assert.deepEqual(filterSongs(songs, { tags: [], favorites: ['3'] }).map((song) => song.id), ['3', '1', '2']);
+  assert.deepEqual(filterSongs(songs, { query: 'Марыя' }).map((song) => song.id), ['2', '3']);
 });
 test('import preserves duplicate titles and rows with stable IDs and source on every song', () => {
   const rows = [{ title: 'А', text: '1', chord: 'C' }, { title: 'А', text: '2', chord: 'D' }, { title: 'А', text: '1', chord: 'C' }];

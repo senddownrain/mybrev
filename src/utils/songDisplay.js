@@ -4,9 +4,9 @@
 export const CHORD_LAYOUTS = Object.freeze(['above', 'right']);
 export const DEFAULT_CHORD_LAYOUT = 'above';
 export const TRANSPOSE_LIMIT = 12;
-// Minimum width of the song text (in em of its own font size) for chords on the right.
-// Measured in em so large reader text falls back to "above" earlier.
-export const RIGHT_LAYOUT_MIN_EM = 28;
+// Minimum width of the song text (in em of its own font size) for two readable columns.
+// Normal phone widths fit; very narrow surfaces or enlarged reader text can fall back.
+export const RIGHT_LAYOUT_MIN_EM = 14;
 
 // Stored values from older versions: "left" became "right".
 export function normalizeChordLayout(value) {

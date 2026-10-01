@@ -7,6 +7,22 @@
 }
 // Shared by the song list (selected tag chips, empty state) and the song editor.
 .songs-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 22px; }
+.songs-selected-tags { gap: 6px; margin-bottom: 14px; }
+.song-tag-picker { display: flex; flex-wrap: wrap; gap: 7px; padding-block: 4px 8px; }
+.song-tag-pill {
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  min-height: 34px; max-width: 100%; padding: 5px 11px;
+  border: 1px solid var(--nav-border); border-radius: 11px;
+  background: transparent; color: var(--nav-muted);
+  font: inherit; font-size: .78rem; font-weight: 600; line-height: 1.25;
+  overflow-wrap: anywhere; cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, color .16s ease;
+}
+.song-tag-pill:hover { border-color: rgba(var(--devotional-rgb), .38); color: var(--nav-on-surface); }
+.song-tag-pill--selected,
+.song-tag-pill--selected:hover { border-color: rgba(var(--devotional-rgb), .3); background: var(--devotional-soft); color: var(--devotional-accent); font-weight: 700; }
+.song-tag-pill--removable { padding-inline: 10px 8px; }
+.song-tag-pill:focus-visible { outline: 2px solid var(--devotional-accent); outline-offset: 2px; }
 .songs-empty { padding: 42px 12px; text-align: center; color: var(--nav-muted); }
 .songs-sheet { background: var(--nav-surface) !important; color: var(--nav-on-surface) !important; padding-bottom: max(16px, env(safe-area-inset-bottom, 0px)); max-height: 75dvh; overflow-y: auto; }
 .add-song-btn { right: 0 !important; left: auto !important; }

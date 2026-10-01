@@ -46,10 +46,9 @@ export function songLines(song = {}) {
   return Array.from({ length: Math.max(lyrics.length, chords.length) }, (_, index) => ({ text: lyrics[index] || '', chord: chords[index] || '' }));
 }
 
-export function filterSongs(songs, { query = '', tags = [], favorites = [], favoritesOnly = false } = {}) {
+export function filterSongs(songs, { query = '', tags = [], favorites = [] } = {}) {
   const needle = query.trim().toLocaleLowerCase();
-  return songs.filter((song) => (!favoritesOnly || favorites.includes(song.id))
-    && (!tags.length || tags.some((tag) => getSongTags(song).includes(tag)))
+  return songs.filter((song) => (!tags.length || tags.some((tag) => getSongTags(song).includes(tag)))
     && (!needle || [song.title, song.text, ...getSongTags(song)].some((value) => String(value || '').toLocaleLowerCase().includes(needle))))
     .sort((a, b) => Number(favorites.includes(b.id)) - Number(favorites.includes(a.id)) || a.title.trim().localeCompare(b.title.trim(), 'be', { sensitivity: 'base' }));
 }

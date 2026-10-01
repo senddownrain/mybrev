@@ -30,7 +30,7 @@ import { run as runMigrationCli } from '../scripts/migrate-mass-content-v4.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const read = (file) => readFileSync(path.join(ROOT, file), 'utf8');
-const englishText = read('src/data/mass/order-of-mass-en.md');
+const englishText = read('src/data/mass/order-of-mass-en.md').replace(/\r\n?/g, '\n');
 const MAJOR_IDS = MASS_MAJOR_SECTIONS.map(({ id }) => id);
 const MAJOR_TITLES = ['Уступныя абрады', 'Літургія слова', 'Эўхарыстычная літургія', 'Абрад Камуніі', 'Заключныя абрады'];
 

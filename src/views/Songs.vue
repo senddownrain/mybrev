@@ -5,7 +5,7 @@
       Не атрымалася загрузіць змены. Даступная захаваная падборка.
       <v-btn variant="text" :loading="store.isLoading" @click="store.init({ fresh: true })">Паўтарыць</v-btn>
     </v-alert>
-    <div v-if="tags.length" class="songs-toolbar"><v-chip v-for="tag in tags" :key="tag" closable @click:close="tags = tags.filter((item) => item !== tag)">{{ tag }}</v-chip></div>
+    <div v-if="tags.length" class="songs-toolbar songs-selected-tags" role="group" aria-label="Абраныя тэгі"><button v-for="tag in tags" :key="tag" type="button" class="song-tag-pill song-tag-pill--selected song-tag-pill--removable" :aria-label="`Прыбраць тэг ${tag}`" @click="toggleTag(tag)">{{ tag }}<PhX :size="13" aria-hidden="true" /></button></div>
     <p class="text-caption mb-3" aria-live="polite">Спеваў: {{ filtered.length }}</p>
     <v-list lines="one" bg-color="transparent" class="prayer-options-list">
       <v-list-item v-for="song in filtered" :key="song.id" :to="{ name: 'SongView', params: { id: song.id } }" class="prayer-list-item">
@@ -14,7 +14,7 @@
         <template #append><div class="prayer-list-item__actions"><v-btn v-if="auth.isAdmin" icon="mdi-pencil" size="small" variant="text" aria-label="Рэдагаваць спеў" @click.stop.prevent="router.push({ name: 'AdminSongEdit', params: { id: song.id } })" /><v-icon class="prayer-list-item__arrow" icon="mdi-chevron-right" size="24" /></div></template>
       </v-list-item>
     </v-list>
-    <p v-if="!filtered.length" class="songs-empty">{{ favoritesOnly ? 'Няма абраных спеваў для гэтых фільтраў.' : 'Спевы не знойдзены.' }}</p>
+    <p v-if="!filtered.length" class="songs-empty">Спевы не знойдзены.</p>
     <v-btn v-if="auth.isAdmin" :to="{ name: 'AdminSongAdd' }" position="fixed" location="bottom right" size="large" rounded="pill" class="add-prayer-btn add-song-btn text-none" aria-label="Новы спеў"><PhPlus :size="24" aria-hidden="true" /><span class="add-song-label">Новы спеў</span></v-btn>
     <form class="prayer-search-dock" role="search" @submit.prevent>
       <PhMagnifyingGlass :size="23" class="prayer-search-icon" aria-hidden="true" />
@@ -24,9 +24,8 @@
     </form>
     <v-bottom-sheet v-model="filterOpen">
       <v-card class="songs-sheet" rounded="t-xl"><v-card-title class="d-flex align-center">Фільтр па тэгах<v-spacer /><v-btn icon="mdi-close" variant="text" aria-label="Закрыць фільтр" @click="filterOpen = false" /></v-card-title><v-card-text>
-        <v-checkbox v-model="favoritesOnly" label="Толькі абраныя спевы" hide-details color="primary" class="mb-3" />
         <p v-if="!store.allTags.length">Тэгі з’явяцца пасля дадання ў рэдактары спеваў.</p>
-        <v-chip-group v-model="tags" multiple column><v-chip v-for="tag in store.allTags" :key="tag" :value="tag" filter>{{ tag }}</v-chip></v-chip-group>
+        <div v-else class="song-tag-picker" role="group" aria-label="Выбраць тэгі"><button v-for="tag in orderedTags" :key="tag" type="button" class="song-tag-pill" :class="{ 'song-tag-pill--selected': tags.includes(tag) }" :aria-pressed="tags.includes(tag)" @click="toggleTag(tag)">{{ tag }}</button></div>
       </v-card-text><v-card-actions><v-btn @click="tags = []">Скінуць</v-btn><v-spacer /><v-btn variant="flat" @click="filterOpen = false">Паказаць спевы</v-btn></v-card-actions></v-card>
     </v-bottom-sheet>
   </v-container>
@@ -45,9 +44,13 @@ const store = useSongsStore();
 const settings = useSettingsStore();
 const auth = useAuthStore();
 const router = useRouter();
-const { searchQuery: query, selectedTags: tags, favoritesOnly } = storeToRefs(store);
+const { searchQuery: query, selectedTags: tags } = storeToRefs(store);
 const filterOpen = ref(false);
-const filtered = computed(() => filterSongs(store.songs, { query: query.value, tags: tags.value, favorites: settings.favoriteSongs, favoritesOnly: favoritesOnly.value }));
+const filtered = computed(() => filterSongs(store.songs, { query: query.value, tags: tags.value, favorites: settings.favoriteSongs }));
+const orderedTags = computed(() => [...store.allTags].sort((a, b) => Number(tags.value.includes(b)) - Number(tags.value.includes(a))));
+function toggleTag(tag) {
+  tags.value = tags.value.includes(tag) ? tags.value.filter((item) => item !== tag) : [...tags.value, tag];
+}
 store.init();
 </script>
 <style scoped src="@/styles/prayers-list.css"></style>

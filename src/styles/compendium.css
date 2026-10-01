@@ -85,6 +85,88 @@
   margin: 28px 20px 0;
 }
 
+/* All questions of one part share one row style; real headings divide the stream. */
+.compendium-part-outline {
+  display: grid;
+  gap: 10px;
+  padding: 0 12px;
+}
+
+.compendium-part-outline [id] {
+  scroll-margin-top: 88px;
+}
+
+.compendium-outline-heading {
+  color: var(--nav-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.compendium-outline-heading .prayers-page-eyebrow {
+  margin-bottom: 5px;
+}
+
+.compendium-outline-heading h2,
+.compendium-outline-heading h3 {
+  margin: 0;
+  font-family: var(--reader-display-font-family);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.compendium-outline-heading--section {
+  margin-top: 30px;
+  padding: 22px 8px 10px;
+  border-top: 2px solid rgba(var(--devotional-rgb), 0.36);
+}
+
+.compendium-outline-heading--section:first-child {
+  margin-top: 0;
+}
+
+.compendium-outline-heading--section h2 {
+  font-size: clamp(1.35rem, 5vw, 1.75rem);
+}
+
+.compendium-outline-heading--subsection {
+  margin-top: 20px;
+  padding: 14px 8px 6px;
+  border-top: 1px solid var(--nav-border);
+}
+
+.compendium-outline-heading--subsection h3 {
+  font-size: clamp(1.14rem, 4vw, 1.4rem);
+}
+
+.compendium-outline-topic {
+  margin: 20px 8px 2px;
+  color: var(--nav-on-surface);
+  font-family: var(--reader-display-font-family);
+  font-size: calc(1.05rem * var(--font-size-multiplier, 1));
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.compendium-outline-subtopic {
+  margin: 10px 8px 0;
+  color: var(--devotional-accent);
+  font-family: var(--reader-display-font-family);
+  font-size: calc(0.94rem * var(--font-size-multiplier, 1));
+  font-style: italic;
+  font-weight: 650;
+}
+
+.compendium-part-outline .compendium-row {
+  min-height: 64px;
+  border-radius: 16px !important;
+}
+
+.compendium-part-outline .compendium-row .prayer-list-item__icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+}
+
 /* Topic reader: expandable question rows inside the reading surface. */
 .compendium-questions {
   padding: 8px 0;

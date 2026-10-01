@@ -27,6 +27,7 @@ try {
   await menuButton.click();
   const drawer = page.locator('.app-drawer');
   await page.locator('.app-drawer:not([inert])').waitFor({ state: 'attached' });
+  assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('aria-label')), 'Закрыць меню');
   const drawerTabIndexes = await drawer.locator('a[href], button, [tabindex]').evaluateAll((elements) => (
     elements.filter((element) => !element.hasAttribute('disabled')).map((element) => element.tabIndex)
   ));

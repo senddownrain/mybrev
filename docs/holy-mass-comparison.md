@@ -1,8 +1,8 @@
 # Святая Імша: параўнанне BE / LA / EN па блоках (V4)
 
 Матрыца складзена па фактычных тэкстах: `prayers/eMmCtxwyJ75ogmL5rwye` (BE, поле `text`),
-`prayers/zdro66KYVuQ9p2KbqizD` (LA, `textVersions.*`) і `src/data/mass/order-of-mass-en.md`
-(EN; дакумента `prayers/order-of-mass-en` у Firestore пакуль няма). Правілы адаптара —
+`prayers/zdro66KYVuQ9p2KbqizD` (LA, `textVersions.*`) і `prayers/order-of-mass-en`
+(EN; тэкст адпавядае `src/data/mass/order-of-mass-en.md`). Правілы адаптара —
 `docs/holy-mass.md`.
 
 Мэта — аднолькавая структура і аднолькавы выгляд для аднолькавых па сэнсе элементаў,

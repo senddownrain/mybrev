@@ -25,7 +25,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useCompendiumStore } from '@/stores/compendium';
-import { buildCompendiumNavigation, nodeRoute, questionTrail } from '@/utils/compendiumNavigation';
+import { questionPartRoute, questionTrail } from '@/utils/compendiumNavigation';
 import CompendiumAnswer from '@/components/compendium/CompendiumAnswer.vue';
 import CompendiumSource from '@/components/compendium/CompendiumSource.vue';
 const props = defineProps({ number: { type: String, required: true } });
@@ -33,15 +33,7 @@ const store = useCompendiumStore();
 const question = computed(() => (/^\d{1,3}$/.test(props.number) ? store.getQuestion(props.number) : null));
 // Real source headings only (part · section · chapter · named topic), each linkable.
 const trail = computed(() => (question.value ? questionTrail(store.index, question.value) : []));
-// A question inside a named topic opens that topic; a question owned directly
-// by a section/subsection opens that node's screen, where it is listed.
-const context = computed(() => {
-  const placement = buildCompendiumNavigation(store.index).getPlacement(question.value.number);
-  const node = buildCompendiumNavigation(store.index).getNode(placement.nodeId);
-  return node.kind === 'topic'
-    ? { label: 'Уся тэма', to: nodeRoute(node) }
-    : { label: 'Да зместу', to: nodeRoute(node) };
-});
+const context = computed(() => ({ label: 'Да часткі', to: questionPartRoute(question.value) }));
 const previous = computed(() => (question.value ? store.getQuestion(question.value.number - 1) : null));
 const next = computed(() => (question.value ? store.getQuestion(question.value.number + 1) : null));
 store.init();

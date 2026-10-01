@@ -4,6 +4,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { parse, compileScript } from '@vue/compiler-sfc';
 import { createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+import { chromium } from 'playwright-core';
+import { compileString } from 'sass';
 import {
   CHORD_LAYOUTS, TRANSPOSE_LIMIT, clampTranspose, formatTranspose,
   normalizeChordLayout, resolveChordLayout, rightLayoutFits,
@@ -169,21 +171,124 @@ test('right layout places each chord cell beside its own lyric line', async () =
     .map(([, lyrics, chords]) => [lyrics, chords]);
   assert.deepEqual(lines, [['Першы радок песні', 'C G'], ['\u00a0', ''], ['Трэці радок', 'a F']]);
   const css = read('src/components/songs/SongText.vue');
-  assert.match(css, /\.song-text--right \{ display: grid; grid-template-columns: minmax\(0, max-content\) fit-content\(38%\)/);
+  assert.match(css, /\.song-text--right \{ display: grid; width: 100%; grid-template-columns: minmax\(0, 1fr\) minmax\(0, 34%\)/);
   assert.match(css, /\.song-text--right \.song-chords \{[^}]*grid-column: 2/);
 });
 
-test('responsive fallback renders "above" on narrow text without losing the "right" preference', () => {
+test('normal phone widths retain right layout; only cramped text falls back without changing preference', () => {
   assert.equal(resolveChordLayout('right', false), 'above');
   assert.equal(resolveChordLayout('right', true), 'right');
   assert.equal(resolveChordLayout('above', true), 'above');
   assert.equal(resolveChordLayout('left', true), 'right');
-  assert.equal(rightLayoutFits(310, 16.6), false); // 375px phone
+  for (const width of [360, 375, 393, 430]) {
+    const contentWidth = width - 32; // 16px reader padding on each side
+    assert.equal(rightLayoutFits(contentWidth, 16.64), true, `${width}px phone`);
+  }
+  assert.equal(rightLayoutFits(200, 16.64), false); // exceptionally narrow surface
   assert.equal(rightLayoutFits(700, 16.6), true); // desktop reader
-  assert.equal(rightLayoutFits(700, 16.6 * 1.8), false); // desktop with the largest text
+  assert.equal(rightLayoutFits(700, 16.6 * 1.8), true); // desktop still has room with large text
+  assert.equal(rightLayoutFits(300, 16.6 * 1.8), false); // enlarged text on a small surface
   assert.equal(rightLayoutFits(0, 16), true); // not measured yet
   const text = read('src/components/songs/SongText.vue');
   assert.match(text, /effectiveLayout = computed\(\(\) => resolveChordLayout\(props\.layout, rightFits\.value\)\)/);
   assert.doesNotMatch(text, /songChordLayout|emit\('update:layout'/);
   assert.match(read('src/views/Song.vue'), /:layout="settings\.songChordLayout"/);
+});
+
+test('song filter contains only compact multi-select tags and keeps removal and reset controls', () => {
+  const list = read('src/views/Songs.vue');
+  const store = read('src/stores/songs.js');
+  const filter = read('src/utils/songChords.js');
+  for (const source of [list, store, filter]) assert.doesNotMatch(source, /favoritesOnly|Толькі абраныя/);
+  assert.doesNotMatch(list, /<v-checkbox|<v-chip-group/);
+  assert.match(list, /class="song-tag-picker" role="group" aria-label="Выбраць тэгі"/);
+  assert.match(list, /v-for="tag in orderedTags"[^>]*class="song-tag-pill"[^>]*aria-pressed="tags\.includes\(tag\)"/);
+  assert.match(list, /const orderedTags = computed\(\(\) => \[\.\.\.store\.allTags\]\.sort/);
+  assert.match(list, /class="songs-toolbar songs-selected-tags" role="group" aria-label="Абраныя тэгі"/);
+  assert.match(list, /:aria-label="`Прыбраць тэг \$\{tag\}`" @click="toggleTag\(tag\)"/);
+  assert.match(list, /tags\.value = tags\.value\.includes\(tag\) \? tags\.value\.filter\(\(item\) => item !== tag\) : \[\.\.\.tags\.value, tag\]/);
+  assert.match(list, /:aria-label="`Фільтр па тэгах: \$\{tags\.length\}`"/);
+  assert.match(list, /<span v-if="tags\.length" class="filter-count">\{\{ tags\.length \}\}<\/span>/);
+  assert.match(list, /@click="tags = \[\]">Скінуць/);
+  assert.match(list, /Паказаць спевы/);
+  assert.match(filter, /Number\(favorites\.includes\(b\.id\)\) - Number\(favorites\.includes\(a\.id\)\)/);
+  const css = read('src/styles/songs.scss');
+  assert.match(css, /\.song-tag-pill--selected/);
+  assert.match(css, /var\(--devotional-soft\)/);
+  assert.match(css, /\.song-tag-pill:focus-visible/);
+});
+
+const browserPath = [
+  process.env.BENCHMARK_BROWSER_PATH,
+  'C:/Program Files/Google/Chrome/Application/chrome.exe',
+  'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+  '/usr/bin/chromium',
+  '/usr/bin/google-chrome',
+].find((path) => path && existsSync(path));
+
+test('right chords fit and lyrics wrap on 360–430px phones without page overflow', { skip: !browserPath }, async () => {
+  const browser = await chromium.launch({ executablePath: browserPath, headless: true });
+  try {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const { descriptor } = parse(read('src/components/songs/SongText.vue'));
+    const css = descriptor.styles[0].content;
+    const { descriptor: controlDescriptor } = parse(read('src/components/songs/SongChordControls.vue'));
+    const controlCss = compileString(controlDescriptor.styles[0].content).css;
+    const longSong = {
+      text: 'Гэта вельмі доўгі радок спеўнага тэксту, які павінен пераносіцца ў левай калонцы некалькі разоў',
+      chord: 'Cmaj7(b9) D/F# Gsus4 Am7 Cmaj7(b9) D/F# Gsus4 Am7',
+    };
+    for (const width of [360, 375, 393, 430]) {
+      await page.setViewportSize({ width, height: 800 });
+      const contentWidth = width - 32;
+      assert.equal(rightLayoutFits(contentWidth, 16.64), true);
+      const controls = await render(SongChordControls, { showChords: true, layout: 'right', layoutAvailable: true });
+      assert.match(controls, /aria-checked="true" aria-label="Акорды справа ад тэксту"/);
+      assert.doesNotMatch(controls, /aria-label="Акорды справа ад тэксту" aria-disabled/);
+      for (let offset = -12; offset <= 12; offset++) {
+        const html = await render(SongText, { song: longSong, showChords: true, layout: 'right', transpose: offset });
+        assert.match(html, /data-chord-layout="right"/, `${width}px at ${offset} semitones`);
+        if (![ -12, 0, 12 ].includes(offset)) continue;
+        await page.setContent(`<meta name="viewport" content="width=device-width, initial-scale=1"><style>*, *::before, *::after { box-sizing: border-box; } body { margin: 0; } .prayer-text { width: 100%; padding: 22px 16px; overflow-x: hidden; } ${css} ${controlCss}</style>${controls}<div class="prayer-text">${html}</div>`);
+        const geometry = await page.evaluate(() => {
+          const root = document.querySelector('.song-text');
+          const lyrics = document.querySelector('.song-lyrics');
+          const chords = document.querySelector('.song-chords');
+          const rightOption = document.querySelector('[aria-label="Акорды справа ад тэксту"]');
+          const optionRect = rightOption.getBoundingClientRect();
+          const lyricRect = lyrics.getBoundingClientRect();
+          const chordRect = chords.getBoundingClientRect();
+          return {
+            pageWidth: document.documentElement.scrollWidth,
+            rootWidth: root.clientWidth,
+            rootScrollWidth: root.scrollWidth,
+            lyricRight: lyricRect.right,
+            lyricHeight: lyricRect.height,
+            lyricLineHeight: parseFloat(getComputedStyle(lyrics).lineHeight),
+            chordLeft: chordRect.left,
+            chordRight: chordRect.right,
+            chordScrollWidth: chords.scrollWidth,
+            chordWidth: chords.clientWidth,
+            optionLeft: optionRect.left,
+            optionRight: optionRect.right,
+            optionDisabled: rightOption.disabled || rightOption.getAttribute('aria-disabled') === 'true',
+            toolbarScrollWidth: document.querySelector('.song-chord-bar').scrollWidth,
+          };
+        });
+        assert.equal(geometry.optionDisabled, false, `${width}px: right selector is available`);
+        assert.ok(geometry.optionLeft >= 0 && geometry.optionRight <= width, `${width}px: right selector is visible`);
+        assert.ok(geometry.toolbarScrollWidth <= width, `${width}px: toolbar fits`);
+        assert.ok(geometry.lyricRight < geometry.chordLeft, `${width}px: chords are beside lyrics`);
+        assert.ok(geometry.lyricHeight > geometry.lyricLineHeight * 1.5, `${width}px: lyrics wrap`);
+        assert.ok(geometry.chordScrollWidth <= geometry.chordWidth + 1, `${width}px: chords stay in their column`);
+        assert.ok(geometry.rootScrollWidth <= geometry.rootWidth + 1, `${width}px: reader has no overflow`);
+        assert.ok(geometry.chordRight <= width - 16 + 1, `${width}px: chords stay inside reader`);
+        assert.ok(geometry.pageWidth <= width, `${width}px: page has no horizontal overflow`);
+      }
+    }
+    await context.close();
+  } finally {
+    await browser.close();
+  }
 });

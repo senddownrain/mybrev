@@ -42,10 +42,10 @@ onBeforeUnmount(() => observer?.disconnect());
 .song-line { display: flex; flex-direction: column; min-width: 0; }
 .song-lyrics { white-space: pre-wrap; overflow-wrap: anywhere; }
 .song-chords { order: -1; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--devotional-accent); font-family: ui-monospace, monospace; font-size: 0.85em; font-weight: 700; }
-/* Right: one shared grid, so the chord column lines up down the whole song and each chord cell sits on its lyric row. */
-/* Lyrics column hugs the longest line (shrinking when space is short); chords follow it, capped at 38%. */
-.song-text--right { display: grid; grid-template-columns: minmax(0, max-content) fit-content(38%); justify-content: start; column-gap: clamp(1.5rem, 6%, 3rem); align-items: baseline; }
+/* A shared grid pairs each lyric and chord row. Both tracks can shrink, so long lines wrap
+   inside the reader instead of setting the width of the page. */
+.song-text--right { display: grid; width: 100%; grid-template-columns: minmax(0, 1fr) minmax(0, 34%); column-gap: clamp(.55rem, 2.4vw, 1.5rem); align-items: baseline; }
 .song-text--right .song-line { display: contents; }
-.song-text--right .song-lyrics { grid-column: 1; }
+.song-text--right .song-lyrics { grid-column: 1; min-width: 0; }
 .song-text--right .song-chords { order: 0; grid-column: 2; min-width: 0; opacity: .88; }
 </style>

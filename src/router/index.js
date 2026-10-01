@@ -45,10 +45,9 @@ const routes = [
         component: () => import('@/views/CompendiumShell.vue'),
         children: [
           { path: '', name: 'Compendium', component: () => import('@/views/Compendium.vue') },
-          // Part, section and subsection share one structural-node screen.
-          { path: 'part/:partId', name: 'CompendiumPart', component: () => import('@/views/CompendiumNode.vue'), props: (route) => ({ nodeId: String(route.params.partId) }) },
-          { path: 'node/:nodeId', name: 'CompendiumNode', component: () => import('@/views/CompendiumNode.vue'), props: true },
-          { path: 'topic/:topicId', name: 'CompendiumTopic', component: () => import('@/views/CompendiumTopic.vue'), props: true },
+          { path: 'part/:partId', name: 'CompendiumPart', component: () => import('@/views/CompendiumNode.vue'), props: true },
+          { path: 'node/:nodeId', name: 'CompendiumNode', component: () => import('@/views/CompendiumLegacy.vue'), props: (route) => ({ id: String(route.params.nodeId), kind: 'node' }) },
+          { path: 'topic/:topicId', name: 'CompendiumTopic', component: () => import('@/views/CompendiumLegacy.vue'), props: (route) => ({ id: String(route.params.topicId), kind: 'topic' }) },
           { path: 'question/:number', name: 'CompendiumQuestion', component: () => import('@/views/CompendiumQuestion.vue'), props: true },
         ],
       },
