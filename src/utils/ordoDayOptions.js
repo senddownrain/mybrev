@@ -24,8 +24,12 @@ import {
 import {
   claimedDayIds, officeDescriptorOf, optionDescriptor, selectFixedDocuments, summarizeOrdoDay,
 } from './ordo/runtime.js';
-import {\n  isSparseDayDocument, OFFICE_TEXT_FIELDS, SPARSE_DAY_SCHEMA, SUNDAY_WEEK_1_TEMPLATE,\n} from '../constants/officeFields.js';
-import {\n  CURRENT_DAY_CHOICE, assembleOffice, assemblyChoices, isBlank,\n} from './ordo/officeAssembly.js';
+import {
+  isSparseDayDocument, OFFICE_TEXT_FIELDS, SPARSE_DAY_SCHEMA, SUNDAY_WEEK_1_TEMPLATE,
+} from '../constants/officeFields.js';
+import {
+  CURRENT_DAY_CHOICE, assembleOffice, assemblyChoices, isBlank,
+} from './ordo/officeAssembly.js';
 import { getDayTemplateLabel } from './liturgicalDayResolution.js';
 
 function buildPeriodTitle(context, date) {
