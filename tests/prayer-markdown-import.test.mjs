@@ -1,10 +1,19 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { existsSync } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { buildImportPlan } from '../scripts/import-prayer-markdown-collection.mjs';
 
-const downloads = 'C:/Users/User/Downloads';
+// The supplied collection is not in the repository: point PRAYER_IMPORT_DIR at
+// the folder holding it, otherwise the user's Downloads folder is used.
+const downloads = process.env.PRAYER_IMPORT_DIR || path.join(os.homedir(), 'Downloads');
+const sourcesPresent = existsSync(`${downloads}/malitvy_md_collection_full.zip`)
+  && existsSync(`${downloads}/malitvy_ajcou_maryjanau.md`);
 
-test('the supplied full collection produces 25 tagged Markdown prayer documents', async () => {
+test('the supplied full collection produces 25 tagged Markdown prayer documents', {
+  skip: sourcesPresent ? false : `source files not found in ${downloads}`,
+}, async () => {
   const prayers = await buildImportPlan({
     archive: `${downloads}/malitvy_md_collection_full.zip`,
     marianSource: `${downloads}/malitvy_ajcou_maryjanau.md`,
