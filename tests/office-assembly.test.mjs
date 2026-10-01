@@ -15,7 +15,9 @@ import {
 import {
   FIRST_VESPER_FIELDS, OFFICE_CONTENT_FIELDS, OFFICE_FIELD_SLOTS, OFFICE_TEXT_FIELDS, SUNDAY_WEEK_1_TEMPLATE,
 } from '../src/constants/officeFields.js';
-import { buildOrdoDayOptions, findOptionByDayId } from '../src/utils/ordoDayOptions.js';
+import {
+  buildOrdoDayOptions, findOptionByDayId, resolveLegacyTemplatePlaceholders,
+} from '../src/utils/ordoDayOptions.js';
 import { classifyValue, inferTemplates, splitSource } from '../scripts/lib/feast-content.mjs';
 import { daysFixture, templatesFixture } from './helpers/ordo-days-fixture.mjs';
 
@@ -189,6 +191,29 @@ test('memorial: own texts stay, the rest is of the day; quick switch to a Common
   assert.notEqual(pastors.laudesHymn, doctors.laudesHymn);
   // An unknown choice falls back to the default.
   assert.equal(assembleOffice({ proper, office, templates: TEMPLATES, choice: 'nope', currentDay }).choice, CURRENT_DAY_CHOICE);
+});
+
+test('legacy Sunday week I markers reuse the published psalter template', () => {
+  const legacy = {
+    id: '02-10-holy-guardian-angels',
+    laudesAnt1: '<p>own antiphon 1</p>',
+    laudesAnt2: '<p>own antiphon 2</p>',
+    laudesAnt3: '<p>own antiphon 3</p>',
+    laudesPs1: ['з нядзелі І тыдня'],
+    laudesPs2: ['з нядзелі I тыдня'],
+    laudesPs3: 'from-first-week',
+  };
+  const resolved = resolveLegacyTemplatePlaceholders(legacy, TEMPLATES);
+  const sunday = TEMPLATES.get(SUNDAY_WEEK_1_TEMPLATE);
+  assert.equal(resolved.laudesAnt1, legacy.laudesAnt1);
+  assert.equal(resolved.laudesAnt2, legacy.laudesAnt2);
+  assert.equal(resolved.laudesAnt3, legacy.laudesAnt3);
+  assert.equal(resolved.laudesPs1, sunday.laudesPs1);
+  assert.equal(resolved.laudesPs2, sunday.laudesPs2);
+  assert.equal(resolved.laudesPs3, sunday.laudesPs3);
+
+  const sparse = { ...legacy, _schema: 2, _fieldRules: { laudesPs1: { source: 'sunday-week-1' } } };
+  assert.equal(resolveLegacyTemplatePlaceholders(sparse, TEMPLATES), sparse, 'sparse documents stay on the new assembly path');
 });
 
 test('structured omit, explicit sources and a missing Common', () => {
