@@ -233,3 +233,18 @@ npm run ordo:import-feasts    # dry-run; -- --apply --only templates бяспе�
 4. Адмін-рэдактар `DayEditor` не ведае пра `_fieldRules`: правіць sparse-дакументы
    пакуль трэба праз `patchs/feasts` + генератар.
 5. Знаходкі аўдыту чытанняў: у дакументах 15.08 і 29.06 — чытанні Імшы вігіліі.
+
+### 7.1. Стан на 2026-10-01
+
+- Firestore rules апублікаваныя (`firestore.rules`, `docs/firestore-rules.md`):
+  чытанне ўсім, запіс толькі адміністратарам; да гэтага дзейнічалі тэставыя
+  правілы з запісам для ўсіх.
+- `ordo:import-calendar -- --apply`: запісана 1519 дакументаў
+  (241 + 74 + 1200 + 4, revision 1); паўторны dry-run — усё `unchanged`.
+  Revision 1 роўная ўбудаванаму snapshot, таму кліенты пакуль працуюць з
+  snapshot; Firestore возьмецца пасля першай новай рэвізіі з адмінкі.
+- `ordo:import-feasts -- --apply --only templates`: 15 `liturgicalTemplates`.
+- Sparse `days` — па-ранейшаму толькі пасля рэлізу web і Flutter з
+  падтрымкай зборкі Office (Flutter: `lib/utils/office_assembly.dart`).
+- 15.08 і 29.06: у `readings` — чытанні Імшы вігіліі; для Імшы дня ў базе няма
+  Ап 11, 19a; 12, 1–6a. 10ab і Дз 12, 1–11, патрэбны тэкст з лекцыянарыя.
