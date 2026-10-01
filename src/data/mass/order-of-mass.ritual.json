@@ -145,9 +145,9 @@
       "markers": {
         "introductory-rites": ["Уступныя абрады", "Вступительные обряды"],
         "liturgy-of-the-word": ["Літургія слова", "Литургия Слова"],
-        "creed": ["Исповедание веры"],
+        "creed": ["Вызнанне веры", "Исповедание веры"],
         "eucharistic-liturgy": ["Эўхарыстычная літургія", "Евхаристическая Литургия"],
-        "eucharistic-prayer": ["Вторая Евхаристическая молитва"],
+        "eucharistic-prayer": ["II эўхарыстычная малітва", "Вторая Евхаристическая молитва"],
         "communion-rite": ["Абрад Камуніі", "Обряд причащения"],
         "concluding-rites": ["Заключныя абрады", "Заключительный обряд"]
       },
@@ -158,8 +158,8 @@
         "kyrie": ["V. Kyrie eleison."],
         "gloria": ["Gloria in excelsis Deo…"],
         "collect": ["V. Oremus:"],
-        "first-reading": ["После чтения:"],
-        "gospel": ["Евангелие:"],
+        "first-reading": ["Пасля чытання:", "После чтения:"],
+        "gospel": ["Евангелле:", "Евангелие:"],
         "offertory": ["V. Benedictus es, Domine, Deus universi…"],
         "lords-prayer": ["V. Praeceptis salutaribus moniti…"],
         "sign-of-peace": ["V. Domine Iesu Christe, qui dixisti…"],
@@ -171,9 +171,9 @@
         "dismissal": ["V. Ite, missa est."]
       },
       "classify": {
-        "heading": ["ЧИН МЕССЫ НА ЛАТИНСКОМ ЯЗЫКЕ"],
-        "rubric": ["После чтения:", "Евангелие:"],
-        "alternative": ["Или:"]
+        "heading": ["ПАРАДАК СВЯТОЙ ІМШЫ НА ЛАЦІНСКАЙ МОВЕ", "ЧИН МЕССЫ НА ЛАТИНСКОМ ЯЗЫКЕ"],
+        "rubric": ["Пасля чытання:", "После чтения:", "Евангелле:", "Евангелие:"],
+        "alternative": ["Альбо:", "Или:"]
       },
       "speakerLabels": {
         "V.": "priest",

@@ -198,6 +198,17 @@ export default defineConfig({
       '.vue',
     ],
   },
+
+  // Vuetify's auto-import plugin adds these imports only when the lazy route is
+  // transformed. Bundle them at startup to keep the dependency hash stable.
+  optimizeDeps: {
+    include: [
+      'vuetify/components/VAvatar',
+      'vuetify/components/VBadge',
+      'vuetify/components/VSkeletonLoader',
+      'vuetify/components/transitions',
+    ],
+  },
   
   // Настройки сервера для разработки
   server: {
