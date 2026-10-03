@@ -7,7 +7,7 @@ import {
   getPeriodDayDocumentId,
   resolveDayAgainstPeriod,
 } from '@/utils/liturgicalDayResolution';
-import { findOptionByDayId } from '@/utils/ordoDayOptions';
+import { findOptionByDayId, findResolvedDayById } from '@/utils/ordoDayOptions';
 
 /**
  * Resolve the route's day from the date-aware service instead of reading a raw
@@ -43,13 +43,7 @@ export function useResolvedLiturgicalDay() {
 
     const resolveDay = (content) => {
       context.value = content.context || null;
-      const selected = content.itemsDays?.find((item) => item.id === id)
-        || content.dayOptions?.find((item) => item.templates?.some((template) => (
-          template.id === id || template.dayIds?.includes(id)
-        )))?.templates.find((template) => (
-          template.id === id || template.dayIds?.includes(id)
-        ))?.day
-        || null;
+      const selected = findResolvedDayById(content, id);
       if (!selected) return null;
 
       // A fixed celebration may have been loaded before its regular period

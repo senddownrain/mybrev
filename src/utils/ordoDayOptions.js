@@ -351,6 +351,13 @@ export function findOptionByDayId(content, dayId) {
     || option.templates?.some((template) => template.id === dayId || template.dayIds?.includes(dayId))) || null;
 }
 
+/** Prefer the legal Office in cached content assembled before itemsDays was fixed. */
+export function findResolvedDayById(content, dayId) {
+  const option = findOptionByDayId(content, dayId);
+  const template = option?.templates?.find((item) => item.id === dayId || item.dayIds?.includes(dayId));
+  return template?.day || content?.itemsDays?.find((item) => item.id === dayId) || null;
+}
+
 /** Route lookup must see the same resolved document as the legal Office card. */
 export function contentDayMap(allDays, dayOptions) {
   const dayMap = new Map(allDays.map((day) => [day.id, day]));

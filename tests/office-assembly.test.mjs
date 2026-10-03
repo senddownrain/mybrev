@@ -16,7 +16,7 @@ import {
   FIRST_VESPER_FIELDS, OFFICE_CONTENT_FIELDS, OFFICE_FIELD_SLOTS, OFFICE_TEXT_FIELDS, SUNDAY_WEEK_1_TEMPLATE,
 } from '../src/constants/officeFields.js';
 import {
-  buildOrdoDayOptions, contentDayMap, findOptionByDayId, resolveLegacyTemplatePlaceholders,
+  buildOrdoDayOptions, contentDayMap, findOptionByDayId, findResolvedDayById, resolveLegacyTemplatePlaceholders,
 } from '../src/utils/ordoDayOptions.js';
 import { resolveDateDayAgainstPeriod, resolveDayAgainstPeriod } from '../src/utils/liturgicalDayResolution.js';
 import { classifyValue, inferTemplates, splitSource } from '../scripts/lib/feast-content.mjs';
@@ -250,8 +250,10 @@ test('Guardian Angels Lauds route pairs own antiphons with Sunday week I psalms 
     const option = findOptionByDayId({ dayOptions }, id);
     assert.ok(option, `${sparse ? 'sparse' : 'legacy'} Guardian Angels option`);
     const itemsDays = [...contentDayMap([fetched, daysResult.periodFallback], dayOptions).values()];
-    // Same precedence as useResolvedLiturgicalDay: itemsDays before option templates.
-    const selected = itemsDays.find((day) => day.id === id) || option.templates[0].day;
+    const oldCachedContent = { itemsDays: [fetched, daysResult.periodFallback], dayOptions };
+    assert.equal(findResolvedDayById(oldCachedContent, id), option.templates[0].day,
+      'route selects the resolved Office even from an old cached content shape');
+    const selected = findResolvedDayById({ itemsDays, dayOptions }, id);
     const routeDay = resolveDayAgainstPeriod(selected, daysResult.periodFallback);
     assert.equal(routeDay.laudesHymn, source.laudesHymn);
     for (const field of ['laudesR', 'laudesAntBen', 'laudesInter', 'laudesPr']) {
