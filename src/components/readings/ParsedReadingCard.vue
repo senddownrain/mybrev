@@ -32,7 +32,7 @@
             v-if="strippedText(section.data) && !hasAcclamation(strippedText(section.data))"
             class="reading-acclamation"
           >
-            Гэта Слова Божае.
+            Гэта слова Божае.
           </div>
         </template>
 
@@ -97,7 +97,7 @@
             v-if="section.data.text && !hasAcclamation(section.data.text)"
             class="reading-acclamation"
           >
-            Гэта Слова Пана.
+            Гэта слова Пана.
           </div>
         </template>
 
@@ -115,6 +115,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { formatResponsorialPsalmHtml } from '@/utils/responsorialPsalmHtml';
 
 const props = defineProps({
   reading: { type: Object, required: true },
@@ -190,17 +191,7 @@ function formatText(text) {
 }
 
 function formatPsalmText(text) {
-  // Work on text only so verse numbers never alter HTML attributes.
-  return formatText(text)
-    .split(/(<[^>]+>)/g)
-    .map((part) => {
-      if (part.startsWith('<')) return part;
-      return part
-        .replace(/(?<=\S)(?:\s|&nbsp;|&#160;|&#xA0;)+(?=\d+\.\s)/gi, '<br>')
-        .replace(/\*(?:\s|&nbsp;|&#160;|&#xA0;)*/gi, '*<br>');
-    })
-    .join('')
-    .replace(/\*(?:<br\s*\/?>(?:\s|&nbsp;|&#160;|&#xA0;)*)+/gi, '*<br>');
+  return formatResponsorialPsalmHtml(formatText(text));
 }
 
 function hasAcclamation(text) {
@@ -422,6 +413,10 @@ function cycleLabel(value) {
 
 .psalm-verse-text {
   padding-left: 4px;
+}
+
+.psalm-verse-text :deep(.psalm-marker) {
+  color: var(--rubric-color);
 }
 
 .alleluia-acclamation {

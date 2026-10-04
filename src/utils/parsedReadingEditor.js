@@ -5,6 +5,7 @@ import {
   normalizeReadingCycle,
   readingSelector,
 } from './parsedReadingsIdentity.js';
+import { normalizeReadingText } from './readingTextNormalization.js';
 
 const READING_SECTION_PATTERN = /^reading(\d+)$/;
 
@@ -31,7 +32,7 @@ function normalizeReadingSection(section = {}) {
     bible: nullableText(section.bible),
     comment: nullableText(section.comment),
     title: nullableText(section.title),
-    text: text(section.text),
+    text: normalizeReadingText(text(section.text)),
   };
 }
 
