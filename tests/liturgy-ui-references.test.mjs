@@ -203,3 +203,37 @@ test('two co-equal memorials stay two neutral alternatives', () => {
   const titles = day.alternatives.map((item) => item.title);
   assert.deepEqual(titles, [...titles].sort((a, b) => a.localeCompare(b, 'be')), 'stable neutral order');
 });
+
+// ---------------------------------------------------------------------------
+// /picker: the Ordo engine, not the legacy calculator or `days`
+// ---------------------------------------------------------------------------
+
+test('/picker by period: every position comes from the engine, impossible ones are absent', async () => {
+  const { ordoDateForPosition } = await import('../src/utils/ordoDatePicker.js');
+  const { legacyContextOf } = await import('../src/utils/ordo/runtime.js');
+  assert.equal(ordoDateForPosition(2026, 'ordinary', 1, 1), null, 'I Sunday of Ordinary Time is the Baptism');
+  assert.equal(ordoDateForPosition(2026, 'ordinary', 1, 2), '2026-01-12');
+  assert.equal(ordoDateForPosition(2026, 'lent', 4, 1), '2026-03-15');
+  assert.equal(ordoDateForPosition(2026, 'holyweek', 1, 5), '2026-04-02');
+  for (const year of [2025, 2029, 2032]) {
+    for (const [type, week, dow] of [['ordinary', 34, 7], ['easter', 7, 1], ['advent', 3, 4], ['lent', 0, 4]]) {
+      const date = ordoDateForPosition(year, type, week, dow);
+      if (!date) continue;
+      const context = legacyContextOf(resolveRuntimeDay(date, { diocese: 'minsk-mohilev' }));
+      assert.deepEqual([context.periodType, Number(context.periodWeek), Number(context.dayOfWeek)], [type, week, dow], `${year} ${type}/${week}/${dow}`);
+    }
+  }
+});
+
+test('/picker by feast: the canonical year — final dates, transfers, diocesan rows', async () => {
+  const { yearCelebrations } = await import('../src/utils/ordoScreen.js');
+  const single = yearCelebrations(2026, ['minsk-mohilev']);
+  assert.ok(single.find((item) => item.optionId === 'corpus-christi' && item.date === '2026-06-04'));
+  assert.ok(single.every((item) => item.optionId !== 'saturday-blessed-virgin-mary'));
+  const both = yearCelebrations(2026, ['minsk-mohilev', 'pinsk']);
+  const pinsk = both.find((item) => item.optionId === 'dedication-cathedral' && item.date === '2026-05-01');
+  assert.deepEqual(pinsk?.badges, ['Пінск']);
+  const feasts = read('src/components/liturgical/FeastsPicker.vue');
+  assert.match(feasts, /yearCelebrations\(props\.year, effectiveOrdoDioceses\.value\)/);
+  assert.doesNotMatch(read('src/services/liturgicalDayService.js'), /getAllFeastDays/, 'no full `days` read for the feast list');
+});

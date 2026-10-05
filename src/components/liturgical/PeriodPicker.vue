@@ -223,7 +223,8 @@
 <script setup>
 import { computed, defineComponent, h, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
+import { ordoDateForPosition } from '@/utils/ordoDatePicker';
+import { currentOrdoDiocese } from '@/utils/ordoDiocese';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { useLiturgicalStore } from '@/stores/liturgical';
 import { useAuthStore } from '@/stores/auth';
@@ -285,7 +286,6 @@ const props = defineProps({
 
 const emit = defineEmits(['day-selected']);
 const router = useRouter();
-const { calculateDateForPeriod } = useLiturgicalDay();
 const { getLiturgicalContentForDate } = useLiturgicalContent();
 const liturgicalStore = useLiturgicalStore();
 const authStore = useAuthStore();
@@ -419,11 +419,14 @@ async function searchSelection() {
   calculatedDate.value = '';
 
   try {
-    const date = selectedExactDate.value || await calculateDateForPeriod(
+    // The position is found by the Ordo engine (the same context as Hours /
+    // Readings); a position that does not exist this year gives no date.
+    const date = selectedExactDate.value || ordoDateForPosition(
       props.year,
       selectedPeriod.value,
       selectedWeek.value,
       selectedDayOfWeek.value,
+      { diocese: currentOrdoDiocese() },
     );
     if (sequence !== searchSequence) return;
     if (!date) {

@@ -6,7 +6,7 @@
  * selection algorithm here. Suppressed candidates never colour a date and
  * are never offered.
  */
-import { resolveRuntimeDay } from './ordo/runtime.js';
+import { legacyContextOf, resolveRuntimeDay } from './ordo/runtime.js';
 import { colorInfo, legalColors, rankLabel } from './ordoScreen.js';
 
 export const MAX_PICKER_COLORS = 3;
@@ -109,4 +109,21 @@ export function pickerRouteFor(option, iso, mode, { today, diocese = '', default
   // option so the list forwards straight to its Office.
   if (iso === today && !hasQuery) return { name: 'Today' };
   return { name: 'SelectedDay', params: { day: iso }, query: { ...query, ...(option?.id ? { option: option.id } : {}) } };
+}
+
+/**
+ * `/picker` «Па перыядзе»: the civil date of a liturgical position in a civil
+ * year, found by the Ordo engine itself (the same context Hours/Readings use).
+ * A position that does not exist that year (I Sunday of Ordinary Time is the
+ * Baptism of the Lord, Advent IV past 24 December…) is null, never a date
+ * from another period.
+ */
+export function ordoDateForPosition(year, periodType, periodWeek, dayOfWeek, { diocese } = {}) {
+  for (let time = Date.UTC(year, 0, 1); time < Date.UTC(year + 1, 0, 1); time += 86_400_000) {
+    const iso = new Date(time).toISOString().slice(0, 10);
+    const context = legacyContextOf(resolveRuntimeDay(iso, { diocese }));
+    if (context.periodType === periodType && Number(context.periodWeek) === Number(periodWeek)
+      && Number(context.dayOfWeek) === Number(dayOfWeek)) return iso;
+  }
+  return null;
 }

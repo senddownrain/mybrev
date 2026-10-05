@@ -94,12 +94,11 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
-import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
-import { logger } from '@/utils/logger';
+import { computed, ref } from 'vue';
 import moment from '@/utils/moment-be';
-import { PLACE_LABEL_MAP, RANK_LABEL_MAP } from '@/constants/liturgical';
-import { withoutObsoleteDocuments } from '@/utils/liturgicalDayResolution';
+import { yearCelebrations } from '@/utils/ordoScreen';
+import { effectiveOrdoDioceses, ordoDiocese } from '@/utils/ordoDiocese';
+import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import {
   PhArrowRight,
   PhBookOpenText,
@@ -117,13 +116,11 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['feast-selected']);
-const { getAllFeasts } = useLiturgicalDay();
 
 const searchQuery = ref('');
 const sourceFilter = ref('all');
-const allFeasts = ref([]);
+// The list is computed by the Ordo engine on the device: no `days` read.
 const loading = ref(false);
-let loadSequence = 0;
 
 const sourceFilters = [
   { value: 'all', label: 'Усе' },
@@ -135,75 +132,29 @@ const openLabel = computed(() => (
   props.mode === 'readings' ? 'Адкрыць чытанні' : 'Адкрыць літургічныя гадзіны'
 ));
 
-onMounted(loadFeasts);
-watch(() => props.year, loadFeasts);
-
-async function loadFeasts() {
-  const sequence = ++loadSequence;
-  loading.value = true;
-  try {
-    const result = await getAllFeasts(props.year);
-    if (sequence === loadSequence) allFeasts.value = Array.isArray(result) ? result : [];
-  } catch (error) {
-    logger.error('Памылка пры загрузцы святаў:', error);
-    if (sequence === loadSequence) allFeasts.value = [];
-  } finally {
-    if (sequence === loadSequence) loading.value = false;
-  }
-}
-
-const preparedFeasts = computed(() => {
-  const groups = new Map();
-
-  // Cached feast lists may predate a migration that retired documents.
-  withoutObsoleteDocuments(allFeasts.value).forEach((feast) => {
-    const calendarDate = getCalendarDate(feast);
-    if (!calendarDate) return;
-
-    const title = cleanText(feast._title || feast._feastName || feast._dayName || 'Свята');
-    const rank = feast._rank || feast._feastType || '';
-    const rankLabel = RANK_LABEL_MAP[rank] || cleanText(rank);
-    const places = normalizePlaces(feast._place);
-    const placeLabels = places.map((place) => PLACE_LABEL_MAP[place] || cleanText(place));
-    const groupKey = [
-      feast.isDynamic ? 'dynamic' : 'fixed',
-      calendarDate,
-      title.toLocaleLowerCase('be-BY'),
-      rank,
-    ].join('|');
-    const date = moment(calendarDate, 'YYYY-MM-DD', true);
-    const existing = groups.get(groupKey);
-
-    if (existing) {
-      existing.variantCount += 1;
-      existing.places = [...new Set([...existing.places, ...places])].sort();
-      existing.placeLabels = existing.places
-        .map((place) => PLACE_LABEL_MAP[place] || cleanText(place));
-      existing.searchText = buildSearchText(existing, date);
-      return;
-    }
-
-    groups.set(groupKey, {
-      ...feast,
-      key: groupKey,
-      title,
-      rankLabel,
-      places,
-      placeLabels,
-      calendarDate,
+/**
+ * Every legal celebration of the year, on its final date (transfers and
+ * diocesan dates included), for the dioceses of Settings — the canonical
+ * calendar, not the documents that happen to exist in `days`.
+ */
+const preparedFeasts = computed(() => (ordoCalendarEpoch.value, yearCelebrations(props.year, effectiveOrdoDioceses.value))
+  .map((item) => {
+    const date = moment(item.date, 'YYYY-MM-DD', true);
+    const feast = {
+      ...item,
+      id: item.optionId,
+      calendarDate: item.date,
+      rankLabel: item.rank,
+      placeLabels: item.badges,
+      isDynamic: item.movable,
+      isFixed: !item.movable,
       dayLabel: date.format('DD'),
       monthLabel: date.format('MMM').replace('.', ''),
       variantCount: 1,
-      searchText: buildSearchText({ title, rankLabel, placeLabels }, date),
-    });
-  });
-
-  return [...groups.values()].sort((a, b) => (
-    a.calendarDate.localeCompare(b.calendarDate)
-      || rankWeight(a._rank || a._feastType) - rankWeight(b._rank || b._feastType)
-      || a.title.localeCompare(b.title, 'be')
-  ));
-});
+    };
+    feast.searchText = buildSearchText(feast, date);
+    return feast;
+  }));
 
 const filteredFeasts = computed(() => {
   const query = searchQuery.value.trim().toLocaleLowerCase('be-BY');
@@ -222,30 +173,8 @@ const resultCountLabel = computed(() => {
   return `${count} святаў`;
 });
 
-function getCalendarDate(feast) {
-  if (feast.calendarDate) return feast.calendarDate;
-  if (!feast.isFixed || !feast._date) return '';
-  const match = String(feast._date).match(/^(\d{1,2})[.-](\d{1,2})$/);
-  if (!match) return '';
-  const date = moment(`${props.year}-${match[2]}-${match[1]}`, 'YYYY-M-D', true);
-  return date.isValid() ? date.format('YYYY-MM-DD') : '';
-}
 
-function cleanText(value) {
-  return String(value || '')
-    .replace(/<br\s*\/?>/gi, ' ')
-    .replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;|&#160;/gi, ' ')
-    .replace(/&amp;/gi, '&')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
 
-function normalizePlaces(value) {
-  return [...new Set((Array.isArray(value) ? value : [value])
-    .map((place) => String(place || '').trim())
-    .filter(Boolean))].sort();
-}
 
 function buildSearchText(feast, date) {
   return [feast.title, feast.rankLabel, ...feast.placeLabels, date.format('DD.MM.YYYY')]
@@ -253,24 +182,14 @@ function buildSearchText(feast, date) {
     .toLocaleLowerCase('be-BY');
 }
 
-function rankWeight(rank) {
-  return {
-    solemnitas: 1,
-    solemnity: 1,
-    festum: 2,
-    feast: 2,
-    memoria: 3,
-    memorial: 3,
-    'memoria-ad-libitum': 4,
-  }[rank] || 5;
-}
 
 function selectFeast(feast) {
-  // Readings are resolved independently by calendar date.
-  // Do not leak a days document id into that query path.
+  // The celebration's identity travels, not a `days` document id: Hours open
+  // its Office, Readings its readings, in the diocese that keeps it.
   emit('feast-selected', {
-    dayId: props.mode === 'readings' ? '' : feast.id,
+    optionId: feast.optionId,
     date: feast.calendarDate,
+    diocese: feast.dioceses.includes(ordoDiocese.value) ? '' : feast.dioceses[0],
   });
 }
 

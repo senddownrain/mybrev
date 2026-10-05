@@ -112,7 +112,15 @@ onMounted(async () => {
     : availableYears.value[0];
 });
 
-function openSelection({ dayId, date }) {
+function openSelection({ dayId, date, optionId, diocese }) {
+  // «Па свяце»: the celebration itself (its Office / its readings, its diocese).
+  if (optionId && date) {
+    const query = { option: optionId, ...(diocese ? { diocese } : {}) };
+    router.push(readingMode.value
+      ? { name: 'ReadingsByDate', params: { date }, query }
+      : { name: 'SelectedDay', params: { day: date }, query });
+    return;
+  }
   if (!date || (!readingMode.value && !dayId)) return;
 
   if (readingMode.value) {

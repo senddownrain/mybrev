@@ -384,6 +384,45 @@ export function getOrdoYear(year, { diocese } = {}) {
 export const ordoYearCacheSize = () => yearCache.size;
 
 /**
+ * `/picker` «Па свяце»: every legal celebration of a civil year — from the
+ * Ordo engine, on its final date (transfers, diocesan dates included), for
+ * one or several dioceses. The same celebration with the same rank on the
+ * same date is one entry; one that only some dioceses keep carries badges.
+ * The weekly Saturday memorial of Mary is not a «feast» to look up.
+ */
+export function yearCelebrations(year, dioceses) {
+  const list = normalizeDioceseFilter(Array.isArray(dioceses) ? dioceses : [dioceses]);
+  const entries = new Map();
+  list.forEach((diocese) => getOrdoYear(year, { diocese }).forEach((day) => {
+    [day.primary, ...day.alternatives]
+      .filter((option) => option.kind !== 'temporal' && option.kind !== 'votive-memorial')
+      .forEach((option) => {
+        const key = `${day.date}|${option.id}|${option.rank || ''}`;
+        const entry = entries.get(key) || {
+          key,
+          optionId: option.id,
+          date: day.date,
+          title: option.title,
+          rank: rankLabel(option),
+          rankKey: option.rank || '',
+          kind: option.kind,
+          movable: option.kind === 'dynamic' || Boolean(option.feastCode),
+          color: option.color || day.color,
+          dioceses: [],
+        };
+        entry.dioceses.push(diocese);
+        entries.set(key, entry);
+      });
+  }));
+  return [...entries.values()]
+    .map((entry) => ({
+      ...entry,
+      badges: entry.dioceses.length === list.length ? [] : entry.dioceses.map((id) => DIOCESE_SHORT_LABELS[id] || id),
+    }))
+    .sort((a, b) => a.date.localeCompare(b.date) || a.title.localeCompare(b.title, 'be'));
+}
+
+/**
  * Compact month overview: one row per day with the primary celebration,
  * its rank and colour, and how many legal alternatives it has.
  */

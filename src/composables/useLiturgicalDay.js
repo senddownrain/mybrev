@@ -7,7 +7,6 @@
  *   computeLiturgicalContextForDate(date) → { periodType, periodWeek, dayOfWeek, _feast }
  *   findDayByPeriod(type, week, day)   → Object|null
  *   calculateDateForPeriod(year, type, week, day) → 'YYYY-MM-DD'|null
- *   getAllFeasts(year)                 → Object[]
  *   feastNameMap                      → FEAST_NAME_MAP constant
  *
  * Flow:
@@ -88,12 +87,6 @@ export function useLiturgicalDay() {
     return calculateDateForContext(year, periodType, periodWeekNumber, dayOfWeek, opts, nextYearOpts);
   }
 
-  /**
-   * Get all feasts for a year (delegates to store with caching).
-   */
-  async function getAllFeasts(year) {
-    return liturgicalStore.fetchAllFeasts(year);
-  }
 
   return {
     // UI scenarios
@@ -102,7 +95,6 @@ export function useLiturgicalDay() {
     computeLiturgicalContextForDate,
     findDayByPeriod,
     calculateDateForPeriod,
-    getAllFeasts,
     // Constant re-exported for components that need it
     feastNameMap: FEAST_NAME_MAP,
   };

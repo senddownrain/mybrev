@@ -10,7 +10,6 @@ import {
   getPeriodDayDocumentId,
   getSeasonalDateDocumentId,
   getSeasonalDateExceptionId,
-  isSeasonalDateDocumentId,
   withoutObsoleteDocuments,
   resolveDayAgainstPeriod,
 } from '@/utils/liturgicalDayResolution';
@@ -143,14 +142,6 @@ export async function findDayByPeriod(periodType, periodWeekNumber, dayOfWeek, s
   if (canonicalError) throw canonicalError;
   if (queryError) throw queryError;
   return null;
-}
-
-export async function getAllFeastDays(session) {
-  logger.log(`[liturgicalDayService] Loading ${LITURGICAL_DAYS_COLLECTION}`);
-  const snapshot = await getDocsOfflineAware(getDaysCollection(), session);
-  return snapshotToDocs(snapshot)
-    .filter((item) => (item._feast || item._rank || item._date) && !isSeasonalDateDocumentId(item.id))
-    .map((item) => resolveDayAgainstPeriod(item, null));
 }
 
 async function getSeasonalException(mDate, periodType, session) {
