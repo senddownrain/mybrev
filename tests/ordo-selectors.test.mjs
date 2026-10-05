@@ -28,9 +28,12 @@ const select = (text, tags, date, celebrations) => daySelector({ text, tags }, d
 
 test('first Friday becomes a recurring selector, not twelve dates', () => {
   assert.deepEqual(select('Першая пятніца месяца.', ['first-friday'], '2026-03-06'), { type: 'nth-weekday-of-month', isoWeekday: 5, nth: 1 });
+  // One canonical Belarus-level rule, not a Pinsk-2026 artifact.
   const note = data.notes.notes.find((n) => n.selector.type === 'nth-weekday-of-month' && n.selector.isoWeekday === 5 && n.scope.level === 'belarus');
-  assert.ok(note, 'first Friday is confirmed across dioceses');
-  assert.ok(note.occurrences > 5);
+  assert.ok(note, 'first Friday is a Belarus-level rule');
+  assert.equal(note.provenance?.kind, 'app-normalization');
+  assert.ok(note.provenance.observedIn.length >= 2, 'seen in several diocesan calendars');
+  assert.ok(!data.notes.notes.some((n) => n !== note && /^(?:І|I|Першая) пятніца месяца\.?$/u.test(n.text.trim())), 'no bare diocesan copies');
 });
 
 test('a novena day is relative to its (movable) celebration', () => {

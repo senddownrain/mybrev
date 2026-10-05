@@ -12,6 +12,7 @@ import { alignDate, celebrationDate, daysBetween, parseIsoDate } from './calenda
 import { CLASSIFICATION, DISPLAY_CATEGORIES, daySelector } from './normalize.mjs';
 import { resolveCelebration } from './identity.mjs';
 import { clean, fingerprint, fold, jaccard, wordSet } from './text.mjs';
+import { bareFirstWeekdayMark, canonicalFirstWeekdayNotes, guardNote, mentionedFirstWeekday } from './note-guards.mjs';
 
 export const DIOCESE_ORDER = ['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno'];
 const RULE_PERIODS = new Set(['advent', 'christmas', 'lent', 'holyweek', 'triduum', 'easter', 'ordinary']);
@@ -271,7 +272,14 @@ export function buildNotes(sources, catalog) {
     }
   });
 
-  const notes = grouped.map((entries, index) => {
+  // Coverage of every source: a recurring selector is checked against it.
+  const coverage = new Map(sources.map((source) => {
+    const days = source.days.map((day) => day.date).sort();
+    return [source.diocese, { from: days[0], to: days.at(-1) }];
+  }));
+  const review = [];
+  const firstWeekdayDioceses = { 4: new Set(), 5: new Set(), 6: new Set() };
+  const built = grouped.map((entries) => {
     const lead = entries[0].occurrences[0];
     const dioceses = [...new Set(entries.map((e) => e.diocese))].sort((a, b) => DIOCESE_ORDER.indexOf(a) - DIOCESE_ORDER.indexOf(b));
     const occurrences = entries.flatMap((e) => e.occurrences);
@@ -279,7 +287,7 @@ export function buildNotes(sources, catalog) {
     const texts = [...new Map(occurrences.map((o) => [`${o.diocese}|${fingerprint(o.text)}`, { diocese: o.diocese, text: o.text }])).values()];
     const markers = [...new Set(occurrences.flatMap((o) => o.markers || []))];
     const entry = {
-      id: `ordo-note-${String(index + 1).padStart(4, '0')}`,
+      id: '',
       scope: dioceses.length >= 2 ? { level: 'belarus', dioceseIds: dioceses } : { level: 'diocese', dioceseId: dioceses[0] },
       selector: entries[0].selector,
       // A cathedral note is diocesan; parish lists are dropped below.
@@ -299,6 +307,27 @@ export function buildNotes(sources, catalog) {
       ? (lead.classificationHint === CLASSIFICATION.YEAR ? CLASSIFICATION.YEAR : classify({ ...entry }))
       : classify({ ...entry });
     entry.confidence = confidence(entry);
+    // Where the calendars print the first-of-month marks (provenance of the canonical rules).
+    texts.forEach((item) => {
+      const weekday = mentionedFirstWeekday(item.text);
+      if (weekday) firstWeekdayDioceses[weekday].add(item.diocese);
+    });
+    // The bare «І чацвер месяца» mark becomes one canonical Belarus rule.
+    const mark = bareFirstWeekdayMark(entry.text) && texts.every((item) => bareFirstWeekdayMark(item.text));
+    if (mark) {
+      dioceses.forEach((diocese) => firstWeekdayDioceses[bareFirstWeekdayMark(entry.text).isoWeekday].add(diocese));
+      return { replaced: 'canonical-first-weekday', occurrences, entry };
+    }
+    const guarded = guardNote(entry, occurrences, coverage);
+    if (guarded.entries) {
+      return { split: guarded.entries.map((item) => ({ ...item, guard: guarded.guard })), occurrences, entry };
+    }
+    if (!guarded.entry) {
+      review.push({ text: entry.text, selector: entry.selector, scope: entry.scope, reason: guarded.review, dates: [...new Set(occurrences.map((o) => o.date).filter(Boolean))].sort().slice(0, 12) });
+      return { replaced: 'review', occurrences, entry };
+    }
+    Object.assign(entry, guarded.entry);
+    if (guarded.guard) entry.guard = guarded.guard;
     entry.observed = dioceses.map((diocese) => {
       const own = occurrences.filter((o) => o.diocese === diocese);
       return {
@@ -309,8 +338,24 @@ export function buildNotes(sources, catalog) {
       };
     });
     delete entry.dioceses;
-    occurrences.forEach((o) => { o.noteId = entry.id; });
-    return entry;
+    return { entry, occurrences };
+  });
+  const canonical = canonicalFirstWeekdayNotes(Object.fromEntries(Object.entries(firstWeekdayDioceses).map(([key, set]) => [key, [...set].sort()])));
+  const notes = [
+    ...built.filter((item) => !item.replaced).flatMap((item) => item.split || [item.entry]),
+    ...canonical.map((entry) => ({ id: '', ...entry })),
+  ];
+  notes.forEach((entry, index) => { entry.id = `ordo-note-${String(index + 1).padStart(4, '0')}`; });
+  // Evidence items point at the published note (the canonical rule for the bare marks).
+  const canonicalOf = (text) => notes.find((note) => note.basis === 'app-normalization'
+    && note.selector.isoWeekday === bareFirstWeekdayMark(text)?.isoWeekday);
+  built.forEach((item) => {
+    if (item.split) {
+      item.occurrences.forEach((o) => { o.noteId = item.split.find((note) => note.selector.date === o.date)?.id; });
+      return;
+    }
+    const published = item.replaced === 'canonical-first-weekday' ? canonicalOf(item.entry.text) : (item.replaced ? null : item.entry);
+    item.occurrences.forEach((o) => { o.noteId = published?.id; });
   });
   // Parish-level lists ("titular solemnity in X, Y") stay in the evidence
   // only: the runtime Ordo has no parish / own-church level.
@@ -318,6 +363,7 @@ export function buildNotes(sources, catalog) {
   return {
     notes: notes.filter((note) => !isParishNote(note.category, note.tags)),
     allNotes: notes,
+    review,
     excludedParishNotes: parish.length,
     candidates: perDiocese.flatMap((e) => e.occurrences),
   };
