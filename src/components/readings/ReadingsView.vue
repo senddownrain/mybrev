@@ -141,7 +141,8 @@ import {
 import { getLiturgicalTheme } from '@/constants/liturgical';
 import { liturgicalVisual } from '@/utils/liturgicalVisual';
 import { resolveRuntimeDay } from '@/utils/ordo/runtime';
-import { currentOrdoDiocese } from '@/utils/ordoDiocese';
+import { currentOrdoDiocese, effectiveOrdoDioceses } from '@/utils/ordoDiocese';
+import { DIOCESE_BADGES } from '@/utils/dayOptionsUnion';
 import moment from '@/utils/moment-be';
 
 const route = useRoute();
@@ -265,7 +266,21 @@ function groupIcon(group) {
   return 'mdi-calendar-blank-outline';
 }
 
+/** Diocese badges of a group that only some of the selected dioceses read. */
+function groupBadges(group) {
+  const selected = context.value?.dioceses || [];
+  if (selected.length < 2) return [];
+  const read = new Set(group.documents.flatMap((document) => document._dioceses || []));
+  return read.size && read.size < selected.length ? [...read].map((id) => DIOCESE_BADGES[id] || id) : [];
+}
+
 function groupMeta(group) {
+  const badges = groupBadges(group).join(', ');
+  const meta = groupMetaText(group);
+  return badges ? `${meta} · ${badges}` : meta;
+}
+
+function groupMetaText(group) {
   const reading = group.documents[0] || {};
   const cycles = [...new Set(group.documents
     .map((document) => normalizeReadingCycle(document.year))
@@ -343,11 +358,12 @@ function load() {
   loadForDate(selectedDate.value.toDate(), {
     dayId: route.query.dayId || '',
     includeAlternatives: true,
+    dioceses: effectiveOrdoDioceses.value,
   });
 }
 
 onMounted(load);
-watch(() => [route.params.date || route.query.date, route.query.dayId], load);
+watch(() => [route.params.date || route.query.date, route.query.dayId, effectiveOrdoDioceses.value.join(',')], load);
 </script>
 
 <style scoped>

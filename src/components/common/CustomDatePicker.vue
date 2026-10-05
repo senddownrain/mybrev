@@ -108,7 +108,7 @@
         <span class="day-option__dot" :style="{ background: option.swatch }" :title="option.colorLabel" aria-hidden="true"></span>
         <span class="day-option__copy">
           <span class="day-option__title">{{ option.title }}</span>
-          <small v-if="option.rank">{{ option.rank }}</small>
+          <small v-if="option.rank || option.badges?.length">{{ [option.rank, ...(option.badges || [])].filter(Boolean).join(' · ') }}</small>
         </span>
         <v-icon icon="mdi-chevron-right" size="18" class="day-option__arrow"></v-icon>
       </button>
@@ -150,8 +150,9 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  // One diocese or the dioceses of Settings (colours and options of all).
   diocese: {
-    type: String,
+    type: [String, Array],
     default: ''
   },
   // List the legal options of the selected date under the grid.

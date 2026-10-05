@@ -9,7 +9,7 @@ import { logger } from '@/utils/logger';
 import { requestWakeLock, releaseWakeLock } from '@/composables/useWakeLock';
 import { ensureReaderFontLoaded } from '@/utils/fonts';
 import { normalizeChordLayout } from '@/utils/songDisplay';
-import { ordoDiocese, setOrdoDiocese } from '@/utils/ordoDiocese';
+import { ordoDiocese, ordoDioceses, setOrdoDiocese, toggleOrdoDiocese } from '@/utils/ordoDiocese';
 
 const PERSONAL_CATEGORIES_KEY = 'personalPrayerCategories';
 const HIDDEN_GLOBAL_CATEGORIES_KEY = 'hiddenGlobalPrayerCategoryIds';
@@ -143,6 +143,11 @@ export const useSettingsStore = defineStore('settings', () => {
     setOrdoDiocese(value);
   }
 
+  /** One or several dioceses for Hours and Readings (minimum one). */
+  function toggleDiocese(value) {
+    return toggleOrdoDiocese(value);
+  }
+
 
   function toggleTheme() {
     themePreference.value = currentTheme.value === 'light' ? 'dark' : 'light';
@@ -229,7 +234,9 @@ export const useSettingsStore = defineStore('settings', () => {
     toggleFavoriteSong,
     keepScreenOn,
     diocese: ordoDiocese,
+    dioceses: ordoDioceses,
     setDiocese,
+    toggleDiocese,
     toggleTheme,
     setTheme,
     setThemePreference,

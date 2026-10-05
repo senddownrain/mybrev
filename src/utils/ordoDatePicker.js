@@ -14,9 +14,16 @@ export const MAX_PICKER_COLORS = 3;
 /** Calendar ring of a vestment colour (one vocabulary: `VESTMENT_COLORS`). */
 export const pickerSwatch = (color) => colorInfo(color).ring || colorInfo(color).swatch;
 
-/** Liturgical colours of the legal options of a date (primary first, max 3). */
-export function pickerColorsOf(iso, diocese) {
-  return legalColors(resolveRuntimeDay(iso, { diocese })).slice(0, MAX_PICKER_COLORS);
+const asList = (dioceses) => (Array.isArray(dioceses) ? dioceses : [dioceses]).filter(Boolean);
+const DIOCESE_BADGES = Object.freeze({ 'minsk-mohilev': 'Мінск', vitebsk: 'Віцебск', pinsk: 'Пінск', grodno: 'Гродна' });
+
+/**
+ * Liturgical colours of the legal options of a date (primary first, max 3);
+ * with several dioceses, the colours of all of them.
+ */
+export function pickerColorsOf(iso, dioceses) {
+  const days = asList(dioceses).map((diocese) => resolveRuntimeDay(iso, { diocese }));
+  return legalColors(days.length ? days : [resolveRuntimeDay(iso, {})]).slice(0, MAX_PICKER_COLORS);
 }
 
 /**
@@ -33,8 +40,7 @@ export function colorGradient(colors) {
 }
 
 /** Legal options of a date for the list under the calendar grid. */
-export function pickerOptionsOf(iso, diocese) {
-  const day = resolveRuntimeDay(iso, { diocese });
+function optionsOfDay(day) {
   return [day.primary, ...day.alternatives].map((option) => ({
     id: option.id,
     title: option.title,
@@ -45,6 +51,41 @@ export function pickerOptionsOf(iso, diocese) {
     colorLabel: colorInfo(option.color || day.color).label,
     hasProperHours: option.kind === 'temporal' || option.contentStatus?.hours === 'proper' || option.kind === 'dynamic',
   }));
+}
+
+/**
+ * Legal options of a date for one or several dioceses. The same celebration
+ * with the same rank is one entry; an option of only some dioceses carries
+ * their badges and the diocese it opens in (`diocese`).
+ */
+export function pickerOptionsOf(iso, dioceses) {
+  const list = asList(dioceses);
+  if (list.length <= 1) return optionsOfDay(resolveRuntimeDay(iso, { diocese: list[0] }));
+  const merged = new Map();
+  list.forEach((diocese) => optionsOfDay(resolveRuntimeDay(iso, { diocese })).forEach((option) => {
+    const key = `${option.id}|${option.rank}`;
+    const entry = merged.get(key) || { ...option, dioceses: [] };
+    entry.dioceses.push(diocese);
+    merged.set(key, entry);
+  }));
+  return [...merged.values()].map((option) => ({
+    ...option,
+    diocese: option.dioceses[0],
+    badges: option.dioceses.length === list.length ? [] : option.dioceses.map((id) => DIOCESE_BADGES[id] || id),
+  }));
+}
+
+/**
+ * «Выбраць»: the date alone — the main screen of that day, where every legal
+ * option is listed (Hours `/day/…`, Readings `/readings/…`).
+ */
+export function pickerDateRoute(iso, mode, { today, diocese = '', defaultDiocese = '' } = {}) {
+  const query = diocese && diocese !== defaultDiocese ? { diocese } : {};
+  const hasQuery = Object.keys(query).length > 0;
+  if (mode === 'readings') {
+    return iso === today && !hasQuery ? { name: 'Readings' } : { name: 'ReadingsByDate', params: { date: iso }, ...(hasQuery ? { query } : {}) };
+  }
+  return iso === today && !hasQuery ? { name: 'Today' } : { name: 'SelectedDay', params: { day: iso }, ...(hasQuery ? { query } : {}) };
 }
 
 /**

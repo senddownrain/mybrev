@@ -130,10 +130,10 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   return {
     isLoading, error,
     fetchContentByDate, fetchDaysByDate, fetchAllFeasts, fetchReadingsByDate, fetchDayByPeriod,
-    getCachedContent: (date) => publicContentCache.peek(contentKey(dateKey(date))) ?? null,
+    getCachedContent: (date, diocese) => publicContentCache.peek(contentKey(dateKey(date), diocese)) ?? null,
     resolveOrdoDay: (date, diocese = currentOrdoDiocese()) => resolveRuntimeDay(dateKey(date), { diocese }),
     getCachedReadings: (date, options) => publicContentCache.peek(readingsKey(dateKey(date), options)) ?? null,
-    primeContent: (date) => publicContentCache.prime([contentKey(dateKey(date))]),
+    primeContent: (date, diocese) => publicContentCache.prime([contentKey(dateKey(date), diocese)]),
     primeReadings: (date, options) => publicContentCache.prime([readingsKey(dateKey(date), options)]),
     // Compatibility: invalidate instead of deleting precious offline content.
     clearCache: requestContentRefresh,

@@ -108,13 +108,17 @@ test('the picker uses the resolved day; both navigation bars pass the screen con
   assert.ok(!/precedence|compareCandidates|resolveDisplay/.test(helper), 'no selection algorithm of its own');
   for (const [file, mode] of [['src/layouts/default/BottomNav.vue', 'hours'], ['src/layouts/default/ReadingsBottomNav.vue', 'readings']]) {
     const nav = read(file);
-    assert.match(nav, /liturgical\s+show-options\s+:diocese="effectiveOrdoDiocese"/);
+    // Colours and options of every diocese of Settings.
+    assert.match(nav, /liturgical\s+show-options\s+:diocese="effectiveOrdoDioceses"/);
+    // date + option → that option; «Выбраць» → the main screen of the date.
     assert.match(nav, new RegExp(`pickerRouteFor\\(option, date, '${mode}'`));
-    assert.ok(!/@click="loadDay"/.test(nav), 'a date alone does not navigate');
+    assert.match(nav, new RegExp(`pickerDateRoute\\(date, '${mode}'`));
+    assert.match(nav, />Выбраць</);
+    assert.ok(!/Выберыце дзень і варыянт/.test(nav));
   }
   // The Ordo screen keeps its own multi-diocese filter: colours only there.
   const ordoNav = read('src/layouts/default/OrdoBottomNav.vue');
-  assert.match(ordoNav, /liturgical\s+:diocese="ordoDioceseFilter\[0\]"/);
+  assert.match(ordoNav, /liturgical\s+:diocese="ordoDioceseFilter"/);
   assert.ok(!/show-options/.test(ordoNav));
 });
 

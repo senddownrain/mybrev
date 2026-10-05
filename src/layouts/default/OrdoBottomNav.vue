@@ -76,7 +76,7 @@
             :first-day-of-week="1"
             show-adjacent-months
             liturgical
-            :diocese="ordoDioceseFilter[0]"
+            :diocese="ordoDioceseFilter"
           />
         </v-card-text>
         <v-card-actions class="date-dialog-actions">

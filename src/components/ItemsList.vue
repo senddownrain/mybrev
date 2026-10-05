@@ -146,7 +146,8 @@ import {
   getLiturgicalTheme,
 } from '@/constants/liturgical';
 import { formatDateDayMonth } from '@/utils/date';
-import { effectiveOrdoDiocese } from '@/utils/ordoDiocese';
+import { effectiveOrdoDioceses, ordoDiocese } from '@/utils/ordoDiocese';
+import { unionDayOptions } from '@/utils/dayOptionsUnion';
 
 const route = useRoute();
 const router = useRouter();
@@ -200,10 +201,13 @@ const getOptionDisplayTitle = (option) => {
 };
 
 const getOptionMeta = (option) => {
-  if (isOfficeForDead(option)) return option.subtitle || 'Памінальны афіцый';
+  if (isOfficeForDead(option)) return [option.subtitle || 'Памінальны афіцый', ...(option?.badges || [])].join(' · ');
   const day = option?.day || {};
   const rank = day._rank || day._feastType;
   const places = Array.isArray(day._place) ? day._place : [day._place];
+  // A diocesan document already names its diocese; the badge would repeat it.
+  // Badges (when present) follow `dioceses` one to one.
+  const badges = (option?.badges || []).filter((badge, index) => !places.includes(option.dioceses[index]));
   const chunks = [];
 
   if (rank) chunks.push(RANK_LABEL_MAP[rank] || rank);
@@ -212,6 +216,7 @@ const getOptionMeta = (option) => {
     .filter(Boolean)
     .map((place) => PLACE_LABEL_MAP[place] || place));
   if (option?.ordo?.missingProper) chunks.push('тэксты дня');
+  chunks.push(...badges);
   // A memorial on a privileged weekday is only commemorated in the Office
   // of the day (never a separate card).
   (option?.ordo?.commemorations || []).forEach((item) => chunks.push(`Успамін (commemoratio): ${item.title}`));
@@ -225,24 +230,34 @@ const getOptionMeta = (option) => {
 // so the result is discarded (prevents race condition).
 let _currentFetchId = 0;
 
+// One diocese: its legal options. Several (Settings): the union of each
+// diocese's options (`unionDayOptions`), every one opened in its diocese.
+const dioceses = computed(() => effectiveOrdoDioceses.value);
+const unite = (results) => (results.length > 1
+  ? unionDayOptions(results, { primary: ordoDiocese.value })
+  : (results[0]?.dayOptions || []));
+const cachedFor = (date, diocese) => getCachedLiturgicalContentForDate(date.toDate(), diocese);
+
 const fetchItemsForDate = async (date) => {
   const fetchId = ++_currentFetchId;
   const key = date.format('YYYY-MM-DD');
+  const list = dioceses.value;
 
   // 1. Try cache first — no spinners needed
-  let cached = getCachedLiturgicalContentForDate(date.toDate());
+  let cached = list.map((diocese) => cachedFor(date, diocese));
   let cacheWaitTimer;
-  if (!cached) {
+  if (cached.some((entry) => !entry)) {
     cacheWaitTimer = setTimeout(() => {
       if (fetchId === _currentFetchId && !dayOptions.value.length) loading.value = true;
     }, 100);
-    cached = await restoreCachedLiturgicalContentForDate(date.toDate());
+    cached = await Promise.all(list.map((diocese, index) => cached[index]
+      || restoreCachedLiturgicalContentForDate(date.toDate(), diocese)));
     clearTimeout(cacheWaitTimer);
   }
   if (fetchId !== _currentFetchId) return;
-  if (cached) {
-    logger.log(`[ItemsList] Cache hit for date: ${key}`);
-    dayOptions.value = Array.isArray(cached.dayOptions) ? cached.dayOptions : [];
+  if (cached.every(Boolean)) {
+    logger.log(`[ItemsList] Cache hit for date: ${key} (${list.join(', ')})`);
+    dayOptions.value = unite(cached.map((entry, index) => ({ diocese: list[index], dayOptions: entry.dayOptions || [] })));
     loading.value = false;
     softLoading.value = false;
     return;
@@ -262,7 +277,8 @@ const fetchItemsForDate = async (date) => {
   }
 
   try {
-    const result = await getLiturgicalContentForDate(date.toDate());
+    const results = await Promise.all(list.map((diocese, index) => cached[index]
+      || getLiturgicalContentForDate(date.toDate(), diocese)));
 
     // Discard stale response if another fetch was started while we waited
     if (fetchId !== _currentFetchId) {
@@ -270,11 +286,7 @@ const fetchItemsForDate = async (date) => {
       return;
     }
 
-    if (result) {
-      dayOptions.value = Array.isArray(result.dayOptions) ? result.dayOptions : [];
-    } else {
-      dayOptions.value = [];
-    }
+    dayOptions.value = unite(results.map((result, index) => ({ diocese: list[index], dayOptions: result?.dayOptions || [] })));
 
     if (dayOptions.value.length === 0) {
       logger.warn(`[ItemsList] No liturgical items found for date: ${key}`);
@@ -311,7 +323,10 @@ const ordoRoute = computed(() => ({ name: 'OrdoByDate', params: { date: currentD
 
 const optionRoute = (option) => {
   const targetId = option.dayId || `missing-${option.key}`;
-  return `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${targetId}`;
+  const path = `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${targetId}`;
+  // An option of another selected diocese opens in that diocese's context.
+  const diocese = option.contextDiocese && option.contextDiocese !== ordoDiocese.value ? option.contextDiocese : '';
+  return diocese ? { path, query: { diocese } } : path;
 };
 
 const isOfficeForDead = (option) => (
@@ -337,8 +352,8 @@ const getOptionIcon = (option) => {
   return 'mdi-calendar-blank';
 };
 
-// The legal Offices depend on the diocese and the own church (Settings).
-watch(effectiveOrdoDiocese, () => fetchItemsForDate(currentDate.value));
+// The legal Offices depend on the dioceses (Settings) and the route context.
+watch(() => dioceses.value.join(','), () => fetchItemsForDate(currentDate.value));
 
 watch(
   () => route.params.day,

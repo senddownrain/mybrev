@@ -30,17 +30,24 @@
         </div>
       </div>
       <div class="setting-row setting-row--theme">
-        <div class="setting-copy"><strong>Дыяцэзія</strong><span>Уласны каляндар для Літургіі гадзін і чытанняў</span></div>
-        <div class="theme-options" role="radiogroup" aria-label="Дыяцэзія">
+        <div class="setting-copy">
+          <strong>Дыяцэзіі</strong>
+          <span>Адна або некалькі: Літургія гадзін і чытанні паказваюць варыянты ўсіх выбраных</span>
+        </div>
+        <div class="theme-options" role="group" aria-label="Дыяцэзіі" data-test="settings-dioceses">
           <button
             v-for="option in dioceseOptions"
             :key="option.value"
             type="button"
-            role="radio"
-            :aria-checked="settings.diocese === option.value"
-            :class="{ 'theme-option--active': settings.diocese === option.value }"
-            @click="settings.setDiocese(option.value)"
-          >{{ option.label }}</button>
+            role="checkbox"
+            :aria-checked="settings.dioceses.includes(option.value)"
+            :aria-disabled="settings.dioceses.length === 1 && settings.dioceses.includes(option.value)"
+            :class="{ 'theme-option--active': settings.dioceses.includes(option.value) }"
+            @click="settings.toggleDiocese(option.value)"
+          >
+            <span class="diocese-check" aria-hidden="true">{{ settings.dioceses.includes(option.value) ? '✓' : '' }}</span>
+            {{ option.label }}
+          </button>
         </div>
       </div>
     </section>
@@ -238,4 +245,5 @@ function restoreGlobalCategories() {
   .text-preview { margin-inline: 16px; }
   .add-category-button { width: calc(100% - 32px); margin-inline: 16px; }
 }
+.diocese-check { display: inline-grid; width: 1em; place-items: center; font-weight: 800; }
 </style>

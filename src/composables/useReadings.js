@@ -17,7 +17,47 @@ export function useReadings() {
   const primaryReading = computed(() => items.value[0] ?? null);
   let loadSequence = 0;
 
+  /**
+   * Several dioceses (Settings): each is planned on its own; the documents are
+   * united by id and remember the dioceses that read them (`_dioceses`).
+   */
+  async function loadForDioceses(date, dioceses, options) {
+    const sequence = ++loadSequence;
+    const anyCached = dioceses.map((diocese) => liturgicalStore.getCachedReadings(date, { ...options, diocese }));
+    if (anyCached.some((entry) => !entry)) isLoading.value = true;
+    error.value = null;
+    try {
+      const results = await Promise.all(dioceses.map((diocese, index) => anyCached[index]
+        || liturgicalStore.fetchReadingsByDate(date, { ...options, diocese })));
+      if (sequence !== loadSequence) return null;
+      const united = new Map();
+      results.forEach((result, index) => (result?.items || []).forEach((item) => {
+        const known = united.get(item.id);
+        if (known) known._dioceses.push(dioceses[index]);
+        else united.set(item.id, { ...item, _dioceses: [dioceses[index]] });
+      }));
+      items.value = [...united.values()];
+      context.value = { ...results[0].context, dioceses };
+      return { items: items.value, context: context.value };
+    } catch (err) {
+      if (sequence !== loadSequence) return null;
+      logger.error('[useReadings] error:', err);
+      error.value = err;
+      items.value = [];
+      context.value = null;
+      return null;
+    } finally {
+      if (sequence === loadSequence) isLoading.value = false;
+    }
+  }
+
   async function loadForDate(date, options = {}) {
+    if (options.dioceses?.length > 1) {
+      const { dioceses, ...rest } = options;
+      return loadForDioceses(date, dioceses, rest);
+    }
+    if (options.dioceses?.length === 1) options = { ...options, diocese: options.dioceses[0] };
+    delete options.dioceses;
     const sequence = ++loadSequence;
     const mDate = moment(date).startOf('day');
     logger.log(`[useReadings] loading ${mDate.format('YYYY-MM-DD')}`);
