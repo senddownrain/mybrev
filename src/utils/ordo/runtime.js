@@ -102,6 +102,7 @@ export function optionDescriptor(day, option) {
     kind: option.kind,
     officeKind: option.officeKind,
     color: option.color || day.color,
+    ...(option.category ? { category: option.category } : {}),
     teDeum: Boolean(office?.teDeum),
     compline,
     complineDay: complineWeekday(compline, day.dayOfWeek),

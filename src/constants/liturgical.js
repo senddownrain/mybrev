@@ -185,11 +185,83 @@ export function getLiturgicalCelebrationThemeKey(day) {
   return '';
 }
 
-/** Celebration-aware theme with the regular period as fallback. */
+// ---------------------------------------------------------------------------
+// One liturgical colour for every screen (see src/utils/liturgicalVisual.js)
+// ---------------------------------------------------------------------------
+
+export const VESTMENT_COLOR_KEYS = Object.freeze(['albus', 'ruber', 'viridis', 'violaceus', 'rosaceus', 'niger']);
+
+/** Accent themes (`color` for text/borders, `rgb` for tints) — contrast-checked in tests. */
+export const VISUAL_THEMES = Object.freeze({
+  white: { color: '#8f7d52', rgb: '143, 125, 82' },
+  gold: { color: '#a77a12', rgb: '196, 150, 50' },
+  red: { color: '#b33a3a', rgb: '179, 58, 58' },
+  green: { color: '#4d8a5b', rgb: '77, 138, 91' },
+  violet: { color: '#7a57a7', rgb: '122, 87, 167' },
+  rose: { color: '#b5617f', rgb: '181, 97, 127' },
+  black: { color: '#67546b', rgb: '103, 84, 107' },
+  marian: { color: '#4f8fb7', rgb: '94, 158, 197' },
+});
+
+export const VESTMENT_COLORS = Object.freeze({
+  // `ring`: the calendar ring — white is drawn as gold, a white ring would vanish on a light surface.
+  albus: { label: 'Белы', swatch: '#f3ecd9', ring: '#d2b15f', theme: VISUAL_THEMES.white },
+  ruber: { label: 'Чырвоны', swatch: '#b33a3a', theme: VISUAL_THEMES.red },
+  viridis: { label: 'Зялёны', swatch: '#4d8a5b', theme: VISUAL_THEMES.green },
+  violaceus: { label: 'Фіялетавы', swatch: '#7a57a7', theme: VISUAL_THEMES.violet },
+  rosaceus: { label: 'Ружовы', swatch: '#d88aa6', theme: VISUAL_THEMES.rose },
+  niger: { label: 'Чорны', swatch: '#2f2a30', theme: VISUAL_THEMES.black },
+});
+
+const SOLEMNITY = new Set(['solemnitas', 'solemnity']);
+
+/**
+ * @param {{ color?: string, category?: string, rank?: string }} option  Ordo option / descriptor
+ * @returns {{ vestment: string|null, label: string, swatch: string, theme: object, accent: object, secondary: string|null }|null}
+ *   `theme` — the vestment colour; `accent` — what the UI tints with (gold for a
+ *   white solemnity, Marian blue for a Marian white celebration).
+ */
+export function liturgicalVisual(option) {
+  const vestment = VESTMENT_COLORS[option?.color] ? option.color : null;
+  if (!vestment) return null;
+  const base = VESTMENT_COLORS[vestment];
+  const marian = vestment === 'albus' && option?.category === 'mary';
+  let accent = base.theme;
+  if (marian) accent = VISUAL_THEMES.marian;
+  else if (vestment === 'albus' && SOLEMNITY.has(option?.rank)) accent = VISUAL_THEMES.gold;
+  return { vestment, label: base.label, swatch: base.swatch, theme: base.theme, accent, secondary: marian ? 'marian' : null };
+}
+
+/** «Колер літургічнага адзення: Белы». */
+export const vestmentLabel = (color) => VESTMENT_COLORS[color]?.label || '';
+
+/** Fields stamped on the Office documents of an option (Hours pages read them). */
+export function visualStamp(option) {
+  if (!VESTMENT_COLORS[option?.color]) return {};
+  return {
+    _vestmentColor: option.color,
+    ...(option.category ? { _celebrationCategory: option.category } : {}),
+    ...(option.rank ? { _celebrationRank: option.rank } : {}),
+  };
+}
+
+/** Visual of a document carrying a stamp (`visualStamp`), or null. */
+export function visualOfDocument(day) {
+  if (!day?._vestmentColor) return null;
+  return liturgicalVisual({ color: day._vestmentColor, category: day._celebrationCategory, rank: day._celebrationRank });
+}
+
+/**
+ * Theme of an Office / readings document. The Ordo vestment colour stamped on
+ * the document (`visualStamp`) decides; title/rank heuristics are only the
+ * fallback for documents without an Ordo identity.
+ */
 export function getLiturgicalTheme(day, fallbackPeriodType = 'default') {
   if (day?._theme === 'requiem' || day?._kind === 'office-for-dead') {
     return LITURGICAL_THEME_MAP.requiem;
   }
+  const canonical = visualOfDocument(day);
+  if (canonical) return canonical.accent;
   const celebrationTheme = getLiturgicalCelebrationThemeKey(day);
   return LITURGICAL_THEME_MAP[celebrationTheme]
     || LITURGICAL_THEME_MAP[day?._periodType || fallbackPeriodType]
@@ -200,20 +272,16 @@ export function getLiturgicalTheme(day, fallbackPeriodType = 'default') {
  * Rubrical vestment colours of the Ordo engine (Latin names) → label, swatch
  * for colour dots and the accent theme of the Ordo screen.
  */
-export const LITURGICAL_VESTMENT_COLORS = Object.freeze({
-  albus: { label: 'Белы', swatch: '#f3ecd9', theme: LITURGICAL_THEME_MAP.gold },
-  ruber: { label: 'Чырвоны', swatch: '#b33a3a', theme: LITURGICAL_THEME_MAP.red },
-  viridis: { label: 'Зялёны', swatch: '#4d8a5b', theme: LITURGICAL_THEME_MAP.ordinary },
-  violaceus: { label: 'Фіялетавы', swatch: '#7a57a7', theme: LITURGICAL_THEME_MAP.advent },
-  rosaceus: { label: 'Ружовы', swatch: '#d88aa6', theme: { color: '#b5617f', rgb: '181, 97, 127' } },
-  niger: { label: 'Чорны', swatch: '#2f2a30', theme: LITURGICAL_THEME_MAP.requiem },
-});
+export const LITURGICAL_VESTMENT_COLORS = VESTMENT_COLORS;
 
 /** Theme for the calendar day itself, without a lower-rank celebration accent. */
 export function getLiturgicalPeriodTheme(day, fallbackPeriodType = 'default') {
   if (day?._theme === 'requiem' || day?._kind === 'office-for-dead') {
     return LITURGICAL_THEME_MAP.requiem;
   }
+  // The day's (primary) vestment colour from the Ordo, when known.
+  const canonical = visualOfDocument(day);
+  if (canonical) return canonical.accent;
   return LITURGICAL_THEME_MAP[day?._contextPeriodType || day?._periodType || fallbackPeriodType]
     || LITURGICAL_THEME_MAP.default;
 }

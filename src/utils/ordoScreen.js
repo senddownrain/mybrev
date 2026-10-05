@@ -461,6 +461,7 @@ function unionRows(days, dioceses) {
       const key = `${role}|${item.id}|${item.rank || item.officeKind}|${item.color || ''}`;
       const row = rows.get(key) || {
         key, id: item.id, role, title: item.title, rank, rankKey: item.rank || '', color: item.color || day.color,
+        category: item.category || '',
         isCelebration: item.kind !== 'temporal' || ['solemnity', 'triduum'].includes(item.officeKind),
         dioceses: [],
       };
@@ -479,6 +480,17 @@ function unionRows(days, dioceses) {
       badges: row.dioceses.length === dioceses.length ? [] : row.dioceses.map((id) => DIOCESE_SHORT_LABELS[id] || id),
     }))
     .sort((a, b) => UNION_ROLES.indexOf(a.role) - UNION_ROLES.indexOf(b.role));
+}
+
+/**
+ * Hours of the date the Ordo shows (`/ordo/:date`), today on the month. A
+ * diocese chosen only in the Ordo filter travels as `?diocese=` context.
+ */
+export function ordoHoursRoute({ date = '', filter = [], userDiocese = '' } = {}) {
+  const diocese = filter.length && !filter.includes(userDiocese) ? filter[0] : '';
+  const query = diocese ? { diocese } : {};
+  if (!date) return Object.keys(query).length ? { name: 'Today', query } : { name: 'Today' };
+  return { name: 'SelectedDay', params: { day: date }, query };
 }
 
 /** Distinct liturgical colours of the legal options of a day (no suppressed). */

@@ -31,6 +31,7 @@ import {
   CURRENT_DAY_CHOICE, assembleOffice, assemblyChoices, isBlank,
 } from './ordo/officeAssembly.js';
 import { getDayTemplateLabel } from './liturgicalDayResolution.js';
+import { visualStamp } from './liturgicalVisual.js';
 
 function buildPeriodTitle(context, date) {
   return formatLiturgicalPeriodTitle({
@@ -379,12 +380,19 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
   }
 
   return {
-    dayOptions: options.map((option) => ({
-      ...option,
-      dayId: option.day?.id || null,
-      hasLiturgicalDay: Boolean(option.day),
-      disabled: false,
-    })),
+    dayOptions: options.map((option) => {
+      // One colour for the card, its Office pages and its readings: the Ordo's.
+      const stamp = visualStamp(option.ordo || {});
+      const stamped = (day) => (day && Object.keys(stamp).length ? { ...day, ...stamp } : day);
+      return {
+        ...option,
+        day: stamped(option.day),
+        templates: (option.templates || []).map((template) => ({ ...template, day: stamped(template.day) })),
+        dayId: option.day?.id || null,
+        hasLiturgicalDay: Boolean(option.day),
+        disabled: false,
+      };
+    }),
     unavailable,
     ordo: { ...summarizeOrdoDay(resolved), unavailable },
   };

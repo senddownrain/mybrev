@@ -11,12 +11,8 @@ import { colorInfo, legalColors, rankLabel } from './ordoScreen.js';
 
 export const MAX_PICKER_COLORS = 3;
 
-/**
- * White is drawn as gold in the calendar: a white ring would disappear on
- * the light surface (vestments may be white or gold anyway).
- */
-const PICKER_SWATCHES = Object.freeze({ albus: '#d2b15f' });
-export const pickerSwatch = (color) => PICKER_SWATCHES[color] || colorInfo(color).swatch;
+/** Calendar ring of a vestment colour (one vocabulary: `VESTMENT_COLORS`). */
+export const pickerSwatch = (color) => colorInfo(color).ring || colorInfo(color).swatch;
 
 /** Liturgical colours of the legal options of a date (primary first, max 3). */
 export function pickerColorsOf(iso, diocese) {

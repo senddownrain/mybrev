@@ -139,6 +139,9 @@ import {
   readingCelebrationKey,
 } from '@/utils/parsedReadingsIdentity';
 import { getLiturgicalTheme } from '@/constants/liturgical';
+import { liturgicalVisual } from '@/utils/liturgicalVisual';
+import { resolveRuntimeDay } from '@/utils/ordo/runtime';
+import { currentOrdoDiocese } from '@/utils/ordoDiocese';
 import moment from '@/utils/moment-be';
 
 const route = useRoute();
@@ -160,11 +163,22 @@ const displayDate = computed(() => {
   return `${prefix}${selectedDate.value.format('dddd, D MMMM YYYY')}`;
 });
 
+// The colour of the celebration the readings are opened for (Ordo), the same
+// as on its Hours card; heuristics only for a reading without an Ordo option.
+const ordoOption = computed(() => {
+  const resolved = resolveRuntimeDay(selectedDate.value.format('YYYY-MM-DD'), {
+    diocese: context.value?.diocese || currentOrdoDiocese(),
+  });
+  const id = activeReading.value?._ordoOptionId || String(route.query.option || '') || context.value?.ordoSelectedId;
+  return [resolved.primary, ...resolved.alternatives].find((option) => option.id === id) || resolved.primary;
+});
+
 const readingsPageStyle = computed(() => {
   const periodType = route.query.returnDayId === 'office-for-dead'
     ? 'requiem'
     : context.value?.periodType || 'default';
-  const theme = getLiturgicalTheme(activeReading.value, periodType);
+  const canonical = periodType === 'requiem' ? null : liturgicalVisual(ordoOption.value);
+  const theme = canonical?.accent || getLiturgicalTheme(activeReading.value, periodType);
   return {
     '--reading-period-color': theme.color,
     '--reading-period-rgb': theme.rgb,
