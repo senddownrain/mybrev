@@ -1,27 +1,26 @@
 /** Firestore access for normalized liturgical days in `days`. */
 import { collection, doc, query, where } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
-import { LITURGICAL_DAYS_COLLECTION } from '@/constants/days';
+import { LITURGICAL_DAYS_COLLECTION, LITURGICAL_PROPER_TEXTS_COLLECTION } from '@/constants/days';
 import { isSparseDayDocument } from '@/constants/officeFields';
 import { getDocOfflineAware, getDocsOfflineAware } from '@/utils/firestoreRead';
 import { logger } from '@/utils/logger';
 import { calculatePsalterWeek } from '@/utils/liturgicalPsalter';
 import {
-  applySeasonalWeekdayAntiphons,
   getPeriodDayDocumentId,
-  getOrdinaryPsalterDayDocumentId,
-  getPeriodPsalterDayDocumentId,
+  getSeasonalDateDocumentId,
   getSeasonalDateExceptionId,
-  hasMissingDaytimeFields,
-  isChristmasDateExceptionExclusion,
-  isSeasonalDateException,
   isSeasonalDateDocumentId,
-  resolveDateDayAgainstPeriod,
   withoutObsoleteDocuments,
-  resolveChristmasDateAgainstPeriod,
   resolveDayAgainstPeriod,
-  resolvePeriodDayAgainstPsalter,
 } from '@/utils/liturgicalDayResolution';
+import {
+  applyPeriodPsalterFallback,
+  assembleDaysResult,
+  exclusiveFeastCodeOf,
+  fixedDateVariantsOf,
+  periodPsalterFallbackId,
+} from '@/utils/daysResult';
 
 export const OFFICE_FOR_DEAD_ID = 'office-for-dead';
 
@@ -40,6 +39,24 @@ export function getDaysByPeriodQuery(periodType, dayOfWeek, periodWeekNumber) {
 
 export function getDaysByFixedDateQuery(dateStr) {
   return query(getDaysCollection(), where('_date', '==', dateStr));
+}
+
+export function getProperTextsByDateQuery(dateStr) {
+  return query(collection(db, LITURGICAL_PROPER_TEXTS_COLLECTION), where('_date', '==', dateStr));
+}
+
+/**
+ * Sparse Propers of the fixed celebrations on these dates. An unpublished or
+ * unreachable collection is an empty list: the legacy `days` fallback stays.
+ */
+async function fetchProperTexts(dates, session) {
+  if (!dates.length) return [];
+  try {
+    return (await queryAll(dates.map(getProperTextsByDateQuery), session)).filter(isSparseDayDocument);
+  } catch (error) {
+    logger.error('[liturgicalDayService] liturgicalProperTexts unavailable:', error);
+    return [];
+  }
 }
 
 export function getDaysByFeastQuery(feastCode) {
@@ -65,20 +82,12 @@ async function queryAll(queries, session) {
 
 async function withPeriodPsalterFallback(day, periodType, periodWeekNumber, dayOfWeek, session) {
   const resolved = resolveDayAgainstPeriod(day, null);
-  if (!resolved || periodType === 'christmas') return resolved;
-  if (periodType !== 'advent' && !hasMissingDaytimeFields(resolved)) return resolved;
-
-  const fallbackId = periodType === 'ordinary'
-    ? getPeriodPsalterDayDocumentId(periodType, periodWeekNumber, dayOfWeek)
-    : getOrdinaryPsalterDayDocumentId(periodWeekNumber, dayOfWeek);
-  if (!fallbackId || fallbackId === resolved.id) return resolved;
+  const fallbackId = periodPsalterFallbackId(resolved, periodType, periodWeekNumber, dayOfWeek);
+  if (!fallbackId) return resolved;
   try {
     const snapshot = await getDocOfflineAware(doc(getDaysCollection(), fallbackId), session);
     if (!snapshot.exists()) return resolved;
-    const psalterDay = { id: snapshot.id, ...snapshot.data() };
-    return periodType === 'advent'
-      ? resolveDayAgainstPeriod(resolved, psalterDay, { fillMissing: true })
-      : resolvePeriodDayAgainstPsalter(resolved, psalterDay);
+    return applyPeriodPsalterFallback(resolved, { id: snapshot.id, ...snapshot.data() }, periodType);
   } catch (error) {
     logger.error(`[liturgicalDayService] psalter fallback failed (${fallbackId}):`, error);
     return resolved;
@@ -145,7 +154,9 @@ export async function getAllFeastDays(session) {
 }
 
 async function getSeasonalException(mDate, periodType, session) {
-  const id = getSeasonalDateExceptionId(mDate, periodType);
+  // The date document even where the celebration is a fixed document
+  // (`assembleDaysResult` decides whether it is the Office or the octave day).
+  const id = getSeasonalDateExceptionId(mDate, periodType) || getSeasonalDateDocumentId(mDate);
   if (!id) return null;
   const snapshot = await getDocOfflineAware(doc(db, LITURGICAL_DAYS_COLLECTION, id), session);
   return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
@@ -161,8 +172,6 @@ function dynamicFeastVariants(code) {
   return [...new Set([normalized, `feast-${normalized}`])];
 }
 
-const normalizedFeastCode = (code) => String(code || '').replace(/^feast-/, '');
-
 /**
  * Fetch and resolve all day variants for a calendar date.
  * `extraFixedDates` (`DD.MM`) loads fixed documents of celebrations that the
@@ -170,10 +179,7 @@ const normalizedFeastCode = (code) => String(code || '').replace(/^feast-/, '');
  */
 export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = [], session, { extraFixedDates = [] } = {}) {
   const hasPeriod = context.periodType && context.periodWeek !== undefined && context.dayOfWeek;
-  const exclusiveFeastCode = dynamicFeastCodes
-    .map(normalizedFeastCode)
-    .find((code) => code === 'holyfamily' || code === 'buptismofthelord') || null;
-  const exclusiveFixedDate = isChristmasDateExceptionExclusion(mDate);
+  const exclusiveFeastCode = exclusiveFeastCodeOf(dynamicFeastCodes);
   const periodPromise = hasPeriod
     ? findDayByPeriod(context.periodType, context.periodWeek, context.dayOfWeek, session)
       .then(async (day) => {
@@ -188,7 +194,7 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = [], s
           : null;
       })
     : Promise.resolve(null);
-  const fixedDateVariants = [...new Set([mDate.format('DD.MM'), mDate.format('D.M')])];
+  const fixedDateVariants = fixedDateVariantsOf(mDate);
   const fixedPromise = exclusiveFeastCode
     ? Promise.resolve([])
     : queryAll(fixedDateVariants.map(getDaysByFixedDateQuery), session);
@@ -201,79 +207,33 @@ export async function fetchDaysForDate(mDate, context, dynamicFeastCodes = [], s
     ? queryAll(extraFixedDates.map(getDaysByFixedDateQuery), session)
     : Promise.resolve([]);
   const officeForDeadPromise = getOfficeForDead(session);
+  const properPromise = exclusiveFeastCode
+    ? Promise.resolve([])
+    : fetchProperTexts([...new Set([...fixedDateVariants, ...extraFixedDates])], session);
   const dynamicPromises = dynamicFeastCodes.map(async (code) => {
     const docs = await queryAll(dynamicFeastVariants(code).map(getDaysByFeastQuery), session);
     return [code, docs];
   });
 
-  const [periodDay, fixedDocs, seasonalDay, officeForDead, dynamicEntries, extraFixedDocs] = await Promise.all([
+  const [periodDay, fixedDocs, seasonalDay, officeForDead, dynamicEntries, extraFixedDocs, properDocs] = await Promise.all([
     periodPromise,
     fixedPromise,
     seasonalPromise,
     officeForDeadPromise,
     Promise.all(dynamicPromises),
     extraFixedPromise,
+    properPromise,
   ]);
-  const withCalendarContext = (day, overrides = {}) => day ? {
-    ...day,
-    _periodType: overrides.periodType || context.periodType || day._periodType,
-    _periodWeekNumber: overrides.periodWeek ?? context.periodWeek ?? day._periodWeekNumber,
-    _dayOfWeek: context.dayOfWeek ?? day._dayOfWeek,
-  } : null;
-  const resolvedPeriodDay = withCalendarContext(resolveDayAgainstPeriod(periodDay, null));
-
-  const hasSeasonalException = isSeasonalDateException(mDate, context.periodType)
-    && Boolean(seasonalDay);
-  const seasonalPeriodType = mDate.month() === 11 && mDate.date() <= 24
-    ? 'advent'
-    : 'christmas';
-  const seasonalPeriodWeek = context.periodWeek;
-  const seasonal = hasSeasonalException
-    ? applySeasonalWeekdayAntiphons(
-      withCalendarContext(
-        context.periodType === 'christmas'
-          ? resolveChristmasDateAgainstPeriod(seasonalDay, resolvedPeriodDay)
-          : resolveDayAgainstPeriod(seasonalDay, resolvedPeriodDay, { fillMissing: true }),
-        { periodType: seasonalPeriodType, periodWeek: seasonalPeriodWeek },
-      ),
-      context.dayOfWeek,
-    )
-    : null;
-  // A sparse feast document (`_schema: 2`) is assembled field by field by the
-  // Office resolver (`officeAssembly.js`), not filled from the period day.
-  const resolveFixed = (item) => withCalendarContext(
-    isSparseDayDocument(item) ? item : resolveDateDayAgainstPeriod(item, resolvedPeriodDay),
-  );
-  const resolvedFixed = fixedDocs
-    .filter((item) => item.id !== seasonalDay?.id && !isSeasonalDateDocumentId(item.id))
-    .map(resolveFixed);
-  if (seasonal) resolvedFixed.unshift(seasonal);
-
-  const resolvedDynamicDays = new Map(dynamicEntries
-    .filter(([code]) => !exclusiveFeastCode || normalizedFeastCode(code) === exclusiveFeastCode)
-    .map(([code, docs]) => [
-      code,
-      docs.map((item) => withCalendarContext(resolveDayAgainstPeriod(item, resolvedPeriodDay))),
-    ]));
-  const resolvedOfficeForDead = officeForDead
-    ? withCalendarContext(resolveDayAgainstPeriod(officeForDead, resolvedPeriodDay))
-    : null;
-
-  const resolvedExtraFixed = extraFixedDocs
-    .filter((item) => !isSeasonalDateDocumentId(item.id))
-    .map(resolveFixed);
-
-  return {
-    extraFixedDays: resolvedExtraFixed,
-    periodDays: exclusiveFeastCode || exclusiveFixedDate || hasSeasonalException
-      ? []
-      : (resolvedPeriodDay ? [resolvedPeriodDay] : []),
-    periodFallback: resolvedPeriodDay,
-    fixedDateDays: exclusiveFeastCode ? [] : resolvedFixed,
-    dynamicDaysByFeast: resolvedDynamicDays,
-    seasonalException: exclusiveFeastCode ? null : seasonal,
-    exclusiveFeastCode,
-    exclusiveFixedDate,
-    officeForDead: resolvedOfficeForDead,
-  };
+  return assembleDaysResult({
+    mDate,
+    context,
+    dynamicFeastCodes,
+    periodDay,
+    fixedDocs,
+    seasonalDay,
+    officeForDead,
+    dynamicEntries,
+    extraFixedDocs,
+    properDocs,
+  });
 }

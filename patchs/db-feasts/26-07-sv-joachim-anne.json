@@ -29,11 +29,13 @@
     },
     "laudesInter": {
       "source": "template",
-      "template": "holy-men"
+      "template": "holy-men",
+      "allowCurrentDay": true
     },
     "vesperInter": {
       "source": "template",
-      "template": "holy-men"
+      "template": "holy-men",
+      "allowCurrentDay": true
     }
   }
 }

@@ -31,7 +31,8 @@ import {
   normalizeRank,
 } from '../src/utils/fixedFeasts.js';
 import {
-  FIRST_VESPER_FIELDS, OFFICE_CONTENT_FIELDS, OFFICE_TEXT_FIELDS, SPARSE_DAY_SCHEMA, SUNDAY_WEEK_1_TEMPLATE, TE_DEUM_FIELD,
+  COMPLEMENTARY_PSALMODY_TEMPLATE, FIRST_VESPER_FIELDS, OFFICE_CONTENT_FIELDS, OFFICE_TEXT_FIELDS, SPARSE_DAY_SCHEMA,
+  SUNDAY_WEEK_1_TEMPLATE, TE_DEUM_FIELD,
 } from '../src/constants/officeFields.js';
 import { hasFirstVespers, inferTemplates, isEmptyValue, splitSource } from '../scripts/lib/feast-content.mjs';
 
@@ -48,6 +49,8 @@ const DEFINITIONS_PATH = path.join(ROOT, 'src', 'data', 'ordo', 'calendar-defini
 const MARKDOWN_REPORT_PATH = path.join(ROOT, 'docs', 'ordo-feast-content-report.md');
 const CONTENT_INDEX_PATH = path.join(ROOT, 'src', 'data', 'ordo', 'feast-content-index.json');
 const FIRST_WEEK_CACHE = path.join(ROOT, 'patchs', 'json', 'ordinary-w5-d1-fixed-day.json');
+// Verified Ps 120–128 (`scripts/liturgy/extract-complementary-psalmody.mjs`).
+const COMPLEMENTARY_SOURCE = path.join(ROOT, 'patchs', 'json', 'complementary-psalmody.json');
 const RANKED_FIXED_DAYS_CACHE = path.join(ROOT, 'patchs', 'json', 'ranked-fixed-days.json');
 const REPORT_PATH = path.join(ROOT, 'reports', 'db-feasts-generation-report.json');
 
@@ -330,6 +333,7 @@ function buildCalendarReport(calendarEntries, sourceVariants) {
 
 const TEMPLATE_TITLES = Object.freeze({
   'sunday-week-1': 'Нядзеля І тыдня псалтыра',
+  'complementary-psalmody': 'Дадатковая псалмодыя (Пс 120–128)',
   'office-for-dead': 'Афіцый за памерлых',
 });
 
@@ -428,7 +432,7 @@ function buildSparseOutput({ sourceFile, outputStem, source, kind, templates, re
 }
 
 /** `liturgicalTemplates` documents: the Commons and the Sunday, week I psalter. */
-function buildTemplateOutputs({ templates, firstWeekDay, manifest, report }) {
+function buildTemplateOutputs({ templates, firstWeekDay, complementary, manifest, report }) {
   const titles = new Map((manifest.sections || []).map((item) => [item.file.replace(/\.json$/, ''), item.title]));
   const outputs = [...templates.entries()].map(([id, raw]) => {
     const { texts, rules, report: fieldReport } = splitSource(raw, { file: `common-texts/${id}.json` });
@@ -456,6 +460,20 @@ function buildTemplateOutputs({ templates, firstWeekDay, manifest, report }) {
       _id: SUNDAY_WEEK_1_TEMPLATE, _schema: SPARSE_DAY_SCHEMA, _kind: 'psalter', title: TEMPLATE_TITLES[SUNDAY_WEEK_1_TEMPLATE],
       _source: { collection: 'days', id: firstWeekDay._id || 'ordinary-w5-d1' },
       ...sunday,
+    },
+  });
+  // Complementary psalmody of Daytime Prayer: Ps 120–128 only (the antiphons
+  // stay with the celebration). Required wherever the Office descriptor names
+  // `complementary`; the assembler never replaces it with the day.
+  const { _id: complementaryId, _source: complementarySource, ...complementaryFields } = complementary;
+  void complementaryId;
+  outputs.push({
+    outputFile: `${COMPLEMENTARY_PSALMODY_TEMPLATE}.json`,
+    output: {
+      _id: COMPLEMENTARY_PSALMODY_TEMPLATE, _schema: SPARSE_DAY_SCHEMA, _kind: 'psalter',
+      title: TEMPLATE_TITLES[COMPLEMENTARY_PSALMODY_TEMPLATE],
+      _source: complementarySource,
+      ...complementaryFields,
     },
   });
   return outputs;
@@ -575,9 +593,10 @@ ${rows(report.normalizedSummary, (item) => `| ${item.from} | \`${item.rule}\` | 
 }
 
 async function main() {
-  const [firstWeekDay, rankedFixedDays] = await Promise.all([
+  const [firstWeekDay, rankedFixedDays, complementary] = await Promise.all([
     loadFirstWeekDay(),
     loadRankedFixedDays(),
+    readJson(COMPLEMENTARY_SOURCE),
   ]);
   const definitions = await readJson(DEFINITIONS_PATH);
   const allSourceFiles = (await fs.readdir(FEASTS_DIR)).filter((name) => name.endsWith('.json')).sort();
@@ -634,7 +653,7 @@ async function main() {
     sourceFile: file, outputStem, source: raw, kind, templates, report,
   }));
   const scaffolds = buildScaffolds({ definitions, outputs, report });
-  const templateOutputs = buildTemplateOutputs({ templates, firstWeekDay, manifest, report });
+  const templateOutputs = buildTemplateOutputs({ templates, firstWeekDay, complementary, manifest, report });
   const allOutputs = [...outputs, ...scaffolds];
 
   const outputIds = new Map();

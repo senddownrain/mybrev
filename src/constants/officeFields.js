@@ -63,3 +63,5 @@ export const isSparseDayDocument = (doc) => Number(doc?._schema) === SPARSE_DAY_
 
 /** Reusable sources kept as `liturgicalTemplates` documents besides the Commons. */
 export const SUNDAY_WEEK_1_TEMPLATE = 'sunday-week-1';
+/** Ps 120–128 of Daytime Prayer on solemnities (`liturgicalTemplates/complementary-psalmody`). */
+export const COMPLEMENTARY_PSALMODY_TEMPLATE = 'complementary-psalmody';

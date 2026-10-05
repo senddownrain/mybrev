@@ -67,15 +67,32 @@ export function classifyValue(field, value) {
     return /Pr$/.test(field) ? { kind: 'rule', rule: { ref: 'laudesPr' } } : { kind: 'empty', note: 'own-texts-expected' };
   }
   if (/^з нядзелі і тыдня$/.test(text)) return { kind: 'rule', rule: { source: 'sunday-week-1' } };
-  if (/усё бярэцца з актавы нараджэння пана/.test(text)) return { kind: 'rule', rule: { source: 'current-day' }, wholeHour: true };
-  if (/бягучага (?:дня|тыдня)/.test(text)) return { kind: 'rule', rule: { source: 'current-day' } };
+  // «Усё бярэцца з …»: one instruction for the whole hour.
+  if (/^усё (?:бярэцца )?з актавы нараджэння пана/.test(text)
+    || /^усё (?:бярэцца )?з (?:бягучага дня|будня|дня)\.?$/.test(text)) {
+    return { kind: 'rule', rule: { source: 'current-day' }, wholeHour: true };
+  }
+  if (/^усё (?:бярэцца )?з агульных тэкстаў пра/.test(text)) {
+    const match = COMMON_BY_PHRASE.find(([pattern]) => pattern.test(text));
+    if (match) return { kind: 'rule', rule: { source: 'template', template: match[1] }, wholeHour: true };
+    return { kind: 'unresolved', reason: 'unknown Common' };
+  }
+  if (/бягучага (?:дня|тыдня)/.test(text) || /^(?:\S+ )?з будня\.?$/.test(text)) return { kind: 'rule', rule: { source: 'current-day' } };
   if (/агульных тэкстаў пра/.test(text)) {
     const match = COMMON_BY_PHRASE.find(([pattern]) => pattern.test(text));
-    if (match) return { kind: 'rule', rule: { source: 'template', template: match[1] } };
+    // «… з Агульных тэкстаў пра святых жанчын, або з будня»: the Common, but
+    // «З дня» keeps the weekday (a rubrical choice, not a fixed source).
+    const allowCurrentDay = /або з (?:будня|бягучага дня|дня)/.test(text);
+    if (match) return { kind: 'rule', rule: { source: 'template', template: match[1], ...(allowCurrentDay ? { allowCurrentDay: true } : {}) } };
     return { kind: 'unresolved', reason: 'unknown Common' };
   }
   if (/^(?:астатняе|малітва) з агульных тэкстаў/.test(text)) return { kind: 'rule', rule: { source: 'common' } };
   if (/^малітва, як пададзена вышэй/.test(text)) return { kind: 'rule', rule: { ref: 'laudesPr' } };
+  if (/Pr$/.test(field)) {
+    if (/^малітва з ютрані\.?$/.test(text)) return { kind: 'rule', rule: { ref: 'laudesPr' } };
+    if (/^малітва з (?:іі )?нешпараў\.?$/.test(text)) return { kind: 'rule', rule: { ref: 'vesperPr' } };
+    if (/^малітва з гадзіны чытанняў\.?$/.test(text)) return { kind: 'rule', rule: { ref: 'officeOfReadingsPr' } };
+  }
   if (/Hymn$/.test(field)) {
     if (/з ютрані\.?$/.test(text)) return { kind: 'rule', rule: { ref: 'laudesHymn' } };
     if (/з і нешпараў\.?$/.test(text)) return { kind: 'rule', rule: { ref: 'vesper1Hymn' } };
@@ -88,7 +105,20 @@ export function classifyValue(field, value) {
     if (/с\. \d+/.test(text) || /з уласных тэкстаў/.test(text)) return { kind: 'unresolved', reason: 'page or own-text reference' };
   }
   if (/\bfrom(?:-[a-z]+)+\b/.test(marker)) return { kind: 'unresolved', reason: 'unknown marker' };
+  // A page of the printed book is never a text (any field).
+  if (/(?:^|[\s,(])с\. ?\d+/.test(text) && text.length < 80) return { kind: 'unresolved', reason: 'page reference' };
   return { kind: 'text' };
+}
+
+/**
+ * The section heading the screen already prints («Просьбы»), typed at the
+ * start of the intercessions in some sources. Only the heading is removed;
+ * the paragraph that carries it stays open.
+ */
+const LEADING_HEADING = /^(\s*<p[^>]*>)?\s*(?:<span[^>]*>\s*)?Просьбы\.?\s*(?:<\/span>)?\s*(?:<br\s*\/?>|<\/p>\s*(?=<p))?\s*/u;
+export function stripLeadingHeading(field, value) {
+  if (!/Inter$/.test(field) || typeof value !== 'string' || !LEADING_HEADING.test(value)) return value;
+  return value.replace(LEADING_HEADING, (match, paragraph) => (/<\/p>/.test(match) ? '' : paragraph || ''));
 }
 
 const hourPrefix = (field) => field.replace(/(Hymn|Ant\d|Ps\d|R|AntBen|AntMag|Inter|Pr|Vers|R\d)$/, '');
@@ -106,7 +136,7 @@ export function splitSource(raw, { file = '' } = {}) {
   Object.entries(raw).forEach(([field, value]) => {
     if (!CONTENT_FIELD_SET.has(field)) return;
     const result = classifyValue(field, value);
-    if (result.kind === 'text') texts[field] = value;
+    if (result.kind === 'text') texts[field] = stripLeadingHeading(field, value);
     else if (result.kind === 'te-deum') texts[field] = true;
     else if (result.kind === 'rule') {
       rules[field] = result.rule;

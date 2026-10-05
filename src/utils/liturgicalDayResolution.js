@@ -132,6 +132,21 @@ export function isSeasonalDateException(mDate, periodType = null) {
   return matchesAdvent || matchesChristmas;
 }
 
+/**
+ * `advent-DD-12` / `christmas-DD-MM` document of a date in 17.12–12.01,
+ * including the dates whose celebration is a fixed document (25–28.12, 1.01,
+ * 6.01). There it is not the Office, but it is the day of the octave/season a
+ * sparse Proper is completed from.
+ */
+export function getSeasonalDateDocumentId(mDate) {
+  const month = mDate.month() + 1;
+  const day = mDate.date();
+  const inWindow = (month === 12 && day >= 17) || (month === 1 && day <= 12);
+  if (!inWindow) return null;
+  const prefix = month === 12 && day <= 24 ? 'advent' : 'christmas';
+  return `${prefix}-${String(day).padStart(2, '0')}-${String(month).padStart(2, '0')}`;
+}
+
 export function getSeasonalDateExceptionId(mDate, periodType = null) {
   if (!isSeasonalDateException(mDate, periodType)) return null;
   const month = mDate.month() + 1;

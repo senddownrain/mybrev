@@ -7,7 +7,7 @@
 | Крыніц у `patchs/feasts` | 227 |
 | Sparse-дакументаў у `patchs/db-feasts` | 290 |
 | з іх scaffolds (без уласных тэкстаў) | 34 |
-| Templates у `patchs/db-templates` | 15 |
+| Templates у `patchs/db-templates` | 16 |
 | Дакументаў з некалькімі Commons (раней N копій) | 87 |
 | Старых копій, якія замяняюцца (`_legacyIds`) | 192 |
 | Тэкставых указанняў → `_fieldRules` | 415 |
@@ -107,8 +107,8 @@
 | Гімн з Ютрані | `{"ref":"laudesHymn"}` | 2 |
 | Просьбы з агульных тэкстаў пра Апосталаў | `{"source":"template","template":"apostles"}` | 2 |
 | Просьбы з Агульных тэкстаў пра Апосталаў | `{"source":"template","template":"apostles"}` | 2 |
-| Просьбы з Агульных тэкстаў пра святых жанчын, або з будня | `{"source":"template","template":"holy-women"}` | 2 |
-| Просьбы з Агульных тэкстаў пра святых мужчын, або з будня | `{"source":"template","template":"holy-men"}` | 2 |
+| Просьбы з Агульных тэкстаў пра святых жанчын, або з будня | `{"source":"template","template":"holy-women","allowCurrentDay":true}` | 2 |
+| Просьбы з Агульных тэкстаў пра святых мужчын, або з будня | `{"source":"template","template":"holy-men","allowCurrentDay":true}` | 2 |
 | Ва ўспамін твой, з Нешпараў | `{"ref":["vesperHymn","vesper1Hymn"]}` | 1 |
 | Вялікі хор, з Ютрані | `{"ref":"laudesHymn"}` | 1 |
 | Гімн з Гадзіны чытанняў | `{"ref":"officeOfReadingsHymn"}` | 1 |

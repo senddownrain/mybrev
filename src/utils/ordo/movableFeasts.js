@@ -185,8 +185,11 @@ export const MOVABLE_CELEBRATIONS = Object.freeze([
     anchor: 'pentecost', color: 'ruber',
   },
   {
+    // No own `days` document: the Office is assembled from the Common of the
+    // BVM and the day (`buildOrdoDayOptions`), like a fixed memorial.
     id: 'mary-mother-church', ...feast('maryMotherChurch'), title: 'Найсв. Панны Марыі, Маці Касцёла',
     rank: LITURGICAL_RANK.MEMORIAL, category: 'mary', anchor: 'maryMotherChurch', color: 'albus',
+    templates: ['blessed-virgin-mary'], defaultTemplate: 'blessed-virgin-mary',
   },
   {
     id: 'trinity', ...feast('holyTrinity'), title: 'Найсвяцейшая Тройца',

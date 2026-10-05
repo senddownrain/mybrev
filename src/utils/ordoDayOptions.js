@@ -134,9 +134,17 @@ export function resolveLegacyTemplatePlaceholders(day, templates = new Map()) {
 
 export const CURRENT_DAY_LABEL = 'З дня';
 
+/** Where the Office of a fixed celebration came from (`option.ordo.properSource`). */
+export const PROPER_SOURCE = Object.freeze({
+  PROPER_TEXTS: 'liturgicalProperTexts',
+  LEGACY_DAYS: 'legacy-days',
+  NONE: 'none',
+});
+
 /** Day of the temporal cycle that completes an assembled Office. */
 function currentDayDocument(daysResult) {
-  return daysResult.seasonalException || daysResult.periodFallback || daysResult.periodDays?.[0] || null;
+  return daysResult.seasonalException || daysResult.seasonalDateDay
+    || daysResult.periodFallback || daysResult.periodDays?.[0] || null;
 }
 
 /** Identity-only document of a celebration that has no `days` document yet. */
@@ -210,6 +218,7 @@ export function allowsOfficeForDead(resolved) {
  * @returns {{ dayOptions: object[], unavailable: object[], ordo: object }}
  */
 export function buildOrdoDayOptions({ resolved, daysResult, context, date, diocese, templates = new Map() }) {
+  const properDocs = (daysResult.properDays || []).filter(isSparseDayDocument);
   const fixedDocs = [
     ...(daysResult.fixedDateDays || []),
     ...(daysResult.extraFixedDays || []),
@@ -247,6 +256,25 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
       // Ash Wednesday, Palm Sunday, Easter, Pentecost ARE the temporal day:
       // without a dynamic document the period document carries the Office.
       if (!docs.length && option.temporal && temporal) docs = [temporal];
+      // A movable memorial without its own document (Mary, Mother of the
+      // Church) is assembled from its Common and the day, like a fixed one.
+      if (!docs.length && !option.temporal && option.templates?.length && currentDayDocument(daysResult)) {
+        unavailable.push({ id: option.id, title: option.title, reason: 'no-days-document', assembled: true });
+        const proper = scaffoldOf(option);
+        const variants = assembledTemplates({ proper, option, resolved, daysResult, templates });
+        options.push({
+          ...base,
+          ordo: { ...ordo, missingProper: true, contentStatus: proper._contentStatus, properSource: PROPER_SOURCE.NONE },
+          key: `dynamic-${option.id}`,
+          source: LITURGICAL_OPTION_SOURCE.DYNAMIC,
+          title: option.title,
+          subtitle: [fixedSubtitle({ _rank: option.rank }, variants.length), contentHint(proper)].filter(Boolean).join(' · '),
+          day: variants[0].day,
+          templates: variants,
+          order: 2,
+        });
+        return;
+      }
       if (!docs.length) { unavailable.push({ id: option.id, title: option.title, reason: 'no-days-document' }); return; }
       options.push({
         ...base,
@@ -261,10 +289,21 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
       return;
     }
 
-    let docs = option.daysRef?.source === 'fixed'
-      ? selectFixedDocuments(option, fixedDocs, { diocese, claimedIds: claimedDayIds(resolved, option.id) })
-      : [];
-    if (!docs.length && option.rankKind === 'all-souls' && daysResult.officeForDead) docs = [daysResult.officeForDead];
+    // Proper source: `liturgicalProperTexts` first; fixed `days` documents
+    // only when the celebration is not published there (transitional).
+    const select = (list) => (option.daysRef?.source === 'fixed'
+      ? selectFixedDocuments(option, list, { diocese, claimedIds: claimedDayIds(resolved, option.id) })
+      : []);
+    let docs = select(properDocs);
+    let properSource = docs.length ? PROPER_SOURCE.PROPER_TEXTS : null;
+    if (!docs.length) {
+      docs = select(fixedDocs);
+      if (docs.length) properSource = PROPER_SOURCE.LEGACY_DAYS;
+    }
+    if (!docs.length && option.rankKind === 'all-souls' && daysResult.officeForDead) {
+      docs = [daysResult.officeForDead];
+      properSource = PROPER_SOURCE.LEGACY_DAYS;
+    }
 
     // Sparse document, or no document at all: the celebration stays visible
     // and its Office is assembled (own texts → Common → the day).
@@ -277,13 +316,18 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
         unavailable.push({ id: option.id, title: option.title, reason: 'no-days-document' });
         return;
       }
-      if (!sparse) unavailable.push({ id: option.id, title: option.title, reason: 'no-days-document' });
+      if (!sparse) unavailable.push({ id: option.id, title: option.title, reason: 'no-days-document', assembled: true });
       const proper = sparse || scaffoldOf(option);
       const variants = assembledTemplates({ proper, option, resolved, daysResult, templates });
       const day = variants[0].day;
       options.push({
         ...base,
-        ordo: { ...ordo, ...(sparse ? {} : { missingProper: true }), contentStatus: proper._contentStatus || null },
+        ordo: {
+          ...ordo,
+          ...(sparse ? {} : { missingProper: true }),
+          contentStatus: proper._contentStatus || null,
+          properSource: sparse ? properSource : PROPER_SOURCE.NONE,
+        },
         key: `fixed-${option.id}`,
         source: LITURGICAL_OPTION_SOURCE.FIXED,
         title: option.title || buildDayTitle(day, context, date),
@@ -298,6 +342,7 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
     const { day, templates: documentTemplates } = templatesFromFixed(docs, diocese);
     options.push({
       ...base,
+      ordo: { ...ordo, properSource },
       key: `fixed-${option.id}`,
       source: docs[0]?._kind === 'office-for-dead' ? LITURGICAL_OPTION_SOURCE.OFFICE_FOR_DEAD : LITURGICAL_OPTION_SOURCE.FIXED,
       title: buildDayTitle(day, context, date) || option.title,
