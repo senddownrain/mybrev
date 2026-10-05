@@ -35,6 +35,13 @@ test('ordinary weekday: the day\'s citations', () => {
   assert.deepEqual(citations(entry), ['Гал 1, 6–12', 'Пс 111 (110), 1–2. 7–8. 9 і 10c (Р.: 5b)', 'Лк 10, 25–37']);
 });
 
+test('days after Ash Wednesday: the week-less weekday documents (Firestore == null)', () => {
+  const entry = one('2026-02-19', 'temporal:lent-w0-d5');
+  assert.equal(entry.status, S.WEEKDAY);
+  assert.deepEqual(citations(entry), ['Дрг 30, 15 — 20', 'Пс 1, 1–2. 3. 4 і 6 (Р.: Пс 40 (39), 5а)', 'Лк 9, 22 — 25']);
+  assert.equal(one('2026-02-21', 'temporal:lent-w0-d7').status, S.WEEKDAY);
+});
+
 test('Sunday: the cycle of the year (A in 2026, B in 2027)', () => {
   const a = one('2026-10-04', 'temporal:ordinary-w27-d1');
   assert.ok(a.documents.every((doc) => doc.year === 'A'));

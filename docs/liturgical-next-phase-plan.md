@@ -79,3 +79,38 @@ Compendium / Songs, fix Анёлаў Ахоўнікаў (`resolveLegacyTemplateP
 | Новы Proper горшы за працуючы legacy | параўнанне assembled ↔ legacy ў аўдыце; legacy fallback застаецца |
 | Нармалізацыя ператворыць сапраўдны кароткі тэкст у правіла | field-aware heuristics; няўпэўненае → NEEDS_REVIEW, не правіла |
 | Notes знікнуць там, дзе былі правільныя | дакладныя даты і бяспечныя recurring selectors застаюцца; астатняе → review |
+
+## 7. Вынік этапу (2026-10-06)
+
+Апублікавана ў Firestore (backup → dry-run → apply → verify; журнал —
+`reports/liturgical-firestore-migration.json`):
+
+| Што | Колькасць | Revision |
+|---|---|---|
+| `days`: рамонт `ordinary-w21-d3/d4` (з кансэнсусу тыдня псалтыра) | 2 | — |
+| `liturgicalTemplates`: `complementary-psalmody` (+1 абнаўленне) | 2 | `templatesRevision` 1 |
+| `liturgicalProperTexts` | 290 | `properTextsRevision` 1 |
+| `liturgicalCelebrations` / overrides | 1 абнаўленне | calendar 2 |
+| `liturgicalOrdoNotes` (rev 2 → 3, падзел па датах, «сёння» guard) | 116 + 1023 + 1; 112 superseded (з backup) | notes 3 |
+
+`CONTENT_REVISION` = `2026-10-05T19:10:00Z`. Legacy fixed `days` не выдалены
+(іх чытае стары Flutter). Drift Firestore ↔ bundled: усе калекцыі in sync.
+
+Рашэнні:
+
+- **`liturgicalProperTexts`** — асобная калекцыя (тыя ж id, што legacy days):
+  новы web чытае яе, стары Flutter — `days`; адна калекцыя не магла служыць абодвум.
+- **Reading references** — bundled праекцыя `readings` (`src/data/ordo/reading-references.json`,
+  `npm run liturgy:reading-references`); на Ordo без запыту ў Firestore.
+  Тыдзень `null` = Firestore `== null` (дні пасля Папяльца), не тыдзень 0.
+- **`/picker` застаецца**: пошук па літургічнай пазіцыі і святу з рэальнай
+  датай; цяпер праз рухавік (`ordoDateForPosition`), не legacy-разлік.
+- **Notes**: дата з днём тыдня / «сёння» → асобны запіс на гэты дзень;
+  месячнае набажэнства → толькі ў назіраных месяцах; першы чацвер/пятніца/субота —
+  канонічныя app-normalization нататкі; загалоўкі і спасылкі на старонкі → review.
+
+Праверка: `npm run liturgy:audit` — Hours sources (target runtime: 0 сырых
+інструкцый, 0 legacy-залежнасцей), Advent/Christmas 864/864 PASS, notes 0
+семантычных парушэнняў, чатыры календары не горш (Мінск 95.6 %, Віцебск 89.6 %,
+Пінск 90.8 %, Гродна 86.0 %). Што засталося — `docs/liturgical-data-deficits.md`
+(P0/P1 — рэдакцыйныя даныя: тэксты з брэвіярыя і лекцыянарыя, якіх у базе няма).

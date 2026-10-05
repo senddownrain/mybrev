@@ -16,7 +16,7 @@ import { CLASSIFICATION, normalizeSource } from './lib/normalize.mjs';
 import { DIOCESE_ORDER, buildNotes } from './lib/notes.mjs';
 
 // Raise when the published notes change (republish with ordo:import-calendar).
-const NOTES_REVISION = 2;
+const NOTES_REVISION = 3;
 import { buildDifferences, properIds } from './lib/differences.mjs';
 import { alignDate } from './lib/calendar.mjs';
 
@@ -257,6 +257,8 @@ function main() {
     notes,
   });
   fs.writeFileSync(path.join(ROOT, 'docs', 'ordo-notes-audit.md'), renderNotesAudit({ notes, review, revision: NOTES_REVISION }));
+  fs.mkdirSync(path.join(ROOT, 'reports', 'liturgy'), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, 'reports', 'liturgy', 'notes-review.json'), `${JSON.stringify({ revision: NOTES_REVISION, review }, null, 1)}\n`);
   write(path.join(OUT_DIR, 'diocesan-differences.json'), { schemaVersion: SCHEMA_VERSION, ...differences });
   write(path.join(OUT_DIR, 'unresolved.json'), unresolved);
 

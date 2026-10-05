@@ -29,6 +29,12 @@ export const READING_LABELS = Object.freeze({
   gospel: 'Евангелле',
 });
 
+// The index drops null fields: a missing week is Firestore's `== null`
+// (lent-w0-d5…d7, the days after Ash Wednesday), not week 0.
+const sameWeek = (value, wanted) => (wanted === null || wanted === undefined
+  ? value === null || value === undefined
+  : value !== null && value !== undefined && Number(value) === Number(wanted));
+
 /** Entries of the index a Firestore query of the plan would return. */
 function matching(index, spec) {
   switch (spec.field) {
@@ -37,7 +43,7 @@ function matching(index, spec) {
     case '_dayId': return index.filter((doc) => doc._dayId === spec.value);
     case '_dayIds': return index.filter((doc) => doc._dayIds?.includes(spec.value));
     case 'period': return index.filter((doc) => doc._periodType === spec.value._periodType
-      && Number(doc._periodWeekNumber) === Number(spec.value._periodWeekNumber)
+      && sameWeek(doc._periodWeekNumber, spec.value._periodWeekNumber)
       && Number(doc._dayOfWeek) === Number(spec.value._dayOfWeek));
     default: return [];
   }

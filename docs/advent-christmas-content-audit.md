@@ -1,6 +1,6 @@
 # Advent 17–24 і Christmas 25.12–12.01: аўдыт зместу
 
-Згенеравана `npm run liturgy:audit` (2026-10-05), snapshot 2026-10-05T17:26:04.938Z. Гады 2025–2032, дыяцэзіі: minsk-mohilev, vitebsk, pinsk, grodno.
+Згенеравана `npm run liturgy:audit` (2026-10-05), snapshot 2026-10-05T22:21:22.217Z. Гады 2025–2032, дыяцэзіі: minsk-mohilev, vitebsk, pinsk, grodno.
 
 Стан «пасля»: `liturgicalProperTexts` + рамонт temporal `days`; «да»: legacy fixed `days`.
 
