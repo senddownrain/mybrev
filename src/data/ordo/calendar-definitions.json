@@ -1,6 +1,6 @@
 {
  "schemaVersion": 1,
- "revision": 1,
+ "revision": 2,
  "celebrations": [
   {"id":"holy-mary-mother-of-god","title":"Урачыстасць Святой Багародзіцы Марыі","rank":"solemnitas","category":"mary","color":"albus","daysRef":{"source":"fixed","_date":"01.01","_rank":"solemnitas","dayIds":["01-01-holy-mary-mother-of-god"]},"readingsRef":{"_date":"01.01"},"templates":[],"contentStatus":{"hours":"proper","readings":"full"},"scope":"universal","dateRule":{"type":"fixed","month":1,"day":1},"enabled":true,"order":0},
   {"id":"sv-basil-gregory-nazianzen","title":"Св. Базыля Вялікага і Грыгорыя Назіянзскага, біскупаў і доктараў Касцёла","rank":"memoria","category":"saint","color":"albus","daysRef":{"source":"fixed","_date":"02.01","_rank":"memoria","dayIds":["02-01-sv-basil-gregory-nazianzen","02-01-sv-basil-gregory-nazianzen--pastors","02-01-sv-basil-gregory-nazianzen--doctors-of-church"]},"readingsRef":{"_date":"02.01"},"templates":["pastors","doctors-of-church"],"defaultTemplate":"pastors","contentStatus":{"hours":"proper","readings":"full"},"scope":"universal","dateRule":{"type":"fixed","month":1,"day":2},"enabled":true,"order":1},
