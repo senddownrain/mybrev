@@ -64,6 +64,12 @@ export function resolveDisplay(candidates, season) {
       ? { ...item, rankKind: 'optional-memorial', precedence: 12, demotedFrom: 'memorial' }
       : item));
     appliedRules.push({ rule: 'concurrent-obligatory-memorials-optional', ids: obligatory.map((item) => item.id) });
+    // Co-equal choices: a neutral, stable order (title), not a hidden priority;
+    // `manualTieBreakPriority` (definitions / diocese overrides) may set one.
+    const demoted = celebrations.filter((item) => item.demotedFrom === 'memorial')
+      .sort((a, b) => (Number(b.manualTieBreakPriority || 0) - Number(a.manualTieBreakPriority || 0))
+        || String(a.title).localeCompare(String(b.title), 'be') || String(a.id).localeCompare(String(b.id)));
+    celebrations = celebrations.map((item) => (item.demotedFrom === 'memorial' ? demoted.shift() : item));
   }
 
   // Optional memorials are never the primary office.

@@ -139,6 +139,10 @@ import {
   readingCelebrationKey,
 } from '@/utils/parsedReadingsIdentity';
 import { getLiturgicalTheme } from '@/constants/liturgical';
+import { liturgicalVisual } from '@/utils/liturgicalVisual';
+import { resolveRuntimeDay } from '@/utils/ordo/runtime';
+import { currentOrdoDiocese, effectiveOrdoDioceses } from '@/utils/ordoDiocese';
+import { DIOCESE_BADGES } from '@/utils/dayOptionsUnion';
 import moment from '@/utils/moment-be';
 
 const route = useRoute();
@@ -160,11 +164,22 @@ const displayDate = computed(() => {
   return `${prefix}${selectedDate.value.format('dddd, D MMMM YYYY')}`;
 });
 
+// The colour of the celebration the readings are opened for (Ordo), the same
+// as on its Hours card; heuristics only for a reading without an Ordo option.
+const ordoOption = computed(() => {
+  const resolved = resolveRuntimeDay(selectedDate.value.format('YYYY-MM-DD'), {
+    diocese: context.value?.diocese || currentOrdoDiocese(),
+  });
+  const id = activeReading.value?._ordoOptionId || String(route.query.option || '') || context.value?.ordoSelectedId;
+  return [resolved.primary, ...resolved.alternatives].find((option) => option.id === id) || resolved.primary;
+});
+
 const readingsPageStyle = computed(() => {
   const periodType = route.query.returnDayId === 'office-for-dead'
     ? 'requiem'
     : context.value?.periodType || 'default';
-  const theme = getLiturgicalTheme(activeReading.value, periodType);
+  const canonical = periodType === 'requiem' ? null : liturgicalVisual(ordoOption.value);
+  const theme = canonical?.accent || getLiturgicalTheme(activeReading.value, periodType);
   return {
     '--reading-period-color': theme.color,
     '--reading-period-rgb': theme.rgb,
@@ -251,7 +266,21 @@ function groupIcon(group) {
   return 'mdi-calendar-blank-outline';
 }
 
+/** Diocese badges of a group that only some of the selected dioceses read. */
+function groupBadges(group) {
+  const selected = context.value?.dioceses || [];
+  if (selected.length < 2) return [];
+  const read = new Set(group.documents.flatMap((document) => document._dioceses || []));
+  return read.size && read.size < selected.length ? [...read].map((id) => DIOCESE_BADGES[id] || id) : [];
+}
+
 function groupMeta(group) {
+  const badges = groupBadges(group).join(', ');
+  const meta = groupMetaText(group);
+  return badges ? `${meta} · ${badges}` : meta;
+}
+
+function groupMetaText(group) {
   const reading = group.documents[0] || {};
   const cycles = [...new Set(group.documents
     .map((document) => normalizeReadingCycle(document.year))
@@ -329,11 +358,12 @@ function load() {
   loadForDate(selectedDate.value.toDate(), {
     dayId: route.query.dayId || '',
     includeAlternatives: true,
+    dioceses: effectiveOrdoDioceses.value,
   });
 }
 
 onMounted(load);
-watch(() => [route.params.date || route.query.date, route.query.dayId], load);
+watch(() => [route.params.date || route.query.date, route.query.dayId, effectiveOrdoDioceses.value.join(',')], load);
 </script>
 
 <style scoped>

@@ -23,9 +23,9 @@
       <li>{{ periodText }}</li>
       <li v-if="psalterText">{{ psalterText }}</li>
       <li v-if="cycleText">{{ cycleText }}</li>
-      <li class="ordo-facts__color">
-        <span class="color-dot" :style="{ '--dot': dayColor.swatch }" aria-hidden="true"></span>
-        {{ dayColorText }}
+      <li class="ordo-facts__color" data-test="vestment-color">
+        <span class="color-dot" :class="{ 'color-dot--marian': dayVisual?.secondary === 'marian' }" :style="{ '--dot': dayColor.swatch }" aria-hidden="true"></span>
+        Колер літургічнага адзення: {{ dayColorText }}
       </li>
     </ul>
 
@@ -45,7 +45,7 @@
     <section class="ordo-section" aria-labelledby="ordo-celebration-title">
       <div class="section-heading">
         <span class="section-icon"><PhStar :size="21" /></span>
-        <div><h2 id="ordo-celebration-title">Празднаванне дня</h2><p>Паводле табліцы першынства</p></div>
+        <div><h2 id="ordo-celebration-title">Святкаванні дня</h2><p>Паводле табліцы першынства</p></div>
       </div>
 
       <template v-if="union.differs">
@@ -60,10 +60,11 @@
           <span class="color-dot" :class="{ 'color-dot--large': row.role === 'primary' }" :style="{ '--dot': colorInfo(row.color).swatch }" aria-hidden="true"></span>
           <div class="celebration__copy">
             <strong>{{ row.title }}</strong>
-            <span class="celebration__meta">{{ [row.rank, ROLE_LABELS[row.role]].filter(Boolean).join(' · ') }}</span>
+            <span class="celebration__meta">{{ [row.rank, ROLE_LABELS[row.role], colorNote(row)].filter(Boolean).join(' · ') }}</span>
             <span v-if="row.badges.length" class="badges">
               <span v-for="badge in row.badges" :key="badge" class="badge badge--diocese">{{ badge }}</span>
             </span>
+            <CelebrationActions v-if="row.role !== 'commemoration'" :hours="hoursLink(row.id, row.dioceses)" :readings="readingsLink(row.id, row.dioceses)" :title="row.title" />
           </div>
         </div>
       </template>
@@ -76,6 +77,7 @@
           <span v-if="optionBadges(day.primary).length" class="badges">
             <span v-for="badge in optionBadges(day.primary)" :key="badge" class="badge">{{ badge }}</span>
           </span>
+          <CelebrationActions :hours="hoursLink(day.primary.id)" :readings="readingsLink(day.primary.id)" :title="day.primary.title" />
         </div>
       </div>
 
@@ -85,10 +87,11 @@
           <span class="color-dot" :style="{ '--dot': colorInfo(item.color).swatch }" aria-hidden="true"></span>
           <div class="celebration__copy">
             <strong>{{ item.title }}</strong>
-            <span class="celebration__meta">{{ rankLabel(item) }}</span>
+            <span class="celebration__meta">{{ [rankLabel(item), colorNote(item)].filter(Boolean).join(' · ') }}</span>
             <span v-if="optionBadges(item).length" class="badges">
               <span v-for="badge in optionBadges(item)" :key="badge" class="badge">{{ badge }}</span>
             </span>
+            <CelebrationActions :hours="hoursLink(item.id)" :readings="readingsLink(item.id)" :title="item.title" />
           </div>
         </div>
       </div>
@@ -121,25 +124,33 @@
         <span class="section-icon"><PhBookOpenText :size="21" /></span>
         <div><h2 id="ordo-mass-title">Імша і чытанні</h2><p>{{ [mass.cycle || 'Лекцыянарый', contextLabel].filter(Boolean).join(' · ') }}</p></div>
       </div>
-      <ul class="ordo-lines">
+      <div v-if="referencesState === 'loading'" class="ordo-empty" role="status">
+        <v-progress-circular indeterminate size="18" width="2" color="primary" /> Загрузка спасылак…
+      </div>
+      <div v-for="block in readingBlocks" :key="block.optionId" class="readings-block" data-test="readings-block">
+        <p v-if="readingBlocks.length > 1" class="readings-block__title">
+          <span class="color-dot" :style="{ '--dot': colorInfo(block.color).swatch }" aria-hidden="true"></span>
+          <span>{{ block.title }}</span>
+        </p>
+        <template v-for="group in block.groups" :key="group.key">
+          <p class="readings-block__label">{{ group.label }}</p>
+          <dl class="reading-rows">
+            <div v-for="row in group.rows" :key="`${group.key}-${row.key}`" class="reading-row">
+              <dt>{{ row.label }}</dt>
+              <dd>{{ row.citation }}</dd>
+            </div>
+          </dl>
+        </template>
+        <p v-if="block.hint" class="ordo-readings-hint">{{ block.hint }}</p>
+        <router-link :to="readingsLink(block.optionId)" class="reading-open">
+          <span>Адкрыць чытанні</span>
+          <PhCaretRight :size="16" weight="bold" aria-hidden="true" />
+        </router-link>
+      </div>
+      <ul v-if="mass.lines.length" class="ordo-lines">
         <li v-for="line in mass.lines" :key="line">{{ line }}</li>
       </ul>
       <OrdoNoteList v-if="notesBySection.mass.length" :groups="notesBySection.mass" plain />
-      <p v-if="readingsHint" class="ordo-readings-hint">{{ readingsHint }}</p>
-      <div class="ordo-links">
-        <v-btn
-          v-for="link in optionLinks"
-          :key="`r-${link.id}`"
-          :to="link.readings"
-          class="ordo-link-btn text-none"
-          variant="tonal"
-          color="primary"
-          rounded="lg"
-        >
-          {{ optionLinks.length > 1 ? `Чытанні: ${link.title}` : 'Чытанні гэтага дня' }}
-          <template #append><PhCaretRight :size="16" weight="bold" /></template>
-        </v-btn>
-      </div>
     </section>
 
     <section class="ordo-section" aria-labelledby="ordo-office-title">
@@ -225,6 +236,10 @@ import {
 } from '@/utils/ordoScreen';
 import { logger } from '@/utils/logger';
 import OrdoNoteList from '@/components/ordo/OrdoNoteList.vue';
+import CelebrationActions from '@/components/ordo/CelebrationActions.vue';
+import { liturgicalVisual } from '@/utils/liturgicalVisual';
+import { resolveRuntimeDay } from '@/utils/ordo/runtime';
+import { loadReadingReferenceIndex, readingReferencesForDay } from '@/utils/ordo/readingReferences';
 
 const route = useRoute();
 const { toggleCalendarDialog } = useAppBar();
@@ -312,23 +327,68 @@ const contextQuery = computed(() => (contextDiocese.value !== ordoDiocese.value 
 const hoursRoute = computed(() => (isToday.value && !contextQuery.value.diocese
   ? { name: 'Today' }
   : { name: 'SelectedDay', params: { day: iso.value }, query: contextQuery.value }));
-const optionLinks = computed(() => [day.value.primary, ...day.value.alternatives].map((option) => {
-  const dayId = option.daysRef?.dayIds?.[0] || (option.kind === 'temporal' ? option.daysRef?.id : '') || '';
-  const query = { ...contextQuery.value, ...(dayId && day.value.alternatives.length ? { dayId } : {}) };
-  return {
-    id: option.id,
-    title: option.title,
-    readings: isToday.value && !Object.keys(query).length
-      ? { name: 'Readings' }
-      : { name: 'ReadingsByDate', params: { date: iso.value }, query },
-  };
-}));
-const readingsHint = computed(() => {
-  const primary = day.value.primary;
-  const status = primary.contentStatus?.readings;
-  if (status === 'reference-only') return `Чытанні: ${primary.readingsReference}. Тэкст чытанняў пакуль недаступны.`;
-  if (status === 'missing') return 'Тэкст чытанняў гэтага празднавання пакуль недаступны.';
-  return '';
+// Each legal celebration opens ITS Hours / Readings (same option id, the
+// diocese it belongs to); the Settings diocese is never changed from here.
+const contextFor = (rowDioceses) => {
+  const diocese = !rowDioceses?.length || rowDioceses.includes(contextDiocese.value) ? contextDiocese.value : rowDioceses[0];
+  return diocese !== ordoDiocese.value ? { diocese } : {};
+};
+const hoursLink = (optionId, rowDioceses) => ({
+  name: 'SelectedDay', params: { day: iso.value }, query: { ...contextFor(rowDioceses), option: optionId },
+});
+const readingsLink = (optionId, rowDioceses) => ({
+  name: 'ReadingsByDate', params: { date: iso.value }, query: { ...contextFor(rowDioceses), option: optionId },
+});
+
+const dayVisual = computed(() => liturgicalVisual(day.value.primary.color ? day.value.primary : { ...day.value.primary, color: day.value.color }));
+/** A variant whose vestment colour differs from the day's says so. */
+const colorNote = (item) => {
+  const color = item.color || day.value.color;
+  return color && color !== (day.value.primary.color || day.value.color) ? `колер: ${colorInfo(color).label.toLowerCase()}` : '';
+};
+
+// Biblical citations of every legal option: the same plan and selection as
+// the Readings screen, on the generated reference index (lazy chunk).
+const referenceIndex = shallowRef(null);
+const referencesState = ref('loading');
+onMounted(async () => {
+  try {
+    referenceIndex.value = await loadReadingReferenceIndex();
+    referencesState.value = 'ready';
+  } catch (error) {
+    logger.warn('[Ordo] reading references unavailable:', error?.message || error);
+    referencesState.value = 'error';
+  }
+});
+const READING_GROUP_LABELS = Object.freeze({
+  weekday: 'Чытанні дня',
+  proper: 'Уласныя чытанні',
+});
+const readingBlocks = computed(() => {
+  if (!referenceIndex.value) return [];
+  const resolved = resolveRuntimeDay(iso.value, { diocese: contextDiocese.value, epoch: ordoCalendarEpoch.value });
+  const options = [resolved.primary, ...resolved.alternatives];
+  return readingReferencesForDay(resolved, referenceIndex.value).map((entry) => {
+    const option = options.find((item) => item.id === entry.optionId);
+    const groups = [];
+    const docGroups = (docs, label, key) => docs.forEach((doc, index) => {
+      if (!doc.rows.length) return;
+      groups.push({
+        key: `${key}-${doc.id}`,
+        label: docs.length > 1 && doc.title ? `${index === 0 ? label : 'Або'}: ${doc.title}` : (index === 0 ? label : 'Або'),
+        rows: doc.rows,
+      });
+    });
+    docGroups(entry.documents, READING_GROUP_LABELS[entry.status] || 'Чытанні', 'main');
+    docGroups(entry.alternatives, 'Або ўласныя', 'own');
+    if (entry.status === 'reference-only') {
+      groups.push({ key: 'reference', label: 'Паводле календара', rows: [{ key: 'reference', label: 'Чытанні', citation: entry.reference }] });
+    }
+    let hint = '';
+    if (entry.status === 'reference-only') hint = 'Тэкст гэтых чытанняў пакуль недаступны ў праграме.';
+    else if (entry.status === 'missing') hint = 'Тэкст чытанняў гэтага празднавання пакуль недаступны.';
+    return { optionId: entry.optionId, title: entry.title, color: option?.color || resolved.color, groups, hint };
+  });
 });
 
 const monthRoute = computed(() => ordoMonthRoute({ year: Number(iso.value.slice(0, 4)), month: Number(iso.value.slice(5, 7)) }, todayIso()));
@@ -347,6 +407,20 @@ const monthTitle = computed(() => {
 .ordo-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 20px 20px; }
 .ordo-links .ordo-link-btn { margin: 0; max-width: 100%; }
 .ordo-readings-hint { margin: 0 20px 8px; color: var(--nav-muted); font-size: .82rem; line-height: 1.45; }
+/* Readings: compact full-width rows that wrap; nothing leaves the card. */
+.readings-block { min-width: 0; margin: 0 20px 14px; padding: 12px 14px; border: 1px solid var(--nav-border); border-radius: 18px; }
+.readings-block__title { display: flex; align-items: flex-start; gap: 8px; min-width: 0; margin: 0 0 6px; color: var(--nav-on-surface); font-size: .9rem; font-weight: 720; line-height: 1.35; overflow-wrap: anywhere; }
+.readings-block__title .color-dot { margin-top: 4px; }
+.readings-block__label { margin: 8px 0 2px; color: var(--nav-muted); font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; overflow-wrap: anywhere; }
+.reading-rows { margin: 0; min-width: 0; }
+.reading-row { display: grid; grid-template-columns: minmax(0, 9.5em) minmax(0, 1fr); gap: 4px 12px; padding: 6px 0; border-top: 1px solid var(--nav-border); }
+.reading-row:first-child { border-top: 0; }
+.reading-row dt { min-width: 0; color: var(--nav-muted); font-size: .78rem; font-weight: 700; line-height: 1.4; }
+.reading-row dd { min-width: 0; margin: 0; color: var(--nav-on-surface); font-size: .86rem; line-height: 1.4; overflow-wrap: anywhere; white-space: normal; }
+.reading-open { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 40px; margin-top: 8px; padding: 8px 12px; border-radius: 12px; background: rgba(var(--chrome-accent-rgb), .08); color: var(--chrome-accent); font-size: .84rem; font-weight: 720; text-decoration: none; }
+.reading-open span { min-width: 0; overflow-wrap: anywhere; }
+.reading-open:focus-visible { outline: 3px solid rgba(var(--chrome-accent-rgb), .3); outline-offset: 2px; }
+.color-dot--marian { box-shadow: 0 0 0 2px rgba(94, 158, 197, .55); }
 .month-link { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 4px 12px 18px; padding: 12px; border: 1px solid var(--nav-border); border-radius: 18px; background: var(--nav-surface); color: var(--chrome-accent); font-size: .86rem; font-weight: 720; text-decoration: none; }
 
 .date-header-shell { position: relative; width: calc(100% - 24px); margin: 0 12px 14px; }
@@ -426,8 +500,11 @@ const monthTitle = computed(() => {
   .section-heading { padding-inline: 16px; }
   .celebration { margin-inline: 16px; }
   .ordo-block .control-label, .ordo-details, .ordo-lines, .directions, .ordo-empty { margin-inline: 16px; }
-  .ordo-links, .ordo-readings-hint, .union-hint { margin-inline: 16px; }
+  .ordo-links, .ordo-readings-hint, .union-hint, .readings-block { margin-inline: 16px; }
   .direction { grid-template-columns: 88px minmax(0, 1fr); }
+}
+@media (max-width: 380px) {
+  .reading-row { grid-template-columns: minmax(0, 1fr); gap: 0; }
 }
 @media (max-width: 359px) {
   .date-header-shell { width: calc(100% - 16px); margin-inline: 8px; }

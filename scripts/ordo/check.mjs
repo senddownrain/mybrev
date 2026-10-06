@@ -26,7 +26,15 @@ export const CLASSIFICATIONS = new Set([
 ]);
 export const SELECTOR_TYPES = new Set([
   'fixed-date', 'celebration', 'period', 'period-phase', 'period-day', 'relative', 'nth-weekday-of-month', 'day-of-month', 'exact-date',
+  'all', 'any', 'months',
 ]);
+/** A composite selector is valid when every part is. */
+function selectorValid(selector) {
+  if (!SELECTOR_TYPES.has(selector?.type)) return false;
+  if (['all', 'any'].includes(selector.type)) return Array.isArray(selector.selectors) && selector.selectors.length > 0 && selector.selectors.every(selectorValid);
+  if (selector.type === 'months') return Array.isArray(selector.months) && selector.months.every((month) => month >= 1 && month <= 12);
+  return true;
+}
 export const DIFFERENCE_TYPES = new Set(['UNIVERSAL', 'BELARUS', 'DIOCESAN', 'LOCAL', 'YEAR_SPECIFIC', 'MORE_DETAILED_SOURCE', 'REAL_CONFLICT']);
 
 export function loadOrdoData(dir = DATA) {
@@ -81,15 +89,19 @@ export function validateNotes(notes, evidence) {
     source.announcements.forEach((a) => itemIds.add(a.id));
   });
   notes.notes.forEach((note) => {
-    if (!SELECTOR_TYPES.has(note.selector?.type)) problems.push(`${note.id}: bad selector ${note.selector?.type}`);
+    if (!selectorValid(note.selector)) problems.push(`${note.id}: bad selector ${note.selector?.type}`);
     if (!CLASSIFICATIONS.has(note.classification)) problems.push(`${note.id}: bad classification`);
     if (!['universal', 'belarus', 'diocese'].includes(note.scope?.level)) problems.push(`${note.id}: bad scope`);
-    if (!note.observed?.length) problems.push(`${note.id}: no observations`);
+    // An app-level normalization (first Thursday …) cites the dioceses it was seen in instead.
+    if (!note.observed?.length && note.provenance?.kind !== 'app-normalization') problems.push(`${note.id}: no observations`);
+    if (note.provenance?.kind === 'app-normalization' && !note.provenance.observedIn?.length) problems.push(`${note.id}: normalization without sources`);
     note.observed?.forEach((o) => {
       if (!o.evidence?.rawText && o.evidence?.rawText !== '') problems.push(`${note.id}: observation without evidence`);
       o.itemIds.forEach((id) => { if (!itemIds.has(id)) problems.push(`${note.id}: unknown item ${id}`); });
     });
-    if (note.selector?.type === 'exact-date' && note.classification !== 'YEAR_INSTANCE_ONLY') {
+    const onlyDates = note.selector?.type === 'exact-date'
+      || (note.selector?.type === 'any' && note.selector.selectors.every((item) => item.type === 'exact-date'));
+    if (onlyDates && note.classification !== 'YEAR_INSTANCE_ONLY') {
       problems.push(`${note.id}: exact-date selector must be YEAR_INSTANCE_ONLY`);
     }
   });

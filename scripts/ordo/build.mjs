@@ -15,7 +15,8 @@ import { loadFixedCatalog } from './lib/identity.mjs';
 import { CLASSIFICATION, normalizeSource } from './lib/normalize.mjs';
 import { DIOCESE_ORDER, buildNotes } from './lib/notes.mjs';
 
-const NOTES_REVISION = 1;
+// Raise when the published notes change (republish with ordo:import-calendar).
+const NOTES_REVISION = 3;
 import { buildDifferences, properIds } from './lib/differences.mjs';
 import { alignDate } from './lib/calendar.mjs';
 
@@ -64,6 +65,86 @@ function missingDays(days) {
   return gaps;
 }
 
+const SELECTOR_LABEL = (selector) => {
+  if (selector.type === 'all') return selector.selectors.map(SELECTOR_LABEL).join(' + ');
+  if (selector.type === 'months') return `месяц ${selector.months.join(', ')}`;
+  return [selector.type, ...Object.entries(selector).filter(([key]) => key !== 'type').map(([key, value]) => `${key}=${JSON.stringify(value)}`)].join(' ');
+};
+
+/** docs/ordo-notes-audit.md — what the semantic guards did to the notes. */
+function renderNotesAudit({ notes, review, revision }) {
+  const guarded = notes.filter((note) => note.guard);
+  const group = (predicate) => guarded.filter((note) => predicate(note.guard));
+  const rows = (items, render) => (items.length ? items.map(render).join('\n') : '_няма_');
+  const fixed = [...group((guard) => /^month|coverage/.test(guard))];
+  const yearInstances = notes.filter((note) => note.selector.type === 'exact-date');
+  const split = group((guard) => /per printed day/.test(guard));
+  const canonical = notes.filter((note) => note.basis === 'app-normalization');
+  const manual = notes.filter((note) => note.classification === 'NEEDS_REVIEW');
+  const count = (items, key) => Object.entries(items.reduce((acc, item) => ({ ...acc, [key(item)]: (acc[key(item)] || 0) + 1 }), {}))
+    .sort((a, b) => b[1] - a[1]);
+  return `# Ordo notes: semantic audit
+
+Згенеравана \`node scripts/ordo/build.mjs\` — не рэдагаваць уручную. Рэвізія публікацыі заўваг: **${revision}**.
+Правілы: \`scripts/ordo/lib/note-guards.mjs\`.
+
+| | |
+|---|---|
+| Апублікаваных заўваг | ${notes.length} |
+| Выпраўлена аўтаматычна (месяц / шчыльнасць) | ${fixed.length} |
+| Дакладная дата / год (у т.л. ${split.length} падзеленых па днях) | ${yearInstances.length} |
+| Кананічныя правілы (І чацвер / пятніца / субота) | ${canonical.length} |
+| Схавана да праверкі (не публікуюцца) | ${review.length} |
+| Апублікавана з пазнакай NEEDS_REVIEW | ${manual.length} |
+
+Высокі працэнт супадзення з календарамі не лічыцца поспехам, калі «Чэрвеньскае набажэнства» паказваецца ў кастрычніку:
+сэнс тэксту правяраецца асобна ад частаты.
+
+## Fixed automatically
+
+Месяц у тэксце («Чэрвеньскае…», «маёвыя…») або рэдкія выпадкі (чатыры чэрвеньскія нядзелі ≠ «кожная нядзеля Звычайнага перыяду»).
+
+| Заўвага | Дыяцэзія | Селектар цяпер | Чаму |
+|---|---|---|---|
+${rows(fixed, (note) => `| ${note.text.slice(0, 70).replace(/\|/g, '/')} | ${note.scope.dioceseId || note.scope.dioceseIds?.join(', ')} | ${SELECTOR_LABEL(note.selector)} | ${note.guard} |`)}
+
+## Promoted to recurring canonical rule
+
+Першы чацвер, першая пятніца і першая субота месяца — адно правіла ўзроўню Беларусі кожнае
+(\`provenance.kind: app-normalization\`), а не «Пінская дыяцэзія · 2026». Голыя дыяцэзіяльныя
+копіі («І чацвер месяца.») выдалены; заўвагі з дадатковым зместам (Імша, набажэнства) засталіся.
+
+| Правіла | Бачылі ў календарах |
+|---|---|
+${rows(canonical, (note) => `| ${note.text} | ${(note.provenance.observedIn || []).join(', ') || '—'} |`)}
+
+## Kept exact-date / year-instance
+
+Тэкст з датай («– у чацвер, 1 кастрычніка, — …», «01.I.2028») — толькі той дзень таго года.
+Падобныя тэксты розных дзён, якія раней зліваліся ў адно «рэгулярнае» правіла, падзелены: ${split.length}.
+
+| Тып | Колькасць |
+|---|---|
+${rows(count(yearInstances, (note) => note.guard ? 'падзелена па днях' : 'з крыніцы'), ([key, value]) => `| ${key} | ${value} |`)}
+
+## Hidden pending review
+
+Не публікуюцца (няма ў \`notes.json\` і Firestore).
+
+| Тэкст | Селектар | Прычына | Даты |
+|---|---|---|---|
+${rows(review, (item) => `| ${String(item.text).slice(0, 70).replace(/\|/g, '/')} | ${SELECTOR_LABEL(item.selector)} | ${item.reason} | ${item.dates.slice(0, 3).join(', ')} |`)}
+
+## Needs manual review
+
+Апублікаваныя, але з пазнакай \`NEEDS_REVIEW\` (канкрэтны дзень, рэдкі выпадак).
+
+| Тэкст | Селектар | Дыяцэзія |
+|---|---|---|
+${rows(manual, (note) => `| ${note.text.slice(0, 70).replace(/\|/g, '/')} | ${SELECTOR_LABEL(note.selector)} | ${note.scope.dioceseId || note.scope.dioceseIds?.join(', ')} |`)}
+`;
+}
+
 function main() {
   if (!fs.existsSync(RAW_DIR)) {
     console.error(`Raw adapter output not found in ${path.relative(ROOT, RAW_DIR)}. Run: python3 scripts/ordo/extract.py`);
@@ -81,7 +162,7 @@ function main() {
   const sources = raws.map((raw) => normalizeSource(raw, { catalog, properSet: properSets[raw.source.diocese] }));
   sources.forEach((source) => properIds(source.rules, catalog, source.diocese));
 
-  const { notes, allNotes, excludedParishNotes, candidates } = buildNotes(sources, catalog);
+  const { notes, allNotes, excludedParishNotes, candidates, review } = buildNotes(sources, catalog);
   const noteByItem = new Map(candidates.map((c) => [c.itemId, c.noteId]));
   const differences = buildDifferences(sources, catalog, properSets);
 
@@ -175,6 +256,9 @@ function main() {
     },
     notes,
   });
+  fs.writeFileSync(path.join(ROOT, 'docs', 'ordo-notes-audit.md'), renderNotesAudit({ notes, review, revision: NOTES_REVISION }));
+  fs.mkdirSync(path.join(ROOT, 'reports', 'liturgy'), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, 'reports', 'liturgy', 'notes-review.json'), `${JSON.stringify({ revision: NOTES_REVISION, review }, null, 1)}\n`);
   write(path.join(OUT_DIR, 'diocesan-differences.json'), { schemaVersion: SCHEMA_VERSION, ...differences });
   write(path.join(OUT_DIR, 'unresolved.json'), unresolved);
 

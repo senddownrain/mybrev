@@ -24,16 +24,17 @@ export async function refreshSavedContent() {
           case 'readings': await liturgical.fetchReadingsByDate(value, {
             ...options, dayId, includeAlternatives, diocese: readingsDiocese,
           }); break;
-          case 'feasts': await liturgical.fetchAllFeasts(value, options); break;
           case 'static':
             if (value === 'liturgicalTemplates') await getLiturgicalTemplates(options);
             else await getStaticCollection(value, options);
             break;
           case 'prayers': await getSavedPrayers(options); break;
           case 'songs': await (await import('../services/songService.js')).getSavedSongs(options); break;
-          // Legacy keys: year options are computed now, nothing to refresh.
+          // Legacy keys: year options are computed now, and the feast list of
+          // `/picker` comes from the Ordo engine (no full `days` read).
           case 'year':
-          case 'years': break;
+          case 'years':
+          case 'feasts': break;
           default: return;
         }
         refreshed += 1;

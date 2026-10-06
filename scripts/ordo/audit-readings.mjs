@@ -109,24 +109,45 @@ function renderMarkdown({ results, summary }, source) {
 ${section('WRONG_CITATION', 'WRONG_CITATION', 'Праверыць тэкст дакумента: магчыма, імпартаваны фармуляр вігіліі або іншага дня.')}${section('WRONG_LINK', 'WRONG_LINK', 'Выправіць `_dayId` / `_dayIds` дакумента чытанняў.')}${section('AMBIGUOUS', 'AMBIGUOUS', 'Удакладніць, які дакумент належыць празднаванню.')}${section('MISSING_CONTENT', 'MISSING_CONTENT', 'Патрэбны тэкст або хаця б цытата.')}${section('REFERENCE_ONLY', 'REFERENCE_ONLY', 'На старонцы дня паказваецца цытата і «Тэкст чытанняў пакуль недаступны».')}`;
 }
 
+/**
+ * Readings of the audit: the local Firestore snapshot (`--snapshot dir`,
+ * default `backups/firestore-snapshot`), else the public read-only cache.
+ */
+async function loadReadings() {
+  const index = process.argv.indexOf('--snapshot');
+  const snapshotDir = path.resolve(index > 0 ? process.argv[index + 1] : path.join(ROOT, 'backups', 'firestore-snapshot'));
+  if (fs.existsSync(path.join(snapshotDir, 'manifest.json'))) {
+    const { openFirestoreSnapshot } = await import('../lib/firestore-snapshot.mjs');
+    const snapshot = await openFirestoreSnapshot(snapshotDir);
+    const docs = (await snapshot.collection('readings')) || [];
+    return { readings: docs.map(({ id, ...data }) => ({ id, data })), label: `snapshot ${snapshot.manifest.exportedAt}`, version: snapshot.manifest.exportedAt };
+  }
+  if (!fs.existsSync(CACHE)) return null;
+  const manifest = JSON.parse(fs.readFileSync(path.join(path.dirname(CACHE), 'manifest.json'), 'utf8'));
+  return { readings: JSON.parse(fs.readFileSync(CACHE, 'utf8')).documents, label: `public read-only cache ${manifest.snapshotVersion}`, version: manifest.snapshotVersion };
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  if (!fs.existsSync(CACHE)) {
-    console.error('No readings cache. Run: node scripts/ordo-fetch-public-cache.mjs');
+  const source = await loadReadings();
+  if (!source) {
+    console.error('No readings source. Export a snapshot or run: node scripts/ordo-fetch-public-cache.mjs');
     process.exit(1);
   }
-  const readings = JSON.parse(fs.readFileSync(CACHE, 'utf8')).documents;
-  const manifest = JSON.parse(fs.readFileSync(path.join(path.dirname(CACHE), 'manifest.json'), 'utf8'));
   const evidence = Object.fromEntries(DIOCESES.map((diocese) => [
     diocese, JSON.parse(fs.readFileSync(path.join(ROOT, 'src', 'data', 'ordo', 'evidence', `${diocese}.json`), 'utf8')),
   ]));
-  const audit = runReadingsAudit({ readings, evidence });
-  fs.writeFileSync(path.join(ROOT, 'reports', 'ordo-readings-audit.json'), `${JSON.stringify({ snapshotVersion: manifest.snapshotVersion, ...audit }, null, 1)}\n`);
-  fs.writeFileSync(path.join(ROOT, 'docs', 'ordo-readings-audit.md'), renderMarkdown(audit, `public read-only cache ${manifest.snapshotVersion}`));
-  const status = Object.fromEntries(audit.results.map((item) => [item.id, {
-    readings: CONTENT_STATUS[item.status],
-    audit: item.status,
-    ...(item.reference && item.status === 'REFERENCE_ONLY' ? { reference: item.reference } : {}),
-  }]));
-  fs.writeFileSync(STATUS_PATH, `{\n${Object.keys(status).sort().map((key) => ` ${JSON.stringify(key)}: ${JSON.stringify(status[key])}`).join(',\n')}\n}\n`);
+  const audit = runReadingsAudit({ readings: source.readings, evidence });
+  fs.mkdirSync(path.join(ROOT, 'reports'), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, 'reports', 'ordo-readings-audit.json'), `${JSON.stringify({ snapshotVersion: source.version, ...audit }, null, 1)}\n`);
+  fs.writeFileSync(path.join(ROOT, 'docs', 'ordo-readings-audit.md'), renderMarkdown(audit, source.label));
+  // `--report-only` (liturgy:audit): never touch the app data.
+  if (!process.argv.includes('--report-only')) {
+    const status = Object.fromEntries(audit.results.map((item) => [item.id, {
+      readings: CONTENT_STATUS[item.status],
+      audit: item.status,
+      ...(item.reference && item.status === 'REFERENCE_ONLY' ? { reference: item.reference } : {}),
+    }]));
+    fs.writeFileSync(STATUS_PATH, `{\n${Object.keys(status).sort().map((key) => ` ${JSON.stringify(key)}: ${JSON.stringify(status[key])}`).join(',\n')}\n}\n`);
+  }
   console.log(JSON.stringify(audit.summary));
 }

@@ -18,6 +18,7 @@
  *   { type: 'day-of-month', day, months? }
  *   { type: 'period', period, dayOfWeek? }
  *   { type: 'exact-date', date }
+ *   { type: 'months', months: [6] }                          (civil months; combined with `all`)
  *   { type: 'all' | 'any', selectors: [...] }, { type: 'not', selector }
  *
  * Only display notes are returned here; structured `effect`s must be encoded
@@ -101,6 +102,8 @@ export function matchesSelector(selector, day, dateOfCelebration = () => null) {
     }
     case 'exact-date':
       return selector.date === day.date;
+    case 'months':
+      return (selector.months || []).map(Number).includes(parseIso(day.date).month);
     case 'celebration': {
       const id = NOTE_CELEBRATION_ALIASES[selector.celebrationId] || selector.celebrationId;
       return celebrationIds(day, selector.role).has(id);

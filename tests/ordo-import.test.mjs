@@ -47,7 +47,10 @@ test('dry runs write a local plan only; destructive options need a confirmation'
   assert.deepEqual(fs.readdirSync(dir).sort(), ['calendar.json', 'feasts.json']);
   await assert.rejects(importCalendar(['--offline', '--prune']), /--confirm prune-ordo-calendar/);
   await assert.rejects(importCalendar(['--offline', '--apply']), /needs Firestore/);
-  await assert.rejects(importFeasts(['--apply', '--service-account', path.join(dir, 'missing.json')]), /--confirm import-sparse-feasts/);
+  // Sparse documents in `days` break old clients; liturgicalProperTexts does not.
+  await assert.rejects(importFeasts(['--apply', '--target', 'days', '--service-account', path.join(dir, 'missing.json')]), /--confirm import-sparse-feasts/);
+  await assert.rejects(importFeasts(['--apply', '--service-account', path.join(dir, 'missing.json')]), /Service-account key not found/);
+  await assert.rejects(importFeasts(['--offline', '--mark-obsolete']), /--target days only/);
 });
 
 test('feast targets: sparse documents, templates and the copies they replace', () => {

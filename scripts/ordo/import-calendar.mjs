@@ -222,7 +222,8 @@ export async function main(argv = process.argv.slice(2)) {
       }
     });
     await commitInBatches(firestore, writes);
-    await firestore.collection(COLLECTIONS.meta).doc('current').set({ ...targets.meta.data, publishedAt: importedAt });
+    // merge: the other publication revisions (properTextsRevision, templatesRevision) stay.
+    await firestore.collection(COLLECTIONS.meta).doc('current').set({ ...targets.meta.data, publishedAt: importedAt }, { merge: true });
     const result = { written: writes.length, meta: targets.meta.data };
     fs.writeFileSync(options.output.replace(/\.json$/, '-result.json'), `${JSON.stringify(result, null, 1)}\n`);
     console.log(JSON.stringify(result));

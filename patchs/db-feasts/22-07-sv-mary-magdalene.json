@@ -37,7 +37,8 @@
     },
     "laudesInter": {
       "source": "template",
-      "template": "holy-women"
+      "template": "holy-women",
+      "allowCurrentDay": true
     },
     "vesperPs1": {
       "source": "template",
@@ -45,7 +46,8 @@
     },
     "vesperInter": {
       "source": "template",
-      "template": "holy-women"
+      "template": "holy-women",
+      "allowCurrentDay": true
     }
   }
 }

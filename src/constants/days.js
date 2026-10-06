@@ -2,6 +2,13 @@
 export const LITURGICAL_DAYS_COLLECTION = 'days';
 
 /**
+ * Sparse Proper of every fixed celebration (`_schema: 2`, same ids as the
+ * legacy `days` documents). The web prefers it; fixed `days` documents are only
+ * a fallback for celebrations that are not published here.
+ */
+export const LITURGICAL_PROPER_TEXTS_COLLECTION = 'liturgicalProperTexts';
+
+/**
  * The collection contains three intentionally different entity shapes.
  * Keeping the selectors here prevents date feasts, period days and movable
  * feasts from being treated as interchangeable documents.

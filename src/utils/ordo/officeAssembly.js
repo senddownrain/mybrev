@@ -16,12 +16,18 @@
  *   { source: 'current-day' }                    «з бягучага дня»
  *   { source: 'common' }                         the chosen Common
  *   { source: 'template', template: 'apostles' } a named Common
+ *   { …, allowCurrentDay: true }                 «… або з будня»: «З дня» keeps the weekday
  *   { omit: true }                               intentionally empty
+ *
+ * A reusable source the rubric requires (Sunday, week I; the complementary
+ * psalmody) is never silently replaced by the day: its absence is reported in
+ * `integrity` / `day._integrityErrors`.
  *
  * Pure: no Firestore, no strings to interpret at runtime.
  */
 import {
-  FIRST_VESPER_FIELDS, OFFICE_FIELD_SLOTS, OFFICE_TEXT_FIELDS, SUNDAY_WEEK_1_TEMPLATE, TE_DEUM_FIELD,
+  COMPLEMENTARY_PSALMODY_TEMPLATE, FIRST_VESPER_FIELDS, OFFICE_FIELD_SLOTS, OFFICE_TEXT_FIELDS, SUNDAY_WEEK_1_TEMPLATE,
+  TE_DEUM_FIELD,
 } from '../../constants/officeFields.js';
 import { isFromDayReference } from '../../constants/days.js';
 
@@ -91,6 +97,7 @@ export function assembleOffice({ proper, office, templates, choice, currentDay }
   const day = {};
   const provenance = {};
   const refs = [];
+  const integrity = [];
 
   // Fields outside the Office slots behave as before: own, else the day's.
   Object.entries(currentDay || {}).forEach(([key, value]) => {
@@ -111,12 +118,14 @@ export function assembleOffice({ proper, office, templates, choice, currentDay }
     switch (source) {
       case 'common': return fromTemplate(common, field, `common:${templateId}`);
       case 'template': return fromTemplate(getTemplate(named), field, `common:${named}`);
+      case 'office-for-dead': return fromTemplate(getTemplate('office-for-dead'), field, 'common:office-for-dead');
       case 'sunday-week-1':
         return sundayWeek1 && !isBlank(sundayWeek1[field]) ? { value: sundayWeek1[field], origin: SUNDAY_WEEK_1_TEMPLATE } : null;
       case 'complementary': {
-        const complementary = getTemplate('complementary-psalmody');
+        const complementary = getTemplate(COMPLEMENTARY_PSALMODY_TEMPLATE);
         if (complementary && !isBlank(complementary[field])) return { value: complementary[field], origin: 'complementary' };
-        return fromSource(CURRENT_DAY_CHOICE, field);
+        integrity.push({ field, source: COMPLEMENTARY_PSALMODY_TEMPLATE, reason: complementary ? 'field-missing' : 'template-missing' });
+        return { missingRequired: true };
       }
       case CURRENT_DAY_CHOICE:
         return isBlank(currentDay?.[field]) ? null : { value: currentDay[field], origin: CURRENT_DAY_CHOICE };
@@ -124,11 +133,13 @@ export function assembleOffice({ proper, office, templates, choice, currentDay }
     }
   }
   const firstOf = (sources, field) => {
+    let required = false;
     for (const source of sources) {
       const found = fromSource(source, field);
+      if (found?.missingRequired) { required = true; continue; }
       if (found) return found;
     }
-    return null;
+    return required ? { missingRequired: true } : null;
   };
 
   function resolveField(field) {
@@ -137,13 +148,18 @@ export function assembleOffice({ proper, office, templates, choice, currentDay }
     if (rule?.omit) return { value: '', origin: 'omit' };
     if (rule?.ref) { refs.push({ field, ref: rule.ref, origin: 'proper' }); return { pending: true }; }
     if (rule?.source) {
+      if (rule.allowCurrentDay && selected === CURRENT_DAY_CHOICE) {
+        const fromDay = fromSource(CURRENT_DAY_CHOICE, field);
+        if (fromDay) return fromDay;
+      }
       const found = fromSource(rule.source, field, rule.template);
-      if (found) return found;
+      if (found && !found.missingRequired) return found;
     }
     const slot = slotOf(office, field);
     if (!slot) return firstOf(['common', CURRENT_DAY_CHOICE], field);
     const chain = slot.chain.filter((source) => source !== 'proper');
     const fromChain = firstOf(chain, field);
+    if (fromChain?.missingRequired) return null;
     if (fromChain) return fromChain;
     if (slot.choice) {
       const order = selected === CURRENT_DAY_CHOICE ? [CURRENT_DAY_CHOICE, 'common'] : ['common', CURRENT_DAY_CHOICE];
@@ -157,9 +173,20 @@ export function assembleOffice({ proper, office, templates, choice, currentDay }
   OFFICE_TEXT_FIELDS.forEach((field) => {
     const found = resolveField(field);
     if (found?.pending) return;
-    if (!found) { day[field] = ''; missing.push(field); return; }
+    if (!found || found.missingRequired) { day[field] = ''; missing.push(field); return; }
     day[field] = found.value;
     provenance[field] = found.origin;
+  });
+
+  // One antiphon around the whole psalmody (solemnities, seasonal Daytime
+  // Prayer): an empty 2nd/3rd antiphon is the form of the hour, not a gap.
+  ['officeOfReadings', 'laudes', 'sext1', 'sext2', 'sext3', 'vesper'].forEach((hour) => {
+    const has = (name) => !isBlank(day[`${hour}${name}`]);
+    if (!has('Ant1') || !has('Ps1') || !has('Ps2') || !has('Ps3') || has('Ant2') || has('Ant3')) return;
+    [`${hour}Ant2`, `${hour}Ant3`].forEach((field) => {
+      const index = missing.indexOf(field);
+      if (index >= 0) missing.splice(index, 1);
+    });
   });
 
   // I Vespers: own or Common texts only. Without them the runtime assembles
@@ -197,7 +224,8 @@ export function assembleOffice({ proper, office, templates, choice, currentDay }
   day._templates = templatesOf(proper);
   if (templateId && selected !== CURRENT_DAY_CHOICE) day._currentVersion = templateId;
   day._assembly = { choice: selected, template: selected === CURRENT_DAY_CHOICE ? '' : templateId, sparse: true };
-  return { day, choice: selected, template: templateId, provenance, missing };
+  if (integrity.length) day._integrityErrors = integrity;
+  return { day, choice: selected, template: templateId, provenance, missing, integrity };
 }
 
 /** Coarse availability of the Hours of a celebration. */

@@ -100,6 +100,9 @@ export function celebrationCandidate(placement, status = 'active') {
     ...(celebration.defaultTemplate ? { defaultTemplate: celebration.defaultTemplate } : {}),
     ...(celebration.contentStatus ? { contentStatus: celebration.contentStatus } : {}),
     ...(celebration.readingsReference ? { readingsReference: celebration.readingsReference } : {}),
+    // Explicit order of co-equal celebrations (definition / diocese override); none = equal.
+    ...(Number.isFinite(Number(celebration.manualTieBreakPriority)) && celebration.manualTieBreakPriority !== undefined
+      ? { manualTieBreakPriority: Number(celebration.manualTieBreakPriority) } : {}),
     rules: celebration.rules || {},
     layerTrail: celebration.layerTrail || [],
     ...(celebration.inheritedFrom ? { inheritedFrom: celebration.inheritedFrom } : {}),

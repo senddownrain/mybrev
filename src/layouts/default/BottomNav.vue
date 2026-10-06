@@ -83,14 +83,14 @@
             show-adjacent-months
             liturgical
             show-options
-            :diocese="effectiveOrdoDiocese"
+            :diocese="effectiveOrdoDioceses"
             @select-option="openOption"
           />
         </v-card-text>
         <v-card-actions class="date-dialog-actions">
           <v-btn class="today-date-btn" variant="text" prepend-icon="mdi-calendar-today" @click="selectToday">Сёння</v-btn>
           <v-spacer />
-          <span class="date-dialog-hint">Выберыце дзень і варыянт</span>
+          <v-btn class="choose-date-btn" variant="flat" color="primary" rounded="lg" data-test="choose-date" @click="chooseDate">Выбраць</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -102,8 +102,8 @@ import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAppBar } from '@/composables/useAppBar';
 import CustomDatePicker from '@/components/common/CustomDatePicker.vue';
-import { effectiveOrdoDiocese, ordoDiocese } from '@/utils/ordoDiocese';
-import { pickerRouteFor } from '@/utils/ordoDatePicker';
+import { effectiveOrdoDiocese, effectiveOrdoDioceses, ordoDiocese } from '@/utils/ordoDiocese';
+import { pickerDateRoute, pickerRouteFor } from '@/utils/ordoDatePicker';
 import moment from '@/utils/moment-be';
 import { PhListBullets, PhSunHorizon, PhCalendarBlank, PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue';
 
@@ -165,6 +165,17 @@ function selectToday() { selectedDate.value = new Date(); }
 function openOption({ option, date }) {
   toggleCalendarDialog();
   router.push(pickerRouteFor(option, date, 'hours', {
+    // An option of only some selected dioceses opens in its own diocese.
+    today: moment().format('YYYY-MM-DD'), diocese: option.diocese || effectiveOrdoDiocese.value, defaultDiocese: ordoDiocese.value,
+  }));
+}
+
+// «Выбраць»: the date alone opens the main screen of that day with every
+// legal option; tapping an option above opens that option directly.
+function chooseDate() {
+  const date = moment(selectedDate.value).format('YYYY-MM-DD');
+  toggleCalendarDialog();
+  router.push(pickerDateRoute(date, 'hours', {
     today: moment().format('YYYY-MM-DD'), diocese: effectiveOrdoDiocese.value, defaultDiocese: ordoDiocese.value,
   }));
 }
@@ -354,6 +365,7 @@ watch(isCalendarDialogOpen, (open) => {
     display: none;
   }
 }
+.choose-date-btn { min-width: 112px; font-weight: 720; letter-spacing: 0; text-transform: none; }
 .date-dialog-hint {
   padding-right: 8px;
   color: var(--nav-muted);

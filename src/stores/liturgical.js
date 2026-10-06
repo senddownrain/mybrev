@@ -2,14 +2,12 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import moment from '@/utils/moment-be';
-import { useCalendarStore } from '@/stores/calendar';
 import {
   dynamicFeastCodesOf, legacyContextOf, planReadings, resolveRuntimeDay,
 } from '@/utils/ordo/runtime';
 import { currentOrdoDiocese } from '@/utils/ordoDiocese';
-import { FEAST_NAME_MAP } from '@/constants/liturgicalFeastsMap';
 import { fetchContentForDate } from '@/services/liturgicalContentService';
-import { fetchDaysForDate, findDayByPeriod, getAllFeastDays } from '@/services/liturgicalDayService';
+import { fetchDaysForDate, findDayByPeriod } from '@/services/liturgicalDayService';
 import { getReadingsForDate } from '@/services/readingsService';
 import { createReadSession } from '@/utils/contentCache';
 import {
@@ -19,7 +17,6 @@ import {
 const dateKey = (date) => moment(date).startOf('day').format('YYYY-MM-DD');
 
 export const useLiturgicalStore = defineStore('liturgical', () => {
-  const calendarStore = useCalendarStore();
   const isLoading = ref(false);
   const error = ref(null);
   let pending = 0;
@@ -79,28 +76,6 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     }, options);
   }
 
-  async function fetchAllFeasts(year, options = {}) {
-    return readResource(publicContentKey('feasts', Number(year)), async (session) => {
-      await calendarStore.getDynamicDates(year);
-      const dynamicDates = calendarStore.dynamicDatesForYear(year).value || {};
-      const allFeastDays = await getAllFeastDays(session);
-      const normalize = (value) => String(value || '').replace(/^feast-/, '');
-      return allFeastDays.map((feast) => {
-        const dynamicEntry = Object.entries(FEAST_NAME_MAP).find(([key, code]) => (
-          normalize(code) === normalize(feast._feast) && dynamicDates[key]
-        ));
-        const dynamicDate = dynamicEntry ? dynamicDates[dynamicEntry[0]] : null;
-        const isDynamic = Boolean(dynamicDate);
-        return {
-          ...feast,
-          isDynamic,
-          isFixed: !isDynamic && Boolean(feast._date),
-          calendarDate: dynamicDate?.format('YYYY-MM-DD') || null,
-        };
-      }).filter((feast) => feast.isDynamic || feast.isFixed);
-    }, options);
-  }
-
   async function fetchReadingsByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
     const diocese = options.diocese || currentOrdoDiocese();
@@ -129,11 +104,11 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
 
   return {
     isLoading, error,
-    fetchContentByDate, fetchDaysByDate, fetchAllFeasts, fetchReadingsByDate, fetchDayByPeriod,
-    getCachedContent: (date) => publicContentCache.peek(contentKey(dateKey(date))) ?? null,
+    fetchContentByDate, fetchDaysByDate, fetchReadingsByDate, fetchDayByPeriod,
+    getCachedContent: (date, diocese) => publicContentCache.peek(contentKey(dateKey(date), diocese)) ?? null,
     resolveOrdoDay: (date, diocese = currentOrdoDiocese()) => resolveRuntimeDay(dateKey(date), { diocese }),
     getCachedReadings: (date, options) => publicContentCache.peek(readingsKey(dateKey(date), options)) ?? null,
-    primeContent: (date) => publicContentCache.prime([contentKey(dateKey(date))]),
+    primeContent: (date, diocese) => publicContentCache.prime([contentKey(dateKey(date), diocese)]),
     primeReadings: (date, options) => publicContentCache.prime([readingsKey(dateKey(date), options)]),
     // Compatibility: invalidate instead of deleting precious offline content.
     clearCache: requestContentRefresh,

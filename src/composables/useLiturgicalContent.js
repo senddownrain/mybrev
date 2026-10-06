@@ -25,8 +25,8 @@ export function useLiturgicalContent() {
    * @param {Date|import('moment').Moment|string} currentDate
    * @returns {Promise<{ context, itemsDays, dayOptions }>}
    */
-  async function getLiturgicalContentForDate(currentDate) {
-    return liturgicalStore.fetchContentByDate(currentDate);
+  async function getLiturgicalContentForDate(currentDate, diocese) {
+    return liturgicalStore.fetchContentByDate(currentDate, diocese ? { diocese } : {});
   }
 
   /**
@@ -36,21 +36,21 @@ export function useLiturgicalContent() {
    * @param {Date|import('moment').Moment|string} currentDate
    * @returns {{ context, itemsDays, dayOptions } | null}
    */
-  function getCachedLiturgicalContentForDate(currentDate) {
-    const cached = liturgicalStore.getCachedContent(currentDate);
+  function getCachedLiturgicalContentForDate(currentDate, diocese) {
+    const cached = liturgicalStore.getCachedContent(currentDate, diocese);
     if (cached) {
       // A fresh entry returns immediately; a stale entry is also returned
       // immediately and the store refreshes it in the background when online.
-      liturgicalStore.fetchContentByDate(currentDate).catch((error) => {
+      liturgicalStore.fetchContentByDate(currentDate, diocese ? { diocese } : {}).catch((error) => {
         logger.error('[useLiturgicalContent] background refresh failed:', error);
       });
     }
     return cached;
   }
 
-  async function restoreCachedLiturgicalContentForDate(currentDate) {
-    await liturgicalStore.primeContent(currentDate);
-    return getCachedLiturgicalContentForDate(currentDate);
+  async function restoreCachedLiturgicalContentForDate(currentDate, diocese) {
+    await liturgicalStore.primeContent(currentDate, diocese);
+    return getCachedLiturgicalContentForDate(currentDate, diocese);
   }
 
   return {
