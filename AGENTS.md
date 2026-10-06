@@ -13,3 +13,10 @@ When investigating Firestore data, preparing audits, or designing migrations:
 
 The snapshot is private and ignored by Git. Never copy the complete backup into `public/`, commit
 it, or expose admin/authentication collections.
+
+## App content manifest
+
+After any write to `days`, `readings`, `liturgicalTemplates`, `invitatoriums`, `completoriums`,
+`prayers`, `prayerCategories` or `songs`, republish the app content manifest
+(`npm run content:manifest -- --apply`), otherwise the Flutter app rejects the change. See
+`docs/app-content-distribution.md`.
