@@ -145,3 +145,40 @@ test('invalid documents are never published', () => {
   assert.equal(publicationDecision('SAFE CONTENT PATCH', { invalid: 1, allowLargePatch: true }).publish, false);
   assert.deepEqual(validateCollection('prayers', [{ id: 'p', titleVersions: { be: 'Т' }, textVersions: { be: 'Т' } }]), []);
 });
+
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import zlib from 'node:zlib';
+import { readCollections, writeBundle } from '../scripts/content/build-app-bundle.mjs';
+
+/** A minimal private snapshot directory (scripts/lib/firestore-snapshot.mjs format). */
+function fakeSnapshot(exportedAt, collections) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'snapshot-'));
+  const manifest = { schemaVersion: 1, exportedAt, collections: {} };
+  for (const [name, docs] of Object.entries(collections)) {
+    const file = `${name}.json`;
+    fs.writeFileSync(path.join(dir, file), JSON.stringify({
+      schemaVersion: 1, collectionPath: name, documents: docs.map(({ id, ...data }) => ({ id, data })),
+    }));
+    manifest.collections[name] = { file };
+  }
+  fs.writeFileSync(path.join(dir, 'manifest.json'), JSON.stringify(manifest));
+  return dir;
+}
+
+test('every bundled collection carries the version of its own snapshot', async () => {
+  const days = fakeSnapshot('2026-10-06T00:00:00.000Z', { days: [{ id: 'd1', _periodType: 'ordinary' }] });
+  const statics = fakeSnapshot('2026-09-01T00:00:00.000Z', { prayers: [{ id: 'p1', title: 'Т', text: 'Т' }] });
+  const { collections, versions, contentVersion } = await readCollections([days, statics], ['days', 'prayers']);
+  assert.equal(versions.get('days'), Date.parse('2026-10-06T00:00:00.000Z'));
+  assert.equal(versions.get('prayers'), Date.parse('2026-09-01T00:00:00.000Z'));
+  assert.equal(contentVersion, versions.get('days'), 'top-level: the newest');
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'bundle-'));
+  const manifest = writeBundle(collections, versions, contentVersion, out, { log: () => {} });
+  assert.equal(manifest.collections.days.contentVersion, versions.get('days'));
+  assert.equal(manifest.collections.prayers.contentVersion, versions.get('prayers'));
+  const file = (name) => JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(out, `${name}.json.gz`))));
+  assert.equal(file('days').contentVersion, versions.get('days'));
+  assert.equal(file('prayers').contentVersion, versions.get('prayers'));
+});

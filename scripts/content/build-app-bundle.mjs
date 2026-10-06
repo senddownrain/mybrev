@@ -8,9 +8,11 @@
  *     --snapshot backups/firestore-snapshot-static --out ../ibreviarybyapp/assets/content
  *
  * Every collection in APP_CONTENT_COLLECTIONS must be found in one of the
- * snapshots and every document must pass validation. The bundle's
- * contentVersion is the oldest snapshot time: an update downloaded after it
- * is newer, one before it is older.
+ * snapshots and every document must pass validation. Every collection
+ * carries its own contentVersion: the export time of the snapshot it was
+ * read from (an update downloaded after it is newer, one before it is older;
+ * the app reconciles its overlay per collection). The manifest's top-level
+ * contentVersion is the newest of them (the «version of the texts»).
  *
  * Before an app release (`npm run content:app-release -- …`):
  *   --compare-live   also reads contentManifest/current (one read) and
@@ -46,7 +48,7 @@ function parseArgs(argv) {
 
 export async function readCollections(snapshotDirs, names = APP_CONTENT_COLLECTIONS) {
   const found = new Map();
-  const times = [];
+  const versions = new Map();
   for (const dir of snapshotDirs) {
     const snapshot = await openFirestoreSnapshot(dir);
     for (const name of names) {
@@ -56,23 +58,21 @@ export async function readCollections(snapshotDirs, names = APP_CONTENT_COLLECTI
       const entries = await snapshot.collectionEntries(name);
       if (!entries) continue;
       found.set(name, entries.map(({ id, data }) => storedDocument(id, data)).sort((a, b) => (a.id < b.id ? -1 : 1)));
-      times.push(Date.parse(snapshot.manifest.exportedAt));
+      versions.set(name, Date.parse(snapshot.manifest.exportedAt));
     }
   }
   const missing = names.filter((name) => !found.has(name));
   if (missing.length) throw new Error(`Not in the snapshots: ${missing.join(', ')}`);
-  return { collections: found, contentVersion: Math.min(...times) };
+  return { collections: found, versions, contentVersion: Math.max(...versions.values()) };
 }
 
-async function main() {
-  const options = parseArgs(process.argv.slice(2));
-  const { collections, contentVersion } = await readCollections(options.snapshots);
-  const invalid = [...collections].flatMap(([name, docs]) => validateCollection(name, docs));
-  if (invalid.length) {
-    invalid.slice(0, 20).forEach((item) => console.error(`  ${item.collection}/${item.id}: ${item.reason}`));
-    throw new Error(`${invalid.length} invalid documents: the bundle was not written.`);
-  }
-  fs.mkdirSync(options.out, { recursive: true });
+/**
+ * Writes `<collection>.json.gz` and `manifest.json` into [out]. Every
+ * collection file and manifest entry carries the version of that collection
+ * (its snapshot time), never a shared minimum.
+ */
+export function writeBundle(collections, versions, contentVersion, out, { log = console.log } = {}) {
+  fs.mkdirSync(out, { recursive: true });
   const manifest = {
     schemaVersion: CONTENT_SCHEMA_VERSION,
     contentVersion,
@@ -82,10 +82,11 @@ async function main() {
   for (const [name, docs] of collections) {
     const described = describeDocuments(docs);
     const { strings, docs: encoded } = encodeCollection(docs);
+    const version = versions.get(name);
     const payload = Buffer.from(JSON.stringify({
       schemaVersion: CONTENT_SCHEMA_VERSION,
       collection: name,
-      contentVersion,
+      contentVersion: version,
       strings,
       docs: encoded,
       hashes: described.hashes,
@@ -94,17 +95,31 @@ async function main() {
     // mtime 0: the same content always gives the same bytes.
     const gz = zlib.gzipSync(payload, { level: 9 });
     gz.writeUInt32LE(0, 4);
-    fs.writeFileSync(path.join(options.out, file), gz);
+    fs.writeFileSync(path.join(out, file), gz);
     manifest.collections[name] = {
       file,
+      contentVersion: version,
+      contentDate: new Date(version).toISOString(),
       count: described.count,
       digest: described.digest,
       storedBytes: described.bytes,
       bundleBytes: gz.length,
     };
-    console.log(`${name.padEnd(20)} ${String(described.count).padStart(5)} docs  ${(described.bytes / 1048576).toFixed(2).padStart(6)} MB stored → ${(gz.length / 1048576).toFixed(2)} MB`);
+    log(`${name.padEnd(20)} ${String(described.count).padStart(5)} docs  ${(described.bytes / 1048576).toFixed(2).padStart(6)} MB stored → ${(gz.length / 1048576).toFixed(2)} MB  (${new Date(version).toISOString().slice(0, 10)})`);
   }
-  fs.writeFileSync(path.join(options.out, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+  fs.writeFileSync(path.join(out, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+  return manifest;
+}
+
+async function main() {
+  const options = parseArgs(process.argv.slice(2));
+  const { collections, versions, contentVersion } = await readCollections(options.snapshots);
+  const invalid = [...collections].flatMap(([name, docs]) => validateCollection(name, docs));
+  if (invalid.length) {
+    invalid.slice(0, 20).forEach((item) => console.error(`  ${item.collection}/${item.id}: ${item.reason}`));
+    throw new Error(`${invalid.length} invalid documents: the bundle was not written.`);
+  }
+  const manifest = writeBundle(collections, versions, contentVersion, options.out);
   const total = Object.values(manifest.collections).reduce((sum, item) => sum + item.bundleBytes, 0);
   console.log(`total bundle ${(total / 1048576).toFixed(2)} MB, contentVersion ${manifest.contentDate}`);
   if (options.compareLive) await compareLive(manifest, options.serviceAccount);

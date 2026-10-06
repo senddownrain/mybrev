@@ -94,6 +94,15 @@ npm run content:app-release -- --snapshot backups/firestore-snapshot \
   --snapshot backups/firestore-snapshot-static --out ../ibreviarybyapp/assets/content
 ```
 
+Каждая коллекция bundle несёт свою версию — время snapshot, из которого она
+взята (`manifest.json` → `collections.<name>.contentVersion` и поле в файле
+коллекции); верхний `contentVersion` — самая новая из них. Приложение сверяет
+свои обновления с версией именно этой коллекции.
+
+В приложении «нужна новая версия» (`appReleaseRequired`) — это и пересборка
+(MASS CONTENT REBUILD, опубликованная через override), и новая схема; статус
+сохраняется и снимается первой совместимой проверкой.
+
 `content:app-release` валидирует, собирает `assets/content`, затем сверяет
 бандл с `contentManifest/current` (одно чтение). Если отличается (устаревший
 snapshot или неопубликованная правка) — exit 3: не выпускать такой бандл.
