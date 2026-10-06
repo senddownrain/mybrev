@@ -16,21 +16,26 @@ const TARGET_COLLECTION = 'readings';
 const SECTION_PATTERN = /^reading\d+$/u;
 
 function args(argv) {
-  const options = { snapshot: DEFAULT_SNAPSHOT, report: DEFAULT_REPORT, serviceAccount: DEFAULT_ACCOUNT, apply: false };
+  const options = { snapshot: DEFAULT_SNAPSHOT, report: DEFAULT_REPORT, serviceAccount: DEFAULT_ACCOUNT, apply: false, id: null };
   for (let i = 0; i < argv.length; i += 1) {
     const item = argv[i];
     if (item === '--apply') options.apply = true;
     else if (item === '--snapshot') options.snapshot = path.resolve(argv[++i]);
     else if (item === '--report') options.report = path.resolve(argv[++i]);
     else if (item === '--service-account') options.serviceAccount = path.resolve(argv[++i]);
+    else if (item === '--id') options.id = argv[++i];
     else if (item === '--help' || item === '-h') options.help = true;
     else throw new Error(`Unknown option: ${item}`);
   }
   return options;
 }
 
-function excerpt(value) {
-  return String(value).slice(0, 145).replace(/\r?\n/gu, '↵');
+function previewPair(before, after) {
+  let difference = 0;
+  while (difference < before.length && before[difference] === after[difference]) difference += 1;
+  const start = Math.max(0, difference - 55);
+  const preview = (value) => value.slice(start, difference + 90).replace(/\r?\n/gu, '↵');
+  return { before: preview(before), after: preview(after) };
 }
 
 function digest(value) {
@@ -52,11 +57,11 @@ export function buildReadingParagraphPlan(documents) {
         type: sectionName === 'gospel' ? 'gospel' : 'reading',
         section: sectionName,
         lineCount: result.lineCount,
-        before: excerpt(before),
+        before: result.kind === 'change' ? previewPair(before, result.value).before : before.slice(0, 145).replace(/\r?\n/gu, '↵'),
         beforeSha256: digest(before),
       };
       if (result.kind === 'change') {
-        changes.push({ ...entry, after: excerpt(result.value), afterSha256: digest(result.value) });
+        changes.push({ ...entry, after: previewPair(before, result.value).after, afterSha256: digest(result.value) });
       } else {
         review.push({ ...entry, reason: 'Mixed or marked-up paragraphs; no automatic change' });
       }
@@ -143,14 +148,16 @@ async function applyPlan(plan, sourceDocuments, options, projectId) {
 async function main() {
   const options = args(process.argv.slice(2));
   if (options.help) {
-    console.log('Usage: node scripts/cleanup-reading-paragraphs.mjs [--snapshot DIR] [--report FILE] [--apply] [--service-account FILE]');
+    console.log('Usage: node scripts/cleanup-reading-paragraphs.mjs [--snapshot DIR] [--report FILE] [--id DOCUMENT_ID] [--apply] [--service-account FILE]');
     console.log('Default: local snapshot dry run. --apply reads only candidate IDs and writes matching fields in readings.');
     return;
   }
   const snapshot = await openFirestoreSnapshot(options.snapshot);
   const collection = snapshot.collectionPaths.includes(TARGET_COLLECTION) ? TARGET_COLLECTION : 'parsedData';
-  const documents = await snapshot.collection(collection);
-  if (!documents) throw new Error(`Snapshot needs readings or parsedData: ${snapshot.root}`);
+  const allDocuments = await snapshot.collection(collection);
+  if (!allDocuments) throw new Error(`Snapshot needs readings or parsedData: ${snapshot.root}`);
+  const documents = options.id ? allDocuments.filter((document) => document.id === options.id) : allDocuments;
+  if (options.id && !documents.length) throw new Error(`Document absent from snapshot: ${options.id}`);
   const plan = buildReadingParagraphPlan(documents);
   const report = {
     mode: options.apply ? 'apply' : 'dry-run', analysisSource: snapshot.root,

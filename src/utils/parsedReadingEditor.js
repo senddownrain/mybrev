@@ -28,12 +28,19 @@ function emptyReadingSection() {
 }
 
 function normalizeReadingSection(section = {}) {
-  return {
+  const normalized = {
     bible: nullableText(section.bible),
     comment: nullableText(section.comment),
     title: nullableText(section.title),
     text: normalizeReadingText(text(section.text)),
   };
+  const alternatives = (section.alternatives || [])
+    .filter(sectionHasAnyValue)
+    .map((alternative) => normalizeReadingSection(alternative));
+  if (alternatives.length) normalized.alternatives = alternatives;
+  const italicLines = (section.italicLines || []).map(text).filter(Boolean);
+  if (italicLines.length) normalized.italicLines = [...new Set(italicLines)];
+  return normalized;
 }
 
 function sectionHasAnyValue(section = {}) {
@@ -99,6 +106,7 @@ export function createParsedReadingDraft(data = {}, seed = {}) {
       bible: data.alleluia?.bible ?? '',
       verse: data.alleluia?.verse ?? data.alleluia?.text ?? '',
     },
+    sequence: { text: data.sequence?.text ?? '' },
     gospel: {
       ...emptyReadingSection(),
       ...(data.gospel || {}),
@@ -178,6 +186,10 @@ export function buildParsedReadingPayload(draft, original = {}) {
   } else {
     delete payload.alleluia;
   }
+
+  const sequenceText = text(draft.sequence?.text);
+  if (sequenceText) payload.sequence = { text: sequenceText };
+  else delete payload.sequence;
 
   payload.gospel = normalizeReadingSection(draft.gospel);
   return payload;

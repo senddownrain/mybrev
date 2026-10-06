@@ -215,6 +215,17 @@
                 />
               </v-col>
             </v-row>
+            <div v-for="(alternative, index) in section.alternatives || []" :key="index" class="mt-5">
+              <div class="d-flex align-center justify-space-between mb-3">
+                <strong>Альтэрнатыўнае чытанне {{ index + 1 }}</strong>
+                <v-btn variant="text" color="error" @click="section.alternatives.splice(index, 1)">Прыбраць</v-btn>
+              </div>
+              <v-text-field v-model="alternative.bible" label="Біблійная спасылка" variant="outlined" />
+              <v-text-field v-model="alternative.comment" label="Кароткі сэнсавы загаловак" variant="outlined" />
+              <v-text-field v-model="alternative.title" label="Літургічны ўступ" variant="outlined" />
+              <v-textarea v-model="alternative.text" label="Тэкст" rows="5" auto-grow variant="outlined" />
+            </div>
+            <v-btn variant="text" prepend-icon="mdi-plus" class="mt-3" @click="addAlternative(section)">Дадаць альтэрнатыўнае чытанне</v-btn>
             <div v-if="section.key !== 'reading1'" class="d-flex justify-end mt-3">
               <v-btn
                 color="error"
@@ -229,6 +240,13 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
       </v-expansion-panels>
+
+      <v-card class="reading-editor__card mb-5" elevation="0">
+        <v-card-title>Секвенцыя</v-card-title>
+        <v-card-text>
+          <v-textarea v-model="draft.sequence.text" label="Тэкст секвенцыі (калі ёсць)" rows="6" auto-grow variant="outlined" />
+        </v-card-text>
+      </v-card>
 
       <v-card class="reading-editor__card mb-5" elevation="0">
         <v-card-title>Рэспансарыйны псальм</v-card-title>
@@ -324,6 +342,9 @@
                 toolbar="essential"
               />
             </v-col>
+            <v-col v-if="draft.gospel.italicLines?.length" cols="12">
+              <v-textarea v-model="gospelItalicLines" label="Радкі курсівам (па адным у радку)" rows="5" auto-grow variant="outlined" />
+            </v-col>
           </v-row>
         </v-card-text>
       </v-card>
@@ -381,6 +402,10 @@ const loadError = ref('');
 const validationErrors = ref([]);
 const original = ref({});
 const draft = ref(createParsedReadingDraft());
+const gospelItalicLines = computed({
+  get: () => (draft.value.gospel.italicLines || []).join('\n'),
+  set: (value) => { draft.value.gospel.italicLines = String(value).split('\n').map((line) => line.trim()).filter(Boolean); },
+});
 const openReadingPanels = ref(['reading1']);
 
 const sourceOptions = computed(() => [
@@ -503,6 +528,11 @@ function addReadingSection() {
   const section = createAdditionalReadingSection(draft.value.readingSections);
   draft.value.readingSections.push(section);
   openReadingPanels.value.push(section.key);
+}
+
+function addAlternative(section) {
+  if (!Array.isArray(section.alternatives)) section.alternatives = [];
+  section.alternatives.push({ bible: '', comment: '', title: '', text: '' });
 }
 
 function removeReadingSection(key) {

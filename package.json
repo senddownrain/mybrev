@@ -40,6 +40,7 @@
     "db:cleanup-intercessions": "node scripts/cleanup-fixed-day-intercessions.mjs",
     "db:cleanup-psalm-breaks": "node scripts/cleanup-psalm-cadence-breaks.mjs",
     "db:cleanup-reading-paragraphs": "node scripts/cleanup-reading-paragraphs.mjs",
+    "db:cleanup-reading-structures": "node scripts/cleanup-reading-structures.mjs",
     "ordo:extract": "python3 scripts/ordo/extract.py && node scripts/ordo/build.mjs && node scripts/ordo/build-identities.mjs && node scripts/ordo/build-calendar-definitions.mjs",
     "ordo:build": "node scripts/ordo/build.mjs && node scripts/ordo/build-identities.mjs && node scripts/ordo/build-calendar-definitions.mjs",
     "ordo:identities": "node scripts/ordo/build-identities.mjs",

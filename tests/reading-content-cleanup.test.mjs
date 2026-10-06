@@ -22,6 +22,15 @@ test('short poetic lines lose only the accidental blank line and stay idempotent
   assert.equal(inspectReadingText(result.value).kind, 'unchanged');
 });
 
+test('a prose introduction keeps its paragraph before a run of poetic lines', () => {
+  const introduction = 'У ранейшыя часы прыніжана была зямля Забулонава і зямля Нэфталіева, але ў будучыні праслаўлены будзе прыморскі шлях, зямля за Ярданам, Галілея язычнікаў.';
+  const source = [introduction, ...poem].join('\n\n');
+  const result = inspectReadingText(source);
+  assert.equal(result.kind, 'change');
+  assert.equal(result.value, `${introduction}\n\n${poem.join('\n')}`);
+  assert.equal(inspectReadingText(result.value).kind, 'unchanged');
+});
+
 test('mixed prose and real paragraphs are left for review', () => {
   const text = ['У тыя дні:', ...poem.slice(0, 7), 'A long paragraph. '.repeat(12)].join('\n\n');
   assert.equal(inspectReadingText(text).kind, 'review');

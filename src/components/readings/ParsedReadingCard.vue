@@ -34,6 +34,13 @@
           >
             Гэта слова Божае.
           </div>
+          <div v-for="(alternative, index) in section.data.alternatives || []" :key="index" class="reading-alternative">
+            <div class="reading-alternative__label">Або <span v-if="alternative.bible">{{ alternative.bible }}</span></div>
+            <div v-if="alternative.comment" class="section-comment">{{ alternative.comment }}</div>
+            <div v-if="alternative.title" class="reading-rubric">{{ alternative.title }}</div>
+            <div v-if="alternative.text" class="section-text" v-html="formatText(strippedText(alternative))"></div>
+            <div v-if="alternative.text && !hasAcclamation(alternative.text)" class="reading-acclamation">Гэта слова Божае.</div>
+          </div>
         </template>
 
         <template v-else-if="section.key === 'psalm'">
@@ -92,7 +99,7 @@
           <div v-if="section.data.title" class="reading-rubric gospel-rubric">
             {{ section.data.title }}
           </div>
-          <div v-if="section.data.text" class="section-text" v-html="formatText(section.data.text)"></div>
+          <div v-if="section.data.text" class="section-text" v-html="formatText(section.data.text, section.data.italicLines)"></div>
           <div
             v-if="section.data.text && !hasAcclamation(section.data.text)"
             class="reading-acclamation"
@@ -138,6 +145,7 @@ const sections = computed(() => {
     ...firstReading,
     ...(props.reading.psalm ? ['psalm'] : []),
     ...laterReadings,
+    ...(props.reading.sequence?.text ? ['sequence'] : []),
     ...(props.reading.alleluia ? ['alleluia'] : []),
     ...(props.reading.gospel ? ['gospel'] : []),
   ];
@@ -145,6 +153,7 @@ const sections = computed(() => {
     psalm: 'Рэспансарыйны псальм',
     alleluia: 'Спеў перад Евангеллем',
     gospel: 'Евангелле',
+    sequence: 'Секвенцыя',
   };
   return ordered.map((key) => ({
     key,
@@ -175,13 +184,16 @@ function escapeHtml(value) {
     .replace(/'/g, '&#039;');
 }
 
-function formatText(text) {
+function formatText(text, italicLines = []) {
   if (!text) return '';
   if (/<[a-z][\s\S]*>/i.test(text)) return text;
   return String(text)
     .split(/\n{2,}/)
     .map((paragraph) => {
-      const safe = escapeHtml(paragraph).replace(/\n/g, '<br>');
+      const safe = paragraph.split('\n').map((line) => {
+        const escaped = escapeHtml(line);
+        return italicLines.includes(line) ? `<em>${escaped}</em>` : escaped;
+      }).join('<br>');
       const className = /^Гэта слова (?:Пана|Божае)\.?$/i.test(paragraph.trim())
         ? ' class="reading-acclamation"'
         : '';
@@ -351,6 +363,23 @@ function cycleLabel(value) {
 .section-text :deep(.reading-acclamation) {
   margin-top: 1.35em;
   font-weight: 700;
+}
+
+.reading-alternative {
+  margin-top: 1.8em;
+  padding-top: 1.1em;
+  border-top: 1px solid var(--reader-border);
+}
+
+.reading-alternative__label {
+  margin-bottom: 0.7em;
+  color: var(--reading-visible-color);
+  font-weight: 750;
+}
+
+.reading-alternative__label span {
+  margin-left: 0.5em;
+  color: var(--nav-muted);
 }
 
 .section-text :deep(b),
