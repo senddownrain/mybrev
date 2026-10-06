@@ -48,7 +48,7 @@ const ROOT = process.cwd();
 
 function parseArgs(argv) {
   const options = {
-    snapshots: [], apply: false, allowLargePatch: false, schemaRelease: false,
+    snapshots: [], apply: false, allowLargePatch: false, schemaRelease: false, introduceCollections: false,
     serviceAccount: path.join(ROOT, 'patchs', 'serviceAccountKey.json'),
   };
   for (let index = 0; index < argv.length; index += 1) {
@@ -56,6 +56,7 @@ function parseArgs(argv) {
     else if (argv[index] === '--apply') options.apply = true;
     else if (argv[index] === '--allow-large-patch') options.allowLargePatch = true;
     else if (argv[index] === '--schema-release') options.schemaRelease = true;
+    else if (argv[index] === '--introduce-collections') options.introduceCollections = true;
     else if (argv[index] === '--service-account') options.serviceAccount = argv[++index];
   }
   if (options.apply && options.snapshots.length) throw new Error('--apply publishes hashes of live Firestore only (no --snapshot).');
@@ -64,9 +65,16 @@ function parseArgs(argv) {
 
 /** Next manifest from the described collections and the published one. */
 /** Whether [verdict] may be published with these flags (and why not). */
-export function publicationDecision(verdict, { invalid = 0, allowLargePatch = false, schemaRelease = false } = {}) {
+export function publicationDecision(verdict, {
+  invalid = 0, allowLargePatch = false, schemaRelease = false, introduceCollections = false,
+} = {}) {
   if (invalid > 0) return { publish: false, why: `${invalid} invalid documents` };
   if (verdict === 'SAFE CONTENT PATCH' || verdict === 'INITIAL MANIFEST') return { publish: true };
+  if (verdict === 'NEW COLLECTIONS') {
+    return introduceCollections
+      ? { publish: true, loud: true }
+      : { publish: false, why: 'new collections (only after the app release that bundles them: --introduce-collections)' };
+  }
   if (verdict === 'MASS CONTENT REBUILD') {
     return allowLargePatch
       ? { publish: true, loud: true }
@@ -143,6 +151,7 @@ async function main() {
     const classification = classifyPatch(diffs, { publishedSchema: published ? published.schemaVersion ?? null : null });
     const decision = publicationDecision(classification.verdict, {
       invalid: invalid.length, allowLargePatch: options.allowLargePatch, schemaRelease: options.schemaRelease,
+      introduceCollections: options.introduceCollections,
     });
     console.log(invalid.length
       ? `INVALID DOCUMENTS (${invalid.length}):\n${invalid.slice(0, 20).map((item) => `  ${item.collection}/${item.id}: ${item.reason}`).join('\n')}\n`

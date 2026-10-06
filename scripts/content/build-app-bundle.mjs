@@ -120,9 +120,17 @@ async function compareLive(manifest, serviceAccountPath) {
     firestore.settings({ preferRest: true });
     const published = (await firestore.collection('contentManifest').doc('current').get()).data();
     if (!published) throw new Error('contentManifest/current is not published.');
+    // A collection the published manifest does not name yet is introduced by
+    // this release (old apps ignore it); publish it after the release with
+    // `content:manifest -- --apply --introduce-collections`.
+    const introduced = Object.keys(manifest.collections).filter((name) => !published.collections?.[name]);
     const differing = Object.entries(manifest.collections)
-      .filter(([name, item]) => published.collections?.[name]?.digest !== item.digest)
+      .filter(([name, item]) => published.collections?.[name] && published.collections[name].digest !== item.digest)
       .map(([name]) => name);
+    if (introduced.length) {
+      console.warn(`\nNEW IN THIS RELEASE (not in contentManifest yet): ${introduced.join(', ')}.\n`
+        + 'Publish them only after this app version is live: npm run content:manifest -- --apply --introduce-collections');
+    }
     if (published.schemaVersion !== manifest.schemaVersion) differing.push(`schemaVersion ${published.schemaVersion} ≠ ${manifest.schemaVersion}`);
     if (differing.length) {
       process.exitCode = 3;

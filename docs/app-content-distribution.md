@@ -6,8 +6,37 @@ Flutter-приложение (ibreviarybyapp) поставляется с пол
 
 Коллекции: `days`, `readings`, `liturgicalTemplates`, `invitatoriums`,
 `completoriums`, `prayers`, `prayerCategories`, `songs`, `compendium`,
-`compendiumMeta` (Кампендый: разделы и `current` с meta и parts)
-(`scripts/content/lib/app-content.mjs` → `APP_CONTENT_COLLECTIONS`).
+`compendiumMeta` (Кампендый: разделы и `current` с meta и parts), а также
+календарь Ordo и канонические Proper: `liturgicalCalendarMeta`,
+`liturgicalCelebrations`, `liturgicalDioceseOverrides`,
+`liturgicalYearOverrides`, `liturgicalProperTexts`, `liturgicalOrdoNotes`
+(`scripts/content/lib/app-content.mjs` → `APP_CONTENT_COLLECTIONS`;
+во Flutter — `kContentCollections`, списки должны совпадать).
+`yearOptions` в приложение не входит: годовые якоря вычисляются на устройстве.
+
+## Новые коллекции: порядок выпуска (обязателен)
+
+Старое приложение берёт из манифеста только коллекции своего списка и
+неизвестные пропускает; новое приложение получает новые коллекции из своего
+бандла. Поэтому новая коллекция попадает в манифест **только после** релиза,
+который её содержит:
+
+```text
+1. snapshot (db:backup … liturgical*)            — локально
+2. content:app-release → assets/content           — бандл с новыми коллекциями;
+   сверка с манифестом: «NEW IN THIS RELEASE» — предупреждение, не ошибка
+3. релиз Flutter (App Store / Google Play)        — новые коллекции едут в бандле
+4. после выхода релиза:
+   npm run content:manifest                       — вердикт NEW COLLECTIONS
+   npm run content:manifest -- --apply --introduce-collections
+5. дальше — обычные патчи (SAFE CONTENT PATCH)
+```
+
+Без `--introduce-collections` вердикт NEW COLLECTIONS не публикуется
+(`--allow-large-patch` не помогает). Новые коллекции не считаются загрузкой
+патча: у новых приложений digest совпадает с бандлом, старые их не читают.
+Связанные литургические коллекции (определения, Proper, notes) одной
+публикации приложение активирует одним поколением (`ContentStore.commit`).
 
 ## Два канала доставки
 
@@ -50,6 +79,7 @@ SAFE CONTENT PATCH
 |---|---|
 | SAFE CONTENT PATCH | публикует |
 | MASS CONTENT REBUILD | **отказ** (exit 2); `--allow-large-patch` публикует с крупным предупреждением, отказ/override пишутся в отчёт миграций |
+| NEW COLLECTIONS | **отказ**; `--introduce-collections` — только после релиза приложения, в бандле которого они есть |
 | SCHEMA CHANGE | **отказ**; `--allow-large-patch` не помогает; `--schema-release` — только вместе с релизом приложения, которое читает новую схему |
 | невалидные документы | **отказ всегда** |
 | INITIAL MANIFEST | публикует (первая публикация) |
@@ -82,12 +112,20 @@ songs 447 (~1 КБ). Обычный патч — до 1–2 МБ; пересбо
 | songs | `title`, `text` |
 | compendium | `title`, `questions` |
 | compendiumMeta | `unitIds`, `parts`, целый `contentVersion` |
+| liturgicalCalendarMeta | целые `schemaVersion`, `revision` |
+| liturgicalCelebrations | `validateCelebrationDefinition` (Ordo engine) |
+| liturgicalDioceseOverrides | `validateDioceseOverride` |
+| liturgicalYearOverrides | `validateYearOverride` |
+| liturgicalProperTexts | `_schema: 2`, `_celebrationId`, `_date` |
+| liturgicalOrdoNotes | `selector.type`, `scope.level`, `text` или `title` |
 
 ## Релиз приложения
 
 ```bash
 npm run db:backup -- --output backups/firestore-snapshot --collection days --collection readings \
-  --collection liturgicalTemplates --collection invitatoriums --collection completoriums
+  --collection liturgicalTemplates --collection invitatoriums --collection completoriums \
+  --collection liturgicalCalendarMeta --collection liturgicalCelebrations --collection liturgicalDioceseOverrides \
+  --collection liturgicalYearOverrides --collection liturgicalProperTexts --collection liturgicalOrdoNotes
 npm run db:backup -- --output backups/firestore-snapshot-static --collection prayers \
   --collection prayerCategories --collection songs --collection compendium --collection compendiumMeta
 npm run content:app-release -- --snapshot backups/firestore-snapshot \
@@ -110,3 +148,12 @@ sha256 (16 hex) канонического JSON (ключи отсортиров
 документа (Timestamp → мс), без `updatedAt`, `importedAt`, `parsedAt`,
 `miniSavedAt`. Тот же алгоритм в Dart (`documentHash`), сверено на всех
 документах. Не менять одну сторону без другой.
+
+## Паритет Ordo web ↔ Flutter
+
+`npm run ordo:flutter-fixture -- --snapshot backups/firestore-snapshot --out
+../ibreviarybyapp/test/fixtures/ordo_parity.json.gz` — read-only: web-движок
+и web-сборка Гадзін на локальном snapshot (те же документы, что в бандле
+приложения), 2025–2032 × 4 дыяцэзіі. Flutter-тест `test/ordo_parity_test.dart`
+сверяет с ним Dart-порт (точное совпадение). Fixture — тестовый артефакт, не
+контент приложения.

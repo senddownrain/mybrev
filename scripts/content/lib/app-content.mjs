@@ -9,6 +9,8 @@
  * without changing the text.
  */
 import { createHash } from 'node:crypto';
+import { validateCelebrationDefinition, validateDioceseOverride } from '../../../src/utils/ordo/definitions.js';
+import { validateYearOverride } from '../../../src/utils/ordo/yearOverrides.js';
 
 export const CONTENT_SCHEMA_VERSION = 1;
 
@@ -25,7 +27,29 @@ export const APP_CONTENT_COLLECTIONS = [
   // Compendium of the Catechism: units, and `current` (meta + parts).
   'compendium',
   'compendiumMeta',
+  // Ordo (liturgical calendar) and the canonical sparse Propers. One
+  // publication of the calendar is one generation in the app (atomic).
+  'liturgicalCalendarMeta',
+  'liturgicalCelebrations',
+  'liturgicalDioceseOverrides',
+  'liturgicalYearOverrides',
+  'liturgicalProperTexts',
+  'liturgicalOrdoNotes',
 ];
+
+/**
+ * Collections the app reads only through the Ordo engine / Hours assembler;
+ * a published manifest must not name them before an app release that ships
+ * them in its bundle (`--introduce-collections`, docs/app-content-distribution.md).
+ */
+export const ORDO_CONTENT_COLLECTIONS = Object.freeze([
+  'liturgicalCalendarMeta',
+  'liturgicalCelebrations',
+  'liturgicalDioceseOverrides',
+  'liturgicalYearOverrides',
+  'liturgicalProperTexts',
+  'liturgicalOrdoNotes',
+]);
 
 /** Written by imports, not part of the text. */
 export const BOOKKEEPING_FIELDS = new Set(['updatedAt', 'importedAt', 'parsedAt', 'miniSavedAt']);
@@ -153,7 +177,19 @@ export const DOCUMENT_RULES = {
   songs: (doc) => (filled(doc.title) && filled(doc.text)) || 'no title/text',
   compendium: (doc) => (filled(doc.title) && filled(doc.questions)) || 'no title/questions',
   compendiumMeta: (doc) => (filled(doc.unitIds) && filled(doc.parts) && Number.isInteger(doc.contentVersion)) || 'no unitIds/parts/contentVersion',
+  // The engine skips an invalid definition; the publisher refuses it.
+  liturgicalCalendarMeta: (doc) => (Number.isInteger(doc.schemaVersion) && Number.isInteger(doc.revision)) || 'no schemaVersion/revision',
+  liturgicalCelebrations: (doc) => errorsOrTrue(validateCelebrationDefinition(doc)),
+  liturgicalDioceseOverrides: (doc) => errorsOrTrue(validateDioceseOverride(doc)),
+  liturgicalYearOverrides: (doc) => errorsOrTrue(validateYearOverride(doc)),
+  // Sparse Proper (`_schema: 2`): identity of the celebration, own texts only.
+  liturgicalProperTexts: (doc) => (doc._schema === 2 && filled(doc._celebrationId) && filled(doc._date)) || 'not a sparse Proper (_schema 2, _celebrationId, _date)',
+  liturgicalOrdoNotes: (doc) => (filled(doc.selector?.type) && filled(doc.scope?.level) && anyOf(doc, ['text', 'title'])) || 'no selector/scope/text',
 };
+
+function errorsOrTrue(errors) {
+  return errors.length ? errors.join('; ') : true;
+}
 
 /** Documents that would reach the app broken: [{collection, id, reason}]. */
 export function validateCollection(name, docs) {
@@ -193,7 +229,12 @@ export function diffCollection(name, described, previous) {
   const changed = Object.keys(described.hashes).filter((id) => id in before && before[id] !== described.hashes[id]).sort();
   const removed = Object.keys(before).filter((id) => !(id in described.hashes)).sort();
   const bytes = [...added, ...changed].reduce((sum, id) => sum + (described.sizes[id] || 0), 0);
-  return { collection: name, count: described.count, previousCount: Object.keys(before).length, added, changed, removed, bytes };
+  return {
+    collection: name, count: described.count, previousCount: Object.keys(before).length, added, changed, removed, bytes,
+    // Not in the published manifest yet: the app that reads it ships it in
+    // its bundle, so it is never a download (see `classifyPatch`).
+    ...(previous ? {} : { introduced: true }),
+  };
 }
 
 /**
@@ -207,17 +248,26 @@ export function classifyPatch(diffs, { publishedSchema = null, schema = CONTENT_
     return { verdict: 'SCHEMA CHANGE', reasons: [`schemaVersion ${publishedSchema} → ${schema}`] };
   }
   const reasons = [];
-  const documents = diffs.reduce((sum, d) => sum + d.added.length + d.changed.length + d.removed.length, 0);
-  const bytes = diffs.reduce((sum, d) => sum + d.bytes, 0);
+  // A collection new to the manifest is the baseline of the app release
+  // that ships it (old apps ignore unknown collections): it is not a patch
+  // download and is published only explicitly (`--introduce-collections`).
+  const introduced = diffs.filter((d) => d.introduced);
+  const patch = diffs.filter((d) => !d.introduced);
+  const documents = patch.reduce((sum, d) => sum + d.added.length + d.changed.length + d.removed.length, 0);
+  const bytes = patch.reduce((sum, d) => sum + d.bytes, 0);
   if (bytes > limits.maxBytes) reasons.push(`download ${(bytes / 1048576).toFixed(1)} MB > ${limits.maxBytes / 1048576} MB`);
   if (documents > limits.maxDocuments) reasons.push(`${documents} documents > ${limits.maxDocuments}`);
-  for (const d of diffs) {
+  for (const d of patch) {
     const replaced = d.changed.length + d.removed.length;
     if (replaced > limits.replacedFloor && replaced > d.previousCount * limits.maxReplacedShare) {
       reasons.push(`${d.collection}: ${replaced} / ${d.previousCount} replaced`);
     }
   }
-  return reasons.length ? { verdict: 'MASS CONTENT REBUILD', reasons } : { verdict: 'SAFE CONTENT PATCH', reasons: [] };
+  if (reasons.length) return { verdict: 'MASS CONTENT REBUILD', reasons };
+  if (introduced.length) {
+    return { verdict: 'NEW COLLECTIONS', reasons: introduced.map((d) => `${d.collection}: ${d.count} documents (bundled by the app release)`) };
+  }
+  return { verdict: 'SAFE CONTENT PATCH', reasons: [] };
 }
 
 const kb = (bytes) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`);
@@ -239,6 +289,10 @@ export function formatPatchReport(diffs, classification) {
   classification.reasons.forEach((reason) => lines.push(`  - ${reason}`));
   if (classification.verdict === 'MASS CONTENT REBUILD') {
     lines.push('', 'Do not publish this as a content patch.', 'Build a new bundled snapshot and release a new app version.');
+  }
+  if (classification.verdict === 'NEW COLLECTIONS') {
+    lines.push('', 'Publish only after the app release that bundles these collections is live:',
+      'npm run content:manifest -- --apply --introduce-collections');
   }
   if (classification.verdict === 'SCHEMA CHANGE') {
     lines.push('', 'A schema change always means a new bundle and a new app version.');

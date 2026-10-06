@@ -145,3 +145,34 @@ test('invalid documents are never published', () => {
   assert.equal(publicationDecision('SAFE CONTENT PATCH', { invalid: 1, allowLargePatch: true }).publish, false);
   assert.deepEqual(validateCollection('prayers', [{ id: 'p', titleVersions: { be: 'Т' }, textVersions: { be: 'Т' } }]), []);
 });
+
+test('Ordo collections new to the manifest are introduced only explicitly', () => {
+  const notes = corpus('n', 1204, 500);
+  const prayers = corpus('p', 117, 17_000);
+  const diffs = [
+    diffCollection('liturgicalOrdoNotes', notes, null),
+    diffCollection('prayers', edit(prayers, { change: 1 }), prayers),
+  ];
+  const result = classifyPatch(diffs, { publishedSchema: 1 });
+  // 1204 new notes are the bundle of the app release, not a patch download.
+  assert.equal(result.verdict, 'NEW COLLECTIONS');
+  assert.match(formatPatchReport(diffs, result), /--introduce-collections/);
+  assert.equal(publicationDecision(result.verdict).publish, false);
+  assert.deepEqual(publicationDecision(result.verdict, { introduceCollections: true }), { publish: true, loud: true });
+  assert.equal(publicationDecision(result.verdict, { allowLargePatch: true }).publish, false);
+});
+
+test('the Ordo collections are validated like the engine reads them', () => {
+  assert.deepEqual(validateCollection('liturgicalProperTexts', [
+    { id: '06-10-sv-bruno', _schema: 2, _celebrationId: 'sv-bruno', _date: '06.10' },
+  ]), []);
+  assert.equal(validateCollection('liturgicalProperTexts', [{ id: 'x', _date: '01.01' }]).length, 1);
+  assert.deepEqual(validateCollection('liturgicalCelebrations', [{
+    id: 'sv-bruno', title: 'Св. Бруна', scope: 'universal', rank: 'memoria-ad-libitum', color: 'albus',
+    dateRule: { type: 'fixed', month: 10, day: 6 },
+  }]), []);
+  assert.equal(validateCollection('liturgicalCelebrations', [{ id: 'x', title: 'X', scope: 'universal', rank: 'memoria', color: 'blue', dateRule: { type: 'fixed', month: 1, day: 1 } }]).length, 1);
+  assert.equal(validateCollection('liturgicalOrdoNotes', [{ id: 'n', scope: { level: 'universal' }, selector: { type: 'fixed-date', month: 1, day: 1 }, text: 'Т' }]).length, 0);
+  assert.equal(validateCollection('liturgicalYearOverrides', [{ id: 'y', year: 2026, scope: 'diocese', dioceseId: 'grodno', action: 'move', targetCelebrationId: 'a', to: '2026-01-02' }]).length, 0);
+  assert.equal(validateCollection('liturgicalCalendarMeta', [{ id: 'current', schemaVersion: 1, revision: 2 }]).length, 0);
+});
