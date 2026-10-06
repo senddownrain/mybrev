@@ -65,3 +65,83 @@ test('the manifest version moves only with the content', () => {
   assert.equal(next.current.collections.days.version, 2);
   assert.equal(next.current.collections.songs.version, 1);
 });
+
+import { classifyPatch, diffCollection, formatPatchReport, validateCollection, PATCH_LIMITS } from '../scripts/content/lib/app-content.mjs';
+import { publicationDecision } from '../scripts/content/publish-manifest.mjs';
+
+// A pretend published collection of [count] documents of [size] bytes.
+function corpus(prefix, count, size) {
+  const hashes = {};
+  const sizes = {};
+  for (let i = 0; i < count; i += 1) {
+    hashes[`${prefix}-${i}`] = `h${i}`;
+    sizes[`${prefix}-${i}`] = size;
+  }
+  return { hashes, sizes, count };
+}
+
+function edit(published, { change = 0, add = 0, remove = 0, size = 1000 }) {
+  const next = { hashes: { ...published.hashes }, sizes: { ...published.sizes } };
+  Object.keys(published.hashes).slice(0, change).forEach((id) => { next.hashes[id] = `${next.hashes[id]}x`; });
+  Object.keys(published.hashes).slice(-remove || Infinity).forEach((id) => { if (remove) { delete next.hashes[id]; delete next.sizes[id]; } });
+  for (let i = 0; i < add; i += 1) { next.hashes[`new-${i}`] = `n${i}`; next.sizes[`new-${i}`] = size; }
+  next.count = Object.keys(next.hashes).length;
+  return next;
+}
+
+test('+100 prayers, 8 songs, 3 days, 2 readings: a safe patch', () => {
+  const prayers = corpus('p', 117, 17_000);
+  const songs = corpus('s', 447, 800);
+  const days = corpus('d', 735, 70_000);
+  const readings = corpus('r', 815, 5_000);
+  const diffs = [
+    diffCollection('prayers', edit(prayers, { add: 100, change: 2, size: 3_000 }), prayers),
+    diffCollection('songs', edit(songs, { add: 8, change: 1, size: 800 }), songs),
+    diffCollection('days', edit(days, { change: 3 }), days),
+    diffCollection('readings', edit(readings, { change: 2 }), readings),
+  ];
+  const result = classifyPatch(diffs, { publishedSchema: 1 });
+  assert.equal(result.verdict, 'SAFE CONTENT PATCH');
+  assert.equal(diffs[0].added.length, 100);
+  assert.equal(diffs[0].changed.length, 2);
+  const report = formatPatchReport(diffs, result);
+  assert.match(report, /prayers:\n {2}added: {3}100\n {2}changed: 2 \/ 117/);
+  assert.match(report, /RESULT:\nSAFE CONTENT PATCH/);
+  assert.deepEqual(publicationDecision(result.verdict), { publish: true });
+});
+
+test('most days rebuilt: refused as a mass rebuild', () => {
+  const days = corpus('d', 735, 70_000);
+  const readings = corpus('r', 815, 5_000);
+  const diffs = [
+    diffCollection('days', edit(days, { change: 690 }), days),
+    diffCollection('readings', edit(readings, { change: 704 }), readings),
+  ];
+  const result = classifyPatch(diffs, { publishedSchema: 1 });
+  assert.equal(result.verdict, 'MASS CONTENT REBUILD');
+  assert.ok(result.reasons.some((reason) => reason.startsWith('days: 690 / 735')));
+  assert.match(formatPatchReport(diffs, result), /Do not publish this as a content patch/);
+  assert.equal(publicationDecision(result.verdict).publish, false);
+  assert.deepEqual(publicationDecision(result.verdict, { allowLargePatch: true }), { publish: true, loud: true });
+});
+
+test('size alone can make a patch a rebuild', () => {
+  const days = corpus('d', 735, 70_000);
+  const diffs = [diffCollection('days', edit(days, { change: 90 }), days)];
+  assert.ok(90 * 70_000 > PATCH_LIMITS.maxBytes);
+  assert.equal(classifyPatch(diffs, { publishedSchema: 1 }).verdict, 'MASS CONTENT REBUILD');
+});
+
+test('a schema change is refused; the large-patch override does not help', () => {
+  const result = classifyPatch([], { publishedSchema: 1, schema: 2 });
+  assert.equal(result.verdict, 'SCHEMA CHANGE');
+  assert.equal(publicationDecision(result.verdict, { allowLargePatch: true }).publish, false);
+  assert.equal(publicationDecision(result.verdict, { schemaRelease: true }).publish, true);
+});
+
+test('invalid documents are never published', () => {
+  const invalid = validateCollection('songs', [{ id: 'a', title: 'A', text: 'x' }, { id: 'b', title: '', text: 'x' }]);
+  assert.deepEqual(invalid, [{ collection: 'songs', id: 'b', reason: 'no title/text' }]);
+  assert.equal(publicationDecision('SAFE CONTENT PATCH', { invalid: 1, allowLargePatch: true }).publish, false);
+  assert.deepEqual(validateCollection('prayers', [{ id: 'p', titleVersions: { be: 'Т' }, textVersions: { be: 'Т' } }]), []);
+});

@@ -128,3 +128,115 @@ export function describeDocuments(docs) {
   }
   return { hashes, sizes, digest: collectionDigest(hashes), count: docs.length, bytes: Object.values(sizes).reduce((a, b) => a + b, 0) };
 }
+
+// ── Publishing safeguard ─────────────────────────────────────────────────────
+
+const filled = (value) => (typeof value === 'string' ? value.trim() !== '' : value !== undefined && value !== null && (typeof value !== 'object' || Object.keys(value).length > 0));
+const anyOf = (doc, keys) => keys.some((key) => filled(doc[key]));
+
+/** What a document of each collection must have to be shown at all. */
+export const DOCUMENT_RULES = {
+  // A day is found by its selector; its texts may be partial (a proper
+  // over the current day) or empty (a period placeholder such as
+  // advent-w4-d6, covered by the 17–24 December documents).
+  // office-for-dead is opened by its id.
+  days: (doc) => doc.id === 'office-for-dead' || anyOf(doc, ['_periodType', '_feast', '_date', '_schema']) || 'no selector',
+  readings: (doc) => anyOf(doc, ['reading1', 'psalm', 'reading2', 'gospel']) || 'no reading',
+  liturgicalTemplates: (doc) => (filled(doc._kind) && filled(doc.title)) || 'no _kind/title',
+  invitatoriums: (doc) => filled(doc.invitatoriumPs1) || 'no psalm',
+  completoriums: (doc) => (filled(doc._periodType) && filled(doc.compPs1)) || 'no period/psalm',
+  prayers: (doc) => (anyOf(doc, ['title', 'titleVersions']) && anyOf(doc, ['text', 'textVersions'])) || 'no title/text',
+  prayerCategories: (doc) => filled(doc.name) || 'no name',
+  songs: (doc) => (filled(doc.title) && filled(doc.text)) || 'no title/text',
+};
+
+/** Documents that would reach the app broken: [{collection, id, reason}]. */
+export function validateCollection(name, docs) {
+  const rule = DOCUMENT_RULES[name] || (() => true);
+  return docs.flatMap((doc) => {
+    if (!doc?.id) return [{ collection: name, id: '(no id)', reason: 'no id' }];
+    const result = rule(doc);
+    return result === true ? [] : [{ collection: name, id: doc.id, reason: result }];
+  });
+}
+
+/**
+ * A content patch is what the app installs over its bundle. Above these a
+ * diff is a rebuild of the corpus and belongs to a new bundle in an app
+ * release. Corpus: days 735 (~70 KB each), readings 815 (~5 KB), prayers
+ * 117 (~17 KB), songs 447 (~1 KB): a typical patch (some prayers, a few days)
+ * is well under 2 MB; rebuilding days alone is ~50 MB.
+ */
+export const PATCH_LIMITS = {
+  /** Download of the whole patch (stored bytes of added + changed). */
+  maxBytes: 5 * 1024 * 1024,
+  /** Edited or removed documents of one collection: share of it… */
+  maxReplacedShare: 0.25,
+  /** …counted only above this many (small collections, single fixes). */
+  replacedFloor: 20,
+  /** All documents of the patch. */
+  maxDocuments: 300,
+};
+
+/**
+ * Per collection: added / changed / removed ids and bytes against the
+ * published hashes (`previous` null: nothing published yet).
+ */
+export function diffCollection(name, described, previous) {
+  const before = previous?.hashes || {};
+  const added = Object.keys(described.hashes).filter((id) => !(id in before)).sort();
+  const changed = Object.keys(described.hashes).filter((id) => id in before && before[id] !== described.hashes[id]).sort();
+  const removed = Object.keys(before).filter((id) => !(id in described.hashes)).sort();
+  const bytes = [...added, ...changed].reduce((sum, id) => sum + (described.sizes[id] || 0), 0);
+  return { collection: name, count: described.count, previousCount: Object.keys(before).length, added, changed, removed, bytes };
+}
+
+/**
+ * SAFE PATCH, MASS CONTENT REBUILD, SCHEMA CHANGE or INITIAL MANIFEST, with
+ * the reasons. Only SAFE PATCH (and INITIAL MANIFEST) may be published by
+ * default.
+ */
+export function classifyPatch(diffs, { publishedSchema = null, schema = CONTENT_SCHEMA_VERSION, limits = PATCH_LIMITS } = {}) {
+  if (publishedSchema === null) return { verdict: 'INITIAL MANIFEST', reasons: ['nothing published yet'] };
+  if (publishedSchema !== schema) {
+    return { verdict: 'SCHEMA CHANGE', reasons: [`schemaVersion ${publishedSchema} → ${schema}`] };
+  }
+  const reasons = [];
+  const documents = diffs.reduce((sum, d) => sum + d.added.length + d.changed.length + d.removed.length, 0);
+  const bytes = diffs.reduce((sum, d) => sum + d.bytes, 0);
+  if (bytes > limits.maxBytes) reasons.push(`download ${(bytes / 1048576).toFixed(1)} MB > ${limits.maxBytes / 1048576} MB`);
+  if (documents > limits.maxDocuments) reasons.push(`${documents} documents > ${limits.maxDocuments}`);
+  for (const d of diffs) {
+    const replaced = d.changed.length + d.removed.length;
+    if (replaced > limits.replacedFloor && replaced > d.previousCount * limits.maxReplacedShare) {
+      reasons.push(`${d.collection}: ${replaced} / ${d.previousCount} replaced`);
+    }
+  }
+  return reasons.length ? { verdict: 'MASS CONTENT REBUILD', reasons } : { verdict: 'SAFE CONTENT PATCH', reasons: [] };
+}
+
+const kb = (bytes) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`);
+
+/** The human report printed before any publication. */
+export function formatPatchReport(diffs, classification) {
+  const lines = ['CONTENT UPDATE DIFF', ''];
+  for (const d of diffs) {
+    if (!d.added.length && !d.changed.length && !d.removed.length) continue;
+    lines.push(`${d.collection}:`);
+    if (d.added.length) lines.push(`  added:   ${d.added.length}`);
+    if (d.changed.length) lines.push(`  changed: ${d.changed.length} / ${d.previousCount}`);
+    if (d.removed.length) lines.push(`  removed: ${d.removed.length}`);
+    lines.push(`  bytes:   ${kb(d.bytes)}`, '');
+  }
+  const documents = diffs.reduce((sum, d) => sum + d.added.length + d.changed.length + d.removed.length, 0);
+  const bytes = diffs.reduce((sum, d) => sum + d.bytes, 0);
+  lines.push('TOTAL:', `  ${documents.toLocaleString('en-US')} documents`, `  ${kb(bytes)}`, '', 'RESULT:', classification.verdict);
+  classification.reasons.forEach((reason) => lines.push(`  - ${reason}`));
+  if (classification.verdict === 'MASS CONTENT REBUILD') {
+    lines.push('', 'Do not publish this as a content patch.', 'Build a new bundled snapshot and release a new app version.');
+  }
+  if (classification.verdict === 'SCHEMA CHANGE') {
+    lines.push('', 'A schema change always means a new bundle and a new app version.');
+  }
+  return lines.join('\n');
+}

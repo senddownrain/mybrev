@@ -14,13 +14,32 @@
  *   npm run content:manifest -- --snapshot <dir>     dry-run from a snapshot (analysis)
  *   npm run content:manifest -- --apply              write (live source only)
  *
- * Run after every content publication (imports, admin edits). Additive:
- * only `contentManifest/*` is written; content collections are only read.
+ * The manifest is the published state: a change in Firestore reaches the
+ * apps only through this command, after validation and a diff report:
+ *
+ *   SAFE CONTENT PATCH     → --apply publishes it
+ *   MASS CONTENT REBUILD   → refused (a new bundle + app release);
+ *                            --allow-large-patch overrides, loudly
+ *   SCHEMA CHANGE          → refused; --schema-release only together with
+ *                            the app release that reads the new schema
+ *   invalid documents      → refused, always
+ *
+ * Additive: only `contentManifest/*` is written; content is only read.
+ * Report: reports/content/manifest-diff.json.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import { APP_CONTENT_COLLECTIONS, CONTENT_SCHEMA_VERSION, describeDocuments, storedDocument } from './lib/app-content.mjs';
+import {
+  APP_CONTENT_COLLECTIONS,
+  CONTENT_SCHEMA_VERSION,
+  classifyPatch,
+  describeDocuments,
+  diffCollection,
+  formatPatchReport,
+  storedDocument,
+  validateCollection,
+} from './lib/app-content.mjs';
 import { readCollections } from './build-app-bundle.mjs';
 import { recordMigration } from '../liturgy/lib/migration-report.mjs';
 
@@ -28,10 +47,15 @@ export const MANIFEST_COLLECTION = 'contentManifest';
 const ROOT = process.cwd();
 
 function parseArgs(argv) {
-  const options = { snapshots: [], apply: false, serviceAccount: path.join(ROOT, 'patchs', 'serviceAccountKey.json') };
+  const options = {
+    snapshots: [], apply: false, allowLargePatch: false, schemaRelease: false,
+    serviceAccount: path.join(ROOT, 'patchs', 'serviceAccountKey.json'),
+  };
   for (let index = 0; index < argv.length; index += 1) {
     if (argv[index] === '--snapshot') options.snapshots.push(argv[++index]);
     else if (argv[index] === '--apply') options.apply = true;
+    else if (argv[index] === '--allow-large-patch') options.allowLargePatch = true;
+    else if (argv[index] === '--schema-release') options.schemaRelease = true;
     else if (argv[index] === '--service-account') options.serviceAccount = argv[++index];
   }
   if (options.apply && options.snapshots.length) throw new Error('--apply publishes hashes of live Firestore only (no --snapshot).');
@@ -39,6 +63,23 @@ function parseArgs(argv) {
 }
 
 /** Next manifest from the described collections and the published one. */
+/** Whether [verdict] may be published with these flags (and why not). */
+export function publicationDecision(verdict, { invalid = 0, allowLargePatch = false, schemaRelease = false } = {}) {
+  if (invalid > 0) return { publish: false, why: `${invalid} invalid documents` };
+  if (verdict === 'SAFE CONTENT PATCH' || verdict === 'INITIAL MANIFEST') return { publish: true };
+  if (verdict === 'MASS CONTENT REBUILD') {
+    return allowLargePatch
+      ? { publish: true, loud: true }
+      : { publish: false, why: 'mass rebuild (new bundle + app release, or --allow-large-patch)' };
+  }
+  if (verdict === 'SCHEMA CHANGE') {
+    return schemaRelease
+      ? { publish: true, loud: true }
+      : { publish: false, why: 'schema change (only with the app release: --schema-release)' };
+  }
+  return { publish: false, why: verdict };
+}
+
 export function planManifest(described, published, now = Date.now()) {
   const collections = {};
   const changed = [];
@@ -72,31 +113,68 @@ async function main() {
   }
   try {
     const described = {};
+    const invalid = [];
     if (firestore) {
       for (const name of APP_CONTENT_COLLECTIONS) {
         console.log(`reading ${name}…`);
         const snapshot = await firestore.collection(name).get();
-        described[name] = describeDocuments(snapshot.docs.map((doc) => storedDocument(doc.id, doc.data())));
+        const docs = snapshot.docs.map((doc) => storedDocument(doc.id, doc.data()));
+        invalid.push(...validateCollection(name, docs));
+        described[name] = describeDocuments(docs);
       }
     } else {
       const { collections } = await readCollections(options.snapshots);
-      for (const [name, docs] of collections) described[name] = describeDocuments(docs);
+      for (const [name, docs] of collections) {
+        invalid.push(...validateCollection(name, docs));
+        described[name] = describeDocuments(docs);
+      }
     }
     const published = firestore ? (await firestore.collection(MANIFEST_COLLECTION).doc('current').get()).data() || null : null;
     const { current, changed } = planManifest(described, published);
-    console.log(JSON.stringify({
-      source: firestore ? 'firestore' : options.snapshots,
-      published: published ? { contentVersion: published.contentVersion, publishedAt: published.publishedAt } : null,
-      changed,
-      collections: Object.fromEntries(Object.entries(current.collections).map(([name, item]) => [name, `${item.count} docs, v${item.version}, ${item.digest}`])),
-    }, null, 2));
+
+    // Diff against the published hashes (read only for changed collections).
+    const diffs = [];
+    for (const name of changed) {
+      const previous = published && firestore
+        ? (await firestore.collection(MANIFEST_COLLECTION).doc(name).get()).data() || null
+        : null;
+      diffs.push(diffCollection(name, described[name], previous));
+    }
+    const classification = classifyPatch(diffs, { publishedSchema: published ? published.schemaVersion ?? null : null });
+    const decision = publicationDecision(classification.verdict, {
+      invalid: invalid.length, allowLargePatch: options.allowLargePatch, schemaRelease: options.schemaRelease,
+    });
+    console.log(invalid.length
+      ? `INVALID DOCUMENTS (${invalid.length}):\n${invalid.slice(0, 20).map((item) => `  ${item.collection}/${item.id}: ${item.reason}`).join('\n')}\n`
+      : 'validation: OK');
+    console.log(changed.length ? formatPatchReport(diffs, classification) : 'CONTENT UPDATE DIFF\n\nNothing changed.');
+    const reportPath = path.join(ROOT, 'reports', 'content', 'manifest-diff.json');
+    fs.mkdirSync(path.dirname(reportPath), { recursive: true });
+    fs.writeFileSync(reportPath, `${JSON.stringify({
+      at: new Date().toISOString(), source: firestore ? 'firestore' : options.snapshots,
+      published: published ? { contentVersion: published.contentVersion, schemaVersion: published.schemaVersion } : null,
+      classification, decision, invalid,
+      diffs: diffs.map((d) => ({ ...d, added: d.added.length, changed: d.changed.length, removed: d.removed.length, ids: { added: d.added, changed: d.changed, removed: d.removed } })),
+    }, null, 1)}\n`);
+    console.log(`report: ${path.relative(ROOT, reportPath)}`);
+
     if (!options.apply) {
-      console.log(changed.length ? 'Dry-run: repeat with --apply to publish.' : 'Nothing changed.');
+      console.log(!changed.length ? 'Nothing to publish.'
+        : decision.publish ? 'Dry-run: repeat with --apply to publish.' : `Would be refused: ${decision.why}.`);
       return;
     }
     if (!changed.length) {
       recordMigration(ROOT, { collection: MANIFEST_COLLECTION, mode: 'apply', unchanged: APP_CONTENT_COLLECTIONS.length });
       return;
+    }
+    if (!decision.publish) {
+      process.exitCode = 2;
+      console.error(`\nREFUSED: ${decision.why}. Nothing was published.`);
+      recordMigration(ROOT, { collection: MANIFEST_COLLECTION, mode: 'refused', skipped: changed.length, notes: `${classification.verdict}: ${decision.why}` });
+      return;
+    }
+    if (decision.loud) {
+      console.warn(`\n${'!'.repeat(72)}\n!! PUBLISHING ${classification.verdict} AS A PATCH (explicit override)\n!! Every app downloads it over the network.\n${'!'.repeat(72)}\n`);
     }
     // Collection documents first: `current` never points to a digest whose
     // hashes are not readable yet.

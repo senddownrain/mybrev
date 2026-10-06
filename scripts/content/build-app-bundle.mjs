@@ -8,8 +8,14 @@
  *     --snapshot backups/firestore-snapshot-static --out ../ibreviarybyapp/assets/content
  *
  * Every collection in APP_CONTENT_COLLECTIONS must be found in one of the
- * snapshots. The bundle's contentVersion is the oldest snapshot time: an
- * update downloaded after it is newer, one before it is older.
+ * snapshots and every document must pass validation. The bundle's
+ * contentVersion is the oldest snapshot time: an update downloaded after it
+ * is newer, one before it is older.
+ *
+ * Before an app release (`npm run content:app-release -- …`):
+ *   --compare-live   also reads contentManifest/current (one read) and
+ *                    fails when the bundle differs from what is published
+ *                    (a stale snapshot, or a change not published yet).
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -22,13 +28,15 @@ import {
   describeDocuments,
   encodeCollection,
   storedDocument,
+  validateCollection,
 } from './lib/app-content.mjs';
 
 function parseArgs(argv) {
-  const options = { snapshots: [], out: null };
+  const options = { snapshots: [], out: null, compareLive: false, serviceAccount: path.join(process.cwd(), 'patchs', 'serviceAccountKey.json') };
   for (let index = 0; index < argv.length; index += 1) {
     if (argv[index] === '--snapshot') options.snapshots.push(argv[++index]);
     else if (argv[index] === '--out') options.out = argv[++index];
+    else if (argv[index] === '--compare-live') options.compareLive = true;
   }
   if (!options.snapshots.length || !options.out) {
     throw new Error('Usage: build-app-bundle.mjs --snapshot <dir> [--snapshot <dir>] --out <assets/content>');
@@ -57,6 +65,11 @@ export async function readCollections(snapshotDirs, names = APP_CONTENT_COLLECTI
 async function main() {
   const options = parseArgs(process.argv.slice(2));
   const { collections, contentVersion } = await readCollections(options.snapshots);
+  const invalid = [...collections].flatMap(([name, docs]) => validateCollection(name, docs));
+  if (invalid.length) {
+    invalid.slice(0, 20).forEach((item) => console.error(`  ${item.collection}/${item.id}: ${item.reason}`));
+    throw new Error(`${invalid.length} invalid documents: the bundle was not written.`);
+  }
   fs.mkdirSync(options.out, { recursive: true });
   const manifest = {
     schemaVersion: CONTENT_SCHEMA_VERSION,
@@ -92,6 +105,32 @@ async function main() {
   fs.writeFileSync(path.join(options.out, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   const total = Object.values(manifest.collections).reduce((sum, item) => sum + item.bundleBytes, 0);
   console.log(`total bundle ${(total / 1048576).toFixed(2)} MB, contentVersion ${manifest.contentDate}`);
+  if (options.compareLive) await compareLive(manifest, options.serviceAccount);
+}
+
+/** The bundle must equal the published content (one Firestore read). */
+async function compareLive(manifest, serviceAccountPath) {
+  const [{ default: admin }, credentials] = await Promise.all([import('firebase-admin'), fs.promises.readFile(serviceAccountPath, 'utf8')]);
+  const serviceAccount = JSON.parse(credentials);
+  const app = admin.initializeApp({ credential: admin.credential.cert(serviceAccount), projectId: serviceAccount.project_id }, `content-bundle-${Date.now()}`);
+  try {
+    const firestore = admin.firestore(app);
+    firestore.settings({ preferRest: true });
+    const published = (await firestore.collection('contentManifest').doc('current').get()).data();
+    if (!published) throw new Error('contentManifest/current is not published.');
+    const differing = Object.entries(manifest.collections)
+      .filter(([name, item]) => published.collections?.[name]?.digest !== item.digest)
+      .map(([name]) => name);
+    if (published.schemaVersion !== manifest.schemaVersion) differing.push(`schemaVersion ${published.schemaVersion} ≠ ${manifest.schemaVersion}`);
+    if (differing.length) {
+      process.exitCode = 3;
+      console.error(`\nBUNDLE ≠ PUBLISHED: ${differing.join(', ')}.\nRefresh the snapshot, or publish the manifest (content:manifest), then rebuild — do not release this bundle.`);
+    } else {
+      console.log('bundle = published manifest: ready for the app release.');
+    }
+  } finally {
+    await app.delete();
+  }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
