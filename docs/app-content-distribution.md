@@ -5,7 +5,8 @@ Flutter-приложение (ibreviarybyapp) поставляется с пол
 и замеры — `ibreviarybyapp/docs/data-loading-architecture.md`.
 
 Коллекции: `days`, `readings`, `liturgicalTemplates`, `invitatoriums`,
-`completoriums`, `prayers`, `prayerCategories`, `songs`
+`completoriums`, `prayers`, `prayerCategories`, `songs`, `compendium`,
+`compendiumMeta` (Кампендый: разделы и `current` с meta и parts)
 (`scripts/content/lib/app-content.mjs` → `APP_CONTENT_COLLECTIONS`).
 
 ## Два канала доставки
@@ -79,6 +80,8 @@ songs 447 (~1 КБ). Обычный патч — до 1–2 МБ; пересбо
 | prayers | название и текст (или их версии) |
 | prayerCategories | `name` |
 | songs | `title`, `text` |
+| compendium | `title`, `questions` |
+| compendiumMeta | `unitIds`, `parts`, целый `contentVersion` |
 
 ## Релиз приложения
 
@@ -86,7 +89,7 @@ songs 447 (~1 КБ). Обычный патч — до 1–2 МБ; пересбо
 npm run db:backup -- --output backups/firestore-snapshot --collection days --collection readings \
   --collection liturgicalTemplates --collection invitatoriums --collection completoriums
 npm run db:backup -- --output backups/firestore-snapshot-static --collection prayers \
-  --collection prayerCategories --collection songs
+  --collection prayerCategories --collection songs --collection compendium --collection compendiumMeta
 npm run content:app-release -- --snapshot backups/firestore-snapshot \
   --snapshot backups/firestore-snapshot-static --out ../ibreviarybyapp/assets/content
 ```

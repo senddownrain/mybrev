@@ -22,6 +22,9 @@ export const APP_CONTENT_COLLECTIONS = [
   'prayers',
   'prayerCategories',
   'songs',
+  // Compendium of the Catechism: units, and `current` (meta + parts).
+  'compendium',
+  'compendiumMeta',
 ];
 
 /** Written by imports, not part of the text. */
@@ -148,6 +151,8 @@ export const DOCUMENT_RULES = {
   prayers: (doc) => (anyOf(doc, ['title', 'titleVersions']) && anyOf(doc, ['text', 'textVersions'])) || 'no title/text',
   prayerCategories: (doc) => filled(doc.name) || 'no name',
   songs: (doc) => (filled(doc.title) && filled(doc.text)) || 'no title/text',
+  compendium: (doc) => (filled(doc.title) && filled(doc.questions)) || 'no title/questions',
+  compendiumMeta: (doc) => (filled(doc.unitIds) && filled(doc.parts) && Number.isInteger(doc.contentVersion)) || 'no unitIds/parts/contentVersion',
 };
 
 /** Documents that would reach the app broken: [{collection, id, reason}]. */

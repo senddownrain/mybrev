@@ -17,7 +17,7 @@ it, or expose admin/authentication collections.
 ## App content manifest
 
 After any write to `days`, `readings`, `liturgicalTemplates`, `invitatoriums`, `completoriums`,
-`prayers`, `prayerCategories` or `songs`, the change reaches the Flutter app only after an explicit
+`prayers`, `prayerCategories`, `songs`, `compendium` or `compendiumMeta`, the change reaches the Flutter app only after an explicit
 publication: `npm run content:manifest` (validation + diff report), then `-- --apply` for a SAFE
 CONTENT PATCH. A mass rebuild or a schema change is refused: it ships as a new bundle with an app
 release (`npm run content:app-release`). Never override without the owner. See

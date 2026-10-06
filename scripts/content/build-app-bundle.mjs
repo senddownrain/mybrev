@@ -51,9 +51,11 @@ export async function readCollections(snapshotDirs, names = APP_CONTENT_COLLECTI
     const snapshot = await openFirestoreSnapshot(dir);
     for (const name of names) {
       if (found.has(name)) continue;
-      const docs = await snapshot.collection(name);
-      if (!docs) continue;
-      found.set(name, docs.map(({ id, ...data }) => storedDocument(id, data)).sort((a, b) => (a.id < b.id ? -1 : 1)));
+      // Document id and data apart: a data field `id` (compendiumMeta has
+      // one) must not replace the document id — as in the app and Firestore.
+      const entries = await snapshot.collectionEntries(name);
+      if (!entries) continue;
+      found.set(name, entries.map(({ id, data }) => storedDocument(id, data)).sort((a, b) => (a.id < b.id ? -1 : 1)));
       times.push(Date.parse(snapshot.manifest.exportedAt));
     }
   }
