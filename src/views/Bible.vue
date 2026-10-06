@@ -225,7 +225,7 @@ import {
 
 import {
   BIBLE_BOOKS, BIBLE_HIGHLIGHT_COLORS, BIBLE_LANGUAGES,
-  getBibleBook, getParallelBibleBook,
+  getBibleBook, getBibleSourceLabel, getParallelBibleBook,
 } from '@/constants/bible.js';
 import { fetchBibleBook } from '@/services/bibleService.js';
 import {
@@ -261,7 +261,7 @@ const books = computed(() => BIBLE_BOOKS[language.value]);
 const currentBook = computed(() => getBibleBook(language.value, route.params.bookId));
 const chapter = computed(() => Number(route.params.chapter) || 1);
 const testamentLabel = computed(() => currentBook.value?.testament === 'new' ? 'Новы Запавет' : 'Стары Запавет');
-const translationLabel = computed(() => languageConfig.value.translation);
+const translationLabel = computed(() => getBibleSourceLabel(language.value, currentBook.value?.testament || 'old'));
 
 const rawChapters = computed(() => bookDocument.value?.chapters || {});
 const verses = computed(() => {

@@ -12,7 +12,12 @@ export const BIBLE_LANGUAGES = Object.freeze({
     shortLabel: 'БЕЛ',
     label: 'Беларуская',
     collection: 'bible_bel',
-    translation: 'Пераклад кс. Ўладзіслава Чарняўскага MIC',
+    translation: 'Беларуская Біблія',
+    // The Belarusian corpus is mixed: each testament comes from its own source.
+    testamentSources: Object.freeze({
+      old: 'Стары Запавет · пераклад кс. Уладзіслава Чарняўскага MIC',
+      new: 'Новы Запавет · Catholic.by',
+    }),
   }),
   ru: Object.freeze({
     id: 'ru',
@@ -216,6 +221,12 @@ export const BIBLE_HIGHLIGHT_COLORS = Object.freeze([
 
 export function getBibleBook(language, bookId) {
   return BIBLE_BOOKS[language]?.find((item) => item.id === bookId) || null;
+}
+
+export function getBibleSourceLabel(language, testament) {
+  const config = BIBLE_LANGUAGES[language];
+  if (!config) return '';
+  return config.testamentSources?.[testament] || config.translation;
 }
 
 export function getParallelBibleBook(fromLanguage, bookId, toLanguage) {
