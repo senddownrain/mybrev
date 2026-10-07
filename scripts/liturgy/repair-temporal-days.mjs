@@ -22,6 +22,7 @@ import { isEmpty, planTemporalRepairs } from './lib/temporal-repairs.mjs';
 import { openFirestoreSnapshot } from '../lib/firestore-snapshot.mjs';
 import { snapshotDirectory } from './lib/snapshot-content.mjs';
 import { recordMigration } from './lib/migration-report.mjs';
+import { withTemporalImports } from './lib/hours-source-imports.mjs';
 
 const ROOT = process.cwd();
 const PLAN = path.join(ROOT, 'reports', 'liturgy', 'temporal-days-repair-plan.json');
@@ -62,7 +63,9 @@ async function apply(plan, serviceAccountPath) {
 async function main() {
   const snapshot = await openFirestoreSnapshot(snapshotDirectory());
   const days = await snapshot.collection('days');
-  const plan = planTemporalRepairs(days);
+  // Planned after the source imports (import-hours-sources): a field the
+  // breviary source fills is no longer «unfillable».
+  const plan = planTemporalRepairs(withTemporalImports(days, ROOT));
   fs.mkdirSync(path.dirname(PLAN), { recursive: true });
   fs.writeFileSync(PLAN, `${JSON.stringify({ snapshot: snapshot.manifest.exportedAt, ...plan }, null, 2)}\n`);
   const summary = {

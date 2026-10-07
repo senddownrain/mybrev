@@ -36,7 +36,7 @@ async function apply(plan, serviceAccountPath) {
   const db = app.firestore();
   const result = { create: 0, update: 0, unchanged: 0, conflicts: [], failures: [] };
   try {
-    const items = plan.filter((item) => item.action !== 'unchanged');
+    const items = plan.filter((item) => item.action === 'create' || item.action === 'update');
     const refs = items.map((item) => db.collection('days').doc(item.id));
     const snapshots = refs.length ? await db.getAll(...refs) : [];
     const backupDir = path.join(ROOT, 'backups', 'hours-sources-import');

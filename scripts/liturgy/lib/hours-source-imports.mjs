@@ -42,7 +42,7 @@ export const PROPER_IMPORTS = Object.freeze([
   },
 ]);
 
-/** Temporal `days` documents (Firestore `days/{id}`). */
+/** `days` documents (Firestore `days/{id}`): temporal ones, and one legacy fixed copy. */
 export const TEMPORAL_IMPORTS = Object.freeze([
   { task: '8.1', id: 'ordinary-w21-d3', page: '2026-08-25.html', fields: ['officeOfReadingsR1', 'officeOfReadingsR2'] },
   { task: '8.1', id: 'ordinary-w21-d4', page: '2023-08-30.html', fields: ['officeOfReadingsR1', 'officeOfReadingsR2'] },
@@ -56,6 +56,10 @@ export const TEMPORAL_IMPORTS = Object.freeze([
     // psalter-equivalent documents (w1/5/13/17/21/25/29/33-d4) agree.
     task: '10', id: 'ordinary-w9-d4', page: '2018-06-06.html', fields: VESPER_FIELDS, replace: true,
     confirmations: ['lh.catholic.by 06.06.2018 (clean Wednesday, IX week)', 'psalter week I Wednesday: ordinary-w{1,5,13,17,21,25,29,33}-d4 + lh.catholic.by 30.08.2023'],
+  },
+  {
+    // Legacy fixed copy still read by released apps: the raw «Гімн, с. 1279».
+    task: '7.3', id: '14-02-sv-cyril-methodius', page: '2026-02-14.html', map: { vesperHymn: 'laudesHymn' }, replace: true,
   },
 ]);
 
@@ -102,25 +106,27 @@ export function writeProperImports(changes, root = process.cwd()) {
 
 /**
  * Plan of the temporal `days` imports against the current documents.
- * @returns {{ id, action: 'create'|'update'|'unchanged', fields: object, previous: object, task }[]}
+ * @returns {{ id, action: 'create'|'update'|'unchanged'|'missing', fields: object, previous: object, task }[]}
  */
 export function planTemporalImports(days, root = process.cwd()) {
   const byId = new Map(days.map((doc) => [doc.id, doc]));
   return TEMPORAL_IMPORTS.map((item) => {
     const { fields: source, identity } = pageFields(item.page, root);
-    const names = item.fields === 'all'
+    const map = item.map || Object.fromEntries((item.fields === 'all'
       ? OFFICE_CONTENT_FIELDS.filter((field) => source[field] !== undefined)
-      : item.fields;
+      : item.fields).map((field) => [field, field]));
+    const names = Object.keys(map);
     const fields = {};
     names.forEach((field) => {
-      if (field === TE_DEUM_FIELD) { fields[field] = source[field] ? true : ''; return; }
-      if (!source[field]) throw new Error(`${item.page}: no ${field} for ${item.id}`);
-      fields[field] = source[field];
+      if (field === TE_DEUM_FIELD) { fields[field] = source[map[field]] ? true : ''; return; }
+      if (!source[map[field]]) throw new Error(`${item.page}: no ${map[field]} for ${item.id}`);
+      fields[field] = source[map[field]];
     });
     const current = byId.get(item.id) || null;
     const previous = Object.fromEntries(names.map((field) => [field, current?.[field] ?? null]));
     if (!current) {
-      if (!item.create) throw new Error(`days/${item.id} missing and not creatable`);
+      // An update target that does not exist is reported, never created.
+      if (!item.create) return { id: item.id, task: item.task, page: item.page, action: 'missing', fields: {}, previous };
       return {
         id: item.id, task: item.task, page: item.page, action: 'create', identity: identity.title,
         fields: { ...item.create, ...fields, checked: false, _source: { kind: 'lh.catholic.by', page: item.page } }, previous,

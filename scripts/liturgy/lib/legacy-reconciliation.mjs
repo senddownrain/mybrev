@@ -5,6 +5,7 @@
  *
  *   all-faithful-departed            lh.catholic.by 02.11.2026 (weekday)
  *   holy-innocents                   lh.catholic.by 28.12.2023
+ *   sv-andrei-bobola                 lh.catholic.by 16.05.2025
  *   dedication-basilicas-peter-paul  «18 лістапада.docx» + GILH 236
  */
 import { pageFields } from './hours-source-imports.mjs';
@@ -13,6 +14,7 @@ import { plain } from './lh-catholic-by.mjs';
 const PAGE_SOURCES = Object.freeze({
   'all-faithful-departed': '2026-11-02.html',
   'holy-innocents': '2023-12-28.html',
+  'sv-andrei-bobola': '2025-05-16.html',
 });
 
 /**

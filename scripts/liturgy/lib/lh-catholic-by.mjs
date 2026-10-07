@@ -161,7 +161,6 @@ const READING2 = /^другое чытанне/iu;
 const PRAYER = /^малітва$/iu;
 const INTERCESSIONS = /^просьбы$/iu;
 const GOSPEL_CANTICLE = /^песня з евангелля$/iu;
-const ANTIPHON = /^(?:(\d)\s*)?ант\.?(?!\s*да песні)/iu;
 const RUBRIC_FONT = /font-size:\s*15px/i;
 const DOXOLOGY_END = /на векі вечныя\.?\s*амэн\.?$/iu;
 const CLOSING = /^(?:к\.\s*благаславім пана|пан з вамі|няхай пан благаславіць нас)/iu;

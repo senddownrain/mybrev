@@ -3,6 +3,7 @@
  * `npm run liturgy:audit` — every liturgical data audit, read-only (local
  * snapshot + generated/bundled data; never writes to Firestore):
  *
+ *   0. Plans: breviary source imports, temporal repair (dry runs)
  *   1. Hours sources + Proper/Common + runtime     audit-hours-sources
  *   2. Advent 17–24 / Christmas 25.12–12.01         audit-advent-christmas
  *   3. Readings citations ↔ calendars ↔ readings    ordo/audit-readings --report-only
@@ -24,6 +25,10 @@ const passThrough = (() => {
 })();
 
 const STEPS = [
+  // Dry-run plans (write only reports/): breviary-source imports and the
+  // temporal repair, both part of the audited target state.
+  ['Hours source imports (plan)', 'scripts/liturgy/import-hours-sources.mjs', passThrough],
+  ['Temporal repair (plan)', 'scripts/liturgy/repair-temporal-days.mjs', passThrough],
   ['Hours sources', 'scripts/liturgy/audit-hours-sources.mjs', passThrough],
   ['Advent / Christmas', 'scripts/liturgy/audit-advent-christmas.mjs', passThrough],
   ['Readings citations', 'scripts/ordo/audit-readings.mjs', ['--report-only', ...passThrough]],
