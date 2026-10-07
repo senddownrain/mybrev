@@ -88,6 +88,12 @@ export function publicationDecision(verdict, {
   return { publish: false, why: verdict };
 }
 
+/** Described collections absent from the published manifest, unless introduced. */
+export function heldBackCollections(described, published, { introduceCollections = false } = {}) {
+  if (!published || introduceCollections) return [];
+  return Object.keys(described).filter((name) => !published.collections?.[name]);
+}
+
 export function planManifest(described, published, now = Date.now()) {
   const collections = {};
   const changed = [];
@@ -138,6 +144,13 @@ async function main() {
       }
     }
     const published = firestore ? (await firestore.collection(MANIFEST_COLLECTION).doc('current').get()).data() || null : null;
+    // Collections not in the published manifest yet stay out of it until the
+    // app release that bundles them: the patch of the others is published.
+    const heldBack = heldBackCollections(described, published, options);
+    for (const name of heldBack) delete described[name];
+    if (heldBack.length) {
+      console.log(`held back (not in the manifest until the app release, --introduce-collections): ${heldBack.join(', ')}`);
+    }
     const { current, changed } = planManifest(described, published);
 
     // Diff against the published hashes (read only for changed collections).

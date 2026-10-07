@@ -213,3 +213,13 @@ test('every bundled collection carries the version of its own snapshot', async (
   assert.equal(file('days').contentVersion, versions.get('days'));
   assert.equal(file('prayers').contentVersion, versions.get('prayers'));
 });
+
+import { heldBackCollections } from '../scripts/content/publish-manifest.mjs';
+
+test('collections new to the manifest are held back unless introduced, so a patch of the others is published', () => {
+  const described = { days: {}, liturgicalCelebrations: {} };
+  const published = { collections: { days: {} } };
+  assert.deepEqual(heldBackCollections(described, published), ['liturgicalCelebrations']);
+  assert.deepEqual(heldBackCollections(described, published, { introduceCollections: true }), []);
+  assert.deepEqual(heldBackCollections(described, null), []);
+});
