@@ -25,9 +25,9 @@
 | Епархия | Дни | MATCH | DIOC | YEAR | MORE | PARSER | MISMATCH | MATCH | Объяснено | MISMATCH: разобрано / нет |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | Мінск (2025–26) | 364 | 348 | 3 | 1 | 0 | 6 | 6 | **95.6%** | 98.4% | 6 / 0 |
-| Віцебск (2025–26) | 364 | 327 | 2 | 1 | 4 | 5 | 25 | **89.8%** | 93.1% | 25 / 0 |
-| Пінск (2026) | 369 | 335 | 25 | 0 | 7 | 1 | 1 | **90.8%** | 99.7% | 1 / 0 |
-| Гродна (2027) | 371 | 319 | 41 | 0 | 3 | 3 | 5 | **86.0%** | 98.7% | 5 / 0 |
+| Віцебск (2025–26) | 364 | 326 | 2 | 1 | 5 | 5 | 25 | **89.6%** | 93.1% | 25 / 0 |
+| Пінск (2026) | 369 | 335 | 26 | 0 | 7 | 1 | 0 | **90.8%** | 100.0% | 0 / 0 |
+| Гродна (2027) | 371 | 320 | 41 | 0 | 3 | 3 | 4 | **86.3%** | 98.9% | 4 / 0 |
 
 ## Проверки
 
@@ -39,18 +39,18 @@
 | period | 100.0% (364/364) | 100.0% (364/364) | 100.0% (369/369) | 100.0% (371/371) |
 | week | 100.0% (364/364) | 100.0% (364/364) | 100.0% (369/369) | 100.0% (371/371) |
 | psalterWeek | 100.0% (336/336) | 95.5% (321/336; MISMATCH 15) | — | 100.0% (48/48) |
-| primary | 99.7% (363/364; MISMATCH 1) | 99.5% (362/364; MISMATCH 2) | 99.7% (368/369; MISMATCH 1) | 98.7% (366/371; DIOC 1, PARSER 1, MISMATCH 3) |
-| rank | 98.8% (159/161; PARSER 2) | 99.1% (341/344; PARSER 3) | 99.4% (170/171; PARSER 1) | 99.4% (180/181; DIOC 1) |
+| primary | 99.7% (363/364; MISMATCH 1) | 99.7% (363/364; MISMATCH 1) | 100.0% (369/369) | 98.9% (367/371; DIOC 1, PARSER 1, MISMATCH 2) |
+| rank | 98.8% (159/161; PARSER 2) | 99.1% (342/345; PARSER 3) | 99.4% (171/172; PARSER 1) | 99.5% (181/182; DIOC 1) |
 | color | 99.7% (363/364; YEAR 1) | 99.7% (359/360; MISMATCH 1) | 100.0% (368/368) | 99.7% (368/369; DIOC 1) |
 | alternatives | 97.9% (94/96; DIOC 2) | 93.9% (92/98; DIOC 1, MORE 4, MISMATCH 1) | 71.7% (81/113; DIOC 25, MORE 7) | 58.7% (61/104; DIOC 40, MORE 3) |
-| suppressed | — | 94.3% (33/35; MORE 2) | — | — |
+| suppressed | — | 91.4% (32/35; MORE 3) | — | — |
 | transfer | — | — | — | 100.0% (4/4) |
 | firstVespers | 93.8% (60/64; MISMATCH 4) | 93.5% (58/62; MISMATCH 4) | 100.0% (62/62) | 98.4% (61/62; PARSER 1) |
 | secondVespers | 100.0% (4/4) | 97.0% (64/66; MISMATCH 2) | 100.0% (1/1) | 100.0% (64/64) |
 | compline | 100.0% (10/10) | 100.0% (29/29) | — | 100.0% (127/127) |
 | officeType | 98.3% (357/363; DIOC 1, YEAR 1, PARSER 3, MISMATCH 1) | 98.6% (346/351; DIOC 2, PARSER 2, MISMATCH 1) | 99.7% (368/369; DIOC 1) | 98.4% (241/245; PARSER 1, MISMATCH 3) |
 | teDeum | 99.7% (355/356; PARSER 1) | 99.7% (335/336; MISMATCH 1) | 100.0% (351/351) | 100.0% (238/238) |
-| notes | 98.3% (57/58; PARSER 1) | 98.3% (171/174; YEAR 2, PARSER 1) | 100.0% (242/242) | 100.0% (145/145) |
+| notes | 98.3% (57/58; PARSER 1) | 98.3% (171/174; YEAR 2, PARSER 1) | 100.0% (242/242) | 100.0% (148/148) |
 
 ## Разобранные ошибки источников (MISMATCH)
 
@@ -59,7 +59,7 @@
 | minsk-mohilev | 2026-01-04 | firstVespers | MISMATCH | I Vespers of Epiphany printed on Sunday 4 Jan; Epiphany is Tuesday 6 Jan (its I Vespers are on 5 Jan). |
 | minsk-mohilev | 2026-01-28 | officeType | MISMATCH | "Літургія гадзінаў з будня" on the obligatory memorial of St Thomas Aquinas. |
 | minsk-mohilev | 2026-02-01 | firstVespers | MISMATCH | I Vespers of the Presentation (feast, Monday 2 Feb): feasts have no I Vespers unless a feast of the Lord falls on a Sunday (GNLYC 13); Sunday II Vespers (row 6) stand. |
-| minsk-mohilev | 2026-06-13 | primary | MISMATCH | Immaculate Heart + St Anthony (obligatory): both become optional (Missal rubric); the calendar prints one as primary. |
+| minsk-mohilev | 2026-06-13 | primary | MISMATCH | Immaculate Heart + St Anthony (obligatory): MyBrev product rule (§11.2): two memorial choices, Immaculate Heart first, no weekday; the calendar prints one order. |
 | minsk-mohilev | 2026-09-20 | firstVespers | MISMATCH | I Vespers of the Sunday printed on the Sunday / the following Monday instead of the Saturday. |
 | minsk-mohilev | 2026-11-16 | firstVespers | MISMATCH | I Vespers of the Sunday printed on the Sunday / the following Monday instead of the Saturday. |
 | vitebsk | 2025-12-27 | secondVespers | MISMATCH | Generic "ІІ Нешпары" on the octave day; Holy Family (feast of the Lord on Sunday 28 Dec) has I Vespers (Minsk prints them). |
@@ -74,8 +74,7 @@
 | vitebsk | 2026-03-14 | psalterWeek | MISMATCH | Week heading repeats the previous psalter week (Lent III / OT XXIII are psalter week III; 28 Nov is week II). |
 | vitebsk | 2026-06-02 | color | MISMATCH | White printed for an Ordinary Time weekday (optional memorial of martyrs: green or red). |
 | vitebsk | 2026-06-03 | secondVespers | MISMATCH | "ІІ Нешпары з урачыстасці Corpus Domini" on the eve (Wednesday); they are I Vespers. |
-| vitebsk | 2026-06-13 | primary | MISMATCH | Immaculate Heart + St Anthony (obligatory): both become optional (Missal rubric); the calendar prints one as primary. |
-| vitebsk | 2026-06-13 | alternatives | MISMATCH | Immaculate Heart + St Anthony (obligatory): both become optional (Missal rubric); the calendar prints one as primary. |
+| vitebsk | 2026-06-13 | alternatives | MISMATCH | Immaculate Heart + St Anthony (obligatory): MyBrev product rule (§11.2): two memorial choices, Immaculate Heart first, no weekday; the calendar prints one order. |
 | vitebsk | 2026-08-10 | firstVespers | MISMATCH | "І Нешпары і Камплета з нядзелі" on a Monday feast (template copied from a Saturday). |
 | vitebsk | 2026-08-22 | officeType | MISMATCH | Queenship of Mary printed as "успамін" but with "Афіцый са свята" and Gloria; universally a memorial. |
 | vitebsk | 2026-08-22 | teDeum | MISMATCH | Queenship of Mary printed as "успамін" but with "Афіцый са свята" and Gloria; universally a memorial. |
@@ -89,10 +88,8 @@
 | vitebsk | 2026-09-12 | psalterWeek | MISMATCH | Week heading repeats the previous psalter week (Lent III / OT XXIII are psalter week III; 28 Nov is week II). |
 | vitebsk | 2026-09-21 | firstVespers | MISMATCH | "І Нешпары і Камплета з нядзелі" on a Monday feast (template copied from a Saturday). |
 | vitebsk | 2026-11-28 | psalterWeek | MISMATCH | Week heading repeats the previous psalter week (Lent III / OT XXIII are psalter week III; 28 Nov is week II). |
-| pinsk | 2026-06-13 | primary | MISMATCH | Immaculate Heart + St Anthony (obligatory): both become optional (Missal rubric); the calendar prints one as primary. |
 | grodno | 2027-04-07 | primary | MISMATCH | St John Baptist de la Salle (obligatory memorial, 7 April, Wednesday after the Easter octave) not printed. |
 | grodno | 2027-04-07 | officeType | MISMATCH | St John Baptist de la Salle (obligatory memorial, 7 April, Wednesday after the Easter octave) not printed. |
-| grodno | 2027-06-05 | primary | MISMATCH | Immaculate Heart + St Boniface (obligatory): both become optional (Missal rubric); the calendar prints one as primary. |
 | grodno | 2027-11-12 | officeType | MISMATCH | Obligatory memorial printed with the weekday Office line ("Аф. буд./звыч. перыяду"). |
 | grodno | 2027-12-03 | officeType | MISMATCH | Obligatory memorial printed with the weekday Office line ("Аф. буд./звыч. перыяду"). |
 | grodno | 2027-12-09 | primary | MISMATCH | Our Lady of Loreto printed on both 9 and 10 December (10 December is correct; 9 December is St Juan Diego). |
@@ -130,8 +127,8 @@
 | Епархия | Дата | Проверка | Статус | Детали / причина |
 | --- | --- | --- | --- | --- |
 | vitebsk | 2026-02-15 | suppressed | MORE | source omits: Прапускаецца ўспамін благаслаўлёнага Міхала Сапоцькі, прэзбітэра. |
+| vitebsk | 2026-06-12 | suppressed | MORE | source omits: Прапускаецца ўспамін ad libitum благаславёных Антонія Ляшчэвіча МІС, Юрыя Кашыры |
 | vitebsk | 2026-06-13 | suppressed | MORE | source omits: Прапускаецца ўспамін св. Антонія Падуанскага, прэзбітэра і доктара Касцёла. |
-| vitebsk | 2026-08-25 | alternatives | MORE | source-only "успамін св. Людовіка."; sv-louis never printed by vitebsk |
 | pinsk | 2026-02-07 | alternatives | MORE | engine offers Saturday BVM; source silent |
 | grodno | 2027-08-07 | alternatives | MORE | engine offers Saturday BVM; source silent; sv-cajetan never printed by grodno |
 | grodno | 2027-09-11 | alternatives | MORE | engine offers Saturday BVM; source silent |

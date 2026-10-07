@@ -13,6 +13,21 @@ import { CLASSIFICATION, DISPLAY_CATEGORIES, daySelector } from './normalize.mjs
 import { resolveCelebration } from './identity.mjs';
 import { clean, fingerprint, fold, jaccard, wordSet } from './text.mjs';
 import { bareFirstWeekdayMark, canonicalFirstWeekdayNotes, guardNote, mentionedFirstWeekday } from './note-guards.mjs';
+import { booksText, extractBooks } from './books.mjs';
+
+/**
+ * Split the Lectionary / Hours volume markers off a note (§13.1): returns the
+ * candidate(s) to keep — a `books` candidate and/or the note without them.
+ */
+function splitBooks(candidate) {
+  if (candidate.category === 'local-church') return [candidate];
+  const { books, remainder } = extractBooks(candidate.text);
+  if (!books) return [candidate];
+  const text = booksText(books);
+  const list = [{ ...candidate, category: 'books', books, text, fp: fingerprint(text), classificationHint: undefined }];
+  if (remainder) list.push({ ...candidate, text: remainder, fp: fingerprint(remainder) });
+  return list;
+}
 
 export const DIOCESE_ORDER = ['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno'];
 const RULE_PERIODS = new Set(['advent', 'christmas', 'lent', 'holyweek', 'triduum', 'easter', 'ordinary']);
@@ -154,11 +169,11 @@ export function buildNotes(sources, catalog) {
     const candidates = [];
     const push = (note, day, origin) => {
       const guess = daySelector(note, day, catalog);
-      candidates.push({
+      candidates.push(...splitBooks({
         diocese: source.diocese, itemId: note.id, date: day.date, align: day.liturgical,
         text: note.text, category: note.category, tags: note.tags || [], evidence: note.evidence,
         origin, ...guess, fp: fingerprint(note.text),
-      });
+      }));
       note.selector = guess.selector;
     };
     source.days.forEach((day) => {
@@ -198,12 +213,21 @@ export function buildNotes(sources, catalog) {
       }
       if (!selector) return;
       rule.selector = selector;
-      candidates.push({
+      candidates.push(...splitBooks({
         diocese: source.diocese, itemId: rule.id, date: rule.anchorDate || null, align: null,
         text: rule.text, category: rule.scopeHint === 'blessings-appendix' ? 'blessing' : (rule.category === 'other' ? 'liturgical-rule' : rule.category),
         tags: rule.tags || [], evidence: rule.evidence, origin: 'section', selector, basis, markers: [], fp: fingerprint(rule.text),
         classificationHint: rule.classification,
-      });
+      }));
+    });
+    // General notes of the front matter (Grodno, Pinsk; §13): explicit selectors.
+    (source.generalNotes || []).forEach((note) => {
+      candidates.push(...splitBooks({
+        diocese: source.diocese, itemId: note.itemIds[0], memberIds: note.itemIds, date: null, align: null,
+        text: note.text, category: note.category, tags: note.tags || [], evidence: note.evidence, origin: 'section',
+        selector: note.selector, basis: 'general-notes', section: note.section, markers: [], fp: fingerprint(note.text),
+        classificationHint: note.classification || 'LIKELY_PERMANENT_RULE',
+      }));
     });
     // Collapse repeated notes of one source.
     const byFingerprint = new Map();
@@ -237,7 +261,10 @@ export function buildNotes(sources, catalog) {
     buckets.get(key)
       .sort((a, b) => DIOCESE_ORDER.indexOf(a.diocese) - DIOCESE_ORDER.indexOf(b.diocese) || a.occurrences[0].text.localeCompare(b.occurrences[0].text))
       .forEach((entry) => {
-        const cluster = clusters.find((c) => jaccard(c.words, entry.words) >= 0.35);
+        // Volume metadata merges only when the volumes are the same.
+        const cluster = clusters.find((c) => (entry.occurrences[0].category === 'books'
+          ? c.entries[0].occurrences[0].text === entry.occurrences[0].text
+          : jaccard(c.words, entry.words) >= 0.35));
         if (cluster) cluster.entries.push(entry);
         else clusters.push({ words: entry.words, entries: [entry] });
       });
@@ -294,7 +321,8 @@ export function buildNotes(sources, catalog) {
       category: isParishNote(lead.category, tags) || lead.category !== 'local-church' ? lead.category : 'liturgical-rule',
       tags,
       text: lead.text,
-      ...(texts.length > 1 ? { variants: texts.slice(1, 6) } : {}),
+      ...(lead.books ? { books: lead.books } : {}),
+      ...(texts.length > 1 && !lead.books ? { variants: texts.slice(1, 6) } : {}),
       effect: effectFor(lead),
       basis: entries[0].basis,
       ...(markers.length ? { yearMarkers: markers } : {}),
@@ -306,6 +334,8 @@ export function buildNotes(sources, catalog) {
     entry.classification = lead.classificationHint && lead.origin === 'section' && dioceses.length < 2
       ? (lead.classificationHint === CLASSIFICATION.YEAR ? CLASSIFICATION.YEAR : classify({ ...entry }))
       : classify({ ...entry });
+    if (lead.classificationHint === CLASSIFICATION.REVIEW && lead.basis === 'general-notes') entry.classification = CLASSIFICATION.REVIEW;
+    if (lead.basis === 'general-notes') entry.provenance = { kind: 'general-notes', section: lead.section || null };
     entry.confidence = confidence(entry);
     // Where the calendars print the first-of-month marks (provenance of the canonical rules).
     texts.forEach((item) => {
@@ -365,7 +395,8 @@ export function buildNotes(sources, catalog) {
     allNotes: notes,
     review,
     excludedParishNotes: parish.length,
-    candidates: perDiocese.flatMap((e) => e.occurrences),
+    candidates: perDiocese.flatMap((e) => e.occurrences)
+      .flatMap((o) => (o.memberIds || [o.itemId]).map((itemId) => ({ ...o, itemId }))),
   };
 }
 

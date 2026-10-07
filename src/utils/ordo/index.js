@@ -16,7 +16,7 @@ import {
   buildCommemorationDescriptor, buildOfficeDescriptor, hasFirstVespersByRight, resolveEvening,
 } from './office.js';
 import { buildCommemorationReadings, buildReadingsDescriptor } from './readings.js';
-import { selectOrdoNotes } from './notes.js';
+import { booksFromNotes, isBooksNote, selectOrdoNotes } from './notes.js';
 import { getYearPlan } from './yearPlan.js';
 import { normalizeDioceseId } from './layers.js';
 
@@ -33,6 +33,16 @@ function resolveCore(iso, context, cache) {
 function stripCandidate(candidate) {
   const { order: _order, status, ...rest } = candidate;
   return { ...rest, status };
+}
+
+function sourceOf(candidate) {
+  return {
+    optionId: candidate.id,
+    celebrationId: candidate.kind === 'temporal' ? null : candidate.id,
+    kind: candidate.kind,
+    officeKind: candidate.officeKind,
+    title: candidate.title,
+  };
 }
 
 function transferRulesFor(iso, plan) {
@@ -94,16 +104,19 @@ export function resolveLiturgicalDate(date, context = {}, cache = null) {
   const evening = resolveEvening(today, tomorrow);
   const eve = resolveEvening(yesterday, today);
   const firstVespers = {
-    byRight: hasFirstVespersByRight(display.primary, season),
-    celebratedOnEve: eve.vespers.type === 'first' && eve.vespers.celebrationId === display.primary.id,
+    byRight: hasFirstVespersByRight(display.officePrimary, season),
+    celebratedOnEve: eve.vespers.type === 'first' && eve.vespers.celebrationId === display.officePrimary.id,
     eveDate: yesterday.season.date,
-    ...(eve.omittedFirstVespers === display.primary.id ? { omittedBecause: eve.conflict } : {}),
+    ...(eve.omittedFirstVespers === display.officePrimary.id ? { omittedBecause: eve.conflict } : {}),
   };
 
   const options = [display.primary, ...display.alternatives];
+  // Office and Mass may come from different sources on one date (§11.1).
+  const officeSplit = display.officePrimary.id !== display.primary.id;
+  const officeOptions = officeSplit ? [display.officePrimary] : options;
   const officeResolution = {
-    primary: buildOfficeDescriptor(display.primary, season, temporal),
-    alternatives: display.alternatives.map((item) => buildOfficeDescriptor(item, season, temporal)),
+    primary: buildOfficeDescriptor(display.officePrimary, season, temporal),
+    alternatives: officeSplit ? [] : display.alternatives.map((item) => buildOfficeDescriptor(item, season, temporal)),
     commemorations: display.commemorations.map(buildCommemorationDescriptor),
     firstVespers,
     evening,
@@ -145,18 +158,29 @@ export function resolveLiturgicalDate(date, context = {}, cache = null) {
     commemorations: display.commemorations.map(stripCandidate),
     suppressed: display.suppressed.map(stripCandidate),
     options: options.map((item) => ({ id: item.id, title: item.title, officeKind: item.officeKind, role: item.role })),
+    // Legal Offices of the Liturgy of the Hours (= `options` unless split).
+    officeOptions: officeOptions.map(stripCandidate),
+    sources: {
+      office: sourceOf(display.officePrimary),
+      mass: sourceOf(display.primary),
+      split: officeSplit,
+    },
     officeResolution,
     readingResolution,
     ordoNotes: [],
+    books: null,
     appliedRules,
     appliedLayers: layerSummary(plan, involvedIds),
   };
 
   const notes = [...(plan.layerNotes || []), ...(context.notes || [])];
-  day.ordoNotes = selectOrdoNotes(notes, day, {
+  const selected = selectOrdoNotes(notes, day, {
     context: planContext,
     dateOfCelebration: dateOfCelebrationFactory(iso, planContext),
   });
+  // Volume markers are day metadata, not «Асаблівыя заўвагі» (§13.1).
+  day.books = booksFromNotes(selected);
+  day.ordoNotes = selected.filter((note) => !isBooksNote(note));
   return day;
 }
 

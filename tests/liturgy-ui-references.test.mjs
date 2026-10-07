@@ -174,7 +174,7 @@ test('Ordo day: «Святкаванні дня», explicit vestment colour, act
   assert.match(day, /Святкаванні дня/);
   assert.doesNotMatch(day, /Празднаванне дня/);
   assert.match(day, /Колер літургічнага адзення:/);
-  assert.match(day, /<CelebrationActions :hours="hoursLink\(day\.primary\.id\)" :readings="readingsLink\(day\.primary\.id\)"/);
+  assert.match(day, /<CelebrationActions :hours="hoursLink\(day\.sources\?\.office\?\.optionId \|\| day\.primary\.id\)" :readings="readingsLink\(day\.primary\.id\)"/);
   assert.match(day, /data-test="readings-block"/);
   assert.match(read('src/components/ordo/CelebrationActions.vue'), /Літургія гадзін[\s\S]*Чытанні/);
 });
@@ -202,13 +202,11 @@ test('«Выбраць»: a date alone opens the main screen of that day (Hours 
     { name: 'ReadingsByDate', params: { date: '2026-10-06' }, query: { diocese: 'pinsk' } });
 });
 
-test('two co-equal memorials stay two neutral alternatives', () => {
+test('Immaculate Heart + another obligatory memorial: two memorial choices, no weekday (§11.2)', () => {
   const day = resolveRuntimeDay('2026-06-13', { diocese: 'minsk-mohilev' });
-  assert.equal(day.primary.kind, 'temporal');
-  assert.deepEqual(day.alternatives.map((item) => item.rankKind), ['optional-memorial', 'optional-memorial']);
-  assert.deepEqual(day.alternatives.map((item) => item.role), ['alternative', 'alternative']);
-  const titles = day.alternatives.map((item) => item.title);
-  assert.deepEqual(titles, [...titles].sort((a, b) => a.localeCompare(b, 'be')), 'stable neutral order');
+  assert.notEqual(day.primary.kind, 'temporal');
+  assert.deepEqual([day.primary, ...day.alternatives].map((item) => item.rankKind), ['memorial', 'memorial']);
+  assert.deepEqual(day.alternatives.map((item) => item.role), ['alternative']);
 });
 
 // ---------------------------------------------------------------------------

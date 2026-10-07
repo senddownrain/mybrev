@@ -29,8 +29,39 @@ import { normalizeDioceseId } from './layers.js';
 
 export const ORDO_NOTE_CATEGORIES = Object.freeze([
   'liturgical-rule', 'mass', 'office', 'devotion', 'blessing', 'procession', 'indulgence',
-  'special-prayer-day', 'pastoral-note', 'announcement', 'other',
+  'special-prayer-day', 'pastoral-note', 'announcement', 'other', 'books',
 ]);
+
+/**
+ * Lectionary / Liturgy of the Hours volumes (final phase §13.1). Notes of the
+ * category `books` carry `books: { lectionaryVolume?, hoursVolume? }`; they
+ * are day/period metadata, not notes. The most specific selector wins per
+ * field (celebration → day → period phase → period).
+ */
+const BOOK_SELECTOR_RANK = Object.freeze({
+  celebration: 0, 'exact-date': 1, 'fixed-date': 1, 'period-day': 1, relative: 1, all: 2, 'period-phase': 3, period: 4,
+});
+
+export function isBooksNote(note) {
+  return note?.category === 'books' && note.books && typeof note.books === 'object';
+}
+
+/** `{ lectionaryVolume?, hoursVolume?, noteIds }` of the selected notes, or null. */
+export function booksFromNotes(notes = []) {
+  const ranked = notes.filter(isBooksNote)
+    .map((note) => ({ note, rank: BOOK_SELECTOR_RANK[note.selector?.type] ?? 5 }))
+    .sort((a, b) => a.rank - b.rank || String(a.note.id).localeCompare(String(b.note.id)));
+  const result = {};
+  const ids = [];
+  ['lectionaryVolume', 'hoursVolume'].forEach((field) => {
+    const hit = ranked.find(({ note }) => note.books[field]);
+    if (hit) {
+      result[field] = hit.note.books[field];
+      if (!ids.includes(hit.note.id)) ids.push(hit.note.id);
+    }
+  });
+  return ids.length ? { ...result, noteIds: ids } : null;
+}
 
 /**
  * Parser (stage 2) identities that differ from engine ids. Movable codes

@@ -228,7 +228,7 @@ function driftRows(drift) {
 function ambiguityRows() {
   return ORDO_AMBIGUITIES.map((item) => row('ENGINE AMBIGUITIES', 'P2', {
     celebration: item.celebrationId || item.id, observed: `${item.title}: ${item.description}`,
-    expected: item.decisionLabel, status: item.status === 'needs-review' ? 'OPEN' : 'DONE',
+    expected: item.decisionLabel, status: item.status === 'decided' ? 'DONE' : 'OPEN',
     action: 'Confirm or override per year (/admin/ordo/year-overrides); docs/ordo-engine-ambiguities.md',
   }));
 }

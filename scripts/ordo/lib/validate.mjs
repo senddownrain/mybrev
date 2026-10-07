@@ -337,6 +337,8 @@ export function compareDay(sourceDay, generated, context) {
   if (noteIds.length) {
     const returned = new Set([
       ...generated.ordoNotes.map((note) => note.id),
+      // Volume markers are selected as `books` metadata (§13.1).
+      ...(generated.books?.noteIds || []),
       ...(sourceDay.notes || []).some((note) => note.tags?.includes('tomorrow'))
         ? (context.nextGenerated?.ordoNotes || []).map((note) => note.id) : [],
     ]);

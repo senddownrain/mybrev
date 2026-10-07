@@ -1,22 +1,29 @@
 /**
- * Admin writes of manual year overrides (`liturgicalYearOverrides`).
- * Public runtime only reads them (`ordoCalendarService.js`).
+ * Admin writes of year overrides (`liturgicalYearOverrides`): manual
+ * decisions and the materialized (auto) transfers, which the admin can
+ * confirm or correct. Public runtime only reads them (`ordoCalendarService.js`).
  */
 import {
   collection, deleteDoc, doc, serverTimestamp, setDoc, updateDoc,
 } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
-import { validateYearOverride } from '@/utils/ordo/yearOverrides';
+import { normalizeYearOverride, validateYearOverride } from '@/utils/ordo/yearOverrides';
 import { CALENDAR_COLLECTIONS, fetchYearOverridesFresh } from '@/services/ordoCalendarService';
 
-const STORED_FIELDS = ['year', 'scope', 'dioceseId', 'targetCelebrationId', 'action', 'from', 'to', 'rank', 'color',
-  'celebration', 'reason', 'source', 'enabled'];
+const STORED_FIELDS = ['year', 'scope', 'dioceseId', 'targetCelebrationId', 'action',
+  'originalDate', 'computedDate', 'effectiveDate', 'from', 'to', 'rank', 'color', 'celebration', 'rule',
+  'reason', 'sourceNote', 'source', 'status', 'transferRule', 'transferCase', 'rankEvidence', 'generator', 'enabled'];
 
-/** Document body of a draft: known fields only, no empty values. */
+/**
+ * Document body of a draft: canonical fields only, no empty values. `from` /
+ * `to` are written as mirrors of `originalDate` / `effectiveDate` for app
+ * builds that predate the canonical schema.
+ */
 export function yearOverrideDocument(draft) {
+  const canonical = normalizeYearOverride(draft);
   const data = {};
   STORED_FIELDS.forEach((field) => {
-    const value = draft[field];
+    const value = canonical[field];
     if (value === undefined || value === null || value === '') return;
     data[field] = field === 'year' ? Number(value) : value;
   });

@@ -14,9 +14,11 @@ import { fileURLToPath } from 'node:url';
 import { loadFixedCatalog } from './lib/identity.mjs';
 import { CLASSIFICATION, normalizeSource } from './lib/normalize.mjs';
 import { DIOCESE_ORDER, buildNotes } from './lib/notes.mjs';
+import { extractGeneralNotes } from './lib/general-notes.mjs';
 
 // Raise when the published notes change (republish with ordo:import-calendar).
-const NOTES_REVISION = 3;
+// 4: Grodno/Pinsk general notes recovered; volume markers → `books` (final phase §13).
+const NOTES_REVISION = 4;
 import { buildDifferences, properIds } from './lib/differences.mjs';
 import { alignDate } from './lib/calendar.mjs';
 
@@ -72,7 +74,23 @@ const SELECTOR_LABEL = (selector) => {
 };
 
 /** docs/ordo-notes-audit.md — what the semantic guards did to the notes. */
-function renderNotesAudit({ notes, review, revision }) {
+const dioceseIdsOf = (note) => note.scope.dioceseIds || [note.scope.dioceseId];
+
+/** Published notes per diocese (§22.7): total, general notes, books, review. */
+function coverageRows(notes, sources, generalSkipped) {
+  return DIOCESE_ORDER.map((diocese) => {
+    const own = notes.filter((note) => dioceseIdsOf(note).includes(diocese) || note.scope.level === 'belarus');
+    const ownOnly = notes.filter((note) => dioceseIdsOf(note).includes(diocese));
+    const source = sources.find((item) => item.diocese === diocese);
+    const general = ownOnly.filter((note) => note.basis === 'general-notes').length;
+    const skipped = generalSkipped.filter((item) => item.diocese === diocese);
+    const reasons = Object.entries(skipped.reduce((acc, item) => ({ ...acc, [item.reason]: (acc[item.reason] || 0) + 1 }), {}))
+      .sort((a, b) => b[1] - a[1]).map(([reason, count]) => `${reason} ${count}`).join(', ');
+    return `| ${diocese} | ${ownOnly.length} | ${own.length} | ${general} | ${ownOnly.filter((note) => note.category === 'books').length} | ${ownOnly.filter((note) => note.classification === 'NEEDS_REVIEW').length} | ${source?.generalNotes?.length ?? 0} | ${reasons || '—'} |`;
+  });
+}
+
+function renderNotesAudit({ notes, review, revision, sources = [], generalSkipped = [] }) {
   const guarded = notes.filter((note) => note.guard);
   const group = (predicate) => guarded.filter((note) => predicate(note.guard));
   const rows = (items, render) => (items.length ? items.map(render).join('\n') : '_няма_');
@@ -96,6 +114,18 @@ function renderNotesAudit({ notes, review, revision }) {
 | Кананічныя правілы (І чацвер / пятніца / субота) | ${canonical.length} |
 | Схавана да праверкі (не публікуюцца) | ${review.length} |
 | Апублікавана з пазнакай NEEDS_REVIEW | ${manual.length} |
+
+## Coverage by diocese
+
+«Уласныя» — заўвагі, якія назіраліся ў календары дыяцэзіі; «бачныя» — разам з агульнабеларускімі.
+Агульныя заўвагі (front matter Гродна / Пінск) аднаўляюцца \`scripts/ordo/lib/general-notes.mjs\`;
+прапушчаныя абзацы — з прычынай (табліцы, правілы першынства, якія лічыць engine, абавязак Імшы
+«pro populo», індэксы, грошы/ахвяраванні, персанальныя даныя духавенства). Тамы Лекцыянарыя /
+Літургіі гадзін — асобная катэгорыя \`books\` (метаданыя, не «Асаблівыя заўвагі»).
+
+| Дыяцэзія | Уласныя | Бачныя | Агульныя заўвагі | Тамы (books) | NEEDS_REVIEW | Абзацаў front matter | Прапушчана front matter |
+|---|---|---|---|---|---|---|---|
+${coverageRows(notes, sources, generalSkipped).join('\n')}
 
 Высокі працэнт супадзення з календарамі не лічыцца поспехам, калі «Чэрвеньскае набажэнства» паказваецца ў кастрычніку:
 сэнс тэксту правяраецца асобна ад частаты.
@@ -162,6 +192,12 @@ function main() {
   const sources = raws.map((raw) => normalizeSource(raw, { catalog, properSet: properSets[raw.source.diocese] }));
   sources.forEach((source) => properIds(source.rules, catalog, source.diocese));
 
+  const generalSkipped = [];
+  sources.forEach((source) => {
+    const general = extractGeneralNotes(source);
+    source.generalNotes = general.notes;
+    generalSkipped.push(...general.skipped);
+  });
   const { notes, allNotes, excludedParishNotes, candidates, review } = buildNotes(sources, catalog);
   const noteByItem = new Map(candidates.map((c) => [c.itemId, c.noteId]));
   const differences = buildDifferences(sources, catalog, properSets);
@@ -256,7 +292,9 @@ function main() {
     },
     notes,
   });
-  fs.writeFileSync(path.join(ROOT, 'docs', 'ordo-notes-audit.md'), renderNotesAudit({ notes, review, revision: NOTES_REVISION }));
+  fs.writeFileSync(path.join(ROOT, 'docs', 'ordo-notes-audit.md'), renderNotesAudit({
+    notes, review, revision: NOTES_REVISION, sources, generalSkipped,
+  }));
   fs.mkdirSync(path.join(ROOT, 'reports', 'liturgy'), { recursive: true });
   fs.writeFileSync(path.join(ROOT, 'reports', 'liturgy', 'notes-review.json'), `${JSON.stringify({ revision: NOTES_REVISION, review }, null, 1)}\n`);
   write(path.join(OUT_DIR, 'diocesan-differences.json'), { schemaVersion: SCHEMA_VERSION, ...differences });

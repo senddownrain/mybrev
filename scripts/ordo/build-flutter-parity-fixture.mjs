@@ -34,10 +34,12 @@ import { FIRST_VESPER_FIELDS, OFFICE_TEXT_FIELDS, TE_DEUM_FIELD } from '../../sr
 import { FIELD_RULE_SOURCES } from '../../src/utils/ordo/fieldRules.js';
 
 export const PARITY_DIOCESES = Object.freeze(['minsk-mohilev', 'grodno', 'pinsk', 'vitebsk']);
-export const PARITY_SCHEMA_VERSION = 1;
+// 2: final phase — Office/Mass split (`sources`, office of `officeOptions`),
+//    `provisional` options, `books`, transfers with `computedDate`, notes file option.
+export const PARITY_SCHEMA_VERSION = 2;
 
 function parseArgs(argv) {
-  const options = { snapshot: 'backups/firestore-snapshot', out: null, from: 2025, to: 2032, hours: true };
+  const options = { snapshot: 'backups/firestore-snapshot', out: null, from: 2025, to: 2032, hours: true, notesFile: null };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === '--snapshot') options.snapshot = argv[++index];
@@ -45,6 +47,8 @@ function parseArgs(argv) {
     else if (arg === '--from') options.from = Number(argv[++index]);
     else if (arg === '--to') options.to = Number(argv[++index]);
     else if (arg === '--no-hours') options.hours = false;
+    // The notes of a build not yet published (e.g. src/data/ordo/notes.json).
+    else if (arg === '--notes-file') options.notesFile = argv[++index];
   }
   if (!options.out) throw new Error('Usage: build-flutter-parity-fixture.mjs --snapshot <dir> --out <file.json.gz>');
   return options;
@@ -64,6 +68,7 @@ const option = (item, day) => ({
   ...(item.transferredFrom ? { transferredFrom: item.transferredFrom } : {}),
   ...(item.movedFrom ? { movedFrom: item.movedFrom } : {}),
   ...(item.demotedFrom ? { demotedFrom: item.demotedFrom } : {}),
+  ...(item.provisional ? { provisional: true } : {}),
 });
 
 /** Hash of the Office text of an assembled document (what the reader sees). */
@@ -98,10 +103,11 @@ async function main() {
   const options = parseArgs(process.argv.slice(2));
   const snapshot = await openFirestoreSnapshot(options.snapshot);
   const entries = async (name) => ((await snapshot.collectionEntries(name)) || []).map(({ id, data }) => storedDocument(id, data));
-  const [celebrations, dioceseOverrides, yearOverrides, notes, readings] = await Promise.all([
+  const [celebrations, dioceseOverrides, yearOverrides, snapshotNotes, readings] = await Promise.all([
     entries('liturgicalCelebrations'), entries('liturgicalDioceseOverrides'), entries('liturgicalYearOverrides'),
     entries('liturgicalOrdoNotes'), entries('readings'),
   ]);
+  const notes = options.notesFile ? JSON.parse(fs.readFileSync(options.notesFile, 'utf8')).notes : snapshotNotes;
   // The engine runs on the published (snapshot) definitions — the app's bundle.
   setCalendarDefinitions({ celebrations, dioceseOverrides, yearOverrides });
   const referenceIndex = buildReadingReferences(readings);
@@ -116,7 +122,8 @@ async function main() {
     days[diocese] = [];
     for (let year = options.from; year <= options.to; year += 1) {
       for (const day of generateLiturgicalYear(year, { country: 'BY', diocese, notes })) {
-        const office = [day.primary, ...day.alternatives].map((item) => {
+        // Legal Offices of the Hours (the Sunday on All Souls Sunday).
+        const office = day.officeOptions.map((item) => {
           const descriptor = optionDescriptor(day, item);
           return {
             id: item.id,
@@ -142,7 +149,12 @@ async function main() {
           commemorations: day.commemorations.map((item) => ({ id: item.id, rank: item.rank })),
           suppressed: day.suppressed.map((item) => ({ id: item.id, reason: item.reason })),
           transfers: day.appliedRules.filter((rule) => rule.rule === 'transfer')
-            .map((rule) => ({ celebrationId: rule.celebrationId, from: rule.from, to: rule.to, rule: rule.transferRule })),
+            .map((rule) => ({
+              celebrationId: rule.celebrationId, from: rule.from, to: rule.to, rule: rule.transferRule,
+              computedDate: rule.computedDate || rule.to,
+            })),
+          ...(day.sources.split ? { sources: { office: day.sources.office.optionId, mass: day.sources.mass.optionId } } : {}),
+          ...(day.books ? { books: { lectionaryVolume: day.books.lectionaryVolume || null, hoursVolume: day.books.hoursVolume || null } } : {}),
           evening: {
             type: day.officeResolution.evening.vespers.type,
             celebrationId: day.officeResolution.evening.vespers.celebrationId || null,
