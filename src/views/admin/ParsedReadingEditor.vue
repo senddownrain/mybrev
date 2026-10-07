@@ -34,7 +34,47 @@
       {{ loadError }}
     </v-alert>
 
+    <div v-else-if="setsDraft">
+      <v-alert v-if="validationErrors.length" type="warning" variant="tonal" class="mb-5" closable @click:close="validationErrors = []">
+        <div class="font-weight-bold mb-2">Праверце наборы чытанняў</div>
+        <ul class="pl-5">
+          <li v-for="message in validationErrors" :key="message">{{ message }}</li>
+        </ul>
+      </v-alert>
+      <section class="reading-editor__section-heading">
+        <div>
+          <p class="reading-editor__eyebrow">{{ draft.title || original.title }}</p>
+          <h2>Наборы чытанняў Імшы</h2>
+        </div>
+        <v-btn variant="tonal" rounded="pill" class="text-none" :prepend-icon="showPreview ? 'mdi-pencil' : 'mdi-eye-outline'" @click="showPreview = !showPreview">
+          {{ showPreview ? 'Рэдагаваць' : 'Папярэдні прагляд' }}
+        </v-btn>
+      </section>
+      <v-alert v-if="changedFields.length" type="info" variant="tonal" density="compact" class="mb-4">
+        Зменена ў адносінах да імпарту з крыніцы: {{ changedFields.join(', ') }}
+      </v-alert>
+      <ParsedReadingCard v-if="showPreview && previewReading" :reading="previewReading" class="mb-5" />
+      <MassReadingSetsEditor
+        v-else
+        v-model:active="activeSetIndex"
+        :model-value="setsDraft"
+        :original="setsOriginal"
+        @reset-set="resetSet"
+      />
+      <div class="reading-editor__footer">
+        <v-btn variant="text" rounded="pill" class="text-none" @click="goBack">Адмяніць</v-btn>
+        <v-btn color="primary" rounded="pill" prepend-icon="mdi-content-save-outline" :loading="saving" class="text-none" @click="save">
+          Захаваць наборы
+        </v-btn>
+      </div>
+    </div>
+
     <v-form v-else @submit.prevent="save">
+      <div v-if="!isNew" class="d-flex justify-end mb-3">
+        <v-btn variant="text" class="text-none" prepend-icon="mdi-format-list-group" @click="startStructuredSets">
+          Перайсці на структураваныя наборы (вігілія / дзень, цыклы, ролі)
+        </v-btn>
+      </div>
       <v-alert
         v-if="validationErrors.length"
         type="warning"
@@ -375,9 +415,24 @@ import {
   collection,
   doc,
   getDoc,
+  getDocs,
+  query as firestoreQuery,
   serverTimestamp,
   setDoc,
+  where,
 } from 'firebase/firestore';
+import MassReadingSetsEditor from '@/components/admin/MassReadingSetsEditor.vue';
+import ParsedReadingCard from '@/components/readings/ParsedReadingCard.vue';
+import { readingViewOfSet } from '@/utils/massReadingSets';
+import {
+  buildSetsPayload,
+  changedSetFields,
+  createSetsDraft,
+  linkedProjectionUpdates,
+  sanitizeSetsDraft,
+  setFromLegacy,
+  validateSetsDraft,
+} from '@/utils/massReadingSetsEditor';
 import { db } from '@/plugins/firebase';
 import { FEAST_NAME_MAP } from '@/constants/liturgicalFeastsMap';
 import { useNotifier } from '@/composables/useNotifier';
@@ -407,6 +462,34 @@ const gospelItalicLines = computed({
   set: (value) => { draft.value.gospel.italicLines = String(value).split('\n').map((line) => line.trim()).filter(Boolean); },
 });
 const openReadingPanels = ref(['reading1']);
+
+// Structured Mass reading sets (`massReadings`): edited as a whole draft;
+// «Адмяніць» drops it, «Адмяніць змены набору» restores one set.
+const setsDraft = ref(null);
+const setsOriginal = ref(null);
+const activeSetIndex = ref(0);
+const showPreview = ref(false);
+const changedFields = computed(() => (setsDraft.value
+  ? setsDraft.value.sets.flatMap((set, index) => changedSetFields(setsOriginal.value?.sets?.[index], set).map((field) => `${set.id}.${field}`))
+  : []));
+const previewReading = computed(() => {
+  if (!setsDraft.value) return null;
+  const clean = sanitizeSetsDraft(setsDraft.value);
+  const set = clean.sets[activeSetIndex.value];
+  return set ? readingViewOfSet({ id: documentId.value, title: original.value.title }, set, String(route.query.year || '')) : null;
+});
+
+function resetSet(index) {
+  const source = setsOriginal.value?.sets?.[index];
+  if (source) setsDraft.value.sets[index] = JSON.parse(JSON.stringify(source));
+}
+
+function startStructuredSets() {
+  const set = setFromLegacy(original.value);
+  setsDraft.value = { schema: 1, flatSet: set.id, sets: [set] };
+  setsOriginal.value = { schema: 1, flatSet: set.id, sets: [] };
+  activeSetIndex.value = 0;
+}
 
 const sourceOptions = computed(() => [
   ...(draft.value.linkedDayId || draft.value.linkedDayIds.length
@@ -508,6 +591,12 @@ async function load() {
       if (!snapshot.exists()) throw new Error('Гэты набор чытанняў не знойдзены.');
       original.value = snapshot.data();
       draft.value = createParsedReadingDraft(original.value);
+      if (original.value.massReadings) {
+        setsDraft.value = createSetsDraft(original.value);
+        setsOriginal.value = createSetsDraft(original.value);
+        const requested = setsDraft.value.sets.findIndex((set) => set.id === String(route.query.set || ''));
+        activeSetIndex.value = Math.max(requested, 0);
+      }
       openReadingPanels.value = ['reading1'];
     }
   } catch (error) {
@@ -554,6 +643,7 @@ function readingsRoute(targetId = '') {
   if (dayId) query.dayId = dayId;
   if (targetId) query.readingId = targetId;
   if (draft.value.year) query.year = draft.value.year;
+  if (setsDraft.value?.sets?.[activeSetIndex.value]) query.set = setsDraft.value.sets[activeSetIndex.value].id;
   return { name: 'ReadingsByDate', params: { date }, query };
 }
 
@@ -561,7 +651,32 @@ function goBack() {
   router.push(readingsRoute(isNew.value ? '' : documentId.value));
 }
 
+async function saveSets() {
+  validationErrors.value = validateSetsDraft(setsDraft.value);
+  if (validationErrors.value.length) return;
+  saving.value = true;
+  try {
+    const payload = buildSetsPayload(original.value, setsDraft.value);
+    payload.updatedAt = serverTimestamp();
+    await setDoc(doc(db, 'readings', documentId.value), payload);
+    // Legacy documents that project a set of this one follow the edit.
+    const linked = await getDocs(firestoreQuery(collection(db, 'readings'), where('_massReadingsRef.doc', '==', documentId.value)));
+    const updates = linkedProjectionUpdates(setsDraft.value, linked.docs.map((item) => ({ id: item.id, ...item.data() })));
+    await Promise.all(updates.map((update) => setDoc(doc(db, 'readings', update.id), { ...update.data, updatedAt: serverTimestamp() })));
+    notifySuccess(updates.length ? `Чытанні захаваны (і ${updates.length} звязаных дакументаў)` : 'Чытанні захаваны');
+    await router.push(readingsRoute(documentId.value));
+  } catch (error) {
+    notifyError(error.message || 'Не ўдалося захаваць чытанні');
+  } finally {
+    saving.value = false;
+  }
+}
+
 async function save() {
+  if (setsDraft.value) {
+    await saveSets();
+    return;
+  }
   validationErrors.value = validateParsedReadingDraft(draft.value);
   if (validationErrors.value.length) return;
 

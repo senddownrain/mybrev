@@ -13,6 +13,8 @@
  *   WRONG_CITATION   the document's Gospel differs from every calendar
  *   AMBIGUOUS        several unrelated documents answer the lookup
  */
+import { collapseCoveredDocuments, massReadingSetsOf } from '../../src/utils/massReadingSets.js';
+
 export const READING_STATUSES = Object.freeze([
   'MATCH', 'WEEKDAY_DEFAULT', 'REFERENCE_ONLY', 'MISSING_CONTENT', 'WRONG_LINK', 'WRONG_CITATION', 'AMBIGUOUS',
 ]);
@@ -44,7 +46,16 @@ export function properReadingLines(sourceReadings, { memorial }) {
 }
 
 // Older imports have no `sectionsFound`; a Gospel citation means the text was parsed.
-const hasContent = (doc) => (Array.isArray(doc.sectionsFound) && doc.sectionsFound.includes('gospel')) || Boolean(doc.gospel?.bible);
+const fullSets = (doc) => massReadingSetsOf(doc).filter((set) => !set.referenceOnly);
+const referenceSets = (doc) => massReadingSetsOf(doc).filter((set) => set.referenceOnly);
+const hasContent = (doc) => fullSets(doc).length > 0
+  || (!referenceSets(doc).length && ((Array.isArray(doc.sectionsFound) && doc.sectionsFound.includes('gospel')) || Boolean(doc.gospel?.bible)));
+/** Gospel citations of a document: every set and cycle, or the flat field. */
+const gospelCitations = (doc) => (massReadingSetsOf(doc).length
+  ? massReadingSetsOf(doc).flatMap((set) => (set.sections || []).filter((section) => section.kind === 'gospel').map((section) => section.bible))
+  : [doc.gospel?.bible]);
+/** Sets imported from the Catholic.by Lectionary (source rank 2 > calendars, rank 3). */
+const fromLectionary = (doc) => fullSets(doc).some((set) => /catholic\.by/.test(set.source?.url || ''));
 const linkedIds = (doc) => [doc._dayId, ...(doc._dayIds || [])].filter(Boolean);
 
 /**
@@ -58,11 +69,17 @@ export function auditCelebrationReadings(celebration, documents, expected) {
   const memorial = ['memorial', 'optional-memorial'].includes(celebration.rankKind);
   const base = { ...(reference ? { reference } : {}), documents: documents.map((doc) => doc.id) };
 
+  documents = collapseCoveredDocuments(documents);
   if (!documents.length) {
     if (reference) return { status: 'REFERENCE_ONLY', ...base };
     return { status: memorial ? 'WEEKDAY_DEFAULT' : 'MISSING_CONTENT', ...base };
   }
   const withContent = documents.filter(hasContent);
+  const references = documents.filter((doc) => referenceSets(doc).length);
+  if (!withContent.length && references.length) {
+    const citation = referenceSets(references[0])[0].sections.map((section) => [section.bible, ...(section.alternatives || []).map((item) => `або ${item.bible}`)].join(' ')).join('; ');
+    return { status: 'REFERENCE_ONLY', ...base, reference: citation, detail: 'reference-only Mass reading set' };
+  }
   if (!withContent.length) {
     return { status: reference ? 'REFERENCE_ONLY' : (memorial ? 'WEEKDAY_DEFAULT' : 'MISSING_CONTENT'), ...base, detail: 'document without texts' };
   }
@@ -71,10 +88,14 @@ export function auditCelebrationReadings(celebration, documents, expected) {
     return { status: 'WRONG_LINK', ...base, detail: `linked to ${foreign.flatMap(linkedIds).join(', ')}` };
   }
   // Lectionary years (A/B/C) of one celebration are not an ambiguity.
-  const unrelated = new Set(withContent.map((doc) => (doc.year ? 'cycle' : doc.id)));
+  // Documents with structured sets gather the cycles/sets of one celebration.
+  const unrelated = new Set(withContent.map((doc) => (doc.year || doc._massReadingsRef ? 'cycle' : doc.id)));
   if (unrelated.size > 1) return { status: 'AMBIGUOUS', ...base, detail: `${withContent.length} documents` };
-  const found = [...new Set(withContent.flatMap((doc) => gospelKeysOf(doc.gospel?.bible)))];
+  const found = [...new Set(withContent.flatMap((doc) => gospelCitations(doc).flatMap(gospelKeysOf)))];
   if (expectedGospels.length && found.length && !found.some((key) => expectedGospels.includes(key))) {
+    if (withContent.some(fromLectionary)) {
+      return { status: 'MATCH', ...base, verified: 'catholic.by', detail: `Catholic.by Lectionary ${found.join(' / ')}; calendars print ${expectedGospels.join(' / ')}` };
+    }
     return { status: 'WRONG_CITATION', ...base, detail: `document ${found.join(' / ')}, calendars ${expectedGospels.join(' / ')}` };
   }
   return { status: 'MATCH', ...base, verified: Boolean(expectedGospels.length && found.length) };

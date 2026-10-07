@@ -1,4 +1,5 @@
 import { normalizeFixedDate, normalizePlaces, normalizeRank } from './fixedFeasts.js';
+import { hasMassReadingSets } from './massReadingSets.js';
 
 export const READING_SECTIONS = Object.freeze([
   'reading1',
@@ -271,6 +272,9 @@ export function hasReadingSectionContent(section) {
 }
 
 export function hasReadingDocumentContent(document) {
+  // Structured Mass reading sets (also reference-only ones) are shown by the
+  // Readings screen even without flat fields; old apps skip such documents.
+  if (hasMassReadingSets(document)) return true;
   return READING_SECTIONS.some((sectionName) => hasReadingSectionContent(document?.[sectionName]));
 }
 

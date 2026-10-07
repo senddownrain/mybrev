@@ -80,6 +80,30 @@
       </details>
 
       <section
+        v-if="readingSets.length > 1"
+        class="cycle-choice set-choice"
+        aria-labelledby="set-choice-title"
+      >
+        <div>
+          <div id="set-choice-title" class="cycle-choice__label">Чытанні Імшы</div>
+          <div class="cycle-choice__hint">{{ readingSets.length }} {{ alternativeWord(readingSets.length) }} аднаго святкавання</div>
+        </div>
+        <div class="set-choice__buttons" role="group" aria-label="Набор чытанняў">
+          <button
+            v-for="set in readingSets"
+            :key="set.id"
+            type="button"
+            class="cycle-choice__button set-choice__button"
+            :class="{ 'cycle-choice__button--active': set.id === activeSet?.id }"
+            :aria-pressed="set.id === activeSet?.id"
+            @click="selectReadingSet(set)"
+          >
+            {{ set.label }}
+          </button>
+        </div>
+      </section>
+
+      <section
         v-if="availableCycles.length > 1"
         class="cycle-choice"
         aria-labelledby="cycle-choice-title"
@@ -138,6 +162,15 @@ import {
   normalizeReadingCycle,
   readingCelebrationKey,
 } from '@/utils/parsedReadingsIdentity';
+import {
+  collapseCoveredDocuments,
+  hasMassReadingSets,
+  massReadingSetsOf,
+  readingViewOfSet,
+  selectSet,
+  setCycles,
+} from '@/utils/massReadingSets';
+import { preferredReadingGroup } from '@/utils/readingSetChoice';
 import { getLiturgicalTheme } from '@/constants/liturgical';
 import { liturgicalVisual } from '@/utils/liturgicalVisual';
 import { resolveRuntimeDay } from '@/utils/ordo/runtime';
@@ -188,7 +221,8 @@ const readingsPageStyle = computed(() => {
 
 const readingGroups = computed(() => {
   const groups = new Map();
-  for (const reading of items.value) {
+  // Legacy documents covered by a document with Mass reading sets are hidden.
+  for (const reading of collapseCoveredDocuments(items.value)) {
     const key = readingCelebrationKey(reading);
     if (!groups.has(key)) groups.set(key, { key, documents: [] });
     groups.get(key).documents.push(reading);
@@ -224,10 +258,20 @@ const activeGroup = computed(() => {
     if (own) return own;
   }
 
-  return readingGroups.value[0] || null;
+  // No explicit choice: an evening/vigil Mass of the date (24.12, Holy
+  // Thursday, Pentecost Saturday) before the morning one.
+  return preferredReadingGroup(readingGroups.value);
 });
 
+/** The document of the active group with structured Mass reading sets. */
+const setDocument = computed(() => activeGroup.value?.documents.find(hasMassReadingSets) || null);
+const readingSets = computed(() => massReadingSetsOf(setDocument.value));
+const activeSet = computed(() => (readingSets.value.length
+  ? selectSet(readingSets.value, String(route.query.set || ''))
+  : null));
+
 const availableCycles = computed(() => {
+  if (activeSet.value) return setCycles(activeSet.value);
   const found = new Set((activeGroup.value?.documents || [])
     .map((document) => normalizeReadingCycle(document.year))
     .filter(Boolean));
@@ -243,13 +287,16 @@ const activeCycle = computed(() => {
   const requested = normalizeReadingCycle(route.query.year);
   if (requested && availableCycles.value.includes(requested)) return requested;
   if (currentCycle.value && availableCycles.value.includes(currentCycle.value)) return currentCycle.value;
-  const hasSharedReading = activeGroup.value?.documents
+  const hasSharedReading = !activeSet.value && activeGroup.value?.documents
     .some((document) => !normalizeReadingCycle(document.year));
   if (hasSharedReading) return '';
   return availableCycles.value[0] || '';
 });
 
 const activeReading = computed(() => {
+  if (setDocument.value && activeSet.value) {
+    return readingViewOfSet(setDocument.value, activeSet.value, activeCycle.value);
+  }
   const documents = activeGroup.value?.documents || [];
   if (!documents.length) return null;
   if (activeCycle.value) {
@@ -317,7 +364,13 @@ function selectReadingGroup(group) {
   if (reading._dayId) query.dayId = reading._dayId;
   else delete query.dayId;
   delete query.year;
+  delete query.set;
   router.replace({ query });
+}
+
+function selectReadingSet(set) {
+  if (!set || set.id === activeSet.value?.id) return;
+  router.replace({ query: { ...route.query, set: set.id } });
 }
 
 function selectCycle(cycle) {
@@ -346,6 +399,8 @@ function openReadingEditor() {
       query._date = selectedDate.value.format('DD.MM');
     }
   }
+
+  if (activeSet.value) query.set = activeSet.value.id;
 
   router.push({
     name: 'AdminParsedReadingEditor',
@@ -626,7 +681,25 @@ watch(() => [route.params.date || route.query.date, route.query.dayId, effective
   background: var(--reading-visible-color);
 }
 
+.set-choice__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.set-choice__button {
+  width: auto;
+  padding-inline: 12px;
+  white-space: nowrap;
+}
+
 @media (max-width: 600px) {
+  .set-choice__buttons {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .readings-container {
     padding: 8px 4px !important;
   }
