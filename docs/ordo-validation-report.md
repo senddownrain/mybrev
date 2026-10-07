@@ -25,7 +25,7 @@
 | Епархия | Дни | MATCH | DIOC | YEAR | MORE | PARSER | MISMATCH | MATCH | Объяснено | MISMATCH: разобрано / нет |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | Мінск (2025–26) | 364 | 348 | 3 | 1 | 0 | 6 | 6 | **95.6%** | 98.4% | 6 / 0 |
-| Віцебск (2025–26) | 364 | 326 | 2 | 1 | 5 | 5 | 25 | **89.6%** | 93.1% | 25 / 0 |
+| Віцебск (2025–26) | 364 | 327 | 2 | 1 | 4 | 5 | 25 | **89.8%** | 93.1% | 25 / 0 |
 | Пінск (2026) | 369 | 335 | 26 | 0 | 7 | 1 | 0 | **90.8%** | 100.0% | 0 / 0 |
 | Гродна (2027) | 371 | 320 | 41 | 0 | 3 | 3 | 4 | **86.3%** | 98.9% | 4 / 0 |
 
@@ -43,7 +43,7 @@
 | rank | 98.8% (159/161; PARSER 2) | 99.1% (342/345; PARSER 3) | 99.4% (171/172; PARSER 1) | 99.5% (181/182; DIOC 1) |
 | color | 99.7% (363/364; YEAR 1) | 99.7% (359/360; MISMATCH 1) | 100.0% (368/368) | 99.7% (368/369; DIOC 1) |
 | alternatives | 97.9% (94/96; DIOC 2) | 93.9% (92/98; DIOC 1, MORE 4, MISMATCH 1) | 71.7% (81/113; DIOC 25, MORE 7) | 58.7% (61/104; DIOC 40, MORE 3) |
-| suppressed | — | 91.4% (32/35; MORE 3) | — | — |
+| suppressed | — | 94.3% (33/35; MORE 2) | — | — |
 | transfer | — | — | — | 100.0% (4/4) |
 | firstVespers | 93.8% (60/64; MISMATCH 4) | 93.5% (58/62; MISMATCH 4) | 100.0% (62/62) | 98.4% (61/62; PARSER 1) |
 | secondVespers | 100.0% (4/4) | 97.0% (64/66; MISMATCH 2) | 100.0% (1/1) | 100.0% (64/64) |
@@ -127,8 +127,8 @@
 | Епархия | Дата | Проверка | Статус | Детали / причина |
 | --- | --- | --- | --- | --- |
 | vitebsk | 2026-02-15 | suppressed | MORE | source omits: Прапускаецца ўспамін благаслаўлёнага Міхала Сапоцькі, прэзбітэра. |
-| vitebsk | 2026-06-12 | suppressed | MORE | source omits: Прапускаецца ўспамін ad libitum благаславёных Антонія Ляшчэвіча МІС, Юрыя Кашыры |
 | vitebsk | 2026-06-13 | suppressed | MORE | source omits: Прапускаецца ўспамін св. Антонія Падуанскага, прэзбітэра і доктара Касцёла. |
+| vitebsk | 2026-08-25 | alternatives | MORE | source-only "успамін св. Людовіка."; sv-louis never printed by vitebsk |
 | pinsk | 2026-02-07 | alternatives | MORE | engine offers Saturday BVM; source silent |
 | grodno | 2027-08-07 | alternatives | MORE | engine offers Saturday BVM; source silent; sv-cajetan never printed by grodno |
 | grodno | 2027-09-11 | alternatives | MORE | engine offers Saturday BVM; source silent |
