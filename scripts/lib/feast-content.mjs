@@ -8,6 +8,7 @@
  * never has to read a phrase to find out where a text comes from.
  */
 import { FIRST_VESPER_FIELDS, OFFICE_CONTENT_FIELDS, TE_DEUM_FIELD } from '../../src/constants/officeFields.js';
+import { isValidFieldRule } from '../../src/utils/ordo/fieldRules.js';
 
 const CONTENT_FIELD_SET = new Set(OFFICE_CONTENT_FIELDS);
 
@@ -47,6 +48,7 @@ const MARKERS = Object.freeze({
   'from-first-week': { source: 'sunday-week-1' },
   'from-apostles': { source: 'template', template: 'apostles' },
   'from-apostels': { source: 'template', template: 'apostles' },
+  'from-proper': { source: 'proper' },
 });
 
 /**
@@ -102,6 +104,9 @@ export function classifyValue(field, value) {
       return { kind: 'rule', rule: { ref: ['vesperHymn', 'vesper1Hymn'] }, ...(incipit ? { incipit } : {}) };
     }
     if (/з гадзіны чытанняў\.?$/.test(text)) return { kind: 'rule', rule: { ref: 'officeOfReadingsHymn' } };
+    // «Гімн з Уласных тэкстаў пра святых» (in a Common): the celebration's own
+    // hymn, wherever its Proper carries it — never one shared Common hymn.
+    if (/^гімн з уласных тэкстаў(?: пра святых)?\.?$/.test(text)) return { kind: 'rule', rule: { source: 'proper' } };
     if (/с\. \d+/.test(text) || /з уласных тэкстаў/.test(text)) return { kind: 'unresolved', reason: 'page or own-text reference' };
   }
   if (/\bfrom(?:-[a-z]+)+\b/.test(marker)) return { kind: 'unresolved', reason: 'unknown marker' };
@@ -130,7 +135,10 @@ const hourPrefix = (field) => field.replace(/(Hymn|Ant\d|Ps\d|R|AntBen|AntMag|In
 export function splitSource(raw, { file = '' } = {}) {
   const texts = {};
   const rules = {};
-  const report = { normalized: [], unresolved: [], droppedPlaceholders: [] };
+  const report = { normalized: [], unresolved: [], droppedPlaceholders: [], invalidRules: [] };
+  // Rules written structurally in the source (`_fieldRules`) — a decision
+  // taken from a source document, e.g. «ГІМН ПРЫМІ ЦЯПЕР З ЮТРАНІ» → { ref }.
+  const explicit = raw._fieldRules && typeof raw._fieldRules === 'object' ? raw._fieldRules : {};
   const wholeHours = [];
   const incipits = {};
   Object.entries(raw).forEach(([field, value]) => {
@@ -146,6 +154,13 @@ export function splitSource(raw, { file = '' } = {}) {
     } else if (result.kind === 'unresolved') {
       report.unresolved.push({ file, field, value, reason: result.reason });
     }
+  });
+  Object.entries(explicit).forEach(([field, rule]) => {
+    if (!CONTENT_FIELD_SET.has(field) || !isValidFieldRule(rule)) { report.invalidRules.push({ file, field, rule }); return; }
+    // An own text always wins; the explicit rule replaces a classified one.
+    if (field in texts) return;
+    rules[field] = { ...rule };
+    report.normalized.push({ file, field, from: '_fieldRules', rule });
   });
   // «Усё бярэцца з …»: the rule covers every field of that hour without own text.
   wholeHours.forEach(({ prefix, rule }) => {

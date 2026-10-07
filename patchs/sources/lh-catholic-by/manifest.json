@@ -1,0 +1,170 @@
+{
+  "source": "https://lh.catholic.by/showalldates/index.php",
+  "pages": {
+    "2018-06-06.html": {
+      "date": "2018-06-06",
+      "savedAs": "lh-6.6.2018.html",
+      "title": "ІХ звычайны тыдзень",
+      "rank": null,
+      "hours": {
+        "invitatory": "day",
+        "officeOfReadings": "day",
+        "lauds": "day",
+        "terce": "day",
+        "sext": "day",
+        "none": "day",
+        "vespers": "day",
+        "compline": "day"
+      },
+      "note": "Clean Wednesday IX ordinary week (next day is an ordinary weekday): source for ordinary-w9-d4 Vespers (task 10); fetched 2026-10-07 from lh.catholic.by/showalldates (POST DateSelector=6.6.2018)"
+    },
+    "2023-06-07.html": {
+      "date": "2023-06-07",
+      "savedAs": "Літургія гадзінаў 07 06 23.html",
+      "title": "ІХ звычайны тыдзень",
+      "rank": null,
+      "hours": {
+        "invitatory": "day",
+        "officeOfReadings": "day",
+        "lauds": "day",
+        "terce": "day",
+        "sext": "day",
+        "none": "day",
+        "vespers": {
+          "title": "НАЙСВЯЦЕЙШАГА ЦЕЛА І КРЫВІ ХРЫСТА",
+          "rank": "Урачыстасць",
+          "firstVespers": true,
+          "date": "2023-06-07",
+          "ownHeading": true
+        },
+        "compline": "day"
+      },
+      "note": "Wednesday IX week daytime; Vespers = I Vespers of Corpus Christi: never a source for ordinary-w9-d4 Vespers (task 10/25)"
+    },
+    "2023-08-30.html": {
+      "date": "2023-08-30",
+      "savedAs": "Літургія гадзінаў Серада - 30 жніўня 2023.html",
+      "title": "ХХІзвычайны тыдзень",
+      "rank": null,
+      "hours": {
+        "invitatory": "day",
+        "officeOfReadings": "day",
+        "lauds": "day",
+        "terce": "day",
+        "sext": "day",
+        "none": "day",
+        "vespers": "day",
+        "compline": "day"
+      },
+      "note": "ordinary-w21-d4 Office of Readings R1/R2 (task 8.1); clean Wednesday psalter week I Vespers"
+    },
+    "2023-12-28.html": {
+      "date": "2023-12-28",
+      "savedAs": "Літургія гадзінаў 28 12.html",
+      "title": "СВ. НЕМАЎЛЯТ, МУЧАНІКАЎ",
+      "rank": "Свята",
+      "hours": {
+        "invitatory": "day",
+        "officeOfReadings": "day",
+        "lauds": "day",
+        "terce": "day",
+        "sext": "day",
+        "none": "day",
+        "vespers": "day",
+        "compline": "day"
+      },
+      "note": "Holy Innocents (task 9.3)"
+    },
+    "2025-05-16.html": {
+      "date": "2025-05-16",
+      "savedAs": "Літургія гадзінаў андрэй баболя.html",
+      "title": "СВ. АНДРЭЯ БАБОЛI, ПРЭЗБIТЭРА I МУЧАНIКА",
+      "rank": "Успамін",
+      "hours": {
+        "invitatory": "day",
+        "officeOfReadings": "day",
+        "lauds": "day",
+        "terce": "day",
+        "sext": "day",
+        "none": "day",
+        "vespers": "day",
+        "compline": "day"
+      },
+      "note": "St Andrew Bobola Proper (task 5.17)"
+    },
+    "2026-02-14.html": {
+      "date": "2026-02-14",
+      "savedAs": "Літургія гадзінаў 14.02.html",
+      "title": "СВ. КІРЫЛА, МНІХА, І МЯТОДА, БІСКУПА, АПЕКУНОЎ ЕЎРОПЫ",
+      "rank": "Свята",
+      "hours": {
+        "invitatory": "day",
+        "officeOfReadings": "day",
+        "lauds": "day",
+        "terce": "day",
+        "sext": "day",
+        "none": "day",
+        "vespers": {
+          "title": "VІ звычайная нядзеля",
+          "rank": "",
+          "firstVespers": true,
+          "date": "2026-02-14",
+          "ownHeading": true
+        },
+        "compline": "day"
+      },
+      "note": "Sts Cyril and Methodius: Lauds hymn = Vespers hymn (task 7.3)"
+    },
+    "2026-03-22.html": {
+      "date": "2026-03-22",
+      "savedAs": "Літургія гадзінаў `lent-w5-d1.html",
+      "title": "V нядзеля Вялікага посту",
+      "rank": null,
+      "hours": {
+        "invitatory": "day",
+        "officeOfReadings": "day",
+        "lauds": "day",
+        "terce": "day",
+        "sext": "day",
+        "none": "day",
+        "vespers": "day",
+        "compline": "day"
+      },
+      "note": "lent-w5-d1, V Sunday of Lent (task 8.2)"
+    },
+    "2026-08-25.html": {
+      "date": "2026-08-25",
+      "savedAs": "Літургія гадзінаў Аўторак - 25 жніўня 2026.html",
+      "title": "ХХІ звычайны тыдзень",
+      "rank": null,
+      "hours": {
+        "invitatory": "day",
+        "officeOfReadings": "day",
+        "lauds": "day",
+        "terce": "day",
+        "sext": "day",
+        "none": "day",
+        "vespers": "day",
+        "compline": "day"
+      },
+      "note": "ordinary-w21-d3 Office of Readings R1/R2 (task 8.1)"
+    },
+    "2026-11-02.html": {
+      "date": "2026-11-02",
+      "savedAs": "Літургія гадзінаў 2 ноября.html",
+      "title": "УСІХ ПАМЕРЛЫХ ВЕРНІКАЎ",
+      "rank": "Успамін",
+      "hours": {
+        "invitatory": "day",
+        "officeOfReadings": "day",
+        "lauds": "day",
+        "terce": "day",
+        "sext": "day",
+        "none": "day",
+        "vespers": "day",
+        "compline": "day"
+      },
+      "note": "All Faithful Departed, weekday (task 9.1)"
+    }
+  }
+}
