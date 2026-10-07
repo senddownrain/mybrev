@@ -82,6 +82,7 @@
 .mdi-format-color-text::before { content: "\F069E"; }
 .mdi-format-font::before { content: "\F06D6"; }
 .mdi-format-font-size-increase::before { content: "\F09F4"; }
+.mdi-format-list-group::before { content: "\F1860"; }
 .mdi-fullscreen::before { content: "\F0293"; }
 .mdi-fullscreen-exit::before { content: "\F0294"; }
 .mdi-hands-pray::before { content: "\F0579"; }
@@ -126,6 +127,7 @@
 .mdi-tag-search-outline::before { content: "\F1908"; }
 .mdi-text-box-outline::before { content: "\F09ED"; }
 .mdi-theme-light-dark::before { content: "\F050E"; }
+.mdi-undo::before { content: "\F054C"; }
 .mdi-unfold-more-horizontal::before { content: "\F054F"; }
 .mdi-volume-high::before { content: "\F057E"; }
 .mdi-volume-low::before { content: "\F057F"; }

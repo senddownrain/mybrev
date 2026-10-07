@@ -104,7 +104,7 @@ songs 447 (~1 КБ). Обычный патч — до 1–2 МБ; пересбо
 | Коллекция | Требуется |
 |---|---|
 | days | селектор (`_periodType`, `_feast`, `_date`, `_schema`) или `office-for-dead` |
-| readings | хотя бы одно чтение (`reading1`, `psalm`, `reading2`, `gospel`) |
+| readings | хотя бы одно чтение (`reading1`, `psalm`, `reading2`, `gospel`) или `massReadings`; `massReadings` проходит `validateMassReadings` (наборы Імшы, `docs/readings-mass-sets.md`) |
 | liturgicalTemplates | `_kind`, `title` |
 | invitatoriums / completoriums | псалом (и период для камплеты) |
 | prayers | название и текст (или их версии) |

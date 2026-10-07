@@ -8,113 +8,146 @@
       </span>
     </header>
 
-    <div class="reading-sections">
+    <div v-if="reading._setLabel || reading._note" class="reading-set-meta">
+      <span v-if="reading._setLabel" class="reading-set-meta__label">{{ reading._setLabel }}</span>
+      <span v-if="reading._note" class="reading-set-meta__note">{{ reading._note }}</span>
+    </div>
+
+    <div v-if="reading._referenceOnly" class="reading-reference-only">
+      <p class="reading-reference-only__notice">Поўны тэкст чытанняў пакуль не загружаны. Цытаты:</p>
+      <dl class="reading-reference-only__list">
+        <template v-for="row in referenceRows" :key="row.key">
+          <dt>{{ row.label }}</dt>
+          <dd>{{ row.bible }}<span v-for="alternative in row.alternatives" :key="alternative"> або {{ alternative }}</span></dd>
+        </template>
+      </dl>
+    </div>
+
+    <div v-else class="reading-sections">
       <section
         v-for="section in sections"
         :key="section.key"
         class="reading-section"
-        :class="`reading-section--${section.key}`"
+        :class="[`reading-section--${section.kind}`, { 'reading-section--rubric-only': section.kind === 'rubric' }]"
       >
-        <div class="section-heading">
-          <h3 class="section-label">{{ section.label }}</h3>
-          <div v-if="section.data.bible" class="section-ref">{{ section.data.bible }}</div>
-        </div>
-
-        <template v-if="/^reading\d+$/.test(section.key)">
-          <div v-if="section.data.comment" class="section-comment">{{ section.data.comment }}</div>
-          <div v-if="section.data.title" class="reading-rubric">{{ section.data.title }}</div>
-          <div
-            v-if="strippedText(section.data)"
-            class="section-text"
-            v-html="formatText(strippedText(section.data))"
-          ></div>
-          <div
-            v-if="strippedText(section.data) && !hasAcclamation(strippedText(section.data))"
-            class="reading-acclamation"
-          >
-            Гэта слова Божае.
-          </div>
-          <div v-for="(alternative, index) in section.data.alternatives || []" :key="index" class="reading-alternative">
-            <div class="reading-alternative__label">Або <span v-if="alternative.bible">{{ alternative.bible }}</span></div>
-            <div v-if="alternative.comment" class="section-comment">{{ alternative.comment }}</div>
-            <div v-if="alternative.title" class="reading-rubric">{{ alternative.title }}</div>
-            <div v-if="alternative.text" class="section-text" v-html="formatText(strippedText(alternative))"></div>
-            <div v-if="alternative.text && !hasAcclamation(alternative.text)" class="reading-acclamation">Гэта слова Божае.</div>
-          </div>
-        </template>
-
-        <template v-else-if="section.key === 'psalm'">
-          <template v-if="section.data.verses?.length">
-            <div v-if="section.data.chorus" class="psalm-refrain">
-              <span class="psalm-refrain__label">Рэфрэн</span>
-              <span>{{ cleanChorus(section.data.chorus) }}</span>
-            </div>
-            <div v-for="(verse, index) in section.data.verses" :key="index" class="psalm-strophe">
-              <div
-                class="section-text psalm-verse-text"
-                v-html="formatPsalmText(typeof verse === 'string' ? verse : (verse.text || ''))"
-              ></div>
-              <div
-                v-if="section.data.chorus && index < section.data.verses.length - 1"
-                class="psalm-refrain psalm-refrain--repeat"
-              >
-                <span class="psalm-refrain__label">Рэфрэн</span>
-                <span>{{ cleanChorus(section.data.chorus) }}</span>
-              </div>
-            </div>
-            <div v-if="section.data.altChorus" class="psalm-refrain psalm-refrain--alternate">
-              <span class="psalm-refrain__label">Або</span>
-              <span>{{ cleanChorus(section.data.altChorus) }}</span>
-            </div>
-            <div v-else-if="section.data.chorus" class="psalm-refrain psalm-refrain--last">
-              <span class="psalm-refrain__label">Рэфрэн</span>
-              <span>{{ cleanChorus(section.data.chorus) }}</span>
-            </div>
-          </template>
-          <div
-            v-else-if="section.data.text"
-            class="section-text psalm-verse-text"
-            v-html="formatPsalmText(section.data.text)"
-          ></div>
-        </template>
-
-        <template v-else-if="section.key === 'alleluia'">
-          <div class="alleluia-acclamation">
-            <strong class="alleluia-acclamation__label">Акламацыя:</strong>
-            <span>Аллелюя, аллелюя, аллелюя.</span>
-          </div>
-          <div
-            v-if="section.data.verse || section.data.text"
-            class="alleluia-verse"
-            v-html="formatText(section.data.verse || section.data.text)"
-          ></div>
-          <div class="alleluia-acclamation alleluia-acclamation--closing">
-            <strong class="alleluia-acclamation__label">Акламацыя:</strong>
-            <span>Аллелюя, аллелюя, аллелюя.</span>
-          </div>
-        </template>
-
-        <template v-else-if="section.key === 'gospel'">
-          <div v-if="section.data.comment" class="section-comment">{{ section.data.comment }}</div>
-          <div v-if="section.data.title" class="reading-rubric gospel-rubric">
-            {{ section.data.title }}
-          </div>
-          <div v-if="section.data.text" class="section-text" v-html="formatText(section.data.text, section.data.italicLines)"></div>
-          <div
-            v-if="section.data.text && !hasAcclamation(section.data.text)"
-            class="reading-acclamation"
-          >
-            Гэта слова Пана.
-          </div>
+        <template v-if="section.kind === 'rubric'">
+          <div class="reading-rubric reading-rubric--liturgical" v-html="formatText(section.data.text)"></div>
         </template>
 
         <template v-else>
-          <div v-if="section.data.text" class="section-text" v-html="formatText(section.data.text)"></div>
+          <div class="section-heading">
+            <h3 class="section-label">{{ section.label }}</h3>
+            <div v-if="section.data.bible" class="section-ref">{{ section.data.bible }}</div>
+          </div>
+
+          <template v-if="section.kind === 'reading'">
+            <div v-if="section.data.comment" class="section-comment">{{ section.data.comment }}</div>
+            <div v-if="section.data.title" class="reading-rubric">{{ section.data.title }}</div>
+            <div
+              v-if="strippedText(section.data)"
+              class="section-text"
+              v-html="formatText(strippedText(section.data))"
+            ></div>
+            <div v-for="rubric in section.data.rubrics || []" :key="rubric" class="reading-rubric reading-rubric--liturgical">{{ rubric }}</div>
+            <div v-if="conclusionOf(section.data, 'Гэта слова Божае.')" class="reading-acclamation">
+              {{ conclusionOf(section.data, 'Гэта слова Божае.') }}
+            </div>
+            <div v-for="(alternative, index) in section.data.alternatives || []" :key="index" class="reading-alternative">
+              <div class="reading-alternative__label">Або <span v-if="alternative.bible">{{ alternative.bible }}</span></div>
+              <div v-if="alternative.comment" class="section-comment">{{ alternative.comment }}</div>
+              <div v-if="alternative.title" class="reading-rubric">{{ alternative.title }}</div>
+              <div v-if="alternative.text" class="section-text" v-html="formatText(strippedText(alternative))"></div>
+              <div v-if="alternative.text && !hasAcclamation(alternative.text)" class="reading-acclamation">Гэта слова Божае.</div>
+            </div>
+          </template>
+
+          <template v-else-if="section.kind === 'psalm'">
+            <template v-if="section.data.verses?.length">
+              <div v-if="section.data.chorus" class="psalm-refrain">
+                <span class="psalm-refrain__label">Рэфрэн</span>
+                <span>{{ cleanChorus(section.data.chorus) }}</span>
+              </div>
+              <div v-if="section.data.altChorus && section.structured" class="psalm-refrain psalm-refrain--alternate">
+                <span class="psalm-refrain__label">Або</span>
+                <span>{{ cleanChorus(section.data.altChorus) }}</span>
+              </div>
+              <div v-for="(verse, index) in section.data.verses" :key="index" class="psalm-strophe">
+                <div
+                  class="section-text psalm-verse-text"
+                  v-html="formatPsalmText(typeof verse === 'string' ? verse : (verse.text || ''))"
+                ></div>
+                <div
+                  v-if="section.data.chorus && index < section.data.verses.length - 1"
+                  class="psalm-refrain psalm-refrain--repeat"
+                >
+                  <span class="psalm-refrain__label">Рэфрэн</span>
+                  <span>{{ cleanChorus(section.data.chorus) }}</span>
+                </div>
+              </div>
+              <div v-if="section.data.altChorus && !section.structured" class="psalm-refrain psalm-refrain--alternate">
+                <span class="psalm-refrain__label">Або</span>
+                <span>{{ cleanChorus(section.data.altChorus) }}</span>
+              </div>
+              <div v-else-if="section.data.chorus" class="psalm-refrain psalm-refrain--last">
+                <span class="psalm-refrain__label">Рэфрэн</span>
+                <span>{{ cleanChorus(section.data.chorus) }}</span>
+              </div>
+            </template>
+            <div
+              v-else-if="section.data.text"
+              class="section-text psalm-verse-text"
+              v-html="formatPsalmText(section.data.text)"
+            ></div>
+          </template>
+
+          <template v-else-if="section.kind === 'acclamation'">
+            <div class="alleluia-acclamation">
+              <strong class="alleluia-acclamation__label">Акламацыя:</strong>
+              <span>{{ section.data.acclamation || 'Аллелюя, аллелюя, аллелюя.' }}</span>
+            </div>
+            <div
+              v-if="section.data.verse || section.data.text"
+              class="alleluia-verse"
+              v-html="formatText(section.data.verse || section.data.text)"
+            ></div>
+            <div class="alleluia-acclamation alleluia-acclamation--closing">
+              <strong class="alleluia-acclamation__label">Акламацыя:</strong>
+              <span>{{ section.data.acclamation || 'Аллелюя, аллелюя, аллелюя.' }}</span>
+            </div>
+          </template>
+
+          <template v-else-if="section.kind === 'gospel'">
+            <div v-if="section.data.comment" class="section-comment">{{ section.data.comment }}</div>
+            <div v-if="section.data.title" class="reading-rubric gospel-rubric">
+              {{ section.data.title }}
+            </div>
+            <div v-if="section.data.passion?.blocks?.length" class="passion" data-testid="passion">
+              <template v-for="(block, index) in section.data.passion.blocks" :key="index">
+                <h4 v-if="block.type === 'heading'" class="passion__heading">{{ block.text }}</h4>
+                <p v-else-if="block.type === 'rubric'" class="reading-rubric reading-rubric--liturgical">{{ block.text }}</p>
+                <p v-else class="section-text passion__paragraph">
+                  <template v-for="(run, runIndex) in block.runs" :key="runIndex">
+                    <span class="passion__role" :class="`passion__role--${run.role}`" :title="roleTitle(run.role)">{{ roleMarker(run.role) ? `${roleMarker(run.role)} ` : '' }}</span>
+                    <span class="passion__run" :class="`passion__run--${run.role}`">{{ run.text }}</span>
+                    {{ ' ' }}
+                  </template>
+                </p>
+              </template>
+            </div>
+            <div v-else-if="section.data.text" class="section-text" v-html="formatText(section.data.text, section.data.italicLines)"></div>
+            <div v-if="conclusionOf(section.data, 'Гэта слова Пана.')" class="reading-acclamation">
+              {{ conclusionOf(section.data, 'Гэта слова Пана.') }}
+            </div>
+          </template>
+
+          <template v-else>
+            <div v-if="section.data.text" class="section-text" v-html="formatText(section.data.text)"></div>
+          </template>
         </template>
       </section>
     </div>
 
-    <div v-if="!hasSections" class="no-content text-grey">
+    <div v-if="!hasSections && !reading._referenceOnly" class="no-content text-grey">
       Тэкст чытання недаступны
     </div>
   </article>
@@ -123,6 +156,7 @@
 <script setup>
 import { computed } from 'vue';
 import { formatResponsorialPsalmHtml } from '@/utils/responsorialPsalmHtml';
+import { PASSION_ROLES, SECTION_LABELS, sanitizeReadingHtml } from '@/utils/massReadingSets';
 
 const props = defineProps({
   reading: { type: Object, required: true },
@@ -135,7 +169,19 @@ function readingLabel(key) {
   return `Чытанне ${number}`;
 }
 
+const LEGACY_KIND = { psalm: 'psalm', alleluia: 'acclamation', gospel: 'gospel', sequence: 'sequence' };
+
 const sections = computed(() => {
+  // Structured Mass reading set: ordered sections (rubrics, cycles resolved).
+  if (Array.isArray(props.reading._sections)) {
+    return props.reading._sections.map((section, index) => ({
+      key: `${index}-${section.kind}-${section.role || ''}`,
+      kind: section.kind,
+      structured: true,
+      label: SECTION_LABELS[section.role] || SECTION_LABELS[section.kind] || readingLabel(String(section.role || 'reading1')),
+      data: section,
+    }));
+  }
   const readingKeys = Object.keys(props.reading)
     .filter((key) => /^reading\d+$/.test(key) && props.reading[key])
     .sort((left, right) => Number(left.replace('reading', '')) - Number(right.replace('reading', '')));
@@ -149,18 +195,42 @@ const sections = computed(() => {
     ...(props.reading.alleluia ? ['alleluia'] : []),
     ...(props.reading.gospel ? ['gospel'] : []),
   ];
-  const labels = {
-    psalm: 'Рэспансарыйны псальм',
-    alleluia: 'Спеў перад Евангеллем',
-    gospel: 'Евангелле',
-    sequence: 'Секвенцыя',
-  };
   return ordered.map((key) => ({
     key,
-    label: key.startsWith('reading') ? readingLabel(key) : labels[key],
+    kind: key.startsWith('reading') ? 'reading' : LEGACY_KIND[key],
+    label: key.startsWith('reading') ? readingLabel(key) : SECTION_LABELS[key],
     data: props.reading[key],
   }));
 });
+
+const referenceRows = computed(() => (props.reading._sections || [])
+  .filter((section) => section.bible)
+  .map((section, index) => ({
+    key: `${index}-${section.role || section.kind}`,
+    label: SECTION_LABELS[section.role] || SECTION_LABELS[section.kind] || '',
+    bible: section.bible,
+    alternatives: (section.alternatives || []).map((item) => item.bible).filter(Boolean),
+  })));
+
+/**
+ * Closing acclamation of a reading: the structured `conclusion` («» = none,
+ * e.g. the third reading of the Easter Vigil); legacy text gets the default
+ * unless it already ends with it.
+ */
+function conclusionOf(data, fallback) {
+  if (typeof data?.conclusion === 'string') return data.conclusion;
+  const body = data?.text || '';
+  if (!body || hasAcclamation(body)) return '';
+  return fallback;
+}
+
+function roleMarker(role) {
+  return PASSION_ROLES[role]?.marker || '';
+}
+
+function roleTitle(role) {
+  return PASSION_ROLES[role]?.label || '';
+}
 
 const hasSections = computed(() => sections.value.length > 0);
 const BIBLE_REF_LEAD = /^[А-ЯA-Z][а-яa-z]{0,4}\.?\s+\d+[\d\s,.\-–()абвabcABC]*\s*/;
@@ -186,7 +256,7 @@ function escapeHtml(value) {
 
 function formatText(text, italicLines = []) {
   if (!text) return '';
-  if (/<[a-z][\s\S]*>/i.test(text)) return text;
+  if (/<[a-z][\s\S]*>/i.test(text)) return sanitizeReadingHtml(text);
   return String(text)
     .split(/\n{2,}/)
     .map((paragraph) => {
@@ -459,6 +529,77 @@ function cycleLabel(value) {
 .alleluia-verse {
   color: rgb(var(--v-theme-on-surface));
   font-style: normal;
+}
+
+.reading-set-meta {
+  display: grid;
+  gap: 4px;
+  padding: 14px 20px 0;
+}
+
+.reading-set-meta__label {
+  color: var(--reading-visible-color);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.reading-set-meta__note,
+.reading-rubric--liturgical {
+  color: var(--reading-visible-color);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.reading-section--rubric-only {
+  padding-block: 14px 0;
+}
+
+.reading-reference-only {
+  padding: 20px;
+}
+
+.reading-reference-only__notice {
+  margin: 0 0 12px;
+  color: var(--nav-muted);
+}
+
+.reading-reference-only__list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 16px;
+  margin: 0;
+}
+
+.reading-reference-only__list dt {
+  color: var(--reading-visible-color);
+  font-weight: 700;
+}
+
+.reading-reference-only__list dd {
+  margin: 0;
+}
+
+.passion__heading {
+  margin: 18px 0 8px;
+  color: var(--reading-visible-color);
+  font-size: 0.95rem;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.passion__role {
+  color: var(--reading-visible-color);
+  font-weight: 800;
+}
+
+.passion__run--christ {
+  font-weight: 600;
+}
+
+.passion__run--crowd {
+  font-style: italic;
 }
 
 .no-content {

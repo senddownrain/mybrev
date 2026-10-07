@@ -11,8 +11,17 @@
 import { createHash } from 'node:crypto';
 import { validateCelebrationDefinition, validateDioceseOverride } from '../../../src/utils/ordo/definitions.js';
 import { validateYearOverride } from '../../../src/utils/ordo/yearOverrides.js';
+import { validateMassReadings } from '../../../src/utils/massReadingSets.js';
 
 export const CONTENT_SCHEMA_VERSION = 1;
+
+/**
+ * Optional, additive document schemas inside a collection. They do not bump
+ * CONTENT_SCHEMA_VERSION: an older app ignores the new field and keeps
+ * reading the flat fields (a document without them it skips as «no text»).
+ *   readings.massReadings — structured Mass reading sets (src/utils/massReadingSets.js)
+ */
+export const DOCUMENT_SCHEMAS = Object.freeze({ readings: { massReadings: 1 } });
 
 /** Collections the app ships and updates (order = load priority). */
 export const APP_CONTENT_COLLECTIONS = [
@@ -168,7 +177,14 @@ export const DOCUMENT_RULES = {
   // advent-w4-d6, covered by the 17–24 December documents).
   // office-for-dead is opened by its id.
   days: (doc) => doc.id === 'office-for-dead' || anyOf(doc, ['_periodType', '_feast', '_date', '_schema']) || 'no selector',
-  readings: (doc) => anyOf(doc, ['reading1', 'psalm', 'reading2', 'gospel']) || 'no reading',
+  // Flat fields (all released apps) or structured Mass reading sets (a
+  // canonical document of several sets, a reference-only set).
+  readings: (doc) => {
+    const errors = validateMassReadings(doc.massReadings);
+    if (errors.length) return errors.join('; ');
+    if (doc._massReadingsRef && !filled(doc._massReadingsRef.doc)) return '_massReadingsRef without doc';
+    return anyOf(doc, ['reading1', 'psalm', 'reading2', 'gospel', 'massReadings']) || 'no reading';
+  },
   liturgicalTemplates: (doc) => (filled(doc._kind) && filled(doc.title)) || 'no _kind/title',
   invitatoriums: (doc) => filled(doc.invitatoriumPs1) || 'no psalm',
   completoriums: (doc) => (filled(doc._periodType) && filled(doc.compPs1)) || 'no period/psalm',
