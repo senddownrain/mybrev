@@ -117,22 +117,22 @@ export const VALIDATION_EXPECTATIONS = Object.freeze([
   {
     ...SOURCE_ERROR,
     diocese: 'minsk-mohilev', date: '2026-06-13', checks: ['primary'],
-    reason: 'Immaculate Heart + St Anthony (obligatory): both become optional (Missal rubric); the calendar prints one as primary.',
+    reason: 'Immaculate Heart + St Anthony (obligatory): MyBrev product rule (§11.2): two memorial choices, Immaculate Heart first, no weekday; the calendar prints one order.',
   },
   {
     ...SOURCE_ERROR,
     diocese: 'vitebsk', date: '2026-06-13', checks: ['primary', 'alternatives'],
-    reason: 'Immaculate Heart + St Anthony (obligatory): both become optional (Missal rubric); the calendar prints one as primary.',
+    reason: 'Immaculate Heart + St Anthony (obligatory): MyBrev product rule (§11.2): two memorial choices, Immaculate Heart first, no weekday; the calendar prints one order.',
   },
   {
     ...SOURCE_ERROR,
     diocese: 'pinsk', date: '2026-06-13', checks: ['primary'],
-    reason: 'Immaculate Heart + St Anthony (obligatory): both become optional (Missal rubric); the calendar prints one as primary.',
+    reason: 'Immaculate Heart + St Anthony (obligatory): MyBrev product rule (§11.2): two memorial choices, Immaculate Heart first, no weekday; the calendar prints one order.',
   },
   {
     ...SOURCE_ERROR,
     diocese: 'grodno', date: '2027-06-05', checks: ['primary'],
-    reason: 'Immaculate Heart + St Boniface (obligatory): both become optional (Missal rubric); the calendar prints one as primary.',
+    reason: 'Immaculate Heart + St Boniface (obligatory): MyBrev product rule (§11.2): two memorial choices, Immaculate Heart first, no weekday; the calendar prints one order.',
   },
   {
     ...SOURCE_ERROR,

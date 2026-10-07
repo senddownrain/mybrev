@@ -137,6 +137,17 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     diocese, JSON.parse(fs.readFileSync(path.join(ROOT, 'src', 'data', 'ordo', 'evidence', `${diocese}.json`), 'utf8')),
   ]));
   const audit = runReadingsAudit({ readings: source.readings, evidence });
+  // `--report-dir dir`: a what-if audit (e.g. a projected snapshot) that
+  // never touches docs/ or the app data.
+  const reportDirIndex = process.argv.indexOf('--report-dir');
+  if (reportDirIndex > 0) {
+    const dir = path.resolve(process.argv[reportDirIndex + 1]);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'ordo-readings-audit.json'), `${JSON.stringify({ snapshotVersion: source.version, ...audit }, null, 1)}\n`);
+    fs.writeFileSync(path.join(dir, 'ordo-readings-audit.md'), renderMarkdown(audit, source.label));
+    console.log(JSON.stringify(audit.summary));
+    process.exit(0);
+  }
   fs.mkdirSync(path.join(ROOT, 'reports'), { recursive: true });
   fs.writeFileSync(path.join(ROOT, 'reports', 'ordo-readings-audit.json'), `${JSON.stringify({ snapshotVersion: source.version, ...audit }, null, 1)}\n`);
   fs.writeFileSync(path.join(ROOT, 'docs', 'ordo-readings-audit.md'), renderMarkdown(audit, source.label));

@@ -1,0 +1,953 @@
+{
+ "generatedAt": "2026-10-07T18:06:01.125Z",
+ "pages": {
+  "assumption": {
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5043-15-zhniunya-urachystasts-unebauzyatstsya-najsvyatsejshaj-panny-maryi",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "Імша ў вігілію",
+     "sections": 5
+    },
+    {
+     "sourceLabel": "Імша ўдзень",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "peter-paul": {
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5041-29-chervenya-urachystasts-svyatykh-pyatra-i-paula-apostalau",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "Імша ў вігілію",
+     "sections": 5
+    },
+    {
+     "sourceLabel": "Імша ўдзень",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "bonaventure": {
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4948-15-lipenya-uspamin-sv-bonaventury-biskupa-i-doktara-kastsjola",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 4
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "clare": {
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4957-11-zhniunya-uspamin-sv-klary-panny",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 4
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "andrew-bobola": {
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4942-16-maya-uspamin-sv-andreya-baboli-svyatara-i-muchanika",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 4
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "all-souls": {
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4972-2-listapada-uspamin-usikh-pamerlykh-vernikau",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "Першая Імша",
+     "sections": 5
+    },
+    {
+     "sourceLabel": "Другая Імша",
+     "sections": 5
+    },
+    {
+     "sourceLabel": "Трэцяя Імша",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "minsk-cathedral-dedication": {
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/17068-16-sakavika-gadavina-pasvyachennya-katedralnaga-kastsjola-u-minsku",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "palm-sunday": {
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5097-palmovaya-nyadzelya-abo-nyadzelya-muki-pana",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "ПРАЦЭСІЯ З ПАЛЬМАМІ",
+     "sections": 3
+    },
+    {
+     "sourceLabel": "ІМША",
+     "sections": 12
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "holy-thursday-chrism": {
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5100-vyaliki-chatsver-imsha-khryzma",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "holy-thursday-evening": {
+   "url": "https://catholic.by/3/liturgy/lectionary/tryduum/5103-vyaliki-chatsver-imsha-vyachery-pana",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "good-friday": {
+   "url": "https://catholic.by/3/liturgy/lectionary/tryduum/5104-vyalikaya-pyatnitsa-muki-pana",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "easter-vigil": {
+   "url": "https://catholic.by/3/liturgy/lectionary/tryduum/5105-paskhalnaya-vigiliya-u-svyatuyu-noch",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 21
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "easter-sunday": {
+   "url": "https://catholic.by/3/liturgy/lectionary/tryduum/5106-velikodnaya-nyadzelya-imsha-udzen",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 6
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "easter-saturday-w7": {
+   "url": "https://catholic.by/3/liturgy/lectionary/velikodny/5167-subota-vii-velikodny-tydzen",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "РАНІШНЯЯ ІМША",
+     "sections": 4
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "pentecost-vigil": {
+   "url": "https://catholic.by/3/liturgy/lectionary/velikodny/5172-spaslanne-dukha-svyatoga",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "Імша ў вігілію",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "pentecost-vigil-old": {
+   "url": "https://old.catholic.by/2/liturgy/lectionary/liturgia-velikodny/103542.html",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "Імша ў вігілію",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "pentecost": {
+   "url": "https://catholic.by/3/liturgy/lectionary/velikodny/5171-nyadzelya-spaslannya-dukha-svyatoga",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "Імша ўдзень",
+     "sections": 6
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "ascension": {
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5029-urachystasts-unebaushestsya-pana",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 7
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "christmas-eve-morning": {
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4604-24-snezhnya-zvychajny-dzen-adventu",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 4
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "christmas-vigil": {
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5023-24-snezhnya-urachystasts-naradzhennya-pana",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "Імша ў вігілію",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "christmas": {
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5024-25-snezhnya-urachystasts-naradzhennya-pana",
+   "fetchedAt": "2026-10-07",
+   "sets": [
+    {
+     "sourceLabel": "Імша ўначы",
+     "sections": 5
+    },
+    {
+     "sourceLabel": "Імша на світанні",
+     "sections": 5
+    },
+    {
+     "sourceLabel": "Імша ўдзень",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  }
+ },
+ "celebrations": [
+  {
+   "celebration": "assumption",
+   "document": "15-08-assumption-blessed-virgin-mary",
+   "sets": [
+    {
+     "id": "vigil",
+     "label": "Св. Імша ў вігілію",
+     "context": "vigil",
+     "default": false,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/urachystasci/5043-15-zhniunya-urachystasts-unebauzyatstsya-najsvyatsejshaj-panny-maryi",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    },
+    {
+     "id": "day",
+     "label": "Св. Імша ўдзень",
+     "context": "day",
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/urachystasci/5043-15-zhniunya-urachystasts-unebauzyatstsya-najsvyatsejshaj-panny-maryi",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "peter-paul",
+   "document": "29-06-sv-peter-paul-apostles",
+   "sets": [
+    {
+     "id": "vigil",
+     "label": "Св. Імша ў вігілію",
+     "context": "vigil",
+     "default": false,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/urachystasci/5041-29-chervenya-urachystasts-svyatykh-pyatra-i-paula-apostalau",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    },
+    {
+     "id": "day",
+     "label": "Св. Імша ўдзень",
+     "context": "day",
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/urachystasci/5041-29-chervenya-urachystasts-svyatykh-pyatra-i-paula-apostalau",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "bonaventure",
+   "document": "15-07-sv-bonaventure",
+   "sets": [
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/uspaminy/4948-15-lipenya-uspamin-sv-bonaventury-biskupa-i-doktara-kastsjola",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "clare",
+   "document": "11-08-sv-clare",
+   "sets": [
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/uspaminy/4957-11-zhniunya-uspamin-sv-klary-panny",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "andrew-bobola",
+   "document": "16-05-sv-andrei-bobola",
+   "sets": [
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/uspaminy/4942-16-maya-uspamin-sv-andreya-baboli-svyatara-i-muchanika",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": [
+    "16-05-sv-andrei-bobola-pinsk"
+   ]
+  },
+  {
+   "celebration": "all-souls",
+   "document": "02-11-all-faithful-departed",
+   "sets": [
+    {
+     "id": "first",
+     "label": "Першая Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/uspaminy/4972-2-listapada-uspamin-usikh-pamerlykh-vernikau",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    },
+    {
+     "id": "second",
+     "label": "Другая Імша",
+     "context": null,
+     "default": false,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/uspaminy/4972-2-listapada-uspamin-usikh-pamerlykh-vernikau",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    },
+    {
+     "id": "third",
+     "label": "Трэцяя Імша",
+     "context": null,
+     "default": false,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/uspaminy/4972-2-listapada-uspamin-usikh-pamerlykh-vernikau",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "minsk-cathedral-dedication",
+   "document": "16-03-minsk-mohilev-cathedral-dedication",
+   "sets": [
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/sviaty/17068-16-sakavika-gadavina-pasvyachennya-katedralnaga-kastsjola-u-minsku",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "grodno-cathedral-dedication",
+   "document": "04-12-grodno-cathedral-dedication",
+   "sets": [
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": true,
+     "source": "MyBrev final phase spec §5.5",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "vitebsk-cathedral-dedication",
+   "document": "10-10-vitebsk-cathedral-dedication",
+   "sets": [
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": true,
+     "source": "MyBrev final phase spec §5.5",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "pinsk-cathedral-dedication",
+   "document": "01-05-pinsk-cathedral-dedication",
+   "sets": [
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": true,
+     "source": "MyBrev final phase spec §5.5",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "our-lady-lahishyn",
+   "document": "22-08-our-lady-lahishyn-pinsk",
+   "sets": [
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": true,
+     "source": "MyBrev final phase spec §5.6",
+     "sections": [
+      "reading:reading1",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "our-lady-trakai",
+   "document": "05-07-our-lady-trakai-grodno",
+   "sets": [
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": true,
+     "source": "MyBrev final phase spec §5.6",
+     "sections": [
+      "reading:reading1",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "palm-sunday",
+   "document": "feast-palmsunday",
+   "sets": [
+    {
+     "id": "procession",
+     "label": "Працэсія з пальмамі",
+     "context": "procession",
+     "default": false,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/post/5097-palmovaya-nyadzelya-abo-nyadzelya-muki-pana",
+     "sections": [
+      "gospel/A",
+      "gospel/B",
+      "gospel/C"
+     ]
+    },
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": "mass",
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/post/5097-palmovaya-nyadzelya-abo-nyadzelya-muki-pana",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "rubric",
+      "rubric",
+      "rubric",
+      "rubric",
+      "rubric",
+      "gospel/A+roles",
+      "gospel/B+roles",
+      "gospel/C+roles"
+     ]
+    }
+   ],
+   "linked": [
+    "feast-palmsunday--A",
+    "feast-palmsunday--B",
+    "feast-palmsunday--C",
+    "feast-palmsunday--procession"
+   ]
+  },
+  {
+   "celebration": "holy-thursday",
+   "document": "holyweek-w1-d5",
+   "sets": [
+    {
+     "id": "chrism",
+     "label": "Св. Імша Хрызма",
+     "context": "chrism",
+     "default": false,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/post/5100-vyaliki-chatsver-imsha-khryzma",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    },
+    {
+     "id": "evening",
+     "label": "Св. Імша Вячэры Пана",
+     "context": "evening",
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/tryduum/5103-vyaliki-chatsver-imsha-vyachery-pana",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": [
+    "holyweek-w1-d5--evening-mass"
+   ]
+  },
+  {
+   "celebration": "good-friday",
+   "document": "holyweek-w1-d6",
+   "sets": [
+    {
+     "id": "passion",
+     "label": "Вялікая пятніца Мукі Пана",
+     "context": null,
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/tryduum/5104-vyalikaya-pyatnitsa-muki-pana",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel+roles"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "easter-vigil",
+   "document": "holyweek-w1-d7--vigil",
+   "sets": [
+    {
+     "id": "vigil",
+     "label": "Пасхальная вігілія",
+     "context": "vigil",
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/tryduum/5105-paskhalnaya-vigiliya-u-svyatuyu-noch",
+     "sections": [
+      "rubric",
+      "reading:reading1",
+      "psalm:psalm1",
+      "reading:reading2",
+      "psalm:psalm2",
+      "reading:reading3",
+      "psalm:psalm3",
+      "reading:reading4",
+      "psalm:psalm4",
+      "reading:reading5",
+      "psalm:psalm5",
+      "reading:reading6",
+      "psalm:psalm6",
+      "reading:reading7",
+      "psalm:psalm7",
+      "rubric",
+      "reading:epistle",
+      "psalm",
+      "gospel/A",
+      "gospel/B",
+      "gospel/C"
+     ]
+    }
+   ],
+   "linked": [
+    "holyweek-w1-d7--A-vigil",
+    "holyweek-w1-d7--B-vigil",
+    "holyweek-w1-d7--C-vigil"
+   ]
+  },
+  {
+   "celebration": "easter-sunday",
+   "document": "feast-eastersunday",
+   "sets": [
+    {
+     "id": "day",
+     "label": "Св. Імша ўдзень",
+     "context": "day",
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/tryduum/5106-velikodnaya-nyadzelya-imsha-udzen",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "sequence",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "pentecost-saturday",
+   "document": "easter-w7-d7",
+   "sets": [
+    {
+     "id": "morning",
+     "label": "Ранішняя імша",
+     "context": "morning",
+     "default": false,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/velikodny/5167-subota-vii-velikodny-tydzen",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    },
+    {
+     "id": "vigil",
+     "label": "Св. Імша ў вігілію",
+     "context": "vigil",
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/velikodny/5172-spaslanne-dukha-svyatoga",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": [
+    "easter-w7-d7--pentecost-vigil"
+   ]
+  },
+  {
+   "celebration": "pentecost",
+   "document": "feast-pentecost",
+   "sets": [
+    {
+     "id": "day",
+     "label": "Св. Імша ўдзень",
+     "context": "day",
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/velikodny/5171-nyadzelya-spaslannya-dukha-svyatoga",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "sequence",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "ascension",
+   "document": "feast-ascension",
+   "sets": [
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/urachystasci/5029-urachystasts-unebaushestsya-pana",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel/A",
+      "gospel/B",
+      "gospel/C"
+     ]
+    }
+   ],
+   "linked": [
+    "feast-ascension--A",
+    "feast-ascension--B",
+    "feast-ascension--C"
+   ]
+  },
+  {
+   "celebration": "christmas-eve",
+   "document": "advent-24-12",
+   "sets": [
+    {
+     "id": "morning",
+     "label": "Ранішняя Св. Імша",
+     "context": "morning",
+     "default": false,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/advent/4604-24-snezhnya-zvychajny-dzen-adventu",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    },
+    {
+     "id": "vigil",
+     "label": "Св. Імша ў вігілію",
+     "context": "vigil",
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/urachystasci/5023-24-snezhnya-urachystasts-naradzhennya-pana",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": [
+    "advent-24-12--christmas-vigil"
+   ]
+  },
+  {
+   "celebration": "christmas",
+   "document": "25-12-naradzhenne-pana",
+   "sets": [
+    {
+     "id": "night",
+     "label": "Св. Імша ўначы",
+     "context": "night",
+     "default": false,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/urachystasci/5024-25-snezhnya-urachystasts-naradzhennya-pana",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    },
+    {
+     "id": "dawn",
+     "label": "Св. Імша на світанні",
+     "context": "dawn",
+     "default": false,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/urachystasci/5024-25-snezhnya-urachystasts-naradzhennya-pana",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    },
+    {
+     "id": "day",
+     "label": "Св. Імша ўдзень",
+     "context": "day",
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/urachystasci/5024-25-snezhnya-urachystasts-naradzhennya-pana",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  }
+ ]
+}

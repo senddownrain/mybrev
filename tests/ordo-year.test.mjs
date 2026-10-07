@@ -15,9 +15,18 @@ test('generates complete years 2025–2030 for every diocese without errors', ()
         assert.ok(Number.isInteger(day.week) && day.week >= 0, `week ${where}`);
         assert.ok([1, 2, 3, 4].includes(day.psalterWeek), `psalter ${where}`);
         assert.ok(['A', 'B', 'C'].includes(day.readingCycle.sunday), `cycle ${where}`);
-        assert.equal(day.officeResolution.primary.optionId, day.primary.id, where);
+        // Office and Mass share the primary except where a rule splits them
+        // (All Souls on a Sunday: Hours of the Sunday, Mass of All Souls).
+        assert.equal(day.officeResolution.primary.optionId, day.sources.office.optionId, where);
         assert.equal(day.readingResolution.primary.optionId, day.primary.id, where);
-        assert.equal(day.officeResolution.alternatives.length, day.alternatives.length, where);
+        assert.equal(day.sources.mass.optionId, day.primary.id, where);
+        if (day.sources.split) {
+          assert.equal(day.primary.id, 'all-faithful-departed', where);
+          assert.equal(Number(day.dayOfWeek), 1, where);
+        } else {
+          assert.equal(day.sources.office.optionId, day.primary.id, where);
+        }
+        assert.equal(day.officeResolution.alternatives.length, day.sources.split ? 0 : day.alternatives.length, where);
       });
     });
   }
@@ -30,14 +39,15 @@ test('display invariants hold for a whole year', () => {
     // A weekday is never an alternative, and never an option next to a memorial/feast/solemnity.
     assert.ok(day.alternatives.every((item) => item.kind !== 'temporal'), where);
     if (['memorial', 'feast', 'solemnity'].includes(day.primary.officeKind)) {
-      assert.ok(day.alternatives.every((item) => item.officeKind === 'memorial'), where);
+      // (Christ the High Priest + another feast: both kept, provisional §11.4.)
+      assert.ok(day.alternatives.every((item) => item.officeKind === 'memorial' || item.provisional), where);
     }
     // Optional memorials are never primary.
     assert.notEqual(day.primary.officeKind, 'optional-memorial', where);
     // Commemorations exist only on privileged weekdays.
     if (day.commemorations.length) assert.equal(day.primary.precedence, 9, where);
     // Every active candidate ends up in exactly one bucket.
-    const buckets = [day.primary, ...day.alternatives, ...day.commemorations, ...day.suppressed].map((item) => item.id);
+    const buckets = [day.primary, ...day.alternatives, ...day.commemorations, ...day.suppressed, ...day.officeOptions].map((item) => item.id);
     day.candidates.forEach((candidate) => assert.ok(buckets.includes(candidate.id), `${where} ${candidate.id}`));
   });
 });

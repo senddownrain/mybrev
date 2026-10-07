@@ -35,6 +35,7 @@ import {
   SUNDAY_WEEK_1_TEMPLATE, TE_DEUM_FIELD,
 } from '../src/constants/officeFields.js';
 import { hasFirstVespers, inferTemplates, isEmptyValue, splitSource } from '../scripts/lib/feast-content.mjs';
+import { scaffoldDecision } from '../scripts/lib/scaffold-commons.mjs';
 
 const CONTENT_FIELDS = OFFICE_CONTENT_FIELDS;
 const CONTENT_FIELD_SET = new Set(CONTENT_FIELDS);
@@ -350,7 +351,7 @@ function celebrationIdOf(stem) {
 }
 
 function mergeReports(target, source) {
-  ['normalized', 'unresolved'].forEach((key) => target[key].push(...source[key]));
+  ['normalized', 'unresolved', 'invalidRules'].forEach((key) => target[key].push(...(source[key] || [])));
 }
 
 /** One sparse document of a celebration. */
@@ -506,7 +507,10 @@ function buildScaffolds({ definitions, outputs, report }) {
     if (dateRule?.type !== 'fixed' || PROPER_OF_SEASONS.has(id)) return;
     const date = ddmm(dateRule);
     if (covered.has(key(date, place, id)) || (place && coveredAnyDate.has(`${place}|${id}`))) return;
-    const templates = inferTemplates(title);
+    // A confirmed decision (scripts/lib/scaffold-commons.mjs) replaces the
+    // inference from the title; it never adds texts.
+    const decision = scaffoldDecision(id);
+    const templates = decision ? [...decision.templates] : inferTemplates(title);
     const stem = [date.replace('.', '-'), id, place].filter(Boolean).join('-');
     covered.add(key(date, place, id));
     scaffolds.push({
@@ -520,12 +524,18 @@ function buildScaffolds({ definitions, outputs, report }) {
         ...(place ? { _place: place } : {}),
         _feastName: title,
         _templates: templates,
-        ...(templates.length ? { _defaultTemplate: templates[0], _templatesInferred: true } : {}),
+        ...(templates.length ? { _defaultTemplate: templates[0] } : {}),
+        ...(templates.length && !decision ? { _templatesInferred: true } : {}),
+        ...(decision ? { _templatesConfirmed: true } : {}),
+        ...(decision?.officeSource ? { _officeSource: decision.officeSource } : {}),
         _scaffold: true,
         _contentStatus: { hours: templates.length ? 'common-only' : 'day-fallback' },
       },
     });
-    report.scaffolds.push({ file: `${stem}.json`, celebrationId: id, _date: date, _rank: normalizeRank(rank), ...(place ? { _place: place } : {}), _feastName: title, templates });
+    report.scaffolds.push({
+      file: `${stem}.json`, celebrationId: id, _date: date, _rank: normalizeRank(rank), ...(place ? { _place: place } : {}), _feastName: title, templates,
+      ...(decision ? { confirmed: true, officeSource: decision.officeSource || null, basis: decision.basis } : {}),
+    });
   };
   // Coverage is decided by the source material only (never by `dayIds`, which
   // are derived from this output).
@@ -571,9 +581,9 @@ function renderMarkdownReport(report) {
 Яны паказваюцца ў Ordo і ў спісе варыянтаў дня; Афіцый збіраецца з агульных тэкстаў
 або з дня.
 
-| Дата | Празднаванне | Ранг | Дыяцэзія | Commons (выведзена з назвы) |
-|---|---|---|---|---|
-${rows(report.scaffolds, (item) => `| ${item._date} | ${item._feastName} | ${item._rank} | ${item._place || '—'} | ${item.templates.join(', ') || '—'} |`)}
+| Дата | Празднаванне | Ранг | Дыяцэзія | Commons | Крыніца рашэння |
+|---|---|---|---|---|---|
+${rows(report.scaffolds, (item) => `| ${item._date} | ${item._feastName} | ${item._rank} | ${item._place || '—'} | ${item.templates.join(', ') || (item.officeSource === 'current-day' ? 'няма: Афіцый дня' : '—')} | ${item.confirmed ? 'пацверджана' : 'выведзена з назвы'} |`)}
 
 ## Нявырашаныя спасылкі ў крыніцах
 
@@ -643,6 +653,7 @@ async function main() {
     missingTemplates: [],
     normalized: [],
     unresolved: [],
+    invalidRules: [],
     droppedPlaceholders: [],
     invalidOutputs: [],
     documents: [],
@@ -699,6 +710,7 @@ async function main() {
     extraInFeasts: report.extraInFeasts.length,
     normalizedInstructions: report.normalized.length,
     unresolvedReferences: report.unresolved.length,
+    invalidRules: report.invalidRules.length,
     droppedPlaceholderValues: legacyPlaceholders,
     invalidOutputs: report.invalidOutputs.length,
     duplicateIds: report.duplicateIds.length,
@@ -729,7 +741,7 @@ async function main() {
   await fs.writeFile(MARKDOWN_REPORT_PATH, renderMarkdownReport(report), 'utf8');
   console.log(JSON.stringify({ outputDir: OUTPUT_DIR, templatesDir: TEMPLATES_OUTPUT_DIR, reportPath: REPORT_PATH, ...report.summary }, null, 2));
 
-  if (report.missingTemplates.length || report.invalidOutputs.length || report.duplicateIds.length) {
+  if (report.missingTemplates.length || report.invalidOutputs.length || report.duplicateIds.length || report.invalidRules.length) {
     process.exitCode = 1;
   }
 }

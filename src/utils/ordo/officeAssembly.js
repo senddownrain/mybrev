@@ -16,8 +16,11 @@
  *   { source: 'current-day' }                    «з бягучага дня»
  *   { source: 'common' }                         the chosen Common
  *   { source: 'template', template: 'apostles' } a named Common
+ *   { source: 'proper' }                         the celebration's own text («Гімн з Уласных
+ *                                                тэкстаў пра святых» in a Common); missing → integrity
  *   { …, allowCurrentDay: true }                 «… або з будня»: «З дня» keeps the weekday
  *   { omit: true }                               intentionally empty
+ * Every kind is listed in `src/utils/ordo/fieldRules.js` (shared with Flutter).
  *
  * A reusable source the rubric requires (Sunday, week I; the complementary
  * psalmody) is never silently replaced by the day: its absence is reported in
@@ -127,6 +130,12 @@ export function assembleOffice({ proper, office, templates, choice, currentDay }
         integrity.push({ field, source: COMPLEMENTARY_PSALMODY_TEMPLATE, reason: complementary ? 'field-missing' : 'template-missing' });
         return { missingRequired: true };
       }
+      case 'proper':
+        // A Common that defers to the celebration's own text: never filled
+        // from the weekday when the Proper has none (reported instead).
+        if (!isBlank(proper?.[field])) return { value: proper[field], origin: 'proper' };
+        integrity.push({ field, source: 'proper', reason: 'proper-text-missing' });
+        return { missingRequired: true };
       case CURRENT_DAY_CHOICE:
         return isBlank(currentDay?.[field]) ? null : { value: currentDay[field], origin: CURRENT_DAY_CHOICE };
       default: return null;

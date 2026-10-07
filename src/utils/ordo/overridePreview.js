@@ -5,7 +5,8 @@
 import { generateLiturgicalYear, getYearPlan } from './index.js';
 import { getCalendarDefinitions } from './definitions.js';
 import { normalizeDioceseId } from './layers.js';
-import { validateYearOverride } from './yearOverrides.js';
+import { isTransferOverride, normalizeYearOverride, validateYearOverride } from './yearOverrides.js';
+import { computedTransfers } from './transferOverrides.js';
 
 export const PREVIEW_DIOCESES = Object.freeze(['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno']);
 
@@ -65,14 +66,33 @@ export function previewYearOverride(override, { country = 'BY' } = {}) {
   return { errors: [], changes };
 }
 
-/** Automatic transfers of the year (computed by the engine, never stored). */
+/**
+ * Transfers of the year: what the algorithm computes and, when it is
+ * materialized, the stored Year Override that holds it (auto or manual).
+ * `{ celebrationId, title, rank, from, to, computedDate, rule, transferCase,
+ *    record: null | { id, source, status, effectiveDate, enabled } }`
+ */
 export function automaticTransfers(year, context = {}) {
   const plan = getYearPlan(Number(year), { country: 'BY', ...context });
-  return plan.transfers.map((item) => ({
-    ...item,
-    title: plan.celebrations.get(item.celebrationId)?.title || item.celebrationId,
-    rank: plan.celebrations.get(item.celebrationId)?.rank || '',
-  }));
+  const stored = getCalendarDefinitions().yearOverrides.map(normalizeYearOverride)
+    .filter((item) => Number(item.year) === Number(year) && isTransferOverride(item));
+  const diocese = normalizeDioceseId(context.diocese);
+  const recordOf = (celebrationId, from) => stored.find((item) => item.targetCelebrationId === celebrationId
+    && (!item.originalDate || item.originalDate === from)
+    && (item.scope !== 'diocese' || normalizeDioceseId(item.dioceseId) === diocese)) || null;
+  return computedTransfers(Number(year), { diocese: context.diocese }).map((item) => {
+    const record = recordOf(item.celebrationId, item.from);
+    const effective = plan.transfers.find((transfer) => transfer.celebrationId === item.celebrationId && transfer.from === item.from);
+    return {
+      ...item,
+      to: effective?.to || item.to,
+      title: plan.celebrations.get(item.celebrationId)?.title || item.title,
+      rank: plan.celebrations.get(item.celebrationId)?.rank || '',
+      record: record ? {
+        id: record.id, source: record.source, status: record.status, effectiveDate: record.effectiveDate, enabled: record.enabled !== false,
+      } : null,
+    };
+  });
 }
 
 /** Days on which a celebration gave way to another one (collisions). */
@@ -87,7 +107,9 @@ export function yearCollisions(year, context = {}) {
     }));
 }
 
-/** Stored manual overrides of a year (every scope), enabled or not. */
+/** Stored overrides of a year (manual and materialized transfers, every scope), enabled or not; canonical form. */
 export function storedYearOverrides(year) {
-  return getCalendarDefinitions().yearOverrides.filter((item) => Number(item.year) === Number(year));
+  return getCalendarDefinitions().yearOverrides
+    .filter((item) => Number(item.year) === Number(year))
+    .map(normalizeYearOverride);
 }

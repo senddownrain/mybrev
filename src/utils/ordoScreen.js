@@ -104,7 +104,7 @@ export function optionBadges(option) {
   else if (option.layer === 'belarus') badges.push('Уласны каляндар Беларусі');
   if (option.transferredFrom) badges.push(`Перанесена з ${formatDayMonth(option.transferredFrom)}`);
   if (option.movedFrom) badges.push(`Перанесена з ${formatDayMonth(option.movedFrom)}`);
-  if (option.demotedFrom) badges.push('Абодва ўспаміны неабавязковыя');
+  if (option.provisional) badges.push('Часовае рашэнне: абодва варыянты');
   return badges;
 }
 
@@ -148,6 +148,16 @@ export function periodLabel(day) {
 }
 
 export const psalterLabel = (day) => (toRomanNumeral(day.psalterWeek) ? `${toRomanNumeral(day.psalterWeek)} тыдзень псалтыра` : '');
+
+/** «Лекцыянарый т. III · Літургія гадзін т. III» (§13.1), or ''. */
+export function booksLabel(day) {
+  const books = day?.books;
+  if (!books) return '';
+  return [
+    books.lectionaryVolume ? `Лекцыянарый т. ${books.lectionaryVolume}` : '',
+    books.hoursVolume ? `Літургія гадзін т. ${books.hoursVolume}` : '',
+  ].filter(Boolean).join(' · ');
+}
 
 /** Lectionary cycles: Sunday A/B/C and weekday I/II. */
 export function readingCycleLabel(day) {
@@ -222,7 +232,9 @@ export function massSummary(day) {
     lines.push(text.charAt(0).toUpperCase() + text.slice(1));
   }
   if (readings.vigilLookup) lines.push('Ёсць чытанні Вігіліі');
-  if (readings.variants?.length) lines.push('Імша Крыжма і Імша Вячэры Пана');
+  if (readings.variantsKind === 'reading-sets') lines.push(`Тры Імшы за памерлых: ${readings.variants.length} камплекты чытанняў на выбар`);
+  else if (readings.variants?.length) lines.push('Імша Крыжма і Імша Вячэры Пана');
+  if (day.sources?.split) lines.push(`Літургія гадзін — з дня: ${day.sources.office.title}`);
   if (day.commemorations.length) lines.push('Успамін (commemoratio): калекта можа быць уласная');
   const cycle = readings.cycle || {};
   const year = cycle.year ? (cycle.lectionary === 'weekday' ? toRomanNumeral(Number(cycle.year)) : cycle.year) : '';

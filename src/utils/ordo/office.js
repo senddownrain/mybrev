@@ -221,8 +221,8 @@ export function buildOfficeDescriptor(candidate, season, temporal) {
   if (officeKind === 'triduum' && season.date === season.anchors.goodFriday) {
     notes.push('Vespers only for those who do not take part in the Celebration of the Lord’s Passion.');
   }
-  if (officeKind === 'all-souls' && season.isSunday) {
-    notes.push('All Souls on Sunday: Mass of All Souls; see docs/ordo-engine-ambiguities.md for the Office.');
+  if (candidate.officeOnly) {
+    notes.push('All Souls on Sunday: the Liturgy of the Hours is of the Sunday; Mass and readings of All Souls.');
   }
   return {
     optionId: candidate.id,
@@ -266,8 +266,9 @@ export function buildCommemorationDescriptor(candidate) {
  * the higher row wins; with equal rows today's Vespers are kept.
  */
 export function resolveEvening(today, tomorrow) {
-  const todayPrimary = today.display.primary;
-  const tomorrowPrimary = tomorrow.display.primary;
+  // The Office source (All Souls on a Sunday: the Sunday, §11.1).
+  const todayPrimary = today.display.officePrimary || today.display.primary;
+  const tomorrowPrimary = tomorrow.display.officePrimary || tomorrow.display.primary;
   const tomorrowHasFirst = hasFirstVespersByRight(tomorrowPrimary, tomorrow.season);
   // Equal rows: today's Vespers are kept, except that a Sunday always begins
   // with its I Vespers against a weekday of the same row (Saturday of the

@@ -25,6 +25,7 @@ import {
 } from '../../../src/utils/daysResult.js';
 import { buildOrdoDayOptions } from '../../../src/utils/ordoDayOptions.js';
 import { withTemporalRepairs } from './temporal-repairs.mjs';
+import { withTemporalImports } from './hours-source-imports.mjs';
 
 const readDir = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir).filter((name) => name.endsWith('.json')).sort() : [])
   .map((name) => {
@@ -52,8 +53,9 @@ export async function openLiturgySource({
 }) {
   const snapshot = await openFirestoreSnapshot(snapshotDir);
   const snapshotDays = (await snapshot.collection('days')) || [];
-  // `repairs`: the planned temporal repairs (repair-temporal-days) applied in memory.
-  const days = repairs ? withTemporalRepairs(snapshotDays) : snapshotDays;
+  // `repairs`: the planned temporal repairs (repair-temporal-days) and the
+  // source imports (import-hours-sources) applied in memory.
+  const days = repairs ? withTemporalRepairs(withTemporalImports(snapshotDays, root)) : snapshotDays;
   const readings = (await snapshot.collection('readings')) || [];
   const snapshotPropers = await snapshot.collection('liturgicalProperTexts');
   const snapshotTemplates = (await snapshot.collection('liturgicalTemplates')) || [];

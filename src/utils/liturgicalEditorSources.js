@@ -77,3 +77,56 @@ export function getDayEditorFieldValue(day, assembledDay, field) {
   }
   return source.readOnly ? (assembledDay?.[field] || '') : (day?.[field] || '');
 }
+
+// ---------------------------------------------------------------------------
+// Sparse Proper documents (`liturgicalProperTexts`, `_schema: 2`)
+// ---------------------------------------------------------------------------
+
+const SPARSE_SOURCE_LABELS = Object.freeze({
+  proper: { label: 'Уласны тэкст', color: 'success' },
+  'current-day': { label: 'З бягучага дня', color: 'warning' },
+  'sunday-week-1': { label: 'З нядзелі І тыдня', color: 'info' },
+  complementary: { label: 'Дадатковая псалмодыя', color: 'info' },
+  omit: { label: 'Наўмысна пустое', color: 'default' },
+});
+
+/**
+ * Where an assembled field of a sparse Proper comes from, for the editor:
+ * own text / Common / current day / structured ref — from the assembler's
+ * provenance (`assembleOffice().provenance`) and the document's own rule.
+ * Every kind stays editable: an edit writes ONLY the own override.
+ */
+export function getSparseFieldSource(proper, field, provenance = {}, describeRule = null) {
+  const rule = proper?._fieldRules?.[field] || null;
+  if (hasText(proper?.[field])) return { kind: 'own', label: 'Уласны тэкст', color: 'success', readOnly: false, rule };
+  const origin = provenance[field] || '';
+  const ruleLabel = rule && describeRule ? `Правіла: ${describeRule(rule)}` : '';
+  if (origin.startsWith('ref:')) return { kind: 'ref', label: ruleLabel || `Спасылка: ${origin.slice(4)}`, color: 'primary', readOnly: false, rule };
+  if (origin.startsWith('common:')) {
+    return { kind: 'common', label: ruleLabel || `З агульных тэкстаў «${origin.slice(7)}»`, color: 'info', readOnly: false, rule };
+  }
+  const known = SPARSE_SOURCE_LABELS[origin];
+  if (known) return { kind: origin === 'current-day' ? 'current-day' : 'rule', label: ruleLabel || known.label, color: known.color, readOnly: false, rule };
+  return { kind: 'empty', label: ruleLabel || 'Не паказваецца', color: 'default', readOnly: false, rule };
+}
+
+/**
+ * Firestore update of a sparse Proper: only own fields and `_fieldRules`
+ * that changed; a cleared own field is removed (`remove`), never written as
+ * the assembled text.
+ */
+export function sparseUpdatePayload(original, edited, fields) {
+  const set = {};
+  const remove = [];
+  fields.forEach((field) => {
+    const before = original?.[field];
+    const after = edited?.[field];
+    if (JSON.stringify(before ?? null) === JSON.stringify(after ?? null)) return;
+    if (!hasText(after) && !(Array.isArray(after) && after.length)) { if (before !== undefined) remove.push(field); return; }
+    set[field] = after;
+  });
+  const rulesBefore = original?._fieldRules || {};
+  const rulesAfter = edited?._fieldRules || {};
+  if (JSON.stringify(rulesBefore) !== JSON.stringify(rulesAfter)) set._fieldRules = rulesAfter;
+  return { set, remove };
+}

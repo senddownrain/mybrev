@@ -23,6 +23,7 @@
       <li>{{ periodText }}</li>
       <li v-if="psalterText">{{ psalterText }}</li>
       <li v-if="cycleText">{{ cycleText }}</li>
+      <li v-if="booksText" data-test="ordo-books">{{ booksText }}</li>
       <li class="ordo-facts__color" data-test="vestment-color">
         <span class="color-dot" :class="{ 'color-dot--marian': dayVisual?.secondary === 'marian' }" :style="{ '--dot': dayColor.swatch }" aria-hidden="true"></span>
         Колер літургічнага адзення: {{ dayColorText }}
@@ -77,7 +78,7 @@
           <span v-if="optionBadges(day.primary).length" class="badges">
             <span v-for="badge in optionBadges(day.primary)" :key="badge" class="badge">{{ badge }}</span>
           </span>
-          <CelebrationActions :hours="hoursLink(day.primary.id)" :readings="readingsLink(day.primary.id)" :title="day.primary.title" />
+          <CelebrationActions :hours="hoursLink(day.sources?.office?.optionId || day.primary.id)" :readings="readingsLink(day.primary.id)" :title="day.primary.title" />
         </div>
       </div>
 
@@ -230,7 +231,7 @@ import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import { loadOrdoNotes } from '@/utils/ordoNotesLoader';
 import { loadPublishedOrdoNotes } from '@/services/ordoCalendarService';
 import {
-  DIOCESE_SHORT_LABELS, buildDayUnion, colorInfo, groupOrdoNotes, massSummary, officeDirections, officeKindLabel,
+  DIOCESE_SHORT_LABELS, booksLabel, buildDayUnion, colorInfo, groupOrdoNotes, massSummary, officeDirections, officeKindLabel,
   optionBadges, ordoMonthRoute, parseOrdoRouteDate, periodLabel, psalterLabel, rankLabel,
   readingCycleLabel, resolveOrdoDay, suppressionReason,
 } from '@/utils/ordoScreen';
@@ -291,6 +292,8 @@ const dateLabel = computed(() => mDate.value.format('D MMMM YYYY'));
 const periodText = computed(() => periodLabel(day.value));
 const psalterText = computed(() => psalterLabel(day.value));
 const cycleText = computed(() => readingCycleLabel(day.value));
+// Lectionary / Liturgy of the Hours volumes: metadata above the notes (§13.1).
+const booksText = computed(() => booksLabel(day.value));
 const dayColor = computed(() => colorInfo(day.value.color));
 const dayColorText = computed(() => [dayColor.value.label, ...day.value.colorAlternatives.map((color) => colorInfo(color).label.toLowerCase())]
   .join(' або '));
@@ -316,9 +319,10 @@ const mass = computed(() => massSummary(day.value));
 const directions = computed(() => officeDirections(day.value));
 const officeSubtitle = computed(() => (day.value.psalterWeek ? psalterLabel(day.value) : 'Афіцый дня'));
 const officeLine = computed(() => {
-  const primary = day.value.primary;
-  const kind = officeKindLabel(primary.officeKind);
-  return primary.kind === 'temporal' ? `Афіцый дня: ${primary.title}` : `Афіцый: ${primary.title}${kind ? ` (${kind.toLowerCase()})` : ''}`;
+  // The Office source may differ from the Mass (All Souls on a Sunday).
+  const office = day.value.sources?.office || day.value.primary;
+  const kind = officeKindLabel(office.officeKind);
+  return office.kind === 'temporal' ? `Афіцый дня: ${office.title}` : `Афіцый: ${office.title}${kind ? ` (${kind.toLowerCase()})` : ''}`;
 });
 
 // Links open the chosen variant in its diocesan context; the stored

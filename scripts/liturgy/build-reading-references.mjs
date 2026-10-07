@@ -17,6 +17,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { openFirestoreSnapshot } from '../lib/firestore-snapshot.mjs';
+import { defaultSetId, massReadingSetsOf, projectSetToLegacy, resolveSetCycle } from '../../src/utils/massReadingSets.js';
 import { hasReadingDocumentContent, hasReadingSectionContent, READING_SECTIONS } from '../../src/utils/parsedReadingsIdentity.js';
 import { snapshotDirectory } from './lib/snapshot-content.mjs';
 
@@ -47,6 +48,19 @@ export function referenceOf(doc) {
   entry.citations = citations;
   // The runtime filters documents by content; every entry here has it.
   entry._hasContent = READING_SECTIONS.some((section) => hasReadingSectionContent(doc[section]));
+  // Structured sets: citations of the default set (reference-only ones included).
+  const sets = massReadingSetsOf(doc);
+  if (sets.length && !Object.keys(citations).length) {
+    const set = sets.find((item) => item.id === defaultSetId(sets));
+    const flat = projectSetToLegacy(set, resolveSetCycle(set, doc.year));
+    ['reading1', 'psalm', 'reading2', 'gospel'].forEach((section) => {
+      const bible = clean(flat[section]?.bible);
+      if (bible) citations[section] = bible;
+    });
+    entry._hasContent = !set.referenceOnly;
+    if (set.referenceOnly) entry._referenceOnly = true;
+  }
+  if (sets.length > 1) entry._sets = sets.map((item) => item.label);
   return entry;
 }
 

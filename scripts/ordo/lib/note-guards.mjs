@@ -169,6 +169,15 @@ export function guardNote(entry, occurrences, coverage) {
   const dates = [...new Set(occurrences.map((item) => item.date).filter(Boolean))].sort();
   const fromSection = occurrences.every((item) => item.origin === 'section');
   if (isHeadingOrFragment(entry.text)) return { entry: null, guard: 'heading', review: 'section heading or fragment, not a note' };
+  // General notes of the front matter carry an explicit, reviewed selector
+  // (scripts/ordo/lib/general-notes.mjs): a date in their text describes a
+  // rule («з 17 па 31 снежня»), it is not a year instance. Missal page
+  // numbers inside a real paragraph are kept; a bare page reference is not.
+  if (entry.basis === 'general-notes') {
+    const withoutPages = String(entry.text).replace(/\(?[^()]{0,20}\bсс?\.\s?\d+[^()]{0,12}\)?/gu, '').trim();
+    if (withoutPages.length < 25) return { entry: null, guard: 'page-reference', review: 'refers to a page of the printed calendar' };
+    return { entry, guard: null };
+  }
   // «гл.: с. 24», «(с. 35)»: a page of the printed calendar is not a note for the app.
   if (/(?:^|[\s(:])с\.\s?\d+/u.test(entry.text) && entry.text.length < 160) {
     return { entry: null, guard: 'page-reference', review: 'refers to a page of the printed calendar' };

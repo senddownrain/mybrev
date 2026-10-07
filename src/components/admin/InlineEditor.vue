@@ -80,6 +80,12 @@ const props = defineProps({
     default: 'Тэкст адсутнічае',
   },
   readOnly: Boolean,
+  // Text the editor starts from when the field has no own value yet (the
+  // assembled text of a sparse Proper): saving makes it an own override.
+  editSeed: {
+    type: String,
+    default: '',
+  },
 });
 
 defineEmits(['source-action']);
@@ -92,7 +98,7 @@ const previewValue = computed(() => (
 
 const startEditing = () => {
   // Копируем текущее значение во временную переменную для редактирования
-  editableContent.value = modelValue.value;
+  editableContent.value = modelValue.value || props.editSeed;
   isEditing.value = true;
 };
 

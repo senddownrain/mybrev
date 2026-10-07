@@ -27,12 +27,26 @@
       </v-alert>
 
       <v-alert v-if="sparseInfo" type="info" variant="tonal" class="mb-4" data-test="sparse-day-notice">
-        <strong>Дакумент новага фармату.</strong>
-        Тут захоўваюцца толькі ўласныя тэксты. Пустое поле бярэцца з агульных тэкстаў
-        ({{ sparseInfo.templates || 'не зададзены' }}) або з бягучага дня.
+        <strong>Уласныя тэксты празднавання (sparse Proper).</strong>
+        Тут захоўваюцца толькі ўласныя тэксты і структураваныя правілы. Каля кожнага поля пазначана,
+        адкуль бярэцца тэкст: уласны, з агульных тэкстаў ({{ sparseInfo.templates || 'не зададзены' }}),
+        з бягучага дня або па правіле. Рэдагаванне поля захоўвае толькі ўласны тэкст гэтага поля.
         <template v-if="sparseInfo.rules.length">
           Правілы палёў: {{ sparseInfo.rules.join('; ') }}. Уласны тэкст у полі мае перавагу над правілам.
         </template>
+        <div v-if="sparseChoices.length > 1" class="mt-2" style="max-width: 360px;">
+          <v-select
+            v-model="sparseChoice"
+            :items="sparseChoices"
+            label="Паказаць зборку"
+            density="compact"
+            variant="outlined"
+            hide-details
+          />
+        </div>
+        <div v-if="!route.query.date" class="mt-1 text-caption">
+          Адкрыйце рэдактар з календарнай даты, каб убачыць тэксты з бягучага дня.
+        </div>
       </v-alert>
 
       <v-card class="mb-6" variant="outlined">
@@ -173,8 +187,22 @@
                 :read-only="fieldSource(field.key).readOnly"
                 :source-action-label="fieldSourceActionLabel(field.key)"
                 :hint="fieldHint(field.key)"
+                :edit-seed="isSparse ? fieldDisplayValue(field.key) : ''"
                 @source-action="openFieldSource(field.key)"
               />
+            </v-row>
+            <v-row v-if="isSparse" no-gutters class="px-3 pb-2">
+              <v-col v-for="field in section.fields" :key="`rule-${field.key}`" cols="12" md="6" class="pa-1">
+                <v-select
+                  :model-value="ruleValue(field.key)"
+                  :items="ruleOptions(field.key)"
+                  :label="`Правіла: ${field.title}`"
+                  density="compact"
+                  variant="outlined"
+                  hide-details
+                  @update:model-value="setRule(field.key, $event)"
+                />
+              </v-col>
             </v-row>
           </v-expansion-panel-text>
         </v-expansion-panel>
@@ -221,12 +249,17 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { collection, doc, getDoc, getDocs, writeBatch } from 'firebase/firestore';
+import { collection, deleteField, doc, getDoc, getDocs, writeBatch } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import InlineEditor from '@/components/admin/InlineEditor.vue';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
 import { useNotifier } from '@/composables/useNotifier';
-import { DAY_EDITOR_COPY_CLEARED_FIELDS, LITURGICAL_DAYS_COLLECTION } from '@/constants/days';
+import { DAY_EDITOR_COPY_CLEARED_FIELDS, LITURGICAL_DAYS_COLLECTION, LITURGICAL_PROPER_TEXTS_COLLECTION } from '@/constants/days';
+import { OFFICE_CONTENT_FIELDS } from '@/constants/officeFields';
+import { getLiturgicalTemplates } from '@/services/staticLiturgicalService';
+import { assemblyChoices, assembleOffice, CURRENT_DAY_CHOICE } from '@/utils/ordo/officeAssembly';
+import { describeFieldRule, editableRuleOptions } from '@/utils/ordo/fieldRules';
+import { officeDescriptorOf, resolveRuntimeDay } from '@/utils/ordo/runtime';
 import {
   COMPLETORIUM_EDITOR_FIELDS,
   DAY_EDITOR_SECTIONS,
@@ -246,6 +279,8 @@ import {
   EDITOR_SOURCE_KIND,
   getDayEditorFieldSource,
   getDayEditorFieldValue,
+  getSparseFieldSource,
+  sparseUpdatePayload,
 } from '@/utils/liturgicalEditorSources';
 import moment from '@/utils/moment-be';
 import { logger } from '@/utils/logger';
@@ -269,6 +304,13 @@ const panels = ref(['general', 'invitatorium']);
 const dayData = ref(null);
 const calendarContext = ref(null);
 const fallbackDay = ref(null);
+// Sparse Proper (`liturgicalProperTexts`): where the document lives, its
+// state as loaded (the save writes only the difference) and the Commons.
+const sourceCollection = ref(LITURGICAL_DAYS_COLLECTION);
+const sourceDocId = ref('');
+const properOriginal = ref(null);
+const sparseTemplates = ref(new Map());
+const sparseChoice = ref('');
 
 const invitatoriums = ref([]);
 const invitatoriumOriginals = new Map();
@@ -355,18 +397,57 @@ function createEmptyDay() {
 }
 
 // Sparse feast document (`_schema: 2`): own texts + structured rules.
-const RULE_LABELS = { 'current-day': 'з дня', 'sunday-week-1': 'з нядзелі І тыдня', common: 'з агульных тэкстаў' };
+const isSparse = computed(() => Number(dayData.value?._schema) === 2);
 const sparseInfo = computed(() => {
   const day = dayData.value;
-  if (Number(day?._schema) !== 2) return null;
-  const rules = Object.entries(day._fieldRules || {}).map(([field, rule]) => {
-    if (rule?.omit) return `${field}: пустое`;
-    if (rule?.ref) return `${field} = ${[].concat(rule.ref).join(' / ')}`;
-    if (rule?.source === 'template') return `${field}: агульныя тэксты «${rule.template}»`;
-    return `${field}: ${RULE_LABELS[rule?.source] || rule?.source}`;
-  });
+  if (!isSparse.value) return null;
+  const rules = Object.entries(day._fieldRules || {}).map(([field, rule]) => `${field}: ${describeFieldRule(rule)}`);
   return { templates: (day._templates || []).join(', '), rules };
 });
+
+/** Office descriptor of the celebration on the calendar date of the route. */
+const sparseOffice = computed(() => {
+  if (!isSparse.value || !route.query.date || !dayData.value?._celebrationId) return null;
+  try {
+    const resolved = resolveRuntimeDay(String(route.query.date), { diocese: String(route.query.diocese || dayData.value._place || 'minsk-mohilev') });
+    return officeDescriptorOf(resolved, dayData.value._celebrationId) || null;
+  } catch {
+    return null;
+  }
+});
+const sparseChoices = computed(() => (isSparse.value
+  ? assemblyChoices(dayData.value, sparseOffice.value).map((value) => ({ value, title: value === CURRENT_DAY_CHOICE ? 'З дня' : `Агульныя тэксты: ${value}` }))
+  : []));
+/** The assembled Office (own → rule → Common → day) with per-field provenance. */
+const sparseAssembly = computed(() => {
+  if (!isSparse.value) return null;
+  return assembleOffice({
+    proper: dayData.value,
+    office: sparseOffice.value,
+    templates: sparseTemplates.value,
+    choice: sparseChoice.value || undefined,
+    currentDay: fallbackDay.value || {},
+  });
+});
+
+function ruleOptions(field) {
+  return [{ value: '', title: 'Без правіла (па апісанні Афіцыя)' }, ...editableRuleOptions(field).map(({ value, title }) => ({ value, title }))];
+}
+
+function ruleValue(field) {
+  const rule = dayData.value?._fieldRules?.[field];
+  if (!rule) return '';
+  if (rule.omit) return 'omit';
+  if (rule.ref) return `ref:${[].concat(rule.ref)[0]}`;
+  return rule.source || '';
+}
+
+function setRule(field, value) {
+  const rules = { ...(dayData.value._fieldRules || {}) };
+  const option = editableRuleOptions(field).find((item) => item.value === value);
+  if (option) rules[field] = option.rule; else delete rules[field];
+  dayData.value = { ...dayData.value, _fieldRules: rules };
+}
 
 async function loadCalendarContext() {
   const date = moment(String(route.query.date || ''), 'YYYY-MM-DD', true);
@@ -380,7 +461,10 @@ async function loadCalendarContext() {
 }
 
 async function loadDay() {
+  properOriginal.value = null;
   if (isNew.value) {
+    sourceCollection.value = LITURGICAL_DAYS_COLLECTION;
+    sourceDocId.value = '';
     const copyData = sessionStorage.getItem(SESSION_KEY_COPY);
     if (copyData) {
       try {
@@ -399,8 +483,22 @@ async function loadDay() {
   }
 
   const snapshot = await getDoc(doc(db, LITURGICAL_DAYS_COLLECTION, dayId.value));
-  if (!snapshot.exists()) throw new Error('Літургічны дзень не знойдзены.');
-  dayData.value = clone(snapshot.data());
+  if (snapshot.exists()) {
+    sourceCollection.value = LITURGICAL_DAYS_COLLECTION;
+    sourceDocId.value = dayId.value;
+    dayData.value = clone(snapshot.data());
+    return;
+  }
+  // A sparse Proper: the card id is the document id, or `<id>--<choice>`.
+  const [baseId, choice] = dayId.value.split('--');
+  const proper = await getDoc(doc(db, LITURGICAL_PROPER_TEXTS_COLLECTION, baseId));
+  if (!proper.exists()) throw new Error('Літургічны дзень не знойдзены.');
+  sourceCollection.value = LITURGICAL_PROPER_TEXTS_COLLECTION;
+  sourceDocId.value = baseId;
+  dayData.value = clone(proper.data());
+  properOriginal.value = clone(proper.data());
+  sparseChoice.value = choice === 'day' ? CURRENT_DAY_CHOICE : (choice || '');
+  sparseTemplates.value = await getLiturgicalTemplates();
 }
 
 async function loadFallbackDay() {
@@ -484,6 +582,7 @@ function isSeasonalGeneratedField(field) {
 }
 
 function fieldSource(field) {
+  if (isSparse.value) return getSparseFieldSource(dayData.value, field, sparseAssembly.value?.provenance, describeFieldRule);
   if (isSeasonalGeneratedField(field)) {
     return { kind: 'seasonal-assembly', label: 'Сабрана з набору дня тыдня', color: 'info', readOnly: true };
   }
@@ -491,6 +590,11 @@ function fieldSource(field) {
 }
 
 function fieldDisplayValue(field) {
+  if (isSparse.value) {
+    const own = dayData.value?.[field];
+    const value = own || sparseAssembly.value?.day?.[field] || '';
+    return Array.isArray(value) ? value.join('') : String(value);
+  }
   return getDayEditorFieldValue(dayData.value, assembledDay.value, field);
 }
 
@@ -503,6 +607,7 @@ function fieldSourceActionLabel(field) {
 
 function fieldHint(field) {
   const source = fieldSource(field);
+  if (isSparse.value && source.kind !== 'own') return 'Паказаны выніковы тэкст. Рэдагаванне створыць уласны тэкст толькі для гэтага поля.';
   if (source.kind === EDITOR_SOURCE_KIND.INHERITED) return 'Ніжэй паказаны выніковы тэкст. Ён змяняецца ў агульным літургічным дні.';
   if (source.kind === EDITOR_SOURCE_KIND.SHARED_DAYTIME) return 'Гэта поле не дублюецца: выкарыстоўваецца адпаведны тэкст малітвы перад поўднем.';
   if (source.kind === 'seasonal-assembly') return 'Ніжэй паказаны вынік аўтаматычнай зборкі з набору антыфонаў дня тыдня.';
@@ -526,11 +631,20 @@ async function saveChanges() {
   saving.value = true;
   try {
     const batch = writeBatch(db);
-    const targetRef = isNew.value ? doc(collection(db, LITURGICAL_DAYS_COLLECTION)) : doc(db, LITURGICAL_DAYS_COLLECTION, dayId.value);
-    const dayPayload = withoutId(dayData.value);
-    dayPayload.allowedAlleluia = dayData.value.allowedAlleluia !== false;
-    dayPayload.checked = dayData.value.checked === true;
-    batch.set(targetRef, dayPayload, { merge: !isNew.value });
+    const targetRef = isNew.value
+      ? doc(collection(db, LITURGICAL_DAYS_COLLECTION))
+      : doc(db, sourceCollection.value, sourceDocId.value || dayId.value);
+    if (isSparse.value && !isNew.value) {
+      // Only the own overrides and rules that changed — never the assembled day.
+      const { set, remove } = sparseUpdatePayload(properOriginal.value, dayData.value, ['feastComment', ...OFFICE_CONTENT_FIELDS]);
+      const payload = { ...set, ...Object.fromEntries(remove.map((field) => [field, deleteField()])) };
+      if (Object.keys(payload).length) batch.update(targetRef, payload);
+    } else {
+      const dayPayload = withoutId(dayData.value);
+      dayPayload.allowedAlleluia = dayData.value.allowedAlleluia !== false;
+      dayPayload.checked = dayData.value.checked === true;
+      batch.set(targetRef, dayPayload, { merge: !isNew.value });
+    }
 
     invitatoriums.value.forEach((item) => {
       const payload = withoutId(item);
@@ -548,6 +662,7 @@ async function saveChanges() {
 
     await retryFirestore(() => batch.commit());
     success('Усе змененыя часткі літургічнага дня захаваны.');
+    if (isSparse.value) properOriginal.value = clone(dayData.value);
     invitatoriums.value.forEach((item) => invitatoriumOriginals.set(item.id, comparable(withoutId(item))));
     if (completoriumData.value) completoriumOriginal.value = comparable(withoutId(completoriumData.value));
     if (isNew.value) await router.replace({ name: 'AdminDayEditor', params: { id: targetRef.id }, query: route.query });

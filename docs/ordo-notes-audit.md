@@ -1,16 +1,31 @@
 # Ordo notes: semantic audit
 
-Згенеравана `node scripts/ordo/build.mjs` — не рэдагаваць уручную. Рэвізія публікацыі заўваг: **3**.
+Згенеравана `node scripts/ordo/build.mjs` — не рэдагаваць уручную. Рэвізія публікацыі заўваг: **4**.
 Правілы: `scripts/ordo/lib/note-guards.mjs`.
 
 | | |
 |---|---|
-| Апублікаваных заўваг | 1204 |
+| Апублікаваных заўваг | 1337 |
 | Выпраўлена аўтаматычна (месяц / шчыльнасць) | 40 |
-| Дакладная дата / год (у т.л. 131 падзеленых па днях) | 174 |
+| Дакладная дата / год (у т.л. 131 падзеленых па днях) | 175 |
 | Кананічныя правілы (І чацвер / пятніца / субота) | 3 |
-| Схавана да праверкі (не публікуюцца) | 50 |
-| Апублікавана з пазнакай NEEDS_REVIEW | 45 |
+| Схавана да праверкі (не публікуюцца) | 45 |
+| Апублікавана з пазнакай NEEDS_REVIEW | 46 |
+
+## Coverage by diocese
+
+«Уласныя» — заўвагі, якія назіраліся ў календары дыяцэзіі; «бачныя» — разам з агульнабеларускімі.
+Агульныя заўвагі (front matter Гродна / Пінск) аднаўляюцца `scripts/ordo/lib/general-notes.mjs`;
+прапушчаныя абзацы — з прычынай (табліцы, правілы першынства, якія лічыць engine, абавязак Імшы
+«pro populo», індэксы, грошы/ахвяраванні, персанальныя даныя духавенства). Тамы Лекцыянарыя /
+Літургіі гадзін — асобная катэгорыя `books` (метаданыя, не «Асаблівыя заўвагі»).
+
+| Дыяцэзія | Уласныя | Бачныя | Агульныя заўвагі | Тамы (books) | NEEDS_REVIEW | Абзацаў front matter | Прапушчана front matter |
+|---|---|---|---|---|---|---|---|
+| minsk-mohilev | 141 | 179 | 0 | 6 | 2 | 0 | — |
+| vitebsk | 396 | 413 | 0 | 0 | 16 | 0 | — |
+| pinsk | 526 | 552 | 14 | 0 | 5 | 14 | index-or-fragment 16, precedence-table-computed-by-engine 13, pastor-mass-pro-populo-obligation 3, table 2, patrons-list 1, table-of-the-year 1, holy-days-of-obligation-list 1 |
+| grodno | 351 | 373 | 112 | 51 | 23 | 121 | table 42, heading 18, pastor-mass-pro-populo-obligation 15, patrons-or-table 8, precedence-rule-computed-by-engine 3, excluded:money 1 |
 
 Высокі працэнт супадзення з календарамі не лічыцца поспехам, калі «Чэрвеньскае набажэнства» паказваецца ў кастрычніку:
 сэнс тэксту правяраецца асобна ад частаты.
@@ -82,7 +97,7 @@
 | Тып | Колькасць |
 |---|---|
 | падзелена па днях | 131 |
-| з крыніцы | 43 |
+| з крыніцы | 44 |
 
 ## Hidden pending review
 
@@ -91,16 +106,12 @@
 | Тэкст | Селектар | Прычына | Даты |
 |---|---|---|---|
 | Аб’явы на гэтую нядзелю гл.: с. 28. | celebration celebrationId="buptismofthelord" | refers to a page of the printed calendar | 2026-01-11 |
-| Лекцыянарый т. ІV (с. 321). | celebration celebrationId="christthehighpriest" | refers to a page of the printed calendar | 2027-05-20 |
-| Лекцыянарый т. ІV (с. 335). | celebration celebrationId="corpuschristi" | refers to a page of the printed calendar | 2027-05-27 |
 | Абрадавыя прадпісанні на ўрачыстасць (с. 33). | celebration celebrationId="corpuschristi" | refers to a page of the printed calendar | 2027-05-27 |
 | Падчас кожнай св. Імшы благаслаўленне кадзіла і крэйды (с. 173) . | celebration celebrationId="epiphany-lord" | refers to a page of the printed calendar | 2027-01-06 |
 | У дыяцэзіі: Аф. святоч., Імша агул. (імшал с. 1193), Хвала, прэф 49. С | celebration celebrationId="grodno-cathedral-dedication" | refers to a page of the printed calendar | 2027-12-06 |
 | Літургія Божага Слова с. 164. | celebration celebrationId="grodno-cathedral-dedication" | refers to a page of the printed calendar | 2027-12-06 |
-| Лекцыянарый т. ІV (с. 343). | celebration celebrationId="heartofjesus" | refers to a page of the printed calendar | 2027-06-04 |
-| Лекцыянарый т. VI (с. 130). | celebration celebrationId="heartofmary" | refers to a page of the printed calendar | 2027-06-05 |
 | Абрад благаслаўлення аўса (с. 183). | celebration celebrationId="holyfamily" | refers to a page of the printed calendar | 2026-12-27, 2027-12-26 |
-| Лекцыянарый т. III; чытанні ў нядзелю – Год В, у будні – Год I; ЛГ - т | celebration celebrationId="marymotherchurch" | refers to a page of the printed calendar | 2027-05-17 |
+| Абрадавыя прадпісання на Звычайны перыяд (с. 22). | celebration celebrationId="marymotherchurch" | refers to a page of the printed calendar | 2027-05-17 |
 | Літургія Божага Слова с. 151. | celebration celebrationId="marymotherchurch" | refers to a page of the printed calendar | 2027-05-17 |
 | Абрад благаслаўлення зерня на сяўбу (с. 182). | celebration celebrationId="nativity-blessed-virgin-mary" | refers to a page of the printed calendar | 2027-09-08 |
 | Літургія Божага Слова с. 161. | celebration celebrationId="our-lady-czestochowa" | refers to a page of the printed calendar | 2027-08-26 |
@@ -113,7 +124,6 @@
 | Літургія Божага Слова с. 159. | celebration celebrationId="sv-maximilian-kolbe" | refers to a page of the printed calendar | 2027-08-14 |
 | Капцёўка (Санктуарый), Рагозніца – урач. НПМ Каралевы Польшчы, тыт. ка | celebration celebrationId="sv-philip-james-apostles" | refers to a page of the printed calendar | 2027-05-03 |
 | Літургія Божага Слова с. 157. | celebration celebrationId="sv-teresa-benedicta-cross" | refers to a page of the printed calendar | 2027-08-09 |
-| Лекцыянарый т. ІV (с. 327). | celebration celebrationId="trinity" | refers to a page of the printed calendar | 2027-05-23 |
 | (17 – 24 снежня) | fixed-date month=12 day=17 | section heading or fragment, not a note | 2025-12-17 |
 | Абрадавыя прадпісанні на Нараджэнне Пана (с. 35). | fixed-date month=12 day=24 | refers to a page of the printed calendar | 2027-12-24 |
 | Аб’явы на гэтую нядзелю гл.: с. 24. | fixed-date month=1 day=4 | refers to a page of the printed calendar | 2026-01-04 |
@@ -153,6 +163,7 @@
 | Падчас вызнання веры на словы “ і ўцелавіўся ад Духа Святога .. і стаў | fixed-date month=12 day=24 | grodno |
 | Заканчэнне каляндарнага года. | fixed-date month=12 day=31 | grodno |
 | У вечары гэтага дня цэлебруецца вігілійная святая Імша з урачыстасці А | fixed-date month=1 day=5 | vitebsk |
+| 5. У трэці тыдзень верасня — квартальныя дні малітваў за дзяцей, молад | месяц 9 | pinsk |
 | Нядзеля мае характар радасны (Gaudete). Можна карыстацца арнатам ружов | period-day period="advent" week=3 dayOfWeek=1 | grodno |
 | Заканчэнне Велікоднай актавы. | period-day period="easter" week=2 dayOfWeek=1 | grodno |
 | Дзень Маці ў дыяцэзіі. | period-day period="easter" week=6 dayOfWeek=1 | grodno |

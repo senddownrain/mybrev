@@ -14,6 +14,10 @@ import { compareCandidates } from './precedence.js';
 
 const OBLIGATORY_MEMORIAL = (candidate) => candidate.rankKind === 'memorial';
 const ANY_MEMORIAL = (candidate) => candidate.rankKind === 'memorial' || candidate.rankKind === 'optional-memorial';
+const CONCURRENT_CHOICE_VALUES = new Set(['legal-choice', 'both-optional']);
+
+/** Jesus Christ, the High and Eternal Priest (national feast, Thursday after Pentecost). */
+export const CHRIST_HIGH_PRIEST_ID = 'christ-the-high-priest';
 
 /**
  * Office kind of the chosen celebration, used by Office/Readings resolution.
@@ -57,19 +61,21 @@ export function resolveDisplay(candidates, season) {
   const temporal = active.find((item) => item.kind === 'temporal');
   let celebrations = active.filter((item) => item.kind !== 'temporal').sort(compareCandidates);
 
-  // Rule: concurrent obligatory memorials become optional (Immaculate Heart).
+  // Product rule (Belarus, final phase §11.2–11.3): when the Immaculate Heart
+  // or Mary, Mother of the Church meets another obligatory memorial, both
+  // obligatory memorials are legal choices (Marian first) and the weekday is
+  // NOT a third option. `concurrentObligatoryMemorials` marks the celebrations
+  // that open this choice ('legal-choice'; the legacy value 'both-optional'
+  // stored in older published definitions means the same).
   const obligatory = celebrations.filter(OBLIGATORY_MEMORIAL);
-  if (obligatory.length > 1 && obligatory.some((item) => item.rules?.concurrentObligatoryMemorials === 'both-optional')) {
-    celebrations = celebrations.map((item) => (OBLIGATORY_MEMORIAL(item)
-      ? { ...item, rankKind: 'optional-memorial', precedence: 12, demotedFrom: 'memorial' }
-      : item));
-    appliedRules.push({ rule: 'concurrent-obligatory-memorials-optional', ids: obligatory.map((item) => item.id) });
-    // Co-equal choices: a neutral, stable order (title), not a hidden priority;
-    // `manualTieBreakPriority` (definitions / diocese overrides) may set one.
-    const demoted = celebrations.filter((item) => item.demotedFrom === 'memorial')
-      .sort((a, b) => (Number(b.manualTieBreakPriority || 0) - Number(a.manualTieBreakPriority || 0))
-        || String(a.title).localeCompare(String(b.title), 'be') || String(a.id).localeCompare(String(b.id)));
-    celebrations = celebrations.map((item) => (item.demotedFrom === 'memorial' ? demoted.shift() : item));
+  const memorialChoice = obligatory.length > 1
+    && obligatory.some((item) => CONCURRENT_CHOICE_VALUES.has(item.rules?.concurrentObligatoryMemorials));
+  if (memorialChoice) {
+    appliedRules.push({
+      rule: 'concurrent-obligatory-memorials-legal-choice',
+      ids: obligatory.map((item) => item.id),
+      basis: 'product-decision',
+    });
   }
 
   // Optional memorials are never the primary office.
@@ -84,12 +90,19 @@ export function resolveDisplay(candidates, season) {
     primary = temporal;
   }
 
+  let officePrimary = null;
   if (primary !== temporal) {
     if (primary.temporal) {
       suppressed.push(suppress(temporal, 'merged-temporal', { mergedInto: primary.id }));
     } else if (primary.rankKind === 'memorial') {
       suppressed.push(suppress(temporal, 'weekday-under-memorial'));
       appliedRules.push({ rule: 'weekday-not-alternative-to-obligatory-memorial' });
+    } else if (primary.rankKind === 'all-souls' && season.isSunday) {
+      // Product rule (§11.1): All Souls on a Sunday — the Mass (and readings)
+      // are of All Souls, the Liturgy of the Hours is of the Sunday. The
+      // Sunday is not suppressed: it is the Office source of the day.
+      officePrimary = temporal;
+      appliedRules.push({ rule: 'all-souls-sunday-split', office: temporal.id, mass: primary.id, basis: 'product-decision' });
     } else {
       suppressed.push(suppress(temporal, 'outranked'));
       if (season.isSunday && temporal.precedence === 6 && primary.rankKind === 'feast') {
@@ -118,6 +131,17 @@ export function resolveDisplay(candidates, season) {
       return;
     }
     if (candidate.rankKind === 'feast') {
+      // Provisional product rule (§11.4): Christ the High Priest meeting
+      // another feast keeps both as legal options; the old automatic
+      // «row 8 proper feast omitted» is not applied without a Belarus
+      // normative source.
+      if (primary.rankKind === 'feast' && [candidate.id, primary.id].includes(CHRIST_HIGH_PRIEST_ID)) {
+        alternatives.push({ ...candidate, role: 'alternative', provisional: true });
+        appliedRules.push({
+          rule: 'christ-high-priest-collision-both-options', id: candidate.id, with: primary.id, status: 'provisional',
+        });
+        return;
+      }
       suppressed.push(suppress(candidate, 'impeded-omitted'));
       appliedRules.push({ rule: 'impeded-feast-omitted', id: candidate.id });
       return;
@@ -136,7 +160,7 @@ export function resolveDisplay(candidates, season) {
       return;
     }
     if (primary.rankKind === 'memorial') {
-      if (OBLIGATORY_MEMORIAL(candidate) && candidate.precedence === primary.precedence) {
+      if (OBLIGATORY_MEMORIAL(candidate) && (candidate.precedence === primary.precedence || memorialChoice)) {
         alternatives.push({ ...candidate, role: 'alternative' });
         appliedRules.push({ rule: 'concurrent-obligatory-memorials-choice', id: candidate.id });
       } else {
@@ -147,8 +171,14 @@ export function resolveDisplay(candidates, season) {
     suppressed.push(suppress(candidate, 'impeded-omitted'));
   });
 
+  const resolvedPrimary = { ...primary, role: 'primary', officeKind: officeKindOf(primary, season) };
   return {
-    primary: { ...primary, role: 'primary', officeKind: officeKindOf(primary, season) },
+    primary: resolvedPrimary,
+    // Office (Hours) source of the day: the primary celebration, except where
+    // a rule splits the Office from the Mass (All Souls on a Sunday).
+    officePrimary: officePrimary
+      ? { ...officePrimary, role: 'primary', officeKind: officeKindOf(officePrimary, season), officeOnly: true }
+      : resolvedPrimary,
     alternatives: alternatives.map((item) => ({ ...item, officeKind: officeKindOf(item, season) })),
     commemorations,
     suppressed,

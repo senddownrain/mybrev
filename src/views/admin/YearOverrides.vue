@@ -5,8 +5,9 @@
         <p class="eyebrow">Адміністраванне · Літургічны каляндар</p>
         <h1>Выключэнні на год</h1>
         <p class="page-description">
-          Пераносы і калізіі каляндар лічыць сам. Тут захоўваюцца толькі ручныя рашэнні на адзін год,
-          якіх нельга вывесці з правілаў.
+          Каляндар сам вылічвае пераносы і калізіі. Вылічаныя пераносы запісваюцца сюды як аўтаматычныя
+          выключэнні з пазнакай «патрабуе праверкі» — іх можна пацвердзіць або выправіць паводле
+          афіцыйнага гадавога календара. Тут жа захоўваюцца ручныя рашэнні на адзін год.
         </p>
       </div>
       <v-btn color="primary" size="large" rounded="pill" prepend-icon="mdi-plus" class="text-none" @click="openCreate()">
@@ -49,14 +50,24 @@
     </section>
 
     <section class="panel" aria-labelledby="overrides-title">
-      <h2 id="overrides-title">Ручныя выключэнні {{ year }} г.</h2>
-      <p v-if="!overrides.length" class="muted empty">На гэты год ручных выключэнняў няма.</p>
+      <h2 id="overrides-title">Выключэнні {{ year }} г.</h2>
+      <p v-if="!overrides.length" class="muted empty">На гэты год выключэнняў няма.</p>
       <article v-for="item in overrides" :key="item.id" class="override-item" :class="{ 'override-item--off': item.enabled === false }">
         <div class="override-main">
           <strong>{{ actionLabel(item.action) }} · {{ celebrationTitle(item) }}</strong>
-          <span>{{ scopeLabel(item) }}{{ item.from ? ` · з ${formatDate(item.from)}` : '' }}{{ item.to ? ` · на ${formatDate(item.to)}` : '' }}{{ item.rank ? ` · ${rankLabelOf(item.rank)}` : '' }}{{ item.color ? ` · ${colorLabel(item.color)}` : '' }}</span>
-          <span class="muted">{{ item.reason }}{{ item.source ? ` — ${item.source}` : '' }}</span>
+          <span class="badges">
+            <span class="badge" :class="item.source === 'auto-transfer' ? 'badge--auto' : 'badge--manual'">{{ sourceLabel(item) }}</span>
+            <span class="badge" :class="item.status === 'needs-review' ? 'badge--review' : 'badge--confirmed'">{{ statusLabel(item) }}</span>
+          </span>
+          <span>{{ scopeLabel(item) }}{{ item.originalDate ? ` · з ${formatDate(item.originalDate)}` : '' }}{{ item.effectiveDate ? ` · на ${formatDate(item.effectiveDate)}` : '' }}{{ item.rank ? ` · ${rankLabelOf(item.rank)}` : '' }}{{ item.color ? ` · ${colorLabel(item.color)}` : '' }}</span>
+          <span v-if="item.computedDate" class="muted">Вылічана engine: {{ formatDate(item.computedDate) }}{{ item.computedDate !== item.effectiveDate ? ' · выпраўлена ўручную' : '' }}</span>
+          <span class="muted">{{ item.reason }}{{ item.sourceNote ? ` — ${item.sourceNote}` : '' }}</span>
         </div>
+        <v-btn
+          v-if="item.source === 'auto-transfer' && item.status === 'needs-review'" variant="tonal" size="small" rounded="pill" class="text-none"
+          :loading="saving" @click="confirm(item)"
+        >Пацвердзіць</v-btn>
+        <span v-else />
         <v-switch
           :model-value="item.enabled !== false" color="primary" hide-details inset density="compact"
           :aria-label="`Уключыць выключэнне ${celebrationTitle(item)}`" @update:model-value="(value) => toggle(item, value)"
@@ -68,11 +79,22 @@
 
     <section class="panel" aria-labelledby="transfers-title">
       <h2 id="transfers-title">Аўтаматычныя пераносы</h2>
-      <p class="muted">Вылічаюцца па правілах і не захоўваюцца.</p>
+      <p class="muted">
+        Вылічаюцца па правілах і запісваюцца ў выключэнні гэтага года (npm run ordo:materialize-transfers
+        або кнопка «Запісаць»). Запісаны перанос можна пацвердзіць або выправіць вышэй.
+      </p>
       <p v-if="!transfers.length" class="muted empty">У гэтым годзе пераносаў няма.</p>
       <ul class="plain-list">
-        <li v-for="item in transfers" :key="item.celebrationId + item.from">
-          <strong>{{ item.title }}</strong>: {{ formatDate(item.from) }} → {{ formatDate(item.to) }}
+        <li v-for="item in transfers" :key="item.celebrationId + item.from" class="transfer-row">
+          <span>
+            <strong>{{ item.title }}</strong>: {{ formatDate(item.from) }} → {{ formatDate(item.to) }}
+            <span v-if="item.to !== item.computedDate" class="muted"> (вылічана {{ formatDate(item.computedDate) }})</span>
+            <span class="muted"> · {{ transferCaseLabel(item.transferCase) }}</span>
+          </span>
+          <span v-if="item.record" class="badge" :class="item.record.status === 'needs-review' ? 'badge--review' : 'badge--confirmed'">
+            {{ item.record.status === 'needs-review' ? 'запісана, патрабуе праверкі' : 'пацверджана' }}
+          </span>
+          <v-btn v-else variant="tonal" size="small" rounded="pill" class="text-none" :loading="saving" @click="materialize(item)">Запісаць</v-btn>
         </li>
       </ul>
     </section>
@@ -128,14 +150,18 @@
             <v-select v-model="draft.celebration.rank" :items="rankItems" item-title="label" item-value="value" label="Ранг" variant="outlined" density="comfortable" hide-details clearable />
             <v-select v-model="draft.celebration.color" :items="colorItems" item-title="label" item-value="value" label="Колер" variant="outlined" density="comfortable" hide-details clearable />
           </div>
+          <v-alert v-if="draft.computedDate" type="info" variant="tonal" density="comfortable" class="mt-3">
+            Аўтаматычны перанос: engine вылічыў {{ formatDate(draft.computedDate) }}.
+            Пасля захавання запіс стане ручным і пацверджаным; вылічаная дата захоўваецца для гісторыі.
+          </v-alert>
           <div class="form-grid mt-3">
-            <v-text-field v-if="usesFrom" v-model="draft.from" type="date" label="З даты (неабавязкова)" variant="outlined" density="comfortable" hide-details />
-            <v-text-field v-if="usesTo" v-model="draft.to" type="date" label="На дату" variant="outlined" density="comfortable" hide-details />
+            <v-text-field v-if="usesFrom" v-model="draft.from" type="date" :label="draft.computedDate ? 'Першапачатковая дата' : 'З даты (неабавязкова)'" variant="outlined" density="comfortable" hide-details :readonly="Boolean(draft.computedDate)" />
+            <v-text-field v-if="usesTo" v-model="draft.to" type="date" :label="draft.computedDate ? 'Дзейная дата (па гадавым календары)' : 'На дату'" variant="outlined" density="comfortable" hide-details />
             <v-select v-if="draft.action === 'changeRank'" v-model="draft.rank" :items="rankItems" item-title="label" item-value="value" label="Новы ранг" variant="outlined" density="comfortable" hide-details />
             <v-select v-if="draft.action === 'changeColor'" v-model="draft.color" :items="colorItems" item-title="label" item-value="value" label="Новы колер" variant="outlined" density="comfortable" hide-details />
           </div>
           <v-textarea v-model="draft.reason" label="Прычына" rows="2" auto-grow variant="outlined" density="comfortable" hide-details class="mt-3" />
-          <v-text-field v-model="draft.source" label="Крыніца / заўвага (дэкрэт, каляндар)" variant="outlined" density="comfortable" hide-details class="mt-3" />
+          <v-text-field v-model="draft.sourceNote" label="Крыніца / заўвага (дэкрэт, каляндар)" variant="outlined" density="comfortable" hide-details class="mt-3" />
 
           <div class="preview" aria-live="polite">
             <h3>Было па разліку → стане</h3>
@@ -184,6 +210,7 @@ import { findAmbiguities } from '@/utils/ordo/ambiguities';
 import {
   automaticTransfers, previewYearOverride, storedYearOverrides, summarizeDay, yearCollisions,
 } from '@/utils/ordo/overridePreview';
+import { TRANSFER_CASES, buildTransferOverrideTargets, confirmTransferOverride } from '@/utils/ordo/transferOverrides';
 import { generateLiturgicalYear } from '@/utils/ordo/index';
 import { colorInfo, listCalendarCelebrations } from '@/utils/ordoScreen';
 import { fetchYearOverridesFresh } from '@/services/ordoCalendarService';
@@ -216,7 +243,9 @@ const colorItems = ['albus', 'ruber', 'viridis', 'violaceus', 'rosaceus', 'niger
 const emptyDraft = () => ({
   id: '', year: year.value, scope: 'belarus', dioceseId: diocese.value, targetCelebrationId: null, action: 'move',
   from: '', to: '', rank: null, color: null, celebration: { id: '', title: '', rank: null, color: null },
-  reason: '', source: '', enabled: true,
+  reason: '', sourceNote: '', enabled: true,
+  // Provenance of a materialized transfer (kept on edit).
+  computedDate: '', source: 'manual', status: 'confirmed', transferRule: '', transferCase: '', rankEvidence: null, generator: null,
 });
 const draft = reactive(emptyDraft());
 
@@ -224,7 +253,9 @@ const validYear = computed(() => (isSupportedOrdoYear(year.value) ? Number(year.
 const context = computed(() => ({ diocese: diocese.value, epoch: ordoCalendarEpoch.value }));
 const engineContext = computed(() => ({ diocese: context.value.diocese }));
 const overrides = computed(() => (ordoCalendarEpoch.value, storedYearOverrides(validYear.value)));
-const ambiguities = computed(() => (ordoCalendarEpoch.value, findAmbiguities(validYear.value, engineContext.value)));
+// Decided cases stay documented; the panel shows open and provisional ones.
+const ambiguities = computed(() => (ordoCalendarEpoch.value, findAmbiguities(validYear.value, engineContext.value)
+  .filter((item) => item.status !== 'decided')));
 const transfers = computed(() => (ordoCalendarEpoch.value, automaticTransfers(validYear.value, engineContext.value)));
 const collisions = computed(() => (ordoCalendarEpoch.value, yearCollisions(validYear.value, engineContext.value)));
 const calendar = computed(() => (showCalendar.value && ordoCalendarEpoch.value >= 0
@@ -249,7 +280,14 @@ function draftOverride() {
     ...(draft.action === 'changeColor' && draft.color ? { color: draft.color } : {}),
     ...(['add', 'replace'].includes(draft.action) && Object.keys(celebration).length ? { celebration } : {}),
     reason: draft.reason,
-    ...(draft.source ? { source: draft.source } : {}),
+    ...(draft.sourceNote ? { sourceNote: draft.sourceNote } : {}),
+    source: draft.source || 'manual',
+    status: draft.status || 'confirmed',
+    ...(draft.computedDate ? { computedDate: draft.computedDate } : {}),
+    ...(draft.transferRule ? { transferRule: draft.transferRule } : {}),
+    ...(draft.transferCase ? { transferCase: draft.transferCase } : {}),
+    ...(draft.rankEvidence ? { rankEvidence: draft.rankEvidence } : {}),
+    ...(draft.generator ? { generator: draft.generator } : {}),
     enabled: draft.enabled !== false,
   };
 }
@@ -274,6 +312,9 @@ const rankLabelOf = (rank) => RANK_LABEL_MAP[rank] || rank;
 const colorLabel = (color) => colorInfo(color).label;
 const actionLabel = (action) => actionItems.find((item) => item.value === action)?.label || action;
 const scopeLabel = (item) => (item.scope === 'diocese' ? dioceseLabel(item.dioceseId) : 'Уся Беларусь');
+const sourceLabel = (item) => (item.source === 'auto-transfer' ? 'Аўтаматычны перанос' : (item.computedDate ? 'Перанос, выпраўлены ўручную' : 'Ручное рашэнне'));
+const statusLabel = (item) => (item.status === 'needs-review' ? 'Патрабуе праверкі' : 'Пацверджана');
+const transferCaseLabel = (value) => TRANSFER_CASES[value] || value || '';
 function celebrationTitle(item) {
   if (item.action === 'add') return item.celebration?.title || item.celebration?.id || '';
   const all = listCalendarCelebrations(item.scope === 'diocese' ? item.dioceseId : diocese.value);
@@ -300,7 +341,8 @@ function openCreate(ambiguity = null) {
 function openEdit(item) {
   Object.assign(draft, emptyDraft(), {
     ...item,
-    from: item.from || '', to: item.to || '', source: item.source || '',
+    from: item.originalDate || item.from || '', to: item.effectiveDate || item.to || '', sourceNote: item.sourceNote || '',
+    computedDate: item.computedDate || '', source: item.source || 'manual', status: item.status || 'confirmed',
     celebration: { id: '', title: '', rank: null, color: null, ...(item.celebration || {}) },
   });
   saveError.value = '';
@@ -313,7 +355,21 @@ async function run(task) {
   try { await task(); return true; } catch (error) { saveError.value = error?.message || String(error); return false; } finally { saving.value = false; }
 }
 async function save() {
-  if (await run(() => saveYearOverride({ ...draftOverride(), createdAt: draft.createdAt }))) dialog.value = false;
+  // A corrected (or simply saved) materialized transfer becomes the
+  // administrator's decision: source manual, status confirmed, computedDate kept.
+  const value = draft.computedDate ? confirmTransferOverride(draftOverride(), { effectiveDate: draft.to }) : draftOverride();
+  if (await run(() => saveYearOverride({ ...value, createdAt: draft.createdAt }))) dialog.value = false;
+}
+async function confirm(item) {
+  if (!(await run(() => saveYearOverride({ ...confirmTransferOverride(item), createdAt: item.createdAt })))) loadError.value = saveError.value;
+}
+/** Write the computed transfer as an auto Year Override (same record as the materialization script). */
+async function materialize(transfer) {
+  const targets = buildTransferOverrideTargets({ years: [validYear.value], yearOverrides: storedYearOverrides(validYear.value), dataYearOverrides: false });
+  const record = targets.find((item) => item.targetCelebrationId === transfer.celebrationId && item.originalDate === transfer.from
+    && (item.scope === 'belarus' || item.dioceseId === diocese.value));
+  if (!record) { loadError.value = 'Перанос не знойдзены ў разліку'; return; }
+  if (!(await run(() => saveYearOverride(record)))) loadError.value = saveError.value;
 }
 async function toggle(item, value) {
   if (!(await run(() => setYearOverrideEnabled(item.id, value)))) loadError.value = saveError.value;
@@ -349,7 +405,7 @@ onMounted(reload);
 .review-item p { margin: 4px 0 0; font-size: .88rem; line-height: 1.45; }
 .review-item ul { margin: 6px 0 0; padding-left: 18px; font-size: .86rem; }
 .review-decision { font-weight: 650; }
-.override-item { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; align-items: center; gap: 8px; padding: 12px 0; border-top: 1px solid var(--nav-border); }
+.override-item { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto auto; align-items: center; gap: 8px; padding: 12px 0; border-top: 1px solid var(--nav-border); }
 .override-item--off .override-main { opacity: .55; }
 .override-main { display: grid; gap: 3px; min-width: 0; font-size: .88rem; }
 .plain-list { margin: 8px 0 0; padding: 0; list-style: none; font-size: .88rem; line-height: 1.5; }
@@ -367,7 +423,14 @@ onMounted(reload);
 .preview-columns { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 10px; font-size: .86rem; }
 .preview-columns p { margin: 2px 0 0; line-height: 1.4; }
 .badge { padding: 2px 8px; border-radius: 99px; background: var(--nav-active); font-size: .7rem; font-weight: 700; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge--review { background: rgba(var(--v-theme-warning), .18); }
+.badge--confirmed { background: rgba(var(--v-theme-success), .16); }
+.badge--auto { background: rgba(var(--v-theme-info), .16); }
+.transfer-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
 @media (max-width: 640px) {
+  .override-item { grid-template-columns: repeat(4, auto); justify-content: end; }
+  .override-item .override-main { grid-column: 1 / -1; }
   .page-hero { align-items: flex-start; flex-direction: column; }
   .form-grid, .preview-columns { grid-template-columns: 1fr; }
   .review-item { flex-direction: column; }

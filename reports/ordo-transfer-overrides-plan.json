@@ -1,0 +1,590 @@
+{
+ "generatedAt": "2026-10-07T18:05:59.855Z",
+ "mode": "dry-run",
+ "years": {
+  "from": 2025,
+  "to": 2035
+ },
+ "dioceses": [
+  "minsk-mohilev",
+  "vitebsk",
+  "pinsk",
+  "grodno"
+ ],
+ "existingSource": "snapshot backups/firestore-snapshot",
+ "policy": "create missing auto records; update computedDate/effectiveDate only while auto + needs-review; never overwrite manual/confirmed; never delete (stale records are listed)",
+ "summary": {
+  "targets": 11,
+  "create": 11,
+  "update": 0,
+  "unchanged": 0,
+  "keepManual": 0,
+  "stale": 0
+ },
+ "byCase": {
+  "diocesan-solemnity": 2,
+  "joseph-holy-week": 1,
+  "annunciation": 4,
+  "coinciding-solemnities": 1,
+  "impeded-solemnity": 3
+ },
+ "operations": [
+  {
+   "id": "auto-transfer-2027-belarus-annunciation-lord",
+   "targetId": "auto-transfer-2027-belarus-annunciation-lord",
+   "action": "create",
+   "record": {
+    "id": "auto-transfer-2027-belarus-annunciation-lord",
+    "year": 2027,
+    "scope": "belarus",
+    "targetCelebrationId": "annunciation-lord",
+    "action": "move",
+    "originalDate": "2027-03-25",
+    "computedDate": "2027-04-05",
+    "effectiveDate": "2027-04-05",
+    "from": "2027-03-25",
+    "to": "2027-04-05",
+    "reason": "Annunciation impeded by Holy Week / the Easter octave: Monday after the II Sunday of Easter",
+    "transferRule": "annunciation-after-easter-octave",
+    "transferCase": "annunciation",
+    "source": "auto-transfer",
+    "status": "needs-review",
+    "enabled": true,
+    "generator": {
+     "kind": "auto-transfer",
+     "version": 1
+    }
+   }
+  },
+  {
+   "id": "auto-transfer-2027-pinsk-sv-andrei-bobola",
+   "targetId": "auto-transfer-2027-pinsk-sv-andrei-bobola",
+   "action": "create",
+   "record": {
+    "id": "auto-transfer-2027-pinsk-sv-andrei-bobola",
+    "year": 2027,
+    "scope": "diocese",
+    "dioceseId": "pinsk",
+    "targetCelebrationId": "sv-andrei-bobola",
+    "action": "move",
+    "originalDate": "2027-05-16",
+    "computedDate": "2027-05-18",
+    "effectiveDate": "2027-05-18",
+    "from": "2027-05-16",
+    "to": "2027-05-18",
+    "reason": "Solemnity impeded by a day of higher precedence: nearest free day (GNLYC 60)",
+    "transferRule": "impeded-by-day",
+    "transferCase": "diocesan-solemnity",
+    "rankEvidence": [
+     "pinsk:2026-05-16:c0"
+    ],
+    "source": "auto-transfer",
+    "status": "needs-review",
+    "enabled": true,
+    "generator": {
+     "kind": "auto-transfer",
+     "version": 1
+    }
+   }
+  },
+  {
+   "id": "auto-transfer-2028-belarus-sv-joseph",
+   "targetId": "auto-transfer-2028-belarus-sv-joseph",
+   "action": "create",
+   "record": {
+    "id": "auto-transfer-2028-belarus-sv-joseph",
+    "year": 2028,
+    "scope": "belarus",
+    "targetCelebrationId": "sv-joseph",
+    "action": "move",
+    "originalDate": "2028-03-19",
+    "computedDate": "2028-03-20",
+    "effectiveDate": "2028-03-20",
+    "from": "2028-03-19",
+    "to": "2028-03-20",
+    "reason": "Solemnity impeded by a day of higher precedence: nearest free day (GNLYC 60)",
+    "transferRule": "impeded-by-day",
+    "transferCase": "impeded-solemnity",
+    "source": "auto-transfer",
+    "status": "needs-review",
+    "enabled": true,
+    "generator": {
+     "kind": "auto-transfer",
+     "version": 1
+    }
+   }
+  },
+  {
+   "id": "auto-transfer-2029-belarus-annunciation-lord",
+   "targetId": "auto-transfer-2029-belarus-annunciation-lord",
+   "action": "create",
+   "record": {
+    "id": "auto-transfer-2029-belarus-annunciation-lord",
+    "year": 2029,
+    "scope": "belarus",
+    "targetCelebrationId": "annunciation-lord",
+    "action": "move",
+    "originalDate": "2029-03-25",
+    "computedDate": "2029-04-09",
+    "effectiveDate": "2029-04-09",
+    "from": "2029-03-25",
+    "to": "2029-04-09",
+    "reason": "Annunciation impeded by Holy Week / the Easter octave: Monday after the II Sunday of Easter",
+    "transferRule": "annunciation-after-easter-octave",
+    "transferCase": "annunciation",
+    "source": "auto-transfer",
+    "status": "needs-review",
+    "enabled": true,
+    "generator": {
+     "kind": "auto-transfer",
+     "version": 1
+    }
+   }
+  },
+  {
+   "id": "auto-transfer-2030-belarus-immaculate-conception",
+   "targetId": "auto-transfer-2030-belarus-immaculate-conception",
+   "action": "create",
+   "record": {
+    "id": "auto-transfer-2030-belarus-immaculate-conception",
+    "year": 2030,
+    "scope": "belarus",
+    "targetCelebrationId": "immaculate-conception",
+    "action": "move",
+    "originalDate": "2030-12-08",
+    "computedDate": "2030-12-09",
+    "effectiveDate": "2030-12-09",
+    "from": "2030-12-08",
+    "to": "2030-12-09",
+    "reason": "Solemnity impeded by a day of higher precedence: nearest free day (GNLYC 60)",
+    "transferRule": "impeded-by-day",
+    "transferCase": "impeded-solemnity",
+    "source": "auto-transfer",
+    "status": "needs-review",
+    "enabled": true,
+    "generator": {
+     "kind": "auto-transfer",
+     "version": 1
+    }
+   }
+  },
+  {
+   "id": "auto-transfer-2032-belarus-annunciation-lord",
+   "targetId": "auto-transfer-2032-belarus-annunciation-lord",
+   "action": "create",
+   "record": {
+    "id": "auto-transfer-2032-belarus-annunciation-lord",
+    "year": 2032,
+    "scope": "belarus",
+    "targetCelebrationId": "annunciation-lord",
+    "action": "move",
+    "originalDate": "2032-03-25",
+    "computedDate": "2032-04-05",
+    "effectiveDate": "2032-04-05",
+    "from": "2032-03-25",
+    "to": "2032-04-05",
+    "reason": "Annunciation impeded by Holy Week / the Easter octave: Monday after the II Sunday of Easter",
+    "transferRule": "annunciation-after-easter-octave",
+    "transferCase": "annunciation",
+    "source": "auto-transfer",
+    "status": "needs-review",
+    "enabled": true,
+    "generator": {
+     "kind": "auto-transfer",
+     "version": 1
+    }
+   }
+  },
+  {
+   "id": "auto-transfer-2032-pinsk-sv-andrei-bobola",
+   "targetId": "auto-transfer-2032-pinsk-sv-andrei-bobola",
+   "action": "create",
+   "record": {
+    "id": "auto-transfer-2032-pinsk-sv-andrei-bobola",
+    "year": 2032,
+    "scope": "diocese",
+    "dioceseId": "pinsk",
+    "targetCelebrationId": "sv-andrei-bobola",
+    "action": "move",
+    "originalDate": "2032-05-16",
+    "computedDate": "2032-05-18",
+    "effectiveDate": "2032-05-18",
+    "from": "2032-05-16",
+    "to": "2032-05-18",
+    "reason": "Solemnity impeded by a day of higher precedence: nearest free day (GNLYC 60)",
+    "transferRule": "impeded-by-day",
+    "transferCase": "diocesan-solemnity",
+    "rankEvidence": [
+     "pinsk:2026-05-16:c0"
+    ],
+    "source": "auto-transfer",
+    "status": "needs-review",
+    "enabled": true,
+    "generator": {
+     "kind": "auto-transfer",
+     "version": 1
+    }
+   }
+  },
+  {
+   "id": "auto-transfer-2033-belarus-nativity-john-baptist",
+   "targetId": "auto-transfer-2033-belarus-nativity-john-baptist",
+   "action": "create",
+   "record": {
+    "id": "auto-transfer-2033-belarus-nativity-john-baptist",
+    "year": 2033,
+    "scope": "belarus",
+    "targetCelebrationId": "nativity-john-baptist",
+    "action": "move",
+    "originalDate": "2033-06-24",
+    "computedDate": "2033-06-25",
+    "effectiveDate": "2033-06-25",
+    "from": "2033-06-24",
+    "to": "2033-06-25",
+    "reason": "Solemnity impeded by a celebration of higher precedence: nearest free day (GNLYC 60) (impeded by sacred-heart)",
+    "transferRule": "impeded-by-celebration",
+    "transferCase": "coinciding-solemnities",
+    "source": "auto-transfer",
+    "status": "needs-review",
+    "enabled": true,
+    "generator": {
+     "kind": "auto-transfer",
+     "version": 1
+    }
+   }
+  },
+  {
+   "id": "auto-transfer-2034-belarus-sv-joseph",
+   "targetId": "auto-transfer-2034-belarus-sv-joseph",
+   "action": "create",
+   "record": {
+    "id": "auto-transfer-2034-belarus-sv-joseph",
+    "year": 2034,
+    "scope": "belarus",
+    "targetCelebrationId": "sv-joseph",
+    "action": "move",
+    "originalDate": "2034-03-19",
+    "computedDate": "2034-03-20",
+    "effectiveDate": "2034-03-20",
+    "from": "2034-03-19",
+    "to": "2034-03-20",
+    "reason": "Solemnity impeded by a day of higher precedence: nearest free day (GNLYC 60)",
+    "transferRule": "impeded-by-day",
+    "transferCase": "impeded-solemnity",
+    "source": "auto-transfer",
+    "status": "needs-review",
+    "enabled": true,
+    "generator": {
+     "kind": "auto-transfer",
+     "version": 1
+    }
+   }
+  },
+  {
+   "id": "auto-transfer-2035-belarus-sv-joseph",
+   "targetId": "auto-transfer-2035-belarus-sv-joseph",
+   "action": "create",
+   "record": {
+    "id": "auto-transfer-2035-belarus-sv-joseph",
+    "year": 2035,
+    "scope": "belarus",
+    "targetCelebrationId": "sv-joseph",
+    "action": "move",
+    "originalDate": "2035-03-19",
+    "computedDate": "2035-03-17",
+    "effectiveDate": "2035-03-17",
+    "from": "2035-03-19",
+    "to": "2035-03-17",
+    "reason": "St Joseph falls in Holy Week: anticipated to the Saturday before Palm Sunday (CDW 2008)",
+    "transferRule": "joseph-anticipated-before-palm-sunday",
+    "transferCase": "joseph-holy-week",
+    "source": "auto-transfer",
+    "status": "needs-review",
+    "enabled": true,
+    "generator": {
+     "kind": "auto-transfer",
+     "version": 1
+    }
+   }
+  },
+  {
+   "id": "auto-transfer-2035-belarus-annunciation-lord",
+   "targetId": "auto-transfer-2035-belarus-annunciation-lord",
+   "action": "create",
+   "record": {
+    "id": "auto-transfer-2035-belarus-annunciation-lord",
+    "year": 2035,
+    "scope": "belarus",
+    "targetCelebrationId": "annunciation-lord",
+    "action": "move",
+    "originalDate": "2035-03-25",
+    "computedDate": "2035-04-02",
+    "effectiveDate": "2035-04-02",
+    "from": "2035-03-25",
+    "to": "2035-04-02",
+    "reason": "Annunciation impeded by Holy Week / the Easter octave: Monday after the II Sunday of Easter",
+    "transferRule": "annunciation-after-easter-octave",
+    "transferCase": "annunciation",
+    "source": "auto-transfer",
+    "status": "needs-review",
+    "enabled": true,
+    "generator": {
+     "kind": "auto-transfer",
+     "version": 1
+    }
+   }
+  }
+ ],
+ "targets": [
+  {
+   "id": "auto-transfer-2027-belarus-annunciation-lord",
+   "year": 2027,
+   "scope": "belarus",
+   "targetCelebrationId": "annunciation-lord",
+   "action": "move",
+   "originalDate": "2027-03-25",
+   "computedDate": "2027-04-05",
+   "effectiveDate": "2027-04-05",
+   "from": "2027-03-25",
+   "to": "2027-04-05",
+   "reason": "Annunciation impeded by Holy Week / the Easter octave: Monday after the II Sunday of Easter",
+   "transferRule": "annunciation-after-easter-octave",
+   "transferCase": "annunciation",
+   "source": "auto-transfer",
+   "status": "needs-review",
+   "enabled": true,
+   "generator": {
+    "kind": "auto-transfer",
+    "version": 1
+   }
+  },
+  {
+   "id": "auto-transfer-2027-pinsk-sv-andrei-bobola",
+   "year": 2027,
+   "scope": "diocese",
+   "dioceseId": "pinsk",
+   "targetCelebrationId": "sv-andrei-bobola",
+   "action": "move",
+   "originalDate": "2027-05-16",
+   "computedDate": "2027-05-18",
+   "effectiveDate": "2027-05-18",
+   "from": "2027-05-16",
+   "to": "2027-05-18",
+   "reason": "Solemnity impeded by a day of higher precedence: nearest free day (GNLYC 60)",
+   "transferRule": "impeded-by-day",
+   "transferCase": "diocesan-solemnity",
+   "rankEvidence": [
+    "pinsk:2026-05-16:c0"
+   ],
+   "source": "auto-transfer",
+   "status": "needs-review",
+   "enabled": true,
+   "generator": {
+    "kind": "auto-transfer",
+    "version": 1
+   }
+  },
+  {
+   "id": "auto-transfer-2028-belarus-sv-joseph",
+   "year": 2028,
+   "scope": "belarus",
+   "targetCelebrationId": "sv-joseph",
+   "action": "move",
+   "originalDate": "2028-03-19",
+   "computedDate": "2028-03-20",
+   "effectiveDate": "2028-03-20",
+   "from": "2028-03-19",
+   "to": "2028-03-20",
+   "reason": "Solemnity impeded by a day of higher precedence: nearest free day (GNLYC 60)",
+   "transferRule": "impeded-by-day",
+   "transferCase": "impeded-solemnity",
+   "source": "auto-transfer",
+   "status": "needs-review",
+   "enabled": true,
+   "generator": {
+    "kind": "auto-transfer",
+    "version": 1
+   }
+  },
+  {
+   "id": "auto-transfer-2029-belarus-annunciation-lord",
+   "year": 2029,
+   "scope": "belarus",
+   "targetCelebrationId": "annunciation-lord",
+   "action": "move",
+   "originalDate": "2029-03-25",
+   "computedDate": "2029-04-09",
+   "effectiveDate": "2029-04-09",
+   "from": "2029-03-25",
+   "to": "2029-04-09",
+   "reason": "Annunciation impeded by Holy Week / the Easter octave: Monday after the II Sunday of Easter",
+   "transferRule": "annunciation-after-easter-octave",
+   "transferCase": "annunciation",
+   "source": "auto-transfer",
+   "status": "needs-review",
+   "enabled": true,
+   "generator": {
+    "kind": "auto-transfer",
+    "version": 1
+   }
+  },
+  {
+   "id": "auto-transfer-2030-belarus-immaculate-conception",
+   "year": 2030,
+   "scope": "belarus",
+   "targetCelebrationId": "immaculate-conception",
+   "action": "move",
+   "originalDate": "2030-12-08",
+   "computedDate": "2030-12-09",
+   "effectiveDate": "2030-12-09",
+   "from": "2030-12-08",
+   "to": "2030-12-09",
+   "reason": "Solemnity impeded by a day of higher precedence: nearest free day (GNLYC 60)",
+   "transferRule": "impeded-by-day",
+   "transferCase": "impeded-solemnity",
+   "source": "auto-transfer",
+   "status": "needs-review",
+   "enabled": true,
+   "generator": {
+    "kind": "auto-transfer",
+    "version": 1
+   }
+  },
+  {
+   "id": "auto-transfer-2032-belarus-annunciation-lord",
+   "year": 2032,
+   "scope": "belarus",
+   "targetCelebrationId": "annunciation-lord",
+   "action": "move",
+   "originalDate": "2032-03-25",
+   "computedDate": "2032-04-05",
+   "effectiveDate": "2032-04-05",
+   "from": "2032-03-25",
+   "to": "2032-04-05",
+   "reason": "Annunciation impeded by Holy Week / the Easter octave: Monday after the II Sunday of Easter",
+   "transferRule": "annunciation-after-easter-octave",
+   "transferCase": "annunciation",
+   "source": "auto-transfer",
+   "status": "needs-review",
+   "enabled": true,
+   "generator": {
+    "kind": "auto-transfer",
+    "version": 1
+   }
+  },
+  {
+   "id": "auto-transfer-2032-pinsk-sv-andrei-bobola",
+   "year": 2032,
+   "scope": "diocese",
+   "dioceseId": "pinsk",
+   "targetCelebrationId": "sv-andrei-bobola",
+   "action": "move",
+   "originalDate": "2032-05-16",
+   "computedDate": "2032-05-18",
+   "effectiveDate": "2032-05-18",
+   "from": "2032-05-16",
+   "to": "2032-05-18",
+   "reason": "Solemnity impeded by a day of higher precedence: nearest free day (GNLYC 60)",
+   "transferRule": "impeded-by-day",
+   "transferCase": "diocesan-solemnity",
+   "rankEvidence": [
+    "pinsk:2026-05-16:c0"
+   ],
+   "source": "auto-transfer",
+   "status": "needs-review",
+   "enabled": true,
+   "generator": {
+    "kind": "auto-transfer",
+    "version": 1
+   }
+  },
+  {
+   "id": "auto-transfer-2033-belarus-nativity-john-baptist",
+   "year": 2033,
+   "scope": "belarus",
+   "targetCelebrationId": "nativity-john-baptist",
+   "action": "move",
+   "originalDate": "2033-06-24",
+   "computedDate": "2033-06-25",
+   "effectiveDate": "2033-06-25",
+   "from": "2033-06-24",
+   "to": "2033-06-25",
+   "reason": "Solemnity impeded by a celebration of higher precedence: nearest free day (GNLYC 60) (impeded by sacred-heart)",
+   "transferRule": "impeded-by-celebration",
+   "transferCase": "coinciding-solemnities",
+   "source": "auto-transfer",
+   "status": "needs-review",
+   "enabled": true,
+   "generator": {
+    "kind": "auto-transfer",
+    "version": 1
+   }
+  },
+  {
+   "id": "auto-transfer-2034-belarus-sv-joseph",
+   "year": 2034,
+   "scope": "belarus",
+   "targetCelebrationId": "sv-joseph",
+   "action": "move",
+   "originalDate": "2034-03-19",
+   "computedDate": "2034-03-20",
+   "effectiveDate": "2034-03-20",
+   "from": "2034-03-19",
+   "to": "2034-03-20",
+   "reason": "Solemnity impeded by a day of higher precedence: nearest free day (GNLYC 60)",
+   "transferRule": "impeded-by-day",
+   "transferCase": "impeded-solemnity",
+   "source": "auto-transfer",
+   "status": "needs-review",
+   "enabled": true,
+   "generator": {
+    "kind": "auto-transfer",
+    "version": 1
+   }
+  },
+  {
+   "id": "auto-transfer-2035-belarus-sv-joseph",
+   "year": 2035,
+   "scope": "belarus",
+   "targetCelebrationId": "sv-joseph",
+   "action": "move",
+   "originalDate": "2035-03-19",
+   "computedDate": "2035-03-17",
+   "effectiveDate": "2035-03-17",
+   "from": "2035-03-19",
+   "to": "2035-03-17",
+   "reason": "St Joseph falls in Holy Week: anticipated to the Saturday before Palm Sunday (CDW 2008)",
+   "transferRule": "joseph-anticipated-before-palm-sunday",
+   "transferCase": "joseph-holy-week",
+   "source": "auto-transfer",
+   "status": "needs-review",
+   "enabled": true,
+   "generator": {
+    "kind": "auto-transfer",
+    "version": 1
+   }
+  },
+  {
+   "id": "auto-transfer-2035-belarus-annunciation-lord",
+   "year": 2035,
+   "scope": "belarus",
+   "targetCelebrationId": "annunciation-lord",
+   "action": "move",
+   "originalDate": "2035-03-25",
+   "computedDate": "2035-04-02",
+   "effectiveDate": "2035-04-02",
+   "from": "2035-03-25",
+   "to": "2035-04-02",
+   "reason": "Annunciation impeded by Holy Week / the Easter octave: Monday after the II Sunday of Easter",
+   "transferRule": "annunciation-after-easter-octave",
+   "transferCase": "annunciation",
+   "source": "auto-transfer",
+   "status": "needs-review",
+   "enabled": true,
+   "generator": {
+    "kind": "auto-transfer",
+    "version": 1
+   }
+  }
+ ]
+}

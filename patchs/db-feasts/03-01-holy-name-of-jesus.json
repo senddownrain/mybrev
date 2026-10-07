@@ -6,6 +6,8 @@
   "_rank": "memoria-ad-libitum",
   "_feastName": "Найсвяцейшага Імя Езуса",
   "_templates": [],
+  "_templatesConfirmed": true,
+  "_officeSource": "current-day",
   "_scaffold": true,
   "_contentStatus": {
     "hours": "day-fallback"

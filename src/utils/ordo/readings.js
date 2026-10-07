@@ -4,6 +4,8 @@
  * `readingsService` should try them; texts stay in `readings`.
  */
 
+const ALL_SOULS_MASSES = Object.freeze([1, 2, 3]);
+
 function cycleFor(officeKind, season) {
   const { sunday, weekday } = season.readingCycle;
   // Sundays, solemnities and feasts of the Lord use the Sunday cycle when the
@@ -65,6 +67,12 @@ export function buildReadingsDescriptor(candidate, season, temporal) {
     sourceFallbacks,
     allowedChoices,
     ...(vigil ? { vigilLookup: vigil } : {}),
+    // All Souls: three Masses, i.e. three reading sets of the one
+    // celebration (also when 2 November is a Sunday, §11.1). The sets are
+    // the `readings` sets of the celebration; this only states the count.
+    ...(kind === 'all-souls'
+      ? { variants: ALL_SOULS_MASSES.map((ordinal) => ({ id: `all-souls-mass-${ordinal}`, ordinal })), variantsKind: 'reading-sets' }
+      : {}),
     ...(season.date === season.anchors.holyThursday
       ? { variants: [{ id: 'chrism-mass' }, { id: 'evening-mass', where: { ...temporal.readingsRef, _variant: 'evening-mass' } }] }
       : {}),
