@@ -10,7 +10,7 @@ import { computeYearAnchors, getCountryRules } from './movableFeasts.js';
 import { celebrationPrecedence } from './precedence.js';
 import { computeSeason, temporalPrecedence } from './season.js';
 import { resolveTransfers } from './transfers.js';
-import { applyYearOverrides, selectYearOverrides } from './yearOverrides.js';
+import { applyYearOverrides, isTransferOverride, selectYearOverrides } from './yearOverrides.js';
 import { getCalendarDefinitions, getDefinitionsEpoch } from './definitions.js';
 
 function isValidFixed(year, month, day) {
@@ -37,6 +37,43 @@ function placeCelebration(celebration, year, anchors) {
   return null;
 }
 
+/**
+ * Transfer overrides the algorithm no longer produces: a confirmed (manual)
+ * one is still the administrator's decision and is applied as a plain move;
+ * an auto one awaiting review is stale and only reported.
+ */
+function applyUnusedTransferOverrides(byDate, unused) {
+  const applied = [];
+  const stale = [];
+  unused.forEach((override) => {
+    if (override.status !== 'confirmed') {
+      stale.push(override);
+      return;
+    }
+    const list = byDate.get(override.originalDate) || [];
+    const index = list.findIndex((item) => item.celebration.id === override.targetCelebrationId && !item.transferredOut);
+    if (index < 0 || !override.effectiveDate || override.effectiveDate === override.originalDate) {
+      stale.push(override);
+      return;
+    }
+    const [placement] = list.splice(index, 1);
+    const moved = {
+      ...placement,
+      date: override.effectiveDate,
+      movedFrom: override.originalDate,
+      noAutoTransfer: true,
+      yearOverride: {
+        action: 'move', scope: override.scope, reason: override.reason || '', source: override.source, status: override.status,
+        ...(override.id ? { overrideId: override.id } : {}),
+      },
+    };
+    if (!byDate.has(override.effectiveDate)) byDate.set(override.effectiveDate, []);
+    byDate.get(override.effectiveDate).push(moved);
+    applied.push({ override, status: 'applied', as: 'move' });
+  });
+  return { applied, stale };
+}
+
 export function contextKey(context = {}) {
   return JSON.stringify({
     country: String(context.country || 'BY').toUpperCase(),
@@ -44,6 +81,7 @@ export function contextKey(context = {}) {
     yearOverrides: context.yearOverrides || [],
     dioceseLayer: context.dioceseLayer || null,
     dataYearOverrides: context.dataYearOverrides !== false,
+    ignoreTransferOverrides: Boolean(context.ignoreTransferOverrides),
     definitions: getDefinitionsEpoch(),
   });
 }
@@ -75,7 +113,11 @@ export function buildYearPlan(year, context = {}) {
   // caller's overrides (admin preview, tests).
   const dataOverrides = context.dataYearOverrides === false
     ? [] : getCalendarDefinitions().yearOverrides.filter((override) => override.enabled !== false);
-  const overrides = selectYearOverrides([...dataOverrides, ...(context.yearOverrides || [])], year, context);
+  const selected = selectYearOverrides([...dataOverrides, ...(context.yearOverrides || [])], year, context);
+  // Materialized transfers are applied by the transfer step (they keep the
+  // computed date); `ignoreTransferOverrides` gives the pure algorithm.
+  const transferOverrides = context.ignoreTransferOverrides ? [] : selected.filter(isTransferOverride);
+  const overrides = selected.filter((override) => !isTransferOverride(override));
   const overrideResult = applyYearOverrides(placements, overrides, { celebrations });
   placements = overrideResult.placements;
   removed.push(...overrideResult.removed);
@@ -87,7 +129,10 @@ export function buildYearPlan(year, context = {}) {
     byDate.get(item.date).push(item);
   });
 
-  const transfers = resolveTransfers(byDate, seasonOf, temporalPrecedence);
+  const transfers = resolveTransfers(byDate, seasonOf, temporalPrecedence, { overrides: transferOverrides });
+  const { applied: lateMoves, stale: staleTransferOverrides } = applyUnusedTransferOverrides(
+    byDate, transferOverrides.filter((override) => !transfers.usedOverrides.has(override)),
+  );
 
   const removedByDate = new Map();
   removed.forEach((item) => {
@@ -114,7 +159,8 @@ export function buildYearPlan(year, context = {}) {
     byDate,
     removedByDate,
     transfers,
-    appliedOverrides: overrideResult.applied,
+    appliedOverrides: [...overrideResult.applied, ...lateMoves],
+    staleTransferOverrides,
     celebrationDates,
   };
 }

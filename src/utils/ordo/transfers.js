@@ -11,11 +11,17 @@
  *   (CDW, Notitiae 2008).
  * - Feasts and memorials that are impeded are not transferred: they are
  *   omitted (or become a commemoration, see `resolveDay.js`).
+ * - A diocesan solemnity is transferred only when its solemnity rank is
+ *   confirmed by a published calendar (`transfer-rank-evidence.js`).
  *
- * These are algorithms, never year overrides.
+ * The algorithm computes every transfer. Its result is materialized as an
+ * editable Year Override (`transferOverrides.js`); a stored transfer override
+ * keeps the computed date as `computedDate` and its `effectiveDate` decides
+ * where the celebration is kept (auto: = computed; manual: the user's date).
  */
 import { addDays } from './dates.js';
 import { celebrationPrecedence, compareCandidates, isImpedingPrecedence, rankKind } from './precedence.js';
+import { rankEvidenceOf } from '../../data/ordo/transfer-rank-evidence.js';
 
 export const SPECIAL_TRANSFER_RULES = Object.freeze([
   {
@@ -49,14 +55,31 @@ function isSolemnity(celebration) {
   return rankKind(celebration.rank) === 'solemnity';
 }
 
+/** Diocesan solemnity whose transferable rank no published calendar confirms. */
+export function unconfirmedDiocesanSolemnity(celebration) {
+  if (celebration.layer !== 'diocese' || !celebration.dioceseId) return false;
+  return !rankEvidenceOf(celebration.dioceseId, celebration.id).length;
+}
+
+const ISO = /^\d{4}-\d{2}-\d{2}$/;
+
+/** The stored transfer override of a placement impeded on `iso`, if any. */
+function overrideFor(overrides, placement, iso) {
+  return overrides.find((item) => item.targetCelebrationId === placement.celebration.id
+    && (!item.originalDate || item.originalDate === iso)) || null;
+}
+
 /**
  * @param {Map<string, object[]>} byDate   placements grouped by ISO date (mutated)
  * @param {(iso: string) => object} seasonOf
  * @param {(season: object) => number} basePrecedenceOf
- * @returns {object[]} transfer records
+ * @param {{ overrides?: object[] }} [options]  normalized transfer overrides of the year
+ * @returns {object[]} transfer records `{ celebrationId, from, to, computedDate, rule, override? }`
+ *   (`transfers.usedOverrides` lists the overrides that were applied)
  */
-export function resolveTransfers(byDate, seasonOf, basePrecedenceOf) {
+export function resolveTransfers(byDate, seasonOf, basePrecedenceOf, { overrides = [] } = {}) {
   const transfers = [];
+  const usedOverrides = new Set();
   const strongestOn = (iso, exclude) => {
     const list = (byDate.get(iso) || []).filter((item) => item !== exclude && !item.transferredOut);
     return list.reduce((best, item) => (best === null || item.precedence < best ? item.precedence : best), null);
@@ -92,11 +115,31 @@ export function resolveTransfers(byDate, seasonOf, basePrecedenceOf) {
         placement.impededWithoutTransfer = true;
         return;
       }
+      if (unconfirmedDiocesanSolemnity(placement.celebration)) {
+        placement.impededWithoutTransfer = true;
+        placement.transferBlocked = 'rank-not-source-confirmed';
+        return;
+      }
       const special = SPECIAL_TRANSFER_RULES
         .find((rule) => rule.celebrationId === placement.celebration.id && rule.applies(season));
-      let target = special ? special.target(season.anchors) : nextFreeDay(iso, placement);
-      if (special && !isFree(target, placement)) target = nextFreeDay(target, placement);
+      let computed = special ? special.target(season.anchors) : nextFreeDay(iso, placement);
+      if (special && !isFree(computed, placement)) computed = nextFreeDay(computed, placement);
+      const override = overrideFor(overrides, placement, iso);
+      let target = computed;
+      if (override) {
+        usedOverrides.add(override);
+        if (ISO.test(String(override.effectiveDate || ''))) target = override.effectiveDate;
+      }
       if (!target) return;
+      if (target === iso) {
+        // A Year Override keeps the impeded celebration where it is (no transfer).
+        placement.impededWithoutTransfer = true;
+        return;
+      }
+      const rule = special ? special.id : (beatenByBase ? 'impeded-by-day' : 'impeded-by-celebration');
+      const provenance = override ? {
+        ...(override.id ? { id: override.id } : {}), source: override.source, status: override.status,
+      } : null;
       placement.transferredOut = true;
       placement.transferredTo = target;
       const moved = {
@@ -105,15 +148,22 @@ export function resolveTransfers(byDate, seasonOf, basePrecedenceOf) {
         transferredTo: undefined,
         date: target,
         transferredFrom: iso,
-        transferRule: special ? special.id : (beatenByBase ? 'impeded-by-day' : 'impeded-by-celebration'),
+        transferRule: rule,
+        ...(provenance ? { transferOverride: { ...provenance, computedDate: computed } } : {}),
       };
       if (!byDate.has(target)) byDate.set(target, []);
       byDate.get(target).push(moved);
       transfers.push({
-        celebrationId: placement.celebration.id, from: iso, to: target, rule: moved.transferRule,
+        celebrationId: placement.celebration.id,
+        from: iso,
+        to: target,
+        computedDate: computed,
+        rule,
+        ...(provenance ? { override: provenance } : {}),
       });
     });
   });
+  Object.defineProperty(transfers, 'usedOverrides', { value: usedOverrides, enumerable: false });
   return transfers;
 }
 

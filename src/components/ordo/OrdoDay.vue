@@ -77,7 +77,7 @@
           <span v-if="optionBadges(day.primary).length" class="badges">
             <span v-for="badge in optionBadges(day.primary)" :key="badge" class="badge">{{ badge }}</span>
           </span>
-          <CelebrationActions :hours="hoursLink(day.primary.id)" :readings="readingsLink(day.primary.id)" :title="day.primary.title" />
+          <CelebrationActions :hours="hoursLink(day.sources?.office?.optionId || day.primary.id)" :readings="readingsLink(day.primary.id)" :title="day.primary.title" />
         </div>
       </div>
 
@@ -316,9 +316,10 @@ const mass = computed(() => massSummary(day.value));
 const directions = computed(() => officeDirections(day.value));
 const officeSubtitle = computed(() => (day.value.psalterWeek ? psalterLabel(day.value) : 'Афіцый дня'));
 const officeLine = computed(() => {
-  const primary = day.value.primary;
-  const kind = officeKindLabel(primary.officeKind);
-  return primary.kind === 'temporal' ? `Афіцый дня: ${primary.title}` : `Афіцый: ${primary.title}${kind ? ` (${kind.toLowerCase()})` : ''}`;
+  // The Office source may differ from the Mass (All Souls on a Sunday).
+  const office = day.value.sources?.office || day.value.primary;
+  const kind = officeKindLabel(office.officeKind);
+  return office.kind === 'temporal' ? `Афіцый дня: ${office.title}` : `Афіцый: ${office.title}${kind ? ` (${kind.toLowerCase()})` : ''}`;
 });
 
 // Links open the chosen variant in its diocesan context; the stored

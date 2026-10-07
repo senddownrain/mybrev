@@ -55,6 +55,7 @@
     "ordo:docs": "node scripts/ordo/render-differences-doc.mjs",
     "ordo:validate": "node scripts/ordo/validate.mjs",
     "ordo:flutter-fixture": "node scripts/ordo/build-flutter-parity-fixture.mjs",
+    "ordo:materialize-transfers": "node scripts/ordo/materialize-transfer-overrides.mjs",
     "ordo:fetch-cache": "node scripts/ordo-fetch-public-cache.mjs",
     "ordo:migrate-ranks": "node scripts/ordo-migrate-ranks.mjs",
     "ordo:missing-content": "node scripts/ordo-missing-content.mjs",

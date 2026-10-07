@@ -1,29 +1,36 @@
 # Ordo engine: ambiguous cases
 
 The cases an administrator may have to decide for a concrete year are also kept as structured
-data in `src/data/ordo/ambiguities.js` (status `needs-review`); the Year Overrides admin page
-shows a case when the selected year hits it. Nothing is turned into an override automatically.
+data in `src/data/ordo/ambiguities.js` (status `needs-review`, `provisional` or `decided`); the
+Year Overrides admin page shows the open and provisional ones when the selected year hits them.
+Computed transfers (items 1, 2, 22) are materialized as editable auto Year Overrides
+(`npm run ordo:materialize-transfers`, `docs/ordo-auto-transfers.md`).
 
 Decisions taken in stage 3 that need liturgical confirmation or source validation (stage 6).
 
 ## Rules
 
-1. **St Joseph in Holy Week** — engine anticipates to the Saturday before Palm Sunday
+1. **St Joseph in Holy Week** — (auto Year Override, case B) engine anticipates to the Saturday before Palm Sunday
    (CDW 2008; e.g. 2035-03-17, 2046-03-17). The Belarusian calendars (Vitebsk 2025/26, "АС, 60")
    only state the general "nearest free day" rule, which would give a date after the Easter octave.
-2. **Coinciding General-Calendar solemnities** (Sacred Heart × Nativity of John the Baptist
+2. **Coinciding General-Calendar solemnities** (auto Year Override, case D) (Sacred Heart × Nativity of John the Baptist
    2033, 2038, 2044; × Peter and Paul 2057) — engine keeps the solemnity of the Lord and moves the
    other to the next free day (e.g. 2033-06-25). In 2022 the CDW anticipated John the Baptist to
    23 June instead. A year override is the intended tool if a decree says otherwise.
-3. **All Souls on Sunday** (2031, 2036, 2042 …) — primary is All Souls (row 3). Whether the Office
-   is of the Sunday or of the dead is left as a descriptor note; the Mass is of All Souls.
+3. **All Souls on Sunday** (2025, 2031, 2036, 2042 …) — *decided (final phase §11.1)*: the
+   Liturgy of the Hours is of the Sunday, the Mass and readings of All Souls (three reading
+   sets). The resolved day carries `sources.office` (the Sunday) and `sources.mass` (All Souls),
+   `officeOptions` holds the Sunday only; no votive Office for the Dead card that day.
 4. **Compline in the Christmas octave and on All Souls** — *resolved by the sources (stage 6)*:
    days of the Christmas octave use Sunday Compline after I or II Vespers and have II Vespers
    (Minsk 26/30.12.2025, Vitebsk, Grodno). All Souls keeps the current weekday's Compline.
-5. **Mary, Mother of the Church** coinciding with another obligatory memorial — engine treats
-   them as a legal choice (Marian memorial first). CDW 2018 guidance should be confirmed.
-6. **Christ the High Priest** — national (proper) feast: row 8, not row 5. It is therefore
-   omitted if it meets a General-Calendar feast (e.g. Visitation 31 May).
+5. **Mary, Mother of the Church** coinciding with another obligatory memorial — *decided
+   (§11.3, confirmed by the user)*: both are legal choices (also against a proper row-11
+   memorial), Marian first, no extra weekday option.
+6. **Christ the High Priest** — national (proper) feast: row 8. *Provisional (§11.4)*: when it
+   meets another feast (e.g. Visitation 31 May) both stay available as options (`provisional:
+   true`, rule `christ-high-priest-collision-both-options`); the former «row 8 proper feast
+   omitted» is not applied until a Belarus normative source decides.
 7. **Holy Thursday** — row 2 during the day (Triduum starts with the evening Mass); the note
    selector phase `triduum` already includes Thursday.
 8. **Diocesan principal patrons** stored as `Урачыстасць` in `fixedCalendar.js` are rows 4
@@ -69,13 +76,15 @@ Decisions taken in stage 3 that need liturgical confirmation or source validatio
 ## Stages 4–6 (runtime and validation)
 
 21. **Immaculate Heart + another obligatory memorial** (13.06.2026 St Anthony, 5.06.2027 St
-    Boniface): the Missal makes both optional, so the weekday is primary with two alternatives.
-    All four calendars print one of them as the primary celebration. The engine keeps the
-    rubric; the validation marks these days as reviewed source simplifications.
+    Boniface): *decided (§11.2, MyBrev/Belarus product rule)*: exactly two memorial choices —
+    the Immaculate Heart first and the other obligatory memorial — and NO weekday («З дня») option.
+    The former Missal reading (both optional, weekday primary) is no longer applied.
 22. **Pinsk patron in 2027** — St Andrew Bobola (proper solemnity) is impeded by Pentecost on
     16.05.2027; in Pinsk Mary, Mother of the Church is a feast (Pinsk 2026), which also impedes
     Monday, so the engine transfers the solemnity to Tuesday 18.05. To be confirmed by the 2027
-    Pinsk calendar.
+    Pinsk calendar. Materialized as auto Year Override (case A); a diocesan solemnity is transferred
+    only when its rank is confirmed by a calendar (`src/data/ordo/transfer-rank-evidence.js`),
+    otherwise it is impeded without transfer (`transferBlocked: 'rank-not-source-confirmed'`).
 23. **Grodno proper from one year only** (2027): OL of Trakai as a feast on 10.07 (MyBrev: 5.07),
     St Adalbert 24.04 and St Stanislaus 8.05 as obligatory memorials, several blessed as optional
     memorials — modelled in `src/data/ordo/layers.js` from a single calendar. St John of Nepomuk

@@ -243,7 +243,7 @@ test('automatic transfers and collisions are computed, not stored', () => {
 
 test('open cases are structured and shown only for the years that hit them', () => {
   ORDO_AMBIGUITIES.forEach((item) => {
-    assert.equal(item.status, 'needs-review');
+    assert.ok(['needs-review', 'provisional', 'decided'].includes(item.status), item.id);
     assert.ok(item.id && item.title && item.currentDecision && item.decisionLabel && item.note);
   });
   const doc = fs.readFileSync(new URL('../docs/ordo-engine-ambiguities.md', import.meta.url), 'utf8');
@@ -254,6 +254,8 @@ test('open cases are structured and shown only for the years that hit them', () 
   assert.ok(!of(2026).includes('st-joseph-holy-week'));
   assert.ok(of(2033).includes('coinciding-general-solemnities'));
   assert.ok(of(2031).includes('all-souls-on-sunday'));
+  assert.ok(of(2026).includes('immaculate-heart-with-memorial'));
+  assert.equal(ORDO_AMBIGUITIES.find((item) => item.id === 'christ-high-priest-collision').status, 'provisional');
   assert.ok(of(2027, 'pinsk').includes('diocesan-patron-impeded'));
   assert.deepEqual(ambiguityYears('st-joseph-holy-week', { from: 2026, to: 2046 }), [2035, 2046]);
   // Ambiguities never become overrides by themselves.

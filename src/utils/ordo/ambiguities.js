@@ -18,21 +18,22 @@ const DETECTORS = Object.freeze({
     .map((item) => occurrence(item.to, `${plan.celebrations.get(item.celebrationId)?.title}: з ${item.from} на ${item.to}`, item.celebrationId)),
 
   'all-souls-on-sunday': ({ days }) => days
-    .filter((day) => day.primary.id === 'all-faithful-departed' && Number(day.dayOfWeek) === 1)
-    .map((day) => occurrence(day.date, 'нядзеля', 'all-faithful-departed')),
+    .filter((day) => day.primary.id === 'all-faithful-departed' && day.sources?.split)
+    .map((day) => occurrence(day.date, `Афіцый: ${day.sources.office.title}; Імша: ${day.primary.title}`, 'all-faithful-departed')),
 
   'mary-mother-church-with-memorial': ({ days }) => days
     .filter((day) => [day.primary, ...day.alternatives].some((item) => item.id === 'mary-mother-church'))
     .filter((day) => day.appliedRules.some((rule) => rule.rule === 'concurrent-obligatory-memorials-choice'))
     .map((day) => occurrence(day.date, [day.primary, ...day.alternatives].map((item) => item.title).join(' / '), 'mary-mother-church')),
 
-  'christ-high-priest-omitted': ({ days }) => days
-    .filter((day) => day.suppressed.some((item) => item.id === 'christ-the-high-priest'))
-    .map((day) => occurrence(day.date, `саступае: ${day.primary.title}`, 'christ-the-high-priest')),
+  'christ-high-priest-collision': ({ days }) => days
+    .filter((day) => day.appliedRules.some((rule) => rule.rule === 'christ-high-priest-collision-both-options'))
+    .map((day) => occurrence(day.date, [day.primary, ...day.alternatives].map((item) => item.title).join(' / '), 'christ-the-high-priest')),
 
   'immaculate-heart-with-memorial': ({ days }) => days
-    .filter((day) => day.appliedRules.some((rule) => rule.rule === 'concurrent-obligatory-memorials-optional'))
-    .map((day) => occurrence(day.date, day.alternatives.map((item) => item.title).join(' / '), 'immaculate-heart')),
+    .filter((day) => [day.primary, ...day.alternatives].some((item) => item.id === 'immaculate-heart'))
+    .filter((day) => day.appliedRules.some((rule) => rule.rule === 'concurrent-obligatory-memorials-legal-choice'))
+    .map((day) => occurrence(day.date, [day.primary, ...day.alternatives].map((item) => item.title).join(' / '), 'immaculate-heart')),
 
   'diocesan-patron-impeded': ({ plan }) => plan.transfers
     .filter((item) => ['diocese', 'belarus'].includes(plan.celebrations.get(item.celebrationId)?.layer))

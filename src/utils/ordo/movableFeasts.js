@@ -190,6 +190,8 @@ export const MOVABLE_CELEBRATIONS = Object.freeze([
     id: 'mary-mother-church', ...feast('maryMotherChurch'), title: 'Найсв. Панны Марыі, Маці Касцёла',
     rank: LITURGICAL_RANK.MEMORIAL, category: 'mary', anchor: 'maryMotherChurch', color: 'albus',
     templates: ['blessed-virgin-mary'], defaultTemplate: 'blessed-virgin-mary',
+    // With another obligatory memorial both are legal choices, Marian first (§11.3).
+    rules: { concurrentObligatoryMemorials: 'legal-choice' },
   },
   {
     id: 'trinity', ...feast('holyTrinity'), title: 'Найсвяцейшая Тройца',
@@ -204,10 +206,10 @@ export const MOVABLE_CELEBRATIONS = Object.freeze([
     rank: LITURGICAL_RANK.SOLEMNITY, category: 'lord', anchor: 'sacredHeart', color: 'albus',
   },
   {
-    // Where it coincides with another obligatory memorial both become optional.
+    // With another obligatory memorial: exactly two memorial choices, no weekday (§11.2).
     id: 'immaculate-heart', ...feast('immaculateHeartOfMary'), title: 'Беззаганнае Сэрца Найсв. Панны Марыі',
     rank: LITURGICAL_RANK.MEMORIAL, category: 'mary', anchor: 'immaculateHeart', color: 'albus',
-    rules: { concurrentObligatoryMemorials: 'both-optional' },
+    rules: { concurrentObligatoryMemorials: 'legal-choice' },
   },
   {
     id: 'christ-the-high-priest', ...feast('christTheHighPriest'),

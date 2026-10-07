@@ -205,6 +205,8 @@ export function allowsOfficeForDead(resolved) {
   // on All Souls itself. Never on Sundays, solemnities, feasts, privileged
   // weekdays or days with an obligatory memorial.
   const primary = resolved.primary;
+  // All Souls on a Sunday: the Hours are of the Sunday (§11.1).
+  if (resolved.sources?.split) return false;
   if (primary.rankKind === 'all-souls') return true;
   return primary.kind === 'temporal' && Number(primary.precedence) === 13;
 }
@@ -228,7 +230,8 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
   const options = [];
   const unavailable = [];
 
-  [resolved.primary, ...resolved.alternatives].forEach((option) => {
+  // Legal Offices of the Hours (`officeOptions`: the Sunday on All Souls Sunday).
+  (resolved.officeOptions || [resolved.primary, ...resolved.alternatives]).forEach((option) => {
     const ordo = optionDescriptor(resolved, option);
     const base = {
       contextPeriodType: context.periodType,
