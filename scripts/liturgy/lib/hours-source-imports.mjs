@@ -37,8 +37,8 @@ export const PROPER_IMPORTS = Object.freeze([
   },
   {
     task: '9.1', files: ['patchs/feasts/common-texts/office-for-dead.json'], page: '2026-11-02.html',
-    fields: ['laudesPs3', ...DAYTIME_DEAD],
-    basis: 'All Faithful Departed 02.11.2026: Daytime Prayer of the Office for the Dead (hymn, Ps 70, 85, 86); Lauds Ps 146 without the repeated antiphon',
+    fields: DAYTIME_DEAD,
+    basis: 'All Faithful Departed 02.11.2026: Daytime Prayer of the Office for the Dead (hymn, Ps 70, 85, 86); the Common keeps its Lauds Ps 146 / Ps 150 alternatives',
   },
 ]);
 

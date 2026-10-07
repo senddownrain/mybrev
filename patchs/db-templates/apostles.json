@@ -50,6 +50,9 @@
     "officeOfReadingsPr": {
       "ref": "laudesPr"
     },
+    "laudesHymn": {
+      "source": "proper"
+    },
     "laudesPs1": {
       "source": "sunday-week-1"
     },

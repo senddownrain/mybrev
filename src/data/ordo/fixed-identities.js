@@ -92,6 +92,7 @@ export const FIXED_IDENTITIES = Object.freeze({
   "12.05|-|Св. Нэрэя і Ахіла, мучанікаў": {"id":"sv-nereus-achilleus","dayIds":["12-05-sv-nereus-achilleus"]},
   "12.05|-|Св. Панкрата, мучаніка": {"id":"sv-pancras","dayIds":["12-05-sv-pancras"]},
   "12.06|grodno|Бл. Генрыха Глябовіча, прэзбітэра, і паплечнікаў, мучанікаў другой сусветнай вайны": {"id":"bl-henryk-hlebowicz","dayIds":["12-06-bl-henryk-hlebowicz-grodno"]},
+  "12.06|vitebsk|Бл. Антонія Ляшчэвіча і Юрыя Кашыры, прэзбітэраў, і паплечнікаў, мучанікаў": {"id":"bl-antoni-leszczewicz-jerzy-kaszyra","dayIds":["12-06-bl-antoni-leszczewicz-jerzy-kaszyra-vitebsk"]},
   "12.08|-|Св. Жаны Франсуазы дэ Шанталь, законніцы": {"id":"sv-jane-frances-de-chantal","dayIds":["12-08-sv-jane-frances-de-chantal","12-08-sv-jane-frances-de-chantal--holy-women","12-08-sv-jane-frances-de-chantal--religious"]},
   "12.09|-|Найсвяцейшага Імя Марыі": {"id":"holy-name-mary","dayIds":["12-09-holy-name-mary"]},
   "12.09|minsk-mohilev|Найсвяцейшага Імя Марыі": {"id":"holy-name-mary","dayIds":["12-09-holy-name-mary-minsk-mohilev-pinsk--minsk-mohilev"]},

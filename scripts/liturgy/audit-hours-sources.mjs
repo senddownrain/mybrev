@@ -21,6 +21,7 @@ import { OFFICE_CONTENT_FIELDS, OFFICE_TEXT_FIELDS, TE_DEUM_FIELD } from '../../
 import { openFirestoreSnapshot } from '../lib/firestore-snapshot.mjs';
 import { classifyField, FIELD_VALUE_TYPE, NOT_RENDERABLE, plainText } from './lib/field-audit.mjs';
 import { contentFor, openLiturgySource, snapshotDirectory } from './lib/snapshot-content.mjs';
+import { reconcileLegacyDifference } from './lib/legacy-reconciliation.mjs';
 
 const ROOT = process.cwd();
 const OUTPUT = path.join(ROOT, 'reports', 'liturgy', 'hours-sources-audit.json');
@@ -156,6 +157,7 @@ function wordSimilarity(left, right) {
 function compareWithLegacy(legacySource, properSource, dates) {
   const byReason = {};
   const unexplained = [];
+  const reconciled = [];
   let compared = 0;
   const commons = properSource.templates;
   for (const date of dates) {
@@ -189,6 +191,14 @@ function compareWithLegacy(legacySource, properSource, dates) {
         else if (currentDay && plainText(before) === plainText(currentDay[field])) reason = 'legacy: the day; assembled: Proper/Common';
         else if (!plainText(after)) reason = 'unexplained: assembled empty';
         else if (wordSimilarity(before, after) >= 0.8) reason = 'same text, variant (legacy copy ↔ source)';
+        if (reason.startsWith('unexplained')) {
+          // Decided by an attached source document (final phase §9).
+          const verdict = reconcileLegacyDifference({ optionId: option.ordo.optionId, field, legacy: before, assembled: after });
+          if (verdict) {
+            reason = `source: ${verdict.source} → ${verdict.winner}`;
+            reconciled.push({ date, optionId: option.ordo.optionId, choice: template.choice, field, ...verdict, legacy: plainText(before).slice(0, 80), assembled: plainText(after).slice(0, 80) });
+          }
+        }
         byReason[reason] = (byReason[reason] || 0) + 1;
         if (reason.startsWith('unexplained') && unexplained.length < 200) {
           unexplained.push({ date, optionId: option.ordo.optionId, choice: template.choice, field, reason, legacy: plainText(before).slice(0, 80), assembled: plainText(after).slice(0, 80) });
@@ -196,7 +206,7 @@ function compareWithLegacy(legacySource, properSource, dates) {
       });
     });
   }
-  return { comparedOptions: compared, byReason, unexplained };
+  return { comparedOptions: compared, byReason, unexplained, reconciled };
 }
 
 async function main() {

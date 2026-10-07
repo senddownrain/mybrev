@@ -5,9 +5,13 @@
   "_date": "09.12",
   "_rank": "memoria-ad-libitum",
   "_feastName": "Св. Яна Дыега Куаўхтлатаацына",
-  "_templates": [],
+  "_templates": [
+    "holy-men"
+  ],
+  "_defaultTemplate": "holy-men",
+  "_templatesConfirmed": true,
   "_scaffold": true,
   "_contentStatus": {
-    "hours": "day-fallback"
+    "hours": "common-only"
   }
 }

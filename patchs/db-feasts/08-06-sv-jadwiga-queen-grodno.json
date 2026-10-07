@@ -6,9 +6,13 @@
   "_rank": "memoria",
   "_place": "grodno",
   "_feastName": "Св. Ядвігі, каралевы",
-  "_templates": [],
+  "_templates": [
+    "holy-women"
+  ],
+  "_defaultTemplate": "holy-women",
+  "_templatesConfirmed": true,
   "_scaffold": true,
   "_contentStatus": {
-    "hours": "day-fallback"
+    "hours": "common-only"
   }
 }
