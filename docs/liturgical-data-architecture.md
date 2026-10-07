@@ -43,3 +43,30 @@ UI гадзінаў атрымлівае ўжо сабраны `effectiveDay` і
 4. Пераключэнне кампанентаў гадзінаў на `effectiveDay`, а затым міграцыя ў `days` і ачыстка старых даных.
 
 Каманда `npm run audit:fixed-feasts` заўсёды друкуе JSON-справаздачу. Для CI можна запусціць яе з `-- --strict`: тады невядомыя значэнні, спасылкі на адсутныя шаблоны і дублікаты ID завершаць працэс з памылкай. Розніца пакрыцця застаецца часткай справаздачы, бо яна з'яўляецца планам далейшага напаўнення, а не тэхнічнай памылкай аўдытара.
+
+## Структураваныя правілы палёў (`_fieldRules`) — кантракт для Flutter
+
+Крыніца праўды: `src/utils/ordo/fieldRules.js` (спіс) і `src/utils/ordo/officeAssembly.js`
+(рэзалвер). Тэкставыя ўказанні брэвіярыя («Гімн з Ютрані», «Гімн з Уласных тэкстаў пра
+святых», «з нядзелі І тыдня») ператвараюцца ў правілы толькі пры генерацыі
+(`scripts/lib/feast-content.mjs`); у runtime сыры беларускі тэкст ніколі не з'яўляецца
+дырэктывай. Крыніца (`patchs/feasts/*.json`, `common-texts`) можа таксама задаваць
+правіла яўна праз `_fieldRules`.
+
+| Правіла | Значэнне | Новае ў фінальнай фазе |
+|---|---|---|
+| `{ ref: 'laudesHymn' }` / `{ ref: [...] }` | same-day field: поле таго ж сабранага Афіцыя (першае непустое) | — (18.11 `vesperHymn → laudesHymn`, Мацей `laudesHymn → officeOfReadingsHymn`, 02.11 малітвы `→ officeOfReadingsPr`) |
+| `{ source: 'current-day' }` | тэмпаральны дзень даты | — |
+| `{ source: 'sunday-week-1' }` | `liturgicalTemplates/sunday-week-1` | — |
+| `{ source: 'common' }` | выбраныя агульныя тэксты | — |
+| `{ source: 'template', template }` | названыя агульныя тэксты | — |
+| `{ source: 'proper' }` | уласны тэкст празднавання; ужываецца ўнутры Common (Апосталы `laudesHymn`). Калі Proper тэксту не мае — поле пустое + `_integrityErrors` (`proper-text-missing`), **ніколі не будзень** | **так** |
+| `{ source: 'complementary' }`, `{ source: 'office-for-dead' }` | шаблоны псалмодыі / Афіцыя за памерлых | — |
+| `{ omit: true }` | наўмысна пустое | — |
+| `allowCurrentDay: true` | мадыфікатар «… або з будня» | — |
+
+Новыя палі scaffold-дакументаў `liturgicalProperTexts`: `_templatesConfirmed: true` (Common
+пацверджаны ўладальнікам, `scripts/lib/scaffold-commons.mjs`) і `_officeSource: 'current-day'`
+(03.01 Імя Езуса: Афіцый дня Каляд, без Common). Абодва інфармацыйныя: зборка робіцца з
+`_templates` як раней. Parity fixture (`npm run ordo:flutter-fixture`) мае спіс
+`fieldRuleKinds`; Dart-зборшчык павінен падтрымліваць кожны від.

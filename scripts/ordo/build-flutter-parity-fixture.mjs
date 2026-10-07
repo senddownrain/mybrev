@@ -31,6 +31,7 @@ import { contentFor, openLiturgySource } from '../liturgy/lib/snapshot-content.m
 import { canonicalJson } from '../content/lib/app-content.mjs';
 import { createHash } from 'node:crypto';
 import { FIRST_VESPER_FIELDS, OFFICE_TEXT_FIELDS, TE_DEUM_FIELD } from '../../src/constants/officeFields.js';
+import { FIELD_RULE_SOURCES } from '../../src/utils/ordo/fieldRules.js';
 
 export const PARITY_DIOCESES = Object.freeze(['minsk-mohilev', 'grodno', 'pinsk', 'vitebsk']);
 export const PARITY_SCHEMA_VERSION = 1;
@@ -168,6 +169,9 @@ async function main() {
     snapshot: snapshot.manifest.exportedAt,
     years: [options.from, options.to],
     dioceses: PARITY_DIOCESES,
+    // `_fieldRules` kinds the assembled hashes rely on (additive; the Dart
+    // assembler must support each one — docs/liturgical-data-architecture.md).
+    fieldRuleKinds: ['ref', 'omit', ...FIELD_RULE_SOURCES.map((source) => `source:${source}`), 'allowCurrentDay'],
     days,
   };
   const gz = zlib.gzipSync(Buffer.from(JSON.stringify(fixture)), { level: 9 });
