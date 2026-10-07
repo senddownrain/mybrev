@@ -16,7 +16,7 @@ import {
   buildCommemorationDescriptor, buildOfficeDescriptor, hasFirstVespersByRight, resolveEvening,
 } from './office.js';
 import { buildCommemorationReadings, buildReadingsDescriptor } from './readings.js';
-import { selectOrdoNotes } from './notes.js';
+import { booksFromNotes, isBooksNote, selectOrdoNotes } from './notes.js';
 import { getYearPlan } from './yearPlan.js';
 import { normalizeDioceseId } from './layers.js';
 
@@ -168,15 +168,19 @@ export function resolveLiturgicalDate(date, context = {}, cache = null) {
     officeResolution,
     readingResolution,
     ordoNotes: [],
+    books: null,
     appliedRules,
     appliedLayers: layerSummary(plan, involvedIds),
   };
 
   const notes = [...(plan.layerNotes || []), ...(context.notes || [])];
-  day.ordoNotes = selectOrdoNotes(notes, day, {
+  const selected = selectOrdoNotes(notes, day, {
     context: planContext,
     dateOfCelebration: dateOfCelebrationFactory(iso, planContext),
   });
+  // Volume markers are day metadata, not «Асаблівыя заўвагі» (§13.1).
+  day.books = booksFromNotes(selected);
+  day.ordoNotes = selected.filter((note) => !isBooksNote(note));
   return day;
 }
 

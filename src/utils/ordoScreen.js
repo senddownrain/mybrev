@@ -149,6 +149,16 @@ export function periodLabel(day) {
 
 export const psalterLabel = (day) => (toRomanNumeral(day.psalterWeek) ? `${toRomanNumeral(day.psalterWeek)} тыдзень псалтыра` : '');
 
+/** «Лекцыянарый т. III · Літургія гадзін т. III» (§13.1), or ''. */
+export function booksLabel(day) {
+  const books = day?.books;
+  if (!books) return '';
+  return [
+    books.lectionaryVolume ? `Лекцыянарый т. ${books.lectionaryVolume}` : '',
+    books.hoursVolume ? `Літургія гадзін т. ${books.hoursVolume}` : '',
+  ].filter(Boolean).join(' · ');
+}
+
 /** Lectionary cycles: Sunday A/B/C and weekday I/II. */
 export function readingCycleLabel(day) {
   const cycle = day.readingCycle || {};

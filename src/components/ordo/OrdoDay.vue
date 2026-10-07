@@ -23,6 +23,7 @@
       <li>{{ periodText }}</li>
       <li v-if="psalterText">{{ psalterText }}</li>
       <li v-if="cycleText">{{ cycleText }}</li>
+      <li v-if="booksText" data-test="ordo-books">{{ booksText }}</li>
       <li class="ordo-facts__color" data-test="vestment-color">
         <span class="color-dot" :class="{ 'color-dot--marian': dayVisual?.secondary === 'marian' }" :style="{ '--dot': dayColor.swatch }" aria-hidden="true"></span>
         Колер літургічнага адзення: {{ dayColorText }}
@@ -230,7 +231,7 @@ import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import { loadOrdoNotes } from '@/utils/ordoNotesLoader';
 import { loadPublishedOrdoNotes } from '@/services/ordoCalendarService';
 import {
-  DIOCESE_SHORT_LABELS, buildDayUnion, colorInfo, groupOrdoNotes, massSummary, officeDirections, officeKindLabel,
+  DIOCESE_SHORT_LABELS, booksLabel, buildDayUnion, colorInfo, groupOrdoNotes, massSummary, officeDirections, officeKindLabel,
   optionBadges, ordoMonthRoute, parseOrdoRouteDate, periodLabel, psalterLabel, rankLabel,
   readingCycleLabel, resolveOrdoDay, suppressionReason,
 } from '@/utils/ordoScreen';
@@ -291,6 +292,8 @@ const dateLabel = computed(() => mDate.value.format('D MMMM YYYY'));
 const periodText = computed(() => periodLabel(day.value));
 const psalterText = computed(() => psalterLabel(day.value));
 const cycleText = computed(() => readingCycleLabel(day.value));
+// Lectionary / Liturgy of the Hours volumes: metadata above the notes (§13.1).
+const booksText = computed(() => booksLabel(day.value));
 const dayColor = computed(() => colorInfo(day.value.color));
 const dayColorText = computed(() => [dayColor.value.label, ...day.value.colorAlternatives.map((color) => colorInfo(color).label.toLowerCase())]
   .join(' або '));

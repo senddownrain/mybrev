@@ -34,7 +34,7 @@ export const COLLECTIONS = Object.freeze({
   meta: 'liturgicalCalendarMeta',
 });
 
-const NOTE_FIELDS = ['scope', 'selector', 'category', 'tags', 'title', 'text', 'variants', 'effect', 'displayOnly',
+const NOTE_FIELDS = ['scope', 'selector', 'category', 'tags', 'title', 'text', 'books', 'variants', 'effect', 'displayOnly',
   'classification', 'confidence', 'validFrom', 'validUntil', 'yearMarkers'];
 
 /** Runtime part of a note: the evidence (`observed`) stays in the repository. */
