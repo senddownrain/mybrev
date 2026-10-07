@@ -270,3 +270,22 @@ test('every former unexplained legacy difference has a source verdict', () => {
     assert.ok(verdict.source, item.field);
   });
 });
+
+// ---------------------------------------------------------------- editor --
+
+test('§15 editor: own / Common / current day / structured ref are told apart; save writes only overrides', async () => {
+  const { getSparseFieldSource, sparseUpdatePayload } = await import('../src/utils/liturgicalEditorSources.js');
+  const doc = proper('18-11-dedication-basilicas-peter-paul');
+  const { provenance } = assemble('2026-11-18', 'dedication-basilicas-peter-paul', { choice: 'apostles' });
+  assert.equal(getSparseFieldSource(doc, 'laudesHymn', provenance, describeFieldRule).kind, 'own');
+  const vesper = getSparseFieldSource(doc, 'vesperHymn', provenance, describeFieldRule);
+  assert.equal(vesper.kind, 'ref');
+  assert.match(vesper.label, /гімн Ютрані/);
+  assert.equal(getSparseFieldSource(doc, 'vesperInter', provenance, describeFieldRule).kind, 'common');
+  assert.equal(getSparseFieldSource(doc, 'sext1Pr', provenance, describeFieldRule).kind, 'current-day');
+  // An edit of one field: only that own field (and the changed rule) is written.
+  const edited = { ...doc, vesperAnt1: '<p>own</p>', laudesAntBen: '', _fieldRules: { ...doc._fieldRules, laudesPr: { ref: 'vesperPr' } } };
+  const { set, remove } = sparseUpdatePayload(doc, edited, ['feastComment', ...OFFICE_TEXT_FIELDS]);
+  assert.deepEqual(Object.keys(set).sort(), ['_fieldRules', 'vesperAnt1']);
+  assert.deepEqual(remove, ['laudesAntBen']);
+});
