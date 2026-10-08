@@ -8,6 +8,7 @@ import { validateCategory } from '@/utils/validators';
 import { logger } from '@/utils/logger';
 import { requestWakeLock, releaseWakeLock } from '@/composables/useWakeLock';
 import { ensureReaderFontLoaded } from '@/utils/fonts';
+import { normalizePsalmVerseLayout, normalizePsalmMarkerBreakMode } from '@/utils/psalmodyDisplay';
 import { normalizeChordLayout } from '@/utils/songDisplay';
 import { ordoDiocese, ordoDioceses, setOrdoDiocese, toggleOrdoDiocese } from '@/utils/ordoDiocese';
 
@@ -50,6 +51,10 @@ export const useSettingsStore = defineStore('settings', () => {
   );
   const fontFamily = ref(normalizeReaderFont(localStorage.getItem('fontFamily')));
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
+  const psalmVerseLayout = ref(normalizePsalmVerseLayout(localStorage.getItem('psalmVerseLayout')));
+  const psalmMarkerBreakMode = ref(normalizePsalmMarkerBreakMode(localStorage.getItem('psalmMarkerBreakMode')));
+  watch(psalmVerseLayout, (value) => localStorage.setItem('psalmVerseLayout', normalizePsalmVerseLayout(value)));
+  watch(psalmMarkerBreakMode, (value) => localStorage.setItem('psalmMarkerBreakMode', normalizePsalmMarkerBreakMode(value)));
   const menuCategories = ref(loadPersonalCategories());
   const hiddenGlobalPrayerCategoryIds = ref(JSON.parse(
     localStorage.getItem(HIDDEN_GLOBAL_CATEGORIES_KEY) || '[]',
@@ -224,6 +229,8 @@ export const useSettingsStore = defineStore('settings', () => {
     fontFamily,
     systemFont: SYSTEM_FONT,
     fontSizeMultiplier,
+    psalmVerseLayout,
+    psalmMarkerBreakMode,
     menuCategories,
     personalPrayerCategories: menuCategories,
     hiddenGlobalPrayerCategoryIds,

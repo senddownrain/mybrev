@@ -13,7 +13,7 @@
                 <br>
                 <span style="color:red">Месія і Яго папярэднік</span>
                 </p>
-                <div class="ora-psalm" v-html="formatPsalm(ben)"></div>        
+                <PsalmText :html="formatPsalm(ben)" />
                
                 <alternative-text v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" :show-picker="false" />
             </v-card-text>
@@ -24,6 +24,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import PsalmText from '@/components/oraparts/PsalmText.vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 import { formatPsalmHtml } from '@/utils/liturgicalHtml';
 

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card class="ora" flat>
-      <v-card-title class="ora-title">
+      <v-card-title class="ora-title" data-hour-heading>
         {{ title }}
       </v-card-title>
 

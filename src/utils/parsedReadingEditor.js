@@ -225,7 +225,6 @@ export function validateParsedReadingDraft(draft) {
 
   for (const [field, label] of [
     ['bible', 'спасылку'],
-    ['comment', 'кароткі загаловак'],
     ['title', 'літургічны ўступ'],
     ['text', 'тэкст'],
   ]) {

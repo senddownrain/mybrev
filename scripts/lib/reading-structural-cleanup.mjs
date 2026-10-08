@@ -114,3 +114,29 @@ export function proseReadingPatch(document) {
   }
   return Object.keys(patch).length ? patch : null;
 }
+
+// A targeted read found these records already partly cleaned after the old snapshot.
+// Keep their current titles and sequences; finish only the reviewed spacing/headings.
+export function reviewedReadingPatch(document) {
+  const compact = (value) => {
+    const parts = value.split(/\r?\n(?:[ \t]*\r?\n)+/u);
+    while (/^(?:а|альбо)$/iu.test(parts.at(-1)?.trim() ?? '')) parts.pop();
+    const intro = parts[0].length <= 45 && /:\s*$/u.test(parts[0]);
+    return parts.map((part, index) => `${index ? (index === 1 && intro ? '\n\n' : '\n') : ''}${part}`).join('');
+  };
+  if (PASSION_IDS.has(document.id)) {
+    if (document.gospel?.title !== 'Мука Пана нашага Езуса Хрыста.') throw new Error('Unexpected reviewed Passion title');
+    const parts = document.gospel.text.split('\n\n');
+    const italicLines = parts.filter((part) => part.length < 100 && !part.includes('\n'));
+    if (italicLines.length < 5 || italicLines.length > 7) throw new Error('Unexpected reviewed Passion headings');
+    return { gospel: { ...document.gospel, text: parts.join('\n'), italicLines } };
+  }
+  if (document.id === 'feast-eastersunday') {
+    if (!document.sequence?.text || document.reading2.text.includes('СЕКВЕНЦЫЯ')) throw new Error('Unexpected reviewed Easter sequence');
+    return null;
+  }
+  const field = document.id === 'feast-pentecost' ? 'reading2'
+    : /^holyweek-w1-d7--[ABC]-vigil$/u.test(document.id) ? 'reading3' : null;
+  if (!field) throw new Error(`Unsupported reviewed document: ${document.id}`);
+  return { [field]: { ...document[field], text: compact(document[field].text) } };
+}

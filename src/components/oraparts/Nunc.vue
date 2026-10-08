@@ -13,7 +13,7 @@
                 <br>
                 <span style="color:red">Хрыстус – святло народаў і хвала Ізраэля</span>
                 </p>
-                <div class="ora-psalm" v-html="formatPsalm(nunc)"></div>
+                <PsalmText :html="formatPsalm(nunc)" />
                 
                 <alternative-text v-model="antOption" class="ora-ant" :text="ant" :show-picker="false" />
             </v-card-text>
@@ -24,6 +24,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import PsalmText from '@/components/oraparts/PsalmText.vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 import { formatPsalmHtml } from '@/utils/liturgicalHtml';
 

@@ -1,25 +1,84 @@
+export const LITURGICAL_HOURS = Object.freeze([
+  {
+    name: 'invitatorium',
+    title: 'Заклік',
+    subtitle: 'Invitatorium',
+    icon: 'mdi-weather-sunset-up',
+    tag: 'Уступ',
+  },
+  {
+    name: 'morning',
+    title: 'Агульная гадзіна',
+    subtitle: 'Invitatorium · Officium lectionis · Laudes',
+    icon: 'mdi-sun-clock-outline',
+    tag: 'Раніца',
+  },
+  {
+    name: 'lectionis',
+    title: 'Гадзіна чытанняў',
+    subtitle: 'Officium lectionis',
+    icon: 'mdi-book-open-page-variant',
+    tag: 'Разважанне',
+  },
+  {
+    name: 'laudes',
+    title: 'Ютрань',
+    subtitle: 'Laudes matutinae',
+    icon: 'mdi-weather-sunny',
+    tag: 'Галоўная',
+  },
+  {
+    name: 'terz',
+    title: 'Малітва перад поўднем',
+    subtitle: 'Tertia',
+    icon: 'mdi-clock-time-nine-outline',
+    tag: 'Малая',
+  },
+  {
+    name: 'sext',
+    title: 'Малітва апоўдні',
+    subtitle: 'Sexta',
+    icon: 'mdi-clock-time-twelve-outline',
+    tag: 'Малая',
+  },
+  {
+    name: 'non',
+    title: 'Малітва пасля поўдня',
+    subtitle: 'Nona',
+    icon: 'mdi-clock-time-three-outline',
+    tag: 'Малая',
+  },
+  {
+    name: 'vesper',
+    title: 'Нешпары',
+    subtitle: 'Vesperae',
+    icon: 'mdi-weather-night',
+    tag: 'Галоўная',
+  },
+  {
+    name: 'completorium',
+    title: 'Камплета',
+    subtitle: 'Completorium',
+    icon: 'mdi-bed-clock',
+    tag: 'Завяршэнне',
+  },
+]);
+
 export const LITURGICAL_HOUR_TITLES = Object.freeze({
-  invitatorium: 'Заклік',
-  morning: 'Агульная гадзіна',
-  lectionis: 'Гадзіна чытанняў',
-  laudes: 'Ютрань',
-  terz: 'Малітва перад поўднем',
-  sext: 'Малітва апоўдні',
-  non: 'Малітва пасля поўдня',
-  vesper: 'Нешпары',
-  completorium: 'Камплета',
+  ...Object.fromEntries(LITURGICAL_HOURS.map(({ name, title }) => [name, title])),
   oras: 'Літургія гадзін',
 });
 
-// Canonical progression of the office. Invitatory is intentionally omitted:
-// it belongs before either the Office of Readings or Lauds, so it has no one
-// unambiguous successor. `morning` is the combined morning office.
-export const NEXT_LITURGICAL_HOUR = Object.freeze({
-  morning: 'terz',
-  lectionis: 'laudes',
-  laudes: 'terz',
-  terz: 'sext',
-  sext: 'non',
-  non: 'vesper',
-  vesper: 'completorium',
-});
+// The combined morning office proceeds to Terce. Invitatory has two possible
+// successors; Compline stays on the selected date without a successor.
+export const NEXT_LITURGICAL_HOUR = Object.freeze(Object.fromEntries(
+  LITURGICAL_HOURS.filter((hour) => !['invitatorium', 'completorium'].includes(hour.name))
+    .map((hour) => [hour.name, hour.name === 'morning' ? 'terz'
+      : LITURGICAL_HOURS[LITURGICAL_HOURS.indexOf(hour) + 1].name]),
+));
+
+export function liturgicalHourRoute(route, name, queryOverrides = {}) {
+  const query = { ...route.query, ...queryOverrides };
+  if (name !== 'vesper') delete query.firstVespersDayId;
+  return { name, params: { day: route.params.day, id: route.params.id }, query };
+}

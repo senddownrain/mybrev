@@ -145,11 +145,10 @@ import { logger } from '@/utils/logger';
 import { useAuthStore } from '@/stores/auth';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 import {
-  PLACE_LABEL_MAP,
   RANK_LABEL_MAP,
   getLiturgicalTheme,
 } from '@/constants/liturgical';
-import { eveningVespersModel } from '@/utils/liturgicalVespers';
+import { useLiturgicalHours } from '@/composables/useLiturgicalHours';
 
 const route = useRoute();
 const router = useRouter();
@@ -167,17 +166,7 @@ const dateParam = computed(() => route.params.day);
 const { day: dayData, pending: loadingDay } = useResolvedLiturgicalDay();
 
 const dayOptions = ref([]);
-const tomorrowContent = ref(null);
-// II Vespers vs I Vespers of tomorrow: the Ordo descriptor of the selected
-// Office decides (legacy heuristics only for days without a descriptor).
-const eveningModel = computed(() => (
-  dayId.value === 'office-for-dead' ? { firstVespers: null, local: [], second: false }
-    : eveningVespersModel(dayData.value, tomorrowContent.value, {
-      isoWeekday: moment(String(dateParam.value), ['YYYY-MM-DD', 'DD-MM-YYYY'], true).isoWeekday(),
-    })
-));
-const tomorrowFirstVespers = computed(() => eveningModel.value.firstVespers);
-const localTomorrowFirstVespers = computed(() => eveningModel.value.local);
+const oras = useLiturgicalHours();
 const templateContainsDay = (template, id) => (
   template?.id === id || template?.dayIds?.includes(id)
 );
@@ -216,142 +205,6 @@ const readingCardStyle = computed(() => ({
   '--reading-color-rgb': readingTheme.value.rgb,
 }));
 
-function getVespersRubricStyle(rubricDay) {
-  const theme = getLiturgicalTheme(rubricDay, rubricDay?._periodType);
-  return {
-    '--vespers-rubric-color': theme.color,
-    '--vespers-rubric-rgb': theme.rgb,
-  };
-}
-
-const vespersRubricStyle = computed(() => (
-  getVespersRubricStyle(tomorrowFirstVespers.value?.day || dayData.value)
-));
-
-const vespersRubric = computed(() => {
-  if (tomorrowFirstVespers.value) return {
-    labelHtml: formatTitleHtml(`I Нешпары · ${tomorrowFirstVespers.value.title}`),
-    kind: 'first',
-    icon: '',
-  };
-  if (eveningModel.value.second) return {
-    labelHtml: 'II Нешпары',
-    kind: 'second',
-    icon: '',
-  };
-  return null;
-});
-
-// Назва свята надходзіць з даных: дазваляем толькі <br>, а іншыя тэгі экраніруем.
-function formatTitleHtml(value) {
-  return String(value || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/\\?&lt;br\s*\/?&gt;/gi, '<br>')
-    .replace(/\r?\n/g, '<br>');
-}
-
-function localFirstVespersLabel(item) {
-  const places = (item.places || []).map((place) => PLACE_LABEL_MAP[place] || place);
-  return ['I Нешпары', item.title, ...places].filter(Boolean).join(' · ');
-}
-
-const oras = computed(() => [
-  {
-    name: 'invitatorium',
-    title: 'Заклік',
-    subtitle: 'Invitatorium',
-    icon: 'mdi-weather-sunset-up',
-    path: `/day/${dateParam.value}/ora/${dayId.value}/invitatorium`,
-    tag: 'Уступ',
-  },
-  {
-    name: 'morning',
-    title: 'Агульная гадзіна',
-    subtitle: 'Invitatorium · Officium lectionis · Laudes',
-    icon: 'mdi-sun-clock-outline',
-    path: `/day/${dateParam.value}/ora/${dayId.value}/morning`,
-    tag: 'Раніца',
-  },
-  {
-    name: 'lectionis',
-    title: 'Гадзіна чытанняў',
-    subtitle: 'Officium lectionis',
-    icon: 'mdi-book-open-page-variant',
-    path: `/day/${dateParam.value}/ora/${dayId.value}/lectionis`,
-    tag: 'Разважанне',
-  },
-  {
-    name: 'laudes',
-    title: 'Ютрань',
-    subtitle: 'Laudes matutinae',
-    icon: 'mdi-weather-sunny',
-    path: `/day/${dateParam.value}/ora/${dayId.value}/laudes`,
-    tag: 'Галоўная',
-  },
-  {
-    name: 'terz',
-    title: 'Малітва перад поўднем',
-    subtitle: 'Tertia',
-    icon: 'mdi-clock-time-nine-outline',
-    path: `/day/${dateParam.value}/ora/${dayId.value}/terz`,
-    tag: 'Малая',
-  },
-  {
-    name: 'sext',
-    title: 'Малітва апоўдні',
-    subtitle: 'Sexta',
-    icon: 'mdi-clock-time-twelve-outline',
-    path: `/day/${dateParam.value}/ora/${dayId.value}/sext`,
-    tag: 'Малая',
-  },
-  {
-    name: 'non',
-    title: 'Малітва пасля поўдня',
-    subtitle: 'Nona',
-    icon: 'mdi-clock-time-three-outline',
-    path: `/day/${dateParam.value}/ora/${dayId.value}/non`,
-    tag: 'Малая',
-  },
-  {
-    name: 'vesper',
-    title: 'Нешпары',
-    subtitle: 'Vesperae',
-    icon: 'mdi-weather-night',
-    path: `/day/${dateParam.value}/ora/${dayId.value}/vesper`,
-    tag: 'Галоўная',
-    rubric: vespersRubric.value,
-    rubricStyle: vespersRubricStyle.value,
-  },
-  ...localTomorrowFirstVespers.value.map((item, index) => ({
-    name: `vesper-first-${item.sourceDayId || index}`,
-    title: 'Нешпары',
-    subtitle: 'Vesperae',
-    icon: 'mdi-weather-night-partly-cloudy',
-    path: {
-      name: 'vesper',
-      params: { day: dateParam.value, id: dayId.value },
-      query: { firstVespersDayId: item.sourceDayId },
-    },
-    tag: 'Галоўная',
-    rubric: {
-      labelHtml: formatTitleHtml(localFirstVespersLabel(item)),
-      kind: 'first',
-      icon: '',
-    },
-    rubricStyle: getVespersRubricStyle(item.day),
-  })),
-  {
-    name: 'completorium',
-    title: 'Камплета',
-    subtitle: 'Completorium',
-    icon: 'mdi-bed-clock',
-    path: `/day/${dateParam.value}/ora/${dayId.value}/completorium`,
-    tag: 'Завяршэнне',
-  },
-]);
-
 const readingReferences = computed(() => {
   const references = readings.value.flatMap((reading) => (
     ['reading1', 'reading2', 'gospel']
@@ -388,12 +241,6 @@ let contentLoadSequence = 0;
 const loadReadings = async () => {
   const sequence = ++contentLoadSequence;
   const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
-  tomorrowContent.value = null;
-
-  getLiturgicalContentForDate(mDate.clone().add(1, 'day').toDate()).then((content) => {
-    if (sequence !== contentLoadSequence) return;
-    tomorrowContent.value = content;
-  }).catch((error) => logger.error('[OrasList] Памылка загрузкі заўтрашняга дня:', error));
 
   try {
     const [result] = await Promise.all([

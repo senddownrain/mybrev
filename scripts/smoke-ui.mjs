@@ -53,17 +53,18 @@ try {
   const vesperHref = await page.locator('a[href*="/ora/"][href$="/vesper"]').first().getAttribute('href');
   await page.goto(new URL(vesperHref, baseUrl).href, { waitUntil: 'domcontentloaded' });
   await page.locator('.liturgical-hour-column .ora .ora-text').first().waitFor({ state: 'visible', timeout: 30_000 });
-  const sectionButton = page.locator('.ora-location').first();
-  await sectionButton.click();
-  const sectionItems = page.locator('.ora-section-menu .v-list-item');
-  assert.ok(await sectionItems.count() >= 4, 'reader exposes document-derived section navigation');
+  assert.equal(await page.locator('.ora-location').count(), 0, 'hour capsule does not duplicate the visible title');
   assert.equal(await page.getByRole('link', { name: /Камплета/ }).count(), 1, 'Vespers links to the canonical next hour');
-  await sectionItems.nth(2).click();
-  await page.waitForTimeout(500);
-  const storedPosition = await page.evaluate(() => (
-    Object.keys(localStorage).some((key) => key.startsWith('mybrev:reading-position:'))
-  ));
-  assert.ok(storedPosition, 'reader stores a section-relative reading position');
+  await page.evaluate(() => window.scrollTo(0, 900));
+  const hourButton = page.locator('.ora-location');
+  await hourButton.waitFor({ state: 'visible' });
+  await hourButton.click();
+  assert.ok(await page.locator('.ora-hour-menu .v-list-item').count() >= 9, 'reader uses the shared hour list');
+  assert.equal(await page.locator('.ora-section-menu').count(), 0, 'old sticky section navigation is removed');
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Уверх', exact: true }).click();
+  await page.waitForFunction(() => window.scrollY === 0);
+  await hourButton.waitFor({ state: 'hidden' });
 
   if (!skipServiceWorker) {
     await page.evaluate(async () => { await navigator.serviceWorker.ready; });
@@ -76,7 +77,7 @@ try {
     await context.setOffline(false);
   }
 
-  console.log(`UI smoke passed: drawer keyboard/focus, system theme, reader sections/resume${skipServiceWorker ? '' : ', service worker'}.`);
+  console.log(`UI smoke passed: drawer keyboard/focus, system theme, hour selector/back-to-top${skipServiceWorker ? '' : ', service worker'}.`);
 } finally {
   await context.close();
   await browser.close();

@@ -149,10 +149,12 @@
         Магчыма, яны яшчэ не дададзены ў базу даных
       </p>
     </div>
+    <BackToTop bottom-nav />
   </v-container>
 </template>
 
 <script setup>
+import BackToTop from '@/components/BackToTop.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useReadings } from '@/composables/useReadings';

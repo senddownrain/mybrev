@@ -6,7 +6,7 @@ import path from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { openFirestoreSnapshot } from './lib/firestore-snapshot.mjs';
-import { STRUCTURAL_READING_IDS, proseReadingPatch, structuralReadingPatch } from './lib/reading-structural-cleanup.mjs';
+import { STRUCTURAL_READING_IDS, proseReadingPatch, reviewedReadingPatch, structuralReadingPatch } from './lib/reading-structural-cleanup.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DEFAULT_SNAPSHOT = path.join(ROOT, 'backups', 'core-collections-migration');
@@ -20,6 +20,7 @@ function optionsOf(argv) {
     const arg = argv[i];
     if (arg === '--apply') options.apply = true;
     else if (arg === '--snapshot') options.snapshot = path.resolve(argv[++i]);
+    else if (arg === '--reviewed-source') options.reviewedSource = path.resolve(argv[++i]);
     else if (arg === '--report') options.report = path.resolve(argv[++i]);
     else if (arg === '--service-account') options.account = path.resolve(argv[++i]);
     else if (arg === '--help' || arg === '-h') options.help = true;
@@ -54,6 +55,7 @@ async function applyPlan(plan, options, projectId) {
   const app = admin.initializeApp({ credential: admin.credential.cert(account), projectId: account.project_id });
   try {
     const db = admin.firestore(app);
+    db.settings({ preferRest: true });
     const snapshots = await db.getAll(...plan.map(({ id }) => db.collection('readings').doc(id)));
     const updates = [];
     const skipped = [];
@@ -93,7 +95,7 @@ async function applyPlan(plan, options, projectId) {
 async function main() {
   const options = optionsOf(process.argv.slice(2));
   if (options.help) {
-    console.log('Usage: node scripts/cleanup-reading-structures.mjs [--snapshot DIR] [--report FILE] [--apply] [--service-account FILE]');
+    console.log('Usage: node scripts/cleanup-reading-structures.mjs [--snapshot DIR] [--reviewed-source FILE] [--report FILE] [--apply] [--service-account FILE]');
     console.log('Default: dry run on a local snapshot. --apply reads only the reviewed candidate document IDs.');
     return;
   }
@@ -101,8 +103,16 @@ async function main() {
   const collection = snapshot.collectionPaths.includes('readings') ? 'readings' : 'parsedData';
   const documents = await snapshot.collection(collection);
   if (!documents) throw new Error(`Snapshot needs readings or parsedData: ${snapshot.root}`);
-  const plan = buildStructuralPlan(documents);
+  const plan = options.reviewedSource
+    ? JSON.parse(await readFile(options.reviewedSource, 'utf8')).flatMap((source) => {
+      const patch = reviewedReadingPatch(source);
+      if (!patch || Object.keys(patch).every((field) => isDeepStrictEqual(source[field], patch[field]))) return [];
+      const fields = Object.keys(patch);
+      return [{ id: source.id, source, patch, fields,
+        beforeHash: hash(Object.fromEntries(fields.map((field) => [field, source[field] ?? null]))), afterHash: hash(patch) }];
+    }) : buildStructuralPlan(documents);
   const report = { mode: options.apply ? 'apply' : 'dry-run', analysisSource: snapshot.root,
+    reviewedSource: options.reviewedSource ?? null,
     snapshotVersion: snapshot.manifest.snapshotVersion, sourceCollection: collection,
     targetCollection: 'readings', candidates: plan.map(({ id, fields, beforeHash, afterHash }) =>
       ({ id, fields, beforeHash, afterHash })) };

@@ -680,7 +680,7 @@ $base-content-font-size: 1rem; // 16px по умолчанию
 
 // Alternate actual strophes in psalms and Gospel canticles. Headings and
 // subtitles are not marked as strophes, so they do not affect parity.
-.ora-psalm p[data-psalm-strophe]:nth-child(even of p[data-psalm-strophe]) {
+.ora-psalm p[data-psalm-side="B"] {
   margin-left: 1rem;
 }
 

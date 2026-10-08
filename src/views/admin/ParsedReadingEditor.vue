@@ -375,7 +375,15 @@
             </v-col>
             <v-col cols="12">
               <label class="reading-editor__field-label">Тэкст Евангелля</label>
+              <v-textarea
+                v-if="draft.gospel.italicLines?.length"
+                v-model="draft.gospel.text"
+                rows="12"
+                auto-grow
+                variant="outlined"
+              />
               <quill-editor
+                v-else
                 v-model:content="draft.gospel.text"
                 content-type="html"
                 theme="snow"

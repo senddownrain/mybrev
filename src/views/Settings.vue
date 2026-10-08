@@ -81,6 +81,8 @@
       </div>
     </section>
 
+    <section class="settings-section"><PsalmodySettings /></section>
+
     <section class="settings-section" aria-labelledby="categories-title">
       <div class="section-heading">
         <span class="section-icon"><PhFolders :size="22" /></span>
@@ -119,6 +121,7 @@
 </template>
 
 <script setup>
+import PsalmodySettings from '@/components/PsalmodySettings.vue';
 import { computed, ref } from 'vue';
 import { PhCheck, PhFolders, PhMinus, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
 import { useSettingsStore } from '@/stores/settings.js';

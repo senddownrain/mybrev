@@ -45,7 +45,7 @@
               :show-picker="index === 0"
               aria-label="Выбар антыфоны закліку"
             />
-              <div class="ora-psalm" v-html="formatPsalm(psalm)"></div>
+              <PsalmText :html="formatPsalm(psalm)" />
             </template>
             <alternative-text
               v-model="invitatoriumAntOption"
@@ -96,6 +96,7 @@ import { logger } from '@/utils/logger';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { getInvitatoriums } from '@/services/staticLiturgicalService';
 import Benedictus from '@/components/oraparts/Benedictus.vue';
+import PsalmText from '@/components/oraparts/PsalmText.vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 import EndOfVesper from '@/components/oraparts/EndOfVesper.vue';

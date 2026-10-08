@@ -38,6 +38,20 @@ function completeDraft() {
   return draft;
 }
 
+test('keeps alternative readings, sequence and italic headings after editing', () => {
+  const draft = completeDraft();
+  draft.readingSections[0].alternatives = [{ bible: 'Гал 4, 4–7', comment: 'Сын', title: 'Чытанне Паслання.', text: 'Браты: Калі...' }];
+  draft.sequence.text = 'Першая страфа\n\nДругая страфа';
+  draft.gospel.italicLines = ['Загаловак'];
+  draft.gospel.comment = null;
+  assert.deepEqual(validateParsedReadingDraft(draft), []);
+  const payload = buildParsedReadingPayload(draft);
+  const restored = buildParsedReadingPayload(createParsedReadingDraft(payload), payload);
+  assert.deepEqual(restored.reading1.alternatives, payload.reading1.alternatives);
+  assert.deepEqual(restored.sequence, payload.sequence);
+  assert.deepEqual(restored.gospel.italicLines, ['Загаловак']);
+});
+
 test('creates a human-facing draft from a linked readings document', () => {
   const draft = createParsedReadingDraft({
     _dayId: 'feast-example',

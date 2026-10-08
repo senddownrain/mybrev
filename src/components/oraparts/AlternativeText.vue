@@ -28,8 +28,11 @@
       role="tabpanel"
       :aria-labelledby="showPicker && options.length > 1 ? `${instanceId}-tab-${activeIndex}` : undefined"
       :class="{ 'intercessions': kind === 'intercession' }"
-      v-html="displayedHtml"
-    ></div>
+    >
+      <slot :html="displayedHtml">
+        <div v-html="displayedHtml"></div>
+      </slot>
+    </div>
   </div>
 </template>
 

@@ -9,26 +9,25 @@
 </template>
 
 <script setup>
+import { useLiturgicalHours } from '@/composables/useLiturgicalHours';
 import { computed } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { PhArrowRight } from '@phosphor-icons/vue';
-import { LITURGICAL_HOUR_TITLES, NEXT_LITURGICAL_HOUR } from '@/constants/liturgicalHours';
+import { NEXT_LITURGICAL_HOUR, liturgicalHourRoute } from '@/constants/liturgicalHours';
 
 const route = useRoute();
+const hours = useLiturgicalHours();
 const nextHour = computed(() => {
   const name = NEXT_LITURGICAL_HOUR[route.name];
-  return name ? { name, title: LITURGICAL_HOUR_TITLES[name] } : null;
+  return name ? hours.value.find((hour) => hour.name === name) : null;
 });
-const nextRoute = computed(() => ({
-  name: nextHour.value.name,
-  params: { day: route.params.day, id: route.params.id },
-}));
+const nextRoute = computed(() => liturgicalHourRoute(route, nextHour.value.name));
 </script>
 
 <style scoped>
 .next-hour {
   width: min(calc(100% - 32px), 760px);
-  margin: 8px auto max(36px, env(safe-area-inset-bottom));
+  margin: 8px auto calc(84px + env(safe-area-inset-bottom, 0px));
 }
 
 .next-hour__link {
