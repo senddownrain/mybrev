@@ -149,13 +149,13 @@ export function periodLabel(day) {
 
 export const psalterLabel = (day) => (toRomanNumeral(day.psalterWeek) ? `${toRomanNumeral(day.psalterWeek)} тыдзень псалтыра` : '');
 
-/** «Лекцыянарый т. III · Літургія гадзін т. III» (§13.1), or ''. */
+/** «Лекцыянарый т. III · Літургія гадзінаў т. III» (§13.1), or ''. */
 export function booksLabel(day) {
   const books = day?.books;
   if (!books) return '';
   return [
     books.lectionaryVolume ? `Лекцыянарый т. ${books.lectionaryVolume}` : '',
-    books.hoursVolume ? `Літургія гадзін т. ${books.hoursVolume}` : '',
+    books.hoursVolume ? `Літургія гадзінаў т. ${books.hoursVolume}` : '',
   ].filter(Boolean).join(' · ');
 }
 
@@ -234,7 +234,7 @@ export function massSummary(day) {
   if (readings.vigilLookup) lines.push('Ёсць чытанні Вігіліі');
   if (readings.variantsKind === 'reading-sets') lines.push(`Тры Імшы за памерлых: ${readings.variants.length} камплекты чытанняў на выбар`);
   else if (readings.variants?.length) lines.push('Імша Крыжма і Імша Вячэры Пана');
-  if (day.sources?.split) lines.push(`Літургія гадзін — з дня: ${day.sources.office.title}`);
+  if (day.sources?.split) lines.push(`Літургія гадзінаў — з дня: ${day.sources.office.title}`);
   if (day.commemorations.length) lines.push('Успамін (commemoratio): калекта можа быць уласная');
   const cycle = readings.cycle || {};
   const year = cycle.year ? (cycle.lectionary === 'weekday' ? toRomanNumeral(Number(cycle.year)) : cycle.year) : '';
@@ -252,7 +252,7 @@ export function massSummary(day) {
 export const NOTE_GROUPS = Object.freeze([
   { id: 'liturgical-rule', label: 'Літургічныя ўказанні', section: 'directions' },
   { id: 'mass', label: 'Імша', section: 'mass' },
-  { id: 'office', label: 'Літургія гадзін', section: 'office' },
+  { id: 'office', label: 'Літургія гадзінаў', section: 'office' },
   { id: 'devotion', label: 'Набажэнствы', section: 'notes' },
   { id: 'blessing', label: 'Благаслаўленні', section: 'notes' },
   { id: 'procession', label: 'Працэсіі', section: 'notes' },

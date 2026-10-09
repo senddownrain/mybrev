@@ -180,7 +180,7 @@ const heroStyle = computed(() => {
 
 // Формирование заголовка для дня периода
 const getPeriodTitle = (day) => {
-  if (!day || !day._periodType) return 'Літургія Гадзінаў';
+  if (!day || !day._periodType) return 'Літургія гадзінаў';
 
   const routeDate = moment(String(route.params.day), ['YYYY-MM-DD', 'DD-MM-YYYY'], true);
   const routeDayOfWeek = routeDate.isValid()

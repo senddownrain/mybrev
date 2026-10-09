@@ -3,7 +3,7 @@
   <nav class="celebration-actions" :aria-label="`Перайсці: ${title}`">
     <router-link :to="hours" class="celebration-action" data-test="celebration-hours">
       <PhSunHorizon :size="16" weight="bold" aria-hidden="true" />
-      <span>Літургія гадзін</span>
+      <span>Літургія гадзінаў</span>
     </router-link>
     <router-link :to="readings" class="celebration-action" data-test="celebration-readings">
       <PhBookOpenText :size="16" weight="bold" aria-hidden="true" />

@@ -81,7 +81,7 @@
           class="readings-nav-segment readings-nav-segment--liturgy text-none"
           prepend-icon="mdi-cross"
         >
-          Літургія
+          Літургія гадзінаў
         </v-btn>
       </div>
       <!-- Меню для остальных страниц -->
@@ -364,7 +364,7 @@ const layoutTitle = computed(() => {
   switch (route.name) {
     case 'Today':
     case 'SelectedDay':
-      return 'Літургія';
+      return 'Літургія гадзінаў';
     case 'LiturgicalPicker':
       return route.query.mode === 'readings' ? 'Знайсці чытанні' : 'Знайсці дзень';
     case 'Prayers':

@@ -157,7 +157,7 @@
     <section class="ordo-section" aria-labelledby="ordo-office-title">
       <div class="section-heading">
         <span class="section-icon"><PhCross :size="21" weight="light" /></span>
-        <div><h2 id="ordo-office-title">Літургія гадзін</h2><p>{{ [officeSubtitle, contextLabel].filter(Boolean).join(' · ') }}</p></div>
+        <div><h2 id="ordo-office-title">Літургія гадзінаў</h2><p>{{ [officeSubtitle, contextLabel].filter(Boolean).join(' · ') }}</p></div>
       </div>
       <ul class="ordo-lines">
         <li>{{ officeLine }}</li>
@@ -167,7 +167,7 @@
       <OrdoNoteList v-if="notesBySection.office.length" :groups="notesBySection.office" plain />
       <div class="ordo-links">
         <v-btn :to="hoursRoute" class="ordo-link-btn text-none" variant="tonal" color="primary" rounded="lg">
-          Літургія гадзін гэтага дня
+          Літургія гадзінаў гэтага дня
           <template #append><PhCaretRight :size="16" weight="bold" /></template>
         </v-btn>
       </div>

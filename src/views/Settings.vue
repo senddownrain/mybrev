@@ -32,7 +32,7 @@
       <div class="setting-row setting-row--theme">
         <div class="setting-copy">
           <strong>Дыяцэзіі</strong>
-          <span>Адна або некалькі: Літургія гадзін і чытанні паказваюць варыянты ўсіх выбраных</span>
+          <span>Адна або некалькі: літургія гадзінаў і чытанні паказваюць варыянты ўсіх выбраных</span>
         </div>
         <div class="theme-options" role="group" aria-label="Дыяцэзіі" data-test="settings-dioceses">
           <button

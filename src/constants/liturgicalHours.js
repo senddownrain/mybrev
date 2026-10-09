@@ -66,7 +66,7 @@ export const LITURGICAL_HOURS = Object.freeze([
 
 export const LITURGICAL_HOUR_TITLES = Object.freeze({
   ...Object.fromEntries(LITURGICAL_HOURS.map(({ name, title }) => [name, title])),
-  oras: 'Літургія гадзін',
+  oras: 'Літургія гадзінаў',
 });
 
 // The combined morning office proceeds to Terce. Invitatory has two possible

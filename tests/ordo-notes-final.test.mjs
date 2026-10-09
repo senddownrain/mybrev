@@ -80,7 +80,7 @@ test('Lectionary / Hours volumes are structured metadata, not «Асаблівы
   const advent = resolve('2026-12-01', 'minsk-mohilev');
   assert.equal(advent.books.lectionaryVolume, 'I');
   assert.equal(advent.books.hoursVolume, 'I');
-  assert.equal(booksLabel(advent), 'Лекцыянарый т. I · Літургія гадзін т. I');
+  assert.equal(booksLabel(advent), 'Лекцыянарый т. I · Літургія гадзінаў т. I');
   assert.ok(!advent.ordoNotes.some((note) => note.category === 'books'));
   // The more specific selector wins; identical volumes are one value.
   const merged = booksFromNotes([

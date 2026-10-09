@@ -37,7 +37,7 @@ const route = useRoute();
 const auth = useAuthStore();
 const hours = useLiturgicalHours();
 const isHour = computed(() => route.name !== 'oras');
-const hourTitle = computed(() => LITURGICAL_HOUR_TITLES[route.name] || 'Літургія гадзін');
+const hourTitle = computed(() => LITURGICAL_HOUR_TITLES[route.name] || 'Літургія гадзінаў');
 const showCapsule = ref(false);
 let headingObserver;
 let contentObserver;

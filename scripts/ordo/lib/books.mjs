@@ -24,7 +24,7 @@ export function normalizeVolume(value) {
 export function booksText(books) {
   return [
     books.lectionaryVolume ? `Лекцыянарый т. ${books.lectionaryVolume}` : '',
-    books.hoursVolume ? `Літургія гадзін т. ${books.hoursVolume}` : '',
+    books.hoursVolume ? `Літургія гадзінаў т. ${books.hoursVolume}` : '',
   ].filter(Boolean).join(' · ');
 }
 

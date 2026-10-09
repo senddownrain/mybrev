@@ -176,7 +176,7 @@ test('Ordo day: «Святкаванні дня», explicit vestment colour, act
   assert.match(day, /Колер літургічнага адзення:/);
   assert.match(day, /<CelebrationActions :hours="hoursLink\(day\.sources\?\.office\?\.optionId \|\| day\.primary\.id\)" :readings="readingsLink\(day\.primary\.id\)"/);
   assert.match(day, /data-test="readings-block"/);
-  assert.match(read('src/components/ordo/CelebrationActions.vue'), /Літургія гадзін[\s\S]*Чытанні/);
+  assert.match(read('src/components/ordo/CelebrationActions.vue'), /Літургія гадзінаў[\s\S]*Чытанні/);
 });
 
 test('Ordo readings rows wrap instead of overflowing the card', () => {

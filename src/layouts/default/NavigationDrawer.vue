@@ -39,7 +39,7 @@
       <div class="drawer-section-label">Асноўнае</div>
       <v-list-item
         tabindex="0"
-        title="Літургія гадзін"
+        title="Літургія гадзінаў"
         :to="{ name: 'Today' }"
         :active="route.name === 'Today' || route.name === 'SelectedDay'"
       >

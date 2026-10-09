@@ -1,7 +1,7 @@
 <template>
   <v-container class="items-list-container">
     <div class="section-page-header">
-      <h1 class="section-page-title">Літургія гадзін</h1>
+      <h1 class="section-page-title">Літургія гадзінаў</h1>
       <router-link :to="ordoRoute" class="ordo-shortcut" aria-label="Літургічны каляндар гэтага дня">
         <v-icon icon="mdi-calendar-text-outline" size="20"></v-icon>
         <span>Каляндар</span>

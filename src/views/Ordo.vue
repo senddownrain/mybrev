@@ -4,9 +4,9 @@
       <h1 class="section-page-title">Літургічны каляндар</h1>
       <div class="ordo-page__tools">
         <!-- Back to the Hours of the date being viewed (today on the month). -->
-        <router-link :to="hoursRoute" class="hours-capsule" data-test="ordo-hours-shortcut" aria-label="Літургія гадзін гэтага дня">
+        <router-link :to="hoursRoute" class="hours-capsule" data-test="ordo-hours-shortcut" aria-label="Літургія гадзінаў гэтага дня">
           <PhSunHorizon :size="18" weight="bold" aria-hidden="true" />
-          <span>Літургія</span>
+          <span>Літургія гадзінаў</span>
         </router-link>
         <OrdoDioceseFilter />
       </div>
