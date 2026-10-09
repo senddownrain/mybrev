@@ -13,7 +13,6 @@
 
       <router-view name="bottomNav" />
 
-      <TextSettingsSheet />
       
       <NotificationSnackbar />
     </v-main>
@@ -23,7 +22,6 @@
 <script setup>
   import { computed } from 'vue';
   import { useRoute } from 'vue-router';
-  import TextSettingsSheet from '@/components/TextSettingsSheet.vue';
   import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
   import BackToTop from '@/components/BackToTop.vue';
   import { providePsalmody } from '@/composables/usePsalmody';

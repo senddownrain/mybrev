@@ -67,7 +67,7 @@ export const useSettingsStore = defineStore('settings', () => {
   if (localStorage.getItem('songChordLayout') !== null) localStorage.setItem('songChordLayout', songChordLayout.value);
   // The song list is always compact now; drop the obsolete toggle.
   localStorage.removeItem('songCompactList');
-  const keepScreenOn = ref(localStorage.getItem('keepScreenOn') === 'true');
+  const keepScreenOn = ref(localStorage.getItem('keepScreenOn') !== 'false');
 
   function applyThemePreference() {
     currentTheme.value = themePreference.value === 'system'
@@ -132,10 +132,7 @@ export const useSettingsStore = defineStore('settings', () => {
       }
     } catch (err) {
       logger.error('[settings] Wake Lock error:', err);
-      // Не сбрасываем значение, если ошибка при выключении
-      if (newValue) {
-        keepScreenOn.value = false;
-      }
+      // A browser refusal does not change the user's saved preference.
     }
   }, { immediate: true });
   

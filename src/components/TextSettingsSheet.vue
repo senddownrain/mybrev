@@ -90,23 +90,16 @@
           </v-chip-group>
         </div>
 
-        <PsalmodySettings v-if="isLiturgicalHour" />
       </v-list>
     </v-card>
   </v-bottom-sheet>
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { LITURGICAL_HOUR_TITLES } from '@/constants/liturgicalHours';
-import PsalmodySettings from '@/components/PsalmodySettings.vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { useAppBar } from '@/composables/useAppBar.js';
 import { READER_FONT_OPTIONS } from '@/constants/fonts';
 
-const route = useRoute();
-const isLiturgicalHour = computed(() => route.name !== 'oras' && Boolean(LITURGICAL_HOUR_TITLES[route.name]));
 const settings = useSettingsStore();
 const { isSettingsSheetOpen, toggleSettingsSheet } = useAppBar();
 

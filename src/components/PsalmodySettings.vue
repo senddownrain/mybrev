@@ -1,32 +1,34 @@
 <template>
   <section class="psalmody-settings" aria-label="Псальмодыя">
     <h3>Псальмодыя</h3>
-    <label>
-      <span>Размяшчэнне строфаў</span>
-      <select v-model="settings.psalmVerseLayout">
-        <option value="alternatingIndent">Чаргаванне водступаў</option>
-        <option value="alignedLeft">Па адным левым краі</option>
-      </select>
-    </label>
-    <label>
+    <div class="psalmody-setting">
+      <span>Водступ кожнай другой страфы</span>
+      <v-switch v-model="alternatingIndent" color="primary" hide-details inset aria-label="Водступ кожнай другой страфы" />
+    </div>
+    <div class="psalmody-setting">
       <span>Перанос пасля * і †</span>
-      <select v-model="settings.psalmMarkerBreakMode">
-        <option value="inline">Без прымусовага пераносу</option>
-        <option value="breakAfterMarker">Новы радок пасля знака</option>
-      </select>
-    </label>
+      <v-switch v-model="breakAfterMarker" color="primary" hide-details inset aria-label="Перанос пасля * і †" />
+    </div>
   </section>
 </template>
 
 <script setup>
 import { useSettingsStore } from '@/stores/settings';
+import { computed } from 'vue';
 const settings = useSettingsStore();
+const alternatingIndent = computed({
+  get: () => settings.psalmVerseLayout === 'alternatingIndent',
+  set: (enabled) => { settings.psalmVerseLayout = enabled ? 'alternatingIndent' : 'alignedLeft'; },
+});
+const breakAfterMarker = computed({
+  get: () => settings.psalmMarkerBreakMode === 'breakAfterMarker',
+  set: (enabled) => { settings.psalmMarkerBreakMode = enabled ? 'breakAfterMarker' : 'inline'; },
+});
 </script>
 
 <style scoped>
 .psalmody-settings { display: grid; gap: 14px; padding: 16px; color: var(--nav-on-surface); }
 h3 { font-size: 1rem; }
-label { display: grid; gap: 7px; font-size: .9rem; }
-select { width: 100%; min-width: 0; min-height: 44px; padding: 9px 12px; border: 1px solid var(--nav-border); border-radius: 12px; background: var(--nav-surface); color: inherit; font: inherit; }
-select:focus-visible { outline: 2px solid var(--focus-ring); }
+.psalmody-setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: .9rem; }
+.psalmody-setting :deep(.v-switch) { flex: 0 0 auto; }
 </style>

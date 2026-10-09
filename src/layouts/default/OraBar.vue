@@ -17,8 +17,7 @@
         </v-menu>
       </div>
     </Transition>
-    <TextScaleControl v-if="isHour && !showCapsule" class="ora-action-start" />
-    <v-btn v-if="isHour" icon variant="flat" class="ora-circle-btn" :class="{ 'ora-action-start': showCapsule }" aria-label="Выгляд тэксту" @click="toggleSettingsSheet"><PhTextAa :size="21" /></v-btn>
+    <TextScaleControl v-if="isHour" class="ora-action-start" />
     <v-btn v-if="auth.isAdmin" icon variant="flat" class="ora-circle-btn" :class="{ 'ora-action-start': !isHour }" aria-label="Рэдагаваць" @click="onEditClick"><PhPencilSimple :size="21" /></v-btn>
   </v-app-bar>
 </template>
@@ -27,9 +26,8 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
-import { PhArrowLeft, PhCaretDown, PhPencilSimple, PhTextAa } from '@phosphor-icons/vue';
+import { PhArrowLeft, PhCaretDown, PhPencilSimple } from '@phosphor-icons/vue';
 import TextScaleControl from '@/components/TextScaleControl.vue';
-import { useAppBar } from '@/composables/useAppBar';
 import { useLiturgicalHours } from '@/composables/useLiturgicalHours';
 import moment from '@/utils/moment-be';
 import { LITURGICAL_HOUR_TITLES } from '@/constants/liturgicalHours';
@@ -38,7 +36,6 @@ const router = useRouter();
 const route = useRoute();
 const auth = useAuthStore();
 const hours = useLiturgicalHours();
-const { toggleSettingsSheet } = useAppBar();
 const isHour = computed(() => route.name !== 'oras');
 const hourTitle = computed(() => LITURGICAL_HOUR_TITLES[route.name] || 'Літургія гадзін');
 const showCapsule = ref(false);
@@ -166,12 +163,12 @@ function onEditClick() {
 
 }
 
-.hour-capsule-anchor { position: fixed; top: calc(13px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); }
-.ora-location { display: flex; align-items: center; gap: 6px; max-width: min(calc(100vw - 144px), 360px); height: 38px; padding: 0 13px; border: 1px solid var(--nav-border); border-radius: 20px; background: var(--nav-surface); color: var(--nav-on-surface); box-shadow: 0 2px 8px var(--nav-button-shadow); font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
+.hour-capsule-anchor { position: fixed; top: calc(13px + env(safe-area-inset-top, 0px)); left: calc(50% - 24px); transform: translateX(-50%); }
+.ora-location { display: flex; align-items: center; gap: 6px; max-width: min(calc(100vw - 200px), 360px); height: 38px; padding: 0 13px; border: 1px solid var(--nav-border); border-radius: 20px; background: var(--nav-surface); color: var(--nav-on-surface); box-shadow: 0 2px 8px var(--nav-button-shadow); font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
 .ora-location span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ora-location svg { flex-shrink: 0; }
-.hour-capsule-anchor--admin { left: calc(50% - 24px); }
-.hour-capsule-anchor--admin .ora-location { max-width: min(calc(100vw - 200px), 360px); }
+.hour-capsule-anchor--admin { left: calc(50% - 48px); }
+.hour-capsule-anchor--admin .ora-location { max-width: min(calc(100vw - 256px), 360px); }
 .ora-hour-menu { max-height: min(65dvh, 480px); overflow-y: auto; }
 .hour-capsule-enter-active, .hour-capsule-leave-active { transition: opacity .18s ease, translate .18s ease; }
 .hour-capsule-enter-from, .hour-capsule-leave-to { opacity: 0; translate: 0 -5px; }

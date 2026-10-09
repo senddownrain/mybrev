@@ -67,6 +67,12 @@ try {
       });
       db.close();
     }, { namespace, revision: CONTENT_REVISION, content, date, theme: profile.theme, scale: profile.scale });
+    await page.goto(`${base}/settings`, { waitUntil: 'domcontentloaded' });
+    assert.equal(await page.getByLabel('Водступ кожнай другой страфы', { exact: true }).isChecked(), true);
+    assert.equal(await page.getByLabel('Перанос пасля * і †', { exact: true }).isChecked(), false);
+    assert.equal(await page.getByLabel('Не выключаць экран', { exact: true }).isChecked(), true);
+    assert.equal(await page.locator('.psalmody-settings select').count(), 0, 'psalmody uses switches');
+    await page.screenshot({ path: path.join(output, `${profile.name}-settings.png`), fullPage: true });
     const url = `${base}/day/${date}/ora/${encodeURIComponent(day.id)}/laudes?dayId=alternative`;
     await page.goto(url, { waitUntil: 'domcontentloaded' });
     const texts = page.locator('.psalmody-text');
@@ -74,6 +80,13 @@ try {
     assert.equal(await texts.count(), 4, 'three psalms and Benedictus');
     assert.equal(await page.locator('.ora-location').count(), 0, 'no duplicate title at the top');
     assert.equal(await page.locator('.ora-section-menu').count(), 0);
+    assert.equal(await page.getByRole('button', { name: 'Выгляд тэксту', exact: true }).count(), 0, 'no added Aa settings button');
+    assert.equal(await page.locator('.text-settings-card').count(), 0, 'no local text settings panel');
+    const originalScale = await page.evaluate(() => Number(localStorage.getItem('fontSizeMultiplier')));
+    const scaleAction = page.getByRole('button', { name: originalScale < 1.8 ? 'Павялічыць тэкст' : 'Паменшыць тэкст', exact: true });
+    await scaleAction.click();
+    assert.notEqual(await page.evaluate(() => Number(localStorage.getItem('fontSizeMultiplier'))), originalScale);
+    await page.getByRole('button', { name: originalScale < 1.8 ? 'Паменшыць тэкст' : 'Павялічыць тэкст', exact: true }).click();
     const firstA = page.locator('[data-psalm-side="A"]').first();
     const firstB = page.locator('[data-psalm-side="B"]').first();
     await firstA.click();
@@ -94,11 +107,11 @@ try {
     const originalText = await texts.first().textContent();
     for (const layout of ['alternatingIndent', 'alignedLeft']) {
       for (const markers of ['inline', 'breakAfterMarker']) {
-        await page.getByRole('button', { name: 'Выгляд тэксту', exact: true }).click();
-        await page.locator('.text-settings-card select').nth(0).selectOption(layout);
-        await page.locator('.text-settings-card select').nth(1).selectOption(markers);
-        await page.getByRole('button', { name: 'Закрыць налады' }).click();
-        await page.locator('.text-settings-card').waitFor({ state: 'hidden' });
+        await page.goto(`${base}/settings`, { waitUntil: 'domcontentloaded' });
+        await page.getByLabel('Водступ кожнай другой страфы', { exact: true }).setChecked(layout === 'alternatingIndent');
+        await page.getByLabel('Перанос пасля * і †', { exact: true }).setChecked(markers === 'breakAfterMarker');
+        await page.goto(url, { waitUntil: 'domcontentloaded' });
+        await texts.first().waitFor({ state: 'visible' });
         const metrics = await texts.first().evaluate((element) => {
           const a = element.querySelector('[data-psalm-side="A"]');
           const b = element.querySelector('[data-psalm-side="B"]');
@@ -135,8 +148,10 @@ try {
     await page.locator('.ora-location').waitFor({ state: 'visible' });
     await page.getByRole('button', { name: 'Уверх', exact: true }).waitFor({ state: 'visible' });
     const capsule = await page.locator('.ora-location').boundingBox();
+    const scaleBox = await page.locator('.text-scale-control').boundingBox();
     assert.equal(capsule.height, 38);
     assert.ok(capsule.y + capsule.height <= 64, 'capsule stays in the toolbar, clear of reader text');
+    assert.ok(capsule.x + capsule.width < scaleBox.x, 'size buttons remain visible beside the capsule');
     await page.locator('.ora-location').click();
     await page.locator('.ora-hour-menu').getByText('Нешпары', { exact: true }).first().click();
     await page.waitForURL('**/vesper?dayId=alternative');
@@ -195,4 +210,31 @@ try {
     console.log(`${profile.name}: psalmody combinations, dimming, persisted settings, hour routes, back-to-top passed`);
     await ctx.close();
   }
+  // Use the real browser API here, rather than a mock sentinel.
+  const nativeContext = await browser.newContext({ serviceWorkers: 'block' });
+  await nativeContext.route('**/*', (route) => route.request().url().startsWith(base) ? route.continue() : route.abort());
+  await nativeContext.addInitScript(() => {
+    window.__nativeWakeLocks = [];
+    if (!navigator.wakeLock) return;
+    const request = navigator.wakeLock.request.bind(navigator.wakeLock);
+    Object.defineProperty(navigator.wakeLock, 'request', { value: async (type) => {
+      const lock = await request(type);
+      window.__nativeWakeLocks.push(lock);
+      return lock;
+    } });
+  });
+  const nativePage = await nativeContext.newPage();
+  await nativePage.goto(`${base}/settings`, { waitUntil: 'domcontentloaded' });
+  await nativePage.locator('.settings-hero').click();
+  await nativePage.waitForFunction(() => window.__nativeWakeLocks.some((lock) => !lock.released));
+  await nativePage.getByLabel('Не выключаць экран', { exact: true }).setChecked(false);
+  await nativePage.waitForFunction(() => window.__nativeWakeLocks.every((lock) => lock.released));
+  assert.equal(await nativePage.evaluate(() => localStorage.getItem('keepScreenOn')), 'false');
+  await nativePage.reload({ waitUntil: 'domcontentloaded' });
+  assert.equal(await nativePage.getByLabel('Не выключаць экран', { exact: true }).isChecked(), false, 'explicit off setting survives reload');
+  assert.equal(await nativePage.evaluate(() => window.__nativeWakeLocks.length), 0);
+  await nativePage.getByLabel('Не выключаць экран', { exact: true }).setChecked(true);
+  await nativePage.waitForFunction(() => window.__nativeWakeLocks.some((lock) => !lock.released));
+  console.log('Native Chrome screen wake lock: default on, acquired, released by switch, explicit off persisted, reacquired when enabled.');
+  await nativeContext.close();
 } finally { await browser.close(); }
