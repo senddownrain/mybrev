@@ -201,6 +201,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
+import { usePrayersStore } from '@/stores/prayers';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import {
   PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart, PhBookmark,
@@ -221,6 +222,8 @@ const route = useRoute();
 const router = useRouter();
 const settings = useSettingsStore();
 const prayerCategories = usePrayerCategoriesStore();
+const prayersStore = usePrayersStore();
+prayersStore.init();
 const { selectedCategory, setSelectedCategory } = usePrayersFilters();
 prayerCategories.init();
 
@@ -229,6 +232,7 @@ const menuCategories = computed(() => {
     prayerCategories.categories,
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
+    auth.isAdmin ? null : prayersStore.prayers,
   );
 });
 

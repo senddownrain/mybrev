@@ -32,6 +32,7 @@ export default [
         sessionStorage: 'readonly',
         NodeFilter: 'readonly',
         structuredClone: 'readonly',
+        crypto: 'readonly',
         // Node globals (for scripts)
         process: 'readonly',
         Buffer: 'readonly',
@@ -54,6 +55,7 @@ export default [
       'outputs/**',
       'reports/**',
       'node_modules/**',
+      'functions/node_modules/**',
       '*.min.js',
       'import-*.js',
       'migrate-*.js',

@@ -168,6 +168,11 @@ const routes = [
         component: () => import('@/views/Admin.vue'),
       },
       {
+        path: 'priest-access', name: 'AdminPriestAccess',
+        component: () => import('@/views/admin/PriestAccess.vue'),
+        meta: { requiresPriestAdmin: true },
+      },
+      {
         path: 'day-editor/:id',
         name: 'AdminDayEditor',
         component: () => import('@/views/admin/DayEditor.vue'),
@@ -252,6 +257,11 @@ router.beforeEach(async (to, from, next) => {
 
   if (requiresAuth) {
     await authStore.init();
+
+    if (to.meta.requiresPriestAdmin && !authStore.canManagePriestAccess) {
+      next({ name: 'Admin' });
+      return;
+    }
 
     if (!authStore.isAdmin) {
       next({ name: 'Login', query: { redirect: to.fullPath } });

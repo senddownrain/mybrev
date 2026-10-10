@@ -40,6 +40,7 @@
       @submit.prevent="handleSave"
     >
       <div class="editor-column">
+        <v-switch v-model="form.priestOnly" label="Толькі для святароў" color="primary" hide-details class="mb-4" />
         <v-card class="editor-card" elevation="0">
           <section class="editor-section">
             <div class="section-heading">
@@ -282,7 +283,7 @@ const showPreview = ref(true);
 const initialSnapshot = ref('');
 const allowNavigation = ref(false);
 
-const form = ref({ title: '', text: '', source: '', tags: [], verified: false });
+const form = ref({ title: '', text: '', source: '', tags: [], verified: false, priestOnly: false });
 const tagQuery = ref('');
 const tagInputFocused = ref(false);
 
@@ -312,6 +313,7 @@ const currentSnapshot = computed(() => JSON.stringify({
   source: form.value.source.trim(),
   tags: [...form.value.tags].sort(),
   verified: form.value.verified,
+  priestOnly: form.value.priestOnly,
 }));
 const isDirty = computed(() => hydrated.value && currentSnapshot.value !== initialSnapshot.value);
 
@@ -348,6 +350,7 @@ const hydrateForm = () => {
     source: prayer.source || '',
     tags: [...(prayer.tags || [])],
     verified: prayer.verified === true,
+    priestOnly: prayer.priestOnly === true,
   };
   loadError.value = '';
   hydrated.value = true;
@@ -361,7 +364,7 @@ watch(() => route.params.id, () => {
   loadError.value = '';
   saveAttempted.value = false;
   allowNavigation.value = false;
-  form.value = { title: '', text: '', source: '', tags: [], verified: false };
+  form.value = { title: '', text: '', source: '', tags: [], verified: false, priestOnly: false };
   tagQuery.value = '';
   hydrateForm();
 });
@@ -430,6 +433,7 @@ async function validateAndBuildPayload() {
     source: form.value.source,
     tags: [...form.value.tags],
     verified: form.value.verified === true,
+    priestOnly: form.value.priestOnly === true,
   };
 }
 

@@ -3,6 +3,7 @@
     <div class="prayers-page-header">
       <div class="prayers-page-eyebrow">Малітоўнік</div>
       <h1 class="prayers-page-title">{{ selectedCategory?.name || 'Малітвы' }}</h1>
+      <v-select v-if="authStore.isAdmin" v-model="accessFilter" label="Доступ" :items="accessFilters" class="mt-4" hide-details />
     </div>
 
 
@@ -51,6 +52,7 @@
 
           <v-list-item-title class="prayer-title-text">
             <span>{{ getTitle(prayer) }}</span>
+            <v-icon v-if="authStore.isAdmin && accessPolicy.prayerRestricted(prayer)" icon="mdi-key" size="small" aria-label="Толькі для святароў" />
             <v-chip
               v-if="authStore.isAdmin && prayer.verified === true"
               color="success"
@@ -172,10 +174,17 @@ import { useNotifier } from '@/composables/useNotifier';
 import { usePrayersFilters } from '@/composables/usePrayersFilters';
 import { matchesPrayerTags } from '@/utils/prayerTagFilter';
 import { PhMagnifyingGlass, PhSlidersHorizontal, PhX } from '@phosphor-icons/vue';
+import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
+import { prayerAccessPolicy } from '../../../functions/lib/priest-policy.mjs';
 
 const router = useRouter();
 const { prayers, isLoading, getTitle, getText, error, deletePrayer } = usePrayers();
 const authStore = useAuthStore();
+const categoriesStore = usePrayerCategoriesStore();
+categoriesStore.init();
+const accessPolicy = computed(() => prayerAccessPolicy(prayers.value, categoriesStore.categories));
+const accessFilter = ref('all');
+const accessFilters = [{ title: 'Усе', value: 'all' }, { title: 'Агульнадаступныя', value: 'public' }, { title: 'Толькі для святароў', value: 'priest' }];
 const settings = useSettingsStore();
 const { notifySuccess, notifyError } = useNotifier();
 const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, toggleFilter } = usePrayersFilters();
@@ -193,6 +202,7 @@ const filteredPrayers = computed(() => {
   }
   
   let filtered = [...prayersArray];
+  if (authStore.isAdmin && accessFilter.value !== 'all') filtered = filtered.filter((p) => accessPolicy.value.prayerRestricted(p) === (accessFilter.value === 'priest'));
   
   // Малітва ўваходзіць у катэгорыю, калі мае хаця б адзін яе тэг.
   if (selectedTags.value && selectedTags.value.length > 0) {

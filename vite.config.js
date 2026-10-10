@@ -80,6 +80,7 @@ export default defineConfig({
         ]
       },
       workbox: {
+        navigateFallbackDenylist: [/^\/api\//],
         cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2,webmanifest}'],
         // Admin/login code remains route-lazy and network-loaded. It must not
@@ -90,9 +91,10 @@ export default defineConfig({
           '**/vendor-firebase-auth-*.js',
           '**/vendor-quill-*.{js,css}',
           '**/vendor-markdown-editor-*.js',
-          '**/{Admin,DayEditor,ParsedReadingEditor,SongEditor,PrayerCategories,PrayerForm,Login}-*.{js,css}',
+          '**/{Admin,DayEditor,ParsedReadingEditor,SongEditor,PrayerCategories,PriestAccess,PrayerForm,Login}-*.{js,css}',
         ],
         runtimeCaching: [
+          { urlPattern: /\/api\/priest\//, handler: 'NetworkOnly' },
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'StaleWhileRevalidate',
@@ -213,6 +215,7 @@ export default defineConfig({
   // Настройки сервера для разработки
   server: {
     port: 3000,
+    proxy: process.env.PRIEST_API_PROXY ? { '/api/priest': { target: process.env.PRIEST_API_PROXY, changeOrigin: false } } : {},
   },
 
   build: {

@@ -2,6 +2,7 @@ export function buildPrayerCategoryMenu(
   globalCategories = [],
   personalCategories = [],
   hiddenGlobalCategoryIds = [],
+  permittedPrayers = null,
 ) {
   const hiddenIds = new Set(hiddenGlobalCategoryIds);
   const categoriesByName = new Map();
@@ -27,5 +28,15 @@ export function buildPrayerCategoryMenu(
     });
   });
 
-  return [...categoriesByName.values()];
+  const items = [...categoriesByName.values()].map((category) => {
+    if (category.scope !== 'global') return category;
+    const descendantIds = new Set([category.id]);
+    let size;
+    do {
+      size = descendantIds.size;
+      globalCategories.forEach((c) => { if (descendantIds.has(c.parentId)) descendantIds.add(c.id); });
+    } while (size !== descendantIds.size);
+    return { ...category, tags: [...new Set(globalCategories.filter((c) => descendantIds.has(c.id)).flatMap((c) => c.tags || []))] };
+  });
+  return permittedPrayers === null ? items : items.filter((c) => permittedPrayers.some((p) => (p.tags || []).some((t) => c.tags.includes(t))));
 }

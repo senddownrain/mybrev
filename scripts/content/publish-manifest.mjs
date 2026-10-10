@@ -40,6 +40,7 @@ import {
   formatPatchReport,
   storedDocument,
   validateCollection,
+  publicAppCollections,
 } from './lib/app-content.mjs';
 import { readCollections } from './build-app-bundle.mjs';
 import { recordMigration } from '../liturgy/lib/migration-report.mjs';
@@ -130,16 +131,18 @@ async function main() {
     const described = {};
     const invalid = [];
     if (firestore) {
+      const collections = new Map();
       for (const name of APP_CONTENT_COLLECTIONS) {
         console.log(`reading ${name}…`);
         const snapshot = await firestore.collection(name).get();
         const docs = snapshot.docs.map((doc) => storedDocument(doc.id, doc.data()));
         invalid.push(...validateCollection(name, docs));
-        described[name] = describeDocuments(docs);
+        collections.set(name, docs);
       }
+      for (const [name, docs] of publicAppCollections(collections)) described[name] = describeDocuments(docs);
     } else {
       const { collections } = await readCollections(options.snapshots);
-      for (const [name, docs] of collections) {
+      for (const [name, docs] of publicAppCollections(collections)) {
         invalid.push(...validateCollection(name, docs));
         described[name] = describeDocuments(docs);
       }

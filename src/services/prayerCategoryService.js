@@ -6,14 +6,14 @@ import {
   onSnapshot,
   serverTimestamp,
   writeBatch,
+  updateDoc,
 } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { retryFirestore } from '@/utils/retry';
 import { buildPrayerTagRemovalPlan } from '@/utils/prayerCategoryAdmin';
-import { getDocsOfflineAware } from '@/utils/firestoreRead';
-import { createReadSession } from '@/utils/contentCache';
-import { publicContentCache, publicContentKey, requestContentRefresh } from '@/utils/publicContentCache';
+import { requestContentRefresh } from '@/utils/publicContentCache';
+import { getPrayerContent } from './prayerContentService';
 
 export const PRAYER_CATEGORIES_COLLECTION = 'prayerCategories';
 const MAX_BATCH_OPERATIONS = 400;
@@ -29,6 +29,8 @@ function cleanTags(tags) {
 function categoryPayload(category) {
   return {
     name: String(category.name || '').trim(),
+    priestOnly: category.priestOnly === true,
+    parentId: category.parentId || null,
     tags: cleanTags(category.tags),
     order: Number.isFinite(category.order) ? category.order : Date.now(),
   };
@@ -45,16 +47,13 @@ function normalizeCategories(snapshot) {
 }
 
 /** Public reading mode. Admin editors keep the real-time subscription below. */
-export async function getSavedPrayerCategories(options = {}) {
-  const entry = await publicContentCache.read(publicContentKey('prayerCategories'), async () => {
-    const session = createReadSession();
-    const snapshot = await getDocsOfflineAware(categoryCollection(), session);
-    return { data: normalizeCategories(snapshot), complete: session.complete };
-  }, options);
-  if (options.requireFresh && !entry.complete) {
-    throw new Error('Не атрымалася абнавіць катэгорыі. Захаваная копія засталася даступнай.');
-  }
-  return entry.data;
+export async function getSavedPrayerCategories() {
+  return (await getPrayerContent()).categories.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+}
+
+export async function updatePrayerCategory(id, category) {
+  await retryFirestore(() => updateDoc(doc(db, PRAYER_CATEGORIES_COLLECTION, id), { ...categoryPayload(category), updatedAt: serverTimestamp() }));
+  requestContentRefresh();
 }
 
 export function subscribePrayerCategories(onData, onError) {
@@ -80,10 +79,11 @@ export async function deletePrayerCategory(categoryId) {
 }
 
 export async function restoreDefaultPrayerCategories(existingCategories = []) {
+  const existingIds = new Set(existingCategories.map((category) => category.id));
   const existingNames = new Set(existingCategories
     .map((category) => String(category.name || '').toLocaleLowerCase('be')));
   const missing = DEFAULT_CATEGORIES.filter(
-    (category) => !existingNames.has(category.name.toLocaleLowerCase('be')),
+    (category) => !existingIds.has(category.id) && !existingNames.has(category.name.toLocaleLowerCase('be')),
   );
 
   if (!missing.length) return 0;

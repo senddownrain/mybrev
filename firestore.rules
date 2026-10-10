@@ -1,8 +1,8 @@
 rules_version = '2';
 
-// Public content database. Every client (web, Flutter) reads anonymously;
-// only administrators write, from the web admin. Scripts with the service
-// account bypass these rules.
+// Public liturgical content is anonymous. Prayers and their categories are
+// served through priestApi (inherited restrictions); administrators edit them.
+// Credentials and grants are accessible only to the server Admin SDK.
 service cloud.firestore {
   match /databases/{database}/documents {
     // Keep in sync with src/constants/admin.js (bootstrap / emergency access).
@@ -23,9 +23,20 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // All reader access goes through the server policy, including inherited tags.
+    match /prayers/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /prayerCategories/{id} {
+      allow read, write: if isAdmin();
+    }
+    // Credentials and grants are server-only, including for client-side admins.
+    function serverOnly(collection) {
+      return collection in ['priestAccess', 'priestDeviceGrants', 'priestInstallations', 'priestActivationAttempts'];
+    }
     match /{collection}/{document=**} {
-      allow read: if collection != 'admins';
-      allow write: if collection != 'admins' && isAdmin();
+      allow read: if !(collection in ['admins', 'prayers', 'prayerCategories']) && !serverOnly(collection);
+      allow write: if !(collection in ['admins', 'prayers', 'prayerCategories']) && !serverOnly(collection) && isAdmin();
     }
   }
 }

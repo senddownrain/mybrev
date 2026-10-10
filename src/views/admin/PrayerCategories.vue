@@ -46,6 +46,7 @@
       <v-window v-model="activeTab" :touch="false">
         <v-window-item value="categories">
           <div class="workspace-toolbar">
+            <v-select v-model="accessFilter" label="Доступ" :items="accessFilters" hide-details />
             <v-text-field
               v-model="categoryQuery"
               label="Пошук па назве або тэгу"
@@ -84,11 +85,13 @@
               <div class="category-main">
                 <div class="category-title-row">
                   <h2>{{ category.name }}</h2>
+                  <v-icon v-if="accessPolicy.categoryRestricted(category.id)" icon="mdi-key" size="small" aria-label="Толькі для святароў" />
                 </div>
                 <div class="tag-chips">
                   <span v-for="tag in category.tags" :key="tag">{{ tag }}</span>
                 </div>
               </div>
+              <v-btn icon="mdi-pencil" variant="text" :aria-label="`Рэдагаваць катэгорыю ${category.name}`" @click="openEditDialog(category)" />
               <v-btn
                 icon="mdi-delete-outline"
                 variant="text"
@@ -160,10 +163,12 @@
 
     <v-dialog v-model="categoryDialogOpen" max-width="560" persistent>
       <v-card class="dialog-card">
-        <v-card-title>Новая катэгорыя</v-card-title>
+        <v-card-title>{{ editingId ? 'Рэдагаванне катэгорыі' : 'Новая катэгорыя' }}</v-card-title>
         <v-card-subtitle>Катэгорыя стане часткай меню па змаўчанні для ўсіх карыстальнікаў.</v-card-subtitle>
         <v-form ref="categoryFormRef" @submit.prevent="saveCategory">
           <v-card-text class="dialog-fields">
+            <v-switch v-model="categoryDraft.priestOnly" label="Толькі для святароў" color="primary" hide-details />
+            <v-select v-model="categoryDraft.parentId" label="Бацькоўская катэгорыя" :items="parentOptions" item-title="name" item-value="id" clearable />
             <v-text-field
               v-model="categoryDraft.name"
               label="Назва катэгорыі"
@@ -190,7 +195,7 @@
             <v-spacer />
             <v-btn variant="text" class="text-none" :disabled="savingDialog" @click="closeCategoryDialog">Скасаваць</v-btn>
             <v-btn type="submit" color="primary" variant="flat" class="text-none" :loading="savingDialog">
-              Стварыць
+              Захаваць
             </v-btn>
           </v-card-actions>
         </v-form>
@@ -238,6 +243,8 @@ import { usePrayers } from '@/composables/usePrayers';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { validateCategory } from '@/utils/validators';
 import { buildPrayerTagStats } from '@/utils/prayerCategoryAdmin';
+import { updatePrayerCategory } from '@/services/prayerCategoryService';
+import { prayerAccessPolicy } from '../../../functions/lib/priest-policy.mjs';
 
 const prayerCategories = usePrayerCategoriesStore();
 const { categories, isLoading: categoriesLoading, error: categoriesError } = storeToRefs(prayerCategories);
@@ -246,6 +253,20 @@ const { notifyError, notifySuccess } = useNotifier();
 
 const activeTab = ref('categories');
 const categoryQuery = ref('');
+const editingId = ref(null);
+const accessFilter = ref('all');
+const accessFilters = [{ title: 'Усе', value: 'all' }, { title: 'Агульнадаступныя', value: 'public' }, { title: 'Толькі для святароў', value: 'priest' }];
+const accessPolicy = computed(() => prayerAccessPolicy(prayers.value, categories.value));
+const parentOptions = computed(() => categories.value.filter((c) => {
+  let current = c;
+  const seen = new Set();
+  while (current) {
+    if (current.id === editingId.value || seen.has(current.id)) return false;
+    seen.add(current.id);
+    current = categories.value.find((p) => p.id === current.parentId);
+  }
+  return true;
+}));
 const tagQuery = ref('');
 const categoryDialogOpen = ref(false);
 const categoryFormRef = ref(null);
@@ -264,10 +285,10 @@ const tagStats = computed(() => buildPrayerTagStats(prayers.value, categories.va
 const availableTagNames = computed(() => tagStats.value.map((tag) => tag.name));
 const filteredCategories = computed(() => {
   const query = normalizeQuery(categoryQuery.value);
-  if (!query) return categories.value;
   return categories.value.filter((category) => (
-    normalizeQuery(category.name).includes(query)
-    || category.tags.some((tag) => normalizeQuery(tag).includes(query))
+    (accessFilter.value === 'all' || accessPolicy.value.categoryRestricted(category.id) === (accessFilter.value === 'priest'))
+    && (!query || normalizeQuery(category.name).includes(query)
+    || category.tags.some((tag) => normalizeQuery(tag).includes(query)))
   ));
 });
 const filteredTagStats = computed(() => {
@@ -277,7 +298,7 @@ const filteredTagStats = computed(() => {
 });
 
 function emptyCategory() {
-  return { name: '', tags: [] };
+  return { name: '', tags: [], priestOnly: false, parentId: null };
 }
 
 function normalizeQuery(value) {
@@ -287,6 +308,9 @@ function normalizeQuery(value) {
 function normalizedDraft() {
   return {
     name: categoryDraft.value.name.trim(),
+    priestOnly: categoryDraft.value.priestOnly === true,
+    parentId: categoryDraft.value.parentId || null,
+    order: categoryDraft.value.order,
     tags: [...new Set(categoryDraft.value.tags.map((tag) => String(tag).trim()).filter(Boolean))],
   };
 }
@@ -296,6 +320,7 @@ function errorMessage(error, fallback) {
 }
 
 function openCreateDialog() {
+  editingId.value = null;
   categoryDraft.value = emptyCategory();
   categoryDialogOpen.value = true;
 }
@@ -304,6 +329,12 @@ function closeCategoryDialog() {
   categoryDialogOpen.value = false;
   categoryDraft.value = emptyCategory();
   categoryFormRef.value?.resetValidation();
+}
+
+function openEditDialog(category) {
+  editingId.value = category.id;
+  categoryDraft.value = { ...category, tags: [...category.tags], priestOnly: category.priestOnly === true };
+  categoryDialogOpen.value = true;
 }
 
 function retryCategories() {
@@ -320,14 +351,15 @@ async function saveCategory() {
   if (validation !== true) return notifyError(validation);
 
   const duplicate = categories.value.some((item) => (
-    item.name.localeCompare(category.name, 'be', { sensitivity: 'base' }) === 0
+    item.id !== editingId.value && item.name.localeCompare(category.name, 'be', { sensitivity: 'base' }) === 0
   ));
   if (duplicate) return notifyError('Катэгорыя з такой назвай ужо існуе');
 
   savingDialog.value = true;
   try {
-    await prayerCategories.addCategory(category);
-    notifySuccess('Катэгорыя дададзена');
+    if (editingId.value) await updatePrayerCategory(editingId.value, category);
+    else await prayerCategories.addCategory(category);
+    notifySuccess('Катэгорыя захавана');
     closeCategoryDialog();
   } catch (error) {
     notifyError(errorMessage(error, 'Не ўдалося захаваць катэгорыю'));

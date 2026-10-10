@@ -45,6 +45,7 @@ function createEditor(t, options = {}) {
     publicContentKey: (name) => name,
     requestContentRefresh: () => {},
     useAuthStore: () => reactive({ isAdmin: true }),
+    priestAccess: reactive({ revision: 0 }),
     getPrayersQuery: () => 'mock-query',
     onSnapshot: (_query, callback) => {
       callback({ docs: [{ id: original.id, data: () => ({ ...original }) }] });

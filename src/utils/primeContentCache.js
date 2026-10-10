@@ -17,7 +17,7 @@ export async function primeContentCache(location = window.location) {
     readingsKey(key, { dayId: routeDayId === 'office-for-dead' ? '' : routeDayId }),
     readingsKey(key, { dayId: url.searchParams.get('dayId'), includeAlternatives: true }),
   ];
-  if (/prayer/.test(url.pathname)) keys.push(publicContentKey('prayers'));
+  if (/prayer/.test(url.pathname)) keys.push(publicContentKey('prayer-content', 2));
   if (/\/songs?(?:\/|$)/.test(url.pathname)) keys.push(publicContentKey('songs', SONGS_CACHE_VERSION));
   if (/completorium|invit/.test(url.pathname)) {
     keys.push(publicContentKey('static', 'completoriums'), publicContentKey('static', 'invitatoriums'));

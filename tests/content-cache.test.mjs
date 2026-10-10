@@ -37,6 +37,17 @@ test('a new app instance restores a complete day with zero network reads, regard
   assert.equal(reads, 1);
 });
 
+test('access-sensitive public data revalidates online even at the same revision and remains offline', async () => {
+  const f = fixture();
+  const cache = f.create();
+  await cache.read('prayers', async () => complete(['public-before']));
+  const result = await cache.read('prayers', async () => complete(['public-now']), { fresh: true, revalidate: true });
+  assert.deepEqual(result.data, ['public-now']);
+  f.online(false);
+  const offline = await f.create().read('prayers', () => assert.fail('no offline requests'), { fresh: true, revalidate: true });
+  assert.deepEqual(offline.data, ['public-now']);
+});
+
 test('concurrent screen and warmup share one request and persist confirmed empty queries', async () => {
   const f = fixture();
   const cache = f.create();

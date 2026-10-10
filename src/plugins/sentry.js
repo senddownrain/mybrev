@@ -27,7 +27,11 @@ export function initSentry(app, router) {
       dsn,
       integrations: [
         Sentry.browserTracingIntegration({ router }),
-        Sentry.replayIntegration(),
+        Sentry.replayIntegration({
+          // Activation codes and individual credentials must never become
+          // network payloads in recordings, even if detail capture is enabled.
+          networkDetailDenyUrls: [/\/api\/priest\//],
+        }),
       ],
       tracesSampleRate: 0.1,
       replaysSessionSampleRate: 0.1,

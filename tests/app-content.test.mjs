@@ -200,8 +200,8 @@ function fakeSnapshot(exportedAt, collections) {
 
 test('every bundled collection carries the version of its own snapshot', async () => {
   const days = fakeSnapshot('2026-10-06T00:00:00.000Z', { days: [{ id: 'd1', _periodType: 'ordinary' }] });
-  const statics = fakeSnapshot('2026-09-01T00:00:00.000Z', { prayers: [{ id: 'p1', title: 'Т', text: 'Т' }] });
-  const { collections, versions, contentVersion } = await readCollections([days, statics], ['days', 'prayers']);
+  const statics = fakeSnapshot('2026-09-01T00:00:00.000Z', { prayers: [{ id: 'p1', title: 'Т', text: 'Т' }], prayerCategories: [] });
+  const { collections, versions, contentVersion } = await readCollections([days, statics], ['days', 'prayers', 'prayerCategories']);
   assert.equal(versions.get('days'), Date.parse('2026-10-06T00:00:00.000Z'));
   assert.equal(versions.get('prayers'), Date.parse('2026-09-01T00:00:00.000Z'));
   assert.equal(contentVersion, versions.get('days'), 'top-level: the newest');

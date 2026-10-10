@@ -43,10 +43,10 @@ export function createContentCache({ storage, getRevision, isOnline, onError = (
     return request;
   }
 
-  async function read(key, loader, { fresh = false } = {}) {
+  async function read(key, loader, { fresh = false, revalidate = false } = {}) {
     const entry = await restore(key);
-    if (isFresh(entry)) return entry;
-    if (entry && (!fresh || !isOnline())) {
+    if (isFresh(entry) && !(revalidate && isOnline())) return entry;
+    if (entry && ((!fresh && !revalidate) || !isOnline())) {
       if (isOnline()) refresh(key, loader).catch(onError);
       return { ...entry, complete: false };
     }

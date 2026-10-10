@@ -5,7 +5,8 @@ import { logger } from '@/utils/logger';
 import { getPrayersQuery } from '@/services/prayerService';
 import * as prayerService from '@/services/prayerService';
 import { useAuthStore } from '@/stores/auth';
-import { publicContentCache, publicContentKey, requestContentRefresh } from '@/utils/publicContentCache';
+import { priestAccess } from '@/services/priestAccessService';
+import { requestContentRefresh } from '@/utils/publicContentCache';
 
 /**
  * @typedef {Object} Prayer
@@ -23,7 +24,7 @@ import { publicContentCache, publicContentKey, requestContentRefresh } from '@/u
  */
 
 export const usePrayersStore = defineStore('prayers', () => {
-  const prayers = ref(publicContentCache.peek(publicContentKey('prayers')) || []);
+  const prayers = ref([]);
   const allTags = ref([]);
   const isLoading = ref(true);
   const error = ref(null);
@@ -84,9 +85,9 @@ export const usePrayersStore = defineStore('prayers', () => {
   async function loadPublicPrayers() {
       const sequence = ++loadSequence;
       if (unsubscribe) { unsubscribe(); unsubscribe = null; }
-      const cached = publicContentCache.peek(publicContentKey('prayers'));
-      if (cached) { prayers.value = cached; refreshAllTags(); }
-      isLoading.value = !cached;
+      prayers.value = [];
+      refreshAllTags();
+      isLoading.value = true;
       try {
         const items = await prayerService.getSavedPrayers();
         if (sequence !== loadSequence) return;
@@ -106,7 +107,7 @@ export const usePrayersStore = defineStore('prayers', () => {
       if (!authStore.isAdmin) loadPublicPrayers();
       return;
     }
-    stopAuthWatch = watch(() => authStore.isAdmin, (isAdmin) => {
+    stopAuthWatch = watch(() => [authStore.isAdmin, priestAccess.revision], ([isAdmin]) => {
       if (isAdmin) {
         loadSequence += 1;
         startLiveSubscription();

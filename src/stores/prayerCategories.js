@@ -10,6 +10,7 @@ import {
 } from '@/services/prayerCategoryService';
 import { logger } from '@/utils/logger';
 import { useAuthStore } from '@/stores/auth';
+import { priestAccess } from '@/services/priestAccessService';
 
 export const usePrayerCategoriesStore = defineStore('prayerCategories', () => {
   const categories = ref([]);
@@ -40,6 +41,7 @@ export const usePrayerCategoriesStore = defineStore('prayerCategories', () => {
     const sequence = ++loadSequence;
     unsubscribe?.();
     unsubscribe = null;
+    categories.value = [];
     isLoading.value = categories.value.length === 0;
     try {
       const items = await getSavedPrayerCategories();
@@ -62,7 +64,7 @@ export const usePrayerCategoriesStore = defineStore('prayerCategories', () => {
       if (!authStore.isAdmin && !unsubscribe && categories.value.length === 0) loadPublicCategories();
       return;
     }
-    stopAuthWatch = watch(() => authStore.isAdmin, (isAdmin) => {
+    stopAuthWatch = watch(() => [authStore.isAdmin, priestAccess.revision], ([isAdmin]) => {
       if (isAdmin) {
         loadSequence += 1;
         startLiveSubscription();

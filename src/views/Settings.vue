@@ -82,6 +82,7 @@
     </section>
 
     <section class="settings-section"><PsalmodySettings /></section>
+    <PriestAccessSettings />
 
     <section class="settings-section" aria-labelledby="categories-title">
       <div class="section-heading">
@@ -121,12 +122,14 @@
 </template>
 
 <script setup>
+import PriestAccessSettings from '@/components/prayers/PriestAccessSettings.vue';
 import PsalmodySettings from '@/components/PsalmodySettings.vue';
 import { computed, ref } from 'vue';
 import { PhCheck, PhFolders, PhMinus, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
+import { usePrayersStore } from '@/stores/prayers';
 import { useNotifier } from '@/composables/useNotifier';
 import AddCategoryDialog from '@/components/prayers/AddCategoryDialog.vue';
 import { READER_FONT_OPTIONS } from '@/constants/fonts';
@@ -134,6 +137,8 @@ import { ORDO_DIOCESES } from '@/utils/ordoDiocese';
 
 const settings = useSettingsStore();
 const prayerCategories = usePrayerCategoriesStore();
+const prayersStore = usePrayersStore();
+prayersStore.init();
 const { notifySuccess } = useNotifier();
 const showAddCategoryDialog = ref(false);
 const fontOptions = READER_FONT_OPTIONS;
@@ -167,6 +172,7 @@ const visibleCategories = computed(() => {
     prayerCategories.categories,
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
+    prayersStore.prayers,
   );
 });
 

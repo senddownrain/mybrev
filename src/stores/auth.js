@@ -13,6 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
   const loading = ref(false);
   /** Reactive admin flag — updated asynchronously after auth state change */
   const isAdmin = ref(false);
+  const canManagePriestAccess = ref(false);
   let authReadyPromise = null;
 
   /**
@@ -22,11 +23,13 @@ export const useAuthStore = defineStore('auth', () => {
    * @returns {Promise<boolean>}
    */
   async function checkIsAdmin(uid) {
+    canManagePriestAccess.value = false;
     // Hardcoded fallback (bootstrap / emergency access)
-    if (ADMIN_UIDS.includes(uid)) return true;
+    if (ADMIN_UIDS.includes(uid)) { canManagePriestAccess.value = true; return true; }
 
     try {
       const adminDoc = await getDoc(doc(db, 'admins', uid));
+      canManagePriestAccess.value = adminDoc.exists() && adminDoc.data().priestAccess === true;
       return adminDoc.exists();
     } catch (error) {
       logger.error('[auth] Failed to check admin status in Firestore, falling back to constants:', error);
@@ -49,6 +52,7 @@ export const useAuthStore = defineStore('auth', () => {
             isAdmin.value = await checkIsAdmin(firebaseUser.uid);
           } else {
             isAdmin.value = false;
+            canManagePriestAccess.value = false;
           }
 
           loading.value = false;
@@ -99,5 +103,5 @@ export const useAuthStore = defineStore('auth', () => {
     await router.push('/');
   };
 
-  return { user, loading, isAdmin, init, login, logout };
+  return { user, loading, isAdmin, canManagePriestAccess, init, login, logout };
 });

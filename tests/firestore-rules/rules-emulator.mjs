@@ -18,6 +18,10 @@ async function seed(path, fields) {
 await seed('days/x', { a: { stringValue: '1' } });
 await seed('admins/dbadmin', { email: { stringValue: 'a@b' } });
 await seed('liturgicalTemplates/t', { a: { stringValue: '1' } });
+await seed('prayers/hidden', { priestOnly: { booleanValue: true }, text: { stringValue: 'secret' } });
+await seed('prayerCategories/hidden', { priestOnly: { booleanValue: true } });
+await seed('priestAccess/settings', { codeHash: { stringValue: 'private' } });
+await seed('priestDeviceGrants/device', { secretHash: { stringValue: 'private' } });
 let n = 0;
 function client(uid) {
   const app = initializeApp({ projectId: P, apiKey: 'x' }, `c${n++}`);
@@ -27,6 +31,14 @@ function client(uid) {
 }
 const anon = client(null), user = client('someone'), staticAdmin = client('64MeSP56IWVotVFG7bu8YKeLis12'), dbAdmin = client('dbadmin');
 const cases = [
+  ['anon cannot read hidden prayer directly', () => getDoc(doc(anon.db, 'prayers/hidden')), false],
+  ['anon cannot list prayers directly', () => getDocs(collection(anon.db, 'prayers')), false],
+  ['user cannot list categories directly', () => getDocs(collection(user.db, 'prayerCategories')), false],
+  ['admin can edit/read hidden prayers', () => getDoc(doc(dbAdmin.db, 'prayers/hidden')), true],
+  ['anon cannot read activation hash', () => getDoc(doc(anon.db, 'priestAccess/settings')), false],
+  ['admin cannot read credential hashes via client', () => getDoc(doc(dbAdmin.db, 'priestDeviceGrants/device')), false],
+  ['admin cannot bypass grant API writes', () => setDoc(doc(dbAdmin.db, 'priestDeviceGrants/device'), { status: 'active' }), false],
+  ['anon cannot list installations', () => getDocs(collection(anon.db, 'priestInstallations')), false],
   ['anon reads days', () => getDoc(doc(anon.db, 'days/x')), true],
   ['anon lists templates', () => getDocs(collection(anon.db, 'liturgicalTemplates')), true],
   ['anon writes days', () => setDoc(doc(anon.db, 'days/x'), { a: 2 }), false],

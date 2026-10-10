@@ -31,6 +31,7 @@ import {
   encodeCollection,
   storedDocument,
   validateCollection,
+  publicAppCollections,
 } from './lib/app-content.mjs';
 
 function parseArgs(argv) {
@@ -72,6 +73,7 @@ export async function readCollections(snapshotDirs, names = APP_CONTENT_COLLECTI
  * (its snapshot time), never a shared minimum.
  */
 export function writeBundle(collections, versions, contentVersion, out, { log = console.log } = {}) {
+  collections = publicAppCollections(collections);
   fs.mkdirSync(out, { recursive: true });
   const manifest = {
     schemaVersion: CONTENT_SCHEMA_VERSION,

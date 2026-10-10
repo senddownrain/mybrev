@@ -3,6 +3,7 @@
     ref="rootElement"
     class="ora-psalm psalmody-text"
     :data-verse-layout="settings.psalmVerseLayout"
+    :data-marker-break-mode="settings.psalmMarkerBreakMode"
     :data-dimmed-side="psalmody?.dimmedSide.value || undefined"
     @click="toggle"
     @keydown="onKeydown"
@@ -59,6 +60,8 @@ function onKeydown(event) {
 .psalmody-text :deep(.psalm-continuation) { display: block; margin-inline-start: .65em; }
 /* Consecutive markers stay at the same modest continuation indent. */
 .psalmody-text :deep(.psalm-continuation .psalm-continuation) { margin-inline-start: 0; }
+/* The strophe container owns the indent when both display options are enabled. */
+.psalmody-text[data-verse-layout="alternatingIndent"][data-marker-break-mode="breakAfterMarker"] :deep(.psalm-continuation) { margin-inline-start: 0; }
 .psalmody-text { min-width: 0; overflow-wrap: break-word; }
 @media (prefers-reduced-motion: reduce) { .psalmody-text :deep([data-psalm-side]) { transition: none; } }
 </style>

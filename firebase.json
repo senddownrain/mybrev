@@ -2,6 +2,7 @@
   "firestore": {
     "rules": "firestore.rules"
   },
+  "functions": { "source": "functions", "runtime": "nodejs22" },
   "hosting": {
     "public": "dist",
     "ignore": [
@@ -79,6 +80,7 @@
       }
     ],
     "rewrites": [
+      { "source": "/api/priest/**", "function": { "functionId": "priestApi", "region": "europe-west1" } },
       {
         "source": "/manifest.webmanifest",
         "destination": "/manifest.webmanifest"

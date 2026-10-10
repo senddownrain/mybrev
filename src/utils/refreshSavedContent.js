@@ -28,6 +28,7 @@ export async function refreshSavedContent() {
             if (value === 'liturgicalTemplates') await getLiturgicalTemplates(options);
             else await getStaticCollection(value, options);
             break;
+          case 'prayer-content':
           case 'prayers': await getSavedPrayers(options); break;
           case 'songs': await (await import('../services/songService.js')).getSavedSongs(options); break;
           // Legacy keys: year options are computed now, and the feast list of
