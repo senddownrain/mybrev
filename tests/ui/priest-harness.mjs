@@ -1,7 +1,7 @@
 import { createApp, h } from 'vue';
 import { createPinia } from 'pinia';
-import { createRouter, createWebHashHistory, RouterView } from 'vue-router';
-import { VApp, VMain } from 'vuetify/components';
+import { createRouter, createWebHashHistory } from 'vue-router';
+import AdminLayout from '/src/layouts/admin/Admin.vue';
 import vuetify from '/src/plugins/vuetify.js';
 import 'vuetify/dist/vuetify.min.css';
 import '/src/styles/main.scss';
@@ -14,8 +14,9 @@ const router = createRouter({ history: createWebHashHistory(), routes: [
   { path: '/categories', component: PrayerCategories },
   { path: '/prayer/edit/:id', component: PrayerForm, name: 'PrayerEdit' },
   { path: '/settings', component: PriestAccessSettings },
+  { path: '/today', component: PriestAccessSettings, name: 'Today' },
   { path: '/prayers', component: PriestAccessSettings, name: 'PrayersList' },
   { path: '/prayer/:id', component: PriestAccessSettings, name: 'PrayerView' },
 ] });
 window.__priestUi = { router };
-createApp({ render: () => h(VApp, [h(VMain, [h(RouterView)])]) }).use(createPinia()).use(vuetify).use(router).mount('#app');
+createApp({ render: () => h(AdminLayout) }).use(createPinia()).use(vuetify).use(router).mount('#app');

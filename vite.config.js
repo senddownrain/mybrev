@@ -80,7 +80,7 @@ export default defineConfig({
         ]
       },
       workbox: {
-        navigateFallbackDenylist: [/^\/api\//],
+        importScripts: ['/priest-cache-cleanup.js'],
         cleanupOutdatedCaches: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2,webmanifest}'],
         // Admin/login code remains route-lazy and network-loaded. It must not
@@ -94,7 +94,6 @@ export default defineConfig({
           '**/{Admin,DayEditor,ParsedReadingEditor,SongEditor,PrayerCategories,PriestAccess,PrayerForm,Login}-*.{js,css}',
         ],
         runtimeCaching: [
-          { urlPattern: /\/api\/priest\//, handler: 'NetworkOnly' },
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'StaleWhileRevalidate',
@@ -117,18 +116,7 @@ export default defineConfig({
               },
             },
           },
-          {
-            urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'firestore-api',
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 дней
-              },
-              networkTimeoutSeconds: 10,
-            },
-          },
+          { urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i, handler: 'NetworkOnly' },
           {
             urlPattern: /^https:\/\/.*\.firebaseio\.com\/.*/i,
             handler: 'NetworkFirst',
@@ -141,18 +129,8 @@ export default defineConfig({
               networkTimeoutSeconds: 10,
             },
           },
-          {
-            urlPattern: /^https:\/\/identitytoolkit\.googleapis\.com\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'firebase-auth',
-              expiration: {
-                maxEntries: 20,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 дней
-              },
-              networkTimeoutSeconds: 5,
-            },
-          },
+          { urlPattern: /^https:\/\/identitytoolkit\.googleapis\.com\/.*/i, handler: 'NetworkOnly' },
+          { urlPattern: /^https:\/\/securetoken\.googleapis\.com\/.*/i, handler: 'NetworkOnly' },
           {
             urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/.*/i,
             handler: 'CacheFirst',
@@ -215,7 +193,6 @@ export default defineConfig({
   // Настройки сервера для разработки
   server: {
     port: 3000,
-    proxy: process.env.PRIEST_API_PROXY ? { '/api/priest': { target: process.env.PRIEST_API_PROXY, changeOrigin: false } } : {},
   },
 
   build: {

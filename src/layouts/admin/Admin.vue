@@ -14,9 +14,9 @@
         Панэль адміністратара
       </v-app-bar-title>
 
-      <v-spacer></v-spacer>
-      <v-btn class="admin-home-button text-none" variant="text" rounded="pill" :to="{ name: 'Today' }">
-        Да малітоўніка
+      <v-btn class="admin-home-button text-none" aria-label="Да малітоўніка" variant="text" rounded="pill" :to="{ name: 'Today' }">
+        <span class="admin-home-label">Да малітоўніка</span>
+        <v-icon class="admin-home-icon" icon="mdi-book-open-page-variant" />
       </v-btn>
     </v-app-bar>
 
@@ -73,6 +73,8 @@ const goToAdminHome = () => {
 }
 
 .admin-title {
+  min-width: 0;
+  margin-inline-start: 0 !important;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 720;
@@ -82,17 +84,19 @@ const goToAdminHome = () => {
   color: var(--nav-muted);
   font-weight: 650;
 }
+.admin-home-icon { display: none; }
 
 @media (max-width: 480px) {
+  .admin-app-bar :deep(.v-toolbar__content) { gap: 4px; padding-inline: 8px; }
+  .admin-nav-button { margin-inline: 0 !important; flex-shrink: 0; }
+  .admin-title { font-size: .87rem; }
   .admin-home-button {
-    padding-inline: 10px !important;
-    font-size: 0;
+    padding-inline: 6px !important;
+    min-width: 36px !important;
+    flex-shrink: 0;
   }
 
-  .admin-home-button::after {
-    font-size: 1.25rem;
-    content: '\F02DC';
-    font-family: 'Material Design Icons';
-  }
+  .admin-home-label { display: none; }
+  .admin-home-icon { display: inline-flex; font-size: 1.25rem; }
 }
 </style>

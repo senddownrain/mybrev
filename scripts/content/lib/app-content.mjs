@@ -9,7 +9,7 @@
  * without changing the text.
  */
 import { createHash } from 'node:crypto';
-import { prayerAccessPolicy } from '../../../functions/lib/priest-policy.mjs';
+import { prayerAccessPolicy } from '../../../src/utils/priestPolicy.mjs';
 import { validateCelebrationDefinition, validateDioceseOverride } from '../../../src/utils/ordo/definitions.js';
 import { validateYearOverride } from '../../../src/utils/ordo/yearOverrides.js';
 import { validateMassReadings } from '../../../src/utils/massReadingSets.js';
@@ -71,10 +71,10 @@ export function publicAppCollections(collections) {
   if (collections.has('prayers') && !collections.has('prayerCategories')) {
     throw new Error('Exporting prayers requires prayerCategories from the same snapshot set (access inheritance).');
   }
-  const result = new Map(collections);
-  const policy = prayerAccessPolicy(collections.get('prayers') || [], collections.get('prayerCategories') || []);
-  if (result.has('prayers')) result.set('prayers', result.get('prayers').filter((p) => !policy.prayerRestricted(p)));
-  if (result.has('prayerCategories')) result.set('prayerCategories', result.get('prayerCategories').filter((c) => !policy.categoryRestricted(c.id)));
+  const result = new Map([...collections].filter(([name]) => APP_CONTENT_COLLECTIONS.includes(name)));
+  const policy = prayerAccessPolicy(collections.get('prayers') || [], [...(collections.get('prayerCategories') || []), ...(collections.get('priestProtectedCategories') || [])]);
+  if (result.has('prayers')) result.set('prayers', result.get('prayers').filter((p) => p.effectivePriestOnly !== true && !policy.prayerRestricted(p)));
+  if (result.has('prayerCategories')) result.set('prayerCategories', result.get('prayerCategories').filter((c) => c.effectivePriestOnly !== true && !policy.categoryRestricted(c.id)));
   return result;
 }
 /** Marks a reference into the string table; never the start of real text. */

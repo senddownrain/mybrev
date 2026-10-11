@@ -175,7 +175,7 @@ import { usePrayersFilters } from '@/composables/usePrayersFilters';
 import { matchesPrayerTags } from '@/utils/prayerTagFilter';
 import { PhMagnifyingGlass, PhSlidersHorizontal, PhX } from '@phosphor-icons/vue';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
-import { prayerAccessPolicy } from '../../../functions/lib/priest-policy.mjs';
+import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
 
 const router = useRouter();
 const { prayers, isLoading, getTitle, getText, error, deletePrayer } = usePrayers();

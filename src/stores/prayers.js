@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed, watch } from 'vue';
-import { onSnapshot } from 'firebase/firestore';
 import { logger } from '@/utils/logger';
-import { getPrayersQuery } from '@/services/prayerService';
 import * as prayerService from '@/services/prayerService';
 import { useAuthStore } from '@/stores/auth';
 import { priestAccess } from '@/services/priestAccessService';
@@ -51,17 +49,11 @@ export const usePrayersStore = defineStore('prayers', () => {
     }
 
     try {
-      const prayersQuery = getPrayersQuery();
       logger.log('[prayersStore] Initializing prayers subscription...');
       
-      unsubscribe = onSnapshot(
-        prayersQuery,
-        (snapshot) => {
-          logger.log('[prayersStore] Documents received:', snapshot.docs.length);
-          prayers.value = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
+      unsubscribe = prayerService.subscribePrayers(
+        (items) => {
+          prayers.value = items;
           refreshAllTags();
           isLoading.value = false;
           error.value = null;

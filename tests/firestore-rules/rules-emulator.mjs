@@ -4,10 +4,12 @@
 // anonymous visitor, a signed-in user and both kinds of administrator.
 
 import { initializeApp, deleteApp } from 'firebase/app';
+import assert from 'node:assert/strict';
 import { getFirestore, connectFirestoreEmulator, doc, getDoc, setDoc, deleteDoc, collection, getDocs } from 'firebase/firestore';
 
 // `firebase emulators:exec` exports the emulator address.
 const [HOST, PORT] = (process.env.FIRESTORE_EMULATOR_HOST || '127.0.0.1:8089').split(':');
+assert.ok(['127.0.0.1', 'localhost'].includes(HOST), 'Local Firestore Emulator required; live tests forbidden');
 const P = 'demo-rules';
 const base = `http://${HOST}:${PORT}/v1/projects/${P}/databases/(default)/documents`;
 // Seed bypassing rules.
@@ -18,8 +20,8 @@ async function seed(path, fields) {
 await seed('days/x', { a: { stringValue: '1' } });
 await seed('admins/dbadmin', { email: { stringValue: 'a@b' } });
 await seed('liturgicalTemplates/t', { a: { stringValue: '1' } });
-await seed('prayers/hidden', { priestOnly: { booleanValue: true }, text: { stringValue: 'secret' } });
-await seed('prayerCategories/hidden', { priestOnly: { booleanValue: true } });
+await seed('priestProtectedPrayers/hidden', { priestOnly: { booleanValue: true }, text: { stringValue: 'secret' } });
+await seed('priestProtectedCategories/hidden', { priestOnly: { booleanValue: true } });
 await seed('priestAccess/settings', { codeHash: { stringValue: 'private' } });
 await seed('priestDeviceGrants/device', { secretHash: { stringValue: 'private' } });
 let n = 0;
@@ -31,10 +33,10 @@ function client(uid) {
 }
 const anon = client(null), user = client('someone'), staticAdmin = client('64MeSP56IWVotVFG7bu8YKeLis12'), dbAdmin = client('dbadmin');
 const cases = [
-  ['anon cannot read hidden prayer directly', () => getDoc(doc(anon.db, 'prayers/hidden')), false],
-  ['anon cannot list prayers directly', () => getDocs(collection(anon.db, 'prayers')), false],
-  ['user cannot list categories directly', () => getDocs(collection(user.db, 'prayerCategories')), false],
-  ['admin can edit/read hidden prayers', () => getDoc(doc(dbAdmin.db, 'prayers/hidden')), true],
+  ['anon cannot read hidden prayer directly', () => getDoc(doc(anon.db, 'priestProtectedPrayers/hidden')), false],
+  ['legacy anonymous public prayer query', () => getDocs(collection(anon.db, 'prayers')), true],
+  ['legacy public category query', () => getDocs(collection(user.db, 'prayerCategories')), true],
+  ['admin can edit/read hidden prayers', () => getDoc(doc(dbAdmin.db, 'priestProtectedPrayers/hidden')), true],
   ['anon cannot read activation hash', () => getDoc(doc(anon.db, 'priestAccess/settings')), false],
   ['admin cannot read credential hashes via client', () => getDoc(doc(dbAdmin.db, 'priestDeviceGrants/device')), false],
   ['admin cannot bypass grant API writes', () => setDoc(doc(dbAdmin.db, 'priestDeviceGrants/device'), { status: 'active' }), false],
