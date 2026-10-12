@@ -75,14 +75,10 @@
         >
           <v-icon>mdi-menu</v-icon>
         </v-btn>
-        <v-btn
+        <LiturgyNavLink
           :to="readingsLiturgyRoute"
-          variant="text"
           class="readings-nav-segment readings-nav-segment--liturgy text-none"
-          prepend-icon="mdi-cross"
-        >
-          Літургія гадзінаў
-        </v-btn>
+        />
       </div>
       <!-- Меню для остальных страниц -->
       <v-app-bar-nav-icon
@@ -103,6 +99,9 @@
         v-if="showTextScaleControl"
         class="top-action-start"
       />
+
+      <v-btn v-if="isHoursHome" :to="homeCalendarRoute" icon="mdi-calendar-text-outline"
+        variant="flat" class="top-circle-btn top-action-start" aria-label="Літургічны каляндар гэтага дня" />
 
       <template v-if="isSongViewPage">
         <v-btn :icon="settings.favoriteSongs.includes(route.params.id) ? 'mdi-heart' : 'mdi-heart-outline'" :color="settings.favoriteSongs.includes(route.params.id) ? 'red' : undefined" class="top-circle-btn" variant="flat" :aria-label="settings.favoriteSongs.includes(route.params.id) ? 'Выдаліць з абраных' : 'Дадаць у абраныя'" @click="settings.toggleFavoriteSong(route.params.id)" />
@@ -190,7 +189,7 @@
 
     <NavigationDrawer />
 
-    <v-main style="padding-bottom: 92px;">
+    <v-main :class="{ 'app-main--bottom-nav': hasBottomNav }">
       <router-view name="topNav" />
       <router-view />
     </v-main>
@@ -245,6 +244,7 @@ import { useUiStore } from '@/stores/ui.js';
 import NavigationDrawer from './NavigationDrawer.vue';
 import TextSettingsSheet from '@/components/TextSettingsSheet.vue';
 import TextScaleControl from '@/components/TextScaleControl.vue';
+import LiturgyNavLink from '@/components/common/LiturgyNavLink.vue';
 import MassLanguageMenu from '@/components/prayers/MassLanguageMenu.vue';
 import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
 import { useSettingsStore } from '@/stores/settings.js';
@@ -310,6 +310,11 @@ const canCopyPrayer = computed(() => route.name === 'PrayerEdit');
 const isReadingsPage = computed(() => {
   return route.name === 'Readings' || route.name === 'ReadingsByDate';
 });
+const isHoursHome = computed(() => ['Today', 'SelectedDay'].includes(route.name));
+const homeCalendarRoute = computed(() => ({
+  name: 'OrdoByDate', params: { date: route.params.day || moment().format('YYYY-MM-DD') },
+}));
+const hasBottomNav = computed(() => route.matched.some((record) => record.components?.bottomNav));
 const isSongViewPage = computed(() => route.name === 'SongView');
 const isCompendiumSubPage = computed(() => ['CompendiumPart', 'CompendiumNode', 'CompendiumTopic', 'CompendiumQuestion'].includes(route.name));
 // Back inside the Compendium: history when it exists (keeps search and scroll),

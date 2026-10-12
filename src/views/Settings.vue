@@ -34,7 +34,7 @@
           <strong>Дыяцэзіі</strong>
           <span>Адна або некалькі: літургія гадзінаў і чытанні паказваюць варыянты ўсіх выбраных</span>
         </div>
-        <div class="theme-options" role="group" aria-label="Дыяцэзіі" data-test="settings-dioceses">
+        <div class="theme-options diocese-options" role="group" aria-label="Дыяцэзіі" data-test="settings-dioceses">
           <button
             v-for="option in dioceseOptions"
             :key="option.value"
@@ -46,7 +46,7 @@
             @click="settings.toggleDiocese(option.value)"
           >
             <span class="diocese-check" aria-hidden="true">{{ settings.dioceses.includes(option.value) ? '✓' : '' }}</span>
-            {{ option.label }}
+            <span>{{ option.label }}</span>
           </button>
         </div>
       </div>
@@ -254,5 +254,7 @@ function restoreGlobalCategories() {
   .text-preview { margin-inline: 16px; }
   .add-category-button { width: calc(100% - 32px); margin-inline: 16px; }
 }
+.diocese-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; width: 100%; }
+.diocese-options button { display: grid; grid-template-columns: 1em minmax(0, 1fr); align-items: center; gap: 5px; min-height: 48px; overflow-wrap: anywhere; line-height: 1.4; }
 .diocese-check { display: inline-grid; width: 1em; place-items: center; font-weight: 800; }
 </style>

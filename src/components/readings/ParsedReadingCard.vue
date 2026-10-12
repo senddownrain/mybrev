@@ -295,6 +295,7 @@ function cycleLabel(value) {
 
 <style scoped>
 .parsed-reading {
+  --reading-body-size: calc(1.04rem * var(--font-size-multiplier, 1));
   margin: 0;
   overflow: hidden;
   border: 1px solid var(--reader-border);
@@ -303,6 +304,7 @@ function cycleLabel(value) {
   color: var(--reader-ink);
   box-shadow: var(--reader-shadow);
   font-family: var(--reader-font-family);
+  overflow-wrap: anywhere;
 }
 
 .reading-header {
@@ -410,7 +412,7 @@ function cycleLabel(value) {
 .section-text,
 .alleluia-verse {
   color: var(--reader-ink);
-  font-size: calc(1.04rem * var(--font-size-multiplier, 1));
+  font-size: var(--reading-body-size);
   font-weight: 400;
   font-optical-sizing: auto;
   line-height: 1.78;
@@ -432,7 +434,9 @@ function cycleLabel(value) {
 .reading-acclamation,
 .section-text :deep(.reading-acclamation) {
   margin-top: 1.35em;
+  font-size: var(--reading-body-size);
   font-weight: 700;
+  line-height: 1.7;
 }
 
 .reading-alternative {
@@ -567,7 +571,7 @@ function cycleLabel(value) {
 
 .reading-reference-only__list {
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 8px 16px;
   margin: 0;
 }

@@ -129,7 +129,7 @@ function resolveImport(from, specifier) {
   if (!specifier.startsWith('.') && !specifier.startsWith('@/')) return null; // package
   const base = specifier.startsWith('@/') ? join(root, 'src', specifier.slice(2)) : resolve(dirname(from), specifier);
   const candidates = extname(base) ? [base] : ['.js', '.vue', '.mjs', '.json', '/index.js'].map((ext) => base + ext);
-  return candidates.find((path) => existsSync(path)) || null;
+  return candidates.map((path) => resolve(path)).find((path) => existsSync(path)) || null;
 }
 
 function staticGraph(entry) {
@@ -181,7 +181,7 @@ test('no LocalChurch anywhere in the runtime', () => {
   const pattern = /localChurch|LocalChurch|ordoLocalChurch|titleCelebrationId|patronCelebrationId|localRole|Мой касцёл|Тытулы парафій/;
   const offenders = files.filter((file) => pattern.test(readFileSync(file, 'utf8')));
   // The only mention left is the one-time removal of the stored setting.
-  assert.deepEqual(offenders.map((file) => file.slice(root.length + 1)), ['src/utils/legacyStorageCleanup.js']);
+  assert.deepEqual(offenders.map((file) => file.slice(root.length + 1).replaceAll('\\', '/')), ['src/utils/legacyStorageCleanup.js']);
   const stored = new Map([['ordoLocalChurch', '{"enabled":true}'], ['ordoDiocese', 'pinsk']]);
   removeLegacyStorageKeys({ removeItem: (key) => stored.delete(key) });
   assert.deepEqual([...stored.keys()], ['ordoDiocese']);
@@ -277,9 +277,10 @@ test('the Ordo main page is one month; the Hours screen links to the Ordo', () =
   assert.match(month, /parseOrdoMonth\(route\.query\.month, today\)/);
   assert.match(month, /scrollToToday/);
   assert.ok(!/generateLiturgicalYear|v-for="month in/.test(month), 'no year-long list');
-  const hours = read('src/components/ItemsList.vue');
-  assert.match(hours, /<router-link :to="ordoRoute" class="ordo-shortcut"/);
-  assert.match(hours, /name: 'OrdoByDate', params: \{ date: currentDate\.value\.format\('YYYY-MM-DD'\) \}/);
+  const hours = read('src/layouts/default/Default.vue');
+  assert.match(hours, /:to="homeCalendarRoute" icon="mdi-calendar-text-outline"/);
+  assert.match(hours, /name: 'OrdoByDate', params: \{ date: route\.params\.day \|\| moment\(\)\.format\('YYYY-MM-DD'\) \}/);
+  assert.ok(!read('src/components/ItemsList.vue').includes('ordo-shortcut'));
   // The drawer entry stays.
   assert.match(read('src/layouts/default/NavigationDrawer.vue'), /Літургічны каляндар/);
 });

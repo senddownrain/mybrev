@@ -199,7 +199,7 @@ watch(isCalendarDialogOpen, (open) => {
   left: 0;
   right: 0;
   z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom, 8px);
+  padding-bottom: var(--bottom-nav-inset);
   pointer-events: none; /* let clicks through where no interactive child */
 }
 
@@ -217,7 +217,7 @@ watch(isCalendarDialogOpen, (open) => {
 .pill {
   display: flex;
   align-items: center;
-  height: 64px;
+  height: var(--bottom-nav-height);
   background: var(--overlay-surface);
   border: 1px solid var(--nav-border);
   border-radius: 32px;

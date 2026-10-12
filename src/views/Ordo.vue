@@ -4,10 +4,7 @@
       <h1 class="section-page-title">Літургічны каляндар</h1>
       <div class="ordo-page__tools">
         <!-- Back to the Hours of the date being viewed (today on the month). -->
-        <router-link :to="hoursRoute" class="hours-capsule" data-test="ordo-hours-shortcut" aria-label="Літургія гадзінаў гэтага дня">
-          <PhSunHorizon :size="18" weight="bold" aria-hidden="true" />
-          <span>Літургія гадзінаў</span>
-        </router-link>
+        <LiturgyNavLink :to="hoursRoute" class="hours-capsule" data-test="ordo-hours-shortcut" aria-label="Літургія гэтага дня" />
         <OrdoDioceseFilter />
       </div>
     </header>
@@ -20,7 +17,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { PhSunHorizon } from '@phosphor-icons/vue';
+import LiturgyNavLink from '@/components/common/LiturgyNavLink.vue';
 import OrdoDay from '@/components/ordo/OrdoDay.vue';
 import OrdoMonth from '@/components/ordo/OrdoMonth.vue';
 import OrdoDioceseFilter from '@/components/ordo/OrdoDioceseFilter.vue';
@@ -42,12 +39,9 @@ const hoursRoute = computed(() => ordoHoursRoute({
 .ordo-page__tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .section-page-title { min-width: 0; margin: 0; color: rgb(var(--v-theme-on-surface)); font-size: clamp(1.6rem, 7vw, 2.35rem); font-family: var(--reader-display-font-family); font-weight: 700; line-height: 1.1; letter-spacing: -.025em; }
 .hours-capsule {
-  position: sticky; top: 10px; z-index: 3;
-  display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 7px 14px;
-  border: 1px solid rgba(var(--chrome-accent-rgb), .3); border-radius: 999px;
-  background: var(--nav-surface); color: var(--chrome-accent); box-shadow: 0 4px 14px var(--nav-button-shadow);
-  font-size: .84rem; font-weight: 760; text-decoration: none; white-space: nowrap;
-  -webkit-tap-highlight-color: transparent;
+  border: 1px solid var(--nav-border);
+  background: var(--nav-surface);
+  box-shadow: 0 2px 9px var(--nav-button-shadow);
 }
 .hours-capsule:hover { background: rgba(var(--chrome-accent-rgb), .1); }
 .hours-capsule:focus-visible { outline: 3px solid rgba(var(--chrome-accent-rgb), .3); outline-offset: 2px; }

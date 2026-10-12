@@ -1,0 +1,71 @@
+/* Shared by the legacy editor and its structured-set child component. */
+.reading-editor .reading-editor__card,
+.reading-editor .reading-editor__panel {
+  min-width: 0;
+  border: 1px solid var(--nav-border);
+  border-radius: 20px !important;
+  background: var(--nav-surface);
+}
+
+.reading-editor .v-card-title {
+  padding: 18px 16px 4px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-weight: 750;
+}
+
+.reading-editor .v-card-subtitle {
+  padding: 0 16px 8px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.reading-editor .v-card-text,
+.reading-editor .v-expansion-panel-text__wrapper {
+  padding: 16px;
+}
+
+.reading-editor .v-row > *,
+.reading-editor .v-input,
+.reading-editor .v-field,
+.reading-editor .v-field__input {
+  min-width: 0;
+}
+
+.reading-editor .v-select__selection {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.reading-editor .v-select__selection-text {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.reading-editor .v-btn:not(.v-btn--icon) {
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  min-height: 44px;
+  padding-block: 10px;
+  letter-spacing: normal;
+}
+
+.reading-editor .v-btn__content {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+
+.reading-editor .v-expansion-panel {
+  margin-top: 0;
+}
+
+.reading-editor .v-expansion-panel::after {
+  display: none;
+}
+
+.reading-editor .v-expansion-panel-title {
+  padding: 16px;
+}

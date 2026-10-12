@@ -1,8 +1,8 @@
 <template>
   <div class="sets-editor">
     <div class="sets-editor__tabs">
-      <v-chip-group v-model="activeIndex" mandatory selected-class="text-primary">
-        <v-chip v-for="(set, index) in model.sets" :key="index" :value="index" variant="outlined">
+      <v-chip-group v-model="activeIndex" mandatory column selected-class="text-primary">
+        <v-chip v-for="(set, index) in model.sets" :key="index" :value="index" variant="outlined" class="sets-editor__tab">
           {{ set.label || set.id }}<span v-if="set.default">&nbsp;★</span>
         </v-chip>
       </v-chip-group>
@@ -188,19 +188,24 @@ function removeSet() {
   margin-bottom: 12px;
 }
 
+.sets-editor__tab { height: auto; min-height: 44px; max-width: 100%; padding-block: 8px; }
+.sets-editor__tab :deep(.v-chip__content) { white-space: normal; overflow-wrap: anywhere; }
+.sets-editor__tabs :deep(.v-chip-group) { min-width: 0; max-width: 100%; }
+
 .sets-editor__section-title {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   font-size: 1rem;
 }
+.sets-editor__section-title > span { flex: 1 0 100%; min-width: 0; }
 
 .sets-editor__alternative {
   display: grid;
-  gap: 6px;
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px dashed var(--nav-border);
-  border-radius: 12px;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 12px 0 0 12px;
+  border-left: 2px solid var(--nav-border);
 }
 
 .gap-2 {

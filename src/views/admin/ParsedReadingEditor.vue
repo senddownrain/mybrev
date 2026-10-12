@@ -1,5 +1,6 @@
 <template>
   <v-container class="reading-editor">
+    <v-defaults-provider :defaults="{ VTextField: { hideDetails: 'auto' }, VTextarea: { hideDetails: 'auto' } }">
     <header class="reading-editor__header">
       <v-btn
         icon="mdi-arrow-left"
@@ -7,7 +8,7 @@
         aria-label="Назад да чытанняў"
         @click="goBack"
       />
-      <div>
+      <div class="reading-editor__heading-copy">
         <p class="reading-editor__eyebrow">Літургія слова</p>
         <h1>{{ isNew ? 'Новыя чытанні' : 'Рэдагаванне чытанняў' }}</h1>
       </div>
@@ -256,7 +257,7 @@
               </v-col>
             </v-row>
             <div v-for="(alternative, index) in section.alternatives || []" :key="index" class="mt-5">
-              <div class="d-flex align-center justify-space-between mb-3">
+              <div class="reading-editor__alternative-heading mb-3">
                 <strong>Альтэрнатыўнае чытанне {{ index + 1 }}</strong>
                 <v-btn variant="text" color="error" @click="section.alternatives.splice(index, 1)">Прыбраць</v-btn>
               </div>
@@ -265,7 +266,7 @@
               <v-text-field v-model="alternative.title" label="Літургічны ўступ" variant="outlined" />
               <v-textarea v-model="alternative.text" label="Тэкст" rows="5" auto-grow variant="outlined" />
             </div>
-            <v-btn variant="text" prepend-icon="mdi-plus" class="mt-3" @click="addAlternative(section)">Дадаць альтэрнатыўнае чытанне</v-btn>
+            <v-btn variant="text" prepend-icon="mdi-plus" class="text-none mt-3" @click="addAlternative(section)">Дадаць альтэрнатыўнае чытанне</v-btn>
             <div v-if="section.key !== 'reading1'" class="d-flex justify-end mt-3">
               <v-btn
                 color="error"
@@ -284,7 +285,7 @@
       <v-card class="reading-editor__card mb-5" elevation="0">
         <v-card-title>Секвенцыя</v-card-title>
         <v-card-text>
-          <v-textarea v-model="draft.sequence.text" label="Тэкст секвенцыі (калі ёсць)" rows="6" auto-grow variant="outlined" />
+          <v-textarea v-model="draft.sequence.text" label="Тэкст секвенцыі (калі ёсць)" rows="4" auto-grow variant="outlined" hide-details="auto" />
         </v-card-text>
       </v-card>
 
@@ -411,6 +412,7 @@
         </v-btn>
       </div>
     </v-form>
+    </v-defaults-provider>
   </v-container>
 </template>
 
@@ -418,6 +420,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { QuillEditor } from '@vueup/vue-quill';
+import '@/styles/reading-editor.css';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import {
   collection,
@@ -730,6 +733,9 @@ onMounted(load);
   margin-bottom: 24px;
 }
 
+.reading-editor__heading-copy { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.reading-editor__alternative-heading { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+
 .reading-editor__header h1,
 .reading-editor__section-heading h2,
 .reading-editor__eyebrow {
@@ -759,27 +765,6 @@ onMounted(load);
   color: var(--nav-muted);
 }
 
-.reading-editor__card,
-.reading-editor__panel {
-  border: 1px solid var(--nav-border);
-  border-radius: 20px !important;
-  background: var(--nav-surface);
-}
-
-.reading-editor__card :deep(.v-card-title) {
-  padding: 20px 20px 4px;
-  font-weight: 750;
-}
-
-.reading-editor__card :deep(.v-card-subtitle) {
-  padding: 0 20px 10px;
-  white-space: normal;
-}
-
-.reading-editor__card :deep(.v-card-text) {
-  padding: 18px 20px 20px;
-}
-
 .reading-editor__section-heading {
   display: flex;
   align-items: center;
@@ -798,6 +783,9 @@ onMounted(load);
   align-items: baseline;
   justify-content: space-between;
   width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
   gap: 18px;
   padding-right: 12px;
   font-weight: 720;
@@ -818,7 +806,7 @@ onMounted(load);
 }
 
 .reading-editor :deep(.ql-container) {
-  min-height: 230px;
+  min-height: 180px;
   border-color: var(--nav-border);
   border-radius: 0 0 8px 8px;
   font-family: var(--reader-font-family);
@@ -844,6 +832,7 @@ onMounted(load);
 
 .reading-editor__footer {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
   padding-top: 8px;

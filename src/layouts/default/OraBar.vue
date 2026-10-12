@@ -1,8 +1,9 @@
 <template>
   <v-app-bar flat class="floating-ora-bar" :class="{ 'floating-ora-bar--scrolled': showCapsule }">
     <v-app-bar-nav-icon class="ora-circle-btn" aria-label="Назад" @click="goBack"><PhArrowLeft :size="21" /></v-app-bar-nav-icon>
+    <LiturgyNavLink v-if="!isHour" :to="dateHomeRoute" />
     <Transition name="hour-capsule">
-      <div v-if="showCapsule" class="hour-capsule-anchor" :class="{ 'hour-capsule-anchor--admin': auth.isAdmin }">
+      <div v-if="showCapsule" class="hour-capsule-anchor">
         <v-menu location="bottom center">
           <template #activator="{ props }">
             <button v-bind="props" type="button" class="ora-location" :aria-label="`Выбраць гадзіну: ${hourTitle}`">
@@ -28,6 +29,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
 import { PhArrowLeft, PhCaretDown, PhPencilSimple } from '@phosphor-icons/vue';
 import TextScaleControl from '@/components/TextScaleControl.vue';
+import LiturgyNavLink from '@/components/common/LiturgyNavLink.vue';
 import { useLiturgicalHours } from '@/composables/useLiturgicalHours';
 import moment from '@/utils/moment-be';
 import { LITURGICAL_HOUR_TITLES } from '@/constants/liturgicalHours';
@@ -93,11 +95,16 @@ function onEditClick() {
   box-shadow: none !important;
 }
 
-.floating-ora-bar--scrolled { background: var(--nav-surface) !important; }
-
 .floating-ora-bar :deep(.v-toolbar__content) {
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 4px;
+  width: calc(100% - 24px);
+  margin-inline: 12px;
+  padding: 4px;
+  border: 1px solid var(--nav-border);
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--nav-surface) 92%, transparent);
+  box-shadow: 0 2px 9px var(--nav-button-shadow);
+  backdrop-filter: blur(12px);
 }
 
 .floating-ora-bar :deep(.v-toolbar__prepend),
@@ -114,13 +121,12 @@ function onEditClick() {
   height: 48px !important;
   min-width: 48px !important;
   flex: 0 0 48px !important;
-  border: 1px solid var(--nav-border) !important;
+  border: 0 !important;
   border-radius: 50% !important;
-  background: color-mix(in srgb, var(--nav-surface) 78%, transparent) !important;
+  background: transparent !important;
   color: var(--nav-on-surface) !important;
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--nav-button-shadow) 72%, transparent) !important;
+  box-shadow: none !important;
   transition: transform 0.16s ease, opacity 0.16s ease !important;
-  backdrop-filter: blur(18px);
 }
 
 .ora-circle-btn:active {
@@ -140,16 +146,20 @@ function onEditClick() {
 
 
 .floating-ora-bar :deep(.text-scale-control) {
-  background: color-mix(in srgb, var(--nav-surface) 78%, transparent);
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--nav-button-shadow) 72%, transparent);
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 
 
 @media (max-width: 359px) {
   .floating-ora-bar :deep(.v-toolbar__content) {
-    gap: 6px;
-    padding-inline: 10px;
+    gap: 2px;
+    width: calc(100% - 16px);
+    margin-inline: 8px;
   }
 
   .ora-circle-btn {
@@ -163,13 +173,15 @@ function onEditClick() {
 
 }
 
-.hour-capsule-anchor { position: fixed; top: calc(13px + env(safe-area-inset-top, 0px)); left: calc(50% - 24px); transform: translateX(-50%); }
-.ora-location { display: flex; align-items: center; gap: 6px; max-width: min(calc(100vw - 200px), 360px); height: 38px; padding: 0 13px; border: 1px solid var(--nav-border); border-radius: 20px; background: var(--nav-surface); color: var(--nav-on-surface); box-shadow: 0 2px 8px var(--nav-button-shadow); font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
-.ora-location span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hour-capsule-anchor { flex: 1 1 0; min-width: 0; }
+.ora-location { display: flex; align-items: center; justify-content: center; gap: 4px; width: 100%; min-height: 44px; padding: 4px; border: 0; border-radius: 20px; background: transparent; color: var(--nav-on-surface); font: inherit; font-size: .9rem; font-weight: 650; line-height: 1.2; cursor: pointer; }
+.ora-location span { min-width: 0; overflow-wrap: anywhere; }
 .ora-location svg { flex-shrink: 0; }
-.hour-capsule-anchor--admin { left: calc(50% - 48px); }
-.hour-capsule-anchor--admin .ora-location { max-width: min(calc(100vw - 256px), 360px); }
-.ora-hour-menu { max-height: min(65dvh, 480px); overflow-y: auto; }
+.ora-location:hover { background: var(--nav-active); }
+.ora-location:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -2px; }
+.ora-hour-menu { max-height: min(65dvh, 480px); overflow-y: auto; border: 1px solid var(--nav-border); border-radius: 20px !important; background: var(--overlay-surface); color: var(--nav-on-surface); box-shadow: var(--hero-shadow); }
+.ora-hour-menu :deep(.v-list-item) { min-height: 44px; }
+.ora-hour-menu :deep(.v-list-item-title), .ora-hour-menu :deep(.v-list-item-subtitle) { white-space: normal; }
 .hour-capsule-enter-active, .hour-capsule-leave-active { transition: opacity .18s ease, translate .18s ease; }
 .hour-capsule-enter-from, .hour-capsule-leave-to { opacity: 0; translate: 0 -5px; }
 @media (prefers-reduced-motion: reduce) { .hour-capsule-enter-active, .hour-capsule-leave-active { transition: none; } }

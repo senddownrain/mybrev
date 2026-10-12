@@ -605,12 +605,10 @@ watch(() => [route.params.date || route.query.date, route.query.dayId, effective
 }
 
 .reading-choice__option-title {
-  overflow: hidden;
   font-size: 0.91rem;
   font-weight: 700;
   line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .reading-choice__summary .reading-choice__option-title {
@@ -655,7 +653,7 @@ watch(() => [route.params.date || route.query.date, route.query.dayId, effective
   position: relative;
   display: grid;
   min-width: 42px;
-  height: 38px;
+  min-height: 44px;
   place-items: center;
   border: 1px solid var(--nav-border);
   border-radius: 13px;
@@ -684,22 +682,25 @@ watch(() => [route.params.date || route.query.date, route.query.dayId, effective
 }
 
 .set-choice__buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 5px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  width: 100%;
+  gap: 8px;
 }
 
+.set-choice { flex-direction: column; align-items: stretch; }
+
 .set-choice__button {
-  width: auto;
-  padding-inline: 12px;
-  white-space: nowrap;
+  min-width: 0;
+  padding: 10px 12px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
 }
 
 @media (max-width: 600px) {
   .set-choice__buttons {
-    width: 100%;
-    justify-content: flex-start;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .readings-container {
