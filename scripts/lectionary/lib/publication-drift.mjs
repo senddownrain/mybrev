@@ -108,6 +108,11 @@ export async function buildPublicationDrift({ audit, previousSnapshotDir = path.
     production: Object.fromEntries(COLLECTIONS.map((n) => [n, production[n] ? { count: production[n].count, digest: production[n].digest, bytes: production[n].bytes } : null])),
     manifest: { current: current ? { contentVersion: current.contentVersion, publishedAt: current.publishedAt, schemaVersion: current.schemaVersion, collections: current.collections } : null, ...manifest },
     flutterBundle, previousLocalSnapshot: previous, repo,
+    devFirestore: { status: 'NONE', note: '.firebaserc declares one project (ibreviaryby); there is no separate dev Firestore to compare with' },
+    applyBackupsSeen: Object.fromEntries(['readings-sets', 'hours-sources-import', 'ordo-calendar', 'ordo-feasts'].map((name) => {
+      const dir = path.join(ROOT, 'backups', name);
+      return [name, fs.existsSync(dir) ? fs.readdirSync(dir).sort() : []];
+    })),
     browser: {
       status: 'NOT_OBSERVABLE_HEADLESSLY',
       consumes: 'live Firestore queries for `readings`/`days` + bundled calendar definitions (revision above) and notes; IndexedDB/persistent cache by content key (src/utils/publicContentCache.js)',

@@ -520,6 +520,7 @@ test('reports: counts are consistent with each other and never claim completenes
   assert.equal(typeof hashes.contract, 'string');
   assert.ok(contract.documents.length > 800);
   assert.equal(collectionDigest(Object.fromEntries(contract.documents.map((d) => [d.id, d.hash]))), hashes.documents);
+  assert.equal(contract.dataset.digest, hashes.documents, 'the dataset revision is the digest of the per-document hashes');
   assert.ok(contract.documents.every((d) => d.kind !== 'canonical' || d.sets.every((s) => s.sections.every((x) => /^[0-9a-f]{16}$/.test(x.hash)))));
   assert.ok(contract.edgeCases.length >= 8);
 });

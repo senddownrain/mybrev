@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generatedAt": "2026-10-12T18:07:20.590Z",
+ "generatedAt": "2026-10-12T18:10:44.614Z",
  "complete": false,
  "completenessStatement": "NOT complete: see `notChecked` and the discrepancies; coverage is stated as numerators over denominators, never as 100%.",
  "inputs": {
@@ -952,6 +952,18 @@
   ],
   "sets": 32,
   "referenceOnlySets": 5
+ },
+ "contentBreakdown": {
+  "note": "what the planned legal options deliver, counted over the normalized identities",
+  "textVerified": 476,
+  "textWithMismatch": 323,
+  "referenceOnly": 9,
+  "weekdayByDesign": 104,
+  "missing": 4,
+  "inaccessibleSource": 0,
+  "sourceMissingTextOnThePage": [
+   "5089"
+  ]
  },
  "sections": {
   "byKind": {

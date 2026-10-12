@@ -147,6 +147,16 @@ export function buildCoverage(audit) {
       byStatus: count([...statuses.values()], 'status'), notReachedByAnyPlannedOption: unreachedDocs,
       sets: setsTotal, referenceOnlySets,
     },
+    contentBreakdown: {
+      note: 'what the planned legal options deliver, counted over the normalized identities',
+      textVerified: (rowsWithStatus.filter((row) => ['verified', 'verified-layout-note'].includes(row.verification))).length,
+      textWithMismatch: rowsWithStatus.filter((row) => row.verification === 'mismatch').length,
+      referenceOnly: rowsWithStatus.filter((row) => row.verification === 'reference-only').length,
+      weekdayByDesign: rowsWithStatus.filter((row) => row.verification === 'weekday-by-design').length,
+      missing: rowsWithStatus.filter((row) => ['no-document', 'no-source-page'].includes(row.verification)).length,
+      inaccessibleSource: pageRows.filter((r) => r.status !== 200).length,
+      sourceMissingTextOnThePage: pageRows.filter((r) => r.parse?.validation?.some((v) => /no text/.test(v))).map((r) => r.id),
+    },
     sections: { byKind: sections, totals: { ...sectionTotals, textSectionsWithDifferences: sectionTotals.checked - sectionTotals.exact, citationMismatches: sectionTotals.citations - sectionTotals.citationsExact } },
     planned: {
       years: planned.years, dateDioceseCombinations: planned.counts.dioceseDates, civilDates: planned.counts.dates,

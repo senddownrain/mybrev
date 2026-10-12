@@ -9,6 +9,7 @@ import { classifyPatch, describeDocuments, diffCollection, documentHash, storedD
 import { projectSetToLegacy } from '../../../src/utils/massReadingSets.js';
 import { validateParsedPage } from '../../liturgy/lib/lectionary-parser.mjs';
 import { parseFidelity } from './fidelity.mjs';
+import { normalizeReadingText } from '../../../src/utils/readingTextNormalization.js';
 import { expectedForLegacy, identityMismatch } from './doc-page.mjs';
 
 const FLAT = ['reading1', 'reading2', 'reading3', 'reading4', 'reading5', 'reading6', 'reading7', 'epistle', 'psalm', 'sequence', 'alleluia', 'gospel'];
@@ -31,6 +32,14 @@ export function flatFieldsFromPage(doc, page) {
   if (flat.alleluia) flat.alleluia = prune({ bible: flat.alleluia.bible, verse: flat.alleluia.verse });
   // the parser's reading fields that legacy documents do not store
   for (const key of Object.keys(flat)) if (flat[key] && typeof flat[key] === 'object') { delete flat[key].conclusion; delete flat[key].rubrics; }
+  // The layout rule every other writer of readings applies (admin editor, db:cleanup-reading-paragraphs):
+  // a uniform run of short poetic lines is one paragraph with line breaks, not a column of paragraphs.
+  const normalizeTexts = (reading) => {
+    if (!reading || typeof reading.text !== 'string') return;
+    reading.text = normalizeReadingText(reading.text);
+    (reading.alternatives || []).forEach(normalizeTexts);
+  };
+  Object.entries(flat).forEach(([key, value]) => { if (/^(reading\d|epistle|gospel)$/.test(key)) normalizeTexts(value); });
   return { flat };
 }
 

@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generatedAt": "2026-10-12T18:07:20.590Z",
+ "generatedAt": "2026-10-12T18:10:44.614Z",
  "snapshot": {
   "dir": ".cache/prod-snapshot-20261012",
   "snapshotVersion": "20261012171555724",
@@ -722,6 +722,36 @@
    "skipped": 4,
    "status": "PENDING APPLY: dry-run plan only (reports/lectionary/resync-plan.json)"
   }
+ },
+ "devFirestore": {
+  "status": "NONE",
+  "note": ".firebaserc declares one project (ibreviaryby); there is no separate dev Firestore to compare with"
+ },
+ "applyBackupsSeen": {
+  "readings-sets": [
+   "2026-10-07T18-13-05-115Z",
+   "2026-10-07T18-13-46-996Z"
+  ],
+  "hours-sources-import": [
+   "2026-10-07T18-13-52-227Z.json"
+  ],
+  "ordo-calendar": [
+   "2026-10-01T08-54-44-648Z.json",
+   "2026-10-01T08-54-57-547Z.json",
+   "2026-10-01T08-55-11-968Z.json",
+   "2026-10-01T08-55-38-503Z.json",
+   "2026-10-07T18-14-37-023Z.json",
+   "2026-10-07T18-14-49-861Z.json",
+   "year-overrides-2026-10-07T18-15-09-781Z.json"
+  ],
+  "ordo-feasts": [
+   "2026-10-01T08-56-39-978Z.json",
+   "2026-10-01T08-57-41-253Z.json",
+   "2026-10-01T08-58-58-978Z.json",
+   "2026-10-01T09-00-56-141Z.json",
+   "2026-10-07T18-14-10-031Z.json",
+   "2026-10-07T18-14-25-743Z.json"
+  ]
  },
  "browser": {
   "status": "NOT_OBSERVABLE_HEADLESSLY",

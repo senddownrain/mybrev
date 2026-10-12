@@ -33,7 +33,7 @@ export function describePage(page, docsOfPage, plannedKeys) {
     ...(set.prayers ? { prayers: set.prayers.map((p) => p.kind) } : {}),
     ...(set.preface ? { preface: set.preface.length } : {}),
     sections: set.sections.filter((s) => s.kind !== 'rubric').map((s) => ({
-      kind: s.kind, role: s.role, ...(s.cycle ? { cycle: s.cycle } : {}), ...(s.year ? { year: s.year } : {}), ...(s.form ? { form: s.form } : {}),
+      kind: s.kind, role: s.role, heading: s.label || null, ...(s.cycle ? { cycle: s.cycle } : {}), ...(s.year ? { year: s.year } : {}), ...(s.form ? { form: s.form } : {}),
       bible: s.bible || '', text: Boolean(s.text || s.passion || s.verses?.length || s.verse),
       ...(s.alternatives?.length ? { alternatives: s.alternatives.map((a) => a.bible || '') } : {}),
     })),
