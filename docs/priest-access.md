@@ -390,12 +390,26 @@ Flutter приложения и не live-тест realtime listener; UI/realtim
 (85 changed + 21 removed prayers, 4 changed + 1 removed categories, 1.6 MB).
 Публикация патча не выполнена и guard не обходился. Требуется новый Flutter
 bundle/app release; старые офлайн-установки могут содержать ранее публичные
-тексты. Server/web доступ уже защищён. Hosting в рамках этого переноса не
-публиковался. Артефакты: `backups/priest-live-20261012`,
+тексты. Server/web доступ уже защищён. После отдельного согласия владельца
+12.10.2026 опубликован Hosting из коммита `be44868`:
+`https://ibreviaryby.web.app`, entry `/assets/index-C2tOKbR9.js`.
+Проверены HTTP 200 для HTML, JavaScript и service worker; на новой сборке
+в браузере проверены настройки активации, отказ по закрытой прямой ссылке
+и общедоступная Імша. При обновлении PWA браузер сначала использовал прежнюю
+сборку; после повторного открытия страниц загрузилась новая версия.
+Артефакты: `backups/priest-live-20261012`,
 `backups/priest-access/d89eb999-5749-4b81-a217-fad0ef133350.json`,
 `reports/priest-access/live/functional-results.json`,
+`reports/priest-access/live/hosting-deployment.json`,
 `reports/content/manifest-diff.json`. Все приватные backups/reports игнорируются
 Git; реальные proof/credentials не включаются в этот документ.
+
+Повторная проверка 12.10.2026: priest tests — 18 passed, 2 emulator-only
+skipped вне эмулятора; Rules/миграция в эмуляторе — 17/17, UI — PASS
+(разделение Auth, сохранение доступа, активация/отключение, смена кода,
+реестр/подписи/отзыв, перенос категории, desktop и 320/390 px).
+App-content/scoped manifest tests — 17/17. Линтинг и production/PWA build
+успешны; прежние предупреждения о крупных chunks остаются.
 
 Проверка этой реализации (Windows, 11.10.2026): Rules regression — 22/22,
 интеграция Rules/миграции — 16/16; реальный UI прошёл Auth separation/reload,
@@ -407,11 +421,12 @@ CRLF/LF в проверке generated snapshot; две проверки `ordo-sc
 Windows separators). Линтинг без исправлений и production/PWA build успешны;
 сборка предупреждает о прежних крупных chunks.
 
-Локальный dry-run реальных имеющихся снимков: 85 молитв; категория и обе
+Исторический локальный dry-run 11.10.2026: 85 молитв; категория и обе
 защищённые коллекции не покрыты. Отчёт —
 `reports/priest-access/local-snapshot-dry-run.json`. Он неполный и **не является
-разрешением на apply**; свежие live reads, production миграция, manifest
-publication, Console changes и deploy не выполнялись.
+разрешением на apply**; на этом этапе свежие live reads, production миграция,
+manifest publication, Console changes и deploy не выполнялись. Последующий
+согласованный production перенос и Hosting deploy описаны выше.
 
 `npm run test:priest` — policy/план/кеш/нормализация/миграция (emulator тесты
 вне emulator пропускаются). `npm run test:priest:rules` — Auth+Firestore Emulator,
