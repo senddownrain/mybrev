@@ -327,13 +327,13 @@ production останется неизменным к моменту приме�
 в manifest). Dry-run не обращается к Firestore и не включает proof в отчёт:
 
 ```text
-npm run db:migrate-priest-grant-proofs -- --snapshot backups/priest-security-20261012-claims-fix
+npm run db:migrate-priest-grant-proofs -- --snapshot backups/priest-security-4966383-rollout
 ```
 
 Только после отдельного подтверждения владельца и публикации проверенных Rules:
 
 ```text
-npm run db:migrate-priest-grant-proofs -- --snapshot backups/priest-security-20261012-claims-fix --apply --approve-digest <digest из reports/priest-access/grant-proof-migration.json> --protected-rules-confirmed
+npm run db:migrate-priest-grant-proofs -- --snapshot backups/priest-security-4966383-rollout --apply --approve-digest <digest из reports/priest-access/grant-proof-migration.json> --protected-rules-confirmed
 ```
 
 Apply сверяет проект и полный реестр со снимком, создаёт приватный lossless
@@ -350,19 +350,52 @@ proof/исчезновение записи останавливают прим�
 работать: `hasGrant()` не зависит от наличия claim, даты активации или кода.
 Для очистки grants не нужна публикация content manifest, молитвы не изменяются.
 
-Порядок production rollout (в этой задаче **не выполнен**):
+Порядок production rollout:
 
 1. Получить отдельное согласие владельца. Проверить, что Flutter-активация и
    веб-сборка используют batch; прежние клиенты больше не активируют новые UID
    одиночным grant, но зарегистрированные устройства сохраняются.
-2. Опубликовать Rules, закрывающие claims и owner get старых proof-bearing grants.
+2. С согласия владельца отключить прежний код (`activeCodeProof: ''`,
+   `changedAt: null`), сохранив остальные settings и grants. Опубликовать Rules,
+   закрывающие claims и owner get старых proof-bearing grants.
    На время до удаления legacy поля такой owner status-check отклоняется;
    серверный grant не отзывается и не истекает.
 3. Применить reviewed field-only migration; при устаревшем снимке остановиться.
-4. Заменить общий activation code, сохранив все grants. Утёкший старый proof
-   после этого не активирует новые установки. Новый код показывать/копировать
-   в админке один раз; не помещать в отчёт/логи/браузерное хранилище.
-5. Опубликовать новую веб-сборку и проверить new device/rotation/revoke.
+4. Опубликовать новую веб-сборку и проверить серверные запреты, старое
+   разрешение, отзыв и публичные молитвы. New device/rotation также проверить
+   в эмуляторе; для живой активации нужен новый рабочий код.
+5. Владелец генерирует и копирует новый код в админке один раз. До этого
+   новые установки не активируются; прежние grants работают. Не помещать
+   новый код в отчёт/логи/браузерное хранилище.
+
+**Production внедрение выполнено 12.10.2026 после отдельного согласия владельца.**
+Свежий scoped backup `backups/priest-security-4966383-rollout` содержит
+4 active grant, 0 claims, 1 settings (версия `20261012182242196`). Старый код
+отключён. Rules из коммита `4966383` опубликованы и сверены:
+ruleset `2e889df2-b2dc-45d9-9f69-1a2445c60737`, SHA-256
+`90f2ccc7acf209200c14e02d68a624563a61a86e3385d396b69b17bcb1ebca50`.
+Миграция удалила proof из всех 4 grants, сохранив все UID, статусы, даты,
+подписи и остальные поля. Приватный lossless backup перед удалением:
+`backups/priest-grant-proofs/43d907e7-8576-4ef8-880a-4b5ba7591e60.json`.
+Никакие реальные устройства не отозваны и не пересозданы.
+
+Hosting опубликован из отдельного архива **точного коммита `4966383`**;
+параллельные незавершённые изменения рабочего каталога не включены.
+Entry `/assets/index-BEq_zll6.js`, сайт `https://ibreviaryby.web.app`.
+Чистый линтинг и production/PWA build этой версии успешны; HTTP HTML/entry/SW
+проверены. В браузере новая версия показывает существующий блок активации.
+На живом сервере проверены отказ чтения закрытых текстов без grant, закрытые
+claim get/list (также для Anonymous владельца), отсутствие частичных документов
+после отклонённого batch при отключённом коде, все три публичных варианта Імшы.
+Собственный временный тестовый grant без claim с датой активации 2025 года
+читает закрытую молитву при отключённом коде; после отзыва следующий запрос
+отклонён. Тестовые grant/Auth удалены; реальные регистрации сохранены.
+Новый рабочий код **ещё не создан**: владелец создаёт и копирует его в разделе
+«Доступ для святароў». Живая активация с новым кодом в этом rollout не выполнялась;
+правильный/неверный код, смена кода и сохранение grant проверены в эмуляторе.
+Приватные отчёты: `reports/priest-access/security-rules-deployment.json`,
+`security-live-results.json`, `security-hosting-deployment.json`,
+`security-clean-build.log`, `security-clean-lint.log`, `security-hosting.log`.
 
 Claims закрыты также от client-admin get/list/update/delete. Доверенный Admin
 SDK обходит Rules и применяется только для резервного копирования/миграции.
@@ -544,9 +577,10 @@ Lite создаёт оба документа, claim отсутствует в �
 Линтер security-файлов чист; полный линтер рабочего каталога обнаружил
 2 ошибки в параллельном незавершённом `scripts/import-catholicby-yearcycle.mjs`
 (`AbortSignal`, дублированный `status`) и 2 предупреждения импортных скриптов.
-Эти изменения не входят в security commit. Реальные production grants только
-прочитаны/сохранены в приватный снимок; Rules/Hosting/миграция/код в рамках
-security fix не опубликованы и ждут отдельного согласия владельца.
+Эти изменения не входят в security commit. Линтинг изолированного архива
+коммита `4966383` чист. После отдельного согласия владельца Rules/Hosting
+опубликованы, legacy proof удалены из 4 grants и старый код отключён;
+подробности и границы live-проверки указаны в разделе внедрения выше.
 Артефакты: `reports/priest-access/claims-emulator-final.log`,
 `claims-ui-lite.log`, `claims-local-tests.log`, `claims-full-tests.log`, `claims-build.log`,
 `grant-proof-migration.json`. Proof/реальные credentials в отчётах не выводятся.
