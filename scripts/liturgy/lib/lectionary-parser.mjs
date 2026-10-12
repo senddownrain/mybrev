@@ -125,30 +125,52 @@ const FOOTER = /^Пераклад здзейснены/u;
 const SITE_FOOTER = /^(Адноўлена|Абноўлена)\s+\d/u;
 const READING_TITLE = /^\+?\s*(Чытанне|Пачатак|Заканчэнне|Мука Пана)/u;
 
-/** Section heading of a line: { kind, role, cycle?, label } or null. */
+const FORMS = { 'ДАЎЖЭЙШАЕ': 'long', 'КАРОЦЕЙШАЕ': 'short', 'КАРОТКАЕ': 'short' };
+// A heading, optionally followed by a form («, ДАЎЖЭЙШАЕ») and/or the citation
+// printed on the same line («ЕВАНГЕЛЛЕ Ян 19, 25-34», 8105 / 5089).
+const HEADING = new RegExp(`^(${ORDINALS.map((word) => `${word} ЧЫТАННЕ`).join('|')}|ЭПІСТАЛА|(?:\\d\\s+)?РЭСПАНСАРЫЙНЫ ПСАЛЬМ|СПЕЎ ПЕРАД ЕВАНГЕЛЛЕМ|СЕКВЕНЦЫЯ|ЕВАНГЕЛЛЕ(?: Ў ГОД [АВСABC])?|КАЛЕКТА|ЛІТУРГІЯ СЛОВА)(?:,\\s*(${Object.keys(FORMS).join('|')}))?(?:\\s+(\\d?\\s?[А-ЯЁІЎ][а-яёіўa-z]*\\.?\\s*\\d.*))?$`, 'u');
+
+/** Section heading of a line: { kind, role, cycle?, label, form?, bible? } or null. */
 export function headingOf(line) {
   const value = line.text.replace(/\s+/g, ' ').trim();
-  if (!line.bold && !EMBEDDED_HEADING.test(`x ${value}`)) return null;
-  const upper = value.toUpperCase();
-  if (upper !== value) return null;
-  const reading = new RegExp(`^(${ORDINALS.join('|')}) ЧЫТАННЕ$`, 'u').exec(value);
+  if (!line.bold && !EMBEDDED_HEADING.test(`x ${value}`) && !HEADING.test(value)) return null;
+  // «Секвенцыя» is printed in bold lower case on some pages.
+  const candidate = line.bold && value.toUpperCase() !== value && !/\d/.test(value) ? value.toUpperCase() : value;
+  const match = HEADING.exec(candidate);
+  if (!match) return null;
+  const [, head, form, bible] = match;
+  const extra = { ...(form ? { form: FORMS[form] } : {}), ...(bible ? { bible: bible.trim() } : {}) };
+  const reading = new RegExp(`^(${ORDINALS.join('|')}) ЧЫТАННЕ$`, 'u').exec(head);
   if (reading) {
     const number = ORDINALS.indexOf(reading[1]) + 1;
-    return { kind: 'reading', role: `reading${number}`, label: value };
+    return { kind: 'reading', role: `reading${number}`, label: head, ...extra };
   }
-  if (value === 'ЭПІСТАЛА') return { kind: 'reading', role: 'epistle', label: value };
-  const psalm = /^(?:(\d)\s+)?РЭСПАНСАРЫЙНЫ ПСАЛЬМ$/u.exec(value);
-  if (psalm) return { kind: 'psalm', role: psalm[1] ? `psalm${psalm[1]}` : 'psalm', label: value };
-  if (value === 'СПЕЎ ПЕРАД ЕВАНГЕЛЛЕМ') return { kind: 'acclamation', role: 'alleluia', label: value };
-  if (value === 'СЕКВЕНЦЫЯ') return { kind: 'sequence', role: 'sequence', label: value };
-  const gospel = /^ЕВАНГЕЛЛЕ(?: Ў ГОД ([АВСABC]))?$/u.exec(value);
-  if (gospel) return { kind: 'gospel', role: 'gospel', label: value, ...(gospel[1] ? { cycle: CYCLE_LETTERS[gospel[1]] } : {}) };
+  if (head === 'ЭПІСТАЛА') return { kind: 'reading', role: 'epistle', label: head, ...extra };
+  const psalm = /^(?:(\d)\s+)?РЭСПАНСАРЫЙНЫ ПСАЛЬМ$/u.exec(head);
+  if (psalm) return { kind: 'psalm', role: psalm[1] ? `psalm${psalm[1]}` : 'psalm', label: head, ...extra };
+  if (head === 'СПЕЎ ПЕРАД ЕВАНГЕЛЛЕМ') return { kind: 'acclamation', role: 'alleluia', label: head, ...extra };
+  if (head === 'СЕКВЕНЦЫЯ') return { kind: 'sequence', role: 'sequence', label: head, ...extra };
+  if (head === 'КАЛЕКТА') return { kind: 'prayer', role: 'collect', label: head, ...extra };
+  if (head === 'ЛІТУРГІЯ СЛОВА') return { kind: 'marker', role: 'liturgy-of-the-word', label: head };
+  const gospel = /^ЕВАНГЕЛЛЕ(?: Ў ГОД ([АВСABC]))?$/u.exec(head);
+  if (gospel) return { kind: 'gospel', role: 'gospel', label: head, ...(gospel[1] ? { cycle: CYCLE_LETTERS[gospel[1]] } : {}), ...extra };
   return null;
 }
 
-const isSetHeader = (line) => line.align === 'center' && /імша|працэсія/iu.test(line.text) && line.text.length < 80;
+/** «Год І» / «Год ІІ»: the weekday lectionary years (I = odd years, II = even years). */
+const WEEKDAY_YEAR = /^Год\s+([IІ]{1,2})$/u;
+export const weekdayYearOf = (line) => {
+  const match = WEEKDAY_YEAR.exec(line.text.replace(/\s+/g, ' ').trim());
+  return match ? String(match[1].length) : '';
+};
+
+export const isSetHeader = (line) => line.align === 'center' && /імша|працэсія/iu.test(line.text) && line.text.length < 80;
 const isRight = (line) => line.align === 'right';
-const isRefrainMarker = (line) => /^Рэфрэн:?$/u.test(line.text);
+// Pages 8105/8570/8864 print the citation as a plain line: a book abbreviation and a verse reference.
+const CITATION = /^(?:\d\s?)?[А-ЯЁІЎ][а-яёіўa-z]{0,6}\.?\s(?:[А-ЯЁІЎ][а-яёіў]{1,5}\s)?\d+[\d\s,.:–—\-абсdefcивп()Рр]*$/u;
+export const looksLikeCitation = (line) => !line.bold && !line.italic && line.text.length < 90 && CITATION.test(line.text);
+const isRefrainMarker = (line) => /^Рэфр[эа]н:?$/u.test(line.text);
+const OR_MARK = /^(або|альбо):?$/iu;
 /** A rubric line: starts in italic, no plain text («Чытаецца калекта і гімн «Хвала…»» quotes the hymn in bold). */
 const mostlyItalic = (line) => line.italic || (line.segments[0]?.i && line.segments.every((segment) => segment.i || segment.b));
 const boldPrefix = (line) => (line.segments[0]?.b ? line.segments[0].text.trim() : '');
@@ -226,23 +248,29 @@ function parsePassion(lines) {
 }
 
 function parseReadingLike(heading, lines, warnings) {
-  const section = { kind: heading.kind, role: heading.role, label: heading.label, ...(heading.cycle ? { cycle: heading.cycle } : {}) };
+  const section = {
+    kind: heading.kind, role: heading.role, label: heading.label, ...(heading.cycle ? { cycle: heading.cycle } : {}),
+    ...(heading.form ? { form: heading.form } : {}),
+    ...(heading.bible ? { bible: heading.bible } : {}),
+  };
   const body = [];
   const rubrics = [];
   let target = section;
   let conclusion = '';
   let afterConclusion = false;
   for (const line of lines) {
-    if (afterConclusion) {
+    // «або» also follows the conclusion of the first reading (8570 «альбо»).
+    if (afterConclusion && !(OR_MARK.test(line.text) || (boldPrefix(line) && OR_MARK.test(boldPrefix(line)) && line.text.length < 8))) {
       rubrics.push(line.text);
       continue;
     }
-    if (isRight(line)) {
+    afterConclusion = false;
+    if (isRight(line) || (!target.bible && !(target === section ? body : target._body).length && !target.title && !target.comment && looksLikeCitation(line))) {
       if (!target.bible) target.bible = line.text;
       else warnings.push(`${heading.label}: extra citation «${line.text}»`);
       continue;
     }
-    if (/^або:?$/iu.test(line.text) || (boldPrefix(line) && /^або:?$/iu.test(boldPrefix(line)) && line.text.length < 8)) {
+    if (OR_MARK.test(line.text) || (boldPrefix(line) && OR_MARK.test(boldPrefix(line)) && line.text.length < 8)) {
       target = { };
       (section.alternatives ||= []).push(target);
       target._body = [];
@@ -251,7 +279,12 @@ function parseReadingLike(heading, lines, warnings) {
     const bucket = target === section ? body : target._body;
     if (!bucket.length && !target.title && line.italic && !target.comment) { target.comment = line.text; continue; }
     if (!bucket.length && line.bold && READING_TITLE.test(line.text) && !target.title) { target.title = line.text; continue; }
-    if (CONCLUSION.test(line.text)) { conclusion = line.text.replace(/\.?$/, '.'); afterConclusion = true; continue; }
+    if (CONCLUSION.test(line.text)) {
+      if (target === section) conclusion = line.text.replace(/\.?$/, '.');
+      else target.conclusion = line.text.replace(/\.?$/, '.');
+      afterConclusion = true;
+      continue;
+    }
     if (/^Не гаворыцца/u.test(line.text)) { rubrics.push(line.text); continue; }
     bucket.push(line);
   }
@@ -273,26 +306,38 @@ function parseReadingLike(heading, lines, warnings) {
 }
 
 function parsePsalm(heading, lines, warnings) {
-  const section = { kind: 'psalm', role: heading.role, label: heading.label, bible: '', chorus: '', verses: [] };
+  const section = {
+    kind: 'psalm', role: heading.role, label: heading.label, bible: heading.bible || '', chorus: '', verses: [],
+  };
   let verse = null;
+  let expectAlternative = false;
   const closeVerse = () => {
     if (verse?.length) section.verses.push(verse.map((line) => line.text).join('\n'));
     verse = null;
   };
   for (const line of lines) {
     if (isRight(line)) {
+      // «Або:» + «(Р.: 9а)»: the citation of the second refrain.
+      if (expectAlternative && /^\(?[РP]\./u.test(line.text)) { section.altChorusRef = line.text; continue; }
       if (!section.bible) section.bible = line.text;
       else warnings.push(`${heading.label}: extra citation «${line.text}»`);
       continue;
     }
+    if (!section.bible && !section.chorus && !verse && looksLikeCitation(line)) { section.bible = line.text; continue; }
+    if (OR_MARK.test(line.text) && !verse) { expectAlternative = true; continue; }
     if (isRefrainMarker(line)) { closeVerse(); continue; }
-    const refrain = /^Рэфрэн:\s*(.+)$/u.exec(line.text);
+    const refrain = /^Рэфр[эа]н:\s*(.+)$/u.exec(line.text);
     if (refrain) {
       closeVerse();
       if (!section.chorus) section.chorus = refrain[1].trim();
+      else if (!section.altChorus && !section.verses.length) section.altChorus = refrain[1].trim();
+      else if (![section.chorus, section.altChorus].some((known) => known && known.replace(/\s+/g, '') === refrain[1].replace(/\s+/g, ''))) {
+        warnings.push(`${heading.label}: extra refrain «${refrain[1].trim().slice(0, 40)}»`);
+      }
+      expectAlternative = false;
       continue;
     }
-    const alternative = /^Або:\s*(.+)$/u.exec(line.text);
+    const alternative = /^(?:Або|Альбо):\s*(.+)$/u.exec(line.text);
     if (alternative && section.chorus && !section.verses.length && !verse) {
       section.altChorus = alternative[1].trim();
       continue;
@@ -308,7 +353,7 @@ function parsePsalm(heading, lines, warnings) {
 }
 
 function parseAcclamation(heading, lines) {
-  const section = { kind: 'acclamation', role: 'alleluia', label: heading.label, acclamation: '', bible: '', verse: '' };
+  const section = { kind: 'acclamation', role: 'alleluia', label: heading.label, acclamation: '', bible: heading.bible || '', verse: '' };
   const verse = [];
   const trailing = [];
   let closed = false;
@@ -320,7 +365,7 @@ function parseAcclamation(heading, lines) {
       else closed = true;
       continue;
     }
-    if (isRight(line)) { if (!section.bible) section.bible = line.text; continue; }
+    if (isRight(line) || (!section.bible && !verse.length && looksLikeCitation(line))) { if (!section.bible) section.bible = line.text; continue; }
     verse.push(line);
   }
   section.verse = verse.map((line) => line.text).join('\n');
@@ -339,8 +384,11 @@ function rubricSections(lines) {
   return out;
 }
 
+const CYCLE_MARK = /^Год\s+([АВСABC])\.?$/u;
+const CYCLE_TOC = /^\d\.\s+Год\s+[АВСABC]\.?$/u;
+
 /**
- * @returns {{ sets: Array<{ sourceLabel, note?, sections }>, warnings: string[], translationNote?: string }}
+ * @returns {{ sets: Array<{ sourceLabel, note?, preface?, prayers?, sections }>, warnings: string[], translationNote?: string }}
  */
 export function parseLectionaryPage(html) {
   const warnings = [];
@@ -350,6 +398,10 @@ export function parseLectionaryPage(html) {
   let heading = null;
   let buffer = [];
   let translationNote = '';
+  let weekdayYear = '';
+  let markerCycle = '';
+  let pendingAlternative = false;
+  const preface = [];
   const ensureSet = () => {
     if (!set) {
       set = { sourceLabel: '', sections: [] };
@@ -357,51 +409,98 @@ export function parseLectionaryPage(html) {
     }
     return set;
   };
+  const pushSection = (target, section, headingOfSection) => {
+    if (headingOfSection?.alternativeOf) {
+      // «або:» + a second heading of the same role: another reading of the same slot.
+      const base = [...target.sections].reverse().find((item) => item.kind === section.kind && item.role === section.role
+        && (item.cycle || '') === (section.cycle || '') && (item.year || '') === (section.year || ''));
+      if (base) {
+        const { kind: _kind, role: _role, label: _label, cycle: _cycle, year: _year, ...alternative } = section;
+        (base.alternatives ||= []).push(alternative);
+        return;
+      }
+    }
+    if (headingOfSection?.bible && section.form === undefined) {
+      // «ПЕРШАЕ ЧЫТАННЕ <цытата>» after a «…, ДАЎЖЭЙШАЕ» of the same slot: the shorter form.
+      const base = [...target.sections].reverse().find((item) => item.kind === section.kind && item.role === section.role
+        && item.form === 'long' && (item.cycle || '') === (section.cycle || '') && (item.year || '') === (section.year || ''));
+      if (base) {
+        const { kind: _kind, role: _role, label: _label, cycle: _cycle, year: _year, ...alternative } = section;
+        (base.alternatives ||= []).push({ ...alternative, form: 'short' });
+        return;
+      }
+    }
+    target.sections.push(section);
+  };
   const flushSection = () => {
     if (!heading) {
-      // Text before the first section: page rubrics (Easter Vigil).
+      // Text before the first section: page rubrics (Easter Vigil) and the preface
+      // of a memorial (rank, Common, source of the formulary).
       const rubrics = buffer.filter((line) => line.italic && line.text.length > 40);
       if (rubrics.length) ensureSet().sections.push(...rubrics.map((line) => ({ kind: 'rubric', text: line.text })));
+      buffer.filter((line) => !rubrics.includes(line)).forEach((line) => preface.push(line.text));
       buffer = [];
       return;
     }
     const target = ensureSet();
-    if (heading.kind === 'psalm') {
+    const stamp = (section) => {
+      if (heading.year) section.year = heading.year;
+      if (markerCycle && !section.cycle) section.cycle = markerCycle;
+      return section;
+    };
+    if (heading.kind === 'prayer') {
+      (target.prayers ||= []).push({ kind: heading.role, label: heading.label, text: paragraphsText(buffer) });
+    } else if (heading.kind === 'marker') {
+      // «ЛІТУРГІЯ СЛОВА»: structure only.
+    } else if (heading.kind === 'psalm') {
       const { trailingRubrics = [], ...psalm } = parsePsalm(heading, buffer, warnings);
-      target.sections.push(psalm, ...trailingRubrics.map((value) => ({ kind: 'rubric', text: value })));
-    }
-    else if (heading.kind === 'acclamation') {
+      pushSection(target, stamp(psalm), null);
+      target.sections.push(...trailingRubrics.map((value) => ({ kind: 'rubric', text: value })));
+    } else if (heading.kind === 'acclamation') {
       const { section, trailing } = parseAcclamation(heading, buffer);
-      target.sections.push(section, ...rubricSections(trailing));
+      target.sections.push(stamp(section), ...rubricSections(trailing));
     } else if (heading.kind === 'sequence') {
-      target.sections.push({ kind: 'sequence', role: 'sequence', label: heading.label, text: paragraphsText(buffer.filter((line) => !line.italic)) });
+      target.sections.push(stamp({ kind: 'sequence', role: 'sequence', label: heading.label, text: paragraphsText(buffer.filter((line) => !line.italic)) }));
     } else {
-      const section = parseReadingLike(heading, buffer, warnings);
+      const section = stamp(parseReadingLike(heading, buffer, warnings));
       const { rubrics } = section;
       if (rubrics?.length && heading.kind === 'reading' && section.conclusion) {
         // Italic lines after «Гэта слова Божае.» are rubrics of the liturgy
         // (Easter Vigil: «Чытаецца калекта…»), not of this reading.
         delete section.rubrics;
-        target.sections.push(section, ...rubrics.map((value) => ({ kind: 'rubric', text: value })));
+        pushSection(target, section, heading);
+        target.sections.push(...rubrics.map((value) => ({ kind: 'rubric', text: value })));
       } else if (rubrics?.length && !section.conclusion) {
         section.conclusion = '';
-        target.sections.push(section);
+        pushSection(target, section, heading);
       } else {
         delete section.rubrics;
-        target.sections.push(section, ...(rubrics || []).map((value) => ({ kind: 'rubric', text: value })));
+        pushSection(target, section, heading);
+        target.sections.push(...(rubrics || []).map((value) => ({ kind: 'rubric', text: value })));
       }
     }
     buffer = [];
   };
 
-  for (const line of lines) {
-    if (FOOTER.test(line.text)) { translationNote = line.text; continue; }
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (FOOTER.test(line.text) || /^Секцыя па перакладзе/u.test(line.text) || /^і афіцыйных дакументаў/u.test(line.text)) { translationNote = translationNote || line.text; continue; }
     if (SITE_FOOTER.test(line.text)) continue;
     if (isSetHeader(line)) {
       flushSection();
       heading = null;
+      markerCycle = '';
+      weekdayYear = '';
       set = { sourceLabel: line.text.replace(/\.$/, ''), sections: [] };
       sets.push(set);
+      continue;
+    }
+    if (CYCLE_TOC.test(line.text)) continue;
+    // «Год А.» (centred, italic): the cycle of the sections that follow (Holy Family, Baptism).
+    const cycleMark = CYCLE_MARK.exec(line.text);
+    if (cycleMark && line.align === 'center') {
+      flushSection();
+      markerCycle = CYCLE_LETTERS[cycleMark[1]];
       continue;
     }
     if (line.align === 'center' && line.italic && set && !set.sections.length && !heading) {
@@ -410,15 +509,34 @@ export function parseLectionaryPage(html) {
     }
     // Table of contents («1. Імша ў вігілію.») before the first set.
     if (!heading && !sets.length && /^\d\.\s.*імша/iu.test(line.text)) continue;
+    const markedYear = weekdayYearOf(line);
+    if (markedYear && line.bold) {
+      flushSection();
+      heading = null;
+      weekdayYear = markedYear;
+      continue;
+    }
+    // «або:» followed by a heading of the same slot (Mary Mother of the Church).
+    if ((line.bold || line.italic) && OR_MARK.test(line.text) && lines[index + 1] && headingOf(lines[index + 1]) && heading) {
+      const upcoming = headingOf(lines[index + 1]);
+      if (upcoming.kind === heading.kind && upcoming.role === heading.role) { pendingAlternative = true; continue; }
+    }
     const next = headingOf(line);
     if (next) {
       flushSection();
       heading = next;
+      if (pendingAlternative) { heading.alternativeOf = true; pendingAlternative = false; }
+      // Weekday years apply to the first reading and the psalm only; the
+      // acclamation and the Gospel of the page are shared by both years.
+      if (!['reading', 'psalm'].includes(next.kind)) weekdayYear = '';
+      else if (weekdayYear) heading.year = weekdayYear;
+      if (next.kind === 'marker') heading = null;
       continue;
     }
     buffer.push(line);
   }
   flushSection();
+  if (preface.length) ensureSet().preface = preface;
   return { sets, warnings, ...(translationNote ? { translationNote } : {}) };
 }
 
