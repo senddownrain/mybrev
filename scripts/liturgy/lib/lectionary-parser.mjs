@@ -278,7 +278,10 @@ function parseReadingLike(heading, lines, warnings) {
     }
     const bucket = target === section ? body : target._body;
     if (!bucket.length && !target.title && line.italic && !target.comment) { target.comment = line.text; continue; }
-    if (!bucket.length && line.bold && READING_TITLE.test(line.text) && !target.title) { target.title = line.text; continue; }
+    if (!bucket.length && (line.bold || !line.italic) && READING_TITLE.test(line.text) && !target.title) { target.title = line.text; continue; }
+    // A summary line printed in plain type just before the bold title (22.10, page 4983).
+    if (!bucket.length && !target.title && !target.comment && !line.italic && !line.bold && !isRight(line) && line.text.length < 160
+      && lines[lines.indexOf(line) + 1]?.bold && READING_TITLE.test(lines[lines.indexOf(line) + 1].text)) { target.comment = line.text; continue; }
     if (CONCLUSION.test(line.text)) {
       if (target === section) conclusion = line.text.replace(/\.?$/, '.');
       else target.conclusion = line.text.replace(/\.?$/, '.');
@@ -300,6 +303,11 @@ function parseReadingLike(heading, lines, warnings) {
     alternative.text = paragraphsText(alternative._body);
     delete alternative._body;
   });
+  // The page prints «Гэта слова Божае.» at the end of the text AND as its own line (4690).
+  if (conclusion && /\sГэта слова (Божае|Пана)\.?\s*$/u.test(section.text || '')) {
+    section.text = section.text.replace(/\s+Гэта слова (Божае|Пана)\.?\s*$/u, '');
+    warnings.push(`${heading.label}: the page repeats the conclusion inside the text`);
+  }
   section.conclusion = conclusion;
   if (rubrics.length) section.rubrics = rubrics;
   return section;
@@ -486,6 +494,8 @@ export function parseLectionaryPage(html) {
     const line = lines[index];
     if (FOOTER.test(line.text) || /^Секцыя па перакладзе/u.test(line.text) || /^і афіцыйных дакументаў/u.test(line.text)) { translationNote = translationNote || line.text; continue; }
     if (SITE_FOOTER.test(line.text)) continue;
+    // A section divider letter that is not wrapped in the divider span (page 5020).
+    if (/^[а-яa-z]$/u.test(line.text) && !line.bold && !line.italic) continue;
     if (isSetHeader(line)) {
       flushSection();
       heading = null;
@@ -500,6 +510,8 @@ export function parseLectionaryPage(html) {
     const cycleMark = CYCLE_MARK.exec(line.text);
     if (cycleMark && line.align === 'center') {
       flushSection();
+      heading = null;
+      weekdayYear = '';
       markerCycle = CYCLE_LETTERS[cycleMark[1]];
       continue;
     }

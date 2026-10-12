@@ -19,6 +19,7 @@ import { selectReadingDocuments } from '../../src/utils/ordo/runtime.js';
 import { selectReadingLectionaryVariants, readingSelector, normalizeReadingCycle } from '../../src/utils/parsedReadingsIdentity.js';
 import { massReadingSetsOf, defaultSetId } from '../../src/utils/massReadingSets.js';
 import { createReadingsRuntime, screenFor } from './lib/runtime-sim.mjs';
+import { expectedPageKey } from './lib/expected-page.mjs';
 import { openSnapshot, snapshotDirFromArgs } from './lib/snapshot-docs.mjs';
 import { ROOT } from './lib/source-pages.mjs';
 
@@ -44,6 +45,7 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
   const rt = createReadingsRuntime(readings);
   const { computeFirstAdventSunday } = await import('../../src/utils/ordo/movableFeasts.js');
   const identities = new Map();
+  const temporalChecks = new Map();
   const anomalies = [];
   const counts = { dates: 0, dioceseDates: 0, options: 0, byDiocese: {}, byYear: {}, byKind: {}, byPeriod: {}, byCycle: {}, byStatus: {} };
   const bump = (obj, key, n = 1) => { obj[key] = (obj[key] || 0) + n; };
@@ -113,6 +115,14 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
             bump(counts.byStatus, 'MISSING_SET');
           }
           counts.screens = (counts.screens || 0) + 1;
+          if (option.kind === 'temporal') {
+            const expectedKey = expectedPageKey(day);
+            const shownDoc = screen.setDocument?.id || screen.activeReading?.id || null;
+            const slot = `${expectedKey}|${shownDoc}|${screen.activeCycle || ''}`;
+            const check = temporalChecks.get(slot) || { expectedKey, doc: shownDoc, cycle: screen.activeCycle || '', dioceses: new Set(), years: new Set(), dates: 0, sample: date, sampleOption: option.id };
+            check.dioceses.add(diocese); check.years.add(year); check.dates += 1;
+            temporalChecks.set(slot, check);
+          }
           // screen: the option opens one of ITS documents, in the right cycle
           const ownIds = new Set(lookups.flatMap((l) => l.found.map((d) => d.id)));
           if (ownIds.size) {
@@ -149,7 +159,7 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
     optionIds: [...identity.optionIds].sort(), officeKinds: [...identity.officeKinds].sort(), dioceses: [...identity.dioceses].sort(),
     years: [...identity.years].sort(), docIds: [...identity.docIds].sort(), sets: [...identity.sets].sort(),
   })).sort((a, b) => a.key.localeCompare(b.key));
-  return { snapshot: { dir: path.relative(ROOT, snap.dir), snapshotVersion: snap.manifest.snapshotVersion, exportedAt: snap.manifest.exportedAt }, years: [from, to], dioceses: DIOCESES, counts, identities: rows, scenarios, anomalies };
+  return { snapshot: { dir: path.relative(ROOT, snap.dir), snapshotVersion: snap.manifest.snapshotVersion, exportedAt: snap.manifest.exportedAt }, years: [from, to], dioceses: DIOCESES, counts, identities: rows, scenarios, temporalChecks: [...temporalChecks.values()].map((c) => ({ ...c, dioceses: [...c.dioceses].sort(), years: [...c.years].sort() })), anomalies };
 }
 
 /** Closed policy scenarios (previous prompt §5/§21) checked in every year and diocese. */
@@ -177,7 +187,11 @@ function scenarioChecks(rt, from, to, anomalies) {
       record('assumption', `${year}-08-15`, diocese, (r) => [r.sets.length === 2 && setIds(r) === 'vigil,day' ? '' : `sets ${setIds(r)}`, r.activeSet === 'day' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean));
       record('peter-paul', `${year}-06-29`, diocese, (r, l) => (l.day.primary.id.includes('peter') ? [r.sets.length === 2 && setIds(r) === 'vigil,day' ? '' : `sets ${setIds(r)}`, r.activeSet === 'day' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean) : []));
       record('christmas', `${year}-12-25`, diocese, (r) => [setIds(r) === 'night,dawn,day' ? '' : `sets ${setIds(r)}`, r.activeSet === 'day' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean));
-      record('christmas-eve', `${year}-12-24`, diocese, (r) => [setIds(r) === 'morning,vigil' ? '' : `sets ${setIds(r)}`, r.activeSet === 'vigil' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean));
+      record('christmas-eve', `${year}-12-24`, diocese, (r, l, screen) => (isoWeekdayOf(`${year}-12-24`) === 7
+        // On a Sunday: the Sunday of Advent (A/B/C) AND the Christmas Vigil Mass (default, evening).
+        ? [screen.groups.length === 2 && screen.activeGroup?.documents.some((doc) => doc._variant === 'christmas-vigil') ? '' : `DEFAULT groups ${screen.groups.map((g) => g.key)}`,
+          screen.groups.some((g) => g.documents.some((doc) => doc.id.startsWith('advent-w4-d1--'))) ? '' : 'Sunday IV Advent not offered'].filter(Boolean)
+        : [setIds(r) === 'morning,vigil' ? '' : `sets ${setIds(r)}`, r.activeSet === 'vigil' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean)));
       record('holy-thursday', addDays(easter, -3), diocese, (r) => [setIds(r) === 'chrism,evening' ? '' : `sets ${setIds(r)}`, r.activeSet === 'evening' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean));
       record('good-friday', addDays(easter, -2), diocese, (r) => [r.sets.length === 1 && r.sets[0].id === 'passion' ? '' : `sets ${setIds(r)}`].filter(Boolean));
       record('easter-vigil', addDays(easter, -1), diocese, (r) => [r.sets.length === 1 && r.sets[0].id === 'vigil' && r.sets[0].cycles.join('') === 'ABC' ? '' : `sets ${setIds(r)} cycles ${r.sets[0]?.cycles}`].filter(Boolean));

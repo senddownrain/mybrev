@@ -34,6 +34,7 @@ export function parseFidelity(html) {
     if (heading) { if (heading.bible) source.push(...tokens(heading.bible)); continue; }
     if (/^Гэта слова (Божае|Пана)\.?$/u.test(line.text)) continue;
     if (/^Год\s+[IІ]{1,2}$/u.test(line.text)) continue;
+    if (/^[а-яa-z]$/u.test(line.text) && !line.bold && !line.italic) continue;
     if (/^\d\.\s.*імша/iu.test(line.text) || /^(\d\.\s+)?Год\s+[АВСABC]\.?$/u.test(line.text) || /^(Секцыя па перакладзе|і афіцыйных дакументаў)/u.test(line.text) || isSetHeader(line) || (line.bold && /^(Першая|Другая|Трэцяя)\s+Імша$/u.test(line.text)) || /^(Акламацыя:|Пераклад здзейснены|Адноўлена|Абноўлена)/u.test(line.text)) continue;
     const refrain = /^Рэфр[эа]н:?\s*(.+)$/u.exec(line.text);
     if (refrain) { const key = tokens(refrain[1]).join(' '); if (refrains.has(key)) continue; refrains.add(key); }
@@ -41,11 +42,15 @@ export function parseFidelity(html) {
   }
   const parsedWords = [];
   const parsed = parseLectionaryPage(html);
+  const repeated = parsed.warnings.filter((warning) => /repeats the conclusion/.test(warning)).length;
+
   collect(parsed.sets, parsedWords);
   const src = count(source.filter((word) => !STRUCTURE.has(word)));
   const out = count(parsedWords.filter((word) => !STRUCTURE.has(word)));
   const dropped = [];
   const extra = [];
+  if (repeated) for (const word of ['гэта', 'слова']) src.set(word, Math.max(0, (src.get(word) || 0) - repeated));
+  if (repeated) for (const word of ['божае', 'пана']) if ((src.get(word) || 0) - (out.get(word) || 0) === repeated) src.set(word, out.get(word) || 0);
   for (const [word, n] of src) if ((out.get(word) || 0) < n) dropped.push([word, n - (out.get(word) || 0)]);
   for (const [word, n] of out) if ((src.get(word) || 0) < n) extra.push([word, n - (src.get(word) || 0)]);
   return {

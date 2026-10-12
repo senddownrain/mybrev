@@ -52,6 +52,21 @@ export function normalizeCitation(value) {
 
 const clip = (value, n = 160) => { const t = String(value ?? '').replace(/\s+/g, ' ').trim(); return t.length > n ? `${t.slice(0, n)}…` : t; };
 
+/** How the stored text relates to the source text (evidence of a WRONG_TEXT). */
+export function relationOf(expected, actual) {
+  const e = wordsOf(expected);
+  const a = wordsOf(actual);
+  if (a === e) return 'same words';
+  if (!a) return 'stored text is empty';
+  if (e.startsWith(a)) return 'stored text is a truncated prefix of the source';
+  if (e.endsWith(a)) return 'stored text lacks the beginning of the source';
+  if (a.startsWith(e)) return 'stored text = source + extra tail';
+  if (a.endsWith(e)) return 'stored text = extra head + source';
+  if (a.includes(e)) return 'stored text contains the source plus extra text';
+  if (e.includes(a)) return 'stored text is a fragment of the source';
+  return 'stored text differs from the source';
+}
+
 /** First point where two normalized strings differ (evidence for a report). */
 export function firstDifference(expected, actual) {
   const a = normalizeText(expected).replace(/\s+/g, ' ');
@@ -111,7 +126,7 @@ function textDiff(path, label, expected, actual, out, klass = 'WRONG_TEXT') {
     out.push({ class: 'STRUCTURE_LOSS', severity: 'low', section: path, field: label, detail: `same words, different paragraphing (${pe} vs ${pa} paragraphs/lines)`, expected: clip(e, 80), actual: clip(a, 80) });
     return;
   }
-  out.push({ class: klass, severity: 'high', section: path, field: label, detail: 'text differs', ...firstDifference(e, a) });
+  out.push({ class: klass, severity: 'high', section: path, field: label, detail: 'text differs', relation: relationOf(e, a), ...firstDifference(e, a) });
 }
 
 function compareReadingLike(path, expected, actual, out) {
@@ -153,21 +168,43 @@ function compareReadingLike(path, expected, actual, out) {
 
 function comparePsalm(path, expected, actual, out) {
   if (citationDiff(expected.bible, actual.bible)) out.push({ class: 'WRONG_REFERENCE', severity: 'high', section: path, field: 'bible', expected: expected.bible || '', actual: actual.bible || '' });
-  if (wordsOf(expected.chorus) !== wordsOf(actual.chorus)) out.push({ class: actual.chorus ? 'WRONG_TEXT' : 'MISSING_BLOCK', severity: 'high', section: path, field: 'chorus', expected: clip(expected.chorus), actual: clip(actual.chorus) });
-  if ((expected.altChorus || actual.altChorus) && wordsOf(expected.altChorus) !== wordsOf(actual.altChorus)) {
-    out.push({ class: actual.altChorus ? 'WRONG_TEXT' : 'MISSING_BLOCK', severity: 'medium', section: path, field: 'altChorus', expected: clip(expected.altChorus), actual: clip(actual.altChorus) });
-  }
   const ev = (expected.verses || []).join('\n\n');
   const av = (actual.verses || []).length ? (actual.verses || []).join('\n\n') : (actual.text || '');
-  if (wordsOf(ev) !== wordsOf(av)) out.push({ class: 'WRONG_TEXT', severity: 'high', section: path, field: 'verses', detail: 'psalm strophes differ', ...firstDifference(ev, av) });
-  else if ((expected.verses || []).length !== (actual.verses || []).length) {
-    out.push({ class: 'STRUCTURE_LOSS', severity: 'low', section: path, field: 'verses', detail: `${(expected.verses || []).length} strophes vs ${(actual.verses || []).length}` });
+  // Order-insensitive: «all words present, in the wrong slot».
+  const all = (value) => normalizeText(`${value.chorus || ''} ${value.altChorus || ''} ${value === expected ? ev : av}`).split(/\s+/).filter(Boolean).sort().join(' ');
+  const sameWordsOverall = all(expected) === all(actual);
+  const chorusOk = wordsOf(expected.chorus) === wordsOf(actual.chorus);
+  const altOk = wordsOf(expected.altChorus) === wordsOf(actual.altChorus);
+  const versesOk = wordsOf(ev) === wordsOf(av);
+  if (chorusOk && altOk && versesOk) {
+    if ((expected.verses || []).length !== (actual.verses || []).length) {
+      out.push({ class: 'STRUCTURE_LOSS', severity: 'low', section: path, field: 'verses', detail: `${(expected.verses || []).length} strophe groups vs ${(actual.verses || []).length}` });
+    }
+    return;
   }
+  if (sameWordsOverall) {
+    // All words are stored but in the wrong slot.
+    if (!chorusOk) {
+      out.push({ class: 'WRONG_TEXT', severity: 'high', section: path, field: 'chorus', detail: 'strophes merged into the refrain', expected: clip(expected.chorus), actual: clip(actual.chorus), artifact: 'strophes merged into the refrain' });
+    } else {
+      out.push({
+        class: 'STRUCTURE_LOSS', severity: 'high', section: path, field: 'altChorus',
+        detail: 'the alternative refrain slot holds text that is not an alternative refrain (the strophes are split differently from the source)',
+        expected: clip(expected.altChorus || '(none)'), actual: clip(actual.altChorus), ...(/^\d/.test(String(actual.altChorus || '')) ? { artifact: 'last strophe stored as the alternative refrain' } : {}),
+      });
+    }
+    return;
+  }
+  if (!chorusOk) out.push({ class: actual.chorus ? 'WRONG_TEXT' : 'MISSING_BLOCK', severity: 'high', section: path, field: 'chorus', expected: clip(expected.chorus), actual: clip(actual.chorus) });
+  if (!altOk && (expected.altChorus || actual.altChorus)) {
+    out.push({ class: actual.altChorus ? 'WRONG_TEXT' : 'MISSING_BLOCK', severity: 'medium', section: path, field: 'altChorus', expected: clip(expected.altChorus), actual: clip(actual.altChorus) });
+  }
+  if (!versesOk) out.push({ class: 'WRONG_TEXT', severity: 'high', section: path, field: 'verses', detail: 'psalm strophes differ', relation: relationOf(ev, av), ...firstDifference(ev, av) });
 }
 
 function compareAcclamation(path, expected, actual, out) {
   if (citationDiff(expected.bible, actual.bible)) out.push({ class: 'WRONG_REFERENCE', severity: 'medium', section: path, field: 'bible', expected: expected.bible || '', actual: actual.bible || '' });
-  if (wordsOf(expected.verse) !== wordsOf(actual.verse ?? actual.text)) out.push({ class: 'WRONG_TEXT', severity: 'high', section: path, field: 'verse', ...firstDifference(expected.verse, actual.verse ?? actual.text) });
+  if (wordsOf(expected.verse) !== wordsOf(actual.verse ?? actual.text)) out.push({ class: 'WRONG_TEXT', severity: 'high', section: path, field: 'verse', relation: relationOf(expected.verse, actual.verse ?? actual.text), ...firstDifference(expected.verse, actual.verse ?? actual.text) });
   if (expected.acclamation !== undefined && actual.acclamation !== undefined && expected.acclamation && wordsOf(expected.acclamation) !== wordsOf(actual.acclamation)) {
     out.push({ class: 'WRONG_TEXT', severity: 'low', section: path, field: 'acclamation', expected: clip(expected.acclamation), actual: clip(actual.acclamation) });
   }
@@ -208,6 +245,18 @@ export function compareSections(expected, actual, options = {}) {
   const order = (map) => [...map.keys()].filter((k) => !k.startsWith('rubric')).join('>');
   if (options.checkOrder && !out.some((d) => d.field === 'section') && order(eMap) !== order(aMap)) {
     out.push({ class: 'STRUCTURE_LOSS', severity: 'medium', section: 'order', field: 'order', expected: order(eMap), actual: order(aMap) });
+  }
+  if (options.stats) {
+    const bad = new Set(out.map((diff) => diff.section));
+    const badFields = new Set(out.filter((diff) => diff.field === 'bible').map((diff) => diff.section));
+    for (const [key, section] of eMap) {
+      const path = key.replace(/\|/g, '/');
+      const kind = section.kind;
+      const stats = (options.stats[kind] ||= { checked: 0, exact: 0, citations: 0, citationsExact: 0 });
+      stats.checked += 1;
+      if (!bad.has(path) && aMap.has(key)) stats.exact += 1;
+      if (section.bible) { stats.citations += 1; if (!badFields.has(path) && aMap.has(key)) stats.citationsExact += 1; }
+    }
   }
   // rubrics: page rubrics must survive in a canonical document
   if (options.checkRubrics) {
