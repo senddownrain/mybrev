@@ -4,7 +4,7 @@ import { readFile,mkdir,writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { openFirestoreSnapshot } from './lib/firestore-snapshot.mjs';
-import { prayerStoragePlan,PRAYER_STORAGE,CONTENT_CONTROL,MAX_ATOMIC_CONTENT_WRITES } from '../src/utils/prayerStoragePlan.mjs';
+import { canonicalPrayerContent,prayerStoragePlan,PRAYER_STORAGE,CONTENT_CONTROL,MAX_ATOMIC_CONTENT_WRITES } from '../src/utils/prayerStoragePlan.mjs';
 
 export const contentCollections=Object.entries(PRAYER_STORAGE).flat();
 // Lossless private backup representation, shared by snapshot comparison/resume.
@@ -31,7 +31,7 @@ export function migrationOperations(collections,plan,maintenance=false) {
  const publish=['prayers','prayerCategories'].flatMap(name=>plan.desired.get(name).map(({id,...data})=>({type:'set',collection:name,id,data})));
  return [...quarantine,...privateWrites,...publish];
 }
-export async function priestMigrationPlan(snapshotDirs) {
+export async function priestMigrationPlan(snapshotDirs,policy={}) {
  const collections=new Map();let projectId;
  for(const directory of snapshotDirs){const snapshot=await openFirestoreSnapshot(directory);
   if(projectId&&snapshot.manifest.projectId!==projectId)throw new Error('Snapshot project mismatch');projectId=snapshot.manifest.projectId;
@@ -39,13 +39,21 @@ export async function priestMigrationPlan(snapshotDirs) {
    const rows=entries.map(({id,data})=>({...data,id}));if(collections.has(name)&&digest(collections.get(name))!==digest(rows))throw new Error(`Conflicting snapshots: ${name}`);collections.set(name,rows);
   }
  }
- const plan=prayerStoragePlan(collections);
+ if(Object.keys(policy).some(key=>!['categoryFlags','mustRemainPublic'].includes(key)))throw new Error('Unsupported migration policy field');
+ const content=canonicalPrayerContent(collections);
+ for(const flag of policy.categoryFlags||[]){
+  if(typeof flag.id!=='string'||typeof flag.priestOnly!=='boolean'||Object.keys(flag).some(key=>!['id','priestOnly'].includes(key)))throw new Error('Invalid category flag policy');
+  const category=content.categories.find(item=>item.id===flag.id);if(!category)throw new Error(`Policy category not found: ${flag.id}`);category.priestOnly=flag.priestOnly;
+ }
+ const plan=prayerStoragePlan(collections,content);
+ for(const id of policy.mustRemainPublic||[]){if(typeof id!=='string'||!plan.desired.get('prayers').some(item=>item.id===id))throw new Error(`Required public prayer would be missing/restricted: ${id}`);}
  const missingCollections=contentCollections.filter(name=>!collections.has(name));
+ const sourceDigest=digest(ordered(collections));
  const report={analysisSource:'local-firestore-snapshot',projectId,missingCollections,ready:missingCollections.length===0,
   before:Object.fromEntries(contentCollections.map(name=>[name,collections.has(name)?collections.get(name).length:null])),after:Object.fromEntries([...plan.desired].map(([name,rows])=>[name,missingCollections.length?null:rows.length])),
   writes:plan.operations.length,atomic:missingCollections.length?null:plan.operations.length<=MAX_ATOMIC_CONTENT_WRITES&&Buffer.byteLength(JSON.stringify(plan.operations))<7000000,
   changes:plan.operations.map(({type,collection,id})=>({type,collection,id})),
-  digest:digest(ordered(collections)),notes:['Own flags and IDs retained. Grants/settings untouched. Missing collection is NOT an empty collection.','Private rules must be deployed before apply; do not reopen public collections before verification.']};
+  sourceDigest,policy,digest:Object.keys(policy).length?digest({sourceDigest,policy}):sourceDigest,notes:['Own flags and IDs retained except explicit category flags in policy. Grants/settings untouched. Missing collection is NOT an empty collection.','Private rules must be deployed before apply; do not reopen public collections before verification.']};
  return {collections,plan,report};
 }
 function decode(value,db,admin) {
@@ -62,10 +70,11 @@ function simulate(original,operations,count) {
 async function main(){
  const options={snapshots:[],serviceAccount:'patchs/serviceAccountKey.json'};
  const args=process.argv.slice(2);for(let i=0;i<args.length;i++){
-  const arg=args[i];if(arg==='--snapshot')options.snapshots.push(args[++i]);else if(['--service-account','--approve-digest','--resume'].includes(arg))options[arg.slice(2)]=args[++i];
+  const arg=args[i];if(arg==='--snapshot')options.snapshots.push(args[++i]);else if(['--service-account','--approve-digest','--resume','--policy'].includes(arg))options[arg.slice(2)]=args[++i];
   else if(['--apply','--allow-maintenance','--protected-rules-confirmed','--test-stop-after-batch'].includes(arg))options[arg.slice(2)]=true;else throw new Error(`Unknown argument: ${arg}`);
  }
- const analysis=await priestMigrationPlan(options.snapshots.length?options.snapshots:['backups/firestore-snapshot']);
+ const policy=options.policy?JSON.parse(await readFile(options.policy,'utf8')):{};
+ const analysis=await priestMigrationPlan(options.snapshots.length?options.snapshots:['backups/firestore-snapshot'],policy);
  await mkdir('reports/priest-access',{recursive:true});await writeFile('reports/priest-access/migration.json',JSON.stringify(analysis.report,null,2)+'\n');
  console.log(`Local dry-run: ${analysis.report.writes} writes; uncovered: ${analysis.report.missingCollections.join(', ')||'none'}. Report has no texts or proofs.`);
  if(!options.apply)return;
@@ -81,11 +90,11 @@ async function main(){
   else {
    if(analysis.report.projectId!==account.project_id)throw new Error('Snapshot/project mismatch');
    const maintenance=!analysis.report.atomic;if(maintenance&&!options['allow-maintenance'])throw new Error('Large migration requires --allow-maintenance: public online catalog temporarily becomes empty; public offline copies stay available.');
-   const original=await readCollections();if(digest(ordered(original))!==analysis.report.digest)throw new Error('Firestore differs from snapshot; abort and obtain a reviewed new snapshot.');
-   backup={schemaVersion:2,projectId:account.project_id,nonce:randomUUID(),maintenance,original:encode(ordered(original)),operations:encode(migrationOperations(original,analysis.plan,maintenance)),
+   const original=await readCollections();if(digest(ordered(original))!==analysis.report.sourceDigest)throw new Error('Firestore differs from snapshot; abort and obtain a reviewed new snapshot.');
+   backup={schemaVersion:2,projectId:account.project_id,nonce:randomUUID(),maintenance,policy,original:encode(ordered(original)),operations:encode(migrationOperations(original,analysis.plan,maintenance)),
     settings:encode((await db.collection('priestAccess').get()).docs.map(d=>({id:d.id,data:d.data()}))),grants:encode((await db.collection('priestDeviceGrants').get()).docs.map(d=>({id:d.id,data:d.data()})))};
    await mkdir('backups/priest-access',{recursive:true});backupPath=path.resolve('backups/priest-access',`${backup.nonce}.json`);await writeFile(backupPath,JSON.stringify(backup),{flag:'wx'});
-   await db.runTransaction(async tx=>{const current=await tx.get(control);const actual=await readCollections(tx);if(current.data()?.lockUid||digest(ordered(actual))!==analysis.report.digest)throw new Error('Concurrent change; backup retained, no migration writes.');
+   await db.runTransaction(async tx=>{const current=await tx.get(control);const actual=await readCollections(tx);if(current.data()?.lockUid||digest(ordered(actual))!==analysis.report.sourceDigest)throw new Error('Concurrent change; backup retained, no migration writes.');
     tx.set(control,{version:(current.data()?.version||0)+1,lockUid:backup.nonce,updatedAt:admin.firestore.FieldValue.serverTimestamp(),migrationStep:0});});
   }
   console.log(`Private backup: ${backupPath}. On failure keep lock and resume this exact file; never copy it into public/.`);

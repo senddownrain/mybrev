@@ -1,6 +1,10 @@
 import { getApp, getApps, initializeApp } from 'firebase/app';
-import { initializeFirestore, memoryLocalCache } from 'firebase/firestore';
+import { initializeFirestore, memoryLocalCache, setLogLevel } from 'firebase/firestore';
 import { firebaseApp } from './firebase';
+
+// SDK diagnostics can include a failed REST write's complete payload/proof.
+// Keep application error handling, but never let SDK logging print secrets.
+setLogLevel('silent');
 
 // Separate app names also isolate Firebase Auth persistence. Never sign the
 // primary administrator Auth in anonymously. Protected Firestore is memory-only.

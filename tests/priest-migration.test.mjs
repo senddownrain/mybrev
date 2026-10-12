@@ -16,6 +16,16 @@ test('maintenance plan quarantines every public row before private/public target
  const map=new Map([['prayers',[{id:'x',priestOnly:true,text:'PRIVATE'},{id:'p',text:'PUBLIC'}]],['prayerCategories',[]]]);
  const ops=migrationOperations(map,prayerStoragePlan(map),true);assert.deepEqual(ops.slice(0,2).map(op=>op.type),['delete','delete']);assert.equal(ops[2].collection,'priestProtectedPrayers');assert.equal(ops.at(-1).data.text,'PUBLIC');
 });
+test('explicit category policy closes descendants, preserves Mass and binds approval to policy',async()=>{
+ const directory='reports/priest-access/migration-policy-test';
+ const map=new Map(contentCollections.map(name=>[name,[]]));map.set('prayers',[{id:'rite',text:'PRIVATE',tags:['priest']},{id:'mass',text:'PUBLIC',tags:['mass']}]);map.set('prayerCategories',[{id:'priest',name:'Priest',tags:['priest']}]);
+ await snapshot(directory,map);
+ const before=await priestMigrationPlan([directory]);
+ const after=await priestMigrationPlan([directory],{categoryFlags:[{id:'priest',priestOnly:true}],mustRemainPublic:['mass']});
+ assert.equal(after.report.sourceDigest,before.report.sourceDigest);assert.notEqual(after.report.digest,before.report.digest);
+ assert.equal(after.plan.desired.get('prayers')[0].id,'mass');assert.equal(after.plan.desired.get('priestProtectedPrayers')[0].id,'rite');assert.equal(after.plan.desired.get('priestProtectedPrayers')[0].priestOnly,false);
+ await assert.rejects(priestMigrationPlan([directory],{categoryFlags:[{id:'priest',priestOnly:true}],mustRemainPublic:['rite']}),/Required public/);
+});
 test('emulator migration: full backup, large phased transfer, interruption/resume and stale-snapshot refusal',{skip:!process.env.FIRESTORE_EMULATOR_HOST},async()=>{
  assert.match(process.env.FIRESTORE_EMULATOR_HOST,/^(127\.0\.0\.1|localhost):\d+$/);
  const app=initializeApp({projectId:'demo-rules'},'migration-tests'),db=getFirestore(app);
