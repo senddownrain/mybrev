@@ -187,7 +187,8 @@ test('Ordo readings rows wrap instead of overflowing the card', () => {
 });
 
 test('Ordo → Hours capsule: the viewed date, today on the month, diocese context kept', () => {
-  assert.match(read('src/views/Ordo.vue'), /data-test="ordo-hours-shortcut"[\s\S]*Літургія/);
+  assert.match(read('src/layouts/default/Default.vue'), /isReadingsPage \|\| isOrdoPage[\s\S]*<LiturgyNavLink[\s\S]*ordo-hours-shortcut/);
+  assert.doesNotMatch(read('src/views/Ordo.vue'), /LiturgyNavLink|hours-capsule|position:\s*sticky/);
   assert.deepEqual(ordoHoursRoute({ date: '2026-09-28', filter: ['minsk-mohilev'], userDiocese: 'minsk-mohilev' }),
     { name: 'SelectedDay', params: { day: '2026-09-28' }, query: {} });
   assert.deepEqual(ordoHoursRoute({ date: '', filter: ['minsk-mohilev'], userDiocese: 'minsk-mohilev' }), { name: 'Today' });

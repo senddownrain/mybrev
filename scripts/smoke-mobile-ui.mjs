@@ -8,6 +8,22 @@ import { MASS_ORDER_PRAYER_ID } from '../src/utils/massRitual.js';
 const baseUrl = process.env.SMOKE_BASE_URL || 'http://127.0.0.1:3000';
 const output = 'reports/mobile-ui';
 await mkdir(output, { recursive: true });
+// Discover all tested lazy-route dependencies before mounting Vue. Otherwise
+// a cold Vite optimizer can replace Vue Router's injection symbols mid-test.
+const modules = new Set([
+  '/src/views/Settings.vue', '/src/views/Ordo.vue', '/src/components/OrasList.vue',
+  '/src/components/readings/ReadingsView.vue', '/src/components/oras/Laudes.vue',
+  '/src/components/oras/Vesper.vue', '/src/views/admin/ParsedReadingEditor.vue',
+  '/src/components/prayers/PrayerView.vue',
+]);
+for (const path of modules) {
+  const response = await fetch(new URL(path, baseUrl));
+  assert.ok(response.ok, `Vite can transform ${path}`);
+  const source = await response.text();
+  for (const match of source.matchAll(/(?:from|import)\s*["'](\/src\/[^"']+\.(?:vue|js)(?:\?[^"']*)?)["']/g)) {
+    modules.add(match[1]);
+  }
+}
 const browser = await chromium.launch({
   executablePath: process.env.BENCHMARK_BROWSER_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe',
   headless: true,
@@ -96,7 +112,7 @@ await context.route('**/*', async (route) => {
     if (['fonts.googleapis.com', 'fonts.gstatic.com'].includes(url.hostname)) return route.continue();
     return route.abort();
   }
-  if (url.pathname === '/__mobile-ui') return route.fulfill({ contentType: 'text/html', body: '<html lang="be"><head><meta name="viewport" content="width=device-width, initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,300..800;1,7..72,300..800&family=Source+Sans+3:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet"></head><body><div id="app"></div><script type="module" src="/reports/mobile-ui/harness.js"></script></body></html>' });
+  if (url.pathname === '/__mobile-ui') return route.fulfill({ contentType: 'text/html', body: '<html lang="be"><head><meta name="viewport" content="width=device-width, initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&family=Literata:ital,opsz,wght@0,7..72,300..800;1,7..72,300..800&family=Source+Sans+3:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" media="print" onload="this.media=\'all\'"></head><body><div id="app"></div><script type="module" src="/reports/mobile-ui/harness.js"></script></body></html>' });
   // Keep Vite's CSS injection, without HMR reloading an in-progress test.
   if (url.pathname === '/@vite/client') return route.fulfill({ contentType: 'text/javascript', body: `
     import '/@vite/env';
@@ -136,6 +152,44 @@ async function checkDock(selector) {
   const positions = await page.evaluate((selector) => ({ content: document.querySelector(selector).getBoundingClientRect().bottom, dock: document.querySelector('.pill-nav-outer').getBoundingClientRect().top }), selector);
   assert.ok(positions.content <= positions.dock, `last content clears the dock: ${JSON.stringify(positions)}`);
 }
+async function checkFloatingBar(selector) {
+  const surfaces = await page.locator(`${selector}, ${selector} .v-toolbar__content`).evaluateAll((elements) => elements.map((element) => {
+    const style = getComputedStyle(element);
+    return { background: style.backgroundColor, image: style.backgroundImage, shadow: style.boxShadow, blur: style.backdropFilter, border: style.borderTopWidth };
+  }));
+  assert.equal(surfaces.length, 2);
+  for (const surface of surfaces) {
+    assert.deepEqual(surface, { background: 'rgba(0, 0, 0, 0)', image: 'none', shadow: 'none', blur: 'none', border: '0px' }, 'toolbar containers remain transparent');
+  }
+}
+async function checkOraElements(label) {
+  await checkFloatingBar('.floating-ora-bar');
+  const boxes = await page.locator('.ora-circle-btn, .ora-liturgy-link, .ora-location, .floating-ora-bar .text-scale-control').evaluateAll((elements) => elements.map((element) => {
+    const box = element.getBoundingClientRect();
+    return { left: box.left, right: box.right, width: box.width, height: box.height, background: getComputedStyle(element).backgroundColor };
+  }));
+  for (let index = 0; index < boxes.length; index++) {
+    assert.ok(boxes[index].width >= 44 && boxes[index].height >= 44, `${label}: controls keep touch targets`);
+    assert.notEqual(boxes[index].background, 'rgba(0, 0, 0, 0)', `${label}: glass belongs to individual controls`);
+    if (index) assert.ok(boxes[index].left >= boxes[index - 1].right + 1, `${label}: independent controls do not collide`);
+  }
+  await checkLayout(label);
+}
+async function checkOrdoNav(label) {
+  await checkFloatingBar('.floating-app-bar');
+  const group = page.locator('.floating-app-bar .readings-nav-group');
+  await group.waitFor();
+  assert.equal(await group.getByLabel('Адкрыць меню', { exact: true }).count(), 1);
+  assert.equal(await group.getByRole('link', { name: 'Літургія', exact: true }).count(), 1);
+  assert.equal(await page.locator('.ordo-page .liturgy-nav-link').count(), 0, 'Ordo content has no duplicate capsule');
+  const dimensions = await group.evaluate((element) => { const box = element.getBoundingClientRect(); return [box.x, box.y, box.width, box.height]; });
+  const reference = await page.evaluate(() => window.readingsNavDimensions);
+  assert.deepEqual(dimensions, reference, `${label}: shared navigation retains the Readings proportions`);
+  await group.getByLabel('Адкрыць меню', { exact: true }).click();
+  await page.locator('.app-drawer:not([inert])').waitFor();
+  await page.keyboard.press('Escape');
+  await page.locator('.app-drawer[inert]').waitFor();
+}
 try {
   await page.goto(`${baseUrl}/__mobile-ui`, { waitUntil: 'domcontentloaded', timeout: 30_000 });
   await page.waitForFunction(() => window.uiReady, null, { timeout: 30_000 });
@@ -166,21 +220,46 @@ try {
         assert.ok(buttons.every((button) => button.scroll <= button.client + 1));
       }
       await page.evaluate(() => { window.ui.settings.fontSizeMultiplier = 1; });
+      await page.evaluate(() => {
+        const box = document.querySelector('.readings-nav-group').getBoundingClientRect();
+        window.readingsNavDimensions = [box.x, box.y, box.width, box.height];
+      });
       await navigate('/ordo');
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
       await checkLayout(`${width}/${theme}/ordo`);
+      await checkOrdoNav(`${width}/${theme}/ordo/top`);
       await checkDock('.month-list');
+      await checkOrdoNav(`${width}/${theme}/ordo/scrolled`);
       await navigate('/ordo/2026-12-25');
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
       await checkLayout(`${width}/${theme}/ordo-day`);
+      await checkOrdoNav(`${width}/${theme}/ordo-day/top`);
+      const hoursLink = page.locator('[data-test="ordo-hours-shortcut"]');
+      assert.equal(await hoursLink.getAttribute('href'), '/day/2026-12-25');
+      await page.evaluate(() => window.scrollTo(0, 900));
+      await checkOrdoNav(`${width}/${theme}/ordo-day/scrolled`);
+      await hoursLink.click();
+      await page.waitForURL('**/day/2026-12-25');
       await navigate('/day/2026-12-25');
       await checkLayout(`${width}/${theme}/home`);
       await page.getByLabel('Літургічны каляндар гэтага дня').click();
       await page.waitForURL('**/ordo/2026-12-25');
       assert.ok(page.url().includes('/ordo/2026-12-25'));
+      await navigate('/day/2026-12-25/ora/ui-day');
+      await page.locator('.oras-hero-block').waitFor();
+      await checkOraElements(`${width}/${theme}/ora/top`);
+      await page.evaluate(() => window.scrollTo(0, 900));
+      await checkOraElements(`${width}/${theme}/ora/scrolled`);
       await navigate('/day/2026-12-25/ora/ui-day/laudes');
       await page.locator('[data-hour-heading]').waitFor();
+      await checkOraElements(`${width}/${theme}/hour/top`);
+      assert.equal(await page.locator('.ora-location').count(), 0, 'the visible hour heading is not covered by a duplicate capsule');
       await page.evaluate(() => window.scrollTo(0, 900));
       await page.locator('.ora-location').waitFor();
-      await checkLayout(`${width}/${theme}/hour`);
+      await checkOraElements(`${width}/${theme}/hour/scrolled`);
+      await page.evaluate(() => { window.ui.auth.isAdmin = true; });
+      await checkOraElements(`${width}/${theme}/hour/admin`);
+      await page.evaluate(() => { window.ui.auth.isAdmin = false; });
       await page.locator('.ora-location').click();
       await page.locator('.ora-hour-menu').waitFor();
       await page.getByRole('link', { name: 'Нешпары', exact: true }).click();
@@ -199,6 +278,33 @@ try {
     console.log(`Passed ${width}px: three themes, three text sizes, navigation and both editors.`);
   }
   await page.setViewportSize({ width: 390, height: 844 });
+  for (const theme of ['light', 'dark']) {
+    await page.evaluate((theme) => window.ui.settings.setThemePreference(theme), theme);
+    for (const [path, name] of [['/ordo', 'ordo'], ['/ordo/2026-12-25', 'ordo-day'], ['/day/2026-12-25/ora/ui-day', 'ora'], ['/day/2026-12-25/ora/ui-day/laudes', 'hour']]) {
+      await navigate(path);
+      await page.waitForTimeout(250);
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+      await page.waitForTimeout(250);
+      await page.screenshot({ path: `${output}/navigation-${name}-${theme}-top.png` });
+      await page.evaluate(() => window.scrollTo(0, 900));
+      await page.waitForTimeout(250);
+      await page.screenshot({ path: `${output}/navigation-${name}-${theme}-scrolled.png` });
+    }
+  }
+  await page.evaluate(async () => {
+    const { setOrdoDioceseFilter } = await import('/src/utils/ordoMonthFilter.js');
+    setOrdoDioceseFilter(['pinsk']);
+  });
+  await navigate('/ordo/2026-12-25');
+  assert.equal(await page.locator('[data-test="ordo-hours-shortcut"]').getAttribute('href'), '/day/2026-12-25?diocese=pinsk');
+  await page.locator('[data-test="ordo-hours-shortcut"]').click();
+  await page.waitForURL('**/day/2026-12-25?diocese=pinsk');
+  await navigate('/ordo');
+  assert.equal(await page.locator('[data-test="ordo-hours-shortcut"]').getAttribute('href'), '/?diocese=pinsk');
+  await page.evaluate(async () => {
+    const { setOrdoDioceseFilter } = await import('/src/utils/ordoMonthFilter.js');
+    setOrdoDioceseFilter(['minsk-mohilev']);
+  });
   await navigate('/settings');
   await page.getByRole('checkbox', { name: /Гродзенская/ }).click();
   assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem('ordoDioceses')).includes('grodno')), true);

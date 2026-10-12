@@ -1,7 +1,7 @@
 <template>
-  <v-app-bar flat class="floating-ora-bar" :class="{ 'floating-ora-bar--scrolled': showCapsule }">
+  <v-app-bar flat class="floating-ora-bar">
     <v-app-bar-nav-icon class="ora-circle-btn" aria-label="Назад" @click="goBack"><PhArrowLeft :size="21" /></v-app-bar-nav-icon>
-    <LiturgyNavLink v-if="!isHour" :to="dateHomeRoute" />
+    <LiturgyNavLink v-if="!isHour" :to="dateHomeRoute" class="ora-liturgy-link" />
     <Transition name="hour-capsule">
       <div v-if="showCapsule" class="hour-capsule-anchor">
         <v-menu location="bottom center">
@@ -96,15 +96,9 @@ function onEditClick() {
 }
 
 .floating-ora-bar :deep(.v-toolbar__content) {
-  gap: 4px;
-  width: calc(100% - 24px);
-  margin-inline: 12px;
-  padding: 4px;
-  border: 1px solid var(--nav-border);
-  border-radius: 28px;
-  background: color-mix(in srgb, var(--nav-surface) 92%, transparent);
-  box-shadow: 0 2px 9px var(--nav-button-shadow);
-  backdrop-filter: blur(12px);
+  gap: 8px;
+  padding: 8px 12px;
+  background: transparent;
 }
 
 .floating-ora-bar :deep(.v-toolbar__prepend),
@@ -121,11 +115,12 @@ function onEditClick() {
   height: 48px !important;
   min-width: 48px !important;
   flex: 0 0 48px !important;
-  border: 0 !important;
+  border: 1px solid var(--nav-border) !important;
   border-radius: 50% !important;
-  background: transparent !important;
+  background: var(--nav-surface) !important;
   color: var(--nav-on-surface) !important;
-  box-shadow: none !important;
+  box-shadow: 0 2px 9px var(--nav-button-shadow) !important;
+  backdrop-filter: blur(12px);
   transition: transform 0.16s ease, opacity 0.16s ease !important;
 }
 
@@ -142,24 +137,20 @@ function onEditClick() {
 .ora-action-start {
   margin-left: auto !important;
 }
-
-
-
 .floating-ora-bar :deep(.text-scale-control) {
   flex-shrink: 0;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
 }
 
-
-
+.ora-liturgy-link {
+  border: 1px solid var(--nav-border);
+  background: var(--nav-surface);
+  box-shadow: 0 2px 9px var(--nav-button-shadow);
+  backdrop-filter: blur(12px);
+}
 @media (max-width: 359px) {
   .floating-ora-bar :deep(.v-toolbar__content) {
-    gap: 2px;
-    width: calc(100% - 16px);
-    margin-inline: 8px;
+    gap: 6px;
+    padding-inline: 8px;
   }
 
   .ora-circle-btn {
@@ -168,13 +159,10 @@ function onEditClick() {
     min-width: 44px !important;
     flex-basis: 44px !important;
   }
-
-
-
 }
 
-.hour-capsule-anchor { flex: 1 1 0; min-width: 0; }
-.ora-location { display: flex; align-items: center; justify-content: center; gap: 4px; width: 100%; min-height: 44px; padding: 4px; border: 0; border-radius: 20px; background: transparent; color: var(--nav-on-surface); font: inherit; font-size: .9rem; font-weight: 650; line-height: 1.2; cursor: pointer; }
+.hour-capsule-anchor { flex: 0 1 auto; min-width: 0; max-width: 360px; }
+.ora-location { display: flex; align-items: center; justify-content: center; gap: 4px; width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid var(--nav-border); border-radius: 24px; background: var(--nav-surface); color: var(--nav-on-surface); box-shadow: 0 2px 9px var(--nav-button-shadow); backdrop-filter: blur(12px); font: inherit; font-size: .9rem; font-weight: 650; line-height: 1.2; cursor: pointer; }
 .ora-location span { min-width: 0; overflow-wrap: anywhere; }
 .ora-location svg { flex-shrink: 0; }
 .ora-location:hover { background: var(--nav-active); }
