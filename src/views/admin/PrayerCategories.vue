@@ -244,7 +244,7 @@ import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { validateCategory } from '@/utils/validators';
 import { buildPrayerTagStats } from '@/utils/prayerCategoryAdmin';
 import { updatePrayerCategory } from '@/services/prayerCategoryService';
-import { prayerAccessPolicy } from '../../../functions/lib/priest-policy.mjs';
+import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
 
 const prayerCategories = usePrayerCategoriesStore();
 const { categories, isLoading: categoriesLoading, error: categoriesError } = storeToRefs(prayerCategories);

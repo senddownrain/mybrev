@@ -30,7 +30,7 @@ export function initSentry(app, router) {
         Sentry.replayIntegration({
           // Activation codes and individual credentials must never become
           // network payloads in recordings, even if detail capture is enabled.
-          networkDetailDenyUrls: [/\/api\/priest\//],
+          networkDetailDenyUrls: [/firestore\.googleapis\.com/, /identitytoolkit\.googleapis\.com/, /securetoken\.googleapis\.com/],
         }),
       ],
       tracesSampleRate: 0.1,

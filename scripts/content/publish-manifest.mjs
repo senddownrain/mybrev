@@ -50,11 +50,12 @@ const ROOT = process.cwd();
 
 function parseArgs(argv) {
   const options = {
-    snapshots: [], apply: false, allowLargePatch: false, schemaRelease: false, introduceCollections: false,
+    snapshots: [], collections: [], apply: false, allowLargePatch: false, schemaRelease: false, introduceCollections: false,
     serviceAccount: path.join(ROOT, 'patchs', 'serviceAccountKey.json'),
   };
   for (let index = 0; index < argv.length; index += 1) {
     if (argv[index] === '--snapshot') options.snapshots.push(argv[++index]);
+    else if (argv[index] === '--collection') options.collections.push(argv[++index]);
     else if (argv[index] === '--apply') options.apply = true;
     else if (argv[index] === '--allow-large-patch') options.allowLargePatch = true;
     else if (argv[index] === '--schema-release') options.schemaRelease = true;
@@ -62,6 +63,7 @@ function parseArgs(argv) {
     else if (argv[index] === '--service-account') options.serviceAccount = argv[++index];
   }
   if (options.apply && options.snapshots.length) throw new Error('--apply publishes hashes of live Firestore only (no --snapshot).');
+  for(const name of options.collections)if(!APP_CONTENT_COLLECTIONS.includes(name))throw new Error(`Unsupported public collection: ${name}`);
   return options;
 }
 
@@ -96,8 +98,9 @@ export function heldBackCollections(described, published, { introduceCollections
   return Object.keys(described).filter((name) => !published.collections?.[name]);
 }
 
-export function planManifest(described, published, now = Date.now()) {
-  const collections = {};
+export function planManifest(described, published, now = Date.now(), {partial=false} = {}) {
+  if(partial&&!published)throw new Error('A partial publication requires an existing manifest.');
+  const collections = partial ? {...published.collections} : {};
   const changed = [];
   for (const [name, item] of Object.entries(described)) {
     const before = published?.collections?.[name];
@@ -132,17 +135,20 @@ async function main() {
     const invalid = [];
     if (firestore) {
       const collections = new Map();
-      for (const name of APP_CONTENT_COLLECTIONS) {
+      const selected=options.collections.length?options.collections:APP_CONTENT_COLLECTIONS;
+      const readNames=[...new Set([...selected,...(selected.includes('prayers')?['prayerCategories']:[])])];
+      for (const name of readNames) {
         console.log(`reading ${name}…`);
         const snapshot = await firestore.collection(name).get();
         const docs = snapshot.docs.map((doc) => storedDocument(doc.id, doc.data()));
         invalid.push(...validateCollection(name, docs));
         collections.set(name, docs);
       }
-      for (const [name, docs] of publicAppCollections(collections)) described[name] = describeDocuments(docs);
+      for (const [name, docs] of publicAppCollections(collections)) if(!options.collections.length||options.collections.includes(name))described[name] = describeDocuments(docs);
     } else {
       const { collections } = await readCollections(options.snapshots);
       for (const [name, docs] of publicAppCollections(collections)) {
+        if(options.collections.length&&!options.collections.includes(name))continue;
         invalid.push(...validateCollection(name, docs));
         described[name] = describeDocuments(docs);
       }
@@ -155,7 +161,7 @@ async function main() {
     if (heldBack.length) {
       console.log(`held back (not in the manifest until the app release, --introduce-collections): ${heldBack.join(', ')}`);
     }
-    const { current, changed } = planManifest(described, published);
+    const { current, changed } = planManifest(described, published, Date.now(), {partial:options.collections.length>0});
 
     // Diff against the published hashes (read only for changed collections).
     const diffs = [];

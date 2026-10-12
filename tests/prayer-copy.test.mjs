@@ -52,6 +52,7 @@ function createEditor(t, options = {}) {
       return () => {};
     },
     prayerService: {
+      subscribePrayers: (callback) => { callback([{ ...original }]); return () => {}; },
       addPrayer: async (data) => {
         if (options.failWrite) throw new Error('Test write failed');
         const id = `copy-${writes.length + 1}`;
