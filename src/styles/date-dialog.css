@@ -1,0 +1,80 @@
+/* Shared by Hours, Readings and Ordo. Vuetify teleports the overlay and
+   manages its stack (above app bars) and background scroll lock. */
+.liturgical-date-dialog {
+  --date-dialog-height: min(680px, calc(100vh - 24px - var(--app-safe-top) - env(safe-area-inset-bottom, 0px)));
+  padding: calc(12px + var(--app-safe-top)) max(12px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+}
+@supports (height: 100dvh) {
+  .liturgical-date-dialog {
+    height: 100dvh;
+    --date-dialog-height: min(680px, calc(100dvh - 24px - var(--app-safe-top) - env(safe-area-inset-bottom, 0px)));
+  }
+}
+.liturgical-date-dialog > .v-overlay__content {
+  margin: 0;
+  /* Overlay content is positioned absolutely, so overlay padding alone
+     cannot reserve the horizontal viewport gutters. */
+  width: calc(100% - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) !important;
+  max-width: 420px;
+  height: var(--date-dialog-height);
+  max-height: 100%;
+}
+.liturgical-date-dialog .date-dialog-card {
+  --calendar-accent: var(--nav-on-surface);
+  --calendar-on-accent: var(--nav-surface);
+  --calendar-accent-soft: color-mix(in srgb, var(--nav-on-surface) 9%, transparent);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden !important;
+  border: 1px solid var(--nav-border);
+  border-radius: 28px !important;
+  background: radial-gradient(circle at 92% 0, color-mix(in srgb, var(--nav-on-surface) 8%, transparent), transparent 210px), var(--overlay-surface) !important;
+  color: var(--nav-on-surface);
+  box-shadow: 0 22px 60px var(--nav-shadow) !important;
+}
+.liturgical-date-dialog .date-dialog-title {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 16px 16px 8px !important;
+}
+.liturgical-date-dialog .date-dialog-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.liturgical-date-dialog .date-dialog-eyebrow {
+  color: var(--calendar-accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.liturgical-date-dialog .date-dialog-heading {
+  margin-top: 3px;
+  font-size: 1.25rem;
+  font-family: var(--reader-display-font-family);
+  font-weight: 760;
+  line-height: 1.3;
+}
+.liturgical-date-dialog .date-dialog-actions {
+  flex: 0 0 auto;
+  padding: 10px 16px 12px !important;
+  border-top: 1px solid var(--nav-border);
+}
+.liturgical-date-dialog .date-dialog-close,
+.liturgical-date-dialog .today-date-btn {
+  color: var(--nav-on-surface) !important;
+}
+.liturgical-date-dialog .date-dialog-close { background: var(--nav-active); }
+.liturgical-date-dialog .select-date-btn {
+  min-width: 112px;
+  background: var(--calendar-accent) !important;
+  color: var(--calendar-on-accent) !important;
+  box-shadow: 0 5px 14px var(--nav-shadow);
+}
