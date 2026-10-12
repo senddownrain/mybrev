@@ -1,0 +1,358 @@
+{
+  "indexUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle.html",
+  "items": [
+    {
+      "n": 1,
+      "title": "Пра адпусты",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100104.html",
+      "type": "reference",
+      "requiredTags": [],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 2,
+      "title": "Адарацыя Найсвяцейшага Сакрамэнту",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100105.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 3,
+      "title": "Святая гадзіна",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100106.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 4,
+      "title": "Набажэнства да Духа Святога",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100107.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 5,
+      "title": "Набажэнства да Найсвяцейшай Тройцы",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100108.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 6,
+      "title": "Набажэнства да Найсвяцейшага Сэрца Езуса",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100109.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 7,
+      "title": "Вяночак да Божай Міласэрнасці",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100110.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 8,
+      "title": "Навэнна перад святам Божай Міласэрнасці",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100111.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства",
+        "Навэнна"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 9,
+      "title": "Літанія да Божай Міласэрнасці",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100103.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства",
+        "Літанія"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 10,
+      "title": "Крыжовы шлях",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100113.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 11,
+      "title": "Крыжовы шлях «Шляхам церпячага Хрыста»",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/116634.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 12,
+      "title": "Крыжовы шлях Міласэрнай Любові",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/116633.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 13,
+      "title": "Яго Крыжовы шлях",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/105679.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 14,
+      "title": "Крыжовы шлях Пакліканых",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/105681.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 15,
+      "title": "Крыжовы шлях Ненароджаных",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/105682.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 16,
+      "title": "Крыжовы шлях штодзённага Жыцця",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/105683.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 17,
+      "title": "Крыжовы шлях Пана нашага Езуса Хрыста (разважанні паводле кс. Рамано Гуардзіні)",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/108432.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 18,
+      "title": "Крыжовы шлях Уцелаўлёнай Любові",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/111854-kryzowy-szlach.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 19,
+      "title": "Курапацкі Крыжовы шлях",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/111858-kryzowy-szlach.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 20,
+      "title": "Крыжовы шлях. Малітва маці за дзяцей",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/111877-kryzowy-szlach.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 21,
+      "title": "Крыжовы шлях «Пане, памнож у нас веру»",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/116694-wialiki-post.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 22,
+      "title": "Крыжовы шлях “дасканалай любові”",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/128936.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 23,
+      "title": "Крыжовы шлях “Найбольшая запаведзь” з разважаннямі благаслаўлёнай Маці Тэрэзы з Калькуты",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/128938.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 24,
+      "title": "Крыжовы шлях “Добры Пастыр”",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/128988.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 25,
+      "title": "Крыжовы шлях міласэрнасці",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/129259.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 26,
+      "title": "Крыжовы шлях учынкаў міласэрнасці",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/129262.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 27,
+      "title": "Крыжовы шлях для моладзі",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/129406.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 28,
+      "title": "Крыжовы шлях “Па слядах міласэрнага Збаўцы, альбо з цемры граху да святла Божай міласэрнасці”",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/129467.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 29,
+      "title": "Крыжовы шлях Бескарыслівай Любові",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/125067-kshalenyblusenkowaj.html",
+      "type": "stations",
+      "requiredTags": [
+        "Набажэнства",
+        "Крыжовы шлях"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 30,
+      "title": "Песні жальбы",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/105811.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 31,
+      "title": "Святы ружанец",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100114.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства",
+        "Марыя"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 32,
+      "title": "Набажэнства першых суботаў месяца – перапрашэннe Беззаганнага Сэрца Марыі",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100115.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства",
+        "Марыя"
+      ],
+      "status": "not_yet_imported_or_verified"
+    },
+    {
+      "n": 33,
+      "title": "Гадзінкі аб Беззаганным Зачацці Найсвяцейшай Панны Марыі",
+      "sourceUrl": "https://old.catholic.by/2/liturgy/pray/year-cycle/100116.html",
+      "type": "devotion",
+      "requiredTags": [
+        "Набажэнства",
+        "Марыя"
+      ],
+      "status": "not_yet_imported_or_verified"
+    }
+  ]
+}

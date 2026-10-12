@@ -65,7 +65,7 @@ function printHelp() {
   console.log(`Import the supplied Belarusian prayer Markdown collection.\n\nDry-run only reads the archive and writes a local report. Firestore is contacted only with --apply.\n\nUsage: node scripts/import-prayer-markdown-collection.mjs [--apply]\n\nOptions:\n  --archive <zip>          Full prayer collection ZIP\n  --marian-source <file>  Separate Marian Fathers Markdown file\n  --report <file>          Local JSON report\n  --apply                  Create only missing deterministic documents\n  --service-account <file> Firebase service account used only with --apply`);
 }
 
-function zipEntries(buffer) {
+export function zipEntries(buffer) {
   const end = buffer.lastIndexOf(Buffer.from('PK\x05\x06'));
   if (end < 0) throw new Error('ZIP end-of-central-directory record was not found');
   const centralOffset = buffer.readUInt32LE(end + 16);
@@ -91,7 +91,7 @@ function zipEntries(buffer) {
   return entries;
 }
 
-async function unzipText(entry, name) {
+export async function unzipText(entry, name) {
   if (!entry) throw new Error(`Archive is missing required file: ${name}`);
   const data = entry.compression === 0 ? entry.data : entry.compression === 8 ? await inflateRawAsync(entry.data) : null;
   if (!data) throw new Error(`Unsupported ZIP compression for ${name}: ${entry.compression}`);

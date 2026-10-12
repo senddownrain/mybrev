@@ -41,3 +41,7 @@ ibreviarybyapp/
 /.ordo-sources/
 __pycache__/
 *.pyc
+
+# Private import package and unreviewed source HTML
+/patchs/sources/catholicby-yearcycle/package/
+/patchs/sources/catholicby-yearcycle/.cache/

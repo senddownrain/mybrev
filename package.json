@@ -20,6 +20,7 @@
     "db:backup": "node scripts/export-firestore-snapshot.mjs",
     "db:snapshot:query": "node scripts/query-firestore-snapshot.mjs",
     "db:import-songs": "node scripts/import-songs.mjs",
+    "db:import-catholicby-yearcycle": "node scripts/import-catholicby-yearcycle.mjs",
     "db:import-mass-english": "node scripts/import-mass-english.mjs",
     "db:migrate-mass-content-v4": "node scripts/migrate-mass-content-v4.mjs",
     "db:migrate-mass-latin-rubrics-v4-1": "node scripts/migrate-mass-latin-rubrics-v4-1.mjs",

@@ -65,7 +65,8 @@
       max-width="420"
       scrim="black"
       :persistent="false"
-      :z-index="110"
+      class="liturgical-date-dialog"
+      scroll-strategy="block"
     >
       <v-card class="date-dialog-card" rounded="xl" elevation="18">
         <v-card-title class="date-dialog-title">
@@ -75,7 +76,7 @@
           </div>
           <v-btn class="date-dialog-close" icon="mdi-close" variant="text" size="small" aria-label="Закрыць" @click="toggleCalendarDialog" />
         </v-card-title>
-        <v-card-text class="pa-0">
+        <v-card-text class="date-dialog-content pa-0">
           <CustomDatePicker
             v-model="selectedDate"
             color="primary"
@@ -102,6 +103,7 @@ import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAppBar } from '@/composables/useAppBar';
 import CustomDatePicker from '@/components/common/CustomDatePicker.vue';
+import '@/styles/date-dialog.css';
 import { effectiveOrdoDiocese, effectiveOrdoDioceses, ordoDiocese } from '@/utils/ordoDiocese';
 import { pickerDateRoute, pickerRouteFor } from '@/utils/ordoDatePicker';
 import moment from '@/utils/moment-be';
@@ -294,77 +296,6 @@ watch(isCalendarDialogOpen, (open) => {
 }
 
 /* ── calendar dialog ── */
-.date-dialog-card {
-  --calendar-accent: var(--nav-on-surface);
-  --calendar-on-accent: var(--nav-surface);
-  --calendar-accent-soft: color-mix(in srgb, var(--nav-on-surface) 9%, transparent);
-  overflow: hidden !important;
-  border: 1px solid var(--nav-border);
-  border-radius: 28px !important;
-  background:
-    radial-gradient(circle at 92% 0, color-mix(in srgb, var(--nav-on-surface) 8%, transparent), transparent 210px),
-    var(--overlay-surface) !important;
-  color: var(--nav-on-surface);
-  box-shadow: 0 22px 60px var(--nav-shadow) !important;
-}
-
-.date-dialog-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 20px 9px !important;
-}
-
-.date-dialog-eyebrow {
-  color: var(--calendar-accent);
-  font-size: 0.7rem;
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.date-dialog-heading {
-  margin-top: 3px;
-  font-size: 1.25rem;
-  font-family: var(--reader-display-font-family);
-  color: var(--nav-on-surface);
-  font-weight: 760;
-  line-height: 1.3;
-}
-
-.date-dialog-actions {
-  padding: 11px 16px 16px !important;
-  border-top: 1px solid var(--nav-border);
-}
-
-.date-dialog-close,
-.today-date-btn {
-  color: var(--nav-on-surface) !important;
-}
-
-.date-dialog-close {
-  color: var(--nav-on-surface) !important;
-  background: var(--nav-active);
-}
-
-.select-date-btn {
-  min-width: 112px;
-  background: var(--calendar-accent) !important;
-  color: var(--calendar-on-accent) !important;
-  box-shadow: 0 5px 14px var(--nav-shadow);
-}
-
-@media (max-height: 620px) {
-  .date-dialog-card {
-    overflow-y: auto !important;
-    scrollbar-width: none;
-  }
-
-  .date-dialog-card::-webkit-scrollbar {
-    display: none;
-  }
-}
 .choose-date-btn { min-width: 112px; font-weight: 720; letter-spacing: 0; text-transform: none; }
 .date-dialog-hint {
   padding-right: 8px;

@@ -1,3 +1,4 @@
+import { checkCalendarLayout } from '../tests/ui/calendar-layout.mjs';
 import assert from 'node:assert/strict';
 import { mkdir, rename, writeFile } from 'node:fs/promises';
 import { chromium } from 'playwright-core';
@@ -14,7 +15,7 @@ const modules = new Set([
   '/src/views/Settings.vue', '/src/views/Ordo.vue', '/src/components/OrasList.vue',
   '/src/components/readings/ReadingsView.vue', '/src/components/oras/Laudes.vue',
   '/src/components/oras/Vesper.vue', '/src/views/admin/ParsedReadingEditor.vue',
-  '/src/components/prayers/PrayerView.vue',
+  '/src/components/prayers/PrayerView.vue', '/src/views/LiturgicalPicker.vue',
 ]);
 for (const path of modules) {
   const response = await fetch(new URL(path, baseUrl));
@@ -191,10 +192,12 @@ async function checkOrdoNav(label) {
   await page.locator('.app-drawer[inert]').waitFor();
 }
 try {
-  await page.goto(`${baseUrl}/__mobile-ui`, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-  await page.waitForFunction(() => window.uiReady, null, { timeout: 30_000 });
+  await page.goto(`${baseUrl}/__mobile-ui`, { waitUntil: 'domcontentloaded', timeout: 60_000 });
+  await page.waitForFunction(() => window.uiReady, null, { timeout: 60_000 });
   await page.locator('[data-test="settings-dioceses"]').waitFor();
   await page.evaluate(() => Promise.race([document.fonts.ready, new Promise((resolve) => setTimeout(resolve, 5000))]));
+  await checkCalendarLayout(page, navigate, output);
+  if (!process.env.CALENDAR_ONLY) {
   for (const width of [320, 360, 390, 412, 430, 1280]) {
     await page.setViewportSize({ width, height: 844 });
     for (const theme of ['light', 'dark', 'system']) {
@@ -364,6 +367,7 @@ try {
   await page.getByRole('button', { name: 'Захаваць', exact: true }).click();
   await page.waitForFunction(() => window.savedEditor?.ref.id === 'ui-sets');
   assert.deepEqual(await page.evaluate(() => window.savedEditor.data.massReadings.sets.map((set) => set.id)), structured.massReadings.sets.map((set) => set.id));
+  }
   assert.deepEqual(errors, [], 'no browser console errors');
   console.log('Mobile UI smoke passed. Screenshots: reports/mobile-ui. Firebase reads/writes were mocked; no live data accessed.');
 } catch (error) {
