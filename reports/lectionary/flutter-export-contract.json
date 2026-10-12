@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "contract": "mybrev.lectionary.flutter-export",
- "generatedAt": "2026-10-12T18:10:44.614Z",
+ "generatedAt": "2026-10-12T18:11:30.977Z",
  "dataset": {
   "collection": "readings",
   "documents": 822,

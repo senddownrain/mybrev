@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-12T18:10:44.614Z",
+ "generatedAt": "2026-10-12T18:11:30.977Z",
  "source": {
   "dir": ".cache/prod-snapshot-20261012",
   "snapshotVersion": "20261012171555724",
@@ -2353,7 +2353,7 @@
     "gospel"
    ],
    "classes": [
-    "WRONG_REFERENCE",
+    "WRONG_CYCLE",
     "WRONG_TEXT"
    ],
    "findings": 4,
@@ -2374,7 +2374,7 @@
     "gospel"
    ],
    "classes": [
-    "WRONG_REFERENCE",
+    "WRONG_CYCLE",
     "WRONG_TEXT"
    ],
    "findings": 4,
@@ -2516,7 +2516,7 @@
     "gospel"
    ],
    "classes": [
-    "WRONG_REFERENCE",
+    "WRONG_CYCLE",
     "WRONG_TEXT"
    ],
    "findings": 4,
@@ -2931,7 +2931,7 @@
     "gospel"
    ],
    "classes": [
-    "WRONG_REFERENCE",
+    "WRONG_CYCLE",
     "WRONG_TEXT"
    ],
    "findings": 4,
@@ -2971,7 +2971,7 @@
     "gospel"
    ],
    "classes": [
-    "WRONG_REFERENCE",
+    "WRONG_CYCLE",
     "WRONG_TEXT"
    ],
    "findings": 5,
@@ -3213,27 +3213,6 @@
    "findings": 1,
    "beforeHash": "c441d0f3391e6786",
    "afterHash": "86debe5d46fcce6f",
-   "wave": 2
-  },
-  {
-   "id": "ordinary-w32-d7--2",
-   "pageId": "4899",
-   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4899-subota-trytstsats-drugi-zvychajny-tydzen",
-   "sourceSha256": "c88a0330eab8482baa804d7f4e59fefd169db25e67d382d627671283f82ad104",
-   "inferredSource": false,
-   "changedFields": [
-    "reading1",
-    "psalm",
-    "alleluia",
-    "gospel"
-   ],
-   "classes": [
-    "WRONG_REFERENCE",
-    "WRONG_TEXT"
-   ],
-   "findings": 2,
-   "beforeHash": "badd59183b98bc2e",
-   "afterHash": "ef7517451e728886",
    "wave": 2
   },
   {
@@ -3482,7 +3461,7 @@
     "gospel"
    ],
    "classes": [
-    "WRONG_REFERENCE",
+    "WRONG_CYCLE",
     "WRONG_TEXT"
    ],
    "findings": 4,
@@ -3503,7 +3482,7 @@
     "gospel"
    ],
    "classes": [
-    "WRONG_REFERENCE",
+    "WRONG_CYCLE",
     "WRONG_TEXT"
    ],
    "findings": 4,
@@ -3603,7 +3582,7 @@
     "gospel"
    ],
    "classes": [
-    "WRONG_REFERENCE",
+    "WRONG_CYCLE",
     "WRONG_TEXT"
    ],
    "findings": 3,
@@ -5823,6 +5802,26 @@
    "findings": 1,
    "beforeHash": "63f48126e71ab444",
    "afterHash": "1a116aa993f05846",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w32-d7--2",
+   "pageId": "4899",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4899-subota-trytstsats-drugi-zvychajny-tydzen",
+   "sourceSha256": "c88a0330eab8482baa804d7f4e59fefd169db25e67d382d627671283f82ad104",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_CYCLE"
+   ],
+   "findings": 2,
+   "beforeHash": "badd59183b98bc2e",
+   "afterHash": "ef7517451e728886",
    "wave": 2
   },
   {

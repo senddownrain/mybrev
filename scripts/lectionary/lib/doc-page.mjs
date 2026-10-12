@@ -3,7 +3,7 @@
  * set / cycle, the expected sections, and the section-by-section comparison.
  */
 import { massReadingSetsOf } from '../../../src/utils/massReadingSets.js';
-import { compareSections, legacySections, normalizeText, wordsOf, pageSectionsFor } from './compare.mjs';
+import { compareSections, legacySections, normalizeCitation, normalizeText, wordsOf, pageSectionsFor } from './compare.mjs';
 import { pageIdOfUrl } from './source-pages.mjs';
 import { docSelector } from './identity.mjs';
 
@@ -155,6 +155,23 @@ export function compareLegacy(doc, page, stats = null) {
     const artifact = artifactOf(diff, expectedSection, actualSection);
     expectedByKey.set(diff.section, expectedSection);
     return { ...diff, ...(artifact ? { artifact } : {}), docId: doc.id, pageId: page.id, url: page.record.url };
+  });
+  // A document of one weekday year / Sunday cycle that carries the reading of ANOTHER year: WRONG_CYCLE, not a typo.
+  const others = (page.parsed.sets[0].sections || []).filter((section) => (section.year && section.year !== String(doc.year)) || (section.cycle && section.cycle !== String(doc.year).toUpperCase()));
+  diffs.forEach((diff) => {
+    if (!['bible', 'text', 'verses', 'chorus'].includes(diff.field) || diff.class === 'STRUCTURE_LOSS') return;
+    const role = diff.section.split('/')[1];
+    const stored = actual.find((section) => section.role === role);
+    if (!stored) return;
+    const twin = others.find((section) => section.role === role && (
+      (diff.field === 'bible' && normalizeCitation(section.bible) === normalizeCitation(stored.bible))
+      || (diff.field === 'text' && wordsOf(section.text) === wordsOf(stored.text) && wordsOf(stored.text))
+      || (diff.field === 'verses' && wordsOf((section.verses || []).join('')) === wordsOf((stored.verses || []).join('')) && (stored.verses || []).length)
+      || (diff.field === 'chorus' && wordsOf(section.chorus) === wordsOf(stored.chorus) && wordsOf(stored.chorus))));
+    if (twin) {
+      diff.class = 'WRONG_CYCLE';
+      diff.detail = `the ${isYear(doc.year) ? `weekday year ${doc.year}` : `cycle ${doc.year}`} document carries the ${role} of ${twin.year ? `weekday year ${twin.year}` : `cycle ${twin.cycle}`} (${twin.bible})`;
+    }
   });
   if (expected.notCycleAware) {
     diffs.push({ class: 'WRONG_CYCLE', severity: 'high', docId: doc.id, pageId: page.id, url: page.record.url, detail: `the page has a Gospel for each year (${expected.notCycleAware.join(', ')}); the document has no year and carries one` });

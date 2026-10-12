@@ -59,7 +59,7 @@ export function buildResyncPlan({ docs, pages, findings, inferred = new Map() })
     const material = own.filter((item) => !(item.class === 'STRUCTURE_LOSS' && item.severity === 'low'));
     if (!material.length) continue;
     const skip = (reason) => skipped.push({ id: doc.id, reason, classes: [...new Set(material.map((item) => item.class))] });
-    if (material.some((item) => item.class === 'WRONG_CYCLE' && !item.detail?.includes('backed by'))) { skip('cycle-aware canonical document needed: handled by migrate-readings-sets.mjs'); continue; }
+    if (material.some((item) => item.class === 'WRONG_CYCLE' && /has a Gospel for each year/.test(item.detail || ''))) { skip('cycle-aware canonical document needed: handled by migrate-readings-sets.mjs'); continue; }
     if (doc.massReadings || doc._massReadingsRef) { skip('canonical or projected document: handled by migrate-readings-sets.mjs'); continue; }
     const page = doc._sourceUrl ? pages.get(/\/(\d{3,6})-[^/]+(?:[?#].*)?$/.exec(doc._sourceUrl)?.[1] || '') || null : inferred.get(doc.id) || null;
     if (!page?.parsed) { skip('no source page'); continue; }

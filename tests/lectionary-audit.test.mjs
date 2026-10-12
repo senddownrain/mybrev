@@ -288,6 +288,20 @@ test('comparison against the Catholic.by page: a legacy document with the typica
   });
 });
 
+test('a weekday-year-2 document that carries the first reading of year 1 is a WRONG_CYCLE, not a typo', async () => {
+  const { reconcileDocuments } = await import('../scripts/lectionary/lib/reconcile.mjs');
+  const page = pages.get('4616');
+  const year1 = flatFieldsFromPage({ year: '1' }, page).flat;
+  const year2 = flatFieldsFromPage({ year: '2' }, page).flat;
+  assert.notEqual(year1.reading1.bible, year2.reading1.bible);
+  const wrong = { id: 'ordinary-w1-d2--2', year: '2', _periodType: 'ordinary', _periodWeekNumber: 1, _dayOfWeek: 2, _sourceUrl: page.record.url, ...JSON.parse(JSON.stringify(year2)), reading1: JSON.parse(JSON.stringify(year1.reading1)) };
+  const right = { ...JSON.parse(JSON.stringify(wrong)), id: 'ordinary-w1-d2--1b', year: '2', reading1: JSON.parse(JSON.stringify(year2.reading1)) };
+  const classes = (doc) => reconcileDocuments({ docs: [doc], pages }).findings.filter((f) => f.severity !== 'low').map((f) => `${f.class}:${f.field}`);
+  assert.deepEqual(classes(right), []);
+  assert.ok(classes(wrong).includes('WRONG_CYCLE:bible'));
+  assert.ok(classes(wrong).includes('WRONG_CYCLE:text'));
+});
+
 test('resync waves stay under the manifest patch limits', () => {
   const changes = Array.from({ length: 321 }, (_, i) => ({ id: `d${i}`, classes: i % 3 ? ['WRONG_TEXT'] : ['WRONG_REFERENCE'] }));
   const waves = partitionWaves(changes);

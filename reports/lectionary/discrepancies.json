@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generatedAt": "2026-10-12T18:10:44.614Z",
+ "generatedAt": "2026-10-12T18:11:30.977Z",
  "classes": [
   "WRONG_TEXT",
   "WRONG_REFERENCE",
@@ -17,12 +17,12 @@
  "summary": {
   "total": 742,
   "byClass": {
-   "WRONG_TEXT": 273,
-   "WRONG_REFERENCE": 56,
+   "WRONG_TEXT": 268,
+   "WRONG_REFERENCE": 47,
    "MISSING_BLOCK": 23,
    "MISSING_SET": 7,
    "WRONG_DEFAULT": 2,
-   "WRONG_CYCLE": 7,
+   "WRONG_CYCLE": 21,
    "WRONG_CONTEXT": 2,
    "STRUCTURE_LOSS": 360,
    "STALE_PUBLISHED": 0,
@@ -10583,7 +10583,7 @@
   {
    "id": "D0251",
    "scope": "document",
-   "class": "WRONG_REFERENCE",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w14-d2--2",
    "identity": "period:ordinary:w14:d2",
@@ -10595,7 +10595,7 @@
    "expected": "Ос 2, 16. 17b–18. 21–22",
    "actual": "Быц 28, 10–22а",
    "evidence": {
-    "detail": null,
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Быц 28, 10–22а)",
     "relation": null,
     "artifact": null,
     "at": null
@@ -10709,7 +10709,7 @@
   {
    "id": "D0254",
    "scope": "document",
-   "class": "WRONG_REFERENCE",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w14-d4--2",
    "identity": "period:ordinary:w14:d4",
@@ -10721,7 +10721,7 @@
    "expected": "Ос 10, 1–3. 7–8. 12",
    "actual": "Быц 41, 55–57; 42, 5–7а. 17–24а",
    "evidence": {
-    "detail": null,
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Быц 41, 55–57; 42, 5–7а. 17–24а)",
     "relation": null,
     "artifact": null,
     "at": null
@@ -11591,7 +11591,7 @@
   {
    "id": "D0275",
    "scope": "document",
-   "class": "WRONG_REFERENCE",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w16-d2--2",
    "identity": "period:ordinary:w16:d2",
@@ -11603,7 +11603,7 @@
    "expected": "Міх 6, 1–4. 6–8",
    "actual": "Зых 14, 5–18",
    "evidence": {
-    "detail": null,
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Зых 14, 5–18)",
     "relation": null,
     "artifact": null,
     "at": null
@@ -13901,7 +13901,7 @@
   {
    "id": "D0330",
    "scope": "document",
-   "class": "WRONG_REFERENCE",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w25-d4--2",
    "identity": "period:ordinary:w25:d4",
@@ -13913,7 +13913,7 @@
    "expected": "Прып 30, 5–9",
    "actual": "Езд 9, 5–9",
    "evidence": {
-    "detail": null,
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Езд 9, 5–9)",
     "relation": null,
     "artifact": null,
     "at": null
@@ -13943,7 +13943,7 @@
   {
    "id": "D0331",
    "scope": "document",
-   "class": "WRONG_TEXT",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w25-d4--2",
    "identity": "period:ordinary:w25:d4",
@@ -13955,7 +13955,7 @@
    "expected": "Кожнае слова Бога выпрабавана ў агні; Ён шчыт для тых, хто ў",
    "actual": "Я, Ездра, у час вечаровай ахвяры падняўся з месца нядолі сва",
    "evidence": {
-    "detail": "text differs",
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Езд 9, 5–9)",
     "relation": "stored text differs from the source",
     "artifact": null,
     "at": 0
@@ -14027,7 +14027,7 @@
   {
    "id": "D0333",
    "scope": "document",
-   "class": "WRONG_REFERENCE",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w25-d6--2",
    "identity": "period:ordinary:w25:d6",
@@ -14039,7 +14039,7 @@
    "expected": "Экл 3, 1–11",
    "actual": "Аг 1, 15b — 2, 9",
    "evidence": {
-    "detail": null,
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Аг 1, 15b — 2, 9)",
     "relation": null,
     "artifact": null,
     "at": null
@@ -14069,7 +14069,7 @@
   {
    "id": "D0334",
    "scope": "document",
-   "class": "WRONG_TEXT",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w25-d6--2",
    "identity": "period:ordinary:w25:d6",
@@ -14081,7 +14081,7 @@
    "expected": "Усё мае свой адпаведны час, свой час мае кожная справа пад не",
    "actual": "У другі год панавання караля Дарыя, у дваццаць першы дзень сё",
    "evidence": {
-    "detail": "text differs",
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Аг 1, 15b — 2, 9)",
     "relation": "stored text differs from the source",
     "artifact": null,
     "at": 1
@@ -14909,7 +14909,7 @@
   {
    "id": "D0354",
    "scope": "document",
-   "class": "WRONG_REFERENCE",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w32-d7--2",
    "identity": "period:ordinary:w32:d7",
@@ -14921,7 +14921,7 @@
    "expected": "3 Ян 5–8",
    "actual": "Мдр 18, 14–16; 19, 6–9",
    "evidence": {
-    "detail": null,
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Мдр 18, 14–16; 19, 6–9)",
     "relation": null,
     "artifact": null,
     "at": null
@@ -14951,7 +14951,7 @@
   {
    "id": "D0355",
    "scope": "document",
-   "class": "WRONG_TEXT",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w32-d7--2",
    "identity": "period:ordinary:w32:d7",
@@ -14963,7 +14963,7 @@
    "expected": "Умілаваны Гай, Ты паступаеш згодна з вераю ў тым, што робіш ",
    "actual": "Калі спакойная ціша ахапіла ўсё, і ноч у сваім бегу дайшла д",
    "evidence": {
-    "detail": "text differs",
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Мдр 18, 14–16; 19, 6–9)",
     "relation": "stored text differs from the source",
     "artifact": null,
     "at": 0
@@ -15791,7 +15791,7 @@
   {
    "id": "D0375",
    "scope": "document",
-   "class": "WRONG_REFERENCE",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w4-d6--2",
    "identity": "period:ordinary:w4:d6",
@@ -15803,7 +15803,7 @@
    "expected": "Сір 47, 2–11",
    "actual": "Гбр 13, 1–8",
    "evidence": {
-    "detail": null,
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Гбр 13, 1–8)",
     "relation": null,
     "artifact": null,
     "at": null
@@ -16127,7 +16127,7 @@
   {
    "id": "D0383",
    "scope": "document",
-   "class": "WRONG_REFERENCE",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w5-d6--2",
    "identity": "period:ordinary:w5:d6",
@@ -16139,7 +16139,7 @@
    "expected": "1 Вал 11, 29–32; 12, 19",
    "actual": "Быц 3, 1–8",
    "evidence": {
-    "detail": null,
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Быц 3, 1–8)",
     "relation": null,
     "artifact": null,
     "at": null
@@ -16169,7 +16169,7 @@
   {
    "id": "D0384",
    "scope": "document",
-   "class": "WRONG_TEXT",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w5-d6--2",
    "identity": "period:ordinary:w5:d6",
@@ -16181,7 +16181,7 @@
    "expected": "Сталася ў той час, калі Ерабаам выйшаў з Ерузалема: сустрэў ",
    "actual": "Змей быў найбольш хітрым з усіх палявых звяроў, якіх стварыў",
    "evidence": {
-    "detail": "text differs",
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Быц 3, 1–8)",
     "relation": "stored text differs from the source",
     "artifact": null,
     "at": 0
@@ -16784,7 +16784,7 @@
   {
    "id": "D0399",
    "scope": "document",
-   "class": "WRONG_REFERENCE",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w8-d2--2",
    "identity": "period:ordinary:w8:d2",
@@ -16796,7 +16796,7 @@
    "expected": "1 П 1, 3–9",
    "actual": "Сір 17, 24–29",
    "evidence": {
-    "detail": null,
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Сір 17, 24–29)",
     "relation": null,
     "artifact": null,
     "at": null
@@ -16826,7 +16826,7 @@
   {
    "id": "D0400",
    "scope": "document",
-   "class": "WRONG_TEXT",
+   "class": "WRONG_CYCLE",
    "severity": "high",
    "docId": "ordinary-w8-d2--2",
    "identity": "period:ordinary:w8:d2",
@@ -16838,7 +16838,7 @@
    "expected": "Благаслаўлёны Бог і Айцец нашага Пана Езуса Хрыста, які праз",
    "actual": "Тым, хто каецца, Бог дае навяртанне і заахвочвае тых, хто гу",
    "evidence": {
-    "detail": "text differs",
+    "detail": "the weekday year 2 document carries the reading1 of weekday year 1 (Сір 17, 24–29)",
     "relation": "stored text differs from the source",
     "artifact": null,
     "at": 0
