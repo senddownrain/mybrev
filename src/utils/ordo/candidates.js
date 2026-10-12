@@ -62,7 +62,14 @@ export function temporalDaysRef(season) {
 export function temporalReadingsRef(season) {
   const mDate = moment(season.date, 'YYYY-MM-DD');
   const dateOnly = isSeasonalDateException(mDate, season.period) || isChristmasDateExceptionExclusion(mDate);
-  if (dateOnly) return { _date: fixedDateKey(season.date), dateOnly: true };
+  // The weekday pages of 17–24 December and of Christmas time are keyed by
+  // date. A SUNDAY there (IV Sunday of Advent, III when it falls on the 17th,
+  // II Sunday after Christmas) is a Sunday of the A/B/C lectionary: its
+  // documents are the period documents (`advent-w4-d1--A`, `christmas-w2-d1`),
+  // not the weekday of that date (audit 2026-10-12, WRONG_CONTEXT).
+  const sundayOfPeriod = Number(season.dayOfWeek) === 1 && ['advent', 'christmas'].includes(season.period)
+    && !isChristmasDateExceptionExclusion(mDate);
+  if (dateOnly && !sundayOfPeriod) return { _date: fixedDateKey(season.date), dateOnly: true };
   return {
     _periodType: season.period,
     _periodWeekNumber: Number(season.periodWeek) === 0 ? [0, null] : season.periodWeek,

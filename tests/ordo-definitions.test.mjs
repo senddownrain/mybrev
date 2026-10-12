@@ -273,7 +273,10 @@ test('Advent 17–24 December keeps its phase and date documents', () => {
     assert.equal(resolved.period, 'advent', `2026-12-${day}`);
     const temporal = resolved.candidates.find((item) => item.kind === 'temporal');
     assert.equal(temporal.daysRef.seasonalDateId, `advent-${day}-12`);
-    assert.deepEqual(temporal.readingsRef, { _date: `${day}.12`, dateOnly: true });
+    // A Sunday of Advent (here 20.12.2026) keeps the Sunday lectionary documents.
+    assert.deepEqual(temporal.readingsRef, Number(resolved.dayOfWeek) === 1
+      ? { _periodType: 'advent', _periodWeekNumber: 4, _dayOfWeek: 1 }
+      : { _date: `${day}.12`, dateOnly: true });
     assert.equal(resolved.periodPhase, 'dec17-24');
   }
   assert.equal(resolveLiturgicalDate('2026-12-16', { diocese: 'minsk' }).candidates[0].daysRef.seasonalDateId, null);

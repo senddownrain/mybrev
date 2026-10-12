@@ -47,6 +47,12 @@ export function buildReadingsDescriptor(candidate, season, temporal) {
     sourceFallbacks.push({ component: 'proper-readings', chain: ['proper', 'common'] });
   } else if (candidate.kind === 'temporal') {
     lookup.push(weekdayLookup);
+    // 24 December on a Sunday: the Sunday of Advent (morning) and, in the
+    // evening, the Mass of the Christmas Vigil (its own legacy document, the
+    // projection of the `vigil` set of `advent-24-12`).
+    if (season.date.slice(5) === '12-24' && Number(season.dayOfWeek) === 1) {
+      lookup.push({ purpose: 'weekday', where: { _date: '24.12', dateOnly: true, _variant: 'christmas-vigil' } });
+    }
   } else if (candidate.temporal) {
     // Ash Wednesday, Palm Sunday, Easter, Pentecost: dynamic identity first.
     lookup.push(properLookup, weekdayLookup);

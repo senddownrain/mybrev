@@ -260,7 +260,9 @@ export function selectReadingDocuments(entry, option, docs) {
       && Number(doc._dayOfWeek) === Number(where._dayOfWeek));
   }
   if (where._date) {
-    const sameDate = docs.filter((doc) => doc._date === where._date);
+    const variant = where._variant ? String(where._variant).toLowerCase() : '';
+    const sameDate = docs.filter((doc) => doc._date === where._date
+      && (!variant || String(doc._variant || '').toLowerCase() === variant));
     if (entry.purpose === 'weekday' || where.dateOnly) return sameDate;
     const ids = [...(option.daysRef?.dayIds || []), ...(option.fallbackDaysRefs || []).flatMap((ref) => ref.dayIds || [])];
     const linked = sameDate.filter((doc) => [doc._dayId, ...(doc._dayIds || [])].some((id) => ids.includes(id)));

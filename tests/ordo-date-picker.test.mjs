@@ -96,7 +96,8 @@ test('Readings route of the chosen option', () => {
   const ordered = orderReadingsByPlan(plan, docs, { includeAlternatives: true });
   assert.equal(ordered.find((doc) => doc.id === 'wd')._ordoOptionId, primary.id);
   assert.equal(ordered.find((doc) => doc.id === 'saint')._ordoOptionId, alternative.id);
-  assert.match(read('src/components/readings/ReadingsView.vue'), /document\._ordoOptionId === optionId/);
+  assert.match(read('src/utils/readingsScreen.js'), /document\._ordoOptionId === optionId/);
+  assert.match(read('src/components/readings/ReadingsView.vue'), /resolveReadingsScreen/);
 });
 
 test('the picker uses the resolved day; both navigation bars pass the screen context', () => {
