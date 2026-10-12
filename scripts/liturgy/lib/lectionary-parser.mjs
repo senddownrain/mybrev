@@ -530,7 +530,7 @@ export function parseLectionaryPage(html) {
       continue;
     }
     // «або:» followed by a heading of the same slot (Mary Mother of the Church).
-    if ((line.bold || line.italic) && OR_MARK.test(line.text) && lines[index + 1] && headingOf(lines[index + 1]) && heading) {
+    if (OR_MARK.test(line.text) && lines[index + 1] && headingOf(lines[index + 1]) && heading) {
       const upcoming = headingOf(lines[index + 1]);
       if (upcoming.kind === heading.kind && upcoming.role === heading.role) { pendingAlternative = true; continue; }
     }

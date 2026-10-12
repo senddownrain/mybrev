@@ -135,8 +135,13 @@ export function expectedForLegacy(doc, page) {
   const year = isYear(doc.year) ? String(doc.year) : '';
   const cycle = isCycle(doc.year) ? String(doc.year).toUpperCase() : '';
   // A legacy document is the projection of ONE cycle / weekday year: the markers are not part of its shape.
-  const sections = pageSectionsFor(sets[0], { year, cycle }).map(({ cycle: _cycle, year: _year, ...section }) => section);
-  return { sections, set: sets[0] };
+  let selected = pageSectionsFor(sets[0], { year, cycle });
+  // The page has cycle-specific sections but the document has no cycle: it can only follow ONE of them (WRONG_CYCLE).
+  const cycles = [...new Set(selected.map((section) => section.cycle).filter(Boolean))];
+  const notCycleAware = cycles.length > 1 && !cycle;
+  if (notCycleAware) selected = selected.filter((section) => !section.cycle || section.cycle === cycles[0]);
+  const sections = selected.map(({ cycle: _cycle, year: _year, ...section }) => section);
+  return { sections, set: sets[0], ...(notCycleAware ? { notCycleAware: cycles } : {}) };
 }
 
 export function compareLegacy(doc, page, stats = null) {
@@ -151,6 +156,9 @@ export function compareLegacy(doc, page, stats = null) {
     expectedByKey.set(diff.section, expectedSection);
     return { ...diff, ...(artifact ? { artifact } : {}), docId: doc.id, pageId: page.id, url: page.record.url };
   });
+  if (expected.notCycleAware) {
+    diffs.push({ class: 'WRONG_CYCLE', severity: 'high', docId: doc.id, pageId: page.id, url: page.record.url, detail: `the page has a Gospel for each year (${expected.notCycleAware.join(', ')}); the document has no year and carries one` });
+  }
   return { diffs };
 }
 

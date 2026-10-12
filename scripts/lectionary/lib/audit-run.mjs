@@ -41,6 +41,15 @@ export async function runAudit({ snapshotDir, plan = null } = {}) {
   const resync = buildResyncPlan({ docs, pages, findings: recon.findings, inferred });
   const resyncById = new Map(resync.changes.map((change) => [change.id, change]));
   const docsById = new Map(docs.map((doc) => [doc.id, doc]));
+  // What the audit would say after the resync plan: the proof that the plan fixes what it claims to fix.
+  const afterById = new Map(resync.changes.map((change) => [change.id, { id: change.id, ...change.after }]));
+  const docsAfter = docs.map((doc) => afterById.get(doc.id) || doc);
+  const reconAfter = reconcileDocuments({ docs: docsAfter, pages, inferred });
+  const projectedAfterResync = {
+    documentsWithFindings: new Set(reconAfter.findings.map((f) => f.docId)).size,
+    documentsWithMaterialFindings: new Set(reconAfter.findings.filter((f) => !(f.class === 'STRUCTURE_LOSS' && f.severity === 'low')).map((f) => f.docId)).size,
+    byClass: count(reconAfter.findings, 'class'), remainingDocumentsMaterial: [...new Set(reconAfter.findings.filter((f) => !(f.class === 'STRUCTURE_LOSS' && f.severity === 'low')).map((f) => f.docId))].sort(),
+  };
 
   // ---- doc → planned identities (dates / dioceses)
   const plannedByDoc = new Map();
@@ -94,11 +103,15 @@ export async function runAudit({ snapshotDir, plan = null } = {}) {
       expected: finding.expected ?? null, actual: finding.actual ?? null,
       evidence: { detail: finding.detail || null, relation: finding.relation || null, artifact: finding.artifact || null, at: finding.at ?? null, sourceLinkInferred: finding.sourceLinkInferred || undefined },
       planned: planned_.slice(0, 3).map((row) => ({ identity: row.key, sampleDates: row.sampleDates, dioceses: row.dioceses })),
-      resolution: finding.projectionOf
+      resolution: finding.class === 'WRONG_CYCLE' && /has a Gospel for each year/.test(finding.detail || '')
+        ? { status: 'FIX_PLANNED', by: 'scripts/liturgy/migrate-readings-sets.mjs (dry-run plan, new celebration transfiguration)', reason: 'a canonical document with a set whose Gospel is chosen by the Sunday cycle A/B/C' }
+        : finding.projectionOf
         ? { status: 'FIX_PLANNED', by: 'scripts/liturgy/migrate-readings-sets.mjs (dry-run plan in the repo)', reason: `the legacy projection of ${finding.projectionOf} differs from its canonical set; the existing migration re-projects it` }
         : eligible
         ? { status: 'FIX_PLANNED', by: 'scripts/lectionary/resync-readings.mjs (dry-run plan)', reason: 'flat fields re-imported from the canonical page; needs `--apply` + manifest publication' }
-        : { status: 'REMAINING', reason: finding.class === 'STRUCTURE_LOSS' ? 'paragraph layout only (same words)' : (resync.skipped.find((row) => row.id === finding.docId)?.reason || 'canonical/projected document or low severity') },
+        : /^the page does not pass/.test(resync.skipped.find((row) => row.id === finding.docId)?.reason || '')
+          ? { status: 'DECISION_NEEDED', reason: `${resync.skipped.find((row) => row.id === finding.docId).reason}; the source page itself is defective (a text is missing on the page), nothing may be invented` }
+          : { status: 'REMAINING', reason: finding.class === 'STRUCTURE_LOSS' ? 'paragraph layout only (same words)' : (resync.skipped.find((row) => row.id === finding.docId)?.reason || 'canonical/projected document or low severity') },
     });
   }
   // ---- plan anomalies (engine ↔ readings)
@@ -179,7 +192,7 @@ export async function runAudit({ snapshotDir, plan = null } = {}) {
     section: null, field: null, sourcePageId: row.id, sourceUrl: row.url, expected: null, actual: null,
     evidence: { detail: row.parse.validation.join('; ') }, planned: [], resolution: { status: 'REMAINING', reason: 'the page does not pass the structural validation of the parser; not auto-importable' },
   }));
-  return { snap, crawl, pages, docs, allDocs, planned, recon, resync, pageRows, duplicates, identityDuplicates, items, inferred, generatedAt, plannedByDoc, plannedDocIds, notImported };
+  return { snap, crawl, pages, docs, allDocs, planned, recon, resync, projectedAfterResync, pageRows, duplicates, identityDuplicates, items, inferred, generatedAt, plannedByDoc, plannedDocIds, notImported };
 }
 
 const wordsOfTitle = (title) => String(title || '').toLowerCase().replace(/^catholic\.by\s*-\s*/, '').replace(/[^\p{L}\s]/gu, ' ').split(/\s+/).filter((w) => w.length > 3 && !/^(успамін|свята|урачыстасць|найсв|панны|марыі|св)$/.test(w));
@@ -188,6 +201,9 @@ const overlap = (a, b) => (a.size ? [...a].filter((w) => b.has(w)).length / a.si
 function classifyPlanAnomaly(row) {
   if (row.option === 'our-lady-budslav') {
     return { status: 'DECISION_NEEDED', reason: 'the only readings document of 02.07 is `02-07-our-lady-budslav-minsk` (_place minsk-mohilev); Vitebsk celebrates a feast, Pinsk a memorial and Grodno an optional memorial of the same title. Whether those dioceses use the Minsk lectionary page is a ritual decision, not a data fix.' };
+  }
+  if (row.scenario === 'transfiguration') {
+    return { status: 'FIX_PLANNED', by: 'scripts/liturgy/migrate-readings-sets.mjs (dry-run plan, new celebration transfiguration)', reason: 'the legacy document 06-08-transfiguration-lord has one Gospel; the page has A, B and C. The canonical set document is cycle-aware.' };
   }
   if (row.scenario === 'nativity-john-baptist') {
     return { status: 'FIX_PLANNED', by: 'scripts/liturgy/migrate-readings-sets.mjs (dry-run plan, new celebration nativity-john-baptist)', reason: 'page 5040 has two Masses (vigil + day) like 15.08/29.06; the canonical document gets both sets, day default (policy by analogy: owner to confirm)' };

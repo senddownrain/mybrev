@@ -76,7 +76,11 @@ export function buildCoverage(audit) {
   const planRows = planned.identities;
   const identityStatus = (row) => {
     const own = row.docIds.map((id) => statuses.get(id)?.status).filter(Boolean);
-    if (!own.length) return 'no-document';
+    if (!own.length) {
+      if (row.absent?.weekdayByDesign && !row.absent.missing) return 'weekday-by-design';
+      if (row.absent?.referenceOnly && !row.absent.missing) return 'reference-only';
+      return 'no-document';
+    }
     if (own.includes('mismatch')) return 'mismatch';
     if (own.every((s) => s === 'reference-only')) return 'reference-only';
     if (own.includes('no-source-page')) return 'no-source-page';

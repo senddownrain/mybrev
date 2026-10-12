@@ -5,7 +5,7 @@
  * document (selectors, `_dayId`, title, year, …) is kept. Pure: the CLI
  * (`resync-readings.mjs`) owns the dry-run report and the guarded apply.
  */
-import { documentHash, storedDocument } from '../../content/lib/app-content.mjs';
+import { classifyPatch, describeDocuments, diffCollection, documentHash, storedDocument } from '../../content/lib/app-content.mjs';
 import { projectSetToLegacy } from '../../../src/utils/massReadingSets.js';
 import { validateParsedPage } from '../../liturgy/lib/lectionary-parser.mjs';
 import { parseFidelity } from './fidelity.mjs';
@@ -50,8 +50,9 @@ export function buildResyncPlan({ docs, pages, findings, inferred = new Map() })
     const material = own.filter((item) => !(item.class === 'STRUCTURE_LOSS' && item.severity === 'low'));
     if (!material.length) continue;
     const skip = (reason) => skipped.push({ id: doc.id, reason, classes: [...new Set(material.map((item) => item.class))] });
+    if (material.some((item) => item.class === 'WRONG_CYCLE' && !item.detail?.includes('backed by'))) { skip('cycle-aware canonical document needed: handled by migrate-readings-sets.mjs'); continue; }
     if (doc.massReadings || doc._massReadingsRef) { skip('canonical or projected document: handled by migrate-readings-sets.mjs'); continue; }
-    const page = doc._sourceUrl ? [...pages.values()].find((candidate) => doc._sourceUrl && candidate.record.url === doc._sourceUrl) || null : inferred.get(doc.id) || null;
+    const page = doc._sourceUrl ? pages.get(/\/(\d{3,6})-[^/]+(?:[?#].*)?$/.exec(doc._sourceUrl)?.[1] || '') || null : inferred.get(doc.id) || null;
     if (!page?.parsed) { skip('no source page'); continue; }
     if (page.parsed.sets.length !== 1) { skip(`source page has ${page.parsed.sets.length} reading sets`); continue; }
     if (identityMismatch(doc, page)) { skip('document identity does not match the page identity'); continue; }
@@ -81,4 +82,44 @@ export function buildResyncPlan({ docs, pages, findings, inferred = new Map() })
     });
   }
   return { changes, skipped };
+}
+
+export const WAVE_SIZE = 150;
+
+/** Waves ordered by severity so the worst documents go first; each wave is a SAFE CONTENT PATCH. */
+export function partitionWaves(changes, size = WAVE_SIZE) {
+  const weight = (change) => (change.classes.includes('WRONG_TEXT') || change.classes.includes('MISSING_BLOCK') ? 0 : change.classes.includes('WRONG_REFERENCE') ? 1 : 2);
+  const ordered = [...changes].sort((a, b) => weight(a) - weight(b) || a.id.localeCompare(b.id));
+  return ordered.map((change, index) => ({ ...change, wave: Math.floor(index / size) + 1 }));
+}
+
+/** Verdict of the manifest classifier for every wave, against the production documents. */
+export function waveVerdicts(waves, docs) {
+  const production = describeDocuments(docs.map(({ id, ...data }) => storedDocument(id, data)));
+  const verdicts = [];
+  for (let wave = 1; wave <= Math.max(0, ...waves.map((change) => change.wave)); wave += 1) {
+    const subset = waves.filter((change) => change.wave === wave);
+    const ids = new Set(subset.map((change) => change.id));
+    const described = describeDocuments([
+      ...docs.filter((doc) => !ids.has(doc.id)).map(({ id, ...data }) => storedDocument(id, data)),
+      ...subset.map((change) => storedDocument(change.id, change.after)),
+    ]);
+    const diff = diffCollection('readings', described, production);
+    const classification = classifyPatch([diff], { publishedSchema: 1 });
+    verdicts.push({ wave, documents: subset.length, changed: diff.changed.length, bytes: diff.bytes, verdict: classification.verdict, reasons: classification.reasons });
+  }
+  return verdicts;
+}
+
+/** The reviewed dry-run report (hashes only; before/after bodies are rebuilt at apply time). */
+export function resyncReport(audit) {
+  const waves = partitionWaves(audit.resync.changes);
+  return {
+    waves,
+    report: {
+      generatedAt: audit.generatedAt, source: audit.planned.snapshot, snapshotDocuments: audit.docs.length,
+      totals: { changes: waves.length, skipped: audit.resync.skipped.length }, verdicts: waveVerdicts(waves, audit.docs), projectedAfterResync: audit.projectedAfterResync,
+      changes: waves.map(({ before, after, ...change }) => change), skipped: audit.resync.skipped,
+    },
+  };
 }

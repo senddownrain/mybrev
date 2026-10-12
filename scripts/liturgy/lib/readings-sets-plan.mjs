@@ -74,6 +74,10 @@ export const READING_SET_CELEBRATIONS = Object.freeze([
     key: 'nativity-john-baptist', doc: '24-06-nativity-john-baptist', flatSet: 'day',
     sets: [{ page: 'nativity-john-baptist', index: 0, id: 'vigil', context: 'vigil' }, { page: 'nativity-john-baptist', index: 1, id: 'day', context: 'day', default: true }],
   },
+  {
+    // Found by the full Lectionary audit: the page has a Gospel for each of the years A, B, C; the legacy document holds one.
+    key: 'transfiguration', doc: '06-08-transfiguration-lord', flatSet: 'mass', sets: [{ page: 'transfiguration', index: 0, id: 'mass' }],
+  },
   { key: 'bonaventure', doc: '15-07-sv-bonaventure', flatSet: 'mass', sets: [{ page: 'bonaventure', index: 0, id: 'mass' }] },
   { key: 'clare', doc: '11-08-sv-clare', flatSet: 'mass', sets: [{ page: 'clare', index: 0, id: 'mass' }] },
   {
