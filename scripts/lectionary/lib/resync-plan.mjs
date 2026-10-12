@@ -55,7 +55,11 @@ export function buildResyncPlan({ docs, pages, findings, inferred = new Map() })
     if (!page?.parsed) { skip('no source page'); continue; }
     if (page.parsed.sets.length !== 1) { skip(`source page has ${page.parsed.sets.length} reading sets`); continue; }
     if (identityMismatch(doc, page)) { skip('document identity does not match the page identity'); continue; }
-    if (validateParsedPage(page.parsed).length || page.parsed.warnings.length) { skip('the page does not pass the parser validation'); continue; }
+    // Page defects the parser handles deterministically are not blockers: a missing liturgical title,
+    // a repeated conclusion, a cycle marker that the table of contents makes unambiguous.
+    const blocking = [...validateParsedPage(page.parsed).filter((error) => !/no liturgical title/.test(error)),
+      ...page.parsed.warnings.filter((warning) => !/cycle marker missing|repeats the conclusion/.test(warning))];
+    if (blocking.length) { skip(`the page does not pass the parser validation: ${blocking[0]}`); continue; }
     const fidelity = parseFidelity(page.html);
     if (fidelity.droppedWords || fidelity.extraWords) { skip('the parse is not lossless for this page'); continue; }
     if (material.some((item) => item.class === 'WRONG_CONTEXT' && item.field === 'section')) { skip('the document has a block that the source page does not (needs a human decision)'); continue; }

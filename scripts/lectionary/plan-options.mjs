@@ -28,7 +28,7 @@ const argValue = (name, fallback) => { const i = process.argv.indexOf(name); ret
 
 /** Closed policy decisions (default Mass set of multi-set dates). */
 export const SET_DEFAULT_POLICY = Object.freeze({
-  '15.08': 'day', '29.06': 'day', '25.12': 'day', '24.12': 'vigil', '02.11': 'first',
+  '15.08': 'day', '29.06': 'day', '24.06': 'day', '25.12': 'day', '24.12': 'vigil', '02.11': 'first',
   holyThursday: 'evening', pentecostSaturday: 'vigil', palmSunday: 'mass',
 });
 
@@ -46,6 +46,7 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
   const { computeFirstAdventSunday } = await import('../../src/utils/ordo/movableFeasts.js');
   const identities = new Map();
   const temporalChecks = new Map();
+  const referenceOnly = new Map();
   const anomalies = [];
   const counts = { dates: 0, dioceseDates: 0, options: 0, byDiocese: {}, byYear: {}, byKind: {}, byPeriod: {}, byCycle: {}, byStatus: {} };
   const bump = (obj, key, n = 1) => { obj[key] = (obj[key] || 0) + n; };
@@ -106,8 +107,17 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
             if (!weekdayFound) missing(`weekday readings of the memorial's day missing (${JSON.stringify(planOption.lookup[0]?.where)})`);
             if (status === 'full' && !properFound) missing(`status full but no proper readings document (${JSON.stringify(lookups.find((l) => l.entry.purpose === 'proper')?.entry.where)})`);
             bump(counts.byStatus, properFound ? 'MEMORIAL_PROPER' : 'MEMORIAL_WEEKDAY');
+            if (status === 'reference-only' && !properFound) {
+              bump(counts.byStatus, 'REFERENCE_ONLY');
+              const row = referenceOnly.get(option.id) || { option: option.id, title: option.title, officeKind: option.officeKind, reference: option.readingsReference || null, dioceses: new Set(), dates: new Set() };
+              row.dioceses.add(diocese); row.dates.add(date); referenceOnly.set(option.id, row);
+            }
           } else if (hasProperLookup && !properFound) {
-            if (status === 'reference-only') bump(counts.byStatus, 'REFERENCE_ONLY');
+            if (status === 'reference-only') {
+              bump(counts.byStatus, 'REFERENCE_ONLY');
+              const row = referenceOnly.get(option.id) || { option: option.id, title: option.title, officeKind: option.officeKind, reference: option.readingsReference || null, dioceses: new Set(), dates: new Set() };
+              row.dioceses.add(diocese); row.dates.add(date); referenceOnly.set(option.id, row);
+            }
             else if (!weekdayFound) { missing(`no readings document for ${option.id} (status ${status || '—'})`); bump(counts.byStatus, 'MISSING_SET'); }
             else if (status === 'full') missing(`status full but only the weekday document is found (${JSON.stringify(lookups[0]?.entry.where)})`);
           } else if (!hasProperLookup && !weekdayFound) {
@@ -159,7 +169,7 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
     optionIds: [...identity.optionIds].sort(), officeKinds: [...identity.officeKinds].sort(), dioceses: [...identity.dioceses].sort(),
     years: [...identity.years].sort(), docIds: [...identity.docIds].sort(), sets: [...identity.sets].sort(),
   })).sort((a, b) => a.key.localeCompare(b.key));
-  return { snapshot: { dir: path.relative(ROOT, snap.dir), snapshotVersion: snap.manifest.snapshotVersion, exportedAt: snap.manifest.exportedAt }, years: [from, to], dioceses: DIOCESES, counts, identities: rows, scenarios, temporalChecks: [...temporalChecks.values()].map((c) => ({ ...c, dioceses: [...c.dioceses].sort(), years: [...c.years].sort() })), anomalies };
+  return { snapshot: { dir: path.relative(ROOT, snap.dir), snapshotVersion: snap.manifest.snapshotVersion, exportedAt: snap.manifest.exportedAt }, years: [from, to], dioceses: DIOCESES, counts, identities: rows, scenarios, referenceOnly: [...referenceOnly.values()].map((r) => ({ ...r, dioceses: [...r.dioceses].sort(), dates: [...r.dates].sort().slice(0, 4), occurrences: r.dates.size })), temporalChecks: [...temporalChecks.values()].map((c) => ({ ...c, dioceses: [...c.dioceses].sort(), years: [...c.years].sort() })), anomalies };
 }
 
 /** Closed policy scenarios (previous prompt §5/§21) checked in every year and diocese. */
@@ -185,6 +195,7 @@ function scenarioChecks(rt, from, to, anomalies) {
     const easter = computeEasterSunday(year);
     for (const diocese of DIOCESES) {
       record('assumption', `${year}-08-15`, diocese, (r) => [r.sets.length === 2 && setIds(r) === 'vigil,day' ? '' : `sets ${setIds(r)}`, r.activeSet === 'day' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean));
+      record('nativity-john-baptist', `${year}-06-24`, diocese, (r, l) => (l.day.primary.id.includes('john-baptist') ? [r.sets.length === 2 && setIds(r) === 'vigil,day' ? '' : `sets ${setIds(r)}`, r.activeSet === 'day' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean) : []));
       record('peter-paul', `${year}-06-29`, diocese, (r, l) => (l.day.primary.id.includes('peter') ? [r.sets.length === 2 && setIds(r) === 'vigil,day' ? '' : `sets ${setIds(r)}`, r.activeSet === 'day' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean) : []));
       record('christmas', `${year}-12-25`, diocese, (r) => [setIds(r) === 'night,dawn,day' ? '' : `sets ${setIds(r)}`, r.activeSet === 'day' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean));
       record('christmas-eve', `${year}-12-24`, diocese, (r, l, screen) => (isoWeekdayOf(`${year}-12-24`) === 7

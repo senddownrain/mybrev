@@ -134,7 +134,9 @@ export function expectedForLegacy(doc, page) {
   if (sets.length > 1) return { error: `page has ${sets.length} reading sets (a canonical document is expected)` };
   const year = isYear(doc.year) ? String(doc.year) : '';
   const cycle = isCycle(doc.year) ? String(doc.year).toUpperCase() : '';
-  return { sections: pageSectionsFor(sets[0], { year, cycle }), set: sets[0] };
+  // A legacy document is the projection of ONE cycle / weekday year: the markers are not part of its shape.
+  const sections = pageSectionsFor(sets[0], { year, cycle }).map(({ cycle: _cycle, year: _year, ...section }) => section);
+  return { sections, set: sets[0] };
 }
 
 export function compareLegacy(doc, page, stats = null) {

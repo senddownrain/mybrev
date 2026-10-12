@@ -409,6 +409,7 @@ export function parseLectionaryPage(html) {
   let weekdayYear = '';
   let markerCycle = '';
   let pendingAlternative = false;
+  const tocCycles = [];
   const preface = [];
   const ensureSet = () => {
     if (!set) {
@@ -505,7 +506,7 @@ export function parseLectionaryPage(html) {
       sets.push(set);
       continue;
     }
-    if (CYCLE_TOC.test(line.text)) continue;
+    if (CYCLE_TOC.test(line.text)) { tocCycles.push(CYCLE_LETTERS[/Год\s+([АВСABC])/u.exec(line.text)[1]]); continue; }
     // «Год А.» (centred, italic): the cycle of the sections that follow (Holy Family, Baptism).
     const cycleMark = CYCLE_MARK.exec(line.text);
     if (cycleMark && line.align === 'center') {
@@ -536,6 +537,13 @@ export function parseLectionaryPage(html) {
     const next = headingOf(line);
     if (next) {
       flushSection();
+      // Holy Family / Baptism: the table of contents lists «Год А. Год В. Год С.» but only the first block carries
+      // a marker; a second first reading inside the same cycle starts the next cycle of the table of contents.
+      if (markerCycle && tocCycles.length > 1 && next.kind === 'reading' && next.role === 'reading1' && !pendingAlternative
+        && set?.sections.some((section) => section.role === 'reading1' && section.cycle === markerCycle)) {
+        const following = tocCycles[tocCycles.indexOf(markerCycle) + 1];
+        if (following) { markerCycle = following; warnings.push(`cycle marker missing: «Год ${following}» inferred from the table of contents`); }
+      }
       heading = next;
       if (pendingAlternative) { heading.alternativeOf = true; pendingAlternative = false; }
       // Weekday years apply to the first reading and the psalm only; the

@@ -69,6 +69,11 @@ export const READING_SET_CELEBRATIONS = Object.freeze([
     key: 'peter-paul', doc: '29-06-sv-peter-paul-apostles', flatSet: 'day',
     sets: [{ page: 'peter-paul', index: 0, id: 'vigil', context: 'vigil' }, { page: 'peter-paul', index: 1, id: 'day', context: 'day', default: true }],
   },
+  {
+    // Found by the full Lectionary audit (2026-10-12): the page has the same two Masses as 15.08 and 29.06.
+    key: 'nativity-john-baptist', doc: '24-06-nativity-john-baptist', flatSet: 'day',
+    sets: [{ page: 'nativity-john-baptist', index: 0, id: 'vigil', context: 'vigil' }, { page: 'nativity-john-baptist', index: 1, id: 'day', context: 'day', default: true }],
+  },
   { key: 'bonaventure', doc: '15-07-sv-bonaventure', flatSet: 'mass', sets: [{ page: 'bonaventure', index: 0, id: 'mass' }] },
   { key: 'clare', doc: '11-08-sv-clare', flatSet: 'mass', sets: [{ page: 'clare', index: 0, id: 'mass' }] },
   {

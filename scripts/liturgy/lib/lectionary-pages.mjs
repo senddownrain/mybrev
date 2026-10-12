@@ -12,6 +12,7 @@ const CB = 'https://catholic.by/3/liturgy/lectionary';
 export const LECTIONARY_PAGES = Object.freeze([
   { key: 'assumption', url: `${CB}/urachystasci/5043-15-zhniunya-urachystasts-unebauzyatstsya-najsvyatsejshaj-panny-maryi` },
   { key: 'peter-paul', url: `${CB}/urachystasci/5041-29-chervenya-urachystasts-svyatykh-pyatra-i-paula-apostalau` },
+  { key: 'nativity-john-baptist', url: `${CB}/urachystasci/5040-24-chervenya-urachystasts-naradzhennya-sv-yana-khrystsitselya` },
   { key: 'bonaventure', url: `${CB}/uspaminy/4948-15-lipenya-uspamin-sv-bonaventury-biskupa-i-doktara-kastsjola` },
   { key: 'clare', url: `${CB}/uspaminy/4957-11-zhniunya-uspamin-sv-klary-panny` },
   { key: 'andrew-bobola', url: `${CB}/uspaminy/4942-16-maya-uspamin-sv-andreya-baboli-svyatara-i-muchanika` },

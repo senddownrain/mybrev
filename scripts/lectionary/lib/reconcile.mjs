@@ -2,7 +2,8 @@
  * Full Lectionary reconciliation (pure over loaded inputs): crawled pages ×
  * stored `readings` documents × planned Ordo options.
  */
-import { massReadingSetsOf, defaultSetId, setCycles } from '../../../src/utils/massReadingSets.js';
+import { massReadingSetsOf, defaultSetId, sectionsForCycle, setCycles } from '../../../src/utils/massReadingSets.js';
+import { compareSections, legacySections } from './compare.mjs';
 import { documentHash, storedDocument } from '../../content/lib/app-content.mjs';
 import { backingOf, compareCanonical, compareLegacy, identityMismatch, pageOfUrl } from './doc-page.mjs';
 import { parseFidelity } from './fidelity.mjs';
@@ -82,6 +83,12 @@ export function reconcileDocuments({ docs, pages, inferred = new Map() }) {
       const id = pageIdOfUrl(set?.source?.url || doc._sourceUrl || '');
       if (id) link(id, doc.id);
       if (!canonical || !set) diffs = [{ class: 'WRONG_CONTEXT', severity: 'high', docId: doc.id, detail: `_massReadingsRef points to a missing document/set (${ref.doc}/${ref.set})` }];
+      else if (ref.projected !== false) {
+        // A projection must carry exactly the flat form of its canonical set (and cycle).
+        const expected = sectionsForCycle(set, ref.cycle || '').map(({ cycle: _cycle, ...section }) => section);
+        diffs = compareSections(expected, legacySections(doc), { stats: sectionStats })
+          .map((diff) => ({ ...diff, docId: doc.id, pageId: id || null, url: set.source?.url || doc._sourceUrl || null, projectionOf: `${ref.doc}#${ref.set}${ref.cycle ? `:${ref.cycle}` : ''}` }));
+      }
       stats.compared += 1;
     } else if (backing.kind === 'legacy') {
       stats.legacy += 1;
@@ -129,7 +136,12 @@ export function inferPagesForUnlinked(unlinkedIds, docsById, pages) {
     const cycle = /^[ABC]$/.test(String(doc.year)) ? `:cycle=${doc.year}` : '';
     const candidates = [...(byKey.get(`${selector}${cycle}`) || []), ...(byKey.get(selector) || []),
       ...[...byKey.entries()].filter(([key]) => key.startsWith(`${selector}:`) && !key.includes('cycle=')).flatMap(([, list]) => list)];
-    const unique = [...new Map(candidates.map((p) => [p.id, p])).values()];
+    let unique = [...new Map(candidates.map((p) => [p.id, p])).values()];
+    // `advent-DD-12` / `christmas-DD-MM` documents are the weekday pages, never a saint's memorial of the same date.
+    if (/^(advent|christmas)-\d/.test(id) && unique.length > 1) {
+      const weekday = unique.filter((p) => ['weekday', 'advent-weekday', 'octave-day'].includes(p.identity.rank));
+      if (weekday.length) unique = weekday;
+    }
     return { docId: id, selector, year: doc.year ?? null, pages: unique.map((p) => p.id), rank: doc._rank || null };
   });
 }

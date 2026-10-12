@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parseLectionaryPage, validateParsedPage } from '../../liturgy/lib/lectionary-parser.mjs';
 import { pageIdentity } from './identity.mjs';
+import { normalizeText } from './compare.mjs';
 
 export const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..', '..');
 export const SNAPSHOT_DIR = path.join(ROOT, 'reports', 'lectionary', 'snapshots');
@@ -29,6 +30,7 @@ export function loadPages() {
     const file = path.join(SNAPSHOT_DIR, record.category || '_root', `${record.id}.html`);
     if (!fs.existsSync(file)) { pages.set(String(record.id), { id: String(record.id), record, html: '', parsed: null, errors: [], identity: pageIdentity(record.title) }); continue; }
     const html = fs.readFileSync(file, 'utf8');
+    record.wordsSha256 = sha256(normalizeText(html.replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' '));
     const parsed = parseLectionaryPage(html);
     pages.set(String(record.id), { id: String(record.id), record, html, parsed, errors: validateParsedPage(parsed), identity: pageIdentity(record.title) });
   }
