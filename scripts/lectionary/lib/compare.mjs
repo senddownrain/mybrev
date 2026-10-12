@@ -28,8 +28,8 @@ export function plain(value) {
 /** Typography-insensitive text: lines kept as `\n`, paragraphs as `\n\n`. */
 export function normalizeText(value) {
   return plain(value)
-    .replace(/[  -   　]/g, ' ')
-    .replace(/[​-‍⁠﻿­]/g, '')
+    .replace(/[\u00a0\u2000-\u200a\u202f\u205f\u3000]/g, ' ')
+    .replace(/[\u200b-\u200d\u2060\ufeff\u00ad]/g, '')
     .replace(/[«»„“”‟]/g, '"')
     .replace(/[’ʼ`´‘]/g, "'")
     .replace(/[‐‑‒–—−]/g, '-')

@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import { openFirestoreSnapshot } from '../../lib/firestore-snapshot.mjs';
 import { sha256 } from './source-pages.mjs';

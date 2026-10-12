@@ -1,0 +1,932 @@
+{
+ "schema": 1,
+ "generatedAt": "2026-10-12T18:07:20.590Z",
+ "snapshot": {
+  "dir": ".cache/prod-snapshot-20261012",
+  "snapshotVersion": "20261012171555724",
+  "exportedAt": "2026-10-12T17:15:55.724Z",
+  "totalDocuments": 3596,
+  "readOnly": true,
+  "collectionFiles": {
+   "readings": "57ae417455eae7237456eee163c4eb78d93dd6c2a3d797ba500311c8cfe1d50b",
+   "days": "e0cd3a2df96a0e42f38c8a13707d0913bab4f76bf9e544eb4015fb541ed9df9f",
+   "liturgicalTemplates": "af0fcb683342e350eec193a0adc60cbdb2233393d1c0b313a390675d8ad25d46",
+   "invitatoriums": "4a5d7e40e8c78b95430ca95a4704ca367f1aac4fd72b848de6964368e912efb3",
+   "completoriums": "e8271975639ef2d5774626e435f5d8f8d08c882d4cfc1e9b6a8fae42aa444e4d",
+   "liturgicalCalendarMeta": "77a869f82b5f5a43aa586663663275040aa9d1e0f2434c5398cb59c50084f42a",
+   "liturgicalCelebrations": "c2d8990b5faeb38454ba47f5282088a094cc47a4c22f938376cc23d7955f2581",
+   "liturgicalDioceseOverrides": "16e157d565230f9ba5646ee5aa614c30d6d0a91694ac7eab7e98a9d1dc261e75",
+   "liturgicalYearOverrides": "d4f499d48add5dd81c8e1d306ced2eb910d1a04de91acb8761f690f7e97cc4fe",
+   "liturgicalProperTexts": "c4f9d935ddece49a5587d1a7b723d5601d5fed321e32066d5dabf2e6fa7b46eb",
+   "liturgicalOrdoNotes": "aba7809b3e37978a0a8ca17ff7b046ff85b0c4d5262f064eb10c65d7e4a9e3ac"
+  }
+ },
+ "production": {
+  "readings": {
+   "count": 822,
+   "digest": "1e8aadb3fc05e137",
+   "bytes": 4776254
+  },
+  "days": {
+   "count": 736,
+   "digest": "b5f4b077f42f6664",
+   "bytes": 53966736
+  },
+  "liturgicalTemplates": {
+   "count": 16,
+   "digest": "665cc09448b91bf7",
+   "bytes": 1137473
+  },
+  "invitatoriums": {
+   "count": 4,
+   "digest": "587d64f9ff8e7b0d",
+   "bytes": 9678
+  },
+  "completoriums": {
+   "count": 35,
+   "digest": "42eb55a0b377d638",
+   "bytes": 323076
+  },
+  "liturgicalCalendarMeta": {
+   "count": 1,
+   "digest": "7676e4c645130243",
+   "bytes": 139
+  },
+  "liturgicalCelebrations": {
+   "count": 241,
+   "digest": "8fb0b75436b7f528",
+   "bytes": 132977
+  },
+  "liturgicalDioceseOverrides": {
+   "count": 75,
+   "digest": "1df4e38742254f17",
+   "bytes": 53313
+  },
+  "liturgicalYearOverrides": {
+   "count": 15,
+   "digest": "62198d0893b2a40f",
+   "bytes": 8111
+  },
+  "liturgicalProperTexts": {
+   "count": 291,
+   "digest": "884f219bbbfe5a7a",
+   "bytes": 3192409
+  },
+  "liturgicalOrdoNotes": {
+   "count": 1337,
+   "digest": "db0465255c4bc5a3",
+   "bytes": 780774
+  }
+ },
+ "manifest": {
+  "current": {
+   "contentVersion": 1791811825340,
+   "publishedAt": "2026-10-12T13:30:25.340Z",
+   "schemaVersion": 1,
+   "collections": {
+    "days": {
+     "digest": "b5f4b077f42f6664",
+     "count": 736,
+     "bytes": 53966736,
+     "version": 2
+    },
+    "readings": {
+     "digest": "1e8aadb3fc05e137",
+     "count": 822,
+     "bytes": 4776254,
+     "version": 3
+    },
+    "liturgicalTemplates": {
+     "digest": "665cc09448b91bf7",
+     "count": 16,
+     "bytes": 1137473,
+     "version": 2
+    },
+    "invitatoriums": {
+     "digest": "587d64f9ff8e7b0d",
+     "count": 4,
+     "bytes": 9678,
+     "version": 1
+    },
+    "completoriums": {
+     "digest": "42eb55a0b377d638",
+     "count": 35,
+     "bytes": 323076,
+     "version": 1
+    },
+    "prayers": {
+     "digest": "3ea932e60dc19d13",
+     "count": 108,
+     "bytes": 2242501,
+     "version": 3
+    },
+    "prayerCategories": {
+     "digest": "2615b158b86e8582",
+     "count": 5,
+     "bytes": 1058,
+     "version": 2
+    },
+    "songs": {
+     "digest": "9752aef2fd846b49",
+     "count": 447,
+     "bytes": 369604,
+     "version": 1
+    }
+   }
+  },
+  "readings": {
+   "published": true,
+   "version": 3,
+   "digest": "1e8aadb3fc05e137",
+   "count": 822,
+   "production": {
+    "digest": "1e8aadb3fc05e137",
+    "count": 822
+   },
+   "inSync": true
+  },
+  "days": {
+   "published": true,
+   "version": 2,
+   "digest": "b5f4b077f42f6664",
+   "count": 736,
+   "production": {
+    "digest": "b5f4b077f42f6664",
+    "count": 736
+   },
+   "inSync": true
+  },
+  "liturgicalTemplates": {
+   "published": true,
+   "version": 2,
+   "digest": "665cc09448b91bf7",
+   "count": 16,
+   "production": {
+    "digest": "665cc09448b91bf7",
+    "count": 16
+   },
+   "inSync": true
+  },
+  "invitatoriums": {
+   "published": true,
+   "version": 1,
+   "digest": "587d64f9ff8e7b0d",
+   "count": 4,
+   "production": {
+    "digest": "587d64f9ff8e7b0d",
+    "count": 4
+   },
+   "inSync": true
+  },
+  "completoriums": {
+   "published": true,
+   "version": 1,
+   "digest": "42eb55a0b377d638",
+   "count": 35,
+   "production": {
+    "digest": "42eb55a0b377d638",
+    "count": 35
+   },
+   "inSync": true
+  },
+  "liturgicalCalendarMeta": {
+   "published": false,
+   "note": "not in the manifest (held back until the app release that bundles it)",
+   "production": {
+    "digest": "7676e4c645130243",
+    "count": 1
+   }
+  },
+  "liturgicalCelebrations": {
+   "published": false,
+   "note": "not in the manifest (held back until the app release that bundles it)",
+   "production": {
+    "digest": "8fb0b75436b7f528",
+    "count": 241
+   }
+  },
+  "liturgicalDioceseOverrides": {
+   "published": false,
+   "note": "not in the manifest (held back until the app release that bundles it)",
+   "production": {
+    "digest": "1df4e38742254f17",
+    "count": 75
+   }
+  },
+  "liturgicalYearOverrides": {
+   "published": false,
+   "note": "not in the manifest (held back until the app release that bundles it)",
+   "production": {
+    "digest": "62198d0893b2a40f",
+    "count": 15
+   }
+  },
+  "liturgicalProperTexts": {
+   "published": false,
+   "note": "not in the manifest (held back until the app release that bundles it)",
+   "production": {
+    "digest": "884f219bbbfe5a7a",
+    "count": 291
+   }
+  },
+  "liturgicalOrdoNotes": {
+   "published": false,
+   "note": "not in the manifest (held back until the app release that bundles it)",
+   "production": {
+    "digest": "db0465255c4bc5a3",
+    "count": 1337
+   }
+  }
+ },
+ "flutterBundle": {
+  "path": "ibreviarybyapp/assets/content",
+  "contentVersion": 1791397285761,
+  "contentDate": "2026-10-07T18:21:25.761Z",
+  "readings": {
+   "contentVersion": 1791397274814,
+   "count": 822,
+   "digest": "6025a2f6fa0262af",
+   "recomputedDigest": "6025a2f6fa0262af",
+   "vsManifest": {
+    "equal": false,
+    "added": [],
+    "removed": [],
+    "changed": [
+     "09-08-sv-teresa-benedicta-cross",
+     "12-09-holy-name-mary-minsk-mohilev-pinsk",
+     "16-11-our-lady-mother-mercy-minsk-mohilev-pinsk",
+     "17-01-sv-antoni",
+     "22-07-sv-mary-magdalene",
+     "24-08-sv-bartholomew",
+     "25-01-conversion-saint-paul",
+     "25-07-sv-james-apostle",
+     "advent-24-12--christmas-vigil",
+     "advent-w3-d1--B",
+     "christmas-02-01",
+     "christmas-05-01",
+     "easter-w1-d3",
+     "easter-w2-d6",
+     "easter-w3-d3",
+     "easter-w3-d5",
+     "easter-w3-d6",
+     "feast-christking--A",
+     "feast-palmsunday--A",
+     "feast-palmsunday--B",
+     "feast-palmsunday--C",
+     "feast-pentecost",
+     "holyweek-w1-d7--A-vigil",
+     "holyweek-w1-d7--B-vigil",
+     "holyweek-w1-d7--C-vigil",
+     "lent-w1-d2",
+     "lent-w2-d4",
+     "lent-w2-d7",
+     "lent-w3-d1--C",
+     "lent-w3-d2",
+     "lent-w4-d1--A",
+     "lent-w4-d1--C",
+     "lent-w4-d3",
+     "lent-w4-d4",
+     "lent-w5-d1--A",
+     "lent-w5-d4",
+     "ordinary-w10-d4--2",
+     "ordinary-w11-d1--C",
+     "ordinary-w11-d6--2",
+     "ordinary-w12-d7--1",
+     "ordinary-w13-d2--1",
+     "ordinary-w13-d3--1",
+     "ordinary-w13-d5--1",
+     "ordinary-w13-d7--1",
+     "ordinary-w15-d4--1",
+     "ordinary-w16-d6--1",
+     "ordinary-w17-d1--B",
+     "ordinary-w17-d1--C",
+     "ordinary-w18-d1--B",
+     "ordinary-w18-d2--2",
+     "ordinary-w19-d6--1",
+     "ordinary-w19-d6--2",
+     "ordinary-w20-d5--1",
+     "ordinary-w20-d5--2",
+     "ordinary-w21-d7--1",
+     "ordinary-w21-d7--2",
+     "ordinary-w22-d2--1",
+     "ordinary-w22-d2--2",
+     "ordinary-w24-d4--2",
+     "ordinary-w24-d5--1",
+     "ordinary-w24-d5--2",
+     "ordinary-w27-d2--1",
+     "ordinary-w27-d5--2",
+     "ordinary-w28-d1--B",
+     "ordinary-w34-d5--1",
+     "ordinary-w4-d4--2",
+     "ordinary-w5-d2--1",
+     "ordinary-w5-d3--1",
+     "ordinary-w6-d1--C",
+     "ordinary-w7-d2--1",
+     "ordinary-w7-d2--2",
+     "ordinary-w8-d2--1",
+     "ordinary-w8-d2--2",
+     "ordinary-w9-d5--1",
+     "ordinary-w9-d6--1"
+    ]
+   },
+   "vsProduction": {
+    "equal": false,
+    "added": [],
+    "removed": [],
+    "changed": [
+     "09-08-sv-teresa-benedicta-cross",
+     "12-09-holy-name-mary-minsk-mohilev-pinsk",
+     "16-11-our-lady-mother-mercy-minsk-mohilev-pinsk",
+     "17-01-sv-antoni",
+     "22-07-sv-mary-magdalene",
+     "24-08-sv-bartholomew",
+     "25-01-conversion-saint-paul",
+     "25-07-sv-james-apostle",
+     "advent-24-12--christmas-vigil",
+     "advent-w3-d1--B",
+     "christmas-02-01",
+     "christmas-05-01",
+     "easter-w1-d3",
+     "easter-w2-d6",
+     "easter-w3-d3",
+     "easter-w3-d5",
+     "easter-w3-d6",
+     "feast-christking--A",
+     "feast-palmsunday--A",
+     "feast-palmsunday--B",
+     "feast-palmsunday--C",
+     "feast-pentecost",
+     "holyweek-w1-d7--A-vigil",
+     "holyweek-w1-d7--B-vigil",
+     "holyweek-w1-d7--C-vigil",
+     "lent-w1-d2",
+     "lent-w2-d4",
+     "lent-w2-d7",
+     "lent-w3-d1--C",
+     "lent-w3-d2",
+     "lent-w4-d1--A",
+     "lent-w4-d1--C",
+     "lent-w4-d3",
+     "lent-w4-d4",
+     "lent-w5-d1--A",
+     "lent-w5-d4",
+     "ordinary-w10-d4--2",
+     "ordinary-w11-d1--C",
+     "ordinary-w11-d6--2",
+     "ordinary-w12-d7--1",
+     "ordinary-w13-d2--1",
+     "ordinary-w13-d3--1",
+     "ordinary-w13-d5--1",
+     "ordinary-w13-d7--1",
+     "ordinary-w15-d4--1",
+     "ordinary-w16-d6--1",
+     "ordinary-w17-d1--B",
+     "ordinary-w17-d1--C",
+     "ordinary-w18-d1--B",
+     "ordinary-w18-d2--2",
+     "ordinary-w19-d6--1",
+     "ordinary-w19-d6--2",
+     "ordinary-w20-d5--1",
+     "ordinary-w20-d5--2",
+     "ordinary-w21-d7--1",
+     "ordinary-w21-d7--2",
+     "ordinary-w22-d2--1",
+     "ordinary-w22-d2--2",
+     "ordinary-w24-d4--2",
+     "ordinary-w24-d5--1",
+     "ordinary-w24-d5--2",
+     "ordinary-w27-d2--1",
+     "ordinary-w27-d5--2",
+     "ordinary-w28-d1--B",
+     "ordinary-w34-d5--1",
+     "ordinary-w4-d4--2",
+     "ordinary-w5-d2--1",
+     "ordinary-w5-d3--1",
+     "ordinary-w6-d1--C",
+     "ordinary-w7-d2--1",
+     "ordinary-w7-d2--2",
+     "ordinary-w8-d2--1",
+     "ordinary-w8-d2--2",
+     "ordinary-w9-d5--1",
+     "ordinary-w9-d6--1"
+    ]
+   }
+  },
+  "days": {
+   "contentVersion": 1791397274814,
+   "count": 736,
+   "digest": "b5f4b077f42f6664",
+   "recomputedDigest": "b5f4b077f42f6664",
+   "vsManifest": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   },
+   "vsProduction": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   }
+  },
+  "liturgicalTemplates": {
+   "contentVersion": 1791397274814,
+   "count": 16,
+   "digest": "665cc09448b91bf7",
+   "recomputedDigest": "665cc09448b91bf7",
+   "vsManifest": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   },
+   "vsProduction": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   }
+  },
+  "invitatoriums": {
+   "contentVersion": 1791397274814,
+   "count": 4,
+   "digest": "587d64f9ff8e7b0d",
+   "recomputedDigest": "587d64f9ff8e7b0d",
+   "vsManifest": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   },
+   "vsProduction": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   }
+  },
+  "completoriums": {
+   "contentVersion": 1791397274814,
+   "count": 35,
+   "digest": "42eb55a0b377d638",
+   "recomputedDigest": "42eb55a0b377d638",
+   "vsManifest": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   },
+   "vsProduction": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   }
+  },
+  "liturgicalCalendarMeta": {
+   "contentVersion": 1791397274814,
+   "count": 1,
+   "digest": "7676e4c645130243",
+   "recomputedDigest": "7676e4c645130243",
+   "vsManifest": "not in the manifest",
+   "vsProduction": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   }
+  },
+  "liturgicalCelebrations": {
+   "contentVersion": 1791397274814,
+   "count": 241,
+   "digest": "8fb0b75436b7f528",
+   "recomputedDigest": "8fb0b75436b7f528",
+   "vsManifest": "not in the manifest",
+   "vsProduction": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   }
+  },
+  "liturgicalDioceseOverrides": {
+   "contentVersion": 1791397274814,
+   "count": 75,
+   "digest": "1df4e38742254f17",
+   "recomputedDigest": "1df4e38742254f17",
+   "vsManifest": "not in the manifest",
+   "vsProduction": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   }
+  },
+  "liturgicalYearOverrides": {
+   "contentVersion": 1791397274814,
+   "count": 15,
+   "digest": "62198d0893b2a40f",
+   "recomputedDigest": "62198d0893b2a40f",
+   "vsManifest": "not in the manifest",
+   "vsProduction": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   }
+  },
+  "liturgicalProperTexts": {
+   "contentVersion": 1791397274814,
+   "count": 291,
+   "digest": "884f219bbbfe5a7a",
+   "recomputedDigest": "884f219bbbfe5a7a",
+   "vsManifest": "not in the manifest",
+   "vsProduction": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   }
+  },
+  "liturgicalOrdoNotes": {
+   "contentVersion": 1791397274814,
+   "count": 1337,
+   "digest": "db0465255c4bc5a3",
+   "recomputedDigest": "db0465255c4bc5a3",
+   "vsManifest": "not in the manifest",
+   "vsProduction": {
+    "equal": true,
+    "added": [],
+    "removed": [],
+    "changed": []
+   }
+  }
+ },
+ "previousLocalSnapshot": {
+  "dir": "backups/firestore-snapshot",
+  "exportedAt": "2026-10-05T22:21:22.217Z",
+  "snapshotVersion": "20261005222122217",
+  "collections": {
+   "completoriums": {
+    "count": 35,
+    "fileSha256": "e8271975639ef2d5774626e435f5d8f8d08c882d4cfc1e9b6a8fae42aa444e4d"
+   },
+   "days": {
+    "count": 735,
+    "fileSha256": "25c90de20747c3ce10394e3653fb5c898749e6095e80ee3ee2280db770ef92de"
+   },
+   "invitatoriums": {
+    "count": 4,
+    "fileSha256": "4a5d7e40e8c78b95430ca95a4704ca367f1aac4fd72b848de6964368e912efb3"
+   },
+   "liturgicalCalendarMeta": {
+    "count": 1,
+    "fileSha256": "7e34e6e28164e996cc86c5b2f6c001f21ae10ceb3d8460b2d275ec6bbf4c22af"
+   },
+   "liturgicalCelebrations": {
+    "count": 241,
+    "fileSha256": "f4476629c56227d019ff076bb59d387270bd58de9af6d339bbf56706160a0740"
+   },
+   "liturgicalDioceseOverrides": {
+    "count": 74,
+    "fileSha256": "bd37baf04a25a7e14815f4818dc92a6dd1258bdd86249d9f25a91d67998220b8"
+   },
+   "liturgicalOrdoNotes": {
+    "count": 1204,
+    "fileSha256": "95b0411fad850f177dcc5ce04d91bdd20913049419ee498825698b290f08a13e"
+   },
+   "liturgicalProperTexts": {
+    "count": 290,
+    "fileSha256": "34dd93d648caedeb82529ce2723bafb995fee682ba0314e5d7ffe00c650eae8c"
+   },
+   "liturgicalTemplates": {
+    "count": 16,
+    "fileSha256": "5636996325bb52acc0ce4809ffe7b4f813c4fb674d52bf4a8df0b84c8f15eb2f"
+   },
+   "liturgicalYearOverrides": {
+    "count": 4,
+    "fileSha256": "c31250b5a240550b8c15d2d4f4e8f197811d0798ef2d3945406b366966cb4554"
+   },
+   "readings": {
+    "count": 815,
+    "fileSha256": "1a721edd6265f38244c314f6e80b494602016e8883c402419c8a6144c169ce98"
+   }
+  }
+ },
+ "repo": {
+  "calendarDefinitions": {
+   "revision": 3,
+   "celebrations": 241,
+   "dioceseOverrides": 75,
+   "yearOverrides": 4,
+   "sha256": "610d7dfaef2fbd8a"
+  },
+  "notes": {
+   "revision": 4,
+   "sha256": "98e33d9ef55f1fe4"
+  },
+  "production": {
+   "calendarRevision": 3,
+   "notesRevision": 4,
+   "properTextsRevision": 2,
+   "templatesRevision": 2
+  },
+  "liturgicalYearOverrides": {
+   "production": 15,
+   "bundled": 4,
+   "inSync": false
+  },
+  "ordoCollectionsVsBundled": {
+   "generatedAt": "2026-10-12T18:06:15.375Z",
+   "snapshot": "2026-10-12T17:15:55.724Z",
+   "summary": {
+    "liturgicalProperTexts": "in sync",
+    "liturgicalTemplates": "in sync",
+    "liturgicalCelebrations": "in sync",
+    "liturgicalDioceseOverrides": "in sync",
+    "liturgicalOrdoNotes": "in sync"
+   },
+   "revisions": {
+    "calendar": {
+     "firestore": 3,
+     "bundled": 3
+    },
+    "notes": {
+     "firestore": 4,
+     "bundled": 4
+    },
+    "properTexts": {
+     "firestore": 2
+    },
+    "templates": {
+     "firestore": 2
+    }
+   }
+  },
+  "lectionaryFixtures": {
+   "pages": 23,
+   "sha256": "ab3824e65afb57a3"
+  },
+  "crawlSnapshots": {
+   "articles": 617,
+   "crawledAt": "2026-10-12T17:41:06.732Z",
+   "sha256": "b86ebe2fbabf2454"
+  },
+  "readingsSetsPlan": {
+   "generatedAt": "2026-10-12T17:59:49.575Z",
+   "source": "snapshot 2026-10-12T17:15:55.724Z",
+   "documents": 38,
+   "identicalToProduction": 28,
+   "withChanges": 10
+  },
+  "hoursSourceImports": {
+   "snapshot": "2026-10-12T17:15:55.724Z",
+   "temporal": [
+    {
+     "id": "ordinary-w21-d3",
+     "action": "unchanged",
+     "sourcePage": "2026-08-25.html",
+     "identity": "ХХІ звычайны тыдзень"
+    },
+    {
+     "id": "ordinary-w21-d4",
+     "action": "unchanged",
+     "sourcePage": "2023-08-30.html",
+     "identity": "ХХІзвычайны тыдзень"
+    },
+    {
+     "id": "lent-w5-d1",
+     "action": "unchanged",
+     "sourcePage": "2026-03-22.html",
+     "identity": "V нядзеля Вялікага посту"
+    },
+    {
+     "id": "ordinary-w9-d4",
+     "action": "unchanged",
+     "sourcePage": "2018-06-06.html",
+     "identity": "ІХ звычайны тыдзень"
+    },
+    {
+     "id": "14-02-sv-cyril-methodius",
+     "action": "unchanged",
+     "sourcePage": "2026-02-14.html",
+     "identity": "СВ. КІРЫЛА, МНІХА, І МЯТОДА, БІСКУПА, АПЕКУНОЎ ЕЎРОПЫ"
+    }
+   ],
+   "proper": [],
+   "pendingApply": []
+  },
+  "resyncPlan": {
+   "changes": 321,
+   "skipped": 4,
+   "status": "PENDING APPLY: dry-run plan only (reports/lectionary/resync-plan.json)"
+  }
+ },
+ "browser": {
+  "status": "NOT_OBSERVABLE_HEADLESSLY",
+  "consumes": "live Firestore queries for `readings`/`days` + bundled calendar definitions (revision above) and notes; IndexedDB/persistent cache by content key (src/utils/publicContentCache.js)",
+  "bundledCalendarRevision": 3,
+  "productionCalendarRevision": 3,
+  "note": "A browser always reads readings from production Firestore (not through the manifest); a stale browser = a stale Service Worker/IndexedDB copy, refreshed by requestContentRefresh."
+ },
+ "driftTable": [
+  {
+   "collection": "readings",
+   "production": {
+    "count": 822,
+    "digest": "1e8aadb3fc05e137"
+   },
+   "manifest": {
+    "version": 3,
+    "digest": "1e8aadb3fc05e137",
+    "inSync": true
+   },
+   "flutterBundle": {
+    "count": 822,
+    "digest": "6025a2f6fa0262af",
+    "equalsManifest": false,
+    "behindManifestBy": 75
+   },
+   "status": "APP_BUNDLE_BEHIND_MANIFEST (patch delivered by the manifest)"
+  },
+  {
+   "collection": "days",
+   "production": {
+    "count": 736,
+    "digest": "b5f4b077f42f6664"
+   },
+   "manifest": {
+    "version": 2,
+    "digest": "b5f4b077f42f6664",
+    "inSync": true
+   },
+   "flutterBundle": {
+    "count": 736,
+    "digest": "b5f4b077f42f6664",
+    "equalsManifest": true,
+    "behindManifestBy": 0
+   },
+   "status": "IN_SYNC"
+  },
+  {
+   "collection": "liturgicalTemplates",
+   "production": {
+    "count": 16,
+    "digest": "665cc09448b91bf7"
+   },
+   "manifest": {
+    "version": 2,
+    "digest": "665cc09448b91bf7",
+    "inSync": true
+   },
+   "flutterBundle": {
+    "count": 16,
+    "digest": "665cc09448b91bf7",
+    "equalsManifest": true,
+    "behindManifestBy": 0
+   },
+   "status": "IN_SYNC"
+  },
+  {
+   "collection": "invitatoriums",
+   "production": {
+    "count": 4,
+    "digest": "587d64f9ff8e7b0d"
+   },
+   "manifest": {
+    "version": 1,
+    "digest": "587d64f9ff8e7b0d",
+    "inSync": true
+   },
+   "flutterBundle": {
+    "count": 4,
+    "digest": "587d64f9ff8e7b0d",
+    "equalsManifest": true,
+    "behindManifestBy": 0
+   },
+   "status": "IN_SYNC"
+  },
+  {
+   "collection": "completoriums",
+   "production": {
+    "count": 35,
+    "digest": "42eb55a0b377d638"
+   },
+   "manifest": {
+    "version": 1,
+    "digest": "42eb55a0b377d638",
+    "inSync": true
+   },
+   "flutterBundle": {
+    "count": 35,
+    "digest": "42eb55a0b377d638",
+    "equalsManifest": true,
+    "behindManifestBy": 0
+   },
+   "status": "IN_SYNC"
+  },
+  {
+   "collection": "liturgicalCalendarMeta",
+   "production": {
+    "count": 1,
+    "digest": "7676e4c645130243"
+   },
+   "manifest": "not published",
+   "flutterBundle": {
+    "count": 1,
+    "digest": "7676e4c645130243",
+    "equalsManifest": null,
+    "behindManifestBy": null
+   },
+   "status": "HELD_BACK"
+  },
+  {
+   "collection": "liturgicalCelebrations",
+   "production": {
+    "count": 241,
+    "digest": "8fb0b75436b7f528"
+   },
+   "manifest": "not published",
+   "flutterBundle": {
+    "count": 241,
+    "digest": "8fb0b75436b7f528",
+    "equalsManifest": null,
+    "behindManifestBy": null
+   },
+   "status": "HELD_BACK"
+  },
+  {
+   "collection": "liturgicalDioceseOverrides",
+   "production": {
+    "count": 75,
+    "digest": "1df4e38742254f17"
+   },
+   "manifest": "not published",
+   "flutterBundle": {
+    "count": 75,
+    "digest": "1df4e38742254f17",
+    "equalsManifest": null,
+    "behindManifestBy": null
+   },
+   "status": "HELD_BACK"
+  },
+  {
+   "collection": "liturgicalYearOverrides",
+   "production": {
+    "count": 15,
+    "digest": "62198d0893b2a40f"
+   },
+   "manifest": "not published",
+   "flutterBundle": {
+    "count": 15,
+    "digest": "62198d0893b2a40f",
+    "equalsManifest": null,
+    "behindManifestBy": null
+   },
+   "status": "HELD_BACK"
+  },
+  {
+   "collection": "liturgicalProperTexts",
+   "production": {
+    "count": 291,
+    "digest": "884f219bbbfe5a7a"
+   },
+   "manifest": "not published",
+   "flutterBundle": {
+    "count": 291,
+    "digest": "884f219bbbfe5a7a",
+    "equalsManifest": null,
+    "behindManifestBy": null
+   },
+   "status": "HELD_BACK"
+  },
+  {
+   "collection": "liturgicalOrdoNotes",
+   "production": {
+    "count": 1337,
+    "digest": "db0465255c4bc5a3"
+   },
+   "manifest": "not published",
+   "flutterBundle": {
+    "count": 1337,
+    "digest": "db0465255c4bc5a3",
+    "equalsManifest": null,
+    "behindManifestBy": null
+   },
+   "status": "HELD_BACK"
+  }
+ ],
+ "pendingApply": [
+  {
+   "id": "lectionary-resync",
+   "description": "321 legacy readings documents differ from the canonical page text (dry-run plan, never applied)",
+   "command": "node scripts/lectionary/resync-readings.mjs --apply (after review)"
+  },
+  {
+   "id": "engine-sunday-readings",
+   "description": "Engine change (Sundays of Advent 17–24.12 / Christmas time, Sunday 24.12 vigil) ships with the next web build and the Flutter port of the same lookup",
+   "command": "npm run build && firebase deploy --only hosting (owner)"
+  }
+ ]
+}

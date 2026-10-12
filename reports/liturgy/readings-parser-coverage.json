@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-07T18:13:04.961Z",
+ "generatedAt": "2026-10-12T17:59:49.575Z",
  "pages": {
   "assumption": {
    "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5043-15-zhniunya-urachystasts-unebauzyatstsya-najsvyatsejshaj-panny-maryi",
@@ -28,6 +28,34 @@
     {
      "sourceLabel": "Імша ўдзень",
      "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "nativity-john-baptist": {
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5040-24-chervenya-urachystasts-naradzhennya-sv-yana-khrystsitselya",
+   "fetchedAt": "2026-10-12",
+   "sets": [
+    {
+     "sourceLabel": "Імша ў вігілію",
+     "sections": 5
+    },
+    {
+     "sourceLabel": "Імша ўдзень",
+     "sections": 5
+    }
+   ],
+   "errors": [],
+   "warnings": []
+  },
+  "transfiguration": {
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/5012-6-zhniunya-svyata-peramyanennya-pana",
+   "fetchedAt": "2026-10-12",
+   "sets": [
+    {
+     "sourceLabel": "",
+     "sections": 7
     }
    ],
    "errors": [],
@@ -352,6 +380,67 @@
       "reading:reading2",
       "acclamation:alleluia",
       "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "nativity-john-baptist",
+   "document": "24-06-nativity-john-baptist",
+   "sets": [
+    {
+     "id": "vigil",
+     "label": "Св. Імша ў вігілію",
+     "context": "vigil",
+     "default": false,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/urachystasci/5040-24-chervenya-urachystasts-naradzhennya-sv-yana-khrystsitselya",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    },
+    {
+     "id": "day",
+     "label": "Св. Імша ўдзень",
+     "context": "day",
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/urachystasci/5040-24-chervenya-urachystasts-naradzhennya-sv-yana-khrystsitselya",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel"
+     ]
+    }
+   ],
+   "linked": []
+  },
+  {
+   "celebration": "transfiguration",
+   "document": "06-08-transfiguration-lord",
+   "sets": [
+    {
+     "id": "mass",
+     "label": "Св. Імша",
+     "context": null,
+     "default": true,
+     "referenceOnly": false,
+     "source": "https://catholic.by/3/liturgy/lectionary/sviaty/5012-6-zhniunya-svyata-peramyanennya-pana",
+     "sections": [
+      "reading:reading1",
+      "psalm",
+      "reading:reading2",
+      "acclamation:alleluia",
+      "gospel/A",
+      "gospel/B",
+      "gospel/C"
      ]
     }
    ],

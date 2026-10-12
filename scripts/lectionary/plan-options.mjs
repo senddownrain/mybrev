@@ -17,9 +17,11 @@ import { addDays, daysOfYear } from '../../src/utils/ordo/dates.js';
 import { computeEasterSunday } from '../../src/utils/ordo/movableFeasts.js';
 import { selectReadingDocuments } from '../../src/utils/ordo/runtime.js';
 import { selectReadingLectionaryVariants, readingSelector, normalizeReadingCycle } from '../../src/utils/parsedReadingsIdentity.js';
-import { massReadingSetsOf, defaultSetId } from '../../src/utils/massReadingSets.js';
+import { massReadingSetsOf } from '../../src/utils/massReadingSets.js';
 import { createReadingsRuntime, screenFor } from './lib/runtime-sim.mjs';
 import { expectedPageKey } from './lib/expected-page.mjs';
+import { pickerOptionsOf, pickerRouteFor } from '../../src/utils/ordoDatePicker.js';
+import { hasReadingDocumentContent } from '../../src/utils/parsedReadingsIdentity.js';
 import { openSnapshot, snapshotDirFromArgs } from './lib/snapshot-docs.mjs';
 import { ROOT } from './lib/source-pages.mjs';
 
@@ -77,7 +79,6 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
             const chosen = selectReadingLectionaryVariants(found, loaded.context);
             return { entry, found, chosen, selector: found[0] ? readingSelector(found[0]) : selectorOfWhere(entry.where) };
           });
-          const wantsText = planOption.readingsStatus !== 'reference-only' && planOption.readingsStatus !== 'missing';
           for (const lookupEntry of lookups) {
             const { entry, found, chosen, selector } = lookupEntry;
             const needsCycle = found.some((doc) => normalizeReadingCycle(doc.year));
@@ -145,6 +146,9 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
             const activeDocId = screen.setDocument?.id || active?.id;
             if (screen.availableCycles.length) counts.cycleScreens = (counts.cycleScreens || 0) + 1;
             if (screen.sets?.length > 1) counts.multiSetScreens = (counts.multiSetScreens || 0) + 1;
+            if (active && !active._referenceOnly && !hasRenderableText(screen)) {
+              anomalies.push({ class: 'MISSING_BLOCK', severity: 'high', date, diocese, option: option.id, detail: `the readings of ${activeDocId} render without any text` });
+            } else if (active) counts.renderedWithText = (counts.renderedWithText || 0) + 1;
             if (!active) anomalies.push({ class: 'MISSING_SET', severity: 'high', date, diocese, option: option.id, detail: 'readings screen shows nothing although documents exist' });
             else if (!ownIds.has(activeDocId) && !isCoveredBy(screen.activeGroup, ownIds)) {
               anomalies.push({ class: 'WRONG_CONTEXT', severity: 'high', date, diocese, option: option.id, detail: `screen shows ${activeDocId}, expected one of ${[...ownIds].join(', ')}` });
@@ -164,11 +168,21 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
             }
           }
         }
+        // date picker navigation: the route of each legal option opens the readings of THAT option
+        for (const pickerOption of pickerOptionsOf(date, diocese)) {
+          const route = pickerRouteFor(pickerOption, date, 'readings', { today: '2026-10-12', diocese, defaultDiocese: 'minsk-mohilev' });
+          counts.pickerRoutes = (counts.pickerRoutes || 0) + 1;
+          const routed = screenFor(loaded, { ...(route.query || {}), option: route.query?.option });
+          const own = routed.groups.some((group) => group.documents.some((doc) => doc._ordoOptionId === pickerOption.id));
+          if (route.query?.option && own && !routed.activeGroup?.documents.some((doc) => doc._ordoOptionId === pickerOption.id)) {
+            anomalies.push({ class: 'WRONG_CONTEXT', severity: 'high', date, diocese, option: pickerOption.id, detail: 'the date-picker route of the option does not open its own readings group' });
+          }
+        }
         counts.dates += diocese === DIOCESES[0] ? 1 : 0;
       }
     }
   }
-  const scenarios = scenarioChecks(rt, from, to, anomalies);
+  const scenarios = scenarioChecks(rt, from, to, anomalies, counts);
   const rows = [...identities.values()].map((identity) => ({
     ...identity,
     absent: identity.absent || null, optionIds: [...identity.optionIds].sort(), officeKinds: [...identity.officeKinds].sort(), dioceses: [...identity.dioceses].sort(),
@@ -178,7 +192,7 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
 }
 
 /** Closed policy scenarios (previous prompt §5/§21) checked in every year and diocese. */
-function scenarioChecks(rt, from, to, anomalies) {
+function scenarioChecks(rt, from, to, anomalies, counts) {
   const rows = [];
   const record = (scenario, date, diocese, expect, extra = {}) => {
     const loaded = rt.load(date, diocese);
@@ -190,6 +204,15 @@ function scenarioChecks(rt, from, to, anomalies) {
     row.sets = (screen.sets || []).map((set) => ({ id: set.id, context: set.context || null, default: Boolean(set.default), referenceOnly: Boolean(set.referenceOnly), cycles: setCyclesOf(set) }));
     row.activeSet = screen.activeSet?.id || null;
     row.cycle = screen.activeCycle || null;
+    // persistent route selections: ?set= and ?year= choose exactly that set / cycle
+    for (const set of screen.sets || []) {
+      const chosen = screenFor(loaded, { set: set.id });
+      if (chosen.activeSet?.id !== set.id) { anomalies.push({ class: 'WRONG_DEFAULT', severity: 'high', date, diocese, scenario, detail: `DEFAULT route ?set=${set.id} opens ${chosen.activeSet?.id}` }); continue; }
+      for (const cycle of chosen.availableCycles) {
+        if (screenFor(loaded, { set: set.id, year: cycle }).activeCycle !== cycle) anomalies.push({ class: 'WRONG_CYCLE', severity: 'high', date, diocese, scenario, detail: `route ?set=${set.id}&year=${cycle} opens another cycle` });
+      }
+      counts.routeSelections = (counts.routeSelections || 0) + 1;
+    }
     const failures = expect(row, loaded, screen) || [];
     row.ok = !failures.length;
     failures.forEach((detail) => anomalies.push({ class: detail.startsWith('DEFAULT') ? 'WRONG_DEFAULT' : detail.startsWith('WRONG_CYCLE') ? 'WRONG_CYCLE' : 'MISSING_SET', severity: 'high', date, diocese, scenario, detail }));
@@ -223,6 +246,11 @@ function scenarioChecks(rt, from, to, anomalies) {
   }
   return rows;
 }
+const hasRenderableText = (screen) => {
+  const view = screen.activeReading;
+  if (view?._sections) return view._sections.some((section) => section.text || section.verses?.length || section.verse || section.passion || section.chorus);
+  return hasReadingDocumentContent(view);
+};
 const setCyclesOf = (set) => ['A', 'B', 'C'].filter((c) => set.cycle === c || (set.sections || []).some((s) => s.cycle === c));
 const isoWeekdayOf = (iso) => { const d = new Date(`${iso}T12:00:00Z`).getUTCDay(); return d === 0 ? 7 : d; };
 

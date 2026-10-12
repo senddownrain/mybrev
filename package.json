@@ -73,7 +73,11 @@
     "test:rules": "firebase emulators:exec --only firestore --project demo-rules \"node tests/firestore-rules/rules-emulator.mjs\"",
     "content:app-bundle": "node scripts/content/build-app-bundle.mjs",
     "content:manifest": "node scripts/content/publish-manifest.mjs",
-    "content:app-release": "node scripts/content/build-app-bundle.mjs --compare-live"
+    "content:app-release": "node scripts/content/build-app-bundle.mjs --compare-live",
+    "lectionary:crawl": "node scripts/lectionary/crawl-source.mjs",
+    "lectionary:audit": "node scripts/lectionary/audit.mjs",
+    "lectionary:resync": "node scripts/lectionary/resync-readings.mjs",
+    "lectionary:plan": "node scripts/lectionary/plan-options.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",

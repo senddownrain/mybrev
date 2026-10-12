@@ -28,7 +28,7 @@ async function describeSnapshot(snap) {
   return out;
 }
 
-export async function buildPublicationDrift({ audit, snapshotDir, previousSnapshotDir = path.join(ROOT, 'backups', 'firestore-snapshot') }) {
+export async function buildPublicationDrift({ audit, previousSnapshotDir = path.join(ROOT, 'backups', 'firestore-snapshot') }) {
   const snap = audit.snap;
   const production = await describeSnapshot(snap);
   const publishedDocs = Object.fromEntries((await snap.collection('contentManifest')).map(({ id, ...data }) => [id, data]));
@@ -92,6 +92,7 @@ export async function buildPublicationDrift({ audit, snapshotDir, previousSnapsh
     lectionaryFixtures: { pages: fs.readdirSync(fixtureDir).filter((f) => f.endsWith('.html')).length, sha256: short(fs.readdirSync(fixtureDir).sort().map((f) => sha256(fs.readFileSync(path.join(fixtureDir, f), 'utf8')))) },
     crawlSnapshots: { articles: Object.keys(audit.crawl.items).length, crawledAt: audit.crawl.crawledAt, sha256: short(Object.values(audit.crawl.items).map((i) => [i.id, i.sha256])) },
     readingsSetsPlan: readingsSetsPlanState(),
+    hoursSourceImports: hoursImportState(),
     resyncPlan: { changes: audit.resync.changes.length, skipped: audit.resync.skipped.length, status: 'PENDING APPLY: dry-run plan only (reports/lectionary/resync-plan.json)' },
   };
   const table = COLLECTIONS.map((name) => ({
@@ -133,4 +134,13 @@ function readingsSetsPlanState() {
   if (!fs.existsSync(file)) return null;
   const plan = JSON.parse(fs.readFileSync(file, 'utf8'));
   return { generatedAt: plan.generatedAt, source: plan.source, documents: plan.changes.length, identicalToProduction: plan.changes.filter((c) => !c.changedFields.length).length, withChanges: plan.changes.filter((c) => c.changedFields.length).length };
+}
+
+/** The prepared Hours source imports (plan from `npm run liturgy:audit`) against the production snapshot. */
+function hoursImportState() {
+  const file = path.join(ROOT, 'reports', 'liturgy', 'hours-sources-import-plan.json');
+  if (!fs.existsSync(file)) return 'run `npm run liturgy:audit -- --snapshot <dir>` first';
+  const plan = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const row = (item) => ({ id: item.id, action: item.action, sourcePage: item.page || null, ...(item.identity ? { identity: item.identity } : {}) });
+  return { snapshot: plan.snapshot, temporal: plan.temporal.map(row), proper: plan.proper.map(row), pendingApply: [...plan.temporal, ...plan.proper].filter((item) => item.action !== 'unchanged').map((item) => item.id) };
 }

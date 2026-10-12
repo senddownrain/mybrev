@@ -3,10 +3,9 @@
  */
 import crypto from 'node:crypto';
 import { massReadingSetsOf, defaultSetId, setCycles, PASSION_ROLES, SET_CONTEXTS, SECTION_KINDS } from '../../../src/utils/massReadingSets.js';
-import { canonicalJson, collectionDigest, describeDocuments, storedDocument, documentHash, CONTENT_SCHEMA_VERSION, DOCUMENT_SCHEMAS } from '../../content/lib/app-content.mjs';
+import { canonicalJson, collectionDigest, storedDocument, documentHash, CONTENT_SCHEMA_VERSION, DOCUMENT_SCHEMAS } from '../../content/lib/app-content.mjs';
 import { docSelector } from './identity.mjs';
 import { SET_DEFAULT_POLICY } from '../plan-options.mjs';
-import { withoutCycle } from './expected-page.mjs';
 
 const short = (value) => crypto.createHash('sha256').update(typeof value === 'string' ? value : canonicalJson(value)).digest('hex').slice(0, 16);
 const count = (items, key) => items.reduce((acc, item) => { const k = typeof key === 'function' ? key(item) : item[key]; acc[k] = (acc[k] || 0) + 1; return acc; }, {});
@@ -205,7 +204,7 @@ function legacyOrderedSections(doc) {
 }
 
 export function buildFlutterContract(audit, { drift }) {
-  const { docs, planned, plannedByDoc } = audit;
+  const { docs, planned } = audit;
   const statuses = documentStatuses(audit);
   const documents = docs.slice().sort((a, b) => a.id.localeCompare(b.id)).map((doc) => {
     const sets = massReadingSetsOf(doc);

@@ -2,7 +2,6 @@
  * The Lectionary audit: crawled pages × production `readings` snapshot ×
  * planned Ordo options. Produces the report objects; the CLI writes them.
  */
-import fs from 'node:fs';
 import path from 'node:path';
 import { massReadingSetsOf } from '../../../src/utils/massReadingSets.js';
 import { docHash, openSnapshot } from './snapshot-docs.mjs';
@@ -12,6 +11,7 @@ import { docSelector } from './identity.mjs';
 import { withoutCycle } from './expected-page.mjs';
 import { buildResyncPlan } from './resync-plan.mjs';
 import { runPlan, DIOCESES } from '../plan-options.mjs';
+import { READING_SET_CELEBRATIONS } from '../../liturgy/lib/readings-sets-plan.mjs';
 
 export const REPORT_DIR = path.join(ROOT, 'reports', 'lectionary');
 const count = (items, key) => items.reduce((acc, item) => { const k = typeof key === 'function' ? key(item) : item[key]; acc[k] = (acc[k] || 0) + 1; return acc; }, {});
@@ -103,15 +103,7 @@ export async function runAudit({ snapshotDir, plan = null } = {}) {
       expected: finding.expected ?? null, actual: finding.actual ?? null,
       evidence: { detail: finding.detail || null, relation: finding.relation || null, artifact: finding.artifact || null, at: finding.at ?? null, sourceLinkInferred: finding.sourceLinkInferred || undefined },
       planned: planned_.slice(0, 3).map((row) => ({ identity: row.key, sampleDates: row.sampleDates, dioceses: row.dioceses })),
-      resolution: finding.class === 'WRONG_CYCLE' && /has a Gospel for each year/.test(finding.detail || '')
-        ? { status: 'FIX_PLANNED', by: 'scripts/liturgy/migrate-readings-sets.mjs (dry-run plan, new celebration transfiguration)', reason: 'a canonical document with a set whose Gospel is chosen by the Sunday cycle A/B/C' }
-        : finding.projectionOf
-        ? { status: 'FIX_PLANNED', by: 'scripts/liturgy/migrate-readings-sets.mjs (dry-run plan in the repo)', reason: `the legacy projection of ${finding.projectionOf} differs from its canonical set; the existing migration re-projects it` }
-        : eligible
-        ? { status: 'FIX_PLANNED', by: 'scripts/lectionary/resync-readings.mjs (dry-run plan)', reason: 'flat fields re-imported from the canonical page; needs `--apply` + manifest publication' }
-        : /^the page does not pass/.test(resync.skipped.find((row) => row.id === finding.docId)?.reason || '')
-          ? { status: 'DECISION_NEEDED', reason: `${resync.skipped.find((row) => row.id === finding.docId).reason}; the source page itself is defective (a text is missing on the page), nothing may be invented` }
-          : { status: 'REMAINING', reason: finding.class === 'STRUCTURE_LOSS' ? 'paragraph layout only (same words)' : (resync.skipped.find((row) => row.id === finding.docId)?.reason || 'canonical/projected document or low severity') },
+      resolution: resolutionOf(finding, eligible, resync.skipped.find((row) => row.id === finding.docId)?.reason || ''),
     });
   }
   // ---- plan anomalies (engine ↔ readings)
@@ -197,6 +189,20 @@ export async function runAudit({ snapshotDir, plan = null } = {}) {
 
 const wordsOfTitle = (title) => String(title || '').toLowerCase().replace(/^catholic\.by\s*-\s*/, '').replace(/[^\p{L}\s]/gu, ' ').split(/\s+/).filter((w) => w.length > 3 && !/^(успамін|свята|урачыстасць|найсв|панны|марыі|св)$/.test(w));
 const overlap = (a, b) => (a.size ? [...a].filter((w) => b.has(w)).length / a.size : 0);
+
+const SETS_MIGRATION = new Set(READING_SET_CELEBRATIONS.flatMap((celebration) => [celebration.doc, ...(celebration.linked || []).map((link) => link.doc)]));
+
+function resolutionOf(finding, eligible, skipReason) {
+  if (finding.projectionOf) return { status: 'FIX_PLANNED', by: 'scripts/liturgy/migrate-readings-sets.mjs (dry-run plan in the repo)', reason: `the legacy projection of ${finding.projectionOf} differs from its canonical set; the existing migration re-projects it` };
+  if (SETS_MIGRATION.has(finding.docId) && /migrate-readings-sets|reading sets|has a Gospel for each year/.test(`${skipReason} ${finding.detail || ''}`)) {
+    return { status: 'FIX_PLANNED', by: 'scripts/liturgy/migrate-readings-sets.mjs (dry-run plan in the repo)', reason: 'a canonical document with structured sets (this celebration was added to the plan by the audit); needs `--apply` + manifest publication' };
+  }
+  if (finding.class === 'STRUCTURE_LOSS' && finding.severity === 'low') return { status: 'REMAINING', reason: 'paragraph layout only (same words); not worth a write' };
+  if (eligible) return { status: 'FIX_PLANNED', by: 'scripts/lectionary/resync-readings.mjs (dry-run plan)', reason: 'flat fields re-imported from the canonical page; needs `--apply` + manifest publication' };
+  if (/^the page does not pass/.test(skipReason)) return { status: 'DECISION_NEEDED', reason: `${skipReason}; the source page itself is defective (a text is missing on the page), nothing may be invented` };
+  if (/identity does not match/.test(skipReason)) return { status: 'DECISION_NEEDED', reason: 'the document is keyed to the date 05.01 but backed by the page of the II Sunday after Christmas; since the engine fix the Sunday reads the period document christmas-w2-d1, so this copy is unreachable. Mark it obsolete or delete it (permanent deletion is not done without the owner)' };
+  return { status: 'REMAINING', reason: skipReason || 'no safe automatic fix' };
+}
 
 function classifyPlanAnomaly(row) {
   if (row.option === 'our-lady-budslav') {

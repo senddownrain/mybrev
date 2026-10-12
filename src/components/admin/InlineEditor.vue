@@ -33,7 +33,7 @@
       <v-card-text v-if="!isEditing" class="pt-2">
         <p v-if="hint" class="text-medium-emphasis text-caption mb-2">{{ hint }}</p>
         <p v-if="!previewValue" class="text-grey-darken-1 text-body-2">{{ emptyText }}</p>
-        <div v-else v-html="previewValue" class="ora-text"></div>
+        <div v-else v-html="safePreview" class="ora-text"></div>
       </v-card-text>
 
       <!-- Режим Редактирования -->
@@ -57,6 +57,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { QuillEditor } from '@vueup/vue-quill';
+import { sanitizeEditorPreviewHtml } from '@/utils/editorHtml';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 // Используем defineModel для удобной двусторонней привязки (v-model)
@@ -95,6 +96,9 @@ const editableContent = ref('');
 const previewValue = computed(() => (
   props.displayValue === undefined ? modelValue.value : props.displayValue
 ));
+
+// The preview renders stored HTML with v-html: formatting only, never scripts or handlers.
+const safePreview = computed(() => sanitizeEditorPreviewHtml(previewValue.value));
 
 const startEditing = () => {
   // Копируем текущее значение во временную переменную для редактирования

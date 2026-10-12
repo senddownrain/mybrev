@@ -123,9 +123,8 @@ for (let i = 0; i < pending.length; i += 1) {
   const bucket = entry.category || '_root';
   const file = path.join(OUT, bucket, `${id}.html`);
   const known = state.items[id];
-  let html = '';
   if (known && fs.existsSync(file) && !REFRESH) {
-    html = fs.readFileSync(file, 'utf8');
+    const html = fs.readFileSync(file, 'utf8');
     for (const link of itemLinks(html).values()) if (!queue.has(`${HOST}${link.path}`)) { enqueue(link, `page:${id}`); pending.push(`${HOST}${link.path}`); }
     known.via = [...new Set([...(known.via || []), ...entry.via])];
     continue;

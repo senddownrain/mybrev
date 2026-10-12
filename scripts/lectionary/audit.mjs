@@ -65,7 +65,7 @@ async function main() {
   const inventory = buildSourceInventory(audit);
   const coverage = buildCoverage(audit);
   const discrepancies = buildDiscrepancies(audit, extra);
-  const drift = await buildPublicationDrift({ audit, snapshotDir });
+  const drift = await buildPublicationDrift({ audit });
   const contract = buildFlutterContract(audit, { drift });
   write('source-inventory.json', inventory);
   write('coverage.json', coverage);

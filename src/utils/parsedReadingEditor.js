@@ -27,8 +27,19 @@ function emptyReadingSection() {
   };
 }
 
+/** Fields of a section the editor models; everything else on the stored object is kept as it is. */
+const SECTION_FIELDS = new Set(['key', 'bible', 'comment', 'title', 'text', 'alternatives', 'italicLines']);
+const PSALM_FIELDS = new Set(['bible', 'chorus', 'altChorus', 'verses', 'text']);
+const ALLELUIA_FIELDS = new Set(['bible', 'verse', 'text']);
+const SEQUENCE_FIELDS = new Set(['text']);
+
+const unknownFieldsOf = (object, known) => Object.fromEntries(
+  Object.entries(object && typeof object === 'object' ? object : {}).filter(([key]) => !known.has(key)),
+);
+
 function normalizeReadingSection(section = {}) {
   const normalized = {
+    ...unknownFieldsOf(section, SECTION_FIELDS),
     bible: nullableText(section.bible),
     comment: nullableText(section.comment),
     title: nullableText(section.title),
@@ -85,7 +96,8 @@ export function createParsedReadingDraft(data = {}, seed = {}) {
     date: data._date ?? seed.date ?? '',
     feast: normalizeFeastCode(data._feast ?? seed.feast),
     periodType: data._periodType ?? seed.periodType ?? 'ordinary',
-    periodWeekNumber: Number(data._periodWeekNumber ?? seed.periodWeekNumber ?? 1),
+    // Lent «week 0» (the days after Ash Wednesday) is stored with a null week: it stays null.
+    periodWeekNumber: data._periodWeekNumber === null ? null : Number(data._periodWeekNumber ?? seed.periodWeekNumber ?? 1),
     dayOfWeek: Number(data._dayOfWeek ?? seed.dayOfWeek ?? 1),
     variant: data._variant ?? '',
     linkedDayId,
@@ -139,7 +151,7 @@ export function buildParsedReadingPayload(draft, original = {}) {
   delete payload._periodWeekNumber;
   delete payload._dayOfWeek;
 
-  payload.title = text(draft.title);
+  if (text(draft.title) || original.title !== undefined) payload.title = text(draft.title);
   payload.year = normalizeReadingCycle(draft.year) || null;
 
   const variant = text(draft.variant);
@@ -159,7 +171,7 @@ export function buildParsedReadingPayload(draft, original = {}) {
     payload._feast = normalizeFeastCode(draft.feast);
   } else if (draft.sourceType === 'period') {
     payload._periodType = text(draft.periodType).toLowerCase();
-    payload._periodWeekNumber = Number(draft.periodWeekNumber);
+    payload._periodWeekNumber = draft.periodWeekNumber === null ? null : Number(draft.periodWeekNumber);
     payload._dayOfWeek = Number(draft.dayOfWeek);
   }
 
@@ -169,6 +181,7 @@ export function buildParsedReadingPayload(draft, original = {}) {
   }
 
   payload.psalm = {
+    ...unknownFieldsOf(original.psalm, PSALM_FIELDS),
     bible: nullableText(draft.psalm?.bible),
     chorus: text(draft.psalm?.chorus),
     altChorus: nullableText(draft.psalm?.altChorus),
@@ -180,6 +193,7 @@ export function buildParsedReadingPayload(draft, original = {}) {
   const alleluiaVerse = text(draft.alleluia?.verse);
   if (alleluiaVerse) {
     payload.alleluia = {
+      ...unknownFieldsOf(original.alleluia, ALLELUIA_FIELDS),
       bible: nullableText(draft.alleluia?.bible),
       verse: alleluiaVerse,
     };
@@ -188,7 +202,7 @@ export function buildParsedReadingPayload(draft, original = {}) {
   }
 
   const sequenceText = text(draft.sequence?.text);
-  if (sequenceText) payload.sequence = { text: sequenceText };
+  if (sequenceText) payload.sequence = { ...unknownFieldsOf(original.sequence, SEQUENCE_FIELDS), text: sequenceText };
   else delete payload.sequence;
 
   payload.gospel = normalizeReadingSection(draft.gospel);

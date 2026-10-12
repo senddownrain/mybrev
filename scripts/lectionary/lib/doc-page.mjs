@@ -2,10 +2,10 @@
  * Stored `readings` document ↔ Catholic.by page(s): which page backs which
  * set / cycle, the expected sections, and the section-by-section comparison.
  */
-import { massReadingSetsOf, sectionsForCycle, setCycles } from '../../../src/utils/massReadingSets.js';
+import { massReadingSetsOf } from '../../../src/utils/massReadingSets.js';
 import { compareSections, legacySections, normalizeText, wordsOf, pageSectionsFor } from './compare.mjs';
 import { pageIdOfUrl } from './source-pages.mjs';
-import { docSelector, pageIdentity } from './identity.mjs';
+import { docSelector } from './identity.mjs';
 
 const isYear = (value) => /^[12]$/.test(String(value ?? ''));
 const isCycle = (value) => /^[ABC]$/.test(String(value ?? '').toUpperCase());

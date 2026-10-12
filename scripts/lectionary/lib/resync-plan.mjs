@@ -72,7 +72,7 @@ export function buildResyncPlan({ docs, pages, findings, inferred = new Map() })
     const changedFields = FLAT.filter((field) => JSON.stringify(doc[field] ?? null) !== JSON.stringify(after[field] ?? null)).concat(
       JSON.stringify(doc.sectionsFound ?? null) !== JSON.stringify(after.sectionsFound ?? null) ? ['sectionsFound'] : []);
     if (!changedFields.length) continue;
-    const { id, ...afterData } = after;
+    const { id: _afterId, ...afterData } = after;
     const { id: _id, ...beforeData } = doc;
     changes.push({
       id: doc.id, pageId: page.id, url: page.record.url, sourceSha256: page.record.sha256, inferredSource: !doc._sourceUrl,
@@ -119,7 +119,7 @@ export function resyncReport(audit) {
     report: {
       generatedAt: audit.generatedAt, source: audit.planned.snapshot, snapshotDocuments: audit.docs.length,
       totals: { changes: waves.length, skipped: audit.resync.skipped.length }, verdicts: waveVerdicts(waves, audit.docs), projectedAfterResync: audit.projectedAfterResync,
-      changes: waves.map(({ before, after, ...change }) => change), skipped: audit.resync.skipped,
+      changes: waves.map(({ before: _before, after: _after, ...change }) => change), skipped: audit.resync.skipped,
     },
   };
 }
