@@ -29,7 +29,7 @@
     "db:migrate-prayer-categories": "node scripts/migrate-prayer-categories.mjs",
     "db:migrate-priest-access": "node scripts/migrate-priest-access.mjs",
     "test:priest": "node --test tests/priest-*.test.mjs",
-    "test:priest:rules": "firebase emulators:exec --only firestore --project demo-rules \"node scripts/test-priest-emulator.mjs\"",
+    "test:priest:rules": "firebase emulators:exec --only auth,firestore --project demo-rules \"node scripts/test-priest-emulator.mjs\"",
     "smoke:priest": "node scripts/smoke-priest-ui.mjs",
     "db:autofix-prayers": "node scripts/autofix-prayer-markdown.mjs",
     "db:migrate-prayer-sources": "node scripts/migrate-prayer-sources.mjs",
@@ -77,7 +77,8 @@
     "lectionary:crawl": "node scripts/lectionary/crawl-source.mjs",
     "lectionary:audit": "node scripts/lectionary/audit.mjs",
     "lectionary:resync": "node scripts/lectionary/resync-readings.mjs",
-    "lectionary:plan": "node scripts/lectionary/plan-options.mjs"
+    "lectionary:plan": "node scripts/lectionary/plan-options.mjs",
+    "db:migrate-priest-grant-proofs": "node scripts/migrate-priest-grant-proofs.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",

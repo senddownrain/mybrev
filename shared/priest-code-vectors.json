@@ -1,0 +1,52 @@
+[
+  {
+    "input": "A2B3-C4D5-E6F7-G8H9-J2K3-L4M5",
+    "normalized": "A2B3C4D5E6F7G8H9J2K3L4M5",
+    "proof": "167b5694448f5252986a273bbd698017c713fef7a1ed7244b09294d4181c7a13"
+  },
+  {
+    "input": " \ta2b3-c4d5-e6f7-g8h9-j2k3-l4m5\r\n",
+    "normalized": "A2B3C4D5E6F7G8H9J2K3L4M5",
+    "proof": "167b5694448f5252986a273bbd698017c713fef7a1ed7244b09294d4181c7a13"
+  },
+  {
+    "input": "A2B3C4D5E6F7G8H9J2K3L4M5",
+    "normalized": "A2B3C4D5E6F7G8H9J2K3L4M5",
+    "proof": "167b5694448f5252986a273bbd698017c713fef7a1ed7244b09294d4181c7a13"
+  },
+  {
+    "input": "A2B3 C4D5E6F7G8H9J2K3L4M5",
+    "normalized": null,
+    "proof": null
+  },
+  {
+    "input": "A2B3--C4D5-E6F7-G8H9-J2K3-L4M5",
+    "normalized": null,
+    "proof": null
+  },
+  {
+    "input": "I2B3-C4D5-E6F7-G8H9-J2K3-L4M5",
+    "normalized": null,
+    "proof": null
+  },
+  {
+    "input": "Ａ2B3-C4D5-E6F7-G8H9-J2K3-L4M5",
+    "normalized": null,
+    "proof": null
+  },
+  {
+    "input": " A2B3-C4D5-E6F7-G8H9-J2K3-L4M5",
+    "normalized": null,
+    "proof": null
+  },
+  {
+    "input": "ß2B3-C4D5-E6F7-G8H9-J2K3-L4M5",
+    "normalized": null,
+    "proof": null
+  },
+  {
+    "input": "SHORT",
+    "normalized": null,
+    "proof": null
+  }
+]
