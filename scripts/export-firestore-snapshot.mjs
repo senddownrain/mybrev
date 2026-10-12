@@ -17,6 +17,7 @@ function parseArgs(argv) {
     serviceAccount: DEFAULT_SERVICE_ACCOUNT,
     projectId: null,
     collections: [],
+    preferRest: false,
     outputExplicit: false,
     help: false,
   };
@@ -29,6 +30,7 @@ function parseArgs(argv) {
     }
     else if (arg === '--service-account') options.serviceAccount = path.resolve(argv[++index]);
     else if (arg === '--project-id') options.projectId = argv[++index];
+    else if (arg === '--prefer-rest') options.preferRest = true;
     else if (arg === '--collection') options.collections.push(argv[++index]);
     else if (arg === '--help' || arg === '-h') options.help = true;
     else throw new Error(`Unknown argument: ${arg}`);
@@ -48,6 +50,7 @@ Options:
   --service-account <file>  Firebase service-account JSON
   --project-id <id>         Override Firebase project id
   --collection <path>       Export only this top-level collection (repeatable; requires --output)
+  --prefer-rest             Use REST instead of gRPC (needed behind the local proxy)
   --help                    Show this message
 
 This creates a private, complete backup under backups/ by default.
@@ -148,6 +151,7 @@ async function main() {
 
   try {
     const db = admin.firestore(app);
+    if (options.preferRest) db.settings({ preferRest: true });
     const topLevelCollections = options.collections.length
       ? [...new Set(options.collections)].map((collectionPath) => db.collection(collectionPath))
       : await db.listCollections();

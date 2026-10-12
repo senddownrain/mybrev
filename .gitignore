@@ -39,3 +39,4 @@ ibreviarybyapp/
 /.ordo-sources/
 __pycache__/
 *.pyc
+/.cache/

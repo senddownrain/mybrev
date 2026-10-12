@@ -160,19 +160,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { useReadings } from '@/composables/useReadings';
 import ParsedReadingCard from '@/components/readings/ParsedReadingCard.vue';
 import { useAuthStore } from '@/stores/auth';
-import {
-  normalizeReadingCycle,
-  readingCelebrationKey,
-} from '@/utils/parsedReadingsIdentity';
-import {
-  collapseCoveredDocuments,
-  hasMassReadingSets,
-  massReadingSetsOf,
-  readingViewOfSet,
-  selectSet,
-  setCycles,
-} from '@/utils/massReadingSets';
-import { preferredReadingGroup } from '@/utils/readingSetChoice';
+import { normalizeReadingCycle } from '@/utils/parsedReadingsIdentity';
+import { resolveReadingsScreen } from '@/utils/readingsScreen';
 import { getLiturgicalTheme } from '@/constants/liturgical';
 import { liturgicalVisual } from '@/utils/liturgicalVisual';
 import { resolveRuntimeDay } from '@/utils/ordo/runtime';
@@ -221,92 +210,20 @@ const readingsPageStyle = computed(() => {
   };
 });
 
-const readingGroups = computed(() => {
-  const groups = new Map();
-  // Legacy documents covered by a document with Mass reading sets are hidden.
-  for (const reading of collapseCoveredDocuments(items.value)) {
-    const key = readingCelebrationKey(reading);
-    if (!groups.has(key)) groups.set(key, { key, documents: [] });
-    groups.get(key).documents.push(reading);
-  }
-
-  return [...groups.values()].map((group) => ({
-    ...group,
-    label: group.documents.find((document) => document.title)?.title || 'Чытанні дня',
-  }));
-});
-
-const activeGroup = computed(() => {
-  const readingId = String(route.query.readingId || '');
-  const dayId = String(route.query.dayId || '');
-
-  if (readingId) {
-    const exact = readingGroups.value.find((group) =>
-      group.documents.some((document) => document.id === readingId));
-    if (exact) return exact;
-  }
-
-  if (dayId) {
-    const linked = readingGroups.value.find((group) => group.documents.some((document) =>
-      document._dayId === dayId || document._dayIds?.includes(dayId)));
-    if (linked) return linked;
-  }
-
-  // Option chosen in the liturgical calendar: its own readings when it has
-  // them; a memorial without proper readings keeps the weekday ones.
-  const optionId = String(route.query.option || '');
-  if (optionId) {
-    const own = readingGroups.value.find((group) => group.documents.some((document) => document._ordoOptionId === optionId));
-    if (own) return own;
-  }
-
-  // No explicit choice: an evening/vigil Mass of the date (24.12, Holy
-  // Thursday, Pentecost Saturday) before the morning one.
-  return preferredReadingGroup(readingGroups.value);
-});
-
-/** The document of the active group with structured Mass reading sets. */
-const setDocument = computed(() => activeGroup.value?.documents.find(hasMassReadingSets) || null);
-const readingSets = computed(() => massReadingSetsOf(setDocument.value));
-const activeSet = computed(() => (readingSets.value.length
-  ? selectSet(readingSets.value, String(route.query.set || ''))
-  : null));
-
-const availableCycles = computed(() => {
-  if (activeSet.value) return setCycles(activeSet.value);
-  const found = new Set((activeGroup.value?.documents || [])
-    .map((document) => normalizeReadingCycle(document.year))
-    .filter(Boolean));
-  return ['A', 'B', 'C', '1', '2'].filter((cycle) => found.has(cycle));
-});
-
-const currentCycle = computed(() => {
-  const hasSundayCycles = availableCycles.value.some((cycle) => ['A', 'B', 'C'].includes(cycle));
-  return normalizeReadingCycle(hasSundayCycles ? context.value?.sundayCycle : context.value?.cycle);
-});
-
-const activeCycle = computed(() => {
-  const requested = normalizeReadingCycle(route.query.year);
-  if (requested && availableCycles.value.includes(requested)) return requested;
-  if (currentCycle.value && availableCycles.value.includes(currentCycle.value)) return currentCycle.value;
-  const hasSharedReading = !activeSet.value && activeGroup.value?.documents
-    .some((document) => !normalizeReadingCycle(document.year));
-  if (hasSharedReading) return '';
-  return availableCycles.value[0] || '';
-});
-
-const activeReading = computed(() => {
-  if (setDocument.value && activeSet.value) {
-    return readingViewOfSet(setDocument.value, activeSet.value, activeCycle.value);
-  }
-  const documents = activeGroup.value?.documents || [];
-  if (!documents.length) return null;
-  if (activeCycle.value) {
-    const exact = documents.find((document) => normalizeReadingCycle(document.year) === activeCycle.value);
-    if (exact) return exact;
-  }
-  return documents.find((document) => !normalizeReadingCycle(document.year)) || documents[0];
-});
+// Pure resolution shared with the audit scripts (`utils/readingsScreen.js`).
+const screen = computed(() => resolveReadingsScreen({
+  items: items.value,
+  context: context.value,
+  query: route.query,
+}));
+const readingGroups = computed(() => screen.value.groups);
+const activeGroup = computed(() => screen.value.activeGroup);
+const readingSets = computed(() => screen.value.sets);
+const activeSet = computed(() => screen.value.activeSet);
+const availableCycles = computed(() => screen.value.availableCycles);
+const currentCycle = computed(() => screen.value.currentCycle);
+const activeCycle = computed(() => screen.value.activeCycle);
+const activeReading = computed(() => screen.value.activeReading);
 
 function groupIcon(group) {
   const reading = group.documents[0] || {};
