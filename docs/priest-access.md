@@ -17,7 +17,10 @@ Spark не означает неограниченное количество ч
 | `priestAccess/settings` | `activeCodeProof`, `changedAt`, `helpText` | Только управляющий доступом |
 | `priestAccessPublic/help` | Только `helpText` | Всем |
 | `priestDeviceGrants/{uid}` | Разрешение установки | Свой документ либо управляющий; список только управляющему |
+| `priestActivationClaims/{uid}` | Одноразовое подтверждение: `uid`, `activationProof`, `createdAt` | Клиентские get/list запрещены всем, включая создателя и администратора |
 | `priestContentControl/state` | Версия, блокировка миграции, серверная дата | Администраторам |
+| `admins/{uid}` | Существующая роль, `priestAccess: true` для управляющего | Собственная роль; запись только доверенным Admin SDK |
+| `priestInstallations`, `priestActivationAttempts`, `priestContentMigrationBackups` | Зарезервированные прежние приватные пространства | Клиентские read/write запрещены |
 
 Молитвы и категории сохраняют собственный `priestOnly` (по умолчанию `false`).
 `effectivePriestOnly` — вычисленное ограничение для хранения и отображения.
@@ -55,21 +58,67 @@ Web Crypto генерирует 24 символа из `ABCDEFGHJKLMNPQRSTUVWXYZ
 
 SHA-256 — **bearer proof длинного случайного кода**, а не замена Argon2 для
 паролей. Обладающий proof может зарегистрировать новую установку. Поэтому
-proof защищён так же, как код: только приватные settings/grant, HTTPS SDK,
-никаких логов, аналитики, URL, публичных экспортов или дискового кеша.
-Собственный grant владелец может читать, включая proof; это явно разрешённая
-модель, не средство подтверждения личности.
+proof защищён так же, как код: только приватные settings/activation claims,
+HTTPS SDK, никаких логов, аналитики, URL, публичных экспортов или дискового
+кеша. Читаемый grant **никогда не содержит activationProof**. Клиент не читает
+claims, даже собственный; админка реестра тоже не запрашивает эту коллекцию.
+Claims сохраняются на сервере без клиентского удаления и без TTL. Это не
+сессии и не разрешения: доступ проверяется только по активному grant.
+При отправке batch код/proof кратковременно находятся в оперативной памяти
+формы и запроса. Веб использует для этой единственной операции
+**Firestore Lite**, тот же именованный App/Auth и тот же серверный WriteBatch:
+Lite не имеет local store/offline queue, поэтому claim не оказывается даже
+в memory cache постоянного SDK чтения. Оба SDK отключают diagnostic logging.
+Статус, подписки и молитвы продолжают использовать прежний memory Firestore.
+Свойства Lite описаны в
+[официальной документации](https://firebase.google.com/docs/firestore/solutions/firestore-lite).
+Flutter полного SDK обязан уничтожить временный Firestore memory cache после
+batch (включая отказ/timeout), не вызывая signOut persistent Anonymous Auth.
 
-Rules разрешают создание grant только с действующим proof, для собственного
-UID, со строго заданными полями и серверными временными метками. Неверная
-попытка не создаёт документ. Клиент не читает settings и не сравнивает код с
-правильным значением. В Spark Rules нет серверного лимита попыток по IP;
+Активация — один WriteBatch из двух **новых** документов одного UID:
+
+| Документ / поле | Тип и проверка при создании |
+| --- | --- |
+| claim.uid | string, совпадает с ID документа и `request.auth.uid` |
+| claim.activationProof | string, 64 lowercase hex, равен текущему `settings.activeCodeProof` |
+| claim.createdAt | Timestamp, `FieldValue.serverTimestamp()`, равен `request.time` |
+| grant.uid | string, совпадает с ID документа и `request.auth.uid` |
+| grant.status | string, строго `active` при создании; позднее `revoked` |
+| grant.deviceName | string, 1–120 символов |
+| grant.client | string, строго `Web` или `Flutter` |
+| grant.platform | string, 0–120 символов; неизвестная платформа — пустая строка |
+| grant.label | string, 0–120 символов; необязательная подпись — пустая строка |
+| grant.activatedAt | Timestamp, server timestamp, равен `request.time` |
+| grant.lastActiveAt | Timestamp, server timestamp, равен `request.time` |
+| grant.revokedAt | null при создании; Timestamp при отзыве |
+
+Все перечисленные поля обязательны; других полей при создании нет. В grant
+запрещён proof, даже если правильный. Rules v2 проверяют каждый документ через
+`getAfter()` противоположного документа и `!exists()` его состояния **до**
+запроса. Claim отдельно и grant отдельно отвергаются; ранее созданный claim
+не годится для последующего grant. После создания клиентские update/delete
+claim запрещены, повторная запись пары запрещена. Grant нельзя удалять или
+восстанавливать из `revoked` клиентским обновлением.
+
+Для каждой из двух create-проверок максимум три document access calls:
+`exists(counterpart)`, `getAfter(counterpart)`, `getAfter(settings)`; максимум шесть
+на весь batch без учёта оптимизации кеша Rules. Это укладывается в лимиты
+10 на операцию и 20 на batch. Механизм и лимиты описаны в
+[официальной документации Firebase](https://firebase.google.com/docs/firestore/security/rules-conditions#access_other_documents)
+и проверены Emulator tests. Проверка кода всегда серверная; клиент не читает
+settings и не сравнивает код с правильным значением. Неверная попытка не
+создаёт ни одного документа. В Spark Rules нет серверного лимита попыток по IP;
 не заявляем такой защиты. Высокая энтропия и ограничения Firebase Auth снижают
 возможность подбора, но злоупотребление может расходовать бесплатную квоту.
 
-Пример приватного grant (proof намеренно опущен из примера):
+Полные документы активации и разрешения:
 
 ```text
+priestActivationClaims/<anonymousUid>
+uid: <тот же anonymousUid>
+activationProof: 64 lowercase hexadecimal characters
+createdAt: server timestamp
+
 priestDeviceGrants/<anonymousUid>
 uid: <тот же anonymousUid>
 status: active | revoked
@@ -80,7 +129,6 @@ label: а. Яўгеній
 activatedAt: server timestamp
 lastActiveAt: server timestamp
 revokedAt: null | server timestamp
-activationProof: 64 lowercase hexadecimal characters
 ```
 
 Управляющий — bootstrap UID из `src/constants/admin.js` либо существующий
@@ -106,14 +154,18 @@ activationProof: 64 lowercase hexadecimal characters
 1. Инициализировать Firebase и восстановить Auth; не создавать Anonymous UID
    для каждого обычного читателя. При вводе кода использовать текущего
    анонимного пользователя или `signInAnonymously()` именованного Auth.
-2. Вычислить proof по общему контракту ниже. `set()` нового
-   `priestDeviceGrants/{uid}` с полями выше; `activatedAt`, `lastActiveAt` —
-   `FieldValue.serverTimestamp()`, `revokedAt: null`. Укажите `client: Flutter`.
+2. Прочитать свой grant с `Source.server`. Если уже `active`, использовать
+   его без повторной записи claim; при `revoked` не пытаться перезаписать.
+   Если grant отсутствует, вычислить proof по общему контракту ниже и одним
+   WriteBatch записать новый claim и новый grant. Все три временные метки —
+   `FieldValue.serverTimestamp()`, `revokedAt: null`, `client: Flutter`.
+   Не читать claim до или после batch; server Rules выполняют проверку.
 3. Прочитать свой grant с `Source.server`. При `status == active` получить
    обе защищённые коллекции с `Source.server`, объединить с публичными по ID,
    применять общий алгоритм тегов/родителей и фильтрации пустых категорий.
 4. При запуске восстановить того же Auth-пользователя и читать grant с сервера;
-   подписка на свой grant немедленно обновляет UI при отзыве. Tokens обновляет
+   подписка на свой grant обновляет UI при отзыве. Игнорировать события с
+   `isFromCache`/`hasPendingWrites` при подтверждении активации. Tokens обновляет
    SDK, код повторно не нужен. При необходимости `getIdToken(true)` обновляет
    token, не grant. Не хранить собственные токены в URL/preferences.
 5. Последнюю активность обновлять только если прошло >= 1 часа, с server
@@ -125,26 +177,51 @@ activationProof: 64 lowercase hexadecimal characters
    доставки отзыва до подключения остаётся SDK Auth credential; доступ в UI
    выключен. Если credential утрачен, администратор отзывает старую запись.
 
+Пример для существующего `FirebasePriestAccess` из `ibreviarybyapp`: его
+`_initialize()` создаёт `mybrev-priest`, устанавливает
+`Settings(persistenceEnabled: false)` до первого чтения и ждёт
+`authStateChanges().first`. `_run()` вызывает этот initializer;
+`_own(uid)` проверяет восстановленного пользователя.
+
 ```dart
-final app = await Firebase.initializeApp(
-  name: 'mybrev-priest', options: DefaultFirebaseOptions.currentPlatform);
-final auth = FirebaseAuth.instanceFor(app: app);
-final privateDb = FirebaseFirestore.instanceFor(app: app);
-// Установить до любого чтения. Никаких защищённых файлов/offline bundle.
-privateDb.settings = const Settings(persistenceEnabled: false);
-final user = auth.currentUser ?? (await auth.signInAnonymously()).user!;
-final grant = privateDb.collection('priestDeviceGrants').doc(user.uid);
-await grant.set({
-  'uid': user.uid, 'status': 'active', 'deviceName': 'Flutter',
-  'client': 'Flutter', 'platform': platformName, 'label': label,
-  'activatedAt': FieldValue.serverTimestamp(),
-  'lastActiveAt': FieldValue.serverTimestamp(), 'revokedAt': null,
-  'activationProof': priestCodeProof(inputCode),
-});
-final status = await grant.get(const GetOptions(source: Source.server));
-if (status.data()?['status'] == 'active') {
-  final texts = await privateDb.collection('priestProtectedPrayers')
-    .get(const GetOptions(source: Source.server));
+// Метод внутри существующего класса FirebasePriestAccess.
+@override
+Future<void> createGrant(String uid, String proof, String deviceName) =>
+    _run(() async {
+  _own(uid);
+  final batch = _privateDb!.batch(); // platform delegate из текущего клиента.
+  batch.set('priestActivationClaims/$uid', {
+    'uid': uid,
+    'activationProof': proof,
+    'createdAt': FieldValue.serverTimestamp(),
+  });
+  batch.set('priestDeviceGrants/$uid', {
+    'uid': uid, 'status': 'active',
+    'deviceName': deviceName.isEmpty ? 'Flutter' : deviceName,
+    'client': 'Flutter',
+    'platform': kIsWeb ? 'Web' : defaultTargetPlatform.name,
+    'label': deviceName, // 0–120 символов; ограничить перед вызовом.
+    'activatedAt': FieldValue.serverTimestamp(),
+    'lastActiveAt': FieldValue.serverTimestamp(), 'revokedAt': null,
+  });
+  try {
+    await batch.commit().timeout(const Duration(seconds: 15));
+  } finally {
+    // Уже существующий метод: terminate Firestore + delete named App.
+    // Без signOut, без удаления persistent Auth; исключить claim из кеша.
+    await clearProtectedMemory();
+  }
+}, activation: true);
+
+// Вызывающий код сначала проверяет существующий grant с сервера.
+// При active повторный createGrant не нужен; при revoked не перезаписывать.
+final uid = await gateway.ensureAnonymousSession();
+await gateway.createGrant(uid, priestCodeProof(inputCode), deviceName);
+// grant() снова вызывает _initialize(): восстанавливается тот же Auth UID
+// и НОВЫЙ platform Firestore delegate, чтение Source.server.
+final status = await gateway.grant(uid);
+if (status?.active == true) {
+  final texts = await gateway.protectedContent(uid);
   // Объединить тексты с публичным набором в памяти; не сохранять на диск.
 }
 ```
@@ -152,6 +229,31 @@ if (status.data()?['status'] == 'active') {
 Не повторять `set()` уже существующего grant: сначала получить статус; Rules
 не разрешают перезапись защищённых полей. Не использовать offline `get()` по
 умолчанию для статуса или защищённых текстов.
+
+При сетевой ошибке/неизвестном результате batch не включать доступ. Повторная
+попытка сначала читает grant с сервера: если прошлый batch был принят, достаточно
+статуса `active`; если grant отсутствует, можно повторить batch с тем же UID и
+введённым кодом. Неверный код не должен порождать новый UID при каждой попытке.
+Отказ второй вкладке, зарегистрировавшей тот же UID, допустимо обработать
+серверным чтением уже созданного безопасного grant. Никогда не выполнять
+fallback на одиночный grant или чтение claim.
+
+Относительно `ibreviarybyapp` коммита `94fbc08` нужно изменить
+`lib/services/firebase_priest_access.dart`, метод `FirebasePriestAccess.createGrant`:
+заменить `_grant(uid).set()` одним `_privateDb!.batch()` с claim и grant, убрать
+`activationProof` из grant. Текущий код использует platform delegate: его
+`batch.set()` принимает путь (`'priestActivationClaims/$uid'`,
+`'priestDeviceGrants/$uid'`), как в примере выше. В `finally` уничтожать
+Firestore memory client через существующий `clearProtectedMemory()`, даже
+при timeout, чтобы записанный claim/proof не остался в локальном SDK кеше.
+Следующее чтение восстанавливает persistent Auth под прежним именем App и UID;
+создавать нужно свежий platform delegate, а не переиспользовать terminated
+high-level wrapper. Восстановление не вызывает повторную активацию.
+Оставить получение grant/подписку, раздельный Auth и отключённую persistence;
+не добавлять чтение claims. Для безопасного перехода legacy grant с proof
+рассматривать как неподтверждённый и не логировать его данные; после миграции
+тот же UID восстанавливает доступ без кода. Нормализация и файл общих векторов
+остаются прежними. Нативное Flutter приложение в этом репозитории не изменяется.
 
 Общая нормализация версии 3, реализована в `src/utils/priestCode.mjs`:
 
@@ -187,18 +289,86 @@ String priestCodeProof(String input) {
 значения, не production код. Вектор `A2B3-C4D5-E6F7-G8H9-J2K3-L4M5` даёт
 `167b5694448f5252986a273bbd698017c713fef7a1ed7244b09294d4181c7a13`.
 
-Ошибки SDK: `permission-denied` при неверном/заменённом proof, чужом UID,
-отозванном grant, неподдерживаемом изменении; `unavailable` без сети;
-`auth/operation-not-allowed` если Anonymous выключен;
-`auth/too-many-requests` при ограничении Auth. Не сообщать пользователю
-приватные поля. Потерю сети трактовать как отсутствие онлайн-доступа, не как
-доказательство административного отзыва.
+| Ситуация | Результат / действие клиента |
+| --- | --- |
+| Неверный или заменённый код | `permission-denied`, ни claim, ни grant не создаётся; предложить проверить код |
+| Отдельный grant/claim, чужой UID, неверные поля/время, повторный claim | `permission-denied`; не делать fallback, исправить клиент |
+| Чтение/list/update/delete claim | Всегда `permission-denied`, включая администратора |
+| Свой grant со старым proof до миграции | Owner get `permission-denied`; дождаться server migration, не выводить данные |
+| Свой чистый grant отозван | Статус `revoked`, очистить закрытые тексты; новые private reads — `permission-denied` |
+| Попытка восстановить/удалить grant | `permission-denied`; новая активация возможна только для новой установки/UID с актуальным кодом |
+| Anonymous выключен | `auth/operation-not-allowed` (`operation-not-allowed` в Flutter Auth) |
+| Ограничение Auth | `auth/too-many-requests` / `too-many-requests`; повторить позднее |
+| `unavailable`, `deadline-exceeded`, offline, неизвестный результат записи | Доступ не подтверждён; повторная попытка сначала проверяет тот же grant с сервера |
+
+Не сообщать пользователю приватные поля. Потерю сети трактовать как отсутствие
+онлайн-доступа, не как доказательство административного отзыва. Ошибки SDK не
+логировать целиком: они могут содержать payload. SDK diagnostics на вебе
+выключены (`setLogLevel('silent')`); Flutter пишет только error code/type.
 
 Административный SDK-контракт: settings get/set только управляющему; создание
 нового proof + `changedAt: serverTimestamp()`; помощь сохраняется атомарно в
 settings и публичную проекцию; реестр — query по ID, страницы 100 записей;
 редактирование label <=120; отзыв — update status/revokedAt. Клиентская UI
 проекция реестра никогда не содержит proof.
+
+## Миграция старых разрешений и внедрение security fix
+
+12.10.2026 сначала проверен локальный snapshot, затем выполнено только
+согласованное заданием чтение трёх security-коллекций production, без общего
+аудита содержимого. В приватном снимке
+`backups/priest-security-20261012-claims-fix` обнаружены **3 active grant**,
+все содержат старое поле `activationProof`; claims пока 0. Старый код мог
+быть прочитан владельцами. Этот снимок не является утверждением, что состояние
+production останется неизменным к моменту применения.
+
+`scripts/migrate-priest-grant-proofs.mjs` принимает локальный снимок, где
+`priestDeviceGrants` явно покрыт (пустая коллекция тоже должна быть записана
+в manifest). Dry-run не обращается к Firestore и не включает proof в отчёт:
+
+```text
+npm run db:migrate-priest-grant-proofs -- --snapshot backups/priest-security-20261012-claims-fix
+```
+
+Только после отдельного подтверждения владельца и публикации проверенных Rules:
+
+```text
+npm run db:migrate-priest-grant-proofs -- --snapshot backups/priest-security-20261012-claims-fix --apply --approve-digest <digest из reports/priest-access/grant-proof-migration.json> --protected-rules-confirmed
+```
+
+Apply сверяет проект и полный реестр со снимком, создаёт приватный lossless
+backup в `backups/priest-grant-proofs/`, затем транзакциями не более 200
+документов удаляет **только** `activationProof`. Статус, UID, даты, подпись,
+неизвестные поля и параллельные изменения активности/отзыва сохраняются.
+Перед удалением каждой группы проверяется прежнее значение proof; смена
+proof/исчезновение записи останавливают применение. После выполнения
+проверяются отсутствие legacy proof и сохранение прежних ID. При прерывании
+выполнить новый local dry-run по свежему согласованному снимку, не повторять
+старый digest. Частично очищенные grants уже безопасны; записи не пересоздаются.
+
+Для прежних UID не создаются фиктивные claims. Их бессрочные grants продолжают
+работать: `hasGrant()` не зависит от наличия claim, даты активации или кода.
+Для очистки grants не нужна публикация content manifest, молитвы не изменяются.
+
+Порядок production rollout (в этой задаче **не выполнен**):
+
+1. Получить отдельное согласие владельца. Проверить, что Flutter-активация и
+   веб-сборка используют batch; прежние клиенты больше не активируют новые UID
+   одиночным grant, но зарегистрированные устройства сохраняются.
+2. Опубликовать Rules, закрывающие claims и owner get старых proof-bearing grants.
+   На время до удаления legacy поля такой owner status-check отклоняется;
+   серверный grant не отзывается и не истекает.
+3. Применить reviewed field-only migration; при устаревшем снимке остановиться.
+4. Заменить общий activation code, сохранив все grants. Утёкший старый proof
+   после этого не активирует новые установки. Новый код показывать/копировать
+   в админке один раз; не помещать в отчёт/логи/браузерное хранилище.
+5. Опубликовать новую веб-сборку и проверить new device/rotation/revoke.
+
+Claims закрыты также от client-admin get/list/update/delete. Доверенный Admin
+SDK обходит Rules и применяется только для резервного копирования/миграции.
+Откат на прежние Rules или прежний одиночный grant не является безопасным
+способом восстановления. Нельзя удалить grants, сбросить UID или массово
+отозвать доступ вместо очистки одного поля.
 
 ## Атомарное редактирование и миграция
 
@@ -360,6 +530,27 @@ Sentry network details Firestore/Auth запрещены, чувствитель
 
 ## Проверки и файлы
 
+Security fix 12.10.2026: атомарная регистрация claim+grant, закрытые claims,
+безопасные owner reads grant, getAfter текущего settings и защита от повторного
+использования. Rules regression — 22/22; Rules/миграции — 23/23. Unit/cache/
+policy/manifest priest-набор — 24 passed, 3 emulator-only skipped вне эмулятора.
+Полный доступный набор рабочего каталога — 702 tests: 699 passed, 3 skipped,
+0 failed. Production/PWA build успешен (прежние крупные chunks).
+UI/Auth SDK — PASS: админский и Anonymous Auth разделены, регистрация через
+Lite создаёт оба документа, claim отсутствует в кеше постоянного SDK и
+недоступен владельцу с сервера; reload, disable, rotation, подписи/отзыв,
+перенос категории и desktop/320/390 px проверены. Кеш Vite и локальные порты
+изолированы от параллельных проверок. Нативный Flutter в этой проверке не запускался.
+Линтер security-файлов чист; полный линтер рабочего каталога обнаружил
+2 ошибки в параллельном незавершённом `scripts/import-catholicby-yearcycle.mjs`
+(`AbortSignal`, дублированный `status`) и 2 предупреждения импортных скриптов.
+Эти изменения не входят в security commit. Реальные production grants только
+прочитаны/сохранены в приватный снимок; Rules/Hosting/миграция/код в рамках
+security fix не опубликованы и ждут отдельного согласия владельца.
+Артефакты: `reports/priest-access/claims-emulator-final.log`,
+`claims-ui-lite.log`, `claims-local-tests.log`, `claims-full-tests.log`, `claims-build.log`,
+`grant-proof-migration.json`. Proof/реальные credentials в отчётах не выводятся.
+
 Живая проверка 12.10.2026: Anonymous включён, automatic cleanup выключен.
 Прежние Rules от 01.10.2026 открывали все коллекции кроме admins, поэтому
 сначала опубликованы и проверены защищающие Rules. С разрешения владельца
@@ -383,7 +574,8 @@ Flutter приложения и не live-тест realtime listener; UI/realtim
 отозванных test grants удалены после приватного backup. Контакт/helpText и
 реальные устройства не изменены. Проверочные коды не предназначены для
 распространения: рабочий код нужно сгенерировать и скопировать в админке.
-Активный code proof закрыт Rules. В SDK отключён вывод диагностических payload:
+Settings code proof закрыт Rules; прежние копии в grant устраняет security fix
+выше. В SDK отключён вывод диагностических payload:
 при отказах REST SDK способен выводить поля запроса, включая proof.
 
 Манифест проверен только для prayers/prayerCategories: `MASS CONTENT REBUILD`
@@ -450,7 +642,8 @@ Rules, 400-operation commit, 550-document migration с прерыванием/re
   `src/components/prayers/PrayersList.vue`.
 - `public/priest-cache-cleanup.js`, `scripts/content/lib/app-content.mjs`,
   `scripts/migrate-priest-access.mjs`, `scripts/prepare-priest-rules.mjs`,
-  `scripts/test-priest-emulator.mjs`, `scripts/smoke-priest-ui.mjs`.
+  `scripts/migrate-priest-grant-proofs.mjs`, `scripts/test-priest-emulator.mjs`,
+  `scripts/smoke-priest-ui.mjs`.
 - `tests/priest-*.test.mjs`, `tests/firestore-rules/rules-emulator.mjs`,
   `tests/prayer-copy.test.mjs`, `tests/ui/priest-harness.mjs`,
   `functions/README.md`, этот документ.

@@ -1,10 +1,12 @@
 import { getApp, getApps, initializeApp } from 'firebase/app';
 import { initializeFirestore, memoryLocalCache, setLogLevel } from 'firebase/firestore';
+import { getFirestore as getActivationFirestore, setLogLevel as setActivationLogLevel } from 'firebase/firestore/lite';
 import { firebaseApp } from './firebase';
 
 // SDK diagnostics can include a failed REST write's complete payload/proof.
 // Keep application error handling, but never let SDK logging print secrets.
 setLogLevel('silent');
+setActivationLogLevel('silent');
 
 // Separate app names also isolate Firebase Auth persistence. Never sign the
 // primary administrator Auth in anonymously. Protected Firestore is memory-only.
@@ -14,6 +16,11 @@ function memoryApp(name) {
 }
 export const priestFirebase = memoryApp('mybrev-priest');
 export const priestEditorFirebase = memoryApp('mybrev-priest-editor');
+// Lite uses the same app/Auth but has no local store or offline write queue.
+// The proof-bearing claim must never enter the long-lived reader SDK cache.
+export function getPriestActivationDb() {
+  return getActivationFirestore(priestFirebase.app);
+}
 let deviceAuthPromise;
 export function getPriestAuth() {
   deviceAuthPromise ||= import('firebase/auth').then(({ initializeAuth, indexedDBLocalPersistence, browserLocalPersistence }) =>

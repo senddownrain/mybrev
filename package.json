@@ -29,6 +29,7 @@
     "db:migrate-core-collections": "node scripts/migrate-core-collections.mjs",
     "db:migrate-prayer-categories": "node scripts/migrate-prayer-categories.mjs",
     "db:migrate-priest-access": "node scripts/migrate-priest-access.mjs",
+    "db:migrate-priest-grant-proofs": "node scripts/migrate-priest-grant-proofs.mjs",
     "test:priest": "node --test tests/priest-*.test.mjs",
     "test:priest:rules": "firebase emulators:exec --only auth,firestore --project demo-rules \"node scripts/test-priest-emulator.mjs\"",
     "smoke:priest": "node scripts/smoke-priest-ui.mjs",

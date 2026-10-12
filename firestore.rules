@@ -17,14 +17,31 @@ service cloud.firestore {
     function proof(value) { return value is string && value.matches('^[a-f0-9]{64}$'); }
     function shortText(value) { return value is string && value.size() <= 120; }
     function own(uid) { return request.auth != null && request.auth.uid == uid; }
-    function register(uid) {
-      let data = request.resource.data;
-      return own(uid) && data.keys().hasOnly(['uid', 'status', 'deviceName', 'client', 'platform', 'label', 'activatedAt', 'lastActiveAt', 'revokedAt', 'activationProof'])
+    function validGrant(uid, data) {
+      return data.keys().hasOnly(['uid', 'status', 'deviceName', 'client', 'platform', 'label', 'activatedAt', 'lastActiveAt', 'revokedAt'])
+        && data.keys().hasAll(['uid', 'status', 'deviceName', 'client', 'platform', 'label', 'activatedAt', 'lastActiveAt', 'revokedAt'])
         && data.uid == uid && data.status == 'active' && data.client in ['Web', 'Flutter']
         && shortText(data.deviceName) && data.deviceName.size() > 0 && shortText(data.platform) && shortText(data.label)
-        && data.activatedAt == request.time && data.lastActiveAt == request.time && data.revokedAt == null
+        && data.activatedAt == request.time && data.lastActiveAt == request.time && data.revokedAt == null;
+    }
+    function validClaim(uid, data) {
+      return data.keys().hasOnly(['uid', 'activationProof', 'createdAt'])
+        && data.keys().hasAll(['uid', 'activationProof', 'createdAt'])
+        && data.uid == uid && data.createdAt == request.time
         && proof(data.activationProof)
-        && data.activationProof == get(/databases/$(database)/documents/priestAccess/settings).data.activeCodeProof;
+        && data.activationProof == getAfter(/databases/$(database)/documents/priestAccess/settings).data.activeCodeProof;
+    }
+    function registerGrant(uid) {
+      return own(uid)
+        && !exists(/databases/$(database)/documents/priestActivationClaims/$(uid))
+        && validGrant(uid, request.resource.data)
+        && validClaim(uid, getAfter(/databases/$(database)/documents/priestActivationClaims/$(uid)).data);
+    }
+    function registerClaim(uid) {
+      return own(uid)
+        && !exists(/databases/$(database)/documents/priestDeviceGrants/$(uid))
+        && validClaim(uid, request.resource.data)
+        && validGrant(uid, getAfter(/databases/$(database)/documents/priestDeviceGrants/$(uid)).data);
     }
     function contentVersion() {
       return exists(/databases/$(database)/documents/priestContentControl/state)
@@ -88,9 +105,11 @@ service cloud.firestore {
       allow delete: if managesPriests();
     }
     match /priestDeviceGrants/{uid} {
-      allow get: if own(uid) || managesPriests();
+      // Legacy grants must be scrubbed by the Admin SDK before owner reads.
+      allow get: if managesPriests() || (own(uid)
+        && (resource == null || !resource.data.keys().hasAny(['activationProof'])));
       allow list: if managesPriests();
-      allow create: if register(uid);
+      allow create: if registerGrant(uid);
       allow update: if (own(uid) && resource.data.status == 'active'
         && ((request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastActiveAt'])
             && request.resource.data.lastActiveAt == request.time
@@ -103,9 +122,14 @@ service cloud.firestore {
             || (request.resource.data.status == 'revoked' && request.resource.data.revokedAt == request.time)));
       allow delete: if false;
     }
+    match /priestActivationClaims/{uid} {
+      allow create: if registerClaim(uid);
+      // getAfter() is an internal Rules check, not a client read permission.
+      allow read, update, delete: if false;
+    }
     function explicitlyRuled(collection) {
       return collection in ['admins', 'prayers', 'prayerCategories', 'priestProtectedPrayers', 'priestProtectedCategories',
-        'priestAccess', 'priestAccessPublic', 'priestDeviceGrants', 'priestContentControl', 'priestContentMigrationBackups',
+        'priestAccess', 'priestAccessPublic', 'priestDeviceGrants', 'priestActivationClaims', 'priestContentControl', 'priestContentMigrationBackups',
         'priestInstallations', 'priestActivationAttempts'];
     }
     // Overlapping allows are OR, so every private namespace is excluded here.

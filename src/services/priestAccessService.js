@@ -1,6 +1,7 @@
 import { reactive } from 'vue';
-import { collection, doc, getDocFromServer, getDocsFromServer, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, setDoc, startAfter, updateDoc } from 'firebase/firestore';
-import { getPriestAuth, getPriestEditorDb, priestFirebase } from '@/plugins/priestFirebase';
+import { collection, doc, getDocFromServer, getDocsFromServer, limit, onSnapshot, orderBy, query, runTransaction, serverTimestamp, startAfter, updateDoc } from 'firebase/firestore';
+import { doc as activationDoc, serverTimestamp as activationTimestamp, writeBatch as activationBatch } from 'firebase/firestore/lite';
+import { getPriestAuth, getPriestActivationDb, getPriestEditorDb, priestFirebase } from '@/plugins/priestFirebase';
 import { codeProof, generateCode, validNewCode } from '@/utils/priestCode.mjs';
 
 export const priestAccess = reactive({ active: false, checked: false, helpText: '', revision: 0 });
@@ -11,6 +12,11 @@ function changed(active) {
   priestAccess.active = active;
   priestAccess.checked = true;
 }
+function activeGrant(snapshot, uid) {
+  const data = snapshot.data();
+  return !snapshot.metadata.hasPendingWrites && data?.uid === uid && data?.status === 'active'
+    && !Object.hasOwn(data, 'activationProof');
+}
 function accessError(error, activation = false) {
   return new Error(error.code === 'permission-denied' && activation ? 'Код няправільны або ўжо заменены.'
     : error.code === 'auth/operation-not-allowed' ? 'Ананімная аўтарызацыя выключана. Паведаміце адміністратару.'
@@ -20,14 +26,14 @@ function accessError(error, activation = false) {
 }
 export function publicDevice(snapshot) {
   const data = snapshot.data();
-  // Proof is deliberately omitted from UI/search/export/analytics.
+  // Explicit metadata projection also excludes any legacy proof during rollout.
   return Object.fromEntries(['uid', 'status', 'deviceName', 'client', 'platform', 'label', 'activatedAt', 'lastActiveAt', 'revokedAt'].map((key) => [key, data[key] ?? null]).concat([['id', snapshot.id]]));
 }
 function watchGrant(uid) {
   if (watchedUid === uid) return;
   grantListener?.(); watchedUid = uid;
   grantListener = onSnapshot(doc(priestFirebase.db, 'priestDeviceGrants', uid), { includeMetadataChanges: true }, (snapshot) => {
-    if (!snapshot.metadata.fromCache) changed(!localStorage.getItem(pendingKey) && snapshot.data()?.uid === uid && snapshot.data()?.status === 'active');
+    if (!snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites) changed(!localStorage.getItem(pendingKey) && activeGrant(snapshot, uid));
   }, () => changed(false));
 }
 async function restoredAuth() {
@@ -58,7 +64,7 @@ export async function checkPriestAccess() {
     const uid = auth.currentUser.uid;
     const reference = doc(priestFirebase.db, 'priestDeviceGrants', uid);
     const snapshot = await getDocFromServer(reference);
-    const active = snapshot.data()?.uid === uid && snapshot.data()?.status === 'active';
+    const active = activeGrant(snapshot, uid);
     changed(active); watchGrant(uid);
     // One activity write per hour; no grant expiry or code rotation.
     if (active && Date.now() - (snapshot.data().lastActiveAt?.toMillis?.() || 0) >= 3600000) {
@@ -70,6 +76,7 @@ export async function checkPriestAccess() {
 }
 export async function activatePriestAccess(code, label) {
   try {
+    if (navigator.onLine === false) throw new Error('OFFLINE');
     const proof = await codeProof(code);
     const auth = await restoredAuth();
     await deliverDisable(auth);
@@ -81,18 +88,29 @@ export async function activatePriestAccess(code, label) {
     const reference = doc(priestFirebase.db, 'priestDeviceGrants', uid);
     const existing = await getDocFromServer(reference);
     if (existing.data()?.status === 'revoked') throw new Error('REVOKED');
-    if (!existing.exists()) await setDoc(reference, {
-      uid, status: 'active', deviceName: browserName(), client: 'Web',
-      platform: (navigator.userAgentData?.platform || navigator.platform || '').slice(0, 120),
-      label: String(label || '').trim().slice(0, 120), activatedAt: serverTimestamp(),
-      lastActiveAt: serverTimestamp(), revokedAt: null, activationProof: proof,
-    }); // Rules decide, never a client-side comparison with settings.
-    return await checkPriestAccess();
+    if (!existing.exists()) {
+      const activationDb = getPriestActivationDb();
+      const batch = activationBatch(activationDb);
+      batch.set(activationDoc(activationDb, 'priestActivationClaims', uid), {
+        uid, activationProof: proof, createdAt: activationTimestamp(),
+      });
+      batch.set(activationDoc(activationDb, 'priestDeviceGrants', uid), {
+        uid, status: 'active', deviceName: browserName(), client: 'Web',
+        platform: (navigator.userAgentData?.platform || navigator.platform || '').slice(0, 120),
+        label: String(label || '').trim().slice(0, 120), activatedAt: activationTimestamp(),
+        lastActiveAt: activationTimestamp(), revokedAt: null,
+      });
+      await batch.commit(); // Rules require both NEW documents via getAfter().
+    }
+    const status = await checkPriestAccess();
+    if (!status.active) throw new Error('ACCESS_NOT_CONFIRMED');
+    return status;
   } catch (error) {
     if (error.code === 'permission-denied') {
       const status = await checkPriestAccess().catch(() => ({ active: false }));
       if (status.active) return status; // Another tab registered the same UID.
     }
+    changed(false);
     if (error.message === 'REVOKED') throw new Error('Доступ адкліканы. Звяжыцеся з адміністратарам.', { cause: error });
     throw accessError(error, true);
   }
