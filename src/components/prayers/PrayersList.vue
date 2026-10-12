@@ -3,7 +3,7 @@
     <div class="prayers-page-header">
       <div class="prayers-page-eyebrow">Малітоўнік</div>
       <h1 class="prayers-page-title">{{ selectedCategory?.name || 'Малітвы' }}</h1>
-      <v-select v-if="authStore.isAdmin" v-model="accessFilter" label="Доступ" :items="accessFilters" class="mt-4" hide-details />
+      <v-select v-if="authStore.isAdmin" v-model="accessFilter" label="Доступ" :items="accessFilters" class="prayers-access-filter mt-4" hide-details />
     </div>
 
 

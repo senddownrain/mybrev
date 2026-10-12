@@ -42,6 +42,12 @@
   margin: 0 12px 22px;
 }
 
+.prayers-access-filter {
+  width: min(100%, 320px);
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
 .prayers-page-eyebrow {
   margin-bottom: 8px;
   color: var(--devotional-accent);
