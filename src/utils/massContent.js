@@ -33,7 +33,7 @@ function sourceBlocks(markdownText, format) {
   const blocks = [];
   let rubricDepth = 0;
   let heading = null;
-  parsePrayerMarkdown(markdownText, format).forEach((token) => {
+  parsePrayerMarkdown(markdownText, format, { emphasisAsRubric: true }).forEach((token) => {
     if (token.type === 'rubric_open') rubricDepth += 1;
     else if (token.type === 'rubric_close') rubricDepth -= 1;
     else if (token.type === 'heading_open') heading = Number(token.tag.slice(1));

@@ -12,12 +12,14 @@ import {
   PRAYER_TEXT_FORMAT_VERSION,
 } from '../src/utils/prayerMarkdown.js';
 import { openFirestoreSnapshot } from './lib/firestore-snapshot.mjs';
+import { auditPrayerFormatting, safePrayerFormatting } from './lib/prayer-format-audit.mjs';
+import { validatePrayerMarkdown } from '../src/utils/prayerMarkdown.js';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, '..');
 const COLLECTION = 'prayers';
 const DEFAULT_SNAPSHOT_DIR = path.join(ROOT, 'backups', 'firestore-snapshot-prayers');
-const DEFAULT_REPORT_PATH = path.join(ROOT, 'reports', 'prayer-markdown-autofix-report.json');
+const DEFAULT_REPORT_PATH = path.join(ROOT, 'backups', 'prayer-formatting', `audit-${new Date().toISOString().replace(/[:.]/g, '-')}.json`);
 const DEFAULT_SERVICE_ACCOUNT_PATH = path.join(ROOT, 'patchs', 'serviceAccountKey.json');
 const BACKUP_DIR = path.join(ROOT, 'backups', 'firestore-migrations');
 const WRITE_CHUNK_SIZE = 40;
@@ -26,7 +28,7 @@ function parseArgs(argv) {
   const options = {
     apply: false,
     rubrics: false,
-    snapshot: DEFAULT_SNAPSHOT_DIR,
+    snapshot: null,
     report: DEFAULT_REPORT_PATH,
     serviceAccount: DEFAULT_SERVICE_ACCOUNT_PATH,
   };
@@ -59,9 +61,9 @@ Usage:
 
 Options:
   --snapshot <dir>          Local snapshot containing the prayers collection
-  --report <file>           Dry-run/apply report path
-  --apply                   Verify, back up, write, and verify again
-  --rubrics                 Also promote high-confidence action directions to rubric blocks
+  --report <file>           Private report path inside ignored backups/
+  --apply                   Apply only newline/BOM fixes after drift check and backup
+  --rubrics                 Include review-only rubric proposals; incompatible with --apply
   --service-account <file>  Firebase service account used only with --apply`);
 }
 
@@ -83,7 +85,12 @@ function chunks(items, size) {
   return result;
 }
 
-function fixText(value, { rubrics }) {
+function fixText(value, { rubrics, safeOnly = false }) {
+  if (safeOnly) {
+    const candidate = safePrayerFormatting(value);
+    const valid = validatePrayerMarkdown(candidate).length === 0;
+    return { markdown: valid ? candidate : value, changed: valid && candidate !== value, fixes: candidate !== value && valid ? ['newline-or-leading-bom'] : [] };
+  }
   const technical = autoFixPrayerMarkdown(value);
   const semantic = rubrics ? promotePrayerRubrics(technical.markdown) : null;
   return {
@@ -96,13 +103,13 @@ function fixText(value, { rubrics }) {
   };
 }
 
-export function buildPrayerAutofixPlan(documents, { rubrics = false } = {}) {
+export function buildPrayerAutofixPlan(documents, { rubrics = false, safeOnly = true } = {}) {
   return documents.flatMap((document) => {
     const updates = [];
     const fixes = new Set();
 
     if (typeof document.text === 'string') {
-      const result = fixText(document.text, { rubrics });
+      const result = fixText(document.text, { rubrics, safeOnly });
       if (result.changed) {
         updates.push({ field: 'text', before: document.text, after: result.markdown });
         result.fixes.forEach((fix) => fixes.add(fix));
@@ -114,7 +121,7 @@ export function buildPrayerAutofixPlan(documents, { rubrics = false } = {}) {
       let textVersionsChanged = false;
       Object.entries(document.textVersions).forEach(([locale, value]) => {
         if (typeof value !== 'string') return;
-        const result = fixText(value, { rubrics });
+        const result = fixText(value, { rubrics, safeOnly });
         if (!result.changed) return;
         afterTextVersions[locale] = result.markdown;
         textVersionsChanged = true;
@@ -126,10 +133,10 @@ export function buildPrayerAutofixPlan(documents, { rubrics = false } = {}) {
     }
 
     if (!updates.length) return [];
-    if (document.textFormat !== PRAYER_TEXT_FORMAT) {
+    if (!safeOnly && document.textFormat !== PRAYER_TEXT_FORMAT) {
       updates.push({ field: 'textFormat', before: document.textFormat, after: PRAYER_TEXT_FORMAT });
     }
-    if (document.textFormatVersion !== PRAYER_TEXT_FORMAT_VERSION) {
+    if (!safeOnly && document.textFormatVersion !== PRAYER_TEXT_FORMAT_VERSION) {
       updates.push({ field: 'textFormatVersion', before: document.textFormatVersion, after: PRAYER_TEXT_FORMAT_VERSION });
     }
 
@@ -197,7 +204,8 @@ async function applyPlan(changes, options) {
       group.forEach((change) => {
         const patch = Object.fromEntries(change.updates.map((update) => [update.field, update.after]));
         patch.updatedAt = admin.firestore.FieldValue.serverTimestamp();
-        batch.update(db.collection(COLLECTION).doc(change.id), patch);
+        const current = currentSnapshots.find((snapshot) => snapshot.id === change.id);
+        batch.update(db.collection(COLLECTION).doc(change.id), patch, { lastUpdateTime: current.updateTime });
       });
       await batch.commit();
     }
@@ -211,6 +219,13 @@ async function applyPlan(changes, options) {
           verificationFailures.push({ id: change.id, field: update.field });
         }
       });
+      const original = currentSnapshots.find((item) => item.id === snapshot.id).data();
+      const changedFields = new Set([...change.updates.map((update) => update.field), 'updatedAt']);
+      for (const field of new Set([...Object.keys(original), ...Object.keys(snapshot.data() || {})])) {
+        if (!changedFields.has(field) && !equal(original[field], snapshot.data()?.[field])) {
+          verificationFailures.push({ id: change.id, field, reason: 'unrelated-field-changed' });
+        }
+      }
     });
     if (verificationFailures.length) {
       throw new Error(`Post-write verification failed; backup=${backupPath}; failures=${JSON.stringify(verificationFailures)}`);
@@ -224,11 +239,34 @@ async function applyPlan(changes, options) {
 async function main() {
   const options = parseArgs(process.argv.slice(2));
   if (options.help) return printHelp();
+  if (options.apply && options.rubrics) throw new Error('Rubric promotion is review-only and cannot be applied by this script.');
+  const privateRelative = path.relative(path.join(ROOT, 'backups'), options.report);
+  if (!privateRelative || privateRelative.startsWith('..') || path.isAbsolute(privateRelative)) {
+    throw new Error('Full audit reports contain private text: --report must be inside ignored backups/.');
+  }
+
+  if (!options.snapshot) {
+    const primary = path.join(ROOT, 'backups', 'firestore-snapshot');
+    const primaryManifest = JSON.parse(await fs.readFile(path.join(primary, 'manifest.json'), 'utf8').catch(() => '{}'));
+    if (primaryManifest.collections?.prayers) options.snapshot = primary;
+    else {
+      const candidates = [];
+      for (const directory of await fs.readdir(path.join(ROOT, 'backups'), { withFileTypes: true })) {
+        if (!directory.isDirectory()) continue;
+        const root = path.join(ROOT, 'backups', directory.name);
+        const manifest = JSON.parse(await fs.readFile(path.join(root, 'manifest.json'), 'utf8').catch(() => '{}'));
+        if (manifest.collections?.prayers) candidates.push({ root, date: manifest.exportedAt || '' });
+      }
+      candidates.sort((a, b) => b.date.localeCompare(a.date));
+      options.snapshot = candidates[0]?.root || DEFAULT_SNAPSHOT_DIR;
+    }
+  }
 
   const snapshot = await openFirestoreSnapshot(options.snapshot);
   const documents = await snapshot.collection(COLLECTION);
   if (!documents) throw new Error(`Snapshot does not contain ${COLLECTION}: ${snapshot.root}`);
   const changes = buildPrayerAutofixPlan(documents, options);
+  const audit = auditPrayerFormatting(documents, options);
   const report = {
     generatedAt: new Date().toISOString(),
     mode: options.apply ? 'apply' : 'dry-run',
@@ -240,6 +278,11 @@ async function main() {
     },
     collection: COLLECTION,
     scannedDocuments: documents.length,
+    scannedVersions: audit.scannedVersions,
+    ageDays: Math.floor((Date.now() - Date.parse(snapshot.manifest.exportedAt)) / 86400000),
+    coverage: 'Only local snapshot; production completeness and freshness are unverified.',
+    audit,
+    safePlan: changes,
     affectedDocuments: changes.length,
     affectedFields: changes.reduce((sum, change) => sum + change.updates.length, 0),
     rubricPromotion: options.rubrics,
@@ -249,9 +292,20 @@ async function main() {
 
   await fs.mkdir(path.dirname(options.report), { recursive: true });
   await fs.writeFile(options.report, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+  const summary = `# Prayer formatting audit\n\nSource: local snapshot exported ${snapshot.manifest.exportedAt} (version ${snapshot.manifest.snapshotVersion}).\n\nScanned documents: ${audit.scannedDocuments}; string text fields/language versions: ${audit.scannedVersions}; non-string fields: ${audit.nonStringFields}.\n\nSafe proposals: ${audit.counts.safe}; review findings/proposals: ${audit.counts.review}; manual findings: ${audit.counts.manual}. Counts are findings, not unique prayers. Safe write plan: ${changes.length} documents.\n\nAll full before/after field and locale diffs are kept privately under ignored backups/prayer-formatting/. No prayer IDs or contents are included here.\n\nReason counts: ${JSON.stringify(audit.reasons)}\n\nSpeaker counts: ${JSON.stringify(audit.roles)}\n\nProduction was not read or changed. This snapshot does not establish production completeness. The control prayer «Анёл Панскі» was not found by title in available local prayer snapshots; no authentic fixture or quote rewrite is claimed.\n\nArchitecture differences: ordinary prayer labels previously had no semantic renderer; HTML paste previously promoted standalone emphasis to rubrics. The new ordinary renderer is separate from the existing Mass adapter. Storage remains mybrev-markdown v1. See docs/prayer-formatting-standard.md for the contract and repeat/apply instructions.\n`;
+  await fs.mkdir(path.join(ROOT, 'reports'), { recursive: true });
+  const publicSummary = options.apply
+    ? summary.replace('Production was not read or changed.', 'Apply mode: see the private report for production reads/writes and verification results.')
+    : summary;
+  await fs.writeFile(path.join(ROOT, 'reports', 'prayer-format-audit.md'), `${publicSummary}\nLocale/field coverage: ${JSON.stringify(audit.locales)}\n\nChange proposals (before/after diffs): ${JSON.stringify(audit.proposalCounts)}. Diagnostic notices: ${JSON.stringify(audit.findingCounts)}. Ordinary emphasis and repeated liturgical formulas are notices for review, not automatic errors or rewrites.\n\nReproduce this report: node scripts/autofix-prayer-markdown.mjs --snapshot ${path.relative(ROOT, options.snapshot).replaceAll('\\', '/')} ${options.rubrics ? '--rubrics' : ''}\n`, 'utf8');
   console.log(JSON.stringify({
     reportPath: options.report,
     scannedDocuments: report.scannedDocuments,
+    scannedVersions: report.scannedVersions,
+    snapshotExportedAt: snapshot.manifest.exportedAt,
+    ageDays: report.ageDays,
+    counts: audit.counts,
+    proposalCounts: audit.proposalCounts,
     affectedDocuments: report.affectedDocuments,
     affectedFields: report.affectedFields,
     ...(report.writtenDocuments === undefined ? {} : { writtenDocuments: report.writtenDocuments, verification: report.verification, backupPath: report.backupPath }),
