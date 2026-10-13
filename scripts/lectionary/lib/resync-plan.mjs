@@ -120,15 +120,21 @@ export function waveVerdicts(waves, docs) {
   return verdicts;
 }
 
-/** The reviewed dry-run report (hashes only; before/after bodies are rebuilt at apply time). */
-export function resyncReport(audit) {
-  const waves = partitionWaves(audit.resync.changes);
+/**
+ * The reviewed dry-run report (hashes only; before/after bodies are rebuilt at apply time).
+ * `extra` carries wave 4 (see wave4-plan.mjs): changes the flat-field resync cannot express.
+ */
+export function resyncReport(audit, extra = { changes: [], deferred: [] }) {
+  const flat = partitionWaves(audit.resync.changes);
+  const clash = extra.changes.filter((change) => flat.some((item) => item.id === change.id));
+  if (clash.length) throw new Error(`wave 4 and waves 1-3 share documents: ${clash.map((change) => change.id).join(', ')}`);
+  const waves = [...flat, ...extra.changes];
   return {
     waves,
     report: {
       generatedAt: audit.generatedAt, source: audit.planned.snapshot, snapshotDocuments: audit.docs.length,
-      totals: { changes: waves.length, skipped: audit.resync.skipped.length }, verdicts: waveVerdicts(waves, audit.docs), projectedAfterResync: audit.projectedAfterResync,
-      changes: waves.map(({ before: _before, after: _after, ...change }) => change), skipped: audit.resync.skipped,
+      totals: { changes: waves.length, resync: flat.length, wave4: extra.changes.length, skipped: audit.resync.skipped.length }, verdicts: waveVerdicts(waves, audit.docs), projectedAfterResync: audit.projectedAfterResync,
+      changes: waves.map(({ before: _before, after: _after, ...change }) => change), skipped: audit.resync.skipped, deferred: extra.deferred,
     },
   };
 }

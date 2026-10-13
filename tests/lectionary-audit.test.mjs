@@ -545,12 +545,17 @@ test('safety: the audit and its analysis scripts are read-only; only resync-read
   const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).forEach((entry) => (entry.isDirectory() ? walk(path.join(d, entry.name)) : files.push(path.join(d, entry.name))));
   walk(dir);
   const writers = files.filter((file) => /\.(set|update|create|delete|commit)\(/.test(fs.readFileSync(file, 'utf8').replace(/fs\.write\w*\(|new Set\(|Map\.set|\.set\(\s*(key|id|k)\b/g, '')) && /firebase-admin|firestore\(/.test(fs.readFileSync(file, 'utf8')));
-  assert.deepEqual(writers.map((file) => path.relative(ROOT, file).replaceAll('\\', '/')), ['scripts/lectionary/resync-readings.mjs']);
+  // the only writer is the guarded wave applier (lib/apply-wave.mjs), reachable only from resync-readings.mjs --apply
+  assert.deepEqual(writers.map((file) => path.relative(ROOT, file).replaceAll('\\', '/')), ['scripts/lectionary/lib/apply-wave.mjs', 'scripts/lectionary/resync-readings.mjs']); // the CLI only calls app.delete() and the applier
   const resync = fs.readFileSync(path.join(dir, 'resync-readings.mjs'), 'utf8');
   assert.match(resync, /if \(!flag\('--apply'\)\)/);
-  assert.match(resync, /lastUpdateTime/);
   assert.match(resync, /reviewed plan/);
-  assert.match(resync, /backups\/lectionary-resync|'backups', 'lectionary-resync'/);
+  assert.ok(!/\.(set|update|create|add)\(/.test(resync.replace(/firestore\.settings\(/g, '').replace(/new Set\(|\.set\(/g, '')), 'the CLI itself writes nothing');
+  assert.match(resync, /'backups', 'lectionary-apply'/);
+  const applier = fs.readFileSync(path.join(dir, 'lib', 'apply-wave.mjs'), 'utf8');
+  assert.match(applier, /lastUpdateTime/);
+  assert.match(applier, /refusing to re-apply/);
+  assert.ok(!/\.set\(\{|\.delete\(\)|collection\([^)]*\)\.add\(/.test(applier.replace(/tx\.set\(ref, decodeValue/g, '').replace(/FieldValue\.delete\(\)/g, '')), 'no document set/delete/add outside the restore transaction');
   const audit = fs.readFileSync(path.join(ROOT, 'scripts', 'lectionary', 'audit.mjs'), 'utf8');
   assert.ok(!/firebase-admin|--apply/.test(audit));
   // the liturgy:audit pipeline never calls a Firestore writer

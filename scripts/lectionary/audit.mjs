@@ -16,7 +16,7 @@ import { daysOfYear } from '../../src/utils/ordo/dates.js';
 import { resolveLiturgicalDate } from '../../src/utils/ordo/index.js';
 import { runAudit, REPORT_DIR, DIOCESES } from './lib/audit-run.mjs';
 import { buildCoverage, buildDiscrepancies, buildFlutterContract, buildSourceInventory } from './lib/reports.mjs';
-import { resyncReport } from './lib/resync-plan.mjs';
+import { fullPlan } from './lib/wave4-plan.mjs';
 import { buildPublicationDrift } from './lib/publication-drift.mjs';
 import { renderAuditDoc } from './lib/render-doc.mjs';
 import { ROOT } from './lib/source-pages.mjs';
@@ -73,7 +73,7 @@ async function main() {
   write('publication-drift.json', drift);
   write('flutter-export-contract.json', contract);
   write('planned-options.json', { ...audit.planned, scenarios: audit.planned.scenarios });
-  write('resync-plan.json', resyncReport(audit).report);
+  write('resync-plan.json', fullPlan(audit).report);
   fs.writeFileSync(path.join(ROOT, 'docs', 'lectionary-full-audit.md'), renderAuditDoc({ audit, inventory, coverage, discrepancies, drift, contract }));
   console.log(JSON.stringify({
     articles: inventory.totals.articles, readingPages: coverage.sources.readingPages, documents: coverage.documents.total,

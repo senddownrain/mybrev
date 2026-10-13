@@ -1,13 +1,15 @@
 {
- "generatedAt": "2026-10-12T18:11:30.977Z",
+ "generatedAt": "2026-10-13T06:49:46.043Z",
  "source": {
-  "dir": ".cache/prod-snapshot-20261012",
-  "snapshotVersion": "20261012171555724",
-  "exportedAt": "2026-10-12T17:15:55.724Z"
+  "dir": ".cache/prod-snapshot-20261013064009",
+  "snapshotVersion": "20261013064136360",
+  "exportedAt": "2026-10-13T06:41:36.360Z"
  },
  "snapshotDocuments": 822,
  "totals": {
-  "changes": 321,
+  "changes": 324,
+  "resync": 321,
+  "wave4": 3,
   "skipped": 4
  },
  "verdicts": [
@@ -32,6 +34,14 @@
    "documents": 21,
    "changed": 21,
    "bytes": 124640,
+   "verdict": "SAFE CONTENT PATCH",
+   "reasons": []
+  },
+  {
+   "wave": 4,
+   "documents": 3,
+   "changed": 3,
+   "bytes": 41711,
    "verdict": "SAFE CONTENT PATCH",
    "reasons": []
   }
@@ -6302,6 +6312,56 @@
    "beforeHash": "0dfa171aba772f69",
    "afterHash": "aef3ba7a7fd8fc1d",
    "wave": 3
+  },
+  {
+   "id": "24-06-nativity-john-baptist",
+   "kind": "sets-migration",
+   "celebration": "nativity-john-baptist",
+   "changedFields": [
+    "alleluia",
+    "gospel",
+    "massReadings",
+    "psalm",
+    "reading1",
+    "reading2"
+   ],
+   "classes": [
+    "MISSING_SET"
+   ],
+   "wave": 4,
+   "beforeHash": "d19af6b9bb6670a5",
+   "afterHash": "81e807a2ed90cd60"
+  },
+  {
+   "id": "06-08-transfiguration-lord",
+   "kind": "sets-migration",
+   "celebration": "transfiguration",
+   "changedFields": [
+    "alleluia",
+    "massReadings",
+    "psalm",
+    "reading2"
+   ],
+   "classes": [
+    "MISSING_SET"
+   ],
+   "wave": 4,
+   "beforeHash": "f67c5c1e90d4edbf",
+   "afterHash": "9f16835941aa1247"
+  },
+  {
+   "id": "ordinary-w28-d1--A",
+   "kind": "citation-correction",
+   "changedFields": [
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_REFERENCE"
+   ],
+   "evidence": "Catholic.by 4865 prints «Мк 22, 1–10» above «+ Чытанне святога Евангелля паводле Мацвея»; page 4873 (Monday of week 28) cites the same parable as «Мц 22, 1–14»",
+   "wave": 4,
+   "beforeHash": "b238eae7cfaaeee3",
+   "afterHash": "a0d35bc2e279a1dc"
   }
  ],
  "skipped": [
@@ -6337,6 +6397,102 @@
     "MISSING_BLOCK",
     "STRUCTURE_LOSS"
    ]
+  }
+ ],
+ "deferred": [
+  {
+   "id": "feast-palmsunday--A",
+   "celebration": "palm-sunday",
+   "changedFields": [
+    "gospel"
+   ],
+   "layoutOnly": false,
+   "productionLacks": [],
+   "productionOnly": [
+    "gospel.italicLines"
+   ],
+   "reason": "paragraph layout only (same words); production carries gospel.italicLines that the plan would drop; production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "feast-palmsunday--B",
+   "celebration": "palm-sunday",
+   "changedFields": [
+    "gospel"
+   ],
+   "layoutOnly": false,
+   "productionLacks": [],
+   "productionOnly": [
+    "gospel.italicLines"
+   ],
+   "reason": "paragraph layout only (same words); production carries gospel.italicLines that the plan would drop; production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "feast-palmsunday--C",
+   "celebration": "palm-sunday",
+   "changedFields": [
+    "gospel"
+   ],
+   "layoutOnly": false,
+   "productionLacks": [],
+   "productionOnly": [
+    "gospel.italicLines"
+   ],
+   "reason": "paragraph layout only (same words); production carries gospel.italicLines that the plan would drop; production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "holyweek-w1-d7--A-vigil",
+   "celebration": "easter-vigil",
+   "changedFields": [
+    "reading3"
+   ],
+   "layoutOnly": true,
+   "productionLacks": [],
+   "productionOnly": [],
+   "reason": "paragraph layout only (same words); production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "holyweek-w1-d7--B-vigil",
+   "celebration": "easter-vigil",
+   "changedFields": [
+    "reading3"
+   ],
+   "layoutOnly": true,
+   "productionLacks": [],
+   "productionOnly": [],
+   "reason": "paragraph layout only (same words); production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "holyweek-w1-d7--C-vigil",
+   "celebration": "easter-vigil",
+   "changedFields": [
+    "reading3"
+   ],
+   "layoutOnly": true,
+   "productionLacks": [],
+   "productionOnly": [],
+   "reason": "paragraph layout only (same words); production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "feast-pentecost",
+   "celebration": "pentecost",
+   "changedFields": [
+    "reading2"
+   ],
+   "layoutOnly": true,
+   "productionLacks": [],
+   "productionOnly": [],
+   "reason": "paragraph layout only (same words); production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "advent-24-12--christmas-vigil",
+   "celebration": "christmas-eve",
+   "changedFields": [
+    "gospel"
+   ],
+   "layoutOnly": true,
+   "productionLacks": [],
+   "productionOnly": [],
+   "reason": "paragraph layout only (same words); production was edited after the migration — a manual edit is not overwritten"
   }
  ]
 }
