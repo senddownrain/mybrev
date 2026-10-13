@@ -60,16 +60,32 @@ export function orderReadingsByPlan(plan, docs, {
 } = {}) {
   const linked = dayId ? linkedTo(dayId, docs) : [];
   if (includeAlternatives) {
-    const ordered = [...linked];
-    // Every document remembers the legal option it belongs to, so a screen
-    // can open the readings of the option chosen in the calendar.
-    plan.options.forEach((option) => optionReadings(plan, option, docs, { selectCalendarDayVariants })
-      .forEach((list) => ordered.push(...list.map((doc) => ({ ...doc, _ordoOptionId: option.optionId })))));
+    // Every document remembers the legal option it belongs to (`_ordoOptionId`: the first one) and,
+    // for each option, the role of the document in it (`_ordoOptionRoles`): so a screen opens
+    // the DEFAULT readings of the option chosen in the calendar — the weekday readings of a
+    // memorial, its own readings only where the Lectionary prescribes them.
+    const planned = [];
+    plan.options.forEach((option) => {
+      const defaultPurpose = option.allowedChoices?.[0]?.default || option.lookup[0]?.purpose || '';
+      optionReadings(plan, option, docs, { selectCalendarDayVariants }).forEach((list, index) => {
+        const purpose = option.lookup[index]?.purpose || '';
+        planned.push(...list.map((doc) => ({ ...doc, _ordoOptionId: option.optionId, _ordoOptionRoles: { [option.optionId]: { purpose, default: purpose === defaultPurpose } } })));
+      });
+    });
+    // Documents of the Hours day link (`dayId`) come first, but only when the plan itself offers them: a
+    // seasonal date document of a Sunday in a date-keyed window is not an option of that Sunday.
+    const plannedIds = new Set(planned.map((doc) => doc.id));
+    const ordered = [...linked.filter((doc) => plannedIds.has(doc.id)), ...planned];
     const unique = new Map();
     ordered.forEach((doc) => {
       const known = unique.get(doc.id);
       if (!known) unique.set(doc.id, doc);
-      else if (!known._ordoOptionId && doc._ordoOptionId) unique.set(doc.id, { ...known, _ordoOptionId: doc._ordoOptionId });
+      else {
+        const merged = { ...known };
+        if (!known._ordoOptionId && doc._ordoOptionId) merged._ordoOptionId = doc._ordoOptionId;
+        if (doc._ordoOptionRoles) merged._ordoOptionRoles = { ...(known._ordoOptionRoles || {}), ...doc._ordoOptionRoles };
+        unique.set(doc.id, merged);
+      }
     });
     return [...unique.values()];
   }

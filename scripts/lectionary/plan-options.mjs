@@ -173,9 +173,25 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
           const route = pickerRouteFor(pickerOption, date, 'readings', { today: '2026-10-12', diocese, defaultDiocese: 'minsk-mohilev' });
           counts.pickerRoutes = (counts.pickerRoutes || 0) + 1;
           const routed = screenFor(loaded, { ...(route.query || {}), option: route.query?.option });
-          const own = routed.groups.some((group) => group.documents.some((doc) => doc._ordoOptionId === pickerOption.id));
-          if (route.query?.option && own && !routed.activeGroup?.documents.some((doc) => doc._ordoOptionId === pickerOption.id)) {
-            anomalies.push({ class: 'WRONG_CONTEXT', severity: 'high', date, diocese, option: pickerOption.id, detail: 'the date-picker route of the option does not open its own readings group' });
+          const own = routed.groups.some((group) => group.documents.some((doc) => doc._ordoOptionRoles?.[pickerOption.id]?.default));
+          // the route opens the DEFAULT readings of the option (weekday for a memorial, its own where prescribed)
+          if (route.query?.option && own && !routed.activeGroup?.documents.some((doc) => doc._ordoOptionRoles?.[pickerOption.id]?.default)) {
+            anomalies.push({ class: 'WRONG_CONTEXT', severity: 'high', date, diocese, option: pickerOption.id, detail: 'the date-picker route of the option does not open the default readings group of the option' });
+          }
+          const plannedPicker = loaded.plan.options.find((planned) => planned.optionId === pickerOption.id);
+          const rule = plannedPicker?.allowedChoices?.[0];
+          if (rule && ['memorial', 'optional-memorial'].includes(plannedPicker.officeKind)) {
+            const roles = routed.activeGroup?.documents.map((doc) => doc._ordoOptionRoles?.[pickerOption.id]?.purpose).filter(Boolean) || [];
+            const wanted = rule.default;
+            // by the memorial rule: the weekday readings, or the prescribed proper ones when the option has them
+            const hasWanted = roles.includes(wanted);
+            const ownExists = routed.groups.some((group) => group.documents.some((doc) => doc._ordoOptionRoles?.[pickerOption.id]?.purpose === 'proper'));
+            if (rule.default === 'proper' && !ownExists && route.query?.option) {
+              anomalies.push({ class: 'MISSING_SET', severity: 'high', date, diocese, option: pickerOption.id, detail: `the Lectionary prescribes proper readings for ${pickerOption.id} but the readings collection has no document of its own (the route falls back to the weekday readings)` });
+            } else if (route.query?.option && !hasWanted && (wanted === 'weekday' || ownExists)) {
+              anomalies.push({ class: 'WRONG_DEFAULT', severity: 'high', date, diocese, option: pickerOption.id, detail: `memorial rule (default ${rule.default}): the route opened ${roles.join('/') || 'nothing'}, expected ${wanted}` });
+            }
+            counts.memorialRoutes = (counts.memorialRoutes || 0) + 1;
           }
         }
         counts.dates += diocese === DIOCESES[0] ? 1 : 0;

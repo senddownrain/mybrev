@@ -194,7 +194,9 @@ const ordoOption = computed(() => {
   const resolved = resolveRuntimeDay(selectedDate.value.format('YYYY-MM-DD'), {
     diocese: context.value?.diocese || currentOrdoDiocese(),
   });
-  const id = activeReading.value?._ordoOptionId || String(route.query.option || '') || context.value?.ordoSelectedId;
+  // the option chosen in the calendar gives the colour until a reading is picked explicitly
+  const chosen = route.query.readingId ? '' : String(route.query.option || '');
+  const id = chosen || activeReading.value?._ordoOptionId || String(route.query.option || '') || context.value?.ordoSelectedId;
   return [resolved.primary, ...resolved.alternatives].find((option) => option.id === id) || resolved.primary;
 });
 

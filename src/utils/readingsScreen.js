@@ -39,7 +39,11 @@ export function resolveReadingsScreen({ items = [], context = {}, query = {} } =
     activeGroup = groups.find((group) => group.documents.some((document) => document._dayId === dayId || document._dayIds?.includes(dayId))) || null;
   }
   if (!activeGroup && optionId) {
-    activeGroup = groups.find((group) => group.documents.some((document) => document._ordoOptionId === optionId)) || null;
+    // The option chosen in the calendar opens ITS DEFAULT readings: the weekday readings of a
+    // memorial, the memorial's own readings only where the Lectionary prescribes them
+    // (src/utils/ordo/memorialReadings.js); the other groups stay selectable alternatives.
+    activeGroup = groups.find((group) => group.documents.some((document) => document._ordoOptionRoles?.[optionId]?.default))
+      || groups.find((group) => group.documents.some((document) => document._ordoOptionId === optionId)) || null;
   }
   if (!activeGroup) activeGroup = preferredReadingGroup(groups);
 

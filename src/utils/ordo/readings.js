@@ -4,6 +4,8 @@
  * `readingsService` should try them; texts stay in `readings`.
  */
 
+import { memorialReadingsRule } from './memorialReadings.js';
+
 const ALL_SOULS_MASSES = Object.freeze([1, 2, 3]);
 
 function cycleFor(officeKind, season) {
@@ -40,10 +42,14 @@ export function buildReadingsDescriptor(candidate, season, temporal) {
   const allowedChoices = [];
 
   if (kind === 'memorial' || kind === 'optional-memorial') {
-    // GIRM 357: on memorials the weekday readings are normally kept; proper
-    // readings (when assigned) or Common readings may be chosen.
-    lookup.push(weekdayLookup, properLookup, { purpose: 'common', where: { common: 'from-days._templates' } });
-    allowedChoices.push({ component: 'readings', options: ['weekday', 'proper', 'common'], default: 'weekday' });
+    // GIRM 357 / OLM 83: the weekday readings are kept on memorials; PROPER
+    // readings that the Lectionary prescribes replace them; own and Common
+    // readings are legal alternatives (`memorialReadingsRule`).
+    const rule = memorialReadingsRule(candidate.id, kind);
+    const common = { purpose: 'common', where: { common: 'from-days._templates' } };
+    if (rule.mode === 'proper-prescribed') lookup.push(properLookup, weekdayLookup, common);
+    else lookup.push(weekdayLookup, properLookup, common);
+    allowedChoices.push({ component: 'readings', options: ['weekday', 'proper', 'common'], default: rule.defaultPurpose, ...(rule.parts.length ? { rule: rule.mode, prescribedParts: rule.parts } : {}) });
     sourceFallbacks.push({ component: 'proper-readings', chain: ['proper', 'common'] });
   } else if (candidate.kind === 'temporal') {
     lookup.push(weekdayLookup);
