@@ -10,8 +10,8 @@
   "seasonalFields": 530,
   "bytes": {
     "before": 1115362,
-    "after": 2036991,
-    "added": 921629
+    "after": 2036139,
+    "added": 920777
   },
   "flatBaseFieldsChanged": [
     "apostles",
@@ -42,7 +42,7 @@
         "works-of-mercy"
       ],
       "removed": [],
-      "bytes": 1950047
+      "bytes": 1949195
     }
   },
   "report": "CONTENT UPDATE DIFF\n\nliturgicalTemplates:\n  changed: 14 / 16\n  bytes:   1.9 MB\n\nTOTAL:\n  14 documents\n  1.9 MB\n\nRESULT:\nSAFE CONTENT PATCH",
@@ -58,8 +58,8 @@
         "easter"
       ],
       "bytesBefore": 44530,
-      "bytesAfter": 106801,
-      "addedBytes": 62271,
+      "bytesAfter": 106729,
+      "addedBytes": 62199,
       "flatBaseChangedVsSnapshot": true,
       "sizeVsFirestoreLimit": "10.2% of 1 MiB"
     },
@@ -74,8 +74,8 @@
         "easter"
       ],
       "bytesBefore": 146868,
-      "bytesAfter": 271844,
-      "addedBytes": 124976,
+      "bytesAfter": 271728,
+      "addedBytes": 124860,
       "flatBaseChangedVsSnapshot": false,
       "sizeVsFirestoreLimit": "25.9% of 1 MiB"
     },
@@ -90,8 +90,8 @@
         "easter"
       ],
       "bytesBefore": 75399,
-      "bytesAfter": 154300,
-      "addedBytes": 78901,
+      "bytesAfter": 154232,
+      "addedBytes": 78833,
       "flatBaseChangedVsSnapshot": false,
       "sizeVsFirestoreLimit": "14.7% of 1 MiB"
     },
@@ -117,10 +117,10 @@
         "easter"
       ],
       "bytesBefore": 63631,
-      "bytesAfter": 129506,
-      "addedBytes": 65875,
+      "bytesAfter": 129446,
+      "addedBytes": 65815,
       "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "12.4% of 1 MiB"
+      "sizeVsFirestoreLimit": "12.3% of 1 MiB"
     },
     {
       "id": "educators",
@@ -146,8 +146,8 @@
         "easter"
       ],
       "bytesBefore": 104072,
-      "bytesAfter": 194370,
-      "addedBytes": 90298,
+      "bytesAfter": 194274,
+      "addedBytes": 90202,
       "flatBaseChangedVsSnapshot": false,
       "sizeVsFirestoreLimit": "18.5% of 1 MiB"
     },
@@ -160,8 +160,8 @@
         "easter"
       ],
       "bytesBefore": 94641,
-      "bytesAfter": 142656,
-      "addedBytes": 48015,
+      "bytesAfter": 142608,
+      "addedBytes": 47967,
       "flatBaseChangedVsSnapshot": true,
       "sizeVsFirestoreLimit": "13.6% of 1 MiB"
     },
@@ -176,8 +176,8 @@
         "easter"
       ],
       "bytesBefore": 88987,
-      "bytesAfter": 195545,
-      "addedBytes": 106558,
+      "bytesAfter": 195431,
+      "addedBytes": 106444,
       "flatBaseChangedVsSnapshot": false,
       "sizeVsFirestoreLimit": "18.6% of 1 MiB"
     },
@@ -192,8 +192,8 @@
         "easter"
       ],
       "bytesBefore": 75559,
-      "bytesAfter": 177728,
-      "addedBytes": 102169,
+      "bytesAfter": 177636,
+      "addedBytes": 102077,
       "flatBaseChangedVsSnapshot": false,
       "sizeVsFirestoreLimit": "16.9% of 1 MiB"
     },
@@ -219,8 +219,8 @@
         "easter"
       ],
       "bytesBefore": 115893,
-      "bytesAfter": 213298,
-      "addedBytes": 97405,
+      "bytesAfter": 213220,
+      "addedBytes": 97327,
       "flatBaseChangedVsSnapshot": false,
       "sizeVsFirestoreLimit": "20.3% of 1 MiB"
     },
@@ -235,8 +235,8 @@
         "easter"
       ],
       "bytesBefore": 26356,
-      "bytesAfter": 59166,
-      "addedBytes": 32810,
+      "bytesAfter": 59118,
+      "addedBytes": 32762,
       "flatBaseChangedVsSnapshot": false,
       "sizeVsFirestoreLimit": "5.6% of 1 MiB"
     },
@@ -260,8 +260,8 @@
         "easter"
       ],
       "bytesBefore": 78340,
-      "bytesAfter": 136088,
-      "addedBytes": 57748,
+      "bytesAfter": 136052,
+      "addedBytes": 57712,
       "flatBaseChangedVsSnapshot": true,
       "sizeVsFirestoreLimit": "13.0% of 1 MiB"
     },
@@ -276,8 +276,8 @@
         "easter"
       ],
       "bytesBefore": 15107,
-      "bytesAfter": 38353,
-      "addedBytes": 23246,
+      "bytesAfter": 38329,
+      "addedBytes": 23222,
       "flatBaseChangedVsSnapshot": false,
       "sizeVsFirestoreLimit": "3.7% of 1 MiB"
     }
