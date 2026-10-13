@@ -44,6 +44,9 @@
       "source": "template",
       "template": "blessed-virgin-mary"
     },
+    "vesperPr": {
+      "ref": "officeOfReadingsPr"
+    },
     "vesper1Ps1": {
       "source": "template",
       "template": "blessed-virgin-mary"

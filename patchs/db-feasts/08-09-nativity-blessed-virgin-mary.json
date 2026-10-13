@@ -111,6 +111,9 @@
     "sext3Ps3": {
       "source": "current-day"
     },
+    "vesperPr": {
+      "ref": "officeOfReadingsPr"
+    },
     "vesper1Ps1": {
       "source": "template",
       "template": "blessed-virgin-mary"

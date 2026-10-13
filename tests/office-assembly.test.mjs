@@ -161,7 +161,10 @@ test('memorial: own texts stay, the rest is of the day; quick switch to a Common
   const ofDay = assembleOffice({ proper, office, templates: TEMPLATES, currentDay });
   assert.equal(ofDay.choice, CURRENT_DAY_CHOICE);
   assert.equal(ofDay.day.officeOfReadingsR2, proper.officeOfReadingsR2, 'hagiographic reading is proper');
-  assert.equal(ofDay.day.laudesPr, TEMPLATES.get('pastors').laudesPr || proper.officeOfReadingsPr || ofDay.day.laudesPr);
+  // The saint's prayer is one prayer: at Lauds and Vespers too (never the Common's «Калі няма ўласнай малітвы…»).
+  assert.equal(ofDay.day.laudesPr, proper.officeOfReadingsPr);
+  assert.equal(ofDay.day.vesperPr, proper.officeOfReadingsPr);
+  assert.deepEqual(proper._fieldRules.laudesPr, { ref: 'officeOfReadingsPr' });
   assert.equal(ofDay.day.laudesHymn, 'day:laudesHymn');
   assert.equal(ofDay.day.laudesAntBen, 'day:laudesAntBen');
   assert.equal(ofDay.day.laudesPs1, 'day:laudesPs1', 'psalmody of the current day');
@@ -185,6 +188,8 @@ test('memorial: own texts stay, the rest is of the day; quick switch to a Common
     // …and the proper fields survive the switch.
     assert.equal(switched.day.officeOfReadingsR2, proper.officeOfReadingsR2);
     assert.equal(switched.day.officeOfReadingsPr, proper.officeOfReadingsPr);
+    assert.equal(switched.day.laudesPr, proper.officeOfReadingsPr, `${template}: own prayer at Lauds`);
+    assert.equal(switched.day.vesperPr, proper.officeOfReadingsPr, `${template}: own prayer at Vespers`);
     assert.equal(switched.day._currentVersion, template);
   }
   const pastors = assembleOffice({ proper, office, templates: TEMPLATES, choice: 'pastors', currentDay }).day;

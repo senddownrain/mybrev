@@ -216,6 +216,11 @@ test('§8.3 Vitebsk 12.06 martyrs: optional memorial, martyrs Common, sparse Pro
   assert.ok(option, 'offered in Vitebsk');
   assert.deepEqual(option.templates.map((item) => item.choice), [CURRENT_DAY_CHOICE, 'martyrs-many']);
   option.templates.forEach(({ day }) => assert.equal(day.officeOfReadingsR2, doc.officeOfReadingsR2));
+  // The one own prayer of the memorial is also the Lauds and Vespers prayer in «З дня» and in the Common (PDF: a single «Малітва»).
+  option.templates.forEach(({ day }) => {
+    assert.equal(day.laudesPr, doc.officeOfReadingsPr);
+    assert.equal(day.vesperPr, doc.officeOfReadingsPr);
+  });
   assert.ok(!content('2027-06-12', { diocese: 'minsk-mohilev' }).dayOptions
     .some((item) => item.ordo?.optionId === 'bl-antoni-leszczewicz-jerzy-kaszyra'));
 });
@@ -288,4 +293,20 @@ test('§15 editor: own / Common / current day / structured ref are told apart; s
   const { set, remove } = sparseUpdatePayload(doc, edited, ['feastComment', ...OFFICE_TEXT_FIELDS]);
   assert.deepEqual(Object.keys(set).sort(), ['_fieldRules', 'vesperAnt1']);
   assert.deepEqual(remove, ['laudesAntBen']);
+});
+
+test('recheck §19: a Proper with only an Office of Readings prayer has it at Lauds and Vespers (every source page: OOR prayer = Lauds prayer)', () => {
+  const lone = PROPERS.filter((doc) => plain(doc.officeOfReadingsPr) && !plain(doc.laudesPr) && !doc._fieldRules?.laudesPr);
+  assert.deepEqual(lone.map((doc) => doc.id), [], 'every such Proper links Lauds to the Office of Readings prayer');
+  const withoutVespers = PROPERS.filter((doc) => plain(doc.officeOfReadingsPr) && !plain(doc.vesperPr) && !doc._fieldRules?.vesperPr);
+  assert.deepEqual(withoutVespers.map((doc) => doc.id), []);
+  PROPERS.filter((doc) => doc._fieldRules?.laudesPr?.ref === 'officeOfReadingsPr' && !doc.laudesPr).forEach((doc) => {
+    assert.ok(plain(doc.officeOfReadingsPr), doc.id);
+    assert.ok(isValidFieldRule(doc._fieldRules.laudesPr), doc.id);
+  });
+  // The four source pages agree: the Lauds prayer is the Office of Readings prayer.
+  ['2025-05-16.html', '2026-02-14.html', '2023-12-28.html', '2026-11-02.html'].forEach((file) => {
+    const fields = pageFields(file).fields;
+    assert.equal(plain(fields.officeOfReadingsPr), plain(fields.laudesPr), file);
+  });
 });

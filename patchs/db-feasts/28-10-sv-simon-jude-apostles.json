@@ -66,6 +66,9 @@
     },
     "sext3Pr": {
       "ref": "laudesPr"
+    },
+    "vesperPr": {
+      "ref": "officeOfReadingsPr"
     }
   }
 }

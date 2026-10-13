@@ -60,6 +60,9 @@
     "sext3R": {
       "source": "template",
       "template": "apostles"
+    },
+    "vesperPr": {
+      "ref": "officeOfReadingsPr"
     }
   }
 }

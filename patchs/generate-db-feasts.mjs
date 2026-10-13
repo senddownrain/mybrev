@@ -38,6 +38,8 @@ import { hasFirstVespers, inferTemplates, isEmptyValue, splitSource } from '../s
 import { scaffoldDecision } from '../scripts/lib/scaffold-commons.mjs';
 
 const CONTENT_FIELDS = OFFICE_CONTENT_FIELDS;
+/** Prayers that are the Office of Readings prayer when the Proper has only that one (final phase recheck §19). */
+const PRAYER_FOLLOWS_OFFICE_OF_READINGS = ['laudesPr', 'vesperPr'];
 const CONTENT_FIELD_SET = new Set(CONTENT_FIELDS);
 const isEmpty = isEmptyValue;
 
@@ -373,6 +375,13 @@ function buildSparseOutput({ sourceFile, outputStem, source, kind, templates, re
     dropped.forEach((field) => delete rules[field]);
     if (dropped.length) report.droppedPlaceholders.push({ file: outputFile, fields: dropped });
   }
+  // The saint's prayer is ONE prayer of the Office: in every Belarusian source page the Office of
+  // Readings prayer is the Lauds prayer (and, outside a feast's own Vespers, the Vespers prayer). A
+  // Proper that carries it only under the Office of Readings therefore has it at Lauds and Vespers
+  // too — otherwise the Common's «Калі няма ўласнай малітвы…» would replace the own prayer there.
+  PRAYER_FOLLOWS_OFFICE_OF_READINGS.forEach((field) => {
+    if ('officeOfReadingsPr' in texts && !(field in texts) && !(field in rules)) rules[field] = { ref: 'officeOfReadingsPr' };
+  });
   if (source._omitFirstVespers) FIRST_VESPER_FIELDS.forEach((field) => { delete texts[field]; delete rules[field]; });
   if (source._omitTeDeum) delete texts[TE_DEUM_FIELD];
 
