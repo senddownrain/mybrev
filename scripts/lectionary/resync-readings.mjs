@@ -8,6 +8,7 @@
  *
  *   node scripts/lectionary/resync-readings.mjs --snapshot <dir>                 # plan + verdict per wave (no Firestore access)
  *   node scripts/lectionary/resync-readings.mjs --snapshot <dir> --preflight     # + read-only classification of the live documents
+ *   node scripts/lectionary/resync-readings.mjs --snapshot <dir> --backup-only  # one verified backup of ALL planned documents (read-only)
  *   node scripts/lectionary/resync-readings.mjs --snapshot <dir> --wave 1 --apply
  *        live Firestore: refuses unless the rebuilt plan equals the reviewed
  *        reports/lectionary/resync-plan.json (before/after hashes), every live
@@ -27,7 +28,7 @@ import { fullPlan } from './lib/wave4-plan.mjs';
 import { runAudit } from './lib/audit-run.mjs';
 import { ROOT } from './lib/source-pages.mjs';
 import { snapshotDirFromArgs } from './lib/snapshot-docs.mjs';
-import { applyWave, rollbackWave, readWave, verifyBackup } from './lib/apply-wave.mjs';
+import { applyWave, rollbackWave, readWave, verifyBackup, writeBackup } from './lib/apply-wave.mjs';
 
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(name);
@@ -65,9 +66,11 @@ async function main() {
     fs.writeFileSync(file, `${JSON.stringify(out, null, 1)}\n`);
     console.log(JSON.stringify({ plan: path.relative(ROOT, file), changes: waves.length, skipped: audit.resync.skipped.length, deferred: out.deferred.length, verdicts: out.verdicts }, null, 1));
     if (flag('--preflight')) await preflight(waves);
+    if (flag('--backup-only')) await backupOnly(waves, out);
     console.log('Dry run: nothing was written to Firestore. Review the plan, then repeat with --wave N --apply.');
     return;
   }
+  if (flag('--backup-only')) throw new Error('--backup-only is a read-only phase: do not combine it with --apply.');
   const waveNumber = value('--wave');
   if (!waveNumber) throw new Error('--apply needs --wave N (one wave at a time).');
   const wanted = waves.filter((change) => String(change.wave) === waveNumber);
@@ -105,6 +108,25 @@ async function preflight(waves) {
       const states = rows.reduce((acc, row) => ({ ...acc, [row.state]: (acc[row.state] || 0) + 1 }), {});
       console.log(`preflight wave ${wave}: ${JSON.stringify(states)}${rows.some((row) => row.state !== 'pending') ? `  NOT PENDING: ${rows.filter((row) => row.state !== 'pending').map((row) => `${row.change.id}=${row.state}`).join(', ')}` : ''}`);
     }
+  } finally {
+    await app.delete();
+  }
+}
+
+/** One verified backup of every planned document (read-only against Firestore). */
+async function backupOnly(waves, report) {
+  const { admin, app, firestore, projectId } = await openAdmin();
+  try {
+    const rows = await retry('backup', () => readWave({ firestore, changes: waves }));
+    const notPending = rows.filter((row) => row.state !== 'pending');
+    if (notPending.length) throw new Error(`Not backing up: ${notPending.length} document(s) are not in the reviewed state (${notPending.slice(0, 8).map((row) => `${row.change.id}=${row.state}`).join(', ')}).`);
+    const dir = path.join(ROOT, 'backups', 'lectionary-apply', `${new Date().toISOString().replace(/[:.]/g, '-')}-all-waves`);
+    const manifest = writeBackup({ dir, rows, meta: { wave: 'all', projectId, planGeneratedAt: report.generatedAt, planSource: report.source, waves: report.verdicts.map((item) => item.wave) } });
+    const check = verifyBackup(dir);
+    console.log(`backup: ${path.relative(ROOT, dir)}  documents ${manifest.count}  listSha256 ${manifest.listSha256}  integrity ${check.ok ? 'OK' : check.problems.join('; ')}`);
+    if (!check.ok) throw new Error('The backup does not verify.');
+    const proof = await rollbackWave({ firestore, admin, backupDir: dir, apply: false });
+    console.log(`rollback dry run: ${JSON.stringify(proof)}`);
   } finally {
     await app.delete();
   }
