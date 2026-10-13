@@ -33,7 +33,7 @@ export function readVolume(filePath) {
   const raw = buffer.toString('utf8').replace(/^\uFEFF/, '');
   const lines = raw.split(/\r?\n/).map((line, index) => ({
     n: index + 1,
-    text: line.replace(SOFT_HYPHEN, '').replace(/[\u00a0\u2007\u202f]/g, ' ').replace(/[ ]+$/g, '').replace(/^[ ]+/g, ''),
+    text: line.replace(SOFT_HYPHEN, '').replace(/[\u00a0\u2000-\u200a\u202f\u205f]/g, ' ').replace(/[ ]+$/g, '').replace(/^[ ]+/g, ''),
   }));
   return { lines, sha256: crypto.createHash('sha256').update(buffer).digest('hex'), bytes: buffer.length };
 }

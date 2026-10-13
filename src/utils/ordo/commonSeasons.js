@@ -30,11 +30,15 @@ export const SEASONAL_VARIANTS_FIELD = '_seasonalVariants';
 /**
  * Ordo period (+ phase) of the SELECTED Office → variant key (null = flat base).
  *
- * Holy Week: the rubric of Volume II reads «У Вялікі пост», and Great Lent
- * (Quadragesima) lasts until the Mass of the Lord's Supper, so Palm Sunday and
- * Monday–Thursday of Holy Week take the Lent texts. The Sacred Triduum
- * (`periodPhase: 'triduum'`) is neither Lent nor Easter: no variant. (No
- * Common-based Office is celebrated in either; tests prove it from the Ordo.)
+ * Holy Week: the rubric of Volume II reads «У Вялікі пост», and Great Lent (Quadragesima) lasts until the
+ * Mass of the Lord's Supper, so Palm Sunday (`palm-sunday`) and Monday–Wednesday of Holy Week (`holy-week`)
+ * take the Lent texts. The Ordo marks every day from Holy Thursday to Holy Saturday as `periodPhase: 'triduum'`
+ * (`computeSeason`: the phase changes at the DATE of Holy Thursday, it does not know the hour of the Mass of
+ * the Lord's Supper), and the Sacred Triduum is neither Lent nor Easter: no variant, so the Thursday morning
+ * hours (Lent by the book) also read the flat text. No Common-based Office is celebrated on any of these days
+ * (tests prove it from the calendar), so this never decides a real celebration.
+ * The decision is made from the PHASE, never from the period alone: `holyweek` without a known phase gives no
+ * variant (the Triduum cannot be told from Palm Sunday by the period).
  */
 export function variantKeyForSeason(season) {
   const period = typeof season === 'string' ? season : season?.period;
@@ -43,7 +47,7 @@ export function variantKeyForSeason(season) {
     case 'advent': return 'advent';
     case 'christmas': return 'christmas';
     case 'lent': return 'lent';
-    case 'holyweek': return phase === 'triduum' ? null : 'lent';
+    case 'holyweek': return phase === 'palm-sunday' || phase === 'holy-week' ? 'lent' : null;
     case 'easter': return 'easter';
     default: return null;
   }

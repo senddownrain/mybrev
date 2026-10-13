@@ -138,4 +138,37 @@ export function baseVersusOrdinary(corpus) {
   return rows;
 }
 
+/**
+ * «Nothing printed by Volume I or II is lost»: for every (Common, field, season) the words that the seasonal volume
+ * prints are looked up (in order, longest common subsequence) in the text the app will show in that season
+ * (the seasonal variant when there is one, else the stored base). What is not found is a difference of wording,
+ * a cross-reference or a page reference; the largest ones are listed so that nothing hides behind a percentage.
+ * `аллелюя` is left out (it is added by rule, not printed word for word).
+ */
+export function volumeWordCoverage({ corpus, variants, seasons, seasonVolume }) {
+  const rows = [];
+  let cells = 0;
+  for (const [commonId, doc] of corpus.base) {
+    for (const season of seasons) {
+      const fields = corpus.volumes[seasonVolume[season]].commons.get(commonId)?.fields || new Map();
+      for (const [field, units] of fields) {
+        const printedText = comparableText(units, season);
+        if (printedText === null) continue;
+        const printed = tokensOf(printedText).filter((t) => t !== 'аллелюя');
+        if (!printed.length) continue;
+        const variant = variants.get(commonId)?.[season]?.[field];
+        const shown = variant ? variant.value : doc[field];
+        const shownTokens = tokensOf(htmlToPlain(Array.isArray(shown) ? shown.join('\n') : (shown || ''))).filter((t) => t !== 'аллелюя');
+        cells += 1;
+        const lost = printed.length - lcsLength(printed, shownTokens);
+        if (lost) rows.push({ common: commonId, field, season, volume: seasonVolume[season], printedWords: printed.length, notFoundWords: lost, seasonalVariant: Boolean(variant) });
+      }
+    }
+  }
+  const bucket = (n) => (n === 0 ? '0' : n <= 5 ? '1–5' : n <= 19 ? '6–19' : '≥ 20');
+  const buckets = { '0': cells - rows.length, '1–5': 0, '6–19': 0, '≥ 20': 0 };
+  rows.forEach((r) => { buckets[bucket(r.notFoundWords)] += 1; });
+  return { cells, buckets, largest: rows.filter((r) => r.notFoundWords >= 6).sort((a, b) => b.notFoundWords - a.notFoundWords || a.common.localeCompare(b.common) || a.field.localeCompare(b.field)) };
+}
+
 export function readText(file) { return fs.readFileSync(file, 'utf8'); }

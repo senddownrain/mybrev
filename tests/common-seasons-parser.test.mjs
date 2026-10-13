@@ -16,6 +16,7 @@ import { unitLines, unitsForSeason } from '../scripts/liturgy/common-seasons/lib
 import { addAlleluiaToText, addAlleluiaToBlockHtml, removeAlleluiaFromBlockHtml } from '../scripts/liturgy/common-seasons/lib/alleluia.mjs';
 import { psalmStrophes, hymnStrophes, renderVersicles } from '../scripts/liturgy/common-seasons/lib/render.mjs';
 import { fixSourceTypos } from '../scripts/liturgy/common-seasons/lib/analyze.mjs';
+import { indexCrossCheck } from '../scripts/liturgy/common-seasons/lib/ledger.mjs';
 import { classifyLine, seasonMarker } from '../scripts/liturgy/common-seasons/lib/volume.mjs';
 import { OFFICE_CONTENT_FIELDS } from '../src/constants/officeFields.js';
 import { validateSeasonalVariants } from '../src/utils/ordo/commonSeasons.js';
@@ -140,8 +141,11 @@ test('explicit variants rendered from a volume keep its first/last paragraph and
         const volume = corpus.volumes[info.volume];
         const units = volume.commons.get(commonId).fields.get(field);
         const source = unitsForSeason(units, season).map((unit) => (unitLines(unit, season, { withRepeats: true }) || []).map((l) => fixSourceTypos(l.text)).join(' ')).join(' ');
-        const variant = plain(info.value);
-        const src = normalizeForCompare(source.replace(/\(\s*Велікодны\s+перыяд\s+Аллелюя\s*\)\.?/gu, ''));
+        // the accepted Easter Alleluia (", / аллелюя." of an antiphon, ", аллелюя." of a К./Н. line) is added to the element,
+        // so it is left out of both sides of the comparison (the rule itself is tested below)
+        const noAlleluia = (text) => text.replace(/,?\s*\/?\s*аллелюя\.?/gu, '').replace(/[.,]/g, '').replace(/\s+/g, ' ').trim();
+        const variant = noAlleluia(plain(info.value));
+        const src = noAlleluia(normalizeForCompare(source.replace(/\(\s*Велікодны\s+перыяд\s+Аллелюя\s*\)\.?(\s*†)?/gu, '')));
         // first and last 40 characters of the text of the variant are found in the source, in this order
         const first = variant.replace(/^(першае чытанне|другое чытанне|калі няма ўласнай малітвы, чытаецца ніжэйпададзеная:) ?/u, '').slice(0, 40);
         const last = variant.slice(-40);
@@ -162,16 +166,21 @@ test('explicit variants rendered from a volume keep its first/last paragraph and
   assert.ok(checked > 40, `checked ${checked}`);
 });
 
-test('the Easter Alleluia: form of antiphons attested in the books; versicles are NOT invented', () => {
+test('the Easter Alleluia: antiphons «…, / аллелюя.», К./Н. lines «…, аллелюя.» (NR-001), «!» keeps the mark, a «†» after the annotation is dropped (NR-002)', () => {
   assert.deepEqual(addAlleluiaToText('Ант. Мой дом будзе названы * домам малітвы. (Велікодны перыяд Аллелюя).'),
     { ok: true, text: 'Ант. Мой дом будзе названы * домам малітвы, / аллелюя.', rule: 'alleluia-v1' });
   assert.equal(addAlleluiaToText('3 ант. Хор мучанікаў, * хвалі на вышынях Пана (Велікодны перыяд Аллелюя).').text, '3 ант. Хор мучанікаў, * хвалі на вышынях Пана, / аллелюя.');
   assert.equal(addAlleluiaToText('Ант. X * Y, / аллелюя. (Велікодны перыяд Аллелюя).').rule, 'already-has-alleluia');
+  // К./Н. lines: the form printed by the Easter responsories of Volume II itself («…, аллелюя.»)
   const versicle = addAlleluiaToText('К. Пане, Ты палюбіў хараство свайго дому. (Велікодны перыяд Аллелюя).');
-  assert.equal(versicle.ok, false);
-  assert.equal(versicle.unverified, true);
-  assert.equal(addAlleluiaToText('2 ант. Якія мілыя Твае шатры, * Пане Магуццяў! (Велікодны перыяд Аллелюя). †').ok, false);
-  assert.equal(addAlleluiaToText('Ант. A * B! (Велікодны перыяд Аллелюя).').ok, false);
+  assert.deepEqual(versicle, { ok: true, text: 'К. Пане, Ты палюбіў хараство свайго дому, аллелюя.', rule: 'alleluia-v1-versicle' });
+  assert.equal(addAlleluiaToText('Н. Патрэбна толькі адно. * Яна выбрала найлепшую частку, якая не адымецца ў яе. (Велікодны перыяд Аллелюя).').text,
+    'Н. Патрэбна толькі адно. * Яна выбрала найлепшую частку, якая не адымецца ў яе, аллелюя.');
+  assert.equal(addAlleluiaToText('К. Хто так? (Велікодны перыяд Аллелюя).').ok, false, 'a К./Н. line that ends with «?» is not guessed');
+  // NR-002: «†» after the annotation belongs to the psalmody
+  const ant = addAlleluiaToText('2 ант. Якія мілыя Твае шатры, * Пане Магуццяў! (Велікодны перыяд Аллелюя). †');
+  assert.deepEqual(ant, { ok: true, text: '2 ант. Якія мілыя Твае шатры, * Пане Магуццяў! / аллелюя.', rule: 'alleluia-v1-exclaim', dropped: '†' });
+  assert.equal(addAlleluiaToText('Ант. A * B (Велікодны перыяд Аллелюя). текст').ok, false, 'text after the annotation is never swallowed');
   // HTML: the red «/» mark and the sentence end; reversible for Lent
   const html = '<p><span style="color: #ff0000;">Ант. </span>Бог * з намі.<span style="color: #ff0000;"> </span></p>';
   const added = addAlleluiaToBlockHtml(html, 'antiphon');
@@ -179,15 +188,32 @@ test('the Easter Alleluia: form of antiphons attested in the books; versicles ar
   const removed = removeAlleluiaFromBlockHtml(added.html);
   assert.match(removed.html, /з намі\./);
   assert.equal(addAlleluiaToBlockHtml('<p>no stop</p>', 'antiphon').ok, false);
-  // every Easter-annotated antiphon of the stored Commons has exactly one «аллелюя» added, versicles none
-  let versicleFields = 0;
-  analysis.unverified.forEach(() => { versicleFields += 1; });
-  assert.ok(versicleFields > 50, 'versicle Alleluia elements are reported, not generated');
+  const exclaim = addAlleluiaToBlockHtml('<p><span style="color: #ff0000;">2 ант.</span> Якія мілыя Твае шатры, Пане Магуццяў! <span style="color: #ff0000;">†</span></p>', 'antiphon', { dropDagger: true });
+  assert.equal(htmlToPlain(exclaim.html).replace(/\s+/g, ' ').trim(), '2 ант. Якія мілыя Твае шатры, Пане Магуццяў! / аллелюя.');
+  assert.equal(addAlleluiaToBlockHtml('<p>К. Хто?</p>', 'versicle').ok, false);
+  // every annotated line of Volume II (corpus and index) is accounted for: nothing is left «unverified»
+  assert.equal(analysis.alleluia.filter((a) => a.rule === 'alleluia-v1-versicle').length >= 100, true);
+  assert.equal('unverified' in analysis, false);
+  assert.deepEqual(analysis.review, [], 'no element is left unresolved');
+  const applied = new Set(analysis.alleluia.map((a) => a.line));
+  const annotated = corpus.volumes.II.lines.filter((l) => /\(\s*Велікодны\s+перыяд\s+Аллелюя\s*\)/u.test(l.text) && l.n <= corpus.volumes.II.indexStart).map((l) => l.n);
+  assert.equal(annotated.length, 375);
+  assert.deepEqual(annotated.filter((n) => !applied.has(n)), [], 'every annotated element of the volume received its Alleluia');
+  // the antiphons of the index at the end of Volume II repeat annotated antiphons of the corpus
+  assert.equal(indexCrossCheck(corpus).unmatched.length, 0);
   documents.forEach((bySeason) => Object.values(bySeason.easter || {}).forEach((value) => {
-    const textual = plain(value);
-    assert.doesNotMatch(textual, /\(велікодны перыяд/);
+    assert.doesNotMatch(plain(value), /\(велікодны перыяд/);
   }));
+  // the other seasons never receive an Alleluia the stored base does not have
+  documents.forEach((bySeason, commonId) => ['advent', 'christmas', 'lent'].forEach((season) => Object.entries(bySeason[season] || {}).forEach(([field, value]) => {
+    const base = corpus.base.get(commonId)[field];
+    const count = (v) => (plain(v).match(/аллелюя/g) || []).length;
+    if (info(commonId, season, field)?.method === 'render' && corpus.volumes.I.commons.get(commonId)?.fields.get(field)) return; // printed by the volume itself
+    assert.ok(count(value) <= (base ? count(base) : 0), `${commonId}.${season}.${field}`);
+  })));
 });
+
+const info = (commonId, season, field) => analysis.variants.get(commonId)?.[season]?.[field];
 
 test('printed misprints are corrected visibly and countably', () => {
   assert.equal(fixSourceTypos('К. X, * аллеюя, аллелюя. Н. Аллеюя.'), 'К. X, * аллелюя, аллелюя. Н. Аллелюя.');
@@ -207,7 +233,7 @@ test('layout helpers: psalm and hymn strophes; K./N. paragraphs keep their marks
 });
 
 test('the matrix covers every field of every Common for every variant season, with a category', () => {
-  const categories = new Set(['seasonal_explicit', 'seasonal_structural', 'ordinary_base', 'editorial_difference', 'optional_variant', 'missing_source', 'needs_review']);
+  const categories = new Set(['seasonal_explicit', 'seasonal_whole_field', 'seasonal_inherited', 'seasonal_structural', 'ordinary_base', 'editorial_difference', 'missing_source']);
   analysis.matrix.forEach((cell) => { assert.ok(categories.has(cell.category), JSON.stringify(cell)); assert.ok(cell.hour !== undefined); });
   const seasons = new Set(analysis.matrix.map((c) => c.season));
   assert.deepEqual([...seasons].sort(), ['advent', 'christmas', 'easter', 'lent']);

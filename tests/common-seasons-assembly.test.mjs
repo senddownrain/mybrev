@@ -170,9 +170,11 @@ test('first Vespers of a celebration use the celebration\'s own season', () => {
   const proper = { _schema: 2, _celebrationId: 'sv-andrew-apostle', _templates: ['apostles'], _defaultTemplate: 'apostles', _rank: 'festum' };
   const office = descriptorOf('2026-11-30', 'sv-andrew-apostle');
   const advent = assembleOffice({ proper, office, templates: TEMPLATES, currentDay, season: { period: day.period, periodPhase: day.periodPhase } });
-  // Advent has no variant for the apostles: the flat base is used for I Vespers, never a Lent/Easter text
+  // Advent has only ONE variant for the apostles (the first reading of Volume I, 1 Кар 1, 18 – 2, 5): the flat base is
+  // used for I Vespers, never a Lent/Easter text
   assert.equal(advent.day.vesper1R, apostles.vesper1R);
-  assert.deepEqual(advent.seasonal.fields, {});
+  assert.deepEqual(advent.seasonal.fields, { officeOfReadingsR1: 'advent' });
+  assert.match(plain(advent.day.officeOfReadingsR1), /Карынцянаў 1, 18 – 2, 5/);
   const easter = assembleOffice({ proper, office, templates: TEMPLATES, currentDay, season: SEASON.easter });
   assert.equal(easter.day.vesper1R, apostles._seasonalVariants.easter.vesper1R);
   assert.notEqual(easter.day.vesper1R, advent.day.vesper1R);

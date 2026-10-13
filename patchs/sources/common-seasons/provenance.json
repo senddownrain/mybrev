@@ -9,7 +9,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "a42bd88916b8810fc7a075944d59ae5db2011e19dd0020715366713444f3c498"
+        "sha256": "89e47e9a2d3814199adb0ce83faad78744c3221add060e249a529cf170085405"
       }
     },
     "christmas": {
@@ -21,7 +21,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "a42bd88916b8810fc7a075944d59ae5db2011e19dd0020715366713444f3c498"
+        "sha256": "89e47e9a2d3814199adb0ce83faad78744c3221add060e249a529cf170085405"
       }
     },
     "lent": {
@@ -33,7 +33,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "c791f294efc086dec74f1d0cdab5997c0e9d6ea57cc0acf229960dd14cb7e133"
+        "sha256": "02cd7e27871ccc99c71dbe80c345eea74b85eac02e7e3d0af355bb7202ba5286"
       },
       "laudesR": {
         "volume": "II",
@@ -63,7 +63,7 @@
         ],
         "method": "render",
         "kind": "ant",
-        "sha256": "888e6150a95f4c0c168459874bf203b0947f316c9671b2d2a591f04f4e301b8f"
+        "sha256": "bb9c5a495d44d2a66d9321e966bb4a8b4be4bf75764ebb5fd5c78f850a0178d6"
       },
       "vesperPs3": {
         "volume": "II",
@@ -93,7 +93,7 @@
         ],
         "method": "render",
         "kind": "ant",
-        "sha256": "46cd86c625ba6cdb73feb23f344a64e6f4bd890d3662ce6c8afd3576b90da6c6"
+        "sha256": "7b07d62c3de67b838cf664720fa9e156efcedac5519f246bc75638d3c91c220e"
       },
       "vesper1Ant3": {
         "volume": "II",
@@ -103,7 +103,7 @@
         ],
         "method": "render",
         "kind": "ant",
-        "sha256": "676f42e55cc47a67c3f715242243058791b753648bf6c4e37cd24733fcbfbdb9"
+        "sha256": "d10d67457a27a450e6ff75a7a664882abd016e3d0132b528b62b5077a079fd07"
       },
       "vesper1Ps1": {
         "volume": "II",
@@ -249,7 +249,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "2fc6e001ecc2b2e052d92af151fd7b301dfcdc0258c1e9282ff7a426793b5b84"
+        "sha256": "5c68cc2f86378c2d246ebc5b0df906ca00b3ea255fe008845e3643ec8ebabc91"
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -311,7 +311,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "e90d57875a388d099343ab223c24232775156ae5aed8e2911698ee8af036f33d"
+        "sha256": "9dbd0512dfa128c2ae33887a03c62e1999e97b37eac08bb477ba58c5abb565e4"
       },
       "sext1Ant1": {
         "volume": "II",
@@ -425,7 +425,7 @@
         ],
         "method": "render",
         "kind": "ant",
-        "sha256": "47729c9538b39712d83c02c528bdc01bf6d133a770bd10564f06ec5dec85d1b3"
+        "sha256": "602d90c2c06299c3ef1f645acc5e8321c30fafbc51c29a867618a184ef67855b"
       },
       "vesperPs1": {
         "volume": "II",
@@ -471,7 +471,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "1a03fd88efc4c8096e88ced8bb2ae2f5d063d509a04b58db97ea8e510325d053"
+        "sha256": "ab879185fd2c118ddaefda0d7de835f61ef85380a31a23638e90cf3c72b0a378"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -550,7 +550,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "47efdec06686d164cc402bc79323e8c2bf9c33b1ead5b9c0349404df8ed8cc57"
+        "sha256": "401ccd6a60847238edc051a3e1d80fde7550f40d36c483b0072bcecd8c699414"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -577,7 +577,7 @@
         ],
         "method": "render",
         "kind": "versicle",
-        "sha256": "65f80f5da4f9849d20f43d80dad8d84731760820b0a99bb9962e6819b1d2c68b"
+        "sha256": "99f4b7ddfb3b9c4db0ab79421a8e929c4a2a22715cd4ad73e9487c19968c2b7c"
       },
       "officeOfReadingsR1": {
         "volume": "I",
@@ -587,7 +587,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "b6f667e08e8ff36bf43965bceddecebfba551e387f22c3593a2e785643a9c3e5"
+        "sha256": "d9ecce7cf8191d2dee822fcad57535e8136ab416bed48319519c191635a03d4a"
       },
       "officeOfReadingsPr": {
         "volume": "I",
@@ -618,7 +618,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "be2bf1d163e62fcabe50bf22ff9b2ccdb56994f5059b531a9446dda361d718a7"
+        "sha256": "a40d772c18f318ce99dfb3c02560d295b1f6c7604728f572edf772144cb04e5a"
       },
       "sext1Pr": {
         "volume": "I",
@@ -639,7 +639,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "14bb602663d42d6b3810872cee094f036f58fb1e02c1745ce6e30cc2418e97a6"
+        "sha256": "cfc4b7a1e18b1dc4e9ffd5b1385c0cd4896a1128fb0d77864a5dd622b1e879c9"
       },
       "sext2Pr": {
         "volume": "I",
@@ -660,7 +660,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "d84868f9d53ecc2a795a1dbd52a08995a0d095bb147f4965a14b774d4b64e6e9"
+        "sha256": "e744e93329dc39d3d389763abd9e801a400a9040a227aa9e12682cf6bb37bb49"
       },
       "sext3Pr": {
         "volume": "I",
@@ -703,7 +703,7 @@
         ],
         "method": "render",
         "kind": "versicle",
-        "sha256": "65f80f5da4f9849d20f43d80dad8d84731760820b0a99bb9962e6819b1d2c68b"
+        "sha256": "99f4b7ddfb3b9c4db0ab79421a8e929c4a2a22715cd4ad73e9487c19968c2b7c"
       },
       "officeOfReadingsR1": {
         "volume": "I",
@@ -713,7 +713,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "b6f667e08e8ff36bf43965bceddecebfba551e387f22c3593a2e785643a9c3e5"
+        "sha256": "d9ecce7cf8191d2dee822fcad57535e8136ab416bed48319519c191635a03d4a"
       },
       "officeOfReadingsPr": {
         "volume": "I",
@@ -744,7 +744,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "be2bf1d163e62fcabe50bf22ff9b2ccdb56994f5059b531a9446dda361d718a7"
+        "sha256": "a40d772c18f318ce99dfb3c02560d295b1f6c7604728f572edf772144cb04e5a"
       },
       "sext1Pr": {
         "volume": "I",
@@ -765,7 +765,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "14bb602663d42d6b3810872cee094f036f58fb1e02c1745ce6e30cc2418e97a6"
+        "sha256": "cfc4b7a1e18b1dc4e9ffd5b1385c0cd4896a1128fb0d77864a5dd622b1e879c9"
       },
       "sext2Pr": {
         "volume": "I",
@@ -786,7 +786,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "d84868f9d53ecc2a795a1dbd52a08995a0d095bb147f4965a14b774d4b64e6e9"
+        "sha256": "e744e93329dc39d3d389763abd9e801a400a9040a227aa9e12682cf6bb37bb49"
       },
       "sext3Pr": {
         "volume": "I",
@@ -829,7 +829,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "b6f667e08e8ff36bf43965bceddecebfba551e387f22c3593a2e785643a9c3e5"
+        "sha256": "d9ecce7cf8191d2dee822fcad57535e8136ab416bed48319519c191635a03d4a"
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -850,7 +850,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "25d5a3a2ca132af7a19c2d4db2a6b7141b0a3b455f0d8db06c8b8dc38d9222b6"
+        "sha256": "b40f75e004a778be8f796f08e8fe806716960d7667a541ee464a59e0739e2a27"
       },
       "laudesPr": {
         "volume": "II",
@@ -923,7 +923,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "a2aa70c1d226fd183e46d4d1ae4e187c3f3271192f3b33071dfa8f917c205c99"
+        "sha256": "6b24d6374b05cc806ccb0e1a006d84364d175e25ea5ac9c3109971994987765b"
       },
       "vesper1Pr": {
         "volume": "II",
@@ -1049,7 +1049,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "fa0d5d9c41b6bf166b483f6e0c2ed8cee01c7f0202325cc23079104ba35a691d"
+        "sha256": "cc85d9d2f2b0e002c3789c40ae7669ae0bc32eae0bef7651632c052e8208a1c9"
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -1122,7 +1122,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "92a7c2f25e373c49396f68dc21d39f501d36b04783fc9b87ba3598eb607b91b5"
+        "sha256": "3b8ed1f2be223ef1a4e76bed5e0c019994018a619d4028957827dc8687bff88c"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -1344,7 +1344,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "d047da358b22f43daf35801a349e57f95f1d3f0616591ba349dcdc77b4a89261"
+        "sha256": "df30812f8b91310c6e4c779465df7eba32fb00275f1ddcd56db97c610eeb7da3"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -1455,7 +1455,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "bb19df224c0cf91070e755af443b22d76be191b44985de8bef47548ae7351516"
+        "sha256": "68bee738554809c3b34fd11bfd75fcdd074690dc63f3da54de6f536feaf6190c"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -1492,7 +1492,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "2d83a512920a4cb392517dc4aa88e3fe7b9ccf11003925d018fcfbffcbb5a87b"
+        "sha256": "e6ee3fa03f78ef9137818a72207ecaff6e0ca98ad607c360bcf15e2d48c13e7d"
       }
     },
     "christmas": {
@@ -1504,7 +1504,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "2d83a512920a4cb392517dc4aa88e3fe7b9ccf11003925d018fcfbffcbb5a87b"
+        "sha256": "e6ee3fa03f78ef9137818a72207ecaff6e0ca98ad607c360bcf15e2d48c13e7d"
       }
     },
     "lent": {
@@ -1516,7 +1516,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "b2ff9b394c6f6093763ff66ad0a17720e8335594ab6b9c4682c36c6b510b0b91"
+        "sha256": "38aad68b25940518fcdd00373be5a2d633b09c4199aaef580016a72abeff72cd"
       },
       "laudesHymn": {
         "volume": "II",
@@ -1556,7 +1556,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "ea18515a0436b7f2424dfb0a6c510f982972b8af40e22b146fba21890ffa0415"
+        "sha256": "f77723142e7235d02165596f7684ea922b013b8208a842aa7c7387aa823e9cae"
       },
       "vesper1Hymn": {
         "volume": "II",
@@ -1680,7 +1680,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "ddce11fbba4b099d01880e56fb70cd987ed02de04e116d5bd669885cbbf3da85"
+        "sha256": "9af0e5a1329cc2c64d1c66cfab8f1d2af5d3907ea08a568fa88168dde1ee334c"
       },
       "laudesHymn": {
         "volume": "II",
@@ -1739,7 +1739,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "b4e5ce4b69a0eff2fadf906002ba1b31ba0ecde70733a6dc72f80961a01a111f"
+        "sha256": "dfa3ad32b7ac04418848fa1666941383471d1fc7dfee77f498bf42e09afc9c37"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -1928,7 +1928,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "54ce22de0a8262bcf6a31ed327b18e9c88e0f3d2caeca0cf55fee9268ab66be8"
+        "sha256": "7e38c36e3c8e44831cb2f454894405c614958c465b43b09696761b362f4a499d"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -2040,7 +2040,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "acf2ed27e39b1bf5b0a7c57552bb206e7be78f91d9eb216aa027880146f8813a"
+        "sha256": "77ece96c4aa58c43e4bb11e9bb7199f8baad89f9635354d45c165087334ca336"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -2067,7 +2067,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "bcdcdaf88859d5c05d6a156baf3efb71da984cb892f26e070a9e8ccab6f09943"
+        "sha256": "2fb2a07d37a9961482b47a6a11db1ccadbbf39eab362021bb652422cecbc3397"
       }
     },
     "christmas": {
@@ -2079,7 +2079,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "bcdcdaf88859d5c05d6a156baf3efb71da984cb892f26e070a9e8ccab6f09943"
+        "sha256": "2fb2a07d37a9961482b47a6a11db1ccadbbf39eab362021bb652422cecbc3397"
       }
     },
     "lent": {
@@ -2091,7 +2091,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "813a5ccaa98bd9569e89e656979ac7d44d2de640cd07b68430cc25949b7f3b69"
+        "sha256": "0264f0de12ab860c8dda5645d57ab07c09cac5b8d79a43e823fbea697368ffa7"
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -2112,7 +2112,7 @@
         ],
         "method": "render",
         "kind": "ant",
-        "sha256": "afb07af47077c095d48b6b8e925606ee8e22a52b89c1f1c866ef406f331eaae8"
+        "sha256": "7c489e20c097128b11f48dca42f58a3ce42c56e12a5ba7a6167bfd0e9cb92732"
       },
       "laudesR": {
         "volume": "II",
@@ -2245,7 +2245,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "a772bb758262b2ba82c2a10f6bde3b0a732b1a28cb8dd5bd5af5e1930a36fa28"
+        "sha256": "de47b8d10f2eabc650a7def4992ab62299d4184b2a1ab2024d5cd5c03aa49cab"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -2381,7 +2381,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "e9c143a7a9311661b5fe19aff3993bb89f0bb0dc2af5b609a515f5f2218d9c37"
+        "sha256": "af75590f0a68aa985566759f2d0ee003f8f0c068f9d850089c4b27bc1cd43987"
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -2451,7 +2451,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "a9c6846fb587a58890c825bd4436c586f2b1b4492978aef3a79bf39d747d4454"
+        "sha256": "054bafc9971f33e15d006bac83ba48f514f9343721a91dac5cbd8106f6e284f2"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -2461,7 +2461,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "834f86cd21405b58df7bf06190aa4d066e81403c28ce52cfea579012f60c61bb"
+        "sha256": "a6effef727bc948a27527e0dc65a249771d11d92e41df183234b3ecd8eac7af5"
       },
       "laudesPr": {
         "volume": "II",
@@ -2494,7 +2494,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "285823b56e92ae9e76daeb558059b77d1d2e9dfe8c46fa78e6aa69a9a48e4209"
+        "sha256": "356f62292e71f04bd6acb26a6ef4b1a5b178bcaca8afd80e5d9276fd826763d2"
       },
       "sext1Pr": {
         "volume": "II",
@@ -2528,7 +2528,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "919ee9621c0ced9669f035be0babbb3fe1888ab18379e896cb8778fd77a11976"
+        "sha256": "fdb8161cd82a6ced6f37178e000bb9cb9ea40837b852ae7e7c4b15901352f73f"
       },
       "sext2Pr": {
         "volume": "II",
@@ -2562,7 +2562,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "dcfdc875df1d0f42f539f8d18795d983b80f982b15e9f25e9a37e258a0d32a2a"
+        "sha256": "98ddffadb11f6c1768eb9ab0f36b20740bb2fae93cdf87a874fcb4a180c52379"
       },
       "sext3Pr": {
         "volume": "II",
@@ -2661,7 +2661,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "9b19eae1f3b7c9b11983acce11eb46bba8a4d53223c07d331352eb020946e2b0"
+        "sha256": "e5084cde996644d2442bd94df58fc6c2f86bf39034a537e8c1d07e4ffd4c16e7"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -2671,7 +2671,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "f9aa82cfff636808af67a89a29005398a4f0ca0e74215165a4de406ba855b0e7"
+        "sha256": "9f305b746dbe0869b46ed52f830a2143a98d3fdabe91fd90436e9c608fc403fe"
       },
       "vesperPr": {
         "volume": "II",
@@ -2769,7 +2769,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "fdb4fd9fda7a8ace29d993ff28c4ca0eb1ed90e9fc58be313be8ab77a65333a3"
+        "sha256": "f5f7d5ba25d1822061ebc2aec2d6685e690eccdb9a9167f6a74e128f666c5409"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -2779,7 +2779,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "6db404f0ab1b33845905cfb71ca1c7e8427c887345ffef893b7dafe71d151623"
+        "sha256": "2bb5707fd9825ef3ce1d165626431d797ebb61d93200a2ff6addd4a27bf92f60"
       },
       "vesper1Pr": {
         "volume": "II",
@@ -2803,7 +2803,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "07a839146976617feb3f80db0877974a33d6eecc26fd5e182c31acf52aea0a41"
+        "sha256": "3173d3b4e0783832491b954634367736d582ccbe90d197c1735ac99d35c3648b"
       }
     },
     "christmas": {
@@ -2815,7 +2815,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "07a839146976617feb3f80db0877974a33d6eecc26fd5e182c31acf52aea0a41"
+        "sha256": "3173d3b4e0783832491b954634367736d582ccbe90d197c1735ac99d35c3648b"
       }
     },
     "lent": {
@@ -2827,7 +2827,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "83ff4c3f8afd3bfeae8c555d680fc01097f548c735dd97410e8fde71df1787af"
+        "sha256": "ee92078175c67d8228a6abe10bca34a82e44e8639a4d664639996d01b736352e"
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -2848,7 +2848,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "1491e394eff76ce350cc680c4a41a8434a447ee4a20df28c5085940d07622b35"
+        "sha256": "a5e7c9853ac193edb5478bf7f867745f6b59cc24f720c8b5df298dffed528565"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -2971,7 +2971,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "64478082dc981553c03bdea260193b0eeddb9dc02a44990eca7424f2d5701959"
+        "sha256": "1bdf82d122f748cf3e85c321de661b4bff6b70c7fecab36d77fa6a5e088c88d0"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -3107,7 +3107,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "ddceb6d16e5e82b622985fe96c9cc013a1933897e53360b3b2e3bb23731bc540"
+        "sha256": "c7e8a2cdfd71043a3cf1b2b8eac3dfa349a571fea7d22f75db862e9206318e51"
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -3180,7 +3180,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "a9c6846fb587a58890c825bd4436c586f2b1b4492978aef3a79bf39d747d4454"
+        "sha256": "054bafc9971f33e15d006bac83ba48f514f9343721a91dac5cbd8106f6e284f2"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -3190,7 +3190,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "b4f801054a556df8589a71b623ac41e6f9062f0f9921e1b34955a5f11e29ec83"
+        "sha256": "5206e053ca5548aa97157166b1f034edb93b07573c0c438271b1b6e542f81fc7"
       },
       "laudesPr": {
         "volume": "II",
@@ -3223,7 +3223,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "447f845cef0e17196b56e71a65b7dd865b2aa1cde3ea56e4437d46c57580b7e5"
+        "sha256": "7afda8b1eccbfac5736173bfc2151881e52e9d1bf4b551fa650209048b79ed4a"
       },
       "sext1Pr": {
         "volume": "II",
@@ -3257,7 +3257,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "1fd79c9fec9d560e6eea986f24b4bd15bdb3a0bf76dedf0e350726e4a1ebf7d5"
+        "sha256": "7128e2f6350801fbdebbee70473ad3468e2e0d77e8f88412b27a791bee266d9b"
       },
       "sext2Pr": {
         "volume": "II",
@@ -3291,7 +3291,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "dcfdc875df1d0f42f539f8d18795d983b80f982b15e9f25e9a37e258a0d32a2a"
+        "sha256": "98ddffadb11f6c1768eb9ab0f36b20740bb2fae93cdf87a874fcb4a180c52379"
       },
       "sext3Pr": {
         "volume": "II",
@@ -3390,7 +3390,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "9b19eae1f3b7c9b11983acce11eb46bba8a4d53223c07d331352eb020946e2b0"
+        "sha256": "e5084cde996644d2442bd94df58fc6c2f86bf39034a537e8c1d07e4ffd4c16e7"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -3400,7 +3400,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "a4744a9b8323ee6ca45161f7e73a803b69df304d511abc20f7975679fe1393c8"
+        "sha256": "f70bf8d812598fc094cc3dea9e9b6f0a586da3e210a7722c23759f8c1136aac7"
       },
       "vesperPr": {
         "volume": "II",
@@ -3498,7 +3498,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "fdb4fd9fda7a8ace29d993ff28c4ca0eb1ed90e9fc58be313be8ab77a65333a3"
+        "sha256": "f5f7d5ba25d1822061ebc2aec2d6685e690eccdb9a9167f6a74e128f666c5409"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -3508,7 +3508,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "6db404f0ab1b33845905cfb71ca1c7e8427c887345ffef893b7dafe71d151623"
+        "sha256": "2bb5707fd9825ef3ce1d165626431d797ebb61d93200a2ff6addd4a27bf92f60"
       },
       "vesper1Pr": {
         "volume": "II",
@@ -3532,7 +3532,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "970cbfdc17700a9c6bb9e822361e4526c687b92f9b52f193097aa939b7a76230"
+        "sha256": "e12f8145293b1ab6563d00a07c0ac7fc576e8fca604f3b5b61b3bd2ca605648d"
       }
     },
     "christmas": {
@@ -3544,7 +3544,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "970cbfdc17700a9c6bb9e822361e4526c687b92f9b52f193097aa939b7a76230"
+        "sha256": "e12f8145293b1ab6563d00a07c0ac7fc576e8fca604f3b5b61b3bd2ca605648d"
       }
     },
     "lent": {
@@ -3556,7 +3556,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "5d0895a55a4226d0e0ac6cf3845c95b8ef92791ee9c90841019a8a9551ce5ad7"
+        "sha256": "9ae66d1a64cc4ee504f00c31fb95fb6371acaa7e3695bb5531f111cb2b3292e5"
       },
       "laudesR": {
         "volume": "II",
@@ -3702,7 +3702,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "2d7411787109dba3231bda0b0e3914baff90c67c70a718a28f679ba4c96fedd7"
+        "sha256": "a58001ed1f1d98ce9c127c2466e8f352297174bfc00d555c9a3b535255330a25"
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -3764,7 +3764,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "e946257ad36eb58b6d22f6caaf455f6d68b6fe9e16096aace0f65f93bb593a89"
+        "sha256": "20ad5d56d13d05caf94ed89a35a1b3665a996c6127922b3fd6dd19e7ab54159d"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -3943,7 +3943,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "32c5b5cfd07dff89990bcdd9d54f2c15b8afc990fac70c384a7024d9263d1a56"
+        "sha256": "d1d3aac84990a07efbbceb64ca30d1ce9a0531b68643f75e839e64403c7d2df6"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -4044,7 +4044,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "ef0bd0dc4c2e3acff58181b06fc06cd4a0417cb68d3be1ecb9f4ea3a3a5f7273"
+        "sha256": "74205fd530f11bc672dff51f9950101652f482573fb3fd7c742e694da72ee279"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -4071,7 +4071,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "ffcdcafef4beadb3200aeccdaffa0ba30c690ff14e56dc06a2729fa6c588d02d"
+        "sha256": "61773b8c4db8abfa70456935427261b6b8a5eacf41869a07266141e5f613a921"
       }
     },
     "christmas": {
@@ -4083,7 +4083,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "ffcdcafef4beadb3200aeccdaffa0ba30c690ff14e56dc06a2729fa6c588d02d"
+        "sha256": "61773b8c4db8abfa70456935427261b6b8a5eacf41869a07266141e5f613a921"
       }
     },
     "lent": {
@@ -4095,7 +4095,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "cfa0ab54feae2ec1eb3700d97dfa9fd396f2dac5418efe34e1c217ed6bbc93da"
+        "sha256": "ff48373b3d96813f6b66fb489fddef236476cfd2755c4b80ae43f88369241c1e"
       },
       "laudesR": {
         "volume": "II",
@@ -4248,7 +4248,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "68583a8c9d57373c0e51ebe0d2cf25cd662fbf66c8558f102848d1e435ae0bf3"
+        "sha256": "75da0d73dee11169a05937dd7395e903bcc2283d72f6ec842cbe2b9939911725"
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -4313,7 +4313,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "8066e81747e11dcb8070e4d4dc67dcbdcbaebcb83fac70b223421a9ac8f4e86e"
+        "sha256": "60b37f2f458bed98160640115e92c82c07bfd30587958b8b34e12d1bdbc2bb1e"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -4504,7 +4504,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "0b0828083b648dc4b8ae30f27eb5f0b95b7e636410c192488c8d75ed86f09dba"
+        "sha256": "4dca137440c9677166f4825b3d22c68999f498d8df47487224ed0b59fa33fc1f"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -4611,7 +4611,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "7069ca00b82434ea698b673c40e6e52d4e01fc8da18209b929267e5354f46248"
+        "sha256": "5ccd0acf22c16a9f7cebb9c455f8b53b93ab04dd2f3e67ab8978f8077d33658d"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -4839,7 +4839,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "03717ba15589c2769aee48a960b2d97b11298ddd5333134684ba37915e43db5f"
+        "sha256": "eaf4079bc8ce7f2303d65dfb0e3516a02e3444e07b84f7fcde7844805f23b2a5"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -5018,7 +5018,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "faf8feeb023ff43b84a1adb16559e310ed2f15083500dbafc01fa85a788f4348"
+        "sha256": "3f15ced1028c4f90435308d51135e3f84b284bc303739976e323be05641bf98e"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -5119,7 +5119,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "c002a4ad6c2ab10229019b234e3a1b69d97d57eac0add38fd88444edaa3e1eb4"
+        "sha256": "fd06f910581463ef8330e38a325205e880659743bb3454272a13006f0a81a1ac"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -5146,7 +5146,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "3e9a65bfcaef3e593a752a6a0dc76e8139703ef2afa114bae34efa8b90a941fa"
+        "sha256": "d1fcb2bfc2c459fc9c309ffd97bdcccc06c71fb30dd5cd90fc2e2a4d6ee75782"
       }
     },
     "christmas": {
@@ -5158,7 +5158,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "3e9a65bfcaef3e593a752a6a0dc76e8139703ef2afa114bae34efa8b90a941fa"
+        "sha256": "d1fcb2bfc2c459fc9c309ffd97bdcccc06c71fb30dd5cd90fc2e2a4d6ee75782"
       }
     },
     "lent": {
@@ -5170,7 +5170,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "a0a6d9a31dd5e6055d3e8437bfe7e2fc72f5aba9acd39e987fbeeba6477c3dfe"
+        "sha256": "64eb202c54406cf085b3ac0422065aa10afe06da92c19772481bcc87b2522dfb"
       },
       "laudesR": {
         "volume": "II",
@@ -5316,7 +5316,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "226fd03d81653d7bcffdb1bc835da5d36106fae8a8062073b5732b6ff217b16f"
+        "sha256": "d4cb43e19e57231a41cd8cd20b30f0691e51ebd90a962bb9168738f420bdc669"
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -5378,7 +5378,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "f452a7a1aa32cf5001697c7c01a653f14f6ddafc772be1983de8340dd9f54fde"
+        "sha256": "d463c4fb77eedd76307d59555c3044048dd6c9f012dd44e5ba31cc109bd70023"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -5557,7 +5557,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "33a12c8875a518eb350668ff9f4208bee1f8a080aafdf7ec5acb665205281bdb"
+        "sha256": "dad9fe1744092bd78aef52da971ce8d831f9a42a6fca38efad6eb901c08d8389"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -5658,7 +5658,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "866739c5ef2603051fae5f748b9f32fe704fdb76411cf5fa09419c8285455b89"
+        "sha256": "7df6959a037480e08a88aafb863dc61cab9790b7711af052993bda8a89a2673e"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -5685,7 +5685,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "401a4c361ee52fe1893b35c6938b7e979f77fa92d5b909af3c0e4397752b1939"
+        "sha256": "5ff619a5c94bbb5d186b9de38690dc97462f738ee6d9dc1cfe71614c2b8ea59f"
       },
       "vesperR": {
         "volume": "II",
@@ -5873,7 +5873,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "a800144e6a273c19caa84e94cbf96a37356d53d7b86e338abdd10104ed9d627e"
+        "sha256": "1078c9bbb6e6d7c7d97a30c984ac2b7417641bf225b087265ead11dc68046fb3"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -6052,7 +6052,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "424ee69937afce78927525f78a698f407401f1a1e0709f0958fcdcc11bda0f3c"
+        "sha256": "4e23884cd1077a2059b96dad0eb2cbe86e7d28181fdd29fe887c04ed55a3711e"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -6153,7 +6153,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "fd21824a4a4d741d99e28f753bf12ed613c2099b7a83072fa2dbe54e51a6408e"
+        "sha256": "e461f30dc954a9287ef800d23ddcd6d17e927b4081f5c7cb5e76e820b43b95b5"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -6180,7 +6180,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "b6ae6b8f3df9cf4fe627c161b7bb9b54155a0fa25a24c43dbe1e5102c8b01033"
+        "sha256": "700573b89c9d741ce5556e11e3ad6caad093c47591f38305072d652822338005"
       }
     },
     "christmas": {
@@ -6192,7 +6192,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "b6ae6b8f3df9cf4fe627c161b7bb9b54155a0fa25a24c43dbe1e5102c8b01033"
+        "sha256": "700573b89c9d741ce5556e11e3ad6caad093c47591f38305072d652822338005"
       }
     },
     "lent": {
@@ -6204,7 +6204,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "a580aa431178af428f3d8575368eff6d222ac7e5d31d40d495339258f4dcf782"
+        "sha256": "3016a836e899b3436867c93aafb04659d2d0ccb1c70eb955390abde0cc5eaef9"
       }
     },
     "easter": {
@@ -6229,7 +6229,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "647da46ae7ac56cd57f3077af38e5e745798dd8581d241fb3b6c5c58652f8116"
+        "sha256": "a97193c3d2571cae38ba77b878e660571aa3ba6f57c9d556c2205de1abef13d8"
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -6295,7 +6295,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "2928745cb33174f70b5ef4ccebed16a038e5bcb53360da71bc3501662cdd0886"
+        "sha256": "dd6c228893cec4b7402e563be79c97233d49dc4226043c9c88bc419aa6ad43a5"
       }
     },
     "christmas": {
@@ -6307,7 +6307,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "2928745cb33174f70b5ef4ccebed16a038e5bcb53360da71bc3501662cdd0886"
+        "sha256": "dd6c228893cec4b7402e563be79c97233d49dc4226043c9c88bc419aa6ad43a5"
       }
     },
     "lent": {
@@ -6319,7 +6319,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "2255eb0beaccee5b22a2b146b5ad5d22b424cd2d3a63bb103c699710a631c0c9"
+        "sha256": "aef8e420a5027ad2b20159d58017718d7fad38920f5fff81d28f309f95f4fb87"
       }
     },
     "easter": {
@@ -6331,7 +6331,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "0765e0f127a0bd818695b6f5a698b1977fd251bc613f00c70b9b429a7401609f"
+        "sha256": "6fd5019a28e42cbf1ae848ccaff825e6137ba716fe42e0aa05486726f69dcae1"
       },
       "officeOfReadingsR2": {
         "volume": "II",

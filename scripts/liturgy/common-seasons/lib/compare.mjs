@@ -161,7 +161,9 @@ export function classifyDifference(volumeText, ordinaryText) {
   const lowest = Math.min(coverage.volume, coverage.ordinary);
   // the two texts have about the same length and most words in common: one text in two wordings
   const similarLength = Math.max(a.length, b.length) <= 1.25 * Math.min(a.length, b.length);
-  if (lowest >= 0.8 && similarLength && (edits <= Math.max(6, Math.round(0.08 * longest)) || lowest >= 0.8)) {
+  // (a short antiphon or versicle with one or two words substituted has a low share of common words and is still one text)
+  const fewWordsChanged = longest <= 16 && edits <= 4 && Math.min(a.length, b.length) >= 5;
+  if ((lowest >= 0.8 && similarLength) || fewWordsChanged) {
     const runs = editRuns(b, a);
     const changes = runs.slice(0, 12).map((run) => ({ ordinary: run.ordinary.join(' '), volume: run.volume.join(' ') }));
     const passageOnlyVolume = runs.find((run) => !run.ordinary.length && run.volume.length >= 6);

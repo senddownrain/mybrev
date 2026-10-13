@@ -7,15 +7,17 @@
     "changed": 14,
     "unchanged": 2
   },
-  "seasonalFields": 426,
+  "seasonalFields": 530,
   "bytes": {
     "before": 1115362,
-    "after": 1685159,
-    "added": 569797
+    "after": 2036991,
+    "added": 921629
   },
   "flatBaseFieldsChanged": [
     "apostles",
-    "office-for-dead"
+    "holy-women",
+    "office-for-dead",
+    "virgins"
   ],
   "validator": {
     "invalidDocuments": [],
@@ -40,29 +42,31 @@
         "works-of-mercy"
       ],
       "removed": [],
-      "bytes": 1598215
+      "bytes": 1950047
     }
   },
-  "report": "CONTENT UPDATE DIFF\n\nliturgicalTemplates:\n  changed: 14 / 16\n  bytes:   1.5 MB\n\nTOTAL:\n  14 documents\n  1.5 MB\n\nRESULT:\nSAFE CONTENT PATCH",
+  "report": "CONTENT UPDATE DIFF\n\nliturgicalTemplates:\n  changed: 14 / 16\n  bytes:   1.9 MB\n\nTOTAL:\n  14 documents\n  1.9 MB\n\nRESULT:\nSAFE CONTENT PATCH",
   "rows": [
     {
       "id": "apostles",
       "status": "changed",
-      "seasonalFields": 41,
+      "seasonalFields": 47,
       "seasons": [
+        "advent",
+        "christmas",
         "lent",
         "easter"
       ],
       "bytesBefore": 44530,
-      "bytesAfter": 94992,
-      "addedBytes": 50462,
+      "bytesAfter": 106801,
+      "addedBytes": 62271,
       "flatBaseChangedVsSnapshot": true,
-      "sizeVsFirestoreLimit": "9.1% of 1 MiB"
+      "sizeVsFirestoreLimit": "10.2% of 1 MiB"
     },
     {
       "id": "blessed-virgin-mary",
       "status": "changed",
-      "seasonalFields": 64,
+      "seasonalFields": 79,
       "seasons": [
         "advent",
         "christmas",
@@ -70,24 +74,26 @@
         "easter"
       ],
       "bytesBefore": 146868,
-      "bytesAfter": 216878,
-      "addedBytes": 70010,
+      "bytesAfter": 271844,
+      "addedBytes": 124976,
       "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "20.7% of 1 MiB"
+      "sizeVsFirestoreLimit": "25.9% of 1 MiB"
     },
     {
       "id": "church-dedication",
       "status": "changed",
-      "seasonalFields": 40,
+      "seasonalFields": 48,
       "seasons": [
+        "advent",
+        "christmas",
         "lent",
         "easter"
       ],
       "bytesBefore": 75399,
-      "bytesAfter": 127718,
-      "addedBytes": 52319,
+      "bytesAfter": 154300,
+      "addedBytes": 78901,
       "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "12.2% of 1 MiB"
+      "sizeVsFirestoreLimit": "14.7% of 1 MiB"
     },
     {
       "id": "complementary-psalmody",
@@ -103,85 +109,93 @@
     {
       "id": "doctors-of-church",
       "status": "changed",
-      "seasonalFields": 12,
+      "seasonalFields": 43,
       "seasons": [
+        "advent",
+        "christmas",
         "lent",
         "easter"
       ],
       "bytesBefore": 63631,
-      "bytesAfter": 82834,
-      "addedBytes": 19203,
+      "bytesAfter": 129506,
+      "addedBytes": 65875,
       "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "7.9% of 1 MiB"
+      "sizeVsFirestoreLimit": "12.4% of 1 MiB"
     },
     {
       "id": "educators",
       "status": "changed",
-      "seasonalFields": 3,
+      "seasonalFields": 4,
       "seasons": [
         "easter"
       ],
       "bytesBefore": 12741,
-      "bytesAfter": 14149,
-      "addedBytes": 1408,
+      "bytesAfter": 22101,
+      "addedBytes": 9360,
       "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "1.3% of 1 MiB"
+      "sizeVsFirestoreLimit": "2.1% of 1 MiB"
     },
     {
       "id": "holy-men",
       "status": "changed",
-      "seasonalFields": 36,
+      "seasonalFields": 43,
       "seasons": [
+        "advent",
+        "christmas",
         "lent",
         "easter"
       ],
       "bytesBefore": 104072,
-      "bytesAfter": 154994,
-      "addedBytes": 50922,
+      "bytesAfter": 194370,
+      "addedBytes": 90298,
       "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "14.8% of 1 MiB"
+      "sizeVsFirestoreLimit": "18.5% of 1 MiB"
     },
     {
       "id": "holy-women",
       "status": "changed",
-      "seasonalFields": 34,
+      "seasonalFields": 39,
       "seasons": [
         "lent",
         "easter"
       ],
       "bytesBefore": 94641,
-      "bytesAfter": 129917,
-      "addedBytes": 35276,
-      "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "12.4% of 1 MiB"
+      "bytesAfter": 142656,
+      "addedBytes": 48015,
+      "flatBaseChangedVsSnapshot": true,
+      "sizeVsFirestoreLimit": "13.6% of 1 MiB"
     },
     {
       "id": "martyr-one",
       "status": "changed",
-      "seasonalFields": 59,
+      "seasonalFields": 63,
       "seasons": [
+        "advent",
+        "christmas",
         "lent",
         "easter"
       ],
       "bytesBefore": 88987,
-      "bytesAfter": 179989,
-      "addedBytes": 91002,
+      "bytesAfter": 195545,
+      "addedBytes": 106558,
       "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "17.2% of 1 MiB"
+      "sizeVsFirestoreLimit": "18.6% of 1 MiB"
     },
     {
       "id": "martyrs-many",
       "status": "changed",
-      "seasonalFields": 60,
+      "seasonalFields": 64,
       "seasons": [
+        "advent",
+        "christmas",
         "lent",
         "easter"
       ],
       "bytesBefore": 75559,
-      "bytesAfter": 161786,
-      "addedBytes": 86227,
+      "bytesAfter": 177728,
+      "addedBytes": 102169,
       "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "15.4% of 1 MiB"
+      "sizeVsFirestoreLimit": "16.9% of 1 MiB"
     },
     {
       "id": "office-for-dead",
@@ -197,29 +211,34 @@
     {
       "id": "pastors",
       "status": "changed",
-      "seasonalFields": 36,
+      "seasonalFields": 43,
       "seasons": [
+        "advent",
+        "christmas",
         "lent",
         "easter"
       ],
       "bytesBefore": 115893,
-      "bytesAfter": 164078,
-      "addedBytes": 48185,
+      "bytesAfter": 213298,
+      "addedBytes": 97405,
       "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "15.6% of 1 MiB"
+      "sizeVsFirestoreLimit": "20.3% of 1 MiB"
     },
     {
       "id": "religious",
       "status": "changed",
-      "seasonalFields": 4,
+      "seasonalFields": 9,
       "seasons": [
+        "advent",
+        "christmas",
+        "lent",
         "easter"
       ],
       "bytesBefore": 26356,
-      "bytesAfter": 30097,
-      "addedBytes": 3741,
+      "bytesAfter": 59166,
+      "addedBytes": 32810,
       "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "2.9% of 1 MiB"
+      "sizeVsFirestoreLimit": "5.6% of 1 MiB"
     },
     {
       "id": "sunday-week-1",
@@ -235,29 +254,32 @@
     {
       "id": "virgins",
       "status": "changed",
-      "seasonalFields": 34,
+      "seasonalFields": 40,
       "seasons": [
         "lent",
         "easter"
       ],
       "bytesBefore": 78340,
-      "bytesAfter": 115825,
-      "addedBytes": 37485,
-      "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "11.0% of 1 MiB"
+      "bytesAfter": 136088,
+      "addedBytes": 57748,
+      "flatBaseChangedVsSnapshot": true,
+      "sizeVsFirestoreLimit": "13.0% of 1 MiB"
     },
     {
       "id": "works-of-mercy",
       "status": "changed",
-      "seasonalFields": 3,
+      "seasonalFields": 8,
       "seasons": [
+        "advent",
+        "christmas",
+        "lent",
         "easter"
       ],
       "bytesBefore": 15107,
-      "bytesAfter": 16667,
-      "addedBytes": 1560,
+      "bytesAfter": 38353,
+      "addedBytes": 23246,
       "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "1.6% of 1 MiB"
+      "sizeVsFirestoreLimit": "3.7% of 1 MiB"
     }
   ]
 }

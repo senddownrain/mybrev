@@ -9,7 +9,7 @@ import { SEASONS, SEASON_VOLUME, SOURCE_TYPO_FIXES } from './analyze.mjs';
 import { VOLUMES } from './volume.mjs';
 import { DIFFERENCE_CLASSES } from './compare.mjs';
 import {
-  BASE_CORRECTIONS, OWNER_DECISIONS, baseVersusOrdinary, indexCrossCheck, scanSourceMisprints,
+  BASE_CORRECTIONS, OWNER_DECISIONS, baseVersusOrdinary, indexCrossCheck, scanSourceMisprints, volumeWordCoverage,
 } from './ledger.mjs';
 
 const count = (items, key) => items.reduce((acc, item) => { const k = typeof key === 'function' ? key(item) : item[key]; acc[k] = (acc[k] || 0) + 1; return acc; }, {});
@@ -156,13 +156,14 @@ export function buildAudit({ corpus, analysis, generatedFrom, baseline }) {
   const matrix = analysis.matrix.map((c) => ({
     common: c.common, hour: c.hour, field: c.field, season: c.season, volume: c.volume, category: c.category, status: c.status, relation: c.relation,
     resolution: c.resolution, method: c.method || null, rules: c.rules?.length ? c.rules : undefined, source: c.source, note: c.note,
-    difference: c.difference,
+    difference: c.difference?.identical ? { class: 0, identical: true } : c.difference,
   }));
   const variantCells = matrix.filter((c) => c.status.startsWith('variant'));
   const bySeason = Object.fromEntries(SEASONS.map((s) => [s, variantCells.filter((c) => c.season === s).length]));
   const misprints = scanSourceMisprints(corpus);
   const indexCheck = indexCrossCheck(corpus);
   const baseGaps = baseVersusOrdinary(corpus);
+  const wordCoverage = volumeWordCoverage({ corpus, variants: new Map([...analysis.variants].map(([id, perSeason]) => [id, perSeason])), seasons: SEASONS, seasonVolume: SEASON_VOLUME });
   const disputed = buildDisputed({ corpus, analysis, baseGaps });
   const decisions = buildNeedsReview({ analysis, misprints, indexCheck });
 
@@ -278,6 +279,7 @@ export function buildAudit({ corpus, analysis, generatedFrom, baseline }) {
     decisions: decisions.items,
     baseCorrections: BASE_CORRECTIONS.map(({ verify, ...rest }) => ({ ...rest, verification: verify(corpus) })),
     sourceMisprints: { fix: SOURCE_TYPO_FIXES.map((f) => ({ id: f.id, note: f.note })), occurrences: misprints, appliedInVariants: analysis.typos.get('alleyuya') || 0 },
+    wordCoverage,
     baseVersusVolumeIII: baseGaps,
     antiphonIndexOfVolumeII: indexCheck,
     disputed,
@@ -328,7 +330,7 @@ export function renderMarkdown(audit) {
     d.passages.forEach((p) => L.push(`- том ${p.volume}${p.lines[0] ? `, стр. ${p.lines[0]}–${p.lines[1]}` : ''}: ${p.text}`));
     L.push('');
   });
-  L.push('## Проверка полноты', '', `- Индекс антифонов тома II (после строки ${audit.volumes.II.indexStartLine}): ${audit.antiphonIndexOfVolumeII.indexAnnotated} пометок, без пары в корпусе: ${audit.antiphonIndexOfVolumeII.unmatched.length}.`);
+  L.push('## Проверка полноты', '', `- Слова сезонных томов в тексте приложения (для каждой клетки Common × поле × сезон слова тома ищутся по порядку в варианте или в базе): клеток ${audit.wordCoverage.cells}; без потерь ${audit.wordCoverage.buckets['0']}, 1–5 слов не найдено ${audit.wordCoverage.buckets['1–5']}, 6–19 слов ${audit.wordCoverage.buckets['6–19']}, ≥ 20 слов ${audit.wordCoverage.buckets['≥ 20']} (это разность переводческих формулировок, отсылки и страницы; крупнейшие строки — в JSON \`wordCoverage.largest\`).`, `- Индекс антифонов тома II (после строки ${audit.volumes.II.indexStartLine}): ${audit.antiphonIndexOfVolumeII.indexAnnotated} пометок, без пары в корпусе: ${audit.antiphonIndexOfVolumeII.unmatched.length}.`);
   L.push(`- «(Велікодны перыяд Аллелюя)»: в тексте тома II ${s.alleluia.annotationsInVolumeII} пометок (из них ${s.alleluia.annotationsInIndexOfVolumeII} в индексе), применено элементов ${s.alleluia.appliedElements}: ${Object.entries(s.alleluia.byRule).map(([k, v]) => `${k}: ${v}`).join(', ')}.`);
   Object.entries(audit.volumes).forEach(([id, v]) => L.push(`- Том ${id}: распознано единиц ${v.recognizedUnits}, полей ${v.recognizedFields}, парсерных замечаний ${v.parseIssues.length}.`));
   L.push('', 'Полная матрица (Common × час × поле × сезон) — в `common-seasons-audit.json`.', '');
