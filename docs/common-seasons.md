@@ -84,7 +84,7 @@ I Нешпары бяруць сезон **самога празднавання
 `tests/common-seasons-parser.test.mjs`; арыгіналы `.doc` — у сумесным архіве).
 
 ```bash
-node scripts/liturgy/common-seasons.mjs --dry-run --report   # аналіз, нічога не піша (reports/liturgy/common-seasons-audit.{json,md})
+node scripts/liturgy/common-seasons.mjs --dry-run --report   # аналіз; піша ТОЛЬКІ адчэты reports/liturgy/common-seasons-audit.{json,md} і common-seasons-base-corrections.md (common-texts не чапае)
 node scripts/liturgy/common-seasons.mjs --check              # exit 1, калі common-texts не адпавядае парсеру
 node scripts/liturgy/common-seasons.mjs --write              # абнавіць _seasonalVariants + patchs/sources/common-seasons/provenance.json
 npm run generate:fixed-feasts                                # патч db-templates (толькі кэш, без Firestore)
