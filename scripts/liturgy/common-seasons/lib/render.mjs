@@ -53,7 +53,7 @@ const redMarksEnd = (line) => {
   return `${escapeHtml(match[1])} ${red(match[2])}`;
 };
 
-export function renderPsalm(lines, { title, note } = {}) {
+export function renderPsalm(lines, { title } = {}) {
   const out = [];
   const rest = [...lines];
   const header = rest.shift();
@@ -81,7 +81,7 @@ export function renderPsalm(lines, { title, note } = {}) {
 }
 
 export function renderHymn(lines) {
-  const body = lines.map(textOf).map((text) => text.replace(/ /g, ' '));
+  const body = lines.map(textOf).map((text) => text.replace(/\u00a0/g, ' '));
   if (/^Гімн$/i.test((body[0] || '').trim())) body.shift();
   return hymnStrophes(body).map((strophe) => paragraph(strophe.map(escapeHtml).join('<br />'))).join('\n');
 }

@@ -25,15 +25,15 @@ export const VOLUMES = Object.freeze({
   III: { id: 'III', file: '03_ordinary_utf8.txt', title: 'Том III: Звычайны перыяд (базавы корпус)', seasons: ['ordinary'] },
 });
 
-const SOFT_HYPHEN = /­/g;
+const SOFT_HYPHEN = /\u00ad/g;
 
 /** Read a volume: [{ n, text }] with 1-based ORIGINAL line numbers (blank lines kept). */
 export function readVolume(filePath) {
   const buffer = fs.readFileSync(filePath);
-  const raw = buffer.toString('utf8').replace(/^﻿/, '');
+  const raw = buffer.toString('utf8').replace(/^\uFEFF/, '');
   const lines = raw.split(/\r?\n/).map((line, index) => ({
     n: index + 1,
-    text: line.replace(SOFT_HYPHEN, '').replace(/[   ]/g, ' ').replace(/[ ]+$/g, '').replace(/^[ ]+/g, ''),
+    text: line.replace(SOFT_HYPHEN, '').replace(/[\u00a0\u2007\u202f]/g, ' ').replace(/[ ]+$/g, '').replace(/^[ ]+/g, ''),
   }));
   return { lines, sha256: crypto.createHash('sha256').update(buffer).digest('hex'), bytes: buffer.length };
 }
@@ -46,14 +46,14 @@ export function normalizeForCompare(value) {
     .replace(/<[^>]*>/g, '')
     .replace(/&nbsp;/g, ' ')
     .replace(/&amp;/g, '&')
-    .replace(/[   ­​]/g, ' ')
+    .replace(/[\u00a0\u2007\u202f\u00ad\u200b]/g, ' ')
     .replace(/[’‘`´ʼ]/g, "'")
     .replace(/[«»„“”"]/g, '"')
-    .replace(/[–—−‒]/g, '-')
+    .replace(/[\u2013\u2014\u2212\u2012]/g, '-')
     .replace(/(?!\p{L})i(?!\p{L})/gu, 'і')
     .replace(/(?<=[А-Яа-яЁёІіЎў])i|i(?=[А-Яа-яЁёІіЎў])/g, 'і')
     .replace(/(?<=[А-Яа-яЁёІіЎў])I|I(?=[А-Яа-яЁёІіЎў])/g, 'І')
-    .replace(/(^|\s)[•\-]\s+/g, '$1')
+    .replace(/(^|\s)[•-]\s+/g, '$1')
     .replace(/\s+/g, ' ')
     .trim()
     .toLocaleLowerCase('be');

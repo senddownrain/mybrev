@@ -120,7 +120,7 @@ function seasonLines(units, season, ctx) {
 const baseHasHeading = (html) => /^<p[^>]*>(?:<span[^>]*>)?\s*(Першае|Другое) чытанне/u.test(html || '');
 
 /** A. Explicit seasonal branch/block. Returns replacement blocks. */
-function stepExplicit({ field, units, season, base, ctx }) {
+function stepExplicit({ units, season, base, ctx }) {
   const active = unitsForSeason(units, season);
   if (!active.length) return { fail: 'no unit of the volume carries this season' };
   const kinds = [...new Set(active.map((u) => u.kind))];
@@ -296,7 +296,7 @@ export function analyzeCorpus(corpus) {
         let renderedExplicit = false;
         if (explicit) {
           cell.category = 'seasonal_explicit';
-          const result = stepExplicit({ field, units, season, base: state.base, ctx });
+          const result = stepExplicit({ units, season, base: state.base, ctx });
           if (result.fail) {
             cell.status = 'review'; cell.note = result.fail;
             review.push({ type: 'explicit-unbuildable', common: commonId, field, season, reason: result.fail, source: cell.source });

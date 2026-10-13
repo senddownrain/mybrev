@@ -30,11 +30,6 @@ const isHeadingLike = (text) => {
   return letters.length > 3 && letters === letters.toLocaleUpperCase('be') && !/^(І|ІІ)\s+НЕШПАРЫ$/.test(upper(t));
 };
 
-/** Which unit kinds start a new unit. */
-const BOUNDARY = new Set([
-  'hymn', 'hymnRef', 'teDeum', 'psalmody', 'ant', 'canticleAnt', 'psalmTitle', 'psalmRef', 'shortReading',
-  'reading1', 'reading2', 'intercessions', 'prayer', 'prayerRef', 'daytimeHour',
-]);
 
 /**
  * @returns {{ commons: Map<string, object>, issues: object[], indexStart: number }}
