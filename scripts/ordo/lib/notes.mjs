@@ -306,7 +306,7 @@ export function buildNotes(sources, catalog) {
   }));
   const review = [];
   const firstWeekdayDioceses = { 4: new Set(), 5: new Set(), 6: new Set() };
-  const built = grouped.map((entries) => {
+  const buildOne = (entries) => {
     const lead = entries[0].occurrences[0];
     const dioceses = [...new Set(entries.map((e) => e.diocese))].sort((a, b) => DIOCESE_ORDER.indexOf(a) - DIOCESE_ORDER.indexOf(b));
     const occurrences = entries.flatMap((e) => e.occurrences);
@@ -354,7 +354,7 @@ export function buildNotes(sources, catalog) {
     }
     if (!guarded.entry) {
       review.push({ text: entry.text, selector: entry.selector, scope: entry.scope, reason: guarded.review, dates: [...new Set(occurrences.map((o) => o.date).filter(Boolean))].sort().slice(0, 12) });
-      return { replaced: 'review', occurrences, entry };
+      return { replaced: 'review', occurrences, entry, entries };
     }
     Object.assign(entry, guarded.entry);
     if (guarded.guard) entry.guard = guarded.guard;
@@ -369,17 +369,29 @@ export function buildNotes(sources, catalog) {
     });
     delete entry.dioceses;
     return { entry, occurrences };
-  });
+  };
+  const built = grouped.map(buildOne);
+  // A general note of the front matter has an explicit selector. When the cross-diocese merge put it
+  // into a cluster whose lead text is hidden for review, it must not disappear with that lead (the
+  // Grodno Advent rule about the Rorate Mass was lost this way): it is judged alone and, when it
+  // passes, published after the canonical rules so that no other note id moves.
+  const rescued = built
+    .filter((item) => item.replaced === 'review')
+    .flatMap((item) => {
+      const own = item.entries.filter((entry) => entry.basis === 'general-notes');
+      return own.length && own.length < item.entries.length ? own.map((entry) => buildOne([entry])) : [];
+    });
   const canonical = canonicalFirstWeekdayNotes(Object.fromEntries(Object.entries(firstWeekdayDioceses).map(([key, set]) => [key, [...set].sort()])));
   const notes = [
     ...built.filter((item) => !item.replaced).flatMap((item) => item.split || [item.entry]),
     ...canonical.map((entry) => ({ id: '', ...entry })),
+    ...rescued.filter((item) => !item.replaced).flatMap((item) => item.split || [item.entry]),
   ];
   notes.forEach((entry, index) => { entry.id = `ordo-note-${String(index + 1).padStart(4, '0')}`; });
   // Evidence items point at the published note (the canonical rule for the bare marks).
   const canonicalOf = (text) => notes.find((note) => note.basis === 'app-normalization'
     && note.selector.isoWeekday === bareFirstWeekdayMark(text)?.isoWeekday);
-  built.forEach((item) => {
+  [...built, ...rescued].forEach((item) => {
     if (item.split) {
       item.occurrences.forEach((o) => { o.noteId = item.split.find((note) => note.selector.date === o.date)?.id; });
       return;

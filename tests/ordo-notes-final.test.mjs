@@ -103,3 +103,21 @@ test('the same volume value is stored once per selector (no duplicates across di
   const counts = keys.reduce((acc, key) => acc.set(key, (acc.get(key) || 0) + 1), new Map());
   assert.ok([...counts.values()].every((count) => count === 1));
 });
+
+test('recheck §13: every extracted Grodno / Pinsk general note is published (none is lost in a cross-diocese cluster)', () => {
+  const published = new Set(NOTES.flatMap((note) => [note.text, ...(note.variants || []).map((variant) => variant.text)]));
+  ['grodno', 'pinsk'].forEach((diocese) => {
+    const evidence = read(`evidence/${diocese}.json`);
+    const { notes } = extractGeneralNotes({ diocese, rules: evidence.rules });
+    assert.ok(notes.length > 10, diocese);
+    const lost = notes.filter((note) => !published.has(note.text)).map((note) => note.text.slice(0, 80));
+    assert.deepEqual(lost, [], `${diocese}: general notes not published`);
+  });
+  // The Grodno Advent rule about the Rorate Mass (it was hidden with a Vitebsk cluster lead).
+  const rorate = NOTES.find((note) => /Традыцыйна ва ўсе дні Адвэнту/u.test(note.text));
+  assert.ok(rorate, 'the Rorate rule is published');
+  assert.deepEqual(rorate.scope, { level: 'diocese', dioceseId: 'grodno' });
+  assert.deepEqual(rorate.selector, { type: 'period', period: 'advent' });
+  assert.ok(texts(resolve('2026-12-02', 'grodno')).some((text) => /Раратнюю/u.test(text)));
+  assert.ok(!texts(resolve('2026-12-02', 'vitebsk')).some((text) => /Раратнюю/u.test(text)));
+});

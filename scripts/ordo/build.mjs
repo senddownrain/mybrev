@@ -18,7 +18,8 @@ import { extractGeneralNotes } from './lib/general-notes.mjs';
 
 // Raise when the published notes change (republish with ordo:import-calendar).
 // 4: Grodno/Pinsk general notes recovered; volume markers → `books` (final phase §13).
-const NOTES_REVISION = 4;
+// 5: the Grodno Advent Rorate rule is no longer hidden together with a cross-diocese cluster lead (DoD recheck).
+const NOTES_REVISION = 5;
 import { buildDifferences, properIds } from './lib/differences.mjs';
 import { alignDate } from './lib/calendar.mjs';
 
