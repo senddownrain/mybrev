@@ -363,24 +363,29 @@ const nextMonth = () => {
 
 .calendar-header {
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) 46px;
+  --month-arrow-size: clamp(32px, 10cqw, 40px);
+  grid-template-columns: var(--month-arrow-size) minmax(0, 1fr) var(--month-arrow-size);
   align-items: center;
-  gap: 8px;
-  min-height: 56px;
+  gap: 4px;
+  min-height: 52px;
 }
 
 .calendar-period {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 82px;
+  grid-template-columns: minmax(0, 1fr) clamp(64px, 20cqw, 76px);
   align-items: center;
-  gap: 6px;
+  gap: 0;
   min-width: 0;
+  border: 1px solid var(--nav-border);
+  border-radius: 24px;
+  background: var(--nav-active);
+  overflow: hidden;
 }
 
 .month-nav-btn {
-  width: 46px !important;
-  min-width: 46px !important;
-  height: 46px !important;
+  width: var(--month-arrow-size) !important;
+  min-width: var(--month-arrow-size) !important;
+  height: var(--month-arrow-size) !important;
   border: 1px solid var(--nav-border);
   color: var(--nav-on-surface);
   background: var(--nav-active);
@@ -578,10 +583,10 @@ const nextMonth = () => {
 .year-select :deep(.v-field) {
   height: 46px !important;
   min-height: 46px !important;
-  padding: 0 7px !important;
-  border: 1px solid var(--nav-border);
-  border-radius: 14px;
-  background: var(--nav-active);
+  padding: 0 4px !important;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   color: var(--nav-on-surface);
 }
 
@@ -595,7 +600,7 @@ const nextMonth = () => {
 .year-select :deep(.v-select__selection) {
   min-width: 0;
   color: var(--nav-on-surface);
-  font-size: 1rem !important;
+  font-size: clamp(0.8125rem, 4.5cqw, 1rem) !important;
   font-weight: 760 !important;
   margin: 0 !important;
   text-align: center !important;
@@ -632,7 +637,8 @@ const nextMonth = () => {
 .year-select :deep(.v-field__append-inner) {
   color: var(--nav-on-surface);
   opacity: 0.52;
-  padding-inline-start: 2px;
+  padding-inline-start: 0;
+  font-size: 16px;
 }
 
 :global(.v-menu > .date-picker-select-menu.v-overlay__content > .v-list) {
@@ -641,57 +647,37 @@ const nextMonth = () => {
   overscroll-behavior: contain;
 }
 
+.month-select :deep(.v-field__append-inner .v-icon),
+.year-select :deep(.v-field__append-inner .v-icon) {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+/* Both segments keep their existing VSelect keyboard/focus behavior. */
+.year-select { position: relative; }
+.year-select::before {
+  content: '';
+  position: absolute;
+  inset-block: 12px;
+  inset-inline-start: 0;
+  z-index: 1;
+  width: 1px;
+  background: var(--nav-border);
+  pointer-events: none;
+}
+
+.month-select :deep(.v-field--focused),
+.year-select :deep(.v-field--focused) {
+  box-shadow: inset 0 -2px 0 var(--focus-ring) !important;
+  background: var(--nav-active);
+}
+
+@media (max-width: 430px) {
+  .custom-date-picker { padding-inline: 12px; }
+}
+
 @container (max-width: 350px) {
-  /* Keep the full month between the arrows; the year has its own row. */
-  .calendar-header {
-    grid-template-columns: 40px minmax(0, 1fr) 40px;
-    gap: 6px;
-    padding-block: 4px;
-  }
-
-  .calendar-period {
-    display: contents;
-  }
-
-  .month-select {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .year-select {
-    grid-column: 2;
-    grid-row: 2;
-    width: 90px;
-    justify-self: center;
-  }
-
-  .calendar-header > :last-child {
-    grid-column: 3;
-    grid-row: 1;
-  }
-
-  .calendar-period {
-    grid-template-columns: minmax(0, 1fr) 80px;
-    gap: 4px;
-  }
-
-  .month-nav-btn {
-    width: 40px !important;
-    min-width: 40px !important;
-    height: 40px !important;
-  }
-
-  .month-select :deep(.v-field),
-  .year-select :deep(.v-field) {
-    height: 44px !important;
-    min-height: 44px !important;
-  }
-
-  .month-select :deep(.v-field__input),
-  .year-select :deep(.v-field__input) {
-    min-height: 42px !important;
-  }
-
   .day-btn {
     min-width: 36px !important;
     width: 36px;
