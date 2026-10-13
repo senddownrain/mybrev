@@ -340,7 +340,8 @@ export function analyzeCorpus(corpus) {
           }
           continue;
         }
-        const value = fromBlocks(state.base);
+        const value0 = fromBlocks(state.base);
+        const value = value0;
         const countAlleluia = (v) => (normalizeForCompare(Array.isArray(v) ? v.join(' ') : v).match(/аллелюя/gu) || []).length;
         const nearEqual = hasBaseText && ['psalm', 'reading1', 'reading2'].includes(cell.kind) && similarity(plainOf(value), plainOf(baseValue)) >= 0.97
           && countAlleluia(value) === countAlleluia(baseValue);
@@ -348,12 +349,15 @@ export function analyzeCorpus(corpus) {
         if (equal && nearEqual) cell.editorialNote = 'equal to the stored base up to editorial wording';
         cell.method = [...state.methods].join('+');
         cell.rules = [...ctx.rules];
-        if (equal) { cell.relation = 'same'; cell.note = 'the seasonal text equals the stored base (not duplicated)'; continue; }
-        cell.relation = hasBaseText ? 'differs' : 'absent';
+        if (equal && (!explicit || state.methods.has('carrier-equal'))) { cell.relation = 'same'; cell.note = 'the seasonal text equals the stored base (not duplicated)'; continue; }
+        const equalsBase = Boolean(equal);
+        const finalValue = equalsBase ? baseValue : value0;
+        cell.relation = equalsBase ? 'same' : (hasBaseText ? 'differs' : 'absent');
+        if (equalsBase) cell.note = 'explicit seasonal text of the volume equals the stored base; stored explicitly so the season does not depend on the base';
         cell.status = ctx.problems.some((p) => !p.unverified && !p.lowConfidence) ? 'variant-partial' : 'variant';
         cell.sourceHash = sha(active.map((u) => (unitLines(u, season, { raw: true }) || []).map((l) => l.text).join('\n')).join('\n'));
         (perSeason[season] ||= {})[field] = {
-          value, method: cell.method, kind: cell.kind || 'annotated', rules: cell.rules, volume: volId, lines: cell.source.lines, hash: sha(JSON.stringify(value)), partial: cell.status === 'variant-partial',
+          value: finalValue, equalsBase, method: cell.method, kind: cell.kind || 'annotated', rules: cell.rules, volume: volId, lines: cell.source.lines, hash: sha(JSON.stringify(finalValue)), partial: cell.status === 'variant-partial',
         };
       }
     }

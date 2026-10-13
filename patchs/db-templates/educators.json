@@ -18,5 +18,18 @@
   "vesper1AntMag": [
     "<p><span style=\"color: #ff0000;\">Ант. да песні</span><span style=\"color: #ff0000;\"> Марыі: </span>Слухай, сыне, наказы бацькі свайго <span style=\"color: #ff0000;\">* </span>і не адкідай павучэнняў сваёй маці, <span style=\"color: #ff0000;\">/ </span>але назаўсёды запішы іх у сэрцы сваім.<span style=\"color: #ff0000;\"> </span></p>"
   ],
-  "vesper1Pr": "<p style=\"text-align: justify;\"><span style=\"color: #ff0000;\">Калі няма ўласнай малітвы, чытаецца ніжэйпададзеная:</span></p>\n<p style=\"text-align: justify;\">Пане, наш Божа, Ты паклiкаў да службы ў Тваiм Касцёле святога <span style=\"color: #ff0000;\">(</span>святую<span style=\"color: #ff0000;\">)</span><span style=\"color: #ff0000;\"> </span><span style=\"color: #ff0000;\">N</span><span style=\"color: #ff0000;\">.</span>, каб ён паказваў <span style=\"color: #ff0000;\">(</span>яна паказвала<span style=\"color: #ff0000;\">)</span> блiжнiм шлях да збаўлення, учыні, каб, наследуючы яго <span style=\"color: #ff0000;\">(</span>яе<span style=\"color: #ff0000;\">)</span> прыклад, мы iшлi за Хрыстом, нашым Настаўнiкам і Панам, i разам з нашымi братамi маглi прыйсцi да вечнай радасці прабывання з Табою. Праз Пана нашага.</p>"
+  "vesper1Pr": "<p style=\"text-align: justify;\"><span style=\"color: #ff0000;\">Калі няма ўласнай малітвы, чытаецца ніжэйпададзеная:</span></p>\n<p style=\"text-align: justify;\">Пане, наш Божа, Ты паклiкаў да службы ў Тваiм Касцёле святога <span style=\"color: #ff0000;\">(</span>святую<span style=\"color: #ff0000;\">)</span><span style=\"color: #ff0000;\"> </span><span style=\"color: #ff0000;\">N</span><span style=\"color: #ff0000;\">.</span>, каб ён паказваў <span style=\"color: #ff0000;\">(</span>яна паказвала<span style=\"color: #ff0000;\">)</span> блiжнiм шлях да збаўлення, учыні, каб, наследуючы яго <span style=\"color: #ff0000;\">(</span>яе<span style=\"color: #ff0000;\">)</span> прыклад, мы iшлi за Хрыстом, нашым Настаўнiкам і Панам, i разам з нашымi братамi маглi прыйсцi да вечнай радасці прабывання з Табою. Праз Пана нашага.</p>",
+  "_seasonalVariants": {
+    "easter": {
+      "laudesAntBen": [
+        "<p><span style=\"color: #ff0000;\">Ант. да песні Захарыі</span><span style=\"color: #ff0000;\">: </span>Хто міласэрны, той вучыць і выхоўвае, <span style=\"color: #ff0000;\">* </span>як пастыр сваіх авечак, <span style=\"color: #ff0000;\">/</span> аллелюя.<span style=\"color: #ff0000;\"> </span></p>"
+      ],
+      "vesperAntMag": [
+        "<p><span style=\"color: #ff0000;\">Ант. да песні</span><span style=\"color: #ff0000;\"> Марыі: </span>Дазвольце дзецям прыходзіць да Мяне, <span style=\"color: #ff0000;\">*</span> не забараняйце ім, <span style=\"color: #ff0000;\">/</span> бо такім належыць Валадарства Божае, <span style=\"color: #ff0000;\">/</span> аллелюя.<span style=\"color: #ff0000;\"> </span></p>"
+      ],
+      "vesper1AntMag": [
+        "<p><span style=\"color: #ff0000;\">Ант. да песні</span><span style=\"color: #ff0000;\"> Марыі: </span>Слухай, сыне, наказы бацькі свайго <span style=\"color: #ff0000;\">* </span>і не адкідай павучэнняў сваёй маці, <span style=\"color: #ff0000;\">/ </span>але назаўсёды запішы іх у сэрцы сваім, <span style=\"color: #ff0000;\">/</span> аллелюя.<span style=\"color: #ff0000;\"> </span></p>"
+      ]
+    }
+  }
 }

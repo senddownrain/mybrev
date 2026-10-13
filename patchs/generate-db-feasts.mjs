@@ -36,6 +36,7 @@ import {
 } from '../src/constants/officeFields.js';
 import { hasFirstVespers, inferTemplates, isEmptyValue, splitSource } from '../scripts/lib/feast-content.mjs';
 import { scaffoldDecision } from '../scripts/lib/scaffold-commons.mjs';
+import { SEASONAL_VARIANTS_FIELD, validateSeasonalVariants } from '../src/utils/ordo/commonSeasons.js';
 
 const CONTENT_FIELDS = OFFICE_CONTENT_FIELDS;
 /** Prayers that are the Office of Readings prayer when the Proper has only that one (final phase recheck §19). */
@@ -441,6 +442,27 @@ function buildSparseOutput({ sourceFile, outputStem, source, kind, templates, re
   return { outputFile, output };
 }
 
+/**
+ * Sparse seasonal deltas of a Common (`_seasonalVariants`, see
+ * src/utils/ordo/commonSeasons.js). Copied as they are written in the source
+ * (field order of OFFICE_CONTENT_FIELDS), validated; the flat base fields are untouched.
+ */
+function seasonalVariantsOf(id, raw, report) {
+  const variants = raw[SEASONAL_VARIANTS_FIELD];
+  if (variants === undefined) return {};
+  const issues = validateSeasonalVariants({ _id: id, [SEASONAL_VARIANTS_FIELD]: variants });
+  issues.forEach((issue) => report.invalidOutputs.push({ file: `common-texts/${id}.json`, ...issue }));
+  const ordered = {};
+  ['advent', 'christmas', 'lent', 'easter'].forEach((season) => {
+    const delta = variants[season];
+    if (!delta || typeof delta !== 'object') return;
+    const fields = CONTENT_FIELDS.filter((field) => field in delta);
+    if (fields.length) ordered[season] = Object.fromEntries(fields.map((field) => [field, delta[field]]));
+  });
+  report.seasonalVariants = (report.seasonalVariants || 0) + Object.values(ordered).reduce((total, delta) => total + Object.keys(delta).length, 0);
+  return Object.keys(ordered).length ? { [SEASONAL_VARIANTS_FIELD]: ordered } : {};
+}
+
 /** `liturgicalTemplates` documents: the Commons and the Sunday, week I psalter. */
 function buildTemplateOutputs({ templates, firstWeekDay, complementary, manifest, report }) {
   const titles = new Map((manifest.sections || []).map((item) => [item.file.replace(/\.json$/, ''), item.title]));
@@ -456,6 +478,7 @@ function buildTemplateOutputs({ templates, firstWeekDay, complementary, manifest
         title: titles.get(id) || TEMPLATE_TITLES[id] || id,
         ...Object.fromEntries(CONTENT_FIELDS.filter((field) => field in texts).map((field) => [field, texts[field]])),
         ...(Object.keys(rules).length ? { _fieldRules: Object.fromEntries(CONTENT_FIELDS.filter((field) => field in rules).map((field) => [field, rules[field]])) } : {}),
+        ...seasonalVariantsOf(id, raw, report),
       },
     };
   });
@@ -711,6 +734,7 @@ async function main() {
     recoveredFromFixedDays: report.recoveredFromFixedDays.length,
     commonTextTemplates: templates.size,
     templateDocuments: templateOutputs.length,
+    seasonalVariantFields: report.seasonalVariants || 0,
     generatedFiles: allOutputs.length,
     scaffolds: scaffolds.length,
     multipleTemplateSources: outputs.filter(({ output }) => output._templates.length > 1).length,

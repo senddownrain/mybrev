@@ -11,6 +11,16 @@
         "kind": "reading1",
         "sha256": "c791f294efc086dec74f1d0cdab5997c0e9d6ea57cc0acf229960dd14cb7e133"
       },
+      "laudesR": {
+        "volume": "II",
+        "lines": [
+          350,
+          356
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "e6902a453187fd3f81380ae5eabad7dd217d2d215e8af7b53d41485214425940"
+      },
       "laudesAntBen": {
         "volume": "II",
         "lines": [
@@ -40,6 +50,16 @@
         "method": "render",
         "kind": "psalm",
         "sha256": "674230836b62514ebeeb1bbd2d7ffa94785012022916ff25b4fc205c5d387ed6"
+      },
+      "vesperR": {
+        "volume": "II",
+        "lines": [
+          521,
+          527
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "4ef7f880395614455d59ea47db7b240079437ef65655d5f4ddb1852df9d5a1ab"
       },
       "vesper1Ant1": {
         "volume": "II",
@@ -80,6 +100,16 @@
         "method": "render",
         "kind": "psalm",
         "sha256": "5d001b18c040b71842716eabafc2a3c998264b08442198466ac568fc030dfc1c"
+      },
+      "vesper1R": {
+        "volume": "II",
+        "lines": [
+          112,
+          118
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "734b98cab0712376be9b8b26b3b764a7da0e77de72ea62891f3cf1f7f33ee994"
       }
     },
     "easter": {
@@ -354,6 +384,16 @@
         ],
         "sha256": "eb29d65571bf018065c93fac253e045ddec63397f007d6e63d82abeddfda8cfc"
       },
+      "vesper1Ant1": {
+        "volume": "II",
+        "lines": [
+          9,
+          10
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "4dcef5a3e34af9278e053841e3824983082b12131fdc59f9375d125b30d42446"
+      },
       "vesper1Ant2": {
         "volume": "II",
         "lines": [
@@ -367,6 +407,16 @@
         ],
         "sha256": "ca6d04e02c61e9b4692b78a3ab3c244bf8e80983b2988bac0e0128c0683e0a8c"
       },
+      "vesper1Ant3": {
+        "volume": "II",
+        "lines": [
+          59,
+          87
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "abaecc1f474e3646914fab5a6c49b3a5d2c651b63dc0d9796a2b4e61aa236dc9"
+      },
       "vesper1Ps2": {
         "volume": "II",
         "lines": [
@@ -379,6 +429,16 @@
           "alleluia-v1"
         ],
         "sha256": "f37b70abea516ffe70b2cc68f6fc230da999aa4686e7b334aa34bc1bcf81782c"
+      },
+      "vesper1Ps3": {
+        "volume": "II",
+        "lines": [
+          60,
+          111
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "ee2c9171230f7731ad259f6adbf175670b6cd96c40ace3e1ef0c206879c57761"
       },
       "vesper1R": {
         "volume": "II",
@@ -632,6 +692,16 @@
         "kind": "ref",
         "from": "laudesPr",
         "sha256": "08da4116c1b35b44d73297d9ad88339a5bfc552ca1919b53e3eab6c8da3d491d"
+      },
+      "vesperR": {
+        "volume": "II",
+        "lines": [
+          1055,
+          1061
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "05130f1dafe424efd6c19b6f85802cde595d8cef68d56181de9c1b85e89baec4"
       },
       "vesperPr": {
         "volume": "II",
@@ -1167,6 +1237,26 @@
         "kind": "hymn",
         "sha256": "db8a12227b84814ace9bd178907843e2dbae9ce1e4ca4b8c35ee54958ec6b8ef"
       },
+      "laudesR": {
+        "volume": "II",
+        "lines": [
+          1350,
+          1356
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "efde181c12bc32dc2d4a193c1c8d1a5f71a0d482f6a3efd602e25380bb02e38e"
+      },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          1397,
+          1447
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "7354e8ab45e85412aa5f829cf3ecf0076f3bb33b01bedcf5bd20be7d8dba06c4"
+      },
       "vesperR": {
         "volume": "II",
         "lines": [
@@ -1176,6 +1266,27 @@
         "method": "carrier+render",
         "kind": "shortReading",
         "sha256": "ea18515a0436b7f2424dfb0a6c510f982972b8af40e22b146fba21890ffa0415"
+      },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          1397,
+          1447
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "7354e8ab45e85412aa5f829cf3ecf0076f3bb33b01bedcf5bd20be7d8dba06c4"
+      },
+      "vesper1R": {
+        "volume": "II",
+        "lines": [
+          1161,
+          1167
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "8ff55c2fa65f25ee501044c083e6f53e099f831c409d095fb86b63ea76959f01"
       }
     },
     "easter": {
@@ -1636,6 +1747,26 @@
         "kind": "ant",
         "sha256": "afb07af47077c095d48b6b8e925606ee8e22a52b89c1f1c866ef406f331eaae8"
       },
+      "laudesR": {
+        "volume": "II",
+        "lines": [
+          1873,
+          1876
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "bc24d538c65612ceeec1f5597fb99c730ac89111a69d5e25d46705b691d41942"
+      },
+      "laudesAntBen": {
+        "volume": "II",
+        "lines": [
+          1877,
+          1877
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "f522d23752cdeaf28f41476610c40c2fa4d6aae06ceea621a95d14836ce9f6e6"
+      },
       "laudesPr": {
         "volume": "II",
         "lines": [
@@ -1645,6 +1776,16 @@
         "method": "render",
         "kind": "prayer",
         "sha256": "f88d75bcb1e9753b782cbfd8ad0707a613ec2e4af030b17f802a28b1fe263f22"
+      },
+      "sext1R": {
+        "volume": "II",
+        "lines": [
+          1930,
+          1936
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "f0d863017706c2e9dc20e4c55209ad5e1fdbcc47c630dc3c992a0f6e55a82247"
       },
       "sext1Pr": {
         "volume": "II",
@@ -1657,6 +1798,16 @@
         "from": "laudesPr",
         "sha256": "f88d75bcb1e9753b782cbfd8ad0707a613ec2e4af030b17f802a28b1fe263f22"
       },
+      "sext2R": {
+        "volume": "II",
+        "lines": [
+          1939,
+          1945
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "1dd5ea247aca807d594d17dafab7fc8fa0aabcdc22706b2ebaea0f6cb24f9e23"
+      },
       "sext2Pr": {
         "volume": "II",
         "lines": [
@@ -1668,6 +1819,16 @@
         "from": "laudesPr",
         "sha256": "f88d75bcb1e9753b782cbfd8ad0707a613ec2e4af030b17f802a28b1fe263f22"
       },
+      "sext3R": {
+        "volume": "II",
+        "lines": [
+          1948,
+          1954
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "bae8dc7bf0349349917d2755d722f7788111c2b2a3c4eb1cc9b816182c55de27"
+      },
       "sext3Pr": {
         "volume": "II",
         "lines": [
@@ -1678,6 +1839,26 @@
         "kind": "ref",
         "from": "laudesPr",
         "sha256": "f88d75bcb1e9753b782cbfd8ad0707a613ec2e4af030b17f802a28b1fe263f22"
+      },
+      "vesperR": {
+        "volume": "II",
+        "lines": [
+          2044,
+          2047
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "a67115d2e633be186529dd174a2a8897a22c78fc878e6a508355d464a32a22ab"
+      },
+      "vesperAntMag": {
+        "volume": "II",
+        "lines": [
+          2048,
+          2048
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "42e745d39b878aabdafdc38fa299dc579e3de561c9c5253bad85cb079f554584"
       },
       "vesperPr": {
         "volume": "II",
@@ -1698,6 +1879,16 @@
         "method": "render",
         "kind": "shortReading",
         "sha256": "a772bb758262b2ba82c2a10f6bde3b0a732b1a28cb8dd5bd5af5e1930a36fa28"
+      },
+      "vesper1AntMag": {
+        "volume": "II",
+        "lines": [
+          1635,
+          1635
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "f99ccaf9bb25fcc1610faa9b53c1b0a91950afa620b19ab8d84d5663e9b8134f"
       },
       "vesper1Pr": {
         "volume": "II",
@@ -1835,6 +2026,16 @@
           "alleluia-v1"
         ],
         "sha256": "be66ce472b9894f34a7b0e9ee313f2a8c692d874998e0ea80f70630b0e986f1b"
+      },
+      "laudesAnt2": {
+        "volume": "II",
+        "lines": [
+          1868,
+          1869
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "27566c69773476b69976d46ec729b67183f1be7938115abc5848d22aaf480b18"
       },
       "laudesAnt3": {
         "volume": "II",
@@ -2211,6 +2412,17 @@
         "kind": "reading1",
         "sha256": "8192bef26903c9178d0cc918797cc251dfd8f44f0a6687e0d597cfe2b05cb281"
       },
+      "officeOfReadingsPr": {
+        "volume": "II",
+        "lines": [
+          2538,
+          2547
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "78c2fa8a4bfd971322c2a64c849aa9e1b81ce4650faa9a315fac0b1eddf4728a"
+      },
       "laudesR": {
         "volume": "II",
         "lines": [
@@ -2221,6 +2433,119 @@
         "kind": "shortReading",
         "sha256": "1491e394eff76ce350cc680c4a41a8434a447ee4a20df28c5085940d07622b35"
       },
+      "laudesAntBen": {
+        "volume": "II",
+        "lines": [
+          2525,
+          2525
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "3c0d838ea01912e864404e3d8c3d9c9a9f1b8381f6c2c24d4ff723653d7c43ea"
+      },
+      "laudesPr": {
+        "volume": "II",
+        "lines": [
+          2538,
+          2547
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "78c2fa8a4bfd971322c2a64c849aa9e1b81ce4650faa9a315fac0b1eddf4728a"
+      },
+      "sext1R": {
+        "volume": "II",
+        "lines": [
+          2578,
+          2584
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "b1977da7a811bdf5161827a83e3cba16cbd7bfc31e7055933807ba0994657c5e"
+      },
+      "sext1Pr": {
+        "volume": "II",
+        "lines": [
+          2538,
+          2547
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "78c2fa8a4bfd971322c2a64c849aa9e1b81ce4650faa9a315fac0b1eddf4728a"
+      },
+      "sext2R": {
+        "volume": "II",
+        "lines": [
+          2587,
+          2593
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "8b79f3054087eb0913f5a0dcba95042185ead49d8c7d296a7832e308d3090d61"
+      },
+      "sext2Pr": {
+        "volume": "II",
+        "lines": [
+          2538,
+          2547
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "78c2fa8a4bfd971322c2a64c849aa9e1b81ce4650faa9a315fac0b1eddf4728a"
+      },
+      "sext3R": {
+        "volume": "II",
+        "lines": [
+          2596,
+          2602
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "1926f1f8ecdc9988c38ba67808a3bb5da2e1fdcec572042018821f90e427e6f6"
+      },
+      "sext3Pr": {
+        "volume": "II",
+        "lines": [
+          2538,
+          2547
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "78c2fa8a4bfd971322c2a64c849aa9e1b81ce4650faa9a315fac0b1eddf4728a"
+      },
+      "vesperR": {
+        "volume": "II",
+        "lines": [
+          2747,
+          2750
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "6684d6854413625b56acceb8915b03c0321a06438003d28f124b17ab7aedbbd7"
+      },
+      "vesperAntMag": {
+        "volume": "II",
+        "lines": [
+          2751,
+          2751
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "cd05e233279a25bd09a996c45f69a1ae31adef5f99a687620cefef531047cd80"
+      },
+      "vesperPr": {
+        "volume": "II",
+        "lines": [
+          2766,
+          2775
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "78c2fa8a4bfd971322c2a64c849aa9e1b81ce4650faa9a315fac0b1eddf4728a"
+      },
       "vesper1R": {
         "volume": "II",
         "lines": [
@@ -2230,6 +2555,26 @@
         "method": "render",
         "kind": "shortReading",
         "sha256": "64478082dc981553c03bdea260193b0eeddb9dc02a44990eca7424f2d5701959"
+      },
+      "vesper1AntMag": {
+        "volume": "II",
+        "lines": [
+          2199,
+          2201
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "c5bcf1944ce972ddd129785b10709260e45b63fef0449c2460c1f613b9913337"
+      },
+      "vesper1Pr": {
+        "volume": "II",
+        "lines": [
+          2216,
+          2225
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "78c2fa8a4bfd971322c2a64c849aa9e1b81ce4650faa9a315fac0b1eddf4728a"
       }
     },
     "easter": {
@@ -2745,6 +3090,36 @@
         "method": "render",
         "kind": "reading1",
         "sha256": "fccbd0d449d6b2ec95363c449aa4e3de8dc6dc7cc5acaed08b4f65a887a3cdbc"
+      },
+      "laudesR": {
+        "volume": "II",
+        "lines": [
+          3203,
+          3209
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "c7a9e1336e506c4afa9e616d283dff8feb57578e87db0fb9d6275dd2e797cc7c"
+      },
+      "vesperR": {
+        "volume": "II",
+        "lines": [
+          3377,
+          3383
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "a442e703932c7207760a36b0158a7beb269baa6505e7d7b936ff4262f019fa2e"
+      },
+      "vesper1R": {
+        "volume": "II",
+        "lines": [
+          2881,
+          2887
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "d790396e420afa49f2a3752e05f66e43868670afc8feaf9484fd27bf2335e2f4"
       }
     },
     "easter": {
@@ -3165,6 +3540,36 @@
         "method": "render",
         "kind": "reading1",
         "sha256": "d2c55a958e8bce7a5589d6b30dde522e3cbcd45d3112fffbb5c17c0252d88b93"
+      },
+      "laudesR": {
+        "volume": "II",
+        "lines": [
+          3515,
+          3521
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "e9caedb032fe440149b64280733675ddd07ac3a1dc71b26499f0181541baa3e0"
+      },
+      "vesperR": {
+        "volume": "II",
+        "lines": [
+          3552,
+          3558
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "a2fee8e5718af154556330341981be7f7d3224d27a112166a3a1c359d1dfae73"
+      },
+      "vesper1R": {
+        "volume": "II",
+        "lines": [
+          3419,
+          3425
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "4dab0561072b1f9a1e4eb753c6f349f47f1a0a1e522185e6cf694c33289ccbde"
       }
     },
     "easter": {
@@ -3263,6 +3668,38 @@
     }
   },
   "virgins": {
+    "lent": {
+      "laudesR": {
+        "volume": "II",
+        "lines": [
+          3851,
+          3857
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "23cb28aec7df7fd1b79399ce0027f43b321ea799c0ab28b10734920c2118b73a"
+      },
+      "vesperR": {
+        "volume": "II",
+        "lines": [
+          3994,
+          4000
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "9da7c5d25dd26ab8fa42dbcd86ba4c5fac1e2b2a388d1d722281aab3cd0329e1"
+      },
+      "vesper1R": {
+        "volume": "II",
+        "lines": [
+          3635,
+          3641
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "621aba7a4a162fae3ba3a8ca93d554fcb75b674afed04a4427b15e787611df5b"
+      }
+    },
     "easter": {
       "invitatoriumAnt": {
         "volume": "II",
@@ -3671,6 +4108,36 @@
         "method": "render",
         "kind": "reading1",
         "sha256": "7dae899c130a63cf9c8579f70c2f9bf0a064e7af5841a0660c04343185279394"
+      },
+      "laudesR": {
+        "volume": "II",
+        "lines": [
+          4364,
+          4370
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "84cf0e93cba9ec2a7f2901e3f66b4686bd62a879d107cb504bc090c6de6dfb0e"
+      },
+      "vesperR": {
+        "volume": "II",
+        "lines": [
+          4527,
+          4533
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "55c8ddfb9f95d3b5fb4160a1a219a37a998f003f726669b379b1f4878a1f9510"
+      },
+      "vesper1R": {
+        "volume": "II",
+        "lines": [
+          4102,
+          4108
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "931e106d2685a28457ef76c8d0a8c1691520b0ba37ae69db970d5f99049ec7c3"
       }
     },
     "easter": {
@@ -4091,6 +4558,26 @@
         "method": "carrier+render",
         "kind": "shortReading",
         "sha256": "401a4c361ee52fe1893b35c6938b7e979f77fa92d5b909af3c0e4397752b1939"
+      },
+      "vesperR": {
+        "volume": "II",
+        "lines": [
+          5012,
+          5018
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "8bff321631bcc011375bc4ce0de1454f307ac68015d69c4df4ce0eb86cdd7c9a"
+      },
+      "vesper1R": {
+        "volume": "II",
+        "lines": [
+          4635,
+          4641
+        ],
+        "method": "carrier+render",
+        "kind": "shortReading",
+        "sha256": "63f50632959a081e850e5f09037ba7e22b2ddab4fb526aaead2e512b16801528"
       }
     },
     "easter": {

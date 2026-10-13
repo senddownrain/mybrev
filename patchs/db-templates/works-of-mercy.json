@@ -19,5 +19,18 @@
   "vesper1AntMag": [
     "<p><span style=\"color: #ff0000;\">Ант. да песні Марыі:</span><span style=\"color: #ff0000;\"> </span>Хто змілуеццца над убогім, будзе благаслаўлёны; <span style=\"color: #ff0000;\">* </span>хто верыць у Пана, той любіць міласэрнасць.<span style=\"color: #ff0000;\"> </span></p>"
   ],
-  "vesper1Pr": "<p style=\"text-align: justify;\"><span style=\"color: #ff0000;\">Калі няма ўласнай малітвы, чытаецца ніжэйпададзеная:</span></p>\n<p style=\"text-align: justify;\">Спрадвечны Божа, Ты вучыў Твой Касцёл, што ўсе Твае запаведзі змяшчаюцца ў любові да Цябе і да бліжняга; учыні, каб мы, ідучы за прыкладам святога <span style=\"color: #ff0000;\">(</span>святой<span style=\"color: #ff0000;\">)</span> <span style=\"color: #ff0000;\">N</span><span style=\"color: #ff0000;\">.</span><span style=\"color: #ff0000;\"> </span>здзяйснялі ўчынкi міласэрнасці і, дзякуючы гэтаму, былі далучаныя да ліку благаслаўлёных у Тваім Валадарстве. Праз Пана нашага.</p>"
+  "vesper1Pr": "<p style=\"text-align: justify;\"><span style=\"color: #ff0000;\">Калі няма ўласнай малітвы, чытаецца ніжэйпададзеная:</span></p>\n<p style=\"text-align: justify;\">Спрадвечны Божа, Ты вучыў Твой Касцёл, што ўсе Твае запаведзі змяшчаюцца ў любові да Цябе і да бліжняга; учыні, каб мы, ідучы за прыкладам святога <span style=\"color: #ff0000;\">(</span>святой<span style=\"color: #ff0000;\">)</span> <span style=\"color: #ff0000;\">N</span><span style=\"color: #ff0000;\">.</span><span style=\"color: #ff0000;\"> </span>здзяйснялі ўчынкi міласэрнасці і, дзякуючы гэтаму, былі далучаныя да ліку благаслаўлёных у Тваім Валадарстве. Праз Пана нашага.</p>",
+  "_seasonalVariants": {
+    "easter": {
+      "laudesAntBen": [
+        "<p><span style=\"color: #ff0000;\">Ант. да п</span><span style=\"color: #ff0000;\">есні Захарыі: </span>Па гэтым усе пазнаюць, што вы Мае вучні, <span style=\"color: #ff0000;\">*</span> калі будзеце мець любоў адзін да аднаго, <span style=\"color: #ff0000;\">/</span> аллелюя.<span style=\"color: #ff0000;\"> </span></p>"
+      ],
+      "vesperAntMag": [
+        "<p><span style=\"color: #ff0000;\">Ант. да песні Марыі: </span>Сапраўды кажу вам: <span style=\"color: #ff0000;\">* </span>тое, што вы зрабілі аднаму з гэтых братоў Маіх меншых, вы Мне зрабілі. <span style=\"color: #ff0000;\">/ </span>Прыйдзіце, благаслаўлёныя Айца Майго, прыміце ў спадчыну Валадарства, <span style=\"color: #ff0000;\">/ </span>падрыхтаванае вам ад стварэння свету, <span style=\"color: #ff0000;\">/</span> аллелюя.<span style=\"color: #ff0000;\"> </span></p>"
+      ],
+      "vesper1AntMag": [
+        "<p><span style=\"color: #ff0000;\">Ант. да песні Марыі:</span><span style=\"color: #ff0000;\"> </span>Хто змілуеццца над убогім, будзе благаслаўлёны; <span style=\"color: #ff0000;\">* </span>хто верыць у Пана, той любіць міласэрнасць, <span style=\"color: #ff0000;\">/</span> аллелюя.<span style=\"color: #ff0000;\"> </span></p>"
+      ]
+    }
+  }
 }
