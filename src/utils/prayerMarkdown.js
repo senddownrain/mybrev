@@ -1,5 +1,6 @@
 import MarkdownIt from 'markdown-it';
 import TurndownService from 'turndown';
+import { collectLegacyPrayerSpeakers, projectLegacyPrayerSpeakers, normalizePrayerLegacyMarkdown } from './prayerLegacyFormatting.js';
 
 export const PRAYER_TEXT_FORMAT = 'mybrev-markdown';
 export const PRAYER_TEXT_FORMAT_VERSION = 1;
@@ -9,50 +10,23 @@ export const PRAYER_TEXT_FORMAT_VERSION = 1;
 export const PRAYER_SPEAKERS = Object.freeze({
   'К.': 'cantor', 'С.': 'priest', 'Н.': 'people', 'Д.': 'deacon',
   'Л.': 'reader', 'Ц.': 'celebrant', 'V.': 'versicle', 'R.': 'response',
+  'Усе:': 'all', 'Цэлебрант:': 'celebrant',
 });
 
 export function prayerSpeakerPrefix(value) {
-  const match = /^(\s{0,3})([КСНДЛЦVR]\.)(:)?(?=[ \t]+\S)/u.exec(value);
+  const match = /^( {0,3})([КСНДЛЦVR]\.:?|Усе:|Цэлебрант:)(?=[ \t]+\S)/u.exec(value);
   if (!match) return null;
   const rest = value.slice(match[0].length).trim();
   // Initials and an unpunctuated surname are ambiguous, so leave them alone.
-  if (/^\p{Lu}\./u.test(rest) || /^\p{Lu}\p{Ll}+(?:\s+\p{Lu}\p{Ll}+)*$/u.test(rest)) return null;
-  return { from: match[1].length, to: match[0].length, label: match[2] + (match[3] || ''), role: PRAYER_SPEAKERS[match[2]] };
+  if (match[2].includes('.') && (/^\p{Lu}\./u.test(rest) || /^\p{Lu}\p{Ll}+(?:\s+\p{Lu}\p{Ll}+)*$/u.test(rest))) return null;
+  if (/^[КСНДЛЦ]/u.test(match[2]) && /^\p{Lu}[\p{Ll}\p{M}-]+(?:\s+\p{Lu}[\p{Ll}\p{M}-]+)*:/u.test(rest)
+    && !/^(?:Молімся|Памолімся):/u.test(rest)) return null;
+  return { from: match[1].length, to: match[0].length, label: match[2], role: PRAYER_SPEAKERS[match[2].replace(/\.:$/, '.')] };
 }
 
 /** Source ranges shared by the reader and CodeMirror; never rewrites input. */
 export function prayerSpeakerRanges(source = '') {
-  const lines = String(source).split('\n');
-  const offsets = [];
-  let offset = 0;
-  for (const line of lines) { offsets.push(offset); offset += line.length + 1; }
-  const ranges = [];
-  const stack = [];
-  for (const token of markdown.parse(String(source), {})) {
-    if (token.nesting === 1) stack.push(token.type);
-    if (token.type === 'inline' && stack.at(-1) === 'paragraph_open'
-      && !stack.some((type) => ['blockquote_open', 'rubric_open'].includes(type))) {
-      const children = token.children || [];
-      let lineStart = true;
-      let lineNumber = token.map[0];
-      for (const child of children) {
-        if (child.type === 'softbreak' || child.type === 'hardbreak') {
-          lineStart = true; lineNumber += 1; continue;
-        }
-        if (lineStart && child.type === 'text') {
-          const line = lines[lineNumber];
-          const prefix = prayerSpeakerPrefix(line);
-          // A list marker, link, emphasis or inline code is not a bare label.
-          if (prefix && child.content.startsWith(line.trimStart().slice(0, prefix.to - prefix.from))) {
-            ranges.push({ ...prefix, from: offsets[lineNumber] + prefix.from, to: offsets[lineNumber] + prefix.to, line: lineNumber + 1 });
-          }
-        }
-        lineStart = false;
-      }
-    }
-    if (token.nesting === -1) stack.pop();
-  }
-  return ranges;
+  return collectLegacyPrayerSpeakers(source).map(({ from, to, label, role, line, kind }) => ({ from, to, label, role, line, kind }));
 }
 
 const RUBRIC_LINE_PATTERN = /^(?:Святар|Народ|Усе|Дыякан|Біскуп|Цэлебрант|Лектар|Псальміст|Кантар)\b[^.!?]*:$/i;
@@ -124,10 +98,9 @@ function createTurndown({ emphasisAsRubric = false } = {}) {
         || (emphasisAsRubric && (onlyEmphasis || RUBRIC_LINE_PATTERN.test(text)));
     },
     replacement(content, node) {
-      const text = (node.textContent || content)
-        .trim()
-        .replace(/^[_*]+|[_*]+$/g, '')
-        .trim();
+      const text = emphasisAsRubric
+        ? (node.textContent || content).trim().replace(/^[_*]+|[_*]+$/g, '').trim()
+        : content.trim();
       return text ? `\n\n:::rubric\n${text}\n:::\n\n` : '';
     },
   });
@@ -378,12 +351,15 @@ export function htmlToPrayerMarkdown(value = '', options = {}) {
 
 export function toPrayerMarkdown(value = '', format = '', options = {}) {
   if (!value) return '';
-  if (format === PRAYER_TEXT_FORMAT) return String(value).replace(/\r\n?/g, '\n');
-  return looksLikeHtml(value) ? htmlToPrayerMarkdown(value, options) : normalizePrayerMarkdown(value);
+  const source = String(value).replace(/\r\n?/g, '\n');
+  if (format === PRAYER_TEXT_FORMAT) return source;
+  const knownHtml = format === 'html' || format === 'legacy-html' || options.emphasisAsRubric;
+  const richRoot = /^\s*</.test(source) && markdown.parse(source, {})[0]?.type !== 'code_block';
+  return looksLikeHtml(source) && (knownHtml || richRoot) ? htmlToPrayerMarkdown(source, options) : source;
 }
 
 export function renderPrayerMarkdown(value = '', format = '') {
-  const source = toPrayerMarkdown(value, format);
+  const source = projectLegacyPrayerSpeakers(toPrayerMarkdown(value, format));
   const eligible = new Map(prayerSpeakerRanges(source).map((range) => [range.line, range]));
   const tokens = markdown.parse(source, {});
   for (const token of tokens) {
@@ -397,7 +373,7 @@ export function renderPrayerMarkdown(value = '', format = '') {
         const label = new child.constructor('html_inline', '', 0);
         label.content = `<span class="prayer-speaker" data-role="${prefix.role}">${markdown.utils.escapeHtml(prefix.label)}</span>`;
         children.push(label);
-        child.content = child.content.replace(/^\s{0,3}[КСНДЛЦVR]\.:?/u, '');
+        child.content = child.content.replace(/^(?: {0,3})(?:[КСНДЛЦVR]\.:?|Усе:|Цэлебрант:)/u, '');
       }
       children.push(child);
       start = child.type === 'softbreak' || child.type === 'hardbreak';
@@ -489,9 +465,10 @@ export function diagnosePrayerMarkdown(value = '') {
   return findings;
 }
 
-export function prayerTextFields(markdownText) {
+export function prayerTextFields(markdownText, { normalizeLegacy = true } = {}) {
+  const source = String(markdownText).replace(/\r\n?/g, '\n');
   return {
-    text: normalizePrayerMarkdown(markdownText),
+    text: normalizeLegacy ? normalizePrayerLegacyMarkdown(source).markdown : source,
     textFormat: PRAYER_TEXT_FORMAT,
     textFormatVersion: PRAYER_TEXT_FORMAT_VERSION,
   };

@@ -68,6 +68,7 @@ export async function openFirestoreSnapshot(snapshotDirectory) {
     const entries = payload.documents.map((item) => ({
       id: item.id,
       data: decodeValue(item.data),
+      ...(item.updateTime ? { updateTime: decodeValue(item.updateTime) } : {}),
     }));
     entryCache.set(collectionPath, entries);
     return entries;

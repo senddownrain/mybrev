@@ -77,6 +77,18 @@ try {
   });
   await page.waitForFunction(() => window.source.value.includes('_Молімся._'));
   assert.ok(!(await page.evaluate(() => window.source.value)).includes(':::rubric'));
+  const legacySource = '**К.:** Пане, пачуй нас.\n_Н.:_ Амэн.';
+  await page.evaluate(source => window.source.value = source, legacySource);
+  await page.waitForFunction(() => document.querySelectorAll('.cm-prayer-speaker').length === 2);
+  assert.equal(await page.evaluate(() => window.source.value), legacySource);
+  await page.getByRole('button', { name: 'MD autofix' }).click();
+  await page.getByText('Праверце выпраўленні Markdown', { exact: true }).waitFor();
+  assert.equal(await page.evaluate(() => window.source.value), legacySource);
+  await page.getByRole('button', { name: 'Ужыць', exact: true }).click();
+  await page.waitForFunction(() => window.source.value === 'К. Пане, пачуй нас.\nН. Амэн.');
+  await page.locator('.cm-content').focus();
+  await page.keyboard.press('Control+z');
+  await page.waitForFunction(() => window.source.value === '**К.:** Пане, пачуй нас.\n_Н.:_ Амэн.');
   await page.evaluate(() => window.source.value = 'К. Пане, пачуй нас.\nН. ' + 'І з духам тваім. '.repeat(30));
   await page.locator('.cm-prayer-speaker').first().waitFor();
   await page.screenshot({ path: `${directory}/editor-light.png` });
