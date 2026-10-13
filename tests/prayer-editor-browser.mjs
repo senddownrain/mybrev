@@ -70,10 +70,10 @@ try {
   });
   await page.locator('.cm-content').focus();
   await page.evaluate(() => {
-    const clipboard = new DataTransfer();
+    const clipboard = new window.DataTransfer();
     clipboard.setData('text/html', '<p><em>Молімся.</em></p><p>К. Пане, пачуй нас.</p>');
     clipboard.setData('text/plain', 'Молімся.\nК. Пане, пачуй нас.');
-    document.querySelector('.cm-content').dispatchEvent(new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: clipboard }));
+    document.querySelector('.cm-content').dispatchEvent(new window.ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: clipboard }));
   });
   await page.waitForFunction(() => window.source.value.includes('_Молімся._'));
   assert.ok(!(await page.evaluate(() => window.source.value)).includes(':::rubric'));
