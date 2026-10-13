@@ -50,11 +50,13 @@ export function addAlleluiaToText(rawText) {
  */
 export function addAlleluiaToBlockHtml(blockHtml, kind) {
   if (/[Аа]ллелюя\.?\s*(<[^>]*>|\s)*<\/p>\s*$/u.test(blockHtml)) return { ok: true, html: blockHtml, rule: 'already-has-alleluia' };
-  // the last visible «.» of the paragraph; trailing empty/space-only spans are kept after it
-  const match = /\.((?:\s|<span[^>]*>\s*<\/span>|<span[^>]*>\s+<\/span>|&nbsp;)*)(<\/p>\s*)$/u.exec(blockHtml);
+  // the last visible «.» of the paragraph (it may sit alone inside a red span)
+  const match = /(<span[^>]*>)?\.((?:\s|<[^>]*>|&nbsp;)*)(<\/p>\s*)$/u.exec(blockHtml);
   if (!match) return { ok: false, reason: 'the block does not end with a full stop' };
   const insert = kind === 'versicle' ? ', аллелюя.' : `, ${red('/')} аллелюя.`;
-  return { ok: true, html: `${blockHtml.slice(0, match.index)}${insert}${match[1]}${match[2]}`, rule: kind === 'versicle' ? ALLELUIA_VERSICLE_RULE : ALLELUIA_RULE };
+  let tail = match[2];
+  if (match[1]) tail = tail.replace('</span>', '');
+  return { ok: true, html: `${blockHtml.slice(0, match.index)}${insert}${tail}${match[3]}`, rule: kind === 'versicle' ? ALLELUIA_VERSICLE_RULE : ALLELUIA_RULE };
 }
 
 /** Remove the Alleluia that is printed inside an antiphon («…, / аллелюя.» → «….»); Lent text has none. */

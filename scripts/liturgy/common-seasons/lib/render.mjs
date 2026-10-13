@@ -99,7 +99,7 @@ export function renderAntiphonParagraph(rawText) {
 
 /** Antiphon-like fields: every line is one paragraph, alternatives are separated by <hr />. */
 export function renderAntiphons(lines) {
-  const items = lines.map(textOf).filter((text) => text.trim());
+  const items = lines.map(textOf).filter((text) => text.trim() && !/^Ант\.\s+да\s+песні\s+(Марыі|Захарыі)\s*:?\s*$/u.test(text.trim()));
   return items.map(renderAntiphonParagraph).join(`\n${HR}\n`);
 }
 
@@ -142,6 +142,11 @@ export function renderShortReading(lines, { responsoryAlign = 'justify' } = {}) 
       return;
     }
     if (/^Кароткі\s+рэспансорый/u.test(text)) { out.push(paragraph(red('Кароткі рэспансорый'), responsoryAlign)); mode = 'resp'; return; }
+    if (/^Пра\s[^:]{2,70}:\s*$/u.test(text)) {
+      if (out.length && !/Кароткі\s+рэспансорый/u.test(out[out.length - 1])) out.push(HR);
+      out.push(paragraph(red(escapeHtml(text.trim())), 'justify'));
+      return;
+    }
     if (/^Або\s*:/u.test(text)) {
       const ref = tab ? tab[2].trim() : text.replace(/^Або\s*:\s*/u, '').trim();
       out.push(HR, paragraph(red('Або: '), 'justify'));
@@ -173,6 +178,12 @@ export function renderLongReading(lines, { heading = true } = {}) {
   let sawBodyOrTitle = false;
   items.forEach((text) => {
     if (/^(Першае|Другое)\s+чытанне/u.test(text)) { if (heading) out.push(paragraph(red(escapeHtml(text.trim())), 'justify')); return; }
+    if (/^Пра\s[^:]{2,70}:\s*$/u.test(text)) {
+      if (out.length) out.push(HR);
+      out.push(paragraph(red(escapeHtml(text.trim())), 'justify'));
+      state = 'start'; sawBodyOrTitle = false;
+      return;
+    }
     if (/^Або\s+іншае\s*:/u.test(text)) { out.push(HR, paragraph(red('Або іншае:'), 'justify')); state = 'start'; sawBodyOrTitle = false; return; }
     if (/^Рэспансорый/u.test(text)) {
       const tab = REF_LINE.exec(text);

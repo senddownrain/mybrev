@@ -36,7 +36,7 @@ const sha = (value) => crypto.createHash('sha256').update(value).digest('hex');
 
 /** Obvious misprints of the printed volumes, corrected with a report line (never silently). */
 export const SOURCE_TYPO_FIXES = Object.freeze([
-  { id: 'alleyuya', pattern: /аллеюя/gu, replacement: 'аллелюя', note: 'misprint «аллеюя» (every other occurrence reads «аллелюя»)' },
+  { id: 'alleyuya', pattern: /([Аа])ллеюя/gu, replacement: '$1ллелюя', note: 'misprint «аллеюя» (every other occurrence reads «аллелюя»)' },
 ]);
 
 export function fixSourceTypos(text, onFix) {
@@ -152,10 +152,30 @@ function stepExplicit({ field, units, season, base, ctx }) {
     }
     return { blocks: splitBlocks(renderShortReading(lines)).map((html) => ({ html, elem: 0 })), method: 'render', kind };
   }
+  if (kind === 'psalm' && base && active.length === 1) {
+    // Same psalm as the stored one, only the closing antiphon differs: keep the stored psalm HTML.
+    const repeats = lines.filter((l) => /^Ант\./u.test(l.text.trim()));
+    const body = lines.filter((l) => !/^Ант\./u.test(l.text.trim()));
+    const storedBlocks = base.blocks;
+    const antIndex = storedBlocks.map((b, i) => [b, i]).filter(([b]) => /^Ант\./u.test(htmlToPlain(b.html).trim())).map(([, i]) => i).pop();
+    const bodyPlain = normalizeForCompare(body.map((l) => l.text).join(' '));
+    const storedBody = normalizeForCompare(storedBlocks.filter((b, i) => i !== antIndex).map((b) => htmlToPlain(b.html)).join(' '));
+    if (antIndex !== undefined && repeats.length === 1 && similarity(bodyPlain, storedBody) >= 0.95) {
+      const out = [...storedBlocks];
+      out[antIndex] = { html: renderAntiphonParagraph(repeats[0].text), elem: storedBlocks[antIndex].elem };
+      return { blocks: out, method: 'carrier+repeat', kind };
+    }
+  }
   const options = {};
   if (kind === 'reading1' || kind === 'reading2') options.heading = base ? baseHasHeading(baseText) : true;
   const html = renderUnitLines(active[0], lines, options);
-  if (html == null) return { fail: `no renderer for ${kind}` };
+  if (html == null) {
+    // Kinds without a renderer (intercessions): usable only when the volume repeats the stored text.
+    const volPlain = normalizeForCompare(lines.map((l) => l.text).join(' '));
+    const storedPlain = base ? normalizeForCompare(base.blocks.map((b) => htmlToPlain(b.html)).join(' ')) : '';
+    if (base && similarity(volPlain, storedPlain) >= 0.9) return { blocks: base.blocks, method: 'carrier-equal', kind };
+    return { fail: `no renderer for ${kind} and the text differs from the stored one` };
+  }
   return { blocks: splitBlocks(html).map((h) => ({ html: h, elem: 0 })), method: 'render', kind };
 }
 
@@ -190,16 +210,19 @@ function stepAnnotations({ units, season, state, ctx, handledByRender }) {
       if (/^<hr/i.test(block.html) || used.has(index)) return;
       const plain = htmlToPlain(block.html).replace(/\s+/g, ' ').trim();
       if (!plain) return;
+      const labelOf = (t) => (/^([123])\s+ант\./iu.exec(t.trim()) || [])[1];
+      if (labelOf(element) && labelOf(plain) && labelOf(element) !== labelOf(plain)) return;
       const score = similarity(element, plain);
       if (score > bestScore) { bestScore = score; best = index; }
     });
-    if (best < 0 || bestScore < 0.8) { ctx.problems.push({ line: line.n, reason: `no stored block matches the annotated element (best similarity ${bestScore.toFixed(2)})`, text: element.slice(0, 90) }); return; }
+    if (best < 0 || bestScore < 0.7) { ctx.problems.push({ line: line.n, reason: `no stored block matches the annotated element (best similarity ${bestScore.toFixed(2)})`, text: element.slice(0, 90) }); return; }
     const res = addAlleluiaToText(line.text);
     if (!res.ok) { ctx.problems.push({ line: line.n, reason: res.reason, text: element.slice(0, 90), unverified: res.unverified, proposal: res.proposal, rule: res.rule }); return; }
     const kind = elementKind(element);
     const edited = addAlleluiaToBlockHtml(state.base.blocks[best].html, kind);
     if (!edited.ok) { ctx.problems.push({ line: line.n, reason: edited.reason, text: element.slice(0, 90) }); return; }
     used.add(best);
+    if (bestScore < 0.85) ctx.problems.push({ line: line.n, reason: `low-confidence match (similarity ${bestScore.toFixed(2)}) between the annotated element and the stored block; applied, please verify`, text: element.slice(0, 90), lowConfidence: true });
     if (edited.html !== state.base.blocks[best].html) { state.base.blocks[best] = { html: edited.html, elem: state.base.blocks[best].elem }; changed = true; ctx.rules.add(edited.rule); state.methods.add('carrier+alleluia'); }
   });
   return changed;
@@ -309,15 +332,25 @@ export function analyzeCorpus(corpus) {
           if (cell.category === 'seasonal_explicit') { cell.status = 'review'; cell.note = 'seasonal mark present but no change could be derived (see needs_review)'; continue; }
           cell.relation = a2 === b ? 'same' : 'differs';
           cell.category = a2 === b ? 'ordinary_base' : 'editorial_difference';
+          if (a2 !== b) {
+            let i = 0; while (i < a2.length && a2[i] === b[i]) i += 1;
+            cell.diff = { volume: a2.slice(Math.max(0, i - 40), i + 80), stored: b.slice(Math.max(0, i - 40), i + 80), at: i };
+            const swap = (t) => t.replace(/(^|\s)([кн])\./gu, (m, lead, l) => `${lead}${l === 'к' ? 'н' : 'к'}.`);
+            if (a2 && swap(a2) === b) { cell.note = 'К./Н. labels are swapped in the stored base (the volume of the season prints them correctly)'; cell.knSwap = true; }
+          }
           continue;
         }
         const value = fromBlocks(state.base);
-        const equal = hasBaseText && plainOf(value) === plainOf(baseValue);
+        const countAlleluia = (v) => (normalizeForCompare(Array.isArray(v) ? v.join(' ') : v).match(/аллелюя/gu) || []).length;
+        const nearEqual = hasBaseText && ['psalm', 'reading1', 'reading2'].includes(cell.kind) && similarity(plainOf(value), plainOf(baseValue)) >= 0.97
+          && countAlleluia(value) === countAlleluia(baseValue);
+        const equal = hasBaseText && (plainOf(value) === plainOf(baseValue) || nearEqual);
+        if (equal && nearEqual) cell.editorialNote = 'equal to the stored base up to editorial wording';
         cell.method = [...state.methods].join('+');
         cell.rules = [...ctx.rules];
         if (equal) { cell.relation = 'same'; cell.note = 'the seasonal text equals the stored base (not duplicated)'; continue; }
         cell.relation = hasBaseText ? 'differs' : 'absent';
-        cell.status = ctx.problems.some((p) => !p.unverified) ? 'variant-partial' : 'variant';
+        cell.status = ctx.problems.some((p) => !p.unverified && !p.lowConfidence) ? 'variant-partial' : 'variant';
         cell.sourceHash = sha(active.map((u) => (unitLines(u, season, { raw: true }) || []).map((l) => l.text).join('\n')).join('\n'));
         (perSeason[season] ||= {})[field] = {
           value, method: cell.method, kind: cell.kind || 'annotated', rules: cell.rules, volume: volId, lines: cell.source.lines, hash: sha(JSON.stringify(value)), partial: cell.status === 'variant-partial',
@@ -326,5 +359,44 @@ export function analyzeCorpus(corpus) {
     }
     variants.set(commonId, perSeason);
   }
+  propagateReferences({ corpus, matrix, variants });
   return { matrix, variants, review, unverified, typos };
+}
+
+/**
+ * The volumes print «Гімн з ІІ Нешпараў» (I Vespers) and «Малітва з Ютрані»
+ * (Office of Readings, Daytime Prayer) instead of a text. The stored Commons
+ * keep a copy of that text, so a seasonal variant of the source field must be
+ * copied to the target field, but only where the stored target equals the
+ * stored source (otherwise the copy would invent a relation).
+ */
+export const REFERENCE_PAIRS = Object.freeze([
+  { target: 'vesper1Hymn', source: 'vesperHymn', hour: 'vespers1', kind: 'hymnRef' },
+  { target: 'officeOfReadingsPr', source: 'laudesPr', hour: 'officeOfReadings', kind: 'prayerRef' },
+  { target: 'sext1Pr', source: 'laudesPr', hour: 'daytime', kind: 'prayerRef' },
+  { target: 'sext2Pr', source: 'laudesPr', hour: 'daytime', kind: 'prayerRef' },
+  { target: 'sext3Pr', source: 'laudesPr', hour: 'daytime', kind: 'prayerRef' },
+]);
+
+function propagateReferences({ corpus, matrix, variants }) {
+  for (const [commonId, baseDoc] of corpus.base) {
+    for (const season of SEASONS) {
+      const common = corpus.volumes[SEASON_VOLUME[season]].commons.get(commonId)?.common;
+      const seasonal = variants.get(commonId)?.[season] || {};
+      for (const pair of REFERENCE_PAIRS) {
+        const sourceVariant = seasonal[pair.source];
+        const targetBase = baseDoc[pair.target];
+        const sourceBase = baseDoc[pair.source];
+        if (!sourceVariant || typeof targetBase !== typeof sourceBase || !targetBase) continue;
+        const cell = matrix.find((c) => c.common === commonId && c.field === pair.target && c.season === season);
+        const refUnit = (common?.hours[pair.hour] || []).find((u) => u.kind === pair.kind);
+        if (!refUnit) continue;
+        if (plainOf(targetBase) !== plainOf(sourceBase)) { if (cell) { cell.status = 'review'; cell.note = `the volume refers to ${pair.source}, but the stored ${pair.target} differs from the stored ${pair.source}`; } continue; }
+        (variants.get(commonId)[season] ||= {})[pair.target] = {
+          ...sourceVariant, method: 'structural-ref', kind: 'ref', from: pair.source, rules: [],
+        };
+        if (cell) { cell.category = 'seasonal_structural'; cell.status = 'variant'; cell.method = 'structural-ref'; cell.note = `volume line ${refUnit.startLine}: reference to ${pair.source}`; cell.source = { volume: SEASON_VOLUME[season], lines: [refUnit.startLine, refUnit.startLine], units: [refUnit.id] }; }
+      }
+    }
+  }
 }

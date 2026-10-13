@@ -132,7 +132,7 @@ export function classifyLine(text) {
   const U = upper(t.replace(/:$/, ''));
   if (HOUR_BY_HEADING.has(U)) return { kind: 'hour', hour: HOUR_BY_HEADING.get(U) };
   if (/^АГУЛЬНЫЯ\s*ТЭКСТЫ/.test(U)) return { kind: 'commonHeading' };
-  if (/^(ПРА\s+(НЕКАЛЬКІХ\s+МУЧАНІКАЎ|АДНАГО\s+МУЧАНІКА))$/.test(U)) return { kind: 'commonHeading', continuation: true };
+  if (t === t.toLocaleUpperCase('be') && /^(ПРА\s+(НЕКАЛЬКІХ\s+МУЧАНІКАЎ|АДНАГО\s+МУЧАНІКА))$/.test(U)) return { kind: 'commonHeading', continuation: true };
   if (/^Гімн$/i.test(t)) return { kind: 'hymn' };
   if (/^(Ва ўрачыстасці і святы\s*[–-]\s*)?гімн\s+Цябе,\s*Бога/i.test(t)) return { kind: 'teDeum' };
   if (/^Гімн(?!\p{L})/iu.test(t)) return { kind: 'hymnRef' };
@@ -142,7 +142,7 @@ export function classifyLine(text) {
   if (label) return { kind: 'antRepeat', season: label.season, label };
   let m = /^([123])\s+ант\./i.exec(t);
   if (m) return { kind: 'ant', index: Number(m[1]) };
-  if (/^Ант\.\s+да\s+песні\s+(Марыі|Захарыі)\s*:/i.test(t)) return { kind: 'canticleAnt', which: /Марыі/i.test(t) ? 'mag' : 'ben' };
+  if (/^Ант\.\s+да\s+песні\s+(Марыі|Захарыі)(?!\p{L})/iu.test(t)) return { kind: 'canticleAnt', which: /Марыі/i.test(t) ? 'mag' : 'ben' };
   if (/^Ант\./i.test(t)) return { kind: 'antRepeat' };
   if (/^Псальмы\s+і\s+песня\s+з\s+нядзелі/i.test(t) || /^Псальм\s+Закліку/i.test(t)) return { kind: 'psalmRef' };
   if (/^(Псальм|Песня)(?!\p{L})/u.test(t)) return { kind: 'psalmTitle' };
