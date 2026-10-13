@@ -70,3 +70,10 @@ UI гадзінаў атрымлівае ўжо сабраны `effectiveDay` і
 (03.01 Імя Езуса: Афіцый дня Каляд, без Common). Абодва інфармацыйныя: зборка робіцца з
 `_templates` як раней. Parity fixture (`npm run ordo:flutter-fixture`) мае спіс
 `fieldRuleKinds`; Dart-зборшчык павінен падтрымліваць кожны від.
+
+## Сезонныя варыянты Commons
+
+`liturgicalTemplates/{commonId}` можа мець разрэджаны `_seasonalVariants` (`advent|christmas|lent|easter`);
+плоскія палі — Звычайны перыяд. `assembleOffice({ season })` матэрыялізуе Common па сезоне выбранага Office
+(`src/utils/ordo/commonSeasons.js`). Поўнае апісанне — `docs/common-seasons.md`; кантракт Flutter —
+`docs/common-seasons-flutter-handoff.md`.

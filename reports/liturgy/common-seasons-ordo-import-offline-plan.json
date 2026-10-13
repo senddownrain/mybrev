@@ -1,0 +1,2069 @@
+{
+ "generatedAt": "2026-10-13T15:24:32.521Z",
+ "mode": "dry-run",
+ "projectId": null,
+ "firestoreRead": false,
+ "feastsCollection": "liturgicalProperTexts",
+ "policy": "create/update only; legacy per-template copies are never deleted, optionally marked _obsolete",
+ "summary": {
+  "templates": {
+   "target": 16,
+   "create": 0,
+   "update": 0,
+   "unchanged": 0,
+   "set": 16,
+   "keepExisting": 0,
+   "obsolete": 0,
+   "delete": 0
+  },
+  "feasts": {
+   "target": 291,
+   "create": 0,
+   "update": 0,
+   "unchanged": 0,
+   "set": 291,
+   "keepExisting": 0,
+   "obsolete": 0,
+   "delete": 0
+  },
+  "legacyCopies": {
+   "listed": 192,
+   "markObsolete": 0,
+   "delete": 0
+  }
+ },
+ "plans": {
+  "templates": {
+   "collection": "liturgicalTemplates",
+   "read": false,
+   "counts": {
+    "target": 16,
+    "create": 0,
+    "update": 0,
+    "unchanged": 0,
+    "set": 16,
+    "keepExisting": 0,
+    "obsolete": 0,
+    "delete": 0
+   },
+   "operations": [
+    {
+     "id": "apostles",
+     "action": "set"
+    },
+    {
+     "id": "blessed-virgin-mary",
+     "action": "set"
+    },
+    {
+     "id": "church-dedication",
+     "action": "set"
+    },
+    {
+     "id": "complementary-psalmody",
+     "action": "set"
+    },
+    {
+     "id": "doctors-of-church",
+     "action": "set"
+    },
+    {
+     "id": "educators",
+     "action": "set"
+    },
+    {
+     "id": "holy-men",
+     "action": "set"
+    },
+    {
+     "id": "holy-women",
+     "action": "set"
+    },
+    {
+     "id": "martyr-one",
+     "action": "set"
+    },
+    {
+     "id": "martyrs-many",
+     "action": "set"
+    },
+    {
+     "id": "office-for-dead",
+     "action": "set"
+    },
+    {
+     "id": "pastors",
+     "action": "set"
+    },
+    {
+     "id": "religious",
+     "action": "set"
+    },
+    {
+     "id": "sunday-week-1",
+     "action": "set"
+    },
+    {
+     "id": "virgins",
+     "action": "set"
+    },
+    {
+     "id": "works-of-mercy",
+     "action": "set"
+    }
+   ],
+   "obsolete": []
+  },
+  "feasts": {
+   "collection": "liturgicalProperTexts",
+   "read": false,
+   "counts": {
+    "target": 291,
+    "create": 0,
+    "update": 0,
+    "unchanged": 0,
+    "set": 291,
+    "keepExisting": 0,
+    "obsolete": 0,
+    "delete": 0
+   },
+   "operations": [
+    {
+     "id": "01-01-holy-mary-mother-of-god",
+     "action": "set"
+    },
+    {
+     "id": "01-05-dedication-pinsk-cathedral-diocese",
+     "action": "set"
+    },
+    {
+     "id": "01-05-sv-joseph-worker",
+     "action": "set"
+    },
+    {
+     "id": "01-06-sv-justin",
+     "action": "set"
+    },
+    {
+     "id": "01-08-sv-alphonsus-liguori",
+     "action": "set"
+    },
+    {
+     "id": "01-09-bl-bronislawa-grodno",
+     "action": "set"
+    },
+    {
+     "id": "01-10-sv-teresa-lisieux",
+     "action": "set"
+    },
+    {
+     "id": "01-11-all-saints",
+     "action": "set"
+    },
+    {
+     "id": "02-01-sv-basil-gregory-nazianzen",
+     "action": "set"
+    },
+    {
+     "id": "02-02-presentation-lord",
+     "action": "set"
+    },
+    {
+     "id": "02-04-sv-francis-paola",
+     "action": "set"
+    },
+    {
+     "id": "02-05-sv-athanasius",
+     "action": "set"
+    },
+    {
+     "id": "02-06-sv-marcellinus-peter",
+     "action": "set"
+    },
+    {
+     "id": "02-07-our-lady-budslav-minsk",
+     "action": "set"
+    },
+    {
+     "id": "02-07-our-lady-budslav-vitebsk",
+     "action": "set"
+    },
+    {
+     "id": "02-07-our-lady-budslav",
+     "action": "set"
+    },
+    {
+     "id": "02-08-our-lady-of-angels-grodno",
+     "action": "set"
+    },
+    {
+     "id": "02-08-sv-eusebius-vercelli",
+     "action": "set"
+    },
+    {
+     "id": "02-08-sv-peter-julian-eymard",
+     "action": "set"
+    },
+    {
+     "id": "02-10-holy-guardian-angels",
+     "action": "set"
+    },
+    {
+     "id": "02-11-all-faithful-departed",
+     "action": "set"
+    },
+    {
+     "id": "03-01-holy-name-of-jesus",
+     "action": "set"
+    },
+    {
+     "id": "03-02-sv-anzgar",
+     "action": "set"
+    },
+    {
+     "id": "03-02-sv-blazej",
+     "action": "set"
+    },
+    {
+     "id": "03-05-sv-philip-james-apostles",
+     "action": "set"
+    },
+    {
+     "id": "03-06-sv-charles-lwanga-companions",
+     "action": "set"
+    },
+    {
+     "id": "03-07-sv-thomas-apostle",
+     "action": "set"
+    },
+    {
+     "id": "03-09-sv-gregory-great",
+     "action": "set"
+    },
+    {
+     "id": "03-11-sv-martin-de-porres",
+     "action": "set"
+    },
+    {
+     "id": "03-12-sv-francis-xavier",
+     "action": "set"
+    },
+    {
+     "id": "04-03-sv-casimir-grodno",
+     "action": "set"
+    },
+    {
+     "id": "04-03-sv-casimir",
+     "action": "set"
+    },
+    {
+     "id": "04-04-sv-isidore-seville",
+     "action": "set"
+    },
+    {
+     "id": "04-05-sv-florian-pinsk",
+     "action": "set"
+    },
+    {
+     "id": "04-07-sv-elizabeth-portugal",
+     "action": "set"
+    },
+    {
+     "id": "04-08-sv-john-vianney",
+     "action": "set"
+    },
+    {
+     "id": "04-09-bl-maria-stella-companions-grodno",
+     "action": "set"
+    },
+    {
+     "id": "04-09-bl-maria-stella-companions-pinsk",
+     "action": "set"
+    },
+    {
+     "id": "04-10-sv-francis-assisi",
+     "action": "set"
+    },
+    {
+     "id": "04-11-sv-charles-borromeo",
+     "action": "set"
+    },
+    {
+     "id": "04-12-grodno-cathedral-dedication",
+     "action": "set"
+    },
+    {
+     "id": "04-12-sv-barbara-grodno",
+     "action": "set"
+    },
+    {
+     "id": "04-12-sv-barbara-pinsk",
+     "action": "set"
+    },
+    {
+     "id": "04-12-sv-john-damascene",
+     "action": "set"
+    },
+    {
+     "id": "05-02-sv-agata",
+     "action": "set"
+    },
+    {
+     "id": "05-04-sv-vincent-ferrer",
+     "action": "set"
+    },
+    {
+     "id": "05-06-sv-boniface",
+     "action": "set"
+    },
+    {
+     "id": "05-06-vitebsk-cathedral-dedication",
+     "action": "set"
+    },
+    {
+     "id": "05-07-our-lady-trakai-grodno-memoria-ad-libitum",
+     "action": "set"
+    },
+    {
+     "id": "05-07-our-lady-trakai-grodno",
+     "action": "set"
+    },
+    {
+     "id": "05-07-our-lady-trakai-sanctuary",
+     "action": "set"
+    },
+    {
+     "id": "05-07-sv-anthony-mary-zaccaria",
+     "action": "set"
+    },
+    {
+     "id": "05-08-dedication-st-mary-major",
+     "action": "set"
+    },
+    {
+     "id": "05-08-our-lady-congregational-grodno",
+     "action": "set"
+    },
+    {
+     "id": "05-09-sv-teresa-calcutta",
+     "action": "set"
+    },
+    {
+     "id": "05-10-sv-faustina-kowalska",
+     "action": "set"
+    },
+    {
+     "id": "06-01-epiphany-lord",
+     "action": "set"
+    },
+    {
+     "id": "06-02-sv-paul-miki",
+     "action": "set"
+    },
+    {
+     "id": "06-06-sv-boniface-vitebsk",
+     "action": "set"
+    },
+    {
+     "id": "06-06-sv-norbert",
+     "action": "set"
+    },
+    {
+     "id": "06-07-sv-maria-goretti",
+     "action": "set"
+    },
+    {
+     "id": "06-08-transfiguration-lord",
+     "action": "set"
+    },
+    {
+     "id": "06-10-sv-bruno",
+     "action": "set"
+    },
+    {
+     "id": "06-12-sv-nicholas",
+     "action": "set"
+    },
+    {
+     "id": "07-01-sv-raymond-penyafort",
+     "action": "set"
+    },
+    {
+     "id": "07-03-sv-perpetua-felicity",
+     "action": "set"
+    },
+    {
+     "id": "07-04-sv-jean-baptiste-de-la-salle",
+     "action": "set"
+    },
+    {
+     "id": "07-08-sv-cajetan",
+     "action": "set"
+    },
+    {
+     "id": "07-08-sv-sixtus-ii-companions",
+     "action": "set"
+    },
+    {
+     "id": "07-10-our-lady-rosary",
+     "action": "set"
+    },
+    {
+     "id": "07-12-sv-ambrose",
+     "action": "set"
+    },
+    {
+     "id": "08-02-sv-jerome-emiliani",
+     "action": "set"
+    },
+    {
+     "id": "08-02-sv-josephine-bakhita",
+     "action": "set"
+    },
+    {
+     "id": "08-03-sv-john-of-god",
+     "action": "set"
+    },
+    {
+     "id": "08-06-sv-jadwiga-queen-grodno",
+     "action": "set"
+    },
+    {
+     "id": "08-08-sv-dominic",
+     "action": "set"
+    },
+    {
+     "id": "08-09-nativity-blessed-virgin-mary",
+     "action": "set"
+    },
+    {
+     "id": "08-09-our-lady-braslau-vitebsk",
+     "action": "set"
+    },
+    {
+     "id": "08-12-immaculate-conception",
+     "action": "set"
+    },
+    {
+     "id": "09-03-sv-frances-of-rome",
+     "action": "set"
+    },
+    {
+     "id": "09-06-sv-ephrem",
+     "action": "set"
+    },
+    {
+     "id": "09-07-sv-augustine-zhao-rong-companions",
+     "action": "set"
+    },
+    {
+     "id": "09-08-sv-teresa-benedicta-cross",
+     "action": "set"
+    },
+    {
+     "id": "09-09-sv-peter-claver",
+     "action": "set"
+    },
+    {
+     "id": "09-10-sv-denis-companions",
+     "action": "set"
+    },
+    {
+     "id": "09-10-sv-john-leonardi",
+     "action": "set"
+    },
+    {
+     "id": "09-11-dedication-lateran-basilica",
+     "action": "set"
+    },
+    {
+     "id": "09-12-sv-juan-diego",
+     "action": "set"
+    },
+    {
+     "id": "10-02-sv-scholastica",
+     "action": "set"
+    },
+    {
+     "id": "10-05-sv-john-avila",
+     "action": "set"
+    },
+    {
+     "id": "10-08-sv-laurentsiya-dyyakana-i-muchanika",
+     "action": "set"
+    },
+    {
+     "id": "10-10-vitebsk-cathedral-dedication",
+     "action": "set"
+    },
+    {
+     "id": "10-11-sv-leo-great",
+     "action": "set"
+    },
+    {
+     "id": "10-12-our-lady-loreto",
+     "action": "set"
+    },
+    {
+     "id": "11-02-our-lady-of-lourdes",
+     "action": "set"
+    },
+    {
+     "id": "11-04-sv-stanislaus-bishop-martyr",
+     "action": "set"
+    },
+    {
+     "id": "11-06-sv-barnabas",
+     "action": "set"
+    },
+    {
+     "id": "11-07-sv-benedict",
+     "action": "set"
+    },
+    {
+     "id": "11-08-sv-clare",
+     "action": "set"
+    },
+    {
+     "id": "11-10-sv-john-xxiii",
+     "action": "set"
+    },
+    {
+     "id": "11-11-sv-martin-tours",
+     "action": "set"
+    },
+    {
+     "id": "11-12-sv-damasus-i",
+     "action": "set"
+    },
+    {
+     "id": "12-05-sv-nereus-achilleus",
+     "action": "set"
+    },
+    {
+     "id": "12-05-sv-pancras",
+     "action": "set"
+    },
+    {
+     "id": "12-06-bl-antoni-leszczewicz-jerzy-kaszyra-vitebsk",
+     "action": "set"
+    },
+    {
+     "id": "12-06-bl-henryk-hlebowicz-grodno",
+     "action": "set"
+    },
+    {
+     "id": "12-08-sv-jane-frances-de-chantal",
+     "action": "set"
+    },
+    {
+     "id": "12-09-holy-name-mary-minsk-mohilev-pinsk--minsk-mohilev",
+     "action": "set"
+    },
+    {
+     "id": "12-09-holy-name-mary-minsk-mohilev-pinsk--pinsk",
+     "action": "set"
+    },
+    {
+     "id": "12-09-holy-name-mary",
+     "action": "set"
+    },
+    {
+     "id": "12-11-sv-josaphat-minsk-mohilev-pinsk--minsk-mohilev",
+     "action": "set"
+    },
+    {
+     "id": "12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk",
+     "action": "set"
+    },
+    {
+     "id": "12-11-sv-josaphat-vitebsk",
+     "action": "set"
+    },
+    {
+     "id": "12-11-sv-josaphat",
+     "action": "set"
+    },
+    {
+     "id": "12-12-our-lady-guadalupe",
+     "action": "set"
+    },
+    {
+     "id": "13-01-sv-hilary",
+     "action": "set"
+    },
+    {
+     "id": "13-04-sv-martin-i-pope-martyr",
+     "action": "set"
+    },
+    {
+     "id": "13-05-our-lady-of-fatima",
+     "action": "set"
+    },
+    {
+     "id": "13-06-sv-anthony-padua",
+     "action": "set"
+    },
+    {
+     "id": "13-07-sv-henry",
+     "action": "set"
+    },
+    {
+     "id": "13-08-sv-pontian-hippolytus",
+     "action": "set"
+    },
+    {
+     "id": "13-09-sv-john-chrysostom",
+     "action": "set"
+    },
+    {
+     "id": "13-10-bl-honorat-kozminski-grodno",
+     "action": "set"
+    },
+    {
+     "id": "13-10-bl-honorat-kozminski-pinsk",
+     "action": "set"
+    },
+    {
+     "id": "13-11-five-martyred-brothers-grodno",
+     "action": "set"
+    },
+    {
+     "id": "13-12-sv-lucy",
+     "action": "set"
+    },
+    {
+     "id": "14-02-sv-cyril-methodius",
+     "action": "set"
+    },
+    {
+     "id": "14-05-sv-matthias",
+     "action": "set"
+    },
+    {
+     "id": "14-07-sv-camillus-de-lellis",
+     "action": "set"
+    },
+    {
+     "id": "14-08-sv-maximilian-kolbe-grodno",
+     "action": "set"
+    },
+    {
+     "id": "14-08-sv-maximilian-kolbe",
+     "action": "set"
+    },
+    {
+     "id": "14-09-exaltation-holy-cross",
+     "action": "set"
+    },
+    {
+     "id": "14-10-sv-callistus-i",
+     "action": "set"
+    },
+    {
+     "id": "14-12-sv-john-cross",
+     "action": "set"
+    },
+    {
+     "id": "15-02-bl-michal-sopocko-grodno",
+     "action": "set"
+    },
+    {
+     "id": "15-07-sv-bonaventure",
+     "action": "set"
+    },
+    {
+     "id": "15-08-assumption-blessed-virgin-mary",
+     "action": "set"
+    },
+    {
+     "id": "15-09-our-lady-sorrows",
+     "action": "set"
+    },
+    {
+     "id": "15-10-sv-teresa-of-jesus",
+     "action": "set"
+    },
+    {
+     "id": "15-11-sv-albert-great",
+     "action": "set"
+    },
+    {
+     "id": "16-03-minsk-mohilev-cathedral-dedication",
+     "action": "set"
+    },
+    {
+     "id": "16-05-sv-andrei-bobola-minsk-mohilev--minsk-mohilev",
+     "action": "set"
+    },
+    {
+     "id": "16-05-sv-andrei-bobola-minsk-mohilev--vitebsk",
+     "action": "set"
+    },
+    {
+     "id": "16-05-sv-andrei-bobola-pinsk",
+     "action": "set"
+    },
+    {
+     "id": "16-05-sv-andrei-bobola",
+     "action": "set"
+    },
+    {
+     "id": "16-07-our-lady-mount-carmel--minsk-mohilev",
+     "action": "set"
+    },
+    {
+     "id": "16-07-our-lady-mount-carmel--pinsk",
+     "action": "set"
+    },
+    {
+     "id": "16-07-our-lady-mount-carmel",
+     "action": "set"
+    },
+    {
+     "id": "16-08-sv-stephen-hungary",
+     "action": "set"
+    },
+    {
+     "id": "16-09-sv-cornelius-cyprian",
+     "action": "set"
+    },
+    {
+     "id": "16-10-sv-hedwig",
+     "action": "set"
+    },
+    {
+     "id": "16-10-sv-margaret-mary-alacoque",
+     "action": "set"
+    },
+    {
+     "id": "16-11-our-lady-mother-mercy-grodno",
+     "action": "set"
+    },
+    {
+     "id": "16-11-our-lady-mother-mercy-minsk-mohilev-pinsk--minsk-mohilev",
+     "action": "set"
+    },
+    {
+     "id": "16-11-our-lady-mother-mercy-minsk-mohilev-pinsk--pinsk",
+     "action": "set"
+    },
+    {
+     "id": "16-11-our-lady-mother-mercy",
+     "action": "set"
+    },
+    {
+     "id": "16-11-sv-gertrude",
+     "action": "set"
+    },
+    {
+     "id": "16-11-sv-margaret-scotland",
+     "action": "set"
+    },
+    {
+     "id": "17-01-sv-antoni",
+     "action": "set"
+    },
+    {
+     "id": "17-02-seven-servite-founders",
+     "action": "set"
+    },
+    {
+     "id": "17-03-sv-patryk",
+     "action": "set"
+    },
+    {
+     "id": "17-06-sv-albert-chmielowski-grodno",
+     "action": "set"
+    },
+    {
+     "id": "17-08-sv-hyacinth-pinsk",
+     "action": "set"
+    },
+    {
+     "id": "17-09-sv-hildegard-bingen",
+     "action": "set"
+    },
+    {
+     "id": "17-09-sv-robert-bellarmine",
+     "action": "set"
+    },
+    {
+     "id": "17-10-sv-ignatius-antioch",
+     "action": "set"
+    },
+    {
+     "id": "17-11-sv-elizabeth-hungary",
+     "action": "set"
+    },
+    {
+     "id": "18-03-sv-cyril-jerusalem",
+     "action": "set"
+    },
+    {
+     "id": "18-05-sv-john-i",
+     "action": "set"
+    },
+    {
+     "id": "18-08-bl-sancja-szymkowiak-grodno",
+     "action": "set"
+    },
+    {
+     "id": "18-09-sv-stanislaus-kostka--grodno",
+     "action": "set"
+    },
+    {
+     "id": "18-09-sv-stanislaus-kostka--minsk-mohilev",
+     "action": "set"
+    },
+    {
+     "id": "18-09-sv-stanislaus-kostka--pinsk",
+     "action": "set"
+    },
+    {
+     "id": "18-10-sv-luke-evangelist",
+     "action": "set"
+    },
+    {
+     "id": "18-11-bl-karolina-kozka-grodno",
+     "action": "set"
+    },
+    {
+     "id": "18-11-dedication-basilicas-peter-paul",
+     "action": "set"
+    },
+    {
+     "id": "19-03-sv-joseph",
+     "action": "set"
+    },
+    {
+     "id": "19-06-sv-romuald",
+     "action": "set"
+    },
+    {
+     "id": "19-08-sv-john-eudes",
+     "action": "set"
+    },
+    {
+     "id": "19-09-sv-januarius",
+     "action": "set"
+    },
+    {
+     "id": "19-10-sv-jean-brebeuf-isaac-jogues-companions",
+     "action": "set"
+    },
+    {
+     "id": "19-10-sv-paul-of-cross",
+     "action": "set"
+    },
+    {
+     "id": "19-11-bl-salomea-grodno",
+     "action": "set"
+    },
+    {
+     "id": "20-01-sv-fabian",
+     "action": "set"
+    },
+    {
+     "id": "20-01-sv-sebastian",
+     "action": "set"
+    },
+    {
+     "id": "20-05-sv-bernardine-of-siena",
+     "action": "set"
+    },
+    {
+     "id": "20-07-bl-czeslaw-pinsk",
+     "action": "set"
+    },
+    {
+     "id": "20-07-sv-apollinaris",
+     "action": "set"
+    },
+    {
+     "id": "20-08-sv-bernard",
+     "action": "set"
+    },
+    {
+     "id": "20-09-sv-andrew-kim-taegon-paul-chong-hasang-companions",
+     "action": "set"
+    },
+    {
+     "id": "20-11-sv-raphael-kalinowski",
+     "action": "set"
+    },
+    {
+     "id": "21-01-sv-agnes",
+     "action": "set"
+    },
+    {
+     "id": "21-02-sv-peter-damian",
+     "action": "set"
+    },
+    {
+     "id": "21-04-sv-anselm",
+     "action": "set"
+    },
+    {
+     "id": "21-05-sv-christopher-magallanes-companions",
+     "action": "set"
+    },
+    {
+     "id": "21-06-sv-aloysius-gonzaga",
+     "action": "set"
+    },
+    {
+     "id": "21-07-sv-lawrence-brindisi",
+     "action": "set"
+    },
+    {
+     "id": "21-08-sv-pius-x",
+     "action": "set"
+    },
+    {
+     "id": "21-09-sv-matthew",
+     "action": "set"
+    },
+    {
+     "id": "21-11-presentation-blessed-virgin-mary",
+     "action": "set"
+    },
+    {
+     "id": "21-12-sv-peter-canisius",
+     "action": "set"
+    },
+    {
+     "id": "22-01-sv-vincent",
+     "action": "set"
+    },
+    {
+     "id": "22-02-chair-of-saint-peter",
+     "action": "set"
+    },
+    {
+     "id": "22-05-sv-rita-cascia",
+     "action": "set"
+    },
+    {
+     "id": "22-06-sv-john-fisher-thomas-more",
+     "action": "set"
+    },
+    {
+     "id": "22-06-sv-paulinus-nola",
+     "action": "set"
+    },
+    {
+     "id": "22-07-sv-mary-magdalene",
+     "action": "set"
+    },
+    {
+     "id": "22-08-our-lady-lahishyn-pinsk",
+     "action": "set"
+    },
+    {
+     "id": "22-08-our-lady-queen",
+     "action": "set"
+    },
+    {
+     "id": "22-10-sv-john-paul-ii",
+     "action": "set"
+    },
+    {
+     "id": "22-11-sv-cecilia",
+     "action": "set"
+    },
+    {
+     "id": "23-01-bl-vincent-lewoniuk-companions-grodno",
+     "action": "set"
+    },
+    {
+     "id": "23-02-sv-polycarp",
+     "action": "set"
+    },
+    {
+     "id": "23-03-sv-turybius-mongrovejo",
+     "action": "set"
+    },
+    {
+     "id": "23-04-sv-adalbert-wojciech-bishop-martyr",
+     "action": "set"
+    },
+    {
+     "id": "23-04-sv-george-martyr",
+     "action": "set"
+    },
+    {
+     "id": "23-07-sv-bridget",
+     "action": "set"
+    },
+    {
+     "id": "23-08-sv-rose-of-lima",
+     "action": "set"
+    },
+    {
+     "id": "23-09-sv-pio-pietrelcina",
+     "action": "set"
+    },
+    {
+     "id": "23-10-sv-john-capistrano",
+     "action": "set"
+    },
+    {
+     "id": "23-11-sv-clement-i",
+     "action": "set"
+    },
+    {
+     "id": "23-11-sv-columban",
+     "action": "set"
+    },
+    {
+     "id": "23-12-sv-john-kenty",
+     "action": "set"
+    },
+    {
+     "id": "24-01-sv-francis-de-sales",
+     "action": "set"
+    },
+    {
+     "id": "24-04-sv-fidel-sigmaringen",
+     "action": "set"
+    },
+    {
+     "id": "24-05-our-lady-help-of-christians-grodno",
+     "action": "set"
+    },
+    {
+     "id": "24-06-nativity-john-baptist",
+     "action": "set"
+    },
+    {
+     "id": "24-07-sv-charbel-makhlouf",
+     "action": "set"
+    },
+    {
+     "id": "24-08-sv-bartholomew",
+     "action": "set"
+    },
+    {
+     "id": "24-10-sv-anthony-mary-claret",
+     "action": "set"
+    },
+    {
+     "id": "24-11-sv-andrew-dung-lac-companions",
+     "action": "set"
+    },
+    {
+     "id": "25-01-conversion-saint-paul",
+     "action": "set"
+    },
+    {
+     "id": "25-03-annunciation-lord",
+     "action": "set"
+    },
+    {
+     "id": "25-04-sv-mark-evangelist",
+     "action": "set"
+    },
+    {
+     "id": "25-05-sv-bede",
+     "action": "set"
+    },
+    {
+     "id": "25-05-sv-gregory-vii",
+     "action": "set"
+    },
+    {
+     "id": "25-05-sv-maria-magdalena-de-pazzi",
+     "action": "set"
+    },
+    {
+     "id": "25-07-sv-james-apostle",
+     "action": "set"
+    },
+    {
+     "id": "25-08-sv-joseph-calasanz",
+     "action": "set"
+    },
+    {
+     "id": "25-08-sv-louis",
+     "action": "set"
+    },
+    {
+     "id": "25-09-bl-ladislaus-gielniow-grodno",
+     "action": "set"
+    },
+    {
+     "id": "25-11-bl-maria-jesus-good-shepherd-grodno",
+     "action": "set"
+    },
+    {
+     "id": "25-11-sv-catherine-alexandria",
+     "action": "set"
+    },
+    {
+     "id": "25-12-naradzhenne-pana",
+     "action": "set"
+    },
+    {
+     "id": "26-01-sv-timothy-titus",
+     "action": "set"
+    },
+    {
+     "id": "26-03-sv-dismas-pinsk",
+     "action": "set"
+    },
+    {
+     "id": "26-05-sv-philip-neri",
+     "action": "set"
+    },
+    {
+     "id": "26-07-sv-joachim-anne",
+     "action": "set"
+    },
+    {
+     "id": "26-08-our-lady-czestochowa--grodno",
+     "action": "set"
+    },
+    {
+     "id": "26-08-our-lady-czestochowa--minsk-mohilev",
+     "action": "set"
+    },
+    {
+     "id": "26-08-our-lady-czestochowa--pinsk",
+     "action": "set"
+    },
+    {
+     "id": "26-09-sv-cosmas-damian",
+     "action": "set"
+    },
+    {
+     "id": "26-10-bl-celina-borzecka-grodno",
+     "action": "set"
+    },
+    {
+     "id": "26-10-bl-celina-borzecka-vitebsk",
+     "action": "set"
+    },
+    {
+     "id": "26-12-sv-stephen-protomartyr",
+     "action": "set"
+    },
+    {
+     "id": "27-01-bl-jurgis-matulaitis-vitebsk",
+     "action": "set"
+    },
+    {
+     "id": "27-01-bl-jurgis-matulaitis",
+     "action": "set"
+    },
+    {
+     "id": "27-01-sv-angela-merici",
+     "action": "set"
+    },
+    {
+     "id": "27-02-sv-gregory-narek",
+     "action": "set"
+    },
+    {
+     "id": "27-05-sv-augustine-of-canterbury",
+     "action": "set"
+    },
+    {
+     "id": "27-06-our-lady-perpetual-help-pinsk",
+     "action": "set"
+    },
+    {
+     "id": "27-06-sv-cyril-alexandrian",
+     "action": "set"
+    },
+    {
+     "id": "27-08-sv-monica",
+     "action": "set"
+    },
+    {
+     "id": "27-09-sv-vincent-de-paul",
+     "action": "set"
+    },
+    {
+     "id": "27-12-sv-john-apostle-evangelist",
+     "action": "set"
+    },
+    {
+     "id": "28-01-sv-thomas-aquinas",
+     "action": "set"
+    },
+    {
+     "id": "28-04-sv-louis-marie-grignion-de-montfort",
+     "action": "set"
+    },
+    {
+     "id": "28-04-sv-peter-chanel",
+     "action": "set"
+    },
+    {
+     "id": "28-06-sv-irenaeus",
+     "action": "set"
+    },
+    {
+     "id": "28-08-sv-augustine",
+     "action": "set"
+    },
+    {
+     "id": "28-09-sv-laurence-ruiz-companions",
+     "action": "set"
+    },
+    {
+     "id": "28-09-sv-wenceslaus",
+     "action": "set"
+    },
+    {
+     "id": "28-10-sv-simon-jude-apostles",
+     "action": "set"
+    },
+    {
+     "id": "28-12-holy-innocents",
+     "action": "set"
+    },
+    {
+     "id": "29-01-bl-boleslawa-lament",
+     "action": "set"
+    },
+    {
+     "id": "29-04-sv-catherine-siena",
+     "action": "set"
+    },
+    {
+     "id": "29-05-sv-paul-vi",
+     "action": "set"
+    },
+    {
+     "id": "29-06-sv-peter-paul-apostles",
+     "action": "set"
+    },
+    {
+     "id": "29-07-sv-martha",
+     "action": "set"
+    },
+    {
+     "id": "29-08-beheading-john-baptist",
+     "action": "set"
+    },
+    {
+     "id": "29-09-archangels-michael-gabriel-raphael",
+     "action": "set"
+    },
+    {
+     "id": "29-12-sv-thomas-becket",
+     "action": "set"
+    },
+    {
+     "id": "30-04-sv-pius-v-pope",
+     "action": "set"
+    },
+    {
+     "id": "30-06-holy-roman-protomartyrs",
+     "action": "set"
+    },
+    {
+     "id": "30-07-sv-peter-chrysologus",
+     "action": "set"
+    },
+    {
+     "id": "30-09-sv-jerome",
+     "action": "set"
+    },
+    {
+     "id": "30-11-sv-andrew-apostle",
+     "action": "set"
+    },
+    {
+     "id": "31-01-sv-john-bosco",
+     "action": "set"
+    },
+    {
+     "id": "31-05-visitation-blessed-virgin-mary",
+     "action": "set"
+    },
+    {
+     "id": "31-07-sv-ignatius-loyola",
+     "action": "set"
+    },
+    {
+     "id": "31-12-sv-sylvester-i",
+     "action": "set"
+    }
+   ],
+   "obsolete": []
+  }
+ },
+ "legacyCopies": [
+  {
+   "id": "01-08-sv-alphonsus-liguori--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "01-08-sv-alphonsus-liguori--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "01.01-solemnity-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "01.11-solemnity-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "02-01-sv-basil-gregory-nazianzen--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "02-01-sv-basil-gregory-nazianzen--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "02-08-sv-peter-julian-eymard--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "02-08-sv-peter-julian-eymard--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "02.02-feast-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "03-02-sv-blazej--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "03-02-sv-blazej--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "03-09-sv-gregory-great--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "03-09-sv-gregory-great--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "03.05-festum-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "04-04-sv-isidore-seville--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "04-04-sv-isidore-seville--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "04-09-bl-maria-stella-companions-grodno--martyrs-many",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "04-09-bl-maria-stella-companions-grodno--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "04-12-sv-john-damascene--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "04-12-sv-john-damascene--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "05-02-sv-agata--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "05-02-sv-agata--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "05-04-sv-vincent-ferrer--educators",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "05-04-sv-vincent-ferrer--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "05-06-sv-boniface--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "05-06-sv-boniface--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "05-07-sv-anthony-mary-zaccaria--educators",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "05-07-sv-anthony-mary-zaccaria--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "05-07-sv-anthony-mary-zaccaria--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "06-06-sv-boniface-vitebsk--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "06-06-sv-boniface-vitebsk--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "06-07-sv-maria-goretti--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "06-07-sv-maria-goretti--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "06-10-sv-bruno--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "06-10-sv-bruno--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "06.01-solemnitas-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "06.08-feast-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "07-04-sv-jean-baptiste-de-la-salle--educators",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "07-04-sv-jean-baptiste-de-la-salle--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "07-08-sv-cajetan--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "07-08-sv-cajetan--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "07-12-sv-ambrose--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "07-12-sv-ambrose--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "08-03-sv-john-of-god--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "08-03-sv-john-of-god--works-of-mercy",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "08-08-sv-dominic--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "08-08-sv-dominic--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "09-08-sv-teresa-benedicta-cross--martyrs-many",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "09-08-sv-teresa-benedicta-cross--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "09-09-sv-peter-claver--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "09-09-sv-peter-claver--works-of-mercy",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "09-10-sv-john-leonardi--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "09-10-sv-john-leonardi--works-of-mercy",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "10-11-sv-leo-great--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "10-11-sv-leo-great--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "10.08-festum-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "11-08-sv-clare--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "11-08-sv-clare--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "12-08-sv-jane-frances-de-chantal--holy-women",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "12-08-sv-jane-frances-de-chantal--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "12-11-sv-josaphat--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "12-11-sv-josaphat--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "12-11-sv-josaphat-minsk-mohilev-pinsk--minsk-mohilev--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "12-11-sv-josaphat-minsk-mohilev-pinsk--minsk-mohilev--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "12-11-sv-josaphat-vitebsk--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "12-11-sv-josaphat-vitebsk--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "13-01-sv-hilary--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "13-01-sv-hilary--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "13-06-sv-anthony-padua--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "13-06-sv-anthony-padua--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "13-06-sv-anthony-padua--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "13-08-sv-pontian-hippolytus--martyrs-many",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "13-08-sv-pontian-hippolytus--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "13-09-sv-john-chrysostom--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "13-09-sv-john-chrysostom--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "13-12-sv-lucy--martyrs-many",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "13-12-sv-lucy--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "14-08-sv-maximilian-kolbe--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "14-08-sv-maximilian-kolbe--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "14-08-sv-maximilian-kolbe-grodno--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "14-08-sv-maximilian-kolbe-grodno--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "14-10-sv-callistus-i--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "14-10-sv-callistus-i--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "14-12-sv-john-cross--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "14-12-sv-john-cross--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "14.09-feast-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "15-07-sv-bonaventure--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "15-07-sv-bonaventure--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "15-11-sv-albert-great--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "15-11-sv-albert-great--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "15.08-solemnitas-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "16-09-sv-cornelius-cyprian--martyrs-many",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "16-09-sv-cornelius-cyprian--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "16-10-sv-hedwig--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "16-10-sv-hedwig--works-of-mercy",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "16-10-sv-margaret-mary-alacoque--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "16-10-sv-margaret-mary-alacoque--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "16-11-sv-gertrude--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "16-11-sv-gertrude--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "17-09-sv-robert-bellarmine--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "17-09-sv-robert-bellarmine--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "17-10-sv-ignatius-antioch--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "17-10-sv-ignatius-antioch--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "18-03-sv-cyril-jerusalem--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "18-03-sv-cyril-jerusalem--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "18-05-sv-john-i--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "18-05-sv-john-i--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "19-08-sv-john-eudes--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "19-08-sv-john-eudes--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "19-09-sv-januarius--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "19-09-sv-januarius--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "19-10-sv-jean-brebeuf-isaac-jogues-companions--martyrs-many",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "19-10-sv-jean-brebeuf-isaac-jogues-companions--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "19-10-sv-paul-of-cross--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "19-10-sv-paul-of-cross--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "19.03-solemnitas-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "20-01-sv-fabian--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "20-01-sv-fabian--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "20-05-sv-bernardine-of-siena--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "20-05-sv-bernardine-of-siena--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "20-07-sv-apollinaris--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "20-07-sv-apollinaris--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "20-08-sv-bernard--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "20-08-sv-bernard--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "21-01-sv-agnes--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "21-01-sv-agnes--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "21-02-sv-peter-damian--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "21-02-sv-peter-damian--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "21-04-sv-anselm--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "21-04-sv-anselm--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "21-05-sv-christopher-magallanes-companions--martyrs-many",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "21-05-sv-christopher-magallanes-companions--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "21-07-sv-lawrence-brindisi--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "21-07-sv-lawrence-brindisi--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "22-11-sv-cecilia--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "22-11-sv-cecilia--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-02-sv-polycarp--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-02-sv-polycarp--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-04-sv-adalbert-wojciech-bishop-martyr--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-04-sv-adalbert-wojciech-bishop-martyr--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-08-sv-rose-of-lima--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-08-sv-rose-of-lima--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-09-sv-pio-pietrelcina--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-09-sv-pio-pietrelcina--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-11-sv-clement-i--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-11-sv-clement-i--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-11-sv-columban--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "23-11-sv-columban--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "24-01-sv-francis-de-sales--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "24-01-sv-francis-de-sales--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "24-04-sv-fidel-sigmaringen--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "24-04-sv-fidel-sigmaringen--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "24-07-sv-charbel-makhlouf--holy-men",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "24-07-sv-charbel-makhlouf--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "24.06-solemnity-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "25-05-sv-bede--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "25-05-sv-bede--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "25-05-sv-maria-magdalena-de-pazzi--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "25-05-sv-maria-magdalena-de-pazzi--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "25-08-sv-joseph-calasanz--educators",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "25-08-sv-joseph-calasanz--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "25-11-sv-catherine-alexandria--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "25-11-sv-catherine-alexandria--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "25.03-solemnitas-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "25.04-festum-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "25.12-solemnitas-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "26-05-sv-philip-neri--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "26-05-sv-philip-neri--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "27-01-sv-angela-merici--educators",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "27-01-sv-angela-merici--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "27-06-sv-cyril-alexandrian--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "27-06-sv-cyril-alexandrian--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "27-09-sv-vincent-de-paul--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "27-09-sv-vincent-de-paul--works-of-mercy",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "28-04-sv-louis-marie-grignion-de-montfort--holy-men",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "28-04-sv-louis-marie-grignion-de-montfort--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "28-06-sv-irenaeus--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "28-06-sv-irenaeus--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "28-08-sv-augustine--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "28-08-sv-augustine--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "29-01-bl-boleslawa-lament--martyr-one",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "29-01-bl-boleslawa-lament--virgins",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "29.06-solemnity-none",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "30-07-sv-peter-chrysologus--doctors-of-church",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "30-07-sv-peter-chrysologus--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "31-01-sv-john-bosco--educators",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "31-01-sv-john-bosco--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "31-07-sv-ignatius-loyola--pastors",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "31-07-sv-ignatius-loyola--religious",
+   "alreadyObsolete": null
+  },
+  {
+   "id": "31.05-feast-none",
+   "alreadyObsolete": null
+  }
+ ]
+}
