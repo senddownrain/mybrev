@@ -13,6 +13,7 @@ import { prayerAccessPolicy } from '../../../src/utils/priestPolicy.mjs';
 import { validateCelebrationDefinition, validateDioceseOverride } from '../../../src/utils/ordo/definitions.js';
 import { validateYearOverride } from '../../../src/utils/ordo/yearOverrides.js';
 import { validateMassReadings } from '../../../src/utils/massReadingSets.js';
+import { validateSeasonalVariants } from '../../../src/utils/ordo/commonSeasons.js';
 
 export const CONTENT_SCHEMA_VERSION = 1;
 
@@ -21,8 +22,10 @@ export const CONTENT_SCHEMA_VERSION = 1;
  * CONTENT_SCHEMA_VERSION: an older app ignores the new field and keeps
  * reading the flat fields (a document without them it skips as «no text»).
  *   readings.massReadings — structured Mass reading sets (src/utils/massReadingSets.js)
+ *   liturgicalTemplates._seasonalVariants — sparse seasonal deltas of a Common (src/utils/ordo/commonSeasons.js);
+ *     the flat base fields are unchanged, so a client that does not know the delta keeps reading them
  */
-export const DOCUMENT_SCHEMAS = Object.freeze({ readings: { massReadings: 1 } });
+export const DOCUMENT_SCHEMAS = Object.freeze({ readings: { massReadings: 1 }, liturgicalTemplates: { seasonalVariants: 1 } });
 
 /** Collections the app ships and updates (order = load priority). */
 export const APP_CONTENT_COLLECTIONS = [
@@ -197,7 +200,11 @@ export const DOCUMENT_RULES = {
     if (doc._massReadingsRef && !filled(doc._massReadingsRef.doc)) return '_massReadingsRef without doc';
     return anyOf(doc, ['reading1', 'psalm', 'reading2', 'gospel', 'massReadings']) || 'no reading';
   },
-  liturgicalTemplates: (doc) => (filled(doc._kind) && filled(doc.title)) || 'no _kind/title',
+  liturgicalTemplates: (doc) => {
+    if (!(filled(doc._kind) && filled(doc.title))) return 'no _kind/title';
+    const issues = validateSeasonalVariants(doc, { id: doc.id });
+    return issues.length ? issues.map((issue) => `${issue.path}: ${issue.message}`).join('; ') : true;
+  },
   invitatoriums: (doc) => filled(doc.invitatoriumPs1) || 'no psalm',
   completoriums: (doc) => (filled(doc._periodType) && filled(doc.compPs1)) || 'no period/psalm',
   prayers: (doc) => (anyOf(doc, ['title', 'titleVersions']) && anyOf(doc, ['text', 'textVersions'])) || 'no title/text',
