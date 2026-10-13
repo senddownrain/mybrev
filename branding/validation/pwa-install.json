@@ -1,0 +1,28 @@
+{
+  "manifest": {
+    "name": "Каталіцкі малітоўнік",
+    "short_name": "Малітоўнік",
+    "icons": 4,
+    "identity": "http://127.0.0.1:4173/"
+  },
+  "install": true,
+  "standalone": true,
+  "themes": [
+    {
+      "mode": "light",
+      "drawerLogo": true,
+      "appearance": "light"
+    },
+    {
+      "mode": "dark",
+      "drawerLogo": true,
+      "appearance": "dark"
+    }
+  ],
+  "remoteRequestsBlocked": 42,
+  "osState": {
+    "badgeCount": 0,
+    "fileHandlers": []
+  },
+  "pageErrors": []
+}
