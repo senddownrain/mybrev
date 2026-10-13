@@ -2,10 +2,6 @@
   <v-container class="items-list-container">
     <div class="section-page-header">
       <h1 class="section-page-title">Літургія гадзінаў</h1>
-      <router-link :to="ordoRoute" class="ordo-shortcut" aria-label="Літургічны каляндар гэтага дня">
-        <v-icon icon="mdi-calendar-text-outline" size="20"></v-icon>
-        <span>Каляндар</span>
-      </router-link>
     </div>
     <div class="date-header-shell" :style="dateHeaderStyle">
       <button
@@ -319,7 +315,6 @@ watch([dayOptions, () => route.query.option], ([options, optionId]) => {
 });
 
 // Ordo detail of the date being viewed.
-const ordoRoute = computed(() => ({ name: 'OrdoByDate', params: { date: currentDate.value.format('YYYY-MM-DD') } }));
 
 const optionRoute = (option) => {
   const targetId = option.dayId || `missing-${option.key}`;
@@ -382,28 +377,6 @@ watch(
   justify-content: space-between;
   gap: 12px;
   margin: 8px 12px 22px;
-}
-
-.ordo-shortcut {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 6px;
-  min-height: 40px;
-  padding: 8px 14px;
-  border: 1px solid var(--nav-border);
-  border-radius: 999px;
-  background: var(--nav-surface);
-  color: var(--nav-on-surface);
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.ordo-shortcut:focus-visible {
-  outline: 3px solid rgba(var(--chrome-accent-rgb), 0.3);
-  outline-offset: 2px;
 }
 
 .section-page-title {
