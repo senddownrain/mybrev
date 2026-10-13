@@ -1,11 +1,11 @@
 # Ordo notes: semantic audit
 
-Згенеравана `node scripts/ordo/build.mjs` — не рэдагаваць уручную. Рэвізія публікацыі заўваг: **5**.
+Згенеравана `node scripts/ordo/build.mjs` — не рэдагаваць уручную. Рэвізія публікацыі заўваг: **6**.
 Правілы: `scripts/ordo/lib/note-guards.mjs`.
 
 | | |
 |---|---|
-| Апублікаваных заўваг | 1338 |
+| Апублікаваных заўваг | 1347 |
 | Выпраўлена аўтаматычна (месяц / шчыльнасць) | 40 |
 | Дакладная дата / год (у т.л. 131 падзеленых па днях) | 175 |
 | Кананічныя правілы (І чацвер / пятніца / субота) | 3 |
@@ -22,10 +22,10 @@
 
 | Дыяцэзія | Уласныя | Бачныя | Агульныя заўвагі | Тамы (books) | NEEDS_REVIEW | Абзацаў front matter | Прапушчана front matter |
 |---|---|---|---|---|---|---|---|
-| minsk-mohilev | 141 | 179 | 0 | 6 | 2 | 0 | — |
-| vitebsk | 396 | 413 | 0 | 0 | 16 | 0 | — |
-| pinsk | 526 | 552 | 14 | 0 | 5 | 14 | index-or-fragment 16, precedence-table-computed-by-engine 13, pastor-mass-pro-populo-obligation 3, table 2, patrons-list 1, table-of-the-year 1, holy-days-of-obligation-list 1 |
-| grodno | 352 | 374 | 113 | 51 | 23 | 121 | table 42, heading 18, pastor-mass-pro-populo-obligation 15, patrons-or-table 8, precedence-rule-computed-by-engine 3, excluded:money 1 |
+| minsk-mohilev | 150 | 188 | 0 | 15 | 2 | 0 | — |
+| vitebsk | 405 | 422 | 0 | 9 | 16 | 0 | — |
+| pinsk | 535 | 561 | 14 | 9 | 5 | 14 | index-or-fragment 16, precedence-table-computed-by-engine 13, pastor-mass-pro-populo-obligation 3, table 2, patrons-list 1, table-of-the-year 1, holy-days-of-obligation-list 1 |
+| grodno | 361 | 383 | 113 | 60 | 23 | 121 | table 42, heading 18, pastor-mass-pro-populo-obligation 15, patrons-or-table 8, precedence-rule-computed-by-engine 3, excluded:money 1 |
 
 Высокі працэнт супадзення з календарамі не лічыцца поспехам, калі «Чэрвеньскае набажэнства» паказваецца ў кастрычніку:
 сэнс тэксту правяраецца асобна ад частаты.

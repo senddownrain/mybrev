@@ -39,7 +39,7 @@ export const ORDO_NOTE_CATEGORIES = Object.freeze([
  * field (celebration → day → period phase → period).
  */
 const BOOK_SELECTOR_RANK = Object.freeze({
-  celebration: 0, 'exact-date': 1, 'fixed-date': 1, 'period-day': 1, relative: 1, all: 2, 'period-phase': 3, period: 4,
+  celebration: 0, 'exact-date': 1, 'fixed-date': 1, 'period-day': 1, relative: 1, all: 2, any: 2, 'period-phase': 3, period: 4,
 });
 
 export function isBooksNote(note) {

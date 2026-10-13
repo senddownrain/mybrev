@@ -74,7 +74,8 @@ test('Lectionary / Hours volumes are structured metadata, not «Асаблівы
   assert.ok(books.length >= 40);
   books.forEach((note) => assert.ok(note.books.lectionaryVolume || note.books.hoursVolume, note.id));
   // Grodno: proper of saints (vol. VI) and Ordinary Time from week 10 (vol. IV).
-  assert.deepEqual(resolve('2027-06-06', 'grodno').books, { lectionaryVolume: 'IV', noteIds: resolve('2027-06-06', 'grodno').books.noteIds });
+  // (the Hours volume of the period table completes the printed Lectionary volume of the day).
+  assert.deepEqual(resolve('2027-06-06', 'grodno').books, { lectionaryVolume: 'IV', hoursVolume: 'III', noteIds: resolve('2027-06-06', 'grodno').books.noteIds });
   assert.equal(resolve('2027-08-15', 'grodno').books.lectionaryVolume, 'VI');
   // Minsk: period markers give both volumes for the whole of Advent.
   const advent = resolve('2026-12-01', 'minsk-mohilev');
@@ -120,4 +121,41 @@ test('recheck §13: every extracted Grodno / Pinsk general note is published (no
   assert.deepEqual(rorate.selector, { type: 'period', period: 'advent' });
   assert.ok(texts(resolve('2026-12-02', 'grodno')).some((text) => /Раратнюю/u.test(text)));
   assert.ok(!texts(resolve('2026-12-02', 'vitebsk')).some((text) => /Раратнюю/u.test(text)));
+});
+
+test('recheck §13.1: period volumes are Belarus-wide structured metadata for every diocese (Minsk + Grodno calendars)', () => {
+  const volumes = (date, diocese) => {
+    const { books } = resolve(date, diocese);
+    return books ? `${books.lectionaryVolume || '-'}/${books.hoursVolume || '-'}` : null;
+  };
+  const expected = {
+    '2025-11-30': 'I/I', // Advent (Minsk ¶8–9, Grodno 28.11.2027 p. 134)
+    '2025-12-25': 'I/I', // Christmas: no new heading
+    '2026-01-12': 'III/III', // Ordinary Time week 1 (Minsk ¶463–464, Grodno 11.01.2027 p. 42)
+    '2026-02-18': 'II/II', // Lent (Minsk ¶817–818, Grodno 10.02.2027 p. 50)
+    '2026-04-01': 'II/II', // Holy Week
+    '2026-04-15': 'II/II', // Easter: no new heading
+    '2026-05-25': 'III/III', // week 8 (Minsk ¶1728–1729)
+    '2026-08-01': 'III/III', // week 17
+    '2026-08-02': 'III/IV', // XVIII Sunday: Hours vol. IV (Minsk ¶2419)
+    '2026-08-30': 'V/IV', // XXII Sunday: Lectionary vol. V (Minsk ¶2689, Grodno 29.08.2027 p. 108)
+    '2026-11-15': 'V/IV',
+  };
+  ['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno'].forEach((diocese) => {
+    Object.entries(expected).forEach(([date, volume]) => assert.equal(volumes(date, diocese), volume, `${diocese} ${date}`));
+  });
+  // Volumes are never «Асаблівыя заўвагі»; a celebration-specific volume (Grodno: Lectionary vol. VI) still wins.
+  assert.ok(!texts(resolve('2026-08-02', 'minsk-mohilev')).some((text) => /т\.\s*(?:III|IV)/u.test(text)));
+  assert.equal(resolve('2027-11-01', 'grodno').books.lectionaryVolume, 'VI');
+  assert.equal(resolve('2027-11-01', 'grodno').books.hoursVolume, 'IV');
+  // Provenance: every period row cites the calendar paragraphs / pages.
+  const rows = NOTES.filter((note) => note.provenance?.kind === 'period-volumes');
+  assert.equal(rows.length, 9);
+  rows.forEach((note) => {
+    assert.deepEqual(note.scope, { level: 'belarus', dioceseIds: ['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno'] });
+    assert.ok(note.provenance.evidence.length, note.id);
+  });
+  // The headings the extractor did read agree with the table (Advent I/I, Lent II/II, week 8 III/III).
+  const minsk = read('evidence/minsk-mohilev.json').rules.map((rule) => rule.text);
+  assert.ok(minsk.includes('ЛЕКЦЫЯНАРЫЙ – т. І') && minsk.includes('ЛЕКЦЫЯНАРЫЙ – т. ІІ') && minsk.includes('ЛЕКЦЫЯНАРЫЙ – т. ІІІ'));
 });

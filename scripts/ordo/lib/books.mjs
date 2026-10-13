@@ -50,3 +50,85 @@ export function extractBooks(text) {
   if (PERIOD_ONLY.test(rest) || /^[\s.;,]*$/.test(rest)) rest = '';
   return { books, remainder: rest };
 }
+
+// ---------------------------------------------------------------------------
+// Period volumes (final phase recheck §13.1)
+// ---------------------------------------------------------------------------
+
+const MINSK = 'Liturg_kal-r_2026 Мінск.docx';
+const GRODNO = 'каляндар 2027 Гродна.pdf';
+const ALL_DIOCESES = Object.freeze(['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno']);
+const orderedWeeks = (from, to) => ({
+  type: 'any',
+  selectors: Array.from({ length: to - from + 1 }, (_, index) => ({ type: 'period-day', period: 'ordinary', week: from + index })),
+});
+
+/**
+ * Volumes by period. The printed calendars give them where the book changes
+ * and say nothing in between, so each row is valid until the next printed
+ * heading (`inherited: true` marks the rows without a heading of their own).
+ * Two independent calendars agree wherever they overlap (Minsk docx paragraphs,
+ * Grodno pdf pages); the Lectionary and the Hours are the same books in every
+ * diocese, so ONE Belarus-wide value is kept instead of four copies (§13.1).
+ * Only the headings of the Minsk calendar were read by the extractor before:
+ * three of its six (OT week 1, week 18, week 22) were lost in the paragraphs
+ * of a day. Weeks 18–21: the Lectionary stays III (no heading between week 8
+ * and week 22).
+ */
+export const PERIOD_VOLUMES = Object.freeze([
+  {
+    id: 'advent', selector: { type: 'period', period: 'advent' }, books: { lectionaryVolume: 'I', hoursVolume: 'I' },
+    evidence: [{ file: MINSK, paragraphs: [8, 9] }, { file: GRODNO, page: 134 }],
+  },
+  {
+    id: 'christmas', selector: { type: 'period', period: 'christmas' }, books: { lectionaryVolume: 'I', hoursVolume: 'I' }, inherited: true,
+    evidence: [{ file: MINSK, paragraphs: [8, 9], note: 'no heading until Ordinary Time week 1' }],
+  },
+  {
+    id: 'ordinary-before-lent', selector: { type: 'period-phase', period: 'ordinary', phase: 'before-lent' }, books: { lectionaryVolume: 'III', hoursVolume: 'III' },
+    evidence: [{ file: MINSK, paragraphs: [463, 464] }, { file: GRODNO, page: 42 }],
+  },
+  {
+    id: 'lent', selector: { type: 'period', period: 'lent' }, books: { lectionaryVolume: 'II', hoursVolume: 'II' },
+    evidence: [{ file: MINSK, paragraphs: [817, 818] }, { file: GRODNO, page: 50 }],
+  },
+  {
+    id: 'holyweek', selector: { type: 'period', period: 'holyweek' }, books: { lectionaryVolume: 'II', hoursVolume: 'II' }, inherited: true,
+    evidence: [{ file: MINSK, paragraphs: [817, 818], note: 'no heading until Ordinary Time week 8' }],
+  },
+  {
+    id: 'easter', selector: { type: 'period', period: 'easter' }, books: { lectionaryVolume: 'II', hoursVolume: 'II' }, inherited: true,
+    evidence: [{ file: MINSK, paragraphs: [817, 818], note: 'no heading until Ordinary Time week 8' }],
+  },
+  {
+    id: 'ordinary-weeks-8-17', selector: orderedWeeks(8, 17), books: { lectionaryVolume: 'III', hoursVolume: 'III' },
+    evidence: [{ file: MINSK, paragraphs: [1728, 1729] }],
+  },
+  {
+    id: 'ordinary-weeks-18-21', selector: orderedWeeks(18, 21), books: { lectionaryVolume: 'III', hoursVolume: 'IV' },
+    evidence: [{ file: MINSK, paragraphs: [2419], note: 'Літургія гадзінаў т. IV from the XVIII Sunday; the Lectionary heading follows only at week 22' }],
+  },
+  {
+    id: 'ordinary-weeks-22-34', selector: orderedWeeks(22, 34), books: { lectionaryVolume: 'V', hoursVolume: 'IV' },
+    evidence: [{ file: MINSK, paragraphs: [2689] }, { file: GRODNO, page: 108 }],
+  },
+]);
+
+/** Belarus-wide `books` notes of the period volumes (appended after every other note: no id moves). */
+export function periodVolumeNotes() {
+  return PERIOD_VOLUMES.map((row) => ({
+    id: '',
+    scope: { level: 'belarus', dioceseIds: [...ALL_DIOCESES] },
+    selector: row.selector,
+    category: 'books',
+    tags: [],
+    text: booksText(row.books),
+    books: row.books,
+    basis: 'period-volumes',
+    occurrences: 0,
+    displayOnly: false,
+    classification: 'LIKELY_PERMANENT_RULE',
+    confidence: row.inherited ? 'inherited-until-next-heading' : 'two-calendars',
+    provenance: { kind: 'period-volumes', rule: row.id, evidence: row.evidence, ...(row.inherited ? { inherited: true } : {}) },
+  }));
+}

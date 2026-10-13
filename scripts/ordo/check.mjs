@@ -93,7 +93,10 @@ export function validateNotes(notes, evidence) {
     if (!CLASSIFICATIONS.has(note.classification)) problems.push(`${note.id}: bad classification`);
     if (!['universal', 'belarus', 'diocese'].includes(note.scope?.level)) problems.push(`${note.id}: bad scope`);
     // An app-level normalization (first Thursday …) cites the dioceses it was seen in instead.
-    if (!note.observed?.length && note.provenance?.kind !== 'app-normalization') problems.push(`${note.id}: no observations`);
+    // Period volumes cite the calendar paragraphs / pages they were read from instead.
+    if (note.provenance?.kind === 'period-volumes') {
+      if (!note.provenance.evidence?.length) problems.push(`${note.id}: period volumes without evidence`);
+    } else if (!note.observed?.length && note.provenance?.kind !== 'app-normalization') problems.push(`${note.id}: no observations`);
     if (note.provenance?.kind === 'app-normalization' && !note.provenance.observedIn?.length) problems.push(`${note.id}: normalization without sources`);
     note.observed?.forEach((o) => {
       if (!o.evidence?.rawText && o.evidence?.rawText !== '') problems.push(`${note.id}: observation without evidence`);

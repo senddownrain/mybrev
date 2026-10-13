@@ -13,7 +13,7 @@ import { CLASSIFICATION, DISPLAY_CATEGORIES, daySelector } from './normalize.mjs
 import { resolveCelebration } from './identity.mjs';
 import { clean, fingerprint, fold, jaccard, wordSet } from './text.mjs';
 import { bareFirstWeekdayMark, canonicalFirstWeekdayNotes, guardNote, mentionedFirstWeekday } from './note-guards.mjs';
-import { booksText, extractBooks } from './books.mjs';
+import { booksText, extractBooks, periodVolumeNotes } from './books.mjs';
 
 /**
  * Split the Lectionary / Hours volume markers off a note (§13.1): returns the
@@ -386,6 +386,7 @@ export function buildNotes(sources, catalog) {
     ...built.filter((item) => !item.replaced).flatMap((item) => item.split || [item.entry]),
     ...canonical.map((entry) => ({ id: '', ...entry })),
     ...rescued.filter((item) => !item.replaced).flatMap((item) => item.split || [item.entry]),
+    ...periodVolumeNotes(),
   ];
   notes.forEach((entry, index) => { entry.id = `ordo-note-${String(index + 1).padStart(4, '0')}`; });
   // Evidence items point at the published note (the canonical rule for the bare marks).
