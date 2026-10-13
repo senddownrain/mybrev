@@ -123,7 +123,12 @@ try {
         });
         assert.equal(metrics.overflow, false, `${profile.name} ${layout} ${markers}: no horizontal overflow`);
         assert.equal(metrics.hasContinuation, markers === 'breakAfterMarker');
-        if (markers === 'breakAfterMarker') assert.ok(metrics.continuationIndent > 0 && metrics.continuationIndent < 1);
+        if (markers === 'breakAfterMarker') {
+          // Alternating strophes already own their indent; continuation must
+          // not add a second one. Aligned strophes use the modest marker indent.
+          if (layout === 'alternatingIndent') assert.equal(metrics.continuationIndent, 0);
+          else assert.ok(metrics.continuationIndent > 0 && metrics.continuationIndent < 1);
+        }
         assert.ok(layout === 'alignedLeft' ? metrics.aLeft === metrics.bLeft : metrics.bLeft > metrics.aLeft);
         assert.equal(await texts.first().textContent(), originalText, 'source text is preserved');
         await page.screenshot({ path: path.join(output, `${profile.name}-${layout}-${markers}.png`) });
