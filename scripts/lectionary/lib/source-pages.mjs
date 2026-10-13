@@ -6,11 +6,12 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { parseLectionaryPage, validateParsedPage } from '../../liturgy/lib/lectionary-parser.mjs';
 import { pageIdentity } from './identity.mjs';
 import { normalizeText } from './compare.mjs';
 
-export const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..', '..');
+export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 export const SNAPSHOT_DIR = path.join(ROOT, 'reports', 'lectionary', 'snapshots');
 export const sha256 = (text) => crypto.createHash('sha256').update(text).digest('hex');
 

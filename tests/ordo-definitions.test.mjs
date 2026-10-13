@@ -28,7 +28,7 @@ const ids = (day) => [day.primary, ...day.alternatives].map((item) => item.id);
 
 test('the bundled snapshot is up to date with the seed sources', () => {
   const { text } = buildSnapshot();
-  assert.equal(fs.readFileSync(new URL('../src/data/ordo/calendar-definitions.json', import.meta.url), 'utf8'), text);
+  assert.equal(fs.readFileSync(new URL('../src/data/ordo/calendar-definitions.json', import.meta.url), 'utf8').replaceAll('\r\n', '\n'), text);
 });
 
 test('the permanent calendar is rules, not 365 annual rows', () => {

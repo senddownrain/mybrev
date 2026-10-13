@@ -32,6 +32,7 @@ const settings = useSettingsStore();
 <style scoped>
 .text-scale-control {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   height: 48px;
   padding: 0 4px;
@@ -46,9 +47,9 @@ const settings = useSettingsStore();
 .text-scale-button {
   display: grid;
   place-items: center;
-  width: 38px;
-  flex: 0 0 38px;
-  height: 40px;
+  width: 44px;
+  flex: 0 0 44px;
+  height: 44px;
   border: 0;
   border-radius: 50%;
   background: transparent;
@@ -87,9 +88,9 @@ const settings = useSettingsStore();
   }
 
   .text-scale-button {
-    width: 34px;
-    flex-basis: 34px;
-    height: 38px;
+    width: 44px;
+    flex-basis: 44px;
+    height: 44px;
   }
 }
 </style>

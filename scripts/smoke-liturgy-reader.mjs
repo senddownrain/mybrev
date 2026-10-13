@@ -32,6 +32,7 @@ try {
   for (const profile of [
     { name: 'mobile-light', width: 390, height: 844, theme: 'light', scale: 1 },
     { name: 'narrow-dark-large', width: 320, height: 740, theme: 'dark', scale: 1.8 },
+    { name: 'tablet-light', width: 768, height: 1024, theme: 'light', scale: 1 },
     { name: 'desktop-dark', width: 1280, height: 900, theme: 'dark', scale: 1 },
   ]) {
     const ctx = await browser.newContext({ viewport: profile, colorScheme: profile.theme, reducedMotion: 'reduce', serviceWorkers: 'block' });
@@ -122,7 +123,12 @@ try {
         });
         assert.equal(metrics.overflow, false, `${profile.name} ${layout} ${markers}: no horizontal overflow`);
         assert.equal(metrics.hasContinuation, markers === 'breakAfterMarker');
-        if (markers === 'breakAfterMarker') assert.ok(metrics.continuationIndent > 0 && metrics.continuationIndent < 1);
+        if (markers === 'breakAfterMarker') {
+          // Alternating strophes already own their indent; continuation must
+          // not add a second one. Aligned strophes use the modest marker indent.
+          if (layout === 'alternatingIndent') assert.equal(metrics.continuationIndent, 0);
+          else assert.ok(metrics.continuationIndent > 0 && metrics.continuationIndent < 1);
+        }
         assert.ok(layout === 'alignedLeft' ? metrics.aLeft === metrics.bLeft : metrics.bLeft > metrics.aLeft);
         assert.equal(await texts.first().textContent(), originalText, 'source text is preserved');
         await page.screenshot({ path: path.join(output, `${profile.name}-${layout}-${markers}.png`) });
@@ -149,7 +155,7 @@ try {
     await page.getByRole('button', { name: 'Уверх', exact: true }).waitFor({ state: 'visible' });
     const capsule = await page.locator('.ora-location').boundingBox();
     const scaleBox = await page.locator('.text-scale-control').boundingBox();
-    assert.equal(capsule.height, 38);
+    assert.ok(capsule.height >= 44, 'hour selector has a sufficient touch target');
     assert.ok(capsule.y + capsule.height <= 64, 'capsule stays in the toolbar, clear of reader text');
     assert.ok(capsule.x + capsule.width < scaleBox.x, 'size buttons remain visible beside the capsule');
     await page.locator('.ora-location').click();

@@ -2,9 +2,19 @@
 // liturgical palette remains a separate semantic layer on each day.
 :root {
   --app-safe-top: env(safe-area-inset-top, 0px);
+  --app-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --bottom-nav-height: 64px;
+  --bottom-nav-inset: max(8px, var(--app-safe-bottom));
+  --bottom-nav-clearance: calc(var(--bottom-nav-height) + 22px + var(--bottom-nav-inset) + 16px);
   --ui-font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --reader-font-family: "Literata", "PT Serif", Georgia, serif;
   --reader-display-font-family: "Cormorant SC", "Old Standard TT", Georgia, serif;
+}
+
+// The same geometry drives all three floating docks and the space to scroll
+// the final content above them (including devices with a system safe area).
+.app-main--bottom-nav {
+  padding-bottom: var(--bottom-nav-clearance) !important;
 }
 
 // All components, including teleported menus/dialogs, consume Vuetify's
