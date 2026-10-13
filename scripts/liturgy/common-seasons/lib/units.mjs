@@ -95,7 +95,7 @@ export function scanVolume(lines) {
       for (let k = 1; k <= 2 && i + k < end; k += 1) {
         const next = lines[i + k].text;
         if (!next.trim()) { skip += 1; continue; }
-        if (isHeadingLike(next) && !classifyLine(next).hour) { text += ` ${next}`; skip += 1; } else break;
+        if ((isHeadingLike(next) || (next.trim().length < 70 && /^(ЯКІЯ|ПРА|НА)\s/u.test(upper(next)) && !/[.:]$/.test(next.trim()))) && !classifyLine(next).hour) { text += ` ${next}`; skip += 1; } else break;
       }
       const id = commonIdOf(text);
       i += skip;
