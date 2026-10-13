@@ -135,7 +135,9 @@ export function classifyLine(text) {
   if (t === t.toLocaleUpperCase('be') && /^(ПРА\s+(НЕКАЛЬКІХ\s+МУЧАНІКАЎ|АДНАГО\s+МУЧАНІКА))$/.test(U)) return { kind: 'commonHeading', continuation: true };
   if (/^Гімн$/i.test(t)) return { kind: 'hymn' };
   if (/^(Ва ўрачыстасці і святы\s*[–-]\s*)?гімн\s+Цябе,\s*Бога/i.test(t)) return { kind: 'teDeum' };
-  if (/^Гімн(?!\p{L})/iu.test(t)) return { kind: 'hymnRef' };
+  // A reference line («Гімн з ІІ Нешпараў, с. 1147.», «Гімн з Уласных тэкстаў пра святых.»), never a verse
+  // that merely begins with the word «Гімн» («Гімн пастыру сёння спяваем.», «Гімн хвалы Табе хай будзе,»).
+  if (/^Гімн(?!\p{L})/iu.test(t) && t.length < 140 && (/с\.\s*\d/u.test(t) || /[Уу]ласных\s+тэкстаў/u.test(t) || /^Гімн[\s.,]*(?:як|з)\s/iu.test(t))) return { kind: 'hymnRef' };
   if (/^Псальмодыя$/i.test(t)) return { kind: 'psalmody' };
   const label = inlineSeasonLabel(t);
   if (label && /^[123]/.test(label.head)) return { kind: 'ant', index: Number(label.head[0]), season: label.season, label };

@@ -89,3 +89,49 @@ export function splitBlocks(html) {
   while ((match = re.exec(html))) blocks.push(match[0]);
   return blocks;
 }
+
+const ALIGN_ATTR = /^<p(?:\s+style="([^"]*)")?>/;
+const alignOf = (html) => {
+  const match = ALIGN_ATTR.exec(html) || /^<p\s+style="([^"]*)"/.exec(html);
+  const style = match?.[1] || '';
+  return /text-align:\s*center/.test(style) ? 'center' : /text-align:\s*justify/.test(style) ? 'justify' : 'none';
+};
+
+/** Layout role of a rendered block: the stored HTML aligns blocks of the same role the same way. */
+export function blockRole(html) {
+  const plain = htmlToPlain(html).replace(/\s+/g, ' ').trim();
+  if (!/^<p/i.test(html)) return null;
+  if (/^(К\.|Н\.)(\s|$)/u.test(plain)) return 'kn';
+  if (/^Кароткі\s+рэспансорый/u.test(plain)) return 'short-responsory';
+  if (/^Рэспансорый/u.test(plain)) return 'responsory';
+  if (/^(Кароткае чытанне|Першае чытанне|Другое чытанне)/u.test(plain)) return 'reading-heading';
+  if (/<em>/.test(html)) return 'title';
+  return 'body';
+}
+
+/**
+ * Copy the paragraph alignment of the stored (carrier) HTML to the freshly rendered blocks of the same
+ * role, so a seasonal text is laid out like the base text of the same Common. Roles the carrier does not
+ * have keep the renderer's default.
+ */
+export function harmonizeAlignment(renderedBlocks, carrierBlocks) {
+  const votes = new Map();
+  carrierBlocks.forEach((html) => {
+    const role = blockRole(html);
+    if (!role) return;
+    const tally = votes.get(role) || {};
+    tally[alignOf(html)] = (tally[alignOf(html)] || 0) + 1;
+    votes.set(role, tally);
+  });
+  const choose = (role) => {
+    const tally = votes.get(role);
+    return tally ? Object.entries(tally).sort((a, b) => b[1] - a[1])[0][0] : null;
+  };
+  return renderedBlocks.map((html) => {
+    const role = blockRole(html);
+    const align = role ? choose(role) : null;
+    if (!align || align === alignOf(html)) return html;
+    const style = align === 'center' ? ' style="text-align: center;"' : align === 'justify' ? ' style="text-align: justify;"' : '';
+    return html.replace(/^<p(?:\s+style="[^"]*")?>/, `<p${style}>`);
+  });
+}
