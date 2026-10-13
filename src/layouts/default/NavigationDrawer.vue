@@ -11,7 +11,7 @@
         <div class="drawer-brand">
           <div class="drawer-logo-wrap">
             <img
-              src="/maria-menu-logo-96.png"
+              src="/app-brand-96.png"
               alt=""
               class="drawer-logo"
               width="34"
