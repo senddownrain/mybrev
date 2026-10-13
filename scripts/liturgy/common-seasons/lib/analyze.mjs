@@ -461,8 +461,9 @@ function propagateInheritance({ corpus, matrix, variants }) {
         const a = childBase[field];
         const b = parentBase[field];
         if (!a || typeof a !== typeof b || plainOf(a) !== plainOf(b)) continue;
-        (variants.get(child)[season] ||= {})[field] = { ...parentVariant, method: `inherit:${parent}`, inheritedFrom: parent, from: undefined };
-        delete variants.get(child)[season][field].from;
+        const { from, ...inherited } = parentVariant;
+        void from;
+        (variants.get(child)[season] ||= {})[field] = { ...inherited, method: `inherit:${parent}`, inheritedFrom: parent };
         const cell = matrix.find((c) => c.common === child && c.field === field && c.season === season);
         if (cell) {
           cell.category = 'seasonal_inherited'; cell.status = 'variant'; cell.method = `inherit:${parent}`;

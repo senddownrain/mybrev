@@ -338,6 +338,22 @@ test('NR-001: К./Н. lines annotated «(Велікодны перыяд Алл�
   })));
 });
 
+test('NR-001: the Alleluia a variant gains is exactly the number of annotated elements of its field (no element missed, none doubled)', () => {
+  const grouped = new Map();
+  analysis.alleluia.forEach((a) => { const key = `${a.common}.${a.field}.${a.season}`; grouped.set(key, [...(grouped.get(key) || []), a]); });
+  const count = (value) => (plain(value || '').match(/аллелюя/gi) || []).length;
+  let checked = 0;
+  grouped.forEach((list, key) => {
+    const [common, field, season] = key.split('.');
+    const info = analysis.variants.get(common)[season]?.[field];
+    if (!info) { assert.equal(list.every((a) => a.already), true, `${key}: base already has the Alleluia`); return; }
+    if (info.method === 'render' || String(info.method).startsWith('inherit')) return;
+    assert.equal(count(info.value) - count(baseOf(common, field)), list.filter((a) => !a.already).length, key);
+    checked += 1;
+  });
+  assert.ok(checked > 250, `checked ${checked}`);
+});
+
 test('NR-010: «аллеюя» is corrected in the variants, counted, and the three places of Volume II are on record', () => {
   const found = scanSourceMisprints(corpus);
   assert.deepEqual(found.map((m) => `${m.volume}:${m.line}`), ['II:118', 'II:527', 'II:1167']);
