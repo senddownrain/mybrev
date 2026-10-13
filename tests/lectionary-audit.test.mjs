@@ -545,7 +545,7 @@ test('safety: the audit and its analysis scripts are read-only; only resync-read
   const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).forEach((entry) => (entry.isDirectory() ? walk(path.join(d, entry.name)) : files.push(path.join(d, entry.name))));
   walk(dir);
   const writers = files.filter((file) => /\.(set|update|create|delete|commit)\(/.test(fs.readFileSync(file, 'utf8').replace(/fs\.write\w*\(|new Set\(|Map\.set|\.set\(\s*(key|id|k)\b/g, '')) && /firebase-admin|firestore\(/.test(fs.readFileSync(file, 'utf8')));
-  assert.deepEqual(writers.map((file) => path.relative(ROOT, file)), ['scripts/lectionary/resync-readings.mjs']);
+  assert.deepEqual(writers.map((file) => path.relative(ROOT, file).replaceAll('\\', '/')), ['scripts/lectionary/resync-readings.mjs']);
   const resync = fs.readFileSync(path.join(dir, 'resync-readings.mjs'), 'utf8');
   assert.match(resync, /if \(!flag\('--apply'\)\)/);
   assert.match(resync, /lastUpdateTime/);
