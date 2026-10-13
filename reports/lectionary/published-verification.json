@@ -1,0 +1,159 @@
+{
+ "schema": 1,
+ "generatedAt": "2026-10-13T07:29:27.115Z",
+ "snapshot": {
+  "dir": ".cache/post-final",
+  "snapshotVersion": "20261013072704240",
+  "exportedAt": "2026-10-13T07:27:04.240Z"
+ },
+ "lostSections": {
+  "missingBlockFindings": [
+   [
+    "lent-w3-d1--B",
+    "Зых 20, 1-3. 7-8. 12-17"
+   ]
+  ],
+  "count": 1
+ },
+ "alternatives": {
+  "pagesWithAlternatives": 9,
+  "alternativeFindings": 1,
+  "note": "a missing or extra «Або» alternative (long/short form, second reading, alternative refrain) is an `alternatives` finding in the section comparison"
+ },
+ "sequences": {
+  "pages": [
+   {
+    "page": "5033",
+    "documents": [
+     "feast-corpuschristi--B"
+    ],
+    "present": 1
+   },
+   {
+    "page": "5035",
+    "documents": [
+     "feast-corpuschristi--A"
+    ],
+    "present": 1
+   },
+   {
+    "page": "5036",
+    "documents": [
+     "feast-corpuschristi--C"
+    ],
+    "present": 1
+   },
+   {
+    "page": "5106",
+    "documents": [
+     "feast-eastersunday"
+    ],
+    "present": 1
+   },
+   {
+    "page": "5171",
+    "documents": [
+     "feast-pentecost"
+    ],
+    "present": 1
+   }
+  ],
+  "duplicatesSkipped": [
+   "5108"
+  ],
+  "allPresent": true
+ },
+ "passion": {
+  "pages": [
+   [
+    "5097",
+    "Пальмовая нядзеля або Нядзеля Мукі Пана"
+   ],
+   [
+    "5104",
+    "Вялікая пятніца Мукі Пана"
+   ]
+  ],
+  "roleOrTextFindings": 0,
+  "textFindingsInPassionDocuments": 0
+ },
+ "easterVigil": {
+  "pages": [
+   [
+    "5105",
+    "Пасхальная вігілія ў святую ноч"
+   ],
+   [
+    "5109",
+    "Пасхальная вігілія ў святую ноч"
+   ]
+  ],
+  "findings": 0
+ },
+ "diocesan": {
+  "perDiocese": {
+   "minsk-mohilev": {
+    "identities": 898,
+    "weekday-by-design": 88,
+    "verified-layout-note": 100,
+    "reference-only": 8,
+    "verified": 697,
+    "no-document": 4,
+    "mismatch": 1,
+    "dateOptions": 4017
+   },
+   "vitebsk": {
+    "identities": 898,
+    "weekday-by-design": 90,
+    "verified-layout-note": 100,
+    "reference-only": 7,
+    "verified": 696,
+    "no-document": 4,
+    "mismatch": 1,
+    "dateOptions": 4017
+   },
+   "pinsk": {
+    "identities": 902,
+    "weekday-by-design": 92,
+    "verified-layout-note": 100,
+    "reference-only": 8,
+    "verified": 697,
+    "no-document": 4,
+    "mismatch": 1,
+    "dateOptions": 4017
+   },
+   "grodno": {
+    "identities": 911,
+    "weekday-by-design": 101,
+    "verified-layout-note": 100,
+    "reference-only": 8,
+    "verified": 697,
+    "no-document": 4,
+    "mismatch": 1,
+    "dateOptions": 4017
+   }
+  },
+  "planAnomalies": {
+   "MISSING_SET": 133,
+   "WRONG_DEFAULT": 0,
+   "WRONG_CONTEXT": 0,
+   "WRONG_CYCLE": 0,
+   "MISSING_BLOCK": 0
+  },
+  "anomalyOptions": [
+   "dedication-basilicas-peter-paul",
+   "holy-name-of-jesus",
+   "our-lady-budslav",
+   "sv-joseph-worker"
+  ],
+  "policyScenarios": {
+   "total": 704,
+   "ok": 704,
+   "failed": []
+  }
+ },
+ "materialFindingsLeft": [
+  "christmas-05-01--sunday",
+  "lent-w3-d1--B"
+ ]
+}

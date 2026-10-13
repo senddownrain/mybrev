@@ -1,13 +1,13 @@
 {
  "schema": 1,
- "generatedAt": "2026-10-13T07:25:42.935Z",
+ "generatedAt": "2026-10-13T07:29:27.115Z",
  "complete": false,
  "completenessStatement": "NOT complete: see `notChecked` and the discrepancies; coverage is stated as numerators over denominators, never as 100%.",
  "inputs": {
   "snapshot": {
-   "dir": ".cache/post-wave4",
-   "snapshotVersion": "20261013070934859",
-   "exportedAt": "2026-10-13T07:09:34.859Z"
+   "dir": ".cache/post-final",
+   "snapshotVersion": "20261013072704240",
+   "exportedAt": "2026-10-13T07:27:04.240Z"
   },
   "crawledAt": "2026-10-12T17:41:06.732Z",
   "plannedYears": [

@@ -352,3 +352,42 @@ function edgeCases(audit) {
   ];
 }
 export { short, count, sortObject, CLASSES };
+
+/**
+ * What the owner asked to confirm after the write: no lost sections, no lost
+ * «Або» alternatives, sequences, the long Passion texts, Easter Vigil,
+ * diocesan errors — each counted from the same comparison as the audit.
+ */
+export function buildPublishedVerification(audit, coverage) {
+  const findings = audit.recon.findings;
+  const material = findings.filter((f) => !(f.class === 'STRUCTURE_LOSS' && f.severity === 'low'));
+  const pages = [...audit.pages.values()].filter((page) => page.parsed?.sets?.some((set) => set.sections.some((s) => ['reading', 'gospel', 'psalm'].includes(s.kind))));
+  const withKind = (test) => pages.filter((page) => page.parsed.sets.some((set) => set.sections.some(test)));
+  const docsOf = (pageId) => [...(audit.recon.docsByPage.get(pageId) || [])].sort();
+  const hasSequence = (doc) => Boolean(doc.sequence?.text) || massReadingSetsOf(doc).some((set) => set.sections.some((s) => s.kind === 'sequence'));
+  const sequencePages = withKind((s) => s.kind === 'sequence');
+  const passionPages = withKind((s) => s.passion || (s.kind === 'gospel' && /Мука/.test(s.title || '')));
+  const alternativePages = withKind((s) => (s.alternatives || []).length);
+  const named = (ids) => ids.map((id) => [id, audit.pages.get(id)?.record.title?.replace(/^Catholic\.by - /, '').slice(0, 70)]);
+  const isVigil = (page) => /Вялікдн|вігіл/i.test(page.record.title || '') && /Вялік|Пасх/i.test(page.record.title || '');
+  const byField = (field) => material.filter((f) => f.field === field).length;
+  const rowOf = (id) => audit.pageRows.find((row) => row.id === id);
+  // a duplicate article (identical words, e.g. Easter 5106 = 5108) is covered by the document of its twin
+  const covered = (page) => docsOf(page.id).length || [...(rowOf(page.id)?.duplicateOf || []), ...(rowOf(page.id)?.sameIdentityAs || [])].some((id) => docsOf(id).length);
+  const sequenceDocs = sequencePages.filter((page) => docsOf(page.id).length).map((page) => ({ page: page.id, documents: docsOf(page.id), present: docsOf(page.id).filter((id) => hasSequence(audit.docs.find((d) => d.id === id))).length }));
+  return {
+    schema: 1, generatedAt: audit.generatedAt, snapshot: audit.planned.snapshot,
+    lostSections: { missingBlockFindings: material.filter((f) => f.class === 'MISSING_BLOCK').map((f) => [f.docId, f.detail]), count: material.filter((f) => f.class === 'MISSING_BLOCK').length },
+    alternatives: { pagesWithAlternatives: alternativePages.length, alternativeFindings: byField('alternatives'), note: 'a missing or extra «Або» alternative (long/short form, second reading, alternative refrain) is an `alternatives` finding in the section comparison' },
+    sequences: { pages: sequenceDocs, duplicatesSkipped: sequencePages.filter((page) => !docsOf(page.id).length && covered(page)).map((page) => page.id), allPresent: sequencePages.every((page) => docsOf(page.id).length || covered(page)) && sequenceDocs.every((row) => row.documents.length && row.present === row.documents.length) },
+    passion: { pages: named(passionPages.map((p) => p.id)), roleOrTextFindings: material.filter((f) => /passion/.test(f.field || '')).length, textFindingsInPassionDocuments: passionPages.flatMap((p) => docsOf(p.id)).filter((id) => material.some((f) => f.docId === id)).length },
+    easterVigil: { pages: named(pages.filter(isVigil).map((p) => p.id)), findings: pages.filter(isVigil).flatMap((p) => docsOf(p.id)).filter((id) => material.some((f) => f.docId === id)).length },
+    diocesan: {
+      perDiocese: coverage.plannedVerification.byDiocese,
+      planAnomalies: Object.fromEntries(['MISSING_SET', 'WRONG_DEFAULT', 'WRONG_CONTEXT', 'WRONG_CYCLE', 'MISSING_BLOCK'].map((cls) => [cls, audit.planned.anomalies.filter((a) => a.class === cls).length])),
+      anomalyOptions: [...new Set(audit.planned.anomalies.map((a) => a.option || a.scenario))].sort(),
+      policyScenarios: coverage.policyScenarios,
+    },
+    materialFindingsLeft: [...new Set(material.map((f) => f.docId))].sort(),
+  };
+}

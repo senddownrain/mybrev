@@ -572,3 +572,24 @@ test('the content of pageIdOfUrl and the snapshot loader', () => {
   assert.equal(pageIdOfUrl('https://old.catholic.by/2/liturgy/lectionary/liturgia-velikodny/103542.html'), '');
   assert.ok(tokenizeLectionaryHtml('<b>ПЕРШАЕ ЧЫТАННЕ</b>').length === 1);
 });
+
+test('reports: the published data were verified after the write (apply record, memorial classification, post-write verification)', () => {
+  const read = (name) => JSON.parse(fs.readFileSync(path.join(ROOT, 'reports', 'lectionary', name), 'utf8'));
+  const record = read('apply-record.json');
+  assert.equal(record.waves.reduce((sum, wave) => sum + wave.documents, 0), 324);
+  assert.deepEqual(record.waves.map((wave) => wave.documents), [150, 150, 21, 3]);
+  record.waves.forEach((wave) => assert.match(wave.manifestVerdict, /^SAFE CONTENT PATCH/));
+  assert.ok(record.flutterDelivery.bundle20261007.changedAfterAllWaves <= record.flutterDelivery.bundle20261007.threshold, 'the oldest bundle still receives a patch, not a rebuild');
+  const applied = read('resync-plan.applied.json');
+  assert.equal(applied.totals.changes, 324);
+  const verification = read('published-verification.json');
+  assert.equal(verification.diocesan.policyScenarios.ok, verification.diocesan.policyScenarios.total);
+  assert.deepEqual(verification.lostSections.missingBlockFindings.map((row) => row[0]), ['lent-w3-d1--B'], 'the only lost block is the documented source defect');
+  assert.equal(verification.sequences.allPresent, true);
+  assert.equal(verification.passion.roleOrTextFindings, 0);
+  assert.deepEqual(verification.materialFindingsLeft, ['christmas-05-01--sunday', 'lent-w3-d1--B']);
+  const memorials = read('memorials.json');
+  assert.equal(memorials.celebrations, memorials.rows.length);
+  assert.equal(memorials.byClass['proper-prescribed'] + memorials.byClass['proper-prescribed-document-missing'], 12, 'prescribed memorials of the closed list that the engine offers');
+  assert.equal(read('pending-authorization.json').plans.every((plan) => ['NEEDS_AUTHORIZATION', 'DECISION_NEEDED'].includes(plan.status)), true);
+});

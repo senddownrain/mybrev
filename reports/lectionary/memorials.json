@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generatedAt": "2026-10-13T07:25:42.935Z",
+ "generatedAt": "2026-10-13T07:29:27.115Z",
  "rule": {
   "default": "the weekday readings (GIRM 357, OLM 83)",
   "prescribed": "proper readings that the Lectionary prescribes replace the weekday readings (closed list: src/utils/ordo/memorialReadings.js)",

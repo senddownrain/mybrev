@@ -3,7 +3,7 @@ const table = (headers, rows) => `| ${headers.join(' | ')} |\n|${headers.map(() 
 const n = (value) => (value === undefined || value === null ? '—' : String(value));
 const obj = (o) => Object.entries(o || {}).map(([k, v]) => `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`).join(', ');
 
-export function renderAuditDoc({ audit, inventory, coverage, discrepancies, drift, contract, memorials, pending, applyRecord }) {
+export function renderAuditDoc({ audit, inventory, coverage, discrepancies, drift, contract, memorials, pending, applyRecord, verification }) {
   const s = coverage.sources;
   const d = coverage.documents;
   const p = coverage.planned;
@@ -95,6 +95,18 @@ export function renderAuditDoc({ audit, inventory, coverage, discrepancies, drif
   out.push('Not written: ' + applyRecord.notWritten.join('; ') + '.', '');
   const fd = applyRecord.flutterDelivery;
   out.push('Delivery to the Flutter app: ' + fd.guards + `. App with the 2026-10-07 bundle: ${fd.bundle20261007.changedAfterAllWaves} of ${fd.bundle20261007.documents} documents differ (${fd.bundle20261007.share}, rebuild threshold > ${fd.bundle20261007.threshold}, ${fd.bundle20261007.bytes}) → ${fd.bundle20261007.result}; app that installed the previous patch: ${fd.installedPreviousPatch.changed} (${fd.installedPreviousPatch.share}) → ${fd.installedPreviousPatch.result}; app with a bundle built from current production → ${fd.bundleBuiltFromCurrentProduction.result}. Hash parity: ${fd.hashParity}.`, '');
+  out.push('', '## 8b. Verification of the published data (post-write snapshot)', '');
+  out.push(`Snapshot ${verification.snapshot.snapshotVersion} (read-only, taken after the last manifest publication).`, '');
+  out.push(table(['Check', 'Result'], [
+    ['Lost sections (MISSING_BLOCK against the Catholic.by page)', `${verification.lostSections.count}${verification.lostSections.count ? ` — ${verification.lostSections.missingBlockFindings.map((x) => x[0]).join(', ')} (source defect, see §9)` : ''}`],
+    [`«Або» alternatives (${verification.alternatives.pagesWithAlternatives} source pages carry them): missing or extra`, `${verification.alternatives.alternativeFindings} findings`],
+    ['Sequences (Easter, Pentecost, Corpus Christi A/B/C; a duplicate article is covered by its twin): pages with a document / all present', `${verification.sequences.pages.length} pages / ${verification.sequences.allPresent}${verification.sequences.duplicatesSkipped.length ? ` (duplicate ${verification.sequences.duplicatesSkipped.join(', ')})` : ''}`],
+    ['Passion texts (Palm Sunday A/B/C, Good Friday): pages; role-sequence or text findings', `${verification.passion.pages.length} pages; ${verification.passion.roleOrTextFindings} role findings, ${verification.passion.textFindingsInPassionDocuments} documents with findings`],
+    ['Easter Vigil pages: documents with findings', `${verification.easterVigil.pages.length} pages; ${verification.easterVigil.findings}`],
+    ['Plan anomalies (engine × readings, 4 dioceses × 2025–2035)', `${obj(verification.diocesan.planAnomalies)} (options: ${verification.diocesan.anomalyOptions.join(', ') || '—'})`],
+    ['Closed policy scenarios', `${verification.diocesan.policyScenarios.ok} / ${verification.diocesan.policyScenarios.total} as required`],
+    ['Documents with a material finding left', `${verification.materialFindingsLeft.length}: ${verification.materialFindingsLeft.join(', ') || '—'}`],
+  ]));
   out.push('', '## 9. Prepared, NOT written (each needs the owner\'s authorization)', '');
   for (const plan of pending) {
     out.push(`### ${plan.title}`, '', `Status: ${plan.status}. Evidence: ${plan.evidence.join(' | ')}`, '');

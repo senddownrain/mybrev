@@ -1,35 +1,26 @@
 {
  "schema": 1,
  "contract": "mybrev.lectionary.flutter-export",
- "generatedAt": "2026-10-13T07:25:42.935Z",
+ "generatedAt": "2026-10-13T07:29:27.115Z",
  "dataset": {
   "collection": "readings",
   "documents": 822,
   "digest": "93314983ba9c1bd5",
   "snapshot": {
-   "dir": ".cache/post-wave4",
-   "snapshotVersion": "20261013070934859",
-   "exportedAt": "2026-10-13T07:09:34.859Z"
+   "dir": ".cache/post-final",
+   "snapshotVersion": "20261013072704240",
+   "exportedAt": "2026-10-13T07:27:04.240Z"
   },
   "publishedManifest": {
    "published": true,
-   "version": 6,
-   "digest": "024096e493551d25",
+   "version": 7,
+   "digest": "93314983ba9c1bd5",
    "count": 822,
    "production": {
     "digest": "93314983ba9c1bd5",
     "count": 822
    },
-   "inSync": false,
-   "staleDocuments": {
-    "added": [],
-    "removed": [],
-    "changed": [
-     "06-08-transfiguration-lord",
-     "24-06-nativity-john-baptist",
-     "ordinary-w28-d1--A"
-    ]
-   }
+   "inSync": true
   },
   "flutterBundle": {
    "contentVersion": 1791397274814,
@@ -50,6 +41,7 @@
      "04-10-sv-francis-assisi",
      "06-01-epiphany-lord",
      "06-02-sv-paul-miki",
+     "06-08-transfiguration-lord",
      "07-04-sv-jean-baptiste-de-la-salle",
      "07-10-our-lady-rosary",
      "08-09-nativity-blessed-virgin-mary",
@@ -79,6 +71,7 @@
      "22-11-sv-cecilia",
      "23-02-sv-polycarp",
      "23-07-sv-bridget",
+     "24-06-nativity-john-baptist",
      "24-08-sv-bartholomew",
      "25-01-conversion-saint-paul",
      "25-03-annunciation-lord",
@@ -336,6 +329,7 @@
      "ordinary-w27-d2--1",
      "ordinary-w27-d5--2",
      "ordinary-w27-d6--2",
+     "ordinary-w28-d1--A",
      "ordinary-w28-d1--B",
      "ordinary-w28-d4--1",
      "ordinary-w28-d4--2",
@@ -76290,6 +76284,6 @@
   "documents": "93314983ba9c1bd5",
   "plannedSelections": "2ba78718e3c0c734",
   "scenarios": "f18fbf1095b9764c",
-  "contract": "6592888bad0315fd"
+  "contract": "1364b4450cd40ce7"
  }
 }
