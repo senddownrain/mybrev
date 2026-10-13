@@ -1,13 +1,13 @@
 {
  "schema": 1,
- "generatedAt": "2026-10-12T18:11:30.977Z",
+ "generatedAt": "2026-10-13T07:25:42.935Z",
  "complete": false,
  "completenessStatement": "NOT complete: see `notChecked` and the discrepancies; coverage is stated as numerators over denominators, never as 100%.",
  "inputs": {
   "snapshot": {
-   "dir": ".cache/prod-snapshot-20261012",
-   "snapshotVersion": "20261012171555724",
-   "exportedAt": "2026-10-12T17:15:55.724Z"
+   "dir": ".cache/post-wave4",
+   "snapshotVersion": "20261013070934859",
+   "exportedAt": "2026-10-13T07:09:34.859Z"
   },
   "crawledAt": "2026-10-12T17:41:06.732Z",
   "plannedYears": [
@@ -106,16 +106,16 @@
     "pages": 13,
     "readingPages": 13,
     "withDocument": 13,
-    "verified": 2,
-    "mismatch": 11,
+    "verified": 12,
+    "mismatch": 1,
     "layoutNoteOnly": 0
    },
    "_root": {
     "pages": 1,
     "readingPages": 1,
     "withDocument": 1,
-    "verified": 0,
-    "mismatch": 1,
+    "verified": 1,
+    "mismatch": 0,
     "layoutNoteOnly": 0
    },
    "_unlisted": {
@@ -130,48 +130,48 @@
     "pages": 37,
     "readingPages": 37,
     "withDocument": 37,
-    "verified": 10,
-    "mismatch": 16,
+    "verified": 26,
+    "mismatch": 0,
     "layoutNoteOnly": 11
    },
    "zvychajny": {
     "pages": 303,
     "readingPages": 303,
     "withDocument": 301,
-    "verified": 116,
-    "mismatch": 148,
-    "layoutNoteOnly": 37
+    "verified": 250,
+    "mismatch": 0,
+    "layoutNoteOnly": 51
    },
    "uspaminy": {
     "pages": 65,
     "readingPages": 65,
     "withDocument": 65,
-    "verified": 25,
-    "mismatch": 37,
+    "verified": 62,
+    "mismatch": 0,
     "layoutNoteOnly": 3
    },
    "sviaty": {
     "pages": 33,
     "readingPages": 33,
     "withDocument": 33,
-    "verified": 11,
-    "mismatch": 17,
+    "verified": 28,
+    "mismatch": 0,
     "layoutNoteOnly": 5
    },
    "urachystasci": {
     "pages": 25,
     "readingPages": 25,
     "withDocument": 24,
-    "verified": 5,
-    "mismatch": 16,
+    "verified": 21,
+    "mismatch": 0,
     "layoutNoteOnly": 3
    },
    "post": {
     "pages": 54,
     "readingPages": 54,
     "withDocument": 54,
-    "verified": 3,
-    "mismatch": 50,
+    "verified": 52,
+    "mismatch": 1,
     "layoutNoteOnly": 1
    },
    "tryduum": {
@@ -186,8 +186,8 @@
     "pages": 64,
     "readingPages": 64,
     "withDocument": 62,
-    "verified": 49,
-    "mismatch": 4,
+    "verified": 53,
+    "mismatch": 0,
     "layoutNoteOnly": 9
    }
   },
@@ -195,22 +195,22 @@
    "29.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "30.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "31.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "02.01": {
     "readingPages": 2,
     "withDocument": 2,
-    "mismatch": 2
+    "mismatch": 0
    },
    "christmas": {
     "readingPages": 1,
@@ -220,37 +220,37 @@
    "03.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "04.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "05.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "07.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "08.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "09.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "10.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "11.01": {
     "readingPages": 1,
@@ -265,42 +265,42 @@
    "advent": {
     "readingPages": 29,
     "withDocument": 29,
-    "mismatch": 9
+    "mismatch": 0
    },
    "17.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "19.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "18.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "20.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "21.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "22.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "23.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "24.12": {
     "readingPages": 2,
@@ -310,12 +310,12 @@
    "ordinary": {
     "readingPages": 300,
     "withDocument": 300,
-    "mismatch": 148
+    "mismatch": 0
    },
    "christking": {
     "readingPages": 6,
     "withDocument": 3,
-    "mismatch": 2
+    "mismatch": 0
    },
    "07.12": {
     "readingPages": 1,
@@ -325,7 +325,7 @@
    "03.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "13.12": {
     "readingPages": 1,
@@ -340,17 +340,17 @@
    "26.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "28.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "31.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "17.01": {
     "readingPages": 1,
@@ -375,17 +375,17 @@
    "06.02": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "10.02": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "23.02": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "04.03": {
     "readingPages": 1,
@@ -400,27 +400,27 @@
    "07.04": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "11.04": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "26.05": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "02.05": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "heartofmary": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "16.05": {
     "readingPages": 1,
@@ -430,17 +430,17 @@
    "31.07": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "29.07": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "26.07": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "22.07": {
     "readingPages": 1,
@@ -475,17 +475,17 @@
    "28.08": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "27.08": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "22.08": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "21.08": {
     "readingPages": 1,
@@ -495,7 +495,7 @@
    "20.08": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "11.08": {
     "readingPages": 1,
@@ -510,7 +510,7 @@
    "30.09": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "27.09": {
     "readingPages": 1,
@@ -530,7 +530,7 @@
    "15.09": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "13.09": {
     "readingPages": 1,
@@ -545,17 +545,17 @@
    "01.10": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "04.10": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "02.10": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "17.10": {
     "readingPages": 1,
@@ -565,12 +565,12 @@
    "15.10": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "07.10": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "02.11": {
     "readingPages": 1,
@@ -590,22 +590,22 @@
    "11.11": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "10.11": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "17.11": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "12.11": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "23.11": {
     "readingPages": 1,
@@ -615,17 +615,17 @@
    "22.11": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "21.11": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "22.10": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "unknown": {
     "readingPages": 1,
@@ -640,32 +640,32 @@
    "26.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "27.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "holyfamily": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "28.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "buptismofthelord": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "25.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "02.02": {
     "readingPages": 1,
@@ -690,7 +690,7 @@
    "29.04": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "31.05": {
     "readingPages": 1,
@@ -715,7 +715,7 @@
    "11.07": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "25.07": {
     "readingPages": 1,
@@ -725,7 +725,7 @@
    "23.07": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "24.08": {
     "readingPages": 1,
@@ -740,12 +740,12 @@
    "06.08": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "29.09": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "21.09": {
     "readingPages": 1,
@@ -755,12 +755,12 @@
    "14.09": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "08.09": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "28.10": {
     "readingPages": 1,
@@ -770,22 +770,22 @@
    "18.10": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "09.11": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "christthehighpriest": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "08.12": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "25.12": {
     "readingPages": 1,
@@ -800,17 +800,17 @@
    "06.01": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "19.03": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "25.03": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "ascension": {
     "readingPages": 1,
@@ -820,22 +820,22 @@
    "trinity": {
     "readingPages": 3,
     "withDocument": 3,
-    "mismatch": 2
+    "mismatch": 0
    },
    "corpuschristi": {
     "readingPages": 3,
     "withDocument": 3,
-    "mismatch": 3
+    "mismatch": 0
    },
    "heartofjesus": {
     "readingPages": 3,
     "withDocument": 3,
-    "mismatch": 3
+    "mismatch": 0
    },
    "24.06": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "29.06": {
     "readingPages": 1,
@@ -845,7 +845,7 @@
    "02.07": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "15.08": {
     "readingPages": 1,
@@ -860,12 +860,12 @@
    "lent": {
     "readingPages": 48,
     "withDocument": 48,
-    "mismatch": 46
+    "mismatch": 1
    },
    "ash": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "palmsunday": {
     "readingPages": 1,
@@ -875,7 +875,7 @@
    "holyweek": {
     "readingPages": 8,
     "withDocument": 7,
-    "mismatch": 3
+    "mismatch": 0
    },
    "eastersunday": {
     "readingPages": 2,
@@ -885,7 +885,7 @@
    "easter": {
     "readingPages": 61,
     "withDocument": 61,
-    "mismatch": 4
+    "mismatch": 0
    },
    "pentecost": {
     "readingPages": 1,
@@ -895,22 +895,22 @@
    "marymotherchurch": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "09.08": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "12.09": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "16.11": {
     "readingPages": 1,
     "withDocument": 1,
-    "mismatch": 1
+    "mismatch": 0
    },
    "16.03": {
     "readingPages": 1,
@@ -921,9 +921,9 @@
  },
  "documents": {
   "total": 822,
-  "canonicalWithSets": 22,
+  "canonicalWithSets": 24,
   "projections": 14,
-  "legacy": 770,
+  "legacy": 768,
   "linkedBySourceUrl": 795,
   "sourcePageInferredFromIdentity": 13,
   "noSourcePage": [
@@ -934,8 +934,8 @@
   "byStatus": {
    "verified-layout-note": 100,
    "reference-only": 5,
-   "verified": 389,
-   "mismatch": 325,
+   "verified": 712,
+   "mismatch": 2,
    "no-source-page": 3
   },
   "notReachedByAnyPlannedOption": [
@@ -950,13 +950,13 @@
    "ordinary-w8-d5--2",
    "ordinary-w9-d1--C"
   ],
-  "sets": 32,
+  "sets": 35,
   "referenceOnlySets": 5
  },
  "contentBreakdown": {
   "note": "what the planned legal options deliver, counted over the normalized identities",
-  "textVerified": 476,
-  "textWithMismatch": 323,
+  "textVerified": 798,
+  "textWithMismatch": 1,
   "referenceOnly": 9,
   "weekdayByDesign": 104,
   "missing": 4,
@@ -968,43 +968,43 @@
  "sections": {
   "byKind": {
    "reading": {
-    "checked": 1052,
-    "exact": 852,
-    "citations": 1052,
-    "citationsExact": 1043
+    "checked": 1056,
+    "exact": 992,
+    "citations": 1056,
+    "citationsExact": 1056
    },
    "psalm": {
-    "checked": 849,
-    "exact": 634,
-    "citations": 849,
-    "citationsExact": 849
+    "checked": 851,
+    "exact": 849,
+    "citations": 851,
+    "citationsExact": 851
    },
    "acclamation": {
-    "checked": 817,
-    "exact": 767,
-    "citations": 760,
-    "citationsExact": 713
+    "checked": 819,
+    "exact": 819,
+    "citations": 762,
+    "citationsExact": 762
    },
    "gospel": {
-    "checked": 830,
-    "exact": 717,
-    "citations": 830,
-    "citationsExact": 830
+    "checked": 834,
+    "exact": 791,
+    "citations": 834,
+    "citationsExact": 834
    },
    "sequence": {
     "checked": 5,
-    "exact": 2,
+    "exact": 5,
     "citations": 0,
     "citationsExact": 0
    }
   },
   "totals": {
-   "checked": 3553,
-   "exact": 2972,
-   "citations": 3491,
-   "citationsExact": 3435,
-   "textSectionsWithDifferences": 581,
-   "citationMismatches": 56
+   "checked": 3565,
+   "exact": 3456,
+   "citations": 3503,
+   "citationsExact": 3503,
+   "textSectionsWithDifferences": 109,
+   "citationMismatches": 0
   }
  },
  "planned": {
@@ -1064,33 +1064,33 @@
    "B/2": 1576
   },
   "lookupStatus": {
-   "FOUND": 22880,
+   "FOUND": 22884,
    "MEMORIAL_PROPER": 2174,
    "MEMORIAL_WEEKDAY": 5041,
    "REFERENCE_ONLY": 169,
    "MISSING_SET": 9
   },
   "screensResolved": 20717,
-  "screensWithCycleChoice": 13329,
-  "screensWithSeveralSets": 352
+  "screensWithCycleChoice": 13265,
+  "screensWithSeveralSets": 396
  },
  "plannedVerification": {
   "identities": 916,
   "weekday-by-design": 104,
   "verified-layout-note": 100,
   "reference-only": 9,
-  "verified": 376,
-  "mismatch": 323,
+  "verified": 698,
   "no-document": 4,
+  "mismatch": 1,
   "byDiocese": {
    "minsk-mohilev": {
     "identities": 898,
     "weekday-by-design": 88,
     "verified-layout-note": 100,
     "reference-only": 8,
-    "verified": 375,
-    "mismatch": 323,
+    "verified": 697,
     "no-document": 4,
+    "mismatch": 1,
     "dateOptions": 4017
    },
    "vitebsk": {
@@ -1098,9 +1098,9 @@
     "weekday-by-design": 90,
     "verified-layout-note": 100,
     "reference-only": 7,
-    "verified": 374,
-    "mismatch": 323,
+    "verified": 696,
     "no-document": 4,
+    "mismatch": 1,
     "dateOptions": 4017
    },
    "pinsk": {
@@ -1108,9 +1108,9 @@
     "weekday-by-design": 92,
     "verified-layout-note": 100,
     "reference-only": 8,
-    "verified": 375,
-    "mismatch": 323,
+    "verified": 697,
     "no-document": 4,
+    "mismatch": 1,
     "dateOptions": 4017
    },
    "grodno": {
@@ -1118,9 +1118,9 @@
     "weekday-by-design": 101,
     "verified-layout-note": 100,
     "reference-only": 8,
-    "verified": 375,
-    "mismatch": 323,
+    "verified": 697,
     "no-document": 4,
+    "mismatch": 1,
     "dateOptions": 4017
    }
   },
@@ -1128,26 +1128,22 @@
    "optional-memorial": {
     "weekday-by-design": 94,
     "reference-only": 3,
-    "mismatch": 90,
-    "verified": 240,
+    "verified": 330,
     "verified-layout-note": 61
    },
    "solemnity": {
     "verified-layout-note": 2,
-    "mismatch": 19,
-    "verified": 11,
+    "verified": 30,
     "no-document": 2
    },
    "feast": {
     "reference-only": 5,
     "verified-layout-note": 5,
-    "mismatch": 24,
-    "verified": 12
+    "verified": 37
    },
    "memorial": {
     "weekday-by-design": 21,
-    "verified": 236,
-    "mismatch": 118,
+    "verified": 354,
     "reference-only": 5,
     "verified-layout-note": 60
    },
@@ -1155,19 +1151,18 @@
     "verified": 1
    },
    "weekday": {
-    "mismatch": 155,
-    "verified": 279,
+    "verified": 434,
     "verified-layout-note": 73,
     "no-document": 1
    },
    "sunday": {
     "verified-layout-note": 13,
-    "mismatch": 89,
-    "verified": 42,
-    "no-document": 1
+    "verified": 130,
+    "no-document": 1,
+    "mismatch": 1
    },
    "christmas-octave": {
-    "mismatch": 3
+    "verified": 3
    },
    "easter-octave": {
     "verified": 5,
@@ -1181,97 +1176,8 @@
  },
  "policyScenarios": {
   "total": 704,
-  "ok": 616,
-  "failed": [
-   "nativity-john-baptist 2025-06-24 minsk-mohilev",
-   "transfiguration 2025-08-06 minsk-mohilev",
-   "nativity-john-baptist 2025-06-24 vitebsk",
-   "transfiguration 2025-08-06 vitebsk",
-   "nativity-john-baptist 2025-06-24 pinsk",
-   "transfiguration 2025-08-06 pinsk",
-   "nativity-john-baptist 2025-06-24 grodno",
-   "transfiguration 2025-08-06 grodno",
-   "nativity-john-baptist 2026-06-24 minsk-mohilev",
-   "transfiguration 2026-08-06 minsk-mohilev",
-   "nativity-john-baptist 2026-06-24 vitebsk",
-   "transfiguration 2026-08-06 vitebsk",
-   "nativity-john-baptist 2026-06-24 pinsk",
-   "transfiguration 2026-08-06 pinsk",
-   "nativity-john-baptist 2026-06-24 grodno",
-   "transfiguration 2026-08-06 grodno",
-   "nativity-john-baptist 2027-06-24 minsk-mohilev",
-   "transfiguration 2027-08-06 minsk-mohilev",
-   "nativity-john-baptist 2027-06-24 vitebsk",
-   "transfiguration 2027-08-06 vitebsk",
-   "nativity-john-baptist 2027-06-24 pinsk",
-   "transfiguration 2027-08-06 pinsk",
-   "nativity-john-baptist 2027-06-24 grodno",
-   "transfiguration 2027-08-06 grodno",
-   "nativity-john-baptist 2028-06-24 minsk-mohilev",
-   "transfiguration 2028-08-06 minsk-mohilev",
-   "nativity-john-baptist 2028-06-24 vitebsk",
-   "transfiguration 2028-08-06 vitebsk",
-   "nativity-john-baptist 2028-06-24 pinsk",
-   "transfiguration 2028-08-06 pinsk",
-   "nativity-john-baptist 2028-06-24 grodno",
-   "transfiguration 2028-08-06 grodno",
-   "nativity-john-baptist 2029-06-24 minsk-mohilev",
-   "transfiguration 2029-08-06 minsk-mohilev",
-   "nativity-john-baptist 2029-06-24 vitebsk",
-   "transfiguration 2029-08-06 vitebsk",
-   "nativity-john-baptist 2029-06-24 pinsk",
-   "transfiguration 2029-08-06 pinsk",
-   "nativity-john-baptist 2029-06-24 grodno",
-   "transfiguration 2029-08-06 grodno",
-   "nativity-john-baptist 2030-06-24 minsk-mohilev",
-   "transfiguration 2030-08-06 minsk-mohilev",
-   "nativity-john-baptist 2030-06-24 vitebsk",
-   "transfiguration 2030-08-06 vitebsk",
-   "nativity-john-baptist 2030-06-24 pinsk",
-   "transfiguration 2030-08-06 pinsk",
-   "nativity-john-baptist 2030-06-24 grodno",
-   "transfiguration 2030-08-06 grodno",
-   "nativity-john-baptist 2031-06-24 minsk-mohilev",
-   "transfiguration 2031-08-06 minsk-mohilev",
-   "pentecost-saturday 2031-05-31 minsk-mohilev",
-   "nativity-john-baptist 2031-06-24 vitebsk",
-   "transfiguration 2031-08-06 vitebsk",
-   "pentecost-saturday 2031-05-31 vitebsk",
-   "nativity-john-baptist 2031-06-24 pinsk",
-   "transfiguration 2031-08-06 pinsk",
-   "pentecost-saturday 2031-05-31 pinsk",
-   "nativity-john-baptist 2031-06-24 grodno",
-   "transfiguration 2031-08-06 grodno",
-   "pentecost-saturday 2031-05-31 grodno",
-   "nativity-john-baptist 2032-06-24 minsk-mohilev",
-   "transfiguration 2032-08-06 minsk-mohilev",
-   "nativity-john-baptist 2032-06-24 vitebsk",
-   "transfiguration 2032-08-06 vitebsk",
-   "nativity-john-baptist 2032-06-24 pinsk",
-   "transfiguration 2032-08-06 pinsk",
-   "nativity-john-baptist 2032-06-24 grodno",
-   "transfiguration 2032-08-06 grodno",
-   "transfiguration 2033-08-06 minsk-mohilev",
-   "transfiguration 2033-08-06 vitebsk",
-   "transfiguration 2033-08-06 pinsk",
-   "transfiguration 2033-08-06 grodno",
-   "nativity-john-baptist 2034-06-24 minsk-mohilev",
-   "transfiguration 2034-08-06 minsk-mohilev",
-   "nativity-john-baptist 2034-06-24 vitebsk",
-   "transfiguration 2034-08-06 vitebsk",
-   "nativity-john-baptist 2034-06-24 pinsk",
-   "transfiguration 2034-08-06 pinsk",
-   "nativity-john-baptist 2034-06-24 grodno",
-   "transfiguration 2034-08-06 grodno",
-   "nativity-john-baptist 2035-06-24 minsk-mohilev",
-   "transfiguration 2035-08-06 minsk-mohilev",
-   "nativity-john-baptist 2035-06-24 vitebsk",
-   "transfiguration 2035-08-06 vitebsk",
-   "nativity-john-baptist 2035-06-24 pinsk",
-   "transfiguration 2035-08-06 pinsk",
-   "nativity-john-baptist 2035-06-24 grodno",
-   "transfiguration 2035-08-06 grodno"
-  ]
+  "ok": 704,
+  "failed": []
  },
  "notChecked": [
   {

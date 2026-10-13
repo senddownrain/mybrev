@@ -2,6 +2,8 @@
  * Report builders of the Lectionary audit (pure over `runAudit` output).
  */
 import crypto from 'node:crypto';
+import fs from 'node:fs';
+import { PRESCRIBED_PROPER_MEMORIALS } from '../../../src/utils/ordo/memorialReadings.js';
 import { massReadingSetsOf, defaultSetId, setCycles, PASSION_ROLES, SET_CONTEXTS, SECTION_KINDS } from '../../../src/utils/massReadingSets.js';
 import { canonicalJson, collectionDigest, storedDocument, documentHash, CONTENT_SCHEMA_VERSION, DOCUMENT_SCHEMAS } from '../../content/lib/app-content.mjs';
 import { docSelector } from './identity.mjs';
@@ -213,6 +215,40 @@ function legacyOrderedSections(doc) {
   return out;
 }
 
+const FLUTTER_PARITY = '/Users/gleb/Documents/GitHub/senddownrain/ibreviarybyapp/reports/flutter-lectionary-parity.json';
+
+/** Classification of every memorial / optional memorial the engine offers (2025-2035 × 4 dioceses). */
+export function buildMemorials(audit) {
+  const rows = (audit.planned.memorials || []).map((row) => {
+    const prescribed = row.prescribedIn.length > 0;
+    const cls = prescribed ? (row.ownDocs.length ? 'proper-prescribed' : 'proper-prescribed-document-missing')
+      : row.ownDocs.length ? 'weekday-default-own-alternative' : 'weekday-default-no-own-document';
+    return { option: row.option, title: row.title, ranks: row.kinds, dioceses: row.dioceses, prescribedIn: row.prescribedIn, ...(prescribed ? { prescribedParts: PRESCRIBED_PROPER_MEMORIALS[row.option]?.parts || row.prescribedParts, source: PRESCRIBED_PROPER_MEMORIALS[row.option]?.note } : {}), ownDocuments: row.ownDocs, readingsStatus: row.statuses, occurrences: row.occurrences, classification: cls };
+  });
+  const byClass = {};
+  rows.forEach((row) => { byClass[row.classification] = (byClass[row.classification] || 0) + 1; });
+  let flutter = null;
+  if (fs.existsSync(FLUTTER_PARITY)) {
+    const report = JSON.parse(fs.readFileSync(FLUTTER_PARITY, 'utf8'));
+    const cases = report.cases.rows.filter((row) => row[7] === 'documented-difference' && !/^temporal/.test(row[2]));
+    const byOption = {};
+    cases.forEach((row) => { byOption[row[2]] = (byOption[row[2]] || 0) + 1; });
+    flutter = { source: 'ibreviarybyapp reports/flutter-lectionary-parity.json (documentedDifferences.memorial-weekday-first)', cases: cases.length, byOption };
+  }
+  return {
+    schema: 1, generatedAt: audit.generatedAt,
+    rule: {
+      default: 'the weekday readings (GIRM 357, OLM 83)',
+      prescribed: 'proper readings that the Lectionary prescribes replace the weekday readings (closed list: src/utils/ordo/memorialReadings.js)',
+      alternatives: 'own and Common readings stay selectable where allowed',
+      route: '?option=<memorial> opens the DEFAULT readings of that option (weekday, or the proper ones when prescribed); the other groups are alternatives on the same screen',
+    },
+    celebrations: rows.length, byClass, flutterCases: flutter,
+    prescribed: Object.entries(PRESCRIBED_PROPER_MEMORIALS).map(([id, entry]) => ({ id, ...entry })),
+    rows,
+  };
+}
+
 export function buildFlutterContract(audit, { drift }) {
   const { docs, planned } = audit;
   const statuses = documentStatuses(audit);
@@ -272,6 +308,21 @@ export function buildFlutterContract(audit, { drift }) {
     documents,
     plannedSelections: planned.identities.map((row) => ({ identity: row.key, purpose: row.purpose, selector: row.selector, cycle: row.cycle || null, options: row.optionIds.slice(0, 6), officeKinds: row.officeKinds, dioceses: row.dioceses, documents: row.docIds, sets: row.sets, occurrences: row.dates, sampleDates: row.sampleDates })),
     policyScenarios: planned.scenarios.map((s) => ({ scenario: s.scenario, date: s.date, diocese: s.diocese, primary: s.primary, document: s.document, sets: s.sets.map((x) => x.id), activeSet: s.activeSet, cycle: s.cycle, sunday: s.sunday ?? undefined, ok: s.ok })),
+    memorialReadings: {
+      rule: 'weekday readings by default; PROPER readings only where the Lectionary prescribes them (closed list); own/Common readings are legal alternatives',
+      registry: PRESCRIBED_PROPER_MEMORIALS,
+      descriptor: 'allowedChoices[0] = { component: readings, options: [weekday, proper, common], default: weekday|proper, rule?: proper-prescribed, prescribedParts? }; lookup order is [proper, weekday, common] when prescribed, otherwise [weekday, proper, common]',
+      dioceseRestriction: 'an entry with `dioceses` applies only there (our-lady-budslav: Pinsk memorial)',
+      roleTags: 'orderReadingsByPlan(includeAlternatives) tags every document with _ordoOptionRoles[optionId] = { purpose, default }; ?option=<id> opens the group that has a document with default = true for that option (fallback: first group tagged with the option)',
+      dayIdRoute: 'documents linked by the Hours day id (?dayId=) come first ONLY when the plan offers them: no seasonal date document of a Sunday in a date-keyed window is added',
+    },
+    engineRules: [
+      { id: 'pentecost-saturday-taken-by-a-feast', detail: 'on the Saturday before Pentecost, when the PRIMARY option is not temporal and has no weekday lookup (a feast, e.g. the Visitation on 2031-05-31), its lookup gets one more entry { purpose: weekday, where: { ...temporal.readingsRef, _variant: pentecost-vigil } }; selectReadingDocuments honours where._variant for period lookups (only the variant document); the evening group (_variant pentecost-vigil) is the default, the feast Mass stays selectable; a memorial keeps its weekday lookup (the Saturday document carries the morning and vigil sets)' },
+      { id: 'nativity-john-baptist', detail: '24.06: documents `24-06-nativity-john-baptist` with sets vigil + day, DAY is the default and the flat projection (as 15.08 and 29.06)' },
+      { id: 'transfiguration', detail: '06.08: one set `mass` with the Gospels of the years A, B, C (cycle-aware)' },
+      { id: 'citation-correction', detail: '`ordinary-w28-d1--A` Gospel citation «Мц 22, 1–10» (the source page prints «Мк 22, 1–10»); the Flutter local correction is now the data' },
+      { id: 'budslav', detail: '02.07: Minsk solemnity, Vitebsk feast, Pinsk memorial with the proper readings (prescribed in Pinsk), Grodno optional memorial (weekday default); the readings document needs `_dayIds` (pending authorization)' },
+    ],
     edgeCases: edgeCases(audit),
     hashes: { documents: docsDigest, plannedSelections: short(planned.identities.map((r) => [r.key, r.docIds, r.sets])), scenarios: short(planned.scenarios.map((s) => [s.scenario, s.date, s.diocese, s.activeSet, s.cycle])) },
   };

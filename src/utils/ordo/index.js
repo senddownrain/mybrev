@@ -122,8 +122,8 @@ export function resolveLiturgicalDate(date, context = {}, cache = null) {
     evening,
   };
   const readingResolution = {
-    primary: buildReadingsDescriptor(display.primary, season, temporal),
-    alternatives: display.alternatives.map((item) => buildReadingsDescriptor(item, season, temporal)),
+    primary: buildReadingsDescriptor(display.primary, season, temporal, { diocese: normalizeDioceseId(context.diocese) || '' }),
+    alternatives: display.alternatives.map((item) => buildReadingsDescriptor(item, season, temporal, { diocese: normalizeDioceseId(context.diocese) || '' })),
     commemorations: display.commemorations.map((item) => buildCommemorationReadings(item, temporal)),
   };
 

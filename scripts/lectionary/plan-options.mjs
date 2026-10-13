@@ -49,6 +49,7 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
   const identities = new Map();
   const temporalChecks = new Map();
   const referenceOnly = new Map();
+  const memorials = new Map();
   const anomalies = [];
   const counts = { dates: 0, dioceseDates: 0, options: 0, byDiocese: {}, byYear: {}, byKind: {}, byPeriod: {}, byCycle: {}, byStatus: {} };
   const bump = (obj, key, n = 1) => { obj[key] = (obj[key] || 0) + n; };
@@ -112,6 +113,14 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
             if (!weekdayFound) missing(`weekday readings of the memorial's day missing (${JSON.stringify(planOption.lookup[0]?.where)})`);
             if (status === 'full' && !properFound) missing(`status full but no proper readings document (${JSON.stringify(lookups.find((l) => l.entry.purpose === 'proper')?.entry.where)})`);
             bump(counts.byStatus, properFound ? 'MEMORIAL_PROPER' : 'MEMORIAL_WEEKDAY');
+            // classification of every memorial option (one row per celebration)
+            const row = memorials.get(option.id) || { option: option.id, title: option.title, kinds: new Set(), dioceses: new Set(), occurrences: 0, ownDocs: new Set(), statuses: new Set(), samples: [] };
+            const choice = planOption.allowedChoices?.[0] || {};
+            row.kinds.add(option.officeKind); row.dioceses.add(diocese); row.occurrences += 1; row.statuses.add(status || '—');
+            row.prescribedIn = row.prescribedIn || new Set(); if (choice.default === 'proper') { row.prescribedIn.add(diocese); row.prescribedParts = choice.prescribedParts || []; }
+            lookups.filter((l) => l.entry.purpose === 'proper').forEach((l) => l.found.forEach((doc) => row.ownDocs.add(doc.id)));
+            if (row.samples.length < 3 && !row.samples.includes(date)) row.samples.push(date);
+            memorials.set(option.id, row);
             if (status === 'reference-only' && !properFound) {
               bump(counts.byStatus, 'REFERENCE_ONLY');
               const row = referenceOnly.get(option.id) || { option: option.id, title: option.title, officeKind: option.officeKind, reference: option.readingsReference || null, dioceses: new Set(), dates: new Set() };
@@ -204,7 +213,7 @@ export async function runPlan({ snapshotDir, from = 2025, to = 2035 } = {}) {
     absent: identity.absent || null, optionIds: [...identity.optionIds].sort(), officeKinds: [...identity.officeKinds].sort(), dioceses: [...identity.dioceses].sort(),
     years: [...identity.years].sort(), docIds: [...identity.docIds].sort(), sets: [...identity.sets].sort(),
   })).sort((a, b) => a.key.localeCompare(b.key));
-  return { snapshot: { dir: path.relative(ROOT, snap.dir), snapshotVersion: snap.manifest.snapshotVersion, exportedAt: snap.manifest.exportedAt }, years: [from, to], dioceses: DIOCESES, counts, identities: rows, scenarios, referenceOnly: [...referenceOnly.values()].map((r) => ({ ...r, dioceses: [...r.dioceses].sort(), dates: [...r.dates].sort().slice(0, 4), occurrences: r.dates.size })), temporalChecks: [...temporalChecks.values()].map((c) => ({ ...c, dioceses: [...c.dioceses].sort(), years: [...c.years].sort() })), anomalies };
+  return { snapshot: { dir: path.relative(ROOT, snap.dir), snapshotVersion: snap.manifest.snapshotVersion, exportedAt: snap.manifest.exportedAt }, years: [from, to], dioceses: DIOCESES, counts, identities: rows, scenarios, memorials: [...memorials.values()].map((row) => ({ ...row, kinds: [...row.kinds].sort(), prescribedIn: [...(row.prescribedIn || [])].sort(), dioceses: [...row.dioceses].sort(), ownDocs: [...row.ownDocs].sort(), statuses: [...row.statuses].sort() })).sort((a, b) => a.option.localeCompare(b.option)), referenceOnly: [...referenceOnly.values()].map((r) => ({ ...r, dioceses: [...r.dioceses].sort(), dates: [...r.dates].sort().slice(0, 4), occurrences: r.dates.size })), temporalChecks: [...temporalChecks.values()].map((c) => ({ ...c, dioceses: [...c.dioceses].sort(), years: [...c.years].sort() })), anomalies };
 }
 
 /** Closed policy scenarios (previous prompt §5/§21) checked in every year and diocese. */
@@ -253,7 +262,11 @@ function scenarioChecks(rt, from, to, anomalies, counts) {
       record('easter-vigil', addDays(easter, -1), diocese, (r) => [r.sets.length === 1 && r.sets[0].id === 'vigil' && r.sets[0].cycles.join('') === 'ABC' ? '' : `sets ${setIds(r)} cycles ${r.sets[0]?.cycles}`].filter(Boolean));
       record('palm-sunday', addDays(easter, -7), diocese, (r) => [setIds(r) === 'procession,mass' ? '' : `sets ${setIds(r)}`, r.activeSet === 'mass' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean));
       record('easter-sunday', easter, diocese, (r) => [r.sets.length === 1 && r.sets[0].id === 'day' ? '' : `sets ${setIds(r)}`].filter(Boolean));
-      record('pentecost-saturday', addDays(easter, 48), diocese, (r) => [setIds(r) === 'morning,vigil' ? '' : `sets ${setIds(r)}`, r.activeSet === 'vigil' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean));
+      record('pentecost-saturday', addDays(easter, 48), diocese, (r, l, screen) => (l.day.primary.kind === 'temporal' || ['memorial', 'optional-memorial'].includes(l.day.primary.officeKind)
+        ? [setIds(r) === 'morning,vigil' ? '' : `sets ${setIds(r)}`, r.activeSet === 'vigil' ? '' : `DEFAULT ${r.activeSet}`].filter(Boolean)
+        // a feast/memorial takes the Saturday (Visitation 2031): its Mass AND the evening Vigil Mass of Pentecost, vigil default
+        : [screen.groups.length === 2 && screen.activeGroup?.documents.some((doc) => doc._variant === 'pentecost-vigil') ? '' : `DEFAULT groups ${screen.groups.map((g) => g.key)}`,
+          screen.groups.some((g) => g.documents.some((doc) => doc._variant === 'pentecost-vigil')) ? '' : 'the Vigil Mass of Pentecost is not offered'].filter(Boolean)));
       record('pentecost-sunday', addDays(easter, 49), diocese, (r) => [r.sets.length === 1 && r.sets[0].id === 'day' ? '' : `sets ${setIds(r)}`].filter(Boolean));
       record('ascension-thursday', addDays(easter, 39), diocese, (r, l) => (l.day.primary.id.includes('ascension') ? (r.sets[0]?.cycles.join('') === 'ABC' ? [] : [`ascension cycles ${r.sets[0]?.cycles}`]) : []));
       record('ascension-sunday', addDays(easter, 42), diocese, (r, l) => (l.day.primary.id.includes('ascension') ? (r.sets[0]?.cycles.join('') === 'ABC' ? [] : [`ascension cycles ${r.sets[0]?.cycles}`]) : []));

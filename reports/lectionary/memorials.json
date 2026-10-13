@@ -1,0 +1,4371 @@
+{
+ "schema": 1,
+ "generatedAt": "2026-10-13T07:25:42.935Z",
+ "rule": {
+  "default": "the weekday readings (GIRM 357, OLM 83)",
+  "prescribed": "proper readings that the Lectionary prescribes replace the weekday readings (closed list: src/utils/ordo/memorialReadings.js)",
+  "alternatives": "own and Common readings stay selectable where allowed",
+  "route": "?option=<memorial> opens the DEFAULT readings of that option (weekday, or the proper ones when prescribed); the other groups are alternatives on the same screen"
+ },
+ "celebrations": 203,
+ "byClass": {
+  "proper-prescribed": 7,
+  "weekday-default-no-own-document": 135,
+  "proper-prescribed-document-missing": 5,
+  "weekday-default-own-alternative": 56
+ },
+ "flutterCases": {
+  "source": "ibreviarybyapp reports/flutter-lectionary-parity.json (documentedDifferences.memorial-weekday-first)",
+  "cases": 140,
+  "byOption": {
+   "sv-john-paul-ii": 27,
+   "sv-martin-de-porres": 40,
+   "sv-clement-i": 36,
+   "sv-andrei-bobola": 9,
+   "holy-name-mary": 19,
+   "our-lady-mount-carmel": 9
+  }
+ },
+ "prescribed": [
+  {
+   "id": "holy-name-of-jesus",
+   "date": "03.01",
+   "parts": [
+    "reading1",
+    "gospel"
+   ],
+   "rank": "optional-memorial",
+   "note": "Lk 2, 21-24"
+  },
+  {
+   "id": "sv-timothy-titus",
+   "date": "26.01",
+   "parts": [
+    "reading1"
+   ],
+   "rank": "memorial",
+   "note": "2 Tim 1, 1-8 / Tit 1, 1-5"
+  },
+  {
+   "id": "sv-joseph-worker",
+   "date": "01.05",
+   "parts": [
+    "gospel"
+   ],
+   "rank": "optional-memorial",
+   "note": "Mt 13, 54-58"
+  },
+  {
+   "id": "sv-barnabas",
+   "date": "11.06",
+   "parts": [
+    "reading1"
+   ],
+   "rank": "memorial",
+   "note": "Dz 11, 21b-26; 13, 1-3"
+  },
+  {
+   "id": "sv-martha",
+   "date": "29.07",
+   "parts": [
+    "gospel"
+   ],
+   "rank": "memorial",
+   "note": "Jn 11, 19-27 / Lk 10, 38-42"
+  },
+  {
+   "id": "beheading-john-baptist",
+   "date": "29.08",
+   "parts": [
+    "gospel"
+   ],
+   "rank": "memorial",
+   "note": "Mk 6, 17-29"
+  },
+  {
+   "id": "our-lady-sorrows",
+   "date": "15.09",
+   "parts": [
+    "gospel",
+    "sequence"
+   ],
+   "rank": "memorial",
+   "note": "Jn 19, 25-27 / Lk 2, 33-35"
+  },
+  {
+   "id": "holy-guardian-angels",
+   "date": "02.10",
+   "parts": [
+    "gospel"
+   ],
+   "rank": "memorial",
+   "note": "Mt 18, 1-5. 10"
+  },
+  {
+   "id": "dedication-basilicas-peter-paul",
+   "date": "18.11",
+   "parts": [
+    "reading1",
+    "gospel"
+   ],
+   "rank": "optional-memorial",
+   "note": "Dz 28, 11-16. 30-31; Mt 14, 22-33"
+  },
+  {
+   "id": "mary-mother-church",
+   "date": "Monday after Pentecost",
+   "parts": [
+    "reading1",
+    "gospel"
+   ],
+   "rank": "memorial",
+   "note": "Hen 3, 9-15. 20 / Jn 19, 25-34"
+  },
+  {
+   "id": "our-lady-budslav",
+   "date": "02.07",
+   "parts": [
+    "reading1",
+    "reading2",
+    "gospel"
+   ],
+   "rank": "memorial",
+   "dioceses": [
+    "pinsk"
+   ],
+   "note": "Саф 3, 14-18; Рым 12, 9-16b; Лк 1, 39-56 (Pinsk diocesan calendar 2026)"
+  },
+  {
+   "id": "immaculate-heart",
+   "date": "Saturday after the 2nd Sunday after Pentecost",
+   "parts": [
+    "gospel"
+   ],
+   "rank": "optional-memorial",
+   "note": "Lk 2, 41-51"
+  }
+ ],
+ "rows": [
+  {
+   "option": "beheading-john-baptist",
+   "title": "Мучаніцтва св. Яна Хрысціцеля",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedParts": [
+    "gospel"
+   ],
+   "source": "Mk 6, 17-29",
+   "ownDocuments": [
+    "29-08-beheading-john-baptist"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "proper-prescribed"
+  },
+  {
+   "option": "bl-antoni-leszczewicz-jerzy-kaszyra",
+   "title": "Бл. Антонія Ляшчэвіча і Юрыя Кашыры, прэзбітэраў, і паплечнікаў, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "—"
+   ],
+   "occurrences": 7,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-boleslawa-lament",
+   "title": "Бл. Баляславы Марыі Лямэнт, панны",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-bronislawa",
+   "title": "Бл. Браніславы, панны",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 10,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-celina-borzecka",
+   "title": "Бл. Цэліны Бажэнцкай, законніцы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 18,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-czeslaw",
+   "title": "Бл. Чэслава, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "pinsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 9,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-henryk-hlebowicz",
+   "title": "Бл. Генрыха Глябовіча, прэзбітэра, і паплечнікаў, мучанікаў другой сусветнай вайны",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 7,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-honorat-kozminski",
+   "title": "Бл. Ганарата Казмінскага, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "pinsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 20,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-jurgis-matulaitis",
+   "title": "Бл. Юрыя Матулевіча, біскупа",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-karolina-kozka",
+   "title": "Бл. Караліны Кузкі, панны і мучаніцы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 9,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-ladislaus-gielniow",
+   "title": "Бл. Уладзіслава з Гельнёва, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 10,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-maria-jesus-good-shepherd",
+   "title": "Бл. Марыі ад Езуса Добрага Пастыра, панны",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 9,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-maria-stella-companions",
+   "title": "Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "pinsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 20,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-michal-sopocko",
+   "title": "Бл. Міхала Сапоцькі, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "—"
+   ],
+   "occurrences": 6,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-salomea",
+   "title": "Бл. Саламеі, панны",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 9,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-sancja-szymkowiak",
+   "title": "Бл. Санцыі Шымкавяк, панны",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 10,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "bl-vincent-lewoniuk-companions",
+   "title": "Бл. Вінцэнта Леванюка і 12 паплечнікаў, мучанікаў з Пратуліна",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 9,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "dedication-basilicas-peter-paul",
+   "title": "Гадавіна пасвячэння рымскіх базылік св. апосталаў Пятра і Паўла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedParts": [
+    "reading1",
+    "gospel"
+   ],
+   "source": "Dz 28, 11-16. 30-31; Mt 14, 22-33",
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "proper-prescribed-document-missing"
+  },
+  {
+   "option": "dedication-st-mary-major",
+   "title": "Гадавіна пасвячэння рымскай базылікі Найсв. Панны Марыі",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 27,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "five-martyred-brothers",
+   "title": "Свв. Бэнэдыкта, Яна, Мацвея, Ісаака і Крыстына, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 10,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "holy-guardian-angels",
+   "title": "Св. Анёлаў Ахоўнікаў",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedParts": [
+    "gospel"
+   ],
+   "source": "Mt 18, 1-5. 10",
+   "ownDocuments": [
+    "02-10-holy-guardian-angels"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "proper-prescribed"
+  },
+  {
+   "option": "holy-name-mary",
+   "title": "Найсвяцейшага Імя Марыі",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "12-09-holy-name-mary-minsk-mohilev-pinsk"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 37,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "holy-name-of-jesus",
+   "title": "Найсвяцейшага Імя Езуса",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedParts": [
+    "reading1",
+    "gospel"
+   ],
+   "source": "Lk 2, 21-24",
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "proper-prescribed-document-missing"
+  },
+  {
+   "option": "holy-roman-protomartyrs",
+   "title": "Св. Першамучанікаў Рымскага Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "immaculate-heart",
+   "title": "Беззаганнае Сэрца Найсв. Панны Марыі",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedParts": [
+    "gospel"
+   ],
+   "source": "Lk 2, 41-51",
+   "ownDocuments": [
+    "feast-heartofmary"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 32,
+   "classification": "proper-prescribed"
+  },
+  {
+   "option": "mary-mother-church",
+   "title": "Найсв. Панны Марыі, Маці Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "minsk-mohilev",
+    "vitebsk"
+   ],
+   "prescribedIn": [
+    "minsk-mohilev",
+    "vitebsk"
+   ],
+   "prescribedParts": [
+    "reading1",
+    "gospel"
+   ],
+   "source": "Hen 3, 9-15. 20 / Jn 19, 25-34",
+   "ownDocuments": [
+    "feast-marymotherchurch"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 20,
+   "classification": "proper-prescribed"
+  },
+  {
+   "option": "our-lady-budslav",
+   "title": "Найсв. Панны Марыі Будслаўскай",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "pinsk"
+   ],
+   "prescribedIn": [
+    "pinsk"
+   ],
+   "prescribedParts": [
+    "reading1",
+    "reading2",
+    "gospel"
+   ],
+   "source": "Саф 3, 14-18; Рым 12, 9-16b; Лк 1, 39-56 (Pinsk diocesan calendar 2026)",
+   "ownDocuments": [],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 18,
+   "classification": "proper-prescribed-document-missing"
+  },
+  {
+   "option": "our-lady-congregational",
+   "title": "Найсв. Панны Марыі Кангрэгацкай (Студэнцкай)",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 9,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "our-lady-czestochowa",
+   "title": "Найсв. Панны Марыі Чэнстахоўскай",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "reference-only"
+   ],
+   "occurrences": 27,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "our-lady-guadalupe",
+   "title": "Найсв. Панны Марыі з Гвадэлупы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "our-lady-help-of-christians",
+   "title": "Найсв. Панны Марыі, Успамогі Вернікаў",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 8,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "our-lady-loreto",
+   "title": "Найсв. Панны Марыі Ларэтанскай",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "our-lady-mother-mercy",
+   "title": "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "16-11-our-lady-mother-mercy-minsk-mohilev-pinsk"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 27,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "our-lady-mount-carmel",
+   "title": "Найсв. Панны Марыі з гары Кармэль",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "16-07-our-lady-mount-carmel"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "our-lady-of-angels",
+   "title": "Найсв. Панны Марыі Анёльскай",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 10,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "our-lady-of-fatima",
+   "title": "Найсв. Панны Марыі з Фацімы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "our-lady-of-lourdes",
+   "title": "Найсв. Панны Марыі з Люрда",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 28,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "our-lady-perpetual-help",
+   "title": "Маці Божай Нястомнай Дапамогі",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "pinsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 8,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "our-lady-queen",
+   "title": "Найсв. Панны Марыі Каралевы",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "22-08-our-lady-queen"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 27,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "our-lady-rosary",
+   "title": "Найсв. Панны Марыі Ружанцовай",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "07-10-our-lady-rosary"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "our-lady-sorrows",
+   "title": "Найсв. Панны Марыі Балеснай",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedParts": [
+    "gospel",
+    "sequence"
+   ],
+   "source": "Jn 19, 25-27 / Lk 2, 33-35",
+   "ownDocuments": [
+    "15-09-our-lady-sorrows"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "proper-prescribed"
+  },
+  {
+   "option": "presentation-blessed-virgin-mary",
+   "title": "Ахвяраванне Найсв. Панны Марыі",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "21-11-presentation-blessed-virgin-mary"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "saturday-blessed-virgin-mary",
+   "title": "Успамін Найсв. Панны Марыі ў суботу",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "—"
+   ],
+   "occurrences": 866,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "seven-servite-founders",
+   "title": "Св. сямі Заснавальнікаў ордэна Слугаў Найсв. Панны Марыі (сэрвітаў)",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 24,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-adalbert-wojciech-bishop-martyr",
+   "title": "Св. Адальбэрта (Войцеха), біскупа і мучаніка",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 26,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-agata",
+   "title": "Св. Агаты, панны і мучаніцы",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "05-02-sv-agata"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-agnes",
+   "title": "Св. Агнешкі, панны і мучаніцы",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "21-01-sv-agnes"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-albert-chmielowski",
+   "title": "Св. Брата Альберта Хмялёўскага, законніка",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 9,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-albert-great",
+   "title": "Св. Альбэрта Вялікага, біскупа і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-aloysius-gonzaga",
+   "title": "Св. Алаізія Ганзагі, законніка",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-alphonsus-liguori",
+   "title": "Св. Альфонса Марыі Лігуоры, біскупа і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "01-08-sv-alphonsus-liguori"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-ambrose",
+   "title": "Св. Амброзія, біскупа і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "07-12-sv-ambrose"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-andrei-bobola",
+   "title": "Св. Андрэя Баболі, прэзбітэра і мучаніка",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "16-05-sv-andrei-bobola"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 27,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-andrew-dung-lac-companions",
+   "title": "Св. Андрэя Зунг Лака, прэзбітэра, і паплечнікаў, мучанікаў",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "reference-only"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-andrew-kim-taegon-paul-chong-hasang-companions",
+   "title": "Св. Андрэя Кім Таэгона, прэзбітэра, і Паўла Чон Хасана, і паплечнікаў, мучанікаў",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-angela-merici",
+   "title": "Св. Анжэлы Мэрычы, панны",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "minsk-mohilev",
+    "pinsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 20,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-anselm",
+   "title": "Св. Анзэльма, біскупа і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 28,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-anthony-mary-claret",
+   "title": "Св. Антонія Марыі Клярэта, біскупа",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-anthony-mary-zaccaria",
+   "title": "Св. Антонія Марыі Дзаккарыя, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-anthony-padua",
+   "title": "Св. Антонія Падуанскага, прэзбітэра і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "reference-only"
+   ],
+   "occurrences": 32,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-antoni",
+   "title": "Св. Антонія, абата",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "17-01-sv-antoni"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-anzgar",
+   "title": "Св. Анзгара (Аскара), біскупа",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-apollinaris",
+   "title": "Св. Апалінарыя, біскупа і мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-athanasius",
+   "title": "Св. Атаназія, біскупа і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "02-05-sv-athanasius"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-augustine",
+   "title": "Св. Аўгустына, біскупа і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "28-08-sv-augustine"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-augustine-of-canterbury",
+   "title": "Св. Аўгустына Кэнтэрберыйскага, біскупа",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 28,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-augustine-zhao-rong-companions",
+   "title": "Св. Аўгустына Джао Жонга, прэзбітэра, і паплечнікаў, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-barbara",
+   "title": "Св. Барбары, панны і мучаніцы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "pinsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 11,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-barnabas",
+   "title": "Св. Барнабы, апостала",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedParts": [
+    "reading1"
+   ],
+   "source": "Dz 11, 21b-26; 13, 1-3",
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "proper-prescribed-document-missing"
+  },
+  {
+   "option": "sv-basil-gregory-nazianzen",
+   "title": "Св. Базыля Вялікага і Грыгорыя Назіянзскага, біскупаў і доктараў Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "02-01-sv-basil-gregory-nazianzen"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-bede",
+   "title": "Св. Бэды Вялебнага, прэзбітэра і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 28,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-bernard",
+   "title": "Св. Бэрнарда, абата і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "20-08-sv-bernard"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-bernardine-of-siena",
+   "title": "Св. Бэрнардына Сіенскага, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 28,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-blazej",
+   "title": "Св. Блажэя, біскупа і мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-bonaventure",
+   "title": "Св. Бонавэнтуры, біскупа і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "15-07-sv-bonaventure"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-boniface",
+   "title": "Св. Баніфацыя, біскупа і мучаніка",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 34,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-bruno",
+   "title": "Св. Бруна, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-cajetan",
+   "title": "Св. Каятана, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-callistus-i",
+   "title": "Св. Калікста І, папы і мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-camillus-de-lellis",
+   "title": "Св. Каміла Леліскага, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-casimir",
+   "title": "Св. Казіміра",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "04-03-sv-casimir"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 6,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-catherine-alexandria",
+   "title": "Св. Кацярыны Александрыйскай, панны і мучаніцы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-cecilia",
+   "title": "Св. Цэцыліі, панны і мучаніцы",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "22-11-sv-cecilia"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-charbel-makhlouf",
+   "title": "Св. Шарбэля Маклуфа, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-charles-borromeo",
+   "title": "Св. Караля Барамэя, біскупа",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "04-11-sv-charles-borromeo"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-charles-lwanga-companions",
+   "title": "Св. Караля Луангі і паплечнікаў, мучанікаў",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-christopher-magallanes-companions",
+   "title": "Св. Хрыстафора Магалана, прэзбітэра, і паплечнікаў, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 32,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-clare",
+   "title": "Св. Клары, панны",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "11-08-sv-clare"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-clement-i",
+   "title": "Св. Клімэнта І, папы і мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "23-11-sv-clement-i"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-columban",
+   "title": "Св. Калюмбана, абата",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-cornelius-cyprian",
+   "title": "Св. Карнэлія, папы, і Кіпрыяна, біскупа, мучанікаў",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "16-09-sv-cornelius-cyprian"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-cosmas-damian",
+   "title": "Св. Космы і Дам’яна, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-cyril-alexandrian",
+   "title": "Св. Кірыла Александрыйскага, біскупа і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 32,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-damasus-i",
+   "title": "Св. Дамаса І, папы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-denis-companions",
+   "title": "Св. Дыянісія, біскупа, і паплечнікаў, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-dominic",
+   "title": "Св. Дамініка, прэзбітэра",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "08-08-sv-dominic"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-elizabeth-hungary",
+   "title": "Св. Альжбеты Венгерскай, законніцы",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "17-11-sv-elizabeth-hungary"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-elizabeth-portugal",
+   "title": "Св. Альжбеты Партугальскай",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-ephrem",
+   "title": "Св. Эфрэма, дыякана і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 28,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-eusebius-vercelli",
+   "title": "Св. Эўзэбія Вэрчэльскага, біскупа",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-fabian",
+   "title": "Св. Фабіяна, папы і мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-faustina-kowalska",
+   "title": "Св. Фаўстыны Кавальскай, панны",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-fidel-sigmaringen",
+   "title": "Св. Фідэля Сігмарынгенскага, прэзбітэра і мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 24,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-florian",
+   "title": "Св. Фларыяна, мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "pinsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 9,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-francis-assisi",
+   "title": "Св. Францішка Асізскага",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "04-10-sv-francis-assisi"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-francis-de-sales",
+   "title": "Св. Францішка Сальскага, біскупа і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "24-01-sv-francis-de-sales"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-francis-xavier",
+   "title": "Св. Францішка Ксавэрыя, прэзбітэра",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "03-12-sv-francis-xavier"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-george-martyr",
+   "title": "Св. Юрыя, мучаніка",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 24,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-gregory-great",
+   "title": "Св. Грыгорыя Вялікага, папы і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "03-09-sv-gregory-great"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-gregory-narek",
+   "title": "Св. Грыгорыя Нарэцкага, абата і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "—"
+   ],
+   "occurrences": 8,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-gregory-vii",
+   "title": "Св. Грыгорыя VII, папы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 28,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-hedwig",
+   "title": "Св. Ядвігі, законніцы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-henry",
+   "title": "Св. Генрыха",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-hilary",
+   "title": "Св. Гілярыя, біскупа і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-hildegard-bingen",
+   "title": "Св. Хільдэгарды Бінгенскай, панны і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-hyacinth",
+   "title": "Св. Яцэка, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "pinsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 9,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-ignatius-antioch",
+   "title": "Св. Ігнацыя з Антыёхіі, біскупа і мучаніка",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "17-10-sv-ignatius-antioch"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-ignatius-loyola",
+   "title": "Св. Ігнацыя Лаёлы, прэзбітэра",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "31-07-sv-ignatius-loyola"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-irenaeus",
+   "title": "Св. Ірэнэя, біскупа і мучаніка",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-isidore-seville",
+   "title": "Св. Ізыдора, біскупа і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "—"
+   ],
+   "occurrences": 4,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-jadwiga-queen",
+   "title": "Св. Ядвігі, каралевы",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 6,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-jane-frances-de-chantal",
+   "title": "Св. Жаны Франсуазы дэ Шанталь, законніцы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-januarius",
+   "title": "Св. Януарыя, біскупа і мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-jean-baptiste-de-la-salle",
+   "title": "Св. Жана Батыста Сальскага, прэзбітэра",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "07-04-sv-jean-baptiste-de-la-salle"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 12,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-jean-brebeuf-isaac-jogues-companions",
+   "title": "Св. Жана дэ Брэбёфа і Ісаака Жога, прэзбітэраў, і паплечнікаў, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-jerome",
+   "title": "Св. Гераніма, прэзбітэра і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "30-09-sv-jerome"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-jerome-emiliani",
+   "title": "Св. Гераніма Эміліяні",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 32,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-joachim-anne",
+   "title": "Св. Яўхіма і Ганны, бацькоў Найсв. Панны Марыі",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "26-07-sv-joachim-anne"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-john-avila",
+   "title": "Св. Яна Авільскага, прэзбітэра і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-john-bosco",
+   "title": "Св. Яна Боска, прэзбітэра",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "31-01-sv-john-bosco"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-john-capistrano",
+   "title": "Св. Яна Капістрана, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-john-chrysostom",
+   "title": "Св. Яна Залатавуснага (Хрызастома), біскупа і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "13-09-sv-john-chrysostom"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-john-cross",
+   "title": "Св. Яна ад Крыжа, прэзбітэра і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "14-12-sv-john-cross"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-john-damascene",
+   "title": "Св. Яна Дамаскіна, прэзбітэра і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 31,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-john-eudes",
+   "title": "Св. Яна Эда, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-john-fisher-thomas-more",
+   "title": "Св. Джона Фішара, біскупа, і Томаса Мора, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-john-i",
+   "title": "Св. Яна І, папы і мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 30,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-john-leonardi",
+   "title": "Св. Яна Леанардзі, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-john-paul-ii",
+   "title": "Св. Яна Паўла ІІ, папы",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "22-10-sv-john-paul-ii"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-john-vianney",
+   "title": "Св. Яна Марыі Віянэя, прэзбітэра",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "04-08-sv-john-vianney"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-john-xxiii",
+   "title": "Св. Яна XXIII, папы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-josaphat",
+   "title": "Св. Язафата, біскупа і мучаніка",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "12-11-sv-josaphat"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 9,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-joseph-calasanz",
+   "title": "Св. Юзафа Каласанса, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-joseph-worker",
+   "title": "Св. Юзафа рамесніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "vitebsk"
+   ],
+   "prescribedIn": [
+    "grodno",
+    "minsk-mohilev",
+    "vitebsk"
+   ],
+   "prescribedParts": [
+    "gospel"
+   ],
+   "source": "Mt 13, 54-58",
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 30,
+   "classification": "proper-prescribed-document-missing"
+  },
+  {
+   "option": "sv-josephine-bakhita",
+   "title": "Св. Жазэфіны Бакіты, панны",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 32,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-juan-diego",
+   "title": "Св. Яна Дыега Куаўхтлатаацына",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 32,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-justin",
+   "title": "Св. Юстына, мучаніка",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 28,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-laurence-ruiz-companions",
+   "title": "Св. Лаўрэнція Руіса і паплечнікаў, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 27,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-lawrence-brindisi",
+   "title": "Св. Лаўрэнція з Брындызі, прэзбітэра і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-leo-great",
+   "title": "Св. Льва Вялікага, папы і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "10-11-sv-leo-great"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-louis",
+   "title": "Св. Людвіка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-louis-marie-grignion-de-montfort",
+   "title": "Св. Людвіка Марыі Грыньён дэ Манфора, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-lucy",
+   "title": "Св. Люцыі, панны і мучаніцы",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "13-12-sv-lucy"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-marcellinus-peter",
+   "title": "Св. Марцэліна і Пятра, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 32,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-margaret-mary-alacoque",
+   "title": "Св. Маргарыты Марыі Алякок, панны",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-maria-goretti",
+   "title": "Св. Марыі Гарэцці, панны і мучаніцы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-maria-magdalena-de-pazzi",
+   "title": "Св. Марыі Магдалены Паццы, панны",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 28,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-martha",
+   "title": "Св. Марты, Марыі і Лазара",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedParts": [
+    "gospel"
+   ],
+   "source": "Jn 11, 19-27 / Lk 10, 38-42",
+   "ownDocuments": [
+    "29-07-sv-martha"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "proper-prescribed"
+  },
+  {
+   "option": "sv-martin-de-porres",
+   "title": "Св. Марціна дэ Порэса, законніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "03-11-sv-martin-de-porres"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-martin-i-pope-martyr",
+   "title": "Св. Марціна І, папы і мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 20,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-martin-tours",
+   "title": "Св. Марціна Турскага, біскупа",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "11-11-sv-martin-tours"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-maximilian-kolbe",
+   "title": "Св. Максімільяна Марыі Кольбэ, прэзбітэра і мучаніка",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "reference-only"
+   ],
+   "occurrences": 30,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-monica",
+   "title": "Св. Монікі",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "27-08-sv-monica"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-nereus-achilleus",
+   "title": "Св. Нэрэя і Ахіла, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-nicholas",
+   "title": "Св. Мікалая, біскупа",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 39,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-norbert",
+   "title": "Св. Норбэрта, біскупа",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 32,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-pancras",
+   "title": "Св. Панкрата, мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-paul-miki",
+   "title": "Св. Паўла Мікі і паплечнікаў, мучанікаў",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "06-02-sv-paul-miki"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-paul-of-cross",
+   "title": "Св. Паўла ад Крыжа, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-paul-vi",
+   "title": "Св. Паўла VI, папы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 32,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-paulinus-nola",
+   "title": "Св. Паўліна Нольскага, біскупа",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-peter-chanel",
+   "title": "Св. Пятра Шанэля, прэзбітэра і мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-peter-chrysologus",
+   "title": "Св. Пятра Хрызалога, біскупа і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-peter-claver",
+   "title": "Св. Пятра Клявэра, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-peter-damian",
+   "title": "Св. Пятра Дам’яна, біскупа і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "—"
+   ],
+   "occurrences": 24,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-peter-julian-eymard",
+   "title": "Св. Пятра Юліяна Эймарда, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-philip-neri",
+   "title": "Св. Філіпа Нэры, прэзбітэра",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "26-05-sv-philip-neri"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-pio-pietrelcina",
+   "title": "Св. Піо з П’етрэльчыны, прэзбітэра",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "23-09-sv-pio-pietrelcina"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-pius-v-pope",
+   "title": "Св. Пія V, папы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-pius-x",
+   "title": "Св. Пія Х, папы",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "21-08-sv-pius-x"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-polycarp",
+   "title": "Св. Палікарпа, біскупа і мучаніка",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "23-02-sv-polycarp"
+   ],
+   "readingsStatus": [
+    "—"
+   ],
+   "occurrences": 12,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-pontian-hippolytus",
+   "title": "Св. Пантыяна, папы, і Гіпаліта, прэзбітэра, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-raphael-kalinowski",
+   "title": "Св. Рафала Каліноўскага, прэзбітэра",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-raymond-penyafort",
+   "title": "Св. Раймунда Пеньяфорцкага, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-rita-cascia",
+   "title": "Св. Рыты з Касіі, законніцы",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-robert-bellarmine",
+   "title": "Св. Робэрта Бэлярміна, біскупа і доктара Касцёла",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-romuald",
+   "title": "Св. Рамуальда, абата",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-rose-of-lima",
+   "title": "Св. Ружы Лімскай, панны",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-scholastica",
+   "title": "Св. Схалястыкі, панны",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "10-02-sv-scholastica"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 32,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-sebastian",
+   "title": "Св. Себасцьяна, мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-sixtus-ii-companions",
+   "title": "Св. Сікста ІІ, папы, і паплечнікаў, мучанікаў",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-stanislaus-bishop-martyr",
+   "title": "Св. Станіслава, біскупа і мучаніка",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "11-04-sv-stanislaus-bishop-martyr"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 17,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-stanislaus-kostka",
+   "title": "Св. Станіслава Косткі, законніка",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "reference-only"
+   ],
+   "occurrences": 30,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-stephen-hungary",
+   "title": "Св. Стэфана Венгерскага",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-teresa-calcutta",
+   "title": "Св. Тэрэзы з Калькуты, панны",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-teresa-lisieux",
+   "title": "Св. Тэрэзы ад Дзіцятка Езус, панны і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "01-10-sv-teresa-lisieux"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-teresa-of-jesus",
+   "title": "Св. Тэрэзы ад Езуса, панны і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "15-10-sv-teresa-of-jesus"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-thomas-aquinas",
+   "title": "Св. Тамаша Аквінскага, прэзбітэра і доктара Касцёла",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "28-01-sv-thomas-aquinas"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-timothy-titus",
+   "title": "Св. Цімафея і Ціта, біскупаў",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedParts": [
+    "reading1"
+   ],
+   "source": "2 Tim 1, 1-8 / Tit 1, 1-5",
+   "ownDocuments": [
+    "26-01-sv-timothy-titus"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 36,
+   "classification": "proper-prescribed"
+  },
+  {
+   "option": "sv-vincent",
+   "title": "Св. Вінцэнта, дыякана і мучаніка",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-vincent-de-paul",
+   "title": "Св. Вінцэнта дэ Поля, прэзбітэра",
+   "ranks": [
+    "memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [
+    "27-09-sv-vincent-de-paul"
+   ],
+   "readingsStatus": [
+    "full"
+   ],
+   "occurrences": 40,
+   "classification": "weekday-default-own-alternative"
+  },
+  {
+   "option": "sv-vincent-ferrer",
+   "title": "Св. Вінцэнта Фэрэра, прэзбітэра",
+   "ranks": [
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "—"
+   ],
+   "occurrences": 4,
+   "classification": "weekday-default-no-own-document"
+  },
+  {
+   "option": "sv-wenceslaus",
+   "title": "Св. Вацлава, мучаніка",
+   "ranks": [
+    "memorial",
+    "optional-memorial"
+   ],
+   "dioceses": [
+    "grodno",
+    "minsk-mohilev",
+    "pinsk",
+    "vitebsk"
+   ],
+   "prescribedIn": [],
+   "ownDocuments": [],
+   "readingsStatus": [
+    "weekday"
+   ],
+   "occurrences": 36,
+   "classification": "weekday-default-no-own-document"
+  }
+ ]
+}

@@ -35,15 +35,20 @@ export const PRESCRIBED_PROPER_MEMORIALS = Object.freeze({
   'holy-guardian-angels': { date: '02.10', parts: ['gospel'], rank: 'memorial', note: 'Mt 18, 1-5. 10' },
   'dedication-basilicas-peter-paul': { date: '18.11', parts: ['reading1', 'gospel'], rank: 'optional-memorial', note: 'Dz 28, 11-16. 30-31; Mt 14, 22-33' },
   'mary-mother-church': { date: 'Monday after Pentecost', parts: ['reading1', 'gospel'], rank: 'memorial', note: 'Hen 3, 9-15. 20 / Jn 19, 25-34' },
+  // Local: the diocesan calendar of Pinsk (2026) celebrates 2 July as a MEMORIAL with the readings of volume VI
+  // (Zeph 3, 14-18; Rom 12, 9-16b; Lk 1, 39-56). Minsk (solemnity) and Vitebsk (feast) have them as their own Mass;
+  // in Grodno (2027) the day is a weekday in the calendar table, so the readings are only an alternative.
+  'our-lady-budslav': { date: '02.07', parts: ['reading1', 'reading2', 'gospel'], rank: 'memorial', dioceses: ['pinsk'], note: 'Саф 3, 14-18; Рым 12, 9-16b; Лк 1, 39-56 (Pinsk diocesan calendar 2026)' },
   'immaculate-heart': { date: 'Saturday after the 2nd Sunday after Pentecost', parts: ['gospel'], rank: 'optional-memorial', note: 'Lk 2, 41-51' },
 });
 
 export const MEMORIAL_KINDS = Object.freeze(['memorial', 'optional-memorial']);
 
 /** `{ mode, parts }` for a memorial option; non-memorials have no rule. */
-export function memorialReadingsRule(optionId, officeKind) {
+export function memorialReadingsRule(optionId, officeKind, diocese = '') {
   if (!MEMORIAL_KINDS.includes(officeKind)) return null;
-  const prescribed = PRESCRIBED_PROPER_MEMORIALS[optionId];
+  const entry = PRESCRIBED_PROPER_MEMORIALS[optionId];
+  const prescribed = entry && (!entry.dioceses || entry.dioceses.includes(diocese)) ? entry : null;
   return prescribed
     ? { mode: 'proper-prescribed', defaultPurpose: 'proper', parts: [...prescribed.parts] }
     : { mode: 'weekday-default', defaultPurpose: 'weekday', parts: [] };

@@ -178,7 +178,7 @@ export async function applyWave({ firestore, admin, changes, backupDir, resume =
       await firestore.collection(COLLECTION).doc(change.id).update(payload, { lastUpdateTime: snapshot.updateTime });
     } catch (error) {
       log(backupDir, { event: 'error', id: change.id, message: String(error.message || error) });
-      throw new Error(`Write of ${change.id} failed (${error.message || error}); the wave is STOPPED after ${written.length} written document(s). Analyse before resuming (--resume ${backupDir}).`);
+      throw new Error(`Write of ${change.id} failed (${error.message || error}); the wave is STOPPED after ${written.length} written document(s). Analyse before resuming (--resume ${backupDir}).`, { cause: error });
     }
     written.push(change.id);
     log(backupDir, { event: 'written', id: change.id, fields: [...Object.keys(set), ...remove.map((key) => `-${key}`)] });

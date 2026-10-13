@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "generatedAt": "2026-10-12T18:11:30.977Z",
+ "generatedAt": "2026-10-13T07:25:42.935Z",
  "source": {
   "index": "https://catholic.by/3/liturgy/lectionary",
   "crawledAt": "2026-10-12T17:41:06.732Z",
@@ -26518,7 +26518,7 @@
         "kind": "gospel",
         "role": "gospel",
         "heading": "ЕВАНГЕЛЛЕ",
-        "bible": "Мк 22, 1–10",
+        "bible": "Мц 22, 1–10",
         "text": true
        }
       ],

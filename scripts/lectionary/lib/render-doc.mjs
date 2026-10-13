@@ -3,7 +3,7 @@ const table = (headers, rows) => `| ${headers.join(' | ')} |\n|${headers.map(() 
 const n = (value) => (value === undefined || value === null ? '—' : String(value));
 const obj = (o) => Object.entries(o || {}).map(([k, v]) => `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`).join(', ');
 
-export function renderAuditDoc({ audit, inventory, coverage, discrepancies, drift, contract }) {
+export function renderAuditDoc({ audit, inventory, coverage, discrepancies, drift, contract, memorials, pending, applyRecord }) {
   const s = coverage.sources;
   const d = coverage.documents;
   const p = coverage.planned;
@@ -68,19 +68,40 @@ export function renderAuditDoc({ audit, inventory, coverage, discrepancies, drif
   out.push(table(['Relation', 'Findings'], Object.entries(relations).sort((a, b) => b[1] - a[1]).map(([k, c]) => [k, c])));
   out.push('', 'Plan-level and source-level findings (not per-document):', '');
   out.push(table(['Id', 'Class', 'Scope', 'Identity', 'Detail', 'Resolution'], discrepancies.items.filter((i) => i.scope !== 'document').map((i) => [i.id, i.class, i.scope, `\`${i.identity || '—'}\``, String(i.evidence?.detail || '').replace(/\|/g, '/').slice(0, 160), `${i.resolution.status}: ${String(i.resolution.reason || '').replace(/\|/g, '/').slice(0, 160)}`])));
-  out.push('', `The resync dry-run plan (\`reports/lectionary/resync-plan.json\`) would re-import ${audit.resync.changes.length} legacy documents from their canonical page (flat fields only); ${audit.resync.skipped.length} documents with material findings are left untouched with a reason each.`, '');
+  out.push('', `Resync plan against this snapshot (\`reports/lectionary/resync-plan.json\`): ${audit.resync.changes.length} documents still to import (the 321 + 3 of the applied plan are in \`resync-plan.applied.json\`); ${audit.resync.skipped.length} documents with material findings are left untouched with a reason each.`, '');
   out.push('## 5. Production vs repo vs manifest vs apps', '');
   out.push(table(['Collection', 'Production (count, digest)', 'Manifest', 'Flutter bundle (count, digest)', 'Status'], drift.driftTable.map((r) => [r.collection, r.production ? `${r.production.count}, ${r.production.digest}` : '—', typeof r.manifest === 'string' ? r.manifest : `v${r.manifest.version}, ${r.manifest.digest}, ${r.manifest.inSync ? 'equal to production' : 'DIFFERS'}`, r.flutterBundle ? `${r.flutterBundle.count}, ${r.flutterBundle.digest}${r.flutterBundle.behindManifestBy ? ` (${r.flutterBundle.behindManifestBy} documents behind the manifest)` : ''}` : '—', r.status])));
   out.push('', `Manifest \`current\`: contentVersion ${drift.manifest.current?.contentVersion}, published ${drift.manifest.current?.publishedAt}. Flutter bundle: contentVersion ${drift.flutterBundle?.contentVersion} (${drift.flutterBundle?.contentDate}). Repo calendar revision ${drift.repo.calendarDefinitions.revision} / production ${drift.repo.production.calendarRevision}; notes ${drift.repo.notes.revision} / ${drift.repo.production.notesRevision}; year overrides in sync: ${drift.repo.liturgicalYearOverrides.inSync}. Readings-sets plan: ${drift.repo.readingsSetsPlan ? `${drift.repo.readingsSetsPlan.identicalToProduction}/${drift.repo.readingsSetsPlan.documents} planned documents are already identical in production` : 'n/a'}.`, '');
   out.push(`Dev Firestore: ${drift.devFirestore.status} (${drift.devFirestore.note}). Apply backups present in this checkout: ${Object.entries(drift.applyBackupsSeen).map(([name, files]) => `${name} [${files.join(', ') || '—'}]`).join('; ')}. The readings-sets apply left backups stamped 2026-10-07T18:13Z (the task text says 2026-10-09; the effect is verified from the production state itself): ${drift.repo.readingsSetsPlan ? `${drift.repo.readingsSetsPlan.identicalToProduction} of ${drift.repo.readingsSetsPlan.documents} documents of the migration plan equal production; 8 existing documents differ in paragraph layout only (production was edited after the apply) and 2 are celebrations this audit adds to the plan (24.06, Transfiguration)` : 'n/a'}.`, '');
   out.push('Browser: ' + drift.browser.status + ' — ' + drift.browser.note, '');
-  out.push('## 6. Engine changes of this audit', '');
+  out.push('## 6. Engine and data changes', '');
   out.push('- `src/utils/ordo/candidates.js`: a Sunday in a date-keyed window (IV Sunday of Advent, III on 17.12, II Sunday after Christmas) uses the period documents, not the weekday documents of the date.');
   out.push('- `src/utils/ordo/readings.js` + `runtime.js`: on a Sunday 24 December the Christmas Vigil Mass is an additional lookup (`_variant: christmas-vigil`), default (evening).');
-  out.push('- `src/utils/readingsScreen.js`: the Readings screen resolution is a pure module used by the view and by the audit.');
-  out.push('', '## 7. Flutter handoff', '');
-  out.push(`See \`reports/lectionary/flutter-export-contract.json\` (dataset revision \`${contract.dataset.revision}\`, ${contract.documents.length} documents, ${contract.plannedSelections.length} planned selections, ${contract.policyScenarios.length} scenario rows, contract hash \`${contract.hashes.contract}\`). Edge cases: ${contract.edgeCases.map((e) => e.id).join(', ')}.`, '');
-  out.push('## 8. Publication instructions (nothing was executed)', '');
-  out.push('See the final report of the audit task and `reports/lectionary/resync-plan.json`; the order is: (1) review the resync plan, (2) `node scripts/lectionary/resync-readings.mjs --apply` (backup + precondition), (3) `npm run content:manifest` (expect MASS CONTENT REBUILD → ships with an app release, or `--allow-large-patch` by the owner), (4) deploy the web build with the engine change, (5) Flutter ports the lookup change.', '');
+  out.push('- `src/utils/readingsScreen.js`: the Readings screen resolution is a pure module used by the view and by the audit; `?option=` opens the default readings of the option.');
+  out.push('- `src/utils/ordo/memorialReadings.js`: ONE rule for the readings of memorials (below).');
+  out.push('- `src/utils/ordo/readings.js`: on the Saturday before Pentecost taken by a feast (the Visitation on 2031-05-31) the evening Vigil Mass of Pentecost is an additional lookup (`_variant: pentecost-vigil`), the evening default; the feast Mass stays selectable.');
+  out.push('- `src/utils/ordo/readingsPlan.js`: the Hours → Readings `?dayId=` route adds only documents the plan offers.');
+  out.push('', '## 7. Memorials: one rule for the web and the Flutter app', '');
+  out.push(`Rule: ${memorials.rule.default}; ${memorials.rule.prescribed}; ${memorials.rule.alternatives}. Route: ${memorials.rule.route}.`, '');
+  out.push(`${memorials.celebrations} memorial / optional-memorial celebrations of the engine (2025–2035 × 4 dioceses) classified: ${obj(memorials.byClass)}.`, '');
+  out.push(table(['Prescribed proper readings (closed list)', 'Date', 'Parts', 'Source citation'], memorials.prescribed.map((e) => [`\`${e.id}\``, e.date, e.parts.join(', '), e.note])));
+  out.push('', 'Sources: Ordo Lectionum Missae, Praenotanda 83; GIRM 355, 357; the Proper of Saints of the Roman Lectionary (proper vs «specially chosen, not proper»; <https://www.catholic-resources.org/Lectionary/2002USL-Sanctoral.htm>); the USCCB calendar notes; every citation was compared with the Catholic.by page.', '');
+  if (memorials.flutterCases) out.push(`The ${memorials.flutterCases.cases} cases of the Flutter audit («memorial-weekday-first») are ${Object.keys(memorials.flutterCases.byOption).length} celebrations (${obj(memorials.flutterCases.byOption)}): optional memorials with their own document. With this rule the web route also opens the weekday readings for them; the Flutter behaviour is the rule, no difference remains.`, '');
+  out.push(table(['Class', 'Celebrations', 'Examples'], Object.entries(memorials.byClass).map(([k, c]) => [k, c, memorials.rows.filter((r) => r.classification === k).slice(0, 6).map((r) => `\`${r.option}\``).join(', ')])));
+  out.push('', '## 8. Written to production (Firestore) and published', '');
+  out.push(`Authorization: ${applyRecord.authorization}.`, '');
+  out.push(table(['Wave', 'Documents', 'Backup (local)', 'Manifest verdict', 'contentVersion', 'readings version / digest'], applyRecord.waves.map((w) => [w.wave, w.documents, `\`${w.backup}\``, w.manifestVerdict, w.manifestAfter.contentVersion, `v${w.manifestAfter.version} / ${w.manifestAfter.digest}`])));
+  out.push('', `Before: contentVersion ${applyRecord.manifestBefore.contentVersion}, readings v${applyRecord.manifestBefore.readings.version} ${applyRecord.manifestBefore.readings.digest}. Backup of all 324 documents: \`${applyRecord.backups.allWaves.dir}\` (list sha256 \`${applyRecord.backups.allWaves.listSha256}\`; rollback dry run: ${applyRecord.backups.allWaves.rollbackDryRun}). Verification after each wave: ${applyRecord.verificationAfterEachWave}.`, '');
+  out.push('Not written: ' + applyRecord.notWritten.join('; ') + '.', '');
+  const fd = applyRecord.flutterDelivery;
+  out.push('Delivery to the Flutter app: ' + fd.guards + `. App with the 2026-10-07 bundle: ${fd.bundle20261007.changedAfterAllWaves} of ${fd.bundle20261007.documents} documents differ (${fd.bundle20261007.share}, rebuild threshold > ${fd.bundle20261007.threshold}, ${fd.bundle20261007.bytes}) → ${fd.bundle20261007.result}; app that installed the previous patch: ${fd.installedPreviousPatch.changed} (${fd.installedPreviousPatch.share}) → ${fd.installedPreviousPatch.result}; app with a bundle built from current production → ${fd.bundleBuiltFromCurrentProduction.result}. Hash parity: ${fd.hashParity}.`, '');
+  out.push('', '## 9. Prepared, NOT written (each needs the owner\'s authorization)', '');
+  for (const plan of pending) {
+    out.push(`### ${plan.title}`, '', `Status: ${plan.status}. Evidence: ${plan.evidence.join(' | ')}`, '');
+    if (plan.documents.length) out.push(table(['Option', 'Document', 'Changed fields', 'Before hash', 'After hash'], plan.documents.map((x) => [x.option || '—', `\`${x.id}\``, x.changedFields.join(', '), x.beforeHash, x.afterHash])));
+    out.push('', 'Options:', '', ...plan.options.map((o) => `- **${o.id}**${o.recommended ? ' (recommended)' : ''}: ${o.label}`), '', `Tests: ${plan.tests}`, '');
+  }
+  out.push('## 10. Flutter handoff', '');
+  out.push(`See \`reports/lectionary/flutter-export-contract.json\` (dataset revision \`${contract.dataset.revision}\`, ${contract.documents.length} documents, ${contract.plannedSelections.length} planned selections, ${contract.policyScenarios.length} scenario rows, contract hash \`${contract.hashes.contract}\`). Edge cases: ${contract.edgeCases.map((e) => e.id).join(', ')}. Engine rules to port: ${contract.engineRules.map((e) => e.id).join(', ')}; memorial rule: \`memorialReadings\` in the contract.`, '');
   return `${out.join('\n')}\n`;
 }

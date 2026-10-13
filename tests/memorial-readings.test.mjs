@@ -32,11 +32,14 @@ test('the rule: weekday by default; proper readings only for the closed, source-
   assert.equal(memorialReadingsRule('sv-martha', 'memorial').mode, 'proper-prescribed');
   assert.deepEqual(memorialReadingsRule('sv-martha', 'memorial').parts, ['gospel']);
   assert.equal(memorialReadingsRule('sv-martha', 'feast'), null, 'only memorials have the rule');
-  assert.equal(Object.keys(PRESCRIBED_PROPER_MEMORIALS).length, 11);
+  assert.equal(Object.keys(PRESCRIBED_PROPER_MEMORIALS).length, 12);
+  // a diocesan prescription applies only there: Budslav is a memorial with proper readings in Pinsk only
+  assert.equal(memorialReadingsRule('our-lady-budslav', 'memorial', 'pinsk').mode, 'proper-prescribed');
+  assert.equal(memorialReadingsRule('our-lady-budslav', 'optional-memorial', 'grodno').mode, 'weekday-default');
 });
 
 test('every prescribed memorial is a memorial option of the engine (id and rank), in every diocese', () => {
-  const dates = { 'holy-name-of-jesus': '2026-01-03', 'sv-timothy-titus': '2026-01-26', 'sv-joseph-worker': '2026-05-01', 'sv-barnabas': '2026-06-11', 'sv-martha': '2026-07-29', 'beheading-john-baptist': '2026-08-29', 'our-lady-sorrows': '2026-09-15', 'holy-guardian-angels': '2026-10-02', 'dedication-basilicas-peter-paul': '2026-11-18', 'mary-mother-church': '2026-05-25', 'immaculate-heart': '2026-06-13' };
+  const dates = { 'holy-name-of-jesus': '2026-01-03', 'sv-timothy-titus': '2026-01-26', 'sv-joseph-worker': '2026-05-01', 'sv-barnabas': '2026-06-11', 'sv-martha': '2026-07-29', 'beheading-john-baptist': '2026-08-29', 'our-lady-sorrows': '2026-09-15', 'holy-guardian-angels': '2026-10-02', 'dedication-basilicas-peter-paul': '2026-11-18', 'mary-mother-church': '2026-05-25', 'immaculate-heart': '2026-06-13' }; // Budslav: tests/liturgical-decisions.test.mjs
   for (const [id, date] of Object.entries(dates)) {
     let found = 0;
     for (const diocese of ['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno']) {

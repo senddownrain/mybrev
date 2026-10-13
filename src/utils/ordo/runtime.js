@@ -253,7 +253,9 @@ export function selectReadingDocuments(entry, option, docs) {
   }
   if (where._periodType) {
     const weeks = Array.isArray(where._periodWeekNumber) ? where._periodWeekNumber : [where._periodWeekNumber];
+    const variant = where._variant ? String(where._variant).toLowerCase() : '';
     return docs.filter((doc) => !doc._date && !doc._feast
+      && (!variant || String(doc._variant || '').toLowerCase() === variant)
       && doc._periodType === where._periodType
       && weeks.some((week) => (week === null ? doc._periodWeekNumber === null || doc._periodWeekNumber === undefined
         : Number(doc._periodWeekNumber) === Number(week)))

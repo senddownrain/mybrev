@@ -206,16 +206,19 @@ function resolutionOf(finding, eligible, skipReason) {
 
 function classifyPlanAnomaly(row) {
   if (row.option === 'our-lady-budslav') {
-    return { status: 'DECISION_NEEDED', reason: 'the only readings document of 02.07 is `02-07-our-lady-budslav-minsk` (_place minsk-mohilev); Vitebsk celebrates a feast, Pinsk a memorial and Grodno an optional memorial of the same title. Whether those dioceses use the Minsk lectionary page is a ritual decision, not a data fix.' };
+    return { status: 'DECISION_NEEDED', reason: 'confirmed by the diocesan calendars: Minsk solemnity, Vitebsk feast, Pinsk memorial with the proper readings, Grodno weekday in the 2027 table (optional memorial in the engine). The only readings document `02-07-our-lady-budslav-minsk` is linked to Minsk only: the prepared change adds `_dayIds` (pending-authorization.json, budslav-link; needs the owner\'s authorization)' };
+  }
+  if (/prescribes proper readings/.test(row.detail || '')) {
+    return { status: 'DECISION_NEEDED', reason: 'the Lectionary prescribes proper readings for this memorial, but Catholic.by has no page for it, so `readings` has no document; the weekday readings are shown (nothing is invented). Obtain the Lectionary page (pending-authorization.json, prescribed-proper-without-document)' };
   }
   if (row.scenario === 'transfiguration') {
-    return { status: 'FIX_PLANNED', by: 'scripts/liturgy/migrate-readings-sets.mjs (dry-run plan, new celebration transfiguration)', reason: 'the legacy document 06-08-transfiguration-lord has one Gospel; the page has A, B and C. The canonical set document is cycle-aware.' };
+    return { status: 'FIXED_IN_DATA', by: 'resync-readings.mjs wave 4', reason: 'document 06-08-transfiguration-lord now has a cycle-aware set (A, B, C)' };
   }
   if (row.scenario === 'nativity-john-baptist') {
-    return { status: 'FIX_PLANNED', by: 'scripts/liturgy/migrate-readings-sets.mjs (dry-run plan, new celebration nativity-john-baptist)', reason: 'page 5040 has two Masses (vigil + day) like 15.08/29.06; the canonical document gets both sets, day default (policy by analogy: owner to confirm)' };
+    return { status: 'FIXED_IN_DATA', by: 'resync-readings.mjs wave 4', reason: 'document 24-06-nativity-john-baptist now has sets vigil + day, DAY default (owner decision)' };
   }
   if (row.scenario === 'pentecost-saturday') {
-    return { status: 'REMAINING', reason: 'Pentecost Saturday coincides with the feast of the Visitation (31.05.2031): the engine yields only the feast, so the Mass of the Pentecost Vigil is not offered. Needs an engine/ordo decision (extra Mass option) and the same change in the Flutter engine.' };
+    return { status: 'FIXED_IN_REPO', reason: 'Pentecost Saturday taken by the Visitation (2031-05-31): the feast Mass and the evening Vigil Mass of Pentecost are both offered, vigil default (src/utils/ordo/readings.js)' };
   }
   return { status: 'REMAINING', reason: 'see detail' };
 }

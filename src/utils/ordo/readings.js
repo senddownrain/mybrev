@@ -5,6 +5,7 @@
  */
 
 import { memorialReadingsRule } from './memorialReadings.js';
+import { addDays } from './dates.js';
 
 const ALL_SOULS_MASSES = Object.freeze([1, 2, 3]);
 
@@ -33,7 +34,7 @@ function vigilLookup(candidate, season) {
  * @param {object} season
  * @param {object} temporal   the temporal candidate of the date
  */
-export function buildReadingsDescriptor(candidate, season, temporal) {
+export function buildReadingsDescriptor(candidate, season, temporal, { diocese = '' } = {}) {
   const kind = candidate.officeKind;
   const weekdayLookup = { purpose: 'weekday', where: temporal.readingsRef };
   const properLookup = candidate.kind === 'temporal' ? null : { purpose: 'proper', where: candidate.readingsRef, title: candidate.title };
@@ -45,7 +46,7 @@ export function buildReadingsDescriptor(candidate, season, temporal) {
     // GIRM 357 / OLM 83: the weekday readings are kept on memorials; PROPER
     // readings that the Lectionary prescribes replace them; own and Common
     // readings are legal alternatives (`memorialReadingsRule`).
-    const rule = memorialReadingsRule(candidate.id, kind);
+    const rule = memorialReadingsRule(candidate.id, kind, diocese);
     const common = { purpose: 'common', where: { common: 'from-days._templates' } };
     if (rule.mode === 'proper-prescribed') lookup.push(properLookup, weekdayLookup, common);
     else lookup.push(weekdayLookup, properLookup, common);
@@ -66,6 +67,14 @@ export function buildReadingsDescriptor(candidate, season, temporal) {
   } else {
     lookup.push(properLookup, { purpose: 'common', where: { common: 'from-days._templates' } });
     sourceFallbacks.push({ component: 'readings', chain: ['proper', 'common'] });
+  }
+
+  // The Saturday before Pentecost taken by a feast or memorial (the Visitation on 31 May 2031): the morning
+  // Mass is that celebration, the evening Mass is the Vigil Mass of Pentecost (the solemnity prevails from
+  // the evening: its first Vespers). Both stay legal and distinguishable; the vigil is the evening default.
+  if (candidate.kind !== 'temporal' && candidate.role === 'primary' && season.date === addDays(season.anchors.pentecost, -1)
+    && !lookup.some((entry) => entry.purpose === 'weekday')) { // a memorial keeps the weekday lookup: the Saturday document carries the morning and vigil sets
+    lookup.push({ purpose: 'weekday', where: { ...temporal.readingsRef, _variant: 'pentecost-vigil' } });
   }
 
   const vigil = vigilLookup(candidate, season);
