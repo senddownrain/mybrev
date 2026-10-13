@@ -1,0 +1,6498 @@
+{
+ "generatedAt": "2026-10-13T06:49:46.043Z",
+ "source": {
+  "dir": ".cache/prod-snapshot-20261013064009",
+  "snapshotVersion": "20261013064136360",
+  "exportedAt": "2026-10-13T06:41:36.360Z"
+ },
+ "snapshotDocuments": 822,
+ "totals": {
+  "changes": 324,
+  "resync": 321,
+  "wave4": 3,
+  "skipped": 4
+ },
+ "verdicts": [
+  {
+   "wave": 1,
+   "documents": 150,
+   "changed": 150,
+   "bytes": 800547,
+   "verdict": "SAFE CONTENT PATCH",
+   "reasons": []
+  },
+  {
+   "wave": 2,
+   "documents": 150,
+   "changed": 150,
+   "bytes": 866658,
+   "verdict": "SAFE CONTENT PATCH",
+   "reasons": []
+  },
+  {
+   "wave": 3,
+   "documents": 21,
+   "changed": 21,
+   "bytes": 124640,
+   "verdict": "SAFE CONTENT PATCH",
+   "reasons": []
+  },
+  {
+   "wave": 4,
+   "documents": 3,
+   "changed": 3,
+   "bytes": 41711,
+   "verdict": "SAFE CONTENT PATCH",
+   "reasons": []
+  }
+ ],
+ "projectedAfterResync": {
+  "documentsWithFindings": 104,
+  "documentsWithMaterialFindings": 4,
+  "byClass": {
+   "WRONG_TEXT": 6,
+   "WRONG_CYCLE": 1,
+   "WRONG_CONTEXT": 1,
+   "MISSING_BLOCK": 1,
+   "STRUCTURE_LOSS": 107,
+   "WRONG_REFERENCE": 1,
+   "MISSING_SET": 1
+  },
+  "remainingDocumentsMaterial": [
+   "06-08-transfiguration-lord",
+   "24-06-nativity-john-baptist",
+   "christmas-05-01--sunday",
+   "lent-w3-d1--B"
+  ]
+ },
+ "changes": [
+  {
+   "id": "02-01-sv-basil-gregory-nazianzen",
+   "pageId": "4924",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4924-2-studzenya-uspamin-sv-bazylya-vyalikaga-i-grygoryya-naziyanzskaga-biskupau-i-doktarau-kastsjola",
+   "sourceSha256": "e344d12e49c67a65217ff6eae7a7f0854598540c98a5871c8f737eadf5f16c8d",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "0e3a2a356f7b7284",
+   "afterHash": "614de70c2049a774",
+   "wave": 1
+  },
+  {
+   "id": "02-05-sv-athanasius",
+   "pageId": "4940",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4940-2-maya-uspamin-sv-atanaziya-biskupa-i-doktara-kastsjola",
+   "sourceSha256": "ef1715e705f0796f003caaafdc4c5eccae4b1719a215ff434fd996574bda1b50",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "2c87d2799daf468a",
+   "afterHash": "b981d7571f6740a1",
+   "wave": 1
+  },
+  {
+   "id": "02-07-our-lady-budslav-minsk",
+   "pageId": "5042",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5042-2-lipenya-urachystasts-matsi-bozhaj-budslauskaj",
+   "sourceSha256": "038f3309ddf1d44e3113607c5357e474096a8e81465c2dbc773d7df2a0881f88",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "252b72483d312f7b",
+   "afterHash": "fda2fce525a07bff",
+   "wave": 1
+  },
+  {
+   "id": "02-10-holy-guardian-angels",
+   "pageId": "4968",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4968-2-kastrychnika-uspamin-sv-anjolau-akhounikau",
+   "sourceSha256": "b4145b7ed60dc2718fd2b014447cc8da7651024f76ba375c1cae04467b94ae2a",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "f401d76ab44996ba",
+   "afterHash": "793331f6892c4ef3",
+   "wave": 1
+  },
+  {
+   "id": "03-12-sv-francis-xavier",
+   "pageId": "4921",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4921-3-snezhnya-uspamin-sv-frantsishka-ksaveryya-svyatara",
+   "sourceSha256": "243ef3ec6a66c049913e8533b8db05d226cb2567de8d360457c1f7e21dd5f031",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "a71ef52929542cdc",
+   "afterHash": "2bf1c826a692ba61",
+   "wave": 1
+  },
+  {
+   "id": "04-10-sv-francis-assisi",
+   "pageId": "4967",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4967-4-kastrychnika-uspamin-sv-frantsishka-asizskaga",
+   "sourceSha256": "1d5348b2da20b0369da894772c8a4e906bb3bf182e679cea20797539c5fe5a37",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "4a8fa84379daf5b9",
+   "afterHash": "8292d4465229837f",
+   "wave": 1
+  },
+  {
+   "id": "06-01-epiphany-lord",
+   "pageId": "5026",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5026-6-studzenya-urachystasts-ab-yaulennya-pana",
+   "sourceSha256": "a25454aad367f1070c92c8b2f95ff64a17119cdbd024e6eadbf7386da64293a6",
+   "inferredSource": true,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel",
+    "sectionsFound"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "7483c0651d417fd1",
+   "afterHash": "8ab435008cfb3739",
+   "wave": 1
+  },
+  {
+   "id": "06-02-sv-paul-miki",
+   "pageId": "4932",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4932-6-lyutaga-uspamin-sv-paula-miki-i-paplechnikau-muchanikau",
+   "sourceSha256": "4817c859c3f035db5c459826b8901840d6e213b3efc08ed22026bf2f305b4c92",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "be158462f51b5308",
+   "afterHash": "a6c696d1fb298c60",
+   "wave": 1
+  },
+  {
+   "id": "07-04-sv-jean-baptiste-de-la-salle",
+   "pageId": "4937",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4937-7-krasavika-uspamin-sv-zhana-batysta-salskaga-svyatara",
+   "sourceSha256": "46996dac5f6c2504550e62e3c641cca46d346ca8f9be8de51abdc8157d7709ed",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 5,
+   "beforeHash": "91c6bd49039484e3",
+   "afterHash": "1c0b0fce2458259c",
+   "wave": 1
+  },
+  {
+   "id": "07-10-our-lady-rosary",
+   "pageId": "4971",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4971-7-kastrychnika-uspamin-najsvyatsejshaj-panny-maryi-ruzhantsovaj",
+   "sourceSha256": "3d541c0787b718594e8968d874fa55b4b6fe12991d82803dde99abc50fbd4419",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "441c11bd9802eb69",
+   "afterHash": "aa186b8a36b52af7",
+   "wave": 1
+  },
+  {
+   "id": "08-09-nativity-blessed-virgin-mary",
+   "pageId": "5016",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/5016-8-verasnya-svyata-naradzhennya-najsvyatsejshaj-panny-maryi",
+   "sourceSha256": "6e8f8312dd5d5c88cc22417eeac6f3c8f4a572bbc37abedcba1e905876856a88",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "1c236a402031b56c",
+   "afterHash": "c459c7fa96257f75",
+   "wave": 1
+  },
+  {
+   "id": "08-12-immaculate-conception",
+   "pageId": "5022",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5022-8-snezhnya-urachystasts-bezzagannaga-zachatstsya-najsvyatsejshaj-panny-maryi",
+   "sourceSha256": "059c10ef626e34a7c9f6bfd155ca36253520b09bb7100afccef3a5ccff278455",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "f713349f4c3c11e5",
+   "afterHash": "59503fc9f6a8805d",
+   "wave": 1
+  },
+  {
+   "id": "09-08-sv-teresa-benedicta-cross",
+   "pageId": "8471",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/8471-9-zhni-nya-svyata-sv-terezy-benedykty-ad-kryzha-edyty-shtajn-panny-i-muchanitsy-apyakunki-e-ropy",
+   "sourceSha256": "6b28cca872d0beaa88f3155989ec011a739034a10fcbc00cdeef7e7bfb22585c",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 4,
+   "beforeHash": "67a8dc65bfaa87b4",
+   "afterHash": "c0eb01106262b949",
+   "wave": 1
+  },
+  {
+   "id": "09-11-dedication-lateran-basilica",
+   "pageId": "5020",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/5020-9-listapada-svyata-gadaviny-pasvyachennya-lateranskaj-bazyliki",
+   "sourceSha256": "432136546ce6941886d1b0d2a622116419e51a422a7c551c5b0011ea1ccf8a86",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "e270b34791d3a48c",
+   "afterHash": "42e986c1bac7345f",
+   "wave": 1
+  },
+  {
+   "id": "10-02-sv-scholastica",
+   "pageId": "4933",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4933-10-lyutaga-uspamin-sv-ckhalyastyki-panny",
+   "sourceSha256": "e62181d48ac49abb114a27ff5f689c02c5fe13371a86bdb9039ea821367bee0b",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "e31ef0fe55e49a1a",
+   "afterHash": "ccbc4e75915235af",
+   "wave": 1
+  },
+  {
+   "id": "10-11-sv-leo-great",
+   "pageId": "4976",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4976-10-listapada-uspamin-sv-lva-vyalikaga-papy-i-doktara-kastsjola",
+   "sourceSha256": "ca9b05b78108a4f9fddb56b162fd351d545288c97e1e7f3465034a7ec1cb6d9d",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "d38532e80db6201e",
+   "afterHash": "8ddffc9c29d8e131",
+   "wave": 1
+  },
+  {
+   "id": "11-04-sv-stanislaus-bishop-martyr",
+   "pageId": "4938",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4938-11-krasavika-uspamin-sv-stanislava-biskupa-i-muchanika",
+   "sourceSha256": "da130fc1f3784a792368ba3c3a239cf870161d39c08fd04706d0290e01912c5a",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "3e133dd720d4e0e7",
+   "afterHash": "9b449f173b0fb38a",
+   "wave": 1
+  },
+  {
+   "id": "11-07-sv-benedict",
+   "pageId": "5007",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/5007-11-lipenya-svyata-sv-benedykta-abata-apekuna-europy",
+   "sourceSha256": "26a2f289ec3aa8918b014cb4f4a662a38f4e982a611e1bb21fd8547dcbbd6a25",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "c08ad2a2effce2c9",
+   "afterHash": "d131fc15260f53ce",
+   "wave": 1
+  },
+  {
+   "id": "11-11-sv-martin-tours",
+   "pageId": "4975",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4975-11-listapada-uspamin-sv-martsina-turskaga-biskupa",
+   "sourceSha256": "6933bed94719dfc9ce4a072fb8e487a443fded8583a2089ce61c8714021580a0",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "5c4db142b70c6e6b",
+   "afterHash": "9ce5a39e0a5fed9d",
+   "wave": 1
+  },
+  {
+   "id": "12-09-holy-name-mary-minsk-mohilev-pinsk",
+   "pageId": "8570",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/8570-12-verasnya-uspamin-najsvyatsejshaga-imya-maryi",
+   "sourceSha256": "151aff92b552c261bf4eded2ac1662b3f2cd421a72687ac508f70efcdc55c782",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 4,
+   "beforeHash": "a861899ff55baa4b",
+   "afterHash": "39c515ff463a064e",
+   "wave": 1
+  },
+  {
+   "id": "12-11-sv-josaphat",
+   "pageId": "4978",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4978-12-listapada-uspamin-sv-yazafata-biskupa-i-muchanika",
+   "sourceSha256": "578005e49b1b0f8a886efd9ff12c37f31fdf954413f3e44aa6f0485bbe3c852f",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "6995587f2010adc7",
+   "afterHash": "39cdd6a3380010ae",
+   "wave": 1
+  },
+  {
+   "id": "14-09-exaltation-holy-cross",
+   "pageId": "5015",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/5015-14-verasnya-svyata-uzvyshennya-svyatoga-kryzha",
+   "sourceSha256": "a7a7b79790cf8455bb35f2f18d5da8055ca4a4f1689216033cd2fe6c05045b63",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "e446c1ba52f0ab17",
+   "afterHash": "bb0f85417c74ebea",
+   "wave": 1
+  },
+  {
+   "id": "15-09-our-lady-sorrows",
+   "pageId": "4963",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4963-15-verasnya-uspamin-najsvyatsejshaj-panny-maryi-balesnaj",
+   "sourceSha256": "83b6ec627f3bbd4b4a505a1acda44cd10bcd6b29fb582f08c71fa38f17d51d9f",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "1f4883e690ed02c7",
+   "afterHash": "a9f32dae3b98cc33",
+   "wave": 1
+  },
+  {
+   "id": "15-10-sv-teresa-of-jesus",
+   "pageId": "4970",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4970-15-kastrychnika-uspamin-sv-terezy-ad-ezusa-panny-i-doktara-kastsjola",
+   "sourceSha256": "19c07809a8088f39efbd2c65ae4479771db113a1b21256e13f3097d3cd40e85c",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "40c00d792d454260",
+   "afterHash": "b2e51d34ab186b51",
+   "wave": 1
+  },
+  {
+   "id": "16-11-our-lady-mother-mercy-minsk-mohilev-pinsk",
+   "pageId": "8864",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/8864-16-listapada-uspamin-najsvyatsejshaj-panny-maryi-matsi-milasernastsi-matsi-bozhaj-vastrabramskaj",
+   "sourceSha256": "0c1d0186cdb8b596e67adf94be1dc667ef7babe7472d8bd11118b371e99e1b91",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 4,
+   "beforeHash": "9a3c86bee8a147f5",
+   "afterHash": "78fc8d9b6db2ecc8",
+   "wave": 1
+  },
+  {
+   "id": "17-11-sv-elizabeth-hungary",
+   "pageId": "4977",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4977-17-listapada-uspamin-sv-alzhbety-vengerskaj-zakonnitsy",
+   "sourceSha256": "6642482fc27bdeafb33dca6e3da585a965bf36188c5bc7a6b5e80860440fdd5b",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "8b9a6ee1db59c9bc",
+   "afterHash": "3eca79bea72ed19f",
+   "wave": 1
+  },
+  {
+   "id": "18-10-sv-luke-evangelist",
+   "pageId": "5018",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/5018-18-kastrychnika-svyata-sv-luki-evangelista",
+   "sourceSha256": "8c7e22cd25bc0b0b525cf31cb3b5d25995acd1f006c22556db186503740016ca",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "45e37915f986b877",
+   "afterHash": "77f3c46ce00c2208",
+   "wave": 1
+  },
+  {
+   "id": "19-03-sv-joseph",
+   "pageId": "5027",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5027-19-sakavika-urachystasts-sv-yuzafa-abrannika-najsvyatsejshaj-panny-maryi",
+   "sourceSha256": "0ee9234233ef478d6aec2ae28712129b522be0c096f0a410f3e798110fb6d6b7",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 2,
+   "beforeHash": "5fa64bdcd7abe8b4",
+   "afterHash": "a874b4829928adf8",
+   "wave": 1
+  },
+  {
+   "id": "20-08-sv-bernard",
+   "pageId": "4956",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4956-20-zhniunya-uspamin-sv-bernarda-abata-i-doktara-kastsjola",
+   "sourceSha256": "a91f8ddb5c15645986ad27e1cf3b90cb5ac1200228aa31e78b7fcb6877e61997",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "a8588b72b4ed6510",
+   "afterHash": "b8e172da37cd67ca",
+   "wave": 1
+  },
+  {
+   "id": "21-11-presentation-blessed-virgin-mary",
+   "pageId": "4981",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4981-21-listapada-uspamin-akhvyaravannya-najsvyatsejshaj-panny-maryi",
+   "sourceSha256": "aacb45c8171653a1b9160878265140f591010bf6e783ec524dafbbba1cdb0210",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "ea8866527b79900b",
+   "afterHash": "46082d646c41fceb",
+   "wave": 1
+  },
+  {
+   "id": "22-08-our-lady-queen",
+   "pageId": "4954",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4954-22-zhniunya-uspamin-najsvyatsejshaj-panny-maryi-karalevy",
+   "sourceSha256": "d4c978f002f982b9d87428da21def3409882f3c8e10626cd1a432711348c225d",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "ef33021a91a6a26f",
+   "afterHash": "78036e853cc6709b",
+   "wave": 1
+  },
+  {
+   "id": "22-10-sv-john-paul-ii",
+   "pageId": "4983",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4983-22-kastrychnika-sv-yana-paula-ii-papy",
+   "sourceSha256": "5676125c63ea7216e8edb05c970afa4e2b3a1476dc35a101db8b052dcacbea71",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "8869036891446792",
+   "afterHash": "51bdd3525895893c",
+   "wave": 1
+  },
+  {
+   "id": "22-11-sv-cecilia",
+   "pageId": "4980",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4980-22-listapada-uspamin-sv-tsetsylii-panny-i-muchanitsy",
+   "sourceSha256": "4b92447487e7f04015b7d8b1375faa51168458153a8e19eb2c17d111eaf11b58",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "79ac031ad124f840",
+   "afterHash": "795e90fc1a225b1d",
+   "wave": 1
+  },
+  {
+   "id": "23-02-sv-polycarp",
+   "pageId": "4934",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4934-23-lyutaga-uspamin-sv-palikarpa-biskupa-i-muchanika",
+   "sourceSha256": "7bc0a400b673d3dbedcd77c08f4c54d3963cb05b0e1ad85f4bd7431fc906c75f",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "193b79d32209e96d",
+   "afterHash": "82cddcb721d385fa",
+   "wave": 1
+  },
+  {
+   "id": "23-07-sv-bridget",
+   "pageId": "5009",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/5009-23-lipenya-svyata-sv-brygity-zakonnitsy-apyakunki-europy",
+   "sourceSha256": "5a6a22ed6bdd999ddb4abecbda9adeb464b444f5ae13b9473cbdad607b7e2509",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "030b4419f8ab0e85",
+   "afterHash": "5a968881f8c4d954",
+   "wave": 1
+  },
+  {
+   "id": "25-01-conversion-saint-paul",
+   "pageId": "4997",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/4997-25-studzenya-svyata-navyartannya-sv-paula-apostala",
+   "sourceSha256": "d5b4f66c1a4b9eed27c3b1a9391e27fb6feb4d17b4813183fc30b9629b0f59ab",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "MISSING_BLOCK"
+   ],
+   "findings": 1,
+   "beforeHash": "e4506c3c44f8aa02",
+   "afterHash": "e37529697eabc9cf",
+   "wave": 1
+  },
+  {
+   "id": "26-01-sv-timothy-titus",
+   "pageId": "4925",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4925-26-studzenya-uspamin-sv-tsimafeya-i-tsita-biskupau",
+   "sourceSha256": "6484249dcd1da940880cd17d2b274ed423a9e17a4d702dd5b0ae09b5577d181b",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "a626d76eac968d01",
+   "afterHash": "22738fca480034af",
+   "wave": 1
+  },
+  {
+   "id": "26-05-sv-philip-neri",
+   "pageId": "4939",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4939-26-maya-uspamin-sv-filipa-nery-svyatara",
+   "sourceSha256": "fc9b5b92eff8d2c12e844a1941b952da1acd0d185c0060c17b612f19165b3afe",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "MISSING_BLOCK"
+   ],
+   "findings": 1,
+   "beforeHash": "7f8e12389a59ce8d",
+   "afterHash": "b2e564b3f907dd48",
+   "wave": 1
+  },
+  {
+   "id": "26-07-sv-joachim-anne",
+   "pageId": "4945",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4945-26-lipenya-uspamin-sv-yaukhima-i-ganny-batskou-najsvyatsejshaj-panny-maryi",
+   "sourceSha256": "930713c8522fa622b1bb24b3fc64e74f970850be6c34e952f78802f5102766a8",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "4f5170c9e5261cfd",
+   "afterHash": "a86d50fa08785342",
+   "wave": 1
+  },
+  {
+   "id": "26-12-sv-stephen-protomartyr",
+   "pageId": "4992",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/4992-26-snezhnya-svyata-sv-stefana-pershamuchanika",
+   "sourceSha256": "7fcafb6d7c5c9db26c02c2e78cc1c7127f22c453edf10a085056294ac6340ad2",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "bde064c35015df44",
+   "afterHash": "6f5396bc534e0fbd",
+   "wave": 1
+  },
+  {
+   "id": "27-08-sv-monica",
+   "pageId": "4953",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4953-27-zhniunya-uspamin-sv-moniki",
+   "sourceSha256": "bb767cde8741251d4350befc37375f85a897a8cc5a06f5347a6590f64ba9a007",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "d57b4fdd0befa7e8",
+   "afterHash": "4178a222869f7a3e",
+   "wave": 1
+  },
+  {
+   "id": "28-01-sv-thomas-aquinas",
+   "pageId": "4926",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4926-28-studzenya-uspamin-sv-tamasha-akvinskaga-svyatara-i-doktara-kastsjola",
+   "sourceSha256": "362d6894d8bb1385228e776601e7ba120375bc6f105f2d59dc4680d444e772ad",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "ebf98065ababb0af",
+   "afterHash": "461f23fe19cb0119",
+   "wave": 1
+  },
+  {
+   "id": "28-08-sv-augustine",
+   "pageId": "4952",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4952-28-zhniunya-uspamin-sv-augustyna-biskupa-i-doktara-kastsjola",
+   "sourceSha256": "8cb2db3cdd167497fb380be2b315ce7df79b360b0fca9ffa137a80159853b6ac",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "a5a231900f1d06e1",
+   "afterHash": "572f11f9c1def879",
+   "wave": 1
+  },
+  {
+   "id": "29-04-sv-catherine-siena",
+   "pageId": "5002",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/5002-29-krasavika-svyata-sv-katsyaryny-sienskaj-panny-i-doktara-kastsjola",
+   "sourceSha256": "f4e7366d08b335123caa5467f9aedecbb70f1548cad23b2b7b1c82032ad5797e",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "67f8bcdd8912b001",
+   "afterHash": "150d766144f63236",
+   "wave": 1
+  },
+  {
+   "id": "29-07-sv-martha",
+   "pageId": "4944",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4944-29-lipenya-uspamin-svyatykh-marty-maryi-i-lazara",
+   "sourceSha256": "a816951cde22060907d1d6561e254b4c3ead76937d77efaebff1d57386fe1e05",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "1da1dccfceb10655",
+   "afterHash": "2b0fcf5532cab601",
+   "wave": 1
+  },
+  {
+   "id": "29-09-archangels-michael-gabriel-raphael",
+   "pageId": "5013",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/5013-29-verasnya-svyata-sv-mikhala-arkhanjola-apekuna-minska-magiljouskaj-pravintsyi-kastsjola-sv-gabryelya-i-rafala-arkhanjolau",
+   "sourceSha256": "d6804d59efaf5d3a8709cc4df59967b1c533455d5586c17b8d2231adab6df5ca",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 4,
+   "beforeHash": "a71968f5ec97261d",
+   "afterHash": "5ab9bfb7abe9f2f9",
+   "wave": 1
+  },
+  {
+   "id": "30-09-sv-jerome",
+   "pageId": "4959",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4959-30-verasnya-uspamin-sv-geranima-svyatara-i-doktara-kastsjola",
+   "sourceSha256": "10bfb36eb57ff1975bf72718f587ebda0a300179e0c2b9685aebea41f8bf4176",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "93dc246f4dbf5fde",
+   "afterHash": "3c2cab3114ddabdf",
+   "wave": 1
+  },
+  {
+   "id": "31-01-sv-john-bosco",
+   "pageId": "4927",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4927-31-studzenya-uspamin-sv-yana-boska-svyatara",
+   "sourceSha256": "977b49381f824eb79c8f5d5add7369366995bbad752693771ebf4f438e2ab9c5",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "b794c50f25ec7ac4",
+   "afterHash": "13a6094324302944",
+   "wave": 1
+  },
+  {
+   "id": "31-07-sv-ignatius-loyola",
+   "pageId": "4943",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4943-31-lipenya-uspamin-sv-ignatsyya-lajoly-svyatara",
+   "sourceSha256": "960de0d4861d70c321543b79e35f2c14d0da368f562ba32311f016b238a953be",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "b6819199a863f70f",
+   "afterHash": "36ef78b64fbd7c71",
+   "wave": 1
+  },
+  {
+   "id": "advent-17-12",
+   "pageId": "4597",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4597-17-snezhnya-zvychajny-dzen-adventu",
+   "sourceSha256": "581a7b5148ff19796996e167867189111728d26707174769c5246fe267128ba3",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "9b735e009c604891",
+   "afterHash": "fb39026a4536dbde",
+   "wave": 1
+  },
+  {
+   "id": "advent-18-12",
+   "pageId": "4599",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4599-18-snezhnya-zvychajny-dzen-adventu",
+   "sourceSha256": "818de3b290acc583664d0d7a8b830a76b1aed155a7a68c32b032a08f29dbc1b4",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "b88d84313829e9f7",
+   "afterHash": "8dec965d1e596ac8",
+   "wave": 1
+  },
+  {
+   "id": "advent-19-12",
+   "pageId": "4598",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4598-19-snezhnya-zvychajny-dzen-adventu",
+   "sourceSha256": "c087e648c1901d9f57b2d612bfb2686f3e7e15cbd5d30c3594bc3490db7b54a3",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "54d10b6044ed1b67",
+   "afterHash": "d6be796b632404d1",
+   "wave": 1
+  },
+  {
+   "id": "advent-20-12",
+   "pageId": "4600",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4600-20-snezhnya-zvychajny-dzen-adventu",
+   "sourceSha256": "c19e0b0a254175bea9c175c0b59163068c3b3eeec5750c0a8b92a867e4471a6f",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "1c52d18c1c008478",
+   "afterHash": "93bff3a17ec891d0",
+   "wave": 1
+  },
+  {
+   "id": "advent-21-12",
+   "pageId": "4601",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4601-21-snezhnya-zvychajny-dzen-adventu",
+   "sourceSha256": "1bf8ac7bcef6259c8fc8232f8a91f3c91edcf8516c2260ea8d4856a3138686fc",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 5,
+   "beforeHash": "2908d79911254c99",
+   "afterHash": "b782e20b3cf0f4bf",
+   "wave": 1
+  },
+  {
+   "id": "advent-22-12",
+   "pageId": "4602",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4602-22-snezhnya-zvychajny-dzen-adventu",
+   "sourceSha256": "c94b8e60fa4266f8eb6f6722cf92f25e9964bd4f52b35995b6b83f8bd3010844",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "b7fe1a9afde6ef38",
+   "afterHash": "6ac2b8e0649dc814",
+   "wave": 1
+  },
+  {
+   "id": "advent-23-12",
+   "pageId": "4603",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4603-23-snezhnya-zvychajny-dzen-adventu",
+   "sourceSha256": "0af025ddb468b8ab897d288666d0ab26ed852bb9fe7c3a48fe566b2954cd7248",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "ebd7f9e626814d52",
+   "afterHash": "dd3f8e92e4ca190f",
+   "wave": 1
+  },
+  {
+   "id": "advent-w1-d1--A",
+   "pageId": "4607",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4607-i-nyadzelya-adventu-god-a",
+   "sourceSha256": "b5229db42997a984fd107d948b26b60d77994e977de5ecc9b8ce99312ac37f5b",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "b62762f5d59eecec",
+   "afterHash": "e10bd3f250a268fc",
+   "wave": 1
+  },
+  {
+   "id": "advent-w1-d1--B",
+   "pageId": "4608",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4608-i-nyadzelya-adventu-god-v",
+   "sourceSha256": "6fb5b998de661ff8a7948245ef29585a4210ef14a3ddb0b131bc8134718ebb92",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "1973aa9a3e7b9769",
+   "afterHash": "18b7c145bff0db3c",
+   "wave": 1
+  },
+  {
+   "id": "advent-w1-d1--C",
+   "pageId": "4576",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4576-i-nyadzelya-adventu-god-s",
+   "sourceSha256": "ed0abaaeac92cfe50b0647bc82f411ad2cac4e7847ba0a1b41c71b0da0f4f34a",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "9f6aa79adb446ce4",
+   "afterHash": "8709a304f28cbdbe",
+   "wave": 1
+  },
+  {
+   "id": "advent-w1-d5",
+   "pageId": "4580",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4580-chatsver-pershy-tydzen-adventu",
+   "sourceSha256": "5c667a8bd99609bada5b9fc471c7b651ce89fd2b568f9b5ca31dc87aa4912335",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "a487cb0164482fb8",
+   "afterHash": "e7c523ce30203b32",
+   "wave": 1
+  },
+  {
+   "id": "advent-w2-d1--B",
+   "pageId": "4611",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4611-ii-nyadzelya-adventu-god-b",
+   "sourceSha256": "bea68208f99393fb5907f6b9a90b08534d9b109c7e886cd36874a4e01e0d8e45",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "500b710f3aee7da4",
+   "afterHash": "ce31c8e1d367773a",
+   "wave": 1
+  },
+  {
+   "id": "advent-w2-d1--C",
+   "pageId": "4583",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4583-ii-nyadzelya-adventu-god-s",
+   "sourceSha256": "f9a1c9dde5dd705a4191103858a3c73adfd83c751eac1039f045cfcf1777baaf",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "52505cbde83c0fdc",
+   "afterHash": "1e80bc7c38f29bda",
+   "wave": 1
+  },
+  {
+   "id": "advent-w2-d7",
+   "pageId": "4588",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4588-subota-drugi-tydzen-adventu",
+   "sourceSha256": "00a871faafdac72af31249b5cbf071b9d826d476a916762f8ebf3a0d50f503d2",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "a060ae9f1af16965",
+   "afterHash": "03b73483c5c204f2",
+   "wave": 1
+  },
+  {
+   "id": "advent-w3-d1--A",
+   "pageId": "4610",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4610-iii-nyadzelya-adventu-god-a",
+   "sourceSha256": "1f4ad372fbb4f6f4dfb9f6d6675b34d1752ece27f6a4e7b5c8719c3542d80e08",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "e63a9dc23cd13ddf",
+   "afterHash": "2bba57b34d210a94",
+   "wave": 1
+  },
+  {
+   "id": "advent-w3-d1--C",
+   "pageId": "4590",
+   "url": "https://catholic.by/3/liturgy/lectionary/advent/4590-iii-nyadzelya-adventu-god-s",
+   "sourceSha256": "4c85bb00716c3cfa9684ecee98310dec620bc3ff16115966f08619e97722ad12",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "5d09239487589e7f",
+   "afterHash": "db46421352470ada",
+   "wave": 1
+  },
+  {
+   "id": "christmas-03-01",
+   "pageId": "4566",
+   "url": "https://catholic.by/3/liturgy/lectionary/bn/4566-3-studzenya-budzen",
+   "sourceSha256": "f427e3dd91612aebec8e6aa8059ef65ac03de2961cfbceee710abdd00ef4f5e9",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 2,
+   "beforeHash": "a3936e73b4311bb1",
+   "afterHash": "7af459ffadd143f0",
+   "wave": 1
+  },
+  {
+   "id": "christmas-29-12",
+   "pageId": "4561",
+   "url": "https://catholic.by/3/liturgy/lectionary/bn/4561-29-snezhnya-pyaty-dzen-u-aktave-naradzhennya-pana",
+   "sourceSha256": "5ca0465a5a6ead23880abc51751fc6ae6f682fe1cf229ba823ab564d970f5430",
+   "inferredSource": true,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel",
+    "sectionsFound"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "3188ac11c58de3c2",
+   "afterHash": "f68eea71935fe61c",
+   "wave": 1
+  },
+  {
+   "id": "christmas-30-12",
+   "pageId": "4562",
+   "url": "https://catholic.by/3/liturgy/lectionary/bn/4562-30-snezhnya-shosty-dzen-u-aktave-naradzhennya-pana",
+   "sourceSha256": "99cd79e15958056e5b0e7e53b80faa37503d4b4edc743ad747de31adad5c48eb",
+   "inferredSource": true,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel",
+    "sectionsFound"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "afa79fdd3d0446ae",
+   "afterHash": "a95552c579de86b9",
+   "wave": 1
+  },
+  {
+   "id": "christmas-31-12",
+   "pageId": "4563",
+   "url": "https://catholic.by/3/liturgy/lectionary/bn/4563-31-snezhnya-sjomy-dzen-u-aktave-naradzhennya-pana",
+   "sourceSha256": "0c33341efc9b7340ebdaa9cdd4abca8d5c4698ee8437c25b13146e0d69c165be",
+   "inferredSource": true,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel",
+    "sectionsFound"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "dc190069d5adf4e9",
+   "afterHash": "b2b5f61b03f95d3d",
+   "wave": 1
+  },
+  {
+   "id": "christmas-w2-d1",
+   "pageId": "4565",
+   "url": "https://catholic.by/3/liturgy/lectionary/bn/4565-ii-nyadzelya-paslya-naradzhennya-pana",
+   "sourceSha256": "0c5e633d9f1eaa6198124942a2c59fa306e1dbbd22a498690008362fd9d72f5f",
+   "inferredSource": true,
+   "changedFields": [
+    "reading1",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "adfac8686a74875e",
+   "afterHash": "4694fcd34288a25c",
+   "wave": 1
+  },
+  {
+   "id": "easter-w2-d1--A",
+   "pageId": "5116",
+   "url": "https://catholic.by/3/liturgy/lectionary/velikodny/5116-ii-velikodnaya-nyadzelya-god-a",
+   "sourceSha256": "e0462ec2f73721cf4095d99ec1af5333dd3e64267a269a695f2682c7bae9ccdf",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "36f600194401e3af",
+   "afterHash": "b244a419d21788d7",
+   "wave": 1
+  },
+  {
+   "id": "easter-w3-d1--A",
+   "pageId": "5127",
+   "url": "https://catholic.by/3/liturgy/lectionary/velikodny/5127-iii-velikodnaya-nyadzelya-god-a",
+   "sourceSha256": "f863bf4cb33a0c8fe44d667a915432c7553d5ac21712a07d1ee3c7dea078b8e3",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "c10ad260214702f0",
+   "afterHash": "fd686b2bc79bd928",
+   "wave": 1
+  },
+  {
+   "id": "easter-w4-d7",
+   "pageId": "5134",
+   "url": "https://catholic.by/3/liturgy/lectionary/velikodny/5134-subota-iv-velikodny-tydzen",
+   "sourceSha256": "2836baf60f4524400cab3f4cc727e561fd45b17bfc3f14da9d2fae8c1495b679",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "38b93d8c4fcba2af",
+   "afterHash": "39a04858f54f1f7a",
+   "wave": 1
+  },
+  {
+   "id": "easter-w7-d5",
+   "pageId": "5169",
+   "url": "https://catholic.by/3/liturgy/lectionary/velikodny/5169-chatsver-vii-velikodny-tydzen",
+   "sourceSha256": "b9360157c34f742d24a66a55d01e470ebdc8f9ac6cf35b63da566a771143a8b6",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "25d12627374fa92c",
+   "afterHash": "3babeccb38ec7032",
+   "wave": 1
+  },
+  {
+   "id": "feast-buptismofthelord--A",
+   "pageId": "4996",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/4996-nyadzelya-paslya-6-studzenya-svyata-khrostu-pana",
+   "sourceSha256": "ee671459fa33018395cddfdff7961bebe72e8c20465e45045abbaf8f77ab1d33",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 3,
+   "beforeHash": "f03252fb40296102",
+   "afterHash": "872ee9436bb66ef1",
+   "wave": 1
+  },
+  {
+   "id": "feast-buptismofthelord--B",
+   "pageId": "4996",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/4996-nyadzelya-paslya-6-studzenya-svyata-khrostu-pana",
+   "sourceSha256": "ee671459fa33018395cddfdff7961bebe72e8c20465e45045abbaf8f77ab1d33",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "efa77a31e7b97e11",
+   "afterHash": "eb3465402c39450d",
+   "wave": 1
+  },
+  {
+   "id": "feast-buptismofthelord--C",
+   "pageId": "4996",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/4996-nyadzelya-paslya-6-studzenya-svyata-khrostu-pana",
+   "sourceSha256": "ee671459fa33018395cddfdff7961bebe72e8c20465e45045abbaf8f77ab1d33",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "fbc7810991663b38",
+   "afterHash": "b819e600464e1a1e",
+   "wave": 1
+  },
+  {
+   "id": "feast-christking--A",
+   "pageId": "5047",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5047-urachystasts-pana-nashaga-ezusa-khrysta-valadara-susvetu-god-a",
+   "sourceSha256": "046a970a7a2a84b15cfbcde941244ca5381809138829ec5ddef4ebae47f84a87",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "3e279b9b6d3c53de",
+   "afterHash": "ede2fc22509c7d71",
+   "wave": 1
+  },
+  {
+   "id": "feast-christking--B",
+   "pageId": "5046",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5046-urachystasts-pana-nashaga-ezusa-khrysta-valadara-susvetu-god-v",
+   "sourceSha256": "e38e4f78a53ffb0001de1575efd98234e9f8ed582e3a34d8b2bd51a47469e6d6",
+   "inferredSource": true,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 4,
+   "beforeHash": "e0ebea95db30a358",
+   "afterHash": "7b9dbfd0ea9a8724",
+   "wave": 1
+  },
+  {
+   "id": "feast-christthehighpriest",
+   "pageId": "5021",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/5021-svyata-ezusa-khrysta-najvyshejshaga-i-vechnaga-svyatara",
+   "sourceSha256": "ee97a6cf6589448b76bcdd9fb75723993a47e0a757fff967f0485a60cd1f8923",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "7c110c145196e49c",
+   "afterHash": "da182845bd35ef2e",
+   "wave": 1
+  },
+  {
+   "id": "feast-corpuschristi--A",
+   "pageId": "5035",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5035-urachystasts-najsvyatsejshaga-tsela-i-kryvi-khrysta-god-a",
+   "sourceSha256": "e753c4fc5dfd64f558dd21e81e9218fb487bc8cb7e883685844641dcb6e9f174",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "sequence",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "5078a064837d64ce",
+   "afterHash": "fbc29b5b77ee0db3",
+   "wave": 1
+  },
+  {
+   "id": "feast-corpuschristi--B",
+   "pageId": "5033",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5033-urachystasts-najsvyatsejshaga-tsela-i-kryvi-khrysta-god-v",
+   "sourceSha256": "217a53156a5b3195fc93192bb94a6727f944be6fd382dcaf3a8f1fc52d402cb2",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "sequence",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 2,
+   "beforeHash": "91734376d233fc60",
+   "afterHash": "196f8f1f70f562ce",
+   "wave": 1
+  },
+  {
+   "id": "feast-corpuschristi--C",
+   "pageId": "5036",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5036-urachystasts-najsvyatsejshaga-tsela-i-kryvi-khrysta-god-c",
+   "sourceSha256": "5f8005dd533d24702c44e2c2e1d6271cc9e2de0ace2e1592b843610bfea81f80",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "sequence",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 3,
+   "beforeHash": "e2925a6d49cf1227",
+   "afterHash": "0d383522caed9c65",
+   "wave": 1
+  },
+  {
+   "id": "feast-heartofjesus--A",
+   "pageId": "5037",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5037-urachystasts-najsvyatsejshaga-sertsa-pana-ezusa-god-a",
+   "sourceSha256": "8130a2cbe59ebc5d651dbe7c0bc8e555d5acc98ad56dc293a85082c9800adf94",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "182fd04b96132450",
+   "afterHash": "d0f8123975b893fe",
+   "wave": 1
+  },
+  {
+   "id": "feast-heartofjesus--B",
+   "pageId": "5034",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5034-urachystasts-najsvyatsejshaga-sertsa-pana-ezusa-god-v",
+   "sourceSha256": "f61144f4d3022b9c5ff4cafb787f74609ac5ed2e0dac7cc98e6a9ae50549f86a",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "1fb6a97345551c3b",
+   "afterHash": "e61f0af7cf3e2521",
+   "wave": 1
+  },
+  {
+   "id": "feast-heartofjesus--C",
+   "pageId": "5038",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5038-urachystasts-najsvyatsejshaga-sertsa-pana-ezusa-god-c",
+   "sourceSha256": "9c4cc51e591e79812244e9212b401f43ba8cc37416a459210cdb3df0545eac09",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "d4ebb5273a47837e",
+   "afterHash": "c7961575648fe5a7",
+   "wave": 1
+  },
+  {
+   "id": "feast-heartofmary",
+   "pageId": "4941",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4941-uspamin-bezzagannaga-sertsa-najsvyatsejshaj-panny-maryi",
+   "sourceSha256": "536a2aa6dd500ecb129a371323a397eecd126b52e0c3f4637647d7ecfadbda62",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "0a18e155f1aa815e",
+   "afterHash": "c0b25098b09b36b5",
+   "wave": 1
+  },
+  {
+   "id": "feast-holyfamily--A",
+   "pageId": "4994",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/4994-nyadzelya-u-aktave-naradzhennya-pana-svyata-svyatoj-syam-i-ezusa-maryi-i-yuzafa",
+   "sourceSha256": "40c0f65fbaa58ed004d12a765f39747c259de0c8edc728ae111b8c10ea71998e",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "7bcc25daceaf34a1",
+   "afterHash": "4626c1c5d3449545",
+   "wave": 1
+  },
+  {
+   "id": "feast-holyfamily--B",
+   "pageId": "4994",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/4994-nyadzelya-u-aktave-naradzhennya-pana-svyata-svyatoj-syam-i-ezusa-maryi-i-yuzafa",
+   "sourceSha256": "40c0f65fbaa58ed004d12a765f39747c259de0c8edc728ae111b8c10ea71998e",
+   "inferredSource": true,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel",
+    "sectionsFound"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 5,
+   "beforeHash": "b61baf562caf345c",
+   "afterHash": "2039cd8dacce90d4",
+   "wave": 1
+  },
+  {
+   "id": "feast-holyfamily--C",
+   "pageId": "4994",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/4994-nyadzelya-u-aktave-naradzhennya-pana-svyata-svyatoj-syam-i-ezusa-maryi-i-yuzafa",
+   "sourceSha256": "40c0f65fbaa58ed004d12a765f39747c259de0c8edc728ae111b8c10ea71998e",
+   "inferredSource": true,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel",
+    "sectionsFound"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "3eaad805c3258c48",
+   "afterHash": "d3c627fa9f473188",
+   "wave": 1
+  },
+  {
+   "id": "feast-marymotherchurch",
+   "pageId": "8105",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/8105-svyata-najsvyatsejshaj-panny-maryi-matsi-kastsjola",
+   "sourceSha256": "c07234fdd25c495ed027e4e0369d9549276e1f59d24dfbcd434c3b277b7c3dde",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK"
+   ],
+   "findings": 3,
+   "beforeHash": "d104d422fb4158a1",
+   "afterHash": "50a11ebdc003ee17",
+   "wave": 1
+  },
+  {
+   "id": "feast-trinity--A",
+   "pageId": "5032",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5032-urachystasts-najsvyatsejshaj-trojtsy-god-a",
+   "sourceSha256": "b5d5fdbb08b6745563b000b0bc574b3f5aef94dcf87a0f5c87d323c74c41fece",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "1fb57a502a6e32ce",
+   "afterHash": "17826e67f6f454fa",
+   "wave": 1
+  },
+  {
+   "id": "feast-trinity--C",
+   "pageId": "5030",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5030-urachystasts-najsvyatsejshaj-trojtsy-god-s",
+   "sourceSha256": "a217ce8707ee09d8104cd26d2cac110a9f6dc9ea3642655df35be3dfe2e5b45e",
+   "inferredSource": true,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "56bd39d6bf7efbf5",
+   "afterHash": "4b536f51e174a73c",
+   "wave": 1
+  },
+  {
+   "id": "holyweek-w1-d2",
+   "pageId": "5102",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5102-vyaliki-panyadzelak",
+   "sourceSha256": "94c053adf9915f78d735b56826b56de32187a32b24b7f9254fba078ea7e3625d",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "55ab93d968640d38",
+   "afterHash": "1d18bf8134fe6154",
+   "wave": 1
+  },
+  {
+   "id": "holyweek-w1-d3",
+   "pageId": "5101",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5101-vyaliki-autorak",
+   "sourceSha256": "29d4ef0d22e50d09ee0943dc5c9284262dba08af021e34dc930ed3d33e2cbaee",
+   "inferredSource": true,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "9fc0a62dac27f5a1",
+   "afterHash": "f8d4acab441e40aa",
+   "wave": 1
+  },
+  {
+   "id": "holyweek-w1-d4",
+   "pageId": "5099",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5099-vyalikaya-serada",
+   "sourceSha256": "fcaf879bc00d48c99936452edad9485956cd454ed2d39570ababae197f341dcf",
+   "inferredSource": true,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "85003d2169457b69",
+   "afterHash": "7aa766413e39152f",
+   "wave": 1
+  },
+  {
+   "id": "lent-w0-d5",
+   "pageId": "5050",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5050-chatsver-paslya-papyaltsa",
+   "sourceSha256": "8626fe1abfef457c77cf816c3e3eeb0a8765e413e1781f61100470a249fb8aac",
+   "inferredSource": true,
+   "changedFields": [
+    "psalm",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "77e7f6a9b3074fe9",
+   "afterHash": "acf2ed5b45c75ddc",
+   "wave": 1
+  },
+  {
+   "id": "lent-w1-d7",
+   "pageId": "5052",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5052-subota-i-tydzen-vyalikaga-postu",
+   "sourceSha256": "6f66cfb8a78fff58d46f30b0f42b1ca414aa71d1fdc5bc3a60863f8a2908dbc4",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "dceda58ef496266b",
+   "afterHash": "9267638848b16950",
+   "wave": 1
+  },
+  {
+   "id": "lent-w5-d1--B",
+   "pageId": "5091",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5091-v-nyadzelya-vyalikaga-postu-god-v",
+   "sourceSha256": "6d4c1891efe8d100a6275f705b29b10dd5c8d87762f99bf57a72a9fadf57e0c5",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "a9f8ccc41ce49d52",
+   "afterHash": "1ff0cf6513bb42a5",
+   "wave": 1
+  },
+  {
+   "id": "lent-w5-d6",
+   "pageId": "5077",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5077-pyatnitsa-v-tydzen-vyalikaga-postu",
+   "sourceSha256": "f6468f0251a5ad9495a6324b58c1da2efae281b011cdfb2421259c95433a9c57",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "051acac6f9dd4493",
+   "afterHash": "e02d22c85e3eb08d",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w1-d2--1",
+   "pageId": "4616",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4616-panyadzelak-pershy-zvychajny-tydzen",
+   "sourceSha256": "d9d927c3af743185147055ed0b4bc33ccd2bb38b6f391531bf677610500d2d39",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 2,
+   "beforeHash": "16d431cf8cf80494",
+   "afterHash": "df2ea7b673bbc41a",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w1-d4--1",
+   "pageId": "4618",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4618-serada-pershy-zvychajny-tydzen",
+   "sourceSha256": "906f81a6c3f9e01bc687a1cb22c904c5eceff34de0b6b9af24d2cc3a69408d33",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "02a7beba7793950e",
+   "afterHash": "0d8a5bf317e9d312",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w10-d1--A",
+   "pageId": "4697",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4697-kh-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "5a4e0b67468b3b798e49836ec8f8045a489b7b41982495f53a961140e1cbe56a",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "064c4c69ed8976f4",
+   "afterHash": "192bfb1694d7620e",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w11-d1--B",
+   "pageId": "4705",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4705-xi-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "d2e3c03cdd46a2136222ff8660b64f7d3487bfa452fd3eb08f4e3b11c756595a",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "b30137c5f8942f48",
+   "afterHash": "a9d3f71630d289a6",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w12-d1--A",
+   "pageId": "4720",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4720-khii-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "6a35c41f2b04a310d2bb3e66e520fd92730153fd2c663a3d9ad3c8ff0e7caba7",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "2d3b35d18c3ff282",
+   "afterHash": "28ccf1de648373bb",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w12-d1--B",
+   "pageId": "4719",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4719-xii-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "f7099b49ca26369cf6ed6139e84f1ff3e26ec552a876108301c838e9a2be61d0",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "7fae38c6665d0a44",
+   "afterHash": "cf5472668ef08b31",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w12-d1--C",
+   "pageId": "4718",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4718-xii-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "f335c0fff1d88e25a5709887263ce99135354dd215e35959de5b609ef00c3aa8",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "a2756aeb7d42d252",
+   "afterHash": "b73dac54689e5e38",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w12-d6--1",
+   "pageId": "4713",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4713-pyatnitsa-dvanatstsaty-zvychajny-tydzen",
+   "sourceSha256": "f678f5ebf7e5940295c6e28eb065433e1af47790e5e68c2f17a5d82b4969db9f",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "f3247e12e77463aa",
+   "afterHash": "7d151b07547c263f",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w12-d6--2",
+   "pageId": "4713",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4713-pyatnitsa-dvanatstsaty-zvychajny-tydzen",
+   "sourceSha256": "f678f5ebf7e5940295c6e28eb065433e1af47790e5e68c2f17a5d82b4969db9f",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "a28b2f7b98b53cf6",
+   "afterHash": "1f02c1c541399429",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w13-d1--A",
+   "pageId": "4729",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4729-khiii-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "311fee9a6f242143f81206e200fb3afa3450419ca57c1715bba71d5a27a2da4f",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "c6711c39db2c5750",
+   "afterHash": "87f66c8d0ccd7e99",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w13-d1--B",
+   "pageId": "4728",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4728-xiii-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "80bce251ba6443b235e80f24271eea66e57142d50e7411fbcb098c0a391b4c91",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "66f85fc0caf2b221",
+   "afterHash": "a9485946d7f81245",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w14-d1--C",
+   "pageId": "4733",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4733-xiv-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "46ef6a8c4d600aea322cfb345dcd5a0db5347dda3f6dee969e8a67ed3e03d79f",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "e927446d3908170e",
+   "afterHash": "1864d595240dd241",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w14-d2--2",
+   "pageId": "4732",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4732-panyadzelak-chatyrnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "f84ac561b538178d6c40574e5519bebe6ee1aa5e754c31e3423d41099acbb750",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_CYCLE",
+    "WRONG_TEXT"
+   ],
+   "findings": 4,
+   "beforeHash": "9fdf53ca33edf30c",
+   "afterHash": "6fd8653a468dfa39",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w14-d4--2",
+   "pageId": "4737",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4737-serada-chatyrnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "7a828d7eaf2631ab5aa329bcc5fb8f85fa25b3d5fcbbb89ecadb5257cad72b97",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_CYCLE",
+    "WRONG_TEXT"
+   ],
+   "findings": 4,
+   "beforeHash": "9a38f99a9398568f",
+   "afterHash": "c4d13fb2a69b1444",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w14-d6--2",
+   "pageId": "4735",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4735-pyatnitsa-chatyrnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "b7fd2eb4476b1bbf5351ec071e6cd6c731412cb91ba319890ba587c34b4a79fc",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "16b361342610c2fb",
+   "afterHash": "b0a634ad3107b1e2",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w15-d1--C",
+   "pageId": "4743",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4743-xv-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "401664cd129355e029df30d996ee93d827181453fb212439d51d7b6c87df525b",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "10042404e47c294c",
+   "afterHash": "d9032b9584ec6f24",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w15-d4--1",
+   "pageId": "4740",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4740-serada-pyatnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "da9dcf79dcffcecd8789b123c2c6e6fec30628917fd18e5c24dbf7b572d758fd",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "0836f1f906b7f3d3",
+   "afterHash": "1873c89f1ccdc53b",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w15-d4--2",
+   "pageId": "4740",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4740-serada-pyatnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "da9dcf79dcffcecd8789b123c2c6e6fec30628917fd18e5c24dbf7b572d758fd",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "4c5762ae14321ceb",
+   "afterHash": "332b2921afa5b44c",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w16-d1--A",
+   "pageId": "4757",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4757-khvi-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "adbee0068814a2660a8d3113cd10a82d5586746459a8eef20ad209d6b717ae39",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "e1bea8eaaa962496",
+   "afterHash": "6a14dbee5102762a",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w16-d1--B",
+   "pageId": "4756",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4756-xvi-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "c3ba50bc8b48ad7d19e566e5f0d98562bb41ddc147cc483f7f0ba1890c26f8f9",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "6e2be4bb1a4ae9ed",
+   "afterHash": "464a890f12bb4671",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w16-d2--2",
+   "pageId": "4754",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4754-panyadzelak-shasnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "31e762ed8fd788432b8d727be7daaeb592d3d8d7bec0e6faba840ac996981e70",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_CYCLE",
+    "WRONG_TEXT"
+   ],
+   "findings": 4,
+   "beforeHash": "500a484d8cb40e44",
+   "afterHash": "8824fdb578163ff3",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w17-d1--A",
+   "pageId": "4765",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4765-khvii-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "49c0c54c53059c37580d836ab2d4dbd0fb2181d8d089d533d142e41fc64a8d02",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "5fb28bf3c2383a63",
+   "afterHash": "781ad47cf690af3e",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w17-d1--B",
+   "pageId": "4764",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4764-xvii-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "2e8b24958b15afcc463f17669b2072eb08f33deed30a1ec9ddb503263e47bb82",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "b8b19fa459145745",
+   "afterHash": "077a9921b95442a7",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w18-d4--1",
+   "pageId": "4774",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4774-serada-vasemnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "a7f66bb612a6e7dc9a574d201acc6104ea194b6f9e494af3ebd2202f78525796",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "cd695d709782e722",
+   "afterHash": "d041e6d0f732feda",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w18-d4--2",
+   "pageId": "4774",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4774-serada-vasemnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "a7f66bb612a6e7dc9a574d201acc6104ea194b6f9e494af3ebd2202f78525796",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "be8f26f3a9674ae0",
+   "afterHash": "bae15b023e8a3039",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w19-d3--1",
+   "pageId": "4779",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4779-autorak-dzevyatnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "59cc1858aff8cd79d02446bdc9d4a00b014c5e08de0db41bfc1fc1bce21af3b2",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "eea06201568c6db9",
+   "afterHash": "36e9a531e1ed0240",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w19-d3--2",
+   "pageId": "4779",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4779-autorak-dzevyatnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "59cc1858aff8cd79d02446bdc9d4a00b014c5e08de0db41bfc1fc1bce21af3b2",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "af5c969c000210e8",
+   "afterHash": "4cc63ba413b2c98c",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w2-d1--A",
+   "pageId": "4628",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4628-ii-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "01114531c4cbaf5a8222437610b8e52b38e7f000d13bd7b0a757c34369ce8d07",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "51346d7466e2e32a",
+   "afterHash": "f35a2f91edf07c19",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w2-d1--B",
+   "pageId": "4629",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4629-ii-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "8a25f4d0cf98e1099b02aa2171df69d53e8e903688505cdd9c666c4e8149d7d4",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 2,
+   "beforeHash": "6ce3783291acdae7",
+   "afterHash": "008ddb1d8e4b889d",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w2-d1--C",
+   "pageId": "4630",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4630-ii-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "e61b43a8886bc73a7703f4b50e081bbae85b2bdabadbfdafeba2130dea667f1f",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 4,
+   "beforeHash": "9c610dc6cabf2709",
+   "afterHash": "dd1e5458c6c4720f",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w21-d1--A",
+   "pageId": "4793",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4793-khkhi-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "0504cf57b4855084ad394d6e0304ed1476b9cf23b964d5ab0e54a0c5b7cab4a2",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "c858a327882b9a6f",
+   "afterHash": "09d3d6750750d901",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w21-d1--B",
+   "pageId": "4801",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4801-xxi-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "fbadd99801d34fab193df4af22f89552940d1e63bba21d63f40886d14dcdd08e",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "48c86ecef86fe7a1",
+   "afterHash": "c8f47513d356e6e7",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w21-d3--2",
+   "pageId": "4798",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4798-autorak-dvatstsats-pershy-zvychajny-tydzen",
+   "sourceSha256": "1b932eef4cd538b5ef63af1b46573f1d62238954818a9dc2feb871be67bc970d",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "112c56275051e71e",
+   "afterHash": "144ca0c8801b34d4",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w22-d1--A",
+   "pageId": "4808",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4808-khkhii-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "9d5e47ed207e88de71f7249842ec7ef99e80cd17f936f65f621c3aa1e5dfff88",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "64976385d41d7ff0",
+   "afterHash": "317ba29d47efd843",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w22-d3--1",
+   "pageId": "4803",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4803-autorak-dvatstsats-drugi-zvychajny-tydzen",
+   "sourceSha256": "b51394d6d8eb1adc89a3db0fb4dd8268212b45654b0ba51dd68dd72d710936ee",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "ee925b5fa0353869",
+   "afterHash": "f883d073a67af6c8",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w22-d3--2",
+   "pageId": "4803",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4803-autorak-dvatstsats-drugi-zvychajny-tydzen",
+   "sourceSha256": "b51394d6d8eb1adc89a3db0fb4dd8268212b45654b0ba51dd68dd72d710936ee",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "873a236c718aa850",
+   "afterHash": "5401c051730be053",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w23-d1--B",
+   "pageId": "4818",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4818-xxiii-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "b96964ef0f6e054595539ce1cbb27b9acad925d43f07dbaf24b047912519f3ef",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "3914cff13d73ed11",
+   "afterHash": "de52518dc946c75c",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w24-d1--A",
+   "pageId": "4828",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4828-khkhiv-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "6bef8dbd11c7d09174befec4451fb0d2ab742c09105dd1daeacd4b9881f5add5",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "2f0e08f33ae33463",
+   "afterHash": "a674706be803f4cb",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w24-d3--1",
+   "pageId": "4824",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4824-autorak-dvatstsats-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "d2d2ac093ac5fb66e9ca7d06d3687247332a5826691611d0565f18e3b664444b",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "f3247abc617d6109",
+   "afterHash": "f5156169f28dd097",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w25-d1--A",
+   "pageId": "4829",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4829-khkhv-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "e9e1eaefb0addf967bfe20d87ddc763d21e440655b92cfe34607208b015ee0ef",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "1f7601e2495949fb",
+   "afterHash": "5e584e548ce12e25",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w25-d3--2",
+   "pageId": "4834",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4834-autorak-dvatstsats-pyaty-zvychajny-tydzen",
+   "sourceSha256": "2ca33dc91e4caaedd720b331b8a0725faf79e7065a5aa0a5dbf691a0f2f7acf6",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "b0a47564dafdf4da",
+   "afterHash": "a6395aaa1ab0e854",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w25-d4--2",
+   "pageId": "4833",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4833-serada-dvatstsats-pyaty-zvychajny-tydzen",
+   "sourceSha256": "62e6008c83dd0e58f70e750737466f7526983c7b0bc59d28ae8c112330b7a20c",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_CYCLE",
+    "WRONG_TEXT"
+   ],
+   "findings": 4,
+   "beforeHash": "548dcb96ae1e32f2",
+   "afterHash": "fda677bc7957f34c",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w25-d6--1",
+   "pageId": "4831",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4831-pyatnitsa-dvatstsats-pyaty-zvychajny-tydzen",
+   "sourceSha256": "872bcae6b2480ff60901164804234aa40e4650a1deb982ab3cceadbba5ad7cce",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "d1a514abd74dbe78",
+   "afterHash": "0c00e752cfbbae61",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w25-d6--2",
+   "pageId": "4831",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4831-pyatnitsa-dvatstsats-pyaty-zvychajny-tydzen",
+   "sourceSha256": "872bcae6b2480ff60901164804234aa40e4650a1deb982ab3cceadbba5ad7cce",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_CYCLE",
+    "WRONG_TEXT"
+   ],
+   "findings": 5,
+   "beforeHash": "c3f9d5002c94f587",
+   "afterHash": "a5b0fb1ce7e03d70",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w26-d1--A",
+   "pageId": "4845",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4845-khkhvi-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "6256368105f42ebdfd65bed5be7c388627f3a2083b8bec228b2597b7b057f422",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "4511db3421084c21",
+   "afterHash": "98d355c391818ac5",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w27-d1--A",
+   "pageId": "4851",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4851-khkhvii-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "42eb946a86f4e5f300c8eb579f170fbb0200e8896b17cf80c14474bbc0491edd",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "4d72c7153a35e41f",
+   "afterHash": "8af702b5b2b8ccf7",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w27-d6--2",
+   "pageId": "4854",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4854-pyatnitsa-dvatstsats-sjomy-zvychajny-tydzen",
+   "sourceSha256": "8258065bb6f8cf1dd85ead72b0e75c6e7a0a46431f66acc044603f4dbb6d82d8",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "9c1edf7ae26c97a9",
+   "afterHash": "dcc7e958daa48e58",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w28-d1--B",
+   "pageId": "4864",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4864-khkhviii-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "0c992a7fa39feb48ef72782db9634e4770f04f6a83ecb04a69095d696fc2f4d0",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "55b96749095dc0b7",
+   "afterHash": "88d303e05da9ef78",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w28-d4--1",
+   "pageId": "4860",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4860-serada-dvatstsats-vosmy-zvychajny-tydzen",
+   "sourceSha256": "f6d74ee8a06f2ff43ccae7532f2646ebfe522ac0b95da700781320405edb2efc",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "ae9436c226aa99c9",
+   "afterHash": "c37717f9a2badc10",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w28-d4--2",
+   "pageId": "4860",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4860-serada-dvatstsats-vosmy-zvychajny-tydzen",
+   "sourceSha256": "f6d74ee8a06f2ff43ccae7532f2646ebfe522ac0b95da700781320405edb2efc",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "4c55d32c42c1a087",
+   "afterHash": "ae6dbe2b340ee4a6",
+   "wave": 1
+  },
+  {
+   "id": "ordinary-w29-d1--B",
+   "pageId": "4872",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4872-khkhix-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "04de8de675399f6615983d51a8c1ef3f291553d2821171cbef353ece4ac2db94",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "65d5f9bdb5bb9425",
+   "afterHash": "543c5c4333b40ac1",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w31-d1--A",
+   "pageId": "4884",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4884-khkhxi-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "6a6df00202343f8a63c8e3317be0d1f1fbe9fec0549537a04a3dbe7b056f6994",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "95ceb0e0d401f869",
+   "afterHash": "81b28cf0dada003a",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w31-d1--C",
+   "pageId": "4888",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4888-xxxi-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "70358a5700b2ab2e3e22918904b23c8c154f3bb65f3fc03e24e3a3ceae757d1f",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "f3ccbaf7b81a6949",
+   "afterHash": "6be9e2b749504865",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w32-d1--A",
+   "pageId": "4897",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4897-khkhxii-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "62b6ffa0a3363c49d16d4fd60ca73244e26f0fb55c4526c73c3718f3a8dd31f2",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "063a29d02f067c0c",
+   "afterHash": "3b014a7c988b5ac4",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w32-d1--B",
+   "pageId": "4896",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4896-khkhxii-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "40daf476fcdd3a475a7147667ea6aaa022217b87fe2d19bf765147936ca6f16a",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "5f11eeac604e94c7",
+   "afterHash": "a71ab4a22ecb78c0",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w32-d7--1",
+   "pageId": "4899",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4899-subota-trytstsats-drugi-zvychajny-tydzen",
+   "sourceSha256": "c88a0330eab8482baa804d7f4e59fefd169db25e67d382d627671283f82ad104",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "c441d0f3391e6786",
+   "afterHash": "86debe5d46fcce6f",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w33-d1--C",
+   "pageId": "4908",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4908-xxxiii-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "9f8347e8e8af047095c15e9ed5ae05670b075483a2428e39075fac631d264409",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "5403bca75a77a796",
+   "afterHash": "f32988eb3966a94c",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w33-d6--1",
+   "pageId": "4903",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4903-pyatnitsa-trytstsats-tretsi-zvychajny-tydzen",
+   "sourceSha256": "5e9eeecf111e6762f7a74803554e777a2e2fc570733adeb4c32b01ccc8bbfb20",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "bda393c52f7e4782",
+   "afterHash": "fc18906d85175b63",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w33-d6--2",
+   "pageId": "4903",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4903-pyatnitsa-trytstsats-tretsi-zvychajny-tydzen",
+   "sourceSha256": "5e9eeecf111e6762f7a74803554e777a2e2fc570733adeb4c32b01ccc8bbfb20",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "122a9fb2ad8f7471",
+   "afterHash": "099250cbf78b9179",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w34-d3--1",
+   "pageId": "4918",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4918-autorak-trytstsats-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "f5188610c2084d2eaf35dea151d9e40895c76e95eb51516b2a2cbeb74ca141a0",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "3b9653024f3d8883",
+   "afterHash": "bfce3959474924d2",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w34-d3--2",
+   "pageId": "4918",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4918-autorak-trytstsats-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "f5188610c2084d2eaf35dea151d9e40895c76e95eb51516b2a2cbeb74ca141a0",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "9452257f0fbb6d62",
+   "afterHash": "2a0ffbe9c64ae208",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w34-d4--1",
+   "pageId": "4917",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4917-serada-trytstsats-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "358df512228fa75945c993fd84d87dee7ab114c0cc6e1b4a13fd6c270315a390",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "fecb0f702ed7a237",
+   "afterHash": "3c93f344fc30380e",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w34-d4--2",
+   "pageId": "4917",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4917-serada-trytstsats-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "358df512228fa75945c993fd84d87dee7ab114c0cc6e1b4a13fd6c270315a390",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 2,
+   "beforeHash": "e0b5eb154e8dfb30",
+   "afterHash": "c69cfeefe25d3b7a",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w4-d1--A",
+   "pageId": "4641",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4641-iv-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "f2a8fe7d08a22c8bcf17639d078479025a19db049297748c3b985bd02f36acaf",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "6aa2e5735b5ec22b",
+   "afterHash": "7010bec7632cae09",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w4-d2--2",
+   "pageId": "4648",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4648-panyadzelak-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "31e1069593c94f14a17126aac23794b92e930f593e77eb53ec67b5995bec63d1",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "e3be724c0f892d92",
+   "afterHash": "4b86e8be141bdd48",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w4-d3--2",
+   "pageId": "4647",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4647-autorak-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "d5ffbf1fc75e161590a6602270e175fb35a888d167c5a858f40701dc99ccffeb",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "64a548783665c3bc",
+   "afterHash": "d94d63684d32a742",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w4-d4--1",
+   "pageId": "4646",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4646-serada-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "7a15d59c5c01266093c90f8da8773f47f6b610d9f2d1a28a39295b24d4df5391",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "7d306fafbc65adb4",
+   "afterHash": "cc1eff82b797f909",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w4-d4--2",
+   "pageId": "4646",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4646-serada-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "7a15d59c5c01266093c90f8da8773f47f6b610d9f2d1a28a39295b24d4df5391",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_REFERENCE"
+   ],
+   "findings": 3,
+   "beforeHash": "fc7f487747bef934",
+   "afterHash": "f73dfdaf14700df8",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w4-d6--2",
+   "pageId": "4644",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4644-pyatnitsa-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "66c353d6be337222b8fb157ea11a90c47335153678f8b68c16092df3e8ed456b",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_CYCLE",
+    "WRONG_TEXT"
+   ],
+   "findings": 4,
+   "beforeHash": "a61b39e698eb7bc4",
+   "afterHash": "fe1047cb8f45e56e",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w5-d6--2",
+   "pageId": "4656",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4656-pyatnitsa-pyaty-zvychajny-tydzen",
+   "sourceSha256": "b5d97bb2b8f2238391b45b09599d967f9d196fc9b0024bd899389f262606c9fe",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_CYCLE",
+    "WRONG_TEXT"
+   ],
+   "findings": 4,
+   "beforeHash": "150ae0fa8ab65853",
+   "afterHash": "c13b479f527f919a",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w6-d1--A",
+   "pageId": "4664",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4664-vi-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "293c97d84262c943888fd33c774e3ec8bc0a46143221e5663c0e58842ebc7ffd",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "5788c8db83b0c83d",
+   "afterHash": "83cebdc3b151751f",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w8-d1--A",
+   "pageId": "4679",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4679-viii-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "0b190d3f455f1df3cc0d7ab79a2a3ed384baa6165b97ecb8fbcc2b555ed12ed6",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "27f630f3dca50b66",
+   "afterHash": "41b3b583c9ef4595",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w8-d1--B",
+   "pageId": "4678",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4678-viii-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "0d51dcddf866c40950cb4b7196aa4e792a56ed790eb854dda553f73f8968cf8f",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "cbdf9c5d7b63e800",
+   "afterHash": "9692d0d82edfb888",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w8-d1--C",
+   "pageId": "4677",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4677-viii-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "e6e209a032628d59a392af9f32b7ac5624d0b7fb990382c18f6c0652c70dfed0",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_TEXT"
+   ],
+   "findings": 1,
+   "beforeHash": "918fa4b4d982354f",
+   "afterHash": "80d0b8b8e45fc068",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w8-d2--2",
+   "pageId": "4676",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4676-panyadzelak-vosmy-zvychajny-tydzen",
+   "sourceSha256": "e222a7164f7aedcac6c821a3d46cf20293255f197e1d7280ac88ebd5e9393a0e",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_CYCLE",
+    "WRONG_TEXT"
+   ],
+   "findings": 3,
+   "beforeHash": "953c3a936db86143",
+   "afterHash": "8fb77bbe16f01e25",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w9-d1--A",
+   "pageId": "4690",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4690-ikh-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "d2e597fb5fa6d7c5c0f28a5733b63224409263b1a2e7d5e3a5460bb572c68e4b",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS",
+    "WRONG_TEXT"
+   ],
+   "findings": 2,
+   "beforeHash": "e651d8d6135c33d5",
+   "afterHash": "5df821db636e32ce",
+   "wave": 2
+  },
+  {
+   "id": "01-10-sv-teresa-lisieux",
+   "pageId": "4966",
+   "url": "https://catholic.by/3/liturgy/lectionary/uspaminy/4966-1-kastrychnika-uspamin-sv-terezy-ad-dzitsyatka-ezus-panny-i-doktara-kastsjola",
+   "sourceSha256": "6306d880f41ca7b366a4b1827f295ef56f8a11a27d15298f22c841149cdba643",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_REFERENCE"
+   ],
+   "findings": 1,
+   "beforeHash": "7c5d31b27543e691",
+   "afterHash": "c5b0631580ebfaa0",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w24-d3--2",
+   "pageId": "4824",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4824-autorak-dvatstsats-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "d2d2ac093ac5fb66e9ca7d06d3687247332a5826691611d0565f18e3b664444b",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_REFERENCE"
+   ],
+   "findings": 1,
+   "beforeHash": "a811a2656cbca006",
+   "afterHash": "bdad8cb7a61cf47c",
+   "wave": 2
+  },
+  {
+   "id": "25-03-annunciation-lord",
+   "pageId": "5028",
+   "url": "https://catholic.by/3/liturgy/lectionary/urachystasci/5028-25-sakavika-urachystasts-zvestavannya-pana",
+   "sourceSha256": "2adedff4a6c5d3d4ad27020a45a40435173fcc5637d28665518929a4335c7508",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "3b457892656052c2",
+   "afterHash": "9a7e594c1fdd02dc",
+   "wave": 2
+  },
+  {
+   "id": "27-12-sv-john-apostle-evangelist",
+   "pageId": "4993",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/4993-27-snezhnya-svyata-sv-yana-apostala-i-evangelista",
+   "sourceSha256": "531e5e57a997bc250ac6dc3de53408189bcc3b75c2fade6ecae7095e9df2eee9",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "717c5120a0d7a756",
+   "afterHash": "bb5825241656e56f",
+   "wave": 2
+  },
+  {
+   "id": "28-12-holy-innocents",
+   "pageId": "4995",
+   "url": "https://catholic.by/3/liturgy/lectionary/sviaty/4995-28-snezhnya-svyata-svyatykh-nemaulyat",
+   "sourceSha256": "1363c97eeb08ec90f815fec5c54ad49c8da6634cc6f0de398c3d2fc104a064a5",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "5de5eccfaa9bc3c6",
+   "afterHash": "4bff2482182b5b95",
+   "wave": 2
+  },
+  {
+   "id": "christmas-02-01",
+   "pageId": "4564",
+   "url": "https://catholic.by/3/liturgy/lectionary/4564-2-studzenya-budzen",
+   "sourceSha256": "fe2e03285b066ec501230316fab277becc32b7cb66199a3eeb962870170723ac",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "e9bd48e9bfc30beb",
+   "afterHash": "a4f8470cb84768d2",
+   "wave": 2
+  },
+  {
+   "id": "christmas-04-01",
+   "pageId": "4567",
+   "url": "https://catholic.by/3/liturgy/lectionary/bn/4567-4-studzenya-budzen",
+   "sourceSha256": "6d5088cd57d40f5f4beb9c3bee819183a949151838fae417dd9b06d676ec7c22",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "338201a735d8b795",
+   "afterHash": "8c85b54cc20fd82f",
+   "wave": 2
+  },
+  {
+   "id": "christmas-05-01",
+   "pageId": "4568",
+   "url": "https://catholic.by/3/liturgy/lectionary/bn/4568-5-studzenya-budzen",
+   "sourceSha256": "a260cf1614c52de63c446e86afe70e7e75a97addbe703fcd59f9f900e63e54f7",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "e6abf42fe36da7e6",
+   "afterHash": "feaddb729547782e",
+   "wave": 2
+  },
+  {
+   "id": "christmas-07-01",
+   "pageId": "4569",
+   "url": "https://catholic.by/3/liturgy/lectionary/bn/4569-7-studzenya-budzen",
+   "sourceSha256": "02924d3dd1dd44bf6649abcaa6ab8ecb97b8fe6d7a49b3e5b37dcf15f524c13d",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "f0f7e728c9fda4b4",
+   "afterHash": "7200eb1552d9421a",
+   "wave": 2
+  },
+  {
+   "id": "christmas-08-01",
+   "pageId": "4570",
+   "url": "https://catholic.by/3/liturgy/lectionary/bn/4570-8-studzenya-budzen",
+   "sourceSha256": "47ef52cf8258286185deaced1de9a2d9a61d5a586fec1f5f62576035ccfb60dc",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "1a0c05931eab7ed8",
+   "afterHash": "407c47c7adb0702a",
+   "wave": 2
+  },
+  {
+   "id": "christmas-09-01",
+   "pageId": "4571",
+   "url": "https://catholic.by/3/liturgy/lectionary/bn/4571-9-studzenya-budzen",
+   "sourceSha256": "cb9c4c85aa11e4d13e4e08e70098aa574d6a9685ec583559f554a941d0eda355",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "38624e14cbae24b8",
+   "afterHash": "97865e28b4adb6c9",
+   "wave": 2
+  },
+  {
+   "id": "christmas-10-01",
+   "pageId": "4572",
+   "url": "https://catholic.by/3/liturgy/lectionary/bn/4572-10-studzenya-budzen",
+   "sourceSha256": "c73e2eed27b4e96eb515247a36fce7dd0133cdfe11a92b067509f030b8e4ab58",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "b4b670a296345b3a",
+   "afterHash": "50b439760dfb7269",
+   "wave": 2
+  },
+  {
+   "id": "feast-ash",
+   "pageId": "5051",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5051-papyaltsovaya-serada",
+   "sourceSha256": "ffff18c023bd35a2eb635d2c05ead919a3d3f58661bb357cc53829a5a45ea508",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "dc8b833d47adc9ed",
+   "afterHash": "58ac6a9b6545d078",
+   "wave": 2
+  },
+  {
+   "id": "lent-w0-d6",
+   "pageId": "5049",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5049-pyatnitsa-paslya-papyaltsa",
+   "sourceSha256": "1352ee7287f6640d71deed1c44d258e57737e629db6a760623305a84fce289d0",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "0f4e04dde80f85bf",
+   "afterHash": "00eb88a33b6d32f4",
+   "wave": 2
+  },
+  {
+   "id": "lent-w0-d7",
+   "pageId": "5048",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5048-subota-paslya-papyaltsa",
+   "sourceSha256": "7399cd53b2e12d4782d7c2f9a4aaaaf02852f4ec218d4f34844069b09035100d",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "d12c3d486e6537b4",
+   "afterHash": "3b23f908689f14f4",
+   "wave": 2
+  },
+  {
+   "id": "lent-w1-d1--A",
+   "pageId": "5082",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5082-i-nyadzelya-vyalikaga-postu-god-a",
+   "sourceSha256": "e87345bebc85991995d065c92ff9964003c8ecc5ef8f55c1b95bac9332cf23df",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "d550a1e457e0bf23",
+   "afterHash": "c4c3423ec4f6bb42",
+   "wave": 2
+  },
+  {
+   "id": "lent-w1-d1--B",
+   "pageId": "5088",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5088-i-nyadzelya-vyalikaga-postu-god-v",
+   "sourceSha256": "4eb8b1920a8c0fb28f471594881a8bece3199c1a443294d95f728a56af8b2c6d",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "5039e01dc12ac537",
+   "afterHash": "b63ffb2ad6c29c51",
+   "wave": 2
+  },
+  {
+   "id": "lent-w1-d1--C",
+   "pageId": "5093",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5093-i-nyadzelya-vyalikaga-postu-god-s",
+   "sourceSha256": "18d331f56c3e9ace075698887af20171e6afb85d4aae139e7b389d7b9ce9321c",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "1b981ba1bf22eb41",
+   "afterHash": "3f038027f64ed78b",
+   "wave": 2
+  },
+  {
+   "id": "lent-w1-d2",
+   "pageId": "5057",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5057-panyadzelak-i-tydzen-vyalikaga-postu",
+   "sourceSha256": "15cf78ebcdf5742994d1de706999808e05a1a9b89d6cdadb33ba8158d45976b3",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "480defad3e9afc1e",
+   "afterHash": "cbb4267c7ef95746",
+   "wave": 2
+  },
+  {
+   "id": "lent-w1-d3",
+   "pageId": "5056",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5056-autorak-i-tydzen-vyalikaga-postu",
+   "sourceSha256": "df0b281f4d440042807905b634f45898c2b2cb8fdcc84e117b9bf761771e15ec",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "dfb25df9dc5aad1b",
+   "afterHash": "094e7b90e6a0b18e",
+   "wave": 2
+  },
+  {
+   "id": "lent-w1-d4",
+   "pageId": "5055",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5055-serada-i-tydzen-vyalikaga-postu",
+   "sourceSha256": "24ed1bb48b38be2286b7d14aab9202e44a2a92e7cfaa561bd30af2c5db47a331",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "859bc30cee821a2e",
+   "afterHash": "0ce5e0a00e4d56d0",
+   "wave": 2
+  },
+  {
+   "id": "lent-w1-d5",
+   "pageId": "5054",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5054-chatsver-i-tydzen-vyalikaga-postu",
+   "sourceSha256": "e54eb18a24efaf1ddd49d0f08134b0da0a8e6d84b684b15d52d1e5640748c995",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "b92be10ecd9d1d78",
+   "afterHash": "0a8605abb6066ced",
+   "wave": 2
+  },
+  {
+   "id": "lent-w1-d6",
+   "pageId": "5053",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5053-pyatnitsa-i-tydzen-vyalikaga-postu",
+   "sourceSha256": "c16768dc767831fc61c7848eb06d8b6c0de47b0019eb26cc5a3ee8b2163599c9",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "a5e794c57d5e4e5f",
+   "afterHash": "1521f86278868835",
+   "wave": 2
+  },
+  {
+   "id": "lent-w2-d1--A",
+   "pageId": "5083",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5083-ii-nyadzelya-vyalikaga-postu-god-a",
+   "sourceSha256": "076401bdd1d10acf60cd153a88e8e81fbf006ebffad0780b1114d580b81a9b39",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "ce5c9f97d95afcae",
+   "afterHash": "852736b29eb36d68",
+   "wave": 2
+  },
+  {
+   "id": "lent-w2-d1--B",
+   "pageId": "5087",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5087-ii-nyadzelya-vyalikaga-postu-god-v",
+   "sourceSha256": "c256edce1fba742242fb7de10f25a484125d12a74f0ea59806f9efd185869ff2",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "1f562d1a51d336f5",
+   "afterHash": "38f0cf9ee99735c2",
+   "wave": 2
+  },
+  {
+   "id": "lent-w2-d2",
+   "pageId": "5063",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5063-panyadzelak-ii-tydzen-vyalikaga-postu",
+   "sourceSha256": "33d8e642bc40426eadae346c7275f9016cc272e3268860646c44c130446b4527",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "afbe45f2f0563515",
+   "afterHash": "18ec1f3a29c9cb76",
+   "wave": 2
+  },
+  {
+   "id": "lent-w2-d3",
+   "pageId": "5062",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5062-autorak-ii-tydzen-vyalikaga-postu",
+   "sourceSha256": "f3b7d5096d9a5ea6e8962f22480b9a08a932061b9640a51d152f5647c3de8619",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "9b7847fb4828b6ca",
+   "afterHash": "0fecebf9d08bffc9",
+   "wave": 2
+  },
+  {
+   "id": "lent-w2-d4",
+   "pageId": "5061",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5061-serada-ii-tydzen-vyalikaga-postu",
+   "sourceSha256": "acee7e060fa2258c6a6586234e27f501c14a0e757a00cc3a68a8c0140ff55445",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "a15200a9ce7f499e",
+   "afterHash": "4b16d8058481aef1",
+   "wave": 2
+  },
+  {
+   "id": "lent-w2-d5",
+   "pageId": "5060",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5060-chatsver-ii-tydzen-vyalikaga-postu",
+   "sourceSha256": "4ddd788a1b2b676d829e48bf0e7d601c36fde4a0cd5336087612ba3e6e7dd2f1",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "992746e3b8f2dbb4",
+   "afterHash": "4a40c468b1fb36e1",
+   "wave": 2
+  },
+  {
+   "id": "lent-w2-d6",
+   "pageId": "5059",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5059-pyatnitsa-ii-tydzen-vyalikaga-postu",
+   "sourceSha256": "2f699eea4da3f96130a002b31aa8362eb184f17cf9966f87546a969ce346803a",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "3ce3401fbcb136a0",
+   "afterHash": "fb28b4dbe0bdaf98",
+   "wave": 2
+  },
+  {
+   "id": "lent-w2-d7",
+   "pageId": "5058",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5058-subota-ii-tydzen-vyalikaga-postu",
+   "sourceSha256": "699221689a5bba9ff32c6558199957674b54e949d10f604647b6f1e76828bcf9",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "2d4341127e45cdcb",
+   "afterHash": "2d9c0108ede0d7cf",
+   "wave": 2
+  },
+  {
+   "id": "lent-w3-d1--A",
+   "pageId": "5084",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5084-iii-nyadzelya-vyalikaga-postu-god-a",
+   "sourceSha256": "c5b41942a17999d352ec2d2d2b8437a99057ee2107fb5253fa2ca73dad2e46fc",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "c3b79ce313183785",
+   "afterHash": "41daa27943978d64",
+   "wave": 2
+  },
+  {
+   "id": "lent-w3-d1--C",
+   "pageId": "5094",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5094-iii-nyadzelya-vyalikaga-postu-god-s",
+   "sourceSha256": "e85dcf3f158dce3b80ba716ea307eeabb1577897bffb366482e9b9a295ab9464",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "7e1bb43e212c7a3d",
+   "afterHash": "bbb933ce4d754bff",
+   "wave": 2
+  },
+  {
+   "id": "lent-w3-d2",
+   "pageId": "5069",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5069-panyadzelak-iii-tydzen-vyalikaga-postu",
+   "sourceSha256": "0980999c663387e557110d1cd5666412fb8f879a8b9b3b421333660a133e013a",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "956a4505f13d60ab",
+   "afterHash": "d44dbedc146043d6",
+   "wave": 2
+  },
+  {
+   "id": "lent-w3-d3",
+   "pageId": "5068",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5068-autorak-iii-tydzen-vyalikaga-postu",
+   "sourceSha256": "813c4bb5ed339b98ea2b7c24498b562e8ded86cab3452cd5faf75bab4bbc4558",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "263aa2eedd6597c5",
+   "afterHash": "7452d371863e0514",
+   "wave": 2
+  },
+  {
+   "id": "lent-w3-d4",
+   "pageId": "5067",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5067-serada-iii-tydzen-vyalikaga-postu",
+   "sourceSha256": "7b6896711ef8dab63f85deb56e2683b71d23f5e332b5768490d0c05f7c476c98",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "75d9c5452324c62b",
+   "afterHash": "a2ff42a96d3ff1dd",
+   "wave": 2
+  },
+  {
+   "id": "lent-w3-d5",
+   "pageId": "5066",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5066-chatsver-iii-tydzen-vyalikaga-postu",
+   "sourceSha256": "0e4046b87ff6cf2c379b6c4b9c6d8de67251324bda8b92206d283dfb201f3cd6",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "0d3422d21391b96b",
+   "afterHash": "f1a7fc01ff363e1e",
+   "wave": 2
+  },
+  {
+   "id": "lent-w3-d6",
+   "pageId": "5065",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5065-pyatnitsa-iii-tydzen-vyalikaga-postu",
+   "sourceSha256": "a206d1dd50201e8cfdf9ff446f111b0e5d9ebb4be956e1bc4a5fc05d593619b7",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "4d244885401a90c0",
+   "afterHash": "007f02dab71c6b60",
+   "wave": 2
+  },
+  {
+   "id": "lent-w4-d1--A",
+   "pageId": "5085",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5085-iv-nyadzelya-vyalikaga-postu-god-a",
+   "sourceSha256": "36d34fc022061ee1ecb39daff68bc955b71c57ace92dd95a364f06e40012f918",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "0f84325cfd541f45",
+   "afterHash": "7a72f9d8c292eaf0",
+   "wave": 2
+  },
+  {
+   "id": "lent-w4-d1--B",
+   "pageId": "5090",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5090-iv-nyadzelya-vyalikaga-postu-god-v",
+   "sourceSha256": "7e66fd98e8faae5da6ddc11c17974b362fc7add2ab0e9bc3a3de80696f45ca6e",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "0a95f278951453bb",
+   "afterHash": "fba12f9c19b05b87",
+   "wave": 2
+  },
+  {
+   "id": "lent-w4-d1--C",
+   "pageId": "5095",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5095-iv-nyadzelya-vyalikaga-postu-god-s",
+   "sourceSha256": "fab75e5625a3f958195b9ab678f29f7a2ddc77057a4244b7d6b4f502a0bdd5b4",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "d4849a7ab100040a",
+   "afterHash": "82e4f3370b41a789",
+   "wave": 2
+  },
+  {
+   "id": "lent-w4-d2",
+   "pageId": "5075",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5075-panyadzelak-iv-tydzen-vyalikaga-postu",
+   "sourceSha256": "41ac316def1325182c34a5ce501e7b5492c9aed414c8ea901e8c0b801817b3e0",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "786a87ef6c59bc43",
+   "afterHash": "a2e87014abed0322",
+   "wave": 2
+  },
+  {
+   "id": "lent-w4-d3",
+   "pageId": "5074",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5074-autorak-iv-tydzen-vyalikaga-postu",
+   "sourceSha256": "1253b118377522342d5ebf2358acbd2958e67ab6c21c95de639114be7306596d",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "f67364f76c0c12b4",
+   "afterHash": "ffd98e2fb75b981c",
+   "wave": 2
+  },
+  {
+   "id": "lent-w4-d4",
+   "pageId": "5073",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5073-serada-iv-tydzen-vyalikaga-postu",
+   "sourceSha256": "a0ce0d193bb0b4be01e1eeadd66b7d4e4a2156d1c0d4270467479e49ef8820a4",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "688c5bdacc2daf69",
+   "afterHash": "c66aaa213a2896d7",
+   "wave": 2
+  },
+  {
+   "id": "lent-w4-d5",
+   "pageId": "5072",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5072-chatsver-iv-tydzen-vyalikaga-postu",
+   "sourceSha256": "314245960bb23d0a8d37299f8c5dd33bdfa054293e44935af258cf242cc72f6f",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "64a5c9c0307e044a",
+   "afterHash": "9aa7e52838a37389",
+   "wave": 2
+  },
+  {
+   "id": "lent-w4-d6",
+   "pageId": "5071",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5071-pyatnitsa-iv-tydzen-vyalikaga-postu",
+   "sourceSha256": "2b90381758fdda7b2312fcc808de3c6d9d34ab7d29eb5a158820fa6b8c8a7e4e",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "c18ad121da998ce0",
+   "afterHash": "273073919ebc8b72",
+   "wave": 2
+  },
+  {
+   "id": "lent-w4-d7",
+   "pageId": "5070",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5070-subota-iv-tydzen-vyalikaga-postu",
+   "sourceSha256": "61f3686af6a1c88466a1fdf912fe7ffe7552a82e5a77eebd0218b88fbcd198b3",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "fc9d10d328f31684",
+   "afterHash": "29b4712bf95e9c82",
+   "wave": 2
+  },
+  {
+   "id": "lent-w5-d1--A",
+   "pageId": "5086",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5086-v-nyadzelya-vyalikaga-postu-god-a",
+   "sourceSha256": "cf1fda6a9cb314300a4830ab3b4f35e4dad9bb7462370ae5c4c64bf3a8ae6f3c",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "1c4d4a301ba7a841",
+   "afterHash": "2aa3da4d13b764d6",
+   "wave": 2
+  },
+  {
+   "id": "lent-w5-d1--C",
+   "pageId": "5096",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5096-v-nyadzelya-vyalikaga-postu-god-s",
+   "sourceSha256": "996220e6068428f94e7cc7839bab5fea5652af9cbe6c4a9d1aa9bfdeef0d0345",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "5825088fe01846b3",
+   "afterHash": "49cc76c7c614cc2f",
+   "wave": 2
+  },
+  {
+   "id": "lent-w5-d2",
+   "pageId": "5081",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5081-panyadzelak-v-tydzen-vyalikaga-postu",
+   "sourceSha256": "8b97ddd3f4ef250db91e786d6770dffe4742b185d68d439fc71404e227ac1429",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "f3f7281d5a78fe99",
+   "afterHash": "19d0c468b94755a7",
+   "wave": 2
+  },
+  {
+   "id": "lent-w5-d3",
+   "pageId": "5080",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5080-autorak-v-tydzen-vyalikaga-postu",
+   "sourceSha256": "269a3b4aa704b2e498839bfcd246e14ece41d68586d02ea88108a6f9e1253bcf",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "f877511e254efcc7",
+   "afterHash": "d20b13722d49503c",
+   "wave": 2
+  },
+  {
+   "id": "lent-w5-d4",
+   "pageId": "5079",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5079-serada-v-tydzen-vyalikaga-postu",
+   "sourceSha256": "78c39e29393247056e9c1fe049b45522ab75a89e29b9fec14eb8d95c26b4c133",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "14106937268f941c",
+   "afterHash": "ad81358227823a24",
+   "wave": 2
+  },
+  {
+   "id": "lent-w5-d5",
+   "pageId": "5078",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5078-chatsver-v-tydzen-vyalikaga-postu",
+   "sourceSha256": "e3a1151354f599eff760bfebfbf6fb3290b6ffbf23265c1a1a513980b0b9dc69",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "bfeea8bc811ab226",
+   "afterHash": "f2437f7d0b23939b",
+   "wave": 2
+  },
+  {
+   "id": "lent-w5-d7",
+   "pageId": "5076",
+   "url": "https://catholic.by/3/liturgy/lectionary/post/5076-subota-v-tydzen-vyalikaga-postu",
+   "sourceSha256": "77af73b5c1d9912d51a6c0aa114473a0582129166072ce53f43a8ce5d9c93539",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "0f6bc7c490cee8c9",
+   "afterHash": "95ed1da51fbbb89b",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w1-d3--1",
+   "pageId": "4617",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4617-autorak-pershy-zvychajny-tydzen",
+   "sourceSha256": "0939ad2964c400df9156b249e9190d7d064f0ae70b1588d9f6a655ac63071d2d",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "f1be52b03a822208",
+   "afterHash": "9fae6bd7413aaf41",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w1-d5--1",
+   "pageId": "4619",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4619-chatsver-pershy-zvychajny-tydzen",
+   "sourceSha256": "87f82a5d9a7eba7a80cb58bb9f9accd982847ccf48c1fcda2dd1d81e9b36821e",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "452b5084af7ddaa1",
+   "afterHash": "a97cccd0d7c1b142",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w1-d6--1",
+   "pageId": "4620",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4620-pyatnitsa-pershy-zvychajny-tydzen",
+   "sourceSha256": "b95d3e1093e4a722670a15a6f64f626c139c9adb81166c1bae8e7755d3f8ed63",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "c392e2e9be8e7cc7",
+   "afterHash": "c9fa0322643a2964",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w10-d1--B",
+   "pageId": "4696",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4696-x-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "044eb4042fc32dce9d8eb1695e4db6451261373a4e301988d2851783265f6030",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "reading2",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "5b7609905d53c0c0",
+   "afterHash": "415b0915a86898e0",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w10-d1--C",
+   "pageId": "4695",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4695-x-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "c5ba46333dc4df4cfcc4189a5f16414186887fda2f8c643205d86a65598ea39f",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "970e0aadbef64a33",
+   "afterHash": "4f134b5ccd647c25",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w10-d2--1",
+   "pageId": "4694",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4694-panyadzelak-dzecyaty-zvychajny-tydzen",
+   "sourceSha256": "8fd02c1ca77a154795bf96bae9e1013178bc19d9dd961544379caac4b95d5958",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "d2c1a2a79c029a67",
+   "afterHash": "3c89c942e123dc61",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w10-d3--1",
+   "pageId": "4702",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4702-autorak-dzyasyaty-zvychajny-tydzen",
+   "sourceSha256": "839706f5be12b8b4d900de2c5d3170ad885fc02f28570d6835c86ed322603843",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "5553ce8378ffdd00",
+   "afterHash": "d821506dbe221767",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w10-d5--1",
+   "pageId": "4700",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4700-chatsver-dzecyaty-zvychajny-tydzen",
+   "sourceSha256": "084a1a9eb85b66280f990b4de137022f136afcdf95375ef53f73c8a4680edbd6",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "f611443a33815bc6",
+   "afterHash": "e51311cf7a9de4a0",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w11-d1--A",
+   "pageId": "4706",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4706-khi-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "a0092f6adcf3464438cbbae645222089e511837fc683d17712fd39a5d6ba3b25",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "33607adadf61c01d",
+   "afterHash": "6fce2f31b0d52abb",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w11-d1--C",
+   "pageId": "4704",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4704-xi-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "a939341ffd46a5789a46669814171c1b8aa3c07defb05df6cc959788f40b890f",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "3886fd685b71dfdf",
+   "afterHash": "4a4657f088a7e0ba",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w11-d2--1",
+   "pageId": "4703",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4703-panyadzelak-adzinatstsaty-zvychajny-tydzen",
+   "sourceSha256": "4b21484980e9b50a4e26cdc9768217da1fc26c11574ffd1ad94eb64ae4a23522",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "a3ea2156da8d0602",
+   "afterHash": "a43857f34bd05800",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w11-d5--1",
+   "pageId": "4709",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4709-chatsver-adzinatstsaty-zvychajny-tydzen",
+   "sourceSha256": "bd9a2ed02c8656b0666461d382ed840a7fd7aae56862461563eecead9d4ba6e4",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "1a79129cc10224a8",
+   "afterHash": "0ebbfabbe5ba49c0",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w11-d6--1",
+   "pageId": "4708",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4708-pyatnitsa-adzinatstsaty-zvychajny-tydzen",
+   "sourceSha256": "51aeecc2a00e76d03011a8f256b0748664c78421cd36de4f99e82911b4a80108",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "889cd96f05e9c94c",
+   "afterHash": "b4f6dfd897be3d73",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w12-d2--1",
+   "pageId": "4717",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4717-panyadzelak-dvanatstsaty-zvychajny-tydzen",
+   "sourceSha256": "e5591cdeb31b70dfae27cc6fcf68b9481b69e84f242d4ae7a78284bc4da7dfe9",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "e74a90d07eb5bbcf",
+   "afterHash": "618a37738bb74fcc",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w12-d3--1",
+   "pageId": "4716",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4716-autorak-dvanatstsaty-zvychajny-tydzen",
+   "sourceSha256": "cd47d87c76ea4a51d110b24d23eae6a7ff68b656fe3e87872a31abc8a4f3b797",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "789c35f41ae19142",
+   "afterHash": "924b2b4622e89ce9",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w12-d5--1",
+   "pageId": "4714",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4714-chatsver-dvanatstsaty-zvychajny-tydzen",
+   "sourceSha256": "d3308a3172c6e9cab0a791618ff8c1894c7127801436f8502996559e0944c099",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "f7e0c2da3ff560b6",
+   "afterHash": "193a7ae50753957f",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w13-d2--1",
+   "pageId": "4726",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4726-panyadzelak-trynatstsaty-zvychajny-tydzen",
+   "sourceSha256": "cf515603175b893b5d63e39272740b474638e9576c1f18050a4e084e95d42645",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "57930baa2d9f9b3b",
+   "afterHash": "5574e67d4809e599",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w13-d3--1",
+   "pageId": "4725",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4725-autorak-trynatstsaty-zvychajny-tydzen",
+   "sourceSha256": "d35356e7242fc3e19eb47ed8e22e72be1e57c60b3bc25b3b619b36c980ca7ab0",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "11c30e8705561356",
+   "afterHash": "822072d20340a75a",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w14-d1--B",
+   "pageId": "4731",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4731-xiv-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "c357b7ae6d7f517109a5ac9c638e0d4a36580af40811082b994c481f81e22454",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "128abb4041289020",
+   "afterHash": "e235d6fefab3f8f8",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w14-d2--1",
+   "pageId": "4732",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4732-panyadzelak-chatyrnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "f84ac561b538178d6c40574e5519bebe6ee1aa5e754c31e3423d41099acbb750",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "ff0f260acf368996",
+   "afterHash": "c9a34143bb4280b0",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w14-d3--1",
+   "pageId": "4738",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4738-autorak-chatyrnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "eea4cafe80d3dd98ffd331580cd80385386796420cbe2f80e42aee630c137454",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "9bb36a8a7d20826e",
+   "afterHash": "8d08ae7415c4aa27",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w14-d5--1",
+   "pageId": "4736",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4736-chatsver-chatyrnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "707b58ea65e9ac2a51a449e91a8d80d0125f60af98a479744e95d046501882f3",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "e1693b1acc4fe587",
+   "afterHash": "234fdc437af69248",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w14-d6--1",
+   "pageId": "4735",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4735-pyatnitsa-chatyrnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "b7fd2eb4476b1bbf5351ec071e6cd6c731412cb91ba319890ba587c34b4a79fc",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "bb8444bde32f81a7",
+   "afterHash": "6e5c0b7c392ff471",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w15-d1--A",
+   "pageId": "4745",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4745-khv-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "fd5765af16cdb8c57b4057cc9e24b28406a7a70b67dfde4cd06ccd69fa59fb0f",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "54ec4db9615f3acf",
+   "afterHash": "cc0eb8f326f5973c",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w15-d1--B",
+   "pageId": "4744",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4744-xv-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "ead4bc4d1f396c8e973643faaf678bddbb2780b2862039644aa2be28758db5ac",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "347b9eabaae53d44",
+   "afterHash": "1f6e2871f4090f35",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w15-d2--1",
+   "pageId": "4742",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4742-panyadzelak-pyatnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "03da040d01d0bac9f5d7b6ab0a16f369cb430eaeb1f9625a772cbb763686e3a1",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "f4af8835f328166a",
+   "afterHash": "fe40c784bd519c79",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w15-d3--1",
+   "pageId": "4741",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4741-autorak-pyatnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "46d46261d30f1e09ca087c27161f8d752b093d6a880323759c8fb8a33e804f48",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "7bd15773f0e51361",
+   "afterHash": "4635d6cb67205c02",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w15-d5--1",
+   "pageId": "4739",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4739-chatsver-pyatnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "022df4239c774e79337a722e8c39aadde0ccd464aba6ca732704b9b8ee28680d",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "ccbd24fec3f3b35d",
+   "afterHash": "0c7fe85387fc6c5e",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w16-d1--C",
+   "pageId": "4755",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4755-xvi-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "f545d94d4d1f5f41b3f81d6e963d06bf73d6a663478a15dc078d7479766fa0ef",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "cafb77881d7ded2a",
+   "afterHash": "c1acb35a63b18b49",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w16-d2--1",
+   "pageId": "4754",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4754-panyadzelak-shasnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "31e762ed8fd788432b8d727be7daaeb592d3d8d7bec0e6faba840ac996981e70",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "47b1a1698e91b5ec",
+   "afterHash": "a27c6500bd52b782",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w16-d3--1",
+   "pageId": "4753",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4753-autorak-shasnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "fbf5ef9440cd16bef3989cd5391e10f738f4a8e204727e8cc5a0526457e5e28e",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "4ca3507a48d37f50",
+   "afterHash": "dd4409bb85e8e448",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w16-d5--1",
+   "pageId": "4751",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4751-chatsver-shasnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "066f6288646cfc9b55ea213b33fb47652de52f99e8cefd9fb37983d38b0548b0",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "a43ee6b5116c8de3",
+   "afterHash": "5be0f86310a3c793",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w16-d6--1",
+   "pageId": "4749",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4749-pyatnitsa-shasnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "c0b100ca9c47925b928726a9ed46cc1f3855f8968dbb9f2c1608be735c3bb006",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "0cf5bb795d0a04d3",
+   "afterHash": "d542282c9d43a66a",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w17-d1--C",
+   "pageId": "4763",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4763-xvii-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "f198903fc51d83cae020b22f16e0c90074dcdca9ce3614b8ddb4d1189b5d5050",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "66e634554da25d35",
+   "afterHash": "cfd65b67cc27ea59",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w17-d3--1",
+   "pageId": "4761",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4761-autorak-syamnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "dff2afd73f2ddf5edd5df42a2d23e4c85a1127e7fffab052985eaec1c5968647",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "054e2943dc4f7932",
+   "afterHash": "72887e8ca61cf93f",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w17-d5--1",
+   "pageId": "4759",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4759-chatsver-syamnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "a8ac9654e7b0139fe73c0206ede941a942b2269250cad9fc2f15a10325fbce95",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "c5527a02e0761c21",
+   "afterHash": "b62dd83a92a90a9a",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w17-d6--1",
+   "pageId": "4758",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4758-pyatnitsa-syamnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "bb401159357e8460d3abe96474dafd0976b17e8aaec8d1e065d81882e60c1421",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "46fed73509280d4c",
+   "afterHash": "363267cf17581cdd",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w18-d1--A",
+   "pageId": "4770",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4770-khviii-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "bafe1b1e66496ff392fe98b51f93dd471cc950dbe41d740223a2fc7c6b409aa7",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "a7783ec7f1dbbcb0",
+   "afterHash": "e95038586e113a52",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w18-d1--B",
+   "pageId": "4769",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4769-xviii-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "ae3aa1db3981f8fa4a1062ed5495ad0eeb9d6a1eb27ba9a3c6c2c67f9caa9952",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "3f805308eef1abe5",
+   "afterHash": "bfc16cdec5555001",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w18-d1--C",
+   "pageId": "4768",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4768-xviii-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "3a79460220260996ce54bb3f3a38fc8d47ca741fd0f926a49894e0c173f62517",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "f1d2e255b2e6984b",
+   "afterHash": "8476b2238a25faff",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w18-d2--1",
+   "pageId": "4767",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4767-panyadzelak-vasemnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "d1a5080b0fe75ffa1730c19758f55b6bda392406fa9d61ccc198f91cf8706882",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "0f476f258fb50ec3",
+   "afterHash": "67fa633760acfed4",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w18-d3--1",
+   "pageId": "4766",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4766-autorak-vasemnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "8b8745f2cbe87d49f275d49e89eaadc8921f95e894bf7f2b3f7bf12ea0049c93",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "2238bee15ea6e68a",
+   "afterHash": "e8f527263a693ea9",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w18-d5--1",
+   "pageId": "4773",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4773-chatsver-vasemnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "b248311e8b860e1e32dd819b4b6e196320eda3b88f43380ae674523747f2a233",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "f74699538eba383a",
+   "afterHash": "fe86a695419a5a4e",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w18-d6--1",
+   "pageId": "4772",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4772-pyatnitsa-vasemnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "c33da6eefa022ebb4ae68ad0e4a4e8e72a5258eaf6c8a93a7b70f59cbc905c7d",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "ad2345e8bf553c31",
+   "afterHash": "126157d4826112cc",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w19-d1--A",
+   "pageId": "4783",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4783-khikh-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "f732649a8c1569e5a2178542e9e1107a3f0c292ecb8109ebbea10ee8eb6cdef2",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "164c96aea69b53e3",
+   "afterHash": "c3a009c00159070a",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w19-d1--B",
+   "pageId": "4782",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4782-xix-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "04e81e93a1230cf9bbdc34c8eda6f7e27f9482981177fb782d6b6a4281692730",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "867c23150cae7e3f",
+   "afterHash": "d70fd7a07aba486c",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w19-d1--C",
+   "pageId": "4781",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4781-xix-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "8c509e79b54bd65a450c011786f7094764d3a75e21a85564cc0c1fdde970d84f",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "796b296d82465894",
+   "afterHash": "6806f2f2079ba928",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w19-d5--1",
+   "pageId": "4777",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4777-chatsver-dzevyatnatstsaty-zvychajny-tydzen",
+   "sourceSha256": "3f14ef8d3056e232ad210766a06f1a61a37868de588956cfa83988ecd89f40d8",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "967062527e4e7f7b",
+   "afterHash": "d050f0abcf95923c",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w2-d2--1",
+   "pageId": "4627",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4627-panyadzelak-drugi-zvychajny-tydzen",
+   "sourceSha256": "6a8b208ea2b2a212c23dabeb15db9132bcd561eed36880a98f2b18add3b31562",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "b029972022ec4d6e",
+   "afterHash": "bdab1a1700fd8cf8",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w2-d4--1",
+   "pageId": "4625",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4625-serada-drugi-zvychajny-tydzen",
+   "sourceSha256": "3c400e840f0d97e20ce7a0dbcb4c9834219047ed8d6b4b6e2ae9d3c5958d9c7c",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "df5a4b51b382a689",
+   "afterHash": "a3de0f17e58dbe0b",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w2-d5--1",
+   "pageId": "4624",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4624-chatsver-drugi-zvychajny-tydzen",
+   "sourceSha256": "9440847a8ef49900a6f935c471f93c47f8bc286a2c5d8b70402bb30b986392fc",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "773431b97c41f36a",
+   "afterHash": "90a1066df3945f05",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w2-d6--1",
+   "pageId": "4623",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4623-pyatnitsa-drugi-zvychajny-tydzen",
+   "sourceSha256": "8d958988f054aa6f6b1f9be68f455f0792840e2171d24b4d7fc9ba81c8fba196",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "6a6b7cb449118b33",
+   "afterHash": "4ec6d32517fdde59",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w20-d1--A",
+   "pageId": "4792",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4792-khkh-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "bb5a2358280f5310233cbd1f2acec944ea921fe09e0dc3f418f47fde8819683d",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "047c74c4e4c56a23",
+   "afterHash": "edf604b41055ba84",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w20-d1--B",
+   "pageId": "4791",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4791-xx-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "653cc51b85fc030710a7e34a460ff9f25874f0c35be2d240e480ac709e2b809f",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "005fcf3c185187e0",
+   "afterHash": "6481da4d7f3cfb49",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w20-d1--C",
+   "pageId": "4790",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4790-xx-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "b55c3e62269b4cd99321c02377ae23add1e9252aa2e6559d10263663f19f0e16",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "56ddc0eb641adb4d",
+   "afterHash": "571e127e6ceec880",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w20-d2--1",
+   "pageId": "4789",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4789-panyadzelak-dvatstsaty-zvychajny-tydzen",
+   "sourceSha256": "89ca5120c3a27e1e2d7c760c6f5f81a1cd6a17f01c35722753ea0128fef6f755",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "acb86ab63ebacd49",
+   "afterHash": "4a638459b8664606",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w20-d3--1",
+   "pageId": "4788",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4788-autorak-dvatstsaty-zvychajny-tydzen",
+   "sourceSha256": "08015140ae8191add7d27d6f1b6fb6d02cfdf06c5c74e01093e3c94584d5ce29",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "151d02a4b97c05a5",
+   "afterHash": "64f4fb4dde5eb7d0",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w20-d5--1",
+   "pageId": "4786",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4786-chatsver-dvatstsaty-zvychajny-tydzen",
+   "sourceSha256": "a283228ded7bc38b7aa15960c4b7979bc464352305ea5189e69f2eafc10127f9",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "21555e495a59ebfd",
+   "afterHash": "c455bf1a8dc2c633",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w3-d1--B",
+   "pageId": "4631",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4631-iii-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "08f6e69fd0da446e15ebe226281024a493b575ad14f51e11ffb6185c499710f3",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "6d994ad887c86d22",
+   "afterHash": "f4b8585ad85b28b1",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w3-d1--C",
+   "pageId": "4633",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4633-iii-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "7a429a27ccb9248d22707d75436130d6017495a02bdb8bb7dc9a1b0bff2efc59",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "185e2308035b9c54",
+   "afterHash": "836e9be0110229d5",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w3-d3--1",
+   "pageId": "4635",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4635-autorak-tretsi-zvychajny-tydzen",
+   "sourceSha256": "069babe307665d5881eda9e1442ce517c170d63053a0e20044aa1ebfe8dfb6e9",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "88cd46106cacde62",
+   "afterHash": "0cedb5552188cfcb",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w3-d4--1",
+   "pageId": "4636",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4636-serada-tretsi-zvychajny-tydzen",
+   "sourceSha256": "07d92a5907b288bf26e9a879f05d32a8430b0509d62987bcbce2cf72a32ceddc",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "d972efb4ad1d648f",
+   "afterHash": "ecd9132b1f0e123c",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w3-d5--1",
+   "pageId": "4637",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4637-chatsver-tretsi-zvychajny-tydzen",
+   "sourceSha256": "38285af0068e395bcf8831f902c3091e15cbbb2ad7b83d4d2425c15f4c663094",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "45cbb5aacc1d4591",
+   "afterHash": "09af57918c9bde47",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w3-d6--1",
+   "pageId": "4638",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4638-pyatnitsa-tretsi-zvychajny-tydzen",
+   "sourceSha256": "a0534e6e94b60f167b69ece0277c8532682bd0d15dd6ea028d52e4391dbbb2fa",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "63f48126e71ab444",
+   "afterHash": "1a116aa993f05846",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w32-d7--2",
+   "pageId": "4899",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4899-subota-trytstsats-drugi-zvychajny-tydzen",
+   "sourceSha256": "c88a0330eab8482baa804d7f4e59fefd169db25e67d382d627671283f82ad104",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_CYCLE"
+   ],
+   "findings": 2,
+   "beforeHash": "badd59183b98bc2e",
+   "afterHash": "ef7517451e728886",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w34-d5--1",
+   "pageId": "4916",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4916-chatsver-trytstsats-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "3b01ddb6766a56530d69c5c24b3f581b7179829a8714115b67e8bd89d6bcc402",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "99a5c8078dcd6c14",
+   "afterHash": "b1f93ab24f1edc71",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w4-d1--B",
+   "pageId": "4642",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4642-iv-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "1c2aef8857c25b07e2de7078e26d9cf5ad82b6c37438ef2f77035f7bf620480d",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "7f4e2073ebcc99b3",
+   "afterHash": "02eec62b1fd7817b",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w4-d1--C",
+   "pageId": "4640",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4640-iv-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "2c1e68429363bc599c54acca21fab0acf34cf60e5ff3f3fcffc64b38c4194372",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "728310d24ad8e931",
+   "afterHash": "07eadc4a58ee76f2",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w4-d2--1",
+   "pageId": "4648",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4648-panyadzelak-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "31e1069593c94f14a17126aac23794b92e930f593e77eb53ec67b5995bec63d1",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "3a7b082bafcf45bd",
+   "afterHash": "72895d4a2e6fa44f",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w4-d3--1",
+   "pageId": "4647",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4647-autorak-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "d5ffbf1fc75e161590a6602270e175fb35a888d167c5a858f40701dc99ccffeb",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "80ea95baab0bcde3",
+   "afterHash": "f120d498cad02efd",
+   "wave": 2
+  },
+  {
+   "id": "ordinary-w4-d5--1",
+   "pageId": "4645",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4645-chatsver-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "b053eab0eed711c58064ff0933847c107a4ace90a29496ecbdeee42e693283f9",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "04c3c3d7eefec155",
+   "afterHash": "ca28816b96e16c96",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w4-d6--1",
+   "pageId": "4644",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4644-pyatnitsa-chatsvjorty-zvychajny-tydzen",
+   "sourceSha256": "66c353d6be337222b8fb157ea11a90c47335153678f8b68c16092df3e8ed456b",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "25b0514ba941784f",
+   "afterHash": "b7586f29b8b3e264",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w5-d1--C",
+   "pageId": "4651",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4651-v-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "2dfb6417998223b60cf09884411e5015a5c6f5c219044f20711224ae72c2919a",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "b3168a6788b4cf4b",
+   "afterHash": "33a72aec404de50a",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w5-d2--1",
+   "pageId": "4652",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4652-panyadzelak-pyaty-zvychajny-tydzen",
+   "sourceSha256": "180648cf96f08006a06d25e2aa76a4eb52d1008efe0080fb3d274a5c4a75f6c6",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "bff0b9b2250f1f19",
+   "afterHash": "eb157fd5d62ce535",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w5-d3--1",
+   "pageId": "4653",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4653-autorak-pyaty-zvychajny-tydzen",
+   "sourceSha256": "4a2a4bf3d91f8c08bcfbe6aedf08f2318219b649d4e846b0a9c352a4c1cf272e",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "7fae8bdb2a02550d",
+   "afterHash": "c7e6d09f1f8b035e",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w5-d4--1",
+   "pageId": "4654",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4654-serada-pyaty-zvychajny-tydzen",
+   "sourceSha256": "ad48949d68dcaee72cecda903ae7cae75834e32c2e5d344adbe70b81db9658ed",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "b87027ba274f8f04",
+   "afterHash": "9572e9e0a2680f3d",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w5-d5--1",
+   "pageId": "4655",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4655-chatsver-pyaty-zvychajny-tydzen",
+   "sourceSha256": "e585de31ab34ab92cb8d5029c620639b656ea1dfa8b0c7b2cca3bbfe1de4aa31",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "2267c5e3a331a15d",
+   "afterHash": "59f54677c073a453",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w5-d6--1",
+   "pageId": "4656",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4656-pyatnitsa-pyaty-zvychajny-tydzen",
+   "sourceSha256": "b5d97bb2b8f2238391b45b09599d967f9d196fc9b0024bd899389f262606c9fe",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "ffe6f325e299e4b2",
+   "afterHash": "966a7ea2d7bb7b86",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w6-d1--B",
+   "pageId": "4665",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4665-vi-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "1bc9aa7662f6c353ccaa1b46341249d90ebb73d532f62b740fcc0f18180fe3c7",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "2837dc33ed85ffcf",
+   "afterHash": "d7d7e43bb47d7639",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w6-d1--C",
+   "pageId": "4666",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4666-vi-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "404bc70eb54051d84a732139abedd69c4f69e3f2b01654d6f6f87224c5017d40",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "c768d58564dd066f",
+   "afterHash": "a9540e73503d49ef",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w6-d2--1",
+   "pageId": "4663",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4663-panyadzelak-shosty-zvychajny-tydzen",
+   "sourceSha256": "f1575174eb59794dd3f9b5509c7cb7a9e8bc722880a9ef4020620868ea7fb544",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "428209074611f1ab",
+   "afterHash": "ee92e78f53044bce",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w6-d3--1",
+   "pageId": "4662",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4662-autorak-shosty-zvychajny-tydzen",
+   "sourceSha256": "ada1e5d74cea76ece11b9e3161656af321a8241556a4c5f09ac19dadbf01f63d",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "39529bf4b7a34670",
+   "afterHash": "a45a58f698f9d11d",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w6-d5--1",
+   "pageId": "4660",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4660-chatsver-shosty-zvychajny-tydzen",
+   "sourceSha256": "e400b79456d9b6f211b6861424a6a6b6a835c914f1f33e12259ed9330e6a2ed1",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "7ba390f4a3a52e9e",
+   "afterHash": "c126df9fe88cc480",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w6-d6--1",
+   "pageId": "4659",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4659-pyatnitsa-shosty-zvychajny-tydzen",
+   "sourceSha256": "d3f8cbef17d526f86e897f178cf37cc5d0b13cb930e147c8e42e4ab9045e9aa5",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "b6aaf7da83f4941b",
+   "afterHash": "2c8b4c121a513785",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w7-d1--A",
+   "pageId": "4675",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4675-vii-zvychajnaya-nyadzelya-god-a",
+   "sourceSha256": "3f3e1960426eb0d0c246c25aadb7993db159331b3e56774a77d48696edf5174d",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "8ded613f0dd5df9c",
+   "afterHash": "27b09f4022fbf9e4",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w7-d1--B",
+   "pageId": "4674",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4674-vii-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "e923da53dc8e82e1aa394ce0c27cc7ccb635efa44bdcfa6f64749658e753e5bc",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "3a59098017a4029a",
+   "afterHash": "df88c311fe210a25",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w7-d1--C",
+   "pageId": "4673",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4673-vii-zvychajnaya-nyadzelya-god-s",
+   "sourceSha256": "6652f4a926b74e36c41f31e4cbd53c94fb955149003b9d81db550e5ff655b2ce",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "118b7777001ea3b8",
+   "afterHash": "3cfa091544b43e0f",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w9-d1--B",
+   "pageId": "4689",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4689-ix-zvychajnaya-nyadzelya-god-b",
+   "sourceSha256": "f28e16ab19c0827fafc9c5e20513001ba3e5a90787086463b0cb66df8e68624e",
+   "inferredSource": false,
+   "changedFields": [
+    "reading2",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "a98f383f6e4f6edd",
+   "afterHash": "a7f8c0a3b6ceee7d",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w9-d3--1",
+   "pageId": "4686",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4686-autorak-dzyavyaty-zvychajny-tydzen",
+   "sourceSha256": "043c63f89bb01e21bf999fc81860cd7d3d4d5587ec46b7e25bf03f844226795c",
+   "inferredSource": false,
+   "changedFields": [
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "cf34d980698bf404",
+   "afterHash": "e23bce02a9d6bbdf",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w9-d5--1",
+   "pageId": "4693",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4693-chatsver-dzyavyaty-zvychajny-tydzen",
+   "sourceSha256": "2f01fa2330f9bcc8e9095b2a0111e395bb46d8fd92d33787b81f03d9cdfcc767",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "2449479514df8cca",
+   "afterHash": "c626e5982374af2c",
+   "wave": 3
+  },
+  {
+   "id": "ordinary-w9-d6--1",
+   "pageId": "4692",
+   "url": "https://catholic.by/3/liturgy/lectionary/zvychajny/4692-pyatnitsa-dzyavyaty-zvychajny-tydzen",
+   "sourceSha256": "829a6e394583b080e768c12d48f6ca6914ef095f3a63a29a3957f2d91a739a82",
+   "inferredSource": false,
+   "changedFields": [
+    "reading1",
+    "psalm",
+    "alleluia",
+    "gospel"
+   ],
+   "classes": [
+    "STRUCTURE_LOSS"
+   ],
+   "findings": 1,
+   "beforeHash": "0dfa171aba772f69",
+   "afterHash": "aef3ba7a7fd8fc1d",
+   "wave": 3
+  },
+  {
+   "id": "24-06-nativity-john-baptist",
+   "kind": "sets-migration",
+   "celebration": "nativity-john-baptist",
+   "changedFields": [
+    "alleluia",
+    "gospel",
+    "massReadings",
+    "psalm",
+    "reading1",
+    "reading2"
+   ],
+   "classes": [
+    "MISSING_SET"
+   ],
+   "wave": 4,
+   "beforeHash": "d19af6b9bb6670a5",
+   "afterHash": "81e807a2ed90cd60"
+  },
+  {
+   "id": "06-08-transfiguration-lord",
+   "kind": "sets-migration",
+   "celebration": "transfiguration",
+   "changedFields": [
+    "alleluia",
+    "massReadings",
+    "psalm",
+    "reading2"
+   ],
+   "classes": [
+    "MISSING_SET"
+   ],
+   "wave": 4,
+   "beforeHash": "f67c5c1e90d4edbf",
+   "afterHash": "9f16835941aa1247"
+  },
+  {
+   "id": "ordinary-w28-d1--A",
+   "kind": "citation-correction",
+   "changedFields": [
+    "gospel"
+   ],
+   "classes": [
+    "WRONG_REFERENCE"
+   ],
+   "evidence": "Catholic.by 4865 prints «Мк 22, 1–10» above «+ Чытанне святога Евангелля паводле Мацвея»; page 4873 (Monday of week 28) cites the same parable as «Мц 22, 1–14»",
+   "wave": 4,
+   "beforeHash": "b238eae7cfaaeee3",
+   "afterHash": "a0d35bc2e279a1dc"
+  }
+ ],
+ "skipped": [
+  {
+   "id": "06-08-transfiguration-lord",
+   "reason": "cycle-aware canonical document needed: handled by migrate-readings-sets.mjs",
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_CYCLE",
+    "WRONG_REFERENCE"
+   ]
+  },
+  {
+   "id": "24-06-nativity-john-baptist",
+   "reason": "source page has 2 reading sets",
+   "classes": [
+    "MISSING_SET"
+   ]
+  },
+  {
+   "id": "christmas-05-01--sunday",
+   "reason": "document identity does not match the page identity",
+   "classes": [
+    "WRONG_TEXT",
+    "WRONG_CONTEXT"
+   ]
+  },
+  {
+   "id": "lent-w3-d1--B",
+   "reason": "the page does not pass the parser validation: set 1 ПЕРШАЕ ЧЫТАННЕ: no text",
+   "classes": [
+    "WRONG_TEXT",
+    "MISSING_BLOCK",
+    "STRUCTURE_LOSS"
+   ]
+  }
+ ],
+ "deferred": [
+  {
+   "id": "feast-palmsunday--A",
+   "celebration": "palm-sunday",
+   "changedFields": [
+    "gospel"
+   ],
+   "layoutOnly": false,
+   "productionLacks": [],
+   "productionOnly": [
+    "gospel.italicLines"
+   ],
+   "reason": "paragraph layout only (same words); production carries gospel.italicLines that the plan would drop; production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "feast-palmsunday--B",
+   "celebration": "palm-sunday",
+   "changedFields": [
+    "gospel"
+   ],
+   "layoutOnly": false,
+   "productionLacks": [],
+   "productionOnly": [
+    "gospel.italicLines"
+   ],
+   "reason": "paragraph layout only (same words); production carries gospel.italicLines that the plan would drop; production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "feast-palmsunday--C",
+   "celebration": "palm-sunday",
+   "changedFields": [
+    "gospel"
+   ],
+   "layoutOnly": false,
+   "productionLacks": [],
+   "productionOnly": [
+    "gospel.italicLines"
+   ],
+   "reason": "paragraph layout only (same words); production carries gospel.italicLines that the plan would drop; production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "holyweek-w1-d7--A-vigil",
+   "celebration": "easter-vigil",
+   "changedFields": [
+    "reading3"
+   ],
+   "layoutOnly": true,
+   "productionLacks": [],
+   "productionOnly": [],
+   "reason": "paragraph layout only (same words); production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "holyweek-w1-d7--B-vigil",
+   "celebration": "easter-vigil",
+   "changedFields": [
+    "reading3"
+   ],
+   "layoutOnly": true,
+   "productionLacks": [],
+   "productionOnly": [],
+   "reason": "paragraph layout only (same words); production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "holyweek-w1-d7--C-vigil",
+   "celebration": "easter-vigil",
+   "changedFields": [
+    "reading3"
+   ],
+   "layoutOnly": true,
+   "productionLacks": [],
+   "productionOnly": [],
+   "reason": "paragraph layout only (same words); production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "feast-pentecost",
+   "celebration": "pentecost",
+   "changedFields": [
+    "reading2"
+   ],
+   "layoutOnly": true,
+   "productionLacks": [],
+   "productionOnly": [],
+   "reason": "paragraph layout only (same words); production was edited after the migration — a manual edit is not overwritten"
+  },
+  {
+   "id": "advent-24-12--christmas-vigil",
+   "celebration": "christmas-eve",
+   "changedFields": [
+    "gospel"
+   ],
+   "layoutOnly": true,
+   "productionLacks": [],
+   "productionOnly": [],
+   "reason": "paragraph layout only (same words); production was edited after the migration — a manual edit is not overwritten"
+  }
+ ]
+}

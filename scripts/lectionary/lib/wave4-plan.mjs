@@ -18,16 +18,11 @@ import { documentHash, storedDocument } from '../../content/lib/app-content.mjs'
 import { normalizeText } from './compare.mjs';
 import { loadFixturePages } from '../../liturgy/migrate-readings-sets.mjs';
 import { resyncReport } from './resync-plan.mjs';
+import { CITATION_CORRECTIONS } from './source-corrections.mjs';
+
+export { CITATION_CORRECTIONS };
 
 export const SETS_WAVE_DOCS = Object.freeze(['24-06-nativity-john-baptist', '06-08-transfiguration-lord']);
-
-/** A defect of the SOURCE page that is corrected in the canonical data (confirmed by the owner). */
-export const CITATION_CORRECTIONS = Object.freeze([
-  {
-    id: 'ordinary-w28-d1--A', field: 'gospel', key: 'bible', from: 'Мк 22, 1–10', to: 'Мц 22, 1–10', pageId: '4865',
-    evidence: 'Catholic.by 4865 prints «Мк 22, 1–10» above «+ Чытанне святога Евангелля паводле Мацвея»; page 4873 (Monday of week 28) cites the same parable as «Мц 22, 1–14»',
-  },
-]);
 
 const idOf = ({ id: _id, ...data }) => data;
 const textsOf = (value) => (value && typeof value === 'object' ? Object.entries(value).flatMap(([key, item]) => (['text', 'verse', 'chorus'].includes(key) || Array.isArray(item) || (item && typeof item === 'object') ? textsOf(item) : [])) : typeof value === 'string' ? [value] : []);
@@ -74,10 +69,11 @@ export function buildWave4({ docs, pages }) {
     changes.push({ id: fix.id, kind: 'citation-correction', changedFields: [fix.field], classes: ['WRONG_REFERENCE'], evidence: fix.evidence, before, after });
   }
   return {
+    // a document that already equals its reviewed after-state is not a change: the plan is empty after the apply
     changes: changes.map((change) => ({
       ...change, wave: 4,
       beforeHash: documentHash(storedDocument(change.id, change.before)), afterHash: documentHash(storedDocument(change.id, change.after)),
-    })),
+    })).filter((change) => change.beforeHash !== change.afterHash),
     deferred,
   };
 }

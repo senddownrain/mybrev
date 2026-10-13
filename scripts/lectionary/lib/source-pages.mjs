@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { parseLectionaryPage, validateParsedPage } from '../../liturgy/lib/lectionary-parser.mjs';
 import { pageIdentity } from './identity.mjs';
 import { normalizeText } from './compare.mjs';
+import { applySourceCorrections } from './source-corrections.mjs';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 export const SNAPSHOT_DIR = path.join(ROOT, 'reports', 'lectionary', 'snapshots');
@@ -33,7 +34,8 @@ export function loadPages() {
     const html = fs.readFileSync(file, 'utf8');
     record.wordsSha256 = sha256(normalizeText(html.replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' '));
     const parsed = parseLectionaryPage(html);
-    pages.set(String(record.id), { id: String(record.id), record, html, parsed, errors: validateParsedPage(parsed), identity: pageIdentity(record.title) });
+    const corrections = applySourceCorrections(record.id, parsed);
+    pages.set(String(record.id), { id: String(record.id), record, html, parsed, errors: validateParsedPage(parsed), identity: pageIdentity(record.title), ...(corrections.length ? { corrections } : {}) });
   }
   return { crawl, pages };
 }
