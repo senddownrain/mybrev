@@ -415,6 +415,16 @@ const sparseOffice = computed(() => {
     return null;
   }
 });
+/** Season of the date of the route (seasonal variants of the Commons are a read-only preview here). */
+const sparseSeason = computed(() => {
+  if (!isSparse.value || !route.query.date) return null;
+  try {
+    const resolved = resolveRuntimeDay(String(route.query.date), { diocese: String(route.query.diocese || dayData.value?._place || 'minsk-mohilev') });
+    return { period: resolved.period, periodPhase: resolved.periodPhase };
+  } catch {
+    return null;
+  }
+});
 const sparseChoices = computed(() => (isSparse.value
   ? assemblyChoices(dayData.value, sparseOffice.value).map((value) => ({ value, title: value === CURRENT_DAY_CHOICE ? 'З дня' : `Агульныя тэксты: ${value}` }))
   : []));
@@ -427,6 +437,7 @@ const sparseAssembly = computed(() => {
     templates: sparseTemplates.value,
     choice: sparseChoice.value || undefined,
     currentDay: fallbackDay.value || {},
+    season: sparseSeason.value,
   });
 });
 
@@ -582,7 +593,7 @@ function isSeasonalGeneratedField(field) {
 }
 
 function fieldSource(field) {
-  if (isSparse.value) return getSparseFieldSource(dayData.value, field, sparseAssembly.value?.provenance, describeFieldRule);
+  if (isSparse.value) return getSparseFieldSource(dayData.value, field, sparseAssembly.value?.provenance, describeFieldRule, sparseAssembly.value?.seasonal?.fields);
   if (isSeasonalGeneratedField(field)) {
     return { kind: 'seasonal-assembly', label: 'Сабрана з набору дня тыдня', color: 'info', readOnly: true };
   }

@@ -180,7 +180,9 @@ export function assembledTemplates({ proper, option, resolved, daysResult, templ
   };
   const choiceId = (choice) => `${proper.id}--${choice === CURRENT_DAY_CHOICE ? 'day' : choice}`;
   return assemblyChoices(proper, office).map((choice, index) => {
-    const { day, missing } = assembleOffice({ proper, office, templates, choice, currentDay });
+    const { day, missing } = assembleOffice({
+      proper, office, templates, choice, currentDay, season: { period: resolved.period, periodPhase: resolved.periodPhase },
+    });
     const id = index === 0 ? proper.id : choiceId(choice);
     return {
       id,

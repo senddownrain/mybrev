@@ -96,14 +96,16 @@ const SPARSE_SOURCE_LABELS = Object.freeze({
  * provenance (`assembleOffice().provenance`) and the document's own rule.
  * Every kind stays editable: an edit writes ONLY the own override.
  */
-export function getSparseFieldSource(proper, field, provenance = {}, describeRule = null) {
+export function getSparseFieldSource(proper, field, provenance = {}, describeRule = null, seasonalFields = {}) {
   const rule = proper?._fieldRules?.[field] || null;
   if (hasText(proper?.[field])) return { kind: 'own', label: 'Уласны тэкст', color: 'success', readOnly: false, rule };
   const origin = provenance[field] || '';
   const ruleLabel = rule && describeRule ? `Правіла: ${describeRule(rule)}` : '';
   if (origin.startsWith('ref:')) return { kind: 'ref', label: ruleLabel || `Спасылка: ${origin.slice(4)}`, color: 'primary', readOnly: false, rule };
   if (origin.startsWith('common:')) {
-    return { kind: 'common', label: ruleLabel || `З агульных тэкстаў «${origin.slice(7)}»`, color: 'info', readOnly: false, rule };
+    const season = seasonalFields?.[field];
+    const suffix = season ? ` · сезонны варыянт: ${season} (толькі для прагляду; змены запісваюцца ў уласны тэкст)` : '';
+    return { kind: 'common', label: ruleLabel || `З агульных тэкстаў «${origin.slice(7)}»${suffix}`, color: 'info', readOnly: false, rule, ...(season ? { season } : {}) };
   }
   const known = SPARSE_SOURCE_LABELS[origin];
   if (known) return { kind: origin === 'current-day' ? 'current-day' : 'rule', label: ruleLabel || known.label, color: known.color, readOnly: false, rule };

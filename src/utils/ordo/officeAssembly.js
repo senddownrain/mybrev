@@ -33,6 +33,7 @@ import {
   TE_DEUM_FIELD,
 } from '../../constants/officeFields.js';
 import { isFromDayReference } from '../../constants/days.js';
+import { seasonalTemplateGetter, variantKeyForSeason } from './commonSeasons.js';
 
 export const CURRENT_DAY_CHOICE = 'current-day';
 
@@ -89,8 +90,12 @@ function slotOf(office, field) {
  * @param {object} params.currentDay  assembled temporal day of the date
  * @returns {{ day: object, choice: string, template: string, provenance: object, missing: string[] }}
  */
-export function assembleOffice({ proper, office, templates, choice, currentDay }) {
-  const getTemplate = (id) => (templates instanceof Map ? templates.get(id) : templates?.[id]) || null;
+export function assembleOffice({ proper, office, templates, choice, currentDay, season }) {
+  // Commons are read through the season of the SELECTED Office (`computeSeason` of its date;
+  // I Vespers use the celebration's own date). Materialised per call: the shared map is never mutated.
+  const getTemplate = seasonalTemplateGetter(templates, season);
+  const seasonVariant = variantKeyForSeason(season);
+  const seasonProvenance = {};
   const choices = assemblyChoices(proper, office);
   const selected = choices.includes(choice) ? choice : choices[0];
   const templateId = selected === CURRENT_DAY_CHOICE ? defaultTemplateOf(proper) : selected;
@@ -113,9 +118,12 @@ export function assembleOffice({ proper, office, templates, choice, currentDay }
   const fromTemplate = (template, field, origin) => {
     if (!template) return null;
     const rule = template._fieldRules?.[field];
+    if (rule?.omit) return { value: '', origin: `${origin}:omit` };
     if (rule?.ref) { refs.push({ field, ref: rule.ref, origin }); return { pending: true }; }
     if (rule?.source) return fromSource(rule.source === 'common' ? 'current-day' : rule.source, field, rule.template);
-    return isBlank(template[field]) ? null : { value: template[field], origin };
+    if (isBlank(template[field])) return null;
+    if (template._seasonal?.fields?.includes(field)) seasonProvenance[field] = template._seasonal.variant;
+    return { value: template[field], origin };
   };
   function fromSource(source, field, named) {
     switch (source) {
@@ -232,9 +240,17 @@ export function assembleOffice({ proper, office, templates, choice, currentDay }
   });
   day._templates = templatesOf(proper);
   if (templateId && selected !== CURRENT_DAY_CHOICE) day._currentVersion = templateId;
-  day._assembly = { choice: selected, template: selected === CURRENT_DAY_CHOICE ? '' : templateId, sparse: true };
+  day._assembly = {
+    choice: selected, template: selected === CURRENT_DAY_CHOICE ? '' : templateId, sparse: true,
+    ...(seasonVariant ? { season: seasonVariant } : {}),
+  };
   if (integrity.length) day._integrityErrors = integrity;
-  return { day, choice: selected, template: templateId, provenance, missing, integrity };
+  // Only the fields that really came from a seasonal variant of a Common.
+  const seasonal = Object.keys(provenance).filter((field) => seasonProvenance[field] && /^common:/.test(provenance[field]));
+  return {
+    day, choice: selected, template: templateId, provenance, missing, integrity,
+    seasonal: { variant: seasonVariant, fields: Object.fromEntries(seasonal.map((field) => [field, seasonProvenance[field]])) },
+  };
 }
 
 /** Coarse availability of the Hours of a celebration. */
