@@ -30,6 +30,9 @@ firestore-debug.log
 # generated artifacts and private Firestore data
 /backups/
 /reports/
+!/reports/
+/reports/*
+!/reports/prayer-format-audit.md
 /outputs/
 /patchs/serviceAccountKey.json
 

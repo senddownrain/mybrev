@@ -44,7 +44,7 @@ test('prayer autofix migration updates text fields without exposing untouched do
   const plan = buildPrayerAutofixPlan([
     { id: 'changed', text: '**\nВажна\n**', textFormat: 'mybrev-markdown', textFormatVersion: 1 },
     { id: 'unchanged', text: 'Звычайны тэкст', textFormat: 'mybrev-markdown', textFormatVersion: 1 },
-  ]);
+  ], { safeOnly: false });
   assert.equal(plan.length, 1);
   assert.equal(plan[0].id, 'changed');
   assert.deepEqual(plan[0].updates, [
@@ -55,7 +55,7 @@ test('prayer autofix migration updates text fields without exposing untouched do
 test('prayer autofix migration repairs legacy localized text and sets its Markdown format', () => {
   const plan = buildPrayerAutofixPlan([
     { id: 'legacy', textVersions: { be: '#Загаловак' } },
-  ]);
+  ], { safeOnly: false });
   assert.deepEqual(plan[0].updates, [
     { field: 'textVersions', before: { be: '#Загаловак' }, after: { be: '# Загаловак' } },
     { field: 'textFormat', before: undefined, after: 'mybrev-markdown' },
@@ -80,7 +80,7 @@ test('does not promote speaker labels, spoken lines, quotations, or litany respo
 test('prayer autofix migration can include action-direction rubric promotion', () => {
   const plan = buildPrayerAutofixPlan([
     { id: 'rubrics', text: 'Святар кажа:\n\nПамолімся.', textFormat: 'mybrev-markdown', textFormatVersion: 1 },
-  ], { rubrics: true });
+  ], { rubrics: true, safeOnly: false });
   assert.deepEqual(plan[0].updates, [
     { field: 'text', before: 'Святар кажа:\n\nПамолімся.', after: ':::rubric\nСвятар кажа:\n:::\n\nПамолімся.' },
   ]);
@@ -104,9 +104,9 @@ test('does not execute raw HTML from prayer source', () => {
   assert.equal(html, '');
 });
 
-test('converts legacy rich HTML and standalone emphasis to Markdown rubrics', () => {
+test('converts legacy rich HTML while preserving ordinary emphasis', () => {
   const markdown = htmlToPrayerMarkdown('<h2>Раздзел</h2><p><em>Усе ўстаюць.</em></p><p><strong>Памолімся.</strong></p>');
-  assert.equal(markdown, '## Раздзел\n\n:::rubric\nУсе ўстаюць.\n:::\n\n**Памолімся.**');
+  assert.equal(markdown, '## Раздзел\n\n_Усе ўстаюць._\n\n**Памолімся.**');
 });
 
 test('keeps emphasized list items inside the CommonMark list', () => {

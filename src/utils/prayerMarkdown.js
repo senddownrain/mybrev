@@ -4,6 +4,57 @@ import TurndownService from 'turndown';
 export const PRAYER_TEXT_FORMAT = 'mybrev-markdown';
 export const PRAYER_TEXT_FORMAT_VERSION = 1;
 
+// Cyrillic labels are distinct from their Latin lookalikes. V/R describe
+// versicle/response, not an inferred priest/cantor identity.
+export const PRAYER_SPEAKERS = Object.freeze({
+  'К.': 'cantor', 'С.': 'priest', 'Н.': 'people', 'Д.': 'deacon',
+  'Л.': 'reader', 'Ц.': 'celebrant', 'V.': 'versicle', 'R.': 'response',
+});
+
+export function prayerSpeakerPrefix(value) {
+  const match = /^(\s{0,3})([КСНДЛЦVR]\.)(:)?(?=[ \t]+\S)/u.exec(value);
+  if (!match) return null;
+  const rest = value.slice(match[0].length).trim();
+  // Initials and an unpunctuated surname are ambiguous, so leave them alone.
+  if (/^\p{Lu}\./u.test(rest) || /^\p{Lu}\p{Ll}+(?:\s+\p{Lu}\p{Ll}+)*$/u.test(rest)) return null;
+  return { from: match[1].length, to: match[0].length, label: match[2] + (match[3] || ''), role: PRAYER_SPEAKERS[match[2]] };
+}
+
+/** Source ranges shared by the reader and CodeMirror; never rewrites input. */
+export function prayerSpeakerRanges(source = '') {
+  const lines = String(source).split('\n');
+  const offsets = [];
+  let offset = 0;
+  for (const line of lines) { offsets.push(offset); offset += line.length + 1; }
+  const ranges = [];
+  const stack = [];
+  for (const token of markdown.parse(String(source), {})) {
+    if (token.nesting === 1) stack.push(token.type);
+    if (token.type === 'inline' && stack.at(-1) === 'paragraph_open'
+      && !stack.some((type) => ['blockquote_open', 'rubric_open'].includes(type))) {
+      const children = token.children || [];
+      let lineStart = true;
+      let lineNumber = token.map[0];
+      for (const child of children) {
+        if (child.type === 'softbreak' || child.type === 'hardbreak') {
+          lineStart = true; lineNumber += 1; continue;
+        }
+        if (lineStart && child.type === 'text') {
+          const line = lines[lineNumber];
+          const prefix = prayerSpeakerPrefix(line);
+          // A list marker, link, emphasis or inline code is not a bare label.
+          if (prefix && child.content.startsWith(line.trimStart().slice(0, prefix.to - prefix.from))) {
+            ranges.push({ ...prefix, from: offsets[lineNumber] + prefix.from, to: offsets[lineNumber] + prefix.to, line: lineNumber + 1 });
+          }
+        }
+        lineStart = false;
+      }
+    }
+    if (token.nesting === -1) stack.pop();
+  }
+  return ranges;
+}
+
 const RUBRIC_LINE_PATTERN = /^(?:Святар|Народ|Усе|Дыякан|Біскуп|Цэлебрант|Лектар|Псальміст|Кантар)\b[^.!?]*:$/i;
 const RUBRIC_ACTOR_PATTERN = /(?:^|[^\p{L}])(?:святар|народ|усе|дыякан|біскуп|цэлебрант|лектар|псальміст|кантар|міністрант|пэнітэнт|вернікі|священник|диакон|епископ|чтец|псаломщик|верующие)(?=$|[^\p{L}])/iu;
 const RUBRIC_ACTION_PATTERN = /(?:ўста(?:е|юць)|садзяц|кленчац|моляц|адказва|спява|прамаўля|чытае|каж[аыуе]|робіць|заахвочвае|просіць|акрапляе|уваходз|завяршае|маўчыць|пакланяецца|стаіць|бярэ|падае|благаслаўляе|садзіцца|стоят|садятся|кланяется|молится|отвечает|поет|говорит|читает|делает|призывает|просит|окропляет|благословляет)/iu;
@@ -70,8 +121,7 @@ function createTurndown({ emphasisAsRubric = false } = {}) {
         .filter((child) => child.nodeType !== 3 || child.textContent.trim());
       const onlyEmphasis = meaningfulChildren.length === 1 && meaningfulChildren[0].nodeName === 'EM';
       return /(?:^|\s)(?:rubric|mass-rubric-line)(?:\s|$)/i.test(className)
-        || onlyEmphasis
-        || RUBRIC_LINE_PATTERN.test(text);
+        || (emphasisAsRubric && (onlyEmphasis || RUBRIC_LINE_PATTERN.test(text)));
     },
     replacement(content, node) {
       const text = (node.textContent || content)
@@ -161,6 +211,9 @@ function repairStandaloneStrongMarkers(lines) {
 
 export function autoFixPrayerMarkdown(value = '') {
   const original = String(value ?? '');
+  if (parsePrayerMarkdown(original, PRAYER_TEXT_FORMAT).some((token) => ['fence', 'code_block'].includes(token.type))) {
+    return { markdown: original, changed: false, fixes: [] };
+  }
   const fixes = [];
   let source = original;
 
@@ -259,7 +312,7 @@ function isRubricInstruction(line) {
   if (!text || text.length > 650 || /[«»]/u.test(text)) return false;
   // Abbreviated speaker labels introduce spoken text. They are styled inline
   // by the prayer view and must not turn an entire spoken line into a rubric.
-  if (/^[СCЦН]\.:/u.test(text)) return false;
+  if (/^[КСНДЛЦVRC]\.:?\s/u.test(text)) return false;
   if (!RUBRIC_ACTOR_PATTERN.test(text)) return false;
 
   return RUBRIC_ACTION_PATTERN.test(text);
@@ -271,7 +324,17 @@ function isRubricInstruction(line) {
  * are deliberately preserved as authored text.
  */
 export function promotePrayerRubrics(value = '') {
-  const source = normalizePrayerMarkdown(value);
+  const tokens = parsePrayerMarkdown(value, PRAYER_TEXT_FORMAT);
+  if (tokens.some((token) => ['fence', 'code_block'].includes(token.type))) {
+    return { markdown: String(value), changed: false, rubricsAdded: 0 };
+  }
+  const excluded = new Set();
+  for (const token of tokens) {
+    if (['blockquote_open', 'heading_open', 'list_item_open'].includes(token.type) && token.map) {
+      for (let line = token.map[0]; line < token.map[1]; line += 1) excluded.add(line);
+    }
+  }
+  const source = String(value).replace(/\r\n?/g, '\n');
   const lines = source.split('\n');
   const result = [];
   let rubricOpen = false;
@@ -289,7 +352,7 @@ export function promotePrayerRubrics(value = '') {
       result.push(line);
       return;
     }
-    if (rubricOpen || !isRubricInstruction(line)) {
+    if (rubricOpen || excluded.has(index) || !isRubricInstruction(line)) {
       result.push(line);
       return;
     }
@@ -300,7 +363,7 @@ export function promotePrayerRubrics(value = '') {
     rubricsAdded += 1;
   });
 
-  const markdown = normalizePrayerMarkdown(result.join('\n'));
+  const markdown = rubricsAdded ? normalizePrayerMarkdown(result.join('\n')) : source;
   return { markdown, changed: markdown !== source, rubricsAdded };
 }
 
@@ -315,17 +378,39 @@ export function htmlToPrayerMarkdown(value = '', options = {}) {
 
 export function toPrayerMarkdown(value = '', format = '', options = {}) {
   if (!value) return '';
-  if (format === PRAYER_TEXT_FORMAT) return normalizePrayerMarkdown(value);
+  if (format === PRAYER_TEXT_FORMAT) return String(value).replace(/\r\n?/g, '\n');
   return looksLikeHtml(value) ? htmlToPrayerMarkdown(value, options) : normalizePrayerMarkdown(value);
 }
 
 export function renderPrayerMarkdown(value = '', format = '') {
-  return markdown.render(toPrayerMarkdown(value, format));
+  const source = toPrayerMarkdown(value, format);
+  const eligible = new Map(prayerSpeakerRanges(source).map((range) => [range.line, range]));
+  const tokens = markdown.parse(source, {});
+  for (const token of tokens) {
+    if (token.type !== 'inline') continue;
+    let line = token.map[0] + 1;
+    let start = true;
+    const children = [];
+    for (const child of token.children || []) {
+      const prefix = start && child.type === 'text' ? eligible.get(line) : null;
+      if (prefix) {
+        const label = new child.constructor('html_inline', '', 0);
+        label.content = `<span class="prayer-speaker" data-role="${prefix.role}">${markdown.utils.escapeHtml(prefix.label)}</span>`;
+        children.push(label);
+        child.content = child.content.replace(/^\s{0,3}[КСНДЛЦVR]\.:?/u, '');
+      }
+      children.push(child);
+      start = child.type === 'softbreak' || child.type === 'hardbreak';
+      if (start) line += 1;
+    }
+    token.children = children;
+  }
+  return markdown.renderer.render(tokens, markdown.options, {});
 }
 
 /** Block tokens of a prayer text, for readers that map blocks to semantics. */
-export function parsePrayerMarkdown(value = '', format = '') {
-  return markdown.parse(toPrayerMarkdown(value, format), {});
+export function parsePrayerMarkdown(value = '', format = '', options = {}) {
+  return markdown.parse(toPrayerMarkdown(value, format, options), {});
 }
 
 /** Renders one inline Markdown fragment (no paragraph wrapper). */
@@ -334,24 +419,30 @@ export function renderPrayerInline(value = '') {
 }
 
 export function prayerMarkdownToPlainText(value = '', format = '') {
-  const source = toPrayerMarkdown(value, format)
-    .replace(/^:::rubric\s*$/gm, '')
-    .replace(/^:::\s*$/gm, '')
-    .replace(/^#{1,6}\s+/gm, '')
-    .replace(/^\s*[-+*]\s+/gm, '')
-    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    .replace(/[*_~`]+/g, '')
-    .replace(/\n{3,}/g, '\n\n');
-  return source.trim();
+  const inlineText = (tokens) => tokens.map((token) => {
+    if (['softbreak', 'hardbreak'].includes(token.type)) return '\n';
+    if (token.type === 'image') return inlineText(token.children || []);
+    return token.nesting === 0 ? token.content : '';
+  }).join('');
+  return markdown.parse(toPrayerMarkdown(value, format), {})
+    .filter((token) => ['inline', 'fence', 'code_block'].includes(token.type))
+    .map((token) => token.type === 'inline' ? inlineText(token.children || []) : token.content.trimEnd())
+    .join('\n\n').trim();
 }
 
 export function validatePrayerMarkdown(value = '') {
-  const source = normalizePrayerMarkdown(value);
+  const source = String(value).replace(/\r\n?/g, '\n');
   const errors = [];
   let rubricOpen = false;
+  const protectedLines = new Set();
+  for (const token of markdown.parse(source, {})) {
+    if (['fence', 'code_block'].includes(token.type)) {
+      for (let line = token.map[0]; line < token.map[1]; line += 1) protectedLines.add(line);
+    }
+  }
 
   source.split('\n').forEach((line, index) => {
+    if (protectedLines.has(index)) return;
     const marker = line.trim();
     if (marker === ':::rubric') {
       if (rubricOpen) errors.push({ line: index + 1, message: 'Рубрыка ўжо адкрыта.' });
@@ -364,6 +455,38 @@ export function validatePrayerMarkdown(value = '') {
 
   if (rubricOpen) errors.push({ line: source.split('\n').length, message: 'Закрыйце рубрыку радком :::.' });
   return errors;
+}
+
+/** Warnings do not block saving an intentional quotation or legacy spelling. */
+export function diagnosePrayerMarkdown(value = '') {
+  const source = String(value);
+  const findings = validatePrayerMarkdown(source).map((issue) => ({ ...issue, severity: 'manual', code: 'rubric-balance' }));
+  const protectedLines = new Set();
+  const tokens = markdown.parse(source, {});
+  for (const token of tokens) {
+    if (['fence', 'code_block'].includes(token.type)) {
+      findings.push({ line: token.map[0] + 1, severity: 'manual', code: 'code', message: 'Код патрабуе ручной праверкі; аўтавыпраўленне адключана.' });
+      for (let n = token.map[0]; n < token.map[1]; n += 1) protectedLines.add(n);
+    }
+  }
+  const seen = new Set();
+  source.split('\n').forEach((line, index) => {
+    if (protectedLines.has(index)) return;
+    const add = (code, message, severity = 'review') => findings.push({ line: index + 1, code, message, severity });
+    if (/^\s*>/.test(line)) add('quotation', 'Цытата: праверце намер аўтара; знак > захоўваецца.');
+    if (/^\s*[КСНДЛЦVR]\.:\s/u.test(line)) add('legacy-label', 'Спадчынная метка з двукроп’ем чытаецца без змены тэксту.');
+    if (/^\s*[CKHNP]\.[ :]?/u.test(line)) add('ambiguous-label', 'Неадназначная лацінская літара або ініцыял; праверце ўдзельніка.', 'manual');
+    if (looksLikeHtml(line)) add('html', 'HTML: праверце пераўтварэнне і захаванне зместу.');
+    if (/^\s*[_*].+[_*]\s*$/.test(line)) add('emphasis', 'Вылучэнне не азначае рубрыку або адказ народу.');
+    if (isRubricInstruction(line)) add('possible-rubric', 'Магчымая рубрыка: патрабуе праверкі па сэнсе.');
+    if (/^\s*(?:#{1,6}\S|\*\*\s*$|:{2,3}\s+rubric)/.test(line)) add('markdown-marker', 'Праверце службовыя знакі Markdown.');
+    if (/\]\(\s*(?:javascript|data):/i.test(line)) add('unsafe-link', 'Небяспечны адрас спасылкі заблакаваны чытачом.', 'manual');
+    if (/\]\(\/prayer\/\s*\)/.test(line)) add('empty-link', 'У спасылцы няма ідэнтыфікатара малітвы.', 'manual');
+    if (line.trim().length > 30 && seen.has(line.trim())) add('duplicate-line', 'Паўтор можа быць літургічнай формулай; не выдаляйце аўтаматычна.');
+    seen.add(line.trim());
+  });
+  if (!source.trim()) findings.push({ line: 1, code: 'empty-text', severity: 'manual', message: 'Пустая моўная версія.' });
+  return findings;
 }
 
 export function prayerTextFields(markdownText) {

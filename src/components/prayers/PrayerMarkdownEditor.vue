@@ -32,6 +32,8 @@
         H2
       </button>
       <span class="markdown-editor__divider" />
+      <button v-for="speaker in [['К.', 'Кантар'], ['Н.', 'Народ'], ['С.', 'Святар'], ['Д.', 'Дыякан'], ['Л.', 'Лектар'], ['Ц.', 'Цэлебрант']]"
+        :key="speaker[0]" type="button" :title="speaker[1]" @click="prefixLines(speaker[0] + ' ')">{{ speaker[0] }}</button>
       <button type="button" title="Спасылка на іншую малітву" @click="openPrayerLink">
         <v-icon icon="mdi-link-variant" size="17" />
         Спасылка
@@ -53,6 +55,19 @@
       </span>
     </div>
     <div ref="editorHost" class="markdown-editor__surface" />
+    <p v-for="issue in editorDiagnostics" :key="issue.line + issue.message" class="markdown-editor__link-help" role="status">Радок {{ issue.line }}: {{ issue.message }}</p>
+    <v-dialog v-model="autofixDialog" max-width="760" @after-leave="view?.focus()">
+      <v-card title="Праверце выпраўленні Markdown">
+        <v-card-text>
+          <p>{{ autofixResult?.fixes.join('; ') }}</p>
+          <p>Праверце змест і рубрыкі перад заменай. Змены можна адмяніць праз Ctrl+Z.</p>
+          <pre class="markdown-editor__fix-preview">{{ autofixBefore }}</pre>
+          <p>Пасля:</p>
+          <pre class="markdown-editor__fix-preview">{{ autofixResult?.markdown }}</pre>
+        </v-card-text>
+        <v-card-actions><v-spacer /><v-btn @click="autofixDialog = false">Скасаваць</v-btn><v-btn color="primary" @click="applyAutofix">Ужыць</v-btn></v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="linkDialog" max-width="560" @after-leave="view?.focus()">
       <v-card :title="editingLink ? 'Рэдагаванне спасылкі' : 'Спасылка на малітву'">
         <v-card-text>
@@ -88,7 +103,8 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { parsePrayerLink, prayerLinkMarkdown } from '@/utils/prayerLink';
 import { ensureSyntaxTree } from '@codemirror/language';
 import { basicSetup } from 'codemirror';
-import { Compartment, EditorState } from '@codemirror/state';
+import { Compartment, EditorState, Transaction } from '@codemirror/state';
+import { isolateHistory } from '@codemirror/commands';
 import {
   Decoration,
   EditorView,
@@ -103,6 +119,8 @@ import {
   htmlToPrayerMarkdown,
   normalizePrayerMarkdown,
   validatePrayerMarkdown,
+  prayerSpeakerRanges,
+  diagnosePrayerMarkdown,
 } from '@/utils/prayerMarkdown';
 import { toggleMarkdownInlineFormat } from '@/utils/markdownInlineFormat';
 
@@ -117,6 +135,10 @@ const emit = defineEmits(['update:modelValue']);
 const editorHost = ref(null);
 const editorMode = ref('visual');
 const editorNotice = ref('');
+const editorDiagnostics = ref([]);
+const autofixDialog = ref(false);
+const autofixResult = ref(null);
+const autofixBefore = ref('');
 const modeCompartment = new Compartment();
 let view = null;
 let pasteNoticeTimeout = null;
@@ -182,7 +204,9 @@ const rubricCompletions = [
   { label: '/rubric', displayLabel: 'Рубрыка', detail: 'літургічная заўвага', apply: ':::rubric\nТэкст рубрыкі\n:::' },
   { label: '/stand', displayLabel: 'Усе ўстаюць', detail: 'рубрыка', apply: ':::rubric\nУсе ўстаюць.\n:::' },
   { label: '/silence', displayLabel: 'Цішыня', detail: 'рубрыка', apply: ':::rubric\nУсе моляцца некаторы час у цішыні.\n:::' },
-  { label: '/priest', displayLabel: 'Святар', detail: 'рубрыка', apply: ':::rubric\nСвятар кажа:\n:::' },
+  { label: '/priest', displayLabel: 'Святар', detail: 'удзельнік', apply: 'С. ' },
+  { label: '/cantor', displayLabel: 'Кантар', detail: 'удзельнік', apply: 'К. ' },
+  { label: '/people', displayLabel: 'Народ', detail: 'удзельнік', apply: 'Н. ' },
 ];
 
 function rubricCompletionSource(context) {
@@ -215,6 +239,9 @@ function addInlineDecorations(line, ranges) {
 function buildVisualDecorations(editorView) {
   const ranges = [];
   let rubricOpen = false;
+  for (const range of prayerSpeakerRanges(editorView.state.doc.toString())) {
+    ranges.push(Decoration.mark({ class: 'cm-prayer-speaker', attributes: { 'data-role': range.role } }).range(range.from, range.to));
+  }
 
   for (let number = 1; number <= editorView.state.doc.lines; number += 1) {
     const line = editorView.state.doc.line(number);
@@ -303,7 +330,10 @@ function createEditor() {
         EditorView.domEventHandlers({ paste: insertPastedContent }),
         modeCompartment.of(visualModeExtension),
         EditorView.updateListener.of((update) => {
-          if (update.docChanged) emit('update:modelValue', update.state.doc.toString());
+          if (update.docChanged) {
+            editorDiagnostics.value = diagnosePrayerMarkdown(update.state.doc.toString());
+            emit('update:modelValue', update.state.doc.toString());
+          }
         }),
         EditorView.theme({
           '&': { minHeight: '310px', backgroundColor: 'transparent' },
@@ -323,10 +353,12 @@ function createEditor() {
           '.cm-visual-heading-3': { fontSize: '1.1em' },
           '.cm-visual-strong': { fontWeight: '750' },
           '.cm-visual-emphasis': { fontStyle: 'italic' },
+          '.cm-prayer-speaker': { color: 'var(--rubric-color)', fontWeight: '700' },
         }),
       ],
     }),
   });
+  editorDiagnostics.value = diagnosePrayerMarkdown(props.modelValue);
 }
 
 function setEditorMode(mode) {
@@ -394,19 +426,38 @@ function autoFixMarkdown() {
     return;
   }
 
+  autofixBefore.value = source;
+  autofixResult.value = result;
+  autofixDialog.value = true;
+}
+
+function applyAutofix() {
+  if (!view || view.state.doc.toString() !== autofixBefore.value) {
+    autofixDialog.value = false;
+    showEditorNotice('Тэкст змяніўся. Запусціце праверку нанова.');
+    return;
+  }
+  const result = autofixResult.value;
   const cursor = Math.min(view.state.selection.main.head, result.markdown.length);
   view.dispatch({
     changes: { from: 0, to: view.state.doc.length, insert: result.markdown },
     selection: { anchor: cursor },
+    annotations: isolateHistory.of('full'),
   });
-  showEditorNotice(`Выпраўлена: ${result.fixes.length}`);
+  autofixDialog.value = false;
+  showEditorNotice(`Выпраўлена: ${result.fixes.join('; ')}`);
   view.focus();
 }
 
 watch(() => props.modelValue, (value) => {
   if (!view || value === view.state.doc.toString()) return;
   linkDialog.value = false;
-  view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: value } });
+  const range = view.state.selection.main;
+  view.dispatch({
+    changes: { from: 0, to: view.state.doc.length, insert: value },
+    selection: { anchor: Math.min(range.anchor, value.length), head: Math.min(range.head, value.length) },
+    annotations: Transaction.addToHistory.of(false),
+  });
 });
 
 watch(() => props.error, () => {
@@ -439,6 +490,7 @@ onBeforeUnmount(() => {
 .markdown-editor__paste-notice { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; color: rgb(var(--v-theme-primary)); font-size: 0.7rem; font-weight: 700; }
 .markdown-editor__surface { color: var(--nav-on-surface); font-size: 1rem; }
 .markdown-editor__link-help { color: var(--nav-muted); font-size: 0.8rem; overflow-wrap: anywhere; }
+.markdown-editor__fix-preview { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 240px; overflow: auto; font: inherit; padding: 12px; background: var(--nav-active); }
 @media (max-width: 600px) {
   .markdown-editor__mode-description, .markdown-editor__hint { display: none; }
   .markdown-editor__mode-bar { justify-content: center; }
