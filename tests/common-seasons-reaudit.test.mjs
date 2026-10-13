@@ -18,7 +18,7 @@ import { htmlToPlain } from '../scripts/liturgy/common-seasons/lib/html.mjs';
 import {
   BASE_CORRECTIONS, baseVersusOrdinary, scanSourceMisprints, volumeWordCoverage,
 } from '../scripts/liturgy/common-seasons/lib/ledger.mjs';
-import { buildAudit } from '../scripts/liturgy/common-seasons/lib/report.mjs';
+import { buildAudit, renderBaseCorrectionsMarkdown, renderMarkdown } from '../scripts/liturgy/common-seasons/lib/report.mjs';
 import { variantKeyForSeason } from '../src/utils/ordo/commonSeasons.js';
 import { computeSeason } from '../src/utils/ordo/season.js';
 import { computeYearAnchors } from '../src/utils/ordo/movableFeasts.js';
@@ -271,6 +271,37 @@ test('nothing printed by Volume I or II is lost: every word is found in the text
   });
 });
 
+test('hymns, antiphons, psalms, short readings, prayers and readings printed by a volume are in the variant of their season word for word, and only there', () => {
+  const LABELS = new Set(['першае', 'чытанне', 'другое', 'ант', 'да', 'песні', 'марыі', 'захарыі', 'аллелюя']);
+  const significant = (text) => tokensOf(text).filter((t) => !LABELS.has(t));
+  const KINDS = new Set(['hymn', 'ant', 'psalm', 'shortReading', 'prayer', 'reading1', 'reading2', 'versicle', 'canticleAnt']);
+  const seen = new Set();
+  const mismatches = [];
+  analysis.variants.forEach((bySeason, commonId) => Object.entries(bySeason).forEach(([season, fields]) => Object.entries(fields).forEach(([field, info]) => {
+    if (info.method !== 'render' || !KINDS.has(info.kind)) return;
+    const units = corpus.volumes[info.volume].commons.get(commonId).fields.get(field);
+    const printed = significant(comparableText(units, season));
+    const shown = significant(plain(info.value));
+    seen.add(info.kind);
+    const diff = tokenDiff(printed, shown).filter((x) => x.op !== '=');
+    if (diff.length) mismatches.push(`${commonId}.${season}.${field}: ${diff.slice(0, 4).map((x) => x.op + x.token).join(' ')}`);
+  })));
+  assert.deepEqual(mismatches, []);
+  ['hymn', 'psalm', 'prayer', 'reading1', 'shortReading', 'versicle'].forEach((kind) => assert.ok(seen.has(kind), `${kind} variants exist and were checked`));
+  // Lent and Easter texts of the same field are different texts when the volume prints two, never glued together
+  let twoSeasons = 0;
+  documents.forEach((bySeason, commonId) => Object.keys(bySeason.lent || {}).forEach((field) => {
+    const lent = analysis.variants.get(commonId).lent[field];
+    const easter = analysis.variants.get(commonId).easter?.[field];
+    if (!easter || lent.method !== 'render' || easter.method !== 'render') return;
+    twoSeasons += 1;
+    const l = significant(plain(lent.value)); const e = significant(plain(easter.value));
+    assert.ok(l.join(' ') !== e.join(' ') || lent.volume === easter.volume, `${commonId}.${field}`);
+    ['Вялікі пост', 'Велікодны перыяд'].forEach((word) => { assert.doesNotMatch(plain(lent.value), new RegExp(`У ${word}:`)); assert.doesNotMatch(plain(easter.value), new RegExp(`У ${word}:`)); });
+  }));
+  assert.ok(twoSeasons > 3, `fields with a Lent and an Easter text: ${twoSeasons}`);
+});
+
 // ------------------------------------------------------------------------------------------------ decisions of the editor
 
 test('NR-007…009: К./Н. of officeOfReadingsVers are in the right order in the base, in the variants and in every Common', () => {
@@ -495,4 +526,12 @@ test('documents stay far below the Firestore limit and the patch is a SAFE CONTE
     const texts = Array.isArray(value) ? value : [value];
     texts.forEach((text) => { assert.ok(text.length < 200000); assert.doesNotMatch(text, /<(script|iframe|object|style)/i); });
   })));
+});
+
+test('the committed audit and the base-corrections ledger are what the parser reports now (run --report after a change)', () => {
+  const audit = buildAudit({ corpus, analysis, baseline, generatedFrom: Object.fromEntries(Object.values(corpus.volumes).map((v) => [v.id, { file: v.file, sha256: v.sha256 }])) });
+  const read = (name) => fs.readFileSync(path.join(ROOT, 'reports', 'liturgy', name), 'utf8');
+  assert.equal(read('common-seasons-audit.json'), `${JSON.stringify(audit, null, 2)}\n`);
+  assert.equal(read('common-seasons-audit.md'), renderMarkdown(audit));
+  assert.equal(read('common-seasons-base-corrections.md'), renderBaseCorrectionsMarkdown(audit));
 });

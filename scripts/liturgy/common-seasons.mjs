@@ -18,7 +18,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { analyzeCorpus, loadCorpus, SEASONS } from './common-seasons/lib/analyze.mjs';
-import { buildAudit, renderMarkdown } from './common-seasons/lib/report.mjs';
+import { buildAudit, renderBaseCorrectionsMarkdown, renderMarkdown } from './common-seasons/lib/report.mjs';
 import { OFFICE_CONTENT_FIELDS } from '../../src/constants/officeFields.js';
 import { SEASONAL_VARIANTS_FIELD, validateSeasonalVariants } from '../../src/utils/ordo/commonSeasons.js';
 
@@ -129,6 +129,7 @@ function main() {
     fs.mkdirSync(PATHS.reports, { recursive: true });
     fs.writeFileSync(path.join(PATHS.reports, 'common-seasons-audit.json'), stable(audit));
     fs.writeFileSync(path.join(PATHS.reports, 'common-seasons-audit.md'), renderMarkdown(audit));
+    fs.writeFileSync(path.join(PATHS.reports, 'common-seasons-base-corrections.md'), renderBaseCorrectionsMarkdown(audit));
     summary.report = path.relative(ROOT, path.join(PATHS.reports, 'common-seasons-audit.json'));
     summary.needsReview = audit.summary.needsReview;
     summary.openQuestionsForTheOwner = audit.disputed.length;

@@ -55,6 +55,12 @@ export const BASE_CORRECTIONS = Object.freeze([
     id, common, field: 'officeOfReadingsVers', kind: 'kn-labels-swapped',
     commit: 'fix(liturgy): swap К./Н. labels in officeOfReadingsVers of apostles, virgins, holy-women',
     evidence,
+    before: {
+      apostles: 'Н. Апосталы абвяшчалі хвалу і магутнасць Пана. К. І цуды, якія Ён учыніў.',
+      virgins: 'Н. Ты паказаў мне шляхі жыцця. К. Напоўніў мяне радасцю сузірання Твайго аблічча.',
+      'holy-women': 'Н. Разважанні майго сэрца заўжды перад Табою. К. Пане, мая дапамога і мой Адкупіцель.',
+    }[common],
+    fields: ['officeOfReadingsVers'],
     verify(corpus) {
       const base = labelsOf(htmlToPlain(corpus.base.get(common).officeOfReadingsVers));
       const labels = (volId) => labelsOf(printed(corpus, volId, common, 'officeOfReadingsVers', volId === 'I' ? 'advent' : volId === 'II' ? 'lent' : null).text.replace(/\s+/g, ' '));
@@ -65,6 +71,8 @@ export const BASE_CORRECTIONS = Object.freeze([
   {
     id: 'NR-003', common: 'apostles', field: 'officeOfReadingsAnt2 + officeOfReadingsPs2 (closing antiphon)', kind: 'misprint-in-antiphon',
     commit: 'fix(liturgy): apostles Ps 64 (63) antiphon wording (абвяшчалі справу)',
+    before: '2 ант. Яны абвяшалі справу Бога * і зразумелі Яго ўчынкі. / (closing) Ант. Яны абвяшалі справы Бога * і зразумелі Яго ўчынкі.',
+    fields: ['officeOfReadingsAnt2', 'officeOfReadingsPs2'],
     evidence: 'Volume III prints «абвяшалі справу» (2 ант., line 1703) and «абвяшалі справы» (closing antiphon, line 1733) while the verse of the same psalm in the same volume reads «абвесцяць справу Бога»; the verb is «абвяшчаць» everywhere else in the three volumes; Volumes I and II print «абвяшчалі справу» in both antiphons. The psalm body is identical in Volume II and in the stored base (checked word by word).',
     verify(corpus) {
       const base = corpus.base.get('apostles');
@@ -169,6 +177,15 @@ export function volumeWordCoverage({ corpus, variants, seasons, seasonVolume }) 
   const buckets = { '0': cells - rows.length, '1–5': 0, '6–19': 0, '≥ 20': 0 };
   rows.forEach((r) => { buckets[bucket(r.notFoundWords)] += 1; });
   return { cells, buckets, largest: rows.filter((r) => r.notFoundWords >= 6).sort((a, b) => b.notFoundWords - a.notFoundWords || a.common.localeCompare(b.common) || a.field.localeCompare(b.field)) };
+}
+
+/** Source lines (per volume) of a field, for the ledger. */
+export function sourceLines(corpus, common, field) {
+  return Object.fromEntries(['I', 'II', 'III'].map((volId) => {
+    const units = corpus.volumes[volId].commons.get(common)?.fields.get(field) || [];
+    const numbers = units.flatMap((unit) => [unit.startLine, ...unit.lines.map((l) => l.n), ...unit.branches.flatMap((b) => b.lines.map((l) => l.n)), ...unit.repeats.map((l) => l.n)]);
+    return [volId, numbers.length ? [Math.min(...numbers), Math.max(...numbers)] : null];
+  }));
 }
 
 export function readText(file) { return fs.readFileSync(file, 'utf8'); }

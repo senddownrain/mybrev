@@ -8,8 +8,9 @@
 import { SEASONS, SEASON_VOLUME, SOURCE_TYPO_FIXES } from './analyze.mjs';
 import { VOLUMES } from './volume.mjs';
 import { DIFFERENCE_CLASSES } from './compare.mjs';
+import { htmlToPlain } from './html.mjs';
 import {
-  BASE_CORRECTIONS, OWNER_DECISIONS, baseVersusOrdinary, indexCrossCheck, scanSourceMisprints, volumeWordCoverage,
+  BASE_CORRECTIONS, OWNER_DECISIONS, baseVersusOrdinary, indexCrossCheck, scanSourceMisprints, sourceLines, volumeWordCoverage,
 } from './ledger.mjs';
 
 const count = (items, key) => items.reduce((acc, item) => { const k = typeof key === 'function' ? key(item) : item[key]; acc[k] = (acc[k] || 0) + 1; return acc; }, {});
@@ -277,7 +278,23 @@ export function buildAudit({ corpus, analysis, generatedFrom, baseline }) {
     },
     reclassification,
     decisions: decisions.items,
-    baseCorrections: BASE_CORRECTIONS.map(({ verify, ...rest }) => ({ ...rest, verification: verify(corpus) })),
+    baseCorrections: BASE_CORRECTIONS.map(({ verify, ...rest }) => ({
+      ...rest,
+      after: rest.fields.map((f) => `${f}: ${htmlToPlain(Array.isArray(corpus.base.get(rest.common)[f]) ? corpus.base.get(rest.common)[f].join(' ') : corpus.base.get(rest.common)[f]).replace(/\s+/g, ' ').trim().slice(-240)}`),
+      sourceLines: Object.fromEntries(rest.fields.map((f) => [f, sourceLines(corpus, rest.common, f)])),
+      verification: verify(corpus),
+    })),
+    candidateCorrectionsNotApplied: {
+      note: 'Found by the comparison and NOT changed: the base fields of Ordinary Time stay as printed in Volume III unless the correction is proven and approved (see the open questions D-4 and D-6).',
+      wordingOfVolumesIAndIIAgainstIII: [...new Map(analysis.matrix
+        .filter((c) => (c.resolution === 'kept-base-substantial-wording' || c.resolution === 'kept-base-minor-wording') && c.difference.sameAsOtherSeasonalVolume && (c.season === 'advent' || c.season === 'lent'))
+        .filter((c) => !BASE_CORRECTIONS.some((x) => x.common === c.common && x.fields.includes(c.field) && x.id === 'NR-003'))
+        .map((c) => [`${c.common}.${c.field}`, {
+          common: c.common, field: c.field, minor: c.difference.minor === true, changes: c.difference.changes,
+          sameInVolumes: ['I', 'II'].filter((v) => corpus.volumes[v].commons.get(c.common)?.fields.has(c.field)),
+        }])).values()],
+      baseGapsAgainstVolumeIII: baseGaps,
+    },
     sourceMisprints: { fix: SOURCE_TYPO_FIXES.map((f) => ({ id: f.id, note: f.note })), occurrences: misprints, appliedInVariants: analysis.typos.get('alleyuya') || 0 },
     wordCoverage,
     baseVersusVolumeIII: baseGaps,
@@ -334,5 +351,35 @@ export function renderMarkdown(audit) {
   L.push(`- «(Велікодны перыяд Аллелюя)»: в тексте тома II ${s.alleluia.annotationsInVolumeII} пометок (из них ${s.alleluia.annotationsInIndexOfVolumeII} в индексе), применено элементов ${s.alleluia.appliedElements}: ${Object.entries(s.alleluia.byRule).map(([k, v]) => `${k}: ${v}`).join(', ')}.`);
   Object.entries(audit.volumes).forEach(([id, v]) => L.push(`- Том ${id}: распознано единиц ${v.recognizedUnits}, полей ${v.recognizedFields}, парсерных замечаний ${v.parseIssues.length}.`));
   L.push('', 'Полная матрица (Common × час × поле × сезон) — в `common-seasons-audit.json`.', '');
+  return `${L.join('\n')}\n`;
+}
+
+/** The separate ledger of the corrections of the BASE texts (Markdown). */
+export function renderBaseCorrectionsMarkdown(audit) {
+  const L = [];
+  L.push('# Ведомость исправлений базовых текстов Common (отдельно от сезонных вариантов)', '');
+  L.push('База = плоские поля `patchs/feasts/common-texts/*.json` (Звычайны перыяд, том III). Здесь только то, что **изменено в базе** отдельными коммитами по решениям редактора, и то, что найдено, но **не** изменено. Сезонные варианты (`_seasonalVariants`) — в `common-seasons-audit.md`.', '');
+  L.push('## Подтверждённые исправления (применены)', '');
+  audit.baseCorrections.forEach((c) => {
+    L.push(`### ${c.id} · ${c.common}.${c.field}`, '');
+    L.push(`- Коммит: «${c.commit}»`);
+    L.push(`- Было: ${c.before}`);
+    L.push(`- Стало (конец поля): ${c.after.join(' | ')}`);
+    L.push(`- Основание: ${c.evidence}`);
+    L.push(`- Строки источников: ${Object.entries(c.sourceLines).map(([f, v]) => `${f}: ${Object.entries(v).map(([vol, r]) => `том ${vol} ${r ? `${r[0]}–${r[1]}` : '—'}`).join(', ')}`).join('; ')}`);
+    L.push(`- Автопроверка: ${c.verification.ok ? 'база совпадает с томами (тест)' : '**НЕ СОВПАДАЕТ**'}`, '');
+  });
+  L.push('### NR-010 · опечатка тома II «аллеюя»', '');
+  L.push(`- Не база: в тексте тома II (строки ${audit.sourceMisprints.occurrences.map((m) => m.line).join(', ')}; ${audit.sourceMisprints.occurrences.reduce((s, m) => s + m.words, 0)} слова) напечатано «аллеюя», всюду в трёх томах — «аллелюя». В сезонных вариантах исправлено; базовые поля опечатки не содержат.`, '');
+  L.push('## Найдено, но НЕ изменено (решение владельца)', '');
+  const candidates = audit.candidateCorrectionsNotApplied;
+  L.push(candidates.note, '');
+  L.push(`### Редакция перевода: тома I и II совпадают между собой и расходятся с томом III (${candidates.wordingOfVolumesIAndIIAgainstIII.length} полей)`, '');
+  L.push('| Поле | Том(а) | Различия (том III → тома I/II) |', '|---|---|---|');
+  candidates.wordingOfVolumesIAndIIAgainstIII.forEach((c) => L.push(`| ${c.common}.${c.field}${c.minor ? '' : ' (существенно)'} | ${c.sameInVolumes.join('+')} | ${(c.changes || []).slice(0, 4).map((x) => `«${x.ordinary || '∅'}» → «${x.volume || '∅'}»`).join('; ')} |`));
+  L.push('', `### Текст тома III, которого нет в базе (${candidates.baseGapsAgainstVolumeIII.length} полей)`, '');
+  L.push('| Поле | Слов нет в базе | Что именно (слова тома III, нормализованные) |', '|---|---|---|');
+  candidates.baseGapsAgainstVolumeIII.forEach((g) => L.push(`| ${g.common}.${g.field} | ${g.missingWords} | ${(g.changes || []).filter((x) => x.onlyInVolumeIII).map((x) => `«${x.onlyInVolumeIII}»`).slice(0, 2).join('; ')} |`));
+  L.push('');
   return `${L.join('\n')}\n`;
 }

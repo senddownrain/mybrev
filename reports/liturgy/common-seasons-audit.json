@@ -4531,6 +4531,29 @@
       "kind": "kn-labels-swapped",
       "commit": "fix(liturgy): swap К./Н. labels in officeOfReadingsVers of apostles, virgins, holy-women",
       "evidence": "Volumes I and II print «К. Апосталы абвяшчалі хвалу і магутнасць Пана. Н. І цуды, якія Ён учыніў.»; Volume III prints the labels reversed. The Proper of Ss. Philip and James (patchs/db-feasts/03-05-sv-philip-james-apostles.json) has К. first.",
+      "before": "Н. Апосталы абвяшчалі хвалу і магутнасць Пана. К. І цуды, якія Ён учыніў.",
+      "fields": [
+        "officeOfReadingsVers"
+      ],
+      "after": [
+        "officeOfReadingsVers: К. Апосталы абвяшчалі хвалу і магутнасць Пана. Н. І цуды, якія Ён учыніў."
+      ],
+      "sourceLines": {
+        "officeOfReadingsVers": {
+          "I": [
+            1184,
+            1185
+          ],
+          "II": [
+            1266,
+            1267
+          ],
+          "III": [
+            1767,
+            1769
+          ]
+        }
+      },
       "verification": {
         "baseLabels": "КН",
         "volumeI": "КН",
@@ -4546,6 +4569,29 @@
       "kind": "kn-labels-swapped",
       "commit": "fix(liturgy): swap К./Н. labels in officeOfReadingsVers of apostles, virgins, holy-women",
       "evidence": "Volumes I and II print «К. Ты паказаў мне шляхі жыцця. Н. Напоўніў мяне радасцю сузірання Твайго аблічча.» (Пс 16 (15), 11); Volume III prints the labels reversed.",
+      "before": "Н. Ты паказаў мне шляхі жыцця. К. Напоўніў мяне радасцю сузірання Твайго аблічча.",
+      "fields": [
+        "officeOfReadingsVers"
+      ],
+      "after": [
+        "officeOfReadingsVers: К. Ты паказаў мне шляхі жыцця. Н. Напоўніў мяне радасцю сузірання Твайго аблічча."
+      ],
+      "sourceLines": {
+        "officeOfReadingsVers": {
+          "I": [
+            3347,
+            3348
+          ],
+          "II": [
+            3781,
+            3782
+          ],
+          "III": [
+            4386,
+            4388
+          ]
+        }
+      },
       "verification": {
         "baseLabels": "КН",
         "volumeI": "КН",
@@ -4561,6 +4607,29 @@
       "kind": "kn-labels-swapped",
       "commit": "fix(liturgy): swap К./Н. labels in officeOfReadingsVers of apostles, virgins, holy-women",
       "evidence": "ONLY Volume I prints «К. Разважанні майго сэрца заўжды перад Табою. Н. Пане, мая дапамога і мой Адкупіцель.»; Volumes II and III repeat the same reversed order (the first decision note assumed that Volume II is right: it is not). The versicle is the first half of Пс 19 (18), 15, the response the second half; every other Common of the three volumes prints К. before Н.",
+      "before": "Н. Разважанні майго сэрца заўжды перад Табою. К. Пане, мая дапамога і мой Адкупіцель.",
+      "fields": [
+        "officeOfReadingsVers"
+      ],
+      "after": [
+        "officeOfReadingsVers: К. Разважанні майго сэрца заўжды перад Табою. Н. Пане, мая дапамога і мой Адкупіцель."
+      ],
+      "sourceLines": {
+        "officeOfReadingsVers": {
+          "I": [
+            4328,
+            4329
+          ],
+          "II": [
+            4777,
+            4778
+          ],
+          "III": [
+            5581,
+            5583
+          ]
+        }
+      },
       "verification": {
         "baseLabels": "КН",
         "volumeI": "КН",
@@ -4575,7 +4644,46 @@
       "field": "officeOfReadingsAnt2 + officeOfReadingsPs2 (closing antiphon)",
       "kind": "misprint-in-antiphon",
       "commit": "fix(liturgy): apostles Ps 64 (63) antiphon wording (абвяшчалі справу)",
+      "before": "2 ант. Яны абвяшалі справу Бога * і зразумелі Яго ўчынкі. / (closing) Ант. Яны абвяшалі справы Бога * і зразумелі Яго ўчынкі.",
+      "fields": [
+        "officeOfReadingsAnt2",
+        "officeOfReadingsPs2"
+      ],
       "evidence": "Volume III prints «абвяшалі справу» (2 ант., line 1703) and «абвяшалі справы» (closing antiphon, line 1733) while the verse of the same psalm in the same volume reads «абвесцяць справу Бога»; the verb is «абвяшчаць» everywhere else in the three volumes; Volumes I and II print «абвяшчалі справу» in both antiphons. The psalm body is identical in Volume II and in the stored base (checked word by word).",
+      "after": [
+        "officeOfReadingsAnt2: 2 ант. Яны абвяшчалі справу Бога * і зразумелі Яго ўчынкі.",
+        "officeOfReadingsPs2: се людзі будуць іх баяцца. Яны абвесцяць справу Бога * і зразумеюць Яго ўчынкі. А справядлівы ўзрадуецца ў Пану † і будзе шукаць прыбежышча ў Ім, * і праславяцца ўсе праведныя сэрцам. Ант. Яны абвяшчалі справу Бога * і зразумелі Яго ўчынкі."
+      ],
+      "sourceLines": {
+        "officeOfReadingsAnt2": {
+          "I": [
+            1127,
+            1127
+          ],
+          "II": [
+            1209,
+            1209
+          ],
+          "III": [
+            1703,
+            1704
+          ]
+        },
+        "officeOfReadingsPs2": {
+          "I": [
+            1128,
+            1154
+          ],
+          "II": [
+            1210,
+            1236
+          ],
+          "III": [
+            1705,
+            1734
+          ]
+        }
+      },
       "verification": {
         "antiphon": "2 ант. яны абвяшчалі справу бога * і зразумелі яго ўчынкі.",
         "closingAntiphonEnd": "ам. ант. яны абвяшчалі справу бога * і зразумелі яго ўчынкі.",
@@ -4586,6 +4694,1783 @@
       }
     }
   ],
+  "candidateCorrectionsNotApplied": {
+    "note": "Found by the comparison and NOT changed: the base fields of Ordinary Time stay as printed in Volume III unless the correction is proven and approved (see the open questions D-4 and D-6).",
+    "wordingOfVolumesIAndIIAgainstIII": [
+      {
+        "common": "church-dedication",
+        "field": "officeOfReadingsPs2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "",
+            "volume": "чые"
+          },
+          {
+            "ordinary": "каго",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "officeOfReadingsR2",
+        "minor": false,
+        "changes": [
+          {
+            "ordinary": "прашэнні",
+            "volume": "малітвы"
+          },
+          {
+            "ordinary": "гораў",
+            "volume": "гор"
+          },
+          {
+            "ordinary": "камні",
+            "volume": "камяні"
+          },
+          {
+            "ordinary": "камені",
+            "volume": "камянях"
+          },
+          {
+            "ordinary": "дрэве",
+            "volume": "дрэвах"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "laudesHymn",
+        "minor": false,
+        "changes": [
+          {
+            "ordinary": "няхай кожны атрымае",
+            "volume": "хай усе тут атрымаюць"
+          },
+          {
+            "ordinary": "аб чым просіць",
+            "volume": "чаго просяць"
+          },
+          {
+            "ordinary": "няхай",
+            "volume": "будуць"
+          },
+          {
+            "ordinary": "няхай будзе вечна",
+            "volume": "хай гучыць заўсёды"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "laudesAntBen",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "яго ў доме сваім",
+            "volume": "хрыста"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "laudesPr",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "народу",
+            "volume": "народа"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "sext3R",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "і",
+            "volume": "а я"
+          },
+          {
+            "ordinary": "двары",
+            "volume": "панадворкі"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "vesperHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "і",
+            "volume": "так"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "vesperAnt1",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "шацёр свой",
+            "volume": "жыллё сваё"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "vesperPs1",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "святыя шатры",
+            "volume": "святое жыллё"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "vesperPr",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "народу",
+            "volume": "народа"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "vesper1Ant2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "",
+            "volume": "горад божы"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "vesper1Ps2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "",
+            "volume": "горад божы"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "vesper1Inter",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "адкідаеш",
+            "volume": "адкідваеш"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "church-dedication",
+        "field": "vesper1Pr",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "народу",
+            "volume": "народа"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "blessed-virgin-mary",
+        "field": "officeOfReadingsPs2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "святыя шатры",
+            "volume": "святое жыллё"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "blessed-virgin-mary",
+        "field": "laudesAnt1",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "прыйшо",
+            "volume": "прыйшло"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "blessed-virgin-mary",
+        "field": "vesperHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "хрыста бога",
+            "volume": "хрыстабога"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "blessed-virgin-mary",
+        "field": "vesperAntMag",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "што",
+            "volume": "няхай"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "blessed-virgin-mary",
+        "field": "vesper1R",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "нараджэння",
+            "volume": ""
+          },
+          {
+            "ordinary": "марыя",
+            "volume": ""
+          },
+          {
+            "ordinary": "нараджэння",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "blessed-virgin-mary",
+        "field": "vesper1AntMag",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "паглядзеў",
+            "volume": "глянуў"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "blessed-virgin-mary",
+        "field": "vesper1Inter",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "ўсемагутнага",
+            "volume": "усемагутнага"
+          },
+          {
+            "ordinary": "валадарку",
+            "volume": "владарку"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "apostles",
+        "field": "sext2R",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "12а",
+            "volume": "12 а"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "apostles",
+        "field": "vesperPs3",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "бо ён",
+            "volume": "i"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "apostles",
+        "field": "vesperR",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "пана",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "apostles",
+        "field": "vesperInter",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "рупліва",
+            "volume": "працавіта"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "apostles",
+        "field": "vesper1Ant1",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "дванаццаць",
+            "volume": ""
+          },
+          {
+            "ordinary": "",
+            "volume": "дванаццаць"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "apostles",
+        "field": "vesper1Ant2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "і",
+            "volume": "i"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "apostles",
+        "field": "vesper1Ps1",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "дванаццаць",
+            "volume": ""
+          },
+          {
+            "ordinary": "",
+            "volume": "дванаццаць"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "apostles",
+        "field": "vesper1Ps2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "і",
+            "volume": "i"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "apostles",
+        "field": "vesper1Ps3",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "бо ён",
+            "volume": "i"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "apostles",
+        "field": "vesper1Inter",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "рупліва",
+            "volume": "працавіта"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyrs-many",
+        "field": "officeOfReadingsPs2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "належыць хваліць яго",
+            "volume": "прыстоіць спеў хвалы"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyrs-many",
+        "field": "officeOfReadingsR2",
+        "minor": false,
+        "changes": [
+          {
+            "ordinary": "",
+            "volume": "хвалебна"
+          },
+          {
+            "ordinary": "хвалу",
+            "volume": ""
+          },
+          {
+            "ordinary": "самому быць",
+            "volume": "асабіста паказацца"
+          },
+          {
+            "ordinary": "пана за",
+            "volume": ""
+          },
+          {
+            "ordinary": "",
+            "volume": "ў пану"
+          },
+          {
+            "ordinary": "вытрываласці",
+            "volume": "цярплівасці"
+          },
+          {
+            "ordinary": "",
+            "volume": "па"
+          },
+          {
+            "ordinary": "шляхам",
+            "volume": "шляху"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyrs-many",
+        "field": "laudesAnt1",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "хрыста",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyrs-many",
+        "field": "sext1R",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "навекі",
+            "volume": "на векі"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyrs-many",
+        "field": "vesperHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "зноў жадае",
+            "volume": "прымушае"
+          },
+          {
+            "ordinary": "адкінуў",
+            "volume": "адрокся"
+          },
+          {
+            "ordinary": "падавалі",
+            "volume": "падалі"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyrs-many",
+        "field": "vesper1Ps3",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "ніякага",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "officeOfReadingsHymn",
+        "minor": false,
+        "changes": [
+          {
+            "ordinary": "ў цярпенні",
+            "volume": "праз цярпенне"
+          },
+          {
+            "ordinary": "ты",
+            "volume": ""
+          },
+          {
+            "ordinary": "",
+            "volume": "ты"
+          },
+          {
+            "ordinary": "й найсвяцейшаму",
+            "volume": "і святому"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "officeOfReadingsPs2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "палючы",
+            "volume": "пякучы"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "officeOfReadingsR2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "спажывай",
+            "volume": "пажывай"
+          },
+          {
+            "ordinary": "гасцей",
+            "volume": "бяседнікаў"
+          },
+          {
+            "ordinary": "удзяліў",
+            "volume": "ўдзяліў"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "laudesHymn",
+        "minor": false,
+        "changes": [
+          {
+            "ordinary": "ідзеш слядамі",
+            "volume": "крочыш следам"
+          },
+          {
+            "ordinary": "небе",
+            "volume": "нябёсах"
+          },
+          {
+            "ordinary": "адары",
+            "volume": ""
+          },
+          {
+            "ordinary": "",
+            "volume": "напоўні"
+          },
+          {
+            "ordinary": "й найсвяцейшаму",
+            "volume": "і святому"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "sext1R",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "навекі",
+            "volume": "на векі"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "vesperHymn",
+        "minor": false,
+        "changes": [
+          {
+            "ordinary": "правіны",
+            "volume": "віны"
+          },
+          {
+            "ordinary": "у",
+            "volume": "ў"
+          },
+          {
+            "ordinary": "праз",
+            "volume": "за"
+          },
+          {
+            "ordinary": "правіны",
+            "volume": "віны"
+          },
+          {
+            "ordinary": "",
+            "volume": "стварыцеля"
+          },
+          {
+            "ordinary": "ўласнага творцы",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "vesperAnt1",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "ісці",
+            "volume": "пайсці"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "vesperAnt2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "будзе",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "vesperPs1",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "ісці",
+            "volume": "пайсці"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "vesperPs2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "будзе",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "vesper1Ps1",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "які ў нябёсах",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "pastors",
+        "field": "officeOfReadingsHymn",
+        "minor": false,
+        "changes": [
+          {
+            "ordinary": "зядноўваў авечак якіх",
+            "volume": "яднаў тваю паству якую"
+          },
+          {
+            "ordinary": "намасціў яго",
+            "volume": ""
+          },
+          {
+            "ordinary": "",
+            "volume": "намасціў яго"
+          },
+          {
+            "ordinary": "",
+            "volume": "рушыць у бой"
+          },
+          {
+            "ordinary": "ён",
+            "volume": ""
+          },
+          {
+            "ordinary": "змагацца",
+            "volume": ""
+          },
+          {
+            "ordinary": "ўспамін",
+            "volume": "успамін"
+          },
+          {
+            "ordinary": "узорным",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "pastors",
+        "field": "officeOfReadingsPs2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "8",
+            "volume": "9"
+          },
+          {
+            "ordinary": "",
+            "volume": "ты ж пане узвышаны навекі"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "pastors",
+        "field": "officeOfReadingsPs3",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "",
+            "volume": "бо"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "pastors",
+        "field": "laudesHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "усё",
+            "volume": "ўсё"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "pastors",
+        "field": "laudesPr",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "душаў",
+            "volume": "душ"
+          },
+          {
+            "ordinary": "народу",
+            "volume": "народа"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "pastors",
+        "field": "sext3R",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "пан",
+            "volume": ""
+          },
+          {
+            "ordinary": "",
+            "volume": "пан"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "pastors",
+        "field": "vesperHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "збавеннаю",
+            "volume": "збаўленнаю"
+          },
+          {
+            "ordinary": "мы кожны год",
+            "volume": "штогод"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "pastors",
+        "field": "vesperPs3",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "3 4",
+            "volume": "34"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "pastors",
+        "field": "vesperPr",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "душаў",
+            "volume": "душ"
+          },
+          {
+            "ordinary": "народу",
+            "volume": "народа"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "pastors",
+        "field": "vesper1Ps2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "",
+            "volume": "праслаўляй душа мая пана"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "pastors",
+        "field": "vesper1Pr",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "душаў",
+            "volume": "душ"
+          },
+          {
+            "ordinary": "народу",
+            "volume": "народа"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "doctors-of-church",
+        "field": "officeOfReadingsR2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "трымценнем",
+            "volume": "трапятаннем"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "doctors-of-church",
+        "field": "vesperHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "стварэнне",
+            "volume": "што ўчыніў"
+          },
+          {
+            "ordinary": "гэтай жанчыны",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "doctors-of-church",
+        "field": "vesper1R",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "17 18",
+            "volume": "1718"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "virgins",
+        "field": "officeOfReadingsHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "спаслаў",
+            "volume": ""
+          },
+          {
+            "ordinary": "сваю",
+            "volume": "спаслаў"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "virgins",
+        "field": "officeOfReadingsAnt1",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "абраннік",
+            "volume": "абраннікам"
+          },
+          {
+            "ordinary": "",
+            "volume": "ёсць"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "virgins",
+        "field": "officeOfReadingsPs1",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "абраннік",
+            "volume": "абраннікам"
+          },
+          {
+            "ordinary": "",
+            "volume": "ёсць"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "virgins",
+        "field": "officeOfReadingsPs2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "афіра",
+            "volume": "афіру"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "virgins",
+        "field": "laudesHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "увайшла",
+            "volume": "ўвайшла"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-men",
+        "field": "officeOfReadingsHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "у",
+            "volume": "ў"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-men",
+        "field": "officeOfReadingsPs2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "",
+            "volume": "ты ж пане узвышаны навекі"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-men",
+        "field": "officeOfReadingsPs3",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "",
+            "volume": "бо"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-men",
+        "field": "laudesHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "для",
+            "volume": "ў"
+          },
+          {
+            "ordinary": "цярпенняў",
+            "volume": "цярпеннях"
+          },
+          {
+            "ordinary": "",
+            "volume": "каб"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-men",
+        "field": "sext2R",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "26 27а",
+            "volume": "2627а"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-men",
+        "field": "vesperHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "у",
+            "volume": "ў"
+          },
+          {
+            "ordinary": "слуг",
+            "volume": "слугаў"
+          },
+          {
+            "ordinary": "да зорак",
+            "volume": "ў неба"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-men",
+        "field": "vesperR",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "28 30",
+            "volume": "2830"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-men",
+        "field": "vesper1Ps2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "",
+            "volume": "праслаўляй душа мая пана"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-women",
+        "field": "officeOfReadingsPs2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "афіра",
+            "volume": "афіру"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-women",
+        "field": "officeOfReadingsR1",
+        "minor": false,
+        "changes": [
+          {
+            "ordinary": "вышэй",
+            "volume": ""
+          },
+          {
+            "ordinary": "1583",
+            "volume": "1787"
+          },
+          {
+            "ordinary": "",
+            "volume": "саламона"
+          },
+          {
+            "ordinary": "прасніцы",
+            "volume": "прaсніцы"
+          },
+          {
+            "ordinary": "таксама",
+            "volume": ""
+          },
+          {
+            "ordinary": "",
+            "volume": "якая жыла ў сужэнстве"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-women",
+        "field": "laudesR",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "жыве",
+            "volume": ""
+          },
+          {
+            "ordinary": "жыве",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-women",
+        "field": "vesperHymn",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "пастамі",
+            "volume": "постам"
+          },
+          {
+            "ordinary": "што ў",
+            "volume": "у"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-women",
+        "field": "vesperAnt3",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "благаслаўлёна",
+            "volume": "благаслаўлёнай"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-women",
+        "field": "vesperPs3",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "благаслаўлёна",
+            "volume": "благаслаўлёнай"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-women",
+        "field": "vesperInter",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "мучанікаў",
+            "volume": "мучаніц"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "holy-women",
+        "field": "vesper1Inter",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "мучанікаў",
+            "volume": "мучаніц"
+          },
+          {
+            "ordinary": "гэтым",
+            "volume": "тым жа"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "religious",
+        "field": "officeOfReadingsR2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "дарозе",
+            "volume": "шляху"
+          },
+          {
+            "ordinary": "скіроўвацца",
+            "volume": "накіроўвацца"
+          },
+          {
+            "ordinary": "",
+            "volume": "як"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "religious",
+        "field": "laudesHymn",
+        "minor": false,
+        "changes": [
+          {
+            "ordinary": "спазнаць",
+            "volume": "пазнаць"
+          },
+          {
+            "ordinary": "агонь",
+            "volume": "полымя"
+          },
+          {
+            "ordinary": "гэты слуга твой адданы жадаў",
+            "volume": "гэтыя шчырыя слугі жадалі"
+          },
+          {
+            "ordinary": "поўны",
+            "volume": ""
+          },
+          {
+            "ordinary": "здабыў ён",
+            "volume": "поўныя здабылі"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "religious",
+        "field": "vesperAntMag",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "мной",
+            "volume": "мною"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "religious",
+        "field": "vesper1AntMag",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "або",
+            "volume": ""
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "religious",
+        "field": "vesper1Pr",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "у",
+            "volume": "ў"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "works-of-mercy",
+        "field": "officeOfReadingsR2",
+        "minor": true,
+        "changes": [
+          {
+            "ordinary": "камень",
+            "volume": "камяні"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      },
+      {
+        "common": "educators",
+        "field": "officeOfReadingsR2",
+        "minor": false,
+        "changes": [
+          {
+            "ordinary": "мурам",
+            "volume": "мyрам"
+          },
+          {
+            "ordinary": "будзем",
+            "volume": ""
+          },
+          {
+            "ordinary": "рупіцца",
+            "volume": "прыкладзем намаганні"
+          },
+          {
+            "ordinary": "бліжняга",
+            "volume": "братоў"
+          },
+          {
+            "ordinary": "мастэрства",
+            "volume": "мастацтва"
+          }
+        ],
+        "sameInVolumes": [
+          "I",
+          "II"
+        ]
+      }
+    ],
+    "baseGapsAgainstVolumeIII": [
+      {
+        "common": "blessed-virgin-mary",
+        "field": "officeOfReadingsHymn",
+        "missingWords": 21,
+        "share": 0.078,
+        "changes": [
+          {
+            "onlyInVolumeIII": "",
+            "onlyInBase": "гімн"
+          },
+          {
+            "onlyInVolumeIII": "або",
+            "onlyInBase": ""
+          },
+          {
+            "onlyInVolumeIII": "або гімн",
+            "onlyInBase": ""
+          }
+        ]
+      },
+      {
+        "common": "blessed-virgin-mary",
+        "field": "laudesHymn",
+        "missingWords": 16,
+        "share": 0.062,
+        "changes": [
+          {
+            "onlyInVolumeIII": "або",
+            "onlyInBase": ""
+          },
+          {
+            "onlyInVolumeIII": "або гімн",
+            "onlyInBase": ""
+          },
+          {
+            "onlyInVolumeIII": "",
+            "onlyInBase": "маці хрыста бога панна найчысцейша верным дапамога ты што прывітана словам габрыэля умацуй нас ў веры ўсім спашлі надзею вызваль"
+          }
+        ]
+      },
+      {
+        "common": "blessed-virgin-mary",
+        "field": "laudesR",
+        "missingWords": 9,
+        "share": 0.039,
+        "changes": [
+          {
+            "onlyInVolumeIII": "і кароткі рэспансорый на выбар з ніжэйпададзеных кароткае чытанне",
+            "onlyInBase": ""
+          }
+        ]
+      },
+      {
+        "common": "blessed-virgin-mary",
+        "field": "laudesAntBen",
+        "missingWords": 8,
+        "share": 0.07,
+        "changes": [
+          {
+            "onlyInVolumeIII": "ант да песні захарыі на выбар з ніжэйпададзеных",
+            "onlyInBase": ""
+          }
+        ]
+      },
+      {
+        "common": "martyr-one",
+        "field": "vesper1R",
+        "missingWords": 80,
+        "share": 0.588,
+        "changes": [
+          {
+            "onlyInVolumeIII": "кароткае чытанне рым 8 35 37 39 хто адлучыць нас ад любові хрыста няшчасце ці прыгнёт ці пераслед ці голад ці галеча ці небяспека ці меч над усім гэтым мы атрым",
+            "onlyInBase": ""
+          }
+        ]
+      },
+      {
+        "common": "holy-men",
+        "field": "officeOfReadingsHymn",
+        "missingWords": 8,
+        "share": 0.078,
+        "changes": [
+          {
+            "onlyInVolumeIII": "пра некалькіх святых гімн будзем праслаўляць за веру",
+            "onlyInBase": ""
+          }
+        ]
+      },
+      {
+        "common": "holy-women",
+        "field": "officeOfReadingsR2",
+        "missingWords": 27,
+        "share": 0.068,
+        "changes": [
+          {
+            "onlyInVolumeIII": "другое чытанне выбіраюцца найбольш адпаведныя тэксты з ліку тых што былі пададзены ў агульных тэкстах пра святых мужчын 1587 або іншае пра святую якая жыла ў су",
+            "onlyInBase": ""
+          }
+        ]
+      },
+      {
+        "common": "religious",
+        "field": "officeOfReadingsR1",
+        "missingWords": 62,
+        "share": 0.133,
+        "changes": [
+          {
+            "onlyInVolumeIII": "першае чытанне пасланне св апостала паўла да філіпянаў 3 7 4 1 4 9",
+            "onlyInBase": ""
+          },
+          {
+            "onlyInVolumeIII": "пра законніцу пс 45 44 2 н адкінула валадарства гэтага свету і ўсю прыгажосць яго дзеля любові да пана майго езуса хрыста яго пазнала і выбрала у яго паверыла і",
+            "onlyInBase": ""
+          }
+        ]
+      }
+    ]
+  },
   "sourceMisprints": {
     "fix": [
       {
