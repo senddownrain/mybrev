@@ -236,7 +236,7 @@
           </div>
           <div class="prayer-preview">
             <h3>{{ form.title.trim() || 'Назва малітвы' }}</h3>
-            <div v-if="plainTextLength" class="prayer-preview__text" v-html="previewHtml" />
+            <div v-if="plainTextLength" class="prayer-preview__text" :class="{ 'prayer-preview__text--office': isDevotionalOffice }" v-html="previewHtml" />
             <p v-else class="preview-placeholder">Тэкст з’явіцца тут падчас рэдагавання.</p>
             <div v-if="form.source.trim()" class="preview-source">
               <span class="preview-source__label">Крыніца:</span>
@@ -260,6 +260,7 @@ import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue';
+import { devotionalOfficeProfile } from '@/utils/devotionalOffice';
 import { MASS_RITUAL } from '@/utils/massRitual';
 import {
   prayerMarkdownToPlainText,
@@ -295,7 +296,9 @@ const isSubmitting = computed(() => saving.value || copying.value);
 const loadingPrayer = computed(() => isEditMode.value && isLoading.value && !hydrated.value);
 const plainText = computed(() => prayerMarkdownToPlainText(form.value.text, PRAYER_TEXT_FORMAT));
 const plainTextLength = computed(() => plainText.value.length);
-const previewHtml = computed(() => renderPrayerMarkdown(form.value.text, PRAYER_TEXT_FORMAT));
+const isDevotionalOffice = computed(() => Boolean(devotionalOfficeProfile(form.value.title)));
+const previewHtml = computed(() => renderPrayerMarkdown(form.value.text, PRAYER_TEXT_FORMAT,
+  isDevotionalOffice.value ? { presentation: 'devotional-office' } : {}));
 const previewSourceHtml = computed(() => renderPrayerMarkdown(form.value.source.trim()));
 const textError = computed(() => {
   if (!saveAttempted.value) return '';
@@ -607,6 +610,11 @@ onBeforeUnmount(() => {
 .prayer-preview__text :deep(li) { min-width: 0; padding-inline-start: 0.16em; overflow-wrap: anywhere; }
 .prayer-preview__text :deep(li::marker) { font-variant-numeric: tabular-nums; }
 .prayer-preview__text :deep(ul ul), .prayer-preview__text :deep(ul ol), .prayer-preview__text :deep(ol ul), .prayer-preview__text :deep(ol ol) { margin-block: 0.3em; padding-inline-start: 1.2em; }
+.prayer-preview__text--office :deep(.office-heading) { margin: 1.6em 0 0.55em; padding: 0 0 0.3em 0.6em; border-left: 3px solid var(--rubric-color); border-bottom: 1px solid var(--reader-border); color: var(--rubric-color); font-family: var(--reader-display-font-family); font-size: 1.02em; font-weight: 700; text-transform: uppercase; }
+.prayer-preview__text--office :deep(.office-extra-heading) { margin-top: 2.1em; border-top: 1px solid var(--reader-border); padding-top: 0.75em; }
+.prayer-preview__text--office :deep(.office-antiphon) { margin: 1em 0; padding: 0.6em 0.8em; border-left: 3px solid var(--rubric-color); border-radius: 0 10px 10px 0; background: var(--rubric-soft); }
+.prayer-preview__text--office :deep(.office-antiphon-label), .prayer-preview__text--office :deep(.office-alternative-label) { color: var(--rubric-color); font-weight: 700; }
+.prayer-preview__text--office :deep(.office-psalm-heading) { margin: 1.2em 0 0.4em; font-size: 0.93em; font-weight: 650; }
 .prayer-preview__text :deep(.prayer-rubric) { margin: 1.05em 0; padding: 0.08em 0 0.08em 0.85em; border-left: 3px solid var(--rubric-color); color: var(--rubric-color); font-size: 0.86em; line-height: 1.45; }
 .prayer-preview__text :deep(.prayer-rubric p) { margin-bottom: 0.45em; }
 .prayer-preview__text :deep(.prayer-speaker) { color: var(--rubric-color); font-weight: 700; font-size: inherit; font-style: normal; }
