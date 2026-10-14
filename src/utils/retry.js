@@ -2,6 +2,7 @@
  * Retry utility for async operations
  */
 import { isFirestoreCacheError } from './firestoreCacheRecovery.js';
+import { assertFirestoreQuotaAvailable, firestoreErrorCode, isFirestoreQuotaError, noteFirestoreError } from './firestoreErrors.mjs';
 
 export async function retry(fn, options = {}) {
   const {
@@ -18,20 +19,23 @@ export async function retry(fn, options = {}) {
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const result = timeout > 0
+      let timer;
+      try { return timeout > 0
         ? await Promise.race([
             fn(),
             new Promise((_, reject) =>
-              setTimeout(
+              { timer = setTimeout(
                 () => reject(new Error(`Operation timed out after ${timeout}ms`)),
                 timeout,
-              )
+              ); }
             ),
           ])
         : await fn();
-      return result;
+      } finally { clearTimeout(timer); }
     } catch (error) {
       lastError = error;
+      noteFirestoreError(error);
+      if (isFirestoreQuotaError(error)) throw error;
 
       // Check if we should retry this error
       if (!shouldRetry(error)) {
@@ -59,28 +63,37 @@ export async function retry(fn, options = {}) {
 
 /**
  * Retry with exponential backoff for Firestore operations.
- * Adds a 10 s per-attempt timeout so a hung network request
- * doesn't block the retry loop indefinitely.
+ * Wait for the SDK request to settle. Promise.race timeouts cannot cancel
+ * Firestore reads and otherwise start overlapping copies of the same query.
  */
 export async function retryFirestore(fn, options = {}) {
-  return retry(fn, {
+  return retry(() => { assertFirestoreQuotaAvailable(); return fn(); }, {
     maxAttempts: 3,
     delay: 300,
     backoff: 2,
-    timeout: 10_000, // 10 s per attempt
+    timeout: 0,
     shouldRetry: (error) => {
       // Repeating a query against broken local persistence cannot repair it.
       if (isFirestoreCacheError(error)) return false;
-      const code = error?.code;
+      const code = firestoreErrorCode(error);
       return (
         code === 'unavailable' ||
         code === 'deadline-exceeded' ||
-        code === 'resource-exhausted' ||
         code === 'aborted' ||
         // Also retry our own timeout sentinel
         error?.message?.startsWith('Operation timed out')
       );
     },
     ...options,
+  });
+}
+
+/** Disable SDK retries; retry only server-reported transaction contention. */
+export function quotaSafeTransaction(runTransaction, db, action) {
+  return retryFirestore(() => runTransaction(db, action, { maxAttempts: 1 }), {
+    maxAttempts: 3, delay: 50, timeout: 0,
+    // Web/Lite optimistic transactions also report a changed document version
+    // as failed-precondition (and a concurrent create as already-exists).
+    shouldRetry: (error) => ['aborted', 'failed-precondition', 'already-exists'].includes(firestoreErrorCode(error)),
   });
 }
