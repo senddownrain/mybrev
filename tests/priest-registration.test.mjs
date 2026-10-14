@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {codeProof} from '../src/utils/priestCode.mjs';
+import * as firestoreErrors from '../src/utils/firestoreErrors.mjs';
+import {quotaSafeTransaction} from '../src/utils/retry.js';
 
 const source=(await readFile(new URL('../src/services/priestAccessService.js',import.meta.url),'utf8')).replace(/^import .*;\r?\n/gm,'').replace(/export /g,'');
 const code='A2B3-C4D5-E6F7-G8H9-J2K3-L4M5';
@@ -10,7 +12,7 @@ function harness({commitError,accepted=false,pending=false,serverError,online=tr
  const snapshot=path=>({id:'device',exists:()=>rows.has(path),data:()=>rows.get(path),metadata:{fromCache:false,hasPendingWrites:pending}});
  let commits=0,operations=[];
  if(legacy)rows.set('priestDeviceGrants/device',{uid:'device',status:'active',activationProof:'old-proof'});
- const bindings={reactive:value=>value,codeProof,getPriestAuth:async()=>auth,getPriestActivationDb:()=>({}),priestFirebase:{db:{}},doc:(_db,name,uid)=>`${name}/${uid}`,activationDoc:(_db,name,uid)=>`${name}/${uid}`,activationTimestamp:()=> 'SERVER_TIME',serverTimestamp:()=> 'SERVER_TIME',
+ const bindings={...firestoreErrors,quotaSafeTransaction,reactive:value=>value,codeProof,getPriestAuth:async()=>auth,getPriestActivationDb:()=>({}),priestFirebase:{db:{}},doc:(_db,name,uid)=>`${name}/${uid}`,activationDoc:(_db,name,uid)=>`${name}/${uid}`,activationTimestamp:()=> 'SERVER_TIME',serverTimestamp:()=> 'SERVER_TIME',activationUpdate:async()=>{},
   getDocFromServer:async path=>{if(serverError&&rows.size)throw serverError;return snapshot(path);},onSnapshot:()=>()=>{},updateDoc:async()=>{},
   navigator:{onLine:online,userAgent:'Chrome/',platform:'Windows'},localStorage:{getItem:key=>storage.get(key),removeItem:key=>storage.delete(key)},
   activationBatch:()=>{operations=[];return {set:(path,data)=>operations.push({path,data}),commit:async()=>{commits++;if(!commitError||accepted)for(const {path,data} of operations)rows.set(path,data);if(commitError)throw commitError;}};}};
