@@ -125,7 +125,9 @@ export function decorateDevotionalOfficeTokens(tokens) {
           token.attrJoin('class', 'office-psalm-heading');
         } else if (ALTERNATIVE_HEADING.test(literal)) {
           token.attrJoin('class', 'office-alternative-label');
-        } else if (!inline.content.includes('\n') && ANTIPHON_LABEL.test(bareLine(inline.content))) {
+        } else if (!inline.content.includes('\n') && ANTIPHON_LABEL.test(
+          (inline.children || []).filter((child) => child.type === 'text').map((child) => child.content).join('').trimStart(),
+        )) {
           token.attrJoin('class', 'office-antiphon');
         }
       }
