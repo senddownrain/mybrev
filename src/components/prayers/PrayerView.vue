@@ -3,7 +3,7 @@
     <div class="prayer-content-area" @click="navigatePrayerLink">
       <article
         class="prayer-reading-surface"
-        :class="{ 'prayer-reading-surface--mass': isMassOrder }"
+        :class="{ 'prayer-reading-surface--mass': isMassOrder, 'prayer-reading-surface--office': isDevotionalOffice }"
       >
           <header class="prayer-reading-header">
             <div class="prayer-reading-eyebrow">{{ isMassOrder ? 'Літургія' : 'Малітва' }}</div>
@@ -81,6 +81,7 @@ import {
   resolveMassSectionTarget,
 } from '@/utils/massRitual';
 import { buildMassDocument, renderMassBlocks } from '@/utils/massContent';
+import { devotionalOfficeProfile } from '@/utils/devotionalOffice';
 import MassSectionNav from '@/components/prayers/MassSectionNav.vue';
 
 const route = useRoute();
@@ -127,6 +128,7 @@ const displayTitle = computed(() => {
   if (!variant || variant.prayerId === MASS_ORDER_PRAYER_ID) return getTitle(prayer.value);
   return getTitle(massVariantPrayer.value) || variant.title;
 });
+const isDevotionalOffice = computed(() => !isMassOrder.value && Boolean(devotionalOfficeProfile(displayTitle.value)));
 const displaySource = computed(() => (
   massVariant.value && massVariant.value.prayerId !== MASS_ORDER_PRAYER_ID
     ? massVariantPrayer.value?.source || massVariant.value.source || ''
@@ -142,7 +144,8 @@ const massDocument = computed(() => (
 const prayerHtml = computed(() => (
   isMassOrder.value
     ? renderMassBlocks(massDocument.value.blocks, massVariant.value)
-    : renderPrayerMarkdown(displayText.value, textPrayer.value?.textFormat)
+    : renderPrayerMarkdown(displayText.value, textPrayer.value?.textFormat,
+      isDevotionalOffice.value ? { presentation: 'devotional-office' } : {})
 ));
 const sourceHtml = computed(() => renderPrayerMarkdown(displaySource.value));
 const massSections = computed(() => massDocument.value.sections);
