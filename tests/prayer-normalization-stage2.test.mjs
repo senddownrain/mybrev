@@ -45,7 +45,10 @@ test('multiline emphasis and label-only dialogue preserve authored emphasis and 
   assert.match(renderPrayerMarkdown(source, 'mybrev-markdown'), /<strong>Першы радок,<br>\nдругі радок\.<\/strong>/);
 });
 
-test('true quotes, fenced code, initials and named narrative never become roles or rubrics', () => {
+test('quoted source stays unchanged; quoted wrappers, code, initials and named narrative stay protected', () => {
+  const bareQuote = '> Н.: І з духам тваім.\n> > V. Пан з вамі.';
+  assert.equal(normalizePrayerLegacyMarkdown(bareQuote).markdown, bareQuote);
+  assert.equal(prayerTextFields(bareQuote).text, bareQuote);
   for (const source of ['> **С.:** Словы цытаты.', '```md\nС.: Словы прыкладу.\n:::rubric\n```', 'С. Я. Прозвішча', '**С. Імя:** _Словы апавядання._', 'С. Імя: _Словы апавядання._', 'C. Пан з вамі.']) {
     assert.equal(normalizePrayerLegacyMarkdown(source).markdown, source);
     assert.doesNotMatch(renderPrayerMarkdown(source, 'mybrev-markdown'), /prayer-speaker/);

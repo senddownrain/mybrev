@@ -89,6 +89,11 @@ try {
   await page.locator('.cm-content').focus();
   await page.keyboard.press('Control+z');
   await page.waitForFunction(() => window.source.value === '**К.:** Пане, пачуй нас.\n_Н.:_ Амэн.');
+  const quoteSource = '> Н. І з духам тваім.\n> > V.: Пан з вамі.';
+  await page.evaluate(source => window.source.value = source, quoteSource);
+  await page.waitForFunction(() => document.querySelectorAll('.cm-prayer-speaker').length === 2);
+  assert.deepEqual(await page.locator('.cm-prayer-speaker').allTextContents(), ['Н.', 'V.:']);
+  assert.equal(await page.evaluate(() => window.source.value), quoteSource);
   await page.evaluate(() => window.source.value = 'К. Пане, пачуй нас.\nН. ' + 'І з духам тваім. '.repeat(30));
   await page.locator('.cm-prayer-speaker').first().waitFor();
   await page.screenshot({ path: `${directory}/editor-light.png` });

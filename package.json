@@ -33,7 +33,7 @@
     "smoke:priest": "node scripts/smoke-priest-ui.mjs",
     "db:autofix-prayers": "node scripts/autofix-prayer-markdown.mjs",
     "db:normalize-prayers": "node scripts/normalize-prayer-legacy.mjs",
-    "test:prayer-normalization": "node --test tests/prayer-normalization-stage2.test.mjs",
+    "test:prayer-normalization": "node --test tests/prayer-normalization-stage2.test.mjs tests/prayer-formatting.test.mjs tests/prayer-markdown.test.mjs",
     "db:migrate-prayer-sources": "node scripts/migrate-prayer-sources.mjs",
     "db:fix-imported-prayer-sources": "node scripts/fix-imported-prayer-sources.mjs",
     "db:remove-rank-feast-comments": "node scripts/remove-rank-feast-comments.mjs",

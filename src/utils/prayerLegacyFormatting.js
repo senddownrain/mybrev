@@ -49,6 +49,44 @@ function validLabelMarkup(source, expected) {
     && token.children.every(child => ['text', 'em_open', 'em_close', 'strong_open', 'strong_close'].includes(child.type));
 }
 
+/** Bare dialogue in quote paragraphs is read-only compatibility, never a migration edit. */
+export function collectQuotedPrayerSpeakers(value = '') {
+  const { lines, tokens } = prayerLegacyStructure(value);
+  const offsets = [];
+  let offset = 0;
+  for (const line of lines) { offsets.push(offset); offset += line.length + 1; }
+  const stack = [];
+  const ranges = [];
+  for (const token of tokens) {
+    if (token.nesting === 1) stack.push(token.type);
+    if (token.type === 'inline' && stack.at(-1) === 'paragraph_open' && stack.includes('blockquote_open')
+      && !stack.some(type => ['rubric_open', 'list_item_open'].includes(type))) {
+      const logicalLines = token.content.split('\n');
+      let index = 0;
+      let start = true;
+      for (const child of token.children || []) {
+        if (start && child.type === 'text') {
+          const logical = logicalLines[index] || '';
+          const prefix = prayerSpeakerPrefix(logical);
+          const physicalIndex = token.map[0] + index;
+          const physical = lines[physicalIndex] || '';
+          const marker = /^(?: {0,3}>[ \t]?)* {0,3}/.exec(physical)[0];
+          // AST establishes paragraph eligibility; source matching locates editor ranges only.
+          if (prefix && /^[КСНДЛЦVR]\./u.test(prefix.label) && child.content.startsWith(logical.slice(prefix.from, prefix.to))
+            && physical.slice(marker.length).startsWith(prefix.label)) {
+            ranges.push({ ...prefix, from: offsets[physicalIndex] + marker.length,
+              to: offsets[physicalIndex] + marker.length + prefix.label.length, line: physicalIndex + 1 });
+          }
+        }
+        start = child.type === 'softbreak' || child.type === 'hardbreak';
+        if (start) index += 1;
+      }
+    }
+    if (token.nesting === -1) stack.pop();
+  }
+  return ranges;
+}
+
 function namedAttribution(line) {
   return /^([*_]{0,6})[КСНДЛЦ]\.[ \t]+\p{Lu}[\p{Ll}\p{M}-]+(?:[ \t]+\p{Lu}[\p{Ll}\p{M}-]+)*:\1(?:\s|$)/u.test(line)
     && !/^[*_]*[КСНДЛЦ]\.[ \t]+(?:Молімся|Памолімся):/u.test(line);

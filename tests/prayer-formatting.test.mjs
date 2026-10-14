@@ -34,7 +34,7 @@ test('initials, lookalikes, prose, quoted narrative and explicit Markdown are ex
   const source = [
     'С. Я. Купала', 'К. Купала', 'Тэкст: Н. І з духам тваім.', 'Народ моліцца.',
     'C. Пан з вамі.', 'K. Пан з вамі.', 'H. І з духам тваім.', 'N. Name',
-    '> С. Пан з вамі.\n> Н. І з духам тваім.',
+    '> С. Я. Купала\n> Тэкст: Н. І з духам тваім.',
     '[С. Пан з вамі.](/prayer/id)', '`Н. І з духам тваім.`',
     '## С. Пан з вамі.', '**V. Заканчэнне**',
     ':::rubric\nС. Пан з вамі.\n:::',
@@ -42,6 +42,36 @@ test('initials, lookalikes, prose, quoted narrative and explicit Markdown are ex
   ].join('\n\n');
   assert.deepEqual(prayerSpeakerRanges(source), []);
   assert.doesNotMatch(renderPrayerMarkdown(source, format), /prayer-speaker/);
+});
+
+test('bare participants in quote paragraphs retain the container, punctuation and source ranges', () => {
+  for (const label of ['К.', 'С.', 'Н.', 'Д.', 'Л.', 'Ц.', 'V.', 'R.']) {
+    for (const suffix of ['', ':']) {
+      const source = `> ${label}${suffix} І з духам тваім.\n> > ${label}${suffix} _Амэн._`;
+      const html = renderPrayerMarkdown(source, format);
+      assert.equal((html.match(/<blockquote>/g) || []).length, 2);
+      assert.equal((html.match(/class="prayer-speaker"/g) || []).length, 2);
+      assert.ok(html.includes(`>${label}${suffix}</span> І з духам тваім.`));
+      assert.ok(html.includes(`>${label}${suffix}</span> <em>Амэн.</em>`));
+      assert.deepEqual(prayerSpeakerRanges(source).map(range => source.slice(range.from, range.to)), [label + suffix, label + suffix]);
+      assert.equal(safePrayerFormatting(source), source);
+    }
+  }
+  assert.match(renderPrayerMarkdown('> Н. І з духам тваім.', format), /<blockquote>\s*<p><span class="prayer-speaker" data-role="people">Н\.<\/span> І з духам тваім\.<\/p>\s*<\/blockquote>/);
+});
+
+test('quoted names, prose, wrappers and protected blocks do not acquire participant spans', () => {
+  for (const source of [
+    '> С. Я. Купала', '> К. Купала', '> С. Імя: Словы.', '> Тэкст: Н. І з духам тваім.',
+    '> C. Пан з вамі.', '> **Н.** І з духам тваім.', '> Усе: Амэн.',
+    '> `Н. І з духам тваім.`', '> [Н. І з духам тваім.](/prayer/id)',
+    '> ## Н. І з духам тваім.', '> - Н. І з духам тваім.',
+    '> ```md\n> Н. І з духам тваім.\n> ```', '>     Н. І з духам тваім.',
+    '> :::rubric\n> Н. І з духам тваім.\n> :::',
+  ]) {
+    assert.deepEqual(prayerSpeakerRanges(source), [], source);
+    assert.doesNotMatch(renderPrayerMarkdown(source, format), /prayer-speaker/, source);
+  }
 });
 
 test('links and ordinary emphasis in a response retain their semantics', () => {

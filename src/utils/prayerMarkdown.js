@@ -1,6 +1,6 @@
 import MarkdownIt from 'markdown-it';
 import TurndownService from 'turndown';
-import { collectLegacyPrayerSpeakers, projectLegacyPrayerSpeakers, normalizePrayerLegacyMarkdown } from './prayerLegacyFormatting.js';
+import { collectLegacyPrayerSpeakers, collectQuotedPrayerSpeakers, projectLegacyPrayerSpeakers, normalizePrayerLegacyMarkdown } from './prayerLegacyFormatting.js';
 
 export const PRAYER_TEXT_FORMAT = 'mybrev-markdown';
 export const PRAYER_TEXT_FORMAT_VERSION = 1;
@@ -26,7 +26,8 @@ export function prayerSpeakerPrefix(value) {
 
 /** Source ranges shared by the reader and CodeMirror; never rewrites input. */
 export function prayerSpeakerRanges(source = '') {
-  return collectLegacyPrayerSpeakers(source).map(({ from, to, label, role, line, kind }) => ({ from, to, label, role, line, kind }));
+  return [...collectLegacyPrayerSpeakers(source).map(({ from, to, label, role, line, kind }) => ({ from, to, label, role, line, kind })),
+    ...collectQuotedPrayerSpeakers(source)].sort((a, b) => a.from - b.from);
 }
 
 const RUBRIC_LINE_PATTERN = /^(?:Святар|Народ|Усе|Дыякан|Біскуп|Цэлебрант|Лектар|Псальміст|Кантар)\b[^.!?]*:$/i;
