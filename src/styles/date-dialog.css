@@ -78,3 +78,20 @@
   color: var(--calendar-on-accent) !important;
   box-shadow: 0 5px 14px var(--nav-shadow);
 }
+
+/* ORDO only: no option list is embedded, so the dialog should
+   shrink to the calendar rather than stretching to 680px. */
+.liturgical-date-dialog--compact > .v-overlay__content {
+  height: auto;
+  max-height: var(--date-dialog-height);
+}
+
+.liturgical-date-dialog--compact .date-dialog-card {
+  max-height: var(--date-dialog-height);
+}
+
+.liturgical-date-dialog--compact .date-dialog-content {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
