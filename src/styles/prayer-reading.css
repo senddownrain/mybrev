@@ -324,6 +324,60 @@
   outline: none;
 }
 
+
+/* Office-style devotions (two for the dead, two Marian, Little Hours).
+   Unlike the Mass adapter, these classes decorate the original Markdown
+   without suppressing text, rubric blocks, citations or alternative wording. */
+.prayer-reading-surface--office .prayer-text :deep(.office-heading) {
+  margin: 1.8em 0 0.6em;
+  padding: 0 0 0.35em 0.68em;
+  border-bottom: 1px solid var(--reader-border);
+  border-left: 3px solid var(--rubric-color);
+  color: var(--rubric-color);
+  font-family: var(--reader-display-font-family);
+  font-size: 1.02em;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+.prayer-reading-surface--office .prayer-text :deep(.office-heading:first-child) {
+  margin-top: 0;
+}
+.prayer-reading-surface--office .prayer-text :deep(.office-extra-heading) {
+  margin-top: 2.35em;
+  padding-top: 0.9em;
+  border-top: 1px solid var(--reader-border);
+}
+.prayer-reading-surface--office .prayer-text :deep(.office-psalm-heading) {
+  margin: 1.35em 0 0.45em;
+  color: var(--reader-ink);
+  font-family: var(--reader-display-font-family);
+  font-size: 0.93em;
+  font-weight: 650;
+  line-height: 1.4;
+}
+.prayer-reading-surface--office .prayer-text :deep(.office-antiphon) {
+  margin: 1.1em 0 1.3em;
+  padding: 0.68em 0.85em;
+  border-left: 3px solid var(--rubric-color);
+  border-radius: 0 12px 12px 0;
+  background: var(--rubric-soft);
+  line-height: 1.55;
+}
+.prayer-reading-surface--office .prayer-text :deep(.office-antiphon-label) {
+  color: var(--rubric-color);
+  font-weight: 750;
+  font-style: normal;
+}
+.prayer-reading-surface--office .prayer-text :deep(.office-alternative-label) {
+  margin: 1.25em 0 0.4em;
+  color: var(--rubric-color);
+  font-size: 0.86em;
+  font-style: italic;
+  font-weight: 650;
+}
+
 @media (max-width: 600px) {
   .prayer-view-container {
     padding: 0 !important;
