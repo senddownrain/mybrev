@@ -1,6 +1,7 @@
 import MarkdownIt from 'markdown-it';
 import TurndownService from 'turndown';
 import { collectLegacyPrayerSpeakers, collectQuotedPrayerSpeakers, projectLegacyPrayerSpeakers, normalizePrayerLegacyMarkdown } from './prayerLegacyFormatting.js';
+import { decorateDevotionalOfficeTokens } from './devotionalOffice.js';
 
 export const PRAYER_TEXT_FORMAT = 'mybrev-markdown';
 export const PRAYER_TEXT_FORMAT_VERSION = 1;
@@ -359,7 +360,7 @@ export function toPrayerMarkdown(value = '', format = '', options = {}) {
   return looksLikeHtml(source) && (knownHtml || richRoot) ? htmlToPrayerMarkdown(source, options) : source;
 }
 
-export function renderPrayerMarkdown(value = '', format = '') {
+export function renderPrayerMarkdown(value = '', format = '', options = {}) {
   const source = projectLegacyPrayerSpeakers(toPrayerMarkdown(value, format));
   const eligible = new Map(prayerSpeakerRanges(source).map((range) => [range.line, range]));
   const tokens = markdown.parse(source, {});
@@ -382,6 +383,7 @@ export function renderPrayerMarkdown(value = '', format = '') {
     }
     token.children = children;
   }
+  if (options.presentation === 'devotional-office') decorateDevotionalOfficeTokens(tokens);
   return markdown.renderer.render(tokens, markdown.options, {});
 }
 
