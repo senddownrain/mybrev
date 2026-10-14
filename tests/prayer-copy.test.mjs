@@ -6,6 +6,7 @@ import { computed, effectScope, nextTick, reactive, ref, watch } from 'vue';
 import { createPinia, defineStore, setActivePinia, storeToRefs } from 'pinia';
 import { useUiStore } from '../src/stores/ui.js';
 import * as markdown from '../src/utils/prayerMarkdown.js';
+import { MASS_RITUAL } from '../src/utils/massRitual.js';
 
 // Execute the real SFC/store logic with injected network and router boundaries.
 // No Firebase initialization, reads, or writes take place in these tests.
@@ -80,7 +81,7 @@ function createEditor(t, options = {}) {
   const scope = effectScope();
   t.after(() => scope.stop());
   const form = scope.run(() => loadLogic('../src/components/prayers/PrayerForm.vue', {
-    ...markdown, computed, ref, watch, storeToRefs,
+    ...markdown, MASS_RITUAL, computed, ref, watch, storeToRefs,
     useRoute: () => route,
     useRouter: () => router,
     usePrayers: () => ({

@@ -14,7 +14,7 @@ test('local snapshot supports collection, document, and filtered reads', async (
     collectionPath: 'days',
     documents: [
       { id: 'one', data: { _date: '26.08', _dayIds: ['linked'] } },
-      { id: 'two', data: { _date: '27.08' } },
+      { id: 'two', data: { _date: '27.08' }, updateTime: { __firestoreType: 'timestamp', seconds: 1787700000, nanoseconds: 123000000 } },
     ],
   };
   await writeFile(path.join(directory, 'fixed-days.json'), JSON.stringify(collectionPayload));
@@ -34,6 +34,10 @@ test('local snapshot supports collection, document, and filtered reads', async (
     data: { _date: '26.08', _dayIds: ['linked'] },
   });
   assert.equal((await snapshot.document('days', 'two'))._date, '27.08');
+  const versioned = (await snapshot.collectionEntries('days'))[1];
+  assert.equal(versioned.updateTime.seconds, 1787700000);
+  assert.equal(versioned.updateTime.nanoseconds, 123000000);
+  assert.deepEqual((await snapshot.collection('days'))[1], { id: 'two', _date: '27.08' });
   assert.deepEqual(
     (await snapshot.query('days', [{ field: '_date', value: '26.08' }])).map(item => item.id),
     ['one'],
