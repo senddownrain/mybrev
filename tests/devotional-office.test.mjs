@@ -91,10 +91,10 @@ test('source-shaped rubric headings and narrow-space antiphons keep their words'
 
 Ант. да песні Марыі: Кожны, каго дае Мне Айцец.`;
   const html = renderPrayerMarkdown(source, '', { presentation: 'devotional-office' });
-  assert.match(html, /<h2 class="office-heading">Нешпары<\\/h2>/);
-  assert.match(html, /<h3 class="office-heading">Гімн<\\/h3>/);
-  assert.match(html, /<span class="office-antiphon-label">1 ант\\.<\\/span>/);
-  assert.match(html, /<h2 class="office-heading office-reading-heading">Кароткае чытанне 1 Кар 15, 55–57<\\/h2>/);
-  assert.match(html, /<span class="office-antiphon-label">Ант\\. да песні Марыі:<\\/span>/);
+  assert.match(html, /<h2 class="office-heading">Нешпары<\/h2>/);
+  assert.match(html, /<h3 class="office-heading">Гімн<\/h3>/);
+  assert.match(html, /<span class="office-antiphon-label">1 ант\.<\/span>/);
+  assert.match(html, /<h2 class="office-heading office-reading-heading">Кароткае чытанне 1 Кар 15, 55–57<\/h2>/);
+  assert.match(html, /<span class="office-antiphon-label">Ант\. да песні Марыі:<\/span>/);
   assert.equal(prayerMarkdownToPlainText(source).includes('Кожны, каго дае Мне Айцец.'), true);
 });
