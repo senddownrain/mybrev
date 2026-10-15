@@ -614,6 +614,7 @@ onBeforeUnmount(() => {
 .prayer-preview__text--office :deep(.office-extra-heading) { margin-top: 2.1em; border-top: 1px solid var(--reader-border); padding-top: 0.75em; }
 .prayer-preview__text--office :deep(.office-antiphon) { margin: 1em 0; padding: 0.6em 0.8em; border-left: 3px solid var(--rubric-color); border-radius: 0 10px 10px 0; background: var(--rubric-soft); }
 .prayer-preview__text--office :deep(.office-antiphon-label), .prayer-preview__text--office :deep(.office-alternative-label) { color: var(--rubric-color); font-weight: 700; }
+.prayer-preview__text--office :deep(h3.office-heading) { margin: 1.1em 0 0.45em; padding: 0; border: 0; color: var(--rubric-color); font-size: 0.92em; }
 .prayer-preview__text--office :deep(.office-psalm-heading) { margin: 1.2em 0 0.4em; font-size: 0.93em; font-weight: 650; }
 .prayer-preview__text :deep(.prayer-rubric) { margin: 1.05em 0; padding: 0.08em 0 0.08em 0.85em; border-left: 3px solid var(--rubric-color); color: var(--rubric-color); font-size: 0.86em; line-height: 1.45; }
 .prayer-preview__text :deep(.prayer-rubric p) { margin-bottom: 0.45em; }
