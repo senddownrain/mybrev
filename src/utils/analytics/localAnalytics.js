@@ -11,6 +11,7 @@ import { mapRoute } from './routeMapper.js';
 
 const MEASURE_DELAY_MS = 1500;
 const MEASURE_ATTEMPTS = 4;
+const SCROLL_THROTTLE_MS = 200;
 /** Below this much text the screen is a loader or a "not found" page, not a text. */
 const MIN_TEXT_CHARS = 200;
 
@@ -52,20 +53,22 @@ export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = pa
     measureTimer = window.setTimeout(measureText, MEASURE_DELAY_MS);
   });
 
+  // Trailing throttle on a timer (not rAF: rAF stops when the page is not being painted).
   window.addEventListener('scroll', () => {
     if (scrollQueued) return;
     scrollQueued = true;
-    window.requestAnimationFrame(() => {
+    window.setTimeout(() => {
       scrollQueued = false;
       collector.reportScroll(scrollFraction());
-    });
+    }, SCROLL_THROTTLE_MS);
   }, { passive: true });
 
   document.addEventListener('visibilitychange', () => collector.setVisible(document.visibilityState === 'visible'));
   window.addEventListener('pagehide', () => collector.flush());
 
   window.__analyticsLocal = {
-    snapshot: () => { collector.flush(); return collector.snapshot(); },
+    // Closed visits only: the open visit is added when the reader leaves the screen or the page.
+    snapshot: () => collector.snapshot(),
     clear: () => collector.clear(),
   };
   return collector;
