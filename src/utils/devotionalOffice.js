@@ -46,7 +46,7 @@ const EXTRA_HEADINGS = new Set([
 const PSALM_HEADING = /^(?:псальм|псалом|пс)\s*\d+(?:\s*\([^)]*\))?(?:\s*[,:.].*)?$/iu;
 const ALTERNATIVE_HEADING = /^(?:альбо|або|или|варыянт\s*\d+|вариант\s*\d+)\s*[:.]?$/iu;
 // Match only the label: the antiphon wording must retain the reader's text colour.
-const ANTIPHON_LABEL = /^(\s*)((?:\d{1,2}\s+ант\.?|ант\.?\s*\d{1,2}\.?|ант\.|антыфона\s*\d{1,2}\.?|ant\.?\s*\d{1,2}\.?))(?=\s|$)/iu;
+const ANTIPHON_LABEL = /^(\s*)((?:\d{1,2}\s+ант\.?|ант\.?\s*\d{1,2}\.?|ант\.\s+да\s+песні\s+(?:захарыі|марыі)\s*:|ант\.|антыфона\s*\d{1,2}\.?|ant\.?\s*\d{1,2}\.?))(?=\s|$)/iu;
 
 const bareLine = (text) => String(text)
   .replace(/^[\s*_]+|[\s*_]+$/g, '')
@@ -119,6 +119,10 @@ export function decorateDevotionalOfficeTokens(tokens) {
           token.tag = 'h2';
           end.tag = 'h2';
           token.attrJoin('class', 'office-heading');
+        } else if (/^(?:кароткае чытанне|кароткі рэспансорый)(?:\\s+[^\\n]+)?$/iu.test(literal)) {
+          token.tag = 'h2';
+          end.tag = 'h2';
+          token.attrJoin('class', 'office-heading office-reading-heading');
         } else if (PSALM_HEADING.test(literal)) {
           token.tag = 'h3';
           end.tag = 'h3';
