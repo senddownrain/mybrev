@@ -349,6 +349,16 @@
   padding-top: 0.9em;
   border-top: 1px solid var(--reader-border);
 }
+.prayer-reading-surface--office .prayer-text :deep(h3.office-heading) {
+  margin: 1.15em 0 0.45em;
+  padding: 0;
+  border: 0;
+  color: var(--rubric-color);
+  font-size: 0.92em;
+}
+.prayer-reading-surface--office .prayer-text :deep(.office-reading-heading) {
+  font-size: 0.94em;
+}
 .prayer-reading-surface--office .prayer-text :deep(.office-psalm-heading) {
   margin: 1.35em 0 0.45em;
   color: var(--reader-ink);
