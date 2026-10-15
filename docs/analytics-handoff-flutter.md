@@ -65,7 +65,7 @@
 | `bible` | `bible:<bel\|ru>:<bookId>` | `bible_chapter_screen.dart` (`/bible/:version/:book/:chapter`) | сопоставить `version`→`bel\|ru`; список `bookId` — из промпта 02 (`НЕ ПОДТВЕРЖДЕНО`) |
 | без ID | `today, readings, ordo, picker, settings` | маршруты `/hours`, `/readings*`, `/hours/ordo`, `/picker*`, `/settings` | `content_id` запрещён |
 
-Инвентарь публичных ID Flutter берёт из своего бандла (`assets/content`, отфильтрованного по
+Готовый инвентарь лежит в вебе: `src/utils/analytics/public-inventory.json` (745 ID, собран из этого же бандла `1791877294111`; Flutter сверяет свою сборку с ним тестом на совпадение множеств). Формат `prayer:` включает slug-ID (`import-*`, `mybrev-*`, `catholicby-yearcycle-*`). Инвентарь публичных ID Flutter берёт из своего бандла (`assets/content`, отфильтрованного по
 публичной политике). **Если приложение содержит закрытую молитву в старом бандле, она не должна
 попасть в инвентарь аналитики** (в старых бандлах закрытый материал мог быть опубликован,
 `docs/priest-access.md`). Неизвестный `content_id` не измеряется (fail closed).

@@ -36,7 +36,8 @@ export const HOUR_IDS = Object.freeze([
 ]);
 
 const CONTENT_ID_PATTERNS = Object.freeze({
-  prayer: /^prayer:[A-Za-z0-9]{20}$/,
+  // Firestore auto-ids (20 chars) plus imported slug ids (import-*, mybrev-*, catholicby-yearcycle-*).
+  prayer: /^prayer:[A-Za-z0-9][A-Za-z0-9_-]{5,100}$/,
   song: /^song:holysongs-[0-9a-f]{20}$/,
   comp: /^comp:[a-z0-9]+(?:-[a-z0-9]+){0,4}$/,
   mass: /^mass:order$/,
