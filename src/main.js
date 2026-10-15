@@ -52,7 +52,6 @@ if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {
   import('./utils/analytics/localAnalytics')
     .then(({ startLocalAnalytics }) => startLocalAnalytics(router, {
       massOrderPrayerId: MASS_ORDER_PRAYER_ID,
-      appVersion: import.meta.env.VITE_APP_VERSION || '0.0',
     }))
     .catch(error => console.warn('[main] Local analytics unavailable:', error.message))
 }

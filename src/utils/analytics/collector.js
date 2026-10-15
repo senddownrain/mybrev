@@ -162,6 +162,12 @@ export function createCollector({
       closeActive();
     },
 
+    /** Drop the active visit without recording it (the material did not actually load). */
+    discardView() {
+      if (!on) return;
+      visit = null;
+    },
+
     /** Furthest bottom edge of the viewport as a share of scrollable height; cheap, in-memory. */
     reportScroll(fraction) {
       if (!on || !visit || !Number.isFinite(fraction)) return;

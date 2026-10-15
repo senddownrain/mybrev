@@ -203,3 +203,12 @@ test('app version is coarsened to major.minor', () => {
   assert.equal(coarseAppVersion('4.5.2+11'), '4.5');
   assert.equal(coarseAppVersion('garbage'), '0.0');
 });
+
+test('discardView drops the active visit without recording it', () => {
+  const { collector, tick } = setup();
+  collector.enterView({ section: 'prayers', contentId: PRAYER });
+  tick(20);
+  collector.discardView();
+  collector.flush();
+  assert.deepEqual(collector.snapshot(), []);
+});
