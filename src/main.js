@@ -4,6 +4,8 @@ import { registerPlugins } from '@/plugins'
 import './styles/main.scss'
 import { primeContentCache } from '@/utils/primeContentCache'
 import { removeLegacyStorageKeys } from '@/utils/legacyStorageCleanup'
+import router from '@/router'
+import { MASS_ORDER_PRAYER_ID } from '@/utils/massRitual'
 
 const app = createApp(App)
 removeLegacyStorageKeys()
@@ -43,3 +45,14 @@ runAfterLoadAndIdle(() => {
     console.error('[main] Cache warmup error:', error)
   })
 }, { delay: 5000, idleTimeout: 5000 })
+
+// Local-only analytics for test builds (decision D-10 = B). The flag is a build-time
+// constant: when it is not 'true' this branch and the analytics code are removed from the bundle.
+if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {
+  import('./utils/analytics/localAnalytics')
+    .then(({ startLocalAnalytics }) => startLocalAnalytics(router, {
+      massOrderPrayerId: MASS_ORDER_PRAYER_ID,
+      appVersion: import.meta.env.VITE_APP_VERSION || '0.0',
+    }))
+    .catch(error => console.warn('[main] Local analytics unavailable:', error.message))
+}

@@ -75,7 +75,7 @@ test('whitelists contain no closed or personal sections and no free-text feature
   assert.equal(new Set(FEATURE_IDS).size, FEATURE_IDS.length);
 });
 
-test('stage guard: no screen, store, plugin or router imports the analytics contract', () => {
+test('stage guard: only main.js, behind the build flag, may reach the analytics code', () => {
   const offenders = [];
   (function walk(dir) {
     for (const name of readdirSync(dir)) {
@@ -84,7 +84,21 @@ test('stage guard: no screen, store, plugin or router imports the analytics cont
       if (/analytics\/contract|utils\/analytics/.test(readFileSync(full, 'utf8'))) offenders.push(path.relative(root, full));
     }
   }(path.join(root, 'src')));
-  assert.deepEqual(offenders, []);
+  assert.deepEqual(offenders, ['src/main.js']);
+  const main = readFileSync(path.join(root, 'src/main.js'), 'utf8');
+  assert.match(main, /if \(import\.meta\.env\.VITE_ANALYTICS_LOCAL === 'true'\) \{\s*import\('\.\/utils\/analytics\/localAnalytics'\)/);
+  assert.equal((main.match(/utils\/analytics/g) || []).length, 1, 'only the flagged dynamic import');
   const indexHtml = readFileSync(path.join(root, 'index.html'), 'utf8');
   assert.ok(!/analytics/i.test(indexHtml));
+  for (const file of readdirSync(root).filter((f) => /^\.env/.test(f))) {
+    assert.ok(!/VITE_ANALYTICS_LOCAL\s*=\s*true/.test(readFileSync(path.join(root, file), 'utf8')), `${file} must not enable analytics`);
+  }
+});
+
+test('no analytics module contains a network call or storage write', () => {
+  const dir = path.join(root, 'src/utils/analytics');
+  for (const name of readdirSync(dir).filter((f) => f.endsWith('.js'))) {
+    const text = readFileSync(path.join(dir, name), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    assert.ok(!/\bfetch\s*\(|XMLHttpRequest|sendBeacon|WebSocket|localStorage|sessionStorage|indexedDB|document\.cookie/.test(text), name);
+  }
 });
