@@ -82,7 +82,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { catalogContentLabel } from '@/utils/liturgicalCatalog';
 import { calendarOccurrence, nearestCatalogYear, occurrenceRoute, OCCURRENCE_LABELS } from '@/utils/catalogOccurrence';
 import { fetchCatalogPreview } from '@/services/catalogPreviewService';
-import { ordoDioceses } from '@/utils/ordoDiocese';
+import { ordoDiocese, ordoDioceses } from '@/utils/ordoDiocese';
 import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import { PLACE_LABEL_MAP } from '@/constants/liturgical';
 import { renderPrayerMarkdown } from '@/utils/prayerMarkdown';
@@ -96,7 +96,9 @@ const currentYear = new Date().getFullYear();
 const queryYear = (value) => value === undefined ? currentYear : value === '' ? '' : Number(value);
 const year = ref(queryYear(route.query.year));
 const dioceses = computed(() => props.entry.dioceses || ordoDioceses.value);
-const diocese = ref(dioceses.value.includes(route.query.calendarDiocese) ? route.query.calendarDiocese : dioceses.value[0]);
+const preferredDiocese = () => [route.query.calendarDiocese, route.query.catalogDiocese, ordoDiocese.value, dioceses.value[0]]
+  .find((id) => dioceses.value.includes(id));
+const diocese = ref(preferredDiocese());
 const panel = computed(() => route.query.panel || '');
 const preview = ref(null), loading = ref(false);
 let sequence = 0;
@@ -128,9 +130,9 @@ watch([() => props.entry.key, diocese, panel, ordoCalendarEpoch], ([key, id, , e
 watch([year, diocese], () => {
   router.replace({ query: { ...route.query, year: String(year.value), calendarDiocese: diocese.value } });
 });
-watch(() => [route.query.year, route.query.calendarDiocese], ([value, id]) => {
+watch(() => [route.query.year, route.query.calendarDiocese], ([value]) => {
   year.value = queryYear(value);
-  diocese.value = dioceses.value.includes(id) ? id : dioceses.value[0];
+  diocese.value = preferredDiocese();
 });
 function openCalendar() {
   // Revalidate against the CURRENT published Ordo immediately before navigation.

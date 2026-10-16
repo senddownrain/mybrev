@@ -50,7 +50,8 @@ Query inputs: entry, **civil year**, diocese, mode (`hours` / `readings`). Year
 appears only after «Адкрыць у календары»: current year, next-year shortcut,
 arbitrary integer year in the supported picker range 1583–4099. Dioceses come
 from Settings; opening a row preserves the specific applicable diocese without
-modifying Settings.
+modifying Settings. A shared entry defaults to the primary diocese of Settings,
+even when that diocese is not first in the selected list.
 
 Outputs include `entryId`, `year`, `diocese`, `mode`, `originalDate`,
 `effectiveDate`, `optionId`, `status`, `reason`, `canOpenHours`, `canOpenReadings`,

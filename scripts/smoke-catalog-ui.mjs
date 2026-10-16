@@ -79,6 +79,7 @@ try {
   assert.equal(await page.locator('.source-preview input[type=number]').count(), 0);
   await noOverflow();
   await page.getByRole('button', { name: 'Адкрыць у календары', exact: true }).click();
+  assert.equal(await page.getByLabel('Дыяцэзія', { exact: true }).inputValue(), 'pinsk', 'shared entries preserve the primary diocese of Settings');
   await page.getByLabel('Каляндарны год', { exact: true }).fill('2026');
   await page.getByText('У гэтым годзе не адзначаецца', { exact: true }).waitFor();
   assert.ok(await page.getByRole('button', { name: 'Перайсці да літургіі гадзінаў', exact: true }).isDisabled());

@@ -67,7 +67,7 @@ import PeriodPicker from '@/components/liturgical/PeriodPicker.vue';
 import FeastsPicker from '@/components/liturgical/FeastsPicker.vue';
 import CatalogEntryDetails from '@/components/liturgical/CatalogEntryDetails.vue';
 import { findCatalogEntry } from '@/utils/liturgicalCatalog';
-import { ordoDioceses } from '@/utils/ordoDiocese';
+import { ordoDiocese, ordoDioceses } from '@/utils/ordoDiocese';
 import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import {
   PhBookOpenText,
@@ -82,7 +82,8 @@ const activeTab = computed({ get: () => route.query.tab === 'feasts' ? 'feasts' 
 const readingMode = computed(() => route.query.mode === 'readings');
 const selectedEntry = computed(() => (ordoCalendarEpoch.value, findCatalogEntry(String(route.query.entry || ''), ordoDioceses.value, route.query.catalogDiocese)));
 function openSelection(entry) {
-  router.push({ query: { ...route.query, entry: entry.id, catalogDiocese: entry.dioceses?.[0] } });
+  const diocese = !entry.dioceses || entry.dioceses.includes(ordoDiocese.value) ? ordoDiocese.value : entry.dioceses[0];
+  router.push({ query: { ...route.query, entry: entry.id, catalogDiocese: diocese } });
 }
 function backToSearch() {
   const { entry: _entry, catalogDiocese: _diocese, panel: _panel, year: _year, ...query } = route.query;

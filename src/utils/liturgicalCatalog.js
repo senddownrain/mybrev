@@ -5,7 +5,7 @@ import { PERIOD_LABEL_MAP, PLACE_LABEL_MAP, RANK_LABEL_MAP, WEEKDAY_LABEL_MAP } 
 
 const pad = (n) => String(n).padStart(2, '0');
 const ANCHORS = Object.freeze({ easterSunday: 'Вялікадня', pentecost: 'Спаслання Духа Святога', firstAdventSunday: 'I нядзелі Адвэнту', christmas: 'Божага Нараджэння', epiphany: 'Аб’яўлення Пана' });
-const NAMED = Object.freeze({ ascension: 'Унебаўшэсце паводле календара краіны', corpusChristi: 'Цела і Кроў Хрыста паводле календара краіны', holyFamily: 'Нядзеля Святой Сям’і', baptismOfLord: 'Хрост Пана паводле календара краіны' });
+const NAMED = Object.freeze({ ascension: 'Унебаўшэсце паводле календара краіны', corpusChristi: 'Цела і Кроў Хрыста паводле календара краіны', holyFamily: 'Свята Святой Сям’і паводле календара краіны', baptismOfLord: 'Хрост Пана паводле календара краіны' });
 
 export function catalogDateLabel(rule) {
   if (rule?.type === 'fixed') return `${pad(rule.day)}.${pad(rule.month)}`;
