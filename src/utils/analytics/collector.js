@@ -41,7 +41,7 @@ export function createCollector({
 }) {
   let on = Boolean(enabled);
   /** day -> Map(cellKey -> cell) */
-  const days = new Map();
+  let days = new Map();
   let cellCount = 0;
   let visit = null; // active visit
   let pending = null; // just-closed visit, held for the double-trigger window
@@ -121,6 +121,25 @@ export function createCollector({
     visit = null;
   }
 
+  function buildPackets() {
+    const packets = [];
+    for (const day of [...days.keys()].sort()) {
+      const cells = [...days.get(day).values()];
+      for (let i = 0; i < cells.length; i += LIMITS.maxCellsPerPacket) {
+        const packet = {
+          schema_version: SCHEMA_VERSION,
+          day,
+          platform,
+          app_version: coarseAppVersion(appVersion),
+          region,
+          cells: cells.slice(i, i + LIMITS.maxCellsPerPacket),
+        };
+        if (validatePacket(packet, { publicIds }).length === 0) packets.push(packet);
+      }
+  }
+    return packets;
+  }
+
   return {
     get enabled() { return on; },
 
@@ -162,6 +181,12 @@ export function createCollector({
         visibleMs: 0,
         runningSince: visible ? at : null,
       };
+    },
+
+    /** Whether the active text needs no scrolling; can change back after late loading. */
+    reportFits(fits) {
+      if (!on || !visit) return;
+      visit.fits = Boolean(fits);
     },
 
     leaveView() {
@@ -225,25 +250,28 @@ export function createCollector({
     },
 
     /** Validated contract packets for all collected days, newest data included. Does not send. */
-    snapshot() {
+    /**
+     * Validated packets. With `includeOpen` the visit in progress is counted as
+     * if it ended now, without ending it (used when the page is hidden, so a
+     * killed tab does not lose the last read).
+     */
+    snapshot({ includeOpen = false } = {}) {
       if (!on) return [];
-      const packets = [];
-      for (const day of [...days.keys()].sort()) {
-        const cells = [...days.get(day).values()];
-        for (let i = 0; i < cells.length; i += LIMITS.maxCellsPerPacket) {
-          const packet = {
-            schema_version: SCHEMA_VERSION,
-            day,
-            platform,
-            app_version: coarseAppVersion(appVersion),
-            region,
-            cells: cells.slice(i, i + LIMITS.maxCellsPerPacket),
-          };
-          if (validatePacket(packet, { publicIds }).length === 0) packets.push(packet);
-        }
+      if (!includeOpen || (!visit && !pending)) return buildPackets();
+      const savedDays = days;
+      const savedCount = cellCount;
+      days = new Map([...savedDays].map(([day, cells]) => [day, new Map([...cells].map(([key, cell]) => [key, { ...cell }]))]));
+      try {
+        if (pending) finalize({ ...pending.visit }, pending.closedAt);
+        if (visit) finalize({ ...visit }, now());
+        return buildPackets();
+      } finally {
+        days = savedDays;
+        cellCount = savedCount;
       }
-      return packets;
     },
+
+
 
     /** Merges previously persisted packets (same platform) back into the counters. */
     importPackets(list) {

@@ -49,7 +49,7 @@ export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = pa
   // Called only when the page is hidden or closed: one small write, no work on scroll/tap.
   function persist() {
     try {
-      let packets = collector.snapshot();
+      let packets = collector.snapshot({ includeOpen: true });
       let text = JSON.stringify(packets);
       while (text.length > MAX_STORED_BYTES && packets.length > 0) {
         packets = packets.slice(1); // oldest day first
@@ -79,7 +79,8 @@ export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = pa
       else { collector.discardView(); current = null; }
       return;
     }
-    collector.enterView({ ...current, totalChars, fits }); // same material: refreshes text facts only
+    collector.enterView({ ...current, totalChars }); // same material: refreshes text facts only
+    collector.reportFits(fits);
     if (!fits) collector.reportScroll(scrollFraction());
   }
 

@@ -269,3 +269,19 @@ test('importPackets restores persisted counters; invalid, foreign and closed-id 
   fresh.importPackets(saved);
   assert.equal(find(fresh.snapshot().flatMap((p) => p.cells), (c) => c.e === 'feature_use').n, 2);
 });
+
+test('snapshot({ includeOpen }) counts the open visit without ending it', () => {
+  const { collector, tick } = setup();
+  collector.enterView({ section: 'prayers', contentId: PRAYER, totalChars: 900 });
+  tick(20);
+  collector.reportScroll(0.6);
+  assert.deepEqual(collector.snapshot(), []);
+  const preview = collector.snapshot({ includeOpen: true }).flatMap((p) => p.cells);
+  assert.equal(find(preview, (c) => c.metric === 'fv').bucket, '15_60s');
+  assert.equal(find(preview, (c) => c.metric === 'sd').bucket, 'p50_75');
+  assert.deepEqual(collector.snapshot(), []); // nothing was committed
+  tick(10);
+  collector.flush();
+  const cells = collector.snapshot().flatMap((p) => p.cells);
+  assert.equal(find(cells, (c) => c.e === 'screen_view').n, 1);
+});
