@@ -170,10 +170,15 @@ test('first Vespers of a celebration use the celebration\'s own season', () => {
   const proper = { _schema: 2, _celebrationId: 'sv-andrew-apostle', _templates: ['apostles'], _defaultTemplate: 'apostles', _rank: 'festum' };
   const office = descriptorOf('2026-11-30', 'sv-andrew-apostle');
   const advent = assembleOffice({ proper, office, templates: TEMPLATES, currentDay, season: { period: day.period, periodPhase: day.periodPhase } });
-  // Advent has only ONE variant for the apostles (the first reading of Volume I, 1 Кар 1, 18 – 2, 5): the flat base is
-  // used for I Vespers, never a Lent/Easter text
+  // Advent has variants for the apostles only where Volume I prints its own text (the first reading 1 Кар 1, 18 – 2, 5 and,
+  // since D-4, the wording of Volume I where it differs from Volume III); I Vespers have none: the flat base is used for
+  // them, never a Lent/Easter text
   assert.equal(advent.day.vesper1R, apostles.vesper1R);
-  assert.deepEqual(advent.seasonal.fields, { officeOfReadingsR1: 'advent' });
+  const adventFields = Object.keys(apostles._seasonalVariants.advent).sort();
+  assert.ok(adventFields.includes('officeOfReadingsR1') && !adventFields.includes('vesper1R'));
+  assert.deepEqual(Object.keys(advent.seasonal.fields).sort(), adventFields);
+  adventFields.forEach((field) => assert.deepEqual(advent.day[field], apostles._seasonalVariants.advent[field], field));
+  assert.equal(advent.seasonal.fields.officeOfReadingsR1, 'advent');
   assert.match(plain(advent.day.officeOfReadingsR1), /Карынцянаў 1, 18 – 2, 5/);
   const easter = assembleOffice({ proper, office, templates: TEMPLATES, currentDay, season: SEASON.easter });
   assert.equal(easter.day.vesper1R, apostles._seasonalVariants.easter.vesper1R);

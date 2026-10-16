@@ -233,7 +233,7 @@ test('layout helpers: psalm and hymn strophes; K./N. paragraphs keep their marks
 });
 
 test('the matrix covers every field of every Common for every variant season, with a category', () => {
-  const categories = new Set(['seasonal_explicit', 'seasonal_whole_field', 'seasonal_inherited', 'seasonal_structural', 'ordinary_base', 'editorial_difference', 'missing_source']);
+  const categories = new Set(['seasonal_explicit', 'seasonal_whole_field', 'seasonal_inherited', 'seasonal_structural', 'seasonal_reference_set', 'ordinary_base', 'editorial_difference', 'missing_source']);
   analysis.matrix.forEach((cell) => { assert.ok(categories.has(cell.category), JSON.stringify(cell)); assert.ok(cell.hour !== undefined); });
   const seasons = new Set(analysis.matrix.map((c) => c.season));
   assert.deepEqual([...seasons].sort(), ['advent', 'christmas', 'easter', 'lent']);

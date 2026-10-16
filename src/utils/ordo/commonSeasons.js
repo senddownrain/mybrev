@@ -28,6 +28,13 @@ export const COMMON_SEASON_KEYS = Object.freeze(['advent', 'christmas', 'lent', 
 export const SEASONAL_VARIANTS_FIELD = '_seasonalVariants';
 
 /**
+ * Marian Common: `_mainSection[field]` is the text of the main section of Volume III WITHOUT the optional Saturday
+ * memorial that the stored field merges with it (D-2). The Saturday memorial itself shows the whole stored field.
+ */
+export const MAIN_SECTION_FIELD = '_mainSection';
+export const SATURDAY_MEMORIAL_OPTION = 'saturday-blessed-virgin-mary';
+
+/**
  * Ordo period (+ phase) of the SELECTED Office → variant key (null = flat base).
  *
  * Holy Week: the rubric of Volume II reads «У Вялікі пост», and Great Lent (Quadragesima) lasts until the

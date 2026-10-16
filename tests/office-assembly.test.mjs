@@ -288,7 +288,8 @@ test('structured omit, explicit sources and a missing Common', () => {
   assert.equal(day.vesperHymn, '<p>own</p>');
   assert.equal(day.vesperInter, '');
   assert.equal(provenance.vesperInter, 'omit');
-  assert.equal(day.laudesInter, TEMPLATES.get('blessed-virgin-mary').laudesInter);
+  // D-2: outside the Saturday memorial the Marian Common shows its main section
+  assert.equal(day.laudesInter, TEMPLATES.get('blessed-virgin-mary')._mainSection.laudesInter);
   assert.equal(day.laudesR, 'day:laudesR');
   // Templates not published yet: the Office is still complete, from the day.
   const offline = assembleOffice({ proper, office, templates: new Map(), currentDay });
@@ -351,7 +352,7 @@ test('a celebration without a days document stays visible', () => {
   const patron = pinsk.dayOptions[0];
   assert.equal(patron.ordo.optionId, 'our-lady-lahishyn');
   assert.equal(patron.day._currentVersion, 'blessed-virgin-mary');
-  assert.equal(patron.day.laudesHymn, TEMPLATES.get('blessed-virgin-mary').laudesHymn);
+  assert.equal(patron.day.laudesHymn, TEMPLATES.get('blessed-virgin-mary')._mainSection.laudesHymn);
 });
 
 test('Saturday memorial of the BVM is offered from its Common', () => {

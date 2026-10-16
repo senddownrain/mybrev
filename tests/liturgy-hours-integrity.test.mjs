@@ -192,7 +192,7 @@ test('a movable memorial without a document is assembled from its Common', () =>
   const option = optionOf(result, 'mary-mother-church');
   assert.ok(option, 'Mary, Mother of the Church is offered');
   assert.deepEqual(option.templates.map((item) => item.choice), [CURRENT_DAY_CHOICE, 'blessed-virgin-mary']);
-  assert.equal(option.templates[1].day.laudesHymn, TEMPLATES.get('blessed-virgin-mary').laudesHymn);
+  assert.equal(option.templates[1].day.laudesHymn, TEMPLATES.get('blessed-virgin-mary')._mainSection.laudesHymn); // D-2: the main section, not the Saturday one
 });
 
 // ---------------------------------------------------------------------------

@@ -175,6 +175,9 @@ export function buildAudit({ corpus, analysis, generatedFrom, baseline }) {
   const removed = [...oldVariant].filter((key) => !newKeys.includes(key));
   const causeOf = (c) => {
     if (c.resolution === 'whole-field-variant') return 'whole-field (целиком напечатанный текст тома)';
+    if (c.category === 'seasonal_structural') return 'ссылка на другое поле того же Common (следует за его сезонным текстом)';
+    if (c.resolution === 'reference-set-of-variants') return 'отсылка как набор законных вариантов (D-1)';
+    if (c.resolution === 'seasonal-edition-variant') return 'редакция сезонного тома, отличающаяся от тома III (D-4)';
     if (c.category === 'seasonal_inherited') return 'унаследовано от родительского Common (doctors ← pastors)';
     const lines = analysis.alleluia.filter((a) => a.common === c.common && a.field === c.field && a.season === c.season);
     if (lines.some((a) => a.rule === 'alleluia-v1-versicle')) return 'К./Н. с пометкой «(Велікодны перыяд Аллелюя)» (NR-001)';

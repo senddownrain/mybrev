@@ -18,6 +18,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { analyzeCorpus, loadCorpus, SEASONS } from './common-seasons/lib/analyze.mjs';
+import { MAIN_SECTION_FIELD, SATURDAY_COMMONS, mainSectionsOf } from './common-seasons/lib/saturday.mjs';
 import { buildAudit, renderBaseCorrectionsMarkdown, renderMarkdown } from './common-seasons/lib/report.mjs';
 import { OFFICE_CONTENT_FIELDS } from '../../src/constants/officeFields.js';
 import { SEASONAL_VARIANTS_FIELD, validateSeasonalVariants } from '../../src/utils/ordo/commonSeasons.js';
@@ -59,7 +60,7 @@ const stable = (value) => `${JSON.stringify(value, null, 2)}\n`;
 export function generate() {
   const corpus = loadCorpus({ sourcesDir: PATHS.sources, commonDir: PATHS.common });
   // The stored `_seasonalVariants` never feeds the analysis (idempotency).
-  corpus.base.forEach((doc) => { delete doc[SEASONAL_VARIANTS_FIELD]; });
+  corpus.base.forEach((doc) => { delete doc[SEASONAL_VARIANTS_FIELD]; delete doc[MAIN_SECTION_FIELD]; });
   const analysis = analyzeCorpus(corpus);
   const documents = new Map();
   const provenance = {};
@@ -81,13 +82,23 @@ export function generate() {
     });
     documents.set(commonId, ordered);
   });
-  return { corpus, analysis, documents, provenance };
+  // D-2: the main section of the Marian Common without the Saturday memorial (the stored fields stay whole).
+  const mainSections = new Map();
+  const mainSectionReport = [];
+  SATURDAY_COMMONS.forEach((commonId) => {
+    const { fields, report } = mainSectionsOf(corpus, commonId);
+    if (Object.keys(fields).length) mainSections.set(commonId, fields);
+    mainSectionReport.push(...report);
+  });
+  analysis.mainSectionReport = mainSectionReport;
+  return { corpus, analysis, documents, provenance, mainSections };
 }
 
-function renderCommonFile(commonId, base, variants) {
-  const { [SEASONAL_VARIANTS_FIELD]: ignored, ...rest } = base;
-  void ignored;
+function renderCommonFile(commonId, base, variants, mainSection = null) {
+  const { [SEASONAL_VARIANTS_FIELD]: ignored, [MAIN_SECTION_FIELD]: ignoredMain, ...rest } = base;
+  void ignored; void ignoredMain;
   const out = { ...rest };
+  if (mainSection && Object.keys(mainSection).length) out[MAIN_SECTION_FIELD] = mainSection;
   if (Object.keys(variants).length) out[SEASONAL_VARIANTS_FIELD] = variants;
   return stable(out);
 }
@@ -99,14 +110,14 @@ function main() {
     if (unknown.includes('--include-unverified')) console.error('`--include-unverified` was removed: unverified fixes are never enabled by a switch; the accepted rules are part of the parser.');
     process.exit(2);
   }
-  const { corpus, analysis, documents, provenance } = generate();
+  const { corpus, analysis, documents, provenance, mainSections } = generate();
   const files = [];
   corpus.manifest.sections.forEach((section) => {
     const id = section.file.replace(/\.json$/, '');
     const file = path.join(PATHS.common, section.file);
     const current = fs.readFileSync(file, 'utf8');
     const stored = JSON.parse(current);
-    const text = renderCommonFile(id, stored, documents.get(id) || {});
+    const text = renderCommonFile(id, stored, documents.get(id) || {}, mainSections.get(id));
     const issues = validateSeasonalVariants({ _id: id, [SEASONAL_VARIANTS_FIELD]: documents.get(id) || undefined });
     files.push({ id, file, current, text, issues, changed: current !== text, fields: Object.values(documents.get(id) || {}).reduce((a, f) => a + Object.keys(f).length, 0) });
   });

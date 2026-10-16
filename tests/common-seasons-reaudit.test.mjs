@@ -56,10 +56,12 @@ test('a verse that merely begins with the word «Гімн» is text, not a refer
 
 test('Volume III parsed by the same parser is the stored base: words of the volume missing in the base are exactly the known, listed gaps', () => {
   const gaps = baseVersusOrdinary(corpus).map((g) => `${g.common}.${g.field}`).sort();
-  // not repaired here (the base fields of Ordinary Time stay as they are): every one is an open question for the owner (D-6)
+  // D-6 repaired martyr-one.vesper1R and religious.officeOfReadingsR1 (scripts/liturgy/common-seasons/apply-d6-base-completion.mjs).
+  // What is left is rubrics printed by Volume III («або», «на выбар з ніжэйпададзеных», «пра некалькіх святых») and the
+  // second reading of holy-women, a cross-reference that D-1 keeps as the set of legal choices: none is missing text.
   assert.deepEqual(gaps, [
     'blessed-virgin-mary.laudesAntBen', 'blessed-virgin-mary.laudesHymn', 'blessed-virgin-mary.laudesR', 'blessed-virgin-mary.officeOfReadingsHymn',
-    'holy-men.officeOfReadingsHymn', 'holy-women.officeOfReadingsR2', 'martyr-one.vesper1R', 'religious.officeOfReadingsR1',
+    'holy-men.officeOfReadingsHymn',
   ]);
   // every other field of Volume III is covered by the stored base (±3 % of the words)
   const ledger = baseVersusOrdinary(corpus);
@@ -133,17 +135,21 @@ test('before / after numbers of the audit', () => {
   const audit = buildAudit({ corpus, analysis, baseline, generatedFrom: {} });
   assert.deepEqual(audit.beforeAfter.baseline.bySeason, { advent: 7, christmas: 7, lent: 82, easter: 330 });
   assert.equal(audit.beforeAfter.baseline.total, 426);
-  assert.deepEqual(audit.beforeAfter.after.bySeason, { advent: 21, christmas: 21, lent: 84, easter: 404 });
-  assert.equal(audit.beforeAfter.after.total, 530);
+  // D-4: the volume's own edition is the season's text, so the seasons also carry the fields whose wording differs from Volume III
+  assert.deepEqual(audit.beforeAfter.after.bySeason, { advent: 118, christmas: 118, lent: 144, easter: 434 });
+  assert.equal(audit.beforeAfter.after.total, 814);
   assert.equal(audit.beforeAfter.removedFields.length, 0, 'nothing that was found before is lost');
   assert.equal(audit.beforeAfter.newWholeFieldVariants.cells, 32);
   assert.equal(audit.beforeAfter.newWholeFieldVariants.wholeReadingCells, 24);
   assert.equal(audit.beforeAfter.newWholeFieldVariants.distinctReadings, 12);
   assert.deepEqual(audit.beforeAfter.addedFieldsByCause, {
     'whole-field (целиком напечатанный текст тома)': 32,
-    'унаследовано от родительского Common (doctors ← pastors)': 28,
-    'К./Н. с пометкой «(Велікодны перыяд Аллелюя)» (NR-001)': 43,
+    'редакция сезонного тома, отличающаяся от тома III (D-4)': 245,
+    'ссылка на другое поле того же Common (следует за его сезонным текстом)': 44,
+    'унаследовано от родительского Common (doctors ← pastors)': 34,
+    'К./Н. с пометкой «(Велікодны перыяд Аллелюя)» (NR-001)': 28,
     'антифона, заканчивающаяся «!» (NR-002)': 1,
+    'отсылка как набор законных вариантов (D-1)': 4,
   });
   assert.equal(audit.summary.reviewCells, 0);
   assert.equal(audit.summary.alleluia.versicleLines, 100);
@@ -174,7 +180,9 @@ test('apostles: Advent / Christmas read 1 Кар 1, 18 – 2, 5 (Volume I), the 
 
 test('religious and works-of-mercy: the whole first reading with its responsory, in every season of both volumes, not spread beyond the proof', () => {
   const base = plain(baseOf('religious', 'officeOfReadingsR1'));
-  assert.match(base, /^Радуйцеся заўсёды ў Пану Браты: Што было для мяне набыткам/);
+  // D-6: the reference line of the reading and the second responsory «Пра законніцу» printed by Volume III are in the base
+  assert.match(base, /^Пасланне св\. апостала Паўла да Філіпянаў 3, 7 – 4, 1\. 4-9 Радуйцеся заўсёды ў Пану Браты: Што было для мяне набыткам/);
+  assert.match(base, /Пра законніцу: Пс 45 \(44\), 2 Н\. Адкінула валадарства гэтага свету[^]*Н\. Яго пазнала\.$/u);
   assert.doesNotMatch(base, /Эфесцаў/);
   assert.match(plain(baseOf('works-of-mercy', 'officeOfReadingsR1')), /Карынцянаў ?12, 31 – 13, 13/);
   SEASONS.forEach((season) => {
@@ -252,19 +260,21 @@ test('doctors-of-church inherits what the volume does not print («Усё з А�
     assert.equal(corpus.volumes.II.commons.get('doctors-of-church').fields.has(field), false, `${field}: the volume does not print it`);
   });
   // what the doctors section prints itself is never overwritten by the parent
-  Object.keys(doctors).filter((field) => !inherited.includes(field)).forEach((field) => assert.ok(corpus.volumes.II.commons.get('doctors-of-church').fields.has(field), field));
+  // (a field that only REFERS to another field of the same Common, «Гімн з ІІ Нешпараў…», follows the referenced text)
+  const info = (field) => analysis.variants.get('doctors-of-church').easter[field];
+  Object.keys(doctors).filter((field) => !inherited.includes(field)).forEach((field) => assert.ok(
+    corpus.volumes.II.commons.get('doctors-of-church').fields.has(field) || /^structural-ref/.test(info(field).method), field,
+  ));
 });
 
 test('nothing printed by Volume I or II is lost: every word is found in the text of the season, the unfound ones are wording, references and listed gaps', () => {
   const coverage = volumeWordCoverage({ corpus, variants: analysis.variants, seasons: SEASONS, seasonVolume: SEASON_VOLUME });
   assert.equal(coverage.cells, 1782);
-  assert.deepEqual(coverage.buckets, { 0: 1326, '1–5': 370, '6–19': 80, '≥ 20': 6 });
+  // D-4: the volume's own wording is the season's text, so far more cells are word for word (1326 → 1512)
+  assert.deepEqual(coverage.buckets, { 0: 1512, '1–5': 248, '6–19': 22, '≥ 20': 0 });
   const large = coverage.largest.filter((r) => r.notFoundWords >= 20).map((r) => `${r.common}.${r.field}.${r.season}`).sort();
-  assert.deepEqual(large, [
-    // the stored I Vespers short reading of the martyr lacks the printed reading Рым 8, 35. 37-39 in EVERY season (D-6)
-    'holy-women.officeOfReadingsR1.advent', 'holy-women.officeOfReadingsR1.christmas', 'holy-women.officeOfReadingsR1.easter', 'holy-women.officeOfReadingsR1.lent',
-    'martyr-one.vesper1R.advent', 'martyr-one.vesper1R.christmas',
-  ].sort());
+  // D-6 completed martyr-one.vesper1R in the base and D-4/D-1 made the seasons print the volume's text: nothing of 20 words or more is missing
+  assert.deepEqual(large, []);
   // every whole text that differs from Volume III (class 3) is a seasonal variant of exactly the seasons of its volume
   analysis.matrix.filter((c) => c.difference?.className === 'different').forEach((c) => {
     assert.ok(c.status.startsWith('variant'), `${c.common}.${c.field}.${c.season}`);
@@ -405,10 +415,18 @@ test('NR-012: Advent / Christmas show ONE prayer of Volume I, Ordinary Time keep
     const base = baseOf('blessed-virgin-mary', field);
     assert.ok((Array.isArray(base) ? base.join('') : base).split('<hr').length > 2, `${field}: the Ordinary Time list is intact`);
   });
-  // the fields where the Saturday memorial of Volume III has more alternatives than the main section of Volume I / II keep them (D-2)
-  const subset = analysis.matrix.filter((c) => c.common === 'blessed-virgin-mary' && c.resolution === 'kept-base-subset');
+  // D-2 / D-4: the fields where Volume III (main + Saturday memorial) has more alternatives than the main section printed by
+  // Volume I / II are the volume's own text in its seasons, never the Saturday section (the 4 intercession cells cannot be
+  // rendered: they fall to the main section of Volume III at assembly, see tests/common-seasons-saturday.test.mjs)
+  const subset = analysis.matrix.filter((c) => c.common === 'blessed-virgin-mary' && c.difference?.relation === 'subset-of-ordinary');
   assert.ok(subset.length >= 20);
-  subset.forEach((c) => assert.equal(variant('blessed-virgin-mary', c.season, c.field), undefined, `${c.field}.${c.season}`));
+  subset.forEach((c) => {
+    if (c.resolution === 'edition-unbuildable-kept-base') { assert.equal(c.field, 'laudesInter'); return; }
+    assert.equal(c.resolution, 'seasonal-edition-variant', `${c.field}.${c.season}`);
+    const value = variant('blessed-virgin-mary', c.season, c.field);
+    assert.ok(value, `${c.field}.${c.season}`);
+    assert.doesNotMatch(plain(value), /УСПАМІН НАЙСВ\. ПАННЫ МАРЫІ Ў СУБОТУ/, `${c.field}.${c.season}`);
+  });
   const satHeading = corpus.volumes.III.commons.get('blessed-virgin-mary').common.order.find((u) => u.section === 'saturday');
   assert.match(satHeading.sectionHeading.text, /УСПАМІН НАЙСВ\. ПАННЫ МАРЫІ Ў СУБОТУ/);
   assert.equal(corpus.volumes.I.commons.get('blessed-virgin-mary').common.order.some((u) => u.section === 'saturday'), false);
@@ -496,7 +514,7 @@ test('assembly: the whole readings arrive through assembleOffice by the season o
   ['advent', 'christmas'].forEach((s) => assert.match(r1('apostles', s), /1, 18 – 2, 5/));
   ['ordinary'].forEach((s) => assert.match(r1('apostles', s), /4, 1-16/));
   ['advent', 'christmas', 'lent', 'easter'].forEach((s) => { assert.match(r1('religious', s), /Эфесцаў 4, 1-24/); assert.match(r1('works-of-mercy', s), /Яна 4, 7-21/); });
-  assert.match(r1('religious', 'ordinary'), /^Радуйцеся заўсёды ў Пану/);
+  assert.match(r1('religious', 'ordinary'), /^Пасланне св\. апостала Паўла да Філіпянаў 3, 7 – 4, 1\. 4-9 Радуйцеся заўсёды ў Пану/);
   assert.match(r1('works-of-mercy', 'ordinary'), /Карынцянаў ?12, 31 – 13, 13/);
   assert.doesNotMatch(r1('religious', 'lent'), /аллелюя/);
   assert.match(r1('religious', 'easter'), /аллелюя/);

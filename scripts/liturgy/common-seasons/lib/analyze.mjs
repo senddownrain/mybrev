@@ -20,7 +20,7 @@ import {
 } from './fields.mjs';
 import { DIFFERENCE_CLASSES, classifyDifference, isReferenceOnly } from './compare.mjs';
 import {
-  harmonizeAlignment, htmlToPlain, splitBlocks,
+  escapeHtml, harmonizeAlignment, htmlToPlain, paragraph, splitBlocks,
 } from './html.mjs';
 import {
   renderUnitLines, renderVersicles, renderShortReading, renderAntiphonParagraph,
@@ -32,6 +32,15 @@ import { OFFICE_CONTENT_FIELDS } from '../../../../src/constants/officeFields.js
 
 export const SEASON_VOLUME = Object.freeze({ advent: 'I', christmas: 'I', lent: 'II', easter: 'II' });
 export const SEASONS = Object.freeze(['advent', 'christmas', 'lent', 'easter']);
+
+/**
+ * D-1: fields where the seasonal volumes print only a CROSS-REFERENCE («Выбіраюцца найбольш адпаведныя тэксты … з Агульных
+ * тэкстаў пра святых мужчын») and Volume III prints the same reference followed by one more legal reading («Або іншае»).
+ * The reference is the set of legal choices: the season keeps the stored text (the reference and the extra reading) and
+ * takes the volume's own sentence of the reference.
+ */
+export const REFERENCE_SET_FIELDS = Object.freeze(new Set(['holy-women.officeOfReadingsR2']));
+const REFERENCE_SENTENCE = /^Выбіраюцца\s+найбольш\s+адпаведныя/u;
 
 const sha = (value) => crypto.createHash('sha256').update(value).digest('hex');
 
@@ -321,7 +330,12 @@ export function analyzeCorpus(corpus) {
             cmp.knSwap = cmp.class === 'lexical' && normalizeForCompare(swapLabels(volumeText)) === normalizeForCompare(ordinaryText);
           }
         }
-        const wholeField = Boolean(cmp) && !referenceOnly && (cmp.class === 'different' || ['superset-of-ordinary', 'volume-only'].includes(cmp.relation));
+        // The seasonal volume is the source of truth for its own seasons (decision D-4): wherever it prints a text
+        // that differs in wording or composition from Volume III (not merely in spelling / typography, and not a
+        // К./Н. label swap of the base), the season takes the volume's own edition as a whole-field variant.
+        const seasonalEdition = Boolean(cmp) && !referenceOnly && !cmp.knSwap && !cmp.exact
+          && (cmp.class === 'lexical' || ['subset-of-ordinary', 'passage-only-in-volume', 'passage-only-in-ordinary'].includes(cmp.relation));
+        const wholeField = Boolean(cmp) && !referenceOnly && (cmp.class === 'different' || ['superset-of-ordinary', 'volume-only'].includes(cmp.relation) || seasonalEdition);
         if (cmp) cell.difference = describeDifference(cmp, { referenceOnly });
 
         const ctx = { problems: [], typos: new Set(), rules: new Set(), alleluia: [] };
@@ -331,12 +345,23 @@ export function analyzeCorpus(corpus) {
         if (explicit || wholeField) {
           cell.category = explicit ? 'seasonal_explicit' : 'seasonal_whole_field';
           const result = stepExplicit({ units, season, base: state.base, ctx });
+          if (result.fail && seasonalEdition && !explicit) {
+            // The volume's own edition of a plain (unmarked) field cannot be rendered (no renderer for this kind of
+            // text): the base stays and the exact difference stays on record, it is not hidden as «equal».
+            classifyPlainCell(cell, { cmp, referenceOnly, hasBaseText });
+            cell.resolution = 'edition-unbuildable-kept-base';
+            cell.note = `the volume's own wording could not be rendered (${result.fail}); the stored text is kept`;
+            continue;
+          }
           if (result.fail) {
             cell.status = 'review'; cell.note = result.fail;
             review.push({ type: explicit ? 'explicit-unbuildable' : 'whole-field-unbuildable', common: commonId, field, season, reason: result.fail, source: cell.source });
             continue;
           }
-          state.base = { isArray: state.base?.isArray || false, count: state.base?.count || 1, blocks: result.blocks };
+          // A volume that prints its alternatives as one text must not leave empty trailing elements of the stored
+          // array (the base lists three alternatives, the volume one): the array is as long as what is printed.
+          const printedCount = result.blocks.reduce((max, block) => Math.max(max, block.elem + 1), 1);
+          state.base = { isArray: state.base?.isArray || false, count: state.base?.isArray ? Math.min(state.base.count, printedCount) : (state.base?.count || 1), blocks: result.blocks };
           state.methods.add(result.method);
           renderedExplicit = true; touched = true;
           cell.kind = result.kind;
@@ -363,25 +388,44 @@ export function analyzeCorpus(corpus) {
         if (!touched) {
           if (cell.category === 'seasonal_explicit') { cell.status = 'review'; cell.note = 'seasonal mark present but no change could be derived (see needs_review)'; continue; }
           if (!cmp) { cell.category = 'missing_source'; cell.relation = 'n/a'; cell.note = 'no comparable text for this season'; continue; }
+          if (referenceOnly && hasBaseText && REFERENCE_SET_FIELDS.has(`${commonId}.${field}`)) {
+            const sentence = active.flatMap((u) => unitLines(u, season, { notes: false }) || []).map((l) => l.text.trim()).find((t) => REFERENCE_SENTENCE.test(t));
+            const target = sentence ? state.base.blocks.findIndex((b) => REFERENCE_SENTENCE.test(htmlToPlain(b.html).replace(/\s+/g, ' ').trim())) : -1;
+            if (target >= 0) {
+              state.base.blocks[target] = { html: paragraph(escapeHtml(sentence), 'justify'), elem: state.base.blocks[target].elem };
+              const finalValue = fromBlocks(state.base);
+              cell.category = 'seasonal_reference_set'; cell.status = 'variant'; cell.relation = 'differs'; cell.kind = 'reading2';
+              cell.resolution = 'reference-set-of-variants'; cell.method = 'reference-set'; cell.rules = [];
+              cell.note = 'the volume prints only the cross-reference; the season shows the volume\'s own sentence of it together with the further legal reading that Volume III prints («Або іншае»), nothing else is added';
+              cell.sourceHash = sha(JSON.stringify(sentence));
+              (perSeason[season] ||= {})[field] = { value: finalValue, equalsBase: false, method: cell.method, kind: cell.kind, rules: [], volume: volId, lines: cell.source.lines, hash: sha(JSON.stringify(finalValue)), partial: false };
+              continue;
+            }
+          }
           classifyPlainCell(cell, { cmp, referenceOnly, hasBaseText });
           continue;
         }
         const value0 = fromBlocks(state.base);
         const value = value0;
         const countAlleluia = (v) => (normalizeForCompare(Array.isArray(v) ? v.join(' ') : v).match(/аллелюя/gu) || []).length;
-        const nearEqual = hasBaseText && ['psalm', 'reading1', 'reading2'].includes(cell.kind) && similarity(plainOf(value), plainOf(baseValue)) >= 0.97
+        // (not for the volume's own edition: a text that differs in wording from Volume III is the season's text, D-4)
+        const nearEqual = hasBaseText && !seasonalEdition && ['psalm', 'reading1', 'reading2'].includes(cell.kind) && similarity(plainOf(value), plainOf(baseValue)) >= 0.97
           && countAlleluia(value) === countAlleluia(baseValue);
         const equal = hasBaseText && (plainOf(value) === plainOf(baseValue) || nearEqual);
         if (equal && nearEqual) cell.editorialNote = 'equal to the stored base up to editorial wording';
         cell.method = [...state.methods].join('+');
         cell.rules = [...ctx.rules];
-        if (equal && (!explicit || state.methods.has('carrier-equal'))) { cell.relation = 'same'; cell.note = 'the seasonal text equals the stored base (not duplicated)'; continue; }
+        if (equal && (!explicit || state.methods.has('carrier-equal'))) {
+          cell.relation = 'same'; cell.note = 'the seasonal text equals the stored base (not duplicated)';
+          if (seasonalEdition) cell.resolution = 'edition-equals-base';
+          continue;
+        }
         const equalsBase = Boolean(equal);
         const finalValue = equalsBase ? baseValue : value0;
         cell.relation = equalsBase ? 'same' : (hasBaseText ? 'differs' : 'absent');
         if (equalsBase) cell.note = 'explicit seasonal text of the volume equals the stored base; stored explicitly so the season does not depend on the base';
         cell.status = ctx.problems.some((p) => !p.lowConfidence) ? 'variant-partial' : 'variant';
-        if (cmp) cell.resolution = wholeField ? 'whole-field-variant' : (cmp.relation === 'same-words' || cmp.relation === 'equal' ? 'variant-carrier-same-text' : 'variant-carrier-wording-kept');
+        if (cmp) cell.resolution = wholeField ? (seasonalEdition ? 'seasonal-edition-variant' : 'whole-field-variant') : (cmp.relation === 'same-words' || cmp.relation === 'equal' ? 'variant-carrier-same-text' : 'variant-carrier-wording-kept');
         cell.sourceHash = sha(active.map((u) => (unitLines(u, season, { raw: true }) || []).map((l) => l.text).join('\n')).join('\n'));
         (perSeason[season] ||= {})[field] = {
           value: finalValue, equalsBase, method: cell.method, kind: cell.kind || 'annotated', rules: cell.rules, volume: volId, lines: cell.source.lines, hash: sha(JSON.stringify(finalValue)), partial: cell.status === 'variant-partial',
@@ -525,7 +569,12 @@ function propagateReferences({ corpus, matrix, variants }) {
         const cell = matrix.find((c) => c.common === commonId && c.field === pair.target && c.season === season);
         const refUnit = (common?.hours[pair.hour] || []).find((u) => u.kind === pair.kind);
         if (!refUnit) continue;
-        if (plainOf(targetBase) !== plainOf(sourceBase)) { if (cell) { cell.status = 'review'; cell.note = `the volume refers to ${pair.source}, but the stored ${pair.target} differs from the stored ${pair.source}`; } continue; }
+        // The volume's reference means the whole source hymn/prayer; a stored target that is the source minus its closing
+        // doxology (martyrs-many.vesper1Hymn lacks «Каб мы заўсёды Цябе праслаўлялі. Амэн.») is the same text.
+        const targetPlain = plainOf(targetBase);
+        const sourcePlain = plainOf(sourceBase);
+        const sameText = targetPlain === sourcePlain || (targetPlain.length > 200 && sourcePlain.startsWith(targetPlain));
+        if (!sameText) { if (cell) { cell.status = 'review'; cell.note = `the volume refers to ${pair.source}, but the stored ${pair.target} differs from the stored ${pair.source}`; } continue; }
         (variants.get(commonId)[season] ||= {})[pair.target] = {
           ...sourceVariant, method: 'structural-ref', kind: 'ref', from: pair.source, rules: [],
         };
