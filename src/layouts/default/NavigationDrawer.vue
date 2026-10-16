@@ -335,8 +335,15 @@ onBeforeUnmount(() => {
     radial-gradient(circle at 14% 4%, rgba(var(--chrome-accent-rgb), 0.13), transparent 210px),
     var(--nav-surface) !important;
   color: var(--nav-on-surface) !important;
-  box-shadow: 10px 0 32px var(--nav-shadow) !important;
+  /* A closed drawer sits at translateX(-100%) but its shadow would still reach
+     into the viewport: only the open drawer casts one (Vuetify's own box-shadow
+     transition animates it). */
+  box-shadow: none !important;
   overflow: hidden;
+}
+
+.app-drawer.v-navigation-drawer--active {
+  box-shadow: 10px 0 32px var(--nav-shadow) !important;
 }
 
 .drawer-shell {
