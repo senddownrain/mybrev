@@ -12,6 +12,7 @@
  * a scripted scroll, JS heap after the scenario, localStorage bytes, and every network request host (analytics must make 0).
  * Env: ANALYTICS_PERF_RUNS (default 7), PERF_SNAPSHOT / PERF_STATIC_SNAPSHOT, BENCHMARK_BROWSER_PATH, PERF_PORT.
  */
+/* global requestAnimationFrame, cancelAnimationFrame, PopStateEvent -- used only inside page.evaluate (browser context) */
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
