@@ -2,4 +2,6 @@ chrome-profile/
 chrome-profile-*/
 *.log
 *.png
+!pwa-bookmark-comparison.png
+!pwa-60.png
 pwa-install.json
