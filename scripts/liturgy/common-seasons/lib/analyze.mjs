@@ -435,6 +435,7 @@ export function analyzeCorpus(corpus) {
     variants.set(commonId, perSeason);
   }
   propagateReferences({ corpus, matrix, variants });
+  completeReferenceSets({ matrix, variants, corpus });
   propagateInheritance({ corpus, matrix, variants });
   markSeasonalVolumeAgreement({ corpus, matrix });
   return { matrix, variants, review, alleluia, typos };
@@ -555,6 +556,29 @@ export const REFERENCE_PAIRS = Object.freeze([
   { target: 'sext2Pr', source: 'laudesPr', hour: 'daytime', kind: 'prayerRef' },
   { target: 'sext3Pr', source: 'laudesPr', hour: 'daytime', kind: 'prayerRef' },
 ]);
+
+/**
+ * D-1 (PR #132 verification A2): Volumes I and II print for the second reading of a holy woman ONLY the reference
+ * «Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі пададзены ў Агульных тэкстах пра святых мужчын, с. N»
+ * (the Pius XII address belongs to Volume III only; nothing in I/II justifies it there). The legal set is therefore the
+ * reference sentence followed by the texts of the Common of holy men of the SAME season volume (their own seasonal edition,
+ * or the stored base where that Common has no variant), so the user can read the permitted choices without any automatic
+ * substitution.
+ */
+function completeReferenceSets({ matrix, variants, corpus }) {
+  const SOURCE = { common: 'holy-men', field: 'officeOfReadingsR2' };
+  for (const season of SEASONS) {
+    const own = variants.get('holy-women')?.[season]?.officeOfReadingsR2;
+    if (!own || own.method !== 'reference-set') continue;
+    const sentenceBlock = (Array.isArray(own.value) ? own.value.join('\n') : own.value).split('\n').find((b) => REFERENCE_SENTENCE.test(htmlToPlain(b).replace(/\s+/g, ' ').trim()));
+    const menValue = variants.get(SOURCE.common)?.[season]?.[SOURCE.field]?.value ?? corpus.base.get(SOURCE.common)?.[SOURCE.field];
+    if (!sentenceBlock || !menValue) continue;
+    const joined = [sentenceBlock, '<hr />', Array.isArray(menValue) ? menValue.join('\n') : menValue].join('\n');
+    own.value = joined; own.hash = sha(JSON.stringify(joined));
+    const cell = matrix.find((c) => c.common === 'holy-women' && c.field === 'officeOfReadingsR2' && c.season === season);
+    if (cell) cell.note = 'the volume prints only the cross-reference to the Common of holy men; the season shows the volume\'s sentence followed by the texts of that Common of the same volume (the legal set, read-only choice); the Pius XII address is Volume III only';
+  }
+}
 
 function propagateReferences({ corpus, matrix, variants }) {
   for (const [commonId, baseDoc] of corpus.base) {

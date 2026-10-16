@@ -35,6 +35,24 @@ import { recordMigration } from '../liturgy/lib/migration-report.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const FEASTS_CONFIRMATION = 'import-sparse-feasts';
+/** Documents that a scoped template import must never touch (not part of the seasonal Commons work). */
+export const PROTECTED_TEMPLATE_IDS = Object.freeze(['office-for-dead', 'sunday-week-1', 'complementary-psalmody']);
+
+/**
+ * `--ids a,b,c` (with `--only templates`): restrict the template import to an explicit allowlist. Unknown ids, protected
+ * ids and an empty list are refused; the plan, the backup and the writes then cover exactly these documents.
+ */
+export function scopeTemplateIds(templates, ids) {
+  const wanted = [...new Set(String(ids || '').split(',').map((id) => id.trim()).filter(Boolean))];
+  if (!wanted.length) throw new Error('--ids needs at least one template id');
+  const known = new Set(templates.map((item) => item.id));
+  const unknown = wanted.filter((id) => !known.has(id));
+  if (unknown.length) throw new Error(`--ids: unknown template id(s): ${unknown.join(', ')}`);
+  const protectedIds = wanted.filter((id) => PROTECTED_TEMPLATE_IDS.includes(id));
+  if (protectedIds.length) throw new Error(`--ids: protected template id(s) cannot be imported by a scoped run: ${protectedIds.join(', ')}`);
+  return { ids: wanted, templates: templates.filter((item) => wanted.includes(item.id)) };
+}
+
 const TARGET_COLLECTIONS = Object.freeze({ 'proper-texts': 'liturgicalProperTexts', days: 'days' });
 
 const readDir = (dir) => fs.readdirSync(dir).filter((name) => name.endsWith('.json')).sort()
@@ -58,7 +76,7 @@ export function buildFeastTargets(root = ROOT) {
 
 function parseArgs(argv) {
   const options = {
-    apply: false, offline: false, markObsolete: false, confirm: '', only: '', target: 'proper-texts',
+    apply: false, offline: false, markObsolete: false, confirm: '', only: '', ids: '', target: 'proper-texts',
     serviceAccount: path.join(ROOT, 'patchs', 'serviceAccountKey.json'),
     output: path.join(ROOT, 'reports', 'ordo-feasts-import-plan.json'),
     backupDir: path.join(ROOT, 'backups', 'ordo-feasts'),
@@ -68,16 +86,17 @@ function parseArgs(argv) {
     if (arg === '--apply') options.apply = true;
     else if (arg === '--offline') options.offline = true;
     else if (arg === '--mark-obsolete') options.markObsolete = true;
-    else if (['--confirm', '--only', '--target', '--service-account', '--output', '--backup-dir'].includes(arg)) {
+    else if (['--confirm', '--only', '--ids', '--target', '--service-account', '--output', '--backup-dir'].includes(arg)) {
       const value = argv[++index];
       if (!value || value.startsWith('--')) throw new Error(`Missing value for ${arg}`);
       const key = {
-        '--confirm': 'confirm', '--only': 'only', '--target': 'target', '--service-account': 'serviceAccount', '--output': 'output', '--backup-dir': 'backupDir',
+        '--confirm': 'confirm', '--only': 'only', '--ids': 'ids', '--target': 'target', '--service-account': 'serviceAccount', '--output': 'output', '--backup-dir': 'backupDir',
       }[arg];
-      options[key] = ['confirm', 'only', 'target'].includes(key) ? value : path.resolve(value);
+      options[key] = ['confirm', 'only', 'ids', 'target'].includes(key) ? value : path.resolve(value);
     } else throw new Error(`Unknown option: ${arg}`);
   }
   if (options.only && !['templates', 'feasts'].includes(options.only)) throw new Error('--only takes templates or feasts');
+  if (options.ids && options.only !== 'templates') throw new Error('--ids requires --only templates');
   if (options.apply && options.offline) throw new Error('--apply needs Firestore; remove --offline.');
   if (!TARGET_COLLECTIONS[options.target]) throw new Error('--target takes proper-texts or days');
   if (options.markObsolete && options.target !== 'days') throw new Error('--mark-obsolete applies to --target days only');
@@ -91,6 +110,7 @@ function parseArgs(argv) {
 export async function main(argv = process.argv.slice(2)) {
   const options = parseArgs(argv);
   const targets = buildFeastTargets();
+  if (options.ids) targets.templates = scopeTemplateIds(targets.templates, options.ids).templates;
   const feastsCollection = TARGET_COLLECTIONS[options.target];
   let connection = null;
   if (!options.offline && fs.existsSync(options.serviceAccount)) {
@@ -110,7 +130,10 @@ export async function main(argv = process.argv.slice(2)) {
     let existing = null;
     if (connection) {
       const { firestore } = connection;
-      const templates = (await firestore.collection('liturgicalTemplates').get()).docs.map((doc) => ({ id: doc.id, data: doc.data() }));
+      const allTemplates = (await firestore.collection('liturgicalTemplates').get()).docs.map((doc) => ({ id: doc.id, data: doc.data() }));
+      // A scoped run plans, backs up and writes only its allowlist.
+      const scoped = new Set(targets.templates.map((item) => item.id));
+      const templates = options.ids ? allTemplates.filter((item) => scoped.has(item.id)) : allTemplates;
       // Only the documents this import touches are read: targets and legacy copies.
       const ids = [...targets.feasts.map((item) => item.id), ...(options.target === 'days' ? targets.legacyIds : [])];
       const days = [];

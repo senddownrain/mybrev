@@ -65,3 +65,17 @@ if (!/Выбіраюцца/u.test(holyWomen.officeOfReadingsR2)) {
   save('holy-women', holyWomen);
   console.log('holy-women.officeOfReadingsR2 completed');
 }
+
+// holy-men.officeOfReadingsHymn (A3 of the PR #132 verification): Volume III prints for several saints only the reference
+// «Пра некалькіх святых – гімн Будзем праслаўляць за веру, с. 1593» (line 4855), and that hymn is stored as the second
+// half of holy-men.vesperHymn. The Office of Readings field had only the hymn «Пра аднаго святога», so the second legal
+// hymn was unreachable there. The paragraphs of the hymn «Пра некалькіх святых» are copied from vesperHymn (same page).
+const holyMen = load('holy-men');
+if (!/Пра некалькіх святых/u.test(holyMen.officeOfReadingsHymn)) {
+  const blocks = (holyMen.vesperHymn || '').split('\n');
+  const start = blocks.findIndex((block) => /Пра некалькіх святых/u.test(block));
+  if (start < 0) throw new Error('holy-men.vesperHymn no longer has the hymn «Пра некалькіх святых»');
+  holyMen.officeOfReadingsHymn = [holyMen.officeOfReadingsHymn.trimEnd(), '<hr />', ...blocks.slice(start)].join('\n');
+  save('holy-men', holyMen);
+  console.log('holy-men.officeOfReadingsHymn completed');
+}

@@ -114,3 +114,39 @@ test('seasons: a Marian celebration of Advent / Lent / Easter uses the season\'s
   });
   SPLIT.filter((f) => !(f in TEMPLATES.get('blessed-virgin-mary')._seasonalVariants.advent)).forEach((field) => assert.equal(advent.day[field], COMMON._mainSection[field], field));
 });
+
+test('boundaries: the Saturday memorial follows the rubrics at every season border and against Marian / obligatory memorials, in all four dioceses', () => {
+  const dioceses = ['minsk-mohilev', 'grodno', 'pinsk', 'vitebsk'];
+  const offeredIn = (iso) => dioceses.map((diocese) => offices(iso, diocese).all.some((o) => o.optionId === 'saturday-blessed-virgin-mary'));
+  const all = (iso, value) => assert.deepEqual(offeredIn(iso), dioceses.map(() => value), iso);
+  all('2026-11-28', true); // last Saturday of Ordinary Time before Advent
+  all('2026-11-21', false); // Presentation of the BVM (obligatory Marian memorial replaces it)
+  all('2027-01-02', false); all('2027-01-09', false); // Christmas time
+  all('2027-01-16', true); all('2027-01-30', true); // first free Saturdays of Ordinary Time after the Baptism of the Lord
+  all('2027-02-06', false); // St Paul Miki (obligatory memorial)
+  all('2027-02-13', false); // Lent
+  all('2027-05-15', false); // Easter time (Saturday before Pentecost)
+  all('2027-05-22', true); all('2027-05-29', true); // Ordinary Time after Pentecost
+  all('2027-06-05', false); // Immaculate Heart of Mary (obligatory Marian memorial)
+  // a diocesan obligatory memorial blocks it only in that diocese
+  assert.deepEqual(offeredIn('2027-06-12'), [true, false, true, true]);
+});
+
+test('every Marian celebration shows the main section of ALL eight split fields and none shows the Saturday heading; only the Saturday memorial shows them whole', () => {
+  const dates = { 'assumption-blessed-virgin-mary': '2026-08-15' };
+  ['2026-09-08', '2026-09-15', '2026-10-07', '2026-12-08'].forEach((iso) => {
+    const found = offices(iso).all.find((o) => /blessed-virgin|our-lady|immaculate|nativity|rosary|sorrows/.test(o.optionId));
+    if (found) dates[found.optionId] = iso;
+  });
+  assert.ok(Object.keys(dates).length >= 4, Object.keys(dates).join(','));
+  Object.entries(dates).forEach(([optionId, iso]) => {
+    const { day, all } = offices(iso);
+    const office = all.find((o) => o.optionId === optionId);
+    const out = assembleOffice({
+      proper: { _schema: 2, _celebrationId: optionId, _templates: ['blessed-virgin-mary'], _defaultTemplate: 'blessed-virgin-mary', _rank: 'festum' },
+      office, templates: TEMPLATES, currentDay, choice: 'blessed-virgin-mary', season: { period: day.period, periodPhase: day.periodPhase },
+    });
+    SPLIT.forEach((field) => assert.doesNotMatch(plain(out.day[field]), SAT_HEADING, `${iso} ${optionId} ${field}`));
+    assert.equal(out.mainSection.saturdaySection, false, optionId);
+  });
+});

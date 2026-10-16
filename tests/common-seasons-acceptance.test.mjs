@@ -120,19 +120,16 @@ test('D-5: the volume I responsories of church-dedication and pastors keep their
   });
 });
 
-test('D-3: volume I verse «Дачка Тыру!…» stays in Advent / Christmas', () => {
-  const found = ['advent', 'christmas'].some((season) => Object.values(commonOnlyAll(season)).some((html) => /Дачка Тыру/u.test(html)));
-  assert.ok(found, 'a field of a Common of the Advent / Christmas season prints «Дачка Тыру!»');
+test('D-3: volume I verse «Дачка Тыру!…» is in virgins.officeOfReadingsPs3 AND holy-women.officeOfReadingsPs3, in Advent AND Christmas, and nowhere else', () => {
+  for (const common of ['virgins', 'holy-women']) {
+    for (const season of ['advent', 'christmas']) {
+      assert.match(plain(commonOnly(common, SEASONS[season]).officeOfReadingsPs3), /Дачка Тыру/u, `${common} / ${season}`);
+    }
+    for (const season of ['lent', 'easter', 'ordinary']) {
+      assert.doesNotMatch(plain(commonOnly(common, SEASONS[season]).officeOfReadingsPs3), /Дачка Тыру/u, `${common} / ${season}`);
+    }
+  }
 });
-
-function commonOnlyAll(season) {
-  const result = {};
-  TEMPLATES.forEach((template, id) => {
-    if (template._kind !== 'common') return;
-    Object.entries(commonOnly(id, SEASONS[season])).forEach(([field, value]) => { result[`${id}.${field}`] = plain(value); });
-  });
-  return result;
-}
 
 test('D-6: martyr-one first Vespers prints the Rom 8, 35. 37-39 reading before the responsory; religious Office of Readings has the Philippians line and the nun responsory', () => {
   const martyr = plain(commonOnly('martyr-one', SEASONS.ordinary).vesper1R);
@@ -148,13 +145,39 @@ test('D-6: the seasonal I and II volumes are not overwritten by the Ordinary Tim
   assert.doesNotMatch(religious, /Філіпянаў/u);
 });
 
-test('D-1: a cross-reference to the readings of another Common is a set of legal variants, not an empty field and not one mandatory text', () => {
-  const holyWomen = readJson('patchs', 'feasts', 'common-texts', 'holy-women.json');
+test('D-1: holy-women second reading: Volumes I/II offer the reference AND the holy-men texts of the same volume (readable set); the Pius XII address is Volume III only', () => {
+  const holyMen = {
+    advent: /Гамілія да кнігі Дзеяў Апосталаў/u, christmas: /Гамілія да кнігі Дзеяў Апосталаў/u,
+    lent: /Гамілія да кнігі Дзеяў Апосталаў/u, easter: /Гамілія да кнігі Дзеяў Апосталаў/u,
+  };
   for (const season of ['advent', 'christmas', 'lent', 'easter']) {
-    const variant = holyWomen._seasonalVariants?.[season]?.officeOfReadingsR2;
-    assert.ok(variant, `holy-women has a ${season} variant of the second reading`);
-    const text = plain(variant.html ?? variant);
-    assert.match(text, /Выбіраюцца найбольш адпаведныя тэксты/u, `${season}: the reference sentence is kept`);
-    assert.match(text, /Або іншае, пра святую, якая жыла ў сужэнстве/u, `${season}: the further legal choice follows`);
+    const text = plain(commonOnly('holy-women', SEASONS[season]).officeOfReadingsR2);
+    assert.match(text, /^Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі пададзены ў Агульных тэкстах пра святых мужчын, с\. \d+-\d+\./u, `${season}: the volume's sentence first`);
+    assert.match(text, holyMen[season], `${season}: the holy-men reading of the same volume follows, so it can be read`);
+    assert.doesNotMatch(text, /Пія ХІІ|Пія XII/u, `${season}: the Pius XII address is not printed in Volumes I/II`);
+    assert.doesNotMatch(text, /Або іншае, пра святую/u, `${season}: no Volume III lead-in`);
   }
+  // Ordinary Time keeps Volume III: reference, then «Або іншае» with the Pius XII address
+  const ordinary = plain(commonOnly('holy-women', SEASONS.ordinary).officeOfReadingsR2);
+  assert.match(ordinary, /Выбіраюцца найбольш адпаведныя тэксты/u);
+  assert.match(ordinary, /Або іншае, пра святую, якая жыла ў сужэнстве/u);
+  assert.match(ordinary, /Пія ХІІ/u);
+  // page references differ by volume (the sentence is the volume's own)
+  assert.match(plain(commonOnly('holy-women', SEASONS.advent).officeOfReadingsR2), /с\. 1275-1277/u);
+  assert.match(plain(commonOnly('holy-women', SEASONS.ordinary).officeOfReadingsR2), /с\. 1584-1587/u);
+});
+
+test('D-1 limitation (not "fully solved"): the legal choices are shown as text; the app has no per-reading selector for a Common that is not among the celebration\'s _templates', () => {
+  const holyWomanDocs = fs.readdirSync(path.join(ROOT, 'patchs', 'db-feasts')).map((n) => readJson('patchs', 'db-feasts', n))
+    .filter((doc) => (doc._templates || []).includes('holy-women'));
+  assert.ok(holyWomanDocs.length > 0);
+  holyWomanDocs.forEach((doc) => assert.ok(!(doc._templates || []).includes('holy-men'), `${doc._id}: holy-men is not offered as a selectable Common`));
+});
+
+test('A3: the base fields that Volume III prints with extra rubric words differ from the volume by rubrics/references only, no prayer text is lost', () => {
+  // the real classification is done on the Volume III corpus in common-seasons-reaudit.test.mjs; here the user-visible result
+  const hymn = plain(commonOnly('holy-men', SEASONS.ordinary).officeOfReadingsHymn);
+  assert.match(hymn, /Пра аднаго святога/u);
+  assert.match(hymn, /Пра некалькіх святых/u);
+  assert.match(hymn, /Будзем праслаўляць за веру/u, 'the hymn for several saints (Volume III p. 1593) is reachable in the Office of Readings');
 });

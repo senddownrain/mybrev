@@ -143,7 +143,7 @@ function main() {
     fs.writeFileSync(path.join(PATHS.reports, 'common-seasons-base-corrections.md'), renderBaseCorrectionsMarkdown(audit));
     summary.report = path.relative(ROOT, path.join(PATHS.reports, 'common-seasons-audit.json'));
     summary.needsReview = audit.summary.needsReview;
-    summary.openQuestionsForTheOwner = audit.disputed.length;
+    summary.openQuestionsForTheOwner = audit.disputed.filter((d) => d.status !== 'resolved').length;
   }
   if (flag('write')) {
     files.filter((f) => f.changed).forEach((f) => fs.writeFileSync(f.file, f.text));

@@ -1,6 +1,6 @@
 {
   "mode": "offline (local snapshot only; no Firestore read, no write)",
-  "snapshot": "../mybrev/backups/firestore-snapshot",
+  "snapshot": "backups/firestore-snapshot",
   "documents": {
     "total": 16,
     "new": 0,
@@ -10,12 +10,13 @@
   "seasonalFields": 814,
   "bytes": {
     "before": 1115362,
-    "after": 2873679,
-    "added": 1758317
+    "after": 2897194,
+    "added": 1781832
   },
   "flatBaseFieldsChanged": [
     "apostles",
     "blessed-virgin-mary",
+    "holy-men",
     "holy-women",
     "martyr-one",
     "office-for-dead",
@@ -45,7 +46,7 @@
         "works-of-mercy"
       ],
       "removed": [],
-      "bytes": 2786735
+      "bytes": 2810250
     }
   },
   "report": "CONTENT UPDATE DIFF\n\nliturgicalTemplates:\n  changed: 14 / 16\n  bytes:   2.7 MB\n\nTOTAL:\n  14 documents\n  2.7 MB\n\nRESULT:\nSAFE CONTENT PATCH",
@@ -152,10 +153,10 @@
         "easter"
       ],
       "bytesBefore": 104072,
-      "bytesAfter": 267348,
-      "addedBytes": 163276,
-      "flatBaseChangedVsSnapshot": false,
-      "sizeVsFirestoreLimit": "25.5% of 1 MiB"
+      "bytesAfter": 268447,
+      "addedBytes": 164375,
+      "flatBaseChangedVsSnapshot": true,
+      "sizeVsFirestoreLimit": "25.6% of 1 MiB"
     },
     {
       "id": "holy-women",
@@ -168,10 +169,10 @@
         "easter"
       ],
       "bytesBefore": 94641,
-      "bytesAfter": 218751,
-      "addedBytes": 124110,
+      "bytesAfter": 241167,
+      "addedBytes": 146526,
       "flatBaseChangedVsSnapshot": true,
-      "sizeVsFirestoreLimit": "20.9% of 1 MiB"
+      "sizeVsFirestoreLimit": "23.0% of 1 MiB"
     },
     {
       "id": "martyr-one",

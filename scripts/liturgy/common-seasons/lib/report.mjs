@@ -165,7 +165,16 @@ export function buildAudit({ corpus, analysis, generatedFrom, baseline }) {
   const indexCheck = indexCrossCheck(corpus);
   const baseGaps = baseVersusOrdinary(corpus);
   const wordCoverage = volumeWordCoverage({ corpus, variants: new Map([...analysis.variants].map(([id, perSeason]) => [id, perSeason])), seasons: SEASONS, seasonVolume: SEASON_VOLUME });
-  const disputed = buildDisputed({ corpus, analysis, baseGaps });
+  const RESOLVED = {
+    'D-1': 'решено: в сезонах — предложение отсылки тома + чтения Common «святых мужчин» того же тома (набор законных текстов, без текста Пія XII, он только в томе III); в Звычайным перыядзе — том III. Ограничение: выбор чтения не автоматизирован, это текст на экране',
+    'D-2': 'решено: основной раздел (`_mainSection`) для праздников и обязательных памятей Марыі, полные поля только для субботнего успамина, а он предлагается лишь в свободные субботы Звычайнага перыяду; из хранилища ничего не удалено',
+    'D-3': 'решено: куплет «Дачка Тыру!» оставлен в Адвенте и Рождестве (virgins и holy-women, officeOfReadingsPs3)',
+    'D-4': 'решено: сезонный текст — редакция сезонного тома, где она отличается от тома III',
+    'D-5': 'решено: «аллелюя» тома I сохранена как напечатано, лишняя не добавлена',
+    'D-6': 'решено: базовые поля дополнены (martyr-one.vesper1R, religious.officeOfReadingsR1, holy-women.officeOfReadingsR2, holy-men.officeOfReadingsHymn)',
+    'D-7': 'решено: Эф 4, 1–24 и 1 Ян 4, 7–21 в Посту и Пасхе, а в Адвенте и Рождестве по тому I; «аллелюя» только в помеченных респонсориях',
+  };
+  const disputed = buildDisputed({ corpus, analysis, baseGaps }).map((d) => (RESOLVED[d.id] ? { ...d, status: 'resolved', historicalCurrent: d.current, current: RESOLVED[d.id] } : d));
   const decisions = buildNeedsReview({ analysis, misprints, indexCheck });
 
   // ---- before / after -------------------------------------------------------------------------------------
@@ -264,7 +273,7 @@ export function buildAudit({ corpus, analysis, generatedFrom, baseline }) {
       versicleLines: new Set(analysis.alleluia.filter((a) => a.rule === 'alleluia-v1-versicle').map((a) => a.line)).size,
     },
     needsReview: decisions.items.filter((i) => i.status === 'open').length,
-    openQuestionsForTheOwner: disputed.length,
+    openQuestionsForTheOwner: disputed.filter((d) => d.status !== 'resolved').length,
     coverage: 'Every field of every Common × every variant season is a matrix cell; a cell is verified when its category is ordinary_base, seasonal_*, or its difference is classified and resolved (see differenceClasses / cellsByResolution).',
   };
 
@@ -344,9 +353,9 @@ export function renderMarkdown(audit) {
   L.push('## Исправления базовых текстов (отдельно от сезонных вариантов)', '');
   L.push(...table(['№', 'Поле', 'Проверка'], audit.baseCorrections.map((x) => [x.id, `${x.common}.${x.field}`, x.verification.ok ? 'подтверждено (база = тома I/II)' : '**НЕ СОВПАДАЕТ**'])), '');
   L.push(`Опечатка тома II «аллеюя»: ${audit.sourceMisprints.occurrences.length} строк (${audit.sourceMisprints.occurrences.map((m) => m.line).join(', ')}); исправлено в сезонных текстах «аллелюя».`, '');
-  L.push('## Спорные места (нужно решение владельца)', '');
+  L.push('## Спорные места (D-1…D-7 решены владельцем 2026-10-16; перечень сохранён как история)', '');
   audit.disputed.forEach((d) => {
-    L.push(`### ${d.id}. ${d.title}`, '', d.question, '', `Сейчас: ${d.current}.`, '');
+    L.push(`### ${d.id}. ${d.title}`, '', d.question, '', `${d.status === 'resolved' ? `Было: ${d.historicalCurrent}.\n\nРешение и состояние сейчас: ${d.current}.` : `Сейчас: ${d.current}.`}`, '');
     d.passages.forEach((p) => L.push(`- том ${p.volume}${p.lines[0] ? `, стр. ${p.lines[0]}–${p.lines[1]}` : ''}: ${p.text}`));
     L.push('');
   });

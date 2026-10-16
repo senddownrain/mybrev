@@ -100,7 +100,7 @@
       "versicleLines": 100
     },
     "needsReview": 0,
-    "openQuestionsForTheOwner": 5,
+    "openQuestionsForTheOwner": 0,
     "coverage": "Every field of every Common × every variant season is a matrix cell; a cell is verified when its category is ordinary_base, seasonal_*, or its difference is classified and resolved (see differenceClasses / cellsByResolution)."
   },
   "beforeAfter": {
@@ -4763,18 +4763,6 @@
             "onlyInBase": ""
           }
         ]
-      },
-      {
-        "common": "holy-men",
-        "field": "officeOfReadingsHymn",
-        "missingWords": 8,
-        "share": 0.078,
-        "changes": [
-          {
-            "onlyInVolumeIII": "пра некалькіх святых гімн будзем праслаўляць за веру",
-            "onlyInBase": ""
-          }
-        ]
       }
     ]
   },
@@ -5080,18 +5068,6 @@
           "onlyInBase": ""
         }
       ]
-    },
-    {
-      "common": "holy-men",
-      "field": "officeOfReadingsHymn",
-      "missingWords": 8,
-      "share": 0.078,
-      "changes": [
-        {
-          "onlyInVolumeIII": "пра некалькіх святых гімн будзем праслаўляць за веру",
-          "onlyInBase": ""
-        }
-      ]
     }
   ],
   "antiphonIndexOfVolumeII": {
@@ -5104,7 +5080,7 @@
       "id": "D-1",
       "title": "holy-women.officeOfReadingsR2: том I и II печатают только отсылку, том III — полный текст",
       "question": "В Адвент, Рождество, Пост и Пасху оставить текст тома III (Пій XII о жене, 396 слов) или показывать отсылку «выбираются наиболее подходящие тексты из Общих текстов о святых мужчинах»?",
-      "current": "оставлен текст базы (том III) во всех сезонах; отсылка сохранена только в отчёте",
+      "current": "решено: в сезонах — предложение отсылки тома + чтения Common «святых мужчин» того же тома (набор законных текстов, без текста Пія XII, он только в томе III); в Звычайным перыядзе — том III. Ограничение: выбор чтения не автоматизирован, это текст на экране",
       "passages": [
         {
           "volume": "I",
@@ -5130,13 +5106,15 @@
           ],
           "text": "Другое чытанне ¶ Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі пададзены ў Агульных тэкстах пра святых мужчын, с. 1584-1587. ¶ Або іншае, пра святую, якая жыла ў сужэнстве: ¶ Прамова папы…"
         }
-      ]
+      ],
+      "status": "resolved",
+      "historicalCurrent": "оставлен текст базы (том III) во всех сезонах; отсылка сохранена только в отчёте"
     },
     {
       "id": "D-2",
       "title": "Найсв. Панна Марыя: альтернативы «Успамін Найсв. Панны Марыі ў суботу» только в томе III",
       "question": "Тома I и II печатают только основной раздел Common (без раздела «Успамін ... у суботу», он по предисловию тома III относится к субботам Звычайнага перыяду). В базе оба раздела слиты в одни поля. Скрывать ли в Адвент/Рождество/Пост/Пасху альтернативы субботнего успамина в полях: ? (Молитвы уже скрыты по NR-012.)",
-      "current": "альтернативы остаются (ничего не потеряно); молитвы заменены сезонной по NR-012",
+      "current": "решено: основной раздел (`_mainSection`) для праздников и обязательных памятей Марыі, полные поля только для субботнего успамина, а он предлагается лишь в свободные субботы Звычайнага перыяду; из хранилища ничего не удалено",
       "passages": [
         {
           "volume": "III",
@@ -5162,20 +5140,24 @@
           ],
           "text": "Ант. да песні Захарыі: Брамы раю праз Еву былі зачынены для ўсіх, * а праз Дзеву Марыю яны для ўсіх расчыніліся."
         }
-      ]
+      ],
+      "status": "resolved",
+      "historicalCurrent": "альтернативы остаются (ничего не потеряно); молитвы заменены сезонной по NR-012"
     },
     {
       "id": "D-4",
       "title": "Другая редакция перевода: 0 полей, где тома I и II печатают одно, а том III — иное",
       "question": "Слова/обороты в томах I и II совпадают между собой и расходятся с томом III (напр. «святыя шатры» / «святое жыллё»). Это не сезонные тексты. Оставить базу (том III) во всех сезонах (текущее поведение) или перенести редакцию I/II в базу отдельным редакционным коммитом?",
-      "current": "оставлена база (том III); полный список слов — в audit.json (matrix[].difference.changes, sameAsOtherSeasonalVolume)",
-      "passages": []
+      "current": "решено: сезонный текст — редакция сезонного тома, где она отличается от тома III",
+      "passages": [],
+      "status": "resolved",
+      "historicalCurrent": "оставлена база (том III); полный список слов — в audit.json (matrix[].difference.changes, sameAsOtherSeasonalVolume)"
     },
     {
       "id": "D-5",
       "title": "Том I печатает «аллелюя» в респонсориях чтений Адвента/Рождества (church-dedication.officeOfReadingsR1, pastors.officeOfReadingsR1)",
       "question": "Текст перенесён как напечатан (с «аллелюя»). Оставить или считать унаследованной пасхальной формой и убрать?",
-      "current": "как в томе I",
+      "current": "решено: «аллелюя» тома I сохранена как напечатано, лишняя не добавлена",
       "passages": [
         {
           "volume": "I",
@@ -5193,13 +5175,15 @@
           ],
           "text": "pastors: Н. Пільнуйце ўвесь статак, у якім Дух Святы паставіў вас біскупамі, * каб вы пасвілі Касцёл Божы, які Хрыстус набыў уласнай крывёю, аллелюя."
         }
-      ]
+      ],
+      "status": "resolved",
+      "historicalCurrent": "как в томе I"
     },
     {
       "id": "D-7",
       "title": "Область действия чтений тома II (religious: Эф 4, 1–24; works-of-mercy: 1 Ян 4, 7–21)",
       "question": "Чтение напечатано без пометы «У Вялікі пост» / «У Велікодны перыяд», но его респонсорий несёт пометку «(Велікодны перыяд Аллелюя)» — значит, блок читается и в Пост (без аллелюя), и в Пасху (с аллелюя). Подтвердите, что оба сезона правильны (в Адвент/Рождество то же чтение напечатано в томе I).",
-      "current": "применено к Посту и Пасхе (и к Адвенту/Рождеству по тому I)",
+      "current": "решено: Эф 4, 1–24 и 1 Ян 4, 7–21 в Посту и Пасхе, а в Адвенте и Рождестве по тому I; «аллелюя» только в помеченных респонсориях",
       "passages": [
         {
           "volume": "II",
@@ -5233,7 +5217,9 @@
           ],
           "text": "Першае чытанне ¶ Першае пасланне св. апостала Паўла да Карынцянаў\t\t\t12, 31 – 13, 13 ¶ Перавага любові ¶ Браты: Дбайце пра большыя дары, і я пакажу вам яшчэ лепшы шлях. ¶ Калі я гавару мовамі людзей і …"
         }
-      ]
+      ],
+      "status": "resolved",
+      "historicalCurrent": "применено к Посту и Пасхе (и к Адвенту/Рождеству по тому I)"
     }
   ],
   "alleluiaApplications": [
@@ -62041,7 +62027,7 @@
           "officeOfReadings.reading2"
         ]
       },
-      "note": "the volume prints only the cross-reference; the season shows the volume's own sentence of it together with the further legal reading that Volume III prints («Або іншае»), nothing else is added",
+      "note": "the volume prints only the cross-reference to the Common of holy men; the season shows the volume's sentence followed by the texts of that Common of the same volume (the legal set, read-only choice); the Pius XII address is Volume III only",
       "difference": {
         "class": 4,
         "className": "structure",
@@ -62084,7 +62070,7 @@
           "officeOfReadings.reading2"
         ]
       },
-      "note": "the volume prints only the cross-reference; the season shows the volume's own sentence of it together with the further legal reading that Volume III prints («Або іншае»), nothing else is added",
+      "note": "the volume prints only the cross-reference to the Common of holy men; the season shows the volume's sentence followed by the texts of that Common of the same volume (the legal set, read-only choice); the Pius XII address is Volume III only",
       "difference": {
         "class": 4,
         "className": "structure",
@@ -62127,7 +62113,7 @@
           "officeOfReadings.reading2"
         ]
       },
-      "note": "the volume prints only the cross-reference; the season shows the volume's own sentence of it together with the further legal reading that Volume III prints («Або іншае»), nothing else is added",
+      "note": "the volume prints only the cross-reference to the Common of holy men; the season shows the volume's sentence followed by the texts of that Common of the same volume (the legal set, read-only choice); the Pius XII address is Volume III only",
       "difference": {
         "class": 4,
         "className": "structure",
@@ -62170,7 +62156,7 @@
           "officeOfReadings.reading2"
         ]
       },
-      "note": "the volume prints only the cross-reference; the season shows the volume's own sentence of it together with the further legal reading that Volume III prints («Або іншае»), nothing else is added",
+      "note": "the volume prints only the cross-reference to the Common of holy men; the season shows the volume's sentence followed by the texts of that Common of the same volume (the legal set, read-only choice); the Pius XII address is Volume III only",
       "difference": {
         "class": 4,
         "className": "structure",

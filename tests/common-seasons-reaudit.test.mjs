@@ -61,7 +61,6 @@ test('Volume III parsed by the same parser is the stored base: words of the volu
   // second reading of holy-women, a cross-reference that D-1 keeps as the set of legal choices: none is missing text.
   assert.deepEqual(gaps, [
     'blessed-virgin-mary.laudesAntBen', 'blessed-virgin-mary.laudesHymn', 'blessed-virgin-mary.laudesR', 'blessed-virgin-mary.officeOfReadingsHymn',
-    'holy-men.officeOfReadingsHymn',
   ]);
   // every other field of Volume III is covered by the stored base (±3 % of the words)
   const ledger = baseVersusOrdinary(corpus);
@@ -129,6 +128,23 @@ test('every one of the 500 editorial_difference cells of the first audit is clas
   assert.equal(audit.reclassification.total, 500);
   assert.equal(Object.values(audit.reclassification.byOutcome).reduce((a, b) => a + b, 0), 500);
   assert.equal(audit.reclassification.cells.every((c) => c.outcome), true);
+});
+
+test('A3: every word of Volume III that the base lacks in the four remaining fields is a rubric or a cross-reference, never prayer text', () => {
+  const RUBRIC = new Set(['або', 'гімн', 'ант', 'на', 'выбар', 'з', 'ніжэйпададзеных', 'і', 'кароткі', 'рэспансорый', 'кароткае', 'чытанне', 'да', 'песні', 'захарыі']);
+  // Saturday section instructions of the Marian Common: «Гімн з ІІ Нешпараў Агульных тэкстаў пра Найсв. Панну Марыю» and
+  // «Антыфоны, псальмы, вершы, першае чытанне са сваім рэспансорыем з бягучай суботы» (cross-references, not texts)
+  const INSTRUCTION = new Set(['пра', 'іі', 'нешпараў', 'агульных', 'тэкстаў', 'найсв', 'панну', 'марыю', 'антыфоны', 'псальмы', 'вершы', 'першае', 'са', 'сваім', 'рэспансорыем', 'бягучай', 'суботы', 'гімн']);
+  for (const row of baseVersusOrdinary(corpus)) {
+    const units = corpus.volumes.III.commons.get(row.common).fields.get(row.field);
+    const volume = tokensOf(comparableText(units, null));
+    const bag = new Map();
+    tokensOf(plain(baseOf(row.common, row.field))).forEach((t) => bag.set(t, (bag.get(t) || 0) + 1));
+    const missing = [];
+    volume.forEach((t) => { const n = bag.get(t) || 0; if (n > 0) bag.set(t, n - 1); else missing.push(t); });
+    const text = missing.filter((t) => !RUBRIC.has(t) && !INSTRUCTION.has(t));
+    assert.deepEqual(text, [], `${row.common}.${row.field}: words of Volume III missing in the base that are not rubric/reference words`);
+  }
 });
 
 test('before / after numbers of the audit', () => {

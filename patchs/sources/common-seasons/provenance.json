@@ -8016,7 +8016,7 @@
         ],
         "method": "reference-set",
         "kind": "reading2",
-        "sha256": "f699b3ed01f6a3be538550394446223edda53da2b269cf713e7116f4c2857572"
+        "sha256": "6b420ff1a5d9df9ca8cfc263efb707299e0b1670e7306979189c612787d46005"
       },
       "laudesR": {
         "volume": "I",
@@ -8099,7 +8099,7 @@
         ],
         "method": "reference-set",
         "kind": "reading2",
-        "sha256": "f699b3ed01f6a3be538550394446223edda53da2b269cf713e7116f4c2857572"
+        "sha256": "6b420ff1a5d9df9ca8cfc263efb707299e0b1670e7306979189c612787d46005"
       },
       "laudesR": {
         "volume": "I",
@@ -8172,7 +8172,7 @@
         ],
         "method": "reference-set",
         "kind": "reading2",
-        "sha256": "b1e2f2bff0469dfa0b24a2539ed70745121c6972613a5389a6388367c0273183"
+        "sha256": "03ef360e72cc60640fd4964945c354af26a583a34067b13d04de1d66f2da659c"
       },
       "laudesR": {
         "volume": "II",
@@ -8346,7 +8346,7 @@
         ],
         "method": "reference-set",
         "kind": "reading2",
-        "sha256": "b1e2f2bff0469dfa0b24a2539ed70745121c6972613a5389a6388367c0273183"
+        "sha256": "f394222c531f358492f4719331ef2f2c4e61336c92756e44eb69333040760e61"
       },
       "laudesAnt1": {
         "volume": "II",

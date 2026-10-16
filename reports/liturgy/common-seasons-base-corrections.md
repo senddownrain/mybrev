@@ -53,7 +53,7 @@ Found by the comparison and NOT changed: the base fields of Ordinary Time stay a
 | Поле | Том(а) | Различия (том III → тома I/II) |
 |---|---|---|
 
-### Текст тома III, которого нет в базе (5 полей)
+### Текст тома III, которого нет в базе (4 полей)
 
 | Поле | Слов нет в базе | Что именно (слова тома III, нормализованные) |
 |---|---|---|
@@ -61,5 +61,4 @@ Found by the comparison and NOT changed: the base fields of Ordinary Time stay a
 | blessed-virgin-mary.laudesHymn | 16 | «або»; «або гімн» |
 | blessed-virgin-mary.laudesR | 9 | «і кароткі рэспансорый на выбар з ніжэйпададзеных кароткае чытанне» |
 | blessed-virgin-mary.laudesAntBen | 8 | «ант да песні захарыі на выбар з ніжэйпададзеных» |
-| holy-men.officeOfReadingsHymn | 8 | «пра некалькіх святых гімн будзем праслаўляць за веру» |
 

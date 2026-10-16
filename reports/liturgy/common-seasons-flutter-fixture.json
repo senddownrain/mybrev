@@ -3,7 +3,7 @@
   "description": "Parity fixture of seasonal Commons (docs/common-seasons-flutter-handoff.md). valueSha256 = sha256(UTF-8 of the string, or of the array items joined with U+0000).",
   "source": {
     "templates": "patchs/db-templates",
-    "templatesDigest": "ec5e61116963ed689db21f764a57fde575c2fde9895725cee55e43f97b3be19d",
+    "templatesDigest": "5eec37223f64255071e02c3fb75d273b54bd8e63d7412c50be3c4aa38a5e2aa9",
     "templateCount": 16
   },
   "periods": [
@@ -46782,10 +46782,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 778,
-          "valueSha256": "901db6838f9c1bc9af0f9ac77cc1e554fc4e573e75d2db1d0ae575f7c10589d6",
+          "length": 1454,
+          "valueSha256": "359f9eb164c9b389ae9740657cc400b4c77c799ab92916e5041bf43096f74a25",
           "plainStart": "Пра аднаго святога: О Адкупіцель сусвету, Збаўленых узнагаро",
-          "plainEnd": "сюды Разам з Айцом Наймілейшым У еднасці Духа Святога. Амэн."
+          "plainEnd": "ышынях, На зямлі – расце пашана, Бо сусветам Ён кіруе. Амэн."
         }
       }
     },
@@ -46958,10 +46958,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 778,
-          "valueSha256": "901db6838f9c1bc9af0f9ac77cc1e554fc4e573e75d2db1d0ae575f7c10589d6",
+          "length": 1454,
+          "valueSha256": "359f9eb164c9b389ae9740657cc400b4c77c799ab92916e5041bf43096f74a25",
           "plainStart": "Пра аднаго святога: О Адкупіцель сусвету, Збаўленых узнагаро",
-          "plainEnd": "сюды Разам з Айцом Наймілейшым У еднасці Духа Святога. Амэн."
+          "plainEnd": "ышынях, На зямлі – расце пашана, Бо сусветам Ён кіруе. Амэн."
         }
       }
     },
@@ -59740,10 +59740,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a13946e415856552c5c9b235e1c3255f3eb65baab9002af31dc19ed0d6280688",
+          "length": 7315,
+          "valueSha256": "90a5e52e2feaf62fa179fadfed61fa0ca693c6da9306f77aca853dcfefd841c5",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
-          "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
+          "plainEnd": "ваўся ад усякага зла і трываў у бязвіннасці сваёй. Н. Няхай."
         }
       }
     },
@@ -59762,10 +59762,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a13946e415856552c5c9b235e1c3255f3eb65baab9002af31dc19ed0d6280688",
+          "length": 7315,
+          "valueSha256": "90a5e52e2feaf62fa179fadfed61fa0ca693c6da9306f77aca853dcfefd841c5",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
-          "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
+          "plainEnd": "ваўся ад усякага зла і трываў у бязвіннасці сваёй. Н. Няхай."
         }
       }
     },
@@ -59784,10 +59784,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a13946e415856552c5c9b235e1c3255f3eb65baab9002af31dc19ed0d6280688",
+          "length": 7315,
+          "valueSha256": "90a5e52e2feaf62fa179fadfed61fa0ca693c6da9306f77aca853dcfefd841c5",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
-          "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
+          "plainEnd": "ваўся ад усякага зла і трываў у бязвіннасці сваёй. Н. Няхай."
         }
       }
     },
@@ -59806,10 +59806,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a13946e415856552c5c9b235e1c3255f3eb65baab9002af31dc19ed0d6280688",
+          "length": 7315,
+          "valueSha256": "90a5e52e2feaf62fa179fadfed61fa0ca693c6da9306f77aca853dcfefd841c5",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
-          "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
+          "plainEnd": "ваўся ад усякага зла і трываў у бязвіннасці сваёй. Н. Няхай."
         }
       }
     },
@@ -59828,10 +59828,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a6ce4a42145eb25d8d06dbe13ce7d4fba6d7c654b2ef6a2ebd7eebad68d2cda8",
+          "length": 7318,
+          "valueSha256": "3090f04cfb9f2e2392261b6124d4251eee8274dab389e0415faa943b2570c1ec",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
-          "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
+          "plainEnd": "ся ад усякага зла і трываў у бязвіннасці сваёй. Н. Няхай Ён."
         }
       }
     },
@@ -59850,10 +59850,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a6ce4a42145eb25d8d06dbe13ce7d4fba6d7c654b2ef6a2ebd7eebad68d2cda8",
+          "length": 7318,
+          "valueSha256": "3090f04cfb9f2e2392261b6124d4251eee8274dab389e0415faa943b2570c1ec",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
-          "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
+          "plainEnd": "ся ад усякага зла і трываў у бязвіннасці сваёй. Н. Няхай Ён."
         }
       }
     },
@@ -59872,10 +59872,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a6ce4a42145eb25d8d06dbe13ce7d4fba6d7c654b2ef6a2ebd7eebad68d2cda8",
+          "length": 7318,
+          "valueSha256": "3090f04cfb9f2e2392261b6124d4251eee8274dab389e0415faa943b2570c1ec",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
-          "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
+          "plainEnd": "ся ад усякага зла і трываў у бязвіннасці сваёй. Н. Няхай Ён."
         }
       }
     },
@@ -59916,10 +59916,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a6ce4a42145eb25d8d06dbe13ce7d4fba6d7c654b2ef6a2ebd7eebad68d2cda8",
+          "length": 7336,
+          "valueSha256": "2864f34a0965ad0f2041f36002e3c5fd036f76325194d22f43702098c8085973",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
-          "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
+          "plainEnd": "ся ад усякага зла і трываў у бязвіннасці сваёй. Н. Няхай Ён."
         }
       }
     },
@@ -59938,10 +59938,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a6ce4a42145eb25d8d06dbe13ce7d4fba6d7c654b2ef6a2ebd7eebad68d2cda8",
+          "length": 7336,
+          "valueSha256": "2864f34a0965ad0f2041f36002e3c5fd036f76325194d22f43702098c8085973",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
-          "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
+          "plainEnd": "ся ад усякага зла і трываў у бязвіннасці сваёй. Н. Няхай Ён."
         }
       }
     },
@@ -59960,10 +59960,10 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a6ce4a42145eb25d8d06dbe13ce7d4fba6d7c654b2ef6a2ebd7eebad68d2cda8",
+          "length": 7336,
+          "valueSha256": "2864f34a0965ad0f2041f36002e3c5fd036f76325194d22f43702098c8085973",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
-          "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
+          "plainEnd": "ся ад усякага зла і трываў у бязвіннасці сваёй. Н. Няхай Ён."
         }
       }
     },
