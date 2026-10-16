@@ -1,31 +1,20 @@
 <template>
   <v-container class="picker-page">
+    <template v-if="route.query.entry">
+      <button type="button" class="back-search" @click="backToSearch">Назад да пошуку</button>
+      <CatalogEntryDetails v-if="selectedEntry" :entry="selectedEntry" :mode="readingMode ? 'readings' : 'hours'" />
+      <p v-else role="status">Пазіцыя адсутнічае ў выбраных дыяцэзіях. Праверце налады.</p>
+    </template>
+    <template v-else>
     <header class="picker-hero">
       <div class="picker-eyebrow">Літургічны каляндар</div>
       <h1>Знайсці дзень</h1>
       <p>
-        Выберыце месца ў літургічным годзе або канкрэтнае свята.
-        <span v-if="readingMode">Адкрыем чытанні для знойдзенай даты.</span>
+        Знайдзіце літургічную пазіцыю або свята і праглядзіце даступныя тэксты незалежна ад года.
       </p>
     </header>
 
     <section class="picker-controls" aria-label="Налады пошуку">
-      <div class="year-control">
-        <div>
-          <span class="control-label">Каляндарны год</span>
-          <strong>{{ selectedYear }}</strong>
-        </div>
-        <v-select
-          v-model="selectedYear"
-          :items="availableYears"
-          variant="solo"
-          flat
-          hide-details
-          density="compact"
-          aria-label="Выбраць каляндарны год"
-          class="year-select"
-        />
-      </div>
 
       <div class="mode-note" :class="{ 'mode-note--readings': readingMode }">
         <PhBookOpenText v-if="readingMode" :size="20" />
@@ -56,29 +45,30 @@
     <v-window v-model="activeTab" class="picker-window">
       <v-window-item value="period">
         <PeriodPicker
-          :year="selectedYear"
           :mode="readingMode ? 'readings' : 'oras'"
           @day-selected="openSelection"
         />
       </v-window-item>
       <v-window-item value="feasts">
         <FeastsPicker
-          :year="selectedYear"
           :mode="readingMode ? 'readings' : 'oras'"
           @feast-selected="openSelection"
         />
       </v-window-item>
     </v-window>
+    </template>
   </v-container>
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useCalendarStore } from '@/stores/calendar';
 import PeriodPicker from '@/components/liturgical/PeriodPicker.vue';
 import FeastsPicker from '@/components/liturgical/FeastsPicker.vue';
-import moment from '@/utils/moment-be';
+import CatalogEntryDetails from '@/components/liturgical/CatalogEntryDetails.vue';
+import { findCatalogEntry } from '@/utils/liturgicalCatalog';
+import { ordoDioceses } from '@/utils/ordoDiocese';
+import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import {
   PhBookOpenText,
   PhCalendarDots,
@@ -88,52 +78,15 @@ import {
 
 const route = useRoute();
 const router = useRouter();
-const calendarStore = useCalendarStore();
-
-const selectedYear = ref(new Date().getFullYear());
-const activeTab = ref('period');
-const availableYears = ref([]);
+const activeTab = computed({ get: () => route.query.tab === 'feasts' ? 'feasts' : 'period', set: (tab) => router.replace({ query: { ...route.query, tab } }) });
 const readingMode = computed(() => route.query.mode === 'readings');
-
-watch(
-  () => route.query.tab,
-  (tab) => {
-    if (tab === 'period' || tab === 'feasts') activeTab.value = tab;
-  },
-  { immediate: true },
-);
-
-onMounted(async () => {
-  const currentYear = new Date().getFullYear();
-  const years = await calendarStore.getAvailableYears();
-  availableYears.value = [...new Set([currentYear, ...years])].sort((a, b) => b - a);
-  selectedYear.value = availableYears.value.includes(currentYear)
-    ? currentYear
-    : availableYears.value[0];
-});
-
-function openSelection({ dayId, date, optionId, diocese }) {
-  // «Па свяце»: the celebration itself (its Office / its readings, its diocese).
-  if (optionId && date) {
-    const query = { option: optionId, ...(diocese ? { diocese } : {}) };
-    router.push(readingMode.value
-      ? { name: 'ReadingsByDate', params: { date }, query }
-      : { name: 'SelectedDay', params: { day: date }, query });
-    return;
-  }
-  if (!date || (!readingMode.value && !dayId)) return;
-
-  if (readingMode.value) {
-    const isToday = moment(date, 'YYYY-MM-DD').isSame(moment(), 'day');
-    router.push({
-      name: isToday ? 'Readings' : 'ReadingsByDate',
-      params: isToday ? {} : { date },
-      query: dayId ? { dayId } : {},
-    });
-    return;
-  }
-
-  router.push({ name: 'oras', params: { day: date, id: dayId } });
+const selectedEntry = computed(() => (ordoCalendarEpoch.value, findCatalogEntry(String(route.query.entry || ''), ordoDioceses.value, route.query.catalogDiocese)));
+function openSelection(entry) {
+  router.push({ query: { ...route.query, entry: entry.id, catalogDiocese: entry.dioceses?.[0] } });
+}
+function backToSearch() {
+  const { entry: _entry, catalogDiocese: _diocese, panel: _panel, year: _year, ...query } = route.query;
+  router.push({ name: 'LiturgicalPicker', query });
 }
 </script>
 
@@ -144,6 +97,7 @@ function openSelection({ dayId, date, optionId, diocese }) {
   width: min(100%, 780px);
   padding: 10px 18px 36px;
 }
+.back-search { padding: 12px; margin-bottom: 12px; color: var(--chrome-accent); }
 
 .picker-page::before {
   position: absolute;

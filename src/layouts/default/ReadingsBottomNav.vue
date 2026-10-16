@@ -126,7 +126,7 @@ const currentRouteDate = computed(() => {
 const today = computed(() => moment().startOf('day'));
 
 const activeIndex = computed(() => {
-  if (route.name === 'ReadingsPicker') return 0;
+  if (route.name === 'ReadingsPicker' || (route.name === 'LiturgicalPicker' && route.query.mode === 'readings')) return 0;
   if (currentRouteDate.value.isSame(today.value, 'day')) return 1;
   return 2;
 });

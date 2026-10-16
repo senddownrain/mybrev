@@ -36,7 +36,7 @@ const routes = [
       {
         path: 'picker',
         name: 'LiturgicalPicker',
-        components: { default: () => import('@/views/LiturgicalPicker.vue'), bottomNav: BottomNavVue },
+        components: { default: () => import('@/views/LiturgicalPicker.vue'), bottomNav: () => import('@/layouts/default/PickerBottomNav.vue') },
       },
       {
         // One shell for every Compendium level: it owns the persistent search dock

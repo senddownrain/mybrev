@@ -1,0 +1,14 @@
+[
+  { "entryId": "sv-nicholas", "year": 2026, "diocese": "minsk-mohilev", "status": "suppressed/impeded", "effectiveDate": "2026-12-06", "canOpenHours": false, "canOpenReadings": false, "color": "albus" },
+  { "entryId": "sv-nicholas", "year": 2027, "diocese": "minsk-mohilev", "status": "legal-alternative", "effectiveDate": "2027-12-06", "canOpenHours": true, "canOpenReadings": true, "color": "albus" },
+  { "entryId": "sv-nicholas", "year": 2026, "diocese": "grodno", "status": "suppressed/impeded", "effectiveDate": "2026-12-06", "canOpenHours": false, "canOpenReadings": false, "color": "albus" },
+  { "entryId": "annunciation-lord", "year": 2027, "diocese": "minsk-mohilev", "status": "transferred", "originalDate": "2027-03-25", "effectiveDate": "2027-04-05", "canOpenHours": true, "canOpenReadings": true, "color": "albus" },
+  { "entryId": "ascension", "year": 2026, "diocese": "minsk-mohilev", "status": "primary", "effectiveDate": "2026-05-14", "canOpenHours": true, "canOpenReadings": true, "color": "albus" },
+  { "entryId": "immaculate-heart", "year": 2026, "diocese": "minsk-mohilev", "status": "primary", "effectiveDate": "2026-06-13", "canOpenHours": true, "canOpenReadings": true, "color": "albus" },
+  { "entryId": "sv-josaphat", "year": 2026, "diocese": "vitebsk", "status": "primary", "effectiveDate": "2026-11-12", "canOpenHours": true, "canOpenReadings": true, "color": "ruber" },
+  { "entryId": "sv-casimir", "year": 2026, "diocese": "minsk-mohilev", "status": "commemoration", "effectiveDate": "2026-03-04", "canOpenHours": false, "canOpenReadings": false, "color": "albus" },
+  { "entryId": "period:advent-w4-d7", "year": 2026, "diocese": "minsk-mohilev", "status": "suppressed/impeded", "effectiveDate": null, "canOpenHours": false, "canOpenReadings": false },
+  { "entryId": "period:lent-w0-d4", "year": 2026, "diocese": "minsk-mohilev", "status": "primary", "effectiveDate": "2026-02-18", "canOpenHours": true, "canOpenReadings": true, "color": "violaceus" },
+  { "entryId": "period:holyweek-w1-d6", "year": 2026, "diocese": "minsk-mohilev", "status": "primary", "effectiveDate": "2026-04-03", "canOpenHours": true, "canOpenReadings": true, "color": "ruber" },
+  { "entryId": "period:christmas-01-01", "year": 2026, "diocese": "minsk-mohilev", "status": "primary", "effectiveDate": "2026-01-01", "canOpenHours": true, "canOpenReadings": true, "color": "albus" }
+]

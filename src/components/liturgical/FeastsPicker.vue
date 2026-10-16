@@ -42,7 +42,7 @@
     <template v-else-if="filteredFeasts.length">
       <div class="list-summary">
         <span>{{ resultCountLabel }}</span>
-        <span>у {{ year }} годзе</span>
+        <span>Незалежна ад года</span>
       </div>
 
       <div class="feast-list">
@@ -53,9 +53,9 @@
           class="feast-row"
           @click="selectFeast(feast)"
         >
-          <div class="date-tile" :class="{ 'date-tile--dynamic': feast.isDynamic }">
-            <strong>{{ feast.dayLabel }}</strong>
-            <span>{{ feast.monthLabel }}</span>
+          <div class="date-tile">
+            <strong>{{ feast.dateRule.type === 'fixed' ? feast.dateLabel.slice(0, 2) : '↔' }}</strong>
+            <span>{{ feast.dateRule.type === 'fixed' ? feast.dateLabel.slice(3) : 'рухомае' }}</span>
           </div>
 
           <div class="feast-copy">
@@ -65,12 +65,14 @@
               {{ feast.isDynamic ? 'Рухомае' : 'Нерухомае' }}
             </div>
             <h3>{{ feast.title }}</h3>
+            <p>{{ feast.dateLabel }}</p>
+            <VestmentMarker :color="feast.color || 'albus'" />
+            <p>{{ catalogContentLabel(feast) }}</p>
             <div class="feast-meta">
               <span v-if="feast.rankLabel" class="rank-badge">{{ feast.rankLabel }}</span>
               <span v-for="place in feast.placeLabels" :key="place" class="place-badge">
                 <PhMapPin :size="13" />{{ place }}
               </span>
-              <span v-if="feast.variantCount > 1">{{ feast.variantCount }} варыянты</span>
             </div>
           </div>
 
@@ -95,10 +97,11 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import moment from '@/utils/moment-be';
-import { yearCelebrations } from '@/utils/ordoScreen';
-import { effectiveOrdoDioceses, ordoDiocese } from '@/utils/ordoDiocese';
+import { feastCatalog, catalogMatches, catalogContentLabel } from '@/utils/liturgicalCatalog';
+import { ordoDioceses } from '@/utils/ordoDiocese';
 import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
+import { useRoute, useRouter } from 'vue-router';
+import VestmentMarker from './VestmentMarker.vue';
 import {
   PhArrowRight,
   PhBookOpenText,
@@ -110,15 +113,16 @@ import {
   PhX,
 } from '@phosphor-icons/vue';
 
-const props = defineProps({
-  year: { type: Number, required: true },
+defineProps({
   mode: { type: String, default: 'oras' },
 });
 
 const emit = defineEmits(['feast-selected']);
 
-const searchQuery = ref('');
-const sourceFilter = ref('all');
+const route = useRoute();
+const router = useRouter();
+const searchQuery = computed({ get: () => String(route.query.q || ''), set: (q) => router.replace({ query: { ...route.query, q: q || undefined } }) });
+const sourceFilter = computed({ get: () => String(route.query.filter || 'all'), set: (filter) => router.replace({ query: { ...route.query, filter } }) });
 // The list is computed by the Ordo engine on the device: no `days` read.
 const loading = ref(false);
 
@@ -128,43 +132,13 @@ const sourceFilters = [
   { value: 'dynamic', label: 'Рухомыя' },
 ];
 
-const openLabel = computed(() => (
-  props.mode === 'readings' ? 'Адкрыць чытанні' : 'Адкрыць літургічныя гадзіны'
-));
+const openLabel = 'Падрабязнасці святкавання';
 
-/**
- * Every legal celebration of the year, on its final date (transfers and
- * diocesan dates included), for the dioceses of Settings — the canonical
- * calendar, not the documents that happen to exist in `days`.
- */
-const preparedFeasts = computed(() => (ordoCalendarEpoch.value, yearCelebrations(props.year, effectiveOrdoDioceses.value))
-  .map((item) => {
-    const date = moment(item.date, 'YYYY-MM-DD', true);
-    const feast = {
-      ...item,
-      id: item.optionId,
-      calendarDate: item.date,
-      rankLabel: item.rank,
-      placeLabels: item.badges,
-      isDynamic: item.movable,
-      isFixed: !item.movable,
-      dayLabel: date.format('DD'),
-      monthLabel: date.format('MMM').replace('.', ''),
-      variantCount: 1,
-    };
-    feast.searchText = buildSearchText(feast, date);
-    return feast;
-  }));
+/** Active layered definitions, including celebrations impeded in any given year. */
+const preparedFeasts = computed(() => (ordoCalendarEpoch.value, feastCatalog(ordoDioceses.value))
+  .map((item) => ({ ...item, isDynamic: item.dateRule.type !== 'fixed', isFixed: item.dateRule.type === 'fixed' })));
 
-const filteredFeasts = computed(() => {
-  const query = searchQuery.value.trim().toLocaleLowerCase('be-BY');
-  return preparedFeasts.value.filter((feast) => {
-    const sourceMatches = sourceFilter.value === 'all'
-      || (sourceFilter.value === 'dynamic' && feast.isDynamic)
-      || (sourceFilter.value === 'fixed' && feast.isFixed);
-    return sourceMatches && (!query || feast.searchText.includes(query));
-  });
-});
+const filteredFeasts = computed(() => preparedFeasts.value.filter((feast) => catalogMatches(feast, searchQuery.value, sourceFilter.value)));
 
 const resultCountLabel = computed(() => {
   const count = filteredFeasts.value.length;
@@ -172,30 +146,12 @@ const resultCountLabel = computed(() => {
   if ([2, 3, 4].includes(count % 10) && ![12, 13, 14].includes(count % 100)) return `${count} святы`;
   return `${count} святаў`;
 });
-
-
-
-
-function buildSearchText(feast, date) {
-  return [feast.title, feast.rankLabel, ...feast.placeLabels, date.format('DD.MM.YYYY')]
-    .join(' ')
-    .toLocaleLowerCase('be-BY');
-}
-
-
 function selectFeast(feast) {
-  // The celebration's identity travels, not a `days` document id: Hours open
-  // its Office, Readings its readings, in the diocese that keeps it.
-  emit('feast-selected', {
-    optionId: feast.optionId,
-    date: feast.calendarDate,
-    diocese: feast.dioceses.includes(ordoDiocese.value) ? '' : feast.dioceses[0],
-  });
+  emit('feast-selected', feast);
 }
 
 function resetFilters() {
-  searchQuery.value = '';
-  sourceFilter.value = 'all';
+  router.replace({ query: { ...route.query, q: undefined, filter: undefined } });
 }
 </script>
 
@@ -203,11 +159,15 @@ function resetFilters() {
 .feasts-picker {
   display: grid;
   gap: 14px;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
 }
 
 .feast-tools {
   display: grid;
   gap: 10px;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
 }
 
 .search-field {
@@ -262,6 +222,7 @@ function resetFilters() {
 
 .source-filters {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   overflow-x: auto;
   padding: 1px 1px 3px;
@@ -281,7 +242,9 @@ function resetFilters() {
   font: inherit;
   font-size: 0.8rem;
   font-weight: 720;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
   cursor: pointer;
 }
 
@@ -303,6 +266,8 @@ function resetFilters() {
 .feast-list,
 .loading-list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: 9px;
 }
 
@@ -340,12 +305,6 @@ function resetFilters() {
   text-align: center;
 }
 
-.date-tile--dynamic {
-  background: rgba(var(--chrome-accent-rgb), 0.11);
-  color: var(--chrome-accent);
-  box-shadow: inset 0 0 0 1px rgba(var(--chrome-accent-rgb), 0.24);
-}
-
 .date-tile strong {
   font-size: 1.15rem;
   line-height: 1;
@@ -360,6 +319,7 @@ function resetFilters() {
 
 .feast-copy {
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .feast-source {
@@ -396,6 +356,8 @@ function resetFilters() {
   display: inline-flex;
   align-items: center;
   gap: 3px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .rank-badge {
