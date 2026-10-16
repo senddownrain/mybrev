@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { trackFeature } from '../utils/trackFeature.js';
 import { ref } from 'vue';
 
 /**
@@ -20,10 +21,12 @@ export const useUiStore = defineStore('ui', () => {
   }
 
   function toggleSettingsSheet() {
+    if (!isSettingsSheetOpen.value) trackFeature('text_settings_open');
     isSettingsSheetOpen.value = !isSettingsSheetOpen.value;
   }
 
   function toggleCalendarDialog() {
+    if (!isCalendarDialogOpen.value) trackFeature('picker_open');
     isCalendarDialogOpen.value = !isCalendarDialogOpen.value;
   }
 

@@ -1,7 +1,7 @@
-# Контракт аналитики v1 (WEB + Flutter)
+# Контракт аналитики v2 (WEB + Flutter)
 
-Статус: **проект контракта, `schema_version = 1`**. Ничего не измеряется, не хранится и не
-отправляется: код контракта (`src/utils/analytics/contract.js`) — только валидатор и функции
+Статус: **контракт, `schema_version = 2`** (изменения относительно v1 — §16). Сетевая
+передача выключена. Код контракта (`src/utils/analytics/contract.js`) — только валидатор и функции
 бакетов, он не подключён ни к одному экрану. Сетевая передача выключена и не разрешена
 (`docs/analytics-privacy.md`). Название продукта «Літургія гадзінаў» не меняется.
 
@@ -30,7 +30,7 @@
 
 | Поле | Значения | Примечание |
 |---|---|---|
-| `schema_version` | `1` | целое; менять только решением владельца |
+| `schema_version` | `2` | целое; менять только решением владельца |
 | `platform` | `web` \| `android` \| `ios` | Telegram WebApp и PWA — это `web` |
 | `app_version` | `^\d{1,2}\.\d{1,2}$` | укрупнённо: major.minor (`4.5.2` → `4.5`); build не отправляется |
 | `region` | `BY` \| `OTHER` \| `UNKNOWN` | см. §9; по умолчанию `UNKNOWN` |
@@ -45,7 +45,7 @@
 |---|---|---|---|
 | `today` | `/`, `/day/:day` | `/hours` (список дня) | нет |
 | `hours` | `/day/:day/ora/:id/<hour>` | `/ora/:date/:dayId/:type` | `hour:<hour>` |
-| `readings` | `/readings`, `/readings/:date` | `/readings/...` | нет (чтения по датам не идентифицируются) |
+| `readings` | `/readings`, `/readings/:date` | `/readings/...` | `reading:day` (один обобщённый материал: без даты, дня, текста) |
 | `ordo` | `/ordo`, `/ordo/:date` | `/hours/ordo` | нет |
 | `prayers` | `/prayers*`, `/prayer/:id`, `/p/:id` (кроме Мессы) | `/prayers/*`, `/prayer/:id` | `prayer:<id>` |
 | `mass` | `/prayer/<MASS_ORDER_PRAYER_ID>` и варианты Імшы | то же | `mass:order` |
@@ -58,9 +58,10 @@
 
 Разделы с видом материала (`prayers`, `mass`, `songs`, `compendium`, `hours`, `bible`) требуют
 `content_id`: валидатор отклоняет `screen_view` без него. Поэтому открытие **списка** молитв/песен/глав
-как экрана не считается; списки измеряются только через `feature_use` (`search_open`,
-`favorite_*`). Разделы без вида материала (`today, readings, ordo, picker, settings, about`) дают
-`screen_view` без `content_id`; `content_id` у них запрещён. Это сознательное упрощение.
+как материала не считается `screen_view`: **открытия каталогов считает отдельное событие `catalog_open`**
+(`catalog_id` из белого списка §16), поэтому открытие материала и открытие списка никогда не
+считаются дважды. Разделы без вида материала (`today, ordo, picker, settings, about`) дают
+`screen_view` без `content_id`; `content_id` у них запрещён. «Число открытий» ≠ «число людей».
 
 Идентификатор часа: web `vesper`, Flutter `vespers` — **в контракте всегда `vesper`**, Flutter
 преобразует на границе. Девять часов: `invitatorium, morning, lectionis, laudes, terz, sext, non,
@@ -113,7 +114,7 @@ comp 27, mass 1, hour 9, bible 146), собран `scripts/analytics/build-publi
   поставляется с клиентом (веб и Flutter) и копией на сервере; формат ID в `contract.js` — только
   проверка формы, принадлежность инвентарю проверяется отдельно.
 
-## 5. События (единственные четыре)
+## 5. События (единственные пять)
 
 Единицей передачи является **агрегированная ячейка** (`cells[]`), а не поток событий: клиент
 считает в памяти и сбрасывает суммы. Поля ячейки строго по whitelist; любое лишнее поле — отказ.
@@ -122,6 +123,7 @@ comp 27, mass 1, hour 9, bible 146), собран `scripts/analytics/build-publi
 |---|---|---|
 | `screen_view` | `section`, `content_id?`, `n` | новый «визит» экрана (§7), у которого есть `content_id` или раздел без списков |
 | `text_read` | `section`, `content_id`, `metric` (`fv`\|`er`\|`sd`), `bucket`, `n` | конец визита с `content_id`, ≥1 с на переднем плане |
+| `catalog_open` | `catalog_id`, `n` | визит ≥ 1 с на каталоге/списке из §16 (без `section`, без текста) |
 | `feature_use` | `feature_id`, `section`, `n` | действие пользователя, выполненное успешно; не при каждом tap/scroll |
 | `measurement_error` | `error_id`, `n` | сбой измерения (§8) |
 
@@ -318,3 +320,37 @@ analytics_network_enabled = false        (по умолчанию, во всех
 распределения `fv`/`er`/`sd` и доли коротких открытий; использования кнопок; сравнения «до/после»
 релиза через `app_version`. Ограничения: нельзя получить уникальных пользователей, возвраты
 пользователя, воронки, когорты, удержание, совместные распределения.
+
+## 16. Изменения v1 → v2 и миграция
+
+| Что | v1 | v2 |
+|---|---|---|
+| `schema_version` | `1` | `2`; сервер и клиенты принимают только `2` (данных v1 нигде нет: сеть не включалась) |
+| Ежедневные чтения | `readings` без `content_id`, `text_read` невозможен | `content_id = reading:day` обязателен; доступны `screen_view`, `fv`, `sd`, `er`. Даты, ID дня, текст не передаются; различение «чтение / псалом / Евангелие» **не вводится** (одна страница, одно значение) |
+| Каталоги | не считались | событие `catalog_open`: `hours_list, prayers_home, prayers_all, favorites, songs, bible_books, compendium_home` |
+| Компендиум | `comp:<глава>` | единица чтения — **часть** `comp:p1…p4` (глава — якорь внутри части); главы `comp:p1-s1-ch1` остаются допустимыми (старый маршрут `node/:id`) |
+| Инвентарь | 745 ID | 750 ID (+`reading:day`, +4 части компендиума) |
+| Фикстура | `analytics-contract-v1.json` | `analytics-contract-v2.json` |
+
+Различение Евангелия — предложение, не реализовано: потребовало бы `IntersectionObserver` по
+блокам страницы и значения `reading:gospel`; повышает детализацию, поэтому нужно решение владельца.
+
+### 16.1 Статус инструментации `feature_use` (веб)
+
+Подключено на реальных успешных действиях (литерал в вызове `trackFeature('…')`, без значений):
+`text_scale_change, font_family_change, theme_change, keep_screen_on_toggle, ordo_diocese_change,
+favorite_add, favorite_remove, psalmody_layout_change, chords_toggle, chord_layout_change,
+chord_transpose, text_settings_open, picker_open, date_pick, back_to_top, copy_use, share_use,
+mass_language_change, mass_section_nav, bible_chapter_nav, bible_language_change`.
+**Не подключены** (нет однозначного места в UI или нужна доработка): `search_open, search_submit,
+hour_switch, hour_option_select, mass_*` кроме двух выше, `offline_update_apply, install_prompt_open`.
+`chord_transpose` не считает возврат к нулю. Событие относится к текущему экрану (`section`);
+на экранах без раздела (админка, вход) оно отбрасывается.
+
+### 16.2 Хранение тестовых данных (решение противоречия)
+
+Раньше документы говорили «`localStorage` для счётчиков» и «только в памяти». Принято: **в тестовой
+сборке** (`VITE_ANALYTICS_LOCAL=true`) один небольшой буфер агрегатов в `localStorage`
+(`analytics_local_v1`): запись только при `visibilitychange=hidden`/`pagehide` (не на scroll/tap),
+≤ 64 КиБ (старейшие дни отбрасываются, `queue_overflow`), срок 14 суток, без идентификаторов, очистка
+`window.__analyticsLocal.clear()`. В обычной сборке хранилище не используется.

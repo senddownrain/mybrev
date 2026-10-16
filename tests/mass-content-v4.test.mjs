@@ -432,7 +432,7 @@ test('section control shows the full current section name and opens a picker of 
 
 test('Mass reader uses the section control, keeps the language menu in the header and has no dock or Share', () => {
   const view = read('src/components/prayers/PrayerView.vue');
-  assert.match(view, /<MassSectionNav[\s\S]*?@select="scrollToMassSection"/);
+  assert.match(view, /<MassSectionNav[\s\S]*?@select="onMassSectionSelect"/);
   assert.doesNotMatch(view, /mass-dock/);
   assert.doesNotMatch(read('src/styles/prayer-reading.css'), /mass-dock/);
   const layout = read('src/layouts/default/Default.vue');

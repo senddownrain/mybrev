@@ -7,7 +7,7 @@
  * a no-op), no screen imports it yet, and it has no code path that sends data.
  */
 import {
-  LIMITS, MAX_VISIT_SECONDS, MIN_COUNTED_VISIT_SECONDS, SCHEMA_VERSION, SECTIONS,
+  CATALOG_IDS, LIMITS, MAX_VISIT_SECONDS, MIN_COUNTED_VISIT_SECONDS, SCHEMA_VERSION, SECTIONS,
   SECTION_CONTENT_KIND, SHORT_OPEN_SECONDS, bucketScrollDepth, bucketVisibleSeconds,
   estimateReadingSeconds, validateCell, validatePacket,
 } from './contract.js';
@@ -89,6 +89,10 @@ export function createCollector({
     const seconds = Math.min(v.visibleMs / 1000, MAX_VISIT_SECONDS);
     if (seconds < MIN_COUNTED_VISIT_SECONDS) return;
     const day = utcDay(endedAt);
+    if (v.catalogId) {
+      addCell(day, { e: 'catalog_open', catalog_id: v.catalogId, n: 1 });
+      return;
+    }
     const base = { section: v.section };
     const contentId = v.contentId ?? undefined;
     addCell(day, { e: 'screen_view', ...base, ...(contentId ? { content_id: contentId } : {}), n: 1 });
@@ -127,19 +131,20 @@ export function createCollector({
     },
 
     /** A material or section came on screen. `totalChars` / `fits` describe the text. */
-    enterView({ section, contentId, totalChars, fits = false } = {}) {
+    enterView({ section, contentId, catalogId, totalChars, fits = false } = {}) {
       if (!on) return;
       const at = now();
-      if (!measurable(section, contentId)) { closeActive(at); commitPending(); return; }
-      if (visit && visit.section === section && visit.contentId === (contentId ?? null)) {
+      const isCatalog = catalogId !== undefined && catalogId !== null;
+      if (isCatalog ? !CATALOG_IDS.includes(catalogId) : !measurable(section, contentId)) { closeActive(at); commitPending(); return; }
+      const key = isCatalog ? `catalog:${catalogId}` : `${section}|${contentId ?? ''}`;
+      if (visit && visit.key === key) {
         // Same material again while its visit is active (lang/hash change, double trigger): one visit.
         if (Number.isFinite(totalChars)) visit.totalChars = totalChars;
         if (fits) visit.fits = true;
         return;
       }
       closeActive(at);
-      if (pending && pending.visit.section === section && pending.visit.contentId === (contentId ?? null)
-        && at - pending.closedAt <= DOUBLE_TRIGGER_MS) {
+      if (pending && pending.visit.key === key && at - pending.closedAt <= DOUBLE_TRIGGER_MS) {
         visit = pending.visit; // resume: the earlier close was a double trigger
         pending = null;
         visit.runningSince = visible ? at : null;
@@ -147,7 +152,9 @@ export function createCollector({
       }
       commitPending();
       visit = {
-        section,
+        key,
+        catalogId: isCatalog ? catalogId : null,
+        section: isCatalog ? null : section,
         contentId: contentId ?? null,
         totalChars: Number.isFinite(totalChars) ? totalChars : null,
         fits: Boolean(fits),
@@ -190,10 +197,10 @@ export function createCollector({
       hiddenAt = null;
       if (!visit) return;
       if (away >= BACKGROUND_CLOSE_MS) {
-        const { section, contentId, totalChars, fits } = visit;
+        const { section, contentId, catalogId, totalChars, fits } = visit;
         closeActive(at - away);
         commitPending();
-        this.enterView({ section, contentId: contentId ?? undefined, totalChars, fits });
+        this.enterView({ section: section ?? undefined, contentId: contentId ?? undefined, catalogId: catalogId ?? undefined, totalChars, fits });
       } else {
         visit.runningSince = at;
       }
@@ -236,6 +243,15 @@ export function createCollector({
         }
       }
       return packets;
+    },
+
+    /** Merges previously persisted packets (same platform) back into the counters. */
+    importPackets(list) {
+      if (!on || !Array.isArray(list)) return;
+      for (const packet of list) {
+        if (validatePacket(packet, { publicIds }).length > 0 || packet.platform !== platform) continue;
+        for (const cell of packet.cells) addCell(packet.day, { ...cell });
+      }
     },
 
     clear() {

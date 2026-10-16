@@ -28,13 +28,14 @@ test('inventory counts and checksum are consistent', () => {
 
 test('inventory covers the fixed sets: mass order, nine hours, both Bible languages', () => {
   assert.ok(inventory.ids.includes('mass:order'));
+  assert.ok(inventory.ids.includes('reading:day'));
   for (const hour of HOUR_IDS) assert.ok(inventory.ids.includes(`hour:${hour}`), hour);
   assert.equal(inventory.ids.filter((id) => id.startsWith('bible:bel:')).length, 73);
   assert.equal(inventory.ids.filter((id) => id.startsWith('bible:ru:')).length, 73);
 });
 
 test('nothing outside the public kinds can be in the inventory', () => {
-  for (const id of inventory.ids) assert.match(id, /^(prayer|song|comp|mass|hour|bible):/);
+  for (const id of inventory.ids) assert.match(id, /^(prayer|song|comp|mass|hour|bible|reading):/);
   assert.ok(!inventory.ids.some((id) => /admin|priest|login|my:|note|donat/i.test(id)));
 });
 

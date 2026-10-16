@@ -35,7 +35,7 @@ const ids = [];
 const problems = [];
 const counts = {};
 const add = (kind, section, list) => {
-  counts[kind] = 0;
+  counts[kind] ??= 0;
   for (const id of list) {
     const contentId = `${kind}:${id}`;
     const bad = validateContentId(section, contentId);
@@ -52,13 +52,17 @@ for (const [collection, kind, section] of [['prayers', 'prayer', 'prayers'], ['s
   closed[collection] = entries.filter(([, doc]) => !isOpen(doc)).length;
   add(kind, section, entries.filter(([, doc]) => isOpen(doc)).map(([id]) => id));
 }
+// A compendium part (p1..p4) is the reading unit; it is public when any of its chapters is.
+const compParts = [...new Set(ids.filter((id) => id.startsWith('comp:')).map((id) => /^comp:(p\d+)(?:-|$)/.exec(id)?.[1]).filter(Boolean))];
+add('comp', 'compendium', compParts);
 add('mass', 'mass', ['order']);
+add('reading', 'readings', ['day']);
 add('hour', 'hours', HOUR_IDS.map((hour) => hour));
 add('bible', 'bible', Object.entries(BIBLE_BOOKS).flatMap(([language, books]) => books.map((book) => `${language}:${book.id}`)));
 
 ids.sort();
 const body = {
-  schema_version: 1,
+  schema_version: 2,
   source: { bundleContentVersion: manifest.contentVersion, bundleContentDate: manifest.contentDate },
   counts,
   excluded_closed_in_bundle: closed,

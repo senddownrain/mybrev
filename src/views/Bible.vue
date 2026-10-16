@@ -228,6 +228,7 @@ import {
   getBibleBook, getBibleSourceLabel, getParallelBibleBook,
 } from '@/constants/bible.js';
 import { fetchBibleBook } from '@/services/bibleService.js';
+import { trackFeature } from '@/utils/trackFeature';
 import {
   bibleVerseKey, loadBibleHighlights, loadBibleLanguage, loadBibleLocation,
   normalizeBibleVerse, saveBibleHighlights, saveBibleLanguage, saveBibleLocation,
@@ -411,6 +412,7 @@ function scrollVerseIntoView(verseNumber) {
 }
 
 function navigate(bookId, chapterNumber, query = {}) {
+  trackFeature('bible_chapter_nav');
   clearSelection();
   router.push(routeLocation(bookId, chapterNumber, query));
 }
@@ -434,6 +436,7 @@ function chooseChapter(bookId, chapterNumber) {
 
 function changeLanguage(nextLanguage) {
   if (nextLanguage === language.value) return;
+  trackFeature('bible_language_change');
   const saved = loadBibleLocation(nextLanguage);
   const parallel = getParallelBibleBook(language.value, currentBook.value?.id, nextLanguage);
   const nextBook = parallel || getBibleBook(nextLanguage, saved?.bookId) || BIBLE_BOOKS[nextLanguage][0];

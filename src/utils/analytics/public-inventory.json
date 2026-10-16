@@ -1,5 +1,5 @@
 {
- "schema_version": 1,
+ "schema_version": 2,
  "source": {
   "bundleContentVersion": 1791877294111,
   "bundleContentDate": "2026-10-13T07:41:34.111Z"
@@ -7,8 +7,9 @@
  "counts": {
   "prayer": 115,
   "song": 447,
-  "comp": 27,
+  "comp": 31,
   "mass": 1,
+  "reading": 1,
   "hour": 9,
   "bible": 146
  },
@@ -164,6 +165,7 @@
   "bible:ru:wis",
   "bible:ru:zc",
   "bible:ru:zp",
+  "comp:p1",
   "comp:p1-s1-ch1",
   "comp:p1-s1-ch2",
   "comp:p1-s1-ch3",
@@ -171,6 +173,7 @@
   "comp:p1-s2-ch1",
   "comp:p1-s2-ch2",
   "comp:p1-s2-ch3",
+  "comp:p2",
   "comp:p2-s1-ch1",
   "comp:p2-s1-ch2",
   "comp:p2-s1-intro",
@@ -179,6 +182,7 @@
   "comp:p2-s2-ch3",
   "comp:p2-s2-ch4",
   "comp:p2-s2-intro",
+  "comp:p3",
   "comp:p3-s1-ch1",
   "comp:p3-s1-ch2",
   "comp:p3-s1-ch3",
@@ -186,6 +190,7 @@
   "comp:p3-s2-ch1",
   "comp:p3-s2-ch2",
   "comp:p3-s2-intro",
+  "comp:p4",
   "comp:p4-s1-ch1",
   "comp:p4-s1-ch2",
   "comp:p4-s1-ch3",
@@ -316,6 +321,7 @@
   "prayer:xGfztLXGNqKqlcjHSNZY",
   "prayer:zdro66KYVuQ9p2KbqizD",
   "prayer:zvkoIQoxh7ilXp7oUjFg",
+  "reading:day",
   "song:holysongs-0027665fbaf1422fd4dc",
   "song:holysongs-00ec18f77eb2a39a8a81",
   "song:holysongs-01829a0e046a22524263",
@@ -764,5 +770,5 @@
   "song:holysongs-fc92f398fb3a4a7e1ac2",
   "song:holysongs-fff116235ea6826870b4"
  ],
- "sha256": "7115a201753d4640349ffbdfe35502cfe0432feaf6ab85e6426de00e33acb3f6"
+ "sha256": "480dfd96459e5c79515e695aa2135e61b549479b18a8e95d34dc2b14e2011311"
 }

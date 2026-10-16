@@ -1,4 +1,4 @@
-# Handoff для Flutter: аналитика по контракту v1
+# Handoff для Flutter: аналитика по контракту v2
 
 Адресат: репозиторий `ibreviarybyapp` (промпт 03/04). Этот документ — инструкция; Flutter-репозиторий
 в рамках веб-этапа не изменялся. Источник правды: `docs/analytics-contract.md` и
@@ -8,6 +8,26 @@
 **Сетевая передача запрещена до закрытия решений D-01…D-09 (`docs/analytics-privacy.md`).**
 На iOS даже после этого нужно явное согласие (Apple 5.1.1(ii)). Первая реализация — только
 локальный счёт и mock transport.
+
+## 0. Контракт v2: что изменилось для Flutter (обязательно, до остального)
+
+Источник: `docs/analytics-contract.md` §16. Flutter на `feature/analytics-local` (PR #15, влит) реализует
+**v1**; чтобы совпасть с вебом, нужно:
+
+1. `schemaVersion = 2`; фикстура `analytics-contract-v2.json` (замена v1; SHA-256 сверять с веб-копией);
+   `public-inventory.json` из веба (750 ID) и перегенерация `lib/analytics/public_inventory.dart`.
+2. `readings` → `content_id = reading:day` (маска `^reading:day$`); `/readings`, `/readings/reading/:id`
+   → `AnalyticsTarget('readings', 'reading:day')`; `screen_view`/`text_read` для чтений.
+3. Событие `catalog_open` + `catalogIds` (`hours_list, prayers_home, prayers_all, favorites, songs,
+   bible_books, compendium_home`); ключи ячейки `e, catalog_id, n`; визит ≥ 1 с; каталог и материал не
+   считаются дважды (маппер возвращает либо материал, либо каталог). Соответствие Flutter-маршрутов:
+   `/hours/hora/:date/:dayId` (список часов дня) → `hours_list`; `/hours` остаётся `today`; `/prayers` → `prayers_home`;
+   `/prayers/all` → `prayers_all`; `/prayers/favorites` → `favorites`; `/prayers/songs` → `songs`;
+   `/prayers/compendium` → `compendium_home`; `/bible` без книги → `bible_books`.
+4. Компендиум: единица чтения — часть `comp:p1…p4` (`/prayers/compendium/part/:partId`), главы —
+   якоря; не только `node/:nodeId`.
+5. `feature_use`: тот же белый список (27); `reportTextLength` для `er`.
+6. Тесты идентичности JS/Dart по v2-фикстуре (`validPacket` с 9 ячейками, 17 `invalidCells`).
 
 ## 1. Состояние Flutter на момент аудита (read-only)
 
