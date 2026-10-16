@@ -24,6 +24,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import { isFirestoreQuotaError } from '../../src/utils/firestoreErrors.mjs';
 import { fullPlan } from './lib/wave4-plan.mjs';
 import { runAudit } from './lib/audit-run.mjs';
 import { ROOT } from './lib/source-pages.mjs';
@@ -48,7 +49,7 @@ async function openAdmin() {
 async function retry(label, fn, attempts = 4) {
   for (let attempt = 1; ; attempt += 1) {
     try { return await fn(); } catch (error) {
-      if (attempt >= attempts || !/UNAVAILABLE|ECONNRESET|ETIMEDOUT|DEADLINE|socket|fetch failed/i.test(String(error.message || error))) throw error;
+      if (isFirestoreQuotaError(error) || attempt >= attempts || !/UNAVAILABLE|ECONNRESET|ETIMEDOUT|DEADLINE|socket|fetch failed/i.test(String(error.message || error))) throw error;
       console.error(`${label}: ${error.message}; retry ${attempt}`);
       await new Promise((resolve) => setTimeout(resolve, 1500 * attempt));
     }

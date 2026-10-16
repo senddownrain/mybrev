@@ -1,22 +1,14 @@
 import { logger } from '@/utils/logger';
 import { useNotifier } from '@/composables/useNotifier';
+import { firestoreErrorCode, firestoreErrorMessage, noteFirestoreError } from './firestoreErrors.mjs';
 
 export function handleFirestoreError(error, context = '') {
-  logger.error(`[${context}] Firestore error:`, error);
+  noteFirestoreError(error);
+  logger.error(`[${context}] Firestore error:`, { code: firestoreErrorCode(error) });
   
   const { notifyError } = useNotifier();
   
-  let message = 'Памылка захавання даных';
-  
-  if (error.code === 'permission-denied') {
-    message = 'Няма доступу для выканання гэтай аперацыі';
-  } else if (error.code === 'unavailable') {
-    message = 'Сэрвіс часова недаступны. Паспрабуйце пазней';
-  } else if (error.code === 'deadline-exceeded') {
-    message = 'Час выканання аперацыі скончыўся. Паспрабуйце яшчэ раз';
-  } else if (error.message) {
-    message = error.message;
-  }
+  const message = firestoreErrorMessage(error);
   
   notifyError(message);
   return message;

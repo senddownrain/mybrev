@@ -5,12 +5,12 @@
     <v-progress-linear v-if="loading" indeterminate aria-label="Загрузка" />
     <v-card class="my-5 pa-5" elevation="0" border>
       <h2>Код актывацыі</h2>
-      <p class="my-3">Статус: {{ settings.codeCreated ? 'код створаны' : 'код адсутнічае' }}<br>Апошняя змена: {{ date(settings.changedAt) }}</p>
+      <p class="my-3">Статус: {{ settings.codeCreated === true ? 'код створаны' : settings.codeCreated === false ? 'код адсутнічае' : 'стан не атрыманы' }}<br>Апошняя змена: {{ settings.changedAtPending ? 'Дата пацвердзіцца пасля абнаўлення' : date(settings.changedAt) }}</p>
       <p>Код патрэбны адзін раз. Змена кода не адключае зарэгістраваныя прылады.</p>
-      <v-btn class="my-4" color="primary" :disabled="busy || loading" @click="confirmCode(true)">Згенераваць новы код</v-btn>
+      <v-btn class="my-4" color="primary" :disabled="busy || loading || Boolean(newCode)" @click="confirmCode(true)">Згенераваць новы код</v-btn>
       <v-form @submit.prevent="confirmCode(false)">
         <v-text-field v-model="customCode" label="Уласны код" type="password" autocomplete="off" :maxlength="79" hint="24–64 сімвалы без I, O, 0 і 1. Выпадковы код бяспечней." persistent-hint />
-        <v-btn type="submit" variant="tonal" :disabled="busy || loading || !customCode.trim()">Усталяваць уласны код</v-btn>
+        <v-btn type="submit" variant="tonal" :disabled="busy || loading || Boolean(newCode) || !customCode.trim()">Усталяваць уласны код</v-btn>
       </v-form>
       <v-alert v-if="newCode" type="success" variant="tonal" class="mt-4">
         <p>Новы код паказваецца толькі зараз. Захавайце яго перад закрыццём.</p>
@@ -18,16 +18,17 @@
         <v-btn variant="text" prepend-icon="mdi-content-copy" @click="copyCode">Капіяваць</v-btn>
         <v-btn variant="text" @click="newCode = ''">Схаваць</v-btn>
         <p v-if="copied">Скапіявана</p>
+        <p v-if="codeWarning" role="status" class="mt-3">{{ codeWarning }}</p>
       </v-alert>
       <v-textarea v-model="helpText" class="mt-5" label="Дзе атрымаць код?" :maxlength="1000" rows="3" hint="Кантакт або інструкцыя. Калі пуста, блок не паказваецца." persistent-hint />
       <v-btn variant="tonal" :loading="busy" :disabled="loading" @click="saveHelp">Захаваць інструкцыю</v-btn>
     </v-card>
     <v-card class="pa-5" elevation="0" border>
       <h2>Зарэгістраваныя прылады</h2>
-      <p class="my-3">Подпіс інфармацыйны і не пацвярджае асобу.</p>
+      <p class="my-3">Подпіс інфармацыйны і не пацвярджае асобу. Пошук і фільтр дзейнічаюць для загружаных прылад. Наступныя прылады можна загрузіць асобна.</p>
       <v-text-field v-model="query" label="Пошук прылады або подпісу" prepend-inner-icon="mdi-magnify" clearable />
       <v-select v-model="filter" label="Статус" :items="[{ title: 'Усе', value: '' }, { title: 'Актыўны', value: 'active' }, { title: 'Адкліканы', value: 'revoked' }]" />
-      <v-btn variant="text" :loading="loading" @click="load">Абнавіць</v-btn>
+      <v-btn variant="text" :loading="loading" :disabled="loading || busy" @click="load(true)">Абнавіць</v-btn>
       <article v-for="device in filteredDevices" :key="device.id" class="device-row">
         <h3>{{ device.deviceName }}</h3>
         <p>{{ device.client }} · {{ device.platform || 'Платформа невядомая' }}</p>
@@ -38,6 +39,7 @@
         <v-btn v-if="device.status === 'active'" color="error" variant="tonal" :disabled="busy" @click="revokeTarget = device">Адклікаць доступ</v-btn>
       </article>
       <p v-if="!filteredDevices.length && !loading" class="my-4">Прылады не знойдзены</p>
+      <v-btn v-if="nextPage" variant="tonal" :loading="loading" :disabled="loading || busy" @click="loadMore">Паказаць яшчэ</v-btn>
     </v-card>
     <v-dialog v-model="codeDialog" max-width="540" persistent>
       <v-card>
@@ -59,12 +61,15 @@
 import { computed, onMounted, ref } from 'vue';
 import { getPriestSettings, replacePriestCode, savePriestHelp, listPriestDevices, updatePriestDevice } from '@/services/priestAccessService';
 import { useNotifier } from '@/composables/useNotifier';
+import { firestoreErrorMessage, resetFirestoreQuota } from '@/utils/firestoreErrors.mjs';
 const { notifySuccess } = useNotifier();
 const settings = ref({});
 const devices = ref([]);
 const helpText = ref('');
 const customCode = ref('');
 const newCode = ref('');
+const codeWarning = ref('');
+const nextPage = ref(null);
 const copied = ref(false);
 const error = ref('');
 const busy = ref(false);
@@ -78,35 +83,45 @@ const filteredDevices = computed(() => devices.value.filter((d) => (!filter.valu
   && `${d.deviceName} ${d.label} ${d.platform} ${d.client}`.toLocaleLowerCase().includes(String(query.value || '').toLocaleLowerCase())));
 const date = (value) => value ? (value.toDate?.() || new Date(value)).toLocaleString('be-BY') : '—';
 onMounted(load);
-async function load() {
+async function load(explicit = false) {
+  if (loading.value || busy.value) return;
+  if (explicit === true) resetFirestoreQuota();
   loading.value = true;
   error.value = '';
   try {
     settings.value = await getPriestSettings();
     helpText.value = settings.value.helpText;
-    const items = [];
-    let after = '';
-    do {
-      const page = await listPriestDevices(after);
-      items.push(...page.devices);
-      after = page.next;
-    } while (after);
-    devices.value = items;
-  } catch (e) { error.value = e.message; }
+    const page = await listPriestDevices();
+    devices.value = page.devices;
+    nextPage.value = page.next;
+  } catch (e) { error.value = firestoreErrorMessage(e); }
   finally { loading.value = false; }
 }
-function confirmCode(auto) { generate.value = auto; codeDialog.value = true; }
+async function loadMore() {
+  if (loading.value || busy.value || !nextPage.value) return;
+  loading.value = true;
+  error.value = '';
+  try {
+    const page = await listPriestDevices(nextPage.value);
+    devices.value = [...new Map([...devices.value, ...page.devices].map(device => [device.id, device])).values()];
+    nextPage.value = page.next;
+  } catch (e) { error.value = firestoreErrorMessage(e); }
+  finally { loading.value = false; }
+}
+function confirmCode(auto) { if (busy.value || loading.value || newCode.value) return; generate.value = auto; codeDialog.value = true; }
 async function perform(action) {
   if (busy.value) return;
   busy.value = true;
   error.value = '';
-  try { await action(); } catch (e) { error.value = e.message; }
+  try { await action(); } catch (e) { error.value = firestoreErrorMessage(e); }
   finally { busy.value = false; }
 }
 async function replaceCode() {
+  codeDialog.value = false; // Show any write failure on the page, outside the confirmation overlay.
   await perform(async () => {
     const result = await replacePriestCode(generate.value ? { generate: true } : { code: customCode.value });
     newCode.value = result.code;
+    codeWarning.value = result.warning || '';
     copied.value = false;
     settings.value = result;
     delete settings.value.code; // The plaintext exists only in the one-time view.

@@ -59,7 +59,7 @@
       max-width="420"
       scrim="black"
       :persistent="false"
-      class="liturgical-date-dialog"
+      class="liturgical-date-dialog liturgical-date-dialog--compact"
       scroll-strategy="block"
     >
       <v-card class="date-dialog-card" rounded="xl" elevation="18">

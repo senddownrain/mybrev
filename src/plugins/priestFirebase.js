@@ -40,3 +40,10 @@ export async function getPriestEditorDb() {
   await updateCurrentUser(editor, primary.currentUser);
   return priestEditorFirebase.db;
 }
+
+// Same authenticated administrator and Rules, without a queued/offline write
+// or a Listen stream for one-shot administrative metadata reads.
+export async function getPriestEditorWriteDb() {
+  await getPriestEditorDb();
+  return getActivationFirestore(priestEditorFirebase.app);
+}

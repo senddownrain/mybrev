@@ -71,12 +71,12 @@
               <span class="section-number">2</span>
               <div>
                 <h2>Тэкст малітвы</h2>
-                <p>Markdown для структуры, рубрыкі — праз кнопку або блок :::rubric.</p>
+                <p>Markdown для структуры, рубрыкі — праз кнопку або блок :::rubric. Меткі ўдзельнікаў нармалізуюцца пры захаванні; словы, курсіў і цытаты захоўваюцца.</p>
               </div>
               <span class="text-count">{{ plainTextLength }} сімв.</span>
             </div>
 
-            <PrayerMarkdownEditor v-model="form.text" :error="Boolean(textError)" :prayers="prayers" :prayers-loading="isLoading" />
+            <PrayerMarkdownEditor v-model="form.text" :error="Boolean(textError)" :prayers="prayers" :prayers-loading="isLoading" :normalize-legacy="!isMassPrayer" />
             <p v-if="textError" class="field-error">{{ textError }}</p>
           </section>
 
@@ -260,6 +260,7 @@ import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue';
+import { MASS_RITUAL } from '@/utils/massRitual';
 import {
   prayerMarkdownToPlainText,
   prayerTextFields,
@@ -289,6 +290,7 @@ const tagQuery = ref('');
 const tagInputFocused = ref(false);
 
 const isEditMode = computed(() => Boolean(route.params.id));
+const isMassPrayer = computed(() => MASS_RITUAL.variants.some(variant => variant.prayerId === route.params.id));
 const isSubmitting = computed(() => saving.value || copying.value);
 const loadingPrayer = computed(() => isEditMode.value && isLoading.value && !hydrated.value);
 const plainText = computed(() => prayerMarkdownToPlainText(form.value.text, PRAYER_TEXT_FORMAT));
@@ -430,7 +432,7 @@ async function validateAndBuildPayload() {
 
   return {
     title: form.value.title,
-    ...prayerTextFields(form.value.text),
+    ...prayerTextFields(form.value.text, { normalizeLegacy: !isMassPrayer.value }),
     source: form.value.source,
     tags: [...form.value.tags],
     verified: form.value.verified === true,
@@ -607,7 +609,7 @@ onBeforeUnmount(() => {
 .prayer-preview__text :deep(ul ul), .prayer-preview__text :deep(ul ol), .prayer-preview__text :deep(ol ul), .prayer-preview__text :deep(ol ol) { margin-block: 0.3em; padding-inline-start: 1.2em; }
 .prayer-preview__text :deep(.prayer-rubric) { margin: 1.05em 0; padding: 0.08em 0 0.08em 0.85em; border-left: 3px solid var(--rubric-color); color: var(--rubric-color); font-size: 0.86em; line-height: 1.45; }
 .prayer-preview__text :deep(.prayer-rubric p) { margin-bottom: 0.45em; }
-.prayer-preview__text :deep(.prayer-speaker) { color: var(--rubric-color); font-weight: 700; font-size: inherit; }
+.prayer-preview__text :deep(.prayer-speaker) { color: var(--rubric-color); font-weight: 700; font-size: inherit; font-style: normal; }
 .preview-placeholder { margin: 0; color: var(--nav-muted); font-style: italic; line-height: 1.6; }
 .preview-source { margin: 22px 0 0; color: var(--nav-muted); font-size: 0.7rem; line-height: 1.4; overflow-wrap: anywhere; }
 .preview-source__label { font-weight: 600; }
