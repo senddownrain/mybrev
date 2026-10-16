@@ -231,7 +231,7 @@ test('/picker by period: every position comes from the engine, impossible ones a
   }
 });
 
-test('/picker by feast: the canonical year — final dates, transfers, diocesan rows', async () => {
+test('/picker by feast: all definitions, Ordo dates and all four dioceses', async () => {
   const { yearCelebrations } = await import('../src/utils/ordoScreen.js');
   const single = yearCelebrations(2026, ['minsk-mohilev']);
   assert.ok(single.find((item) => item.optionId === 'corpus-christi' && item.date === '2026-06-04'));
@@ -240,6 +240,6 @@ test('/picker by feast: the canonical year — final dates, transfers, diocesan 
   const pinsk = both.find((item) => item.optionId === 'dedication-cathedral' && item.date === '2026-05-01');
   assert.deepEqual(pinsk?.badges, ['Пінск']);
   const feasts = read('src/components/liturgical/FeastsPicker.vue');
-  assert.match(feasts, /yearCelebrations\(props\.year, effectiveOrdoDioceses\.value\)/);
+  assert.match(feasts, /yearCelebrations\(props\.year, ORDO_FILTER_DIOCESES\)/);
   assert.doesNotMatch(read('src/services/liturgicalDayService.js'), /getAllFeastDays/, 'no full `days` read for the feast list');
 });

@@ -51,6 +51,7 @@
           :key="feast.key"
           type="button"
           class="feast-row"
+          :disabled="!canOpenFeast(feast)"
           @click="selectFeast(feast)"
         >
           <div class="date-tile" :class="{ 'date-tile--dynamic': feast.isDynamic }">
@@ -67,14 +68,22 @@
             <h3>{{ feast.title }}</h3>
             <div class="feast-meta">
               <span v-if="feast.rankLabel" class="rank-badge">{{ feast.rankLabel }}</span>
+              <span v-if="feast.colorLabel">
+                <i class="feast-color" :style="{ backgroundColor: feast.swatch }" aria-hidden="true" />
+                {{ feast.colorLabel }}
+              </span>
               <span v-for="place in feast.placeLabels" :key="place" class="place-badge">
                 <PhMapPin :size="13" />{{ place }}
               </span>
               <span v-if="feast.variantCount > 1">{{ feast.variantCount }} варыянты</span>
             </div>
+            <div v-if="feast.statusLabel" class="feast-status">{{ feast.statusLabel }}</div>
+            <div v-else-if="!canOpenFeast(feast)" class="feast-status">
+              {{ mode === 'readings' ? 'Чытанні гэтага свята не дазволены' : 'Літургічныя гадзіны гэтага свята не дазволены' }}
+            </div>
           </div>
 
-          <span class="open-button" :title="openLabel">
+          <span v-if="canOpenFeast(feast)" class="open-button" :title="openLabel">
             <PhBookOpenText v-if="mode === 'readings'" :size="19" />
             <PhArrowRight v-else :size="19" />
           </span>
@@ -96,8 +105,8 @@
 <script setup>
 import { computed, ref } from 'vue';
 import moment from '@/utils/moment-be';
-import { yearCelebrations } from '@/utils/ordoScreen';
-import { effectiveOrdoDioceses, ordoDiocese } from '@/utils/ordoDiocese';
+import { colorInfo, ORDO_COLORS, ORDO_FILTER_DIOCESES, yearCelebrations } from '@/utils/ordoScreen';
+import { ordoDiocese } from '@/utils/ordoDiocese';
 import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import {
   PhArrowRight,
@@ -133,23 +142,26 @@ const openLabel = computed(() => (
 ));
 
 /**
- * Every legal celebration of the year, on its final date (transfers and
- * diocesan dates included), for the dioceses of Settings — the canonical
- * calendar, not the documents that happen to exist in `days`.
+ * Search all four diocesan calendars without changing Settings. Presence
+ * comes from definitions; permission and the opening date come from Ordo.
  */
-const preparedFeasts = computed(() => (ordoCalendarEpoch.value, yearCelebrations(props.year, effectiveOrdoDioceses.value))
+const preparedFeasts = computed(() => (ordoCalendarEpoch.value, yearCelebrations(props.year, ORDO_FILTER_DIOCESES))
   .map((item) => {
-    const date = moment(item.date, 'YYYY-MM-DD', true);
+    // A fixed nominal 29 February remains displayable in a non-leap year.
+    const date = moment(item.movable ? item.date : `2000-${item.date.slice(5)}`, 'YYYY-MM-DD', true);
+    const color = ORDO_COLORS[item.color] ? colorInfo(item.color) : null;
     const feast = {
       ...item,
       id: item.optionId,
-      calendarDate: item.date,
+      calendarDate: item.routeDate,
       rankLabel: item.rank,
       placeLabels: item.badges,
       isDynamic: item.movable,
       isFixed: !item.movable,
-      dayLabel: date.format('DD'),
-      monthLabel: date.format('MMM').replace('.', ''),
+      dayLabel: date.isValid() ? date.format('DD') : '—',
+      monthLabel: date.isValid() ? date.format('MMM').replace('.', '') : 'рухомае',
+      colorLabel: color?.label || '',
+      swatch: color?.swatch || '',
       variantCount: 1,
     };
     feast.searchText = buildSearchText(feast, date);
@@ -177,19 +189,25 @@ const resultCountLabel = computed(() => {
 
 
 function buildSearchText(feast, date) {
-  return [feast.title, feast.rankLabel, ...feast.placeLabels, date.format('DD.MM.YYYY')]
+  return [feast.title, feast.rankLabel, ...feast.placeLabels,
+    date.isValid() ? `${date.format('DD.MM D MMMM')} ${date.format('MMMM')}` : 'рухомае', feast.date, feast.calendarDate]
     .join(' ')
     .toLocaleLowerCase('be-BY');
 }
 
 
+function canOpenFeast(feast) {
+  return Boolean(feast.calendarDate && (props.mode === 'readings' ? feast.readingsAllowed : feast.hoursAllowed));
+}
+
 function selectFeast(feast) {
+  if (!canOpenFeast(feast)) return;
   // The celebration's identity travels, not a `days` document id: Hours open
   // its Office, Readings its readings, in the diocese that keeps it.
   emit('feast-selected', {
     optionId: feast.optionId,
     date: feast.calendarDate,
-    diocese: feast.dioceses.includes(ordoDiocese.value) ? '' : feast.dioceses[0],
+    diocese: feast.dioceses.includes(ordoDiocese.value) ? ordoDiocese.value : feast.dioceses[0],
   });
 }
 
@@ -327,6 +345,23 @@ function resetFilters() {
 
 .feast-row:active {
   transform: scale(0.985);
+}
+
+.feast-row:disabled { cursor: default; }
+.feast-row:disabled:active { transform: none; }
+
+.feast-color {
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--nav-muted);
+  border-radius: 50%;
+}
+
+.feast-status {
+  margin-top: 7px;
+  color: var(--nav-muted);
+  font-size: 0.7rem;
+  line-height: 1.4;
 }
 
 .date-tile {

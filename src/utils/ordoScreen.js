@@ -9,7 +9,7 @@
 import { generateLiturgicalYear, resolveLiturgicalDate } from './ordo/index.js';
 import { addDays, isoWeekday, parseIso, toIsoDate } from './ordo/dates.js';
 import { buildCalendarLayers } from './ordo/layers.js';
-import { contextKey } from './ordo/yearPlan.js';
+import { contextKey, getYearPlan } from './ordo/yearPlan.js';
 import {
   LITURGICAL_VESTMENT_COLORS, PERIOD_LABEL_MAP, PLACE_LABEL_MAP, RANK_LABEL_MAP,
 } from '../constants/liturgical.js';
@@ -396,42 +396,64 @@ export function getOrdoYear(year, { diocese } = {}) {
 export const ordoYearCacheSize = () => yearCache.size;
 
 /**
- * `/picker` «Па свяце»: every legal celebration of a civil year — from the
- * Ordo engine, on its final date (transfers, diocesan dates included), for
- * one or several dioceses. The same celebration with the same rank on the
- * same date is one entry; one that only some dioceses keep carries badges.
- * The weekly Saturday memorial of Mary is not a «feast» to look up.
+ * `/picker` «Па свяце»: definitions determine presence, Ordo alone determines
+ * permission to open. Fixed dates stay nominal; routeDate is the actual date.
+ * Different definitions or diocesan permissions must never merge into one row.
  */
 export function yearCelebrations(year, dioceses) {
   const list = normalizeDioceseFilter(Array.isArray(dioceses) ? dioceses : [dioceses]);
   const entries = new Map();
-  list.forEach((diocese) => getOrdoYear(year, { diocese }).forEach((day) => {
-    [day.primary, ...day.alternatives]
-      .filter((option) => option.kind !== 'temporal' && option.kind !== 'votive-memorial')
-      .forEach((option) => {
-        const key = `${day.date}|${option.id}|${option.rank || ''}`;
-        const entry = entries.get(key) || {
-          key,
-          optionId: option.id,
-          date: day.date,
-          title: option.title,
-          rank: rankLabel(option),
-          rankKey: option.rank || '',
-          kind: option.kind,
-          movable: option.kind === 'dynamic' || Boolean(option.feastCode),
-          color: option.color || day.color,
-          dioceses: [],
-        };
-        entry.dioceses.push(diocese);
-        entries.set(key, entry);
-      });
-  }));
+  list.forEach((diocese) => {
+    const context = engineContext({ diocese });
+    const { celebrations } = buildCalendarLayers(context);
+    const plan = getYearPlan(Number(year), context);
+    const days = getOrdoYear(year, { diocese });
+    const byDate = new Map(days.map((day) => [day.date, day]));
+    const removed = new Map([...plan.removedByDate.values()].flat()
+      .map((item) => [item.celebration.id, item]));
+    celebrations.forEach((definition) => {
+      if (!definition.id || !definition.title || !definition.date) return;
+      const placement = plan.celebrationDates.get(definition.id) || removed.get(definition.id);
+      const day = byDate.get(placement?.date);
+      const routeDate = day?.date || '';
+      const readingsAllowed = Boolean(day && [day.primary, ...day.alternatives].some((item) => item.id === definition.id));
+      const hoursAllowed = Boolean(day?.officeOptions.some((item) => item.id === definition.id));
+      const commemoration = day?.commemorations.find((item) => item.id === definition.id);
+      const suppressed = day?.suppressed.find((item) => item.id === definition.id);
+      const movable = definition.date.type !== 'fixed';
+      const date = movable ? routeDate : `${year}-${String(definition.date.month).padStart(2, '0')}-${String(definition.date.day).padStart(2, '0')}`;
+      const transferred = routeDate && placement?.originalDate && routeDate !== placement.originalDate;
+      const statusLabel = [
+        transferred ? `перанесена на ${formatDayMonth(routeDate)}` : '',
+        commemoration ? 'памінанне' : '',
+        suppressed ? (suppressed.reason === 'suppressed-by-layer'
+          ? suppressionReason(suppressed) : 'не адзначаецца ў гэтым годзе') : '',
+        !day ? 'дата не вызначана' : '',
+      ].filter(Boolean).join(' · ');
+      // Include text identities as well as visible fields. A local suppression
+      // stays separate even when the inherited definition is otherwise equal.
+      const key = JSON.stringify([
+        definition.id, definition.date, definition.title, definition.rank, definition.color,
+        definition.daysRef, definition.readingsRef, definition.fallbackDaysRefs,
+        definition.templates, definition.defaultTemplate, definition.readingsReference,
+        date, routeDate, hoursAllowed, readingsAllowed, statusLabel,
+      ]);
+      const entry = entries.get(key) || {
+        key, optionId: definition.id, date, routeDate, title: definition.title,
+        rank: RANK_LABEL_MAP[definition.rank] || '', rankKey: definition.rank || '',
+        movable, color: definition.color || '', hoursAllowed, readingsAllowed, statusLabel,
+        dioceses: [],
+      };
+      entry.dioceses.push(diocese);
+      entries.set(key, entry);
+    });
+  });
   return [...entries.values()]
     .map((entry) => ({
       ...entry,
       badges: entry.dioceses.length === list.length ? [] : entry.dioceses.map((id) => DIOCESE_SHORT_LABELS[id] || id),
     }))
-    .sort((a, b) => a.date.localeCompare(b.date) || a.title.localeCompare(b.title, 'be'));
+    .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999') || a.title.localeCompare(b.title, 'be'));
 }
 
 /**
