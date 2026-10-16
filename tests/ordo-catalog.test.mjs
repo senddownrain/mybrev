@@ -83,6 +83,7 @@ test('semantic positions persist without a year; actual dates and nearest years 
   assert.equal(new Set(positions.map((e) => e.id)).size, positions.length);
   assert.ok(positions.some((e) => e.id === 'period:ordinary-w1-d1'));
   assert.ok(positions.some((e) => e.id === 'period:ordinary-w34-d7'));
+  assert.ok(positions.find((e) => e.id === 'period:lent-w0-d4').title.includes('Папялец'), 'Ash Wednesday is searchable by its actual name');
   const absent = entry('period:advent-w4-d7');
   assert.equal(calendarOccurrence(absent, 2026, dioceses[0]).effectiveDate, null);
   const nearest = nearestCatalogYear(absent, 2026, dioceses[0], 'hours');

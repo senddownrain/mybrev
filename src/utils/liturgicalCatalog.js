@@ -55,8 +55,11 @@ export function periodCatalog() {
   const definitions = [...buildCalendarLayers().celebrations.values()];
   const weekly = (periodKey, week, weekday) => {
     const id = `${periodKey}-w${week}-d${weekday}`;
+    const opening = { 4: 'Папялец', 5: 'Чацвер пасля Папяльца', 6: 'Пятніца пасля Папяльца', 7: 'Субота пасля Папяльца' };
+    const title = periodKey === 'lent' && week === 0 ? `${PERIOD_LABEL_MAP[periodKey]} · ${opening[weekday]}`
+      : `${PERIOD_LABEL_MAP[periodKey]} · ${week} тыдзень · ${WEEKDAY_LABEL_MAP[weekday]}`;
     entries.push({ id: `period:${id}`, key: `period:${id}`, kind: 'period', periodKey, week, weekday,
-      title: `${PERIOD_LABEL_MAP[periodKey]} · ${week} тыдзень · ${WEEKDAY_LABEL_MAP[weekday]}`,
+      title,
       daysRef: { id }, readingsRef: { _periodType: periodKey, _periodWeekNumber: week === 0 ? [0, null] : week, _dayOfWeek: weekday },
     });
   };
