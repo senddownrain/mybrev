@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-10-16T19:34:10.645Z",
+  "shortPrayer": {
+    "id": "import-05-vyanochak-za-kanayuchykh-i-pamerlykh",
+    "length": 443
+  },
+  "longPrayer": {
+    "id": "import-03-sakrament-pakayannya-spovedz",
+    "length": 25643
+  },
+  "hours": {
+    "laudes": "/day/2026-10-16/ora/ordinary-w28-d6/laudes",
+    "vesper": "/day/2026-10-16/ora/ordinary-w28-d6/vesper"
+  },
+  "song": "holysongs-0027665fbaf1422fd4dc",
+  "rows": [
+    {
+      "screen": "feature_use: hour_switch (menu of hours)",
+      "screen_view": true,
+      "features": [
+        "hour_switch@hours"
+      ],
+      "catalog_open": [],
+      "fv": "lt5s",
+      "sd": "—",
+      "er": "—",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/day/2026-10-16/ora/ordinary-w28-d6/invitatorium",
+      "shown": "ЗВЫЧАЙНЫ ПЕРЫЯД · IV ТЫДЗЕНЬ ПСАЛТЫРА XXVIII звычайны тыдзень, пятніца 16 кастрычніка 2026",
+      "rect": [
+        [
+          60,
+          2555,
+          382,
+          "block",
+          ""
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "feature_use: search_open (Bible search sheet)",
+      "screen_view": true,
+      "features": [
+        "search_open@bible"
+      ],
+      "catalog_open": [],
+      "fv": "lt5s",
+      "sd": "—",
+      "er": "—",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/bible/bel/gn/1",
+      "shown": "БЕЛ РУС СТАРЫ ЗАПАВЕТ · БЕЛАРУСКАЯ Роду Раздзел 1 Стары Запавет · пераклад кс. Уладзіслава",
+      "rect": [
+        [
+          398,
+          3750,
+          374,
+          "block",
+          ""
+        ]
+      ],
+      "problems": []
+    }
+  ]
+}

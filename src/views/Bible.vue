@@ -498,6 +498,7 @@ function applyHighlight(color) {
 async function openSearch() {
   searchTerm.value = '';
   searchOpen.value = true;
+  trackFeature('search_open'); // the search sheet was opened (no query text is ever reported)
   await nextTick();
   searchInput.value?.focus();
 }

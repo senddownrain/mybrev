@@ -12,12 +12,11 @@ import { createCollector } from './collector.js';
 import { LIMITS } from './contract.js';
 import inventory from './public-inventory.json';
 import { mapRoute } from './routeMapper.js';
+import { findReaderContent, measureDepth, readerState, scrollParentOf } from './readerSignal.js';
 
-const MEASURE_DELAY_MS = 1500;
-const MEASURE_ATTEMPTS = 4;
 const SCROLL_THROTTLE_MS = 200;
-/** Below this much text the screen is a loader or a "not found" page, not a text. */
-const MIN_TEXT_CHARS = 200;
+/** Wait for the reader block of a material: quick checks first, then slower ones (≈ 9.5 s in total), then give up. */
+const READY_DELAYS_MS = Object.freeze([...Array(8).fill(250), ...Array(10).fill(750)]);
 /** Section a feature use is attributed to when the current screen is a catalog. */
 const CATALOG_SECTION = Object.freeze({
   hours_list: 'hours', prayers_home: 'prayers', prayers_all: 'prayers', favorites: 'prayers',
@@ -33,6 +32,8 @@ export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = pa
   let current = null;
   let scrollQueued = false;
   let measureTimer = 0;
+  let routeToken = 0; // every route change invalidates pending readiness checks (fast switching, Back)
+  let reader = null; // { element, scroller, observer } of the material that is on screen
 
   restore();
 
@@ -62,46 +63,85 @@ export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = pa
     }
   }
 
-  const scrollFraction = () => {
-    const root = document.documentElement;
-    const total = root.scrollHeight;
-    return total > 0 ? (window.scrollY + window.innerHeight) / total : 1;
-  };
-
-  function measureText(attempt = 1) {
-    if (!current || !current.contentId) return;
-    const root = document.documentElement;
-    const fits = root.scrollHeight <= window.innerHeight + 2;
-    const totalChars = (document.querySelector('.v-main')?.textContent || '').length;
-    if (totalChars < MIN_TEXT_CHARS) {
-      // Loader or "not found": retry while it may still load, then do not count the visit.
-      if (attempt < MEASURE_ATTEMPTS) measureTimer = window.setTimeout(() => measureText(attempt + 1), MEASURE_DELAY_MS);
-      else { collector.discardView(); current = null; }
-      return;
-    }
-    collector.enterView({ ...current, totalChars }); // same material: refreshes text facts only
-    collector.reportFits(fits);
-    if (!fits) collector.reportScroll(scrollFraction());
+  function stopObserving() {
+    window.clearTimeout(measureTimer);
+    reader?.observer?.disconnect();
+    reader = null;
   }
 
-  router.afterEach((to, from, failure) => {
-    if (failure) return;
-    window.clearTimeout(measureTimer);
+  // The view may replace the block while it loads (a hour re-renders its column when the psalms arrive): follow it.
+  function bindReader(element) {
+    reader?.observer?.disconnect();
+    reader = { element, scroller: scrollParentOf(element, window), observer: null, failures: 0, reported: false };
+    // Font size change, resize or late content: re-measure on the same throttle (one observed element, no tree walk).
+    if (typeof window.ResizeObserver === 'function') {
+      reader.observer = new window.ResizeObserver(() => queueMeasure());
+      reader.observer.observe(element);
+    }
+  }
+
+  // Facts of the text that is on screen now: fits / depth of the reader block, never of the whole document.
+  function measure() {
+    if (!current || !reader) return;
+    if (!reader.element.isConnected) {
+      const element = findReaderContent(current.section, document);
+      if (!element) return; // being re-rendered: the next scroll / resize measures again
+      bindReader(element);
+    }
+    const result = measureDepth(reader.element, window, reader.scroller);
+    if (result.unmeasurable) {
+      // may be a block that is not laid out yet: report only when it stays unmeasurable on a second look
+      reader.failures += 1;
+      if (reader.failures >= 2 && !reader.reported) { reader.reported = true; collector.reportError('scroll_unmeasurable'); }
+      else if (reader.failures < 2) queueMeasure();
+      return;
+    }
+    reader.failures = 0;
+    collector.reportFits(result.fits); // may change back after late loading or a larger font
+    if (!result.fits) collector.reportScroll(result.depth);
+  }
+
+  function onReaderReady(element, chars) {
+    collector.enterView({ ...current, totalChars: chars }); // same material: refreshes the text facts only
+    bindReader(element);
+    measure();
+  }
+
+  function waitForReader(token, attempt) {
+    if (token !== routeToken || !current?.contentId) return;
+    const element = findReaderContent(current.section, document);
+    const state = readerState(element);
+    if (state.ready) { onReaderReady(element, state.chars); return; }
+    if (attempt >= READY_DELAYS_MS.length) { collector.discardView(); current = null; return; } // loader / not found / error
+    measureTimer = window.setTimeout(() => waitForReader(token, attempt + 1), READY_DELAYS_MS[attempt]);
+  }
+
+  let routeSeen = false;
+  function onRoute(to) {
+    routeSeen = true;
+    routeToken += 1;
+    stopObserving();
     current = mapRoute(to, { massOrderPrayerId });
     if (!current) { collector.leaveView(); return; }
     collector.enterView(current);
-    if (current.contentId) measureTimer = window.setTimeout(measureText, MEASURE_DELAY_MS);
-  });
+    if (current.contentId) waitForReader(routeToken, 0);
+  }
+  router.afterEach((to, from, failure) => { if (!failure) onRoute(to); });
+  // The module is loaded lazily, usually after the first navigation finished: the screen the page was opened on
+  // (a direct link to a prayer, a reload) would otherwise never be seen.
+  router.isReady().then(() => { if (!routeSeen) onRoute(router.currentRoute.value); }).catch(() => {});
 
-  // Trailing throttle on a timer (not rAF: rAF stops when the page is not being painted).
-  window.addEventListener('scroll', () => {
+  // Trailing throttle on a timer (not rAF: rAF stops when the page is not being painted). The listener is passive and
+  // global (capture) so that the window and a nested scroller are both seen, but only ours is measured.
+  function queueMeasure() {
     if (scrollQueued) return;
     scrollQueued = true;
-    window.setTimeout(() => {
-      scrollQueued = false;
-      collector.reportScroll(scrollFraction());
-    }, SCROLL_THROTTLE_MS);
-  }, { passive: true });
+    window.setTimeout(() => { scrollQueued = false; measure(); }, SCROLL_THROTTLE_MS);
+  }
+  document.addEventListener('scroll', (event) => {
+    if (!reader) return;
+    if (event.target === document || event.target === reader.scroller) queueMeasure();
+  }, { passive: true, capture: true });
 
   document.addEventListener('visibilitychange', () => {
     const visible = document.visibilityState === 'visible';

@@ -105,8 +105,10 @@ test('no analytics module contains a network call; only the DOM glue may touch l
   const glue = readFileSync(path.join(dir, 'localAnalytics.js'), 'utf8');
   // Storage is written only from page-hide handlers and bounded, never from scroll/tap.
   assert.match(glue, /MAX_STORED_BYTES = 64 \* 1024/);
-  const scrollBlock = glue.slice(glue.indexOf("addEventListener('scroll'"), glue.indexOf('{ passive: true })'));
-  assert.ok(scrollBlock.length > 20 && !/persist\(|localStorage/.test(scrollBlock));
+  const start = glue.indexOf("addEventListener('scroll'");
+  const scrollBlock = glue.slice(start, glue.indexOf('{ passive: true, capture: true })', start) + '{ passive: true, capture: true })'.length);
+  assert.ok(scrollBlock.length > 20 && !/persist\(|localStorage/.test(scrollBlock), 'the scroll listener is passive and only queues a throttled measurement');
+  assert.match(scrollBlock, /queueMeasure\(\)/);
 });
 
 test('trackFeature is an empty function in a normal build and call sites pass only a feature id', () => {

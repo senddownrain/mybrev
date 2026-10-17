@@ -8,10 +8,10 @@
 Локальный счётчик (без сети; подключён только через флаг сборки `VITE_ANALYTICS_LOCAL=true` для тестовых сборок, решение D-10 = B; в обычной сборке код и данные отсутствуют в бандле, проверено сборкой):
 `src/utils/analytics/collector.js`, тесты `tests/analytics-collector.test.mjs`. Он реализует §5-§8
 как конечный автомат с внешними часами; Flutter реализует ту же логику и проверяется теми же
-сценариями. Маршруты → `section`/`content_id`: `src/utils/analytics/routeMapper.js`; `feature_use` (кнопки) пока не подключены. Ограничения: данные только в памяти вкладки (чтение — `window.__analyticsLocal.snapshot()`); `CompendiumPart` и `Question` не измеряются; `comp:` берётся из `nodeId`, совпадение с ID глав в инвентаре не проверено в браузере; прокрутка считается по окну (`window`) и проверена на Settings, молитве и часе; события прокрутки берутся с таймером 200 мс (не rAF). Экран «не найдено»/загрузки (< 200 символов текста за ~6 с) визитом не считается. Браузерная проверка 2026-10-15 с живыми чтениями (разрешены владельцем, минимум): молитва `import-15-malitvy-za-semi`, песня `holysongs-0027665fbaf1422fd4dc`, Библия `bel:gn:1`, час `laudes` дня 2026-10-15 дали `screen_view` и три метрики; ввод колесом мыши: ожидаемая доля 0,42 → `p25_50`; программные `scrollTo` в неотрисованной панели событий прокрутки не порождают (артефакт стенда). Сетевых запросов аналитики нет. **НЕ ПРОВЕРЕНЫ**: русская Библия, компендиум (`nodeId` ↔ ID глав), Мэса `mass:order`, Android/iOS/реальные устройства, влияние на производительность.
+сценариями. Маршруты → `section`/`content_id`: `src/utils/analytics/routeMapper.js`; `feature_use` подключён для 24 из 27 id (§16.1: непокрытые — `search_submit`, `offline_update_apply`, `install_prompt_open`, у всех нет однозначного успешного действия в UI). Данные хранятся по §16.2 (буфер `localStorage` только в тестовой сборке; чтение — `window.__analyticsLocal.snapshot()`). Готовность текста и прокрутка (**v2, `src/utils/analytics/readerSignal.js`**): текст материала — блок читалки (`.prayer-reading-surface`, `.readings-content`, `.liturgical-hour-column`, `.bible-reader`, `.compendium-part-outline`); он готов, когда существует, не содержит загрузчика/ошибки (idle-полоса `.v-card__loader` не считается) и в нём есть видимый текст, **без порога в 200 символов** (короткая молитва считается); «не найдено», ошибка и загрузка блока не создают, визит отбрасывается через ≈ 9,5 с. Глубина `sd` — доля именно этого блока, достигшая нижней границы видимой области окна или ближайшего прокручиваемого предка; навигация, подвал и отступы оболочки не учитываются. Слушатель прокрутки пассивный, в фазе capture, чтение геометрии одного элемента на таймере 200 мс; `ResizeObserver` одного блока пересчитывает при смене шрифта/размера; блок недоступен для измерения → `scroll_unmeasurable`. Первый маршрут страницы (прямая ссылка, перезагрузка) учитывается через `router.isReady()`. Проверено на реальных экранах: `npm run analytics:smoke` (эмулятор, не production).
 
 Источник правды для кода: `src/utils/analytics/contract.js`; эталонные векторы для Flutter:
-`tests/fixtures/analytics-contract-v1.json`; тесты: `tests/analytics-contract.test.mjs`.
+`tests/fixtures/analytics-contract-v2.json`; тесты: `tests/analytics-contract.test.mjs`.
 Любое расхождение между этим текстом и кодом — ошибка этого текста.
 
 ## 1. Что измеряем и чего не измеряем
@@ -89,7 +89,7 @@ Ordo-знаменательных дат, заметок Ordo. Они доста
 
 ### 4.1 Инвентарь публичных `content_id` (закрыт для кода, ждёт подтверждения владельца)
 
-Инвентарь — файл `src/utils/analytics/public-inventory.json` (745 значений: prayer 115, song 447,
+Инвентарь — файл `src/utils/analytics/public-inventory.json` (750 значений в v2 — раньше 745: prayer 115, song 447,
 comp 27, mass 1, hour 9, bible 146), собран `scripts/analytics/build-public-inventory.mjs
 --bundle <dir>` из **опубликованного бандла контента приложения** (`assets/content`, версия
 `1791877294111`, 2026-10-13), а не из сырого снимка Firestore и без живых чтений. В список попадает
@@ -157,7 +157,7 @@ comp 27, mass 1, hour 9, bible 146), собран `scripts/analytics/build-publi
 | `fv`, `er` | `lt5s` <5 · `5_15s` · `15_60s` · `60_180s` · `180_600s` · `gte600s` ≥600 |
 | `sd` | `fit` · `p0_25` · `p25_50` · `p50_75` · `p75_99` · `p100` |
 
-Эталонные входы/выходы — в `tests/fixtures/analytics-contract-v1.json` (поле
+Эталонные входы/выходы — в `tests/fixtures/analytics-contract-v2.json` (поле
 `visibleSecondsBuckets`, `scrollBuckets`, `readingEstimates`). Граница округления: время не
 округляется заранее, бакет берётся от точного значения (4,99 → `lt5s`, 5 → `5_15s`).
 
@@ -170,7 +170,7 @@ chord_transpose, chord_layout_change, mass_language_change, mass_section_nav,
 ordo_diocese_change, bible_language_change, bible_chapter_nav, back_to_top,
 offline_update_apply, install_prompt_open`.
 
-Правила: значение настройки (размер, тема, язык) **не передаётся** в v1 — только факт использования
+Правила: значение настройки (размер, тема, язык) **не передаётся** (v1 и v2) — только факт использования
 (иначе комбинации раскрывают конфигурацию устройства); `search_submit` не содержит запроса;
 `share_use`/`copy_use` не содержат что делились и куда; `favorite_*` не содержит какая молитва.
 Оценка кардинальности: 27 × 12 разделов ≤ 324 ячейки на день и платформу, реально ≈ 60. Новая кнопка
@@ -192,7 +192,7 @@ offline_update_apply, install_prompt_open`.
 - Визит короче 1 с (`MIN_COUNTED_VISIT_SECONDS`, редиректы, например Імша → вариант) отбрасывается
   без записи. Визит 1–5 с — «короткое открытие»: `screen_view` и `text_read fv=lt5s`, без `er`/`sd`.
 - Закрытие вкладки/выход: запись визита в локальный буфер при `pagehide`/`visibilitychange=hidden`;
-  без синхронных запросов, `sendBeacon` не используется в v1.
+  без синхронных запросов, `sendBeacon` не используется в v1 и v2.
 - Один и тот же человек, открывший материал дважды, даёт два визита; контракт не отличает его от
   двух людей.
 
@@ -341,9 +341,21 @@ analytics_network_enabled = false        (по умолчанию, во всех
 `text_scale_change, font_family_change, theme_change, keep_screen_on_toggle, ordo_diocese_change,
 favorite_add, favorite_remove, psalmody_layout_change, chords_toggle, chord_layout_change,
 chord_transpose, text_settings_open, picker_open, date_pick, back_to_top, copy_use, share_use,
-mass_language_change, mass_section_nav, bible_chapter_nav, bible_language_change`.
-**Не подключены** (нет однозначного места в UI или нужна доработка): `search_open, search_submit,
-hour_switch, hour_option_select, mass_*` кроме двух выше, `offline_update_apply, install_prompt_open`.
+mass_language_change, mass_section_nav, bible_chapter_nav, bible_language_change, search_open,
+hour_switch, hour_option_select` (24 из 27). Три последних добавлены при закрытии PR #129 и проверены в реальном UI
+(`npm run analytics:smoke`): `search_open` — открытие панели поиска Библии (текст запроса не передаётся),
+`hour_switch` — выбор другой гадзіны в меню (текущая не считается), `hour_option_select` — выбор варианта гадзіны
+(`v-select` инвітаторыя и переключатель законных вариантов дня; значение не передаётся).
+**Не подключены, с обоснованием:**
+
+| id | Статус | Почему |
+|---|---|---|
+| `search_submit` | NOT APPLICABLE | в UI нет явной отправки: поиск работает по набору с задержкой (debounce); счёт по вводу считал бы набор, а не использование, и приблизился бы к тексту запроса |
+| `offline_update_apply` | NOT APPLICABLE | в коде нет UI применения обновления PWA (`registerSW`/`onNeedRefresh` отсутствуют, автообновление без действия пользователя) |
+| `install_prompt_open` | NOT APPLICABLE | в коде нет обработчика `beforeinstallprompt` и кнопки установки |
+
+Поиск у молитв и песен (`search_open`) не подключён: это строка ввода на странице, а не отдельное действие. Новых
+элементов интерфейса ради аналитики не добавлялось.
 `chord_transpose` не считает возврат к нулю. Событие относится к текущему экрану (`section`);
 на экранах без раздела (админка, вход) оно отбрасывается.
 

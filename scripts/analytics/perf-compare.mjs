@@ -13,72 +13,34 @@
  * Env: ANALYTICS_PERF_RUNS (default 7), PERF_SNAPSHOT / PERF_STATIC_SNAPSHOT, BENCHMARK_BROWSER_PATH, PERF_PORT.
  */
 /* global requestAnimationFrame, cancelAnimationFrame, PopStateEvent -- used only inside page.evaluate (browser context) */
-import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright-core';
-import { build, preview } from 'vite';
-import { initializeApp } from 'firebase-admin/app';
-import { Timestamp, getFirestore } from 'firebase-admin/firestore';
-import { openFirestoreSnapshot } from '../lib/firestore-snapshot.mjs';
+import { ROOT, buildAndServe, emulatorFromEnv, seedEmulator } from './lib/emulator-app.mjs';
 
-const host = process.env.FIRESTORE_EMULATOR_HOST || '';
-assert.match(host, /^(127\.0\.0\.1|localhost):\d+$/, 'A local Firestore emulator is required (npm run analytics:perf)');
-const [emulatorHost, emulatorPort] = host.split(':');
+const { emulatorHost, emulatorPort } = emulatorFromEnv();
 const projectId = 'demo-analytics-perf';
 const runs = Math.max(5, Number(process.env.ANALYTICS_PERF_RUNS) || 7);
 const basePort = Number(process.env.PERF_PORT || 5290);
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+const root = ROOT;
 const outRoot = path.join(root, 'outputs', 'analytics-perf');
 fs.mkdirSync(outRoot, { recursive: true });
 
-// ---- seed the emulator from local snapshots -----------------------------------------
-const toAdmin = (value) => {
-  if (Array.isArray(value)) return value.map(toAdmin);
-  if (value instanceof Date || !value || typeof value !== 'object') return value;
-  if (value.__firestoreType === 'timestamp') return new Timestamp(value.seconds, value.nanoseconds);
-  if (value.__firestoreType === 'date') return new Date(value.iso);
-  return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, toAdmin(item)]));
-};
-const db = getFirestore(initializeApp({ projectId }, 'perf-seed'));
-let seeded = 0;
-const snapshots = [process.env.PERF_SNAPSHOT || 'backups/firestore-snapshot-readings-sets', process.env.PERF_STATIC_SNAPSHOT || 'backups/firestore-snapshot-static'];
-for (const dir of snapshots) {
-  const manifest = JSON.parse(fs.readFileSync(path.join(dir, 'manifest.json'), 'utf8'));
-  const snapshot = await openFirestoreSnapshot(dir);
-  for (const name of Object.keys(manifest.collections)) {
-    const writer = db.bulkWriter();
-    for (const { id, ...data } of (await snapshot.collection(name)) || []) { writer.set(db.doc(`${name}/${id}`), toAdmin(data)); seeded += 1; }
-    await writer.close();
-  }
-}
+const { seeded } = await seedEmulator({ projectId, snapshots: [process.env.PERF_SNAPSHOT || 'backups/firestore-snapshot-readings-sets', process.env.PERF_STATIC_SNAPSHOT || 'backups/firestore-snapshot-static'] });
 console.log(`seeded ${seeded} documents into the emulator`);
 
-// ---- two builds of the same sources: flag off / on ----------------------------------
-const firebaseModule = `import { initializeApp } from 'firebase/app';
-import { initializeFirestore, memoryLocalCache, connectFirestoreEmulator } from 'firebase/firestore';
-import { createFirestoreCacheRecovery } from '/src/utils/firestoreCacheRecovery.js';
-export const firebaseApp = initializeApp({ projectId: '${projectId}', apiKey: 'demo-key', authDomain: '${projectId}.firebaseapp.com' });
-export const firestoreCacheRecovery = createFirestoreCacheRecovery({ projectId: '${projectId}', storage: () => window.sessionStorage, reload: () => window.location.reload(), isOnline: () => true });
-export const db = initializeFirestore(firebaseApp, { localCache: memoryLocalCache() });
-connectFirestoreEmulator(db, '${emulatorHost}', ${emulatorPort});`;
-const swapPlugin = { name: 'perf-local-emulator-only', enforce: 'pre', transform: (source, id) => (id.replaceAll('\\', '/').split('?')[0].endsWith('/src/plugins/firebase.js') ? firebaseModule : null) };
-
+// two builds of the same sources: flag off / on
 const variants = [];
 for (const [index, [name, flag]] of [['off', 'false'], ['on', 'true']].entries()) {
-  process.env.VITE_ANALYTICS_LOCAL = flag;
-  const outDir = path.join(outRoot, `dist-${name}`);
-  await build({ configFile: path.join(root, 'vite.config.js'), logLevel: 'error', plugins: [swapPlugin], build: { outDir, emptyOutDir: true, reportCompressedSize: false }, cacheDir: path.join(root, `node_modules/.vite-perf-${name}`) });
-  const server = await preview({ configFile: false, root, preview: { host: '127.0.0.1', port: basePort + index, strictPort: true }, build: { outDir } });
-  variants.push({ name, flag, outDir, base: `http://127.0.0.1:${basePort + index}`, server });
+  variants.push(await buildAndServe({ name, flag, projectId, emulatorHost, emulatorPort, outRoot, port: basePort + index }));
 }
-delete process.env.VITE_ANALYTICS_LOCAL;
 
 const bytesIn = (dir) => { let total = 0; (function walk(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else total += fs.statSync(p).size; } }(dir)); return total; };
 
 // ---- measurement ----------------------------------------------------------------------
 const browser = await chromium.launch(process.env.BENCHMARK_BROWSER_PATH ? { executablePath: process.env.BENCHMARK_BROWSER_PATH } : {});
+const cpuThrottle = Math.max(1, Number(process.env.PERF_CPU_THROTTLE) || 1); // 4 = a slow phone class CPU (Chromium CDP emulation)
+const throttle = async (context, page) => { if (cpuThrottle > 1) await (await context.newCDPSession(page)).send('Emulation.setCPUThrottlingRate', { rate: cpuThrottle }); };
 const sleep = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
 const ready = async (page, selector) => {
   await page.locator(selector).first().waitFor({ state: 'visible', timeout: 45_000 });
@@ -107,6 +69,7 @@ const routes = [
 async function coldRun(variant, route) {
   const context = await browser.newContext({ serviceWorkers: 'block' });
   const page = await context.newPage();
+  await throttle(context, page);
   const hosts = new Set();
   page.on('request', (request) => { try { hosts.add(new URL(request.url()).host); } catch { /* data: urls */ } });
   const started = Date.now();
@@ -121,6 +84,7 @@ async function scenario(variant, route) {
   // One session: load, scripted scroll with frame timing, SPA navigation, then heap and storage.
   const context = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 390, height: 780 } });
   const page = await context.newPage();
+  await throttle(context, page);
   const hosts = new Set();
   page.on('request', (request) => { try { hosts.add(new URL(request.url()).host); } catch { /* data: urls */ } });
   await page.goto(`${variant.base}${route.path}`, { waitUntil: 'domcontentloaded' });
@@ -196,11 +160,11 @@ for (const variant of variants) {
 }
 const report = {
   generatedAt: new Date().toISOString(),
-  stand: { node: process.version, platform: process.platform, arch: process.arch, runs, browser: process.env.BENCHMARK_BROWSER_PATH || 'playwright default', viewport: '390x780 (scenario), default (cold)', seededDocuments: seeded },
+  stand: { cpuThrottle, node: process.version, platform: process.platform, arch: process.arch, runs, browser: process.env.BENCHMARK_BROWSER_PATH || 'playwright default', viewport: '390x780 (scenario), default (cold)', seededDocuments: seeded },
   methodology: 'Two production builds of the same sources (flag off / on) served by vite preview with the Firestore module swapped for the local emulator; runs interleaved A/B with alternating first position; each cold run is a new browser context; scenario = load hour page, 24 wheel steps down and up at 40 ms, one SPA navigation; frames from requestAnimationFrame deltas.',
   summary,
 };
-const out = path.join(root, 'reports', 'performance', `analytics-web-before-after-${new Date().toISOString().slice(0, 10)}.json`);
+const out = path.join(root, 'reports', 'performance', `analytics-web-before-after-${new Date().toISOString().slice(0, 10)}${cpuThrottle > 1 ? `-cpu${cpuThrottle}x` : ''}.json`);
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
 console.log(JSON.stringify(summary, null, 2));
