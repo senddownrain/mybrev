@@ -84,7 +84,8 @@
     "lectionary:plan": "node scripts/lectionary/plan-options.mjs",
     "db:migrate-priest-grant-proofs": "node scripts/migrate-priest-grant-proofs.mjs",
     "analytics:perf": "firebase emulators:exec --only firestore --project demo-analytics-perf \"node scripts/analytics/perf-compare.mjs\"",
-    "analytics:smoke": "firebase emulators:exec --only firestore --project demo-analytics-smoke \"node scripts/analytics/screens-smoke.mjs\""
+    "analytics:smoke": "firebase emulators:exec --only firestore --project demo-analytics-smoke \"node scripts/analytics/screens-smoke.mjs\"",
+    "test:analytics": "node --test tests/analytics-*.test.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",
