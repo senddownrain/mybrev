@@ -3,7 +3,7 @@
     <div class="prayer-content-area" @click="navigatePrayerLink">
       <article
         class="prayer-reading-surface"
-        :class="{ 'prayer-reading-surface--mass': isMassOrder }"
+        :class="{ 'prayer-reading-surface--mass': isMassOrder, 'prayer-reading-surface--office': officeProfile }"
       >
           <header class="prayer-reading-header">
             <div class="prayer-reading-eyebrow">{{ isMassOrder ? 'Літургія' : 'Малітва' }}</div>
@@ -23,7 +23,16 @@
             </div>
           </header>
 
+          <DevotionalOfficeReader
+            v-if="officeProfile"
+            :text="displayText"
+            :format="textPrayer?.textFormat"
+            :profile="officeProfile"
+            :document-title="displayTitle"
+            class="prayer-office-reader"
+          />
           <div
+            v-else
             ref="prayerTextElement"
             v-html="prayerHtml"
             class="prayer-text"
@@ -83,6 +92,8 @@ import {
 import { buildMassDocument, renderMassBlocks } from '@/utils/massContent';
 import { trackFeature } from '@/utils/trackFeature';
 import MassSectionNav from '@/components/prayers/MassSectionNav.vue';
+import DevotionalOfficeReader from '@/components/prayers/DevotionalOfficeReader.vue';
+import { devotionalOfficeProfile } from '@/utils/devotionalOffice';
 
 const route = useRoute();
 const router = useRouter();
@@ -116,6 +127,11 @@ const massVariantPrayer = computed(() => {
   return prayers.value.find(p => p.id === variant.prayerId) || null;
 });
 const textPrayer = computed(() => massVariantPrayer.value || prayer.value);
+const officeProfile = computed(() => (
+  !isMassOrder.value && prayer.value
+    ? devotionalOfficeProfile(prayer.value, getText(prayer.value), prayer.value.textFormat)
+    : null
+));
 const displayText = computed(() => {
   const variant = massVariant.value;
   if (!variant || variant.prayerId === MASS_ORDER_PRAYER_ID || massVariantPrayer.value) {

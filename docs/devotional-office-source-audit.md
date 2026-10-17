@@ -1,0 +1,88 @@
+# Пять набажэнстваў: аудит источников и граница готовности
+
+Дата: 17 октября 2026. Состояние: **SOURCE ONLY / LIVE PARITY NOT VERIFIED**.
+
+## Проверенные локальные данные
+
+`backups/firestore-snapshot/manifest.json` (27 августа 2026) содержит только `fixedDays`.
+Дополнительный локальный `backups/firestore-snapshot-prayers/manifest.json` (28 августа,
+85 молитв) и сохранённые экспортные копии от 12 октября (85/105 молитв) не содержат
+ни одной из пяти искомых молитв. Квота на чтение production Firestore не
+подтверждена; новый экспорт и live audit не выполнялись. Значения `title`,
+`titleVersions`, `text`, `textVersions`, `textFormat`, `source`, категорий,
+тегов и `updatedAt` опубликованных документов **NOT VERIFIED**.
+
+| Молитва | Локальный источник | Предложенный ID | Live parity |
+| --- | --- | --- | --- |
+| Ютрань за памерлых | `patchs/feasts/common-texts/office-for-dead.json`, `laudes*` | `mybrev-devotion-office-for-dead-laudes` | NOT VERIFIED |
+| Нешпары за памерлых | тот же, `vesper*` | `mybrev-devotion-office-for-dead-vesper` | NOT VERIFIED |
+| Ютрань да Найсвяцейшай Панны Марыі | `patchs/feasts/common-texts/blessed-virgin-mary.json`, `laudes*` | `mybrev-devotion-blessed-virgin-mary-laudes` | NOT VERIFIED |
+| Нешпары да Найсвяцейшай Панны Марыі | тот же, `vesper*` | `mybrev-devotion-blessed-virgin-mary-vesper` | NOT VERIFIED |
+| Гадзінкі аб Беззаганным Зачацці Найсвяцейшай Панны Марыі | пользовательские DOCX/Markdown из предыдущего аудита; разрешённой локальной копии при этой проверке не найдено | неизвестен | NOT VERIFIED |
+
+Эти четыре ID являются **кандидатами из плана импорта**, а не подтверждёнными
+ключами Firestore. В коде их профиль дополнительно ограничен структурой
+Markdown. Пятый ID не подменён title matcher: профиль Гадзінак доступен
+адаптеру для fixture/preview, но не назначается опубликованной молитве до
+проверки реального ID и текста.
+Четыре ключа присутствуют также в `src/utils/analytics/public-inventory.json`,
+но этот список не содержит текстов, времени обновления или подтверждения
+текущего состояния Firestore; пятого ключа там нет.
+
+## Инвентаризация HTML-шаблонов, не опубликованных Markdown-документов
+
+`Ant1–3` и `Ps1–3` — три псальмодийных места. `R` объединяет короткое
+чтение и респонсорий; `AntBen`/`AntMag` — антифон к евангельской песни,
+`Inter` — просьбы, `Pr` — заключительная молитва. В этих JSON нет оснований
+добавлять полный текст «Ойча наш», вступительный диалог, саму евангельскую
+песнь или формулы окончания в статическую молитву.
+
+| Источник | Гімн | Псальмодыя | Чытанне + рэспансорый | Песня з Евангелля | Просьбы | Малітва | Явные варианты |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| умершие, laudes | `laudesHymn` | `laudesAnt1–3`, `laudesPs1–3` | `laudesR` | `laudesAntBen` | `laudesInter` | `laudesPr` | гимн 3 окончания; псалом 3 — 2 парных варианта; молитва 5 обстоятельств |
+| умершие, vesper | `vesperHymn` | `vesperAnt1–3`, `vesperPs1–3` | `vesperR` | `vesperAntMag` | `vesperInter` | `vesperPr` | гимн 3 окончания; респонсорий 2 при общем чтении; молитва 5 обстоятельств |
+| Мария, laudes | `laudesHymn` | `laudesAnt1–3`, `laudesPs1–3` | `laudesR` | `laudesAntBen` | `laudesInter` | `laudesPr` | HTML-разделители: гимн 3, R 3, антифон Benedictus 6, просьбы 3, молитва 11; границы вариантов требуют сверки |
+| Мария, vesper | `vesperHymn` | `vesperAnt1–3`, `vesperPs1–3` | `vesperR` | `vesperAntMag` | `vesperInter` | `vesperPr` | HTML-разделители: просьбы 1, молитва 5; границы вариантов требуют сверки |
+| Гадзінкі | DOCX/Markdown не найден | не применять схему 3 псалмов | не применять автоматически | не применять автоматически | по исходнику | по исходнику | 8 основных частей по предыдущему аудиту; строки не сверены |
+
+### Особые места для сверки по точному полю
+
+- `office-for-dead.laudesHymn`/`vesperHymn`: неизменная часть гимна перед
+  тремя `data-alternative-title`; выбор окончания не должен скрывать общие строфы.
+- `office-for-dead.laudesPs3`: два `data-alternative-title` содержат пары
+  собственного псалма и антифона. Нужна сверка повторной антифоны, чтобы
+  выбранная пара выводилась целиком и один раз.
+- `office-for-dead.vesperR`: одно чтение `1 Кар 15, 55–57`, затем два
+  альтернативных респонсория.
+- `office-for-dead.laudesPr`/`vesperPr`: по пять блоков обстоятельств;
+  именные `N.` и флексии нельзя редактировать в presentation layer.
+- `blessed-virgin-mary.laudesPs1–3`: в шаблоне только `from-first-week`;
+  нужно установить, развёрнуты ли псалмы в опубликованном документе.
+  Если нет, это содержательный blocker и потребует отдельного плана исправления.
+- `blessed-virgin-mary.laudesAntBen`: несколько антифонов к одной неизменной
+  песне; HTML `hr` сам по себе не доказывает, как они импортированы.
+- Поля `Ant*` содержат узкие пробелы U+2005, красные `span` вокруг знаков
+  `*`, `†`, `/` и местами встроенные повторные антифоны в `Ps*`.
+  Редакторский HTML, `data-alternative-title` и `from-first-week` не должны
+  показываться как произносимый текст.
+
+## Release gate
+
+| Молитва | Блоки исходника | Переключатели опубликованного текста | Сохранность опубликованного текста | Preview | 390/320 px, 200%, light/dark |
+| --- | --- | --- | --- | --- | --- |
+| умершие, Ютрань | source mapped | NOT VERIFIED | NOT VERIFIED | code path connected; live NOT TESTED | NOT TESTED |
+| умершие, Нешпары | source mapped | NOT VERIFIED | NOT VERIFIED | code path connected; live NOT TESTED | NOT TESTED |
+| Мария, Ютрань | source mapped; `from-first-week` blocker | NOT VERIFIED | NOT VERIFIED | code path connected; live NOT TESTED | NOT TESTED |
+| Мария, Нешпары | source mapped | NOT VERIFIED | NOT VERIFIED | code path connected; live NOT TESTED | NOT TESTED |
+| Гадзінкі | 8 headings from prior audit only | NOT VERIFIED | NOT VERIFIED | AST fixture only | NOT TESTED |
+
+Выполнен только synthetic unit QA адаптера. Визуальное сравнение с
+календарными Ютранню/Нешпарамі, реальные скриншоты, screen reader и
+полная проверка всех альтернатив остаются **NOT TESTED**. Счётчик
+подтверждённых альтернатив опубликованного текста: **0**.
+
+Нужен точечный разрешённый read-only экспорт пяти документов после подтверждения
+квоты. По каждому следует зафиксировать ID, полные метаданные, хэш текста,
+сопоставление каждого source span с визуальным блоком, все варианты и
+скриншоты reader/preview. До этого новая ветка и PR остаются черновыми;
+PR #127 закрывать нельзя. Firestore не изменялся.
