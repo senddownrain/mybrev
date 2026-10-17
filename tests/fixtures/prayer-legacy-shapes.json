@@ -1,0 +1,13 @@
+{
+  "provenance": "Anonymized structural shapes observed in the 2026-10-12 private snapshot. IDs, titles and authored utterances replaced; delimiters, spacing and block shapes retained. No private prayer text is included.",
+  "examples": [
+    { "kind": "bare-colon", "before": "С.: Пане, пачуй нас.\nН.: Амэн.", "after": "С. Пане, пачуй нас.\nН. Амэн." },
+    { "kind": "bold-label", "before": "**С.:** Пане, пачуй нас.\n**Н.:** Амэн.", "after": "С. Пане, пачуй нас.\nН. Амэн." },
+    { "kind": "emphasized-label", "before": "_К.:_ Пане, пачуй нас.\n*Н.:* Амэн.", "after": "К. Пане, пачуй нас.\nН. Амэн." },
+    { "kind": "emphasized-utterance", "before": "**С.: Пане, пачуй нас.**\n*Н.: Амэн.*", "after": "С. **Пане, пачуй нас.**\nН. *Амэн.*" },
+    { "kind": "named-attribution", "before": "**С. Імя:** *Словы цытаванага апавядання.*", "after": "**С. Імя:** *Словы цытаванага апавядання.*" },
+    { "kind": "roman-section", "before": "**I. Пачатак**\n\n**V. Заканчэнне**", "after": "**I. Пачатак**\n\n**V. Заканчэнне**" },
+    { "kind": "imported-quotation", "before": "> Словы малітвы,\n> наступны радок.\n> _Формула…_\n\n**С.:** Пане, пачуй нас.", "after": "> Словы малітвы,\n> наступны радок.\n> _Формула…_\n\nС. Пане, пачуй нас." },
+    { "kind": "joined-import", "before": "*С.: Словы малітвы,**Усе: Словы адказу!*", "after": "*С.: Словы малітвы,**Усе: Словы адказу!*" }
+  ]
+}

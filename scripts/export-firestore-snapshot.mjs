@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import admin from 'firebase-admin';
@@ -20,6 +20,7 @@ function parseArgs(argv) {
     preferRest: false,
     outputExplicit: false,
     help: false,
+    requireNewOutput: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -31,6 +32,7 @@ function parseArgs(argv) {
     else if (arg === '--service-account') options.serviceAccount = path.resolve(argv[++index]);
     else if (arg === '--project-id') options.projectId = argv[++index];
     else if (arg === '--prefer-rest') options.preferRest = true;
+    else if (arg === '--require-new-output') options.requireNewOutput = true;
     else if (arg === '--collection') options.collections.push(argv[++index]);
     else if (arg === '--help' || arg === '-h') options.help = true;
     else throw new Error(`Unknown argument: ${arg}`);
@@ -51,6 +53,7 @@ Options:
   --project-id <id>         Override Firebase project id
   --collection <path>       Export only this top-level collection (repeatable; requires --output)
   --prefer-rest             Use REST instead of gRPC (needed behind the local proxy)
+  --require-new-output      Refuse existing output or temporary directory
   --help                    Show this message
 
 This creates a private, complete backup under backups/ by default.
@@ -96,6 +99,7 @@ async function exportCollection(collectionRef, output, manifestCollections, { in
   const documents = snapshot.docs.map((document) => ({
     id: document.id,
     data: encodeValue(document.data()),
+    updateTime: encodeValue(document.updateTime),
   }));
   const payload = {
     schemaVersion: SNAPSHOT_SCHEMA_VERSION,
@@ -141,6 +145,12 @@ async function main() {
   assertSafeOutput(options.output);
   if (options.collections.length && !options.outputExplicit) {
     throw new Error('A filtered snapshot requires an explicit --output directory');
+  }
+  if (options.requireNewOutput) {
+    for (const target of [options.output, `${options.output}.tmp`]) {
+      const exists = await access(target).then(() => true, error => { if (error.code === 'ENOENT') return false; throw error; });
+      if (exists) throw new Error('Output already exists; choose a unique new snapshot directory.');
+    }
   }
 
   const serviceAccount = JSON.parse(await readFile(options.serviceAccount, 'utf8'));

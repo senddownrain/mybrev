@@ -39,6 +39,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isDeepStrictEqual } from 'node:util';
 import zlib from 'node:zlib';
+import { firestoreErrorCode, isFirestoreQuotaError } from '../../src/utils/firestoreErrors.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const OT_SOURCE = path.join(ROOT, 'scripts/bible/bible_seed_bel_charniauski.json.gz');
@@ -135,7 +136,7 @@ async function withRetry(label, fn, attempts = 6) {
     try {
       return await fn();
     } catch (err) {
-      if (attempt >= attempts) throw err;
+      if (attempt >= attempts || isFirestoreQuotaError(err) || firestoreErrorCode(err) === 'permission-denied') throw err;
       const delay = 1000 * 2 ** (attempt - 1);
       console.warn(`  ! ${label} failed (${err.code ?? ''} ${err.message}); retry ${attempt}/${attempts - 1} in ${delay} ms`);
       await new Promise((resolve) => setTimeout(resolve, delay));

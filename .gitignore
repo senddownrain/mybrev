@@ -33,6 +33,7 @@ firestore-debug.log
 !/reports/
 /reports/*
 !/reports/prayer-format-audit.md
+!/reports/prayer-format-stage2.md
 /outputs/
 /patchs/serviceAccountKey.json
 

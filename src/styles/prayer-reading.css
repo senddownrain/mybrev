@@ -149,7 +149,7 @@
 
 .prayer-text :deep(.prayer-rubric p) { margin: 0 0 0.45em; }
 .prayer-text :deep(.prayer-rubric p:last-child) { margin-bottom: 0; }
-.prayer-text :deep(.prayer-speaker) { color: var(--rubric-color); font-weight: 700; font-size: inherit; }
+.prayer-text :deep(.prayer-speaker) { color: var(--rubric-color); font-weight: 700; font-size: inherit; font-style: normal; }
 
 .prayer-text :deep(*) {
   max-width: 100% !important;

@@ -2,6 +2,8 @@ import { collection, doc, getDocFromServer, getDocsFromServer, onSnapshot, runTr
 import { getPriestEditorDb } from '@/plugins/priestFirebase';
 import { canonicalPrayerContent, comparablePrayerValue, CONTENT_CONTROL, MAX_ATOMIC_CONTENT_WRITES, PRAYER_STORAGE, prayerStoragePlan } from '@/utils/prayerStoragePlan.mjs';
 import { requestContentRefresh } from '@/utils/publicContentCache';
+import { quotaSafeTransaction } from '@/utils/retry';
+import { noteFirestoreError, withFirestoreQuota } from '@/utils/firestoreErrors.mjs';
 
 const collectionNames = Object.entries(PRAYER_STORAGE).flat();
 const rows = (snapshot) => snapshot.docs.map((item) => ({ ...item.data(), id: item.id }));
@@ -10,10 +12,10 @@ async function readState(db) {
   // All supported writers serialize through one version. Web transactions do
   // not support collection queries, so validate the complete read with it.
   for (let attempt = 0; attempt < 3; attempt++) {
-    const before = await getDocFromServer(doc(db, CONTENT_CONTROL));
+    const before = await withFirestoreQuota(() => getDocFromServer(doc(db, CONTENT_CONTROL)));
     if (before.data()?.lockUid) throw new Error('Міграцыя змесціва працягваецца. Рэдагаванне часова недаступнае.');
-    const collections = new Map(await Promise.all(collectionNames.map(async (name) => [name, rows(await getDocsFromServer(collection(db, name)))])));
-    const after = await getDocFromServer(doc(db, CONTENT_CONTROL));
+    const collections = new Map(await Promise.all(collectionNames.map(async (name) => [name, rows(await withFirestoreQuota(() => getDocsFromServer(collection(db, name))))])));
+    const after = await withFirestoreQuota(() => getDocFromServer(doc(db, CONTENT_CONTROL)));
     if (controlVersion(before) === controlVersion(after) && !after.data()?.lockUid) return { collections, version: controlVersion(after) };
   }
   throw new Error('Змесціва змянілася ў іншай сесіі. Паспрабуйце яшчэ раз.');
@@ -31,7 +33,7 @@ export async function mutatePrayerContent(edit) {
     }
     if (!plan.operations.length) return result;
     try {
-      await runTransaction(db, async (transaction) => {
+      await quotaSafeTransaction(runTransaction, db, async (transaction) => {
         const control = doc(db, CONTENT_CONTROL);
         const current = await transaction.get(control);
         if (controlVersion(current) !== version || current.data()?.lockUid) throw new Error('CONTENT_CONFLICT');
@@ -90,7 +92,7 @@ export function subscribeAdminPrayerContent(callback, onError) {
           lastContent = content;
           for (const item of observers) item.callback(content);
         }
-      }, (error) => { for (const item of observers) item.onError?.(error); }));
+      }, (error) => { noteFirestoreError(error); for (const item of observers) item.onError?.(error); }));
       stop = () => { unsubscribers.forEach((unsubscribe) => unsubscribe()); stop = null; lastContent = null; };
     }).catch((error) => { for (const item of observers) item.onError?.(error); }).finally(() => { pending = null; });
   }

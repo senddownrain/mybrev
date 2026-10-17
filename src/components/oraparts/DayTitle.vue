@@ -95,6 +95,7 @@ import { formatDateLong } from '@/utils/date';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { isSeasonalDateDocumentId } from '@/utils/liturgicalDayResolution';
 import { formatLiturgicalPeriodTitle } from '@/utils/liturgicalPeriodTitle';
+import { formatLiturgicalTitleHtml } from '@/utils/liturgicalTitle';
 import { calculatePsalterWeek, formatPsalterWeekLabel } from '@/utils/liturgicalPsalter';
 
 const props = defineProps({
@@ -129,14 +130,8 @@ const displayTitle = computed(() => {
   return day._title || getPeriodTitle(day);
 });
 
-// Названия дней хранятся в данных и не должны вставляться как произвольный HTML.
-// Разрешаем только <br> для многострочных названий, например праздника Святой Сям'і.
-const displayTitleHtml = computed(() => String(displayTitle.value || '')
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;')
-  .replace(/\\?&lt;br\s*\/?&gt;/gi, '<br>')
-  .replace(/\r?\n/g, '<br>'));
+// Названия дней — текст; разрешаем только явно заданные переносы строк.
+const displayTitleHtml = computed(() => formatLiturgicalTitleHtml(displayTitle.value));
 
 // --- Форматирование даты ---
 // Берем полную дату из параметра URL (:day) и форматируем ее

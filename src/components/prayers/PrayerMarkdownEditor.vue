@@ -123,6 +123,7 @@ import {
   diagnosePrayerMarkdown,
 } from '@/utils/prayerMarkdown';
 import { toggleMarkdownInlineFormat } from '@/utils/markdownInlineFormat';
+import { normalizePrayerLegacyMarkdown, explicitPrayerDirectionLines, prayerLegacyStructure, PRAYER_RULE_LABELS } from '@/utils/prayerLegacyFormatting';
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
@@ -130,6 +131,7 @@ const props = defineProps({
   error: { type: Boolean, default: false },
   prayers: { type: Array, default: () => [] },
   prayersLoading: { type: Boolean, default: false },
+  normalizeLegacy: { type: Boolean, default: true },
 });
 const emit = defineEmits(['update:modelValue']);
 const editorHost = ref(null);
@@ -239,6 +241,13 @@ function addInlineDecorations(line, ranges) {
 function buildVisualDecorations(editorView) {
   const ranges = [];
   let rubricOpen = false;
+  const automaticDirections = new Set(explicitPrayerDirectionLines(editorView.state.doc.toString()));
+  const codeLines = new Set();
+  for (const token of prayerLegacyStructure(editorView.state.doc.toString()).tokens) {
+    if (['fence', 'code_block'].includes(token.type)) {
+      for (let index = token.map[0]; index < token.map[1]; index += 1) codeLines.add(index + 1);
+    }
+  }
   for (const range of prayerSpeakerRanges(editorView.state.doc.toString())) {
     ranges.push(Decoration.mark({ class: 'cm-prayer-speaker', attributes: { 'data-role': range.role } }).range(range.from, range.to));
   }
@@ -246,6 +255,7 @@ function buildVisualDecorations(editorView) {
   for (let number = 1; number <= editorView.state.doc.lines; number += 1) {
     const line = editorView.state.doc.line(number);
     const trimmed = line.text.trim();
+    if (codeLines.has(number)) continue;
 
     if (trimmed === ':::rubric' || trimmed === ':::') {
       ranges.push(Decoration.line({ class: 'cm-rubric-marker-line' }).range(line.from));
@@ -254,7 +264,7 @@ function buildVisualDecorations(editorView) {
       continue;
     }
 
-    if (rubricOpen) {
+    if (rubricOpen || automaticDirections.has(number)) {
       ranges.push(Decoration.line({ class: 'cm-rubric-line' }).range(line.from));
     }
 
@@ -353,7 +363,7 @@ function createEditor() {
           '.cm-visual-heading-3': { fontSize: '1.1em' },
           '.cm-visual-strong': { fontWeight: '750' },
           '.cm-visual-emphasis': { fontStyle: 'italic' },
-          '.cm-prayer-speaker': { color: 'var(--rubric-color)', fontWeight: '700' },
+          '.cm-prayer-speaker': { color: 'var(--rubric-color)', fontWeight: '700', fontStyle: 'normal' },
         }),
       ],
     }),
@@ -418,7 +428,10 @@ function insertRubric() {
 function autoFixMarkdown() {
   if (!view) return;
   const source = view.state.doc.toString();
-  const result = autoFixPrayerMarkdown(source);
+  const technical = autoFixPrayerMarkdown(source);
+  const legacy = props.normalizeLegacy ? normalizePrayerLegacyMarkdown(technical.markdown) : { markdown: technical.markdown, operations: [] };
+  const result = { markdown: legacy.markdown, changed: legacy.markdown !== source,
+    fixes: [...technical.fixes, ...new Set(legacy.operations.map(operation => PRAYER_RULE_LABELS[operation.rule]))] };
 
   if (!result.changed) {
     showEditorNotice('Памылак не знойдзена');
