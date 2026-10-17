@@ -7,52 +7,6 @@ on:
     branches: [main, master]
 
 jobs:
-  office-audit-once:
-    if: github.event_name == 'pull_request' && github.head_ref == 'feat/five-devotions-liturgical-reader'
-    name: Owner-approved one-time public prayers REST audit
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    steps:
-      - name: Read only four candidate IDs and one exact-title query, no credentials, no retries
-        run: |
-          node --input-type=module <<'NODE'
-          import {createHash} from 'node:crypto';
-          const root='https://firestore.googleapis.com/v1/projects/ibreviaryby/databases/(default)/documents';
-          const ids=['mybrev-devotion-office-for-dead-laudes','mybrev-devotion-office-for-dead-vesper','mybrev-devotion-blessed-virgin-mary-laudes','mybrev-devotion-blessed-virgin-mary-vesper'];
-          const name='Гадзінкі аб Беззаганным Зачацці Найсвяцейшай Панны Марыі';
-          let attempts=0,returned=0;
-          const dec=f=>{if(!f)return null;if('stringValue'in f)return f.stringValue;if('timestampValue'in f)return f.timestampValue;if('booleanValue'in f)return f.booleanValue;if('integerValue'in f)return f.integerValue;if('arrayValue'in f)return(f.arrayValue.values||[]).map(dec);if('mapValue'in f)return Object.fromEntries(Object.entries(f.mapValue.fields||{}).map(([k,v])=>[k,dec(v)]));return null};
-          async function request(url,options){
-           attempts++;
-           const r=await fetch(url,{...options,headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(10000)});
-           if(!r.ok)throw new Error('HTTP_'+r.status+' '+(await r.text()).slice(0,120).replace(/[^\x20-\x7e]/g,'?'));
-           return await r.json();
-          }
-          function print(d,label){
-           if(++returned>9)throw Error('HARD_LIMIT');
-           const f=d.fields||{},source=dec(f.text);
-           const v=dec(f.textVersions);
-           const texts={text:typeof source==='string'?source:''};
-           if(v&&typeof v==='object')for(const [k,x] of Object.entries(v)){if(typeof x==='string')texts[k]=x;else if(x&&typeof x==='object'&&typeof x.text==='string')texts[k]=x.text}
-           const summaries=Object.fromEntries(Object.entries(texts).map(([k,s])=>[k,{length:s.length,hash:createHash('sha256').update(s).digest('hex'),heads:s.split(/\r?\n/).filter(y=>/^#{1,4} /u.test(y)).slice(0,25),
-           nonempty:s.split(/\r?\n/).filter(x=>x.trim()).length,rawPlaceholders:(s.match(/from-first-week|data-alternative-title/gu)||[]).length,
-           hasBenedictus:/Благаслаўлёны Пан, Бог Ізраэля/iu.test(s),hasMagnificat:/Велічае душа мая/iu.test(s),hasPater:/Ойча наш/iu.test(s)}]));
-           console.log('AUDIT_RESULT '+JSON.stringify({label,id:d.name.split('/').at(-1),title:dec(f.title),titleVersions:dec(f.titleVersions),textFormat:dec(f.textFormat),updatedAt:dec(f.updatedAt),fields:Object.keys(f).sort(),texts:summaries}));
-          }
-          try{
-           for(const id of ids){
-            let d;
-            try{d=await request(root+'/prayers/'+encodeURIComponent(id))}
-            catch(e){if(e.message.startsWith('HTTP_404')){console.log('AUDIT_MISSING '+id);continue}throw e}
-            print(d,'candidate');
-           }
-           const data={structuredQuery:{from:[{collectionId:'prayers'}],where:{fieldFilter:{field:{fieldPath:'title'},op:'EQUAL',value:{stringValue:name}}},limit:5}};
-           const q=await request(root+':runQuery',{method:'POST',body:JSON.stringify(data)});
-           const docs=q.map(x=>x.document).filter(Boolean);
-           for(const d of docs)print(d,'gadzinki_exact_title');
-           console.log('AUDIT_DONE requests='+attempts+' docs='+returned+' fifth='+docs.length);
-          }catch(e){console.log('AUDIT_ABORT attempts='+attempts+' docs='+returned+' '+e.message.slice(0,150));}
-          NODE
   lint-and-build:
     name: Lint & Build
     runs-on: ubuntu-latest
