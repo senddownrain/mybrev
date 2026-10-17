@@ -91,7 +91,8 @@
     "test:common-seasons": "node --test tests/common-seasons-*.test.mjs",
     "analytics:perf": "firebase emulators:exec --only firestore --project demo-analytics-perf \"node scripts/analytics/perf-compare.mjs\"",
     "analytics:smoke": "firebase emulators:exec --only firestore --project demo-analytics-smoke \"node scripts/analytics/screens-smoke.mjs\"",
-    "test:analytics": "node --test tests/analytics-*.test.mjs"
+    "test:analytics": "node --test tests/analytics-*.test.mjs",
+    "test:analytics-ingest": "node --test experiments/analytics-ingest/test/*.test.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",
