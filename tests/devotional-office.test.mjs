@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   buildDevotionalOfficeDocument, devotionalAntiphon, devotionalOfficeProfile,
   devotionalBlockHtml, devotionalPsalmHeading, devotionalReadingHeading,
@@ -37,9 +38,11 @@ const office = `# Ютрань за памерлых
 
 test('office blocks retain source spans and repeated antiphons', () => {
   const blocks = devotionalSourceBlocks(office, 'mybrev-markdown');
-  const covered = new Set(blocks.flatMap(block => Array.from(
+  const coveredLines = blocks.flatMap(block => Array.from(
     { length: block.span[1] - block.span[0] }, (_, offset) => block.span[0] + offset,
-  )));
+  ));
+  const covered = new Set(coveredLines);
+  assert.equal(coveredLines.length, covered.size, 'source spans do not overlap');
   office.split('\n').forEach((line, index) => {
     if (line.trim()) assert.ok(covered.has(index), `source line ${index + 1} is retained`);
   });
@@ -87,4 +90,29 @@ test('Gadzinki keeps exactly eight ordered parts and nested headings', () => {
   assert.deepEqual(document.sections.map(section => section.title), GADZINKI_PARTS);
   assert.equal(document.sections.flatMap(section => section.blocks).length, document.sourceBlockCount);
   assert.equal(devotionalOfficeProfile({}, source.replace('## Ахвяраванне Гадзінак', '## Іншая частка'), 'mybrev-markdown', 'gadzinki'), null);
+});
+
+test('provided Gadzinki source retains all lines and eight parts when available', {
+  skip: !process.env.MYBREV_GADZINKI_SOURCE,
+}, () => {
+  const source = readFileSync(process.env.MYBREV_GADZINKI_SOURCE, 'utf8');
+  const blocks = devotionalSourceBlocks(source, 'mybrev-markdown');
+  const document = buildDevotionalOfficeDocument(source, 'mybrev-markdown', 'gadzinki');
+  const coveredLines = blocks.flatMap(block => Array.from(
+    { length: block.span[1] - block.span[0] }, (_, offset) => block.span[0] + offset,
+  ));
+  const covered = new Set(coveredLines);
+  assert.equal(coveredLines.length, covered.size, 'source spans do not overlap');
+  source.split('\n').forEach((line, index) => {
+    if (line.trim()) assert.ok(covered.has(index), `source line ${index + 1} is retained`);
+  });
+  assert.equal(devotionalOfficeProfile({}, source, 'mybrev-markdown', 'gadzinki'), 'gadzinki');
+  assert.deepEqual(document.sections.map(section => section.title), GADZINKI_PARTS);
+  assert.equal(document.sections.flatMap(section => section.blocks).length, blocks.length);
+  assert.equal(blocks.length, 118);
+  assert.equal(blocks.filter(block => block.level === 3 && block.text === 'Гімн').length, 7);
+  assert.equal(blocks.filter(block => block.level === 3 && block.text === 'Антыфона').length, 1);
+  assert.ok(source.includes('**К:**'));
+  assert.ok(source.includes('**Молiмся:**'));
+  assert.ok(devotionalBlockHtml(blocks.find(block => block.source.startsWith('**К:**'))).includes('<strong>К:</strong>'));
 });

@@ -65,6 +65,7 @@ const psalmHtml = block => formatPsalmHtml(blockHtml(block));
 .devotional-office__reference { display: block; font-size: .88em; font-weight: 500; letter-spacing: normal; text-transform: none; }
 .devotional-office__separator { border: 0; border-top: 1px solid var(--nav-border); margin: 1.2em 0; }
 .devotional-office__text :deep(p) { margin: 0 0 .8em; }
+.devotional-office[data-office-profile='gadzinki'] .devotional-office__text :deep(p > strong:first-child) { color: var(--rubric-color); }
 .devotional-office :deep(.ora-ant) { color: inherit; }
 .devotional-office :deep(.liturgical-rubric) { color: var(--rubric-color); }
 </style>
