@@ -2,9 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import {
   buildDevotionalOfficeDocument, devotionalAntiphon, devotionalOfficeProfile,
   devotionalBlockHtml, devotionalDisplayItems, devotionalPsalmHeading, devotionalReadingHeading,
+  devotionalSelectedBlocks,
   devotionalSourceBlocks, GADZINKI_PARTS,
 } from '../src/utils/devotionalOffice.js';
 
@@ -255,4 +257,67 @@ test('provided Gadzinki source retains all lines and eight parts when available'
   assert.ok(source.includes('**К:**'));
   assert.ok(source.includes('**Молiмся:**'));
   assert.ok(devotionalBlockHtml(blocks.find(block => block.source.startsWith('**К:**'))).includes('<strong>К:</strong>'));
+});
+
+test('four locally captured published texts retain source and select complete variants', {
+  skip: !process.env.MYBREV_DEVOTIONAL_SOURCE_DIR,
+}, () => {
+  const cases = [
+    ['mybrev-devotion-office-for-dead-laudes', 'laudes', 161, 7, '19d3a887d6e7caf29151db3b7eb702c2533c16e52443bdfc4869cdd53b975d76'],
+    ['mybrev-devotion-office-for-dead-vesper', 'vesper', 131, 7, 'e110cc0e52edc3a8c65fe2635d35af3fcd51cab7b5b2401452f7d992cd420820'],
+    ['mybrev-devotion-blessed-virgin-mary-laudes', 'laudes', 213, 19, '7183b9e3eec3b03a969ac3d4e78ec9a9ca85f9b1e57e58276d3313ecbdcf2919'],
+    ['mybrev-devotion-blessed-virgin-mary-vesper', 'vesper', 128, 6, '286051ada6fc65d6f4ba360db8725329ce87b42147f7658f1c6713a0a405801b'],
+  ];
+  for (const [id, profile, expectedBlocks, expectedOptions, hash] of cases) {
+    const source = readFileSync(join(process.env.MYBREV_DEVOTIONAL_SOURCE_DIR, `${id}.md`), 'utf8');
+    assert.equal(createHash('sha256').update(source).digest('hex'), hash, id);
+    assert.equal(devotionalOfficeProfile({ id }, source, 'mybrev-markdown'), profile, id);
+    const blocks = devotionalSourceBlocks(source, 'mybrev-markdown');
+    const document = buildDevotionalOfficeDocument(source, 'mybrev-markdown', profile);
+    assert.equal(blocks.length, expectedBlocks, id);
+    const owned = document.sections.reduce((count, section) => count + section.blocks.length
+      + (section.alternatives || []).reduce((sum, option) => sum + option.blocks.length, 0), 0);
+    assert.equal(owned, blocks.length, `${id} assigns each source block once`);
+    assert.equal(document.sections.flatMap(section => section.alternatives || []).length, expectedOptions, id);
+    const covered = blocks.flatMap(block => Array.from(
+      { length: block.span[1] - block.span[0] }, (_, offset) => block.span[0] + offset,
+    ));
+    assert.equal(covered.length, new Set(covered).size, `${id} spans do not overlap`);
+    source.split('\n').forEach((line, index) => {
+      if (line.trim() && line.trim() !== ':::rubric' && line.trim() !== ':::') {
+        assert.ok(covered.includes(index), `${id} line ${index + 1} covered`);
+      }
+    });
+    for (const section of document.sections) {
+      for (let selected = 1; selected <= (section.alternatives?.length || 0); selected += 1) {
+        const visible = devotionalSelectedBlocks(section, selected);
+        assert.ok(visible.length > 1, `${id} ${section.title} option ${selected}`);
+        assert.equal(visible[0], section.blocks[0]);
+      }
+    }
+    if (id === 'mybrev-devotion-office-for-dead-laudes') {
+      const psalmody = document.sections.find(section => section.type === 'psalmody');
+      const selected = devotionalSelectedBlocks(psalmody, 1);
+      assert.equal(selected.filter(block => block.kind === 'psalmTitle').length, 3);
+      assert.ok(selected.some(block => block.text === 'Псальм 150'));
+      assert.ok(!selected.some(block => block.text === 'Псальм 146 (145)'));
+      assert.equal(selected.filter(block => block.kind === 'antiphon').length, 6);
+    }
+    if (id === 'mybrev-devotion-office-for-dead-vesper') {
+      const reading = document.sections.find(section => section.type === 'reading');
+      const selected = devotionalSelectedBlocks(reading, 1);
+      assert.equal(selected[1], reading.blocks[1]);
+      assert.equal(selected[2], reading.blocks[2]);
+      assert.notEqual(selected.at(-1), reading.blocks.at(-1));
+    }
+    if (id === 'mybrev-devotion-blessed-virgin-mary-laudes') {
+      const canticle = document.sections.find(section => section.type === 'canticle');
+      const selected = devotionalSelectedBlocks(canticle, 1);
+      const antiphons = selected.filter(block => block.kind === 'antiphon');
+      assert.equal(antiphons.length, 2);
+      assert.equal(antiphons[0].text, antiphons[1].text);
+      assert.equal(selected.filter(block => block.kind === 'text').length,
+        canticle.blocks.filter(block => block.kind === 'text').length);
+    }
+  }
 });

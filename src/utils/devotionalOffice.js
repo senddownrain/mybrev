@@ -235,3 +235,36 @@ export function devotionalDisplayItems(section) {
   }
   return items;
 }
+
+/** Select only the spoken blocks for one complete liturgical configuration. */
+export function devotionalSelectedBlocks(section, selected = 0) {
+  const option = section.alternatives?.[selected - 1];
+  if (!option) return section.blocks;
+  const body = option.blocks.slice(1);
+  if (!body.length) return section.blocks;
+  if (section.type === 'psalmody') {
+    const thirdStart = section.blocks.findIndex(block => block.kind === 'antiphon'
+      && /^3\s*ант\./iu.test(block.text));
+    return thirdStart < 0 ? section.blocks : [...section.blocks.slice(0, thirdStart), ...body];
+  }
+  if (section.type === 'canticle') {
+    const optionText = body.map(block => block.text).join('\n');
+    return section.blocks.map(block => {
+      if (block.kind !== 'antiphon') return block;
+      const antiphon = devotionalAntiphon(block);
+      return antiphon ? {
+        ...block,
+        text: `${antiphon.label}${antiphon.gap}${optionText}`,
+        source: body.map(part => part.source).join('\n\n'),
+        span: [...body[0].span],
+        derivedFrom: body.map(part => part.span),
+      } : block;
+    });
+  }
+  if (section.type === 'reading'
+    && section.blocks[1]?.source === body[0]?.source
+    && section.blocks[2]?.source === body[1]?.source) {
+    return [...section.blocks.slice(0, 3), ...body.slice(2)];
+  }
+  return [section.blocks[0], ...body];
+}
