@@ -325,7 +325,11 @@ const optionRoute = (option) => {
     : (option.contextDiocese && option.contextDiocese !== ordoDiocese.value ? option.contextDiocese : '');
   const query = {
     ...(diocese ? { diocese } : {}),
-    ...(route.query.view === 'reference' ? { view: 'reference', ...(route.query.reference ? { reference: route.query.reference } : {}) } : {}),
+    ...(route.query.view === 'reference' ? {
+      view: 'reference',
+      ...(route.query.option ? { option: route.query.option } : {}),
+      ...(route.query.reference ? { reference: route.query.reference } : {}),
+    } : {}),
   };
   return Object.keys(query).length ? { path, query } : path;
 };
