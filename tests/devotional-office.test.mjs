@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import {
   buildDevotionalOfficeDocument, devotionalAntiphon, devotionalOfficeProfile,
-  devotionalBlockHtml, devotionalPsalmHeading, devotionalReadingHeading,
+  devotionalBlockHtml, devotionalDisplayItems, devotionalPsalmHeading, devotionalReadingHeading,
   devotionalSourceBlocks, GADZINKI_PARTS,
 } from '../src/utils/devotionalOffice.js';
 
@@ -67,11 +68,147 @@ test('office document assigns every source block exactly once', () => {
   const document = buildDevotionalOfficeDocument(office, 'mybrev-markdown', 'laudes');
   assert.equal(document.sections.flatMap(section => section.blocks).length, document.sourceBlockCount);
   assert.ok(document.sections.some(section => section.type === 'psalmody'));
-  assert.ok(document.sections.some(section => section.type === 'responsory'));
-  assert.equal(devotionalOfficeProfile({ id: 'mybrev-devotion-office-for-dead-laudes' }, office, 'mybrev-markdown'), 'laudes');
+  assert.ok(document.sections.some(section => section.type === 'reading' && section.blocks.some(block => block.kind === 'responseTitle')));
+  assert.equal(devotionalOfficeProfile({ id: 'mybrev-devotion-office-for-dead-laudes' }, office, 'mybrev-markdown'), null);
   assert.equal(devotionalOfficeProfile({ id: 'unrelated' }, office, 'mybrev-markdown'), null);
   assert.equal(devotionalOfficeProfile({ id: 'mybrev-devotion-office-for-dead-vesper' }, office, 'mybrev-markdown'), null);
   assert.equal(devotionalOfficeProfile({ id: 'mybrev-devotion-office-for-dead-laudes' }, '# Ютрань\nЗвычайная малітва', 'mybrev-markdown'), null);
+});
+
+const publishedShape = canticle => `# Малітва
+## Пачатак
+Пане, адкрый мае вусны.
+## Гімн
+Агульныя строфы.
+## Псальмодыя
+1 ант. Антыфона перад.
+### Псальм 121 (120)
+Першая страфа * адказ.
+
+Другая страфа † адказ.
+1 ант. Антыфона пасля.
+## Кароткае чытанне і рэспансорый
+Кароткае чытанне 1 Кар 15, 55–57
+Тэкст чытання.
+Кароткі рэспансорый
+К. Адказ. Н. Амэн.
+## ${canticle}
+Ант. да песні ${canticle.includes('Захарыі') ? 'Захарыі' : 'Марыі'}: Перад.
+Тэкст песні * адказ.
+Ант. да песні ${canticle.includes('Захарыі') ? 'Захарыі' : 'Марыі'}: Пасля.
+## Просьбы
+Прашэнне і адказ.
+## Ойча наш
+Ойча наш.
+## Малітва
+Заключная малітва.
+## Завяршэнне
+Благаслаўленне.
+## Іншыя варыянты частак Гадзіны
+### За адну памерлую
+Варыянт малітвы.`;
+
+test('all five confirmed IDs gate on observed section structure', () => {
+  for (const id of ['mybrev-devotion-office-for-dead-laudes', 'mybrev-devotion-blessed-virgin-mary-laudes']) {
+    assert.equal(devotionalOfficeProfile({ id }, publishedShape('Песня Захарыі (Лк 1, 68–79)'), 'mybrev-markdown'), 'laudes');
+    assert.equal(devotionalOfficeProfile({ id }, publishedShape('Песня Марыі (Лк 1, 46–55)'), 'mybrev-markdown'), null);
+  }
+  for (const id of ['mybrev-devotion-office-for-dead-vesper', 'mybrev-devotion-blessed-virgin-mary-vesper']) {
+    assert.equal(devotionalOfficeProfile({ id }, publishedShape('Песня Марыі (Лк 1, 46–55)'), 'mybrev-markdown'), 'vesper');
+    assert.equal(devotionalOfficeProfile({ id }, publishedShape('Песня Захарыі (Лк 1, 68–79)'), 'mybrev-markdown'), null);
+  }
+  const gadzinki = GADZINKI_PARTS.map(part => `## ${part}\nТэкст часткі.`).join('\n');
+  assert.equal(devotionalOfficeProfile({ id: 'catholicby-yearcycle-100116' }, gadzinki, 'mybrev-markdown'), 'gadzinki');
+  assert.equal(devotionalOfficeProfile({ id: 'unrelated' }, gadzinki, 'mybrev-markdown'), null);
+});
+
+test('real office headings form sections; one psalm body keeps all strophes', () => {
+  const source = publishedShape('Песня Захарыі (Лк 1, 68–79)');
+  const document = buildDevotionalOfficeDocument(source, 'mybrev-markdown', 'laudes');
+  assert.deepEqual(document.sections.slice(1).map(section => section.title), [
+    'Пачатак', 'Гімн', 'Псальмодыя', 'Кароткае чытанне і рэспансорый',
+    'Песня Захарыі (Лк 1, 68–79)', 'Просьбы', 'Ойча наш', 'Малітва',
+    'Завяршэнне', 'Іншыя варыянты частак Гадзіны',
+  ]);
+  const psalm = document.sections.find(section => section.type === 'psalmody');
+  const items = devotionalDisplayItems(psalm);
+  assert.equal(items.filter(item => item.kind === 'psalmBody').length, 1);
+  assert.ok(items.find(item => item.kind === 'psalmBody').source.includes('Другая страфа'));
+  assert.equal(items.filter(item => item.kind === 'antiphon').length, 2);
+  const canticle = document.sections.find(section => section.type === 'canticle');
+  const canticleItems = devotionalDisplayItems(canticle);
+  assert.equal(canticleItems.filter(item => item.kind === 'antiphon').length, 2);
+  assert.equal(canticleItems.filter(item => item.kind === 'psalmBody').length, 1);
+  assert.ok(document.sections.find(section => section.type === 'alternatives')
+    .blocks.some(block => block.text === 'За адну памерлую'));
+  assert.equal(document.sections.flatMap(section => section.blocks).length, document.sourceBlockCount);
+  assert.equal(devotionalReadingHeading('Кароткае чытанне і рэспансорый'), null);
+});
+
+test('observed alternative headings attach to the matching part without losing blocks', () => {
+  const alternatives = [
+    ['Гімн — За адну памерлую', 'hymn'],
+    ['Трэці псальм — Псальм 150', 'psalmody'],
+    ['Чытанне і рэспансорый — Гал 4, 4-5', 'reading'],
+    ['Антыфона да песні Захарыі — Варыянт 2', 'canticle'],
+    ['Просьбы — Варыянт 2', 'intercessions'],
+    ['Малітва — Варыянт 2', 'prayer'],
+  ];
+  const source = publishedShape('Песня Захарыі (Лк 1, 68–79)').replace(
+    '### За адну памерлую\nВарыянт малітвы.',
+    alternatives.map(([title], index) => `### ${title}\nВарыянт ${index + 1}.`).join('\n'),
+  );
+  const document = buildDevotionalOfficeDocument(source, 'mybrev-markdown', 'laudes');
+  for (const [title, type] of alternatives) {
+    assert.ok(document.sections.find(section => section.type === type)
+      .alternatives.some(option => option.title === title));
+  }
+  const assigned = document.sections.reduce((total, section) => total + section.blocks.length
+    + (section.alternatives || []).reduce((count, option) => count + option.blocks.length, 0), 0);
+  assert.equal(assigned, document.sourceBlockCount);
+});
+
+test('every alternative heading recorded by the five-document audit has a target', () => {
+  const cases = [
+    ['Песня Захарыі (Лк 1, 68–79)', [
+      'Гімн — За адну памерлую', 'Гімн — За некалькіх',
+      'Трэці псальм — Псальм 150',
+      'Малітва — За аднаго памерлага або адну памерлую — 2',
+      'Малітва — За аднаго памерлага або адну памерлую — 3',
+      'Малітва — За некалькіх', 'Малітва — За братоў, блізкіх і дабрадзеяў',
+    ]],
+    ['Песня Марыі (Лк 1, 46–55)', [
+      'Гімн — За адну памерлую', 'Гімн — За некалькіх',
+      'Чытанне і рэспансорый — У міласэрнасці сваёй, Пане',
+      'Малітва — За аднаго памерлага або адну памерлую — 2',
+      'Малітва — За аднаго памерлага або адну памерлую — 3',
+      'Малітва — За некалькіх', 'Малітва — За братоў, блізкіх і дабрадзеяў',
+    ]],
+    ['Песня Захарыі (Лк 1, 68–79)', [
+      'Гімн — О Святая Валадарка · 2',
+      'Гімн — О Ты, што святлом незвычайным яснееш',
+      'Гімн — Вітай, Зорка мора',
+      ...[2, 3, 4, 5, 6, 7].map(number => `Антыфона да песні Захарыі — Варыянт ${number}`),
+      'Чытанне і рэспансорый — Гал 4, 4-5',
+      'Чытанне і рэспансорый — Ап 12, 1',
+      ...[2, 3, 4].map(number => `Просьбы — Варыянт ${number}`),
+      'Малітва — Варыянт 2',
+    ]],
+    ['Песня Марыі (Лк 1, 46–55)', [
+      'Просьбы — Варыянт 2',
+      ...[2, 3, 4, 5, 6].map(number => `Малітва — Варыянт ${number}`),
+    ]],
+  ];
+  for (const [canticle, names] of cases) {
+    const source = publishedShape(canticle).replace(
+      '### За адну памерлую\nВарыянт малітвы.',
+      names.map(name => `### ${name}\nТэкст варыянту.`).join('\n'),
+    );
+    const document = buildDevotionalOfficeDocument(source, 'mybrev-markdown',
+      canticle.includes('Захарыі') ? 'laudes' : 'vesper');
+    const mapped = document.sections.flatMap(section => section.alternatives || []);
+    assert.deepEqual(mapped.map(option => option.title).sort(), [...names].sort());
+  }
 });
 
 test('Gospel canticle antiphon label is separate and markup is escaped', () => {
@@ -110,6 +247,9 @@ test('provided Gadzinki source retains all lines and eight parts when available'
   assert.deepEqual(document.sections.map(section => section.title), GADZINKI_PARTS);
   assert.equal(document.sections.flatMap(section => section.blocks).length, blocks.length);
   assert.equal(blocks.length, 118);
+  assert.equal(source.split(/\r?\n/u).filter(line => line.trim()).length, 281);
+  assert.equal(createHash('sha256').update(source.replace(/\r?\n$/u, '')).digest('hex'),
+    'e8c6693e882538a129a77d6439111f5b28719f6ba534df2fc70ffd4eba07784b');
   assert.equal(blocks.filter(block => block.level === 3 && block.text === 'Гімн').length, 7);
   assert.equal(blocks.filter(block => block.level === 3 && block.text === 'Антыфона').length, 1);
   assert.ok(source.includes('**К:**'));

@@ -93,7 +93,7 @@ import { buildMassDocument, renderMassBlocks } from '@/utils/massContent';
 import { trackFeature } from '@/utils/trackFeature';
 import MassSectionNav from '@/components/prayers/MassSectionNav.vue';
 import DevotionalOfficeReader from '@/components/prayers/DevotionalOfficeReader.vue';
-import { devotionalOfficeProfile } from '@/utils/devotionalOffice';
+import { DEVOTIONAL_OFFICE_PROFILES, devotionalOfficeProfile } from '@/utils/devotionalOffice';
 
 const route = useRoute();
 const router = useRouter();
@@ -132,6 +132,13 @@ const officeProfile = computed(() => (
     ? devotionalOfficeProfile(prayer.value, getText(prayer.value), prayer.value.textFormat)
     : null
 ));
+const warnedOfficeIds = new Set();
+watch([prayer, officeProfile], ([candidate, profile]) => {
+  if (!candidate || profile || !DEVOTIONAL_OFFICE_PROFILES[candidate.id]
+    || !String(getText(candidate) || '').trim() || warnedOfficeIds.has(candidate.id)) return;
+  warnedOfficeIds.add(candidate.id);
+  logger.warn(`[PrayerView] Office structure mismatch for ${candidate.id}; using the standard prayer reader.`);
+}, { immediate: true });
 const displayText = computed(() => {
   const variant = massVariant.value;
   if (!variant || variant.prayerId === MASS_ORDER_PRAYER_ID || massVariantPrayer.value) {
