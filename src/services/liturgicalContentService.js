@@ -26,6 +26,11 @@ export async function fetchContentForDate(mDate, context, dynamicFeastCodes = []
     }),
     getLiturgicalTemplates(),
   ]);
+  if (resolved.periodOnly && resolved.primary.kind === 'temporal' && daysResult.seasonalDateDay) {
+    // Date-based seasonal texts remain their own source on octave dates too.
+    daysResult.periodDays = [daysResult.seasonalDateDay];
+    daysResult.periodFallback = daysResult.seasonalDateDay;
+  }
   const allDays = [
     ...daysResult.periodDays,
     ...daysResult.fixedDateDays,

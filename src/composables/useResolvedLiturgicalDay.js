@@ -101,7 +101,7 @@ export function useResolvedLiturgicalDay() {
     }
   }
 
-  watch([() => route.params.day, () => route.params.id], load, { immediate: true });
+  watch([() => route.params.day, () => route.params.id, () => route.query.reference, () => route.query.diocese, () => route.query.view], load, { immediate: true });
   return {
     day,
     context: computed(() => context.value),

@@ -16,7 +16,7 @@
         </div>
         <h1 v-html="displayTitleHtml"></h1>
         <div class="day-title-hero__footer">
-          <span class="day-title-hero__date">
+          <span v-if="formattedDate" class="day-title-hero__date">
             <v-icon icon="mdi-calendar-blank-outline" size="17"></v-icon>
             {{ formattedDate }}
           </span>
@@ -32,8 +32,8 @@
         </div>
         <h1 v-html="displayTitleHtml"></h1>
         <div class="day-title-standard__meta">
-          <span class="day-title-standard__marker" aria-hidden="true"></span>
-          <span>{{ formattedDate }}</span>
+          <span v-if="formattedDate" class="day-title-standard__marker" aria-hidden="true"></span>
+          <span v-if="formattedDate">{{ formattedDate }}</span>
           <span v-if="dayMeta" class="day-title-standard__rank">{{ dayMeta }}</span>
         </div>
       </div>
@@ -141,6 +141,7 @@ const displayTitleHtml = computed(() => String(displayTitle.value || '')
 // --- Форматирование даты ---
 // Берем полную дату из параметра URL (:day) и форматируем ее
 const formattedDate = computed(() => {
+  if (route.query.view === 'reference') return '';
   if (!route.params.day) return '';
   // Используем массив форматов для надежности, как мы делали раньше
   const mDate = moment(route.params.day, ['YYYY-MM-DD', 'DD-MM-YYYY']);

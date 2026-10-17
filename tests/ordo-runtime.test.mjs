@@ -16,7 +16,33 @@ import { generateLiturgicalYear } from '../src/utils/ordo/index.js';
 import {
   buildYearOptions, compareStoredYearOptions, getGeneratableYears, isSupportedOrdoYear,
 } from '../src/utils/liturgicalMovableDates.js';
-import { daysFixture } from './helpers/ordo-days-fixture.mjs';
+import { daysFixture, templatesFixture } from './helpers/ordo-days-fixture.mjs';
+import { celebrationTextContext } from '../src/utils/ordoScreen.js';
+
+test('reference texts retain their own prayer and all Common choices in every diocese', () => {
+  for (const [date, id, docId] of [
+    ['2026-12-06', 'sv-nicholas', '06-12-sv-nicholas'],
+    ['2026-03-17', 'sv-patryk', '17-03-sv-patryk'],
+  ]) {
+    const proper = JSON.parse(readFileSync(new URL(`../patchs/db-feasts/${docId}.json`, import.meta.url), 'utf8'));
+    for (const diocese of ['minsk-mohilev', 'grodno', 'pinsk', 'vitebsk']) {
+      const resolved = celebrationTextContext(date, id, { diocese });
+      const { context, daysResult } = daysFixture(resolved);
+      const built = buildOrdoDayOptions({ resolved, context, date, diocese, templates: templatesFixture(), daysResult: {
+        ...daysResult, properDays: [{ ...proper, id: docId }],
+      } });
+      const option = built.dayOptions.find((item) => item.ordo.optionId === id);
+      assert.ok(option, `${id} ${diocese}`);
+      assert.equal(option.ordo.optionId, id);
+      assert.ok(option.templates.some((item) => item.choice === 'current-day'));
+      assert.ok(option.templates.some((item) => item.choice === 'pastors'));
+      for (const template of option.templates) {
+        assert.deepEqual(template.day.laudesPr, proper.laudesPr || proper.officeOfReadingsPr, `${id} ${diocese} ${template.id}`);
+        assert.equal(template.day._celebrationId, id);
+      }
+    }
+  }
+});
 
 const DIOCESES = ['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno'];
 

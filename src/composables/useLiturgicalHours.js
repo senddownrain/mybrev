@@ -21,6 +21,7 @@ export function provideLiturgicalHours() {
   watch(dateParam, async (date) => {
     const current = ++sequence;
     tomorrowContent.value = null;
+    if (route.query.reference || route.query.view === 'period') return;
     try {
       const content = await getLiturgicalContentForDate(moment(date, 'YYYY-MM-DD').add(1, 'day').toDate());
       if (current === sequence) tomorrowContent.value = content;

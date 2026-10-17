@@ -1,9 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   buildAdventDateOptions,
   buildChristmasDateOptions,
 } from '../src/utils/liturgicalPicker.js';
+
+test('period selection emits the reader directly without an intermediate options list', () => {
+  const picker = readFileSync(new URL('../src/components/liturgical/PeriodPicker.vue', import.meta.url), 'utf8');
+  const template = picker.split('<script setup>')[0];
+  assert.doesNotMatch(template, /result-card|result-list|варыянты|readingCount/);
+  assert.match(picker, /fetchReadingsByDate\(date, \{ periodOnly: true \}\)/);
+  assert.match(picker, /getLiturgicalContentForDate\(date, currentOrdoDiocese\(\), \{ periodOnly: true \}\)/);
+  assert.match(picker, /emit\('day-selected', \{ dayId: option\.dayId, date, periodOnly: true/);
+  for (const file of ['components/oraparts/DayTitle.vue', 'components/readings/ReadingsView.vue', 'components/liturgical/FeastsPicker.vue']) {
+    assert.doesNotMatch(readFileSync(new URL(`../src/${file}`, import.meta.url), 'utf8'), /Апорная дата|Даведачны рэжым|Прагляд тэкстаў, а не/);
+  }
+});
 
 test('offers every privileged Advent date from 17 through 24 December', () => {
   const dates = buildAdventDateOptions(2026);

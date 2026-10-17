@@ -142,7 +142,7 @@ import {
   getLiturgicalTheme,
 } from '@/constants/liturgical';
 import { formatDateDayMonth } from '@/utils/date';
-import { effectiveOrdoDioceses, ordoDiocese } from '@/utils/ordoDiocese';
+import { effectiveOrdoDioceses, normalizeOrdoDiocese, ordoDiocese } from '@/utils/ordoDiocese';
 import { unionDayOptions } from '@/utils/dayOptionsUnion';
 
 const route = useRoute();
@@ -228,7 +228,8 @@ let _currentFetchId = 0;
 
 // One diocese: its legal options. Several (Settings): the union of each
 // diocese's options (`unionDayOptions`), every one opened in its diocese.
-const dioceses = computed(() => effectiveOrdoDioceses.value);
+const dioceses = computed(() => route.query.view === 'reference'
+  ? [normalizeOrdoDiocese(route.query.diocese || ordoDiocese.value)] : effectiveOrdoDioceses.value);
 const unite = (results) => (results.length > 1
   ? unionDayOptions(results, { primary: ordoDiocese.value })
   : (results[0]?.dayOptions || []));
@@ -320,8 +321,13 @@ const optionRoute = (option) => {
   const targetId = option.dayId || `missing-${option.key}`;
   const path = `/day/${currentDate.value.format('YYYY-MM-DD')}/ora/${targetId}`;
   // An option of another selected diocese opens in that diocese's context.
-  const diocese = option.contextDiocese && option.contextDiocese !== ordoDiocese.value ? option.contextDiocese : '';
-  return diocese ? { path, query: { diocese } } : path;
+  const diocese = route.query.view === 'reference' ? dioceses.value[0]
+    : (option.contextDiocese && option.contextDiocese !== ordoDiocese.value ? option.contextDiocese : '');
+  const query = {
+    ...(diocese ? { diocese } : {}),
+    ...(route.query.view === 'reference' ? { view: 'reference', ...(route.query.reference ? { reference: route.query.reference } : {}) } : {}),
+  };
+  return Object.keys(query).length ? { path, query } : path;
 };
 
 const isOfficeForDead = (option) => (

@@ -5,28 +5,11 @@
       <h1>Знайсці дзень</h1>
       <p>
         Выберыце месца ў літургічным годзе або канкрэтнае свята.
-        <span v-if="readingMode">Адкрыем чытанні для знойдзенай даты.</span>
+        <span v-if="readingMode">Адкрыем чытанні выбранага святкавання.</span>
       </p>
     </header>
 
     <section class="picker-controls" aria-label="Налады пошуку">
-      <div class="year-control">
-        <div>
-          <span class="control-label">Каляндарны год</span>
-          <strong>{{ selectedYear }}</strong>
-        </div>
-        <v-select
-          v-model="selectedYear"
-          :items="availableYears"
-          variant="solo"
-          flat
-          hide-details
-          density="compact"
-          aria-label="Выбраць каляндарны год"
-          class="year-select"
-        />
-      </div>
-
       <div class="mode-note" :class="{ 'mode-note--readings': readingMode }">
         <PhBookOpenText v-if="readingMode" :size="20" />
         <PhHandsPraying v-else :size="20" />
@@ -73,9 +56,8 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useCalendarStore } from '@/stores/calendar';
 import PeriodPicker from '@/components/liturgical/PeriodPicker.vue';
 import FeastsPicker from '@/components/liturgical/FeastsPicker.vue';
 import moment from '@/utils/moment-be';
@@ -88,11 +70,8 @@ import {
 
 const route = useRoute();
 const router = useRouter();
-const calendarStore = useCalendarStore();
-
-const selectedYear = ref(new Date().getFullYear());
+const selectedYear = new Date().getFullYear();
 const activeTab = ref('period');
-const availableYears = ref([]);
 const readingMode = computed(() => route.query.mode === 'readings');
 
 watch(
@@ -103,19 +82,17 @@ watch(
   { immediate: true },
 );
 
-onMounted(async () => {
-  const currentYear = new Date().getFullYear();
-  const years = await calendarStore.getAvailableYears();
-  availableYears.value = [...new Set([currentYear, ...years])].sort((a, b) => b - a);
-  selectedYear.value = availableYears.value.includes(currentYear)
-    ? currentYear
-    : availableYears.value[0];
-});
-
-function openSelection({ dayId, date, optionId, diocese }) {
+function openSelection({ dayId, date, optionId, diocese, referenceOnly, periodOnly }) {
+  if (periodOnly && date) {
+    const query = { view: 'period', ...(diocese ? { diocese } : {}) };
+    router.push(readingMode.value
+      ? { name: 'ReadingsByDate', params: { date }, query }
+      : { name: 'oras', params: { day: date, id: dayId }, query });
+    return;
+  }
   // «Па свяце»: the celebration itself (its Office / its readings, its diocese).
   if (optionId && date) {
-    const query = { option: optionId, ...(diocese ? { diocese } : {}) };
+    const query = { option: optionId, view: 'reference', ...(referenceOnly ? { reference: optionId } : {}), ...(diocese ? { diocese } : {}) };
     router.push(readingMode.value
       ? { name: 'ReadingsByDate', params: { date }, query }
       : { name: 'SelectedDay', params: { day: date }, query });
@@ -194,7 +171,7 @@ function openSelection({ dayId, date, optionId, diocese }) {
 
 .picker-controls {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: 1fr;
   gap: 10px;
   margin-bottom: 12px;
 }

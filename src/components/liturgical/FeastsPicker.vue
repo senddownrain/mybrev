@@ -42,7 +42,7 @@
     <template v-else-if="filteredFeasts.length">
       <div class="list-summary">
         <span>{{ resultCountLabel }}</span>
-        <span>у {{ year }} годзе</span>
+        <span>Статус на {{ year }} год</span>
       </div>
 
       <div class="feast-list">
@@ -51,7 +51,8 @@
           :key="feast.key"
           type="button"
           class="feast-row"
-          :disabled="!canOpenFeast(feast)"
+          :class="{ 'day-option--themed': feast.theme }"
+          :style="feast.theme ? { '--option-color': feast.theme.color, '--option-rgb': feast.theme.rgb } : {}"
           @click="selectFeast(feast)"
         >
           <div class="date-tile" :class="{ 'date-tile--dynamic': feast.isDynamic }">
@@ -65,11 +66,13 @@
               <PhCalendarDots v-else :size="14" />
               {{ feast.isDynamic ? 'Рухомае' : 'Нерухомае' }}
             </div>
-            <h3>{{ feast.title }}</h3>
+            <h3>
+              <i v-if="feast.colorLabel" class="color-dot" :style="{ '--dot': feast.swatch }" :aria-label="feast.colorLabel" role="img" />
+              {{ feast.title }}
+            </h3>
             <div class="feast-meta">
               <span v-if="feast.rankLabel" class="rank-badge">{{ feast.rankLabel }}</span>
               <span v-if="feast.colorLabel">
-                <i class="feast-color" :style="{ backgroundColor: feast.swatch }" aria-hidden="true" />
                 {{ feast.colorLabel }}
               </span>
               <span v-for="place in feast.placeLabels" :key="place" class="place-badge">
@@ -78,12 +81,9 @@
               <span v-if="feast.variantCount > 1">{{ feast.variantCount }} варыянты</span>
             </div>
             <div v-if="feast.statusLabel" class="feast-status">{{ feast.statusLabel }}</div>
-            <div v-else-if="!canOpenFeast(feast)" class="feast-status">
-              {{ mode === 'readings' ? 'Чытанні гэтага свята не дазволены' : 'Літургічныя гадзіны гэтага свята не дазволены' }}
-            </div>
           </div>
 
-          <span v-if="canOpenFeast(feast)" class="open-button" :title="openLabel">
+          <span class="open-button" :title="openLabel">
             <PhBookOpenText v-if="mode === 'readings'" :size="19" />
             <PhArrowRight v-else :size="19" />
           </span>
@@ -105,8 +105,9 @@
 <script setup>
 import { computed, ref } from 'vue';
 import moment from '@/utils/moment-be';
-import { colorInfo, ORDO_COLORS, ORDO_FILTER_DIOCESES, yearCelebrations } from '@/utils/ordoScreen';
+import { celebrationViewDate, colorInfo, ORDO_COLORS, ORDO_FILTER_DIOCESES, yearCelebrations } from '@/utils/ordoScreen';
 import { ordoDiocese } from '@/utils/ordoDiocese';
+import { getLiturgicalTheme, liturgicalVisual, visualStamp } from '@/constants/liturgical';
 import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import {
   PhArrowRight,
@@ -143,13 +144,15 @@ const openLabel = computed(() => (
 
 /**
  * Search all four diocesan calendars without changing Settings. Presence
- * comes from definitions; permission and the opening date come from Ordo.
+ * comes from definitions; the calendar status comes from Ordo.
  */
 const preparedFeasts = computed(() => (ordoCalendarEpoch.value, yearCelebrations(props.year, ORDO_FILTER_DIOCESES))
   .map((item) => {
     // A fixed nominal 29 February remains displayable in a non-leap year.
     const date = moment(item.movable ? item.date : `2000-${item.date.slice(5)}`, 'YYYY-MM-DD', true);
     const color = ORDO_COLORS[item.color] ? colorInfo(item.color) : null;
+    const option = { color: item.color, category: item.category, rank: item.rankKey };
+    const visual = liturgicalVisual(option);
     const feast = {
       ...item,
       id: item.optionId,
@@ -162,6 +165,7 @@ const preparedFeasts = computed(() => (ordoCalendarEpoch.value, yearCelebrations
       monthLabel: date.isValid() ? date.format('MMM').replace('.', '') : 'рухомае',
       colorLabel: color?.label || '',
       swatch: color?.swatch || '',
+      theme: visual ? getLiturgicalTheme(visualStamp(option)) : null,
       variantCount: 1,
     };
     feast.searchText = buildSearchText(feast, date);
@@ -196,18 +200,16 @@ function buildSearchText(feast, date) {
 }
 
 
-function canOpenFeast(feast) {
-  return Boolean(feast.calendarDate && (props.mode === 'readings' ? feast.readingsAllowed : feast.hoursAllowed));
-}
-
 function selectFeast(feast) {
-  if (!canOpenFeast(feast)) return;
+  const diocese = feast.dioceses.includes(ordoDiocese.value) ? ordoDiocese.value : feast.dioceses[0];
+  const date = celebrationViewDate(feast.optionId, props.year, { diocese, mode: props.mode });
   // The celebration's identity travels, not a `days` document id: Hours open
   // its Office, Readings its readings, in the diocese that keeps it.
   emit('feast-selected', {
     optionId: feast.optionId,
-    date: feast.calendarDate,
-    diocese: feast.dioceses.includes(ordoDiocese.value) ? ordoDiocese.value : feast.dioceses[0],
+    date: date || feast.calendarDate || feast.sourceDate || feast.date,
+    diocese,
+    referenceOnly: !date,
   });
 }
 
@@ -347,14 +349,35 @@ function resetFilters() {
   transform: scale(0.985);
 }
 
-.feast-row:disabled { cursor: default; }
-.feast-row:disabled:active { transform: none; }
-
-.feast-color {
-  width: 10px;
-  height: 10px;
-  border: 1px solid var(--nav-muted);
+.color-dot {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: -2px;
+  border: 1px solid rgba(0, 0, 0, .18);
   border-radius: 50%;
+  background: var(--dot);
+}
+
+:global(.v-theme--dark) .color-dot { border-color: rgba(255, 255, 255, .28); }
+
+/* Same accents and card treatment as ItemsList's celebration cards. */
+.day-option--themed {
+  --option-visible-color: color-mix(in srgb, var(--option-color) var(--period-accent-weight), var(--period-accent-target));
+  border-color: rgba(var(--option-rgb), 0.28);
+  background:
+    linear-gradient(120deg, rgba(var(--option-rgb), 0.14), rgba(var(--option-rgb), 0.025) 72%),
+    var(--nav-surface);
+}
+
+.day-option--themed:hover { border-color: rgba(var(--option-rgb), 0.42); }
+
+.day-option--themed .date-tile,
+.day-option--themed .open-button {
+  border: 1px solid rgba(var(--option-rgb), 0.22);
+  background: rgba(var(--option-rgb), 0.14);
+  color: var(--option-visible-color);
 }
 
 .feast-status {

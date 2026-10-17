@@ -12,11 +12,89 @@ import {
   announcesOtherDate, buildMonthOverview, getOrdoYear, groupOrdoNotes, listCalendarCelebrations,
   NOTE_GROUPS, buildDayUnion, buildMonthUnion, legalColors, massSummary, normalizeDioceseFilter, noteAppliesToYear,
   officeDirections, ordoMonthRoute, ordoRouteFor, parseOrdoMonth, parseOrdoRouteDate, resolveOrdoDay, shiftOrdoMonth,
-  suppressionReason, yearCelebrations, ORDO_FILTER_DIOCESES,
+  suppressionReason, yearCelebrations, ORDO_FILTER_DIOCESES, celebrationViewDate, celebrationTextContext, periodTextContext,
 } from '../src/utils/ordoScreen.js';
+import { planReadings } from '../src/utils/ordo/runtime.js';
+import { orderReadingsByPlan } from '../src/utils/ordo/readingsPlan.js';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (path) => readFileSync(join(root, path), 'utf8');
+
+test('period reader opens its temporal position even under an obligatory saint, without changing Ordo', () => {
+  const canonical = resolveOrdoDay('2026-01-21', { diocese: 'minsk-mohilev' });
+  const original = JSON.stringify(canonical);
+  assert.equal(canonical.primary.id, 'sv-agnes');
+  const period = periodTextContext('2026-01-21', { diocese: 'minsk-mohilev' });
+  assert.equal(period.primary.id, 'temporal:ordinary-w2-d4');
+  assert.equal(period.primary.color, 'viridis');
+  assert.equal(period.officeOptions.length, 1);
+  assert.equal(JSON.stringify(canonical), original);
+  const plan = planReadings(period);
+  assert.equal(plan.options.length, 1);
+  const docs = orderReadingsByPlan(plan, [
+    { id: 'weekday', _periodType: 'ordinary', _periodWeekNumber: 2, _dayOfWeek: 4 },
+    { id: 'saint', _date: '21.01', title: 'Св. Агнешкі' },
+  ], { includeAlternatives: true });
+  assert.deepEqual(docs.map((doc) => doc.id), ['weekday']);
+  assert.equal(plan.cycle, canonical.readingCycle.weekday);
+});
+
+test('period reader preserves temporal seasons, date entities and reading cycles', () => {
+  const positions = [
+    ['2026-01-20', 'ordinary', 2, 3], ['2026-12-17', 'advent', 3, 5],
+    ['2026-02-18', 'lent', 0, 4], ['2026-04-02', 'holyweek', 1, 5],
+    ['2026-04-05', 'easter', 1, 1], ['2026-12-25', 'christmas', 1, 6],
+  ];
+  for (const [date, period, week, dow] of positions) {
+    const day = periodTextContext(date, { diocese: 'minsk-mohilev' });
+    assert.deepEqual([day.period, day.week, day.dayOfWeek], [period, week, dow]);
+    assert.equal(day.officeOptions.length, 1);
+    assert.equal(day.periodOnly, true);
+    assert.ok(planReadings(day).options[0].lookup.length);
+  }
+  assert.deepEqual(planReadings(periodTextContext('2026-12-17')).options[0].lookup[0].where, { _date: '17.12', dateOnly: true });
+  assert.equal(new Set(['2025-01-21', '2026-01-20'].map((date) => planReadings(periodTextContext(date)).cycle)).size, 2);
+});
+
+test('feast reading reference dates keep exact diocesan identities and leave Ordo unchanged', () => {
+  for (const diocese of ORDO_FILTER_DIOCESES) {
+    for (const mode of ['oras', 'readings']) {
+      const date = celebrationViewDate('sv-nicholas', 2026, { diocese, mode });
+      assert.equal(date, '2025-12-06');
+      const day = resolveOrdoDay(date, { diocese });
+      const options = mode === 'readings' ? [day.primary, ...day.alternatives] : day.officeOptions;
+      assert.ok(options.some((item) => item.id === 'sv-nicholas'));
+    }
+  }
+  assert.equal(celebrationViewDate('sv-nicholas', 2027, { diocese: 'minsk-mohilev' }), '2027-12-06');
+  assert.notEqual(celebrationViewDate('sv-nicholas', 2027, { diocese: 'grodno' }), '2027-12-06');
+  assert.equal(celebrationViewDate('corpus-christi', 2026, { diocese: 'minsk-mohilev' }), '2026-06-04');
+  assert.equal(celebrationViewDate('not-a-celebration', 2026, { diocese: 'minsk-mohilev' }), '');
+  const canonical = resolveOrdoDay('2026-12-06', { diocese: 'minsk-mohilev' });
+  const before = JSON.stringify(canonical);
+  const reference = celebrationTextContext('2026-12-06', 'sv-nicholas', { diocese: 'minsk-mohilev' });
+  assert.equal(reference.referenceOnly, true);
+  assert.equal(reference.primary.id, 'sv-nicholas');
+  assert.equal(reference.primary.color, 'albus');
+  assert.ok(reference.readingResolution.primary.lookup.every((item) => item.purpose !== 'weekday'));
+  assert.equal(JSON.stringify(canonical), before);
+  assert.ok(!resolveOrdoDay('2026-12-06', { diocese: 'minsk-mohilev' }).officeOptions.some((item) => item.id === 'sv-nicholas'));
+});
+
+test('permanently impeded memorials use isolated reference descriptors and preserve diocesan text refs', () => {
+  assert.equal(celebrationViewDate('sv-patryk', 2026, { diocese: 'minsk-mohilev' }), '');
+  for (const diocese of ORDO_FILTER_DIOCESES) {
+    const reference = celebrationTextContext('2026-03-17', 'sv-patryk', { diocese });
+    const definition = buildCalendarLayers({ country: 'BY', diocese }).celebrations.get('sv-patryk');
+    assert.deepEqual(reference.primary.daysRef, definition.daysRef);
+    assert.deepEqual(reference.primary.readingsRef, definition.readingsRef);
+    assert.equal(reference.officeResolution.primary.officeKind, 'optional-memorial');
+    assert.ok(reference.officeResolution.primary.allowedChoices.some((item) => item.options.includes('common')));
+    const day = resolveOrdoDay('2026-03-17', { diocese });
+    assert.ok(!day.officeOptions.some((item) => item.id === 'sv-patryk'));
+  }
+  assert.throws(() => celebrationTextContext('2026-03-17', 'unknown', { diocese: 'pinsk' }));
+});
 
 test('feast search includes every effective definition even when Ordo suppresses it', () => {
   const rows = yearCelebrations(2026, ORDO_FILTER_DIOCESES);
