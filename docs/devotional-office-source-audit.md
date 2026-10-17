@@ -132,9 +132,9 @@ Markdown содержит восемь частей в порядке «Ютра
 | --- | --- | --- | --- | --- | --- |
 | умершие, Ютрань | source mapped | NOT VERIFIED | NOT VERIFIED | code path connected; live NOT TESTED | NOT TESTED |
 | умершие, Нешпары | source mapped | NOT VERIFIED | NOT VERIFIED | code path connected; live NOT TESTED | NOT TESTED |
-| Мария, Ютрань | source mapped; `from-first-week` blocker | NOT VERIFIED | NOT VERIFIED | code path connected; live NOT TESTED | NOT TESTED |
+| Мария, Ютрань | source mapped; live `from-first-week` отсутствует, содержание псалмов ещё требует проверки | NOT VERIFIED | NOT VERIFIED | code path connected; live NOT TESTED | NOT TESTED |
 | Мария, Нешпары | source mapped | NOT VERIFIED | NOT VERIFIED | code path connected; live NOT TESTED | NOT TESTED |
-| Гадзінкі | DOCX ↔ Markdown: 1 761/1 761 токен; 8 частей, 118 блоков; все непустые строки покрыты | не требуются по приложенному источнику; live NOT VERIFIED | NOT VERIFIED | адаптер проверен на приложенном Markdown; опубликованный документ NOT TESTED | NOT TESTED |
+| Гадзінкі | DOCX ↔ Markdown: 1 761/1 761 токен; 8 частей, 118 блоков; все непустые строки покрыты | не требуются по опубликованной структуре | VERIFIED — байтовое совпадение после удаления конечного LF | адаптер проверен на приложенном Markdown; UI опубликованного документа NOT TESTED | NOT TESTED |
 
 Выполнен synthetic unit QA адаптера и локальный source QA Гадзінак. Визуальное сравнение с
 календарными Ютранню/Нешпарамі, реальные скриншоты, screen reader и
