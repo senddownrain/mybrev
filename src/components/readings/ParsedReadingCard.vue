@@ -363,23 +363,30 @@ function cycleLabel(value) {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  min-width: 0;
   gap: 18px;
   margin-bottom: 15px;
 }
 
 .section-label {
+  min-width: 0;
   margin: 0;
   color: var(--reading-visible-color);
   font-size: calc(1rem * var(--font-size-multiplier, 1));
   font-family: var(--reader-display-font-family);
   font-weight: 700;
   line-height: 1.3;
-  letter-spacing: 0.11em;
+  /* Tracking shrinks as the text grows, so a long label such as
+     «Рэспансарыйны псальм» still fits a 320 px card at the largest size. */
+  letter-spacing: max(0.04em, calc(0.11em / var(--font-size-multiplier, 1)));
+  overflow-wrap: anywhere;
   text-transform: uppercase;
 }
 
 .section-ref {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: var(--nav-muted);
   font-size: calc(0.78rem * var(--font-size-multiplier, 1));
   font-weight: 700;
@@ -429,10 +436,22 @@ function cycleLabel(value) {
   margin-bottom: 0;
 }
 
-.reading-acclamation,
-.section-text :deep(.reading-acclamation) {
+.reading-acclamation {
   margin-top: 1.35em;
+  color: var(--reader-ink);
+  /* A sibling of .section-text, so it needs the same scaled size itself. */
+  font-size: calc(1.04rem * var(--font-size-multiplier, 1));
   font-weight: 700;
+  line-height: 1.78;
+}
+
+/* Inside the formatted HTML the parent is already scaled: do not scale twice. */
+.section-text :deep(.reading-acclamation),
+.alleluia-verse :deep(.reading-acclamation) {
+  margin-top: 1.35em;
+  font-size: inherit;
+  font-weight: 700;
+  line-height: inherit;
 }
 
 .reading-alternative {

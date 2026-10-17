@@ -34,7 +34,7 @@
           <strong>Дыяцэзіі</strong>
           <span>Адна або некалькі: літургія гадзінаў і чытанні паказваюць варыянты ўсіх выбраных</span>
         </div>
-        <div class="theme-options" role="group" aria-label="Дыяцэзіі" data-test="settings-dioceses">
+        <div class="theme-options diocese-options" role="group" aria-label="Дыяцэзіі" data-test="settings-dioceses">
           <button
             v-for="option in dioceseOptions"
             :key="option.value"
@@ -255,4 +255,11 @@ function restoreGlobalCategories() {
   .add-category-button { width: calc(100% - 32px); margin-inline: 16px; }
 }
 .diocese-check { display: inline-grid; width: 1em; place-items: center; font-weight: 800; }
+/* Dioceses are a 2 x 2 choice grid with equal cells; the check mark has its own
+   reserved column, so a selected label never changes the cell's size. */
+.diocese-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; align-items: stretch; justify-content: stretch; gap: 6px; width: min(100%, 360px); }
+.diocese-options button { display: grid; grid-template-columns: 1em minmax(0, 1fr); align-items: center; column-gap: 6px; min-height: 44px; padding: 8px 10px; text-align: left; line-height: 1.25; overflow-wrap: anywhere; }
+@media (max-width: 560px) {
+  .diocese-options { width: 100%; }
+}
 </style>
