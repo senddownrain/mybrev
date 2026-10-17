@@ -9,10 +9,11 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { PhArrowUp } from '@phosphor-icons/vue';
+import { trackFeature } from '@/utils/trackFeature';
 defineProps({ bottomNav: Boolean });
 const visible = ref(false);
 const update = () => { visible.value = window.scrollY > Math.max(400, window.innerHeight * .7); };
-const goUp = () => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+const goUp = () => { trackFeature('back_to_top'); window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); };
 onMounted(() => { update(); window.addEventListener('scroll', update, { passive: true }); });
 onBeforeUnmount(() => window.removeEventListener('scroll', update));
 </script>

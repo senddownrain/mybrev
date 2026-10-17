@@ -11,7 +11,8 @@ import hashlib
 import json
 import subprocess
 import sys
-from PIL import Image
+import tempfile
+from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'branding/source'
@@ -21,12 +22,15 @@ IVORY = '#F5F1E8'
 def root_svg(body, viewbox='0 0 1024 1024'):
     return f'<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="{viewbox}">{body}</svg>'
 
-def art_svg(scale=1, background=None, circle=False, crop=False):
+def art_svg(scale=1, background=None, circle=False, crop=False, pwa=False):
     data=base64.b64encode((SOURCE/'approved-icon.png').read_bytes()).decode()
     # Approved image: 1254x1254; the existing circular composition is centred
     # at (627,616) with radius 525. No additional squircle is baked into it.
     defs='<defs><clipPath id="brand-circle"><circle cx="512" cy="503" r="426"/></clipPath></defs>'
     image=f'<image href="data:image/png;base64,{data}" x="0" y="0" width="1024" height="1024"/>'
+    if pwa:
+        overlay=(SOURCE/'pwa-bookmark.svg').read_text(encoding='utf-8')
+        image+=overlay[overlay.index('>')+1:overlay.rindex('</svg>')]
     if circle: image=f'{defs}<g clip-path="url(#brand-circle)">{image}</g>'
     offset=512*(1-scale)
     # Centre the circle optically when using a native transparent layer.
@@ -77,17 +81,62 @@ def native(tasks):
     queue(tasks,'web/favicon.png',mono_svg(scale=1,background='#6B4A32'),32)
 
 def web(tasks):
-    queue(tasks,'public/app-icon-master.png',art_svg(background=IVORY,circle=True),1024)
+    queue(tasks,'public/app-icon-master.png',art_svg(background=IVORY,circle=True,pwa=True),1024)
     for size in (192,512):
-        queue(tasks,f'public/web-app-manifest-{size}x{size}.png',art_svg(background=IVORY,circle=True),size)
-        queue(tasks,f'public/web-app-manifest-maskable-{size}x{size}.png',art_svg(scale=.92,background=IVORY,circle=True),size)
-    queue(tasks,'public/apple-touch-icon.png',art_svg(background=IVORY,circle=True),180)
+        queue(tasks,f'public/web-app-manifest-{size}x{size}.png',art_svg(background=IVORY,circle=True,pwa=True),size)
+        queue(tasks,f'public/web-app-manifest-maskable-{size}x{size}.png',art_svg(scale=.92,background=IVORY,circle=True,pwa=True),size)
+    queue(tasks,'public/apple-touch-icon.png',art_svg(background=IVORY,circle=True,pwa=True),180)
     # Micro favicons retain the core silhouette, with clear cutout cross;
     # they do not claim to preserve every feather of a shaded illustration.
     for size in (16,32,48,96):
-        image=mono_svg(scale=1,background='#6B4A32') if size<=32 else art_svg(background=IVORY,circle=True)
+        image=mono_svg(scale=1,background='#6B4A32') if size<=32 else art_svg(background=IVORY,circle=True,pwa=True)
         queue(tasks,f'public/favicon-{size}x{size}.png',image,size)
-    queue(tasks,'public/app-brand-96.png',art_svg(circle=True,crop=True),96)
+    queue(tasks,'public/app-brand-96.png',art_svg(circle=True,crop=True,pwa=True),96)
+
+def render(tasks):
+    subprocess.run(['node',str(Path(__file__).with_name('render_brand_assets.cjs'))],input=json.dumps(tasks),text=True,encoding='utf-8',check=True)
+
+def comparison_sheet():
+    """Real pixel sizes, with the same renderer and placement as install assets."""
+    output=ROOT/'branding/validation'
+    with tempfile.TemporaryDirectory() as tmp:
+        tasks=[]
+        for size in (1024,180,60,48,32):
+            svg=mono_svg(scale=1,background='#6B4A32') if size==32 else art_svg(background=IVORY,circle=True)
+            queue(tasks,Path(tmp)/f'before-{size}.png',svg,size)
+        queue(tasks,output/'pwa-60.png',art_svg(background=IVORY,circle=True,pwa=True),60)
+        queue(tasks,Path(tmp)/'mask.png',art_svg(scale=.92,background=IVORY,circle=True,pwa=True),128)
+        render(tasks)
+        # Pillow's bundled bitmap font keeps this sheet independent of system fonts.
+        sheet=Image.new('RGB',(2200,1730),'#E9E6E0')
+        draw=ImageDraw.Draw(sheet)
+        font=ImageFont.load_default(size=22)
+        small=ImageFont.load_default(size=17)
+        draw.text((40,22),'APPROVED / FLUTTER - unchanged source',fill='#30261F',font=font)
+        draw.text((1136,22),'PWA - one matte burgundy book ribbon',fill='#30261F',font=font)
+        paths={1024:'public/app-icon-master.png',180:'public/apple-touch-icon.png',60:'branding/validation/pwa-60.png',48:'public/favicon-48x48.png',32:'public/favicon-32x32.png'}
+        for column in (0,1):
+            x=40+1096*column
+            for size,dx,y in ((1024,0,90),(180,0,1170),(60,240,1170),(48,380,1170),(32,520,1170)):
+                path=Path(tmp)/f'before-{size}.png' if column==0 else ROOT/paths[size]
+                with Image.open(path) as im:
+                    sheet.paste(im.convert('RGB'),(x+dx,y))
+                draw.text((x+dx,y-29),f'{size} px',fill='#30261F',font=small)
+        draw.text((280,1270),'60 / 48 / 32 are shown at actual pixels (no enlargement).',fill='#30261F',font=small)
+        draw.text((280,1300),'32 px: existing optical monochrome favicon on both sides; ribbon omitted.',fill='#30261F',font=small)
+        draw.text((40,1395),'PWA MASKABLE - Android launcher masks / light and dark backgrounds',fill='#30261F',font=font)
+        with Image.open(Path(tmp)/'mask.png') as im:
+            for i,(shape,bg) in enumerate((('circle','#FAF8F4'),('rounded','#FAF8F4'),('circle','#24201E'),('rounded','#24201E'))):
+                x=40+i*530
+                draw.rounded_rectangle((x,1440,x+490,1675),radius=16,fill=bg)
+                mask=Image.new('L',(128,128))
+                md=ImageDraw.Draw(mask)
+                if shape=='circle': md.ellipse((0,0,127,127),fill=255)
+                else: md.rounded_rectangle((0,0,127,127),radius=28,fill=255)
+                sheet.paste(im.convert('RGB'),(x+28,1470),mask)
+                draw.text((x+180,1515),f'{shape} / 128 px',fill='#30261F' if i<2 else '#F5F1E8',font=small)
+        sheet.save(output/'pwa-bookmark-comparison.png',compress_level=9)
+    return [output/'pwa-bookmark-comparison.png',output/'pwa-60.png']
 
 def validate(tasks):
     for task in tasks:
@@ -107,7 +156,7 @@ def main():
     tasks=[]
     (native if args.target=='native' else web)(tasks)
     tasks=list({task['output']:task for task in tasks}.values())
-    subprocess.run(['node',str(Path(__file__).with_name('render_brand_assets.cjs'))],input=json.dumps(tasks),text=True,encoding='utf-8',check=True)
+    render(tasks)
     for task in tasks:
         # App Store icons must not have an alpha channel. Normalise all fully
         # opaque install exports to lossless RGB, preserving every colour.
@@ -121,8 +170,12 @@ def main():
             im.save(ROOT/'public/favicon.ico',format='ICO',sizes=[(16,16),(32,32),(48,48),(96,96)],append_images=[Image.open(ROOT/'public/favicon-16x16.png'),Image.open(ROOT/'public/favicon-32x32.png'),Image.open(ROOT/'public/favicon-48x48.png')])
     validate(tasks)
     files=[Path(t['output']) for t in tasks]
-    if args.target=='web': files.append(ROOT/'public/favicon.ico')
+    if args.target=='web':
+        files.append(ROOT/'public/favicon.ico')
+        files.extend(comparison_sheet())
     inventory={'approved_source_sha256':hashlib.sha256((SOURCE/'approved-icon.png').read_bytes()).hexdigest(),'files':[{'path':p.relative_to(ROOT).as_posix(),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in files]}
+    if args.target=='web':
+        inventory['pwa_overlay_sha256']=hashlib.sha256((SOURCE/'pwa-bookmark.svg').read_bytes()).hexdigest()
     (ROOT/'branding/asset-manifest.json').write_text(json.dumps(inventory,indent=2)+'\n',encoding='utf-8')
 
 if __name__=='__main__': main()

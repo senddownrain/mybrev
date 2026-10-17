@@ -87,7 +87,10 @@
     "lectionary:plan": "node scripts/lectionary/plan-options.mjs",
     "db:migrate-priest-grant-proofs": "node scripts/migrate-priest-grant-proofs.mjs",
     "liturgy:common-seasons:scope": "node scripts/liturgy/common-seasons-import-scope.mjs",
-    "test:common-seasons": "node --test tests/common-seasons-*.test.mjs"
+    "test:common-seasons": "node --test tests/common-seasons-*.test.mjs",
+    "analytics:perf": "firebase emulators:exec --only firestore --project demo-analytics-perf \"node scripts/analytics/perf-compare.mjs\"",
+    "analytics:smoke": "firebase emulators:exec --only firestore --project demo-analytics-smoke \"node scripts/analytics/screens-smoke.mjs\"",
+    "test:analytics": "node --test tests/analytics-*.test.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",
