@@ -1,0 +1,63 @@
+{
+  "generatedAt": "2026-10-16T18:56:26.776Z",
+  "allowlist": [
+    "apostles",
+    "blessed-virgin-mary",
+    "church-dedication",
+    "doctors-of-church",
+    "educators",
+    "holy-men",
+    "holy-women",
+    "martyr-one",
+    "martyrs-many",
+    "pastors",
+    "religious",
+    "virgins",
+    "works-of-mercy"
+  ],
+  "protectedNeverTouched": [
+    "office-for-dead",
+    "sunday-week-1",
+    "complementary-psalmody"
+  ],
+  "changedVsMain": [
+    "apostles",
+    "blessed-virgin-mary",
+    "church-dedication",
+    "doctors-of-church",
+    "educators",
+    "holy-men",
+    "holy-women",
+    "martyr-one",
+    "martyrs-many",
+    "pastors",
+    "religious",
+    "virgins",
+    "works-of-mercy"
+  ],
+  "changedVsSnapshot": {
+    "note": "a LOCAL snapshot is an old copy, not production",
+    "ids": [
+      "apostles",
+      "blessed-virgin-mary",
+      "church-dedication",
+      "doctors-of-church",
+      "educators",
+      "holy-men",
+      "holy-women",
+      "martyr-one",
+      "martyrs-many",
+      "office-for-dead",
+      "pastors",
+      "religious",
+      "virgins",
+      "works-of-mercy"
+    ],
+    "notInAllowlist": [
+      "office-for-dead"
+    ]
+  },
+  "changedVsLive": "NOT VERIFIED LIVE",
+  "dryRunCommand": "npm run ordo:import-feasts -- --only templates --ids apostles,blessed-virgin-mary,church-dedication,doctors-of-church,educators,holy-men,holy-women,martyr-one,martyrs-many,pastors,religious,virgins,works-of-mercy",
+  "applyCommand": "NOT RUN: needs separate owner permission; same command plus --apply"
+}
