@@ -76,6 +76,8 @@ const optionHtml = option => option.blocks.slice(1).map(blockHtml).join('');
 .devotional-office__psalm-title { color: var(--rubric-color); text-align: center !important; font-size: inherit; font-weight: 600; margin: 1.3em 0 .55em; }
 .devotional-office__reference { display: block; font-size: .88em; font-weight: 500; letter-spacing: normal; text-transform: none; }
 .devotional-office__separator { border: 0; border-top: 1px solid var(--nav-border); margin: 1.2em 0; }
+.devotional-office__text { margin-bottom: .8em; }
+.devotional-office__text:last-child { margin-bottom: 0; }
 .devotional-office__text :deep(p) { margin: 0 0 .8em; }
 .devotional-office__alternatives { margin-block: 1.2em; }
 .devotional-office__alternatives details { border-top: 1px solid var(--nav-border); padding: .65em 0; }
