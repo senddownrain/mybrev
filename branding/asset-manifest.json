@@ -3,27 +3,27 @@
   "files": [
     {
       "path": "public/app-icon-master.png",
-      "sha256": "b1642ab4919bc283c77dcc03e571d6801f97b9be17ed326cc2c3a9350933ebae"
+      "sha256": "0ea611e5192d2b86d54d70edf553f477c3688d4d0be9c8f44fae8b27b2098750"
     },
     {
       "path": "public/web-app-manifest-192x192.png",
-      "sha256": "1d834b9550913188b1182027cbb032021bab891cf869e4e31f33b1f230755a51"
+      "sha256": "4707e3290d53c1655e935de9bda13b82e3f8d96fa0a3c16e935d59d7c9e7741c"
     },
     {
       "path": "public/web-app-manifest-maskable-192x192.png",
-      "sha256": "8dfaf7391339f4dbcec7858a8f221d8e004ef2574552133ead194b76e7f0b410"
+      "sha256": "c2edc845ba5d0fba99f8895730f21c3e64ff564324be55810b6188fac6eac984"
     },
     {
       "path": "public/web-app-manifest-512x512.png",
-      "sha256": "2e8030656e5d7472a9b67d7ca0c44b2cdc41946a645fe4af40e426faeb504da5"
+      "sha256": "3b58923813ae729115e67b1d5d7435df47cda802e598951e2720eda4df61b90b"
     },
     {
       "path": "public/web-app-manifest-maskable-512x512.png",
-      "sha256": "7136118835aa1a02d1f8a23dee15e77bebfaa22b03800b6b37068cd6448d40a1"
+      "sha256": "9961d9a993ca1c1deeb4be3fa4dadd53227a9997fd04d27072e631eebef7e207"
     },
     {
       "path": "public/apple-touch-icon.png",
-      "sha256": "3f0cf5db240921e80272112f4386b55f289165c92a39c9767e50e9fe3e110659"
+      "sha256": "fc0230c1910ea000b410e6116f5deda6d9ed3c26a6e8df4407f7edebc9f47d91"
     },
     {
       "path": "public/favicon-16x16.png",
@@ -35,19 +35,28 @@
     },
     {
       "path": "public/favicon-48x48.png",
-      "sha256": "7cc8ebc105b41b007d46723110086fb82990eeab93f2b2d17c9ce9bb08a0cf74"
+      "sha256": "a62ff26204470ed8bfab880e217cf778a37a85c5587e9e57f326f4c0478433a1"
     },
     {
       "path": "public/favicon-96x96.png",
-      "sha256": "c96060aa93fb579968bb31598afdd9e2015d59369596b1152805615db9f1c157"
+      "sha256": "13dda18fc1fb0c438b1d5f9f8a50a18588721c37f45a7de8478c4e6b81284b56"
     },
     {
       "path": "public/app-brand-96.png",
-      "sha256": "75e759ff9ac5ce346adb81469542bb6bf064c7a8afb07875e7289b332838c058"
+      "sha256": "162af5ddb1c2e24ea726d61b6a1fb056a3032551245c20a9f1b05b1c5006f288"
     },
     {
       "path": "public/favicon.ico",
-      "sha256": "46a497a442cff585a8f3391d5ca2239560d0e4992536576cd7d3ca8c3193e6b9"
+      "sha256": "6d9b32874325d068e50f9370d278b4a25423a81ef1cac214593d2fb142999fde"
+    },
+    {
+      "path": "branding/validation/pwa-bookmark-comparison.png",
+      "sha256": "9d6868848ad9b37b7c324ada340cf23cc183c50f4e6d0507cc19376122033c29"
+    },
+    {
+      "path": "branding/validation/pwa-60.png",
+      "sha256": "4922a1c62b12a7ab562d3def7eda0a5608bc2ee214c61dd88ee6145f232e0ab4"
     }
-  ]
+  ],
+  "pwa_overlay_sha256": "e982329f4d4c34cb9554888996a240bb81b937662dae467251618291ae6fd9fe"
 }

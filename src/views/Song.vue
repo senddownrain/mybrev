@@ -24,6 +24,7 @@ import { getSongTags } from '@/constants/songTags';
 import SongChordControls from '@/components/songs/SongChordControls.vue';
 import SongText from '@/components/songs/SongText.vue';
 import '@/styles/songs.scss';
+import { trackFeature } from '@/utils/trackFeature';
 const props = defineProps({ id: { type: String, required: true } });
 const store = useSongsStore();
 const settings = useSettingsStore();
@@ -34,6 +35,8 @@ const transpose = ref(0);
 // Whether the text is wide enough for chords on the right; reported by SongText.
 const rightFits = ref(true);
 watch(() => props.id, () => { transpose.value = 0; });
+// Moving away from zero is a real transposition; the reset above lands on zero and is not counted.
+watch(transpose, (value) => { if (value !== 0) trackFeature('chord_transpose'); });
 store.init();
 </script>
 <style scoped src="@/styles/prayer-reading.css"></style>

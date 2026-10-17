@@ -259,6 +259,7 @@ import { compendiumParentRoute } from '@/utils/compendiumBack.js';
 import moment from '@/utils/moment-be';
 import { ordoHoursRoute } from '@/utils/ordoScreen';
 import { ordoDiocese } from '@/utils/ordoDiocese';
+import { trackFeature } from '@/utils/trackFeature';
 import { ordoDioceseFilter } from '@/utils/ordoMonthFilter';
 
 const { isDrawerOpen } = useAppBar();
@@ -443,6 +444,7 @@ const shareCurrentPrayer = async () => {
       title: getTitle(currentPrayer.value),
       url,
     });
+    if (result !== 'cancelled') trackFeature('share_use');
     if (result === 'copied') notifySuccess('Спасылка на малітву скапіявана');
   } catch (error) {
     logger.error('Failed to share prayer link:', error);

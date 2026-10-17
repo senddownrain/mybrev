@@ -13,7 +13,7 @@
           <v-list class="ora-hour-menu" density="compact" aria-label="Літургічныя гадзіны">
             <v-list-item v-for="hour in hours" :key="hour.name" :to="hour.path" :title="hour.title"
               :subtitle="hour.selectorSubtitle"
-              :active="isCurrentHour(hour)" />
+              :active="isCurrentHour(hour)" @click="!isCurrentHour(hour) && trackFeature('hour_switch')" />
           </v-list>
         </v-menu>
       </div>
@@ -28,6 +28,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
 import { PhArrowLeft, PhCaretDown, PhPencilSimple } from '@phosphor-icons/vue';
+import { trackFeature } from '@/utils/trackFeature';
 import TextScaleControl from '@/components/TextScaleControl.vue';
 import LiturgyNavLink from '@/components/common/LiturgyNavLink.vue';
 import { useLiturgicalHours } from '@/composables/useLiturgicalHours';

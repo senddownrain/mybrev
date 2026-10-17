@@ -122,6 +122,7 @@ import moment from '@/utils/moment-be'
 import { ordoCalendarEpoch } from '@/utils/ordoCalendarState'
 import { colorGradient, pickerColorsOf, pickerOptionsOf } from '@/utils/ordoDatePicker'
 import { colorInfo } from '@/utils/ordoScreen'
+import { trackFeature } from '@/utils/trackFeature'
 
 const props = defineProps({
   modelValue: {
@@ -333,6 +334,7 @@ const selectDate = (day) => {
   if (!isCurrentMonth(day)) {
     currentMonth.value = day.clone().startOf('month')
   }
+  trackFeature('date_pick')
   emit('update:modelValue', day.toDate())
 }
 

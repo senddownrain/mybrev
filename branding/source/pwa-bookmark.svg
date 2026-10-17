@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>PWA prayer-book ribbon</title>
+  <desc>Coordinates match the approved 1254px illustration scaled to 1024px.
+    The ribbon emerges at the lower outer edge of the right page, below the
+    last text line. Its short tucked head follows the page curvature; the
+    hanging cloth crosses the page block and cover and ends in a V cut.
+    No dove, cross or text pixels are covered. Flat matte colours only.</desc>
+  <path d="M752 729 Q767 732 783 731 C786 751 786 775 795 803
+    L778 796 L763 809 C759 781 760 750 752 729Z"
+    fill="#9B302A" stroke="#6F3026" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M752 729 Q767 732 783 731 L784 737 Q769 738 754 735Z" fill="#7E2824"/>
+  <path d="M756 737 C762 758 761 779 766 801" fill="none"
+    stroke="#B25D4E" stroke-width="2" stroke-linecap="round"/>
+</svg>
