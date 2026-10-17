@@ -141,7 +141,12 @@ export function renderShortReading(lines, { responsoryAlign = 'justify' } = {}) 
       out.push(paragraph(`${red('Кароткае чытанне')}${ref ? `${red(' ')}${red(escapeHtml(ref))}` : ''}`, 'justify'));
       return;
     }
-    if (/^Кароткі\s+рэспансорый/u.test(text)) { out.push(paragraph(red('Кароткі рэспансорый'), responsoryAlign)); mode = 'resp'; return; }
+    if (/^Кароткі\s+рэспансорый/u.test(text)) {
+      // «Кароткі рэспансорый \tЯн 13, 35»: the reference stays in the red heading
+      const ref = tab ? tab[2].trim() : '';
+      out.push(paragraph(red(escapeHtml(ref ? `Кароткі рэспансорый ${ref}` : 'Кароткі рэспансорый')), responsoryAlign));
+      mode = 'resp'; return;
+    }
     if (/^Пра\s[^:]{2,70}:\s*$/u.test(text)) {
       if (out.length && !/Кароткі\s+рэспансорый/u.test(out[out.length - 1])) out.push(HR);
       out.push(paragraph(red(escapeHtml(text.trim())), 'justify'));
@@ -171,7 +176,7 @@ export function renderShortReading(lines, { responsoryAlign = 'justify' } = {}) 
 const SOURCE_PAREN = /^\(.+\)$/u;
 
 /** First/Second Reading of the Office of Readings with its responsory. */
-export function renderLongReading(lines, { heading = true } = {}) {
+export function renderLongReading(lines, { heading = true, titleAlign = 'center' } = {}) {
   const items = lines.map(textOf).map(clean).filter((text) => text.trim());
   const out = [];
   let state = 'start';
@@ -182,6 +187,13 @@ export function renderLongReading(lines, { heading = true } = {}) {
       if (out.length) out.push(HR);
       out.push(paragraph(red(escapeHtml(text.trim())), 'justify'));
       state = 'start'; sawBodyOrTitle = false;
+      return;
+    }
+    // «Пра законніцу: \tЛк 10, 42. 39»: an alternative responsory with its own reference
+    const alternativeResponsory = /^(Пра\s[^:]{2,70}:)\s*\t+\s*(\S.*)$/u.exec(text);
+    if (alternativeResponsory) {
+      out.push(HR, paragraph(red(escapeHtml(`${alternativeResponsory[1]} ${alternativeResponsory[2].trim()}`)), 'justify'));
+      state = 'resp';
       return;
     }
     if (/^Або\s+іншае\s*:/u.test(text)) { out.push(HR, paragraph(red('Або іншае:'), 'justify')); state = 'start'; sawBodyOrTitle = false; return; }
@@ -209,7 +221,7 @@ export function renderLongReading(lines, { heading = true } = {}) {
       return;
     }
     if ((state === 'afterRef' || state === 'afterAuthor') && !sawBodyOrTitle && text.length < 140 && !/[.!?»]$/.test(text.trim())) {
-      out.push(paragraph(`<em><em>${red(escapeHtml(text.trim()))}</em></em>`, 'center'));
+      out.push(paragraph(`<em><em>${red(escapeHtml(text.trim()))}</em></em>`, titleAlign));
       sawBodyOrTitle = true;
       return;
     }

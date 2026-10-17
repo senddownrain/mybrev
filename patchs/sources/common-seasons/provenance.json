@@ -1,5 +1,359 @@
 {
   "church-dedication": {
+    "advent": {
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          218,
+          231
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "89e47e9a2d3814199adb0ce83faad78744c3221add060e249a529cf170085405"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          232,
+          262
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "ecc5fd31b36e291c1dd7b4c1c4329fb2b5a1b0dc7b3c645ae5d01587b29162f7"
+      },
+      "officeOfReadingsPr": {
+        "volume": "I",
+        "lines": [
+          318,
+          324
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          266,
+          296
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "2556cd6272dd5aef84a8e262d4ef404519b24962440e4c631cfb315b3f256ce6"
+      },
+      "laudesAntBen": {
+        "volume": "I",
+        "lines": [
+          305,
+          305
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "656b6bd66340c7ebeb7a59369a6f85af33091d4ab91c2fc6bdb460a252cf4240"
+      },
+      "laudesPr": {
+        "volume": "I",
+        "lines": [
+          318,
+          324
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "sext1Pr": {
+        "volume": "I",
+        "lines": [
+          318,
+          324
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "sext2Pr": {
+        "volume": "I",
+        "lines": [
+          318,
+          324
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "sext3R": {
+        "volume": "I",
+        "lines": [
+          341,
+          346
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "3847250f380234c80d576cd9d81d3edb404850f9f1756a08fe15fcc03deda8f4"
+      },
+      "sext3Pr": {
+        "volume": "I",
+        "lines": [
+          318,
+          324
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          349,
+          379
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "5309fc770c21d75ab1ab47503af6a50635089095fae58b8445fda698b77e6e4f"
+      },
+      "vesperAnt1": {
+        "volume": "I",
+        "lines": [
+          381,
+          381
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "50773f6f8ae172a1ae1db7e340595c0e6d95f9f40a8928bdc6ab2a82adf144d1"
+      },
+      "vesperPs1": {
+        "volume": "I",
+        "lines": [
+          382,
+          406
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "90ae2ec157221ec7b08742e9db888294ce41a106b314467c981f206c9d7b488b"
+      },
+      "vesperPr": {
+        "volume": "I",
+        "lines": [
+          473,
+          479
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          349,
+          379
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "5309fc770c21d75ab1ab47503af6a50635089095fae58b8445fda698b77e6e4f"
+      },
+      "vesper1Ps1": {
+        "volume": "I",
+        "lines": [
+          9,
+          33
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "5fc191f7d82128102a28107a26d53bbd0069f44f58efc982655ec85411127597"
+      },
+      "vesper1Pr": {
+        "volume": "I",
+        "lines": [
+          99,
+          105
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          218,
+          231
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "89e47e9a2d3814199adb0ce83faad78744c3221add060e249a529cf170085405"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          232,
+          262
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "ecc5fd31b36e291c1dd7b4c1c4329fb2b5a1b0dc7b3c645ae5d01587b29162f7"
+      },
+      "officeOfReadingsPr": {
+        "volume": "I",
+        "lines": [
+          318,
+          324
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          266,
+          296
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "2556cd6272dd5aef84a8e262d4ef404519b24962440e4c631cfb315b3f256ce6"
+      },
+      "laudesAntBen": {
+        "volume": "I",
+        "lines": [
+          305,
+          305
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "656b6bd66340c7ebeb7a59369a6f85af33091d4ab91c2fc6bdb460a252cf4240"
+      },
+      "laudesPr": {
+        "volume": "I",
+        "lines": [
+          318,
+          324
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "sext1Pr": {
+        "volume": "I",
+        "lines": [
+          318,
+          324
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "sext2Pr": {
+        "volume": "I",
+        "lines": [
+          318,
+          324
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "sext3R": {
+        "volume": "I",
+        "lines": [
+          341,
+          346
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "3847250f380234c80d576cd9d81d3edb404850f9f1756a08fe15fcc03deda8f4"
+      },
+      "sext3Pr": {
+        "volume": "I",
+        "lines": [
+          318,
+          324
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          349,
+          379
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "5309fc770c21d75ab1ab47503af6a50635089095fae58b8445fda698b77e6e4f"
+      },
+      "vesperAnt1": {
+        "volume": "I",
+        "lines": [
+          381,
+          381
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "50773f6f8ae172a1ae1db7e340595c0e6d95f9f40a8928bdc6ab2a82adf144d1"
+      },
+      "vesperPs1": {
+        "volume": "I",
+        "lines": [
+          382,
+          406
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "90ae2ec157221ec7b08742e9db888294ce41a106b314467c981f206c9d7b488b"
+      },
+      "vesperPr": {
+        "volume": "I",
+        "lines": [
+          473,
+          479
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          349,
+          379
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "5309fc770c21d75ab1ab47503af6a50635089095fae58b8445fda698b77e6e4f"
+      },
+      "vesper1Ps1": {
+        "volume": "I",
+        "lines": [
+          9,
+          33
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "5fc191f7d82128102a28107a26d53bbd0069f44f58efc982655ec85411127597"
+      },
+      "vesper1Pr": {
+        "volume": "I",
+        "lines": [
+          99,
+          105
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "e2a1f7afa4142166fa5205905e06193b123bfbbc332153ee015e385792bc7b38"
+      }
+    },
     "lent": {
       "officeOfReadingsR1": {
         "volume": "II",
@@ -9,7 +363,27 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "c791f294efc086dec74f1d0cdab5997c0e9d6ea57cc0acf229960dd14cb7e133"
+        "sha256": "02cd7e27871ccc99c71dbe80c345eea74b85eac02e7e3d0af355bb7202ba5286"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          282,
+          311
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "a3b079f2f7a1c87425474dc5e418e5c999805802d934f46f4b9a60c0f87c3ed7"
+      },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          315,
+          345
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "2556cd6272dd5aef84a8e262d4ef404519b24962440e4c631cfb315b3f256ce6"
       },
       "laudesR": {
         "volume": "II",
@@ -27,9 +401,29 @@
           357,
           357
         ],
-        "method": "carrier-alleluia-removed",
-        "kind": "annotated",
-        "sha256": "4cee07babdfba699c64caceed397eb0acc0cccd8c76e8b240e861d360a792ecb"
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "73573390cd1f377a1cdc57deb5e7d9275205b6ec50679b5eb263ff53697e778f"
+      },
+      "sext3R": {
+        "volume": "II",
+        "lines": [
+          393,
+          398
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "7217f66048e858dfc5323c7cecaa162c3a892e0a129cf217fe8b938ebc96eae2"
+      },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          401,
+          431
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "43d074355884bb85d27779d785525ba8b36f45706bbc627239b54624ce322757"
       },
       "vesperAnt3": {
         "volume": "II",
@@ -39,7 +433,7 @@
         ],
         "method": "render",
         "kind": "ant",
-        "sha256": "888e6150a95f4c0c168459874bf203b0947f316c9671b2d2a591f04f4e301b8f"
+        "sha256": "bb9c5a495d44d2a66d9321e966bb4a8b4be4bf75764ebb5fd5c78f850a0178d6"
       },
       "vesperPs3": {
         "volume": "II",
@@ -61,6 +455,17 @@
         "kind": "shortReading",
         "sha256": "4ef7f880395614455d59ea47db7b240079437ef65655d5f4ddb1852df9d5a1ab"
       },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          401,
+          431
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "43d074355884bb85d27779d785525ba8b36f45706bbc627239b54624ce322757"
+      },
       "vesper1Ant1": {
         "volume": "II",
         "lines": [
@@ -69,7 +474,17 @@
         ],
         "method": "render",
         "kind": "ant",
-        "sha256": "46cd86c625ba6cdb73feb23f344a64e6f4bd890d3662ce6c8afd3576b90da6c6"
+        "sha256": "7b07d62c3de67b838cf664720fa9e156efcedac5519f246bc75638d3c91c220e"
+      },
+      "vesper1Ant2": {
+        "volume": "II",
+        "lines": [
+          38,
+          38
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "f4779b0a1d7fca8c277e447f4376ecfb5b82b46b7e73d9cdfd4634f6d5f1ee65"
       },
       "vesper1Ant3": {
         "volume": "II",
@@ -79,7 +494,7 @@
         ],
         "method": "render",
         "kind": "ant",
-        "sha256": "676f42e55cc47a67c3f715242243058791b753648bf6c4e37cd24733fcbfbdb9"
+        "sha256": "d10d67457a27a450e6ff75a7a664882abd016e3d0132b528b62b5077a079fd07"
       },
       "vesper1Ps1": {
         "volume": "II",
@@ -90,6 +505,16 @@
         "method": "carrier+repeat",
         "kind": "annotated",
         "sha256": "db0e40ac04ddd6d3f19a4cb7c30be2d0223791ef1f83e30d5c4df8d3e5a816fe"
+      },
+      "vesper1Ps2": {
+        "volume": "II",
+        "lines": [
+          39,
+          57
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "c5fba5552d211ad12a7e4c35358da1b2edf3b06b66b423cb078f4249cd8e9f2f"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -139,6 +564,19 @@
         ],
         "sha256": "ca147461549f41d93dae0549945e5e442f473e1ebbfecad02ae5c90b7dd9fb07"
       },
+      "officeOfReadingsAnt2": {
+        "volume": "II",
+        "lines": [
+          196,
+          196
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-exclaim"
+        ],
+        "sha256": "fb31b2d1ad87c5b1af523c53ac99a68fbdc17a884c00d8249faf624f986e8854"
+      },
       "officeOfReadingsAnt3": {
         "volume": "II",
         "lines": [
@@ -171,12 +609,9 @@
           197,
           230
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "aa72544015505af06b3a99426913c6840f17d270220d6dbfc5112385947f3861"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "5814456a0379a23855c1a94fb37aa85e2f8968fa5ff08679232c39b3906a6f5a"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -191,6 +626,19 @@
         ],
         "sha256": "4b8ab67d6d61d01f70cd84b12e6f5f1dbbeb2ae10be6a29b0354fa594e744c3a"
       },
+      "officeOfReadingsVers": {
+        "volume": "II",
+        "lines": [
+          251,
+          252
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "e6eaa84b8039ca9e0fd2203919d743be801755cb10ccdeb602043dfbc6496fe8"
+      },
       "officeOfReadingsR1": {
         "volume": "II",
         "lines": [
@@ -199,7 +647,27 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "2fc6e001ecc2b2e052d92af151fd7b301dfcdc0258c1e9282ff7a426793b5b84"
+        "sha256": "5c68cc2f86378c2d246ebc5b0df906ca00b3ea255fe008845e3643ec8ebabc91"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          282,
+          311
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "c043df789c3443aac5f76930d4746076cf0b95b381f1366a4b7d86e8d652ce2b"
+      },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          315,
+          345
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "2556cd6272dd5aef84a8e262d4ef404519b24962440e4c631cfb315b3f256ce6"
       },
       "laudesAnt1": {
         "volume": "II",
@@ -248,7 +716,17 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "e90d57875a388d099343ab223c24232775156ae5aed8e2911698ee8af036f33d"
+        "sha256": "9dbd0512dfa128c2ae33887a03c62e1999e97b37eac08bb477ba58c5abb565e4"
+      },
+      "laudesAntBen": {
+        "volume": "II",
+        "lines": [
+          357,
+          357
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "656b6bd66340c7ebeb7a59369a6f85af33091d4ab91c2fc6bdb460a252cf4240"
       },
       "sext1Ant1": {
         "volume": "II",
@@ -263,6 +741,19 @@
         ],
         "sha256": "a711df50032e16efe49c3a3351407a44873456249820da15f2712eda371dace7"
       },
+      "sext1R": {
+        "volume": "II",
+        "lines": [
+          381,
+          384
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "80d477d7ce02ada011fb5c4cc031bc7655f84d1e80073df4084aa9b4aca1bbc7"
+      },
       "sext2Ant1": {
         "volume": "II",
         "lines": [
@@ -276,6 +767,19 @@
         ],
         "sha256": "7731c523e9d54eb2afcba1714a357b70e643c1ae7fa68d167eecdd76a1555ea8"
       },
+      "sext2R": {
+        "volume": "II",
+        "lines": [
+          387,
+          390
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "c655d813ca934032895e538073cfa368a6d2f2922c8138be4916341183e5bb01"
+      },
       "sext3Ant1": {
         "volume": "II",
         "lines": [
@@ -288,6 +792,26 @@
           "alleluia-v1"
         ],
         "sha256": "9363c2d9d9853d379ef292df8e0bf6e016ab5005d0ddda2d5e72f0eeffc0c789"
+      },
+      "sext3R": {
+        "volume": "II",
+        "lines": [
+          393,
+          398
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "7596146913e475edc27e64ab33b4600490138808c44b26b0aef7b01f5057fb8d"
+      },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          401,
+          431
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "43d074355884bb85d27779d785525ba8b36f45706bbc627239b54624ce322757"
       },
       "vesperAnt1": {
         "volume": "II",
@@ -323,7 +847,7 @@
         ],
         "method": "render",
         "kind": "ant",
-        "sha256": "47729c9538b39712d83c02c528bdc01bf6d133a770bd10564f06ec5dec85d1b3"
+        "sha256": "602d90c2c06299c3ef1f645acc5e8321c30fafbc51c29a867618a184ef67855b"
       },
       "vesperPs1": {
         "volume": "II",
@@ -331,11 +855,8 @@
           434,
           458
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
         "sha256": "2de140be364405dcfae89be775124942ad6a7288d7780d70397aaedbb128016a"
       },
       "vesperPs2": {
@@ -369,7 +890,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "1a03fd88efc4c8096e88ced8bb2ae2f5d063d509a04b58db97ea8e510325d053"
+        "sha256": "ab879185fd2c118ddaefda0d7de835f61ef85380a31a23638e90cf3c72b0a378"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -383,6 +904,17 @@
           "alleluia-v1"
         ],
         "sha256": "eb29d65571bf018065c93fac253e045ddec63397f007d6e63d82abeddfda8cfc"
+      },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          401,
+          431
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "43d074355884bb85d27779d785525ba8b36f45706bbc627239b54624ce322757"
       },
       "vesper1Ant1": {
         "volume": "II",
@@ -400,12 +932,9 @@
           38,
           38
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "ca6d04e02c61e9b4692b78a3ab3c244bf8e80983b2988bac0e0128c0683e0a8c"
+        "method": "render",
+        "kind": "ant",
+        "sha256": "5ca162038f574e54b26bfa796bcfb2c5fe3f6ac881dd08363b0683c81c141a92"
       },
       "vesper1Ant3": {
         "volume": "II",
@@ -423,12 +952,9 @@
           39,
           57
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "f37b70abea516ffe70b2cc68f6fc230da999aa4686e7b334aa34bc1bcf81782c"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "957509bf3a6d8cc0582311b84418cf288c947b99009abc1395795d38ee27eaba"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -448,7 +974,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "47efdec06686d164cc402bc79323e8c2bf9c33b1ead5b9c0349404df8ed8cc57"
+        "sha256": "401ccd6a60847238edc051a3e1d80fde7550f40d36c483b0072bcecd8c699414"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -467,6 +993,56 @@
   },
   "blessed-virgin-mary": {
     "advent": {
+      "invitatoriumAnt": {
+        "volume": "I",
+        "lines": [
+          619,
+          620
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "a3c142c14e7b18a9360c1fd92a7cb77853f05821a04870f4d1ffa1a2995f71de"
+      },
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          623,
+          643
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "4189a0b2cb09663b0f11e6f5c7930b18828d641d798e2b38d7cc052e3d4972c1"
+      },
+      "officeOfReadingsVers": {
+        "volume": "I",
+        "lines": [
+          719,
+          720
+        ],
+        "method": "render",
+        "kind": "versicle",
+        "sha256": "99f4b7ddfb3b9c4db0ab79421a8e929c4a2a22715cd4ad73e9487c19968c2b7c"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          721,
+          730
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "d9ecce7cf8191d2dee822fcad57535e8136ab416bed48319519c191635a03d4a"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          731,
+          777
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "7f56092f9eda309ae401effba29a3930b8e0048cacc7ecb7e02d3ffd8a041f30"
+      },
       "officeOfReadingsPr": {
         "volume": "I",
         "lines": [
@@ -478,6 +1054,46 @@
         "from": "laudesPr",
         "sha256": "9fa795cc377c895faeb6149016fb44f2cda365e673f88487501cad163baf8484"
       },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          781,
+          797
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "31da29bd8942105735b781130b1c6a19531d929d709347d9ec6c96ee5692dd6c"
+      },
+      "laudesAnt1": {
+        "volume": "I",
+        "lines": [
+          798,
+          798
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "64cbac164e70beb7a46562f20ec35919f288822f34098cfd6df9250911b9fb21"
+      },
+      "laudesR": {
+        "volume": "I",
+        "lines": [
+          802,
+          805
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "8b89098c740f459efed90632e49eb24053f973bb30b4e3c46283894abc7fd062"
+      },
+      "laudesAntBen": {
+        "volume": "I",
+        "lines": [
+          806,
+          806
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "76b54cfb7e6b3b0037c22b6d3829e843c577b942ffcb8f72884484d6451b1bab"
+      },
       "laudesPr": {
         "volume": "I",
         "lines": [
@@ -487,6 +1103,16 @@
         "method": "render",
         "kind": "prayer",
         "sha256": "9fa795cc377c895faeb6149016fb44f2cda365e673f88487501cad163baf8484"
+      },
+      "sext1R": {
+        "volume": "I",
+        "lines": [
+          844,
+          847
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "a40d772c18f318ce99dfb3c02560d295b1f6c7604728f572edf772144cb04e5a"
       },
       "sext1Pr": {
         "volume": "I",
@@ -499,6 +1125,16 @@
         "from": "laudesPr",
         "sha256": "9fa795cc377c895faeb6149016fb44f2cda365e673f88487501cad163baf8484"
       },
+      "sext2R": {
+        "volume": "I",
+        "lines": [
+          850,
+          853
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "cfc4b7a1e18b1dc4e9ffd5b1385c0cd4896a1128fb0d77864a5dd622b1e879c9"
+      },
       "sext2Pr": {
         "volume": "I",
         "lines": [
@@ -509,6 +1145,16 @@
         "kind": "ref",
         "from": "laudesPr",
         "sha256": "9fa795cc377c895faeb6149016fb44f2cda365e673f88487501cad163baf8484"
+      },
+      "sext3R": {
+        "volume": "I",
+        "lines": [
+          856,
+          859
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "e744e93329dc39d3d389763abd9e801a400a9040a227aa9e12682cf6bb37bb49"
       },
       "sext3Pr": {
         "volume": "I",
@@ -521,6 +1167,26 @@
         "from": "laudesPr",
         "sha256": "9fa795cc377c895faeb6149016fb44f2cda365e673f88487501cad163baf8484"
       },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          862,
+          890
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "ca16df5f87fa127aa15cfb070e7a7769e4e5abe71bf4f7584c04c5cf0ffd1b0a"
+      },
+      "vesperAntMag": {
+        "volume": "I",
+        "lines": [
+          964,
+          964
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "8968e6c1580250b7b5cb713d11a06a6acffbd9f06aed28c8fcfc027cdf28877c"
+      },
       "vesperPr": {
         "volume": "I",
         "lines": [
@@ -530,6 +1196,26 @@
         "method": "render",
         "kind": "prayer",
         "sha256": "9fa795cc377c895faeb6149016fb44f2cda365e673f88487501cad163baf8484"
+      },
+      "vesper1R": {
+        "volume": "I",
+        "lines": [
+          577,
+          580
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "6b24d6374b05cc806ccb0e1a006d84364d175e25ea5ac9c3109971994987765b"
+      },
+      "vesper1AntMag": {
+        "volume": "I",
+        "lines": [
+          581,
+          582
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "6709eb1ee10362c7777df8ed9aab6dc5a0117c223d5ba39527e8cdf28c87f476"
       },
       "vesper1Pr": {
         "volume": "I",
@@ -543,6 +1229,56 @@
       }
     },
     "christmas": {
+      "invitatoriumAnt": {
+        "volume": "I",
+        "lines": [
+          619,
+          620
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "a3c142c14e7b18a9360c1fd92a7cb77853f05821a04870f4d1ffa1a2995f71de"
+      },
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          623,
+          643
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "4189a0b2cb09663b0f11e6f5c7930b18828d641d798e2b38d7cc052e3d4972c1"
+      },
+      "officeOfReadingsVers": {
+        "volume": "I",
+        "lines": [
+          719,
+          720
+        ],
+        "method": "render",
+        "kind": "versicle",
+        "sha256": "99f4b7ddfb3b9c4db0ab79421a8e929c4a2a22715cd4ad73e9487c19968c2b7c"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          721,
+          730
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "d9ecce7cf8191d2dee822fcad57535e8136ab416bed48319519c191635a03d4a"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          731,
+          777
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "7f56092f9eda309ae401effba29a3930b8e0048cacc7ecb7e02d3ffd8a041f30"
+      },
       "officeOfReadingsPr": {
         "volume": "I",
         "lines": [
@@ -554,6 +1290,46 @@
         "from": "laudesPr",
         "sha256": "0b9c528711a957f9e82d52c495b61122acc954709ac7eae82d4e9998f4b495ee"
       },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          781,
+          797
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "31da29bd8942105735b781130b1c6a19531d929d709347d9ec6c96ee5692dd6c"
+      },
+      "laudesAnt1": {
+        "volume": "I",
+        "lines": [
+          798,
+          798
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "64cbac164e70beb7a46562f20ec35919f288822f34098cfd6df9250911b9fb21"
+      },
+      "laudesR": {
+        "volume": "I",
+        "lines": [
+          802,
+          805
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "8b89098c740f459efed90632e49eb24053f973bb30b4e3c46283894abc7fd062"
+      },
+      "laudesAntBen": {
+        "volume": "I",
+        "lines": [
+          806,
+          806
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "76b54cfb7e6b3b0037c22b6d3829e843c577b942ffcb8f72884484d6451b1bab"
+      },
       "laudesPr": {
         "volume": "I",
         "lines": [
@@ -563,6 +1339,16 @@
         "method": "render",
         "kind": "prayer",
         "sha256": "0b9c528711a957f9e82d52c495b61122acc954709ac7eae82d4e9998f4b495ee"
+      },
+      "sext1R": {
+        "volume": "I",
+        "lines": [
+          844,
+          847
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "a40d772c18f318ce99dfb3c02560d295b1f6c7604728f572edf772144cb04e5a"
       },
       "sext1Pr": {
         "volume": "I",
@@ -575,6 +1361,16 @@
         "from": "laudesPr",
         "sha256": "0b9c528711a957f9e82d52c495b61122acc954709ac7eae82d4e9998f4b495ee"
       },
+      "sext2R": {
+        "volume": "I",
+        "lines": [
+          850,
+          853
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "cfc4b7a1e18b1dc4e9ffd5b1385c0cd4896a1128fb0d77864a5dd622b1e879c9"
+      },
       "sext2Pr": {
         "volume": "I",
         "lines": [
@@ -585,6 +1381,16 @@
         "kind": "ref",
         "from": "laudesPr",
         "sha256": "0b9c528711a957f9e82d52c495b61122acc954709ac7eae82d4e9998f4b495ee"
+      },
+      "sext3R": {
+        "volume": "I",
+        "lines": [
+          856,
+          859
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "e744e93329dc39d3d389763abd9e801a400a9040a227aa9e12682cf6bb37bb49"
       },
       "sext3Pr": {
         "volume": "I",
@@ -597,6 +1403,26 @@
         "from": "laudesPr",
         "sha256": "0b9c528711a957f9e82d52c495b61122acc954709ac7eae82d4e9998f4b495ee"
       },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          862,
+          890
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "ca16df5f87fa127aa15cfb070e7a7769e4e5abe71bf4f7584c04c5cf0ffd1b0a"
+      },
+      "vesperAntMag": {
+        "volume": "I",
+        "lines": [
+          964,
+          964
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "8968e6c1580250b7b5cb713d11a06a6acffbd9f06aed28c8fcfc027cdf28877c"
+      },
       "vesperPr": {
         "volume": "I",
         "lines": [
@@ -606,6 +1432,26 @@
         "method": "render",
         "kind": "prayer",
         "sha256": "0b9c528711a957f9e82d52c495b61122acc954709ac7eae82d4e9998f4b495ee"
+      },
+      "vesper1R": {
+        "volume": "I",
+        "lines": [
+          577,
+          580
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "6b24d6374b05cc806ccb0e1a006d84364d175e25ea5ac9c3109971994987765b"
+      },
+      "vesper1AntMag": {
+        "volume": "I",
+        "lines": [
+          581,
+          582
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "6709eb1ee10362c7777df8ed9aab6dc5a0117c223d5ba39527e8cdf28c87f476"
       },
       "vesper1Pr": {
         "volume": "I",
@@ -619,6 +1465,26 @@
       }
     },
     "lent": {
+      "invitatoriumAnt": {
+        "volume": "II",
+        "lines": [
+          695,
+          696
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "a3c142c14e7b18a9360c1fd92a7cb77853f05821a04870f4d1ffa1a2995f71de"
+      },
+      "officeOfReadingsHymn": {
+        "volume": "II",
+        "lines": [
+          699,
+          719
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "4189a0b2cb09663b0f11e6f5c7930b18828d641d798e2b38d7cc052e3d4972c1"
+      },
       "officeOfReadingsR1": {
         "volume": "II",
         "lines": [
@@ -627,7 +1493,17 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "aa16cc6b664ee6d3cd768b19f5cd7d03e69dbb59d6acb9300d1acba6f21759b4"
+        "sha256": "d9ecce7cf8191d2dee822fcad57535e8136ab416bed48319519c191635a03d4a"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          822,
+          866
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "8e5e409a0df71fd4c9f8c692eae584a0a2bfb4183a940561a1cf7faf71274116"
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -640,6 +1516,26 @@
         "from": "laudesPr",
         "sha256": "08da4116c1b35b44d73297d9ad88339a5bfc552ca1919b53e3eab6c8da3d491d"
       },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          870,
+          886
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "0771fb045afc17315c36b10e8aa22699e36a5b4f0843294447776d822bdd96e3"
+      },
+      "laudesAnt1": {
+        "volume": "II",
+        "lines": [
+          887,
+          887
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "64cbac164e70beb7a46562f20ec35919f288822f34098cfd6df9250911b9fb21"
+      },
       "laudesR": {
         "volume": "II",
         "lines": [
@@ -648,7 +1544,17 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "25d5a3a2ca132af7a19c2d4db2a6b7141b0a3b455f0d8db06c8b8dc38d9222b6"
+        "sha256": "b40f75e004a778be8f796f08e8fe806716960d7667a541ee464a59e0739e2a27"
+      },
+      "laudesAntBen": {
+        "volume": "II",
+        "lines": [
+          898,
+          898
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "76b54cfb7e6b3b0037c22b6d3829e843c577b942ffcb8f72884484d6451b1bab"
       },
       "laudesPr": {
         "volume": "II",
@@ -693,6 +1599,16 @@
         "from": "laudesPr",
         "sha256": "08da4116c1b35b44d73297d9ad88339a5bfc552ca1919b53e3eab6c8da3d491d"
       },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          958,
+          986
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "ca16df5f87fa127aa15cfb070e7a7769e4e5abe71bf4f7584c04c5cf0ffd1b0a"
+      },
       "vesperR": {
         "volume": "II",
         "lines": [
@@ -702,6 +1618,16 @@
         "method": "carrier+render",
         "kind": "shortReading",
         "sha256": "05130f1dafe424efd6c19b6f85802cde595d8cef68d56181de9c1b85e89baec4"
+      },
+      "vesperAntMag": {
+        "volume": "II",
+        "lines": [
+          1062,
+          1062
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "8968e6c1580250b7b5cb713d11a06a6acffbd9f06aed28c8fcfc027cdf28877c"
       },
       "vesperPr": {
         "volume": "II",
@@ -721,7 +1647,17 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "a2aa70c1d226fd183e46d4d1ae4e187c3f3271192f3b33071dfa8f917c205c99"
+        "sha256": "6b24d6374b05cc806ccb0e1a006d84364d175e25ea5ac9c3109971994987765b"
+      },
+      "vesper1AntMag": {
+        "volume": "II",
+        "lines": [
+          653,
+          654
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "2562ceddb3cf2fe4e3447e1a4dab26a538fc2609333f70189269c61207698866"
       },
       "vesper1Pr": {
         "volume": "II",
@@ -741,12 +1677,19 @@
           695,
           696
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
+        "method": "render",
+        "kind": "ant",
+        "sha256": "bc57ef8e615397b7d92d799464544fc0985437925413d2b90b075281508df2a5"
+      },
+      "officeOfReadingsHymn": {
+        "volume": "II",
+        "lines": [
+          699,
+          719
         ],
-        "sha256": "310c0a14d92ba0845ab7c43bd7122f93d374e70a2ff7217ae88f7fc18f7cd553"
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "4189a0b2cb09663b0f11e6f5c7930b18828d641d798e2b38d7cc052e3d4972c1"
       },
       "officeOfReadingsAnt1": {
         "volume": "II",
@@ -806,11 +1749,8 @@
           750,
           774
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
         "sha256": "1a32e69e4af40581a2e883b8e5881e607af299c7fbdfa4e58d891b1950b7ecb6"
       },
       "officeOfReadingsPs3": {
@@ -826,6 +1766,19 @@
         ],
         "sha256": "2456142fdec3e44ca5a6d7f5db539a27a28629ef4ed18f8d4f785f8e7c90aaa1"
       },
+      "officeOfReadingsVers": {
+        "volume": "II",
+        "lines": [
+          795,
+          796
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "c6a90a4dbd730e397c15437876713f5881f84e7b57cce3e33296462ba14f828a"
+      },
       "officeOfReadingsR1": {
         "volume": "II",
         "lines": [
@@ -834,7 +1787,17 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "47c0a4141fdb351c572c3d89723950d6903f3d58ac66d4aa42b9f059408c711a"
+        "sha256": "cc85d9d2f2b0e002c3789c40ae7669ae0bc32eae0bef7651632c052e8208a1c9"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          822,
+          866
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "f4ddb15851a5b549c63e1096b92062ab3574eebd4d08e0327effee914afd3a57"
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -847,18 +1810,25 @@
         "from": "laudesPr",
         "sha256": "b2e9c46e53bf743cad235012fdb04ce845f67b668364abb9f382e1d67e254a33"
       },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          870,
+          886
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "0771fb045afc17315c36b10e8aa22699e36a5b4f0843294447776d822bdd96e3"
+      },
       "laudesAnt1": {
         "volume": "II",
         "lines": [
           887,
           887
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "11014b750b0f1a7c5d9c37faf8603d75277f9185d324670bcd4a07d356ed88e4"
+        "method": "render",
+        "kind": "ant",
+        "sha256": "a1947ddbf9073b81d13e1aa97ea4b103de0a7b9ac3b816e7c8ac3b51418f994c"
       },
       "laudesAnt2": {
         "volume": "II",
@@ -894,7 +1864,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "92a7c2f25e373c49396f68dc21d39f501d36b04783fc9b87ba3598eb607b91b5"
+        "sha256": "3b8ed1f2be223ef1a4e76bed5e0c019994018a619d4028957827dc8687bff88c"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -902,12 +1872,9 @@
           898,
           898
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "b14c6dae72453667bce5a8a0247d8bc5c7d6c7f486ff00fe9e22f5f62f4e4924"
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "5cba944742c0c55850c5fc77e1fd04c0006f58a86535c1b2e519b246a7a24a6f"
       },
       "laudesPr": {
         "volume": "II",
@@ -931,6 +1898,19 @@
           "alleluia-v1"
         ],
         "sha256": "6438fe1c6eeda1668f3151ab0392b9f36237977f5d4f7b107d58286f1d121b61"
+      },
+      "sext1R": {
+        "volume": "II",
+        "lines": [
+          940,
+          943
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "786e1063e58df44d6ad4d72760d81aa57d318fb787f5c72682f1516475edb4ea"
       },
       "sext1Pr": {
         "volume": "II",
@@ -956,6 +1936,19 @@
         ],
         "sha256": "aa24427c3c24791afb11782ec3c3b87bca2f4e1fac14c2693233ba88a5be242e"
       },
+      "sext2R": {
+        "volume": "II",
+        "lines": [
+          946,
+          949
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "1f8fea1b6ce7e9ce417708ecbaa9d63d871697f82c4ffa6df554297fafefe2fb"
+      },
       "sext2Pr": {
         "volume": "II",
         "lines": [
@@ -980,6 +1973,19 @@
         ],
         "sha256": "b44bbc993022ecd0a47e4279112e36ea70eba4d1353027c264d75b8299025094"
       },
+      "sext3R": {
+        "volume": "II",
+        "lines": [
+          952,
+          955
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "61bacfbdbbe9701604b57e996ef8b2ddc11f36a25d81b8906c9461a7407a07eb"
+      },
       "sext3Pr": {
         "volume": "II",
         "lines": [
@@ -990,6 +1996,16 @@
         "kind": "ref",
         "from": "laudesPr",
         "sha256": "b2e9c46e53bf743cad235012fdb04ce845f67b668364abb9f382e1d67e254a33"
+      },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          958,
+          986
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "ca16df5f87fa127aa15cfb070e7a7769e4e5abe71bf4f7584c04c5cf0ffd1b0a"
       },
       "vesperAnt1": {
         "volume": "II",
@@ -1077,7 +2093,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "d047da358b22f43daf35801a349e57f95f1d3f0616591ba349dcdc77b4a89261"
+        "sha256": "df30812f8b91310c6e4c779465df7eba32fb00275f1ddcd56db97c610eeb7da3"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -1085,12 +2101,9 @@
           1062,
           1062
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "b8a6e6043221bf993393c1d9ae73d0624cf63f4c7118d2e179b44699c207aa4b"
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "8b7dd0ed5994a943cda77660e71bbc0b2f8b3ed2f39cab172ecf98782194ee83"
       },
       "vesperPr": {
         "volume": "II",
@@ -1188,7 +2201,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "bb19df224c0cf91070e755af443b22d76be191b44985de8bef47548ae7351516"
+        "sha256": "68bee738554809c3b34fd11bfd75fcdd074690dc63f3da54de6f536feaf6190c"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -1196,12 +2209,9 @@
           653,
           654
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "e1cdb75721778c880b9a144db1d838357e1ca76929eb440f2b7f7b3d595dd867"
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "9de2cf2cac1d5c90ba66e739e1af2257f847541fd8423cabcb8edf4ca2163651"
       },
       "vesper1Pr": {
         "volume": "II",
@@ -1216,6 +2226,110 @@
     }
   },
   "apostles": {
+    "advent": {
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          1083,
+          1107
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "db8a12227b84814ace9bd178907843e2dbae9ce1e4ca4b8c35ee54958ec6b8ef"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          1186,
+          1200
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "e6ee3fa03f78ef9137818a72207ecaff6e0ca98ad607c360bcf15e2d48c13e7d"
+      },
+      "vesperR": {
+        "volume": "I",
+        "lines": [
+          1348,
+          1351
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "453f81509e878c5e79acaeb7855f0a699eeeea23d70410014b38a3fe00ae81bf"
+      },
+      "vesper1Ant1": {
+        "volume": "I",
+        "lines": [
+          1004,
+          1004
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "b70a07371d4afc9be60471a5bf295ec7fe947201046cf1192a64e90389f46834"
+      },
+      "vesper1Ps1": {
+        "volume": "I",
+        "lines": [
+          1005,
+          1009
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "8e8305ef46c77eaac05852b8aaeb06da0554c916bb2e1a1ea6c28f3c66ef39c5"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          1083,
+          1107
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "db8a12227b84814ace9bd178907843e2dbae9ce1e4ca4b8c35ee54958ec6b8ef"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          1186,
+          1200
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "e6ee3fa03f78ef9137818a72207ecaff6e0ca98ad607c360bcf15e2d48c13e7d"
+      },
+      "vesperR": {
+        "volume": "I",
+        "lines": [
+          1348,
+          1351
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "453f81509e878c5e79acaeb7855f0a699eeeea23d70410014b38a3fe00ae81bf"
+      },
+      "vesper1Ant1": {
+        "volume": "I",
+        "lines": [
+          1004,
+          1004
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "b70a07371d4afc9be60471a5bf295ec7fe947201046cf1192a64e90389f46834"
+      },
+      "vesper1Ps1": {
+        "volume": "I",
+        "lines": [
+          1005,
+          1009
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "8e8305ef46c77eaac05852b8aaeb06da0554c916bb2e1a1ea6c28f3c66ef39c5"
+      }
+    },
     "lent": {
       "officeOfReadingsR1": {
         "volume": "II",
@@ -1225,7 +2339,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "0f25bb152d07566afb6c5ef3fe66d2e1a3ee7f80be9edd5acda0f6ece2d7b7be"
+        "sha256": "38aad68b25940518fcdd00373be5a2d633b09c4199aaef580016a72abeff72cd"
       },
       "laudesHymn": {
         "volume": "II",
@@ -1247,6 +2361,16 @@
         "kind": "shortReading",
         "sha256": "efde181c12bc32dc2d4a193c1c8d1a5f71a0d482f6a3efd602e25380bb02e38e"
       },
+      "sext2R": {
+        "volume": "II",
+        "lines": [
+          1384,
+          1387
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "300e6e360ccad3de36668274c4e004754fc6a9b0f9fd33178f5cf33ffa342655"
+      },
       "vesperHymn": {
         "volume": "II",
         "lines": [
@@ -1265,7 +2389,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "ea18515a0436b7f2424dfb0a6c510f982972b8af40e22b146fba21890ffa0415"
+        "sha256": "f77723142e7235d02165596f7684ea922b013b8208a842aa7c7387aa823e9cae"
       },
       "vesper1Hymn": {
         "volume": "II",
@@ -1277,6 +2401,46 @@
         "kind": "ref",
         "from": "vesperHymn",
         "sha256": "7354e8ab45e85412aa5f829cf3ecf0076f3bb33b01bedcf5bd20be7d8dba06c4"
+      },
+      "vesper1Ant1": {
+        "volume": "II",
+        "lines": [
+          1106,
+          1106
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "b70a07371d4afc9be60471a5bf295ec7fe947201046cf1192a64e90389f46834"
+      },
+      "vesper1Ant2": {
+        "volume": "II",
+        "lines": [
+          1113,
+          1113
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "c981f3af0c572950caee2aa8d4016501d47f73c3c09e56aab89cce2ff2c58964"
+      },
+      "vesper1Ps1": {
+        "volume": "II",
+        "lines": [
+          1107,
+          1111
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "8e8305ef46c77eaac05852b8aaeb06da0554c916bb2e1a1ea6c28f3c66ef39c5"
+      },
+      "vesper1Ps2": {
+        "volume": "II",
+        "lines": [
+          1114,
+          1132
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "edee2c8700e89808ea4d5d86a31260ea64b139fc2d091fe3f9500931a8b6b6cb"
       },
       "vesper1R": {
         "volume": "II",
@@ -1309,12 +2473,9 @@
           1209,
           1209
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "23fa6f06486883321e5677c9dc8486514f0b03e8ddfefd05a263cd8bb9c7a9fe"
+        "method": "render",
+        "kind": "ant",
+        "sha256": "e435394fcde006042937bbbfbec52c30ea9b3f5ca8f0bc0c33e30de5f6770cea"
       },
       "officeOfReadingsAnt3": {
         "volume": "II",
@@ -1348,12 +2509,9 @@
           1210,
           1235
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "6974f66af231736207cb6f200818c305b2b9464764714a985961d3381db9e2ea"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "81d27b5d00263fe5cae82402d0375cecbb0563b9667c3f08e1c48cd9830aead7"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -1368,6 +2526,19 @@
         ],
         "sha256": "d46c36f11da3cf203c75b2c49c89a119c0e1f8cfa06c3720cd6adcccf9b6704c"
       },
+      "officeOfReadingsVers": {
+        "volume": "II",
+        "lines": [
+          1266,
+          1267
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "396724dc5ef88b659833f247ba34162114718a0c612b9ca9ebefc38e1f369a5a"
+      },
       "officeOfReadingsR1": {
         "volume": "II",
         "lines": [
@@ -1376,7 +2547,7 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "54474e1a90a5458dfa03534bb7e47b90c5a27aac82d9bf4c42507dc53eae69eb"
+        "sha256": "9af0e5a1329cc2c64d1c66cfab8f1d2af5d3907ea08a568fa88168dde1ee334c"
       },
       "laudesHymn": {
         "volume": "II",
@@ -1435,7 +2606,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "b4e5ce4b69a0eff2fadf906002ba1b31ba0ecde70733a6dc72f80961a01a111f"
+        "sha256": "dfa3ad32b7ac04418848fa1666941383471d1fc7dfee77f498bf42e09afc9c37"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -1463,6 +2634,19 @@
         ],
         "sha256": "e8adaeeb9b820f67f5133132f4898df714615b7ed112f21e906a36471fcabd37"
       },
+      "sext1R": {
+        "volume": "II",
+        "lines": [
+          1378,
+          1381
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "18904ecccf6ef4cd3f0851f24c793a8db0bb94ac0db43174671c081bef830f0f"
+      },
       "sext2Ant1": {
         "volume": "II",
         "lines": [
@@ -1476,6 +2660,16 @@
         ],
         "sha256": "50371273fcec18a50a4a4b8ccd32c442cafcb2de660377c1cb61d8509df1ee9a"
       },
+      "sext2R": {
+        "volume": "II",
+        "lines": [
+          1384,
+          1387
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "8306c94c0e4aa4cdda60431c9243b00ad5b256d177c3bc0c2d7b54dcc6e8832e"
+      },
       "sext3Ant1": {
         "volume": "II",
         "lines": [
@@ -1488,6 +2682,19 @@
           "alleluia-v1"
         ],
         "sha256": "06de57ee7c341181ab20015a4c83a2eee4c21b2028af044adb36d89ad0b087b6"
+      },
+      "sext3R": {
+        "volume": "II",
+        "lines": [
+          1391,
+          1394
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "1db7befbb018bc4144966737c2230d5c49dc97b3e069a76f43d38574a78d9c6f"
       },
       "vesperHymn": {
         "volume": "II",
@@ -1570,12 +2777,9 @@
           1491,
           1515
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "bbcf525a936e065e0cc8f4a5db2f102e2b9cca4762974b844b0c2120c20f3e9e"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "b8ed9a3c7fb988aedc85138b07a8a561583facf5c1952fde2785d2160071b7cb"
       },
       "vesperR": {
         "volume": "II",
@@ -1585,7 +2789,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "54ce22de0a8262bcf6a31ed327b18e9c88e0f3d2caeca0cf55fee9268ab66be8"
+        "sha256": "7e38c36e3c8e44831cb2f454894405c614958c465b43b09696761b362f4a499d"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -1617,12 +2821,9 @@
           1106,
           1106
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "71611e5a054303e6087c6093abc17056062c99d525234e166c19305402a83490"
+        "method": "render",
+        "kind": "ant",
+        "sha256": "e03c06d88238c5c2e2994fdb01ad483c1be4a7acac766f2d49c11d5afab76489"
       },
       "vesper1Ant2": {
         "volume": "II",
@@ -1630,12 +2831,9 @@
           1113,
           1113
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "19a9242d3275f9ce04687c966e4b2389de844a26ab234854cac8c7d9db2e3f05"
+        "method": "render",
+        "kind": "ant",
+        "sha256": "59d4f01a2065a735c2969715e0e5c8b8f9b93cade018f9db8aefcfb4cc9ce8dd"
       },
       "vesper1Ant3": {
         "volume": "II",
@@ -1656,12 +2854,9 @@
           1107,
           1111
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "0998c0308e24bd807db771e5983fc76c1dacb9f87e5b76384e7798cbd7caafe6"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "6ecf7979f59e0c4c5d8d611b6aa8fdaa95a8bd827b319a355a85a4b90a6c8862"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -1669,12 +2864,9 @@
           1114,
           1132
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "d77542f17b8d8bab8080e0815a70433e314de5e0785249b2e82928bbb57af233"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "b0a35c1c83efdab9cf51f00a698f27d63d95006642f7be0ff8ad268cce02c2e6"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -1682,12 +2874,9 @@
           1135,
           1159
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "8fac028cbdc08268e17356914ca259adb81f00ca3027385becae1a618eb622ee"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "ba63c46aef98e4d040b2d9238b5c5a3fd97f1cdeb4503d03a000b3f62c855bf1"
       },
       "vesper1R": {
         "volume": "II",
@@ -1697,7 +2886,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "acf2ed27e39b1bf5b0a7c57552bb206e7be78f91d9eb216aa027880146f8813a"
+        "sha256": "77ece96c4aa58c43e4bb11e9bb7199f8baad89f9635354d45c165087334ca336"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -1715,6 +2904,112 @@
     }
   },
   "martyrs-many": {
+    "advent": {
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          1591,
+          1601
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "2fb2a07d37a9961482b47a6a11db1ccadbbf39eab362021bb652422cecbc3397"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          1602,
+          1618
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "2d5ef821241c9ab149562fc484158d69eaabeac85f690c6d5cd8b1d891116575"
+      },
+      "sext1R": {
+        "volume": "I",
+        "lines": [
+          1684,
+          1687
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "4eb92ede3dc6a09bfba233128086e795e0271e2339722c3a47dc1b78a124d3ff"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          1702,
+          1722
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "938e100ad79edef4b79ca2b72216a0dd8245c7e99a60121ea0db7c0f869ff808"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          1702,
+          1722
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "938e100ad79edef4b79ca2b72216a0dd8245c7e99a60121ea0db7c0f869ff808"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          1591,
+          1601
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "2fb2a07d37a9961482b47a6a11db1ccadbbf39eab362021bb652422cecbc3397"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          1602,
+          1618
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "2d5ef821241c9ab149562fc484158d69eaabeac85f690c6d5cd8b1d891116575"
+      },
+      "sext1R": {
+        "volume": "I",
+        "lines": [
+          1684,
+          1687
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "4eb92ede3dc6a09bfba233128086e795e0271e2339722c3a47dc1b78a124d3ff"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          1702,
+          1722
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "938e100ad79edef4b79ca2b72216a0dd8245c7e99a60121ea0db7c0f869ff808"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          1702,
+          1722
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "938e100ad79edef4b79ca2b72216a0dd8245c7e99a60121ea0db7c0f869ff808"
+      }
+    },
     "lent": {
       "officeOfReadingsR1": {
         "volume": "II",
@@ -1724,7 +3019,17 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "900b2cfa905cc4605b800506dcb7fd8e61f70a9ed82bd1b06dde1772ff67490c"
+        "sha256": "0264f0de12ab860c8dda5645d57ab07c09cac5b8d79a43e823fbea697368ffa7"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          1818,
+          1833
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "85de84b472a61b291239f061be811c3c0338a291bca80cfb7ae74cf398c76b0d"
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -1737,6 +3042,16 @@
         "from": "laudesPr",
         "sha256": "f88d75bcb1e9753b782cbfd8ad0707a613ec2e4af030b17f802a28b1fe263f22"
       },
+      "laudesAnt1": {
+        "volume": "II",
+        "lines": [
+          1866,
+          1866
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "4f1472b5ec2aca0314ea84b68687992b387935a6024f0c60aa3d757edf19f061"
+      },
       "laudesAnt2": {
         "volume": "II",
         "lines": [
@@ -1745,7 +3060,7 @@
         ],
         "method": "render",
         "kind": "ant",
-        "sha256": "afb07af47077c095d48b6b8e925606ee8e22a52b89c1f1c866ef406f331eaae8"
+        "sha256": "7c489e20c097128b11f48dca42f58a3ce42c56e12a5ba7a6167bfd0e9cb92732"
       },
       "laudesR": {
         "volume": "II",
@@ -1840,6 +3155,16 @@
         "from": "laudesPr",
         "sha256": "f88d75bcb1e9753b782cbfd8ad0707a613ec2e4af030b17f802a28b1fe263f22"
       },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          1957,
+          1977
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "6d03fdee46f8fe872521b7ba93c20d34867bac490a80a9a62b69132738b7fcab"
+      },
       "vesperR": {
         "volume": "II",
         "lines": [
@@ -1870,6 +3195,17 @@
         "kind": "prayer",
         "sha256": "f88d75bcb1e9753b782cbfd8ad0707a613ec2e4af030b17f802a28b1fe263f22"
       },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          1957,
+          1977
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "6d03fdee46f8fe872521b7ba93c20d34867bac490a80a9a62b69132738b7fcab"
+      },
       "vesper1R": {
         "volume": "II",
         "lines": [
@@ -1878,7 +3214,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "a772bb758262b2ba82c2a10f6bde3b0a732b1a28cb8dd5bd5af5e1930a36fa28"
+        "sha256": "de47b8d10f2eabc650a7def4992ab62299d4184b2a1ab2024d5cd5c03aa49cab"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -1973,12 +3309,9 @@
           1743,
           1766
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "a3361995583107cdf4ca134a9a9d6f4ddb658b45ce5b69410fc4668c92806a27"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "5de0b3172840eee860115954bffecdd666961fe210d53019f6bfba2e79a728c1"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -1993,6 +3326,19 @@
         ],
         "sha256": "852cbb184b2301c1711f06c5a71d9202c8cff32dc7c3af4503158280eeeb4f94"
       },
+      "officeOfReadingsVers": {
+        "volume": "II",
+        "lines": [
+          1793,
+          1794
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "2d8824bc2c803a8babf5d5315b0a3bfa5950f4bbe281e123ea7939e635e7aabb"
+      },
       "officeOfReadingsR1": {
         "volume": "II",
         "lines": [
@@ -2001,7 +3347,17 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "3db6ddd4e931b07a7049564ddb3f56fb762ae3c659c8fc603ce668368746b983"
+        "sha256": "af75590f0a68aa985566759f2d0ee003f8f0c068f9d850089c4b27bc1cd43987"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          1818,
+          1833
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "8bd0f02b2368e12cbd5765b20595a9a38a918328cf5e7d3799a626c6debc8173"
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -2020,12 +3376,9 @@
           1866,
           1866
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "be66ce472b9894f34a7b0e9ee313f2a8c692d874998e0ea80f70630b0e986f1b"
+        "method": "render",
+        "kind": "ant",
+        "sha256": "e9602d3141b432ff3c4e42f1abd7e0ee382d98e01283076767723e61792984e2"
       },
       "laudesAnt2": {
         "volume": "II",
@@ -2058,7 +3411,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "a9c6846fb587a58890c825bd4436c586f2b1b4492978aef3a79bf39d747d4454"
+        "sha256": "054bafc9971f33e15d006bac83ba48f514f9343721a91dac5cbd8106f6e284f2"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -2068,7 +3421,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "834f86cd21405b58df7bf06190aa4d066e81403c28ce52cfea579012f60c61bb"
+        "sha256": "a6effef727bc948a27527e0dc65a249771d11d92e41df183234b3ecd8eac7af5"
       },
       "laudesPr": {
         "volume": "II",
@@ -2101,7 +3454,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "f993a26e272441ca751a0744c1295a5f5038edee7ced1d4be050194b5c48ef2a"
+        "sha256": "356f62292e71f04bd6acb26a6ef4b1a5b178bcaca8afd80e5d9276fd826763d2"
       },
       "sext1Pr": {
         "volume": "II",
@@ -2135,7 +3488,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "69f513d8a7c0912ea1ba06051f32cae4cf0eb28a4026fbbc50384c5eb5baf490"
+        "sha256": "fdb8161cd82a6ced6f37178e000bb9cb9ea40837b852ae7e7c4b15901352f73f"
       },
       "sext2Pr": {
         "volume": "II",
@@ -2169,7 +3522,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "de549e468abab9d85b236ed8322f6eccef66cfab996affeab49c644d014d4f55"
+        "sha256": "98ddffadb11f6c1768eb9ab0f36b20740bb2fae93cdf87a874fcb4a180c52379"
       },
       "sext3Pr": {
         "volume": "II",
@@ -2181,6 +3534,16 @@
         "kind": "ref",
         "from": "laudesPr",
         "sha256": "20171a8782f6d6cddb5078db67f87d1add46d0f42efc76e07a44df6cb3a98667"
+      },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          1957,
+          1977
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "6d03fdee46f8fe872521b7ba93c20d34867bac490a80a9a62b69132738b7fcab"
       },
       "vesperAnt1": {
         "volume": "II",
@@ -2268,7 +3631,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "9b19eae1f3b7c9b11983acce11eb46bba8a4d53223c07d331352eb020946e2b0"
+        "sha256": "e5084cde996644d2442bd94df58fc6c2f86bf39034a537e8c1d07e4ffd4c16e7"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -2278,7 +3641,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "f9aa82cfff636808af67a89a29005398a4f0ca0e74215165a4de406ba855b0e7"
+        "sha256": "9f305b746dbe0869b46ed52f830a2143a98d3fdabe91fd90436e9c608fc403fe"
       },
       "vesperPr": {
         "volume": "II",
@@ -2289,6 +3652,17 @@
         "method": "render",
         "kind": "prayer",
         "sha256": "20171a8782f6d6cddb5078db67f87d1add46d0f42efc76e07a44df6cb3a98667"
+      },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          1957,
+          1977
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "6d03fdee46f8fe872521b7ba93c20d34867bac490a80a9a62b69132738b7fcab"
       },
       "vesper1Ant1": {
         "volume": "II",
@@ -2361,12 +3735,9 @@
           1614,
           1629
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "d245d007ed9b5b45bff222d6aee48087a95a248a4a67e45072164000aa264c11"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "e89d09b1c92462ea6984ccb55514de6be23bc174b5dc8817cbdb430e4fcf02bc"
       },
       "vesper1R": {
         "volume": "II",
@@ -2376,7 +3747,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "fdb4fd9fda7a8ace29d993ff28c4ca0eb1ed90e9fc58be313be8ab77a65333a3"
+        "sha256": "f5f7d5ba25d1822061ebc2aec2d6685e690eccdb9a9167f6a74e128f666c5409"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -2386,7 +3757,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "6db404f0ab1b33845905cfb71ca1c7e8427c887345ffef893b7dafe71d151623"
+        "sha256": "2bb5707fd9825ef3ce1d165626431d797ebb61d93200a2ff6addd4a27bf92f60"
       },
       "vesper1Pr": {
         "volume": "II",
@@ -2401,7 +3772,263 @@
     }
   },
   "martyr-one": {
+    "advent": {
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          1941,
+          2012
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "7544b0c1abc2dda957e4672ed13e42947a0320d7298cc9c714c78cd6b6df91ce"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          2113,
+          2123
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "3173d3b4e0783832491b954634367736d582ccbe90d197c1735ac99d35c3648b"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          2124,
+          2140
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "29b4a808a9ac66b40e6e1d15db9ab33b782a97c83879707823fdf2c9e353db02"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          2144,
+          2185
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "135c024b21ee24eec1b672745c06ba41347db7b6b8c2851d3fddf1a59f797b71"
+      },
+      "sext1R": {
+        "volume": "I",
+        "lines": [
+          2219,
+          2222
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "557d4b382480129253a6f33f20d7ce1aeb3299c7cd6597d7e1db69c405562991"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          2237,
+          2312
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "62ac2317e9cf233ab5a1b7c0948793d1e59e4aae83df8d19eb490e0fe8223937"
+      },
+      "vesperAnt1": {
+        "volume": "I",
+        "lines": [
+          2314,
+          2314
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "123dba21e623071031c239c94dcfe156a3adf673b5c8277a0b3c9fc249e7bbe1"
+      },
+      "vesperAnt2": {
+        "volume": "I",
+        "lines": [
+          2336,
+          2336
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "2dd0c05c2f77520ae297560fe52962babd9445c7f69913a0845a95cc64a12425"
+      },
+      "vesperPs1": {
+        "volume": "I",
+        "lines": [
+          2315,
+          2334
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "e4af499673ca090bd87960f35da493d8856791567c9cdcf165d19110836bd74d"
+      },
+      "vesperPs2": {
+        "volume": "I",
+        "lines": [
+          2337,
+          2358
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "de8036ccdb96ab0116e5f8f3dcae648e5cd61dd4f06d7f639bc78a9942fc57a9"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          2237,
+          2312
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "62ac2317e9cf233ab5a1b7c0948793d1e59e4aae83df8d19eb490e0fe8223937"
+      },
+      "vesper1Ps1": {
+        "volume": "I",
+        "lines": [
+          1821,
+          1860
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "4fb3f254f13819c1425b00718020050c8c69b61907e46ec52fc4175706bd3a78"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          1941,
+          2012
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "7544b0c1abc2dda957e4672ed13e42947a0320d7298cc9c714c78cd6b6df91ce"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          2113,
+          2123
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "3173d3b4e0783832491b954634367736d582ccbe90d197c1735ac99d35c3648b"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          2124,
+          2140
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "29b4a808a9ac66b40e6e1d15db9ab33b782a97c83879707823fdf2c9e353db02"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          2144,
+          2185
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "135c024b21ee24eec1b672745c06ba41347db7b6b8c2851d3fddf1a59f797b71"
+      },
+      "sext1R": {
+        "volume": "I",
+        "lines": [
+          2219,
+          2222
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "557d4b382480129253a6f33f20d7ce1aeb3299c7cd6597d7e1db69c405562991"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          2237,
+          2312
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "62ac2317e9cf233ab5a1b7c0948793d1e59e4aae83df8d19eb490e0fe8223937"
+      },
+      "vesperAnt1": {
+        "volume": "I",
+        "lines": [
+          2314,
+          2314
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "123dba21e623071031c239c94dcfe156a3adf673b5c8277a0b3c9fc249e7bbe1"
+      },
+      "vesperAnt2": {
+        "volume": "I",
+        "lines": [
+          2336,
+          2336
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "2dd0c05c2f77520ae297560fe52962babd9445c7f69913a0845a95cc64a12425"
+      },
+      "vesperPs1": {
+        "volume": "I",
+        "lines": [
+          2315,
+          2334
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "e4af499673ca090bd87960f35da493d8856791567c9cdcf165d19110836bd74d"
+      },
+      "vesperPs2": {
+        "volume": "I",
+        "lines": [
+          2337,
+          2358
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "de8036ccdb96ab0116e5f8f3dcae648e5cd61dd4f06d7f639bc78a9942fc57a9"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          2237,
+          2312
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "62ac2317e9cf233ab5a1b7c0948793d1e59e4aae83df8d19eb490e0fe8223937"
+      },
+      "vesper1Ps1": {
+        "volume": "I",
+        "lines": [
+          1821,
+          1860
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "4fb3f254f13819c1425b00718020050c8c69b61907e46ec52fc4175706bd3a78"
+      }
+    },
     "lent": {
+      "officeOfReadingsHymn": {
+        "volume": "II",
+        "lines": [
+          2259,
+          2330
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "7544b0c1abc2dda957e4672ed13e42947a0320d7298cc9c714c78cd6b6df91ce"
+      },
       "officeOfReadingsR1": {
         "volume": "II",
         "lines": [
@@ -2410,7 +4037,17 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "8192bef26903c9178d0cc918797cc251dfd8f44f0a6687e0d597cfe2b05cb281"
+        "sha256": "ee92078175c67d8228a6abe10bca34a82e44e8639a4d664639996d01b736352e"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          2453,
+          2469
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "55f4a70cd9820c9f61dd6a7b98857bb5ccaccaedad4652f9e07e1788f4571b5d"
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -2423,6 +4060,16 @@
         "from": "laudesPr",
         "sha256": "78c2fa8a4bfd971322c2a64c849aa9e1b81ce4650faa9a315fac0b1eddf4728a"
       },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          2473,
+          2514
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "135c024b21ee24eec1b672745c06ba41347db7b6b8c2851d3fddf1a59f797b71"
+      },
       "laudesR": {
         "volume": "II",
         "lines": [
@@ -2431,7 +4078,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "1491e394eff76ce350cc680c4a41a8434a447ee4a20df28c5085940d07622b35"
+        "sha256": "a5e7c9853ac193edb5478bf7f867745f6b59cc24f720c8b5df298dffed528565"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -2516,6 +4163,16 @@
         "from": "laudesPr",
         "sha256": "78c2fa8a4bfd971322c2a64c849aa9e1b81ce4650faa9a315fac0b1eddf4728a"
       },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          2605,
+          2680
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "ce39aa4de004b2c23dfb8a4df014ac077cab672e01927bcb8922952e5fd87098"
+      },
       "vesperR": {
         "volume": "II",
         "lines": [
@@ -2546,6 +4203,27 @@
         "kind": "prayer",
         "sha256": "78c2fa8a4bfd971322c2a64c849aa9e1b81ce4650faa9a315fac0b1eddf4728a"
       },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          2605,
+          2680
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "ce39aa4de004b2c23dfb8a4df014ac077cab672e01927bcb8922952e5fd87098"
+      },
+      "vesper1Ps1": {
+        "volume": "II",
+        "lines": [
+          2107,
+          2146
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "4fb3f254f13819c1425b00718020050c8c69b61907e46ec52fc4175706bd3a78"
+      },
       "vesper1R": {
         "volume": "II",
         "lines": [
@@ -2554,7 +4232,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "64478082dc981553c03bdea260193b0eeddb9dc02a44990eca7424f2d5701959"
+        "sha256": "1bdf82d122f748cf3e85c321de661b4bff6b70c7fecab36d77fa6a5e088c88d0"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -2590,6 +4268,16 @@
           "alleluia-v1"
         ],
         "sha256": "ba26ec0a17f216285b668a928fa83517cced704a7a690d33c45c33f77a58e198"
+      },
+      "officeOfReadingsHymn": {
+        "volume": "II",
+        "lines": [
+          2259,
+          2330
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "7544b0c1abc2dda957e4672ed13e42947a0320d7298cc9c714c78cd6b6df91ce"
       },
       "officeOfReadingsAnt1": {
         "volume": "II",
@@ -2649,12 +4337,9 @@
           2364,
           2383
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "7d198246563f2f90ccf8ffd07685d0bb5eecd23c21a82952278aa58fbe88d595"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "4d2dcb2ec2e69d23d77abb29c1f617e7a1b2603a2b90f6c293c84b0f3e1e06a6"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -2669,6 +4354,19 @@
         ],
         "sha256": "00c1eb8542e381d9309549a9dffe9f59700ed25c8fe6a11b5fad85f79c60dbc0"
       },
+      "officeOfReadingsVers": {
+        "volume": "II",
+        "lines": [
+          2428,
+          2429
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "cbba1b95738bad7c8955dffdc7cf50fd2fc20b46b74b6587c0b8cf7548d7cdb0"
+      },
       "officeOfReadingsR1": {
         "volume": "II",
         "lines": [
@@ -2677,7 +4375,17 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "48f2027c16a7e7974887e6f241f60e34022435a9f83ba0db4708e7637ecf29ce"
+        "sha256": "c7e8a2cdfd71043a3cf1b2b8eac3dfa349a571fea7d22f75db862e9206318e51"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          2453,
+          2469
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "f1d4d8ad09555a8e401d1205322be583fe754b0d20ca49281f101bc46ba792da"
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -2689,6 +4397,16 @@
         "kind": "ref",
         "from": "laudesPr",
         "sha256": "515d76b9f9eee1a1240bf99be81695900a3d2781e5e8b9e0a6281ae691f1c449"
+      },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          2473,
+          2514
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "135c024b21ee24eec1b672745c06ba41347db7b6b8c2851d3fddf1a59f797b71"
       },
       "laudesAnt1": {
         "volume": "II",
@@ -2737,7 +4455,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "a9c6846fb587a58890c825bd4436c586f2b1b4492978aef3a79bf39d747d4454"
+        "sha256": "054bafc9971f33e15d006bac83ba48f514f9343721a91dac5cbd8106f6e284f2"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -2747,7 +4465,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "b4f801054a556df8589a71b623ac41e6f9062f0f9921e1b34955a5f11e29ec83"
+        "sha256": "5206e053ca5548aa97157166b1f034edb93b07573c0c438271b1b6e542f81fc7"
       },
       "laudesPr": {
         "volume": "II",
@@ -2780,7 +4498,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "1e6770d52854c0d42eb6cb48b9e10fd77ac0f8c797f747d28b419e616f867d7c"
+        "sha256": "7afda8b1eccbfac5736173bfc2151881e52e9d1bf4b551fa650209048b79ed4a"
       },
       "sext1Pr": {
         "volume": "II",
@@ -2814,7 +4532,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "1372f82d791d4db69ee815cdb8137bb1207f693befab852faade0ea96242f769"
+        "sha256": "7128e2f6350801fbdebbee70473ad3468e2e0d77e8f88412b27a791bee266d9b"
       },
       "sext2Pr": {
         "volume": "II",
@@ -2848,7 +4566,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "de549e468abab9d85b236ed8322f6eccef66cfab996affeab49c644d014d4f55"
+        "sha256": "98ddffadb11f6c1768eb9ab0f36b20740bb2fae93cdf87a874fcb4a180c52379"
       },
       "sext3Pr": {
         "volume": "II",
@@ -2860,6 +4578,16 @@
         "kind": "ref",
         "from": "laudesPr",
         "sha256": "515d76b9f9eee1a1240bf99be81695900a3d2781e5e8b9e0a6281ae691f1c449"
+      },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          2605,
+          2680
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "ce39aa4de004b2c23dfb8a4df014ac077cab672e01927bcb8922952e5fd87098"
       },
       "vesperAnt1": {
         "volume": "II",
@@ -2947,7 +4675,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "9b19eae1f3b7c9b11983acce11eb46bba8a4d53223c07d331352eb020946e2b0"
+        "sha256": "e5084cde996644d2442bd94df58fc6c2f86bf39034a537e8c1d07e4ffd4c16e7"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -2957,7 +4685,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "a4744a9b8323ee6ca45161f7e73a803b69df304d511abc20f7975679fe1393c8"
+        "sha256": "f70bf8d812598fc094cc3dea9e9b6f0a586da3e210a7722c23759f8c1136aac7"
       },
       "vesperPr": {
         "volume": "II",
@@ -2968,6 +4696,17 @@
         "method": "render",
         "kind": "prayer",
         "sha256": "515d76b9f9eee1a1240bf99be81695900a3d2781e5e8b9e0a6281ae691f1c449"
+      },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          2605,
+          2680
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "ce39aa4de004b2c23dfb8a4df014ac077cab672e01927bcb8922952e5fd87098"
       },
       "vesper1Ant1": {
         "volume": "II",
@@ -3014,12 +4753,9 @@
           2107,
           2146
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "2ab7bfea923bddb36485eec0a58388ae7fc74202ec460722e99fdaaa6bf36d47"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "b15fe6165bd0ea132a0a232a7459386221b4f13acae7f998f915797e7bbeec8d"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -3055,7 +4791,7 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "fdb4fd9fda7a8ace29d993ff28c4ca0eb1ed90e9fc58be313be8ab77a65333a3"
+        "sha256": "f5f7d5ba25d1822061ebc2aec2d6685e690eccdb9a9167f6a74e128f666c5409"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -3065,7 +4801,7 @@
         ],
         "method": "render",
         "kind": "canticleAnt",
-        "sha256": "6db404f0ab1b33845905cfb71ca1c7e8427c887345ffef893b7dafe71d151623"
+        "sha256": "2bb5707fd9825ef3ce1d165626431d797ebb61d93200a2ff6addd4a27bf92f60"
       },
       "vesper1Pr": {
         "volume": "II",
@@ -3080,7 +4816,351 @@
     }
   },
   "pastors": {
+    "advent": {
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          2522,
+          2577
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "179bf949cab3ea3c0bee414881102790be03d126d0a2bf64010ca7baded9ea97"
+      },
+      "officeOfReadingsPs3": {
+        "volume": "I",
+        "lines": [
+          2621,
+          2637
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "d5c79447c88f4987daaa6417a7fee84bc066d935914237dbf9ff108205494347"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          2641,
+          2668
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "e12f8145293b1ab6563d00a07c0ac7fc576e8fca604f3b5b61b3bd2ca605648d"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          2669,
+          2740
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "1706d9c7346e8683162c2eaea917fdd0afe0a5810719d3721d5ca2de5f627c10"
+      },
+      "officeOfReadingsPr": {
+        "volume": "I",
+        "lines": [
+          2813,
+          2826
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          2744,
+          2791
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "0383b54f9eb8f5214b3669ceffd00a69792710a89dee3e8738a88130c58f732c"
+      },
+      "laudesPr": {
+        "volume": "I",
+        "lines": [
+          2813,
+          2826
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "sext1Pr": {
+        "volume": "I",
+        "lines": [
+          2813,
+          2826
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "sext2Pr": {
+        "volume": "I",
+        "lines": [
+          2813,
+          2826
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "sext3R": {
+        "volume": "I",
+        "lines": [
+          2842,
+          2845
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "f58a1aa8a1f70a2f918df5c1c77db12f2b6792800623cc2fb5b333000fdc0462"
+      },
+      "sext3Pr": {
+        "volume": "I",
+        "lines": [
+          2813,
+          2826
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          2848,
+          2907
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "cf86ce4f2ae26e19eec35dfa99ebe87eb8b93f7d3290efca7311ab2a3a0a1303"
+      },
+      "vesperPr": {
+        "volume": "I",
+        "lines": [
+          2987,
+          3000
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          2848,
+          2907
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "cf86ce4f2ae26e19eec35dfa99ebe87eb8b93f7d3290efca7311ab2a3a0a1303"
+      },
+      "vesper1Ps2": {
+        "volume": "I",
+        "lines": [
+          2431,
+          2454
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "9c6e8ad747f0bd52d614897c71eb8da04a432966398d6eb3cae1c845b8f792b8"
+      },
+      "vesper1Pr": {
+        "volume": "I",
+        "lines": [
+          2504,
+          2517
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          2522,
+          2577
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "179bf949cab3ea3c0bee414881102790be03d126d0a2bf64010ca7baded9ea97"
+      },
+      "officeOfReadingsPs3": {
+        "volume": "I",
+        "lines": [
+          2621,
+          2637
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "d5c79447c88f4987daaa6417a7fee84bc066d935914237dbf9ff108205494347"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          2641,
+          2668
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "e12f8145293b1ab6563d00a07c0ac7fc576e8fca604f3b5b61b3bd2ca605648d"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          2669,
+          2740
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "1706d9c7346e8683162c2eaea917fdd0afe0a5810719d3721d5ca2de5f627c10"
+      },
+      "officeOfReadingsPr": {
+        "volume": "I",
+        "lines": [
+          2813,
+          2826
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          2744,
+          2791
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "0383b54f9eb8f5214b3669ceffd00a69792710a89dee3e8738a88130c58f732c"
+      },
+      "laudesPr": {
+        "volume": "I",
+        "lines": [
+          2813,
+          2826
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "sext1Pr": {
+        "volume": "I",
+        "lines": [
+          2813,
+          2826
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "sext2Pr": {
+        "volume": "I",
+        "lines": [
+          2813,
+          2826
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "sext3R": {
+        "volume": "I",
+        "lines": [
+          2842,
+          2845
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "f58a1aa8a1f70a2f918df5c1c77db12f2b6792800623cc2fb5b333000fdc0462"
+      },
+      "sext3Pr": {
+        "volume": "I",
+        "lines": [
+          2813,
+          2826
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "laudesPr",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          2848,
+          2907
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "cf86ce4f2ae26e19eec35dfa99ebe87eb8b93f7d3290efca7311ab2a3a0a1303"
+      },
+      "vesperPr": {
+        "volume": "I",
+        "lines": [
+          2987,
+          3000
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          2848,
+          2907
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "cf86ce4f2ae26e19eec35dfa99ebe87eb8b93f7d3290efca7311ab2a3a0a1303"
+      },
+      "vesper1Ps2": {
+        "volume": "I",
+        "lines": [
+          2431,
+          2454
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "9c6e8ad747f0bd52d614897c71eb8da04a432966398d6eb3cae1c845b8f792b8"
+      },
+      "vesper1Pr": {
+        "volume": "I",
+        "lines": [
+          2504,
+          2517
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "a10602c71e81384712171b5a9ede63d962ed285c0a9c9a06ede7c6509c83769b"
+      }
+    },
     "lent": {
+      "officeOfReadingsHymn": {
+        "volume": "II",
+        "lines": [
+          2923,
+          2978
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "1b17098b7235207d020f7e323dd68fd934d6a83a4d369d1bf85f315e21efc3b3"
+      },
       "officeOfReadingsR1": {
         "volume": "II",
         "lines": [
@@ -3089,7 +5169,27 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "fccbd0d449d6b2ec95363c449aa4e3de8dc6dc7cc5acaed08b4f65a887a3cdbc"
+        "sha256": "9ae66d1a64cc4ee504f00c31fb95fb6371acaa7e3695bb5531f111cb2b3292e5"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          3076,
+          3147
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "3ad71aff2a69117f213c127fa46ce046a50402b1983b0bcb7c5b0f198f4e7ee2"
+      },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          3151,
+          3198
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "0383b54f9eb8f5214b3669ceffd00a69792710a89dee3e8738a88130c58f732c"
       },
       "laudesR": {
         "volume": "II",
@@ -3101,6 +5201,16 @@
         "kind": "shortReading",
         "sha256": "c7a9e1336e506c4afa9e616d283dff8feb57578e87db0fb9d6275dd2e797cc7c"
       },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          3258,
+          3317
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "cf86ce4f2ae26e19eec35dfa99ebe87eb8b93f7d3290efca7311ab2a3a0a1303"
+      },
       "vesperR": {
         "volume": "II",
         "lines": [
@@ -3110,6 +5220,17 @@
         "method": "carrier+render",
         "kind": "shortReading",
         "sha256": "a442e703932c7207760a36b0158a7beb269baa6505e7d7b936ff4262f019fa2e"
+      },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          3258,
+          3317
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "cf86ce4f2ae26e19eec35dfa99ebe87eb8b93f7d3290efca7311ab2a3a0a1303"
       },
       "vesper1R": {
         "volume": "II",
@@ -3135,6 +5256,16 @@
           "alleluia-v1"
         ],
         "sha256": "cf2cbed9278bfc38f0b23266f2123c7a69aa198fee491c52983ea277daec9220"
+      },
+      "officeOfReadingsHymn": {
+        "volume": "II",
+        "lines": [
+          2923,
+          2978
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "1b17098b7235207d020f7e323dd68fd934d6a83a4d369d1bf85f315e21efc3b3"
       },
       "officeOfReadingsAnt1": {
         "volume": "II",
@@ -3194,12 +5325,9 @@
           3000,
           3017
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "8251279fd3b7574711f1e7656477a85cdae008f7c5ae346a64435382138c471b"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "759b49d1a8bf42f8a6b9b4cd63ffaf6f64883b82e4b33872a73910de6c9063e8"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -3207,12 +5335,22 @@
           3020,
           3036
         ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "6078902adeabde4519f949ab664a239b2cf026959cce90ca2c5bdc487b001e92"
+      },
+      "officeOfReadingsVers": {
+        "volume": "II",
+        "lines": [
+          3038,
+          3039
+        ],
         "method": "carrier+alleluia",
         "kind": "annotated",
         "rules": [
-          "alleluia-v1"
+          "alleluia-v1-versicle"
         ],
-        "sha256": "dd4913462ccb6c0fed4ef4031d5c8b216fba36ba319eaa64c5c806015591faa2"
+        "sha256": "e9a4f15c99eaa1ad7f3cd528fa906910a3121b087975c2d5431cf03ada3c56c6"
       },
       "officeOfReadingsR1": {
         "volume": "II",
@@ -3222,7 +5360,27 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "32ce28f4b9bc1c2a9bfc605678ce6e79cded2316bb2c4612e99e37fd5702d238"
+        "sha256": "a58001ed1f1d98ce9c127c2466e8f352297174bfc00d555c9a3b535255330a25"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          3076,
+          3147
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "5129b753e93e0a5c5b09dab0bf81f9de10693f9b5c2779c8fd3c238bef10ddbe"
+      },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          3151,
+          3198
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "0383b54f9eb8f5214b3669ceffd00a69792710a89dee3e8738a88130c58f732c"
       },
       "laudesAnt1": {
         "volume": "II",
@@ -3271,7 +5429,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "e946257ad36eb58b6d22f6caaf455f6d68b6fe9e16096aace0f65f93bb593a89"
+        "sha256": "20ad5d56d13d05caf94ed89a35a1b3665a996c6127922b3fd6dd19e7ab54159d"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -3299,6 +5457,19 @@
         ],
         "sha256": "fb20d81f0ad1bd9046a68cf1aeed53dc33a6f2cf829481de1dfc3d86e2acb741"
       },
+      "sext1R": {
+        "volume": "II",
+        "lines": [
+          3240,
+          3243
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "6089b59c5975897a60f944c43e0492b88d0cccb7fbf7d3a406d8a856abb888fc"
+      },
       "sext2Ant1": {
         "volume": "II",
         "lines": [
@@ -3312,6 +5483,19 @@
         ],
         "sha256": "0f443a947da08da3e2bf2bf0963bcc33ae22babeef3cda8fd29110843a82fd3e"
       },
+      "sext2R": {
+        "volume": "II",
+        "lines": [
+          3246,
+          3249
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "72e76c668ee479e73b5a58fda50b66a0be0a0c2b1d2c05453d254293929c38ed"
+      },
       "sext3Ant1": {
         "volume": "II",
         "lines": [
@@ -3324,6 +5508,29 @@
           "alleluia-v1"
         ],
         "sha256": "66a79b29c34545fb4b53c3bfac7f4b1d7ed86a9c54d9235c95fd9c03dd9dd72d"
+      },
+      "sext3R": {
+        "volume": "II",
+        "lines": [
+          3252,
+          3255
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "2248fb95a908fa89789ab9676b572ca8ab9b34013c6d3865998f54e36a9f8e3f"
+      },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          3258,
+          3317
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "cf86ce4f2ae26e19eec35dfa99ebe87eb8b93f7d3290efca7311ab2a3a0a1303"
       },
       "vesperAnt1": {
         "volume": "II",
@@ -3411,7 +5618,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "32c5b5cfd07dff89990bcdd9d54f2c15b8afc990fac70c384a7024d9263d1a56"
+        "sha256": "d1d3aac84990a07efbbceb64ca30d1ce9a0531b68643f75e839e64403c7d2df6"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -3425,6 +5632,17 @@
           "alleluia-v1"
         ],
         "sha256": "fb91259bf0b56788eff04660e1a949df47fe1be37e3162a69743ec3d6b4c1d57"
+      },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          3258,
+          3317
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "cf86ce4f2ae26e19eec35dfa99ebe87eb8b93f7d3290efca7311ab2a3a0a1303"
       },
       "vesper1Ant1": {
         "volume": "II",
@@ -3512,7 +5730,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "ef0bd0dc4c2e3acff58181b06fc06cd4a0417cb68d3be1ecb9f4ea3a3a5f7273"
+        "sha256": "74205fd530f11bc672dff51f9950101652f482573fb3fd7c742e694da72ee279"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -3530,6 +5748,178 @@
     }
   },
   "doctors-of-church": {
+    "advent": {
+      "officeOfReadingsPs3": {
+        "volume": "I",
+        "lines": [
+          2621,
+          2637
+        ],
+        "method": "inherit:pastors",
+        "kind": "psalm",
+        "inheritedFrom": "pastors",
+        "sha256": "d5c79447c88f4987daaa6417a7fee84bc066d935914237dbf9ff108205494347"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          3018,
+          3030
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "61773b8c4db8abfa70456935427261b6b8a5eacf41869a07266141e5f613a921"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          3031,
+          3059
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "c1a3f86537e943172eaeebecdc42908b01da9b8ff42027acad47dcb7dc46b957"
+      },
+      "sext3R": {
+        "volume": "I",
+        "lines": [
+          2842,
+          2845
+        ],
+        "method": "inherit:pastors",
+        "kind": "shortReading",
+        "inheritedFrom": "pastors",
+        "sha256": "f58a1aa8a1f70a2f918df5c1c77db12f2b6792800623cc2fb5b333000fdc0462"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          3093,
+          3117
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "2fa5aa31b9fa730c64f4714b7670fabe147af1f401903ff2c275892642fc2896"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          3093,
+          3117
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "2fa5aa31b9fa730c64f4714b7670fabe147af1f401903ff2c275892642fc2896"
+      },
+      "vesper1Ps2": {
+        "volume": "I",
+        "lines": [
+          2431,
+          2454
+        ],
+        "method": "inherit:pastors",
+        "kind": "psalm",
+        "inheritedFrom": "pastors",
+        "sha256": "9c6e8ad747f0bd52d614897c71eb8da04a432966398d6eb3cae1c845b8f792b8"
+      },
+      "vesper1R": {
+        "volume": "I",
+        "lines": [
+          3005,
+          3008
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "f43be315f8270b1779f6303d8bb0f85d696abec5cffb8f138110d09a34be4acf"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsPs3": {
+        "volume": "I",
+        "lines": [
+          2621,
+          2637
+        ],
+        "method": "inherit:pastors",
+        "kind": "psalm",
+        "inheritedFrom": "pastors",
+        "sha256": "d5c79447c88f4987daaa6417a7fee84bc066d935914237dbf9ff108205494347"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          3018,
+          3030
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "61773b8c4db8abfa70456935427261b6b8a5eacf41869a07266141e5f613a921"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          3031,
+          3059
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "c1a3f86537e943172eaeebecdc42908b01da9b8ff42027acad47dcb7dc46b957"
+      },
+      "sext3R": {
+        "volume": "I",
+        "lines": [
+          2842,
+          2845
+        ],
+        "method": "inherit:pastors",
+        "kind": "shortReading",
+        "inheritedFrom": "pastors",
+        "sha256": "f58a1aa8a1f70a2f918df5c1c77db12f2b6792800623cc2fb5b333000fdc0462"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          3093,
+          3117
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "2fa5aa31b9fa730c64f4714b7670fabe147af1f401903ff2c275892642fc2896"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          3093,
+          3117
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "2fa5aa31b9fa730c64f4714b7670fabe147af1f401903ff2c275892642fc2896"
+      },
+      "vesper1Ps2": {
+        "volume": "I",
+        "lines": [
+          2431,
+          2454
+        ],
+        "method": "inherit:pastors",
+        "kind": "psalm",
+        "inheritedFrom": "pastors",
+        "sha256": "9c6e8ad747f0bd52d614897c71eb8da04a432966398d6eb3cae1c845b8f792b8"
+      },
+      "vesper1R": {
+        "volume": "I",
+        "lines": [
+          3005,
+          3008
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "f43be315f8270b1779f6303d8bb0f85d696abec5cffb8f138110d09a34be4acf"
+      }
+    },
     "lent": {
       "officeOfReadingsR1": {
         "volume": "II",
@@ -3539,7 +5929,17 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "d2c55a958e8bce7a5589d6b30dde522e3cbcd45d3112fffbb5c17c0252d88b93"
+        "sha256": "ff48373b3d96813f6b66fb489fddef236476cfd2755c4b80ae43f88369241c1e"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          3463,
+          3490
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "482ec2c4f8fc0297dc985a57041b92d9df16dc84139e906de2228370d007dab5"
       },
       "laudesR": {
         "volume": "II",
@@ -3551,6 +5951,16 @@
         "kind": "shortReading",
         "sha256": "e9caedb032fe440149b64280733675ddd07ac3a1dc71b26499f0181541baa3e0"
       },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          3527,
+          3551
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "2fa5aa31b9fa730c64f4714b7670fabe147af1f401903ff2c275892642fc2896"
+      },
       "vesperR": {
         "volume": "II",
         "lines": [
@@ -3560,6 +5970,17 @@
         "method": "carrier+render",
         "kind": "shortReading",
         "sha256": "a2fee8e5718af154556330341981be7f7d3224d27a112166a3a1c359d1dfae73"
+      },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          3527,
+          3551
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "2fa5aa31b9fa730c64f4714b7670fabe147af1f401903ff2c275892642fc2896"
       },
       "vesper1R": {
         "volume": "II",
@@ -3586,6 +6007,98 @@
         ],
         "sha256": "195d0ed5ec73e092bca6bd3d7683df798959a3f031851c838deee0b2e789abbd"
       },
+      "officeOfReadingsAnt1": {
+        "volume": "II",
+        "lines": [
+          2980,
+          2980
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "454736987b4d8ae416d1cced7e631bfb06af5bbc5336a8c23bcfa948b4da5cbe"
+      },
+      "officeOfReadingsAnt2": {
+        "volume": "II",
+        "lines": [
+          2999,
+          2999
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "b35ce8f68766253ac38b3ea3ed382e23d341ffe1eeb59a36b65d5201667c2654"
+      },
+      "officeOfReadingsAnt3": {
+        "volume": "II",
+        "lines": [
+          3019,
+          3019
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "57c8b86e04d0c4b013e6c212aebb01e917aa9c4b3fc57a2d42746bf0a5496af6"
+      },
+      "officeOfReadingsPs1": {
+        "volume": "II",
+        "lines": [
+          2981,
+          2997
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "3f19b26cf2ac9dc6767d323c383aa7a4000fbc77cc75f685097d839543644663"
+      },
+      "officeOfReadingsPs2": {
+        "volume": "II",
+        "lines": [
+          3000,
+          3017
+        ],
+        "method": "inherit:pastors",
+        "kind": "psalm",
+        "inheritedFrom": "pastors",
+        "sha256": "759b49d1a8bf42f8a6b9b4cd63ffaf6f64883b82e4b33872a73910de6c9063e8"
+      },
+      "officeOfReadingsPs3": {
+        "volume": "II",
+        "lines": [
+          3020,
+          3036
+        ],
+        "method": "inherit:pastors",
+        "kind": "psalm",
+        "inheritedFrom": "pastors",
+        "sha256": "6078902adeabde4519f949ab664a239b2cf026959cce90ca2c5bdc487b001e92"
+      },
+      "officeOfReadingsVers": {
+        "volume": "II",
+        "lines": [
+          3038,
+          3039
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "e9a4f15c99eaa1ad7f3cd528fa906910a3121b087975c2d5431cf03ada3c56c6"
+      },
       "officeOfReadingsR1": {
         "volume": "II",
         "lines": [
@@ -3594,7 +6107,59 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "9f7cb8ee25072a4787b06e6c0da2cf0a0e8a11805f94a0068f75760e6cb807f3"
+        "sha256": "75da0d73dee11169a05937dd7395e903bcc2283d72f6ec842cbe2b9939911725"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          3463,
+          3490
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "1915e3001cf24e12f775e670cb3c92119569b7da08aaa352eccf37bb920763dc"
+      },
+      "laudesAnt1": {
+        "volume": "II",
+        "lines": [
+          3199,
+          3199
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "6c289c862ef28952e0d170387cc31bdafad00fe6d08b1ece7c147a343e735d5f"
+      },
+      "laudesAnt2": {
+        "volume": "II",
+        "lines": [
+          3201,
+          3201
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "e877c73c49b9799391b208f669d57436ccc9a9834914451e1086862db374b188"
+      },
+      "laudesAnt3": {
+        "volume": "II",
+        "lines": [
+          3202,
+          3202
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "cb430cec5b1446e6fd524d7df7648ca1012aaa5e3a8525b6841aecb8fc4968dd"
       },
       "laudesR": {
         "volume": "II",
@@ -3604,7 +6169,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "8066e81747e11dcb8070e4d4dc67dcbdcbaebcb83fac70b223421a9ac8f4e86e"
+        "sha256": "60b37f2f458bed98160640115e92c82c07bfd30587958b8b34e12d1bdbc2bb1e"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -3619,6 +6184,184 @@
         ],
         "sha256": "3b68dc50af32bdabb9b370207527d4449c35c5559b794c9016ee7e9ec38567c1"
       },
+      "sext1Ant1": {
+        "volume": "II",
+        "lines": [
+          3239,
+          3239
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "fb20d81f0ad1bd9046a68cf1aeed53dc33a6f2cf829481de1dfc3d86e2acb741"
+      },
+      "sext1R": {
+        "volume": "II",
+        "lines": [
+          3240,
+          3243
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "6089b59c5975897a60f944c43e0492b88d0cccb7fbf7d3a406d8a856abb888fc"
+      },
+      "sext2Ant1": {
+        "volume": "II",
+        "lines": [
+          3245,
+          3245
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "0f443a947da08da3e2bf2bf0963bcc33ae22babeef3cda8fd29110843a82fd3e"
+      },
+      "sext2R": {
+        "volume": "II",
+        "lines": [
+          3246,
+          3249
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "72e76c668ee479e73b5a58fda50b66a0be0a0c2b1d2c05453d254293929c38ed"
+      },
+      "sext3Ant1": {
+        "volume": "II",
+        "lines": [
+          3251,
+          3251
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "66a79b29c34545fb4b53c3bfac7f4b1d7ed86a9c54d9235c95fd9c03dd9dd72d"
+      },
+      "sext3R": {
+        "volume": "II",
+        "lines": [
+          3252,
+          3255
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "2248fb95a908fa89789ab9676b572ca8ab9b34013c6d3865998f54e36a9f8e3f"
+      },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          3527,
+          3551
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "2fa5aa31b9fa730c64f4714b7670fabe147af1f401903ff2c275892642fc2896"
+      },
+      "vesperAnt1": {
+        "volume": "II",
+        "lines": [
+          3319,
+          3319
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "f118afe84b88aa185ba88acaf0cc803b24ef3997bedead78a22840a1474eb6c8"
+      },
+      "vesperAnt2": {
+        "volume": "II",
+        "lines": [
+          3338,
+          3338
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "000fd49c47071357a504443422f3c7fae69f72ff312d0f9abd19dac92ba6b43c"
+      },
+      "vesperAnt3": {
+        "volume": "II",
+        "lines": [
+          3363,
+          3363
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "36e4bc4136308326c57ca6d7d6e57c705868747d10f1e4f5de02f8de1cb49f46"
+      },
+      "vesperPs1": {
+        "volume": "II",
+        "lines": [
+          3320,
+          3336
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "9ef6dc17d38cc77ef4ea482867393fe6ffee913df8c3813ca3f62a83087ff95d"
+      },
+      "vesperPs2": {
+        "volume": "II",
+        "lines": [
+          3339,
+          3361
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "35d65e8a1ce70b60e0e8f89dc8388b1b6f9911f870c247a926491ab698ba06a1"
+      },
+      "vesperPs3": {
+        "volume": "II",
+        "lines": [
+          3364,
+          3375
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "23e55e35ef667e9b9909b392195f1f16730f93c8ddd337a1cd4d9fe3becd6825"
+      },
       "vesperR": {
         "volume": "II",
         "lines": [
@@ -3627,7 +6370,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "0b0828083b648dc4b8ae30f27eb5f0b95b7e636410c192488c8d75ed86f09dba"
+        "sha256": "4dca137440c9677166f4825b3d22c68999f498d8df47487224ed0b59fa33fc1f"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -3642,6 +6385,101 @@
         ],
         "sha256": "62a07a9dd40346e6af7ab7843a145731f1c022968b048ee1aa88acf93dede33c"
       },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          3527,
+          3551
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "2fa5aa31b9fa730c64f4714b7670fabe147af1f401903ff2c275892642fc2896"
+      },
+      "vesper1Ant1": {
+        "volume": "II",
+        "lines": [
+          2809,
+          2809
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "14f19eba63c185ac769a4c7a7ce53fb4df3655764d48a4ae8308c1ae084aeb02"
+      },
+      "vesper1Ant2": {
+        "volume": "II",
+        "lines": [
+          2829,
+          2829
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "bbe805a10dbb93b96212003c2b60579494032e14062a235363e111270d37850d"
+      },
+      "vesper1Ant3": {
+        "volume": "II",
+        "lines": [
+          2854,
+          2854
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "29f582df1896b408df7ebaa6b8e6797c98b246264450f003415103c9a9d3da05"
+      },
+      "vesper1Ps1": {
+        "volume": "II",
+        "lines": [
+          2810,
+          2827
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "2df4da30b169cb18ea21403e71ba4299deb7c7e07f00e5f257130617d298730a"
+      },
+      "vesper1Ps2": {
+        "volume": "II",
+        "lines": [
+          2830,
+          2852
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "2788e41eaaa312c245113b2eb2de8728e461d4dd6b3a02ff12890acc98776623"
+      },
+      "vesper1Ps3": {
+        "volume": "II",
+        "lines": [
+          2855,
+          2879
+        ],
+        "method": "inherit:pastors",
+        "kind": "annotated",
+        "inheritedFrom": "pastors",
+        "rules": [
+          "alleluia-v1"
+        ],
+        "sha256": "754c7be3759b09212fe134e86e490b69fef24e0bbbb92c6eb0efd852bd41bdfc"
+      },
       "vesper1R": {
         "volume": "II",
         "lines": [
@@ -3650,7 +6488,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "7069ca00b82434ea698b673c40e6e52d4e01fc8da18209b929267e5354f46248"
+        "sha256": "5ccd0acf22c16a9f7cebb9c455f8b53b93ab04dd2f3e67ab8978f8077d33658d"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -3668,7 +6506,211 @@
     }
   },
   "virgins": {
+    "advent": {
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          3232,
+          3274
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "112f47932405abc1f3cb2f3c7babb42500898bf82831af6e69af9ff4a3286a51"
+      },
+      "officeOfReadingsAnt1": {
+        "volume": "I",
+        "lines": [
+          3276,
+          3276
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "9c888dfbacdf6088fba559a1e51f39bf8e3a6d7ebf0c8d52f4c0976d0c1e22e7"
+      },
+      "officeOfReadingsPs1": {
+        "volume": "I",
+        "lines": [
+          3277,
+          3292
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "da6700dcc1cb0948a09b943e99ba74a0ba61f26546cf62e991e6666950d25894"
+      },
+      "officeOfReadingsPs3": {
+        "volume": "I",
+        "lines": [
+          3328,
+          3345
+        ],
+        "method": "render",
+        "kind": "psalm",
+        "sha256": "004817db64454348fdaf99329a1f7c896c56b9ffd983fb8f594e3a215da4e78b"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          3349,
+          3362
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "3d611bd9a9a7fa791090581d3104d52691af618ac0c2e7fdcab757b6103b20d0"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          3363,
+          3388
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "4168d916255dfddadd5a123c092648b607d657db280dda4b6d365de54125432b"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          3392,
+          3414
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "55e1ecda9254909ee05b4d19dc9c52f50d406c6f9b65e987a311a2875d63b8e1"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          3232,
+          3274
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "112f47932405abc1f3cb2f3c7babb42500898bf82831af6e69af9ff4a3286a51"
+      },
+      "officeOfReadingsAnt1": {
+        "volume": "I",
+        "lines": [
+          3276,
+          3276
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "9c888dfbacdf6088fba559a1e51f39bf8e3a6d7ebf0c8d52f4c0976d0c1e22e7"
+      },
+      "officeOfReadingsPs1": {
+        "volume": "I",
+        "lines": [
+          3277,
+          3292
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "da6700dcc1cb0948a09b943e99ba74a0ba61f26546cf62e991e6666950d25894"
+      },
+      "officeOfReadingsPs3": {
+        "volume": "I",
+        "lines": [
+          3328,
+          3345
+        ],
+        "method": "render",
+        "kind": "psalm",
+        "sha256": "004817db64454348fdaf99329a1f7c896c56b9ffd983fb8f594e3a215da4e78b"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          3349,
+          3362
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "3d611bd9a9a7fa791090581d3104d52691af618ac0c2e7fdcab757b6103b20d0"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          3363,
+          3388
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "4168d916255dfddadd5a123c092648b607d657db280dda4b6d365de54125432b"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          3392,
+          3414
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "55e1ecda9254909ee05b4d19dc9c52f50d406c6f9b65e987a311a2875d63b8e1"
+      }
+    },
     "lent": {
+      "officeOfReadingsHymn": {
+        "volume": "II",
+        "lines": [
+          3672,
+          3714
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "112f47932405abc1f3cb2f3c7babb42500898bf82831af6e69af9ff4a3286a51"
+      },
+      "officeOfReadingsAnt1": {
+        "volume": "II",
+        "lines": [
+          3716,
+          3716
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "9c888dfbacdf6088fba559a1e51f39bf8e3a6d7ebf0c8d52f4c0976d0c1e22e7"
+      },
+      "officeOfReadingsPs1": {
+        "volume": "II",
+        "lines": [
+          3717,
+          3732
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "da6700dcc1cb0948a09b943e99ba74a0ba61f26546cf62e991e6666950d25894"
+      },
+      "officeOfReadingsR1": {
+        "volume": "II",
+        "lines": [
+          3783,
+          3795
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "e2e33a371215650a661d39084cebaef2064b9e744118e076c1f98f1f15fc56c9"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          3796,
+          3820
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "4ca8258a004a76433d704b1f4a5a7ee9fa05019a6c536ff74dcd113590a6e19e"
+      },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          3824,
+          3846
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "be67f95fde147cc313296d569cf42fd5cff0ca2d3478caba52e972b06b22bd62"
+      },
       "laudesR": {
         "volume": "II",
         "lines": [
@@ -3714,18 +6756,25 @@
         ],
         "sha256": "9f6b827f7148d65b7c668d0c1a51164763be0167672fd2d87bab2312aa98406c"
       },
+      "officeOfReadingsHymn": {
+        "volume": "II",
+        "lines": [
+          3672,
+          3714
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "112f47932405abc1f3cb2f3c7babb42500898bf82831af6e69af9ff4a3286a51"
+      },
       "officeOfReadingsAnt1": {
         "volume": "II",
         "lines": [
           3716,
           3716
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "42d1a3400d939aa9187b28dccbbec89f3f72bf4ed7f92c90ce98532d87cfdc12"
+        "method": "render",
+        "kind": "ant",
+        "sha256": "9677f1c90789d666ad5ac26b6427e2b7e352296d963fb8f583bdcedc0271f9dc"
       },
       "officeOfReadingsAnt2": {
         "volume": "II",
@@ -3759,12 +6808,9 @@
           3717,
           3732
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "2da3b0da5ffff98b770adc1ccbf9e466d359ca8d036eb6732311487bdac66b1b"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "0f2aa672230ec88418a4e9068dc29f9a31c1bcab809acc5a8d8450d48127fded"
       },
       "officeOfReadingsPs2": {
         "volume": "II",
@@ -3772,12 +6818,9 @@
           3735,
           3762
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "8522c28134c8b2096eeb413adf7d090a3c88d55e1f66ecca3371ffa3f356bda7"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "96ac2e98c733baedcdebd439dfc6865be394d45d0e2c88963ea7098656249ce7"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -3791,6 +6834,49 @@
           "alleluia-v1"
         ],
         "sha256": "ac538a681a1de3ae6a74b0e5c99cac995ca156de6fff07db87321c141978dcbd"
+      },
+      "officeOfReadingsVers": {
+        "volume": "II",
+        "lines": [
+          3781,
+          3782
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "d56f0f054022c9612999177c32a059e026f1ba224840d4a2f03bc11d1440fe02"
+      },
+      "officeOfReadingsR1": {
+        "volume": "II",
+        "lines": [
+          3783,
+          3795
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "d46d807a4973af744a77d8cb1720954cc6a65119b1b264b72ce8ae8452e420c4"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          3796,
+          3820
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "38f43580d80374fe65af263965ddde90ffca0008da02bb0b9f028111a58d53fd"
+      },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          3824,
+          3846
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "be67f95fde147cc313296d569cf42fd5cff0ca2d3478caba52e972b06b22bd62"
       },
       "laudesAnt1": {
         "volume": "II",
@@ -3839,7 +6925,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "03717ba15589c2769aee48a960b2d97b11298ddd5333134684ba37915e43db5f"
+        "sha256": "eaf4079bc8ce7f2303d65dfb0e3516a02e3444e07b84f7fcde7844805f23b2a5"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -3867,6 +6953,19 @@
         ],
         "sha256": "335a385d160f2c9ae1f176bb2b135b3f84dcea2e49acc17f9d46663d5780bb6b"
       },
+      "sext1R": {
+        "volume": "II",
+        "lines": [
+          3887,
+          3890
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "6ba4ebbfcf2ae3cd039d2f6e0c036d1e7802bd8c4a92ba704c0202f56c0f6c4d"
+      },
       "sext2Ant1": {
         "volume": "II",
         "lines": [
@@ -3880,6 +6979,19 @@
         ],
         "sha256": "e1a3a3087a1a10210b9ae9c25d5ce1d4b1bcb9e77d881275775f0bfbfcef71e7"
       },
+      "sext2R": {
+        "volume": "II",
+        "lines": [
+          3893,
+          3896
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "8b7b82db4b9d27568eca1aa4d5ddd0c5d331def13f920d6819f8cccea9c8dca8"
+      },
       "sext3Ant1": {
         "volume": "II",
         "lines": [
@@ -3892,6 +7004,19 @@
           "alleluia-v1"
         ],
         "sha256": "d7e674555220fc559cf7172fd77e6bdb07a396ec9b03b0d5f02cd10d22423bbf"
+      },
+      "sext3R": {
+        "volume": "II",
+        "lines": [
+          3899,
+          3902
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "529a705bf0e9239abd72fcd829f2304a49fbc1531ec68831de5c34f3c171790f"
       },
       "vesperAnt1": {
         "volume": "II",
@@ -3979,7 +7104,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "faf8feeb023ff43b84a1adb16559e310ed2f15083500dbafc01fa85a788f4348"
+        "sha256": "3f15ced1028c4f90435308d51135e3f84b284bc303739976e323be05641bf98e"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -4080,7 +7205,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "c002a4ad6c2ab10229019b234e3a1b69d97d57eac0add38fd88444edaa3e1eb4"
+        "sha256": "fd06f910581463ef8330e38a325205e880659743bb3454272a13006f0a81a1ac"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -4098,7 +7223,183 @@
     }
   },
   "holy-men": {
+    "advent": {
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          3704,
+          3730
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "1eb963405df20d4ec01b0b82bbde88f7d1c3540987478dcf86e1315e7da8de82"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          3794,
+          3828
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "d1fcb2bfc2c459fc9c309ffd97bdcccc06c71fb30dd5cd90fc2e2a4d6ee75782"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          3829,
+          3863
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "67e90bedb8fb6b0e84958281b8af6f4ea7bb9bf7ee949d0003deccbe379d2ed6"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          3867,
+          3913
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "583062a1888232186b108fc5ff4168b28f124c59c68c94ff5c95f1034004e2c1"
+      },
+      "sext2R": {
+        "volume": "I",
+        "lines": [
+          3960,
+          3963
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "ab4e85cea556a94bbadef940d754e0fe4b88c1c8a9656d7b68e86c57d87de79e"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          3972,
+          4018
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "575f9a07ed9c66861d1cb58c3b0813ec3f8e45d26195bd056f90240ee580a8b6"
+      },
+      "vesperR": {
+        "volume": "I",
+        "lines": [
+          4078,
+          4081
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "53787839558fee14483c2d6b97c5c780bd3feafed3ce0a3105df8738307adc2d"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          3972,
+          4018
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "575f9a07ed9c66861d1cb58c3b0813ec3f8e45d26195bd056f90240ee580a8b6"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsHymn": {
+        "volume": "I",
+        "lines": [
+          3704,
+          3730
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "1eb963405df20d4ec01b0b82bbde88f7d1c3540987478dcf86e1315e7da8de82"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          3794,
+          3828
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "d1fcb2bfc2c459fc9c309ffd97bdcccc06c71fb30dd5cd90fc2e2a4d6ee75782"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          3829,
+          3863
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "67e90bedb8fb6b0e84958281b8af6f4ea7bb9bf7ee949d0003deccbe379d2ed6"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          3867,
+          3913
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "583062a1888232186b108fc5ff4168b28f124c59c68c94ff5c95f1034004e2c1"
+      },
+      "sext2R": {
+        "volume": "I",
+        "lines": [
+          3960,
+          3963
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "ab4e85cea556a94bbadef940d754e0fe4b88c1c8a9656d7b68e86c57d87de79e"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          3972,
+          4018
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "575f9a07ed9c66861d1cb58c3b0813ec3f8e45d26195bd056f90240ee580a8b6"
+      },
+      "vesperR": {
+        "volume": "I",
+        "lines": [
+          4078,
+          4081
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "53787839558fee14483c2d6b97c5c780bd3feafed3ce0a3105df8738307adc2d"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          3972,
+          4018
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "575f9a07ed9c66861d1cb58c3b0813ec3f8e45d26195bd056f90240ee580a8b6"
+      }
+    },
     "lent": {
+      "officeOfReadingsHymn": {
+        "volume": "II",
+        "lines": [
+          4143,
+          4169
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "1779ae0b8080daa24256667db11e82a25751672178d06be7201cdd1379e7f27c"
+      },
       "officeOfReadingsR1": {
         "volume": "II",
         "lines": [
@@ -4107,7 +7408,27 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "7dae899c130a63cf9c8579f70c2f9bf0a064e7af5841a0660c04343185279394"
+        "sha256": "64eb202c54406cf085b3ac0422065aa10afe06da92c19772481bcc87b2522dfb"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          4276,
+          4309
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "b8933c4f432a0c501bf6d51ae652843d4513514bdbda97cb41d411e6c85a06e5"
+      },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          4313,
+          4359
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "de297fd5a7f894438f249082d49660ca727d95598b0d5b467872adec9dc7acb8"
       },
       "laudesR": {
         "volume": "II",
@@ -4119,6 +7440,16 @@
         "kind": "shortReading",
         "sha256": "84cf0e93cba9ec2a7f2901e3f66b4686bd62a879d107cb504bc090c6de6dfb0e"
       },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          4421,
+          4467
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "1bbc870c84723e470adf7b07830a29a29f3135a998c722d07b19754c893375d3"
+      },
       "vesperR": {
         "volume": "II",
         "lines": [
@@ -4128,6 +7459,17 @@
         "method": "carrier+render",
         "kind": "shortReading",
         "sha256": "55c8ddfb9f95d3b5fb4160a1a219a37a998f003f726669b379b1f4878a1f9510"
+      },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          4421,
+          4467
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "1bbc870c84723e470adf7b07830a29a29f3135a998c722d07b19754c893375d3"
       },
       "vesper1R": {
         "volume": "II",
@@ -4153,6 +7495,16 @@
           "alleluia-v1"
         ],
         "sha256": "9ee0e6c0285fb5cd2b24ec4a073ce6ac01f052b132e217c92d2263351e6a4602"
+      },
+      "officeOfReadingsHymn": {
+        "volume": "II",
+        "lines": [
+          4143,
+          4169
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "1779ae0b8080daa24256667db11e82a25751672178d06be7201cdd1379e7f27c"
       },
       "officeOfReadingsAnt1": {
         "volume": "II",
@@ -4212,12 +7564,9 @@
           4191,
           4208
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "14265fdf69cc2a26442055f5eb3f6c8c3e396ff727f38a0e7c5336f3ab841d02"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "6b918b0f3a79aadea607e6abba7ce4a54f569b09f84ad7c9bb1ea84331c40cc9"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -4225,12 +7574,22 @@
           4211,
           4227
         ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "ca6b9afbbf0d7e4e2745fd8fc0cbd0b261721467f6e1cc65527519db08e5365e"
+      },
+      "officeOfReadingsVers": {
+        "volume": "II",
+        "lines": [
+          4229,
+          4230
+        ],
         "method": "carrier+alleluia",
         "kind": "annotated",
         "rules": [
-          "alleluia-v1"
+          "alleluia-v1-versicle"
         ],
-        "sha256": "8f1657e19f0f2e4b0e2e3a60a47a9243ab9de2ca5c9ed2f15feeb513f9466af5"
+        "sha256": "3cb06ea3418a42c48d80d64f19adeee80ceb7f2ae65f259db74014c321c2990f"
       },
       "officeOfReadingsR1": {
         "volume": "II",
@@ -4240,7 +7599,27 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "d700cf2f11ebb831cd4e8651216e75d1196c19f2cc342273d88e8cca73d604e7"
+        "sha256": "d4cb43e19e57231a41cd8cd20b30f0691e51ebd90a962bb9168738f420bdc669"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          4276,
+          4309
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "4fa37eb899885d22d141e45ddbe1159483408e7de89fe4524abacab79a994c24"
+      },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          4313,
+          4359
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "de297fd5a7f894438f249082d49660ca727d95598b0d5b467872adec9dc7acb8"
       },
       "laudesAnt1": {
         "volume": "II",
@@ -4289,7 +7668,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "f452a7a1aa32cf5001697c7c01a653f14f6ddafc772be1983de8340dd9f54fde"
+        "sha256": "d463c4fb77eedd76307d59555c3044048dd6c9f012dd44e5ba31cc109bd70023"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -4317,6 +7696,19 @@
         ],
         "sha256": "33954857cf4f52d16ec73106803d2e21f30249235b9a7e220219107aefd18941"
       },
+      "sext1R": {
+        "volume": "II",
+        "lines": [
+          4403,
+          4406
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "0864d27796d9039337b190899c1b38cff4617b4c8cf807e8648457a016cfd1e0"
+      },
       "sext2Ant1": {
         "volume": "II",
         "lines": [
@@ -4330,6 +7722,19 @@
         ],
         "sha256": "7ab58e148860c2dd3addadb4768c74c095a5a30fc7efa4a253fca2abcd9c315c"
       },
+      "sext2R": {
+        "volume": "II",
+        "lines": [
+          4409,
+          4412
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "0924ed0f8c474313794af3d214f36c30774dbae527b486d0391796ae7513b44c"
+      },
       "sext3Ant1": {
         "volume": "II",
         "lines": [
@@ -4342,6 +7747,29 @@
           "alleluia-v1"
         ],
         "sha256": "3b819a9f6d1411ac81fa784a20d95edf22ea0b54d01e1f1eb76b3f5facfea0d9"
+      },
+      "sext3R": {
+        "volume": "II",
+        "lines": [
+          4415,
+          4418
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "eb014f9ec143902420d3508eff3a829d89d0641127d64cec04ce67529b2d7484"
+      },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          4421,
+          4467
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "1bbc870c84723e470adf7b07830a29a29f3135a998c722d07b19754c893375d3"
       },
       "vesperAnt1": {
         "volume": "II",
@@ -4429,7 +7857,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "33a12c8875a518eb350668ff9f4208bee1f8a080aafdf7ec5acb665205281bdb"
+        "sha256": "dad9fe1744092bd78aef52da971ce8d831f9a42a6fca38efad6eb901c08d8389"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -4443,6 +7871,17 @@
           "alleluia-v1"
         ],
         "sha256": "b32bb2dda4cd490a0b373bb10bd6e5dd232e42d18255f536aa4d84abf305f5ab"
+      },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          4421,
+          4467
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "1bbc870c84723e470adf7b07830a29a29f3135a998c722d07b19754c893375d3"
       },
       "vesper1Ant1": {
         "volume": "II",
@@ -4530,7 +7969,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "866739c5ef2603051fae5f748b9f32fe704fdb76411cf5fa09419c8285455b89"
+        "sha256": "7df6959a037480e08a88aafb863dc61cab9790b7711af052993bda8a89a2673e"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -4548,7 +7987,193 @@
     }
   },
   "holy-women": {
+    "advent": {
+      "officeOfReadingsPs3": {
+        "volume": "I",
+        "lines": [
+          4309,
+          4326
+        ],
+        "method": "render",
+        "kind": "psalm",
+        "sha256": "46095b1d860a75dbfda8284b645e3db8121018ce1aec0c4bdeb6195a402bc50b"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          4330,
+          4358
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "be8243d41a92b2e212b3ea5392016e723b576c2142e4a904ef6d7cbc3525bbd5"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          4359,
+          4360
+        ],
+        "method": "reference-set",
+        "kind": "reading2",
+        "sha256": "6b420ff1a5d9df9ca8cfc263efb707299e0b1670e7306979189c612787d46005"
+      },
+      "laudesR": {
+        "volume": "I",
+        "lines": [
+          4403,
+          4406
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "4ba686b88cc6aa1508a7d5042a35fa7e22b85f4feaba54254ebf747c9eba7dd8"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          4455,
+          4493
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "07cd41a24e2fd7d48efa2f83fb41ca0492689f334e05cdd442a2b845ee2e7f79"
+      },
+      "vesperAnt3": {
+        "volume": "I",
+        "lines": [
+          4536,
+          4536
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "86d4882afb52443e431a5c783d3239617b9c4b42f64476c19691d0b8fc3d7cc2"
+      },
+      "vesperPs3": {
+        "volume": "I",
+        "lines": [
+          4537,
+          4561
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "a339f0deb150130a0bea83ea436cf522fd8177b94ffb8f77a2bb87f13a9aaeac"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          4455,
+          4493
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "07cd41a24e2fd7d48efa2f83fb41ca0492689f334e05cdd442a2b845ee2e7f79"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsPs3": {
+        "volume": "I",
+        "lines": [
+          4309,
+          4326
+        ],
+        "method": "render",
+        "kind": "psalm",
+        "sha256": "46095b1d860a75dbfda8284b645e3db8121018ce1aec0c4bdeb6195a402bc50b"
+      },
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          4330,
+          4358
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "be8243d41a92b2e212b3ea5392016e723b576c2142e4a904ef6d7cbc3525bbd5"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          4359,
+          4360
+        ],
+        "method": "reference-set",
+        "kind": "reading2",
+        "sha256": "6b420ff1a5d9df9ca8cfc263efb707299e0b1670e7306979189c612787d46005"
+      },
+      "laudesR": {
+        "volume": "I",
+        "lines": [
+          4403,
+          4406
+        ],
+        "method": "render",
+        "kind": "shortReading",
+        "sha256": "4ba686b88cc6aa1508a7d5042a35fa7e22b85f4feaba54254ebf747c9eba7dd8"
+      },
+      "vesperHymn": {
+        "volume": "I",
+        "lines": [
+          4455,
+          4493
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "07cd41a24e2fd7d48efa2f83fb41ca0492689f334e05cdd442a2b845ee2e7f79"
+      },
+      "vesperAnt3": {
+        "volume": "I",
+        "lines": [
+          4536,
+          4536
+        ],
+        "method": "render",
+        "kind": "ant",
+        "sha256": "86d4882afb52443e431a5c783d3239617b9c4b42f64476c19691d0b8fc3d7cc2"
+      },
+      "vesperPs3": {
+        "volume": "I",
+        "lines": [
+          4537,
+          4561
+        ],
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "a339f0deb150130a0bea83ea436cf522fd8177b94ffb8f77a2bb87f13a9aaeac"
+      },
+      "vesper1Hymn": {
+        "volume": "I",
+        "lines": [
+          4455,
+          4493
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "07cd41a24e2fd7d48efa2f83fb41ca0492689f334e05cdd442a2b845ee2e7f79"
+      }
+    },
     "lent": {
+      "officeOfReadingsR1": {
+        "volume": "II",
+        "lines": [
+          4779,
+          4805
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "468d30589e5a9e239cc0583e9b6884b02b11b4fa2c85255eaa8264a3e9433d64"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          4806,
+          4807
+        ],
+        "method": "reference-set",
+        "kind": "reading2",
+        "sha256": "03ef360e72cc60640fd4964945c354af26a583a34067b13d04de1d66f2da659c"
+      },
       "laudesR": {
         "volume": "II",
         "lines": [
@@ -4557,7 +8182,17 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "401a4c361ee52fe1893b35c6938b7e979f77fa92d5b909af3c0e4397752b1939"
+        "sha256": "5ff619a5c94bbb5d186b9de38690dc97462f738ee6d9dc1cfe71614c2b8ea59f"
+      },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          4905,
+          4943
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "07cd41a24e2fd7d48efa2f83fb41ca0492689f334e05cdd442a2b845ee2e7f79"
       },
       "vesperR": {
         "volume": "II",
@@ -4568,6 +8203,17 @@
         "method": "carrier+render",
         "kind": "shortReading",
         "sha256": "8bff321631bcc011375bc4ce0de1454f307ac68015d69c4df4ce0eb86cdd7c9a"
+      },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          4905,
+          4943
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "07cd41a24e2fd7d48efa2f83fb41ca0492689f334e05cdd442a2b845ee2e7f79"
       },
       "vesper1R": {
         "volume": "II",
@@ -4652,12 +8298,9 @@
           4731,
           4758
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "d7ea9fbe1b0876882303e7674b7a7dcb45bee8fbdda75427280e328b4443bb08"
+        "method": "carrier+repeat",
+        "kind": "psalm",
+        "sha256": "52848530b82a37d6a7fc485b4ce302954bac2959678c4ebba85f255b6a49744f"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -4671,6 +8314,39 @@
           "alleluia-v1"
         ],
         "sha256": "d283f80c79ccf62738faccdfa4aa8cad1d53c7e15efe7ee6cab693c6f5f4645c"
+      },
+      "officeOfReadingsVers": {
+        "volume": "II",
+        "lines": [
+          4777,
+          4778
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "877b48804f5fafbb4bf46219ce4bc6aa6495e3d61feae04c3179eb3d99fc65e2"
+      },
+      "officeOfReadingsR1": {
+        "volume": "II",
+        "lines": [
+          4779,
+          4805
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "b19ccfb14c761255462c7a9eafad2e95ecbc6ce120bc8b2e08ff48d39e872f98"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          4806,
+          4807
+        ],
+        "method": "reference-set",
+        "kind": "reading2",
+        "sha256": "f394222c531f358492f4719331ef2f2c4e61336c92756e44eb69333040760e61"
       },
       "laudesAnt1": {
         "volume": "II",
@@ -4719,7 +8395,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "a800144e6a273c19caa84e94cbf96a37356d53d7b86e338abdd10104ed9d627e"
+        "sha256": "1078c9bbb6e6d7c7d97a30c984ac2b7417641bf225b087265ead11dc68046fb3"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -4747,6 +8423,19 @@
         ],
         "sha256": "7d08740c85b661038b2a8aee87fe1770d9d1b866e9035a344f51d9a056627958"
       },
+      "sext1R": {
+        "volume": "II",
+        "lines": [
+          4887,
+          4890
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "d08b9a118a203a095cd99a60e975a9b565d452dc31676be330fe71c141816f3b"
+      },
       "sext2Ant1": {
         "volume": "II",
         "lines": [
@@ -4760,6 +8449,19 @@
         ],
         "sha256": "a6f88a2de9a6bab765b51978708e4c0ac579a2156ed73c94fbbdfafe9fd501c8"
       },
+      "sext2R": {
+        "volume": "II",
+        "lines": [
+          4893,
+          4896
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "291356447577365188307f40c55b59a9ff8f33ffda49187fd442b52a65dd5ab8"
+      },
       "sext3Ant1": {
         "volume": "II",
         "lines": [
@@ -4772,6 +8474,29 @@
           "alleluia-v1"
         ],
         "sha256": "eb62f5f80671e94bcb421bbfbad59ba6ea77f7202267fa681f5fa8945dc34623"
+      },
+      "sext3R": {
+        "volume": "II",
+        "lines": [
+          4899,
+          4902
+        ],
+        "method": "carrier+alleluia",
+        "kind": "annotated",
+        "rules": [
+          "alleluia-v1-versicle"
+        ],
+        "sha256": "075f919df915ddce33c2fcac91b6ec5462e45919fabacccf0d67de646ae7c2c1"
+      },
+      "vesperHymn": {
+        "volume": "II",
+        "lines": [
+          4905,
+          4943
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "07cd41a24e2fd7d48efa2f83fb41ca0492689f334e05cdd442a2b845ee2e7f79"
       },
       "vesperAnt1": {
         "volume": "II",
@@ -4859,7 +8584,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "424ee69937afce78927525f78a698f407401f1a1e0709f0958fcdcc11bda0f3c"
+        "sha256": "4e23884cd1077a2059b96dad0eb2cbe86e7d28181fdd29fe887c04ed55a3711e"
       },
       "vesperAntMag": {
         "volume": "II",
@@ -4873,6 +8598,17 @@
           "alleluia-v1"
         ],
         "sha256": "8a7ca15502b2af66fa2491722253b49d4a9972875f6425daa6273bf4cf76ab68"
+      },
+      "vesper1Hymn": {
+        "volume": "II",
+        "lines": [
+          4905,
+          4943
+        ],
+        "method": "structural-ref",
+        "kind": "ref",
+        "from": "vesperHymn",
+        "sha256": "07cd41a24e2fd7d48efa2f83fb41ca0492689f334e05cdd442a2b845ee2e7f79"
       },
       "vesper1Ant1": {
         "volume": "II",
@@ -4960,7 +8696,7 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "fd21824a4a4d741d99e28f753bf12ed613c2099b7a83072fa2dbe54e51a6408e"
+        "sha256": "e461f30dc954a9287ef800d23ddcd6d17e927b4081f5c7cb5e76e820b43b95b5"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -4978,6 +8714,182 @@
     }
   },
   "religious": {
+    "advent": {
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          4614,
+          4629
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "700573b89c9d741ce5556e11e3ad6caad093c47591f38305072d652822338005"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          4630,
+          4643
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "6b514d9e3d339ed37d527904b38b916f5945d21dcdfc820da30d3c9f53157e28"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          4647,
+          4667
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "7a738cf7ae1e4964152c572711ac166028a7ef842c3e715f128caf25d831c293"
+      },
+      "vesperAntMag": {
+        "volume": "I",
+        "lines": [
+          4701,
+          4702
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "95ef59fd0bf2cfc610dc998b14b03199b63ca9326f49189a49b35d83f7d35c52"
+      },
+      "vesper1AntMag": {
+        "volume": "I",
+        "lines": [
+          4600,
+          4602
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "b466604ceeb9c63a3f37c49d953e2cdf71218f987570dc6922533243c4bac334"
+      },
+      "vesper1Pr": {
+        "volume": "I",
+        "lines": [
+          4603,
+          4607
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "2f583a73142bc51b8d661f328c6a366857f57d5d7da59f93ca969c0a4cddc581"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          4614,
+          4629
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "700573b89c9d741ce5556e11e3ad6caad093c47591f38305072d652822338005"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          4630,
+          4643
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "6b514d9e3d339ed37d527904b38b916f5945d21dcdfc820da30d3c9f53157e28"
+      },
+      "laudesHymn": {
+        "volume": "I",
+        "lines": [
+          4647,
+          4667
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "7a738cf7ae1e4964152c572711ac166028a7ef842c3e715f128caf25d831c293"
+      },
+      "vesperAntMag": {
+        "volume": "I",
+        "lines": [
+          4701,
+          4702
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "95ef59fd0bf2cfc610dc998b14b03199b63ca9326f49189a49b35d83f7d35c52"
+      },
+      "vesper1AntMag": {
+        "volume": "I",
+        "lines": [
+          4600,
+          4602
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "b466604ceeb9c63a3f37c49d953e2cdf71218f987570dc6922533243c4bac334"
+      },
+      "vesper1Pr": {
+        "volume": "I",
+        "lines": [
+          4603,
+          4607
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "2f583a73142bc51b8d661f328c6a366857f57d5d7da59f93ca969c0a4cddc581"
+      }
+    },
+    "lent": {
+      "officeOfReadingsR1": {
+        "volume": "II",
+        "lines": [
+          5066,
+          5080
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "3016a836e899b3436867c93aafb04659d2d0ccb1c70eb955390abde0cc5eaef9"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          5081,
+          5093
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "461b12b5d4d668f8cb427b8ed4f54ea78a42704fed8c3dcfc5eb16fb56227463"
+      },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          5097,
+          5117
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "7a738cf7ae1e4964152c572711ac166028a7ef842c3e715f128caf25d831c293"
+      },
+      "vesperAntMag": {
+        "volume": "II",
+        "lines": [
+          5151,
+          5152
+        ],
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "95ef59fd0bf2cfc610dc998b14b03199b63ca9326f49189a49b35d83f7d35c52"
+      },
+      "vesper1Pr": {
+        "volume": "II",
+        "lines": [
+          5055,
+          5059
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "2f583a73142bc51b8d661f328c6a366857f57d5d7da59f93ca969c0a4cddc581"
+      }
+    },
     "easter": {
       "invitatoriumAnt": {
         "volume": "II",
@@ -4991,6 +8903,36 @@
           "alleluia-v1"
         ],
         "sha256": "5852f26b68d954cd8ac048e6b3f4bb1cbee84c49357003dacd7ca03110c12703"
+      },
+      "officeOfReadingsR1": {
+        "volume": "II",
+        "lines": [
+          5066,
+          5080
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "a97193c3d2571cae38ba77b878e660571aa3ba6f57c9d556c2205de1abef13d8"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          5081,
+          5093
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "1062fa513fc3034b93d5c231d758180ab9c86e3e881ae9ee10a74eaf0e8db0c6"
+      },
+      "laudesHymn": {
+        "volume": "II",
+        "lines": [
+          5097,
+          5117
+        ],
+        "method": "render",
+        "kind": "hymn",
+        "sha256": "7a738cf7ae1e4964152c572711ac166028a7ef842c3e715f128caf25d831c293"
       },
       "laudesAntBen": {
         "volume": "II",
@@ -5011,12 +8953,9 @@
           5151,
           5152
         ],
-        "method": "carrier+alleluia",
-        "kind": "annotated",
-        "rules": [
-          "alleluia-v1"
-        ],
-        "sha256": "bc0d63938b4fd1f66f9e58bc453a45feaf45c6352da73b3f064871c7aa9d564b"
+        "method": "render",
+        "kind": "canticleAnt",
+        "sha256": "514fe95ece7d2473cf670a2d295a98ec1de0adf89819f31c1e64362e83777fd7"
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -5030,11 +8969,107 @@
           "alleluia-v1"
         ],
         "sha256": "cbdc127906e973e82f1628a8f7c602e7266ba7f80cec2804df5d82156cca1b27"
+      },
+      "vesper1Pr": {
+        "volume": "II",
+        "lines": [
+          5055,
+          5059
+        ],
+        "method": "render",
+        "kind": "prayer",
+        "sha256": "2f583a73142bc51b8d661f328c6a366857f57d5d7da59f93ca969c0a4cddc581"
       }
     }
   },
   "works-of-mercy": {
+    "advent": {
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          4711,
+          4720
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "dd6c228893cec4b7402e563be79c97233d49dc4226043c9c88bc419aa6ad43a5"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          4721,
+          4740
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "4d02f55431943ff8a7a36b5e105f1a2ed957676b5faa7b71646a4d64ba7b201a"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsR1": {
+        "volume": "I",
+        "lines": [
+          4711,
+          4720
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "dd6c228893cec4b7402e563be79c97233d49dc4226043c9c88bc419aa6ad43a5"
+      },
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          4721,
+          4740
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "4d02f55431943ff8a7a36b5e105f1a2ed957676b5faa7b71646a4d64ba7b201a"
+      }
+    },
+    "lent": {
+      "officeOfReadingsR1": {
+        "volume": "II",
+        "lines": [
+          5160,
+          5169
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "aef8e420a5027ad2b20159d58017718d7fad38920f5fff81d28f309f95f4fb87"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          5170,
+          5188
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "1497525ac1442429394ea68da77302351085adb00cbf141dc8acc67d1a189544"
+      }
+    },
     "easter": {
+      "officeOfReadingsR1": {
+        "volume": "II",
+        "lines": [
+          5160,
+          5169
+        ],
+        "method": "render",
+        "kind": "reading1",
+        "sha256": "6fd5019a28e42cbf1ae848ccaff825e6137ba716fe42e0aa05486726f69dcae1"
+      },
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          5170,
+          5188
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "523da4dfe958e029beb012b64e8e0bd0fbf22ef63c7f6d00d6253eab6848222b"
+      },
       "laudesAntBen": {
         "volume": "II",
         "lines": [
@@ -5077,7 +9112,53 @@
     }
   },
   "educators": {
+    "advent": {
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          4756,
+          4770
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "7e80eee07e2855199655b1498acc25220c9f9fc43aac355265f24b85b328bf09"
+      }
+    },
+    "christmas": {
+      "officeOfReadingsR2": {
+        "volume": "I",
+        "lines": [
+          4756,
+          4770
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "7e80eee07e2855199655b1498acc25220c9f9fc43aac355265f24b85b328bf09"
+      }
+    },
+    "lent": {
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          5204,
+          5217
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "3b38308e3aeae5f6368cd6188c62e96620d8d7482d943dbea8b23462e55ef0ed"
+      }
+    },
     "easter": {
+      "officeOfReadingsR2": {
+        "volume": "II",
+        "lines": [
+          5204,
+          5217
+        ],
+        "method": "render",
+        "kind": "reading2",
+        "sha256": "7c108bd40cb50f3a948ea93041ba62d85bcfaf22e40cda8a19c4e01fe5672541"
+      },
       "laudesAntBen": {
         "volume": "II",
         "lines": [

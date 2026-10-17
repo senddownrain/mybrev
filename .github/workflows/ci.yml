@@ -46,5 +46,8 @@ jobs:
       - name: Audit tests
         run: npm run test:audit
 
+      - name: Seasonal Commons tests (generator, assembly, acceptance, Saturday memorial, UI data path, import scope)
+        run: npm run test:common-seasons
+
       - name: Analytics tests (contract, collector, mapper, inventory, reader signal)
         run: npm run test:analytics
