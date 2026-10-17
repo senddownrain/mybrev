@@ -11,7 +11,7 @@ import { readingReferencesForDay, READING_REFERENCE_STATUS as S } from '../src/u
 import { unionDayOptions } from '../src/utils/dayOptionsUnion.js';
 import { pickerColorsOf, pickerDateRoute, pickerOptionsOf } from '../src/utils/ordoDatePicker.js';
 import { normalizeOrdoDioceses, readStoredDioceses } from '../src/utils/ordoDiocese.js';
-import { ordoHoursRoute } from '../src/utils/ordoScreen.js';
+import { ordoHoursRoute, ORDO_FILTER_DIOCESES, yearCelebrations } from '../src/utils/ordoScreen.js';
 import {
   VESTMENT_COLORS, contrastRatio, liturgicalVisual, visualOfDocument, visualStamp,
 } from '../src/utils/liturgicalVisual.js';
@@ -24,6 +24,25 @@ const INDEX = JSON.parse(read('src/data/ordo/reading-references.json')).referenc
 const refs = (date, diocese = 'minsk-mohilev') => readingReferencesForDay(resolveRuntimeDay(date, { diocese }), INDEX);
 const one = (date, id, diocese) => refs(date, diocese).find((item) => item.optionId === id);
 const citations = (entry) => entry.documents.flatMap((doc) => doc.rows.map((row) => row.citation));
+
+test('search cards use canonical celebration accents separately from vestment swatches', () => {
+  const rows = yearCelebrations(2026, ORDO_FILTER_DIOCESES);
+  const visual = (row) => liturgicalVisual({ color: row.color, rank: row.rankKey, category: row.category });
+  const mary = rows.find((row) => row.optionId === 'holy-mary-mother-of-god');
+  assert.equal(visual(mary).secondary, 'marian');
+  assert.equal(visual(mary).vestment, 'albus');
+  const solemnity = rows.find((row) => row.optionId === 'epiphany-lord');
+  assert.notDeepEqual(visual(solemnity).accent, visual(solemnity).theme);
+  for (const color of ['albus', 'ruber', 'viridis', 'violaceus', 'rosaceus', 'niger']) {
+    const option = { color, rank: 'memoria', category: 'saint' };
+    assert.deepEqual(liturgicalVisual(option).accent, getLiturgicalTheme(visualStamp(option)));
+    assert.equal(liturgicalVisual(option).swatch, VESTMENT_COLORS[color].swatch);
+  }
+  const picker = read('src/components/liturgical/FeastsPicker.vue');
+  assert.match(picker, /getLiturgicalTheme\(visualStamp\(option\)\)/);
+  assert.match(picker, /linear-gradient\(120deg, rgba\(var\(--option-rgb\), 0\.14\), rgba\(var\(--option-rgb\), 0\.025\) 72%\)/);
+  assert.doesNotMatch(read('src/views/LiturgicalPicker.vue'), /v-select|availableYears|getAvailableYears/);
+});
 
 // ---------------------------------------------------------------------------
 // Reading references (Ordo «Імша і чытанні»)
@@ -231,7 +250,7 @@ test('/picker by period: every position comes from the engine, impossible ones a
   }
 });
 
-test('/picker by feast: the canonical year — final dates, transfers, diocesan rows', async () => {
+test('/picker by feast: all definitions, Ordo dates and all four dioceses', async () => {
   const { yearCelebrations } = await import('../src/utils/ordoScreen.js');
   const single = yearCelebrations(2026, ['minsk-mohilev']);
   assert.ok(single.find((item) => item.optionId === 'corpus-christi' && item.date === '2026-06-04'));
@@ -240,6 +259,6 @@ test('/picker by feast: the canonical year — final dates, transfers, diocesan 
   const pinsk = both.find((item) => item.optionId === 'dedication-cathedral' && item.date === '2026-05-01');
   assert.deepEqual(pinsk?.badges, ['Пінск']);
   const feasts = read('src/components/liturgical/FeastsPicker.vue');
-  assert.match(feasts, /yearCelebrations\(props\.year, effectiveOrdoDioceses\.value\)/);
+  assert.match(feasts, /yearCelebrations\(props\.year, ORDO_FILTER_DIOCESES\)/);
   assert.doesNotMatch(read('src/services/liturgicalDayService.js'), /getAllFeastDays/, 'no full `days` read for the feast list');
 });

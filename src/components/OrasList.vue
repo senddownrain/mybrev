@@ -227,16 +227,17 @@ const readingItem = computed(() => {
   return {
     id: dateParam.value,
     title: 'Чытанні',
-    path: dayData.value?._readingsFromDay
-      ? `/readings/${dateParam.value}?returnDayId=${encodeURIComponent(dayId.value || '')}`
-      : `/readings/${dateParam.value}?dayId=${encodeURIComponent(dayId.value || '')}`,
+    path: { name: 'ReadingsByDate', params: { date: dateParam.value }, query: {
+      ...route.query,
+      [dayData.value?._readingsFromDay ? 'returnDayId' : 'dayId']: dayId.value || '',
+    } },
   };
 });
 
 const selectTemplate = (id) => {
   if (!id || id === dayId.value) return;
   trackFeature('hour_option_select'); // a legal variant of the day was chosen (id only, never the value)
-  router.replace({ name: 'oras', params: { day: dateParam.value, id } });
+  router.replace({ name: 'oras', params: { day: dateParam.value, id }, query: { ...route.query } });
 };
 
 let contentLoadSequence = 0;

@@ -9,7 +9,11 @@
 import { generateLiturgicalYear, resolveLiturgicalDate } from './ordo/index.js';
 import { addDays, isoWeekday, parseIso, toIsoDate } from './ordo/dates.js';
 import { buildCalendarLayers } from './ordo/layers.js';
-import { contextKey } from './ordo/yearPlan.js';
+import { contextKey, getYearPlan } from './ordo/yearPlan.js';
+import { celebrationCandidate, temporalCandidate } from './ordo/candidates.js';
+import { officeKindOf } from './ordo/display.js';
+import { buildOfficeDescriptor } from './ordo/office.js';
+import { buildReadingsDescriptor } from './ordo/readings.js';
 import {
   LITURGICAL_VESTMENT_COLORS, PERIOD_LABEL_MAP, PLACE_LABEL_MAP, RANK_LABEL_MAP,
 } from '../constants/liturgical.js';
@@ -395,43 +399,137 @@ export function getOrdoYear(year, { diocese } = {}) {
 
 export const ordoYearCacheSize = () => yearCache.size;
 
+/** A legal reference date for reading this exact diocesan definition. */
+export function celebrationViewDate(optionId, year, { diocese, mode = 'oras' } = {}) {
+  const context = engineContext({ diocese });
+  const definition = buildCalendarLayers(context).celebrations.get(optionId);
+  if (!definition || definition.suppressedBy) return '';
+  const current = getYearPlan(year, context).celebrationDates.get(optionId);
+  const anchor = current?.originalDate || current?.date || `${year}-07-01`;
+  const fields = ['title', 'rank', 'color', 'daysRef', 'readingsRef', 'fallbackDaysRefs', 'templates', 'defaultTemplate', 'readingsReference'];
+  const value = (item, field) => (field === 'templates' && !item[field]?.length ? null : item[field] ?? null);
+  const sameDefinition = (option) => option.id === optionId && fields.every((field) => (
+    JSON.stringify(value(option, field)) === JSON.stringify(value(definition, field))
+    || (field === 'color' && !definition.color)
+  ));
+  // A Gregorian weekday cycle bounds the search. No extra option is ever
+  // inserted into Ordo; a different title/rank/text variant cannot substitute.
+  for (let distance = 0; distance <= 28; distance += 1) {
+    const dates = (distance ? [year - distance, year + distance] : [year]).flatMap((candidateYear) => {
+      const date = getYearPlan(candidateYear, context).celebrationDates.get(optionId)?.date;
+      if (!date) return [];
+      const day = resolveOrdoDay(date, { diocese });
+      const options = mode === 'readings' ? [day.primary, ...day.alternatives] : day.officeOptions;
+      return options.some(sameDefinition) ? [date] : [];
+    });
+    if (dates.length) return dates.sort((a, b) => Math.abs(Date.parse(a) - Date.parse(anchor)) - Math.abs(Date.parse(b) - Date.parse(anchor)) || a.localeCompare(b))[0];
+  }
+  return '';
+}
+
+/** Text-only context, requested explicitly by the feast reader. Never cached as Ordo. */
+export function celebrationTextContext(date, optionId, { diocese } = {}) {
+  const context = engineContext({ diocese });
+  const definition = buildCalendarLayers(context).celebrations.get(optionId);
+  if (!definition) throw new Error('Святкаванне не знойдзена ў календары гэтай дыяцэзіі.');
+  const day = resolveOrdoDay(date, { diocese });
+  const season = getYearPlan(parseIso(date).year, context).seasonOf(date);
+  const temporal = temporalCandidate(season);
+  const candidate = celebrationCandidate({ celebration: definition });
+  const option = { ...candidate, officeKind: officeKindOf(candidate, season), role: 'primary' };
+  const readings = buildReadingsDescriptor(option, season, temporal, { diocese });
+  // A reference view must not present the impeded day's readings as the
+  // missing proper readings of this celebration.
+  readings.lookup = readings.lookup.filter((entry) => entry.purpose !== 'weekday');
+  readings.allowedChoices = [];
+  return {
+    ...day, referenceOnly: true, primary: option, alternatives: [], officeOptions: [option],
+    candidates: [temporal, ...day.candidates.filter((item) => item.kind !== 'temporal' && item.id !== optionId), option],
+    commemorations: [],
+    officeResolution: {
+      ...day.officeResolution, primary: buildOfficeDescriptor(option, season, temporal), alternatives: [], commemorations: [],
+      evening: { ...day.officeResolution.evening, vespers: { type: 'of-the-day', celebrationId: optionId, date, title: option.title } },
+    },
+    readingResolution: { primary: readings, alternatives: [], commemorations: [] },
+  };
+}
+
+/** The requested temporal position, even when a saint occupies its civil date. */
+export function periodTextContext(date, { diocese } = {}) {
+  const day = resolveOrdoDay(date, { diocese });
+  const season = getYearPlan(parseIso(date).year, engineContext({ diocese })).seasonOf(date);
+  const temporal = temporalCandidate(season);
+  const candidate = day.primary.temporal || (day.period === 'christmas' && day.primary.category === 'lord') ? day.primary : temporal;
+  const option = { ...candidate, officeKind: officeKindOf(candidate, season), role: 'primary' };
+  return {
+    ...day, periodOnly: true, primary: option, alternatives: [], officeOptions: [option], commemorations: [],
+    officeResolution: {
+      ...day.officeResolution, primary: buildOfficeDescriptor(option, season, temporal), alternatives: [], commemorations: [],
+      evening: { ...day.officeResolution.evening, vespers: { type: 'of-the-day', celebrationId: option.id, date, title: option.title } },
+    },
+    readingResolution: { primary: buildReadingsDescriptor(option, season, temporal, { diocese }), alternatives: [], commemorations: [] },
+  };
+}
+
 /**
- * `/picker` «Па свяце»: every legal celebration of a civil year — from the
- * Ordo engine, on its final date (transfers, diocesan dates included), for
- * one or several dioceses. The same celebration with the same rank on the
- * same date is one entry; one that only some dioceses keep carries badges.
- * The weekly Saturday memorial of Mary is not a «feast» to look up.
+ * `/picker` «Па свяце»: definitions determine presence; Ordo supplies the
+ * calendar status. Fixed dates stay nominal; routeDate is the actual date.
+ * Different definitions or diocesan permissions must never merge into one row.
  */
 export function yearCelebrations(year, dioceses) {
   const list = normalizeDioceseFilter(Array.isArray(dioceses) ? dioceses : [dioceses]);
   const entries = new Map();
-  list.forEach((diocese) => getOrdoYear(year, { diocese }).forEach((day) => {
-    [day.primary, ...day.alternatives]
-      .filter((option) => option.kind !== 'temporal' && option.kind !== 'votive-memorial')
-      .forEach((option) => {
-        const key = `${day.date}|${option.id}|${option.rank || ''}`;
-        const entry = entries.get(key) || {
-          key,
-          optionId: option.id,
-          date: day.date,
-          title: option.title,
-          rank: rankLabel(option),
-          rankKey: option.rank || '',
-          kind: option.kind,
-          movable: option.kind === 'dynamic' || Boolean(option.feastCode),
-          color: option.color || day.color,
-          dioceses: [],
-        };
-        entry.dioceses.push(diocese);
-        entries.set(key, entry);
-      });
-  }));
+  list.forEach((diocese) => {
+    const context = engineContext({ diocese });
+    const { celebrations } = buildCalendarLayers(context);
+    const plan = getYearPlan(Number(year), context);
+    const days = getOrdoYear(year, { diocese });
+    const byDate = new Map(days.map((day) => [day.date, day]));
+    const removed = new Map([...plan.removedByDate.values()].flat()
+      .map((item) => [item.celebration.id, item]));
+    celebrations.forEach((definition) => {
+      if (!definition.id || !definition.title || !definition.date) return;
+      const placement = plan.celebrationDates.get(definition.id) || removed.get(definition.id);
+      const day = byDate.get(placement?.date);
+      const routeDate = day?.date || '';
+      const readingsAllowed = Boolean(day && [day.primary, ...day.alternatives].some((item) => item.id === definition.id));
+      const hoursAllowed = Boolean(day?.officeOptions.some((item) => item.id === definition.id));
+      const commemoration = day?.commemorations.find((item) => item.id === definition.id);
+      const suppressed = day?.suppressed.find((item) => item.id === definition.id);
+      const movable = definition.date.type !== 'fixed';
+      const date = movable ? routeDate : `${year}-${String(definition.date.month).padStart(2, '0')}-${String(definition.date.day).padStart(2, '0')}`;
+      const transferred = routeDate && placement?.originalDate && routeDate !== placement.originalDate;
+      const statusLabel = [
+        transferred ? `перанесена на ${formatDayMonth(routeDate)}` : '',
+        commemoration ? 'памінанне' : '',
+        suppressed ? (suppressed.reason === 'suppressed-by-layer'
+          ? suppressionReason(suppressed) : 'не адзначаецца ў гэтым годзе') : '',
+        !day ? 'дата не вызначана' : '',
+      ].filter(Boolean).join(' · ');
+      // Include text identities as well as visible fields. A local suppression
+      // stays separate even when the inherited definition is otherwise equal.
+      const key = JSON.stringify([
+        definition.id, definition.date, definition.title, definition.rank, definition.color, definition.category,
+        definition.daysRef, definition.readingsRef, definition.fallbackDaysRefs,
+        definition.templates, definition.defaultTemplate, definition.readingsReference,
+        date, routeDate, hoursAllowed, readingsAllowed, statusLabel,
+      ]);
+      const entry = entries.get(key) || {
+        key, optionId: definition.id, date, routeDate, sourceDate: placement?.date || '', title: definition.title,
+        rank: RANK_LABEL_MAP[definition.rank] || '', rankKey: definition.rank || '',
+        movable, color: definition.color || '', category: definition.category || '', hoursAllowed, readingsAllowed, statusLabel,
+        dioceses: [],
+      };
+      entry.dioceses.push(diocese);
+      entries.set(key, entry);
+    });
+  });
   return [...entries.values()]
     .map((entry) => ({
       ...entry,
       badges: entry.dioceses.length === list.length ? [] : entry.dioceses.map((id) => DIOCESE_SHORT_LABELS[id] || id),
     }))
-    .sort((a, b) => a.date.localeCompare(b.date) || a.title.localeCompare(b.title, 'be'));
+    .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999') || a.title.localeCompare(b.title, 'be'));
 }
 
 /**

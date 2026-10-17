@@ -55,7 +55,14 @@ export async function getReadingsForDate(mDate, context, plan, options = {}) {
     const q = firestoreQuery(spec);
     return q ? queryDocs(q) : [];
   }));
-  const documents = [...new Map(results.flat().map((document) => [document.id, document])).values()];
+  let documents = [...new Map(results.flat().map((document) => [document.id, document])).values()];
+  if (options.periodOnly && plan.options[0]?.kind === 'temporal') {
+    const ref = plan.options[0].daysRef || {};
+    const ids = [ref.id, ref.seasonalDateId].filter(Boolean);
+    documents = documents.filter((document) => !document._date || document._periodType === context.periodType
+      || ids.includes(document._dayId) || document._dayIds?.some((id) => ids.includes(id))
+      || ids.includes(document.id));
+  }
   const ordered = orderReadingsByPlan(plan, documents, {
     dayId: options.dayId || '',
     includeAlternatives: Boolean(options.includeAlternatives),

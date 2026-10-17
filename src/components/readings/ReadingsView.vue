@@ -3,9 +3,13 @@
     <header class="readings-page-header">
       <div>
         <h1 class="section-page-title">Чытанні</h1>
-        <p class="readings-date">
+        <p v-if="route.query.view !== 'reference'" class="readings-date">
           <span class="readings-date__marker" aria-hidden="true"></span>
           {{ displayDate }}
+        </p>
+        <p v-if="route.query.view === 'reference'" class="text-caption">
+          {{ ordoOption?.title }}
+          <span v-if="activeReading?._ordoOptionRoles?.[route.query.option]?.purpose === 'weekday'">Для ўспаміну выбраны чытанні дня.</span>
         </p>
       </div>
       <v-btn
@@ -191,6 +195,8 @@ const displayDate = computed(() => {
 // The colour of the celebration the readings are opened for (Ordo), the same
 // as on its Hours card; heuristics only for a reading without an Ordo option.
 const ordoOption = computed(() => {
+  if (context.value?.referenceOption) return context.value.referenceOption;
+  if (context.value?.periodOption) return context.value.periodOption;
   const resolved = resolveRuntimeDay(selectedDate.value.format('YYYY-MM-DD'), {
     diocese: context.value?.diocese || currentOrdoDiocese(),
   });
@@ -339,7 +345,7 @@ function load() {
 }
 
 onMounted(load);
-watch(() => [route.params.date || route.query.date, route.query.dayId, effectiveOrdoDioceses.value.join(',')], load);
+watch(() => [route.params.date || route.query.date, route.query.dayId, route.query.reference, route.query.view, effectiveOrdoDioceses.value.join(',')], load);
 </script>
 
 <style scoped>

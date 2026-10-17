@@ -2,9 +2,12 @@ import { ref, computed } from 'vue';
 import { useLiturgicalStore } from '@/stores/liturgical';
 import { logger } from '@/utils/logger';
 import moment from '@/utils/moment-be';
+import { useRoute } from 'vue-router';
+import { normalizeOrdoDiocese, ordoDiocese } from '@/utils/ordoDiocese';
 
 export function useReadings() {
   const liturgicalStore = useLiturgicalStore();
+  const route = useRoute();
 
   const items    = ref([]);
   const context  = ref(null);
@@ -52,6 +55,8 @@ export function useReadings() {
   }
 
   async function loadForDate(date, options = {}) {
+    options = { ...options, referenceOptionId: String(route?.query.reference || ''), periodOnly: route?.query.view === 'period' };
+    if (['reference', 'period'].includes(route?.query.view)) options.dioceses = [normalizeOrdoDiocese(route.query.diocese || ordoDiocese.value)];
     if (options.dioceses?.length > 1) {
       const { dioceses, ...rest } = options;
       return loadForDioceses(date, dioceses, rest);

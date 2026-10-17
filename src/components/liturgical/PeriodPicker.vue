@@ -1,5 +1,5 @@
 <template>
-  <div class="period-picker">
+  <div class="period-picker" :style="periodStyle(selectedPeriod)">
     <section class="picker-step">
       <div class="step-heading">
         <span>01</span>
@@ -14,13 +14,14 @@
           :key="period.value"
           type="button"
           class="choice-button period-button"
+          :style="periodStyle(period.value)"
           :class="[
             `period-button--${period.value}`,
             { 'choice-button--active': selectedPeriod === period.value },
           ]"
           @click="selectPeriod(period.value)"
         >
-          <span class="period-dot" :style="{ background: LITURGICAL_THEME_MAP[period.value]?.color }" />
+          <span class="period-dot" />
           {{ period.title }}
         </button>
       </div>
@@ -169,39 +170,6 @@
         <span>{{ loadingLabel }}</span>
       </div>
 
-      <template v-else-if="resultOptions.length">
-        <div class="result-date">
-          <div class="result-date-icon"><PhCalendarCheck :size="22" /></div>
-          <div>
-            <span>{{ exactDateSelection ? 'Каляндарная дата' : 'Знойдзеная дата' }}</span>
-            <strong>{{ formattedDate }}</strong>
-          </div>
-        </div>
-
-        <div class="result-list">
-          <button
-            v-for="option in resultOptions"
-            :key="option.key"
-            type="button"
-            class="result-card"
-            :disabled="mode === 'oras' && !option.dayId"
-            @click="selectOption(option)"
-          >
-            <div class="result-card-copy">
-              <span class="result-source">{{ option.subtitle }}</span>
-              <strong>{{ option.title }}</strong>
-              <div class="result-badges">
-                <span v-if="option.readingCount">
-                  <PhBookOpenText :size="14" /> {{ readingCountLabel(option.readingCount) }}
-                </span>
-                <span v-if="option.templates?.length > 1">{{ option.templates.length }} варыянты літургіі</span>
-              </div>
-            </div>
-            <span class="result-arrow"><PhArrowRight :size="19" /></span>
-          </button>
-        </div>
-      </template>
-
       <div v-else class="empty-state">
         <PhCalendarX :size="34" />
         <strong>{{ resultMessage }}</strong>
@@ -231,8 +199,8 @@ import { useAuthStore } from '@/stores/auth';
 import { logger } from '@/utils/logger';
 import moment from '@/utils/moment-be';
 import { buildAdventDateOptions, buildChristmasDateOptions } from '@/utils/liturgicalPicker';
-import { LITURGICAL_THEME_MAP, PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
-import { PhArrowRight, PhBookOpenText, PhCalendarCheck, PhCalendarX } from '@phosphor-icons/vue';
+import { getLiturgicalTheme, PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
+import { PhCalendarX } from '@phosphor-icons/vue';
 
 const DateChoiceGrid = defineComponent({
   name: 'DateChoiceGrid',
@@ -291,11 +259,14 @@ const liturgicalStore = useLiturgicalStore();
 const authStore = useAuthStore();
 
 const selectedPeriod = ref(null);
+const periodStyle = (period) => {
+  if (!period) return {};
+  const theme = getLiturgicalTheme({ _periodType: period });
+  return { '--chrome-accent': theme.color, '--chrome-accent-rgb': theme.rgb };
+};
 const selectedWeek = ref(null);
 const selectedDayOfWeek = ref(null);
 const selectedDateToken = ref('');
-const resultOptions = ref([]);
-const calculatedDate = ref('');
 const loading = ref(false);
 const resultMessage = ref('Для гэтага дня нічога не знойдзена.');
 let searchSequence = 0;
@@ -347,9 +318,6 @@ const hasCompleteSelection = computed(() => (
   exactDateSelection.value
   || Boolean(selectedPeriod.value && selectedWeek.value !== null && selectedDayOfWeek.value !== null)
 ));
-const formattedDate = computed(() => calculatedDate.value
-  ? moment(calculatedDate.value, 'YYYY-MM-DD').format('dddd, D MMMM YYYY')
-  : '');
 const loadingLabel = computed(() => props.mode === 'readings'
   ? 'Знаходзім чытанні…'
   : 'Знаходзім літургічныя гадзіны…');
@@ -400,8 +368,6 @@ function selectExactDate(option) {
 
 function resetResult() {
   searchSequence += 1;
-  resultOptions.value = [];
-  calculatedDate.value = '';
   loading.value = false;
 }
 
@@ -415,8 +381,6 @@ function selectLentOpeningDay(day) {
 async function searchSelection() {
   const sequence = ++searchSequence;
   loading.value = true;
-  resultOptions.value = [];
-  calculatedDate.value = '';
 
   try {
     // The position is found by the Ordo engine (the same context as Hours /
@@ -441,37 +405,27 @@ async function searchSelection() {
     }
 
     if (props.mode === 'readings') {
-      const result = await liturgicalStore.fetchReadingsByDate(date);
+      const result = await liturgicalStore.fetchReadingsByDate(date, { periodOnly: true });
       if (sequence !== searchSequence) return;
       if (!exactDateSelection.value && !contextMatches(result?.context)) {
         resultMessage.value = 'Гэтая пазіцыя выходзіць за межы перыяду ў выбраным годзе.';
         return;
       }
       const readings = Array.isArray(result?.items) ? result.items : [];
-      calculatedDate.value = date;
-      resultOptions.value = readings.length ? [{
-        key: `readings-${date}`,
-        dayId: '',
-        subtitle: 'Чытанні',
-        title: `Чытанні на ${moment(date).format('D MMMM')}`,
-        readingCount: readings.length,
-      }] : [];
+      if (readings.length) emit('day-selected', { date, periodOnly: true, diocese: currentOrdoDiocese() });
       if (!readings.length) resultMessage.value = 'Чытанні для гэтай даты не знойдзены.';
       return;
     }
 
-    const result = await getLiturgicalContentForDate(date);
+    const result = await getLiturgicalContentForDate(date, currentOrdoDiocese(), { periodOnly: true });
     if (sequence !== searchSequence) return;
     if (!exactDateSelection.value && !contextMatches(result?.context)) {
       resultMessage.value = 'Гэтая пазіцыя выходзіць за межы перыяду ў выбраным годзе.';
       return;
     }
-    const options = Array.isArray(result?.dayOptions)
-      ? result.dayOptions.filter((option) => option.hasLiturgicalDay)
-      : [];
-    calculatedDate.value = date;
-    resultOptions.value = options;
-    if (!options.length) resultMessage.value = 'Літургічны дзень для гэтай даты не знойдзены.';
+    const option = result?.dayOptions?.find((item) => item.hasLiturgicalDay && item.ordo?.optionId !== 'office-for-dead');
+    if (option?.dayId) emit('day-selected', { dayId: option.dayId, date, periodOnly: true, diocese: currentOrdoDiocese() });
+    else resultMessage.value = 'Літургічны дзень для гэтай даты не знойдзены.';
   } catch (error) {
     logger.error('Памылка пры пошуку дня:', error);
     resultMessage.value = props.mode === 'readings'
@@ -488,21 +442,6 @@ function contextMatches(context) {
     && Number(context?.dayOfWeek) === Number(selectedDayOfWeek.value);
 }
 
-function selectOption(option) {
-  if (!calculatedDate.value) return;
-  const dayId = props.mode === 'readings'
-    ? ''
-    : (option.dayId || option.templates?.[0]?.id || '');
-  if (props.mode === 'oras' && !dayId) return;
-  emit('day-selected', { dayId, date: calculatedDate.value });
-}
-
-function readingCountLabel(count) {
-  if (count === 1) return '1 камплект чытанняў';
-  if ([2, 3, 4].includes(count)) return `${count} камплекты чытанняў`;
-  return `${count} камплектаў чытанняў`;
-}
-
 function createDay() {
   router.push({
     name: 'AdminDayEditor',
@@ -517,6 +456,10 @@ function createDay() {
 </script>
 
 <style scoped>
+.period-picker,
+.period-button {
+  --picker-visible-accent: color-mix(in srgb, var(--chrome-accent) var(--period-accent-weight), var(--period-accent-target));
+}
 .period-picker { display: grid; gap: 16px; }
 
 .picker-step,
@@ -532,7 +475,7 @@ function createDay() {
 .step-heading > span {
   display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center;
   border: 1px solid rgba(var(--chrome-accent-rgb), 0.18);
-  border-radius: 12px; background: rgba(var(--chrome-accent-rgb), 0.1); color: var(--chrome-accent);
+  border-radius: 12px; background: rgba(var(--chrome-accent-rgb), 0.1); color: var(--picker-visible-accent);
   font-size: 0.72rem; font-weight: 800;
 }
 .step-heading h2 { margin: 0; font-size: 1.05rem; font-weight: 750; line-height: 1.25; }
@@ -549,11 +492,18 @@ function createDay() {
   cursor: pointer; transition: background 0.16s ease, color 0.16s ease, transform 0.14s ease;
 }
 .choice-button:active { transform: scale(0.97); }
-.choice-button--active { border-color: rgba(var(--chrome-accent-rgb), 0.24); background: rgba(var(--chrome-accent-rgb), 0.11); color: var(--chrome-accent); }
+.choice-button--active { border-color: rgba(var(--chrome-accent-rgb), 0.24); background: rgba(var(--chrome-accent-rgb), 0.11); color: var(--picker-visible-accent); }
 .choice-button:disabled { opacity: 0.38; cursor: not-allowed; }
 
-.period-button { display: flex; align-items: center; gap: 10px; padding: 10px 12px; text-align: left; }
-.period-dot { width: 10px; height: 10px; flex: 0 0 10px; border-radius: 50%; background: var(--chrome-accent); }
+.period-button {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; text-align: left;
+  border-color: rgba(var(--chrome-accent-rgb), 0.28);
+  background: linear-gradient(120deg, rgba(var(--chrome-accent-rgb), 0.14), rgba(var(--chrome-accent-rgb), 0.025) 72%);
+}
+.period-dot {
+  width: 10px; height: 10px; flex: 0 0 10px; border-radius: 50%;
+  background: var(--picker-visible-accent);
+}
 
 .subsection-label { margin: 0 0 8px 2px; color: var(--nav-muted); font-size: 0.72rem; font-weight: 780; text-transform: uppercase; }
 .advent-weeks { grid-template-columns: repeat(4, minmax(56px, 1fr)); }
@@ -577,7 +527,7 @@ function createDay() {
 :deep(.date-choice-button strong) { color: var(--nav-on-surface); font-size: 1rem; line-height: 1; }
 :deep(.date-choice-button span) { font-size: 0.63rem; font-weight: 760; text-transform: uppercase; }
 :deep(.date-choice-button small) { font-size: 0.62rem; }
-:deep(.date-choice-button--active) { border-color: rgba(var(--chrome-accent-rgb), 0.24); background: rgba(var(--chrome-accent-rgb), 0.11); color: var(--chrome-accent); }
+:deep(.date-choice-button--active) { border-color: rgba(var(--chrome-accent-rgb), 0.24); background: rgba(var(--chrome-accent-rgb), 0.11); color: var(--picker-visible-accent); }
 
 .lent-opening-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .lent-opening-button { display: grid; gap: 3px; padding: 9px 10px; text-align: left; }

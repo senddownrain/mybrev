@@ -14,9 +14,13 @@
 import { useLiturgicalStore } from '@/stores/liturgical';
 import { FEAST_NAME_MAP as feastNameMap } from '@/constants/liturgicalFeastsMap';
 import { logger } from '@/utils/logger';
+import { useRoute } from 'vue-router';
 
 export function useLiturgicalContent() {
   const liturgicalStore = useLiturgicalStore();
+  const route = useRoute();
+  const referenceOptionId = () => String(route?.query.reference || '');
+  const periodOnly = () => route?.query.view === 'period';
 
   /**
    * Fetch liturgical-day content for a date.
@@ -25,8 +29,8 @@ export function useLiturgicalContent() {
    * @param {Date|import('moment').Moment|string} currentDate
    * @returns {Promise<{ context, itemsDays, dayOptions }>}
    */
-  async function getLiturgicalContentForDate(currentDate, diocese) {
-    return liturgicalStore.fetchContentByDate(currentDate, diocese ? { diocese } : {});
+  async function getLiturgicalContentForDate(currentDate, diocese, options = {}) {
+    return liturgicalStore.fetchContentByDate(currentDate, { ...(diocese ? { diocese } : {}), referenceOptionId: referenceOptionId(), periodOnly: periodOnly(), ...options });
   }
 
   /**
@@ -37,11 +41,11 @@ export function useLiturgicalContent() {
    * @returns {{ context, itemsDays, dayOptions } | null}
    */
   function getCachedLiturgicalContentForDate(currentDate, diocese) {
-    const cached = liturgicalStore.getCachedContent(currentDate, diocese);
+    const cached = liturgicalStore.getCachedContent(currentDate, diocese, referenceOptionId(), periodOnly());
     if (cached) {
       // A fresh entry returns immediately; a stale entry is also returned
       // immediately and the store refreshes it in the background when online.
-      liturgicalStore.fetchContentByDate(currentDate, diocese ? { diocese } : {}).catch((error) => {
+      getLiturgicalContentForDate(currentDate, diocese).catch((error) => {
         logger.error('[useLiturgicalContent] background refresh failed:', error);
       });
     }
@@ -49,7 +53,7 @@ export function useLiturgicalContent() {
   }
 
   async function restoreCachedLiturgicalContentForDate(currentDate, diocese) {
-    await liturgicalStore.primeContent(currentDate, diocese);
+    await liturgicalStore.primeContent(currentDate, diocese, referenceOptionId(), periodOnly());
     return getCachedLiturgicalContentForDate(currentDate, diocese);
   }
 

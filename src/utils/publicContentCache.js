@@ -28,11 +28,12 @@ export function requestContentRefresh() {
 
 // Hours and Readings are resolved for a diocese (Ordo layers), so the
 // diocese is part of the key.
-export function contentKey(date, diocese = currentOrdoDiocese()) {
-  return publicContentKey('content', date, diocese);
+export function contentKey(date, diocese = currentOrdoDiocese(), referenceOptionId = '', periodOnly = false) {
+  if (periodOnly) return publicContentKey('period-content', date, diocese);
+  return referenceOptionId ? publicContentKey('reference-content', date, diocese, referenceOptionId) : publicContentKey('content', date, diocese);
 }
 export function readingsKey(date, options = {}) {
   return publicContentKey(
-    'readings', date, options.dayId || '', Boolean(options.includeAlternatives), options.diocese || currentOrdoDiocese(),
+    ...(options.periodOnly ? ['period-readings'] : options.referenceOptionId ? ['reference-readings', options.referenceOptionId] : ['readings']), date, options.dayId || '', Boolean(options.includeAlternatives), options.diocese || currentOrdoDiocese(),
   );
 }

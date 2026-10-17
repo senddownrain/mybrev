@@ -6,6 +6,7 @@ import {
   dynamicFeastCodesOf, legacyContextOf, planReadings, resolveRuntimeDay,
 } from '@/utils/ordo/runtime';
 import { currentOrdoDiocese } from '@/utils/ordoDiocese';
+import { celebrationTextContext, periodTextContext } from '@/utils/ordoScreen';
 import { fetchContentForDate } from '@/services/liturgicalContentService';
 import { fetchDaysForDate, findDayByPeriod } from '@/services/liturgicalDayService';
 import { getReadingsForDate } from '@/services/readingsService';
@@ -26,8 +27,10 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
    * The period context used for `days`/`readings` lookups is the engine's;
    * nothing stored in Firestore can override the computed year.
    */
-  function resolveContext(mDate, diocese = currentOrdoDiocese()) {
-    const resolved = resolveRuntimeDay(mDate.format('YYYY-MM-DD'), { diocese });
+  function resolveContext(mDate, diocese = currentOrdoDiocese(), referenceOptionId = '', periodOnly = false) {
+    const resolved = periodOnly ? periodTextContext(mDate.format('YYYY-MM-DD'), { diocese }) : referenceOptionId
+      ? celebrationTextContext(mDate.format('YYYY-MM-DD'), referenceOptionId, { diocese })
+      : resolveRuntimeDay(mDate.format('YYYY-MM-DD'), { diocese });
     return { context: legacyContextOf(resolved), resolved, diocese, dynamicFeastCodes: dynamicFeastCodesOf(resolved) };
   }
 
@@ -53,8 +56,8 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   async function fetchContentByDate(date, options = {}) {
     const mDate = moment(date).startOf('day');
     const diocese = options.diocese || currentOrdoDiocese();
-    return readResource(contentKey(dateKey(date), diocese), async (session) => {
-      const { context, dynamicFeastCodes, resolved } = resolveContext(mDate, diocese);
+    return readResource(contentKey(dateKey(date), diocese, options.referenceOptionId, options.periodOnly), async (session) => {
+      const { context, dynamicFeastCodes, resolved } = resolveContext(mDate, diocese, options.referenceOptionId, options.periodOnly);
       return fetchContentForDate(mDate, context, dynamicFeastCodes, session, { resolved, diocese });
     }, options);
   }
@@ -80,7 +83,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     const mDate = moment(date).startOf('day');
     const diocese = options.diocese || currentOrdoDiocese();
     return readResource(readingsKey(dateKey(date), { ...options, diocese }), async (session) => {
-      const { context, resolved } = resolveContext(mDate, diocese);
+      const { context, resolved } = resolveContext(mDate, diocese, options.referenceOptionId, options.periodOnly);
       // The same ResolvedLiturgicalDay as the Hours: identity, cycles and
       // lookup order all come from the engine.
       const plan = planReadings(resolved, { dayId: options.dayId || '' });
@@ -91,6 +94,8 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
         ordoPrimaryId: plan.primaryOptionId,
         ordoSelectedId: plan.selectedOptionId,
         diocese,
+        ...(resolved.referenceOnly ? { referenceOption: resolved.primary } : {}),
+        ...(resolved.periodOnly ? { periodOption: resolved.primary } : {}),
       };
       const items = await getReadingsForDate(mDate, fullContext, plan, {
         ...options, readSession: session,
@@ -105,10 +110,10 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   return {
     isLoading, error,
     fetchContentByDate, fetchDaysByDate, fetchReadingsByDate, fetchDayByPeriod,
-    getCachedContent: (date, diocese) => publicContentCache.peek(contentKey(dateKey(date), diocese)) ?? null,
+    getCachedContent: (date, diocese, referenceOptionId, periodOnly) => publicContentCache.peek(contentKey(dateKey(date), diocese, referenceOptionId, periodOnly)) ?? null,
     resolveOrdoDay: (date, diocese = currentOrdoDiocese()) => resolveRuntimeDay(dateKey(date), { diocese }),
     getCachedReadings: (date, options) => publicContentCache.peek(readingsKey(dateKey(date), options)) ?? null,
-    primeContent: (date, diocese) => publicContentCache.prime([contentKey(dateKey(date), diocese)]),
+    primeContent: (date, diocese, referenceOptionId, periodOnly) => publicContentCache.prime([contentKey(dateKey(date), diocese, referenceOptionId, periodOnly)]),
     primeReadings: (date, options) => publicContentCache.prime([readingsKey(dateKey(date), options)]),
     // Compatibility: invalidate instead of deleting precious offline content.
     clearCache: requestContentRefresh,

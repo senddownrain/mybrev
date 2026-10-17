@@ -2,6 +2,32 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { setImmediate } from 'node:timers';
 import { createContentCache, createReadSession } from '../src/utils/contentCache.js';
+import { createServer } from 'vite';
+import { fileURLToPath } from 'node:url';
+
+test('reference Office and readings caches cannot populate canonical day keys', async () => {
+  const server = await createServer({ configFile: false, cacheDir: 'node_modules/.cache/cache-test-vite', server: { middlewareMode: true }, optimizeDeps: { noDiscovery: true, entries: [] }, root: fileURLToPath(new URL('../', import.meta.url)) });
+  try {
+    const { contentKey, readingsKey, publicContentCache } = await server.ssrLoadModule('/src/utils/publicContentCache.js');
+    const date = '2026-12-06', diocese = 'minsk-mohilev';
+    assert.deepEqual(JSON.parse(contentKey(date, diocese)), ['content', date, diocese]);
+    assert.deepEqual(JSON.parse(readingsKey(date, { diocese })), ['readings', date, '', false, diocese]);
+    const office = contentKey(date, diocese, 'sv-nicholas');
+    const readings = readingsKey(date, { diocese, referenceOptionId: 'sv-nicholas' });
+    const period = contentKey(date, diocese, '', true);
+    await publicContentCache.read(office, async () => ({ data: { title: 'Nicholas' }, complete: true }));
+    await publicContentCache.read(readings, async () => ({ data: { title: 'Nicholas readings' }, complete: true }));
+    await publicContentCache.read(period, async () => ({ data: { title: 'Period' }, complete: true }));
+    assert.equal(publicContentCache.peek(contentKey(date, diocese)), undefined);
+    assert.equal(publicContentCache.peek(readingsKey(date, { diocese })), undefined);
+    assert.notEqual(office, contentKey(date, 'grodno', 'sv-nicholas'));
+    assert.notEqual(office, contentKey(date, diocese, 'sv-patryk'));
+    assert.notEqual(period, office);
+    assert.notEqual(readingsKey(date, { diocese, periodOnly: true }), readingsKey(date, { diocese }));
+  } finally {
+    await server.close();
+  }
+});
 
 function fixture() {
   const records = new Map();
