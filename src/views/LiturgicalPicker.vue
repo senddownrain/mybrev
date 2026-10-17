@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PeriodPicker from '@/components/liturgical/PeriodPicker.vue';
 import FeastsPicker from '@/components/liturgical/FeastsPicker.vue';
@@ -71,16 +71,11 @@ import {
 const route = useRoute();
 const router = useRouter();
 const selectedYear = new Date().getFullYear();
-const activeTab = ref('period');
+const activeTab = computed({
+  get: () => route.query.tab === 'feasts' ? 'feasts' : 'period',
+  set: (tab) => router.replace({ query: { ...route.query, tab } }),
+});
 const readingMode = computed(() => route.query.mode === 'readings');
-
-watch(
-  () => route.query.tab,
-  (tab) => {
-    if (tab === 'period' || tab === 'feasts') activeTab.value = tab;
-  },
-  { immediate: true },
-);
 
 function openSelection({ dayId, date, optionId, diocese, referenceOnly, periodOnly }) {
   if (periodOnly && date) {

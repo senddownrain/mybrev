@@ -18,18 +18,31 @@
         >
           <PhX :size="17" />
         </button>
-      </div>
-
-      <div class="source-filters" aria-label="Тып свята">
-        <button
-          v-for="filter in sourceFilters"
-          :key="filter.value"
-          type="button"
-          :class="{ 'source-filter--active': sourceFilter === filter.value }"
-          @click="sourceFilter = filter.value"
-        >
-          {{ filter.label }}
-        </button>
+        <v-menu>
+          <template #activator="{ props: menuProps }">
+            <button
+              v-bind="menuProps"
+              type="button"
+              class="filter-button"
+              :class="{ 'filter-button--active': sourceFilter !== 'all' }"
+              :aria-label="`Тып свята: ${sourceFilterLabel}`"
+              :title="sourceFilterLabel"
+            >
+              <PhFunnel :size="19" />
+            </button>
+          </template>
+          <v-list density="compact" role="menu" aria-label="Тып свята">
+            <v-list-item
+              v-for="filter in sourceFilters"
+              :key="filter.value"
+              :title="filter.label"
+              :active="sourceFilter === filter.value"
+              :aria-checked="sourceFilter === filter.value"
+              role="menuitemradio"
+              @click="sourceFilter = filter.value"
+            />
+          </v-list>
+        </v-menu>
       </div>
     </div>
 
@@ -78,7 +91,6 @@
               <span v-for="place in feast.placeLabels" :key="place" class="place-badge">
                 <PhMapPin :size="13" />{{ place }}
               </span>
-              <span v-if="feast.variantCount > 1">{{ feast.variantCount }} варыянты</span>
             </div>
             <div v-if="feast.statusLabel" class="feast-status">{{ feast.statusLabel }}</div>
           </div>
@@ -104,6 +116,7 @@
 
 <script setup>
 import { computed, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import moment from '@/utils/moment-be';
 import { celebrationViewDate, colorInfo, ORDO_COLORS, ORDO_FILTER_DIOCESES, yearCelebrations } from '@/utils/ordoScreen';
 import { ordoDiocese } from '@/utils/ordoDiocese';
@@ -114,6 +127,7 @@ import {
   PhBookOpenText,
   PhCalendarBlank,
   PhCalendarDots,
+  PhFunnel,
   PhMagnifyingGlass,
   PhMapPin,
   PhStarFour,
@@ -127,8 +141,18 @@ const props = defineProps({
 
 const emit = defineEmits(['feast-selected']);
 
-const searchQuery = ref('');
-const sourceFilter = ref('all');
+const route = useRoute();
+const router = useRouter();
+// Replace the picker entry as its filters change: Back returns to the exact
+// search, without adding a history entry for every typed character.
+const searchQuery = computed({
+  get: () => typeof route.query.q === 'string' ? route.query.q : '',
+  set: (q) => router.replace({ query: { ...route.query, q: q || undefined } }),
+});
+const sourceFilter = computed({
+  get: () => ['fixed', 'dynamic'].includes(route.query.filter) ? route.query.filter : 'all',
+  set: (filter) => router.replace({ query: { ...route.query, filter: filter === 'all' ? undefined : filter } }),
+});
 // The list is computed by the Ordo engine on the device: no `days` read.
 const loading = ref(false);
 
@@ -137,6 +161,7 @@ const sourceFilters = [
   { value: 'fixed', label: 'Нерухомыя' },
   { value: 'dynamic', label: 'Рухомыя' },
 ];
+const sourceFilterLabel = computed(() => sourceFilters.find((filter) => filter.value === sourceFilter.value).label);
 
 const openLabel = computed(() => (
   props.mode === 'readings' ? 'Адкрыць чытанні' : 'Адкрыць літургічныя гадзіны'
@@ -166,7 +191,6 @@ const preparedFeasts = computed(() => (ordoCalendarEpoch.value, yearCelebrations
       colorLabel: color?.label || '',
       swatch: color?.swatch || '',
       theme: visual ? getLiturgicalTheme(visualStamp(option)) : null,
-      variantCount: 1,
     };
     feast.searchText = buildSearchText(feast, date);
     return feast;
@@ -214,8 +238,7 @@ function selectFeast(feast) {
 }
 
 function resetFilters() {
-  searchQuery.value = '';
-  sourceFilter.value = 'all';
+  router.replace({ query: { ...route.query, q: undefined, filter: undefined } });
 }
 </script>
 
@@ -280,17 +303,6 @@ function resetFilters() {
   cursor: pointer;
 }
 
-.source-filters {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding: 1px 1px 3px;
-  scrollbar-width: none;
-}
-
-.source-filters::-webkit-scrollbar { display: none; }
-
-.source-filters button,
 .empty-state button {
   min-height: 40px;
   padding: 0 16px;
@@ -305,10 +317,12 @@ function resetFilters() {
   cursor: pointer;
 }
 
-.source-filters .source-filter--active {
-  border-color: rgba(var(--chrome-accent-rgb), 0.24);
+.search-field .filter-button { flex: 0 0 34px; }
+
+.search-field .filter-button--active {
   background: rgba(var(--chrome-accent-rgb), 0.11);
   color: var(--chrome-accent);
+  box-shadow: inset 0 0 0 1px rgba(var(--chrome-accent-rgb), 0.24);
 }
 
 .list-summary {

@@ -1,10 +1,68 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { createServer } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { createSSRApp, h } from 'vue';
+import { renderToString } from 'vue/server-renderer';
+import { createMemoryHistory, createRouter } from 'vue-router';
 import {
   buildAdventDateOptions,
   buildChristmasDateOptions,
 } from '../src/utils/liturgicalPicker.js';
+
+test('feast search survives reader Back without extra entries for query/filter edits', async () => {
+  const root = fileURLToPath(new URL('../', import.meta.url));
+  const server = await createServer({
+    configFile: false, root, plugins: [vue()],
+    cacheDir: 'node_modules/.cache/picker-navigation-test-vite',
+    resolve: { alias: { '@': `${root}/src` } },
+    server: { middlewareMode: true }, optimizeDeps: { noDiscovery: true, entries: [] },
+  });
+  try {
+    const { default: FeastsPicker } = await server.ssrLoadModule('/src/components/liturgical/FeastsPicker.vue');
+    const empty = { render: () => h('div') };
+    const router = createRouter({ history: createMemoryHistory(), routes: [
+      { path: '/', component: empty }, { path: '/picker', component: empty }, { path: '/reader', component: empty },
+    ] });
+    await router.push('/');
+    await router.push('/picker?tab=feasts&mode=readings');
+    let state;
+    const app = createSSRApp({ setup() {
+      state = FeastsPicker.setup({ year: 2026, mode: 'readings' }, { expose() {}, emit() {} });
+      return () => h('div');
+    } });
+    app.use(router);
+    await renderToString(app);
+    const navigate = (action) => new Promise((resolve, reject) => {
+      const remove = router.afterEach((_to, _from, failure) => { remove(); failure ? reject(failure) : resolve(); });
+      action();
+    });
+    await navigate(() => { state.searchQuery.value = '06.12'; });
+    await navigate(() => { state.sourceFilter.value = 'fixed'; });
+    assert.equal(state.filteredFeasts.value.length, 1);
+    assert.equal(state.filteredFeasts.value[0].optionId, 'sv-nicholas');
+    await router.push('/reader');
+    await navigate(() => router.back());
+    assert.equal(state.searchQuery.value, '06.12');
+    assert.equal(state.sourceFilter.value, 'fixed');
+    assert.equal(router.currentRoute.value.query.mode, 'readings');
+    await router.replace({ query: { ...router.currentRoute.value.query, tab: 'period' } });
+    await router.replace({ query: { ...router.currentRoute.value.query, tab: 'feasts' } });
+    assert.equal(state.searchQuery.value, '06.12');
+    assert.equal(state.sourceFilter.value, 'fixed');
+    await navigate(() => state.resetFilters());
+    assert.equal(state.searchQuery.value, '');
+    assert.equal(state.sourceFilter.value, 'all');
+    await navigate(() => router.back());
+    assert.equal(router.currentRoute.value.path, '/', 'typing, filters and tabs replace the same picker history entry');
+    await router.push('/picker?filter=unexpected');
+    assert.equal(state.sourceFilter.value, 'all');
+  } finally {
+    await server.close();
+  }
+});
 
 test('period selection emits the reader directly without an intermediate options list', () => {
   const picker = readFileSync(new URL('../src/components/liturgical/PeriodPicker.vue', import.meta.url), 'utf8');

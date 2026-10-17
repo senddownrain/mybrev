@@ -1,5 +1,5 @@
 <template>
-  <div class="period-picker">
+  <div class="period-picker" :style="periodStyle(selectedPeriod)">
     <section class="picker-step">
       <div class="step-heading">
         <span>01</span>
@@ -14,13 +14,14 @@
           :key="period.value"
           type="button"
           class="choice-button period-button"
+          :style="periodStyle(period.value)"
           :class="[
             `period-button--${period.value}`,
             { 'choice-button--active': selectedPeriod === period.value },
           ]"
           @click="selectPeriod(period.value)"
         >
-          <span class="period-dot" :style="{ background: LITURGICAL_THEME_MAP[period.value]?.color }" />
+          <span class="period-dot" />
           {{ period.title }}
         </button>
       </div>
@@ -198,7 +199,7 @@ import { useAuthStore } from '@/stores/auth';
 import { logger } from '@/utils/logger';
 import moment from '@/utils/moment-be';
 import { buildAdventDateOptions, buildChristmasDateOptions } from '@/utils/liturgicalPicker';
-import { LITURGICAL_THEME_MAP, PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
+import { getLiturgicalTheme, PERIOD_LABEL_MAP, WEEKDAY_LABEL_MAP } from '@/constants/liturgical';
 import { PhCalendarX } from '@phosphor-icons/vue';
 
 const DateChoiceGrid = defineComponent({
@@ -258,6 +259,11 @@ const liturgicalStore = useLiturgicalStore();
 const authStore = useAuthStore();
 
 const selectedPeriod = ref(null);
+const periodStyle = (period) => {
+  if (!period) return {};
+  const theme = getLiturgicalTheme({ _periodType: period });
+  return { '--chrome-accent': theme.color, '--chrome-accent-rgb': theme.rgb };
+};
 const selectedWeek = ref(null);
 const selectedDayOfWeek = ref(null);
 const selectedDateToken = ref('');
@@ -450,6 +456,10 @@ function createDay() {
 </script>
 
 <style scoped>
+.period-picker,
+.period-button {
+  --picker-visible-accent: color-mix(in srgb, var(--chrome-accent) var(--period-accent-weight), var(--period-accent-target));
+}
 .period-picker { display: grid; gap: 16px; }
 
 .picker-step,
@@ -465,7 +475,7 @@ function createDay() {
 .step-heading > span {
   display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center;
   border: 1px solid rgba(var(--chrome-accent-rgb), 0.18);
-  border-radius: 12px; background: rgba(var(--chrome-accent-rgb), 0.1); color: var(--chrome-accent);
+  border-radius: 12px; background: rgba(var(--chrome-accent-rgb), 0.1); color: var(--picker-visible-accent);
   font-size: 0.72rem; font-weight: 800;
 }
 .step-heading h2 { margin: 0; font-size: 1.05rem; font-weight: 750; line-height: 1.25; }
@@ -482,11 +492,18 @@ function createDay() {
   cursor: pointer; transition: background 0.16s ease, color 0.16s ease, transform 0.14s ease;
 }
 .choice-button:active { transform: scale(0.97); }
-.choice-button--active { border-color: rgba(var(--chrome-accent-rgb), 0.24); background: rgba(var(--chrome-accent-rgb), 0.11); color: var(--chrome-accent); }
+.choice-button--active { border-color: rgba(var(--chrome-accent-rgb), 0.24); background: rgba(var(--chrome-accent-rgb), 0.11); color: var(--picker-visible-accent); }
 .choice-button:disabled { opacity: 0.38; cursor: not-allowed; }
 
-.period-button { display: flex; align-items: center; gap: 10px; padding: 10px 12px; text-align: left; }
-.period-dot { width: 10px; height: 10px; flex: 0 0 10px; border-radius: 50%; background: var(--chrome-accent); }
+.period-button {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; text-align: left;
+  border-color: rgba(var(--chrome-accent-rgb), 0.28);
+  background: linear-gradient(120deg, rgba(var(--chrome-accent-rgb), 0.14), rgba(var(--chrome-accent-rgb), 0.025) 72%);
+}
+.period-dot {
+  width: 10px; height: 10px; flex: 0 0 10px; border-radius: 50%;
+  background: var(--picker-visible-accent);
+}
 
 .subsection-label { margin: 0 0 8px 2px; color: var(--nav-muted); font-size: 0.72rem; font-weight: 780; text-transform: uppercase; }
 .advent-weeks { grid-template-columns: repeat(4, minmax(56px, 1fr)); }
@@ -510,7 +527,7 @@ function createDay() {
 :deep(.date-choice-button strong) { color: var(--nav-on-surface); font-size: 1rem; line-height: 1; }
 :deep(.date-choice-button span) { font-size: 0.63rem; font-weight: 760; text-transform: uppercase; }
 :deep(.date-choice-button small) { font-size: 0.62rem; }
-:deep(.date-choice-button--active) { border-color: rgba(var(--chrome-accent-rgb), 0.24); background: rgba(var(--chrome-accent-rgb), 0.11); color: var(--chrome-accent); }
+:deep(.date-choice-button--active) { border-color: rgba(var(--chrome-accent-rgb), 0.24); background: rgba(var(--chrome-accent-rgb), 0.11); color: var(--picker-visible-accent); }
 
 .lent-opening-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .lent-opening-button { display: grid; gap: 3px; padding: 9px 10px; text-align: left; }
