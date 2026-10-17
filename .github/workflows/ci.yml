@@ -21,6 +21,82 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      # Owner approved one-time read-only audit of up to nine public prayer docs; remove after inspection.
+      - name: Approved five-prayer Firestore audit (one-off)
+        if: github.event_name == 'pull_request' && github.head_ref == 'feat/five-devotions-liturgical-reader'
+        timeout-minutes: 2
+        env:
+          FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+        run: |
+          node --input-type=module <<'NODE_AUDIT'
+          import { createHash } from 'node:crypto';
+          const project='ibreviaryby';
+          const root='https://firestore.googleapis.com/v1/projects/'+project+'/databases/(default)/documents';
+          const key=process.env.FIREBASE_API_KEY;
+          const ids=['mybrev-devotion-office-for-dead-laudes','mybrev-devotion-office-for-dead-vesper','mybrev-devotion-blessed-virgin-mary-laudes','mybrev-devotion-blessed-virgin-mary-vesper'];
+          const target='Гадзінкі аб Беззаганным Зачацці Найсвяцейшай Панны Марыі';
+          let returned=0,requests=0;
+          function val(f){
+           if(!f)return null;
+           if('stringValue' in f)return f.stringValue;
+           if('timestampValue' in f)return f.timestampValue;
+           if('booleanValue' in f)return f.booleanValue;
+           if('integerValue' in f)return Number(f.integerValue);
+           if('arrayValue' in f)return (f.arrayValue.values||[]).map(val);
+           if('mapValue' in f)return Object.fromEntries(Object.entries(f.mapValue.fields||{}).map(([k,v])=>[k,val(v)]));
+           return null;
+          }
+          async function get(url,opts){
+           requests++;
+           const r=await fetch(url,{...opts,signal:AbortSignal.timeout(10000),headers:{'Content-Type':'application/json'}});
+           if(!r.ok)throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,100).replace(/[^\x20-\x7e]/g,'?'));
+           return r.json();
+          }
+          function report(d,tag){
+           if(++returned>9)throw Error('Hard stop: returned >9 docs');
+           const f=d.fields||{},t=val(f.text),versions=val(f.textVersions);
+           const strings={main:typeof t==='string'?t:''};
+           if(versions && typeof versions==='object') for(const [k,v] of Object.entries(versions)) {
+            if(typeof v==='string')strings['version:'+k]=v;
+            else if(v && typeof v==='object')for(const [j,x] of Object.entries(v))if(typeof x==='string'&&/^(?:text|content)$/iu.test(j))strings['version:'+k+'.'+j]=x;
+           }
+           function inspect(s){
+            const tokens=s.match(/[\p{L}\p{N}]+|[^\s\p{L}\p{N}]/gu)||[];
+            return {chars:s.length,nonempty:s.split(/\r?\n/u).filter(x=>x.trim()).length,
+             sha256:createHash('sha256').update(s).digest('hex'),
+             tokenSha256:createHash('sha256').update(tokens.join('\n')).digest('hex'),tokens:tokens.length,
+             headings:s.split(/\r?\n/u).filter(x=>/^#{1,4}\s/u.test(x)).slice(0,35),
+             antiphonCount:(s.match(/(?:^|\n)\s*[123][\s\u00a0\u2000-\u200a]*ант\./giu)||[]).length,
+             shortReadings:(s.match(/Кароткае\s+чытанне/giu)||[]).length,
+             responsories:(s.match(/Кароткі\s+рэспансорый/giu)||[]).length,
+             unresolved:(s.match(/from-first-week|from-day|data-alternative-title/giu)||[]).length,
+             containsBenedictus:/Благаслаўлёны Пан, Бог Ізраэля/iu.test(s),
+             containsMagnificat:/Велічае душа мая/iu.test(s),containsPater:/Ойча наш/iu.test(s),
+             };
+           }
+           const out={tag,id:d.name.split('/').at(-1),title:val(f.title),titleVersions:val(f.titleVersions),
+            textFormat:val(f.textFormat),tags:val(f.tags),source:val(f.source),
+            updatedAt:val(f.updatedAt),fields:Object.keys(f).sort(),
+            texts:Object.fromEntries(Object.entries(strings).map(([k,v])=>[k,inspect(v)]))};
+           console.log('AUDIT_DOCUMENT '+JSON.stringify(out));
+          }
+          if(!key){console.log('AUDIT_ABORT key_unavailable reads=0');process.exit(0)}
+          try {
+           for(const id of ids){
+            let d;
+            try{d=await get(root+'/prayers/'+encodeURIComponent(id)+'?key='+encodeURIComponent(key))}
+            catch(e){if(e.message.startsWith('HTTP 404')){console.log('AUDIT_MISSING '+id);continue}throw e}
+            report(d,'candidate');
+           }
+           const q={structuredQuery:{from:[{collectionId:'prayers'}],
+            where:{fieldFilter:{field:{fieldPath:'title'},op:'EQUAL',value:{stringValue:target}}},
+            limit:5}};
+           const results=await get(root+':runQuery?key='+encodeURIComponent(key),{method:'POST',body:JSON.stringify(q)});
+           const matched=results.map(x=>x.document).filter(Boolean);
+           for(const d of matched)report(d,'gadzinki_exact_title');
+           console.log('AUDIT_DONE requests='+requests+' returned_documents='+returned+' fifth_matches='+matched.length+' document_limit=9');
+          }catch(e){console.log('AUDIT_ABORT requests='+requests+' returned_documents='+returned+' '+String(e.message).slice(0,200))}
+          NODE_AUDIT
       - name: Install dependencies
         run: npm ci
 
