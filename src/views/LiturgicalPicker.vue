@@ -133,6 +133,13 @@ function openSelection({ dayId, date, optionId, diocese, referenceOnly, periodOn
   padding: 8px 4px 20px;
 }
 
+/* Cards share the header's side inset (hero padding), so they line up with its text. */
+.picker-controls,
+.picker-tabs,
+.picker-window {
+  margin-inline: 4px;
+}
+
 .picker-eyebrow,
 .control-label {
   color: var(--nav-muted);

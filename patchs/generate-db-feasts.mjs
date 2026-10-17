@@ -36,7 +36,7 @@ import {
 } from '../src/constants/officeFields.js';
 import { hasFirstVespers, inferTemplates, isEmptyValue, splitSource } from '../scripts/lib/feast-content.mjs';
 import { scaffoldDecision } from '../scripts/lib/scaffold-commons.mjs';
-import { SEASONAL_VARIANTS_FIELD, validateSeasonalVariants } from '../src/utils/ordo/commonSeasons.js';
+import { MAIN_SECTION_FIELD, SEASONAL_VARIANTS_FIELD, validateSeasonalVariants } from '../src/utils/ordo/commonSeasons.js';
 
 const CONTENT_FIELDS = OFFICE_CONTENT_FIELDS;
 /** Prayers that are the Office of Readings prayer when the Proper has only that one (final phase recheck §19). */
@@ -463,6 +463,19 @@ function seasonalVariantsOf(id, raw, report) {
   return Object.keys(ordered).length ? { [SEASONAL_VARIANTS_FIELD]: ordered } : {};
 }
 
+/**
+ * Main section of the Marian Common without the Saturday memorial (`_mainSection`, D-2): the stored fields stay whole,
+ * the assembler shows this text for every celebration except the Saturday memorial (src/utils/ordo/officeAssembly.js).
+ */
+function mainSectionOf(id, raw, report) {
+  const section = raw[MAIN_SECTION_FIELD];
+  if (section === undefined) return {};
+  const fields = CONTENT_FIELDS.filter((field) => field in section);
+  const bad = Object.keys(section).filter((field) => !CONTENT_FIELDS.includes(field) || typeof section[field] !== 'string' || !section[field].trim());
+  bad.forEach((field) => report.invalidOutputs.push({ file: `common-texts/${id}.json`, path: `${id}.${MAIN_SECTION_FIELD}.${field}`, message: 'must be a non-empty HTML string of a known content field' }));
+  return fields.length ? { [MAIN_SECTION_FIELD]: Object.fromEntries(fields.map((field) => [field, section[field]])) } : {};
+}
+
 /** `liturgicalTemplates` documents: the Commons and the Sunday, week I psalter. */
 function buildTemplateOutputs({ templates, firstWeekDay, complementary, manifest, report }) {
   const titles = new Map((manifest.sections || []).map((item) => [item.file.replace(/\.json$/, ''), item.title]));
@@ -479,6 +492,7 @@ function buildTemplateOutputs({ templates, firstWeekDay, complementary, manifest
         ...Object.fromEntries(CONTENT_FIELDS.filter((field) => field in texts).map((field) => [field, texts[field]])),
         ...(Object.keys(rules).length ? { _fieldRules: Object.fromEntries(CONTENT_FIELDS.filter((field) => field in rules).map((field) => [field, rules[field]])) } : {}),
         ...seasonalVariantsOf(id, raw, report),
+        ...mainSectionOf(id, raw, report),
       },
     };
   });

@@ -10,6 +10,9 @@ import { resolveLiturgicalDate } from '../src/utils/ordo/index.js';
 const root = path.resolve(import.meta.dirname, '..');
 const generatedDir = path.join(root, 'patchs', 'db-feasts');
 
+/** D-2: outside the Saturday memorial the Marian Common shows its main section (`_mainSection`), not the merged stored field. */
+const mainOf = (common, field) => common._mainSection?.[field] ?? common[field];
+
 async function readJson(file) {
   return JSON.parse(await readFile(file, 'utf8'));
 }
@@ -45,14 +48,14 @@ test('Marian feast references are structured rules resolved from the Common', as
     'officeOfReadingsVers', 'vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3',
   ]) {
     assert.deepEqual(nativity._fieldRules[field], marian, field);
-    assert.equal(assembled.nativity[field], common[field], field);
+    assert.equal(assembled.nativity[field], mainOf(common, field), field);
   }
-  for (const feast of ['nativity', 'sorrows']) assert.equal(assembled[feast].laudesInter, common.laudesInter);
+  for (const feast of ['nativity', 'sorrows']) assert.equal(assembled[feast].laudesInter, mainOf(common, 'laudesInter'));
   for (const field of ['vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1Inter']) {
-    assert.equal(assembled.sorrows[field], common[field], field);
+    assert.equal(assembled.sorrows[field], mainOf(common, field), field);
   }
   for (const field of ['vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperInter']) {
-    assert.equal(assembled.rosary[field], common[field], field);
+    assert.equal(assembled.rosary[field], mainOf(common, field), field);
   }
   // «Ты гонар з Нешпараў»: the hymn of the Office of Readings is the Vespers hymn.
   assert.deepEqual(nativity._fieldRules.officeOfReadingsHymn, { ref: 'vesper1Hymn' });

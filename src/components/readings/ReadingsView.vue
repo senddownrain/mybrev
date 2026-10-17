@@ -388,7 +388,7 @@ watch(() => [route.params.date || route.query.date, route.query.dayId, route.que
 
 .readings-date {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 9px;
   margin: 8px 0 0;
   color: var(--reading-visible-color);
@@ -399,6 +399,8 @@ watch(() => [route.params.date || route.query.date, route.query.dayId, route.que
 }
 
 .readings-date__marker {
+  /* Centred on the first line of the date, so a wrapped date keeps its dot at the top. */
+  margin-top: calc(0.7 * 1.02rem * var(--font-size-multiplier, 1) - 4.5px);
   width: 9px;
   height: 9px;
   flex: 0 0 9px;
@@ -412,6 +414,11 @@ watch(() => [route.params.date || route.query.date, route.query.dayId, route.que
   display: grid;
   gap: 14px;
   width: 100%;
+}
+
+/* The reading card shares the page gutter with the choice cards above it. */
+.readings-content > :deep(.parsed-reading) {
+  margin-inline: 12px;
 }
 
 .reading-choice,
@@ -633,7 +640,8 @@ watch(() => [route.params.date || route.query.date, route.query.dayId, route.que
 
   .readings-page-header,
   .reading-choice,
-  .cycle-choice {
+  .cycle-choice,
+  .readings-content > :deep(.parsed-reading) {
     margin-inline: 8px;
   }
 
@@ -650,5 +658,25 @@ watch(() => [route.params.date || route.query.date, route.query.dayId, route.que
     flex: 1 1 0;
   }
 
+  /* Reading-set buttons carry long Belarusian labels: they stack at full width
+     and may wrap, instead of inheriting the compact A/B/C shrink above. */
+  .set-choice__buttons {
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+  }
+
+  .set-choice__button {
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: 44px;
+    padding-block: 9px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    text-align: center;
+    white-space: normal;
+  }
 }
 </style>

@@ -42,7 +42,7 @@
       v-if="isMassOrder"
       :section-ids="massSectionIds"
       :active-section-id="activeMassSectionId"
-      @select="scrollToMassSection"
+      @select="onMassSectionSelect"
     />
   </v-container>
 
@@ -81,6 +81,7 @@ import {
   resolveMassSectionTarget,
 } from '@/utils/massRitual';
 import { buildMassDocument, renderMassBlocks } from '@/utils/massContent';
+import { trackFeature } from '@/utils/trackFeature';
 import MassSectionNav from '@/components/prayers/MassSectionNav.vue';
 
 const route = useRoute();
@@ -210,6 +211,7 @@ function readStoredMassLanguage() {
 }
 
 function switchMassLanguage(language) {
+  if (language !== massLanguage.value) trackFeature('mass_language_change');
   pendingMassSection = activeMassSectionId.value;
   massLanguage.value = language;
   try {
@@ -250,6 +252,7 @@ async function copyText() {
 
   try {
     await navigator.clipboard.writeText(textToCopy);
+    trackFeature('copy_use');
     copySuccess.value = true;
     notifySuccess('Тэкст скапіяваны');
     copyTimeoutId = setTimeout(resetCopySuccess, 2000);
@@ -262,6 +265,7 @@ async function copyText() {
     textArea.select();
     try {
       document.execCommand('copy');
+      trackFeature('copy_use');
       copySuccess.value = true;
       notifySuccess('Тэкст скапіяваны');
       copyTimeoutId = setTimeout(resetCopySuccess, 2000);
@@ -293,6 +297,11 @@ async function updateMassSections() {
 
 function massSectionElement(sectionId) {
   return prayerTextElement.value?.querySelector(`[data-mass-section="${sectionId}"]`) || null;
+}
+
+function onMassSectionSelect(sectionId) {
+  trackFeature('mass_section_nav');
+  scrollToMassSection(sectionId);
 }
 
 function scrollToMassSection(sectionId, behavior = 'smooth') {

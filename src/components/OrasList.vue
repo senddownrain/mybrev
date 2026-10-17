@@ -143,6 +143,7 @@ import { useReadings } from '@/composables/useReadings';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { logger } from '@/utils/logger';
 import { useAuthStore } from '@/stores/auth';
+import { trackFeature } from '@/utils/trackFeature';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 import {
   RANK_LABEL_MAP,
@@ -235,6 +236,7 @@ const readingItem = computed(() => {
 
 const selectTemplate = (id) => {
   if (!id || id === dayId.value) return;
+  trackFeature('hour_option_select'); // a legal variant of the day was chosen (id only, never the value)
   router.replace({ name: 'oras', params: { day: dateParam.value, id }, query: { ...route.query } });
 };
 

@@ -33,7 +33,7 @@ import {
   TE_DEUM_FIELD,
 } from '../../constants/officeFields.js';
 import { isFromDayReference } from '../../constants/days.js';
-import { seasonalTemplateGetter, variantKeyForSeason } from './commonSeasons.js';
+import { MAIN_SECTION_FIELD, SATURDAY_MEMORIAL_OPTION, seasonalTemplateGetter, variantKeyForSeason } from './commonSeasons.js';
 
 export const CURRENT_DAY_CHOICE = 'current-day';
 
@@ -96,6 +96,9 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   const getTemplate = seasonalTemplateGetter(templates, season);
   const seasonVariant = variantKeyForSeason(season);
   const seasonProvenance = {};
+  // Marian Common (D-2): only the Saturday memorial itself shows the Saturday section merged into the stored fields.
+  const showsSaturdaySection = office?.optionId === SATURDAY_MEMORIAL_OPTION;
+  const mainSectionFields = [];
   const choices = assemblyChoices(proper, office);
   const selected = choices.includes(choice) ? choice : choices[0];
   const templateId = selected === CURRENT_DAY_CHOICE ? defaultTemplateOf(proper) : selected;
@@ -123,6 +126,9 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
     if (rule?.source) return fromSource(rule.source === 'common' ? 'current-day' : rule.source, field, rule.template);
     if (isBlank(template[field])) return null;
     if (template._seasonal?.fields?.includes(field)) seasonProvenance[field] = template._seasonal.variant;
+    // A seasonal variant is already the volume's own (main) text; otherwise the main section replaces the merged field.
+    const mainSection = !showsSaturdaySection && !template._seasonal?.fields?.includes(field) ? template[MAIN_SECTION_FIELD]?.[field] : undefined;
+    if (!isBlank(mainSection)) { mainSectionFields.push(field); return { value: mainSection, origin }; }
     return { value: template[field], origin };
   };
   function fromSource(source, field, named) {
@@ -250,6 +256,8 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   return {
     day, choice: selected, template: templateId, provenance, missing, integrity,
     seasonal: { variant: seasonVariant, fields: Object.fromEntries(seasonal.map((field) => [field, seasonProvenance[field]])) },
+    // fields whose Saturday-memorial section was left out (Marian Common, not the Saturday memorial)
+    mainSection: { fields: [...new Set(mainSectionFields)], saturdaySection: showsSaturdaySection },
   };
 }
 

@@ -15,6 +15,7 @@
     "preview": "node --no-deprecation ./node_modules/vite/bin/vite.js preview",
     "benchmark:routes": "node scripts/benchmark-routes.mjs",
     "smoke:ui": "node scripts/smoke-ui.mjs",
+    "smoke:responsive": "firebase emulators:exec --only firestore --project demo-responsive \"node scripts/smoke-responsive.mjs\"",
     "lint": "eslint . --fix",
     "db:backup": "node scripts/export-firestore-snapshot.mjs",
     "db:snapshot:query": "node scripts/query-firestore-snapshot.mjs",
@@ -85,7 +86,12 @@
     "lectionary:audit": "node scripts/lectionary/audit.mjs",
     "lectionary:resync": "node scripts/lectionary/resync-readings.mjs",
     "lectionary:plan": "node scripts/lectionary/plan-options.mjs",
-    "db:migrate-priest-grant-proofs": "node scripts/migrate-priest-grant-proofs.mjs"
+    "db:migrate-priest-grant-proofs": "node scripts/migrate-priest-grant-proofs.mjs",
+    "liturgy:common-seasons:scope": "node scripts/liturgy/common-seasons-import-scope.mjs",
+    "test:common-seasons": "node --test tests/common-seasons-*.test.mjs",
+    "analytics:perf": "firebase emulators:exec --only firestore --project demo-analytics-perf \"node scripts/analytics/perf-compare.mjs\"",
+    "analytics:smoke": "firebase emulators:exec --only firestore --project demo-analytics-smoke \"node scripts/analytics/screens-smoke.mjs\"",
+    "test:analytics": "node --test tests/analytics-*.test.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",

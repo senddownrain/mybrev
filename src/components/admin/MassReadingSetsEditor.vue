@@ -63,7 +63,7 @@
                 <v-btn v-if="section.kind === 'gospel'" variant="text" size="small" class="text-none mt-1" @click="setPassion(section, section.text || '')">Размеціць па ролях</v-btn>
               </v-col>
               <v-col v-if="!set.referenceOnly" cols="12" md="6">
-                <v-text-field v-model="section.conclusion" label="Заканчэнне («Гэта слова Божае.»; пуста — не гаворыцца)" variant="outlined" hide-details />
+                <v-text-field v-model="section.conclusion" label="Заканчэнне" hint="Напрыклад «Гэта слова Божае.»; пустое поле — заканчэнне не гаворыцца" persistent-hint variant="outlined" />
               </v-col>
               <v-col cols="12">
                 <div v-for="(alternative, altIndex) in section.alternatives || []" :key="altIndex" class="sets-editor__alternative">

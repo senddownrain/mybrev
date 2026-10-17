@@ -26,7 +26,7 @@ test('generated templates keep the stored flat fields and carry exactly the stor
     const source = JSON.parse(fs.readFileSync(path.join(dir, `${template._id}.json`), 'utf8'));
     assert.deepEqual(template._seasonalVariants || {}, source._seasonalVariants || {}, template._id);
     // nothing but the documented keys is added next to the flat fields
-    assert.ok(Object.keys(template).every((key) => !key.startsWith('_') || ['_id', '_schema', '_kind', '_fieldRules', '_seasonalVariants'].includes(key)), template._id);
+    assert.ok(Object.keys(template).every((key) => !key.startsWith('_') || ['_id', '_schema', '_kind', '_fieldRules', '_seasonalVariants', '_mainSection'].includes(key)), template._id);
   });
 });
 
