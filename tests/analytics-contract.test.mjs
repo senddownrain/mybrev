@@ -10,10 +10,10 @@ import {
 } from '../src/utils/analytics/contract.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const fixture = JSON.parse(readFileSync(path.join(root, 'tests/fixtures/analytics-contract-v1.json'), 'utf8'));
+const fixture = JSON.parse(readFileSync(path.join(root, 'tests/fixtures/analytics-contract-v2.json'), 'utf8'));
 
-test('contract is v1 and the network gate defaults to off', () => {
-  assert.equal(SCHEMA_VERSION, 1);
+test('contract is v2 and the network gate defaults to off', () => {
+  assert.equal(SCHEMA_VERSION, 2);
   assert.equal(fixture.schema_version, SCHEMA_VERSION);
   assert.equal(ANALYTICS_NETWORK_DEFAULT, false);
 });
@@ -46,7 +46,7 @@ test('packets reject identifiers, unknown fields and bad envelopes', () => {
   for (const extra of ['user_id', 'installation_id', 'session_id', 'device_id', 'ip', 'email', 'query', 'ts']) {
     assert.notDeepEqual(validatePacket({ ...base, [extra]: 'x' }), [], extra);
   }
-  assert.notDeepEqual(validatePacket({ ...base, schema_version: 2 }), []);
+  assert.notDeepEqual(validatePacket({ ...base, schema_version: 1 }), []);
   assert.notDeepEqual(validatePacket({ ...base, platform: 'desktop' }), []);
   assert.notDeepEqual(validatePacket({ ...base, region: 'DE' }), []);
   assert.notDeepEqual(validatePacket({ ...base, app_version: '4.5.2' }), []);
@@ -95,10 +95,39 @@ test('stage guard: only main.js, behind the build flag, may reach the analytics 
   }
 });
 
-test('no analytics module contains a network call or storage write', () => {
+test('no analytics module contains a network call; only the DOM glue may touch localStorage', () => {
   const dir = path.join(root, 'src/utils/analytics');
   for (const name of readdirSync(dir).filter((f) => f.endsWith('.js'))) {
     const text = readFileSync(path.join(dir, name), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
-    assert.ok(!/\bfetch\s*\(|XMLHttpRequest|sendBeacon|WebSocket|localStorage|sessionStorage|indexedDB|document\.cookie/.test(text), name);
+    assert.ok(!/\bfetch\s*\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|navigator\.\w*[Bb]eacon|sessionStorage|indexedDB|document\.cookie/.test(text), name);
+    if (name !== 'localAnalytics.js') assert.ok(!/localStorage/.test(text), `${name} must not touch storage`);
+  }
+  const glue = readFileSync(path.join(dir, 'localAnalytics.js'), 'utf8');
+  // Storage is written only from page-hide handlers and bounded, never from scroll/tap.
+  assert.match(glue, /MAX_STORED_BYTES = 64 \* 1024/);
+  const start = glue.indexOf("addEventListener('scroll'");
+  const scrollBlock = glue.slice(start, glue.indexOf('{ passive: true, capture: true })', start) + '{ passive: true, capture: true })'.length);
+  assert.ok(scrollBlock.length > 20 && !/persist\(|localStorage/.test(scrollBlock), 'the scroll listener is passive and only queues a throttled measurement');
+  assert.match(scrollBlock, /queueMeasure\(\)/);
+});
+
+test('trackFeature is an empty function in a normal build and call sites pass only a feature id', () => {
+  const track = readFileSync(path.join(root, 'src/utils/trackFeature.js'), 'utf8');
+  assert.match(track, /import\.meta\.env\.VITE_ANALYTICS_LOCAL === 'true'/);
+  const used = [];
+  (function walk(dir) {
+    for (const name of readdirSync(dir)) {
+      const full = path.join(dir, name);
+      if (statSync(full).isDirectory()) { walk(full); continue; }
+      if (/trackFeature\.js$|localAnalytics\.js$/.test(full)) continue;
+      const text = readFileSync(full, 'utf8');
+      for (const match of text.matchAll(/trackFeature\(([^)]*)\)/g)) used.push(match[1]);
+    }
+  }(path.join(root, 'src')));
+  assert.ok(used.length >= 20);
+  for (const arg of used) {
+    if (arg.startsWith('favoriteSongs.value.includes')) continue;
+    assert.match(arg, /^'[a-z_]+'$/, `trackFeature argument must be a literal feature id: ${arg}`);
+    assert.ok(FEATURE_IDS.includes(arg.slice(1, -1)), `unknown feature ${arg}`);
   }
 });

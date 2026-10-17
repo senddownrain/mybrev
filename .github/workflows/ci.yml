@@ -45,3 +45,6 @@ jobs:
 
       - name: Audit tests
         run: npm run test:audit
+
+      - name: Analytics tests (contract, collector, mapper, inventory, reader signal)
+        run: npm run test:analytics

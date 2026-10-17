@@ -1,5 +1,5 @@
 /**
- * Analytics contract v1 (WEB + Flutter). See docs/analytics-contract.md.
+ * Analytics contract v2 (WEB + Flutter). See docs/analytics-contract.md.
  *
  * Pure, dependency-free validator and bucketing helpers. Nothing here measures,
  * stores or sends anything, and no screen imports this module yet. Network
@@ -7,7 +7,7 @@
  * contract has no code path that sends data.
  */
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 /** Compiled default of the network gate. Changing it requires an owner decision. */
 export const ANALYTICS_NETWORK_DEFAULT = false;
@@ -23,6 +23,7 @@ export const SECTIONS = Object.freeze([
 
 /** section -> content_id kind. Sections absent from the map carry no content_id. */
 export const SECTION_CONTENT_KIND = Object.freeze({
+  readings: 'reading',
   prayers: 'prayer',
   mass: 'mass',
   songs: 'song',
@@ -36,6 +37,8 @@ export const HOUR_IDS = Object.freeze([
 ]);
 
 const CONTENT_ID_PATTERNS = Object.freeze({
+  // The daily readings screen as one generic material: no date, day id or text.
+  reading: /^reading:day$/,
   // Firestore auto-ids (20 chars) plus imported slug ids (import-*, mybrev-*, catholicby-yearcycle-*).
   prayer: /^prayer:[A-Za-z0-9][A-Za-z0-9_-]{5,100}$/,
   song: /^song:holysongs-[0-9a-f]{20}$/,
@@ -60,7 +63,16 @@ export const ERROR_IDS = Object.freeze([
   'visibility_unsupported', 'scroll_unmeasurable',
 ]);
 
-export const EVENTS = Object.freeze(['screen_view', 'text_read', 'feature_use', 'measurement_error']);
+/**
+ * Catalog / landing screens that have no single material. Counted by `catalog_open`
+ * (opens of the screen, not people) so they never double-count a material open.
+ */
+export const CATALOG_IDS = Object.freeze([
+  'hours_list', 'prayers_home', 'prayers_all', 'favorites', 'songs',
+  'bible_books', 'compendium_home',
+]);
+
+export const EVENTS = Object.freeze(['screen_view', 'text_read', 'feature_use', 'catalog_open', 'measurement_error']);
 export const TEXT_METRICS = Object.freeze(['fv', 'er', 'sd']);
 
 /** Upper bounds of time buckets in seconds (exclusive), in order. */
@@ -90,6 +102,7 @@ const CELL_KEYS = Object.freeze({
   screen_view: ['e', 'section', 'content_id', 'n'],
   text_read: ['e', 'section', 'content_id', 'metric', 'bucket', 'n'],
   feature_use: ['e', 'feature_id', 'section', 'n'],
+  catalog_open: ['e', 'catalog_id', 'n'],
   measurement_error: ['e', 'error_id', 'n'],
 });
 
@@ -158,6 +171,10 @@ export function validateCell(cell, options = {}) {
   if (!Number.isInteger(cell.n) || cell.n < 1 || cell.n > LIMITS.maxCellCount) errors.push('n must be an integer 1..10000');
   if (cell.e === 'measurement_error') {
     if (!ERROR_IDS.includes(cell.error_id)) errors.push(`unknown error_id "${cell.error_id}"`);
+    return errors;
+  }
+  if (cell.e === 'catalog_open') {
+    if (!CATALOG_IDS.includes(cell.catalog_id)) errors.push(`unknown catalog_id "${cell.catalog_id}"`);
     return errors;
   }
   if (!SECTIONS.includes(cell.section)) { errors.push(`unknown section "${cell.section}"`); return errors; }

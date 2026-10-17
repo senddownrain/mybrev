@@ -8,6 +8,7 @@
                   <div class="hour-option-picker__label">Выбар тэксту</div>
                   <v-select
                     v-model="selectedInvitatoriumId"
+                    @update:model-value="trackFeature('hour_option_select')"
                     :items="invitatoriumOptions"
                     item-title="label"
                     item-value="id"
@@ -67,6 +68,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { logger } from '@/utils/logger';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { getInvitatoriums } from '@/services/staticLiturgicalService';
+import { trackFeature } from '@/utils/trackFeature';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 import PsalmText from '@/components/oraparts/PsalmText.vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';

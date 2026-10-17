@@ -5,7 +5,7 @@ import { validatePacket } from '../src/utils/analytics/contract.js';
 
 const PRAYER = 'prayer:AbCdEfGhIjKlMnOpQrSt';
 const CLOSED = 'prayer:ZZZZZZZZZZZZZZZZZZZZ';
-const publicIds = new Set([PRAYER, 'hour:laudes']);
+const publicIds = new Set([PRAYER, 'hour:laudes', 'reading:day']);
 
 function setup(options = {}) {
   let t = Date.parse('2026-10-15T10:00:00Z');
@@ -211,4 +211,77 @@ test('discardView drops the active visit without recording it', () => {
   collector.discardView();
   collector.flush();
   assert.deepEqual(collector.snapshot(), []);
+});
+
+test('daily readings are measured as one generic material with fv, sd and er; no date anywhere', () => {
+  const { collector, tick } = setup();
+  collector.enterView({ section: 'readings', contentId: 'reading:day', totalChars: 2400 });
+  tick(40);
+  collector.reportScroll(0.9);
+  collector.flush();
+  const cells = collector.snapshot().flatMap((p) => p.cells);
+  assert.ok(find(cells, (c) => c.e === 'screen_view' && c.section === 'readings' && c.content_id === 'reading:day'));
+  assert.equal(find(cells, (c) => c.metric === 'sd').bucket, 'p75_99');
+  assert.ok(find(cells, (c) => c.metric === 'er'));
+  assert.ok(!JSON.stringify(cells).match(/20\d\d-\d\d/));
+});
+
+test('catalog screens count catalog_open once per visit and never a material', () => {
+  const { collector, tick } = setup();
+  collector.enterView({ catalogId: 'prayers_home' });
+  tick(3);
+  collector.enterView({ catalogId: 'prayers_home' }); // same screen again: one visit
+  tick(2);
+  collector.leaveView();
+  collector.enterView({ section: 'prayers', contentId: PRAYER, totalChars: 500 });
+  tick(6);
+  collector.flush();
+  const cells = collector.snapshot().flatMap((p) => p.cells);
+  assert.equal(find(cells, (c) => c.e === 'catalog_open' && c.catalog_id === 'prayers_home').n, 1);
+  assert.equal(cells.filter((c) => c.e === 'screen_view').length, 1);
+  collector.enterView({ catalogId: 'not_a_catalog' });
+  tick(3);
+  collector.flush();
+  assert.ok(!collector.snapshot().flatMap((p) => p.cells).some((c) => c.catalog_id === 'not_a_catalog'));
+});
+
+test('catalog visit under one second is discarded; background time does not count', () => {
+  const { collector, tick } = setup();
+  collector.enterView({ catalogId: 'songs' });
+  tick(0.4);
+  collector.leaveView();
+  collector.flush();
+  assert.deepEqual(collector.snapshot(), []);
+});
+
+test('importPackets restores persisted counters; invalid, foreign and closed-id packets are ignored', () => {
+  const { collector, tick } = setup();
+  collector.featureUse('theme_change', 'settings');
+  collector.enterView({ section: 'prayers', contentId: PRAYER, totalChars: 500 });
+  tick(6);
+  collector.flush();
+  const saved = collector.snapshot();
+  const fresh = setup().collector;
+  fresh.importPackets([...saved, { junk: true }, { ...saved[0], platform: 'ios' }, { ...saved[0], cells: [{ e: 'screen_view', section: 'prayers', content_id: CLOSED, n: 1 }] }]);
+  const cells = fresh.snapshot().flatMap((p) => p.cells);
+  assert.equal(cells.filter((c) => c.e === 'feature_use').length, 1);
+  assert.ok(!cells.some((c) => c.content_id === CLOSED));
+  fresh.importPackets(saved);
+  assert.equal(find(fresh.snapshot().flatMap((p) => p.cells), (c) => c.e === 'feature_use').n, 2);
+});
+
+test('snapshot({ includeOpen }) counts the open visit without ending it', () => {
+  const { collector, tick } = setup();
+  collector.enterView({ section: 'prayers', contentId: PRAYER, totalChars: 900 });
+  tick(20);
+  collector.reportScroll(0.6);
+  assert.deepEqual(collector.snapshot(), []);
+  const preview = collector.snapshot({ includeOpen: true }).flatMap((p) => p.cells);
+  assert.equal(find(preview, (c) => c.metric === 'fv').bucket, '15_60s');
+  assert.equal(find(preview, (c) => c.metric === 'sd').bucket, 'p50_75');
+  assert.deepEqual(collector.snapshot(), []); // nothing was committed
+  tick(10);
+  collector.flush();
+  const cells = collector.snapshot().flatMap((p) => p.cells);
+  assert.equal(find(cells, (c) => c.e === 'screen_view').n, 1);
 });
