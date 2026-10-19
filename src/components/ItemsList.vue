@@ -132,6 +132,7 @@ import moment from '@/utils/moment-be';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { useAppBar } from '@/composables/useAppBar';
 import { logger } from '@/utils/logger';
+import { firestoreErrorMessage } from '@/utils/firestoreErrors.mjs';
 import { useNotifier } from '@/composables/useNotifier';
 import {
   LITURGICAL_OPTION_SOURCE,
@@ -292,7 +293,7 @@ const fetchItemsForDate = async (date) => {
     if (fetchId !== _currentFetchId) return; // stale — ignore
 
     logger.error('[ItemsList] Critical error loading data:', e);
-    const errorMessage = e?.message || 'Не атрымалася загрузіць дадзеныя. Паспрабуйце абнавіць старонку.';
+    const errorMessage = firestoreErrorMessage(e);
     error.value = errorMessage;
     notifyError(errorMessage);
   } finally {
