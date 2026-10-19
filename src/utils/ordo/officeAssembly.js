@@ -37,6 +37,15 @@ import { MAIN_SECTION_FIELD, SATURDAY_MEMORIAL_OPTION, seasonalTemplateGetter, v
 
 export const CURRENT_DAY_CHOICE = 'current-day';
 
+// Volume III, 03_ordinary_utf8.txt:5931 (also I:4597, II:5048):
+// religious uses holy men/women except for its own printed elements.
+const RELIGIOUS_INHERITED_FIELDS = [
+  'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
+  'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers',
+  'laudesAnt1', 'laudesAnt2', 'laudesAnt3', 'laudesR', 'laudesInter',
+  'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR', 'vesperInter',
+];
+
 const IDENTITY = new Set([
   'id', '_id', '_schema', '_date', '_feast', '_feastName', '_rank', '_place', '_templates', '_defaultTemplate',
   '_currentVersion', '_celebrationId', '_fieldRules', '_contentStatus', '_periodType', '_periodWeekNumber',
@@ -108,7 +117,19 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   const isFestiveField = (field) => festiveCommon
     && ['lauds', 'vespers', 'officeOfReadings'].includes(OFFICE_FIELD_SLOTS[field]?.[0]);
   const templateId = selected === CURRENT_DAY_CHOICE ? defaultTemplateOf(proper) : selected;
-  const common = getTemplate(templateId);
+  const storedCommon = getTemplate(templateId);
+  // Only the confirmed subject of this patch; do not infer a male/female
+  // base from titles or silently choose holy-men for every religious saint.
+  const religiousBase = festiveCommon && templateId === 'religious'
+    && proper?._celebrationId === 'sv-paul-of-cross' ? 'holy-men' : '';
+  const common = religiousBase && storedCommon ? {
+    ...storedCommon,
+    _fieldRules: {
+      ...Object.fromEntries(RELIGIOUS_INHERITED_FIELDS.filter((field) => isBlank(storedCommon[field]))
+        .map((field) => [field, { source: 'template', template: religiousBase }])),
+      ...storedCommon._fieldRules,
+    },
+  } : storedCommon;
   const sundayWeek1 = getTemplate(SUNDAY_WEEK_1_TEMPLATE);
   const rules = proper?._fieldRules || {};
   const day = {};
@@ -144,7 +165,13 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   function fromSource(source, field, named) {
     switch (source) {
       case 'common': return fromTemplate(common, field, `common:${templateId}`);
-      case 'template': return fromTemplate(getTemplate(named), field, `common:${named}`);
+      case 'template': {
+        const template = getTemplate(named);
+        const found = fromTemplate(template, field, `common:${named}`);
+        if (found || !isFestiveField(field)) return found;
+        integrity.push({ field, source: `common:${named}`, reason: template ? 'field-missing' : 'template-missing' });
+        return { missingRequired: true };
+      }
       case 'office-for-dead': return fromTemplate(getTemplate('office-for-dead'), field, 'common:office-for-dead');
       case 'sunday-week-1':
         return sundayWeek1 && !isBlank(sundayWeek1[field]) ? { value: sundayWeek1[field], origin: SUNDAY_WEEK_1_TEMPLATE } : null;
