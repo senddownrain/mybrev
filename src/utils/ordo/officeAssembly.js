@@ -101,6 +101,12 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   const mainSectionFields = [];
   const choices = assemblyChoices(proper, office);
   const selected = choices.includes(choice) ? choice : choices[0];
+  // An existing Common choice may be used as a local festive formulary.
+  // This changes only these three hours, never the calendar descriptor.
+  const festiveCommon = hasDayChoice(office) && selected !== CURRENT_DAY_CHOICE
+    && ['memorial', 'optional-memorial'].includes(office?.officeKind);
+  const isFestiveField = (field) => festiveCommon
+    && ['lauds', 'vespers', 'officeOfReadings'].includes(OFFICE_FIELD_SLOTS[field]?.[0]);
   const templateId = selected === CURRENT_DAY_CHOICE ? defaultTemplateOf(proper) : selected;
   const common = getTemplate(templateId);
   const sundayWeek1 = getTemplate(SUNDAY_WEEK_1_TEMPLATE);
@@ -123,7 +129,11 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
     const rule = template._fieldRules?.[field];
     if (rule?.omit) return { value: '', origin: `${origin}:omit` };
     if (rule?.ref) { refs.push({ field, ref: rule.ref, origin }); return { pending: true }; }
-    if (rule?.source) return fromSource(rule.source === 'common' ? 'current-day' : rule.source, field, rule.template);
+    if (rule?.source) {
+      // A Common referring back to Common is not permission to use a weekday.
+      if (rule.source === 'common' && isFestiveField(field)) return null;
+      return fromSource(rule.source === 'common' ? 'current-day' : rule.source, field, rule.template);
+    }
     if (isBlank(template[field])) return null;
     if (template._seasonal?.fields?.includes(field)) seasonProvenance[field] = template._seasonal.variant;
     // A seasonal variant is already the volume's own (main) text; otherwise the main section replaces the merged field.
@@ -178,6 +188,16 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
       const found = fromSource(rule.source, field, rule.template);
       if (found && !found.missingRequired) return found;
     }
+    if (isFestiveField(field)) {
+      const source = OFFICE_FIELD_SLOTS[field][0] === 'lauds' && OFFICE_FIELD_SLOTS[field][1] === 'psalmody'
+        ? SUNDAY_WEEK_1_TEMPLATE : 'common';
+      const found = fromSource(source, field);
+      if (found) return found;
+      const template = source === 'common' ? common : sundayWeek1;
+      integrity.push({ field, source: source === 'common' ? `common:${templateId}` : source,
+        reason: template ? 'field-missing' : 'template-missing' });
+      return null;
+    }
     const slot = slotOf(office, field);
     if (!slot) return firstOf(['common', CURRENT_DAY_CHOICE], field);
     const chain = slot.chain.filter((source) => source !== 'proper');
@@ -214,7 +234,7 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
 
   // I Vespers: own or Common texts only. Without them the runtime assembles
   // I Vespers from the celebration's Vespers (`liturgicalVespers.js`).
-  if (!proper?._omitFirstVespers) {
+  if (!proper?._omitFirstVespers && !festiveCommon) {
     FIRST_VESPER_FIELDS.forEach((field) => {
       if (!isBlank(proper?.[field])) { day[field] = proper[field]; provenance[field] = 'proper'; return; }
       const rule = rules[field];
@@ -229,15 +249,16 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   refs.forEach(({ field, ref, origin }) => {
     const target = (Array.isArray(ref) ? ref : [ref]).find((name) => !isBlank(day[name]));
     if (target) { day[field] = day[target]; provenance[field] = `ref:${target}`; return; }
-    const fallback = fromSource(CURRENT_DAY_CHOICE, field);
+    const fallback = isFestiveField(field) ? null : fromSource(CURRENT_DAY_CHOICE, field);
     day[field] = fallback?.value ?? '';
     if (fallback) provenance[field] = fallback.origin; else if (OFFICE_FIELD_SLOTS[field]) missing.push(field);
+    if (isFestiveField(field)) integrity.push({ field, source: `ref:${[ref].flat().join(',')}`, reason: 'field-missing' });
     void origin;
   });
 
   if (proper?._omitTeDeum) day[TE_DEUM_FIELD] = false;
   else if (proper?.[TE_DEUM_FIELD] !== undefined && proper[TE_DEUM_FIELD] !== '') day[TE_DEUM_FIELD] = Boolean(proper[TE_DEUM_FIELD]);
-  else day[TE_DEUM_FIELD] = office?.teDeum ? true : '';
+  else day[TE_DEUM_FIELD] = festiveCommon || office?.teDeum ? true : '';
 
   // Identity of the celebration; `_currentVersion` keeps the template label
   // and the Marian/requiem theme heuristics of the existing UI working.
@@ -248,6 +269,7 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   if (templateId && selected !== CURRENT_DAY_CHOICE) day._currentVersion = templateId;
   day._assembly = {
     choice: selected, template: selected === CURRENT_DAY_CHOICE ? '' : templateId, sparse: true,
+    ...(festiveCommon ? { festiveCommon: true } : {}),
     ...(seasonVariant ? { season: seasonVariant } : {}),
   };
   if (integrity.length) day._integrityErrors = integrity;

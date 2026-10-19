@@ -19,6 +19,7 @@ import {
   buildOrdoDayOptions, contentDayMap, findOptionByDayId, findResolvedDayById, resolveLegacyTemplatePlaceholders,
 } from '../src/utils/ordoDayOptions.js';
 import { resolveDateDayAgainstPeriod, resolveDayAgainstPeriod } from '../src/utils/liturgicalDayResolution.js';
+import { getCompletoriumWeekday, shouldShowTeDeum } from '../src/utils/liturgicalOffice.js';
 import { classifyValue, inferTemplates, splitSource } from '../scripts/lib/feast-content.mjs';
 import { daysFixture, templatesFixture } from './helpers/ordo-days-fixture.mjs';
 
@@ -176,14 +177,14 @@ test('memorial: own texts stay, the rest is of the day; quick switch to a Common
     const common = TEMPLATES.get(template);
     const switched = assembleOffice({ proper, office, templates: TEMPLATES, choice: template, currentDay });
     assert.equal(switched.choice, template);
-    // Only the components where the rubrics allow the Common change…
+    // The selected Common supplies the festive formulary of the main hours.
     assert.equal(switched.day.laudesHymn, common.laudesHymn, template);
     assert.equal(switched.provenance.laudesHymn, `common:${template}`);
     assert.equal(switched.day.vesperAntMag, common.vesperAntMag);
-    // …psalmody, the biblical reading and Daytime Prayer stay of the day…
-    assert.equal(switched.day.laudesPs1, 'day:laudesPs1');
-    assert.equal(switched.day.laudesAnt1, 'day:laudesAnt1');
-    assert.equal(switched.day.officeOfReadingsR1, 'day:officeOfReadingsR1');
+    assert.equal(switched.day.laudesPs1, TEMPLATES.get(SUNDAY_WEEK_1_TEMPLATE).laudesPs1);
+    assert.equal(switched.day.laudesAnt1, common.laudesAnt1);
+    assert.equal(switched.day.officeOfReadingsR1, common.officeOfReadingsR1);
+    // Daytime Prayer stays of the day.
     assert.equal(switched.day.sext1Ps1, 'day:sext1Ps1');
     // …and the proper fields survive the switch.
     assert.equal(switched.day.officeOfReadingsR2, proper.officeOfReadingsR2);
@@ -197,6 +198,117 @@ test('memorial: own texts stay, the rest is of the day; quick switch to a Common
   assert.notEqual(pastors.laudesHymn, doctors.laudesHymn);
   // An unknown choice falls back to the default.
   assert.equal(assembleOffice({ proper, office, templates: TEMPLATES, choice: 'nope', currentDay }).choice, CURRENT_DAY_CHOICE);
+});
+
+test('Paul of the Cross, 19 October 2026: the day choice keeps weekday Hours', () => {
+  const proper = feast('19-10-sv-paul-of-cross');
+  const office = officeOf('2026-10-19', 'sv-paul-of-cross');
+  assert.deepEqual(assemblyChoices(proper, office), [CURRENT_DAY_CHOICE, 'pastors', 'religious']);
+  const { day, provenance } = assembleOffice({ proper, office, templates: TEMPLATES, currentDay });
+  for (const prefix of ['laudes', 'vesper', 'officeOfReadings']) {
+    for (const suffix of ['Ps1', 'Ps2', 'Ps3', 'Ant1', 'Ant2', 'Ant3']) {
+      const field = `${prefix}${suffix}`;
+      assert.equal(day[field], currentDay[field]);
+      assert.equal(provenance[field], CURRENT_DAY_CHOICE);
+    }
+  }
+  assert.equal(day.officeOfReadingsR1, currentDay.officeOfReadingsR1);
+  assert.equal(day.officeOfReadingsR2, proper.officeOfReadingsR2);
+  assert.equal(day.laudesPr, proper.officeOfReadingsPr);
+  assert.equal(shouldShowTeDeum({ ...day, _ordo: { teDeum: office.teDeum } }), false);
+});
+
+test('Paul of the Cross: pastors supplies festive main Hours without changing other hours or rank', () => {
+  const proper = feast('19-10-sv-paul-of-cross');
+  const office = officeOf('2026-10-19', 'sv-paul-of-cross');
+  const before = JSON.stringify({ proper, office, currentDay, templates: [...TEMPLATES] });
+  const common = TEMPLATES.get('pastors');
+  const { day, provenance, missing, integrity } = assembleOffice({ proper, office, templates: TEMPLATES, choice: 'pastors', currentDay });
+  for (const prefix of ['laudes', 'vesper', 'officeOfReadings']) {
+    for (const suffix of ['Ps1', 'Ps2', 'Ps3', 'Ant1', 'Ant2', 'Ant3']) {
+      const field = `${prefix}${suffix}`;
+      const sunday = prefix === 'laudes' && suffix.startsWith('Ps');
+      assert.equal(day[field], (sunday ? TEMPLATES.get(SUNDAY_WEEK_1_TEMPLATE) : common)[field], field);
+      assert.equal(provenance[field], sunday ? SUNDAY_WEEK_1_TEMPLATE : 'common:pastors', field);
+    }
+  }
+  assert.equal(day.officeOfReadingsR1, common.officeOfReadingsR1, 'includes its responsory');
+  assert.equal(day.officeOfReadingsR2, proper.officeOfReadingsR2);
+  assert.equal(day.laudesR, common.laudesR, 'short reading includes its responsory');
+  assert.equal(day.laudesInter, common.laudesInter);
+  assert.equal(day.vesperInter, common.vesperInter);
+  assert.equal(day.laudesPr, proper.officeOfReadingsPr);
+  assert.equal(day.vesperPr, proper.officeOfReadingsPr);
+  assert.equal(day._rank, proper._rank);
+  assert.equal(office.firstVespers.byRight, false);
+  assert.ok(FIRST_VESPER_FIELDS.every((field) => !(field in day)));
+  OFFICE_TEXT_FIELDS.filter((field) => field.startsWith('sext')).forEach((field) => assert.equal(day[field], currentDay[field], field));
+  assert.equal(getCompletoriumWeekday(day, 2), 2);
+  assert.equal(shouldShowTeDeum({ ...day, _ordo: { teDeum: false } }), true);
+  assert.deepEqual(missing, []);
+  assert.deepEqual(integrity, []);
+  assert.equal(JSON.stringify({ proper, office, currentDay, templates: [...TEMPLATES] }), before);
+
+  // Follow the existing card → route → hour path with the sparse Proper
+  // collection taking precedence over legacy materialized documents.
+  const date = '2026-10-19';
+  const resolved = resolveRuntimeDay(date, { diocese: 'minsk-mohilev' });
+  const { context, daysResult } = daysFixture(resolved);
+  daysResult.properDays = [{ ...proper, id: proper._id }];
+  const content = buildOrdoDayOptions({ resolved, daysResult, context, date, diocese: 'minsk-mohilev', templates: TEMPLATES });
+  const option = content.dayOptions.find((item) => item.ordo.optionId === 'sv-paul-of-cross');
+  assert.deepEqual(option.templates.map((item) => item.label), ['З дня', 'Пра пастыраў', 'Пра законнікаў']);
+  const id = `${proper._id}--pastors`;
+  const routed = resolveDayAgainstPeriod(findResolvedDayById(content, id), daysResult.periodFallback);
+  assert.equal(routed.laudesPs1, day.laudesPs1);
+  assert.equal(routed.vesperPs1, common.vesperPs1);
+  assert.equal(routed.officeOfReadingsR1, common.officeOfReadingsR1);
+  assert.equal(shouldShowTeDeum({ ...routed, _ordo: findOptionByDayId(content, id).ordo }), true);
+  const religious = resolveDayAgainstPeriod(findResolvedDayById(content, `${proper._id}--religious`), daysResult.periodFallback);
+  assert.equal(religious.vesperPs1, '', 'route preserves reported Common gaps');
+  assert.ok(religious._missingFields.includes('vesperPs1'));
+});
+
+test('Paul of the Cross: religious keeps its own Common and the saint prayer, reporting gaps', () => {
+  const proper = feast('19-10-sv-paul-of-cross');
+  const office = officeOf('2026-10-19', 'sv-paul-of-cross');
+  const common = TEMPLATES.get('religious');
+  const { day, integrity, missing } = assembleOffice({ proper, office, templates: TEMPLATES, choice: 'religious', currentDay });
+  for (const field of ['laudesHymn', 'laudesAntBen', 'vesperHymn', 'vesperAntMag', 'officeOfReadingsHymn', 'officeOfReadingsR1']) {
+    assert.equal(day[field], common[field], field);
+  }
+  assert.equal(day.laudesPs1, TEMPLATES.get(SUNDAY_WEEK_1_TEMPLATE).laudesPs1);
+  for (const field of ['officeOfReadingsR2', 'officeOfReadingsPr']) assert.equal(day[field], proper[field]);
+  assert.equal(day.laudesPr, proper.officeOfReadingsPr);
+  assert.equal(day.vesperPr, proper.officeOfReadingsPr);
+  for (const field of ['laudesAnt1', 'laudesR', 'laudesInter', 'vesperPs1', 'vesperAnt1', 'vesperR', 'vesperInter', 'officeOfReadingsPs1', 'officeOfReadingsAnt1']) {
+    assert.equal(day[field], '', field);
+    assert.ok(missing.includes(field), field);
+    assert.ok(integrity.some((item) => item.field === field && item.source === 'common:religious'), field);
+  }
+});
+
+test('festive Common: Proper texts and references take priority; absent sources never use the weekday', () => {
+  const base = feast('19-10-sv-paul-of-cross');
+  const office = officeOf('2026-10-19', 'sv-paul-of-cross');
+  const proper = { ...base, laudesAnt1: 'own antiphon', laudesPs1: 'own psalm', vesperPs1: 'own evening psalm',
+    _fieldRules: { ...base._fieldRules, vesperHymn: { ref: 'laudesHymn' } } };
+  const { day } = assembleOffice({ proper, office, templates: TEMPLATES, choice: 'pastors', currentDay });
+  for (const field of ['laudesAnt1', 'laudesPs1', 'vesperPs1']) assert.equal(day[field], proper[field]);
+  assert.equal(day.vesperHymn, day.laudesHymn);
+  const templates = new Map(TEMPLATES);
+  templates.delete(SUNDAY_WEEK_1_TEMPLATE);
+  const common = { ...templates.get('pastors'), _fieldRules: { officeOfReadingsR1: { ref: 'absentReading' } } };
+  delete common.officeOfReadingsR1;
+  templates.set('pastors', common);
+  const incomplete = assembleOffice({ proper: base, office, templates, choice: 'pastors', currentDay });
+  assert.equal(incomplete.day.laudesPs1, '');
+  assert.equal(incomplete.day.officeOfReadingsR1, '');
+  assert.ok(incomplete.integrity.some((item) => item.source === SUNDAY_WEEK_1_TEMPLATE && item.reason === 'template-missing'));
+  assert.ok(incomplete.integrity.some((item) => item.field === 'officeOfReadingsR1'));
+  const offline = assembleOffice({ proper: base, office, templates: new Map(), choice: 'pastors', currentDay });
+  assert.equal(offline.day.officeOfReadingsR1, '');
+  assert.equal(offline.day.vesperPs1, '');
 });
 
 test('legacy Sunday week I markers reuse the published psalter template', () => {
