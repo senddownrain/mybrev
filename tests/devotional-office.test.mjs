@@ -8,6 +8,7 @@ import {
   devotionalBlockHtml, devotionalDisplayItems, devotionalPsalmHeading, devotionalReadingHeading,
   devotionalSelectedBlocks,
   devotionalDeadIntentions, devotionalDeadSelection, devotionalOfficeChoices,
+  devotionalHeading, devotionalSpeakerHtml, devotionalSubheadingHtml,
   devotionalSourceBlocks, GADZINKI_PARTS,
 } from '../src/utils/devotionalOffice.js';
 
@@ -73,6 +74,33 @@ test('reader variant policy is keyed by prayer ID and leaves Gadzinki alone', ()
   assert.deepEqual(devotionalOfficeChoices('catholicby-yearcycle-100116', {
     type: 'prayer', alternatives: [{ title: 'Малітва — Варыянт 2' }],
   }), []);
+});
+
+test('speaker labels are marked once only at the start of a response line', () => {
+  const cases = ['К:', 'К.:', 'К.', 'Кантар:', 'Н.:', 'Н.', 'С.', 'Молімся:', 'Молiмся:'];
+  for (const label of cases) {
+    for (const source of [label + ' Адказ', '**' + label + '** Адказ']) {
+      const html = devotionalSpeakerHtml({ source });
+      assert.ok(html.includes(label + '</span> Адказ'), source);
+      assert.equal((html.match(/data-office-speaker/gu) || []).length, 1, source);
+    }
+  }
+  const multiline = devotionalSpeakerHtml({ source: 'К. Першы адказ\nН.: Другі адказ' });
+  assert.equal((multiline.match(/data-office-speaker/gu) || []).length, 2);
+  assert.ok(!devotionalSpeakerHtml({ source: 'Пасля слова К. іншы тэкст' }).includes('data-office-speaker'));
+});
+
+test('office heading policy hides import labels without changing Gadzinki headings', () => {
+  const expected = [
+    ['intro', 'Ютрань'], ['hymn', 'Гімн'], ['psalmody', 'Псальмодыя'],
+    ['reading', ''], ['canticle', 'Песня з Евангелля'], ['intercessions', 'Просьбы'],
+    ['ourFather', ''], ['prayer', 'Малітва'], ['ending', ''], ['alternatives', ''],
+  ];
+  for (const [type, title] of expected) {
+    assert.equal(devotionalHeading({ type, title: 'Імпарт' }, 'laudes').title, title);
+  }
+  assert.equal(devotionalHeading({ type: 'intro', title: 'Пачатак' }, 'vesper').title, 'Нешпары');
+  assert.equal(devotionalHeading({ type: 'gadzinkiPart', title: 'Трэцяя гадзіна' }, 'gadzinki').title, 'Трэцяя гадзіна');
 });
 
 test('office document assigns every source block exactly once', () => {
@@ -329,12 +357,14 @@ test('four locally captured published texts retain source and select complete va
         const chosenHymn = devotionalDeadSelection(hymn, intention);
         const chosenPrayer = devotionalDeadSelection(prayer, intention);
         assert.ok(chosenHymn.length > 2);
-        assert.ok(chosenPrayer.length > 2);
-        assert.equal(chosenHymn.filter(block => /За адн(?:аго|у) памерл|За некалькіх:/u.test(block.text)).length, 1);
+        assert.equal(chosenPrayer.length, 2);
+        assert.equal(chosenHymn.filter(block => /^За (?:аднаго памерлага|адну памерлую|некалькіх):$/u.test(block.text)).length, 0);
+        assert.ok(!chosenPrayer.some(block => /^За .+:$/u.test(block.text)));
         if (index === 0) assert.ok(chosenHymn.some(block => /Брату, што спіць|Брата Ты пакліч/u.test(block.text)));
         if (index === 1) assert.ok(chosenHymn.some(block => /Сястры, што спіць|Ты пакліч сястру/u.test(block.text)));
-        if (index >= 2) assert.ok(chosenHymn.some(block => block.text.includes('За некалькіх:')));
-        if (index === 3) assert.ok(chosenPrayer.some(block => block.text.includes('За братоў, блізкіх і дабрадзеяў:')));
+        if (index >= 2) assert.ok(chosenHymn.some(block => /Тым, што ўжо спяць|Слугаў Ты пакліч/u.test(block.text)));
+        if (index === 2) assert.ok(chosenPrayer.some(block => block.text.includes('(N. і N.)')));
+        if (index === 3) assert.ok(chosenPrayer.some(block => block.text.includes('нашых родных, сяброў і дабрадзеяў')));
       }
       assert.ok(prayer.blocks.some(block => block.text.includes('(Твая) N.')));
       assert.ok(prayer.alternatives.some(option => option.title.endsWith('— 2')));
@@ -347,6 +377,15 @@ test('four locally captured published texts retain source and select complete va
       assert.notEqual(selected.at(-1), reading.blocks.at(-1));
     }
     if (id === 'mybrev-devotion-blessed-virgin-mary-laudes') {
+      const psalmody = document.sections.find(section => section.type === 'psalmody');
+      const items = devotionalDisplayItems(psalmody);
+      assert.equal(items.filter(block => block.kind === 'psalmMeta').length, 6);
+      assert.ok(items.some(block => block.kind === 'psalmMeta' && block.text === 'Душа, якая прагне Бога'));
+      for (const block of items.filter(item => item.kind === 'psalmMeta')) {
+        assert.ok(devotionalSubheadingHtml(block).includes('data-liturgical-subheading'));
+        assert.ok(!items.filter(item => item.kind === 'psalmBody')
+          .some(body => body.blocks.some(verse => verse.span[0] === block.span[0])));
+      }
       const canticle = document.sections.find(section => section.type === 'canticle');
       const selected = devotionalSelectedBlocks(canticle, 1);
       const antiphons = selected.filter(block => block.kind === 'antiphon');
@@ -366,6 +405,10 @@ test('four locally captured published texts retain source and select complete va
       assert.equal(new Set(prayers.map(option => option.label)).size, prayers.length);
       const requests = devotionalOfficeChoices(id, document.sections.find(section => section.type === 'intercessions'));
       assert.deepEqual(requests.map(option => option.sourceIndex), [0, 1]);
+    }
+    if (id !== 'mybrev-devotion-blessed-virgin-mary-laudes') {
+      assert.equal(devotionalDisplayItems(document.sections.find(section => section.type === 'psalmody'))
+        .filter(block => block.kind === 'psalmMeta').length, 0);
     }
   }
 });

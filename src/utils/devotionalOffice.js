@@ -60,9 +60,17 @@ export function devotionalOfficeChoices(prayerId, section) {
 export function devotionalDeadSelection(section, intention) {
   if (!intention || !['hymn', 'prayer'].includes(section.type)) return null;
   const title = intention[section.type];
-  if (!title) return section.blocks;
-  const choice = sourceChoice(section, title, '');
-  return choice ? devotionalSelectedBlocks(section, choice.sourceIndex) : null;
+  const choice = title ? sourceChoice(section, title, '') : null;
+  if (title && !choice) return null;
+  const blocks = choice ? devotionalSelectedBlocks(section, choice.sourceIndex) : section.blocks;
+  const label = section.type === 'hymn'
+    ? (title ? title.slice('Гімн — '.length) : 'За аднаго памерлага')
+    : (title ? title.slice('Малітва — '.length) : 'За аднаго памерлага або адну памерлую — 1');
+  const labelIndex = section.type === 'hymn' ? blocks.length - 2 : 1;
+  const editorial = blocks[labelIndex];
+  if (editorial?.kind !== 'text' || editorial.source.trim() !== label + ':'
+    || editorial.span[1] - editorial.span[0] !== 1) return blocks;
+  return blocks.filter((_block, index) => index !== labelIndex);
 }
 
 export const GADZINKI_PARTS = Object.freeze([
@@ -181,6 +189,8 @@ export function devotionalOfficeProfile(prayer, value, format = '', explicitProf
 
 function sectionType(block) {
   const title = unmark(block.text).toLocaleLowerCase('be');
+  if (title === 'пачатак') return 'intro';
+  if (title === 'ойча наш') return 'ourFather';
   if (title.includes('псальмодыя')) return 'psalmody';
   if (title.includes('гімн')) return 'hymn';
   if (title.includes('чытанне')) return 'reading';
@@ -254,6 +264,60 @@ export function devotionalBlockHtml(block) {
   return renderPrayerMarkdown(block.source, 'mybrev-markdown');
 }
 
+const OFFICE_SPEAKER = '(?:Кантар:|Мол[іi]мся:|[КНС](?:\\.:|\\.|:))';
+const OFFICE_SPEAKER_LINE = new RegExp(
+  '(<p\\b[^>]*>|<br\\s*\\/?>)(\\s*)(?:<strong>(' + OFFICE_SPEAKER
+    + ')<\\/strong>|(' + OFFICE_SPEAKER + '))(?=\\s|&nbsp;|<|$)',
+  'giu',
+);
+
+/** Mark only response labels at the start of a rendered Markdown line. */
+export function devotionalSpeakerHtml(block) {
+  const rendered = devotionalBlockHtml(block).replace(
+    /<span class="prayer-speaker" data-role="[^"]+">/giu,
+    span => span.replace('>', ' data-office-speaker>'),
+  );
+  return rendered.replace(
+    OFFICE_SPEAKER_LINE,
+    (_match, start, space, strongLabel, plainLabel) => start + space
+      + '<span data-office-speaker>' + (strongLabel || plainLabel) + '</span>',
+  );
+}
+
+export function devotionalHeading(section, profile) {
+  if (profile === 'gadzinki') return { title: section.title, caption: '' };
+  const titles = {
+    intro: profile === 'laudes' ? 'Ютрань' : 'Нешпары',
+    hymn: 'Гімн',
+    psalmody: 'Псальмодыя',
+    canticle: 'Песня з Евангелля',
+    intercessions: 'Просьбы',
+    prayer: 'Малітва',
+  };
+  return { title: titles[section.type] || '', caption: section.type === 'canticle' ? section.title : '' };
+}
+
+function hasPsalmCadence(block) {
+  return /(?:\\\*|\*|†)/u.test(block.source);
+}
+
+function psalmMetadataCount(blocks, titleIndex) {
+  const first = blocks[titleIndex + 1];
+  const second = blocks[titleIndex + 2];
+  const third = blocks[titleIndex + 3];
+  if (first?.kind !== 'text' || hasPsalmCadence(first)) return 0;
+  // A theme followed by an italic epigraph and a marked first verse is
+  // metadata. An isolated italic epigraph has the same structural role.
+  if (/^_[\s\S]+_$/u.test(first.source.trim()) && second?.kind === 'text' && hasPsalmCadence(second)) return 1;
+  if (second?.kind === 'text' && /^_[\s\S]+_$/u.test(second.source.trim())
+    && third?.kind === 'text' && hasPsalmCadence(third)) return 2;
+  return 0;
+}
+
+export function devotionalSubheadingHtml(block) {
+  return devotionalBlockHtml(block).replace(/^<p(?=[\s>])/iu, '<p data-liturgical-subheading');
+}
+
 export function devotionalAntiphon(block) {
   const match = ANTIPHON.exec(unmark(block.text));
   return match ? { label: match[1], gap: match[2], text: match[3] } : null;
@@ -275,9 +339,18 @@ export function devotionalDisplayItems(section) {
   if (!['psalmody', 'canticle'].includes(section.type)) return section.blocks;
   const items = [];
   let inWork = false;
-  for (const block of section.blocks) {
+  let metadataRemaining = 0;
+  for (const [index, block] of section.blocks.entries()) {
     if (block.kind === 'antiphon') inWork = false;
-    if (block.kind === 'psalmTitle') inWork = true;
+    if (block.kind === 'psalmTitle') {
+      inWork = true;
+      metadataRemaining = psalmMetadataCount(section.blocks, index);
+    }
+    if (metadataRemaining && block.kind === 'text') {
+      items.push({ ...block, kind: 'psalmMeta' });
+      metadataRemaining -= 1;
+      continue;
+    }
     const canGroup = block.kind === 'text' && (inWork || section.type === 'canticle');
     const previous = items.at(-1);
     if (canGroup && previous?.kind === 'psalmBody') {
