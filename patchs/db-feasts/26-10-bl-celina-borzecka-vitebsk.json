@@ -9,6 +9,9 @@
   "_templates": [
     "religious"
   ],
+  "_commonBase": {
+    "religious": "holy-women"
+  },
   "_defaultTemplate": "religious",
   "_templatesInferred": true,
   "_scaffold": true,

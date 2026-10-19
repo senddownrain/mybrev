@@ -58,7 +58,12 @@ materializeCommonForSeason(template, season):
   flat._seasonal = {variant: key, fields: [прымененыя]}
 ```
 
-Прыярытэт у `assembleOffice` без змен: **свой Proper** → `_fieldRules` → Common (матэрыялізаваны па сезоне) → дзень.
+Прыярытэт у `assembleOffice`: **свой Proper** → `_fieldRules` → Common (матэрыялізаваны па сезоне),
+далей толькі дазволеная рубрыкамі крыніца. Для памяткі «З дня» захоўваецца спалучэнне Proper і бягучага дня.
+У PR #141 ужо прапанаваны Common-варыянт памяткі збірае тры асноўныя гадзіны святочна:
+псальмы Ютрані — з нядзелі I тыдня, антыфоны — з Proper/Common; псальмодыя Гадзіны чытанняў і Нешпараў —
+з Proper/Common. Дазволенае наследаванне базавага Common апісана ў `docs/common-office-festive-assembly.md`;
+адвольнага буднічнага fallback тут няма. Першыя Нешпары для гэтага варыянта не ствараюцца.
 Сезон ужываецца толькі да Common (`source: common|template`, `vesper1*`, выбар «Іншыя варыянты»); `current-day`,
 `sunday-week-1`, `complementary`, `office-for-dead` яго не бачаць. Для шаблона-«template» `omit` у `_fieldRules`
 Common азначае пусты тэкст (`origin: common:<id>:omit`). Памятка «З дня» і `allowCurrentDay` не змяняюцца.
@@ -74,12 +79,15 @@ Common азначае пусты тэкст (`origin: common:<id>:omit`). Пам
 
 ## 5. Эквівалентныя Dart-тэсты
 
-1. Усе `cases` fixture (4872 выпадкі): `materialize(template, period, periodPhase)[field]` → `expected.value.valueSha256`
+1. Усе `cases` fixture (5400 выпадкаў): `materialize(template, period, periodPhase)[field]` → `expected.value.valueSha256`
    (`sha256(utf8(string))` або items, злучаныя `\u0000`), `length`, `plainStart/plainEnd`, `variant`, `source`.
 2. `calendar`: `variantKey(computeSeason(date))` для 48 межавых дат 2026–2028 (Хрышчэнне Пана → Звычайны перыяд,
    Попельцовая серада, Пальмовая нядзеля, Вялікі чацвер → null, Уваскрасенне, Пяцідзясятніца, 1-я нядзеля Адвэнту, 24–25.12).
 3. `assembly` (11 выпадкаў): свой Proper перамагае (`provenance == 'proper'`), памятка «З дня», `church-dedication` Lent vs Easter
    (`vesper1Ant3`+`vesper1Ps3`, `officeOfReadingsR1`, `laudesR`), `blessed-virgin-mary` Адвэнт vs Нараджэнне (адна малітва).
+   Пасля PR #141 у `memorial pastors easter` абноўлены толькі `expected.seasonalFields`: дададзены сезонныя
+   антыфоны/псальмодыя асноўных гадзін і першае чытанне, прыбраны `vesper1*`. Схема 1, усе 5400 `cases`,
+   хэшы тэкстаў, digest шаблонаў, астатнія 10 `assembly` і ўсе 48 `calendar` засталіся ранейшымі.
 4. Чыстая функцыя: пустая дэльта → той самы аб'ект; `null` → `omit`; `{rule}`; невядомае поле ігнаруецца; аргумент не мутуецца.
 5. Валідацыя: невядомы сезон/поле, `""`, незбалансаваныя тэгі — адмова (як `validateSeasonalVariants`).
 6. Рэгрэсія: ніводнае поле дня не змяшчае два сезонныя тэксты адначасова і не змяшчае «(Велікодны перыяд» / «У Вялікі пост:».

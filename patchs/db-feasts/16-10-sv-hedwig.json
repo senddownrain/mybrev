@@ -9,6 +9,10 @@
     "works-of-mercy",
     "religious"
   ],
+  "_commonBase": {
+    "works-of-mercy": "holy-women",
+    "religious": "holy-women"
+  },
   "_defaultTemplate": "works-of-mercy",
   "_legacyIds": [
     "16-10-sv-hedwig--works-of-mercy",

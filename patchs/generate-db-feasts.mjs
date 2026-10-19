@@ -17,6 +17,7 @@
  * (`src/utils/ordo/officeAssembly.js`). Do not edit the generated folders.
  *
  *   npm run generate:fixed-feasts                          # from the cached Firestore reads
+ *   npm run generate:fixed-feasts -- --offline             # cached sources only; never query Firestore
  *   npm run generate:fixed-feasts -- --refresh-first-week  # re-read days/ordinary-w5-d1
  */
 
@@ -153,6 +154,7 @@ async function readJson(filePath) {
 }
 
 async function fetchFirstWeekDay() {
+  if (process.argv.includes('--offline')) throw new Error('Offline generation requires the cached Sunday week I source.');
   const [{ default: admin }, serviceAccount] = await Promise.all([
     import('firebase-admin'),
     readJson(path.join(ROOT, 'patchs', 'serviceAccountKey.json')),
@@ -187,6 +189,7 @@ async function loadFirstWeekDay() {
 }
 
 async function fetchRankedFixedDays() {
+  if (process.argv.includes('--offline')) throw new Error('Offline generation requires the cached ranked fixed days.');
   const [{ default: admin }, serviceAccount] = await Promise.all([
     import('firebase-admin'),
     readJson(path.join(ROOT, 'patchs', 'serviceAccountKey.json')),
@@ -402,6 +405,7 @@ function buildSparseOutput({ sourceFile, outputStem, source, kind, templates, re
     ...(places.length > 1 ? { _place: places } : {}),
     _feastName: String(source._feastName ?? '').trim(),
     _templates: knownTemplates,
+    ...(source._commonBase ? { _commonBase: { ...source._commonBase } } : {}),
     ...(defaultTemplate ? { _defaultTemplate: defaultTemplate } : {}),
     ...(legacyIds.some((id) => id !== outputStem) ? { _legacyIds: legacyIds.filter((id) => id !== outputStem) } : {}),
     ...(source._omitFirstVespers ? { _omitFirstVespers: true } : {}),
@@ -556,7 +560,16 @@ function buildScaffolds({ definitions, outputs, report }) {
     // A confirmed decision (scripts/lib/scaffold-commons.mjs) replaces the
     // inference from the title; it never adds texts.
     const decision = scaffoldDecision(id);
-    const templates = decision ? [...decision.templates] : inferTemplates(title);
+    const hasTemplateDecision = Array.isArray(decision?.templates);
+    const templates = hasTemplateDecision ? [...decision.templates] : inferTemplates(title);
+    // A diocese without its own texts can share the confirmed metadata of
+    // the same celebration, without copying a single Proper text.
+    const siblingBases = outputs.filter(({ output }) => output._celebrationId === id && output._commonBase)
+      .map(({ output }) => output._commonBase);
+    if (new Set(siblingBases.map((base) => JSON.stringify(base))).size > 1) {
+      throw new Error(`Conflicting _commonBase metadata for ${id}`);
+    }
+    const commonBase = decision?.commonBase || siblingBases[0];
     const stem = [date.replace('.', '-'), id, place].filter(Boolean).join('-');
     covered.add(key(date, place, id));
     scaffolds.push({
@@ -570,9 +583,10 @@ function buildScaffolds({ definitions, outputs, report }) {
         ...(place ? { _place: place } : {}),
         _feastName: title,
         _templates: templates,
+        ...(commonBase ? { _commonBase: { ...commonBase } } : {}),
         ...(templates.length ? { _defaultTemplate: templates[0] } : {}),
-        ...(templates.length && !decision ? { _templatesInferred: true } : {}),
-        ...(decision ? { _templatesConfirmed: true } : {}),
+        ...(templates.length && !hasTemplateDecision ? { _templatesInferred: true } : {}),
+        ...(hasTemplateDecision ? { _templatesConfirmed: true } : {}),
         ...(decision?.officeSource ? { _officeSource: decision.officeSource } : {}),
         _scaffold: true,
         _contentStatus: { hours: templates.length ? 'common-only' : 'day-fallback' },
@@ -580,7 +594,8 @@ function buildScaffolds({ definitions, outputs, report }) {
     });
     report.scaffolds.push({
       file: `${stem}.json`, celebrationId: id, _date: date, _rank: normalizeRank(rank), ...(place ? { _place: place } : {}), _feastName: title, templates,
-      ...(decision ? { confirmed: true, officeSource: decision.officeSource || null, basis: decision.basis } : {}),
+      ...(hasTemplateDecision ? { confirmed: true, officeSource: decision.officeSource || null, basis: decision.basis }
+        : commonBase ? { commonBase, basis: decision?.basis || 'Confirmed metadata of the same celebration in another diocese' } : {}),
     });
   };
   // Coverage is decided by the source material only (never by `dayIds`, which
