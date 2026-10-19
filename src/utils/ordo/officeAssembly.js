@@ -37,14 +37,20 @@ import { MAIN_SECTION_FIELD, SATURDAY_MEMORIAL_OPTION, seasonalTemplateGetter, v
 
 export const CURRENT_DAY_CHOICE = 'current-day';
 
-// Volume III, 03_ordinary_utf8.txt:5931 (also I:4597, II:5048):
-// religious uses holy men/women except for its own printed elements.
-const RELIGIOUS_INHERITED_FIELDS = [
-  'officeOfReadingsAnt1', 'officeOfReadingsAnt2', 'officeOfReadingsAnt3',
-  'officeOfReadingsPs1', 'officeOfReadingsPs2', 'officeOfReadingsPs3', 'officeOfReadingsVers',
-  'laudesAnt1', 'laudesAnt2', 'laudesAnt3', 'laudesR', 'laudesInter',
-  'vesperAnt1', 'vesperAnt2', 'vesperAnt3', 'vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperR', 'vesperInter',
-];
+// Volume III, 03_ordinary_utf8.txt:5931,6080,6143: everything except
+// the printed exceptions comes from holy men/women. No such blanket rule
+// is prescribed for pastors, martyrs or the base Commons themselves.
+const COMMON_BASES = {
+  religious: ['holy-men', 'holy-women'],
+  'works-of-mercy': ['holy-men', 'holy-women'],
+  educators: ['holy-men', 'holy-women'],
+};
+// Existing Common bindings, not names or prayer text. Pastors is the
+// ordained-saints category; virgins is the female-virgins category.
+const BASE_BY_COMMON_BINDING = {
+  'holy-men': 'holy-men', pastors: 'holy-men',
+  'holy-women': 'holy-women', virgins: 'holy-women',
+};
 
 const IDENTITY = new Set([
   'id', '_id', '_schema', '_date', '_feast', '_feastName', '_rank', '_place', '_templates', '_defaultTemplate',
@@ -60,6 +66,23 @@ export function isBlank(value) {
 }
 
 const templatesOf = (proper) => (Array.isArray(proper?._templates) ? proper._templates.filter(Boolean) : []);
+
+/** One source rule for a rubric-confirmed base, without celebration-ID exceptions. */
+export function commonBaseRule(proper, templateId) {
+  const allowed = COMMON_BASES[templateId];
+  if (!Array.isArray(allowed)) return null;
+  const explicit = proper?._commonBase?.[templateId];
+  if (explicit !== undefined) {
+    return allowed.includes(explicit)
+      ? { rule: { source: 'template', template: explicit } }
+      : { reason: 'base-common-invalid' };
+  }
+  // Scaffolds marked as title-inferred are not confirmed structural evidence.
+  const candidates = new Set(proper?._templatesInferred ? [] : templatesOf(proper)
+    .map((id) => BASE_BY_COMMON_BINDING[id]).filter((id) => allowed.includes(id)));
+  if (candidates.size !== 1) return { reason: candidates.size ? 'base-common-ambiguous' : 'base-common-unconfirmed' };
+  return { rule: { source: 'template', template: [...candidates][0] } };
+}
 
 /** Default Common of a celebration: `_defaultTemplate`, else the first template. */
 export function defaultTemplateOf(proper) {
@@ -114,22 +137,12 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   // This changes only these three hours, never the calendar descriptor.
   const festiveCommon = hasDayChoice(office) && selected !== CURRENT_DAY_CHOICE
     && ['memorial', 'optional-memorial'].includes(office?.officeKind);
-  const isFestiveField = (field) => festiveCommon
-    && ['lauds', 'vespers', 'officeOfReadings'].includes(OFFICE_FIELD_SLOTS[field]?.[0]);
+  const isMainHourField = (field) => ['lauds', 'vespers', 'officeOfReadings'].includes(OFFICE_FIELD_SLOTS[field]?.[0]);
+  const isFestiveField = (field) => festiveCommon && isMainHourField(field);
   const templateId = selected === CURRENT_DAY_CHOICE ? defaultTemplateOf(proper) : selected;
-  const storedCommon = getTemplate(templateId);
-  // Only the confirmed subject of this patch; do not infer a male/female
-  // base from titles or silently choose holy-men for every religious saint.
-  const religiousBase = festiveCommon && templateId === 'religious'
-    && proper?._celebrationId === 'sv-paul-of-cross' ? 'holy-men' : '';
-  const common = religiousBase && storedCommon ? {
-    ...storedCommon,
-    _fieldRules: {
-      ...Object.fromEntries(RELIGIOUS_INHERITED_FIELDS.filter((field) => isBlank(storedCommon[field]))
-        .map((field) => [field, { source: 'template', template: religiousBase }])),
-      ...storedCommon._fieldRules,
-    },
-  } : storedCommon;
+  const common = getTemplate(templateId);
+  const base = selected !== CURRENT_DAY_CHOICE ? commonBaseRule(proper, templateId) : null;
+  const isStrictCommonField = (field) => isFestiveField(field) || (Boolean(base) && isMainHourField(field));
   const sundayWeek1 = getTemplate(SUNDAY_WEEK_1_TEMPLATE);
   const rules = proper?._fieldRules || {};
   const day = {};
@@ -152,10 +165,19 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
     if (rule?.ref) { refs.push({ field, ref: rule.ref, origin }); return { pending: true }; }
     if (rule?.source) {
       // A Common referring back to Common is not permission to use a weekday.
-      if (rule.source === 'common' && isFestiveField(field)) return null;
+      if (rule.source === 'common' && isStrictCommonField(field)) return null;
       return fromSource(rule.source === 'common' ? 'current-day' : rule.source, field, rule.template);
     }
-    if (isBlank(template[field])) return null;
+    if (isBlank(template[field])) {
+      // Reuse the named-template resolver only after the selected Common's
+      // own text/rule. Base lookup is limited to the three festive hours.
+      if (template === common && isMainHourField(field) && base) {
+        if (base.rule) return fromSource(base.rule.source, field, base.rule.template);
+        integrity.push({ field, source: `common:${templateId}`, reason: base.reason });
+        return { missingRequired: true };
+      }
+      return null;
+    }
     if (template._seasonal?.fields?.includes(field)) seasonProvenance[field] = template._seasonal.variant;
     // A seasonal variant is already the volume's own (main) text; otherwise the main section replaces the merged field.
     const mainSection = !showsSaturdaySection && !template._seasonal?.fields?.includes(field) ? template[MAIN_SECTION_FIELD]?.[field] : undefined;
@@ -168,7 +190,7 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
       case 'template': {
         const template = getTemplate(named);
         const found = fromTemplate(template, field, `common:${named}`);
-        if (found || !isFestiveField(field)) return found;
+        if (found || !isStrictCommonField(field)) return found;
         integrity.push({ field, source: `common:${named}`, reason: template ? 'field-missing' : 'template-missing' });
         return { missingRequired: true };
       }
@@ -276,10 +298,10 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   refs.forEach(({ field, ref, origin }) => {
     const target = (Array.isArray(ref) ? ref : [ref]).find((name) => !isBlank(day[name]));
     if (target) { day[field] = day[target]; provenance[field] = `ref:${target}`; return; }
-    const fallback = isFestiveField(field) ? null : fromSource(CURRENT_DAY_CHOICE, field);
+    const fallback = isStrictCommonField(field) ? null : fromSource(CURRENT_DAY_CHOICE, field);
     day[field] = fallback?.value ?? '';
     if (fallback) provenance[field] = fallback.origin; else if (OFFICE_FIELD_SLOTS[field]) missing.push(field);
-    if (isFestiveField(field)) integrity.push({ field, source: `ref:${[ref].flat().join(',')}`, reason: 'field-missing' });
+    if (isStrictCommonField(field)) integrity.push({ field, source: `ref:${[ref].flat().join(',')}`, reason: 'field-missing' });
     void origin;
   });
 

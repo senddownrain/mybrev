@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { resolveLiturgicalDate } from '../src/utils/ordo/index.js';
 import { resolveRuntimeDay } from '../src/utils/ordo/runtime.js';
 import {
-  CURRENT_DAY_CHOICE, assembleOffice, assemblyChoices, defaultTemplateOf, hoursContentStatus,
+  CURRENT_DAY_CHOICE, assembleOffice, assemblyChoices, commonBaseRule, defaultTemplateOf, hoursContentStatus,
 } from '../src/utils/ordo/officeAssembly.js';
 import {
   FIRST_VESPER_FIELDS, OFFICE_CONTENT_FIELDS, OFFICE_FIELD_SLOTS, OFFICE_TEXT_FIELDS, SUNDAY_WEEK_1_TEMPLATE,
@@ -331,9 +331,69 @@ test('religious references respect explicit rules and seasons; an unavailable ba
   assert.equal(unavailable.day.vesperPs1, '');
   assert.ok(unavailable.missing.includes('vesperPs1'));
   assert.ok(unavailable.integrity.some((item) => item.field === 'vesperPs1' && item.source === 'common:holy-men' && item.reason === 'template-missing'));
-  const unconfirmed = assembleOffice({ proper: { ...proper, _celebrationId: 'unconfirmed-subject' }, office,
+  const unconfirmed = assembleOffice({ proper: { ...proper, _templates: ['religious'] }, office,
     templates: TEMPLATES, choice: 'religious', currentDay });
   assert.equal(unconfirmed.day.vesperPs1, '', 'never infer a male base for an unconfirmed saint');
+  assert.ok(unconfirmed.integrity.some((item) => item.reason === 'base-common-unconfirmed'));
+});
+
+test('religious base uses existing Common bindings for other men and women, independently of IDs and titles', () => {
+  for (const [id, date, optionId, base] of [
+    ['06-10-sv-bruno', '2026-10-06', 'sv-bruno', 'holy-men'],
+    ['12-08-sv-jane-frances-de-chantal', '2026-08-12', 'sv-jane-frances-de-chantal', 'holy-women'],
+    ['11-08-sv-clare', '2026-08-11', 'sv-clare', 'holy-women'],
+  ]) {
+    const proper = feast(id);
+    const office = officeOf(date, optionId);
+    for (const subject of [proper, { ...proper, _id: 'irrelevant', _celebrationId: 'irrelevant', _feastName: 'irrelevant' }]) {
+      const result = assembleOffice({ proper: subject, office, templates: TEMPLATES, choice: 'religious', currentDay });
+      for (const field of ['officeOfReadingsPs1', 'officeOfReadingsAnt1', 'laudesAnt1', 'vesperPs1', 'vesperAnt1']) {
+        if (subject[field] || subject._fieldRules?.[field]) continue;
+        assert.equal(result.day[field], TEMPLATES.get(base)[field], `${id}: ${field}`);
+        assert.equal(result.provenance[field], `common:${base}`);
+      }
+      assert.equal(result.day.laudesPs1, TEMPLATES.get(SUNDAY_WEEK_1_TEMPLATE).laudesPs1);
+    }
+  }
+});
+
+test('an explicit base needs one metadata entry; unknown, conflicting or inferred bindings never guess', () => {
+  const proper = feast('03-11-sv-martin-de-porres');
+  const office = officeOf('2026-11-03', 'sv-martin-de-porres');
+  assert.deepEqual(proper._templates, ['religious']);
+  assert.deepEqual(commonBaseRule(proper, 'religious'), { reason: 'base-common-unconfirmed' });
+  for (const base of ['holy-men', 'holy-women']) {
+    const subject = { ...proper, _commonBase: { religious: base } };
+    const result = assembleOffice({ proper: subject, office, templates: TEMPLATES, choice: 'religious', currentDay });
+    assert.equal(result.day.vesperPs1, TEMPLATES.get(base).vesperPs1);
+    assert.equal(result.provenance.vesperPs1, `common:${base}`);
+    const ofDay = assembleOffice({ proper: subject, office, templates: TEMPLATES, currentDay });
+    assert.equal(ofDay.day.vesperPs1, currentDay.vesperPs1, 'metadata never changes the day choice');
+  }
+  for (const [metadata, reason] of [
+    [{ _templates: ['religious', 'pastors', 'holy-women'] }, 'base-common-ambiguous'],
+    [{ _templates: ['religious', 'pastors'], _templatesInferred: true }, 'base-common-unconfirmed'],
+    [{ _commonBase: { religious: 'pastors' } }, 'base-common-invalid'],
+  ]) {
+    const result = assembleOffice({ proper: { ...proper, ...metadata }, office, templates: TEMPLATES, choice: 'religious', currentDay });
+    assert.equal(result.day.vesperPs1, '');
+    assert.ok(result.missing.includes('vesperPs1'));
+    assert.ok(result.integrity.some((item) => item.field === 'vesperPs1' && item.reason === reason));
+  }
+});
+
+test('only Commons with a confirmed introductory rubric inherit through the same resolver', () => {
+  const proper = feast('19-10-sv-paul-of-cross');
+  const office = officeOf('2026-10-19', 'sv-paul-of-cross');
+  for (const choice of ['educators', 'works-of-mercy']) {
+    const subject = { ...proper, _templates: ['pastors', choice] };
+    const result = assembleOffice({ proper: subject, office, templates: TEMPLATES, choice, currentDay });
+    assert.equal(result.day.officeOfReadingsPs1, TEMPLATES.get('holy-men').officeOfReadingsPs1);
+    assert.equal(result.provenance.officeOfReadingsPs1, 'common:holy-men');
+  }
+  for (const choice of ['pastors', 'martyr-one', 'martyrs-many', 'holy-men', 'holy-women']) {
+    assert.equal(commonBaseRule({ ...proper, _commonBase: { [choice]: 'holy-men' } }, choice), null);
+  }
 });
 
 test('Invitatorium: day/pastors/religious select their antiphon, while Proper always wins', () => {
