@@ -7,6 +7,7 @@ import {
   buildDevotionalOfficeDocument, devotionalAntiphon, devotionalOfficeProfile,
   devotionalBlockHtml, devotionalDisplayItems, devotionalPsalmHeading, devotionalReadingHeading,
   devotionalSelectedBlocks,
+  devotionalDeadIntentions, devotionalDeadSelection, devotionalOfficeChoices,
   devotionalSourceBlocks, GADZINKI_PARTS,
 } from '../src/utils/devotionalOffice.js';
 
@@ -64,6 +65,14 @@ test('office blocks retain source spans and repeated antiphons', () => {
     label: 'Кароткае чытанне', reference: '1 Кар 15, 55–57',
   });
   assert.equal(blocks.find(block => block.kind === 'responseTitle').text, 'Кароткі рэспансорый');
+});
+
+test('reader variant policy is keyed by prayer ID and leaves Gadzinki alone', () => {
+  assert.equal(devotionalDeadIntentions('catholicby-yearcycle-100116').length, 0);
+  assert.equal(devotionalDeadIntentions('mybrev-devotion-office-for-dead-laudes').length, 4);
+  assert.deepEqual(devotionalOfficeChoices('catholicby-yearcycle-100116', {
+    type: 'prayer', alternatives: [{ title: 'Малітва — Варыянт 2' }],
+  }), []);
 });
 
 test('office document assigns every source block exactly once', () => {
@@ -297,11 +306,38 @@ test('four locally captured published texts retain source and select complete va
     }
     if (id === 'mybrev-devotion-office-for-dead-laudes') {
       const psalmody = document.sections.find(section => section.type === 'psalmody');
+      assert.equal(psalmody.blocks.filter(block => block.kind === 'psalmTitle').length, 3);
+      assert.ok(psalmody.blocks.some(block => block.text === 'Псальм 146 (145)'));
+      assert.ok(!psalmody.blocks.some(block => block.text === 'Псальм 150'));
+      assert.equal(devotionalOfficeChoices(id, psalmody).length, 0);
       const selected = devotionalSelectedBlocks(psalmody, 1);
       assert.equal(selected.filter(block => block.kind === 'psalmTitle').length, 3);
       assert.ok(selected.some(block => block.text === 'Псальм 150'));
       assert.ok(!selected.some(block => block.text === 'Псальм 146 (145)'));
       assert.equal(selected.filter(block => block.kind === 'antiphon').length, 6);
+    }
+    if (id.includes('office-for-dead')) {
+      const hymn = document.sections.find(section => section.type === 'hymn');
+      const prayer = document.sections.find(section => section.type === 'prayer');
+      assert.equal(devotionalOfficeChoices(id, hymn).length, 0);
+      assert.equal(devotionalOfficeChoices(id, prayer).length, 0);
+      assert.equal(devotionalDeadSelection(hymn, null), null);
+      assert.equal(devotionalDeadSelection(prayer, null), null);
+      const intentions = devotionalDeadIntentions(id);
+      assert.equal(intentions.length, 4);
+      for (const [index, intention] of intentions.entries()) {
+        const chosenHymn = devotionalDeadSelection(hymn, intention);
+        const chosenPrayer = devotionalDeadSelection(prayer, intention);
+        assert.ok(chosenHymn.length > 2);
+        assert.ok(chosenPrayer.length > 2);
+        assert.equal(chosenHymn.filter(block => /За адн(?:аго|у) памерл|За некалькіх:/u.test(block.text)).length, 1);
+        if (index === 0) assert.ok(chosenHymn.some(block => /Брату, што спіць|Брата Ты пакліч/u.test(block.text)));
+        if (index === 1) assert.ok(chosenHymn.some(block => /Сястры, што спіць|Ты пакліч сястру/u.test(block.text)));
+        if (index >= 2) assert.ok(chosenHymn.some(block => block.text.includes('За некалькіх:')));
+        if (index === 3) assert.ok(chosenPrayer.some(block => block.text.includes('За братоў, блізкіх і дабрадзеяў:')));
+      }
+      assert.ok(prayer.blocks.some(block => block.text.includes('(Твая) N.')));
+      assert.ok(prayer.alternatives.some(option => option.title.endsWith('— 2')));
     }
     if (id === 'mybrev-devotion-office-for-dead-vesper') {
       const reading = document.sections.find(section => section.type === 'reading');
@@ -318,6 +354,18 @@ test('four locally captured published texts retain source and select complete va
       assert.equal(antiphons[0].text, antiphons[1].text);
       assert.equal(selected.filter(block => block.kind === 'text').length,
         canticle.blocks.filter(block => block.kind === 'text').length);
+    }
+    if (id.includes('blessed-virgin-mary')) {
+      for (const type of ['hymn', 'psalmody', 'reading', 'canticle']) {
+        assert.equal(devotionalOfficeChoices(id, document.sections.find(section => section.type === type)).length, 0);
+      }
+      const psalmody = document.sections.find(section => section.type === 'psalmody');
+      assert.equal(psalmody.blocks.filter(block => block.kind === 'psalmTitle').length, 3);
+      const prayers = devotionalOfficeChoices(id, document.sections.find(section => section.type === 'prayer'));
+      assert.deepEqual(prayers.map(option => option.sourceIndex), [0, 1, 2, 3, 4]);
+      assert.equal(new Set(prayers.map(option => option.label)).size, prayers.length);
+      const requests = devotionalOfficeChoices(id, document.sections.find(section => section.type === 'intercessions'));
+      assert.deepEqual(requests.map(option => option.sourceIndex), [0, 1]);
     }
   }
 });

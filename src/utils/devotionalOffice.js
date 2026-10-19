@@ -10,6 +10,61 @@ export const DEVOTIONAL_OFFICE_PROFILES = Object.freeze({
   'catholicby-yearcycle-100116': 'gadzinki',
 });
 
+const DEAD_IDS = new Set([
+  'mybrev-devotion-office-for-dead-laudes',
+  'mybrev-devotion-office-for-dead-vesper',
+]);
+const MARY_IDS = new Set([
+  'mybrev-devotion-blessed-virgin-mary-laudes',
+  'mybrev-devotion-blessed-virgin-mary-vesper',
+]);
+
+export const DEVOTIONAL_DEAD_INTENTIONS = Object.freeze([
+  { label: 'За аднаго памерлага', hymn: null, prayer: null },
+  { label: 'За адну памерлую', hymn: 'Гімн — За адну памерлую', prayer: null },
+  { label: 'За некалькіх', hymn: 'Гімн — За некалькіх', prayer: 'Малітва — За некалькіх' },
+  { label: 'За братоў, блізкіх і дабрадзеяў', hymn: 'Гімн — За некалькіх', prayer: 'Малітва — За братоў, блізкіх і дабрадзеяў' },
+]);
+
+export function devotionalDeadIntentions(prayerId) {
+  return DEAD_IDS.has(prayerId) ? DEVOTIONAL_DEAD_INTENTIONS : [];
+}
+
+function sourceChoice(section, title, label) {
+  const index = section.alternatives?.findIndex(option => option.title === title) ?? -1;
+  return index < 0 ? null : { label, sourceIndex: index + 1 };
+}
+
+/** Only published, meaningfully different choices are exposed in the reader. */
+export function devotionalOfficeChoices(prayerId, section) {
+  if (!MARY_IDS.has(prayerId)) return [];
+  if (section.type === 'intercessions') {
+    const label = prayerId.endsWith('laudes')
+      ? 'Аб чысціні і нябеснай славе' : 'Аб сям’і і тых, хто ў патрэбе';
+    const other = sourceChoice(section, 'Просьбы — Варыянт 2', label);
+    return other ? [{ label: prayerId.endsWith('laudes') ? 'Аб жыцці ў Хрысце' : 'Аб Касцёле і збаўленні', sourceIndex: 0 }, other] : [];
+  }
+  if (section.type === 'prayer') {
+    const themes = [
+      ['Малітва — Варыянт 2', 'Аб прабачэнні'],
+      ['Малітва — Варыянт 3', 'Аб выпраўленні жыцця'],
+      ['Малітва — Варыянт 4', 'Аб абароне'],
+      ['Малітва — Варыянт 5', 'Аб Божай ласцы'],
+    ];
+    const options = themes.map(([title, label]) => sourceChoice(section, title, label));
+    return options.every(Boolean) ? [{ label: 'Агульная', sourceIndex: 0 }, ...options] : [];
+  }
+  return [];
+}
+
+export function devotionalDeadSelection(section, intention) {
+  if (!intention || !['hymn', 'prayer'].includes(section.type)) return null;
+  const title = intention[section.type];
+  if (!title) return section.blocks;
+  const choice = sourceChoice(section, title, '');
+  return choice ? devotionalSelectedBlocks(section, choice.sourceIndex) : null;
+}
+
 export const GADZINKI_PARTS = Object.freeze([
   'Ютрань', 'Першая гадзіна', 'Трэцяя гадзіна', 'Шостая гадзіна',
   'Дзевятая гадзіна', 'Нешпары', 'Напрыканцы дня', 'Ахвяраванне Гадзінак',

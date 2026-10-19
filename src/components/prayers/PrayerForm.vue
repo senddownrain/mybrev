@@ -242,6 +242,7 @@
               :text="form.text"
               :format="PRAYER_TEXT_FORMAT"
               :profile="officeProfile"
+              :prayer-id="route.params.id"
               :document-title="form.title"
             />
             <div v-else-if="plainTextLength" class="prayer-preview__text" v-html="previewHtml" />

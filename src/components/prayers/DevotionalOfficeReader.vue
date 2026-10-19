@@ -1,8 +1,5 @@
 <template>
   <div class="liturgical-hour-column devotional-office" :data-office-profile="document.profile">
-    <div v-if="alternativeInstructions.length" class="devotional-office__instruction">
-      <div v-for="(block, index) in alternativeInstructions" :key="index" v-html="blockHtml(block)" />
-    </div>
     <section v-for="section in visibleSections" :key="section.id" class="ora">
       <h2 v-if="section.title" class="ora-title">
         <template v-if="section.type === 'reading' && readingHeading(section.title)">
@@ -11,16 +8,27 @@
         </template>
         <template v-else>{{ section.title }}</template>
       </h2>
-      <div v-if="section.alternatives?.length" class="devotional-office__choices" role="group" :aria-label="`${section.title}: варыянты`">
-        <button type="button" :aria-pressed="choice(section) === 0" @click="selected[section.id] = 0">Асноўны</button>
+      <div v-if="deadIntentions.length && section.type === 'hymn'" class="devotional-office__choices" role="group" aria-label="Намер малітвы за памерлых">
         <button
-          v-for="(option, index) in section.alternatives"
-          :key="`${section.id}-alternative-${index}`"
+          v-for="(intention, index) in deadIntentions"
+          :key="intention.label"
           type="button"
-          :aria-pressed="choice(section) === index + 1"
-          @click="selected[section.id] = index + 1"
-        >{{ option.title }}</button>
+          :aria-pressed="intentionIndex === index"
+          @click="intentionIndex = index"
+        >{{ intention.label }}</button>
       </div>
+      <div v-if="choices(section).length > 1" class="devotional-office__choices" role="group" :aria-label="`${section.title}: намер`">
+        <button
+          v-for="(option, index) in choices(section)"
+          :key="`${section.id}-choice-${option.sourceIndex}`"
+          type="button"
+          :aria-pressed="choice(section) === index"
+          @click="selected[section.id] = index"
+        >{{ option.label }}</button>
+      </div>
+      <p v-if="deadIntentions.length && section.type === 'prayer' && chosenIntention" class="devotional-office__context">Намер: {{ chosenIntention.label }}</p>
+      <p v-if="deadIntentions.length && ['hymn', 'prayer'].includes(section.type) && !chosenIntention" class="devotional-office__context">Абярыце намерэнне перад гімнам, каб паказаць поўны тэкст.</p>
+      <p v-if="deadIntentions.length && ['hymn', 'prayer'].includes(section.type) && chosenIntention && !selectedSection(section).blocks.length" class="devotional-office__context">Тэкст для гэтага намеру недаступны.</p>
       <div class="ora-text">
         <template v-for="(block, index) in displayItems(selectedSection(section))" :key="`${section.id}-${index}`">
           <template v-if="(index === 0 && section.title) || (block.level === 1 && block.text.trim() === documentTitle.trim())" />
@@ -41,7 +49,7 @@
 </template>
 
 <script setup>
-import { computed, reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import PsalmText from '@/components/oraparts/PsalmText.vue';
 import { providePsalmody } from '@/composables/usePsalmody';
@@ -49,28 +57,41 @@ import { formatPsalmHtml, markPsalmCadenceSigns } from '@/utils/liturgicalHtml';
 import { renderPrayerInline } from '@/utils/prayerMarkdown';
 import {
   buildDevotionalOfficeDocument, devotionalAntiphon, devotionalBlockHtml,
-  devotionalDisplayItems, devotionalPsalmHeading, devotionalReadingHeading,
-  devotionalSelectedBlocks,
+  devotionalDeadIntentions, devotionalDeadSelection, devotionalDisplayItems,
+  devotionalOfficeChoices, devotionalPsalmHeading, devotionalReadingHeading, devotionalSelectedBlocks,
 } from '@/utils/devotionalOffice';
 
 const props = defineProps({
   text: { type: String, default: '' },
   format: { type: String, default: '' },
   profile: { type: String, required: true },
+  prayerId: { type: String, default: '' },
   documentTitle: { type: String, default: '' },
 });
 providePsalmody(useRoute());
 const document = computed(() => buildDevotionalOfficeDocument(props.text, props.format, props.profile));
 const selected = reactive({});
+const intentionIndex = ref(-1);
+const deadIntentions = computed(() => devotionalDeadIntentions(props.prayerId));
+const chosenIntention = computed(() => deadIntentions.value[intentionIndex.value] || null);
 const choice = section => selected[section.id] || 0;
-const selectedSection = section => ({ ...section, blocks: devotionalSelectedBlocks(section, choice(section)) });
-const alternativeInstructions = computed(() => {
-  const section = document.value.sections.find(item => item.type === 'alternatives');
-  return section?.blocks.slice(1).every(block => block.kind === 'rubric')
-    ? section.blocks.slice(1) : [];
-});
+const choices = section => devotionalOfficeChoices(props.prayerId, section);
+const selectedSection = section => {
+  let blocks;
+  let selectedAlternative = false;
+  if (deadIntentions.value.length && ['hymn', 'prayer'].includes(section.type)) {
+    blocks = devotionalDeadSelection(section, chosenIntention.value) || [];
+  } else {
+    const sourceIndex = choices(section)[choice(section)]?.sourceIndex || 0;
+    selectedAlternative = sourceIndex > 0;
+    blocks = devotionalSelectedBlocks(section, sourceIndex);
+  }
+  return { ...section, blocks: selectedAlternative
+    ? blocks.filter(block => !/^(?:Або|Або іншыя):$/iu.test(block.text?.trim() || ''))
+    : blocks };
+};
 const visibleSections = computed(() => document.value.sections.filter(section => (
-  section.type !== 'alternatives' || !alternativeInstructions.value.length
+  section.type !== 'alternatives' || section.blocks.slice(1).some(block => block.kind !== 'rubric')
 )));
 const antiphon = devotionalAntiphon;
 const psalmHeading = devotionalPsalmHeading;
@@ -93,8 +114,8 @@ const psalmHtml = block => formatPsalmHtml(blockHtml(block));
 .devotional-office__text { margin-bottom: .8em; }
 .devotional-office__text:last-child { margin-bottom: 0; }
 .devotional-office__text :deep(p) { margin: 0 0 .8em; }
-.devotional-office__instruction { padding: 1em 28px; color: var(--rubric-color); }
 .devotional-office__choices { display: flex; flex-wrap: wrap; gap: .4em; padding: .5em 28px; }
+.devotional-office__context { padding: .5em 28px; color: var(--rubric-color); }
 .devotional-office__choices button { min-width: 0; max-width: 100%; border: 1px solid var(--nav-border); border-radius: 999px; padding: .35em .75em; color: var(--reader-ink); background: var(--reader-surface); cursor: pointer; text-align: left; overflow-wrap: anywhere; }
 .devotional-office__choices button[aria-pressed='true'] { border-color: var(--rubric-color); color: var(--rubric-color); font-weight: 700; }
 .devotional-office__choices button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }

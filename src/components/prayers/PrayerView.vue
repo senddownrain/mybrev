@@ -28,6 +28,7 @@
             :text="displayText"
             :format="textPrayer?.textFormat"
             :profile="officeProfile"
+            :prayer-id="textPrayer?.id"
             :document-title="displayTitle"
             class="prayer-office-reader"
           />
