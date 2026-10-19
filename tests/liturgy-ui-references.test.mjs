@@ -25,7 +25,7 @@ const refs = (date, diocese = 'minsk-mohilev') => readingReferencesForDay(resolv
 const one = (date, id, diocese) => refs(date, diocese).find((item) => item.optionId === id);
 const citations = (entry) => entry.documents.flatMap((doc) => doc.rows.map((row) => row.citation));
 
-test('search cards use canonical celebration accents separately from vestment swatches', () => {
+test('search cards keep canonical celebration accents without vestment dots or labels', () => {
   const rows = yearCelebrations(2026, ORDO_FILTER_DIOCESES);
   const visual = (row) => liturgicalVisual({ color: row.color, rank: row.rankKey, category: row.category });
   const mary = rows.find((row) => row.optionId === 'holy-mary-mother-of-god');
@@ -40,6 +40,8 @@ test('search cards use canonical celebration accents separately from vestment sw
   }
   const picker = read('src/components/liturgical/FeastsPicker.vue');
   assert.match(picker, /getLiturgicalTheme\(visualStamp\(option\)\)/);
+  assert.match(picker, /<strong>\{\{ feast\.dayLabel \}\}<\/strong>/);
+  assert.doesNotMatch(picker, /color-dot|feast\.colorLabel|feast\.swatch/);
   assert.match(picker, /linear-gradient\(120deg, rgba\(var\(--option-rgb\), 0\.14\), rgba\(var\(--option-rgb\), 0\.025\) 72%\)/);
   assert.doesNotMatch(read('src/views/LiturgicalPicker.vue'), /v-select|availableYears|getAvailableYears/);
 });
