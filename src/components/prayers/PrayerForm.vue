@@ -236,7 +236,16 @@
           </div>
           <div class="prayer-preview">
             <h3>{{ form.title.trim() || 'Назва малітвы' }}</h3>
-            <div v-if="plainTextLength" class="prayer-preview__text" v-html="previewHtml" />
+            <DevotionalOfficeReader
+              v-if="plainTextLength && officeProfile"
+              class="prayer-preview__office"
+              :text="form.text"
+              :format="PRAYER_TEXT_FORMAT"
+              :profile="officeProfile"
+              :prayer-id="route.params.id"
+              :document-title="form.title"
+            />
+            <div v-else-if="plainTextLength" class="prayer-preview__text" v-html="previewHtml" />
             <p v-else class="preview-placeholder">Тэкст з’явіцца тут падчас рэдагавання.</p>
             <div v-if="form.source.trim()" class="preview-source">
               <span class="preview-source__label">Крыніца:</span>
@@ -260,6 +269,8 @@ import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
 import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue';
+import DevotionalOfficeReader from '@/components/prayers/DevotionalOfficeReader.vue';
+import { devotionalOfficeProfile } from '@/utils/devotionalOffice';
 import { MASS_RITUAL } from '@/utils/massRitual';
 import {
   prayerMarkdownToPlainText,
@@ -291,6 +302,9 @@ const tagInputFocused = ref(false);
 
 const isEditMode = computed(() => Boolean(route.params.id));
 const isMassPrayer = computed(() => MASS_RITUAL.variants.some(variant => variant.prayerId === route.params.id));
+const officeProfile = computed(() => devotionalOfficeProfile(
+  { id: route.params.id }, form.value.text, PRAYER_TEXT_FORMAT,
+));
 const isSubmitting = computed(() => saving.value || copying.value);
 const loadingPrayer = computed(() => isEditMode.value && isLoading.value && !hydrated.value);
 const plainText = computed(() => prayerMarkdownToPlainText(form.value.text, PRAYER_TEXT_FORMAT));
