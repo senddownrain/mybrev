@@ -84,3 +84,13 @@ The unconfigured-bundle browser also reproduced the category subscription failur
 Local evidence is retained under `/workspace/artifacts/mybrev-production-audit/`: smoke results, screenshots and test logs. The audit runner is preserved there as investigation evidence, not part of the shipped app.
 
 Remaining production gate: permit the Hosting origin in the environment network configuration, then verify the served bundle and run the same clean-profile Hours/categories/reader flows against `https://ibreviaryby.web.app`. No deployment is authorized by this report.
+
+## PR #144 CI follow-up
+
+[Run 39330628522](https://github.com/senddownrain/mybrev/actions/runs/39330628522), job `118327602598`: dependency installation and lint succeeded; Build exited 1 with `Missing Firebase web build configuration` listing all six required fields. All six `secrets.VITE_FIREBASE_*` expressions resolved to empty strings in that job. Subsequent tests were skipped because Build failed.
+
+This was a same-repository `pull_request` by `senddownrain`, not a fork or Dependabot run. Fork PRs and Dependabot normally cannot receive repository secrets, but those restrictions do not explain this particular run. The CI job also does not select the `production` environment, unlike Deploy; environment-scoped secrets are not available to it. Secret values/settings were not accessed, so this audit does not claim to distinguish absent repository secrets from secrets stored at another scope. The confirmed failure is unavailable build configuration, exposed by the new fail-fast check; lint/build source compilation was not the cause.
+
+CI now uses six explicit, fake `demo-mybrev-ci` build values, `.invalid` domains and no production secrets, for both PR and branch checks. These values exist only on the compile step; offline tests do not connect to Firebase and the workflow does not deploy or publish this artifact. Optional Sentry/Analytics credentials are omitted. The same Vite validation still runs; there is no CI bypass or implicit fallback in application configuration.
+
+Deploy remains a manually dispatched main-only workflow selecting `environment: production`. It binds the real configuration via secrets and rejects missing required fields or a project other than `ibreviaryby`; the CI demo project cannot pass that target check. No deployment was triggered to test secret availability. If the secrets are missing from the production scope, the deployment will stop before publishing rather than emit an unconfigured client.
