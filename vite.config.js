@@ -1,5 +1,6 @@
 // Импортируем утилиты из стандартных пакетов
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
+import { validateFirebaseWebConfig } from './scripts/lib/firebase-web-config.mjs'
 import { fileURLToPath, URL } from 'node:url'
 import { APP_THEME_COLORS, APP_STATUS_BAR_COLORS } from './src/constants/appearance.js'
 
@@ -12,7 +13,9 @@ import { VitePWA } from 'vite-plugin-pwa'; // Импортируем
 import { visualizer } from 'rollup-plugin-visualizer' // Импортируем
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command, mode }) => {
+  if (command === 'build') validateFirebaseWebConfig(loadEnv(mode, process.cwd(), 'VITE_'));
+  return {
   plugins: [
     // Плагин для поддержки однофайловых компонентов Vue (.vue)
     vue({ 
@@ -266,4 +269,5 @@ export default defineConfig({
       },
     },
   },
+  };
 })

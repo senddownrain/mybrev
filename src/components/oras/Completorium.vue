@@ -30,6 +30,7 @@ import { useRoute } from 'vue-router';
 import { useCompletorium } from '@/composables/useCompletorium';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { logger } from '@/utils/logger';
+import { firestoreErrorMessage } from '@/utils/firestoreErrors.mjs';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
 import Intro from '@/components/oraparts/Intro.vue';
 import Psalms from '@/components/oraparts/Psalms.vue';
@@ -76,7 +77,7 @@ watch(
     } catch (loadError) {
       logger.error('[Completorium] Памылка загрузкі:', loadError);
       if (sequence === loadSequence) {
-        error.value = loadError?.message || 'Не атрымалася загрузіць камплету.';
+        error.value = firestoreErrorMessage(loadError);
       }
     } finally {
       if (sequence === loadSequence) loadingCompletorium.value = false;

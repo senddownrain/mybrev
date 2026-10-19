@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { logger } from '@/utils/logger';
+import { firestoreErrorMessage } from '@/utils/firestoreErrors.mjs';
 import {
   getPeriodDayDocumentId,
   resolveDayAgainstPeriod,
@@ -95,7 +96,7 @@ export function useResolvedLiturgicalDay() {
       if (!day.value) error.value = 'Літургічны дзень не знойдзены.';
     } catch (loadError) {
       logger.error('[useResolvedLiturgicalDay] load failed:', loadError);
-      if (currentSequence === sequence) error.value = loadError?.message || 'Не атрымалася загрузіць дзень.';
+      if (currentSequence === sequence) error.value = firestoreErrorMessage(loadError);
     } finally {
       if (currentSequence === sequence) pending.value = false;
     }

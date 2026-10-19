@@ -43,6 +43,9 @@ jobs:
       - name: Prayer normalization tests (offline)
         run: npm run test:prayer-normalization
 
+      - name: Firebase web build configuration tests (offline)
+        run: node --test tests/firebase-web-config.test.mjs
+
       - name: Audit tests
         run: npm run test:audit
 
