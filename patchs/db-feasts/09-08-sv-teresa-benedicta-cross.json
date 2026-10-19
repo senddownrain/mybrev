@@ -9,6 +9,9 @@
     "martyrs-many",
     "religious"
   ],
+  "_commonBase": {
+    "religious": "holy-women"
+  },
   "_defaultTemplate": "martyrs-many",
   "_legacyIds": [
     "09-08-sv-teresa-benedicta-cross--martyrs-many",

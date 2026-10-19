@@ -237,6 +237,13 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
       const found = fromSource(rule.source, field, rule.template);
       if (found && !found.missingRequired) return found;
     }
+    // One own collect may be stored only at Lauds. In a selected Common
+    // formulary it still precedes the Common collect (including groups).
+    // Keep the legacy current-day assembly unchanged.
+    if (selected !== CURRENT_DAY_CHOICE && field === 'officeOfReadingsPr' && !rule && !isBlank(proper?.laudesPr)) {
+      refs.push({ field, ref: 'laudesPr', origin: 'proper' });
+      return { pending: true };
+    }
     if (isFestiveField(field)) {
       const source = OFFICE_FIELD_SLOTS[field][0] === 'lauds' && OFFICE_FIELD_SLOTS[field][1] === 'psalmody'
         ? SUNDAY_WEEK_1_TEMPLATE : 'common';

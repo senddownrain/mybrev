@@ -9,6 +9,9 @@
     "doctors-of-church",
     "religious"
   ],
+  "_commonBase": {
+    "religious": "holy-men"
+  },
   "_defaultTemplate": "doctors-of-church",
   "_legacyIds": [
     "20-08-sv-bernard--doctors-of-church",

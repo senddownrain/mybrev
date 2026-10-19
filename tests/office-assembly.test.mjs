@@ -22,6 +22,7 @@ import { resolveDateDayAgainstPeriod, resolveDayAgainstPeriod } from '../src/uti
 import { getCompletoriumWeekday, shouldShowTeDeum } from '../src/utils/liturgicalOffice.js';
 import { classifyValue, inferTemplates, splitSource } from '../scripts/lib/feast-content.mjs';
 import { daysFixture, templatesFixture } from './helpers/ordo-days-fixture.mjs';
+import { buildFeastTargets } from '../scripts/ordo/import-feasts.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readDir = (dir) => fs.readdirSync(path.join(ROOT, dir)).filter((name) => name.endsWith('.json'))
@@ -358,7 +359,7 @@ test('religious base uses existing Common bindings for other men and women, inde
 });
 
 test('an explicit base needs one metadata entry; unknown, conflicting or inferred bindings never guess', () => {
-  const proper = feast('03-11-sv-martin-de-porres');
+  const { _commonBase, ...proper } = feast('03-11-sv-martin-de-porres');
   const office = officeOf('2026-11-03', 'sv-martin-de-porres');
   assert.deepEqual(proper._templates, ['religious']);
   assert.deepEqual(commonBaseRule(proper, 'religious'), { reason: 'base-common-unconfirmed' });
@@ -379,6 +380,72 @@ test('an explicit base needs one metadata entry; unknown, conflicting or inferre
     assert.equal(result.day.vesperPs1, '');
     assert.ok(result.missing.includes('vesperPs1'));
     assert.ok(result.integrity.some((item) => item.field === 'vesperPs1' && item.reason === reason));
+  }
+});
+
+test('all 29 confirmed metadata bindings survive generation/import and assemble without unintended gaps', () => {
+  const plan = JSON.parse(fs.readFileSync(path.join(ROOT, 'patchs/common-base-metadata-plan.json'), 'utf8'));
+  assert.equal(plan.documentCount, 27);
+  assert.equal(plan.commonBaseBindingCount, 29);
+  const targets = new Map(buildFeastTargets().feasts.map((item) => [item.id, item.data]));
+  const office = officeOf('2026-10-19', 'sv-paul-of-cross');
+  let bindings = 0;
+  for (const operation of plan.operations) {
+    const proper = feast(operation.id);
+    const imported = targets.get(operation.id);
+    assert.deepEqual(imported._commonBase, proper._commonBase, operation.id);
+    if (operation.evidence.source.startsWith('patchs/feasts/')) {
+      const sourceFile = operation.evidence.source.split('#')[0];
+      const source = JSON.parse(fs.readFileSync(path.join(ROOT, sourceFile), 'utf8'));
+      assert.deepEqual(proper._commonBase, source._commonBase, `${operation.id}: metadata retained from source`);
+    }
+    for (const [field, value] of Object.entries(operation.updates)) {
+      assert.ok(field.startsWith('_commonBase.'), field);
+      if (!field.startsWith('_commonBase.')) continue;
+      bindings += 1;
+      const choice = field.slice('_commonBase.'.length);
+      assert.equal(commonBaseRule(proper, choice).rule.template, value, operation.id);
+      const result = assembleOffice({ proper: imported, office, templates: TEMPLATES, choice, currentDay });
+      assert.deepEqual(result.missing, [], `${operation.id}/${choice}`);
+      assert.deepEqual(result.integrity, [], `${operation.id}/${choice}`);
+      const mainFields = OFFICE_TEXT_FIELDS.filter((f) => ['lauds', 'vespers', 'officeOfReadings'].includes(OFFICE_FIELD_SLOTS[f][0]));
+      for (const f of mainFields) {
+        if (proper[f] !== undefined) assert.equal(result.day[f], proper[f], `${operation.id}: Proper ${f}`);
+        else if (f === 'officeOfReadingsPr' && proper.laudesPr && !proper._fieldRules?.[f]) {
+          assert.equal(result.day[f], proper.laudesPr, `${operation.id}: own collect`);
+        } else if (TEMPLATES.get(choice)[f] !== undefined && !proper._fieldRules?.[f]) {
+          assert.equal(result.day[f], TEMPLATES.get(choice)[f], `${operation.id}: selected Common ${f}`);
+        }
+      }
+      const { _commonBase, ...withoutBase } = proper;
+      const dayBefore = assembleOffice({ proper: withoutBase, office, templates: TEMPLATES, currentDay });
+      const dayAfter = assembleOffice({ proper, office, templates: TEMPLATES, currentDay });
+      OFFICE_TEXT_FIELDS.forEach((f) => assert.equal(dayAfter.day[f], dayBefore.day[f], `${operation.id}: day ${f}`));
+    }
+  }
+  assert.equal(bindings, 29);
+});
+
+test('seven Servite founders keep their collective Proper and own prayer in the Common formulary', () => {
+  const proper = feast('17-02-seven-servite-founders');
+  const office = officeOf('2026-02-17', 'seven-servite-founders');
+  assert.deepEqual(proper._commonBase, { religious: 'holy-men' });
+  for (const choice of [CURRENT_DAY_CHOICE, 'religious']) {
+    const result = assembleOffice({ proper, office, templates: TEMPLATES, choice, currentDay });
+    for (const field of ['laudesAntBen', 'vesperAntMag', 'officeOfReadingsR2', 'laudesPr', 'vesperPr']) {
+      assert.equal(result.day[field], proper[field]);
+      assert.equal(result.provenance[field], 'proper');
+    }
+    if (choice === 'religious') {
+      assert.equal(result.day.officeOfReadingsPr, proper.laudesPr, 'collective collect, never the Common prayer for N.');
+      assert.equal(result.provenance.officeOfReadingsPr, 'ref:laudesPr');
+      assert.match(result.day.officeOfReadingsPr, /сем святых братоў/u);
+      assert.equal(result.day.officeOfReadingsHymn, TEMPLATES.get('religious').officeOfReadingsHymn);
+      assert.equal(result.day.vesperHymn, TEMPLATES.get('religious').vesperHymn);
+      assert.deepEqual(result.missing, []);
+    } else {
+      assert.equal(result.day.officeOfReadingsPr, TEMPLATES.get('religious').officeOfReadingsPr, 'legacy day choice stays unchanged');
+    }
   }
 });
 
