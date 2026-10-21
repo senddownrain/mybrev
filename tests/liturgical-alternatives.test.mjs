@@ -181,3 +181,29 @@ test('gives all supported intercession source shapes the same paragraph structur
   assert.equal(initialResponse.querySelector('.intercessions__marker'), null);
   assert.match(initialResponse.text, /^дапамажы/u);
 });
+
+
+test('keeps Psalm 26:7-14 whole when verse 8 begins with “Пра ...:”', () => {
+  const psalm = [
+    '<p>II (7-14)</p>',
+    '<p>Пачуй, Пане, мой голас, калі я клічу, * змілуйся нада мною і адкажы мне.</p>',
+    '<p>Пра Цябе кажа маё сэрца: † «Шукай Ягонага аблічча!» * Буду шукаць Твайго аблічча, Пане.</p>',
+    '<p>Не хавай ад мяне свайго твару.</p>',
+  ].join('');
+  const options = getLiturgicalAlternatives(psalm, 'psalm');
+
+  assert.equal(options.length, 1);
+  assert.match(options[0].html, /Пачуй, Пане, мой голас/u);
+  assert.match(options[0].html, /Пра Цябе кажа маё сэрца:/u);
+  assert.match(options[0].html, /Не хавай ад мяне/u);
+  assert.equal(hasLiturgicalAlternatives(psalm), true, 'generic mode remains unchanged');
+  assert.equal(getLiturgicalAlternatives(psalm, 'psalm').length, 1);
+});
+
+test('keeps genuine explicit psalm alternatives selectable', () => {
+  const options = getLiturgicalAlternatives(
+    '<p>Псальм 1.</p><hr><p>Або:</p><p>Іншы псальм.</p>',
+    'psalm',
+  );
+  assert.equal(options.length, 2);
+});
