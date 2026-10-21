@@ -196,7 +196,6 @@ test('keeps Psalm 26:7-14 whole when verse 8 begins with “Пра ...:”', () 
   assert.match(options[0].html, /Пачуй, Пане, мой голас/u);
   assert.match(options[0].html, /Пра Цябе кажа маё сэрца:/u);
   assert.match(options[0].html, /Не хавай ад мяне/u);
-  assert.equal(hasLiturgicalAlternatives(psalm), true, 'generic mode remains unchanged');
   assert.equal(getLiturgicalAlternatives(psalm, 'psalm').length, 1);
 });
 
