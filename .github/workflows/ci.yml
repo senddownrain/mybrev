@@ -46,6 +46,9 @@ jobs:
       - name: Firebase web build configuration tests (offline)
         run: node --test tests/firebase-web-config.test.mjs
 
+      - name: Liturgical alternatives regression tests
+        run: npm run test:alternatives
+
       - name: Audit tests
         run: npm run test:audit
 
