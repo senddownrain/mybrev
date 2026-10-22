@@ -1,0 +1,48 @@
+{
+  "generatedAt": "2026-10-22T20:43:33.705Z",
+  "repository": "senddownrain/mybrev",
+  "pullRequest": 149,
+  "sourceHead": "4b77c9702fe97a371b7386f0083415b49b339a72",
+  "platform": {
+    "os": "linux",
+    "release": "6.18.55",
+    "arch": "x64",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "availableCPUs": 2,
+    "node": "v24.19.0",
+    "chromium": "Chromium 154.0.8037.57 built on Debian GNU/Linux 13 (trixie)",
+    "playwright": "1.63.0"
+  },
+  "viewport": {
+    "width": 1366,
+    "height": 820
+  },
+  "date": "2026-02-08T12:00:00.000Z",
+  "timezone": "UTC",
+  "timing": "Native timers/performance APIs. Date-only override for deterministic saved liturgical day.",
+  "backend": "Loopback-only fixture adapter over 245 saved repository JSON documents; no Firestore emulator or production snapshot available. Real Firebase initialization, real UI and public-content IndexedDB.",
+  "network": "SDK disableNetwork; SDK mutations rejected; dummy demo-first-click configuration replaces inherited Firebase settings in fixture-build process; Chromium external proxy points to closed loopback port, loopback bypass only.",
+  "limitations": [
+    "A single fixture date and one desktop viewport",
+    "Prayer collections not represented; no full production data workload",
+    "Firestore SDK reads are adapted, so persistent read timing/server behavior is untested",
+    "Google Fonts unavailable; fallback fonts used",
+    "Profiling runs kept separate",
+    "Exploratory Playwright-clock reports excluded due incompatible timing origins"
+  ],
+  "scripts": [
+    {
+      "file": "scripts/diagnose-first-interactions.mjs",
+      "sha256": "6f4788f7780de9820b693c306f33934e6a400393d0bf46f1a8bc0ec8d7f29fe3"
+    },
+    {
+      "file": "scripts/first-click-local-fixtures.mjs",
+      "sha256": "8dc54aafeafb231f7f3b9fb17e0f6392631fdebe1a9777c88e5bcca4dcedce59"
+    },
+    {
+      "file": "scripts/analyze-first-interactions.mjs",
+      "sha256": "86db5b32c37786f8fd076e7d5cbb65ff08480673d86d3575e2125bc453d744cd"
+    }
+  ],
+  "scriptHashScope": "Final diagnostic source files; raw reports record experiment flags. Network-host counters were added after baseline; baseline geometry and primary timing were unchanged."
+}

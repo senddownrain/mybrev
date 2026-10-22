@@ -108,3 +108,60 @@ collected. Scrutinize all diagnostic reports before sharing outside the team.
 4. Confirm immediate menu/day selection, Back, offline PWA, and cache behavior.
 5. Keep all application, Firestore and hosting production state unchanged
    until a separate explicit authorization to merge and deploy.
+
+## Recorded local investigation (2026-10-22)
+
+See [the findings and limitations](first-click-diagnostics-2026-10-22.md).
+No production snapshot is present in this environment. The diagnostic-only
+fixture server builds the existing app with a read adapter over saved repository
+JSON documents. It uses a dummy `demo-first-click` Firebase project, disables SDK
+network access, rejects SDK mutations, and overrides inherited Firebase settings
+only in its own process. It does not change app source or normal build config.
+Unrepresented collections (including the full prayer corpus) remain empty.
+
+Start the fixture preview in one terminal:
+
+```bash
+node scripts/first-click-local-fixtures.mjs
+```
+
+Then run the original geometry experiment:
+
+```bash
+FIRST_CLICK_BROWSER_PATH=/usr/bin/chromium \
+FIRST_CLICK_LOCAL_FIXTURES=1 FIRST_CLICK_RUNS=8 \
+node scripts/diagnose-first-interactions.mjs
+```
+
+`FIRST_CLICK_LOCAL_FIXTURES=1` freezes only the calendar date to 2026-02-08
+(the saved ordinary-w5-d1 document), leaves all performance/timer APIs native,
+and blocks external browser traffic through an unavailable proxy while allowing
+loopback. Do not use it with a production preview build.
+
+Optional diagnostic controls, disabled by default:
+
+- `FIRST_CLICK_VISIBLE_POINT=1`: click the center of the visible intersection
+  of the element and viewport. It still does not wait for actionability,
+  stability, an unobstructed target, or a completed transition.
+- `FIRST_CLICK_SETTLED_WARM=1`: before the warm reload, wait for day data,
+  service worker readiness and successful Firestore IndexedDB initialization.
+  The measured reload still clicks at the first visible opportunity.
+- `FIRST_CLICK_PROFILE=1`: save Chrome CPU profiles and native resource timings.
+  Profiling perturbs timing; keep these probes separate from the primary series.
+
+The default geometry and reload behavior are retained for comparison. Failed
+primary attempts get a screenshot and a separate retry after timeout; retries
+never count as primary successes. IndexedDB logs include only names, stores,
+operation types and timings. No stored values are collected.
+
+Derive the action-level JSON and CSV (first argument = baseline, second = control):
+
+```bash
+node scripts/analyze-first-interactions.mjs BASELINE.json CONTROL.json
+```
+
+One menu scenario contains two actions. Analyze hamburger opening separately
+from drawer navigation, otherwise successful opening latencies disappear when
+the later link click fails. `sampleToInputMs` includes automation overhead and
+must not be called INP. Native long-task intervals and input timestamps can be
+compared; virtualized Playwright-clock runs must be excluded from that analysis.
