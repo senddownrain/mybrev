@@ -10,17 +10,6 @@
             <!-- Plain text interpolation — no v-html, no XSS risk -->
             <h1 class="prayer-title" :lang="isMassOrder ? massLanguage : undefined">{{ displayTitle }}</h1>
 
-            <div v-if="prayer.tags && prayer.tags.length > 0" class="prayer-tags">
-              <v-chip
-                v-for="tag in prayer.tags"
-                :key="tag"
-                size="small"
-                variant="tonal"
-                class="prayer-tag"
-              >
-                {{ tag }}
-              </v-chip>
-            </div>
           </header>
 
           <DevotionalOfficeReader
