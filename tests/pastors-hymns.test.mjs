@@ -18,7 +18,7 @@ test('all Pastors common hymns assemble all and only the right stanzas', () => {
   for (const values of [source, generated]) {
     for (const [field, singleStanzas, pluralStanzas] of hours) {
       const original = values[field];
-      const options = getLiturgicalAlternatives(preparePastorsHymn(original), 'hymn');
+      const options = getLiturgicalAlternatives(preparePastorsHymn(original, 'Св. Яна Паўла ІІ, папы'), 'hymn');
       assert.deepEqual(options.map(({ title }) => title), labels, field);
       options.forEach(({ html, title }, i) => {
         assert.equal((html.match(/<p>/g) || []).length, i === 3 ? pluralStanzas : singleStanzas, field + ': ' + title);
@@ -43,6 +43,12 @@ test('Pope John Paul II, bishops, presbyters and plural titles select the approp
   assert.equal(pastorKindFromTitle('Св. Яна Марыі Віянэя, прэзбітэра'), 'priest');
   assert.equal(pastorKindFromTitle('Святых біскупаў і пастыраў'), 'many');
   assert.equal(pastorKindFromTitle('Св. Яна Паўла ІІ'), '');
+  for (const [field] of hours) {
+    const uncertain = getLiturgicalAlternatives(preparePastorsHymn(source[field], 'Св. Невядомага'), 'hymn');
+    assert.equal(uncertain.length, 5);
+    assert.equal(uncertain[0].title, 'Абярыце тып пастыра');
+    assert.equal(uncertain[1].title, 'Пра Папу');
+  }
   for (const [title, label] of [
     ['Св. Яна Паўла ІІ, папы', 'Пра Папу'],
     ['Св. Марціна, біскупа', 'Пра біскупа'],
