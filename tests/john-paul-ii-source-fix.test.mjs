@@ -15,6 +15,28 @@ test('22 October: owner-approved text agrees in both source copies', () => {
   assert.ok(patch.officeOfReadingsR2.before.includes('Адчыніце дзверы Хрусту!'));
 });
 
+test('the old responsory differs only in the second occurrence, not the heading', () => {
+  const { before, after } = expectedWording().officeOfReadingsR2;
+  const correctPhrase = 'Адчыніце дзверы Хрысту!';
+  const originalTypo = 'Адчыніце дзверы Хрусту!';
+  const marker = 'Рэспансорый</span>';
+  const count = (value, phrase) => value.split(phrase).length - 1;
+
+  // Approved text legitimately uses the exact same phrase twice.
+  assert.equal(count(after, correctPhrase), 2);
+  assert.equal(count(after, originalTypo), 0);
+  // Prior text had an already-correct heading and an incorrect responsory.
+  assert.equal(count(before, correctPhrase), 1);
+  assert.equal(count(before, originalTypo), 1);
+  const pivot = before.indexOf(marker);
+  assert.ok(pivot > 0);
+  assert.ok(before.slice(0, pivot).includes(correctPhrase));
+  assert.ok(!before.slice(0, pivot).includes(originalTypo));
+  assert.ok(before.slice(pivot).includes(originalTypo));
+  // The exact minimal edit returns the approved text with no changes elsewhere.
+  assert.equal(before.replace(originalTypo, correctPhrase), after);
+});
+
 test('single-document update accepts only old or already-corrected fields', () => {
   const patch = expectedWording();
   const old = Object.fromEntries(Object.entries(patch).map(([k, v]) => [k, v.before]));
