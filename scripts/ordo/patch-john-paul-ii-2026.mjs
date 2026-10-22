@@ -32,6 +32,38 @@ function exactOnce(text, part) {
   return typeof text === 'string' && text.split(part).length === 2;
 }
 
+/**
+ * Reconstruct only the exact pre-correction wording.
+ *
+ * In the Office reading, "Адчыніце дзверы Хрысту!" appears twice: in the
+ * heading (already correct in the legacy source), and in the responsory (the
+ * ONLY place where the user authorized correcting "Хрусту").
+ * Replacing the first occurrence corrupts our production comparison.
+ */
+function reconstructBefore(field, current, { before, after }) {
+  if (typeof current !== 'string' || current.includes(before)) {
+    throw new Error(`Unapproved or unexpected source wording in ${field}.`);
+  }
+  if (field === 'officeOfReadingsR2') {
+    const marker = 'Рэспансорый</span>';
+    if (!exactOnce(current, marker)) {
+      throw new Error('Missing or duplicated responsory heading in the approved text.');
+    }
+    const pivot = current.indexOf(marker);
+    const heading = current.slice(0, pivot);
+    const responsory = current.slice(pivot);
+    // The heading was already "Хрысту"; only the responsory was "Хрусту".
+    if (!exactOnce(heading, after) || !exactOnce(responsory, after)) {
+      throw new Error('Expected exactly one approved phrase in both heading and responsory.');
+    }
+    return heading + responsory.replace(after, before);
+  }
+  if (!exactOnce(current, after)) {
+    throw new Error(`Expected exactly one approved name phrase in ${field}.`);
+  }
+  return current.replace(after, before);
+}
+
 export function expectedWording(root = ROOT) {
   const read = (subdir) => JSON.parse(fs.readFileSync(path.join(root, 'patchs', subdir, `${PROPER_ID}.json`), 'utf8'));
   const source = read('feasts');
@@ -42,10 +74,10 @@ export function expectedWording(root = ROOT) {
   const result = {};
   for (const [field, { before, after }] of Object.entries(corrections)) {
     const expected = source[field];
-    if (!exactOnce(expected, after) || expected.includes(before) || generated[field] !== expected) {
+    if (generated[field] !== expected) {
       throw new Error(`The source and generated ${field} are not identical, approved texts.`);
     }
-    result[field] = { before: expected.replace(after, before), after: expected };
+    result[field] = { before: reconstructBefore(field, expected, { before, after }), after: expected };
   }
   if (generated._fieldRules?.laudesPr?.ref !== 'officeOfReadingsPr'
       || generated._fieldRules?.vesperPr?.ref !== 'officeOfReadingsPr') {
