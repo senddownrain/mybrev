@@ -13,7 +13,6 @@ const hours = [
   ['vesperHymn', 6, 5],
 ];
 const labels = ['Пра Папу', 'Пра біскупа', 'Пра прэзбітэра', 'Пра некалькіх пастыраў'];
-const markers = ['Пятров', 'біскупа', 'прэзбітэра'];
 
 test('all Pastors common hymns assemble all and only the right stanzas', () => {
   for (const values of [source, generated]) {
