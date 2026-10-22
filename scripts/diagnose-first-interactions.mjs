@@ -10,6 +10,7 @@
  * IMPORTANT: Remote sites make actual public Firestore reads. To opt in,
  * explicitly set FIRST_CLICK_ALLOW_REMOTE=yes (max 2 runs per case/mode).
  */
+/* global document, window, performance, PerformanceObserver, getComputedStyle, location */
 import { chromium } from 'playwright-core';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
