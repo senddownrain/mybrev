@@ -61,8 +61,13 @@ export function preparePastorsHymn(html, feastName = '') {
   };
   const selected = pastorKindFromTitle(feastName);
   const order = selected ? [selected, ...KINDS.filter((kind) => kind !== selected)] : KINDS;
-  return order.map((kind) =>
+  const hymns = order.map((kind) =>
     '<div data-alternative-title="' + TITLES[kind] + '" data-pastor-kind="' + kind + '">\n' +
     content[kind].map(paragraph).join('\n') + '\n</div>'
   ).join('\n');
+  // With no explicit rank in the feast title, require a manual choice instead
+  // of silently presenting the Pope hymn as if it belonged to this saint.
+  if (selected) return hymns;
+  return '<div data-alternative-title="Абярыце тып пастыра" data-pastor-kind="unspecified">' +
+    '<p>Абярыце адпаведны варыянт гімна паводле святога.</p></div>\n' + hymns;
 }
