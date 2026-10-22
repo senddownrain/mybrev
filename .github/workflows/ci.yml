@@ -43,6 +43,9 @@ jobs:
       - name: Prayer normalization tests (offline)
         run: npm run test:prayer-normalization
 
+      - name: John Paul II source and migration validator tests (offline)
+        run: node --test tests/john-paul-ii-source-fix.test.mjs
+
       - name: Firebase web build configuration tests (offline)
         run: node --test tests/firebase-web-config.test.mjs
 
