@@ -1,6 +1,6 @@
 # 22 October — St John Paul II: source-verification blocker
 
-Status: **needs-source-verification**. Recorded 2026-10-22. **Do not modify the liturgical wording without a second verified source and owner approval.**
+Status: **two exact corrections owner-approved on 2026-10-22; publication pending**. The owner explicitly instructed changing `святога Ян Павел ІІ, папа` to `святы Ян Павел ІІ, папа` and `Адчыніце дзверы Хрусту!` to `Адчыніце дзверы Хрысту!`. This is a documented direct owner correction to a photographed source containing typographical defects, **not an AI translation or reconstructed liturgical text**. Only these two changes are authorized; see MyBrev Draft PR #152.
 
 ## Material examined
 
@@ -10,13 +10,13 @@ Status: **needs-source-verification**. Recorded 2026-10-22. **Do not modify the 
 
 ## Findings, with exact photographed wording
 
-1. The photographed prayer has **`святога Ян Павел II, папа`** and the stored `officeOfReadingsPr` has the same words (with Belarusian Roman-number glyphs `ІІ`). The phrase appears grammatically suspicious, but the photo **does not establish an alternative wording**. Do not replace it with an assistant-generated Belarusian translation or infer a case ending.
-2. The photographed responsory has **`Адчыніце дзверы Хрусту!`** and the stored `officeOfReadingsR2` also has **`Хрусту`**. This is an apparent typo **in the photographed document itself**, not an established transcription mismatch. Do not silently correct it to a guessed alternative.
+1. The photograph and original stored prayer both contain **`святога Ян Павел II, папа`** (stored with `ІІ`). The owner has now supplied and approved the **exact** replacement **`святы Ян Павел ІІ, папа`**. Do not substitute any assistant-generated alternatives.
+2. The photo and stored responsory both contain **`Адчыніце дзверы Хрусту!`**. The owner explicitly approved the exact correction **`Адчыніце дзверы Хрысту!`**. It is a narrowly approved editorial correction, not an invisible import fix.
 3. The generated DB feast document reuses `officeOfReadingsPr` for `laudesPr` and `vesperPr` via `_fieldRules`. This is intentional; no evidence of runtime name interpolation was found for this entry.
 
 ## Required next action
 
-Obtain an independent owner-designated direct source with the verified *exact* Belarusian words (e.g. another breviary printing/page or the prior prayer-book export, with precise record location), compare it line by line, then propose a minimal and source-cited correction for explicit owner review. No prayer text edits are approved by this report. If no better source is found, retain the recorded wording and the open verification flag.
+The owner has independently approved the **two exact replacements** documented above; implement and verify only those. Future disputed wording still requires the owner's direct source or exact explicit textual approval. After merge, perform a scoped Firestore migration and publish Flutter's safe content manifest patch using the documented guarded workflow; no other liturgical edits are approved.
 
 ## Publication impact
 
