@@ -16,7 +16,7 @@
                     <span class="vespers-rubric__line" aria-hidden="true"></span>
                     <span class="vespers-rubric__label" v-html="vespersRubric.labelHtml"></span>
                 </v-chip>
-                <hymnus :text="vesperDay.vesperHymn" />
+                <hymnus :text="vesperDay.vesperHymn" :feast-name="vesperDay._feastName" />
                 <psalms :ant1="vesperDay.vesperAnt1" :ant2="vesperDay.vesperAnt2" :ant3="vesperDay.vesperAnt3" :ps1="vesperDay.vesperPs1"
                     :ps2="vesperDay.vesperPs2" :ps3="vesperDay.vesperPs3" />
                 <reading :text="vesperDay.vesperR" />
