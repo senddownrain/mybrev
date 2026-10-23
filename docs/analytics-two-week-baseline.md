@@ -48,6 +48,7 @@ The historical 31 failures after `8751196` did **not** reproduce on current `mai
 
 - New job `analytics-tests` in `flutter-pr-ci.yml`: `flutter test test/analytics`, 15 min timeout.
 - New `flutter-full-suite.yml`: `workflow_dispatch` only, full `flutter test`, log uploaded as artifact (14 days), 30 min timeout. No schedule until a manual run confirms duration on the runner.
+- GitHub run [39994362499](https://github.com/senddownrain/ibreviarybyapp/actions/runs/39994362499) at `70ce5e5`: FAIL, same 3 failures as local (1399 pass, 1 skipped), 22 min 36 s on `ubuntu-latest` against a 30 min timeout, so the timeout margin is thin. Log kept as artifact `flutter-full-test-log`.
 - First full-suite run on GitHub is triggered by a temporary `pull_request` trigger in the workflow (workflow_dispatch needs the file on `main`). Remove that trigger before merge.
 
 ## Node 24 / `node:sqlite` (Draft #138, not merged)
