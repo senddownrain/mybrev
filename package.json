@@ -92,6 +92,7 @@
     "test:common-seasons": "node --test tests/common-seasons-*.test.mjs",
     "analytics:perf": "firebase emulators:exec --only firestore --project demo-analytics-perf \"node scripts/analytics/perf-compare.mjs\"",
     "analytics:smoke": "firebase emulators:exec --only firestore --project demo-analytics-smoke \"node scripts/analytics/screens-smoke.mjs\"",
+    "analytics:parity": "node scripts/analytics/parity.mjs",
     "test:analytics": "node --test tests/analytics-*.test.mjs"
   },
   "dependencies": {
