@@ -118,6 +118,9 @@ try {
       await page.evaluate(({ theme, size }) => {
         document.body.classList.remove('v-theme--light', 'v-theme--dark');
         document.body.classList.add(`v-theme--${theme}`);
+        window.readerTest.settings.setThemePreference(theme);
+        // The normal app shell sets the viewport canvas; reproduce it here.
+        document.documentElement.style.setProperty('--app-viewport-background', `rgb(${getComputedStyle(document.body).getPropertyValue('--v-theme-background')})`);
         window.readerTest.settings.fontSizeMultiplier = size;
       }, { theme, size });
       for (const layout of ['alignedLeft', 'alternatingIndent']) for (const mode of ['inline', 'breakAfterMarker']) {
