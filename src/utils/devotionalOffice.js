@@ -1,4 +1,4 @@
-import { parsePrayerMarkdown, renderPrayerMarkdown, toPrayerMarkdown } from './prayerMarkdown.js';
+import { parsePrayerMarkdown, renderPrayerInline, renderPrayerMarkdown, toPrayerMarkdown } from './prayerMarkdown.js';
 
 // Confirmed by the owner-approved five-document read-only audit on 2026-10-17.
 // The reader also checks each document's structure before selecting a profile.
@@ -83,7 +83,7 @@ const ANTIPHON = new RegExp(`^((?:[1-3]${SPACE}*)?Ант\\.(?:${SPACE}+да${SPA
 const PSALM_TITLE = /^(Псальм|Песня)\s+(.+)$/iu;
 const READING = /^Кароткае\s+чытанне(?:\s+(.+))?$/iu;
 const RESPONSE = /^Кароткі\s+рэспансорый$/iu;
-const SECTION = /^(?:пачатак|уступ|гімн|псальмодыя|кароткае чытанне(?: і рэспансорый)?|кароткі рэспансорый|песня з евангелля|песня захарыі(?: \(лк .+\))?|песня марыі(?: \(лк .+\))?|просьбы|ойча наш|малітва|заканчэнне|завяршэнне|благаслаўленне|адпуст|іншыя варыянты частак гадзіны)$/iu;
+const SECTION = /^(?:пачатак|уступ|гімн|псальмодыя|кароткае чытанне(?: і рэспансорый)?|кароткі рэспансорый|песня з евангелля|песня захарыі(?: \(лк .+\))?|песня марыі(?: \(лк .+\))?|песня сімеона(?: \(лк .+\))?|просьбы|ойча наш|малітва|заканчэнне|завяршэнне|благаслаўленне|адпуст|іншыя варыянты частак гадзіны)$/iu;
 const OFFICE_PARTS = Object.freeze([
   'Пачатак', 'Гімн', 'Псальмодыя', 'Кароткае чытанне і рэспансорый',
   null, 'Просьбы', 'Ойча наш', 'Малітва', 'Завяршэнне',
@@ -284,6 +284,20 @@ export function devotionalSpeakerHtml(block) {
   );
 }
 
+/** Responsories have one compact line per response, including legacy К.Тэкст. */
+export function devotionalResponsoryHtml(block) {
+  const lines = block.source
+    .replace(/(^|\s)((?:\*\*|__)?[КН]\.(?::)?(?:\*\*|__)?)/gu, '$1\n$2')
+    .trim().split(/\n\s*\n|\n/gu).filter(line => line.trim());
+  const replies = lines.map(line => {
+    const match = /^(?:\*\*([КН]\.:?)\*\*|__([КН]\.:?)__|([КН]\.:?))([ \t\u00a0]*)([\s\S]*)$/u.exec(line.trim());
+    if (!match) return renderPrayerInline(line);
+    return '<span data-office-speaker>' + (match[1] || match[2] || match[3])
+      + '</span>' + match[4] + renderPrayerInline(match[5]);
+  });
+  return '<p>' + replies.join('<br>\n') + '</p>\n';
+}
+
 export function devotionalHeading(section, profile) {
   if (profile === 'gadzinki') return { title: section.title, caption: '' };
   const titles = {
@@ -294,7 +308,7 @@ export function devotionalHeading(section, profile) {
     intercessions: 'Просьбы',
     prayer: 'Малітва',
   };
-  return { title: titles[section.type] || '', caption: section.type === 'canticle' ? section.title : '' };
+  return { title: titles[section.type] || '', caption: section.type === 'canticle' && !/^Песня з Евангелля$/iu.test(section.title) ? section.title : '' };
 }
 
 function hasPsalmCadence(block) {
@@ -336,7 +350,31 @@ export function devotionalPsalmHeading(block) {
 
 /** Keep one PsalmText instance per contiguous psalm/canticle body. */
 export function devotionalDisplayItems(section) {
-  if (!['psalmody', 'canticle'].includes(section.type)) return section.blocks;
+  if (!['psalmody', 'canticle'].includes(section.type)) {
+    const items = [];
+    let responsory = section.type === 'responsory';
+    for (const [index, block] of section.blocks.entries()) {
+      const reading = devotionalReadingHeading(block.text || '');
+      const responseTitle = RESPONSE.test(unmark(block.text || ''));
+      if (index === 0 && reading && devotionalReadingHeading(section.blocks[1]?.text || '')) {
+        items.push(block);
+      } else if (reading || responseTitle || (block.level === 3 && block.kind === 'section' && /^Гімн$/iu.test(block.text))) {
+        items.push({ ...block, kind: 'sectionHeading', text: reading?.label || block.text, reference: reading?.reference || '' });
+        responsory = responseTitle;
+      } else if (responsory && block.kind === 'text') {
+        const previous = items.at(-1);
+        if (previous?.kind === 'responsoryBody') {
+          previous.source += `\n${block.source}`;
+          previous.blocks.push(block);
+          previous.span[1] = block.span[1];
+        } else items.push({ ...block, kind: 'responsoryBody', blocks: [block], span: [...block.span] });
+      } else {
+        items.push(block);
+        if (index > 0 && block.level) responsory = false;
+      }
+    }
+    return items;
+  }
   const items = [];
   let inWork = false;
   let metadataRemaining = 0;

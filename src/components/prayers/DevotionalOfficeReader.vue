@@ -2,7 +2,7 @@
   <div class="liturgical-hour-column devotional-office" :data-office-profile="document.profile">
     <section v-for="section in visibleSections" :key="section.id" class="ora">
       <h2 v-if="heading(section).title" class="ora-title" :data-hour-heading="section.type === 'intro' ? '' : null">{{ heading(section).title }}</h2>
-      <p v-if="heading(section).caption" class="ora-sub devotional-office__canticle-caption">{{ heading(section).caption }}</p>
+      <h3 v-if="heading(section).caption" class="ora-sub devotional-office__canticle-caption">{{ heading(section).caption }}</h3>
       <div v-if="deadIntentions.length && section.type === 'hymn'" class="devotional-office__choices" role="group" aria-label="Намер малітвы за памерлых">
         <button
           v-for="(intention, index) in deadIntentions"
@@ -25,7 +25,12 @@
       <p v-if="deadIntentions.length && ['hymn', 'prayer'].includes(section.type) && chosenIntention && !selectedSection(section).blocks.length" class="devotional-office__context">Тэкст для гэтага намеру недаступны.</p>
       <div class="ora-text">
         <template v-for="(block, index) in displayItems(selectedSection(section))" :key="`${section.id}-${index}`">
-          <template v-if="(index === 0 && section.title) || (block.level === 1 && block.text.trim() === documentTitle.trim())" />
+          <template v-if="(index === 0 && section.title && block.kind !== 'sectionHeading') || (block.level === 1 && block.text.trim() === documentTitle.trim())" />
+          <template v-else-if="block.kind === 'sectionHeading'">
+            <h2 class="ora-title">{{ block.text }}</h2>
+            <p v-if="block.reference" class="ora-sub devotional-office__reading-reference">{{ block.reference }}</p>
+          </template>
+          <div v-else-if="block.kind === 'responsoryBody'" class="devotional-office__text devotional-office__responsory" v-html="responsoryHtml(block)" />
           <h3 v-else-if="block.kind === 'heading' || (block.level && block.kind !== 'psalmTitle')" class="ora-sub">{{ block.text }}</h3>
           <div v-else-if="block.kind === 'antiphon'" class="ora-ant">
             <span class="devotional-office__ant-label">{{ antiphon(block)?.label }}</span>{{ antiphon(block)?.gap }}<span v-html="antiphonText(block)" />
@@ -54,7 +59,7 @@ import {
   buildDevotionalOfficeDocument, devotionalAntiphon, devotionalBlockHtml,
   devotionalDeadIntentions, devotionalDeadSelection, devotionalDisplayItems,
   devotionalHeading, devotionalOfficeChoices, devotionalPsalmHeading, devotionalSelectedBlocks,
-  devotionalSpeakerHtml, devotionalSubheadingHtml,
+  devotionalSpeakerHtml, devotionalSubheadingHtml, devotionalResponsoryHtml,
 } from '@/utils/devotionalOffice';
 
 const props = defineProps({
@@ -96,6 +101,7 @@ const psalmHeading = devotionalPsalmHeading;
 const heading = section => devotionalHeading(section, document.value.profile);
 const blockHtml = devotionalBlockHtml;
 const speakerHtml = devotionalSpeakerHtml;
+const responsoryHtml = devotionalResponsoryHtml;
 const subheadingHtml = devotionalSubheadingHtml;
 const displayItems = devotionalDisplayItems;
 const antiphonText = block => markPsalmCadenceSigns(renderPrayerInline(antiphon(block)?.text || ''));
@@ -109,7 +115,8 @@ const psalmHtml = block => formatPsalmHtml(blockHtml(block));
 .devotional-office__ant-label { color: var(--rubric-color); }
 .devotional-office .ora-ant :deep(.psalm-marker) { color: var(--rubric-color); }
 .devotional-office__psalm-title { color: var(--rubric-color); text-align: center !important; font-size: inherit; font-weight: 600; margin: 1.3em 0 .55em; }
-.devotional-office__canticle-caption { margin: 0 28px; }
+.devotional-office__canticle-caption { margin: 0 28px; font-size: inherit; font-weight: inherit; }
+.devotional-office .ora-text > .ora-title { padding-inline: 0 !important; }
 .devotional-office__meta :deep(p[data-liturgical-subheading]) { margin: 0; text-align: center !important; font-size: .84em; line-height: 1.45; }
 .devotional-office__meta :deep(p[data-liturgical-subheading]:last-child) { margin-bottom: 1.15em; }
 .devotional-office :deep([data-office-speaker]) { color: var(--rubric-color); font-weight: 700; }
