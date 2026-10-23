@@ -1,6 +1,6 @@
 # Sentry (WEB): факты конфигурации, риски, варианты
 
-Дата проверки: 2026-10-17, `origin/main` `e1bfa8a`. Это аудит фактов, **не изменение**: конфигурация Sentry не менялась и не должна меняться без решения владельца (D-08). Секреты и значение DSN не читались и не выводились.
+Дата проверки: 2026-10-17, `origin/main` `e1bfa8a`; перепроверено по коду 2026-10-23 на `6e0b708` (`src/plugins/sentry.js` не менялся: `CONFIRMED BY CODE`). Это аудит фактов, **не изменение**: конфигурация Sentry не менялась и не должна меняться без решения владельца (D-08). Секреты и значение DSN не читались и не выводились.
 
 ## 1. Факты из кода (`src/plugins/sentry.js`, `@sentry/vue` 10.41.0)
 
@@ -42,6 +42,12 @@
 ## 5. Рекомендация (не применена)
 
 Вариант B + `replaysSessionSampleRate = 0`, `replaysOnErrorSampleRate = 0` (или оставить replay только на ошибках с `maskAllText`, `blockAllMedia`, но без путей), `tracesSampleRate = 0`. Это отдельный PR, который меняет поведение production; **требует вашего «да»** и сопровождающей проверки на тестовой сборке, чтобы убедиться, что ошибки по-прежнему доходят. Изменений в `src/plugins/sentry.js` в этой ветке нет.
+
+## 7. Вариант B реализован отдельным Draft (2026-10-23, NOT DEPLOYED)
+
+Логика вынесена в `src/plugins/sentryPrivacy.js`, тесты — `tests/sentry-privacy.test.mjs` (синтетические `Sentry.Event`, без сети): без `browserTracingIntegration`/`replayIntegration`, `traces=0`, `replays=0`, `sendDefaultPii=false`; `beforeSend` параметризует маршруты (по паттернам vue-router, иначе `/x/:param`), удаляет query/hash/cookies/headers/body, `user`, `extra` (сюда `logger.js` кладёт произвольные данные), UI/console-breadcrumbs; `beforeSendTransaction` возвращает `null`. Стек, тип и сообщение ошибки, release сохраняются (тест «useful error data survives»). Rollback — `git revert` коммита; production при этом не меняется, пока владелец не примет решение о слиянии и выкладке.
+
+**Остаточные риски (`UNKNOWN`/`LEGAL REVIEW REQUIRED`):** IP виден транспорту Sentry; сообщения исключений могут содержать текст, сгенерированный библиотеками — обрезаются до 500 символов, но семантически не фильтруются; регион/DPA/retention проекта Sentry не подтверждены.
 
 ## 6. Что подтвердить Sentry-аккаунтом (юридически)
 
