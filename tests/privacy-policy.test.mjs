@@ -10,7 +10,8 @@ test('privacy document is public, standalone HTML and identifies both apps', () 
   assert.match(html, /Палітыка прыватнасці/);
   assert.match(html, /MyBrev Test/);
   assert.match(html, /MIC Development/);
-  assert.match(html, /mailto:/);
+  assert.match(html, /mailto:micdev\.by@gmail\.com/);
+  assert.doesNotMatch(html, /marianchurch\.minsk@gmail\.com/);
   assert.match(html, /Sentry/);
   assert.match(html, /Firebase/);
   assert.doesNotMatch(html, /<script\b|<iframe\b|noindex|http-equiv="refresh"/i);
