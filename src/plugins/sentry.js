@@ -1,3 +1,5 @@
+import { SENTRY_PRIVACY_OPTIONS, createRouterPatternResolver, createSentryFilters } from './sentryPrivacy';
+
 const dsn = import.meta.env.VITE_SENTRY_DSN;
 const isEnabled = import.meta.env.PROD && Boolean(dsn);
 
@@ -25,17 +27,11 @@ export function initSentry(app, router) {
     Sentry.init({
       app,
       dsn,
-      integrations: [
-        Sentry.browserTracingIntegration({ router }),
-        Sentry.replayIntegration({
-          // Activation codes and individual credentials must never become
-          // network payloads in recordings, even if detail capture is enabled.
-          networkDetailDenyUrls: [/firestore\.googleapis\.com/, /identitytoolkit\.googleapis\.com/, /securetoken\.googleapis\.com/],
-        }),
-      ],
-      tracesSampleRate: 0.1,
-      replaysSessionSampleRate: 0.1,
-      replaysOnErrorSampleRate: 1.0,
+      // Variant B (errors only): no tracing or Replay integration, so navigation paths and
+      // recordings of prayer, song or Bible reading are never sent. See docs/analytics-sentry-review.md.
+      integrations: [],
+      ...SENTRY_PRIVACY_OPTIONS,
+      ...createSentryFilters(createRouterPatternResolver(router)),
       environment: import.meta.env.MODE,
     });
     flushPendingReports(Sentry);
