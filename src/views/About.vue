@@ -23,6 +23,7 @@
         <p class="about-developer">Распрацоўшчык @davin_dev</p>
       </div>
 
+      <p class="about-privacy"><a href="/privacy">Палітыка прыватнасці</a></p>
       <p class="about-version">Версія: {{ appVersion }}</p>
     </main>
   </v-container>
@@ -90,6 +91,17 @@ import { version as appVersion } from '../../package.json';
   margin: 22px 0 0;
   color: var(--nav-muted);
   font-size: 0.9em;
+}
+
+.about-privacy {
+  margin: 18px 0 0;
+  font-size: 0.96rem;
+}
+
+.about-privacy a {
+  color: var(--chrome-accent);
+  font-weight: 650;
+  text-underline-offset: 3px;
 }
 
 .about-version {
