@@ -182,11 +182,11 @@ test('report side: small cells are suppressed with k = 5; k < 2 is refused', () 
 
 test('cost model (D1 Free: 100 000 rows written / day; the guard stops at 80 000): 100 / 1000 / 3000 packets a day', () => {
   const at = (packetsPerDay, cellsPerPacket) => costModel({ packetsPerDay, cellsPerPacket });
-  assert.deepEqual([at(100, 20).rowsWritten, at(100, 20).withinBudget], [2000, true]);
-  assert.deepEqual([at(1000, 20).rowsWritten, at(1000, 20).withinBudget], [20000, true]);
-  assert.deepEqual([at(3000, 20).rowsWritten, at(3000, 20).withinBudget], [60000, true]);
-  assert.deepEqual([at(3000, 30).rowsWritten, at(3000, 30).withinBudget], [90000, false], '3000 packets of 30 cells exceed the budget: BLOCKED at this size');
-  assert.equal(at(1000, 30).maxPacketsPerDayAtThisSize, 2666);
+  assert.deepEqual([at(100, 20).rowsWritten, at(100, 20).withinBudget], [2100, true]);
+  assert.deepEqual([at(1000, 20).rowsWritten, at(1000, 20).withinBudget], [21000, true]);
+  assert.deepEqual([at(3000, 20).rowsWritten, at(3000, 20).withinBudget], [63000, true]);
+  assert.deepEqual([at(3000, 30).rowsWritten, at(3000, 30).withinBudget], [93000, false], '3000 packets of 30 cells exceed the budget: BLOCKED at this size');
+  assert.equal(at(1000, 30).maxPacketsPerDayAtThisSize, 2580);
 });
 
 test('isolation: the app does not import the prototype, no sender exists, no analytics endpoint is referenced outside docs', () => {

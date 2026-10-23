@@ -1,3 +1,4 @@
+/* global TextEncoder */
 /**
  * Pure core of the offline ingest prototype: gate -> size -> parse -> validate -> normalize -> aggregate -> store.
  * No vendor SDK, no network, no clock of its own (`env.now()` is injected), no logging of content.
@@ -20,6 +21,9 @@ export const DEFAULT_CONFIG = Object.freeze({
   maxDayAgeDays: 2, // clock skew / late delivery window (UTC days)
   dailyRowWriteBudget: 80000, // 80 % of the D1 Free 100 000 rows-written/day, see docs
 });
+
+/** Rows written besides the cells: the daily_budget upsert. Accounting assumption, NOT verified on D1 billing. */
+export const BUDGET_ROW_OVERHEAD = 1;
 
 const respond = (status, code, extra = {}) => ({ status, code, ...extra });
 const utcDay = (ms) => new Date(ms).toISOString().slice(0, 10);
@@ -51,7 +55,7 @@ export async function handleIngest(request, env) {
   if (!config.ingestEnabled) return done(STATUS.UNAVAILABLE, 'ingest_disabled'); // before anything is read or parsed
   if (request.method !== 'POST') return done(STATUS.METHOD, 'method_not_allowed');
   const bodyText = typeof request.bodyText === 'string' ? request.bodyText : '';
-  if (Buffer.byteLength(bodyText, 'utf8') > LIMITS.maxPacketBytes) return done(STATUS.TOO_LARGE, 'payload_too_large');
+  if (new TextEncoder().encode(bodyText).byteLength > LIMITS.maxPacketBytes) return done(STATUS.TOO_LARGE, 'payload_too_large');
 
   let packet;
   try { packet = JSON.parse(bodyText); } catch { return done(STATUS.BAD_REQUEST, 'bad_json'); }
@@ -66,7 +70,8 @@ export async function handleIngest(request, env) {
 
   const rows = normalizeCells(packet);
   try {
-    const result = await env.storage.addCounts({ today, rows, dailyRowWriteBudget: config.dailyRowWriteBudget });
+    // charge = one row per distinct cell + the daily_budget row itself, which is also written once per packet
+    const result = await env.storage.addCounts({ today, rows, charge: rows.length + BUDGET_ROW_OVERHEAD, dailyRowWriteBudget: config.dailyRowWriteBudget });
     if (!result.ok) return done(STATUS.UNAVAILABLE, 'budget_exhausted');
   } catch {
     return done(STATUS.UNAVAILABLE, 'storage_unavailable'); // the storage rolled back; the client drops the packet
@@ -74,19 +79,25 @@ export async function handleIngest(request, env) {
   return done(STATUS.OK, 'ok', { cells: rows.length });
 }
 
-/** Retention: delete counters older than `retentionDays` UTC days (a primary-key range delete). */
-export async function cleanup(storage, nowMs, retentionDays) {
+/**
+ * Retention: delete counters of UTC days strictly before `today - retentionDays` (a primary-key range delete).
+ * The cutoff day itself is kept, so retentionDays + 1 calendar days are present; the day is the first component of the key.
+ */
+export async function cleanup(storage, nowMs, retentionDays, { maxDayAgeDays = DEFAULT_CONFIG.maxDayAgeDays } = {}) {
+  // a retention not longer than the late-delivery window would let a late packet re-create a day that was just deleted
+  if (!Number.isInteger(retentionDays) || retentionDays <= maxDayAgeDays) throw new Error('retentionDays must be an integer greater than maxDayAgeDays');
   const cutoff = utcDay(nowMs - retentionDays * 86400000);
   return storage.deleteBefore(cutoff);
 }
 
-/** Cost model for the D1 Free plan: rows written per UTC day, one upsert per distinct cell per packet. */
-export function costModel({ packetsPerDay, cellsPerPacket, budget = DEFAULT_CONFIG.dailyRowWriteBudget, hardLimit = 100000 }) {
-  const rowsWritten = packetsPerDay * cellsPerPacket;
+/** Cost model for the D1 Free plan: rows written per UTC day = one upsert per distinct cell + one budget row per packet (ASSUMPTION, not billing-verified). */
+export function costModel({ packetsPerDay, cellsPerPacket, budget = DEFAULT_CONFIG.dailyRowWriteBudget, hardLimit = 100000, overheadRowsPerPacket = BUDGET_ROW_OVERHEAD }) {
+  const rowsPerPacket = cellsPerPacket + overheadRowsPerPacket;
+  const rowsWritten = packetsPerDay * rowsPerPacket;
   return {
     packetsPerDay, cellsPerPacket, rowsWritten,
     shareOfFreeLimit: Number((rowsWritten / hardLimit).toFixed(3)),
     withinBudget: rowsWritten <= budget,
-    maxPacketsPerDayAtThisSize: Math.floor(budget / cellsPerPacket),
+    maxPacketsPerDayAtThisSize: Math.floor(budget / rowsPerPacket),
   };
 }
