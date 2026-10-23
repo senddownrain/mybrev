@@ -84,13 +84,19 @@
         "destination": "/manifest.webmanifest"
       },
       {
+        "source": "/privacy",
+        "destination": "/privacy.html"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
     ]
   },
   "emulators": {
-    "auth": { "port": 9099 },
+    "auth": {
+      "port": 9099
+    },
     "firestore": {
       "port": 8089
     },
