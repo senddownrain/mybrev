@@ -91,10 +91,13 @@ export default defineConfig(({ command, mode }) => {
       workbox: {
         importScripts: ['/priest-cache-cleanup.js'],
         cleanupOutdatedCaches: true,
+        // Legal page must bypass the SPA navigation fallback in installed PWAs.
+        navigateFallbackDenylist: [/^\/privacy(?:\.html)?\/?$/],
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2,webmanifest}'],
         // Admin/login code remains route-lazy and network-loaded. It must not
         // consume every reader's offline install budget.
         globIgnores: [
+          'privacy.html', // Always fetch the current legal text from Hosting.
           'app-icon-master.png',
           'maria-menu-logo.svg',
           '**/vendor-firebase-auth-*.js',

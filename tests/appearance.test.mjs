@@ -77,6 +77,20 @@ test('first paint, saved theme, runtime status bar and PWA manifest agree', () =
   assert.match(config, /background_color: APP_THEME_COLORS\.light\.background/);
 });
 
+test('document canvas and body use the selected PWA appearance in both themes', () => {
+  const html = read('index.html');
+  const css = read('src/styles/main.scss');
+  assert.match(html, /:root\s*\{\s*--app-viewport-background:\s*#F5F1E8;/);
+  assert.match(html, /:root\[data-appearance="dark"\]\s*\{\s*--app-viewport-background:\s*#0F0E0C;/);
+  assert.match(html, /background-color:\s*var\(--app-viewport-background\)/);
+  assert.match(html, /color-scheme:\s*light/);
+  assert.match(html, /color-scheme:\s*dark/);
+  assert.match(css, /html,\s*body\s*\{\s*background-color:\s*var\(--app-viewport-background,\s*#F5F1E8\)/);
+  for (const theme of ['light', 'dark']) {
+    assert.ok(html.includes(APP_THEME_COLORS[theme].background), theme);
+  }
+});
+
 test('purple literals only belong to the liturgical palette, never application chrome', () => {
   const root = new URL('../src/', import.meta.url);
   const files = readdirSync(root, { recursive: true }).filter((file) => /\.(vue|js|scss|css)$/.test(file));
