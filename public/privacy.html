@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="be">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Палітыка прыватнасці MyBrev і MyBrev Test: апрацоўка даных у вэб-, Android- і iOS-праграмах.">
+  <meta name="robots" content="index, follow">
+  <meta name="color-scheme" content="light dark">
+  <title>Палітыка прыватнасці — MyBrev</title>
+  <link rel="icon" href="/favicon.ico">
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.65; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f5f1e8; color: #29241f; }
+    main { width: min(100% - 36px, 780px); margin: 32px auto 64px; padding: clamp(24px, 5vw, 52px); background: #fffcf8; border: 1px solid #dfd6ca; border-radius: 24px; box-shadow: 0 12px 36px #3b2c1b12; }
+    a { color: #795131; overflow-wrap: anywhere; text-underline-offset: 3px; }
+    a:focus-visible { outline: 3px solid #b88c5d; outline-offset: 3px; }
+    header { text-align: center; margin-bottom: 32px; }
+    .brand { display: inline-flex; gap: 8px; align-items: center; color: #795131; font-weight: 650; text-decoration: none; }
+    .brand img { width: 34px; height: 34px; }
+    h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.8rem, 5vw, 2.5rem); line-height: 1.2; margin: 22px 0 8px; }
+    h2 { font-size: 1.18rem; margin: 30px 0 8px; }
+    p, ul { margin: 8px 0 14px; }
+    ul { padding-left: 1.35rem; }
+    .date, .muted { color: #6e665d; }
+    footer { margin-top: 34px; border-top: 1px solid #dfd6ca; padding-top: 20px; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #0f0e0c; color: #ece4db; }
+      main { background: #24201c; border-color: #52473c; box-shadow: none; }
+      a, .brand { color: #e9b983; }
+      .date, .muted { color: #c3b7a9; }
+      footer { border-color: #52473c; }
+    }
+    @media (max-width: 520px) { main { width: 100%; margin: 0; min-height: 100dvh; border: 0; border-radius: 0; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a class="brand" href="/" aria-label="MyBrev — на галоўную"><img src="/maria-menu-logo.svg" alt="" width="34" height="34"> MyBrev</a>
+      <h1>Палітыка прыватнасці</h1>
+      <p>MyBrev · MyBrev Test · вэб-праграма, Android і iOS</p>
+      <p class="date">Апошняе абнаўленне: 23 кастрычніка 2026 г.</p>
+    </header>
+
+    <p>Гэтая палітыка тлумачыць, як апрацоўваюцца даныя пры карыстанні каталіцкім малітоўнікам MyBrev (уключаючы тэставую версію <strong>MyBrev Test</strong>). Яна распаўсюджваецца на вэб-версію, усталяваную PWA і мабільныя праграмы.</p>
+
+    <h2>1. Хто адказвае за праграму і як звязацца</h2>
+    <p>Распрацоўшчык у Google Play: <strong>MIC Development</strong>. Праект звязаны з парафіяй Беззаганнага Зачацця Найсвяцейшай Панны Марыі (айцы марыяне, Мінск).</p>
+    <p>Па пытаннях прыватнасці, доступу, выпраўлення або выдалення даных пішыце на <a href="mailto:micdev.by@gmail.com">micdev.by@gmail.com</a>. Сайт парафіі: <a href="https://mic-minsk.by/" rel="noopener noreferrer">mic-minsk.by</a>.</p>
+
+    <h2>2. Якія даныя выкарыстоўваюцца</h2>
+    <ul>
+      <li><strong>Чытанне і налады.</strong> Для звычайнага чытання малітваў рэгістрацыя не патрэбная. Абраная тэма, шрыфт, закладкі, улюбёныя тэксты, асабістыя малітвы і спампаваныя матэрыялы могуць захоўвацца лакальна на прыладзе (у тым ліку ў памяці браўзера).</li>
+      <li><strong>Праца сайта і абнаўленне тэкстаў.</strong> Пры злучэнні з серверам хостынг і Firebase/Firestore тэхнічна апрацоўваюць сеткавыя запыты, у тым ліку IP-адрас і службовую інфармацыю запыту, неабходную для дастаўкі змесціва і бяспекі.</li>
+      <li><strong>Доступ для святароў і адміністраванне.</strong> Калі карыстальнік асобна актывуе закрыты раздзел, Firebase Anonymous Authentication стварае тэхнічны ідэнтыфікатар доступу. Для дазволу ў Firestore могуць захоўвацца назва і тып прылады, пазнака, стан доступу і даты актыўнасці. Для звычайных чытачоў гэта не патрабуецца.</li>
+      <li><strong>Звароты.</strong> Калі вы пішаце нам, мы атрымліваем адрас электроннай пошты і звесткі, якія вы самі дасылаеце.</li>
+    </ul>
+
+    <h2>3. Дыягностыка і аналітыка</h2>
+    <p>У вэб-версіі сістэма <strong>Sentry</strong> можа быць уключана для выяўлення памылак і праблем з хуткадзейнасцю. У гэтым выпадку яна можа атрымліваць тэхнічныя звесткі пра памылкі, старонкі і дзеянні ў інтэрфейсе, а таксама выбарачныя запісы сеансаў працы. Гэта функцыя залежыць ад налад вытворчай версіі. Не дасылайце праз формы канфідэнцыйную інфармацыю, калі гэта не патрабуецца.</p>
+    <p>Праект прадугледжвае тэставы <strong>лакальны</strong> падлік выкарыстання без аўтаматычнай адпраўкі аналітычных падзей на сервер. У мабільнай праграме не падключаны рэкламныя SDK, Firebase Analytics або Sentry. Калі спосаб збору зменіцца, палітыка і неабходныя запыты згоды будуць абноўлены да ўключэння адпаведных функцый.</p>
+
+    <h2>4. Каму могуць перадавацца даныя</h2>
+    <p>Для працы сэрвісу выкарыстоўваюцца <strong>Google Firebase / Google Cloud</strong> (хостынг, база змесціва і тэхнічная аўтарызацыя для абмежаваных функцый), а ў вэб-версіі — <strong>Sentry</strong>, калі дыягностыка актывавана. Вэб-версія можа запытваць шрыфты з <strong>Google Fonts</strong>. Пры пераходзе на знешні сайт дзейнічае яго ўласная палітыка. Мы не прадаём асабістыя даныя і не выкарыстоўваем рэкламнае адсочванне паміж праграмамі.</p>
+
+    <h2>5. Для чаго і як доўга захоўваюцца даныя</h2>
+    <p>Даныя выкарыстоўваюцца для паказу малітоўных тэкстаў, захавання выбраных карыстальнікам параметраў, абнаўлення змесціва, абароны абмежаваных раздзелаў, апрацоўкі зваротаў і, пры ўключэнні, пошуку памылак. Лакальныя даныя звычайна захоўваюцца да іх ачысткі ў праграме ці на прыладзе. Серверныя запісы доступу захоўваюцца пакуль патрэбныя для працы функцыі і абароны сэрвісу; тэхнічныя журналы захоўваюцца ў межах налад адпаведных пастаўшчыкоў. Абгрунтаваны запыт на выдаленне будзе разгледжаны з улікам тэхнічных магчымасцяў і патрабаванняў закону.</p>
+
+    <h2>6. Бяспека і ваш выбар</h2>
+    <p>Сеткавыя злучэнні выкарыстоўваюць HTTPS, а доступ да абмежаваных запісаў рэгулюецца правіламі Firebase. Вы можаце змяняць налады праграмы, выдаляць лакальныя даныя сродкамі прылады або звярнуцца да нас наконт даных, звязаных з вашым зваротам ці дазволам доступу. Каб запытаць доступ, выпраўленне або выдаленне даных, выкарыстоўвайце электронны адрас вышэй.</p>
+
+    <h2>7. Змены палітыкі</h2>
+    <p>Пры істотных зменах у працы праграмы палітыка будзе абноўлена; дата апошняга абнаўлення пазначана ўверсе гэтай старонкі. У выпадках, калі закон патрабуе асобнага паведамлення або згоды, мы прадугледзім іх дадаткова.</p>
+
+    <footer>
+      <p class="muted">Гэта пастаянная агульнадаступная старонка прыватнасці MyBrev і MyBrev Test. Для яе прагляду не патрэбныя ўліковы запіс, JavaScript або ўсталяванне праграмы.</p>
+      <a href="/">Вярнуцца да MyBrev</a>
+    </footer>
+  </main>
+</body>
+</html>
