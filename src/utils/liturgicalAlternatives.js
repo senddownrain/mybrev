@@ -2,7 +2,14 @@ import { parse } from 'node-html-parser';
 import { removeBreakAfterPsalmCadenceSign } from './liturgicalHtml.js';
 
 const MAX_TITLE_LENGTH = 56;
+// A reading's title is a work or Scripture reference, longer than a hymn's first verse.
+const MAX_READING_TITLE_LENGTH = 84;
 const ALTERNATIVE_MARKER = /^\s*А\s*бо(?:\s+(?:інш(?:ае|ая|ыя)|яшчэ))?\s*:/iu;
+// Readings only: «Або іншае, пра святую, якая жыла ў сужэнстве:» and «Іншае, пра святую …:» also open a new choice.
+const READING_QUALIFIED_MARKER = /^\s*(?:А\s*бо\s+)?Інш(?:ае|ая|ыя)\s*,[^:]{1,100}:\s*$/iu;
+// D-1: the volumes print «Выбіраюцца найбольш адпаведныя тэксты … з Агульных тэкстаў …, с. N» instead of a text.
+// It is the rubric of the choice, not a reading: the reader shows it as a note above the readings.
+const READING_REFERENCE = /^\s*Выбіраюцца\s+найбольш\s+адпаведныя/iu;
 // Category headings in the common texts use "Пра", "За" or "Для". Treating
 // every "У …:" paragraph as a heading also caught the narrative Scripture
 // phrase "У тыя дні:" and split the Holy Innocents reading in two.
@@ -24,6 +31,8 @@ function directElements(root) {
 
 function isMarkerText(text) {
   return ALTERNATIVE_MARKER.test(text)
+    || READING_QUALIFIED_MARKER.test(text)
+    || READING_REFERENCE.test(text)
     || CATEGORY_MARKER.test(text)
     || INSTRUCTION_MARKER.test(text);
 }
@@ -31,6 +40,7 @@ function isMarkerText(text) {
 function isAlternativeBoundary(element, kind) {
   if (element.rawTagName !== 'p') return false;
   const text = textOf(element.toString());
+  if (kind === 'office-reading' && (READING_QUALIFIED_MARKER.test(text) || READING_REFERENCE.test(text))) return true;
   // Scripture verses beginning "Пра ...:" are not alternative-category headings.
   // Keep genuine explicit alternatives (<hr>, "Або:") available for psalms.
   return ALTERNATIVE_MARKER.test(text)
@@ -185,16 +195,37 @@ function categoryTitle(paragraphs) {
   return '';
 }
 
-function readingTitle(paragraphs) {
+const SECTION_HEADING = /^(?:Першае|Другое)\s+чытанне$/iu;
+const AUTHOR_LINE = /^(?:св\.|бл\.|Св\.|Бл\.)\s/u;
+const looksLikeReference = (text) => text.length <= 90 && /\d/u.test(text) && !/^\(|[A-Za-z]{3}/u.test(text)
+  && (/(?:пар\.|[А-ЯЁІЎ][а-яёіў]{0,5})\s*\d/u.test(text) || /\p{L}\.?\s*\d{1,3}\s*[,:–-]\s*\d/u.test(text));
+// The source HTML sometimes glues the book and the chapter («Прыпавесцяў31, 10-31»).
+const spaceBookAndNumber = (text) => text.replace(/([а-яёіўА-ЯЁІЎ.])(\d)/gu, '$1 $2');
+
+function readingTitle(paragraphs, { office = false } = {}) {
   for (const paragraph of paragraphs.slice(0, 4)) {
     const match = paragraph.match(/Кароткае\s+чытанне\s+(.{1,42})$/iu);
     if (match) return shorten(match[1]);
   }
-  for (const paragraph of paragraphs.slice(0, 4)) {
-    if (/\d/u.test(paragraph) && /(?:пар\.|[А-ЯЁІЎ][а-яёіў]{0,5})\s*\d/u.test(paragraph)) {
-      return shorten(paragraph.replace(/^(?:Першае|Другое)\s+чытанне\s*/iu, ''));
-    }
+  const body = paragraphs
+    // «Або іншае: Казанне св. Аўгустына» keeps its title after the marker; a bare marker is dropped.
+    .map((text) => text.replace(ALTERNATIVE_MARKER, '').trim())
+    .filter((text) => text && !READING_QUALIFIED_MARKER.test(text) && !READING_REFERENCE.test(text) && !SECTION_HEADING.test(text)
+      && !(CATEGORY_MARKER.test(text) && /:\s*$/u.test(text)));
+  const limit = office ? MAX_READING_TITLE_LENGTH : MAX_TITLE_LENGTH;
+  // A Patristic or magisterial text: its title line followed by the author line («св. Яна Хрызастома, біскупа»).
+  if (office && body[0] && !/\d/u.test(body[0]) && AUTHOR_LINE.test(body[1] || '') && !/\d/u.test(body[1])) {
+    return shorten(`${body[0]} ${body[1]}`, limit);
   }
+  for (let index = 0; index < Math.min(body.length, 4); index += 1) {
+    const paragraph = body[index];
+    if (!looksLikeReference(paragraph)) continue;
+    // «Першае пасланне» / «св. апостала Пятра 3, 1-6» are two paragraphs of one title.
+    const previous = body[index - 1];
+    const joined = index > 0 && previous.length <= 40 && !/\d/u.test(previous) ? `${previous} ${paragraph}` : paragraph;
+    return shorten(spaceBookAndNumber(joined.replace(/^(?:Першае|Другое)\s+чытанне\s*/iu, '')), limit);
+  }
+  if (office && body[0] && !/^\(/u.test(body[0])) return shorten(body[0].replace(/\s*\([^)]*\)\s*$/u, ''), limit);
   return '';
 }
 
@@ -202,10 +233,15 @@ function optionTitle(option, index, kind) {
   if (option.explicitTitle) return shorten(option.explicitTitle);
   const paragraphs = paragraphTexts(option.html);
   const category = categoryTitle(paragraphs);
+  if (kind === 'office-reading') {
+    // The reading itself names the choice; the category («Пра святога, які жыў у сужэнстве») only qualifies it.
+    const reading = readingTitle(paragraphs, { office: true });
+    if (reading) return shorten(category ? `${reading} · ${category.charAt(0).toLocaleLowerCase('be')}${category.slice(1)}` : reading, MAX_READING_TITLE_LENGTH);
+  }
   if (category) return category;
 
-  if (kind === 'reading') {
-    const reference = readingTitle(paragraphs);
+  if (kind === 'reading' || kind === 'office-reading') {
+    const reference = readingTitle(paragraphs, { office: kind === 'office-reading' });
     if (reference) return reference;
   }
   if (kind === 'hymn') {
@@ -225,8 +261,26 @@ function optionTitle(option, index, kind) {
   return `Варыянт ${index + 1}`;
 }
 
+/** A group that holds only the volume's «Выбіраюцца найбольш адпаведныя тэксты …» sentence (no reading text). */
+function isReadingReference(html) {
+  const paragraphs = paragraphTexts(html);
+  return paragraphs.length > 0 && paragraphs.length <= 2 && READING_REFERENCE.test(paragraphs[0]);
+}
+
 export function hasLiturgicalAlternatives(html) {
   return getLiturgicalAlternatives(html).length > 1;
+}
+
+/**
+ * Readings of an Office as the reader shows them: the volume's reference sentence(s) as a note and the
+ * legal readings to choose from. Nothing is added or reworded; with no real choice `options` has one item.
+ * A text that is only a reference keeps it as the single option (the old behaviour).
+ */
+export function getReadingChoices(html) {
+  const all = getLiturgicalAlternatives(html, 'office-reading');
+  const notes = all.filter((option) => option.reference);
+  const options = all.filter((option) => !option.reference);
+  return options.length ? { notes, options } : { notes: [], options: all.map(({ reference, ...rest }) => (void reference, rest)) };
 }
 
 export function getLiturgicalAlternatives(html, kind = 'generic') {
@@ -237,10 +291,14 @@ export function getLiturgicalAlternatives(html, kind = 'generic') {
     ? gospelCycleAlternatives(root) || structuredAlternatives(root)
     : structuredAlternatives(root);
   const rawOptions = structured || splitAtRules(root, kind).map((optionHtml) => ({ html: optionHtml }));
-  const options = uniqueOptions(rawOptions).map((option, index) => ({
-    html: removeBreakAfterPsalmCadenceSign(option.html),
-    title: optionTitle(option, index, kind),
-  }));
+  const options = uniqueOptions(rawOptions).map((option, index) => {
+    const reference = kind === 'office-reading' && isReadingReference(option.html);
+    return {
+      html: removeBreakAfterPsalmCadenceSign(option.html),
+      title: reference ? 'Адсылка' : optionTitle(option, index, kind),
+      ...(reference ? { reference: true } : {}),
+    };
+  });
   const titleCounts = new Map();
   options.forEach((option) => {
     const count = (titleCounts.get(option.title) || 0) + 1;

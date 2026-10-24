@@ -67,8 +67,8 @@
           :ps3="day.officeOfReadingsPs3"
         />
         <resp :text="day.officeOfReadingsVers" />
-        <lectio title="Першае чытанне" :text="day.officeOfReadingsR1" />
-        <lectio title="Другое чытанне" :text="day.officeOfReadingsR2" />
+        <lectio title="Першае чытанне" :text="day.officeOfReadingsR1" field="officeOfReadingsR1" />
+        <lectio title="Другое чытанне" :text="day.officeOfReadingsR2" field="officeOfReadingsR2" />
         <te-deum v-if="showTeDeum" />
 
         <psalms

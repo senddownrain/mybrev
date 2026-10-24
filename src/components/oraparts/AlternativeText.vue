@@ -1,5 +1,13 @@
 <template>
   <div class="alternative-text">
+    <!-- D-1: the volume's «Выбіраюцца найбольш адпаведныя тэксты …» sentence is the rubric of the choice, not a reading -->
+    <div
+      v-for="(note, noteIndex) in notes"
+      :key="`note-${noteIndex}`"
+      class="alternative-reference"
+      role="note"
+      v-html="note.html"
+    ></div>
     <div v-if="showPicker && options.length > 1" class="alternative-picker mb-5">
       <div class="alternative-picker__label">{{ ariaLabel }}</div>
       <div class="alternative-tabs" role="tablist" :aria-label="ariaLabel">
@@ -13,7 +21,9 @@
           :class="{ 'alternative-tab--active': activeIndex === index }"
           :aria-selected="activeIndex === index"
           :aria-controls="`${instanceId}-panel`"
+          :tabindex="activeIndex === index ? 0 : -1"
           @click="selectOption(index)"
+          @keydown="onTabKeydown($event, index)"
         >
           <span class="alternative-tab__number">{{ index + 1 }}</span>
           <span class="alternative-tab__title">{{ option.title }}</span>
@@ -37,7 +47,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, ref, watch } from 'vue';
+import { computed, getCurrentInstance, nextTick, ref, watch } from 'vue';
 import { formatIntercessions, getLiturgicalAlternatives } from '@/utils/liturgicalAlternatives';
 
 const props = defineProps({
@@ -47,14 +57,20 @@ const props = defineProps({
   modelValue: { type: Number, default: undefined },
   showPicker: { type: Boolean, default: true },
 });
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'options']);
 const internalIndex = ref(0);
-const activeIndex = computed(() => (
-  Number.isInteger(props.modelValue) ? props.modelValue : internalIndex.value
-));
+const activeIndex = computed(() => {
+  const index = Number.isInteger(props.modelValue) ? props.modelValue : internalIndex.value;
+  return Math.max(0, Math.min(index, options.value.length - 1));
+});
 const instanceId = `alternative-${getCurrentInstance()?.uid ?? 0}`;
 
-const options = computed(() => getLiturgicalAlternatives(props.text, props.kind));
+const allOptions = computed(() => getLiturgicalAlternatives(props.text, props.kind));
+// Reference sentences of the volume are shown as a note; a text that is only a reference stays one reading.
+const hasChoices = computed(() => allOptions.value.some((option) => !option.reference));
+const notes = computed(() => (hasChoices.value ? allOptions.value.filter((option) => option.reference) : []));
+const options = computed(() => (hasChoices.value ? allOptions.value.filter((option) => !option.reference) : allOptions.value));
+watch(options, (list) => emit('options', list.length), { immediate: true });
 
 const activeOption = computed(() => options.value[activeIndex.value] || options.value[0] || null);
 const displayedHtml = computed(() => {
@@ -66,6 +82,17 @@ watch(() => props.text, () => {
   internalIndex.value = 0;
   if (Number.isInteger(props.modelValue)) emit('update:modelValue', 0);
 });
+
+async function onTabKeydown(event, index) {
+  const last = options.value.length - 1;
+  const target = { ArrowRight: index >= last ? 0 : index + 1, ArrowDown: index >= last ? 0 : index + 1,
+    ArrowLeft: index <= 0 ? last : index - 1, ArrowUp: index <= 0 ? last : index - 1, Home: 0, End: last }[event.key];
+  if (target === undefined) return;
+  event.preventDefault();
+  selectOption(target);
+  await nextTick();
+  document.getElementById(`${instanceId}-tab-${target}`)?.focus();
+}
 
 function selectOption(index) {
   internalIndex.value = index;
@@ -79,6 +106,20 @@ function selectOption(index) {
   border: 1px solid var(--nav-border);
   border-radius: 18px;
   background: rgba(var(--v-theme-on-surface), 0.025);
+}
+
+.alternative-reference {
+  margin: 0 0 14px;
+  padding: 10px 13px;
+  border-left: 3px solid var(--chrome-accent);
+  border-radius: 4px 12px 12px 4px;
+  background: rgba(var(--v-theme-on-surface), 0.035);
+  font-size: calc(0.92rem * var(--font-size-multiplier, 1));
+  line-height: 1.5;
+}
+
+.alternative-reference :deep(p) {
+  margin: 0;
 }
 
 .alternative-picker__label {
