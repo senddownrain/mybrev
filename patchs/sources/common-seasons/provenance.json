@@ -8004,9 +8004,9 @@
           4330,
           4358
         ],
-        "method": "render",
+        "method": "render+reference-set",
         "kind": "reading1",
-        "sha256": "be8243d41a92b2e212b3ea5392016e723b576c2142e4a904ef6d7cbc3525bbd5"
+        "sha256": "13be835c17c12b8852e9fb79d66635cd01ef851942c20f740468a484612c785d"
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -8087,9 +8087,9 @@
           4330,
           4358
         ],
-        "method": "render",
+        "method": "render+reference-set",
         "kind": "reading1",
-        "sha256": "be8243d41a92b2e212b3ea5392016e723b576c2142e4a904ef6d7cbc3525bbd5"
+        "sha256": "13be835c17c12b8852e9fb79d66635cd01ef851942c20f740468a484612c785d"
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -8160,9 +8160,9 @@
           4779,
           4805
         ],
-        "method": "render",
+        "method": "render+reference-set",
         "kind": "reading1",
-        "sha256": "468d30589e5a9e239cc0583e9b6884b02b11b4fa2c85255eaa8264a3e9433d64"
+        "sha256": "b82e7cb1aade78c3beeb6fa023d578ae020ead5d56806f1f9f5400010a73f6e8"
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -8334,9 +8334,9 @@
           4779,
           4805
         ],
-        "method": "render",
+        "method": "render+reference-set",
         "kind": "reading1",
-        "sha256": "b19ccfb14c761255462c7a9eafad2e95ecbc6ce120bc8b2e08ff48d39e872f98"
+        "sha256": "f7f2efaefd6489073b15b4b82b897ed3c79a76701daf2597a099781b816f1f1a"
       },
       "officeOfReadingsR2": {
         "volume": "II",

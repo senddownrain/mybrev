@@ -436,6 +436,7 @@ export function analyzeCorpus(corpus) {
   }
   propagateReferences({ corpus, matrix, variants });
   completeReferenceSets({ matrix, variants, corpus });
+  completeReferenceReadings({ matrix, variants, corpus });
   propagateInheritance({ corpus, matrix, variants });
   markSeasonalVolumeAgreement({ corpus, matrix });
   return { matrix, variants, review, alleluia, typos };
@@ -577,6 +578,36 @@ function completeReferenceSets({ matrix, variants, corpus }) {
     own.value = joined; own.hash = sha(JSON.stringify(joined));
     const cell = matrix.find((c) => c.common === 'holy-women' && c.field === 'officeOfReadingsR2' && c.season === season);
     if (cell) cell.note = 'the volume prints only the cross-reference to the Common of holy men; the season shows the volume\'s sentence followed by the texts of that Common of the same volume (the legal set, read-only choice); the Pius XII address is Volume III only';
+  }
+}
+
+/**
+ * D-1, owner decision 2026-10-24: the first reading of a holy woman prints the same reference («Выбіраюцца найбольш
+ * адпаведныя тэксты …, с. N») followed by the readings specific to a holy woman. The season's text is the volume's own text
+ * of the field (rendered as printed); the legal set the reference points to, the first readings of the Common of holy men
+ * of the SAME volume, is inserted right after the reference sentence, exactly where Volume III's base now has them.
+ * Nothing else is added or reworded.
+ */
+function completeReferenceReadings({ matrix, variants, corpus }) {
+  const SOURCE = { common: 'holy-men', field: 'officeOfReadingsR1' };
+  for (const season of SEASONS) {
+    const own = variants.get('holy-women')?.[season]?.officeOfReadingsR1;
+    if (!own) continue;
+    const blocks = (Array.isArray(own.value) ? own.value.join('\n') : own.value).split('\n');
+    const at = blocks.findIndex((b) => REFERENCE_SENTENCE.test(htmlToPlain(b).replace(/\s+/g, ' ').trim()));
+    const menValue = variants.get(SOURCE.common)?.[season]?.[SOURCE.field]?.value ?? corpus.base.get(SOURCE.common)?.[SOURCE.field];
+    if (at < 0 || !menValue || blocks.some((b) => /<hr\s*\/?>/u.test(b))) continue;
+    // Once the field has a rule (<hr />) the reader splits only at rules, so every further printed alternative gets its own.
+    const tail = [];
+    blocks.slice(at + 1).forEach((block) => {
+      if (/^(?:Або\s+)?Інш(?:ае|ая|ыя)\s*,/iu.test(htmlToPlain(block).replace(/\s+/g, ' ').trim()) && tail.length && tail.at(-1) !== '<hr />') tail.push('<hr />');
+      tail.push(block);
+    });
+    const joined = [...blocks.slice(0, at + 1), '<hr />', (Array.isArray(menValue) ? menValue.join('\n') : menValue).trim(), '<hr />', ...tail].join('\n');
+    own.value = joined; own.hash = sha(JSON.stringify(joined)); own.method = `${own.method}+reference-set`;
+    const cell = matrix.find((c) => c.common === 'holy-women' && c.field === SOURCE.field && c.season === season);
+    if (cell) cell.method = own.method;
+    if (cell) cell.note = `${cell.note ? `${cell.note}; ` : ''}the reference sentence is followed by the first readings of the Common of holy men of the same volume (the legal set, D-1), then the readings specific to a holy woman as printed`;
   }
 }
 

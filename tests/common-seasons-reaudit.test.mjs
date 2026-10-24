@@ -404,7 +404,7 @@ test('NR-001: the Alleluia a variant gains is exactly the number of annotated el
     const [common, field, season] = key.split('.');
     const info = analysis.variants.get(common)[season]?.[field];
     if (!info) { assert.equal(list.every((a) => a.already), true, `${key}: base already has the Alleluia`); return; }
-    if (info.method === 'render' || String(info.method).startsWith('inherit')) return;
+    if (info.method === 'render' || String(info.method).startsWith('inherit') || /reference-set/u.test(info.method)) return;
     assert.equal(count(info.value) - count(baseOf(common, field)), list.filter((a) => !a.already).length, key);
     checked += 1;
   });
@@ -568,4 +568,73 @@ test('the committed audit and the base-corrections ledger are what the parser re
   assert.equal(read('common-seasons-audit.json'), `${JSON.stringify(audit, null, 2)}\n`);
   assert.equal(read('common-seasons-audit.md'), renderMarkdown(audit));
   assert.equal(read('common-seasons-base-corrections.md'), renderBaseCorrectionsMarkdown(audit));
+});
+
+// ------------------------------------------------------------------------------------------------ D-1: the reference is the set of legal readings
+
+// «аллелюя»: the accepted Easter rule (NR-001); the stored HTML glues a book and a chapter in places («Прыпавесцяў31»)
+const LABELS_D1 = new Set(['першае', 'другое', 'чытанне', 'аллелюя']);
+const significantD1 = (text) => tokensOf(text.replace(/(\p{L})(\d)/gu, '$1 $2')).filter((t) => !LABELS_D1.has(t));
+const sections = (html) => (Array.isArray(html) ? html.join('\n') : html).split(/\n?<hr \/>\n?/u);
+
+test('D-1 (owner decision 2026-10-24): the first reading of a holy woman in a season = the volume\'s reference, the first readings of holy men of the SAME volume, then the readings printed for a holy woman', () => {
+  for (const season of SEASONS) {
+    const women = variant('holy-women', season, 'officeOfReadingsR1');
+    const men = variant('holy-men', season, 'officeOfReadingsR1') ?? baseOf('holy-men', 'officeOfReadingsR1');
+    assert.ok(women.includes(men.trim()), `${season}: the holy-men readings of the same volume are inserted unchanged`);
+    const parts = sections(women);
+    const menCount = sections(men).length;
+    const [reference] = parts;
+    const insertedMen = parts.slice(1, 1 + menCount).join('\n<hr />\n');
+    const rest = parts.slice(1 + menCount);
+    assert.match(plain(reference), /^Выбіраюцца найбольш адпаведныя тэксты .* святых мужчын, с\. \d+-\d+\.$/u, season);
+    assert.equal(insertedMen.trim(), men.trim(), season);
+    // what remains is exactly the section the volume prints (reference + readings of a holy woman), word for word
+    const volume = SEASON_VOLUME[season];
+    const printed = comparableText(corpus.volumes[volume].commons.get('holy-women').fields.get('officeOfReadingsR1'), season);
+    const remaining = [reference, ...rest].join('\n');
+    assert.deepEqual(tokenDiff(significantD1(printed), significantD1(plain(remaining))).filter((x) => x.op !== '='), [], `${season}: nothing added or lost`);
+    // every legal reading is its own alternative (the reader splits only at rules)
+    assert.equal(rest.length, 2, `${season}: Prov 31 and 1 Pet 3 are two alternatives`);
+    assert.match(plain(rest[0]), /Прыпавесцяў Саламона 31, 10-31/u);
+    assert.match(plain(rest[1]), /Першае пасланне св\. апостала Пятра 3, 1-6\. 8-17/u);
+  }
+  assert.equal(analysis.variants.get('holy-women').advent.officeOfReadingsR1.method, 'render+reference-set');
+});
+
+test('D-1: Volume III base of holy-women (Ordinary Time) offers the holy-men readings the reference points to, then the printed readings for a holy woman, word for word', () => {
+  const printedOf = (field) => comparableText(corpus.volumes.III.commons.get('holy-women').fields.get(field), null);
+  const r1 = baseOf('holy-women', 'officeOfReadingsR1');
+  const men1 = baseOf('holy-men', 'officeOfReadingsR1').trim();
+  assert.ok(r1.includes(men1));
+  const parts1 = sections(r1);
+  const menCount1 = sections(men1).length;
+  const [reference1] = parts1;
+  const insertedMen1 = parts1.slice(1, 1 + menCount1).join('\n<hr />\n');
+  const [prov, pet, ...extra1] = parts1.slice(1 + menCount1);
+  assert.equal(extra1.length, 0);
+  assert.match(plain(reference1), /с\. 1580-1583\.$/u);
+  assert.equal(insertedMen1.trim(), men1);
+  assert.match(plain(prov), /^Іншае, пра святую, якая жыла ў сужэнстве: Кніга Прыпавесцяў/u);
+  assert.match(plain(pet), /^Або іншае, таксама пра святую: Першае пасланне св\. апостала Пятра 3, 1-6\. 8-17/u);
+  assert.deepEqual(tokenDiff(significantD1(printedOf('officeOfReadingsR1')), significantD1(plain([reference1, prov, pet].join('\n')))).filter((x) => x.op !== '='), []);
+
+  const r2 = baseOf('holy-women', 'officeOfReadingsR2');
+  const men2 = baseOf('holy-men', 'officeOfReadingsR2').trim();
+  const parts2 = sections(r2);
+  const menCount2 = sections(men2).length;
+  const [reference2] = parts2;
+  const insertedMen2 = parts2.slice(1, 1 + menCount2).join('\n<hr />\n');
+  const [pius, ...extra2] = parts2.slice(1 + menCount2);
+  assert.equal(extra2.length, 0);
+  assert.match(plain(reference2), /с\. 1584-1587\.$/u);
+  assert.equal(insertedMen2.trim(), men2);
+  assert.match(plain(pius), /^Або іншае, пра святую, якая жыла ў сужэнстве: Прамова папы Пія ХІІ/u);
+  assert.deepEqual(tokenDiff(significantD1(printedOf('officeOfReadingsR2')), significantD1(plain([reference2, pius].join('\n')))).filter((x) => x.op !== '='), []);
+});
+
+test('D-1: the apply script is idempotent', () => {
+  const run = spawnSync(process.execPath, [path.join(ROOT, 'scripts', 'liturgy', 'common-seasons', 'apply-d1-reference-set-base.mjs')], { encoding: 'utf8' });
+  assert.equal(run.status, 0, run.stderr);
+  assert.match(run.stdout, /nothing to do/u);
 });

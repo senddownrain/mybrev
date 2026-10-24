@@ -61764,7 +61764,7 @@
       "status": "variant",
       "relation": "differs",
       "resolution": "seasonal-edition-variant",
-      "method": "render",
+      "method": "render+reference-set",
       "source": {
         "volume": "I",
         "lines": [
@@ -61775,6 +61775,7 @@
           "officeOfReadings.reading1"
         ]
       },
+      "note": "the reference sentence is followed by the first readings of the Common of holy men of the same volume (the legal set, D-1), then the readings specific to a holy woman as printed",
       "difference": {
         "class": 2,
         "className": "lexical",
@@ -61827,7 +61828,7 @@
       "status": "variant",
       "relation": "differs",
       "resolution": "seasonal-edition-variant",
-      "method": "render",
+      "method": "render+reference-set",
       "source": {
         "volume": "I",
         "lines": [
@@ -61838,6 +61839,7 @@
           "officeOfReadings.reading1"
         ]
       },
+      "note": "the reference sentence is followed by the first readings of the Common of holy men of the same volume (the legal set, D-1), then the readings specific to a holy woman as printed",
       "difference": {
         "class": 2,
         "className": "lexical",
@@ -61890,7 +61892,7 @@
       "status": "variant",
       "relation": "differs",
       "resolution": "seasonal-edition-variant",
-      "method": "render",
+      "method": "render+reference-set",
       "source": {
         "volume": "II",
         "lines": [
@@ -61901,6 +61903,7 @@
           "officeOfReadings.reading1"
         ]
       },
+      "note": "the reference sentence is followed by the first readings of the Common of holy men of the same volume (the legal set, D-1), then the readings specific to a holy woman as printed",
       "difference": {
         "class": 2,
         "className": "lexical",
@@ -61953,7 +61956,7 @@
       "status": "variant",
       "relation": "differs",
       "resolution": "seasonal-edition-variant",
-      "method": "render",
+      "method": "render+reference-set",
       "source": {
         "volume": "II",
         "lines": [
@@ -61964,6 +61967,7 @@
           "officeOfReadings.reading1"
         ]
       },
+      "note": "the reference sentence is followed by the first readings of the Common of holy men of the same volume (the legal set, D-1), then the readings specific to a holy woman as printed",
       "difference": {
         "class": 2,
         "className": "lexical",

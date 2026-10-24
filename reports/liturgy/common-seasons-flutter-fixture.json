@@ -3,7 +3,7 @@
   "description": "Parity fixture of seasonal Commons (docs/common-seasons-flutter-handoff.md). valueSha256 = sha256(UTF-8 of the string, or of the array items joined with U+0000).",
   "source": {
     "templates": "patchs/db-templates",
-    "templatesDigest": "5eec37223f64255071e02c3fb75d273b54bd8e63d7412c50be3c4aa38a5e2aa9",
+    "templatesDigest": "34f788939a946d0f688a8584ed6f5b379f2dd588b2d27dd898f5bf87ffeb6830",
     "templateCount": 16
   },
   "periods": [
@@ -59454,8 +59454,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 6038,
-          "valueSha256": "442bdb7f0d49863e7ec7f6d1b621226e2d7e736db9a6ea894508d10cbbc29222",
+          "length": 14134,
+          "valueSha256": "b1fc04ea093bdc16de6a29a13b5f639f5e30d2c92fe29e930295423067bf2217",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59476,8 +59476,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 5259,
-          "valueSha256": "4aa85b9acb03b709f6186d7359fe5eb5df28d7c83f60525f1d7ca14914633e57",
+          "length": 12624,
+          "valueSha256": "3114df702e9b31eac4f6227675a51651f59be92036b9d282a609757de01b4e06",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59498,8 +59498,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 5259,
-          "valueSha256": "4aa85b9acb03b709f6186d7359fe5eb5df28d7c83f60525f1d7ca14914633e57",
+          "length": 12624,
+          "valueSha256": "3114df702e9b31eac4f6227675a51651f59be92036b9d282a609757de01b4e06",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59520,8 +59520,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 5259,
-          "valueSha256": "4aa85b9acb03b709f6186d7359fe5eb5df28d7c83f60525f1d7ca14914633e57",
+          "length": 12624,
+          "valueSha256": "3114df702e9b31eac4f6227675a51651f59be92036b9d282a609757de01b4e06",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59542,8 +59542,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 5259,
-          "valueSha256": "4aa85b9acb03b709f6186d7359fe5eb5df28d7c83f60525f1d7ca14914633e57",
+          "length": 12624,
+          "valueSha256": "3114df702e9b31eac4f6227675a51651f59be92036b9d282a609757de01b4e06",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59564,8 +59564,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 5187,
-          "valueSha256": "bcba5f4d2cada5f76e3069d8a76c25f9f7d603e10be9e1db20749d00826ae142",
+          "length": 10313,
+          "valueSha256": "db1eb99851610e5ea4136282806c7c9ffb4fbce5229b3829a28f0490f089c509",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59586,8 +59586,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 5187,
-          "valueSha256": "bcba5f4d2cada5f76e3069d8a76c25f9f7d603e10be9e1db20749d00826ae142",
+          "length": 10313,
+          "valueSha256": "db1eb99851610e5ea4136282806c7c9ffb4fbce5229b3829a28f0490f089c509",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59608,8 +59608,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 5187,
-          "valueSha256": "bcba5f4d2cada5f76e3069d8a76c25f9f7d603e10be9e1db20749d00826ae142",
+          "length": 10313,
+          "valueSha256": "db1eb99851610e5ea4136282806c7c9ffb4fbce5229b3829a28f0490f089c509",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59630,8 +59630,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 6038,
-          "valueSha256": "442bdb7f0d49863e7ec7f6d1b621226e2d7e736db9a6ea894508d10cbbc29222",
+          "length": 14134,
+          "valueSha256": "b1fc04ea093bdc16de6a29a13b5f639f5e30d2c92fe29e930295423067bf2217",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59652,8 +59652,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 5205,
-          "valueSha256": "91ce67b11473751217fd5dae371065a22b78f12c74d56f09674e773970c229a1",
+          "length": 9926,
+          "valueSha256": "282bc8e040a105bada9d4f807c78593261be59211ed44b9ddf6a6857a72b70b5",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59674,8 +59674,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 5205,
-          "valueSha256": "91ce67b11473751217fd5dae371065a22b78f12c74d56f09674e773970c229a1",
+          "length": 9926,
+          "valueSha256": "282bc8e040a105bada9d4f807c78593261be59211ed44b9ddf6a6857a72b70b5",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59696,8 +59696,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 5205,
-          "valueSha256": "91ce67b11473751217fd5dae371065a22b78f12c74d56f09674e773970c229a1",
+          "length": 9926,
+          "valueSha256": "282bc8e040a105bada9d4f807c78593261be59211ed44b9ddf6a6857a72b70b5",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "райцеся рабіць дабро адзін аднаму і ўсім. Н. Не клапаціцеся."
         }
@@ -59718,8 +59718,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a92135a4ee7d3d136f438d691fe59d0fcf126b43cb59a8f7a7b75b33f8b42326",
+          "length": 11869,
+          "valueSha256": "419a42b1a36e977cc0087c1114de2d094cc47ad4364cdecab3358e12f03cea02",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
         }
@@ -59894,8 +59894,8 @@
         "value": {
           "present": true,
           "shape": "string",
-          "length": 3952,
-          "valueSha256": "a92135a4ee7d3d136f438d691fe59d0fcf126b43cb59a8f7a7b75b33f8b42326",
+          "length": 11869,
+          "valueSha256": "419a42b1a36e977cc0087c1114de2d094cc47ad4364cdecab3358e12f03cea02",
           "plainStart": "Выбіраюцца найбольш адпаведныя тэксты з ліку тых, што былі п",
           "plainEnd": "ак хараство добрай жонкі – упрыгожванне дому яе. Н. Любасць."
         }
