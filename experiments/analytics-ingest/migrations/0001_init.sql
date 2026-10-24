@@ -4,7 +4,8 @@
 -- and starts with the UTC day, so retention cleanup is a primary-key range delete (no extra index = no extra row writes).
 CREATE TABLE IF NOT EXISTS cell_counts (
   cell_key TEXT PRIMARY KEY,
-  n        INTEGER NOT NULL CHECK (n >= 0)
+  -- upper bound = Number.MAX_SAFE_INTEGER: SQLite turns an int64 overflow into REAL silently, the CHECK turns it into a failed (rolled back) statement
+  n        INTEGER NOT NULL CHECK (n >= 0 AND n <= 9007199254740991)
 ) WITHOUT ROWID;
 
 -- Daily write budget guard (counts rows written by this service, UTC day of the server clock).

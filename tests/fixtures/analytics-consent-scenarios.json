@@ -1,0 +1,114 @@
+{
+  "note": "P07 shared SYNTHETIC scenarios for the offline consent/transport mock. Run by WEB (experiments/analytics-ingest/test/p07-mock-client.test.mjs) and Flutter (test/analytics/consent_mock_test.dart). Nothing here is real data. Day tokens: D-1 = yesterday UTC, D0 = today UTC. A packet is the first `cells` cells of the contract-v2 fixture validPacket, with the given day. Expected values are checked after the op.",
+  "config": { "minCells": 3, "ttlDays": 14 },
+  "gates": [
+    { "name": "OFF/OFF", "build": false, "server": false, "processes": false },
+    { "name": "build ON / server OFF", "build": true, "server": false, "processes": false },
+    { "name": "build OFF / server ON", "build": false, "server": true, "processes": false },
+    { "name": "ON/ON", "build": true, "server": true, "processes": true }
+  ],
+  "scenarios": [
+    {
+      "name": "no consent: reading produces no queue and nothing is sent",
+      "build": true, "server": true,
+      "steps": [
+        { "op": "offer", "day": "D-1", "cells": 9, "expect": { "accepted": false, "queueDays": [], "queueKeyPresent": false } },
+        { "op": "flush", "expect": { "sent": 0, "accepted": 0, "queueKeyPresent": false } }
+      ]
+    },
+    {
+      "name": "consent: a closed day is sent once, today is held",
+      "build": true, "server": true,
+      "steps": [
+        { "op": "grant" },
+        { "op": "offer", "day": "D-1", "cells": 9, "expect": { "accepted": true, "queueDays": ["D-1"] } },
+        { "op": "offer", "day": "D0", "cells": 9, "expect": { "queueDays": ["D-1", "D0"] } },
+        { "op": "flush", "expect": { "sent": 1, "accepted": 1, "queueDays": ["D0"], "aggregateN": 28 } },
+        { "op": "flush", "expect": { "sent": 0, "accepted": 1, "aggregateN": 28 } }
+      ]
+    },
+    {
+      "name": "min batch: a day with fewer than 3 cells is held, never sent",
+      "build": true, "server": true,
+      "steps": [
+        { "op": "grant" },
+        { "op": "offer", "day": "D-1", "cells": 2, "expect": { "queueDays": ["D-1"] } },
+        { "op": "flush", "expect": { "sent": 0, "held": 1, "accepted": 0, "queueDays": ["D-1"] } }
+      ]
+    },
+    {
+      "name": "revoke wipes the queue; later events are dropped; no automatic re-grant",
+      "build": true, "server": true,
+      "steps": [
+        { "op": "grant" },
+        { "op": "offer", "day": "D-1", "cells": 9, "expect": { "queueDays": ["D-1"] } },
+        { "op": "revoke", "expect": { "queueDays": [], "queueKeyPresent": false, "consent": false, "hostBufferPurged": true } },
+        { "op": "offer", "day": "D-1", "cells": 9, "expect": { "accepted": false, "queueKeyPresent": false } },
+        { "op": "flush", "expect": { "sent": 0, "accepted": 0 } },
+        { "op": "relaunch", "expect": { "consent": false } },
+        { "op": "offer", "day": "D-1", "cells": 9, "expect": { "accepted": false, "queueKeyPresent": false } },
+        { "op": "grant", "expect": { "consent": true } },
+        { "op": "offer", "day": "D-1", "cells": 9, "expect": { "accepted": true, "queueDays": ["D-1"] } }
+      ]
+    },
+    {
+      "name": "kill switch OFF: even with consent nothing is queued or sent, existing queue is wiped",
+      "build": true, "server": true,
+      "steps": [
+        { "op": "grant" },
+        { "op": "offer", "day": "D-1", "cells": 9, "expect": { "queueDays": ["D-1"] } },
+        { "op": "setServer", "value": false },
+        { "op": "flush", "expect": { "sent": 0, "accepted": 0, "queueDays": [], "queueKeyPresent": false } },
+        { "op": "offer", "day": "D-1", "cells": 9, "expect": { "accepted": false, "reason": "kill_switch" } },
+        { "op": "setServer", "value": true },
+        { "op": "flush", "expect": { "sent": 0, "accepted": 0, "queueDays": [] } }
+      ]
+    },
+    {
+      "name": "at-most-once: a lost send is not retried (under-count), no duplicate on relaunch",
+      "build": true, "server": true,
+      "steps": [
+        { "op": "grant" },
+        { "op": "offer", "day": "D-1", "cells": 9 },
+        { "op": "loseNext" },
+        { "op": "flush", "expect": { "sent": 0, "lost": 1, "accepted": 0, "queueDays": [] } },
+        { "op": "relaunch" },
+        { "op": "flush", "expect": { "sent": 0, "accepted": 0, "queueDays": [], "aggregateN": 0 } }
+      ]
+    },
+    {
+      "name": "crash before the queue is persisted again: the packet survives and is sent once after relaunch",
+      "build": true, "server": true,
+      "steps": [
+        { "op": "grant" },
+        { "op": "offer", "day": "D-1", "cells": 9 },
+        { "op": "relaunch", "expect": { "queueDays": ["D-1"] } },
+        { "op": "flush", "expect": { "sent": 1, "accepted": 1, "aggregateN": 28 } },
+        { "op": "relaunch" },
+        { "op": "flush", "expect": { "sent": 0, "accepted": 1, "aggregateN": 28 } }
+      ]
+    },
+    {
+      "name": "server-side kill switch alone (client unaware): 503, counted lost, never retried",
+      "build": true, "server": true,
+      "steps": [
+        { "op": "grant" },
+        { "op": "offer", "day": "D-1", "cells": 9 },
+        { "op": "setBackend", "value": false },
+        { "op": "flush", "expect": { "sent": 0, "lost": 1, "accepted": 0, "queueDays": [] } },
+        { "op": "setBackend", "value": true },
+        { "op": "flush", "expect": { "sent": 0, "accepted": 0 } }
+      ]
+    },
+    {
+      "name": "retention: a queued day older than 14 days expires and is never sent",
+      "build": true, "server": true,
+      "steps": [
+        { "op": "grant" },
+        { "op": "offer", "day": "D-1", "cells": 9 },
+        { "op": "advanceDays", "days": 15 },
+        { "op": "flush", "expect": { "sent": 0, "accepted": 0, "queueDays": [] } }
+      ]
+    }
+  ]
+}

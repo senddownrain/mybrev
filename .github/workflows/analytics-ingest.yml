@@ -1,0 +1,29 @@
+name: Analytics ingest (offline prototype, Node 24)
+
+# Separate from ci.yml (Node 20): node:sqlite needs Node >= 22.5, so the SQLite tests are only real here.
+# No secrets, no network access by the code under test, no deploy, read-only token.
+on:
+  pull_request:
+    paths:
+      - 'experiments/analytics-ingest/**'
+      - 'src/utils/analytics/**'
+      - 'tests/fixtures/analytics-*'
+      - '.github/workflows/analytics-ingest.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analytics-ingest:
+    name: Ingest tests (Node 24, SQLite not skipped)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --version
+      # the prototype and its tests have no npm dependencies, so nothing is installed
+      - name: Tests (fails if node:sqlite is missing)
+        run: npm run test:analytics-ingest

@@ -8,7 +8,11 @@ import { cleanup, handleIngest } from '../src/core.mjs';
 
 let createSqliteStorage = null;
 try { ({ createSqliteStorage } = await import('../src/storage-sqlite.mjs')); } catch { /* Node without node:sqlite */ }
-const skip = createSqliteStorage ? false : 'node:sqlite is not available on this Node';
+// Never skip silently: without node:sqlite (Node 20) the suite FAILS, unless the skip is requested explicitly.
+const skip = createSqliteStorage ? false : 'node:sqlite is not available (skip explicitly allowed)';
+if (!createSqliteStorage && process.env.ANALYTICS_INGEST_ALLOW_SQLITE_SKIP !== '1') {
+  test('SQLite tests need node:sqlite (Node >= 24); set ANALYTICS_INGEST_ALLOW_SQLITE_SKIP=1 to skip knowingly', () => { assert.fail('node:sqlite is not available on this Node'); });
+}
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const fixture = JSON.parse(fs.readFileSync(path.join(ROOT, 'tests/fixtures/analytics-contract-v2.json'), 'utf8'));
@@ -27,7 +31,7 @@ test('SQLite: upsert sums counters, one transaction per packet, schema is the mi
   const rows = await storage.all();
   assert.equal(rows.reduce((s, r) => s + r.n, 0), 2 * fixture.validPacket.cells.reduce((s, c) => s + c.n, 0));
   const budget = storage.db.prepare('SELECT rows_written FROM daily_budget').get().rows_written;
-  assert.equal(budget, 2 * rows.length);
+  assert.equal(budget, 2 * (rows.length + 1), 'cells + one budget row per packet');
   storage.close();
 });
 

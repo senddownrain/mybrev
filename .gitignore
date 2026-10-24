@@ -46,3 +46,5 @@ ibreviarybyapp/
 __pycache__/
 *.pyc
 /.cache/
+experiments/analytics-ingest/demo/out/
+experiments/analytics-ingest/dashboard-demo/out/

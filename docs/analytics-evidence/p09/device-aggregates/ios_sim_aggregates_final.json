@@ -1,0 +1,271 @@
+[
+ {
+  "schema_version": 2,
+  "day": "2026-10-23",
+  "platform": "ios",
+  "app_version": "1.0",
+  "region": "UNKNOWN",
+  "cells": [
+   {
+    "e": "screen_view",
+    "section": "today",
+    "n": 2
+   },
+   {
+    "e": "screen_view",
+    "section": "hours",
+    "content_id": "hour:laudes",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "hours",
+    "content_id": "hour:laudes",
+    "metric": "fv",
+    "bucket": "60_180s",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "hours",
+    "content_id": "hour:laudes",
+    "metric": "sd",
+    "bucket": "p100",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "hours",
+    "content_id": "hour:laudes",
+    "metric": "er",
+    "bucket": "60_180s",
+    "n": 1
+   },
+   {
+    "e": "catalog_open",
+    "catalog_id": "prayers_home",
+    "n": 3
+   },
+   {
+    "e": "catalog_open",
+    "catalog_id": "songs",
+    "n": 2
+   },
+   {
+    "e": "feature_use",
+    "feature_id": "favorite_add",
+    "section": "songs",
+    "n": 1
+   },
+   {
+    "e": "feature_use",
+    "feature_id": "favorite_remove",
+    "section": "songs",
+    "n": 1
+   },
+   {
+    "e": "screen_view",
+    "section": "songs",
+    "content_id": "song:holysongs-47aac31ac301c3c2d79c",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "songs",
+    "content_id": "song:holysongs-47aac31ac301c3c2d79c",
+    "metric": "fv",
+    "bucket": "15_60s",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "songs",
+    "content_id": "song:holysongs-47aac31ac301c3c2d79c",
+    "metric": "sd",
+    "bucket": "fit",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "songs",
+    "content_id": "song:holysongs-47aac31ac301c3c2d79c",
+    "metric": "er",
+    "bucket": "15_60s",
+    "n": 1
+   },
+   {
+    "e": "feature_use",
+    "feature_id": "bible_language_change",
+    "section": "bible",
+    "n": 2
+   },
+   {
+    "e": "screen_view",
+    "section": "bible",
+    "content_id": "bible:bel:gn",
+    "n": 2
+   },
+   {
+    "e": "text_read",
+    "section": "bible",
+    "content_id": "bible:bel:gn",
+    "metric": "fv",
+    "bucket": "5_15s",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "bible",
+    "content_id": "bible:bel:gn",
+    "metric": "sd",
+    "bucket": "p0_25",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "bible",
+    "content_id": "bible:bel:gn",
+    "metric": "er",
+    "bucket": "5_15s",
+    "n": 1
+   },
+   {
+    "e": "screen_view",
+    "section": "bible",
+    "content_id": "bible:ru:gn",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "bible",
+    "content_id": "bible:ru:gn",
+    "metric": "fv",
+    "bucket": "5_15s",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "bible",
+    "content_id": "bible:ru:gn",
+    "metric": "sd",
+    "bucket": "p0_25",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "bible",
+    "content_id": "bible:ru:gn",
+    "metric": "er",
+    "bucket": "5_15s",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "bible",
+    "content_id": "bible:bel:gn",
+    "metric": "fv",
+    "bucket": "lt5s",
+    "n": 1
+   },
+   {
+    "e": "screen_view",
+    "section": "readings",
+    "content_id": "reading:day",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "readings",
+    "content_id": "reading:day",
+    "metric": "fv",
+    "bucket": "15_60s",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "readings",
+    "content_id": "reading:day",
+    "metric": "sd",
+    "bucket": "p75_99",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "readings",
+    "content_id": "reading:day",
+    "metric": "er",
+    "bucket": "15_60s",
+    "n": 1
+   },
+   {
+    "e": "screen_view",
+    "section": "mass",
+    "content_id": "mass:order",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "mass",
+    "content_id": "mass:order",
+    "metric": "fv",
+    "bucket": "15_60s",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "mass",
+    "content_id": "mass:order",
+    "metric": "sd",
+    "bucket": "p100",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "mass",
+    "content_id": "mass:order",
+    "metric": "er",
+    "bucket": "15_60s",
+    "n": 1
+   }
+  ]
+ },
+ {
+  "schema_version": 2,
+  "day": "2026-10-24",
+  "platform": "ios",
+  "app_version": "1.0",
+  "region": "UNKNOWN",
+  "cells": [
+   {
+    "e": "screen_view",
+    "section": "mass",
+    "content_id": "mass:order",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "mass",
+    "content_id": "mass:order",
+    "metric": "fv",
+    "bucket": "gte600s",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "mass",
+    "content_id": "mass:order",
+    "metric": "sd",
+    "bucket": "p0_25",
+    "n": 1
+   },
+   {
+    "e": "text_read",
+    "section": "mass",
+    "content_id": "mass:order",
+    "metric": "er",
+    "bucket": "180_600s",
+    "n": 1
+   }
+  ]
+ }
+]
