@@ -9,8 +9,8 @@
                 <psalms :ant1="day.officeOfReadingsAnt1" :ant2="day.officeOfReadingsAnt2" :ant3="day.officeOfReadingsAnt3" :ps1="day.officeOfReadingsPs1"
                     :ps2="day.officeOfReadingsPs2" :ps3="day.officeOfReadingsPs3" />
                 <resp :text="day.officeOfReadingsVers"/>
-                <lectio title="Першае чытанне" :text="day.officeOfReadingsR1" />
-                <lectio title="Другое чытанне" :text="day.officeOfReadingsR2" />
+                <lectio title="Першае чытанне" :text="day.officeOfReadingsR1" field="officeOfReadingsR1" />
+                <lectio title="Другое чытанне" :text="day.officeOfReadingsR2" field="officeOfReadingsR2" />
                 <te-deum v-if="showTeDeum" />
                 <last-prayer :text="day.officeOfReadingsPr" />
                 <end-of-sext/>
