@@ -1,0 +1,43 @@
+                'diocese': 'grodno',
+                'date': '2032-07-10',
+                'option': 'our-lady-trakai',
+                'kind': 'route-day-id',
+                'web': '05-07-our-lady-trakai-grodno',
+                'app': '05-07-our-lady-trakai-grodno-memoria-ad-libitum'
+              },
+              {
+                'diocese': 'grodno',
+                'date': '2034-07-10',
+                'option': 'our-lady-trakai',
+                'kind': 'route-day-id',
+                'web': '05-07-our-lady-trakai-grodno',
+                'app': '05-07-our-lady-trakai-grodno-memoria-ad-libitum'
+              },
+              {
+                'diocese': 'grodno',
+                'date': '2035-07-10',
+                'option': 'our-lady-trakai',
+                'kind': 'route-day-id',
+                'web': '05-07-our-lady-trakai-grodno',
+                'app': '05-07-our-lady-trakai-grodno-memoria-ad-libitum'
+              }
+            ]
+  {"diocese":"grodno","date":"2025-07-10","option":"our-lady-trakai","kind":"route-day-id","web":"05-07-our-lady-trakai-grodno","app":"05-07-our-lady-trakai-grodno-memoria-ad-libitum"}
+  {"diocese":"grodno","date":"2026-07-10","option":"our-lady-trakai","kind":"route-day-id","web":"05-07-our-lady-trakai-grodno","app":"05-07-our-lady-trakai-grodno-memoria-ad-libitum"}
+  {"diocese":"grodno","date":"2027-07-10","option":"our-lady-trakai","kind":"route-day-id","web":"05-07-our-lady-trakai-grodno","app":"05-07-our-lady-trakai-grodno-memoria-ad-libitum"}
+  {"diocese":"grodno","date":"2028-07-10","option":"our-lady-trakai","kind":"route-day-id","web":"05-07-our-lady-trakai-grodno","app":"05-07-our-lady-trakai-grodno-memoria-ad-libitum"}
+  {"diocese":"grodno","date":"2029-07-10","option":"our-lady-trakai","kind":"route-day-id","web":"05-07-our-lady-trakai-grodno","app":"05-07-our-lady-trakai-grodno-memoria-ad-libitum"}
+  {"diocese":"grodno","date":"2030-07-10","option":"our-lady-trakai","kind":"route-day-id","web":"05-07-our-lady-trakai-grodno","app":"05-07-our-lady-trakai-grodno-memoria-ad-libitum"}
+  {"diocese":"grodno","date":"2031-07-10","option":"our-lady-trakai","kind":"route-day-id","web":"05-07-our-lady-trakai-grodno","app":"05-07-our-lady-trakai-grodno-memoria-ad-libitum"}
+  {"diocese":"grodno","date":"2032-07-10","option":"our-lady-trakai","kind":"route-day-id","web":"05-07-our-lady-trakai-grodno","app":"05-07-our-lady-trakai-grodno-memoria-ad-libitum"}
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/lectionary_parity_test.dart 414:7              main.<fn>
+  
+13:00 +1425 ~8 -1: <$'worktree>/test/lectionary_parity_test.dart: (tearDownAll)
+13:00 +1425 ~8 -1: Some tests failed.
+exit 1
+13:00 +1425 ~8 -1: <$'worktree>/test/lectionary_parity_test.dart: Flutter Readings screen equals the web screen for every legal option [E]
+13:00 +1425 ~8 -1: <$'worktree>/test/lectionary_parity_test.dart: (tearDownAll)
+13:00 +1425 ~8 -1: Some tests failed.

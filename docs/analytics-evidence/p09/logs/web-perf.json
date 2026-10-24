@@ -1,0 +1,200 @@
+{
+  "generatedAt": "2026-10-24T06:05:14.972Z",
+  "stand": {
+    "cpuThrottle": 1,
+    "node": "v24.2.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "runs": 7,
+    "browser": "<chromium> Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+    "viewport": "390x780 (scenario), default (cold)",
+    "seededDocuments": 4035
+  },
+  "methodology": "Two production builds of the same sources (flag off / on) served by vite preview with the Firestore module swapped for the local emulator; runs interleaved A/B with alternating first position; each cold run is a new browser context; scenario = load hour page, 24 wheel steps down and up at 40 ms, one SPA navigation; frames from requestAnimationFrame deltas.",
+  "summary": {
+    "off": {
+      "flag": "false",
+      "distBytes": 9719066,
+      "cold_ms": {
+        "home": {
+          "n": 7,
+          "median": 354,
+          "p25": 333,
+          "p75": 421,
+          "min": 331,
+          "max": 449
+        },
+        "readings": {
+          "n": 7,
+          "median": 253,
+          "p25": 242,
+          "p75": 368,
+          "min": 226,
+          "max": 442
+        },
+        "hour": {
+          "n": 7,
+          "median": 245,
+          "p25": 233,
+          "p75": 254,
+          "min": 226,
+          "max": 257
+        }
+      },
+      "frame_p50_ms": {
+        "n": 7,
+        "median": 16.7,
+        "p25": 16.7,
+        "p75": 16.7,
+        "min": 16.7,
+        "max": 16.7
+      },
+      "frame_p95_ms": {
+        "n": 7,
+        "median": 17.5,
+        "p25": 17.5,
+        "p75": 17.6,
+        "min": 17.5,
+        "max": 17.6
+      },
+      "frame_max_ms": {
+        "n": 7,
+        "median": 17.7,
+        "p25": 17.6,
+        "p75": 17.7,
+        "min": 17.6,
+        "max": 34.1
+      },
+      "slow_frames_over_33ms": {
+        "n": 7,
+        "median": 0,
+        "p25": 0,
+        "p75": 0,
+        "min": 0,
+        "max": 1
+      },
+      "spa_nav_ms": {
+        "n": 7,
+        "median": 18.7,
+        "p25": 18.2,
+        "p75": 21.1,
+        "min": 17,
+        "max": 23.2
+      },
+      "js_heap_mb": {
+        "n": 7,
+        "median": 16.25,
+        "p25": 16.22,
+        "p75": 16.25,
+        "min": 14.77,
+        "max": 16.27
+      },
+      "storage_bytes": {
+        "n": 7,
+        "median": 207,
+        "p25": 206,
+        "p75": 207,
+        "min": 206,
+        "max": 207
+      },
+      "request_hosts": [
+        "127.0.0.1:5290",
+        "127.0.0.1:8089",
+        "fonts.googleapis.com",
+        "fonts.gstatic.com"
+      ]
+    },
+    "on": {
+      "flag": "true",
+      "distBytes": 9759327,
+      "cold_ms": {
+        "home": {
+          "n": 7,
+          "median": 346,
+          "p25": 339,
+          "p75": 351,
+          "min": 336,
+          "max": 359
+        },
+        "readings": {
+          "n": 7,
+          "median": 259,
+          "p25": 254,
+          "p75": 368,
+          "min": 240,
+          "max": 392
+        },
+        "hour": {
+          "n": 7,
+          "median": 247,
+          "p25": 236,
+          "p75": 347,
+          "min": 233,
+          "max": 353
+        }
+      },
+      "frame_p50_ms": {
+        "n": 7,
+        "median": 16.7,
+        "p25": 16.7,
+        "p75": 16.7,
+        "min": 16.7,
+        "max": 16.7
+      },
+      "frame_p95_ms": {
+        "n": 7,
+        "median": 17.6,
+        "p25": 17.5,
+        "p75": 17.6,
+        "min": 17.5,
+        "max": 17.6
+      },
+      "frame_max_ms": {
+        "n": 7,
+        "median": 17.7,
+        "p25": 17.6,
+        "p75": 17.7,
+        "min": 17.6,
+        "max": 17.8
+      },
+      "slow_frames_over_33ms": {
+        "n": 7,
+        "median": 0,
+        "p25": 0,
+        "p75": 0,
+        "min": 0,
+        "max": 0
+      },
+      "spa_nav_ms": {
+        "n": 7,
+        "median": 18.6,
+        "p25": 18.2,
+        "p75": 19.9,
+        "min": 18,
+        "max": 21.1
+      },
+      "js_heap_mb": {
+        "n": 7,
+        "median": 16.35,
+        "p25": 14.9,
+        "p75": 16.38,
+        "min": 14.89,
+        "max": 16.4
+      },
+      "storage_bytes": {
+        "n": 7,
+        "median": 207,
+        "p25": 206,
+        "p75": 207,
+        "min": 206,
+        "max": 207
+      },
+      "request_hosts": [
+        "127.0.0.1:5291",
+        "127.0.0.1:8089",
+        "fonts.googleapis.com",
+        "fonts.gstatic.com"
+      ]
+    }
+  }
+}
