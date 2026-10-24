@@ -8,6 +8,9 @@
   "_templates": [
     "works-of-mercy"
   ],
+  "_commonBase": {
+    "works-of-mercy": "holy-men"
+  },
   "_defaultTemplate": "works-of-mercy",
   "_contentStatus": {
     "hours": "proper"

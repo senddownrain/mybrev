@@ -28,12 +28,17 @@ function isMarkerText(text) {
     || INSTRUCTION_MARKER.test(text);
 }
 
-function isAlternativeBoundary(element) {
+function isAlternativeBoundary(element, kind) {
   if (element.rawTagName !== 'p') return false;
-  return isMarkerText(textOf(element.toString()));
+  const text = textOf(element.toString());
+  // Scripture verses beginning "Пра ...:" are not alternative-category headings.
+  // Keep genuine explicit alternatives (<hr>, "Або:") available for psalms.
+  return ALTERNATIVE_MARKER.test(text)
+    || INSTRUCTION_MARKER.test(text)
+    || (kind !== 'psalm' && CATEGORY_MARKER.test(text));
 }
 
-function splitAtRules(root) {
+function splitAtRules(root, kind) {
   const nodes = [...root.childNodes];
   const hasRule = nodes.some((node) => node.nodeType === 1 && node.rawTagName === 'hr');
   const repeatedMarkers = new Map();
@@ -55,7 +60,7 @@ function splitAtRules(root) {
       ? textOf(node.toString()).match(REPEATED_SECTION_MARKER)?.[0]?.toLowerCase()
       : '';
     const startsNewGroup = !hasRule && groups.at(-1).length && (
-      (node.nodeType === 1 && isAlternativeBoundary(node))
+      (node.nodeType === 1 && isAlternativeBoundary(node, kind))
       || (marker && repeatedMarkers.get(marker) > 1)
     );
     if (startsNewGroup) groups.push([]);
@@ -231,7 +236,7 @@ export function getLiturgicalAlternatives(html, kind = 'generic') {
   const structured = kind === 'gospel-antiphon'
     ? gospelCycleAlternatives(root) || structuredAlternatives(root)
     : structuredAlternatives(root);
-  const rawOptions = structured || splitAtRules(root).map((optionHtml) => ({ html: optionHtml }));
+  const rawOptions = structured || splitAtRules(root, kind).map((optionHtml) => ({ html: optionHtml }));
   const options = uniqueOptions(rawOptions).map((option, index) => ({
     html: removeBreakAfterPsalmCadenceSign(option.html),
     title: optionTitle(option, index, kind),

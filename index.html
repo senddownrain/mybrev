@@ -19,8 +19,17 @@
   <style>
     /* First paint and the area beneath a translucent mobile status bar.
        Kept in sync with constants/appearance.js by the appearance tests. */
-    :root { color-scheme: light; background: #F5F1E8; }
-    :root[data-appearance="dark"] { color-scheme: dark; background: #0F0E0C; }
+    /* The document canvas and body must paint the same colour even while
+       the app is loading or when mobile viewport/safe-area gaps are exposed. */
+    :root {
+      --app-viewport-background: #F5F1E8;
+      color-scheme: light;
+      background-color: var(--app-viewport-background);
+    }
+    :root[data-appearance="dark"] {
+      --app-viewport-background: #0F0E0C;
+      color-scheme: dark;
+    }
   </style>
   <script>
     // Apply the saved appearance immediately, before Vue finishes loading.

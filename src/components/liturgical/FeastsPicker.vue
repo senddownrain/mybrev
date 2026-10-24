@@ -80,14 +80,10 @@
               {{ feast.isDynamic ? 'Рухомае' : 'Нерухомае' }}
             </div>
             <h3>
-              <i v-if="feast.colorLabel" class="color-dot" :style="{ '--dot': feast.swatch }" :aria-label="feast.colorLabel" role="img" />
               {{ feast.title }}
             </h3>
             <div class="feast-meta">
               <span v-if="feast.rankLabel" class="rank-badge">{{ feast.rankLabel }}</span>
-              <span v-if="feast.colorLabel">
-                {{ feast.colorLabel }}
-              </span>
               <span v-for="place in feast.placeLabels" :key="place" class="place-badge">
                 <PhMapPin :size="13" />{{ place }}
               </span>
@@ -118,7 +114,7 @@
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import moment from '@/utils/moment-be';
-import { celebrationViewDate, colorInfo, ORDO_COLORS, ORDO_FILTER_DIOCESES, yearCelebrations } from '@/utils/ordoScreen';
+import { celebrationViewDate, ORDO_FILTER_DIOCESES, yearCelebrations } from '@/utils/ordoScreen';
 import { ordoDiocese } from '@/utils/ordoDiocese';
 import { getLiturgicalTheme, liturgicalVisual, visualStamp } from '@/constants/liturgical';
 import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
@@ -175,7 +171,6 @@ const preparedFeasts = computed(() => (ordoCalendarEpoch.value, yearCelebrations
   .map((item) => {
     // A fixed nominal 29 February remains displayable in a non-leap year.
     const date = moment(item.movable ? item.date : `2000-${item.date.slice(5)}`, 'YYYY-MM-DD', true);
-    const color = ORDO_COLORS[item.color] ? colorInfo(item.color) : null;
     const option = { color: item.color, category: item.category, rank: item.rankKey };
     const visual = liturgicalVisual(option);
     const feast = {
@@ -188,8 +183,6 @@ const preparedFeasts = computed(() => (ordoCalendarEpoch.value, yearCelebrations
       isFixed: !item.movable,
       dayLabel: date.isValid() ? date.format('DD') : '—',
       monthLabel: date.isValid() ? date.format('MMM').replace('.', '') : 'рухомае',
-      colorLabel: color?.label || '',
-      swatch: color?.swatch || '',
       theme: visual ? getLiturgicalTheme(visualStamp(option)) : null,
     };
     feast.searchText = buildSearchText(feast, date);
@@ -362,19 +355,6 @@ function resetFilters() {
 .feast-row:active {
   transform: scale(0.985);
 }
-
-.color-dot {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-right: 5px;
-  vertical-align: -2px;
-  border: 1px solid rgba(0, 0, 0, .18);
-  border-radius: 50%;
-  background: var(--dot);
-}
-
-:global(.v-theme--dark) .color-dot { border-color: rgba(255, 255, 255, .28); }
 
 /* Same accents and card treatment as ItemsList's celebration cards. */
 .day-option--themed {

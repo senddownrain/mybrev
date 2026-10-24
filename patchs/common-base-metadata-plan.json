@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "collection": "liturgicalProperTexts",
+  "mode": "prepared-only",
+  "documentCount": 27,
+  "commonBaseBindingCount": 29,
+  "sourcePolicy": "Manually verified source evidence; no gender inference in runtime; no new texts.",
+  "publicationPolicy": "After explicit owner approval: read and back up these exact existing documents, reject conflicting metadata, update only these leaf paths; never create/replace documents. Bump liturgicalCalendarMeta/current.properTextsRevision, then follow docs/app-content-distribution.md.",
+  "operations": [
+    {
+      "id": "02-04-sv-francis-paola",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/02-04-sv-francis-paola.json#feastComment",
+        "basis": "Founder of a community of hermits/brothers."
+      }
+    },
+    {
+      "id": "03-11-sv-martin-de-porres",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/03-11-sv-martin-de-porres.json#feastComment",
+        "basis": "Religious brother in the Order of Preachers."
+      }
+    },
+    {
+      "id": "04-07-sv-elizabeth-portugal",
+      "updates": {
+        "_commonBase.works-of-mercy": "holy-women"
+      },
+      "evidence": {
+        "source": "patchs/feasts/04-07-sv-elizabeth-portugal.json#feastComment",
+        "basis": "Queen of Portugal, wife and mother, Franciscan tertiary."
+      }
+    },
+    {
+      "id": "04-10-sv-francis-assisi",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/04-10-sv-francis-assisi.json#feastComment",
+        "basis": "Founder of the Friars Minor."
+      }
+    },
+    {
+      "id": "08-02-sv-jerome-emiliani",
+      "updates": {
+        "_commonBase.educators": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/08-02-sv-jerome-emiliani.json#feastComment",
+        "basis": "Founder of the Somascan clerics, serving orphans."
+      }
+    },
+    {
+      "id": "08-03-sv-john-of-god",
+      "updates": {
+        "_commonBase.religious": "holy-men",
+        "_commonBase.works-of-mercy": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/08-03-sv-john-of-god.json#feastComment",
+        "basis": "Founder of the Brothers of Mercy."
+      }
+    },
+    {
+      "id": "09-03-sv-frances-of-rome",
+      "updates": {
+        "_commonBase.religious": "holy-women"
+      },
+      "evidence": {
+        "source": "patchs/feasts/09-03-sv-frances-of-rome.json#feastComment",
+        "basis": "Wife and mother, founder of the Benedictine oblates."
+      }
+    },
+    {
+      "id": "09-08-sv-teresa-benedicta-cross",
+      "updates": {
+        "_commonBase.religious": "holy-women"
+      },
+      "evidence": {
+        "source": "patchs/feasts/09-08-sv-teresa-benedicta-cross.json#feastComment",
+        "basis": "Edith Stein, member of the Carmelite Sisters."
+      }
+    },
+    {
+      "id": "11-07-sv-benedict",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/11-07-sv-benedict.json#feastComment",
+        "basis": "Abbot and founder of Monte Cassino."
+      }
+    },
+    {
+      "id": "14-07-sv-camillus-de-lellis",
+      "updates": {
+        "_commonBase.works-of-mercy": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/14-07-sv-camillus-de-lellis.json#feastComment",
+        "basis": "Ordained priest, founder of a community serving the sick."
+      }
+    },
+    {
+      "id": "16-10-sv-hedwig",
+      "updates": {
+        "_commonBase.works-of-mercy": "holy-women",
+        "_commonBase.religious": "holy-women"
+      },
+      "evidence": {
+        "source": "patchs/feasts/16-10-sv-hedwig.json#feastComment",
+        "basis": "Wife of Henry of Silesia and mother; benefactor of hospitals."
+      }
+    },
+    {
+      "id": "16-11-sv-margaret-scotland",
+      "updates": {
+        "_commonBase.works-of-mercy": "holy-women"
+      },
+      "evidence": {
+        "source": "patchs/feasts/16-11-sv-margaret-scotland.json#feastComment",
+        "basis": "Wife of Malcolm III, queen and mother."
+      }
+    },
+    {
+      "id": "17-01-sv-antoni",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/17-01-sv-antoni.json#feastComment",
+        "basis": "Father of monks and abbot."
+      }
+    },
+    {
+      "id": "17-02-seven-servite-founders",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/17-02-seven-servite-founders.json#feastComment",
+        "basis": "Seven men (not one subject); own reading, collective prayer and Gospel antiphons."
+      }
+    },
+    {
+      "id": "17-06-sv-albert-chmielowski-grodno",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "scripts/lib/scaffold-commons.mjs#sv-albert-chmielowski",
+        "basis": "Brother Albert, founder and brother serving the poor; canonization homily, 12 November 1989.",
+        "url": "https://www.vatican.va/content/john-paul-ii/it/homilies/1989/documents/hf_jp-ii_hom_19891112_due-canonizzazioni.html"
+      }
+    },
+    {
+      "id": "17-11-sv-elizabeth-hungary",
+      "updates": {
+        "_commonBase.works-of-mercy": "holy-women"
+      },
+      "evidence": {
+        "source": "patchs/feasts/17-11-sv-elizabeth-hungary.json#feastComment",
+        "basis": "Daughter of Andrew II, wife and mother, serving the poor."
+      }
+    },
+    {
+      "id": "18-09-sv-stanislaus-kostka--grodno",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/18-09-sv-stanislaus-kostka.json#feastComment",
+        "basis": "Stanislaus and his brother studied in Vienna; he entered the Society of Jesus in Rome."
+      }
+    },
+    {
+      "id": "18-09-sv-stanislaus-kostka--minsk-mohilev",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/18-09-sv-stanislaus-kostka.json#feastComment",
+        "basis": "Stanislaus and his brother studied in Vienna; he entered the Society of Jesus in Rome."
+      }
+    },
+    {
+      "id": "18-09-sv-stanislaus-kostka--pinsk",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/18-09-sv-stanislaus-kostka.json#feastComment",
+        "basis": "Stanislaus and his brother studied in Vienna; he entered the Society of Jesus in Rome."
+      }
+    },
+    {
+      "id": "19-06-sv-romuald",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/19-06-sv-romuald.json#feastComment",
+        "basis": "Hermit and abbot founding monasteries."
+      }
+    },
+    {
+      "id": "20-08-sv-bernard",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/20-08-sv-bernard.json#feastComment",
+        "basis": "Cistercian abbot of Clairvaux."
+      }
+    },
+    {
+      "id": "21-06-sv-aloysius-gonzaga",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/21-06-sv-aloysius-gonzaga.json#feastComment",
+        "basis": "Eldest son of Ferdinand de Castiglione, Jesuit religious."
+      }
+    },
+    {
+      "id": "23-07-sv-bridget",
+      "updates": {
+        "_commonBase.religious": "holy-women"
+      },
+      "evidence": {
+        "source": "patchs/feasts/23-07-sv-bridget.json#feastComment",
+        "basis": "Married mother and founder of a religious order."
+      }
+    },
+    {
+      "id": "25-05-sv-bede",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "patchs/feasts/25-05-sv-bede.json#feastComment",
+        "basis": "Monk and ordained priest, Doctor of the Church."
+      }
+    },
+    {
+      "id": "26-10-bl-celina-borzecka-grodno",
+      "updates": {
+        "_commonBase.religious": "holy-women"
+      },
+      "evidence": {
+        "source": "patchs/feasts/26-10-bl-celina-borzecka-grodno.json#feastComment",
+        "basis": "Widow and mother, founder of the Resurrection Sisters."
+      }
+    },
+    {
+      "id": "26-10-bl-celina-borzecka-vitebsk",
+      "updates": {
+        "_commonBase.religious": "holy-women"
+      },
+      "evidence": {
+        "source": "patchs/feasts/26-10-bl-celina-borzecka-grodno.json#feastComment",
+        "basis": "Same celebrationId bl-celina-borzecka as the Grodno source: widow, mother and founder of the Resurrection Sisters."
+      }
+    },
+    {
+      "id": "27-02-sv-gregory-narek",
+      "updates": {
+        "_commonBase.religious": "holy-men"
+      },
+      "evidence": {
+        "source": "scripts/lib/scaffold-commons.mjs#sv-gregory-narek",
+        "basis": "Abbot and Doctor Gregory of Narek; decree of 25 January 2021.",
+        "url": "https://press.vatican.va/roman_curia/congregations/ccdds/documents/rc_con_ccdds_doc_20210125_decreto-dottori_en.html"
+      }
+    }
+  ],
+  "lastReadOnlyPreflight": {
+    "readAt": "2026-10-19T11:33:01.839Z",
+    "documentsRequested": 28,
+    "existingTargets": 27,
+    "metadataConflicts": 0,
+    "properTextsRevision": 3
+  }
+}

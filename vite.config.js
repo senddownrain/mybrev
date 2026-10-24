@@ -1,5 +1,6 @@
 // Импортируем утилиты из стандартных пакетов
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
+import { validateFirebaseWebConfig } from './scripts/lib/firebase-web-config.mjs'
 import { fileURLToPath, URL } from 'node:url'
 import { APP_THEME_COLORS, APP_STATUS_BAR_COLORS } from './src/constants/appearance.js'
 
@@ -12,7 +13,9 @@ import { VitePWA } from 'vite-plugin-pwa'; // Импортируем
 import { visualizer } from 'rollup-plugin-visualizer' // Импортируем
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command, mode }) => {
+  if (command === 'build') validateFirebaseWebConfig(loadEnv(mode, process.cwd(), 'VITE_'));
+  return {
   plugins: [
     // Плагин для поддержки однофайловых компонентов Vue (.vue)
     vue({ 
@@ -88,10 +91,13 @@ export default defineConfig({
       workbox: {
         importScripts: ['/priest-cache-cleanup.js'],
         cleanupOutdatedCaches: true,
+        // Legal page must bypass the SPA navigation fallback in installed PWAs.
+        navigateFallbackDenylist: [/^\/privacy(?:\.html)?\/?$/],
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2,webmanifest}'],
         // Admin/login code remains route-lazy and network-loaded. It must not
         // consume every reader's offline install budget.
         globIgnores: [
+          'privacy.html', // Always fetch the current legal text from Hosting.
           'app-icon-master.png',
           'maria-menu-logo.svg',
           '**/vendor-firebase-auth-*.js',
@@ -266,4 +272,5 @@ export default defineConfig({
       },
     },
   },
+  };
 })

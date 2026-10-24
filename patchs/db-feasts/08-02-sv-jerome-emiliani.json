@@ -8,6 +8,9 @@
   "_templates": [
     "educators"
   ],
+  "_commonBase": {
+    "educators": "holy-men"
+  },
   "_defaultTemplate": "educators",
   "_contentStatus": {
     "hours": "proper"

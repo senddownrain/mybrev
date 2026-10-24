@@ -9,6 +9,10 @@
     "religious",
     "works-of-mercy"
   ],
+  "_commonBase": {
+    "religious": "holy-men",
+    "works-of-mercy": "holy-men"
+  },
   "_defaultTemplate": "religious",
   "_legacyIds": [
     "08-03-sv-john-of-god--religious",

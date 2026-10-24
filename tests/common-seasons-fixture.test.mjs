@@ -36,7 +36,7 @@ test('fixture cases: Holy Week = Lent, Triduum and Ordinary Time = the flat base
   assert.match(lent.expected.value.plainStart, /Клс 1, 12-20/);
 });
 
-test('fixture assembly cases: own Proper wins; the memorial keeps the weekday', () => {
+test('fixture assembly cases: own Proper wins; current-day keeps the weekday; Common uses festive hours', () => {
   const byName = (name) => fixture.assembly.find((a) => a.name === name);
   const own = byName('church-dedication with own vesper1Ant3 lent').expected;
   assert.equal(own.fields.vesper1Ant3.provenance, 'proper');
@@ -44,4 +44,11 @@ test('fixture assembly cases: own Proper wins; the memorial keeps the weekday', 
   assert.equal(own.seasonalFields.vesper1Ant3, undefined);
   const memorial = byName('memorial current-day easter').expected;
   assert.equal(memorial.fields.laudesHymn.provenance, 'current-day');
+  const common = byName('memorial pastors easter').expected;
+  for (const field of ['officeOfReadingsAnt1', 'officeOfReadingsR1', 'laudesAnt1', 'vesperPs1']) {
+    assert.equal(common.seasonalFields[field], 'easter');
+    assert.equal(memorial.seasonalFields[field], undefined);
+  }
+  assert.equal(common.seasonalFields.laudesPs1, undefined); // Sunday I, not the seasonal Common.
+  assert.ok(!Object.keys(common.seasonalFields).some((field) => field.startsWith('vesper1')));
 });

@@ -94,6 +94,14 @@
   }
 }
 
+// The installed PWA's document canvas and page body must share the active
+// appearance colour. Keep this separate from the native Android navigation bar:
+// its colour is controlled by the hosting browser/OS, not by page CSS.
+html,
+body {
+  background-color: var(--app-viewport-background, #F5F1E8);
+}
+
 // Один нативный scroll-контейнер для всех страниц. Не переносим вертикальный
 // скролл на body: вложенные overflow-контейнеры могут съедать первый touch-жест.
 html {

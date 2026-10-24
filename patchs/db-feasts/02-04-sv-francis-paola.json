@@ -8,6 +8,9 @@
   "_templates": [
     "religious"
   ],
+  "_commonBase": {
+    "religious": "holy-men"
+  },
   "_defaultTemplate": "religious",
   "_contentStatus": {
     "hours": "proper"

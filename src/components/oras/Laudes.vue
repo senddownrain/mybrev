@@ -5,7 +5,7 @@
             <v-col class="liturgical-hour-column" v-if="!pending && day">
                 <day-title :day-data="day" />
                 <intro title="ЮТРАНЬ" />
-                <hymnus :text="day.laudesHymn" />
+                <hymnus :text="day.laudesHymn" :feast-name="day._feastName" />
                 <psalms :ant1="day.laudesAnt1" :ant2="day.laudesAnt2" :ant3="day.laudesAnt3" :ps1="day.laudesPs1"
                     :ps2="day.laudesPs2" :ps3="day.laudesPs3" />
                 <reading :text="day.laudesR" />

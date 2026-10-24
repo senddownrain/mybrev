@@ -1,0 +1,42 @@
+
+> mybrev@4.5.2 analytics:smoke
+> firebase emulators:exec --only firestore --project demo-analytics-smoke "node scripts/analytics/screens-smoke.mjs"
+
+i  emulators: Starting emulators: firestore
+i  emulators: Detected demo project ID "demo-analytics-smoke", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
+✔  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: node scripts/analytics/screens-smoke.mjs
+(node:52023) MetadataLookupWarning: received unexpected error = request to http://metadata.google.internal./computeMetadata/v1/instance failed, reason: socket hang up code = ECONNRESET
+(Use `node --trace-warnings ...` to show where the warning was created)
+seeded 4035 documents + 2 Bible books into the emulator
+ok   today: view=true fv=— sd=— er=— catalog=— features=— errors=—
+ok   short open (2 s): fv only, no sd/er: view=true fv=lt5s sd=— er=— catalog=— features=— errors=—
+ok   catalog prayers: view=false fv=— sd=— er=— catalog=prayers_home features=— errors=—
+ok   readings: view=true fv=5_15s sd=p100 er=5_15s catalog=— features=— errors=—
+ok   hour laudes: view=true fv=5_15s sd=p100 er=5_15s catalog=— features=— errors=—
+ok   hour vesper: view=true fv=5_15s sd=p100 er=5_15s catalog=— features=— errors=—
+ok   mass order: view=true fv=5_15s sd=p100 er=5_15s catalog=— features=— errors=—
+ok   short prayer (443 chars), tall screen: view=true fv=5_15s sd=fit er=5_15s catalog=— features=— errors=—
+ok   short prayer, 320 px, text ×1.8: view=true fv=5_15s sd=p100 er=5_15s catalog=— features=— errors=—
+ok   long prayer (25643 chars): view=true fv=5_15s sd=p100 er=5_15s catalog=— features=— errors=—
+ok   prayer not found in the data: view=false fv=— sd=— er=— catalog=— features=— errors=—
+ok   song: view=true fv=5_15s sd=fit er=5_15s catalog=— features=— errors=—
+ok   catalog songs: view=false fv=— sd=— er=— catalog=songs features=— errors=—
+ok   compendium part p1: view=true fv=5_15s sd=p100 er=5_15s catalog=— features=— errors=—
+ok   catalog compendium: view=false fv=— sd=— er=— catalog=compendium_home features=— errors=—
+ok   Bible bel gn 1: view=true fv=5_15s sd=p100 er=5_15s catalog=— features=— errors=—
+ok   Bible ru gn 1: view=true fv=5_15s sd=p100 er=5_15s catalog=— features=— errors=—
+ok   Back navigation: the same screen twice = two visits, no double count: view=true fv=5_15s sd=p0_25 er=5_15s catalog=— features=— errors=—
+ok   background 9 s: hidden time is not reading time: view=true fv=5_15s sd=p0_25 er=5_15s catalog=— features=— errors=—
+ok   quick switch before the text is read: only the last screen is a read: view=true fv=5_15s sd=p0_25 er=lt5s catalog=— features=— errors=—
+ok   feature_use: hour_switch (menu of hours): view=true fv=lt5s sd=— er=— catalog=— features=hour_switch@hours errors=—
+ok   feature_use: search_open (Bible search sheet): view=true fv=lt5s sd=— er=— catalog=— features=search_open@bible errors=—
+ok   Bible without a book (catalog or last book): view=true fv=lt5s sd=— er=— catalog=— features=— errors=—
+report: /Users/gleb/Documents/GitHub/senddownrain/mybrev/.claude/worktrees/p04-parity-27adc9/docs/analytics-evidence/p04/smoke.json
+✔  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator
+exit=0

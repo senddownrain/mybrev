@@ -56,7 +56,7 @@
           </v-card-text>
         </v-card>
 
-        <hymnus :text="day.laudesHymn" />
+        <hymnus :text="day.laudesHymn" :feast-name="day._feastName" />
 
         <psalms
           :ant1="day.officeOfReadingsAnt1"

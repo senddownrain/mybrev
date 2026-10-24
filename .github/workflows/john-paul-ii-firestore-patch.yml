@@ -1,0 +1,93 @@
+name: Publish John Paul II text correction
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Check only, or publish the approved two-field correction"
+        required: true
+        default: dry-run
+        type: choice
+        options:
+          - dry-run
+          - apply
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jp2-firestore-production
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 25
+    steps:
+      - name: Checkout approved main
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify exact approved wording and migration guards
+        run: |
+          node --test tests/john-paul-ii-source-fix.test.mjs
+          node scripts/ordo/patch-john-paul-ii-2026.mjs
+
+      - name: Load existing protected Firebase credential
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IBREVIARYBY }}
+        run: |
+          set -euo pipefail
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "::error::FIREBASE_SERVICE_ACCOUNT_IBREVIARYBY is not configured for the production environment."
+            exit 1
+          fi
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
+          node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); if(p.project_id!=='ibreviaryby') {console.error('Wrong Firebase project ID'); process.exit(1)}" "$RUNNER_TEMP/firebase-service-account.json"
+          echo "JP2_SERVICE_ACCOUNT=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
+
+      - name: Read one production Proper and verify before/after wording (no writes)
+        run: node scripts/ordo/patch-john-paul-ii-2026.mjs --service-account "$JP2_SERVICE_ACCOUNT"
+
+      - name: Apply exact two-field correction in one Firestore transaction
+        if: inputs.mode == 'apply'
+        run: node scripts/ordo/patch-john-paul-ii-2026.mjs --service-account "$JP2_SERVICE_ACCOUNT" --apply
+
+      - name: Check Flutter manifest update scope (no writes)
+        if: inputs.mode == 'apply'
+        run: |
+          npm run content:manifest -- --collection liturgicalProperTexts --collection liturgicalCalendarMeta --service-account "$JP2_SERVICE_ACCOUNT"
+
+      - name: Publish Flutter manifest only if validation accepts patch
+        if: inputs.mode == 'apply'
+        run: |
+          npm run content:manifest -- --collection liturgicalProperTexts --collection liturgicalCalendarMeta --service-account "$JP2_SERVICE_ACCOUNT" --apply
+
+      - name: Verify updated Firestore wording
+        if: inputs.mode == 'apply'
+        run: |
+          node scripts/ordo/patch-john-paul-ii-2026.mjs --service-account "$JP2_SERVICE_ACCOUNT"
+
+      - name: Preserve non-secret source-text rollback record
+        if: always() && inputs.mode == 'apply'
+        uses: actions/upload-artifact@v4
+        with:
+          name: jp2-correction-rollback
+          path: backups/ordo-feasts/john-paul-ii-*.json
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Clean up credential
+        if: always()
+        run: rm -f "$RUNNER_TEMP/firebase-service-account.json"
