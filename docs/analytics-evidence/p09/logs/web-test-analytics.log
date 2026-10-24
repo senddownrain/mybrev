@@ -1,0 +1,65 @@
+
+> mybrev@4.5.2 test:analytics
+> node --test tests/analytics-*.test.mjs
+
+✔ disabled by default: nothing is collected (0.967375ms)
+✔ a read visit yields screen_view plus fv, sd and er cells in a valid packet (1.989584ms)
+✔ short opens (1-5 s) give fv=lt5s only; under 1 s is discarded (0.429375ms)
+✔ closed or unknown material is never measured (fail closed) (0.159875ms)
+✔ background time is not visible time; 5+ minutes in background starts a new visit (0.404584ms)
+✔ same-material double trigger within 2 s and same-material re-entry are one visit (0.707459ms)
+✔ back navigation to the same material after more than 2 s is a new visit (0.127167ms)
+✔ sections without content ids count views only; text that fits reports fit (0.151208ms)
+✔ unmeasurable scroll is counted as an error, not guessed (0.112333ms)
+✔ clock going backwards is a measurement error, not negative time (0.161334ms)
+✔ feature_use validates ids; unknown features and sections are dropped (0.100625ms)
+✔ local queue is bounded and overflow is counted (8.611375ms)
+✔ pruneOlderThan drops stale days; disabling clears everything (0.323541ms)
+✔ app version is coarsened to major.minor (0.053458ms)
+✔ discardView drops the active visit without recording it (0.078375ms)
+✔ daily readings are measured as one generic material with fv, sd and er; no date anywhere (0.280916ms)
+✔ catalog screens count catalog_open once per visit and never a material (0.170791ms)
+✔ catalog visit under one second is discarded; background time does not count (0.070667ms)
+✔ importPackets restores persisted counters; invalid, foreign and closed-id packets are ignored (0.273708ms)
+✔ snapshot({ includeOpen }) counts the open visit without ending it (0.142291ms)
+✔ contract is v2 and the network gate defaults to off (0.507791ms)
+✔ visible-time buckets follow the golden vectors (0.136708ms)
+✔ scroll-depth buckets follow the golden vectors (0.1035ms)
+✔ estimated reading time is bounded by visible time and by the text reached (0.142042ms)
+✔ the golden packet is valid and every invalid cell is rejected (1.673708ms)
+✔ packets reject identifiers, unknown fields and bad envelopes (1.124208ms)
+✔ closed material cannot pass: content_id must be in the public inventory (0.120208ms)
+✔ whitelists contain no closed or personal sections and no free-text features (0.1595ms)
+✔ stage guard: only main.js, behind the build flag, may reach the analytics code (59.63975ms)
+✔ no analytics module contains a network call; only the DOM glue may touch localStorage (0.872333ms)
+✔ trackFeature is an empty function in a normal build and call sites pass only a feature id (41.0795ms)
+✔ inventory ids are unique, sorted, well-formed and match their section kind (22.653334ms)
+✔ inventory counts and checksum are consistent (0.738416ms)
+✔ inventory covers the fixed sets: mass order, nine hours, both Bible languages (0.204ms)
+✔ nothing outside the public kinds can be in the inventory (0.512042ms)
+﹣ inventory is in sync with the app bundle when the bundle is available (0.239708ms) # app bundle not present next to this repo
+✔ committed parity golden equals what the WEB sources produce (drift guard) (14.496208ms)
+✔ golden pins the shared fixture and the public inventory (0.704833ms)
+✔ every route case is mapped exactly as the golden promises (0.829375ms)
+✔ content id probes agree with the validator (0.166042ms)
+✔ synthetic visits replay to the golden cells; packets are valid and text-free (2.779458ms)
+✔ feature_use coverage: 24/27 hooked, the rest declared with a reason (13.481041ms)
+✔ every section that is measured has a content block selector; catalogs and settings have none (0.511125ms)
+✔ readiness: a short prayer under 200 characters is ready; loader, error alert, empty and missing blocks are not (0.59725ms)
+✔ depth uses the text block, not the document: a block that fits is fit, a tall one reports how far it has been seen (0.173416ms)
+✔ a block that is short but starts low enough to need a scroll is not fit (0.068084ms)
+✔ nested scroller: the visible area is the scroller, not the window; the scroller is found once (0.132291ms)
+✔ degradation: a hidden block or an empty viewport is unmeasurable, never an invented depth (0.071ms)
+✔ public routes map to contract sections (1.997042ms)
+✔ daily readings are one generic material; catalogs map to catalog ids, never a material (0.353583ms)
+✔ lists, admin, login, personal prayers and incomplete routes are not measured (0.220041ms)
+✔ every mapped content id is shaped for its section; unknown ids fail the inventory (0.305625ms)
+ℹ tests 52
+ℹ suites 0
+ℹ pass 51
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 167.769916
+exit 0

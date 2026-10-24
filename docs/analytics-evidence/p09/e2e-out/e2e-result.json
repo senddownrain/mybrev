@@ -1,0 +1,317 @@
+{
+  "gates": [
+    {
+      "name": "build OFF",
+      "buildFlag": false,
+      "server": true,
+      "consent": true,
+      "offered": false,
+      "reason": "build_flag_off",
+      "sent": 0,
+      "transportCalls": 0,
+      "queueKeyExists": false,
+      "kvWrites": 0
+    },
+    {
+      "name": "build ON, server OFF (kill switch)",
+      "buildFlag": true,
+      "server": false,
+      "consent": true,
+      "offered": false,
+      "reason": "kill_switch",
+      "sent": 0,
+      "transportCalls": 0,
+      "queueKeyExists": false,
+      "kvWrites": 1
+    },
+    {
+      "name": "build ON, server ON, consent OFF",
+      "buildFlag": true,
+      "server": true,
+      "consent": false,
+      "offered": false,
+      "reason": "no_consent",
+      "sent": 0,
+      "transportCalls": 0,
+      "queueKeyExists": false,
+      "kvWrites": 0
+    },
+    {
+      "name": "revoke after queueing",
+      "queuedBefore": 1,
+      "queueKeyExistsAfter": false,
+      "consentKey": "false",
+      "offeredAfter": false,
+      "reason": "no_consent",
+      "sent": 0,
+      "transportCalls": 0
+    },
+    {
+      "name": "kill switch flipped before flush",
+      "sent": 0,
+      "queueKeyExistsAfter": false,
+      "transportCalls": 0
+    }
+  ],
+  "x1": {
+    "multiplicity": 1,
+    "packetsValid": {
+      "web": [
+        0
+      ],
+      "android": [
+        0
+      ],
+      "ios": [
+        0,
+        0
+      ]
+    },
+    "perDevice": {
+      "web": {
+        "sent": 1,
+        "lost": 0,
+        "flush": {
+          "sent": 1,
+          "lost": 0,
+          "held": 0
+        },
+        "queueLeft": 0
+      },
+      "android": {
+        "sent": 1,
+        "lost": 0,
+        "flush": {
+          "sent": 1,
+          "lost": 0,
+          "held": 0
+        },
+        "queueLeft": 0
+      },
+      "ios": {
+        "sent": 2,
+        "lost": 0,
+        "flush": {
+          "sent": 2,
+          "lost": 0,
+          "held": 0
+        },
+        "queueLeft": 0
+      }
+    },
+    "transport": {
+      "calls": 4,
+      "accepted": 4
+    },
+    "storedRows": 81,
+    "expectedTotals": {
+      "screen_view": 23,
+      "by_web": {
+        "screen_view": 5,
+        "text_read_fv": 4,
+        "text_read_sd": 4,
+        "text_read_er": 4,
+        "feature_use": 1,
+        "catalog_open": 1
+      },
+      "text_read_fv": 18,
+      "text_read_sd": 16,
+      "text_read_er": 16,
+      "feature_use": 9,
+      "catalog_open": 10,
+      "by_android": {
+        "screen_view": 8,
+        "text_read_fv": 6,
+        "text_read_sd": 5,
+        "text_read_er": 5,
+        "catalog_open": 4,
+        "feature_use": 4
+      },
+      "by_ios": {
+        "screen_view": 10,
+        "text_read_fv": 8,
+        "text_read_sd": 7,
+        "text_read_er": 7,
+        "catalog_open": 5,
+        "feature_use": 4
+      }
+    },
+    "storedTotals": {
+      "screen_view": 23,
+      "by_web": {
+        "screen_view": 5,
+        "text_read_fv": 4,
+        "text_read_sd": 4,
+        "text_read_er": 4,
+        "feature_use": 1,
+        "catalog_open": 1
+      },
+      "text_read_fv": 18,
+      "text_read_sd": 16,
+      "text_read_er": 16,
+      "feature_use": 9,
+      "catalog_open": 10,
+      "by_android": {
+        "screen_view": 8,
+        "text_read_fv": 6,
+        "text_read_sd": 5,
+        "text_read_er": 5,
+        "catalog_open": 4,
+        "feature_use": 4
+      },
+      "by_ios": {
+        "screen_view": 10,
+        "text_read_fv": 8,
+        "text_read_sd": 7,
+        "text_read_er": 7,
+        "catalog_open": 5,
+        "feature_use": 4
+      }
+    },
+    "storedEqualsExpected": true,
+    "report": {
+      "k": 5,
+      "days": [
+        "2026-10-23",
+        "2026-10-24"
+      ],
+      "publishedOpens": 0,
+      "publishedFv": 0,
+      "publishedFeatures": 0,
+      "publishedCells": 1,
+      "minPublishedN": 5,
+      "privacyScan": []
+    }
+  },
+  "x6": {
+    "multiplicity": 6,
+    "packetsValid": {
+      "web": [
+        0
+      ],
+      "android": [
+        0
+      ],
+      "ios": [
+        0,
+        0
+      ]
+    },
+    "perDevice": {
+      "web": {
+        "sent": 1,
+        "lost": 0,
+        "flush": {
+          "sent": 1,
+          "lost": 0,
+          "held": 0
+        },
+        "queueLeft": 0
+      },
+      "android": {
+        "sent": 1,
+        "lost": 0,
+        "flush": {
+          "sent": 1,
+          "lost": 0,
+          "held": 0
+        },
+        "queueLeft": 0
+      },
+      "ios": {
+        "sent": 2,
+        "lost": 0,
+        "flush": {
+          "sent": 2,
+          "lost": 0,
+          "held": 0
+        },
+        "queueLeft": 0
+      }
+    },
+    "transport": {
+      "calls": 4,
+      "accepted": 4
+    },
+    "storedRows": 81,
+    "expectedTotals": {
+      "screen_view": 138,
+      "by_web": {
+        "screen_view": 30,
+        "text_read_fv": 24,
+        "text_read_sd": 24,
+        "text_read_er": 24,
+        "feature_use": 6,
+        "catalog_open": 6
+      },
+      "text_read_fv": 108,
+      "text_read_sd": 96,
+      "text_read_er": 96,
+      "feature_use": 54,
+      "catalog_open": 60,
+      "by_android": {
+        "screen_view": 48,
+        "text_read_fv": 36,
+        "text_read_sd": 30,
+        "text_read_er": 30,
+        "catalog_open": 24,
+        "feature_use": 24
+      },
+      "by_ios": {
+        "screen_view": 60,
+        "text_read_fv": 48,
+        "text_read_sd": 42,
+        "text_read_er": 42,
+        "catalog_open": 30,
+        "feature_use": 24
+      }
+    },
+    "storedTotals": {
+      "screen_view": 138,
+      "by_web": {
+        "screen_view": 30,
+        "text_read_fv": 24,
+        "text_read_sd": 24,
+        "text_read_er": 24,
+        "feature_use": 6,
+        "catalog_open": 6
+      },
+      "text_read_fv": 108,
+      "text_read_sd": 96,
+      "text_read_er": 96,
+      "feature_use": 54,
+      "catalog_open": 60,
+      "by_android": {
+        "screen_view": 48,
+        "text_read_fv": 36,
+        "text_read_sd": 30,
+        "text_read_er": 30,
+        "catalog_open": 24,
+        "feature_use": 24
+      },
+      "by_ios": {
+        "screen_view": 60,
+        "text_read_fv": 48,
+        "text_read_sd": 42,
+        "text_read_er": 42,
+        "catalog_open": 30,
+        "feature_use": 24
+      }
+    },
+    "storedEqualsExpected": true,
+    "report": {
+      "k": 5,
+      "days": [
+        "2026-10-23",
+        "2026-10-24"
+      ],
+      "publishedOpens": 138,
+      "publishedFv": 108,
+      "publishedFeatures": 54,
+      "publishedCells": 76,
+      "minPublishedN": 6,
+      "privacyScan": []
+    }
+  },
+  "networkAttempts": []
+}
