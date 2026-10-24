@@ -93,7 +93,8 @@
     "analytics:smoke": "firebase emulators:exec --only firestore --project demo-analytics-smoke \"node scripts/analytics/screens-smoke.mjs\"",
     "test:analytics": "node --test tests/analytics-*.test.mjs",
     "test:analytics-ingest": "node --test experiments/analytics-ingest/test/*.test.mjs",
-    "analytics:consent-demo": "node experiments/analytics-ingest/demo/build-demo.mjs"
+    "analytics:consent-demo": "node experiments/analytics-ingest/demo/build-demo.mjs",
+    "analytics:dashboard-demo": "node experiments/analytics-ingest/dashboard-demo/build-dashboard.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",
