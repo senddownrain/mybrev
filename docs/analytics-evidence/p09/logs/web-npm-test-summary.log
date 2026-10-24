@@ -1,0 +1,12 @@
+✖ Marian feast references are structured rules resolved from the Common (43.750667ms)
+ℹ tests 1036
+ℹ suites 0
+ℹ pass 1024
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 11
+ℹ todo 0
+ℹ duration_ms 23292.8605
+✖ failing tests:
+✖ Marian feast references are structured rules resolved from the Common (43.750667ms)
+exit 1

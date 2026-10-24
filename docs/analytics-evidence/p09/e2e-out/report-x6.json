@@ -1,0 +1,520 @@
+{
+  "schema": "p08-report-v1",
+  "synthetic": true,
+  "banner": "SYNTHETIC DATA — НЕТ РЕАЛЬНОЙ СТАТИСТИКИ",
+  "banner_sub": "ОТКРЫТИЯ ≠ ЛЮДИ",
+  "seed": null,
+  "generated": "P09 e2e x6",
+  "k": 5,
+  "totalsAreLowerBounds": true,
+  "unit": "opens (not people)",
+  "window": {
+    "from": "2026-10-23",
+    "to": "2026-10-24",
+    "days": [
+      "2026-10-23",
+      "2026-10-24"
+    ]
+  },
+  "opens": [
+    {
+      "day": "2026-10-23",
+      "platform": "web",
+      "section": "today",
+      "n": 6
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "web",
+      "section": "hours",
+      "n": 6
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "web",
+      "section": "songs",
+      "n": 6
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "web",
+      "section": "bible",
+      "n": 6
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "web",
+      "section": "readings",
+      "n": 6
+    },
+    {
+      "day": "2026-10-24",
+      "platform": "android",
+      "section": "today",
+      "n": 12
+    },
+    {
+      "day": "2026-10-24",
+      "platform": "android",
+      "section": "hours",
+      "n": 6
+    },
+    {
+      "day": "2026-10-24",
+      "platform": "android",
+      "section": "songs",
+      "n": 6
+    },
+    {
+      "day": "2026-10-24",
+      "platform": "android",
+      "section": "bible",
+      "n": 18
+    },
+    {
+      "day": "2026-10-24",
+      "platform": "android",
+      "section": "readings",
+      "n": 6
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "ios",
+      "section": "today",
+      "n": 12
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "ios",
+      "section": "hours",
+      "n": 6
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "ios",
+      "section": "songs",
+      "n": 6
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "ios",
+      "section": "bible",
+      "n": 18
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "ios",
+      "section": "readings",
+      "n": 6
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "ios",
+      "section": "mass",
+      "n": 6
+    },
+    {
+      "day": "2026-10-24",
+      "platform": "ios",
+      "section": "mass",
+      "n": 6
+    }
+  ],
+  "catalog": [
+    {
+      "day": "2026-10-23",
+      "platform": "web",
+      "catalog_id": "prayers_home",
+      "n": 6
+    },
+    {
+      "day": "2026-10-24",
+      "platform": "android",
+      "catalog_id": "prayers_home",
+      "n": 12
+    },
+    {
+      "day": "2026-10-24",
+      "platform": "android",
+      "catalog_id": "songs",
+      "n": 12
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "ios",
+      "catalog_id": "prayers_home",
+      "n": 18
+    },
+    {
+      "day": "2026-10-23",
+      "platform": "ios",
+      "catalog_id": "songs",
+      "n": 12
+    }
+  ],
+  "materials": [
+    {
+      "section": "songs",
+      "content_id": "song:holysongs-47aac31ac301c3c2d79c",
+      "n": 18
+    },
+    {
+      "section": "bible",
+      "content_id": "bible:bel:gn",
+      "n": 30
+    },
+    {
+      "section": "bible",
+      "content_id": "bible:ru:gn",
+      "n": 12
+    }
+  ],
+  "text": [
+    {
+      "platform": "web",
+      "section": "hours",
+      "metric": "fv",
+      "bucket": "60_180s",
+      "n": 6
+    },
+    {
+      "platform": "web",
+      "section": "hours",
+      "metric": "sd",
+      "bucket": "p100",
+      "n": 6
+    },
+    {
+      "platform": "web",
+      "section": "hours",
+      "metric": "er",
+      "bucket": "60_180s",
+      "n": 6
+    },
+    {
+      "platform": "web",
+      "section": "songs",
+      "metric": "fv",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "web",
+      "section": "songs",
+      "metric": "sd",
+      "bucket": "fit",
+      "n": 6
+    },
+    {
+      "platform": "web",
+      "section": "songs",
+      "metric": "er",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "web",
+      "section": "bible",
+      "metric": "fv",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "web",
+      "section": "bible",
+      "metric": "sd",
+      "bucket": "p50_75",
+      "n": 6
+    },
+    {
+      "platform": "web",
+      "section": "bible",
+      "metric": "er",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "web",
+      "section": "readings",
+      "metric": "fv",
+      "bucket": "60_180s",
+      "n": 6
+    },
+    {
+      "platform": "web",
+      "section": "readings",
+      "metric": "sd",
+      "bucket": "p75_99",
+      "n": 6
+    },
+    {
+      "platform": "web",
+      "section": "readings",
+      "metric": "er",
+      "bucket": "60_180s",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "section": "hours",
+      "metric": "fv",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "section": "hours",
+      "metric": "sd",
+      "bucket": "p100",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "section": "hours",
+      "metric": "er",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "section": "songs",
+      "metric": "fv",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "section": "songs",
+      "metric": "sd",
+      "bucket": "fit",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "section": "songs",
+      "metric": "er",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "section": "bible",
+      "metric": "fv",
+      "bucket": "5_15s",
+      "n": 12
+    },
+    {
+      "platform": "android",
+      "section": "bible",
+      "metric": "sd",
+      "bucket": "p0_25",
+      "n": 12
+    },
+    {
+      "platform": "android",
+      "section": "bible",
+      "metric": "er",
+      "bucket": "5_15s",
+      "n": 12
+    },
+    {
+      "platform": "android",
+      "section": "bible",
+      "metric": "fv",
+      "bucket": "lt5s",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "section": "readings",
+      "metric": "fv",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "section": "readings",
+      "metric": "sd",
+      "bucket": "p100",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "section": "readings",
+      "metric": "er",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "hours",
+      "metric": "fv",
+      "bucket": "60_180s",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "hours",
+      "metric": "sd",
+      "bucket": "p100",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "hours",
+      "metric": "er",
+      "bucket": "60_180s",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "songs",
+      "metric": "fv",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "songs",
+      "metric": "sd",
+      "bucket": "fit",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "songs",
+      "metric": "er",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "bible",
+      "metric": "fv",
+      "bucket": "5_15s",
+      "n": 12
+    },
+    {
+      "platform": "ios",
+      "section": "bible",
+      "metric": "sd",
+      "bucket": "p0_25",
+      "n": 12
+    },
+    {
+      "platform": "ios",
+      "section": "bible",
+      "metric": "er",
+      "bucket": "5_15s",
+      "n": 12
+    },
+    {
+      "platform": "ios",
+      "section": "bible",
+      "metric": "fv",
+      "bucket": "lt5s",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "readings",
+      "metric": "fv",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "readings",
+      "metric": "sd",
+      "bucket": "p75_99",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "readings",
+      "metric": "er",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "mass",
+      "metric": "fv",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "mass",
+      "metric": "sd",
+      "bucket": "p100",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "mass",
+      "metric": "er",
+      "bucket": "15_60s",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "mass",
+      "metric": "fv",
+      "bucket": "gte600s",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "mass",
+      "metric": "sd",
+      "bucket": "p0_25",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "section": "mass",
+      "metric": "er",
+      "bucket": "180_600s",
+      "n": 6
+    }
+  ],
+  "features": [
+    {
+      "platform": "web",
+      "feature_id": "favorite_add",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "feature_id": "favorite_add",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "feature_id": "favorite_remove",
+      "n": 6
+    },
+    {
+      "platform": "android",
+      "feature_id": "bible_language_change",
+      "n": 12
+    },
+    {
+      "platform": "ios",
+      "feature_id": "favorite_add",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "feature_id": "favorite_remove",
+      "n": 6
+    },
+    {
+      "platform": "ios",
+      "feature_id": "bible_language_change",
+      "n": 12
+    }
+  ],
+  "errors": []
+}

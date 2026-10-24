@@ -94,7 +94,8 @@
     "test:analytics": "node --test tests/analytics-*.test.mjs",
     "test:analytics-ingest": "node --test experiments/analytics-ingest/test/*.test.mjs",
     "analytics:consent-demo": "node experiments/analytics-ingest/demo/build-demo.mjs",
-    "analytics:dashboard-demo": "node experiments/analytics-ingest/dashboard-demo/build-dashboard.mjs"
+    "analytics:dashboard-demo": "node experiments/analytics-ingest/dashboard-demo/build-dashboard.mjs",
+    "analytics:e2e": "node experiments/analytics-ingest/e2e/p09-e2e.mjs --out docs/analytics-evidence/p09/e2e-out"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",
