@@ -105,6 +105,11 @@ export function scrubEvent(event, resolvePattern) {
   if (!event) return null;
   const out = deepScrub(event, resolvePattern);
   for (const field of DROPPED_EVENT_FIELDS) delete out[field];
+  if (out.contexts && typeof out.contexts === 'object') {
+    // Defense in depth: component props (prayer, song, Bible text) must never ride along.
+    out.contexts = { ...out.contexts };
+    delete out.contexts.vue;
+  }
   if (out.request) {
     const request = { ...out.request };
     if (typeof event.request?.url === 'string') request.url = parameterizeRoute(event.request.url, resolvePattern);

@@ -72,6 +72,16 @@ test('scrubbed synthetic event contains no id, query, hash, text, user or cookie
   assert.equal(out.extra, undefined);
 });
 
+test('Vue component props never reach the event', () => {
+  const event = { ...SYNTHETIC_EVENT(), contexts: { browser: { name: 'Chrome' }, vue: { componentName: 'Reader', propsData: { text: 'Ойча наш, Які ёсць на нябёсах' } } } };
+  const out = scrubEvent(event, resolvePattern);
+  assert.equal(out.contexts.vue, undefined);
+  assert.deepEqual(out.contexts.browser, { name: 'Chrome' });
+  assert.ok(!JSON.stringify(out).includes('Ойча'));
+  const src = readFileSync(path.join(root, 'src/plugins/sentry.js'), 'utf8');
+  assert.match(src, /attachProps: false/);
+});
+
 test('useful error data survives scrubbing', () => {
   const out = scrubEvent(SYNTHETIC_EVENT(), resolvePattern);
   assert.equal(out.level, 'error');

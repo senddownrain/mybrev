@@ -30,6 +30,9 @@ export function initSentry(app, router) {
       // Variant B (errors only): no tracing or Replay integration, so navigation paths and
       // recordings of prayer, song or Bible reading are never sent. See docs/analytics-sentry-review.md.
       integrations: [],
+      // @sentry/vue would otherwise attach the failing component's props (prayer or song text) to the event.
+      attachProps: false,
+      trackComponents: false,
       ...SENTRY_PRIVACY_OPTIONS,
       ...createSentryFilters(createRouterPatternResolver(router)),
       environment: import.meta.env.MODE,
