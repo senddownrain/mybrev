@@ -1,0 +1,25 @@
+# R05 evidence (local fallback, 2026-10-26). Tokens are not used in the 401 cases.
+$ curl -i http://127.0.0.1:8790/reports/api/summary   # no credentials
+HTTP/1.1 401 Unauthorized
+cache-control: no-store
+content-security-policy: default-src 'none'; frame-ancestors 'none'; base-uri 'none'
+content-type: application/json; charset=utf-8
+cross-origin-opener-policy: same-origin
+cross-origin-resource-policy: same-origin
+permissions-policy: interest-cohort=(), geolocation=(), camera=(), microphone=()
+pragma: no-cache
+referrer-policy: no-referrer
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-robots-tag: noindex, nofollow
+Transfer-Encoding: chunked
+
+{"code":"unauthorized"}
+
+$ curl -i http://127.0.0.1:8790/reports/api/summary.csv -H "Authorization: Bearer wrong"
+HTTP/1.1 401 Unauthorized
+
+$ curl -i http://127.0.0.1:8791/reports   # via LOCAL Access simulator (page)
+HTTP/1.1 200 OK
+cache-control: no-store
+content-security-policy: default-src 'none'; script-src 'nonce-FZ7llC6sc7MYxJUZVhCdgw=='; style-src 'nonce-FZ7llC6sc7MYxJUZVhCdgw=='; connect-src 'self'; img-src 'none'; font-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';
