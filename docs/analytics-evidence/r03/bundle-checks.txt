@@ -1,0 +1,6 @@
+# R03 bundle checks (2026-10-26, Node v24.2.0)
+off: files with staging URL/ingest path:        0; files with analytics_local_v1:        0
+local: files with staging URL/ingest path:        0; files with analytics_local_v1:        1
+qa: files with staging URL/ingest path:        2; files with analytics_local_v1:        1
+qa-only-staging: files with staging URL/ingest path:        0; files with analytics_local_v1:        0
+(off = plain build; local = VITE_ANALYTICS_LOCAL only; qa = LOCAL + STAGING + URL; qa-only-staging = STAGING without LOCAL => nothing)

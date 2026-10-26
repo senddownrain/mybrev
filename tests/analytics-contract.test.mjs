@@ -86,12 +86,17 @@ test('stage guard: only main.js, behind the build flag, may reach the analytics 
   }(path.join(root, 'src')));
   assert.deepEqual(offenders, ['src/main.js']);
   const main = readFileSync(path.join(root, 'src/main.js'), 'utf8');
-  assert.match(main, /if \(import\.meta\.env\.VITE_ANALYTICS_LOCAL === 'true'\) \{\s*import\('\.\/utils\/analytics\/localAnalytics'\)/);
-  assert.equal((main.match(/utils\/analytics/g) || []).length, 1, 'only the flagged dynamic import');
+  // R03: two dynamic imports, both inside the LOCAL flag; the transport additionally behind its own compile-time STAGING flag
+  const localBlock = main.slice(main.indexOf("if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {"));
+  assert.ok(localBlock.length > 0 && main.indexOf("if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {") === main.lastIndexOf("if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {"));
+  assert.match(localBlock, /import\('\.\/utils\/analytics\/localAnalytics'\)/);
+  assert.match(localBlock, /import\.meta\.env\.VITE_ANALYTICS_STAGING === 'true'\s*\?\s*import\('\.\/utils\/analytics\/stagingTransport'\)/);
+  assert.equal((main.match(/utils\/analytics/g) || []).length, 2, 'only the two flagged dynamic imports');
+  assert.equal(main.indexOf('utils/analytics'), main.indexOf("if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {") + main.slice(main.indexOf("if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {")).indexOf('utils/analytics'), 'nothing analytics-related before the flag');
   const indexHtml = readFileSync(path.join(root, 'index.html'), 'utf8');
   assert.ok(!/analytics/i.test(indexHtml));
   for (const file of readdirSync(root).filter((f) => /^\.env/.test(f))) {
-    assert.ok(!/VITE_ANALYTICS_LOCAL\s*=\s*true/.test(readFileSync(path.join(root, file), 'utf8')), `${file} must not enable analytics`);
+    assert.ok(!/VITE_ANALYTICS_(LOCAL|STAGING)\s*=\s*true/.test(readFileSync(path.join(root, file), 'utf8')), `${file} must not enable analytics`);
   }
 });
 
@@ -99,8 +104,10 @@ test('no analytics module contains a network call; only the DOM glue may touch l
   const dir = path.join(root, 'src/utils/analytics');
   for (const name of readdirSync(dir).filter((f) => f.endsWith('.js'))) {
     const text = readFileSync(path.join(dir, name), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
-    assert.ok(!/\bfetch\s*\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|navigator\.\w*[Bb]eacon|sessionStorage|indexedDB|document\.cookie/.test(text), name);
-    if (name !== 'localAnalytics.js') assert.ok(!/localStorage/.test(text), `${name} must not touch storage`);
+    // R03: the QA-only staging transport is the single module allowed to call fetch (compile-time gated in main.js)
+    const network = name === 'stagingTransport.js' ? /XMLHttpRequest|sendBeacon|WebSocket|EventSource|navigator\.\w*[Bb]eacon|sessionStorage|indexedDB|document\.cookie/ : /\bfetch\s*\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|navigator\.\w*[Bb]eacon|sessionStorage|indexedDB|document\.cookie/;
+    assert.ok(!network.test(text), name);
+    if (!['localAnalytics.js', 'stagingTransport.js'].includes(name)) assert.ok(!/localStorage/.test(text), `${name} must not touch storage`);
   }
   const glue = readFileSync(path.join(dir, 'localAnalytics.js'), 'utf8');
   // Storage is written only from page-hide handlers and bounded, never from scroll/tap.
