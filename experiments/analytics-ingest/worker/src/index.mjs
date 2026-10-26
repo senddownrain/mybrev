@@ -1,3 +1,4 @@
+/* global Response, TextEncoder, TextDecoder */
 /**
  * MyBrev analytics STAGING Worker (R02). Routes:
  *   POST /v2/ingest            public, contract v2 packet <= 16 KiB -> 204 / 4xx / 503

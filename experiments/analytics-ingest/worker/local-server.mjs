@@ -1,3 +1,4 @@
+/* global Request */
 /**
  * Real local HTTP endpoint (R02 fallback while there is no Cloudflare staging): the SAME worker/src/index.mjs behind node:http,
  * D1 replaced by a persistent SQLite file. Binds 127.0.0.1 only. Prints nothing about requests.

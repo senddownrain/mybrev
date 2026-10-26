@@ -1,3 +1,4 @@
+/* global Request, ReadableStream */
 /**
  * R02: the staging Worker (worker/src/index.mjs) + D1 adapter, driven through real Request/Response objects.
  * D1 is the SQLite shim (batch = transaction), so this proves the HTTP, routing, auth, budget and rollback logic;
