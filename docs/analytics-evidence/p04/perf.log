@@ -1,0 +1,212 @@
+
+> mybrev@4.5.2 analytics:perf
+> firebase emulators:exec --only firestore --project demo-analytics-perf "node scripts/analytics/perf-compare.mjs"
+
+i  emulators: Starting emulators: firestore
+i  emulators: Detected demo project ID "demo-analytics-perf", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
+✔  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: node scripts/analytics/perf-compare.mjs
+(node:52912) MetadataLookupWarning: received unexpected error = network timeout at: http://169.254.169.254/computeMetadata/v1/instance code = UNKNOWN
+(Use `node --trace-warnings ...` to show where the warning was created)
+seeded 4035 documents into the emulator
+run 1/7 done
+run 2/7 done
+run 3/7 done
+run 4/7 done
+run 5/7 done
+run 6/7 done
+run 7/7 done
+{
+  "off": {
+    "flag": "false",
+    "distBytes": 9716823,
+    "cold_ms": {
+      "home": {
+        "n": 7,
+        "median": 381,
+        "p25": 372,
+        "p75": 509,
+        "min": 351,
+        "max": 550
+      },
+      "readings": {
+        "n": 7,
+        "median": 392,
+        "p25": 374,
+        "p75": 410,
+        "min": 346,
+        "max": 473
+      },
+      "hour": {
+        "n": 7,
+        "median": 284,
+        "p25": 245,
+        "p75": 399,
+        "min": 242,
+        "max": 426
+      }
+    },
+    "frame_p50_ms": {
+      "n": 7,
+      "median": 16.7,
+      "p25": 16.7,
+      "p75": 16.7,
+      "min": 16.7,
+      "max": 16.7
+    },
+    "frame_p95_ms": {
+      "n": 7,
+      "median": 17.3,
+      "p25": 17.2,
+      "p75": 17.4,
+      "min": 17.2,
+      "max": 17.6
+    },
+    "frame_max_ms": {
+      "n": 7,
+      "median": 17.7,
+      "p25": 17.6,
+      "p75": 17.7,
+      "min": 17.6,
+      "max": 17.8
+    },
+    "slow_frames_over_33ms": {
+      "n": 7,
+      "median": 0,
+      "p25": 0,
+      "p75": 0,
+      "min": 0,
+      "max": 0
+    },
+    "spa_nav_ms": {
+      "n": 7,
+      "median": 21.7,
+      "p25": 19.9,
+      "p75": 31.6,
+      "min": 18,
+      "max": 31.9
+    },
+    "js_heap_mb": {
+      "n": 7,
+      "median": 16.25,
+      "p25": 14.77,
+      "p75": 16.26,
+      "min": 14.76,
+      "max": 16.27
+    },
+    "storage_bytes": {
+      "n": 7,
+      "median": 207,
+      "p25": 206,
+      "p75": 207,
+      "min": 206,
+      "max": 207
+    },
+    "request_hosts": [
+      "127.0.0.1:5290",
+      "127.0.0.1:8089",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com"
+    ]
+  },
+  "on": {
+    "flag": "true",
+    "distBytes": 9757084,
+    "cold_ms": {
+      "home": {
+        "n": 7,
+        "median": 376,
+        "p25": 360,
+        "p75": 418,
+        "min": 356,
+        "max": 425
+      },
+      "readings": {
+        "n": 7,
+        "median": 401,
+        "p25": 261,
+        "p75": 443,
+        "min": 245,
+        "max": 443
+      },
+      "hour": {
+        "n": 7,
+        "median": 363,
+        "p25": 304,
+        "p75": 374,
+        "min": 262,
+        "max": 391
+      }
+    },
+    "frame_p50_ms": {
+      "n": 7,
+      "median": 16.7,
+      "p25": 16.7,
+      "p75": 16.7,
+      "min": 16.7,
+      "max": 16.7
+    },
+    "frame_p95_ms": {
+      "n": 7,
+      "median": 17.4,
+      "p25": 17.3,
+      "p75": 17.5,
+      "min": 17.3,
+      "max": 17.7
+    },
+    "frame_max_ms": {
+      "n": 7,
+      "median": 17.7,
+      "p25": 17.6,
+      "p75": 17.8,
+      "min": 17.5,
+      "max": 17.8
+    },
+    "slow_frames_over_33ms": {
+      "n": 7,
+      "median": 0,
+      "p25": 0,
+      "p75": 0,
+      "min": 0,
+      "max": 0
+    },
+    "spa_nav_ms": {
+      "n": 7,
+      "median": 19.5,
+      "p25": 17.3,
+      "p75": 22.8,
+      "min": 16.8,
+      "max": 23.7
+    },
+    "js_heap_mb": {
+      "n": 7,
+      "median": 16.37,
+      "p25": 14.93,
+      "p75": 16.39,
+      "min": 14.89,
+      "max": 16.39
+    },
+    "storage_bytes": {
+      "n": 7,
+      "median": 207,
+      "p25": 207,
+      "p75": 207,
+      "min": 207,
+      "max": 207
+    },
+    "request_hosts": [
+      "127.0.0.1:5291",
+      "127.0.0.1:8089",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com"
+    ]
+  }
+}
+report: /Users/gleb/Documents/GitHub/senddownrain/mybrev/.claude/worktrees/p04-parity-27adc9/reports/performance/analytics-web-before-after-2026-10-23.json
+✔  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator
+exit=0

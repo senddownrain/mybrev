@@ -1,0 +1,5411 @@
+{
+  "meta": {
+    "schema": "p08-report-v1",
+    "seed": 20261024,
+    "generated": "synthetic fixture (fixed date, not a real run)",
+    "banner": "SYNTHETIC DATA — НЕТ РЕАЛЬНОЙ СТАТИСТИКИ",
+    "banner_sub": "ОТКРЫТИЯ ≠ ЛЮДИ",
+    "k": 5,
+    "retention_days": 14,
+    "days_generated": 21,
+    "days_removed_by_retention": [
+      "2026-10-17",
+      "2026-10-18",
+      "2026-10-19",
+      "2026-10-20",
+      "2026-10-21",
+      "2026-10-22"
+    ],
+    "platforms": [
+      "web",
+      "android",
+      "ios"
+    ],
+    "public_ids": 750,
+    "features_in_profile": 8
+  },
+  "report": {
+    "schema": "p08-report-v1",
+    "synthetic": true,
+    "banner": "SYNTHETIC DATA — НЕТ РЕАЛЬНОЙ СТАТИСТИКИ",
+    "banner_sub": "ОТКРЫТИЯ ≠ ЛЮДИ",
+    "seed": 20261024,
+    "generated": "synthetic fixture (fixed date, not a real run)",
+    "k": 5,
+    "totalsAreLowerBounds": true,
+    "unit": "opens (not people)",
+    "window": {
+      "from": "2026-10-23",
+      "to": "2026-11-06",
+      "days": [
+        "2026-10-23",
+        "2026-10-24",
+        "2026-10-25",
+        "2026-10-26",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30",
+        "2026-10-31",
+        "2026-11-01",
+        "2026-11-02",
+        "2026-11-03",
+        "2026-11-04",
+        "2026-11-05",
+        "2026-11-06"
+      ]
+    },
+    "opens": [
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "section": "today",
+        "n": 36
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "section": "songs",
+        "n": 25
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "section": "compendium",
+        "n": 14
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "section": "readings",
+        "n": 30
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "section": "hours",
+        "n": 32
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "section": "bible",
+        "n": 10
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "section": "prayers",
+        "n": 28
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "section": "mass",
+        "n": 7
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "section": "ordo",
+        "n": 9
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "android",
+        "section": "readings",
+        "n": 15
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "android",
+        "section": "hours",
+        "n": 28
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "android",
+        "section": "today",
+        "n": 18
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "android",
+        "section": "prayers",
+        "n": 14
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "android",
+        "section": "bible",
+        "n": 12
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "android",
+        "section": "songs",
+        "n": 11
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "ios",
+        "section": "hours",
+        "n": 15
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 10
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "ios",
+        "section": "compendium",
+        "n": 6
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "ios",
+        "section": "bible",
+        "n": 6
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "ios",
+        "section": "readings",
+        "n": 12
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "ios",
+        "section": "today",
+        "n": 19
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "ios",
+        "section": "songs",
+        "n": 9
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "web",
+        "section": "prayers",
+        "n": 33
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "web",
+        "section": "hours",
+        "n": 31
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "web",
+        "section": "readings",
+        "n": 24
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "web",
+        "section": "songs",
+        "n": 17
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "web",
+        "section": "today",
+        "n": 21
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "web",
+        "section": "bible",
+        "n": 11
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "web",
+        "section": "compendium",
+        "n": 11
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "android",
+        "section": "readings",
+        "n": 18
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "android",
+        "section": "prayers",
+        "n": 18
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "android",
+        "section": "bible",
+        "n": 13
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "android",
+        "section": "songs",
+        "n": 13
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "android",
+        "section": "today",
+        "n": 22
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "android",
+        "section": "hours",
+        "n": 21
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "android",
+        "section": "mass",
+        "n": 5
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "ios",
+        "section": "bible",
+        "n": 9
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "ios",
+        "section": "hours",
+        "n": 19
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 7
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "ios",
+        "section": "songs",
+        "n": 12
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "ios",
+        "section": "today",
+        "n": 11
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "ios",
+        "section": "readings",
+        "n": 12
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "section": "today",
+        "n": 41
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "section": "prayers",
+        "n": 35
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "section": "mass",
+        "n": 11
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "section": "hours",
+        "n": 52
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "section": "readings",
+        "n": 31
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "section": "songs",
+        "n": 30
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "section": "bible",
+        "n": 25
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "section": "compendium",
+        "n": 10
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "section": "bible",
+        "n": 15
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "section": "hours",
+        "n": 28
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "section": "today",
+        "n": 29
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "section": "ordo",
+        "n": 5
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "section": "songs",
+        "n": 12
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "section": "readings",
+        "n": 19
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "section": "prayers",
+        "n": 26
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "section": "compendium",
+        "n": 6
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "section": "mass",
+        "n": 5
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "section": "picker",
+        "n": 8
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "ios",
+        "section": "bible",
+        "n": 11
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "ios",
+        "section": "hours",
+        "n": 21
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "ios",
+        "section": "readings",
+        "n": 18
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "ios",
+        "section": "today",
+        "n": 22
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 15
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "ios",
+        "section": "songs",
+        "n": 11
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "section": "hours",
+        "n": 40
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "section": "prayers",
+        "n": 20
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "section": "bible",
+        "n": 26
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "section": "picker",
+        "n": 6
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "section": "readings",
+        "n": 25
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "section": "today",
+        "n": 47
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "section": "songs",
+        "n": 18
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "section": "compendium",
+        "n": 6
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "android",
+        "section": "today",
+        "n": 21
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "android",
+        "section": "hours",
+        "n": 30
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "android",
+        "section": "songs",
+        "n": 20
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "android",
+        "section": "ordo",
+        "n": 6
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "android",
+        "section": "readings",
+        "n": 20
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "android",
+        "section": "bible",
+        "n": 8
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "android",
+        "section": "prayers",
+        "n": 19
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "android",
+        "section": "settings",
+        "n": 5
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "android",
+        "section": "compendium",
+        "n": 6
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "ios",
+        "section": "today",
+        "n": 18
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "ios",
+        "section": "hours",
+        "n": 19
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "ios",
+        "section": "compendium",
+        "n": 5
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "ios",
+        "section": "readings",
+        "n": 12
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 11
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "ios",
+        "section": "songs",
+        "n": 7
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "ios",
+        "section": "bible",
+        "n": 14
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "section": "hours",
+        "n": 45
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "section": "songs",
+        "n": 28
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "section": "mass",
+        "n": 7
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "section": "today",
+        "n": 22
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "section": "readings",
+        "n": 28
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "section": "prayers",
+        "n": 38
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "section": "bible",
+        "n": 17
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "section": "compendium",
+        "n": 9
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "android",
+        "section": "songs",
+        "n": 13
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "android",
+        "section": "readings",
+        "n": 22
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "android",
+        "section": "hours",
+        "n": 22
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "android",
+        "section": "prayers",
+        "n": 9
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "android",
+        "section": "today",
+        "n": 17
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "android",
+        "section": "compendium",
+        "n": 7
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "ios",
+        "section": "hours",
+        "n": 12
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "ios",
+        "section": "today",
+        "n": 11
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "ios",
+        "section": "readings",
+        "n": 12
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "ios",
+        "section": "songs",
+        "n": 11
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "ios",
+        "section": "bible",
+        "n": 7
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "ios",
+        "section": "compendium",
+        "n": 5
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 12
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "section": "mass",
+        "n": 10
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "section": "today",
+        "n": 17
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "section": "readings",
+        "n": 33
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "section": "ordo",
+        "n": 5
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "section": "prayers",
+        "n": 34
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "section": "bible",
+        "n": 25
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "section": "hours",
+        "n": 41
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "section": "songs",
+        "n": 16
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "section": "compendium",
+        "n": 6
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "android",
+        "section": "readings",
+        "n": 15
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "android",
+        "section": "hours",
+        "n": 26
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "android",
+        "section": "prayers",
+        "n": 16
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "android",
+        "section": "songs",
+        "n": 15
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "android",
+        "section": "today",
+        "n": 17
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "android",
+        "section": "bible",
+        "n": 12
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "android",
+        "section": "compendium",
+        "n": 8
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "ios",
+        "section": "songs",
+        "n": 16
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "ios",
+        "section": "today",
+        "n": 16
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 13
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "ios",
+        "section": "readings",
+        "n": 13
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "ios",
+        "section": "hours",
+        "n": 14
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "ios",
+        "section": "bible",
+        "n": 13
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "section": "compendium",
+        "n": 15
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "section": "bible",
+        "n": 19
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "section": "hours",
+        "n": 51
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "section": "readings",
+        "n": 31
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "section": "songs",
+        "n": 23
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "section": "prayers",
+        "n": 29
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "section": "today",
+        "n": 26
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "section": "ordo",
+        "n": 7
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "section": "picker",
+        "n": 6
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "section": "mass",
+        "n": 5
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "android",
+        "section": "today",
+        "n": 10
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "android",
+        "section": "hours",
+        "n": 27
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "android",
+        "section": "prayers",
+        "n": 25
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "android",
+        "section": "bible",
+        "n": 8
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "android",
+        "section": "readings",
+        "n": 14
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "android",
+        "section": "songs",
+        "n": 15
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "android",
+        "section": "mass",
+        "n": 5
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "ios",
+        "section": "readings",
+        "n": 14
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "ios",
+        "section": "hours",
+        "n": 22
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "ios",
+        "section": "today",
+        "n": 15
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "ios",
+        "section": "songs",
+        "n": 6
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "ios",
+        "section": "compendium",
+        "n": 6
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 8
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "section": "songs",
+        "n": 30
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "section": "ordo",
+        "n": 6
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "section": "compendium",
+        "n": 14
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "section": "bible",
+        "n": 17
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "section": "hours",
+        "n": 42
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "section": "today",
+        "n": 31
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "section": "prayers",
+        "n": 26
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "section": "picker",
+        "n": 6
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "section": "about",
+        "n": 7
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "section": "readings",
+        "n": 21
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "section": "mass",
+        "n": 5
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "android",
+        "section": "compendium",
+        "n": 6
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "android",
+        "section": "hours",
+        "n": 31
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "android",
+        "section": "readings",
+        "n": 17
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "android",
+        "section": "prayers",
+        "n": 11
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "android",
+        "section": "ordo",
+        "n": 6
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "android",
+        "section": "today",
+        "n": 14
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "android",
+        "section": "bible",
+        "n": 9
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "android",
+        "section": "songs",
+        "n": 14
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "ios",
+        "section": "hours",
+        "n": 11
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "ios",
+        "section": "bible",
+        "n": 8
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "ios",
+        "section": "songs",
+        "n": 7
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 9
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "ios",
+        "section": "readings",
+        "n": 14
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "ios",
+        "section": "today",
+        "n": 12
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "section": "readings",
+        "n": 28
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "section": "hours",
+        "n": 39
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "section": "mass",
+        "n": 11
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "section": "prayers",
+        "n": 21
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "section": "bible",
+        "n": 15
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "section": "today",
+        "n": 36
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "section": "compendium",
+        "n": 12
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "section": "picker",
+        "n": 5
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "section": "songs",
+        "n": 18
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "section": "bible",
+        "n": 13
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "section": "hours",
+        "n": 25
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "section": "compendium",
+        "n": 5
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "section": "today",
+        "n": 15
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "section": "readings",
+        "n": 14
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "section": "prayers",
+        "n": 11
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "section": "mass",
+        "n": 5
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "section": "picker",
+        "n": 6
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "section": "songs",
+        "n": 12
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 10
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "ios",
+        "section": "hours",
+        "n": 10
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "ios",
+        "section": "readings",
+        "n": 11
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "ios",
+        "section": "songs",
+        "n": 11
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "ios",
+        "section": "today",
+        "n": 10
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "ios",
+        "section": "bible",
+        "n": 9
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "ios",
+        "section": "compendium",
+        "n": 5
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "section": "today",
+        "n": 50
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "section": "bible",
+        "n": 20
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "section": "readings",
+        "n": 43
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "section": "songs",
+        "n": 37
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "section": "hours",
+        "n": 55
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "section": "prayers",
+        "n": 46
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "section": "compendium",
+        "n": 16
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "section": "mass",
+        "n": 13
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "section": "ordo",
+        "n": 15
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "section": "compendium",
+        "n": 7
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "section": "songs",
+        "n": 16
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "section": "mass",
+        "n": 7
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "section": "bible",
+        "n": 18
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "section": "prayers",
+        "n": 27
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "section": "hours",
+        "n": 41
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "section": "today",
+        "n": 30
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "section": "readings",
+        "n": 13
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "ios",
+        "section": "readings",
+        "n": 18
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "ios",
+        "section": "today",
+        "n": 22
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 22
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "ios",
+        "section": "bible",
+        "n": 8
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "ios",
+        "section": "hours",
+        "n": 19
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "ios",
+        "section": "songs",
+        "n": 9
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "ios",
+        "section": "ordo",
+        "n": 6
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "section": "bible",
+        "n": 28
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "section": "compendium",
+        "n": 13
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "section": "songs",
+        "n": 39
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "section": "prayers",
+        "n": 29
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "section": "hours",
+        "n": 56
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "section": "picker",
+        "n": 6
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "section": "readings",
+        "n": 34
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "section": "today",
+        "n": 33
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "section": "ordo",
+        "n": 7
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "section": "hours",
+        "n": 27
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "section": "today",
+        "n": 21
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "section": "songs",
+        "n": 18
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "section": "prayers",
+        "n": 15
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "section": "readings",
+        "n": 21
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "section": "compendium",
+        "n": 8
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "section": "bible",
+        "n": 12
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "section": "ordo",
+        "n": 5
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "ios",
+        "section": "readings",
+        "n": 12
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "ios",
+        "section": "bible",
+        "n": 8
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "ios",
+        "section": "compendium",
+        "n": 6
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "ios",
+        "section": "hours",
+        "n": 22
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 14
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "ios",
+        "section": "today",
+        "n": 12
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "ios",
+        "section": "songs",
+        "n": 9
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "section": "songs",
+        "n": 25
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "section": "bible",
+        "n": 24
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "section": "prayers",
+        "n": 29
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "section": "ordo",
+        "n": 6
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "section": "hours",
+        "n": 52
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "section": "readings",
+        "n": 38
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "section": "today",
+        "n": 41
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "section": "mass",
+        "n": 6
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "section": "compendium",
+        "n": 8
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "android",
+        "section": "hours",
+        "n": 22
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "android",
+        "section": "prayers",
+        "n": 21
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "android",
+        "section": "today",
+        "n": 19
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "android",
+        "section": "songs",
+        "n": 13
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "android",
+        "section": "compendium",
+        "n": 8
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "android",
+        "section": "bible",
+        "n": 10
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "android",
+        "section": "readings",
+        "n": 20
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "android",
+        "section": "settings",
+        "n": 5
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "ios",
+        "section": "compendium",
+        "n": 5
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "ios",
+        "section": "hours",
+        "n": 17
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "ios",
+        "section": "bible",
+        "n": 11
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "ios",
+        "section": "mass",
+        "n": 5
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 18
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "ios",
+        "section": "today",
+        "n": 18
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "ios",
+        "section": "readings",
+        "n": 13
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "ios",
+        "section": "songs",
+        "n": 8
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "section": "hours",
+        "n": 44
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "section": "prayers",
+        "n": 32
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "section": "readings",
+        "n": 49
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "section": "picker",
+        "n": 5
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "section": "today",
+        "n": 43
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "section": "songs",
+        "n": 27
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "section": "compendium",
+        "n": 16
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "section": "bible",
+        "n": 22
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "android",
+        "section": "ordo",
+        "n": 8
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "android",
+        "section": "today",
+        "n": 21
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "android",
+        "section": "hours",
+        "n": 28
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "android",
+        "section": "bible",
+        "n": 12
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "android",
+        "section": "readings",
+        "n": 15
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "android",
+        "section": "songs",
+        "n": 16
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "android",
+        "section": "prayers",
+        "n": 23
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "ios",
+        "section": "today",
+        "n": 16
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "ios",
+        "section": "songs",
+        "n": 14
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "ios",
+        "section": "bible",
+        "n": 9
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 12
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "ios",
+        "section": "hours",
+        "n": 10
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "ios",
+        "section": "readings",
+        "n": 7
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "section": "readings",
+        "n": 39
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "section": "hours",
+        "n": 44
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "section": "compendium",
+        "n": 15
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "section": "today",
+        "n": 46
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "section": "songs",
+        "n": 17
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "section": "prayers",
+        "n": 23
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "section": "bible",
+        "n": 19
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "section": "mass",
+        "n": 6
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "android",
+        "section": "hours",
+        "n": 24
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "android",
+        "section": "today",
+        "n": 23
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "android",
+        "section": "compendium",
+        "n": 5
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "android",
+        "section": "songs",
+        "n": 12
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "android",
+        "section": "readings",
+        "n": 20
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "android",
+        "section": "prayers",
+        "n": 16
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "android",
+        "section": "bible",
+        "n": 15
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "android",
+        "section": "mass",
+        "n": 5
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "ios",
+        "section": "today",
+        "n": 14
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "ios",
+        "section": "songs",
+        "n": 10
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 14
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "ios",
+        "section": "hours",
+        "n": 21
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "ios",
+        "section": "readings",
+        "n": 6
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "section": "hours",
+        "n": 44
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "section": "today",
+        "n": 29
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "section": "bible",
+        "n": 19
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "section": "readings",
+        "n": 35
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "section": "prayers",
+        "n": 30
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "section": "mass",
+        "n": 14
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "section": "ordo",
+        "n": 8
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "section": "compendium",
+        "n": 8
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "section": "songs",
+        "n": 24
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "section": "picker",
+        "n": 5
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "android",
+        "section": "readings",
+        "n": 21
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "android",
+        "section": "prayers",
+        "n": 14
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "android",
+        "section": "bible",
+        "n": 14
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "android",
+        "section": "hours",
+        "n": 30
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "android",
+        "section": "today",
+        "n": 21
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "android",
+        "section": "songs",
+        "n": 12
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "ios",
+        "section": "hours",
+        "n": 19
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "ios",
+        "section": "today",
+        "n": 16
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "ios",
+        "section": "prayers",
+        "n": 10
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "ios",
+        "section": "bible",
+        "n": 9
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "ios",
+        "section": "readings",
+        "n": 10
+      }
+    ],
+    "catalog": [
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 12
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 6
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 8
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "catalog_id": "compendium_home",
+        "n": 6
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 13
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 7
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 13
+      },
+      {
+        "day": "2026-10-23",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 6
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 12
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 13
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 11
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "android",
+        "catalog_id": "prayers_home",
+        "n": 6
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "android",
+        "catalog_id": "songs",
+        "n": 5
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "android",
+        "catalog_id": "prayers_all",
+        "n": 6
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 10
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "ios",
+        "catalog_id": "bible_books",
+        "n": 6
+      },
+      {
+        "day": "2026-10-24",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 7
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 5
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 12
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 9
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 17
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "catalog_id": "compendium_home",
+        "n": 5
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 6
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 9
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "catalog_id": "bible_books",
+        "n": 11
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "catalog_id": "prayers_all",
+        "n": 7
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "android",
+        "catalog_id": "prayers_home",
+        "n": 10
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "ios",
+        "catalog_id": "prayers_home",
+        "n": 7
+      },
+      {
+        "day": "2026-10-25",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 10
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 9
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 15
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 7
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 9
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "android",
+        "catalog_id": "songs",
+        "n": 10
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 13
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 6
+      },
+      {
+        "day": "2026-10-26",
+        "platform": "ios",
+        "catalog_id": "bible_books",
+        "n": 6
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 8
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 18
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 12
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 9
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 7
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 6
+      },
+      {
+        "day": "2026-10-27",
+        "platform": "ios",
+        "catalog_id": "prayers_home",
+        "n": 5
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 10
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 16
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 19
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 12
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "android",
+        "catalog_id": "prayers_home",
+        "n": 7
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "android",
+        "catalog_id": "songs",
+        "n": 7
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 6
+      },
+      {
+        "day": "2026-10-28",
+        "platform": "ios",
+        "catalog_id": "bible_books",
+        "n": 7
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 5
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 20
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "catalog_id": "compendium_home",
+        "n": 6
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 8
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 8
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 7
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 10
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "android",
+        "catalog_id": "bible_books",
+        "n": 5
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "android",
+        "catalog_id": "prayers_home",
+        "n": 10
+      },
+      {
+        "day": "2026-10-29",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 9
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 11
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 9
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 7
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 12
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 7
+      },
+      {
+        "day": "2026-10-30",
+        "platform": "android",
+        "catalog_id": "bible_books",
+        "n": 5
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 5
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 5
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 8
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "catalog_id": "compendium_home",
+        "n": 8
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 20
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 5
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "catalog_id": "bible_books",
+        "n": 7
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 8
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "android",
+        "catalog_id": "prayers_home",
+        "n": 8
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 5
+      },
+      {
+        "day": "2026-10-31",
+        "platform": "ios",
+        "catalog_id": "prayers_home",
+        "n": 7
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 22
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 9
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "catalog_id": "compendium_home",
+        "n": 5
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 9
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 17
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "catalog_id": "songs",
+        "n": 8
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "catalog_id": "bible_books",
+        "n": 8
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "catalog_id": "prayers_home",
+        "n": 10
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 15
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "android",
+        "catalog_id": "prayers_all",
+        "n": 5
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "ios",
+        "catalog_id": "prayers_all",
+        "n": 5
+      },
+      {
+        "day": "2026-11-01",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 7
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "catalog_id": "compendium_home",
+        "n": 5
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 7
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 9
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 21
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 15
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 9
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 11
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "catalog_id": "prayers_all",
+        "n": 5
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "catalog_id": "prayers_home",
+        "n": 7
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "android",
+        "catalog_id": "songs",
+        "n": 8
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "ios",
+        "catalog_id": "prayers_home",
+        "n": 7
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "ios",
+        "catalog_id": "bible_books",
+        "n": 5
+      },
+      {
+        "day": "2026-11-02",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 6
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 9
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 20
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 13
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 7
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 11
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "android",
+        "catalog_id": "prayers_home",
+        "n": 6
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 6
+      },
+      {
+        "day": "2026-11-03",
+        "platform": "ios",
+        "catalog_id": "prayers_home",
+        "n": 8
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 12
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 10
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "catalog_id": "compendium_home",
+        "n": 8
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 10
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 8
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 7
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "android",
+        "catalog_id": "prayers_all",
+        "n": 7
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "android",
+        "catalog_id": "songs",
+        "n": 6
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 8
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "android",
+        "catalog_id": "prayers_home",
+        "n": 5
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "ios",
+        "catalog_id": "songs",
+        "n": 7
+      },
+      {
+        "day": "2026-11-04",
+        "platform": "ios",
+        "catalog_id": "bible_books",
+        "n": 5
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 19
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 9
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 9
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 7
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "web",
+        "catalog_id": "compendium_home",
+        "n": 6
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "android",
+        "catalog_id": "hours_list",
+        "n": 11
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "android",
+        "catalog_id": "bible_books",
+        "n": 6
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 7
+      },
+      {
+        "day": "2026-11-05",
+        "platform": "ios",
+        "catalog_id": "prayers_home",
+        "n": 7
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "catalog_id": "hours_list",
+        "n": 14
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "catalog_id": "prayers_all",
+        "n": 9
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "catalog_id": "bible_books",
+        "n": 6
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "catalog_id": "prayers_home",
+        "n": 11
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "web",
+        "catalog_id": "songs",
+        "n": 9
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "android",
+        "catalog_id": "prayers_home",
+        "n": 8
+      },
+      {
+        "day": "2026-11-06",
+        "platform": "ios",
+        "catalog_id": "hours_list",
+        "n": 6
+      }
+    ],
+    "materials": [
+      {
+        "section": "prayers",
+        "content_id": "prayer:catholicby-yearcycle-105679",
+        "n": 185
+      },
+      {
+        "section": "prayers",
+        "content_id": "prayer:BM6NBd38XEsffKbAOfoj",
+        "n": 75
+      },
+      {
+        "section": "prayers",
+        "content_id": "prayer:qrRI9AV3wNNFxuFJb0uj",
+        "n": 57
+      },
+      {
+        "section": "prayers",
+        "content_id": "prayer:catholicby-yearcycle-116633",
+        "n": 37
+      },
+      {
+        "section": "prayers",
+        "content_id": "prayer:catholicby-yearcycle-100106",
+        "n": 29
+      },
+      {
+        "section": "prayers",
+        "content_id": "prayer:b9F5qGGznu8z0v3jlLM3",
+        "n": 28
+      },
+      {
+        "section": "prayers",
+        "content_id": "prayer:dCwOvya9ZskMCtvC3scV",
+        "n": 26
+      },
+      {
+        "section": "prayers",
+        "content_id": "prayer:import-09-litaniya-da-khrysta-svyatara-i-akhvyary",
+        "n": 22
+      },
+      {
+        "section": "prayers",
+        "content_id": "prayer:import-01-malitvy-na-kozhny-dzen-tydnya",
+        "n": 20
+      },
+      {
+        "section": "prayers",
+        "content_id": "prayer:GNFT4IfETGwV5tN73xaw",
+        "n": 18
+      },
+      {
+        "section": "songs",
+        "content_id": "song:holysongs-6339e58fdcebf42a4494",
+        "n": 108
+      },
+      {
+        "section": "songs",
+        "content_id": "song:holysongs-e5ab8f42b297a5631326",
+        "n": 49
+      },
+      {
+        "section": "songs",
+        "content_id": "song:holysongs-097552e79322dd4d7d92",
+        "n": 30
+      },
+      {
+        "section": "songs",
+        "content_id": "song:holysongs-3deda1b0de8fd52f18f5",
+        "n": 26
+      },
+      {
+        "section": "songs",
+        "content_id": "song:holysongs-845dcce92cd05a554809",
+        "n": 23
+      },
+      {
+        "section": "songs",
+        "content_id": "song:holysongs-81f33658f98f437cda40",
+        "n": 21
+      },
+      {
+        "section": "songs",
+        "content_id": "song:holysongs-9cba13d55ff073d0e1b2",
+        "n": 16
+      },
+      {
+        "section": "songs",
+        "content_id": "song:holysongs-4ae35177cc2d12040277",
+        "n": 13
+      },
+      {
+        "section": "songs",
+        "content_id": "song:holysongs-f11c5933a382889beb3e",
+        "n": 12
+      },
+      {
+        "section": "songs",
+        "content_id": "song:holysongs-899b5bb6e8c5ef7a475c",
+        "n": 10
+      },
+      {
+        "section": "compendium",
+        "content_id": "comp:p1",
+        "n": 74
+      },
+      {
+        "section": "compendium",
+        "content_id": "comp:p2-s1-ch2",
+        "n": 34
+      },
+      {
+        "section": "compendium",
+        "content_id": "comp:p1-s1-ch2",
+        "n": 25
+      },
+      {
+        "section": "compendium",
+        "content_id": "comp:p3-s1-intro",
+        "n": 22
+      },
+      {
+        "section": "compendium",
+        "content_id": "comp:p1-s1-ch3",
+        "n": 19
+      },
+      {
+        "section": "compendium",
+        "content_id": "comp:p1-s1-intro",
+        "n": 15
+      },
+      {
+        "section": "compendium",
+        "content_id": "comp:p2",
+        "n": 12
+      },
+      {
+        "section": "compendium",
+        "content_id": "comp:p1-s2-ch1",
+        "n": 11
+      },
+      {
+        "section": "compendium",
+        "content_id": "comp:p2-s2-ch4",
+        "n": 10
+      },
+      {
+        "section": "compendium",
+        "content_id": "comp:p1-s2-ch2",
+        "n": 9
+      },
+      {
+        "section": "bible",
+        "content_id": "bible:ru:3jo",
+        "n": 120
+      },
+      {
+        "section": "bible",
+        "content_id": "bible:bel:1ti",
+        "n": 52
+      },
+      {
+        "section": "bible",
+        "content_id": "bible:bel:so",
+        "n": 27
+      },
+      {
+        "section": "bible",
+        "content_id": "bible:bel:prv",
+        "n": 26
+      },
+      {
+        "section": "bible",
+        "content_id": "bible:ru:2jo",
+        "n": 19
+      },
+      {
+        "section": "bible",
+        "content_id": "bible:bel:ne",
+        "n": 14
+      },
+      {
+        "section": "bible",
+        "content_id": "bible:ru:et",
+        "n": 13
+      },
+      {
+        "section": "bible",
+        "content_id": "bible:ru:jdt",
+        "n": 13
+      },
+      {
+        "section": "bible",
+        "content_id": "bible:bel:2jn",
+        "n": 11
+      },
+      {
+        "section": "bible",
+        "content_id": "bible:bel:jud",
+        "n": 10
+      }
+    ],
+    "text": [
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 174
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 224
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 65
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 85
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 90
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 32
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 88
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 118
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 82
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 191
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 285
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 320
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 188
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 131
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 137
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 75
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 31
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 219
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 54
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 166
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 159
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 80
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 45
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 29
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 206
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 231
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 203
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 213
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 182
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 182
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 54
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 64
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 27
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 46
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 9
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 28
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 17
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 128
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 75
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 82
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 51
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 253
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 125
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "5_15s",
+        "n": 16
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "er",
+        "bucket": "5_15s",
+        "n": 27
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 61
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 35
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 39
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 8
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 9
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 47
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 46
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 27
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 132
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 76
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 104
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 61
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 26
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 49
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 124
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 43
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 89
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p100",
+        "n": 7
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 36
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 19
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 23
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p100",
+        "n": 13
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 62
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 47
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 33
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 100
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 42
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p100",
+        "n": 5
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 122
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 31
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 28
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 29
+      },
+      {
+        "platform": "web",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 42
+      },
+      {
+        "platform": "web",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "gte600s",
+        "n": 8
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 29
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p100",
+        "n": 6
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 30
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 165
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 182
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 105
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 103
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 120
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 51
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 58
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 29
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 123
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 79
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 92
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 30
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 107
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 122
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 40
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 21
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 59
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 133
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 125
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 123
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 38
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 23
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 51
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 77
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 78
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 73
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 22
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 31
+      },
+      {
+        "platform": "android",
+        "section": "mass",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 26
+      },
+      {
+        "platform": "android",
+        "section": "mass",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 27
+      },
+      {
+        "platform": "android",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 16
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 92
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 66
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 49
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 115
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 46
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 107
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 105
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 70
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 17
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 52
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 57
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 37
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 41
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 23
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 63
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 36
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 29
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p100",
+        "n": 15
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 20
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 15
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 17
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 21
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 97
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 15
+      },
+      {
+        "platform": "ios",
+        "section": "mass",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 11
+      },
+      {
+        "platform": "ios",
+        "section": "mass",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 10
+      },
+      {
+        "platform": "ios",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 14
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 37
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 44
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p100",
+        "n": 8
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 73
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 80
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 18
+      },
+      {
+        "platform": "ios",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 12
+      },
+      {
+        "platform": "ios",
+        "section": "compendium",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 11
+      },
+      {
+        "platform": "ios",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 14
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 54
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 58
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 34
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 78
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 94
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 54
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 102
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 114
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 54
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 80
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 72
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 73
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 76
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "er",
+        "bucket": "5_15s",
+        "n": 8
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 16
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 65
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 93
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 39
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 47
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 38
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 19
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 68
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 74
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 67
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 67
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 17
+      },
+      {
+        "platform": "ios",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 15
+      },
+      {
+        "platform": "ios",
+        "section": "compendium",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 16
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 53
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 38
+      },
+      {
+        "platform": "ios",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 9
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 14
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 30
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 17
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 31
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 24
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 29
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 49
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 30
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 12
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 12
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 21
+      },
+      {
+        "platform": "ios",
+        "section": "compendium",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 20
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 21
+      },
+      {
+        "platform": "ios",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 9
+      },
+      {
+        "platform": "ios",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 19
+      },
+      {
+        "platform": "ios",
+        "section": "mass",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 8
+      },
+      {
+        "platform": "ios",
+        "section": "mass",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 8
+      },
+      {
+        "platform": "ios",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 8
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 16
+      },
+      {
+        "platform": "android",
+        "section": "mass",
+        "metric": "er",
+        "bucket": "180_600s",
+        "n": 14
+      },
+      {
+        "platform": "android",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 17
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 35
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 10
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 34
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "5_15s",
+        "n": 14
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "er",
+        "bucket": "5_15s",
+        "n": 16
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 82
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 10
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 11
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 19
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "gte600s",
+        "n": 20
+      },
+      {
+        "platform": "web",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 35
+      },
+      {
+        "platform": "web",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p100",
+        "n": 19
+      },
+      {
+        "platform": "web",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 28
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "5_15s",
+        "n": 11
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "er",
+        "bucket": "5_15s",
+        "n": 13
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 26
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p100",
+        "n": 6
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 29
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 30
+      },
+      {
+        "platform": "android",
+        "section": "mass",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 14
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 13
+      },
+      {
+        "platform": "android",
+        "section": "mass",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 6
+      },
+      {
+        "platform": "android",
+        "section": "mass",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 6
+      },
+      {
+        "platform": "android",
+        "section": "mass",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 7
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 9
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 10
+      },
+      {
+        "platform": "android",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 10
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 11
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 20
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 25
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "sd",
+        "bucket": "p100",
+        "n": 12
+      },
+      {
+        "platform": "ios",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 13
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 15
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 31
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 37
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "gte600s",
+        "n": 11
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 14
+      },
+      {
+        "platform": "ios",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p50_75",
+        "n": 9
+      },
+      {
+        "platform": "ios",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "p25_50",
+        "n": 10
+      },
+      {
+        "platform": "web",
+        "section": "mass",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 9
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "5_15s",
+        "n": 17
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "er",
+        "bucket": "5_15s",
+        "n": 21
+      },
+      {
+        "platform": "android",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 15
+      },
+      {
+        "platform": "android",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 18
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "fv",
+        "bucket": "gte600s",
+        "n": 14
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "fv",
+        "bucket": "15_60s",
+        "n": 20
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "er",
+        "bucket": "15_60s",
+        "n": 21
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "p75_99",
+        "n": 22
+      },
+      {
+        "platform": "android",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 23
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "fv",
+        "bucket": "lt5s",
+        "n": 23
+      },
+      {
+        "platform": "ios",
+        "section": "prayers",
+        "metric": "er",
+        "bucket": "5_15s",
+        "n": 6
+      },
+      {
+        "platform": "ios",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 9
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 16
+      },
+      {
+        "platform": "ios",
+        "section": "mass",
+        "metric": "fv",
+        "bucket": "60_180s",
+        "n": 14
+      },
+      {
+        "platform": "ios",
+        "section": "mass",
+        "metric": "er",
+        "bucket": "60_180s",
+        "n": 16
+      },
+      {
+        "platform": "android",
+        "section": "compendium",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 10
+      },
+      {
+        "platform": "android",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p0_25",
+        "n": 6
+      },
+      {
+        "platform": "ios",
+        "section": "bible",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 12
+      },
+      {
+        "platform": "web",
+        "section": "songs",
+        "metric": "sd",
+        "bucket": "p100",
+        "n": 5
+      },
+      {
+        "platform": "ios",
+        "section": "hours",
+        "metric": "sd",
+        "bucket": "fit",
+        "n": 5
+      },
+      {
+        "platform": "ios",
+        "section": "songs",
+        "metric": "fv",
+        "bucket": "180_600s",
+        "n": 12
+      },
+      {
+        "platform": "android",
+        "section": "mass",
+        "metric": "sd",
+        "bucket": "p100",
+        "n": 5
+      },
+      {
+        "platform": "android",
+        "section": "readings",
+        "metric": "fv",
+        "bucket": "gte600s",
+        "n": 6
+      }
+    ],
+    "features": [
+      {
+        "platform": "web",
+        "feature_id": "text_scale_change",
+        "n": 311
+      },
+      {
+        "platform": "web",
+        "feature_id": "share_use",
+        "n": 199
+      },
+      {
+        "platform": "web",
+        "feature_id": "bible_chapter_nav",
+        "n": 24
+      },
+      {
+        "platform": "web",
+        "feature_id": "hour_switch",
+        "n": 77
+      },
+      {
+        "platform": "web",
+        "feature_id": "favorite_add",
+        "n": 66
+      },
+      {
+        "platform": "web",
+        "feature_id": "search_open",
+        "n": 87
+      },
+      {
+        "platform": "web",
+        "feature_id": "chord_transpose",
+        "n": 30
+      },
+      {
+        "platform": "android",
+        "feature_id": "share_use",
+        "n": 119
+      },
+      {
+        "platform": "android",
+        "feature_id": "search_open",
+        "n": 51
+      },
+      {
+        "platform": "android",
+        "feature_id": "text_scale_change",
+        "n": 166
+      },
+      {
+        "platform": "android",
+        "feature_id": "chord_transpose",
+        "n": 25
+      },
+      {
+        "platform": "android",
+        "feature_id": "hour_switch",
+        "n": 38
+      },
+      {
+        "platform": "android",
+        "feature_id": "favorite_add",
+        "n": 23
+      },
+      {
+        "platform": "ios",
+        "feature_id": "text_scale_change",
+        "n": 114
+      },
+      {
+        "platform": "ios",
+        "feature_id": "share_use",
+        "n": 87
+      },
+      {
+        "platform": "ios",
+        "feature_id": "search_open",
+        "n": 28
+      },
+      {
+        "platform": "ios",
+        "feature_id": "hour_switch",
+        "n": 22
+      },
+      {
+        "platform": "ios",
+        "feature_id": "chord_transpose",
+        "n": 9
+      },
+      {
+        "platform": "android",
+        "feature_id": "theme_change",
+        "n": 10
+      },
+      {
+        "platform": "android",
+        "feature_id": "bible_chapter_nav",
+        "n": 14
+      },
+      {
+        "platform": "ios",
+        "feature_id": "theme_change",
+        "n": 7
+      },
+      {
+        "platform": "ios",
+        "feature_id": "favorite_add",
+        "n": 30
+      },
+      {
+        "platform": "ios",
+        "feature_id": "bible_chapter_nav",
+        "n": 14
+      },
+      {
+        "platform": "web",
+        "feature_id": "theme_change",
+        "n": 8
+      }
+    ],
+    "errors": [
+      {
+        "platform": "web",
+        "error_id": "clock_anomaly",
+        "n": 15
+      },
+      {
+        "platform": "web",
+        "error_id": "visibility_unsupported",
+        "n": 27
+      },
+      {
+        "platform": "android",
+        "error_id": "clock_anomaly",
+        "n": 10
+      },
+      {
+        "platform": "ios",
+        "error_id": "scroll_unmeasurable",
+        "n": 11
+      },
+      {
+        "platform": "ios",
+        "error_id": "clock_anomaly",
+        "n": 5
+      }
+    ]
+  },
+  "states": {
+    "ok": {
+      "label": "Приём включён, данные есть",
+      "hasData": true,
+      "http": 204,
+      "code": "ok"
+    },
+    "kill_switch_off": {
+      "label": "Kill switch: приём выключен",
+      "title": "Приём выключен (kill switch)",
+      "text": "Сервер отвечает 503 до разбора тела; ничего не записано. Панель не показывает нули как факт — данных нет.",
+      "hasData": false,
+      "http": 503,
+      "code": "ingest_disabled"
+    },
+    "rejected": {
+      "label": "Все пакеты отклонены",
+      "title": "Данные отклонены",
+      "text": "Пакеты не прошли проверку (неизвестный ID, лишние поля, устаревший день): записано 0 агрегатов.",
+      "hasData": false,
+      "http": 400,
+      "code": "invalid_packet"
+    },
+    "no_data": {
+      "label": "Нет данных",
+      "title": "Нет данных",
+      "text": "Приём включён, но пакетов ещё не было (или всё удалено по сроку хранения).",
+      "hasData": false,
+      "http": 200,
+      "code": "empty"
+    }
+  },
+  "scenarios": [
+    {
+      "id": "happy",
+      "title": "Корректный пакет",
+      "expected": {
+        "status": 204,
+        "code": "ok"
+      },
+      "actual": {
+        "status": 204,
+        "code": "ok"
+      },
+      "pass": true,
+      "note": "Принят и записан как агрегат.",
+      "rowsStored": 3
+    },
+    {
+      "id": "kill_switch_off",
+      "title": "Приём выключен (kill switch)",
+      "expected": {
+        "status": 503,
+        "code": "ingest_disabled"
+      },
+      "actual": {
+        "status": 503,
+        "code": "ingest_disabled"
+      },
+      "pass": true,
+      "note": "Отказ до разбора тела; ничего не записано (fail closed).",
+      "rowsStored": 0
+    },
+    {
+      "id": "closed_or_unknown_id",
+      "title": "Неизвестный / закрытый ID материала",
+      "expected": {
+        "status": 400,
+        "code": "invalid_packet"
+      },
+      "actual": {
+        "status": 400,
+        "code": "invalid_packet"
+      },
+      "pass": true,
+      "note": "ID вне публичного перечня отклоняется; сам ID не логируется и не показывается.",
+      "rowsStored": 0
+    },
+    {
+      "id": "extra_identifier_field",
+      "title": "Лишнее поле (идентификатор)",
+      "expected": {
+        "status": 400,
+        "code": "invalid_packet"
+      },
+      "actual": {
+        "status": 400,
+        "code": "invalid_packet"
+      },
+      "pass": true,
+      "note": "Любое поле вне белого списка отклоняет весь пакет.",
+      "rowsStored": 0
+    },
+    {
+      "id": "stale_packet",
+      "title": "Устаревший пакет (5 дней назад)",
+      "expected": {
+        "status": 400,
+        "code": "day_out_of_range"
+      },
+      "actual": {
+        "status": 400,
+        "code": "day_out_of_range"
+      },
+      "pass": true,
+      "note": "Окно позднего приёма 2 дня UTC.",
+      "rowsStored": 0
+    },
+    {
+      "id": "future_day",
+      "title": "День из будущего",
+      "expected": {
+        "status": 400,
+        "code": "day_out_of_range"
+      },
+      "actual": {
+        "status": 400,
+        "code": "day_out_of_range"
+      },
+      "pass": true,
+      "note": "Часы клиента нельзя «перепрыгнуть».",
+      "rowsStored": 0
+    },
+    {
+      "id": "region_not_allowed",
+      "title": "Регион вне списка (D-04: региона нет)",
+      "expected": {
+        "status": 400,
+        "code": "region_not_allowed"
+      },
+      "actual": {
+        "status": 400,
+        "code": "region_not_allowed"
+      },
+      "pass": true,
+      "note": "Допустим только UNKNOWN.",
+      "rowsStored": 0
+    },
+    {
+      "id": "bad_json",
+      "title": "Повреждённый JSON",
+      "expected": {
+        "status": 400,
+        "code": "bad_json"
+      },
+      "actual": {
+        "status": 400,
+        "code": "bad_json"
+      },
+      "pass": true,
+      "note": "Без записи и без эхо тела.",
+      "rowsStored": 0
+    },
+    {
+      "id": "oversize",
+      "title": "Слишком большой пакет (>16 KiB)",
+      "expected": {
+        "status": 413,
+        "code": "payload_too_large"
+      },
+      "actual": {
+        "status": 413,
+        "code": "payload_too_large"
+      },
+      "pass": true,
+      "note": "Отказ по размеру до разбора.",
+      "rowsStored": 0
+    },
+    {
+      "id": "wrong_method",
+      "title": "Неверный метод",
+      "expected": {
+        "status": 405,
+        "code": "method_not_allowed"
+      },
+      "actual": {
+        "status": 405,
+        "code": "method_not_allowed"
+      },
+      "pass": true,
+      "note": "Только POST.",
+      "rowsStored": 0
+    },
+    {
+      "id": "budget_exhausted",
+      "title": "Исчерпан дневной бюджет записей",
+      "expected": {
+        "status": 503,
+        "code": "budget_exhausted"
+      },
+      "actual": {
+        "status": 503,
+        "code": "budget_exhausted"
+      },
+      "pass": true,
+      "note": "Fail closed: прежние значения не меняются.",
+      "rowsStored": 0
+    },
+    {
+      "id": "duplicate_post",
+      "title": "Тот же пакет отправлен дважды",
+      "expected": {
+        "status": 204,
+        "code": "ok"
+      },
+      "actual": {
+        "status": 204,
+        "code": "ok"
+      },
+      "pass": true,
+      "note": "Сервер НЕ дедуплицирует (нет id пакета): повтор удваивает счётчики. Защита на клиенте (P07): пакет удаляется из очереди ДО отправки, потеря даёт недосчёт, а не задвоение. Exactly-once не заявляется.",
+      "rowsStored": 3,
+      "counterAfterTwoPosts": 2,
+      "firstStatus": 204
+    },
+    {
+      "id": "retention",
+      "title": "Срок хранения 14 дней (UTC)",
+      "expected": {
+        "status": 200,
+        "code": "retention_applied"
+      },
+      "actual": {
+        "status": 200,
+        "code": "retention_applied"
+      },
+      "pass": true,
+      "note": "Дни строго раньше границы удалены; свежие сохранены.",
+      "rowsStored": 3
+    },
+    {
+      "id": "no_data",
+      "title": "Нет данных",
+      "expected": {
+        "status": 200,
+        "code": "empty"
+      },
+      "actual": {
+        "status": 200,
+        "code": "empty"
+      },
+      "pass": true,
+      "note": "Панель показывает «нет данных», а не нули как факт.",
+      "rowsStored": 0
+    }
+  ],
+  "safety": [
+    "Только синтетические данные из фиксированного seed; реальной статистики, пользователей, устройств и сессий нет.",
+    "Единица — «открытие»: один и тот же человек может дать много открытий, поэтому «открытия ≠ люди»; счётчика людей нет и быть не может (в схеме нет идентификаторов).",
+    "k = 5: сначала агрегация до публикуемой гранулярности, потом скрытие ячеек n < k; все суммы считаются только по показанным ячейкам и всегда «не менее».",
+    "Число скрытых ячеек, app_version, region, устройства, поиск, точное время, путь по экранам и даты богослужебных материалов в отчёт не попадают.",
+    "Нет закрытых материалов и их ID: неизвестный ID отклоняется ядром, в отчёте только публичные ID из перечня (750).",
+    "Панель читает только report.json (sanitised); доступа к cell_counts нет. Сети нет: CSP connect-src none, нет CDN, шрифтов, аналитики.",
+    "Не публиковать и не хостить. Это не разрешение на сбор: D-01…D-09 открыты, сеть заблокирована."
+  ]
+}

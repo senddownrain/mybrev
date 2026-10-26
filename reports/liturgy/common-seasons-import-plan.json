@@ -10,8 +10,8 @@
   "seasonalFields": 814,
   "bytes": {
     "before": 1115362,
-    "after": 2897194,
-    "added": 1781832
+    "after": 2961227,
+    "added": 1845865
   },
   "flatBaseFieldsChanged": [
     "apostles",
@@ -46,7 +46,7 @@
         "works-of-mercy"
       ],
       "removed": [],
-      "bytes": 2810250
+      "bytes": 2874283
     }
   },
   "report": "CONTENT UPDATE DIFF\n\nliturgicalTemplates:\n  changed: 14 / 16\n  bytes:   2.7 MB\n\nTOTAL:\n  14 documents\n  2.7 MB\n\nRESULT:\nSAFE CONTENT PATCH",
@@ -169,10 +169,10 @@
         "easter"
       ],
       "bytesBefore": 94641,
-      "bytesAfter": 241167,
-      "addedBytes": 146526,
+      "bytesAfter": 305200,
+      "addedBytes": 210559,
       "flatBaseChangedVsSnapshot": true,
-      "sizeVsFirestoreLimit": "23.0% of 1 MiB"
+      "sizeVsFirestoreLimit": "29.1% of 1 MiB"
     },
     {
       "id": "martyr-one",

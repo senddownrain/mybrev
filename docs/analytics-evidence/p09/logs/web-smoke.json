@@ -1,0 +1,532 @@
+{
+  "generatedAt": "2026-10-24T06:00:59.821Z",
+  "shortPrayer": {
+    "id": "import-05-vyanochak-za-kanayuchykh-i-pamerlykh",
+    "length": 443
+  },
+  "longPrayer": {
+    "id": "import-03-sakrament-pakayannya-spovedz",
+    "length": 25643
+  },
+  "hours": {
+    "laudes": "/day/2026-10-24/ora/ordinary-w29-d7/laudes",
+    "vesper": "/day/2026-10-24/ora/ordinary-w29-d7/vesper"
+  },
+  "song": "holysongs-0027665fbaf1422fd4dc",
+  "rows": [
+    {
+      "screen": "today",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "—",
+      "sd": "—",
+      "er": "—",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/",
+      "shown": "Літургія гадзінаў СЁННЯ субота 24 кастрычніка XXIX звычайны тыдзень, субота Успамін Найсв.",
+      "rect": null,
+      "problems": []
+    },
+    {
+      "screen": "short open (2 s): fv only, no sd/er",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "lt5s",
+      "sd": "—",
+      "er": "—",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/readings",
+      "shown": "Чытанні Сёння, субота, 24 кастрычніка 2026 ЛІТУРГІЧНЫ ЦЫКЛ Актуальны на гэту дату адкрыты ",
+      "rect": [
+        [
+          169,
+          3679,
+          382,
+          "grid",
+          ""
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "catalog prayers",
+      "screen_view": false,
+      "features": [],
+      "catalog_open": [
+        "prayers_home"
+      ],
+      "fv": "—",
+      "sd": "—",
+      "er": "—",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/prayers",
+      "shown": "МАЛІТОЎНІК Малітвы Агульны катэхізіс Асноўныя малітвы на лацінскай мове Асноўныя малітвы н",
+      "rect": null,
+      "problems": []
+    },
+    {
+      "screen": "readings",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p100",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/readings",
+      "shown": "Чытанні Сёння, субота, 24 кастрычніка 2026 ЛІТУРГІЧНЫ ЦЫКЛ Актуальны на гэту дату адкрыты ",
+      "rect": [
+        [
+          -3233,
+          3895,
+          382,
+          "grid",
+          ""
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "hour laudes",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p100",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/day/2026-10-24/ora/ordinary-w29-d7/laudes",
+      "shown": "Ютрань ЗВЫЧАЙНЫ ПЕРЫЯД · I ТЫДЗЕНЬ ПСАЛТЫРА XXIX звычайны тыдзень, субота 24 кастрычніка 2",
+      "rect": [
+        [
+          -8413,
+          9032,
+          382,
+          "block",
+          ""
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "hour vesper",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p100",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/day/2026-10-24/ora/ordinary-w29-d7/vesper",
+      "shown": "Нешпары ЗВЫЧАЙНЫ ПЕРЫЯД · II ТЫДЗЕНЬ ПСАЛТЫРА XXX нядзеля звычайная 24 кастрычніка 2026 г.",
+      "rect": [
+        [
+          -9440,
+          10060,
+          382,
+          "block",
+          ""
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "mass order",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p100",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/prayer/eMmCtxwyJ75ogmL5rwye",
+      "shown": "ЛІТУРГІЯ Парадак святой Імшы Уступныя абрады Святар гаворыць: У імя Айца і Сына, і Духа Св",
+      "rect": [
+        [
+          -14137,
+          14917,
+          390,
+          "block",
+          "DIV.prayer-content-area:auto:14917/14917"
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "short prayer (443 chars), tall screen",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "fit",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/prayer/import-05-vyanochak-za-kanayuchykh-i-pamerlykh",
+      "shown": "МАЛІТВА Вяночак за канаючых і памерлых Вяночак чытаецца на ружанцы. Напачатку: Ойча наш...",
+      "rect": [
+        [
+          64,
+          707,
+          390,
+          "block",
+          "DIV.prayer-content-area:auto:707/707"
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "short prayer, 320 px, text ×1.8",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p100",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/prayer/import-05-vyanochak-za-kanayuchykh-i-pamerlykh",
+      "shown": "МАЛІТВА Вяночак за канаючых і памерлых Вяночак чытаецца на ружанцы. Напачатку: Ойча наш...",
+      "rect": [
+        [
+          -2008,
+          2648,
+          320,
+          "block",
+          "DIV.prayer-content-area:auto:2648/2648"
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "long prayer (25643 chars)",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p100",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/prayer/import-03-sakrament-pakayannya-spovedz",
+      "shown": "МАЛІТВА САКРАМЭНТ ПАКАЯННЯ I ПАЯДНАННЯ (СПОВЕДЗЬ) «Тыя, хто прыступае да сакрамэнту пакаян",
+      "rect": [
+        [
+          -24784,
+          25564,
+          390,
+          "block",
+          "DIV.prayer-content-area:auto:25564/25564"
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "prayer not found in the data",
+      "screen_view": false,
+      "features": [],
+      "catalog_open": [],
+      "fv": "—",
+      "sd": "—",
+      "er": "—",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/prayer/Prbvb1Ian16Y3mKeNv4d",
+      "shown": "Малітва не знойдзена Малітва з такім ID не існуе або была выдалена ВЯРНУЦЦА ДА СПІСУ МАЛІТ",
+      "rect": null,
+      "problems": []
+    },
+    {
+      "screen": "song",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "fit",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/song/holysongs-0027665fbaf1422fd4dc",
+      "shown": "ПІЛІГРЫМКАВЫ СПЕЎНІК Kirie eleison Часткі Імшы Акорды даступна на шырэйшым экране, цяпер а",
+      "rect": [
+        [
+          64,
+          402,
+          390,
+          "block",
+          "DIV.prayer-content-area:auto:402/402"
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "catalog songs",
+      "screen_view": false,
+      "features": [],
+      "catalog_open": [
+        "songs"
+      ],
+      "fv": "—",
+      "sd": "—",
+      "er": "—",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/songs",
+      "shown": "ПІЛІГРЫМКАВЫ Спеўнік Спеваў: 447 АДКРЫЙ СВАЁ СЭРЦА АДНАВІ МАЮ НАДЗЕЮ Аллелюя АЛЛЕЛЮЯ ЕЗУС ",
+      "rect": null,
+      "problems": []
+    },
+    {
+      "screen": "compendium part p1",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p100",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/compendium/part/p1",
+      "shown": "ЧАСТКА ПЕРШАЯ ВЫЗНАННЕ ВЕРЫ РАЗДЗЕЛ ПЕРШЫ «ВЕРУ» — «ВЕРЫМ» 1 Які Божы намер адносна чалаве",
+      "rect": [
+        [
+          -21440,
+          22040,
+          382,
+          "grid",
+          ""
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "catalog compendium",
+      "screen_view": false,
+      "features": [],
+      "catalog_open": [
+        "compendium_home"
+      ],
+      "fv": "—",
+      "sd": "—",
+      "er": "—",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/compendium",
+      "shown": "КАТАЛІЦКІ КАСЦЁЛ Кампендый Катэхізіса I ЧАСТКА ПЕРШАЯ ВЫЗНАННЕ ВЕРЫ Пытанні 1–217 II ЧАСТК",
+      "rect": null,
+      "problems": []
+    },
+    {
+      "screen": "Bible bel gn 1",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p100",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/bible/bel/gn/1",
+      "shown": "БЕЛ РУС СТАРЫ ЗАПАВЕТ · БЕЛАРУСКАЯ Роду Раздзел 1 Стары Запавет · пераклад кс. Уладзіслава",
+      "rect": [
+        [
+          -3268,
+          3961,
+          374,
+          "block",
+          ""
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "Bible ru gn 1",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p100",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/bible/ru/gn/1",
+      "shown": "БЕЛ РУС СТАРЫ ЗАПАВЕТ · РУССКИЙ Бытие Раздзел 1 Синодальный перевод 1В начале сотворил Бог",
+      "rect": [
+        [
+          -3449,
+          4142,
+          374,
+          "block",
+          ""
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "Back navigation: the same screen twice = two visits, no double count",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p0_25",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/prayer/import-03-sakrament-pakayannya-spovedz",
+      "shown": "МАЛІТВА САКРАМЭНТ ПАКАЯННЯ I ПАЯДНАННЯ (СПОВЕДЗЬ) «Тыя, хто прыступае да сакрамэнту пакаян",
+      "rect": [
+        [
+          64,
+          25564,
+          390,
+          "block",
+          "DIV.prayer-content-area:auto:25564/25564"
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "background 9 s: hidden time is not reading time",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p0_25",
+      "er": "5_15s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/prayer/import-03-sakrament-pakayannya-spovedz",
+      "shown": "МАЛІТВА САКРАМЭНТ ПАКАЯННЯ I ПАЯДНАННЯ (СПОВЕДЗЬ) «Тыя, хто прыступае да сакрамэнту пакаян",
+      "rect": [
+        [
+          64,
+          25564,
+          390,
+          "block",
+          "DIV.prayer-content-area:auto:25564/25564"
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "quick switch before the text is read: only the last screen is a read",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "5_15s",
+      "sd": "p0_25",
+      "er": "lt5s",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/prayer/import-03-sakrament-pakayannya-spovedz",
+      "shown": "МАЛІТВА САКРАМЭНТ ПАКАЯННЯ I ПАЯДНАННЯ (СПОВЕДЗЬ) «Тыя, хто прыступае да сакрамэнту пакаян",
+      "rect": [
+        [
+          64,
+          25564,
+          390,
+          "block",
+          "DIV.prayer-content-area:auto:25564/25564"
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "feature_use: hour_switch (menu of hours)",
+      "screen_view": true,
+      "features": [
+        "hour_switch@hours"
+      ],
+      "catalog_open": [],
+      "fv": "lt5s",
+      "sd": "—",
+      "er": "—",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/day/2026-10-24/ora/ordinary-w29-d7/invitatorium",
+      "shown": "ЗВЫЧАЙНЫ ПЕРЫЯД · I ТЫДЗЕНЬ ПСАЛТЫРА XXIX звычайны тыдзень, субота 24 кастрычніка 2026 г. ",
+      "rect": [
+        [
+          60,
+          2768,
+          382,
+          "block",
+          ""
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "feature_use: search_open (Bible search sheet)",
+      "screen_view": true,
+      "features": [
+        "search_open@bible"
+      ],
+      "catalog_open": [],
+      "fv": "lt5s",
+      "sd": "—",
+      "er": "—",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/bible/bel/gn/1",
+      "shown": "БЕЛ РУС СТАРЫ ЗАПАВЕТ · БЕЛАРУСКАЯ Роду Раздзел 1 Стары Запавет · пераклад кс. Уладзіслава",
+      "rect": [
+        [
+          398,
+          3750,
+          374,
+          "block",
+          ""
+        ]
+      ],
+      "problems": []
+    },
+    {
+      "screen": "Bible without a book (catalog or last book)",
+      "screen_view": true,
+      "features": [],
+      "catalog_open": [],
+      "fv": "lt5s",
+      "sd": "—",
+      "er": "—",
+      "errors": [],
+      "foreignHosts": [],
+      "pageErrors": [],
+      "finalPath": "/bible/bel/gn/1",
+      "shown": "БЕЛ РУС СТАРЫ ЗАПАВЕТ · БЕЛАРУСКАЯ Роду Раздзел 1 Стары Запавет · пераклад кс. Уладзіслава",
+      "rect": null,
+      "problems": []
+    }
+  ]
+}
