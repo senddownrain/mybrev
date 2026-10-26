@@ -51,8 +51,10 @@ test('Marian feast references are structured rules resolved from the Common', as
     assert.equal(assembled.nativity[field], mainOf(common, field), field);
   }
   for (const feast of ['nativity', 'sorrows']) assert.equal(assembled[feast].laudesInter, mainOf(common, 'laudesInter'));
+  // Our Lady of Sorrows is a memorial: an extended Common variant does not materialise I Vespers
+  // (docs/common-office-festive-assembly.md, #141); only the feast (Nativity) keeps them, checked above.
   for (const field of ['vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3', 'vesper1Inter']) {
-    assert.equal(assembled.sorrows[field], mainOf(common, field), field);
+    assert.equal(assembled.sorrows[field], undefined, field);
   }
   for (const field of ['vesperPs1', 'vesperPs2', 'vesperPs3', 'vesperInter']) {
     assert.equal(assembled.rosary[field], mainOf(common, field), field);
