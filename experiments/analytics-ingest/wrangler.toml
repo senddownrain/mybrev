@@ -1,0 +1,27 @@
+# STAGING ONLY. No account_id, no secrets, no production resources. Real resources must be named *analytics-staging*.
+# Create them by hand per docs/analytics-staging-contract.md §6 and paste ONLY the new D1 database_id below (it is not a secret).
+name = "mybrev-analytics-staging"
+main = "worker/src/index.mjs"
+compatibility_date = "2026-10-01"
+workers_dev = true          # *.workers.dev staging host; no custom/production route
+preview_urls = false
+
+[vars]
+INGEST_ENABLED = "false"    # fail closed; flip only during controlled QA: `npm run staging:ingest-on`
+MAX_DAY_AGE_DAYS = "2"
+DAILY_ROW_WRITE_BUDGET = "80000"
+RETENTION_DAYS = "90"
+ALLOWED_ORIGINS = ""        # comma-separated browser origins of QA builds; empty = no browser may read replies
+# REPORT_TOKEN / ADMIN_TOKEN are secrets: `wrangler secret put` (never put them here)
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mybrev-analytics-staging"
+database_id = "00000000-0000-0000-0000-000000000000"  # placeholder: local dev ignores it, deploy needs the staging id
+migrations_dir = "migrations"
+
+[triggers]
+crons = ["17 3 * * *"]       # daily retention run
+
+[observability]
+enabled = false

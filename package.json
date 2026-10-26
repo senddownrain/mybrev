@@ -97,6 +97,8 @@
     "test:analytics-ingest": "node --test experiments/analytics-ingest/test/*.test.mjs",
     "analytics:consent-demo": "node experiments/analytics-ingest/demo/build-demo.mjs",
     "analytics:dashboard-demo": "node experiments/analytics-ingest/dashboard-demo/build-dashboard.mjs",
+    "analytics:r02-probes": "node experiments/analytics-ingest/worker/run-probes-local.mjs",
+    "analytics:r02-probes-workerd": "node experiments/analytics-ingest/worker/run-probes-wrangler.mjs",
     "analytics:e2e": "node experiments/analytics-ingest/e2e/p09-e2e.mjs --out docs/analytics-evidence/p09/e2e-out"
   },
   "dependencies": {

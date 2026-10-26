@@ -48,3 +48,7 @@ __pycache__/
 /.cache/
 experiments/analytics-ingest/demo/out/
 experiments/analytics-ingest/dashboard-demo/out/
+
+# wrangler local state / cache
+.wrangler/
+.dev.vars
