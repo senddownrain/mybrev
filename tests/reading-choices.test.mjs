@@ -158,3 +158,27 @@ test('a broken or missing storage only means "no memory"', () => {
   const garbage = createReadingChoiceStore({ getItem: () => '[1,2', setItem() {} });
   assert.equal(garbage.get('x', 'y'), 0);
 });
+
+test('religious R1: the responsory variant «Пра законніцу» stays inside its reading, it is not a second reading (found on screen, D1 phase 8)', () => {
+  const religious = template('religious');
+  const expectedReading = {
+    base: /Філіпянаў 3, 7 – 4, 1\. 4-9/u, advent: /Эфесцаў 4, 1-24/u, christmas: /Эфесцаў 4, 1-24/u, lent: /Эфесцаў 4, 1-24/u, easter: /Эфесцаў 4, 1-24/u,
+  };
+  const variant = { base: /Пс 45 \(44\), 2/u, advent: /Лк 10, 42\. 39/u, christmas: /Лк 10, 42\. 39/u, lent: /Лк 10, 42\. 39/u, easter: /Лк 10, 42\. 39/u };
+  for (const season of Object.keys(expectedReading)) {
+    const source = season === 'base' ? religious.officeOfReadingsR1 : religious._seasonalVariants[season].officeOfReadingsR1;
+    const { options } = getReadingChoices(source);
+    assert.equal(options.length, 1, `${season}: one reading, no responsory pseudo-choice`);
+    assert.match(options[0].title, expectedReading[season], `${season}: the title names the reading`);
+    const text = plain(options[0].html);
+    assert.match(text, /Пра закон[нn][іi]цу/u, `${season}: the printed variant for a woman is kept in the text`);
+    assert.match(text, variant[season], `${season}: its citation is kept`);
+    assert.ok(text.indexOf('Пра закон') > text.indexOf('К. '), `${season}: it follows the responsory of the reading`);
+  }
+});
+
+test('responsory variants are only merged when they are responsory-only blocks: real alternative readings stay choices', () => {
+  const html = '<p>Пасланне св. апостала Паўла да Рымлянаў 12, 1-21</p><p>Тэкст адзін</p><hr /><p>Пасланне св. апостала Паўла да Эфесцаў 5, 21-32</p><p>Тэкст два</p>';
+  assert.equal(getReadingChoices(html).options.length, 2);
+  assert.equal(getReadingChoices(women.officeOfReadingsR1).options.length, 5);
+});

@@ -1,0 +1,183 @@
+[
+  {
+    "id": "D1-W1",
+    "label": "D1-W1 Grodno 08.06.2027 Jadwiga, Common holy-women: R2 choose B -> only B; R1 five legal readings",
+    "profile": "390-light",
+    "diocese": "grodno",
+    "date": "2027-06-08",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W1-grodno-08-06-2027-R2-B__390-light__start.png",
+      "D1-W1-grodno-08-06-2027-R2-B__390-light__end.png",
+      "D1-W1-grodno-08-06-2027-R2-B__390-light.txt"
+    ]
+  },
+  {
+    "id": "D1-W1",
+    "label": "D1-W1 Grodno 08.06.2027 Jadwiga, Common holy-women: R2 choose B -> only B; R1 five legal readings",
+    "profile": "320-dark-180",
+    "diocese": "grodno",
+    "date": "2027-06-08",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W1-grodno-08-06-2027-R2-B__320-dark-180__start.png",
+      "D1-W1-grodno-08-06-2027-R2-B__320-dark-180__end.png",
+      "D1-W1-grodno-08-06-2027-R2-B__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "D1-W1",
+    "label": "D1-W1 Grodno 08.06.2027 Jadwiga, Common holy-women: R2 choose B -> only B; R1 five legal readings",
+    "profile": "desktop-light",
+    "diocese": "grodno",
+    "date": "2027-06-08",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W1-grodno-08-06-2027-R2-B__desktop-light__start.png",
+      "D1-W1-grodno-08-06-2027-R2-B__desktop-light__end.png",
+      "D1-W1-grodno-08-06-2027-R2-B__desktop-light.txt"
+    ]
+  },
+  {
+    "id": "D1-W2-monica-R1",
+    "label": "D1-W2 Minsk 27.08.2026 Monica, Common holy-women (Vol. III): R1 five readings, no R2 selector (own R2)",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W2-monica-R1__390-light.txt",
+      "D1-W2-monica-R1__390-light__start.png",
+      "D1-W2-monica-R1__390-light__end.png"
+    ]
+  },
+  {
+    "id": "D1-W2-jane-frances",
+    "label": "D1-W2 Minsk 12.08.2026 Jane Frances de Chantal, Common holy-women (Vol. III): R1 five readings, own R2 (no selector)",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W2-jane-frances__390-light.txt",
+      "D1-W2-jane-frances__390-light__start.png",
+      "D1-W2-jane-frances__390-light__end.png"
+    ]
+  },
+  {
+    "id": "D1-W2-religious-R1-responsory",
+    "label": "D1-W2/W5 Minsk 19.10.2026 Paul of the Cross «Пра законнікаў»: R1 is ONE reading with both responsories, no pseudo-choice",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W2-religious-R1-responsory__390-light.txt",
+      "D1-W2-religious-R1-responsory__390-light__start.png",
+      "D1-W2-religious-R1-responsory__390-light__end.png"
+    ]
+  },
+  {
+    "id": "D1-W3",
+    "label": "D1-W3 Minsk 27.08.2026 Monica: own R2 beats the Common, «З дня» and day variants are separate",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W3-day-cards__390-light.txt",
+      "D1-W3-day-cards__390-light.png",
+      "D1-W3-monica-lectionis__390-light.txt",
+      "D1-W3-monica-R2__390-light__start.png",
+      "D1-W3-monica-R2__390-light__end.png"
+    ]
+  },
+  {
+    "id": "D1-W4",
+    "label": "D1-W4 Grodno 08.06.2027 Jadwiga: B survives reload/back/forward in its own context, is not applied to other days/celebrations/Commons/dioceses",
+    "profile": "390-light",
+    "diocese": "grodno",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W4-other-celebration-default__390-light.txt",
+      "D1-W4-minsk-08-06-2027__390-light.txt",
+      "D1-W4-b-restored__390-light.png"
+    ]
+  },
+  {
+    "id": "D1-W5-selector",
+    "label": "D1-W5 Grodno 08.06.2027 five-tab selector: keyboard, focus, no clipping, no horizontal scroll",
+    "profile": "320-light",
+    "diocese": "grodno",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W5-selector-R1-Prov31__320-light__start.png",
+      "D1-W5-selector-R1-Prov31__320-light__end.png"
+    ]
+  },
+  {
+    "id": "D1-W5-selector",
+    "label": "D1-W5 Grodno 08.06.2027 five-tab selector: keyboard, focus, no clipping, no horizontal scroll",
+    "profile": "320-dark-180",
+    "diocese": "grodno",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W5-selector-R1-Prov31__320-dark-180__start.png",
+      "D1-W5-selector-R1-Prov31__320-dark-180__end.png"
+    ]
+  },
+  {
+    "id": "D1-W5-selector",
+    "label": "D1-W5 Grodno 08.06.2027 five-tab selector: keyboard, focus, no clipping, no horizontal scroll",
+    "profile": "390-light",
+    "diocese": "grodno",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W5-selector-R1-Prov31__390-light__start.png",
+      "D1-W5-selector-R1-Prov31__390-light__end.png"
+    ]
+  },
+  {
+    "id": "D1-W5-selector",
+    "label": "D1-W5 Grodno 08.06.2027 five-tab selector: keyboard, focus, no clipping, no horizontal scroll",
+    "profile": "390-dark",
+    "diocese": "grodno",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W5-selector-R1-Prov31__390-dark__start.png",
+      "D1-W5-selector-R1-Prov31__390-dark__end.png"
+    ]
+  },
+  {
+    "id": "D1-W5-selector",
+    "label": "D1-W5 Grodno 08.06.2027 five-tab selector: keyboard, focus, no clipping, no horizontal scroll",
+    "profile": "desktop-light",
+    "diocese": "grodno",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W5-selector-R1-Prov31__desktop-light__start.png",
+      "D1-W5-selector-R1-Prov31__desktop-light__end.png"
+    ]
+  },
+  {
+    "id": "D1-W5-single",
+    "label": "D1-W5 single legal reading (Monica own R2): no selector",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "D1-W5-single-monica-R2__320-dark-180__start.png",
+      "D1-W5-single-monica-R2__320-dark-180__end.png"
+    ]
+  }
+]

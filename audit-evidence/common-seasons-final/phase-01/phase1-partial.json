@@ -1,0 +1,592 @@
+[
+  {
+    "id": "W1-grodno-04-12-lectionis",
+    "label": "W1 Grodno 04.12.2026 Office of Readings",
+    "profile": "390-light",
+    "diocese": "grodno",
+    "date": "2026-12-04",
+    "url": "http://127.0.0.1:5190/day/2026-12-04/ora/04-12-grodno-cathedral-dedication/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W1-grodno-04-12-lectionis__390-light__start.png",
+      "W1-grodno-04-12-lectionis__390-light__end.png",
+      "W1-grodno-04-12-lectionis__390-light.txt"
+    ]
+  },
+  {
+    "id": "W1-grodno-04-12-lectionis",
+    "label": "W1 Grodno 04.12.2026 Office of Readings",
+    "profile": "411-light",
+    "diocese": "grodno",
+    "date": "2026-12-04",
+    "url": "http://127.0.0.1:5190/day/2026-12-04/ora/04-12-grodno-cathedral-dedication/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W1-grodno-04-12-lectionis__411-light__start.png",
+      "W1-grodno-04-12-lectionis__411-light__end.png",
+      "W1-grodno-04-12-lectionis__411-light.txt"
+    ]
+  },
+  {
+    "id": "W1-grodno-04-12-lectionis",
+    "label": "W1 Grodno 04.12.2026 Office of Readings",
+    "profile": "390-dark",
+    "diocese": "grodno",
+    "date": "2026-12-04",
+    "url": "http://127.0.0.1:5190/day/2026-12-04/ora/04-12-grodno-cathedral-dedication/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W1-grodno-04-12-lectionis__390-dark__start.png",
+      "W1-grodno-04-12-lectionis__390-dark__end.png",
+      "W1-grodno-04-12-lectionis__390-dark.txt"
+    ]
+  },
+  {
+    "id": "W1-grodno-04-12-lectionis",
+    "label": "W1 Grodno 04.12.2026 Office of Readings",
+    "profile": "320-dark-180",
+    "diocese": "grodno",
+    "date": "2026-12-04",
+    "url": "http://127.0.0.1:5190/day/2026-12-04/ora/04-12-grodno-cathedral-dedication/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W1-grodno-04-12-lectionis__320-dark-180__start.png",
+      "W1-grodno-04-12-lectionis__320-dark-180__end.png",
+      "W1-grodno-04-12-lectionis__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W1-grodno-04-12-lectionis",
+    "label": "W1 Grodno 04.12.2026 Office of Readings",
+    "profile": "desktop-light",
+    "diocese": "grodno",
+    "date": "2026-12-04",
+    "url": "http://127.0.0.1:5190/day/2026-12-04/ora/04-12-grodno-cathedral-dedication/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W1-grodno-04-12-lectionis__desktop-light__start.png",
+      "W1-grodno-04-12-lectionis__desktop-light__end.png",
+      "W1-grodno-04-12-lectionis__desktop-light.txt"
+    ]
+  },
+  {
+    "id": "W1-neg-minsk-mohilev",
+    "label": "W1 minsk-mohilev 04.12.2026 has no Grodno local feast",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-12-04",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W1-other-diocese-minsk-mohilev-04-12__390-light__start.png",
+      "W1-other-diocese-minsk-mohilev-04-12__390-light.txt"
+    ]
+  },
+  {
+    "id": "W1-neg-pinsk",
+    "label": "W1 pinsk 04.12.2026 has no Grodno local feast",
+    "profile": "390-light",
+    "diocese": "pinsk",
+    "date": "2026-12-04",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W1-other-diocese-pinsk-04-12__390-light__start.png",
+      "W1-other-diocese-pinsk-04-12__390-light.txt"
+    ]
+  },
+  {
+    "id": "W1-neg-vitebsk",
+    "label": "W1 vitebsk 04.12.2026 has no Grodno local feast",
+    "profile": "390-light",
+    "diocese": "vitebsk",
+    "date": "2026-12-04",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W1-other-diocese-vitebsk-04-12__390-light__start.png",
+      "W1-other-diocese-vitebsk-04-12__390-light.txt"
+    ]
+  },
+  {
+    "id": "W2-09-11-lectionis",
+    "label": "W2 09.11.2026 Lateran Office of Readings",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-11-09",
+    "url": "http://127.0.0.1:5190/day/2026-11-09/ora/09-11-dedication-lateran-basilica/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W2-09-11-lectionis__390-light__start.png",
+      "W2-09-11-lectionis__390-light__end.png",
+      "W2-09-11-lectionis__390-light.txt"
+    ]
+  },
+  {
+    "id": "W2-09-11-lectionis",
+    "label": "W2 09.11.2026 Lateran Office of Readings",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "date": "2026-11-09",
+    "url": "http://127.0.0.1:5190/day/2026-11-09/ora/09-11-dedication-lateran-basilica/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W2-09-11-lectionis__320-dark-180__start.png",
+      "W2-09-11-lectionis__320-dark-180__end.png",
+      "W2-09-11-lectionis__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W3-16-03-2027-lectionis",
+    "label": "W3 16.03.2027 Minsk-Mohilev Office of Readings",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2027-03-16",
+    "url": "http://127.0.0.1:5190/day/2027-03-16/ora/16-03-minsk-mohilev-cathedral-dedication/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W3-16-03-2027-lectionis__390-light__start.png",
+      "W3-16-03-2027-lectionis__390-light__end.png",
+      "W3-16-03-2027-lectionis__390-light.txt"
+    ]
+  },
+  {
+    "id": "W3-16-03-2027-lectionis",
+    "label": "W3 16.03.2027 Minsk-Mohilev Office of Readings",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "date": "2027-03-16",
+    "url": "http://127.0.0.1:5190/day/2027-03-16/ora/16-03-minsk-mohilev-cathedral-dedication/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W3-16-03-2027-lectionis__320-dark-180__start.png",
+      "W3-16-03-2027-lectionis__320-dark-180__end.png",
+      "W3-16-03-2027-lectionis__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W4-2026-10-24-minsk-mohilev",
+    "label": "W4 2026-10-24 minsk-mohilev: Saturday memorial of Our Lady offered (free Saturday of Ordinary Time (week 29))",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-24",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-2026-10-24-minsk-mohilev__390-light__start.png",
+      "W4-2026-10-24-minsk-mohilev__390-light.txt"
+    ]
+  },
+  {
+    "id": "W4-2026-10-24-grodno",
+    "label": "W4 2026-10-24 grodno: Saturday memorial of Our Lady offered (same, Grodno)",
+    "profile": "390-light",
+    "diocese": "grodno",
+    "date": "2026-10-24",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-2026-10-24-grodno__390-light__start.png",
+      "W4-2026-10-24-grodno__390-light.txt"
+    ]
+  },
+  {
+    "id": "W4-2026-12-05-minsk-mohilev",
+    "label": "W4 2026-12-05 minsk-mohilev: Saturday memorial of Our Lady NOT offered (Saturday of Advent week 1)",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-12-05",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-2026-12-05-minsk-mohilev__390-light__start.png",
+      "W4-2026-12-05-minsk-mohilev__390-light.txt"
+    ]
+  },
+  {
+    "id": "W4-2026-12-05-grodno",
+    "label": "W4 2026-12-05 grodno: Saturday memorial of Our Lady NOT offered (Saturday of Advent week 1, Grodno)",
+    "profile": "390-light",
+    "diocese": "grodno",
+    "date": "2026-12-05",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-2026-12-05-grodno__390-light__start.png",
+      "W4-2026-12-05-grodno__390-light.txt"
+    ]
+  },
+  {
+    "id": "W4-2027-03-06-minsk-mohilev",
+    "label": "W4 2027-03-06 minsk-mohilev: Saturday memorial of Our Lady NOT offered (Saturday of Lent)",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2027-03-06",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-2027-03-06-minsk-mohilev__390-light__start.png",
+      "W4-2027-03-06-minsk-mohilev__390-light.txt"
+    ]
+  },
+  {
+    "id": "W4-2027-01-02-minsk-mohilev",
+    "label": "W4 2027-01-02 minsk-mohilev: Saturday memorial of Our Lady NOT offered (Saturday in Christmastide)",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2027-01-02",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-2027-01-02-minsk-mohilev__390-light__start.png",
+      "W4-2027-01-02-minsk-mohilev__390-light.txt"
+    ]
+  },
+  {
+    "id": "W4-2027-04-17-minsk-mohilev",
+    "label": "W4 2027-04-17 minsk-mohilev: Saturday memorial of Our Lady NOT offered (Saturday of Easter)",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2027-04-17",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-2027-04-17-minsk-mohilev__390-light__start.png",
+      "W4-2027-04-17-minsk-mohilev__390-light.txt"
+    ]
+  },
+  {
+    "id": "W4-24-10-saturday-mary-lectionis",
+    "label": "W4 24.10.2026 Saturday memorial of Our Lady, lectionis",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-24",
+    "url": "http://127.0.0.1:5190/day/2026-10-24/ora/saturday-blessed-virgin-mary/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-24-10-saturday-mary-lectionis__390-light__start.png",
+      "W4-24-10-saturday-mary-lectionis__390-light__end.png",
+      "W4-24-10-saturday-mary-lectionis__390-light.txt"
+    ]
+  },
+  {
+    "id": "W4-24-10-saturday-mary-lectionis",
+    "label": "W4 24.10.2026 Saturday memorial of Our Lady, lectionis",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-24",
+    "url": "http://127.0.0.1:5190/day/2026-10-24/ora/saturday-blessed-virgin-mary/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-24-10-saturday-mary-lectionis__320-dark-180__start.png",
+      "W4-24-10-saturday-mary-lectionis__320-dark-180__end.png",
+      "W4-24-10-saturday-mary-lectionis__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W4-24-10-saturday-mary-laudes",
+    "label": "W4 24.10.2026 Saturday memorial of Our Lady, laudes",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-24",
+    "url": "http://127.0.0.1:5190/day/2026-10-24/ora/saturday-blessed-virgin-mary/laudes",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-24-10-saturday-mary-laudes__390-light__start.png",
+      "W4-24-10-saturday-mary-laudes__390-light__end.png",
+      "W4-24-10-saturday-mary-laudes__390-light.txt"
+    ]
+  },
+  {
+    "id": "W4-24-10-saturday-mary-laudes",
+    "label": "W4 24.10.2026 Saturday memorial of Our Lady, laudes",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-24",
+    "url": "http://127.0.0.1:5190/day/2026-10-24/ora/saturday-blessed-virgin-mary/laudes",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-24-10-saturday-mary-laudes__320-dark-180__start.png",
+      "W4-24-10-saturday-mary-laudes__320-dark-180__end.png",
+      "W4-24-10-saturday-mary-laudes__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W4-24-10-saturday-mary-vesper",
+    "label": "W4 24.10.2026 Saturday memorial of Our Lady, vesper",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-24",
+    "url": "http://127.0.0.1:5190/day/2026-10-24/ora/saturday-blessed-virgin-mary/vesper",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-24-10-saturday-mary-vesper__390-light__start.png",
+      "W4-24-10-saturday-mary-vesper__390-light__end.png",
+      "W4-24-10-saturday-mary-vesper__390-light.txt"
+    ]
+  },
+  {
+    "id": "W4-24-10-saturday-mary-vesper",
+    "label": "W4 24.10.2026 Saturday memorial of Our Lady, vesper",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-24",
+    "url": "http://127.0.0.1:5190/day/2026-10-24/ora/saturday-blessed-virgin-mary/vesper",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W4-24-10-saturday-mary-vesper__320-dark-180__start.png",
+      "W4-24-10-saturday-mary-vesper__320-dark-180__end.png",
+      "W4-24-10-saturday-mary-vesper__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-З-дня-lectionis",
+    "label": "W5 19.10.2026 Paul of the Cross «З дня», lectionis",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-З-дня-lectionis__390-light__start.png",
+      "W5-paul-З-дня-lectionis__390-light__end.png",
+      "W5-paul-З-дня-lectionis__390-light.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-З-дня-lectionis",
+    "label": "W5 19.10.2026 Paul of the Cross «З дня», lectionis",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-З-дня-lectionis__320-dark-180__start.png",
+      "W5-paul-З-дня-lectionis__320-dark-180__end.png",
+      "W5-paul-З-дня-lectionis__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-З-дня-laudes",
+    "label": "W5 19.10.2026 Paul of the Cross «З дня», laudes",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross/laudes",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-З-дня-laudes__390-light__start.png",
+      "W5-paul-З-дня-laudes__390-light__end.png",
+      "W5-paul-З-дня-laudes__390-light.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-З-дня-laudes",
+    "label": "W5 19.10.2026 Paul of the Cross «З дня», laudes",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross/laudes",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-З-дня-laudes__320-dark-180__start.png",
+      "W5-paul-З-дня-laudes__320-dark-180__end.png",
+      "W5-paul-З-дня-laudes__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-З-дня-vesper",
+    "label": "W5 19.10.2026 Paul of the Cross «З дня», vesper",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross/vesper",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-З-дня-vesper__390-light__start.png",
+      "W5-paul-З-дня-vesper__390-light__end.png",
+      "W5-paul-З-дня-vesper__390-light.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-З-дня-vesper",
+    "label": "W5 19.10.2026 Paul of the Cross «З дня», vesper",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross/vesper",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-З-дня-vesper__320-dark-180__start.png",
+      "W5-paul-З-дня-vesper__320-dark-180__end.png",
+      "W5-paul-З-дня-vesper__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-Пра-пастыраў-lectionis",
+    "label": "W5 19.10.2026 Paul of the Cross «Пра пастыраў», lectionis",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross--pastors/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-Пра-пастыраў-lectionis__390-light__start.png",
+      "W5-paul-Пра-пастыраў-lectionis__390-light__end.png",
+      "W5-paul-Пра-пастыраў-lectionis__390-light.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-Пра-пастыраў-lectionis",
+    "label": "W5 19.10.2026 Paul of the Cross «Пра пастыраў», lectionis",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross--pastors/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-Пра-пастыраў-lectionis__320-dark-180__start.png",
+      "W5-paul-Пра-пастыраў-lectionis__320-dark-180__end.png",
+      "W5-paul-Пра-пастыраў-lectionis__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-Пра-пастыраў-laudes",
+    "label": "W5 19.10.2026 Paul of the Cross «Пра пастыраў», laudes",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross--pastors/laudes",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-Пра-пастыраў-laudes__390-light__start.png",
+      "W5-paul-Пра-пастыраў-laudes__390-light__end.png",
+      "W5-paul-Пра-пастыраў-laudes__390-light.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-Пра-пастыраў-laudes",
+    "label": "W5 19.10.2026 Paul of the Cross «Пра пастыраў», laudes",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross--pastors/laudes",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-Пра-пастыраў-laudes__320-dark-180__start.png",
+      "W5-paul-Пра-пастыраў-laudes__320-dark-180__end.png",
+      "W5-paul-Пра-пастыраў-laudes__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-Пра-пастыраў-vesper",
+    "label": "W5 19.10.2026 Paul of the Cross «Пра пастыраў», vesper",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross--pastors/vesper",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-Пра-пастыраў-vesper__390-light__start.png",
+      "W5-paul-Пра-пастыраў-vesper__390-light__end.png",
+      "W5-paul-Пра-пастыраў-vesper__390-light.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-Пра-пастыраў-vesper",
+    "label": "W5 19.10.2026 Paul of the Cross «Пра пастыраў», vesper",
+    "profile": "320-dark-180",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross--pastors/vesper",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-Пра-пастыраў-vesper__320-dark-180__start.png",
+      "W5-paul-Пра-пастыраў-vesper__320-dark-180__end.png",
+      "W5-paul-Пра-пастыраў-vesper__320-dark-180.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-Пра-законнікаў-lectionis",
+    "label": "W5 19.10.2026 Paul of the Cross «Пра законнікаў», lectionis",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross--religious/lectionis",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-Пра-законнікаў-lectionis__390-light__start.png",
+      "W5-paul-Пра-законнікаў-lectionis__390-light__end.png",
+      "W5-paul-Пра-законнікаў-lectionis__390-light.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-Пра-законнікаў-laudes",
+    "label": "W5 19.10.2026 Paul of the Cross «Пра законнікаў», laudes",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross--religious/laudes",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-Пра-законнікаў-laudes__390-light__start.png",
+      "W5-paul-Пра-законнікаў-laudes__390-light__end.png",
+      "W5-paul-Пра-законнікаў-laudes__390-light.txt"
+    ]
+  },
+  {
+    "id": "W5-paul-Пра-законнікаў-vesper",
+    "label": "W5 19.10.2026 Paul of the Cross «Пра законнікаў», vesper",
+    "profile": "390-light",
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-19",
+    "url": "http://127.0.0.1:5190/day/2026-10-19/ora/19-10-sv-paul-of-cross--religious/vesper",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-Пра-законнікаў-vesper__390-light__start.png",
+      "W5-paul-Пра-законнікаў-vesper__390-light__end.png",
+      "W5-paul-Пра-законнікаў-vesper__390-light.txt"
+    ]
+  },
+  {
+    "id": "W5-video",
+    "label": "W5 video: first readings while switching: [[\"З дня\",\"ПЕРШАЕ ЧЫТАННЕ Кніга Эстэры 3, 1-15 Пагроза для габрэяў Пасля гэтага кароль Ахашверош узвысіў Амана, сына Амедата агагіцяніна і ўзнёс яго ды ўстанавіў па-над усімі князямі, якія былі пры ім. Усе слугі караля, якія былі ў каралеўскай браме, кленчылі і кланяліся Аману, бо \"],[\"Пра пастыраў\",\"ПЕРШАЕ ЧЫТАННЕ ВЫБАР ЧЫТАННЯ 1 Пасланне св. апостала Паўла да Ціта 1, 7-11; 2, 1-8 · пра Папу ці біскупа ✓ 2 Першае пасланне св. апостала Пятра 5, 1-11 · пра прэзбітэра Пра Папу ці біскупа: Пасланне св. апостала Паўла да Ціта1, 7-11; 2, 1-8 Вучэнне Апосталаў пра біскупс\"],[\"Пра законнікаў\",\"ПЕРШАЕ ЧЫТАННЕ ВЫБАР ЧЫТАННЯ 1 Пасланне св. апостала Паўла да Філіпянаў 3, 7 – 4, 1. 4-9 ✓ 2 Пра законніцу: Пс 45 (44), 2 · пра законніцу Пасланне св. апостала Паўла да Філіпянаў 3, 7 – 4, 1. 4-9 Радуйцеся заўсёды ў Пану Браты: Што было для мяне набыткам, тое дзеля Хрыс\"]]",
+    "profile": "390-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "W5-paul-switch-commons.webm"
+    ]
+  }
+]

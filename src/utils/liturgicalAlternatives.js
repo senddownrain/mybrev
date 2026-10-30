@@ -269,6 +269,17 @@ function optionTitle(option, index, kind) {
   return `Варыянт ${index + 1}`;
 }
 
+/**
+ * A group that is only the responsory variant «Пра законніцу: Пс 45 (44), 2 / Н. … / К. … / Н. …» printed after the
+ * reading (religious R1). It is a variant of the reading's responsory, not a second reading, so it must not be a choice.
+ */
+function isResponsoryVariant(html) {
+  const paragraphs = paragraphTexts(html);
+  if (!paragraphs.length || paragraphs.length > 6) return false;
+  const text = paragraphs.join(' ');
+  return /^Пра\s+[^:]{1,60}:\s*\p{L}{1,6}\s*\d/u.test(paragraphs[0]) && /(?:^|\s)Н\.\s/u.test(text) && /(?:^|\s)К\.\s/u.test(text) && text.length < 700;
+}
+
 /** A group that holds only the volume's «Выбіраюцца найбольш адпаведныя тэксты …» sentence (no reading text). */
 function isReadingReference(html) {
   const paragraphs = paragraphTexts(html);
@@ -298,7 +309,15 @@ export function getLiturgicalAlternatives(html, kind = 'generic') {
   const structured = kind === 'gospel-antiphon'
     ? gospelCycleAlternatives(root) || structuredAlternatives(root)
     : structuredAlternatives(root);
-  const rawOptions = structured || splitAtRules(root, kind).map((optionHtml) => ({ html: optionHtml }));
+  const split = structured || splitAtRules(root, kind).map((optionHtml) => ({ html: optionHtml }));
+  // Office readings: a responsory variant stays with the reading it follows, in the printed order.
+  const rawOptions = kind === 'office-reading'
+    ? split.reduce((list, option) => {
+      if (list.length && isResponsoryVariant(option.html)) list[list.length - 1] = { ...list.at(-1), html: `${list.at(-1).html}\n<hr />\n${option.html}` };
+      else list.push(option);
+      return list;
+    }, [])
+    : split;
   const options = uniqueOptions(rawOptions).map((option, index) => {
     const reference = kind === 'office-reading' && isReadingReference(option.html);
     return {
