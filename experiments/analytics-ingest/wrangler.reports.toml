@@ -1,0 +1,22 @@
+# STAGING ONLY, READ-ONLY dashboard Worker (R05). Separate from the ingest Worker (wrangler.toml): own name, own secrets, no cron, no ingest route.
+# No account_id, no secrets, no production resources. Create/deploy by hand per docs/analytics-dashboard-r05.md §5.
+name = "mybrev-analytics-reports-staging"
+main = "worker/src/reports-worker.mjs"
+compatibility_date = "2026-10-01"
+workers_dev = true          # *.workers.dev staging host; protect it with a Cloudflare Access application (the Worker verifies the JWT itself)
+preview_urls = false
+
+[vars]
+DASHBOARD_MODE = "qa"       # "qa" = synthetic/QA banner. "live" additionally needs LIVE_RELEASE_CARD (a release-card id) or every request answers 503
+ACCESS_TEAM_DOMAIN = ""     # e.g. "<team>.cloudflareaccess.com" (not a secret). Empty = the Access layer is off
+ACCESS_AUD = ""             # the Access application's AUD tag (not a secret)
+ACCESS_ALLOWED_EMAILS = ""  # optional comma-separated allow-list on top of the Access policy
+# DASHBOARD_TOKEN is a secret (>= 24 random chars, optional CLI/smoke layer): `wrangler secret put DASHBOARD_TOKEN --config wrangler.reports.toml` (never put it here)
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mybrev-analytics-staging"
+database_id = "00000000-0000-0000-0000-000000000000"  # placeholder: the SAME staging database as the ingest Worker (read-only use)
+
+[observability]
+enabled = false

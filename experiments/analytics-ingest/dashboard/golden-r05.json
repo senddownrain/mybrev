@@ -1,0 +1,16 @@
+{
+ "_note": "seed 20261024, 31 days ending 2026-11-06, k=5; the test cross-checks the same numbers against an independent recount of the packets",
+ "opens": [
+  3213,
+  11770,
+  12795
+ ],
+ "catalog28": {
+  "hours_list": 900,
+  "prayers_home": 581,
+  "songs": 506,
+  "prayers_all": 399,
+  "bible_books": 371,
+  "compendium_home": 220
+ }
+}

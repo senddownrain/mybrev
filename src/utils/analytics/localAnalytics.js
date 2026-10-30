@@ -22,10 +22,16 @@ const CATALOG_SECTION = Object.freeze({
   hours_list: 'hours', prayers_home: 'prayers', prayers_all: 'prayers', favorites: 'prayers',
   songs: 'songs', bible_books: 'bible', compendium_home: 'compendium',
 });
+const HANDOVER_DELAY_MS = 3000;
+const HANDOVER_MIN_INTERVAL_MS = 10 * 60 * 1000;
 const STORAGE_KEY = 'analytics_local_v1';
 const MAX_STORED_BYTES = 64 * 1024;
 
-export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = packageVersion }) {
+/**
+ * `staging` (R03, QA only) is a factory `({ collector, publicIds, persist }) => transport` supplied by src/main.js
+ * only when the compile-time flag VITE_ANALYTICS_STAGING is on; this module never imports a transport itself.
+ */
+export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = packageVersion, staging = null }) {
   const collector = createCollector({
     platform: 'web', appVersion, enabled: true, region: 'UNKNOWN', publicIds: new Set(inventory.ids),
   });
@@ -35,12 +41,15 @@ export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = pa
   let routeToken = 0; // every route change invalidates pending readiness checks (fast switching, Back)
   let reader = null; // { element, scroller, observer } of the material that is on screen
 
+  const publicIds = new Set(inventory.ids);
+  const transport = staging ? staging({ collector, publicIds, persist: () => persist({ strict: true }) }) : null;
+
   restore();
 
   function restore() {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored) collector.importPackets(JSON.parse(stored));
+      if (stored) collector.importPackets(JSON.parse(stored).filter((packet) => !transport?.wasSent(packet)));
       collector.pruneOlderThan(LIMITS.maxLocalDays);
     } catch {
       collector.reportError('storage_unavailable');
@@ -48,9 +57,10 @@ export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = pa
   }
 
   // Called only when the page is hidden or closed: one small write, no work on scroll/tap.
-  function persist() {
+  function persist({ strict = false } = {}) {
     try {
-      let packets = collector.snapshot({ includeOpen: true });
+      // a day that another tab already handed over must not come back from this tab's memory
+      let packets = collector.snapshot({ includeOpen: true }).filter((packet) => !transport?.wasSent(packet));
       let text = JSON.stringify(packets);
       while (text.length > MAX_STORED_BYTES && packets.length > 0) {
         packets = packets.slice(1); // oldest day first
@@ -58,8 +68,9 @@ export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = pa
         text = JSON.stringify(packets);
       }
       window.localStorage.setItem(STORAGE_KEY, text);
-    } catch {
+    } catch (error) {
       collector.reportError('storage_unavailable');
+      if (strict) throw error;
     }
   }
 
@@ -147,8 +158,23 @@ export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = pa
     const visible = document.visibilityState === 'visible';
     collector.setVisible(visible);
     if (!visible) persist();
+    else scheduleHandOver();
   });
   window.addEventListener('pagehide', () => { collector.flush(); persist(); });
+
+  // QA staging only: closed UTC days are handed over once (at-most-once) after start and on return to the foreground,
+  // never on scroll/tap and never from pagehide. Throttled; no retry.
+  let handOverTimer = 0;
+  let lastHandOver = 0;
+  function scheduleHandOver() {
+    if (!transport || handOverTimer || Date.now() - lastHandOver < HANDOVER_MIN_INTERVAL_MS) return;
+    handOverTimer = window.setTimeout(() => {
+      handOverTimer = 0;
+      lastHandOver = Date.now();
+      transport.flush().catch(() => {});
+    }, HANDOVER_DELAY_MS);
+  }
+  scheduleHandOver();
 
   // A successful user action reported by trackFeature(); the section is the current screen's.
   window.__analyticsFeature = (featureId) => {
@@ -159,6 +185,8 @@ export function startLocalAnalytics(router, { massOrderPrayerId, appVersion = pa
   window.__analyticsLocal = {
     // Closed visits only: the open visit is added when the reader leaves the screen or the page.
     snapshot: () => collector.snapshot(),
+    // QA staging only (absent otherwise): run the hand-over now; `pause()` is the local kill switch.
+    ...(transport ? { handOver: () => transport.flush(), stagingStats: transport.stats, pauseStaging: () => transport.pause() } : {}),
     clear: () => { collector.clear(); try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* storage unavailable */ } },
   };
   return collector;
