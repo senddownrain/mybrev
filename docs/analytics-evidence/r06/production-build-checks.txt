@@ -1,0 +1,14 @@
+R06 — обычные (production) сборки без QA-флагов, 2026-10-27
+
+WEB  (npm run build, фейковые VITE_FIREBASE_*), dist/:
+  grep -rlE '127\.0\.0\.1:8788|/v2/ingest|analytics_staging|ANALYTICS_STAGING|__analyticsLocal|analytics_local_v1' dist  -> пусто (0 файлов)
+  браузер (vite preview dist, 127.0.0.1:4174, 8 c): window.__analyticsLocal = undefined; localStorage без ключей analytics*;
+  ни одного запроса к :8788 или *ingest*. (Firestore/Google Fonts — штатные запросы приложения, не аналитика; Firebase здесь фейковый CI-проект.)
+WEB  QA-сборка (VITE_ANALYTICS_LOCAL=true VITE_ANALYTICS_STAGING=true): '/v2/ingest' только в assets/stagingTransport-*.js
+
+Flutter release (flutter build ios --release --no-codesign, без --dart-define), strings -a Frameworks/App.framework/App:
+  /v2/ingest 0 | 127.0.0.1 0 | HttpStagingTransport 0 | StagingSender 0 | staging_http 0 | ANALYTICS_STAGING 0 | analytics_local 0
+  контроль метода: 'mybrev_flutter' 185, 'hive' 51
+Flutter debug (simulator) без флагов: '127.0.0.1:8788' 0; код отправителя и литерал '/v2/ingest' есть (debug kernel без tree-shaking), но не достижим (kAnalyticsStagingActive == false).
+Flutter debug, QA-флаги: '127.0.0.1:8788' 1.
+Flutter OFF на симуляторе (запуск + фон): журнал ingest 32 строки до и после; cell_counts 16/60 до и после.

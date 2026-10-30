@@ -1,17 +1,19 @@
 # MyBrev Analytics — итоговая передача владельцу (P09)
 
+> **Исправлено в R06 (2026-10-27).** Документ описывает срез 2026-10-24. Строки о слиянии/Draft ниже были устаревшими: P00–P09 **слиты в `main`** (WEB `dc45801`, Flutter `bb3afd3`; точная таблица — `docs/analytics-continuation/STATUS.md` §2), а #137/#138/#157/#159 и Flutter #31/#32/#33/#36/#37 больше не открыты. Таблица этапов §2 осталась историческим срезом 24.10. Актуальный итог недели R00–R06 — `docs/analytics-week-closeout.md`.
+
 **Срез:** 2026-10-24 06:06 UTC; **ответственный разработчик:** Gleb (исполнитель P09: Claude, сессия `p09`); **объект:** MyBrev Analytics WEB + Flutter + OFFLINE prototype.
 **WEB `origin/main`:** `6e0b708`. **Flutter `origin/main`:** `57c78b7`. Все числа ниже получены **в этом срезе** на перечисленных SHA (лог рядом, `docs/analytics-evidence/p09/`); отчёты прежних этапов использовались как отправная точка, а не как доказательство.
 
 ```
 TECHNICAL STATUS: TECHNICALLY DEMO READY / LIVE NETWORK BLOCKED   (с оговорками ниже: 1 WEB-тест и 1 Flutter-тест контента красные на main, физические устройства и D1 не проверялись)
 LIVE ANALYTICS NETWORK: BLOCKED
-MERGED: НИЧЕГО из P00–P09 не слито (все PR открыты как Draft)
+MERGED: P00–P09 слиты в main (WEB dc45801, Flutter bb3afd3; на 2026-10-24 это было не так — срез устарел, см. STATUS.md). Открыты: WEB #158 (Sentry B) и работа R00–R06
 READY FOR REVIEW: WEB #157 #158 #159 #137 + цепочка #138→#160→#161→#162; Flutter #33 #36 #37 #32; (#31 — только после правки триггера, см. §5; #21 — исторический)
 NOT TESTED: физический iPhone/Android; release/profile-производительность на устройстве; Mass multi-part sd; background 9 s на мобильных; D1 (биллинг/семантика); production Sentry; обычная iOS/Android-сборка без флага на устройстве (только статика); GitHub CI на объединённой ветке
 OWNER DECISIONS: D-01…D-09 OPEN, D-10 = B, G1…G13 — см. docs/analytics-open-decisions.md
 RUN THIS DEMO: npm ci && npm run analytics:e2e && npm run analytics:dashboard-demo   (Node 24; без сети; см. docs/analytics-demo.md)
-ROLLBACK: ничего не слито/не развёрнуто — достаточно закрыть Draft PR (см. §9)
+ROLLBACK: развёрнуто ничего нет (production не затрагивался); слитое откатывается `git revert` по PR (см. §9)
 ```
 
 ## 1. Короткий итог
@@ -44,7 +46,7 @@ ROLLBACK: ничего не слито/не развёрнуто — доста�
 | P09 final | WEB (этот PR, стек на #162) | `8481d2f` → см. PR | — | см. PR | этот документ, e2e-скрипт и тест, runbook/demo/decisions, evidence | закрыть PR |
 | старый | Flutter [#21](https://github.com/senddownrain/ibreviarybyapp/pull/21) | `014b14a` → `9aa4bd3` | 19 | нет проверок | исторический iOS QA (31 падение); **не слит**, перепроверен — см. §4 | закрыть PR |
 
-**Старые PR #137/#138/#21 не слиты** (state=OPEN, Draft — проверено `gh pr view` 2026-10-24).
+**На 2026-10-24 старые PR #137/#138/#21 были не слиты (OPEN, Draft). На 2026-10-27 #137 и #138 слиты в main (по STATUS.md); Flutter #21 остаётся открытым Draft.**
 
 **Стек WEB:** #138 → #160 → #161 → #162 (каждый PR нацелен на ветку предыдущего; при слиянии — строго снизу вверх и с перенацеливанием на main). **Все четыре на 18 коммитов позади main.**
 
@@ -193,4 +195,4 @@ open docs/analytics-evidence/p09/e2e-out/dashboard-e2e.html
 
 ## 9. Откат
 
-Ничего не слито, не развёрнуто, ни один endpoint/секрет/Worker/D1 не создавался. Откат = закрыть Draft PR (и, при желании, удалить ветки `claude/p0*`). Локальные тестовые приложения и эмулятор P03 удалены (см. P03_REPORT). Следы только в локальных worktree разработчика.
+Ни один endpoint/секрет/Worker/D1 не создавался; слитые на 2026-10-27 P00–P09 откатываются `git revert` соответствующих PR (код аналитики в обычных сборках выключен), открытые Draft — закрытием PR (и, при желании, удалением веток `claude/p0*`). Локальные тестовые приложения и эмулятор P03 удалены (см. P03_REPORT). Следы только в локальных worktree разработчика.
