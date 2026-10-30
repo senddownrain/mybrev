@@ -17,7 +17,7 @@ ALLOWED_ORIGINS = ""        # comma-separated browser origins of QA builds; empt
 [[d1_databases]]
 binding = "DB"
 database_name = "mybrev-analytics-staging"
-database_id = "00000000-0000-0000-0000-000000000000"  # placeholder: local dev ignores it, deploy needs the staging id
+database_id = "35c31d78-03fa-4178-b6b3-c116a116b699"  # staging D1 created 2026-10-30 (not a secret)
 migrations_dir = "migrations"
 
 [triggers]

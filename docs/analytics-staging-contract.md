@@ -86,7 +86,11 @@ INGEST_ENABLED=true REPORT_TOKEN=$(openssl rand -hex 24) ADMIN_TOKEN=$(openssl r
 | `rows_written` локального движка: пакет из 1 ячейки = 2 (ячейка + строка бюджета), совпадает с моделью `BUDGET_ROW_OVERHEAD` | **локально**, не биллинг D1 |
 | реальный D1: batch-rollback, лимиты операторов/параметров, CPU Free, `rows_written` с биллингом, Free-квота, 20 параллельных у границы | **NOT TESTED** (нужен staging, §6) |
 
-## 6. Блокер `R02-STAGING-BLOCKED-CREDENTIALS` и что нужно от разработчика
+## 6.0 Статус реального staging (2026-10-30)
+
+Создано в Cloudflare (аккаунт разработчика, `wrangler login`): D1 `mybrev-analytics-staging` (`35c31d78-03fa-4178-b6b3-c116a116b699`, миграции 0001 и 0002 применены), Worker `mybrev-analytics-staging` на `https://mybrev-analytics-staging.slovo-app.workers.dev`, секреты `REPORT_TOKEN` и `ADMIN_TOKEN` (значения не в репозитории). Ingest по умолчанию OFF. Пробы `worker/probe.mjs` против реального Worker и D1 прошли: `--expect off` (8/8), `--expect on` (22/22, включая 20 параллельных пакетов и точную сумму отчёта, kill switch без redeploy). Не сделано: Cloudflare Access для `/v2/report*` и `/v2/admin/*`; замеры `rows_read`/`rows_written` в Dashboard.
+
+## 6. Блокер `R02-STAGING-BLOCKED-CREDENTIALS` (снят 2026-10-30, см. 6.0) и исходные шаги
 
 Сессия обнаружила одну OAuth-сессию wrangler (личный аккаунт, scope `user (read)`). Принадлежность аккаунта проекту не подтверждена и прав на создание ресурсов нет, поэтому **в Cloudflare ничего не создавалось**. Нужно:
 
