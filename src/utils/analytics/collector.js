@@ -273,6 +273,25 @@ export function createCollector({
 
 
 
+    /**
+     * Removes and returns (validated packets) every collected day for which `isClosed(day)` is true. The data is gone
+     * from memory when this returns: it is the "mark" step of an at-most-once hand-over (R03). The visit in progress is
+     * not touched.
+     */
+    takeDays(isClosed) {
+      if (!on) return [];
+      const taken = new Map();
+      for (const day of [...days.keys()]) {
+        if (!isClosed(day)) continue;
+        taken.set(day, days.get(day));
+        cellCount -= days.get(day).size;
+        days.delete(day);
+      }
+      const keep = days;
+      days = taken;
+      try { return buildPackets(); } finally { days = keep; }
+    },
+
     /** Merges previously persisted packets (same platform) back into the counters. */
     importPackets(list) {
       if (!on || !Array.isArray(list)) return;
