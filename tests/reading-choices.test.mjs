@@ -44,22 +44,28 @@ test('holy-women R2 in Advent, Christmas, Lent, Easter: reference note + the two
   }
 });
 
-test('holy-women R2 in Ordinary Time (Volume III): reference note + Pius XII as the printed "Або іншае"', () => {
+test('holy-women R2 in Ordinary Time (Volume III): reference note, the two holy-men texts, then Pius XII as the printed "Або іншае"', () => {
   const { notes, options } = getReadingChoices(women.officeOfReadingsR2);
   assert.equal(notes.length, 1);
   assert.match(plain(notes[0].html), /с\. 1584-1587\.$/u);
-  assert.deepEqual(options.map((o) => o.title), ['Прамова папы Пія ХІІ, скіраваная да маладых сужэнстваў']);
-  assert.match(plain(options[0].html), /Жонка – сонца сям’і/u);
+  // owner decision D-1 (#165): the reference is the SET of legal readings, so the holy-men texts of the same volume come first
+  assert.deepEqual(options.map((o) => o.title), [...WORKS, 'Прамова папы Пія ХІІ, скіраваная да маладых сужэнстваў']);
+  assert.match(plain(options[2].html), /Жонка – сонца сям’і/u);
 });
 
-test('holy-women R1: the printed readings for a married saint are separate choices, the reference is a note', () => {
+test('holy-women R1: reference note, the first readings of holy men of the same volume, then the two printed for a married saint', () => {
+  // holy-men R1 count per volume: I (Advent, Christmas) 3, II (Lent, Easter) 2, III (Ordinary Time) 3
+  const menCount = { null: 3, advent: 3, christmas: 3, lent: 2, easter: 2 };
   for (const period of [null, 'advent', 'christmas', 'lent', 'easter']) {
     const { notes, options } = getReadingChoices((period ? inSeason(women, period) : women).officeOfReadingsR1);
     assert.equal(notes.length, 1, String(period));
-    assert.equal(options.length, 2, String(period));
-    assert.match(options[0].title, /^Кніга Прыпавесцяў(?: Саламона)? 31, 10-31$/u, String(period));
-    assert.equal(options[1].title, WOMEN_R1[1], String(period));
-    assert.doesNotMatch(plain(options[0].html), /Першае пасланне св\. апостала Пятра/u, `${period}: two readings glued`);
+    assert.equal(options.length, menCount[period] + 2, String(period));
+    const own = options.slice(-2);
+    assert.match(own[0].title, /^Кніга Прыпавесцяў(?: Саламона)? 31, 10-31$/u, String(period));
+    assert.equal(own[1].title, WOMEN_R1[1], String(period));
+    assert.doesNotMatch(plain(own[0].html), /Першае пасланне св\. апостала Пятра/u, `${period}: two readings glued`);
+    const men1 = getReadingChoices((period ? inSeason(men, period) : men).officeOfReadingsR1).options;
+    assert.deepEqual(options.slice(0, menCount[period]).map((o) => o.title), men1.map((o) => o.title), `${period}: holy-men readings unchanged`);
   }
 });
 
@@ -75,7 +81,8 @@ test('no choice is invented or lost: the choices and notes together are the stor
 });
 
 test('a single legal reading gets no picker, and a text that is only a reference stays readable', () => {
-  assert.equal(getReadingChoices(women.officeOfReadingsR2).options.length, 1);
+  assert.equal(getReadingChoices(women.officeOfReadingsR2).options.length, 3); // holy-women R2 is a set since D-1 (#165)
+  assert.equal(getReadingChoices('<p>Кніга Рут 1, 1-5</p>').options.length, 1);
   const onlyReference = '<p>Выбіраюцца найбольш адпаведныя тэксты з Агульных тэкстаў пра святых мужчын, с. 1.</p>';
   const choices = getReadingChoices(onlyReference);
   assert.equal(choices.notes.length, 0);
