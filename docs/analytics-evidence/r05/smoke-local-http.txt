@@ -1,0 +1,10 @@
+PASS  no token /reports -> 401
+PASS  no token /reports/api/summary -> 401
+PASS  no token /reports/api/summary.csv -> 401
+PASS  wrong token -> 401
+PASS  bearer token -> 200 JSON, k=5, QA banner, lower bounds — opens_shown=11770
+PASS  CSV: every n >= 5 — 105 rows
+PASS  owner via Access simulator -> page 200 with strict CSP
+PASS  owner via Access simulator -> platform filter works — ios 7d opens>=656
+PASS  forged Access JWT straight to the Worker -> 401
+all PASS
