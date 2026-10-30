@@ -206,3 +206,20 @@ test('keeps genuine explicit psalm alternatives selectable', () => {
   );
   assert.equal(options.length, 2);
 });
+
+test('a hymn stanza that begins with «Для …» and ends a later line with a colon is verse, not a heading', () => {
+  const generated = JSON.parse(fs.readFileSync(path.resolve('patchs/db-templates/holy-men.json'), 'utf8'));
+  const stanza = 'Для адданых слугаў Божых';
+  for (const season of ['advent', 'christmas', 'lent', 'easter']) {
+    for (const field of ['vesperHymn', 'vesper1Hymn']) {
+      const html = generated._seasonalVariants[season][field];
+      const options = getLiturgicalAlternatives(html, 'hymn');
+      assert.deepEqual(options.map(({ title }) => title), ['Пра аднаго святога', 'Пра некалькіх святых'], `${season} ${field}`);
+      assert.match(options[1].html, new RegExp(stanza, 'u'), `${season} ${field}: the stanza stays inside the plural hymn`);
+      assert.match(options[1].html, /Бо сусветам Ён кіруе\. Амэн/u, `${season} ${field}: the plural hymn is complete`);
+    }
+  }
+  // A real heading on the first line still opens a choice.
+  const headings = '<p>Пра адну панну:<br />Першы радок<br />Другі радок</p><p>Для адданых слугаў:<br />Трэці радок</p>';
+  assert.equal(getLiturgicalAlternatives(headings, 'hymn').length, 2);
+});
