@@ -1,0 +1,146 @@
+[
+  {
+    "id": "advent-xavier-priest",
+    "season": "Advent",
+    "date": "2026-12-03",
+    "profile": "390-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "advent-xavier-priest__390-light.png",
+      "advent-xavier-priest__390-light.txt"
+    ]
+  },
+  {
+    "id": "advent-xavier-priest",
+    "season": "Advent",
+    "date": "2026-12-03",
+    "profile": "desktop-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "advent-xavier-priest__desktop-light.png",
+      "advent-xavier-priest__desktop-light.txt"
+    ]
+  },
+  {
+    "id": "advent-xavier-pope-chosen",
+    "season": "Advent",
+    "date": "2026-12-03",
+    "profile": "390-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "advent-xavier-pope-chosen__390-light.png",
+      "advent-xavier-pope-chosen__390-light.txt"
+    ]
+  },
+  {
+    "id": "advent-xavier-pope-chosen",
+    "season": "Advent",
+    "date": "2026-12-03",
+    "profile": "desktop-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "advent-xavier-pope-chosen__desktop-light.png",
+      "advent-xavier-pope-chosen__desktop-light.txt"
+    ]
+  },
+  {
+    "id": "advent-xavier-many-chosen",
+    "season": "Advent",
+    "date": "2026-12-03",
+    "profile": "390-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "advent-xavier-many-chosen__390-light.png",
+      "advent-xavier-many-chosen__390-light.txt"
+    ]
+  },
+  {
+    "id": "advent-xavier-many-chosen",
+    "season": "Advent",
+    "date": "2026-12-03",
+    "profile": "desktop-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "advent-xavier-many-chosen__desktop-light.png",
+      "advent-xavier-many-chosen__desktop-light.txt"
+    ]
+  },
+  {
+    "id": "christmas-raymond-priest",
+    "season": "Christmas",
+    "date": "2027-01-07",
+    "profile": "390-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "christmas-raymond-priest__390-light.png",
+      "christmas-raymond-priest__390-light.txt"
+    ]
+  },
+  {
+    "id": "christmas-raymond-priest",
+    "season": "Christmas",
+    "date": "2027-01-07",
+    "profile": "desktop-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "christmas-raymond-priest__desktop-light.png",
+      "christmas-raymond-priest__desktop-light.txt"
+    ]
+  },
+  {
+    "id": "easter-anselm-bishop",
+    "season": "Easter",
+    "date": "2027-04-21",
+    "profile": "390-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "easter-anselm-bishop__390-light.png",
+      "easter-anselm-bishop__390-light.txt"
+    ]
+  },
+  {
+    "id": "easter-anselm-bishop",
+    "season": "Easter",
+    "date": "2027-04-21",
+    "profile": "desktop-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "easter-anselm-bishop__desktop-light.png",
+      "easter-anselm-bishop__desktop-light.txt"
+    ]
+  },
+  {
+    "id": "ordinary-paul-priest",
+    "season": "Ordinary time",
+    "date": "2026-10-19",
+    "profile": "390-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "ordinary-paul-priest__390-light.png",
+      "ordinary-paul-priest__390-light.txt"
+    ]
+  },
+  {
+    "id": "ordinary-paul-priest",
+    "season": "Ordinary time",
+    "date": "2026-10-19",
+    "profile": "desktop-light",
+    "status": "PASS",
+    "failed": [],
+    "files": [
+      "ordinary-paul-priest__desktop-light.png",
+      "ordinary-paul-priest__desktop-light.txt"
+    ]
+  }
+]

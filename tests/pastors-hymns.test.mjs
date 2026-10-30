@@ -118,3 +118,64 @@ test('a flattened hymn with an unrecognizable shape is left untouched', () => {
   const doubled = flat + '<p>Пра Папу:<br />Яшчэ</p>';
   assert.equal(preparePastorsHymn(doubled, 'папы'), doubled);
 });
+
+// Independent expectation: the plain-text volumes separate the opening, the three
+// exclusive stanzas and the shared conclusion with a tab-only line. Expectations
+// are parsed from those sources, not from the generated templates.
+const readLines = (file) => fs.readFileSync(file, 'utf8').split(/\r?\n/);
+const sourceHymns = (file) => {
+  const lines = readLines(file);
+  const out = [];
+  lines.forEach((line, i) => {
+    if (line.trim() !== 'Пра аднаго пастыра:') return;
+    let end = i;
+    while (end < lines.length && !/^(?:Псальмодыя|\d\s*ант|Ант)/u.test(lines[end])) end += 1;
+    const block = lines.slice(i, end);
+    const parts = [[]];
+    for (const line of block) {
+      if (line.trim() === '' && line.includes('\t')) parts.push([]);
+      else parts[parts.length - 1].push(line.trim());
+    }
+    const [opening, exclusive, ending] = parts;
+    const at = (label) => exclusive.indexOf(label);
+    const [iPope, iBishop, iPriest] = ['Пра Папу:', 'Пра біскупа:', 'Пра прэзбітэра:'].map(at);
+    const manyAt = ending.indexOf('Пра некалькіх пастыраў:');
+    out.push({
+      opening: opening.slice(1),
+      pope: exclusive.slice(iPope + 1, iBishop),
+      bishop: exclusive.slice(iBishop + 1, iPriest),
+      priest: exclusive.slice(iPriest + 1),
+      ending: ending.slice(0, manyAt),
+      many: ending.slice(manyAt + 1),
+    });
+  });
+  return out;
+};
+
+test('seasonal Pastors hymns match the stanza layout of the source volumes', () => {
+  const adventChristmas = sourceHymns('patchs/sources/common-seasons/01_advent_christmas_utf8.txt');
+  const lentEaster = sourceHymns('patchs/sources/common-seasons/02_lent_easter_utf8.txt');
+  assert.ok(adventChristmas.length >= 3 && lentEaster.length >= 3, 'sources parsed');
+  const pairs = [
+    ['advent', 'officeOfReadingsHymn', adventChristmas[0]], ['advent', 'laudesHymn', adventChristmas[1]],
+    ['advent', 'vesperHymn', adventChristmas[2]], ['advent', 'vesper1Hymn', adventChristmas[2]],
+    ['christmas', 'laudesHymn', adventChristmas[1]],
+    ['lent', 'officeOfReadingsHymn', lentEaster[0]], ['lent', 'laudesHymn', lentEaster[1]],
+    ['lent', 'vesperHymn', lentEaster[2]],
+  ];
+  for (const [season, field, expected] of pairs) {
+    const html = generated._seasonalVariants[season][field];
+    const options = getLiturgicalAlternatives(preparePastorsHymn(html, 'Св. Яна Паўла ІІ, папы'), 'hymn');
+    const where = season + ' ' + field;
+    const stanzas = ({ html: h }) => h.replace(/<\/p>/gi, '\n').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '')
+      .split(/\n+/).map((l) => l.trim()).filter(Boolean);
+    const norm = (list) => list.map((l) => l.replace(/\s+/g, ' ').replace('Ўсё', 'Ўсё'));
+    const want = [
+      [...expected.opening, ...expected.pope, ...expected.ending],
+      [...expected.opening, ...expected.bishop, ...expected.ending],
+      [...expected.opening, ...expected.priest, ...expected.ending],
+      expected.many,
+    ];
+    options.forEach((option, i) => assert.deepEqual(norm(stanzas(option)), norm(want[i]), where + ': ' + labels[i]));
+  }
+});
