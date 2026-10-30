@@ -37,6 +37,14 @@ function isMarkerText(text) {
     || INSTRUCTION_MARKER.test(text);
 }
 
+// A hymn heading («Пра аднаго святога:») stands alone on the first line of its paragraph. A stanza
+// that merely begins with «Для …» / «За …» and ends a LATER line with a colon («Для адданых слугаў
+// Божых / Хай гучыць хвала й падзяка:») is verse, not a heading.
+function firstLineText(element) {
+  const line = element.innerHTML.split(/<br\s*\/?>/iu).find((part) => textOf(part));
+  return textOf(line);
+}
+
 function isAlternativeBoundary(element, kind) {
   if (element.rawTagName !== 'p') return false;
   const text = textOf(element.toString());
@@ -45,7 +53,7 @@ function isAlternativeBoundary(element, kind) {
   // Keep genuine explicit alternatives (<hr>, "Або:") available for psalms.
   return ALTERNATIVE_MARKER.test(text)
     || INSTRUCTION_MARKER.test(text)
-    || (kind !== 'psalm' && CATEGORY_MARKER.test(text));
+    || (kind !== 'psalm' && CATEGORY_MARKER.test(kind === 'hymn' ? firstLineText(element) : text));
 }
 
 function splitAtRules(root, kind) {
