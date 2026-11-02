@@ -48,10 +48,18 @@ test('dioceses use their own 2 x 2 grid and the theme switch keeps its flex layo
   const source = readFileSync(new URL('../src/views/Settings.vue', import.meta.url), 'utf8');
   assert.match(source, /class="theme-options diocese-options"[^>]*data-test="settings-dioceses"/);
   const css = style('src/views/Settings.vue');
+  assert.match(source, /class="setting-row setting-row--dioceses"/);
+  const row = rule(css, '.setting-row--dioceses');
+  assert.match(row, /flex-direction: column/);
+  assert.match(row, /align-items: stretch/);
   const grid = rule(css, '.diocese-options');
   assert.match(grid, /display: grid/);
   assert.match(grid, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(grid, /grid-auto-rows: 1fr/);
+  assert.match(grid, /width: 100%/);
+  assert.doesNotMatch(grid, /360px/);
+  const narrow = css.slice(css.indexOf('@media (max-width: 380px)'));
+  assert.match(rule(narrow, '.diocese-options'), /grid-template-columns: 1fr/);
   assert.match(rule(css, '.theme-options'), /display: flex/);
   assert.equal((source.match(/class="theme-options"/g) || []).length, 1, 'the theme switch still uses the plain flex layout');
 });
