@@ -29,7 +29,7 @@
           >{{ option.label }}</button>
         </div>
       </div>
-      <div class="setting-row setting-row--theme">
+      <div class="setting-row setting-row--dioceses">
         <div class="setting-copy">
           <strong>Дыяцэзіі</strong>
           <span>Адна або некалькі: літургія гадзінаў і чытанні паказваюць варыянты ўсіх выбраных</span>
@@ -254,12 +254,13 @@ function restoreGlobalCategories() {
   .text-preview { margin-inline: 16px; }
   .add-category-button { width: calc(100% - 32px); margin-inline: 16px; }
 }
+.setting-row--dioceses { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 12px; padding-block: 16px 20px; }
 .diocese-check { display: inline-grid; width: 1em; place-items: center; font-weight: 800; }
-/* Dioceses are a 2 x 2 choice grid with equal cells; the check mark has its own
-   reserved column, so a selected label never changes the cell's size. */
-.diocese-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; align-items: stretch; justify-content: stretch; gap: 6px; width: min(100%, 360px); }
-.diocese-options button { display: grid; grid-template-columns: 1em minmax(0, 1fr); align-items: center; column-gap: 6px; min-height: 44px; padding: 8px 10px; text-align: left; line-height: 1.25; overflow-wrap: anywhere; }
-@media (max-width: 560px) {
-  .diocese-options { width: 100%; }
+/* The diocese label and explanation remain above the full-width choice grid.
+   A reserved check column keeps button labels stable when toggling a choice. */
+.diocese-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; align-items: stretch; gap: 8px; width: 100%; }
+.diocese-options button { display: grid; grid-template-columns: 1em minmax(0, 1fr); align-items: center; column-gap: 8px; min-height: 48px; padding: 10px 14px; text-align: left; line-height: 1.25; overflow-wrap: anywhere; }
+@media (max-width: 380px) {
+  .diocese-options { grid-template-columns: 1fr; }
 }
 </style>
