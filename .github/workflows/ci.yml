@@ -27,6 +27,9 @@ jobs:
       - name: Immaculate Heart movable memorial regression tests
         run: node --test tests/immaculate-heart-hours.test.mjs
 
+      - name: Sunday first Vespers and cache release regression tests
+        run: node --test tests/liturgical-vespers.test.mjs tests/content-cache.test.mjs
+
       - name: Lint
         run: npm run lint
 
