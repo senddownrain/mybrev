@@ -273,8 +273,20 @@ export function resolveDayAgainstPeriod(day, periodDay, { fillMissing = false, f
       const shared = fillMissingDaytime && !fillMissing && field.match(/^sext[23](.+)$/);
       const fromTerce = shared ? day?.[`sext1${shared[1]}`] : null;
       const useProperTerce = shared && !isMissing(fromTerce) && !isFromDayReference(fromTerce);
-      const fallback = useProperTerce ? '' : periodDay?.[field];
-      resolved[field] = isFromDayReference(fallback) ? '' : (fallback ?? '');
+      const suffix = field.match(/^sext[123](.+)$/)?.[1];
+      if (fillMissingDaytime && !fillMissing && suffix === 'R') {
+        // Feast readings are proper (GILH 232), never silently borrowed from a
+        // weekday. If absent from the source, they need a content correction.
+        resolved[field] = '';
+      } else if (fillMissingDaytime && !fillMissing && suffix === 'Pr') {
+        // The feast's daytime collect is the proper collect of Lauds.
+        const ownCollect = day?.laudesPr;
+        resolved[field] = useProperTerce ? ''
+          : (!isMissing(ownCollect) && !isFromDayReference(ownCollect) ? ownCollect : '');
+      } else {
+        const fallback = useProperTerce ? '' : periodDay?.[field];
+        resolved[field] = isFromDayReference(fallback) ? '' : (fallback ?? '');
+      }
     }
   });
 
