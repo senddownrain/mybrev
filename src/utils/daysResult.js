@@ -112,7 +112,18 @@ export function assembleDaysResult({
     .filter(([code]) => !exclusiveFeastCode || normalizedFeastCode(code) === exclusiveFeastCode)
     .map(([code, docs]) => [
       code,
-      docs.map((item) => withCalendarContext(resolveDayAgainstPeriod(item, resolvedPeriodDay))),
+      docs.map((item) => {
+        // Movable *feasts* use the weekday psalter for Daytime Prayer. Legacy
+        // feast documents may contain empty strings that mask that psalter.
+        // Do not apply this to solemnities (their psalmody is different), or
+        // to the remaining hours of the feast.
+        const rank = String(item?._rank || item?._feastType || '').toLowerCase();
+        const isFeast = ['festum', 'feast'].includes(rank)
+          || normalizedFeastCode(code) === 'christthehighpriest';
+        return withCalendarContext(resolveDayAgainstPeriod(item, resolvedPeriodDay, {
+          fillMissingDaytime: isFeast,
+        }));
+      }),
     ]));
 
   return {
