@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  assembleOrdinarySundayFirstVespers,
+  eveningVespersModel,
   findTomorrowFirstVespers,
   findTomorrowRegularVespers,
   getTomorrowFirstVespersOptions,
@@ -78,4 +80,72 @@ test('never takes first Vespers from a memorial', () => {
 test('office for the dead retains its own Vespers', () => {
   assert.equal(usesOwnVespers({ _kind: 'office-for-dead' }), true);
   assert.equal(usesOwnVespers({ _kind: 'period' }), false);
+});
+
+test('13 June 2026: I Vespers of XI Sunday use Saturday psalter, never Sunday II Vespers', async () => {
+  const { resolveRuntimeDay } = await import('../src/utils/ordo/runtime.js');
+  const { buildOrdoDayOptions } = await import('../src/utils/ordoDayOptions.js');
+  const { daysFixture, templatesFixture } = await import('./helpers/ordo-days-fixture.mjs');
+  for (const diocese of ['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno']) {
+    const saturday = resolveRuntimeDay('2026-06-13', { diocese });
+    const sunday = resolveRuntimeDay('2026-06-14', { diocese });
+    const sat = daysFixture(saturday);
+    const sun = daysFixture(sunday);
+    const satContent = buildOrdoDayOptions({
+      resolved: saturday, daysResult: sat.daysResult, context: sat.context,
+      diocese, date: '2026-06-13', templates: templatesFixture(),
+    });
+    const sunContent = buildOrdoDayOptions({
+      resolved: sunday, daysResult: sun.daysResult, context: sun.context,
+      diocese, date: '2026-06-14', templates: templatesFixture(),
+    });
+    const heart = satContent.dayOptions.find((option) => option.ordo.optionId === 'immaculate-heart');
+    const sundayCard = sunContent.dayOptions.find((option) => option.ordo.officeKind === 'sunday');
+    assert.ok(heart, diocese);
+    assert.ok(sundayCard, diocese);
+    assert.equal(heart.ordo.vespers.type, 'first', diocese);
+    const saturdayPsalter = sat.daysResult.periodFallback;
+    assert.ok(saturdayPsalter.id.endsWith('-d7'), diocese);
+    const evening = eveningVespersModel(
+      { ...heart.day, _ordo: heart.ordo }, sunContent,
+      { isoWeekday: 6, periodDay: saturdayPsalter },
+    );
+    assert.ok(evening.firstVespers, diocese);
+    assert.equal(evening.firstVespers.sourceDayId, sundayCard.day.id, diocese);
+    assert.equal(evening.firstVespers.day.vesperHymn, saturdayPsalter.vesperHymn, diocese);
+    assert.notEqual(evening.firstVespers.day.vesperHymn, sundayCard.day.vesperHymn, diocese);
+    assert.equal(evening.firstVespers.day.vesperAntMag, saturdayPsalter.vesperAntMag, diocese);
+    assert.equal(evening.firstVespers.day._firstVespersSource, 'saturday-psalter', diocese);
+    assert.deepEqual(evening.firstVespers.day._missingFirstVespersFields, [], diocese);
+  }
+});
+
+test('Sunday I Vespers preserve explicit first-Vespers Propers and never borrow II Vespers', () => {
+  const sunday = {
+    id: 'ordinary-sunday',
+    vesper1AntMag: '<p>I Ант. да песні Марыі</p>',
+    vesperHymn: 'II Vespers hymn',
+    vesperR: 'II Vespers reading',
+  };
+  const saturdayPsalter = {
+    id: 'ordinary-saturday', vesperHymn: 'I Vespers hymn',
+    vesperR: 'I Vespers reading', vesperAntMag: 'I Vespers psalter antiphon',
+  };
+  const first = assembleOrdinarySundayFirstVespers(sunday, saturdayPsalter);
+  assert.equal(first.vesperHymn, 'I Vespers hymn');
+  assert.equal(first.vesperR, 'I Vespers reading');
+  assert.equal(first.vesperAntMag, sunday.vesper1AntMag);
+  assert.equal(first.vesperPr, '', 'missing source must not silently borrow II Vespers');
+  assert.ok(first._missingFirstVespersFields.includes('Pr'));
+  assert.equal(first._firstVespersSource, 'vesper1+saturday-psalter');
+});
+
+test('non-Sunday celebrations preserve their existing first Vespers fallback', () => {
+  const current = { id: 'sat', _ordo: { vespers: { type: 'first', celebrationId: 'saint-solemnity' } } };
+  const tomorrow = { dayOptions: [{ title: 'Saint solemnity', day: { id: 'saint', vesperHymn: 'solemnity own hymn' }, ordo: { role: 'primary' } }] };
+  const evening = eveningVespersModel(current, tomorrow, {
+    isoWeekday: 6, periodDay: { vesperHymn: 'Saturday psalter hymn' },
+  });
+  assert.equal(evening.firstVespers.day.vesperHymn, 'solemnity own hymn');
+  assert.equal(evening.firstVespers.day._firstVespersSource, 'proper');
 });
