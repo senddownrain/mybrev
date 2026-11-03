@@ -1,0 +1,27 @@
+{
+  "totalDays": 16068,
+  "projectedDays": 16068,
+  "changedDays": 516,
+  "invariants": 0,
+  "normativeRuleIssues": 2,
+  "roles": {
+    "primary": 16068,
+    "suppressed": 7296,
+    "alternative": 4649,
+    "commemoration": 564
+  },
+  "ruleCounts": {
+    "weekday-not-alternative-to-obligatory-memorial": 2566,
+    "GNLYC 61": 2831,
+    "feast-of-the-lord-replaces-sunday": 116,
+    "saturday-memorial-of-mary": 866,
+    "memorial-as-commemoration": 564,
+    "impeded-feast-omitted": 210,
+    "layer-modification": 374,
+    "concurrent-obligatory-memorials-legal-choice": 23,
+    "concurrent-obligatory-memorials-choice": 23,
+    "all-souls-sunday-split": 8,
+    "year-override": 4,
+    "transfer": 76
+  }
+}

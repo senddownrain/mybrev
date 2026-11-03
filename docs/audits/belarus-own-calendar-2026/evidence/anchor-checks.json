@@ -1,0 +1,4578 @@
+[
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "easterSunday",
+    "expected": "2025-04-20",
+    "actual": "2025-04-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "pentecost",
+    "expected": "2025-06-08",
+    "actual": "2025-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "baptismOfLord",
+    "expected": "2025-01-12",
+    "actual": "2025-01-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "maryMotherChurch",
+    "expected": "2025-06-09",
+    "actual": "2025-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "christTheHighPriest",
+    "expected": "2025-06-12",
+    "actual": "2025-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "trinity",
+    "expected": "2025-06-15",
+    "actual": "2025-06-15",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "corpusChristi",
+    "expected": "2025-06-19",
+    "actual": "2025-06-19",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "sacredHeart",
+    "expected": "2025-06-27",
+    "actual": "2025-06-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "immaculateHeart",
+    "expected": "2025-06-28",
+    "actual": "2025-06-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "christKing",
+    "expected": "2025-11-23",
+    "actual": "2025-11-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "holyFamily",
+    "expected": "2025-12-28",
+    "actual": "2025-12-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "firstAdventSunday",
+    "expected": "2025-11-30",
+    "actual": "2025-11-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2025,
+    "anchor": "ascension",
+    "expected": "2025-05-29",
+    "actual": "2025-05-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "easterSunday",
+    "expected": "2026-04-05",
+    "actual": "2026-04-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "pentecost",
+    "expected": "2026-05-24",
+    "actual": "2026-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "baptismOfLord",
+    "expected": "2026-01-11",
+    "actual": "2026-01-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "maryMotherChurch",
+    "expected": "2026-05-25",
+    "actual": "2026-05-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "christTheHighPriest",
+    "expected": "2026-05-28",
+    "actual": "2026-05-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "trinity",
+    "expected": "2026-05-31",
+    "actual": "2026-05-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "corpusChristi",
+    "expected": "2026-06-04",
+    "actual": "2026-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "sacredHeart",
+    "expected": "2026-06-12",
+    "actual": "2026-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "immaculateHeart",
+    "expected": "2026-06-13",
+    "actual": "2026-06-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "christKing",
+    "expected": "2026-11-22",
+    "actual": "2026-11-22",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "holyFamily",
+    "expected": "2026-12-27",
+    "actual": "2026-12-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "firstAdventSunday",
+    "expected": "2026-11-29",
+    "actual": "2026-11-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2026,
+    "anchor": "ascension",
+    "expected": "2026-05-14",
+    "actual": "2026-05-14",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "easterSunday",
+    "expected": "2027-03-28",
+    "actual": "2027-03-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "pentecost",
+    "expected": "2027-05-16",
+    "actual": "2027-05-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "baptismOfLord",
+    "expected": "2027-01-10",
+    "actual": "2027-01-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "maryMotherChurch",
+    "expected": "2027-05-17",
+    "actual": "2027-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "christTheHighPriest",
+    "expected": "2027-05-20",
+    "actual": "2027-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "trinity",
+    "expected": "2027-05-23",
+    "actual": "2027-05-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "corpusChristi",
+    "expected": "2027-05-27",
+    "actual": "2027-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "sacredHeart",
+    "expected": "2027-06-04",
+    "actual": "2027-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "immaculateHeart",
+    "expected": "2027-06-05",
+    "actual": "2027-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "christKing",
+    "expected": "2027-11-21",
+    "actual": "2027-11-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "holyFamily",
+    "expected": "2027-12-26",
+    "actual": "2027-12-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "firstAdventSunday",
+    "expected": "2027-11-28",
+    "actual": "2027-11-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2027,
+    "anchor": "ascension",
+    "expected": "2027-05-06",
+    "actual": "2027-05-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "easterSunday",
+    "expected": "2028-04-16",
+    "actual": "2028-04-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "pentecost",
+    "expected": "2028-06-04",
+    "actual": "2028-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "baptismOfLord",
+    "expected": "2028-01-09",
+    "actual": "2028-01-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "maryMotherChurch",
+    "expected": "2028-06-05",
+    "actual": "2028-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "christTheHighPriest",
+    "expected": "2028-06-08",
+    "actual": "2028-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "trinity",
+    "expected": "2028-06-11",
+    "actual": "2028-06-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "corpusChristi",
+    "expected": "2028-06-15",
+    "actual": "2028-06-15",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "sacredHeart",
+    "expected": "2028-06-23",
+    "actual": "2028-06-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "immaculateHeart",
+    "expected": "2028-06-24",
+    "actual": "2028-06-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "christKing",
+    "expected": "2028-11-26",
+    "actual": "2028-11-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "holyFamily",
+    "expected": "2028-12-31",
+    "actual": "2028-12-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "firstAdventSunday",
+    "expected": "2028-12-03",
+    "actual": "2028-12-03",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2028,
+    "anchor": "ascension",
+    "expected": "2028-05-25",
+    "actual": "2028-05-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "easterSunday",
+    "expected": "2029-04-01",
+    "actual": "2029-04-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "pentecost",
+    "expected": "2029-05-20",
+    "actual": "2029-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "baptismOfLord",
+    "expected": "2029-01-07",
+    "actual": "2029-01-07",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "maryMotherChurch",
+    "expected": "2029-05-21",
+    "actual": "2029-05-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "christTheHighPriest",
+    "expected": "2029-05-24",
+    "actual": "2029-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "trinity",
+    "expected": "2029-05-27",
+    "actual": "2029-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "corpusChristi",
+    "expected": "2029-05-31",
+    "actual": "2029-05-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "sacredHeart",
+    "expected": "2029-06-08",
+    "actual": "2029-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "immaculateHeart",
+    "expected": "2029-06-09",
+    "actual": "2029-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "christKing",
+    "expected": "2029-11-25",
+    "actual": "2029-11-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "holyFamily",
+    "expected": "2029-12-30",
+    "actual": "2029-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "firstAdventSunday",
+    "expected": "2029-12-02",
+    "actual": "2029-12-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2029,
+    "anchor": "ascension",
+    "expected": "2029-05-10",
+    "actual": "2029-05-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "easterSunday",
+    "expected": "2030-04-21",
+    "actual": "2030-04-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "pentecost",
+    "expected": "2030-06-09",
+    "actual": "2030-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "baptismOfLord",
+    "expected": "2030-01-13",
+    "actual": "2030-01-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "maryMotherChurch",
+    "expected": "2030-06-10",
+    "actual": "2030-06-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "christTheHighPriest",
+    "expected": "2030-06-13",
+    "actual": "2030-06-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "trinity",
+    "expected": "2030-06-16",
+    "actual": "2030-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "corpusChristi",
+    "expected": "2030-06-20",
+    "actual": "2030-06-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "sacredHeart",
+    "expected": "2030-06-28",
+    "actual": "2030-06-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "immaculateHeart",
+    "expected": "2030-06-29",
+    "actual": "2030-06-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "christKing",
+    "expected": "2030-11-24",
+    "actual": "2030-11-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "holyFamily",
+    "expected": "2030-12-29",
+    "actual": "2030-12-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "firstAdventSunday",
+    "expected": "2030-12-01",
+    "actual": "2030-12-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2030,
+    "anchor": "ascension",
+    "expected": "2030-05-30",
+    "actual": "2030-05-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "easterSunday",
+    "expected": "2031-04-13",
+    "actual": "2031-04-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "pentecost",
+    "expected": "2031-06-01",
+    "actual": "2031-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "baptismOfLord",
+    "expected": "2031-01-12",
+    "actual": "2031-01-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "maryMotherChurch",
+    "expected": "2031-06-02",
+    "actual": "2031-06-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "christTheHighPriest",
+    "expected": "2031-06-05",
+    "actual": "2031-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "trinity",
+    "expected": "2031-06-08",
+    "actual": "2031-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "corpusChristi",
+    "expected": "2031-06-12",
+    "actual": "2031-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "sacredHeart",
+    "expected": "2031-06-20",
+    "actual": "2031-06-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "immaculateHeart",
+    "expected": "2031-06-21",
+    "actual": "2031-06-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "christKing",
+    "expected": "2031-11-23",
+    "actual": "2031-11-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "holyFamily",
+    "expected": "2031-12-28",
+    "actual": "2031-12-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "firstAdventSunday",
+    "expected": "2031-11-30",
+    "actual": "2031-11-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2031,
+    "anchor": "ascension",
+    "expected": "2031-05-22",
+    "actual": "2031-05-22",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "easterSunday",
+    "expected": "2032-03-28",
+    "actual": "2032-03-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "pentecost",
+    "expected": "2032-05-16",
+    "actual": "2032-05-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "baptismOfLord",
+    "expected": "2032-01-11",
+    "actual": "2032-01-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "maryMotherChurch",
+    "expected": "2032-05-17",
+    "actual": "2032-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "christTheHighPriest",
+    "expected": "2032-05-20",
+    "actual": "2032-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "trinity",
+    "expected": "2032-05-23",
+    "actual": "2032-05-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "corpusChristi",
+    "expected": "2032-05-27",
+    "actual": "2032-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "sacredHeart",
+    "expected": "2032-06-04",
+    "actual": "2032-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "immaculateHeart",
+    "expected": "2032-06-05",
+    "actual": "2032-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "christKing",
+    "expected": "2032-11-21",
+    "actual": "2032-11-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "holyFamily",
+    "expected": "2032-12-26",
+    "actual": "2032-12-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "firstAdventSunday",
+    "expected": "2032-11-28",
+    "actual": "2032-11-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2032,
+    "anchor": "ascension",
+    "expected": "2032-05-06",
+    "actual": "2032-05-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "easterSunday",
+    "expected": "2033-04-17",
+    "actual": "2033-04-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "pentecost",
+    "expected": "2033-06-05",
+    "actual": "2033-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "baptismOfLord",
+    "expected": "2033-01-09",
+    "actual": "2033-01-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "maryMotherChurch",
+    "expected": "2033-06-06",
+    "actual": "2033-06-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "christTheHighPriest",
+    "expected": "2033-06-09",
+    "actual": "2033-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "trinity",
+    "expected": "2033-06-12",
+    "actual": "2033-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "corpusChristi",
+    "expected": "2033-06-16",
+    "actual": "2033-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "sacredHeart",
+    "expected": "2033-06-24",
+    "actual": "2033-06-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "immaculateHeart",
+    "expected": "2033-06-25",
+    "actual": "2033-06-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "christKing",
+    "expected": "2033-11-20",
+    "actual": "2033-11-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "holyFamily",
+    "expected": "2033-12-30",
+    "actual": "2033-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "firstAdventSunday",
+    "expected": "2033-11-27",
+    "actual": "2033-11-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2033,
+    "anchor": "ascension",
+    "expected": "2033-05-26",
+    "actual": "2033-05-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "easterSunday",
+    "expected": "2034-04-09",
+    "actual": "2034-04-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "pentecost",
+    "expected": "2034-05-28",
+    "actual": "2034-05-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "baptismOfLord",
+    "expected": "2034-01-08",
+    "actual": "2034-01-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "maryMotherChurch",
+    "expected": "2034-05-29",
+    "actual": "2034-05-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "christTheHighPriest",
+    "expected": "2034-06-01",
+    "actual": "2034-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "trinity",
+    "expected": "2034-06-04",
+    "actual": "2034-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "corpusChristi",
+    "expected": "2034-06-08",
+    "actual": "2034-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "sacredHeart",
+    "expected": "2034-06-16",
+    "actual": "2034-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "immaculateHeart",
+    "expected": "2034-06-17",
+    "actual": "2034-06-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "christKing",
+    "expected": "2034-11-26",
+    "actual": "2034-11-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "holyFamily",
+    "expected": "2034-12-31",
+    "actual": "2034-12-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "firstAdventSunday",
+    "expected": "2034-12-03",
+    "actual": "2034-12-03",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2034,
+    "anchor": "ascension",
+    "expected": "2034-05-18",
+    "actual": "2034-05-18",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "easterSunday",
+    "expected": "2035-03-25",
+    "actual": "2035-03-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "pentecost",
+    "expected": "2035-05-13",
+    "actual": "2035-05-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "baptismOfLord",
+    "expected": "2035-01-07",
+    "actual": "2035-01-07",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "maryMotherChurch",
+    "expected": "2035-05-14",
+    "actual": "2035-05-14",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "christTheHighPriest",
+    "expected": "2035-05-17",
+    "actual": "2035-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "trinity",
+    "expected": "2035-05-20",
+    "actual": "2035-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "corpusChristi",
+    "expected": "2035-05-24",
+    "actual": "2035-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "sacredHeart",
+    "expected": "2035-06-01",
+    "actual": "2035-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "immaculateHeart",
+    "expected": "2035-06-02",
+    "actual": "2035-06-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "christKing",
+    "expected": "2035-11-25",
+    "actual": "2035-11-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "holyFamily",
+    "expected": "2035-12-30",
+    "actual": "2035-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "firstAdventSunday",
+    "expected": "2035-12-02",
+    "actual": "2035-12-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "year": 2035,
+    "anchor": "ascension",
+    "expected": "2035-05-03",
+    "actual": "2035-05-03",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "easterSunday",
+    "expected": "2025-04-20",
+    "actual": "2025-04-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "pentecost",
+    "expected": "2025-06-08",
+    "actual": "2025-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "baptismOfLord",
+    "expected": "2025-01-12",
+    "actual": "2025-01-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "maryMotherChurch",
+    "expected": "2025-06-09",
+    "actual": "2025-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "christTheHighPriest",
+    "expected": "2025-06-12",
+    "actual": "2025-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "trinity",
+    "expected": "2025-06-15",
+    "actual": "2025-06-15",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "corpusChristi",
+    "expected": "2025-06-19",
+    "actual": "2025-06-19",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "sacredHeart",
+    "expected": "2025-06-27",
+    "actual": "2025-06-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "immaculateHeart",
+    "expected": "2025-06-28",
+    "actual": "2025-06-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "christKing",
+    "expected": "2025-11-23",
+    "actual": "2025-11-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "holyFamily",
+    "expected": "2025-12-28",
+    "actual": "2025-12-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "firstAdventSunday",
+    "expected": "2025-11-30",
+    "actual": "2025-11-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2025,
+    "anchor": "ascension",
+    "expected": "2025-05-29",
+    "actual": "2025-05-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "easterSunday",
+    "expected": "2026-04-05",
+    "actual": "2026-04-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "pentecost",
+    "expected": "2026-05-24",
+    "actual": "2026-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "baptismOfLord",
+    "expected": "2026-01-11",
+    "actual": "2026-01-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "maryMotherChurch",
+    "expected": "2026-05-25",
+    "actual": "2026-05-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "christTheHighPriest",
+    "expected": "2026-05-28",
+    "actual": "2026-05-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "trinity",
+    "expected": "2026-05-31",
+    "actual": "2026-05-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "corpusChristi",
+    "expected": "2026-06-04",
+    "actual": "2026-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "sacredHeart",
+    "expected": "2026-06-12",
+    "actual": "2026-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "immaculateHeart",
+    "expected": "2026-06-13",
+    "actual": "2026-06-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "christKing",
+    "expected": "2026-11-22",
+    "actual": "2026-11-22",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "holyFamily",
+    "expected": "2026-12-27",
+    "actual": "2026-12-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "firstAdventSunday",
+    "expected": "2026-11-29",
+    "actual": "2026-11-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2026,
+    "anchor": "ascension",
+    "expected": "2026-05-14",
+    "actual": "2026-05-14",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "easterSunday",
+    "expected": "2027-03-28",
+    "actual": "2027-03-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "pentecost",
+    "expected": "2027-05-16",
+    "actual": "2027-05-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "baptismOfLord",
+    "expected": "2027-01-10",
+    "actual": "2027-01-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "maryMotherChurch",
+    "expected": "2027-05-17",
+    "actual": "2027-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "christTheHighPriest",
+    "expected": "2027-05-20",
+    "actual": "2027-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "trinity",
+    "expected": "2027-05-23",
+    "actual": "2027-05-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "corpusChristi",
+    "expected": "2027-05-27",
+    "actual": "2027-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "sacredHeart",
+    "expected": "2027-06-04",
+    "actual": "2027-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "immaculateHeart",
+    "expected": "2027-06-05",
+    "actual": "2027-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "christKing",
+    "expected": "2027-11-21",
+    "actual": "2027-11-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "holyFamily",
+    "expected": "2027-12-26",
+    "actual": "2027-12-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "firstAdventSunday",
+    "expected": "2027-11-28",
+    "actual": "2027-11-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2027,
+    "anchor": "ascension",
+    "expected": "2027-05-06",
+    "actual": "2027-05-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "easterSunday",
+    "expected": "2028-04-16",
+    "actual": "2028-04-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "pentecost",
+    "expected": "2028-06-04",
+    "actual": "2028-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "baptismOfLord",
+    "expected": "2028-01-09",
+    "actual": "2028-01-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "maryMotherChurch",
+    "expected": "2028-06-05",
+    "actual": "2028-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "christTheHighPriest",
+    "expected": "2028-06-08",
+    "actual": "2028-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "trinity",
+    "expected": "2028-06-11",
+    "actual": "2028-06-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "corpusChristi",
+    "expected": "2028-06-15",
+    "actual": "2028-06-15",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "sacredHeart",
+    "expected": "2028-06-23",
+    "actual": "2028-06-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "immaculateHeart",
+    "expected": "2028-06-24",
+    "actual": "2028-06-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "christKing",
+    "expected": "2028-11-26",
+    "actual": "2028-11-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "holyFamily",
+    "expected": "2028-12-31",
+    "actual": "2028-12-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "firstAdventSunday",
+    "expected": "2028-12-03",
+    "actual": "2028-12-03",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2028,
+    "anchor": "ascension",
+    "expected": "2028-05-25",
+    "actual": "2028-05-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "easterSunday",
+    "expected": "2029-04-01",
+    "actual": "2029-04-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "pentecost",
+    "expected": "2029-05-20",
+    "actual": "2029-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "baptismOfLord",
+    "expected": "2029-01-07",
+    "actual": "2029-01-07",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "maryMotherChurch",
+    "expected": "2029-05-21",
+    "actual": "2029-05-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "christTheHighPriest",
+    "expected": "2029-05-24",
+    "actual": "2029-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "trinity",
+    "expected": "2029-05-27",
+    "actual": "2029-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "corpusChristi",
+    "expected": "2029-05-31",
+    "actual": "2029-05-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "sacredHeart",
+    "expected": "2029-06-08",
+    "actual": "2029-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "immaculateHeart",
+    "expected": "2029-06-09",
+    "actual": "2029-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "christKing",
+    "expected": "2029-11-25",
+    "actual": "2029-11-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "holyFamily",
+    "expected": "2029-12-30",
+    "actual": "2029-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "firstAdventSunday",
+    "expected": "2029-12-02",
+    "actual": "2029-12-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2029,
+    "anchor": "ascension",
+    "expected": "2029-05-10",
+    "actual": "2029-05-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "easterSunday",
+    "expected": "2030-04-21",
+    "actual": "2030-04-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "pentecost",
+    "expected": "2030-06-09",
+    "actual": "2030-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "baptismOfLord",
+    "expected": "2030-01-13",
+    "actual": "2030-01-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "maryMotherChurch",
+    "expected": "2030-06-10",
+    "actual": "2030-06-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "christTheHighPriest",
+    "expected": "2030-06-13",
+    "actual": "2030-06-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "trinity",
+    "expected": "2030-06-16",
+    "actual": "2030-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "corpusChristi",
+    "expected": "2030-06-20",
+    "actual": "2030-06-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "sacredHeart",
+    "expected": "2030-06-28",
+    "actual": "2030-06-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "immaculateHeart",
+    "expected": "2030-06-29",
+    "actual": "2030-06-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "christKing",
+    "expected": "2030-11-24",
+    "actual": "2030-11-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "holyFamily",
+    "expected": "2030-12-29",
+    "actual": "2030-12-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "firstAdventSunday",
+    "expected": "2030-12-01",
+    "actual": "2030-12-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2030,
+    "anchor": "ascension",
+    "expected": "2030-05-30",
+    "actual": "2030-05-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "easterSunday",
+    "expected": "2031-04-13",
+    "actual": "2031-04-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "pentecost",
+    "expected": "2031-06-01",
+    "actual": "2031-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "baptismOfLord",
+    "expected": "2031-01-12",
+    "actual": "2031-01-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "maryMotherChurch",
+    "expected": "2031-06-02",
+    "actual": "2031-06-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "christTheHighPriest",
+    "expected": "2031-06-05",
+    "actual": "2031-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "trinity",
+    "expected": "2031-06-08",
+    "actual": "2031-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "corpusChristi",
+    "expected": "2031-06-12",
+    "actual": "2031-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "sacredHeart",
+    "expected": "2031-06-20",
+    "actual": "2031-06-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "immaculateHeart",
+    "expected": "2031-06-21",
+    "actual": "2031-06-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "christKing",
+    "expected": "2031-11-23",
+    "actual": "2031-11-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "holyFamily",
+    "expected": "2031-12-28",
+    "actual": "2031-12-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "firstAdventSunday",
+    "expected": "2031-11-30",
+    "actual": "2031-11-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2031,
+    "anchor": "ascension",
+    "expected": "2031-05-22",
+    "actual": "2031-05-22",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "easterSunday",
+    "expected": "2032-03-28",
+    "actual": "2032-03-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "pentecost",
+    "expected": "2032-05-16",
+    "actual": "2032-05-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "baptismOfLord",
+    "expected": "2032-01-11",
+    "actual": "2032-01-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "maryMotherChurch",
+    "expected": "2032-05-17",
+    "actual": "2032-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "christTheHighPriest",
+    "expected": "2032-05-20",
+    "actual": "2032-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "trinity",
+    "expected": "2032-05-23",
+    "actual": "2032-05-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "corpusChristi",
+    "expected": "2032-05-27",
+    "actual": "2032-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "sacredHeart",
+    "expected": "2032-06-04",
+    "actual": "2032-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "immaculateHeart",
+    "expected": "2032-06-05",
+    "actual": "2032-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "christKing",
+    "expected": "2032-11-21",
+    "actual": "2032-11-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "holyFamily",
+    "expected": "2032-12-26",
+    "actual": "2032-12-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "firstAdventSunday",
+    "expected": "2032-11-28",
+    "actual": "2032-11-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2032,
+    "anchor": "ascension",
+    "expected": "2032-05-06",
+    "actual": "2032-05-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "easterSunday",
+    "expected": "2033-04-17",
+    "actual": "2033-04-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "pentecost",
+    "expected": "2033-06-05",
+    "actual": "2033-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "baptismOfLord",
+    "expected": "2033-01-09",
+    "actual": "2033-01-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "maryMotherChurch",
+    "expected": "2033-06-06",
+    "actual": "2033-06-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "christTheHighPriest",
+    "expected": "2033-06-09",
+    "actual": "2033-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "trinity",
+    "expected": "2033-06-12",
+    "actual": "2033-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "corpusChristi",
+    "expected": "2033-06-16",
+    "actual": "2033-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "sacredHeart",
+    "expected": "2033-06-24",
+    "actual": "2033-06-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "immaculateHeart",
+    "expected": "2033-06-25",
+    "actual": "2033-06-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "christKing",
+    "expected": "2033-11-20",
+    "actual": "2033-11-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "holyFamily",
+    "expected": "2033-12-30",
+    "actual": "2033-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "firstAdventSunday",
+    "expected": "2033-11-27",
+    "actual": "2033-11-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2033,
+    "anchor": "ascension",
+    "expected": "2033-05-26",
+    "actual": "2033-05-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "easterSunday",
+    "expected": "2034-04-09",
+    "actual": "2034-04-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "pentecost",
+    "expected": "2034-05-28",
+    "actual": "2034-05-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "baptismOfLord",
+    "expected": "2034-01-08",
+    "actual": "2034-01-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "maryMotherChurch",
+    "expected": "2034-05-29",
+    "actual": "2034-05-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "christTheHighPriest",
+    "expected": "2034-06-01",
+    "actual": "2034-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "trinity",
+    "expected": "2034-06-04",
+    "actual": "2034-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "corpusChristi",
+    "expected": "2034-06-08",
+    "actual": "2034-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "sacredHeart",
+    "expected": "2034-06-16",
+    "actual": "2034-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "immaculateHeart",
+    "expected": "2034-06-17",
+    "actual": "2034-06-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "christKing",
+    "expected": "2034-11-26",
+    "actual": "2034-11-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "holyFamily",
+    "expected": "2034-12-31",
+    "actual": "2034-12-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "firstAdventSunday",
+    "expected": "2034-12-03",
+    "actual": "2034-12-03",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2034,
+    "anchor": "ascension",
+    "expected": "2034-05-18",
+    "actual": "2034-05-18",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "easterSunday",
+    "expected": "2035-03-25",
+    "actual": "2035-03-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "pentecost",
+    "expected": "2035-05-13",
+    "actual": "2035-05-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "baptismOfLord",
+    "expected": "2035-01-07",
+    "actual": "2035-01-07",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "maryMotherChurch",
+    "expected": "2035-05-14",
+    "actual": "2035-05-14",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "christTheHighPriest",
+    "expected": "2035-05-17",
+    "actual": "2035-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "trinity",
+    "expected": "2035-05-20",
+    "actual": "2035-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "corpusChristi",
+    "expected": "2035-05-24",
+    "actual": "2035-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "sacredHeart",
+    "expected": "2035-06-01",
+    "actual": "2035-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "immaculateHeart",
+    "expected": "2035-06-02",
+    "actual": "2035-06-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "christKing",
+    "expected": "2035-11-25",
+    "actual": "2035-11-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "holyFamily",
+    "expected": "2035-12-30",
+    "actual": "2035-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "firstAdventSunday",
+    "expected": "2035-12-02",
+    "actual": "2035-12-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "vitebsk",
+    "year": 2035,
+    "anchor": "ascension",
+    "expected": "2035-05-03",
+    "actual": "2035-05-03",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "easterSunday",
+    "expected": "2025-04-20",
+    "actual": "2025-04-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "pentecost",
+    "expected": "2025-06-08",
+    "actual": "2025-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "baptismOfLord",
+    "expected": "2025-01-12",
+    "actual": "2025-01-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "maryMotherChurch",
+    "expected": "2025-06-09",
+    "actual": "2025-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "christTheHighPriest",
+    "expected": "2025-06-12",
+    "actual": "2025-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "trinity",
+    "expected": "2025-06-15",
+    "actual": "2025-06-15",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "corpusChristi",
+    "expected": "2025-06-19",
+    "actual": "2025-06-19",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "sacredHeart",
+    "expected": "2025-06-27",
+    "actual": "2025-06-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "immaculateHeart",
+    "expected": "2025-06-28",
+    "actual": "2025-06-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "christKing",
+    "expected": "2025-11-23",
+    "actual": "2025-11-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "holyFamily",
+    "expected": "2025-12-28",
+    "actual": "2025-12-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "firstAdventSunday",
+    "expected": "2025-11-30",
+    "actual": "2025-11-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2025,
+    "anchor": "ascension",
+    "expected": "2025-05-29",
+    "actual": "2025-05-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "easterSunday",
+    "expected": "2026-04-05",
+    "actual": "2026-04-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "pentecost",
+    "expected": "2026-05-24",
+    "actual": "2026-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "baptismOfLord",
+    "expected": "2026-01-11",
+    "actual": "2026-01-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "maryMotherChurch",
+    "expected": "2026-05-25",
+    "actual": "2026-05-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "christTheHighPriest",
+    "expected": "2026-05-28",
+    "actual": "2026-05-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "trinity",
+    "expected": "2026-05-31",
+    "actual": "2026-05-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "corpusChristi",
+    "expected": "2026-06-04",
+    "actual": "2026-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "sacredHeart",
+    "expected": "2026-06-12",
+    "actual": "2026-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "immaculateHeart",
+    "expected": "2026-06-13",
+    "actual": "2026-06-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "christKing",
+    "expected": "2026-11-22",
+    "actual": "2026-11-22",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "holyFamily",
+    "expected": "2026-12-27",
+    "actual": "2026-12-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "firstAdventSunday",
+    "expected": "2026-11-29",
+    "actual": "2026-11-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2026,
+    "anchor": "ascension",
+    "expected": "2026-05-14",
+    "actual": "2026-05-14",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "easterSunday",
+    "expected": "2027-03-28",
+    "actual": "2027-03-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "pentecost",
+    "expected": "2027-05-16",
+    "actual": "2027-05-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "baptismOfLord",
+    "expected": "2027-01-10",
+    "actual": "2027-01-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "maryMotherChurch",
+    "expected": "2027-05-17",
+    "actual": "2027-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "christTheHighPriest",
+    "expected": "2027-05-20",
+    "actual": "2027-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "trinity",
+    "expected": "2027-05-23",
+    "actual": "2027-05-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "corpusChristi",
+    "expected": "2027-05-27",
+    "actual": "2027-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "sacredHeart",
+    "expected": "2027-06-04",
+    "actual": "2027-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "immaculateHeart",
+    "expected": "2027-06-05",
+    "actual": "2027-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "christKing",
+    "expected": "2027-11-21",
+    "actual": "2027-11-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "holyFamily",
+    "expected": "2027-12-26",
+    "actual": "2027-12-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "firstAdventSunday",
+    "expected": "2027-11-28",
+    "actual": "2027-11-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2027,
+    "anchor": "ascension",
+    "expected": "2027-05-06",
+    "actual": "2027-05-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "easterSunday",
+    "expected": "2028-04-16",
+    "actual": "2028-04-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "pentecost",
+    "expected": "2028-06-04",
+    "actual": "2028-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "baptismOfLord",
+    "expected": "2028-01-09",
+    "actual": "2028-01-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "maryMotherChurch",
+    "expected": "2028-06-05",
+    "actual": "2028-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "christTheHighPriest",
+    "expected": "2028-06-08",
+    "actual": "2028-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "trinity",
+    "expected": "2028-06-11",
+    "actual": "2028-06-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "corpusChristi",
+    "expected": "2028-06-15",
+    "actual": "2028-06-15",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "sacredHeart",
+    "expected": "2028-06-23",
+    "actual": "2028-06-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "immaculateHeart",
+    "expected": "2028-06-24",
+    "actual": "2028-06-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "christKing",
+    "expected": "2028-11-26",
+    "actual": "2028-11-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "holyFamily",
+    "expected": "2028-12-31",
+    "actual": "2028-12-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "firstAdventSunday",
+    "expected": "2028-12-03",
+    "actual": "2028-12-03",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2028,
+    "anchor": "ascension",
+    "expected": "2028-05-25",
+    "actual": "2028-05-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "easterSunday",
+    "expected": "2029-04-01",
+    "actual": "2029-04-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "pentecost",
+    "expected": "2029-05-20",
+    "actual": "2029-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "baptismOfLord",
+    "expected": "2029-01-07",
+    "actual": "2029-01-07",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "maryMotherChurch",
+    "expected": "2029-05-21",
+    "actual": "2029-05-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "christTheHighPriest",
+    "expected": "2029-05-24",
+    "actual": "2029-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "trinity",
+    "expected": "2029-05-27",
+    "actual": "2029-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "corpusChristi",
+    "expected": "2029-05-31",
+    "actual": "2029-05-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "sacredHeart",
+    "expected": "2029-06-08",
+    "actual": "2029-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "immaculateHeart",
+    "expected": "2029-06-09",
+    "actual": "2029-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "christKing",
+    "expected": "2029-11-25",
+    "actual": "2029-11-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "holyFamily",
+    "expected": "2029-12-30",
+    "actual": "2029-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "firstAdventSunday",
+    "expected": "2029-12-02",
+    "actual": "2029-12-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2029,
+    "anchor": "ascension",
+    "expected": "2029-05-10",
+    "actual": "2029-05-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "easterSunday",
+    "expected": "2030-04-21",
+    "actual": "2030-04-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "pentecost",
+    "expected": "2030-06-09",
+    "actual": "2030-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "baptismOfLord",
+    "expected": "2030-01-13",
+    "actual": "2030-01-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "maryMotherChurch",
+    "expected": "2030-06-10",
+    "actual": "2030-06-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "christTheHighPriest",
+    "expected": "2030-06-13",
+    "actual": "2030-06-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "trinity",
+    "expected": "2030-06-16",
+    "actual": "2030-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "corpusChristi",
+    "expected": "2030-06-20",
+    "actual": "2030-06-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "sacredHeart",
+    "expected": "2030-06-28",
+    "actual": "2030-06-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "immaculateHeart",
+    "expected": "2030-06-29",
+    "actual": "2030-06-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "christKing",
+    "expected": "2030-11-24",
+    "actual": "2030-11-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "holyFamily",
+    "expected": "2030-12-29",
+    "actual": "2030-12-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "firstAdventSunday",
+    "expected": "2030-12-01",
+    "actual": "2030-12-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2030,
+    "anchor": "ascension",
+    "expected": "2030-05-30",
+    "actual": "2030-05-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "easterSunday",
+    "expected": "2031-04-13",
+    "actual": "2031-04-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "pentecost",
+    "expected": "2031-06-01",
+    "actual": "2031-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "baptismOfLord",
+    "expected": "2031-01-12",
+    "actual": "2031-01-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "maryMotherChurch",
+    "expected": "2031-06-02",
+    "actual": "2031-06-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "christTheHighPriest",
+    "expected": "2031-06-05",
+    "actual": "2031-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "trinity",
+    "expected": "2031-06-08",
+    "actual": "2031-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "corpusChristi",
+    "expected": "2031-06-12",
+    "actual": "2031-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "sacredHeart",
+    "expected": "2031-06-20",
+    "actual": "2031-06-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "immaculateHeart",
+    "expected": "2031-06-21",
+    "actual": "2031-06-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "christKing",
+    "expected": "2031-11-23",
+    "actual": "2031-11-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "holyFamily",
+    "expected": "2031-12-28",
+    "actual": "2031-12-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "firstAdventSunday",
+    "expected": "2031-11-30",
+    "actual": "2031-11-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2031,
+    "anchor": "ascension",
+    "expected": "2031-05-22",
+    "actual": "2031-05-22",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "easterSunday",
+    "expected": "2032-03-28",
+    "actual": "2032-03-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "pentecost",
+    "expected": "2032-05-16",
+    "actual": "2032-05-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "baptismOfLord",
+    "expected": "2032-01-11",
+    "actual": "2032-01-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "maryMotherChurch",
+    "expected": "2032-05-17",
+    "actual": "2032-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "christTheHighPriest",
+    "expected": "2032-05-20",
+    "actual": "2032-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "trinity",
+    "expected": "2032-05-23",
+    "actual": "2032-05-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "corpusChristi",
+    "expected": "2032-05-27",
+    "actual": "2032-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "sacredHeart",
+    "expected": "2032-06-04",
+    "actual": "2032-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "immaculateHeart",
+    "expected": "2032-06-05",
+    "actual": "2032-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "christKing",
+    "expected": "2032-11-21",
+    "actual": "2032-11-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "holyFamily",
+    "expected": "2032-12-26",
+    "actual": "2032-12-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "firstAdventSunday",
+    "expected": "2032-11-28",
+    "actual": "2032-11-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2032,
+    "anchor": "ascension",
+    "expected": "2032-05-06",
+    "actual": "2032-05-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "easterSunday",
+    "expected": "2033-04-17",
+    "actual": "2033-04-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "pentecost",
+    "expected": "2033-06-05",
+    "actual": "2033-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "baptismOfLord",
+    "expected": "2033-01-09",
+    "actual": "2033-01-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "maryMotherChurch",
+    "expected": "2033-06-06",
+    "actual": "2033-06-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "christTheHighPriest",
+    "expected": "2033-06-09",
+    "actual": "2033-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "trinity",
+    "expected": "2033-06-12",
+    "actual": "2033-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "corpusChristi",
+    "expected": "2033-06-16",
+    "actual": "2033-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "sacredHeart",
+    "expected": "2033-06-24",
+    "actual": "2033-06-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "immaculateHeart",
+    "expected": "2033-06-25",
+    "actual": "2033-06-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "christKing",
+    "expected": "2033-11-20",
+    "actual": "2033-11-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "holyFamily",
+    "expected": "2033-12-30",
+    "actual": "2033-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "firstAdventSunday",
+    "expected": "2033-11-27",
+    "actual": "2033-11-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2033,
+    "anchor": "ascension",
+    "expected": "2033-05-26",
+    "actual": "2033-05-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "easterSunday",
+    "expected": "2034-04-09",
+    "actual": "2034-04-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "pentecost",
+    "expected": "2034-05-28",
+    "actual": "2034-05-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "baptismOfLord",
+    "expected": "2034-01-08",
+    "actual": "2034-01-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "maryMotherChurch",
+    "expected": "2034-05-29",
+    "actual": "2034-05-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "christTheHighPriest",
+    "expected": "2034-06-01",
+    "actual": "2034-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "trinity",
+    "expected": "2034-06-04",
+    "actual": "2034-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "corpusChristi",
+    "expected": "2034-06-08",
+    "actual": "2034-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "sacredHeart",
+    "expected": "2034-06-16",
+    "actual": "2034-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "immaculateHeart",
+    "expected": "2034-06-17",
+    "actual": "2034-06-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "christKing",
+    "expected": "2034-11-26",
+    "actual": "2034-11-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "holyFamily",
+    "expected": "2034-12-31",
+    "actual": "2034-12-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "firstAdventSunday",
+    "expected": "2034-12-03",
+    "actual": "2034-12-03",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2034,
+    "anchor": "ascension",
+    "expected": "2034-05-18",
+    "actual": "2034-05-18",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "easterSunday",
+    "expected": "2035-03-25",
+    "actual": "2035-03-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "pentecost",
+    "expected": "2035-05-13",
+    "actual": "2035-05-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "baptismOfLord",
+    "expected": "2035-01-07",
+    "actual": "2035-01-07",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "maryMotherChurch",
+    "expected": "2035-05-14",
+    "actual": "2035-05-14",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "christTheHighPriest",
+    "expected": "2035-05-17",
+    "actual": "2035-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "trinity",
+    "expected": "2035-05-20",
+    "actual": "2035-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "corpusChristi",
+    "expected": "2035-05-24",
+    "actual": "2035-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "sacredHeart",
+    "expected": "2035-06-01",
+    "actual": "2035-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "immaculateHeart",
+    "expected": "2035-06-02",
+    "actual": "2035-06-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "christKing",
+    "expected": "2035-11-25",
+    "actual": "2035-11-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "holyFamily",
+    "expected": "2035-12-30",
+    "actual": "2035-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "firstAdventSunday",
+    "expected": "2035-12-02",
+    "actual": "2035-12-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "pinsk",
+    "year": 2035,
+    "anchor": "ascension",
+    "expected": "2035-05-03",
+    "actual": "2035-05-03",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "easterSunday",
+    "expected": "2025-04-20",
+    "actual": "2025-04-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "pentecost",
+    "expected": "2025-06-08",
+    "actual": "2025-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "baptismOfLord",
+    "expected": "2025-01-12",
+    "actual": "2025-01-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "maryMotherChurch",
+    "expected": "2025-06-09",
+    "actual": "2025-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "christTheHighPriest",
+    "expected": "2025-06-12",
+    "actual": "2025-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "trinity",
+    "expected": "2025-06-15",
+    "actual": "2025-06-15",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "corpusChristi",
+    "expected": "2025-06-19",
+    "actual": "2025-06-19",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "sacredHeart",
+    "expected": "2025-06-27",
+    "actual": "2025-06-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "immaculateHeart",
+    "expected": "2025-06-28",
+    "actual": "2025-06-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "christKing",
+    "expected": "2025-11-23",
+    "actual": "2025-11-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "holyFamily",
+    "expected": "2025-12-28",
+    "actual": "2025-12-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "firstAdventSunday",
+    "expected": "2025-11-30",
+    "actual": "2025-11-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2025,
+    "anchor": "ascension",
+    "expected": "2025-05-29",
+    "actual": "2025-05-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "easterSunday",
+    "expected": "2026-04-05",
+    "actual": "2026-04-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "pentecost",
+    "expected": "2026-05-24",
+    "actual": "2026-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "baptismOfLord",
+    "expected": "2026-01-11",
+    "actual": "2026-01-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "maryMotherChurch",
+    "expected": "2026-05-25",
+    "actual": "2026-05-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "christTheHighPriest",
+    "expected": "2026-05-28",
+    "actual": "2026-05-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "trinity",
+    "expected": "2026-05-31",
+    "actual": "2026-05-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "corpusChristi",
+    "expected": "2026-06-04",
+    "actual": "2026-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "sacredHeart",
+    "expected": "2026-06-12",
+    "actual": "2026-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "immaculateHeart",
+    "expected": "2026-06-13",
+    "actual": "2026-06-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "christKing",
+    "expected": "2026-11-22",
+    "actual": "2026-11-22",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "holyFamily",
+    "expected": "2026-12-27",
+    "actual": "2026-12-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "firstAdventSunday",
+    "expected": "2026-11-29",
+    "actual": "2026-11-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2026,
+    "anchor": "ascension",
+    "expected": "2026-05-14",
+    "actual": "2026-05-14",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "easterSunday",
+    "expected": "2027-03-28",
+    "actual": "2027-03-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "pentecost",
+    "expected": "2027-05-16",
+    "actual": "2027-05-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "baptismOfLord",
+    "expected": "2027-01-10",
+    "actual": "2027-01-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "maryMotherChurch",
+    "expected": "2027-05-17",
+    "actual": "2027-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "christTheHighPriest",
+    "expected": "2027-05-20",
+    "actual": "2027-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "trinity",
+    "expected": "2027-05-23",
+    "actual": "2027-05-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "corpusChristi",
+    "expected": "2027-05-27",
+    "actual": "2027-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "sacredHeart",
+    "expected": "2027-06-04",
+    "actual": "2027-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "immaculateHeart",
+    "expected": "2027-06-05",
+    "actual": "2027-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "christKing",
+    "expected": "2027-11-21",
+    "actual": "2027-11-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "holyFamily",
+    "expected": "2027-12-26",
+    "actual": "2027-12-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "firstAdventSunday",
+    "expected": "2027-11-28",
+    "actual": "2027-11-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2027,
+    "anchor": "ascension",
+    "expected": "2027-05-06",
+    "actual": "2027-05-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "easterSunday",
+    "expected": "2028-04-16",
+    "actual": "2028-04-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "pentecost",
+    "expected": "2028-06-04",
+    "actual": "2028-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "baptismOfLord",
+    "expected": "2028-01-09",
+    "actual": "2028-01-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "maryMotherChurch",
+    "expected": "2028-06-05",
+    "actual": "2028-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "christTheHighPriest",
+    "expected": "2028-06-08",
+    "actual": "2028-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "trinity",
+    "expected": "2028-06-11",
+    "actual": "2028-06-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "corpusChristi",
+    "expected": "2028-06-15",
+    "actual": "2028-06-15",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "sacredHeart",
+    "expected": "2028-06-23",
+    "actual": "2028-06-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "immaculateHeart",
+    "expected": "2028-06-24",
+    "actual": "2028-06-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "christKing",
+    "expected": "2028-11-26",
+    "actual": "2028-11-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "holyFamily",
+    "expected": "2028-12-31",
+    "actual": "2028-12-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "firstAdventSunday",
+    "expected": "2028-12-03",
+    "actual": "2028-12-03",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2028,
+    "anchor": "ascension",
+    "expected": "2028-05-25",
+    "actual": "2028-05-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "easterSunday",
+    "expected": "2029-04-01",
+    "actual": "2029-04-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "pentecost",
+    "expected": "2029-05-20",
+    "actual": "2029-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "baptismOfLord",
+    "expected": "2029-01-07",
+    "actual": "2029-01-07",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "maryMotherChurch",
+    "expected": "2029-05-21",
+    "actual": "2029-05-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "christTheHighPriest",
+    "expected": "2029-05-24",
+    "actual": "2029-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "trinity",
+    "expected": "2029-05-27",
+    "actual": "2029-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "corpusChristi",
+    "expected": "2029-05-31",
+    "actual": "2029-05-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "sacredHeart",
+    "expected": "2029-06-08",
+    "actual": "2029-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "immaculateHeart",
+    "expected": "2029-06-09",
+    "actual": "2029-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "christKing",
+    "expected": "2029-11-25",
+    "actual": "2029-11-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "holyFamily",
+    "expected": "2029-12-30",
+    "actual": "2029-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "firstAdventSunday",
+    "expected": "2029-12-02",
+    "actual": "2029-12-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2029,
+    "anchor": "ascension",
+    "expected": "2029-05-10",
+    "actual": "2029-05-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "easterSunday",
+    "expected": "2030-04-21",
+    "actual": "2030-04-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "pentecost",
+    "expected": "2030-06-09",
+    "actual": "2030-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "baptismOfLord",
+    "expected": "2030-01-13",
+    "actual": "2030-01-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "maryMotherChurch",
+    "expected": "2030-06-10",
+    "actual": "2030-06-10",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "christTheHighPriest",
+    "expected": "2030-06-13",
+    "actual": "2030-06-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "trinity",
+    "expected": "2030-06-16",
+    "actual": "2030-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "corpusChristi",
+    "expected": "2030-06-20",
+    "actual": "2030-06-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "sacredHeart",
+    "expected": "2030-06-28",
+    "actual": "2030-06-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "immaculateHeart",
+    "expected": "2030-06-29",
+    "actual": "2030-06-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "christKing",
+    "expected": "2030-11-24",
+    "actual": "2030-11-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "holyFamily",
+    "expected": "2030-12-29",
+    "actual": "2030-12-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "firstAdventSunday",
+    "expected": "2030-12-01",
+    "actual": "2030-12-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2030,
+    "anchor": "ascension",
+    "expected": "2030-05-30",
+    "actual": "2030-05-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "easterSunday",
+    "expected": "2031-04-13",
+    "actual": "2031-04-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "pentecost",
+    "expected": "2031-06-01",
+    "actual": "2031-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "baptismOfLord",
+    "expected": "2031-01-12",
+    "actual": "2031-01-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "maryMotherChurch",
+    "expected": "2031-06-02",
+    "actual": "2031-06-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "christTheHighPriest",
+    "expected": "2031-06-05",
+    "actual": "2031-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "trinity",
+    "expected": "2031-06-08",
+    "actual": "2031-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "corpusChristi",
+    "expected": "2031-06-12",
+    "actual": "2031-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "sacredHeart",
+    "expected": "2031-06-20",
+    "actual": "2031-06-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "immaculateHeart",
+    "expected": "2031-06-21",
+    "actual": "2031-06-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "christKing",
+    "expected": "2031-11-23",
+    "actual": "2031-11-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "holyFamily",
+    "expected": "2031-12-28",
+    "actual": "2031-12-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "firstAdventSunday",
+    "expected": "2031-11-30",
+    "actual": "2031-11-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2031,
+    "anchor": "ascension",
+    "expected": "2031-05-22",
+    "actual": "2031-05-22",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "easterSunday",
+    "expected": "2032-03-28",
+    "actual": "2032-03-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "pentecost",
+    "expected": "2032-05-16",
+    "actual": "2032-05-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "baptismOfLord",
+    "expected": "2032-01-11",
+    "actual": "2032-01-11",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "maryMotherChurch",
+    "expected": "2032-05-17",
+    "actual": "2032-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "christTheHighPriest",
+    "expected": "2032-05-20",
+    "actual": "2032-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "trinity",
+    "expected": "2032-05-23",
+    "actual": "2032-05-23",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "corpusChristi",
+    "expected": "2032-05-27",
+    "actual": "2032-05-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "sacredHeart",
+    "expected": "2032-06-04",
+    "actual": "2032-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "immaculateHeart",
+    "expected": "2032-06-05",
+    "actual": "2032-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "christKing",
+    "expected": "2032-11-21",
+    "actual": "2032-11-21",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "holyFamily",
+    "expected": "2032-12-26",
+    "actual": "2032-12-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "firstAdventSunday",
+    "expected": "2032-11-28",
+    "actual": "2032-11-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2032,
+    "anchor": "ascension",
+    "expected": "2032-05-06",
+    "actual": "2032-05-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "easterSunday",
+    "expected": "2033-04-17",
+    "actual": "2033-04-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "pentecost",
+    "expected": "2033-06-05",
+    "actual": "2033-06-05",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "baptismOfLord",
+    "expected": "2033-01-09",
+    "actual": "2033-01-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "maryMotherChurch",
+    "expected": "2033-06-06",
+    "actual": "2033-06-06",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "christTheHighPriest",
+    "expected": "2033-06-09",
+    "actual": "2033-06-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "trinity",
+    "expected": "2033-06-12",
+    "actual": "2033-06-12",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "corpusChristi",
+    "expected": "2033-06-16",
+    "actual": "2033-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "sacredHeart",
+    "expected": "2033-06-24",
+    "actual": "2033-06-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "immaculateHeart",
+    "expected": "2033-06-25",
+    "actual": "2033-06-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "christKing",
+    "expected": "2033-11-20",
+    "actual": "2033-11-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "holyFamily",
+    "expected": "2033-12-30",
+    "actual": "2033-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "firstAdventSunday",
+    "expected": "2033-11-27",
+    "actual": "2033-11-27",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2033,
+    "anchor": "ascension",
+    "expected": "2033-05-26",
+    "actual": "2033-05-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "easterSunday",
+    "expected": "2034-04-09",
+    "actual": "2034-04-09",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "pentecost",
+    "expected": "2034-05-28",
+    "actual": "2034-05-28",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "baptismOfLord",
+    "expected": "2034-01-08",
+    "actual": "2034-01-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "maryMotherChurch",
+    "expected": "2034-05-29",
+    "actual": "2034-05-29",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "christTheHighPriest",
+    "expected": "2034-06-01",
+    "actual": "2034-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "trinity",
+    "expected": "2034-06-04",
+    "actual": "2034-06-04",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "corpusChristi",
+    "expected": "2034-06-08",
+    "actual": "2034-06-08",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "sacredHeart",
+    "expected": "2034-06-16",
+    "actual": "2034-06-16",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "immaculateHeart",
+    "expected": "2034-06-17",
+    "actual": "2034-06-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "christKing",
+    "expected": "2034-11-26",
+    "actual": "2034-11-26",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "holyFamily",
+    "expected": "2034-12-31",
+    "actual": "2034-12-31",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "firstAdventSunday",
+    "expected": "2034-12-03",
+    "actual": "2034-12-03",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2034,
+    "anchor": "ascension",
+    "expected": "2034-05-18",
+    "actual": "2034-05-18",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "easterSunday",
+    "expected": "2035-03-25",
+    "actual": "2035-03-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "pentecost",
+    "expected": "2035-05-13",
+    "actual": "2035-05-13",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "baptismOfLord",
+    "expected": "2035-01-07",
+    "actual": "2035-01-07",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "maryMotherChurch",
+    "expected": "2035-05-14",
+    "actual": "2035-05-14",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "christTheHighPriest",
+    "expected": "2035-05-17",
+    "actual": "2035-05-17",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "trinity",
+    "expected": "2035-05-20",
+    "actual": "2035-05-20",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "corpusChristi",
+    "expected": "2035-05-24",
+    "actual": "2035-05-24",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "sacredHeart",
+    "expected": "2035-06-01",
+    "actual": "2035-06-01",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "immaculateHeart",
+    "expected": "2035-06-02",
+    "actual": "2035-06-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "christKing",
+    "expected": "2035-11-25",
+    "actual": "2035-11-25",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "holyFamily",
+    "expected": "2035-12-30",
+    "actual": "2035-12-30",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "firstAdventSunday",
+    "expected": "2035-12-02",
+    "actual": "2035-12-02",
+    "status": "PASS"
+  },
+  {
+    "diocese": "grodno",
+    "year": 2035,
+    "anchor": "ascension",
+    "expected": "2035-05-03",
+    "actual": "2035-05-03",
+    "status": "PASS"
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "source_revision": "8a7017412ee04ec43eaee7a9fe2dacd64999b54c",
+  "reference_rows": 263,
+  "permanent_diff_rows": 1011,
+  "all_diff_rows": 1055,
+  "reference_coverage": {
+    "direct": 262,
+    "fully_superseded": 1,
+    "uncovered": 0
+  },
+  "definition_inventory": 320,
+  "effective_content_inventory": 1005,
+  "annual_celebrations": 1354,
+  "annual_source_rules": 1201,
+  "seed_cases": 30,
+  "baseline_days": 16068,
+  "projection_days": 16068,
+  "projection_changed_days": 516,
+  "structural_invariant_failures": 0,
+  "independent_anchor_checks": 572,
+  "pdf_acceptance_cases": 12,
+  "rank_assertions": 3,
+  "source_selection_checks": 4,
+  "reproduced_machine_csv_identical": true,
+  "reproduced_daily_csv_identical_uncompressed": true,
+  "python_tool_syntax": "PASS",
+  "relative_report_links": "PASS",
+  "referenced_code_paths_and_line_bounds": "PASS",
+  "analyzed_source_file_hashes_unchanged": "PASS",
+  "ordo_tests": {
+    "pass": 205,
+    "fail": 0
+  },
+  "full_tests": {
+    "total": 1065,
+    "pass": 1055,
+    "skip": 10,
+    "fail": 0
+  },
+  "ordo_check": "PASS; raw rebuild determinism skipped",
+  "targeted_read_only_eslint": "PASS",
+  "isolated_vite_build": "PASS",
+  "runtime_bridge_probe": "BASELINE_DEFECT_REPRODUCED",
+  "production_firestore": "UNVERIFIED; no live reads",
+  "flutter": "untouched"
+}

@@ -1,0 +1,140 @@
+{
+  "audit_date": "2026-11-03",
+  "timezone": "Europe/Moscow",
+  "repository": "senddownrain/mybrev",
+  "branch": "audit/belarus-own-calendar-2026",
+  "base_commit": "8a7017412ee04ec43eaee7a9fe2dacd64999b54c",
+  "app_version": "4.5.2",
+  "bundled_revision": 3,
+  "input_files": {
+    "PLAN.md": "a887d9d646a2fffdbafd7d3ce3cf5b42973f2387c4ad1dddd8d4f3617231a22c",
+    "PROMPT_01_AUDIT_CLOUD.md": "4967355414bdf81e17f49c3a67925c1e533741b713d274aa43747b6d3da694ce",
+    "SOURCE_TEXT_PAGES_01-13.txt": "e4d586e25201460ed3e38a30efdf21f6989a5f17224ff63c6b8e6712fb9312e6",
+    "AUDIT_SEED_CASES.csv": "6c44c66d864cbf5eb0d784cf931f0e1ffdbcd9d4fe5b415a21fa9672190e4f3d",
+    "SOURCE_Ulasny_kalyandar_dyiacezii_na_Belarusi.pdf": "681a59f92395a299510da4b4afc68d79cf0017518c0abb1351828560796017f3"
+  },
+  "analyzed_repository_files": {
+    "AGENTS.md": "410ff6e02d8b87270cb5d3205ed49583bce25884652aae620ee8aeba2dc23705",
+    "package.json": "d58443bc1b883377e66a10cf801750988ef29020077c37a231408c6f7c581277",
+    "src/constants/fixedCalendar.js": "a78b3c08638206cea6f89f70d5d65b5306991ffd13071b028e35e84ce40294c3",
+    "src/data/ordo/layers.js": "96a81010ef38c0d3e7fdb0f45a4df1360a690b8c42b291a91ee3505df5f1b4a7",
+    "src/data/ordo/year-overrides.js": "ca037e4092c562ae851578645c0e2620c09981b7f3fec4a946adffa31739cdb5",
+    "src/data/ordo/calendar-definitions.json": "e67cdb2441739b9ffbe8bc7f8d695497385ce7a708755a24a6ec2cd6633b5d60",
+    "src/data/ordo/fixed-identities.js": "0024c7ddbc2fefff65b74b34b82a6315a3350d2b89ca47a5aafc31db64b2b61d",
+    "src/data/ordo/feast-content-index.json": "4b0937f0d13c07fa8e19f70a88f1f2a67f29cca5a071be8bf10294e4eee3ab07",
+    "src/data/ordo/readings-status.json": "2438bd2ee3751974a5f562a06f159fae95381407541346cb55e9b064833b1c45",
+    "src/data/ordo/transfer-rank-evidence.js": "902de64b94c66c5f2907b5cbe5ea1b15739de9538eb0ad882d3552d5ce6f89fc",
+    "src/utils/ordo/seed.js": "d3909692725a9212c48c97da4c0c7316cc94a3989162f6db8285a94cb2b82ad5",
+    "src/utils/ordo/fixedCelebrations.js": "c994bcc35bc1802629d69b43f1aaddc5076338b930285ea451f165e13806dc2f",
+    "src/utils/ordo/definitions.js": "19f01154b9325aa72e525e6b027734867a7c3d8fb23026943f17f4979283ea65",
+    "src/utils/ordo/yearPlan.js": "ed9accf48a8d70c8cd36911368b5104bb812718f35ceaef43ece61a5e81d79dd",
+    "src/utils/ordo/candidates.js": "b5db962e578e75f68c09b366d2e4ef2de49e69f3a2fcd7ead9e6ca2530ebe5e2",
+    "src/utils/ordo/display.js": "a4771fe6b526fa423e8626ebfe2569b702c040afab902cafce40efdf455dec45",
+    "src/utils/ordo/precedence.js": "ae127293538787854b4018ba188b54885e0bcc0f0c3831aa58121c331cd0edf9",
+    "src/utils/ordo/transfers.js": "7c4884dbca92cb64eb2ab901b7d48d6a24d4cbcdb9269a003ef28b895e6cb43d",
+    "src/utils/ordo/office.js": "ceaaade0bdd96a26f8681f047e30f55c676def18c5205b1e8c68eff817337c4a",
+    "src/utils/ordo/runtime.js": "741f5724a9a4c1d1082f0cae4b7b13a5a99ccac2673436064bd6a0c715cc0079",
+    "src/utils/ordoCalendarSource.js": "b62c5552b056a610d7b08e666c84a625b9e14fc3b7c2b68373a9742bdfdb982d",
+    "src/utils/ordoCalendarCache.js": "0d6e7deed97350a8ecc9ec5fc0bb855642189906a5b74ec6f849c314cc40c6c4",
+    "src/services/ordoCalendarService.js": "2b03f2424bea3f7d0267f25a8db29bd4c852fc497b53d001ce9375519fb4d4dd",
+    "scripts/ordo/data/firestore-days-index.json": "a78dfddd900cd4e63c80ed16df1ef6720f82a672d80137650c00ca0a8da42763",
+    "src/data/ordo/evidence/minsk-mohilev.json": "5d1941c7d7baab925816cdbb48848bcc1603d87849d91e755c6831a4891ae131",
+    "src/data/ordo/evidence/vitebsk.json": "ab3f89a9af1d47581d88302a7096b5cadedbb1960595fbafe15abf93f8f0aae8",
+    "src/data/ordo/evidence/pinsk.json": "376cc885e76cc4e98ad0db3a32405c62f6c08523229c37d31eb088fbcdb9646f",
+    "src/data/ordo/evidence/grodno.json": "8c3bc3d41035f4b721f95c959b02b652a3f7ff93802cceb6fa90357a2fea1e8f"
+  },
+  "source_pdf_pages_visually_reviewed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "source_pdf_metadata_creation": "2026-10-08T09:39:39+03:00 (technical metadata, not normative effective date)",
+  "initial_git_status": "clean",
+  "snapshot_status": "ABSENT",
+  "firestore_live_reads": 0,
+  "firestore_writes": 0,
+  "production_deploys": 0,
+  "flutter_changes": 0,
+  "original_diocesan_acts_independently_verified": false,
+  "general_sources": [
+    {
+      "id": "newman",
+      "url": "https://www.vatican.va/content/romancuria/en/dicasteri/dicastero-culto-divino-e-disciplina-sacramenti/documenti/20251109-decreto-iscrizione-newman.html",
+      "accessed": "2026-11-03",
+      "status": "VERIFIED_PRIMARY"
+    },
+    {
+      "id": "newman-release",
+      "url": "https://press.vatican.va/content/salastampa/en/bollettino/pubblico/2026/02/03/260203a.html",
+      "accessed": "2026-11-03",
+      "status": "VERIFIED_PRIMARY"
+    },
+    {
+      "id": "notitiae",
+      "url": "https://www.cultodivino.va/content/dam/cultodivino/rivista-notitiae/2000/notitiae-40-%282004%29/Notitiae-451-452-2004.pdf",
+      "accessed": "2026-11-03",
+      "status": "VERIFIED_PRIMARY"
+    },
+    {
+      "id": "loreto",
+      "url": "https://www.vatican.va/content/dam/wss/roman_curia/congregations/ccdds/documents/rc_con_ccdds_doc_20191007_decreto-celebrazione-verginediloreto_en.html",
+      "accessed": "2026-11-03",
+      "status": "VERIFIED_PRIMARY"
+    },
+    {
+      "id": "mmc",
+      "url": "https://press.vatican.va/content/salastampa/en/bollettino/pubblico/2018/03/27/180327b.html",
+      "accessed": "2026-11-03",
+      "status": "VERIFIED_PRIMARY"
+    },
+    {
+      "id": "paul",
+      "url": "https://press.vatican.va/content/salastampa/en/bollettino/pubblico/2019/02/06/190206b.html",
+      "accessed": "2026-11-03",
+      "status": "VERIFIED_PRIMARY"
+    },
+    {
+      "id": "irenaeus",
+      "url": "https://press.vatican.va/content/salastampa/en/bollettino/pubblico/2022/01/21/220121b.html",
+      "accessed": "2026-11-03",
+      "status": "VERIFIED_PRIMARY"
+    },
+    {
+      "id": "documents",
+      "url": "https://www.vatican.va/content/romancuria/en/dicasteri/dicastero-culto-divino-e-disciplina-sacramenti/documenti.html",
+      "accessed": "2026-11-03",
+      "status": "REVIEWED_OFFICIAL_INDEX"
+    },
+    {
+      "id": "teresa",
+      "url": "https://press.vatican.va/content/salastampa/en/bollettino/pubblico/2025/02/11/250211b.html",
+      "accessed": "2026-11-03",
+      "status": "VERIFIED_PRIMARY"
+    }
+  ],
+  "runtime_publication": "UNVERIFIED",
+  "software": {
+    "python": "3.12.14",
+    "node": "v24.19.0",
+    "PyMuPDF": "1.26.6",
+    "python-dateutil": "2.9.0.post0"
+  },
+  "comparison_limits": [
+    "Projection is data-only with same engine, not independent normative oracle",
+    "No retroactive Newman universal memorial on 2025-10-09",
+    "Braslau alias intentionally unresolved",
+    "Annual original source files unavailable; generated evidence retained",
+    "Common-only content not automatically a defect",
+    "Direct Vite build used isolated output to avoid mutating prebuild hooks"
+  ]
+}

@@ -1,0 +1,1530 @@
+[
+  {
+    "diocese": "pinsk",
+    "date": "2026-12-04",
+    "before": {
+      "primary": "temporal:advent-w1-d6",
+      "primaryRank": "feria",
+      "alternatives": [
+        "sv-barbara",
+        "sv-john-damascene"
+      ],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-12-03"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": null,
+          "date": "2026-12-04",
+          "title": "I тыдзень Адвэнту, пятніца"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "advent",
+      "phase": "advent-weekdays"
+    },
+    "after": {
+      "primary": "temporal:advent-w1-d6",
+      "primaryRank": "feria",
+      "alternatives": [
+        "sv-john-damascene"
+      ],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-12-03"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": null,
+          "date": "2026-12-04",
+          "title": "I тыдзень Адвэнту, пятніца"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "advent",
+      "phase": "advent-weekdays"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "grodno",
+    "date": "2026-12-04",
+    "before": {
+      "primary": "grodno-cathedral-dedication",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:advent-w1-d6",
+          "reason": "outranked"
+        },
+        {
+          "id": "sv-barbara",
+          "reason": "impeded-omitted"
+        },
+        {
+          "id": "sv-john-damascene",
+          "reason": "impeded-omitted"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-12-03"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "grodno-cathedral-dedication",
+          "date": "2026-12-04",
+          "title": "Гадавіна пасвячэння катэдральнага касцёла"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "advent",
+      "phase": "advent-weekdays"
+    },
+    "after": {
+      "primary": "grodno-cathedral-dedication",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:advent-w1-d6",
+          "reason": "outranked"
+        },
+        {
+          "id": "sv-john-damascene",
+          "reason": "impeded-omitted"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-12-03"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "grodno-cathedral-dedication",
+          "date": "2026-12-04",
+          "title": "Гадавіна пасвячэння катэдральнага касцёла"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "advent",
+      "phase": "advent-weekdays"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "pinsk",
+    "date": "2026-07-02",
+    "before": {
+      "primary": "our-lady-budslav",
+      "primaryRank": "memoria",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w13-d5",
+          "reason": "weekday-under-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-07-01"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "our-lady-budslav",
+          "date": "2026-07-02",
+          "title": "Найсв. Панны Марыі Будслаўскай"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "temporal:ordinary-w13-d5",
+      "primaryRank": "feria",
+      "alternatives": [
+        "our-lady-budslav"
+      ],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-07-01"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": null,
+          "date": "2026-07-02",
+          "title": "XIII звычайны тыдзень, чацвер"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "date": "2026-07-02",
+    "before": {
+      "primary": "our-lady-budslav",
+      "primaryRank": "solemnitas",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w13-d5",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": true,
+        "celebratedOnEve": true,
+        "eveDate": "2026-07-01"
+      },
+      "evening": {
+        "vespers": {
+          "type": "second",
+          "celebrationId": "our-lady-budslav",
+          "date": "2026-07-02",
+          "title": "Найсв. Панны Марыі Будслаўскай, апякункі архідыяцэзіі"
+        },
+        "compline": "sunday-after-second-vespers",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "our-lady-budslav",
+      "primaryRank": "solemnitas",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w13-d5",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": true,
+        "celebratedOnEve": true,
+        "eveDate": "2026-07-01"
+      },
+      "evening": {
+        "vespers": {
+          "type": "second",
+          "celebrationId": "our-lady-budslav",
+          "date": "2026-07-02",
+          "title": "Найсв. Панны Марыі Будслаўскай, апякункі архідыяцэзіі"
+        },
+        "compline": "sunday-after-second-vespers",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "vitebsk",
+    "date": "2026-07-02",
+    "before": {
+      "primary": "our-lady-budslav",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w13-d5",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-07-01"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "our-lady-budslav",
+          "date": "2026-07-02",
+          "title": "Найсв. Панны Марыі Будслаўскай"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "our-lady-budslav",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w13-d5",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-07-01"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "our-lady-budslav",
+          "date": "2026-07-02",
+          "title": "Найсв. Панны Марыі Будслаўскай"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "grodno",
+    "date": "2027-07-05",
+    "before": {
+      "primary": "temporal:ordinary-w14-d2",
+      "primaryRank": "feria",
+      "alternatives": [
+        "sv-anthony-mary-zaccaria"
+      ],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-07-04"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": null,
+          "date": "2027-07-05",
+          "title": "XIV звычайны тыдзень, панядзелак"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "our-lady-trakai",
+      "primaryRank": "memoria",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w14-d2",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "sv-anthony-mary-zaccaria",
+          "reason": "impeded-by-obligatory-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-07-04"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "our-lady-trakai",
+          "date": "2027-07-05",
+          "title": "Найсв. Панны Марыі Тракельскай"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "grodno",
+    "date": "2027-07-10",
+    "before": {
+      "primary": "our-lady-trakai",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w14-d7",
+          "reason": "outranked"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-07-09"
+      },
+      "evening": {
+        "vespers": {
+          "type": "first",
+          "celebrationId": "temporal:ordinary-w15-d1",
+          "date": "2027-07-11",
+          "title": "XV нядзеля звычайная"
+        },
+        "compline": "sunday-after-first-vespers",
+        "conflict": {
+          "today": "our-lady-trakai",
+          "tomorrow": "temporal:ordinary-w15-d1",
+          "winner": "tomorrow",
+          "rule": "GNLYC 61"
+        },
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "temporal:ordinary-w14-d7",
+      "primaryRank": "feria",
+      "alternatives": [
+        "saturday-blessed-virgin-mary"
+      ],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-07-09"
+      },
+      "evening": {
+        "vespers": {
+          "type": "first",
+          "celebrationId": "temporal:ordinary-w15-d1",
+          "date": "2027-07-11",
+          "title": "XV нядзеля звычайная"
+        },
+        "compline": "sunday-after-first-vespers",
+        "conflict": {
+          "today": "temporal:ordinary-w14-d7",
+          "tomorrow": "temporal:ordinary-w15-d1",
+          "winner": "tomorrow",
+          "rule": "GNLYC 61"
+        },
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "pinsk",
+    "date": "2026-08-22",
+    "before": {
+      "primary": "our-lady-lahishyn",
+      "primaryRank": "solemnitas",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w20-d7",
+          "reason": "outranked"
+        },
+        {
+          "id": "our-lady-queen",
+          "reason": "impeded-omitted"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": true,
+        "celebratedOnEve": true,
+        "eveDate": "2026-08-21"
+      },
+      "evening": {
+        "vespers": {
+          "type": "second",
+          "celebrationId": "our-lady-lahishyn",
+          "date": "2026-08-22",
+          "title": "Найсв. Панны Марыі Лагішынскай, апякункі Пінскай дыяцэзіі"
+        },
+        "compline": "sunday-after-second-vespers",
+        "conflict": {
+          "today": "our-lady-lahishyn",
+          "tomorrow": "temporal:ordinary-w21-d1",
+          "winner": "today",
+          "rule": "GNLYC 61"
+        },
+        "omittedFirstVespers": "temporal:ordinary-w21-d1"
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "our-lady-queen",
+      "primaryRank": "memoria",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w20-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-08-21"
+      },
+      "evening": {
+        "vespers": {
+          "type": "first",
+          "celebrationId": "temporal:ordinary-w21-d1",
+          "date": "2026-08-23",
+          "title": "XXI нядзеля звычайная"
+        },
+        "compline": "sunday-after-first-vespers",
+        "conflict": {
+          "today": "our-lady-queen",
+          "tomorrow": "temporal:ordinary-w21-d1",
+          "winner": "tomorrow",
+          "rule": "GNLYC 61"
+        },
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "pinsk",
+    "date": "2026-05-25",
+    "before": {
+      "primary": "mary-mother-church",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w8-d2",
+          "reason": "outranked"
+        },
+        {
+          "id": "sv-bede",
+          "reason": "impeded-omitted"
+        },
+        {
+          "id": "sv-gregory-vii",
+          "reason": "impeded-omitted"
+        },
+        {
+          "id": "sv-maria-magdalena-de-pazzi",
+          "reason": "impeded-omitted"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-05-24"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "mary-mother-church",
+          "date": "2026-05-25",
+          "title": "Найсв. Панны Марыі, Маці Касцёла"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "mary-mother-church",
+      "primaryRank": "memoria",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w8-d2",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "sv-bede",
+          "reason": "impeded-by-obligatory-memorial"
+        },
+        {
+          "id": "sv-gregory-vii",
+          "reason": "impeded-by-obligatory-memorial"
+        },
+        {
+          "id": "sv-maria-magdalena-de-pazzi",
+          "reason": "impeded-by-obligatory-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-05-24"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "mary-mother-church",
+          "date": "2026-05-25",
+          "title": "Найсв. Панны Марыі, Маці Касцёла"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "grodno",
+    "date": "2026-05-25",
+    "before": {
+      "primary": "mary-mother-church",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w8-d2",
+          "reason": "outranked"
+        },
+        {
+          "id": "sv-bede",
+          "reason": "impeded-omitted"
+        },
+        {
+          "id": "sv-gregory-vii",
+          "reason": "impeded-omitted"
+        },
+        {
+          "id": "sv-maria-magdalena-de-pazzi",
+          "reason": "impeded-omitted"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-05-24"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "mary-mother-church",
+          "date": "2026-05-25",
+          "title": "Найсв. Панны Марыі, Маці Касцёла"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "mary-mother-church",
+      "primaryRank": "memoria",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w8-d2",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "sv-bede",
+          "reason": "impeded-by-obligatory-memorial"
+        },
+        {
+          "id": "sv-gregory-vii",
+          "reason": "impeded-by-obligatory-memorial"
+        },
+        {
+          "id": "sv-maria-magdalena-de-pazzi",
+          "reason": "impeded-by-obligatory-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-05-24"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "mary-mother-church",
+          "date": "2026-05-25",
+          "title": "Найсв. Панны Марыі, Маці Касцёла"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "vitebsk",
+    "date": "2026-11-16",
+    "before": {
+      "primary": "our-lady-mother-mercy",
+      "primaryRank": "memoria",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w33-d2",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "sv-margaret-scotland",
+          "reason": "impeded-by-obligatory-memorial"
+        },
+        {
+          "id": "sv-gertrude",
+          "reason": "impeded-by-obligatory-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-11-15"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "our-lady-mother-mercy",
+          "date": "2026-11-16",
+          "title": "Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "temporal:ordinary-w33-d2",
+      "primaryRank": "feria",
+      "alternatives": [
+        "our-lady-mother-mercy",
+        "sv-margaret-scotland",
+        "sv-gertrude"
+      ],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-11-15"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": null,
+          "date": "2026-11-16",
+          "title": "XXXIII звычайны тыдзень, панядзелак"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "vitebsk",
+    "date": "2026-09-08",
+    "before": {
+      "primary": "nativity-blessed-virgin-mary",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w23-d3",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-09-07"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "nativity-blessed-virgin-mary",
+          "date": "2026-09-08",
+          "title": "Найсв. Панны Марыі Браслаўскай"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "nativity-blessed-virgin-mary",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w23-d3",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-09-07"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "nativity-blessed-virgin-mary",
+          "date": "2026-09-08",
+          "title": "Найсв. Панны Марыі Браслаўскай"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "vitebsk",
+    "date": "2026-06-12",
+    "before": {
+      "primary": "sacred-heart",
+      "primaryRank": "solemnitas",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w10-d6",
+          "reason": "outranked"
+        },
+        {
+          "id": "bl-antoni-leszczewicz-jerzy-kaszyra",
+          "reason": "impeded-omitted"
+        }
+      ],
+      "firstVespers": {
+        "byRight": true,
+        "celebratedOnEve": true,
+        "eveDate": "2026-06-11"
+      },
+      "evening": {
+        "vespers": {
+          "type": "second",
+          "celebrationId": "sacred-heart",
+          "date": "2026-06-12",
+          "title": "Найсвяцейшае Сэрца Пана Езуса"
+        },
+        "compline": "sunday-after-second-vespers",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "sacred-heart",
+      "primaryRank": "solemnitas",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w10-d6",
+          "reason": "outranked"
+        },
+        {
+          "id": "bl-antoni-leszczewicz-jerzy-kaszyra",
+          "reason": "impeded-omitted"
+        }
+      ],
+      "firstVespers": {
+        "byRight": true,
+        "celebratedOnEve": true,
+        "eveDate": "2026-06-11"
+      },
+      "evening": {
+        "vespers": {
+          "type": "second",
+          "celebrationId": "sacred-heart",
+          "date": "2026-06-12",
+          "title": "Найсвяцейшае Сэрца Пана Езуса"
+        },
+        "compline": "sunday-after-second-vespers",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "vitebsk",
+    "date": "2026-11-12",
+    "before": {
+      "primary": "sv-josaphat",
+      "primaryRank": "solemnitas",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w32-d5",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": true,
+        "celebratedOnEve": true,
+        "eveDate": "2026-11-11"
+      },
+      "evening": {
+        "vespers": {
+          "type": "second",
+          "celebrationId": "sv-josaphat",
+          "date": "2026-11-12",
+          "title": "Св. Язафата, біскупа і мучаніка, галоўнага апекуна дыяцэзіі"
+        },
+        "compline": "sunday-after-second-vespers",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "sv-josaphat",
+      "primaryRank": "solemnitas",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w32-d5",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": true,
+        "celebratedOnEve": true,
+        "eveDate": "2026-11-11"
+      },
+      "evening": {
+        "vespers": {
+          "type": "second",
+          "celebrationId": "sv-josaphat",
+          "date": "2026-11-12",
+          "title": "Св. Язафата, біскупа і мучаніка, галоўнага апекуна дыяцэзіі"
+        },
+        "compline": "sunday-after-second-vespers",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "date": "2026-11-12",
+    "before": {
+      "primary": "sv-josaphat",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w32-d5",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-11-11"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "sv-josaphat",
+          "date": "2026-11-12",
+          "title": "Св. Язафата, біскупа і мучаніка"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "sv-josaphat",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w32-d5",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-11-11"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "sv-josaphat",
+          "date": "2026-11-12",
+          "title": "Св. Язафата, біскупа і мучаніка"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "pinsk",
+    "date": "2026-11-12",
+    "before": {
+      "primary": "sv-josaphat",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w32-d5",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-11-11"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "sv-josaphat",
+          "date": "2026-11-12",
+          "title": "Св. Язафата, біскупа і мучаніка"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "sv-josaphat",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w32-d5",
+          "reason": "outranked"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-11-11"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "sv-josaphat",
+          "date": "2026-11-12",
+          "title": "Св. Язафата, біскупа і мучаніка"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "grodno",
+    "date": "2026-11-12",
+    "before": {
+      "primary": "sv-josaphat",
+      "primaryRank": "memoria",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w32-d5",
+          "reason": "weekday-under-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-11-11"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "sv-josaphat",
+          "date": "2026-11-12",
+          "title": "Св. Язафата, біскупа і мучаніка"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "sv-josaphat",
+      "primaryRank": "memoria",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w32-d5",
+          "reason": "weekday-under-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-11-11"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "sv-josaphat",
+          "date": "2026-11-12",
+          "title": "Св. Язафата, біскупа і мучаніка"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "vitebsk",
+    "date": "2026-02-15",
+    "before": {
+      "primary": "temporal:ordinary-w6-d1",
+      "primaryRank": "dominica",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": true,
+        "celebratedOnEve": true,
+        "eveDate": "2026-02-14"
+      },
+      "evening": {
+        "vespers": {
+          "type": "second",
+          "celebrationId": null,
+          "date": "2026-02-15",
+          "title": "VI нядзеля звычайная"
+        },
+        "compline": "sunday-after-second-vespers",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "before-lent"
+    },
+    "after": {
+      "primary": "temporal:ordinary-w6-d1",
+      "primaryRank": "dominica",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "bl-michal-sopocko",
+          "reason": "impeded-omitted"
+        }
+      ],
+      "firstVespers": {
+        "byRight": true,
+        "celebratedOnEve": true,
+        "eveDate": "2026-02-14"
+      },
+      "evening": {
+        "vespers": {
+          "type": "second",
+          "celebrationId": null,
+          "date": "2026-02-15",
+          "title": "VI нядзеля звычайная"
+        },
+        "compline": "sunday-after-second-vespers",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "before-lent"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "vitebsk",
+    "date": "2027-02-15",
+    "before": {
+      "primary": "temporal:lent-w1-d2",
+      "primaryRank": "feria",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-02-14"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": null,
+          "date": "2027-02-15",
+          "title": "I тыдзень Вялікага посту, панядзелак"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "lent",
+      "phase": "lent-weeks"
+    },
+    "after": {
+      "primary": "temporal:lent-w1-d2",
+      "primaryRank": "feria",
+      "alternatives": [],
+      "commemorations": [
+        "bl-michal-sopocko"
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-02-14"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": null,
+          "date": "2027-02-15",
+          "title": "I тыдзень Вялікага посту, панядзелак"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "lent",
+      "phase": "lent-weeks"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "minsk-mohilev",
+    "date": "2026-10-09",
+    "before": {
+      "primary": "temporal:ordinary-w27-d6",
+      "primaryRank": "feria",
+      "alternatives": [
+        "sv-denis-companions",
+        "sv-john-leonardi"
+      ],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-10-08"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": null,
+          "date": "2026-10-09",
+          "title": "XXVII звычайны тыдзень, пятніца"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "after": {
+      "primary": "temporal:ordinary-w27-d6",
+      "primaryRank": "feria",
+      "alternatives": [
+        "sv-denis-companions",
+        "sv-john-leonardi",
+        "sv-john-henry-newman"
+      ],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-10-08"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": null,
+          "date": "2026-10-09",
+          "title": "XXVII звычайны тыдзень, пятніца"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "ordinary",
+      "phase": "after-pentecost"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "grodno",
+    "date": "2027-12-04",
+    "before": {
+      "primary": "temporal:advent-w1-d7",
+      "primaryRank": "feria",
+      "alternatives": [
+        "sv-barbara",
+        "sv-john-damascene"
+      ],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-12-03"
+      },
+      "evening": {
+        "vespers": {
+          "type": "first",
+          "celebrationId": "temporal:advent-w2-d1",
+          "date": "2027-12-05",
+          "title": "II нядзеля Адвэнту"
+        },
+        "compline": "sunday-after-first-vespers",
+        "conflict": {
+          "today": "temporal:advent-w1-d7",
+          "tomorrow": "temporal:advent-w2-d1",
+          "winner": "tomorrow",
+          "rule": "GNLYC 61"
+        },
+        "omittedFirstVespers": null
+      },
+      "period": "advent",
+      "phase": "advent-weekdays"
+    },
+    "after": {
+      "primary": "temporal:advent-w1-d7",
+      "primaryRank": "feria",
+      "alternatives": [
+        "sv-john-damascene"
+      ],
+      "commemorations": [],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-12-03"
+      },
+      "evening": {
+        "vespers": {
+          "type": "first",
+          "celebrationId": "temporal:advent-w2-d1",
+          "date": "2027-12-05",
+          "title": "II нядзеля Адвэнту"
+        },
+        "compline": "sunday-after-first-vespers",
+        "conflict": {
+          "today": "temporal:advent-w1-d7",
+          "tomorrow": "temporal:advent-w2-d1",
+          "winner": "tomorrow",
+          "rule": "GNLYC 61"
+        },
+        "omittedFirstVespers": null
+      },
+      "period": "advent",
+      "phase": "advent-weekdays"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  },
+  {
+    "diocese": "grodno",
+    "date": "2027-12-06",
+    "before": {
+      "primary": "grodno-cathedral-dedication",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:advent-w2-d2",
+          "reason": "outranked"
+        },
+        {
+          "id": "sv-nicholas",
+          "reason": "impeded-omitted"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-12-05"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "grodno-cathedral-dedication",
+          "date": "2027-12-06",
+          "title": "Гадавіна пасвячэння катэдральнага касцёла"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "advent",
+      "phase": "advent-weekdays"
+    },
+    "after": {
+      "primary": "grodno-cathedral-dedication",
+      "primaryRank": "festum",
+      "alternatives": [],
+      "commemorations": [],
+      "suppressed": [
+        {
+          "id": "temporal:advent-w2-d2",
+          "reason": "outranked"
+        },
+        {
+          "id": "sv-nicholas",
+          "reason": "impeded-omitted"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-12-05"
+      },
+      "evening": {
+        "vespers": {
+          "type": "of-the-day",
+          "celebrationId": "grodno-cathedral-dedication",
+          "date": "2027-12-06",
+          "title": "Гадавіна пасвячэння катэдральнага касцёла"
+        },
+        "compline": "current-weekday",
+        "conflict": null,
+        "omittedFirstVespers": null
+      },
+      "period": "advent",
+      "phase": "advent-weekdays"
+    },
+    "scenario": "PDF-DATA-ONLY; Braslau alias unresolved; year overrides retained"
+  }
+]

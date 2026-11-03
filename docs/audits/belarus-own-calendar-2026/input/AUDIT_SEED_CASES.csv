@@ -1,0 +1,31 @@
+﻿mmdd_or_rule,diocese,celebration_id,suspected_discrepancy,source_pdf_evidence,question_or_action,test_date
+12-04,pinsk,sv-barbara,extra,PDF p13: only John Damascene; no St Barbara,Remove diocesan calendar add unless separate Roman act,2026-12-04
+12-04,grodno,sv-barbara,extra,"PDF p13: cathedral dedication, not St Barbara",Remove diocesan calendar add unless separate Roman act,2026-12-04
+07-05,grodno,our-lady-trakai,date/rank,PDF p8: 05 July optional memorial,Check 2027-07-05; not universal,2027-07-05
+07-10,grodno,our-lady-trakai,date/rank,Web defines 10 July feast; PDF says 5 July optional,No permanent 10 July feast without later decree,2027-07-10
+08-22,pinsk,our-lady-lahishyn,extra/needs-decree,PDF p9: no 22 Aug diocesan solemnity,Distinguish diocesan patron vs local shrine,2026-08-22
+07-02,pinsk,our-lady-budslav,rank,PDF p8: no Pinsk promotion; absent rank = optional,Check rank and effective default,2026-07-02
+07-02,minsk-mohilev,our-lady-budslav,control,PDF p8: solemnity in Minsk-Mohilev,Must preserve solemnity,2026-07-02
+07-02,vitebsk,our-lady-budslav,control,PDF p8: feast in Vitebsk,Must preserve feast,2026-07-02
+pentecost+1,pinsk,mary-mother-church,rank,"PDF p6: memorial, no Pinsk feast",Check 2026-05-25,2026-05-25
+pentecost+1,grodno,mary-mother-church,rank,"PDF p6: memorial, no Grodno feast",Check 2026-05-25,2026-05-25
+01-27,grodno,bl-jurgis-matulaitis,rank,PDF p1: proper memory only for Vitebsk; others no rank,Check optional vs mandatory,2027-01-27
+01-29,grodno,bl-boleslawa-lament,rank,PDF p1: no Grodno promotion,Check optional vs mandatory,2027-01-29
+08-05,grodno,our-lady-congregational,rank,PDF p9: not marked rank => optional,Check optional vs mandatory,2027-08-05
+10-22,pinsk,sv-john-paul-ii,rank,PDF p11: no rank => optional,Check optional vs mandatory,2026-10-22
+11-16,vitebsk,our-lady-mother-mercy,rank,PDF p12: Vitebsk no rank => optional,Check actual inherited Belarus rank,2026-11-16
+09-08,vitebsk,nativity-blessed-virgin-mary,identity/precedence,PDF p10: both Nativity and Braslau listed as feasts,Do not silently remove one: ask liturgical resolution,2026-09-08
+06-12,vitebsk,bl-antoni-leszczewicz-jerzy-kaszyra,title,PDF p7: five blessed named; app title abridged,Check approved title versus app,2026-06-12
+12-10,all,our-lady-loreto,pdf-typo,PDF p13 reads Latераn / Lataranskaya on 10 Dec,Verify general calendar; source may contain typo,2026-12-10
+03-26,pinsk,sv-dismas,extra,Absent from PDF,Check actual source only / local,2027-03-26
+05-04,pinsk,sv-florian,extra,Absent from PDF,Check general vs diocesan,2027-05-04
+06-27,pinsk,our-lady-perpetual-help,extra,Absent from PDF,Check local/other calendar,2027-06-27
+07-20,pinsk,bl-czeslaw,extra,Absent from PDF,Check local/other calendar,2027-07-20
+08-17,pinsk,sv-hyacinth,extra,Absent from PDF,Check local/other calendar,2027-08-17
+09-04,pinsk,bl-maria-stella-companions,extra,PDF p10 assigns 09-04 to Grodno only,Check provenance / no Pinsk own calendar assignment,2027-09-04
+10-13,pinsk,bl-honorat-kozminski,extra,Absent from PDF,Check general vs diocesan,2027-10-13
+05-24,grodno,our-lady-help-of-christians,extra,Absent from PDF,Check local/other calendar,2027-05-24
+06-08,grodno,sv-jadwiga-queen,extra,Absent from PDF,Check local/other calendar,2027-06-08
+06-17,grodno,sv-albert-chmielowski,extra,Absent from PDF,Check local/other calendar,2027-06-17
+10-05,grodno,sv-faustina-kowalska,rank,PDF p11: no Grodno promotion,Check general optional vs Grodno mandatory,2027-10-05
+11-20,grodno,sv-raphael-kalinowski,rank,PDF p12: no Grodno promotion,Check general proper optional vs Grodno mandatory,2027-11-20

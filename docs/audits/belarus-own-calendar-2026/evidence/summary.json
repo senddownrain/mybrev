@@ -1,0 +1,119 @@
+{
+  "reference_rows": 263,
+  "reference_unique_ids": 249,
+  "reference_scoped_rows": 28,
+  "scope_expanded": 39,
+  "diff_rows": 1055,
+  "permanent_rows": 1011,
+  "counts_per_diocese": {
+    "minsk-mohilev": {
+      "MATCH": 228,
+      "TITLE": 14,
+      "UNIVERSAL_UPDATE": 3,
+      "MISSING": 1
+    },
+    "vitebsk": {
+      "MATCH": 225,
+      "TITLE": 16,
+      "MISSING": 2,
+      "DIOCESE_SCOPE": 2,
+      "NEEDS_DECREE": 2,
+      "PARSER_UNCERTAIN": 1,
+      "UNIVERSAL_UPDATE": 3,
+      "RANK": 1
+    },
+    "pinsk": {
+      "MATCH": 224,
+      "TITLE": 14,
+      "EXTRA_NOT_IN_OWN_CALENDAR": 9,
+      "POSSIBLE_LOCAL_ONLY": 9,
+      "NEEDS_DECREE": 9,
+      "DIOCESE_SCOPE": 1,
+      "RANK": 4,
+      "UNIVERSAL_UPDATE": 3,
+      "MISSING": 1
+    },
+    "grodno": {
+      "MATCH": 222,
+      "TITLE": 15,
+      "RANK": 12,
+      "EXTRA_NOT_IN_OWN_CALENDAR": 14,
+      "POSSIBLE_LOCAL_ONLY": 14,
+      "NEEDS_DECREE": 14,
+      "UNIVERSAL_UPDATE": 3,
+      "DATE": 3,
+      "MISSING": 1
+    }
+  },
+  "counts_permanent": {
+    "MATCH": 899,
+    "TITLE": 59,
+    "UNIVERSAL_UPDATE": 12,
+    "MISSING": 5,
+    "DIOCESE_SCOPE": 3,
+    "NEEDS_DECREE": 25,
+    "PARSER_UNCERTAIN": 1,
+    "RANK": 17,
+    "EXTRA_NOT_IN_OWN_CALENDAR": 23,
+    "POSSIBLE_LOCAL_ONLY": 23,
+    "DATE": 3
+  },
+  "extras": 23,
+  "row_kinds": {
+    "permanent": 1011,
+    "content": 29,
+    "year-override": 4,
+    "runtime-rule": 6,
+    "universal-title": 4,
+    "runtime-bridge": 1
+  },
+  "seed_rows": 30,
+  "rule_stats": {
+    "minsk-mohilev": {
+      "days": 364,
+      "celebrations": 279,
+      "rules": 38,
+      "rule_classifications": {
+        "LIKELY_PERMANENT_RULE": 35,
+        "DISPLAY_NOTE": 3
+      }
+    },
+    "vitebsk": {
+      "days": 397,
+      "celebrations": 497,
+      "rules": 551,
+      "rule_classifications": {
+        "YEAR_INSTANCE_ONLY": 25,
+        "LIKELY_PERMANENT_RULE": 295,
+        "DISPLAY_NOTE": 56,
+        "CONFIRMED_PERMANENT_RULE": 174,
+        "DIOCESAN_PROPER": 1
+      }
+    },
+    "pinsk": {
+      "days": 369,
+      "celebrations": 294,
+      "rules": 221,
+      "rule_classifications": {
+        "LIKELY_PERMANENT_RULE": 121,
+        "YEAR_INSTANCE_ONLY": 4,
+        "CONFIRMED_PERMANENT_RULE": 32,
+        "DISPLAY_NOTE": 64
+      }
+    },
+    "grodno": {
+      "days": 371,
+      "celebrations": 284,
+      "rules": 391,
+      "rule_classifications": {
+        "LIKELY_PERMANENT_RULE": 193,
+        "DISPLAY_NOTE": 55,
+        "CONFIRMED_PERMANENT_RULE": 129,
+        "YEAR_INSTANCE_ONLY": 3,
+        "DIOCESAN_PROPER": 11
+      }
+    }
+  },
+  "linked_annual_evidence": 45,
+  "content_rows": 1005
+}

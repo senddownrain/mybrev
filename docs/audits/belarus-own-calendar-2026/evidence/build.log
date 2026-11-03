@@ -1,0 +1,176 @@
+vite v6.4.1 building for production...
+
+(!) outDir /workspace/work/belarus-audit/build is not inside project root and will not be emptied.
+Use --emptyOutDir to override.
+
+transforming...
+✓ 3513 modules transformed.
+rendering chunks...
+computing gzip size...
+../work/belarus-audit/build/registerSW.js                                         0.13 kB
+../work/belarus-audit/build/manifest.webmanifest                                  0.73 kB
+../work/belarus-audit/build/index.html                                            6.46 kB │ gzip:   2.21 kB
+../work/belarus-audit/build/assets/materialdesignicons-subset-BFyRXxCA.woff2      6.56 kB
+../work/belarus-audit/build/assets/Invit-CBTCLg6Z.css                             0.05 kB │ gzip:   0.07 kB
+../work/belarus-audit/build/assets/Morning-Bmj5_02W.css                           0.13 kB │ gzip:   0.12 kB
+../work/belarus-audit/build/assets/TeDeum-DhevE62D.css                            0.16 kB │ gzip:   0.14 kB
+../work/belarus-audit/build/assets/Reading-DWbPq_Tk.css                           0.20 kB │ gzip:   0.11 kB
+../work/belarus-audit/build/assets/EndOfSext-CMDMEoQz.css                         0.23 kB │ gzip:   0.16 kB
+../work/belarus-audit/build/assets/DayEditor-aAiihW6d.css                         0.39 kB │ gzip:   0.24 kB
+../work/belarus-audit/build/assets/SongEditor-QVjDxgj1.css                        0.46 kB │ gzip:   0.25 kB
+../work/belarus-audit/build/assets/LastPrayer-BNTX5UFv.css                        0.56 kB │ gzip:   0.18 kB
+../work/belarus-audit/build/assets/Completorium-CMOYuTX6.css                      0.61 kB │ gzip:   0.26 kB
+../work/belarus-audit/build/assets/Vesper-C44Lwdiz.css                            0.68 kB │ gzip:   0.37 kB
+../work/belarus-audit/build/assets/SongText-Te2A8VZN.css                          0.87 kB │ gzip:   0.40 kB
+../work/belarus-audit/build/assets/One-CVEAY3TW.css                               0.87 kB │ gzip:   0.47 kB
+../work/belarus-audit/build/assets/BackToTop-Dw9JFzgM.css                         0.93 kB │ gzip:   0.44 kB
+../work/belarus-audit/build/assets/Admin-nu_MM271.css                             0.94 kB │ gzip:   0.41 kB
+../work/belarus-audit/build/assets/PriestAccess-CGs19bae.css                      0.99 kB │ gzip:   0.39 kB
+../work/belarus-audit/build/assets/liturgicalHtml-z7sfGaRt.css                    1.02 kB │ gzip:   0.39 kB
+../work/belarus-audit/build/assets/Admin-BpQh2NZw.css                             1.15 kB │ gzip:   0.44 kB
+../work/belarus-audit/build/assets/EndOfVesper-CFBI7x9M.css                       1.30 kB │ gzip:   0.42 kB
+../work/belarus-audit/build/assets/About-BSO9DDOQ.css                             1.59 kB │ gzip:   0.62 kB
+../work/belarus-audit/build/assets/OrdoBottomNav-D9pZCHpV.css                     1.72 kB │ gzip:   0.61 kB
+../work/belarus-audit/build/assets/songs-DAW_v4BY.css                             1.91 kB │ gzip:   0.75 kB
+../work/belarus-audit/build/assets/ReadingsBottomNav-P3xgGU8o.css                 1.91 kB │ gzip:   0.68 kB
+../work/belarus-audit/build/assets/AlternativeText-CPUZArzh.css                   2.05 kB │ gzip:   0.70 kB
+../work/belarus-audit/build/assets/DevotionalOfficeReader-Bi1dT2VF.css            2.12 kB │ gzip:   0.63 kB
+../work/belarus-audit/build/assets/Login-DX9f098Z.css                             2.97 kB │ gzip:   1.02 kB
+../work/belarus-audit/build/assets/ParsedReadingEditor-Bmk3uQuI.css               3.19 kB │ gzip:   0.92 kB
+../work/belarus-audit/build/assets/OraBar-C_7aPs3l.css                            3.25 kB │ gzip:   0.93 kB
+../work/belarus-audit/build/assets/FavoritePrayers-C1Omj2fk.css                   4.22 kB │ gzip:   1.27 kB
+../work/belarus-audit/build/assets/YearOverrides-QrDI6a5i.css                     4.25 kB │ gzip:   1.17 kB
+../work/belarus-audit/build/assets/OrasList-CsdoXhOx.css                          5.13 kB │ gzip:   1.35 kB
+../work/belarus-audit/build/assets/ReadingsView-C35WeeUb.css                      6.16 kB │ gzip:   1.52 kB
+../work/belarus-audit/build/assets/PrayerCategories-DbhdYSpt.css                  6.40 kB │ gzip:   1.49 kB
+../work/belarus-audit/build/assets/ParsedReadingCard-CNiPgHS2.css                 7.34 kB │ gzip:   1.74 kB
+../work/belarus-audit/build/assets/DayTitle-BbN8NPYQ.css                          7.69 kB │ gzip:   1.72 kB
+../work/belarus-audit/build/assets/CompendiumSource-CfH56Ytv.css                  8.30 kB │ gzip:   1.79 kB
+../work/belarus-audit/build/assets/PrayerForm-C934tnIC.css                       11.33 kB │ gzip:   2.59 kB
+../work/belarus-audit/build/assets/Song-QZ2fZQPH.css                             12.61 kB │ gzip:   2.53 kB
+../work/belarus-audit/build/assets/Bible-CmAcqIwD.css                            12.81 kB │ gzip:   2.72 kB
+../work/belarus-audit/build/assets/PrayersList-b6LmJb5e.css                      12.91 kB │ gzip:   2.11 kB
+../work/belarus-audit/build/assets/CompendiumLegacy-B1EwlSjp.css                 12.99 kB │ gzip:   2.92 kB
+../work/belarus-audit/build/assets/Compendium-B5j5iJ7O.css                       13.06 kB │ gzip:   2.94 kB
+../work/belarus-audit/build/assets/CompendiumNode-CS7LFpOl.css                   13.06 kB │ gzip:   2.94 kB
+../work/belarus-audit/build/assets/LiturgicalPicker-C0XxWXL3.css                 15.29 kB │ gzip:   3.05 kB
+../work/belarus-audit/build/assets/Settings-B-cxwUIN.css                         15.37 kB │ gzip:   3.04 kB
+../work/belarus-audit/build/assets/Songs-B8UwMdgG.css                            16.14 kB │ gzip:   3.35 kB
+../work/belarus-audit/build/assets/Ordo-DxQn-qjh.css                             17.37 kB │ gzip:   3.31 kB
+../work/belarus-audit/build/assets/PrayerView-G8eVJ10M.css                       20.28 kB │ gzip:   3.19 kB
+../work/belarus-audit/build/assets/vendor-quill-C86WLP6Y.css                     20.38 kB │ gzip:   3.33 kB
+../work/belarus-audit/build/assets/CompendiumQuestion-9NlzmHSM.css               20.78 kB │ gzip:   3.23 kB
+../work/belarus-audit/build/assets/CompendiumShell-XaLlNTac.css                  32.79 kB │ gzip:   3.82 kB
+../work/belarus-audit/build/assets/vendor-vuetify-CCAW2Mv9.css                  151.92 kB │ gzip:  20.67 kB
+../work/belarus-audit/build/assets/index-ptvuZPO5.css                           307.64 kB │ gzip:  40.36 kB
+../work/belarus-audit/build/assets/usePsalmody-qNFQbW6T.js                        0.31 kB │ gzip:   0.24 kB
+../work/belarus-audit/build/assets/useCompendiumScroll-UHtQifu0.js                0.34 kB │ gzip:   0.25 kB
+../work/belarus-audit/build/assets/invitatorium-30A20b7T.js                       0.38 kB │ gzip:   0.28 kB
+../work/belarus-audit/build/assets/Resp-j8wXTu0o.js                               0.44 kB │ gzip:   0.32 kB
+../work/belarus-audit/build/assets/errorHandler-B1Uo_wxI.js                       0.50 kB │ gzip:   0.31 kB
+../work/belarus-audit/build/assets/Prayers-BcHVXnc7.js                            0.59 kB │ gzip:   0.36 kB
+../work/belarus-audit/build/assets/EndOfSext-DTpFPzG0.js                          0.66 kB │ gzip:   0.42 kB
+../work/belarus-audit/build/assets/Reading-CyqSd-8M.js                            0.67 kB │ gzip:   0.47 kB
+../work/belarus-audit/build/assets/songs-BFzwnDNe.js                              0.76 kB │ gzip:   0.49 kB
+../work/belarus-audit/build/assets/CompendiumSource-B1qUc2Pm.js                   0.77 kB │ gzip:   0.52 kB
+../work/belarus-audit/build/assets/liturgicalMovableDates-D9CamSZK.js             0.89 kB │ gzip:   0.49 kB
+../work/belarus-audit/build/assets/About-Bt68W47I.js                              1.41 kB │ gzip:   0.85 kB
+../work/belarus-audit/build/assets/SongText-BYEr9GPr.js                           1.45 kB │ gzip:   0.84 kB
+../work/belarus-audit/build/assets/liturgicalOffice-D7mIgk8p.js                   1.49 kB │ gzip:   0.77 kB
+../work/belarus-audit/build/assets/cacheWarmup-BVLJPC4r.js                        1.49 kB │ gzip:   0.85 kB
+../work/belarus-audit/build/assets/Sext-apS1RrhJ.js                               1.51 kB │ gzip:   0.83 kB
+../work/belarus-audit/build/assets/Non-Q7uSndGb.js                                1.52 kB │ gzip:   0.84 kB
+../work/belarus-audit/build/assets/Terz-z8MrwNol.js                               1.52 kB │ gzip:   0.84 kB
+../work/belarus-audit/build/assets/CompendiumLegacy-Cw8QXsJI.js                   1.60 kB │ gzip:   0.97 kB
+../work/belarus-audit/build/assets/Admin-BqzzfqN_.js                              1.70 kB │ gzip:   0.94 kB
+../work/belarus-audit/build/assets/Laudes-Bob6PgTF.js                             1.70 kB │ gzip:   0.86 kB
+../work/belarus-audit/build/assets/useResolvedLiturgicalDay-DfnH7xQ3.js           1.82 kB │ gzip:   0.95 kB
+../work/belarus-audit/build/assets/PhCaretDown.vue-Dht8cVBN.js                    1.95 kB │ gzip:   0.95 kB
+../work/belarus-audit/build/assets/Lectionis-DfwWC-IH.js                          2.06 kB │ gzip:   1.00 kB
+../work/belarus-audit/build/assets/One--7wXimHe.js                                2.07 kB │ gzip:   1.11 kB
+../work/belarus-audit/build/assets/PhArrowRight.vue-JEEeJ3YG.js                   2.11 kB │ gzip:   1.01 kB
+../work/belarus-audit/build/assets/PhCheck.vue-DPepI2-G.js                        2.12 kB │ gzip:   0.98 kB
+../work/belarus-audit/build/assets/PhMagnifyingGlass.vue-BiunVPUR.js              2.21 kB │ gzip:   1.07 kB
+../work/belarus-audit/build/assets/useCompletorium-BtYNzctZ.js                    2.24 kB │ gzip:   1.10 kB
+../work/belarus-audit/build/assets/refreshSavedContent-CgVGqIhi.js                2.26 kB │ gzip:   1.03 kB
+../work/belarus-audit/build/assets/useReadings-D5Y6N-eo.js                        2.28 kB │ gzip:   1.04 kB
+../work/belarus-audit/build/assets/Compendium-C2xL9QXg.js                         2.52 kB │ gzip:   1.32 kB
+../work/belarus-audit/build/assets/Admin-C19XSrlm.js                              2.73 kB │ gzip:   1.37 kB
+../work/belarus-audit/build/assets/liturgicalVespers-BsHGJQCF.js                  2.73 kB │ gzip:   1.17 kB
+../work/belarus-audit/build/assets/ordoCalendarService-DE7JMg9x.js                2.80 kB │ gzip:   1.18 kB
+../work/belarus-audit/build/assets/EndOfVesper-CpOI8he2.js                        2.88 kB │ gzip:   1.12 kB
+../work/belarus-audit/build/assets/PhSlidersHorizontal.vue-DSwbUVuK.js            2.95 kB │ gzip:   1.15 kB
+../work/belarus-audit/build/assets/BackToTop-CuvIcG3G.js                          2.96 kB │ gzip:   1.45 kB
+../work/belarus-audit/build/assets/Benedictus-Dum33vZR.js                         3.13 kB │ gzip:   1.54 kB
+../work/belarus-audit/build/assets/FavoritePrayers-DxFAaojP.js                    3.17 kB │ gzip:   1.52 kB
+../work/belarus-audit/build/assets/liturgicalCalendar-O56BeUL5.js                 3.30 kB │ gzip:   1.15 kB
+../work/belarus-audit/build/assets/CompendiumNode-CXhZ4v0s.js                     3.44 kB │ gzip:   1.55 kB
+../work/belarus-audit/build/assets/Login-oijPTqxD.js                              3.47 kB │ gzip:   1.75 kB
+../work/belarus-audit/build/assets/CompendiumQuestion-Df6Q1052.js                 3.65 kB │ gzip:   1.61 kB
+../work/belarus-audit/build/assets/compendium_search_aliases-OX14zKGt.js          3.73 kB │ gzip:   1.43 kB
+../work/belarus-audit/build/assets/useLiturgicalHours-MpzIdOeo.js                 3.79 kB │ gzip:   1.77 kB
+../work/belarus-audit/build/assets/OrdoBottomNav-Bv7L-3YZ.js                      3.99 kB │ gzip:   1.80 kB
+../work/belarus-audit/build/assets/ReadingsBottomNav-OQfQAgDW.js                  4.09 kB │ gzip:   1.77 kB
+../work/belarus-audit/build/assets/liturgicalHtml-DGhp6idR.js                     4.54 kB │ gzip:   2.04 kB
+../work/belarus-audit/build/assets/CompendiumShell-QD0Nw9yx.js                    4.93 kB │ gzip:   2.41 kB
+../work/belarus-audit/build/assets/DayTitle-B56WbOAm.js                           5.20 kB │ gzip:   2.06 kB
+../work/belarus-audit/build/assets/Invit-BFzc1eH6.js                              5.33 kB │ gzip:   2.10 kB
+../work/belarus-audit/build/assets/Morning-dcWc7v-z.js                            5.52 kB │ gzip:   2.51 kB
+../work/belarus-audit/build/assets/compendiumNavigation-R8KlrF0x.js               5.58 kB │ gzip:   2.05 kB
+../work/belarus-audit/build/assets/TeDeum-Cgyhx8yG.js                             5.74 kB │ gzip:   2.50 kB
+../work/belarus-audit/build/assets/Completorium-Cq9LLv5M.js                       5.81 kB │ gzip:   2.63 kB
+../work/belarus-audit/build/assets/Vesper-ViE2DmCh.js                             6.09 kB │ gzip:   2.94 kB
+../work/belarus-audit/build/assets/Songs-Uatz4juE.js                              6.44 kB │ gzip:   2.74 kB
+../work/belarus-audit/build/assets/SongEditor-CN8MxLhD.js                         6.75 kB │ gzip:   2.84 kB
+../work/belarus-audit/build/assets/OrasList-CikrFjXr.js                           7.35 kB │ gzip:   3.09 kB
+../work/belarus-audit/build/assets/LastPrayer-MUWYz6Gk.js                         7.58 kB │ gzip:   2.71 kB
+../work/belarus-audit/build/assets/PrayersList-CuIEpDpc.js                        8.13 kB │ gzip:   3.54 kB
+../work/belarus-audit/build/assets/PhHandsPraying.vue-ByqGZ0Zt.js                 8.38 kB │ gzip:   2.69 kB
+../work/belarus-audit/build/assets/OraBar-5p2ti02n.js                             8.42 kB │ gzip:   3.40 kB
+../work/belarus-audit/build/assets/PriestAccess-ZTrau369.js                       9.59 kB │ gzip:   3.59 kB
+../work/belarus-audit/build/assets/ParsedReadingCard-53ernWwb.js                 10.32 kB │ gzip:   3.49 kB
+../work/belarus-audit/build/assets/compendium-Drm3HohK.js                        11.74 kB │ gzip:   5.01 kB
+../work/belarus-audit/build/assets/ReadingsView-C7Q6xIZ9.js                      12.54 kB │ gzip:   4.85 kB
+../work/belarus-audit/build/assets/order-of-mass-en-BNbpG73n.js                  12.79 kB │ gzip:   4.40 kB
+../work/belarus-audit/build/assets/PrayerCategories-CWgmjG9a.js                  15.16 kB │ gzip:   4.99 kB
+../work/belarus-audit/build/assets/Song-1-hySiuy.js                              15.27 kB │ gzip:   4.89 kB
+../work/belarus-audit/build/assets/DevotionalOfficeReader-CFc8o3h9.js            16.31 kB │ gzip:   6.07 kB
+../work/belarus-audit/build/assets/PrayerView-DCmyKYrB.js                        19.26 kB │ gzip:   7.87 kB
+../work/belarus-audit/build/assets/PrayerForm-Cbs2bWq_.js                        29.76 kB │ gzip:  10.71 kB
+../work/belarus-audit/build/assets/LiturgicalPicker-6DWULFfy.js                  30.41 kB │ gzip:  10.30 kB
+../work/belarus-audit/build/assets/Bible-CZuY-1Tv.js                             30.78 kB │ gzip:  10.53 kB
+../work/belarus-audit/build/assets/DayEditor-4c0JvARx.js                         32.86 kB │ gzip:  10.67 kB
+../work/belarus-audit/build/assets/Ordo-BgSHU2bK.js                              33.40 kB │ gzip:  11.27 kB
+../work/belarus-audit/build/assets/Settings-C-8wn69R.js                          34.10 kB │ gzip:  11.12 kB
+../work/belarus-audit/build/assets/YearOverrides-BLoZXBE0.js                     36.73 kB │ gzip:  11.42 kB
+../work/belarus-audit/build/assets/vendor-date-fns-D2KF6XsG.js                   39.83 kB │ gzip:  10.25 kB
+../work/belarus-audit/build/assets/ParsedReadingEditor-q7DSOIKT.js               45.70 kB │ gzip:  12.92 kB
+../work/belarus-audit/build/assets/vendor-moment-BLMuvzoS.js                     60.80 kB │ gzip:  19.71 kB
+../work/belarus-audit/build/assets/vendor-firebase-core-ci0fum2U.js              95.40 kB │ gzip:  29.41 kB
+../work/belarus-audit/build/assets/vendor-vue-CBKyuEcF.js                       106.95 kB │ gzip:  41.79 kB
+../work/belarus-audit/build/assets/vendor-firebase-auth-BpfhUhjQ.js             123.70 kB │ gzip:  25.08 kB
+../work/belarus-audit/build/assets/AlternativeText-DP11hdKq.js                  159.53 kB │ gzip:  58.41 kB
+../work/belarus-audit/build/assets/vendor-markdown-DRBRTfeX.js                  179.05 kB │ gzip:  79.16 kB
+../work/belarus-audit/build/assets/vendor-quill-CpYGzHNl.js                     257.19 kB │ gzip:  68.95 kB
+../work/belarus-audit/build/assets/vendor-vuetify-B2wI3zza.js                   286.26 kB │ gzip:  89.38 kB
+../work/belarus-audit/build/assets/reading-references-eMzCQyau.js               297.25 kB │ gzip:  37.63 kB
+../work/belarus-audit/build/assets/songService-C95owjBc.js                      358.93 kB │ gzip:  99.64 kB
+../work/belarus-audit/build/assets/vendor-sentry-2GG7X9Hq.js                    435.61 kB │ gzip: 144.11 kB
+../work/belarus-audit/build/assets/vendor-firebase-firestore-CRpaZL8P.js        450.98 kB │ gzip: 101.57 kB
+../work/belarus-audit/build/assets/compendium-DOeFbIeo.js                       541.61 kB │ gzip: 118.37 kB
+../work/belarus-audit/build/assets/index-ITigOMxV.js                            568.00 kB │ gzip: 144.28 kB
+../work/belarus-audit/build/assets/vendor-markdown-editor-3A_B7tS8.js           610.01 kB │ gzip: 208.93 kB
+../work/belarus-audit/build/assets/notes-BEwnMk93.js                          1,449.66 kB │ gzip: 162.08 kB
+
+(!) Some chunks are larger than 650 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 35.54s
+
+PWA v0.21.2
+mode      generateSW
+precache  151 entries (6549.44 KiB)
+files generated
+  ../work/belarus-audit/build/sw.js
+  ../work/belarus-audit/build/workbox-94d0e55c.js

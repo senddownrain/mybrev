@@ -1,0 +1,46 @@
+{
+  "minsk-mohilev": {
+    "days": 364,
+    "celebrations": 279,
+    "rules": 38,
+    "rule_classifications": {
+      "LIKELY_PERMANENT_RULE": 35,
+      "DISPLAY_NOTE": 3
+    }
+  },
+  "vitebsk": {
+    "days": 397,
+    "celebrations": 497,
+    "rules": 551,
+    "rule_classifications": {
+      "YEAR_INSTANCE_ONLY": 25,
+      "LIKELY_PERMANENT_RULE": 295,
+      "DISPLAY_NOTE": 56,
+      "CONFIRMED_PERMANENT_RULE": 174,
+      "DIOCESAN_PROPER": 1
+    }
+  },
+  "pinsk": {
+    "days": 369,
+    "celebrations": 294,
+    "rules": 221,
+    "rule_classifications": {
+      "LIKELY_PERMANENT_RULE": 121,
+      "YEAR_INSTANCE_ONLY": 4,
+      "CONFIRMED_PERMANENT_RULE": 32,
+      "DISPLAY_NOTE": 64
+    }
+  },
+  "grodno": {
+    "days": 371,
+    "celebrations": 284,
+    "rules": 391,
+    "rule_classifications": {
+      "LIKELY_PERMANENT_RULE": 193,
+      "DISPLAY_NOTE": 55,
+      "CONFIRMED_PERMANENT_RULE": 129,
+      "YEAR_INSTANCE_ONLY": 3,
+      "DIOCESAN_PROPER": 11
+    }
+  }
+}

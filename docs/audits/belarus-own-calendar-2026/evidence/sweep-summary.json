@@ -1,0 +1,3137 @@
+{
+  "contexts": [
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2025,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 165,
+        "alternative": 98,
+        "commemoration": 12
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2026,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 158,
+        "alternative": 105,
+        "commemoration": 13
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2027,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 152,
+        "alternative": 112,
+        "commemoration": 13
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2028,
+      "days": 366,
+      "roles": {
+        "primary": 366,
+        "suppressed": 158,
+        "alternative": 107,
+        "commemoration": 13
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2029,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 160,
+        "alternative": 106,
+        "commemoration": 12
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2030,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 168,
+        "alternative": 96,
+        "commemoration": 13
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2031,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 160,
+        "alternative": 103,
+        "commemoration": 12
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2032,
+      "days": 366,
+      "roles": {
+        "primary": 366,
+        "suppressed": 155,
+        "alternative": 109,
+        "commemoration": 13
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2033,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 163,
+        "alternative": 99,
+        "commemoration": 15
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2034,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 163,
+        "alternative": 103,
+        "commemoration": 12
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2035,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 157,
+        "alternative": 109,
+        "commemoration": 13
+      },
+      "transfers": 2
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2025,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 165,
+        "alternative": 98,
+        "commemoration": 12
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2026,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 157,
+        "alternative": 106,
+        "commemoration": 13
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2027,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 150,
+        "alternative": 114,
+        "commemoration": 13
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2028,
+      "days": 366,
+      "roles": {
+        "primary": 366,
+        "suppressed": 156,
+        "alternative": 109,
+        "commemoration": 13
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2029,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 159,
+        "alternative": 107,
+        "commemoration": 12
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2030,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 164,
+        "alternative": 100,
+        "commemoration": 13
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2031,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 160,
+        "alternative": 103,
+        "commemoration": 12
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2032,
+      "days": 366,
+      "roles": {
+        "primary": 366,
+        "suppressed": 153,
+        "alternative": 111,
+        "commemoration": 13
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2033,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 161,
+        "alternative": 101,
+        "commemoration": 15
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2034,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 161,
+        "alternative": 105,
+        "commemoration": 12
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2035,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 156,
+        "alternative": 110,
+        "commemoration": 13
+      },
+      "transfers": 2
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2025,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 173,
+        "alternative": 98,
+        "commemoration": 13
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2026,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 162,
+        "alternative": 109,
+        "commemoration": 14
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2027,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 159,
+        "alternative": 115,
+        "commemoration": 13
+      },
+      "transfers": 2
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2028,
+      "days": 366,
+      "roles": {
+        "primary": 366,
+        "suppressed": 163,
+        "alternative": 111,
+        "commemoration": 13
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2029,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 164,
+        "alternative": 111,
+        "commemoration": 12
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2030,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 173,
+        "alternative": 99,
+        "commemoration": 14
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2031,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 167,
+        "alternative": 104,
+        "commemoration": 13
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2032,
+      "days": 366,
+      "roles": {
+        "primary": 366,
+        "suppressed": 162,
+        "alternative": 112,
+        "commemoration": 13
+      },
+      "transfers": 2
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2033,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 169,
+        "alternative": 101,
+        "commemoration": 16
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2034,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 168,
+        "alternative": 107,
+        "commemoration": 12
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2035,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 161,
+        "alternative": 114,
+        "commemoration": 13
+      },
+      "transfers": 2
+    },
+    {
+      "diocese": "grodno",
+      "year": 2025,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 179,
+        "alternative": 105,
+        "commemoration": 11
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "grodno",
+      "year": 2026,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 178,
+        "alternative": 106,
+        "commemoration": 12
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "grodno",
+      "year": 2027,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 174,
+        "alternative": 109,
+        "commemoration": 14
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "grodno",
+      "year": 2028,
+      "days": 366,
+      "roles": {
+        "primary": 366,
+        "suppressed": 181,
+        "alternative": 105,
+        "commemoration": 12
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "grodno",
+      "year": 2029,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 180,
+        "alternative": 105,
+        "commemoration": 13
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "grodno",
+      "year": 2030,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 187,
+        "alternative": 98,
+        "commemoration": 12
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "grodno",
+      "year": 2031,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 177,
+        "alternative": 107,
+        "commemoration": 11
+      },
+      "transfers": 0
+    },
+    {
+      "diocese": "grodno",
+      "year": 2032,
+      "days": 366,
+      "roles": {
+        "primary": 366,
+        "suppressed": 181,
+        "alternative": 104,
+        "commemoration": 12
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "grodno",
+      "year": 2033,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 180,
+        "alternative": 103,
+        "commemoration": 14
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "grodno",
+      "year": 2034,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 180,
+        "alternative": 107,
+        "commemoration": 11
+      },
+      "transfers": 1
+    },
+    {
+      "diocese": "grodno",
+      "year": 2035,
+      "days": 365,
+      "roles": {
+        "primary": 365,
+        "suppressed": 177,
+        "alternative": 108,
+        "commemoration": 14
+      },
+      "transfers": 2
+    }
+  ],
+  "invariantFailures": [],
+  "normativeRuleIssues": [
+    {
+      "diocese": "minsk-mohilev",
+      "date": "2028-06-05",
+      "type": "mother-church-concurrent-memorial",
+      "primary": "mary-mother-church",
+      "alternatives": [
+        "sv-boniface"
+      ],
+      "source": "https://press.vatican.va/content/salastampa/en/bollettino/pubblico/2018/03/27/180327b.html"
+    },
+    {
+      "diocese": "vitebsk",
+      "date": "2028-06-05",
+      "type": "mother-church-concurrent-memorial",
+      "primary": "mary-mother-church",
+      "alternatives": [
+        "sv-boniface"
+      ],
+      "source": "https://press.vatican.va/content/salastampa/en/bollettino/pubblico/2018/03/27/180327b.html"
+    }
+  ],
+  "ruleCounts": {
+    "weekday-not-alternative-to-obligatory-memorial": 2566,
+    "GNLYC 61": 2831,
+    "feast-of-the-lord-replaces-sunday": 116,
+    "saturday-memorial-of-mary": 866,
+    "memorial-as-commemoration": 564,
+    "impeded-feast-omitted": 210,
+    "layer-modification": 374,
+    "concurrent-obligatory-memorials-legal-choice": 23,
+    "concurrent-obligatory-memorials-choice": 23,
+    "all-souls-sunday-split": 8,
+    "year-override": 4,
+    "transfer": 76
+  },
+  "roles": {
+    "primary": 16068,
+    "suppressed": 7296,
+    "alternative": 4649,
+    "commemoration": 564
+  },
+  "missingContent": {},
+  "anchors": [
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2025,
+      "anchors": {
+        "year": 2025,
+        "epiphany": "2025-01-06",
+        "baptismOfLord": "2025-01-12",
+        "ashWednesday": "2025-03-05",
+        "firstLentSunday": "2025-03-09",
+        "palmSunday": "2025-04-13",
+        "holyThursday": "2025-04-17",
+        "goodFriday": "2025-04-18",
+        "holySaturday": "2025-04-19",
+        "easterSunday": "2025-04-20",
+        "divineMercySunday": "2025-04-27",
+        "ascension": "2025-05-29",
+        "pentecost": "2025-06-08",
+        "maryMotherChurch": "2025-06-09",
+        "christTheHighPriest": "2025-06-12",
+        "trinity": "2025-06-15",
+        "corpusChristi": "2025-06-19",
+        "sacredHeart": "2025-06-27",
+        "immaculateHeart": "2025-06-28",
+        "christKing": "2025-11-23",
+        "firstAdventSunday": "2025-11-30",
+        "christmas": "2025-12-25",
+        "holyFamily": "2025-12-28"
+      },
+      "transfers": [],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2026,
+      "anchors": {
+        "year": 2026,
+        "epiphany": "2026-01-06",
+        "baptismOfLord": "2026-01-11",
+        "ashWednesday": "2026-02-18",
+        "firstLentSunday": "2026-02-22",
+        "palmSunday": "2026-03-29",
+        "holyThursday": "2026-04-02",
+        "goodFriday": "2026-04-03",
+        "holySaturday": "2026-04-04",
+        "easterSunday": "2026-04-05",
+        "divineMercySunday": "2026-04-12",
+        "ascension": "2026-05-14",
+        "pentecost": "2026-05-24",
+        "maryMotherChurch": "2026-05-25",
+        "christTheHighPriest": "2026-05-28",
+        "trinity": "2026-05-31",
+        "corpusChristi": "2026-06-04",
+        "sacredHeart": "2026-06-12",
+        "immaculateHeart": "2026-06-13",
+        "christKing": "2026-11-22",
+        "firstAdventSunday": "2026-11-29",
+        "christmas": "2026-12-25",
+        "holyFamily": "2026-12-27"
+      },
+      "transfers": [],
+      "appliedOverrides": [
+        {
+          "override": {
+            "id": "2026-minsk-mohilev-sv-stanislaus-bishop-martyr",
+            "year": 2026,
+            "scope": "diocese",
+            "dioceseId": "minsk-mohilev",
+            "targetCelebrationId": "sv-stanislaus-bishop-martyr",
+            "action": "move",
+            "originalDate": "2026-04-11",
+            "effectiveDate": "2026-04-16",
+            "from": "2026-04-11",
+            "to": "2026-04-16",
+            "reason": "St Stanislaus (11.04, Saturday in the Easter octave) kept on Thursday 16 April",
+            "source": "manual",
+            "status": "confirmed",
+            "evidence": [
+              "minsk-mohilev:2026-04-16:c0"
+            ],
+            "enabled": true
+          },
+          "status": "applied"
+        }
+      ],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2027,
+      "anchors": {
+        "year": 2027,
+        "epiphany": "2027-01-06",
+        "baptismOfLord": "2027-01-10",
+        "ashWednesday": "2027-02-10",
+        "firstLentSunday": "2027-02-14",
+        "palmSunday": "2027-03-21",
+        "holyThursday": "2027-03-25",
+        "goodFriday": "2027-03-26",
+        "holySaturday": "2027-03-27",
+        "easterSunday": "2027-03-28",
+        "divineMercySunday": "2027-04-04",
+        "ascension": "2027-05-06",
+        "pentecost": "2027-05-16",
+        "maryMotherChurch": "2027-05-17",
+        "christTheHighPriest": "2027-05-20",
+        "trinity": "2027-05-23",
+        "corpusChristi": "2027-05-27",
+        "sacredHeart": "2027-06-04",
+        "immaculateHeart": "2027-06-05",
+        "christKing": "2027-11-21",
+        "firstAdventSunday": "2027-11-28",
+        "christmas": "2027-12-25",
+        "holyFamily": "2027-12-26"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2027-03-25",
+          "to": "2027-04-05",
+          "computedDate": "2027-04-05",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2028,
+      "anchors": {
+        "year": 2028,
+        "epiphany": "2028-01-06",
+        "baptismOfLord": "2028-01-09",
+        "ashWednesday": "2028-03-01",
+        "firstLentSunday": "2028-03-05",
+        "palmSunday": "2028-04-09",
+        "holyThursday": "2028-04-13",
+        "goodFriday": "2028-04-14",
+        "holySaturday": "2028-04-15",
+        "easterSunday": "2028-04-16",
+        "divineMercySunday": "2028-04-23",
+        "ascension": "2028-05-25",
+        "pentecost": "2028-06-04",
+        "maryMotherChurch": "2028-06-05",
+        "christTheHighPriest": "2028-06-08",
+        "trinity": "2028-06-11",
+        "corpusChristi": "2028-06-15",
+        "sacredHeart": "2028-06-23",
+        "immaculateHeart": "2028-06-24",
+        "christKing": "2028-11-26",
+        "firstAdventSunday": "2028-12-03",
+        "christmas": "2028-12-25",
+        "holyFamily": "2028-12-31"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2028-03-19",
+          "to": "2028-03-20",
+          "computedDate": "2028-03-20",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2029,
+      "anchors": {
+        "year": 2029,
+        "epiphany": "2029-01-06",
+        "baptismOfLord": "2029-01-07",
+        "ashWednesday": "2029-02-14",
+        "firstLentSunday": "2029-02-18",
+        "palmSunday": "2029-03-25",
+        "holyThursday": "2029-03-29",
+        "goodFriday": "2029-03-30",
+        "holySaturday": "2029-03-31",
+        "easterSunday": "2029-04-01",
+        "divineMercySunday": "2029-04-08",
+        "ascension": "2029-05-10",
+        "pentecost": "2029-05-20",
+        "maryMotherChurch": "2029-05-21",
+        "christTheHighPriest": "2029-05-24",
+        "trinity": "2029-05-27",
+        "corpusChristi": "2029-05-31",
+        "sacredHeart": "2029-06-08",
+        "immaculateHeart": "2029-06-09",
+        "christKing": "2029-11-25",
+        "firstAdventSunday": "2029-12-02",
+        "christmas": "2029-12-25",
+        "holyFamily": "2029-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2029-03-25",
+          "to": "2029-04-09",
+          "computedDate": "2029-04-09",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2030,
+      "anchors": {
+        "year": 2030,
+        "epiphany": "2030-01-06",
+        "baptismOfLord": "2030-01-13",
+        "ashWednesday": "2030-03-06",
+        "firstLentSunday": "2030-03-10",
+        "palmSunday": "2030-04-14",
+        "holyThursday": "2030-04-18",
+        "goodFriday": "2030-04-19",
+        "holySaturday": "2030-04-20",
+        "easterSunday": "2030-04-21",
+        "divineMercySunday": "2030-04-28",
+        "ascension": "2030-05-30",
+        "pentecost": "2030-06-09",
+        "maryMotherChurch": "2030-06-10",
+        "christTheHighPriest": "2030-06-13",
+        "trinity": "2030-06-16",
+        "corpusChristi": "2030-06-20",
+        "sacredHeart": "2030-06-28",
+        "immaculateHeart": "2030-06-29",
+        "christKing": "2030-11-24",
+        "firstAdventSunday": "2030-12-01",
+        "christmas": "2030-12-25",
+        "holyFamily": "2030-12-29"
+      },
+      "transfers": [
+        {
+          "celebrationId": "immaculate-conception",
+          "from": "2030-12-08",
+          "to": "2030-12-09",
+          "computedDate": "2030-12-09",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2031,
+      "anchors": {
+        "year": 2031,
+        "epiphany": "2031-01-06",
+        "baptismOfLord": "2031-01-12",
+        "ashWednesday": "2031-02-26",
+        "firstLentSunday": "2031-03-02",
+        "palmSunday": "2031-04-06",
+        "holyThursday": "2031-04-10",
+        "goodFriday": "2031-04-11",
+        "holySaturday": "2031-04-12",
+        "easterSunday": "2031-04-13",
+        "divineMercySunday": "2031-04-20",
+        "ascension": "2031-05-22",
+        "pentecost": "2031-06-01",
+        "maryMotherChurch": "2031-06-02",
+        "christTheHighPriest": "2031-06-05",
+        "trinity": "2031-06-08",
+        "corpusChristi": "2031-06-12",
+        "sacredHeart": "2031-06-20",
+        "immaculateHeart": "2031-06-21",
+        "christKing": "2031-11-23",
+        "firstAdventSunday": "2031-11-30",
+        "christmas": "2031-12-25",
+        "holyFamily": "2031-12-28"
+      },
+      "transfers": [],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2032,
+      "anchors": {
+        "year": 2032,
+        "epiphany": "2032-01-06",
+        "baptismOfLord": "2032-01-11",
+        "ashWednesday": "2032-02-11",
+        "firstLentSunday": "2032-02-15",
+        "palmSunday": "2032-03-21",
+        "holyThursday": "2032-03-25",
+        "goodFriday": "2032-03-26",
+        "holySaturday": "2032-03-27",
+        "easterSunday": "2032-03-28",
+        "divineMercySunday": "2032-04-04",
+        "ascension": "2032-05-06",
+        "pentecost": "2032-05-16",
+        "maryMotherChurch": "2032-05-17",
+        "christTheHighPriest": "2032-05-20",
+        "trinity": "2032-05-23",
+        "corpusChristi": "2032-05-27",
+        "sacredHeart": "2032-06-04",
+        "immaculateHeart": "2032-06-05",
+        "christKing": "2032-11-21",
+        "firstAdventSunday": "2032-11-28",
+        "christmas": "2032-12-25",
+        "holyFamily": "2032-12-26"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2032-03-25",
+          "to": "2032-04-05",
+          "computedDate": "2032-04-05",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2033,
+      "anchors": {
+        "year": 2033,
+        "epiphany": "2033-01-06",
+        "baptismOfLord": "2033-01-09",
+        "ashWednesday": "2033-03-02",
+        "firstLentSunday": "2033-03-06",
+        "palmSunday": "2033-04-10",
+        "holyThursday": "2033-04-14",
+        "goodFriday": "2033-04-15",
+        "holySaturday": "2033-04-16",
+        "easterSunday": "2033-04-17",
+        "divineMercySunday": "2033-04-24",
+        "ascension": "2033-05-26",
+        "pentecost": "2033-06-05",
+        "maryMotherChurch": "2033-06-06",
+        "christTheHighPriest": "2033-06-09",
+        "trinity": "2033-06-12",
+        "corpusChristi": "2033-06-16",
+        "sacredHeart": "2033-06-24",
+        "immaculateHeart": "2033-06-25",
+        "christKing": "2033-11-20",
+        "firstAdventSunday": "2033-11-27",
+        "christmas": "2033-12-25",
+        "holyFamily": "2033-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "nativity-john-baptist",
+          "from": "2033-06-24",
+          "to": "2033-06-25",
+          "computedDate": "2033-06-25",
+          "rule": "impeded-by-celebration"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2034,
+      "anchors": {
+        "year": 2034,
+        "epiphany": "2034-01-06",
+        "baptismOfLord": "2034-01-08",
+        "ashWednesday": "2034-02-22",
+        "firstLentSunday": "2034-02-26",
+        "palmSunday": "2034-04-02",
+        "holyThursday": "2034-04-06",
+        "goodFriday": "2034-04-07",
+        "holySaturday": "2034-04-08",
+        "easterSunday": "2034-04-09",
+        "divineMercySunday": "2034-04-16",
+        "ascension": "2034-05-18",
+        "pentecost": "2034-05-28",
+        "maryMotherChurch": "2034-05-29",
+        "christTheHighPriest": "2034-06-01",
+        "trinity": "2034-06-04",
+        "corpusChristi": "2034-06-08",
+        "sacredHeart": "2034-06-16",
+        "immaculateHeart": "2034-06-17",
+        "christKing": "2034-11-26",
+        "firstAdventSunday": "2034-12-03",
+        "christmas": "2034-12-25",
+        "holyFamily": "2034-12-31"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2034-03-19",
+          "to": "2034-03-20",
+          "computedDate": "2034-03-20",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "year": 2035,
+      "anchors": {
+        "year": 2035,
+        "epiphany": "2035-01-06",
+        "baptismOfLord": "2035-01-07",
+        "ashWednesday": "2035-02-07",
+        "firstLentSunday": "2035-02-11",
+        "palmSunday": "2035-03-18",
+        "holyThursday": "2035-03-22",
+        "goodFriday": "2035-03-23",
+        "holySaturday": "2035-03-24",
+        "easterSunday": "2035-03-25",
+        "divineMercySunday": "2035-04-01",
+        "ascension": "2035-05-03",
+        "pentecost": "2035-05-13",
+        "maryMotherChurch": "2035-05-14",
+        "christTheHighPriest": "2035-05-17",
+        "trinity": "2035-05-20",
+        "corpusChristi": "2035-05-24",
+        "sacredHeart": "2035-06-01",
+        "immaculateHeart": "2035-06-02",
+        "christKing": "2035-11-25",
+        "firstAdventSunday": "2035-12-02",
+        "christmas": "2035-12-25",
+        "holyFamily": "2035-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2035-03-19",
+          "to": "2035-03-17",
+          "computedDate": "2035-03-17",
+          "rule": "joseph-anticipated-before-palm-sunday"
+        },
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2035-03-25",
+          "to": "2035-04-02",
+          "computedDate": "2035-04-02",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2025,
+      "anchors": {
+        "year": 2025,
+        "epiphany": "2025-01-06",
+        "baptismOfLord": "2025-01-12",
+        "ashWednesday": "2025-03-05",
+        "firstLentSunday": "2025-03-09",
+        "palmSunday": "2025-04-13",
+        "holyThursday": "2025-04-17",
+        "goodFriday": "2025-04-18",
+        "holySaturday": "2025-04-19",
+        "easterSunday": "2025-04-20",
+        "divineMercySunday": "2025-04-27",
+        "ascension": "2025-05-29",
+        "pentecost": "2025-06-08",
+        "maryMotherChurch": "2025-06-09",
+        "christTheHighPriest": "2025-06-12",
+        "trinity": "2025-06-15",
+        "corpusChristi": "2025-06-19",
+        "sacredHeart": "2025-06-27",
+        "immaculateHeart": "2025-06-28",
+        "christKing": "2025-11-23",
+        "firstAdventSunday": "2025-11-30",
+        "christmas": "2025-12-25",
+        "holyFamily": "2025-12-28"
+      },
+      "transfers": [],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2026,
+      "anchors": {
+        "year": 2026,
+        "epiphany": "2026-01-06",
+        "baptismOfLord": "2026-01-11",
+        "ashWednesday": "2026-02-18",
+        "firstLentSunday": "2026-02-22",
+        "palmSunday": "2026-03-29",
+        "holyThursday": "2026-04-02",
+        "goodFriday": "2026-04-03",
+        "holySaturday": "2026-04-04",
+        "easterSunday": "2026-04-05",
+        "divineMercySunday": "2026-04-12",
+        "ascension": "2026-05-14",
+        "pentecost": "2026-05-24",
+        "maryMotherChurch": "2026-05-25",
+        "christTheHighPriest": "2026-05-28",
+        "trinity": "2026-05-31",
+        "corpusChristi": "2026-06-04",
+        "sacredHeart": "2026-06-12",
+        "immaculateHeart": "2026-06-13",
+        "christKing": "2026-11-22",
+        "firstAdventSunday": "2026-11-29",
+        "christmas": "2026-12-25",
+        "holyFamily": "2026-12-27"
+      },
+      "transfers": [],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2027,
+      "anchors": {
+        "year": 2027,
+        "epiphany": "2027-01-06",
+        "baptismOfLord": "2027-01-10",
+        "ashWednesday": "2027-02-10",
+        "firstLentSunday": "2027-02-14",
+        "palmSunday": "2027-03-21",
+        "holyThursday": "2027-03-25",
+        "goodFriday": "2027-03-26",
+        "holySaturday": "2027-03-27",
+        "easterSunday": "2027-03-28",
+        "divineMercySunday": "2027-04-04",
+        "ascension": "2027-05-06",
+        "pentecost": "2027-05-16",
+        "maryMotherChurch": "2027-05-17",
+        "christTheHighPriest": "2027-05-20",
+        "trinity": "2027-05-23",
+        "corpusChristi": "2027-05-27",
+        "sacredHeart": "2027-06-04",
+        "immaculateHeart": "2027-06-05",
+        "christKing": "2027-11-21",
+        "firstAdventSunday": "2027-11-28",
+        "christmas": "2027-12-25",
+        "holyFamily": "2027-12-26"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2027-03-25",
+          "to": "2027-04-05",
+          "computedDate": "2027-04-05",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2028,
+      "anchors": {
+        "year": 2028,
+        "epiphany": "2028-01-06",
+        "baptismOfLord": "2028-01-09",
+        "ashWednesday": "2028-03-01",
+        "firstLentSunday": "2028-03-05",
+        "palmSunday": "2028-04-09",
+        "holyThursday": "2028-04-13",
+        "goodFriday": "2028-04-14",
+        "holySaturday": "2028-04-15",
+        "easterSunday": "2028-04-16",
+        "divineMercySunday": "2028-04-23",
+        "ascension": "2028-05-25",
+        "pentecost": "2028-06-04",
+        "maryMotherChurch": "2028-06-05",
+        "christTheHighPriest": "2028-06-08",
+        "trinity": "2028-06-11",
+        "corpusChristi": "2028-06-15",
+        "sacredHeart": "2028-06-23",
+        "immaculateHeart": "2028-06-24",
+        "christKing": "2028-11-26",
+        "firstAdventSunday": "2028-12-03",
+        "christmas": "2028-12-25",
+        "holyFamily": "2028-12-31"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2028-03-19",
+          "to": "2028-03-20",
+          "computedDate": "2028-03-20",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2029,
+      "anchors": {
+        "year": 2029,
+        "epiphany": "2029-01-06",
+        "baptismOfLord": "2029-01-07",
+        "ashWednesday": "2029-02-14",
+        "firstLentSunday": "2029-02-18",
+        "palmSunday": "2029-03-25",
+        "holyThursday": "2029-03-29",
+        "goodFriday": "2029-03-30",
+        "holySaturday": "2029-03-31",
+        "easterSunday": "2029-04-01",
+        "divineMercySunday": "2029-04-08",
+        "ascension": "2029-05-10",
+        "pentecost": "2029-05-20",
+        "maryMotherChurch": "2029-05-21",
+        "christTheHighPriest": "2029-05-24",
+        "trinity": "2029-05-27",
+        "corpusChristi": "2029-05-31",
+        "sacredHeart": "2029-06-08",
+        "immaculateHeart": "2029-06-09",
+        "christKing": "2029-11-25",
+        "firstAdventSunday": "2029-12-02",
+        "christmas": "2029-12-25",
+        "holyFamily": "2029-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2029-03-25",
+          "to": "2029-04-09",
+          "computedDate": "2029-04-09",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2030,
+      "anchors": {
+        "year": 2030,
+        "epiphany": "2030-01-06",
+        "baptismOfLord": "2030-01-13",
+        "ashWednesday": "2030-03-06",
+        "firstLentSunday": "2030-03-10",
+        "palmSunday": "2030-04-14",
+        "holyThursday": "2030-04-18",
+        "goodFriday": "2030-04-19",
+        "holySaturday": "2030-04-20",
+        "easterSunday": "2030-04-21",
+        "divineMercySunday": "2030-04-28",
+        "ascension": "2030-05-30",
+        "pentecost": "2030-06-09",
+        "maryMotherChurch": "2030-06-10",
+        "christTheHighPriest": "2030-06-13",
+        "trinity": "2030-06-16",
+        "corpusChristi": "2030-06-20",
+        "sacredHeart": "2030-06-28",
+        "immaculateHeart": "2030-06-29",
+        "christKing": "2030-11-24",
+        "firstAdventSunday": "2030-12-01",
+        "christmas": "2030-12-25",
+        "holyFamily": "2030-12-29"
+      },
+      "transfers": [
+        {
+          "celebrationId": "immaculate-conception",
+          "from": "2030-12-08",
+          "to": "2030-12-09",
+          "computedDate": "2030-12-09",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2031,
+      "anchors": {
+        "year": 2031,
+        "epiphany": "2031-01-06",
+        "baptismOfLord": "2031-01-12",
+        "ashWednesday": "2031-02-26",
+        "firstLentSunday": "2031-03-02",
+        "palmSunday": "2031-04-06",
+        "holyThursday": "2031-04-10",
+        "goodFriday": "2031-04-11",
+        "holySaturday": "2031-04-12",
+        "easterSunday": "2031-04-13",
+        "divineMercySunday": "2031-04-20",
+        "ascension": "2031-05-22",
+        "pentecost": "2031-06-01",
+        "maryMotherChurch": "2031-06-02",
+        "christTheHighPriest": "2031-06-05",
+        "trinity": "2031-06-08",
+        "corpusChristi": "2031-06-12",
+        "sacredHeart": "2031-06-20",
+        "immaculateHeart": "2031-06-21",
+        "christKing": "2031-11-23",
+        "firstAdventSunday": "2031-11-30",
+        "christmas": "2031-12-25",
+        "holyFamily": "2031-12-28"
+      },
+      "transfers": [],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2032,
+      "anchors": {
+        "year": 2032,
+        "epiphany": "2032-01-06",
+        "baptismOfLord": "2032-01-11",
+        "ashWednesday": "2032-02-11",
+        "firstLentSunday": "2032-02-15",
+        "palmSunday": "2032-03-21",
+        "holyThursday": "2032-03-25",
+        "goodFriday": "2032-03-26",
+        "holySaturday": "2032-03-27",
+        "easterSunday": "2032-03-28",
+        "divineMercySunday": "2032-04-04",
+        "ascension": "2032-05-06",
+        "pentecost": "2032-05-16",
+        "maryMotherChurch": "2032-05-17",
+        "christTheHighPriest": "2032-05-20",
+        "trinity": "2032-05-23",
+        "corpusChristi": "2032-05-27",
+        "sacredHeart": "2032-06-04",
+        "immaculateHeart": "2032-06-05",
+        "christKing": "2032-11-21",
+        "firstAdventSunday": "2032-11-28",
+        "christmas": "2032-12-25",
+        "holyFamily": "2032-12-26"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2032-03-25",
+          "to": "2032-04-05",
+          "computedDate": "2032-04-05",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2033,
+      "anchors": {
+        "year": 2033,
+        "epiphany": "2033-01-06",
+        "baptismOfLord": "2033-01-09",
+        "ashWednesday": "2033-03-02",
+        "firstLentSunday": "2033-03-06",
+        "palmSunday": "2033-04-10",
+        "holyThursday": "2033-04-14",
+        "goodFriday": "2033-04-15",
+        "holySaturday": "2033-04-16",
+        "easterSunday": "2033-04-17",
+        "divineMercySunday": "2033-04-24",
+        "ascension": "2033-05-26",
+        "pentecost": "2033-06-05",
+        "maryMotherChurch": "2033-06-06",
+        "christTheHighPriest": "2033-06-09",
+        "trinity": "2033-06-12",
+        "corpusChristi": "2033-06-16",
+        "sacredHeart": "2033-06-24",
+        "immaculateHeart": "2033-06-25",
+        "christKing": "2033-11-20",
+        "firstAdventSunday": "2033-11-27",
+        "christmas": "2033-12-25",
+        "holyFamily": "2033-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "nativity-john-baptist",
+          "from": "2033-06-24",
+          "to": "2033-06-25",
+          "computedDate": "2033-06-25",
+          "rule": "impeded-by-celebration"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2034,
+      "anchors": {
+        "year": 2034,
+        "epiphany": "2034-01-06",
+        "baptismOfLord": "2034-01-08",
+        "ashWednesday": "2034-02-22",
+        "firstLentSunday": "2034-02-26",
+        "palmSunday": "2034-04-02",
+        "holyThursday": "2034-04-06",
+        "goodFriday": "2034-04-07",
+        "holySaturday": "2034-04-08",
+        "easterSunday": "2034-04-09",
+        "divineMercySunday": "2034-04-16",
+        "ascension": "2034-05-18",
+        "pentecost": "2034-05-28",
+        "maryMotherChurch": "2034-05-29",
+        "christTheHighPriest": "2034-06-01",
+        "trinity": "2034-06-04",
+        "corpusChristi": "2034-06-08",
+        "sacredHeart": "2034-06-16",
+        "immaculateHeart": "2034-06-17",
+        "christKing": "2034-11-26",
+        "firstAdventSunday": "2034-12-03",
+        "christmas": "2034-12-25",
+        "holyFamily": "2034-12-31"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2034-03-19",
+          "to": "2034-03-20",
+          "computedDate": "2034-03-20",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "vitebsk",
+      "year": 2035,
+      "anchors": {
+        "year": 2035,
+        "epiphany": "2035-01-06",
+        "baptismOfLord": "2035-01-07",
+        "ashWednesday": "2035-02-07",
+        "firstLentSunday": "2035-02-11",
+        "palmSunday": "2035-03-18",
+        "holyThursday": "2035-03-22",
+        "goodFriday": "2035-03-23",
+        "holySaturday": "2035-03-24",
+        "easterSunday": "2035-03-25",
+        "divineMercySunday": "2035-04-01",
+        "ascension": "2035-05-03",
+        "pentecost": "2035-05-13",
+        "maryMotherChurch": "2035-05-14",
+        "christTheHighPriest": "2035-05-17",
+        "trinity": "2035-05-20",
+        "corpusChristi": "2035-05-24",
+        "sacredHeart": "2035-06-01",
+        "immaculateHeart": "2035-06-02",
+        "christKing": "2035-11-25",
+        "firstAdventSunday": "2035-12-02",
+        "christmas": "2035-12-25",
+        "holyFamily": "2035-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2035-03-19",
+          "to": "2035-03-17",
+          "computedDate": "2035-03-17",
+          "rule": "joseph-anticipated-before-palm-sunday"
+        },
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2035-03-25",
+          "to": "2035-04-02",
+          "computedDate": "2035-04-02",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2025,
+      "anchors": {
+        "year": 2025,
+        "epiphany": "2025-01-06",
+        "baptismOfLord": "2025-01-12",
+        "ashWednesday": "2025-03-05",
+        "firstLentSunday": "2025-03-09",
+        "palmSunday": "2025-04-13",
+        "holyThursday": "2025-04-17",
+        "goodFriday": "2025-04-18",
+        "holySaturday": "2025-04-19",
+        "easterSunday": "2025-04-20",
+        "divineMercySunday": "2025-04-27",
+        "ascension": "2025-05-29",
+        "pentecost": "2025-06-08",
+        "maryMotherChurch": "2025-06-09",
+        "christTheHighPriest": "2025-06-12",
+        "trinity": "2025-06-15",
+        "corpusChristi": "2025-06-19",
+        "sacredHeart": "2025-06-27",
+        "immaculateHeart": "2025-06-28",
+        "christKing": "2025-11-23",
+        "firstAdventSunday": "2025-11-30",
+        "christmas": "2025-12-25",
+        "holyFamily": "2025-12-28"
+      },
+      "transfers": [],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2026,
+      "anchors": {
+        "year": 2026,
+        "epiphany": "2026-01-06",
+        "baptismOfLord": "2026-01-11",
+        "ashWednesday": "2026-02-18",
+        "firstLentSunday": "2026-02-22",
+        "palmSunday": "2026-03-29",
+        "holyThursday": "2026-04-02",
+        "goodFriday": "2026-04-03",
+        "holySaturday": "2026-04-04",
+        "easterSunday": "2026-04-05",
+        "divineMercySunday": "2026-04-12",
+        "ascension": "2026-05-14",
+        "pentecost": "2026-05-24",
+        "maryMotherChurch": "2026-05-25",
+        "christTheHighPriest": "2026-05-28",
+        "trinity": "2026-05-31",
+        "corpusChristi": "2026-06-04",
+        "sacredHeart": "2026-06-12",
+        "immaculateHeart": "2026-06-13",
+        "christKing": "2026-11-22",
+        "firstAdventSunday": "2026-11-29",
+        "christmas": "2026-12-25",
+        "holyFamily": "2026-12-27"
+      },
+      "transfers": [],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2027,
+      "anchors": {
+        "year": 2027,
+        "epiphany": "2027-01-06",
+        "baptismOfLord": "2027-01-10",
+        "ashWednesday": "2027-02-10",
+        "firstLentSunday": "2027-02-14",
+        "palmSunday": "2027-03-21",
+        "holyThursday": "2027-03-25",
+        "goodFriday": "2027-03-26",
+        "holySaturday": "2027-03-27",
+        "easterSunday": "2027-03-28",
+        "divineMercySunday": "2027-04-04",
+        "ascension": "2027-05-06",
+        "pentecost": "2027-05-16",
+        "maryMotherChurch": "2027-05-17",
+        "christTheHighPriest": "2027-05-20",
+        "trinity": "2027-05-23",
+        "corpusChristi": "2027-05-27",
+        "sacredHeart": "2027-06-04",
+        "immaculateHeart": "2027-06-05",
+        "christKing": "2027-11-21",
+        "firstAdventSunday": "2027-11-28",
+        "christmas": "2027-12-25",
+        "holyFamily": "2027-12-26"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2027-03-25",
+          "to": "2027-04-05",
+          "computedDate": "2027-04-05",
+          "rule": "annunciation-after-easter-octave"
+        },
+        {
+          "celebrationId": "sv-andrei-bobola",
+          "from": "2027-05-16",
+          "to": "2027-05-18",
+          "computedDate": "2027-05-18",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2028,
+      "anchors": {
+        "year": 2028,
+        "epiphany": "2028-01-06",
+        "baptismOfLord": "2028-01-09",
+        "ashWednesday": "2028-03-01",
+        "firstLentSunday": "2028-03-05",
+        "palmSunday": "2028-04-09",
+        "holyThursday": "2028-04-13",
+        "goodFriday": "2028-04-14",
+        "holySaturday": "2028-04-15",
+        "easterSunday": "2028-04-16",
+        "divineMercySunday": "2028-04-23",
+        "ascension": "2028-05-25",
+        "pentecost": "2028-06-04",
+        "maryMotherChurch": "2028-06-05",
+        "christTheHighPriest": "2028-06-08",
+        "trinity": "2028-06-11",
+        "corpusChristi": "2028-06-15",
+        "sacredHeart": "2028-06-23",
+        "immaculateHeart": "2028-06-24",
+        "christKing": "2028-11-26",
+        "firstAdventSunday": "2028-12-03",
+        "christmas": "2028-12-25",
+        "holyFamily": "2028-12-31"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2028-03-19",
+          "to": "2028-03-20",
+          "computedDate": "2028-03-20",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2029,
+      "anchors": {
+        "year": 2029,
+        "epiphany": "2029-01-06",
+        "baptismOfLord": "2029-01-07",
+        "ashWednesday": "2029-02-14",
+        "firstLentSunday": "2029-02-18",
+        "palmSunday": "2029-03-25",
+        "holyThursday": "2029-03-29",
+        "goodFriday": "2029-03-30",
+        "holySaturday": "2029-03-31",
+        "easterSunday": "2029-04-01",
+        "divineMercySunday": "2029-04-08",
+        "ascension": "2029-05-10",
+        "pentecost": "2029-05-20",
+        "maryMotherChurch": "2029-05-21",
+        "christTheHighPriest": "2029-05-24",
+        "trinity": "2029-05-27",
+        "corpusChristi": "2029-05-31",
+        "sacredHeart": "2029-06-08",
+        "immaculateHeart": "2029-06-09",
+        "christKing": "2029-11-25",
+        "firstAdventSunday": "2029-12-02",
+        "christmas": "2029-12-25",
+        "holyFamily": "2029-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2029-03-25",
+          "to": "2029-04-09",
+          "computedDate": "2029-04-09",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2030,
+      "anchors": {
+        "year": 2030,
+        "epiphany": "2030-01-06",
+        "baptismOfLord": "2030-01-13",
+        "ashWednesday": "2030-03-06",
+        "firstLentSunday": "2030-03-10",
+        "palmSunday": "2030-04-14",
+        "holyThursday": "2030-04-18",
+        "goodFriday": "2030-04-19",
+        "holySaturday": "2030-04-20",
+        "easterSunday": "2030-04-21",
+        "divineMercySunday": "2030-04-28",
+        "ascension": "2030-05-30",
+        "pentecost": "2030-06-09",
+        "maryMotherChurch": "2030-06-10",
+        "christTheHighPriest": "2030-06-13",
+        "trinity": "2030-06-16",
+        "corpusChristi": "2030-06-20",
+        "sacredHeart": "2030-06-28",
+        "immaculateHeart": "2030-06-29",
+        "christKing": "2030-11-24",
+        "firstAdventSunday": "2030-12-01",
+        "christmas": "2030-12-25",
+        "holyFamily": "2030-12-29"
+      },
+      "transfers": [
+        {
+          "celebrationId": "immaculate-conception",
+          "from": "2030-12-08",
+          "to": "2030-12-09",
+          "computedDate": "2030-12-09",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2031,
+      "anchors": {
+        "year": 2031,
+        "epiphany": "2031-01-06",
+        "baptismOfLord": "2031-01-12",
+        "ashWednesday": "2031-02-26",
+        "firstLentSunday": "2031-03-02",
+        "palmSunday": "2031-04-06",
+        "holyThursday": "2031-04-10",
+        "goodFriday": "2031-04-11",
+        "holySaturday": "2031-04-12",
+        "easterSunday": "2031-04-13",
+        "divineMercySunday": "2031-04-20",
+        "ascension": "2031-05-22",
+        "pentecost": "2031-06-01",
+        "maryMotherChurch": "2031-06-02",
+        "christTheHighPriest": "2031-06-05",
+        "trinity": "2031-06-08",
+        "corpusChristi": "2031-06-12",
+        "sacredHeart": "2031-06-20",
+        "immaculateHeart": "2031-06-21",
+        "christKing": "2031-11-23",
+        "firstAdventSunday": "2031-11-30",
+        "christmas": "2031-12-25",
+        "holyFamily": "2031-12-28"
+      },
+      "transfers": [],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2032,
+      "anchors": {
+        "year": 2032,
+        "epiphany": "2032-01-06",
+        "baptismOfLord": "2032-01-11",
+        "ashWednesday": "2032-02-11",
+        "firstLentSunday": "2032-02-15",
+        "palmSunday": "2032-03-21",
+        "holyThursday": "2032-03-25",
+        "goodFriday": "2032-03-26",
+        "holySaturday": "2032-03-27",
+        "easterSunday": "2032-03-28",
+        "divineMercySunday": "2032-04-04",
+        "ascension": "2032-05-06",
+        "pentecost": "2032-05-16",
+        "maryMotherChurch": "2032-05-17",
+        "christTheHighPriest": "2032-05-20",
+        "trinity": "2032-05-23",
+        "corpusChristi": "2032-05-27",
+        "sacredHeart": "2032-06-04",
+        "immaculateHeart": "2032-06-05",
+        "christKing": "2032-11-21",
+        "firstAdventSunday": "2032-11-28",
+        "christmas": "2032-12-25",
+        "holyFamily": "2032-12-26"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2032-03-25",
+          "to": "2032-04-05",
+          "computedDate": "2032-04-05",
+          "rule": "annunciation-after-easter-octave"
+        },
+        {
+          "celebrationId": "sv-andrei-bobola",
+          "from": "2032-05-16",
+          "to": "2032-05-18",
+          "computedDate": "2032-05-18",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2033,
+      "anchors": {
+        "year": 2033,
+        "epiphany": "2033-01-06",
+        "baptismOfLord": "2033-01-09",
+        "ashWednesday": "2033-03-02",
+        "firstLentSunday": "2033-03-06",
+        "palmSunday": "2033-04-10",
+        "holyThursday": "2033-04-14",
+        "goodFriday": "2033-04-15",
+        "holySaturday": "2033-04-16",
+        "easterSunday": "2033-04-17",
+        "divineMercySunday": "2033-04-24",
+        "ascension": "2033-05-26",
+        "pentecost": "2033-06-05",
+        "maryMotherChurch": "2033-06-06",
+        "christTheHighPriest": "2033-06-09",
+        "trinity": "2033-06-12",
+        "corpusChristi": "2033-06-16",
+        "sacredHeart": "2033-06-24",
+        "immaculateHeart": "2033-06-25",
+        "christKing": "2033-11-20",
+        "firstAdventSunday": "2033-11-27",
+        "christmas": "2033-12-25",
+        "holyFamily": "2033-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "nativity-john-baptist",
+          "from": "2033-06-24",
+          "to": "2033-06-25",
+          "computedDate": "2033-06-25",
+          "rule": "impeded-by-celebration"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2034,
+      "anchors": {
+        "year": 2034,
+        "epiphany": "2034-01-06",
+        "baptismOfLord": "2034-01-08",
+        "ashWednesday": "2034-02-22",
+        "firstLentSunday": "2034-02-26",
+        "palmSunday": "2034-04-02",
+        "holyThursday": "2034-04-06",
+        "goodFriday": "2034-04-07",
+        "holySaturday": "2034-04-08",
+        "easterSunday": "2034-04-09",
+        "divineMercySunday": "2034-04-16",
+        "ascension": "2034-05-18",
+        "pentecost": "2034-05-28",
+        "maryMotherChurch": "2034-05-29",
+        "christTheHighPriest": "2034-06-01",
+        "trinity": "2034-06-04",
+        "corpusChristi": "2034-06-08",
+        "sacredHeart": "2034-06-16",
+        "immaculateHeart": "2034-06-17",
+        "christKing": "2034-11-26",
+        "firstAdventSunday": "2034-12-03",
+        "christmas": "2034-12-25",
+        "holyFamily": "2034-12-31"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2034-03-19",
+          "to": "2034-03-20",
+          "computedDate": "2034-03-20",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "pinsk",
+      "year": 2035,
+      "anchors": {
+        "year": 2035,
+        "epiphany": "2035-01-06",
+        "baptismOfLord": "2035-01-07",
+        "ashWednesday": "2035-02-07",
+        "firstLentSunday": "2035-02-11",
+        "palmSunday": "2035-03-18",
+        "holyThursday": "2035-03-22",
+        "goodFriday": "2035-03-23",
+        "holySaturday": "2035-03-24",
+        "easterSunday": "2035-03-25",
+        "divineMercySunday": "2035-04-01",
+        "ascension": "2035-05-03",
+        "pentecost": "2035-05-13",
+        "maryMotherChurch": "2035-05-14",
+        "christTheHighPriest": "2035-05-17",
+        "trinity": "2035-05-20",
+        "corpusChristi": "2035-05-24",
+        "sacredHeart": "2035-06-01",
+        "immaculateHeart": "2035-06-02",
+        "christKing": "2035-11-25",
+        "firstAdventSunday": "2035-12-02",
+        "christmas": "2035-12-25",
+        "holyFamily": "2035-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2035-03-19",
+          "to": "2035-03-17",
+          "computedDate": "2035-03-17",
+          "rule": "joseph-anticipated-before-palm-sunday"
+        },
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2035-03-25",
+          "to": "2035-04-02",
+          "computedDate": "2035-04-02",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "grodno",
+      "year": 2025,
+      "anchors": {
+        "year": 2025,
+        "epiphany": "2025-01-06",
+        "baptismOfLord": "2025-01-12",
+        "ashWednesday": "2025-03-05",
+        "firstLentSunday": "2025-03-09",
+        "palmSunday": "2025-04-13",
+        "holyThursday": "2025-04-17",
+        "goodFriday": "2025-04-18",
+        "holySaturday": "2025-04-19",
+        "easterSunday": "2025-04-20",
+        "divineMercySunday": "2025-04-27",
+        "ascension": "2025-05-29",
+        "pentecost": "2025-06-08",
+        "maryMotherChurch": "2025-06-09",
+        "christTheHighPriest": "2025-06-12",
+        "trinity": "2025-06-15",
+        "corpusChristi": "2025-06-19",
+        "sacredHeart": "2025-06-27",
+        "immaculateHeart": "2025-06-28",
+        "christKing": "2025-11-23",
+        "firstAdventSunday": "2025-11-30",
+        "christmas": "2025-12-25",
+        "holyFamily": "2025-12-28"
+      },
+      "transfers": [],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "grodno",
+      "year": 2026,
+      "anchors": {
+        "year": 2026,
+        "epiphany": "2026-01-06",
+        "baptismOfLord": "2026-01-11",
+        "ashWednesday": "2026-02-18",
+        "firstLentSunday": "2026-02-22",
+        "palmSunday": "2026-03-29",
+        "holyThursday": "2026-04-02",
+        "goodFriday": "2026-04-03",
+        "holySaturday": "2026-04-04",
+        "easterSunday": "2026-04-05",
+        "divineMercySunday": "2026-04-12",
+        "ascension": "2026-05-14",
+        "pentecost": "2026-05-24",
+        "maryMotherChurch": "2026-05-25",
+        "christTheHighPriest": "2026-05-28",
+        "trinity": "2026-05-31",
+        "corpusChristi": "2026-06-04",
+        "sacredHeart": "2026-06-12",
+        "immaculateHeart": "2026-06-13",
+        "christKing": "2026-11-22",
+        "firstAdventSunday": "2026-11-29",
+        "christmas": "2026-12-25",
+        "holyFamily": "2026-12-27"
+      },
+      "transfers": [],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "grodno",
+      "year": 2027,
+      "anchors": {
+        "year": 2027,
+        "epiphany": "2027-01-06",
+        "baptismOfLord": "2027-01-10",
+        "ashWednesday": "2027-02-10",
+        "firstLentSunday": "2027-02-14",
+        "palmSunday": "2027-03-21",
+        "holyThursday": "2027-03-25",
+        "goodFriday": "2027-03-26",
+        "holySaturday": "2027-03-27",
+        "easterSunday": "2027-03-28",
+        "divineMercySunday": "2027-04-04",
+        "ascension": "2027-05-06",
+        "pentecost": "2027-05-16",
+        "maryMotherChurch": "2027-05-17",
+        "christTheHighPriest": "2027-05-20",
+        "trinity": "2027-05-23",
+        "corpusChristi": "2027-05-27",
+        "sacredHeart": "2027-06-04",
+        "immaculateHeart": "2027-06-05",
+        "christKing": "2027-11-21",
+        "firstAdventSunday": "2027-11-28",
+        "christmas": "2027-12-25",
+        "holyFamily": "2027-12-26"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2027-03-25",
+          "to": "2027-04-05",
+          "computedDate": "2027-04-05",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [
+        {
+          "override": {
+            "id": "2027-grodno-sv-peter-damian",
+            "year": 2027,
+            "scope": "diocese",
+            "dioceseId": "grodno",
+            "targetCelebrationId": "sv-peter-damian",
+            "action": "move",
+            "originalDate": "2027-02-21",
+            "effectiveDate": "2027-02-20",
+            "from": "2027-02-21",
+            "to": "2027-02-20",
+            "reason": "Optional memorial anticipated from the II Sunday of Lent to Saturday",
+            "source": "manual",
+            "status": "confirmed",
+            "evidence": [
+              "grodno:2027-02-20:c0"
+            ],
+            "enabled": true
+          },
+          "status": "applied"
+        },
+        {
+          "override": {
+            "id": "2027-grodno-holy-name-mary",
+            "year": 2027,
+            "scope": "diocese",
+            "dioceseId": "grodno",
+            "targetCelebrationId": "holy-name-mary",
+            "action": "move",
+            "originalDate": "2027-09-12",
+            "effectiveDate": "2027-09-11",
+            "from": "2027-09-12",
+            "to": "2027-09-11",
+            "reason": "Optional memorial anticipated from Sunday to Saturday",
+            "source": "manual",
+            "status": "confirmed",
+            "evidence": [
+              "grodno:2027-09-11:c0"
+            ],
+            "enabled": true
+          },
+          "status": "applied"
+        },
+        {
+          "override": {
+            "id": "2027-grodno-grodno-cathedral-dedication",
+            "year": 2027,
+            "scope": "diocese",
+            "dioceseId": "grodno",
+            "targetCelebrationId": "grodno-cathedral-dedication",
+            "action": "move",
+            "originalDate": "2027-12-04",
+            "effectiveDate": "2027-12-06",
+            "from": "2027-12-04",
+            "to": "2027-12-06",
+            "reason": "Dedication anniversary of the cathedral kept on Monday 6 December",
+            "source": "manual",
+            "status": "confirmed",
+            "evidence": [
+              "grodno:2027-12-06:c0"
+            ],
+            "enabled": true
+          },
+          "status": "applied"
+        }
+      ],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "grodno",
+      "year": 2028,
+      "anchors": {
+        "year": 2028,
+        "epiphany": "2028-01-06",
+        "baptismOfLord": "2028-01-09",
+        "ashWednesday": "2028-03-01",
+        "firstLentSunday": "2028-03-05",
+        "palmSunday": "2028-04-09",
+        "holyThursday": "2028-04-13",
+        "goodFriday": "2028-04-14",
+        "holySaturday": "2028-04-15",
+        "easterSunday": "2028-04-16",
+        "divineMercySunday": "2028-04-23",
+        "ascension": "2028-05-25",
+        "pentecost": "2028-06-04",
+        "maryMotherChurch": "2028-06-05",
+        "christTheHighPriest": "2028-06-08",
+        "trinity": "2028-06-11",
+        "corpusChristi": "2028-06-15",
+        "sacredHeart": "2028-06-23",
+        "immaculateHeart": "2028-06-24",
+        "christKing": "2028-11-26",
+        "firstAdventSunday": "2028-12-03",
+        "christmas": "2028-12-25",
+        "holyFamily": "2028-12-31"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2028-03-19",
+          "to": "2028-03-20",
+          "computedDate": "2028-03-20",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "grodno",
+      "year": 2029,
+      "anchors": {
+        "year": 2029,
+        "epiphany": "2029-01-06",
+        "baptismOfLord": "2029-01-07",
+        "ashWednesday": "2029-02-14",
+        "firstLentSunday": "2029-02-18",
+        "palmSunday": "2029-03-25",
+        "holyThursday": "2029-03-29",
+        "goodFriday": "2029-03-30",
+        "holySaturday": "2029-03-31",
+        "easterSunday": "2029-04-01",
+        "divineMercySunday": "2029-04-08",
+        "ascension": "2029-05-10",
+        "pentecost": "2029-05-20",
+        "maryMotherChurch": "2029-05-21",
+        "christTheHighPriest": "2029-05-24",
+        "trinity": "2029-05-27",
+        "corpusChristi": "2029-05-31",
+        "sacredHeart": "2029-06-08",
+        "immaculateHeart": "2029-06-09",
+        "christKing": "2029-11-25",
+        "firstAdventSunday": "2029-12-02",
+        "christmas": "2029-12-25",
+        "holyFamily": "2029-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2029-03-25",
+          "to": "2029-04-09",
+          "computedDate": "2029-04-09",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "grodno",
+      "year": 2030,
+      "anchors": {
+        "year": 2030,
+        "epiphany": "2030-01-06",
+        "baptismOfLord": "2030-01-13",
+        "ashWednesday": "2030-03-06",
+        "firstLentSunday": "2030-03-10",
+        "palmSunday": "2030-04-14",
+        "holyThursday": "2030-04-18",
+        "goodFriday": "2030-04-19",
+        "holySaturday": "2030-04-20",
+        "easterSunday": "2030-04-21",
+        "divineMercySunday": "2030-04-28",
+        "ascension": "2030-05-30",
+        "pentecost": "2030-06-09",
+        "maryMotherChurch": "2030-06-10",
+        "christTheHighPriest": "2030-06-13",
+        "trinity": "2030-06-16",
+        "corpusChristi": "2030-06-20",
+        "sacredHeart": "2030-06-28",
+        "immaculateHeart": "2030-06-29",
+        "christKing": "2030-11-24",
+        "firstAdventSunday": "2030-12-01",
+        "christmas": "2030-12-25",
+        "holyFamily": "2030-12-29"
+      },
+      "transfers": [
+        {
+          "celebrationId": "immaculate-conception",
+          "from": "2030-12-08",
+          "to": "2030-12-09",
+          "computedDate": "2030-12-09",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "grodno",
+      "year": 2031,
+      "anchors": {
+        "year": 2031,
+        "epiphany": "2031-01-06",
+        "baptismOfLord": "2031-01-12",
+        "ashWednesday": "2031-02-26",
+        "firstLentSunday": "2031-03-02",
+        "palmSunday": "2031-04-06",
+        "holyThursday": "2031-04-10",
+        "goodFriday": "2031-04-11",
+        "holySaturday": "2031-04-12",
+        "easterSunday": "2031-04-13",
+        "divineMercySunday": "2031-04-20",
+        "ascension": "2031-05-22",
+        "pentecost": "2031-06-01",
+        "maryMotherChurch": "2031-06-02",
+        "christTheHighPriest": "2031-06-05",
+        "trinity": "2031-06-08",
+        "corpusChristi": "2031-06-12",
+        "sacredHeart": "2031-06-20",
+        "immaculateHeart": "2031-06-21",
+        "christKing": "2031-11-23",
+        "firstAdventSunday": "2031-11-30",
+        "christmas": "2031-12-25",
+        "holyFamily": "2031-12-28"
+      },
+      "transfers": [],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "grodno",
+      "year": 2032,
+      "anchors": {
+        "year": 2032,
+        "epiphany": "2032-01-06",
+        "baptismOfLord": "2032-01-11",
+        "ashWednesday": "2032-02-11",
+        "firstLentSunday": "2032-02-15",
+        "palmSunday": "2032-03-21",
+        "holyThursday": "2032-03-25",
+        "goodFriday": "2032-03-26",
+        "holySaturday": "2032-03-27",
+        "easterSunday": "2032-03-28",
+        "divineMercySunday": "2032-04-04",
+        "ascension": "2032-05-06",
+        "pentecost": "2032-05-16",
+        "maryMotherChurch": "2032-05-17",
+        "christTheHighPriest": "2032-05-20",
+        "trinity": "2032-05-23",
+        "corpusChristi": "2032-05-27",
+        "sacredHeart": "2032-06-04",
+        "immaculateHeart": "2032-06-05",
+        "christKing": "2032-11-21",
+        "firstAdventSunday": "2032-11-28",
+        "christmas": "2032-12-25",
+        "holyFamily": "2032-12-26"
+      },
+      "transfers": [
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2032-03-25",
+          "to": "2032-04-05",
+          "computedDate": "2032-04-05",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "grodno",
+      "year": 2033,
+      "anchors": {
+        "year": 2033,
+        "epiphany": "2033-01-06",
+        "baptismOfLord": "2033-01-09",
+        "ashWednesday": "2033-03-02",
+        "firstLentSunday": "2033-03-06",
+        "palmSunday": "2033-04-10",
+        "holyThursday": "2033-04-14",
+        "goodFriday": "2033-04-15",
+        "holySaturday": "2033-04-16",
+        "easterSunday": "2033-04-17",
+        "divineMercySunday": "2033-04-24",
+        "ascension": "2033-05-26",
+        "pentecost": "2033-06-05",
+        "maryMotherChurch": "2033-06-06",
+        "christTheHighPriest": "2033-06-09",
+        "trinity": "2033-06-12",
+        "corpusChristi": "2033-06-16",
+        "sacredHeart": "2033-06-24",
+        "immaculateHeart": "2033-06-25",
+        "christKing": "2033-11-20",
+        "firstAdventSunday": "2033-11-27",
+        "christmas": "2033-12-25",
+        "holyFamily": "2033-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "nativity-john-baptist",
+          "from": "2033-06-24",
+          "to": "2033-06-25",
+          "computedDate": "2033-06-25",
+          "rule": "impeded-by-celebration"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "grodno",
+      "year": 2034,
+      "anchors": {
+        "year": 2034,
+        "epiphany": "2034-01-06",
+        "baptismOfLord": "2034-01-08",
+        "ashWednesday": "2034-02-22",
+        "firstLentSunday": "2034-02-26",
+        "palmSunday": "2034-04-02",
+        "holyThursday": "2034-04-06",
+        "goodFriday": "2034-04-07",
+        "holySaturday": "2034-04-08",
+        "easterSunday": "2034-04-09",
+        "divineMercySunday": "2034-04-16",
+        "ascension": "2034-05-18",
+        "pentecost": "2034-05-28",
+        "maryMotherChurch": "2034-05-29",
+        "christTheHighPriest": "2034-06-01",
+        "trinity": "2034-06-04",
+        "corpusChristi": "2034-06-08",
+        "sacredHeart": "2034-06-16",
+        "immaculateHeart": "2034-06-17",
+        "christKing": "2034-11-26",
+        "firstAdventSunday": "2034-12-03",
+        "christmas": "2034-12-25",
+        "holyFamily": "2034-12-31"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2034-03-19",
+          "to": "2034-03-20",
+          "computedDate": "2034-03-20",
+          "rule": "impeded-by-day"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    },
+    {
+      "diocese": "grodno",
+      "year": 2035,
+      "anchors": {
+        "year": 2035,
+        "epiphany": "2035-01-06",
+        "baptismOfLord": "2035-01-07",
+        "ashWednesday": "2035-02-07",
+        "firstLentSunday": "2035-02-11",
+        "palmSunday": "2035-03-18",
+        "holyThursday": "2035-03-22",
+        "goodFriday": "2035-03-23",
+        "holySaturday": "2035-03-24",
+        "easterSunday": "2035-03-25",
+        "divineMercySunday": "2035-04-01",
+        "ascension": "2035-05-03",
+        "pentecost": "2035-05-13",
+        "maryMotherChurch": "2035-05-14",
+        "christTheHighPriest": "2035-05-17",
+        "trinity": "2035-05-20",
+        "corpusChristi": "2035-05-24",
+        "sacredHeart": "2035-06-01",
+        "immaculateHeart": "2035-06-02",
+        "christKing": "2035-11-25",
+        "firstAdventSunday": "2035-12-02",
+        "christmas": "2035-12-25",
+        "holyFamily": "2035-12-30"
+      },
+      "transfers": [
+        {
+          "celebrationId": "sv-joseph",
+          "from": "2035-03-19",
+          "to": "2035-03-17",
+          "computedDate": "2035-03-17",
+          "rule": "joseph-anticipated-before-palm-sunday"
+        },
+        {
+          "celebrationId": "annunciation-lord",
+          "from": "2035-03-25",
+          "to": "2035-04-02",
+          "computedDate": "2035-04-02",
+          "rule": "annunciation-after-easter-octave"
+        }
+      ],
+      "appliedOverrides": [],
+      "staleTransferOverrides": []
+    }
+  ],
+  "sourceSelection": [
+    {
+      "name": "missing",
+      "actual": "bundled",
+      "expected": "bundled"
+    },
+    {
+      "name": "equal",
+      "actual": "bundled",
+      "expected": "bundled"
+    },
+    {
+      "name": "newer",
+      "actual": "firestore",
+      "expected": "firestore"
+    },
+    {
+      "name": "empty-newer",
+      "actual": "bundled",
+      "expected": "bundled"
+    }
+  ],
+  "hypothesis": "PDF permanent-data projection, same engine/rules and existing year decisions; not an approved or independent normative oracle",
+  "officeOnly": 8,
+  "projectionNormativeRuleIssues": [
+    {
+      "diocese": "minsk-mohilev",
+      "date": "2028-06-05",
+      "primary": "mary-mother-church",
+      "alternatives": [
+        "sv-boniface"
+      ]
+    },
+    {
+      "diocese": "vitebsk",
+      "date": "2028-06-05",
+      "primary": "mary-mother-church",
+      "alternatives": [
+        "sv-boniface"
+      ]
+    },
+    {
+      "diocese": "pinsk",
+      "date": "2028-06-05",
+      "primary": "mary-mother-church",
+      "alternatives": [
+        "sv-boniface"
+      ]
+    },
+    {
+      "diocese": "grodno",
+      "date": "2028-06-05",
+      "primary": "mary-mother-church",
+      "alternatives": [
+        "sv-boniface"
+      ]
+    }
+  ],
+  "totalDays": 16068,
+  "projectedDays": 16068,
+  "changedDays": 516,
+  "fixedAcceptanceCases": [
+    {
+      "diocese": "pinsk",
+      "date": "2026-12-04",
+      "beforePrimary": "temporal:advent-w1-d6",
+      "afterPrimary": "temporal:advent-w1-d6",
+      "afterAlternatives": [
+        "sv-john-damascene"
+      ],
+      "status": "PASS"
+    },
+    {
+      "diocese": "grodno",
+      "date": "2026-12-04",
+      "beforePrimary": "grodno-cathedral-dedication",
+      "afterPrimary": "grodno-cathedral-dedication",
+      "afterAlternatives": [],
+      "status": "PASS"
+    },
+    {
+      "diocese": "pinsk",
+      "date": "2026-07-02",
+      "beforePrimary": "our-lady-budslav",
+      "afterPrimary": "temporal:ordinary-w13-d5",
+      "afterAlternatives": [
+        "our-lady-budslav"
+      ],
+      "status": "PASS"
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "date": "2026-07-02",
+      "beforePrimary": "our-lady-budslav",
+      "afterPrimary": "our-lady-budslav",
+      "afterAlternatives": [],
+      "status": "PASS"
+    },
+    {
+      "diocese": "vitebsk",
+      "date": "2026-07-02",
+      "beforePrimary": "our-lady-budslav",
+      "afterPrimary": "our-lady-budslav",
+      "afterAlternatives": [],
+      "status": "PASS"
+    },
+    {
+      "diocese": "grodno",
+      "date": "2027-07-05",
+      "beforePrimary": "temporal:ordinary-w14-d2",
+      "afterPrimary": "our-lady-trakai",
+      "afterAlternatives": [],
+      "status": "PASS"
+    },
+    {
+      "diocese": "grodno",
+      "date": "2027-07-10",
+      "beforePrimary": "our-lady-trakai",
+      "afterPrimary": "temporal:ordinary-w14-d7",
+      "afterAlternatives": [
+        "saturday-blessed-virgin-mary"
+      ],
+      "status": "PASS"
+    },
+    {
+      "diocese": "pinsk",
+      "date": "2026-08-22",
+      "beforePrimary": "our-lady-lahishyn",
+      "afterPrimary": "our-lady-queen",
+      "afterAlternatives": [],
+      "status": "PASS"
+    },
+    {
+      "diocese": "pinsk",
+      "date": "2026-05-25",
+      "beforePrimary": "mary-mother-church",
+      "afterPrimary": "mary-mother-church",
+      "afterAlternatives": [],
+      "status": "PASS"
+    },
+    {
+      "diocese": "grodno",
+      "date": "2026-05-25",
+      "beforePrimary": "mary-mother-church",
+      "afterPrimary": "mary-mother-church",
+      "afterAlternatives": [],
+      "status": "PASS"
+    },
+    {
+      "diocese": "vitebsk",
+      "date": "2026-11-16",
+      "beforePrimary": "our-lady-mother-mercy",
+      "afterPrimary": "temporal:ordinary-w33-d2",
+      "afterAlternatives": [
+        "our-lady-mother-mercy",
+        "sv-margaret-scotland",
+        "sv-gertrude"
+      ],
+      "status": "PASS"
+    },
+    {
+      "diocese": "minsk-mohilev",
+      "date": "2026-10-09",
+      "beforePrimary": "temporal:ordinary-w27-d6",
+      "afterPrimary": "temporal:ordinary-w27-d6",
+      "afterAlternatives": [
+        "sv-denis-companions",
+        "sv-john-leonardi",
+        "sv-john-henry-newman"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "acceptanceRankChecks": [
+    {
+      "diocese": "pinsk",
+      "date": "2026-05-25",
+      "expectedRank": "memoria",
+      "status": "PASS"
+    },
+    {
+      "diocese": "grodno",
+      "date": "2026-05-25",
+      "expectedRank": "memoria",
+      "status": "PASS"
+    },
+    {
+      "diocese": "grodno",
+      "date": "2027-07-05",
+      "expectedRank": "memoria",
+      "status": "PASS"
+    }
+  ],
+  "braslauTwoIdentityScenario": {
+    "primary": "nativity-blessed-virgin-mary",
+    "primaryRank": "festum",
+    "alternatives": [],
+    "commemorations": [],
+    "suppressed": [
+      {
+        "id": "temporal:ordinary-w23-d3",
+        "reason": "outranked"
+      },
+      {
+        "id": "our-lady-braslau",
+        "reason": "impeded-omitted"
+      }
+    ],
+    "firstVespers": {
+      "byRight": false,
+      "celebratedOnEve": false,
+      "eveDate": "2026-09-07"
+    },
+    "evening": {
+      "vespers": {
+        "type": "of-the-day",
+        "celebrationId": "nativity-blessed-virgin-mary",
+        "date": "2026-09-08",
+        "title": "Нараджэнне Найсв. Панны Марыі"
+      },
+      "compline": "current-weekday",
+      "conflict": null,
+      "omittedFirstVespers": null
+    },
+    "period": "ordinary",
+    "phase": "after-pentecost"
+  },
+  "yearOverrideCases": [
+    {
+      "id": "2026-minsk-mohilev-sv-stanislaus-bishop-martyr",
+      "date": "2026-04-11",
+      "diocese": "minsk-mohilev",
+      "stored": {
+        "primary": "temporal:easter-w1-d7",
+        "primaryRank": "feria",
+        "alternatives": [],
+        "commemorations": [],
+        "suppressed": [],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2026-04-10"
+        },
+        "evening": {
+          "vespers": {
+            "type": "first",
+            "celebrationId": "temporal:easter-w2-d1",
+            "date": "2026-04-12",
+            "title": "II велікодная нядзеля"
+          },
+          "compline": "sunday-after-first-vespers",
+          "conflict": {
+            "today": "temporal:easter-w1-d7",
+            "tomorrow": "temporal:easter-w2-d1",
+            "winner": "tomorrow",
+            "rule": "GNLYC 61"
+          },
+          "omittedFirstVespers": null
+        },
+        "period": "easter",
+        "phase": "octave"
+      },
+      "withoutStored": {
+        "primary": "temporal:easter-w1-d7",
+        "primaryRank": "feria",
+        "alternatives": [],
+        "commemorations": [],
+        "suppressed": [
+          {
+            "id": "sv-stanislaus-bishop-martyr",
+            "reason": "impeded-omitted"
+          }
+        ],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2026-04-10"
+        },
+        "evening": {
+          "vespers": {
+            "type": "first",
+            "celebrationId": "temporal:easter-w2-d1",
+            "date": "2026-04-12",
+            "title": "II велікодная нядзеля"
+          },
+          "compline": "sunday-after-first-vespers",
+          "conflict": {
+            "today": "temporal:easter-w1-d7",
+            "tomorrow": "temporal:easter-w2-d1",
+            "winner": "tomorrow",
+            "rule": "GNLYC 61"
+          },
+          "omittedFirstVespers": null
+        },
+        "period": "easter",
+        "phase": "octave"
+      }
+    },
+    {
+      "id": "2026-minsk-mohilev-sv-stanislaus-bishop-martyr",
+      "date": "2026-04-16",
+      "diocese": "minsk-mohilev",
+      "stored": {
+        "primary": "sv-stanislaus-bishop-martyr",
+        "primaryRank": "memoria",
+        "alternatives": [],
+        "commemorations": [],
+        "suppressed": [
+          {
+            "id": "temporal:easter-w2-d5",
+            "reason": "weekday-under-memorial"
+          }
+        ],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2026-04-15"
+        },
+        "evening": {
+          "vespers": {
+            "type": "of-the-day",
+            "celebrationId": "sv-stanislaus-bishop-martyr",
+            "date": "2026-04-16",
+            "title": "Св. Станіслава, біскупа і мучаніка"
+          },
+          "compline": "current-weekday",
+          "conflict": null,
+          "omittedFirstVespers": null
+        },
+        "period": "easter",
+        "phase": "before-ascension"
+      },
+      "withoutStored": {
+        "primary": "temporal:easter-w2-d5",
+        "primaryRank": "feria",
+        "alternatives": [],
+        "commemorations": [],
+        "suppressed": [],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2026-04-15"
+        },
+        "evening": {
+          "vespers": {
+            "type": "of-the-day",
+            "celebrationId": null,
+            "date": "2026-04-16",
+            "title": "II велікодны тыдзень, чацвер"
+          },
+          "compline": "current-weekday",
+          "conflict": null,
+          "omittedFirstVespers": null
+        },
+        "period": "easter",
+        "phase": "before-ascension"
+      }
+    },
+    {
+      "id": "2027-grodno-sv-peter-damian",
+      "date": "2027-02-21",
+      "diocese": "grodno",
+      "stored": {
+        "primary": "temporal:lent-w2-d1",
+        "primaryRank": "dominica",
+        "alternatives": [],
+        "commemorations": [],
+        "suppressed": [],
+        "firstVespers": {
+          "byRight": true,
+          "celebratedOnEve": true,
+          "eveDate": "2027-02-20"
+        },
+        "evening": {
+          "vespers": {
+            "type": "second",
+            "celebrationId": null,
+            "date": "2027-02-21",
+            "title": "II нядзеля Вялікага посту"
+          },
+          "compline": "sunday-after-second-vespers",
+          "conflict": null,
+          "omittedFirstVespers": null
+        },
+        "period": "lent",
+        "phase": "lent-weeks"
+      },
+      "withoutStored": {
+        "primary": "temporal:lent-w2-d1",
+        "primaryRank": "dominica",
+        "alternatives": [],
+        "commemorations": [],
+        "suppressed": [
+          {
+            "id": "sv-peter-damian",
+            "reason": "impeded-omitted"
+          }
+        ],
+        "firstVespers": {
+          "byRight": true,
+          "celebratedOnEve": true,
+          "eveDate": "2027-02-20"
+        },
+        "evening": {
+          "vespers": {
+            "type": "second",
+            "celebrationId": null,
+            "date": "2027-02-21",
+            "title": "II нядзеля Вялікага посту"
+          },
+          "compline": "sunday-after-second-vespers",
+          "conflict": null,
+          "omittedFirstVespers": null
+        },
+        "period": "lent",
+        "phase": "lent-weeks"
+      }
+    },
+    {
+      "id": "2027-grodno-sv-peter-damian",
+      "date": "2027-02-20",
+      "diocese": "grodno",
+      "stored": {
+        "primary": "temporal:lent-w1-d7",
+        "primaryRank": "feria",
+        "alternatives": [],
+        "commemorations": [
+          "sv-peter-damian"
+        ],
+        "suppressed": [],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2027-02-19"
+        },
+        "evening": {
+          "vespers": {
+            "type": "first",
+            "celebrationId": "temporal:lent-w2-d1",
+            "date": "2027-02-21",
+            "title": "II нядзеля Вялікага посту"
+          },
+          "compline": "sunday-after-first-vespers",
+          "conflict": {
+            "today": "temporal:lent-w1-d7",
+            "tomorrow": "temporal:lent-w2-d1",
+            "winner": "tomorrow",
+            "rule": "GNLYC 61"
+          },
+          "omittedFirstVespers": null
+        },
+        "period": "lent",
+        "phase": "lent-weeks"
+      },
+      "withoutStored": {
+        "primary": "temporal:lent-w1-d7",
+        "primaryRank": "feria",
+        "alternatives": [],
+        "commemorations": [],
+        "suppressed": [],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2027-02-19"
+        },
+        "evening": {
+          "vespers": {
+            "type": "first",
+            "celebrationId": "temporal:lent-w2-d1",
+            "date": "2027-02-21",
+            "title": "II нядзеля Вялікага посту"
+          },
+          "compline": "sunday-after-first-vespers",
+          "conflict": {
+            "today": "temporal:lent-w1-d7",
+            "tomorrow": "temporal:lent-w2-d1",
+            "winner": "tomorrow",
+            "rule": "GNLYC 61"
+          },
+          "omittedFirstVespers": null
+        },
+        "period": "lent",
+        "phase": "lent-weeks"
+      }
+    },
+    {
+      "id": "2027-grodno-holy-name-mary",
+      "date": "2027-09-12",
+      "diocese": "grodno",
+      "stored": {
+        "primary": "temporal:ordinary-w24-d1",
+        "primaryRank": "dominica",
+        "alternatives": [],
+        "commemorations": [],
+        "suppressed": [],
+        "firstVespers": {
+          "byRight": true,
+          "celebratedOnEve": true,
+          "eveDate": "2027-09-11"
+        },
+        "evening": {
+          "vespers": {
+            "type": "second",
+            "celebrationId": null,
+            "date": "2027-09-12",
+            "title": "XXIV нядзеля звычайная"
+          },
+          "compline": "sunday-after-second-vespers",
+          "conflict": null,
+          "omittedFirstVespers": null
+        },
+        "period": "ordinary",
+        "phase": "after-pentecost"
+      },
+      "withoutStored": {
+        "primary": "temporal:ordinary-w24-d1",
+        "primaryRank": "dominica",
+        "alternatives": [],
+        "commemorations": [],
+        "suppressed": [
+          {
+            "id": "holy-name-mary",
+            "reason": "impeded-omitted"
+          }
+        ],
+        "firstVespers": {
+          "byRight": true,
+          "celebratedOnEve": true,
+          "eveDate": "2027-09-11"
+        },
+        "evening": {
+          "vespers": {
+            "type": "second",
+            "celebrationId": null,
+            "date": "2027-09-12",
+            "title": "XXIV нядзеля звычайная"
+          },
+          "compline": "sunday-after-second-vespers",
+          "conflict": null,
+          "omittedFirstVespers": null
+        },
+        "period": "ordinary",
+        "phase": "after-pentecost"
+      }
+    },
+    {
+      "id": "2027-grodno-holy-name-mary",
+      "date": "2027-09-11",
+      "diocese": "grodno",
+      "stored": {
+        "primary": "temporal:ordinary-w23-d7",
+        "primaryRank": "feria",
+        "alternatives": [
+          "saturday-blessed-virgin-mary",
+          "holy-name-mary"
+        ],
+        "commemorations": [],
+        "suppressed": [],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2027-09-10"
+        },
+        "evening": {
+          "vespers": {
+            "type": "first",
+            "celebrationId": "temporal:ordinary-w24-d1",
+            "date": "2027-09-12",
+            "title": "XXIV нядзеля звычайная"
+          },
+          "compline": "sunday-after-first-vespers",
+          "conflict": {
+            "today": "temporal:ordinary-w23-d7",
+            "tomorrow": "temporal:ordinary-w24-d1",
+            "winner": "tomorrow",
+            "rule": "GNLYC 61"
+          },
+          "omittedFirstVespers": null
+        },
+        "period": "ordinary",
+        "phase": "after-pentecost"
+      },
+      "withoutStored": {
+        "primary": "temporal:ordinary-w23-d7",
+        "primaryRank": "feria",
+        "alternatives": [
+          "saturday-blessed-virgin-mary"
+        ],
+        "commemorations": [],
+        "suppressed": [],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2027-09-10"
+        },
+        "evening": {
+          "vespers": {
+            "type": "first",
+            "celebrationId": "temporal:ordinary-w24-d1",
+            "date": "2027-09-12",
+            "title": "XXIV нядзеля звычайная"
+          },
+          "compline": "sunday-after-first-vespers",
+          "conflict": {
+            "today": "temporal:ordinary-w23-d7",
+            "tomorrow": "temporal:ordinary-w24-d1",
+            "winner": "tomorrow",
+            "rule": "GNLYC 61"
+          },
+          "omittedFirstVespers": null
+        },
+        "period": "ordinary",
+        "phase": "after-pentecost"
+      }
+    },
+    {
+      "id": "2027-grodno-grodno-cathedral-dedication",
+      "date": "2027-12-04",
+      "diocese": "grodno",
+      "stored": {
+        "primary": "temporal:advent-w1-d7",
+        "primaryRank": "feria",
+        "alternatives": [
+          "sv-barbara",
+          "sv-john-damascene"
+        ],
+        "commemorations": [],
+        "suppressed": [],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2027-12-03"
+        },
+        "evening": {
+          "vespers": {
+            "type": "first",
+            "celebrationId": "temporal:advent-w2-d1",
+            "date": "2027-12-05",
+            "title": "II нядзеля Адвэнту"
+          },
+          "compline": "sunday-after-first-vespers",
+          "conflict": {
+            "today": "temporal:advent-w1-d7",
+            "tomorrow": "temporal:advent-w2-d1",
+            "winner": "tomorrow",
+            "rule": "GNLYC 61"
+          },
+          "omittedFirstVespers": null
+        },
+        "period": "advent",
+        "phase": "advent-weekdays"
+      },
+      "withoutStored": {
+        "primary": "grodno-cathedral-dedication",
+        "primaryRank": "festum",
+        "alternatives": [],
+        "commemorations": [],
+        "suppressed": [
+          {
+            "id": "temporal:advent-w1-d7",
+            "reason": "outranked"
+          },
+          {
+            "id": "sv-barbara",
+            "reason": "impeded-omitted"
+          },
+          {
+            "id": "sv-john-damascene",
+            "reason": "impeded-omitted"
+          }
+        ],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2027-12-03"
+        },
+        "evening": {
+          "vespers": {
+            "type": "first",
+            "celebrationId": "temporal:advent-w2-d1",
+            "date": "2027-12-05",
+            "title": "II нядзеля Адвэнту"
+          },
+          "compline": "sunday-after-first-vespers",
+          "conflict": {
+            "today": "grodno-cathedral-dedication",
+            "tomorrow": "temporal:advent-w2-d1",
+            "winner": "tomorrow",
+            "rule": "GNLYC 61"
+          },
+          "omittedFirstVespers": null
+        },
+        "period": "advent",
+        "phase": "advent-weekdays"
+      }
+    },
+    {
+      "id": "2027-grodno-grodno-cathedral-dedication",
+      "date": "2027-12-06",
+      "diocese": "grodno",
+      "stored": {
+        "primary": "grodno-cathedral-dedication",
+        "primaryRank": "festum",
+        "alternatives": [],
+        "commemorations": [],
+        "suppressed": [
+          {
+            "id": "temporal:advent-w2-d2",
+            "reason": "outranked"
+          },
+          {
+            "id": "sv-nicholas",
+            "reason": "impeded-omitted"
+          }
+        ],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2027-12-05"
+        },
+        "evening": {
+          "vespers": {
+            "type": "of-the-day",
+            "celebrationId": "grodno-cathedral-dedication",
+            "date": "2027-12-06",
+            "title": "Гадавіна пасвячэння катэдральнага касцёла"
+          },
+          "compline": "current-weekday",
+          "conflict": null,
+          "omittedFirstVespers": null
+        },
+        "period": "advent",
+        "phase": "advent-weekdays"
+      },
+      "withoutStored": {
+        "primary": "temporal:advent-w2-d2",
+        "primaryRank": "feria",
+        "alternatives": [
+          "sv-nicholas"
+        ],
+        "commemorations": [],
+        "suppressed": [],
+        "firstVespers": {
+          "byRight": false,
+          "celebratedOnEve": false,
+          "eveDate": "2027-12-05"
+        },
+        "evening": {
+          "vespers": {
+            "type": "of-the-day",
+            "celebrationId": null,
+            "date": "2027-12-06",
+            "title": "II тыдзень Адвэнту, панядзелак"
+          },
+          "compline": "current-weekday",
+          "conflict": null,
+          "omittedFirstVespers": null
+        },
+        "period": "advent",
+        "phase": "advent-weekdays"
+      }
+    }
+  ]
+}

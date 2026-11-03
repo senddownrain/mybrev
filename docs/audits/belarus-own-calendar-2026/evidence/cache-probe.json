@@ -1,0 +1,22 @@
+{
+  "status": "BASELINE_DEFECT_REPRODUCED",
+  "date": "2026-07-02",
+  "diocese": "pinsk",
+  "syntheticPublicationOnly": true,
+  "before": {
+    "id": "our-lady-budslav",
+    "rank": "memoria"
+  },
+  "fresh": {
+    "id": "temporal:ordinary-w13-d5",
+    "rank": "feria",
+    "alternatives": [
+      "our-lady-budslav"
+    ]
+  },
+  "cached": {
+    "id": "our-lady-budslav",
+    "rank": "memoria"
+  },
+  "sameObject": true
+}
