@@ -27,6 +27,7 @@ class SongReviewTest(unittest.TestCase):
         scratch.mkdir(parents=True, exist_ok=True)
         cls.temp = tempfile.TemporaryDirectory(dir=scratch)
         cls.root = Path(cls.temp.name)
+        r.DEFAULT_LAYOUT = 'legacy'
         cls.source = cls.root / 'songs.json'
         cls.rows = [
             {'id': 'stable-ў-1', 'title': 'Імя — «Ў»', 'text': 'Першы\r\n\r\nДругі\n\n',
@@ -45,6 +46,7 @@ class SongReviewTest(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        r.DEFAULT_LAYOUT = 'book'
         cls.temp.cleanup()
 
     def run_check(self, mutate=None, current=None):

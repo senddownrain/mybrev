@@ -27,19 +27,22 @@ SEED = ROOT / 'src/data/songs.json'
 FIELDS = ('title', 'text', 'chord', 'tag', 'tags', 'source')
 LABELS = ('SONG_ID:', 'Назва:', 'Катэгорыі:', 'Дадатковыя тэгі:', 'Крыніца:',
           'Рашэнне камісіі:', 'Заўвагі камісіі:')
-STATUSES = ('ПАКІНУЦЬ', 'ВЫКЛЮЧЫЦЬ', 'ВЫПРАВІЦЬ', 'АБМЕРКАВАЦЬ')
+STATUSES = ('ПАКІНУЦЬ', 'ВЫКЛЮЧЫЦЬ', 'ВЫПРАВІЦЬ', 'АБМЕРКАВАЦЬ', 'НЕ ПРАВЕРАНА')
+DEFAULT_LAYOUT = 'book'
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import book_layout
 PREFIX = 'song-review-v1:'
 WARNING = 'ЭТО НЕ ПОДТВЕРЖДЁННАЯ ПОЛНАЯ ВЕРСИЯ ДЛЯ КОМИССИИ'
 RULES = '''Гэта працоўная, НЕ ЗАЦВЕРДЖАНАЯ рэдакцыя.
 Можна змяняць назву, катэгорыі, тэгі, крыніцу, тэкст і акорды ў картках.
 Катэгорыі і дадатковыя тэгі: адзін пункт — адзін абзац. Першая катэгорыя — асноўная.
-Рашэнне камісіі: ПАКІНУЦЬ / ВЫКЛЮЧЫЦЬ / ВЫПРАВІЦЬ / АБМЕРКАВАЦЬ.
-ПАКІНУЦЬ азначае «не выключаць», але не з'яўляецца канчатковым зацвярджэннем.
+Рашэнне камісіі: НЕ ПРАВЕРАНА / ПАКІНУЦЬ / ВЫКЛЮЧЫЦЬ / ВЫПРАВІЦЬ / АБМЕРКАВАЦЬ.
+НЕ ПРАВЕРАНА азначае, што песня яшчэ не разгледжана.
 Не выдаляйце картку цалкам і не змяняйце SONG_ID, нават калі песню трэба выключыць.
 Не змяняйце подпісы тэхнічных палёў і структуру карткі. Заўвагі пішыце ў адпаведным полі.
-Захоўвайце пустыя радкі і строфы. Кожны радок левай калонкі адпавядае праваму.
-Для новых строф устаўляйце радкі ў табліцу; не аб'ядноўвайце ячэйкі.
-Правая калонка змяшчае і акорды, і словы прыпеваў — праверце яе цалкам.
+Захоўвайце пустыя радкі і строфы. Тэкст і акорды рэдагуюцца ў асобных блоках.
+Для новых строф націскайце Enter унутры блока; не выдаляйце подпісы і закладкі.
+Блок акордаў можа змяшчаць словы прыпеваў — праверце яго цалкам.
 Спрэчныя рашэнні пазначайце АБМЕРКАВАЦЬ. Каментарыі дазволены для абмеркавання.
 Перад машыннай праверкай зрабіце асобную фінальную копію: прыміце або адхіліце ўсе адсочваныя змены.
 Каментарыі не з'яўляюцца аўтаматычнымі ўказаннямі для імпарту.
@@ -309,7 +312,10 @@ def export(source, seed, out):
                 'categories': payload['categories'], 'provenance': payload['provenance'], 'report': report}
     baseline['baselineHash'] = digest(baseline)
     write_json(out / 'songs_review_baseline.json', baseline)
-    export_docx(baseline, out / 'Speunik_dlia_kamisii.docx')
+    if DEFAULT_LAYOUT == 'book':
+        book_layout.export(baseline, out / 'Speunik_dlia_kamisii.docx', __import__("types").SimpleNamespace(**globals()))
+    else:
+        export_docx(baseline, out / 'Speunik_dlia_kamisii.docx')
     (out / 'README_dlia_kamisii.md').write_text('# Правілы працы\n\n' + report['warning'] + '\n\n' + RULES +
         '\n\nКамісіі перадаецца DOCX і гэтая памятка. Baseline захоўвае ўладальнік.\n', encoding='utf-8')
     groups = defaultdict(list)
@@ -321,6 +327,8 @@ def export(source, seed, out):
         for title, ids in sorted(groups.items()):
             if len(ids) > 1:
                 writer.writerow([title, ' | '.join(ids), 'manual review; no deletion'])
+    if DEFAULT_LAYOUT == 'book':
+        write_json(out / 'variant_candidates.json', [v for song in songs for v in book_layout.candidates(song, __import__('types').SimpleNamespace(**globals()))])
     return baseline
 
 
@@ -412,6 +420,9 @@ def parse_docx(path, baseline):
                     comments.append({'part': name, 'id': node.get(qn('w:id')), 'text': xml_text(node)})
         if root is None:
             raise ValueError('Missing word/document.xml')
+    if core.find('{http://purl.org/dc/elements/1.1/}subject') is not None and core.find('{http://purl.org/dc/elements/1.1/}subject').text == 'song-review-book-v2':
+        parsed, more_errors, warnings = book_layout.parse(root, baseline, __import__("types").SimpleNamespace(**globals()))
+        return parsed, errors + more_errors, warnings, comments
     songs = {s['id']: s for s in baseline['songs']}
     categories = {c['id']: c['title'] for c in baseline['categories']}
     reverse = {v: k for k, v in categories.items()}
@@ -547,7 +558,7 @@ def check(input_path, baseline_path, out, current_source=None, seed=None):
             report['decisions'][entry['decision']] += 1
             changed = {k: {'old': old[sid].get(k), 'new': entry['song'].get(k)} for k in FIELDS
                        if old[sid].get(k) != entry['song'].get(k)}
-            report['changes'].append({'id': sid, 'decision': entry['decision'], 'notes': entry['notes'], 'fields': changed})
+            report['changes'].append({'id': sid, 'decision': entry['decision'], 'notes': entry['notes'], 'fields': changed, 'variants': entry.get('variants', [])})
         source = current_source or baseline['provenance']['source']
         current = load_source(source, seed or SEED)
         current_report = validate_source(current)
@@ -564,6 +575,10 @@ def check(input_path, baseline_path, out, current_source=None, seed=None):
     report['fieldChanges'] = dict(Counter(k for c in report['changes'] for k in c['fields']))
     report['incompleteBlocks'] = sum('Missing/incomplete song block:' in e for e in report['errors'])
     report['blocked'] = bool(report['errors'] or report['conflicts'] or report['decisions']['АБМЕРКАВАЦЬ'])
+    report['unreviewedIds'] = [c['id'] for c in report['changes'] if c['decision'] == 'НЕ ПРАВЕРАНА']
+    report['variantReviews'] = [v for c in report['changes'] for v in c.get('variants', [])]
+    report['revisionComplete'] = not report['blocked'] and not report['unreviewedIds'] and not any(not v['boundaryConfirmed'] or v['decision'] in ['НЕ ПРАВЕРАНА', 'АБМЕРКАВАЦЬ'] or v['anchorDrift'] for v in report['variantReviews'])
+    report['blocked'] = report['blocked'] or not report['revisionComplete']
     report['approvalRequired'] = True
     write_json(out / 'review_diff.json', report)
     lines = ['# Праверка рэвізіі — толькі dry-run', '',
@@ -577,6 +592,8 @@ def check(input_path, baseline_path, out, current_source=None, seed=None):
     for item in report['changes']:
         if item['fields'] or item['notes'] or item['decision'] != STATUSES[0]:
             lines += [f"- {item['id']}: {item['decision']}; палі: {', '.join(item['fields']) or 'без змен'}; заўвагі: {item['notes']}"]
+    lines += ['', f"Не праверана: {len(report['unreviewedIds'])}; кандыдаты: {len(report['variantReviews'])}; рэвізія завершана: {report['revisionComplete']}"]
+    lines += [f"- {v['parentSongId']} / {v['key']}: {v['decision']}; заўвагі: {v['notes']}; межы пацверджаны: {v['boundaryConfirmed']}; дрэйф: {v['anchorDrift']}" for v in report['variantReviews']]
     lines += ['', 'Поўныя старыя/новыя значэнні, радкі і каментарыі: review_diff.json.']
     (out / 'review_summary.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
     return report
