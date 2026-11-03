@@ -1,0 +1,12 @@
+
+> mybrev@4.5.2 ordo:check
+> node scripts/ordo/check.mjs && node scripts/ordo/build-identities.mjs --check && node scripts/ordo/build-calendar-definitions.mjs --check
+
+minsk-mohilev: 364 days, 2429 items, excluded {"clergy-birthday":107,"clergy-list-continuation":1,"collection":18,"death-anniversary":35,"name-day":52,"ordination-anniversary":73}
+vitebsk: 397 days, 2885 items, excluded {"collection":22,"necrology":75,"ordination-anniversary":3}
+pinsk: 369 days, 2520 items, excluded {"clergy-birthday":5,"clergy-contacts":2,"collection":26,"name-day":29,"necrology":146,"ordination-anniversary":13}
+grodno: 371 days, 1946 items, excluded {"clergy-list-continuation":1,"collection":14,"name-day":6,"necrology":208,"ordination-anniversary":5}
+notes: 1347; differences: 145; determinism: skipped (no raw sources)
+ordo:check OK
+fixed identities: up to date
+calendar definitions: up to date

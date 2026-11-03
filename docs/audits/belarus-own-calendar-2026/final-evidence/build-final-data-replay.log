@@ -1,0 +1,36 @@
+{
+  "productionDiffRows": 1082,
+  "productionDiffKinds": {
+    "permanent": 1011,
+    "content-metadata": 29,
+    "universal-title": 4,
+    "year-override": 15,
+    "runtime-rule": 23
+  },
+  "decisionRows": 172,
+  "classes": {
+    "A": 33,
+    "KEEP": 58,
+    "C": 31,
+    "D": 48,
+    "B": 2
+  },
+  "mandatoryCommissionRows": 31,
+  "substantivePermanentRows": 48,
+  "substantiveByDiocese": {
+    "minsk-mohilev": 1,
+    "vitebsk": 5,
+    "pinsk": 14,
+    "grodno": 28
+  },
+  "confirmedRankConflicts": 17,
+  "confirmedDateConflicts": 3,
+  "additionalAssignments": 23,
+  "missingAssignments": 5,
+  "commissionDistinctCases": 30,
+  "commissionPermanentDistinctCases": 24,
+  "normativeIssueOccurrences": 23,
+  "heartOccurrences": 21,
+  "motherChurchOccurrences": 2,
+  "sourceComparison": "316 permanent documents equal after only importedAt/createdAt/updatedAt excluded; 4 manual canonically equal; 11 auto document additions"
+}

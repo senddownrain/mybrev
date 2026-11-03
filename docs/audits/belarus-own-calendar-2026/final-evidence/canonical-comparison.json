@@ -1,0 +1,2222 @@
+{
+  "ignoredMetadata": [
+    "importedAt",
+    "createdAt",
+    "updatedAt"
+  ],
+  "matches": [
+    {
+      "collection": "celebrations",
+      "id": "holy-mary-mother-of-god",
+      "bundledHash": "620521eea3a70ab1eb873f22555860d9fdb6a7e23b29fc918161305c610cede8",
+      "productionHash": "620521eea3a70ab1eb873f22555860d9fdb6a7e23b29fc918161305c610cede8",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-basil-gregory-nazianzen",
+      "bundledHash": "b3aae31fedb49284dd44e1f75e7521a0b4fe432696ac3afc97c1b53ccda9a583",
+      "productionHash": "b3aae31fedb49284dd44e1f75e7521a0b4fe432696ac3afc97c1b53ccda9a583",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "holy-name-of-jesus",
+      "bundledHash": "b6c09aa1fb50b57443f080a629f0cf12933eddd0f391cc8fea3a3b7f55aef5f3",
+      "productionHash": "b6c09aa1fb50b57443f080a629f0cf12933eddd0f391cc8fea3a3b7f55aef5f3",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "epiphany-lord",
+      "bundledHash": "a63ef5f82843042c32f5ca63bffc10208fb59ac6041b5c54bf1b77dbc6c815a1",
+      "productionHash": "a63ef5f82843042c32f5ca63bffc10208fb59ac6041b5c54bf1b77dbc6c815a1",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-raymond-penyafort",
+      "bundledHash": "009ecf47ec83496471a74bcfb6dc2ec62d98e57952a4c86e932e0dc40f4a779a",
+      "productionHash": "009ecf47ec83496471a74bcfb6dc2ec62d98e57952a4c86e932e0dc40f4a779a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-hilary",
+      "bundledHash": "2e08b33096bca382fa5291527bb0655edbf6bce4ed044d1af49024ee2421d370",
+      "productionHash": "2e08b33096bca382fa5291527bb0655edbf6bce4ed044d1af49024ee2421d370",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-antoni",
+      "bundledHash": "b0bbc1b6874cc604da9c33b758f9466761b4d2ad4a9f98d84c8f9b11e55a414e",
+      "productionHash": "b0bbc1b6874cc604da9c33b758f9466761b4d2ad4a9f98d84c8f9b11e55a414e",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-fabian",
+      "bundledHash": "20a399d81b5eb774230ef0919789208521c24111dd59a09ac6e149702a980356",
+      "productionHash": "20a399d81b5eb774230ef0919789208521c24111dd59a09ac6e149702a980356",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-sebastian",
+      "bundledHash": "62d52f434064efb1213baccf8b50b7ba12bdde112a9fb2a9ace5fb5ab10e03b3",
+      "productionHash": "62d52f434064efb1213baccf8b50b7ba12bdde112a9fb2a9ace5fb5ab10e03b3",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-agnes",
+      "bundledHash": "cd1df7c986cafaacbb32af55c36226b3094dda30f57532572d804056c87df968",
+      "productionHash": "cd1df7c986cafaacbb32af55c36226b3094dda30f57532572d804056c87df968",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-vincent",
+      "bundledHash": "846272d3c83b3ec9acb629ed596cc46dc416e8f22034dfc37529b82070e349f3",
+      "productionHash": "846272d3c83b3ec9acb629ed596cc46dc416e8f22034dfc37529b82070e349f3",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-francis-de-sales",
+      "bundledHash": "6ed6d449204881e9de63bd0d84d8b16ddf89cdba39697049089dc398f51c6162",
+      "productionHash": "6ed6d449204881e9de63bd0d84d8b16ddf89cdba39697049089dc398f51c6162",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "conversion-saint-paul",
+      "bundledHash": "f35f138c718d751b599f9f2b3739d1782eaec24a65908eda986e59e8a4cdeb34",
+      "productionHash": "f35f138c718d751b599f9f2b3739d1782eaec24a65908eda986e59e8a4cdeb34",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-timothy-titus",
+      "bundledHash": "80f1dc44b621b7fa1b0f3c117756e3385722feb8982524680eefe423a11090f5",
+      "productionHash": "80f1dc44b621b7fa1b0f3c117756e3385722feb8982524680eefe423a11090f5",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-angela-merici",
+      "bundledHash": "7239a8f5549ee643865445009bc94ce2a25f37f08d36b9e9484d3f94ba5cb42f",
+      "productionHash": "7239a8f5549ee643865445009bc94ce2a25f37f08d36b9e9484d3f94ba5cb42f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "bl-jurgis-matulaitis",
+      "bundledHash": "1a79acaa01a3ac35c92dfd713b0ea456ddcffc9ff7db5a308dae43f6c31cfe3b",
+      "productionHash": "1a79acaa01a3ac35c92dfd713b0ea456ddcffc9ff7db5a308dae43f6c31cfe3b",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-thomas-aquinas",
+      "bundledHash": "d29c410ba5ea9340c2230582bc575da416d51b6832154162033c1953612ee1e2",
+      "productionHash": "d29c410ba5ea9340c2230582bc575da416d51b6832154162033c1953612ee1e2",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "bl-boleslawa-lament",
+      "bundledHash": "47343fc2089bb3934e7c43957ef6ed7c5be7e59313263ded70e1d4649ac4baec",
+      "productionHash": "47343fc2089bb3934e7c43957ef6ed7c5be7e59313263ded70e1d4649ac4baec",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-bosco",
+      "bundledHash": "6e425ff3cae0a56e56a5195d9af5757a34951fa672e5bc28e264edfc6bba807b",
+      "productionHash": "6e425ff3cae0a56e56a5195d9af5757a34951fa672e5bc28e264edfc6bba807b",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "presentation-lord",
+      "bundledHash": "e0be7c4f277dbf444b0b68e41ddf1152bef937347f72c4e709f4f34dc6d4d645",
+      "productionHash": "e0be7c4f277dbf444b0b68e41ddf1152bef937347f72c4e709f4f34dc6d4d645",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-blazej",
+      "bundledHash": "534a40f018cf8114ae6147ad869625cb751846feee8bc4d8f4f7e956bbef1add",
+      "productionHash": "534a40f018cf8114ae6147ad869625cb751846feee8bc4d8f4f7e956bbef1add",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-anzgar",
+      "bundledHash": "036fc015d198b21bd064728e852f1915722ab08c64a6b5c08b863ea65e4aa485",
+      "productionHash": "036fc015d198b21bd064728e852f1915722ab08c64a6b5c08b863ea65e4aa485",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-agata",
+      "bundledHash": "44a93803edfb7c9a72c68cc446a226c52ef30215504d31548fbe393a09aa2b9a",
+      "productionHash": "44a93803edfb7c9a72c68cc446a226c52ef30215504d31548fbe393a09aa2b9a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-paul-miki",
+      "bundledHash": "7314d72c8614157ceac25091d6a8528e36d5db8af0a835107e73f0dc71477f4e",
+      "productionHash": "7314d72c8614157ceac25091d6a8528e36d5db8af0a835107e73f0dc71477f4e",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-jerome-emiliani",
+      "bundledHash": "5e57394995a6e6b3492fb7baab63fc32bfe90db521536fc1ac5b25931fee7ee5",
+      "productionHash": "5e57394995a6e6b3492fb7baab63fc32bfe90db521536fc1ac5b25931fee7ee5",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-josephine-bakhita",
+      "bundledHash": "80e2da0c3616622a7cd52afeeb2ff87cfe5788c9be3c3a532ddf38a9eaa752a6",
+      "productionHash": "80e2da0c3616622a7cd52afeeb2ff87cfe5788c9be3c3a532ddf38a9eaa752a6",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-scholastica",
+      "bundledHash": "375881ff08ea3339b4e8671a68944ea53a06a6a612de579eb4888adaa9726009",
+      "productionHash": "375881ff08ea3339b4e8671a68944ea53a06a6a612de579eb4888adaa9726009",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "our-lady-of-lourdes",
+      "bundledHash": "4a492af0ee2494d26e8d2243382d7fa66f5ac49839182de3a8f06b8a9b77c9fb",
+      "productionHash": "4a492af0ee2494d26e8d2243382d7fa66f5ac49839182de3a8f06b8a9b77c9fb",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-cyril-methodius",
+      "bundledHash": "54571c46d403abea1e122d791b58ea3f7a87b373e78cbb9296b01a1529ce041e",
+      "productionHash": "54571c46d403abea1e122d791b58ea3f7a87b373e78cbb9296b01a1529ce041e",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "seven-servite-founders",
+      "bundledHash": "d02f98318a39d735ee8682a5f47f0b4110b1bae28d106e072102d2e766628f2f",
+      "productionHash": "d02f98318a39d735ee8682a5f47f0b4110b1bae28d106e072102d2e766628f2f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-peter-damian",
+      "bundledHash": "91a3e7310f2e06c1a06ad59771bf3aff8e99c0f26339d77cec392324cbf83fc1",
+      "productionHash": "91a3e7310f2e06c1a06ad59771bf3aff8e99c0f26339d77cec392324cbf83fc1",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "chair-of-saint-peter",
+      "bundledHash": "0a986bd034e7923d88fcc7cba48b4f401116de547c032d508fde7970eee46a7b",
+      "productionHash": "0a986bd034e7923d88fcc7cba48b4f401116de547c032d508fde7970eee46a7b",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-polycarp",
+      "bundledHash": "650b626de268afe2f8db918eadc34659cc867a688f54aa007b70f87f45ee63f2",
+      "productionHash": "650b626de268afe2f8db918eadc34659cc867a688f54aa007b70f87f45ee63f2",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-gregory-narek",
+      "bundledHash": "671cde6c3d3cc5c789a937e88a88132f65ae67142c127cdd34f64920202037e1",
+      "productionHash": "671cde6c3d3cc5c789a937e88a88132f65ae67142c127cdd34f64920202037e1",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-casimir",
+      "bundledHash": "55bfd62104e2eddfb340f6336ffc0f783eb4ba0290a730f494976bf479eacc88",
+      "productionHash": "55bfd62104e2eddfb340f6336ffc0f783eb4ba0290a730f494976bf479eacc88",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-perpetua-felicity",
+      "bundledHash": "0de44184ff9cc877d3c91357d5db12561b282afbbe73a190b03c7f43711db606",
+      "productionHash": "0de44184ff9cc877d3c91357d5db12561b282afbbe73a190b03c7f43711db606",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-of-god",
+      "bundledHash": "5f9873763b184daf4dc0537061b766d6a02edf87d704330d38aede91e3f3680b",
+      "productionHash": "5f9873763b184daf4dc0537061b766d6a02edf87d704330d38aede91e3f3680b",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-frances-of-rome",
+      "bundledHash": "1ce7cf066fd79ece5d8eb4291c97bbc79e96708c5398ad87b7f4ed00452004f4",
+      "productionHash": "1ce7cf066fd79ece5d8eb4291c97bbc79e96708c5398ad87b7f4ed00452004f4",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-patryk",
+      "bundledHash": "a33239c2d9dd8fbbc17c4029e57a2520bd39ea27af5a17b665841529683b246a",
+      "productionHash": "a33239c2d9dd8fbbc17c4029e57a2520bd39ea27af5a17b665841529683b246a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-cyril-jerusalem",
+      "bundledHash": "1f914d69992ae17a57bc4b1273ea622eefd382a9dda15c95bf10f6326ccff416",
+      "productionHash": "1f914d69992ae17a57bc4b1273ea622eefd382a9dda15c95bf10f6326ccff416",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-joseph",
+      "bundledHash": "9cd75f0b9aacb47fedf1db7d62e1f0afe06fb354876a865609d90c8eba6b5f96",
+      "productionHash": "9cd75f0b9aacb47fedf1db7d62e1f0afe06fb354876a865609d90c8eba6b5f96",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-turybius-mongrovejo",
+      "bundledHash": "dc0c68f2f1103c3c18d62b17bef8f7a435a7a3eea992bfe20a38f669c18b75a9",
+      "productionHash": "dc0c68f2f1103c3c18d62b17bef8f7a435a7a3eea992bfe20a38f669c18b75a9",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "annunciation-lord",
+      "bundledHash": "0fde1d73ac47038a4695cc6f42099fd3c611e4d688906ea11fbee81681c717bb",
+      "productionHash": "0fde1d73ac47038a4695cc6f42099fd3c611e4d688906ea11fbee81681c717bb",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-francis-paola",
+      "bundledHash": "8e81ebc3d947c2f8c307596866c60aed9259536ff5041c2c264a65c17e38e981",
+      "productionHash": "8e81ebc3d947c2f8c307596866c60aed9259536ff5041c2c264a65c17e38e981",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-isidore-seville",
+      "bundledHash": "496db0c00f8e0d95c225acae752717131ff64b08cf2f4db360a6d3ba0b15a08e",
+      "productionHash": "496db0c00f8e0d95c225acae752717131ff64b08cf2f4db360a6d3ba0b15a08e",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-vincent-ferrer",
+      "bundledHash": "745ea215a8513b93dac94ebbde5c6eb503f01f763de1291aed38afe478f223e9",
+      "productionHash": "745ea215a8513b93dac94ebbde5c6eb503f01f763de1291aed38afe478f223e9",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-jean-baptiste-de-la-salle",
+      "bundledHash": "026d140e1735103cd8ebf15625da2e2e84eb8bc1be90825e33f3153bad218e45",
+      "productionHash": "026d140e1735103cd8ebf15625da2e2e84eb8bc1be90825e33f3153bad218e45",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-stanislaus-bishop-martyr",
+      "bundledHash": "554ad28a7749c61e25ef9d0e85b0bd63e65c9be4c9825c4969610d1538a9bd05",
+      "productionHash": "554ad28a7749c61e25ef9d0e85b0bd63e65c9be4c9825c4969610d1538a9bd05",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-martin-i-pope-martyr",
+      "bundledHash": "d14df7918c37b79da10166abcf34d0cef497cacb75caeef1fd6f7a62c4a1ba0e",
+      "productionHash": "d14df7918c37b79da10166abcf34d0cef497cacb75caeef1fd6f7a62c4a1ba0e",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-anselm",
+      "bundledHash": "c3707eecb0e1924d2ea1ced068fad598f4e687aa241ada50ed0989af8bfaaf99",
+      "productionHash": "c3707eecb0e1924d2ea1ced068fad598f4e687aa241ada50ed0989af8bfaaf99",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-george-martyr",
+      "bundledHash": "435d78ec493a25ef3a203778352ee26afa15766c8c3543b41feb969675282dcf",
+      "productionHash": "435d78ec493a25ef3a203778352ee26afa15766c8c3543b41feb969675282dcf",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-adalbert-wojciech-bishop-martyr",
+      "bundledHash": "aa7778498acd02c1a7117706ebb1bcb8d52d9242500859dddb061c20286c2c69",
+      "productionHash": "aa7778498acd02c1a7117706ebb1bcb8d52d9242500859dddb061c20286c2c69",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-fidel-sigmaringen",
+      "bundledHash": "a069406951c7f436cdb07dc4a4ba0e55ada318fa9281066a99e28f03dd5c44b9",
+      "productionHash": "a069406951c7f436cdb07dc4a4ba0e55ada318fa9281066a99e28f03dd5c44b9",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-mark-evangelist",
+      "bundledHash": "3d7b8b6faf11312fa3e912cf9e78ae600234426a948ad621553d466e7aa0c7f5",
+      "productionHash": "3d7b8b6faf11312fa3e912cf9e78ae600234426a948ad621553d466e7aa0c7f5",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-peter-chanel",
+      "bundledHash": "dd8ad5aa4d93652db68f9faf50719c24a32ad1da8511d02fc82491846a7cbf83",
+      "productionHash": "dd8ad5aa4d93652db68f9faf50719c24a32ad1da8511d02fc82491846a7cbf83",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-louis-marie-grignion-de-montfort",
+      "bundledHash": "be3b7d6bec54e7aaa58a6552d65844387a406e5e60016e2654b7ab071a622a8b",
+      "productionHash": "be3b7d6bec54e7aaa58a6552d65844387a406e5e60016e2654b7ab071a622a8b",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-catherine-siena",
+      "bundledHash": "e1b00f2a4357fd19c9dd57b8e1683d01a3b9237c6bda6183b8169d14a5c85356",
+      "productionHash": "e1b00f2a4357fd19c9dd57b8e1683d01a3b9237c6bda6183b8169d14a5c85356",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-pius-v-pope",
+      "bundledHash": "c0f261bb917dfa46f6f297d10c8aebc38febd419a8780da3a20c9f3966142814",
+      "productionHash": "c0f261bb917dfa46f6f297d10c8aebc38febd419a8780da3a20c9f3966142814",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-joseph-worker",
+      "bundledHash": "d8e5d637e770400a60c7702ef69dbe296a5bef78a240e093ff67bbeada1ce7d4",
+      "productionHash": "d8e5d637e770400a60c7702ef69dbe296a5bef78a240e093ff67bbeada1ce7d4",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-athanasius",
+      "bundledHash": "9bc80bff12d73d6c3b0db1d4dda55aa4f3a95b480bf13c425bc97e425610cacb",
+      "productionHash": "9bc80bff12d73d6c3b0db1d4dda55aa4f3a95b480bf13c425bc97e425610cacb",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-philip-james-apostles",
+      "bundledHash": "082cf8786b5e676b7b627dfe20be86e3f4a819e83d3cefd2202800962d15ed9f",
+      "productionHash": "082cf8786b5e676b7b627dfe20be86e3f4a819e83d3cefd2202800962d15ed9f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-avila",
+      "bundledHash": "44887aa740ba544b48bfea5a7fd9d8c65230e4f0c8ea82e4f11220f9a2e274dd",
+      "productionHash": "44887aa740ba544b48bfea5a7fd9d8c65230e4f0c8ea82e4f11220f9a2e274dd",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-nereus-achilleus",
+      "bundledHash": "d39fb851e4ea1dac64139d47ea8a81799758cb8560f30fad8948f14942144ab4",
+      "productionHash": "d39fb851e4ea1dac64139d47ea8a81799758cb8560f30fad8948f14942144ab4",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-pancras",
+      "bundledHash": "cdefd441869d1a80ac4f039edc169f1fcacf9e49c505ac4cd92e2367a0303aca",
+      "productionHash": "cdefd441869d1a80ac4f039edc169f1fcacf9e49c505ac4cd92e2367a0303aca",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "our-lady-of-fatima",
+      "bundledHash": "a10719cb6964a0c7dc7fad201f9c78e0be311b67b2f6b2a6107c102bfc9239a3",
+      "productionHash": "a10719cb6964a0c7dc7fad201f9c78e0be311b67b2f6b2a6107c102bfc9239a3",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-matthias",
+      "bundledHash": "5e0903c49ca0b9cfac1b6b29b176871bea14ecaad94001176e3ab54d6f4e07e7",
+      "productionHash": "5e0903c49ca0b9cfac1b6b29b176871bea14ecaad94001176e3ab54d6f4e07e7",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-andrei-bobola",
+      "bundledHash": "27bfdad7251a9d083121a0f216ecb780c799b34a70679c31dfd4297604280570",
+      "productionHash": "27bfdad7251a9d083121a0f216ecb780c799b34a70679c31dfd4297604280570",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-i",
+      "bundledHash": "9f022e074cd83e3472fa5cd80b209e291bf92be06b8a01d3598c44693682f8f9",
+      "productionHash": "9f022e074cd83e3472fa5cd80b209e291bf92be06b8a01d3598c44693682f8f9",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-bernardine-of-siena",
+      "bundledHash": "b4e59f45e29c510c8b9fed8c008517f03f04c18aeb20968ba56370304af4120f",
+      "productionHash": "b4e59f45e29c510c8b9fed8c008517f03f04c18aeb20968ba56370304af4120f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-christopher-magallanes-companions",
+      "bundledHash": "aa22cd4b5b335b2ad13dba5a237f55a590813b14d2e28ce246bf1b36c063acb5",
+      "productionHash": "aa22cd4b5b335b2ad13dba5a237f55a590813b14d2e28ce246bf1b36c063acb5",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-rita-cascia",
+      "bundledHash": "b259342ae97663a2b8ac4317238bccb6b0af0c398c9e00a1f8b86aa7a58c9c67",
+      "productionHash": "b259342ae97663a2b8ac4317238bccb6b0af0c398c9e00a1f8b86aa7a58c9c67",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-bede",
+      "bundledHash": "cbb4ab6e96ae554b361fc39c3fd6faf1e6df729dd28c93d516582bd71dbf74de",
+      "productionHash": "cbb4ab6e96ae554b361fc39c3fd6faf1e6df729dd28c93d516582bd71dbf74de",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-gregory-vii",
+      "bundledHash": "427adf1f2fadccad6e95407cf01678e113f1d39f3c3cb3501f49aa8b8f89a6f8",
+      "productionHash": "427adf1f2fadccad6e95407cf01678e113f1d39f3c3cb3501f49aa8b8f89a6f8",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-maria-magdalena-de-pazzi",
+      "bundledHash": "20e9da4055f3c5e0863ad0258d3512c7f720e260e4c25c548fe229c428aefdd2",
+      "productionHash": "20e9da4055f3c5e0863ad0258d3512c7f720e260e4c25c548fe229c428aefdd2",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-philip-neri",
+      "bundledHash": "f8ac3ceb8b561ee279e2eedd7f047bbdd9c6299cbcb7d036f204d0ae48b044fb",
+      "productionHash": "f8ac3ceb8b561ee279e2eedd7f047bbdd9c6299cbcb7d036f204d0ae48b044fb",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-augustine-of-canterbury",
+      "bundledHash": "668a33a101b930f3ee77671653de1be7e2885198c2207a2fc51b32823672c480",
+      "productionHash": "668a33a101b930f3ee77671653de1be7e2885198c2207a2fc51b32823672c480",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-paul-vi",
+      "bundledHash": "764eee94bc56a4f7987af64ec2c59b09833dc5d0e0bc8b2d34a6d7c91880f4ff",
+      "productionHash": "764eee94bc56a4f7987af64ec2c59b09833dc5d0e0bc8b2d34a6d7c91880f4ff",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "visitation-blessed-virgin-mary",
+      "bundledHash": "c1be5dcf65948c40270d46cecd2f6b784a08122c61a0242eb5afd3bc78bf845c",
+      "productionHash": "c1be5dcf65948c40270d46cecd2f6b784a08122c61a0242eb5afd3bc78bf845c",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-justin",
+      "bundledHash": "5127373087d97e4fce5438b57bd88b3366ee84b05c0aaad85ccdd91df0447eb2",
+      "productionHash": "5127373087d97e4fce5438b57bd88b3366ee84b05c0aaad85ccdd91df0447eb2",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-marcellinus-peter",
+      "bundledHash": "e963130236e8815b1b69cd3947e19bacded3b2eda021b82f05d80c4adf9fe4e8",
+      "productionHash": "e963130236e8815b1b69cd3947e19bacded3b2eda021b82f05d80c4adf9fe4e8",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-charles-lwanga-companions",
+      "bundledHash": "32cf7aabbdd9374621591eb6902cad98970cb3b18d422278932c5f3c6b047b73",
+      "productionHash": "32cf7aabbdd9374621591eb6902cad98970cb3b18d422278932c5f3c6b047b73",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-boniface",
+      "bundledHash": "9f4787849f8155fef9578f6d2162858ec2974f64e79fcd15f36142771af2d720",
+      "productionHash": "9f4787849f8155fef9578f6d2162858ec2974f64e79fcd15f36142771af2d720",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-norbert",
+      "bundledHash": "06d69c41401edbfe3134bc47253d28a6c5a91e3ca1dae73f29ee78e7d96ae4f4",
+      "productionHash": "06d69c41401edbfe3134bc47253d28a6c5a91e3ca1dae73f29ee78e7d96ae4f4",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-ephrem",
+      "bundledHash": "db1ce5a6063aff051a8f1842c2e4bcb0be39af993ae5b607cdcc19295c16b561",
+      "productionHash": "db1ce5a6063aff051a8f1842c2e4bcb0be39af993ae5b607cdcc19295c16b561",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-barnabas",
+      "bundledHash": "0382e3496e5e1bb2ce33691d797aeb318775ab120d8a788a8522fc77506c4182",
+      "productionHash": "0382e3496e5e1bb2ce33691d797aeb318775ab120d8a788a8522fc77506c4182",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-anthony-padua",
+      "bundledHash": "ffb09d36bba6a270943edca39eed7bd2cb89e0ccab24353513ee4b11144fd0e0",
+      "productionHash": "ffb09d36bba6a270943edca39eed7bd2cb89e0ccab24353513ee4b11144fd0e0",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-romuald",
+      "bundledHash": "4e5e265b47832a01dcc06678c523b334f5a63e025371fcd2b488ef5246475084",
+      "productionHash": "4e5e265b47832a01dcc06678c523b334f5a63e025371fcd2b488ef5246475084",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-aloysius-gonzaga",
+      "bundledHash": "597ef6f86ce11852af147cbc554ea190d3ca1b1a4573f0c8a43a7c97b00fcc30",
+      "productionHash": "597ef6f86ce11852af147cbc554ea190d3ca1b1a4573f0c8a43a7c97b00fcc30",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-paulinus-nola",
+      "bundledHash": "c03249d4fd9a6f5dc067f5f082a6e669e70d6fc25ecef288cfa69ef4b7b08781",
+      "productionHash": "c03249d4fd9a6f5dc067f5f082a6e669e70d6fc25ecef288cfa69ef4b7b08781",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-fisher-thomas-more",
+      "bundledHash": "3fe0dc398d44e25b7a58d5a5668411cf3e78f8140214bf12e5d01ea53047841f",
+      "productionHash": "3fe0dc398d44e25b7a58d5a5668411cf3e78f8140214bf12e5d01ea53047841f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "nativity-john-baptist",
+      "bundledHash": "8af74695cd92b1146f5dd349e5574f240691fccb3bbeb7deaa97c21c373364cc",
+      "productionHash": "8af74695cd92b1146f5dd349e5574f240691fccb3bbeb7deaa97c21c373364cc",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-cyril-alexandrian",
+      "bundledHash": "05fbaa10270143fcc0a3d53e728bbff7b52ca0465be8f2919a63d6b119b2d0a9",
+      "productionHash": "05fbaa10270143fcc0a3d53e728bbff7b52ca0465be8f2919a63d6b119b2d0a9",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-irenaeus",
+      "bundledHash": "0a6ac818ec68f18a9a565c135654067aacdd9b55c7c0d2b87b0bf9e25306deaa",
+      "productionHash": "0a6ac818ec68f18a9a565c135654067aacdd9b55c7c0d2b87b0bf9e25306deaa",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-peter-paul-apostles",
+      "bundledHash": "0f2ae5a46231376ccaf440715b26ce1582d041d99fdf1a761de8aa9f9f65ed37",
+      "productionHash": "0f2ae5a46231376ccaf440715b26ce1582d041d99fdf1a761de8aa9f9f65ed37",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "holy-roman-protomartyrs",
+      "bundledHash": "ae7a366045991b5893d74d2fe6119e95c93187d8dba18447a4b199a3a712da62",
+      "productionHash": "ae7a366045991b5893d74d2fe6119e95c93187d8dba18447a4b199a3a712da62",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "our-lady-budslav",
+      "bundledHash": "d4560ada6de20f430c810e6e6d48d68ced6350bae8aa4e755531949dbd41f8e2",
+      "productionHash": "d4560ada6de20f430c810e6e6d48d68ced6350bae8aa4e755531949dbd41f8e2",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-thomas-apostle",
+      "bundledHash": "691a858471ab15d6fb94eeb8945d85bb033735c8a6e3b6270b6340b0151a53bc",
+      "productionHash": "691a858471ab15d6fb94eeb8945d85bb033735c8a6e3b6270b6340b0151a53bc",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-elizabeth-portugal",
+      "bundledHash": "1560419a5e61d3f5e796678775768365a2327469072cd6c8baffcf90595de560",
+      "productionHash": "1560419a5e61d3f5e796678775768365a2327469072cd6c8baffcf90595de560",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-anthony-mary-zaccaria",
+      "bundledHash": "0b8a48cb36fd4d58d5e1eb776e40a396762fc69c147dc138476c5fb72ea8025f",
+      "productionHash": "0b8a48cb36fd4d58d5e1eb776e40a396762fc69c147dc138476c5fb72ea8025f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-maria-goretti",
+      "bundledHash": "542bacb66d67e3887bc03e80411157c282ccc8216de4ad2ae18cd4483f00cb31",
+      "productionHash": "542bacb66d67e3887bc03e80411157c282ccc8216de4ad2ae18cd4483f00cb31",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-augustine-zhao-rong-companions",
+      "bundledHash": "afccf1eae1645f6fb8ec6ed2641c95601abf1e38b6549733c06f602100fbca76",
+      "productionHash": "afccf1eae1645f6fb8ec6ed2641c95601abf1e38b6549733c06f602100fbca76",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-benedict",
+      "bundledHash": "bd93da575537a91aae6659dd2d591327320dc6205e67c14e9fb33b80c5bba44c",
+      "productionHash": "bd93da575537a91aae6659dd2d591327320dc6205e67c14e9fb33b80c5bba44c",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-henry",
+      "bundledHash": "5a7a87f8a03f6bcb4056bf1d12cb2cf742da86fc22c32d92f2fe7c1e0d4d5c9d",
+      "productionHash": "5a7a87f8a03f6bcb4056bf1d12cb2cf742da86fc22c32d92f2fe7c1e0d4d5c9d",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-camillus-de-lellis",
+      "bundledHash": "a48714c35c02f6824101a4988cdee4a7ae868385edac37bf89abf8e936cf7371",
+      "productionHash": "a48714c35c02f6824101a4988cdee4a7ae868385edac37bf89abf8e936cf7371",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-bonaventure",
+      "bundledHash": "d9ae19741f944f2262b06d2807cfd3a945e003b38957019a7c33f94000ebbd3a",
+      "productionHash": "d9ae19741f944f2262b06d2807cfd3a945e003b38957019a7c33f94000ebbd3a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "our-lady-mount-carmel",
+      "bundledHash": "b1acda266afaec06e36ddc311ca3349bbcc72b6ebfeba0f80fc627960ff854ee",
+      "productionHash": "b1acda266afaec06e36ddc311ca3349bbcc72b6ebfeba0f80fc627960ff854ee",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-apollinaris",
+      "bundledHash": "1ef4fb30dd43f7b7ae5e2896b36a518142b06fbb34e69ab3b59e74907f83a70c",
+      "productionHash": "1ef4fb30dd43f7b7ae5e2896b36a518142b06fbb34e69ab3b59e74907f83a70c",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-lawrence-brindisi",
+      "bundledHash": "10c19135ccd7da3afeccdc2cde25a24ab16940eb4f450bcd6a023a23930c44c2",
+      "productionHash": "10c19135ccd7da3afeccdc2cde25a24ab16940eb4f450bcd6a023a23930c44c2",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-mary-magdalene",
+      "bundledHash": "3c8d82ca9aa5e5799d383d3bf5e3818c1e08b5682fc09c870ee0c544c26b521f",
+      "productionHash": "3c8d82ca9aa5e5799d383d3bf5e3818c1e08b5682fc09c870ee0c544c26b521f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-bridget",
+      "bundledHash": "67c2d354648412bf504fbd3feb71b8a4ee4f5407c8d1a0af008743a9e99fe3f7",
+      "productionHash": "67c2d354648412bf504fbd3feb71b8a4ee4f5407c8d1a0af008743a9e99fe3f7",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-charbel-makhlouf",
+      "bundledHash": "84ccd8789061b5ca3da896fe4691c5132796add656a7b98d0569d24e69026d4f",
+      "productionHash": "84ccd8789061b5ca3da896fe4691c5132796add656a7b98d0569d24e69026d4f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-james-apostle",
+      "bundledHash": "5b61b675f2a28d34ed8fbcce683cd170067a1f303e99bac7dc59469452519c1f",
+      "productionHash": "5b61b675f2a28d34ed8fbcce683cd170067a1f303e99bac7dc59469452519c1f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-joachim-anne",
+      "bundledHash": "c6f37cac50778cdedd70b3ecfa9e9b1336349d43aed482f59b2e88ee2bb03bf1",
+      "productionHash": "c6f37cac50778cdedd70b3ecfa9e9b1336349d43aed482f59b2e88ee2bb03bf1",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-martha",
+      "bundledHash": "cc3f1dbfc5de4d68e5cc134948b9bf1364eff8819654689bbfdcbe30e57f6e75",
+      "productionHash": "cc3f1dbfc5de4d68e5cc134948b9bf1364eff8819654689bbfdcbe30e57f6e75",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-peter-chrysologus",
+      "bundledHash": "da9d987bd2bb7a07bff64b20fe4a6975c5c2d102674346698146695daf877dcb",
+      "productionHash": "da9d987bd2bb7a07bff64b20fe4a6975c5c2d102674346698146695daf877dcb",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-ignatius-loyola",
+      "bundledHash": "d5f4d0b7385e90c7e0b0cbecfab67fb373a4e6904262fcc8cf8ee33c6ef40918",
+      "productionHash": "d5f4d0b7385e90c7e0b0cbecfab67fb373a4e6904262fcc8cf8ee33c6ef40918",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-alphonsus-liguori",
+      "bundledHash": "2c46e272406161599bcea6e95001ebc4e761221869e5066be00bfeae4d6873c3",
+      "productionHash": "2c46e272406161599bcea6e95001ebc4e761221869e5066be00bfeae4d6873c3",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-eusebius-vercelli",
+      "bundledHash": "4a1b7b5c4d67cfb2b92bc8889a7fc103cc58ba71c8d18b5235fe60b1f15232ef",
+      "productionHash": "4a1b7b5c4d67cfb2b92bc8889a7fc103cc58ba71c8d18b5235fe60b1f15232ef",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-peter-julian-eymard",
+      "bundledHash": "cc14821402130dfc9588966f150d82044641d0e8d1a5cd5dff18839f70535d97",
+      "productionHash": "cc14821402130dfc9588966f150d82044641d0e8d1a5cd5dff18839f70535d97",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-vianney",
+      "bundledHash": "1c0f1fc92c8772a75fff6868b5b0189c20a3977c11adf3da28bbaedfa294eece",
+      "productionHash": "1c0f1fc92c8772a75fff6868b5b0189c20a3977c11adf3da28bbaedfa294eece",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "dedication-st-mary-major",
+      "bundledHash": "7238ec0ad1ef2f13aa020e62a9f6141348a8ec7430ce692dc7ebe44324ccf8cc",
+      "productionHash": "7238ec0ad1ef2f13aa020e62a9f6141348a8ec7430ce692dc7ebe44324ccf8cc",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "transfiguration-lord",
+      "bundledHash": "a051f03c98dcc7c9bea3c40db479edac67a533763edf38a98ce67c411c8bad5a",
+      "productionHash": "a051f03c98dcc7c9bea3c40db479edac67a533763edf38a98ce67c411c8bad5a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-sixtus-ii-companions",
+      "bundledHash": "768e4aeed6b9d845bd6fc7090c3f184afdf22a88ec401e48769ae78119a45018",
+      "productionHash": "768e4aeed6b9d845bd6fc7090c3f184afdf22a88ec401e48769ae78119a45018",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-cajetan",
+      "bundledHash": "700611fb715a6d079d05ad03f07584b88e9cbc56d08d165484f1905042424c3d",
+      "productionHash": "700611fb715a6d079d05ad03f07584b88e9cbc56d08d165484f1905042424c3d",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-dominic",
+      "bundledHash": "87f22676cd984141f840b064e9d28afea8ec3bcdd8e2af216f58d6916ac4de09",
+      "productionHash": "87f22676cd984141f840b064e9d28afea8ec3bcdd8e2af216f58d6916ac4de09",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-teresa-benedicta-cross",
+      "bundledHash": "a1409f606e173fb72bed5226fa41ceea57e7b9c10a13c14797ff76b5df5bf5ec",
+      "productionHash": "a1409f606e173fb72bed5226fa41ceea57e7b9c10a13c14797ff76b5df5bf5ec",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-laurentsiya-dyyakana-i-muchanika",
+      "bundledHash": "a58a8917417e824ae375462a3b751fed00b3e8c75bdb4388e45c873be5e0ed0a",
+      "productionHash": "a58a8917417e824ae375462a3b751fed00b3e8c75bdb4388e45c873be5e0ed0a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-clare",
+      "bundledHash": "194e6ec3c6887b5ab94ecc3c62f534c6e92c0180ea9a61b6401edb773fa0fd11",
+      "productionHash": "194e6ec3c6887b5ab94ecc3c62f534c6e92c0180ea9a61b6401edb773fa0fd11",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-jane-frances-de-chantal",
+      "bundledHash": "51e7a1f2722b7bf2d417df322f59b89406bfe1b4a10efeab25ca50e8eae1935a",
+      "productionHash": "51e7a1f2722b7bf2d417df322f59b89406bfe1b4a10efeab25ca50e8eae1935a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-pontian-hippolytus",
+      "bundledHash": "43c222afe473d33b9e4d3bda0fb1ae310e3a31eb43035fdf86f27e87b4a92a63",
+      "productionHash": "43c222afe473d33b9e4d3bda0fb1ae310e3a31eb43035fdf86f27e87b4a92a63",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-maximilian-kolbe",
+      "bundledHash": "a4b1d5dc0f6e88b197ddc7a3cf93ff049c774b333996843f27536fc893263823",
+      "productionHash": "a4b1d5dc0f6e88b197ddc7a3cf93ff049c774b333996843f27536fc893263823",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "assumption-blessed-virgin-mary",
+      "bundledHash": "c1093338755f44f2719e957931ef5a8a2d483bcf260b8e1e6fdb9056b8aa840d",
+      "productionHash": "c1093338755f44f2719e957931ef5a8a2d483bcf260b8e1e6fdb9056b8aa840d",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-stephen-hungary",
+      "bundledHash": "559580b953e300578e8d984d5ac1b5efbe8e5db44e739705e429b421b0ac07c3",
+      "productionHash": "559580b953e300578e8d984d5ac1b5efbe8e5db44e739705e429b421b0ac07c3",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-eudes",
+      "bundledHash": "df0b91035385c1ed4772d3d43bf54901c7d21903f737af6b1b59bc0bdc8dab47",
+      "productionHash": "df0b91035385c1ed4772d3d43bf54901c7d21903f737af6b1b59bc0bdc8dab47",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-bernard",
+      "bundledHash": "223161f04c0a719af8f8d438666489923d2aefcf8afc9869959e4cc2bf59a514",
+      "productionHash": "223161f04c0a719af8f8d438666489923d2aefcf8afc9869959e4cc2bf59a514",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-pius-x",
+      "bundledHash": "ab2a259aae1cf1bfe4436d2224e76c1d079fa2eb30fc93382f329d27f11aa355",
+      "productionHash": "ab2a259aae1cf1bfe4436d2224e76c1d079fa2eb30fc93382f329d27f11aa355",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "our-lady-queen",
+      "bundledHash": "48e6ceb38ad244665b63b4462211a56d8397d03eb76942073969232561c729b0",
+      "productionHash": "48e6ceb38ad244665b63b4462211a56d8397d03eb76942073969232561c729b0",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-rose-of-lima",
+      "bundledHash": "777ba86eb397af2db27862ad37aff149a64b8f32efe43bbb1fa77933ea6ba5c4",
+      "productionHash": "777ba86eb397af2db27862ad37aff149a64b8f32efe43bbb1fa77933ea6ba5c4",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-bartholomew",
+      "bundledHash": "a27da1c9011c7c2161559f9c5dbf64f61217a304f7af3b383c337b8d11d4ad9b",
+      "productionHash": "a27da1c9011c7c2161559f9c5dbf64f61217a304f7af3b383c337b8d11d4ad9b",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-louis",
+      "bundledHash": "7c6e48a2d5560b611a66a63ceaae89cfc768b7f1ad9e7e36fb87b89c1efe6176",
+      "productionHash": "7c6e48a2d5560b611a66a63ceaae89cfc768b7f1ad9e7e36fb87b89c1efe6176",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-joseph-calasanz",
+      "bundledHash": "7b5a7f5ef85f7ba6d90000f8d7265ff2150a3ba3406e93edc85f3d7f5973e6d8",
+      "productionHash": "7b5a7f5ef85f7ba6d90000f8d7265ff2150a3ba3406e93edc85f3d7f5973e6d8",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-monica",
+      "bundledHash": "a1c261a72358c51f3ca6cb34fa710b129bebb9623a06567d095297c389329b8e",
+      "productionHash": "a1c261a72358c51f3ca6cb34fa710b129bebb9623a06567d095297c389329b8e",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-augustine",
+      "bundledHash": "7bb0930facda5cce6f9ace08672a037653237f11a24a236ab9c909eb8b4d1ed2",
+      "productionHash": "7bb0930facda5cce6f9ace08672a037653237f11a24a236ab9c909eb8b4d1ed2",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "beheading-john-baptist",
+      "bundledHash": "a146576778ea9df03c076dcedc470594979720a53794c4773100b053dbe4ee54",
+      "productionHash": "a146576778ea9df03c076dcedc470594979720a53794c4773100b053dbe4ee54",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-gregory-great",
+      "bundledHash": "84a9cfcaeb3e7b9982dba7a5ae476ee3ebea3efeb61a948ed512871a5218906f",
+      "productionHash": "84a9cfcaeb3e7b9982dba7a5ae476ee3ebea3efeb61a948ed512871a5218906f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-teresa-calcutta",
+      "bundledHash": "80e86b89507c4f8a0ef0486f311b92f96598995c05d760a1a9e96db26e7a58de",
+      "productionHash": "80e86b89507c4f8a0ef0486f311b92f96598995c05d760a1a9e96db26e7a58de",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "nativity-blessed-virgin-mary",
+      "bundledHash": "6e9f74e39138e46f3c04f1de926add6502c893d26dad658dbc0cb6fd2247e147",
+      "productionHash": "6e9f74e39138e46f3c04f1de926add6502c893d26dad658dbc0cb6fd2247e147",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-peter-claver",
+      "bundledHash": "59ad282f38f445b51a0e6c8ee847605c75e5f03a2dd59ea9bbf1b3e4e58cecd5",
+      "productionHash": "59ad282f38f445b51a0e6c8ee847605c75e5f03a2dd59ea9bbf1b3e4e58cecd5",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "holy-name-mary",
+      "bundledHash": "4aeaba024eb2ba1a93208a72e5c336cec3362707d9499b503dfc1270f521746a",
+      "productionHash": "4aeaba024eb2ba1a93208a72e5c336cec3362707d9499b503dfc1270f521746a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-chrysostom",
+      "bundledHash": "0572e46d836fdd3969a9cbe8bcfe97772cdc0af6a98b7a287846769757603c98",
+      "productionHash": "0572e46d836fdd3969a9cbe8bcfe97772cdc0af6a98b7a287846769757603c98",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "exaltation-holy-cross",
+      "bundledHash": "b5a7db7b454cf46e3ceaefcf4ebe57c82b44a622f5d147ad308536f48e53f0d6",
+      "productionHash": "b5a7db7b454cf46e3ceaefcf4ebe57c82b44a622f5d147ad308536f48e53f0d6",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "our-lady-sorrows",
+      "bundledHash": "e38b9e59db2e225f11f04d66c245a5b79803730333cd87a5c0ae52b13c7b3ae8",
+      "productionHash": "e38b9e59db2e225f11f04d66c245a5b79803730333cd87a5c0ae52b13c7b3ae8",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-cornelius-cyprian",
+      "bundledHash": "5c7a315422b1cc895c85e6111ad5b7cc5898e6572039ce2297b23c1fb3f43c7a",
+      "productionHash": "5c7a315422b1cc895c85e6111ad5b7cc5898e6572039ce2297b23c1fb3f43c7a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-robert-bellarmine",
+      "bundledHash": "2cf9cc29851bd0ef88e4a924199c9930e5bb5c2bc2a24d3b362cf61daaacb5d0",
+      "productionHash": "2cf9cc29851bd0ef88e4a924199c9930e5bb5c2bc2a24d3b362cf61daaacb5d0",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-hildegard-bingen",
+      "bundledHash": "eba3157a5242affce9316fa1847b6852b9bed39218ac79f63377f0db4b8a684b",
+      "productionHash": "eba3157a5242affce9316fa1847b6852b9bed39218ac79f63377f0db4b8a684b",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-januarius",
+      "bundledHash": "b56ebb62234708ebc46ada04492a4135e64b3d1771fd008518e9a6aebaf56c6d",
+      "productionHash": "b56ebb62234708ebc46ada04492a4135e64b3d1771fd008518e9a6aebaf56c6d",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-andrew-kim-taegon-paul-chong-hasang-companions",
+      "bundledHash": "0d6af81e9e96eebc255725da1532e28066681f188fdef5e10569e2e4c89c19bb",
+      "productionHash": "0d6af81e9e96eebc255725da1532e28066681f188fdef5e10569e2e4c89c19bb",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-matthew",
+      "bundledHash": "2285dac9b4ac47a2ecc59a9393050ef1dff6ae4b4dc8f90c9fbc6ba0ef3123dd",
+      "productionHash": "2285dac9b4ac47a2ecc59a9393050ef1dff6ae4b4dc8f90c9fbc6ba0ef3123dd",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-pio-pietrelcina",
+      "bundledHash": "1bd17e3bf9185a6cd0b08fc1464da7f29662bb7e8cdc91bac5dbe555c684d411",
+      "productionHash": "1bd17e3bf9185a6cd0b08fc1464da7f29662bb7e8cdc91bac5dbe555c684d411",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-cosmas-damian",
+      "bundledHash": "b16fc3e750ddc19e0f9f8664e3a49bd75b23bd46bf13ffba874b78b18d918f3a",
+      "productionHash": "b16fc3e750ddc19e0f9f8664e3a49bd75b23bd46bf13ffba874b78b18d918f3a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-vincent-de-paul",
+      "bundledHash": "ae2928cf1d69f506fa45b6b2d567e7a13ed1bcfd59c03fe5baecb0a1333b0799",
+      "productionHash": "ae2928cf1d69f506fa45b6b2d567e7a13ed1bcfd59c03fe5baecb0a1333b0799",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-wenceslaus",
+      "bundledHash": "9ea1890207143c93759f1ebb6aed69d9a851642b178c5d43843cb6dfe4054cdb",
+      "productionHash": "9ea1890207143c93759f1ebb6aed69d9a851642b178c5d43843cb6dfe4054cdb",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-laurence-ruiz-companions",
+      "bundledHash": "2772d6651036e1563fb03e5371e87e149c974b0f36815642e45b0996c9ec36bd",
+      "productionHash": "2772d6651036e1563fb03e5371e87e149c974b0f36815642e45b0996c9ec36bd",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "archangels-michael-gabriel-raphael",
+      "bundledHash": "68bad74b54e99f28caa3d3b0ffe14714794e47775371fea61ba31e10111bdaa0",
+      "productionHash": "68bad74b54e99f28caa3d3b0ffe14714794e47775371fea61ba31e10111bdaa0",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-jerome",
+      "bundledHash": "ed2d4204dcd37fb2d6c93b6730de706e0e2222c521a5492c2f203b19ea33bb33",
+      "productionHash": "ed2d4204dcd37fb2d6c93b6730de706e0e2222c521a5492c2f203b19ea33bb33",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-teresa-lisieux",
+      "bundledHash": "d3a3c21fbaef4aa619b1cc3960060fb26abe74a8568a4aa792c1df6715c35459",
+      "productionHash": "d3a3c21fbaef4aa619b1cc3960060fb26abe74a8568a4aa792c1df6715c35459",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "holy-guardian-angels",
+      "bundledHash": "6c9f2993a005d4088d413b3a3d4040ceb417b0ce0948d84fb5be7b4387836836",
+      "productionHash": "6c9f2993a005d4088d413b3a3d4040ceb417b0ce0948d84fb5be7b4387836836",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-francis-assisi",
+      "bundledHash": "f642713d4a3a8b8cf2d6b4d096e389adab8e1d90c7114b6ba36b348963f0650e",
+      "productionHash": "f642713d4a3a8b8cf2d6b4d096e389adab8e1d90c7114b6ba36b348963f0650e",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-faustina-kowalska",
+      "bundledHash": "d19a2ef9c43015f2cceff0f9a69941c259ef9f2ce06b61a59c2aab2df9298cb1",
+      "productionHash": "d19a2ef9c43015f2cceff0f9a69941c259ef9f2ce06b61a59c2aab2df9298cb1",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-bruno",
+      "bundledHash": "6c57b59929f0fe176eb4309382658430b22d5e9c3f929c748e77913f0b4325fd",
+      "productionHash": "6c57b59929f0fe176eb4309382658430b22d5e9c3f929c748e77913f0b4325fd",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "our-lady-rosary",
+      "bundledHash": "db15d4f2ec4c8c40807a30a50e9c2e3f432ae32e532bf7cc47fe9be1bb1d680b",
+      "productionHash": "db15d4f2ec4c8c40807a30a50e9c2e3f432ae32e532bf7cc47fe9be1bb1d680b",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-denis-companions",
+      "bundledHash": "bba08111f4840631bb5551081e80bb81bf449722e5712f0c1f12dfb57948aa4a",
+      "productionHash": "bba08111f4840631bb5551081e80bb81bf449722e5712f0c1f12dfb57948aa4a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-leonardi",
+      "bundledHash": "bde5deca674bd53a62d05cecf99343e29aa4e5fc17bc943e27260b0043f24187",
+      "productionHash": "bde5deca674bd53a62d05cecf99343e29aa4e5fc17bc943e27260b0043f24187",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-xxiii",
+      "bundledHash": "70c5ab75e642439f17b2c7b8309fcf2765f2512fdb2330c265d2261e80f6a644",
+      "productionHash": "70c5ab75e642439f17b2c7b8309fcf2765f2512fdb2330c265d2261e80f6a644",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-callistus-i",
+      "bundledHash": "d009ece5f952e5f95f2ac338c44906e0456344b11665f74715d46f4d4acd70fe",
+      "productionHash": "d009ece5f952e5f95f2ac338c44906e0456344b11665f74715d46f4d4acd70fe",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-teresa-of-jesus",
+      "bundledHash": "be145783a4829a69f33e114d65a04bff73d7216f4cad09168c19caa64265f9a5",
+      "productionHash": "be145783a4829a69f33e114d65a04bff73d7216f4cad09168c19caa64265f9a5",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-hedwig",
+      "bundledHash": "dd7d8cc779527c998ee8b3907b794ecbe1272f3028fd35a4b31c5a01b0b28855",
+      "productionHash": "dd7d8cc779527c998ee8b3907b794ecbe1272f3028fd35a4b31c5a01b0b28855",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-margaret-mary-alacoque",
+      "bundledHash": "922da64f673d1ba717eb446c643fc66c98679a0a2006e42528793d147cdb46c4",
+      "productionHash": "922da64f673d1ba717eb446c643fc66c98679a0a2006e42528793d147cdb46c4",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-ignatius-antioch",
+      "bundledHash": "e56b58015bc349d77f2c8f1b8588eab73ced9cea997c3e2a22007dea89c4ea0e",
+      "productionHash": "e56b58015bc349d77f2c8f1b8588eab73ced9cea997c3e2a22007dea89c4ea0e",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-luke-evangelist",
+      "bundledHash": "5d105013d43a4eab14d0602f766d16d5c0a1d3dbb8e992c093d0a86a3d01f771",
+      "productionHash": "5d105013d43a4eab14d0602f766d16d5c0a1d3dbb8e992c093d0a86a3d01f771",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-jean-brebeuf-isaac-jogues-companions",
+      "bundledHash": "9d8eeb8abe2bfd1603328431ab8d2e54496cb3cfb0dae5a2b64f9cd051e48039",
+      "productionHash": "9d8eeb8abe2bfd1603328431ab8d2e54496cb3cfb0dae5a2b64f9cd051e48039",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-paul-of-cross",
+      "bundledHash": "5c60ec1961d9188a766a80c4e0e848b935bd4b412db44e54187207850e3c3432",
+      "productionHash": "5c60ec1961d9188a766a80c4e0e848b935bd4b412db44e54187207850e3c3432",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-paul-ii",
+      "bundledHash": "e6525c114c9faf8d8eee3a279c702a67cd8c295c2bb4a6a34de9cc461e05a93a",
+      "productionHash": "e6525c114c9faf8d8eee3a279c702a67cd8c295c2bb4a6a34de9cc461e05a93a",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-capistrano",
+      "bundledHash": "b31ab4adb7b6f9dc361b5f2f28807a3e2eb4ca534d85f96833fe70aa78d6d48c",
+      "productionHash": "b31ab4adb7b6f9dc361b5f2f28807a3e2eb4ca534d85f96833fe70aa78d6d48c",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-anthony-mary-claret",
+      "bundledHash": "0d9d73e93ca9a201a97656e0cda100e8889437a65235cdb5845cbce9c5a8d6d7",
+      "productionHash": "0d9d73e93ca9a201a97656e0cda100e8889437a65235cdb5845cbce9c5a8d6d7",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-simon-jude-apostles",
+      "bundledHash": "47496af041ff946b734706236deb7b02aafec5ae98ba12464a555c31471e6dec",
+      "productionHash": "47496af041ff946b734706236deb7b02aafec5ae98ba12464a555c31471e6dec",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "all-saints",
+      "bundledHash": "7dc60ce42d056a7ebb6acfd99a2737fe7144826f7e9dd30c8c1f5630c4ff781d",
+      "productionHash": "7dc60ce42d056a7ebb6acfd99a2737fe7144826f7e9dd30c8c1f5630c4ff781d",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "all-faithful-departed",
+      "bundledHash": "37aa636832ab9b8db2767d8539d8ac41d293e802e1f62c28bcac15f72b9cb1d1",
+      "productionHash": "37aa636832ab9b8db2767d8539d8ac41d293e802e1f62c28bcac15f72b9cb1d1",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-martin-de-porres",
+      "bundledHash": "8fb7fda56018989f680c2f4609a6eddd929323ec486216c1687efa494d1f49af",
+      "productionHash": "8fb7fda56018989f680c2f4609a6eddd929323ec486216c1687efa494d1f49af",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-charles-borromeo",
+      "bundledHash": "800ba1f5ea19ef816b6a77e087710b51d8fab10a53050ef8ac06579a40a0071c",
+      "productionHash": "800ba1f5ea19ef816b6a77e087710b51d8fab10a53050ef8ac06579a40a0071c",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "dedication-lateran-basilica",
+      "bundledHash": "c00a5d834a5d614d61cfa194a13b56b7dd4a5214165eaaec53d9fcb157f495d6",
+      "productionHash": "c00a5d834a5d614d61cfa194a13b56b7dd4a5214165eaaec53d9fcb157f495d6",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-leo-great",
+      "bundledHash": "ba6b58f3cac0ab6d73005f4c0f699dd90a2daede626924694676e8110e479915",
+      "productionHash": "ba6b58f3cac0ab6d73005f4c0f699dd90a2daede626924694676e8110e479915",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-martin-tours",
+      "bundledHash": "1bf3d32f26b19be91e791289f2c433363dcbc7aef03630d4a57f8727054716ce",
+      "productionHash": "1bf3d32f26b19be91e791289f2c433363dcbc7aef03630d4a57f8727054716ce",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-josaphat",
+      "bundledHash": "37f0950b21845d79d9873f215f02bde68629dba0ff4179ddbc2d84aeec4d45ab",
+      "productionHash": "37f0950b21845d79d9873f215f02bde68629dba0ff4179ddbc2d84aeec4d45ab",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-albert-great",
+      "bundledHash": "c71c53643cf72252bd4b9c6035f15fd8ee07d263a028054d58805c1bd96f93da",
+      "productionHash": "c71c53643cf72252bd4b9c6035f15fd8ee07d263a028054d58805c1bd96f93da",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "our-lady-mother-mercy",
+      "bundledHash": "5b536e63a086c8200f3452cd0e6cd89e29d3b8deb14e4bb6cb7d31a4dc4a9914",
+      "productionHash": "5b536e63a086c8200f3452cd0e6cd89e29d3b8deb14e4bb6cb7d31a4dc4a9914",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-margaret-scotland",
+      "bundledHash": "e171c49b4288ed403b2a56378c5b87fd77902f94cf05a50b06e816a1d45f962f",
+      "productionHash": "e171c49b4288ed403b2a56378c5b87fd77902f94cf05a50b06e816a1d45f962f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-gertrude",
+      "bundledHash": "b96a353e29fab11484447e3c226c480a569fa8d1164712f0f1276d5b67bcffb4",
+      "productionHash": "b96a353e29fab11484447e3c226c480a569fa8d1164712f0f1276d5b67bcffb4",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-elizabeth-hungary",
+      "bundledHash": "2e76060ec30c1c853f5e505da362abf9b43ff2303eca96104324e09d0b9f9c6f",
+      "productionHash": "2e76060ec30c1c853f5e505da362abf9b43ff2303eca96104324e09d0b9f9c6f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "dedication-basilicas-peter-paul",
+      "bundledHash": "857522b511ad8eaeef373acd6fed273dc643c5a4fc468ff03ecc718bf87a0d5e",
+      "productionHash": "857522b511ad8eaeef373acd6fed273dc643c5a4fc468ff03ecc718bf87a0d5e",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-raphael-kalinowski",
+      "bundledHash": "0b2c8910a275da39f0e471b03047df913bf29a504a9b32e4ec0a769df260307d",
+      "productionHash": "0b2c8910a275da39f0e471b03047df913bf29a504a9b32e4ec0a769df260307d",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "presentation-blessed-virgin-mary",
+      "bundledHash": "f7cb2e31f708813fb57f641df757b1c6f542c617e9c368b9e4d6ebabb3e368a9",
+      "productionHash": "f7cb2e31f708813fb57f641df757b1c6f542c617e9c368b9e4d6ebabb3e368a9",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-cecilia",
+      "bundledHash": "fa200a03953aebf0c675922b9bfda4ac4bad42a7239d06a02f0549377ac14c08",
+      "productionHash": "fa200a03953aebf0c675922b9bfda4ac4bad42a7239d06a02f0549377ac14c08",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-clement-i",
+      "bundledHash": "70d6b2d01cb5e75c9bce24fd4c157aea17dfb23bf85db28c9e681cc05e148bcf",
+      "productionHash": "70d6b2d01cb5e75c9bce24fd4c157aea17dfb23bf85db28c9e681cc05e148bcf",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-columban",
+      "bundledHash": "f77668a7545708f23c2031a942487af92c038321663d8e530faf47dcbd739866",
+      "productionHash": "f77668a7545708f23c2031a942487af92c038321663d8e530faf47dcbd739866",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-andrew-dung-lac-companions",
+      "bundledHash": "ab591f703091caef7e659ed9fc81b0e8d514349f6da1edefeb391c8cd5fb5ad9",
+      "productionHash": "ab591f703091caef7e659ed9fc81b0e8d514349f6da1edefeb391c8cd5fb5ad9",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-catherine-alexandria",
+      "bundledHash": "eb14e27a2abefff9ac0c683e056c708148e5f0505b4afcdcfd27e8c28b1d46e3",
+      "productionHash": "eb14e27a2abefff9ac0c683e056c708148e5f0505b4afcdcfd27e8c28b1d46e3",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-andrew-apostle",
+      "bundledHash": "557caed7ec15b60853a14753bdd47e5dff8071e46b0ac55d6c9828c0550941d9",
+      "productionHash": "557caed7ec15b60853a14753bdd47e5dff8071e46b0ac55d6c9828c0550941d9",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-francis-xavier",
+      "bundledHash": "9eef07b5f5f86b208bfec80541e3aa51f5475f642ee503b633fc8686c71c054e",
+      "productionHash": "9eef07b5f5f86b208bfec80541e3aa51f5475f642ee503b633fc8686c71c054e",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-damascene",
+      "bundledHash": "f26567ca51c06ce6bab158e79f3874c73d49ce068a28af9680cd5c0c9bd676d0",
+      "productionHash": "f26567ca51c06ce6bab158e79f3874c73d49ce068a28af9680cd5c0c9bd676d0",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-nicholas",
+      "bundledHash": "e32097dc63298b0062ce6c82b133d137cdb5bbe49b047d86d503fee51e7ad45d",
+      "productionHash": "e32097dc63298b0062ce6c82b133d137cdb5bbe49b047d86d503fee51e7ad45d",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-ambrose",
+      "bundledHash": "902d7c87cad12bad3835388ec844fe1c6a3b4270b29d8c2674541dad0b086710",
+      "productionHash": "902d7c87cad12bad3835388ec844fe1c6a3b4270b29d8c2674541dad0b086710",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "immaculate-conception",
+      "bundledHash": "a72cc35ad7400ac54b7e36983e348ab7617312e36e42e41a79fb86438aad6452",
+      "productionHash": "a72cc35ad7400ac54b7e36983e348ab7617312e36e42e41a79fb86438aad6452",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-juan-diego",
+      "bundledHash": "ac2af58cf22963bbad687d72de03873b09af0601649cf1f879134ed67405dbf4",
+      "productionHash": "ac2af58cf22963bbad687d72de03873b09af0601649cf1f879134ed67405dbf4",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "our-lady-loreto",
+      "bundledHash": "d93b07d4dbb58c34c4dfd3ff43712dbd21a7f04ff389834f60f9d686750e872f",
+      "productionHash": "d93b07d4dbb58c34c4dfd3ff43712dbd21a7f04ff389834f60f9d686750e872f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-damasus-i",
+      "bundledHash": "4493ef14b421aded474b78f522b1eb4391f976a339bbd91566043ddf0cda0562",
+      "productionHash": "4493ef14b421aded474b78f522b1eb4391f976a339bbd91566043ddf0cda0562",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "our-lady-guadalupe",
+      "bundledHash": "41bafee515adbd7f74a03b5dfc1a3e99117c911f68394e7b27b5fa07258d3aa3",
+      "productionHash": "41bafee515adbd7f74a03b5dfc1a3e99117c911f68394e7b27b5fa07258d3aa3",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-lucy",
+      "bundledHash": "5582d9262eb3636b0498b7ec81248f4465d586b41db9f9560bade11f6d874d8e",
+      "productionHash": "5582d9262eb3636b0498b7ec81248f4465d586b41db9f9560bade11f6d874d8e",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-cross",
+      "bundledHash": "643a332d10546de9c36d5a17663b9718ad7bed091d1d3022d3df6f64f650a574",
+      "productionHash": "643a332d10546de9c36d5a17663b9718ad7bed091d1d3022d3df6f64f650a574",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-peter-canisius",
+      "bundledHash": "e6de42d476a32eabe9f9770282ac843a9637b6044ba276d5dac1470a9d2ee165",
+      "productionHash": "e6de42d476a32eabe9f9770282ac843a9637b6044ba276d5dac1470a9d2ee165",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-kenty",
+      "bundledHash": "005b9c9e2948fd40296931bbaa5ad0ccacdfacca2e0652cf9724f2544b24583b",
+      "productionHash": "005b9c9e2948fd40296931bbaa5ad0ccacdfacca2e0652cf9724f2544b24583b",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "nativity-lord",
+      "bundledHash": "032bf66da8cf199646974e45ec486123571b32074d3eb3a2304beeb4b24ec32c",
+      "productionHash": "032bf66da8cf199646974e45ec486123571b32074d3eb3a2304beeb4b24ec32c",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-stephen-protomartyr",
+      "bundledHash": "070c6183b094fe5873af3827bfdbb6b54ef3cfb23b7906f6e46a85b588b789b7",
+      "productionHash": "070c6183b094fe5873af3827bfdbb6b54ef3cfb23b7906f6e46a85b588b789b7",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-john-apostle-evangelist",
+      "bundledHash": "ccc38b7d8cd9f099e2d1b4883a3716947f6c524f51a06017f5b9c2585ada97aa",
+      "productionHash": "ccc38b7d8cd9f099e2d1b4883a3716947f6c524f51a06017f5b9c2585ada97aa",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "holy-innocents",
+      "bundledHash": "1c51881d8b957a05371874059c89d05ffb04e9e8fa7c44783c5f008fdd86b0f2",
+      "productionHash": "1c51881d8b957a05371874059c89d05ffb04e9e8fa7c44783c5f008fdd86b0f2",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-thomas-becket",
+      "bundledHash": "e99bfb5dec5eeae059081193b309523fdd7c4e4f5f5fd4833c36c035031d2883",
+      "productionHash": "e99bfb5dec5eeae059081193b309523fdd7c4e4f5f5fd4833c36c035031d2883",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sv-sylvester-i",
+      "bundledHash": "fbd7316ba945a6b6eef945b465cbc2afee2741b6aacb3a0322d4bc83e2d7f9b6",
+      "productionHash": "fbd7316ba945a6b6eef945b465cbc2afee2741b6aacb3a0322d4bc83e2d7f9b6",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "ash-wednesday",
+      "bundledHash": "cd140f47f4526a78fa328159eac571c26f832562adc81b59f93f3a2a356f0c43",
+      "productionHash": "cd140f47f4526a78fa328159eac571c26f832562adc81b59f93f3a2a356f0c43",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "palm-sunday",
+      "bundledHash": "ce2e9e2f588f84d738d117e004c59757d487eab71a0189e17fc858b05ef13ee4",
+      "productionHash": "ce2e9e2f588f84d738d117e004c59757d487eab71a0189e17fc858b05ef13ee4",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "easter-sunday",
+      "bundledHash": "1909a6c0e69b4db31ef2c7f4050e964e66a657952eabb63e38e9f3daec2cc70d",
+      "productionHash": "1909a6c0e69b4db31ef2c7f4050e964e66a657952eabb63e38e9f3daec2cc70d",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "ascension",
+      "bundledHash": "892e008d578286041c94c80a9b635a837845e06f99751b2d52601a665e2be935",
+      "productionHash": "892e008d578286041c94c80a9b635a837845e06f99751b2d52601a665e2be935",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "pentecost",
+      "bundledHash": "df8030fb8f24dc7264298b0945b75aa1b2a1d8f946fb24a1b97f8b9c60442d99",
+      "productionHash": "df8030fb8f24dc7264298b0945b75aa1b2a1d8f946fb24a1b97f8b9c60442d99",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "mary-mother-church",
+      "bundledHash": "b447a04530fc8c1d1af0c9db1189aed25f2b5483a0b90b7723501ebcbf524532",
+      "productionHash": "b447a04530fc8c1d1af0c9db1189aed25f2b5483a0b90b7723501ebcbf524532",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "trinity",
+      "bundledHash": "a0efd3c242cde7625fca0c8be100d7103f49c93d26d9429f1f7efee9ad535c65",
+      "productionHash": "a0efd3c242cde7625fca0c8be100d7103f49c93d26d9429f1f7efee9ad535c65",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "corpus-christi",
+      "bundledHash": "25a8bce4f96ae1165af3e889ec74a2158bafd092498383647cf7ed3757ab406f",
+      "productionHash": "25a8bce4f96ae1165af3e889ec74a2158bafd092498383647cf7ed3757ab406f",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "sacred-heart",
+      "bundledHash": "bcb1d2203992a1cb5337298343f41cc6bd8f46803b34e44d242138e605908092",
+      "productionHash": "bcb1d2203992a1cb5337298343f41cc6bd8f46803b34e44d242138e605908092",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "immaculate-heart",
+      "bundledHash": "cd1e862309cc262e187d77986656af6d89f308a82c4de2346ffe1820357557e2",
+      "productionHash": "cd1e862309cc262e187d77986656af6d89f308a82c4de2346ffe1820357557e2",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "christ-king",
+      "bundledHash": "d5c56d1d1d91d4a4959ca33898670963454cc542e21cb1e7de4477c438f4b5b4",
+      "productionHash": "d5c56d1d1d91d4a4959ca33898670963454cc542e21cb1e7de4477c438f4b5b4",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "holy-family",
+      "bundledHash": "16773586562c91a670254b463de74453b8044619ee8e051a206322b6bd602519",
+      "productionHash": "16773586562c91a670254b463de74453b8044619ee8e051a206322b6bd602519",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "baptism-of-the-lord",
+      "bundledHash": "002ce8df35c9d5e59c072a92d86eb9d72ac2c1cfe88dccea0c13f5051192b1e0",
+      "productionHash": "002ce8df35c9d5e59c072a92d86eb9d72ac2c1cfe88dccea0c13f5051192b1e0",
+      "same": true
+    },
+    {
+      "collection": "celebrations",
+      "id": "christ-the-high-priest",
+      "bundledHash": "8fd03ad0b73c529e4e4b045ef350a84aeef6e91b905f4f5aed2241955a16626b",
+      "productionHash": "8fd03ad0b73c529e4e4b045ef350a84aeef6e91b905f4f5aed2241955a16626b",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-michal-sopocko",
+      "bundledHash": "9631cfbb9eceb5859adf22917bf833222043899a367cb3c4bdb317ac67e78d9e",
+      "productionHash": "9631cfbb9eceb5859adf22917bf833222043899a367cb3c4bdb317ac67e78d9e",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "minsk-mohilev--minsk-mohilev-cathedral-dedication",
+      "bundledHash": "91cf45c4678dd2a7d816ec453148476f7aa8fd5f646c0740e32f3999c9aaef4b",
+      "productionHash": "91cf45c4678dd2a7d816ec453148476f7aa8fd5f646c0740e32f3999c9aaef4b",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--dedication-cathedral",
+      "bundledHash": "cadf0cf693b59400637d8c4d7abdddaf41aab0bd6a0dd5f459c14675842ce352",
+      "productionHash": "cadf0cf693b59400637d8c4d7abdddaf41aab0bd6a0dd5f459c14675842ce352",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "vitebsk--bl-antoni-leszczewicz-jerzy-kaszyra",
+      "bundledHash": "94c22b3d24cc8d2c7dd29681bb10d69a85ec072731a595179832c0becf8a3efe",
+      "productionHash": "94c22b3d24cc8d2c7dd29681bb10d69a85ec072731a595179832c0becf8a3efe",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-henryk-hlebowicz",
+      "bundledHash": "d46d6359fd92aa44614889947f44e11133279b690d04b809ee711c39d179a133",
+      "productionHash": "d46d6359fd92aa44614889947f44e11133279b690d04b809ee711c39d179a133",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "minsk-mohilev--our-lady-czestochowa",
+      "bundledHash": "24e54cf5e8138c5f42ac644e5ee80476879f072fd2ea3ed21eeaae5a35cecfa0",
+      "productionHash": "24e54cf5e8138c5f42ac644e5ee80476879f072fd2ea3ed21eeaae5a35cecfa0",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--our-lady-czestochowa",
+      "bundledHash": "04f8728efbe2fac04421e63a07e50845b391f2226619c83e28c88b1657aaf962",
+      "productionHash": "04f8728efbe2fac04421e63a07e50845b391f2226619c83e28c88b1657aaf962",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "vitebsk--vitebsk-cathedral-dedication",
+      "bundledHash": "8ff343c3c15345e9274729c7a2a6d19019cd17a0e0a46e19b74295c593f92613",
+      "productionHash": "8ff343c3c15345e9274729c7a2a6d19019cd17a0e0a46e19b74295c593f92613",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--our-lady-trakai",
+      "bundledHash": "4afac2abb2f365a8ac298b0c44d8daa3dcfe7f76e9fd788a637eb340ca552dd3",
+      "productionHash": "4afac2abb2f365a8ac298b0c44d8daa3dcfe7f76e9fd788a637eb340ca552dd3",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "minsk-mohilev--sv-stanislaus-kostka",
+      "bundledHash": "2915ee1a391833cd565e5318af4154a77de6d08003efe180adb4bef0b7bbe7a8",
+      "productionHash": "2915ee1a391833cd565e5318af4154a77de6d08003efe180adb4bef0b7bbe7a8",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--sv-stanislaus-kostka",
+      "bundledHash": "c65b072ca11fe4324185f29881a6f1bb00d1ce051ddeafea73513776a378d885",
+      "productionHash": "c65b072ca11fe4324185f29881a6f1bb00d1ce051ddeafea73513776a378d885",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "vitebsk--bl-celina-borzecka",
+      "bundledHash": "ffdbcb7f40af69481ad2fdc43589f4c7e600194f09a049b31809db25a7846b3f",
+      "productionHash": "ffdbcb7f40af69481ad2fdc43589f4c7e600194f09a049b31809db25a7846b3f",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--our-lady-congregational",
+      "bundledHash": "b5220b645d99181bc35aab25d593b9e1198f9a8cae747fe7310a9c6fd062a4e5",
+      "productionHash": "b5220b645d99181bc35aab25d593b9e1198f9a8cae747fe7310a9c6fd062a4e5",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "minsk-mohilev--sv-andrei-bobola",
+      "bundledHash": "0b8f69cbd032104c4380dd55c1be4d9b5fad545b7840fdaf533b4c5a10df7702",
+      "productionHash": "0b8f69cbd032104c4380dd55c1be4d9b5fad545b7840fdaf533b4c5a10df7702",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--sv-dismas",
+      "bundledHash": "813ee6f05f4dd3876ec183abc7b7ac8639b0df29519d9b1d19413b6db10ac1ff",
+      "productionHash": "813ee6f05f4dd3876ec183abc7b7ac8639b0df29519d9b1d19413b6db10ac1ff",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "vitebsk--bl-jurgis-matulaitis",
+      "bundledHash": "7a37396ee17f65460ee6a8fa07539e7f166f78f4f98c7f4067438ed0137171ca",
+      "productionHash": "7a37396ee17f65460ee6a8fa07539e7f166f78f4f98c7f4067438ed0137171ca",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--our-lady-czestochowa",
+      "bundledHash": "b391c8a526ae0cfaf07f2f80f72f4b3c0eb2c4337d78de9787a813634fcbe288",
+      "productionHash": "b391c8a526ae0cfaf07f2f80f72f4b3c0eb2c4337d78de9787a813634fcbe288",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "minsk-mohilev--our-lady-budslav",
+      "bundledHash": "16d702e592d3190ee51200381722fc3f9989dd9acb90ee53a13fa1319a07a179",
+      "productionHash": "16d702e592d3190ee51200381722fc3f9989dd9acb90ee53a13fa1319a07a179",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--sv-florian",
+      "bundledHash": "f74e86c5ca51f1057c8371030e59cf228fd47b5402fbf3b136bdf6af50963b2a",
+      "productionHash": "f74e86c5ca51f1057c8371030e59cf228fd47b5402fbf3b136bdf6af50963b2a",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "vitebsk--sv-andrei-bobola",
+      "bundledHash": "1116c3fddb059cf797aa8ac0dd5d33f9100b2a72da65e9172de76371a91e01fa",
+      "productionHash": "1116c3fddb059cf797aa8ac0dd5d33f9100b2a72da65e9172de76371a91e01fa",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-maria-stella-companions",
+      "bundledHash": "677a0631d465b9cfd9eadfb10071d898fc5621d9de42507a9bf9f79e3941f73f",
+      "productionHash": "677a0631d465b9cfd9eadfb10071d898fc5621d9de42507a9bf9f79e3941f73f",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "minsk-mohilev--our-lady-mount-carmel",
+      "bundledHash": "efa81d088c912c725efd1e056bb46e0a30585faa8ba3e5d4902c97e44c4f762b",
+      "productionHash": "efa81d088c912c725efd1e056bb46e0a30585faa8ba3e5d4902c97e44c4f762b",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--our-lady-perpetual-help",
+      "bundledHash": "4b634e84e0fb67c9872426c50cd8586717b05fba24c77cbc80ea730d63aaa9da",
+      "productionHash": "4b634e84e0fb67c9872426c50cd8586717b05fba24c77cbc80ea730d63aaa9da",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "vitebsk--our-lady-budslav",
+      "bundledHash": "8ecf47d5c1ea156edd6949105cecfaf5831cd63f90d4da3505b30fe7a5202732",
+      "productionHash": "8ecf47d5c1ea156edd6949105cecfaf5831cd63f90d4da3505b30fe7a5202732",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-stanislaus-kostka",
+      "bundledHash": "b090c6149f1f759de1110ccb16c9c7944df080c0a13cd05feea7a8052bfa50ef",
+      "productionHash": "b090c6149f1f759de1110ccb16c9c7944df080c0a13cd05feea7a8052bfa50ef",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "minsk-mohilev--holy-name-mary",
+      "bundledHash": "e8be284d6b4a7f55c53a368acea5b98df281fd2e052b23cc86d0c34fdbb220a5",
+      "productionHash": "e8be284d6b4a7f55c53a368acea5b98df281fd2e052b23cc86d0c34fdbb220a5",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--bl-czeslaw",
+      "bundledHash": "5d933880827d6dc1907b5e748e8e4b885d3e7db710ae2fff611d7a2876688d80",
+      "productionHash": "5d933880827d6dc1907b5e748e8e4b885d3e7db710ae2fff611d7a2876688d80",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "vitebsk--nativity-blessed-virgin-mary",
+      "bundledHash": "2d344176799df694845824c4cbe4b5570c892fd3c4244dd4b576bb949bf37293",
+      "productionHash": "2d344176799df694845824c4cbe4b5570c892fd3c4244dd4b576bb949bf37293",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-celina-borzecka",
+      "bundledHash": "1845a1742194a6e60fb03cbc42c4b5582ec65fa9271f92c001bf0c8ded7d0d77",
+      "productionHash": "1845a1742194a6e60fb03cbc42c4b5582ec65fa9271f92c001bf0c8ded7d0d77",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "minsk-mohilev--sv-josaphat",
+      "bundledHash": "ba7f552300212d48dd734d3788ba9c7ce37f6abc58b6f0b2f5358c96b19f0305",
+      "productionHash": "ba7f552300212d48dd734d3788ba9c7ce37f6abc58b6f0b2f5358c96b19f0305",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--sv-hyacinth",
+      "bundledHash": "0fd126328403c033238611e448e4583dc6dc40d41a83b525836b0eae414d2d28",
+      "productionHash": "0fd126328403c033238611e448e4583dc6dc40d41a83b525836b0eae414d2d28",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "vitebsk--sv-josaphat",
+      "bundledHash": "7b3c8a4905b076811c72ac55581b3b94eb85bf85d6ab6fba71fcd75fdbda2294",
+      "productionHash": "7b3c8a4905b076811c72ac55581b3b94eb85bf85d6ab6fba71fcd75fdbda2294",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--grodno-cathedral-dedication",
+      "bundledHash": "27eb44770d4f8d596d06a3ca829c503c2038bbb1ca1bd3624767d780fea55237",
+      "productionHash": "27eb44770d4f8d596d06a3ca829c503c2038bbb1ca1bd3624767d780fea55237",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "minsk-mohilev--our-lady-mother-mercy",
+      "bundledHash": "2faaa789df43d75319f091572a12186388a83eeefa1d535f933c6995e7ac49d7",
+      "productionHash": "2faaa789df43d75319f091572a12186388a83eeefa1d535f933c6995e7ac49d7",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--our-lady-lahishyn",
+      "bundledHash": "47963c49fd3670a69de768154a686ff2b7072ec079802abae7ac1c3dfb96eb81",
+      "productionHash": "47963c49fd3670a69de768154a686ff2b7072ec079802abae7ac1c3dfb96eb81",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-vincent-lewoniuk-companions",
+      "bundledHash": "e7d80c79360e7008eafcd9e948cc9442555a287e337575d66a174a48cb65a220",
+      "productionHash": "e7d80c79360e7008eafcd9e948cc9442555a287e337575d66a174a48cb65a220",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--bl-maria-stella-companions",
+      "bundledHash": "017d38fe55678c51965d0417c2a0adca6e6353d189ddf262a958564e386caf8c",
+      "productionHash": "017d38fe55678c51965d0417c2a0adca6e6353d189ddf262a958564e386caf8c",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--our-lady-help-of-christians",
+      "bundledHash": "135449d346eb1ca2e7b0e060c2b2e51cdc49dab1075b35818ad3bc7c78d3cfd4",
+      "productionHash": "135449d346eb1ca2e7b0e060c2b2e51cdc49dab1075b35818ad3bc7c78d3cfd4",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--bl-honorat-kozminski",
+      "bundledHash": "f2a6379ad8cab853068fd4588881ef94af6d6824947a6543654d17a6f4f3e837",
+      "productionHash": "f2a6379ad8cab853068fd4588881ef94af6d6824947a6543654d17a6f4f3e837",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-jadwiga-queen",
+      "bundledHash": "45063e11a110b4ebcd23e9f0eb71e155ef79fd91843bd2497c951f0b5116ef49",
+      "productionHash": "45063e11a110b4ebcd23e9f0eb71e155ef79fd91843bd2497c951f0b5116ef49",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--sv-barbara",
+      "bundledHash": "6ac17ba9b1a8fd4046d6e109cdef5c4477cff940afe34cf5ccf066a17fb7f0dd",
+      "productionHash": "6ac17ba9b1a8fd4046d6e109cdef5c4477cff940afe34cf5ccf066a17fb7f0dd",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-albert-chmielowski",
+      "bundledHash": "fced39d6a2268b3e00c012adb50bd5cfd22ea21ef30bdc81a327d381b445b002",
+      "productionHash": "fced39d6a2268b3e00c012adb50bd5cfd22ea21ef30bdc81a327d381b445b002",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--sv-andrei-bobola",
+      "bundledHash": "b7360cdfbdf2bbcd3cb40b7444ab5714b928282c1fe2e662f196789fc027a33f",
+      "productionHash": "b7360cdfbdf2bbcd3cb40b7444ab5714b928282c1fe2e662f196789fc027a33f",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--our-lady-of-angels",
+      "bundledHash": "91c4464a323c4592cfaec1b428d49f3b8cbc5b38c31bc715c7d17c6f28278f4b",
+      "productionHash": "91c4464a323c4592cfaec1b428d49f3b8cbc5b38c31bc715c7d17c6f28278f4b",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--our-lady-mount-carmel",
+      "bundledHash": "75e946e4947c54217087edc908401e2467fe146552da8fa18feaa2b92a9f2613",
+      "productionHash": "75e946e4947c54217087edc908401e2467fe146552da8fa18feaa2b92a9f2613",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-sancja-szymkowiak",
+      "bundledHash": "6ddd9263d645574e553a92b05e28a8acb19aba3382e0c43d73eb642c575ef5b5",
+      "productionHash": "6ddd9263d645574e553a92b05e28a8acb19aba3382e0c43d73eb642c575ef5b5",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--holy-name-mary",
+      "bundledHash": "80ca6b95ec5876b3a95eceb684cd3131924f4732aa9500cbb905e302c26f337b",
+      "productionHash": "80ca6b95ec5876b3a95eceb684cd3131924f4732aa9500cbb905e302c26f337b",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-bronislawa",
+      "bundledHash": "9a23a3b13f2dc53322b73cda16fcd80cea2c40cea9ea508eddcfc2f9b8d67f19",
+      "productionHash": "9a23a3b13f2dc53322b73cda16fcd80cea2c40cea9ea508eddcfc2f9b8d67f19",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--sv-josaphat",
+      "bundledHash": "2ad70abf19b57edbca336071e35176e7a717e46caa543952c53bdf13ba29db15",
+      "productionHash": "2ad70abf19b57edbca336071e35176e7a717e46caa543952c53bdf13ba29db15",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-ladislaus-gielniow",
+      "bundledHash": "59c78c0a8ac2712207283433b1016db244ccc2419f18a1d1622a14941c20beda",
+      "productionHash": "59c78c0a8ac2712207283433b1016db244ccc2419f18a1d1622a14941c20beda",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--our-lady-mother-mercy",
+      "bundledHash": "3be36ffa155c11f2a61d96286c34a6eb6151fdcda71b4cf293d90fe47fa72080",
+      "productionHash": "3be36ffa155c11f2a61d96286c34a6eb6151fdcda71b4cf293d90fe47fa72080",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-honorat-kozminski",
+      "bundledHash": "46639034bfd4fc0de241787e2dd07ec8cdb7da5abfefd40757f1c81fa3702813",
+      "productionHash": "46639034bfd4fc0de241787e2dd07ec8cdb7da5abfefd40757f1c81fa3702813",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--our-lady-of-lourdes",
+      "bundledHash": "32df1f4986a89a4a694602ebc52c95fb5f826726ca65e850b8be522f1d8d1777",
+      "productionHash": "32df1f4986a89a4a694602ebc52c95fb5f826726ca65e850b8be522f1d8d1777",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--five-martyred-brothers",
+      "bundledHash": "a9e21214e2472b7c05220acd780eadb148605d27948dfe55f6ae31fa6271cd2e",
+      "productionHash": "a9e21214e2472b7c05220acd780eadb148605d27948dfe55f6ae31fa6271cd2e",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--sv-john-paul-ii",
+      "bundledHash": "56250fbb9a703008a910cedc1863341c397e4aad3955301ef88c9c216768e87d",
+      "productionHash": "56250fbb9a703008a910cedc1863341c397e4aad3955301ef88c9c216768e87d",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-karolina-kozka",
+      "bundledHash": "8da5c6c863c1fde3710e75f3397474452d7dee37654c2e22ad7e3a3e5c13a51b",
+      "productionHash": "8da5c6c863c1fde3710e75f3397474452d7dee37654c2e22ad7e3a3e5c13a51b",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--mary-mother-church",
+      "bundledHash": "dfb80e915416a6f55b706a15854e96de6e7ff02d5cbc9b9a1a961b87adaaafd0",
+      "productionHash": "dfb80e915416a6f55b706a15854e96de6e7ff02d5cbc9b9a1a961b87adaaafd0",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-salomea",
+      "bundledHash": "22d9d2e77735d03967a6efe827317caf43e1ec9c265a6b3f6b367e105322ee30",
+      "productionHash": "22d9d2e77735d03967a6efe827317caf43e1ec9c265a6b3f6b367e105322ee30",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "pinsk--our-lady-budslav",
+      "bundledHash": "01093f6042b4f72301ae437253e3af5f183160ff50d03bdcf784376dcd00a7eb",
+      "productionHash": "01093f6042b4f72301ae437253e3af5f183160ff50d03bdcf784376dcd00a7eb",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-maria-jesus-good-shepherd",
+      "bundledHash": "95ca64e8e94393e0bc2634578a645a51a63e00412225ab3e29df5d490c0af0dd",
+      "productionHash": "95ca64e8e94393e0bc2634578a645a51a63e00412225ab3e29df5d490c0af0dd",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-barbara",
+      "bundledHash": "0fb5240112283f346079e984677e20fc73c931889aac367639b8ef308d8ab30b",
+      "productionHash": "0fb5240112283f346079e984677e20fc73c931889aac367639b8ef308d8ab30b",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-casimir",
+      "bundledHash": "e4c3fd2c4326ef0da1c325632c96242c49ca57e210785861ae0bd019a90244e2",
+      "productionHash": "e4c3fd2c4326ef0da1c325632c96242c49ca57e210785861ae0bd019a90244e2",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-maximilian-kolbe",
+      "bundledHash": "56d12ee8d1d01598672c909c02305663746c92f9dbd8df50246dab8b3eab461d",
+      "productionHash": "56d12ee8d1d01598672c909c02305663746c92f9dbd8df50246dab8b3eab461d",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--our-lady-mother-mercy",
+      "bundledHash": "bc1ee16a6faa1fb0b4d4ef2fbbd52696acab800949b7aeb0e9b0c7709963b832",
+      "productionHash": "bc1ee16a6faa1fb0b4d4ef2fbbd52696acab800949b7aeb0e9b0c7709963b832",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-jurgis-matulaitis",
+      "bundledHash": "4b5fb2bf25a3f6f568b8895d22e57b02c3c390398078939810fd006b76d4c645",
+      "productionHash": "4b5fb2bf25a3f6f568b8895d22e57b02c3c390398078939810fd006b76d4c645",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--bl-boleslawa-lament",
+      "bundledHash": "7e1fd2b0f176ec150a0abcb31d19c14d8050797eaa12a9a1388d77abf8aa4940",
+      "productionHash": "7e1fd2b0f176ec150a0abcb31d19c14d8050797eaa12a9a1388d77abf8aa4940",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-george-martyr",
+      "bundledHash": "792486f2dbcdc8f8803d7386a5ee5d1d1d12fa18c06421137689157ab9ceaa52",
+      "productionHash": "792486f2dbcdc8f8803d7386a5ee5d1d1d12fa18c06421137689157ab9ceaa52",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-wenceslaus",
+      "bundledHash": "d6753cb9852506dbe1a3e8b618c0aca0b6c4389f713f699f3ee68b40bc6abfc9",
+      "productionHash": "d6753cb9852506dbe1a3e8b618c0aca0b6c4389f713f699f3ee68b40bc6abfc9",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-raphael-kalinowski",
+      "bundledHash": "70c5b746b15817463f7174a6d06477838c5cfe89095f1fe9225360bb1d66f60c",
+      "productionHash": "70c5b746b15817463f7174a6d06477838c5cfe89095f1fe9225360bb1d66f60c",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--mary-mother-church",
+      "bundledHash": "ae9aedc55012250f9dadd7ecfc741276b79eb91ccef52a5e4bebc60b651ccb2f",
+      "productionHash": "ae9aedc55012250f9dadd7ecfc741276b79eb91ccef52a5e4bebc60b651ccb2f",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--our-lady-mount-carmel",
+      "bundledHash": "96ddd8d68859e2dc14d0f2d1a1cdc97d4a72f06c09e5e23ec7bb84034ade4673",
+      "productionHash": "96ddd8d68859e2dc14d0f2d1a1cdc97d4a72f06c09e5e23ec7bb84034ade4673",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-faustina-kowalska",
+      "bundledHash": "8b9567394904609d3dbb7738ab98bb8bc834fdce1c42e48c982b569743d4e50d",
+      "productionHash": "8b9567394904609d3dbb7738ab98bb8bc834fdce1c42e48c982b569743d4e50d",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--our-lady-loreto",
+      "bundledHash": "d5f8fc7f9bd63371ae19913daeff5c808f275648e2d427baec6f67ff5dec628b",
+      "productionHash": "d5f8fc7f9bd63371ae19913daeff5c808f275648e2d427baec6f67ff5dec628b",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-adalbert-wojciech-bishop-martyr",
+      "bundledHash": "7e47c72a2dcf46f37be3321f92e0fdae13fd808837294a7bfd773b82014b5110",
+      "productionHash": "7e47c72a2dcf46f37be3321f92e0fdae13fd808837294a7bfd773b82014b5110",
+      "same": true
+    },
+    {
+      "collection": "dioceseOverrides",
+      "id": "grodno--sv-stanislaus-bishop-martyr",
+      "bundledHash": "2a333201784e67ec82a4c32b138ac2ae0e3436cd7e18c4065791f8681caae0ab",
+      "productionHash": "2a333201784e67ec82a4c32b138ac2ae0e3436cd7e18c4065791f8681caae0ab",
+      "same": true
+    }
+  ],
+  "differences": []
+}

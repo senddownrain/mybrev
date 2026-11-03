@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "permanentRows": 1011,
+  "substantive": 48,
+  "extras": 23,
+  "ranks": 17,
+  "dates": 3,
+  "missing": 5,
+  "decisions": 172,
+  "commissionCases": 30,
+  "reportSections": 18,
+  "previousArtifactHashes": "unchanged",
+  "runtimeAndFlutter": "unchanged",
+  "networkRequests": 0
+}

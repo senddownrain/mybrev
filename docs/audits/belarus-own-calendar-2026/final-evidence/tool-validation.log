@@ -1,0 +1,9 @@
+PYTHON_SYNTAX_PASS build-final-data.py
+PYTHON_SYNTAX_PASS capture-calendar.py
+PYTHON_SYNTAX_PASS verify-artifacts.py
+NODE_SYNTAX_PASS compare-production.mjs
+NODE_SYNTAX_PASS normative-cases.mjs
+NODE_SYNTAX_PASS probe-cache.mjs
+OFFLINE_REPLAY_BYTE_IDENTICAL PRODUCTION_DIFF.csv
+OFFLINE_REPLAY_BYTE_IDENTICAL DECISION_MATRIX.csv
+OFFLINE_REPLAY_BYTE_IDENTICAL final-evidence/final-summary.json

@@ -1,0 +1,70 @@
+[
+  {
+    "sequence": 1,
+    "method": "GET",
+    "path": "liturgicalCalendarMeta/current",
+    "fieldMask": [
+      "schemaVersion",
+      "revision",
+      "notesRevision",
+      "publishedAt"
+    ],
+    "startedAt": "2026-11-03T21:05:59.533455+00:00",
+    "retries": 0,
+    "status": 200,
+    "responseBytes": 452
+  },
+  {
+    "sequence": 2,
+    "method": "GET",
+    "path": "liturgicalCelebrations",
+    "startedAt": "2026-11-03T21:07:21.016321+00:00",
+    "retries": 0,
+    "pageSize": "1000",
+    "pagination": false,
+    "status": 200,
+    "responseBytes": 622889
+  },
+  {
+    "sequence": 3,
+    "method": "GET",
+    "path": "liturgicalDioceseOverrides",
+    "startedAt": "2026-11-03T21:07:23.408646+00:00",
+    "retries": 0,
+    "pageSize": "1000",
+    "pagination": false,
+    "status": 200,
+    "responseBytes": 225808
+  },
+  {
+    "sequence": 4,
+    "method": "GET",
+    "path": "liturgicalYearOverrides",
+    "startedAt": "2026-11-03T21:07:25.927069+00:00",
+    "retries": 0,
+    "pageSize": "1000",
+    "pagination": false,
+    "status": 200,
+    "responseBytes": 26174
+  },
+  {
+    "sequence": 5,
+    "method": "POST",
+    "path": ":runAggregationQuery",
+    "startedAt": "2026-11-03T21:07:27.324548+00:00",
+    "retries": 0,
+    "status": 200,
+    "responseBytes": 170
+  },
+  {
+    "sequence": 6,
+    "method": "GET",
+    "path": "liturgicalCalendarMeta/current",
+    "startedAt": "2026-11-03T21:07:29.381563+00:00",
+    "retries": 0,
+    "pageSize": null,
+    "pagination": false,
+    "status": 200,
+    "responseBytes": 452
+  }
+]

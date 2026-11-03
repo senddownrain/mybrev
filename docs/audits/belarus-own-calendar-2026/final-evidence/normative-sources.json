@@ -1,0 +1,33 @@
+{
+  "verified": [
+    {
+      "id": "IMMACULATE-HEART-1998",
+      "url": "https://www.vatican.va/roman_curia/congregations/ccdds/documents/rc_con_ccdds_doc_20000630_memoria-immaculati-cordis-mariae-virginis_lt.html",
+      "document_date": "1998-12-08",
+      "protocol": "2671/98/L",
+      "fact": "On coincidence with another obligatory memorial, both are optional that year. Permanent rank unchanged."
+    },
+    {
+      "id": "MOTHER-CHURCH-2018",
+      "url": "https://press.vatican.va/content/salastampa/en/bollettino/pubblico/2018/03/27/180327b.html",
+      "document_date": "2018-03-24",
+      "fact": "Marian memorial prevails over coincident saint/blessed memorial."
+    },
+    {
+      "id": "USCCB-2013-CONTROL",
+      "url": "https://www.usccb.org/resources/newsletter-2013-06.pdf",
+      "location": "PDF page4, printed p24",
+      "role": "Secondary episcopal application corroborating primary 1998 notification."
+    }
+  ],
+  "not_verified_as_permanent_2033_rule": [
+    {
+      "url": "https://www.cbcew.org.uk/wp-content/uploads/sites/13/2021/10/Ordo-2022.pdf",
+      "scope": "Historical Calendar Notes 2022; do not extrapolate to 2033"
+    },
+    {
+      "url": "https://www.cultodivino.va/content/cultodivino/it/documenti/responsa-ad-dubia/2020/de-calendario-liturgico-2022.html",
+      "status": "Direct old URL inaccessible in browsing tool"
+    }
+  ]
+}

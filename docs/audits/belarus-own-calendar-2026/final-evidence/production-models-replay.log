@@ -1,0 +1,38 @@
+{
+  "permanentEqual": 316,
+  "permanentDifferent": 0,
+  "models": {
+    "web-bundle": {
+      "days": 16068,
+      "roleCounts": {
+        "primary": 16068,
+        "alternative": 4649,
+        "commemoration": 564,
+        "suppressed": 7296
+      }
+    },
+    "production": {
+      "days": 16068,
+      "roleCounts": {
+        "primary": 16068,
+        "alternative": 4649,
+        "commemoration": 564,
+        "suppressed": 7296
+      }
+    },
+    "web-selected-current": {
+      "days": 16068,
+      "roleCounts": {
+        "primary": 16068,
+        "alternative": 4649,
+        "commemoration": 564,
+        "suppressed": 7296
+      }
+    }
+  },
+  "dayDifferences": 0,
+  "yearOverrides": 15,
+  "extraAuto": 11,
+  "ruleWitnesses": 23,
+  "materializedTransferOccurrences": 38
+}

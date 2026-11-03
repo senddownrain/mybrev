@@ -1,0 +1,42 @@
+{
+  "projectId": "ibreviaryby",
+  "schemaVersion": 1,
+  "revision": 3,
+  "notesRevision": 4,
+  "publishedAt": "2026-10-07T18:15:01.305Z",
+  "snapshotExportedAt": "2026-11-03T21:07:30.059696+00:00",
+  "metaBookendsStable": true,
+  "notesCount": 1337,
+  "notesBodiesRead": false,
+  "bundledNotesRevision": 6,
+  "requests": 6,
+  "documentPayloadsReturned": 333,
+  "distinctDocumentPayloads": 332,
+  "aggregationCountQuery": 1,
+  "billingExact": "not measured; payload count is not a billing guarantee",
+  "collections": {
+    "liturgicalCalendarMeta": {
+      "documentCount": 1,
+      "sha256": "4c81d4cf39fbc0ae704c7c970076470009673c258db5afad6ff220c6b8a38ee7",
+      "requests": 1
+    },
+    "liturgicalCelebrations": {
+      "documentCount": 241,
+      "sha256": "aed56cec31f9c1852018051ff1fc7d5f1e533003d02d9a5b3952d42bd539183b",
+      "requests": 1
+    },
+    "liturgicalDioceseOverrides": {
+      "documentCount": 75,
+      "sha256": "26eaf40dbbb8fbf2e0ecca6beaa0216b89f2448217d4596d91c3ae19ab9e7efe",
+      "requests": 1
+    },
+    "liturgicalYearOverrides": {
+      "documentCount": 15,
+      "sha256": "a028f5718a5df2440fce571f86dfe603eb5b42e923fcfa2ddc180432457dea0f",
+      "requests": 1
+    }
+  },
+  "noWrites": true,
+  "nonCalendarCollectionsRead": [],
+  "sourceSnapshotPrivateNotCommitted": true
+}

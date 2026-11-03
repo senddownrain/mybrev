@@ -1,0 +1,103 @@
+{
+  "previous_audit_commit": "34301a65b0e58f43a514c0d62968e9bf043a7f42",
+  "code_commit": "8a7017412ee04ec43eaee7a9fe2dacd64999b54c",
+  "branch": "audit/belarus-own-calendar-2026-final",
+  "first_audit_reused": true,
+  "source_hashes_unchanged": {
+    "AGENTS.md": "410ff6e02d8b87270cb5d3205ed49583bce25884652aae620ee8aeba2dc23705",
+    "package.json": "d58443bc1b883377e66a10cf801750988ef29020077c37a231408c6f7c581277",
+    "src/constants/fixedCalendar.js": "a78b3c08638206cea6f89f70d5d65b5306991ffd13071b028e35e84ce40294c3",
+    "src/data/ordo/layers.js": "96a81010ef38c0d3e7fdb0f45a4df1360a690b8c42b291a91ee3505df5f1b4a7",
+    "src/data/ordo/year-overrides.js": "ca037e4092c562ae851578645c0e2620c09981b7f3fec4a946adffa31739cdb5",
+    "src/data/ordo/calendar-definitions.json": "e67cdb2441739b9ffbe8bc7f8d695497385ce7a708755a24a6ec2cd6633b5d60",
+    "src/data/ordo/fixed-identities.js": "0024c7ddbc2fefff65b74b34b82a6315a3350d2b89ca47a5aafc31db64b2b61d",
+    "src/data/ordo/feast-content-index.json": "4b0937f0d13c07fa8e19f70a88f1f2a67f29cca5a071be8bf10294e4eee3ab07",
+    "src/data/ordo/readings-status.json": "2438bd2ee3751974a5f562a06f159fae95381407541346cb55e9b064833b1c45",
+    "src/data/ordo/transfer-rank-evidence.js": "902de64b94c66c5f2907b5cbe5ea1b15739de9538eb0ad882d3552d5ce6f89fc",
+    "src/utils/ordo/seed.js": "d3909692725a9212c48c97da4c0c7316cc94a3989162f6db8285a94cb2b82ad5",
+    "src/utils/ordo/fixedCelebrations.js": "c994bcc35bc1802629d69b43f1aaddc5076338b930285ea451f165e13806dc2f",
+    "src/utils/ordo/definitions.js": "19f01154b9325aa72e525e6b027734867a7c3d8fb23026943f17f4979283ea65",
+    "src/utils/ordo/yearPlan.js": "ed9accf48a8d70c8cd36911368b5104bb812718f35ceaef43ece61a5e81d79dd",
+    "src/utils/ordo/candidates.js": "b5db962e578e75f68c09b366d2e4ef2de49e69f3a2fcd7ead9e6ca2530ebe5e2",
+    "src/utils/ordo/display.js": "a4771fe6b526fa423e8626ebfe2569b702c040afab902cafce40efdf455dec45",
+    "src/utils/ordo/precedence.js": "ae127293538787854b4018ba188b54885e0bcc0f0c3831aa58121c331cd0edf9",
+    "src/utils/ordo/transfers.js": "7c4884dbca92cb64eb2ab901b7d48d6a24d4cbcdb9269a003ef28b895e6cb43d",
+    "src/utils/ordo/office.js": "ceaaade0bdd96a26f8681f047e30f55c676def18c5205b1e8c68eff817337c4a",
+    "src/utils/ordo/runtime.js": "741f5724a9a4c1d1082f0cae4b7b13a5a99ccac2673436064bd6a0c715cc0079",
+    "src/utils/ordoCalendarSource.js": "b62c5552b056a610d7b08e666c84a625b9e14fc3b7c2b68373a9742bdfdb982d",
+    "src/utils/ordoCalendarCache.js": "0d6e7deed97350a8ecc9ec5fc0bb855642189906a5b74ec6f849c314cc40c6c4",
+    "src/services/ordoCalendarService.js": "2b03f2424bea3f7d0267f25a8db29bd4c852fc497b53d001ce9375519fb4d4dd",
+    "scripts/ordo/data/firestore-days-index.json": "a78dfddd900cd4e63c80ed16df1ef6720f82a672d80137650c00ca0a8da42763",
+    "src/data/ordo/evidence/minsk-mohilev.json": "5d1941c7d7baab925816cdbb48848bcc1603d87849d91e755c6831a4891ae131",
+    "src/data/ordo/evidence/vitebsk.json": "ab3f89a9af1d47581d88302a7096b5cadedbb1960595fbafe15abf93f8f0aae8",
+    "src/data/ordo/evidence/pinsk.json": "376cc885e76cc4e98ad0db3a32405c62f6c08523229c37d31eb088fbcdb9646f",
+    "src/data/ordo/evidence/grodno.json": "8c3bc3d41035f4b721f95c959b02b652a3f7ff93802cceb6fa90357a2fea1e8f"
+  },
+  "firebase_project_verified": "ibreviaryby",
+  "read_started_utc": "2026-11-03T21:05:59.533455+00:00",
+  "read_finished_request_utc": "2026-11-03T21:07:29.381563+00:00",
+  "production_read_requests": 6,
+  "database_writes": 0,
+  "hosting_mutations": 0,
+  "flutter_changes": 0,
+  "text_mutations": 0,
+  "private_snapshot_committed": false,
+  "notes_body_read": false,
+  "notes_body_read_reason": "production revision4 < bundled revision6; cannot be selected by current Web",
+  "counts": {
+    "projectId": "ibreviaryby",
+    "schemaVersion": 1,
+    "revision": 3,
+    "notesRevision": 4,
+    "publishedAt": "2026-10-07T18:15:01.305Z",
+    "snapshotExportedAt": "2026-11-03T21:07:30.059696+00:00",
+    "metaBookendsStable": true,
+    "notesCount": 1337,
+    "notesBodiesRead": false,
+    "bundledNotesRevision": 6,
+    "requests": 6,
+    "documentPayloadsReturned": 333,
+    "distinctDocumentPayloads": 332,
+    "aggregationCountQuery": 1,
+    "billingExact": "not measured; payload count is not a billing guarantee",
+    "collections": {
+      "liturgicalCalendarMeta": {
+        "documentCount": 1,
+        "sha256": "4c81d4cf39fbc0ae704c7c970076470009673c258db5afad6ff220c6b8a38ee7",
+        "requests": 1
+      },
+      "liturgicalCelebrations": {
+        "documentCount": 241,
+        "sha256": "aed56cec31f9c1852018051ff1fc7d5f1e533003d02d9a5b3952d42bd539183b",
+        "requests": 1
+      },
+      "liturgicalDioceseOverrides": {
+        "documentCount": 75,
+        "sha256": "26eaf40dbbb8fbf2e0ecca6beaa0216b89f2448217d4596d91c3ae19ab9e7efe",
+        "requests": 1
+      },
+      "liturgicalYearOverrides": {
+        "documentCount": 15,
+        "sha256": "a028f5718a5df2440fce571f86dfe603eb5b42e923fcfa2ddc180432457dea0f",
+        "requests": 1
+      }
+    },
+    "noWrites": true,
+    "nonCalendarCollectionsRead": [],
+    "sourceSnapshotPrivateNotCommitted": true
+  },
+  "artifacts": {
+    "comparison_rows": 1082,
+    "decision_rows": 172,
+    "permanent_substantive": 48,
+    "commission_cases": 30,
+    "commission_rows": 31
+  },
+  "limitations": [
+    "Non-transactional capture with stable metadata bookends",
+    "Installed clients and actual delivered Hosting build not inspected",
+    "No days/readings bodies inspected",
+    "C30 permanent rule not inferred from historical annual example"
+  ],
+  "timezone_reference": "Europe/Minsk (Belarus, UTC+03:00); capture timestamps in UTC"
+}

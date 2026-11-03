@@ -1,0 +1,1470 @@
+[
+  {
+    "id": "B-HEART",
+    "diocese": "minsk-mohilev",
+    "date": "2025-06-28",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-irenaeus",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w12-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2025-06-27"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w12-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-irenaeus",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2025-06-27"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "minsk-mohilev",
+    "date": "2026-06-13",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-anthony-padua",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w10-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-06-12"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w10-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-anthony-padua",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-06-12"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "minsk-mohilev",
+    "date": "2027-06-05",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w9-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-boniface",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-06-04"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "minsk-mohilev",
+    "date": "2031-06-21",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-aloysius-gonzaga",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w11-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2031-06-20"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w11-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-aloysius-gonzaga",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2031-06-20"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "minsk-mohilev",
+    "date": "2032-06-05",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2032-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w9-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-boniface",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2032-06-04"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "vitebsk",
+    "date": "2025-06-28",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-irenaeus",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w12-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2025-06-27"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w12-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-irenaeus",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2025-06-27"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "vitebsk",
+    "date": "2026-06-13",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-anthony-padua",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w10-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-06-12"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w10-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-anthony-padua",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-06-12"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "vitebsk",
+    "date": "2027-06-05",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w9-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-boniface",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-06-04"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "vitebsk",
+    "date": "2031-06-21",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-aloysius-gonzaga",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w11-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2031-06-20"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w11-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-aloysius-gonzaga",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2031-06-20"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "vitebsk",
+    "date": "2032-06-05",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2032-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w9-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-boniface",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2032-06-04"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "pinsk",
+    "date": "2025-06-28",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-irenaeus",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w12-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2025-06-27"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w12-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-irenaeus",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2025-06-27"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "pinsk",
+    "date": "2026-06-13",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-anthony-padua",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w10-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-06-12"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w10-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-anthony-padua",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-06-12"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "pinsk",
+    "date": "2027-06-05",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w9-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-boniface",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-06-04"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "pinsk",
+    "date": "2031-06-21",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-aloysius-gonzaga",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w11-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2031-06-20"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w11-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-aloysius-gonzaga",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2031-06-20"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "pinsk",
+    "date": "2032-06-05",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2032-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w9-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-boniface",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2032-06-04"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "grodno",
+    "date": "2025-06-28",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-irenaeus",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w12-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2025-06-27"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w12-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-irenaeus",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2025-06-27"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "grodno",
+    "date": "2026-06-13",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-anthony-padua",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w10-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-06-12"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w10-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-anthony-padua",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2026-06-12"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "grodno",
+    "date": "2027-06-05",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w9-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-boniface",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2027-06-04"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "grodno",
+    "date": "2031-06-21",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-aloysius-gonzaga",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w11-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2031-06-20"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w11-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-aloysius-gonzaga",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2031-06-20"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "grodno",
+    "date": "2032-06-05",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2032-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w9-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-boniface",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2032-06-04"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-HEART",
+    "diocese": "grodno",
+    "date": "2034-06-17",
+    "before": {
+      "primary": {
+        "id": "immaculate-heart",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-albert-chmielowski",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w10-d7",
+          "reason": "weekday-under-memorial"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "reason": "not-applicable"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2034-06-16"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "temporal:ordinary-w10-d7",
+        "rank": "feria"
+      },
+      "alternatives": [
+        {
+          "id": "immaculate-heart",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "saturday-blessed-virgin-mary",
+          "rank": "memoria-ad-libitum"
+        },
+        {
+          "id": "sv-albert-chmielowski",
+          "rank": "memoria-ad-libitum"
+        }
+      ],
+      "suppressed": [],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2034-06-16"
+      }
+    },
+    "method": "in-memory year rank projection; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-MOTHER-CHURCH",
+    "diocese": "minsk-mohilev",
+    "date": "2028-06-05",
+    "before": {
+      "primary": {
+        "id": "mary-mother-church",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d2",
+          "reason": "weekday-under-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2028-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "mary-mother-church",
+        "rank": "memoria"
+      },
+      "alternatives": [],
+      "suppressed": [
+        {
+          "id": "sv-boniface",
+          "reason": "suppressed-by-year-override"
+        },
+        {
+          "id": "temporal:ordinary-w9-d2",
+          "reason": "weekday-under-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2028-06-04"
+      }
+    },
+    "method": "PDF rank projection + isolated suppression of competing saint; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-MOTHER-CHURCH",
+    "diocese": "vitebsk",
+    "date": "2028-06-05",
+    "before": {
+      "primary": {
+        "id": "mary-mother-church",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d2",
+          "reason": "weekday-under-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2028-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "mary-mother-church",
+        "rank": "memoria"
+      },
+      "alternatives": [],
+      "suppressed": [
+        {
+          "id": "sv-boniface",
+          "reason": "suppressed-by-year-override"
+        },
+        {
+          "id": "temporal:ordinary-w9-d2",
+          "reason": "weekday-under-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2028-06-04"
+      }
+    },
+    "method": "PDF rank projection + isolated suppression of competing saint; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-MOTHER-CHURCH",
+    "diocese": "pinsk",
+    "date": "2028-06-05",
+    "before": {
+      "primary": {
+        "id": "mary-mother-church",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d2",
+          "reason": "weekday-under-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2028-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "mary-mother-church",
+        "rank": "memoria"
+      },
+      "alternatives": [],
+      "suppressed": [
+        {
+          "id": "sv-boniface",
+          "reason": "suppressed-by-year-override"
+        },
+        {
+          "id": "temporal:ordinary-w9-d2",
+          "reason": "weekday-under-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2028-06-04"
+      }
+    },
+    "method": "PDF rank projection + isolated suppression of competing saint; not an implementation patch",
+    "status": "PASS"
+  },
+  {
+    "id": "B-MOTHER-CHURCH",
+    "diocese": "grodno",
+    "date": "2028-06-05",
+    "before": {
+      "primary": {
+        "id": "mary-mother-church",
+        "rank": "memoria"
+      },
+      "alternatives": [
+        {
+          "id": "sv-boniface",
+          "rank": "memoria"
+        }
+      ],
+      "suppressed": [
+        {
+          "id": "temporal:ordinary-w9-d2",
+          "reason": "weekday-under-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2028-06-04"
+      }
+    },
+    "expectedAfter": {
+      "primary": {
+        "id": "mary-mother-church",
+        "rank": "memoria"
+      },
+      "alternatives": [],
+      "suppressed": [
+        {
+          "id": "sv-boniface",
+          "reason": "suppressed-by-year-override"
+        },
+        {
+          "id": "temporal:ordinary-w9-d2",
+          "reason": "weekday-under-memorial"
+        }
+      ],
+      "firstVespers": {
+        "byRight": false,
+        "celebratedOnEve": false,
+        "eveDate": "2028-06-04"
+      }
+    },
+    "method": "PDF rank projection + isolated suppression of competing saint; not an implementation patch",
+    "status": "PASS"
+  }
+]

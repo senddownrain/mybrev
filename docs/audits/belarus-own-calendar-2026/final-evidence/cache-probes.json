@@ -1,0 +1,55 @@
+[
+  {
+    "id": "D-MEMO",
+    "status": "BASELINE_BEHAVIOR_REPRODUCED",
+    "cachedRank": "memoria",
+    "freshRank": "feria",
+    "callerEpochIgnored": true
+  },
+  {
+    "id": "D-REVALIDATE",
+    "status": "BASELINE_BEHAVIOR_REPRODUCED",
+    "simulatedServerRevision": 4,
+    "clientObservedRevision": 3,
+    "networkCallsAtStartup": 0,
+    "condition": "complete local entry, unchanged CONTENT_REVISION/refresh token"
+  },
+  {
+    "id": "D-FRESH-FLAG",
+    "status": "BASELINE_BEHAVIOR_REPRODUCED",
+    "freshFlagAloneForcesNetwork": false,
+    "networkCalls": 0
+  },
+  {
+    "id": "D-REVALIDATE-CONTROL",
+    "status": "BASELINE_BEHAVIOR_REPRODUCED",
+    "revalidateTrueCallsLoader": true
+  },
+  {
+    "id": "D-CACHED-SCHEMA",
+    "status": "BASELINE_BEHAVIOR_REPRODUCED",
+    "unsupportedCachedSchemaSelected": true,
+    "scope": "local cache path; network loader separately guards future schema"
+  },
+  {
+    "id": "NOTES-CURRENT",
+    "status": "BASELINE_BEHAVIOR_REPRODUCED",
+    "productionNotesRevision": 4,
+    "bundledNotesRevision": 6,
+    "selected": "bundled"
+  },
+  {
+    "id": "D-DOWNGRADE",
+    "status": "BASELINE_BEHAVIOR_REPRODUCED",
+    "serverMetadataRevision": 3,
+    "activeRevisionAfterApply": 4,
+    "meaning": "Lowering meta is not a reliable rollback in an already active session"
+  },
+  {
+    "id": "D-NOTES-PROMISE",
+    "status": "BASELINE_BEHAVIOR_REPRODUCED",
+    "firstPublishedReaderCalls": 1,
+    "nextPublishedReaderCalls": 0,
+    "condition": "successful loader promise held for session; future notes update"
+  }
+]
