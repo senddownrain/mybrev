@@ -108,8 +108,12 @@ export function assembleDaysResult({
     .map(resolveFixed);
   if (seasonal) resolvedFixed.unshift(seasonal);
 
-  const resolvedDynamicDays = new Map(dynamicEntries
-    .filter(([code]) => !exclusiveFeastCode || normalizedFeastCode(code) === exclusiveFeastCode)
+  const movableEntries = dynamicEntries
+    .filter(([code]) => !exclusiveFeastCode || normalizedFeastCode(code) === exclusiveFeastCode);
+  // Keep the original sparse/legacy Proper fields for rubric-aware assembly.
+  // The legacy resolved map stays unchanged for solemnities and feasts.
+  const rawDynamicDaysByFeast = new Map(movableEntries);
+  const resolvedDynamicDays = new Map(movableEntries
     .map(([code, docs]) => [
       code,
       docs.map((item) => withCalendarContext(resolveDayAgainstPeriod(item, resolvedPeriodDay))),
@@ -124,6 +128,7 @@ export function assembleDaysResult({
     periodFallback: resolvedPeriodDay,
     fixedDateDays: exclusiveFeastCode ? [] : resolvedFixed,
     dynamicDaysByFeast: resolvedDynamicDays,
+    rawDynamicDaysByFeast,
     seasonalException: exclusiveFeastCode ? null : seasonal,
     seasonalDateDay,
     exclusiveFeastCode,
