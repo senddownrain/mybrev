@@ -44,3 +44,10 @@ npm run db:snapshot:query -- --collection days
 Не обновляйте snapshot и не запускайте live-аудит без подтверждения доступной квоты. Локальный service account хранится в `patchs/serviceAccountKey.json`, но исключён из Git.
 
 Подробности: [Firestore snapshots](docs/firestore-snapshots.md) и [архитектура литургических данных](docs/liturgical-data-architecture.md).
+
+## Word-ревизия песенника
+
+Офлайн-экспорт DOCX и проверка возвращённого документа без применения изменений:
+`npm run songs:review:export -- --source src/data/songs.json --out out/songbook-review/seed-v1`.
+Установка Python-зависимостей, snapshot-режим, dry-run, тесты и план доставки:
+[docs/songbook-review.md](docs/songbook-review.md).
