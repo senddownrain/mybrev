@@ -48,12 +48,15 @@ test('High Priest feast completes all three daytime hours without replacing its 
     sext1Ant1: '<p>One proper antiphon</p>',
     sext1Ant2: '[from-day]',
     sext1Ant3: '',
+    sext2Ant1: '<p>Proper Sext antiphon</p>',
+    sext3Ant1: '<p>Proper None antiphon</p>',
     sext1Ps1: null,
     sext1Ps2: '',
     sext1Ps3: 'from-day',
-    sext1R: '<p>Proper daytime reading</p>',
+    sext1R: '<p>Proper Terce reading</p>',
+    sext2R: '<p>Proper Sext reading</p>',
+    sext3R: '<p>Proper None reading</p>',
     sext1Pr: '<p>Proper collect</p>',
-    sext2R: '',
     sext2Pr: '',
     sext3Pr: null,
   };
@@ -68,10 +71,14 @@ test('High Priest feast completes all three daytime hours without replacing its 
     ['Ps1', 'Ps2', 'Ps3'].forEach((suffix) => {
       assert.equal(getDaytimeHourField(day, hour, suffix), `<p>weekday:${hour}:${suffix}</p>`);
     });
-    assert.equal(getDaytimeHourField(day, hour, 'Ant1'), '<p>One proper antiphon</p>');
+    const antiphon = hour === 1 ? '<p>One proper antiphon</p>'
+      : hour === 2 ? '<p>Proper Sext antiphon</p>' : '<p>Proper None antiphon</p>';
+    assert.equal(getDaytimeHourField(day, hour, 'Ant1'), antiphon);
     assert.equal(getDaytimeHourField(day, hour, 'Ant2'), '');
     assert.equal(getDaytimeHourField(day, hour, 'Ant3'), '');
-    assert.equal(getDaytimeHourField(day, hour, 'R'), '<p>Proper daytime reading</p>');
+    const reading = hour === 1 ? '<p>Proper Terce reading</p>'
+      : hour === 2 ? '<p>Proper Sext reading</p>' : '<p>Proper None reading</p>';
+    assert.equal(getDaytimeHourField(day, hour, 'R'), reading);
     assert.equal(getDaytimeHourField(day, hour, 'Pr'), '<p>Proper collect</p>');
   });
 
@@ -79,7 +86,7 @@ test('High Priest feast completes all three daytime hours without replacing its 
   // That must not reintroduce Ant2/Ant3 after a single proper antiphon.
   const rerendered = resolveDayAgainstPeriod(day, weekday);
   assert.equal(getDaytimeHourField(rerendered, 1, 'Ant2'), '');
-  assert.equal(getDaytimeHourField(rerendered, 2, 'Ant1'), '<p>One proper antiphon</p>');
+  assert.equal(getDaytimeHourField(rerendered, 2, 'Ant1'), '<p>Proper Sext antiphon</p>');
   assert.equal(getDaytimeHourField(rerendered, 3, 'Pr'), '<p>Proper collect</p>');
 });
 
@@ -97,10 +104,25 @@ test('missing proper fields fall back to the matching weekday hour; explicit ref
   HOURS.forEach((hour) => {
     assert.equal(getDaytimeHourField(day, hour, 'Hymn'), `<p>weekday:${hour}:Hymn</p>`);
   });
-  assert.equal(getDaytimeHourField(day, 1, 'R'), '<p>weekday:1:R</p>');
+  assert.equal(getDaytimeHourField(day, 1, 'R'), '',
+    'missing proper feast reading must not silently become the weekday reading');
   assert.equal(getDaytimeHourField(day, 2, 'R'), '<p>weekday:2:R</p>');
   assert.equal(getDaytimeHourField(day, 3, 'Ps2'), '<p>Proper None psalm</p>');
   assert.equal(getDaytimeHourField(day, 2, 'Ps2'), '<p>weekday:2:Ps2</p>');
+});
+
+test('missing daytime collect of a feast is inherited from its proper Lauds, not the weekday', () => {
+  const day = forDate('feast-christthehighpriest', {
+    id: 'feast-christthehighpriest',
+    _feast: 'feast-christthehighpriest',
+    _rank: 'festum',
+    laudesPr: '<p>Proper collect from Lauds</p>',
+    sext1Pr: '',
+    sext2Pr: '',
+  });
+  HOURS.forEach((hour) => {
+    assert.equal(getDaytimeHourField(day, hour, 'Pr'), '<p>Proper collect from Lauds</p>');
+  });
 });
 
 test('dynamic solemnities keep their own missing-field semantics (not weekday Daytime Prayer)', () => {
