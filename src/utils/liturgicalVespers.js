@@ -60,6 +60,29 @@ export function assembleFirstVespers(day) {
   return result;
 }
 
+/**
+ * The ordinary Sunday document stores II Vespers in `vesper*`. When its
+ * `vesper1*` are empty, I Vespers are the Saturday psalter's `vesper*`,
+ * NOT Sunday's `vesper*`. Preserve any explicit Sunday `vesper1*` Proper.
+ * Missing source fields are left blank and reported, never silently filled
+ * with Sunday's II Vespers.
+ */
+export function assembleOrdinarySundayFirstVespers(sunday, saturdayPsalter) {
+  if (!sunday) return null;
+  const result = { ...sunday };
+  const missing = [];
+  VESPER_FIELDS.forEach((field) => {
+    const first = sunday[`vesper1${field}`];
+    const saturday = saturdayPsalter?.[`vesper${field}`];
+    const value = hasText(first) ? first : (hasText(saturday) ? saturday : '');
+    result[`vesper${field}`] = value;
+    if (!hasText(value)) missing.push(field);
+  });
+  result._firstVespersSource = hasFirstVespers(sunday) ? 'vesper1+saturday-psalter' : 'saturday-psalter';
+  result._missingFirstVespersFields = missing;
+  return result;
+}
+
 /** Tomorrow's option that owns I Vespers tonight (by celebration id). */
 export function findFirstVespersOption(tomorrowContent, celebrationId) {
   const options = tomorrowContent?.dayOptions || [];
@@ -76,7 +99,7 @@ export function findFirstVespersOption(tomorrowContent, celebrationId) {
  *
  * @returns {{ firstVespers: object|null, local: object[], second: boolean }}
  */
-export function eveningVespersModel(day, tomorrowContent, { isoWeekday, requestedDayId = '' } = {}) {
+export function eveningVespersModel(day, tomorrowContent, { isoWeekday, requestedDayId = '', periodDay = null } = {}) {
   const none = { firstVespers: null, local: [], second: false };
   if (!day || usesOwnVespers(day)) return none;
   if (day._ordo?.vespers) {
@@ -84,10 +107,15 @@ export function eveningVespersModel(day, tomorrowContent, { isoWeekday, requeste
     if (vespers.type === 'first') {
       const option = findFirstVespersOption(tomorrowContent, vespers.celebrationId);
       if (!option?.day) return none;
+      const ordinarySunday = Number(isoWeekday) === 6
+        && option.ordo?.officeKind === 'sunday'
+        && String(vespers.celebrationId || '').startsWith('temporal:ordinary-');
       return {
         ...none,
         firstVespers: {
-          day: assembleFirstVespers(option.day),
+          day: ordinarySunday
+            ? assembleOrdinarySundayFirstVespers(option.day, periodDay)
+            : assembleFirstVespers(option.day),
           sourceDayId: option.day.id || '',
           title: option.title || vespers.title || 'заўтрашняга дня',
           places: [],
