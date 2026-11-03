@@ -95,9 +95,10 @@
               </span>
             </template>
 
-            <v-list-item-title class="day-option__title">
-              {{ getOptionDisplayTitle(option) }}
-            </v-list-item-title>
+            <v-list-item-title
+              class="day-option__title"
+              v-html="formatLiturgicalTitleHtml(getOptionDisplayTitle(option))"
+            ></v-list-item-title>
             <v-list-item-subtitle v-if="getOptionMeta(option)" class="day-option__subtitle">
               {{ getOptionMeta(option) }}
             </v-list-item-subtitle>
@@ -143,6 +144,7 @@ import {
   getLiturgicalTheme,
 } from '@/constants/liturgical';
 import { formatDateDayMonth } from '@/utils/date';
+import { formatLiturgicalTitleHtml } from '@/utils/liturgicalTitle';
 import { effectiveOrdoDioceses, normalizeOrdoDiocese, ordoDiocese } from '@/utils/ordoDiocese';
 import { unionDayOptions } from '@/utils/dayOptionsUnion';
 
