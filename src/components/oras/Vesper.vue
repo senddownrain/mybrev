@@ -16,6 +16,7 @@
                     <span class="vespers-rubric__line" aria-hidden="true"></span>
                     <span class="vespers-rubric__label" v-html="vespersRubric.labelHtml"></span>
                 </v-chip>
+                <v-alert v-if="firstVespersWarning" type="warning" variant="tonal" class="mb-4" role="alert">{{ firstVespersWarning }}</v-alert>
                 <hymnus :text="vesperDay.vesperHymn" :feast-name="vesperDay._feastName" />
                 <psalms :ant1="vesperDay.vesperAnt1" :ant2="vesperDay.vesperAnt2" :ant3="vesperDay.vesperAnt3" :ps1="vesperDay.vesperPs1"
                     :ps2="vesperDay.vesperPs2" :ps3="vesperDay.vesperPs3" />
@@ -55,7 +56,7 @@ import EndOfVesper from '@/components/oraparts/EndOfVesper.vue';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 
 const route = useRoute();
-const { day, pending } = useResolvedLiturgicalDay();
+const { day, pending, periodDay } = useResolvedLiturgicalDay();
 const { getLiturgicalContentForDate } = useLiturgicalContent();
 const tomorrowContent = ref(null);
 const checkingTomorrow = ref(false);
@@ -76,9 +77,15 @@ const eveningModel = computed(() => (
     : eveningVespersModel(day.value, tomorrowContent.value, {
       isoWeekday: routeDate.value.isoWeekday(),
       requestedDayId: route.query.firstVespersDayId || '',
+      periodDay: periodDay.value,
     })
 ));
 const tomorrowFirstVespers = computed(() => eveningModel.value.firstVespers);
+const firstVespersWarning = computed(() => (
+  tomorrowFirstVespers.value?.day?._missingFirstVespersFields?.length
+    ? 'Не ўсе тэксты I Нешпараў знойдзены ў псалтыры. Тэксты II Нешпараў не падстаўляюцца.'
+    : ''
+));
 const firstVespersLabel = computed(() => {
   const source = tomorrowFirstVespers.value;
   if (!source) return '';
