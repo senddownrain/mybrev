@@ -209,6 +209,7 @@ export const MOVABLE_CELEBRATIONS = Object.freeze([
     // With another obligatory memorial: exactly two memorial choices, no weekday (§11.2).
     id: 'immaculate-heart', ...feast('immaculateHeartOfMary'), title: 'Беззаганнае Сэрца Найсв. Панны Марыі',
     rank: LITURGICAL_RANK.MEMORIAL, category: 'mary', anchor: 'immaculateHeart', color: 'albus',
+    templates: ['blessed-virgin-mary'], defaultTemplate: 'blessed-virgin-mary',
     rules: { concurrentObligatoryMemorials: 'legal-choice' },
   },
   {
