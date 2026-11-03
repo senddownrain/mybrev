@@ -55,6 +55,9 @@ jobs:
       - name: Liturgical alternatives regression tests
         run: npm run test:alternatives
 
+      - name: Immaculate Heart movable memorial regression tests
+        run: node --test tests/immaculate-heart-hours.test.mjs
+
       - name: Audit tests
         run: npm run test:audit
 
