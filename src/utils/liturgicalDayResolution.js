@@ -62,6 +62,7 @@ const DAYTIME_SUFFIXES = Object.freeze([
 const DAYTIME_FIELDS = Object.freeze([1, 2, 3].flatMap((hour) => (
   DAYTIME_SUFFIXES.map((suffix) => `sext${hour}${suffix}`)
 )));
+const DAYTIME_FIELD_SET = new Set(DAYTIME_FIELDS);
 
 export function isChristmasDateExceptionExclusion(mDate) {
   return CHRISTMAS_DATE_EXCEPTION_EXCLUSIONS.has(mDate.format('DD.MM'));
@@ -232,8 +233,12 @@ export function hasSingleAntiphonPsalmody({ ant1, ant2, ant3, ps1, ps2, ps3 }) {
     && !isMissing(ps3);
 }
 
-/** Resolve explicit from-day references and optional seasonal gaps. */
-export function resolveDayAgainstPeriod(day, periodDay, { fillMissing = false } = {}) {
+/**
+ * Resolve explicit from-day references and optional gaps.
+ * `fillMissingDaytime` is for movable feasts (rank festum): complete their three
+ * daytime hours without replacing deliberately sparse Lauds/Readings/Vespers.
+ */
+export function resolveDayAgainstPeriod(day, periodDay, { fillMissing = false, fillMissingDaytime = false } = {}) {
   if (!day && !periodDay) return null;
 
   const resolved = { ...(periodDay || {}), ...(day || {}) };
@@ -243,7 +248,7 @@ export function resolveDayAgainstPeriod(day, periodDay, { fillMissing = false } 
   Object.entries(day || {}).forEach(([field, value]) => {
     if (isFromDayReference(value)) fromDayFields.add(field);
   });
-  const antiphonFallbackExclusions = fillMissing
+  const antiphonFallbackExclusions = fillMissing || fillMissingDaytime
     ? singleAntiphonFallbackExclusions(day)
     : new Set();
   const keys = new Set([
@@ -259,8 +264,16 @@ export function resolveDayAgainstPeriod(day, periodDay, { fillMissing = false } 
     } else if (fromDayFields.has(field)) {
       const fallback = IDENTITY_FIELDS.has(field) ? '' : periodDay?.[field];
       resolved[field] = isFromDayReference(fallback) ? '' : (fallback ?? '');
-    } else if (!IDENTITY_FIELDS.has(field) && fillMissing && isMissing(value)) {
-      const fallback = periodDay?.[field];
+    } else if (!IDENTITY_FIELDS.has(field)
+      && (fillMissing || (fillMissingDaytime && DAYTIME_FIELD_SET.has(field)))
+      && isMissing(value)) {
+      // The daytime renderer shares a proper Terce field with Sext/None when
+      // their field is empty. Do not overwrite that proper text with the
+      // weekday before getDaytimeHourField() has a chance to inherit it.
+      const shared = fillMissingDaytime && !fillMissing && field.match(/^sext[23](.+)$/);
+      const fromTerce = shared ? day?.[`sext1${shared[1]}`] : null;
+      const useProperTerce = shared && !isMissing(fromTerce) && !isFromDayReference(fromTerce);
+      const fallback = useProperTerce ? '' : periodDay?.[field];
       resolved[field] = isFromDayReference(fallback) ? '' : (fallback ?? '');
     }
   });
