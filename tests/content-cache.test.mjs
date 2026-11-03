@@ -183,3 +183,34 @@ test('completeness requires every dependency to be server-confirmed without pend
   missingMetadata.observe({});
   assert.equal(missingMetadata.complete, false);
 });
+
+test('updated Hours cache revision never exposes old assembled page as a fresh immediate hit', async () => {
+  const f = fixture();
+  const previousApp = f.create();
+  await previousApp.read('2026-06-13', async () => complete({ laudesHymn: '', vesperHymn: 'old II Vespers' }));
+  assert.equal(previousApp.peekFresh('2026-06-13').laudesHymn, '');
+  f.revision('pr184');
+  const updatedApp = f.create();
+  await updatedApp.prime(['2026-06-13']);
+  assert.equal(updatedApp.peekFresh('2026-06-13'), undefined);
+  assert.equal(updatedApp.peek('2026-06-13').vesperHymn, 'old II Vespers', 'offline copy retained');
+  const fresh = await updatedApp.read('2026-06-13', async () => complete({
+    laudesHymn: 'Marian proper', vesperHymn: 'Sunday I Vespers',
+  }), { fresh: true });
+  assert.deepEqual(fresh.data, { laudesHymn: 'Marian proper', vesperHymn: 'Sunday I Vespers' });
+  assert.equal(updatedApp.peekFresh('2026-06-13').laudesHymn, 'Marian proper');
+  assert.equal(f.records.get('2026-06-13').revision, 'pr184');
+});
+
+test('offline stale Hours remain readable after revision bump without a network request', async () => {
+  const f = fixture();
+  const old = f.create();
+  await old.read('2026-06-13', async () => complete({ offlineText: 'previous saved text' }));
+  f.revision('pr184'); f.online(false);
+  const freshApp = f.create();
+  await freshApp.prime(['2026-06-13']);
+  assert.equal(freshApp.peekFresh('2026-06-13'), undefined);
+  const saved = await freshApp.read('2026-06-13', () => assert.fail('offline should not fetch'), { fresh: true });
+  assert.equal(saved.data.offlineText, 'previous saved text');
+  assert.equal(saved.complete, false);
+});
