@@ -125,3 +125,41 @@
 отсутствие горизонтального скролла и три обозначения перевода Библии.
 Скриншоты: [мобильный](evidence/about-390.png), [настольный](evidence/about-1440.png).
 Это проверка UI и локальных метаданных; полнота текста из live Firestore не проверялась.
+
+Итоговая база PR: `0a21e29` (актуальный `origin/main` на момент проверки).
+Ветка обновлена от неё без изменения защищённых разделов в diff PR.
+
+- `SOURCE_AUDIT_DIFF=/tmp/mybrev-source-diff.txt npm test`: **1083 проверки,
+  1073 pass, 0 fail, 10 skipped**. Пропуски относятся к отсутствующим приватным
+  исходникам/Flutter bundle и необязательным тестам с эмуляторами; новые проверки
+  реестра и границ PR выполнены. Начальный запуск в ограниченной песочнице имел
+  четыре ошибки запуска локального HTTP/Chromium/дочерних процессов; повторный
+  запуск с доступом к этим локальным возможностям прошёл полностью.
+- `npm run lint -- --no-fix`: **PASS**, без исправления посторонних файлов.
+- `npm run build`: **PASS**, PWA production bundle сформирован. Vite сообщает
+  предупреждения о размере отдельных chunks; ошибок сборки нет.
+- `git diff --check`: **PASS**.
+- Chromium (Vite и итоговая production-сборка): 320/390/1440 px, все шесть записей, клавиатура, ссылки, отсутствие
+  горизонтального переполнения и выбор трёх переводов — **PASS**. Скриншоты
+  просмотрены на мобильной и настольной ширине; текст и неизвестные сведения
+  читаемы, примечания и декреты раскрываются без выхода за карточку.
+
+Локального `backups/firestore-snapshot/manifest.json` в окружении нет.
+Аудит подписей относится к коду UI и доступным локальным импортным материалам;
+наличие возможных подписей внутри удалённых полей текстов отдельно не утверждается.
+Live Firestore, миграции, публикация контента, Firebase deploy и merge не выполнялись.
+
+Изменённые файлы:
+
+- `src/data/sources.json`
+- `src/constants/sources.js`
+- `src/constants/bible.js`
+- `src/constants/compendium.js`
+- `src/components/SourceRights.vue`
+- `src/views/About.vue`
+- `tests/sources.test.mjs`
+- `tests/bible.test.mjs`
+- `scripts/smoke-source-rights.mjs`
+- `docs/sources/registry-audit.md`
+- `docs/sources/evidence/about-390.png`
+- `docs/sources/evidence/about-1440.png`
