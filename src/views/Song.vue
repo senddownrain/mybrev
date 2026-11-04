@@ -3,7 +3,7 @@
     <div v-if="song" class="prayer-content-area">
       <article class="prayer-reading-surface">
       <header class="prayer-reading-header">
-        <div class="prayer-reading-eyebrow">Пілігрымкавы спеўнік</div>
+        <div class="prayer-reading-eyebrow">Спеўнік пілігрымковы</div>
         <h1 class="prayer-title">{{ song.title }}</h1>
         <div v-if="getSongTags(song).length" class="prayer-tags"><v-chip v-for="tag in getSongTags(song)" :key="tag" class="prayer-tag" variant="tonal" size="small">{{ tag }}</v-chip></div>
       </header>
