@@ -7,6 +7,7 @@
  * snapshot, so both see exactly the same documents.
  */
 import { isSparseDayDocument } from '../constants/officeFields.js';
+import highPriestDaytime from '../data/liturgical/christ-high-priest-daytime-by.json' with { type: 'json' };
 import {
   applySeasonalWeekdayAntiphons,
   getOrdinaryPsalterDayDocumentId,
@@ -22,6 +23,24 @@ import {
 } from './liturgicalDayResolution.js';
 
 const normalizedFeastCode = (code) => String(code || '').replace(/^feast-/, '');
+
+/**
+ * Canonical Belarusian daytime Proper from the supplied feast formulary.
+ * This temporary bundled fallback is needed while the live Firestore feast
+ * document is unverified/unpatched. No other Hours or feasts are modified.
+ */
+export function applyHighPriestDaytimeProper(doc, feastCode) {
+  if (!doc || normalizedFeastCode(feastCode) !== 'christthehighpriest') return doc;
+  const supplied = highPriestDaytime.fields;
+  const staleRefs = Array.isArray(doc._fromDayFields)
+    ? doc._fromDayFields.filter((field) => !Object.hasOwn(supplied, field))
+    : null;
+  return {
+    ...doc,
+    ...supplied,
+    ...(staleRefs ? { _fromDayFields: staleRefs } : {}),
+  };
+}
 
 /** Codes that make the whole date one movable feast (no fixed documents). */
 export function exclusiveFeastCodeOf(dynamicFeastCodes = []) {
@@ -117,10 +136,11 @@ export function assembleDaysResult({
         // feast documents may contain empty strings that mask that psalter.
         // Do not apply this to solemnities (their psalmody is different), or
         // to the remaining hours of the feast.
-        const rank = String(item?._rank || item?._feastType || '').toLowerCase();
+        const properDay = applyHighPriestDaytimeProper(item, code);
+        const rank = String(properDay?._rank || properDay?._feastType || '').toLowerCase();
         const isFeast = ['festum', 'feast'].includes(rank)
           || normalizedFeastCode(code) === 'christthehighpriest';
-        return withCalendarContext(resolveDayAgainstPeriod(item, resolvedPeriodDay, {
+        return withCalendarContext(resolveDayAgainstPeriod(properDay, resolvedPeriodDay, {
           fillMissingDaytime: isFeast,
         }));
       }),
