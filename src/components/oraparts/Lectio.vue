@@ -20,10 +20,7 @@
 import { computed, ref } from 'vue';
 import { useReadingChoice } from '@/composables/useReadingChoice';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
-import {
-  markLeadingLiturgicalSubheadings,
-  removeLectionSectionHeading,
-} from '@/utils/liturgicalHtml';
+import { removeLectionSectionHeading } from '@/utils/liturgicalHtml';
 
 const props = defineProps({
   text: String,
@@ -35,7 +32,5 @@ const props = defineProps({
 const optionCount = ref(Infinity);
 const choice = useReadingChoice(() => props.field, () => optionCount.value);
 
-const formattedText = computed(() => markLeadingLiturgicalSubheadings(
-  removeLectionSectionHeading(props.text, props.title),
-));
+const formattedText = computed(() => removeLectionSectionHeading(props.text, props.title));
 </script>

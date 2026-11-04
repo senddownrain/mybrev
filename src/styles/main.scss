@@ -444,6 +444,15 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   line-height: 1.3;
   letter-spacing: 0.045em;
   text-transform: uppercase;
+  text-align: left !important;
+}
+
+// Legacy inline font sizes and alignment must not make fragments of a section
+// label differ from one another. Restrict this reset to recognised headings.
+.liturgical-hour-column .ora-text p[data-liturgical-heading] * {
+  color: inherit;
+  font-size: inherit !important;
+  text-align: inherit !important;
 }
 
 .liturgical-hour-column .ora-text [data-liturgical-reference] {

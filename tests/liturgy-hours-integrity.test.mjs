@@ -20,6 +20,8 @@ import { classifyField, FIELD_VALUE_TYPE, NOT_RENDERABLE } from '../scripts/litu
 import { consensus, planTemporalRepairs } from '../scripts/liturgy/lib/temporal-repairs.mjs';
 import { extractComplementaryPsalmody } from '../scripts/liturgy/extract-complementary-psalmody.mjs';
 import { daysFixture, templatesFixture } from './helpers/ordo-days-fixture.mjs';
+import { markLeadingLiturgicalSubheadings } from '../src/utils/liturgicalHtml.js';
+import { parse } from 'node-html-parser';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PROPERS = fs.readdirSync(path.join(ROOT, 'patchs', 'db-feasts')).filter((name) => name.endsWith('.json')).map((name) => {
@@ -148,6 +150,10 @@ test('All Souls takes the Office for the Dead, not the weekday', () => {
   const { day } = assembleOffice({ proper, office, templates: TEMPLATES, currentDay: DAY });
   assert.equal(day.officeOfReadingsPs1, TEMPLATES.get('office-for-dead').officeOfReadingsPs1);
   assert.notEqual(day.laudesPs1, 'day:laudesPs1');
+  const reading = parse(markLeadingLiturgicalSubheadings(day.laudesR));
+  const headings = reading.querySelectorAll('[data-liturgical-heading]');
+  assert.deepEqual(headings.map(p => p.text.trim()), ['Кароткае чытанне 1 Тэс 4, 14', 'Кароткі рэспансорый']);
+  assert.equal(reading.querySelectorAll('[data-liturgical-subheading]').length, 0);
 });
 
 // ---------------------------------------------------------------------------
