@@ -1,6 +1,6 @@
 <template>
   <v-container class="prayers-list-container songs-list-container">
-    <header class="prayers-page-header"><div class="prayers-page-eyebrow">Пілігрымкавы</div><h1 class="prayers-page-title">Спеўнік</h1></header>
+    <header class="prayers-page-header" aria-label="Спеўнік пілігрымковы"><h1 class="prayers-page-title">Спеўнік</h1><p class="prayers-page-eyebrow mt-2 mb-0">Пілігрымковы</p></header>
     <v-alert v-if="store.error" type="warning" variant="tonal" class="mb-4">
       Не атрымалася загрузіць змены. Даступная захаваная падборка.
       <v-btn variant="text" :loading="store.isLoading" @click="store.init({ fresh: true })">Паўтарыць</v-btn>
