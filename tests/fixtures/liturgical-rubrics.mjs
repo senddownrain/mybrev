@@ -19,3 +19,15 @@ export function fieldsOf(document, path = '') {
 export const isShortReading = key => /^(?:laudes|vesper1?|sext[123])R$/u.test(key);
 export const shortReadingFields = Object.entries(commons).flatMap(([id, document]) =>
   fieldsOf(document).filter(field => isShortReading(field.key)).map(field => ({ id, ...field })));
+
+export const officeReadingFields = Object.entries(commons).flatMap(([id, document]) =>
+  fieldsOf(document).filter(field => /^officeOfReadingsR[12]$/u.test(field.key)).map(field => ({ id, ...field })));
+
+// Inventory candidates independently of the renderer's reference grammar.
+// The corpus stores these captions in standalone paragraphs with no replies.
+export const responsoryReferenceParagraphs = [...shortReadingFields, ...officeReadingFields].flatMap(field =>
+  field.html.match(/<p\b[^>]*>[\s\S]*?<\/p>/giu)?.filter(html => {
+    const text = html.replace(/<[^>]*>/gu, '').replace(/&nbsp;|&#0*32;|&#x0*20;/giu, ' ').trim();
+    return /^(?:Кароткі\s+)?рэспансорый\s*\S/iu.test(text)
+      && !/^(?:Кароткі\s+)?рэспансорый$/iu.test(text);
+  }).map(html => ({ ...field, html })) || []);

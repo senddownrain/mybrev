@@ -2,8 +2,10 @@ import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright-core';
-import { commons } from '../tests/fixtures/liturgical-rubrics.mjs';
+import { parse } from 'node-html-parser';
+import { commons, responsoryReferenceParagraphs } from '../tests/fixtures/liturgical-rubrics.mjs';
 import { getLiturgicalAlternatives } from '../src/utils/liturgicalAlternatives.js';
+import { removeLectionSectionHeading } from '../src/utils/liturgicalHtml.js';
 
 // Run against `npm run dev -- --host 127.0.0.1 --port 4174`.
 // Real Vue components and application CSS, with public local texts and all
@@ -88,16 +90,22 @@ try {
         ['doctors-of-church', 'laudesR'], ['virgins', 'laudesR'],
         ['church-dedication', 'sext1R'], ['church-dedication', 'sext3R'],
         ['pastors', 'laudesR'], ['pastors', 'sext1R'], ['office-for-dead', 'sext1R'],
+        ['apostles', 'vesper1R'],
       ]) {
         const source = commons[id][field];
         const options = getLiturgicalAlternatives(source, 'reading');
         await show('Reading', { text: source });
-        if (options.length > 1) assert.equal(await page.getByRole('tab').count(), options.length);
+        if (options.length > 1) assert.deepEqual(await page.locator('.alternative-tab__title').allTextContents(), options.map(o => o.title));
         for (let index = 0; index < options.length; index++) {
           if (options.length > 1) await page.getByRole('tab').nth(index).click();
           const expected = options[index].html.replace(/<[^>]*>/gu, '').replace(/\s/gu, '');
           assert.equal((await page.getByRole('tabpanel').textContent()).replace(/\s/gu, ''), expected);
           const styles = await headingStyles();
+          const referenceCaptions = parse(options[index].html).querySelectorAll('p')
+            .filter(p => /^(?:Кароткі\s+)?рэспансорый.+/iu.test(p.text.trim()));
+          for (const caption of referenceCaptions) {
+            assert.equal(await page.locator('p[data-liturgical-heading]').filter({ hasText: caption.text.trim() }).count(), 1);
+          }
           // The church-dedication alternative is a bare Scripture reference.
           if (styles.length) assertStyles(styles);
           const plainBody = page.locator('[role="tabpanel"] p:not([data-liturgical-heading]):not([data-liturgical-subheading])').first();
@@ -107,6 +115,50 @@ try {
           if (width === 390) await page.screenshot({ path: path.join(output, `${theme}-${id}-${field}-${index}.png`), fullPage: true });
         }
       }
+
+      // Render every newly covered source caption, including all seasonal
+      // duplicates and multi-span labels, through the production component.
+      const captionCorpus = responsoryReferenceParagraphs.map(field => field.html).join('\n');
+      await show('Reading', { text: captionCorpus });
+      assert.equal(await page.locator('p[data-liturgical-heading]').count(), 183);
+      assert.equal(await page.locator('p[data-liturgical-subheading]').count(), 0);
+      assertStyles(await headingStyles());
+      assert.equal((await page.getByRole('tabpanel').textContent()).replace(/\s/gu, ''), parse(captionCorpus).text.replace(/\s/gu, ''));
+
+      // Real long readings: title removal, option titles and the entire active
+      // text stay unchanged, including the responsory that follows each body.
+      for (const [id, field] of [['apostles', 'officeOfReadingsR1'], ['blessed-virgin-mary', 'officeOfReadingsR2']]) {
+        const title = field.endsWith('1') ? 'Першае чытанне' : 'Другое чытанне';
+        const source = commons[id][field];
+        const options = getLiturgicalAlternatives(removeLectionSectionHeading(source, title), 'office-reading');
+        await show('Lectio', { text: source, title, field });
+        if (options.length > 1) assert.deepEqual(await page.locator('.alternative-tab__title').allTextContents(), options.map(o => o.title));
+        for (let index = 0; index < options.length; index++) {
+          if (options.length > 1) await page.getByRole('tab').nth(index).click();
+          const expected = parse(options[index].html);
+          assert.equal((await page.getByRole('tabpanel').textContent()).replace(/\s/gu, ''), expected.text.replace(/\s/gu, ''));
+          const captions = expected.querySelectorAll('p').filter(p => /^рэспансорый/iu.test(p.text.trim()));
+          assert.ok(captions.length > 0);
+          assert.equal(await page.locator('[role="tabpanel"] [data-liturgical-heading]').count(), captions.length);
+          assertStyles(await headingStyles());
+          if (width === 390 && index === 0) await page.screenshot({ path: path.join(output, `${theme}-${id}-${field}-responsory.png`), fullPage: true });
+        }
+      }
+
+      const mixed = '<p><span style="color:red">Кароткі рэспан</span><span style="color:red">сорый Ян 13, 35</span></p>'
+        + '<p><span style="color:red">Н.</span> Любіце адзін аднаго.</p>'
+        + '<p><span style="color:red">Рэспансорый Ян 13, 35<br>Н. Любіце адзін аднаго.</span></p>';
+      await show('Reading', { text: mixed });
+      assert.equal(await page.locator('[data-liturgical-heading]').count(), 1, 'mixed paragraphs and replies are not section headings');
+      assert.equal(await page.locator('[data-liturgical-subheading]').count(), 0);
+      assertStyles(await headingStyles());
+      const bodies = await page.locator('[role="tabpanel"] p:not([data-liturgical-heading])').evaluateAll(nodes => nodes.map(n => {
+        const style = getComputedStyle(n);
+        return { size: style.fontSize, readerSize: getComputedStyle(n.closest('.ora-text')).fontSize, align: style.textAlign };
+      }));
+      bodies.forEach(body => { assert.equal(body.size, body.readerSize); assert.equal(body.align, 'left'); });
+      await show('Reading', { text: '<p><span style="color:red">Рэспансорый Ян 13, 35<br>Н. Любіце адзін аднаго.</span></p>' });
+      assert.equal(await page.locator('[data-liturgical-heading], [data-liturgical-subheading]').count(), 0, 'even the first fully red mixed paragraph stays body text');
 
       // Each Office reading alternative gets its own leading metadata budget.
       const choices = [1, 2].map(n => `<p><span style="color:red">Другое чытанне</span></p><p><em>Крыніца ${n}</em></p><p><span style="color:red">Тэма ${n}</span></p><p>Звычайны тэкст ${n}.</p>`).join('<hr>');

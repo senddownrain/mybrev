@@ -3,12 +3,12 @@ import test from 'node:test';
 import { parse } from 'node-html-parser';
 import { getLiturgicalAlternatives } from '../src/utils/liturgicalAlternatives.js';
 import { formatPsalmHtml, markLeadingLiturgicalSubheadings as format } from '../src/utils/liturgicalHtml.js';
-import { commons, fieldsOf, shortReadingFields } from './fixtures/liturgical-rubrics.mjs';
+import { commons, fieldsOf, isShortReading, shortReadingFields, officeReadingFields, responsoryReferenceParagraphs } from './fixtures/liturgical-rubrics.mjs';
 
 const paragraphs = html => parse(html).querySelectorAll('p');
 const text = p => p.text.replace(/\s+/gu, ' ').trim();
 const shortHeading = p => /^Кароткае\s+чытанне/iu.test(text(p));
-const responsoryHeading = p => /^(?:Кароткі\s+)?рэспансорый$/iu.test(text(p));
+const responsoryHeading = p => /^(?:Кароткі\s+)?рэспансорый/iu.test(text(p));
 const lectionHeading = p => /^(?:Першае|Другое)\s+чытанне$/iu.test(text(p));
 
 function assertHeading(paragraph, context) {
@@ -57,7 +57,21 @@ test('every short-reading field and alternative, including seasonal overrides, p
   assert.equal(shortReadingFields.length, 194);
   assert.equal(variants, 205);
   assert.equal(readings, 198);
-  assert.equal(responsories, 105);
+  assert.equal(responsories, 108);
+});
+
+test('independent responsory-reference audit: all 3 short and 180 long source captions are covered', () => {
+  const short = responsoryReferenceParagraphs.filter(field => isShortReading(field.key));
+  const long = responsoryReferenceParagraphs.filter(field => !isShortReading(field.key));
+  assert.equal(short.length, 3);
+  assert.equal(long.length, 180);
+  assert.equal(responsoryReferenceParagraphs.filter(field => parse(field.html).querySelectorAll('span').length > 1).length, 43);
+  for (const field of responsoryReferenceParagraphs) {
+    const before = paragraphs(field.html)[0];
+    const after = paragraphs(format(field.html))[0];
+    assertHeading(after, `${field.id}/${field.path}/${text(before)}`);
+    assert.equal(after.innerHTML, before.innerHTML);
+  }
 });
 
 for (const [id, key, expected] of [
@@ -86,19 +100,22 @@ for (const [id, key, expected] of [
   });
 }
 
-test('all first/second readings preserve content and promote only standalone section labels', () => {
-  let fields = 0;
-  for (const [id, document] of Object.entries(commons)) {
-    for (const field of fieldsOf(document).filter(field => /^officeOfReadingsR[12]$/u.test(field.key))) {
-      fields += 1;
-      for (const option of getLiturgicalAlternatives(field.html, 'office-reading')) {
-        const after = paragraphs(format(option.html));
-        assert.deepEqual(after.map(p => p.innerHTML), paragraphs(option.html).map(p => p.innerHTML));
-        after.filter(lectionHeading).forEach(p => assertHeading(p, `${id}/${field.path}`));
-      }
+test('all first/second reading variants preserve content and mark section labels and responsory captions', () => {
+  let responsories = 0;
+  for (const field of officeReadingFields) {
+    for (const option of getLiturgicalAlternatives(field.html, 'office-reading')) {
+      const formatted = format(option.html);
+      const after = paragraphs(formatted);
+      assert.deepEqual(after.map(p => p.innerHTML), paragraphs(option.html).map(p => p.innerHTML));
+      assert.equal(format(formatted), formatted, `${field.id}/${field.path}: idempotent`);
+      after.filter(p => lectionHeading(p) || responsoryHeading(p)).forEach(p => {
+        assertHeading(p, `${field.id}/${field.path}`);
+        if (responsoryHeading(p)) responsories += 1;
+      });
     }
   }
-  assert.equal(fields, 124);
+  assert.equal(officeReadingFields.length, 124);
+  assert.equal(responsories, 219); // 180 with references + 39 bare labels.
 });
 
 test('all psalms/canticles keep their centred source captions and original text', () => {
@@ -134,4 +151,38 @@ test('semantic headings win over explicit centring, stale subtitle attributes an
 test('a reading label sharing a paragraph with Scripture never shrinks the body', () => {
   const html = '<p><span style="color:red">Кароткае чытанне 1 Тэс 4, 14</span><br>Бо калі мы верым, што Езус памёр і ўваскрос.</p>';
   assert.equal(format(html), html);
+});
+
+test('fragmented responsory labels and glued references are structural headings', () => {
+  for (const label of [
+    '<span style="color:red">Кароткі рэспан</span><span style="color:red">сорый Ян 13, 35</span>',
+    '<span style="color:red">Рэспан</span><span style="color:red">сорый</span><span style="color:red">пар. Пс 72 (71), 6. 19; Ап 21, 3</span>',
+    '<span style="color:red">РэспансорыйМц 1, 20, 21; Міх 5, 4-5</span>',
+    'Рэспансорый Ян 15, 15; Мц 13, 11. 16',
+  ]) {
+    const source = `<p style="text-align:center" data-liturgical-subheading>${label}</p>`;
+    const formatted = format(source);
+    assertHeading(paragraphs(formatted)[0], label);
+    assert.equal(paragraphs(formatted)[0].innerHTML, label);
+  }
+});
+
+test('ordinary replies and mixed responsory/body paragraphs never become structural headings', () => {
+  for (const body of [
+    '<span style="color:red">Н.</span> Рэспансорый Ян 13, 35.',
+    '<span style="color:red">К.</span> Любіце адзін аднаго.',
+    '<span style="color:red">Н. Любіце адзін аднаго.</span>',
+    '<span style="color:red">Рэспансорый Ян 13, 35</span><br><span style="color:red">Н.</span> Любіце адзін аднаго.',
+    '<span style="color:red">Рэспансорый Ян 13, 35<br>Н. Любіце адзін аднаго.</span>',
+    '<em>Рэспансорый дапамагае маліцца.</em>',
+    '<span style="color:red">Рэспансорый Ян 13, 35. Любіце адзін аднаго.</span>',
+  ]) {
+    // Check both at the start and after prose has ended the metadata budget.
+    for (const prefix of ['', '<p>Сам тэкст чытання.</p>']) {
+      const formatted = format(`${prefix}<p>${body}</p>`);
+      assert.ok(!paragraphs(formatted).at(-1).hasAttribute('data-liturgical-heading'), body);
+      assert.ok(!paragraphs(formatted).at(-1).hasAttribute('data-liturgical-subheading'), body);
+      assert.equal(paragraphs(formatted).at(-1).innerHTML, body);
+    }
+  }
 });
