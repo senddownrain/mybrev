@@ -23,6 +23,7 @@
         <p class="about-developer">Распрацоўшчык @davin_dev</p>
       </div>
 
+      <SourceRights />
       <p class="about-privacy"><a href="/privacy">Палітыка прыватнасці</a></p>
       <p class="about-version">Версія: {{ appVersion }}</p>
     </main>
@@ -31,6 +32,7 @@
 
 <script setup>
 import { version as appVersion } from '../../package.json';
+import SourceRights from '@/components/SourceRights.vue';
 </script>
 
 <style scoped>
