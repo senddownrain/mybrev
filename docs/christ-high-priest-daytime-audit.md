@@ -1,32 +1,36 @@
-# Christ the Eternal High Priest — Daytime Prayer (2026-05-28)
+# Christ the Eternal High Priest — Daytime Prayer
 
-## Liturgical source and date
+## Source and scope
 
-The feast is celebrated on the Thursday after Pentecost, which is **28 May 2026** (Pinsk, Belarus). It is a **feast** (`festum`), not a solemnity. The rubrics for feasts in GILH 232 distinguish weekday hymn + weekday psalmody from **proper readings and collect**.
+**Authoritative input for this repair:** user-supplied Belarusian Word document `Чацвер пасля Спаслання Духа Святога.docx`, section **«МАЛІТВА НА ПРАЦЯГУ ДНЯ»** (followed by three hours and «Малітва з Ютрані»). The file also contains the entire feast Office, but the present repair deliberately covers **Daytime Prayer** only.
 
-Source: International Commission on English in the Liturgy, *Our Lord Jesus Christ, The Eternal High Priest*, Gray Book, 11 April 2016, *Liturgy of the Hours*, p. 6, English/Latin. https://www.cbcew.org.uk/wp-content/uploads/sites/3/2018/11/Our-Lord-Jesus-feast-gray-book-130416-A4.pdf
+The document says: **«Псальмы з бягучага дня.»** All three daytime hours must therefore retain their own weekday hymn/psalmody while displaying the special feast antiphon, short reading and concluding collect.
 
-The book provides separate proper **antiphons**, **short Scripture readings** and versicles/responses for the three daytime hours, with the **collect from Lauds**. It specifies psalms of the occurring weekday. These are not all one and the same reading.
+The second and third hour both have the heading «Малітва пасля поўдня» in the supplied Word text. Because the three hours are in sequence and the scripture references identify them, the second is mapped to `sext2` (Малітва апоўдні) and the third to `sext3` (Малітва пасля поўдня). **The source document itself has not been edited.**
 
-| Hour | Source fields | Proper reading reference | Proper antiphon |
-|---|---|---|---|
-| Terce | `sext1Ant1`, `sext1R`, `sext1Pr` | Heb 7:26–27 | Eph 2:18 |
-| Sext | `sext2Ant1`, `sext2R`, `sext2Pr` | 1 Pet 2:4–5 | Eph 2:20 |
-| None | `sext3Ant1`, `sext3R`, `sext3Pr` | 1 Pet 2:9–10 | Eph 4:7 (cf. Eph 4:12) |
+| Web hour | Database fields | Own short reading | Own antiphon | Verse + response |
+|---|---|---|---|---|
+| Terce, before noon | `sext1Ant1`, `sext1R`, `sext1Pr` | Гбр 7, 26–27 | «Праз Хрыста … доступ да Айца» | К. «Паколькі вы прымаеце ўдзел…»; Н. «Каб і ў час аб’яўлення…» |
+| Sext, noon | `sext2Ant1`, `sext2R`, `sext2Pr` | 1 П 2, 4–5 | «Вы ўмацаваныя на падмурку…» | К. «Як вы прынялі Пана…»; Н. «Укаранёныя і збудаваныя…» |
+| None, afternoon | `sext3Ant1`, `sext3R`, `sext3Pr` | 1 П 2, 9–10 | «Кожнаму з нас дадзена ласка…» | К. «Няхай валадарыць…»; Н. «Да якога вы пакліканыя…» |
 
-The app currently has no separate fields for the daytime *versicle/response* given after each short reading in the source. This is an independent structural/content follow-up.
+The supplied concluding prayer of Lauds starts **«Божа, Ты дзеля хвалы Тваёй велічы…»** and ends **«Праз Пана нашага.»** The Word document explicitly says «Малітва з Ютрані.» It is repeated in all three `sext*Pr` fields, which works for both Web and eventual Flutter content distribution.
 
-## Required content validation (before declaring the bug fully resolved)
+## Implementation in PR #183
 
-1. Inspect the existing document(s) in `days` where `_feast = feast-christthehighpriest`, via the **local Firestore snapshot**; do not perform quota-consuming live reads without approval (see `AGENTS.md`).
-2. Check `sext1Ant1`, `sext2Ant1`, `sext3Ant1` — each has its own proper antiphon. Empty `Ant2`/`Ant3` are intentional when one antiphon surrounds the three weekday psalms.
-3. Check `sext1R`, `sext2R`, `sext3R` — three different proper short readings with their **complete approved Belarusian biblical texts**, not weekday readings or placeholders.
-4. For `sext1Pr`/`sext2Pr`/`sext3Pr`, the proper collect of Lauds is to be used. The runtime now reuses `laudesPr` when no separate daytime collect is stored.
-5. Confirm that `ordinary-w8-d5` (or the correct four-week psalter fallback, Thursday of Psalter Week IV) exists with the `sext1/2/3` weekday hymns and psalmody.
-6. Compare `terz`, `sext` and `none` visually on 2026-05-28 with the Pinsk diocese, then run same checks for 2027 and 2028 using each year's correct movable date.
+- `src/data/liturgical/christ-high-priest-daytime-by.json` contains the complete Belarusian antiphons, readings, versicles/responses and concluding prayers from the supplied document.
+- The source's verse and response are kept **inside each `sext*R` HTML field**, using the same layout as existing Office readings. No runtime schema change is necessary.
+- Each of `sext*Ant2` and `sext*Ant3` is intentionally empty: one unique proper antiphon surrounds the three psalms of each daytime hour.
+- `applyHighPriestDaytimeProper()` overlays these proper fields on the High Priest feast only. It also clears stale `_fromDayFields` references for these fields, so an older Firestore marker cannot replace an explicitly supplied reading.
+- The rest of the movable-feast daytime resolver fills only weekday hymn and psalmody gaps, and preserves the feast's own readings and prayers.
+- Six offline regression tests cover the Pinsk feast date, the complete field content, inheritance of all three daytime hours, re-resolution, other feasts and solemnities.
 
-## Scope of this PR
+## Publication boundaries / remaining verification
 
-The code change only repairs **runtime inheritance of genuinely missing daytime psalter fields** for movable feasts and the **proper Lauds collect**. It does **not** modify Firestore or supply untranslated / unverified proper readings. If the production document lacks its three proper readings or antiphons, a **separate content patch** from verified Belarusian text will still be necessary.
+The user-provided Word text is a **source supplied for the repair**, not evidence that the production Firestore document already has its fields or that the translation's ecclesiastical approval has been independently checked.
 
-No live Firebase deployment or data migration is performed by this PR.
+**Web:** after merging and deploying PR #183, the bundled content fallback should make the daytime Proper available even if Firestore still contains empty/stale source fields. The live URL must then be visually checked at `terz`, `sext` and `none` for Pinsk on 2026-05-28; also check the corresponding movable date for 2027.
+
+**Firestore / Flutter:** this PR does not write to Firestore. The JSON is ready to become a field-level content patch for `days` documents of `feast-christthehighpriest`, after inspecting a local snapshot and confirming the live document IDs. Do not overwrite unrelated Office fields or perform quota-consuming live reads without explicit authorization. Once Firestore is patched, follow `AGENTS.md` and `docs/app-content-distribution.md` for the content manifest and Flutter publication.
+
+**Source retention:** the entire 11-page Word file is *not* checked into the repository. Only the fields needed to correct this issue are committed.
