@@ -18,7 +18,7 @@
         </v-menu>
       </div>
     </Transition>
-    <TextScaleControl v-if="isHour" class="ora-action-start" />
+    <TextScaleControl v-if="isHour" show-settings class="ora-action-start" />
     <v-btn v-if="auth.isAdmin" icon variant="flat" class="ora-circle-btn" :class="{ 'ora-action-start': !isHour }" aria-label="Рэдагаваць" @click="onEditClick"><PhPencilSimple :size="21" /></v-btn>
   </v-app-bar>
 </template>

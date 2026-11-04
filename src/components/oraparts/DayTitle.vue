@@ -163,7 +163,7 @@ const psalterWeek = computed(() => calculatePsalterWeek({
 const psalterWeekLabel = computed(() => formatPsalterWeekLabel(psalterWeek.value));
 const periodLabel = computed(() => (
   resolvedDay.value?._kind === 'office-for-dead'
-    ? 'Памінальны афіцый'
+    ? 'Афіцый за памерлых'
     : PERIOD_LABEL_MAP[resolvedDay.value?._periodType] || 'Літургічны дзень'
 ));
 const heroStyle = computed(() => {

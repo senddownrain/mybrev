@@ -199,7 +199,7 @@ const getOptionDisplayTitle = (option) => {
 };
 
 const getOptionMeta = (option) => {
-  if (isOfficeForDead(option)) return [option.subtitle || 'Памінальны афіцый', ...(option?.badges || [])].join(' · ');
+  if (isOfficeForDead(option)) return [option.subtitle || 'Афіцый за памерлых', ...(option?.badges || [])].join(' · ');
   const day = option?.day || {};
   const rank = day._rank || day._feastType;
   const places = Array.isArray(day._place) ? day._place : [day._place];

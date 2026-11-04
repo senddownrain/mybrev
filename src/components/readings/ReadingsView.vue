@@ -90,7 +90,7 @@
       >
         <div>
           <div id="set-choice-title" class="cycle-choice__label">Чытанні Імшы</div>
-          <div class="cycle-choice__hint">{{ readingSets.length }} {{ alternativeWord(readingSets.length) }} аднаго святкавання</div>
+          <div class="cycle-choice__hint">Магчымасці цэлебрацыі</div>
         </div>
         <div class="set-choice__buttons" role="group" aria-label="Набор чытанняў">
           <button

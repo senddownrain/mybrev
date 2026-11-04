@@ -136,7 +136,7 @@
               v-if="draft.scope === 'diocese'" v-model="draft.dioceseId" :items="ORDO_DIOCESES" item-title="label" item-value="value"
               label="Дыяцэзія" variant="outlined" density="comfortable" hide-details
             />
-            <v-select v-model="draft.action" :items="actionItems" item-title="label" item-value="value" label="Дзеянне" variant="outlined" density="comfortable" hide-details />
+            <v-select :menu-props="{ contentClass: 'liturgical-action-menu' }" v-model="draft.action" :items="actionItems" item-title="label" item-value="value" label="Дзеянне" variant="outlined" density="comfortable" hide-details />
           </div>
           <v-autocomplete
             v-if="draft.action !== 'add'" v-model="draft.targetCelebrationId" :items="celebrationItems" item-title="title" item-value="value"
@@ -147,7 +147,7 @@
           <div v-if="draft.action === 'add' || draft.action === 'replace'" class="form-grid mt-3">
             <v-text-field v-if="draft.action === 'add'" v-model="draft.celebration.id" label="ID (лацінкай)" variant="outlined" density="comfortable" hide-details />
             <v-text-field v-model="draft.celebration.title" label="Назва" variant="outlined" density="comfortable" hide-details />
-            <v-select v-model="draft.celebration.rank" :items="rankItems" item-title="label" item-value="value" label="Ранг" variant="outlined" density="comfortable" hide-details clearable />
+            <v-select v-model="draft.celebration.rank" :items="rankItems" item-title="label" item-value="value" label="Літургічная ступень" persistent-placeholder variant="outlined" density="comfortable" hide-details clearable />
             <v-select v-model="draft.celebration.color" :items="colorItems" item-title="label" item-value="value" label="Колер" variant="outlined" density="comfortable" hide-details clearable />
           </div>
           <v-alert v-if="draft.computedDate" type="info" variant="tonal" density="comfortable" class="mt-3">
@@ -157,7 +157,7 @@
           <div class="form-grid mt-3">
             <v-text-field v-if="usesFrom" v-model="draft.from" type="date" :label="draft.computedDate ? 'Першапачатковая дата' : 'З даты (неабавязкова)'" variant="outlined" density="comfortable" hide-details :readonly="Boolean(draft.computedDate)" />
             <v-text-field v-if="usesTo" v-model="draft.to" type="date" :label="draft.computedDate ? 'Дзейная дата (па гадавым календары)' : 'На дату'" variant="outlined" density="comfortable" hide-details />
-            <v-select v-if="draft.action === 'changeRank'" v-model="draft.rank" :items="rankItems" item-title="label" item-value="value" label="Новы ранг" variant="outlined" density="comfortable" hide-details />
+            <v-select v-if="draft.action === 'changeRank'" v-model="draft.rank" :items="rankItems" item-title="label" item-value="value" label="Новая літургічная ступень" persistent-placeholder variant="outlined" density="comfortable" hide-details />
             <v-select v-if="draft.action === 'changeColor'" v-model="draft.color" :items="colorItems" item-title="label" item-value="value" label="Новы колер" variant="outlined" density="comfortable" hide-details />
           </div>
           <v-textarea v-model="draft.reason" label="Прычына" rows="2" auto-grow variant="outlined" density="comfortable" hide-details class="mt-3" />
@@ -234,7 +234,7 @@ const actionItems = [
   { value: 'suppress', label: 'Прапусціць' },
   { value: 'add', label: 'Дадаць' },
   { value: 'replace', label: 'Замяніць' },
-  { value: 'changeRank', label: 'Змяніць ранг' },
+  { value: 'changeRank', label: 'Змяніць літургічную ступень' },
   { value: 'changeColor', label: 'Змяніць колер' },
 ];
 const rankItems = ['solemnitas', 'festum', 'memoria', 'memoria-ad-libitum'].map((value) => ({ value, label: RANK_LABEL_MAP[value] || value }));
@@ -297,7 +297,7 @@ const ERROR_LABELS = [
   [/targetCelebrationId is required/, 'выберыце празднаванне'],
   [/move requires ISO `to`/, 'пазначце дату, на якую пераносіцца'],
   [/add requires/, 'для дадання патрэбны ID і дата'],
-  [/changeRank requires/, 'выберыце новы ранг'],
+  [/changeRank requires/, 'выберыце новую літургічную ступень'],
   [/changeColor requires/, 'выберыце новы колер'],
   [/replace requires/, 'пазначце, што змяняецца'],
   [/dioceseId is required/, 'выберыце дыяцэзію'],
@@ -388,6 +388,9 @@ onMounted(reload);
 </script>
 
 <style scoped>
+.override-dialog :deep(.v-select__selection-text) { white-space: normal; overflow: visible; text-overflow: clip; }
+:global(.liturgical-action-menu .v-list-item-title) { white-space: normal; overflow: visible; text-overflow: clip; }
+
 .overrides-admin { width: min(100%, 980px); padding: 38px 22px 80px !important; color: var(--nav-on-surface); }
 .page-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin: 0 4px 22px; }
 .eyebrow { margin: 0 0 8px; color: var(--chrome-accent); font-size: .72rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }

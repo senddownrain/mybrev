@@ -6,10 +6,16 @@ import { openFirestoreSnapshot } from './lib/firestore-snapshot.mjs';
 import { CONTENT_REVISION, CONTENT_CACHE_SCHEMA } from '../src/constants/contentRevision.js';
 
 // Test only local public presentation data; never query or refresh Firestore.
-const snapshot = await openFirestoreSnapshot(process.env.READER_SNAPSHOT || 'backups/firestore-snapshot');
-const days = await snapshot.collection('days') || await snapshot.collection('fixedDays');
-const day = days?.find((item) => item.laudesPs1 && item.laudesPs2 && item.laudesPs3 && item.vesperPs1);
-assert.ok(day, 'local snapshot contains a complete Lauds/Vespers example');
+let day;
+if (process.env.READER_SNAPSHOT || fs.existsSync('backups/firestore-snapshot/manifest.json')) {
+  const snapshot = await openFirestoreSnapshot(process.env.READER_SNAPSHOT || 'backups/firestore-snapshot');
+  const days = await snapshot.collection('days') || await snapshot.collection('fixedDays');
+  day = days?.find((item) => item.laudesPs1 && item.laudesPs2 && item.laudesPs3 && item.vesperPs1);
+} else {
+  const fixture = JSON.parse(fs.readFileSync('patchs/json/ordinary-w5-d1-fixed-day.json', 'utf8'));
+  day = { ...fixture, id: fixture._id };
+}
+assert.ok(day, 'local source contains a complete Lauds/Vespers example');
 const date = '2026-01-01';
 const contextData = { periodType: day._periodType || 'christmas', periodWeek: 1, dayOfWeek: 5 };
 const content = {
@@ -23,7 +29,7 @@ const projectId = process.env.VITE_FIREBASE_PROJECT_ID
 const namespace = `mybrev-public-${projectId}-v${CONTENT_CACHE_SCHEMA}`;
 const base = (process.env.SMOKE_BASE_URL || 'http://127.0.0.1:4174').replace(/\/$/, '');
 const browser = await chromium.launch({
-  executablePath: process.env.BENCHMARK_BROWSER_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe',
+  executablePath: process.env.BENCHMARK_BROWSER_PATH || '/usr/bin/chromium',
   headless: true,
 });
 const output = path.resolve('outputs/liturgy-reader');
@@ -69,10 +75,9 @@ try {
       db.close();
     }, { namespace, revision: CONTENT_REVISION, content, date, theme: profile.theme, scale: profile.scale });
     await page.goto(`${base}/settings`, { waitUntil: 'domcontentloaded' });
-    assert.equal(await page.getByLabel('Водступ кожнай другой страфы', { exact: true }).isChecked(), true);
-    assert.equal(await page.getByLabel('Перанос пасля * і †', { exact: true }).isChecked(), false);
+    assert.equal(await page.locator('[data-mode="left-break"]').getAttribute('aria-checked'), 'true');
     assert.equal(await page.getByLabel('Не выключаць экран', { exact: true }).isChecked(), true);
-    assert.equal(await page.locator('.psalmody-settings select').count(), 0, 'psalmody uses switches');
+    assert.equal(await page.locator('.psalmody-settings select').count(), 0, 'psalmody uses radio buttons');
     await page.screenshot({ path: path.join(output, `${profile.name}-settings.png`), fullPage: true });
     const url = `${base}/day/${date}/ora/${encodeURIComponent(day.id)}/laudes?dayId=alternative`;
     await page.goto(url, { waitUntil: 'domcontentloaded' });
@@ -81,7 +86,7 @@ try {
     assert.equal(await texts.count(), 4, 'three psalms and Benedictus');
     assert.equal(await page.locator('.ora-location').count(), 0, 'no duplicate title at the top');
     assert.equal(await page.locator('.ora-section-menu').count(), 0);
-    assert.equal(await page.getByRole('button', { name: 'Выгляд тэксту', exact: true }).count(), 0, 'no added Aa settings button');
+    assert.equal(await page.getByRole('button', { name: 'Выгляд тэксту', exact: true }).count(), 1, 'reader settings are reachable');
     assert.equal(await page.locator('.text-settings-card').count(), 0, 'no local text settings panel');
     const originalScale = await page.evaluate(() => Number(localStorage.getItem('fontSizeMultiplier')));
     const scaleAction = page.getByRole('button', { name: originalScale < 1.8 ? 'Павялічыць тэкст' : 'Паменшыць тэкст', exact: true });
@@ -106,49 +111,65 @@ try {
     assert.equal(await page.locator('.ora-ant [data-psalm-side], [data-liturgical-subheading][data-psalm-side]').count(), 0);
 
     const originalText = await texts.first().textContent();
-    for (const layout of ['alternatingIndent', 'alignedLeft']) {
-      for (const markers of ['inline', 'breakAfterMarker']) {
-        await page.goto(`${base}/settings`, { waitUntil: 'domcontentloaded' });
-        await page.getByLabel('Водступ кожнай другой страфы', { exact: true }).setChecked(layout === 'alternatingIndent');
-        await page.getByLabel('Перанос пасля * і †', { exact: true }).setChecked(markers === 'breakAfterMarker');
-        await page.goto(url, { waitUntil: 'domcontentloaded' });
+    for (const mode of ['left-break', 'left-break-indent', 'alternating-stanzas']) {
+      await page.getByRole('button', { name: 'Выгляд тэксту', exact: true }).click();
+      const panel = page.locator('.text-settings-card');
+      await panel.locator(`[data-mode="${mode}"]`).click();
+      assert.equal(await panel.locator('[role="radio"][aria-checked="true"]').count(), 1);
+      await panel.getByRole('button', { name: 'Закрыць налады' }).click();
+      await panel.waitFor({ state: 'hidden' });
+      for (const hour of ['laudes', 'vesper', 'lectionis', 'completorium']) {
+        await page.goto(`${base}/day/${date}/ora/${day.id}/${hour}?dayId=alternative`, { waitUntil: 'domcontentloaded' });
         await texts.first().waitFor({ state: 'visible' });
-        const metrics = await texts.first().evaluate((element) => {
-          const a = element.querySelector('[data-psalm-side="A"]');
-          const b = element.querySelector('[data-psalm-side="B"]');
-          const continuation = element.querySelector('.psalm-continuation');
-          return { aLeft: a.getBoundingClientRect().left, bLeft: b.getBoundingClientRect().left,
-            hasContinuation: Boolean(continuation), continuationIndent: continuation ? parseFloat(getComputedStyle(continuation).marginInlineStart) / parseFloat(getComputedStyle(continuation).fontSize) : 0,
-            overflow: document.documentElement.scrollWidth > window.innerWidth };
-        });
-        assert.equal(metrics.overflow, false, `${profile.name} ${layout} ${markers}: no horizontal overflow`);
-        assert.equal(metrics.hasContinuation, markers === 'breakAfterMarker');
-        if (markers === 'breakAfterMarker') {
-          // Alternating strophes already own their indent; continuation must
-          // not add a second one. Aligned strophes use the modest marker indent.
-          if (layout === 'alternatingIndent') assert.equal(metrics.continuationIndent, 0);
-          else assert.ok(metrics.continuationIndent > 0 && metrics.continuationIndent < 1);
+        const source = await texts.allTextContents();
+        const other = await page.locator('.ora-ant, .ora-text:not(.ora-psalm)').allTextContents();
+        for (const width of [320, 375, 390, 768]) for (const scale of [1, 1.5, 1.8]) {
+          await page.setViewportSize({ width, height: 844 });
+          await page.evaluate(async scale => {
+            const { useSettingsStore } = await import('/src/stores/settings.js');
+            useSettingsStore(document.querySelector('#app').__vue_app__.config.globalProperties.$pinia).fontSizeMultiplier = scale;
+          }, scale);
+          const metrics = await texts.first().evaluate(element => {
+            const a = element.querySelector('[data-psalm-side="A"]');
+            const b = element.querySelector('[data-psalm-side="B"]');
+            const continuation = element.querySelector('.psalm-continuation');
+            return { aLeft: a.getBoundingClientRect().left, bLeft: b.getBoundingClientRect().left,
+              hasContinuation: Boolean(continuation), indent: continuation ? parseFloat(getComputedStyle(continuation).marginInlineStart) : 0,
+              br: element.querySelectorAll('[data-psalm-side] br').length,
+              overflow: document.documentElement.scrollWidth > window.innerWidth };
+          });
+          assert.equal(metrics.overflow, false, `${hour} ${mode} ${width} ${scale}: overflow`);
+          assert.equal(metrics.hasContinuation, mode !== 'alternating-stanzas');
+          if (mode === 'alternating-stanzas') assert.equal(metrics.br, 0);
+          assert.equal(metrics.bLeft > metrics.aLeft, mode === 'alternating-stanzas');
+          assert.equal(metrics.indent > 0, mode === 'left-break-indent');
+          assert.deepEqual(await texts.allTextContents(), source, 'all words and signs survive');
+          assert.deepEqual(await page.locator('.ora-ant, .ora-text:not(.ora-psalm)').allTextContents(), other);
         }
-        assert.ok(layout === 'alignedLeft' ? metrics.aLeft === metrics.bLeft : metrics.bLeft > metrics.aLeft);
-        assert.equal(await texts.first().textContent(), originalText, 'source text is preserved');
-        await page.screenshot({ path: path.join(output, `${profile.name}-${layout}-${markers}.png`) });
       }
+      await page.goto(`${base}/settings`, { waitUntil: 'domcontentloaded' });
+      assert.equal(await page.locator(`[data-mode="${mode}"]`).getAttribute('aria-checked'), 'true', 'global setting shares the mode');
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      assert.equal(await page.locator(`[data-mode="${mode}"]`).getAttribute('aria-checked'), 'true', 'mode persists after reload');
+      await page.goto(url, { waitUntil: 'domcontentloaded' });
+      await texts.first().waitFor({ state: 'visible' });
     }
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    await texts.first().waitFor({ state: 'visible' });
-    assert.equal(await texts.first().getAttribute('data-verse-layout'), 'alignedLeft');
-    assert.ok(await page.locator('.psalm-continuation').count() > 0, 'marker setting persisted');
-    assert.equal(await page.locator('.psalmody-text[data-dimmed-side]').count(), 0, 'dim state is temporary');
+    assert.equal(await texts.first().textContent(), originalText);
     assert.ok(await page.evaluate(async () => {
       const { decoratePsalmody } = await import('/src/utils/psalmodyDisplay.js');
-      const root = document.createElement('div');
-      root.innerHTML = '<p data-psalm-strophe><strong>Першы <span class="psalm-marker">†</span> другі <span class="psalm-marker">*</span> трэці</strong><br>чацвёрты</p><p data-psalm-strophe data-liturgical-subheading>Рубрыка *</p><p data-psalm-strophe>Ант. Рэфрэн *</p>';
-      const original = root.textContent;
-      decoratePsalmody(root, { breakAfterMarker: true });
-      return root.textContent === original && root.querySelectorAll('.psalm-continuation').length === 2
-        && root.querySelectorAll('br').length === 1 && root.querySelectorAll('[data-psalm-side]').length === 1
-        && [...root.querySelectorAll('.psalm-marker')].map((marker) => marker.textContent).join('') === '†*';
-    }), 'multiple nested cadence signs preserve text, styling and original line breaks');
+      const input = '<p data-psalm-strophe><strong>1 Першы <span class="psalm-marker">†</span> другі <span class="psalm-marker">*</span> трэці</strong><br>2 чацвёрты</p><p data-psalm-strophe data-liturgical-subheading>Рубрыка *</p><p data-psalm-strophe>Ант. Рэфрэн *</p>';
+      return ['left-break', 'left-break-indent', 'alternating-stanzas'].every(mode => {
+        const root = document.createElement('div'); root.innerHTML = input;
+        const original = root.textContent.replace(/\s/gu, '');
+        decoratePsalmody(root, { mode });
+        return root.textContent.replace(/\s/gu, '') === original
+          && root.querySelectorAll('.psalm-continuation').length === (mode === 'alternating-stanzas' ? 0 : 2)
+          && root.querySelectorAll('br').length === (mode === 'alternating-stanzas' ? 0 : 1)
+          && root.querySelectorAll('[data-psalm-side]').length === 1
+          && root.querySelectorAll('strong .psalm-marker').length > 0;
+      });
+    }), 'nested markup, multiple verses, both cadence signs and excluded rubrics survive');
+    await page.setViewportSize(profile);
     await firstA.click();
     await page.evaluate(() => window.scrollTo(0, 900));
     await page.locator('.ora-location').waitFor({ state: 'visible' });

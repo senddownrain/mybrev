@@ -40,7 +40,7 @@ export const TRANSFER_DIOCESES = Object.freeze(['minsk-mohilev', 'vitebsk', 'pin
 export const TRANSFER_MATERIALIZATION_VERSION = 1;
 
 export const TRANSFER_CASES = Object.freeze({
-  'diocesan-solemnity': 'A. Уласная ўрачыстасць дыяцэзіі (ранг пацверджаны календаром)',
+  'diocesan-solemnity': 'A. Уласная ўрачыстасць дыяцэзіі (літургічная ступень пацверджана календаром)',
   'joseph-holy-week': 'B. Св. Юзаф у Вялікім тыдні',
   annunciation: 'C. Звеставанне Пана',
   'coinciding-solemnities': 'D. Супадзенне дзвюх урачыстасцяў агульнага календара',
