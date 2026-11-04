@@ -9,6 +9,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { parse } from 'node-html-parser';
 import moment from '../src/utils/moment-be.js';
 import { getLiturgicalAlternatives, getReadingChoices } from '../src/utils/liturgicalAlternatives.js';
 import { materializeCommonForSeason } from '../src/utils/ordo/commonSeasons.js';
@@ -17,6 +18,8 @@ import { resolveRuntimeDay } from '../src/utils/ordo/runtime.js';
 import { buildOrdoDayOptions } from '../src/utils/ordoDayOptions.js';
 import { buildFeastTargets } from '../scripts/ordo/import-feasts.mjs';
 import { daysFixture } from './helpers/ordo-days-fixture.mjs';
+import { assembleDaysResult } from '../src/utils/daysResult.js';
+import { markLeadingLiturgicalSubheadings, removeLectionSectionHeading } from '../src/utils/liturgicalHtml.js';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const template = (id) => JSON.parse(fs.readFileSync(path.join(ROOT, 'patchs', 'db-templates', `${id}.json`), 'utf8'));
@@ -27,6 +30,65 @@ const plain = (html) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(
 
 const WORKS = ['«Гамілія да кнігі Дзеяў Апосталаў» св. Яна Хрызастома, біскупа', 'Казанне св. Аўгустына, біскупа'];
 const WOMEN_R1 = ['Кніга Прыпавесцяў', 'Першае пасланне св. апостала Пятра 3, 1-6. 8-17'];
+
+test('Palm Sunday 29.03.2026: raw, assembled and Lectio HTML keep Hebrews and its responsory as one reading', () => {
+  // Exact officeOfReadingsR1 from days/feast-palmsunday (also identical in
+  // days/holyweek-w1-d1), read individually on 04.11.2026. No snapshot refresh.
+  const html = fs.readFileSync(path.join(ROOT, 'tests/fixtures/office-readings/palm-sunday-r1.html'), 'utf8');
+  assert.doesNotMatch(html, /<hr\b/iu, 'the reported split is not caused by a rule');
+  const date = '2026-03-29';
+  const resolved = resolveRuntimeDay(date, { diocese: 'pinsk' });
+  const { context } = daysFixture(resolved);
+  const daysResult = assembleDaysResult({
+    mDate: moment(date), context, dynamicFeastCodes: ['palmsunday'],
+    periodDay: { id: 'holyweek-w1-d1', officeOfReadingsR1: html },
+    dynamicEntries: [['palmsunday', [{ id: 'feast-palmsunday', _feast: 'feast-palmsunday', officeOfReadingsR1: html }]]],
+  });
+  const result = buildOrdoDayOptions({ resolved, context, date, diocese: 'pinsk', daysResult });
+  const assembled = result.dayOptions.find((o) => o.day.id === 'feast-palmsunday').day.officeOfReadingsR1;
+  assert.equal(assembled, html, 'assembly preserves the stored reading');
+  const formatted = markLeadingLiturgicalSubheadings(removeLectionSectionHeading(assembled, 'Першае чытанне'));
+  for (const source of [html, assembled, formatted]) {
+    const { notes, options } = getReadingChoices(source);
+    assert.equal(notes.length, 0);
+    assert.equal(options.length, 1);
+    assert.equal(options[0].title, 'Пасланне да Габрэяў 10, 1-18');
+    assert.equal(plain(options[0].html), plain(source), 'all words and fragments stay in order');
+    assert.match(options[0].html, /Нашае асвячэнне праз ахвяру Хрыста/u);
+    assert.match(options[0].html, /Пра гэта сведчыць нам і Дух Святы/u);
+    assert.match(options[0].html, /РЭСПАНСОРЫЙ пар\. Гбр 10, 5-7\. 4 \(Пс 40 \[39\], 7-8\)/u);
+    assert.match(options[0].html, /Вось іду, каб выканаць волю Тваю, Божа\.<\/p>$/u);
+  }
+});
+
+test('Office for the Dead keeps its three explicit first readings and all their shared content', () => {
+  const html = template('office-for-dead').officeOfReadingsR1;
+  const { notes, options } = getReadingChoices(html);
+  assert.equal(notes.length, 0);
+  assert.deepEqual(options.map((o) => o.title), ['1 Кар 15, 12–34', '1 Кар 15, 35–57', '2 Кар 4, 16 — 5, 10']);
+  const root = parse(html);
+  const blocks = root.querySelectorAll('[data-alternative-title]');
+  const suffixes = root.querySelectorAll('[data-alternative-suffix]');
+  const bodies = blocks.map((block) => block.innerHTML);
+  const suffix = suffixes.map((block) => block.innerHTML).join(' ');
+  [...blocks, ...suffixes].forEach((block) => block.remove());
+  assert.equal(options.length, blocks.length);
+  options.forEach((option, index) => {
+    assert.equal(plain(option.html), plain([root.innerHTML, bodies[index], suffix].join(' ')), 'complete reading with shared heading and responsory');
+  });
+});
+
+test('the same narrative-category collision in martyr-one and St Sebastian does not hide the end of R2', () => {
+  const martyr = template('martyr-one');
+  const sebastian = JSON.parse(fs.readFileSync(path.join(ROOT, 'patchs/db-feasts/20-01-sv-sebastian.json'), 'utf8'));
+  for (const doc of [martyr, ...Object.values(martyr._seasonalVariants), sebastian]) {
+    const html = doc.officeOfReadingsR2;
+    const { notes, options } = getReadingChoices(html);
+    assert.equal(notes.length, 0);
+    assert.equal(options.length, 1);
+    assert.equal(plain(options[0].html), plain(html), 'all paragraphs including the responsory survive in order');
+  }
+});
 
 test('holy-women R2 in Advent, Christmas, Lent, Easter: reference note + the two readings of holy men of the same volume', () => {
   const pages = { advent: '1275-1277', christmas: '1275-1277', lent: '1787-1791', easter: '1787-1791' };

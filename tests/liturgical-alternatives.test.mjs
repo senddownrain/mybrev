@@ -103,6 +103,24 @@ test('does not split a reading at the narrative phrase "У тыя дні"', () =
   assert.match(options[0].html, /У тыя дні/u);
 });
 
+test('Office category boundaries require a heading line; quoted prose stays in its reading', () => {
+  for (const prose of [
+    'Пра гэта сведчыць нам і Дух Святы, бо сказана: «Вось запавет».',
+    'Пра гэты келіх казалі мучанікі: «Келіх збаўлення ўзніму».',
+    'Пра такія ганенні кажа Апостал: «Усе пераследаваныя будуць».',
+  ]) {
+    const html = `<p>Казанне св. Аўгустына</p><p>${prose}</p><p>Заканчэнне і рэспансорый.</p>`;
+    const options = getLiturgicalAlternatives(html, 'office-reading');
+    assert.equal(options.length, 1);
+    assert.equal(parse(options[0].html).text.replace(/\s+/gu, ''), parse(html).text.replace(/\s+/gu, ''));
+  }
+  for (const boundary of ['<p>Пра прэзбітэра:</p>', '<p>Пра прэзбітэра:<br>Кніга Рут 1, 1-5</p>']) {
+    const options = getLiturgicalAlternatives(`<p>Кніга Зыходу 1, 1-5</p><p>Тэкст адзін.</p>${boundary}<p>Тэкст два.</p>`, 'office-reading');
+    assert.equal(options.length, 2, boundary);
+    assert.match(options[1].html, /Тэкст два/u);
+  }
+});
+
 test('all common-template rule-separated fields become selectable with short safe titles', () => {
   for (const filename of fs.readdirSync(templatesDirectory).filter((name) => name.endsWith('.json'))) {
     const template = loadTemplate(filename);
