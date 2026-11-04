@@ -95,10 +95,9 @@
               </span>
             </template>
 
-            <v-list-item-title
-              class="day-option__title"
-              v-html="formatLiturgicalTitleHtml(getOptionDisplayTitle(option))"
-            ></v-list-item-title>
+            <v-list-item-title class="day-option__title">
+              <span v-html="formatLiturgicalTitleHtml(getOptionDisplayTitle(option))"></span>
+            </v-list-item-title>
             <v-list-item-subtitle v-if="getOptionMeta(option)" class="day-option__subtitle">
               {{ getOptionMeta(option) }}
             </v-list-item-subtitle>

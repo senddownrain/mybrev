@@ -292,3 +292,14 @@ test('right chords fit and lyrics wrap on 360–430px phones without page overfl
     await browser.close();
   }
 });
+
+
+test('the pilgrim songbook name is visible in navigation, list and reader', () => {
+  const nav = read('src/layouts/default/NavigationDrawer.vue');
+  const list = read('src/views/Songs.vue');
+  const detail = read('src/views/Song.vue');
+  assert.match(nav, /title="Спеўнік" subtitle="Пілігрымковы"/);
+  assert.match(list, /aria-label="Спеўнік пілігрымковы"/);
+  assert.match(list, /class="prayers-page-eyebrow mt-2 mb-0">Пілігрымковы</);
+  assert.match(detail, /prayer-reading-eyebrow">Спеўнік пілігрымковы</);
+});
