@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
-import { APP_THEME_COLORS, APP_STATUS_BAR_COLORS } from '../src/constants/appearance.js';
+import { APP_THEME_COLORS, APP_STATUS_BAR_COLORS, THEME_OPTIONS, isThemePreference, loadThemePreference, resolveTheme } from '../src/constants/appearance.js';
 import { getLiturgicalTheme, LITURGICAL_THEME_MAP } from '../src/constants/liturgical.js';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
@@ -20,9 +20,9 @@ function contrast(a, b) {
 }
 
 for (const [theme, colors] of Object.entries(APP_THEME_COLORS)) {
-  test(`${theme}: text, accents and keyboard focus stay readable on warm surfaces`, () => {
-    for (const surface of ['background', 'surface', 'surface-variant']) {
-      for (const foreground of ['primary', 'devotional', 'on-surface', 'reader-muted', 'rubric']) {
+  test(`${theme}: text, accents and keyboard focus stay readable on application surfaces`, () => {
+    for (const surface of ['background', 'surface', 'surface-variant', ...(colors['reader-surface'] ? ['reader-surface'] : [])]) {
+      for (const foreground of ['primary', 'devotional', 'on-surface', 'on-surface-variant', 'reader-muted', 'rubric']) {
         const ratio = contrast(rgb(colors[foreground]), rgb(colors[surface]));
         assert.ok(ratio >= 4.5, `${theme} ${foreground}/${surface}: ${ratio.toFixed(2)}`);
       }
@@ -38,14 +38,14 @@ for (const [theme, colors] of Object.entries(APP_THEME_COLORS)) {
 
 test('CSS and Vuetify share the same application palette, including overlay themes', () => {
   const css = read('src/styles/main.scss');
-  assert.match(css, /\.v-theme--light,\s*\.v-theme--dark\s*\{/);
+  assert.match(css, /\.v-theme--light,\s*\.v-theme--dark,\s*\.v-theme--marian\s*\{/);
   assert.match(css, /--chrome-accent: rgb\(var\(--v-theme-primary\)\)/);
   assert.match(css, /--devotional-rgb: var\(--v-theme-devotional\)/);
   assert.match(css, /--focus-ring: rgba\(var\(--chrome-accent-rgb\), 0\.7\)/);
   assert.match(css, /--overlay-surface: rgba\(var\(--v-theme-surface\)/);
   assert.match(css, /:where\(a:any-link\)\s*\{\s*color: var\(--chrome-accent\)/);
   const vuetify = read('src/plugins/vuetify.js');
-  for (const theme of ['light', 'dark']) {
+  for (const theme of Object.keys(APP_THEME_COLORS)) {
     assert.ok(vuetify.includes(`colors: { ...APP_THEME_COLORS.${theme} }`));
   }
 });
@@ -53,20 +53,26 @@ test('CSS and Vuetify share the same application palette, including overlay them
 test('first paint, saved theme, runtime status bar and PWA manifest agree', () => {
   for (const path of ['index.html', 'public/404.html']) {
     const html = read(path);
-    for (const savedTheme of [null, 'light', 'dark', 'obsolete-theme']) {
-      const theme = savedTheme === 'dark' ? 'dark' : 'light';
-      let themeColor = html.match(/name="theme-color" content="([^"]+)"/)[1];
-      const dataset = {};
-      runInNewContext(html.match(/<script>([\s\S]*?)<\/script>/)[1], {
-        localStorage: { getItem: () => savedTheme },
-        document: {
-          documentElement: { dataset },
-          querySelector: () => ({ setAttribute: (_name, value) => { themeColor = value; } }),
-        },
-      });
-      assert.equal(themeColor, APP_STATUS_BAR_COLORS[theme], `${path}: ${savedTheme}`);
-      assert.equal(dataset.appearance || 'light', theme);
-      assert.ok(html.includes(APP_THEME_COLORS[theme].background));
+    for (const saved of [null, 'system', 'light', 'dark', 'marian', 'obsolete-theme']) {
+      for (const legacy of [null, 'light', 'dark', 'marian', 'obsolete-theme']) {
+        for (const systemDark of [false, true]) {
+          const storage = { getItem: (key) => key === 'themePreference' ? saved : legacy };
+          const theme = resolveTheme(loadThemePreference(storage), systemDark);
+          let themeColor = html.match(/name="theme-color" content="([^"]+)"/)[1];
+          const dataset = {};
+          runInNewContext(html.match(/<script>([\s\S]*?)<\/script>/)[1], {
+            localStorage: storage,
+            matchMedia: () => ({ matches: systemDark }),
+            document: {
+              documentElement: { dataset },
+              querySelector: () => ({ setAttribute: (_name, value) => { themeColor = value; } }),
+            },
+          });
+          assert.equal(themeColor, APP_STATUS_BAR_COLORS[theme], `${path}: ${saved}/${legacy}/${systemDark}`);
+          assert.equal(dataset.appearance, theme);
+          assert.ok(html.includes(APP_THEME_COLORS[theme].background));
+        }
+      }
     }
   }
   const runtime = read('src/stores/settings.js');
@@ -77,7 +83,7 @@ test('first paint, saved theme, runtime status bar and PWA manifest agree', () =
   assert.match(config, /background_color: APP_THEME_COLORS\.light\.background/);
 });
 
-test('document canvas and body use the selected PWA appearance in both themes', () => {
+test('document canvas and body use the selected PWA appearance in all themes', () => {
   const html = read('index.html');
   const css = read('src/styles/main.scss');
   assert.match(html, /:root\s*\{\s*--app-viewport-background:\s*#F5F1E8;/);
@@ -86,7 +92,7 @@ test('document canvas and body use the selected PWA appearance in both themes', 
   assert.match(html, /color-scheme:\s*light/);
   assert.match(html, /color-scheme:\s*dark/);
   assert.match(css, /html,\s*body\s*\{\s*background-color:\s*var\(--app-viewport-background,\s*#F5F1E8\)/);
-  for (const theme of ['light', 'dark']) {
+  for (const theme of Object.keys(APP_THEME_COLORS)) {
     assert.ok(html.includes(APP_THEME_COLORS[theme].background), theme);
   }
 });
@@ -130,4 +136,57 @@ test('periods and feast overrides retain their independent liturgical colours', 
   const hours = read('src/components/OrasList.vue');
   assert.ok(!hours.includes('avatarColor'));
   assert.match(hours, /getLiturgicalTheme\(dayData\.value, dayData\.value\?\._periodType\)/);
+});
+
+
+test('Marian palette keeps the requested materials and readable functional colours', () => {
+  const colors = APP_THEME_COLORS.marian;
+  for (const [key, value] of Object.entries({
+    background: '#F4F8FC', surface: '#FFFFFF', 'surface-variant': '#E2EFF9',
+    primary: '#244D78', secondary: '#477DAA', ambient: '#A8CBE6',
+    'on-surface': '#202D39', 'on-surface-variant': '#52687A', rubric: '#9B302A',
+  })) assert.equal(colors[key], value, key);
+  for (const role of ['error', 'success', 'warning', 'info']) {
+    for (const surface of ['surface', 'background', 'surface-variant']) {
+      assert.ok(contrast(rgb(colors[role]), rgb(colors[surface])) >= 4.5, `${role}/${surface}`);
+    }
+    assert.ok(contrast(rgb(colors[role]), rgb(colors[`on-${role}`])) >= 4.5, role);
+  }
+  assert.match(read('src/styles/main.scss'), /\.text-secondary\s*\{ color: rgb\(var\(--v-theme-primary\)\)/);
+});
+
+test('all four preferences, legacy migration, restoration and OS independence', () => {
+  assert.deepEqual(THEME_OPTIONS.map((option) => option.value), ['system', 'light', 'dark', 'marian']);
+  const saved = new Map();
+  const storage = { getItem: (key) => saved.get(key) ?? null };
+  assert.equal(loadThemePreference(storage), 'system');
+  for (const legacy of ['light', 'dark']) {
+    saved.set('theme', legacy);
+    assert.equal(loadThemePreference(storage), legacy);
+    saved.set('themePreference', 'invalid');
+    assert.equal(loadThemePreference(storage), legacy);
+    saved.delete('themePreference');
+  }
+  for (const { value } of THEME_OPTIONS) {
+    assert.ok(isThemePreference(value));
+    saved.set('themePreference', value);
+    assert.equal(loadThemePreference(storage), value);
+    for (const systemDark of [true, false]) {
+      assert.equal(resolveTheme(loadThemePreference(storage), systemDark), value === 'system' ? systemDark ? 'dark' : 'light' : value);
+    }
+  }
+  assert.equal(isThemePreference('unknown'), false);
+  assert.equal(isThemePreference(null), false);
+  saved.set('fontSizeMultiplier', '1.3');
+  loadThemePreference(storage);
+  assert.equal(saved.get('fontSizeMultiplier'), '1.3');
+});
+
+
+test('Marian prayer paper remains almost white with AA text and focus contrast', () => {
+  const colors = APP_THEME_COLORS.marian;
+  assert.equal(colors['reader-surface'], '#FBFDFF');
+  for (const role of ['on-surface', 'on-surface-variant', 'primary', 'rubric']) {
+    assert.ok(contrast(rgb(colors[role]), rgb(colors['reader-surface'])) >= 4.5, role);
+  }
 });

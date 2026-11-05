@@ -132,6 +132,7 @@ import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { usePrayersStore } from '@/stores/prayers';
 import { useNotifier } from '@/composables/useNotifier';
 import AddCategoryDialog from '@/components/prayers/AddCategoryDialog.vue';
+import { THEME_OPTIONS } from '@/constants/appearance';
 import { READER_FONT_OPTIONS } from '@/constants/fonts';
 import { ORDO_DIOCESES } from '@/utils/ordoDiocese';
 
@@ -143,11 +144,7 @@ const { notifySuccess } = useNotifier();
 const showAddCategoryDialog = ref(false);
 const fontOptions = READER_FONT_OPTIONS;
 const dioceseOptions = ORDO_DIOCESES;
-const themeOptions = [
-  { value: 'system', label: 'Сістэмная' },
-  { value: 'light', label: 'Светлая' },
-  { value: 'dark', label: 'Цёмная' },
-];
+const themeOptions = THEME_OPTIONS;
 const refreshingContent = ref(false);
 const refreshStatus = ref('');
 async function refreshContent() {
@@ -227,7 +224,7 @@ function restoreGlobalCategories() {
 .stepper button { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; background: var(--nav-surface); color: var(--nav-on-surface); }
 .stepper button:disabled { opacity: .35; cursor: default; }
 .stepper strong { color: var(--nav-on-surface); font-size: .8rem; }
-.text-preview { margin: 4px 20px 20px; padding: 17px 18px; border-radius: 17px; background: var(--nav-active); color: var(--nav-on-surface); }
+.text-preview { margin: 4px 20px 20px; padding: 17px 18px; border-radius: 17px; background: var(--reader-preview-surface); color: var(--nav-on-surface); }
 .text-preview > span { display: block; margin-bottom: 8px; font-family: var(--ui-font-family); }
 .text-preview p { margin: 0; line-height: 1.65; }
 .text-preview p { font-optical-sizing: auto; }
@@ -247,6 +244,7 @@ function restoreGlobalCategories() {
   .setting-row--theme { align-items: flex-start; flex-direction: column; padding-block: 14px; }
   .theme-options { width: 100%; justify-content: stretch; }
   .theme-options button { flex: 1; }
+  .setting-row--theme .theme-options button { flex-basis: calc(50% - 5px); }
   .font-picker { padding-inline: 16px; }
   .text-size-control { align-items: flex-start; flex-direction: column; }
   .stepper { width: 100%; grid-template-columns: 42px 1fr 42px; }

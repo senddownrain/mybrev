@@ -44,7 +44,7 @@ try {
   )), true, 'protected admin boundary loads Firebase Auth and redirects to login');
 
   await page.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
-  await page.getByRole('radio', { name: 'Сістэмная' }).click();
+  await page.getByRole('radio', { name: 'Сістэма' }).click();
   assert.ok(await page.locator('.v-theme--dark').count(), 'system theme follows dark OS preference');
 
   await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });

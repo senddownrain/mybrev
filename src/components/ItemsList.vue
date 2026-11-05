@@ -428,8 +428,8 @@ watch(
   border: 1px solid var(--nav-border);
   border-radius: 28px;
   background:
-    radial-gradient(circle at 92% 14%, rgba(var(--liturgical-rgb), 0.28) 0, rgba(var(--liturgical-rgb), 0.28) 42px, transparent 43px),
-    linear-gradient(145deg, rgba(var(--liturgical-rgb), 0.13), rgba(var(--liturgical-rgb), 0.035) 66%),
+    radial-gradient(circle at 92% 14%, rgba(var(--liturgical-rgb), var(--day-circle-opacity, 0.28)) 0, rgba(var(--liturgical-rgb), var(--day-circle-opacity, 0.28)) 42px, transparent 43px),
+    linear-gradient(145deg, rgba(var(--liturgical-rgb), var(--day-wash-opacity, 0.13)), rgba(var(--liturgical-rgb), var(--day-wash-tail-opacity, 0.035)) 66%),
     var(--nav-surface);
   color: var(--nav-on-surface);
   box-shadow: var(--hero-shadow);

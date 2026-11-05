@@ -1,0 +1,1306 @@
+{
+  "scenes": [
+    {
+      "width": 390,
+      "theme": "marian",
+      "scene": "settings",
+      "metrics": [
+        {
+          "selector": ".settings-section",
+          "background": "rgba(255, 255, 255, 0.94)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            14,
+            214.2,
+            362,
+            527.67
+          ],
+          "liturgical": "",
+          "textHash": "19e892c82c5852a946595c0d1989550fe5265ae78af2676d1ad65acd837e8cb3"
+        },
+        {
+          "selector": ".text-preview",
+          "background": "rgb(251, 253, 255)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            31,
+            1118.14,
+            328,
+            116.83
+          ],
+          "liturgical": "",
+          "textHash": "90631ff7a3ad1cc22923e29fe97beb0701ab617c1f9b2fc6dd573f4685762f46"
+        }
+      ],
+      "screenshotHash": "1bb49005ea4327a0be118573c07b276b42ebe8f53758aee72460049922c9585c"
+    },
+    {
+      "width": 390,
+      "theme": "marian",
+      "scene": "home",
+      "metrics": [
+        {
+          "selector": ".date-header",
+          "background": "rgba(255, 255, 255, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.11) 0px, rgba(77, 138, 91, 0.11) 42px, rgba(0, 0, 0, 0) 43px), linear-gradient(145deg, rgba(77, 138, 91, 0.05), rgba(77, 138, 91, 0.01) 66%), none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            16,
+            138.31,
+            358,
+            158
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "67084419fa339d70ff9fb5dac8286f4f699cc35c8dc8712276ec6507f7a20acf"
+        },
+        {
+          "selector": ".day-option",
+          "background": "rgba(255, 255, 255, 0.94)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            16,
+            306.31,
+            358,
+            80
+          ],
+          "liturgical": "",
+          "textHash": "75f8e4ffde98d80373287ac9f51aa47e06e5b63f53b08b0320b2d58ddc5cee58"
+        }
+      ],
+      "screenshotHash": "42d998b75eeabd2943a776a1252356f2b72d396fb855c8fe0b43b4c5b0cffabf"
+    },
+    {
+      "width": 390,
+      "theme": "marian",
+      "scene": "calendar",
+      "metrics": [
+        {
+          "selector": ".date-dialog-card",
+          "background": "rgba(255, 255, 255, 0.97)",
+          "image": "radial-gradient(circle at 92% 0px, color(srgb 0.12549 0.176471 0.223529 / 0.08), rgba(0, 0, 0, 0) 210px), none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            12,
+            110,
+            366,
+            680
+          ],
+          "liturgical": "",
+          "textHash": "d6235d50bae9b0aeb3b954e63ce445ea18b10d79cff34305367abfb59175d3e9"
+        }
+      ],
+      "screenshotHash": "a43946286a082588a4e3cf9adfcd0c7501522fda6696e8cb22f9dddb2dfa5e50"
+    },
+    {
+      "width": 390,
+      "theme": "marian",
+      "scene": "hours",
+      "metrics": [
+        {
+          "selector": ".day-title-hero",
+          "background": "rgba(255, 255, 255, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.11) 0px, rgba(77, 138, 91, 0.11) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.05), rgba(77, 138, 91, 0.01) 66%), none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            12,
+            72,
+            366,
+            184
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.04), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            12,
+            72,
+            366,
+            184
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        }
+      ],
+      "screenshotHash": "764bba333b8e88395bacb0679ba11f799624db1215af64d9eb889dd768020500"
+    },
+    {
+      "width": 390,
+      "theme": "marian",
+      "scene": "reading",
+      "metrics": [
+        {
+          "selector": ".day-title-standard",
+          "background": "rgba(255, 255, 255, 0.94)",
+          "image": "radial-gradient(circle at 92% 18%, rgba(77, 138, 91, 0.11) 0px, rgba(77, 138, 91, 0.11) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.05), rgba(0, 0, 0, 0) 62%), none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            12,
+            72,
+            366,
+            137.05
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.04), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            4,
+            72,
+            382,
+            137.05
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".liturgical-hour-column > .ora",
+          "background": "rgb(251, 253, 255)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            4,
+            11171.36,
+            382,
+            715.11
+          ],
+          "liturgical": "",
+          "textHash": "7ec5298d2a1394369aca778d1119605131d84835be450258b5a4803a5d5a7ece"
+        }
+      ],
+      "screenshotHash": "e450a6584d22c6106c73ee08a207ed4928cc91c3544b1a867346b09bae28a7ba",
+      "paper": {
+        "color": "rgb(251, 253, 255)",
+        "image": "none"
+      }
+    },
+    {
+      "width": 390,
+      "theme": "marian",
+      "scene": "reading-middle",
+      "metrics": [
+        {
+          "selector": ".psalmody-text",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            25,
+            -3719.67,
+            340,
+            1126.11
+          ],
+          "liturgical": "",
+          "textHash": "0af0f4c39293ce2adde8472b4a2a47f432eaa5fe6493c482ef62d1b4caae958a"
+        }
+      ],
+      "screenshotHash": "caddbc34c0415424e1e43dd6f1bd11a7acaaed426a70aaa33bcb5bd0cabf41c7"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "scene": "settings",
+      "metrics": [
+        {
+          "selector": ".settings-section",
+          "background": "rgba(255, 251, 243, 0.94)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            14,
+            214.2,
+            362,
+            527.67
+          ],
+          "liturgical": "",
+          "textHash": "19e892c82c5852a946595c0d1989550fe5265ae78af2676d1ad65acd837e8cb3"
+        },
+        {
+          "selector": ".text-preview",
+          "background": "rgb(236, 227, 214)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            31,
+            1118.14,
+            328,
+            116.83
+          ],
+          "liturgical": "",
+          "textHash": "90631ff7a3ad1cc22923e29fe97beb0701ab617c1f9b2fc6dd573f4685762f46"
+        }
+      ],
+      "screenshotHash": "86ba4dbd185f6c0a192c04109f1e47c512877a7cd30a21857b5a402d7f1556b6"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "scene": "home",
+      "metrics": [
+        {
+          "selector": ".date-header",
+          "background": "rgba(255, 251, 243, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.28) 0px, rgba(77, 138, 91, 0.28) 42px, rgba(0, 0, 0, 0) 43px), linear-gradient(145deg, rgba(77, 138, 91, 0.13), rgba(77, 138, 91, 0.035) 66%), none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            16,
+            138.31,
+            358,
+            158
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "67084419fa339d70ff9fb5dac8286f4f699cc35c8dc8712276ec6507f7a20acf"
+        },
+        {
+          "selector": ".day-option",
+          "background": "rgba(255, 251, 243, 0.94)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            16,
+            306.31,
+            358,
+            80
+          ],
+          "liturgical": "",
+          "textHash": "75f8e4ffde98d80373287ac9f51aa47e06e5b63f53b08b0320b2d58ddc5cee58"
+        }
+      ],
+      "screenshotHash": "8e0d4b279975ae8543537e55b695e601da6bca4d5bd6def47d2ae45a4fa2edcb"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "scene": "calendar",
+      "metrics": [
+        {
+          "selector": ".date-dialog-card",
+          "background": "rgba(255, 251, 243, 0.97)",
+          "image": "radial-gradient(circle at 92% 0px, color(srgb 0.164706 0.133333 0.105882 / 0.08), rgba(0, 0, 0, 0) 210px), none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            12,
+            110,
+            366,
+            680
+          ],
+          "liturgical": "",
+          "textHash": "d6235d50bae9b0aeb3b954e63ce445ea18b10d79cff34305367abfb59175d3e9"
+        }
+      ],
+      "screenshotHash": "4b603aa81ca60fe7e54fc4caafe3672fec3bbd837519f6d4776c463e5902a98b"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "scene": "hours",
+      "metrics": [
+        {
+          "selector": ".day-title-hero",
+          "background": "rgba(255, 251, 243, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.3) 0px, rgba(77, 138, 91, 0.3) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.16), rgba(77, 138, 91, 0.04) 66%), none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            12,
+            72,
+            366,
+            184
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.11), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            12,
+            72,
+            366,
+            184
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        }
+      ],
+      "screenshotHash": "e8dc893e4600f382d4ace0299fe873b5d96281a17e9726b230535717f6286f60"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "scene": "reading",
+      "metrics": [
+        {
+          "selector": ".day-title-standard",
+          "background": "rgba(255, 251, 243, 0.94)",
+          "image": "radial-gradient(circle at 92% 18%, rgba(77, 138, 91, 0.16) 0px, rgba(77, 138, 91, 0.16) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.1), rgba(0, 0, 0, 0) 62%), none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            12,
+            72,
+            366,
+            137.05
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.11), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            4,
+            72,
+            382,
+            137.05
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".liturgical-hour-column > .ora",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            4,
+            11171.36,
+            382,
+            715.11
+          ],
+          "liturgical": "",
+          "textHash": "7ec5298d2a1394369aca778d1119605131d84835be450258b5a4803a5d5a7ece"
+        }
+      ],
+      "screenshotHash": "e306ee9f5529b13977011bf502c79e6ad2665ce95e795c9b017e19df30171f78",
+      "paper": {
+        "color": "rgba(255, 251, 243, 0.9)",
+        "image": "none"
+      }
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "scene": "reading-middle",
+      "metrics": [
+        {
+          "selector": ".psalmody-text",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            25,
+            -3719.67,
+            340,
+            1126.11
+          ],
+          "liturgical": "",
+          "textHash": "0af0f4c39293ce2adde8472b4a2a47f432eaa5fe6493c482ef62d1b4caae958a"
+        }
+      ],
+      "screenshotHash": "f11997f510e8c395e32b12be64783a8b3ac2e81011f2442e71041cf4becae407"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "scene": "settings",
+      "metrics": [
+        {
+          "selector": ".settings-section",
+          "background": "rgba(23, 21, 18, 0.94)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            14,
+            214.2,
+            362,
+            527.67
+          ],
+          "liturgical": "",
+          "textHash": "19e892c82c5852a946595c0d1989550fe5265ae78af2676d1ad65acd837e8cb3"
+        },
+        {
+          "selector": ".text-preview",
+          "background": "rgb(42, 38, 33)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            31,
+            1118.14,
+            328,
+            116.83
+          ],
+          "liturgical": "",
+          "textHash": "90631ff7a3ad1cc22923e29fe97beb0701ab617c1f9b2fc6dd573f4685762f46"
+        }
+      ],
+      "screenshotHash": "3d7088af45f103ab5f896f4b374fa2c594f7fab877e0fb710e270b02445d1638"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "scene": "home",
+      "metrics": [
+        {
+          "selector": ".date-header",
+          "background": "rgba(23, 21, 18, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.28) 0px, rgba(77, 138, 91, 0.28) 42px, rgba(0, 0, 0, 0) 43px), linear-gradient(145deg, rgba(77, 138, 91, 0.13), rgba(77, 138, 91, 0.035) 66%), none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            16,
+            138.31,
+            358,
+            158
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "67084419fa339d70ff9fb5dac8286f4f699cc35c8dc8712276ec6507f7a20acf"
+        },
+        {
+          "selector": ".day-option",
+          "background": "rgba(23, 21, 18, 0.94)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            16,
+            306.31,
+            358,
+            80
+          ],
+          "liturgical": "",
+          "textHash": "75f8e4ffde98d80373287ac9f51aa47e06e5b63f53b08b0320b2d58ddc5cee58"
+        }
+      ],
+      "screenshotHash": "70097e5009ecd68e5c11f716c1f686d9a645161c5dbac1bd249cb0a676d14756"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "scene": "calendar",
+      "metrics": [
+        {
+          "selector": ".date-dialog-card",
+          "background": "rgba(23, 21, 18, 0.97)",
+          "image": "radial-gradient(circle at 92% 0px, color(srgb 0.94902 0.921569 0.866667 / 0.08), rgba(0, 0, 0, 0) 210px), none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            12,
+            110,
+            366,
+            680
+          ],
+          "liturgical": "",
+          "textHash": "d6235d50bae9b0aeb3b954e63ce445ea18b10d79cff34305367abfb59175d3e9"
+        }
+      ],
+      "screenshotHash": "e2aca5a0aa958ba469d73f955acc32db8f389fd96b6a58762ce813e35a27f9db"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "scene": "hours",
+      "metrics": [
+        {
+          "selector": ".day-title-hero",
+          "background": "rgba(23, 21, 18, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.3) 0px, rgba(77, 138, 91, 0.3) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.16), rgba(77, 138, 91, 0.04) 66%), none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            12,
+            72,
+            366,
+            184
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.17), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            12,
+            72,
+            366,
+            184
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        }
+      ],
+      "screenshotHash": "dd4b1dda5264fe7b37f5b6e59bac25dc27a282010e98c425114b6bec374a531b"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "scene": "reading",
+      "metrics": [
+        {
+          "selector": ".day-title-standard",
+          "background": "rgba(23, 21, 18, 0.94)",
+          "image": "radial-gradient(circle at 92% 18%, rgba(77, 138, 91, 0.16) 0px, rgba(77, 138, 91, 0.16) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.1), rgba(0, 0, 0, 0) 62%), none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            12,
+            72,
+            366,
+            137.05
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.17), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            4,
+            72,
+            382,
+            137.05
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".liturgical-hour-column > .ora",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            4,
+            11171.36,
+            382,
+            715.11
+          ],
+          "liturgical": "",
+          "textHash": "7ec5298d2a1394369aca778d1119605131d84835be450258b5a4803a5d5a7ece"
+        }
+      ],
+      "screenshotHash": "65c2967a5eb7fa2632b9067e7196fb99a03f1944ad351b64947a28ac005d353c",
+      "paper": {
+        "color": "rgba(23, 21, 18, 0.9)",
+        "image": "none"
+      }
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "scene": "reading-middle",
+      "metrics": [
+        {
+          "selector": ".psalmody-text",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            25,
+            -3719.67,
+            340,
+            1126.11
+          ],
+          "liturgical": "",
+          "textHash": "0af0f4c39293ce2adde8472b4a2a47f432eaa5fe6493c482ef62d1b4caae958a"
+        }
+      ],
+      "screenshotHash": "2abeb234fdf9f590908940468c0d2bc45676cc38e843d8b8448bce95261a1857"
+    },
+    {
+      "width": 1440,
+      "theme": "marian",
+      "scene": "settings",
+      "metrics": [
+        {
+          "selector": ".settings-section",
+          "background": "rgba(255, 255, 255, 0.94)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            348,
+            200.17,
+            744,
+            411.47
+          ],
+          "liturgical": "",
+          "textHash": "19e892c82c5852a946595c0d1989550fe5265ae78af2676d1ad65acd837e8cb3"
+        },
+        {
+          "selector": ".text-preview",
+          "background": "rgb(251, 253, 255)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            369,
+            884.28,
+            702,
+            87.81
+          ],
+          "liturgical": "",
+          "textHash": "90631ff7a3ad1cc22923e29fe97beb0701ab617c1f9b2fc6dd573f4685762f46"
+        }
+      ],
+      "screenshotHash": "2f6d2ed53f7ba3d1368034093e75fff4f146f4cc03f39c5467be58654e668125"
+    },
+    {
+      "width": 1440,
+      "theme": "marian",
+      "scene": "home",
+      "metrics": [
+        {
+          "selector": ".date-header",
+          "background": "rgba(255, 255, 255, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.11) 0px, rgba(77, 138, 91, 0.11) 42px, rgba(0, 0, 0, 0) 43px), linear-gradient(145deg, rgba(77, 138, 91, 0.05), rgba(77, 138, 91, 0.01) 66%), none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            368,
+            147.34,
+            704,
+            166
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "67084419fa339d70ff9fb5dac8286f4f699cc35c8dc8712276ec6507f7a20acf"
+        },
+        {
+          "selector": ".day-option",
+          "background": "rgba(255, 255, 255, 0.94)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            368,
+            323.34,
+            704,
+            82
+          ],
+          "liturgical": "",
+          "textHash": "75f8e4ffde98d80373287ac9f51aa47e06e5b63f53b08b0320b2d58ddc5cee58"
+        }
+      ],
+      "screenshotHash": "24d84d6985021e2a8979cb6658b3cb84e8f9179f8595abbf04e5b4eb3548250a"
+    },
+    {
+      "width": 1440,
+      "theme": "marian",
+      "scene": "calendar",
+      "metrics": [
+        {
+          "selector": ".date-dialog-card",
+          "background": "rgba(255, 255, 255, 0.97)",
+          "image": "radial-gradient(circle at 92% 0px, color(srgb 0.12549 0.176471 0.223529 / 0.08), rgba(0, 0, 0, 0) 210px), none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            510,
+            160,
+            420,
+            680
+          ],
+          "liturgical": "",
+          "textHash": "d6235d50bae9b0aeb3b954e63ce445ea18b10d79cff34305367abfb59175d3e9"
+        }
+      ],
+      "screenshotHash": "45e1cf32c3bc989b7adab21814f9561293da8b14cc44f10e25d628073008a6cc"
+    },
+    {
+      "width": 1440,
+      "theme": "marian",
+      "scene": "hours",
+      "metrics": [
+        {
+          "selector": ".day-title-hero",
+          "background": "rgba(255, 255, 255, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.11) 0px, rgba(77, 138, 91, 0.11) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.05), rgba(77, 138, 91, 0.01) 66%), none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            368,
+            74,
+            704,
+            190
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.04), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            368,
+            74,
+            704,
+            190
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        }
+      ],
+      "screenshotHash": "ab2318b52919bfc5f4ad76aabca3abe3e199f3ce4b5b0cabb9d52b2e2847c26c"
+    },
+    {
+      "width": 1440,
+      "theme": "marian",
+      "scene": "reading",
+      "metrics": [
+        {
+          "selector": ".day-title-standard",
+          "background": "rgba(255, 255, 255, 0.94)",
+          "image": "radial-gradient(circle at 92% 18%, rgba(77, 138, 91, 0.11) 0px, rgba(77, 138, 91, 0.11) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.05), rgba(0, 0, 0, 0) 62%), none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            304,
+            80,
+            832,
+            152.88
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.04), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            304,
+            80,
+            832,
+            152.88
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".liturgical-hour-column > .ora",
+          "background": "rgb(251, 253, 255)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            304,
+            9434.42,
+            832,
+            557.17
+          ],
+          "liturgical": "",
+          "textHash": "7ec5298d2a1394369aca778d1119605131d84835be450258b5a4803a5d5a7ece"
+        }
+      ],
+      "screenshotHash": "5d41ad4180d9030d6148088b4e458dbfb100ec8d22de845aea34907af46375f0",
+      "paper": {
+        "color": "rgb(251, 253, 255)",
+        "image": "none"
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "marian",
+      "scene": "reading-middle",
+      "metrics": [
+        {
+          "selector": ".psalmody-text",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(32, 45, 57)",
+          "before": "none",
+          "geometry": [
+            333,
+            -2728.7,
+            774,
+            1008.95
+          ],
+          "liturgical": "",
+          "textHash": "0af0f4c39293ce2adde8472b4a2a47f432eaa5fe6493c482ef62d1b4caae958a"
+        }
+      ],
+      "screenshotHash": "083346115291b09a61c284513bb87d4337805b9c3566141698d17ebaeba3a675"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "scene": "settings",
+      "metrics": [
+        {
+          "selector": ".settings-section",
+          "background": "rgba(255, 251, 243, 0.94)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            348,
+            200.17,
+            744,
+            411.47
+          ],
+          "liturgical": "",
+          "textHash": "19e892c82c5852a946595c0d1989550fe5265ae78af2676d1ad65acd837e8cb3"
+        },
+        {
+          "selector": ".text-preview",
+          "background": "rgb(236, 227, 214)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            369,
+            884.28,
+            702,
+            87.81
+          ],
+          "liturgical": "",
+          "textHash": "90631ff7a3ad1cc22923e29fe97beb0701ab617c1f9b2fc6dd573f4685762f46"
+        }
+      ],
+      "screenshotHash": "23dc671cc7760bfa5320584293679b3b63fc56b09350963bcecc9196b37ed548"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "scene": "home",
+      "metrics": [
+        {
+          "selector": ".date-header",
+          "background": "rgba(255, 251, 243, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.28) 0px, rgba(77, 138, 91, 0.28) 42px, rgba(0, 0, 0, 0) 43px), linear-gradient(145deg, rgba(77, 138, 91, 0.13), rgba(77, 138, 91, 0.035) 66%), none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            368,
+            147.34,
+            704,
+            166
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "67084419fa339d70ff9fb5dac8286f4f699cc35c8dc8712276ec6507f7a20acf"
+        },
+        {
+          "selector": ".day-option",
+          "background": "rgba(255, 251, 243, 0.94)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            368,
+            323.34,
+            704,
+            82
+          ],
+          "liturgical": "",
+          "textHash": "75f8e4ffde98d80373287ac9f51aa47e06e5b63f53b08b0320b2d58ddc5cee58"
+        }
+      ],
+      "screenshotHash": "c83eed50ea16c3ff431a4b6cbe3a9d4edeb70b32aebce9c4d294197ccbeb2607"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "scene": "calendar",
+      "metrics": [
+        {
+          "selector": ".date-dialog-card",
+          "background": "rgba(255, 251, 243, 0.97)",
+          "image": "radial-gradient(circle at 92% 0px, color(srgb 0.164706 0.133333 0.105882 / 0.08), rgba(0, 0, 0, 0) 210px), none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            510,
+            160,
+            420,
+            680
+          ],
+          "liturgical": "",
+          "textHash": "d6235d50bae9b0aeb3b954e63ce445ea18b10d79cff34305367abfb59175d3e9"
+        }
+      ],
+      "screenshotHash": "afe69529500843ddaafad4c3448efb326a067592e38f7eb91fe101a29e809112"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "scene": "hours",
+      "metrics": [
+        {
+          "selector": ".day-title-hero",
+          "background": "rgba(255, 251, 243, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.3) 0px, rgba(77, 138, 91, 0.3) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.16), rgba(77, 138, 91, 0.04) 66%), none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            368,
+            74,
+            704,
+            190
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.14), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            368,
+            74,
+            704,
+            190
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        }
+      ],
+      "screenshotHash": "03de21ff3d8bd225edd05f986ff5c17a3bcb8027b58b302d857009d147169f61"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "scene": "reading",
+      "metrics": [
+        {
+          "selector": ".day-title-standard",
+          "background": "rgba(255, 251, 243, 0.94)",
+          "image": "radial-gradient(circle at 92% 18%, rgba(77, 138, 91, 0.16) 0px, rgba(77, 138, 91, 0.16) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.1), rgba(0, 0, 0, 0) 62%), none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            304,
+            80,
+            832,
+            152.88
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.14), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            304,
+            80,
+            832,
+            152.88
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".liturgical-hour-column > .ora",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            304,
+            9434.42,
+            832,
+            557.17
+          ],
+          "liturgical": "",
+          "textHash": "7ec5298d2a1394369aca778d1119605131d84835be450258b5a4803a5d5a7ece"
+        }
+      ],
+      "screenshotHash": "6f2c629964d39ea6605210c855832aa28636d56b70d934943ec620d2b2fdff0c",
+      "paper": {
+        "color": "rgba(255, 251, 243, 0.9)",
+        "image": "none"
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "scene": "reading-middle",
+      "metrics": [
+        {
+          "selector": ".psalmody-text",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(42, 34, 27)",
+          "before": "none",
+          "geometry": [
+            333,
+            -2728.7,
+            774,
+            1008.95
+          ],
+          "liturgical": "",
+          "textHash": "0af0f4c39293ce2adde8472b4a2a47f432eaa5fe6493c482ef62d1b4caae958a"
+        }
+      ],
+      "screenshotHash": "da856c015a3f61471fc496aafa24b9ac69607233ee9e743c7a9208c8645a1859"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "scene": "settings",
+      "metrics": [
+        {
+          "selector": ".settings-section",
+          "background": "rgba(23, 21, 18, 0.94)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            348,
+            200.17,
+            744,
+            411.47
+          ],
+          "liturgical": "",
+          "textHash": "19e892c82c5852a946595c0d1989550fe5265ae78af2676d1ad65acd837e8cb3"
+        },
+        {
+          "selector": ".text-preview",
+          "background": "rgb(42, 38, 33)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            369,
+            884.28,
+            702,
+            87.81
+          ],
+          "liturgical": "",
+          "textHash": "90631ff7a3ad1cc22923e29fe97beb0701ab617c1f9b2fc6dd573f4685762f46"
+        }
+      ],
+      "screenshotHash": "a8f48992de5ec76161ac1070505f88eca75e45dbe06400c00c7e4670a2a0778b"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "scene": "home",
+      "metrics": [
+        {
+          "selector": ".date-header",
+          "background": "rgba(23, 21, 18, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.28) 0px, rgba(77, 138, 91, 0.28) 42px, rgba(0, 0, 0, 0) 43px), linear-gradient(145deg, rgba(77, 138, 91, 0.13), rgba(77, 138, 91, 0.035) 66%), none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            368,
+            147.34,
+            704,
+            166
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "67084419fa339d70ff9fb5dac8286f4f699cc35c8dc8712276ec6507f7a20acf"
+        },
+        {
+          "selector": ".day-option",
+          "background": "rgba(23, 21, 18, 0.94)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            368,
+            323.34,
+            704,
+            82
+          ],
+          "liturgical": "",
+          "textHash": "75f8e4ffde98d80373287ac9f51aa47e06e5b63f53b08b0320b2d58ddc5cee58"
+        }
+      ],
+      "screenshotHash": "c8a1d811f10a5224d46c2b4ffc55174cbe72b5f82645e830261b520063af7c15"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "scene": "calendar",
+      "metrics": [
+        {
+          "selector": ".date-dialog-card",
+          "background": "rgba(23, 21, 18, 0.97)",
+          "image": "radial-gradient(circle at 92% 0px, color(srgb 0.94902 0.921569 0.866667 / 0.08), rgba(0, 0, 0, 0) 210px), none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            510,
+            160,
+            420,
+            680
+          ],
+          "liturgical": "",
+          "textHash": "d6235d50bae9b0aeb3b954e63ce445ea18b10d79cff34305367abfb59175d3e9"
+        }
+      ],
+      "screenshotHash": "f67c353aba8541117eb2ecdabf552a92510185b55424c9d3873a3523a7f0cf91"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "scene": "hours",
+      "metrics": [
+        {
+          "selector": ".day-title-hero",
+          "background": "rgba(23, 21, 18, 0.94)",
+          "image": "radial-gradient(circle at 92% 14%, rgba(77, 138, 91, 0.3) 0px, rgba(77, 138, 91, 0.3) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.16), rgba(77, 138, 91, 0.04) 66%), none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            368,
+            74,
+            704,
+            190
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.22), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            368,
+            74,
+            704,
+            190
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "4209cdf9e9798adfca0d05cdc399eae878767326263f0b639c632c511c99e441"
+        }
+      ],
+      "screenshotHash": "e3f86c8c0da63747a0f075720ee1f222a5f14d2957083ab53349c0e739304970"
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "scene": "reading",
+      "metrics": [
+        {
+          "selector": ".day-title-standard",
+          "background": "rgba(23, 21, 18, 0.94)",
+          "image": "radial-gradient(circle at 92% 18%, rgba(77, 138, 91, 0.16) 0px, rgba(77, 138, 91, 0.16) 44px, rgba(0, 0, 0, 0) 45px), linear-gradient(145deg, rgba(77, 138, 91, 0.1), rgba(0, 0, 0, 0) 62%), none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            304,
+            80,
+            832,
+            152.88
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".day-title-container",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "radial-gradient(at 76% 24%, rgba(77, 138, 91, 0.22), rgba(0, 0, 0, 0) 68%)",
+          "geometry": [
+            304,
+            80,
+            832,
+            152.88
+          ],
+          "liturgical": "77, 138, 91",
+          "textHash": "b33209a70acdb1cc303371e69eec51c4e09b49a8a9e7c861acfed80a8f12f668"
+        },
+        {
+          "selector": ".liturgical-hour-column > .ora",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            304,
+            9434.42,
+            832,
+            557.17
+          ],
+          "liturgical": "",
+          "textHash": "7ec5298d2a1394369aca778d1119605131d84835be450258b5a4803a5d5a7ece"
+        }
+      ],
+      "screenshotHash": "48046bfaa14a566002c3290e181abed26e7b5b67642cf8ad9df7414b45ad50bf",
+      "paper": {
+        "color": "rgba(23, 21, 18, 0.9)",
+        "image": "none"
+      }
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "scene": "reading-middle",
+      "metrics": [
+        {
+          "selector": ".psalmody-text",
+          "background": "rgba(0, 0, 0, 0)",
+          "image": "none",
+          "ink": "rgb(242, 235, 221)",
+          "before": "none",
+          "geometry": [
+            333,
+            -2728.7,
+            774,
+            1008.95
+          ],
+          "liturgical": "",
+          "textHash": "0af0f4c39293ce2adde8472b4a2a47f432eaa5fe6493c482ef62d1b4caae958a"
+        }
+      ],
+      "screenshotHash": "10a8a70cc5cfd02086ad59fc4b80d31fdf198bb109353257617f132f006d090c"
+    }
+  ]
+}

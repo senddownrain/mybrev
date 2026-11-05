@@ -74,6 +74,10 @@ export default createVuetify({
         dark: false,
         colors: { ...APP_THEME_COLORS.light },
       },
+      marian: {
+        dark: false,
+        colors: { ...APP_THEME_COLORS.marian },
+      },
       dark: {
         dark: true,
         colors: { ...APP_THEME_COLORS.dark },
