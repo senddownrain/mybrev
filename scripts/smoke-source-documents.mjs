@@ -5,7 +5,7 @@ import calendar from '../src/data/documents/proper-calendar.json' with { type: '
 import decrees from '../src/data/documents/liturgy-hours-decrees.json' with { type: 'json' };
 
 const baseUrl = process.env.SMOKE_BASE_URL || 'http://127.0.0.1:4173';
-const output = 'docs/sources/evidence/documents';
+const output = process.env.SOURCE_EVIDENCE_DIR || 'reports/source-review/documents';
 await fs.mkdir(output, { recursive: true });
 const browser = await chromium.launch({ executablePath: process.env.BENCHMARK_BROWSER_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
 const normalize = text => text.replace(/\s+/gu, ' ').trim();
@@ -23,6 +23,10 @@ try {
       await page.getByRole('link', { name: 'Крыніцы і аўтарскія правы' }).click();
       await page.getByRole('heading', { name: 'Крыніцы і аўтарскія правы', level: 1 }).waitFor();
       assert.equal(await page.locator('.source-rights__entry').count(), 6);
+      assert.equal(await page.getByRole('link', { name: 'Дэкрэты Літургіі гадзінаў', exact: true }).count(), 1);
+      assert.equal(await page.locator('#liturgy-hours-2012-2020 a').count(), 0);
+      assert.equal(normalize(await page.locator('#bible-nt-kkbb-2017').innerText()), '«Новы Запавет» (Мінск, 2017) © Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2017');
+      assert.doesNotMatch(await page.locator('.sources-page').innerText(), /пераклад ККББ|Copyright/);
       assert.match(await page.locator('#bible-charniauski-2017').innerText(), /^Стары Запавет — пераклад кс. Уладзіслава Чарняўскага MIC/);
       assert.doesNotMatch(await page.locator('.sources-page').innerText(), /pending|requires_verification|Стан праверкі|парсер|Чацвёрты дэкрэт|лічбавае выкарыстанне/);
       await overflow('Sources');
@@ -33,7 +37,7 @@ try {
         await context.close();
         continue;
       }
-      await page.getByRole('link', { name: 'Дэкрэты аб выкарыстанні тэкстаў', exact: true }).focus();
+      await page.getByRole('link', { name: 'Дэкрэты Літургіі гадзінаў', exact: true }).focus();
       await page.keyboard.press('Enter');
       await page.locator('.decree').last().waitFor();
       assert.equal(await page.locator('.decree').count(), 4);
@@ -51,6 +55,9 @@ try {
       await page.keyboard.press('Enter');
       await page.locator('.calendar-page').last().waitFor();
       assert.equal(await page.locator('.calendar-month').count(), 12);
+      assert.equal(await page.locator('p.calendar-intro').count(), 1);
+      const intro = calendar.pages[0].rows.filter(row => row.kind === 'intro').map(row => row.runs.map(run => run.text).join('')).join(' ');
+      assert.equal(await page.locator('p.calendar-intro').textContent(), intro);
       assert.equal(await page.locator('.calendar-row[data-date]').count(), 365);
       assert.equal(await page.locator('.calendar-page').count(), 13);
       assert.equal(await page.getByRole('heading', { name: calendar.title, exact: true }).innerText(), calendar.title);

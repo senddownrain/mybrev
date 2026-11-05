@@ -1,5 +1,7 @@
 # PR #189: первичные документы, декреты и собственный календарь
 
+Актуальные точечные исправления: [отчёт независимой проверки](review-corrections.md).
+
 Доработка по пакету `MyBrev_PR189_sources_decrees_calendar.zip`, полученному 05.11.2026.
 Исходная ревизия этой доработки: `02aa708`. Использованы все три присланных первичных
 документа и https://lh.catholic.by/dekrety.php. Контрольные суммы и исходные имена —
@@ -118,25 +120,25 @@ HTML представляет читаемую статью: бумажные п
 
 | Лист | Диапазон и особенности | HTML-снимок |
 | --- | --- | --- |
-| 1 | Заголовок/протоколы, январь 1–31, диоцезия 27-го, Крещение, красное курсивное примечание | [01](evidence/documents/html-sheet-01.png) |
-| 2 | Февраль 1–28, два варианта 3-го и 8-го, подзапись 15-го | [02](evidence/documents/html-sheet-02.png) |
-| 3 | Март 1–31, Казимир 4-го, освящение собора 16-го, степени справа | [03](evidence/documents/html-sheet-03.png) |
-| 4 | Апрель 1–30, пустые даты, пары воспоминаний, капители 29-го | [04](evidence/documents/html-sheet-04.png) |
-| 5 | Май 1–31, Пинск 1-го, многострочный Андрей Боболя 16-го, пурпурная звёздочка | [05](evidence/documents/html-sheet-05.png) |
-| 6 | Три подвижных празднования после мая, без нового месяца | [06](evidence/documents/html-sheet-06.png) |
-| 7 | Июнь 1–30, разные диоцезии 12-го, три подвижные записи после 30-го | [07](evidence/documents/html-sheet-07.png) |
-| 8 | Июль 1–31, Будслав 2-го, Тамаш 3-го, Кармель 16-го, Мария/Марта/Лазарь 29-го | [08](evidence/documents/html-sheet-08.png) |
-| 9 | Август 1–31, Кольбе 14-го, Ченстоховская Богоматерь 26-го, степени и звёздочки | [09](evidence/documents/html-sheet-09.png) |
-| 10 | Сентябрь 1–30, несколько диоцезий, капители и звёздочка 29-го | [10](evidence/documents/html-sheet-10.png) |
-| 11 | Октябрь 1–31, тройная запись 9-го, освящение 10-го, две диоцезии 26-го | [11](evidence/documents/html-sheet-11.png) |
-| 12 | Ноябрь 1–25, Язафат 12-го, все диоцезиальные варианты 16-го, курсив и отступы | [12](evidence/documents/html-sheet-12.png) |
-| 13 | Ноябрь 26–30, Христос Царь, декабрь 1–31, Гродно 4-го, Святое Семейство | [13](evidence/documents/html-sheet-13.png) |
+| 1 | Заголовок/протоколы, январь 1–31, диоцезия 27-го, Крещение, красное курсивное примечание | 01 (`evidence/documents/html-sheet-01.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 2 | Февраль 1–28, два варианта 3-го и 8-го, подзапись 15-го | 02 (`evidence/documents/html-sheet-02.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 3 | Март 1–31, Казимир 4-го, освящение собора 16-го, степени справа | 03 (`evidence/documents/html-sheet-03.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 4 | Апрель 1–30, пустые даты, пары воспоминаний, капители 29-го | 04 (`evidence/documents/html-sheet-04.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 5 | Май 1–31, Пинск 1-го, многострочный Андрей Боболя 16-го, пурпурная звёздочка | 05 (`evidence/documents/html-sheet-05.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 6 | Три подвижных празднования после мая, без нового месяца | 06 (`evidence/documents/html-sheet-06.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 7 | Июнь 1–30, разные диоцезии 12-го, три подвижные записи после 30-го | 07 (`evidence/documents/html-sheet-07.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 8 | Июль 1–31, Будслав 2-го, Тамаш 3-го, Кармель 16-го, Мария/Марта/Лазарь 29-го | 08 (`evidence/documents/html-sheet-08.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 9 | Август 1–31, Кольбе 14-го, Ченстоховская Богоматерь 26-го, степени и звёздочки | 09 (`evidence/documents/html-sheet-09.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 10 | Сентябрь 1–30, несколько диоцезий, капители и звёздочка 29-го | 10 (`evidence/documents/html-sheet-10.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 11 | Октябрь 1–31, тройная запись 9-го, освящение 10-го, две диоцезии 26-го | 11 (`evidence/documents/html-sheet-11.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 12 | Ноябрь 1–25, Язафат 12-го, все диоцезиальные варианты 16-го, курсив и отступы | 12 (`evidence/documents/html-sheet-12.png`, воспроизводимый снимок в `reports/source-review/`) |
+| 13 | Ноябрь 26–30, Христос Царь, декабрь 1–31, Гродно 4-го, Святое Семейство | 13 (`evidence/documents/html-sheet-13.png`, воспроизводимый снимок в `reports/source-review/`) |
 
-Сопоставления: [лист 1](evidence/documents/compare-sheet-01.png),
-[лист 5](evidence/documents/compare-sheet-05.png),
+Сопоставления: лист 1 (`evidence/documents/compare-sheet-01.png`, воспроизводимый снимок в `reports/source-review/`),
+лист 5 (`evidence/documents/compare-sheet-05.png`, воспроизводимый снимок в `reports/source-review/`),
 [лист 8](evidence/documents/compare-sheet-08.png),
 [лист 12](evidence/documents/compare-sheet-12.png),
-[лист 13](evidence/documents/compare-sheet-13.png).
+лист 13 (`evidence/documents/compare-sheet-13.png`, воспроизводимый снимок в `reports/source-review/`).
 Они покрывают вступление, цвета, курсив, звёздочки, многострочные/вложенные записи,
 капители, степени справа и продолжение месяца на другом листе.
 
@@ -144,12 +146,12 @@ HTML представляет читаемую статью: бумажные п
 
 Основные страницы: [декреты, телефон](evidence/documents/decrees-390-light.png),
 [календарь, телефон](evidence/documents/calendar-390-light.png),
-[декреты, desktop](evidence/documents/decrees-1440-light.png),
-[календарь, desktop](evidence/documents/calendar-1440-light.png).
-Контрольные фрагменты (без плавающего меню): [IV декрет](evidence/documents/decree-IV-390-light.png),
-[ноябрь](evidence/documents/november-390-light.png).
-Тёмная тема: [декреты](evidence/documents/decrees-390-dark.png),
-[календарь](evidence/documents/calendar-390-dark.png).
+декреты, desktop (`evidence/documents/decrees-1440-light.png`, воспроизводимый снимок в `reports/source-review/`),
+календарь, desktop (`evidence/documents/calendar-1440-light.png`, воспроизводимый снимок в `reports/source-review/`).
+Контрольные фрагменты (без плавающего меню): IV декрет (`evidence/documents/decree-IV-390-light.png`, воспроизводимый снимок в `reports/source-review/`),
+ноябрь (`evidence/documents/november-390-light.png`, воспроизводимый снимок в `reports/source-review/`).
+Тёмная тема: декреты (`evidence/documents/decrees-390-dark.png`, воспроизводимый снимок в `reports/source-review/`),
+календарь (`evidence/documents/calendar-390-dark.png`, воспроизводимый снимок в `reports/source-review/`).
 Все 320/390/768/1440 px × light/dark — в `evidence/documents/`;
 [results.json](evidence/documents/results.json) содержит результаты восьми сценариев.
 

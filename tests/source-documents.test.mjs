@@ -82,3 +82,13 @@ test('static document UI renders all runs, public original and safe navigation w
   assert.match(read('src/components/DocumentBack.vue'), /router.push\(\{ name: 'Sources' \}\)/);
   for (const route of ['documents/proper-calendar', 'documents/liturgy-hours-decrees']) assert.ok(read('src/router/index.js').includes(route));
 });
+
+test('registry and document metadata agree strictly for every decree', () => {
+  const registry = getSource('liturgy-hours-2012-2020').decrees;
+  const common = doc => ({ volume: doc.volume, number: doc.number, date: doc.date, sourceUrl: doc.sourceUrl });
+  assert.deepEqual(registry.map(common), decrees.documents.map(common));
+  for (const [index, doc] of decrees.documents.entries()) {
+    assert.equal(registry[index].documentPath, `/documents/liturgy-hours-decrees#${doc.id}`);
+    if (registry[index].sourceDocument) assert.equal(registry[index].sourceDocument, doc.sourceFile);
+  }
+});

@@ -4,11 +4,10 @@
       <h2 :id="`sources-${group.id}`">{{ group.title }}</h2>
       <ul class="source-rights__list">
         <li v-for="source in group.entries" :id="source.id" :key="source.id" class="source-rights__entry">
-          <h3 v-if="source.translation.label">{{ textLabel(source) }}</h3>
-          <p v-if="edition(source) && source.id !== bindings.bible.bel.new" class="source-rights__edition">{{ edition(source) }}</p>
-          <p v-for="notice in source.copyrightNotices" :key="notice">{{ notice }}</p>
+          <h3 v-if="source.translation.label && source.id !== bindings.bible.bel.new">{{ textLabel(source) }}</h3>
+          <p v-if="edition(source)" class="source-rights__edition">{{ edition(source) }}</p>
+          <p v-for="notice in source.copyrightNotices" :key="notice">{{ copyrightNotice(notice) }}</p>
           <p v-if="source.rightsholder && !source.copyrightNotices.length">{{ source.rightsholder }}</p>
-          <router-link v-if="source.decrees" :to="{ name: 'LiturgyHoursDecrees' }" class="source-rights__decrees-link">Дэкрэты аб выкарыстанні тэкстаў</router-link>
         </li>
       </ul>
     </section>
@@ -29,17 +28,17 @@ const groups = [
 function edition(source) {
   const details = [source.publicationPlace, source.years].filter(Boolean).join(', ');
   if (source.id === bindings.bible.ru.old) return '';
-  return `«${source.officialEdition}»${details ? ` (${details})` : ''}`;
+  const title = ['liturgy-hours-2012-2020', 'compendium-kkbb-2010'].includes(source.id) ? source.officialEdition : `«${source.officialEdition}»`;
+  return `${title}${details ? ` (${details})` : ''}`;
 }
 
 function textLabel(source) {
-  if (source.id === bindings.bible.bel.new) {
-    const translator = source.translation.label.split(' · ').at(-1).replace(`, ${source.years}`, '');
-    return `${edition(source)} — ${translator}`;
-  }
   return source.translation.label.replace(' · ', ' — ').replace(`, ${source.years}`, '');
 }
 
+function copyrightNotice(notice) {
+  return notice.replace(/^© Copyright (\d+) — (.+)$/, '© $2, $1');
+}
 </script>
 
 <style scoped>
@@ -52,6 +51,5 @@ function textLabel(source) {
 .source-rights__entry + .source-rights__entry { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--nav-border); }
 .source-rights p { margin: 2px 0 0; }
 .source-rights a { color: var(--chrome-accent); text-underline-offset: 3px; }
-.source-rights__decrees-link { display: inline-block; padding-block: 8px; }
 .source-rights a:focus-visible { outline: 2px solid var(--chrome-accent); outline-offset: 3px; }
 </style>

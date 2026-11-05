@@ -47,11 +47,11 @@ test('all registry bindings and consumer references resolve', () => {
 });
 
 test('required notices and every former Bible attribution are retained', () => {
-  for (const [id, years] of [['bible-nt-kkbb-2017', '2017'], ['lectionary-kkbb-2002-2005', '2002–2005'], ['compendium-kkbb-2010', '2010']]) {
+  for (const [id, years] of [['bible-nt-kkbb-2017', '2017'], ['lectionary-kkbb-2002-2005', '2002-2005'], ['compendium-kkbb-2010', '2010']]) {
     assert.ok(getSource(id).copyrightNotices.includes(`© Канферэнцыя Каталіцкіх Біскупаў Беларусі, ${years}`));
     assert.equal(getSource(id).publicationPlace, 'Мінск');
   }
-  assert.equal(getSource('liturgy-hours-2012-2020').years, '2012–2020');
+  assert.equal(getSource('liturgy-hours-2012-2020').years, '2012-2020');
   for (const text of ['Стары Запавет · пераклад кс. Уладзіслава Чарняўскага MIC', 'Новы Запавет · Catholic.by', 'Синодальный перевод']) {
     const legacy = SOURCE_REGISTRY.legacyAttributions.find(item => item.text === text);
     assert.ok(getSource(legacy?.sourceId), text);
@@ -100,7 +100,7 @@ test('Bible, Readings and all Hours have no old source footers; About links to a
   const component = read('src/components/SourceRights.vue');
   for (const field of ['officialEdition', 'rightsholder', 'copyrightNotices', 'translation']) assert.ok(component.includes(`source.${field}`));
   assert.doesNotMatch(component, /source\.(?:verification|digitalSources|digitalPermission)|decree\.summary|<dl>|<dt>|<table/);
-  assert.match(component, /name: 'LiturgyHoursDecrees'/);
+  assert.doesNotMatch(component, /name: 'LiturgyHoursDecrees'/);
   assert.doesNotMatch(component, /<details/);
   assert.match(read('src/views/Sources.vue'), /name: 'ProperCalendar'/);
 });

@@ -5,7 +5,7 @@ import { SOURCES } from '../src/constants/sources.js';
 
 const baseUrl = process.env.SMOKE_BASE_URL || 'http://127.0.0.1:3000';
 const browser = await chromium.launch({ executablePath: process.env.BENCHMARK_BROWSER_PATH || '/usr/bin/chromium', headless: true, args: ['--no-sandbox'] });
-const output = 'docs/sources/evidence';
+const output = process.env.SOURCE_EVIDENCE_DIR || 'reports/source-review';
 await fs.mkdir(output, { recursive: true });
 const noOverflow = async (page, width) => assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `${width}: horizontal overflow`);
 try {
@@ -34,13 +34,13 @@ try {
     ]);
     const text = await page.locator('.source-rights').textContent();
     for (const source of SOURCES) {
-      for (const notice of source.copyrightNotices) assert.ok(text.includes(notice), notice);
+      for (const notice of source.copyrightNotices) assert.ok(text.includes(notice.replace(/^© Copyright (\d+) — (.+)$/, '© $2, $1')), notice);
       for (const pending of source.verification.pending) assert.ok(!text.includes(pending));
     }
-    for (const edition of ['«Новы Запавет» (Мінск, 2017)', '«Лекцыянарый» (Мінск, 2002–2005)', '«Катэхізіс Каталіцкага Касцёла. Кампендый» (Мінск, 2010)']) assert.ok(text.includes(edition));
+    for (const edition of ['«Новы Запавет» (Мінск, 2017)', '«Лекцыянарый» (Мінск, 2002-2005)', 'Катэхізіс Каталіцкага Касцёла. Кампендый (Мінск, 2010)']) assert.ok(text.includes(edition));
     assert.doesNotMatch(text, /verification|requires_verification|pending|Патрабуе праверкі|Стан праверкі|Лічбавыя крыніцы|імпарт|парсер|лічбавае выкарыстанне|Чацвёрты|чацвёрты/);
     assert.equal(await page.locator('.source-rights details').count(), 0);
-    assert.equal(await page.getByRole('link', { name: 'Дэкрэты аб выкарыстанні тэкстаў', exact: true }).getAttribute('href'), '/documents/liturgy-hours-decrees');
+    assert.equal(await page.getByRole('link', { name: 'Дэкрэты Літургіі гадзінаў', exact: true }).getAttribute('href'), '/documents/liturgy-hours-decrees');
     await noOverflow(page, width);
     await page.screenshot({ path: `${output}/sources-${width}.png`, fullPage: true });
     await page.getByRole('link', { name: 'Пра праграму', exact: true }).click();
@@ -53,7 +53,7 @@ try {
     assert.equal(await page.locator('.source-rights details').count(), 0);
     for (const [language, book, expected] of [
       ['bel', 'gn', 'Стары Запавет · пераклад кс. Уладзіслава Чарняўскага MIC'],
-      ['bel', 'mt', 'Новы Запавет · пераклад ККББ, 2017'],
+      ['bel', 'mt', 'Новы Запавет · ККББ, 2017'],
       ['ru', 'mt', 'Синодальный перевод'],
     ]) {
       await page.goto(`${baseUrl}/bible/${language}/${book}/1`);
@@ -61,7 +61,7 @@ try {
       assert.equal(await page.locator('.bible-heading__translation').innerText(), expected);
       assert.equal(await page.locator('.bible-page footer, .bible-page .prayer-source').count(), 0);
     }
-    console.log(`${width}px: compact About, grouped Sources, bibliography, technical details hidden, decree page link, back/deep links, no overflow, unchanged Bible translations: PASS (remote requests blocked)`);
+    console.log(`${width}px: compact About, grouped Sources, bibliography, technical details hidden, decree page link, back/deep links, no overflow, Bible translation labels: PASS (remote requests blocked)`);
     await context.close();
   }
 } finally {

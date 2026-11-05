@@ -10,7 +10,10 @@
         <section v-for="page in calendar.pages" :key="page.number" :data-page="page.number" class="calendar-page" :aria-label="`Старонка ${page.number} арыгінала`">
           <template v-for="(row, index) in page.rows" :key="index">
             <h2 v-if="row.kind === 'month'" :id="`month-${row.month}`" class="calendar-month">{{ row.text }}</h2>
-            <p v-else-if="row.kind === 'intro' || row.kind === 'note'" :class="`calendar-${row.kind}`"><DocumentRuns :runs="row.runs" /></p>
+            <template v-else-if="row.kind === 'intro'">
+              <p v-if="index === 0" class="calendar-intro"><DocumentRuns :runs="introRuns" /></p>
+            </template>
+            <p v-else-if="row.kind === 'note'" class="calendar-note"><DocumentRuns :runs="row.runs" /></p>
             <div v-else class="calendar-row" :class="{ 'calendar-row--full': !row.date && !row.indent, 'calendar-row--empty': row.date && !row.runs.length }" :data-month="row.month" :data-date="row.date">
               <span v-if="row.date" class="calendar-date" :class="`doc-tone--${row.dateTone}`">{{ row.date }}.</span>
               <span class="calendar-text"><DocumentRuns :runs="row.runs" /></span>
@@ -27,6 +30,10 @@
 import calendar from '@/data/documents/proper-calendar.json';
 import DocumentBack from '@/components/DocumentBack.vue';
 import DocumentRuns from '@/components/DocumentRuns.vue';
+// Keep the five source lines and their styles intact in the document data.
+// Only their presentation becomes one logical, naturally wrapping paragraph.
+const introRuns = calendar.pages.flatMap(page => page.rows).filter(row => row.kind === 'intro')
+  .flatMap((row, index) => [...(index ? [{ ...row.runs[0], text: ' ' }] : []), ...row.runs]);
 </script>
 <style src="@/styles/documents.css"></style>
 <style scoped>

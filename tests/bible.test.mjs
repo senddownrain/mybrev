@@ -50,7 +50,7 @@ test('Belarusian metadata no longer claims the whole Bible is Chernyavski', () =
     getBibleSourceLabel('bel', 'old'),
     'Стары Запавет · пераклад кс. Уладзіслава Чарняўскага MIC',
   );
-  assert.equal(getBibleSourceLabel('bel', 'new'), 'Новы Запавет · пераклад ККББ, 2017');
+  assert.equal(getBibleSourceLabel('bel', 'new'), 'Новы Запавет · ККББ, 2017');
   assert.equal(getBibleSourceLabel('ru', 'new'), 'Синодальный перевод');
 });
 

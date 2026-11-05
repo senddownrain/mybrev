@@ -3,10 +3,11 @@
 No application data is changed. Requires PyMuPDF and Pillow.
 """
 from pathlib import Path
+import os
 import fitz
 from PIL import Image, ImageDraw, ImageFont
 root = Path(__file__).resolve().parents[2]
-out = root / 'docs/sources/evidence/documents'
+out = root / os.environ.get('SOURCE_EVIDENCE_DIR', 'reports/source-review/documents')
 pdf = fitz.open(root / 'public/documents/proper-calendar.pdf')
 font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 19)
 for number in [1, 5, 8, 12, 13]:
