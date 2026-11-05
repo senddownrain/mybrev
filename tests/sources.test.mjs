@@ -61,13 +61,16 @@ test('required notices and every former Bible attribution are retained', () => {
   assert.ok(getSource('bible-ru-synodal').digitalSources.every(source => source.status === 'candidate'));
 });
 
-test('three documented KKBB decrees and unresolved fourth never invent metadata', () => {
+test('four documented KKBB decrees keep decree and approval numbers distinct', () => {
   const decrees = getSource('liturgy-hours-2012-2020').decrees;
   assert.deepEqual(decrees.map(({ number, date }) => [number, date]), [
-    ['32/P/12', '2012-06-29'], ['70/P/13', '2013-08-15'], ['62/P/15', '2015-08-06'], [null, null],
+    ['32/P/12', '2012-06-29'], ['70/P/13', '2013-08-15'], ['62/P/15', '2015-08-06'], ['04/P/20', '2020-02-02'],
   ]);
-  assert.equal(decrees[3].status, 'requires_verification');
-  assert.equal(decrees[3].summary, null);
+  assert.equal(decrees[3].status, 'verified');
+  assert.equal(decrees[3].approval.number, '15/P/19');
+  assert.equal(decrees[3].sourceUrl, null);
+  assert.equal(decrees[3].sourceKind, 'provided_primary_doc');
+  assert.ok(fs.existsSync(new URL(decrees[3].sourceDocument, root)));
   for (const id of ['bible-charniauski-2017', 'bible-ru-synodal', 'liturgy-hours-2012-2020']) assert.equal(getSource(id).rightsholder, null);
 });
 
@@ -97,9 +100,9 @@ test('Bible, Readings and all Hours have no old source footers; About links to a
   const component = read('src/components/SourceRights.vue');
   for (const field of ['officialEdition', 'rightsholder', 'copyrightNotices', 'translation']) assert.ok(component.includes(`source.${field}`));
   assert.doesNotMatch(component, /source\.(?:verification|digitalSources|digitalPermission)|decree\.summary|<dl>|<dt>|<table/);
-  assert.match(component, /item.status === 'verified'/);
-  assert.equal((component.match(/<details/g) || []).length, 1);
-  assert.doesNotMatch(component, /<details[^>]*\sopen/);
+  assert.match(component, /name: 'LiturgyHoursDecrees'/);
+  assert.doesNotMatch(component, /<details/);
+  assert.match(read('src/views/Sources.vue'), /name: 'ProperCalendar'/);
 });
 
 test('PR leaves prayer, song, Bible text, readings, Hours and calendar modules untouched', { skip: !process.env.SOURCE_AUDIT_DIFF }, () => {

@@ -1,0 +1,66 @@
+[
+  {
+    "width": 320,
+    "theme": "light",
+    "pages": 13,
+    "dates": 365,
+    "decrees": 4,
+    "status": "PASS"
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "pages": 13,
+    "dates": 365,
+    "decrees": 4,
+    "status": "PASS"
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "pages": 13,
+    "dates": 365,
+    "decrees": 4,
+    "status": "PASS"
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "pages": 13,
+    "dates": 365,
+    "decrees": 4,
+    "status": "PASS"
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "pages": 13,
+    "dates": 365,
+    "decrees": 4,
+    "status": "PASS"
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "pages": 13,
+    "dates": 365,
+    "decrees": 4,
+    "status": "PASS"
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "pages": 13,
+    "dates": 365,
+    "decrees": 4,
+    "status": "PASS"
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "pages": 13,
+    "dates": 365,
+    "decrees": 4,
+    "status": "PASS"
+  }
+]

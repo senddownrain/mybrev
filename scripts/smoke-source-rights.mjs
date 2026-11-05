@@ -39,19 +39,10 @@ try {
     }
     for (const edition of ['«Новы Запавет» (Мінск, 2017)', '«Лекцыянарый» (Мінск, 2002–2005)', '«Катэхізіс Каталіцкага Касцёла. Кампендый» (Мінск, 2010)']) assert.ok(text.includes(edition));
     assert.doesNotMatch(text, /verification|requires_verification|pending|Патрабуе праверкі|Стан праверкі|Лічбавыя крыніцы|імпарт|парсер|лічбавае выкарыстанне|Чацвёрты|чацвёрты/);
-    assert.equal(await page.locator('.source-rights details').count(), 1);
-    const details = page.locator('.source-rights details');
-    assert.equal(await details.getAttribute('open'), null);
+    assert.equal(await page.locator('.source-rights details').count(), 0);
+    assert.equal(await page.getByRole('link', { name: 'Дэкрэты аб выкарыстанні тэкстаў', exact: true }).getAttribute('href'), '/documents/liturgy-hours-decrees');
     await noOverflow(page, width);
     await page.screenshot({ path: `${output}/sources-${width}.png`, fullPage: true });
-    await details.locator('summary').focus();
-    await page.keyboard.press('Enter');
-    assert.notEqual(await details.getAttribute('open'), null);
-    const decreeLinks = await details.getByRole('link').evaluateAll(elements => elements.map(element => ({ text: element.textContent, href: element.href, rel: element.rel })));
-    assert.deepEqual(decreeLinks.map(link => link.text), ['Том 1 — № 32/P/12, 29.06.2012', 'Том 2 — № 70/P/13, 15.08.2013', 'Том 3 — № 62/P/15, 06.08.2015']);
-    assert.ok(decreeLinks.every(link => link.href === 'https://lh.catholic.by/dekrety.php' && link.rel.includes('noopener')));
-    await noOverflow(page, width);
-    await page.screenshot({ path: `${output}/sources-decrees-${width}.png`, fullPage: true });
     await page.getByRole('link', { name: 'Пра праграму', exact: true }).click();
     await sourcesLink.waitFor();
     await page.goto(`${baseUrl}/sources#compendium-kkbb-2010`);
@@ -59,7 +50,7 @@ try {
     await page.waitForFunction(() => document.querySelector('#compendium-kkbb-2010').getBoundingClientRect().top < window.innerHeight);
     await page.reload();
     await page.getByRole('heading', { name: 'Крыніцы і аўтарскія правы', level: 1 }).waitFor();
-    assert.equal(await details.getAttribute('open'), null);
+    assert.equal(await page.locator('.source-rights details').count(), 0);
     for (const [language, book, expected] of [
       ['bel', 'gn', 'Стары Запавет · пераклад кс. Уладзіслава Чарняўскага MIC'],
       ['bel', 'mt', 'Новы Запавет · пераклад ККББ, 2017'],
@@ -70,7 +61,7 @@ try {
       assert.equal(await page.locator('.bible-heading__translation').innerText(), expected);
       assert.equal(await page.locator('.bible-page footer, .bible-page .prayer-source').count(), 0);
     }
-    console.log(`${width}px: compact About, grouped Sources, bibliography, technical details hidden, collapsed decrees/keyboard, back/deep links, no overflow, unchanged Bible translations: PASS (remote requests blocked)`);
+    console.log(`${width}px: compact About, grouped Sources, bibliography, technical details hidden, decree page link, back/deep links, no overflow, unchanged Bible translations: PASS (remote requests blocked)`);
     await context.close();
   }
 } finally {

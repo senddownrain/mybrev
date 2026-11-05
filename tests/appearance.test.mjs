@@ -91,12 +91,21 @@ test('document canvas and body use the selected PWA appearance in both themes', 
   }
 });
 
-test('purple literals only belong to the liturgical palette, never application chrome', () => {
+test('purple literals only belong to liturgical or source-document ink, never application chrome', () => {
   const root = new URL('../src/', import.meta.url);
   const files = readdirSync(root, { recursive: true }).filter((file) => /\.(vue|js|scss|css)$/.test(file));
   const failures = [];
   for (const file of files) {
     if (file.replaceAll('\\', '/') === 'constants/liturgical.js') continue;
+    // The static PDF transcription preserves its magenta documentary marks.
+    // Its ink is scoped to .document-page and is independent of app chrome.
+    if (file.replaceAll('\\', '/') === 'styles/documents.css') {
+      const documentCss = read('src/styles/documents.css');
+      assert.match(documentCss, /\.document-page\.v-container[^}]*--document-magenta:/);
+      assert.match(documentCss, /\.v-theme--dark \.document-page[^}]*--document-magenta:/);
+      assert.match(documentCss, /\.doc-tone--magenta\s*\{\s*color: var\(--document-magenta\)/);
+      continue;
+    }
     const source = readFileSync(new URL(file.replaceAll('\\', '/'), root), 'utf8');
     if (/["'](?:deep-)?(?:purple|indigo|violet|lavender)(?:-(?:darken|lighten)-\d)?["']/i.test(source)) failures.push(file);
     const colors = [

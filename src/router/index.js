@@ -39,6 +39,16 @@ const routes = [
         component: () => import('@/views/Sources.vue'),
       },
       {
+        path: 'documents/liturgy-hours-decrees',
+        name: 'LiturgyHoursDecrees',
+        component: () => import('@/views/LiturgyHoursDecrees.vue'),
+      },
+      {
+        path: 'documents/proper-calendar',
+        name: 'ProperCalendar',
+        component: () => import('@/views/ProperCalendar.vue'),
+      },
+      {
         path: 'picker',
         name: 'LiturgicalPicker',
         components: { default: () => import('@/views/LiturgicalPicker.vue'), bottomNav: BottomNavVue },
@@ -239,7 +249,7 @@ const router = createRouter({
     if (savedPosition) {
       return savedPosition;
     }
-    if (to.name === 'Sources' && to.hash) {
+    if (['Sources', 'LiturgyHoursDecrees', 'ProperCalendar'].includes(to.name) && to.hash) {
       return { el: to.hash, top: 80 };
     }
     // Switching the Mass language only rewrites `?lang`; the reader restores
