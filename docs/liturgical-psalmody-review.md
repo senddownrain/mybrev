@@ -23,7 +23,7 @@
 
 ## Псалмодия и миграция
 
-Единственное актуальное сохраняемое значение — `localStorage.psalmodyMode`. Компонент `PsalmodySettings` уже используется в `Settings.vue`; теперь он также подключён в `TextSettingsSheet.vue`, а сама панель доступна кнопкой Aa из часов через `OraBar.vue` и layout `One.vue`.
+Единственное актуальное сохраняемое значение — `localStorage.psalmodyMode`. Компонент `PsalmodySettings` используется только на странице `Settings.vue`. В Web режим псалмодии выбирается исключительно в общих настройках. Верхняя панель чтения сохраняет прежние кнопки `−` и `+` для размера текста, без дополнительной кнопки Aa.
 
 | `psalmVerseLayout` | `psalmMarkerBreakMode` | Новый режим | Основание |
 | --- | --- | --- | --- |
@@ -42,7 +42,7 @@
 
 В первых двух режимах продолжения добавляются после отмеченных `*`/`†`, без отступа или с 0.65em. В третьем режиме внутренние `br` структурной строфы становятся пробелами, знаки и вложенное выделение сохраняются; каждая вторая строфа получает `min(1em, 8%)` слева. Отдельные строфы не склеиваются. Все режимы выровнены влево.
 
-Три равные соединённые кнопки имеют SVG-пиктограммы, белорусские доступные имена и tooltip, `radiogroup`/`radio`, один активный вариант, roving tabindex, стрелки, Home/End, Enter/Space, видимый фокус и высоту 52 px. Размер и семейство шрифта сохраняют прежнее поведение. В мобильной панели выбор темы вынесен под подпись: все три кнопки видны при 320 px.
+Три равные соединённые кнопки имеют SVG-пиктограммы, белорусские доступные имена и tooltip, `radiogroup`/`radio`, один активный вариант, roving tabindex, стрелки, Home/End, Enter/Space, видимый фокус и высоту 52 px. Размер и семейство шрифта сохраняют прежнее поведение. Псалмодия настраивается только на странице общих настроек; три кнопки доступны при ширине 320 px.
 
 ## Проверки
 
@@ -52,7 +52,7 @@
 - `node scripts/smoke-liturgy-reader.mjs`: четыре профиля, каждый проходит 3 режима × 4 часа × 4 ширины × 3 размера шрифта — **576 проверок компоновки**. Ютрань, Нешпары, Гадзіна чытанняў, Камплета; реальные псалмы из `patchs/json/ordinary-w5-d1-fixed-day.json`, встроенные Benedictus, Magnificat, Nunc dimittis. Обе темы; 320, 375, 390, 768 px; 100%, 150%, 180%. Проверены текст/знаки, отступы, отсутствие внутренних `br` в третьем режиме, горизонтального overflow, приглушение и клавиатура хоров, общая настройка, reload, переходы часов и wake lock.
 - Дополнительный DOM-кейс: несколько стихов в одной структурной строфе, оба знака, вложенный `strong`, исключённые рубрики и антифона. Все слова и знаки сохраняются.
 - `node scripts/smoke-devotional-office.mjs`: пять профилей дополнительного рендерера прошли, включая кантики и три режима. Скрипт проверки полных частных источников также обновлён для нового ключа; **`smoke-devotional-office-real.mjs` не запускался**, потому что его отдельные исходные файлы не предоставлены.
-- `node scripts/smoke-liturgical-terminology.mjs`: карточка дня, выбор общих текстов и наборов чтений — 4 ширины × 2 темы; диалог Ordo на 4 ширинах; клавиатура radio, равная ширина и touch targets, четыре миграции через реальный store с reload, видимость трёх кнопок темы и панель шрифта.
+- `node scripts/smoke-liturgical-terminology.mjs`: карточка дня, выбор общих текстов и наборов чтений — 4 ширины × 2 темы; диалог Ordo на 4 ширинах; клавиатура radio, равная ширина и touch targets, четыре миграции через реальный store с reload, верхняя панель содержит только две кнопки изменения размера шрифта.
 
 Приватного snapshot нет. Браузерные проверки используют локальные тексты и cache fixtures, внешние запросы заблокированы. Live Firestore reads/writes не выполнялись. Проверки screen reader ограничены семантикой DOM и доступными именами Playwright; ручная сессия VoiceOver/TalkBack не проводилась.
 
@@ -68,7 +68,6 @@
 | Наборы чтений, 320 px | «Магчымасці цэлебрацыі» читается целиком | [Снимок](liturgical-psalmody-evidence/celebration-light-320.png) |
 | Карточка, 320 px | «Афіцый за памерлых» без обрезания | [Снимок](liturgical-psalmody-evidence/day-card-light-320.png) |
 | Диалог Ordo, 320 px | Действие переносится; полная плавающая подпись ступени | [Снимок](liturgical-psalmody-evidence/ordo-rank-320.png) |
-| Панель шрифта, 320 px | Все кнопки темы и псалмодии доступны | [Снимок](liturgical-psalmody-evidence/reader-settings-320.png) |
 
 Снимки псалмов показывают сам компонент: плавающая панель навигации скрыта только при захвате, чтобы она не закрывала текст. Остальные снимки показывают действующие элементы интерфейса. Карточки и наборы чтений собраны в локальном тестовом cache; даты/число вариантов — тестовый контекст.
 
@@ -84,7 +83,6 @@
 - `docs/liturgical-psalmody-evidence/left-break-indent.png`
 - `docs/liturgical-psalmody-evidence/left-break.png`
 - `docs/liturgical-psalmody-evidence/ordo-rank-320.png`
-- `docs/liturgical-psalmody-evidence/reader-settings-320.png`
 - `docs/liturgical-psalmody-review.md`
 - `scripts/smoke-devotional-office-real.mjs`
 - `scripts/smoke-devotional-office.mjs`
@@ -93,15 +91,11 @@
 - `src/components/ItemsList.vue`
 - `src/components/OrasList.vue`
 - `src/components/PsalmodySettings.vue`
-- `src/components/TextScaleControl.vue`
-- `src/components/TextSettingsSheet.vue`
 - `src/components/liturgical/FeastsPicker.vue`
 - `src/components/oraparts/DayTitle.vue`
 - `src/components/oraparts/PsalmText.vue`
 - `src/components/readings/ReadingsView.vue`
 - `src/data/ordo/ambiguities.js`
-- `src/layouts/default/OraBar.vue`
-- `src/layouts/simple/One.vue`
 - `src/stores/settings.js`
 - `src/styles/main.scss`
 - `src/utils/ordo/transferOverrides.js`

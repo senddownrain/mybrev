@@ -1,6 +1,5 @@
 <template>
   <div class="text-scale-control" role="group" aria-label="Памер тэксту">
-    <button v-if="showSettings" type="button" class="text-scale-button" aria-label="Выгляд тэксту" title="Выгляд тэксту" @click="ui.toggleSettingsSheet"><PhTextAa :size="22" /></button>
     <button
       type="button"
       class="text-scale-button"
@@ -24,12 +23,9 @@
 </template>
 
 <script setup>
-import { PhMinus, PhPlus, PhTextAa } from '@phosphor-icons/vue';
+import { PhMinus, PhPlus } from '@phosphor-icons/vue';
 import { useSettingsStore } from '@/stores/settings.js';
 
-import { useUiStore } from '@/stores/ui';
-defineProps({ showSettings: Boolean });
-const ui = useUiStore();
 const settings = useSettingsStore();
 </script>
 

@@ -14,8 +14,7 @@
           <template v-slot:prepend>
             <v-icon>mdi-theme-light-dark</v-icon>
           </template>
-        </v-list-item>
-        <div class="sheet-theme-control">
+          <template v-slot:append>
             <v-btn-toggle
               :model-value="settings.themePreference"
               mandatory
@@ -28,7 +27,8 @@
               <v-btn value="light" aria-label="Светлая тэма">Светлая</v-btn>
               <v-btn value="dark" aria-label="Цёмная тэма">Цёмная</v-btn>
             </v-btn-toggle>
-        </div>
+          </template>
+        </v-list-item>
 
         <v-divider class="my-2"></v-divider>
 
@@ -90,8 +90,6 @@
           </v-chip-group>
         </div>
 
-        <v-divider class="my-2" />
-        <PsalmodySettings />
       </v-list>
     </v-card>
   </v-bottom-sheet>
@@ -100,7 +98,6 @@
 <script setup>
 import { useSettingsStore } from '@/stores/settings.js';
 import { useAppBar } from '@/composables/useAppBar.js';
-import PsalmodySettings from '@/components/PsalmodySettings.vue';
 import { READER_FONT_OPTIONS } from '@/constants/fonts';
 
 const settings = useSettingsStore();
@@ -152,10 +149,6 @@ const fontOptions = READER_FONT_OPTIONS;
 .text-settings-card :deep(.v-list-item) {
   border-radius: 16px;
 }
-
-.sheet-theme-control { padding: 0 16px 10px; }
-.sheet-theme-control :deep(.v-btn-toggle) { display: flex; width: 100%; height: auto; }
-.sheet-theme-control :deep(.v-btn) { flex: 1 1 0; min-width: 0; min-height: 44px; padding-inline: 6px; }
 
 .sheet-scale-control {
   display: flex;

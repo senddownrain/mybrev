@@ -86,7 +86,8 @@ try {
     assert.equal(await texts.count(), 4, 'three psalms and Benedictus');
     assert.equal(await page.locator('.ora-location').count(), 0, 'no duplicate title at the top');
     assert.equal(await page.locator('.ora-section-menu').count(), 0);
-    assert.equal(await page.getByRole('button', { name: 'Выгляд тэксту', exact: true }).count(), 1, 'reader settings are reachable');
+    assert.equal(await page.getByRole('button', { name: 'Выгляд тэксту', exact: true }).count(), 0, 'no extra reader settings button');
+    assert.equal(await page.locator('.text-scale-control button').count(), 2, 'font toolbar has only minus/plus');
     assert.equal(await page.locator('.text-settings-card').count(), 0, 'no local text settings panel');
     const originalScale = await page.evaluate(() => Number(localStorage.getItem('fontSizeMultiplier')));
     const scaleAction = page.getByRole('button', { name: originalScale < 1.8 ? 'Павялічыць тэкст' : 'Паменшыць тэкст', exact: true });
@@ -112,12 +113,11 @@ try {
 
     const originalText = await texts.first().textContent();
     for (const mode of ['left-break', 'left-break-indent', 'alternating-stanzas']) {
-      await page.getByRole('button', { name: 'Выгляд тэксту', exact: true }).click();
-      const panel = page.locator('.text-settings-card');
-      await panel.locator(`[data-mode="${mode}"]`).click();
-      assert.equal(await panel.locator('[role="radio"][aria-checked="true"]').count(), 1);
-      await panel.getByRole('button', { name: 'Закрыць налады' }).click();
-      await panel.waitFor({ state: 'hidden' });
+      await page.goto(`${base}/settings`, { waitUntil: 'domcontentloaded' });
+      const group = page.getByRole('radiogroup', { name: 'Выгляд псальмодыі' });
+      await group.locator(`[data-mode="${mode}"]`).click();
+      assert.equal(await group.locator('[role="radio"][aria-checked="true"]').count(), 1);
+      assert.equal(await page.evaluate(() => localStorage.getItem('psalmodyMode')), mode);
       for (const hour of ['laudes', 'vesper', 'lectionis', 'completorium']) {
         await page.goto(`${base}/day/${date}/ora/${day.id}/${hour}?dayId=alternative`, { waitUntil: 'domcontentloaded' });
         await texts.first().waitFor({ state: 'visible' });

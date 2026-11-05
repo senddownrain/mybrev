@@ -148,17 +148,19 @@ try {
     await psalm.waitFor({ state: 'visible' });
     await psalm.screenshot({ path: path.join(output, `${mode}.png`), style: '.floating-ora-bar, .back-to-top { visibility: hidden !important; }' });
   }
-  await page.getByRole('button', { name: 'Выгляд тэксту', exact: true }).click();
-  const sheet = page.locator('.text-settings-card');
+  // The top-right toolbar retains exactly the original font-size buttons.
+  const topControls = page.locator('.text-scale-control');
+  await topControls.waitFor({ state: 'visible' });
+  assert.equal(await topControls.locator('button').count(), 2, 'only minus and plus');
+  assert.equal(await page.getByRole('button', { name: 'Выгляд тэксту', exact: true }).count(), 0);
+  assert.equal(await page.locator('.text-settings-card').count(), 0);
   for (const width of [320, 375, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });
-    assert.ok(await sheet.evaluate(e => e.scrollWidth <= e.clientWidth), 'font settings sheet fits');
-    for (const button of await sheet.locator('.sheet-theme-control button').all()) {
-      const box = await button.boundingBox();
-      const card = await sheet.boundingBox();
-      assert.ok(box.x >= card.x && box.x + box.width <= card.x + card.width, 'all theme buttons are visible');
-    }
-    if (width === 320) await sheet.screenshot({ path: path.join(output, 'reader-settings-320.png') });
+    const { left, right } = await topControls.evaluate(e => {
+      const rect = e.getBoundingClientRect();
+      return { left: rect.left, right: rect.right };
+    });
+    assert.ok(left >= 0 && right <= width, 'font controls fit viewport');
   }
   // Exercise the real Ordo editor in an isolated shell; requests stay blocked.
   await ctx.route(`${base}/__terminology-admin`, route => route.fulfill({ contentType: 'text/html', body: `<html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="app"></div><script type="module" src="${entryUrl}"></script></body></html>` }));
