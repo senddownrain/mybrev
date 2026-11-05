@@ -34,6 +34,11 @@ const routes = [
         component: () => import('@/views/About.vue'),
       },
       {
+        path: 'sources',
+        name: 'Sources',
+        component: () => import('@/views/Sources.vue'),
+      },
+      {
         path: 'picker',
         name: 'LiturgicalPicker',
         components: { default: () => import('@/views/LiturgicalPicker.vue'), bottomNav: BottomNavVue },
@@ -233,6 +238,9 @@ const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition;
+    }
+    if (to.name === 'Sources' && to.hash) {
+      return { el: to.hash, top: 80 };
     }
     // Switching the Mass language only rewrites `?lang`; the reader restores
     // the semantic section itself instead of jumping to the top.

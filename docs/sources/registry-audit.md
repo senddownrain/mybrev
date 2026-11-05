@@ -13,13 +13,13 @@
 
 | Прежняя подпись → новое расположение сведений | Компонент и точное место до изменения | Реестр / отображение после изменения |
 | --- | --- | --- |
-| `Стары Запавет · пераклад кс. Уладзіслава Чарняўскага MIC` | `src/constants/bible.js`, `BIBLE_LANGUAGES.bel.testamentSources.old` → `src/views/Bible.vue:35`, `.bible-heading__translation`, под названием главы | `bible-charniauski-2017`; обозначение перевода остаётся в заголовке; полные сведения в `/about#bible-charniauski-2017` |
-| `Новы Запавет · Catholic.by` | тот же компонент/элемент; `testamentSources.new` | `bible-nt-kkbb-2017`; заголовок теперь `Новы Запавет · пераклад ККББ, 2017`; издание и © в `/about#bible-nt-kkbb-2017` |
-| `Синодальный перевод` | `src/constants/bible.js`, `BIBLE_LANGUAGES.ru.translation` → тот же элемент Библии | `bible-ru-synodal`; заголовок сохранён; сведения и неопределённости в `/about#bible-ru-synodal` |
-| Нижняя подпись в «Чытанні»: отсутствует | `src/components/readings/ReadingsView.vue`, `ParsedReadingCard.vue`; общий `src/layouts/default/Default.vue`, `ReadingsBottomNav.vue` | новая запись `lectionary-kkbb-2002-2005`, `/about#lectionary-kkbb-2002-2005` |
-| Нижняя подпись в «Літургія гадзінаў»: отсутствует | `src/components/OrasList.vue`, все девять `src/components/oras/*.vue`, общие `src/components/oraparts/*.vue` и layout | новая запись `liturgy-hours-2012-2020`, `/about#liturgy-hours-2012-2020` |
-| Сведения в настройках и «Пра праграму»: отсутствуют | `src/views/Settings.vue`, `src/views/About.vue` | подраздел «Крыніцы і аўтарскія правы» в `About.vue`, компонент `SourceRights.vue` |
-| `Крыніца:` + `Кампендый Катэхізіса Каталіцкага Касцёла, Catholic.by` + `store.meta.copyright.join('. ')` при наличии | `src/components/compendium/CompendiumSource.vue:2`, footer. **Один общий компонент** используется в `src/views/Compendium.vue:22`, `CompendiumNode.vue:30`, `CompendiumQuestion.vue:18` | существующий footer сохранён, URL/название цифрового источника теперь берутся из реестра через `src/constants/compendium.js`; дополнительно полная библиография в `/about#compendium-kkbb-2010` |
+| `Стары Запавет · пераклад кс. Уладзіслава Чарняўскага MIC` | `src/constants/bible.js`, `BIBLE_LANGUAGES.bel.testamentSources.old` → `src/views/Bible.vue:35`, `.bible-heading__translation`, под названием главы | `bible-charniauski-2017`; обозначение перевода остаётся в заголовке; библиографические сведения в `/sources#bible-charniauski-2017` |
+| `Новы Запавет · Catholic.by` | тот же компонент/элемент; `testamentSources.new` | `bible-nt-kkbb-2017`; заголовок теперь `Новы Запавет · пераклад ККББ, 2017`; издание и © в `/sources#bible-nt-kkbb-2017` |
+| `Синодальный перевод` | `src/constants/bible.js`, `BIBLE_LANGUAGES.ru.translation` → тот же элемент Библии | `bible-ru-synodal`; заголовок сохранён; краткая библиография в `/sources#bible-ru-synodal`; неопределённости сохранены в JSON и этом отчёте |
+| Нижняя подпись в «Чытанні»: отсутствует | `src/components/readings/ReadingsView.vue`, `ParsedReadingCard.vue`; общий `src/layouts/default/Default.vue`, `ReadingsBottomNav.vue` | новая запись `lectionary-kkbb-2002-2005`, `/sources#lectionary-kkbb-2002-2005` |
+| Нижняя подпись в «Літургія гадзінаў»: отсутствует | `src/components/OrasList.vue`, все девять `src/components/oras/*.vue`, общие `src/components/oraparts/*.vue` и layout | новая запись `liturgy-hours-2012-2020`, `/sources#liturgy-hours-2012-2020` |
+| Сведения в настройках и «Пра праграму»: отсутствуют | `src/views/Settings.vue`, `src/views/About.vue` | одна ссылка «Крыніцы і аўтарскія правы» в `About.vue` → `/sources`; компактный компонент `SourceRights.vue` в `Sources.vue` |
+| `Крыніца:` + `Кампендый Катэхізіса Каталіцкага Касцёла, Catholic.by` + `store.meta.copyright.join('. ')` при наличии | `src/components/compendium/CompendiumSource.vue:2`, footer. **Один общий компонент** используется в `src/views/Compendium.vue:22`, `CompendiumNode.vue:30`, `CompendiumQuestion.vue:18` | существующий footer сохранён, URL/название цифрового источника теперь берутся из реестра через `src/constants/compendium.js`; дополнительно полная библиография в `/sources#compendium-kkbb-2010` |
 
 `Bible.vue` использует один заголовок для всех языков/заветов; отдельной подписи
 в стихах или под каждой главой нет. `getBibleSourceLabel` теперь получает перевод
@@ -104,11 +104,13 @@
 4. Для Web используется `bindings.bible[language][testament]`; Flutter должен связать
    **свои реально доступные корпуса** с соответствующими ID, а не предполагать их
    совпадение с Web. Для полного корпуса Чарняўскага выбирать его запись и для NT.
-5. В «Пра праграму» отображать все записи, официальное издание, ©, правообладателя,
-   перевод и статус проверки. Неизвестное показывать как требующее проверки.
-   `digitalSources.status == candidate` не выдавать за подтверждённый источник.
+5. В «Пра праграму» оставить ссылку на отдельную краткую справку: четыре группы,
+   шесть записей с названием издания, известными годом/местом, © и кратким
+   обозначением перевода. Неизвестные реквизиты не придумывать. Служебные статусы,
+   цифровые источники и примечания не показывать в пользовательском списке.
 6. Не трактовать `verification.status` как лицензию; разрешение хранится отдельно.
-   Для часов показывать три подтверждённых декрета и нерешённый IV том.
+   В UI часов оставить один свёрнутый пункт с подтверждёнными декретами (дата,
+   номер, ссылка). Нерешённый IV том хранить в техническом реестре и отчёте.
 7. Валидировать уникальность ID и все `bindings`, перенести проверки из
    `tests/sources.test.mjs`; не требуются Firestore, миграция или публикация контента.
 
@@ -121,10 +123,13 @@
 Визуальная проверка: `node scripts/smoke-source-rights.mjs` при локальном Vite
 (по умолчанию `http://127.0.0.1:3000`; `SMOKE_BASE_URL` переопределяет адрес).
 Скрипт блокирует все внешние запросы, включая Firestore. Проверены ширины
-320, 390, 1440 px, раскрытые примечания/декреты, клавиатура, внешние ссылки,
+320, 390, 1440 px, переход About → Sources → About, свёрнутые декреты и их раскрытие с клавиатуры, ссылки,
 отсутствие горизонтального скролла и три обозначения перевода Библии.
-Скриншоты: [мобильный](evidence/about-390.png), [настольный](evidence/about-1440.png).
+Скриншоты: «Пра праграму» — [320](evidence/about-320.png), [390](evidence/about-390.png), [1440](evidence/about-1440.png); справка — [320](evidence/sources-320.png), [390](evidence/sources-390.png), [1440](evidence/sources-1440.png);
+декреты раскрыты — [320](evidence/sources-decrees-320.png), [390](evidence/sources-decrees-390.png), [1440](evidence/sources-decrees-1440.png).
 Это проверка UI и локальных метаданных; полнота текста из live Firestore не проверялась.
+
+Проверки первой версии PR от 04.11.2026 (до компактного UI):
 
 Итоговая база PR: `0a21e29` (актуальный `origin/main` на момент проверки).
 Ветка обновлена от неё без изменения защищённых разделов в diff PR.
@@ -149,17 +154,73 @@
 наличие возможных подписей внутри удалённых полей текстов отдельно не утверждается.
 Live Firestore, миграции, публикация контента, Firebase deploy и merge не выполнялись.
 
-Изменённые файлы:
+Изменённые файлы PR:
 
-- `src/data/sources.json`
-- `src/constants/sources.js`
+- `docs/sources/evidence/about-1440.png`
+- `docs/sources/evidence/about-320.png`
+- `docs/sources/evidence/about-390.png`
+- `docs/sources/evidence/sources-1440.png`
+- `docs/sources/evidence/sources-320.png`
+- `docs/sources/evidence/sources-390.png`
+- `docs/sources/evidence/sources-decrees-1440.png`
+- `docs/sources/evidence/sources-decrees-320.png`
+- `docs/sources/evidence/sources-decrees-390.png`
+- `docs/sources/registry-audit.md`
+- `scripts/smoke-source-rights.mjs`
+- `src/components/SourceRights.vue`
 - `src/constants/bible.js`
 - `src/constants/compendium.js`
-- `src/components/SourceRights.vue`
+- `src/constants/sources.js`
+- `src/data/sources.json`
+- `src/router/index.js`
 - `src/views/About.vue`
-- `tests/sources.test.mjs`
+- `src/views/Sources.vue`
 - `tests/bible.test.mjs`
-- `scripts/smoke-source-rights.mjs`
-- `docs/sources/registry-audit.md`
-- `docs/sources/evidence/about-390.png`
-- `docs/sources/evidence/about-1440.png`
+- `tests/sources.test.mjs`
+
+## Доработка компактного UI — 05.11.2026
+
+Продолжение того же PR #189, исходная ревизия `a73ec52`.
+
+- В About развёрнутый `SourceRights` заменён одной строкой навигации рядом
+  с политикой приватности. Герб, описание проекта и разработчик сохранены.
+- `/sources` — самостоятельная страница в обычном layout MyBrev с явной
+  ссылкой назад в «Пра праграму». Поддерживаются ссылки `/sources#<source-id>`.
+- Четыре группы: Святое Пісанне (ККББ NT, Чарняўскі, Синодальный), Чытанні,
+  Літургія гадзінаў, Кампендый ККК. Шесть записей без карточек и таблиц.
+- Издание с известными местом и годом занимает одну строку/абзац, ниже —
+  краткое обозначение перевода и установленные ©. Повторяющихся ярлыков
+  «Выданне», «Праваўладальнік», «Пераклад» нет. Неизвестные реквизиты опущены.
+- В UI отсутствуют статусы проверки, pending, evidence, история импорта,
+  цифровые источники, правовые предупреждения и длинные описания перевода.
+  `src/data/sources.json` полностью сохранён без изменений относительно `a73ec52`.
+- Единственный details «Дэкрэты аб выкарыстанні тэкстаў» свёрнут по умолчанию.
+  В нём три подтверждённых документа с томом, датой, номером и ссылкой;
+  длинные тексты не воспроизводятся. Это **подтверждённые документы**,
+  а не заявленный полный набор из четырёх. Четвёртый остаётся нерешённым
+  вопросом в реестре и разделе «Что остаётся проверить» выше.
+- Библейские подписи, тексты, молитвы, песенник, Firestore и литургические
+  алгоритмы не изменены. Merge и deploy не выполнялись.
+
+Скрипт `scripts/smoke-source-rights.mjs` проверяет обе страницы на 320/390/1440 px,
+четыре группы и порядок шести записей, обязательную библиографию и ©, отсутствие
+служебных сведений, исходно закрытые декреты, клавиатуру, обратную навигацию,
+прямые ссылки и обновление страницы, горизонтальное переполнение и прежние
+обозначения переводов Библии. Внешние запросы, включая Firestore, блокируются.
+
+Проверки доработки от 05.11.2026:
+
+- Полный набор: **1083 проверки, 1073 pass, 0 fail, 10 skipped**. Проверки
+  маршрута, переноса компонента и отсутствия служебных полей выполнены.
+  Пропуски относятся к прежним необязательным материалам и эмуляторам.
+- `npm run lint -- --no-fix`, `npm run build`, `git diff --check`: **PASS**.
+  В сборке остаётся предупреждение Vite о размере отдельных chunks.
+- Chromium на production-сборке: **320, 390, 1440 px — PASS**. Проверены обе
+  страницы, порядок групп/изданий, скрытие технических данных, переключение
+  декретов клавиатурой, обратная навигация, прямые ссылки и перезагрузка.
+  На телефоне сохранены боковые поля 20 px; горизонтального переполнения нет.
+- JSON-реестр и обозначения переводов Библии совпадают с ревизией `a73ec52`
+  побайтно (`git diff a73ec52 --exit-code -- src/data/sources.json
+  src/constants/bible.js src/views/Bible.vue`).
+- Для каждой ширины сохранены снимки About, Sources и Sources с раскрытыми
+  декретами. Все девять снимков находятся в `docs/sources/evidence/`; ссылки выше.

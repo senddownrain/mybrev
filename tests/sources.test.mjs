@@ -83,16 +83,23 @@ test('every Bible book retains correct visible translation by language and testa
   assert.match(read('src/views/Bible.vue'), /getBibleSourceLabel\(language.value, currentBook.value\?\.testament/);
 });
 
-test('Bible, Readings and all Hours have no old source footers; About renders registry', () => {
+test('Bible, Readings and all Hours have no old source footers; About links to a dedicated Sources page', () => {
   const files = ['src/views/Bible.vue', 'src/components/OrasList.vue', ...vueFiles('src/components/oras'), ...vueFiles('src/components/oraparts'), ...vueFiles('src/components/readings')];
   for (const file of files) {
     const template = read(file).split('</template>')[0];
     assert.doesNotMatch(template, /(?:catholic\.by|bible\.by|Крыніца:|prayer-source|CompendiumSource|SourceRights|©)/i, file);
   }
-  assert.match(read('src/views/About.vue'), /<SourceRights\s*\/>/);
+  assert.doesNotMatch(read('src/views/About.vue'), /SourceRights/);
+  assert.match(read('src/views/About.vue'), /name: 'Sources'/);
+  assert.match(read('src/views/Sources.vue'), /<SourceRights\s*\/>/);
+  assert.match(read('src/views/Sources.vue'), /name: 'About'/);
+  assert.match(read('src/router/index.js'), /path: 'sources',\s*name: 'Sources'/);
   const component = read('src/components/SourceRights.vue');
-  for (const field of ['officialEdition', 'rightsholder', 'copyrightNotices', 'translation', 'digitalSources', 'verification.pending']) assert.ok(component.includes(`source.${field}`));
-  assert.match(component, /v-for="source in SOURCES"/);
+  for (const field of ['officialEdition', 'rightsholder', 'copyrightNotices', 'translation']) assert.ok(component.includes(`source.${field}`));
+  assert.doesNotMatch(component, /source\.(?:verification|digitalSources|digitalPermission)|decree\.summary|<dl>|<dt>|<table/);
+  assert.match(component, /item.status === 'verified'/);
+  assert.equal((component.match(/<details/g) || []).length, 1);
+  assert.doesNotMatch(component, /<details[^>]*\sopen/);
 });
 
 test('PR leaves prayer, song, Bible text, readings, Hours and calendar modules untouched', { skip: !process.env.SOURCE_AUDIT_DIFF }, () => {

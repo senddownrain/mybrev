@@ -23,7 +23,11 @@
         <p class="about-developer">Распрацоўшчык @davin_dev</p>
       </div>
 
-      <SourceRights />
+      <router-link :to="{ name: 'Sources' }" class="about-sources">
+        <PhBookOpen :size="20" aria-hidden="true" />
+        <span>Крыніцы і аўтарскія правы</span>
+        <PhCaretRight :size="17" aria-hidden="true" />
+      </router-link>
       <p class="about-privacy"><a href="/privacy">Палітыка прыватнасці</a></p>
       <p class="about-version">Версія: {{ appVersion }}</p>
     </main>
@@ -32,7 +36,7 @@
 
 <script setup>
 import { version as appVersion } from '../../package.json';
-import SourceRights from '@/components/SourceRights.vue';
+import { PhBookOpen, PhCaretRight } from '@phosphor-icons/vue';
 </script>
 
 <style scoped>
@@ -99,6 +103,22 @@ import SourceRights from '@/components/SourceRights.vue';
   margin: 18px 0 0;
   font-size: 0.96rem;
 }
+
+.about-sources {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  min-height: 44px;
+  color: var(--chrome-accent);
+  font-size: 0.96rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.about-sources svg { flex-shrink: 0; }
+.about-sources:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.about-sources:focus-visible { outline: 2px solid var(--chrome-accent); outline-offset: 4px; border-radius: 4px; }
 
 .about-privacy a {
   color: var(--chrome-accent);
