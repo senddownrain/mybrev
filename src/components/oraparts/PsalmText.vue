@@ -2,8 +2,7 @@
   <div
     ref="rootElement"
     class="ora-psalm psalmody-text"
-    :data-verse-layout="settings.psalmVerseLayout"
-    :data-marker-break-mode="settings.psalmMarkerBreakMode"
+    :data-psalmody-mode="settings.psalmodyMode"
     :data-dimmed-side="psalmody?.dimmedSide.value || undefined"
     @click="toggle"
     @keydown="onKeydown"
@@ -25,7 +24,7 @@ const displayedHtml = computed(() => {
   const root = document.createElement('div');
   root.innerHTML = props.html;
   decoratePsalmody(root, {
-    breakAfterMarker: settings.psalmMarkerBreakMode === 'breakAfterMarker',
+    mode: settings.psalmodyMode,
   });
   return root.innerHTML;
 });
@@ -56,12 +55,20 @@ function onKeydown(event) {
 .psalmody-text[data-dimmed-side="B"] :deep([data-psalm-side="B"]) {
   opacity: .68;
 }
-.psalmody-text[data-verse-layout="alignedLeft"] :deep(p[data-psalm-side]) { margin-left: 0 !important; padding-left: 0 !important; text-indent: 0 !important; }
-.psalmody-text :deep(.psalm-continuation) { display: block; margin-inline-start: .65em; }
-/* Consecutive markers stay at the same modest continuation indent. */
+.psalmody-text :deep(p[data-psalm-side]) {
+  margin-inline: 0 !important;
+  padding-inline: 0 !important;
+  text-indent: 0 !important;
+  text-align: left !important;
+  white-space: normal !important;
+}
+.psalmody-text[data-psalmody-mode="alternating-stanzas"] :deep(p[data-psalm-side="B"]) {
+  margin-inline-start: min(1em, 8%) !important;
+}
+.psalmody-text :deep(.psalm-continuation) { display: block; margin-inline-start: 0; }
+.psalmody-text[data-psalmody-mode="left-break-indent"] :deep(p > .psalm-continuation) { margin-inline-start: .65em; }
+/* Nested continuations share the same indent after successive cadence signs. */
 .psalmody-text :deep(.psalm-continuation .psalm-continuation) { margin-inline-start: 0; }
-/* The strophe container owns the indent when both display options are enabled. */
-.psalmody-text[data-verse-layout="alternatingIndent"][data-marker-break-mode="breakAfterMarker"] :deep(.psalm-continuation) { margin-inline-start: 0; }
 .psalmody-text { min-width: 0; overflow-wrap: break-word; }
 @media (prefers-reduced-motion: reduce) { .psalmody-text :deep([data-psalm-side]) { transition: none; } }
 </style>

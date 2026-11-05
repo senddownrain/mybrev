@@ -696,12 +696,6 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   text-align: center !important;
 }
 
-// Alternate actual strophes in psalms and Gospel canticles. Headings and
-// subtitles are not marked as strophes, so they do not affect parity.
-.ora-psalm p[data-psalm-side="B"] {
-  margin-left: 1rem;
-}
-
 // Cadence signs in every psalter use the same colour as liturgical rubrics.
 .ora-psalm .psalm-marker,
 .ora-intro .psalm-marker {

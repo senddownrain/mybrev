@@ -1,15 +1,33 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { LITURGICAL_HOURS, liturgicalHourRoute } from '../src/constants/liturgicalHours.js';
-import { normalizePsalmVerseLayout, normalizePsalmMarkerBreakMode } from '../src/utils/psalmodyDisplay.js';
+import { normalizePsalmodyMode, loadPsalmodyMode, PSALMODY_MODES } from '../src/utils/psalmodyDisplay.js';
 
-test('missing and obsolete psalm preferences retain the current appearance', () => {
-  for (const value of [null, undefined, '', 'obsolete']) {
-    assert.equal(normalizePsalmVerseLayout(value), 'alternatingIndent');
-    assert.equal(normalizePsalmMarkerBreakMode(value), 'inline');
+test('new installs default to left-break and valid saved mode wins over legacy keys', () => {
+  const storage = (values) => ({ getItem: key => values[key] ?? null });
+  assert.equal(loadPsalmodyMode(storage({})), 'left-break');
+  for (const mode of PSALMODY_MODES) {
+    assert.equal(normalizePsalmodyMode(mode), mode);
+    assert.equal(loadPsalmodyMode(storage({ psalmodyMode: mode, psalmVerseLayout: 'alignedLeft' })), mode);
   }
-  assert.equal(normalizePsalmVerseLayout('alignedLeft'), 'alignedLeft');
-  assert.equal(normalizePsalmMarkerBreakMode('breakAfterMarker'), 'breakAfterMarker');
+  for (const value of [null, undefined, '', 'obsolete']) assert.equal(normalizePsalmodyMode(value), 'left-break');
+});
+
+test('all legacy combinations migrate, including partially stored preferences', () => {
+  for (const [layout, breaks, expected] of [
+    ['alignedLeft', 'inline', 'left-break'],
+    ['alignedLeft', 'breakAfterMarker', 'left-break-indent'],
+    ['alternatingIndent', 'inline', 'alternating-stanzas'],
+    ['alternatingIndent', 'breakAfterMarker', 'alternating-stanzas'],
+    [null, 'inline', 'alternating-stanzas'],
+    [null, 'breakAfterMarker', 'alternating-stanzas'],
+    ['alignedLeft', null, 'left-break'],
+    ['alternatingIndent', null, 'alternating-stanzas'],
+    ['obsolete', 'obsolete', 'alternating-stanzas'],
+  ]) {
+    const values = { psalmVerseLayout: layout, psalmMarkerBreakMode: breaks, psalmodyMode: 'obsolete' };
+    assert.equal(loadPsalmodyMode({ getItem: key => values[key] ?? null }), expected, JSON.stringify(values));
+  }
 });
 
 test('every hour preserves date, selected day and diocesan context', () => {
