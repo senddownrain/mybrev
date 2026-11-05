@@ -6,15 +6,16 @@
     <title>Старонка не знойдзена — Малітоўнік</title>
     <meta name="theme-color" content="#6B4A32">
     <script>
-      const savedThemePreference = localStorage.getItem('themePreference') || localStorage.getItem('theme') || 'system';
-      const initialTheme = savedThemePreference === 'system'
-        && globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : savedThemePreference === 'dark' ? 'dark' : 'light';
-      if (initialTheme === 'dark') {
-        document.documentElement.dataset.appearance = 'dark';
-        document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0F0E0C');
-      }
+    const saved = localStorage.getItem('themePreference')
+    const legacy = localStorage.getItem('theme')
+    const preference = ['system', 'light', 'dark', 'marian'].includes(saved)
+      ? saved : ['light', 'dark', 'marian'].includes(legacy) ? legacy : 'system'
+    const initialTheme = preference === 'system'
+      ? globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      : preference
+    document.documentElement.dataset.appearance = initialTheme
+    const statusColors = { light: '#6B4A32', dark: '#0F0E0C', marian: '#244D78' }
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', statusColors[initialTheme])
     </script>
 
     <style media="screen">
@@ -27,6 +28,11 @@
         color-scheme: dark;
         --paper: #0F0E0C; --surface: #171512; --ink: #F2EBDD;
         --accent: #C9A67B; --on-accent: #281B12; --muted: #B4A89A;
+      }
+      :root[data-appearance="marian"] {
+        color-scheme: light;
+        --paper: #F4F8FC; --surface: #FFFFFF; --ink: #202D39;
+        --accent: #244D78; --on-accent: #FFFFFF; --muted: #52687A;
       }
       * { box-sizing: border-box; }
       body { background: var(--paper); color: var(--ink); font-family: system-ui, sans-serif; margin: 0; padding: 24px; }

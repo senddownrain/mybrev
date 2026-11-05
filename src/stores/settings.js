@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { useTheme } from 'vuetify';
 import { normalizeReaderFont, SYSTEM_FONT } from '@/constants/fonts';
-import { APP_STATUS_BAR_COLORS } from '@/constants/appearance';
+import { APP_STATUS_BAR_COLORS, isThemePreference, loadThemePreference, resolveTheme } from '@/constants/appearance';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { validateCategory } from '@/utils/validators';
 import { logger } from '@/utils/logger';
@@ -36,20 +36,8 @@ function loadPersonalCategories() {
 export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme();
   const colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
-  const savedThemePreference = localStorage.getItem('themePreference');
-  // Existing explicit light/dark choices remain explicit after migration.
-  const legacyTheme = localStorage.getItem('theme');
-  const themePreference = ref(
-    ['system', 'light', 'dark'].includes(savedThemePreference)
-      ? savedThemePreference
-      : ['light', 'dark'].includes(legacyTheme) ? legacyTheme : 'system',
-  );
-
-  const currentTheme = ref(
-    themePreference.value === 'system'
-      ? colorScheme.matches ? 'dark' : 'light'
-      : themePreference.value,
-  );
+  const themePreference = ref(loadThemePreference(localStorage));
+  const currentTheme = ref(resolveTheme(themePreference.value, colorScheme.matches));
   const fontFamily = ref(normalizeReaderFont(localStorage.getItem('fontFamily')));
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
   const psalmodyMode = ref(loadPsalmodyMode(localStorage));
@@ -74,9 +62,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') !== 'false');
 
   function applyThemePreference() {
-    currentTheme.value = themePreference.value === 'system'
-      ? colorScheme.matches ? 'dark' : 'light'
-      : themePreference.value;
+    currentTheme.value = resolveTheme(themePreference.value, colorScheme.matches);
   }
 
   watch(themePreference, (newPreference) => {
@@ -175,7 +161,7 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   function setThemePreference(preference) {
-    if (['system', 'light', 'dark'].includes(preference)) {
+    if (isThemePreference(preference)) {
       if (themePreference.value !== preference) trackFeature('theme_change');
       themePreference.value = preference;
     }
