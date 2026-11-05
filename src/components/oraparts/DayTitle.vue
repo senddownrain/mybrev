@@ -225,7 +225,7 @@ const getPeriodTitle = (day) => {
   border-radius: 48px;
   background: radial-gradient(
     ellipse at 76% 24%,
-    rgba(var(--liturgical-rgb), var(--ambient-strength, 0.14)),
+    rgba(var(--liturgical-rgb), var(--day-glow-opacity, var(--ambient-strength, 0.14))),
     transparent 68%
   );
   content: "";
@@ -250,8 +250,8 @@ const getPeriodTitle = (day) => {
   border: 1px solid rgba(var(--liturgical-rgb), 0.2);
   border-radius: 28px;
   background:
-    radial-gradient(circle at 92% 18%, rgba(var(--liturgical-rgb), 0.16) 0, rgba(var(--liturgical-rgb), 0.16) 44px, transparent 45px),
-    linear-gradient(145deg, rgba(var(--liturgical-rgb), 0.1), transparent 62%),
+    radial-gradient(circle at 92% 18%, rgba(var(--liturgical-rgb), var(--day-circle-opacity, 0.16)) 0, rgba(var(--liturgical-rgb), var(--day-circle-opacity, 0.16)) 44px, transparent 45px),
+    linear-gradient(145deg, rgba(var(--liturgical-rgb), var(--day-wash-opacity, 0.1)), transparent 62%),
     var(--nav-surface);
   box-shadow: 0 5px 20px var(--nav-button-shadow);
   text-align: left;
@@ -328,8 +328,8 @@ const getPeriodTitle = (day) => {
   border: 1px solid rgba(var(--liturgical-rgb), 0.25);
   border-radius: 28px;
   background:
-    radial-gradient(circle at 92% 14%, rgba(var(--liturgical-rgb), 0.3) 0, rgba(var(--liturgical-rgb), 0.3) 44px, transparent 45px),
-    linear-gradient(145deg, rgba(var(--liturgical-rgb), 0.16), rgba(var(--liturgical-rgb), 0.04) 66%),
+    radial-gradient(circle at 92% 14%, rgba(var(--liturgical-rgb), var(--day-circle-opacity, 0.3)) 0, rgba(var(--liturgical-rgb), var(--day-circle-opacity, 0.3)) 44px, transparent 45px),
+    linear-gradient(145deg, rgba(var(--liturgical-rgb), var(--day-wash-opacity, 0.16)), rgba(var(--liturgical-rgb), var(--day-wash-tail-opacity, 0.04)) 66%),
     var(--nav-surface);
   color: var(--nav-on-surface);
   box-shadow: var(--hero-shadow);

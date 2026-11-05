@@ -224,7 +224,7 @@ function restoreGlobalCategories() {
 .stepper button { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; background: var(--nav-surface); color: var(--nav-on-surface); }
 .stepper button:disabled { opacity: .35; cursor: default; }
 .stepper strong { color: var(--nav-on-surface); font-size: .8rem; }
-.text-preview { margin: 4px 20px 20px; padding: 17px 18px; border-radius: 17px; background: var(--nav-active); color: var(--nav-on-surface); }
+.text-preview { margin: 4px 20px 20px; padding: 17px 18px; border-radius: 17px; background: var(--reader-preview-surface); color: var(--nav-on-surface); }
 .text-preview > span { display: block; margin-bottom: 8px; font-family: var(--ui-font-family); }
 .text-preview p { margin: 0; line-height: 1.65; }
 .text-preview p { font-optical-sizing: auto; }

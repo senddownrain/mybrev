@@ -28,6 +28,7 @@ export const APP_THEME_COLORS = Object.freeze({
     'on-secondary': '#000000',
     background: '#F4F8FC',
     surface: '#FFFFFF',
+    'reader-surface': '#FBFDFF',
     'surface-bright': '#FFFFFF',
     'surface-light': '#FFFFFF',
     'surface-variant': '#E2EFF9',

@@ -21,7 +21,7 @@ function contrast(a, b) {
 
 for (const [theme, colors] of Object.entries(APP_THEME_COLORS)) {
   test(`${theme}: text, accents and keyboard focus stay readable on application surfaces`, () => {
-    for (const surface of ['background', 'surface', 'surface-variant']) {
+    for (const surface of ['background', 'surface', 'surface-variant', ...(colors['reader-surface'] ? ['reader-surface'] : [])]) {
       for (const foreground of ['primary', 'devotional', 'on-surface', 'on-surface-variant', 'reader-muted', 'rubric']) {
         const ratio = contrast(rgb(colors[foreground]), rgb(colors[surface]));
         assert.ok(ratio >= 4.5, `${theme} ${foreground}/${surface}: ${ratio.toFixed(2)}`);
@@ -180,4 +180,13 @@ test('all four preferences, legacy migration, restoration and OS independence', 
   saved.set('fontSizeMultiplier', '1.3');
   loadThemePreference(storage);
   assert.equal(saved.get('fontSizeMultiplier'), '1.3');
+});
+
+
+test('Marian prayer paper remains almost white with AA text and focus contrast', () => {
+  const colors = APP_THEME_COLORS.marian;
+  assert.equal(colors['reader-surface'], '#FBFDFF');
+  for (const role of ['on-surface', 'on-surface-variant', 'primary', 'rubric']) {
+    assert.ok(contrast(rgb(colors[role]), rgb(colors['reader-surface'])) >= 4.5, role);
+  }
 });

@@ -5,6 +5,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { chromium } from 'playwright-core';
 import { APP_THEME_COLORS, APP_STATUS_BAR_COLORS, THEME_OPTIONS } from '../src/constants/appearance.js';
 import { CONTENT_REVISION, CONTENT_CACHE_SCHEMA } from '../src/constants/contentRevision.js';
@@ -81,11 +82,106 @@ async function fits(page) {
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), 'no horizontal page overflow');
 }
 async function capture(page, name) {
-  await page.evaluate(() => document.fonts.ready);
-  await page.screenshot({ path: path.join(output, `${name}.png`), animations: 'disabled', fullPage: !name.endsWith('-reading') });
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise((resolve) => window.requestAnimationFrame(() => window.requestAnimationFrame(resolve)));
+  });
+  await page.screenshot({ path: path.join(output, `${name}.png`), animations: 'disabled', fullPage: !name.includes('-reading') });
+}
+
+
+// Reuse the same real-app fixture for the visual audit; never alter app data.
+async function auditSurfaces() {
+  const scenes = [];
+  const screenshot = async (page, width, theme, scene, selectors) => {
+    const name = `${width}-${theme}-${scene}`;
+    await capture(page, name);
+    const metrics = await page.evaluate((selectors) => selectors.map((selector) => {
+      const el = document.querySelector(selector);
+      if (!el) throw new Error(`Missing surface: ${selector}`);
+      const style = getComputedStyle(el);
+      const rect = el.getBoundingClientRect();
+      return { selector, background: style.backgroundColor, image: style.backgroundImage,
+        ink: style.color, before: getComputedStyle(el, '::before').backgroundImage,
+        geometry: [rect.x, rect.y, rect.width, rect.height].map((n) => Math.round(n * 100) / 100),
+        text: el.textContent, liturgical: style.getPropertyValue('--liturgical-rgb').trim(),
+      };
+    }), selectors);
+    for (const metric of metrics) {
+      metric.textHash = createHash('sha256').update(metric.text).digest('hex');
+      delete metric.text;
+    }
+    scenes.push({ width, theme, scene, metrics,
+      screenshotHash: createHash('sha256').update(fs.readFileSync(path.join(output, `${name}.png`))).digest('hex') });
+  };
+  for (const width of [390, 1440]) for (const theme of ['marian', 'light', 'dark']) {
+    const { context, page, errors } = await open(width, theme);
+    await page.goto(`${base}/settings`);
+    await page.locator('.text-preview').waitFor();
+    await appearance(page, theme);
+    await screenshot(page, width, theme, 'settings', ['.settings-section', '.text-preview']);
+    await page.goto(base);
+    await page.locator('.day-options-list .day-option').first().waitFor();
+    await screenshot(page, width, theme, 'home', ['.date-header', '.day-option']);
+    await page.getByRole('button', { name: 'Каляндар', exact: true }).click();
+    await page.locator('.date-dialog-card').waitFor();
+    await screenshot(page, width, theme, 'calendar', ['.date-dialog-card']);
+    await page.keyboard.press('Escape');
+    await page.goto(`${base}/day/${date}/ora/${encodeURIComponent(day.id)}`);
+    await page.locator('.day-title-hero').waitFor();
+    await screenshot(page, width, theme, 'hours', ['.day-title-hero', '.day-title-container']);
+    await page.goto(`${base}/day/${date}/ora/${encodeURIComponent(day.id)}/laudes`);
+    await page.locator('.psalmody-text').first().waitFor();
+    await screenshot(page, width, theme, 'reading', ['.day-title-standard', '.day-title-container', '.liturgical-hour-column > .ora']);
+    const paper = await page.locator('.liturgical-hour-column > .day-title-container + *').evaluate((el) => ({ color: getComputedStyle(el).backgroundColor, image: getComputedStyle(el).backgroundImage }));
+    scenes.at(-1).paper = paper;
+    assert.equal(paper.image, 'none', 'no decorative gradient under prayer text');
+    if (theme === 'marian' && process.env.APPEARANCE_EXPECT_REFINED === '1') {
+      assert.equal(paper.color, 'rgb(251, 253, 255)');
+      const sections = await page.locator('.liturgical-hour-column > :not(.day-title-container)').evaluateAll((els) => els.map((el) => ({ color: getComputedStyle(el).backgroundColor, image: getComputedStyle(el).backgroundImage })));
+      assert.ok(sections.every((section) => section.color === paper.color && section.image === 'none'), 'all sections, including unwrapped final cards, use flat prayer paper');
+      const preview = scenes.find((s) => s.width === width && s.theme === theme && s.scene === 'settings').metrics[1];
+      assert.equal(preview.background, paper.color, 'settings preview uses the actual paper');
+      assert.equal(preview.image, 'none');
+    }
+    await page.evaluate(() => window.scrollTo(0, (document.documentElement.scrollHeight - window.innerHeight) / 2));
+    await page.getByRole('button', { name: 'Уверх', exact: true }).waitFor();
+    await screenshot(page, width, theme, 'reading-middle', ['.psalmody-text']);
+    await fits(page);
+    assert.deepEqual(errors, []);
+    record(`${width}px ${theme}: surfaces, headings, calendar, long reading start/middle; no text gradients or page errors`);
+    await context.close();
+  }
+  fs.writeFileSync(path.join(output, 'surfaces.json'), JSON.stringify({ scenes }, null, 2));
+  if (process.env.APPEARANCE_COMPARE_TO) {
+    const baseline = JSON.parse(fs.readFileSync(path.join(process.env.APPEARANCE_COMPARE_TO, 'surfaces.json'))).scenes;
+    let identicalImages = 0;
+    for (const previous of baseline) {
+      const current = scenes.find((s) => s.width === previous.width && s.theme === previous.theme && s.scene === previous.scene);
+      const tag = `${previous.width}px ${previous.theme} ${previous.scene}`;
+      assert.ok(current, tag);
+      for (let i = 0; i < previous.metrics.length; i++) {
+        for (const field of ['geometry', 'textHash', 'liturgical', 'ink']) {
+          assert.deepEqual(current.metrics[i][field], previous.metrics[i][field], `${tag}: ${field}`);
+        }
+      }
+      if (previous.theme !== 'marian') {
+        assert.deepEqual(current.metrics, previous.metrics, `${tag}: existing theme styles`);
+        assert.equal(current.screenshotHash, previous.screenshotHash, `${tag}: existing theme pixels`);
+        identicalImages++;
+      }
+    }
+    const comparison = { scenes: scenes.length, unchangedLightDarkImages: identicalImages,
+      geometry: 'identical', content: 'identical', liturgicalRGB: 'identical', foregroundInk: 'identical' };
+    fs.writeFileSync(path.join(output, 'comparison.json'), JSON.stringify(comparison, null, 2));
+    record(`${scenes.length} scenes: geometry/content/liturgical colours preserved; ${identicalImages} light/dark screenshots pixel-identical`);
+  }
+
 }
 
 try {
+  if (process.env.APPEARANCE_SURFACES === '1') await auditSurfaces();
+  else {
   // Actual Pinia/Vuetify lifecycle: selection, storage, restoration and OS events.
   for (const width of (process.env.APPEARANCE_WIDTHS || '320,390,1440').split(',').map(Number)) {
     const { context, page, errors } = await open(width);
@@ -184,7 +280,7 @@ try {
       await page.locator('.psalmody-text').first().waitFor();
       await appearance(page, theme);
       await fits(page);
-      if (theme === 'marian') assert.equal(await page.locator('.v-application').evaluate((el) => getComputedStyle(el).getPropertyValue('--reader-surface').trim()), 'rgb(255,255,255)');
+      if (theme === 'marian') assert.equal(await page.locator('.liturgical-hour-column > .day-title-container + *').evaluate((el) => getComputedStyle(el).backgroundColor), `rgb(${APP_THEME_COLORS.marian['reader-surface'].slice(1).match(/../g).map((c) => parseInt(c, 16)).join(', ')})`);
       await capture(page, `${width}-${theme}-reading`);
       if (width === 390 && theme === 'marian') {
         await page.evaluate(() => window.scrollTo(0, 900));
@@ -232,6 +328,7 @@ try {
     await appearance(page, legacy);
     record(`legacy ${legacy}: migrated choice stays explicit and survives reload`);
     await context.close();
+  }
   }
 } catch (error) {
   failure = error.message;
