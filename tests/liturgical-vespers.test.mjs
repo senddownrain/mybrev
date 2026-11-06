@@ -117,6 +117,9 @@ test('13 June 2026: I Vespers of XI Sunday use Saturday psalter, never Sunday II
     assert.equal(evening.firstVespers.day.vesperAntMag, saturdayPsalter.vesperAntMag, diocese);
     assert.equal(evening.firstVespers.day._firstVespersSource, 'saturday-psalter', diocese);
     assert.deepEqual(evening.firstVespers.day._missingFirstVespersFields, [], diocese);
+    const second = eveningVespersModel({ ...sundayCard.day, _ordo: sundayCard.ordo }, null, { isoWeekday: 7 });
+    assert.equal(second.second, true, diocese);
+    assert.equal(second.firstVespers, null, diocese);
   }
 });
 

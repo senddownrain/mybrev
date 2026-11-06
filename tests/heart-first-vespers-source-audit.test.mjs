@@ -1,12 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { auditFirstVespers, VESPER_SUFFIXES } from '../scripts/liturgy/audit-heart-first-vespers.mjs';
+import { auditFirstVespers, loadServiceAccount, VESPER_SUFFIXES } from '../scripts/liturgy/audit-heart-first-vespers.mjs';
 
 test('one resolved I Vespers field always uses Sunday explicit Proper or Saturday psalter, never Sunday II', () => {
   const saturday = Object.fromEntries(VESPER_SUFFIXES.map((suffix) => ['vesper' + suffix, '<p>I ' + suffix + '</p>']));
   const sunday = Object.fromEntries([
     ...VESPER_SUFFIXES.map((suffix) => ['vesper' + suffix, '<p>II ' + suffix + '</p>']),
     ['vesper1AntMag', '<p>Proper I AntMag</p>'],
+    ['vesperPr', saturday.vesperPr],
   ]);
   const source = Object.fromEntries(VESPER_SUFFIXES.map((suffix) => [
     'vesper1' + suffix, suffix === 'AntMag' ? '<p>Proper I AntMag</p>' : '<p>I ' + suffix + '</p>',
@@ -32,4 +33,25 @@ test('without independent source, completeness alone does not claim liturgical c
   const result = auditFirstVespers({ saturday, sunday: {}, source: null });
   assert.equal(result.verdict, 'SOURCE_VERIFICATION_REQUIRED');
   assert.equal(result.counts.SOURCE_NOT_PROVIDED, VESPER_SUFFIXES.length);
+});
+
+
+test('a populated Saturday from another celebration blocks even without external HTML', () => {
+  const saturday = Object.fromEntries(VESPER_SUFFIXES.map((suffix) => ['vesper' + suffix, '<p>Trinity ' + suffix + '</p>']));
+  const sunday = { vesperPr: '<p>Collect of XI Sunday</p>' };
+  const result = auditFirstVespers({ saturday, sunday });
+  assert.equal(result.verdict, 'BLOCKED');
+  assert.equal(result.counts.MISSING_CONTENT, undefined);
+  assert.equal(result.sourceIssues[0].code, 'INCONSISTENT_SUNDAY_COLLECT');
+  // The proper collect resolves this particular inconsistency, but never
+  // substitutes for the independent field-by-field source comparison.
+  sunday.vesper1Pr = sunday.vesperPr;
+  assert.equal(auditFirstVespers({ saturday, sunday }).verdict, 'SOURCE_VERIFICATION_REQUIRED');
+});
+
+test('injected base64 credentials are read in memory without accessing a key file', () => {
+  const account = { project_id: 'test-project', client_email: 'test@example.invalid' };
+  assert.deepEqual(loadServiceAccount('/nonexistent/key.json', {
+    FIREBASE_SERVICE_ACCOUNT_B64: Buffer.from(JSON.stringify(account)).toString('base64'),
+  }), account);
 });

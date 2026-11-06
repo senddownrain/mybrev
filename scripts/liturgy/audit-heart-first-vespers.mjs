@@ -45,6 +45,13 @@ export function auditFirstVespers({ saturday, sunday, source = null }) {
   });
   const counts = Object.fromEntries([...new Set(fields.map((item) => item.status))]
     .map((status) => [status, fields.filter((item) => item.status === status).length]));
+  // Ordinary Sunday uses the same collect in I and II Vespers. A different
+  // Saturday collect proves that the fallback belongs to another celebration;
+  // populated fields alone must never certify that source as usable.
+  const saturdayCollect = normalize(saturday?.vesperPr);
+  const sundayCollect = normalize(sunday?.vesperPr || sunday?.laudesPr);
+  const inconsistentCollect = !normalize(sunday?.vesper1Pr)
+    && Boolean(saturdayCollect && sundayCollect && saturdayCollect !== sundayCollect);
   return {
     date: '2026-06-13',
     office: 'First Vespers of XI Sunday in Ordinary Time',
@@ -53,7 +60,12 @@ export function auditFirstVespers({ saturday, sunday, source = null }) {
     sundayFound: Boolean(sunday),
     fields,
     counts,
-    verdict: !saturday || !sunday || fields.some((item) => ['MISSING_CONTENT', 'DIFFERENT'].includes(item.status))
+    sourceIssues: inconsistentCollect ? [{
+      code: 'INCONSISTENT_SUNDAY_COLLECT',
+      saturdayField: 'days/ordinary-w10-d7.vesperPr',
+      sundayField: 'days/ordinary-w11-d1.vesperPr',
+    }] : [],
+    verdict: inconsistentCollect || !saturday || !sunday || fields.some((item) => ['MISSING_CONTENT', 'DIFFERENT'].includes(item.status))
       ? 'BLOCKED'
       : source === null || fields.some((item) => item.status === 'SOURCE_FIELD_NOT_EXTRACTED')
         ? 'SOURCE_VERIFICATION_REQUIRED' : 'MATCHED',
@@ -76,9 +88,17 @@ function argsOf(argv) {
   return args;
 }
 
+export function loadServiceAccount(serviceAccountFile, env = process.env) {
+  // Keep injected credentials in memory; never write them into the checkout.
+  if (env.FIREBASE_SERVICE_ACCOUNT_B64) {
+    return JSON.parse(Buffer.from(env.FIREBASE_SERVICE_ACCOUNT_B64, 'base64').toString('utf8'));
+  }
+  return JSON.parse(fs.readFileSync(serviceAccountFile, 'utf8'));
+}
+
 async function loadLive(serviceAccountFile) {
   const { default: admin } = await import('firebase-admin');
-  const credentials = JSON.parse(fs.readFileSync(serviceAccountFile, 'utf8'));
+  const credentials = loadServiceAccount(serviceAccountFile);
   const app = admin.initializeApp({ credential: admin.credential.cert(credentials) }, 'heart-vespers-readonly-' + process.pid);
   try {
     const db = app.firestore();
