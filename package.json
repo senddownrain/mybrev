@@ -80,6 +80,7 @@
     "test:parsed-readings": "node --test tests/parsed-readings-identity.test.mjs tests/parsed-readings-content-integrity.test.mjs",
     "test:prayer-markdown": "node --test tests/prayer-markdown.test.mjs",
     "test:ordo": "node --test tests/ordo-*.test.mjs",
+    "test:admin-roles-ui": "firebase emulators:exec --only auth,firestore --project demo-roles \"node scripts/smoke-admin-roles-ui.mjs\"",
     "test:rules": "firebase emulators:exec --only firestore --project demo-rules \"node tests/firestore-rules/rules-emulator.mjs\"",
     "content:app-bundle": "node scripts/content/build-app-bundle.mjs",
     "content:manifest": "node scripts/content/publish-manifest.mjs",
