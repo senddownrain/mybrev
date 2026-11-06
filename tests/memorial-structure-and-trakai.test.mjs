@@ -146,6 +146,18 @@ test('Trakai: document choice does not depend on the order of the bundle or on p
   }
 });
 
+test('two sparse documents of one celebration: the calendar rank decides, then the dayIds order, never the bundle order', () => {
+  const memoria = { ...feast('05-07-our-lady-trakai-grodno'), id: '05-07-our-lady-trakai-grodno' };
+  const adLibitum = { ...feast('05-07-our-lady-trakai-grodno-memoria-ad-libitum'), id: '05-07-our-lady-trakai-grodno-memoria-ad-libitum', _obsolete: undefined };
+  const ids = [adLibitum.id, memoria.id];
+  for (const [rank, expected] of [['memoria', memoria.id], ['memoria-ad-libitum', adLibitum.id], ['festum', adLibitum.id]]) {
+    for (const docs of [[memoria, adLibitum], [adLibitum, memoria]]) {
+      const selected = selectFixedDocuments({ rank, daysRef: { dayIds: ids, _date: '05.07' } }, docs, { diocese: 'grodno' });
+      assert.deepEqual(selected.map((doc) => doc.id), [expected], `rank ${rank}`);
+    }
+  }
+});
+
 test('Trakai: 2025-2035 — Grodno only, one memoria card on 5 July (Sunday keeps priority), nothing on 10 July', () => {
   for (let year = 2025; year <= 2035; year += 1) {
     const grodno = resolveLiturgicalDate(`${year}-07-05`, { diocese: 'grodno' });
