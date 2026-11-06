@@ -74,7 +74,7 @@
               <v-text-field v-model="dayData._feastName" label="Назва дня або свята" hide-details variant="outlined" density="compact" />
             </v-col>
             <v-col cols="12" md="3">
-              <v-text-field v-model="dayData._rank" label="Ранг" hide-details variant="outlined" density="compact" />
+              <v-text-field v-model="dayData._rank" label="Літургічная ступень" persistent-placeholder hide-details variant="outlined" density="compact" />
             </v-col>
           </v-row>
           <v-row>

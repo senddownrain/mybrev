@@ -1,0 +1,25 @@
+# LOCAL / TEMPLATE ONLY. Feedback Worker, separate from analytics. No account_id, no secrets, no real database_id.
+# The owner creates staging/production resources by hand (docs/feedback-operations.md) and pastes only the new D1 id.
+name = "mybrev-feedback-staging"
+main = "src/index.mjs"
+compatibility_date = "2026-10-01"
+workers_dev = true
+preview_urls = false
+
+[vars]
+FEEDBACK_ENABLED = "true"          # emergency off-switch for public POST: set to "false" and redeploy
+FIREBASE_PROJECT_ID = ""           # real Firebase project id (public); must equal the `aud` of ID tokens
+ALLOWED_ORIGINS = ""               # comma-separated https web origins of MyBrev
+RATE_PER_MINUTE = "5"
+DAILY_BUDGET = "500"
+RETENTION_DAYS = "180"
+# RATE_SALT is a secret: `wrangler secret put RATE_SALT`
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mybrev-feedback-staging"
+database_id = "00000000-0000-0000-0000-000000000000"   # placeholder, replace after the owner creates the D1
+migrations_dir = "migrations"
+
+[triggers]
+crons = ["23 3 * * *"]

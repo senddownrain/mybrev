@@ -1,0 +1,11 @@
+{
+  "fixture": "local public Bible seed; remote requests blocked; data service substituted in Vite only",
+  "results": [
+    "390px marian: Bible chapter, original highlight colours, teleported book picker, no overflow/errors",
+    "390px light: Bible chapter, original highlight colours, teleported book picker, no overflow/errors",
+    "390px dark: Bible chapter, original highlight colours, teleported book picker, no overflow/errors",
+    "1440px marian: Bible chapter, original highlight colours, teleported book picker, no overflow/errors",
+    "1440px light: Bible chapter, original highlight colours, teleported book picker, no overflow/errors",
+    "1440px dark: Bible chapter, original highlight colours, teleported book picker, no overflow/errors"
+  ]
+}

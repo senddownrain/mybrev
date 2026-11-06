@@ -1,0 +1,38 @@
+{
+  "receivedAt": "2026-11-05",
+  "files": [
+    {
+      "path": "public/documents/proper-calendar.pdf",
+      "originalName": "04_Кalandar_2026_aktualny АГУЛЬНЫ.pdf",
+      "sha256": "681a59f92395a299510da4b4afc68d79cf0017518c0abb1351828560796017f3"
+    },
+    {
+      "path": "docs/sources/primary/decret-hours-IV.doc",
+      "originalName": "Decret_Lit.horarum_ІV.doc",
+      "sha256": "31b4e0d713371cb042e956c8196a2627617bc53c94f2932be4713978e447490d"
+    },
+    {
+      "path": "docs/sources/primary/jan-kremis-remarks-2026-11-02.docx",
+      "originalName": "ЗАЎВАГІ ад кс. Яна Крэміса.docx",
+      "sha256": "c638738d4b629e9a942992cb51562275251cbfdf2d61ec41a26e6a587c197a84"
+    },
+    {
+      "path": "docs/sources/primary/lh-decrees-2026-11-05.txt",
+      "originalName": "https://lh.catholic.by/dekrety.php",
+      "sha256": "8cf26b439ad61c7c6229e3d1e6d1c3e6dca67f73151ad01c115bce4d8321a048"
+    },
+    {
+      "path": "docs/sources/primary/lh-introduction-2026-11-06.txt",
+      "originalName": "https://lh.catholic.by/uvodziny.php",
+      "sha256": "c4745d67c64288531a3b99f0bd14805d46cc618b1a70ea67c89a9b552008eaf8",
+      "recordedAt": "2026-11-06",
+      "format": "Complete web-tool text extraction; article only; original spelling retained"
+    },
+    {
+      "path": "docs/sources/primary/introduction-permission-2026-11-06.md",
+      "originalName": "Подтверждение владельца проекта в рабочей переписке",
+      "sha256": "3f8709cc690cf38cd2105bd3ee0adc377100e46d279e3a15be7b9678d9c74067",
+      "recordedAt": "2026-11-06"
+    }
+  ]
+}

@@ -133,16 +133,14 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   const mainSectionFields = [];
   const choices = assemblyChoices(proper, office);
   const selected = choices.includes(choice) ? choice : choices[0];
-  // An existing Common choice may be used as a local festive formulary.
-  // This changes only these three hours, never the calendar descriptor.
-  const festiveCommon = hasDayChoice(office) && selected !== CURRENT_DAY_CHOICE
-    && ['memorial', 'optional-memorial'].includes(office?.officeKind);
+  // GILH 235-239: a memorial keeps the structure of its weekday whatever Common the user picks.
+  // The Common only supplies the elements the descriptor lets it supply (see `memorialHours`).
+  const isMemorial = ['memorial', 'optional-memorial'].includes(office?.officeKind);
   const isMainHourField = (field) => ['lauds', 'vespers', 'officeOfReadings'].includes(OFFICE_FIELD_SLOTS[field]?.[0]);
-  const isFestiveField = (field) => festiveCommon && isMainHourField(field);
-  const templateId = selected === CURRENT_DAY_CHOICE ? defaultTemplateOf(proper) : selected;
+    const templateId = selected === CURRENT_DAY_CHOICE ? defaultTemplateOf(proper) : selected;
   const common = getTemplate(templateId);
   const base = selected !== CURRENT_DAY_CHOICE ? commonBaseRule(proper, templateId) : null;
-  const isStrictCommonField = (field) => isFestiveField(field) || (Boolean(base) && isMainHourField(field));
+  const isStrictCommonField = (field) => Boolean(base) && isMainHourField(field);
   const sundayWeek1 = getTemplate(SUNDAY_WEEK_1_TEMPLATE);
   const rules = proper?._fieldRules || {};
   const day = {};
@@ -244,16 +242,6 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
       refs.push({ field, ref: 'laudesPr', origin: 'proper' });
       return { pending: true };
     }
-    if (isFestiveField(field)) {
-      const source = OFFICE_FIELD_SLOTS[field][0] === 'lauds' && OFFICE_FIELD_SLOTS[field][1] === 'psalmody'
-        ? SUNDAY_WEEK_1_TEMPLATE : 'common';
-      const found = fromSource(source, field);
-      if (found) return found;
-      const template = source === 'common' ? common : sundayWeek1;
-      integrity.push({ field, source: source === 'common' ? `common:${templateId}` : source,
-        reason: template ? 'field-missing' : 'template-missing' });
-      return null;
-    }
     const slot = slotOf(office, field);
     if (!slot) return firstOf(['common', CURRENT_DAY_CHOICE], field);
     const chain = slot.chain.filter((source) => source !== 'proper');
@@ -290,7 +278,7 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
 
   // I Vespers: own or Common texts only. Without them the runtime assembles
   // I Vespers from the celebration's Vespers (`liturgicalVespers.js`).
-  if (!proper?._omitFirstVespers && !festiveCommon) {
+  if (!proper?._omitFirstVespers && !isMemorial) {
     FIRST_VESPER_FIELDS.forEach((field) => {
       if (!isBlank(proper?.[field])) { day[field] = proper[field]; provenance[field] = 'proper'; return; }
       const rule = rules[field];
@@ -314,7 +302,7 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
 
   if (proper?._omitTeDeum) day[TE_DEUM_FIELD] = false;
   else if (proper?.[TE_DEUM_FIELD] !== undefined && proper[TE_DEUM_FIELD] !== '') day[TE_DEUM_FIELD] = Boolean(proper[TE_DEUM_FIELD]);
-  else day[TE_DEUM_FIELD] = festiveCommon || office?.teDeum ? true : '';
+  else day[TE_DEUM_FIELD] = office?.teDeum ? true : '';
 
   // Identity of the celebration; `_currentVersion` keeps the template label
   // and the Marian/requiem theme heuristics of the existing UI working.
@@ -325,7 +313,6 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   if (templateId && selected !== CURRENT_DAY_CHOICE) day._currentVersion = templateId;
   day._assembly = {
     choice: selected, template: selected === CURRENT_DAY_CHOICE ? '' : templateId, sparse: true,
-    ...(festiveCommon ? { festiveCommon: true } : {}),
     ...(seasonVariant ? { season: seasonVariant } : {}),
   };
   if (integrity.length) day._integrityErrors = integrity;

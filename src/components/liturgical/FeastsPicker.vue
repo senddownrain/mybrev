@@ -6,8 +6,9 @@
         <input
           v-model="searchQuery"
           type="search"
-          placeholder="Назва, дата, ранг або дыяцэзія"
-          aria-label="Пошук свята"
+          placeholder="Пошук свята"
+          title="Назва, дата, літургічная ступень або дыяцэзія"
+          aria-label="Пошук свята: назва, дата, літургічная ступень або дыяцэзія"
           :disabled="loading"
         >
         <button

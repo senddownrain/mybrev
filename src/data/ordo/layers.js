@@ -74,7 +74,6 @@ export const DIOCESAN_LAYERS = Object.freeze({
       {"id": "our-lady-loreto", "rank": "memoria", "evidence": ["grodno:2027-12-10:c0"]},
       {"id": "sv-adalbert-wojciech-bishop-martyr", "rank": "memoria", "mmdd": "04-24", "evidence": ["grodno:2027-04-24:c0"]},
       {"id": "sv-stanislaus-bishop-martyr", "rank": "memoria", "mmdd": "05-08", "evidence": ["grodno:2027-05-08:c0"]},
-      {"id": "our-lady-trakai", "rank": "festum", "mmdd": "07-10", "evidence": ["grodno:2027-07-10:c0"]},
     ],
     rules: [],
   },

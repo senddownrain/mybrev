@@ -26,6 +26,10 @@
       color-scheme: light;
       background-color: var(--app-viewport-background);
     }
+    :root[data-appearance="marian"] {
+      --app-viewport-background: #F4F8FC;
+      color-scheme: light;
+    }
     :root[data-appearance="dark"] {
       --app-viewport-background: #0F0E0C;
       color-scheme: dark;
@@ -34,15 +38,16 @@
   <script>
     // Apply the saved appearance immediately, before Vue finishes loading.
     // This controls the browser/status-bar colour, not the PWA splash screen.
-    const savedThemePreference = localStorage.getItem('themePreference') || localStorage.getItem('theme') || 'system'
-    const initialTheme = savedThemePreference === 'system'
-      && globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : savedThemePreference === 'dark' ? 'dark' : 'light'
-    if (initialTheme === 'dark') {
-      document.documentElement.dataset.appearance = 'dark'
-      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0F0E0C')
-    }
+    const saved = localStorage.getItem('themePreference')
+    const legacy = localStorage.getItem('theme')
+    const preference = ['system', 'light', 'dark', 'marian'].includes(saved)
+      ? saved : ['light', 'dark', 'marian'].includes(legacy) ? legacy : 'system'
+    const initialTheme = preference === 'system'
+      ? globalThis.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      : preference
+    document.documentElement.dataset.appearance = initialTheme
+    const statusColors = { light: '#6B4A32', dark: '#0F0E0C', marian: '#244D78' }
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', statusColors[initialTheme])
   </script>
   
   <!-- Мета-теги для полноэкранного режима на iOS и Android -->

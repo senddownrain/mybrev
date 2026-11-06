@@ -1,0 +1,516 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-06",
+  "sections": {
+    "bible": "Біблія",
+    "readings": "Чытанні",
+    "liturgy-hours": "Літургія гадзінаў",
+    "compendium": "Кампендый ККК"
+  },
+  "entries": [
+    {
+      "id": "bible-nt-kkbb-2017",
+      "title": "Новы Запавет",
+      "years": "2017",
+      "officialEdition": "Новы Запавет",
+      "publicationPlace": "Мінск",
+      "rightsholder": "Канферэнцыя Каталіцкіх Біскупаў Беларусі",
+      "copyrightNotices": [
+        "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2017"
+      ],
+      "translation": {
+        "language": "be",
+        "translator": "Секцыя па перакладзе літургічных тэкстаў і афіцыйных дакументаў Касцёла Камісіі Божага Культу і Дысцыпліны Сакрамэнтаў пры ККББ",
+        "edition": "Першае поўнае афіцыйнае рыма-каталіцкае выданне на беларускай мове",
+        "label": "Новы Запавет · ККББ, 2017"
+      },
+      "digitalSources": [
+        {
+          "label": "Catholic.by",
+          "url": "https://catholic.by/3/lib/bible",
+          "status": "verified",
+          "note": "EPUB; пацверджана парсерам scripts/bible/parse-bel-nt.py."
+        }
+      ],
+      "sections": [
+        "bible"
+      ],
+      "verification": {
+        "status": "partially_verified",
+        "evidence": [
+          {
+            "location": "https://catholic.by/3/lib/bible",
+            "fields": [
+              "title",
+              "years",
+              "publicationPlace",
+              "translation"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-04"
+          },
+          {
+            "location": "docs/sources/primary/jan-kremis-remarks-2026-11-02.docx",
+            "fields": [
+              "rightsholder",
+              "copyrightNotices"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-05"
+          },
+          {
+            "location": "scripts/bible/parse-bel-nt.py",
+            "fields": [
+              "digitalSources"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-04"
+          }
+        ],
+        "pending": [
+          "Дазвол на лічбавае выкарыстанне ў MyBrev."
+        ]
+      },
+      "digitalPermission": {
+        "status": "requires_verification",
+        "note": "Знак ©, публікацыя на сайце і літургічны дэкрэт самі па сабе не пацвярджаюць дазволу на лічбавае выкарыстанне ў MyBrev."
+      }
+    },
+    {
+      "id": "lectionary-kkbb-2002-2005",
+      "title": "Лекцыянарый",
+      "years": "2002-2005",
+      "officialEdition": "Лекцыянарый",
+      "publicationPlace": "Мінск",
+      "rightsholder": "Канферэнцыя Каталіцкіх Біскупаў Беларусі",
+      "copyrightNotices": [
+        "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2002-2005"
+      ],
+      "translation": {
+        "language": "be",
+        "translator": null,
+        "edition": null,
+        "label": null
+      },
+      "digitalSources": [
+        {
+          "label": "Catholic.by",
+          "url": "https://catholic.by/3/liturgy/lectionary",
+          "status": "verified",
+          "note": "Імпарт: scripts/liturgy/lib/lectionary-pages.mjs; scripts/lectionary/crawl-source.mjs."
+        }
+      ],
+      "sections": [
+        "readings"
+      ],
+      "verification": {
+        "status": "partially_verified",
+        "evidence": [
+          {
+            "location": "docs/sources/primary/jan-kremis-remarks-2026-11-02.docx",
+            "fields": [
+              "title",
+              "years",
+              "publicationPlace",
+              "rightsholder",
+              "copyrightNotices"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-05"
+          },
+          {
+            "location": "scripts/liturgy/lib/lectionary-pages.mjs",
+            "fields": [
+              "digitalSources"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-04"
+          }
+        ],
+        "pending": [
+          "Выхадныя звесткі друкаваных тамоў і склад перакладчыкаў.",
+          "Дазвол на лічбавае выкарыстанне ў MyBrev."
+        ]
+      },
+      "digitalPermission": {
+        "status": "requires_verification",
+        "note": "Знак ©, публікацыя на сайце і літургічны дэкрэт самі па сабе не пацвярджаюць дазволу на лічбавае выкарыстанне ў MyBrev."
+      }
+    },
+    {
+      "id": "liturgy-hours-2012-2020",
+      "title": "Літургія гадзінаў",
+      "years": "2012-2020",
+      "officialEdition": "Літургія гадзінаў",
+      "publicationPlace": "Мінск",
+      "rightsholder": "Канферэнцыя Каталіцкіх Біскупаў Беларусі",
+      "copyrightNotices": [
+        "© Канферэнцыя Каталіцкіх Біскупаў Беларусі"
+      ],
+      "translation": {
+        "language": "be",
+        "translator": "Секцыя па перакладзе літургічных тэкстаў і афіцыйных дакументаў Касцёла Камісіі Божага Культу і Дысцыпліны Сакрамэнтаў пры ККББ",
+        "edition": "Студыйны тэкст; пераклад з другога ўзорнага лацінскага выдання",
+        "label": null
+      },
+      "digitalSources": [
+        {
+          "label": "lh.catholic.by",
+          "url": "https://lh.catholic.by/",
+          "status": "verified",
+          "note": "Імпартныя старонкі: patchs/sources/lh-catholic-by; таксама лакальныя тэксты patchs/sources/common-seasons."
+        }
+      ],
+      "sections": [
+        "liturgy-hours"
+      ],
+      "verification": {
+        "status": "partially_verified",
+        "evidence": [
+          {
+            "location": "docs/sources/primary/kremis-final-remarks-2026-11-06.md",
+            "fields": [
+              "rightsholder",
+              "copyrightNotices"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-06"
+          },
+          {
+            "location": "docs/sources/primary/jan-kremis-remarks-2026-11-02.docx",
+            "fields": [
+              "title",
+              "years",
+              "publicationPlace"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-05"
+          },
+          {
+            "location": "https://lh.catholic.by/dekrety.php",
+            "fields": [
+              "translation",
+              "decrees"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-04"
+          },
+          {
+            "location": "scripts/liturgy/lib/hours-source-imports.mjs",
+            "fields": [
+              "digitalSources"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-04"
+          },
+          {
+            "location": "docs/sources/primary/decret-hours-IV.doc",
+            "fields": [
+              "decrees"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-05"
+          }
+        ],
+        "pending": [
+          "Дакладныя знакі © і гады ўсіх тамоў: патрабуюцца выхадныя старонкі. Перыяд выдання 2012–2020 не пацверджаны як перыяд ©.",
+          "Дазвол на лічбавае выкарыстанне ў MyBrev."
+        ]
+      },
+      "digitalPermission": {
+        "status": "requires_verification",
+        "note": "Знак ©, публікацыя на сайце і літургічны дэкрэт самі па сабе не пацвярджаюць дазволу на лічбавае выкарыстанне ў MyBrev."
+      },
+      "decrees": [
+        {
+          "id": "kkbb-hours-volume-1",
+          "volume": 1,
+          "number": "32/P/12",
+          "date": "2012-06-29",
+          "issuer": "Канферэнцыя Каталіцкіх Біскупаў Беларусі",
+          "status": "verified",
+          "sourceUrl": "https://lh.catholic.by/dekrety.php",
+          "summary": "Прадпісвае карыстацца студыйным беларускім тэкстам адпаведнага тома пры цэлебрацыі Літургіі гадзінаў ва ўсіх дыяцэзіях Беларусі.",
+          "documentPath": "/documents/liturgy-hours-decrees#volume-1"
+        },
+        {
+          "id": "kkbb-hours-volume-2",
+          "volume": 2,
+          "number": "70/P/13",
+          "date": "2013-08-15",
+          "issuer": "Канферэнцыя Каталіцкіх Біскупаў Беларусі",
+          "status": "verified",
+          "sourceUrl": "https://lh.catholic.by/dekrety.php",
+          "summary": "Прадпісвае карыстацца студыйным беларускім тэкстам адпаведнага тома пры цэлебрацыі Літургіі гадзінаў ва ўсіх дыяцэзіях Беларусі.",
+          "documentPath": "/documents/liturgy-hours-decrees#volume-2"
+        },
+        {
+          "id": "kkbb-hours-volume-3",
+          "volume": 3,
+          "number": "62/P/15",
+          "date": "2015-08-06",
+          "issuer": "Канферэнцыя Каталіцкіх Біскупаў Беларусі",
+          "status": "verified",
+          "sourceUrl": "https://lh.catholic.by/dekrety.php",
+          "summary": "Прадпісвае карыстацца студыйным беларускім тэкстам адпаведнага тома пры цэлебрацыі Літургіі гадзінаў ва ўсіх дыяцэзіях Беларусі.",
+          "documentPath": "/documents/liturgy-hours-decrees#volume-3"
+        },
+        {
+          "id": "kkbb-hours-volume-4",
+          "volume": 4,
+          "number": "04/P/20",
+          "date": "2020-02-02",
+          "issuer": "Канферэнцыя Каталіцкіх Біскупаў Беларусі",
+          "status": "verified",
+          "sourceUrl": null,
+          "summary": "Прадпісвае карыстацца студыйным беларускім тэкстам IV тома пры цэлебрацыі Літургіі гадзінаў ва ўсіх дыяцэзіях Беларусі.",
+          "sourceDocument": "docs/sources/primary/decret-hours-IV.doc",
+          "sourceKind": "provided_primary_doc",
+          "sourceSha256": "31b4e0d713371cb042e956c8196a2627617bc53c94f2932be4713978e447490d",
+          "approval": {
+            "number": "15/P/19",
+            "date": "2019-10-28"
+          },
+          "documentPath": "/documents/liturgy-hours-decrees#volume-4"
+        }
+      ]
+    },
+    {
+      "id": "compendium-kkbb-2010",
+      "title": "Катэхізіс Каталіцкага Касцёла. Кампендый",
+      "years": "2010",
+      "officialEdition": "Катэхізіс Каталіцкага Касцёла. Кампендый",
+      "publicationPlace": "Мінск",
+      "rightsholder": "Канферэнцыя Каталіцкіх Біскупаў Беларусі",
+      "copyrightNotices": [
+        "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2010"
+      ],
+      "translation": {
+        "language": "be",
+        "translator": null,
+        "edition": null,
+        "label": null
+      },
+      "digitalSources": [
+        {
+          "label": "Catholic.by",
+          "url": "https://catholic.by/3/lib/documents/kasciol/3963-kampendyj-katekhizisa-katalitskaga-kastsjola",
+          "status": "verified",
+          "note": "Захаваны HTML у scripts/compendium-source; парсер захоўвае абодва знакі ©."
+        }
+      ],
+      "sections": [
+        "compendium"
+      ],
+      "verification": {
+        "status": "partially_verified",
+        "evidence": [
+          {
+            "location": "docs/sources/primary/jan-kremis-remarks-2026-11-02.docx",
+            "fields": [
+              "title",
+              "years",
+              "publicationPlace",
+              "rightsholder"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-05"
+          },
+          {
+            "location": "scripts/compendium-source/3963-kampendyj-katekhizisa-katalitskaga-kastsjola.html",
+            "fields": [
+              "copyrightNotices",
+              "digitalSources",
+              "auditNotices"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-04"
+          }
+        ],
+        "pending": [
+          "Перакладчыкі і поўныя выхадныя звесткі друкаванага выдання.",
+          "Дазвол на лічбавае выкарыстанне ў MyBrev."
+        ]
+      },
+      "digitalPermission": {
+        "status": "requires_verification",
+        "note": "Знак ©, публікацыя на сайце і літургічны дэкрэт самі па сабе не пацвярджаюць дазволу на лічбавае выкарыстанне ў MyBrev."
+      },
+      "auditNotices": [
+        {
+          "text": "© Copyright 2005 — Libreria Editrice Vaticana",
+          "sourceDocument": "scripts/compendium-source/3963-kampendyj-katekhizisa-katalitskaga-kastsjola.html",
+          "note": "Захавана з арыгінала для ўнутранага аўдыту. Не паказваецца ў бібліяграфічным запісе /sources паводле фінальнага заўважання кс. Яна Крэміса, перададзенага ў заданні 06.11.2026."
+        }
+      ]
+    },
+    {
+      "id": "bible-charniauski-2017",
+      "title": "Біблія. Кнігі Святога Пісання",
+      "years": "2017",
+      "officialEdition": "Біблія. Кнігі Святога Пісання",
+      "publicationPlace": null,
+      "rightsholder": null,
+      "copyrightNotices": [],
+      "translation": {
+        "language": "be",
+        "translator": "кс. Уладзіслаў Чарняўскі MIC",
+        "edition": "Рэдакцыя Біблейскага таварыства ў Рэспубліцы Беларусь да выдання 2017 года",
+        "label": "Стары Запавет · пераклад кс. Уладзіслава Чарняўскага MIC"
+      },
+      "digitalSources": [
+        {
+          "label": "bible.by · Чарняўскі, 2017",
+          "url": "https://bible.by/bvc-2017/",
+          "status": "verified",
+          "note": "Адрас у convert-bel-charniauski.py. У змешаным беларускім корпусе Web выкарыстоўваецца Стары Запавет гэтага перакладу."
+        }
+      ],
+      "sections": [
+        "bible"
+      ],
+      "verification": {
+        "status": "partially_verified",
+        "evidence": [
+          {
+            "location": "scripts/bible/convert-bel-charniauski.py",
+            "fields": [
+              "digitalSources",
+              "years"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-04"
+          },
+          {
+            "location": "https://bible.by/bvc-2017/",
+            "fields": [
+              "translation",
+              "years"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-04"
+          },
+          {
+            "location": "https://www.bible.com/versions/3637",
+            "fields": [
+              "title",
+              "translation",
+              "years"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-04"
+          }
+        ],
+        "pending": [
+          "Месца выдання, выдавец і дакладныя выхадныя звесткі друкаванай рэдакцыі 2017 года.",
+          "Праваўладальнік перакладу і рэдакцыі: назва Біблейскага таварыства як рэдактара не вызначае праваўладальніка.",
+          "Дазвол на лічбавае выкарыстанне ў MyBrev."
+        ]
+      },
+      "digitalPermission": {
+        "status": "requires_verification",
+        "note": "Знак ©, публікацыя на сайце і літургічны дэкрэт самі па сабе не пацвярджаюць дазволу на лічбавае выкарыстанне ў MyBrev."
+      }
+    },
+    {
+      "id": "bible-ru-synodal",
+      "title": "Библия. Синодальный перевод",
+      "years": null,
+      "officialEdition": "Библия. Синодальный перевод",
+      "publicationPlace": null,
+      "rightsholder": null,
+      "copyrightNotices": [],
+      "translation": {
+        "language": "ru",
+        "translator": null,
+        "edition": null,
+        "label": "Синодальный перевод"
+      },
+      "digitalSources": [
+        {
+          "label": "scrollmapper/Bible_Databases",
+          "url": "https://github.com/scrollmapper/Bible_Databases/blob/master/formats/json/RusSynodal.json",
+          "status": "candidate",
+          "note": "Канвертар convert-ru-scrollmapper.py; супадзенне з фактычным імпартам не пацверджана."
+        },
+        {
+          "label": "thiagobodruk/bible",
+          "url": "https://github.com/thiagobodruk/bible/blob/master/json/ru_synodal.json",
+          "status": "candidate",
+          "note": "Іншы канвертар convert-ru-synodal.py піша той жа seed. Паходжанне з bible.by не пацверджана."
+        }
+      ],
+      "sections": [
+        "bible"
+      ],
+      "verification": {
+        "status": "partially_verified",
+        "evidence": [
+          {
+            "location": "scripts/bible/convert-ru-scrollmapper.py",
+            "fields": [
+              "digitalSources"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-04"
+          },
+          {
+            "location": "scripts/bible/convert-ru-synodal.py",
+            "fields": [
+              "digitalSources"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-04"
+          }
+        ],
+        "pending": [
+          "Дакладная рэдакцыя, год, месца і афіцыйнае друкаванае выданне выкарыстанага тэксту.",
+          "Прававы статус перакладу, лічбавай рэдакцыі і дазвол на выкарыстанне.",
+          "Лічбавая крыніца фактычна выкарыстанага тэксту: паходжанне з bible.by не пацверджана."
+        ]
+      },
+      "digitalPermission": {
+        "status": "requires_verification",
+        "note": "Знак ©, публікацыя на сайце і літургічны дэкрэт самі па сабе не пацвярджаюць дазволу на лічбавае выкарыстанне ў MyBrev."
+      }
+    }
+  ],
+  "bindings": {
+    "bible": {
+      "bel": {
+        "old": "bible-charniauski-2017",
+        "new": "bible-nt-kkbb-2017"
+      },
+      "ru": {
+        "old": "bible-ru-synodal",
+        "new": "bible-ru-synodal"
+      }
+    },
+    "readings": [
+      "lectionary-kkbb-2002-2005"
+    ],
+    "liturgy-hours": [
+      "liturgy-hours-2012-2020"
+    ],
+    "compendium": [
+      "compendium-kkbb-2010"
+    ]
+  },
+  "legacyAttributions": [
+    {
+      "text": "Стары Запавет · пераклад кс. Уладзіслава Чарняўскага MIC",
+      "sourceId": "bible-charniauski-2017",
+      "location": "src/constants/bible.js → src/views/Bible.vue:35"
+    },
+    {
+      "text": "Новы Запавет · Catholic.by",
+      "sourceId": "bible-nt-kkbb-2017",
+      "location": "src/constants/bible.js → src/views/Bible.vue:35"
+    },
+    {
+      "text": "Синодальный перевод",
+      "sourceId": "bible-ru-synodal",
+      "location": "src/constants/bible.js → src/views/Bible.vue:35"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { nextRouteDiocese, routeDiocese, setRouteDiocese } from '@/utils/ordoDiocese';
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { adminRouteDecision } from '@/utils/adminAccess';
 import { getMassVariantByPrayerId, MASS_ORDER_PRAYER_ID } from '@/utils/massRitual';
 
 import DefaultVue from '@/layouts/default/Default.vue';
@@ -29,9 +30,34 @@ const routes = [
         component: () => import('@/views/Settings.vue'),
       },
       {
+        path: 'feedback',
+        name: 'Feedback',
+        component: () => import('@/views/Feedback.vue'),
+      },
+      {
         path: 'about',
         name: 'About',
         component: () => import('@/views/About.vue'),
+      },
+      {
+        path: 'sources',
+        name: 'Sources',
+        component: () => import('@/views/Sources.vue'),
+      },
+      {
+        path: 'documents/liturgy-hours-decrees',
+        name: 'LiturgyHoursDecrees',
+        component: () => import('@/views/LiturgyHoursDecrees.vue'),
+      },
+      {
+        path: 'documents/liturgy-hours-introduction',
+        name: 'LiturgyHoursIntroduction',
+        component: () => import('@/views/LiturgyHoursIntroduction.vue'),
+      },
+      {
+        path: 'documents/proper-calendar',
+        name: 'ProperCalendar',
+        component: () => import('@/views/ProperCalendar.vue'),
       },
       {
         path: 'picker',
@@ -168,6 +194,15 @@ const routes = [
         component: () => import('@/views/Admin.vue'),
       },
       {
+        path: 'feedback', name: 'AdminFeedback',
+        component: () => import('@/views/admin/Feedback.vue'),
+      },
+      {
+        path: 'analytics', name: 'AdminAnalytics',
+        component: () => import('@/views/admin/Analytics.vue'),
+        meta: { requiresSuperAdmin: true },
+      },
+      {
         path: 'priest-access', name: 'AdminPriestAccess',
         component: () => import('@/views/admin/PriestAccess.vue'),
         meta: { requiresPriestAdmin: true },
@@ -234,6 +269,9 @@ const router = createRouter({
     if (savedPosition) {
       return savedPosition;
     }
+    if (['Sources', 'LiturgyHoursDecrees', 'LiturgyHoursIntroduction', 'ProperCalendar'].includes(to.name) && to.hash) {
+      return { el: to.hash, top: 80 };
+    }
     // Switching the Mass language only rewrites `?lang`; the reader restores
     // the semantic section itself instead of jumping to the top.
     if (to.name === 'PrayerView' && from.name === 'PrayerView'
@@ -258,16 +296,8 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth) {
     await authStore.init();
 
-    if (to.meta.requiresPriestAdmin && !authStore.canManagePriestAccess) {
-      next({ name: 'Admin' });
-      return;
-    }
-
-    if (!authStore.isAdmin) {
-      next({ name: 'Login', query: { redirect: to.fullPath } });
-    } else {
-      next();
-    }
+    const metas = to.matched.reduce((acc, record) => ({ ...acc, ...record.meta }), {});
+    next(adminRouteDecision(metas, authStore, to.fullPath));
   } else {
     next();
   }

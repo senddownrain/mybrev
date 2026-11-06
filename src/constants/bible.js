@@ -1,3 +1,5 @@
+import { getBibleSource } from './sources.js';
+
 const book = (key, id, name, chapterCount, testament = 'old') => ({
   key,
   id,
@@ -13,18 +15,13 @@ export const BIBLE_LANGUAGES = Object.freeze({
     label: 'Беларуская',
     collection: 'bible_bel',
     translation: 'Беларуская Біблія',
-    // The Belarusian corpus is mixed: each testament comes from its own source.
-    testamentSources: Object.freeze({
-      old: 'Стары Запавет · пераклад кс. Уладзіслава Чарняўскага MIC',
-      new: 'Новы Запавет · Catholic.by',
-    }),
   }),
   ru: Object.freeze({
     id: 'ru',
     shortLabel: 'РУС',
     label: 'Русский',
     collection: 'bible_ru',
-    translation: 'Синодальный перевод',
+    translation: getBibleSource('ru', 'old').translation.label,
   }),
 });
 
@@ -226,7 +223,7 @@ export function getBibleBook(language, bookId) {
 export function getBibleSourceLabel(language, testament) {
   const config = BIBLE_LANGUAGES[language];
   if (!config) return '';
-  return config.testamentSources?.[testament] || config.translation;
+  return getBibleSource(language, testament)?.translation.label || config.translation;
 }
 
 export function getParallelBibleBook(fromLanguage, bookId, toLanguage) {

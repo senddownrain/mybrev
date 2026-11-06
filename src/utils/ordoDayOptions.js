@@ -392,7 +392,7 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
       key: 'office-for-dead',
       source: LITURGICAL_OPTION_SOURCE.OFFICE_FOR_DEAD,
       title: daysResult.officeForDead._feastName || 'Афіцый за памерлых',
-      subtitle: 'Памінальны афіцый',
+      subtitle: 'Афіцый за памерлых',
       day: daysResult.officeForDead,
       templates: [{ id: daysResult.officeForDead.id, label: 'Афіцый за памерлых', day: daysResult.officeForDead }],
       order: 99,

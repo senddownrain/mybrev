@@ -103,7 +103,7 @@
         </template>
       </v-list-item>
 
-      <v-list-item tabindex="0" title="Спеўнік" :to="{ name: 'Songs' }" :active="route.name === 'Songs' || route.name === 'SongView'">
+      <v-list-item tabindex="0" title="Спеўнік" subtitle="Пілігрымковы" :to="{ name: 'Songs' }" :active="route.name === 'Songs' || route.name === 'SongView'">
         <template #prepend><PhMusicNotes :size="22" class="drawer-icon" /></template>
       </v-list-item>
 

@@ -2,13 +2,13 @@ import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { useTheme } from 'vuetify';
 import { normalizeReaderFont, SYSTEM_FONT } from '@/constants/fonts';
-import { APP_STATUS_BAR_COLORS } from '@/constants/appearance';
+import { APP_STATUS_BAR_COLORS, isThemePreference, loadThemePreference, resolveTheme } from '@/constants/appearance';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { validateCategory } from '@/utils/validators';
 import { logger } from '@/utils/logger';
 import { requestWakeLock, releaseWakeLock } from '@/composables/useWakeLock';
 import { ensureReaderFontLoaded } from '@/utils/fonts';
-import { normalizePsalmVerseLayout, normalizePsalmMarkerBreakMode } from '@/utils/psalmodyDisplay';
+import { normalizePsalmodyMode, loadPsalmodyMode } from '@/utils/psalmodyDisplay';
 import { normalizeChordLayout } from '@/utils/songDisplay';
 import { trackFeature } from '../utils/trackFeature.js';
 import { ordoDiocese, ordoDioceses, setOrdoDiocese, toggleOrdoDiocese } from '@/utils/ordoDiocese';
@@ -36,32 +36,17 @@ function loadPersonalCategories() {
 export const useSettingsStore = defineStore('settings', () => {
   const theme = useTheme();
   const colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
-  const savedThemePreference = localStorage.getItem('themePreference');
-  // Existing explicit light/dark choices remain explicit after migration.
-  const legacyTheme = localStorage.getItem('theme');
-  const themePreference = ref(
-    ['system', 'light', 'dark'].includes(savedThemePreference)
-      ? savedThemePreference
-      : ['light', 'dark'].includes(legacyTheme) ? legacyTheme : 'system',
-  );
-
-  const currentTheme = ref(
-    themePreference.value === 'system'
-      ? colorScheme.matches ? 'dark' : 'light'
-      : themePreference.value,
-  );
+  const themePreference = ref(loadThemePreference(localStorage));
+  const currentTheme = ref(resolveTheme(themePreference.value, colorScheme.matches));
   const fontFamily = ref(normalizeReaderFont(localStorage.getItem('fontFamily')));
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
-  const psalmVerseLayout = ref(normalizePsalmVerseLayout(localStorage.getItem('psalmVerseLayout')));
-  const psalmMarkerBreakMode = ref(normalizePsalmMarkerBreakMode(localStorage.getItem('psalmMarkerBreakMode')));
-  watch(psalmVerseLayout, (value) => {
-    trackFeature('psalmody_layout_change');
-    localStorage.setItem('psalmVerseLayout', normalizePsalmVerseLayout(value));
-  });
-  watch(psalmMarkerBreakMode, (value) => {
-    trackFeature('psalmody_layout_change');
-    localStorage.setItem('psalmMarkerBreakMode', normalizePsalmMarkerBreakMode(value));
-  });
+  const psalmodyMode = ref(loadPsalmodyMode(localStorage));
+  watch(psalmodyMode, (value, previous) => {
+    const mode = normalizePsalmodyMode(value);
+    if (mode !== value) { psalmodyMode.value = mode; return; }
+    if (previous !== undefined) trackFeature('psalmody_layout_change');
+    localStorage.setItem('psalmodyMode', mode);
+  }, { immediate: true, flush: 'sync' });
   const menuCategories = ref(loadPersonalCategories());
   const hiddenGlobalPrayerCategoryIds = ref(JSON.parse(
     localStorage.getItem(HIDDEN_GLOBAL_CATEGORIES_KEY) || '[]',
@@ -77,9 +62,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') !== 'false');
 
   function applyThemePreference() {
-    currentTheme.value = themePreference.value === 'system'
-      ? colorScheme.matches ? 'dark' : 'light'
-      : themePreference.value;
+    currentTheme.value = resolveTheme(themePreference.value, colorScheme.matches);
   }
 
   watch(themePreference, (newPreference) => {
@@ -178,7 +161,7 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   function setThemePreference(preference) {
-    if (['system', 'light', 'dark'].includes(preference)) {
+    if (isThemePreference(preference)) {
       if (themePreference.value !== preference) trackFeature('theme_change');
       themePreference.value = preference;
     }
@@ -252,8 +235,7 @@ export const useSettingsStore = defineStore('settings', () => {
     fontFamily,
     systemFont: SYSTEM_FONT,
     fontSizeMultiplier,
-    psalmVerseLayout,
-    psalmMarkerBreakMode,
+    psalmodyMode,
     menuCategories,
     personalPrayerCategories: menuCategories,
     hiddenGlobalPrayerCategoryIds,

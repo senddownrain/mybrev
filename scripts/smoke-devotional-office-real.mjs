@@ -123,11 +123,8 @@ try {
         document.documentElement.style.setProperty('--app-viewport-background', `rgb(${getComputedStyle(document.body).getPropertyValue('--v-theme-background')})`);
         window.readerTest.settings.fontSizeMultiplier = size;
       }, { theme, size });
-      for (const layout of ['alignedLeft', 'alternatingIndent']) for (const mode of ['inline', 'breakAfterMarker']) {
-        await page.evaluate(({ layout, mode }) => {
-          window.readerTest.settings.psalmVerseLayout = layout;
-          window.readerTest.settings.psalmMarkerBreakMode = mode;
-        }, { layout, mode });
+      for (const mode of ['left-break', 'left-break-indent', 'alternating-stanzas']) {
+        await page.evaluate(mode => { window.readerTest.settings.psalmodyMode = mode; }, mode);
         assert.equal(normal(await page.locator('.devotional-office').textContent()), content, 'settings preserve all text');
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `${fixture.id}: overflow at ${width}, ${theme}, ${size}`);
       }
@@ -138,7 +135,7 @@ try {
         await page.screenshot({ path: path.join(output, `${fixture.id}-detail.png`) });
       }
     }
-    console.log(`${fixture.id}: full source, variants, roles, metadata and 32 layout combinations passed`);
+    console.log(`${fixture.id}: full source, variants, roles, metadata and 24 layout combinations passed`);
   }
   assert.deepEqual(errors, []);
 } finally {

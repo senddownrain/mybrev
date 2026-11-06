@@ -58,8 +58,7 @@ try {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.evaluate(fixture => {
       Object.assign(window.readerTest.props, fixture, { prayerId: fixture.id });
-      window.readerTest.settings.psalmVerseLayout = 'alternatingIndent';
-      window.readerTest.settings.psalmMarkerBreakMode = 'inline';
+      window.readerTest.settings.psalmodyMode = 'alternating-stanzas';
     }, fixture);
     if (fixture.id.includes('office-for-dead')) await page.getByRole('button', { name: 'За аднаго памерлага', exact: true }).click();
     await page.screenshot({ path: path.join(output, `${fixture.id}.png`), fullPage: true });
@@ -81,15 +80,14 @@ try {
       const original = await canticle.locator('.psalmody-text').textContent();
       for (const width of [390, 320]) {
         await page.setViewportSize({ width, height: 844 });
-        for (const layout of ['alignedLeft', 'alternatingIndent']) for (const mode of ['inline', 'breakAfterMarker']) {
-          await page.evaluate(({ layout, mode }) => { window.readerTest.settings.psalmVerseLayout = layout; window.readerTest.settings.psalmMarkerBreakMode = mode; }, { layout, mode });
-          await page.waitForFunction(({ layout, mode }) => {
+        for (const mode of ['left-break', 'left-break-indent', 'alternating-stanzas']) {
+          await page.evaluate(mode => { window.readerTest.settings.psalmodyMode = mode; }, mode);
+          await page.waitForFunction(mode => {
             const psalm = document.querySelector('.devotional-office__canticle-caption')?.closest('.ora').querySelector('.psalmody-text');
-            return psalm?.dataset.verseLayout === layout && psalm?.dataset.markerBreakMode === mode;
-          }, { layout, mode });
-          assert.equal(await canticle.locator('.psalmody-text').getAttribute('data-verse-layout'), layout);
+            return psalm?.dataset.psalmodyMode === mode;
+          }, mode);
           assert.equal(await canticle.locator('.psalmody-text').textContent(), original);
-          assert.equal(await canticle.locator('.psalm-continuation').count() > 0, mode === 'breakAfterMarker');
+          assert.equal(await canticle.locator('.psalm-continuation').count() > 0, mode !== 'alternating-stanzas');
           assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), 'no horizontal overflow');
         }
       }

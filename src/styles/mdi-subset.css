@@ -46,6 +46,7 @@
 .mdi-calendar-text-outline::before { content: "\F0C46"; }
 .mdi-calendar-today::before { content: "\F00F6"; }
 .mdi-candle::before { content: "\F05E2"; }
+.mdi-chart-box-outline::before { content: "\F154E"; }
 .mdi-check::before { content: "\F012C"; }
 .mdi-check-circle::before { content: "\F05E0"; }
 .mdi-check-circle-outline::before { content: "\F05E1"; }
@@ -92,16 +93,19 @@
 .mdi-key::before { content: "\F0306"; }
 .mdi-keyboard-return::before { content: "\F0311"; }
 .mdi-keyboard-space::before { content: "\F1050"; }
+.mdi-link-off::before { content: "\F0338"; }
 .mdi-link-variant::before { content: "\F0339"; }
 .mdi-lock-outline::before { content: "\F0341"; }
 .mdi-magnify::before { content: "\F0349"; }
 .mdi-menu::before { content: "\F035C"; }
 .mdi-menu-down::before { content: "\F035D"; }
 .mdi-menu-right::before { content: "\F035F"; }
+.mdi-message-alert-outline::before { content: "\F0A04"; }
 .mdi-minus::before { content: "\F0374"; }
 .mdi-minus-box::before { content: "\F0375"; }
 .mdi-music-note::before { content: "\F0387"; }
 .mdi-note-off-outline::before { content: "\F1784"; }
+.mdi-open-in-new::before { content: "\F03CC"; }
 .mdi-page-first::before { content: "\F0600"; }
 .mdi-page-last::before { content: "\F0601"; }
 .mdi-palette::before { content: "\F03D8"; }

@@ -2,8 +2,11 @@
 // read-only content domain (not a prayer). See docs/compendium.md.
 export const COMPENDIUM_TITLE = 'Кампендый Катэхізіса';
 export const COMPENDIUM_FULL_TITLE = 'Кампендый Катэхізіса Каталіцкага Касцёла';
-export const COMPENDIUM_SOURCE_URL = 'https://catholic.by/3/lib/documents/kasciol/3963-kampendyj-katekhizisa-katalitskaga-kastsjola';
-export const COMPENDIUM_SOURCE_HOST = 'Catholic.by';
+import { getSource } from './sources.js';
+
+export const COMPENDIUM_SOURCE = getSource('compendium-kkbb-2010');
+export const COMPENDIUM_SOURCE_URL = COMPENDIUM_SOURCE.digitalSources[0].url;
+export const COMPENDIUM_SOURCE_HOST = COMPENDIUM_SOURCE.digitalSources[0].label;
 
 // Firestore layout: one document per chapter-like unit + a version document.
 export const COMPENDIUM_COLLECTION = 'compendium';

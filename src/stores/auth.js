@@ -4,7 +4,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
-import { ADMIN_UIDS } from '@/constants/admin';
+import { NO_ACCESS, resolveAdminAccess } from '@/utils/adminAccess';
 import router from '@/router';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -13,27 +13,32 @@ export const useAuthStore = defineStore('auth', () => {
   const loading = ref(false);
   /** Reactive admin flag — updated asynchronously after auth state change */
   const isAdmin = ref(false);
+  /** 'admin' | 'superadmin' | null — resolved by resolveAdminAccess() only. */
+  const role = ref(null);
+  const isSuperAdmin = ref(false);
   const canManagePriestAccess = ref(false);
   let authReadyPromise = null;
+  let accessCheckId = 0;
+
+  function applyAccess(access) {
+    isAdmin.value = access.isAdmin;
+    role.value = access.role;
+    isSuperAdmin.value = access.isSuperAdmin;
+    canManagePriestAccess.value = access.canManagePriestAccess;
+  }
 
   /**
-   * Check admin status: Firestore `admins/{uid}` first, fallback to hardcoded ADMIN_UIDS.
-   * Add a document `{ email, name }` to the `admins` collection (doc ID = uid) to grant access.
+   * Read Firestore `admins/{uid}` and resolve the role (see utils/adminAccess.js).
+   * Pure: does not touch store state. ADMIN_UIDS stay as admin fallback when the read fails.
    * @param {string} uid
-   * @returns {Promise<boolean>}
    */
-  async function checkIsAdmin(uid) {
-    canManagePriestAccess.value = false;
-    // Hardcoded fallback (bootstrap / emergency access)
-    if (ADMIN_UIDS.includes(uid)) { canManagePriestAccess.value = true; return true; }
-
+  async function fetchAccess(uid) {
     try {
       const adminDoc = await getDoc(doc(db, 'admins', uid));
-      canManagePriestAccess.value = adminDoc.exists() && adminDoc.data().priestAccess === true;
-      return adminDoc.exists();
+      return resolveAdminAccess(uid, { exists: adminDoc.exists(), data: adminDoc.exists() ? adminDoc.data() : null });
     } catch (error) {
-      logger.error('[auth] Failed to check admin status in Firestore, falling back to constants:', error);
-      return false;
+      logger.error('[auth] Failed to check admin status in Firestore:', error);
+      return resolveAdminAccess(uid, { failed: true });
     }
   }
 
@@ -46,13 +51,14 @@ export const useAuthStore = defineStore('auth', () => {
         let firstStateResolved = false;
         onAuthStateChanged(getAuth(), async (firebaseUser) => {
           loading.value = true;
+          const checkId = ++accessCheckId;
           user.value = firebaseUser;
+          // Drop previous privileges immediately: nothing leaks while the new account resolves.
+          applyAccess(NO_ACCESS);
 
           if (firebaseUser) {
-            isAdmin.value = await checkIsAdmin(firebaseUser.uid);
-          } else {
-            isAdmin.value = false;
-            canManagePriestAccess.value = false;
+            const access = await fetchAccess(firebaseUser.uid);
+            if (checkId === accessCheckId) applyAccess(access);
           }
 
           loading.value = false;
@@ -79,15 +85,16 @@ export const useAuthStore = defineStore('auth', () => {
       const credential = await retryFirestore(
         () => signInWithEmailAndPassword(auth, email, password)
       );
-      const hasAdminAccess = await checkIsAdmin(credential.user.uid);
-      if (!hasAdminAccess) {
+      const checkId = ++accessCheckId;
+      const access = await fetchAccess(credential.user.uid);
+      if (!access.isAdmin) {
         await signOut(auth);
         const accessError = new Error('Admin access required');
         accessError.code = 'auth/not-admin';
         throw accessError;
       }
       user.value = credential.user;
-      isAdmin.value = true;
+      if (checkId === accessCheckId) applyAccess(access);
     } catch (error) {
       logger.error('[auth] Login error:', error);
       throw error;
@@ -100,8 +107,10 @@ export const useAuthStore = defineStore('auth', () => {
     const { getAuth, signOut } = await import('firebase/auth');
     const auth = getAuth();
     await signOut(auth);
+    accessCheckId += 1;
+    applyAccess(NO_ACCESS);
     await router.push('/');
   };
 
-  return { user, loading, isAdmin, canManagePriestAccess, init, login, logout };
+  return { user, loading, isAdmin, role, isSuperAdmin, canManagePriestAccess, init, login, logout };
 });

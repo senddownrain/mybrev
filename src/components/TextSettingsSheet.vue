@@ -10,7 +10,7 @@
       </div>
 
       <v-list lines="one" subheader>
-        <v-list-item title="Тэма">
+        <v-list-item title="Тэма" class="sheet-theme-row">
           <template v-slot:prepend>
             <v-icon>mdi-theme-light-dark</v-icon>
           </template>
@@ -23,9 +23,7 @@
               aria-label="Тэма праграмы"
               @update:model-value="settings.setThemePreference"
             >
-              <v-btn value="system" aria-label="Сістэмная тэма">Аўта</v-btn>
-              <v-btn value="light" aria-label="Светлая тэма">Светлая</v-btn>
-              <v-btn value="dark" aria-label="Цёмная тэма">Цёмная</v-btn>
+              <v-btn v-for="option in themeOptions" :key="option.value" :value="option.value" :aria-label="`${option.label} тэма`">{{ option.label }}</v-btn>
             </v-btn-toggle>
           </template>
         </v-list-item>
@@ -98,12 +96,14 @@
 <script setup>
 import { useSettingsStore } from '@/stores/settings.js';
 import { useAppBar } from '@/composables/useAppBar.js';
+import { THEME_OPTIONS } from '@/constants/appearance';
 import { READER_FONT_OPTIONS } from '@/constants/fonts';
 
 const settings = useSettingsStore();
 const { isSettingsSheetOpen, toggleSettingsSheet } = useAppBar();
 
 const fontOptions = READER_FONT_OPTIONS;
+const themeOptions = THEME_OPTIONS;
 </script>
 
 <style scoped>
@@ -178,5 +178,11 @@ const fontOptions = READER_FONT_OPTIONS;
 .text-settings-card :deep(.v-chip--selected) {
   background: var(--nav-active) !important;
   box-shadow: none;
+}
+@media (max-width: 600px) {
+  .sheet-theme-row { grid-template-areas: "prepend content" "append append"; grid-template-columns: max-content minmax(0, 1fr); }
+  .sheet-theme-row :deep(.v-list-item__append) { grid-column: 1 / -1; justify-content: stretch; padding-top: 10px; }
+  .sheet-theme-row :deep(.v-btn-toggle) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; height: auto; }
+  .sheet-theme-row :deep(.v-btn) { min-width: 0; min-height: 36px; }
 }
 </style>

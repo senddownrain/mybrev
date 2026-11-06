@@ -1,0 +1,29 @@
+{
+  "base": "http://127.0.0.1:4175",
+  "fixture": "local public example; remote requests blocked",
+  "passed": 21,
+  "failure": null,
+  "results": [
+    "320px: four choices, reload, system changes, canvas/status bar, other preferences, no clipping",
+    "320px marian: home, Hours reading, settings, calendar, navigation, teleported dialog",
+    "320px light: home, Hours reading, settings, calendar, navigation, teleported dialog",
+    "320px dark: home, Hours reading, settings, calendar, navigation, teleported dialog",
+    "invalid preference ignored; legacy setTheme/toggleTheme APIs still work",
+    "390px: four choices, reload, system changes, canvas/status bar, other preferences, no clipping",
+    "Marian coverage: /readings/2026-02-08",
+    "Marian coverage: /prayer/appearance-prayer",
+    "Marian coverage: /songs",
+    "Marian coverage: /song/appearance-song",
+    "Marian coverage: /bible/bel/mt/1",
+    "Marian coverage: /ordo/2026-02-08",
+    "390px marian: home, Hours reading, settings, calendar, navigation, teleported dialog",
+    "390px light: home, Hours reading, settings, calendar, navigation, teleported dialog",
+    "390px dark: home, Hours reading, settings, calendar, navigation, teleported dialog",
+    "1440px: four choices, reload, system changes, canvas/status bar, other preferences, no clipping",
+    "1440px marian: home, Hours reading, settings, calendar, navigation, teleported dialog",
+    "1440px light: home, Hours reading, settings, calendar, navigation, teleported dialog",
+    "1440px dark: home, Hours reading, settings, calendar, navigation, teleported dialog",
+    "legacy light: migrated choice stays explicit and survives reload",
+    "legacy dark: migrated choice stays explicit and survives reload"
+  ]
+}

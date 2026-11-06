@@ -20,7 +20,8 @@
 // All components, including teleported menus/dialogs, consume Vuetify's
 // theme variables from constants/appearance.js. No second accent palette.
 .v-theme--light,
-.v-theme--dark {
+.v-theme--dark,
+.v-theme--marian {
   --devotional-accent: rgb(var(--v-theme-devotional));
   --devotional-rgb: var(--v-theme-devotional);
   --on-devotional-accent: rgb(var(--v-theme-on-devotional));
@@ -39,12 +40,14 @@
   --nav-muted: rgba(var(--v-theme-on-surface), 0.72);
   --hero-shadow: 0 8px 28px var(--nav-button-shadow);
   --reader-surface: rgba(var(--v-theme-surface), 0.9);
+  --reader-preview-surface: var(--reader-surface);
   --reader-ink: rgb(var(--v-theme-on-surface));
   --reader-muted: rgb(var(--v-theme-reader-muted));
   --rubric-color: rgb(var(--v-theme-rubric));
 }
 
 .v-theme--light {
+  --reader-preview-surface: rgb(var(--v-theme-surface-variant));
   --period-accent-weight: 82%;
   --period-accent-target: black;
   --devotional-soft: rgba(var(--devotional-rgb), 0.075);
@@ -63,6 +66,7 @@
 }
 
 .v-theme--dark {
+  --reader-preview-surface: rgb(var(--v-theme-surface-variant));
   --period-accent-weight: 62%;
   --period-accent-target: white;
   --devotional-soft: rgba(var(--devotional-rgb), 0.095);
@@ -80,12 +84,47 @@
     rgb(var(--v-theme-background));
 }
 
+.v-theme--marian {
+  --period-accent-weight: 82%;
+  --period-accent-target: black;
+  --devotional-soft: rgba(var(--devotional-rgb), 0.075);
+  --calendar-accent-soft: rgba(var(--chrome-accent-rgb), 0.12);
+  --nav-border: rgba(var(--v-theme-on-surface), 0.1);
+  --nav-shadow: rgba(var(--v-theme-primary), 0.15);
+  --nav-button-shadow: rgba(var(--v-theme-primary), 0.08);
+  --reader-border: rgba(var(--v-theme-on-surface), 0.12);
+  --reader-rule: rgba(var(--v-theme-on-surface), 0.14);
+  --reader-shadow: 0 18px 46px rgba(var(--v-theme-primary), 0.06);
+  --reader-surface: rgb(var(--v-theme-reader-surface));
+  // Some hour sections are cards without a wrapper; keep their paper opaque too.
+  .liturgical-hour-column > .ora { background: var(--reader-surface) !important; }
+  --rubric-soft: rgba(var(--v-theme-rubric), 0.075);
+  // Keep liturgical colour in small accents; the paper and outer shell stay calm.
+  --day-circle-opacity: 0.11;
+  --day-wash-opacity: 0.05;
+  --day-wash-tail-opacity: 0.01;
+  --day-glow-opacity: 0.04;
+  --ambient-strength: 0.04;
+  --app-background:
+    radial-gradient(circle at 50% -12rem, rgba(var(--v-theme-ambient), 0.06), transparent 38rem),
+    rgb(var(--v-theme-background));
+
+  // Secondary remains the requested accent swatch. Its small text uses the
+  // darker primary ink (the swatch itself is below 4.5:1 on white).
+  .text-secondary { color: rgb(var(--v-theme-primary)) !important; }
+}
+
 // On narrow screens the hero sits close to the viewport edge. Tighten the
 // elevation and ambient wash so neither turns into a clipped vertical band.
 @media (max-width: 600px) {
   .v-theme--light {
     --hero-shadow: 0 6px 20px rgba(61, 48, 34, 0.075);
     --ambient-strength: 0.11;
+  }
+
+  .v-theme--marian {
+    --hero-shadow: 0 6px 20px rgba(var(--v-theme-primary), 0.06);
+    --ambient-strength: 0.04;
   }
 
   .v-theme--dark {
@@ -694,12 +733,6 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   .ora-sub
 ) * {
   text-align: center !important;
-}
-
-// Alternate actual strophes in psalms and Gospel canticles. Headings and
-// subtitles are not marked as strophes, so they do not affect parity.
-.ora-psalm p[data-psalm-side="B"] {
-  margin-left: 1rem;
 }
 
 // Cadence signs in every psalter use the same colour as liturgical rubrics.

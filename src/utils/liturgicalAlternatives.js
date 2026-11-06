@@ -45,6 +45,13 @@ function firstLineText(element) {
   return textOf(line);
 }
 
+function isReadingCategoryHeading(text) {
+  // A category occupies the whole heading line. Scripture and homilies also
+  // contain prose such as «Пра гэта сведчыць ... сказана: ...».
+  const match = text.match(CATEGORY_MARKER);
+  return Boolean(match && match[0].length === text.length);
+}
+
 function isAlternativeBoundary(element, kind) {
   if (element.rawTagName !== 'p') return false;
   const text = textOf(element.toString());
@@ -53,7 +60,9 @@ function isAlternativeBoundary(element, kind) {
   // Keep genuine explicit alternatives (<hr>, "Або:") available for psalms.
   return ALTERNATIVE_MARKER.test(text)
     || INSTRUCTION_MARKER.test(text)
-    || (kind !== 'psalm' && CATEGORY_MARKER.test(kind === 'hymn' ? firstLineText(element) : text));
+    || (kind === 'office-reading'
+      ? isReadingCategoryHeading(firstLineText(element))
+      : kind !== 'psalm' && CATEGORY_MARKER.test(kind === 'hymn' ? firstLineText(element) : text));
 }
 
 function splitAtRules(root, kind) {
@@ -195,8 +204,9 @@ function firstVerseLine(html) {
   }) || '');
 }
 
-function categoryTitle(paragraphs) {
+function categoryTitle(paragraphs, kind) {
   for (const paragraph of paragraphs.slice(0, 3)) {
+    if (kind === 'office-reading' && !isReadingCategoryHeading(paragraph)) continue;
     const match = paragraph.match(CATEGORY_MARKER);
     if (match) return shorten(match[0].replace(/\s*:\s*$/u, ''));
   }
@@ -240,7 +250,7 @@ function readingTitle(paragraphs, { office = false } = {}) {
 function optionTitle(option, index, kind) {
   if (option.explicitTitle) return shorten(option.explicitTitle);
   const paragraphs = paragraphTexts(option.html);
-  const category = categoryTitle(paragraphs);
+  const category = categoryTitle(paragraphs, kind);
   if (kind === 'office-reading') {
     // The reading itself names the choice; the category («Пра святога, які жыў у сужэнстве») only qualifies it.
     const reading = readingTitle(paragraphs, { office: true });

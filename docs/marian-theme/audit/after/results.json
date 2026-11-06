@@ -1,0 +1,15 @@
+{
+  "base": "http://127.0.0.1:4175",
+  "fixture": "local public example; remote requests blocked",
+  "passed": 7,
+  "failure": null,
+  "results": [
+    "390px marian: surfaces, headings, calendar, long reading start/middle; no text gradients or page errors",
+    "390px light: surfaces, headings, calendar, long reading start/middle; no text gradients or page errors",
+    "390px dark: surfaces, headings, calendar, long reading start/middle; no text gradients or page errors",
+    "1440px marian: surfaces, headings, calendar, long reading start/middle; no text gradients or page errors",
+    "1440px light: surfaces, headings, calendar, long reading start/middle; no text gradients or page errors",
+    "1440px dark: surfaces, headings, calendar, long reading start/middle; no text gradients or page errors",
+    "36 scenes: geometry/content/liturgical colours preserved; 24 light/dark screenshots pixel-identical"
+  ]
+}

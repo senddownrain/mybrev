@@ -64,6 +64,9 @@ jobs:
       - name: Liturgical alternatives regression tests
         run: npm run test:alternatives
 
+      - name: Movable feast daytime prayer regression tests
+        run: node --test tests/dynamic-feast-daytime.test.mjs
+
       - name: Audit tests
         run: npm run test:audit
 
