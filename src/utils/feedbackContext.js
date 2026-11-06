@@ -1,0 +1,28 @@
+// Safe automatic context for the feedback form: only public IDs / dates / names. Mirrors the Worker allowlist.
+const KINDS = ['prayer', 'song', 'reading', 'hour', 'day', 'bible', 'compendium', 'other'];
+const HOURS = ['invitatory', 'office_of_readings', 'lauds', 'daytime', 'vespers', 'compline', 'mass', 'other'];
+const SAFE_ID = /^[\p{L}\p{N}_\-.:]{1,128}$/u;
+
+/** Build the context sent to the Worker from route query keys `ctx_kind`, `ctx_id`, `ctx_date`, `ctx_hour`, `ctx_title`. Unknown/unsafe values are dropped. */
+export function contextFromQuery(query = {}, { diocese, lang = 'be', path } = {}) {
+  const one = (v) => (Array.isArray(v) ? v[0] : v);
+  const out = {};
+  const kind = one(query.ctx_kind); if (KINDS.includes(kind)) out.kind = kind;
+  const id = one(query.ctx_id); if (typeof id === 'string' && SAFE_ID.test(id)) out.id = id;
+  const date = one(query.ctx_date); if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) out.date = date;
+  const hour = one(query.ctx_hour); if (HOURS.includes(hour)) out.hour = hour;
+  const title = one(query.ctx_title); if (typeof title === 'string' && title.trim()) out.title = title.trim().slice(0, 120);
+  if (!Object.keys(out).length) return null;
+  if (typeof diocese === 'string' && /^[a-z_]{2,24}$/.test(diocese)) out.diocese = diocese;
+  if (lang) out.lang = lang;
+  if (typeof path === 'string') { const p = path.split(/[?#]/)[0]; if (/^\/[\w\-./%]{0,198}$/.test(p) && !p.includes('..')) out.path = p; }
+  return out;
+}
+
+/** Route location for the "Паведаміць пра памылку" link. */
+export const feedbackLink = ({ kind, id, date, hour, title }) => ({
+  name: 'Feedback',
+  query: Object.fromEntries(Object.entries({ ctx_kind: kind, ctx_id: id, ctx_date: date, ctx_hour: hour, ctx_title: title }).filter(([, v]) => v)),
+});
+
+export const contextSummary = (ctx) => (ctx ? [ctx.title, ctx.kind && `тып: ${ctx.kind}`, ctx.id && `ID: ${ctx.id}`, ctx.date, ctx.hour].filter(Boolean).join(' · ') : '');

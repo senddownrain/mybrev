@@ -28,9 +28,11 @@
 import { computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 const auth = useAuthStore();
-const visibleEditors = computed(() => editors.filter((item) => (!item.priestAccess || auth.canManagePriestAccess)
+const feedbackTitle = computed(() => (auth.isSuperAdmin ? 'Усе звароты' : 'Звароты па тэкстах'));
+const visibleEditors = computed(() => editors.map((item) => (item.feedback ? { ...item, title: feedbackTitle.value, description: auth.isSuperAdmin ? 'Усе паведамленні з Web, Android і iOS, катэгорыі, статусы.' : item.description } : item)).filter((item) => (!item.priestAccess || auth.canManagePriestAccess)
   && (!item.superAdmin || auth.isSuperAdmin)));
 const editors = [
+  { feedback: true, title: 'Звароты па тэкстах', description: 'Паведамленні ад чытачоў: памылкі і прапановы па тэкстах.', icon: 'mdi-message-alert-outline', to: { name: 'AdminFeedback' } },
   { title: 'Доступ для святароў', description: 'Код актывацыі і дазволы зарэгістраваных прылад.', icon: 'mdi-key', to: { name: 'AdminPriestAccess' }, priestAccess: true },
   { title: 'Аналітыка', description: 'Статыстыка выкарыстання малітоўніка і яго раздзелаў.', icon: 'mdi-chart-box-outline', to: { name: 'AdminAnalytics' }, superAdmin: true },
   { title: 'Стварыць спеў', description: 'Тэкст, акорды і тэгі для пілігрымкавага спеўніка.', icon: 'mdi-music-note', to: { name: 'AdminSongAdd' } },

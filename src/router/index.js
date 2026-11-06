@@ -30,6 +30,11 @@ const routes = [
         component: () => import('@/views/Settings.vue'),
       },
       {
+        path: 'feedback',
+        name: 'Feedback',
+        component: () => import('@/views/Feedback.vue'),
+      },
+      {
         path: 'about',
         name: 'About',
         component: () => import('@/views/About.vue'),
@@ -187,6 +192,10 @@ const routes = [
         path: '',
         name: 'Admin',
         component: () => import('@/views/Admin.vue'),
+      },
+      {
+        path: 'feedback', name: 'AdminFeedback',
+        component: () => import('@/views/admin/Feedback.vue'),
       },
       {
         path: 'analytics', name: 'AdminAnalytics',
