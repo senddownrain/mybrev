@@ -285,6 +285,7 @@ import {
 import moment from '@/utils/moment-be';
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
+import { requestContentRefresh } from '@/utils/publicContentCache';
 
 const SESSION_KEY_COPY = 'dayEditorCopyData';
 const INVITATORIUM_COLLECTION = 'invitatoriums';
@@ -672,6 +673,9 @@ async function saveChanges() {
     }
 
     await retryFirestore(() => batch.commit());
+    // Public Hours/Readings use a persistent cache; invalidate it only after
+    // Firestore confirms the complete editor save, never on local field edits.
+    requestContentRefresh();
     success('Усе змененыя часткі літургічнага дня захаваны.');
     if (isSparse.value) properOriginal.value = clone(dayData.value);
     invitatoriums.value.forEach((item) => invitatoriumOriginals.set(item.id, comparable(withoutId(item))));
