@@ -13,13 +13,13 @@
 | Flutter unit/widget (форма, контекст, сервис, ошибки, повтор по кнопке) | `flutter test test/feedback` | PASS (7) |
 | Flutter `analyze` | `flutter analyze` | PASS по ошибкам; info-замечания стиля (в новых файлах — curly_braces/null-aware; в репозитории их уже 27) |
 | iOS Simulator (iPhone 16, `fb-iphone`): форма, контекст, отправка в локальный Worker, строка в D1 с `platform=ios` | вручную | PASS |
-| Android AVD API 34 | `flutter build apk --debug` | см. раздел «Android» ниже |
+| Android AVD API 34 (`MyBrev_Test_API34`): `flutter build apk --debug`, форма, контекст, отправка в локальный Worker, строка в D1 с `platform=android` | вручную | PASS (тёмная тема) |
 | `npm run lint` | не запускался (`--fix` меняет файлы); eslint запущен точечно на новых файлах без `--fix` | PASS |
 | Staging / production | — | NOT TESTED (нет разрешения на Cloudflare) |
 | Реальная подпись Google JWKS | — | NOT TESTED (тесты с локальными RSA-ключами; реальный токен проверяется только в staging) |
 
 ## Android
-Сборка `assembleDebug` на этой машине дважды упала при скачивании `kotlin-compiler-embeddable-2.2.20.jar` с repo.maven.apache.org (таймаут сети). Если итоговая запись ниже не обновлена, Android — **NOT TESTED**. Для эмулятора: `adb reverse tcp:8791 tcp:8791`, `--dart-define=FEEDBACK_API_URL=http://127.0.0.1:8791` (для http нужен debug-only cleartext; production — только https).
+`flutter build apk --debug` собран (первые две попытки упали по таймауту скачивания kotlin-compiler-embeddable с maven central — сеть; третья прошла). Для эмулятора: `adb reverse tcp:8791 tcp:8791`, `--dart-define=FEEDBACK_API_URL=http://127.0.0.1:8791` (debug разрешает http на loopback; production — только https). Скриншоты: `docs/feedback-evidence/flutter-android-*.png`, `flutter-ios-success.png`. Автоматизированного Android/iOS UI-теста нет — это ручной прогон через adb/simctl.
 
 ## 6 проверок для владельца (после staging)
 
