@@ -38,7 +38,7 @@ try {
   for(const icon of manifest.icons) {
     const response=await fetch(new URL(icon.src,base));
     assert.equal(response.status,200,icon.src);
-    assert.equal(sha(Buffer.from(await response.arrayBuffer())),sha(await readFile(path.join(root,'public',icon.src))),icon.src);
+    assert.equal(sha(Buffer.from(await response.arrayBuffer())),sha(await readFile(path.join(root,'public',new URL(icon.src,base).pathname.slice(1)))),icon.src);
   }
   for(const src of ['favicon-16x16.png','favicon-32x32.png','favicon-48x48.png',
     'favicon-96x96.png','favicon.ico','apple-touch-icon.png','app-brand-96.png']) {
