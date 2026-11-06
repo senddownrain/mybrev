@@ -147,4 +147,12 @@ export const VALIDATION_EXPECTATIONS = Object.freeze([
     status: 'PARSER_UNCERTAIN', diocese: 'vitebsk', date: '2025-12-24', checks: ['notes'],
     reason: 'Christmas notes printed with the Vigil (24 Dec) were generalized to the Christmas day selector only.',
   },
+  {
+    status: 'EXPECTED_DIOCESAN_DIFFERENCE', diocese: 'grodno', date: '2027-07-05', checks: ['primary', 'color', 'alternatives'],
+    reason: 'Our Lady of Trakai: owner decision — Grodno keeps it on 5 July as an obligatory memorial (memoria); the 2027 PDF prints no memorial on 5 July. The optional memorial of St Anthony Zaccaria is displaced by the obligatory one.',
+  },
+  {
+    status: 'EXPECTED_DIOCESAN_DIFFERENCE', diocese: 'grodno', date: '2027-07-10', checks: ['primary', 'officeType', 'teDeum'],
+    reason: 'Our Lady of Trakai: owner decision — 10 July is no longer a celebration of the diocese; the 2027 PDF prints «НПМ Тракельскай свята» there (feast). MyBrev keeps the memorial on 5 July and does not move or duplicate it.',
+  },
 ]);
