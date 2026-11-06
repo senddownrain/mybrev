@@ -61,27 +61,29 @@ export default defineConfig(({ command, mode }) => {
         orientation: 'portrait',
         lang: 'be',
         start_url: '.',
+        // A changed icon URL tells Chrome 144+ to re-fetch installed PWA icons.
+        // Keep the manifest URL, start_url and implicit identity unchanged.
         icons: [
           {
-            src: 'web-app-manifest-192x192.png',
+            src: 'web-app-manifest-192x192.png?v=20261106-color',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any'
           },
           {
-            src: 'web-app-manifest-512x512.png',
+            src: 'web-app-manifest-512x512.png?v=20261106-color',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any'
           },
           {
-            src: 'web-app-manifest-maskable-192x192.png',
+            src: 'web-app-manifest-maskable-192x192.png?v=20261106-color',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'maskable'
           },
           {
-            src: 'web-app-manifest-maskable-512x512.png',
+            src: 'web-app-manifest-maskable-512x512.png?v=20261106-color',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable'
