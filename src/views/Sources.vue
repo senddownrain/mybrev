@@ -1,5 +1,5 @@
 <template>
-  <v-container class="sources-page">
+  <v-container class="sources-page" lang="be">
     <main>
       <router-link :to="{ name: 'About' }" class="sources-back">
         <PhArrowLeft :size="19" aria-hidden="true" />
@@ -11,6 +11,7 @@
         <h2 id="sources-documents-title">Дакументы</h2>
         <ul>
           <li><router-link :to="{ name: 'LiturgyHoursDecrees' }">Дэкрэты Літургіі гадзінаў</router-link></li>
+          <li><router-link :to="{ name: 'LiturgyHoursIntroduction' }">Агульныя ўводзіны да Літургіі гадзінаў</router-link></li>
           <li><router-link :to="{ name: 'ProperCalendar' }">Уласны каляндар дыяцэзій на Беларусі</router-link></li>
         </ul>
       </section>

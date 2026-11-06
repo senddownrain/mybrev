@@ -26,9 +26,10 @@ const groups = [
 ].map(group => ({ ...group, entries: group.ids.map(getSource) }));
 
 function edition(source) {
-  const details = [source.publicationPlace, source.years].filter(Boolean).join(', ');
+  const years = source.id === 'liturgy-hours-2012-2020' ? source.years.replace('-', '–') : source.years;
+  const details = [source.publicationPlace, years].filter(Boolean).join(', ');
   if (source.id === bindings.bible.ru.old) return '';
-  const title = ['liturgy-hours-2012-2020', 'compendium-kkbb-2010'].includes(source.id) ? source.officialEdition : `«${source.officialEdition}»`;
+  const title = source.id === 'compendium-kkbb-2010' ? source.officialEdition : `«${source.officialEdition}»`;
   return `${title}${details ? ` (${details})` : ''}`;
 }
 

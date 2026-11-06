@@ -4,6 +4,8 @@ import fs from 'node:fs';
 import crypto from 'node:crypto';
 import calendar from '../src/data/documents/proper-calendar.json' with { type: 'json' };
 import decrees from '../src/data/documents/liturgy-hours-decrees.json' with { type: 'json' };
+import apostolic from '../src/data/documents/apostolic-see-decrees.json' with { type: 'json' };
+import introduction from '../src/data/documents/liturgy-hours-introduction.json' with { type: 'json' };
 import { getSource } from '../src/constants/sources.js';
 const read = file => fs.readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
 const normalized = text => text.replace(/\s+/gu, ' ').trim();
@@ -72,7 +74,7 @@ test('protocols, printed styles, nested dioceses and movable celebrations surviv
 });
 
 test('static document UI renders all runs, public original and safe navigation without calendar services', () => {
-  for (const file of ['src/views/ProperCalendar.vue', 'src/views/LiturgyHoursDecrees.vue']) {
+  for (const file of ['src/views/ProperCalendar.vue', 'src/views/LiturgyHoursDecrees.vue', 'src/views/LiturgyHoursIntroduction.vue']) {
     const vue = read(file);
     assert.doesNotMatch(vue, /firestore|useLiturgical|useOrdo|calendarService|v-html/);
     assert.match(vue, /DocumentBack/);
@@ -80,7 +82,22 @@ test('static document UI renders all runs, public original and safe navigation w
   assert.match(read('src/views/ProperCalendar.vue'), /calendar.pages/);
   assert.match(read('src/views/ProperCalendar.vue'), /:href="calendar.sourceFile"/);
   assert.match(read('src/components/DocumentBack.vue'), /router.push\(\{ name: 'Sources' \}\)/);
-  for (const route of ['documents/proper-calendar', 'documents/liturgy-hours-decrees']) assert.ok(read('src/router/index.js').includes(route));
+  for (const route of ['documents/proper-calendar', 'documents/liturgy-hours-decrees', 'documents/liturgy-hours-introduction']) assert.ok(read('src/router/index.js').includes(route));
+});
+
+test('new translations stay link-only until republication permission is established', () => {
+  for (const document of [introduction, apostolic]) {
+    assert.equal(document.publicationMode, 'official_link');
+    assert.ok(!('paragraphs' in document) && !('fullText' in document));
+  }
+  assert.equal(introduction.fullTextUrl, 'https://lh.catholic.by/uvodziny.php');
+  assert.equal(apostolic.sourceUrl, 'https://lh.catholic.by/dekrety.php');
+  assert.deepEqual(apostolic.documents.map(doc => [doc.protocol, doc.date]), [['1000/71', '1971-04-11'], ['1814/84', '1985-04-07']]);
+  for (const document of apostolic.documents) {
+    assert.ok(!('volume' in document) && !('roman' in document) && !('fullText' in document));
+    assert.ok(read('docs/sources/primary/lh-decrees-2026-11-05.txt').includes(`Прат. № ${document.protocol}`));
+  }
+  assert.equal(getSource('liturgy-hours-2012-2020').decrees.length, 4);
 });
 
 test('registry and document metadata agree strictly for every decree', () => {

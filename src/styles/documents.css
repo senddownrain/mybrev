@@ -6,6 +6,7 @@
 .document-index { display: flex; flex-wrap: wrap; gap: 2px 18px; margin-bottom: 24px; }
 .document-index a { display: inline-flex; align-items: center; min-height: 40px; font-size: .9rem; }
 .document-original { margin-top: 26px; font-size: .95rem; }
+.document-prose { text-align: justify; text-align-last: left; hyphens: auto; overflow-wrap: break-word; }
 .doc-tone--red { color: var(--document-red); }
 .doc-tone--magenta { color: var(--document-magenta); }
 .doc-italic { font-style: italic; }

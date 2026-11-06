@@ -56,7 +56,14 @@ test('required notices and every former Bible attribution are retained', () => {
     const legacy = SOURCE_REGISTRY.legacyAttributions.find(item => item.text === text);
     assert.ok(getSource(legacy?.sourceId), text);
   }
-  assert.ok(getSource('compendium-kkbb-2010').copyrightNotices.includes('© Copyright 2005 — Libreria Editrice Vaticana'));
+  const compendium = getSource('compendium-kkbb-2010');
+  assert.deepEqual(compendium.copyrightNotices, ['© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2010']);
+  assert.equal(compendium.auditNotices[0].text, '© Copyright 2005 — Libreria Editrice Vaticana');
+  assert.ok(read(compendium.auditNotices[0].sourceDocument).includes('Libreria Editrice Vaticana'));
+  const hours = getSource('liturgy-hours-2012-2020');
+  assert.equal(hours.rightsholder, 'Канферэнцыя Каталіцкіх Біскупаў Беларусі');
+  assert.deepEqual(hours.copyrightNotices, ['© Канферэнцыя Каталіцкіх Біскупаў Беларусі']);
+  assert.ok(hours.verification.pending.some(note => note.includes('выхадныя старонкі')));
   assert.equal(getSource('bible-charniauski-2017').digitalSources[0].url, 'https://bible.by/bvc-2017/');
   assert.ok(getSource('bible-ru-synodal').digitalSources.every(source => source.status === 'candidate'));
 });
@@ -71,7 +78,7 @@ test('four documented KKBB decrees keep decree and approval numbers distinct', (
   assert.equal(decrees[3].sourceUrl, null);
   assert.equal(decrees[3].sourceKind, 'provided_primary_doc');
   assert.ok(fs.existsSync(new URL(decrees[3].sourceDocument, root)));
-  for (const id of ['bible-charniauski-2017', 'bible-ru-synodal', 'liturgy-hours-2012-2020']) assert.equal(getSource(id).rightsholder, null);
+  for (const id of ['bible-charniauski-2017', 'bible-ru-synodal']) assert.equal(getSource(id).rightsholder, null);
 });
 
 test('every Bible book retains correct visible translation by language and testament', () => {

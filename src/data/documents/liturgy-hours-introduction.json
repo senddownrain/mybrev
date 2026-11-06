@@ -1,0 +1,18 @@
+{
+  "title": "Агульныя ўводзіны да Літургіі гадзінаў",
+  "publicationMode": "official_link",
+  "sections": [
+    { "id": "edition", "title": "Пра выданне" },
+    { "id": "full-text", "title": "Поўны тэкст" },
+    { "id": "sources", "title": "Крыніцы" }
+  ],
+  "editionNote": "Бе\u00adла\u00adрускі пе\u00adра\u00adклад Уводзін можна пра\u00adчы\u00adтаць на афі\u00adцый\u00adным сайце Лі\u00adтур\u00adгіі га\u00adдзі\u00adнаў.",
+  "readingNote": "На ста\u00adрон\u00adцы афі\u00adцый\u00adнага вы\u00adдан\u00adня па\u00adда\u00adдзе\u00adны раз\u00adдзе\u00adлы I–V, пункты 1–284, за\u00adключ\u00adная «Таб\u00adліца лі\u00adтур\u00adгіч\u00adных дзён» і тэкст пра су\u00adпа\u00adдзен\u00adне і пер\u00adшын\u00adство цэ\u00adле\u00adбра\u00adцый.",
+  "fullTextUrl": "https://lh.catholic.by/uvodziny.php",
+  "sources": [
+    {
+      "label": "Catholic.by — крыніца, указаная кс. Янам Крэмісам",
+      "url": "https://catholic.by/3/liturgy/liturgical-books/5913-agulnyya-vodziny-da-liturgii-gadzina"
+    }
+  ]
+}

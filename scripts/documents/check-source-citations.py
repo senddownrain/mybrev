@@ -15,11 +15,16 @@ for id, quoted in [('bible-nt-kkbb-2017', True), ('lectionary-kkbb-2002-2005', T
     title = f'«{e["officialEdition"]}»' if quoted else e['officialEdition']
     citation = f'{title} ({e["publicationPlace"]}, {e["years"]})'
     assert citation in paragraphs, citation
-    if e['rightsholder']:
+    if e['rightsholder'] and id != 'liturgy-hours-2012-2020':
         assert e['copyrightNotices'][0] in paragraphs, e['copyrightNotices'][0]
 assert entries['bible-nt-kkbb-2017']['translation']['label'] == 'Новы Запавет · ККББ, 2017'
-for id in ['liturgy-hours-2012-2020', 'bible-charniauski-2017', 'bible-ru-synodal']:
+for id in ['bible-charniauski-2017', 'bible-ru-synodal']:
     assert entries[id]['rightsholder'] is None
-legacy_notice = entries['compendium-kkbb-2010']['copyrightNotices'][1]
+hours = entries['liturgy-hours-2012-2020']
+assert hours['rightsholder'] == 'Канферэнцыя Каталіцкіх Біскупаў Беларусі'
+assert hours['copyrightNotices'] == ['© Канферэнцыя Каталіцкіх Біскупаў Беларусі']
+assert hours['copyrightNotices'][0] in (root / 'docs/sources/primary/kremis-final-remarks-2026-11-06.md').read_text()
+assert entries['compendium-kkbb-2010']['copyrightNotices'] == ['© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2010']
+legacy_notice = entries['compendium-kkbb-2010']['auditNotices'][0]['text']
 assert legacy_notice in (root / 'scripts/compendium-source/3963-kampendyj-katekhizisa-katalitskaga-kastsjola.html').read_text()
-print('DOCX: four bibliographic citations and three KKBB notices match verbatim; LEV verified against saved primary HTML; unknown holders remain null')
+print('DOCX: four citations and three notices verified; final remarks: Hours holder without unverified years; internal LEV provenance verified against original HTML')
