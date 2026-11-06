@@ -9,6 +9,7 @@ import { logger } from '@/utils/logger';
 import { requestWakeLock, releaseWakeLock } from '@/composables/useWakeLock';
 import { ensureReaderFontLoaded } from '@/utils/fonts';
 import { normalizePsalmodyMode, loadPsalmodyMode } from '@/utils/psalmodyDisplay';
+import { normalizeTextAlignment } from '@/utils/readerPreferences';
 import { normalizeChordLayout } from '@/utils/songDisplay';
 import { trackFeature } from '../utils/trackFeature.js';
 import { ordoDiocese, ordoDioceses, setOrdoDiocese, toggleOrdoDiocese } from '@/utils/ordoDiocese';
@@ -40,6 +41,15 @@ export const useSettingsStore = defineStore('settings', () => {
   const currentTheme = ref(resolveTheme(themePreference.value, colorScheme.matches));
   const fontFamily = ref(normalizeReaderFont(localStorage.getItem('fontFamily')));
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
+  const textAlignment = ref(normalizeTextAlignment(localStorage.getItem('textAlignment')));
+  const textSettingsExpanded = ref(localStorage.getItem('textSettingsExpanded') === 'true');
+  watch(textAlignment, (value) => {
+    const alignment = normalizeTextAlignment(value);
+    if (alignment !== value) { textAlignment.value = alignment; return; }
+    localStorage.setItem('textAlignment', alignment);
+    document.documentElement.style.setProperty('--reader-text-alignment', alignment);
+  }, { immediate: true, flush: 'sync' });
+  watch(textSettingsExpanded, value => localStorage.setItem('textSettingsExpanded', String(value)));
   const psalmodyMode = ref(loadPsalmodyMode(localStorage));
   watch(psalmodyMode, (value, previous) => {
     const mode = normalizePsalmodyMode(value);
@@ -236,6 +246,8 @@ export const useSettingsStore = defineStore('settings', () => {
     systemFont: SYSTEM_FONT,
     fontSizeMultiplier,
     psalmodyMode,
+    textAlignment,
+    textSettingsExpanded,
     menuCategories,
     personalPrayerCategories: menuCategories,
     hiddenGlobalPrayerCategoryIds,

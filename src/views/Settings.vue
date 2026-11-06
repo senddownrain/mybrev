@@ -53,32 +53,41 @@
     </section>
 
     <section class="settings-section" aria-labelledby="text-title">
-      <div class="section-heading">
-        <span class="section-icon"><PhTextAa :size="22" /></span>
-        <div><h2 id="text-title">Тэкст</h2><p>Шрыфт і памер для чытання</p></div>
-      </div>
-      <div class="font-picker">
-        <span class="control-label">Шрыфт чытання</span>
-        <div class="font-options" role="radiogroup" aria-label="Шрыфт чытання">
-          <button v-for="font in fontOptions" :key="font.value" type="button" role="radio"
-            :aria-checked="font.value === settings.fontFamily"
-            :class="{ 'font-option--active': font.value === settings.fontFamily }"
-            :style="{ fontFamily: font.value }" @click="settings.setFontFamily(font.value)">
-            {{ font.title }}<PhCheck v-if="font.value === settings.fontFamily" :size="16" weight="bold" />
-          </button>
+      <h2 class="text-group-heading">
+        <button type="button" class="section-heading text-group-toggle" :aria-expanded="settings.textSettingsExpanded"
+          aria-controls="text-settings-content" @click="settings.textSettingsExpanded = !settings.textSettingsExpanded">
+          <span class="section-icon"><PhTextAa :size="22" /></span>
+          <span class="text-group-copy"><span id="text-title">Тэкст</span><span>Шрыфт, памер і выраўноўванне</span></span>
+          <PhCaretDown :size="20" class="text-group-chevron" :class="{ 'is-expanded': settings.textSettingsExpanded }" aria-hidden="true" />
+        </button>
+      </h2>
+      <v-expand-transition>
+        <div v-show="settings.textSettingsExpanded" id="text-settings-content">
+          <div class="font-picker">
+            <span class="control-label">Шрыфт чытання</span>
+            <div class="font-options" role="radiogroup" aria-label="Шрыфт чытання">
+              <button v-for="font in fontOptions" :key="font.value" type="button" role="radio"
+                :aria-checked="font.value === settings.fontFamily"
+                :class="{ 'font-option--active': font.value === settings.fontFamily }"
+                :style="{ fontFamily: font.value }" @click="settings.setFontFamily(font.value)">
+                {{ font.title }}<PhCheck v-if="font.value === settings.fontFamily" :size="16" weight="bold" />
+              </button>
+            </div>
+          </div>
+          <div class="text-size-control">
+            <div class="setting-copy"><strong>Памер тэксту</strong><span>Змяняецца з крокам у 10%</span></div>
+            <div class="stepper" aria-label="Памер тэксту">
+              <button type="button" aria-label="Паменшыць тэкст" :disabled="settings.fontSizeMultiplier <= 0.7" @click="settings.decreaseFontSize"><PhMinus :size="18" weight="bold" /></button>
+              <strong>{{ Math.round(settings.fontSizeMultiplier * 100) }}%</strong>
+              <button type="button" aria-label="Павялічыць тэкст" :disabled="settings.fontSizeMultiplier >= 1.8" @click="settings.increaseFontSize"><PhPlus :size="18" weight="bold" /></button>
+            </div>
+          </div>
+          <TextAlignmentSettings class="text-alignment-row" />
+          <div class="text-preview">
+            <span>Прыклад</span><p>Божа, прыйдзі мне на дапамогу. Пане, паспяшы да мяне на паратунак.</p>
+          </div>
         </div>
-      </div>
-      <div class="text-size-control">
-        <div class="setting-copy"><strong>Памер тэксту</strong><span>Змяняецца з крокам у 10%</span></div>
-        <div class="stepper" aria-label="Памер тэксту">
-          <button type="button" aria-label="Паменшыць тэкст" :disabled="settings.fontSizeMultiplier <= 0.7" @click="settings.decreaseFontSize"><PhMinus :size="18" weight="bold" /></button>
-          <strong>{{ Math.round(settings.fontSizeMultiplier * 100) }}%</strong>
-          <button type="button" aria-label="Павялічыць тэкст" :disabled="settings.fontSizeMultiplier >= 1.8" @click="settings.increaseFontSize"><PhPlus :size="18" weight="bold" /></button>
-        </div>
-      </div>
-      <div class="text-preview" :style="{ fontFamily: settings.fontFamily, fontSize: `${settings.fontSizeMultiplier}em` }">
-        <span>Прыклад</span><p>Божа, прыйдзі мне на дапамогу. Пане, паспяшы да мяне на паратунак.</p>
-      </div>
+      </v-expand-transition>
     </section>
 
     <section class="settings-section"><PsalmodySettings /></section>
@@ -130,9 +139,10 @@
 
 <script setup>
 import PriestAccessSettings from '@/components/prayers/PriestAccessSettings.vue';
+import TextAlignmentSettings from '@/components/TextAlignmentSettings.vue';
 import PsalmodySettings from '@/components/PsalmodySettings.vue';
 import { computed, ref } from 'vue';
-import { PhCheck, PhFolders, PhMinus, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
+import { PhCaretDown, PhCheck, PhFolders, PhMinus, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
@@ -234,7 +244,17 @@ function restoreGlobalCategories() {
 .text-preview { margin: 4px 20px 20px; padding: 17px 18px; border-radius: 17px; background: var(--reader-preview-surface); color: var(--nav-on-surface); }
 .text-preview > span { display: block; margin-bottom: 8px; font-family: var(--ui-font-family); }
 .text-preview p { margin: 0; line-height: 1.65; }
-.text-preview p { font-optical-sizing: auto; }
+.text-preview p { font-optical-sizing: auto; font-family: var(--reader-font-family); font-size: calc(1rem * var(--font-size-multiplier, 1)); overflow-wrap: anywhere; }
+.text-group-heading { margin: 0; font: inherit; }
+.text-group-toggle { width: 100%; border: 0; background: transparent; text-align: start; cursor: pointer; font: inherit; }
+.text-group-toggle:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -4px; border-radius: 24px; }
+.text-group-copy { display: grid; min-width: 0; gap: 2px; }
+.text-group-copy > :first-child { color: var(--nav-on-surface); font-size: 1rem; font-weight: 780; }
+.text-group-copy > :last-child { color: var(--nav-muted); font-size: .78rem; line-height: 1.35; }
+.text-group-chevron { flex-shrink: 0; margin-inline-start: auto; color: var(--nav-muted); transition: transform .18s ease; }
+.text-group-chevron.is-expanded { transform: rotate(180deg); }
+.text-alignment-row { margin-inline: 20px; border-top: 1px solid var(--nav-border); }
+@media (prefers-reduced-motion: reduce) { .text-group-chevron { transition: none; } }
 .category-row { min-height: 64px; }
 .global-badge { padding: 3px 7px; border-radius: 99px; background: var(--nav-active); color: var(--chrome-accent) !important; font-size: .62rem !important; font-weight: 750; white-space: nowrap; }
 .categories-empty { margin: 8px 20px 0; padding: 14px 0; border-top: 1px solid var(--nav-border); color: var(--nav-muted); font-size: .8rem; text-align: center; }
@@ -253,6 +273,7 @@ function restoreGlobalCategories() {
   .theme-options button { flex: 1; }
   .setting-row--theme .theme-options button { flex-basis: calc(50% - 5px); }
   .font-picker { padding-inline: 16px; }
+  .text-alignment-row { margin-inline: 16px; }
   .text-size-control { align-items: flex-start; flex-direction: column; }
   .stepper { width: 100%; grid-template-columns: 42px 1fr 42px; }
   .stepper button { width: 42px; }
