@@ -1,7 +1,12 @@
 <template>
   <v-app-bar flat class="floating-ora-bar">
-    <v-app-bar-nav-icon class="ora-circle-btn" aria-label="Назад" @click="goBack"><PhArrowLeft :size="21" /></v-app-bar-nav-icon>
-    <LiturgyNavLink v-if="!isHour" :to="dateHomeRoute" class="ora-liturgy-link" />
+    <div v-if="!isHour" class="ora-nav-group" role="group" aria-label="Навігацыя літургіі">
+      <v-btn icon variant="text" class="ora-nav-segment ora-nav-segment--back" aria-label="Назад" @click="goBack">
+        <PhArrowLeft :size="21" />
+      </v-btn>
+      <LiturgyNavLink :to="dateHomeRoute" class="ora-nav-segment ora-nav-segment--liturgy" />
+    </div>
+    <v-app-bar-nav-icon v-else class="ora-circle-btn" aria-label="Назад" @click="goBack"><PhArrowLeft :size="21" /></v-app-bar-nav-icon>
     <Transition name="hour-capsule">
       <div v-if="showCapsule" class="hour-capsule-anchor">
         <v-menu location="bottom center">
@@ -142,11 +147,36 @@ function onEditClick() {
   flex-shrink: 0;
 }
 
-.ora-liturgy-link {
+/* Match the shared Menu + Літургія capsule used by the Readings screen. */
+.ora-nav-group {
+  display: flex;
+  height: 48px;
+  flex: 0 0 auto;
+  overflow: hidden;
   border: 1px solid var(--nav-border);
-  background: var(--nav-surface);
+  border-radius: 24px;
+  background: var(--overlay-surface);
+  color: var(--nav-on-surface);
   box-shadow: 0 2px 9px var(--nav-button-shadow);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(18px);
+}
+.ora-nav-segment {
+  height: 46px !important;
+  border-radius: 0 !important;
+  color: var(--nav-on-surface) !important;
+}
+.ora-nav-segment--back {
+  width: 48px !important;
+  min-width: 48px !important;
+}
+.ora-nav-segment--liturgy {
+  min-width: 112px !important;
+  padding-inline: 12px 16px !important;
+  border-left: 1px solid var(--nav-border) !important;
+  font-weight: 650;
+}
+.ora-nav-segment:active {
+  background: var(--nav-active) !important;
 }
 @media (max-width: 359px) {
   .floating-ora-bar :deep(.v-toolbar__content) {
@@ -159,6 +189,21 @@ function onEditClick() {
     height: 44px !important;
     min-width: 44px !important;
     flex-basis: 44px !important;
+  }
+  .ora-nav-group {
+    height: 44px;
+    border-radius: 22px;
+  }
+  .ora-nav-segment {
+    height: 42px !important;
+  }
+  .ora-nav-segment--back {
+    width: 44px !important;
+    min-width: 44px !important;
+  }
+  .ora-nav-segment--liturgy {
+    min-width: 104px !important;
+    padding-inline: 10px 13px !important;
   }
 }
 
