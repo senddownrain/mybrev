@@ -82,8 +82,15 @@ const SYNTHETIC_VARIANTS = Object.freeze({
   '05-07-our-lady-trakai-grodno.json': [
     {
       outputStem: '05-07-our-lady-trakai-grodno-memoria-ad-libitum',
-      overrides: { _rank: 'memoria-ad-libitum' },
-      reason: 'Дадатковы ранг з fixedCalendar; тэксты гродзенскага ўспаміну',
+      // Retired: the Grodno calendar keeps the Trakai memorial as an obligatory memorial on 5 July
+      // (owner decision), so there is one active document. The variant stays addressable, but never offered.
+      overrides: {
+        _rank: 'memoria-ad-libitum',
+        _obsolete: true,
+        _obsoleteReason: 'Obligatory memorial 05.07 (memoria); superseded by 05-07-our-lady-trakai-grodno',
+        _supersededBy: ['05-07-our-lady-trakai-grodno'],
+      },
+      reason: 'Састарэлы ранг: гродзенскае ўспамін 5 ліпеня — абавязковае (memoria); дакумент застаецца для сумяшчальнасці',
     },
   ],
   '16-07-our-lady-mount-carmel.json': [
@@ -410,6 +417,7 @@ function buildSparseOutput({ sourceFile, outputStem, source, kind, templates, re
     ...(legacyIds.some((id) => id !== outputStem) ? { _legacyIds: legacyIds.filter((id) => id !== outputStem) } : {}),
     ...(source._omitFirstVespers ? { _omitFirstVespers: true } : {}),
     ...(source._omitTeDeum ? { _omitTeDeum: true } : {}),
+    ...(source._obsolete ? { _obsolete: true, _obsoleteReason: source._obsoleteReason, _supersededBy: source._supersededBy } : {}),
     _contentStatus: {
       hours: ownTextFields.length ? 'proper' : (knownTemplates.length ? 'common-only' : 'day-fallback'),
     },

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="document-page proper-calendar-page">
+  <v-container class="document-page proper-calendar-page" lang="be">
     <main>
       <DocumentBack />
       <h1>{{ calendar.title }}</h1>
@@ -11,12 +11,12 @@
           <template v-for="(row, index) in page.rows" :key="index">
             <h2 v-if="row.kind === 'month'" :id="`month-${row.month}`" class="calendar-month">{{ row.text }}</h2>
             <template v-else-if="row.kind === 'intro'">
-              <p v-if="index === 0" class="calendar-intro"><DocumentRuns :runs="introRuns" /></p>
+              <p v-if="index === 0" class="calendar-intro document-prose"><DocumentRuns :runs="introRuns" /></p>
             </template>
-            <p v-else-if="row.kind === 'note'" class="calendar-note"><DocumentRuns :runs="row.runs" /></p>
+            <p v-else-if="row.kind === 'note'" class="calendar-note document-prose"><DocumentRuns :runs="row.runs" /></p>
             <div v-else class="calendar-row" :class="{ 'calendar-row--full': !row.date && !row.indent, 'calendar-row--empty': row.date && !row.runs.length }" :data-month="row.month" :data-date="row.date">
               <span v-if="row.date" class="calendar-date" :class="`doc-tone--${row.dateTone}`">{{ row.date }}.</span>
-              <span class="calendar-text"><DocumentRuns :runs="row.runs" /></span>
+              <span class="calendar-text" :class="{ 'document-prose': row.runs.reduce((length, run) => length + run.text.length, 0) >= 120 }"><DocumentRuns :runs="row.runs" /></span>
               <span v-if="row.rank.length" class="calendar-rank"><DocumentRuns :runs="row.rank" /></span>
             </div>
           </template>
@@ -49,8 +49,8 @@ const introRuns = calendar.pages.flatMap(page => page.rows).filter(row => row.ki
 .calendar-row--full:not(:has(.calendar-rank)) .calendar-text { grid-column: 1 / -1; }
 .calendar-row:not(:has(.calendar-rank)) .calendar-text { grid-column-end: -1; }
 @media (max-width: 600px) {
-  .calendar-row { grid-template-columns: 1.8rem minmax(0, 1fr); column-gap: 4px; }
-  .calendar-row--full .calendar-text { grid-column: 1 / -1; }
-  .calendar-rank { grid-column: 2; margin: 2px 0 4px; font-size: 1rem; }
+  .calendar-row { grid-template-columns: 1.6rem minmax(0, 1fr) 6rem; column-gap: 4px; }
+  .calendar-rank { font-size: .94rem; }
+  .calendar-row:has(.calendar-rank) .calendar-text { text-align: left; }
 }
 </style>

@@ -74,9 +74,6 @@ export function usesSundayCompletorium(day) {
  */
 export function shouldShowTeDeum(day) {
   if (!day || day._kind === 'office-for-dead') return false;
-  // The selected local Common formulary has festive Hours without changing
-  // the memorial's rank or the calendar's Office descriptor.
-  if (day._assembly?.festiveCommon) return Boolean(day.officeOfReadingsTeDeum);
   // The Ordo descriptor decides by the Office actually celebrated.
   if (typeof day._ordo?.teDeum === 'boolean') return day._ordo.teDeum;
 

@@ -158,7 +158,18 @@ export function selectFixedDocuments(option, allDocs, { diocese, claimedIds = ne
   const ref = option.daysRef || {};
   // After the data migration the sparse document and the per-template
   // copies it replaces can coexist: the sparse one is the celebration.
-  const preferSparse = (list) => (list.some(isSparseDayDocument) ? list.filter(isSparseDayDocument).slice(0, 1) : list);
+  // Several sparse documents of one celebration. A rank variant (`memoria` next to a retired
+  // `memoria-ad-libitum`) is decided by the calendar rank of the option; documents of the same rank
+  // are equivalent copies (one per diocese) and keep the stable id order, never the bundle order.
+  const canonicalSparse = (sparse) => {
+    const sameRank = sparse.filter((doc) => doc._rank === option.rank);
+    const pool = sameRank.length ? sameRank : sparse;
+    return [[...pool].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))[0]];
+  };
+  const preferSparse = (list) => {
+    const sparse = list.filter(isSparseDayDocument);
+    return sparse.length ? canonicalSparse(sparse) : list;
+  };
   const byIds = (ids) => preferSparse(docs.filter((doc) => ids?.includes(doc.id)));
   const own = byIds(ref.dayIds);
   if (own.length) return own;

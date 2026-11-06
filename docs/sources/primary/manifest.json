@@ -20,6 +20,19 @@
       "path": "docs/sources/primary/lh-decrees-2026-11-05.txt",
       "originalName": "https://lh.catholic.by/dekrety.php",
       "sha256": "8cf26b439ad61c7c6229e3d1e6d1c3e6dca67f73151ad01c115bce4d8321a048"
+    },
+    {
+      "path": "docs/sources/primary/lh-introduction-2026-11-06.txt",
+      "originalName": "https://lh.catholic.by/uvodziny.php",
+      "sha256": "c4745d67c64288531a3b99f0bd14805d46cc618b1a70ea67c89a9b552008eaf8",
+      "recordedAt": "2026-11-06",
+      "format": "Complete web-tool text extraction; article only; original spelling retained"
+    },
+    {
+      "path": "docs/sources/primary/introduction-permission-2026-11-06.md",
+      "originalName": "Подтверждение владельца проекта в рабочей переписке",
+      "sha256": "3f8709cc690cf38cd2105bd3ee0adc377100e46d279e3a15be7b9678d9c74067",
+      "recordedAt": "2026-11-06"
     }
   ]
 }

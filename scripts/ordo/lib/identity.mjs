@@ -40,6 +40,9 @@ export function loadFixedCatalog(root) {
       // Scaffolds have no texts: they are linked through the content index,
       // not matched by title like real documents.
       if (data._scaffold) return [];
+      // Retired variants (`_obsolete`) stay in the repository and in Firestore for compatibility
+      // but never take part in celebration matching: the active document is the one that supersedes them.
+      if (data._obsolete === true) return [];
       return [data._id || name.replace(/\.json$/, ''), ...(data._legacyIds || [])].map((dayId) => ({
         dayId,
         ddmm: data._date,
