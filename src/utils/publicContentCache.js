@@ -13,7 +13,11 @@ const readRefreshRevision = () => {
 
 export const isContentOnline = () => typeof navigator === 'undefined' || navigator.onLine !== false;
 export const publicContentKey = (type, ...parts) => JSON.stringify([type, ...parts]);
+// Recheck public content after 15 minutes on the next online visit.
+// No polling and no extra reads for repeated navigation within that window.
+export const PUBLIC_CONTENT_MAX_AGE_MS = 15 * 60 * 1000;
 export const publicContentCache = createContentCache({
+  maxAgeMs: PUBLIC_CONTENT_MAX_AGE_MS,
   storage: createContentCacheStorage(namespace),
   getRevision: () => `${CONTENT_REVISION}:${readRefreshRevision()}`,
   isOnline: isContentOnline,
