@@ -82,6 +82,13 @@
     </section>
 
     <section class="settings-section"><PsalmodySettings /></section>
+
+    <section class="settings-section" aria-labelledby="feedback-title">
+      <div class="setting-row">
+        <div class="setting-copy"><strong id="feedback-title">Зваротная сувязь</strong><span>Паведаміць пра памылку ў тэксце або даслаць прапанову</span></div>
+        <v-btn :to="{ name: 'Feedback' }" variant="tonal" class="text-none" data-test="settings-feedback">Напісаць</v-btn>
+      </div>
+    </section>
     <PriestAccessSettings />
 
     <section class="settings-section" aria-labelledby="categories-title">

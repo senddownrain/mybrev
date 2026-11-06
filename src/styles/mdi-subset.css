@@ -100,6 +100,7 @@
 .mdi-menu::before { content: "\F035C"; }
 .mdi-menu-down::before { content: "\F035D"; }
 .mdi-menu-right::before { content: "\F035F"; }
+.mdi-message-alert-outline::before { content: "\F0A04"; }
 .mdi-minus::before { content: "\F0374"; }
 .mdi-minus-box::before { content: "\F0375"; }
 .mdi-music-note::before { content: "\F0387"; }
