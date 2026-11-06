@@ -253,6 +253,6 @@ test('intercession formatting preserves a space between separately styled Belaru
   const formatted = parse(formatIntercessions(option.html));
   const response = formatted.querySelector('.intercessions__response');
   assert.ok(response, 'the response must remain present');
-  assert.match(response.text, /хто\\s+рупліва/u);
+  assert.match(response.text, /хто\s+рупліва/u);
   assert.doesNotMatch(response.text, /хторупліва/u);
 });
