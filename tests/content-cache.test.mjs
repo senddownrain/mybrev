@@ -183,3 +183,57 @@ test('completeness requires every dependency to be server-confirmed without pend
   missingMetadata.observe({});
   assert.equal(missingMetadata.complete, false);
 });
+
+test('TTL refreshes corrected liturgical content on the next online visit, not on every navigation', async () => {
+  const f = fixture();
+  let time = 1_000_000;
+  let online = true;
+  let reads = 0;
+  const create = () => createContentCache({
+    storage: f.storage,
+    getRevision: () => '1',
+    isOnline: () => online,
+    maxAgeMs: 15 * 60 * 1000,
+    now: () => time,
+  });
+  const cache = create();
+  assert.equal((await cache.read('day', async () => {
+    reads++;
+    return complete('хторупліва');
+  })).data, 'хторупліва');
+  time += 14 * 60 * 1000;
+  assert.equal((await create().read('day', () => assert.fail('cache should still be fresh'))).data, 'хторупліва');
+  time += 2 * 60 * 1000;
+  assert.equal((await create().read('day', async () => {
+    reads++;
+    return complete('хто рупліва');
+  })).data, 'хто рупліва');
+  assert.equal(f.records.get('day').data, 'хто рупліва');
+  assert.equal(reads, 2);
+  assert.equal((await create().read('day', () => assert.fail('repeat navigation should be cached'))).data, 'хто рупліва');
+  online = false;
+  time += 60 * 60 * 1000;
+  const offline = await create().read('day', () => assert.fail('offline must not fetch'));
+  assert.equal(offline.data, 'хто рупліва');
+  assert.equal(offline.complete, false);
+});
+
+test('legacy cache without timestamp refreshes online and survives offline or failed updates', async () => {
+  const f = fixture();
+  f.records.set('day', { complete: true, revision: '1', data: 'offline text' });
+  let online = false;
+  const create = () => createContentCache({
+    storage: f.storage,
+    getRevision: () => '1',
+    isOnline: () => online,
+    maxAgeMs: 30_000,
+    now: () => 120_000,
+  });
+  assert.equal((await create().read('day', () => assert.fail('offline fetch'))).data, 'offline text');
+  online = true;
+  const failed = await create().read('day', async () => { throw new Error('no network'); });
+  assert.equal(failed.data, 'offline text');
+  assert.equal(failed.complete, false);
+  assert.equal((await create().read('day', async () => complete('corrected'))).data, 'corrected');
+  assert.equal(f.records.get('day').fetchedAt, 120_000);
+});

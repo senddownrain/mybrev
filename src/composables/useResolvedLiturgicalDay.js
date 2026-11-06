@@ -85,6 +85,18 @@ export function useResolvedLiturgicalDay() {
       day.value = resolveDay(cached);
       if (!day.value) error.value = 'Літургічны дзень не знойдзены.';
       pending.value = false;
+      // Show the offline copy immediately, but apply a completed online refresh
+      // too. Otherwise the reader stays on old content even after the cache
+      // has fetched a corrected version in the background.
+      try {
+        const updated = await getLiturgicalContentForDate(date.toDate());
+        if (currentSequence !== sequence) return;
+        day.value = resolveDay(updated);
+        error.value = day.value ? '' : 'Літургічны дзень не знойдзены.';
+      } catch (refreshError) {
+        // The existing complete cached day remains usable offline.
+        logger.warn('[useResolvedLiturgicalDay] cached day refresh failed:', refreshError);
+      }
       return;
     }
 
