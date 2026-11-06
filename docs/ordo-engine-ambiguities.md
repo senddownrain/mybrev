@@ -85,7 +85,10 @@ Decisions taken in stage 3 that need liturgical confirmation or source validatio
     Pinsk calendar. Materialized as auto Year Override (case A); a diocesan solemnity is transferred
     only when its rank is confirmed by a calendar (`src/data/ordo/transfer-rank-evidence.js`),
     otherwise it is impeded without transfer (`transferBlocked: 'rank-not-source-confirmed'`).
-23. **Grodno proper from one year only** (2027): OL of Trakai as a feast on 10.07 (MyBrev: 5.07),
+23. **Grodno proper from one year only** (2027): OL of Trakai is printed as a feast on 10.07; the owner
+    decided (Nov 2026) that MyBrev keeps it on **5.07 as an obligatory memorial (`memoria`)** and that 10.07
+    is no longer a celebration of the diocese (`fixedCalendar.js`; the layer entry was removed; validation
+    expectations 2027-07-05 / 2027-07-10 record the difference to the printed 2027 calendar),
     St Adalbert 24.04 and St Stanislaus 8.05 as obligatory memorials, several blessed as optional
     memorials — modelled in `src/data/ordo/layers.js` from a single calendar. St John of Nepomuk
     (21.05.2027, transferred from 16.05) is not modelled (no permanent date in the evidence).

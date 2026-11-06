@@ -105,7 +105,7 @@ export const READING_SET_CELEBRATIONS = Object.freeze([
   },
   {
     key: 'our-lady-trakai', doc: '05-07-our-lady-trakai-grodno', flatSet: 'mass', reference: 'our-lady-lahishyn-trakai',
-    create: { _date: '05.07', _dayId: '05-07-our-lady-trakai-grodno', _place: 'grodno', _rank: 'festum', title: 'Найсв. Панны Марыі Тракельскай', year: null },
+    create: { _date: '05.07', _dayId: '05-07-our-lady-trakai-grodno', _place: 'grodno', _rank: 'memoria', title: 'Найсв. Панны Марыі Тракельскай', year: null },
   },
   {
     key: 'palm-sunday', doc: 'feast-palmsunday', flatSet: null,

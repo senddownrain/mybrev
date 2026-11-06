@@ -10,6 +10,11 @@
     "blessed-virgin-mary"
   ],
   "_defaultTemplate": "blessed-virgin-mary",
+  "_obsolete": true,
+  "_obsoleteReason": "Obligatory memorial 05.07 (memoria); superseded by 05-07-our-lady-trakai-grodno",
+  "_supersededBy": [
+    "05-07-our-lady-trakai-grodno"
+  ],
   "_contentStatus": {
     "hours": "proper"
   },

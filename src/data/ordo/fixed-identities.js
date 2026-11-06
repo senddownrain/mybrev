@@ -46,7 +46,7 @@ export const FIXED_IDENTITIES = Object.freeze({
   "05.04|-|Св. Вінцэнта Фэрэра, прэзбітэра": {"id":"sv-vincent-ferrer","dayIds":["05-04-sv-vincent-ferrer","05-04-sv-vincent-ferrer--pastors","05-04-sv-vincent-ferrer--educators"]},
   "05.06|-|Св. Баніфацыя, біскупа і мучаніка": {"id":"sv-boniface","dayIds":["05-06-sv-boniface","05-06-sv-boniface--martyr-one","05-06-sv-boniface--pastors"]},
   "05.07|-|Св. Антонія Марыі Дзаккарыя, прэзбітэра": {"id":"sv-anthony-mary-zaccaria","dayIds":["05-07-sv-anthony-mary-zaccaria","05-07-sv-anthony-mary-zaccaria--pastors","05-07-sv-anthony-mary-zaccaria--educators","05-07-sv-anthony-mary-zaccaria--religious"]},
-  "05.07|grodno|Найсв. Панны Марыі Тракельскай": {"id":"our-lady-trakai","dayIds":["05-07-our-lady-trakai-grodno-memoria-ad-libitum","05-07-our-lady-trakai-grodno"]},
+  "05.07|grodno|Найсв. Панны Марыі Тракельскай": {"id":"our-lady-trakai","dayIds":["05-07-our-lady-trakai-grodno"]},
   "05.08|-|Гадавіна пасвячэння рымскай базылікі Найсв. Панны Марыі": {"id":"dedication-st-mary-major","dayIds":["05-08-dedication-st-mary-major"]},
   "05.08|grodno|Найсв. Панны Марыі Кангрэгацкай (Студэнцкай)": {"id":"our-lady-congregational","dayIds":["05-08-our-lady-congregational-grodno"]},
   "06.01|-|Аб’яўленне Пана": {"id":"epiphany-lord","dayIds":["06-01-epiphany-lord"]},
