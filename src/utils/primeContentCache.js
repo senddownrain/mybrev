@@ -11,6 +11,10 @@ export async function primeContentCache(location = window.location) {
   const date = parsed.isValid() ? parsed : moment();
   const key = date.format('YYYY-MM-DD');
   const routeDayId = decodeURIComponent(url.pathname.match(/\/ora\/([^/]+)/)?.[1] || '');
+  // The cached calendar publication (newer revision, manual year overrides)
+  // must be active before anything is resolved for the first screen.
+  await publicContentCache.prime([CALENDAR_CACHE_KEY, YEAR_OVERRIDES_CACHE_KEY]);
+  applyCachedCalendar();
   const keys = [
     contentKey(key), contentKey(date.clone().add(1, 'day').format('YYYY-MM-DD')),
     readingsKey(key), readingsKey(key, { includeAlternatives: true }),
@@ -22,9 +26,5 @@ export async function primeContentCache(location = window.location) {
   if (/completorium|invit/.test(url.pathname)) {
     keys.push(publicContentKey('static', 'completoriums'), publicContentKey('static', 'invitatoriums'));
   }
-  // The cached calendar publication (newer revision, manual year overrides)
-  // must be active before anything is resolved for the first screen.
-  await publicContentCache.prime([CALENDAR_CACHE_KEY, YEAR_OVERRIDES_CACHE_KEY]);
-  applyCachedCalendar();
   await publicContentCache.prime([...new Set(keys)]);
 }

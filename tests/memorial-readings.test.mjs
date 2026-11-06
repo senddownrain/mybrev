@@ -32,9 +32,9 @@ test('the rule: weekday by default; proper readings only for the closed, source-
   assert.equal(memorialReadingsRule('sv-martha', 'memorial').mode, 'proper-prescribed');
   assert.deepEqual(memorialReadingsRule('sv-martha', 'memorial').parts, ['gospel']);
   assert.equal(memorialReadingsRule('sv-martha', 'feast'), null, 'only memorials have the rule');
-  assert.equal(Object.keys(PRESCRIBED_PROPER_MEMORIALS).length, 12);
-  // a diocesan prescription applies only there: Budslav is a memorial with proper readings in Pinsk only
-  assert.equal(memorialReadingsRule('our-lady-budslav', 'memorial', 'pinsk').mode, 'proper-prescribed');
+  assert.equal(Object.keys(PRESCRIBED_PROPER_MEMORIALS).length, 11);
+  // Consolidated 06.11.2026: Budslav is optional in Pinsk/Grodno; the annual prescription is not a permanent rule.
+  assert.equal(memorialReadingsRule('our-lady-budslav', 'optional-memorial', 'pinsk').mode, 'weekday-default');
   assert.equal(memorialReadingsRule('our-lady-budslav', 'optional-memorial', 'grodno').mode, 'weekday-default');
 });
 

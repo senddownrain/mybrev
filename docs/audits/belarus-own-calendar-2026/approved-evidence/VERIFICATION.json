@@ -1,0 +1,58 @@
+{
+  "test-all": {
+    "log": "logs/test-all.log",
+    "tests": 1130,
+    "pass": 1119,
+    "fail": 0,
+    "skipped": 11,
+    "status": "PASS"
+  },
+  "test-ordo": {
+    "log": "logs/test-ordo.log",
+    "tests": 217,
+    "pass": 217,
+    "fail": 0,
+    "skipped": 0,
+    "status": "PASS"
+  },
+  "ordo-check": {
+    "log": "logs/ordo-check.log",
+    "status": "PASS",
+    "rawAnnualSourcesDeterminism": "SKIPPED: no raw sources"
+  },
+  "lint": {
+    "log": "logs/lint.log",
+    "status": "PASS"
+  },
+  "build": {
+    "log": "logs/build.log",
+    "status": "PASS"
+  },
+  "document-check": {
+    "status": "PASS"
+  },
+  "source-ui": {
+    "log": "logs/source-ui.log",
+    "status": "PASS",
+    "cases": 12
+  },
+  "approved-ui": {
+    "log": "logs/approved-ui.log",
+    "status": "PASS",
+    "cases": 12
+  },
+  "mounted-hours": {
+    "log": "logs/mounted-hours.log",
+    "status": "PASS",
+    "scope": "real mounted view, local content fixtures; production network blocked"
+  },
+  "sweep": {
+    "log": "logs/sweep.log",
+    "status": "PASS"
+  },
+  "uiLimitations": [
+    "Local Chrome/Playwright, 320/390/768/1440, light/dark/marian.",
+    "Mounted Hours test uses local content fixtures; external requests blocked.",
+    "No claim that production Hosting or installed user PWA/Flutter was updated."
+  ]
+}

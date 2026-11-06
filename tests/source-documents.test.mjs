@@ -41,7 +41,7 @@ test('static calendar has the source title, all 13 sheets and 365 printed date r
   assert.equal(calendar.title, 'Уласны каляндар дыяцэзій на Беларусі');
   assert.equal(calendar.pages.length, 13);
   assert.equal(calendar.months.length, 12);
-  assert.equal(rows.length, 495);
+  assert.equal(rows.length, 493);
   assert.equal(rows.filter(row => row.date).length, 365);
   for (let month = 1; month <= 12; month++) {
     const dates = rows.filter(row => row.month === month && row.date).map(row => row.date);
@@ -66,7 +66,7 @@ test('protocols, printed styles, nested dioceses and movable celebrations surviv
   const thomas = rows.find(row => row.month === 7 && row.date === 3);
   assert.equal(text(thomas), 'СВ. ТАМАША, АПОСТАЛА');
   assert.ok(thomas.runs.some(run => run.small));
-  assert.ok(rows.find(row => row.month === 11 && text(row).startsWith('(Маці Божай') && row.runs.some(run => run.italic)).indent, 'PDF indentation comes from visible glyph position, not leading whitespace bbox');
+  assert.ok(rows.find(row => row.month === 11 && text(row).startsWith('(Маці Божай') && !row.runs.some(run => run.italic)).indent, 'PDF indentation comes from visible glyph position, not leading whitespace bbox');
   const december = calendar.pages[12].rows.filter(row => row.month === 12).map(text).join('\n');
   assert.ok(december.includes('Св. Яна Дамаскіна'));
   assert.ok(december.includes('ГАДАВІНА ПАСВЯЧЭННЯ КАТЭДРАЛЬНАГА КАСЦЁЛА'));
@@ -142,4 +142,15 @@ test('registry and document metadata agree strictly for every decree', () => {
     assert.equal(registry[index].documentPath, `/documents/liturgy-hours-decrees#${doc.id}`);
     if (registry[index].sourceDocument) assert.equal(registry[index].sourceDocument, doc.sourceFile);
   }
+});
+
+test('06.11.2026 source page12 includes Vitebsk in the obligatory memorial group', () => {
+  assert.equal(calendar.sourceSha256, 'a55dc34c89317bd0a4b683ea84b46941213aa2b981d0a9de1fe3ebeb71dc9696');
+  const november = calendar.pages[11].rows;
+  assert.ok(november.some(row => text(row).includes('Пінскай і Віцебскай дыяцэзіі:')));
+  const start = november.findIndex(row => row.date === 16);
+  const end = november.findIndex(row => row.date === 17);
+  const section = november.slice(start, end);
+  assert.equal(section.filter(row => text(row).startsWith('У Віцебскай дыяцэзіі:')).length, 0);
+  assert.ok(section.some(row => row.rank?.some(run => run.text.includes('Успамін'))));
 });

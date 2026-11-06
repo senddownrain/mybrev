@@ -7,6 +7,7 @@
  * (readings lookup), so both always work on the same liturgical identity.
  */
 import { resolveLiturgicalDate } from './index.js';
+import { getDefinitionsEpoch } from './definitions.js';
 import { toIsoDate } from './dates.js';
 import { normalizeDioceseId } from './layers.js';
 import { readingTitleSimilarity } from '../parsedReadingsIdentity.js';
@@ -22,7 +23,7 @@ const RUNTIME_CACHE_LIMIT = 120;
 export function resolveRuntimeDay(date, { diocese = DEFAULT_DIOCESE } = {}) {
   const dioceseId = normalizeDioceseId(diocese) || DEFAULT_DIOCESE;
   const iso = toIsoDate(typeof date === 'string' ? date.slice(0, 10) : date);
-  const key = `${iso}|${dioceseId}`;
+  const key = `${getDefinitionsEpoch()}|${iso}|${dioceseId}`;
   if (runtimeCache.has(key)) return runtimeCache.get(key);
   const day = resolveLiturgicalDate(iso, { country: 'BY', diocese: dioceseId });
   runtimeCache.set(key, day);
@@ -172,7 +173,15 @@ export function selectFixedDocuments(option, allDocs, { diocese, claimedIds = ne
   };
   const byIds = (ids) => preferSparse(docs.filter((doc) => ids?.includes(doc.id)));
   const own = byIds(ref.dayIds);
-  if (own.length) return own;
+  if (own.length) {
+    // Vitebsk Ordo 2027: Braslau uses the Office of the Nativity. Keep its own
+    // identity/prayer while inheriting verified existing texts, never translating them.
+    if (option.id === 'our-lady-braslau') {
+      const inherited = byIds((option.fallbackDaysRefs || []).flatMap((item) => item.dayIds || []))[0];
+      if (inherited) return own.map((doc) => ({ ...inherited, ...doc, _fieldRules: { ...inherited._fieldRules, ...doc._fieldRules } }));
+    }
+    return own;
+  }
   for (const fallback of option.fallbackDaysRefs || []) {
     const found = byIds(fallback.dayIds);
     if (found.length) return found;
@@ -281,7 +290,7 @@ export function selectReadingDocuments(entry, option, docs) {
     const linked = sameDate.filter((doc) => [doc._dayId, ...(doc._dayIds || [])].some((id) => ids.includes(id)));
     if (linked.length) return linked;
     const scored = sameDate
-      .map((doc) => ({ doc, score: readingTitleSimilarity(doc.title || '', option.title) }))
+      .map((doc) => ({ doc, score: readingTitleSimilarity(doc.title || '', option.readingsRef?.celebrationId === 'nativity-blessed-virgin-mary' ? 'Нараджэнне Найсв. Панны Марыі' : option.title) }))
       .sort((a, b) => b.score - a.score);
     if (scored.length && scored[0].score >= 0.4) {
       const best = scored[0].score;

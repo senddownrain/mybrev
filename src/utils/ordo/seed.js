@@ -43,7 +43,9 @@ export function buildBaseLayers(country = 'BY') {
   const movable = MOVABLE_CELEBRATIONS
     .filter((item) => !item.countryRule || countryRules[item.countryRule])
     .map(movableCelebration);
-  const all = [...fixed, ...movable];
+  // Append the new universal identity to keep existing publication order stable.
+  const all = [...fixed.filter((item) => item.id !== 'sv-john-henry-newman'), ...movable,
+    ...fixed.filter((item) => item.id === 'sv-john-henry-newman')];
   const layers = [{
     id: 'universal', level: 'universal', add: all.filter((item) => item.layer === 'universal'), modify: [], rules: [], notes: [],
   }];
@@ -224,7 +226,7 @@ export function buildCalendarDefinitionsSeed({ revision = 1 } = {}) {
   const yearOverrides = YEAR_OVERRIDES.map((override) => withoutUndefined({
     id: `${override.year}-${override.scope === 'diocese' ? normalizeDioceseId(override.dioceseId) : override.scope}-${override.targetCelebrationId}`,
     ...override,
-    enabled: true,
+    enabled: override.enabled !== false,
   }));
 
   return {

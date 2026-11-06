@@ -67,7 +67,7 @@ test('feast reading reference dates keep exact diocesan identities and leave Ord
     }
   }
   assert.equal(celebrationViewDate('sv-nicholas', 2027, { diocese: 'minsk-mohilev' }), '2027-12-06');
-  assert.notEqual(celebrationViewDate('sv-nicholas', 2027, { diocese: 'grodno' }), '2027-12-06');
+  assert.equal(celebrationViewDate('sv-nicholas', 2027, { diocese: 'grodno' }), '2027-12-06');
   assert.equal(celebrationViewDate('corpus-christi', 2026, { diocese: 'minsk-mohilev' }), '2026-06-04');
   assert.equal(celebrationViewDate('not-a-celebration', 2026, { diocese: 'minsk-mohilev' }), '');
   const canonical = resolveOrdoDay('2026-12-06', { diocese: 'minsk-mohilev' });
@@ -100,6 +100,7 @@ test('feast search includes every effective definition even when Ordo suppresses
   const rows = yearCelebrations(2026, ORDO_FILTER_DIOCESES);
   for (const diocese of ORDO_FILTER_DIOCESES) {
     for (const definition of buildCalendarLayers({ country: 'BY', diocese }).celebrations.values()) {
+      if (definition.suppressedBy) continue;
       assert.ok(rows.some((row) => row.optionId === definition.id && row.dioceses.includes(diocese)), `${diocese}: ${definition.id}`);
     }
   }
@@ -117,7 +118,7 @@ test('feast search includes every effective definition even when Ordo suppresses
     const row = yearCelebrations(2027, [diocese]).find((item) => /Мікалая, біскупа/.test(item.title));
     const day = resolveOrdoDay('2027-12-06', { diocese });
     assert.equal(row.hoursAllowed, day.officeOptions.some((item) => item.id === row.optionId), diocese);
-    assert.equal(row.hoursAllowed, diocese === 'minsk-mohilev');
+    assert.equal(row.hoursAllowed, true);
     assert.equal(row.readingsAllowed, [day.primary, ...day.alternatives].some((item) => item.id === row.optionId), diocese);
     assert.equal(row.color, 'albus');
   }
@@ -163,11 +164,8 @@ test('feast search preserves text/color/title/date/rank variants and local suppr
       { id: 'picker-suppressed', celebrationId: id, dioceseId: 'grodno', action: 'suppress' },
     ] });
     const rows = rowsFor();
-    assert.equal(rows.length, 2);
-    const suppressed = rows.find((row) => row.dioceses.includes('grodno'));
-    assert.deepEqual(suppressed.dioceses, ['grodno']);
-    assert.equal(suppressed.hoursAllowed || suppressed.readingsAllowed, false);
-    assert.match(suppressed.statusLabel, /не адзначаецца ў гэтай дыяцэзіі/);
+    assert.equal(rows.length, 1);
+    assert.ok(!rows.some((row) => row.dioceses.includes('grodno')));
     assert.ok(rows.find((row) => row.dioceses.includes('minsk-mohilev')).hoursAllowed);
   } finally {
     setCalendarDefinitions(null);
@@ -518,8 +516,8 @@ test('month union: different ranks are split by diocese', () => {
   assert.deepEqual(pair.rows[0].badges, []);
   // A celebration only one diocese has is a badged row next to the shared one.
   const grodno = buildMonthUnion(2027, 6, ['minsk-mohilev', 'grodno']).find((item) => item.date === '2027-06-08');
-  const jadwiga = grodno.rows.find((row) => row.id === 'sv-jadwiga-queen');
-  assert.deepEqual(jadwiga.badges, ['Гродна']);
+  assert.ok(!grodno.rows.some((row) => row.id === 'sv-jadwiga-queen'));
+  assert.equal(grodno.rows.length, 1);
 });
 
 test('day union: shared data once, differences with diocesan badges', () => {

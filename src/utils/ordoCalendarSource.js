@@ -9,6 +9,7 @@
  * There is always exactly one active calendar — never a merge of two.
  */
 export function selectCalendarSource({ bundled, cached }) {
+  if (Number(cached?.schemaVersion ?? 1) !== Number(bundled?.schemaVersion ?? 1)) return 'bundled';
   if (!cached || !Array.isArray(cached.celebrations) || !cached.celebrations.length) return 'bundled';
   return Number(cached.revision || 0) > Number(bundled?.revision || 0) ? 'firestore' : 'bundled';
 }

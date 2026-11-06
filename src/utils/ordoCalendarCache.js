@@ -13,6 +13,10 @@ export const NOTES_CACHE_KEY = publicContentKey('ordo-notes');
 /** Definitions the cache asks for (partial), or null when it has nothing newer. */
 export function definitionsFromCache({ calendar, overrides, bundled }) {
   const source = selectCalendarSource({ bundled, cached: calendar });
+  const disabled = bundled.yearOverrides.filter((item) => item.enabled === false);
+  const yearItems = Array.isArray(overrides?.items) ? overrides.items : null;
+  const years = yearItems && Number(calendar?.revision || 0) <= bundled.revision
+    ? [...yearItems.filter((item) => !disabled.some((cancelled) => cancelled.id === item.id)), ...disabled] : yearItems;
   const next = {
     ...(source === 'firestore' ? {
       schemaVersion: calendar.schemaVersion,
@@ -21,7 +25,7 @@ export function definitionsFromCache({ calendar, overrides, bundled }) {
       celebrations: calendar.celebrations,
       dioceseOverrides: calendar.dioceseOverrides || [],
     } : {}),
-    ...(Array.isArray(overrides?.items) ? { yearOverrides: overrides.items } : {}),
+    ...(years ? { yearOverrides: years } : {}),
   };
   return Object.keys(next).length ? next : null;
 }
@@ -34,8 +38,8 @@ export function applyCachedCalendar({ markContentStale = false } = {}) {
     bundled: getBundledCalendarDefinitions(),
   });
   if (!next || sameDefinitions(getCalendarDefinitions(), next)) return false;
-  setCalendarDefinitions(next);
-  // Saved Hours / Readings were resolved with the previous calendar.
+  // Invalidate before listeners rerender the already open day.
   if (markContentStale) requestContentRefresh();
+  setCalendarDefinitions(next);
   return true;
 }

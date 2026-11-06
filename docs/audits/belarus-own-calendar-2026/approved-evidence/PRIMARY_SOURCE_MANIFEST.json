@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Liturg_kal-r_2027.docx",
+    "sha256": "581a941f99c143acded2d4fb2829bafbdd7460c4d95439c47ffbb4fb261bfe87",
+    "role": "supporting-primary-document"
+  },
+  {
+    "name": "Кalandar_лістапад.doc",
+    "sha256": "cf626857af3dd7a865de805765130d07ddc6a98f4b0a765f1de580b58df389df",
+    "role": "supporting-primary-document"
+  },
+  {
+    "name": "Уласны_каляндар_Віцебскай_дыяцэзіі_2027_г.docx",
+    "sha256": "843185ec2dbaa3d377d98d3922c286eefcf010a31561a132783ff185d321b482",
+    "role": "supporting-primary-document"
+  },
+  {
+    "name": "04_Кalandar_2026_aktualny АГУЛЬНЫ.pdf",
+    "sha256": "681a59f92395a299510da4b4afc68d79cf0017518c0abb1351828560796017f3",
+    "role": "previous-edition-comparison-only"
+  },
+  {
+    "name": "Кalandar_06.11.26_aktualny.pdf",
+    "sha256": "a55dc34c89317bd0a4b683ea84b46941213aa2b981d0a9de1fe3ebeb71dc9696",
+    "role": "current-consolidated-calendar"
+  }
+]

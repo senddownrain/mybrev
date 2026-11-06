@@ -103,7 +103,8 @@ export function buildYearPlan(year, context = {}) {
   let order = 0;
   celebrations.forEach((celebration) => {
     const date = placeCelebration(celebration, year, anchors);
-    if (!date) return;
+    if (!date || (celebration.validFrom && date < celebration.validFrom)
+      || (celebration.validUntil && date > celebration.validUntil)) return;
     const placement = { celebration, date, originalDate: date, order: order++ };
     if (celebration.suppressedBy) removed.push({ ...placement, reason: 'suppressed-by-layer' });
     else placements.push(placement);

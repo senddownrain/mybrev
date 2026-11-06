@@ -298,16 +298,14 @@ test('24 same date, different dioceses', () => {
   assert.equal(vitebsk.primary.officeKind, 'memorial');
   assert.ok(resolve('2026-11-16', { country: 'universal' }).primary.kind === 'temporal');
 
-  // Pentecost 16 May 2027 impedes the Pinsk patron (proper solemnity). In
-  // Pinsk Mary, Mother of the Church is a feast (row 8, Pinsk 2026), which
-  // impedes Monday too, so the solemnity moves to Tuesday 18 May.
-  const pinsk = resolve('2027-05-18', { ...BY, diocese: 'pinsk' });
+  // The approved Mother Church memorial does not impede a transferred solemnity.
+  const pinsk = resolve('2027-05-17', { ...BY, diocese: 'pinsk' });
   const pinskMonday = resolve('2027-05-17', { ...BY, diocese: 'pinsk' });
   const minsk2027 = resolve('2027-05-17', { ...BY, diocese: 'minsk' });
   assert.equal(pinsk.primary.id, 'sv-andrei-bobola');
   assert.equal(pinsk.primary.transferredFrom, '2027-05-16');
-  assert.equal(pinskMonday.primary.id, 'mary-mother-church');
-  assert.equal(pinskMonday.primary.officeKind, 'feast');
+  assert.equal(pinskMonday.primary.id, 'sv-andrei-bobola');
+  assert.equal(pinskMonday.primary.officeKind, 'solemnity');
   assert.equal(minsk2027.primary.id, 'mary-mother-church');
   assert.equal(minsk2027.primary.officeKind, 'memorial');
 });

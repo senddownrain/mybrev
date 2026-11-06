@@ -128,7 +128,11 @@ export function resolveTransfers(byDate, seasonOf, basePrecedenceOf, { overrides
       let target = computed;
       if (override) {
         usedOverrides.add(override);
-        if (ISO.test(String(override.effectiveDate || ''))) target = override.effectiveDate;
+        // An untouched auto record is a materialization of the general rule,
+        // never a manual decision that can override a newly corrected rule.
+        const staleAuto = override.source === 'auto-transfer' && override.status !== 'confirmed'
+          && override.effectiveDate === override.computedDate && override.computedDate !== computed;
+        if (!staleAuto && ISO.test(String(override.effectiveDate || ''))) target = override.effectiveDate;
       }
       if (!target) return;
       if (target === iso) {

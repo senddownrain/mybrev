@@ -190,8 +190,8 @@ export const MOVABLE_CELEBRATIONS = Object.freeze([
     id: 'mary-mother-church', ...feast('maryMotherChurch'), title: 'Найсв. Панны Марыі, Маці Касцёла',
     rank: LITURGICAL_RANK.MEMORIAL, category: 'mary', anchor: 'maryMotherChurch', color: 'albus',
     templates: ['blessed-virgin-mary'], defaultTemplate: 'blessed-virgin-mary',
-    // With another obligatory memorial both are legal choices, Marian first (§11.3).
-    rules: { concurrentObligatoryMemorials: 'legal-choice' },
+    // CDW notification 24.03.2018: this memorial prevails over saint memorials.
+    rules: { concurrentObligatoryMemorials: 'mother-church-prevails' },
   },
   {
     id: 'trinity', ...feast('holyTrinity'), title: 'Найсвяцейшая Тройца',
@@ -206,10 +206,10 @@ export const MOVABLE_CELEBRATIONS = Object.freeze([
     rank: LITURGICAL_RANK.SOLEMNITY, category: 'lord', anchor: 'sacredHeart', color: 'albus',
   },
   {
-    // With another obligatory memorial: exactly two memorial choices, no weekday (§11.2).
+    // CDW 2671/98/L, 08.12.1998: both memorials become optional for this occurrence.
     id: 'immaculate-heart', ...feast('immaculateHeartOfMary'), title: 'Беззаганнае Сэрца Найсв. Панны Марыі',
     rank: LITURGICAL_RANK.MEMORIAL, category: 'mary', anchor: 'immaculateHeart', color: 'albus',
-    rules: { concurrentObligatoryMemorials: 'legal-choice' },
+    rules: { concurrentObligatoryMemorials: 'both-optional' },
   },
   {
     id: 'christ-the-high-priest', ...feast('christTheHighPriest'),

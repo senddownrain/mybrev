@@ -42,19 +42,21 @@ test('All Souls on a Sunday: Hours of the Sunday, Mass of All Souls with 3 readi
   assert.equal(weekday.readingResolution.primary.variants.length, 3);
 });
 
-test('Immaculate Heart + obligatory memorial: exactly two memorial choices, NO weekday (13.06.2026)', () => {
+test('Immaculate Heart + obligatory memorial: both optional, weekday primary (13.06.2026)', () => {
   ['minsk-mohilev', 'vitebsk', 'pinsk'].forEach((diocese) => {
     const day = resolveLiturgicalDate('2026-06-13', BY(diocese));
-    assert.deepEqual(optionIds(day), ['immaculate-heart', 'sv-anthony-padua'], diocese);
-    assert.ok([day.primary, ...day.alternatives].every((item) => item.rankKind === 'memorial'));
-    assert.ok(!day.officeOptions.some((item) => item.kind === 'temporal'));
+    assert.equal(day.primary.kind, 'temporal');
+    assert.deepEqual(day.alternatives.map((item) => item.id), ['immaculate-heart', 'sv-anthony-padua'], diocese);
+    assert.ok(day.alternatives.every((item) => item.rankKind === 'optional-memorial'));
+    assert.equal(day.officeOptions[0].kind, 'temporal');
   });
-  assert.deepEqual(optionIds(resolveLiturgicalDate('2027-06-05', BY('grodno'))), ['immaculate-heart', 'sv-boniface']);
+  assert.deepEqual(resolveLiturgicalDate('2027-06-05', BY('grodno')).alternatives.map((item) => item.id), ['immaculate-heart', 'sv-boniface']);
 });
 
-test('Mary, Mother of the Church + obligatory memorial: both offered, Marian first, no weekday (§11.3)', () => {
+test('Mary, Mother of the Church + obligatory memorial: prevails over the saint memorial (CDW 24.03.2018)', () => {
   const day = resolveLiturgicalDate('2028-06-05', BY());
-  assert.deepEqual(optionIds(day), ['mary-mother-church', 'sv-boniface']);
+  assert.deepEqual(optionIds(day), ['mary-mother-church']);
+  assert.ok(day.suppressed.some((item) => item.id === 'sv-boniface'));
   assert.ok(!optionIds(day).some((id) => id.startsWith('temporal:')));
   // Also against a proper (row 11) obligatory memorial.
   const layer = {
@@ -64,10 +66,10 @@ test('Mary, Mother of the Church + obligatory memorial: both offered, Marian fir
     }],
   };
   const proper = resolveLiturgicalDate('2026-05-25', BY('minsk-mohilev', { dioceseLayer: layer }));
-  assert.deepEqual(optionIds(proper), ['mary-mother-church', 'test-proper-memorial']);
+  assert.deepEqual(optionIds(proper), ['mary-mother-church']);
 });
 
-test('Christ the High Priest + another feast: both kept, provisional (§11.4)', () => {
+test('Christ the High Priest + another feast: general Table precedence, one feast', () => {
   const layer = {
     add: [{
       id: 'test-feast', title: 'Тэставае свята', rank: 'festum', category: 'saint', layer: 'diocese',
@@ -75,10 +77,9 @@ test('Christ the High Priest + another feast: both kept, provisional (§11.4)', 
     }],
   };
   const day = resolveLiturgicalDate('2026-05-28', BY('minsk-mohilev', { dioceseLayer: layer }));
-  assert.deepEqual(optionIds(day).sort(), ['christ-the-high-priest', 'test-feast']);
-  assert.ok(day.alternatives.every((item) => item.provisional));
-  assert.ok(!day.suppressed.some((item) => item.id === 'christ-the-high-priest' || item.id === 'test-feast'));
-  assert.ok(day.appliedRules.some((rule) => rule.rule === 'christ-high-priest-collision-both-options' && rule.status === 'provisional'));
+  assert.deepEqual(optionIds(day), ['christ-the-high-priest']);
+  assert.ok(day.suppressed.some((item) => item.id === 'test-feast'));
+  assert.equal(day.alternatives.length, 0);
 });
 
 // ---------------------------------------------------------------------------
@@ -115,7 +116,7 @@ test('diocesan patron transfers only with a source-confirmed solemnity rank (cas
   assert.equal(bobola.scope, 'diocese');
   assert.equal(bobola.dioceseId, 'pinsk');
   assert.equal(bobola.transferCase, 'diocesan-solemnity');
-  assert.equal(bobola.computedDate, '2027-05-18');
+  assert.equal(bobola.computedDate, '2027-05-17');
   assert.deepEqual(bobola.rankEvidence, ['pinsk:2026-05-16:c0']);
   // An unconfirmed diocesan solemnity is impeded without transfer.
   const layer = {
@@ -199,7 +200,7 @@ test('materialized auto records do not change the generated year', () => {
     plain.forEach((day, index) => assert.deepEqual(optionIds(withRecords[index]), optionIds(day), `${diocese} ${day.date}`));
   });
   const rows = automaticTransfers(2027, { diocese: 'pinsk' });
-  assert.ok(rows.some((item) => item.celebrationId === 'sv-andrei-bobola' && item.computedDate === '2027-05-18'));
+  assert.ok(rows.some((item) => item.celebrationId === 'sv-andrei-bobola' && item.computedDate === '2027-05-17'));
   assert.ok(computedTransfers(2027, { diocese: 'pinsk' }).every((item) => item.transferCase));
 });
 

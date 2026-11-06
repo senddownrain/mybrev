@@ -68,13 +68,13 @@ test('Saturday memorial of the BVM is offered only without an obligatory memoria
   assert.ok(!resolveLiturgicalDate('2026-03-14').alternatives.some((item) => item.id === 'saturday-blessed-virgin-mary'));
 });
 
-test('Immaculate Heart + another obligatory memorial: exactly two memorial choices, no weekday (§11.2)', () => {
+test('Immaculate Heart + another obligatory memorial: two optional memorials and weekday primary (CDW 2671/98/L)', () => {
   const day = resolveLiturgicalDate('2026-06-13');
   const options = [day.primary, ...day.alternatives];
-  assert.deepEqual(options.map((item) => item.id), ['immaculate-heart', 'sv-anthony-padua']);
-  assert.ok(options.every((item) => item.rankKind === 'memorial' && item.officeKind === 'memorial'));
-  assert.ok(options.every((item) => item.kind !== 'temporal'));
-  assert.equal(day.suppressed.find((item) => item.kind === 'temporal').reason, 'weekday-under-memorial');
+  assert.equal(day.primary.kind, 'temporal');
+  assert.deepEqual(day.alternatives.map((item) => item.id), ['immaculate-heart', 'sv-anthony-padua']);
+  assert.ok(day.alternatives.every((item) => item.rankKind === 'optional-memorial' && item.officeKind === 'optional-memorial'));
+  assert.equal(options.length, 3);
 });
 
 test('Advent 17–24 and Christmas keep their date-based documents', () => {

@@ -201,9 +201,9 @@ test('same date in two dioceses gives different Offices and readings plans', () 
   assert.ok(vitebsk.dayOptions[0].templates.every((template) => [template.day._place].flat().includes('vitebsk')));
   const pinsk = content('2026-08-22', 'pinsk');
   const minsk = content('2026-08-22', 'minsk-mohilev');
-  assert.equal(pinsk.ordo.primary.id, 'our-lady-lahishyn');
+  assert.equal(pinsk.ordo.primary.id, 'our-lady-queen');
   assert.equal(minsk.ordo.primary.id, 'our-lady-queen');
-  assert.notEqual(planReadings(pinsk.resolved).primaryOptionId, planReadings(minsk.resolved).primaryOptionId);
+  assert.equal(planReadings(pinsk.resolved).primaryOptionId, planReadings(minsk.resolved).primaryOptionId);
 });
 
 test('readings follow the engine lookup order (no independent priority)', () => {

@@ -216,7 +216,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, shallowRef } from 'vue';
+import { computed, onMounted, onUnmounted, ref, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
 import {
   PhBookOpenText, PhCalendarBlank, PhCalendarDots, PhCaretDown, PhCaretRight,
@@ -276,7 +276,8 @@ async function loadNotes() {
     notesState.value = 'error';
   }
 }
-onMounted(loadNotes);
+onMounted(() => { loadNotes(); window.addEventListener('ordo-publication-checked', loadNotes); });
+onUnmounted(() => window.removeEventListener('ordo-publication-checked', loadNotes));
 
 const day = computed(() => resolveOrdoDay(iso.value, { ...engineOptions.value, notes: notes.value }));
 const groupedNotes = computed(() => groupOrdoNotes(day.value.ordoNotes, { date: iso.value, diocese: contextDiocese.value }));

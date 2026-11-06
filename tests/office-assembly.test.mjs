@@ -669,12 +669,10 @@ test('a celebration without a days document stays visible', () => {
     assert.equal(option.day.laudesPs1, 'day:laudesPs1');
     assert.equal(migrated ? unavailable.length : unavailable.some((item) => item.id === 'sv-john-xxiii'), migrated ? 0 : true);
   }
-  // Pinsk's solemnity without texts is the primary Office, from its Common.
+  // The excluded local solemnity must not survive as an Office card.
   const pinsk = content('2028-08-22', { diocese: 'pinsk' });
-  const patron = pinsk.dayOptions[0];
-  assert.equal(patron.ordo.optionId, 'our-lady-lahishyn');
-  assert.equal(patron.day._currentVersion, 'blessed-virgin-mary');
-  assert.equal(patron.day.laudesHymn, TEMPLATES.get('blessed-virgin-mary')._mainSection.laudesHymn);
+  assert.equal(pinsk.dayOptions[0].ordo.optionId, 'our-lady-queen');
+  assert.ok(!pinsk.dayOptions.some((item) => item.ordo.optionId === 'our-lady-lahishyn'));
 });
 
 test('Saturday memorial of the BVM is offered from its Common', () => {
