@@ -1,12 +1,21 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // `admins/{uid}`: no `role` => admin (legacy); `role` admin|superadmin. Any other explicit
+    // role grants nothing (legacy UIDs below stay admin). Roles are written only via Console/Admin SDK.
+    function legacyAdmin() {
+      return request.auth.uid in ['64MeSP56IWVotVFG7bu8YKeLis12', '7mszX2IiXHgjWxj0ZE5vEqdkmoD2'];
+    }
+    function adminRecord() {
+      return exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.get('role', 'admin') in ['admin', 'superadmin'];
+    }
     function isAdmin() {
-      return request.auth != null && (request.auth.uid in ['64MeSP56IWVotVFG7bu8YKeLis12', '7mszX2IiXHgjWxj0ZE5vEqdkmoD2']
-        || exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+      return request.auth != null && (legacyAdmin() || adminRecord());
     }
     function managesPriests() {
-      return isAdmin() && (request.auth.uid in ['64MeSP56IWVotVFG7bu8YKeLis12', '7mszX2IiXHgjWxj0ZE5vEqdkmoD2']
+      return isAdmin() && (legacyAdmin()
+        || get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.get('role', 'admin') == 'superadmin'
         || get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.get('priestAccess', false) == true);
     }
     function hasGrant() {

@@ -1,6 +1,7 @@
 import { nextRouteDiocese, routeDiocese, setRouteDiocese } from '@/utils/ordoDiocese';
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { adminRouteDecision } from '@/utils/adminAccess';
 import { getMassVariantByPrayerId, MASS_ORDER_PRAYER_ID } from '@/utils/massRitual';
 
 import DefaultVue from '@/layouts/default/Default.vue';
@@ -183,6 +184,11 @@ const routes = [
         component: () => import('@/views/Admin.vue'),
       },
       {
+        path: 'analytics', name: 'AdminAnalytics',
+        component: () => import('@/views/admin/Analytics.vue'),
+        meta: { requiresSuperAdmin: true },
+      },
+      {
         path: 'priest-access', name: 'AdminPriestAccess',
         component: () => import('@/views/admin/PriestAccess.vue'),
         meta: { requiresPriestAdmin: true },
@@ -276,16 +282,8 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth) {
     await authStore.init();
 
-    if (to.meta.requiresPriestAdmin && !authStore.canManagePriestAccess) {
-      next({ name: 'Admin' });
-      return;
-    }
-
-    if (!authStore.isAdmin) {
-      next({ name: 'Login', query: { redirect: to.fullPath } });
-    } else {
-      next();
-    }
+    const metas = to.matched.reduce((acc, record) => ({ ...acc, ...record.meta }), {});
+    next(adminRouteDecision(metas, authStore, to.fullPath));
   } else {
     next();
   }
