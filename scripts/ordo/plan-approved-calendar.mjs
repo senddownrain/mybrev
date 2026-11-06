@@ -87,7 +87,7 @@ export async function planApprovedCalendar(snapshotPath) {
   return { plan: { mode: 'DRY_RUN_ONLY', projectId: source.manifest.projectId, database: '(default)',
     snapshotAt: source.manifest.exportedAt, snapshotMetaStable: source.manifest.metaBookendsStable,
     observedMeta: { schemaVersion: meta.schemaVersion, revision: meta.revision, notesRevision: meta.notesRevision },
-    auditBaselineCommit: '9ecd0fdfd2e0230cfd1159476c11291893dd46bf', baseCommit: 'a8ca4b4e53600d10081388963daa62b20059b629',
+    auditBaselineCommit: '9ecd0fdfd2e0230cfd1159476c11291893dd46bf', baseCommit: 'b5d768714f25e55a56e6121d47b739a08fdaed14',
     sourceSha256: targetMeta.sourceSha256, targetMeta, collections,
     operationCount: operations.length, operationsSha256: calendarHash(operations), operations,
     futurePublication: { requiresOwnerAcceptanceOfExactDiff: true, method: 'one atomic preconditioned batch, including metadata',

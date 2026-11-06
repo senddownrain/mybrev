@@ -2,7 +2,7 @@
 
 Подготовлены рабочий Web-календарь, его механизм обновления, новая статическая Web-публикация первоисточника, тесты и полный read-only план миграции. **Production Firestore, Hosting и мобильное приложение не изменены.** Merge, deploy, manifest apply и app release не выполнялись.
 
-База: актуальный при старте `origin/main` **a8ca4b4e53600d10081388963daa62b20059b629**. Ветка `fix/belarus-calendar-approved-2026-11`. Evidence предыдущего финального аудита: **9ecd0fdfd2e0230cfd1159476c11291893dd46bf**, ветка `audit/belarus-own-calendar-2026-final`. Аудит использован как baseline, не как нормативное решение поверх новой редакции PDF. Точные implementation SHA, PR и результаты CI будут закреплены в `PR_ACCEPTANCE_STATUS.md`; этот файл является частью того же diff.
+Первоначальная база — `a8ca4b4e53600d10081388963daa62b20059b629`. Перед сдачей ветка перебазирована на актуальный `origin/main` **b5d768714f25e55a56e6121d47b739a08fdaed14**. Сохранены PR #196 (навигация часов), #197 (PWA/иконки), #199 (TTL и обновление текстов после editor save). Ветка `fix/belarus-calendar-approved-2026-11`. Evidence предыдущего финального аудита: **9ecd0fdfd2e0230cfd1159476c11291893dd46bf**, ветка `audit/belarus-own-calendar-2026-final`. Аудит использован как baseline, не как нормативное решение поверх новой редакции PDF. PR: **[senddownrain/mybrev#201](https://github.com/senddownrain/mybrev/pull/201)**. Implementation после rebase: **0ce530885f4402ef44a57ec4fab61216eebb8da9**. Приёмка и CI закреплены в [PR_ACCEPTANCE_STATUS.md](PR_ACCEPTANCE_STATUS.md).
 
 ## Принятые решения A/B/C/D и реализация
 
@@ -130,10 +130,10 @@ python3 scripts/documents/build-proper-calendar.py --check
 SMOKE_WIDTHS=320,390,768,1440 node scripts/smoke-source-documents.mjs
 node scripts/smoke-approved-calendar.mjs
 node scripts/ordo/plan-approved-calendar.mjs --snapshot <private-local-snapshot> --out reports/ordo-approved/PRODUCTION_PATCH_PLAN.json
-node scripts/ordo/sweep-approved-calendar.mjs --snapshot <private-local-snapshot> --baseline <archive-of-a8ca4b4-with-node_modules> --out reports/ordo-approved
+node scripts/ordo/sweep-approved-calendar.mjs --snapshot <private-local-snapshot> --baseline <archive-of-b5d7687-with-node_modules> --out reports/ordo-approved
 ```
 
-Финальный локальный результат: **1 130 tests: 1 119 PASS, 11 SKIP, 0 FAIL; Ordo 217/217 PASS**. В отдельном реальном mounted Hours view с локальными контентными fixtures проверены переключение Витебск → Минск → Витебск на том же старом URL и смена definitions epoch: [результат](approved-evidence/ui/mounted-hours-result.json), [скриншот](approved-evidence/ui/hours-390-vitebsk-fixture.png). Внешние запросы в этом UI-тесте блокировались; это не проверка доставки production Hosting.
+Финальный локальный результат: **1 135 tests: 1 124 PASS, 11 SKIP, 0 FAIL; Ordo 217/217 PASS**. В отдельном реальном mounted Hours view с локальными контентными fixtures проверены переключение Витебск → Минск → Витебск на том же старом URL и смена definitions epoch: [результат](approved-evidence/ui/mounted-hours-result.json), [скриншот](approved-evidence/ui/hours-390-vitebsk-fixture.png). Внешние запросы в этом UI-тесте блокировались; это не проверка доставки production Hosting.
 
 Фактические итоги и ссылки на журналы: [VERIFICATION.json](approved-evidence/VERIFICATION.json). `ordo:check` проверяет generated definitions/identities; проверка повторного извлечения старых raw annual sources пропущена, поскольку исходных файлов старого parser pipeline в текущем main нет. Новый PDF проверен собственным deterministic extractor. Пропущенные tests не обозначаются PASS. UI и сборка локальные; CI указан после появления результата PR.
 

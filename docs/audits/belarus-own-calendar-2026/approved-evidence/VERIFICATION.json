@@ -1,8 +1,8 @@
 {
   "test-all": {
     "log": "logs/test-all.log",
-    "tests": 1130,
-    "pass": 1119,
+    "tests": 1135,
+    "pass": 1124,
     "fail": 0,
     "skipped": 11,
     "status": "PASS"
@@ -54,5 +54,13 @@
     "Local Chrome/Playwright, 320/390/768/1440, light/dark/marian.",
     "Mounted Hours test uses local content fixtures; external requests blocked.",
     "No claim that production Hosting or installed user PWA/Flutter was updated."
-  ]
+  ],
+  "baseCommit": "b5d768714f25e55a56e6121d47b739a08fdaed14",
+  "githubCI": {
+    "status": "SUCCESS",
+    "commit": "0ce530885f4402ef44a57ec4fab61216eebb8da9",
+    "runId": 42296866946,
+    "url": "https://github.com/senddownrain/mybrev/actions/runs/42296866946",
+    "job": "Lint & Build"
+  }
 }
