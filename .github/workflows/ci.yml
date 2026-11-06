@@ -52,6 +52,9 @@ jobs:
       - name: Public privacy policy tests (offline)
         run: node --test tests/privacy-policy.test.mjs
 
+      - name: PWA brand and icon refresh regressions
+        run: node --test tests/brand-icon-update.test.mjs
+
       - name: Liturgical alternatives regression tests
         run: npm run test:alternatives
 
