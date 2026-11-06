@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-11-05",
+  "reviewedAt": "2026-11-06",
   "sections": {
     "bible": "Біблія",
     "readings": "Чытанні",
@@ -143,8 +143,10 @@
       "years": "2012-2020",
       "officialEdition": "Літургія гадзінаў",
       "publicationPlace": "Мінск",
-      "rightsholder": null,
-      "copyrightNotices": [],
+      "rightsholder": "Канферэнцыя Каталіцкіх Біскупаў Беларусі",
+      "copyrightNotices": [
+        "© Канферэнцыя Каталіцкіх Біскупаў Беларусі"
+      ],
       "translation": {
         "language": "be",
         "translator": "Секцыя па перакладзе літургічных тэкстаў і афіцыйных дакументаў Касцёла Камісіі Божага Культу і Дысцыпліны Сакрамэнтаў пры ККББ",
@@ -165,6 +167,15 @@
       "verification": {
         "status": "partially_verified",
         "evidence": [
+          {
+            "location": "docs/sources/primary/kremis-final-remarks-2026-11-06.md",
+            "fields": [
+              "rightsholder",
+              "copyrightNotices"
+            ],
+            "status": "verified",
+            "checkedAt": "2026-11-06"
+          },
           {
             "location": "docs/sources/primary/jan-kremis-remarks-2026-11-02.docx",
             "fields": [
@@ -202,7 +213,7 @@
           }
         ],
         "pending": [
-          "Праваўладальнік і дакладныя знакі © усіх тамоў: патрабуюцца выхадныя старонкі.",
+          "Дакладныя знакі © і гады ўсіх тамоў: патрабуюцца выхадныя старонкі. Перыяд выдання 2012–2020 не пацверджаны як перыяд ©.",
           "Дазвол на лічбавае выкарыстанне ў MyBrev."
         ]
       },
@@ -272,8 +283,7 @@
       "publicationPlace": "Мінск",
       "rightsholder": "Канферэнцыя Каталіцкіх Біскупаў Беларусі",
       "copyrightNotices": [
-        "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2010",
-        "© Copyright 2005 — Libreria Editrice Vaticana"
+        "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2010"
       ],
       "translation": {
         "language": "be",
@@ -310,7 +320,8 @@
             "location": "scripts/compendium-source/3963-kampendyj-katekhizisa-katalitskaga-kastsjola.html",
             "fields": [
               "copyrightNotices",
-              "digitalSources"
+              "digitalSources",
+              "auditNotices"
             ],
             "status": "verified",
             "checkedAt": "2026-11-04"
@@ -324,7 +335,14 @@
       "digitalPermission": {
         "status": "requires_verification",
         "note": "Знак ©, публікацыя на сайце і літургічны дэкрэт самі па сабе не пацвярджаюць дазволу на лічбавае выкарыстанне ў MyBrev."
-      }
+      },
+      "auditNotices": [
+        {
+          "text": "© Copyright 2005 — Libreria Editrice Vaticana",
+          "sourceDocument": "scripts/compendium-source/3963-kampendyj-katekhizisa-katalitskaga-kastsjola.html",
+          "note": "Захавана з арыгінала для ўнутранага аўдыту. Не паказваецца ў бібліяграфічным запісе /sources паводле фінальнага заўважання кс. Яна Крэміса, перададзенага ў заданні 06.11.2026."
+        }
+      ]
     },
     {
       "id": "bible-charniauski-2017",
