@@ -85,12 +85,12 @@ test('static document UI renders all runs, public original and safe navigation w
   for (const route of ['documents/proper-calendar', 'documents/liturgy-hours-decrees', 'documents/liturgy-hours-introduction']) assert.ok(read('src/router/index.js').includes(route));
 });
 
-test('new translations stay link-only until republication permission is established', () => {
-  for (const document of [introduction, apostolic]) {
-    assert.equal(document.publicationMode, 'official_link');
-    assert.ok(!('paragraphs' in document) && !('fullText' in document));
-  }
-  assert.equal(introduction.fullTextUrl, 'https://lh.catholic.by/uvodziny.php');
+test('Roman references remain link-only; introduction permission has a scoped evidence record', () => {
+  assert.equal(apostolic.publicationMode, 'official_link');
+  assert.equal(introduction.publicationMode, 'full_text');
+  assert.equal(introduction.permission.status, 'confirmed_by_project_owner');
+  assert.match(read(introduction.permission.evidence), /Разрешение получено/);
+  assert.equal(introduction.sourceUrl, 'https://lh.catholic.by/uvodziny.php');
   assert.equal(apostolic.sourceUrl, 'https://lh.catholic.by/dekrety.php');
   assert.deepEqual(apostolic.documents.map(doc => [doc.protocol, doc.date]), [['1000/71', '1971-04-11'], ['1814/84', '1985-04-07']]);
   for (const document of apostolic.documents) {
@@ -98,6 +98,40 @@ test('new translations stay link-only until republication permission is establis
     assert.ok(read('docs/sources/primary/lh-decrees-2026-11-05.txt').includes(`Прат. № ${document.protocol}`));
   }
   assert.equal(getSource('liturgy-hours-2012-2020').decrees.length, 4);
+});
+
+const documentBlockText = (block, sourceNumbers = false) => {
+  if (block.type === 'list') return block.items.join(' ');
+  if (block.type === 'point') return `${sourceNumbers ? block.sourceNumber : block.number}. ${block.blocks.map(item => documentBlockText(item, sourceNumbers)).join(' ')}`;
+  return block.text;
+};
+
+test('complete introduction preserves all 284 points, five chapters and every source word in order', () => {
+  const source = read(introduction.sourceFile);
+  assert.equal(crypto.createHash('sha256').update(source).digest('hex'), introduction.sourceSha256);
+  const points = introduction.chapters.flatMap(chapter => chapter.blocks.filter(block => block.type === 'point'));
+  assert.deepEqual(points.map(point => point.number), Array.from({ length: 284 }, (_, index) => index + 1));
+  assert.deepEqual(introduction.chapters.map(chapter => [chapter.firstPoint, chapter.lastPoint]), [[1, 33], [34, 99], [100, 203], [204, 252], [253, 284]]);
+  assert.equal(points[139].blocks.length, 2, 'point 140 has a number on a separate source line and two paragraphs');
+  assert.equal(points[176].sourceNumber, 178);
+  assert.equal(points[177].sourceNumber, 178);
+  assert.equal(introduction.editorialNotes[0].point, 177);
+  assert.match(introduction.editorialNotes[0].verificationUrl, /liturgyoffice\.org\.uk/);
+  const table = introduction.liturgicalDays;
+  const entries = table.groups.flatMap(group => group.entries);
+  assert.deepEqual(entries.map(entry => entry.number), Array.from({ length: 13 }, (_, index) => index + 1));
+  assert.deepEqual(table.groups.map(group => group.entries.length), [4, 5, 4]);
+  assert.deepEqual(entries.filter(entry => entry.subpoints.length).map(entry => [entry.number, entry.subpoints.length]), [[4, 4], [8, 6], [11, 2]]);
+  assert.equal(introduction.precedence.paragraphs.length, 2);
+  const reconstructed = [introduction.officialTitle];
+  for (const chapter of introduction.chapters) reconstructed.push(chapter.label, chapter.title, ...chapter.blocks.map(block => documentBlockText(block, true)));
+  reconstructed.push(table.title, table.subtitle, table.introduction);
+  for (const group of table.groups) {
+    reconstructed.push(group.label);
+    for (const entry of group.entries) reconstructed.push(`${entry.number}. ${entry.text}`, ...entry.subpoints);
+  }
+  reconstructed.push(introduction.precedence.title, ...introduction.precedence.paragraphs);
+  assert.equal(normalized(reconstructed.join(' ')), normalized(source), 'whole article, not only point numbers, round-trips to primary text');
 });
 
 test('registry and document metadata agree strictly for every decree', () => {

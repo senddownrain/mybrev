@@ -76,18 +76,42 @@ try {
       await page.getByRole('button', { name: 'Назад', exact: true }).click();
       await page.locator('.sources-page').waitFor();
       await page.getByRole('link', { name: introduction.title, exact: true }).click();
-      await page.getByRole('heading', { name: introduction.title, level: 1 }).waitFor();
-      assert.equal(await page.locator('.introduction-section').count(), 3);
-      assert.equal(await page.getByRole('link', { name: 'Чытаць поўны тэкст на lh.catholic.by' }).getAttribute('href'), introduction.fullTextUrl);
-      for (const section of introduction.sections) {
-        await page.locator('.introduction-index').getByRole('link', { name: section.title, exact: true }).click();
+      await page.getByRole('heading', { name: introduction.officialTitle, level: 1 }).waitFor();
+      assert.equal(await page.locator('.introduction-point').count(), 284);
+      assert.equal(await page.locator('.precedence-list > li').count(), 13);
+      const sourceText = await fs.readFile(new URL(`../${introduction.sourceFile}`, import.meta.url), 'utf8');
+      const renderedText = await page.locator('[data-source-text]').evaluateAll(elements => elements.map(element => element.innerText).join(' '));
+      assert.equal(normalize(renderedText), normalize(sourceText.replace(/^178\. Гімны/mu, '177. Гімны')), 'every source paragraph, heading, list, table entry and final sentence is rendered');
+      assert.equal(await page.locator('.introduction-sources a').first().getAttribute('href'), introduction.sourceUrl);
+      assert.equal(await page.locator('.introduction-sources a').last().innerText(), 'Catholic.by');
+      assert.doesNotMatch(await page.locator('.introduction-page').innerText(), /Крэміс|указаная/);
+      for (const section of [...introduction.chapters, introduction.liturgicalDays, introduction.precedence]) {
+        await page.locator(`.introduction-index a[href$="#${section.id}"]`).click();
         await page.waitForURL(url => url.hash === `#${section.id}`);
         await page.waitForFunction(id => document.getElementById(id).getBoundingClientRect().top < window.innerHeight, section.id);
         assert.ok(page.url().endsWith(`#${section.id}`));
       }
-      assert.equal(await page.locator('.introduction-section .document-prose').first().evaluate(element => getComputedStyle(element).textAlign), 'justify');
+      for (const chapter of introduction.chapters) {
+        const details = page.locator(`#${chapter.id} .chapter-index`);
+        await details.locator('summary').click();
+        for (const heading of chapter.blocks.filter(block => block.type === 'heading')) {
+          await details.locator(`a[href$="#${heading.id}"]`).click();
+          await page.waitForURL(url => url.hash === `#${heading.id}`);
+          await page.waitForFunction(id => { const rect = document.getElementById(id).getBoundingClientRect(); return rect.top >= 0 && rect.top < window.innerHeight; }, heading.id);
+        }
+        await details.locator('summary').click();
+      }
+      assert.equal(await page.locator('.introduction-point .document-prose').first().evaluate(element => getComputedStyle(element).textAlign), 'justify');
+      for (const selector of ['.introduction-header h1', '.introduction-chapter h2', '.introduction-subheading', '.introduction-index', '.introduction-copyright']) {
+        assert.notEqual(await page.locator(selector).first().evaluate(element => getComputedStyle(element).textAlign), 'justify');
+      }
+      await page.getByRole('link', { name: 'Заўвага да нумарацыі пункта 177' }).click();
+      await page.waitForURL(url => url.hash === '#numbering-note-177');
+      await page.locator('#point-177').screenshot({ path: `${output}/introduction-point-177-${width}-${theme}.png` });
+      await page.locator('.precedence-table').screenshot({ path: `${output}/introduction-table-${width}-${theme}.png` });
       await overflow('Introduction');
-      await page.screenshot({ path: `${output}/introduction-${width}-${theme}.png`, fullPage: true });
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.screenshot({ path: `${output}/introduction-${width}-${theme}.png` });
       await page.getByRole('button', { name: 'Назад', exact: true }).click();
       await page.locator('.sources-page').waitFor();
       await page.getByRole('link', { name: calendar.title, exact: true }).focus();
@@ -134,7 +158,7 @@ try {
       await page.getByRole('button', { name: 'Назад', exact: true }).click();
       await page.locator('.sources-page').waitFor();
       // Direct URLs in a fresh page must use the safe Sources fallback.
-      for (const path of ['/documents/proper-calendar#month-7', '/documents/liturgy-hours-decrees#volume-4', '/documents/liturgy-hours-introduction#full-text']) {
+      for (const path of ['/documents/proper-calendar#month-7', '/documents/liturgy-hours-decrees#volume-4', '/documents/liturgy-hours-introduction#point-284']) {
         const isolated = await context.newPage();
         const response = await isolated.goto(`${baseUrl}${path}`);
         assert.equal(response.status(), 200);
@@ -145,8 +169,8 @@ try {
         await isolated.close();
       }
       assert.deepEqual(errors, []);
-      results.push({ width, theme, protocol: new URL(baseUrl).protocol, pages: 13, dates: 365, decrees: 4, apostolicReferences: 2, introduction: 'official_link', status: 'PASS' });
-      console.log(`${width}/${theme}: four complete decrees, two Roman references, introduction links, 13 PDF sheets, 365 dates, columns, anchors, safe back, no overflow: PASS`);
+      results.push({ width, theme, protocol: new URL(baseUrl).protocol, pages: 13, dates: 365, decrees: 4, apostolicReferences: 2, introduction: 'full_text', introductionPoints: 284, precedenceEntries: 13, status: 'PASS' });
+      console.log(`${width}/${theme}: all 284 introduction points, 13 precedence entries, full source text, chapter/subsection anchors, four decrees, calendar, safe back, no overflow: PASS`);
       await context.close();
     }
   }

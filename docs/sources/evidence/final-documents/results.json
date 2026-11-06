@@ -7,7 +7,9 @@
     "dates": 365,
     "decrees": 4,
     "apostolicReferences": 2,
-    "introduction": "official_link",
+    "introduction": "full_text",
+    "introductionPoints": 284,
+    "precedenceEntries": 13,
     "status": "PASS"
   },
   {
@@ -18,7 +20,9 @@
     "dates": 365,
     "decrees": 4,
     "apostolicReferences": 2,
-    "introduction": "official_link",
+    "introduction": "full_text",
+    "introductionPoints": 284,
+    "precedenceEntries": 13,
     "status": "PASS"
   },
   {
@@ -29,7 +33,9 @@
     "dates": 365,
     "decrees": 4,
     "apostolicReferences": 2,
-    "introduction": "official_link",
+    "introduction": "full_text",
+    "introductionPoints": 284,
+    "precedenceEntries": 13,
     "status": "PASS"
   },
   {
@@ -40,7 +46,9 @@
     "dates": 365,
     "decrees": 4,
     "apostolicReferences": 2,
-    "introduction": "official_link",
+    "introduction": "full_text",
+    "introductionPoints": 284,
+    "precedenceEntries": 13,
     "status": "PASS"
   },
   {
@@ -51,7 +59,9 @@
     "dates": 365,
     "decrees": 4,
     "apostolicReferences": 2,
-    "introduction": "official_link",
+    "introduction": "full_text",
+    "introductionPoints": 284,
+    "precedenceEntries": 13,
     "status": "PASS"
   },
   {
@@ -62,7 +72,9 @@
     "dates": 365,
     "decrees": 4,
     "apostolicReferences": 2,
-    "introduction": "official_link",
+    "introduction": "full_text",
+    "introductionPoints": 284,
+    "precedenceEntries": 13,
     "status": "PASS"
   },
   {
@@ -73,7 +85,9 @@
     "dates": 365,
     "decrees": 4,
     "apostolicReferences": 2,
-    "introduction": "official_link",
+    "introduction": "full_text",
+    "introductionPoints": 284,
+    "precedenceEntries": 13,
     "status": "PASS"
   },
   {
@@ -84,7 +98,9 @@
     "dates": 365,
     "decrees": 4,
     "apostolicReferences": 2,
-    "introduction": "official_link",
+    "introduction": "full_text",
+    "introductionPoints": 284,
+    "precedenceEntries": 13,
     "status": "PASS"
   },
   {
@@ -95,7 +111,9 @@
     "dates": 365,
     "decrees": 4,
     "apostolicReferences": 2,
-    "introduction": "official_link",
+    "introduction": "full_text",
+    "introductionPoints": 284,
+    "precedenceEntries": 13,
     "status": "PASS"
   }
 ]
