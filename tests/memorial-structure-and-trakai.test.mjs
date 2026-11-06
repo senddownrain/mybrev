@@ -146,15 +146,23 @@ test('Trakai: document choice does not depend on the order of the bundle or on p
   }
 });
 
-test('two sparse documents of one celebration: the calendar rank decides, then the dayIds order, never the bundle order', () => {
+test('two sparse documents of one celebration: the calendar rank decides, equivalent copies keep id order, never the bundle order', () => {
   const memoria = { ...feast('05-07-our-lady-trakai-grodno'), id: '05-07-our-lady-trakai-grodno' };
   const adLibitum = { ...feast('05-07-our-lady-trakai-grodno-memoria-ad-libitum'), id: '05-07-our-lady-trakai-grodno-memoria-ad-libitum', _obsolete: undefined };
   const ids = [adLibitum.id, memoria.id];
-  for (const [rank, expected] of [['memoria', memoria.id], ['memoria-ad-libitum', adLibitum.id], ['festum', adLibitum.id]]) {
+  // `festum`: no document has the calendar rank (the not-yet-published calendar): stable id order, same as the memoria rank.
+  for (const [rank, expected] of [['memoria', memoria.id], ['memoria-ad-libitum', adLibitum.id], ['festum', memoria.id]]) {
     for (const docs of [[memoria, adLibitum], [adLibitum, memoria]]) {
       const selected = selectFixedDocuments({ rank, daysRef: { dayIds: ids, _date: '05.07' } }, docs, { diocese: 'grodno' });
       assert.deepEqual(selected.map((doc) => doc.id), [expected], `rank ${rank}`);
     }
+  }
+  // Per-diocese copies of the same rank are equivalent: the choice does not depend on the order of the bundle.
+  const copy = (place) => ({ ...memoria, id: `26-08-our-lady-czestochowa--${place}`, _place: place, _rank: 'memoria' });
+  const copies = [copy('minsk-mohilev'), copy('grodno')];
+  for (const docs of [copies, [...copies].reverse()]) {
+    const selected = selectFixedDocuments({ rank: 'memoria', daysRef: { dayIds: copies.map((doc) => doc.id), _date: '26.08' } }, docs, { diocese: 'minsk-mohilev' });
+    assert.deepEqual(selected.map((doc) => doc.id), ['26-08-our-lady-czestochowa--grodno']);
   }
 });
 
