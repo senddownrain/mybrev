@@ -64,6 +64,9 @@ jobs:
       - name: Ordinary Friday Vespers repair regressions (offline)
         run: node --test tests/ordinary-friday-vespers.test.mjs
 
+      - name: Liturgical editor source and persistence regression tests
+        run: node --test tests/day-editor-persistence.test.mjs
+
       - name: Movable feast daytime prayer regression tests
         run: node --test tests/dynamic-feast-daytime.test.mjs
 

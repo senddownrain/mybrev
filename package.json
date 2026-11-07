@@ -17,6 +17,7 @@
     "smoke:ui": "node scripts/smoke-ui.mjs",
     "smoke:appearance": "node scripts/smoke-appearance.mjs",
     "smoke:devotional-office": "node scripts/smoke-devotional-office.mjs",
+    "smoke:day-editor": "node scripts/smoke-day-editor-persistence.mjs",
     "smoke:responsive": "firebase emulators:exec --only firestore --project demo-responsive \"node scripts/smoke-responsive.mjs\"",
     "lint": "eslint . --fix",
     "db:backup": "node scripts/export-firestore-snapshot.mjs",
