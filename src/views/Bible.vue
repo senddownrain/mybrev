@@ -49,13 +49,14 @@
         </div>
       </div>
 
-      <article v-else class="bible-reader" :aria-label="`${currentBook?.name}, раздзел ${chapter}`">
+      <article v-else class="bible-reader" :lang="language === 'bel' ? 'be' : 'ru'" :aria-label="`${currentBook?.name}, раздзел ${chapter}`">
         <button
           v-for="verse in verses"
           :id="`bible-verse-${verse.num}`"
           :key="verse.num"
           type="button"
           class="bible-verse"
+          :data-reader-prose="/[\r\n]/u.test(verse.text) ? undefined : ''"
           :class="verseClasses(verse.num)"
           :aria-pressed="isVerseSelected(verse.num)"
           :aria-label="`Верш ${verse.num}. ${verse.text}`"

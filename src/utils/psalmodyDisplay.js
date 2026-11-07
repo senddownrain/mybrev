@@ -14,18 +14,20 @@ export function loadPsalmodyMode(storage) {
 }
 
 /** Decorate only the selected psalm's strophes, keeping inline markup intact. */
-export function decoratePsalmody(root, { mode = 'left-break', dimmedSide = null } = {}) {
+export function decoratePsalmody(root, { mode = 'left-break', dimmedSide = null, interactive = true } = {}) {
   const strophes = [...root.querySelectorAll('p[data-psalm-strophe]')]
     .filter((p) => !p.hasAttribute('data-liturgical-subheading')
       && !p.hasAttribute('data-liturgical-heading')
       && !/^(?:\d+\s*)?Ант\./iu.test(p.textContent.trim()));
   strophes.forEach((p, index) => {
     p.dataset.psalmSide = index % 2 ? 'B' : 'A';
-    p.setAttribute('role', 'button');
-    p.setAttribute('tabindex', '0');
-    p.setAttribute('aria-pressed', String(p.dataset.psalmSide === dimmedSide));
-    p.setAttribute('aria-label', `Частка ${p.dataset.psalmSide}: ${p.textContent.replace(/\s+/gu, ' ').trim()}`);
-    p.setAttribute('aria-description', 'Націсніце, каб зацямніць гэтую частку ва ўсёй гадзіне або аднавіць яе.');
+    if (interactive) {
+      p.setAttribute('role', 'button');
+      p.setAttribute('tabindex', '0');
+      p.setAttribute('aria-pressed', String(p.dataset.psalmSide === dimmedSide));
+      p.setAttribute('aria-label', `Частка ${p.dataset.psalmSide}: ${p.textContent.replace(/\s+/gu, ' ').trim()}`);
+      p.setAttribute('aria-description', 'Націсніце, каб зацямніць гэтую частку ва ўсёй гадзіне або аднавіць яе.');
+    }
     // Structural paragraphs own strophe boundaries. Only the continuous
     // stanza mode removes source line breaks inside those boundaries.
     if (mode === 'alternating-stanzas') {
