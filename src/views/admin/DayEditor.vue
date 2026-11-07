@@ -13,7 +13,7 @@
       >
         Стварыць копію
       </v-btn>
-      <v-btn :loading="saving" variant="text" @click="saveChanges">Захаваць усё</v-btn>
+      <v-btn :loading="saving" :disabled="loading || !dayData" variant="text" @click="saveChanges">Захаваць усё</v-btn>
     </v-app-bar>
 
     <div v-if="loading" class="d-flex justify-center align-center ga-4" style="height: 80vh;">
@@ -22,6 +22,13 @@
     </div>
 
     <v-container v-else-if="dayData" class="day-editor pb-16">
+      <v-alert type="info" variant="tonal" class="mb-4" data-test="editor-document-source">
+        Змены захоўваюцца ў <strong>{{ sourceCollection }}/{{ sourceDocId || 'новы дакумент' }}</strong>.
+        <template v-if="sourceCollection === LITURGICAL_PROPER_TEXTS_COLLECTION">
+          Гэта крыніца публічнага прагляду. Старыя копіі гэтага свята ў days не выкарыстоўваюцца.
+        </template>
+        «Захаваць поле» абнаўляе форму; запіс у базу выконваецца кнопкай «Захаваць усё».
+      </v-alert>
       <v-alert v-if="loadError" type="warning" variant="tonal" class="mb-4">
         {{ loadError }}
       </v-alert>
@@ -243,13 +250,16 @@
         </v-expansion-panel>
       </v-expansion-panels>
     </v-container>
+    <v-container v-else>
+      <v-alert type="error" variant="tonal">{{ loadError }}</v-alert>
+    </v-container>
   </div>
 </template>
 
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { collection, deleteField, doc, getDoc, getDocs, writeBatch } from 'firebase/firestore';
+import { collection, deleteField, doc, getDoc, getDocFromServer, getDocs, writeBatch } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import InlineEditor from '@/components/admin/InlineEditor.vue';
 import { useLiturgicalDay } from '@/composables/useLiturgicalDay';
@@ -285,6 +295,7 @@ import {
 import moment from '@/utils/moment-be';
 import { logger } from '@/utils/logger';
 import { retryFirestore } from '@/utils/retry';
+import { loadDayEditorDocument, verifyDayEditorWrite } from '@/utils/dayEditorPersistence';
 import { requestContentRefresh } from '@/utils/publicContentCache';
 
 const SESSION_KEY_COPY = 'dayEditorCopyData';
@@ -494,23 +505,20 @@ async function loadDay() {
     return;
   }
 
-  const snapshot = await getDoc(doc(db, LITURGICAL_DAYS_COLLECTION, dayId.value));
-  if (snapshot.exists()) {
-    sourceCollection.value = LITURGICAL_DAYS_COLLECTION;
-    sourceDocId.value = dayId.value;
-    dayData.value = clone(snapshot.data());
-    return;
+  // Never open a shadowed days copy when the public Office uses its Proper.
+  // Server reads also keep reopening the editor independent of the SDK cache.
+  const source = await loadDayEditorDocument(dayId.value, async (collectionName, id) => {
+    const snapshot = await getDocFromServer(doc(db, collectionName, id));
+    return snapshot.exists() ? snapshot.data() : null;
+  });
+  sourceCollection.value = source.collection;
+  sourceDocId.value = source.id;
+  dayData.value = clone(source.data);
+  if (isSparse.value) {
+    properOriginal.value = clone(source.data);
+    sparseChoice.value = source.choice === 'day' ? CURRENT_DAY_CHOICE : source.choice;
+    sparseTemplates.value = await getLiturgicalTemplates({ revalidate: true });
   }
-  // A sparse Proper: the card id is the document id, or `<id>--<choice>`.
-  const [baseId, choice] = dayId.value.split('--');
-  const proper = await getDoc(doc(db, LITURGICAL_PROPER_TEXTS_COLLECTION, baseId));
-  if (!proper.exists()) throw new Error('Літургічны дзень не знойдзены.');
-  sourceCollection.value = LITURGICAL_PROPER_TEXTS_COLLECTION;
-  sourceDocId.value = baseId;
-  dayData.value = clone(proper.data());
-  properOriginal.value = clone(proper.data());
-  sparseChoice.value = choice === 'day' ? CURRENT_DAY_CHOICE : (choice || '');
-  sparseTemplates.value = await getLiturgicalTemplates();
 }
 
 async function loadFallbackDay() {
@@ -567,6 +575,7 @@ async function loadCompletorium() {
 
 async function initialize() {
   loading.value = true;
+  dayData.value = null;
   loadError.value = '';
   try {
     await Promise.all([loadDay(), loadCalendarContext()]);
@@ -574,7 +583,7 @@ async function initialize() {
   } catch (error) {
     logger.error('[DayEditor] load failed:', error);
     loadError.value = error?.message || 'Не атрымалася загрузіць літургічны дзень.';
-    if (!dayData.value) dayData.value = createEmptyDay();
+    dayData.value = null;
   } finally {
     loading.value = false;
   }
@@ -619,7 +628,12 @@ function fieldSourceActionLabel(field) {
 
 function fieldHint(field) {
   const source = fieldSource(field);
-  if (isSparse.value && source.kind !== 'own') return 'Паказаны выніковы тэкст. Рэдагаванне створыць уласны тэкст толькі для гэтага поля.';
+  if (isSparse.value && source.kind !== 'own') {
+    const origin = sparseAssembly.value?.provenance?.[field] || '';
+    const path = origin.startsWith('common:') ? `liturgicalTemplates/${origin.slice(7)}`
+      : origin === 'current-day' && fallbackDay.value?.id ? `days/${fallbackDay.value.id}` : origin;
+    return `Крыніца: ${path || 'няма тэксту'}. Рэдагаванне створыць уласны тэкст толькі для гэтага поля ў ${sourceCollection.value}/${sourceDocId.value}.`;
+  }
   if (source.kind === EDITOR_SOURCE_KIND.INHERITED) return 'Ніжэй паказаны выніковы тэкст. Ён змяняецца ў агульным літургічным дні.';
   if (source.kind === EDITOR_SOURCE_KIND.SHARED_DAYTIME) return 'Гэта поле не дублюецца: выкарыстоўваецца адпаведны тэкст малітвы перад поўднем.';
   if (source.kind === 'seasonal-assembly') return 'Ніжэй паказаны вынік аўтаматычнай зборкі з набору антыфонаў дня тыдня.';
@@ -639,10 +653,11 @@ function openFieldSource(field) {
 }
 
 async function saveChanges() {
-  if (!dayData.value) return;
+  if (!dayData.value || loading.value || saving.value) return;
   saving.value = true;
   try {
     const batch = writeBatch(db);
+    const writes = [];
     const targetRef = isNew.value
       ? doc(collection(db, LITURGICAL_DAYS_COLLECTION))
       : doc(db, sourceCollection.value, sourceDocId.value || dayId.value);
@@ -650,25 +665,33 @@ async function saveChanges() {
       // Only the own overrides and rules that changed — never the assembled day.
       const { set, remove } = sparseUpdatePayload(properOriginal.value, dayData.value, ['feastComment', ...OFFICE_CONTENT_FIELDS]);
       const payload = { ...set, ...Object.fromEntries(remove.map((field) => [field, deleteField()])) };
-      if (Object.keys(payload).length) batch.update(targetRef, payload);
+      if (Object.keys(payload).length) {
+        batch.update(targetRef, payload);
+        writes.push({ ref: targetRef, path: targetRef.path, set, remove });
+      }
     } else {
       const dayPayload = withoutId(dayData.value);
       dayPayload.allowedAlleluia = dayData.value.allowedAlleluia !== false;
       dayPayload.checked = dayData.value.checked === true;
       batch.set(targetRef, dayPayload, { merge: !isNew.value });
+      writes.push({ ref: targetRef, path: targetRef.path, set: dayPayload });
     }
 
     invitatoriums.value.forEach((item) => {
       const payload = withoutId(item);
       if (invitatoriumOriginals.get(item.id) !== comparable(payload)) {
-        batch.set(doc(db, INVITATORIUM_COLLECTION, item.id), payload, { merge: true });
+        const ref = doc(db, INVITATORIUM_COLLECTION, item.id);
+        batch.set(ref, payload, { merge: true });
+        writes.push({ ref, path: ref.path, set: payload });
       }
     });
 
     if (completoriumData.value) {
       const payload = withoutId(completoriumData.value);
       if (completoriumOriginal.value !== comparable(payload)) {
-        batch.set(doc(db, COMPLETORIUM_COLLECTION, completoriumData.value.id), payload, { merge: true });
+        const ref = doc(db, COMPLETORIUM_COLLECTION, completoriumData.value.id);
+        batch.set(ref, payload, { merge: true });
+        writes.push({ ref, path: ref.path, set: payload });
       }
     }
 
@@ -676,6 +699,10 @@ async function saveChanges() {
     // Public Hours/Readings use a persistent cache; invalidate it only after
     // Firestore confirms the complete editor save, never on local field edits.
     requestContentRefresh();
+    await Promise.all(writes.map(async (write) => {
+      const snapshot = await getDocFromServer(write.ref);
+      verifyDayEditorWrite(snapshot.exists() ? snapshot.data() : null, write);
+    }));
     success('Усе змененыя часткі літургічнага дня захаваны.');
     if (isSparse.value) properOriginal.value = clone(dayData.value);
     invitatoriums.value.forEach((item) => invitatoriumOriginals.set(item.id, comparable(withoutId(item))));
