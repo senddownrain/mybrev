@@ -2,12 +2,6 @@ name: Deploy Web to Firebase Hosting
 
 on:
   workflow_dispatch:
-  # One-off graphite PWA release trigger; remove after successful deployment.
-  # Only this PR's appearance-token edit should match on merge to main.
-  push:
-    branches: [main]
-    paths:
-      - 'src/constants/appearance.js'
 
 permissions:
   contents: read
