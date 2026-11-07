@@ -13,3 +13,9 @@
 7. Выпускать через `docs/app-content-distribution.md`. Изменение более 25% существующих diocesan overrides и более 20 документов ожидаемо требует **MASS CONTENT REBUILD**, нового bundle и app release, а не автоматического small patch/override. Сначала отдельный `content:manifest` dry-run; решение о выпуске и любом `--apply` принимает владелец после точного diff. Notes, prayers, songs и остальные коллекции не включать без основания.
 
 Сдать отдельный PR с русским отчётом, результатами parity/UI и новым планом публикации/отката. Не выполнять app release, запись Firestore, manifest apply или merge по разрешению, данному только на текущую Web-задачу.
+
+## Статус попытки выпуска 07.11.2026
+
+Web/Firestore-выпуск остановлен до merge/deploy/записи: live preconditions изменились. На 17:16:08 UTC production имеет calendar revision 3, notesRevision 6, properTextsRevision 6; Тракельская уже исправлена на 05.07 memoria. Не рассчитывать на опубликованную server revision 4.
+
+Новый НЕ утверждённый dry-run содержит 71 операцию вместо 72, сохраняет независимую notesRevision 6. Его принятие и Web-публикация должны предшествовать финальной Flutter parity и доставке bundle. Не переносить старую notesRevision 4 в новый overlay/rollback. Подробности и безопасные manifests: [PRODUCTION_RELEASE_REPORT.md](PRODUCTION_RELEASE_REPORT.md). Мобильный код этой задачей не меняется.

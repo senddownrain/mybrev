@@ -1,0 +1,50 @@
+{
+  "scope": "LOCAL_PREPARATION_BRANCH_NOT_PRODUCTION_RELEASE",
+  "checkedPrHead": "d9e12c6ad71a80e92b6f5749a16fff76b89d0634",
+  "mergedMainForLocalChecks": "8900841d97316cd1a18451c1dd5520d4b155c0ca",
+  "tests": {
+    "total": 1144,
+    "pass": 1133,
+    "skip": 11,
+    "fail": 0,
+    "privateSnapshotExplicit": true,
+    "liveFirestoreReads": 0
+  },
+  "ordo": {
+    "total": 226,
+    "pass": 226,
+    "fail": 0,
+    "originalOrdoTests": 217,
+    "newPublisherTests": 9
+  },
+  "lint": "PASS",
+  "build": "PASS",
+  "definitionsCheck": "PASS",
+  "documentGeneratorCheck": "PASS",
+  "localDryRun": {
+    "operations": 72,
+    "result": "PASS",
+    "writes": 0
+  },
+  "publisherTests": {
+    "pass": 9,
+    "skip": 0,
+    "fail": 0,
+    "productionTransactionAttempted": false,
+    "atomicFailureTransport": "fake"
+  },
+  "browser": {
+    "localCalendarContexts": 12,
+    "localDocumentContexts": 6,
+    "externalRequests": "BLOCKED",
+    "serviceWorkers": "BLOCKED",
+    "productionBrowser": "NOT_RUN_NETWORK_BLOCKED",
+    "oldInstalledPwa": "NOT_VERIFIED"
+  },
+  "visualInspection": [
+    "local-ui/november-390-light.png",
+    "local-ui/braslau-390-light.png"
+  ],
+  "sourcePdfSha256": "a55dc34c89317bd0a4b683ea84b46941213aa2b981d0a9de1fe3ebeb71dc9696",
+  "productionRelease": "BLOCKED_PRECONDITIONS_CHANGED"
+}
