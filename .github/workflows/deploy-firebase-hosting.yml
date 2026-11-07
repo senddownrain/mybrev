@@ -41,6 +41,9 @@ jobs:
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
           VITE_FIREBASE_DATABASE_URL: ${{ secrets.VITE_FIREBASE_DATABASE_URL }}
           VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+          # Public URLs (not secrets): feedback Worker API and the superadmin-only link to the analytics reports panel.
+          VITE_FEEDBACK_API_URL: https://mybrev-feedback.slovo-app.workers.dev
+          VITE_ANALYTICS_REPORTS_URL: https://mybrev-analytics-reports-staging.slovo-app.workers.dev/reports
         run: |
           if [ "$VITE_FIREBASE_PROJECT_ID" != "ibreviaryby" ]; then
             echo "::error::VITE_FIREBASE_PROJECT_ID must match the Hosting target ibreviaryby."
