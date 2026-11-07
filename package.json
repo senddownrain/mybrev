@@ -106,7 +106,10 @@
     "analytics:r05-local": "node experiments/analytics-ingest/worker/reports-local-server.mjs",
     "analytics:r05-seed": "node experiments/analytics-ingest/dashboard/seed-synthetic.mjs",
     "analytics:r05-smoke": "node experiments/analytics-ingest/worker/run-reports-smoke.mjs",
-    "analytics:e2e": "node experiments/analytics-ingest/e2e/p09-e2e.mjs --out docs/analytics-evidence/p09/e2e-out"
+    "analytics:e2e": "node experiments/analytics-ingest/e2e/p09-e2e.mjs --out docs/analytics-evidence/p09/e2e-out",
+    "audit:doxologies": "node scripts/liturgy/audit-doxologies.mjs",
+    "test:doxologies": "node --test tests/psalmody-doxology.test.mjs",
+    "verify:doxologies": "node scripts/liturgy/verify-doxologies.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",

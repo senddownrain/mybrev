@@ -1,3 +1,4 @@
+import { DOXOLOGY_HTML } from '../../lib/psalmody-doxology.mjs';
 /**
  * Ledgers of the audit: what changed in the BASE texts (separate from the seasonal variants), what was found
  * but NOT changed, and the decisions of the editor that the parser applies.
@@ -80,7 +81,7 @@ export const BASE_CORRECTIONS = Object.freeze([
       const closing = plainOf(base.officeOfReadingsPs2);
       const ps2 = comparableText(corpus.volumes.II.commons.get('apostles').fields.get('officeOfReadingsPs2'), 'easter') || '';
       const body = (t) => tokensOf(t).filter((w) => w !== 'ант' && w !== 'аллелюя');
-      const baseBody = body(htmlToPlain(base.officeOfReadingsPs2));
+      const baseBody = body(htmlToPlain(base.officeOfReadingsPs2.replaceAll(DOXOLOGY_HTML, '')));
       const volBody = body(ps2);
       const common = lcsLength(baseBody, volBody);
       return {

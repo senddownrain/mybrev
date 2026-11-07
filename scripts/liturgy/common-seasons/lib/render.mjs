@@ -5,6 +5,7 @@
  */
 import { HR, escapeHtml, markInline, paragraph, red } from './html.mjs';
 import { ALLELUIA_ANNOTATION } from './volume.mjs';
+import { repairPsalm } from '../../lib/psalmody-doxology.mjs';
 
 const clean = (text) => text.replace(ALLELUIA_ANNOTATION, '').replace(/\t+/g, '\t').replace(/\s+$/, '');
 const textOf = (line) => (typeof line === 'string' ? line : line.text);
@@ -77,7 +78,9 @@ export function renderPsalm(lines, { title } = {}) {
   });
   psalmStrophes(verses).forEach((strophe) => out.push(paragraph(strophe.map(redMarksEnd).join('<br />'))));
   repeats.forEach((text) => out.push(renderAntiphonParagraph(text)));
-  return out.join('\n');
+  // Printed Commons abbreviate the ending. Expand it in canonical HTML,
+  // before a repeated antiphon, including every regenerated seasonal psalm.
+  return repairPsalm(out.join('\n'), { field: 'laudesPs1' }).value;
 }
 
 export function renderHymn(lines) {
