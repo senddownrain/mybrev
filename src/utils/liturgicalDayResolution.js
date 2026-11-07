@@ -1,4 +1,6 @@
 import { isFromDayReference } from '../constants/days.js';
+import { OFFICE_CONTENT_FIELDS } from '../constants/officeFields.js';
+import { ADVENT_VESPERS_PSALMS } from './adventVespers.js';
 
 const DAY_TEMPLATE_LABELS = Object.freeze({
   apostles: 'Апосталы',
@@ -318,6 +320,35 @@ export function resolveChristmasDateAgainstPeriod(dateDay, periodDay) {
   return resolveDateDayAgainstPeriod(dateDay, periodDay);
 }
 
+/** Late Advent combines three sources, rather than treating a saved date page
+ * as an entire Office. Sundays retain their proper Office; weekday evening
+ * psalmody belongs to the current psalter, even when a source-year page has
+ * materialized another evening (notably Christmas I Vespers).
+ */
+export function resolveAdventDateAgainstPeriod(dateDay, periodDay, dayOfWeek) {
+  const sunday = Number(dayOfWeek) === 1;
+  const resolved = resolveDateDayAgainstPeriod(dateDay, periodDay);
+  if (!resolved) return null;
+  const sources = { ...periodDay?._fieldSources };
+  OFFICE_CONTENT_FIELDS.forEach((field) => {
+    const dateProper = ['laudesAntBen', 'vesperAntMag'].includes(field);
+    const periodOnly = (sunday && !dateProper) || ADVENT_VESPERS_PSALMS.includes(field);
+    if (periodOnly) {
+      resolved[field] = periodDay?.[field] ?? '';
+      sources[field] = periodDay?._fieldSources?.[field] || { document: periodDay?.id || null, field };
+    } else if (!isMissing(dateDay?.[field]) && !isFromDayReference(dateDay[field])) {
+      sources[field] = dateDay?._fieldSources?.[field] || { document: dateDay.id, field };
+    } else {
+      sources[field] = periodDay?._fieldSources?.[field] || { document: periodDay?.id || null, field };
+    }
+  });
+  resolved._fieldSources = sources;
+  // Do not let the route resolver reapply a date's old from-day instructions
+  // after this deliberate source selection.
+  delete resolved._fromDayFields;
+  return sunday ? resolved : applySeasonalWeekdayAntiphons(resolved, dayOfWeek);
+}
+
 function splitAntiphons(html) {
   if (!html) return [];
   const paragraphs = String(html).match(/<p(?:\s[^>]*)?>[\s\S]*?<\/p>/gi) || [];
@@ -337,6 +368,11 @@ export function applySeasonalWeekdayAntiphons(day, dayOfWeek) {
   ['laudes', 'vesper'].forEach((office) => {
     antiphons.forEach((antiphon, index) => {
       resolved[`${office}Ant${index + 1}`] = antiphon;
+      if (resolved._fieldSources) {
+        resolved._fieldSources = { ...resolved._fieldSources,
+          [`${office}Ant${index + 1}`]: { document: day.id, field: WEEKDAY_FIELD[Number(dayOfWeek)], part: index + 1 },
+        };
+      }
     });
   });
   return resolved;
