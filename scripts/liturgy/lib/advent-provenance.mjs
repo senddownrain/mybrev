@@ -82,5 +82,7 @@ export function checkAdventProvenance(source, date, diocese, content = contentFo
       assertField(option?.day, field, expectedDocument);
     }
   }
-  return { evening: christmasFirst ? 'christmas-I' : first ? 'I' : model.second ? 'II' : 'weekday', fields: rows };
+  const evening = christmasFirst ? 'christmas-I' : first ? 'I' : model.second ? 'II' : 'weekday';
+  const expectedEvening = m.date() === 24 ? 'christmas-I' : m.day() === 6 ? 'I' : sunday ? 'II' : 'weekday';
+  return { evening, expectedEvening, eveningStatus: evening === expectedEvening ? 'PASS' : 'WRONG_EVENING', fields: rows };
 }

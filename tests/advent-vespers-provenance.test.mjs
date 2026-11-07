@@ -72,6 +72,7 @@ test('2025–2032, all dioceses: every late-Advent source assertion, Sunday rota
         const date = `${year}-12-${day}`;
         const c = contentFor(source, date, { diocese });
         const report = checkAdventProvenance(source, date, diocese, c);
+        assert.equal(report.eveningStatus, 'PASS', `${date} ${diocese}: evening identity`);
         assert.deepEqual(report.fields.filter((field) => field.status !== 'PASS'), [], `${date} ${diocese}`);
         assert.equal(c.resolved.primary.kind, 'temporal');
         assert.ok(![c.resolved.primary, ...c.resolved.alternatives].some((o) => ['memorial', 'optional-memorial'].includes(o.rankKind)));
@@ -86,6 +87,9 @@ test('2025–2032, all dioceses: every late-Advent source assertion, Sunday rota
       // If Sunday is 24 December (2028), its evening is Christmas I Vespers.
       const sunday = evening(`${year}-12-${sundays[year - 2025]}`, diocese);
       assert.ok(sundays[year - 2025] === 24 ? sunday.model.firstVespers : sunday.model.second);
+      if (sundays[year - 2025] === 24) {
+        assert.equal(sunday.content.dayOptions[0].ordo.vespers.celebrationId, 'nativity-lord');
+      }
     }
   }
   assert.equal(checked, 256);
@@ -124,6 +128,12 @@ test('canonical document id does not bless newly corrupted proper text', () => {
   const changed = { ...source, days, daysById: new Map(days.map((day) => [day.id, day])) };
   const report = checkAdventProvenance(changed, '2026-12-21', DIOCESES[0]);
   assert.ok(report.fields.some((row) => row.field === 'vesperR' && row.status === 'WRONG_SOURCE'));
+});
+
+test('audit refuses IV Sunday II Vespers on the Christmas boundary even when all fields are nonempty', () => {
+  const c = contentFor(source, '2028-12-24');
+  c.dayOptions[0].ordo.vespers = { type: 'second' };
+  assert.equal(checkAdventProvenance(source, '2028-12-24', DIOCESES[0], c).eveningStatus, 'WRONG_EVENING');
 });
 
 test('reviewed data bridge preserves future edits and becomes inert after the patch', () => {

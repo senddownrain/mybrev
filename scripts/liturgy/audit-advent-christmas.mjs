@@ -48,6 +48,9 @@ export function checkDate(source, date, diocese) {
   const issues = [];
   const add = (kind, detail) => issues.push({ kind, ...detail });
   const provenance = checkAdventProvenance(source, date, diocese, content);
+  if (provenance && provenance.eveningStatus !== 'PASS') {
+    add('ADVENT_FIELD_SOURCE', { what: 'evening identity', expected: provenance.expectedEvening, actual: provenance.evening });
+  }
   (provenance?.fields || []).filter((field) => field.status !== 'PASS').forEach((field) => {
     add('ADVENT_FIELD_SOURCE', { evening: provenance.evening, ...field });
   });
@@ -219,7 +222,8 @@ async function main() {
       provenance: {
         dates: rows.filter((row) => row.provenance).length,
         fields: rows.reduce((n, row) => n + (row.provenance?.fields.length || 0), 0),
-        failures: rows.flatMap((row) => row.provenance?.fields || []).filter((field) => field.status !== 'PASS').length,
+        failures: rows.flatMap((row) => row.provenance?.fields || []).filter((field) => field.status !== 'PASS').length
+          + rows.filter((row) => row.provenance && row.provenance.eveningStatus !== 'PASS').length,
       },
     },
     problems,
@@ -234,6 +238,7 @@ async function main() {
     range: report.range, summary: report.summary.provenance,
     dates: rows.filter((row) => row.provenance).map((row) => ({
       date: row.date, diocese: row.diocese, evening: row.provenance.evening,
+      expectedEvening: row.provenance.expectedEvening, eveningStatus: row.provenance.eveningStatus,
       fields: row.provenance.fields.map(({ expectedText: _expected, actualText: _actual, ...field }) => field),
     })),
   })));
