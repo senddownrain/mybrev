@@ -1,0 +1,105 @@
+{
+  "status": "BLOCKED_PRECONDITIONS_CHANGED",
+  "capturedAt": "2026-11-07T17:16:08.280Z",
+  "projectId": "ibreviaryby",
+  "counts": {
+    "liturgicalCalendarMeta": 1,
+    "liturgicalCelebrations": 241,
+    "liturgicalDioceseOverrides": 75,
+    "liturgicalYearOverrides": 15
+  },
+  "baselineDocuments": 332,
+  "currentDocuments": 332,
+  "changedDocuments": [
+    {
+      "path": "liturgicalCalendarMeta/current",
+      "expectedHash": "4c5cb3324ebff435c04ac74673c1db4e7dce5798b9b3e320d808dbc9271c3209",
+      "actualHash": "f98551a4dc0836608f67e23a479e83f2a26480d5cc7ac65fe5b0c4a0f967f1d4",
+      "expectedUpdateTime": "2026-10-24T16:48:11.306509Z",
+      "actualUpdateTime": "2026-11-07T14:03:05.302442Z",
+      "fields": {
+        "publishedAt": {
+          "expected": "2026-10-07T18:15:01.305Z",
+          "actual": "2026-11-07T14:02:10.882Z"
+        },
+        "properTextsRevision": {
+          "expected": 5,
+          "actual": 6
+        },
+        "notesRevision": {
+          "expected": 4,
+          "actual": 6
+        }
+      }
+    },
+    {
+      "path": "liturgicalDioceseOverrides/grodno--our-lady-trakai",
+      "expectedHash": "071aa73e3f276f7bbe436db7da79deba6a36abd20b8ddee1d34099aaa237fc03",
+      "actualHash": "ab4250e2332dc9db585b332c50823454b9703469cd730aa20e502e6e62a5b41d",
+      "expectedUpdateTime": "2026-10-01T08:55:15.578926Z",
+      "actualUpdateTime": "2026-11-07T14:02:10.287433Z",
+      "fields": {
+        "daysRef": {
+          "expected": {
+            "_rank": "memoria-ad-libitum",
+            "_place": "grodno",
+            "dayIds": [
+              "05-07-our-lady-trakai-grodno-memoria-ad-libitum",
+              "05-07-our-lady-trakai-grodno"
+            ],
+            "source": "fixed",
+            "_date": "05.07"
+          },
+          "actual": {
+            "source": "fixed",
+            "dayIds": [
+              "05-07-our-lady-trakai-grodno"
+            ],
+            "_rank": "memoria",
+            "_date": "05.07",
+            "_place": "grodno"
+          }
+        },
+        "importedAt": {
+          "expected": "2026-10-01T08:55:13.577Z",
+          "actual": "2026-11-07T14:02:10.092Z"
+        },
+        "rank": {
+          "expected": "festum",
+          "actual": "memoria"
+        },
+        "source": {
+          "expected": {
+            "rawText": "Найсв. Панны Марыі Тракельскай",
+            "evidence": [
+              "grodno:2027-07-10:c0"
+            ],
+            "file": "src/data/ordo/layers.js",
+            "basis": ""
+          },
+          "actual": {
+            "file": "src/constants/fixedCalendar.js",
+            "rawText": "Найсв. Панны Марыі Тракельскай"
+          }
+        },
+        "dateRule": {
+          "expected": {
+            "type": "fixed",
+            "day": 10,
+            "month": 7
+          },
+          "actual": {
+            "day": 5,
+            "type": "fixed",
+            "month": 7
+          }
+        }
+      }
+    }
+  ],
+  "unchangedDocuments": 330,
+  "requests": 5,
+  "firestoreWrites": 0,
+  "mergePerformed": false,
+  "hostingDeployPerformed": false
+}

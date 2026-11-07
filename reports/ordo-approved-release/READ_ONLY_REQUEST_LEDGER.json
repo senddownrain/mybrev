@@ -1,0 +1,37 @@
+[
+  {
+    "method": "GET",
+    "resource": "/liturgicalCalendarMeta/current",
+    "startedAt": "2026-11-07T17:16:05.337Z",
+    "status": 200,
+    "responseBytes": 574
+  },
+  {
+    "method": "GET",
+    "resource": "/liturgicalCelebrations",
+    "startedAt": "2026-11-07T17:16:05.669Z",
+    "status": 200,
+    "responseBytes": 622889
+  },
+  {
+    "method": "GET",
+    "resource": "/liturgicalDioceseOverrides",
+    "startedAt": "2026-11-07T17:16:06.419Z",
+    "status": 200,
+    "responseBytes": 225347
+  },
+  {
+    "method": "GET",
+    "resource": "/liturgicalYearOverrides",
+    "startedAt": "2026-11-07T17:16:07.662Z",
+    "status": 200,
+    "responseBytes": 26174
+  },
+  {
+    "method": "GET",
+    "resource": "/liturgicalCalendarMeta/current",
+    "startedAt": "2026-11-07T17:16:07.996Z",
+    "status": 200,
+    "responseBytes": 574
+  }
+]
