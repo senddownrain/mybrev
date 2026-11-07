@@ -16,7 +16,7 @@ import { useSettingsStore } from '@/stores/settings';
 import { usePsalmody } from '@/composables/usePsalmody';
 import { decoratePsalmody } from '@/utils/psalmodyDisplay';
 
-const props = defineProps({ html: { type: String, default: '' } });
+const props = defineProps({ html: { type: String, default: '' }, interactive: { type: Boolean, default: true } });
 const settings = useSettingsStore();
 const psalmody = usePsalmody();
 const rootElement = ref(null);
@@ -25,6 +25,7 @@ const displayedHtml = computed(() => {
   root.innerHTML = props.html;
   decoratePsalmody(root, {
     mode: settings.psalmodyMode,
+    interactive: props.interactive,
   });
   return root.innerHTML;
 });
@@ -33,7 +34,7 @@ watchPostEffect(() => {
   // Track a text/layout update too, while keeping focus on a toggled strophe.
   displayedHtml.value;
   rootElement.value?.querySelectorAll('[data-psalm-side]').forEach((strophe) => {
-    strophe.setAttribute('aria-pressed', String(strophe.dataset.psalmSide === side));
+    if (props.interactive) strophe.setAttribute('aria-pressed', String(strophe.dataset.psalmSide === side));
   });
 });
 function toggle(event) {
@@ -49,7 +50,8 @@ function onKeydown(event) {
 </script>
 
 <style scoped>
-.psalmody-text :deep([data-psalm-side]) { cursor: pointer; transition: opacity .16s ease; }
+.psalmody-text :deep([data-psalm-side]) { transition: opacity .16s ease; }
+.psalmody-text :deep([data-psalm-side][role="button"]) { cursor: pointer; }
 .psalmody-text :deep([data-psalm-side]:focus-visible) { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
 .psalmody-text[data-dimmed-side="A"] :deep([data-psalm-side="A"]),
 .psalmody-text[data-dimmed-side="B"] :deep([data-psalm-side="B"]) {

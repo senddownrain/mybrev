@@ -13,4 +13,4 @@ export function providePsalmody(route) {
   });
 }
 
-export const usePsalmody = () => inject(PSALMODY);
+export const usePsalmody = () => inject(PSALMODY, null);

@@ -1,0 +1,41 @@
+{
+  "full_matrix": [
+    "1440px/light: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "1440px/dark: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "1440px/marian: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "768px/light: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "768px/dark: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "768px/marian: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "390px/light: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "390px/dark: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "390px/marian: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "320px/light: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "320px/dark: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "320px/marian: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed"
+  ],
+  "mobile_final_with_full_width_and_live_alignment": [
+    "390px/light: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "390px/dark: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "390px/marian: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "320px/light: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "320px/dark: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "320px/marian: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed"
+  ],
+  "unit_tests": {
+    "total": 1120,
+    "passed": 1109,
+    "skipped": 11,
+    "failed": 0
+  },
+  "build": "passed",
+  "eslint": "passed",
+  "existing_smokes": [
+    "appearance",
+    "liturgy-reader",
+    "devotional-office"
+  ],
+  "limitations": [
+    "External font requests blocked; computed family, scale and Belarusian text checked with available fallback fonts.",
+    "smoke:responsive requires unavailable Firebase CLI, emulator and private snapshots."
+  ]
+}

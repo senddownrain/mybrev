@@ -11,7 +11,7 @@
           <template v-for="(row, index) in page.rows" :key="index">
             <h2 v-if="row.kind === 'month'" :id="`month-${row.month}`" class="calendar-month">{{ row.text }}</h2>
             <template v-else-if="row.kind === 'intro'">
-              <p v-if="index === 0" class="calendar-intro document-prose"><DocumentRuns :runs="introRuns" /></p>
+              <p v-if="index === 0" class="calendar-intro document-prose" data-reader-prose><DocumentRuns :runs="introRuns" /></p>
             </template>
             <p v-else-if="row.kind === 'note'" class="calendar-note document-prose"><DocumentRuns :runs="row.runs" /></p>
             <div v-else class="calendar-row" :class="{ 'calendar-row--full': !row.date && !row.indent, 'calendar-row--empty': row.date && !row.runs.length }" :data-month="row.month" :data-date="row.date">

@@ -23,6 +23,7 @@
           />
           <div
             v-else
+            v-reader-prose
             ref="prayerTextElement"
             v-html="prayerHtml"
             class="prayer-text"
@@ -62,6 +63,7 @@
 </template>
 
 <script setup>
+import { vReaderProse } from '@/directives/readerProse';
 import { feedbackLink } from '@/utils/feedbackContext';
 import '@/styles/prayer-reading.css';
 import { ref, computed, watch, nextTick, onUnmounted, onMounted } from 'vue';
