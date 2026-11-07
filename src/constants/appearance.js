@@ -77,6 +77,12 @@ export const APP_STATUS_BAR_COLORS = Object.freeze({
   marian: APP_THEME_COLORS.marian.primary,
 });
 
+// Stable Android installed-PWA chrome fallback. The native navigation bar is
+// browser-controlled; this dark graphite can be used by Chrome before Vue
+// starts and when Android uses the static manifest theme colour. The top
+// browser/status bar continues to follow APP_STATUS_BAR_COLORS at runtime.
+export const APP_PWA_MANIFEST_THEME_COLOR = '#111318';
+
 export const THEME_OPTIONS = Object.freeze([
   { value: 'system', label: 'Сістэма' },
   { value: 'light', label: 'Светлая' },
