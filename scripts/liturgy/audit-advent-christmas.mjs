@@ -13,6 +13,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import { gzipSync } from 'node:zlib';
 import moment from '../../src/utils/moment-be.js';
 import { OFFICE_TEXT_FIELDS } from '../../src/constants/officeFields.js';
 import { getSeasonalDateDocumentId } from '../../src/utils/liturgicalDayResolution.js';
@@ -20,10 +21,12 @@ import { optionDescriptor } from '../../src/utils/ordo/runtime.js';
 import { classifyField, NOT_RENDERABLE, plainText } from './lib/field-audit.mjs';
 import { contentFor, openLiturgySource, snapshotDirectory } from './lib/snapshot-content.mjs';
 import { DIOCESES } from './audit-hours-sources.mjs';
+import { checkAdventProvenance } from './lib/advent-provenance.mjs';
 
 const ROOT = process.cwd();
 const JSON_OUT = path.join(ROOT, 'reports', 'advent-christmas-content-audit.json');
 const MD_OUT = path.join(ROOT, 'docs', 'advent-christmas-content-audit.md');
+const PROVENANCE_OUT = path.join(ROOT, 'docs', 'evidence', 'issue-200', 'advent-provenance.json.gz');
 const arg = (name, fallback) => { const index = process.argv.indexOf(name); return index > 0 ? process.argv[index + 1] : fallback; };
 
 const WEEKDAYS = ['нядзеля', 'панядзелак', 'аўторак', 'серада', 'чацвер', 'пятніца', 'субота'];
@@ -44,6 +47,10 @@ export function checkDate(source, date, diocese) {
   const { daysResult, resolved, context } = content;
   const issues = [];
   const add = (kind, detail) => issues.push({ kind, ...detail });
+  const provenance = checkAdventProvenance(source, date, diocese, content);
+  (provenance?.fields || []).filter((field) => field.status !== 'PASS').forEach((field) => {
+    add('ADVENT_FIELD_SOURCE', { evening: provenance.evening, ...field });
+  });
   const inSeason = ['advent', 'christmas'].includes(context.periodType);
   const dateDocId = getSeasonalDateDocumentId(mDate);
   const dateDoc = dateDocId ? source.daysById.get(dateDocId) : null;
@@ -111,11 +118,12 @@ export function checkDate(source, date, diocese) {
     dateDocument: dateDocId ? { id: dateDocId, exists: Boolean(dateDoc), used: [daysResult.seasonalException?.id, daysResult.seasonalDateDay?.id].includes(dateDocId) } : null,
     options: content.dayOptions.map((option) => ({ id: option.ordo?.optionId || option.key, title: option.title, properSource: option.ordo?.properSource || null, choices: (option.templates || []).map((item) => item.label) })),
     commemorations: commemorations.map((item) => item.id),
+    ...(provenance ? { provenance } : {}),
     issues,
   };
 }
 
-const REVIEW = new Set(['OCTAVE_DAYTIME_LOST', 'RAW_INSTRUCTION', 'STALE_TITLE', 'SPECIAL_ANTIPHON_LOST', 'COMMON_OVER_SEASON', 'MEMORIAL_NOT_COMMEMORATION', 'INTEGRITY', 'MISSING_FIELD']);
+const REVIEW = new Set(['ADVENT_FIELD_SOURCE', 'OCTAVE_DAYTIME_LOST', 'RAW_INSTRUCTION', 'STALE_TITLE', 'SPECIAL_ANTIPHON_LOST', 'COMMON_OVER_SEASON', 'MEMORIAL_NOT_COMMEMORATION', 'INTEGRITY', 'MISSING_FIELD']);
 function statusOf(target, before) {
   if (target.issues.some((item) => item.kind === 'MISSING')) return 'MISSING';
   if (target.issues.some((item) => REVIEW.has(item.kind))) return 'NEEDS_REVIEW';
@@ -127,6 +135,7 @@ function renderMarkdown(report) {
     '# Advent 17–24 і Christmas 25.12–12.01: аўдыт зместу',
     '',
     `Згенеравана \`npm run liturgy:audit\` (${report.generatedAt.slice(0, 10)}), snapshot ${report.snapshot}. Гады ${report.range.from}–${report.range.to}, дыяцэзіі: ${DIOCESES.join(', ')}.`,
+    `Крыніца: \`${report.snapshotScope}\`. Гэта офлайн-праверка, не live-аўдыт Firestore.`,
     '',
     'Стан «пасля»: `liturgicalProperTexts` + рамонт temporal `days`; «да»: legacy fixed `days`.',
     '',
@@ -139,6 +148,18 @@ function renderMarkdown(report) {
     '| Сезон | PASS | FIXED | NEEDS_REVIEW | MISSING |',
     '|---|---|---|---|---|',
     ...Object.entries(report.summary.byYear).map(([year, counts]) => `| ${year}/${Number(year) + 1} | ${counts.PASS || 0} | ${counts.FIXED || 0} | ${counts.NEEDS_REVIEW || 0} | ${counts.MISSING || 0} |`),
+    '',
+    '## Паходжанне палёў Адвэнту (issue #200)',
+    '',
+    `${report.summary.provenance.dates} дат×дыяцэзій, ${report.summary.provenance.fields} праверак палёў; памылак: ${report.summary.provenance.failures}. Правяраюцца і тэкст, і дакумент/поле-крыніца; непустое поле з няправільнай крыніцы не праходзіць.`,
+    '',
+    '| Вечар 2026 | Нешпары | Поле | Крыніца | Статус |',
+    '|---|---|---|---|---|',
+    ...report.dates.filter((row) => row.diocese === DIOCESES[0] && ['2026-12-19', '2026-12-20', '2026-12-21', '2026-12-23'].includes(row.date))
+      .flatMap((row) => row.provenance.fields.filter((field) => field.field.startsWith('vesper')).map((field) =>
+        `| ${row.date} | ${row.provenance.evening} | ${field.field} | ${field.actualSource?.document}.${field.actualSource?.field} | ${field.status} |`)),
+    '',
+    'Усе дыяцэзіі правяраюцца асобна. Захаваны per-field вынік — [advent-provenance.json.gz](evidence/issue-200/advent-provenance.json.gz); поўны лакальны справаздачны JSON — `reports/advent-christmas-content-audit.json`; крыніцы і dry-run — [advent-vespers-issue-200.md](advent-vespers-issue-200.md).',
     '',
     '## Што было выпраўлена (FIXED)',
     '',
@@ -155,7 +176,8 @@ function renderMarkdown(report) {
     '',
     '## Як чытаць',
     '',
-    '- 17–24.12: Office будня па даце (`advent-DD-12`), спецыяльныя антыфоны да Benedictus/Magnificat, успаміны — толькі коммемарацыя.',
+    '- 17–24.12: будні — уласныя тэксты даты + актуальны псалтыр; нядзелі — уласны нядзельны Office. Антыфоны Benedictus/Magnificat па даце захоўваюцца; у I Нешпарах O-антыфона адпавядае грамадзянскаму вечару. Успаміны — толькі коммемарацыя.',
+    '- 24.12.2028: днём IV нядзеля, вечарам I Нешпары Нараджэння Пана (GNLYC 33, 39).',
     '- 25–28.12, 1.01, 6.01: Office — празднаванне; дакумент даты — дзень актавы, з якога дабіраецца sparse Proper.',
     '- Да 12.01: дакументы `christmas-DD-01` ужываюцца, пакуль ідзе перыяд Нараджэння (мяжа перыяду ≠ акно захоўвання).',
     '',
@@ -191,15 +213,32 @@ async function main() {
   const report = {
     generatedAt: new Date().toISOString(),
     snapshot: target.manifest.exportedAt,
+    snapshotScope: target.manifest.scope || 'local-snapshot',
     range: { from: fromYear, to: toYear },
-    summary: { byStatus: count(rows, (row) => row.status), byYear, fixedKinds },
+    summary: { byStatus: count(rows, (row) => row.status), byYear, fixedKinds,
+      provenance: {
+        dates: rows.filter((row) => row.provenance).length,
+        fields: rows.reduce((n, row) => n + (row.provenance?.fields.length || 0), 0),
+        failures: rows.flatMap((row) => row.provenance?.fields || []).filter((field) => field.status !== 'PASS').length,
+      },
+    },
     problems,
     dates: rows,
   };
   fs.mkdirSync(path.dirname(JSON_OUT), { recursive: true });
   fs.writeFileSync(JSON_OUT, `${JSON.stringify(report, null, 1)}\n`);
   fs.writeFileSync(MD_OUT, renderMarkdown(report));
+  fs.mkdirSync(path.dirname(PROVENANCE_OUT), { recursive: true });
+  fs.writeFileSync(PROVENANCE_OUT, gzipSync(JSON.stringify({
+    generatedAt: report.generatedAt, snapshot: report.snapshot, scope: report.snapshotScope,
+    range: report.range, summary: report.summary.provenance,
+    dates: rows.filter((row) => row.provenance).map((row) => ({
+      date: row.date, diocese: row.diocese, evening: row.provenance.evening,
+      fields: row.provenance.fields.map(({ expectedText: _expected, actualText: _actual, ...field }) => field),
+    })),
+  })));
   console.log(JSON.stringify({ output: [path.relative(ROOT, JSON_OUT), path.relative(ROOT, MD_OUT)], ...report.summary.byStatus }, null, 2));
+  if (problems.length) process.exitCode = 1;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

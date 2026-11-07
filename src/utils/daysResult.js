@@ -17,10 +17,13 @@ import {
   isSeasonalDateDocumentId,
   isSeasonalDateException,
   resolveChristmasDateAgainstPeriod,
+  resolveAdventDateAgainstPeriod,
   resolveDateDayAgainstPeriod,
   resolveDayAgainstPeriod,
   resolvePeriodDayAgainstPsalter,
 } from './liturgicalDayResolution.js';
+import { ADVENT_VESPERS_PSALMS, applyReviewedAdventVespers } from './adventVespers.js';
+import { OFFICE_CONTENT_FIELDS } from '../constants/officeFields.js';
 
 const normalizedFeastCode = (code) => String(code || '').replace(/^feast-/, '');
 
@@ -67,9 +70,23 @@ export function periodPsalterFallbackId(resolved, periodType, periodWeekNumber, 
 
 export function applyPeriodPsalterFallback(resolved, psalterDay, periodType) {
   if (!resolved || !psalterDay) return resolved;
-  return periodType === 'advent'
+  const result = periodType === 'advent'
     ? resolveDayAgainstPeriod(resolved, psalterDay, { fillMissing: true })
     : resolvePeriodDayAgainstPsalter(resolved, psalterDay);
+  if (periodType === 'advent') {
+    result._fieldSources = { ...resolved._fieldSources };
+    OFFICE_CONTENT_FIELDS.forEach((field) => {
+      const own = resolved[field] !== undefined && resolved[field] !== null && resolved[field] !== '';
+      result._fieldSources[field] ||= { document: own ? resolved.id : psalterDay.id, field };
+    });
+    if (Number(resolved._dayOfWeek) !== 1) {
+      ADVENT_VESPERS_PSALMS.forEach((field) => {
+        result[field] = psalterDay[field] ?? '';
+        result._fieldSources[field] = { document: psalterDay.id, field };
+      });
+    }
+  }
+  return result;
 }
 
 /**
@@ -97,7 +114,7 @@ export function assembleDaysResult({
     _periodWeekNumber: overrides.periodWeek ?? context.periodWeek ?? day._periodWeekNumber,
     _dayOfWeek: context.dayOfWeek ?? day._dayOfWeek,
   } : null);
-  const resolvedPeriodDay = withCalendarContext(resolveDayAgainstPeriod(periodDay, null));
+  const resolvedPeriodDay = withCalendarContext(resolveDayAgainstPeriod(applyReviewedAdventVespers(periodDay), null));
 
   const hasSeasonalException = isSeasonalDateException(mDate, context.periodType) && Boolean(seasonalDay);
   // 25–28.12, 1.01, 6.01: the date document is not the Office (a fixed
@@ -107,14 +124,11 @@ export function assembleDaysResult({
     : null;
   const seasonalPeriodType = mDate.month() === 11 && mDate.date() <= 24 ? 'advent' : 'christmas';
   const seasonal = hasSeasonalException
-    ? applySeasonalWeekdayAntiphons(
-      withCalendarContext(
-        context.periodType === 'christmas'
-          ? resolveChristmasDateAgainstPeriod(seasonalDay, resolvedPeriodDay)
-          : resolveDayAgainstPeriod(seasonalDay, resolvedPeriodDay, { fillMissing: true }),
-        { periodType: seasonalPeriodType, periodWeek: context.periodWeek },
-      ),
-      context.dayOfWeek,
+    ? withCalendarContext(
+      context.periodType === 'christmas'
+        ? applySeasonalWeekdayAntiphons(resolveChristmasDateAgainstPeriod(seasonalDay, resolvedPeriodDay), context.dayOfWeek)
+        : resolveAdventDateAgainstPeriod(applyReviewedAdventVespers(seasonalDay), resolvedPeriodDay, context.dayOfWeek),
+      { periodType: seasonalPeriodType, periodWeek: context.periodWeek },
     )
     : null;
   // A sparse feast document (`_schema: 2`) is assembled field by field by the
