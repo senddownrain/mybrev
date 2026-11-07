@@ -57,6 +57,8 @@
           </div>
         </v-list-item>
 
+        <TextAlignmentSettings class="sheet-alignment" />
+
         <v-divider class="my-2"></v-divider>
 
         <v-list-item>
@@ -94,6 +96,7 @@
 </template>
 
 <script setup>
+import TextAlignmentSettings from '@/components/TextAlignmentSettings.vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { useAppBar } from '@/composables/useAppBar.js';
 import { THEME_OPTIONS } from '@/constants/appearance';
@@ -107,6 +110,7 @@ const themeOptions = THEME_OPTIONS;
 </script>
 
 <style scoped>
+.sheet-alignment { margin-inline: 16px; }
 .text-settings-card {
   padding: 10px 12px 16px;
   max-height: 85dvh;

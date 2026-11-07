@@ -92,15 +92,14 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
   max-width: 100%;
+}
+
+.prayer-text :deep(*:not([data-reader-prose])) {
   text-align: left !important;
 }
 
-.prayer-text :deep(*) {
-  text-align: left !important;
-}
-
-.prayer-text :deep([style*="text-align: justify"]),
-.prayer-text :deep([style*="text-align:justify"]) {
+.prayer-text :deep([style*="text-align: justify"]:not([data-reader-prose])),
+.prayer-text :deep([style*="text-align:justify"]:not([data-reader-prose])) {
   text-align: left !important;
 }
 

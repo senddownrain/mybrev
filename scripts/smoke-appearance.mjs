@@ -117,6 +117,7 @@ async function auditSurfaces() {
   for (const width of [390, 1440]) for (const theme of ['marian', 'light', 'dark']) {
     const { context, page, errors } = await open(width, theme);
     await page.goto(`${base}/settings`);
+    await page.locator('.text-group-toggle').click();
     await page.locator('.text-preview').waitFor();
     await appearance(page, theme);
     await screenshot(page, width, theme, 'settings', ['.settings-section', '.text-preview']);
