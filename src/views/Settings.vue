@@ -15,6 +15,10 @@
         <div class="setting-copy"><strong>Не выключаць экран</strong><span>Карысна падчас малітвы або доўгага чытання</span></div>
         <v-switch :model-value="settings.keepScreenOn" color="primary" hide-details inset aria-label="Не выключаць экран" @update:model-value="settings.setKeepScreenOn" />
       </div>
+      <div class="setting-row">
+        <div class="setting-copy"><strong>Каляровае вылучэнне ў чытаннях</strong><span>Выбірайце сказы і захоўвайце іх колер</span></div>
+        <v-switch v-model="settings.readingHighlightsEnabled" color="primary" hide-details inset aria-label="Каляровае вылучэнне ў чытаннях" />
+      </div>
       <div class="setting-row setting-row--theme">
         <div class="setting-copy"><strong>Тэма</strong><span>Сістэмная аўтаматычна сочыць за наладамі прылады</span></div>
         <div class="theme-options" role="radiogroup" aria-label="Тэма праграмы">
