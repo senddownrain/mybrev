@@ -43,6 +43,9 @@ jobs:
       - name: Approved calendar and source documents
         run: npm run test:ordo && node --test tests/source-documents.test.mjs
 
+      - name: Reading sentence highlights and screen wake lock regressions (offline)
+        run: node --test tests/reading-highlights.test.mjs tests/screen-wake-lock.test.mjs
+
       - name: Prayer normalization tests (offline)
         run: npm run test:prayer-normalization
 
