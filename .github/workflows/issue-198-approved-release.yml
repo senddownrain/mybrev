@@ -1,0 +1,188 @@
+name: Issue 198 approved production repair and visual QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/issue-198-approved-release.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: issue-198-approved-production
+  cancel-in-progress: false
+
+jobs:
+  repair-publish-verify:
+    if: github.repository == 'senddownrain/mybrev' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 50
+    steps:
+      - name: Checkout approved main
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install and test approved repair
+        run: |
+          npm ci
+          node --test tests/ordinary-friday-vespers.test.mjs
+          git diff --check
+
+      - name: Load existing protected Firebase credential
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IBREVIARYBY }}
+        run: |
+          set -euo pipefail
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then echo "::error::Missing production Firebase credential"; exit 1; fi
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
+          node -e "const a=require(process.argv[1]);if(a.project_id!=='ibreviaryby') process.exit(2)" "$RUNNER_TEMP/firebase-service-account.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
+          echo "FIREBASE_SERVICE_ACCOUNT_B64=$(printf '%s' "$FIREBASE_SERVICE_ACCOUNT" | base64 -w0)" >> "$GITHUB_ENV"
+
+      - name: Preflight app manifest — reject unrelated unpublished changes
+        run: |
+          npm run content:manifest -- --collection days --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('reports/content/manifest-diff.json','utf8'));
+          if(!r.published) throw Error('Existing Flutter manifest missing; block one-document release');
+          const changed=r.diffs.flatMap(d=>[...(d.ids?.added||[]),...(d.ids?.changed||[]),...(d.ids?.removed||[])]);
+          if(changed.some(id=>id!=='ordinary-w30-d6')) throw Error('Unrelated days updates are not approved for this release: '+changed.length);
+          console.log('Preflight manifest: no unrelated changed days');
+          NODE
+
+      - name: Create guarded, reviewed 11-field patch from fresh live reads
+        run: |
+          node scripts/liturgy/fix-ordinary-friday-vespers.mjs --live --out reports/liturgy/issue-198-production-plan.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p=JSON.parse(fs.readFileSync('reports/liturgy/issue-198-production-plan.json','utf8'));
+          const n=Object.keys(p.fields).length;
+          if(n!==11 && n!==0) throw Error('Expected 11-field repair or already corrected; found '+n);
+          if(p.comparison.some(x=>x.changed && !x.equalsAllSaintsFirst)) throw Error('Unrecognized source');
+          console.log('Approved changes: '+n);
+          NODE
+
+      - name: Apply exact Firestore patch with update-time preconditions and readback
+        run: |
+          node scripts/liturgy/fix-ordinary-friday-vespers.mjs --live --apply --plan reports/liturgy/issue-198-production-plan.json
+
+      - name: Validate Flutter content manifest — only approved target
+        run: |
+          npm run content:manifest -- --collection days --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('reports/content/manifest-diff.json','utf8'));
+          const changed=r.diffs.flatMap(d=>[...(d.ids?.added||[]),...(d.ids?.changed||[]),...(d.ids?.removed||[])]);
+          if(changed.some(id=>id!=='ordinary-w30-d6')) throw Error('Manifest includes unapproved changes');
+          const planned=JSON.parse(fs.readFileSync('reports/liturgy/issue-198-production-plan.json','utf8'));
+          if(Object.keys(planned.fields).length && !changed.includes('ordinary-w30-d6')) throw Error('Patched target absent from pending manifest');
+          if(changed.length && (r.classification.verdict!=='SAFE CONTENT PATCH' || !r.decision?.publish)) {
+            throw Error('Manifest publication refused: '+r.classification.verdict);
+          }
+          console.log('Manifest scope approved: '+JSON.stringify(changed));
+          NODE
+
+      - name: Publish Flutter content manifest patch
+        run: npm run content:manifest -- --collection days --service-account "$GOOGLE_APPLICATION_CREDENTIALS" --apply
+
+      - name: Build Web with published content revision
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+          VITE_FIREBASE_DATABASE_URL: ${{ secrets.VITE_FIREBASE_DATABASE_URL }}
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+          VITE_FEEDBACK_API_URL: https://mybrev-feedback.slovo-app.workers.dev
+          VITE_ANALYTICS_REPORTS_URL: https://mybrev-analytics-reports-staging.slovo-app.workers.dev/reports
+        run: |
+          test "$VITE_FIREBASE_PROJECT_ID" = ibreviaryby
+          npm run build
+          test -s dist/index.html
+
+      - name: Deploy Firebase Hosting
+        run: npx --yes firebase-tools@latest deploy --only hosting --project ibreviaryby --non-interactive
+
+      - name: Install Chromium for mobile and desktop visual QA
+        run: npx --no-install playwright-core install --with-deps chromium
+
+      - name: Production date screenshots and visible-content QA
+        run: |
+          mkdir -p reports/liturgy/issue-198-screenshots
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import { chromium } from 'playwright-core';
+          const base='https://ibreviaryby.web.app';
+          const browser=await chromium.launch({headless:true});
+          const cases=[
+            ['2026-10-30','ordinary-w30-d6',false],
+            ['2027-10-29','ordinary-w30-d6',false],
+            ['2028-11-03','ordinary-w30-d6',false],
+            ['2026-10-31','ordinary-w30-d7',true],
+            ['2027-10-31','ordinary-w31-d1',true],
+          ];
+          const records=[];
+          try {
+            for(const [date,id,expectFirst] of cases){
+              for(const [size,viewport] of [['mobile',{width:390,height:844}],['desktop',{width:1280,height:800}]]){
+                const ctx=await browser.newContext({viewport,serviceWorkers:'block'});
+                const page=await ctx.newPage();
+                const url=base+'/day/'+date+'/ora/'+id+'/vesper?diocese=vitebsk';
+                try {
+                  await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
+                  await page.locator('.liturgical-hour-column .ora-text').first().waitFor({state:'visible',timeout:60000});
+                  const rubrics=await page.locator('.vespers-rubric-chip').allInnerTexts();
+                  const first=rubrics.some(x=>/I Нешпары/.test(x)&&!/II Нешпары/.test(x));
+                  assert.equal(first,expectFirst,date+': incorrect I Vespers rubric '+rubrics);
+                  if(!expectFirst) assert.ok(!rubrics.some(x=>x.includes('Усіх Святых')),date+': All Saints rubric on Friday');
+                  const body=await page.locator('.liturgical-hour-column').innerText();
+                  assert.ok(body.length>1500,date+': prayer text unexpectedly short');
+                  const file='reports/liturgy/issue-198-screenshots/'+date+'-'+size+'.png';
+                  await page.screenshot({path:file,fullPage:true});
+                  records.push({date,size,url,first,rubrics,textChars:body.length,screenshot:file});
+                  console.log('PASS',date,size,rubrics.join(' | '));
+                }finally {await ctx.close();}
+              }
+            }
+          }finally {await browser.close();}
+          fs.writeFileSync('reports/liturgy/issue-198-screenshots/results.json',JSON.stringify({cases:records.length,records},null,2));
+          console.log('Screenshot acceptance:',records.length,'passed');
+          NODE
+
+      - name: Upload visual evidence and sanitized release reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: issue-198-production-screenshots-and-report
+          path: |
+            reports/liturgy/issue-198-screenshots/
+            reports/content/manifest-diff.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Preserve private pre-write Firestore rollback copy
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: issue-198-private-rollback
+          path: backups/issue-198/
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Erase runner credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/firebase-service-account.json"
