@@ -46,7 +46,6 @@ jobs:
           printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
           node -e "const a=require(process.argv[1]);if(a.project_id!=='ibreviaryby') process.exit(2)" "$RUNNER_TEMP/firebase-service-account.json"
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
-          echo "FIREBASE_SERVICE_ACCOUNT_B64=$(printf '%s' "$FIREBASE_SERVICE_ACCOUNT" | base64 -w0)" >> "$GITHUB_ENV"
 
       - name: Preflight app manifest — reject unrelated unpublished changes
         run: |
@@ -62,7 +61,7 @@ jobs:
 
       - name: Create guarded, reviewed 11-field patch from fresh live reads
         run: |
-          node scripts/liturgy/fix-ordinary-friday-vespers.mjs --live --out reports/liturgy/issue-198-production-plan.json
+          FIREBASE_SERVICE_ACCOUNT_B64="$(base64 -w0 "$GOOGLE_APPLICATION_CREDENTIALS")" node scripts/liturgy/fix-ordinary-friday-vespers.mjs --live --out reports/liturgy/issue-198-production-plan.json
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const p=JSON.parse(fs.readFileSync('reports/liturgy/issue-198-production-plan.json','utf8'));
@@ -74,7 +73,7 @@ jobs:
 
       - name: Apply exact Firestore patch with update-time preconditions and readback
         run: |
-          node scripts/liturgy/fix-ordinary-friday-vespers.mjs --live --apply --plan reports/liturgy/issue-198-production-plan.json
+          FIREBASE_SERVICE_ACCOUNT_B64="$(base64 -w0 "$GOOGLE_APPLICATION_CREDENTIALS")" node scripts/liturgy/fix-ordinary-friday-vespers.mjs --live --apply --plan reports/liturgy/issue-198-production-plan.json
 
       - name: Validate Flutter content manifest — only approved target
         run: |
