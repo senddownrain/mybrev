@@ -85,18 +85,29 @@ test('static document UI renders all runs, public original and safe navigation w
   for (const route of ['documents/proper-calendar', 'documents/liturgy-hours-decrees', 'documents/liturgy-hours-introduction']) assert.ok(read('src/router/index.js').includes(route));
 });
 
-test('Roman references remain link-only; introduction permission has a scoped evidence record', () => {
-  assert.equal(apostolic.publicationMode, 'official_link');
+test('full Apostolic See decrees are embedded and source-verifiable without outbound links', () => {
+  assert.equal(apostolic.publicationMode, 'full_text');
   assert.equal(introduction.publicationMode, 'full_text');
   assert.equal(introduction.permission.status, 'confirmed_by_project_owner');
   assert.match(read(introduction.permission.evidence), /Разрешение получено/);
   assert.equal(introduction.sourceUrl, 'https://lh.catholic.by/uvodziny.php');
-  assert.equal(apostolic.sourceUrl, 'https://lh.catholic.by/dekrety.php');
+  assert.equal(apostolic.sourceFile, 'docs/sources/primary/lh-decrees-2026-11-05.txt');
   assert.deepEqual(apostolic.documents.map(doc => [doc.protocol, doc.date]), [['1000/71', '1971-04-11'], ['1814/84', '1985-04-07']]);
-  for (const document of apostolic.documents) {
-    assert.ok(!('volume' in document) && !('roman' in document) && !('fullText' in document));
-    assert.ok(read('docs/sources/primary/lh-decrees-2026-11-05.txt').includes(`Прат. № ${document.protocol}`));
-  }
+  const source = read(apostolic.sourceFile);
+  const sourceStart = source.indexOf('СВЯТАЯ КАНГРЭГАЦЫЯ БОЖАГА КУЛЬТУ');
+  assert.ok(sourceStart >= 0);
+  const original = source.slice(sourceStart);
+  const second = original.indexOf('\nКАНГРЭГАЦЫЯ БОЖАГА КУЛЬТУ\n');
+  assert.ok(second >= 0);
+  const sourceTexts = [original.slice(0, second), original.slice(second + 1)];
+  apostolic.documents.forEach((doc, index) => {
+    const rendered = [doc.issuer, `Прат. № ${doc.protocol}`, doc.heading, doc.body].join('\n');
+    assert.equal(normalized(rendered), normalized(sourceTexts[index]), `Full decree ${doc.protocol} must match the primary source`);
+    assert.ok(doc.body.length > 100);
+  });
+  const vue = read('src/views/LiturgyHoursDecrees.vue');
+  assert.match(vue, /apostolic-decree__body/);
+  assert.doesNotMatch(vue, /Крыніца дэкрэтаў I–III тамоў|Поўныя тэксты двух дэкрэтаў на|https:\/\/lh\.catholic\.by\/dekrety\.php/);
   assert.equal(getSource('liturgy-hours-2012-2020').decrees.length, 4);
 });
 
