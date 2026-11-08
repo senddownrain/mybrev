@@ -110,8 +110,8 @@ export const VALIDATION_EXPECTATIONS = Object.freeze([
     reason: 'St John of Nepomuk (Grodno/Polish proper, 16 May) kept on 21 May 2027 because of Pentecost; not in MyBrev data.',
   },
   {
-    ...SOURCE_ERROR, diocese: 'grodno', date: '2027-12-09', checks: ['primary'],
-    reason: 'Our Lady of Loreto printed on both 9 and 10 December (10 December is correct; 9 December is St Juan Diego).',
+    ...SOURCE_ERROR, diocese: 'grodno', date: '2027-12-09', checks: ['primary', 'color'],
+    reason: 'Annual Grodno Ordo prints Loreto and white on 9 December, but approved Belarus PDF 06.11.2026 has no 9 December celebration: Advent weekday violet. Loreto remains on 10 December; Juan Diego is also absent from the approved PDF.',
   },
   // --- Rubrics the engine applies and the calendars simplify ------------------
   {
