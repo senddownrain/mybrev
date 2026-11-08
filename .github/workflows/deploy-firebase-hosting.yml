@@ -2,10 +2,6 @@ name: Deploy Web to Firebase Hosting
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/deploy-firebase-hosting.yml'
 
 permissions:
   contents: read
