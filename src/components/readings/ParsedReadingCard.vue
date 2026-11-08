@@ -1,5 +1,5 @@
 <template>
-  <article class="parsed-reading" lang="be">
+  <article v-reading-highlights="highlightBinding" class="parsed-reading" :class="{ 'parsed-reading--highlighting': settings.readingHighlightsEnabled }" lang="be">
     <header v-if="reading.title" class="reading-header">
       <div class="reading-header__eyebrow">Літургія слова</div>
       <h2 class="reading-day-title">{{ reading.title }}</h2>
@@ -150,18 +150,62 @@
     <div v-if="!hasSections && !reading._referenceOnly" class="no-content text-grey">
       Тэкст чытання недаступны
     </div>
+    <Teleport to=".v-application">
+      <aside v-if="settings.readingHighlightsEnabled && selected.size" class="reading-highlight-bar" aria-label="Колер вылучэння">
+        <button v-for="color in BIBLE_HIGHLIGHT_COLORS" :key="color.id" type="button"
+          class="reading-color-button" :data-color="color.id" :aria-label="color.label" @click="applyHighlight(color.id)"></button>
+        <button type="button" aria-label="Прыбраць вылучэнне" @click="applyHighlight(null)">Сцерці</button>
+        <button type="button" aria-label="Скасаваць выбар" @click="selected = new Set()">✕</button>
+      </aside>
+    </Teleport>
   </article>
 </template>
 
 <script setup>
 import { vReaderProse } from '@/directives/readerProse';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { useSettingsStore } from '@/stores/settings';
+import { BIBLE_HIGHLIGHT_COLORS } from '@/constants/bible';
+import { vReadingHighlights } from '@/directives/readingHighlights';
+import { readingHighlightDocumentKey, loadReadingHighlights, saveReadingHighlights } from '@/utils/readingHighlights';
 import { formatResponsorialPsalmHtml } from '@/utils/responsorialPsalmHtml';
 import { PASSION_ROLES, SECTION_LABELS, sanitizeReadingHtml } from '@/utils/massReadingSets';
 
 const props = defineProps({
   reading: { type: Object, required: true },
 });
+
+const settings = useSettingsStore();
+const documentKey = computed(() => readingHighlightDocumentKey(props.reading));
+const selected = ref(new Set());
+const highlights = ref({});
+watch(documentKey, key => {
+  selected.value = new Set();
+  highlights.value = loadReadingHighlights()[key] || {};
+}, { immediate: true, flush: 'sync' });
+watch(() => settings.readingHighlightsEnabled, () => { selected.value = new Set(); });
+const highlightBinding = computed(() => ({
+  enabled: settings.readingHighlightsEnabled,
+  documentKey: documentKey.value,
+  highlights: highlights.value,
+  selected: selected.value,
+  onSelect(key) {
+    const next = new Set(selected.value);
+    if (next.has(key)) next.delete(key);
+    else next.add(key);
+    selected.value = next;
+  },
+}));
+function applyHighlight(color) {
+  const next = { ...highlights.value };
+  selected.value.forEach(key => {
+    if (color) next[key] = color;
+    else delete next[key];
+  });
+  highlights.value = next;
+  saveReadingHighlights(documentKey.value, next);
+  selected.value = new Set();
+}
 
 function readingLabel(key) {
   const number = Number(key.replace('reading', ''));
@@ -672,4 +716,29 @@ function cycleLabel(value) {
     line-height: 1.7;
   }
 }
+</style>
+
+<style>
+/* Generated sentence fragments do not carry Vue scoped-style attributes. */
+.parsed-reading--highlighting { margin-bottom: 80px; }
+.reading-sentence { cursor: pointer; border-radius: 3px; }
+.reading-sentence[data-color="amber"] { background: rgba(226, 174, 52, 0.3); }
+.reading-sentence[data-color="rose"] { background: rgba(211, 112, 116, 0.25); }
+.reading-sentence[data-color="sky"] { background: rgba(79, 159, 193, 0.25); }
+.reading-sentence[data-color="leaf"] { background: rgba(89, 164, 107, 0.25); }
+.reading-sentence--selected { outline: 1px solid var(--chrome-accent); background: rgba(var(--chrome-accent-rgb), 0.15); }
+.reading-sentence:focus-visible { outline: 2px solid var(--chrome-accent); }
+.reading-highlight-bar {
+  position: fixed; z-index: 100; bottom: calc(84px + env(safe-area-inset-bottom));
+  left: 12px; right: 12px; width: max-content; max-width: calc(100% - 24px);
+  margin-inline: auto; padding: 8px; display: flex; gap: 3px;
+  border: 1px solid var(--nav-border); border-radius: 18px;
+  background: var(--overlay-surface); box-shadow: 0 10px 32px var(--nav-shadow);
+}
+.reading-highlight-bar button { min-width: 44px; min-height: 44px; padding: 4px; color: var(--nav-on-surface); border: 0; border-radius: 50%; cursor: pointer; }
+.reading-highlight-bar button:not(.reading-color-button) { background: transparent; }
+.reading-color-button[data-color="amber"] { background: #e2ae34; }
+.reading-color-button[data-color="rose"] { background: #d37074; }
+.reading-color-button[data-color="sky"] { background: #4f9fc1; }
+.reading-color-button[data-color="leaf"] { background: #59a46b; }
 </style>

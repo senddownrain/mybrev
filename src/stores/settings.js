@@ -69,6 +69,8 @@ export const useSettingsStore = defineStore('settings', () => {
   if (localStorage.getItem('songChordLayout') !== null) localStorage.setItem('songChordLayout', songChordLayout.value);
   // The song list is always compact now; drop the obsolete toggle.
   localStorage.removeItem('songCompactList');
+  const readingHighlightsEnabled = ref(localStorage.getItem('readingHighlightsEnabled') === 'true');
+  watch(readingHighlightsEnabled, value => localStorage.setItem('readingHighlightsEnabled', String(value)), { flush: 'sync' });
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') !== 'false');
 
   function applyThemePreference() {
@@ -256,6 +258,7 @@ export const useSettingsStore = defineStore('settings', () => {
     songShowChords,
     songChordLayout,
     toggleFavoriteSong,
+    readingHighlightsEnabled,
     keepScreenOn,
     diocese: ordoDiocese,
     dioceses: ordoDioceses,
