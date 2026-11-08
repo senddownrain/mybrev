@@ -10,8 +10,12 @@ test('reference Office and readings caches cannot populate canonical day keys', 
   try {
     const { contentKey, readingsKey, publicContentCache } = await server.ssrLoadModule('/src/utils/publicContentCache.js');
     const date = '2026-12-06', diocese = 'minsk-mohilev';
-    assert.deepEqual(JSON.parse(contentKey(date, diocese)), ['content', date, diocese]);
-    assert.deepEqual(JSON.parse(readingsKey(date, { diocese })), ['readings', date, '', false, diocese]);
+    const contentParts = JSON.parse(contentKey(date, diocese));
+    const readingsParts = JSON.parse(readingsKey(date, { diocese }));
+    assert.deepEqual(contentParts.slice(0, 3), ['content', date, diocese]);
+    assert.match(contentParts[3], /^calendar:/);
+    assert.deepEqual(readingsParts.slice(0, 5), ['readings', date, '', false, diocese]);
+    assert.equal(readingsParts[5], contentParts[3], 'Ordo calendar revision is part of both cache namespaces');
     const office = contentKey(date, diocese, 'sv-nicholas');
     const readings = readingsKey(date, { diocese, referenceOptionId: 'sv-nicholas' });
     const period = contentKey(date, diocese, '', true);
