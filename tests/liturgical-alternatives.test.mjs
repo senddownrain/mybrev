@@ -241,3 +241,18 @@ test('a hymn stanza that begins with «Для …» and ends a later line with a
   const headings = '<p>Пра адну панну:<br />Першы радок<br />Другі радок</p><p>Для адданых слугаў:<br />Трэці радок</p>';
   assert.equal(getLiturgicalAlternatives(headings, 'hymn').length, 2);
 });
+
+test('intercession formatting preserves a space between separately styled Belarusian words', () => {
+  const source = [
+    '<p>Ойча, Ты паслаў свайго Сына сеяць зерне слова,</p>',
+    '<p><em>Дай нам прымаць Тваё слова.</em></p>',
+    '<p>Просім Тваёй дапамогі:</p>',
+    '<p>– дай усім, <span>хто</span> <span>рупліва</span> сее слова, з радасцю збіраць плён.</p>',
+  ].join('');
+  const [option] = getLiturgicalAlternatives(source, 'intercession');
+  const formatted = parse(formatIntercessions(option.html));
+  const response = formatted.querySelector('.intercessions__response');
+  assert.ok(response, 'the response must remain present');
+  assert.match(response.text, /хто\s+рупліва/u);
+  assert.doesNotMatch(response.text, /хторупліва/u);
+});

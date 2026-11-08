@@ -1,0 +1,205 @@
+
+> mybrev@4.5.2 prebuild
+> npm run icons:generate
+
+
+> mybrev@4.5.2 icons:generate
+> node scripts/generate-mdi-subset.mjs
+
+Generated src/styles/mdi-subset.css and src/assets/materialdesignicons-subset.woff2 with 124 icons (6808 bytes).
+
+> mybrev@4.5.2 build
+> node --no-deprecation ./node_modules/vite/bin/vite.js build
+
+vite v6.4.1 building for production...
+transforming...
+✓ 3547 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/registerSW.js                                                              0.13 kB
+dist/manifest.webmanifest                                                       0.80 kB
+dist/index.html                                                                 6.76 kB │ gzip:   2.38 kB
+dist/assets/materialdesignicons-subset-OLcrr2yP.woff2                           6.81 kB
+dist/assets/Invit-CBTCLg6Z.css                                                  0.05 kB │ gzip:   0.07 kB
+dist/assets/Morning-Bmj5_02W.css                                                0.13 kB │ gzip:   0.12 kB
+dist/assets/TeDeum-DhevE62D.css                                                 0.16 kB │ gzip:   0.14 kB
+dist/assets/Reading-DWbPq_Tk.css                                                0.20 kB │ gzip:   0.11 kB
+dist/assets/EndOfSext-CMDMEoQz.css                                              0.23 kB │ gzip:   0.16 kB
+dist/assets/DayEditor-hi4T-9mQ.css                                              0.39 kB │ gzip:   0.24 kB
+dist/assets/Analytics-CuQKY9CF.css                                              0.45 kB │ gzip:   0.25 kB
+dist/assets/SongEditor-QVjDxgj1.css                                             0.46 kB │ gzip:   0.25 kB
+dist/assets/LastPrayer-BNTX5UFv.css                                             0.56 kB │ gzip:   0.18 kB
+dist/assets/Completorium-CMOYuTX6.css                                           0.61 kB │ gzip:   0.26 kB
+dist/assets/Vesper-B3TfftLc.css                                                 0.68 kB │ gzip:   0.37 kB
+dist/assets/Feedback-BW1kpNlA.css                                               0.75 kB │ gzip:   0.36 kB
+dist/assets/SongText-Te2A8VZN.css                                               0.87 kB │ gzip:   0.40 kB
+dist/assets/One-CVEAY3TW.css                                                    0.87 kB │ gzip:   0.47 kB
+dist/assets/BackToTop-Dw9JFzgM.css                                              0.93 kB │ gzip:   0.44 kB
+dist/assets/Admin-5bi5mVkC.css                                                  0.94 kB │ gzip:   0.41 kB
+dist/assets/PriestAccess-CGs19bae.css                                           0.99 kB │ gzip:   0.39 kB
+dist/assets/LiturgyHoursDecrees-BV8x_kNM.css                                    1.09 kB │ gzip:   0.38 kB
+dist/assets/ProperCalendar-RX63N7pA.css                                         1.13 kB │ gzip:   0.41 kB
+dist/assets/Admin-BpQh2NZw.css                                                  1.15 kB │ gzip:   0.44 kB
+dist/assets/liturgicalHtml-BdWFze5W.css                                         1.16 kB │ gzip:   0.41 kB
+dist/assets/documents-CUI40Jye.css                                              1.27 kB │ gzip:   0.56 kB
+dist/assets/EndOfVesper-CFBI7x9M.css                                            1.30 kB │ gzip:   0.42 kB
+dist/assets/Feedback-CG3-OrnQ.css                                               1.58 kB │ gzip:   0.59 kB
+dist/assets/OrdoBottomNav-D9pZCHpV.css                                          1.72 kB │ gzip:   0.61 kB
+dist/assets/Sources-D7JmNPKI.css                                                1.86 kB │ gzip:   0.58 kB
+dist/assets/songs-DAW_v4BY.css                                                  1.91 kB │ gzip:   0.75 kB
+dist/assets/ReadingsBottomNav-P3xgGU8o.css                                      1.91 kB │ gzip:   0.68 kB
+dist/assets/About-DmDITKyh.css                                                  2.04 kB │ gzip:   0.73 kB
+dist/assets/AlternativeText-CPUZArzh.css                                        2.05 kB │ gzip:   0.70 kB
+dist/assets/DevotionalOfficeReader-Bi1dT2VF.css                                 2.12 kB │ gzip:   0.63 kB
+dist/assets/Login-DX9f098Z.css                                                  2.97 kB │ gzip:   1.02 kB
+dist/assets/ParsedReadingEditor-Bmk3uQuI.css                                    3.19 kB │ gzip:   0.92 kB
+dist/assets/LiturgyHoursIntroduction-DVZjPEzO.css                               3.79 kB │ gzip:   1.04 kB
+dist/assets/OraBar-DRzYK20r.css                                                 4.11 kB │ gzip:   1.05 kB
+dist/assets/FavoritePrayers-C1Omj2fk.css                                        4.22 kB │ gzip:   1.27 kB
+dist/assets/YearOverrides-DkAliyLc.css                                          4.41 kB │ gzip:   1.25 kB
+dist/assets/OrasList-BXT_fvCS.css                                               5.13 kB │ gzip:   1.35 kB
+dist/assets/ReadingsView-9ctXfUaL.css                                           6.16 kB │ gzip:   1.52 kB
+dist/assets/PrayerCategories-DbhdYSpt.css                                       6.40 kB │ gzip:   1.49 kB
+dist/assets/ParsedReadingCard-CNiPgHS2.css                                      7.34 kB │ gzip:   1.74 kB
+dist/assets/DayTitle-40cL5YHD.css                                               7.90 kB │ gzip:   1.75 kB
+dist/assets/CompendiumSource-CfH56Ytv.css                                       8.30 kB │ gzip:   1.79 kB
+dist/assets/PrayerForm-C934tnIC.css                                            11.33 kB │ gzip:   2.59 kB
+dist/assets/Song-CEZ7OGLV.css                                                  12.61 kB │ gzip:   2.53 kB
+dist/assets/Bible-CmAcqIwD.css                                                 12.81 kB │ gzip:   2.72 kB
+dist/assets/PrayersList-b6LmJb5e.css                                           12.91 kB │ gzip:   2.11 kB
+dist/assets/CompendiumLegacy-B1EwlSjp.css                                      12.99 kB │ gzip:   2.92 kB
+dist/assets/Compendium-B5j5iJ7O.css                                            13.06 kB │ gzip:   2.94 kB
+dist/assets/CompendiumNode-CS7LFpOl.css                                        13.06 kB │ gzip:   2.94 kB
+dist/assets/LiturgicalPicker-DcVUcz98.css                                      15.29 kB │ gzip:   3.05 kB
+dist/assets/Settings-Df-VHPOG.css                                              16.09 kB │ gzip:   3.22 kB
+dist/assets/Songs-DA953GTz.css                                                 16.14 kB │ gzip:   3.35 kB
+dist/assets/Ordo-VlzCtCDU.css                                                  17.48 kB │ gzip:   3.34 kB
+dist/assets/vendor-quill-C86WLP6Y.css                                          20.38 kB │ gzip:   3.33 kB
+dist/assets/PrayerView-DrZJJ99q.css                                            20.43 kB │ gzip:   3.22 kB
+dist/assets/CompendiumQuestion-9NlzmHSM.css                                    20.78 kB │ gzip:   3.23 kB
+dist/assets/CompendiumShell-XaLlNTac.css                                       32.79 kB │ gzip:   3.82 kB
+dist/assets/vendor-vuetify-CCAW2Mv9.css                                       151.92 kB │ gzip:  20.67 kB
+dist/assets/index-DkFWZ8NN.css                                                309.70 kB │ gzip:  40.68 kB
+dist/assets/usePsalmody-c3x6cAUI.js                                             0.31 kB │ gzip:   0.24 kB
+dist/assets/useCompendiumScroll-D7aXckcF.js                                     0.34 kB │ gzip:   0.26 kB
+dist/assets/invitatorium-30A20b7T.js                                            0.38 kB │ gzip:   0.28 kB
+dist/assets/Resp-00QSBMTo.js                                                    0.44 kB │ gzip:   0.32 kB
+dist/assets/errorHandler-CykZpZ1g.js                                            0.50 kB │ gzip:   0.31 kB
+dist/assets/documents.css_vue_type_style_index_0_src_true_lang-D1Poq_Dy.js      0.58 kB │ gzip:   0.43 kB
+dist/assets/Prayers-uqnwx4bX.js                                                 0.59 kB │ gzip:   0.36 kB
+dist/assets/EndOfSext-BjPev-9r.js                                               0.66 kB │ gzip:   0.42 kB
+dist/assets/Reading-BRqe1qPc.js                                                 0.67 kB │ gzip:   0.46 kB
+dist/assets/songs-DImWXP7J.js                                                   0.76 kB │ gzip:   0.49 kB
+dist/assets/CompendiumSource-CqGPyx8i.js                                        0.77 kB │ gzip:   0.52 kB
+dist/assets/liturgicalMovableDates-DFTPjtpf.js                                  0.89 kB │ gzip:   0.49 kB
+dist/assets/feedbackContext-Cvj02_-8.js                                         1.17 kB │ gzip:   0.70 kB
+dist/assets/liturgicalOffice-BK1v_cil.js                                        1.41 kB │ gzip:   0.73 kB
+dist/assets/SongText-DVOUQyJ2.js                                                1.45 kB │ gzip:   0.83 kB
+dist/assets/cacheWarmup-kJ1Otydj.js                                             1.49 kB │ gzip:   0.85 kB
+dist/assets/Sext-aNeBZZBb.js                                                    1.51 kB │ gzip:   0.83 kB
+dist/assets/Non-IcKP0eW1.js                                                     1.52 kB │ gzip:   0.84 kB
+dist/assets/Terz-C_9M4HHU.js                                                    1.52 kB │ gzip:   0.84 kB
+dist/assets/Analytics-CXhczXdh.js                                               1.60 kB │ gzip:   0.91 kB
+dist/assets/CompendiumLegacy-CPqChS_Z.js                                        1.63 kB │ gzip:   0.98 kB
+dist/assets/Admin-CHZGgB6N.js                                                   1.70 kB │ gzip:   0.94 kB
+dist/assets/About-CgA9E_1O.js                                                   1.70 kB │ gzip:   0.98 kB
+dist/assets/Laudes-ClP-rj-o.js                                                  1.70 kB │ gzip:   0.86 kB
+dist/assets/feedbackApi-B4OBH4HT.js                                             1.87 kB │ gzip:   1.05 kB
+dist/assets/PhCaretDown.vue-BHslwBZA.js                                         1.95 kB │ gzip:   0.95 kB
+dist/assets/Lectionis-C-95r7LV.js                                               2.06 kB │ gzip:   1.00 kB
+dist/assets/One-B5qMK2ne.js                                                     2.07 kB │ gzip:   1.11 kB
+dist/assets/useResolvedLiturgicalDay-RDFVut_s.js                                2.09 kB │ gzip:   1.04 kB
+dist/assets/PhArrowRight.vue-BrowA7tp.js                                        2.11 kB │ gzip:   1.01 kB
+dist/assets/PhCheck.vue-DB72QxrA.js                                             2.12 kB │ gzip:   0.98 kB
+dist/assets/PhArrowLeft.vue-DJvC9CXg.js                                         2.12 kB │ gzip:   1.01 kB
+dist/assets/PhMagnifyingGlass.vue-CaIKV-LC.js                                   2.21 kB │ gzip:   1.07 kB
+dist/assets/useCompletorium-DqUBh3mu.js                                         2.24 kB │ gzip:   1.10 kB
+dist/assets/useReadings-D5v3yUhl.js                                             2.28 kB │ gzip:   1.04 kB
+dist/assets/Compendium-DwH0fFF3.js                                              2.55 kB │ gzip:   1.34 kB
+dist/assets/refreshSavedContent-Ce2BjnU1.js                                     2.56 kB │ gzip:   1.10 kB
+dist/assets/liturgicalVespers-BsHGJQCF.js                                       2.73 kB │ gzip:   1.17 kB
+dist/assets/EndOfVesper-DyBO8iud.js                                             2.88 kB │ gzip:   1.11 kB
+dist/assets/PhSlidersHorizontal.vue-BVTAmvB5.js                                 2.95 kB │ gzip:   1.15 kB
+dist/assets/BackToTop-DX2JH86z.js                                               2.96 kB │ gzip:   1.45 kB
+dist/assets/Benedictus-BBwj2frO.js                                              3.13 kB │ gzip:   1.54 kB
+dist/assets/FavoritePrayers-C8vTKTfo.js                                         3.17 kB │ gzip:   1.52 kB
+dist/assets/liturgicalCalendar-BTgDfiHS.js                                      3.30 kB │ gzip:   1.15 kB
+dist/assets/Sources-DUtW_ye4.js                                                 3.34 kB │ gzip:   1.66 kB
+dist/assets/CompendiumNode-BEomvVxc.js                                          3.47 kB │ gzip:   1.57 kB
+dist/assets/Login-a4_nVXUm.js                                                   3.47 kB │ gzip:   1.75 kB
+dist/assets/Admin-CjcBAq3N.js                                                   3.47 kB │ gzip:   1.63 kB
+dist/assets/CompendiumQuestion-CPCHBQ0E.js                                      3.68 kB │ gzip:   1.62 kB
+dist/assets/compendium_search_aliases-OX14zKGt.js                               3.73 kB │ gzip:   1.43 kB
+dist/assets/useLiturgicalHours-YbGTWXkc.js                                      3.80 kB │ gzip:   1.78 kB
+dist/assets/OrdoBottomNav-Pp9XVOSw.js                                           3.99 kB │ gzip:   1.80 kB
+dist/assets/ReadingsBottomNav-DwXROUk-.js                                       4.09 kB │ gzip:   1.77 kB
+dist/assets/ordoCalendarService-Col_pPqZ.js                                     4.30 kB │ gzip:   1.70 kB
+dist/assets/liturgicalHtml-BGJsDKGK.js                                          4.43 kB │ gzip:   1.99 kB
+dist/assets/CompendiumShell-CBQTu7C0.js                                         4.96 kB │ gzip:   2.43 kB
+dist/assets/DayTitle-BzN3wk8W.js                                                5.20 kB │ gzip:   2.05 kB
+dist/assets/Invit-DwOwITSp.js                                                   5.33 kB │ gzip:   2.10 kB
+dist/assets/Morning-Bcq6jGJe.js                                                 5.52 kB │ gzip:   2.50 kB
+dist/assets/compendiumNavigation-R8KlrF0x.js                                    5.58 kB │ gzip:   2.05 kB
+dist/assets/TeDeum-Do0et4Nl.js                                                  5.74 kB │ gzip:   2.50 kB
+dist/assets/Completorium-B5pwogzq.js                                            5.81 kB │ gzip:   2.62 kB
+dist/assets/Vesper-DO7fxcnj.js                                                  6.13 kB │ gzip:   2.96 kB
+dist/assets/Feedback-VJ32BGa8.js                                                6.40 kB │ gzip:   2.92 kB
+dist/assets/Songs-B3BbifbV.js                                                   6.51 kB │ gzip:   2.76 kB
+dist/assets/OraBar-CZQ7c0uR.js                                                  6.71 kB │ gzip:   3.03 kB
+dist/assets/SongEditor-e_7Hewp2.js                                              6.75 kB │ gzip:   2.84 kB
+dist/assets/OrasList-DD0g8HLB.js                                                7.43 kB │ gzip:   3.14 kB
+dist/assets/LastPrayer-CPtTKwMQ.js                                              7.58 kB │ gzip:   2.71 kB
+dist/assets/PrayersList-D4i9fxiO.js                                             8.13 kB │ gzip:   3.54 kB
+dist/assets/Feedback-C83xhvLR.js                                                8.35 kB │ gzip:   3.25 kB
+dist/assets/PhHandsPraying.vue-CagHO1B_.js                                      8.38 kB │ gzip:   2.69 kB
+dist/assets/PriestAccess-C4Ay77OQ.js                                            9.59 kB │ gzip:   3.59 kB
+dist/assets/ParsedReadingCard-CiFHandC.js                                      10.32 kB │ gzip:   3.50 kB
+dist/assets/compendium-CEPT4B0I.js                                             11.76 kB │ gzip:   5.00 kB
+dist/assets/ReadingsView-JYS_u7-7.js                                           12.51 kB │ gzip:   4.85 kB
+dist/assets/order-of-mass-en-BNbpG73n.js                                       12.79 kB │ gzip:   4.40 kB
+dist/assets/sources-CakK0IYY.js                                                15.14 kB │ gzip:   3.28 kB
+dist/assets/PrayerCategories-B2Ljd-N5.js                                       15.17 kB │ gzip:   4.99 kB
+dist/assets/Song-WnSeaAn4.js                                                   15.27 kB │ gzip:   4.89 kB
+dist/assets/DevotionalOfficeReader-BaBZUQja.js                                 16.31 kB │ gzip:   6.07 kB
+dist/assets/LiturgyHoursDecrees-K11Vw9uq.js                                    18.49 kB │ gzip:   3.35 kB
+dist/assets/PrayerView-NG7Bl8zX.js                                             19.61 kB │ gzip:   8.02 kB
+dist/assets/PrayerForm-BzIvNqF9.js                                             29.76 kB │ gzip:  10.71 kB
+dist/assets/LiturgicalPicker-DGN2QaSJ.js                                       30.55 kB │ gzip:  10.30 kB
+dist/assets/Bible-VJS2UCeO.js                                                  30.63 kB │ gzip:  10.46 kB
+dist/assets/DayEditor-DC1fxdym.js                                              32.93 kB │ gzip:  10.70 kB
+dist/assets/Ordo-BtV3w_C8.js                                                   33.52 kB │ gzip:  11.32 kB
+dist/assets/Settings-DSlazg4w.js                                               35.20 kB │ gzip:  11.57 kB
+dist/assets/YearOverrides-jDn9JC-5.js                                          36.77 kB │ gzip:  11.45 kB
+dist/assets/vendor-date-fns-D2KF6XsG.js                                        39.83 kB │ gzip:  10.25 kB
+dist/assets/ParsedReadingEditor-DkuJ2keb.js                                    45.70 kB │ gzip:  12.92 kB
+dist/assets/vendor-moment-BLMuvzoS.js                                          60.80 kB │ gzip:  19.71 kB
+dist/assets/vendor-firebase-core-ci0fum2U.js                                   95.40 kB │ gzip:  29.41 kB
+dist/assets/vendor-vue-C5zwCmRR.js                                            106.95 kB │ gzip:  41.79 kB
+dist/assets/ProperCalendar-xLZTYW77.js                                        123.26 kB │ gzip:  10.99 kB
+dist/assets/vendor-firebase-auth-BpfhUhjQ.js                                  123.70 kB │ gzip:  25.08 kB
+dist/assets/AlternativeText-DCe4QpHT.js                                       159.68 kB │ gzip:  58.46 kB
+dist/assets/vendor-markdown-DRBRTfeX.js                                       179.05 kB │ gzip:  79.16 kB
+dist/assets/LiturgyHoursIntroduction-OfOgDfhu.js                              235.74 kB │ gzip:  53.56 kB
+dist/assets/vendor-quill-3-qL_Tri.js                                          257.19 kB │ gzip:  68.95 kB
+dist/assets/vendor-vuetify-BtIV-xt_.js                                        286.26 kB │ gzip:  89.38 kB
+dist/assets/reading-references-eMzCQyau.js                                    297.25 kB │ gzip:  37.63 kB
+dist/assets/songService-BbQ_O2ub.js                                           358.93 kB │ gzip:  99.63 kB
+dist/assets/vendor-sentry-2GG7X9Hq.js                                         435.61 kB │ gzip: 144.11 kB
+dist/assets/vendor-firebase-firestore-BAcSjDXZ.js                             450.98 kB │ gzip: 101.57 kB
+dist/assets/compendium-DOeFbIeo.js                                            541.61 kB │ gzip: 118.37 kB
+dist/assets/index-Cum--0Gy.js                                                 560.70 kB │ gzip: 146.42 kB
+dist/assets/vendor-markdown-editor-3A_B7tS8.js                                610.01 kB │ gzip: 208.93 kB
+dist/assets/notes-BEwnMk93.js                                               1,449.66 kB │ gzip: 162.08 kB
+
+(!) Some chunks are larger than 650 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1m 5s
+
+PWA v0.21.2
+mode      generateSW
+precache  167 entries (6970.39 KiB)
+files generated
+  dist/sw.js
+  dist/workbox-1fd0e6ac.js

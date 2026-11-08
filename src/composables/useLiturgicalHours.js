@@ -1,3 +1,5 @@
+import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
+import { effectiveOrdoDiocese } from '@/utils/ordoDiocese';
 import { computed, inject, provide, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
@@ -18,7 +20,7 @@ export function provideLiturgicalHours() {
   const { getLiturgicalContentForDate } = useLiturgicalContent();
   const tomorrowContent = ref(null);
   let sequence = 0;
-  watch(dateParam, async (date) => {
+  watch([dateParam, ordoCalendarEpoch, effectiveOrdoDiocese], async ([date]) => {
     const current = ++sequence;
     tomorrowContent.value = null;
     if (route.query.reference || route.query.view === 'period') return;

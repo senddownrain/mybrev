@@ -1,3 +1,5 @@
+import { effectiveOrdoDiocese } from '@/utils/ordoDiocese';
+import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
@@ -68,6 +70,7 @@ export function useResolvedLiturgicalDay() {
       const option = findOptionByDayId(content, id);
       return {
         ...resolved,
+        ...(option?.ordo?.celebrationId ? { _feastName: option.ordo.title, _rank: option.ordo.rank } : {}),
         _calendarDate: date.format('YYYY-MM-DD'),
         _contextPeriodType: content.context?.periodType || '',
         _ordo: option?.ordo || null,
@@ -88,6 +91,18 @@ export function useResolvedLiturgicalDay() {
       day.value = resolveDay(cached);
       if (!day.value) error.value = 'Літургічны дзень не знойдзены.';
       pending.value = false;
+      // Show the offline copy immediately, but apply a completed online refresh
+      // too. Otherwise the reader stays on old content even after the cache
+      // has fetched a corrected version in the background.
+      try {
+        const updated = await getLiturgicalContentForDate(date.toDate());
+        if (currentSequence !== sequence) return;
+        day.value = resolveDay(updated);
+        error.value = day.value ? '' : 'Літургічны дзень не знойдзены.';
+      } catch (refreshError) {
+        // The existing complete cached day remains usable offline.
+        logger.warn('[useResolvedLiturgicalDay] cached day refresh failed:', refreshError);
+      }
       return;
     }
 
@@ -105,7 +120,7 @@ export function useResolvedLiturgicalDay() {
     }
   }
 
-  watch([() => route.params.day, () => route.params.id, () => route.query.reference, () => route.query.diocese, () => route.query.view], load, { immediate: true });
+  watch([ordoCalendarEpoch, effectiveOrdoDiocese, () => route.params.day, () => route.params.id, () => route.query.reference, () => route.query.diocese, () => route.query.view], load, { immediate: true });
   return {
     day,
     context: computed(() => context.value),

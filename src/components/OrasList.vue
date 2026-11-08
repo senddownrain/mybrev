@@ -134,6 +134,8 @@
 </template>
 
 <script setup>
+import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
+import { effectiveOrdoDiocese } from '@/utils/ordoDiocese';
 import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import moment from '@/utils/moment-be';
@@ -293,7 +295,7 @@ const goToCreateReading = () => {
   });
 };
 
-watch(dateParam, (newDateParam) => {
+watch([dateParam, dayId, ordoCalendarEpoch, effectiveOrdoDiocese], ([newDateParam]) => {
   if (newDateParam) {
     loadReadings();
   }

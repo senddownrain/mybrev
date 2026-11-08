@@ -488,7 +488,9 @@ export function yearCelebrations(year, dioceses) {
     const removed = new Map([...plan.removedByDate.values()].flat()
       .map((item) => [item.celebration.id, item]));
     celebrations.forEach((definition) => {
-      if (!definition.id || !definition.title || !definition.date) return;
+      if (!definition.id || !definition.title || !definition.date || definition.suppressedBy) return;
+      const yearEnd = `${year}-12-31`;
+      if (definition.validFrom && yearEnd < definition.validFrom) return;
       const placement = plan.celebrationDates.get(definition.id) || removed.get(definition.id);
       const day = byDate.get(placement?.date);
       const routeDate = day?.date || '';

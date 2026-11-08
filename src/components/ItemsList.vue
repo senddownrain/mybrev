@@ -126,6 +126,7 @@
 </template>
 
 <script setup>
+import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import moment from '@/utils/moment-be';
@@ -360,7 +361,7 @@ const getOptionIcon = (option) => {
 };
 
 // The legal Offices depend on the dioceses (Settings) and the route context.
-watch(() => dioceses.value.join(','), () => fetchItemsForDate(currentDate.value));
+watch([() => dioceses.value.join(','), ordoCalendarEpoch], () => fetchItemsForDate(currentDate.value));
 
 watch(
   () => route.params.day,

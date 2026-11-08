@@ -1,5 +1,5 @@
 /** Versioned cache for complete PUBLIC presentation data, never auth/admin data. */
-export function createContentCache({ storage, getRevision, isOnline, onError = () => {} }) {
+export function createContentCache({ storage, getRevision, isOnline, onError = () => {}, maxAgeMs = Infinity, now = Date.now }) {
   const memory = new Map();
   const requests = new Map();
   const reads = new Map();
@@ -19,7 +19,13 @@ export function createContentCache({ storage, getRevision, isOnline, onError = (
     return reads.get(key);
   }
 
-  const isFresh = (entry) => entry?.complete === true && entry.revision === getRevision();
+  const isFresh = (entry) => {
+    if (entry?.complete !== true || entry.revision !== getRevision()) return false;
+    if (!Number.isFinite(maxAgeMs)) return true;
+    // Existing persisted records without fetchedAt must be revalidated once online.
+    return Number.isFinite(entry.fetchedAt)
+      && now() >= entry.fetchedAt && now() - entry.fetchedAt < maxAgeMs;
+  };
 
   function refresh(key, loader) {
     const revision = getRevision();
@@ -30,7 +36,7 @@ export function createContentCache({ storage, getRevision, isOnline, onError = (
       const previous = memory.get(key);
       // Offline / partial query results must never replace a known complete day.
       if (!result.complete && previous?.complete) return { ...previous, complete: false };
-      const entry = { data: result.data, complete: result.complete === true, revision };
+      const entry = { data: result.data, complete: result.complete === true, revision, fetchedAt: now() };
       if (getRevision() === revision) {
         memory.set(key, entry);
         if (entry.complete) {
@@ -46,7 +52,10 @@ export function createContentCache({ storage, getRevision, isOnline, onError = (
   async function read(key, loader, { fresh = false, revalidate = false } = {}) {
     const entry = await restore(key);
     if (isFresh(entry) && !(revalidate && isOnline())) return entry;
-    if (entry && ((!fresh && !revalidate) || !isOnline())) {
+    if (entry && (!isOnline() || (!fresh && !revalidate && !Number.isFinite(maxAgeMs)))) {
+      // With no TTL keep the previous stale-while-revalidate behaviour.
+      // TTL-controlled public content is awaited online to avoid rendering an
+      // obsolete result as though it were the final version.
       if (isOnline()) refresh(key, loader).catch(onError);
       return { ...entry, complete: false };
     }
@@ -62,8 +71,6 @@ export function createContentCache({ storage, getRevision, isOnline, onError = (
   return {
     read,
     peek: (key) => memory.get(key)?.data,
-    // Only the current public-content revision is safe to render immediately.
-    // Stale entries remain available through read() for offline fallback.
     peekFresh: (key) => (isFresh(memory.get(key)) ? memory.get(key).data : undefined),
     prime: (keys) => Promise.all(keys.map(restore)),
     async keys() {

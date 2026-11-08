@@ -1,0 +1,77 @@
+{
+  "rubrics": [
+    {
+      "document": "liturgicalProperTexts/08-12-immaculate-conception",
+      "field": "sext1Ps1",
+      "reference": {
+        "source": "complementary",
+        "text": "Дадатковая псальмодыя; замест псальма 122 (121) можна чытаць псальм 129 (128), а замест псальма 127 (126) – псальм 131 (130)"
+      }
+    },
+    {
+      "document": "liturgicalProperTexts/08-12-immaculate-conception",
+      "field": "sext2Ps1",
+      "reference": {
+        "source": "complementary",
+        "text": "Дадатковая псальмодыя; замест псальма 122 (121) можна чытаць псальм 129 (128), а замест псальма 127 (126) – псальм 131 (130)"
+      }
+    },
+    {
+      "document": "liturgicalProperTexts/08-12-immaculate-conception",
+      "field": "sext3Ps1",
+      "reference": {
+        "source": "complementary",
+        "text": "Дадатковая псальмодыя; замест псальма 122 (121) можна чытаць псальм 129 (128), а замест псальма 127 (126) – псальм 131 (130)"
+      }
+    },
+    {
+      "document": "liturgicalProperTexts/18-10-sv-luke-evangelist",
+      "field": "sext3Ps1",
+      "reference": {
+        "source": "current-day",
+        "text": "Антыфоны і псальмы з бягучага дня. У дадатковай псальмодыі замест псальма 126 (125) можна чытаць псальм 129 (128), с. 1017."
+      }
+    },
+    {
+      "document": "days/08-12-immaculate-conception",
+      "field": "sext2Ps1",
+      "reference": {
+        "source": "complementary",
+        "text": "Дадатковая псальмодыя; замест псальма 122 (121) можна чытаць псальм 129 (128), а замест псальма 127 (126) – псальм 131 (130)"
+      }
+    },
+    {
+      "document": "days/08-12-immaculate-conception",
+      "field": "sext3Ps1",
+      "reference": {
+        "source": "complementary",
+        "text": "Дадатковая псальмодыя; замест псальма 122 (121) можна чытаць псальм 129 (128), а замест псальма 127 (126) – псальм 131 (130)"
+      }
+    },
+    {
+      "document": "days/08-12-immaculate-conception",
+      "field": "sext1Ps1",
+      "reference": {
+        "source": "complementary",
+        "text": "Дадатковая псальмодыя; замест псальма 122 (121) можна чытаць псальм 129 (128), а замест псальма 127 (126) – псальм 131 (130)"
+      }
+    }
+  ],
+  "optionalPsalmTargets": {
+    "129": {
+      "document": "days/advent-w4-d5",
+      "field": "sext3Ps3",
+      "psalm": "Псальм 129 (128) Новая надзея прыгнечанага народу",
+      "fullDoxologies": 1,
+      "sha256": "80be06b53395038bd2be13847147cb7d016fc74a3e9ada87e2bbb634ae785076"
+    },
+    "131": {
+      "document": "days/advent-w3-d3",
+      "field": "vesperPs2",
+      "psalm": "Псальм 131 (130) Верыць у Бога, як дзіця",
+      "fullDoxologies": 1,
+      "sha256": "757e38b1fea7f0b95149b6623fc433f5c5801b7fa4c1a402da128f2881440592"
+    }
+  },
+  "note": "Reference-only values are preserved as rubrics, not expanded into Bible text by this migration. In the resolved 2026 Office, three Daytime Ps1 fields on 8 December remain reference rubrics. Supplementary psalmody (Ps 120–128) is audited in liturgicalTemplates/complementary-psalmody; optional Ps 129 and 131 are present with complete doxologies in the canonical psalter."
+}

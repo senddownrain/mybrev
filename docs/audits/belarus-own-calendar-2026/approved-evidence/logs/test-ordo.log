@@ -1,0 +1,302 @@
+
+> mybrev@4.5.2 test:ordo
+> node --test tests/ordo-*.test.mjs
+
+✔ all 262 source rows produce 959 approved effective assignments, including source default optional ranks (10.578027ms)
+✔ 2025–2035 × four dioceses: all roles, Vespers, Office and Mass refs; 23 scoped assignments absent (1254.475626ms)
+✔ 8 September is Braslau only in Vitebsk, Nativity elsewhere, with Nativity Office/Mass source (25.578664ms)
+✔ 16 November 2026/2027, Mother Church and cancelled manual moves (4.502692ms)
+✔ Newman starts in 2026 with no spurious Leonardi content; Sopocko is a Lent commemoration (13.023595ms)
+✔ runtime memo invalidates for an already visited date; future schema is rejected, rollback has a larger revision (5.459295ms)
+✔ online revalidation bypasses complete caches on a bound, shares concurrent calls and backs off offline/failure (0.980019ms)
+✔ High Priest and Christ King are different days and both follow the general Table (4.958519ms)
+✔ old Nativity/Braslau direct links follow the single current diocesan Office, never a stale raw document (3.661523ms)
+✔ old materialized auto dates cannot undo the corrected general transfer rule (5.122126ms)
+✔ Braslau legacy fallback is not reported as a published Proper collection (99.197725ms)
+✔ rank plan is deterministic regardless of input order (26.706796ms)
+✔ rank plan aligns Mary Magdalene and All Souls, and the linked readings (8.668986ms)
+✔ plan never deletes without the explicit flag (12.630162ms)
+✔ uncertain documents stay in place as review items (6.503269ms)
+✔ dry run writes only the local plan and never opens Firestore (15.540442ms)
+✔ --apply requires the confirmation token before any Firestore access (6.920128ms)
+✔ --apply writes updates and obsolete marks with preconditions, no deletes without the flag (7.568557ms)
+✔ applyPlan refuses delete items unless deletes are allowed (5.338874ms)
+✔ missing-content detection on fixtures (113.896367ms)
+✔ suggested Commons (0.313643ms)
+✔ missing-content script writes JSON and Markdown only locally (145.54628ms)
+✔ REST cache round-trips through the snapshot reader (10.418496ms)
+✔ one colour: a plain circle (21.796604ms)
+✔ two and three colours: segments of a conic gradient (22.715255ms)
+✔ only legal options are offered, with rank and colour; suppressed never colour a date (9.867695ms)
+✔ Hours route of the chosen option (1.229444ms)
+✔ Readings route of the chosen option (3.910829ms)
+✔ the picker uses the resolved day; both navigation bars pass the screen context (0.529639ms)
+✔ diocesan context of a route: explicit, kept within the same day, dropped elsewhere (0.261805ms)
+✔ the bundled snapshot is up to date with the seed sources (22.866363ms)
+✔ the permanent calendar is rules, not 365 annual rows (2.040207ms)
+✔ definitions reproduce the seed calendar for every diocese (35.558268ms)
+✔ date DSL is a white list; nothing from the database is executed (0.355647ms)
+✔ a published Firestore revision replaces the active calendar; reset returns the snapshot (28.785091ms)
+✔ source selection: exactly one calendar is active (3.535463ms)
+✔ one-year override for the whole of Belarus (20.979917ms)
+✔ one-year override for one diocese; a disabled override does nothing (147.093584ms)
+✔ override actions: suppress, add, changeColor; validation (16.850498ms)
+✔ override preview: «было па разліку → стане» (326.105024ms)
+✔ automatic transfers and collisions are computed, not stored (35.879623ms)
+✔ open cases are structured and shown only for the years that hit them (667.635787ms)
+✔ Advent 17–24 December keeps its phase and date documents (3.125264ms)
+✔ Christmas: the season ends with the Baptism, the date documents reach 12 January (5.052922ms)
+✔ aligns by celebration identity across sources of different years (0.951686ms)
+✔ diocesan proper and cathedral dedications are DIOCESAN (0.208554ms)
+✔ agreement of all sources against MyBrev is flagged as a MyBrev divergence (0.198399ms)
+✔ celebrations missing from MyBrev are listed with a scope guess (0.151038ms)
+✔ impediments of a particular year are YEAR_SPECIFIC, not conflicts (0.276056ms)
+✔ every diocese has an evidence file from its own adapter (1.567845ms)
+✔ adapters cover a full liturgical year of contiguous days (0.426884ms)
+✔ every extracted item carries provenance and a classification (11.791116ms)
+✔ PDF evidence is coordinate-aware, DOCX evidence is paragraph-based (0.160322ms)
+✔ alignment uses liturgical identity, not only the civil date (0.240403ms)
+✔ celebrations map to MyBrev identities (0.222857ms)
+✔ Office descriptors keep the published rubrics as oracle flags (0.195575ms)
+✔ recognises every excluded category (2.971823ms)
+✔ keeps liturgical content that only looks similar (0.139321ms)
+✔ no collection or clergy-personal data leaks into committed Ordo files (96.859408ms)
+✔ the adapters actually met and excluded such content (0.285561ms)
+✔ excluded records keep only a location, never the personal text (0.443889ms)
+{
+ "celebrations": {
+  "target": 242,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 242,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "dioceseOverrides": {
+  "target": 39,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 39,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "notes": {
+  "target": 1347,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 1347,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "yearOverrides": {
+  "target": 4,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 4,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/ordo-import-vkfmTg/calendar.json
+Dry run only. Nothing was written to Firestore.
+{
+ "templates": {
+  "target": 16,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 16,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "feasts": {
+  "target": 291,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 291,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "legacyCopies": {
+  "listed": 192,
+  "markObsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/ordo-import-vkfmTg/feasts.json
+Dry run only. Nothing was written to Firestore.
+✔ plan: create / update / unchanged / obsolete, never delete (1.637741ms)
+✔ calendar targets: definitions, notes without evidence, meta last (5.745397ms)
+✔ dry runs write a local plan only; destructive options need a confirmation (110.865069ms)
+✔ feast targets: sparse documents, templates and the copies they replace (41.342363ms)
+✔ every diocesan layer entry is proven by an evidence item with the same rank (0.814328ms)
+✔ layers never copy the universal calendar (15.248753ms)
+✔ year overrides are valid, proven and not computable transfers (0.149205ms)
+✔ fixedCalendar fixes found by stage 2 (13.51714ms)
+✔ diocesan data layers change only their diocese (23.604576ms)
+✔ the real notes.json is accepted as context.notes (22.721434ms)
+✔ Belarus layer changes are proven in every diocese that prints them (0.252802ms)
+✔ 16.11 in Pinsk resolves to the multi-place diocesan document, not the universal one (16.017892ms)
+✔ 16.05 in Vitebsk resolves to the multi-place diocesan document, not the universal one (6.263118ms)
+✔ generated identities point every diocese of a multi-place document to the live id (0.683661ms)
+✔ resolveLiveDayIds keeps live ids, keeps Common variants and leaves unknown ids alone (0.603761ms)
+✔ obsolete documents are filtered (0.175094ms)
+✔ runtime never selects an obsolete document, by id or by title (1.177135ms)
+✔ computes Gregorian Easter (1.520904ms)
+✔ matches the movable dates printed by the Vitebsk 2025–2026 calendar (1.540204ms)
+✔ matches the movable dates printed by the Grodno 2027 calendar (0.160483ms)
+✔ Holy Family falls on 30 December when Christmas is a Sunday (0.200543ms)
+✔ derived year options drive the existing calendar context (5.411753ms)
+✔ lectionary cycles follow the liturgical year (0.468446ms)
+✔ computes Easter and derived movable feasts for 2025–2030 (1.839786ms)
+✔ Easter computus matches reference dates across centuries (0.18549ms)
+✔ Holy Family and Baptism agree with the existing moment-based rules (8.637018ms)
+✔ Belarus keeps Ascension on Thursday and adds Christ the High Priest (0.721178ms)
+✔ season identities match computeLiturgicalContext for every day 2020–2035 (453.287222ms)
+✔ toYearOptions reproduces the stored 2026 yearOptions shape (0.182376ms)
+✔ computes phases, psalter weeks and lectionary cycles (4.15325ms)
+✔ no clergy personal data and no collections in the published notes (25.708961ms)
+✔ Grodno and Pinsk general notes are recovered from the front matter (57.452675ms)
+✔ general-notes extraction skips tables, pro populo obligations and money (25.113833ms)
+✔ Lectionary / Hours volumes are structured metadata, not «Асаблівыя заўвагі» (20.954358ms)
+✔ the same volume value is stored once per selector (no duplicates across dioceses) (0.534767ms)
+✔ recheck §13: every extracted Grodno / Pinsk general note is published (none is lost in a cross-diocese cluster) (55.852311ms)
+✔ recheck §13.1: period volumes are Belarus-wide structured metadata for every diocese (Minsk + Grodno calendars) (87.737278ms)
+✔ celebration and fixed-date selectors (43.505025ms)
+✔ celebration selector follows a transfer; fixed-date does not (1.650771ms)
+✔ nth weekday with an exclusion, period and period-phase selectors (3.336042ms)
+✔ period-day, relative, exact-date selectors and diocesan scope (24.108176ms)
+✔ nth-weekday supports "last" and month restriction (0.33185ms)
+✔ notes without a structured effect are display-only (0.572504ms)
+✔ solemnity: Proper → Common fallbacks, no user choices (22.148841ms)
+✔ memorial: current Psalter, current first reading, hagiographic second reading (1.136265ms)
+✔ readings use the same resolved identity as the Office (8.361704ms)
+✔ alternatives carry their own Office and Readings descriptors (1.574936ms)
+✔ Saturday memorial of the BVM is offered only without an obligatory memorial (1.884743ms)
+✔ Immaculate Heart + another obligatory memorial: two optional memorials and weekday primary (CDW 2671/98/L) (0.78863ms)
+✔ Advent 17–24 and Christmas keep their date-based documents (2.225237ms)
+✔ warm complete cache detects new publication, refreshes manual years, rejects schema99 and preserves notes6 (446.217775ms)
+✔ citations are compared by book and chapter (1.815028ms)
+✔ audit statuses (1.713625ms)
+✔ the audit covers every primary / alternative celebration of the calendars (312.799405ms)
+✔ missing readings: the celebration is shown with its reference, nothing is substituted (5.119613ms)
+✔ a memorial keeps the weekday readings and gives no notice (0.579063ms)
+✔ reference texts retain their own prayer and all Common choices in every diocese (254.758142ms)
+✔ Hours and Readings receive the same resolved identity for a date (35.103903ms)
+✔ dayOptions only contain legal Offices; a weekday never competes with an obligatory memorial or feast (373.298555ms)
+✔ display resolver cases on real days documents (5.096137ms)
+✔ Office for the Dead is a votive option only on ordinary weekdays (1.2663ms)
+✔ I Vespers by liturgical right, II vs I Vespers conflict (6.283709ms)
+✔ I Vespers are assembled from Proper/Common when no vesper1 texts exist (0.210989ms)
+✔ Compline and Te Deum follow the descriptor flags (1.556979ms)
+✔ same date in two dioceses gives different Offices and readings plans (0.975121ms)
+✔ readings follow the engine lookup order (no independent priority) (3.529584ms)
+✔ Firestore yearOptions never override computed dates; a discrepancy is only reported (0.519854ms)
+✔ any future year is generated without a stored yearOptions document (132.767359ms)
+✔ period reader opens its temporal position even under an obligatory saint, without changing Ordo (17.364333ms)
+✔ period reader preserves temporal seasons, date entities and reading cycles (14.224177ms)
+✔ feast reading reference dates keep exact diocesan identities and leave Ordo unchanged (61.232201ms)
+✔ permanently impeded memorials use isolated reference descriptors and preserve diocesan text refs (187.528008ms)
+✔ feast search includes every effective definition even when Ordo suppresses it (205.808102ms)
+✔ feast search permissions are those of Ordo for each date, mode and diocese (258.840064ms)
+✔ feast search preserves text/color/title/date/rank variants and local suppression (518.177828ms)
+✔ feast search uses Ordo for named, movable, last-weekday dates and transfers (48.800153ms)
+✔ router has lazy /ordo and /ordo/:date routes with the Ordo bottom navigation (0.779676ms)
+✔ drawer entry «Літургічны каляндар» with a Phosphor icon (0.405592ms)
+✔ route helpers: /ordo is the month, a day is /ordo/:date, invalid dates fall back (0.493214ms)
+✔ notes are grouped by category in display order, deduplicated, with diocesan variants (1.866505ms)
+✔ one-year notes stay in their year; copied announcements only on the date they name (0.255045ms)
+✔ grouping the real notes of a date through the engine (31.899619ms)
+✔ startup code never statically imports notes.json (lazy chunk of the Ordo screen) (9.433409ms)
+✔ no LocalChurch anywhere in the runtime (13.672225ms)
+✔ parish-title notes are not part of the runtime Ordo (13.456048ms)
+✔ celebration list covers fixed, diocesan and movable celebrations (1.380091ms)
+✔ day summaries: Office directions, Mass, suppressed reasons (2.930019ms)
+✔ month overview: one row per day with primary, rank and colour; year generation memoized (87.782677ms)
+✔ the Ordo main page is one month; the Hours screen links to the Ordo (0.552643ms)
+✔ display filter: valid, ordered, never empty, stored separately from the Hours diocese (0.195115ms)
+✔ month union: the same result in every selected diocese is one row (17.42192ms)
+✔ month union: different ranks are split by diocese (47.401614ms)
+✔ day union: shared data once, differences with diocesan badges (56.995856ms)
+✔ first Friday becomes a recurring selector, not twelve dates (7.448195ms)
+✔ a novena day is relative to its (movable) celebration (2.217796ms)
+✔ notes follow the celebration rather than the civil date (3.714022ms)
+✔ Paschal-cycle days are relative to Easter (0.540806ms)
+✔ plain period days keep a period-day selector; year markers force exact-date (1.69023ms)
+✔ repeated notes collapse to period selectors (0.23897ms)
+✔ single examples are never promoted silently (0.708889ms)
+✔ office flags recognise I Vespers, Sunday Compline and optional memorials (1.398069ms)
+✔ 01 ordinary weekday without a saint (17.827442ms)
+✔ 02 weekday + optional memorial: the weekday is primary, the memorial an alternative (1.079789ms)
+✔ 03 several optional memorials are all legal alternatives (1.291628ms)
+✔ 04 obligatory memorial: weekday is not an alternative Office (1.171717ms)
+✔ 05 feast: no I Vespers, Sunday-week-I psalms at Lauds, weekday Compline, Te Deum (1.048091ms)
+✔ 06 solemnity: I and II Vespers, Sunday Compline, Te Deum (0.810733ms)
+✔ 07 Sunday + conflicting fixed saint; feasts of the Lord replace a Sunday of Ordinary Time (5.600699ms)
+✔ 08 Sundays of Advent, Lent and Easter outrank feasts and solemnities (1.138217ms)
+✔ 09 17–24 December + saint: commemoration only (1.906777ms)
+✔ 10 Lent weekday + memorial: commemoratio, but a diocesan feast is celebrated (7.189125ms)
+✔ 11 Christmas octave (6.510521ms)
+✔ 12 Easter octave: every day ranks as a solemnity, memorials omitted (0.999548ms)
+✔ 13 Holy Week: Monday–Thursday exclude every other celebration (1.095272ms)
+✔ 14 Paschal Triduum (1.052988ms)
+✔ 15 Saturday evening belongs to Sunday (0.404521ms)
+✔ 16 II Vespers of today vs I Vespers of tomorrow (GNLYC 61) (8.210355ms)
+✔ 17 diocesan rank override (St Josaphat, 12 November) (7.260552ms)
+✔ 18 cathedral dedication stays a diocesan feast (no own-church level) (0.455037ms)
+✔ 19 there is no local titular solemnity: a saint on a Sunday stays impeded (4.218082ms)
+✔ 20 transferred solemnity (Annunciation 2027 → Monday after Divine Mercy) (2.819503ms)
+✔ 21 Baptism of the Lord closes the Christmas season (3.544577ms)
+✔ 22 Holy Family: Sunday in the octave, or 30 December without I Vespers (0.421256ms)
+✔ 23 source calendars vs current MyBrev behaviour (1.277598ms)
+✔ 24 same date, different dioceses (7.170796ms)
+✔ All Souls on a Sunday: Hours of the Sunday, Mass of All Souls with 3 reading sets (§11.1) (20.237387ms)
+✔ Immaculate Heart + obligatory memorial: both optional, weekday primary (13.06.2026) (16.680727ms)
+✔ Mary, Mother of the Church + obligatory memorial: prevails over the saint memorial (CDW 24.03.2018) (7.759684ms)
+✔ Christ the High Priest + another feast: general Table precedence, one feast (3.868225ms)
+✔ St Joseph in Holy Week: computed transfer + materialized auto override (case B) (15.51292ms)
+✔ Annunciation impeded: computed transfer + materialized auto override (case C) (11.770966ms)
+✔ diocesan patron transfers only with a source-confirmed solemnity rank (case A) (3.531898ms)
+✔ every rank confirmation is a solemnity printed by that diocese (45.26441ms)
+✔ Lord solemnity collision: the Lord stays, the other solemnity transfers (case D) (22.813293ms)
+✔ auto materialization is idempotent (13.271639ms)
+✔ a manual-confirmed override survives regeneration and controls the effective date (4.180977ms)
+✔ materialized auto records do not change the generated year (178.786231ms)
+✔ legacy from/to overrides normalize to one canonical representation (6.351571ms)
+✔ Annunciation in Holy Week or the Easter octave → Monday after Divine Mercy Sunday (24.327457ms)
+✔ St Joseph: Sunday of Lent → Monday; Holy Week → Saturday before Palm Sunday (6.531463ms)
+✔ Immaculate Conception on a Sunday of Advent → Monday (6.111068ms)
+✔ coinciding solemnities: the solemnity of the Lord keeps the day (3.65962ms)
+✔ proper solemnity impeded by Pentecost moves only in its diocese (5.681771ms)
+✔ feasts and memorials are never transferred (18.410081ms)
+✔ year override: move, suppress, add and changeRank, in scope order (22.523856ms)
+✔ validates YearOverride records (0.181814ms)
+✔ the validation runs over every published day of the four calendars (2.932573ms)
+✔ MATCH plus explicitly approved source differences meets the unchanged threshold (0.222996ms)
+✔ every GENERATOR_MISMATCH has been investigated (0.295976ms)
+✔ core liturgical checks agree with every calendar (0.213432ms)
+✔ office types printed by the calendars are normalized (0.213392ms)
+✔ the markdown report renders the summary (8.329375ms)
+✔ generates complete years 2025–2030 for every diocese without errors (899.163639ms)
+✔ display invariants hold for a whole year (22.981747ms)
+✔ every Sunday and solemnity has I Vespers by right; feasts only on Sundays (22.64579ms)
+✔ resolution is deterministic and accepts Date/route formats (2.165076ms)
+ℹ tests 217
+ℹ suites 0
+ℹ pass 217
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15531.737227

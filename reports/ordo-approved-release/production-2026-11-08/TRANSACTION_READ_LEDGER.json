@@ -1,0 +1,51 @@
+[
+  {
+    "method": "POST",
+    "resource": ":beginTransaction",
+    "startedAt": "2026-11-08T06:43:21.004Z",
+    "status": 200,
+    "responseBytes": 160
+  },
+  {
+    "method": "GET",
+    "resource": "/liturgicalCalendarMeta/current",
+    "startedAt": "2026-11-08T06:43:21.310Z",
+    "status": 200,
+    "responseBytes": 574
+  },
+  {
+    "method": "GET",
+    "resource": "/liturgicalCelebrations",
+    "startedAt": "2026-11-08T06:43:21.544Z",
+    "status": 200,
+    "responseBytes": 622889
+  },
+  {
+    "method": "GET",
+    "resource": "/liturgicalDioceseOverrides",
+    "startedAt": "2026-11-08T06:43:21.911Z",
+    "status": 200,
+    "responseBytes": 225347
+  },
+  {
+    "method": "GET",
+    "resource": "/liturgicalYearOverrides",
+    "startedAt": "2026-11-08T06:43:22.048Z",
+    "status": 200,
+    "responseBytes": 26174
+  },
+  {
+    "method": "GET",
+    "resource": "/liturgicalCalendarMeta/current",
+    "startedAt": "2026-11-08T06:43:22.281Z",
+    "status": 200,
+    "responseBytes": 574
+  },
+  {
+    "method": "POST",
+    "resource": ":rollback",
+    "startedAt": "2026-11-08T06:43:22.602Z",
+    "status": 200,
+    "responseBytes": 3
+  }
+]

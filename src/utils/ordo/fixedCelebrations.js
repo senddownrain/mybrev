@@ -59,6 +59,7 @@ const FIXED_METADATA = Object.freeze({
   '08.12|беззаганнага зачацця': { id: 'immaculate-conception', category: 'mary' },
   // Added to the General Calendar after the `days` import (no db-feasts slug yet).
   '27.02|нарэцкага': { id: 'sv-gregory-narek', category: 'saint' },
+  '09.10|ньюмана': { id: 'sv-john-henry-newman', category: 'saint', validFrom: '2026-02-03' },
   '10.05|авільскага': { id: 'sv-john-avila', category: 'saint' },
   '05.09|калькуты': { id: 'sv-teresa-calcutta', category: 'saint' },
   '17.09|хільдэгарды': { id: 'sv-hildegard-bingen', category: 'saint' },
@@ -71,15 +72,6 @@ const FIXED_METADATA = Object.freeze({
   '26.12|стэфана': { id: 'sv-stephen-protomartyr', category: 'saint', color: 'ruber' },
   '27.12|св. яна, апостала': { id: 'sv-john-apostle-evangelist', category: 'saint', color: 'albus' },
   '28.12|немаўлят': { id: 'holy-innocents', category: 'saint', color: 'ruber' },
-});
-
-/**
- * Diocesan entries that are the local form of a general celebration on the
- * same day although the title differs (Vitebsk 2025/26: "8 верасня – свята
- * Найсв. Панны Марыі Браслаўскай" replaces the Nativity of the BVM).
- */
-const DIOCESAN_REPLACES = Object.freeze({
-  '08.09|браслаўскай': 'nativity-blessed-virgin-mary',
 });
 
 const TRANSLIT = Object.freeze({
@@ -164,13 +156,15 @@ export function fixedParts(date) {
 function buildCelebration(entry, { id, layer, dioceseId, meta }) {
   const rank = meta?.rank || normalizeRank(entry.rank);
   const place = normalizeFixedPlace(entry.place);
-  const content = feastContentOf({ id, date: entry.date, place, rank });
+  const content = feastContentOf({ id, date: entry.date, place, rank })
+    || (id === 'bl-michal-sopocko' ? feastContentOf({ id, date: entry.date, place: 'grodno', rank }) : null);
   // A celebration without texts is carried by its scaffold document.
   const dayIds = fixedIdentityOf(entry)?.dayIds || (content?.scaffold ? [content.dayId] : []);
   const category = meta?.category || inferCategory(entry.title);
   return {
     id,
     title: entry.title,
+    ...(meta?.validFrom ? { validFrom: meta.validFrom } : {}),
     rank,
     category,
     layer,
@@ -189,8 +183,10 @@ function buildCelebration(entry, { id, layer, dioceseId, meta }) {
       ...(place ? { _place: place } : {}),
       ...(dayIds.length ? { dayIds } : {}),
     },
-    readingsRef: { _date: entry.date },
+    readingsRef: { _date: entry.date, ...(id === 'our-lady-braslau' ? { celebrationId: 'nativity-blessed-virgin-mary' } : {}) },
+    ...(id === 'our-lady-braslau' ? { fallbackDaysRefs: [{ source: 'fixed', _date: '08.09', dayIds: ['08-09-nativity-blessed-virgin-mary'] }] } : {}),
     ...contentFields(content, id),
+    ...(id === 'sv-john-henry-newman' ? { templates: ['pastors', 'doctors-of-church'], defaultTemplate: 'pastors', contentStatus: { hours: 'common-only', readings: 'weekday', proper: 'missing' } } : {}),
   };
 }
 
@@ -225,13 +221,8 @@ function buildCatalog() {
     });
     const title = normalizeCelebrationTitle(entry.title);
     const sameDate = universal.filter((item) => item.daysRef._date === entry.date);
-    const replaced = Object.entries(DIOCESAN_REPLACES).find(([key]) => {
-      const [date, fragment] = key.split('|');
-      return date === entry.date && title.includes(fragment);
-    });
     const identity = fixedIdentityOf(entry);
-    const base = (replaced && universal.find((item) => item.id === replaced[1]))
-      || (identity && universal.find((item) => item.id === identity.id))
+    const base = (identity && universal.find((item) => item.id === identity.id))
       || sameDate.find((item) => {
       const universalTitle = normalizeCelebrationTitle(item.title).split(',')[0];
       return title === normalizeCelebrationTitle(item.title) || title.startsWith(universalTitle);

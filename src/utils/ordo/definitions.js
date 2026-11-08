@@ -189,6 +189,8 @@ export function setCalendarDefinitions(raw) {
   if (!raw) {
     active = BUNDLED;
   } else {
+    if (raw.schemaVersion !== undefined && Number(raw.schemaVersion) !== CALENDAR_SCHEMA_VERSION) return active;
+    if (raw.revision !== undefined && Number(raw.revision) < active.revision) return active;
     const next = normalizeCalendarDefinitions({
       schemaVersion: raw.schemaVersion ?? active.schemaVersion,
       revision: raw.revision ?? active.revision,
@@ -197,8 +199,8 @@ export function setCalendarDefinitions(raw) {
       dioceseOverrides: raw.dioceseOverrides ?? active.dioceseOverrides,
       yearOverrides: raw.yearOverrides ?? active.yearOverrides,
     });
-    // An empty calendar is never a valid publication.
-    active = next.celebrations.length ? next : { ...next, celebrations: BUNDLED.celebrations, dioceseOverrides: BUNDLED.dioceseOverrides };
+    if (next.warnings.length || !next.celebrations.length) return active;
+    active = next;
   }
   epoch += 1;
   listeners.forEach((listener) => listener(active));

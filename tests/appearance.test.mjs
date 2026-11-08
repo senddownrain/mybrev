@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
-import { APP_THEME_COLORS, APP_STATUS_BAR_COLORS, THEME_OPTIONS, isThemePreference, loadThemePreference, resolveTheme } from '../src/constants/appearance.js';
+import { APP_THEME_COLORS, APP_STATUS_BAR_COLORS, APP_PWA_MANIFEST_THEME_COLOR, THEME_OPTIONS, isThemePreference, loadThemePreference, resolveTheme } from '../src/constants/appearance.js';
 import { getLiturgicalTheme, LITURGICAL_THEME_MAP } from '../src/constants/liturgical.js';
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
@@ -79,8 +79,18 @@ test('first paint, saved theme, runtime status bar and PWA manifest agree', () =
   assert.match(runtime, /APP_STATUS_BAR_COLORS\[newTheme\]/);
   assert.match(runtime, /dataset\.appearance = newTheme/);
   const config = read('vite.config.js');
-  assert.match(config, /theme_color: APP_STATUS_BAR_COLORS\.light/);
+  assert.match(config, /theme_color: APP_PWA_MANIFEST_THEME_COLOR/);
   assert.match(config, /background_color: APP_THEME_COLORS\.light\.background/);
+});
+
+test('PWA native chrome fallback is neutral graphite and readable in every theme', () => {
+  assert.equal(APP_PWA_MANIFEST_THEME_COLOR, '#111318');
+  assert.ok(contrast(rgb('#FFFFFF'), rgb(APP_PWA_MANIFEST_THEME_COLOR)) >= 7);
+  for (const color of Object.values(APP_STATUS_BAR_COLORS)) {
+    assert.notEqual(APP_PWA_MANIFEST_THEME_COLOR, color);
+  }
+  // This change must never replace the per-theme top status-bar meta logic.
+  assert.match(read('src/stores/settings.js'), /APP_STATUS_BAR_COLORS\[newTheme\]/);
 });
 
 test('document canvas and body use the selected PWA appearance in all themes', () => {

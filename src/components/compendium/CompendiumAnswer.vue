@@ -1,5 +1,5 @@
 <template>
-  <div class="compendium-answer">
+  <div v-reader-prose class="compendium-answer" lang="be">
     <p v-for="(paragraph, index) in paragraphs" :key="index">
       <template v-for="(run, runIndex) in paragraph" :key="runIndex">
         <em v-if="run.style === 'italic'">{{ run.text }}</em>
@@ -14,6 +14,7 @@
   </div>
 </template>
 <script setup>
+import { vReaderProse } from '@/directives/readerProse';
 import { computed } from 'vue';
 import { answerParagraphs, formatCccRefs } from '@/utils/compendiumData';
 const props = defineProps({ question: { type: Object, required: true } });

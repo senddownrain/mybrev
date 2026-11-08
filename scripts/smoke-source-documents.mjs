@@ -57,7 +57,11 @@ try {
         assert.equal(normalize(rendered.replace(`Том ${doc.roman}`, '')), normalize(doc.fullText));
       }
       assert.equal(await page.locator('.apostolic-decree').count(), 2);
-      for (const document of apostolic.documents) assert.match(await page.locator(`#${document.id}`).innerText(), new RegExp(document.protocol));
+      for (const document of apostolic.documents) {
+        const rendered = await page.locator(`#${document.id}`).innerText();
+        assert.match(rendered, new RegExp(document.protocol));
+        assert.ok(normalize(rendered).includes(normalize(document.body)), `full decree ${document.protocol}`);
+      }
       assert.doesNotMatch(await page.locator('.decrees-page').innerText(), /Том V|Том VI/);
       const proseStyles = await page.locator('.decree__paragraph').first().evaluate(element => {
         const style = getComputedStyle(element);
@@ -82,8 +86,8 @@ try {
       const sourceText = await fs.readFile(new URL(`../${introduction.sourceFile}`, import.meta.url), 'utf8');
       const renderedText = await page.locator('[data-source-text]').evaluateAll(elements => elements.map(element => element.innerText).join(' '));
       assert.equal(normalize(renderedText), normalize(sourceText.replace(/^178\. Гімны/mu, '177. Гімны')), 'every source paragraph, heading, list, table entry and final sentence is rendered');
-      assert.equal(await page.locator('.introduction-sources a').first().getAttribute('href'), introduction.sourceUrl);
-      assert.equal(await page.locator('.introduction-sources a').last().innerText(), 'Catholic.by');
+      assert.equal(await page.locator('.introduction-sources a').count(), 0);
+      assert.match(await page.locator('.introduction-copyright').innerText(), /Канферэнцыя Каталіцкіх Біскупаў Беларусі/);
       assert.doesNotMatch(await page.locator('.introduction-page').innerText(), /Крэміс|указаная/);
       for (const section of [...introduction.chapters, introduction.liturgicalDays, introduction.precedence]) {
         await page.locator(`.introduction-index a[href$="#${section.id}"]`).click();
@@ -105,8 +109,8 @@ try {
       for (const selector of ['.introduction-header h1', '.introduction-chapter h2', '.introduction-subheading', '.introduction-index', '.introduction-copyright']) {
         assert.notEqual(await page.locator(selector).first().evaluate(element => getComputedStyle(element).textAlign), 'justify');
       }
-      await page.getByRole('link', { name: 'Заўвага да нумарацыі пункта 177' }).click();
-      await page.waitForURL(url => url.hash === '#numbering-note-177');
+      assert.equal(await page.getByRole('link', { name: 'Заўвага да нумарацыі пункта 177' }).count(), 0);
+      await page.locator('#point-177').scrollIntoViewIfNeeded();
       await page.locator('#point-177').screenshot({ path: `${output}/introduction-point-177-${width}-${theme}.png` });
       await page.locator('.precedence-table').screenshot({ path: `${output}/introduction-table-${width}-${theme}.png` });
       await overflow('Introduction');
@@ -138,7 +142,11 @@ try {
       assert.notEqual(styles.month.color, styles.text.color);
       assert.notEqual(styles.rank.color, styles.text.color);
       assert.ok(parseFloat(styles.small.size) < parseFloat(styles.text.size));
-      assert.equal(await page.locator('.calendar-intro').evaluate(element => getComputedStyle(element).textAlign), 'justify');
+      const introAlignment = () => page.locator('.calendar-intro').evaluate(element => getComputedStyle(element).textAlign);
+      assert.equal(await introAlignment(), 'start');
+      await page.evaluate(() => { document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('settings').textAlignment = 'justify'; });
+      assert.equal(await introAlignment(), 'justify');
+      await page.evaluate(() => { document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s.get('settings').textAlignment = 'start'; });
       assert.equal(await page.locator('.calendar-rank').first().evaluate(element => getComputedStyle(element).textAlign), 'start');
       const rankGeometry = await page.locator('.calendar-row:has(.calendar-rank)').evaluateAll(rows => rows.every(row => {
         const text = row.querySelector('.calendar-text').getBoundingClientRect();

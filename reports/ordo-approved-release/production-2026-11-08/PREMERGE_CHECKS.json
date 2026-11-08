@@ -1,0 +1,38 @@
+{
+  "scope": "premerge-local",
+  "mainIntegrated": "faf509d486a3422db135838dd601620e367738a5",
+  "ownerApproval": "https://github.com/senddownrain/mybrev/pull/201#issuecomment-6714161064",
+  "tests": {
+    "total": 1167,
+    "pass": 1156,
+    "skip": 11,
+    "fail": 0
+  },
+  "ordo": {
+    "pass": 227,
+    "fail": 0
+  },
+  "publisher": {
+    "pass": 10,
+    "fail": 0,
+    "usesExplicitPrivateSnapshot": true
+  },
+  "lint": "PASS",
+  "build": "PASS",
+  "definitions": "PASS",
+  "document": "PASS",
+  "plannedServerBundledParity": 16068,
+  "sourceRows": 262,
+  "assignments": 959,
+  "transactionReadPreflight": "PASS_NO_COMMIT",
+  "productionWrites": 0,
+  "operationsSha256": "bc21ba7e9f7d4dc5f210bf1fee67247cd3cbe9a602788ce92d5ed862a2753238",
+  "baselineFingerprint": "c95e86a8fb40a96d8a331e9260f74393873061a6c7f8d7f38e562e3a0571f614",
+  "localBrowser": {
+    "calendarContexts": 12,
+    "documentsContexts": 4,
+    "readerContexts": 6,
+    "editor": "local double PASS",
+    "status": "PASS"
+  }
+}

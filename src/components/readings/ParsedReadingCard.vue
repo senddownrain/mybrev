@@ -1,5 +1,5 @@
 <template>
-  <article class="parsed-reading">
+  <article class="parsed-reading" lang="be">
     <header v-if="reading.title" class="reading-header">
       <div class="reading-header__eyebrow">Літургія слова</div>
       <h2 class="reading-day-title">{{ reading.title }}</h2>
@@ -45,7 +45,7 @@
             <div v-if="section.data.title" class="reading-rubric">{{ section.data.title }}</div>
             <div
               v-if="strippedText(section.data)"
-              class="section-text"
+              v-reader-prose class="section-text"
               v-html="formatText(strippedText(section.data))"
             ></div>
             <div v-for="rubric in section.data.rubrics || []" :key="rubric" class="reading-rubric reading-rubric--liturgical">{{ rubric }}</div>
@@ -56,7 +56,7 @@
               <div class="reading-alternative__label">Або <span v-if="alternative.bible">{{ alternative.bible }}</span></div>
               <div v-if="alternative.comment" class="section-comment">{{ alternative.comment }}</div>
               <div v-if="alternative.title" class="reading-rubric">{{ alternative.title }}</div>
-              <div v-if="alternative.text" class="section-text" v-html="formatText(strippedText(alternative))"></div>
+              <div v-if="alternative.text" v-reader-prose class="section-text" v-html="formatText(strippedText(alternative))"></div>
               <div v-if="alternative.text && !hasAcclamation(alternative.text)" class="reading-acclamation">Гэта слова Божае.</div>
             </div>
           </template>
@@ -134,7 +134,7 @@
                 </p>
               </template>
             </div>
-            <div v-else-if="section.data.text" class="section-text" v-html="formatText(section.data.text, section.data.italicLines)"></div>
+            <div v-else-if="section.data.text" v-reader-prose class="section-text" v-html="formatText(section.data.text, section.data.italicLines)"></div>
             <div v-if="conclusionOf(section.data, 'Гэта слова Пана.')" class="reading-acclamation">
               {{ conclusionOf(section.data, 'Гэта слова Пана.') }}
             </div>
@@ -154,6 +154,7 @@
 </template>
 
 <script setup>
+import { vReaderProse } from '@/directives/readerProse';
 import { computed } from 'vue';
 import { formatResponsorialPsalmHtml } from '@/utils/responsorialPsalmHtml';
 import { PASSION_ROLES, SECTION_LABELS, sanitizeReadingHtml } from '@/utils/massReadingSets';

@@ -2,7 +2,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import { validateFirebaseWebConfig } from './scripts/lib/firebase-web-config.mjs'
 import { fileURLToPath, URL } from 'node:url'
-import { APP_THEME_COLORS, APP_STATUS_BAR_COLORS } from './src/constants/appearance.js'
+import { APP_THEME_COLORS, APP_PWA_MANIFEST_THEME_COLOR } from './src/constants/appearance.js'
 
 // Импортируем плагины для Vue и Vuetify
 import vue from '@vitejs/plugin-vue'
@@ -52,36 +52,39 @@ export default defineConfig(({ command, mode }) => {
         name: 'Каталіцкі малітоўнік',
         short_name: 'Малітоўнік',
         description: 'Каталіцкі малітоўнік для штодзённай малітвы',
-        // These colours are used by Android before the app JavaScript starts.
-        // They must stay static: the browser reads the manifest before it can
-        // determine the current liturgical period or the saved user theme.
-        theme_color: APP_STATUS_BAR_COLORS.light,
+        // Android may use the manifest colour for native PWA chrome, including
+        // the 3-button navigation bar. Use neutral graphite instead of the light
+        // theme's brown. The in-page meta theme-color remains dynamic, so the
+        // status bar still follows light/dark/Marian after JavaScript starts.
+        theme_color: APP_PWA_MANIFEST_THEME_COLOR,
         background_color: APP_THEME_COLORS.light.background,
         display: 'standalone',
         orientation: 'portrait',
         lang: 'be',
         start_url: '.',
+        // A changed icon URL tells Chrome 144+ to re-fetch installed PWA icons.
+        // Keep the manifest URL, start_url and implicit identity unchanged.
         icons: [
           {
-            src: 'web-app-manifest-192x192.png',
+            src: 'web-app-manifest-192x192.png?v=20261106-color',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any'
           },
           {
-            src: 'web-app-manifest-512x512.png',
+            src: 'web-app-manifest-512x512.png?v=20261106-color',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any'
           },
           {
-            src: 'web-app-manifest-maskable-192x192.png',
+            src: 'web-app-manifest-maskable-192x192.png?v=20261106-color',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'maskable'
           },
           {
-            src: 'web-app-manifest-maskable-512x512.png',
+            src: 'web-app-manifest-maskable-512x512.png?v=20261106-color',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable'

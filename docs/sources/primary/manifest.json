@@ -3,8 +3,9 @@
   "files": [
     {
       "path": "public/documents/proper-calendar.pdf",
-      "originalName": "04_Кalandar_2026_aktualny АГУЛЬНЫ.pdf",
-      "sha256": "681a59f92395a299510da4b4afc68d79cf0017518c0abb1351828560796017f3"
+      "originalName": "Кalandar_06.11.26_aktualny.pdf",
+      "receivedAt": "2026-11-06",
+      "sha256": "a55dc34c89317bd0a4b683ea84b46941213aa2b981d0a9de1fe3ebeb71dc9696"
     },
     {
       "path": "docs/sources/primary/decret-hours-IV.doc",

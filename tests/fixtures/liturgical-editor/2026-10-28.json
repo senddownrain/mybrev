@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-28",
+  "diocese": "minsk-mohilev",
+  "dayId": "28-10-sv-simon-jude-apostles",
+  "note": "Public fields only, read from production 2026-11-06. Reduced to identity, rules and the investigated field.",
+  "documents": {
+    "days/28-10-sv-simon-jude-apostles": {
+      "_date": "28.10",
+      "_rank": "festum",
+      "_feastName": "Св. Сымона і Юды, апосталаў",
+      "_templates": [
+        "apostles"
+      ],
+      "vesperInter": "<p style=\"text-align: justify;\">Мы належым да Касцёла, пабудаванага на падмурку Апосталаў, узнясём малітвы да Айца за Яго святы народ:</p><p>\n</p><p style=\"text-align: justify;\">Памятай, Пане, пра свой Касцёл.</p><p>\n</p><p style=\"text-align: justify;\">Ойча, Ты пажадаў, каб Твой уваскрослы Сын найперш з’явіўся Апосталам,</p><p>\n</p><p style=\"text-align: justify;\">–учыні, каб мы былі Ягонымі сведкамі па ўсёй зямлі.</p><p>\n</p><p style=\"text-align: justify;\">Ойча, Ты паслаў свайго Сына абвяшчаць Добрую Навіну ўбогім,</p><p>\n</p><p style=\"text-align: justify;\">–дапамажы нам усім прапаведаваць Евангелле.</p><p>\n</p><p style=\"text-align: justify;\">Ойча, Ты паслаў свайго Сына сеяць зерне слова,</p><p>\n</p><p style=\"text-align: justify;\">–дай усім, хто рупліва сее слова, з радасцю збіраць плён.</p><p>\n</p><p style=\"text-align: justify;\">Ойча, Ты паслаў свайго Сына паяднаць з сабою свет праз Ягоную кроў,</p><p>\n</p><p style=\"text-align: justify;\">–дапамажы нам усім супрацоўнічаць дзеля паяднання.</p><p>\n</p><p style=\"text-align: justify;\">Ойча, Ты паставіў свайго Сына ў небе праваруч сябе,</p><p>\n</p><p style=\"text-align: justify;\">–дапусці памерлых да валадарства вечнага шчасця.</p>"
+    },
+    "liturgicalProperTexts/28-10-sv-simon-jude-apostles": {
+      "_schema": 2,
+      "_celebrationId": "sv-simon-jude-apostles",
+      "_date": "28.10",
+      "_rank": "festum",
+      "_feastName": "Св. Сымона і Юды, апосталаў",
+      "_templates": [
+        "apostles"
+      ],
+      "_defaultTemplate": "apostles",
+      "_fieldRules": {
+        "sext1Ps1": {
+          "source": "current-day"
+        },
+        "sext1Ps2": {
+          "source": "current-day"
+        },
+        "sext1Ps3": {
+          "source": "current-day"
+        },
+        "sext1R": {
+          "source": "template",
+          "template": "apostles"
+        },
+        "sext1Pr": {
+          "ref": "laudesPr"
+        },
+        "sext2Ps1": {
+          "source": "current-day"
+        },
+        "sext2Ps2": {
+          "source": "current-day"
+        },
+        "sext2Ps3": {
+          "source": "current-day"
+        },
+        "sext2R": {
+          "source": "template",
+          "template": "apostles"
+        },
+        "sext2Pr": {
+          "ref": "laudesPr"
+        },
+        "sext3Ps1": {
+          "source": "current-day"
+        },
+        "sext3Ps2": {
+          "source": "current-day"
+        },
+        "sext3Ps3": {
+          "source": "current-day"
+        },
+        "sext3R": {
+          "source": "template",
+          "template": "apostles"
+        },
+        "sext3Pr": {
+          "ref": "laudesPr"
+        },
+        "vesperPr": {
+          "ref": "officeOfReadingsPr"
+        }
+      }
+    },
+    "liturgicalTemplates/apostles": {
+      "_schema": 2,
+      "vesperInter": "<p style=\"text-align: justify;\">Мы належым да Касцёла, пабудаванага на падмурку Апосталаў, узнясём малітвы да Айца за Яго святы народ:</p>\n<p style=\"text-align: justify;\">Памятай, Пане, пра свой Касцёл.</p>\n<p style=\"text-align: justify;\">Ойча, Ты пажадаў, каб Твой уваскрослы Сын найперш з’явіўся Апосталам,</p>\n<p style=\"text-align: justify;\">–учыні, каб мы былі Ягонымі сведкамі па ўсёй зямлі.</p>\n<p style=\"text-align: justify;\">Ойча, Ты паслаў свайго Сына абвяшчаць Добрую Навіну ўбогім,</p>\n<p style=\"text-align: justify;\">–дапамажы нам усім прапаведаваць Евангелле.</p>\n<p style=\"text-align: justify;\">Ойча, Ты паслаў свайго Сына сеяць зерне слова,</p>\n<p style=\"text-align: justify;\">–дай усім, хторупліва сее слова, з радасцю збіраць плён.</p>\n<p style=\"text-align: justify;\">Ойча, Ты паслаў свайго Сына паяднаць з сабою свет праз Ягоную кроў,</p>\n<p style=\"text-align: justify;\">–дапамажы нам усім супрацоўнічаць дзеля паяднання.</p>\n<p style=\"text-align: justify;\">Ойча, Ты паставіў свайго Сына ў небе праваруч сябе,</p>\n<p style=\"text-align: justify;\">–дапусці памерлых да валадарства вечнага шчасця.</p>",
+      "_fieldRules": {
+        "vesperPr": {
+          "ref": "laudesPr"
+        },
+        "sext2Pr": {
+          "ref": "laudesPr"
+        },
+        "sext1Pr": {
+          "ref": "laudesPr"
+        },
+        "laudesPs3": {
+          "source": "sunday-week-1"
+        },
+        "officeOfReadingsPr": {
+          "ref": "laudesPr"
+        },
+        "vesper1Pr": {
+          "ref": "laudesPr"
+        },
+        "sext3Pr": {
+          "ref": "laudesPr"
+        },
+        "laudesPs1": {
+          "source": "sunday-week-1"
+        },
+        "laudesPs2": {
+          "source": "sunday-week-1"
+        },
+        "laudesHymn": {
+          "source": "proper"
+        }
+      }
+    },
+    "days/ordinary-w30-d4": {
+      "_periodType": "ordinary",
+      "vesperInter": "<p style=\"text-align: justify;\">Узрадуемся нашаму Богу, які адорвае свой народ вялікімі дабротамі, і ўзнясём да Яго шчырыя малітвы:<br /><em>Пане, памнож любоў і спакой.</em></p>\r\n<p style=\"text-align: justify;\">Вечны Божа, тысяча гадоў для Цябе як дзень, што мінуў,<br /><span style=\"color: #ff0000;\">&ndash;</span> не дай нам забыць, што наша жыццё &ndash; як палявая кветка, якая раніцай расцвітае, а вечарам вяне.</p>\r\n<p style=\"text-align: justify;\">Давай верным Тваю манну, каб яны не цярпелі ад голаду,<br /><span style=\"color: #ff0000;\">&ndash;</span> і жывую ваду, каб яны ніколі не прагнулі.</p>\r\n<p style=\"text-align: justify;\">Не дазволь нам страціць веру і хрысціянскі сэнс жыцця,<br /><span style=\"color: #ff0000;\">&ndash;</span> каб у працы і адпачынку мы шукалі Тваёй славы.</p>\r\n<p style=\"text-align: justify;\">Дай нам спрыяльнае надвор&rsquo;е,<br /><span style=\"color: #ff0000;\">&ndash;</span> каб зямля дала багаты плён.</p>\r\n<p style=\"text-align: justify;\">Выбаў нас, Пане, ад усялякіх бедстваў<br /><span style=\"color: #ff0000;\">&ndash;</span> і спашлі сваё благаслаўленне на нашыя дамы.</p>\r\n<p style=\"text-align: justify;\">Дазволь памерлым убачыць Тваё аблічча<br /><span style=\"color: #ff0000;\">&ndash;</span> і нас таксама залічы да ліку Тваіх выбраных.</p>",
+      "_dayOfWeek": 4,
+      "_periodWeekNumber": 30
+    }
+  }
+}

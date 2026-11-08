@@ -1,0 +1,432 @@
+{
+  "runId": 42456459973,
+  "commit": "c273214b4c1d624147bd42392dfc0101a4458876",
+  "workflow": "https://github.com/senddownrain/ibreviarybyapp/actions/runs/42456459973",
+  "artifactId": "13607734461",
+  "artifactUrl": "https://github.com/senddownrain/ibreviarybyapp/actions/runs/42456459973/artifacts/13607734461",
+  "manualImageInspection": "pending: artifact download blocked by environment network policy (403)",
+  "states": [
+    {
+      "case": "josaphat-martyr",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=josaphat-martyr&date=2026-11-12&dayId=12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk&hour=lectionis&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-12/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/lectionis?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "josaphat-pastors",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=josaphat-pastors&date=2026-11-12&dayId=12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors&hour=lectionis&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-12/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors/lectionis?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-lectionis",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=dead-lectionis&date=2026-11-02&dayId=office-for-dead&hour=lectionis&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-02/office-for-dead/lectionis?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-terz",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=dead-terz&date=2026-11-02&dayId=office-for-dead&hour=terz&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-02/office-for-dead/terz?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-sext",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=dead-sext&date=2026-11-02&dayId=office-for-dead&hour=sext&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-02/office-for-dead/sext?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-non",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=dead-non&date=2026-11-02&dayId=office-for-dead&hour=non&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-02/office-for-dead/non?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-vespers",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=dead-vespers&date=2026-11-02&dayId=office-for-dead&hour=vespers&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-02/office-for-dead/vespers?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-completorium",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=dead-completorium&date=2026-11-02&dayId=office-for-dead&hour=completorium&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-02/office-for-dead/completorium?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-laudes-146",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=dead-laudes-146&date=2026-11-02&dayId=office-for-dead&hour=laudes&psalm=%D0%B4%D1%83%D1%88%D0%B0+%D0%BC%D0%B0%D1%8F&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-02/office-for-dead/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-laudes-150",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=dead-laudes-150&date=2026-11-02&dayId=office-for-dead&hour=laudes&psalm=%D0%B3%D1%83%D0%BA%D0%B0%D0%BC+%D1%82%D1%80%D1%83%D0%B1%D1%8B&alternative=true&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-02/office-for-dead/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "ordinary",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=ordinary&date=2026-11-05&dayId=ordinary-w31-d5&hour=laudes&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-05/ordinary-w31-d5/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "daniel",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=daniel&date=2026-11-01&dayId=01-11-all-saints&hour=laudes&needle=%D0%91%D0%BB%D0%B0%D0%B3%D0%B0%D1%81%D0%BB%D0%B0%D0%B2%D1%96%D0%BC+%D0%90%D0%B9%D1%86%D0%B0+%D1%96+%D0%A1%D1%8B%D0%BD%D0%B0&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-01/01-11-all-saints/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "solemnity-I",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=solemnity-I&date=2026-10-31&dayId=ordinary-w30-d7&hour=vespers&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-10-31/ordinary-w30-d7/vespers?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "solemnity-II",
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "scale": "normal",
+      "mode": "leftBreak",
+      "url": "http://localhost:5241/?name=solemnity-II&date=2026-11-01&dayId=01-11-all-saints&hour=vespers&width=390&height=844&theme=light&scale=normal&mode=leftBreak#/hours/ora/2026-11-01/01-11-all-saints/vespers?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "josaphat-martyr",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=josaphat-martyr&date=2026-11-12&dayId=12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk&hour=lectionis&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-12/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/lectionis?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "josaphat-pastors",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=josaphat-pastors&date=2026-11-12&dayId=12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors&hour=lectionis&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-12/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors/lectionis?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-lectionis",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=dead-lectionis&date=2026-11-02&dayId=office-for-dead&hour=lectionis&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-02/office-for-dead/lectionis?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-terz",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=dead-terz&date=2026-11-02&dayId=office-for-dead&hour=terz&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-02/office-for-dead/terz?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-sext",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=dead-sext&date=2026-11-02&dayId=office-for-dead&hour=sext&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-02/office-for-dead/sext?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-non",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=dead-non&date=2026-11-02&dayId=office-for-dead&hour=non&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-02/office-for-dead/non?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-vespers",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=dead-vespers&date=2026-11-02&dayId=office-for-dead&hour=vespers&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-02/office-for-dead/vespers?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-completorium",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=dead-completorium&date=2026-11-02&dayId=office-for-dead&hour=completorium&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-02/office-for-dead/completorium?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-laudes-146",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=dead-laudes-146&date=2026-11-02&dayId=office-for-dead&hour=laudes&psalm=%D0%B4%D1%83%D1%88%D0%B0+%D0%BC%D0%B0%D1%8F&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-02/office-for-dead/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-laudes-150",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=dead-laudes-150&date=2026-11-02&dayId=office-for-dead&hour=laudes&psalm=%D0%B3%D1%83%D0%BA%D0%B0%D0%BC+%D1%82%D1%80%D1%83%D0%B1%D1%8B&alternative=true&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-02/office-for-dead/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "ordinary",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=ordinary&date=2026-11-05&dayId=ordinary-w31-d5&hour=laudes&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-05/ordinary-w31-d5/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "daniel",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=daniel&date=2026-11-01&dayId=01-11-all-saints&hour=laudes&needle=%D0%91%D0%BB%D0%B0%D0%B3%D0%B0%D1%81%D0%BB%D0%B0%D0%B2%D1%96%D0%BC+%D0%90%D0%B9%D1%86%D0%B0+%D1%96+%D0%A1%D1%8B%D0%BD%D0%B0&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-01/01-11-all-saints/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "solemnity-I",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=solemnity-I&date=2026-10-31&dayId=ordinary-w30-d7&hour=vespers&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-10-31/ordinary-w30-d7/vespers?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "solemnity-II",
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "scale": "normal",
+      "mode": "alternatingStanzas",
+      "url": "http://localhost:5241/?name=solemnity-II&date=2026-11-01&dayId=01-11-all-saints&hour=vespers&width=1280&height=900&theme=dark&scale=normal&mode=alternatingStanzas#/hours/ora/2026-11-01/01-11-all-saints/vespers?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "josaphat-martyr",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=josaphat-martyr&date=2026-11-12&dayId=12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk&hour=lectionis&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-12/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/lectionis?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "josaphat-pastors",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=josaphat-pastors&date=2026-11-12&dayId=12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors&hour=lectionis&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-12/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors/lectionis?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-lectionis",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=dead-lectionis&date=2026-11-02&dayId=office-for-dead&hour=lectionis&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-02/office-for-dead/lectionis?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-terz",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=dead-terz&date=2026-11-02&dayId=office-for-dead&hour=terz&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-02/office-for-dead/terz?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-sext",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=dead-sext&date=2026-11-02&dayId=office-for-dead&hour=sext&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-02/office-for-dead/sext?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-non",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=dead-non&date=2026-11-02&dayId=office-for-dead&hour=non&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-02/office-for-dead/non?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-vespers",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=dead-vespers&date=2026-11-02&dayId=office-for-dead&hour=vespers&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-02/office-for-dead/vespers?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-completorium",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=dead-completorium&date=2026-11-02&dayId=office-for-dead&hour=completorium&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-02/office-for-dead/completorium?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-laudes-146",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=dead-laudes-146&date=2026-11-02&dayId=office-for-dead&hour=laudes&psalm=%D0%B4%D1%83%D1%88%D0%B0+%D0%BC%D0%B0%D1%8F&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-02/office-for-dead/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "dead-laudes-150",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=dead-laudes-150&date=2026-11-02&dayId=office-for-dead&hour=laudes&psalm=%D0%B3%D1%83%D0%BA%D0%B0%D0%BC+%D1%82%D1%80%D1%83%D0%B1%D1%8B&alternative=true&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-02/office-for-dead/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "ordinary",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=ordinary&date=2026-11-05&dayId=ordinary-w31-d5&hour=laudes&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-05/ordinary-w31-d5/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "daniel",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=daniel&date=2026-11-01&dayId=01-11-all-saints&hour=laudes&needle=%D0%91%D0%BB%D0%B0%D0%B3%D0%B0%D1%81%D0%BB%D0%B0%D0%B2%D1%96%D0%BC+%D0%90%D0%B9%D1%86%D0%B0+%D1%96+%D0%A1%D1%8B%D0%BD%D0%B0&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-01/01-11-all-saints/laudes?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "solemnity-I",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=solemnity-I&date=2026-10-31&dayId=ordinary-w30-d7&hour=vespers&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-10-31/ordinary-w30-d7/vespers?diocese=pinsk",
+      "endingReached": true
+    },
+    {
+      "case": "solemnity-II",
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "scale": "large",
+      "mode": "leftBreakIndent",
+      "url": "http://localhost:5241/?name=solemnity-II&date=2026-11-01&dayId=01-11-all-saints&hour=vespers&width=390&height=844&theme=dark&scale=large&mode=leftBreakIndent#/hours/ora/2026-11-01/01-11-all-saints/vespers?diocese=pinsk",
+      "endingReached": true
+    }
+  ],
+  "errors": [],
+  "external": []
+}

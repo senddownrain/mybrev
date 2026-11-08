@@ -275,7 +275,11 @@ export function resolveEvening(today, tomorrow) {
   // Easter octave → II Sunday of Easter; Vitebsk and Pinsk 11.04.2026).
   const sundayTie = tomorrowPrimary.precedence === todayPrimary.precedence
     && tomorrow.season.isSunday && !today.season.isSunday;
-  const tomorrowWins = tomorrowHasFirst && (tomorrowPrimary.precedence < todayPrimary.precedence || sundayTie);
+  // GNLYC 33, 39: Advent ends before Christmas I Vespers, including when
+  // 24 December is IV Sunday. Both occupy row 2, so the ordinary tie rule
+  // alone would incorrectly retain the Advent Sunday's II Vespers (2028).
+  const christmasBoundary = today.season.period === 'advent' && tomorrowPrimary.id === 'nativity-lord';
+  const tomorrowWins = tomorrowHasFirst && (tomorrowPrimary.precedence < todayPrimary.precedence || sundayTie || christmasBoundary);
   const todayKind = todayPrimary.officeKind;
   // Days of both octaves have II Vespers (Vitebsk/Grodno print "ІІ Нешпары"
   // on 26–31 December; Minsk "Нешпары з актавы").

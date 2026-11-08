@@ -995,3 +995,17 @@ $base-content-font-size: 1rem; // 16px по умолчанию
     font-size: calc(1.35rem * var(--font-size-multiplier, 1)) !important;
   }
 }
+
+// Semantic opt-in: never inherited by navigation or any text of the Hours.
+// Specificity overrides legacy reader rules that forced left alignment.
+:is(.prayer-text, .section-text, .compendium-answer, .bible-reader) [data-reader-prose],
+.document-prose[data-reader-prose] {
+  text-align: var(--reader-text-alignment, start) !important;
+  text-align-last: start;
+  hyphens: auto;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+@media (prefers-reduced-motion: reduce) {
+  .expand-transition-enter-active, .expand-transition-leave-active { transition-duration: 0s !important; }
+}

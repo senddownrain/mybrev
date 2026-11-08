@@ -41,7 +41,7 @@ test('static calendar has the source title, all 13 sheets and 365 printed date r
   assert.equal(calendar.title, 'Уласны каляндар дыяцэзій на Беларусі');
   assert.equal(calendar.pages.length, 13);
   assert.equal(calendar.months.length, 12);
-  assert.equal(rows.length, 495);
+  assert.equal(rows.length, 493);
   assert.equal(rows.filter(row => row.date).length, 365);
   for (let month = 1; month <= 12; month++) {
     const dates = rows.filter(row => row.month === month && row.date).map(row => row.date);
@@ -66,37 +66,48 @@ test('protocols, printed styles, nested dioceses and movable celebrations surviv
   const thomas = rows.find(row => row.month === 7 && row.date === 3);
   assert.equal(text(thomas), 'СВ. ТАМАША, АПОСТАЛА');
   assert.ok(thomas.runs.some(run => run.small));
-  assert.ok(rows.find(row => row.month === 11 && text(row).startsWith('(Маці Божай') && row.runs.some(run => run.italic)).indent, 'PDF indentation comes from visible glyph position, not leading whitespace bbox');
+  assert.ok(rows.find(row => row.month === 11 && text(row).startsWith('(Маці Божай') && !row.runs.some(run => run.italic)).indent, 'PDF indentation comes from visible glyph position, not leading whitespace bbox');
   const december = calendar.pages[12].rows.filter(row => row.month === 12).map(text).join('\n');
   assert.ok(december.includes('Св. Яна Дамаскіна'));
   assert.ok(december.includes('ГАДАВІНА ПАСВЯЧЭННЯ КАТЭДРАЛЬНАГА КАСЦЁЛА'));
   assert.doesNotMatch(december, /Барбар/);
 });
 
-test('static document UI renders all runs, public original and safe navigation without calendar services', () => {
+test('static document UI renders all runs without a public calendar PDF link and retains safe navigation', () => {
   for (const file of ['src/views/ProperCalendar.vue', 'src/views/LiturgyHoursDecrees.vue', 'src/views/LiturgyHoursIntroduction.vue']) {
     const vue = read(file);
     assert.doesNotMatch(vue, /firestore|useLiturgical|useOrdo|calendarService|v-html/);
     assert.match(vue, /DocumentBack/);
   }
   assert.match(read('src/views/ProperCalendar.vue'), /calendar.pages/);
-  assert.match(read('src/views/ProperCalendar.vue'), /:href="calendar.sourceFile"/);
+  assert.doesNotMatch(read('src/views/ProperCalendar.vue'), /Арыгінал PDF|:href="calendar.sourceFile"|class="document-original"/);
   assert.match(read('src/components/DocumentBack.vue'), /router.push\(\{ name: 'Sources' \}\)/);
   for (const route of ['documents/proper-calendar', 'documents/liturgy-hours-decrees', 'documents/liturgy-hours-introduction']) assert.ok(read('src/router/index.js').includes(route));
 });
 
-test('Roman references remain link-only; introduction permission has a scoped evidence record', () => {
-  assert.equal(apostolic.publicationMode, 'official_link');
+test('full Apostolic See decrees are embedded and source-verifiable without outbound links', () => {
+  assert.equal(apostolic.publicationMode, 'full_text');
   assert.equal(introduction.publicationMode, 'full_text');
   assert.equal(introduction.permission.status, 'confirmed_by_project_owner');
   assert.match(read(introduction.permission.evidence), /Разрешение получено/);
   assert.equal(introduction.sourceUrl, 'https://lh.catholic.by/uvodziny.php');
-  assert.equal(apostolic.sourceUrl, 'https://lh.catholic.by/dekrety.php');
+  assert.equal(apostolic.sourceFile, 'docs/sources/primary/lh-decrees-2026-11-05.txt');
   assert.deepEqual(apostolic.documents.map(doc => [doc.protocol, doc.date]), [['1000/71', '1971-04-11'], ['1814/84', '1985-04-07']]);
-  for (const document of apostolic.documents) {
-    assert.ok(!('volume' in document) && !('roman' in document) && !('fullText' in document));
-    assert.ok(read('docs/sources/primary/lh-decrees-2026-11-05.txt').includes(`Прат. № ${document.protocol}`));
-  }
+  const source = read(apostolic.sourceFile);
+  const sourceStart = source.indexOf('СВЯТАЯ КАНГРЭГАЦЫЯ БОЖАГА КУЛЬТУ');
+  assert.ok(sourceStart >= 0);
+  const original = source.slice(sourceStart);
+  const second = original.indexOf('\nКАНГРЭГАЦЫЯ БОЖАГА КУЛЬТУ\n');
+  assert.ok(second >= 0);
+  const sourceTexts = [original.slice(0, second), original.slice(second + 1)];
+  apostolic.documents.forEach((doc, index) => {
+    const rendered = [doc.issuer, `Прат. № ${doc.protocol}`, doc.heading, doc.body].join('\n');
+    assert.equal(normalized(rendered), normalized(sourceTexts[index]), `Full decree ${doc.protocol} must match the primary source`);
+    assert.ok(doc.body.length > 100);
+  });
+  const vue = read('src/views/LiturgyHoursDecrees.vue');
+  assert.match(vue, /apostolic-decree__body/);
+  assert.doesNotMatch(vue, /Крыніца дэкрэтаў I–III тамоў|Поўныя тэксты двух дэкрэтаў на|https:\/\/lh\.catholic\.by\/dekrety\.php/);
   assert.equal(getSource('liturgy-hours-2012-2020').decrees.length, 4);
 });
 
@@ -142,4 +153,23 @@ test('registry and document metadata agree strictly for every decree', () => {
     assert.equal(registry[index].documentPath, `/documents/liturgy-hours-decrees#${doc.id}`);
     if (registry[index].sourceDocument) assert.equal(registry[index].sourceDocument, doc.sourceFile);
   }
+});
+
+test('06.11.2026 source page12 includes Vitebsk in the obligatory memorial group', () => {
+  assert.equal(calendar.sourceSha256, 'a55dc34c89317bd0a4b683ea84b46941213aa2b981d0a9de1fe3ebeb71dc9696');
+  const november = calendar.pages[11].rows;
+  assert.ok(november.some(row => text(row).includes('Пінскай і Віцебскай дыяцэзіі:')));
+  const start = november.findIndex(row => row.date === 16);
+  const end = november.findIndex(row => row.date === 17);
+  const section = november.slice(start, end);
+  assert.equal(section.filter(row => text(row).startsWith('У Віцебскай дыяцэзіі:')).length, 0);
+  assert.ok(section.some(row => row.rank?.some(run => run.text.includes('Успамін'))));
+});
+
+test('introduction renders original text without the editorial footnote or external source links', () => {
+  const vue = read('src/views/LiturgyHoursIntroduction.vue');
+  assert.doesNotMatch(vue, /editorialNotes|introduction\.sources|numbering-note-177|editorial-reference|editorial-note/);
+  assert.doesNotMatch(vue, /lh\.catholic\.by|Catholic\.by|source\.url/);
+  assert.match(vue, /© Канферэнцыя Каталіцкіх Біскупаў Беларусі/);
+  assert.match(vue, /introduction\.precedence\.paragraphs/);
 });

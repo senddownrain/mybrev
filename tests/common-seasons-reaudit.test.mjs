@@ -1,3 +1,4 @@
+import { DOXOLOGY_HTML } from '../scripts/liturgy/lib/psalmody-doxology.mjs';
 /**
  * Re-audit of the seasonal Commons: the three volumes are compared SECTION BY SECTION
  * (Common → hour → field → text), a missing local marker never means "equal to Volume III",
@@ -307,7 +308,7 @@ test('hymns, antiphons, psalms, short readings, prayers and readings printed by 
     if (info.method !== 'render' || !KINDS.has(info.kind)) return;
     const units = corpus.volumes[info.volume].commons.get(commonId).fields.get(field);
     const printed = significant(comparableText(units, season));
-    const shown = significant(plain(info.value));
+    const shown = significant(plain(info.kind === 'psalm' ? info.value.replaceAll(DOXOLOGY_HTML, '') : info.value));
     seen.add(info.kind);
     const diff = tokenDiff(printed, shown).filter((x) => x.op !== '=');
     if (diff.length) mismatches.push(`${commonId}.${season}.${field}: ${diff.slice(0, 4).map((x) => x.op + x.token).join(' ')}`);

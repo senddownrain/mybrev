@@ -158,6 +158,7 @@
 </template>
 
 <script setup>
+import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import BackToTop from '@/components/BackToTop.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -345,7 +346,7 @@ function load() {
 }
 
 onMounted(load);
-watch(() => [route.params.date || route.query.date, route.query.dayId, route.query.reference, route.query.view, effectiveOrdoDioceses.value.join(',')], load);
+watch(() => [ordoCalendarEpoch.value, route.params.date || route.query.date, route.query.dayId, route.query.reference, route.query.view, effectiveOrdoDioceses.value.join(',')], load);
 </script>
 
 <style scoped>

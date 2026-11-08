@@ -17,6 +17,7 @@
     "smoke:ui": "node scripts/smoke-ui.mjs",
     "smoke:appearance": "node scripts/smoke-appearance.mjs",
     "smoke:devotional-office": "node scripts/smoke-devotional-office.mjs",
+    "smoke:day-editor": "node scripts/smoke-day-editor-persistence.mjs",
     "smoke:responsive": "firebase emulators:exec --only firestore --project demo-responsive \"node scripts/smoke-responsive.mjs\"",
     "lint": "eslint . --fix",
     "db:backup": "node scripts/export-firestore-snapshot.mjs",
@@ -106,7 +107,10 @@
     "analytics:r05-local": "node experiments/analytics-ingest/worker/reports-local-server.mjs",
     "analytics:r05-seed": "node experiments/analytics-ingest/dashboard/seed-synthetic.mjs",
     "analytics:r05-smoke": "node experiments/analytics-ingest/worker/run-reports-smoke.mjs",
-    "analytics:e2e": "node experiments/analytics-ingest/e2e/p09-e2e.mjs --out docs/analytics-evidence/p09/e2e-out"
+    "analytics:e2e": "node experiments/analytics-ingest/e2e/p09-e2e.mjs --out docs/analytics-evidence/p09/e2e-out",
+    "audit:doxologies": "node scripts/liturgy/audit-doxologies.mjs",
+    "test:doxologies": "node --test tests/psalmody-doxology.test.mjs",
+    "verify:doxologies": "node scripts/liturgy/verify-doxologies.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",
@@ -132,6 +136,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "eslint-plugin-vue": "^10.8.0",
     "firebase-admin": "^13.6.0",
+    "https-proxy-agent": "^7.0.6",
     "playwright-core": "^1.63.0",
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "^1.83.0",

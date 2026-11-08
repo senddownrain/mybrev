@@ -1,0 +1,42 @@
+{
+  "mode": "READ_ONLY_PREFLIGHT",
+  "matched": true,
+  "mismatches": [],
+  "requests": [
+    {
+      "method": "GET",
+      "resource": "/liturgicalCalendarMeta/current",
+      "startedAt": "2026-11-08T07:02:02.833Z",
+      "status": 200,
+      "responseBytes": 574
+    },
+    {
+      "method": "GET",
+      "resource": "/liturgicalCelebrations",
+      "startedAt": "2026-11-08T07:02:03.142Z",
+      "status": 200,
+      "responseBytes": 622889
+    },
+    {
+      "method": "GET",
+      "resource": "/liturgicalDioceseOverrides",
+      "startedAt": "2026-11-08T07:02:03.562Z",
+      "status": 200,
+      "responseBytes": 225347
+    },
+    {
+      "method": "GET",
+      "resource": "/liturgicalYearOverrides",
+      "startedAt": "2026-11-08T07:02:03.863Z",
+      "status": 200,
+      "responseBytes": 26174
+    },
+    {
+      "method": "GET",
+      "resource": "/liturgicalCalendarMeta/current",
+      "startedAt": "2026-11-08T07:02:04.112Z",
+      "status": 200,
+      "responseBytes": 574
+    }
+  ]
+}

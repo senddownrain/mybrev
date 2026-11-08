@@ -3,6 +3,8 @@ import { publicContentCache, isContentOnline, requestContentRefresh } from './pu
 /** Explicit user action. Refresh only previously saved resources, never a full DB audit. */
 export async function refreshSavedContent() {
   if (!isContentOnline()) throw new Error('Для абнаўлення патрэбны інтэрнэт. Захаваныя тэксты даступныя без сеткі.');
+  const { refreshCalendarDefinitions } = await import('../services/ordoCalendarService.js');
+  await refreshCalendarDefinitions({ fresh: true, revalidate: true });
   const keys = await publicContentCache.keys();
   requestContentRefresh();
   const [{ useLiturgicalStore }, { getStaticCollection, getLiturgicalTemplates }, { getSavedPrayers }] = await Promise.all([

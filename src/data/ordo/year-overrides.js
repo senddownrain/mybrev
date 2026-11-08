@@ -23,6 +23,7 @@ export const YEAR_OVERRIDES = Object.freeze([
     reason: 'St Stanislaus (11.04, Saturday in the Easter octave) kept on Thursday 16 April',
     source: 'manual',
     status: 'confirmed',
+    enabled: false, // Owner decision 2026-11-06: retain reference, cancel manual move.
     evidence: ['minsk-mohilev:2026-04-16:c0'],
   },
   {
@@ -38,6 +39,7 @@ export const YEAR_OVERRIDES = Object.freeze([
     reason: 'Optional memorial anticipated from the II Sunday of Lent to Saturday',
     source: 'manual',
     status: 'confirmed',
+    enabled: false, // Owner decision 2026-11-06: retain reference, cancel manual move.
     evidence: ['grodno:2027-02-20:c0'],
   },
   {
@@ -53,6 +55,7 @@ export const YEAR_OVERRIDES = Object.freeze([
     reason: 'Optional memorial anticipated from Sunday to Saturday',
     source: 'manual',
     status: 'confirmed',
+    enabled: false, // Owner decision 2026-11-06: retain reference, cancel manual move.
     evidence: ['grodno:2027-09-11:c0'],
   },
   {
@@ -68,6 +71,7 @@ export const YEAR_OVERRIDES = Object.freeze([
     reason: 'Dedication anniversary of the cathedral kept on Monday 6 December',
     source: 'manual',
     status: 'confirmed',
+    enabled: false, // Owner decision 2026-11-06: retain reference, cancel manual move.
     evidence: ['grodno:2027-12-06:c0'],
   },
 ]);

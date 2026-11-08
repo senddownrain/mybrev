@@ -119,7 +119,7 @@ test('a published Firestore revision replaces the active calendar; reset returns
     assert.ok(pinsk.suppressed.some((item) => item.id === 'test-movable'));
     // An empty publication never takes the calendar down.
     setCalendarDefinitions({ revision: 99, celebrations: [] });
-    assert.equal(getCalendarDefinitions().celebrations.length, bundled.celebrations.length);
+    assert.equal(getCalendarDefinitions().celebrations.length, bundled.celebrations.length + 1); // invalid empty publication retains the last complete calendar
   } finally {
     reset();
   }
@@ -255,7 +255,7 @@ test('open cases are structured and shown only for the years that hit them', () 
   assert.ok(of(2033).includes('coinciding-general-solemnities'));
   assert.ok(of(2031).includes('all-souls-on-sunday'));
   assert.ok(of(2026).includes('immaculate-heart-with-memorial'));
-  assert.equal(ORDO_AMBIGUITIES.find((item) => item.id === 'christ-high-priest-collision').status, 'provisional');
+  assert.equal(ORDO_AMBIGUITIES.find((item) => item.id === 'christ-high-priest-collision').status, 'decided');
   assert.ok(of(2027, 'pinsk').includes('diocesan-patron-impeded'));
   assert.deepEqual(ambiguityYears('st-joseph-holy-week', { from: 2026, to: 2046 }), [2035, 2046]);
   // Ambiguities never become overrides by themselves.

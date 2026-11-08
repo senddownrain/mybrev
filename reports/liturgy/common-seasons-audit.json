@@ -4654,7 +4654,7 @@
       "evidence": "Volume III prints «абвяшалі справу» (2 ант., line 1703) and «абвяшалі справы» (closing antiphon, line 1733) while the verse of the same psalm in the same volume reads «абвесцяць справу Бога»; the verb is «абвяшчаць» everywhere else in the three volumes; Volumes I and II print «абвяшчалі справу» in both antiphons. The psalm body is identical in Volume II and in the stored base (checked word by word).",
       "after": [
         "officeOfReadingsAnt2: 2 ант. Яны абвяшчалі справу Бога * і зразумелі Яго ўчынкі.",
-        "officeOfReadingsPs2: се людзі будуць іх баяцца. Яны абвесцяць справу Бога * і зразумеюць Яго ўчынкі. А справядлівы ўзрадуецца ў Пану † і будзе шукаць прыбежышча ў Ім, * і праславяцца ўсе праведныя сэрцам. Ант. Яны абвяшчалі справу Бога * і зразумелі Яго ўчынкі."
+        "officeOfReadingsPs2: уецца ў Пану † і будзе шукаць прыбежышча ў Ім, * і праславяцца ўсе праведныя сэрцам. Хвала Айцу і Сыну, * і Духу Святому. Як была спрадвеку, цяпер і заўсёды, * і на векі вечныя. Амэн. Ант. Яны абвяшчалі справу Бога * і зразумелі Яго ўчынкі."
       ],
       "sourceLines": {
         "officeOfReadingsAnt2": {
@@ -4688,7 +4688,7 @@
       },
       "verification": {
         "antiphon": "2 ант. яны абвяшчалі справу бога * і зразумелі яго ўчынкі.",
-        "closingAntiphonEnd": "ам. ант. яны абвяшчалі справу бога * і зразумелі яго ўчынкі.",
+        "closingAntiphonEnd": "эн. ант. яны абвяшчалі справу бога * і зразумелі яго ўчынкі.",
         "psalmWordsBase": 139,
         "psalmWordsVolumeII": 139,
         "psalmWordsDifferent": 0,

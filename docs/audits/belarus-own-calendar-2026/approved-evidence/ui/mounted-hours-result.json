@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "scope": "actual mounted Hours view with local Office fixtures and verified existing source content",
+  "dioceseSwitch": "PASS",
+  "legacyDirectLink": "PASS",
+  "epochRerender": "PASS",
+  "network": "external requests blocked; production not modified"
+}

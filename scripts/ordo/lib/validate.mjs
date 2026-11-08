@@ -13,6 +13,7 @@
  * SOURCE_MORE_DETAILED, PARSER_UNCERTAIN, GENERATOR_MISMATCH.
  */
 import { generateLiturgicalYear, getYearPlan } from '../../../src/utils/ordo/index.js';
+import approvedAnnualExpectations from './approved-annual-expectations.json' with { type: 'json' };
 import { VALIDATION_EXPECTATIONS } from './validation-expectations.mjs';
 import { BELARUS_LAYER, DIOCESAN_LAYERS } from '../../../src/data/ordo/layers.js';
 import { YEAR_OVERRIDES } from '../../../src/data/ordo/year-overrides.js';
@@ -150,7 +151,7 @@ function teDeumOfOfficeFrom(officeFrom, generated) {
 }
 
 function expectationFor(diocese, date, check) {
-  return VALIDATION_EXPECTATIONS.find((item) => item.diocese === diocese
+  return [...approvedAnnualExpectations, ...VALIDATION_EXPECTATIONS].find((item) => item.diocese === diocese
     && (item.date === date || (item.dates || []).includes(date) || (item.mmdd && date.slice(5) === item.mmdd))
     && (!item.checks || item.checks.includes(check)));
 }
@@ -356,6 +357,7 @@ export function compareDay(sourceDay, generated, context) {
     if (expected) {
       checks[check] = {
         ...value, status: expected.status, reason: expected.reason, reviewed: true,
+        ...(expected.approvedDecision ? { approvedDecision: true } : {}),
         ...(expected.sourceError ? { sourceError: true } : {}),
       };
     }
@@ -412,7 +414,9 @@ export function summarize(days) {
     const counts = Object.fromEntries(STATUSES.map((status) => [status, 0]));
     days.forEach((day) => { if (day.checks[check]) counts[day.checks[check].status] += 1; });
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
-    byCheck[check] = { total, ...counts, matchRate: total ? counts.MATCH / total : null };
+    const approved = days.filter((day) => day.checks[check]?.approvedDecision).length;
+    byCheck[check] = { total, ...counts, matchRate: total ? counts.MATCH / total : null,
+      approvedDecisionRate: total ? (counts.MATCH + approved) / total : null };
   });
   const total = days.length;
   const explained = total - byStatus.GENERATOR_MISMATCH;
@@ -423,6 +427,7 @@ export function summarize(days) {
     reviewedMismatches,
     unreviewedMismatches: byStatus.GENERATOR_MISMATCH - reviewedMismatches,
     matchRate: total ? byStatus.MATCH / total : 0,
+    approvedDecisionRate: total ? days.filter((day) => day.status === 'MATCH' || (day.status !== 'GENERATOR_MISMATCH' && Object.values(day.checks).some((check) => check.approvedDecision))).length / total : 0,
     // MATCH + every explained difference (all statuses but GENERATOR_MISMATCH).
     explainedRate: total ? explained / total : 0,
     byCheck,
