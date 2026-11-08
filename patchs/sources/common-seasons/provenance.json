@@ -133,7 +133,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "90ae2ec157221ec7b08742e9db888294ce41a106b314467c981f206c9d7b488b"
+        "sha256": "454bae982dbfd87226917ff3fafafde2531a626e88e91891ac9f871f1a48dd5e"
       },
       "vesperPr": {
         "volume": "I",
@@ -164,7 +164,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "5fc191f7d82128102a28107a26d53bbd0069f44f58efc982655ec85411127597"
+        "sha256": "7693429f03eeb7c01176ea2156a884cf6628826074d8a71e0c3d3d432234d646"
       },
       "vesper1Pr": {
         "volume": "I",
@@ -310,7 +310,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "90ae2ec157221ec7b08742e9db888294ce41a106b314467c981f206c9d7b488b"
+        "sha256": "454bae982dbfd87226917ff3fafafde2531a626e88e91891ac9f871f1a48dd5e"
       },
       "vesperPr": {
         "volume": "I",
@@ -341,7 +341,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "5fc191f7d82128102a28107a26d53bbd0069f44f58efc982655ec85411127597"
+        "sha256": "7693429f03eeb7c01176ea2156a884cf6628826074d8a71e0c3d3d432234d646"
       },
       "vesper1Pr": {
         "volume": "I",
@@ -443,7 +443,7 @@
         ],
         "method": "render",
         "kind": "psalm",
-        "sha256": "674230836b62514ebeeb1bbd2d7ffa94785012022916ff25b4fc205c5d387ed6"
+        "sha256": "fbeac59da3f3f2f04f4e1ae04967c2f316739a979e0ef73725e431e663742390"
       },
       "vesperR": {
         "volume": "II",
@@ -504,7 +504,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "annotated",
-        "sha256": "db0e40ac04ddd6d3f19a4cb7c30be2d0223791ef1f83e30d5c4df8d3e5a816fe"
+        "sha256": "58a8856cc893775ad5508b1769d6339556a6d3b1f1bd97bac293a3284ac98094"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -514,7 +514,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "c5fba5552d211ad12a7e4c35358da1b2edf3b06b66b423cb078f4249cd8e9f2f"
+        "sha256": "829740469aaa13443e62598ebfc9498f791f4a2b6dfb892936aa6d56e9a22a5c"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -524,7 +524,7 @@
         ],
         "method": "render",
         "kind": "psalm",
-        "sha256": "5d001b18c040b71842716eabafc2a3c998264b08442198466ac568fc030dfc1c"
+        "sha256": "c7ed57bf97ef6eb0c89cff253a62904778702f5ec3f33c5025d97385d4085c17"
       },
       "vesper1R": {
         "volume": "II",
@@ -601,7 +601,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "52ad484a035bf7d214b2332b25bc75be9098ac69454f2cc30fbb46458b4d5af2"
+        "sha256": "f38a05fbe067941cf3a20df6e19bfb8ad7761bf2ef590bf112de1e82935aaced"
       },
       "officeOfReadingsPs2": {
         "volume": "II",
@@ -611,7 +611,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "5814456a0379a23855c1a94fb37aa85e2f8968fa5ff08679232c39b3906a6f5a"
+        "sha256": "eb9652f36247a9c7bc33f03f838ea3453b8666752e57c39a2ca26d494966c87b"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -624,7 +624,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "4b8ab67d6d61d01f70cd84b12e6f5f1dbbeb2ae10be6a29b0354fa594e744c3a"
+        "sha256": "f34265b359e2e979e9d56a8d247fcb039d9dad6879b788ffb255c0c5cfbde4c4"
       },
       "officeOfReadingsVers": {
         "volume": "II",
@@ -857,7 +857,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "2de140be364405dcfae89be775124942ad6a7288d7780d70397aaedbb128016a"
+        "sha256": "497e0097a2ce5998a7ddc3ea2533f446d63c5d6f5ebf92552e68e60000e6cee3"
       },
       "vesperPs2": {
         "volume": "II",
@@ -870,7 +870,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "0b6bd76b945bed7cd2431b7751ee479a05108f84d1334e0461699f977335301c"
+        "sha256": "5f386d6c0d09759cb666fae3f30fc809134b93873b665df87341925c8f2f796f"
       },
       "vesperPs3": {
         "volume": "II",
@@ -880,7 +880,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "0e03c1687839e0fc2f7b937dc8425a89132e5606992a2ba63699a9ffeb832162"
+        "sha256": "6e23060fbee869caed24c75b6629fe01f0def6ed715127169060ced1477c1477"
       },
       "vesperR": {
         "volume": "II",
@@ -954,7 +954,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "957509bf3a6d8cc0582311b84418cf288c947b99009abc1395795d38ee27eaba"
+        "sha256": "bea465be57d0021989aa969ed0eef0591e79e3b3ab60e21012ac5197afb8e917"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -964,7 +964,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "ee2c9171230f7731ad259f6adbf175670b6cd96c40ace3e1ef0c206879c57761"
+        "sha256": "56a133b0a2186301d05982a9f92c6038e84b9b9a6cfdc5418b2ca00e425c0281"
       },
       "vesper1R": {
         "volume": "II",
@@ -1741,7 +1741,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "003afc226e61bd45dca50bebf1caf9563ce23a2e44da67038d4e52d49abc6236"
+        "sha256": "2174af6d5c084a97f643d5d7becde091b0baa168efa416c14ab534db70f2e5dc"
       },
       "officeOfReadingsPs2": {
         "volume": "II",
@@ -1751,7 +1751,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "1a32e69e4af40581a2e883b8e5881e607af299c7fbdfa4e58d891b1950b7ecb6"
+        "sha256": "05fca648ed61b8d21d032401a47e16d8158b964cf1500d61b6a30b4ecd687d9d"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -1764,7 +1764,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "2456142fdec3e44ca5a6d7f5db539a27a28629ef4ed18f8d4f785f8e7c90aaa1"
+        "sha256": "eca4058bc64facab7df308236f4e6d092f5ad7b65304941609411f927036eb1d"
       },
       "officeOfReadingsVers": {
         "volume": "II",
@@ -2057,7 +2057,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "c28742d6874fdd953c28318d1f093e87cb95b57249ed4404b3be9bbf3124091c"
+        "sha256": "61a8a791723461d6d67e6f72e12a9e03908f086eab3ed951de9f42de978d36c1"
       },
       "vesperPs2": {
         "volume": "II",
@@ -2070,7 +2070,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "9b06b57114d3478421dedfad11de536c05abd291a46c293932190775e4bdb636"
+        "sha256": "e9d07b7b882cc79973619e20708fc04a05dfbe17a859330daa86bccec8e50a7e"
       },
       "vesperPs3": {
         "volume": "II",
@@ -2083,7 +2083,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "d756861d853d3de2d4ab4f64a90d374b36ba9dfe87690d826d1efe6887e46ab7"
+        "sha256": "0a7709a827c94eb9115228502fef7ee0bbe4143d61831a84c00873a5f0549af0"
       },
       "vesperR": {
         "volume": "II",
@@ -2165,7 +2165,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "8a565f1b86a99757b3044c26ce3e6e8b3e418f56c0311bc3b4da26fa86fb6e4d"
+        "sha256": "29a1199fabf656042292a103a627ad1f18dd915911ed74240d2992e4c8dacd7d"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -2178,7 +2178,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "3b3dbe5be7c59b91b5a1fba411b908a39d33b06c1104beec0d6af45550248095"
+        "sha256": "9d438c9d04135721d345ed257157d9d8b94ebbded2ffc8c527cef4da21d3a9be"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -2191,7 +2191,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "ff3f1101ef5785dd81dd3de74b2aefe39b0d9be7a358c7e1513208002e0dbc59"
+        "sha256": "900b65bebdb31c891d80e4203abfa6034bbe1e6e036dcc0b833bff7694416d96"
       },
       "vesper1R": {
         "volume": "II",
@@ -2275,7 +2275,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "8e8305ef46c77eaac05852b8aaeb06da0554c916bb2e1a1ea6c28f3c66ef39c5"
+        "sha256": "1e85d6c64c9c908a46405459e43fc78238e0f72b8edf2b2419b1dcbdb148a7bc"
       }
     },
     "christmas": {
@@ -2327,7 +2327,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "8e8305ef46c77eaac05852b8aaeb06da0554c916bb2e1a1ea6c28f3c66ef39c5"
+        "sha256": "1e85d6c64c9c908a46405459e43fc78238e0f72b8edf2b2419b1dcbdb148a7bc"
       }
     },
     "lent": {
@@ -2430,7 +2430,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "8e8305ef46c77eaac05852b8aaeb06da0554c916bb2e1a1ea6c28f3c66ef39c5"
+        "sha256": "1e85d6c64c9c908a46405459e43fc78238e0f72b8edf2b2419b1dcbdb148a7bc"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -2440,7 +2440,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "edee2c8700e89808ea4d5d86a31260ea64b139fc2d091fe3f9500931a8b6b6cb"
+        "sha256": "ce71169f0ab85f7855108c8bba7a8b7a540c5b7d722dd41a7596234c2c03e552"
       },
       "vesper1R": {
         "volume": "II",
@@ -2501,7 +2501,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "482499176d4d6cdcfebdd09e4b0115e83a32311e3e8dbd3eea2f5e59b21d99fd"
+        "sha256": "a686f93b0b95fd468cba85479e95e17544eed380a3c88dfa9aab4185d41e9230"
       },
       "officeOfReadingsPs2": {
         "volume": "II",
@@ -2511,7 +2511,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "81d27b5d00263fe5cae82402d0375cecbb0563b9667c3f08e1c48cd9830aead7"
+        "sha256": "22c5d7845c498b2b18739cfb011046e0da20245f23ebe8fedd8c952ecb6dbc90"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -2524,7 +2524,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "d46c36f11da3cf203c75b2c49c89a119c0e1f8cfa06c3720cd6adcccf9b6704c"
+        "sha256": "9c3a76f0939e3f3e0d04d6404fa72fefe8fbc83f3f73d8cbcd76c4a3678cc8cb"
       },
       "officeOfReadingsVers": {
         "volume": "II",
@@ -2756,7 +2756,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "283edb559e5a3eaca16c45a8563a5fcd276304434c5a1f5e56d4e4e89da2bdf5"
+        "sha256": "40bea0da92059db3a5a77c299bfcbc8459fcbe96065f648e5fb797c1aa78c77d"
       },
       "vesperPs2": {
         "volume": "II",
@@ -2769,7 +2769,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "41f7d93bc2f962252d86f3f95de65f5edd0912cbaddec5ba01dc4bcbe96f76fc"
+        "sha256": "8a0ddeb94d555bdd8f84becf76ff03954140394fb61a1b4686f0c3b995c9b2a0"
       },
       "vesperPs3": {
         "volume": "II",
@@ -2779,7 +2779,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "b8ed9a3c7fb988aedc85138b07a8a561583facf5c1952fde2785d2160071b7cb"
+        "sha256": "a081ee3daaa4c549642498fc72d04e34c0889d06ded5f98bb8e45503e63d4710"
       },
       "vesperR": {
         "volume": "II",
@@ -2856,7 +2856,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "6ecf7979f59e0c4c5d8d611b6aa8fdaa95a8bd827b319a355a85a4b90a6c8862"
+        "sha256": "aef7593efbe2cbd884080fde2c6bc9261099fd788744cab94f4fcd383077c7b9"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -2866,7 +2866,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "b0a35c1c83efdab9cf51f00a698f27d63d95006642f7be0ff8ad268cce02c2e6"
+        "sha256": "a120d855f4dacec898a2fa1ce8ee3f7a4d99c88dd49451ac57ecf6f1dd878c4e"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -2876,7 +2876,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "ba63c46aef98e4d040b2d9238b5c5a3fd97f1cdeb4503d03a000b3f62c855bf1"
+        "sha256": "c40b0191e40bfef3eb72631ffee8d5baf807133d7a63306beb9d2346e8c85606"
       },
       "vesper1R": {
         "volume": "II",
@@ -3301,7 +3301,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "9a88d18b5cf90bb67159a3c1ddddfc6dec5bc690a2602a657ebaa90a2f96237a"
+        "sha256": "2614ed54bca1368e168acfba0f23bf5dbc5318e8690be9b89fb22a4a59814de4"
       },
       "officeOfReadingsPs2": {
         "volume": "II",
@@ -3311,7 +3311,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "5de0b3172840eee860115954bffecdd666961fe210d53019f6bfba2e79a728c1"
+        "sha256": "53e22b304395faecaaf8288a28a2639ec9b11a492da1b44a6cc19be1d57d1722"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -3324,7 +3324,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "852cbb184b2301c1711f06c5a71d9202c8cff32dc7c3af4503158280eeeb4f94"
+        "sha256": "edd9a5d13625fdc90a57293ef101eeaaf262960b38cbd0c995c1b0da83e54ecb"
       },
       "officeOfReadingsVers": {
         "volume": "II",
@@ -3595,7 +3595,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "e63274099d60a24913e2be6dbe58c7a9a91c548ec2e59979f3efa5d6658af178"
+        "sha256": "41463b8cb84d9694bc244c451a5f47f41d94f3e637db2d09a8464359c0fc687a"
       },
       "vesperPs2": {
         "volume": "II",
@@ -3608,7 +3608,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "f7e1e96861a11d29401f2d2810680846fca4f4254e7209307fe32fe95678c3c3"
+        "sha256": "faa4a8ffd0da40422333b22e1f90721ac0876604894096486c24619ce7297078"
       },
       "vesperPs3": {
         "volume": "II",
@@ -3621,7 +3621,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "698578b71f781aa515d0bf69307d82da4813e9d3b22beeeac667ffd41b26dfcb"
+        "sha256": "a334eedeabd9b0ca3e2d73820f2efb38b73a682f740eea3e0e0bb129b1932308"
       },
       "vesperR": {
         "volume": "II",
@@ -3714,7 +3714,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "7252b0bc39609d972a2eab745557925d67f7a93269fba81c4967a04b978da818"
+        "sha256": "445c1ed35b41586d7a60e3803f3307727764dd4780754e32c25ba056f19a08e2"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -3727,7 +3727,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "0bdd681e1432271d8fb4bb980b8ed845ca85b87bd597788f8ca476786705f0ea"
+        "sha256": "76474eafaa60066d457dbee0d646b7e4d91e68ee313c5d8b9bc99167530dca75"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -3737,7 +3737,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "e89d09b1c92462ea6984ccb55514de6be23bc174b5dc8817cbdb430e4fcf02bc"
+        "sha256": "75e58936052249da9dd1b3f3f087300a451ce2669dcacce7b3e7d6787ff6ace2"
       },
       "vesper1R": {
         "volume": "II",
@@ -3861,7 +3861,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "e4af499673ca090bd87960f35da493d8856791567c9cdcf165d19110836bd74d"
+        "sha256": "bbe2b8a24729c97283937699f85a14354e99e995fe2e09dacf554c0ad319721b"
       },
       "vesperPs2": {
         "volume": "I",
@@ -3871,7 +3871,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "de8036ccdb96ab0116e5f8f3dcae648e5cd61dd4f06d7f639bc78a9942fc57a9"
+        "sha256": "ff8ec619c04d6a3d96de60fb8306df505b3fc39f0c77ec8f474de4d784570144"
       },
       "vesper1Hymn": {
         "volume": "I",
@@ -3892,7 +3892,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "4fb3f254f13819c1425b00718020050c8c69b61907e46ec52fc4175706bd3a78"
+        "sha256": "369b01d1be3d84234871a07eaddb4b35bd9b998f514cc7b89afd52903cd5b3d8"
       }
     },
     "christmas": {
@@ -3984,7 +3984,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "e4af499673ca090bd87960f35da493d8856791567c9cdcf165d19110836bd74d"
+        "sha256": "bbe2b8a24729c97283937699f85a14354e99e995fe2e09dacf554c0ad319721b"
       },
       "vesperPs2": {
         "volume": "I",
@@ -3994,7 +3994,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "de8036ccdb96ab0116e5f8f3dcae648e5cd61dd4f06d7f639bc78a9942fc57a9"
+        "sha256": "ff8ec619c04d6a3d96de60fb8306df505b3fc39f0c77ec8f474de4d784570144"
       },
       "vesper1Hymn": {
         "volume": "I",
@@ -4015,7 +4015,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "4fb3f254f13819c1425b00718020050c8c69b61907e46ec52fc4175706bd3a78"
+        "sha256": "369b01d1be3d84234871a07eaddb4b35bd9b998f514cc7b89afd52903cd5b3d8"
       }
     },
     "lent": {
@@ -4222,7 +4222,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "4fb3f254f13819c1425b00718020050c8c69b61907e46ec52fc4175706bd3a78"
+        "sha256": "369b01d1be3d84234871a07eaddb4b35bd9b998f514cc7b89afd52903cd5b3d8"
       },
       "vesper1R": {
         "volume": "II",
@@ -4329,7 +4329,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "33ff5948b3e11bedf3a8e9dbd65213b9b5206b13c5f459b82127e6e4eabba415"
+        "sha256": "b963f747da9f62ace6d85b7202b1be3174f7181c11d6c9ba7d51b76e6d5fdde9"
       },
       "officeOfReadingsPs2": {
         "volume": "II",
@@ -4339,7 +4339,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "4d2dcb2ec2e69d23d77abb29c1f617e7a1b2603a2b90f6c293c84b0f3e1e06a6"
+        "sha256": "42a33fd4abc32684dba284b7072ba3d743602598259952b0c4a1a6a2596c37c3"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -4352,7 +4352,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "00c1eb8542e381d9309549a9dffe9f59700ed25c8fe6a11b5fad85f79c60dbc0"
+        "sha256": "2ee62aa1818c6829c87c518d6843c665ec5d72b213d8404a115eec149298b214"
       },
       "officeOfReadingsVers": {
         "volume": "II",
@@ -4639,7 +4639,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "3c78477cd4daef2b0d1b3e4fefc25061e96547ad6fd6a65cbe792bbe289d90d4"
+        "sha256": "a08d74d99881e35cadd9a68f0f86a62345665f38b9c14f102cf4c93a296a5747"
       },
       "vesperPs2": {
         "volume": "II",
@@ -4652,7 +4652,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "a3f0fddbdfb427e941449c4941d9870f2a9256c67098e70da42065c2a93318a7"
+        "sha256": "5e3c70fc98898e8233ee51f97d877c064039c2422253fed25a1eaf90d976f300"
       },
       "vesperPs3": {
         "volume": "II",
@@ -4665,7 +4665,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "f2fcbd9c5db75e353cdc7dd2ab0e33f1ce48203038ec90bbe322b9033bd68826"
+        "sha256": "311e239666a205463ca6102aff283699c8cb8bd8f4d7c65b1fe53232c612ac25"
       },
       "vesperR": {
         "volume": "II",
@@ -4755,7 +4755,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "b15fe6165bd0ea132a0a232a7459386221b4f13acae7f998f915797e7bbeec8d"
+        "sha256": "c6ed055c7ac8adf4f6810a445d682ee3be8bbdde6ae4241511a6d813f0b829f0"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -4768,7 +4768,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "e90b6439b526bfe08a85fac0a13371f08bcde04ffb013c40f5d4ea4a29c807ca"
+        "sha256": "8b056c193ea7d803110b36c0f03847447e8654e79bc6663c5874a4e699dfb234"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -4781,7 +4781,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "09201ebecafc33212ad2891cd341679af248343efb187599599982dd45ffaa80"
+        "sha256": "36044527f0e72f1c14b52c1d6864cf4faa959ec6ee39c189cb547cd6cc9fb1ec"
       },
       "vesper1R": {
         "volume": "II",
@@ -4835,7 +4835,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "d5c79447c88f4987daaa6417a7fee84bc066d935914237dbf9ff108205494347"
+        "sha256": "a3afe8c371dfe2ae4a1d34ecab80165fce5712b4746289f395382db1a7ba58bf"
       },
       "officeOfReadingsR1": {
         "volume": "I",
@@ -4970,7 +4970,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "9c6e8ad747f0bd52d614897c71eb8da04a432966398d6eb3cae1c845b8f792b8"
+        "sha256": "bc560544221f742062cba8097ab038751a178c7625e926e62250bbcab92d9380"
       },
       "vesper1Pr": {
         "volume": "I",
@@ -5002,7 +5002,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "d5c79447c88f4987daaa6417a7fee84bc066d935914237dbf9ff108205494347"
+        "sha256": "a3afe8c371dfe2ae4a1d34ecab80165fce5712b4746289f395382db1a7ba58bf"
       },
       "officeOfReadingsR1": {
         "volume": "I",
@@ -5137,7 +5137,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "9c6e8ad747f0bd52d614897c71eb8da04a432966398d6eb3cae1c845b8f792b8"
+        "sha256": "bc560544221f742062cba8097ab038751a178c7625e926e62250bbcab92d9380"
       },
       "vesper1Pr": {
         "volume": "I",
@@ -5317,7 +5317,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "3f19b26cf2ac9dc6767d323c383aa7a4000fbc77cc75f685097d839543644663"
+        "sha256": "9577bbbec855c4e30d7e4f6452025c4f0fabfab06dfcddb62662d3111acf3c0e"
       },
       "officeOfReadingsPs2": {
         "volume": "II",
@@ -5327,7 +5327,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "759b49d1a8bf42f8a6b9b4cd63ffaf6f64883b82e4b33872a73910de6c9063e8"
+        "sha256": "7d671f812f5d08e2732797026d1585d61c87ce16599fe4038d65216e9673f7db"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -5337,7 +5337,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "6078902adeabde4519f949ab664a239b2cf026959cce90ca2c5bdc487b001e92"
+        "sha256": "063527773189232cf559302ac2dbc75b335f7e95ff465f3d13704d6b4f6f276e"
       },
       "officeOfReadingsVers": {
         "volume": "II",
@@ -5582,7 +5582,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "9ef6dc17d38cc77ef4ea482867393fe6ffee913df8c3813ca3f62a83087ff95d"
+        "sha256": "9c0d75803dee7c29c10b341e11e19d8ca88447df83eac7974c30b7b8f0421688"
       },
       "vesperPs2": {
         "volume": "II",
@@ -5595,7 +5595,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "35d65e8a1ce70b60e0e8f89dc8388b1b6f9911f870c247a926491ab698ba06a1"
+        "sha256": "f97db79013734dfbad6e1c610a6e7df4509616613db87d7e0ee45b571688452b"
       },
       "vesperPs3": {
         "volume": "II",
@@ -5608,7 +5608,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "23e55e35ef667e9b9909b392195f1f16730f93c8ddd337a1cd4d9fe3becd6825"
+        "sha256": "e131b3df50b26b73d933c5954a3868c9043292b6ab4bffb777c73c921f13997a"
       },
       "vesperR": {
         "volume": "II",
@@ -5694,7 +5694,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "2df4da30b169cb18ea21403e71ba4299deb7c7e07f00e5f257130617d298730a"
+        "sha256": "68901153566e2dcc73989bfdb1976f934235e2fa24b87dfbdec81a0e52c7bb57"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -5707,7 +5707,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "2788e41eaaa312c245113b2eb2de8728e461d4dd6b3a02ff12890acc98776623"
+        "sha256": "49d12443176182a3d6a081df9ded129c64d58f1db68e2c1b7e0150942a6e8de0"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -5720,7 +5720,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "754c7be3759b09212fe134e86e490b69fef24e0bbbb92c6eb0efd852bd41bdfc"
+        "sha256": "7c3a64f17de17824384a0cb8e51f5c4488c4fb16eba65a4d8d6e9aafb0385953"
       },
       "vesper1R": {
         "volume": "II",
@@ -5758,7 +5758,7 @@
         "method": "inherit:pastors",
         "kind": "psalm",
         "inheritedFrom": "pastors",
-        "sha256": "d5c79447c88f4987daaa6417a7fee84bc066d935914237dbf9ff108205494347"
+        "sha256": "a3afe8c371dfe2ae4a1d34ecab80165fce5712b4746289f395382db1a7ba58bf"
       },
       "officeOfReadingsR1": {
         "volume": "I",
@@ -5821,7 +5821,7 @@
         "method": "inherit:pastors",
         "kind": "psalm",
         "inheritedFrom": "pastors",
-        "sha256": "9c6e8ad747f0bd52d614897c71eb8da04a432966398d6eb3cae1c845b8f792b8"
+        "sha256": "bc560544221f742062cba8097ab038751a178c7625e926e62250bbcab92d9380"
       },
       "vesper1R": {
         "volume": "I",
@@ -5844,7 +5844,7 @@
         "method": "inherit:pastors",
         "kind": "psalm",
         "inheritedFrom": "pastors",
-        "sha256": "d5c79447c88f4987daaa6417a7fee84bc066d935914237dbf9ff108205494347"
+        "sha256": "a3afe8c371dfe2ae4a1d34ecab80165fce5712b4746289f395382db1a7ba58bf"
       },
       "officeOfReadingsR1": {
         "volume": "I",
@@ -5907,7 +5907,7 @@
         "method": "inherit:pastors",
         "kind": "psalm",
         "inheritedFrom": "pastors",
-        "sha256": "9c6e8ad747f0bd52d614897c71eb8da04a432966398d6eb3cae1c845b8f792b8"
+        "sha256": "bc560544221f742062cba8097ab038751a178c7625e926e62250bbcab92d9380"
       },
       "vesper1R": {
         "volume": "I",
@@ -6061,7 +6061,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "3f19b26cf2ac9dc6767d323c383aa7a4000fbc77cc75f685097d839543644663"
+        "sha256": "9577bbbec855c4e30d7e4f6452025c4f0fabfab06dfcddb62662d3111acf3c0e"
       },
       "officeOfReadingsPs2": {
         "volume": "II",
@@ -6072,7 +6072,7 @@
         "method": "inherit:pastors",
         "kind": "psalm",
         "inheritedFrom": "pastors",
-        "sha256": "759b49d1a8bf42f8a6b9b4cd63ffaf6f64883b82e4b33872a73910de6c9063e8"
+        "sha256": "7d671f812f5d08e2732797026d1585d61c87ce16599fe4038d65216e9673f7db"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -6083,7 +6083,7 @@
         "method": "inherit:pastors",
         "kind": "psalm",
         "inheritedFrom": "pastors",
-        "sha256": "6078902adeabde4519f949ab664a239b2cf026959cce90ca2c5bdc487b001e92"
+        "sha256": "063527773189232cf559302ac2dbc75b335f7e95ff465f3d13704d6b4f6f276e"
       },
       "officeOfReadingsVers": {
         "volume": "II",
@@ -6332,7 +6332,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "9ef6dc17d38cc77ef4ea482867393fe6ffee913df8c3813ca3f62a83087ff95d"
+        "sha256": "9c0d75803dee7c29c10b341e11e19d8ca88447df83eac7974c30b7b8f0421688"
       },
       "vesperPs2": {
         "volume": "II",
@@ -6346,7 +6346,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "35d65e8a1ce70b60e0e8f89dc8388b1b6f9911f870c247a926491ab698ba06a1"
+        "sha256": "f97db79013734dfbad6e1c610a6e7df4509616613db87d7e0ee45b571688452b"
       },
       "vesperPs3": {
         "volume": "II",
@@ -6360,7 +6360,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "23e55e35ef667e9b9909b392195f1f16730f93c8ddd337a1cd4d9fe3becd6825"
+        "sha256": "e131b3df50b26b73d933c5954a3868c9043292b6ab4bffb777c73c921f13997a"
       },
       "vesperR": {
         "volume": "II",
@@ -6450,7 +6450,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "2df4da30b169cb18ea21403e71ba4299deb7c7e07f00e5f257130617d298730a"
+        "sha256": "68901153566e2dcc73989bfdb1976f934235e2fa24b87dfbdec81a0e52c7bb57"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -6464,7 +6464,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "2788e41eaaa312c245113b2eb2de8728e461d4dd6b3a02ff12890acc98776623"
+        "sha256": "49d12443176182a3d6a081df9ded129c64d58f1db68e2c1b7e0150942a6e8de0"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -6478,7 +6478,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "754c7be3759b09212fe134e86e490b69fef24e0bbbb92c6eb0efd852bd41bdfc"
+        "sha256": "7c3a64f17de17824384a0cb8e51f5c4488c4fb16eba65a4d8d6e9aafb0385953"
       },
       "vesper1R": {
         "volume": "II",
@@ -6535,7 +6535,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "da6700dcc1cb0948a09b943e99ba74a0ba61f26546cf62e991e6666950d25894"
+        "sha256": "e935f1c13bbf866495f0a009fe0689d2b2d65ad9103326338eb414a18f728491"
       },
       "officeOfReadingsPs3": {
         "volume": "I",
@@ -6545,7 +6545,7 @@
         ],
         "method": "render",
         "kind": "psalm",
-        "sha256": "004817db64454348fdaf99329a1f7c896c56b9ffd983fb8f594e3a215da4e78b"
+        "sha256": "adaaf7a6b8f063e54153e309d5c6b56cbd5b8f6410d471b8a36bd70a45c28486"
       },
       "officeOfReadingsR1": {
         "volume": "I",
@@ -6607,7 +6607,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "da6700dcc1cb0948a09b943e99ba74a0ba61f26546cf62e991e6666950d25894"
+        "sha256": "e935f1c13bbf866495f0a009fe0689d2b2d65ad9103326338eb414a18f728491"
       },
       "officeOfReadingsPs3": {
         "volume": "I",
@@ -6617,7 +6617,7 @@
         ],
         "method": "render",
         "kind": "psalm",
-        "sha256": "004817db64454348fdaf99329a1f7c896c56b9ffd983fb8f594e3a215da4e78b"
+        "sha256": "adaaf7a6b8f063e54153e309d5c6b56cbd5b8f6410d471b8a36bd70a45c28486"
       },
       "officeOfReadingsR1": {
         "volume": "I",
@@ -6679,7 +6679,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "da6700dcc1cb0948a09b943e99ba74a0ba61f26546cf62e991e6666950d25894"
+        "sha256": "e935f1c13bbf866495f0a009fe0689d2b2d65ad9103326338eb414a18f728491"
       },
       "officeOfReadingsR1": {
         "volume": "II",
@@ -6810,7 +6810,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "0f2aa672230ec88418a4e9068dc29f9a31c1bcab809acc5a8d8450d48127fded"
+        "sha256": "6b2269c95df62622972aa035538ff23c36bc12c8187d36573d1180e69b9eeda3"
       },
       "officeOfReadingsPs2": {
         "volume": "II",
@@ -6820,7 +6820,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "96ac2e98c733baedcdebd439dfc6865be394d45d0e2c88963ea7098656249ce7"
+        "sha256": "d13c7ee941bae764737a227f36fe1806fe4ee64a76081dc1dcf188a8d7ce09ee"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -6833,7 +6833,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "ac538a681a1de3ae6a74b0e5c99cac995ca156de6fff07db87321c141978dcbd"
+        "sha256": "b6e21bce3cefa22ea61d9517057483f9151d95625a66f7bd174f1e999f930d4d"
       },
       "officeOfReadingsVers": {
         "volume": "II",
@@ -7068,7 +7068,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "4344da722d6aef732ad257a27e425b4ecc47f35228188e8e87864d5b796577c4"
+        "sha256": "ae3976a7301a3fa4dfdfe6c3d13486da37c668de0b26061462ab7b73951e633a"
       },
       "vesperPs2": {
         "volume": "II",
@@ -7081,7 +7081,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "66778b70926280d633e15098331b0b6af43de157a5f2726b101169cf4face5b4"
+        "sha256": "ac3c753f623a1a5e0d0702e522155a762c67abcbd837ac6b8262ae81041d8497"
       },
       "vesperPs3": {
         "volume": "II",
@@ -7094,7 +7094,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "a29308dc18e8b7152b280936a9f3e7ad12456c0e1f91b9528cb3c9f9d0470c42"
+        "sha256": "a85a9409d283ea253620a243159a8913ceeb4434a0772ec276d1d6e906b9557b"
       },
       "vesperR": {
         "volume": "II",
@@ -7169,7 +7169,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "0303a1d57bb0197234cf5d4457b6bba173006388628b12b5397e0bbf8fa792d1"
+        "sha256": "d5b916e20713ec261cb3d6fad2379897d8f21291cb1a81e1b25b080f0ac08bac"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -7182,7 +7182,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "a787312e683a6ea373f324e2e4c6154605329653dd2acd03a76f97d6c2de5ea9"
+        "sha256": "ac706d63753150b08d3ddddb867ba2b39dcfd6dfbd089715f559ab49bd5a81ec"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -7195,7 +7195,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "904c15f132d3daf9c9a2ab09e12bda946318a662b796fb57b370ad64bba57319"
+        "sha256": "d8f0177d893ccab1a78b214ef2c375386b7d6c5aa68eaae52c12519c0db5b956"
       },
       "vesper1R": {
         "volume": "II",
@@ -7556,7 +7556,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "e4326866eaa3361c251edd037018b31c5e94e7c2546a57a0afce58852e854caa"
+        "sha256": "16a215cb2ef7c519f2c35cbc11e03d67dfe66d0420af959891d994bf08f88bd3"
       },
       "officeOfReadingsPs2": {
         "volume": "II",
@@ -7566,7 +7566,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "6b918b0f3a79aadea607e6abba7ce4a54f569b09f84ad7c9bb1ea84331c40cc9"
+        "sha256": "0d0bab95961bad8fb67bbdc6bc6c017c55bc24cdece69439c46fb8c1a85f9ed6"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -7576,7 +7576,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "ca6b9afbbf0d7e4e2745fd8fc0cbd0b261721467f6e1cc65527519db08e5365e"
+        "sha256": "360bef6a5208babfa1a94c6253e41acf10a61d6708cc190a0698ece59eada1bf"
       },
       "officeOfReadingsVers": {
         "volume": "II",
@@ -7821,7 +7821,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "b72a12e5d928a4336b7ad6efe3c1110ab5bb5f5d4bde88ab63d88bd0d3c100e7"
+        "sha256": "4c427041d014c4028966e3ca9a791806b9c6d17b8f4fc69d07853f9aa65524e0"
       },
       "vesperPs2": {
         "volume": "II",
@@ -7834,7 +7834,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "07749ddabab8c0761e4d6d2e67b344bfec47236dbbe8ccec21e0a1ff2e677648"
+        "sha256": "ddd8ede7ae0a6d506ed4d60f8e6e1a0d5d9bbe8743a2860b28ac5ee595e9dbf0"
       },
       "vesperPs3": {
         "volume": "II",
@@ -7847,7 +7847,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "83ca8ac21f8d68d92063d14246528ff14f0ebd70052bf57b0ebd17eef85a858d"
+        "sha256": "014e91ea9b59a2f68aea7124507cb39cfbdf1431fbb9ca3f87e66bb7eefeab36"
       },
       "vesperR": {
         "volume": "II",
@@ -7933,7 +7933,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "0f9ba0d8a056cec4537da660270e67d91311679e88c513baa1c523536e2a7265"
+        "sha256": "f83e64bb6433484ebaec4ae641e24a51c1e41bf0aeaf9a4214c5164ffb9d9831"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -7946,7 +7946,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "34762856b2e2184715bf673f7f75954132d6a2307d2e8f9ce8913fae19b1f780"
+        "sha256": "6539151f0ad0e82f6583458832f69f1da5d6afcfa6f4df070ad7e7279d66bdcc"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -7959,7 +7959,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "bbfc0e77d5001b8f9f5ca37b6fa155f7ee868b34a51907428923970f76899191"
+        "sha256": "2ca233ff981d13d5e873a720675909d9f6f099d4a749a676bcf45b20ed8eb53d"
       },
       "vesper1R": {
         "volume": "II",
@@ -7996,7 +7996,7 @@
         ],
         "method": "render",
         "kind": "psalm",
-        "sha256": "46095b1d860a75dbfda8284b645e3db8121018ce1aec0c4bdeb6195a402bc50b"
+        "sha256": "a47daa5001f5152dd095ae5ec1a745bd2b29a84cebc40252e8d022dfb1378f2d"
       },
       "officeOfReadingsR1": {
         "volume": "I",
@@ -8056,7 +8056,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "a339f0deb150130a0bea83ea436cf522fd8177b94ffb8f77a2bb87f13a9aaeac"
+        "sha256": "cce199e4e3d0df676782f32ae6dcfbc03f64654bb36f7aaf81e461781a0b6e56"
       },
       "vesper1Hymn": {
         "volume": "I",
@@ -8079,7 +8079,7 @@
         ],
         "method": "render",
         "kind": "psalm",
-        "sha256": "46095b1d860a75dbfda8284b645e3db8121018ce1aec0c4bdeb6195a402bc50b"
+        "sha256": "a47daa5001f5152dd095ae5ec1a745bd2b29a84cebc40252e8d022dfb1378f2d"
       },
       "officeOfReadingsR1": {
         "volume": "I",
@@ -8139,7 +8139,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "a339f0deb150130a0bea83ea436cf522fd8177b94ffb8f77a2bb87f13a9aaeac"
+        "sha256": "cce199e4e3d0df676782f32ae6dcfbc03f64654bb36f7aaf81e461781a0b6e56"
       },
       "vesper1Hymn": {
         "volume": "I",
@@ -8290,7 +8290,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "d40491dea1c55f96da6246f6abcabfeae22729a14fe6673737939588a165d593"
+        "sha256": "20cfa3ef4eb7ac9ab1060d49ff7e5e5db863ececde6c17a5dfcdfaa4a60f40b4"
       },
       "officeOfReadingsPs2": {
         "volume": "II",
@@ -8300,7 +8300,7 @@
         ],
         "method": "carrier+repeat",
         "kind": "psalm",
-        "sha256": "52848530b82a37d6a7fc485b4ce302954bac2959678c4ebba85f255b6a49744f"
+        "sha256": "ef5f562b2bc4fe395231dc5a396cf5130ef48634e95e74b6b5ff628de31c4a22"
       },
       "officeOfReadingsPs3": {
         "volume": "II",
@@ -8313,7 +8313,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "d283f80c79ccf62738faccdfa4aa8cad1d53c7e15efe7ee6cab693c6f5f4645c"
+        "sha256": "37068f6c4d920217cc3cde953e4b620f6144bcbafb72591173a2fe7842e69419"
       },
       "officeOfReadingsVers": {
         "volume": "II",
@@ -8548,7 +8548,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "e513512a05127f5b5e1b1e00386b7456aba552049189fe7558e2f73fefc9e2c3"
+        "sha256": "f0fb5e2b68286fe6220fc2e9787befcaedd814934922c70d860fd28e088613f6"
       },
       "vesperPs2": {
         "volume": "II",
@@ -8561,7 +8561,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "41c02fd00d4cac6f25891b6222f948484be62cb8b52c2cd1d9d0bb1be9b84cea"
+        "sha256": "ea2a65c28a4957fc63ca0621fc0574148fc89158a2311b586a974adb2d8cd859"
       },
       "vesperPs3": {
         "volume": "II",
@@ -8574,7 +8574,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "fda9a209f9e74bbff70b2addc07f33a9cd005e2aac87201c6b8427a030e15dc0"
+        "sha256": "ae6c0def91935aa6f55a2e5a90b4fb3103675386cda40182e824e9bd5aae3381"
       },
       "vesperR": {
         "volume": "II",
@@ -8660,7 +8660,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "64b580906b29fedadafa4eb7ead7c2d8e3f53a709ec0257538b43e7d9b0b7be6"
+        "sha256": "90ccbfa03cf12e3cffe6782e92463efb646060cfb92b0799df9c045c91442271"
       },
       "vesper1Ps2": {
         "volume": "II",
@@ -8673,7 +8673,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "bfe8cffe5a3e714f460015e92e24e72c46ad5ae3c465e024b4d7fe09932a06cc"
+        "sha256": "f2312acc6937740cdf64068ac49b914cd31b100d5075ce27a91af8246bf93309"
       },
       "vesper1Ps3": {
         "volume": "II",
@@ -8686,7 +8686,7 @@
         "rules": [
           "alleluia-v1"
         ],
-        "sha256": "f8cce6dcf24076d0427f98e49827efff87ed4a33cf1cbf159eca49db4817075d"
+        "sha256": "b77597ebb7e0c8415e8cd9aff219efca08e8ab67d62bbdc80e5ba904f0e5d91d"
       },
       "vesper1R": {
         "volume": "II",

@@ -81,3 +81,8 @@ jobs:
 
       - name: Analytics tests (contract, collector, mapper, inventory, reader signal)
         run: npm run test:analytics
+
+      - name: Psalmody doxology audit and regressions (offline)
+        run: |
+          npm run audit:doxologies -- --check
+          npm run test:doxologies

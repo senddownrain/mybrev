@@ -29,6 +29,7 @@ import {
   addAlleluiaToText, addAlleluiaToBlockHtml, removeAlleluiaFromBlockHtml, elementKind, hasAnnotation, similarity, stripAnnotationText,
 } from './alleluia.mjs';
 import { OFFICE_CONTENT_FIELDS } from '../../../../src/constants/officeFields.js';
+import { DOXOLOGY_HTML } from '../../lib/psalmody-doxology.mjs';
 
 export const SEASON_VOLUME = Object.freeze({ advent: 'I', christmas: 'I', lent: 'II', easter: 'II' });
 export const SEASONS = Object.freeze(['advent', 'christmas', 'lent', 'easter']);
@@ -84,6 +85,8 @@ export const hourOfField = (field) => {
 };
 
 const stripHeading = (text) => text.replace(/^(першае чытанне|другое чытанне|просьбы|малітва|гімн) /, '');
+const withoutDoxology = (value) => String(value || '').replaceAll(DOXOLOGY_HTML, '');
+const psalmComparison = (value) => plainOf(withoutDoxology(value));
 const plainOf = (value) => stripHeading(normalizeForCompare(Array.isArray(value) ? value.join(' ') : value));
 
 const lineRange = (units) => {
@@ -176,7 +179,7 @@ function stepExplicit({ units, season, base, ctx }) {
     const storedBlocks = base.blocks;
     const antIndex = storedBlocks.map((b, i) => [b, i]).filter(([b]) => /^Ант\./u.test(htmlToPlain(b.html).trim())).map(([, i]) => i).pop();
     const bodyPlain = normalizeForCompare(body.map((l) => l.text).join(' '));
-    const storedBody = normalizeForCompare(storedBlocks.filter((b, i) => i !== antIndex).map((b) => htmlToPlain(b.html)).join(' '));
+    const storedBody = normalizeForCompare(withoutDoxology(storedBlocks.filter((b, i) => i !== antIndex).map((b) => b.html).join('\n')));
     if (antIndex !== undefined && repeats.length === 1 && similarity(bodyPlain, storedBody) >= 0.95) {
       const out = [...storedBlocks];
       out[antIndex] = { html: renderAntiphonParagraph(repeats[0].text), elem: storedBlocks[antIndex].elem };
@@ -409,9 +412,10 @@ export function analyzeCorpus(corpus) {
         const value = value0;
         const countAlleluia = (v) => (normalizeForCompare(Array.isArray(v) ? v.join(' ') : v).match(/аллелюя/gu) || []).length;
         // (not for the volume's own edition: a text that differs in wording from Volume III is the season's text, D-4)
-        const nearEqual = hasBaseText && !seasonalEdition && ['psalm', 'reading1', 'reading2'].includes(cell.kind) && similarity(plainOf(value), plainOf(baseValue)) >= 0.97
+        const compareValue = cell.kind === 'psalm' ? psalmComparison : plainOf;
+        const nearEqual = hasBaseText && !seasonalEdition && ['psalm', 'reading1', 'reading2'].includes(cell.kind) && similarity(compareValue(value), compareValue(baseValue)) >= 0.97
           && countAlleluia(value) === countAlleluia(baseValue);
-        const equal = hasBaseText && (plainOf(value) === plainOf(baseValue) || nearEqual);
+        const equal = hasBaseText && (compareValue(value) === compareValue(baseValue) || nearEqual);
         if (equal && nearEqual) cell.editorialNote = 'equal to the stored base up to editorial wording';
         cell.method = [...state.methods].join('+');
         cell.rules = [...ctx.rules];

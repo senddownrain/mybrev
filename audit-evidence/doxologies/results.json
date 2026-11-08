@@ -1,0 +1,976 @@
+[
+  {
+    "scenario": "josaphat-martyr-one",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/lectionis"
+  },
+  {
+    "scenario": "josaphat-pastors",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors/lectionis"
+  },
+  {
+    "scenario": "dead-lectionis",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/lectionis"
+  },
+  {
+    "scenario": "dead-laudes",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/laudes"
+  },
+  {
+    "scenario": "dead-laudes",
+    "alternative": 1,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/laudes"
+  },
+  {
+    "scenario": "dead-terz",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/terz"
+  },
+  {
+    "scenario": "dead-sext",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/sext"
+  },
+  {
+    "scenario": "dead-non",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/non"
+  },
+  {
+    "scenario": "dead-vesper",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/vesper"
+  },
+  {
+    "scenario": "dead-completorium",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/completorium"
+  },
+  {
+    "scenario": "ordinary",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-05/ora/ordinary-w31-d5/laudes"
+  },
+  {
+    "scenario": "daniel",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      0,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-01/ora/01-11-all-saints/laudes"
+  },
+  {
+    "scenario": "solemnity-II",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-01/ora/01-11-all-saints/vesper"
+  },
+  {
+    "scenario": "solemnity-I",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-10-31/ora/ordinary-w30-d7/vesper"
+  },
+  {
+    "scenario": "josaphat-martyr-one",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/lectionis"
+  },
+  {
+    "scenario": "josaphat-pastors",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors/lectionis"
+  },
+  {
+    "scenario": "dead-lectionis",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/lectionis"
+  },
+  {
+    "scenario": "dead-laudes",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/laudes"
+  },
+  {
+    "scenario": "dead-laudes",
+    "alternative": 1,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/laudes"
+  },
+  {
+    "scenario": "dead-terz",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/terz"
+  },
+  {
+    "scenario": "dead-sext",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/sext"
+  },
+  {
+    "scenario": "dead-non",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/non"
+  },
+  {
+    "scenario": "dead-vesper",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/vesper"
+  },
+  {
+    "scenario": "dead-completorium",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/completorium"
+  },
+  {
+    "scenario": "ordinary",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-05/ora/ordinary-w31-d5/laudes"
+  },
+  {
+    "scenario": "daniel",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      0,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-01/ora/01-11-all-saints/laudes"
+  },
+  {
+    "scenario": "solemnity-II",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-01/ora/01-11-all-saints/vesper"
+  },
+  {
+    "scenario": "solemnity-I",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-10-31/ora/ordinary-w30-d7/vesper"
+  },
+  {
+    "scenario": "josaphat-martyr-one",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/lectionis"
+  },
+  {
+    "scenario": "josaphat-pastors",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors/lectionis"
+  },
+  {
+    "scenario": "dead-lectionis",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/lectionis"
+  },
+  {
+    "scenario": "dead-laudes",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/laudes"
+  },
+  {
+    "scenario": "dead-laudes",
+    "alternative": 1,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/laudes"
+  },
+  {
+    "scenario": "dead-terz",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/terz"
+  },
+  {
+    "scenario": "dead-sext",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/sext"
+  },
+  {
+    "scenario": "dead-non",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/non"
+  },
+  {
+    "scenario": "dead-vesper",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/vesper"
+  },
+  {
+    "scenario": "dead-completorium",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-02/ora/office-for-dead/completorium"
+  },
+  {
+    "scenario": "ordinary",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-05/ora/ordinary-w31-d5/laudes"
+  },
+  {
+    "scenario": "daniel",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      0,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-01/ora/01-11-all-saints/laudes"
+  },
+  {
+    "scenario": "solemnity-II",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-11-01/ora/01-11-all-saints/vesper"
+  },
+  {
+    "scenario": "solemnity-I",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "url": "http://127.0.0.1:5191/day/2026-10-31/ora/ordinary-w30-d7/vesper"
+  }
+]

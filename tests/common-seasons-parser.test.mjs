@@ -1,3 +1,4 @@
+import { DOXOLOGY_HTML } from '../scripts/liturgy/lib/psalmody-doxology.mjs';
 /**
  * Offline parser of the three volumes: structure, idempotency, provenance and
  * checks of the generated variants against the sources (hash, first/last
@@ -121,8 +122,8 @@ test('regression hashes of the mandatory church-dedication / blessed-virgin-mary
   const d = documents.get('church-dedication');
   assert.equal(hash(d.lent.vesper1Ant3), 'fb798d8ee91e13a4');
   assert.equal(hash(d.easter.vesper1Ant3), '6d08f86ee3b73c45');
-  assert.equal(hash(d.lent.vesper1Ps3), '7f79835135dd3d16');
-  assert.equal(hash(d.easter.vesper1Ps3), '7734bc14fd3e906b');
+  assert.equal(hash(d.lent.vesper1Ps3), '9ff533bd153a6b13');
+  assert.equal(hash(d.easter.vesper1Ps3), '38e64ebc53e41542');
   assert.equal(hash(d.lent.officeOfReadingsR1), '1ddc4dd25056b36c');
   assert.equal(hash(d.easter.officeOfReadingsR1), '33e605ef7d5d8756');
   assert.equal(hash(d.lent.laudesR), '7ba6ba7aad998761');
@@ -144,7 +145,8 @@ test('explicit variants rendered from a volume keep its first/last paragraph and
         // the accepted Easter Alleluia (", / аллелюя." of an antiphon, ", аллелюя." of a К./Н. line) is added to the element,
         // so it is left out of both sides of the comparison (the rule itself is tested below)
         const noAlleluia = (text) => text.replace(/,?\s*\/?\s*аллелюя\.?/gu, '').replace(/[.,]/g, '').replace(/\s+/g, ' ').trim();
-        const variant = noAlleluia(plain(info.value));
+        // Compare Scripture and printed rubrics separately from the expanded ending.
+        const variant = noAlleluia(plain(info.kind === 'psalm' ? info.value.replaceAll(DOXOLOGY_HTML, '') : info.value));
         const src = noAlleluia(normalizeForCompare(source.replace(/\(\s*Велікодны\s+перыяд\s+Аллелюя\s*\)\.?(\s*†)?/gu, '')));
         // first and last 40 characters of the text of the variant are found in the source, in this order
         const first = variant.replace(/^(першае чытанне|другое чытанне|калі няма ўласнай малітвы, чытаецца ніжэйпададзеная:) ?/u, '').slice(0, 40);

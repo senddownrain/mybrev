@@ -1,0 +1,416 @@
+[
+  {
+    "file": "patchs/feasts/02-10-holy-guardian-angels.json",
+    "location": "",
+    "fields": [
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/27-12-sv-john-apostle-evangelist.json",
+    "location": "",
+    "fields": [
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/29-09-archangels-michael-gabriel-raphael.json",
+    "location": "",
+    "fields": [
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/common-texts/apostles.json",
+    "location": "",
+    "fields": [
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3",
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "_seasonalVariants.advent.vesper1Ps1",
+      "_seasonalVariants.christmas.vesper1Ps1",
+      "_seasonalVariants.lent.vesper1Ps1",
+      "_seasonalVariants.lent.vesper1Ps2",
+      "_seasonalVariants.easter.officeOfReadingsPs1",
+      "_seasonalVariants.easter.officeOfReadingsPs2",
+      "_seasonalVariants.easter.officeOfReadingsPs3",
+      "_seasonalVariants.easter.vesperPs1",
+      "_seasonalVariants.easter.vesperPs2",
+      "_seasonalVariants.easter.vesperPs3",
+      "_seasonalVariants.easter.vesper1Ps1",
+      "_seasonalVariants.easter.vesper1Ps2",
+      "_seasonalVariants.easter.vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/common-texts/blessed-virgin-mary.json",
+    "location": "",
+    "fields": [
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3",
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "_seasonalVariants.easter.officeOfReadingsPs1",
+      "_seasonalVariants.easter.officeOfReadingsPs2",
+      "_seasonalVariants.easter.officeOfReadingsPs3",
+      "_seasonalVariants.easter.vesperPs1",
+      "_seasonalVariants.easter.vesperPs2",
+      "_seasonalVariants.easter.vesperPs3",
+      "_seasonalVariants.easter.vesper1Ps1",
+      "_seasonalVariants.easter.vesper1Ps2",
+      "_seasonalVariants.easter.vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/common-texts/church-dedication.json",
+    "location": "",
+    "fields": [
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3",
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "_seasonalVariants.advent.vesperPs1",
+      "_seasonalVariants.advent.vesper1Ps1",
+      "_seasonalVariants.christmas.vesperPs1",
+      "_seasonalVariants.christmas.vesper1Ps1",
+      "_seasonalVariants.lent.vesperPs3",
+      "_seasonalVariants.lent.vesper1Ps1",
+      "_seasonalVariants.lent.vesper1Ps2",
+      "_seasonalVariants.lent.vesper1Ps3",
+      "_seasonalVariants.easter.officeOfReadingsPs1",
+      "_seasonalVariants.easter.officeOfReadingsPs2",
+      "_seasonalVariants.easter.officeOfReadingsPs3",
+      "_seasonalVariants.easter.vesperPs1",
+      "_seasonalVariants.easter.vesperPs2",
+      "_seasonalVariants.easter.vesperPs3",
+      "_seasonalVariants.easter.vesper1Ps2",
+      "_seasonalVariants.easter.vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/common-texts/doctors-of-church.json",
+    "location": "",
+    "fields": [
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3",
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "_seasonalVariants.advent.officeOfReadingsPs3",
+      "_seasonalVariants.advent.vesper1Ps2",
+      "_seasonalVariants.christmas.officeOfReadingsPs3",
+      "_seasonalVariants.christmas.vesper1Ps2",
+      "_seasonalVariants.easter.officeOfReadingsPs1",
+      "_seasonalVariants.easter.officeOfReadingsPs2",
+      "_seasonalVariants.easter.officeOfReadingsPs3",
+      "_seasonalVariants.easter.vesperPs1",
+      "_seasonalVariants.easter.vesperPs2",
+      "_seasonalVariants.easter.vesperPs3",
+      "_seasonalVariants.easter.vesper1Ps1",
+      "_seasonalVariants.easter.vesper1Ps2",
+      "_seasonalVariants.easter.vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/common-texts/holy-men.json",
+    "location": "",
+    "fields": [
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3",
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "_seasonalVariants.easter.officeOfReadingsPs1",
+      "_seasonalVariants.easter.officeOfReadingsPs2",
+      "_seasonalVariants.easter.officeOfReadingsPs3",
+      "_seasonalVariants.easter.vesperPs1",
+      "_seasonalVariants.easter.vesperPs2",
+      "_seasonalVariants.easter.vesperPs3",
+      "_seasonalVariants.easter.vesper1Ps1",
+      "_seasonalVariants.easter.vesper1Ps2",
+      "_seasonalVariants.easter.vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/common-texts/holy-women.json",
+    "location": "",
+    "fields": [
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3",
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "_seasonalVariants.advent.officeOfReadingsPs3",
+      "_seasonalVariants.advent.vesperPs3",
+      "_seasonalVariants.christmas.officeOfReadingsPs3",
+      "_seasonalVariants.christmas.vesperPs3",
+      "_seasonalVariants.easter.officeOfReadingsPs1",
+      "_seasonalVariants.easter.officeOfReadingsPs2",
+      "_seasonalVariants.easter.officeOfReadingsPs3",
+      "_seasonalVariants.easter.vesperPs1",
+      "_seasonalVariants.easter.vesperPs2",
+      "_seasonalVariants.easter.vesperPs3",
+      "_seasonalVariants.easter.vesper1Ps1",
+      "_seasonalVariants.easter.vesper1Ps2",
+      "_seasonalVariants.easter.vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/common-texts/martyr-one.json",
+    "location": "",
+    "fields": [
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3",
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "_seasonalVariants.advent.vesperPs1",
+      "_seasonalVariants.advent.vesperPs2",
+      "_seasonalVariants.advent.vesper1Ps1",
+      "_seasonalVariants.christmas.vesperPs1",
+      "_seasonalVariants.christmas.vesperPs2",
+      "_seasonalVariants.christmas.vesper1Ps1",
+      "_seasonalVariants.lent.vesper1Ps1",
+      "_seasonalVariants.easter.officeOfReadingsPs1",
+      "_seasonalVariants.easter.officeOfReadingsPs2",
+      "_seasonalVariants.easter.officeOfReadingsPs3",
+      "_seasonalVariants.easter.vesperPs1",
+      "_seasonalVariants.easter.vesperPs2",
+      "_seasonalVariants.easter.vesperPs3",
+      "_seasonalVariants.easter.vesper1Ps1",
+      "_seasonalVariants.easter.vesper1Ps2",
+      "_seasonalVariants.easter.vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/common-texts/martyrs-many.json",
+    "location": "",
+    "fields": [
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3",
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "_seasonalVariants.easter.officeOfReadingsPs1",
+      "_seasonalVariants.easter.officeOfReadingsPs2",
+      "_seasonalVariants.easter.officeOfReadingsPs3",
+      "_seasonalVariants.easter.vesperPs1",
+      "_seasonalVariants.easter.vesperPs2",
+      "_seasonalVariants.easter.vesperPs3",
+      "_seasonalVariants.easter.vesper1Ps1",
+      "_seasonalVariants.easter.vesper1Ps2",
+      "_seasonalVariants.easter.vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/common-texts/office-for-dead.json",
+    "location": "",
+    "fields": [
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "laudesPs1",
+      "laudesPs2",
+      "laudesPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/common-texts/pastors.json",
+    "location": "",
+    "fields": [
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3",
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "_seasonalVariants.advent.officeOfReadingsPs3",
+      "_seasonalVariants.advent.vesper1Ps2",
+      "_seasonalVariants.christmas.officeOfReadingsPs3",
+      "_seasonalVariants.christmas.vesper1Ps2",
+      "_seasonalVariants.easter.officeOfReadingsPs1",
+      "_seasonalVariants.easter.officeOfReadingsPs2",
+      "_seasonalVariants.easter.officeOfReadingsPs3",
+      "_seasonalVariants.easter.vesperPs1",
+      "_seasonalVariants.easter.vesperPs2",
+      "_seasonalVariants.easter.vesperPs3",
+      "_seasonalVariants.easter.vesper1Ps1",
+      "_seasonalVariants.easter.vesper1Ps2",
+      "_seasonalVariants.easter.vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/feasts/common-texts/virgins.json",
+    "location": "",
+    "fields": [
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3",
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "_seasonalVariants.advent.officeOfReadingsPs1",
+      "_seasonalVariants.advent.officeOfReadingsPs3",
+      "_seasonalVariants.christmas.officeOfReadingsPs1",
+      "_seasonalVariants.christmas.officeOfReadingsPs3",
+      "_seasonalVariants.lent.officeOfReadingsPs1",
+      "_seasonalVariants.easter.officeOfReadingsPs1",
+      "_seasonalVariants.easter.officeOfReadingsPs2",
+      "_seasonalVariants.easter.officeOfReadingsPs3",
+      "_seasonalVariants.easter.vesperPs1",
+      "_seasonalVariants.easter.vesperPs2",
+      "_seasonalVariants.easter.vesperPs3",
+      "_seasonalVariants.easter.vesper1Ps1",
+      "_seasonalVariants.easter.vesper1Ps2",
+      "_seasonalVariants.easter.vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/json/ranked-fixed-days.json",
+    "location": "documents.1",
+    "fields": [
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/json/ranked-fixed-days.json",
+    "location": "documents.4",
+    "fields": [
+      "vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/json/ranked-fixed-days.json",
+    "location": "documents.5",
+    "fields": [
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/json/ranked-fixed-days.json",
+    "location": "documents.8",
+    "fields": [
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/json/ranked-fixed-days.json",
+    "location": "documents.16",
+    "fields": [
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3"
+    ]
+  },
+  {
+    "file": "patchs/json/ranked-fixed-days.json",
+    "location": "documents.18",
+    "fields": [
+      "vesper1Ps1",
+      "vesper1Ps2"
+    ]
+  },
+  {
+    "file": "patchs/json/ranked-fixed-days.json",
+    "location": "documents.19",
+    "fields": [
+      "vesper1Ps3"
+    ]
+  },
+  {
+    "file": "patchs/json/ranked-fixed-days.json",
+    "location": "documents.20",
+    "fields": [
+      "officeOfReadingsPs1",
+      "officeOfReadingsPs2",
+      "officeOfReadingsPs3",
+      "vesperPs1",
+      "vesperPs2",
+      "vesperPs3",
+      "vesper1Ps1",
+      "vesper1Ps2",
+      "vesper1Ps3"
+    ]
+  }
+]
