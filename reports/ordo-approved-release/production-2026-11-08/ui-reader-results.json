@@ -1,0 +1,12 @@
+{
+  "results": [
+    "390px/light: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "390px/dark: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "390px/marian: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "1440px/light: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "1440px/dark: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed",
+    "1440px/marian: 5 fonts × 2 sizes × 3 modes; persistence; Bible/Readings/Prayer/Compendium; Hours isolation passed"
+  ],
+  "source": "<p>Божа, мой Божа, Цябе шукаю, *<br />Цябе прагне душа мая.</p>\n<p>Маё цела па Табе тужыць *<br />у зямлі пустыннай, засохлай і бязводнай.</p>\n<p>Так, у святыні я ўглядаюся ў Цябе, *<br />каб убачыць Тваю сілу і славу.</p>",
+  "note": "External font requests blocked; computed family, scale and Belarusian text checked with available fallback fonts."
+}

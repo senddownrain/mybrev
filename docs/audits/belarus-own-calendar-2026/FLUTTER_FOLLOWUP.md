@@ -1,6 +1,6 @@
 # Отдельное следующее задание для ibreviarybyapp
 
-В этой ветке изменён только Web. Flutter-репозиторий не изменялся, релиз и публикация манифеста не выполнялись.
+Flutter-репозиторий не изменялся; мобильный релиз и публикация contentManifest не выполнялись. Фактический статус Web/Firestore приведён в конце документа и в PRODUCTION_RELEASE_REPORT.md.
 
 После приёмки Web diff создать отдельную ветку от актуального main `senddownrain/ibreviarybyapp`, прочитать его AGENTS.md и действующие правила доставки контента. Зафиксировать SHA принятого Web commit и источника `a55dc34c89317bd0a4b683ea84b46941213aa2b981d0a9de1fe3ebeb71dc9696`.
 
@@ -23,3 +23,7 @@ Web/Firestore-выпуск остановлен до merge/deploy/записи: 
 ## Окончательное разрешение выпуска 08.11.2026
 
 Владелец принял новый 71-operation plan и разрешил merge/Hosting/атомарный Firestore выпуск. Прежний blocked status выше — история 07.11. Фактические результаты и принятый SHA смотреть в [PRODUCTION_RELEASE_REPORT.md](PRODUCTION_RELEASE_REPORT.md); до подтверждённого readback не считать revision 4 уже опубликованной. Независимые revisions: notes6/properTexts6/templates4. Flutter по-прежнему отдельная задача без публикации в магазины.
+
+## Фактический статус после Hosting, 08.11.2026
+
+PR #201 слит: `8b635f2e8dd102e145c34767a5eb0528f101dd11`, Hosting опубликован [run 42456727170](https://github.com/senddownrain/mybrev/actions/runs/42456727170). Firestore write не выполнялась: перед ней блокируется обязательный production browser smoke из-за неприменённых Hosting network domains. Последний scoped read 07:02:04 UTC: calendar3/notes6/properTexts6/templates4, все 71 preconditions совпадают. План принят, нового одобрения не требуется при сохранении preconditions. Flutter остаётся отдельным следующим этапом после фактического readback revision 4; см. актуальный отчёт.

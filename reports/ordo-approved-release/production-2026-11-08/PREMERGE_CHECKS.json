@@ -27,5 +27,12 @@
   "transactionReadPreflight": "PASS_NO_COMMIT",
   "productionWrites": 0,
   "operationsSha256": "bc21ba7e9f7d4dc5f210bf1fee67247cd3cbe9a602788ce92d5ed862a2753238",
-  "baselineFingerprint": "c95e86a8fb40a96d8a331e9260f74393873061a6c7f8d7f38e562e3a0571f614"
+  "baselineFingerprint": "c95e86a8fb40a96d8a331e9260f74393873061a6c7f8d7f38e562e3a0571f614",
+  "localBrowser": {
+    "calendarContexts": 12,
+    "documentsContexts": 4,
+    "readerContexts": 6,
+    "editor": "local double PASS",
+    "status": "PASS"
+  }
 }

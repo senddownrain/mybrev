@@ -1,0 +1,20 @@
+PASS production-shaped fixture reproduces public typo before edits (fresh browser)
+BROWSER ERROR Failed to load resource: net::ERR_FAILED
+PASS Quill → save field → form → save all → exact Proper field payload → confirmed readback
+PASS public Vesper refreshes an existing stale cached day after save
+BROWSER ERROR Failed to load resource: net::ERR_FAILED
+PASS browser reload and editor reopen retain the saved space
+BROWSER ERROR Failed to load resource: net::ERR_FAILED
+PASS new browser session displays saved value
+BROWSER ERROR Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+BROWSER ERROR [DayEditor] save failed: Error: local commit rejected
+    at request (http://127.0.0.1:5173/tests/helpers/day-editor-firestore-double.mjs:12:22)
+    at async retry (http://127.0.0.1:5173/src/utils/retry.js:33:11)
+    at async saveChanges (http://127.0.0.1:5173/src/views/admin/DayEditor.vue:445:5)
+PASS rejected commit shows error and preserves persisted text
+BROWSER ERROR [DayEditor] save failed: Error: Не пацверджана захаванне: liturgicalProperTexts/28-10-sv-simon-jude-apostles (vesperInter)
+    at verifyDayEditorWrite (http://127.0.0.1:5173/src/utils/dayEditorPersistence.js:40:32)
+    at http://127.0.0.1:5173/src/views/admin/DayEditor.vue:451:7
+    at async Promise.all (index 0)
+    at async saveChanges (http://127.0.0.1:5173/src/views/admin/DayEditor.vue:449:5)
+PASS mismatching server readback prevents success confirmation

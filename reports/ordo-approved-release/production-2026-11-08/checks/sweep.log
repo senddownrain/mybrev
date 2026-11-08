@@ -1,0 +1,2 @@
+Deprecation warning: use moment.updateLocale(localeName, config) to change an existing locale. moment.defineLocale(localeName, config) should only be used for creating a new locale See http://momentjs.com/guides/#/warnings/define-locale/ for more info.
+{"cases":16068,"changedDays":641,"byDiocese":{"minsk-mohilev":46,"vitebsk":73,"pinsk":188,"grodno":334},"publishedParity":16068,"sourceRows":262,"effectiveAssignments":959}
