@@ -8,7 +8,8 @@ import { calendarHash } from './plan-approved-calendar.mjs';
 import { openFirestoreSnapshot } from '../lib/firestore-snapshot.mjs';
 import { createApprovedRest, encodeFirestoreValue, RELEASE_COLLECTIONS, RELEASE_PROJECT } from './lib/approved-calendar-rest.mjs';
 
-export const APPROVED_OPERATIONS_HASH = 'a9bd4ad1facefdd7f2df0382eefc841bec3d50d7fcf34fbc571aed49f3094565';
+export const APPROVED_OPERATIONS_HASH = 'bc21ba7e9f7d4dc5f210bf1fee67247cd3cbe9a602788ce92d5ed862a2753238';
+export const APPROVED_BASELINE_HASH = 'c95e86a8fb40a96d8a331e9260f74393873061a6c7f8d7f38e562e3a0571f614';
 export const SOURCE_HASH = 'a55dc34c89317bd0a4b683ea84b46941213aa2b981d0a9de1fe3ebeb71dc9696';
 const countsBefore = { liturgicalCalendarMeta: 1, liturgicalCelebrations: 241, liturgicalDioceseOverrides: 75, liturgicalYearOverrides: 15 };
 const countsAfter = { liturgicalCalendarMeta: 1, liturgicalCelebrations: 242, liturgicalDioceseOverrides: 77, liturgicalYearOverrides: 15 };
@@ -23,13 +24,14 @@ const fail = message => { throw Error(message); };
 
 export function validateSealedPlan(plan) {
   if (plan.projectId !== RELEASE_PROJECT || plan.database !== '(default)') fail('Wrong project/database');
-  if (plan.observedMeta.schemaVersion !== 1 || plan.observedMeta.revision !== 3 || plan.observedMeta.notesRevision !== 4) fail('Wrong starting metadata');
-  if (plan.targetMeta.schemaVersion !== 1 || plan.targetMeta.revision !== 4 || plan.targetMeta.notesRevision !== 4 || plan.targetMeta.sourceSha256 !== SOURCE_HASH) fail('Wrong target metadata');
-  if (plan.operations.length !== 72 || plan.operationCount !== 72) fail('Wrong operation count');
+  if (plan.observedMeta.schemaVersion !== 1 || plan.observedMeta.revision !== 3 || plan.observedMeta.notesRevision !== 6 || plan.observedMeta.properTextsRevision !== 6 || plan.observedMeta.templatesRevision !== 4) fail('Wrong starting metadata');
+  if (plan.targetMeta.schemaVersion !== 1 || plan.targetMeta.revision !== 4 || plan.targetMeta.notesRevision !== 6 || plan.targetMeta.sourceSha256 !== SOURCE_HASH || plan.targetMeta.properTextsRevision !== 6 || plan.targetMeta.templatesRevision !== 4) fail('Wrong target metadata');
+  if (plan.operations.length !== 71 || plan.operationCount !== 71) fail('Wrong operation count');
   const actions = {};
   const paths = new Set();
   for (const op of plan.operations) {
     const [collection, id, extra] = op.path.split('/');
+    if (op.path === 'liturgicalDioceseOverrides/grodno--our-lady-trakai') fail('Independently corrected Trakai must remain untouched');
     if (!RELEASE_COLLECTIONS.includes(collection) || !id || extra || (collection === 'liturgicalCalendarMeta' && id !== 'current')) fail('Forbidden collection/document');
     if (paths.has(op.path)) fail('Duplicate operation'); paths.add(op.path);
     if (!['create', 'update', 'disable', 'publish-meta'].includes(op.action)) fail('Forbidden action');
@@ -41,8 +43,8 @@ export function validateSealedPlan(plan) {
     }
     actions[op.action] = (actions[op.action] || 0) + 1;
   }
-  if (JSON.stringify(actions) !== JSON.stringify({ update: 26, create: 3, disable: 42, 'publish-meta': 1 })
-    && !(actions.create === 3 && actions.update === 26 && actions.disable === 42 && actions['publish-meta'] === 1)) fail('Wrong action counts');
+  if (JSON.stringify(actions) !== JSON.stringify({ update: 25, create: 3, disable: 42, 'publish-meta': 1 })
+    && !(actions.create === 3 && actions.update === 25 && actions.disable === 42 && actions['publish-meta'] === 1)) fail('Wrong action counts');
   if (calendarHash(plan.operations) !== APPROVED_OPERATIONS_HASH || exactHash(plan.operations) !== APPROVED_OPERATIONS_HASH || plan.operationsSha256 !== APPROVED_OPERATIONS_HASH) fail('Approved plan checksum mismatch');
   return actions;
 }
@@ -58,13 +60,15 @@ export async function stateFromSnapshot(directory) {
   return { projectId: source.manifest.projectId, collections, capturedAt: source.manifest.exportedAt };
 }
 const indexOf = state => new Map(RELEASE_COLLECTIONS.flatMap(c => state.collections[c].map(d => [`${c}/${d.id}`, d])));
+export const baselineFingerprint = state => exactHash([...indexOf(state)].map(([key, d]) => ({ path: key, hash: exactHash(d.data), updateTime: d.updateTime })).sort((a, b) => a.path.localeCompare(b.path)));
 const metaOf = state => state.collections.liturgicalCalendarMeta.find(d => d.id === 'current')?.data;
 
 export function verifyBefore(plan, baseline, current) {
   validateSealedPlan(plan);
   if (current.projectId !== RELEASE_PROJECT || baseline.projectId !== RELEASE_PROJECT) fail('State project mismatch');
+  if (baselineFingerprint(baseline) !== APPROVED_BASELINE_HASH) fail('Approved full baseline fingerprint mismatch');
   const meta = metaOf(current);
-  if (meta?.schemaVersion !== 1 || meta.revision !== 3 || meta.notesRevision !== 4) fail('Already applied or changed production revision/schema/notes');
+  if (meta?.schemaVersion !== 1 || meta.revision !== 3 || meta.notesRevision !== 6 || meta.properTextsRevision !== 6 || meta.templatesRevision !== 4) fail('Already applied or changed production revision/schema/notes');
   const mismatches = [];
   for (const c of RELEASE_COLLECTIONS) {
     if (baseline.collections[c]?.length !== countsBefore[c] || current.collections[c]?.length !== countsBefore[c]) mismatches.push({ collection: c, reason: 'COUNT_CHANGED', expected: countsBefore[c], actual: current.collections[c]?.length });
@@ -104,7 +108,7 @@ export function buildForwardWrites(plan) {
 export function rollbackBlueprint(plan, baseline) {
   validateSealedPlan(plan);
   const before = indexOf(baseline);
-  return { mode: 'ROLLBACK_BLUEPRINT_NOT_APPLIED', projectId: RELEASE_PROJECT, fromRevision: 4, toRevision: 5, notesRevision: 4,
+  return { mode: 'ROLLBACK_BLUEPRINT_NOT_APPLIED', projectId: RELEASE_PROJECT, fromRevision: 4, toRevision: 5, notesRevision: 6, properTextsRevision: 6, templatesRevision: 4,
     requiresFreshReadbackPreconditionsAndSeparateDecision: true, operations: plan.operations.map(op => ({ path: op.path,
       action: op.action === 'create' ? 'disable-created' : op.action === 'publish-meta' ? 'publish-rollback-meta' : 'restore-fields',
       fields: op.action === 'create' ? { enabled: { after: false } } : Object.fromEntries(Object.entries(op.fields).map(([field]) => [field,
@@ -124,7 +128,7 @@ export function expectedAfter(plan, beforeState, timestamp) {
 }
 
 export function verifyAfter(plan, beforeState, current, result) {
-  if (!result || result.writeResults?.length !== 72 || !result.commitTime) fail('Incomplete/unknown commit response; reconcile read-only');
+  if (!result || result.writeResults?.length !== 71 || !result.commitTime) fail('Incomplete/unknown commit response; reconcile read-only');
   const timestamp = result.writeResults.at(-1).transformResults?.[0]?.timestampValue;
   if (!timestamp) fail('Missing metadata server timestamp');
   const expected = indexOf(expectedAfter(plan, beforeState, timestamp)); const actual = indexOf(current);
@@ -136,11 +140,11 @@ export function verifyAfter(plan, beforeState, current, result) {
     if (!a || !b || calendarHash(a.data) !== calendarHash(b.data) || exactHash(a.data) !== exactHash(b.data) || b.updateTime !== (changed.get(key) || a.updateTime)) errors.push(key);
   }
   const meta = metaOf(current);
-  if (meta?.revision !== 4 || meta.schemaVersion !== 1 || meta.notesRevision !== 4 || meta.sourceSha256 !== SOURCE_HASH) errors.push('metadata');
+  if (meta?.revision !== 4 || meta.schemaVersion !== 1 || meta.notesRevision !== 6 || meta.sourceSha256 !== SOURCE_HASH || meta.properTextsRevision !== 6 || meta.templatesRevision !== 4) errors.push('metadata');
   const enabled = c => current.collections[c].filter(d => d.data.enabled !== false).length;
   if (enabled('liturgicalCelebrations') !== 242 || enabled('liturgicalDioceseOverrides') !== 39 || enabled('liturgicalYearOverrides') !== 11) errors.push('enabled counts');
   if (errors.length) fail(`POST_COMMIT_VERIFICATION_FAILED: ${errors.join(', ')}`);
-  return { mode: 'PUBLISHED_AND_VERIFIED', projectId: RELEASE_PROJECT, revision: 4, schemaVersion: 1, notesRevision: 4,
+  return { mode: 'PUBLISHED_AND_VERIFIED', projectId: RELEASE_PROJECT, revision: 4, schemaVersion: 1, notesRevision: 6, properTextsRevision: 6, templatesRevision: 4,
     sourceSha256: SOURCE_HASH, operationsSha256: APPROVED_OPERATIONS_HASH, commitTime: result.commitTime,
     counts: countsAfter, enabled: { liturgicalCelebrations: 242, liturgicalDioceseOverrides: 39, liturgicalYearOverrides: 11 },
     operations: plan.operations.map((op, i) => ({ path: op.path, action: op.action, result: 'VERIFIED', updateTime: result.writeResults[i].updateTime,
@@ -191,7 +195,7 @@ async function main(args) {
   if (!opts['--live']) {
     const errors = verifyBefore(plan, baseline, baseline); if (errors.length) fail(JSON.stringify(errors));
     await privateJson(path.join(out, 'DRY_RUN.json'), { mode: 'LOCAL_DRY_RUN', operationCount: buildForwardWrites(plan).length, checksum: APPROVED_OPERATIONS_HASH, errors });
-    console.log('LOCAL_DRY_RUN PASS: 72 writes, sealed checksum, no network, no writes'); return;
+    console.log('LOCAL_DRY_RUN PASS: 71 writes, sealed checksum, no network, no writes'); return;
   }
   const transport = createApprovedRest({ allowCommit: Boolean(opts['--apply']) });
   try {
@@ -200,7 +204,7 @@ async function main(args) {
       const mismatches = verifyBefore(plan, baseline, current);
       await privateJson(path.join(out, 'PREFLIGHT.json'), { mode: 'READ_ONLY_PREFLIGHT', matched: mismatches.length === 0, mismatches, requests: transport.ledger });
       if (mismatches.length) fail(`Production differs: ${JSON.stringify(mismatches)}`);
-      console.log('READ_ONLY_PREFLIGHT PASS: all IDs, hashes, updateTimes, metadata and 72 preconditions match'); return;
+      console.log('READ_ONLY_PREFLIGHT PASS: all IDs, hashes, updateTimes, metadata and 71 preconditions match'); return;
     }
     const attemptFile = path.join(out, 'APPLY_ATTEMPT.private.json');
     try { await fs.access(attemptFile); fail('Previous apply attempt exists; reconcile read-only, never retry blindly'); } catch (error) { if (error.code !== 'ENOENT') throw error; }
@@ -211,7 +215,7 @@ async function main(args) {
     const afterIndex = indexOf(published.after);
     const boundRollback = { ...rollback, mode: 'BOUND_ROLLBACK_NOT_APPLIED', preconditions: Object.fromEntries([...afterIndex].map(([key, d]) => [key, { updateTime: d.updateTime, sha256: calendarHash(d.data) }])) };
     await privateJson(path.join(out, 'BOUND_ROLLBACK.private.json'), boundRollback);
-    console.log('PUBLISHED_AND_VERIFIED: revision 4; 72 operations; no deletes; notesRevision 4');
+    console.log('PUBLISHED_AND_VERIFIED: revision 4; 71 operations; no deletes; notesRevision 6');
   } finally { await privateJson(path.join(out, 'REQUEST_LEDGER.json'), transport.ledger); }
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

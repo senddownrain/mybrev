@@ -19,3 +19,7 @@
 Web/Firestore-выпуск остановлен до merge/deploy/записи: live preconditions изменились. На 17:16:08 UTC production имеет calendar revision 3, notesRevision 6, properTextsRevision 6; Тракельская уже исправлена на 05.07 memoria. Не рассчитывать на опубликованную server revision 4.
 
 Новый НЕ утверждённый dry-run содержит 71 операцию вместо 72, сохраняет независимую notesRevision 6. Его принятие и Web-публикация должны предшествовать финальной Flutter parity и доставке bundle. Не переносить старую notesRevision 4 в новый overlay/rollback. Подробности и безопасные manifests: [PRODUCTION_RELEASE_REPORT.md](PRODUCTION_RELEASE_REPORT.md). Мобильный код этой задачей не меняется.
+
+## Окончательное разрешение выпуска 08.11.2026
+
+Владелец принял новый 71-operation plan и разрешил merge/Hosting/атомарный Firestore выпуск. Прежний blocked status выше — история 07.11. Фактические результаты и принятый SHA смотреть в [PRODUCTION_RELEASE_REPORT.md](PRODUCTION_RELEASE_REPORT.md); до подтверждённого readback не считать revision 4 уже опубликованной. Независимые revisions: notes6/properTexts6/templates4. Flutter по-прежнему отдельная задача без публикации в магазины.

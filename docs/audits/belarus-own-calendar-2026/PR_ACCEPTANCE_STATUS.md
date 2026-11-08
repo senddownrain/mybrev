@@ -1,3 +1,11 @@
+# Актуальная приёмка владельца — 08.11.2026
+
+[Владелец окончательно разрешил выпуск](https://github.com/senddownrain/mybrev/pull/201#issuecomment-6714161064), включая новый план из 71 операции с digest `bc21ba7e9f7d4dc5f210bf1fee67247cd3cbe9a602788ce92d5ed862a2753238`, без повторного утверждения литургических решений. Сохранить notes6/properTexts6/templates4, Тракельскую не переписывать. Guarded publisher и rollback обновлены под этот точный план. Свежие production preconditions обязательны перед commit.
+
+Актуальный ход выпуска: [PRODUCTION_RELEASE_REPORT.md](PRODUCTION_RELEASE_REPORT.md). Ниже сохранена историческая точка проверки первоначального 72-operation plan; она заменена новым утверждённым планом и не является текущим запретом публикации.
+
+---
+
 # PR и точка приёмки
 
 **PR:** https://github.com/senddownrain/mybrev/pull/201

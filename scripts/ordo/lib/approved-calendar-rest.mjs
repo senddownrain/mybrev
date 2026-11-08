@@ -94,11 +94,12 @@ export function createApprovedRest({ projectId = RELEASE_PROJECT, allowCommit = 
     },
     async begin() { return (await request(':beginTransaction', { body: { options: { readWrite: {} } } })).transaction; },
     async commit(writes, transaction) {
-      if (!transaction || !Array.isArray(writes) || writes.length !== 72) throw Error('Invalid sealed transaction');
+      if (!transaction || !Array.isArray(writes) || writes.length !== 71) throw Error('Invalid sealed transaction');
       for (const write of writes) {
         const documentPath = write.update?.name?.slice(root.replace('https://firestore.googleapis.com/v1/', '').length + 1);
         const [collection, id, extra] = (documentPath || '').split('/');
         if (!write.update?.name?.startsWith(root.replace('https://firestore.googleapis.com/v1/', '') + '/')
+          || documentPath === 'liturgicalDioceseOverrides/grodno--our-lady-trakai'
           || !RELEASE_COLLECTIONS.includes(collection) || !id || extra || write.delete || write.transform
           || !write.currentDocument || (collection === 'liturgicalCalendarMeta' && id !== 'current')) throw Error('Write outside calendar scope');
       }
