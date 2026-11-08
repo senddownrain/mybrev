@@ -1,0 +1,18 @@
+✔ sealed publisher accepts exactly 71 approved operations with strict masks and no deletes (4.650663ms)
+✔ altered hash, foreign project, revision, scope, extra fields and ignored-metadata injection all fail closed (6.163044ms)
+✔ every baseline ID, hash, updateTime and every operation precondition matches offline (23.257942ms)
+✔ changed document, updateTime, ID or collection size prevents publication (97.949167ms)
+✔ already applied revision 4, changed independent revisions and wrong schema are refused (28.720878ms)
+✔ post-commit verifier checks all scoped documents and every one of the 71 outcomes (38.99634ms)
+✔ one atomic commit only; a failure of one write leaves the entire fake database unchanged (35.39724ms)
+✔ success performs exactly one commit; readback failure never retries or automatically rolls back data (59.366394ms)
+✔ rollback blueprint restores old fields under revision 5, disables created IDs and preserves notes6 independently (6.084076ms)
+✔ replacement baseline cannot legitimize independent production changes (6.335762ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 417.573956

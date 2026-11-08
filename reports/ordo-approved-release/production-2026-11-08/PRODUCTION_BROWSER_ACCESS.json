@@ -1,0 +1,6 @@
+{
+  "url": "https://ibreviaryby.web.app",
+  "at": "2026-11-08T07:02:05.037Z",
+  "status": "BLOCKED",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://ibreviaryby.web.app/"
+}
