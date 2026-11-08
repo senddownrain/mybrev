@@ -49,6 +49,9 @@ jobs:
       - name: John Paul II source and migration validator tests (offline)
         run: node --test tests/john-paul-ii-source-fix.test.mjs
 
+      - name: High Priest targeted manifest publication safeguards (offline)
+        run: node --test tests/high-priest-targeted-release.test.mjs
+
       - name: Firebase web build configuration tests (offline)
         run: node --test tests/firebase-web-config.test.mjs
 
