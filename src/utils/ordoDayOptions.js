@@ -432,6 +432,11 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
 
 /** The option (and its descriptor) that owns a `days` document id. */
 export function findOptionByDayId(content, dayId) {
+  // Old links on 8 September follow the single legal diocesan identity.
+  if (/^08-09-(?:nativity-blessed-virgin-mary|our-lady-braslau-vitebsk)(?:--|$)/u.test(String(dayId))) {
+    const current = (content?.dayOptions || []).find((option) => ['nativity-blessed-virgin-mary', 'our-lady-braslau'].includes(option.ordo?.optionId));
+    if (current) return current;
+  }
   return (content?.dayOptions || []).find((option) => option.dayId === dayId
     || option.templates?.some((template) => template.id === dayId || template.dayIds?.includes(dayId))) || null;
 }
@@ -440,7 +445,7 @@ export function findOptionByDayId(content, dayId) {
 export function findResolvedDayById(content, dayId) {
   const option = findOptionByDayId(content, dayId);
   const template = option?.templates?.find((item) => item.id === dayId || item.dayIds?.includes(dayId));
-  return template?.day || content?.itemsDays?.find((item) => item.id === dayId) || null;
+  return template?.day || option?.day || content?.itemsDays?.find((item) => item.id === dayId) || null;
 }
 
 /** Route lookup must see the same resolved document as the legal Office card. */
