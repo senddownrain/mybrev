@@ -36,7 +36,7 @@ function fixture() {
 }
 test('one-document release contains only 12 explicit references', () => {
   const input = fixture();
-  const old = structuredClone(input);
+  const old = structuredClone({ day: input.day, days: input.days, current: input.current });
   const plan = planHighPriestTargetedRelease(input);
   assert.equal(plan.kind, 'safe-targeted-patch');
   assert.deepEqual(plan.changed, [HIGH_PRIEST_ID]);
