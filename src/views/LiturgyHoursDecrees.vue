@@ -16,16 +16,14 @@
         <div class="decree__date"><div v-for="line in document.dateLines" :key="line">{{ line }}</div></div>
         <div class="decree__signature"><div v-for="line in document.signature" :key="line">{{ line }}</div></div>
       </article>
-      <p class="document-original"><a href="https://lh.catholic.by/dekrety.php" target="_blank" rel="noopener noreferrer">Крыніца дэкрэтаў I–III тамоў</a></p>
       <section id="apostolic-see" class="apostolic-decrees" aria-labelledby="apostolic-see-title">
         <h2 id="apostolic-see-title">{{ apostolic.title }}</h2>
         <article v-for="document in apostolic.documents" :id="document.id" :key="document.id" class="apostolic-decree" :aria-labelledby="`${document.id}-title`">
-          <h3 :id="`${document.id}-title`">Прат. № {{ document.protocol }}</h3>
           <p class="apostolic-decree__issuer">{{ document.issuer }}</p>
-          <p class="apostolic-decree__date"><time :datetime="document.date">{{ document.dateLabel }}</time></p>
+          <h3 :id="`${document.id}-title`">Прат. № {{ document.protocol }}</h3>
+          <h4 class="apostolic-decree__heading">{{ document.heading }}</h4>
+          <div class="apostolic-decree__body document-prose" data-source-text>{{ document.body }}</div>
         </article>
-        <p class="document-prose">{{ apostolic.publicationNote }}</p>
-        <p class="document-original"><a :href="apostolic.sourceUrl" target="_blank" rel="noopener noreferrer">Поўныя тэксты двух дэкрэтаў на lh.catholic.by</a></p>
       </section>
     </main>
   </v-container>
@@ -47,8 +45,9 @@ import DocumentBack from '@/components/DocumentBack.vue';
 .decree__signature { margin-top: 22px; }
 .apostolic-decrees { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--nav-border); scroll-margin-top: 80px; }
 .apostolic-decrees h2 { font-size: 1.35rem; line-height: 1.4; }
-.apostolic-decree { margin-block: 24px; scroll-margin-top: 80px; }
-.apostolic-decree h3 { font-size: 1.1rem; }
-.apostolic-decree__issuer { margin-block: 6px; }
-.apostolic-decree__date { font-size: .95rem; }
+.apostolic-decree { margin-block: 26px; padding-top: 20px; border-top: 1px solid var(--nav-border); scroll-margin-top: 80px; }
+.apostolic-decree__issuer { text-align: center; font-size: .95rem; line-height: 1.5; }
+.apostolic-decree h3 { margin: 18px 0; font-size: 1.1rem; }
+.apostolic-decree__heading { margin: 22px 0 18px; text-align: center; font-size: 1.15rem; }
+.apostolic-decree__body { font-family: 'Times New Roman', serif; font-size: 1.125rem; line-height: 1.6; white-space: pre-line; }
 </style>
