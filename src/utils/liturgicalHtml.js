@@ -55,8 +55,10 @@ function markAsLiturgicalHeading(attributes) {
 
 function visibleText(html) {
   return String(html || '')
-    .replace(/<[^>]*>/gu, ' ')
-    .replace(/&nbsp;|&#x0*20;/giu, ' ')
+    // Inline tags can split a word; only actual HTML line breaks add space.
+    .replace(/<br\s*\/?>/giu, ' ')
+    .replace(/<[^>]*>/gu, '')
+    .replace(/&nbsp;|&#0*32;|&#x0*20;/giu, ' ')
     .replace(/\s+/gu, ' ')
     .trim();
 }
@@ -74,24 +76,45 @@ function unwrapFullyStyledContent(content, tagPattern) {
 function isLiturgicalSubheading(attributes, content) {
   if (/text-align\s*:\s*center/iu.test(attributes)) return true;
 
-  const fullyEmphasized = unwrapFullyStyledContent(
-    content,
+  return isFullyStyledContent(content);
+}
+
+function isFullyStyledContent(content) {
+  const withoutEmphasis = String(content || '').replace(
     /<(?:em|i|strong|b)\b[^>]*>[\s\S]*?<\/(?:em|i|strong|b)>/giu,
+    '',
   );
-  if (fullyEmphasized) return true;
 
   return unwrapFullyStyledContent(
-    content,
+    withoutEmphasis,
     /<(?:span|font)\b[^>]*(?:color\s*:\s*(?:#ff0000|red)|color\s*=\s*["']?red)[^>]*>[\s\S]*?<\/(?:span|font)>/giu,
   );
 }
 
 function isReadingHeading(content) {
-  return /^(?:ПЕРШАЕ|ДРУГОЕ|КАРОТКАЕ)\s+ЧЫТАННЕ(?:\s|$)/iu.test(visibleText(content));
+  // Some imported headings glue the reference directly to «чытанне».
+  return /^(?:ПЕРШАЕ|ДРУГОЕ|КАРОТКАЕ)\s+ЧЫТАННЕ/iu.test(visibleText(content));
 }
 
-function isLectionSectionHeading(content) {
-  return /^(?:ПЕРШАЕ|ДРУГОЕ)\s+ЧЫТАННЕ\s*$/iu.test(visibleText(content));
+// Responsory captions may cite several books or continue with another chapter
+// of the same book. Keep the suffix restricted to references, not response text.
+const BIBLICAL_BOOK_PATTERN = '(?:[1-3]\\s*)?\\p{L}+\\.?\\s*';
+const BIBLICAL_LOCATION_PATTERN = '\\d+(?:\\s*\\(\\d+\\))?\\s*,\\s*\\d[\\d\\s.,:()–—a-dа-вс-]*';
+const RESPONSORY_REFERENCE_PATTERN = new RegExp(
+  `^(?:пар\\.\\s*)?${BIBLICAL_BOOK_PATTERN}${BIBLICAL_LOCATION_PATTERN}`
+    + `(?:;\\s*(?:пар\\.\\s*)?(?:${BIBLICAL_BOOK_PATTERN})?${BIBLICAL_LOCATION_PATTERN})*;?$`,
+  'iu',
+);
+
+function isStandaloneLiturgicalHeading(content) {
+  const text = visibleText(content);
+  if (/^(?:(?:ПЕРШАЕ|ДРУГОЕ|КАРОТКАЕ)\s+ЧЫТАННЕ|(?:КАРОТКІ\s+)?РЭСПАНСОРЫЙ)$/iu.test(text)) return true;
+
+  const responsoryReference = text.match(/^(?:КАРОТКІ\s+)?РЭСПАНСОРЫЙ\s*(.+)$/iu)?.[1] || '';
+  if (RESPONSORY_REFERENCE_PATTERN.test(responsoryReference)) return true;
+  // A label with its reference is still a heading when the whole paragraph
+  // is styled. A mixed paragraph containing Scripture must retain body size.
+  return isReadingHeading(content) && isFullyStyledContent(content);
 }
 
 function escapePattern(value) {
@@ -156,8 +179,17 @@ export function markLeadingLiturgicalSubheadings(html) {
   return String(html || '').replace(
     PARAGRAPH_PATTERN,
     (paragraph, attributes, content) => {
-      if (isLectionSectionHeading(content)) {
+      // Semantic section labels take precedence over colour/alignment and
+      // are recognised anywhere, including after a rubric or the reading body.
+      if (isStandaloneLiturgicalHeading(content)) {
         return `<p${markAsLiturgicalHeading(attributes)}>${content}</p>`;
+      }
+
+      // A response, or a caption sharing its paragraph with the response,
+      // remains body text even when the imported paragraph is entirely red.
+      if (/^(?:(?:КАРОТКІ\s+)?РЭСПАНСОРЫЙ|[КН]\.)/iu.test(visibleText(content))) {
+        canMark = false;
+        return paragraph;
       }
 
       // Centred lines in the source are structural captions (psalm parts,

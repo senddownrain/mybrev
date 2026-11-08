@@ -49,6 +49,7 @@
 <script setup>
 import { computed, getCurrentInstance, nextTick, ref, watch } from 'vue';
 import { formatIntercessions, getLiturgicalAlternatives } from '@/utils/liturgicalAlternatives';
+import { markLeadingLiturgicalSubheadings } from '@/utils/liturgicalHtml';
 
 const props = defineProps({
   text: { type: String, default: '' },
@@ -75,6 +76,9 @@ watch(options, (list) => emit('options', list.length), { immediate: true });
 const activeOption = computed(() => options.value[activeIndex.value] || options.value[0] || null);
 const displayedHtml = computed(() => {
   const html = activeOption.value?.html || '';
+  // Classify metadata within the selected variant, with a fresh leading
+  // paragraph budget. Splitting and choice titles use the unformatted source.
+  if (props.kind === 'reading' || props.kind === 'office-reading') return markLeadingLiturgicalSubheadings(html);
   return props.kind === 'intercession' ? formatIntercessions(html) : html;
 });
 
