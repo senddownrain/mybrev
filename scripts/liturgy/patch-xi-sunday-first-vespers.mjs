@@ -59,7 +59,7 @@ export function planXiSundayPatch(current, fields) {
     const old = current[key];
     return typeof old === 'string' && old.trim() && old !== fields[key] || (old != null && typeof old !== 'string');
   });
-  const updates = Object.fromEntries(XI_FIELDS.filter((key) => !current[key]).map((key) => [key, fields[key]]));
+  const updates = Object.fromEntries(XI_FIELDS.filter((key) => current[key] == null || (typeof current[key] === 'string' && !current[key].trim())).map((key) => [key, fields[key]]));
   return { conflicts, updates, unchanged: XI_FIELDS.length - Object.keys(updates).length, status: conflicts.length ? 'CONFLICT' : Object.keys(updates).length ? 'PATCH_NEEDED' : 'ALREADY_APPLIED' };
 }
 
@@ -113,10 +113,9 @@ async function main() {
     });
     const after = await ref.get();
     if (XI_FIELDS.some((key) => after.data()?.[key] !== fields[key])) throw Error('Post-write verification failed');
-    for (const [key, value] of Object.entries(before)) {
-      if (!XI_FIELDS.includes(key) && after.data()?.[key] !== value) {
-        throw Error('Unexpected change outside target fields: ' + key);
-      }
+    const untouched = (data) => Object.fromEntries(Object.entries(data).filter(([key]) => !XI_FIELDS.includes(key)));
+    if (sha(untouched(before)) !== sha(untouched(after.data()))) {
+      throw Error('Unexpected change outside the eleven target fields');
     }
     console.log(JSON.stringify({ published: true, verified: true, updatedFields: Object.keys(plan.updates).length, document: ref.path, afterHash: sha(after.data()) }));
   } finally {
