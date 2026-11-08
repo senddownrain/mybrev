@@ -36,7 +36,7 @@ jobs:
 
       - name: Validate the 11 source fields and protected mutation rules
         run: |
-          node --test tests/xi-sunday-first-vespers-source.test.mjs
+          node --test tests/xi-sunday-first-vespers-source.test.mjs tests/xi-sunday-atomic-release.test.mjs
           node scripts/liturgy/patch-xi-sunday-first-vespers.mjs --validate-only
 
       - name: Load protected production credential
@@ -53,22 +53,14 @@ jobs:
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
           node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));if(x.project_id!=='ibreviaryby')throw Error('Wrong Firebase project')" "$RUNNER_TEMP/firebase-service-account.json"
 
-      - name: Preview exact live Firestore patch (read only)
-        run: node scripts/liturgy/patch-xi-sunday-first-vespers.mjs
+      - name: Preview atomic XI Sunday day + manifest patch (read only)
+        run: node scripts/content/publish-xi-sunday-targeted.mjs --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
 
-      - name: Apply only missing XI Sunday I Vespers fields transactionally
-        run: node scripts/liturgy/patch-xi-sunday-first-vespers.mjs --apply
+      - name: Atomically publish only XI Sunday and its two manifest documents
+        run: node scripts/content/publish-xi-sunday-targeted.mjs --service-account "$GOOGLE_APPLICATION_CREDENTIALS" --apply --approved
 
-      - name: Validate pending Flutter content manifest changes (read only)
-        run: npm run content:manifest -- --collection days --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
-
-      - name: Publish updated days manifest (no other collection writes)
-        run: npm run content:manifest -- --collection days --service-account "$GOOGLE_APPLICATION_CREDENTIALS" --apply
-
-      - name: Verify production patch and current manifest again
-        run: |
-          node scripts/liturgy/patch-xi-sunday-first-vespers.mjs
-          npm run content:manifest -- --collection days --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
+      - name: Verify the three target documents (read only)
+        run: node scripts/content/publish-xi-sunday-targeted.mjs --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
 
       - name: Build production Web
         env:
@@ -116,7 +108,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: xi-sunday-firestore-backup
-          path: backups/liturgy/xi-sunday-first-vespers-*.json
+          path: backups/liturgy/xi-sunday-first-vespers-atomic-*.json
           if-no-files-found: warn
           retention-days: 30
 
