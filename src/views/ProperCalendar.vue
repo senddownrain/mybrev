@@ -22,7 +22,6 @@
           </template>
         </section>
       </article>
-      <p class="document-original"><a :href="calendar.sourceFile" target="_blank" rel="noopener noreferrer">Арыгінал PDF</a></p>
     </main>
   </v-container>
 </template>
