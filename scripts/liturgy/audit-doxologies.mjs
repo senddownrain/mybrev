@@ -94,6 +94,7 @@ export async function runAudit(args=process.argv.slice(2)) {
   for (let i=0; i<args.length; i++) { if (!flags.has(args[i])) throw Error(`Unknown argument: ${args[i]}`); if (['--snapshot','--flutter','--out'].includes(args[i])) { if(!args[++i] || args[i].startsWith('--')) throw Error('Missing option value'); } }
   const root=process.cwd(), rows=[], sources=[], plan=[], written=[], writes=[];
   let scannedJsonFiles=0;
+  const metadataFiles=[];
   const scan=(source,id,doc,extra={})=>{
     const found=auditDocument(doc);sources.push({source,id,fields:found.length});
     for(const item of found)rows.push({source,document:id,field:item.path.join('.'),hour:item.field.replace(/Ps\d+$/,''),classification:item.audit.classification,inheritance:item.rule||item.audit.rule||'own-text',alternativeCount:item.audit.alternativeCount||0,alternatives:item.audit.alternatives, ...extra});
@@ -103,6 +104,12 @@ export async function runAudit(args=process.argv.slice(2)) {
     if(file.includes('serviceAccount'))continue;
     const doc=JSON.parse(fs.readFileSync(file,'utf8'));
     scannedJsonFiles++;
+    // Ps-field keys in provenance describe volume/line/hash metadata, not
+    // content values. Keep the file in the source inventory, not psalmody.
+    if (path.relative(root,file).replaceAll(path.sep,'/') === 'patchs/sources/common-seasons/provenance.json') {
+      metadataFiles.push({file:path.relative(root,file),role:'source-provenance'});
+      continue;
+    }
     let modified=false;
     for(const {location,doc:item} of documentsIn(doc)) {
       scan('json',`${path.relative(root,file)}${location?'#'+location:''}`,item);
@@ -139,9 +146,9 @@ export async function runAudit(args=process.argv.slice(2)) {
     for(const[id,doc]of Object.entries(decodeCollection(payload)))scan('flutter-bundle',`${name}/${id}`,doc);
   }
   const statuses={};for(const row of rows)for(const alt of row.alternatives)statuses[alt.status]=(statuses[alt.status]||0)+1;
-  const summary={scannedJsonFiles,documents:sources.length,fields:rows.length,alternatives:rows.reduce((n,r)=>n+r.alternatives.length,0),statuses,bySource:Object.fromEntries([...new Set(sources.map(s=>s.source))].map(source=>[source,{documents:sources.filter(s=>s.source===source).length,fields:rows.filter(r=>r.source===source).length}])),productionDocuments:plan.length,productionFields:plan.reduce((n,d)=>n+d.fields.length,0),writtenSourceDocuments:written.length};
+  const summary={scannedJsonFiles,metadataFiles:metadataFiles.length,documents:sources.length,fields:rows.length,alternatives:rows.reduce((n,r)=>n+r.alternatives.length,0),statuses,bySource:Object.fromEntries([...new Set(sources.map(s=>s.source))].map(source=>[source,{documents:sources.filter(s=>s.source===source).length,fields:rows.filter(r=>r.source===source).length}])),productionDocuments:plan.length,productionFields:plan.reduce((n,d)=>n+d.fields.length,0),writtenSourceDocuments:written.length};
   const out=arg(args,'--out','reports/doxologies');fs.mkdirSync(out,{recursive:true});
-  fs.writeFileSync(path.join(out,'audit.json'),JSON.stringify({summary,sources,rows},null,2)+'\n');
+  fs.writeFileSync(path.join(out,'audit.json'),JSON.stringify({summary,metadataFiles,sources,rows},null,2)+'\n');
   fs.writeFileSync(path.join(out,'dry-run.json'),JSON.stringify({schemaVersion:1,projectId:'ibreviaryby',mode:'dry-run',network:false,writePrecondition:'currentDocument.updateTime == captured updateTime; verify field SHA-256; exact updateMask only',summary,documents:plan},null,2)+'\n');
   const requests=[];let group=[];let bytes=0;
   for(const write of writes){const size=Buffer.byteLength(JSON.stringify(write));if(group.length && (bytes+size>8*1024*1024 || group.length>=400)){requests.push({writes:group});group=[];bytes=0;}group.push(write);bytes+=size;}
