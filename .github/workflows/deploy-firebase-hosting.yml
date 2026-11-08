@@ -2,6 +2,12 @@ name: Deploy Web to Firebase Hosting
 
 on:
   workflow_dispatch:
+  # One-time publication of PR #211. Return to dispatch-only after production verification.
+  push:
+    branches: [main]
+    paths:
+      - 'src/data/documents/apostolic-see-decrees.json'
+      - 'src/views/LiturgyHoursDecrees.vue'
 
 permissions:
   contents: read
@@ -13,7 +19,7 @@ concurrency:
 jobs:
   deploy:
     name: Build and publish web
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[deploy-decrees-211]'))
     runs-on: ubuntu-latest
     environment: production
     timeout-minutes: 25
