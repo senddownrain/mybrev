@@ -47,17 +47,8 @@ jobs:
           node -e "const a=require(process.argv[1]);if(a.project_id!=='ibreviaryby') process.exit(2)" "$RUNNER_TEMP/firebase-service-account.json"
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
 
-      - name: Preflight app manifest — reject unrelated unpublished changes
-        run: |
-          npm run content:manifest -- --collection days --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const r=JSON.parse(fs.readFileSync('reports/content/manifest-diff.json','utf8'));
-          if(!r.published) throw Error('Existing Flutter manifest missing; block one-document release');
-          const changed=r.diffs.flatMap(d=>[...(d.ids?.added||[]),...(d.ids?.changed||[]),...(d.ids?.removed||[])]);
-          if(changed.some(id=>id!=='ordinary-w30-d6')) throw Error('Unrelated days updates are not approved for this release: '+changed.length);
-          console.log('Preflight manifest: no unrelated changed days');
-          NODE
+      - name: Validate isolated Flutter manifest planner (offline)
+        run: node --test tests/single-day-manifest.test.mjs
 
       - name: Create guarded, reviewed 11-field patch from fresh live reads
         run: |
@@ -75,24 +66,16 @@ jobs:
         run: |
           FIREBASE_SERVICE_ACCOUNT_B64="$(base64 -w0 "$GOOGLE_APPLICATION_CREDENTIALS")" node scripts/liturgy/fix-ordinary-friday-vespers.mjs --live --apply --plan reports/liturgy/issue-198-production-plan.json
 
-      - name: Validate Flutter content manifest — only approved target
-        run: |
-          npm run content:manifest -- --collection days --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const r=JSON.parse(fs.readFileSync('reports/content/manifest-diff.json','utf8'));
-          const changed=r.diffs.flatMap(d=>[...(d.ids?.added||[]),...(d.ids?.changed||[]),...(d.ids?.removed||[])]);
-          if(changed.some(id=>id!=='ordinary-w30-d6')) throw Error('Manifest includes unapproved changes');
-          const planned=JSON.parse(fs.readFileSync('reports/liturgy/issue-198-production-plan.json','utf8'));
-          if(Object.keys(planned.fields).length && !changed.includes('ordinary-w30-d6')) throw Error('Patched target absent from pending manifest');
-          if(changed.length && (r.classification.verdict!=='SAFE CONTENT PATCH' || !r.decision?.publish)) {
-            throw Error('Manifest publication refused: '+r.classification.verdict);
-          }
-          console.log('Manifest scope approved: '+JSON.stringify(changed));
-          NODE
+      - name: Dry-run isolated Flutter manifest update (one doc, not 277)
+        run: node scripts/content/publish-single-day-manifest.mjs --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
 
-      - name: Publish Flutter content manifest patch
-        run: npm run content:manifest -- --collection days --service-account "$GOOGLE_APPLICATION_CREDENTIALS" --apply
+      - name: Publish exactly one corrected Flutter days hash and digest
+        run: node scripts/content/publish-single-day-manifest.mjs --service-account "$GOOGLE_APPLICATION_CREDENTIALS" --apply
+
+      - name: Verify manifest is idempotent and report remaining unpublished days
+        run: |
+          node scripts/content/publish-single-day-manifest.mjs --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
+          npm run content:manifest -- --collection days --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
 
       - name: Build Web with published content revision
         env:
