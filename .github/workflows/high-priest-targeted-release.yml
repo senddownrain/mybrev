@@ -56,7 +56,9 @@ jobs:
       - name: Read exactly three documents and check SAFE CONTENT PATCH (no writes)
         run: node scripts/content/publish-high-priest-targeted.mjs --service-account "$HIGH_PRIEST_SERVICE_ACCOUNT"
       - name: Publish approved 12-field patch and manifest atomically
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'apply'
+        if: >-
+          (github.event_name == 'push' && contains(github.event.head_commit.message, '[publish-high-priest]')) ||
+          (github.event_name == 'workflow_dispatch' && inputs.mode == 'apply')
         run: node scripts/content/publish-high-priest-targeted.mjs --service-account "$HIGH_PRIEST_SERVICE_ACCOUNT" --apply --approved
       - name: Remove temporary credentials
         if: always()
