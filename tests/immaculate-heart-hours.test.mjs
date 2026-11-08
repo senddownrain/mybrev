@@ -82,13 +82,15 @@ test('incomplete legacy Proper retains its own texts but fills gaps from the cor
   assert.notEqual(marian.day.laudesR, state.daysResult.periodFallback.laudesR);
 });
 
-test('13 June 2026 retains both legally competing memorials, without a weekday card', () => {
+test('13 June 2026 retains both memorial choices and the weekday option when both are optional', () => {
   const state = setup('pinsk');
   const built = build(state, 'pinsk');
   const ids = built.dayOptions.map((item) => item.ordo.optionId);
   assert.ok(ids.includes('immaculate-heart'));
   assert.ok(ids.includes('sv-anthony-padua'));
-  assert.ok(!built.dayOptions.some((item) => item.ordo.kind === 'temporal'));
+  // With two competing obligatory memorials the current approved calendar
+  // makes both optional; the ordinary weekday also remains a legitimate choice.
+  assert.ok(built.dayOptions.some((item) => item.ordo.kind === 'temporal'));
 });
 
 test('Sacred Heart solemnity still uses the legacy dynamic document path', () => {
