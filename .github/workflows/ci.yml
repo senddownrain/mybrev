@@ -33,6 +33,9 @@ jobs:
       - name: I Vespers independent-source audit safety checks
         run: node --test tests/heart-first-vespers-source-audit.test.mjs
 
+      - name: XI Sunday printed-source integrity and safe patch regression
+        run: node --test tests/xi-sunday-first-vespers-source.test.mjs
+
       - name: Lint
         run: npm run lint
 
