@@ -146,3 +146,10 @@ test('a canticle may repeat its choral response after the doxology', () => {
   const chorus = '<p>Н. Хваліце Пана, усе народы.</p>';
   check(text + chorus + DOXOLOGY_HTML + chorus);
 });
+
+test('invitatory fragments cannot hide an extra ending before the final fragment', () => {
+  const rows = auditDocument({invitatoriumPs1: text + DOXOLOGY_HTML, invitatoriumPs2: DOXOLOGY_HTML});
+  assert.equal(rows[0].audit.alternatives[0].status, 'REVIEW_INVITATORY_DOXOLOGY');
+  assert.equal(rows[1].audit.alternatives[0].status, 'complete');
+  assert.equal(rows[0].changed, false);
+});

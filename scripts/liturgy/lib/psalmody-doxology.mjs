@@ -63,7 +63,7 @@ function inspectUncached(html, { field = '', continuation = false, rule } = {}) 
     const inlineRubric = /Хвала Айцу\.(?:<br\s*\/?>|\s)*Верш Хвала Айцу чытаецца ў канцы ўсіх псальмаў і песняў\./u.exec(fragment);
     const notes = allParagraphs.filter(n => /^(?:Хвала Айцу\.|Хвала Айцу і Сыну|Як была спрадвеку)/iu.test(plain(n.toString())));
     const location = full.length ? (trailingAnts.length ? 'before-repeated-antiphon' : containers.length ? 'inside-ora-psalm' : 'end-of-psalm') : 'absent';
-    let status = continuation ? 'invitatory-strophe' : daniel ? (full.length ? 'REVIEW_DANIEL_DUPLICATE' : 'exception-daniel-3-57-88-56') : full.length === 1 ? 'complete' : full.length > 1 ? 'REVIEW_DUPLICATE' : partial ? 'incomplete' : 'missing';
+    let status = continuation ? (full.length ? 'REVIEW_INVITATORY_DOXOLOGY' : 'invitatory-strophe') : daniel ? (full.length ? 'REVIEW_DANIEL_DUPLICATE' : 'exception-daniel-3-57-88-56') : full.length === 1 ? 'complete' : full.length > 1 ? 'REVIEW_DUPLICATE' : partial ? 'incomplete' : 'missing';
     if (containers.length > 1 || pieces.length !== pickerCount) status = 'REVIEW_ALTERNATIVE_STRUCTURE';
     // Multiple actual psalm headings inside a choice require editorial review.
     const headings = allParagraphs.filter(n => /^(?:Псальм\s+\d|Песн[яь]\s*\(?[А-ЯІЎЁ])/u.test(plain(n.toString())));
