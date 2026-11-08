@@ -47,7 +47,8 @@ function inspectUncached(html, { field = '', continuation = false, rule } = {}) 
     const full = [...text.matchAll(FULL)];
     const partial = /Хвала Айцу|Як была спрадвеку/iu.test(text) && full.length === 0;
     const ownTrinity = /Благаславім Айца і Сына, і Духа Святога/iu.test(text);
-    const daniel = /Дан\s*3\s*,\s*57\s*[-–—]\s*88/iu.test(text) && ownTrinity;
+    const danielRange = /Дан\s*3\s*,\s*57\s*[-–—]\s*88/iu.test(text);
+    const daniel = danielRange && ownTrinity;
     const psalm = root.querySelectorAll('p').map(n => plain(n.toString())).find(t => /^(?:Псальм|Песня|Песнь)/iu.test(t)) || (continuation ? 'Continuation of preceding psalm' : 'Unlabelled psalm part');
     const allParagraphs = target.querySelectorAll('p');
     const trailingAnts = [];
@@ -77,6 +78,8 @@ function inspectUncached(html, { field = '', continuation = false, rule } = {}) 
       const endingIndex = allParagraphs.findIndex(n => prayerText(n.toString()).includes('Хвала Айцу і Сыну'));
       if (allParagraphs.some((n, i) => i > 1 && i < endingIndex && antiphon(n))) status = 'REVIEW_DOXOLOGY_POSITION';
     }
+    if (full.length === 1 && ((text.match(/Хвала Айцу і Сыну/giu) || []).length > 1 || (text.match(/Як была спрадвеку/giu) || []).length > 1 || /Хвала Айцу\./iu.test(text))) status = 'REVIEW_INCOMPLETE_DUPLICATE';
+    if (danielRange && !ownTrinity) status = 'REVIEW_DANIEL_TRINITY';
     if (sharedDoxology) status = 'REVIEW_SHARED_DOXOLOGY';
     if (['missing', 'incomplete'].includes(status)) {
       // Only standalone doxology paragraphs can be safely replaced.

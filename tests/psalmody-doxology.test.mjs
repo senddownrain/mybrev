@@ -153,3 +153,27 @@ test('invitatory fragments cannot hide an extra ending before the final fragment
   assert.equal(rows[1].audit.alternatives[0].status, 'complete');
   assert.equal(rows[0].changed, false);
 });
+
+test('a damaged Daniel 3 ending requires review instead of an invented replacement', () => {
+  const song = load('db-templates', 'sunday-week-1').laudesPs2.replace('Благаславім Айца і Сына, і Духа Святога', 'Адсутны ўзор трынітарнага заканчэння');
+  const result = repairPsalm(song, {field:'laudesPs2'});
+  assert.equal(result.changed, false);
+  assert.equal(result.audit.alternatives[0].status, 'REVIEW_DANIEL_TRINITY');
+});
+
+test('a complete ending cannot hide another partial ending', () => {
+  const result = repairPsalm(text + DOXOLOGY_HTML + '<p>Хвала Айцу.</p>', {field:'laudesPs1'});
+  assert.equal(result.changed, false);
+  assert.equal(result.audit.alternatives[0].status, 'REVIEW_INCOMPLETE_DUPLICATE');
+});
+
+test('standard snapshot Timestamp metadata survives planning without mutation', () => {
+  const timestamp = {__firestoreType:'timestamp',seconds:1,nanoseconds:2,toDate:()=>new Date(1000)};
+  const doc = {updatedAt:timestamp,_seasonalVariants:{lent:{laudesPs1:text}}};
+  const result = repairDocument(doc);
+  assert.equal(result.after.updatedAt,timestamp);
+  assert.equal(doc._seasonalVariants.lent.laudesPs1,text);
+  assert.notEqual(result.after._seasonalVariants.lent.laudesPs1,text);
+  const planned = {updateTime:{seconds:1,nanoseconds:2},fields:result.changes};
+  assert.equal(verifyPlannedDocument(doc,planned,planned.updateTime).updatedAt,timestamp);
+});

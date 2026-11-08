@@ -13,8 +13,16 @@ const COLLECTIONS = ['liturgicalTemplates', 'liturgicalProperTexts', 'days', 'co
 const arg = (args, key, fallback) => args.includes(key) ? args[args.indexOf(key)+1] : fallback;
 export const getAt = (doc, keys) => keys.reduce((v,k) => v?.[k],doc);
 export function setAt(doc, keys, value) { const parent=getAt(doc,keys.slice(0,-1)); parent[keys.at(-1)]=value; }
+// Snapshot Timestamp wrappers include toDate(). Keep immutable metadata and
+// other non-plain values intact; clone only data containers we may patch.
+function cloneDocument(value) {
+  if (Array.isArray(value)) return value.map(cloneDocument);
+  if (!value || typeof value !== 'object' || value.__firestoreType
+    || Object.getPrototypeOf(value) !== Object.prototype) return value;
+  return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, cloneDocument(item)]));
+}
 export function repairDocument(doc, canonical = null) {
-  const after=structuredClone(doc), changes=[];
+  const after=cloneDocument(doc), changes=[];
   for(const item of auditDocument(doc)) if(item.changed) {
     setAt(after,item.path,item.value);
     const verified=inspectPsalm(item.value,{field:item.field});
@@ -43,7 +51,7 @@ export function repairDocument(doc, canonical = null) {
 }
 export function verifyPlannedDocument(doc, plan, updateTime) {
   if(JSON.stringify(updateTime)!==JSON.stringify(plan.updateTime)) throw Error('Concurrent document change: updateTime');
-  const after=structuredClone(doc);
+  const after=cloneDocument(doc);
   for(const change of plan.fields) {
     const before=getAt(after,change.path);
     if(typeof before!=='string'||sha256(before)!==change.beforeSha256) throw Error(`Concurrent field change: ${change.field}`);
