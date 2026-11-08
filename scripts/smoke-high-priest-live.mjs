@@ -15,7 +15,7 @@ try {
   for (const [hour, reference] of [
     ['terz', 'Гбр 7, 26-27'],
     ['sext', '1 П 2, 4-5'],
-    ['none', '1 П 2, 9-10'],
+    ['non', '1 П 2, 9-10'],
   ]) {
     const context = await browser.newContext({
       viewport: { width: 390, height: 844 },
@@ -41,6 +41,22 @@ try {
       ready = true;
     } catch { /* Still save the screenshot for diagnostic evidence. */ }
     await page.evaluate(() => document.fonts?.ready).catch(() => {});
+    // Screenshot the actual reading, not a sticky footer caught by fullPage.
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(300);
+    await page.screenshot({
+      path: path.join(output, hour + '-overview.png'),
+      animations: 'disabled',
+    });
+    if (ready) {
+      await page.getByText(reference, { exact: false }).first()
+        .scrollIntoViewIfNeeded({ timeout: 8000 }).catch(() => {});
+      await page.waitForTimeout(250);
+      await page.screenshot({
+        path: path.join(output, hour + '-reading.png'),
+        animations: 'disabled',
+      });
+    }
     const file = path.join(output, hour + '-pinsk-2026-05-28.png');
     await page.screenshot({ path: file, fullPage: true, animations: 'disabled' });
     results.push({ hour, url, httpStatus: response?.status(), expected: reference,
