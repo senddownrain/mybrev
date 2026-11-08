@@ -41,7 +41,22 @@ async function screenshotCard(page, locator, label) {
   label + ': invisible or empty rendered prayer card ' + JSON.stringify(state));
   assert.ok(state.y < state.viewportHeight && state.y + state.height > 0,
     label + ': element not in viewport');
-  await element.screenshot({ path: path.join(output, label + '.png'), animations: 'disabled', timeout: 25000 });
+  // Firestore revalidation may replace Vue cards while Chromium is rasterizing.
+  // Re-resolve the locator instead of failing on an obsolete element handle.
+  let captured = false;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    try {
+      await locator.first().screenshot({
+        path: path.join(output, label + '.png'), animations: 'disabled', timeout: 25000,
+      });
+      captured = true;
+      break;
+    } catch (error) {
+      if (attempt === 4 || !/detached|not attached|Element is not attached/iu.test(String(error.message))) throw error;
+      await page.waitForTimeout(400);
+    }
+  }
+  assert.ok(captured, label + ': screenshot capture did not stabilize');
   const bytes = fs.statSync(path.join(output, label + '.png')).size;
   assert.ok(bytes > 2000, label + ': screenshot unexpectedly small');
   return { ...state, bytes };
@@ -62,6 +77,8 @@ try {
       const collectText = 'Усемагутны Божа, наша моц і надзея';
       const magnText = 'Убачыўшы натоўпы людзей';
       await page.getByText(collectText, { exact: false }).first().waitFor({ timeout: 30000 });
+      await page.evaluate(() => document.fonts.ready);
+      await page.waitForTimeout(600); // let the cached-to-live Firestore refresh settle
       const text = await page.locator('.liturgical-hour-column').innerText();
       assert.match(text, /I Нешпары|І Нешпары/iu);
       assert.match(text, /Псальм 113 \(112\)/u);
