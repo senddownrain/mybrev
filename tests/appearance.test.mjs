@@ -90,7 +90,7 @@ test('PWA native chrome fallback is neutral graphite and readable in every theme
     assert.notEqual(APP_PWA_MANIFEST_THEME_COLOR, color);
   }
   // This change must never replace the per-theme top status-bar meta logic.
-  assert.match(read('src/stores/settings.js'), /APP_STATUS_BAR_COLORS\\[newTheme\\]/);
+  assert.match(read('src/stores/settings.js'), /APP_STATUS_BAR_COLORS\[newTheme\]/);
 });
 
 test('document canvas and body use the selected PWA appearance in all themes', () => {

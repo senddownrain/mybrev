@@ -54,6 +54,12 @@ export function assembleFirstVespers(day) {
     const first = day[`vesper1${field}`];
     if (hasText(first)) own += 1;
     result[`vesper${field}`] = hasText(first) ? first : (day[`vesper${field}`] || '');
+    if (day._fieldSources) {
+      const key = hasText(first) ? `vesper1${field}` : `vesper${field}`;
+      result._fieldSources = { ...result._fieldSources,
+        [`vesper${field}`]: day._fieldSources[key] || { document: day.id, field: key },
+      };
+    }
   });
   result._firstVespersSource = own === VESPER_FIELDS.length ? 'vesper1'
     : own ? 'vesper1+proper' : 'proper';
@@ -84,10 +90,20 @@ export function eveningVespersModel(day, tomorrowContent, { isoWeekday, requeste
     if (vespers.type === 'first') {
       const option = findFirstVespersOption(tomorrowContent, vespers.celebrationId);
       if (!option?.day) return none;
+      const firstDay = assembleFirstVespers(option.day);
+      // The O antiphon follows the civil evening, including I Vespers of an
+      // Advent Sunday (it must not advance to tomorrow's O antiphon).
+      if (day._periodType === 'advent' && option.day._periodType === 'advent'
+        && /^advent-\d{2}-12$/.test(day.id || '') && hasText(day.vesperAntMag)) {
+        firstDay.vesperAntMag = day.vesperAntMag;
+        firstDay._fieldSources = { ...firstDay._fieldSources,
+          vesperAntMag: day._fieldSources?.vesperAntMag || { document: day.id, field: 'vesperAntMag' },
+        };
+      }
       return {
         ...none,
         firstVespers: {
-          day: assembleFirstVespers(option.day),
+          day: firstDay,
           sourceDayId: option.day.id || '',
           title: option.title || vespers.title || 'заўтрашняга дня',
           places: [],
