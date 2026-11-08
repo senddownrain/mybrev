@@ -46,7 +46,7 @@ export function validateXiSundaySource(source) {
   for (const key of ['vesper1Ps1', 'vesper1Ps2', 'vesper1Ps3']) {
     if ((fields[key].match(/Хвала Айцу і Сыну/g) || []).length !== 1) throw Error(key + ' requires exactly one doxology');
   }
-  if (/\<p\>1\.\s/.test(fields.vesper1Inter)) throw Error('Word list numbering escaped into intercessions');
+  if (/<p>1\.\s/.test(fields.vesper1Inter)) throw Error('Word list numbering escaped into intercessions');
   return fields;
 }
 
