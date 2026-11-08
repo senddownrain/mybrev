@@ -119,3 +119,30 @@ test('canonical plan accepts paragraph whitespace only and refuses other drift',
   assert.equal(result.after.laudesPs1,canonical.laudesPs1);
   assert.throws(()=>repairDocument(doc,{laudesPs1:canonical.laudesPs1.replace('Хваліце','Змена')}),/Unexpected canonical drift/);
 });
+
+test('audit rejects a doxology before Scripture or after a repeated antiphon', () => {
+  for (const html of [DOXOLOGY_HTML + text, text + '<p>Ант. Паўтор.</p>' + DOXOLOGY_HTML]) {
+    assert.equal(inspectPsalm(html, {field:'laudesPs1'}).alternatives[0].status, 'REVIEW_DOXOLOGY_POSITION');
+    assert.equal(repairPsalm(html, {field:'laudesPs1'}).changed, false);
+  }
+});
+
+test('structured alternatives without ora-psalm keep the ending inside their own wrapper', () => {
+  const html = `<section data-alternative-title="Першы">${text}</section><div data-alternative-title="Другі">${text.replace('усе народы', 'усе плямёны')}</div>`;
+  const repaired = repairPsalm(html, {field:'laudesPs3'}).value;
+  const blocks = parse(repaired).querySelectorAll('[data-alternative-title]');
+  for (const block of blocks) check(block.innerHTML, 'laudesPs3');
+  assert.equal((repaired.match(/Хвала Айцу і Сыну/gu) || []).length, 2);
+});
+
+test('shared alternative suffixes are held for review without adding duplicate endings', () => {
+  const html = `<div data-alternative-title="Першы">${text}</div><div data-alternative-title="Другі">${text.replace('усе народы', 'усе плямёны')}</div><div data-alternative-suffix>${DOXOLOGY_HTML}</div>`;
+  const result = repairPsalm(html, {field:'laudesPs3'});
+  assert.equal(result.changed, false);
+  assert.ok(result.audit.alternatives.every(a => a.status === 'REVIEW_SHARED_DOXOLOGY'));
+});
+
+test('a canticle may repeat its choral response after the doxology', () => {
+  const chorus = '<p>Н. Хваліце Пана, усе народы.</p>';
+  check(text + chorus + DOXOLOGY_HTML + chorus);
+});

@@ -1,0 +1,2192 @@
+{
+  "baselineCommit": "8900841",
+  "changedPsalmodyFields": 546,
+  "biblicalOrAntiphonTextChanges": 0,
+  "unexpected": [],
+  "fields": [
+    {
+      "field": "patchs/feasts/02-10-holy-guardian-angels.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/02-10-holy-guardian-angels.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/02-10-holy-guardian-angels.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/27-12-sv-john-apostle-evangelist.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/27-12-sv-john-apostle-evangelist.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/27-12-sv-john-apostle-evangelist.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/29-09-archangels-michael-gabriel-raphael.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/29-09-archangels-michael-gabriel-raphael.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/29-09-archangels-michael-gabriel-raphael.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/29-09-archangels-michael-gabriel-raphael.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/29-09-archangels-michael-gabriel-raphael.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/29-09-archangels-michael-gabriel-raphael.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.advent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.christmas.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.lent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.lent.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/apostles.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/blessed-virgin-mary.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.advent.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.advent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.christmas.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.christmas.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.lent.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.lent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.lent.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.lent.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/church-dedication.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.advent.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.advent.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.christmas.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.christmas.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/doctors-of-church.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-men.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.advent.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.advent.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.christmas.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.christmas.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/holy-women.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.advent.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.advent.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.advent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.christmas.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.christmas.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.christmas.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.lent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyr-one.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/martyrs-many.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/office-for-dead.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/office-for-dead.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/office-for-dead.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/office-for-dead.json.laudesPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/office-for-dead.json.laudesPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/office-for-dead.json.laudesPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/office-for-dead.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/office-for-dead.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/office-for-dead.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.advent.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.advent.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.christmas.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.christmas.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/pastors.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.advent.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.advent.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.christmas.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.christmas.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.lent.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/feasts/common-texts/virgins.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/01-11-all-saints.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/01-11-all-saints.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/01-11-all-saints.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/01-11-all-saints.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/01-11-all-saints.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/01-11-all-saints.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/01-11-all-saints.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/01-11-all-saints.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/01-11-all-saints.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/02-10-holy-guardian-angels.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/02-10-holy-guardian-angels.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/02-10-holy-guardian-angels.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/06-01-epiphany-lord.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/06-08-transfiguration-lord.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/06-08-transfiguration-lord.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/06-08-transfiguration-lord.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/06-08-transfiguration-lord.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/06-08-transfiguration-lord.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/06-08-transfiguration-lord.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/06-08-transfiguration-lord.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/06-08-transfiguration-lord.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/06-08-transfiguration-lord.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/14-09-exaltation-holy-cross.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/14-09-exaltation-holy-cross.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/14-09-exaltation-holy-cross.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/14-09-exaltation-holy-cross.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/14-09-exaltation-holy-cross.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/14-09-exaltation-holy-cross.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/14-09-exaltation-holy-cross.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/14-09-exaltation-holy-cross.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/14-09-exaltation-holy-cross.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/27-12-sv-john-apostle-evangelist.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/27-12-sv-john-apostle-evangelist.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/27-12-sv-john-apostle-evangelist.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/29-09-archangels-michael-gabriel-raphael.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/29-09-archangels-michael-gabriel-raphael.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/29-09-archangels-michael-gabriel-raphael.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/29-09-archangels-michael-gabriel-raphael.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/29-09-archangels-michael-gabriel-raphael.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-feasts/29-09-archangels-michael-gabriel-raphael.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.advent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.christmas.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.lent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.lent.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/apostles.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/blessed-virgin-mary.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.advent.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.advent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.christmas.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.christmas.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.lent.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.lent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.lent.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.lent.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/church-dedication.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.advent.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.advent.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.christmas.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.christmas.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/doctors-of-church.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-men.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.advent.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.advent.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.christmas.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.christmas.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/holy-women.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.advent.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.advent.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.advent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.christmas.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.christmas.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.christmas.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.lent.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyr-one.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/martyrs-many.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/office-for-dead.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/office-for-dead.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/office-for-dead.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/office-for-dead.json.laudesPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/office-for-dead.json.laudesPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/office-for-dead.json.laudesPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/office-for-dead.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/office-for-dead.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/office-for-dead.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.advent.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.advent.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.christmas.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.christmas.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/pastors.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.advent.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.advent.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.christmas.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.christmas.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.lent.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.easter.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.easter.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.easter.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.easter.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.easter.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.easter.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.easter.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.easter.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/db-templates/virgins.json._seasonalVariants.easter.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.1.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.1.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.1.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.1.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.1.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.1.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.1.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.1.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.1.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.4.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.5.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.5.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.5.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.5.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.5.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.5.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.5.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.5.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.5.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.8.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.8.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.8.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.8.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.8.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.8.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.8.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.8.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.8.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.16.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.16.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.16.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.16.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.16.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.16.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.18.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.18.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.19.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.20.officeOfReadingsPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.20.officeOfReadingsPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.20.officeOfReadingsPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.20.vesperPs1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.20.vesperPs2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.20.vesperPs3",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.20.vesper1Ps1",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.20.vesper1Ps2",
+      "scriptureAndAntiphonsUnchanged": true
+    },
+    {
+      "field": "patchs/json/ranked-fixed-days.json.documents.20.vesper1Ps3",
+      "scriptureAndAntiphonsUnchanged": true
+    }
+  ]
+}

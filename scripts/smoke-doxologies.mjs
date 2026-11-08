@@ -64,7 +64,8 @@ try {
     const shownPsalm=psalms.nth(s.name==='dead-laudes'?2:s.daniel?1:0);
     const ending=s.daniel?shownPsalm.locator('p').last():shownPsalm.locator('p').filter({hasText:'Хвала Айцу і Сыну'}).first();
     await ending.scrollIntoViewIfNeeded();
-    await page.screenshot({path:path.join(out,`${profile.width}-${profile.theme}-${profile.mode}-${s.name}-${alt}.png`)});
+    await page.waitForFunction(p => Number(getComputedStyle(p).opacity) > 0.9, await ending.elementHandle());
+    await page.screenshot({path:path.join(out,`${profile.width}-${profile.theme}-${profile.mode}-${s.name}-${alt}.png`),animations:'disabled'});
     results.push({scenario:s.name,alternative:alt,profile,counts,metrics,url:page.url()});
    }
   }

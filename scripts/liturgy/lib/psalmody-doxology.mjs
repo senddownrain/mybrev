@@ -35,11 +35,14 @@ function inspectUncached(html, { field = '', continuation = false, rule } = {}) 
   if (typeof html !== 'string') return { classification: 'REVIEW_NON_STRING', alternatives: [], edits: [] };
   const alternatives = [], edits = [];
   const pieces = ranges(html);
+  const sharedHtml = pieces.length > 1 ? pieces.reduceRight((value, r) => value.slice(0, r.start) + value.slice(r.end), html) : '';
+  const sharedDoxology = /Хвала Айцу|Як была спрадвеку/iu.test(plain(sharedHtml));
   const pickerCount = getLiturgicalAlternatives(html, 'psalm').length;
   for (const [index, range] of pieces.entries()) {
     const fragment = html.slice(range.start, range.end), root = parse(fragment);
     const containers = root.querySelectorAll('.ora-psalm');
-    const target = containers.length === 1 ? containers[0] : root;
+    const structuredRoot = root.childNodes.find(n => n.nodeType === 1 && n.hasAttribute?.('data-alternative-title'));
+    const target = containers.length === 1 ? containers[0] : structuredRoot || root;
     const body = target.toString(), text = prayerText(body);
     const full = [...text.matchAll(FULL)];
     const partial = /Хвала Айцу|Як была спрадвеку/iu.test(text) && full.length === 0;
@@ -48,13 +51,14 @@ function inspectUncached(html, { field = '', continuation = false, rule } = {}) 
     const psalm = root.querySelectorAll('p').map(n => plain(n.toString())).find(t => /^(?:Псальм|Песня|Песнь)/iu.test(t)) || (continuation ? 'Continuation of preceding psalm' : 'Unlabelled psalm part');
     const allParagraphs = target.querySelectorAll('p');
     const trailingAnts = [];
-    for (const node of [...(containers.length ? target.childNodes : root.childNodes)].reverse()) {
+    for (const node of [...target.childNodes].reverse()) {
       if (!plain(node.toString())) continue;
       if (node.nodeType === 1 && antiphon(node)) trailingAnts.unshift(node);
       else break;
     }
     // A nested ora-ant following ora-psalm is outside target, already safe.
-    const lastVerseEnd = containers.length ? target.range[1] - '</div>'.length : fragment.trimEnd().length;
+    const closingTag = target === root ? '' : target.toString().match(/<\/[^>]+>\s*$/u)?.[0];
+    const lastVerseEnd = closingTag ? target.range[1] - closingTag.length : fragment.trimEnd().length;
     const insertAt = trailingAnts[0]?.range[0] ?? lastVerseEnd;
     const inlineRubric = /Хвала Айцу\.(?:<br\s*\/?>|\s)*Верш Хвала Айцу чытаецца ў канцы ўсіх псальмаў і песняў\./u.exec(fragment);
     const notes = allParagraphs.filter(n => /^(?:Хвала Айцу\.|Хвала Айцу і Сыну|Як была спрадвеку)/iu.test(plain(n.toString())));
@@ -64,6 +68,16 @@ function inspectUncached(html, { field = '', continuation = false, rule } = {}) 
     // Multiple actual psalm headings inside a choice require editorial review.
     const headings = allParagraphs.filter(n => /^(?:Псальм\s+\d|Песн[яь]\s*\(?[А-ЯІЎЁ])/u.test(plain(n.toString())));
     if (headings.length > 1) status = 'REVIEW_MULTIPLE_PSALMS';
+    if (full.length === 1 && !daniel && !continuation) {
+      const suffix = text.slice(full[0].index + full[0][0].length).trim();
+      const antiphonSuffix = prayerText(trailingAnts.map(n => n.toString()).join(' '));
+      const repeatedResponse = /^Н\.\s/u.test(suffix) && text.slice(0, full[0].index).includes(suffix);
+      if (suffix !== antiphonSuffix && !repeatedResponse) status = 'REVIEW_DOXOLOGY_POSITION';
+      // A repeated antiphon between Scripture and the ending is also wrong.
+      const endingIndex = allParagraphs.findIndex(n => prayerText(n.toString()).includes('Хвала Айцу і Сыну'));
+      if (allParagraphs.some((n, i) => i > 1 && i < endingIndex && antiphon(n))) status = 'REVIEW_DOXOLOGY_POSITION';
+    }
+    if (sharedDoxology) status = 'REVIEW_SHARED_DOXOLOGY';
     if (['missing', 'incomplete'].includes(status)) {
       // Only standalone doxology paragraphs can be safely replaced.
       if (partial && !notes.length && !inlineRubric) status = 'REVIEW_INLINE_DOXOLOGY';
