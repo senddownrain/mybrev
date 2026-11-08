@@ -38,7 +38,6 @@
             <div v-else-if="block.type === 'point'" :id="block.id" class="introduction-point">
               <span class="introduction-point__mark">
                 <span class="introduction-point__number" data-source-text>{{ block.number }}.</span>
-                <sup v-if="block.number === 177" class="editorial-reference"><router-link :to="{ hash: '#numbering-note-177' }" replace aria-label="Заўвага да нумарацыі пункта 177">†</router-link></sup>
               </span>
               <DocumentTextBlocks :blocks="block.blocks" />
             </div>
@@ -71,13 +70,7 @@
         </section>
 
         <footer class="introduction-footer">
-          <aside v-for="note in introduction.editorialNotes" :id="note.id" :key="note.id" class="editorial-note" aria-label="Рэдакцыйная заўвага">
-            <p>† {{ note.text }} <a :href="note.verificationUrl" target="_blank" rel="noopener noreferrer">Пар. пункт {{ note.point }}</a>.</p>
-          </aside>
           <p class="introduction-copyright">© Канферэнцыя Каталіцкіх Біскупаў Беларусі</p>
-          <ul class="introduction-sources" aria-label="Крыніцы тэксту">
-            <li v-for="source in introduction.sources" :key="source.url"><a :href="source.url" target="_blank" rel="noopener noreferrer">{{ source.label }}</a></li>
-          </ul>
         </footer>
       </article>
     </main>
@@ -111,7 +104,6 @@ h3.introduction-subheading { font-size: 1.05em; }
 h4.introduction-subheading { font-size: 1em; font-style: italic; font-weight: 600; }
 .introduction-point { display: flow-root; margin-block: 1.1em; scroll-margin-top: 80px; }
 .introduction-point__mark { float: left; margin-right: .45em; color: var(--document-red); font-weight: 700; font-variant-numeric: tabular-nums; }
-.editorial-reference { display: inline-block; margin-left: .25em; }
 .introduction-source-note { margin-top: 24px; }
 .precedence-table__subtitle { margin-bottom: 20px; text-align: center; font-style: italic; }
 .precedence-group { margin-top: 28px; }
@@ -123,8 +115,5 @@ h4.introduction-subheading { font-size: 1em; font-style: italic; font-weight: 60
 .precedence-subpoints > li + li { margin-top: .5em; }
 .precedence-paragraph + .precedence-paragraph { margin-top: 1em; }
 .introduction-footer { margin-top: 44px; padding-top: 24px; border-top: 1px solid var(--nav-border); font-size: .9rem; line-height: 1.6; }
-.editorial-note { margin-bottom: 24px; scroll-margin-top: 80px; }
 .introduction-copyright { margin-block: 16px; }
-.introduction-sources { display: flex; flex-wrap: wrap; gap: 4px 24px; padding: 0; list-style: none; }
-.introduction-sources a { display: inline-block; padding-block: 10px; }
 </style>

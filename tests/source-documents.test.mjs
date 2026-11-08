@@ -143,3 +143,11 @@ test('registry and document metadata agree strictly for every decree', () => {
     if (registry[index].sourceDocument) assert.equal(registry[index].sourceDocument, doc.sourceFile);
   }
 });
+
+test('introduction renders original text without the editorial footnote or external source links', () => {
+  const vue = read('src/views/LiturgyHoursIntroduction.vue');
+  assert.doesNotMatch(vue, /editorialNotes|introduction\.sources|numbering-note-177|editorial-reference|editorial-note/);
+  assert.doesNotMatch(vue, /lh\.catholic\.by|Catholic\.by|source\.url/);
+  assert.match(vue, /© Канферэнцыя Каталіцкіх Біскупаў Беларусі/);
+  assert.match(vue, /introduction\.precedence\.paragraphs/);
+});
