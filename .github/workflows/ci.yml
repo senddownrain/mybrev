@@ -64,6 +64,9 @@ jobs:
       - name: Public content cache refresh regression tests
         run: node --test tests/content-cache.test.mjs
 
+      - name: Ordinary Friday Vespers repair regressions (offline)
+        run: node --test tests/ordinary-friday-vespers.test.mjs
+
       - name: Liturgical editor source and persistence regression tests
         run: node --test tests/day-editor-persistence.test.mjs
 
