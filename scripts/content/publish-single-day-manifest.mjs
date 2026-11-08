@@ -116,12 +116,14 @@ export async function run({ apply = false, keyPath }) {
 }
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const args = process.argv.slice(2);
-  if (args.some(x => x !== '--apply' && x !== '--service-account' && x !== process.env.GOOGLE_APPLICATION_CREDENTIALS)) {
+  const keyIndex = args.indexOf('--service-account');
+  const keyPath = keyIndex >= 0 ? args[keyIndex + 1] : process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  const legal = keyIndex >= 0 ? ['--service-account', keyPath, '--apply'] : ['--apply'];
+  if (!keyPath || args.some(x => !legal.includes(x)) || (keyIndex >= 0 && !args[keyIndex + 1])) {
     console.error('Expected --service-account <path> [--apply]');
     process.exitCode = 1;
   } else {
-    run({ apply: args.includes('--apply'),
-      keyPath: args[args.indexOf('--service-account') + 1] || process.env.GOOGLE_APPLICATION_CREDENTIALS })
+    run({ apply: args.includes('--apply'), keyPath })
       .catch(e => { console.error(e.message); process.exitCode = 1; });
   }
 }
