@@ -24,6 +24,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Immaculate Heart movable memorial regression tests
+        run: node --test tests/immaculate-heart-hours.test.mjs
+
+      - name: Sunday first Vespers and cache release regression tests
+        run: node --test tests/liturgical-vespers.test.mjs tests/content-cache.test.mjs
+
+      - name: I Vespers independent-source audit safety checks
+        run: node --test tests/heart-first-vespers-source-audit.test.mjs
+
+      - name: XI Sunday printed-source integrity and three-document atomic release
+        run: node --test tests/xi-sunday-first-vespers-source.test.mjs tests/xi-sunday-atomic-release.test.mjs
+
       - name: Lint
         run: npm run lint
 

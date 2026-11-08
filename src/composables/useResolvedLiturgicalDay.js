@@ -26,6 +26,7 @@ export function useResolvedLiturgicalDay() {
   } = useLiturgicalContent();
   const day = ref(null);
   const context = ref(null);
+  const periodDay = ref(null);
   const pending = ref(false);
   const error = ref('');
   let sequence = 0;
@@ -38,6 +39,7 @@ export function useResolvedLiturgicalDay() {
     error.value = '';
     day.value = null;
     context.value = null;
+    periodDay.value = null;
     if (!date.isValid()) {
       error.value = 'Няправільная дата літургічнага дня.';
       pending.value = false;
@@ -58,8 +60,9 @@ export function useResolvedLiturgicalDay() {
         content.context?.periodWeek,
         content.context?.dayOfWeek,
       );
-      const periodDay = content.itemsDays?.find((item) => item.id === periodId) || null;
-      const resolved = periodDay ? resolveDayAgainstPeriod(selected, periodDay) : selected;
+      const currentPeriodDay = content.itemsDays?.find((item) => item.id === periodId) || null;
+      periodDay.value = currentPeriodDay;
+      const resolved = currentPeriodDay ? resolveDayAgainstPeriod(selected, currentPeriodDay) : selected;
       // Office descriptor of the legal option that owns this document
       // (officeKind, Te Deum, Compline, I/II Vespers, fallbacks vs choices).
       // A document reached by an old link that is not a legal Office keeps
@@ -121,6 +124,7 @@ export function useResolvedLiturgicalDay() {
   return {
     day,
     context: computed(() => context.value),
+    periodDay: computed(() => periodDay.value),
     pending: computed(() => pending.value),
     error: computed(() => error.value),
     reload: load,

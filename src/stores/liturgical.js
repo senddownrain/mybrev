@@ -59,7 +59,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     return readResource(contentKey(dateKey(date), diocese, options.referenceOptionId, options.periodOnly), async (session) => {
       const { context, dynamicFeastCodes, resolved } = resolveContext(mDate, diocese, options.referenceOptionId, options.periodOnly);
       return fetchContentForDate(mDate, context, dynamicFeastCodes, session, { resolved, diocese });
-    }, options);
+    }, { ...options, fresh: true });
   }
 
   async function fetchDaysByDate(date, options = {}) {
@@ -110,7 +110,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   return {
     isLoading, error,
     fetchContentByDate, fetchDaysByDate, fetchReadingsByDate, fetchDayByPeriod,
-    getCachedContent: (date, diocese, referenceOptionId, periodOnly) => publicContentCache.peek(contentKey(dateKey(date), diocese, referenceOptionId, periodOnly)) ?? null,
+    getCachedContent: (date, diocese, referenceOptionId, periodOnly) => publicContentCache.peekFresh(contentKey(dateKey(date), diocese, referenceOptionId, periodOnly)) ?? null,
     resolveOrdoDay: (date, diocese = currentOrdoDiocese()) => resolveRuntimeDay(dateKey(date), { diocese }),
     getCachedReadings: (date, options) => publicContentCache.peek(readingsKey(dateKey(date), options)) ?? null,
     primeContent: (date, diocese, referenceOptionId, periodOnly) => publicContentCache.prime([contentKey(dateKey(date), diocese, referenceOptionId, periodOnly)]),

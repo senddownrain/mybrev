@@ -71,6 +71,7 @@ export function createContentCache({ storage, getRevision, isOnline, onError = (
   return {
     read,
     peek: (key) => memory.get(key)?.data,
+    peekFresh: (key) => (isFresh(memory.get(key)) ? memory.get(key).data : undefined),
     prime: (keys) => Promise.all(keys.map(restore)),
     async keys() {
       try { return [...new Set([...memory.keys(), ...await storage.keys()])]; }
