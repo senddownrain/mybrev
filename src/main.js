@@ -19,7 +19,7 @@ primeContentCache().catch(error => console.warn('[main] Local cache unavailable:
   // Calendar definitions and manual year overrides: cached copy is already
   // applied; this only checks Firestore in the background.
   import('./services/ordoCalendarService')
-    .then(({ refreshCalendarDefinitions }) => refreshCalendarDefinitions())
+    .then(({ startCalendarRevalidation }) => startCalendarRevalidation())
     .catch(error => console.warn('[main] Calendar refresh skipped:', error.message))
 })
 

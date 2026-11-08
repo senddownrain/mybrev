@@ -224,11 +224,11 @@ test('«Выбраць»: a date alone opens the main screen of that day (Hours 
     { name: 'ReadingsByDate', params: { date: '2026-10-06' }, query: { diocese: 'pinsk' } });
 });
 
-test('Immaculate Heart + another obligatory memorial: two memorial choices, no weekday (§11.2)', () => {
+test('Immaculate Heart + another obligatory memorial: weekday and two optional memorials (2671/98/L)', () => {
   const day = resolveRuntimeDay('2026-06-13', { diocese: 'minsk-mohilev' });
-  assert.notEqual(day.primary.kind, 'temporal');
-  assert.deepEqual([day.primary, ...day.alternatives].map((item) => item.rankKind), ['memorial', 'memorial']);
-  assert.deepEqual(day.alternatives.map((item) => item.role), ['alternative']);
+  assert.equal(day.primary.kind, 'temporal');
+  assert.deepEqual(day.alternatives.map((item) => item.rankKind), ['optional-memorial', 'optional-memorial']);
+  assert.deepEqual(day.alternatives.map((item) => item.role), ['alternative', 'alternative']);
 });
 
 // ---------------------------------------------------------------------------

@@ -1,0 +1,231 @@
+{
+  "status": "PROPOSED_ONLY_REQUIRES_NEW_ACCEPTANCE",
+  "approved": false,
+  "originalOperationsSha256": "a9bd4ad1facefdd7f2df0382eefc841bec3d50d7fcf34fbc571aed49f3094565",
+  "proposedOperationsSha256": "bc21ba7e9f7d4dc5f210bf1fee67247cd3cbe9a602788ce92d5ed862a2753238",
+  "originalCount": 72,
+  "proposedCount": 71,
+  "removed": [
+    {
+      "path": "liturgicalDioceseOverrides/grodno--our-lady-trakai",
+      "approvedOperation": {
+        "path": "liturgicalDioceseOverrides/grodno--our-lady-trakai",
+        "action": "update",
+        "precondition": {
+          "exists": true,
+          "updateTime": "2026-10-01T08:55:15.578926Z",
+          "sha256": "071aa73e3f276f7bbe436db7da79deba6a36abd20b8ddee1d34099aaa237fc03"
+        },
+        "fields": {
+          "daysRef": {
+            "before": {
+              "_date": "05.07",
+              "_place": "grodno",
+              "_rank": "memoria-ad-libitum",
+              "dayIds": [
+                "05-07-our-lady-trakai-grodno-memoria-ad-libitum",
+                "05-07-our-lady-trakai-grodno"
+              ],
+              "source": "fixed"
+            },
+            "after": {
+              "_date": "05.07",
+              "_place": "grodno",
+              "_rank": "memoria",
+              "dayIds": [
+                "05-07-our-lady-trakai-grodno"
+              ],
+              "source": "fixed"
+            }
+          },
+          "rank": {
+            "before": "festum",
+            "after": "memoria"
+          },
+          "source": {
+            "before": {
+              "basis": "",
+              "evidence": [
+                "grodno:2027-07-10:c0"
+              ],
+              "file": "src/data/ordo/layers.js",
+              "rawText": "Найсв. Панны Марыі Тракельскай"
+            },
+            "after": {
+              "file": "src/constants/fixedCalendar.js",
+              "rawText": "Найсв. Панны Марыі Тракельскай"
+            }
+          },
+          "dateRule": {
+            "before": {
+              "day": 10,
+              "month": 7,
+              "type": "fixed"
+            },
+            "after": {
+              "day": 5,
+              "month": 7,
+              "type": "fixed"
+            }
+          }
+        }
+      },
+      "reason": "Production already contains target values; do not rewrite independently published change"
+    }
+  ],
+  "changed": [
+    {
+      "path": "liturgicalCalendarMeta/current",
+      "approvedOperation": {
+        "path": "liturgicalCalendarMeta/current",
+        "action": "publish-meta",
+        "precondition": {
+          "exists": true,
+          "updateTime": "2026-10-24T16:48:11.306509Z",
+          "sha256": "4c5cb3324ebff435c04ac74673c1db4e7dce5798b9b3e320d808dbc9271c3209"
+        },
+        "fields": {
+          "schemaVersion": {
+            "before": 1,
+            "after": 1
+          },
+          "revision": {
+            "before": 3,
+            "after": 4
+          },
+          "notesRevision": {
+            "before": 4,
+            "after": 4
+          },
+          "sourceSha256": {
+            "beforeAbsent": true,
+            "after": "a55dc34c89317bd0a4b683ea84b46941213aa2b981d0a9de1fe3ebeb71dc9696"
+          },
+          "counts": {
+            "beforeAbsent": true,
+            "after": {
+              "celebrations": 242,
+              "dioceseOverrides": 77
+            }
+          },
+          "publishedAt": {
+            "before": "2026-10-07T18:15:01.305Z",
+            "afterTransform": "REQUEST_TIME"
+          }
+        }
+      },
+      "proposedOperation": {
+        "path": "liturgicalCalendarMeta/current",
+        "action": "publish-meta",
+        "precondition": {
+          "exists": true,
+          "updateTime": "2026-11-07T14:03:05.302442Z",
+          "sha256": "f98551a4dc0836608f67e23a479e83f2a26480d5cc7ac65fe5b0c4a0f967f1d4"
+        },
+        "fields": {
+          "schemaVersion": {
+            "before": 1,
+            "after": 1
+          },
+          "revision": {
+            "before": 3,
+            "after": 4
+          },
+          "notesRevision": {
+            "before": 6,
+            "after": 6
+          },
+          "sourceSha256": {
+            "beforeAbsent": true,
+            "after": "a55dc34c89317bd0a4b683ea84b46941213aa2b981d0a9de1fe3ebeb71dc9696"
+          },
+          "counts": {
+            "beforeAbsent": true,
+            "after": {
+              "celebrations": 242,
+              "dioceseOverrides": 77
+            }
+          },
+          "publishedAt": {
+            "before": "2026-11-07T14:02:10.882Z",
+            "afterTransform": "REQUEST_TIME"
+          }
+        }
+      }
+    }
+  ],
+  "unchangedOperationPaths": [
+    "liturgicalCelebrations/sv-irenaeus",
+    "liturgicalCelebrations/archangels-michael-gabriel-raphael",
+    "liturgicalCelebrations/mary-mother-church",
+    "liturgicalCelebrations/immaculate-heart",
+    "liturgicalCelebrations/sv-john-henry-newman",
+    "liturgicalCelebrations/christ-the-high-priest",
+    "liturgicalDioceseOverrides/vitebsk--bl-michal-sopocko",
+    "liturgicalDioceseOverrides/vitebsk--bl-antoni-leszczewicz-jerzy-kaszyra",
+    "liturgicalDioceseOverrides/vitebsk--our-lady-braslau",
+    "liturgicalDioceseOverrides/vitebsk--vitebsk-cathedral-dedication",
+    "liturgicalDioceseOverrides/vitebsk--bl-celina-borzecka",
+    "liturgicalDioceseOverrides/vitebsk--bl-jurgis-matulaitis",
+    "liturgicalDioceseOverrides/vitebsk--sv-andrei-bobola",
+    "liturgicalDioceseOverrides/vitebsk--our-lady-budslav",
+    "liturgicalDioceseOverrides/vitebsk--sv-josaphat",
+    "liturgicalDioceseOverrides/vitebsk--nativity-blessed-virgin-mary",
+    "liturgicalDioceseOverrides/pinsk--sv-andrei-bobola",
+    "liturgicalDioceseOverrides/pinsk--our-lady-mount-carmel",
+    "liturgicalDioceseOverrides/pinsk--holy-name-mary",
+    "liturgicalDioceseOverrides/pinsk--sv-josaphat",
+    "liturgicalDioceseOverrides/pinsk--our-lady-mother-mercy",
+    "liturgicalDioceseOverrides/grodno--our-lady-congregational",
+    "liturgicalDioceseOverrides/grodno--bl-celina-borzecka",
+    "liturgicalDioceseOverrides/grodno--sv-casimir",
+    "liturgicalDioceseOverrides/grodno--sv-maximilian-kolbe",
+    "liturgicalDioceseOverrides/grodno--our-lady-mother-mercy",
+    "liturgicalDioceseOverrides/grodno--bl-boleslawa-lament",
+    "liturgicalDioceseOverrides/grodno--bl-bronislawa",
+    "liturgicalDioceseOverrides/grodno--bl-honorat-kozminski",
+    "liturgicalDioceseOverrides/grodno--bl-jurgis-matulaitis",
+    "liturgicalDioceseOverrides/grodno--bl-karolina-kozka",
+    "liturgicalDioceseOverrides/grodno--bl-ladislaus-gielniow",
+    "liturgicalDioceseOverrides/grodno--bl-maria-jesus-good-shepherd",
+    "liturgicalDioceseOverrides/grodno--bl-salomea",
+    "liturgicalDioceseOverrides/grodno--bl-sancja-szymkowiak",
+    "liturgicalDioceseOverrides/grodno--bl-vincent-lewoniuk-companions",
+    "liturgicalDioceseOverrides/grodno--five-martyred-brothers",
+    "liturgicalDioceseOverrides/grodno--mary-mother-church",
+    "liturgicalDioceseOverrides/grodno--our-lady-help-of-christians",
+    "liturgicalDioceseOverrides/grodno--our-lady-loreto",
+    "liturgicalDioceseOverrides/grodno--our-lady-mount-carmel",
+    "liturgicalDioceseOverrides/grodno--our-lady-of-angels",
+    "liturgicalDioceseOverrides/grodno--sv-adalbert-wojciech-bishop-martyr",
+    "liturgicalDioceseOverrides/grodno--sv-albert-chmielowski",
+    "liturgicalDioceseOverrides/grodno--sv-barbara",
+    "liturgicalDioceseOverrides/grodno--sv-faustina-kowalska",
+    "liturgicalDioceseOverrides/grodno--sv-george-martyr",
+    "liturgicalDioceseOverrides/grodno--sv-jadwiga-queen",
+    "liturgicalDioceseOverrides/grodno--sv-raphael-kalinowski",
+    "liturgicalDioceseOverrides/grodno--sv-stanislaus-bishop-martyr",
+    "liturgicalDioceseOverrides/grodno--sv-wenceslaus",
+    "liturgicalDioceseOverrides/pinsk--bl-czeslaw",
+    "liturgicalDioceseOverrides/pinsk--bl-honorat-kozminski",
+    "liturgicalDioceseOverrides/pinsk--bl-maria-stella-companions",
+    "liturgicalDioceseOverrides/pinsk--mary-mother-church",
+    "liturgicalDioceseOverrides/pinsk--our-lady-budslav",
+    "liturgicalDioceseOverrides/pinsk--our-lady-lahishyn",
+    "liturgicalDioceseOverrides/pinsk--our-lady-of-lourdes",
+    "liturgicalDioceseOverrides/pinsk--our-lady-perpetual-help",
+    "liturgicalDioceseOverrides/pinsk--sv-barbara",
+    "liturgicalDioceseOverrides/pinsk--sv-dismas",
+    "liturgicalDioceseOverrides/pinsk--sv-florian",
+    "liturgicalDioceseOverrides/pinsk--sv-hyacinth",
+    "liturgicalDioceseOverrides/pinsk--sv-john-paul-ii",
+    "liturgicalYearOverrides/2026-minsk-mohilev-sv-stanislaus-bishop-martyr",
+    "liturgicalYearOverrides/2027-grodno-sv-peter-damian",
+    "liturgicalYearOverrides/2027-grodno-holy-name-mary",
+    "liturgicalYearOverrides/2027-grodno-grodno-cathedral-dedication",
+    "liturgicalYearOverrides/auto-transfer-2027-pinsk-sv-andrei-bobola",
+    "liturgicalYearOverrides/auto-transfer-2032-pinsk-sv-andrei-bobola"
+  ],
+  "unchangedCount": 70,
+  "added": []
+}

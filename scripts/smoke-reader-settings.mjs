@@ -47,9 +47,10 @@ try {
         request.onupgradeneeded = () => request.result.createObjectStore('entries');
         request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error);
       });
+      const cache = await import('/src/utils/publicContentCache.js');
       const entries = [
-        [['content', date, 'minsk-mohilev'], content],
-        [['readings', date, '', true, 'minsk-mohilev'], { context: content.context, items: [{ id: 'test-reading', title: 'Чытанне', reading1: { bible: 'Лк 1', text: prose }, psalm: { chorus: 'Рэфрэн', verses: ['Першы радок\nДругі радок'] }, gospel: { bible: 'Лк 2', text: prose }, sequence: { text: 'Першы радок\nДругі радок' } }] }],
+        [JSON.parse(cache.contentKey(date, 'minsk-mohilev')), content],
+        [JSON.parse(cache.readingsKey(date, { includeAlternatives: true, diocese: 'minsk-mohilev' })), { context: content.context, items: [{ id: 'test-reading', title: 'Чытанне', reading1: { bible: 'Лк 1', text: prose }, psalm: { chorus: 'Рэфрэн', verses: ['Першы радок\nДругі радок'] }, gospel: { bible: 'Лк 2', text: prose }, sequence: { text: 'Першы радок\nДругі радок' } }] }],
         [['prayer-content', 3], { prayers: [{ id: 'settings-prayer', title: 'Малітва', text: prayerText, textFormat: 'mybrev-markdown', verified: true, tags: [] }], categories: [] }],
       ];
       await new Promise((resolve, reject) => {

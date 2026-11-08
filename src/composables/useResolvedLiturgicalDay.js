@@ -1,3 +1,5 @@
+import { effectiveOrdoDiocese } from '@/utils/ordoDiocese';
+import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
@@ -65,6 +67,7 @@ export function useResolvedLiturgicalDay() {
       const option = findOptionByDayId(content, id);
       return {
         ...resolved,
+        ...(option?.ordo?.celebrationId ? { _feastName: option.ordo.title, _rank: option.ordo.rank } : {}),
         _calendarDate: date.format('YYYY-MM-DD'),
         _contextPeriodType: content.context?.periodType || '',
         _ordo: option?.ordo || null,
@@ -114,7 +117,7 @@ export function useResolvedLiturgicalDay() {
     }
   }
 
-  watch([() => route.params.day, () => route.params.id, () => route.query.reference, () => route.query.diocese, () => route.query.view], load, { immediate: true });
+  watch([ordoCalendarEpoch, effectiveOrdoDiocese, () => route.params.day, () => route.params.id, () => route.query.reference, () => route.query.diocese, () => route.query.view], load, { immediate: true });
   return {
     day,
     context: computed(() => context.value),

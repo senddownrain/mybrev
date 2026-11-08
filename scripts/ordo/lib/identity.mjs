@@ -64,6 +64,11 @@ export function loadFixedCatalog(root) {
     const sameDate = documents.filter((doc) => doc.ddmm === item.date);
     // A rank corrected in fixedCalendar.js (e.g. Mary Magdalene → feast) keeps
     // its existing `days` document until the data is migrated.
+    // Newman has no approved proper in this corpus; fuzzy 'John' must never bind Leonardi.
+    if (fallbackFixedCelebrationId(item) === 'sv-john-henry-newman') return {
+      kind: 'fixed', id: 'sv-john-henry-newman', ddmm: item.date, mmdd: mmddFromDdmm(item.date),
+      title: item.title, rank, place: place || null, stems, fixedCalendarIndex: index, dayIds: [],
+    };
     let candidates = scoreDocs(sameDate.filter((doc) => doc.rank === rank));
     if (!candidates.length) candidates = scoreDocs(sameDate).filter(({ score }) => score >= 0.6);
     const matches = candidates.length ? documents.filter((doc) => celebrationSlug(doc.dayId) === celebrationSlug(candidates[0].doc.dayId) && doc.ddmm === item.date) : [];

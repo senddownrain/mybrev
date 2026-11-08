@@ -14,7 +14,6 @@ import { compareCandidates } from './precedence.js';
 
 const OBLIGATORY_MEMORIAL = (candidate) => candidate.rankKind === 'memorial';
 const ANY_MEMORIAL = (candidate) => candidate.rankKind === 'memorial' || candidate.rankKind === 'optional-memorial';
-const CONCURRENT_CHOICE_VALUES = new Set(['legal-choice', 'both-optional']);
 
 /** Jesus Christ, the High and Eternal Priest (national feast, Thursday after Pentecost). */
 export const CHRIST_HIGH_PRIEST_ID = 'christ-the-high-priest';
@@ -61,21 +60,22 @@ export function resolveDisplay(candidates, season) {
   const temporal = active.find((item) => item.kind === 'temporal');
   let celebrations = active.filter((item) => item.kind !== 'temporal').sort(compareCandidates);
 
-  // Product rule (Belarus, final phase §11.2–11.3): when the Immaculate Heart
-  // or Mary, Mother of the Church meets another obligatory memorial, both
-  // obligatory memorials are legal choices (Marian first) and the weekday is
-  // NOT a third option. `concurrentObligatoryMemorials` marks the celebrations
-  // that open this choice ('legal-choice'; the legacy value 'both-optional'
-  // stored in older published definitions means the same).
   const obligatory = celebrations.filter(OBLIGATORY_MEMORIAL);
-  const memorialChoice = obligatory.length > 1
-    && obligatory.some((item) => CONCURRENT_CHOICE_VALUES.has(item.rules?.concurrentObligatoryMemorials));
-  if (memorialChoice) {
-    appliedRules.push({
-      rule: 'concurrent-obligatory-memorials-legal-choice',
-      ids: obligatory.map((item) => item.id),
-      basis: 'product-decision',
+  const motherChurch = obligatory.find((item) => item.id === 'mary-mother-church');
+  const heartCollision = obligatory.length > 1 && obligatory.some((item) => item.id === 'immaculate-heart');
+  if (motherChurch) {
+    celebrations = celebrations.filter((item) => {
+      if (item !== motherChurch && ANY_MEMORIAL(item)) {
+        suppressed.push(suppress(item, 'mother-church-prevails'));
+        return false;
+      }
+      return true;
     });
+    appliedRules.push({ rule: 'mother-church-prevails', basis: 'CDW 24.03.2018' });
+  } else if (heartCollision) {
+    celebrations = celebrations.map((item) => OBLIGATORY_MEMORIAL(item)
+      ? { ...item, rank: 'memoria-ad-libitum', rankKind: 'optional-memorial', precedence: 12 } : item);
+    appliedRules.push({ rule: 'immaculate-heart-both-optional', basis: '2671/98/L', ids: obligatory.map((item) => item.id) });
   }
 
   // Optional memorials are never the primary office.
@@ -113,12 +113,12 @@ export function resolveDisplay(candidates, season) {
 
   const primaryIsPrivilegedWeekday = primary === temporal && temporal.precedence === 9;
   const primaryIsOrdinaryWeekday = primary === temporal && temporal.precedence === 13;
-  const hasObligatoryMemorial = obligatory.length > 0;
+  const hasObligatoryMemorial = celebrations.some(OBLIGATORY_MEMORIAL);
 
   celebrations.forEach((candidate) => {
     if (candidate === primary) return;
     if (candidate.id === 'saturday-blessed-virgin-mary') {
-      if (primaryIsOrdinaryWeekday && !hasObligatoryMemorial) {
+      if (primaryIsOrdinaryWeekday && !hasObligatoryMemorial && !heartCollision) {
         alternatives.push({ ...candidate, role: 'alternative' });
         appliedRules.push({ rule: 'saturday-memorial-of-mary' });
       } else {
@@ -131,17 +131,6 @@ export function resolveDisplay(candidates, season) {
       return;
     }
     if (candidate.rankKind === 'feast') {
-      // Provisional product rule (§11.4): Christ the High Priest meeting
-      // another feast keeps both as legal options; the old automatic
-      // «row 8 proper feast omitted» is not applied without a Belarus
-      // normative source.
-      if (primary.rankKind === 'feast' && [candidate.id, primary.id].includes(CHRIST_HIGH_PRIEST_ID)) {
-        alternatives.push({ ...candidate, role: 'alternative', provisional: true });
-        appliedRules.push({
-          rule: 'christ-high-priest-collision-both-options', id: candidate.id, with: primary.id, status: 'provisional',
-        });
-        return;
-      }
       suppressed.push(suppress(candidate, 'impeded-omitted'));
       appliedRules.push({ rule: 'impeded-feast-omitted', id: candidate.id });
       return;
@@ -160,7 +149,7 @@ export function resolveDisplay(candidates, season) {
       return;
     }
     if (primary.rankKind === 'memorial') {
-      if (OBLIGATORY_MEMORIAL(candidate) && (candidate.precedence === primary.precedence || memorialChoice)) {
+      if (OBLIGATORY_MEMORIAL(candidate) && (candidate.precedence === primary.precedence)) {
         alternatives.push({ ...candidate, role: 'alternative' });
         appliedRules.push({ rule: 'concurrent-obligatory-memorials-choice', id: candidate.id });
       } else {

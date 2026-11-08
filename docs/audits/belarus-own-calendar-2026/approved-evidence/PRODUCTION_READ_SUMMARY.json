@@ -1,0 +1,74 @@
+{
+  "snapshotAtUTC": "2026-11-06T18:18:57.176119+00:00",
+  "snapshotAtMoscow": "2026-11-06T21:18:57.176119+03:00",
+  "projectId": "ibreviaryby",
+  "metaUpdateTime": "2026-10-24T16:48:11.306509Z",
+  "metaBookendsStable": true,
+  "counts": {
+    "liturgicalCalendarMeta": 1,
+    "liturgicalCelebrations": 241,
+    "liturgicalDioceseOverrides": 75,
+    "liturgicalYearOverrides": 15
+  },
+  "calendarCaptureHTTPRequests": 6,
+  "fullMetaAdditionalGET": 1,
+  "selectedContentGET": {
+    "requests": 11,
+    "found": 7,
+    "notFound": 4
+  },
+  "selectedContentQueries": [
+    {
+      "collection": "liturgicalProperTexts",
+      "documents": 5,
+      "ids": [
+        "08-09-nativity-blessed-virgin-mary",
+        "08-09-our-lady-braslau-vitebsk",
+        "09-10-sv-denis-companions",
+        "09-10-sv-john-leonardi",
+        "15-02-bl-michal-sopocko-grodno"
+      ],
+      "sha256": "3da731c0fddc5d56ade0c9193eeb512bf540049768c81deb9650da21354a852a"
+    },
+    {
+      "collection": "readings",
+      "documents": 1,
+      "ids": [
+        "08-09-nativity-blessed-virgin-mary"
+      ],
+      "sha256": "28eed0b1999542afc1271804cb57aabe498b4262e63e7c120b1f5b0cc202ce02"
+    },
+    {
+      "collection": "days",
+      "documents": 3,
+      "ids": [
+        "09-10-sv-denis-companions",
+        "09-10-sv-john-leonardi--pastors",
+        "09-10-sv-john-leonardi--works-of-mercy"
+      ],
+      "sha256": "fcbd144bafdfa47bea458472cfc929b867dab16db7f94d5948549c547240b445"
+    }
+  ],
+  "snapshotCollections": {
+    "liturgicalCalendarMeta": {
+      "sha256": "8305c627cf97a7a8ba1c38ae43d8784196c6e78b493498708e9eedff4795ed43",
+      "documentCount": 1
+    },
+    "liturgicalCelebrations": {
+      "sha256": "3b33f1d8ff1f9d3c400dd2db0e8a9b1c0830df4b489678dde0c18cf74308a6cf",
+      "documentCount": 241
+    },
+    "liturgicalDioceseOverrides": {
+      "sha256": "0758b7f0f1b9422546abd51f4aeecd5551d1615f1027bcd0e58e3217f290a571",
+      "documentCount": 75
+    },
+    "liturgicalYearOverrides": {
+      "sha256": "6712eb2cacb038537f45caf1d68f56d0cdc8e611e4ed715dcea36d864d92f1e4",
+      "documentCount": 15
+    }
+  },
+  "credentialUse": "FIREBASE_SERVICE_ACCOUNT_B64 decoded in memory; self-signed JWT over the configured HTTPS proxy; never printed or persisted",
+  "billingReadsMeasured": false,
+  "firestoreWrites": 0,
+  "privateSnapshotCommitted": false
+}

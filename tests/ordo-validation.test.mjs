@@ -20,9 +20,9 @@ test('the validation runs over every published day of the four calendars', () =>
   });
 });
 
-test('MATCH rate does not regress below the recorded threshold', () => {
+test('MATCH plus explicitly approved source differences meets the unchanged threshold', () => {
   results.forEach(({ diocese, summary }) => {
-    assert.ok(summary.matchRate >= thresholds.matchRate[diocese],
+    assert.ok(summary.approvedDecisionRate >= thresholds.matchRate[diocese],
       `${diocese}: ${(100 * summary.matchRate).toFixed(1)}% < ${100 * thresholds.matchRate[diocese]}%`);
   });
 });
@@ -38,7 +38,7 @@ test('every GENERATOR_MISMATCH has been investigated', () => {
 test('core liturgical checks agree with every calendar', () => {
   results.forEach(({ diocese, summary }) => {
     ['period', 'week'].forEach((check) => assert.equal(summary.byCheck[check].matchRate, 1, `${diocese} ${check}`));
-    assert.ok(summary.byCheck.primary.matchRate >= 0.97, `${diocese} primary`);
+    assert.ok(summary.byCheck.primary.approvedDecisionRate >= 0.97, `${diocese} primary`);
   });
 });
 

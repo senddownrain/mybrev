@@ -1,0 +1,55 @@
+{
+  "cases": 16068,
+  "changedDays": 641,
+  "byDiocese": {
+    "minsk-mohilev": 46,
+    "vitebsk": 73,
+    "pinsk": 188,
+    "grodno": 334
+  },
+  "publishedParity": 16068,
+  "sourceRows": 262,
+  "effectiveAssignments": 959,
+  "hiddenScopedIds": [
+    "grodno--bl-vincent-lewoniuk-companions",
+    "grodno--our-lady-help-of-christians",
+    "grodno--sv-jadwiga-queen",
+    "grodno--sv-albert-chmielowski",
+    "grodno--our-lady-of-angels",
+    "grodno--bl-sancja-szymkowiak",
+    "grodno--bl-bronislawa",
+    "grodno--bl-ladislaus-gielniow",
+    "grodno--bl-honorat-kozminski",
+    "grodno--five-martyred-brothers",
+    "grodno--bl-karolina-kozka",
+    "grodno--bl-salomea",
+    "grodno--bl-maria-jesus-good-shepherd",
+    "grodno--sv-barbara",
+    "pinsk--sv-dismas",
+    "pinsk--sv-florian",
+    "pinsk--our-lady-perpetual-help",
+    "pinsk--bl-czeslaw",
+    "pinsk--sv-hyacinth",
+    "pinsk--our-lady-lahishyn",
+    "pinsk--bl-maria-stella-companions",
+    "pinsk--bl-honorat-kozminski",
+    "pinsk--sv-barbara"
+  ],
+  "disabledManualIds": [
+    "2026-minsk-mohilev-sv-stanislaus-bishop-martyr",
+    "2027-grodno-sv-peter-damian",
+    "2027-grodno-holy-name-mary",
+    "2027-grodno-grodno-cathedral-dedication"
+  ],
+  "includes": [
+    "primary",
+    "alternatives",
+    "commemorations",
+    "suppressed",
+    "Office",
+    "readings/Mass references",
+    "I/II Vespers"
+  ],
+  "productionWrites": 0,
+  "deltaSha256": "e299e3060985f33e991b5e76378fc02b668bfbf44a1dbc929764c2e573fd0fba"
+}

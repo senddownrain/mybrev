@@ -14,6 +14,7 @@ import moment from '../src/utils/moment-be.js';
 import { getLiturgicalAlternatives, getReadingChoices } from '../src/utils/liturgicalAlternatives.js';
 import { materializeCommonForSeason } from '../src/utils/ordo/commonSeasons.js';
 import { createReadingChoiceStore, readingChoiceContext, READING_CHOICE_STORAGE_KEY } from '../src/utils/readingChoice.js';
+import { resolveLiturgicalDate } from '../src/utils/ordo/index.js';
 import { resolveRuntimeDay } from '../src/utils/ordo/runtime.js';
 import { buildOrdoDayOptions } from '../src/utils/ordoDayOptions.js';
 import { buildFeastTargets } from '../scripts/ordo/import-feasts.mjs';
@@ -165,9 +166,9 @@ test('holy-men R2 (the legal set the reference points to) offers exactly the two
   });
 });
 
-test('a real celebration of a holy woman in Easter shows the reference and the choices on its Office card (Jadwiga, 08.06.2038)', () => {
+test('a retained local proper of a holy woman in Easter keeps its reading choices (Jadwiga, no general diocesan assignment)', () => {
   const date = '2038-06-08';
-  const resolved = resolveRuntimeDay(date, { diocese: 'grodno' });
+  const resolved = resolveLiturgicalDate(date, { diocese: 'grodno', dioceseLayer: { add: [{ id: 'sv-jadwiga-queen', title: 'Св. Ядвігі, каралевы', rank: 'memoria', category: 'saint', layer: 'diocese', dioceseId: 'grodno', date: { type: 'fixed', month: 6, day: 8 }, templates: ['holy-women'], defaultTemplate: 'holy-women', daysRef: { source: 'fixed', _date: '08.06', dayIds: ['08-06-sv-jadwiga-queen-grodno'] } }] } });
   assert.equal(resolved.period, 'easter');
   const templates = new Map(buildFeastTargets().templates.map(({ id, data }) => [id, { id, ...data }]));
   const properDocs = fs.readdirSync(path.join(ROOT, 'patchs', 'db-feasts')).filter((n) => n.endsWith('.json')).map((n) => {

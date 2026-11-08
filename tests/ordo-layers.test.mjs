@@ -46,7 +46,7 @@ test('layers never copy the universal calendar', () => {
 });
 
 test('year overrides are valid, proven and not computable transfers', () => {
-  YEAR_OVERRIDES.forEach((override) => {
+  YEAR_OVERRIDES.filter((override) => override.enabled !== false).forEach((override) => {
     assert.deepEqual(validateYearOverride(override), []);
     override.evidence.forEach((itemId) => {
       const item = items.get(itemId);
@@ -80,15 +80,16 @@ test('fixedCalendar fixes found by stage 2', () => {
 test('diocesan data layers change only their diocese', () => {
   const pinsk = resolveLiturgicalDate('2026-08-22', { diocese: 'pinsk' });
   const minsk = resolveLiturgicalDate('2026-08-22', { diocese: 'minsk' });
-  assert.equal(pinsk.primary.id, 'our-lady-lahishyn');
-  assert.equal(pinsk.primary.officeKind, 'solemnity');
+  assert.equal(pinsk.primary.id, 'our-lady-queen');
+  assert.equal(pinsk.primary.officeKind, 'memorial');
   assert.equal(minsk.primary.id, 'our-lady-queen');
   const grodno = resolveLiturgicalDate('2027-04-23', { diocese: 'grodno' });
-  assert.equal(grodno.primary.id, 'sv-george-martyr');
-  assert.equal(resolveLiturgicalDate('2027-04-24', { diocese: 'grodno' }).primary.id, 'sv-adalbert-wojciech-bishop-martyr');
+  assert.equal(grodno.primary.kind, 'temporal');
+  assert.ok(grodno.alternatives.some((item) => item.id === 'sv-adalbert-wojciech-bishop-martyr'));
+  assert.ok(!resolveLiturgicalDate('2027-04-24', { diocese: 'grodno' }).alternatives.some((item) => item.id === 'sv-adalbert-wojciech-bishop-martyr'));
   assert.equal(resolveLiturgicalDate('2027-04-23', { diocese: 'vitebsk' }).primary.kind, 'temporal');
   const plan = getYearPlan(2027, { diocese: 'grodno' });
-  assert.equal(plan.celebrationDates.get('sv-stanislaus-bishop-martyr').date, '2027-05-08');
+  assert.equal(plan.celebrationDates.get('sv-stanislaus-bishop-martyr').date, '2027-04-11');
 });
 
 test('the real notes.json is accepted as context.notes', () => {

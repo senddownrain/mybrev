@@ -23,7 +23,7 @@ const DETECTORS = Object.freeze({
 
   'mary-mother-church-with-memorial': ({ days }) => days
     .filter((day) => [day.primary, ...day.alternatives].some((item) => item.id === 'mary-mother-church'))
-    .filter((day) => day.appliedRules.some((rule) => rule.rule === 'concurrent-obligatory-memorials-choice'))
+    .filter((day) => day.suppressed.some((item) => item.reason === 'mother-church-prevails'))
     .map((day) => occurrence(day.date, [day.primary, ...day.alternatives].map((item) => item.title).join(' / '), 'mary-mother-church')),
 
   'christ-high-priest-collision': ({ days }) => days
@@ -32,7 +32,7 @@ const DETECTORS = Object.freeze({
 
   'immaculate-heart-with-memorial': ({ days }) => days
     .filter((day) => [day.primary, ...day.alternatives].some((item) => item.id === 'immaculate-heart'))
-    .filter((day) => day.appliedRules.some((rule) => rule.rule === 'concurrent-obligatory-memorials-legal-choice'))
+    .filter((day) => day.appliedRules.some((rule) => rule.rule === 'immaculate-heart-both-optional'))
     .map((day) => occurrence(day.date, [day.primary, ...day.alternatives].map((item) => item.title).join(' / '), 'immaculate-heart')),
 
   'diocesan-patron-impeded': ({ plan }) => plan.transfers

@@ -35,6 +35,8 @@
 </template>
 <script setup>
 
+import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
+import { effectiveOrdoDiocese } from '@/utils/ordoDiocese';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
@@ -110,8 +112,8 @@ function formatTitleHtml(value) {
 }
 
 watch(
-  () => route.params.day,
-  async (routeDateParam) => {
+  () => [route.params.day, ordoCalendarEpoch.value, effectiveOrdoDiocese.value],
+  async ([routeDateParam]) => {
     const version = ++requestVersion;
     tomorrowContent.value = null;
     const date = moment(String(routeDateParam), ['YYYY-MM-DD', 'DD-MM-YYYY'], true);

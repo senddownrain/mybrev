@@ -58,7 +58,7 @@ test('the variant lookup selects only the variant document; a lookup without a v
 
 test('Our Lady of Budslav (02.07): rank and readings per diocese, from the diocesan calendars', () => {
   const kinds = Object.fromEntries(DIOCESES.map((diocese) => [diocese, options('2026-07-02', diocese).find((item) => item.id === 'our-lady-budslav').officeKind]));
-  assert.deepEqual(kinds, { 'minsk-mohilev': 'solemnity', vitebsk: 'feast', pinsk: 'memorial', grodno: 'optional-memorial' });
+  assert.deepEqual(kinds, { 'minsk-mohilev': 'solemnity', vitebsk: 'feast', pinsk: 'optional-memorial', grodno: 'optional-memorial' });
   const linked = { id: '02-07-our-lady-budslav-minsk', _date: '02.07', _dayId: '02-07-our-lady-budslav-minsk', _dayIds: ['02-07-our-lady-budslav-minsk', '02-07-our-lady-budslav-vitebsk', '02-07-our-lady-budslav'], _rank: 'solemnitas', _place: 'minsk-mohilev', title: '2 ліпеня — урачыстасць Маці Божай Будслаўскай', reading1: reading('Саф 3, 14–18'), reading2: reading('Рым 12, 9–16b'), gospel: reading('Лк 1, 39–56') };
   const weekday = { id: 'ordinary-w13-d5--2', _periodType: 'ordinary', _periodWeekNumber: 13, _dayOfWeek: 5, year: '2', title: 'Чацвер', reading1: reading('Быц 22, 1'), gospel: reading('Мц 9, 1') };
   const open = (docs, diocese) => {
@@ -68,13 +68,15 @@ test('Our Lady of Budslav (02.07): rank and readings per diocese, from the dioce
     return { screen: screenFor(loaded, query), loaded, default: screenFor(loaded, {}) };
   };
   // with the document linked to every Budslav option (_dayIds): the proper readings are used by Minsk, Vitebsk and Pinsk
-  for (const diocese of ['minsk-mohilev', 'vitebsk', 'pinsk']) {
+  for (const diocese of ['minsk-mohilev', 'vitebsk']) {
     assert.equal(open([linked, weekday], diocese).screen.activeGroup.documents[0].id, linked.id, `${diocese} opens the Budslav readings`);
   }
   // Grodno (optional memorial; the 2027 calendar has a weekday): the weekday readings, Budslav as an alternative
-  const grodno = open([linked, weekday], 'grodno');
-  assert.equal(grodno.screen.activeGroup.documents[0].id, weekday.id);
-  assert.ok(grodno.screen.groups.some((group) => group.documents.some((doc) => doc.id === linked.id)));
+  for (const diocese of ['grodno', 'pinsk']) {
+    const optional = open([linked, weekday], diocese);
+    assert.equal(optional.screen.activeGroup.documents[0].id, weekday.id);
+    assert.ok(optional.screen.groups.some((group) => group.documents.some((doc) => doc.id === linked.id)));
+  }
   // as published today (`_dayId` of Minsk only, no `_dayIds`): the other dioceses cannot find the document
   const { _dayIds: _unlinked, ...published } = linked;
   for (const diocese of ['vitebsk', 'pinsk', 'grodno']) {

@@ -1,0 +1,75 @@
+﻿path,action,field,before,after
+liturgicalCelebrations/sv-irenaeus,update,title,"""Св. Ірэнэя, біскупа і мучаніка""","""Св. Ірэнэя, біскупа, мучаніка і доктара Касцёла"""
+liturgicalCelebrations/archangels-michael-gabriel-raphael,update,title,"""Св. Міхала Архангёла, Св. Габрыэля і Рафаіла, архангёлаў""","""Св. Міхала Архангёла (апекуна Мінска-Магілёўскай правінцыі Касцёла), Св. Габрыэля і Рафаіла, архангёлаў"""
+liturgicalCelebrations/sv-john-henry-newman,create,title,"""ABSENT""","""Св. Джона Генры Ньюмана, прэзбітэра і доктара Касцёла"""
+liturgicalCelebrations/sv-john-henry-newman,create,rank,"""ABSENT""","""memoria-ad-libitum"""
+liturgicalCelebrations/sv-john-henry-newman,create,dateRule,"""ABSENT""","{""day"": 9, ""month"": 10, ""type"": ""fixed""}"
+liturgicalCelebrations/sv-john-henry-newman,create,enabled,"""ABSENT""",true
+liturgicalDioceseOverrides/vitebsk--bl-michal-sopocko,create,title,"""ABSENT""","""Бл. Міхала Сапоцькі, прэзбітэра"""
+liturgicalDioceseOverrides/vitebsk--bl-michal-sopocko,create,rank,"""ABSENT""","""memoria-ad-libitum"""
+liturgicalDioceseOverrides/vitebsk--bl-michal-sopocko,create,dateRule,"""ABSENT""","{""day"": 15, ""month"": 2, ""type"": ""fixed""}"
+liturgicalDioceseOverrides/vitebsk--bl-michal-sopocko,create,enabled,"""ABSENT""",true
+liturgicalDioceseOverrides/vitebsk--bl-antoni-leszczewicz-jerzy-kaszyra,update,title,"""Бл. Антонія Ляшчэвіча і Юрыя Кашыры, прэзбітэраў, і паплечнікаў, мучанікаў""","""Бл. Антонія Ляшчэвіча, Юрыя Кашыры, Мечыслава Багаткевіча, Уладыслава Мацковяка, Станіслава Пыртэка, прэзбітэраў, і паплечнікаў, мучанікаў"""
+liturgicalDioceseOverrides/vitebsk--our-lady-braslau,create,title,"""ABSENT""","""Найсв. Панны Марыі Браслаўскай"""
+liturgicalDioceseOverrides/vitebsk--our-lady-braslau,create,rank,"""ABSENT""","""festum"""
+liturgicalDioceseOverrides/vitebsk--our-lady-braslau,create,dateRule,"""ABSENT""","{""day"": 8, ""month"": 9, ""type"": ""fixed""}"
+liturgicalDioceseOverrides/vitebsk--our-lady-braslau,create,enabled,"""ABSENT""",true
+liturgicalDioceseOverrides/grodno--our-lady-trakai,update,rank,"""festum""","""memoria"""
+liturgicalDioceseOverrides/grodno--our-lady-trakai,update,dateRule,"{""day"": 10, ""month"": 7, ""type"": ""fixed""}","{""day"": 5, ""month"": 7, ""type"": ""fixed""}"
+liturgicalDioceseOverrides/grodno--our-lady-congregational,update,rank,"""memoria""","""memoria-ad-libitum"""
+liturgicalDioceseOverrides/grodno--bl-celina-borzecka,update,title,"""Бл. Цэліны Бажэцкай""","""Бл. Цэліны Бажэнцкай, законніцы"""
+liturgicalDioceseOverrides/grodno--bl-boleslawa-lament,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/grodno--bl-bronislawa,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--bl-honorat-kozminski,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--bl-jurgis-matulaitis,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/grodno--bl-karolina-kozka,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--bl-ladislaus-gielniow,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--bl-maria-jesus-good-shepherd,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--bl-salomea,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--bl-sancja-szymkowiak,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--bl-vincent-lewoniuk-companions,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--five-martyred-brothers,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--mary-mother-church,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/grodno--our-lady-help-of-christians,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--our-lady-loreto,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/grodno--our-lady-mount-carmel,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/grodno--our-lady-of-angels,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--sv-adalbert-wojciech-bishop-martyr,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/grodno--sv-albert-chmielowski,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--sv-barbara,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--sv-faustina-kowalska,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/grodno--sv-george-martyr,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/grodno--sv-jadwiga-queen,disable,enabled,true,false
+liturgicalDioceseOverrides/grodno--sv-raphael-kalinowski,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/grodno--sv-stanislaus-bishop-martyr,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/grodno--sv-wenceslaus,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/pinsk--bl-czeslaw,disable,enabled,true,false
+liturgicalDioceseOverrides/pinsk--bl-honorat-kozminski,disable,enabled,true,false
+liturgicalDioceseOverrides/pinsk--bl-maria-stella-companions,disable,enabled,true,false
+liturgicalDioceseOverrides/pinsk--mary-mother-church,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/pinsk--our-lady-budslav,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/pinsk--our-lady-lahishyn,disable,enabled,true,false
+liturgicalDioceseOverrides/pinsk--our-lady-of-lourdes,disable,enabled,"""ABSENT""",false
+liturgicalDioceseOverrides/pinsk--our-lady-perpetual-help,disable,enabled,true,false
+liturgicalDioceseOverrides/pinsk--sv-barbara,disable,enabled,true,false
+liturgicalDioceseOverrides/pinsk--sv-dismas,disable,enabled,true,false
+liturgicalDioceseOverrides/pinsk--sv-florian,disable,enabled,true,false
+liturgicalDioceseOverrides/pinsk--sv-hyacinth,disable,enabled,true,false
+liturgicalDioceseOverrides/pinsk--sv-john-paul-ii,disable,enabled,"""ABSENT""",false
+liturgicalYearOverrides/2026-minsk-mohilev-sv-stanislaus-bishop-martyr,disable,enabled,true,false
+liturgicalYearOverrides/2026-minsk-mohilev-sv-stanislaus-bishop-martyr,disable,effectiveDate,"""ABSENT""","""2026-04-16"""
+liturgicalYearOverrides/2027-grodno-sv-peter-damian,disable,enabled,true,false
+liturgicalYearOverrides/2027-grodno-sv-peter-damian,disable,effectiveDate,"""ABSENT""","""2027-02-20"""
+liturgicalYearOverrides/2027-grodno-holy-name-mary,disable,enabled,true,false
+liturgicalYearOverrides/2027-grodno-holy-name-mary,disable,effectiveDate,"""ABSENT""","""2027-09-11"""
+liturgicalYearOverrides/2027-grodno-grodno-cathedral-dedication,disable,enabled,true,false
+liturgicalYearOverrides/2027-grodno-grodno-cathedral-dedication,disable,effectiveDate,"""ABSENT""","""2027-12-06"""
+liturgicalYearOverrides/auto-transfer-2027-pinsk-sv-andrei-bobola,update,effectiveDate,"""2027-05-18""","""2027-05-17"""
+liturgicalYearOverrides/auto-transfer-2027-pinsk-sv-andrei-bobola,update,to,"""2027-05-18""","""2027-05-17"""
+liturgicalYearOverrides/auto-transfer-2027-pinsk-sv-andrei-bobola,update,computedDate,"""2027-05-18""","""2027-05-17"""
+liturgicalYearOverrides/auto-transfer-2032-pinsk-sv-andrei-bobola,update,to,"""2032-05-18""","""2032-05-17"""
+liturgicalYearOverrides/auto-transfer-2032-pinsk-sv-andrei-bobola,update,effectiveDate,"""2032-05-18""","""2032-05-17"""
+liturgicalYearOverrides/auto-transfer-2032-pinsk-sv-andrei-bobola,update,computedDate,"""2032-05-18""","""2032-05-17"""
+liturgicalCalendarMeta/current,publish-meta,revision,3,4
+liturgicalCalendarMeta/current,publish-meta,notesRevision,4,4
+liturgicalCalendarMeta/current,publish-meta,sourceSha256,"""ABSENT""","""a55dc34c89317bd0a4b683ea84b46941213aa2b981d0a9de1fe3ebeb71dc9696"""
