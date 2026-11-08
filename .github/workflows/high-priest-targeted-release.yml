@@ -1,0 +1,88 @@
+name: High Priest targeted content release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/high-priest-targeted-release.yml
+      - scripts/content/high-priest-targeted-plan.mjs
+      - scripts/content/publish-high-priest-targeted.mjs
+      - scripts/smoke-high-priest-live.mjs
+      - tests/high-priest-targeted-release.test.mjs
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Read-only check or explicitly authorized atomic publication"
+        required: true
+        default: dry-run
+        type: choice
+        options:
+          - dry-run
+          - apply
+
+permissions:
+  contents: read
+
+concurrency:
+  group: high-priest-content-release
+  cancel-in-progress: false
+
+jobs:
+  targeted-content:
+    if: github.ref == 'refs/heads/main'
+    name: Verify and optionally publish three Firestore documents
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Validate guarded single-document publication (offline)
+        run: node --test tests/high-priest-targeted-release.test.mjs
+      - name: Load existing production Firebase secret
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IBREVIARYBY }}
+        run: |
+          set -euo pipefail
+          test -n "$FIREBASE_SERVICE_ACCOUNT" || { echo "::error::Missing production Firebase service account"; exit 1; }
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/high-priest-firebase.json"
+          node -e "const p=require(process.argv[1]); if(p.project_id!=='ibreviaryby')process.exit(2)" "$RUNNER_TEMP/high-priest-firebase.json"
+          echo "HIGH_PRIEST_SERVICE_ACCOUNT=$RUNNER_TEMP/high-priest-firebase.json" >> "$GITHUB_ENV"
+      - name: Read exactly three documents and check SAFE CONTENT PATCH (no writes)
+        run: node scripts/content/publish-high-priest-targeted.mjs --service-account "$HIGH_PRIEST_SERVICE_ACCOUNT"
+      - name: Publish approved 12-field patch and manifest atomically
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'apply'
+        run: node scripts/content/publish-high-priest-targeted.mjs --service-account "$HIGH_PRIEST_SERVICE_ACCOUNT" --apply --approved
+      - name: Remove temporary credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/high-priest-firebase.json"
+
+  browser-evidence:
+    if: github.ref == 'refs/heads/main'
+    name: Capture real published Web hours in Chrome
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Generate three public Web screenshots in headless Chrome
+        env:
+          CHROME_BIN: /usr/bin/google-chrome
+        run: node scripts/smoke-high-priest-live.mjs audit-evidence/high-priest-live
+      - name: Upload screenshots and browser results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: high-priest-web-screenshots
+          path: audit-evidence/high-priest-live/
+          retention-days: 14
+          if-no-files-found: warn
