@@ -17,6 +17,7 @@
           Найсвяцейшай Панны Марыі,<br />
           г. Мінск, Айцы марыяне
         </p>
+        <p class="about-cooperation">у супрацоўніцтве з ККББ</p>
         <a href="https://www.mic-minsk.by" target="_blank" rel="noopener noreferrer">
           www.mic-minsk.by
         </a>
@@ -85,6 +86,14 @@ import { PhBookOpen, PhCaretRight } from '@phosphor-icons/vue';
 
 .about-copy p {
   margin: 0 0 4px;
+}
+
+.about-cooperation {
+  margin: 6px 0 10px !important;
+  color: var(--nav-muted);
+  font-size: 0.74em;
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 .about-copy a {
