@@ -99,8 +99,8 @@ test('wiring: analytics route is superadmin-only, card is superadmin-only, link 
 test('songbook is available to admins only in navigation and on both direct routes', () => {
   const router = readFileSync(new URL('../src/router/index.js', import.meta.url), 'utf8');
   const drawer = readFileSync(new URL('../src/layouts/default/NavigationDrawer.vue', import.meta.url), 'utf8');
-  assert.match(router, /name: 'Songs'.*meta: \\{ requiresAuth: true \\}/);
-  assert.match(router, /name: 'SongView'.*meta: \\{ requiresAuth: true \\}/);
-  assert.match(drawer, /v-if="auth\\.isAdmin"[^>]+title="Спеўнік"/);
-  assert.match(drawer, /auth\\.init\\(\\)/);
+  assert.match(router, /name: 'Songs'.*meta: \{ requiresAuth: true \}/);
+  assert.match(router, /name: 'SongView'.*meta: \{ requiresAuth: true \}/);
+  assert.match(drawer, /v-if="auth\.isAdmin"[^>]+title="Спеўнік"/);
+  assert.match(drawer, /auth\.init\(\)/);
 });
