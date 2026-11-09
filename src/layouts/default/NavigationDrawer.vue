@@ -50,7 +50,7 @@
 
       <v-list-item
         tabindex="0"
-        title="Чытанні"
+        title="Чытанні дня"
         :to="{ name: 'Readings' }"
         :active="route.name === 'Readings' || route.name === 'ReadingsByDate' || route.name === 'ReadingsPicker' || (route.name === 'LiturgicalPicker' && route.query.mode === 'readings')"
       >
