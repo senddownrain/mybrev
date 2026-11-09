@@ -217,7 +217,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useAppBar } from '@/composables/useAppBar.js';
 import { useAuthStore } from '@/stores/auth.js';
 import { useRoute, useRouter } from 'vue-router';
@@ -241,8 +241,8 @@ const drawerShell = ref(null);
 let returnFocusTo = null;
 let inertElements = [];
 const auth = useAuthStore();
-// Resolve the persisted Firebase login even when the visitor lands on a public page.
-void auth.init().catch(() => {});
+// Resolve the persisted Firebase login when the visitor opens a public page.
+onMounted(() => { void auth.init().catch(() => {}); });
 const route = useRoute();
 const router = useRouter();
 const settings = useSettingsStore();
