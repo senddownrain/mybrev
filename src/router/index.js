@@ -77,8 +77,8 @@ const routes = [
           { path: 'question/:number', name: 'CompendiumQuestion', component: () => import('@/views/CompendiumQuestion.vue'), props: true },
         ],
       },
-      { path: 'songs', name: 'Songs', component: () => import('@/views/Songs.vue') },
-      { path: 'song/:id', name: 'SongView', component: () => import('@/views/Song.vue'), props: true },
+      { path: 'songs', name: 'Songs', component: () => import('@/views/Songs.vue'), meta: { requiresAuth: true } },
+      { path: 'song/:id', name: 'SongView', component: () => import('@/views/Song.vue'), props: true, meta: { requiresAuth: true } },
       {
         path: 'prayers',
         name: 'Prayers',

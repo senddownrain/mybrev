@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Administrator-only Songbook regression tests
+        run: node --test tests/admin-access.test.mjs
+
       - name: Immaculate Heart movable memorial regression tests
         run: node --test tests/immaculate-heart-hours.test.mjs
 

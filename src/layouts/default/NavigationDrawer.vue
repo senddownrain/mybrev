@@ -103,7 +103,7 @@
         </template>
       </v-list-item>
 
-      <v-list-item tabindex="0" title="Спеўнік" subtitle="Пілігрымковы" :to="{ name: 'Songs' }" :active="route.name === 'Songs' || route.name === 'SongView'">
+      <v-list-item v-if="auth.isAdmin" tabindex="0" title="Спеўнік" subtitle="Пілігрымковы" :to="{ name: 'Songs' }" :active="route.name === 'Songs' || route.name === 'SongView'">
         <template #prepend><PhMusicNotes :size="22" class="drawer-icon" /></template>
       </v-list-item>
 
@@ -217,7 +217,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useAppBar } from '@/composables/useAppBar.js';
 import { useAuthStore } from '@/stores/auth.js';
 import { useRoute, useRouter } from 'vue-router';
@@ -241,6 +241,8 @@ const drawerShell = ref(null);
 let returnFocusTo = null;
 let inertElements = [];
 const auth = useAuthStore();
+// Resolve the persisted Firebase login when the visitor opens a public page.
+onMounted(() => { void auth.init().catch(() => {}); });
 const route = useRoute();
 const router = useRouter();
 const settings = useSettingsStore();
