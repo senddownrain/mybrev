@@ -2,6 +2,11 @@ name: Deploy Web to Firebase Hosting
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/views/About.vue'
+      - 'src/layouts/default/NavigationDrawer.vue'
 
 permissions:
   contents: read
