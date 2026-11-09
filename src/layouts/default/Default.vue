@@ -399,7 +399,7 @@ const layoutTitle = computed(() => {
       return 'Рэдагаванне малітвы';
     case 'Readings':
     case 'ReadingsByDate':
-      return 'Чытанні';
+      return 'Чытанні дня';
     case 'ReadingsPicker':
       return 'Каляндар чытанняў';
     case 'Bible':
