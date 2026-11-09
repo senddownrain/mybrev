@@ -21,7 +21,9 @@
         <a href="https://www.mic-minsk.by" target="_blank" rel="noopener noreferrer">
           www.mic-minsk.by
         </a>
-        <p class="about-developer">Распрацоўшчык @davin_dev</p>
+        <p class="about-developer">
+        Распрацоўшчык: <a href="https://t.me/davin_dev" target="_blank" rel="noopener noreferrer" aria-label="Глеб Шаршнёў — Telegram">Глеб Шаршнёў</a>
+      </p>
       </div>
 
       <router-link :to="{ name: 'Sources' }" class="about-sources">
@@ -106,6 +108,21 @@ import { PhBookOpen, PhCaretRight } from '@phosphor-icons/vue';
   margin: 22px 0 0;
   color: var(--nav-muted);
   font-size: 0.9em;
+}
+
+.about-developer a {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.about-developer a:focus-visible {
+  outline: 2px solid var(--chrome-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .about-privacy {
