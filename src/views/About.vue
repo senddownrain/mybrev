@@ -17,7 +17,7 @@
           Найсвяцейшай Панны Марыі,<br />
           г. Мінск, Айцы марыяне
         </p>
-        <p class="about-cooperation">у супрацоўніцтве з ККББ</p>
+        <p class="about-cooperation">у супрацоўніцтве з Камісіяй Божага Культу і Дысцыпліны Сакрамэнтаў</p>
         <a href="https://www.mic-minsk.by" target="_blank" rel="noopener noreferrer">
           www.mic-minsk.by
         </a>
