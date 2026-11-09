@@ -32,7 +32,7 @@ async function screenshotCard(page, locator, label) {
       x: rect.x, y: rect.y, width: rect.width, height: rect.height,
       display: style.display, visibility: style.visibility, opacity: Number(style.opacity),
       textLength: (el.innerText || '').trim().length,
-      viewportHeight: innerHeight,
+      viewportHeight: window.innerHeight,
     };
   });
   assert.ok(state.width > 180 && state.height > 40
@@ -94,7 +94,7 @@ try {
       // Scroll the hymn/psalmody into view and capture what the user ACTUALLY sees.
       const psalmProof = await screenshotCard(page, psalms, item.name + '-psalmody');
       await psalms.first().scrollIntoViewIfNeeded();
-      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      await page.evaluate(() => new Promise(resolve => window.requestAnimationFrame(() => window.requestAnimationFrame(resolve))));
       const intersects = await psalms.first().evaluate(el => {
         const b=el.getBoundingClientRect(); return b.bottom > 0 && b.top < window.innerHeight;
       });
