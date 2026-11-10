@@ -178,10 +178,8 @@ const templateOptions = computed(() => (
     option.templates?.some((template) => templateContainsDay(template, dayId.value))
   ))?.templates || []
 ));
-// A memorial may take the rest of its texts from the day or from a Common.
-const templateLabel = computed(() => (
-  templateOptions.value.some((template) => template.choice === 'current-day') ? 'Тэксты Літургіі гадзінаў апрача ўласных' : 'Шаблон літургіі дня'
-));
+// The heading applies equally to weekday and Common-only text variants.
+const templateLabel = 'Тэксты Літургіі гадзінаў апрача ўласных';
 const selectedTemplateId = computed(() => (
   templateOptions.value.find((template) => templateContainsDay(template, dayId.value))?.id
     || dayId.value
