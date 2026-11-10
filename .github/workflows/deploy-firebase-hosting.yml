@@ -15,6 +15,7 @@ on:
       - 'src/components/oraparts/Lectio.vue'
       - 'src/components/oraparts/LastPrayer.vue'
       - 'src/components/oraparts/DayTitle.vue'
+      - 'src/components/OrasList.vue'
       - 'src/styles/main.scss'
 
 permissions:
