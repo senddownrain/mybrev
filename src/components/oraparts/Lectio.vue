@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-card class="ora" flat>
-            <v-card-text class="ora-text">
+            <v-card-text class="ora-text reader-align-office">
                 <p v-if="title" data-liturgical-heading>{{ title }}</p>
                 <alternative-text
                     v-model="choice"

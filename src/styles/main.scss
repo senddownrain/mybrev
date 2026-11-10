@@ -1006,6 +1006,44 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   overflow-wrap: anywhere;
   word-break: normal;
 }
+
+// Only continuous prose in the canonical Hours uses the reader alignment
+// preference. Psalms, antiphons, hymns, responsories, headings and rubrics
+// retain their established layout. This opt-in overrides legacy left !important
+// rules above, without changing the source HTML or other liturgical parts.
+.prayer-content-area .liturgical-hour-column .ora .ora-text.reader-align-office,
+.prayer-content-area .liturgical-hour-column .ora .ora-text.reader-align-office .alternative-text [role="tabpanel"],
+.prayer-content-area .liturgical-hour-column .ora .ora-text.reader-align-office .alternative-text [role="tabpanel"] > div,
+.prayer-content-area .liturgical-hour-column .ora .ora-text.reader-align-office .alternative-text [role="tabpanel"] p:not(
+  [data-liturgical-heading],
+  [data-liturgical-subheading],
+  .liturgical-rubric,
+  .liturgical-reference,
+  .liturgical-service-heading,
+  .liturgical-reading-reference,
+  .responsory-turn,
+  .office-reading-pericope-title,
+  .ora-sub
+) {
+  text-align: var(--reader-text-alignment, justify) !important;
+  text-align-last: start;
+  hyphens: auto;
+  word-break: normal;
+}
+
+// Celebration commentary can appear either expanded in the day hero or
+// inline below the day title. Its label and toggle are not prose.
+.prayer-content-area .day-title-comment.reader-align-comment,
+.prayer-content-area .day-title-comment.reader-align-comment :is(p, div):not(
+  .liturgical-rubric,
+  [data-liturgical-heading],
+  [data-liturgical-subheading]
+) {
+  text-align: var(--reader-text-alignment, justify) !important;
+  text-align-last: start;
+  hyphens: auto;
+  word-break: normal;
+}
 @media (prefers-reduced-motion: reduce) {
   .expand-transition-enter-active, .expand-transition-leave-active { transition-duration: 0s !important; }
 }
