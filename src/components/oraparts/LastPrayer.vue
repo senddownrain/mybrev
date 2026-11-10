@@ -4,7 +4,7 @@
            <v-card-title class="ora-title">
             МАЛІТВА
             </v-card-title>
-            <v-card-text class="ora-text">
+            <v-card-text class="ora-text reader-align-office">
                 <alternative-text :text="text" kind="prayer" aria-label="Выбар малітвы" />
             </v-card-text>
         </v-card>
