@@ -41,6 +41,10 @@ import DocumentBack from '@/components/DocumentBack.vue';
 .decree__number { margin: 18px 0; }
 .decree h3 { margin-block: 20px; text-align: center; font-size: 1.2rem; font-weight: 600; }
 .decree__paragraph { margin-bottom: 16px; white-space: pre-line; }
+/* The Latin title in volume II contains an editorial line break; render it as prose. */
+.decree#volume-2 .decree__paragraph { white-space: normal; }
+/* Keep distinct body paragraphs visibly separated in the second decree. */
+.decree#volume-2 .decree__paragraph + .decree__paragraph { margin-top: 1.5em; }
 .decree__date { margin-top: 22px; }
 .decree__signature { margin-top: 22px; }
 .apostolic-decrees { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--nav-border); scroll-margin-top: 80px; }
