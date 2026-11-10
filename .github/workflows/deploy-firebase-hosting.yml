@@ -7,6 +7,13 @@ on:
     paths:
       - 'src/views/About.vue'
       - 'src/layouts/default/NavigationDrawer.vue'
+      # Deploy this reader update after the reviewed PR reaches main.
+      - 'src/utils/readerPreferences.js'
+      - 'src/components/oraparts/Reading.vue'
+      - 'src/components/oraparts/Lectio.vue'
+      - 'src/components/oraparts/LastPrayer.vue'
+      - 'src/components/oraparts/DayTitle.vue'
+      - 'src/styles/main.scss'
 
 permissions:
   contents: read
