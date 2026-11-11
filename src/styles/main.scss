@@ -1056,7 +1056,11 @@ html[data-liturgical-emphasis="off"] .liturgical-hour-column .ora-ant,
 html[data-liturgical-emphasis="off"] .liturgical-hour-column .ora-text .intercessions__refrain,
 html[data-liturgical-emphasis="off"] .parsed-reading .psalm-refrain,
 html[data-liturgical-emphasis="off"] .parsed-reading .alleluia-acclamation {
-  padding: 0 0 0 0.75em;
+  // With no card/stripe there is no reason to indent the liturgical line.
+  // Align with the surrounding psalm strophes and reading text.
+  padding: 0;
+  margin-inline: 0;
+  text-align: left;
   border: 0;
   border-radius: 0;
   background: transparent;
