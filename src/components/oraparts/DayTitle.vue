@@ -48,7 +48,7 @@
         >
           <span class="day-title-comment-toggle__label">
             <v-icon icon="mdi-text-box-outline" size="20"></v-icon>
-            Заўвага да дня
+            Уступ да літургіі дня
           </span>
           <v-icon
             class="day-title-comment-toggle__chevron"
