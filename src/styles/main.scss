@@ -1047,3 +1047,45 @@ $base-content-font-size: 1rem; // 16px по умолчанию
 @media (prefers-reduced-motion: reduce) {
   .expand-transition-enter-active, .expand-transition-leave-active { transition-duration: 0s !important; }
 }
+
+
+// Quiet Book / liturgical reader: an optional plain-text appearance for
+// antiphons and communal refrains. The decorated original remains the default.
+// Do not affect psalm verses, rubrics, reading highlights or liturgical colours.
+html[data-liturgical-emphasis="off"] .liturgical-hour-column .ora-ant,
+html[data-liturgical-emphasis="off"] .liturgical-hour-column .ora-text .intercessions__refrain,
+html[data-liturgical-emphasis="off"] .parsed-reading .psalm-refrain,
+html[data-liturgical-emphasis="off"] .parsed-reading .alleluia-acclamation {
+  // With no card/stripe there is no reason to indent the liturgical line.
+  // Align with the surrounding psalm strophes and reading text.
+  padding: 0;
+  margin-inline: 0;
+  text-align: left;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--reader-ink);
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+// Keep comfortable pauses around text-only refrains, including repetitions.
+html[data-liturgical-emphasis="off"] .liturgical-hour-column .ora-ant {
+  margin-block: 14px 20px;
+}
+html[data-liturgical-emphasis="off"] .liturgical-hour-column .ora-text .intercessions__refrain {
+  margin: 0.4rem 0 1.3rem;
+}
+html[data-liturgical-emphasis="off"] .parsed-reading .psalm-refrain,
+html[data-liturgical-emphasis="off"] .parsed-reading .alleluia-acclamation {
+  margin-block: 14px 18px;
+}
+
+// Neutral labels distinguish communal responses without a coloured callout.
+// Traditional red source rubrics and cadence symbols retain their meaning.
+html[data-liturgical-emphasis="off"] .parsed-reading .psalm-refrain__label,
+html[data-liturgical-emphasis="off"] .parsed-reading .alleluia-acclamation__label {
+  color: var(--reader-muted);
+  font-weight: 700;
+}
