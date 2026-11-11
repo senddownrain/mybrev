@@ -7,10 +7,29 @@ import decrees from '../src/data/documents/liturgy-hours-decrees.json' with { ty
 import apostolic from '../src/data/documents/apostolic-see-decrees.json' with { type: 'json' };
 import introduction from '../src/data/documents/liturgy-hours-introduction.json' with { type: 'json' };
 import { getSource } from '../src/constants/sources.js';
+import bibliography from '../src/data/sourceBibliography.json' with { type: 'json' };
 const read = file => fs.readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
 const normalized = text => text.replace(/\s+/gu, ' ').trim();
 const text = row => (row.runs || []).map(run => run.text).join('');
 const rows = calendar.pages.flatMap(page => page.rows);
+
+
+test('public sources page displays exactly the 13 approved publications and rights', () => {
+  assert.equal(bibliography.schemaVersion, 1);
+  assert.equal(bibliography.entries.length, 13);
+  assert.equal(new Set(bibliography.entries.map(entry => entry.id)).size, 13);
+  assert.equal(bibliography.entries[0].title, '«Новы запавет» (Мінск, 2017)');
+  assert.equal(bibliography.entries[1].title, '«Рымскі Імшал для дыяцэзій на Беларусі» (Мінск, 2004)');
+  assert.equal(bibliography.entries[12].title, 'Спеўнік «Божа, мы Цябе ўслаўляем» (Мінск, 2026)');
+  assert.deepEqual(bibliography.entries[10].notices, [
+    '© Камісія Божага Культу і Дысцыпліны Сакрамэнтаў, 2022',
+    '© Выдавецтва «Про Хрысто», 2022',
+  ]);
+  assert.ok(bibliography.entries.every(entry => entry.title && entry.notices.length));
+  const sourceComponent = read('src/components/SourceRights.vue');
+  assert.match(sourceComponent, /bibliography\.entries/);
+  assert.doesNotMatch(sourceComponent, /bindings\.bible|groups\.map/);
+});
 
 test('all four full decrees match the primary text, issuer, date and signature in order', () => {
   assert.deepEqual(decrees.documents.map(doc => [doc.number, doc.date]), [
