@@ -31,6 +31,9 @@ test('plain book appearance covers Hours antiphons, intercession responses and d
   }
   assert.match(css, /background: transparent;/);
   assert.match(css, /border: 0;/);
+  // The no-card mode must align flush with psalm text, without a residual indent.
+  assert.match(css, /html\[data-liturgical-emphasis="off"\] \.liturgical-hour-column \.ora-ant,[\s\S]*?padding: 0;\s*margin-inline: 0;\s*text-align: left;/);
+  assert.doesNotMatch(css, /padding: 0 0 0 0\.75em;/);
   assert.match(css, /color: var\(--reader-ink\);/);
   assert.match(css, /\.parsed-reading \.psalm-refrain__label/);
   assert.match(readings, /<div v-if="section\.data\.chorus" class="psalm-refrain">/);
