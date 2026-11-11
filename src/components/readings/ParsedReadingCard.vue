@@ -542,6 +542,17 @@ function cycleLabel(value) {
   line-height: 1.5;
 }
 
+/* Keep the responsorial refrain easy to locate without a triple emphasis.
+   Scope this Quiet Book experiment to Readings only; do not affect the
+   Alleluia card or antiphons in the Liturgy of the Hours. */
+.psalm-refrain {
+  padding-inline: 16px;
+  border-left: 0;
+  border-radius: 12px;
+  background: rgba(var(--reading-period-rgb), 0.052);
+  font-weight: 650;
+}
+
 .psalm-refrain__label,
 .alleluia-acclamation__label {
   display: block;
@@ -551,6 +562,11 @@ function cycleLabel(value) {
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+/* The accent-coloured label still leads the eye, but no longer shouts. */
+.psalm-refrain__label {
+  font-weight: 780;
 }
 
 .psalm-strophe + .psalm-strophe {
