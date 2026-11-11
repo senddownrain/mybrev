@@ -56,7 +56,7 @@ jobs:
           VITE_FIREBASE_APP_ID: '1:123456789012:web:0000000000000000000000'
 
       - name: Approved calendar and source documents
-        run: npm run test:ordo && node --test tests/source-documents.test.mjs
+        run: npm run test:ordo && node --test tests/source-documents.test.mjs tests/juan-diego-calendar.test.mjs
 
       - name: Reading sentence highlights and screen wake lock regressions (offline)
         run: node --test tests/reading-highlights.test.mjs tests/screen-wake-lock.test.mjs
