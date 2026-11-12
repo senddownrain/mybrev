@@ -3,11 +3,6 @@
     <main>
       <DocumentBack />
       <h1>{{ calendar.title }}</h1>
-      <p class="calendar-publication-note" role="note">
-        Дапаўненне да апублікаванай рэдакцыі PDF:
-        <template v-for="addition in calendarAdditions" :key="addition.id">{{ addition.date }} снежня — {{ addition.title }} ({{ addition.rank.toLowerCase() }}).</template>
-        У зыходным PDF гэты запіс адсутнічае.
-      </p>
       <nav class="document-index" aria-label="Месяцы ўласнага календара">
         <router-link v-for="month in calendar.months" :key="month.id" :to="{ hash: `#${month.id}` }" replace>{{ month.title }}</router-link>
       </nav>
@@ -25,20 +20,18 @@
                 <span v-if="calendarAdditionFor(row)" class="calendar-addition-title">{{ calendarAdditionFor(row).title }}</span>
                 <DocumentRuns v-else :runs="row.runs" />
               </span>
-              <span v-if="row.rank.length || calendarAdditionFor(row)" class="calendar-rank">
-                <span v-if="calendarAdditionFor(row)" class="calendar-addition-rank">{{ calendarAdditionFor(row).rank }}</span>
-                <DocumentRuns v-else :runs="row.rank" />
-              </span>
+              <span v-if="row.rank.length" class="calendar-rank"><DocumentRuns :runs="row.rank" /></span>
             </div>
           </template>
         </section>
       </article>
+      <p class="calendar-publication-note" role="note">Заўвага: запіс 9 снежня дададзены пасля публікацыі зыходнага PDF.</p>
     </main>
   </v-container>
 </template>
 <script setup>
 import calendar from '@/data/documents/proper-calendar.json';
-import { calendarAdditions, calendarAdditionFor } from '@/data/documents/proper-calendar-additions.js';
+import { calendarAdditionFor } from '@/data/documents/proper-calendar-additions.js';
 import DocumentBack from '@/components/DocumentBack.vue';
 import DocumentRuns from '@/components/DocumentRuns.vue';
 // Keep the five source lines and their styles intact in the document data.
@@ -53,7 +46,6 @@ const introRuns = calendar.pages.flatMap(page => page.rows).filter(row => row.ki
 .calendar-intro { margin: 0; }
 .calendar-publication-note { margin: 8px 0 4px; font-size: .9rem; line-height: 1.45; opacity: .82; }
 .calendar-addition-title { font-style: italic; }
-.calendar-addition-rank { color: var(--document-red); }
 .calendar-note { margin-top: 8px; }
 .calendar-row { display: grid; grid-template-columns: 2rem minmax(0, 1fr) 8.25rem; column-gap: 8px; min-height: 1.5em; }
 .calendar-date { grid-column: 1; }
