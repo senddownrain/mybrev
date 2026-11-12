@@ -27,7 +27,6 @@
           </v-list-item>
         </template>
       </div>
-      <div class="compendium-source-note"><CompendiumSource /></div>
     </template>
     <v-progress-linear v-else-if="!store.ready && !store.error" indeterminate aria-label="Загрузка Кампендыя" />
     <v-alert v-else type="warning" class="mx-3">Частка не знойдзена. <router-link :to="{ name: 'Compendium' }">Да зместу</router-link></v-alert>
@@ -39,7 +38,6 @@ import { PhCaretRight } from '@phosphor-icons/vue';
 import { useRoute } from 'vue-router';
 import { useCompendiumStore } from '@/stores/compendium';
 import { buildPartReadingOutline } from '@/utils/compendiumNavigation';
-import CompendiumSource from '@/components/compendium/CompendiumSource.vue';
 import { useCompendiumScroll } from '@/composables/useCompendiumScroll';
 
 const props = defineProps({ partId: { type: String, required: true } });
@@ -56,6 +54,3 @@ useCompendiumScroll();
 </script>
 <style scoped src="@/styles/prayers-list.css"></style>
 <style scoped src="@/styles/compendium.css"></style>
-<style scoped>
-.compendium-source-note :deep(.prayer-source) { margin: 0; padding: 0; }
-</style>

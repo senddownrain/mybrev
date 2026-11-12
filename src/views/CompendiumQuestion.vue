@@ -15,7 +15,6 @@
           <v-btn variant="text" class="text-none" :to="context.to">{{ context.label }}</v-btn>
           <v-btn v-if="next" variant="text" class="text-none" append-icon="mdi-chevron-right" :to="{ name: 'CompendiumQuestion', params: { number: next.number } }">{{ next.number }}</v-btn><span v-else />
         </nav>
-        <CompendiumSource />
       </article>
     </div>
     <v-progress-linear v-else-if="!store.ready && !store.error" indeterminate aria-label="Загрузка Кампендыя" />
@@ -27,7 +26,6 @@ import { computed } from 'vue';
 import { useCompendiumStore } from '@/stores/compendium';
 import { questionPartRoute, questionTrail } from '@/utils/compendiumNavigation';
 import CompendiumAnswer from '@/components/compendium/CompendiumAnswer.vue';
-import CompendiumSource from '@/components/compendium/CompendiumSource.vue';
 const props = defineProps({ number: { type: String, required: true } });
 const store = useCompendiumStore();
 const question = computed(() => (/^\d{1,3}$/.test(props.number) ? store.getQuestion(props.number) : null));
