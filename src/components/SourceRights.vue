@@ -10,6 +10,7 @@
         </li>
       </ul>
     </section>
+  </div>
 </template>
 
 <script setup>
