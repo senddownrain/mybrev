@@ -14,21 +14,31 @@ const text = row => (row.runs || []).map(run => run.text).join('');
 const rows = calendar.pages.flatMap(page => page.rows);
 
 
-test('public sources page displays exactly the 13 approved publications and rights', () => {
+test('public sources page displays 15 church and 2 other items in document order', () => {
   assert.equal(bibliography.schemaVersion, 1);
-  assert.equal(bibliography.entries.length, 13);
-  assert.equal(new Set(bibliography.entries.map(entry => entry.id)).size, 13);
+  assert.deepEqual(bibliography.sections, ['Касцёльныя крыніцы', 'Іншыя крыніцы']);
+  assert.equal(bibliography.entries.length, 17);
+  assert.equal(new Set(bibliography.entries.map(entry => entry.id)).size, 17);
+  assert.deepEqual(bibliography.sections.map(section => bibliography.entries.filter(entry => entry.section === section).length), [15, 2]);
   assert.equal(bibliography.entries[0].title, '«Новы запавет» (Мінск, 2017)');
-  assert.equal(bibliography.entries[1].title, '«Рымскі Імшал для дыяцэзій на Беларусі» (Мінск, 2004)');
-  assert.equal(bibliography.entries[12].title, 'Спеўнік «Божа, мы Цябе ўслаўляем» (Мінск, 2026)');
-  assert.deepEqual(bibliography.entries[10].notices, [
+  assert.equal(bibliography.entries[10].title, 'Спеўнік «Божа, мы Цябе ўслаўляем» (Мінск, 2026)');
+  assert.deepEqual(bibliography.entries[11].notices, [
     '© Камісія Божага Культу і Дысцыпліны Сакрамэнтаў, 2022',
     '© Выдавецтва «Про Хрысто», 2022',
   ]);
-  assert.ok(bibliography.entries.every(entry => entry.title && entry.notices.length));
+  assert.equal(bibliography.entries[13].title, 'Малітоўнік «Бог Добры» (Пінск, 2018)');
+  assert.equal(bibliography.entries[14].title, 'Малітоўнік «Каб пазналі Цябе» (Гродна, 2014)');
+  assert.equal(bibliography.entries[15].title, '«Біблія» (Мінск, 2017)');
+  assert.deepEqual(bibliography.entries[15].details, ['Стары Запавет - на падставе рукапісаў кс. У. Чарняўскага']);
+  assert.deepEqual(bibliography.entries[15].notices, ['© «Біблійнае таварыства ў Рэспубліцы Беларусь», 2017']);
+  assert.equal(bibliography.entries[16].title, '«Біблія» Синодальный перевод');
+  assert.deepEqual(bibliography.entries[16].notices, []);
+  assert.ok(bibliography.entries.every(entry => entry.title && Array.isArray(entry.notices)));
   const sourceComponent = read('src/components/SourceRights.vue');
-  assert.match(sourceComponent, /bibliography\.entries/);
-  assert.doesNotMatch(sourceComponent, /bindings\.bible|groups\.map/);
+  assert.match(sourceComponent, /bibliography\\.sections/);
+  assert.match(sourceComponent, /bibliography\\.entries/);
+  assert.match(sourceComponent, /source\\.details/);
+  assert.doesNotMatch(sourceComponent, /bindings\\.bible|groups\\.map/);
 });
 
 test('all four full decrees match the primary text, issuer, date and signature in order', () => {
