@@ -35,10 +35,10 @@ test('public sources page displays 15 church and 2 other items in document order
   assert.deepEqual(bibliography.entries[16].notices, []);
   assert.ok(bibliography.entries.every(entry => entry.title && Array.isArray(entry.notices)));
   const sourceComponent = read('src/components/SourceRights.vue');
-  assert.match(sourceComponent, /bibliography\\.sections/);
-  assert.match(sourceComponent, /bibliography\\.entries/);
-  assert.match(sourceComponent, /source\\.details/);
-  assert.doesNotMatch(sourceComponent, /bindings\\.bible|groups\\.map/);
+  assert.match(sourceComponent, /bibliography\.sections/);
+  assert.match(sourceComponent, /bibliography\.entries/);
+  assert.match(sourceComponent, /source\.details/);
+  assert.doesNotMatch(sourceComponent, /bindings\.bible|groups\.map/);
 });
 
 test('all four full decrees match the primary text, issuer, date and signature in order', () => {
