@@ -10,8 +10,8 @@ export const calendarAdditions = Object.freeze([
     id: 'sv-juan-diego',
     month: 12,
     date: 9,
-    title: 'Св. Яна Дыега Куаўхтлатаацына',
-    rank: 'Неабавязковы ўспамін',
+    title: 'Св. Хуана Дыега Куаўтлатаацына',
+    rank: '', // In the published calendar, optional memorials have an empty rank column.
     ordoRank: 'memoria-ad-libitum',
   }),
 ]);
