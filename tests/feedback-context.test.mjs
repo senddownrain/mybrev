@@ -28,3 +28,28 @@ test('feedbackLocationForRoute gives automatic context for materials only', asyn
   assert.equal(loc({ name: 'Bible', params: {} }), null);
   assert.equal(loc({ name: 'PrayerView', params: { id: '<x>' } }).query.ctx_id, undefined);
 });
+
+test('request id: identical retry keeps it, an edited message gets a new one', async () => {
+  const { attemptRequestId, resetAttempt } = await import('../src/utils/feedbackContext.js');
+  let n = 0; const gen = () => `id-${++n}`;
+  const st = { id: '', key: '' };
+  const a = attemptRequestId(st, { body: 'one', category: 'text_error' }, gen);
+  assert.equal(attemptRequestId(st, { body: 'one', category: 'text_error' }, gen), a, 'same payload: same id');
+  const b = attemptRequestId(st, { body: 'one edited', category: 'text_error' }, gen);
+  assert.notEqual(b, a, 'edited text: new id');
+  assert.notEqual(attemptRequestId(st, { body: 'one edited', category: 'other' }, gen), b, 'changed category: new id');
+  resetAttempt(st);
+  assert.notEqual(attemptRequestId(st, { body: 'one edited', category: 'other' }, gen), b, 'after success: next message is fresh');
+});
+
+test('context summary is human readable and Ordo/path are carried', async () => {
+  const { contextSummary, feedbackLocationForRoute: loc, contextFromQuery } = await import('../src/utils/feedbackContext.js');
+  assert.equal(contextSummary({ kind: 'hour', date: '2026-11-13', hour: 'lauds' }), 'Літургія гадзінаў · 2026-11-13 · Ютрань');
+  assert.equal(contextSummary({ kind: 'prayer', title: 'Ойча наш' }), 'Малітва · Ойча наш');
+  assert.equal(contextSummary({ id: 'x1' }), 'ID: x1');
+  assert.equal(contextSummary(null), '');
+  assert.deepEqual(loc({ name: 'OrdoByDate', params: { date: '2026-11-13' }, path: '/ordo/2026-11-13' }).query, { ctx_kind: 'day', ctx_date: '2026-11-13', ctx_path: '/ordo/2026-11-13' });
+  assert.equal(loc({ name: 'Ordo', params: {} }), null);
+  assert.equal(contextFromQuery({ ctx_kind: 'prayer', ctx_id: 'a', ctx_path: '/prayer/a' }).path, '/prayer/a');
+  assert.equal(contextFromQuery({ ctx_kind: 'prayer', ctx_id: 'a', ctx_path: 'https://evil.example/' }).path, undefined);
+});

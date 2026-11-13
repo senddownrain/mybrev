@@ -3,6 +3,7 @@
 import { firestoreRoleProvider } from './roles.mjs';
 import { verifyFirebaseIdToken } from './firebase-auth.mjs';
 import { projectItem, projectListRow, visibleCategories } from './acl.mjs';
+import { exportRow, toCsv } from './export.mjs';
 import { CATEGORIES, MAX_BODY_BYTES, STATUSES, PLATFORMS, validateNote, validateSubmission } from './validate.mjs';
 
 const json = (data, status = 200, extra = {}) => new Response(JSON.stringify(data), {
@@ -72,7 +73,9 @@ async function submit(request, env, deps) {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?, ?)`)
     .bind(id, now, now, f.sourceApp, f.platform, f.appVersion, f.category, f.body, f.context ? JSON.stringify(f.context) : null, f.email, dedup).run();
   if (res.meta.changes === 0 && dedup) {
-    const existing = await db.prepare('SELECT id FROM feedback WHERE dedup_key = ?').bind(dedup).first();
+    const existing = await db.prepare('SELECT id, body, category FROM feedback WHERE dedup_key = ?').bind(dedup).first();
+    // Only an identical retry is idempotent. The same request id with another message is a client bug: never answer "saved" for text we did not store.
+    if (existing && (existing.body !== f.body || existing.category !== f.category)) return err(409, 'request_id_reused');
     if (existing) return json({ id: existing.id, duplicate: true }, 201);
   }
   return json({ id }, 201);
@@ -105,6 +108,35 @@ async function list(url, auth, db) {
   scope(auth.role, sw, sa);
   const counted = await db.prepare(`SELECT COUNT(*) AS n FROM feedback WHERE status = 'new'${sw.length ? ` AND ${sw.join(' AND ')}` : ''}`).bind(...sa).first();
   return json({ items: page.map((r) => projectListRow(r, auth.role)), nextCursor: results.length > limit ? encodeCursor(page[page.length - 1]) : null, newCount: counted.n });
+}
+
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
+/** Redacted, personal-data-free export for analysis. Same role scope as the inbox; nothing outside it can be requested. */
+async function exportRows(url, auth, db, now) {
+  const q = url.searchParams;
+  const format = q.get('format') || 'json';
+  if (!['json', 'csv'].includes(format)) return err(400, 'invalid');
+  const where = []; const args = [];
+  scope(auth.role, where, args);
+  const status = q.get('status'); const category = q.get('category'); const platform = q.get('platform');
+  if (status) { if (!STATUSES.includes(status)) return err(400, 'invalid'); where.push('status = ?'); args.push(status); }
+  if (category) { if (!CATEGORIES.includes(category)) return err(400, 'invalid'); where.push('category = ?'); args.push(category); }
+  if (platform) { if (!PLATFORMS.includes(platform)) return err(400, 'invalid'); where.push('platform = ?'); args.push(platform); }
+  for (const [key, op] of [['from', '>='], ['to', '<']]) {
+    const v = q.get(key);
+    if (!v) continue;
+    const t = DAY.test(v) ? Date.parse(`${v}T00:00:00Z`) : NaN;
+    if (Number.isNaN(t)) return err(400, 'invalid');
+    where.push(`created_at ${op} ?`); args.push(key === 'to' ? t + 86400000 : t);
+  }
+  const limit = Math.min(Math.max(parseInt(q.get('limit') || '500', 10) || 500, 1), 1000);
+  const { results } = await db.prepare(`SELECT * FROM feedback ${where.length ? `WHERE ${where.join(' AND ')}` : ''} ORDER BY created_at DESC, id DESC LIMIT ?`).bind(...args, limit).all();
+  const rows = results.map((r) => exportRow(r, auth.role));
+  const stamp = new Date(now).toISOString().slice(0, 10);
+  if (format === 'csv') {
+    return new Response(toCsv(rows, auth.role), { status: 200, headers: { 'content-type': 'text/csv; charset=utf-8', 'content-disposition': `attachment; filename="feedback-${stamp}.csv"`, 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' } });
+  }
+  return json({ generatedAt: stamp, role: auth.role, count: rows.length, items: rows }, 200, { 'content-disposition': `attachment; filename="feedback-${stamp}.json"` });
 }
 
 async function loadScoped(db, id, role) {
@@ -185,6 +217,7 @@ export async function handle(request, env, deps = {}) {
     if (auth.res) return wrap(auth.res);
     if (path === '/api/admin/me' && request.method === 'GET') return wrap(json({ role: auth.role, categories: visibleCategories(auth.role) ?? CATEGORIES, canSeeContacts: auth.role === 'superadmin' }));
     if (path === '/api/admin/feedback' && request.method === 'GET') return wrap(await list(url, auth, env.DB));
+    if (path === '/api/admin/export' && request.method === 'GET') return wrap(await exportRows(url, auth, env.DB, now));
     const m = /^\/api\/admin\/feedback\/([0-9a-f-]{36})(\/notes)?$/.exec(path);
     if (m) {
       if (!m[2] && request.method === 'GET') return wrap(await detail(m[1], auth, env.DB));
