@@ -102,7 +102,7 @@
 
     <section class="settings-section" aria-labelledby="feedback-title">
       <div class="setting-row">
-        <div class="setting-copy"><strong id="feedback-title">Зваротная сувязь</strong><span>Паведаміць пра памылку ў тэксце або даслаць прапанову</span></div>
+        <div class="setting-copy"><strong id="feedback-title">Зваротная сувязь</strong><span>Прапанова, пытанне або праблема з праграмай. Пра памылку ў тэксце — праз пункт «Памылка ў тэксце» ў меню старонкі.</span></div>
         <v-btn :to="{ name: 'Feedback' }" variant="tonal" class="text-none" data-test="settings-feedback">Напісаць</v-btn>
       </div>
     </section>
