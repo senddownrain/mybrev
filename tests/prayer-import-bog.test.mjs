@@ -13,7 +13,6 @@ const bog = (id, type, title, text, extra = {}) => ({ id, sourceId: BOG_SOURCE_I
   blocks: [{ type: 'heading', text: title, runs: [{ text: title, bold: true, color: '#231f20' }], semantic: { level: 2 } }, ...text.split('\n\n').map((t) => ({ type: 'paragraph', text: t, runs: [{ text: t, color: '#231f20' }] })), { type: 'image', text: '', runs: [], semantic: { decorative: true } }], ...extra });
 const corpusFrom = (entries) => ({ index: entries.map(({ blocks: _b, ...meta }) => meta), readEntry: (meta) => entries.find((e) => e.id === meta.id) });
 const UNIQUE = 'Божа, дабраславі нашы палі і ўсе пасевы; дай нам дажджу ў час і сонца ў час, каб мы елі хлеб удзячна.';
-const CANON_TEXT = 'Кірые, элейсон Хрыстэ, элейсон Святы Юзафе маліся за нас Апекуне Святой Сям’і маліся за нас Абаронца Царквы';
 
 function build(entries, oldPrayers = []) {
   const canonical = planCanonical({ corpus: corpusOf([litanyEntry('lit-1', 'Літанія да св. Юзафа')]), sources: SOURCES, oldPrayers: [], categories: [] });
