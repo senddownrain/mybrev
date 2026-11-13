@@ -231,8 +231,15 @@ onMounted(() => { categoriesStore.init?.(); load(); });
 .provenance { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 14px 0 0; font-size: 0.8rem; color: var(--nav-muted); }
 .provenance dd { margin: 0; overflow-wrap: anywhere; }
 .preview h3 { margin: 0 0 10px; font-size: 1.05rem; }
-.prayer-preview { white-space: normal; overflow-wrap: anywhere; line-height: 1.55; }
-.prayer-preview :deep(p) { margin: 0 0 0.7em; }
+.prayer-preview { color: var(--reader-ink); font-family: var(--reader-font-family); font-size: 1rem; line-height: 1.7; overflow-wrap: anywhere; }
+.prayer-preview :deep(p) { margin: 0 0 1em; }
+.prayer-preview :deep(p:last-child) { margin-bottom: 0; }
+.prayer-preview :deep(h2), .prayer-preview :deep(h3), .prayer-preview :deep(h4) { margin: 1.2em 0 0.5em; font-size: 1.05em; line-height: 1.3; }
+.prayer-preview :deep(ul), .prayer-preview :deep(ol) { margin: 0.65em 0 1em; padding-inline-start: 1.45em; }
+.prayer-preview :deep(li) { padding-inline-start: 0.16em; overflow-wrap: anywhere; }
+.prayer-preview :deep(.prayer-rubric) { margin: 1.05em 0; padding: 0.08em 0 0.08em 0.85em; border-left: 3px solid var(--rubric-color); color: var(--rubric-color); font-size: 0.86em; line-height: 1.45; }
+.prayer-preview :deep(.prayer-rubric p) { margin-bottom: 0.45em; }
+.prayer-preview :deep(.prayer-speaker) { color: var(--rubric-color); font-weight: 700; font-size: inherit; font-style: normal; }
 .preview--empty { color: var(--nav-muted); }
 .preview-source { margin-top: 14px; color: var(--nav-muted); font-size: 0.72rem; }
 .dup-list, .audit-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 0.88rem; }
