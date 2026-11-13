@@ -160,6 +160,18 @@
       </v-list-item>
 
       <v-list-item
+        v-if="reportLocation"
+        tabindex="0"
+        title="Памылка ў тэксце"
+        :to="reportLocation"
+        data-test="drawer-report-error"
+      >
+        <template #prepend>
+          <PhFlag :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
+      <v-list-item
         tabindex="0"
         title="Інфармацыя"
         :to="{ name: 'About' }"
@@ -226,9 +238,10 @@ import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { usePrayersStore } from '@/stores/prayers';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
+import { feedbackLocationForRoute } from '@/utils/feedbackContext.js';
 import {
   PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart, PhBookmark,
-  PhChurch, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll, PhCalendarDots,
+  PhChurch, PhFlag, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll, PhCalendarDots,
 } from '@phosphor-icons/vue';
 
 const ORDO_ROUTE_NAMES = ['Ordo', 'OrdoByDate'];
@@ -245,6 +258,7 @@ const auth = useAuthStore();
 onMounted(() => { void auth.init().catch(() => {}); });
 const route = useRoute();
 const router = useRouter();
+const reportLocation = computed(() => feedbackLocationForRoute(route));
 const settings = useSettingsStore();
 const prayerCategories = usePrayerCategoriesStore();
 const prayersStore = usePrayersStore();

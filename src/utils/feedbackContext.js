@@ -25,4 +25,36 @@ export const feedbackLink = ({ kind, id, date, hour, title }) => ({
   query: Object.fromEntries(Object.entries({ ctx_kind: kind, ctx_id: id, ctx_date: date, ctx_hour: hour, ctx_title: title }).filter(([, v]) => v)),
 });
 
+const HOUR_BY_ROUTE = {
+  invitatorium: 'invitatory', lectionis: 'office_of_readings', morning: 'lauds', laudes: 'lauds',
+  terz: 'daytime', sext: 'daytime', non: 'daytime', vesper: 'vespers', completorium: 'compline',
+};
+const isDate = (v) => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
+const safeId = (v) => (typeof v === 'string' && SAFE_ID.test(v) ? v : undefined);
+
+/** Automatic "Памылка" location for the current route; null when the screen is not a material (lists, settings, about, editors, the form itself). */
+export function feedbackLocationForRoute(route) {
+  const p = route?.params || {};
+  const q = route?.query || {};
+  const name = route?.name;
+  if (name === 'oras') return feedbackLink({ kind: 'day', id: safeId(p.id), date: isDate(p.day) ? p.day : undefined });
+  if (name in HOUR_BY_ROUTE) {
+    return feedbackLink({ kind: 'hour', id: safeId(p.id), date: isDate(p.day) ? p.day : undefined, hour: HOUR_BY_ROUTE[name] });
+  }
+  if (name === 'Readings' || name === 'ReadingsByDate') {
+    const date = isDate(p.date) ? p.date : isDate(q.date) ? q.date : undefined;
+    return feedbackLink({ kind: 'reading', date });
+  }
+  if (name === 'PrayerView') return feedbackLink({ kind: 'prayer', id: safeId(p.id) });
+  if (name === 'SongView') return feedbackLink({ kind: 'song', id: safeId(p.id) });
+  if (name === 'CompendiumPart') return feedbackLink({ kind: 'compendium', id: safeId(p.partId) });
+  if (name === 'CompendiumNode') return feedbackLink({ kind: 'compendium', id: safeId(p.nodeId) });
+  if (name === 'CompendiumTopic') return feedbackLink({ kind: 'compendium', id: safeId(p.topicId) });
+  if (name === 'CompendiumQuestion') return feedbackLink({ kind: 'compendium', id: safeId(String(p.number ?? '')) });
+  if (name === 'Bible' && p.bookId) {
+    return feedbackLink({ kind: 'bible', id: safeId([p.language, p.bookId, p.chapter].filter(Boolean).join('-')) });
+  }
+  return null;
+}
+
 export const contextSummary = (ctx) => (ctx ? [ctx.title, ctx.kind && `тып: ${ctx.kind}`, ctx.id && `ID: ${ctx.id}`, ctx.date, ctx.hour].filter(Boolean).join(' · ') : '');
