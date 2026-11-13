@@ -56,3 +56,16 @@ export const adminList = (params) => adminRequest(`/api/admin/feedback?${new URL
 export const adminGet = (id) => adminRequest(`/api/admin/feedback/${id}`);
 export const adminPatch = (id, body) => adminRequest(`/api/admin/feedback/${id}`, { method: 'PATCH', body });
 export const adminAddNote = (id, body) => adminRequest(`/api/admin/feedback/${id}/notes`, { method: 'POST', body });
+
+/** Redacted export for analysis (role-scoped by the Worker). Returns the text and a file name. */
+export async function adminExport(params = {}) {
+  const user = getAuth().currentUser;
+  if (!user) throw new FeedbackApiError(401, 'unauthorized');
+  const base = feedbackBaseUrl();
+  if (!base) throw new FeedbackApiError(0, 'not_configured');
+  let res;
+  try { res = await fetch(`${base}/api/admin/export?${new URLSearchParams(Object.entries(params).filter(([, v]) => v)).toString()}`, { headers: { authorization: `Bearer ${await user.getIdToken()}` } }); } catch { throw new FeedbackApiError(0, 'network'); }
+  if (!res.ok) { const data = await res.json().catch(() => ({})); throw new FeedbackApiError(res.status, data.error); }
+  const name = /filename="([^"]+)"/.exec(res.headers.get('content-disposition') || '')?.[1] || `feedback.${params.format === 'csv' ? 'csv' : 'json'}`;
+  return { text: await res.text(), name, type: res.headers.get('content-type') || 'text/plain' };
+}
