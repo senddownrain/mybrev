@@ -4,7 +4,9 @@
 // ordered lists and /prayer/<id> links. No raw HTML is ever produced.
 import { normalizeTitleKey } from '../../../src/utils/prayerDraftModel.mjs';
 
-export const RED = '#ed008c';
+export const RED = '#ed008c'; // official books
+export const RED_COLORS = new Set([RED, '#d2232a']); // «Бог Добры» uses #d2232a
+const isRed = (color) => RED_COLORS.has(String(color || '').toLowerCase());
 const LINE_TYPES = new Set(['invocation', 'response', 'petition', 'verse', 'dialogue']);
 
 /** Latin look-alikes inside Cyrillic words (typesetting slips such as «Iмені»). */
@@ -26,10 +28,10 @@ export function escapeMd(text, { lineStart = false } = {}) {
 function mergeRuns(runs) {
   const merged = [];
   for (const run of runs) {
-    const key = JSON.stringify([run.bold === true, run.italic === true, run.color === RED]);
+    const key = JSON.stringify([run.bold === true, run.italic === true, isRed(run.color)]);
     const last = merged.at(-1);
     if (last && last.key === key) last.text += run.text;
-    else merged.push({ key, text: run.text, bold: run.bold === true, italic: run.italic === true, red: run.color === RED });
+    else merged.push({ key, text: run.text, bold: run.bold === true, italic: run.italic === true, red: isRed(run.color) });
   }
   return merged;
 }
@@ -66,8 +68,17 @@ export function runsToMarkdown(runs, { redAsBold = false, ignoreRed = false } = 
   return out;
 }
 
-const isRedOnly = (runs) => runs.length > 0 && runs.every((run) => run.color === RED || !run.text.trim());
-const hasRed = (runs) => runs.some((run) => run.color === RED && run.text.trim());
+const isRedOnly = (runs) => runs.length > 0 && runs.every((run) => isRed(run.color) || !run.text.trim());
+const hasRed = (runs) => runs.some((run) => isRed(run.color) && run.text.trim());
+
+// «Бог Добры» block vocabulary -> the vocabulary above (images carry no text and are skipped).
+function adaptBlock(block) {
+  if (block.type === 'image') return null;
+  if (block.type === 'subheading') return { ...block, type: 'heading', semantic: { ...block.semantic, level: Math.min(Math.max(block.semantic?.level || 3, 3), 6) } };
+  if (block.type === 'reference_only') return { ...block, type: 'paragraph' };
+  if (block.type === 'stanza' || block.type === 'psalm' || block.type === 'antiphon') return { ...block, type: 'paragraph' };
+  return block;
+}
 
 /**
  * @param {object} entry canonical entry (blocks)
@@ -79,9 +90,11 @@ export function entryToMarkdown(entry, { title = entry.title, resolveLink = () =
   const stats = { blocks: 0, rubrics: 0, mixedRed: 0, links: 0, unresolvedLinks: 0, droppedTitle: 0 };
   const flags = [];
   const refs = new Map((entry.crossReferences || []).filter((ref) => ref.targetEntryId).map((ref) => [ref.refTitle, ref]));
-  const titleKeys = new Set([normalizeTitleKey(title), normalizeTitleKey(entry.sourcePrintedHeading)]);
+  const titleKeys = new Set([normalizeTitleKey(title), normalizeTitleKey(entry.sourcePrintedHeading || entry.printedHeading)]);
   let separate = true;
-  for (const block of entry.blocks) {
+  for (const sourceBlock of entry.blocks) {
+    const block = adaptBlock(sourceBlock);
+    if (!block) { stats.skippedBlocks = (stats.skippedBlocks || 0) + 1; continue; }
     stats.blocks += 1;
     const runs = block.runs?.length ? block.runs : [{ text: block.text, color: '#231f20' }];
     const space = block.semantic?.spaceBefore === true;

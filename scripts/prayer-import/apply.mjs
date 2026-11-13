@@ -37,6 +37,7 @@ export function selectOperations(plan, rights, onlySources) {
   for (const op of plan.operations) {
     if (!op.targetId) continue;
     if (onlySources && !onlySources.includes(op.sourceId)) { skipped.push({ op, why: 'source not selected' }); continue; }
+    if (plan.draftsOnly && op.targetCollection !== 'prayerDrafts') { skipped.push({ op, why: 'drafts-only plan' }); continue; }
     if (op.targetCollection === 'prayers' && !rights?.[op.sourceId]?.confirmedBy) { skipped.push({ op, why: 'digital publication rights not confirmed for this source' }); continue; }
     run.push(op);
   }
