@@ -1,0 +1,38 @@
+# Імпарт афіцыйных тэкстаў і «Бог Добры»
+
+Інструменты ў `scripts/prayer-import/`. **Dry-run па змаўчанні.** Ніякіх запісаў у production, deploy або publish без асобнага ўзгаднення плана.
+
+Карпусы кніг (поўны тэкст) і справаздачы dry-run жывуць толькі ў ігнараваным `backups/prayer-import/`; у git трапляюць код, тэсты, `sources.json` (назвы кніг і © без тэксту) і дакументацыя.
+
+## Крыніцы і правы
+
+`sources.json` — кніга, выданне і правы па кожным `sourceId` (з `schemas/source_priority_and_rights.json` пакета). Кожны тэкст атрымлівае `source` («Кніга (месца, год), с. N. © …»), `copyrightNotices`, `sourceId`, `sourceEntryId`. **Права на публічную лічбавую публікацыю не пацверджана**: усе запісы `rightsStatus: unconfirmed`; `apply` прапускае публічныя аперацыі крыніцы, пакуль у файле правоў няма `confirmedBy` і падставы.
+
+## Першы заход (афіцыйны канон)
+
+```bash
+node scripts/prayer-import/canon-import.mjs plan --official <Official_8_PDF_Claude_structured.zip|каталог> \
+  --snapshot backups/firestore-snapshot-static [--snapshot <другі>] [--out backups/prayer-import/canon-…]
+```
+
+Для кожнага з 238 запісаў адзін маршрут: `CREATE`, `REPLACE_KEEP_ID` (замена канонічнай рэдакцыяй са старым ID, `createdAt`, `verified`, `priestOnly`, іншымі мовамі), `REVIEW_AMBIGUOUS` (закрыты чарнавік у `prayerDrafts`) або `PRESERVE_STRUCTURE` (9 груп-загалоўкаў дзён/святых — не малітвы).
+
+- **Супастаўленне** (`lib/matching.mjs`): назва (`і/i`, `ё/е`, апострафы) знаходзіць кандыдатаў, а тэкст (біграмы слоў) пацвярджае, што гэта тая ж малітва. Літанія ніколі не супадае з навэннай. Аднолькавая назва з вельмі розным тэкстам, некалькі аднолькавых назваў без выразнага лідара, падобная назва без пацверджання тэкстам → `REVIEW_AMBIGUOUS`. Рэдакцыі не параўноўваюцца па якасці.
+- **Не поўныя** (`needs_review`, `partial`) і абрады → чарнавікі: абрады — выпіскі з кніг, іх замена патрабуе жывой структуры абраду і рашэння рэдактара (заўвагі Крэміса да Хросту пп. 16–17 не вырашаюцца аўтаматычна).
+- **Тэгі** (`lib/tags.mjs`): толькі існуючыя (NFC/casefold/апострафы), тып (Літанія / Навэнна), тэмы па назве, тэгі старой малітвы (без дублікатаў). Адзіны прапанаваны новы агульны тэг — `Вяночак`; ён **не ствараецца**, а толькі запісваецца ў `proposed_new_tags.csv`.
+- **Канвертар** (`lib/blocks-to-markdown.mjs`): `blocks/runs` → `mybrev-markdown` без HTML. Радкі літаній захоўваюцца як радкі; курсіў/тлусты; `:::rubric` для рубрык; меткі К./Н./Ц.; нумараваныя спісы; загалоўкі дзён (`##`); `* * *` → гарызантальная рыса; спасылкі на іншыя малітвы → `/prayer/<id>` толькі для запланаваных мэт. **Чырвоны колер** у Markdown не перадаецца: у змешаных блоках чырвоная частка становіцца тлустай (лічыльнік у `migration_qa.md`). Адзінкавая літара ў слове (памылка набору) без выдзялення.
+
+Вынікі (`planned_operations.json` без поўных тэкстаў, `payloads/` з тэкстамі, `old_to_new_ids.csv`, `duplicates_review.csv`, `source_coverage.csv`, `tag_mapping.csv`, `proposed_new_tags.csv`, `proposed_new_categories.csv`, `migration_qa.md`) і `planSha256`.
+
+## Backup → план па жывой базе → apply → rollback
+
+1. **Backup (read-only)** і аналіз па ім:
+   `npm run db:backup -- --collection prayers --collection priestProtectedPrayers --collection prayerCategories --collection priestProtectedCategories --collection priestContentControl --output backups/prayer-import/live-<дата> --require-new-output` (патрэбны ключ сэрвіснага акаўнта, у рэпазіторый не кладзецца).
+2. `canon-import.mjs plan … --snapshot backups/prayer-import/live-<дата>` → `planSha256`.
+3. Уладальнік правярае справаздачы і пацвярджае правы (`rights.json`: `{ "<sourceId>": { "confirmedBy": "…", "basis": "…" } }`).
+4. `node scripts/prayer-import/apply.mjs apply --plan <каталог> --approve-sha <planSha256> --rights rights.json --backup-dir backups/prayer-import/applied --project <id> --service-account <файл> --i-understand-this-writes-production`.
+   Праверкі: хэш плана і payload-аў, жывыя дакументы супадаюць з dry-run (`oldFingerprint`), lock `priestContentControl/state`, партыі ≤200, прыватны backup кожнага змененага дакумента, ідэмпатэнтнасць, аднаўленне пасля перапынку.
+5. `apply.mjs rollback --backup <файл> --project <id> …` аднаўляе змененыя дакументы і выдаляе створаныя.
+6. Пасля — `npm run content:manifest` (AGENTS.md); да гэтага змены не трапляюць у Flutter.
+
+Эмулятар: `npm run test:import` (JDK 21).

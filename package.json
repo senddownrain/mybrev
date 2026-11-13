@@ -86,6 +86,8 @@
     "test:feedback-e2e": "firebase emulators:exec --config firebase.feedback-e2e.json --only auth,firestore --project demo-feedback \"node scripts/smoke-feedback-e2e.mjs\"",
     "test:admin-roles-ui": "firebase emulators:exec --only auth,firestore --project demo-roles \"node scripts/smoke-admin-roles-ui.mjs\"",
     "test:drafts": "firebase emulators:exec --only firestore --project demo-rules \"node --test --test-concurrency=1 tests/prayer-drafts-firestore.test.mjs\"",
+    "test:import": "node --test tests/prayer-import-converter.test.mjs tests/prayer-import-plan.test.mjs && firebase emulators:exec --only firestore --project demo-rules \"node --test --test-concurrency=1 tests/prayer-import-apply.test.mjs\"",
+    "import:canon:plan": "node scripts/prayer-import/canon-import.mjs plan",
     "test:rules": "firebase emulators:exec --only firestore --project demo-rules \"node tests/firestore-rules/rules-emulator.mjs\"",
     "content:app-bundle": "node scripts/content/build-app-bundle.mjs",
     "content:manifest": "node scripts/content/publish-manifest.mjs",
