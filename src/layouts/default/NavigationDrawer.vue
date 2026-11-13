@@ -50,7 +50,7 @@
 
       <v-list-item
         tabindex="0"
-        title="Чытанні"
+        title="Чытанні дня"
         :to="{ name: 'Readings' }"
         :active="route.name === 'Readings' || route.name === 'ReadingsByDate' || route.name === 'ReadingsPicker' || (route.name === 'LiturgicalPicker' && route.query.mode === 'readings')"
       >
@@ -103,7 +103,7 @@
         </template>
       </v-list-item>
 
-      <v-list-item tabindex="0" title="Спеўнік" subtitle="Пілігрымковы" :to="{ name: 'Songs' }" :active="route.name === 'Songs' || route.name === 'SongView'">
+      <v-list-item v-if="auth.isAdmin" tabindex="0" title="Спеўнік" subtitle="Пілігрымковы" :to="{ name: 'Songs' }" :active="route.name === 'Songs' || route.name === 'SongView'">
         <template #prepend><PhMusicNotes :size="22" class="drawer-icon" /></template>
       </v-list-item>
 
@@ -160,6 +160,18 @@
       </v-list-item>
 
       <v-list-item
+        v-if="reportLocation"
+        tabindex="0"
+        title="Памылка ў тэксце"
+        :to="reportLocation"
+        data-test="drawer-report-error"
+      >
+        <template #prepend>
+          <PhFlag :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
+
+      <v-list-item
         tabindex="0"
         title="Інфармацыя"
         :to="{ name: 'About' }"
@@ -169,6 +181,29 @@
           <PhInfo :size="22" class="drawer-icon" />
         </template>
       </v-list-item>
+
+
+      <div class="drawer-section-label drawer-section-label--spaced">Мабільныя праграмы</div>
+      <div class="drawer-store-badges" aria-label="Спасылкі на мабільныя праграмы з'явяцца пазней">
+        <div class="drawer-store-badge" aria-disabled="true" title="Спасылка з'явіцца пазней">
+          <svg class="drawer-store-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M5 3.8v24.4L18 16 5 3.8Z" fill="#37C7D6"/>
+            <path d="m5 3.8 18 10-5 2.2L5 3.8Z" fill="#58CE7A"/>
+            <path d="m5 28.2 18-10-5-2.2L5 28.2Z" fill="#F7C851"/>
+            <path d="m18 16 5-2.2 4 2.2-4 2.2L18 16Z" fill="#F17F78"/>
+          </svg>
+          <span class="drawer-store-copy"><span class="drawer-store-kicker">Праграма для Android</span><strong>Google Play</strong></span>
+          <span class="drawer-store-soon">Хутка</span>
+        </div>
+        <div class="drawer-store-badge" aria-disabled="true" title="Спасылка з'явіцца пазней">
+          <svg class="drawer-store-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect x="8" y="2.5" width="16" height="27" rx="3.5" stroke="currentColor" stroke-width="2.3"/>
+            <path d="M13 6h6M14 26h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+          <span class="drawer-store-copy"><span class="drawer-store-kicker">Праграма для iPhone</span><strong>App Store</strong></span>
+          <span class="drawer-store-soon">Хутка</span>
+        </div>
+      </div>
 
       <v-list-item v-if="!auth.user" tabindex="0" title="Уваход" to="/login">
         <template #prepend>
@@ -194,7 +229,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useAppBar } from '@/composables/useAppBar.js';
 import { useAuthStore } from '@/stores/auth.js';
 import { useRoute, useRouter } from 'vue-router';
@@ -203,9 +238,10 @@ import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { usePrayersStore } from '@/stores/prayers';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
+import { feedbackLocationForRoute } from '@/utils/feedbackContext.js';
 import {
   PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart, PhBookmark,
-  PhChurch, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll, PhCalendarDots,
+  PhChurch, PhFlag, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll, PhCalendarDots,
 } from '@phosphor-icons/vue';
 
 const ORDO_ROUTE_NAMES = ['Ordo', 'OrdoByDate'];
@@ -218,8 +254,11 @@ const drawerShell = ref(null);
 let returnFocusTo = null;
 let inertElements = [];
 const auth = useAuthStore();
+// Resolve the persisted Firebase login when the visitor opens a public page.
+onMounted(() => { void auth.init().catch(() => {}); });
 const route = useRoute();
 const router = useRouter();
+const reportLocation = computed(() => feedbackLocationForRoute(route));
 const settings = useSettingsStore();
 const prayerCategories = usePrayerCategoriesStore();
 const prayersStore = usePrayersStore();
@@ -484,6 +523,55 @@ onBeforeUnmount(() => {
   margin-top: 8px;
   padding-top: 12px;
   border-top: 1px solid var(--nav-border);
+}
+
+.drawer-store-badges {
+  display: grid;
+  gap: 8px;
+  padding: 4px 8px 12px;
+}
+
+.drawer-store-badge {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 60px;
+  padding: 10px 12px;
+  border: 1px solid var(--nav-border);
+  border-radius: 14px;
+  background: var(--reader-surface);
+  color: var(--nav-on-surface);
+  opacity: 0.86;
+  cursor: default;
+}
+
+.drawer-store-icon {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+}
+
+.drawer-store-copy {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  line-height: 1.22;
+}
+
+.drawer-store-kicker {
+  color: var(--nav-muted);
+  font-size: 0.66rem;
+}
+
+.drawer-store-copy strong {
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+.drawer-store-soon {
+  color: var(--nav-muted);
+  font-size: 0.69rem;
 }
 
 .drawer-icon {

@@ -72,10 +72,12 @@ process.env.VITE_FEEDBACK_API_URL = API;
 const server = await createServer({
   configFile: false, define: { 'process.env': {} }, cacheDir: 'node_modules/.vite-feedback-e2e',
   resolve: { alias: { '@': fileURLToPath(new URL('../src', import.meta.url)) } },
-  server: { host: '127.0.0.1', port: WEB_PORT, strictPort: true },
+  server: { host: '127.0.0.1', port: WEB_PORT, strictPort: true, warmup: { clientFiles: ['src/main.js', 'src/views/**/*.vue'] } },
   plugins: [vue(), vuetify({ styles: false }), { name: 'emulator-only', enforce: 'pre', transform(src, id) { return id.replaceAll('\\', '/').split('?')[0].endsWith('/src/plugins/firebase.js') ? firebaseModule : undefined; } }],
 });
 await server.listen();
+// Cold Vite dep optimizer discovers Vuetify components lazily and force-reloads the page mid-test (login lost -> flaky 15s timeouts). Crawl all views first and wait until the optimizer has settled.
+await server.waitForRequestsIdle();
 
 const browser = await chromium.launch({ executablePath: process.env.BENCHMARK_BROWSER_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true });
 const failures = [];
@@ -94,7 +96,7 @@ async function send(page, label, text, email) {
   if (email) await page.fill('[data-test="feedback-email"]', email);
   await page.click('[data-test="feedback-submit"]');
   await page.locator('[data-test="feedback-success"]').waitFor();
-  return (await page.locator('[data-test="feedback-success"] strong').innerText()).trim();
+  return (await page.locator('[data-test="feedback-id"]').innerText()).trim();
 }
 const ids = {};
 
@@ -109,7 +111,7 @@ await check('Web (390px): Settings link, safe context shown/removable, three mes
   await shot(page, '1-web-form-390');
   ids.text = await send(page, 'Памылка ў тэксце', 'ТЭСТ WEB ТЭКСТ <script>alert(1)</script>');
   await page.goto(`${WEB}/feedback?ctx_kind=prayer&ctx_id=ojcha-nash`);
-  await page.click('text=Прыбраць');
+  await page.click('[data-test="feedback-context-remove"]');
   assert.equal(await page.locator('[data-test="feedback-context"]').count(), 0);
   ids.content = await send(page, 'Прапанова па тэкстах', 'ТЭСТ WEB ПРАПАНОВА');
   await page.goto(`${WEB}/feedback`);
@@ -174,9 +176,9 @@ async function login(who, target, viewport = { width: 1100, height: 800 }) {
 await check('Admin UI (plain admin): card, only 2 content items, no email/category filter, XSS shown as text', async () => {
   const { context, page } = await login('admin', '/admin/feedback');
   await page.locator('[data-test="fb-list"]').waitFor();
-  assert.equal(await page.locator('[data-test="fb-list"] .v-list-item').count(), 2);
+  assert.equal(await page.locator('[data-test="fb-list"] .fb-card').count(), 2);
   assert.equal(await page.locator('[data-test="fb-filter-category"]').count(), 0);
-  await page.locator('[data-test="fb-list"] .v-list-item', { hasText: 'ТЭСТ WEB ТЭКСТ' }).click();
+  await page.locator('[data-test="fb-list"] .fb-card', { hasText: 'ТЭСТ WEB ТЭКСТ' }).click();
   await page.locator('[data-test="fb-detail"]').waitFor();
   assert.match(await page.locator('[data-test="fb-body"]').innerText(), /<script>alert\(1\)<\/script>/);
   assert.equal(await page.locator('[data-test="fb-email"]').count(), 0);
@@ -192,8 +194,8 @@ await check('Admin UI (plain admin): card, only 2 content items, no email/catego
 await check('Superadmin UI: all items, email visible, reclassify technical->text and back updates admin ACL at once', async () => {
   const { context, page } = await login('super', '/admin/feedback');
   await page.locator('[data-test="fb-list"]').waitFor();
-  assert.ok(await page.locator('[data-test="fb-list"] .v-list-item').count() >= 4);
-  await page.locator('[data-test="fb-list"] .v-list-item', { hasText: 'ТЭСТ WEB ТЭХНІКА' }).click();
+  assert.ok(await page.locator('[data-test="fb-list"] .fb-card').count() >= 4);
+  await page.locator('[data-test="fb-list"] .fb-card', { hasText: 'ТЭСТ WEB ТЭХНІКА' }).click();
   await page.locator('[data-test="fb-email"]').waitFor();
   assert.match(await page.locator('[data-test="fb-email"]').innerText(), /reader@example\.test/);
   await shot(page, '5-superadmin-detail');

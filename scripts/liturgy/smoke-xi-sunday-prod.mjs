@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* global innerHeight, requestAnimationFrame */
 /** Production browser proof: capture actual painted prayer cards, not an empty full-page scroll region. */
 import assert from 'node:assert/strict';
 import fs from 'node:fs';

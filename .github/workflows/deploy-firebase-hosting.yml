@@ -2,6 +2,27 @@ name: Deploy Web to Firebase Hosting
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/views/About.vue'
+      - 'src/views/LiturgyHoursDecrees.vue'
+      - 'src/views/ProperCalendar.vue'
+      - 'src/views/Compendium.vue'
+      - 'src/views/CompendiumNode.vue'
+      - 'src/views/CompendiumQuestion.vue'
+      - 'src/data/documents/proper-calendar-additions.js'
+      - 'src/data/documents/proper-calendar.json'
+      - 'src/data/documents/liturgy-hours-decrees.json'
+      - 'src/layouts/default/NavigationDrawer.vue'
+      # Deploy this reader update after the reviewed PR reaches main.
+      - 'src/utils/readerPreferences.js'
+      - 'src/components/oraparts/Reading.vue'
+      - 'src/components/oraparts/Lectio.vue'
+      - 'src/components/oraparts/LastPrayer.vue'
+      - 'src/components/oraparts/DayTitle.vue'
+      - 'src/components/OrasList.vue'
+      - 'src/styles/main.scss'
 
 permissions:
   contents: read

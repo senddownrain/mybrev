@@ -29,7 +29,7 @@ test('root, Part and question are the normal routes; node and topic are compatib
   assert.match(read('src/views/CompendiumQuestion.vue'), /store\.init\(\)/);
 });
 
-test('one persistent search dock covers root, Part and question; sources remain attributed', () => {
+test('one persistent search dock covers root, Part and question; no inline source footers', () => {
   const shell = read('src/views/CompendiumShell.vue');
   assert.equal(shell.match(/<CompendiumSearchDock\b/g).length, 1);
   assert.match(shell, /:key="route.path" v-show="!resultsOpen"/);
@@ -38,7 +38,7 @@ test('one persistent search dock covers root, Part and question; sources remain 
   assert.match(read('src/components/compendium/CompendiumSearchResults.vue'), /name: 'CompendiumQuestion'/);
   assert.equal(COMPENDIUM_SOURCE_URL, 'https://catholic.by/3/lib/documents/kasciol/3963-kampendyj-katekhizisa-katalitskaga-kastsjola');
   for (const view of ['Compendium', 'CompendiumNode', 'CompendiumQuestion']) {
-    assert.match(read(`src/views/${view}.vue`), /<CompendiumSource \/>/);
+    assert.doesNotMatch(read(`src/views/${view}.vue`), /CompendiumSource|compendium-source-note/);
   }
 });
 

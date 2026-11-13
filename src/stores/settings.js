@@ -71,6 +71,13 @@ export const useSettingsStore = defineStore('settings', () => {
   localStorage.removeItem('songCompactList');
   const readingHighlightsEnabled = ref(localStorage.getItem('readingHighlightsEnabled') === 'true');
   watch(readingHighlightsEnabled, value => localStorage.setItem('readingHighlightsEnabled', String(value)), { flush: 'sync' });
+  // Presentation-only preference. Liturgical colours and the texts themselves stay unchanged.
+  // Enabled by default, preserving the established coloured cards for existing readers.
+  const liturgicalEmphasisEnabled = ref(localStorage.getItem('liturgicalEmphasisEnabled') !== 'false');
+  watch(liturgicalEmphasisEnabled, (enabled) => {
+    document.documentElement.dataset.liturgicalEmphasis = enabled ? 'on' : 'off';
+    localStorage.setItem('liturgicalEmphasisEnabled', String(enabled));
+  }, { immediate: true, flush: 'sync' });
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') !== 'false');
 
   function applyThemePreference() {
@@ -259,6 +266,7 @@ export const useSettingsStore = defineStore('settings', () => {
     songChordLayout,
     toggleFavoriteSong,
     readingHighlightsEnabled,
+    liturgicalEmphasisEnabled,
     keepScreenOn,
     diocese: ordoDiocese,
     dioceses: ordoDioceses,

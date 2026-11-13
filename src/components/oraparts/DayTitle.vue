@@ -48,7 +48,7 @@
         >
           <span class="day-title-comment-toggle__label">
             <v-icon icon="mdi-text-box-outline" size="20"></v-icon>
-            Заўвага да дня
+            Уступ да літургіі дня
           </span>
           <v-icon
             class="day-title-comment-toggle__chevron"
@@ -61,7 +61,7 @@
           <div
             v-show="commentExpanded"
             id="day-title-comment-content"
-            class="day-title-comment day-title-comment--hero ora-text text-start"
+            class="day-title-comment day-title-comment--hero ora-text reader-align-comment"
             v-html="dayComment"
           ></div>
         </v-expand-transition>
@@ -69,7 +69,7 @@
 
       <div
         v-else-if="dayComment"
-        class="day-title-comment ora-text text-start mt-5"
+        class="day-title-comment ora-text reader-align-comment mt-5"
         v-html="dayComment"
       ></div>
      

@@ -19,6 +19,10 @@
         <div class="setting-copy"><strong>Каляровае вылучэнне ў чытаннях</strong><span>Выбірайце сказы і захоўвайце іх колер</span></div>
         <v-switch v-model="settings.readingHighlightsEnabled" color="primary" hide-details inset aria-label="Каляровае вылучэнне ў чытаннях" />
       </div>
+      <div class="setting-row" data-test="liturgical-emphasis-setting">
+        <div class="setting-copy"><strong>Вылучэнне антыфон і рэфрэнаў</strong><span>Каляровыя падкладкі і рыскі ў Літургіі гадзін і Чытаннях дня. Без вылучэння — спакойны кніжны выгляд.</span></div>
+        <v-switch v-model="settings.liturgicalEmphasisEnabled" color="primary" hide-details inset aria-label="Вылучэнне антыфон і рэфрэнаў" />
+      </div>
       <div class="setting-row setting-row--theme">
         <div class="setting-copy"><strong>Тэма</strong><span>Сістэмная аўтаматычна сочыць за наладамі прылады</span></div>
         <div class="theme-options" role="radiogroup" aria-label="Тэма праграмы">
@@ -98,7 +102,7 @@
 
     <section class="settings-section" aria-labelledby="feedback-title">
       <div class="setting-row">
-        <div class="setting-copy"><strong id="feedback-title">Зваротная сувязь</strong><span>Паведаміць пра памылку ў тэксце або даслаць прапанову</span></div>
+        <div class="setting-copy"><strong id="feedback-title">Зваротная сувязь</strong><span>Прапанова, пытанне або праблема з праграмай. Пра памылку ў тэксце — праз пункт «Памылка ў тэксце» ў меню старонкі.</span></div>
         <v-btn :to="{ name: 'Feedback' }" variant="tonal" class="text-none" data-test="settings-feedback">Напісаць</v-btn>
       </div>
     </section>

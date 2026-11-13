@@ -26,3 +26,14 @@ test('About links to privacy route and Hosting returns static page', () => {
   assert.ok(i >= 0 && i < fallback, 'privacy rewrite must precede SPA fallback');
   assert.equal(hosting.hosting.rewrites[i].destination, '/privacy.html');
 });
+
+test('privacy policy describes the actual feedback collection and Cloudflare processing', () => {
+  const html = read('../public/privacy.html');
+  assert.match(html, /Зваротная сувязь/);
+  assert.match(html, /Cloudflare Workers/);
+  assert.match(html, /Cloudflare D1/);
+  assert.match(html, /180 дзён/);
+  assert.match(html, /без адраса пошты/);
+  assert.match(html, /Прыкладанні \(скрыншоты, файлы\) форма не прымае/);
+  assert.match(html, /13 лістапада 2026/);
+});

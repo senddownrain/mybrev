@@ -2,7 +2,7 @@
   <v-container class="readings-container" :style="readingsPageStyle">
     <header class="readings-page-header">
       <div>
-        <h1 class="section-page-title">Чытанні</h1>
+        <h1 class="section-page-title">Чытанні дня</h1>
         <p v-if="route.query.view !== 'reference'" class="readings-date">
           <span class="readings-date__marker" aria-hidden="true"></span>
           {{ displayDate }}
