@@ -22,11 +22,15 @@ export function planCanonical({ corpus, sources, oldPrayers, categories = [] }) 
   const rightsOf = (sourceId) => sources.sources[sourceId];
 
   // Pass 1: classification (needs the matching text), pass 2 writes final markdown with links to planned targets.
+  const titleCount = new Map();
   const planned = new Map(); // entryId -> { meta, entry, markdown, decision }
+  const groupOf = new Map(); // member entryId -> printed group title (weekday / plural saint group)
+  for (const meta of corpus.index) for (const member of meta.members || []) groupOf.set(member, meta.title);
   for (const meta of corpus.index) {
     const entry = corpus.readEntry(meta);
     if (meta.kind === 'other') { planned.set(meta.entryId, { meta, entry, decision: { decision: 'PRESERVE_STRUCTURE', reason: 'section/day group heading, not a prayer' } }); continue; }
     const title = fixLatinInCyrillic(entry.title);
+    titleCount.set(normalizeTitleKey(title), (titleCount.get(normalizeTitleKey(title)) || 0) + 1);
     const { markdown } = entryToMarkdown(entry, { title });
     const kind = meta.kind === 'ritual' ? 'ritual' : meta.kind;
     let decision;
@@ -39,6 +43,13 @@ export function planCanonical({ corpus, sources, oldPrayers, categories = [] }) 
       decision = matchCanonical({ title, text: markdown, kind: meta.kind === 'prayer' ? null : meta.kind }, oldPrayers);
     }
     planned.set(meta.entryId, { meta, entry, title, markdown, kind, decision });
+  }
+  // Different prayers that share one printed title (e.g. «Малітоўныя заклікі» under every weekday) get the group
+  // in the title so readers and the matcher can tell them apart. The printed title stays in `printedTitle`.
+  for (const item of planned.values()) {
+    if (!item.title || titleCount.get(normalizeTitleKey(item.title)) < 2) continue;
+    const group = groupOf.get(item.meta.entryId);
+    if (group) { item.printedTitle = item.title; item.title = `${item.title} (${group})`; }
   }
   const targetOf = new Map();
   for (const [entryId, item] of planned) {
@@ -70,7 +81,7 @@ export function planCanonical({ corpus, sources, oldPrayers, categories = [] }) 
     const sourceFields = { sourceBook: rights.book, copyrightNotices: rights.copyrightNotices };
     const sourceNotice = draftSourceNotice({ ...sourceFields, printedPageStart: meta.printedPageStart, printedPageEnd: meta.printedPageEnd, pdfPageStart: meta.pdfPageStart });
     const hash = textHash(finalMarkdown);
-    const common = { ...base, title: item.title, canonicalTitle: item.title, tags, source: sourceNotice, copyrightNotices: rights.copyrightNotices, rightsStatus: 'unconfirmed', textSha256: hash, textLength: finalMarkdown.length, blocks: stats.blocks };
+    const common = { ...base, title: item.title, canonicalTitle: item.title, ...(item.printedTitle ? { printedTitle: item.printedTitle } : {}), tags, source: sourceNotice, copyrightNotices: rights.copyrightNotices, rightsStatus: 'unconfirmed', textSha256: hash, textLength: finalMarkdown.length, blocks: stats.blocks };
     if (decision.decision === 'CREATE' || decision.decision === 'REPLACE_KEEP_ID') {
       const id = targetOf.get(entryId);
       const priestOnly = old?.priestOnly === true;
