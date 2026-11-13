@@ -137,6 +137,13 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
       await assert.rejects(() => api.publishDraft('bd_bad'), { code: 'blocked' });
       assert.equal((await api.getDraft('bd_bad')).status, 'draft');
     });
+  it('unconfirmed digital-publication rights block publication until an admin confirms them', async () => {
+    const api = actions(roles.plain, 'plain');
+    await api.createDraft('bd_rights', baseDraft({ title: 'Правы пад пытаннем', rightsStatus: 'unconfirmed' }));
+    await assert.rejects(() => api.publishDraft('bd_rights'), { code: 'blocked' });
+    await api.saveDraft('bd_rights', { rightsStatus: 'confirmed' });
+    assert.equal((await api.publishDraft('bd_rights')).alreadyPublished, false);
+  });
   it('a content lock aborts publication and leaves draft and public content consistent', async () => {
       const api = actions(roles.plain, 'plain');
       await api.createDraft('bd_lock', baseDraft({ title: 'Падчас блакіроўкі' }));

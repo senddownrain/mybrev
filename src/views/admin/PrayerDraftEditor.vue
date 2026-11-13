@@ -39,6 +39,9 @@
             <h2>Крыніца і правы</h2>
             <v-text-field v-model="form.sourceBook" label="Кніга і выданне" variant="outlined" hide-details="auto" :readonly="locked" />
             <v-textarea v-model="copyrightText" label="Аўтарскія правы (кожны запіс з новага радка)" variant="outlined" rows="2" auto-grow hide-details="auto" class="mt-3" :readonly="locked" />
+            <v-checkbox v-model="rightsConfirmed" class="mt-2" color="primary" hide-details :readonly="locked"
+              label="Права на лічбавую публікацыю гэтай крыніцы пацверджаны пісьмова" />
+            <p class="hint">Без пацверджання кнопка «Апублікаваць» заблакаваная. Права на кнігу не вынікаюць з наяўнасці PDF.</p>
             <dl class="provenance">
               <template v-for="row in provenance" :key="row[0]"><dt>{{ row[0] }}</dt><dd>{{ row[1] }}</dd></template>
             </dl>
@@ -137,7 +140,8 @@ const publishOpen = ref(false);
 const replaceId = ref('');
 const acknowledge = ref(false);
 const audit = ref([]);
-const form = ref({ title: '', text: '', tags: [], priestOnly: false, sourceBook: '', copyrightNotices: [] });
+const form = ref({ title: '', text: '', tags: [], priestOnly: false, sourceBook: '', copyrightNotices: [], rightsStatus: '' });
+const rightsConfirmed = computed({ get: () => form.value.rightsStatus === 'confirmed', set: (value) => { form.value.rightsStatus = value ? 'confirmed' : 'unconfirmed'; } });
 const copyrightText = computed({
   get: () => form.value.copyrightNotices.join('\n'),
   set: (value) => { form.value.copyrightNotices = value.split('\n').map((line) => line.trim()).filter(Boolean); },
@@ -169,7 +173,7 @@ const provenance = computed(() => [
 ].filter((row) => row[1]));
 
 function hydrate(source) {
-  form.value = { title: source.title || '', text: source.text || '', tags: [...(source.tags || [])], priestOnly: source.priestOnly === true, sourceBook: source.sourceBook || source.source || '', copyrightNotices: [...(source.copyrightNotices || [])] };
+  form.value = { title: source.title || '', text: source.text || '', tags: [...(source.tags || [])], priestOnly: source.priestOnly === true, sourceBook: source.sourceBook || source.source || '', copyrightNotices: [...(source.copyrightNotices || [])], rightsStatus: source.rightsStatus || '' };
 }
 const auditLabel = (entry) => {
   const date = entry.at?.toDate?.().toLocaleString('be-BY') || '';
@@ -191,7 +195,7 @@ async function load() {
 async function save(status) {
   busy.value = 'save'; message.value = null;
   try {
-    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, sourceBook: form.value.sourceBook, copyrightNotices: form.value.copyrightNotices };
+    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, sourceBook: form.value.sourceBook, copyrightNotices: form.value.copyrightNotices, ...(form.value.rightsStatus ? { rightsStatus: form.value.rightsStatus } : {}) };
     await actions.saveDraft(draft.value.id, patch, { expectedVersion: draft.value.version, status });
     message.value = { type: 'success', text: status ? `Статус: ${DRAFT_STATUS_LABELS[status]}.` : 'Чарнавік захаваны.' };
     await load();
@@ -202,7 +206,7 @@ async function publish() {
   busy.value = 'publish'; message.value = null;
   try {
     // Unsaved edits go first, so exactly the confirmed text is published.
-    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, sourceBook: form.value.sourceBook, copyrightNotices: form.value.copyrightNotices };
+    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, sourceBook: form.value.sourceBook, copyrightNotices: form.value.copyrightNotices, ...(form.value.rightsStatus ? { rightsStatus: form.value.rightsStatus } : {}) };
     await actions.saveDraft(draft.value.id, patch, { expectedVersion: draft.value.version });
     const fresh = await actions.getDraft(draft.value.id);
     const result = await actions.publishDraft(draft.value.id, { replaceId: replaceId.value || undefined, acknowledgeDuplicates: acknowledge.value, expectedVersion: fresh.version });
