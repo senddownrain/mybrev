@@ -1,5 +1,6 @@
 import reviewed from '../data/liturgical/advent-benedictus-by.json' with { type: 'json' };
 import { getLiturgicalAlternatives } from './liturgicalAlternatives.js';
+import { parse } from 'node-html-parser';
 
 const CYCLES = { A: 'A', А: 'A', B: 'B', В: 'B', C: 'C', С: 'C' };
 
@@ -11,7 +12,7 @@ export function selectAdventBenedictus(html, cycle) {
   const options = getLiturgicalAlternatives(html, 'gospel-antiphon')
     .filter((option) => CYCLES[option.title.match(/^Год ([AАBВCС])(?: · \d+)?$/u)?.[1]] === cycle);
   if (options.length !== 1) return '';
-  const text = options[0].html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
+  const text = parse(options[0].html).text.replace(/\s+/g, ' ');
   return /Год [AАBВCС]:\s*\S/u.test(text) ? options[0].html : '';
 }
 

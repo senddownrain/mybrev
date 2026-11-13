@@ -1,2 +1,2 @@
 # Preserve retrieved source bytes so SHA-256 checks survive checkout.
-*.html -text
+*.html -text whitespace=-trailing-space

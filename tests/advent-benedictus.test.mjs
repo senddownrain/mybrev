@@ -108,6 +108,7 @@ test('future editions win; missing or ambiguous variants do not silently fall ba
   assert.equal(selectAdventBenedictus(reviewed.value, 'D'), '');
   assert.equal(selectAdventBenedictus(reviewed.value.replace('Год C:', 'Год B:'), 'B'), '', 'ambiguous cycle labels');
   assert.equal(selectAdventBenedictus('<p>Год А:</p><p>Год B:</p><p>Год C:</p>', 'B'), '', 'rubric without text');
+  assert.equal(selectAdventBenedictus('<p>Год А:&nbsp;</p><p>Год B:&nbsp;</p><p>Год C:&nbsp;</p>', 'B'), '', 'HTML spacing is not a source text');
   const dated = source.daysById.get('advent-20-12');
   const missing = resolveAdventDateAgainstPeriod(dated, { ...sunday, laudesAntBen: '' }, 1, { sundayCycle: 'B' });
   assert.equal(missing.laudesAntBen, '');
