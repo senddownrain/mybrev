@@ -105,7 +105,8 @@ test('Bible, Readings and all Hours have no old source footers; About links to a
   assert.match(read('src/views/Sources.vue'), /name: 'About'/);
   assert.match(read('src/router/index.js'), /path: 'sources',\s*name: 'Sources'/);
   const component = read('src/components/SourceRights.vue');
-  for (const field of ['officialEdition', 'rightsholder', 'copyrightNotices', 'translation']) assert.ok(component.includes(`source.${field}`));
+  assert.match(component, /@\/data\/sourceBibliography\.json/);
+  for (const field of ['title', 'details', 'notices']) assert.ok(component.includes(`source.${field}`));
   assert.doesNotMatch(component, /source\.(?:verification|digitalSources|digitalPermission)|decree\.summary|<dl>|<dt>|<table/);
   assert.doesNotMatch(component, /name: 'LiturgyHoursDecrees'/);
   assert.doesNotMatch(component, /<details/);
