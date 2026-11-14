@@ -23,6 +23,12 @@ on:
       - 'src/components/oraparts/DayTitle.vue'
       - 'src/components/OrasList.vue'
       - 'src/styles/main.scss'
+      # Draft editor and its Firestore policy are deployed together.
+      - 'src/views/admin/PrayerDraftEditor.vue'
+      - 'src/views/admin/PrayerDrafts.vue'
+      - 'src/utils/prayerDraftModel.mjs'
+      - 'src/utils/prayerDraftActions.mjs'
+      - 'firestore.rules'
 
 permissions:
   contents: read
@@ -89,6 +95,10 @@ jobs:
           fi
           printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
+
+      - name: Deploy Firestore rules for approved draft workflow change
+        if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[deploy-draft-rules]')
+        run: npx --yes firebase-tools@latest deploy --only firestore:rules --project ibreviaryby --non-interactive
 
       - name: Deploy Hosting only
         run: npx --yes firebase-tools@latest deploy --only hosting --project ibreviaryby --non-interactive
