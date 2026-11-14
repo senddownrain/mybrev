@@ -53,7 +53,7 @@
             </div>
           </div>
           <div class="draft-row__side">
-            <v-chip size="small" :color="statusColor(draft.status)" variant="flat">{{ DRAFT_STATUS_LABELS[draft.status] || draft.status }}</v-chip>
+            <v-chip size="small" :color="statusColor(draft.status)" variant="flat">{{ DRAFT_STATUS_LABELS[normalizeDraftStatus(draft.status)] || 'Чарнавік' }}</v-chip>
             <span class="date">{{ dateLabel(draft.updatedAt) }}</span>
           </div>
         </router-link>
@@ -67,7 +67,7 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { DRAFT_REASON_LABELS, DRAFT_STATUS_LABELS, normalizeTitleKey } from '@/utils/prayerDraftModel.mjs';
+import { DRAFT_REASON_LABELS, DRAFT_STATUS_LABELS, normalizeDraftStatus, normalizeTitleKey } from '@/utils/prayerDraftModel.mjs';
 import { getDraftActions } from '@/services/prayerDraftService';
 
 const drafts = ref([]);
@@ -77,17 +77,21 @@ const query = ref('');
 const originFilter = ref('');
 const statusFilter = ref('');
 const shown = ref(50);
-const statusOptions = Object.entries(DRAFT_STATUS_LABELS).filter(([value]) => value !== 'archived').map(([value, title]) => ({ value, title }));
+const statusOptions = Object.entries(DRAFT_STATUS_LABELS).map(([value, title]) => ({ value, title }));
 const reasonLabel = (reason) => DRAFT_REASON_LABELS[reason] || reason;
-const statusColor = (status) => ({ draft: 'grey', needs_review: 'warning', ready_for_publication: 'info', published: 'success', archived: 'grey' }[status] || 'grey');
+const statusColor = (status) => normalizeDraftStatus(status) === 'published' ? 'success' : 'grey';
 
-const counts = computed(() => drafts.value.reduce((acc, item) => ({ ...acc, [item.status]: (acc[item.status] || 0) + 1 }), {}));
+const counts = computed(() => drafts.value.reduce((acc, item) => {
+  const status = normalizeDraftStatus(item.status);
+  acc[status] = (acc[status] || 0) + 1;
+  return acc;
+}, {}));
 const filtered = computed(() => {
   const needle = normalizeTitleKey(query.value || '');
   return drafts.value
-    .filter((item) => (statusFilter.value ? item.status === statusFilter.value : !['archived', 'published'].includes(item.status)))
+    .filter((item) => (statusFilter.value ? normalizeDraftStatus(item.status) === statusFilter.value : normalizeDraftStatus(item.status) === 'draft'))
     .filter((item) => !originFilter.value || item.origin === originFilter.value)
-    .filter((item) => !needle || normalizeTitleKey(`${item.title} ${item.sourceBook || ''} ${(item.tags || []).join(' ')} ${item.text || ''}`).includes(needle))
+    .filter((item) => !needle || normalizeTitleKey(`${item.title} ${item.source || ''} ${item.sourceBook || ''} ${(item.tags || []).join(' ')} ${item.text || ''}`).includes(needle))
     .sort((a, b) => String(a.title).localeCompare(String(b.title), 'be'));
 });
 const visible = computed(() => filtered.value.slice(0, shown.value));
@@ -95,7 +99,7 @@ watch([query, originFilter, statusFilter], () => { shown.value = 50; });
 
 function sourceLine(draft) {
   const pages = draft.printedPageStart ? `, с. ${draft.printedPageStart}${draft.printedPageEnd && draft.printedPageEnd !== draft.printedPageStart ? `–${draft.printedPageEnd}` : ''}` : '';
-  return `${draft.sourceBook || draft.source || 'Крыніца не пазначана'}${pages}`;
+  return draft.source || `${draft.sourceBook || 'Крыніца не пазначана'}${pages}`;
 }
 function dateLabel(value) {
   const date = value?.toDate?.();
