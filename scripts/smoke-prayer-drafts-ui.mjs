@@ -158,7 +158,7 @@ await check('list: counts, origin filter, search, dark 390', async () => {
   await mobile.context.close();
 });
 
-await check('editor renders rubric preview, tags, source and provenance; responsive widths', async () => {
+await check('editor renders rubric preview, tags and simple source; responsive widths', async () => {
   for (const [width, theme, name] of [[1440, 'light', '04-editor-1440-light'], [768, 'light', '05-editor-768-light'], [390, 'dark', '06-editor-390-dark'], [320, 'light', '07-editor-320-light']]) {
     const { context, page } = await open('admin', { width, height: width < 500 ? 800 : 900, theme, path: '/admin/prayer-drafts/bd-litany' });
     console.log('  width', width);
