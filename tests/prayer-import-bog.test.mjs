@@ -68,7 +68,7 @@ test('title case: ALL-CAPS headings become sentence case with sacred names capit
 });
 test('a drafts-only plan can never write public content, whatever the rights file says', () => {
   const plan = { draftsOnly: true, operations: [{ sourceId: 'x', targetId: 'a', targetCollection: 'prayerDrafts' }, { sourceId: 'x', targetId: 'b', targetCollection: 'prayers' }] };
-  const { run, skipped } = selectOperations(plan, { x: { confirmedBy: 'owner' } }, null);
+  const { run, skipped } = selectOperations(plan, { x: { confirmedBy: 'owner', basis: 'тэставая пісьмовая згода выдаўца, 2026-11-14' } }, null);
   assert.deepEqual(run.map((op) => op.targetId), ['a']); assert.equal(skipped.length, 1);
 });
 

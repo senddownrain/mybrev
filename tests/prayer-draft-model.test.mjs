@@ -24,7 +24,11 @@ test('validation and publish blockers', () => {
   assert.deepEqual(validateDraft(draft), []);
   assert.ok(validateDraft({ ...draft, textFormat: 'html' }).length);
   assert.ok(validateDraft({ ...draft, title: '' }).length);
-  assert.deepEqual(publishBlockers(draft), []);
+  const confirmed = { ...draft, rightsStatus: 'confirmed', rightsBasis: 'Ліст выдавецтва ад 2026-11-14' };
+  assert.deepEqual(publishBlockers(confirmed), []);
+  assert.ok(publishBlockers(draft).some((x) => /лічбавую/.test(x)), 'no explicit rights confirmation blocks publication');
+  assert.ok(publishBlockers({ ...confirmed, rightsBasis: '' }).some((x) => /падставу/.test(x)), 'confirmed without a basis is not a confirmation');
+  assert.ok(publishBlockers({ ...confirmed, rightsBasis: 'так' }).some((x) => /падставу/.test(x)));
   assert.ok(publishBlockers({ ...draft, tags: [] }).length && publishBlockers({ ...draft, copyrightNotices: [] }).length);
   assert.ok(publishBlockers({ ...draft, rightsStatus: 'unconfirmed' }).some((x) => /лічбавую/.test(x)));
 });

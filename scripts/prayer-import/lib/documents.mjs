@@ -11,6 +11,7 @@ export function replacementDocument(old, payload) {
   return merged;
 }
 export const newDocument = (payload) => ({ ...payload.data, priestOnly: false });
-export function draftDocument(payload, { rightsStatus, createdBy }) {
-  return { ...payload.data, rightsStatus, version: 1, createdBy, status: payload.data.status || 'needs_review' };
+export function draftDocument(payload, { rightsStatus, createdBy, rightsBasis = '', rightsConfirmedBy = '' }) {
+  const confirmed = rightsStatus === 'confirmed' ? { rightsBasis, rightsConfirmedBy } : {};
+  return { ...payload.data, rightsStatus, ...confirmed, version: 1, createdBy, status: payload.data.status || 'needs_review' };
 }

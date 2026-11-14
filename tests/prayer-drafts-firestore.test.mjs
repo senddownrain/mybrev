@@ -24,7 +24,7 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
   };
   const actions = (db, uid) => createDraftActions({ db, fs, actorUid: uid, writer: createPrayerContentWriter({ db, fs }) });
   const denied = (operation) => assert.rejects(operation, { code: 'permission-denied' });
-  const baseDraft = (over = {}) => ({ title: 'Новая малітва', text: 'Тэкст малітвы.', tags: ['Літанія'], sourceBook: '«Кніга»', copyrightNotices: ['© Тэст, 2024'], priestOnly: false, ...over });
+  const baseDraft = (over = {}) => ({ title: 'Новая малітва', text: 'Тэкст малітвы.', tags: ['Літанія'], sourceBook: '«Кніга»', copyrightNotices: ['© Тэст, 2024'], priestOnly: false, rightsStatus: 'confirmed', rightsBasis: 'Пісьмовая згода выдаўца ад 2026-11-14 (тэст)', ...over });
   let roles;
   before(async () => {
     for (const name of ['prayers', 'priestProtectedPrayers', 'priestProtectedCategories', 'prayerCategories', 'prayerDrafts', 'priestContentControl', 'admins', 'priestDeviceGrants']) await seed.recursiveDelete(seed.collection(name));
@@ -137,12 +137,51 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
       await assert.rejects(() => api.publishDraft('bd_bad'), { code: 'blocked' });
       assert.equal((await api.getDraft('bd_bad')).status, 'draft');
     });
-  it('unconfirmed digital-publication rights block publication until an admin confirms them', async () => {
+  it('rights: unconfirmed blocks; a bare tick without basis is refused; with basis it publishes and the confirmer is recorded', async () => {
     const api = actions(roles.plain, 'plain');
-    await api.createDraft('bd_rights', baseDraft({ title: 'Правы пад пытаннем', rightsStatus: 'unconfirmed' }));
+    await api.createDraft('bd_rights', baseDraft({ title: 'Правы пад пытаннем', rightsStatus: 'unconfirmed', rightsBasis: '' }));
     await assert.rejects(() => api.publishDraft('bd_rights'), { code: 'blocked' });
-    await api.saveDraft('bd_rights', { rightsStatus: 'confirmed' });
+    await assert.rejects(() => api.saveDraft('bd_rights', { rightsStatus: 'confirmed' }), { code: 'invalid' });
+    await assert.rejects(() => api.saveDraft('bd_rights', { rightsStatus: 'confirmed', rightsBasis: 'так' }), { code: 'invalid' });
+    assert.equal((await api.getDraft('bd_rights')).rightsStatus, 'unconfirmed');
+    await api.saveDraft('bd_rights', { rightsStatus: 'confirmed', rightsBasis: 'Ліст выдавецтва ад 2026-11-14, №12' });
+    const confirmed = await api.getDraft('bd_rights');
+    assert.equal(confirmed.rightsConfirmedBy, 'plain');
+    assert.ok(confirmed.rightsConfirmedAt);
     assert.equal((await api.publishDraft('bd_rights')).alreadyPublished, false);
+  });
+  it('rules: confirmed rights need a basis and the signed-in confirmer; nobody can forge another admin as confirmer', async () => {
+    const api = actions(roles.plain, 'plain');
+    await api.createDraft('bd_forge', baseDraft({ title: 'Падробка', rightsStatus: 'unconfirmed', rightsBasis: '' }));
+    const draft = await api.getDraft('bd_forge');
+    const ref = doc(roles.plain, 'prayerDrafts/bd_forge');
+    const base = { rightsStatus: 'confirmed', version: draft.version + 1, updatedAt: serverTimestamp() };
+    await denied(updateDoc(ref, { ...base, rightsConfirmedBy: 'plain' })); // no basis
+    await denied(updateDoc(ref, { ...base, rightsBasis: 'Ліст выдавецтва, 2026', rightsConfirmedBy: 'boss' })); // someone else
+    await denied(updateDoc(ref, { ...base, rightsBasis: 'Ліст выдавецтва, 2026' })); // nobody recorded
+    await updateDoc(ref, { ...base, rightsBasis: 'Ліст выдавецтва, 2026', rightsConfirmedBy: 'plain' });
+    // A second admin edits another field: the original confirmer stays untouched and the draft stays valid.
+    const bossApi = actions(roles.boss, 'boss');
+    await bossApi.saveDraft('bd_forge', { notes: 'правіў boss' });
+    assert.equal((await bossApi.getDraft('bd_forge')).rightsConfirmedBy, 'plain');
+  });
+  it('plain admin: priestOnly draft publishes into the protected collection, status moves and audit work', async () => {
+    const api = actions(roles.plain, 'plain');
+    await api.createDraft('bd_plain_priest', baseDraft({ title: 'Толькі святарам (plain admin)', priestOnly: true }));
+    await api.saveDraft('bd_plain_priest', {}, { status: 'needs_review' });
+    await api.saveDraft('bd_plain_priest', {}, { status: 'ready_for_publication' });
+    const { id } = await api.publishDraft('bd_plain_priest');
+    assert.equal((await getDoc(doc(roles.anon, `prayers/${id}`))).exists(), false);
+    assert.equal((await getDoc(doc(roles.priest, `priestProtectedPrayers/${id}`))).data().sourceDraftId, 'bd_plain_priest');
+    const log = (await api.listAudit('bd_plain_priest')).map((e) => e.action);
+    // The log is ordered by whole seconds, so compare the set of actions, not their order.
+    assert.deepEqual([...log].sort(), ['create', 'publish', 'status:needs_review', 'status:ready_for_publication']);
+  });
+  it('plain admin does NOT get superadmin powers: no admin roles, no priest access settings', async () => {
+    await denied(setDoc(doc(roles.plain, 'admins/intruder'), { role: 'admin' }));
+    await denied(setDoc(doc(roles.plain, 'admins/plain'), { role: 'superadmin' }));
+    await denied(setDoc(doc(roles.plain, 'priestAccess/settings'), { activeCodeProof: '', changedAt: null, helpText: 'x' }));
+    await denied(getDoc(doc(roles.plain, 'priestAccess/settings')));
   });
   it('a content lock aborts publication and leaves draft and public content consistent', async () => {
       const api = actions(roles.plain, 'plain');

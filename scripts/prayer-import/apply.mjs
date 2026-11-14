@@ -32,6 +32,9 @@ export function loadApprovedPlan(planDir, approvedSha) {
   return { plan, payloads };
 }
 
+/** A source counts as confirmed only with who confirmed it AND the written basis (document, licence, date). */
+export const rightsConfirmed = (rights, sourceId) => Boolean(rights?.[sourceId]?.confirmedBy && String(rights?.[sourceId]?.basis || '').trim().length >= 10);
+
 /** Operations that may be written now, with the reason for every skipped one. */
 export function selectOperations(plan, rights, onlySources) {
   const run = []; const skipped = [];
@@ -39,7 +42,7 @@ export function selectOperations(plan, rights, onlySources) {
     if (!op.targetId) continue;
     if (onlySources && !onlySources.includes(op.sourceId)) { skipped.push({ op, why: 'source not selected' }); continue; }
     if (plan.draftsOnly && op.targetCollection !== 'prayerDrafts') { skipped.push({ op, why: 'drafts-only plan' }); continue; }
-    if (op.targetCollection === 'prayers' && !rights?.[op.sourceId]?.confirmedBy) { skipped.push({ op, why: 'digital publication rights not confirmed for this source' }); continue; }
+    if (op.targetCollection === 'prayers' && !rightsConfirmed(rights, op.sourceId)) { skipped.push({ op, why: 'digital publication rights not confirmed for this source' }); continue; }
     run.push(op);
   }
   return { run, skipped };
@@ -59,7 +62,7 @@ export async function applyCanonPlan({ db, FieldValue, planDir, approvedSha, rig
     if (op.targetCollection === 'prayerDrafts') {
       const existing = liveDrafts.get(op.targetId);
       if (existing) { (existing.fingerprint === payload.data.fingerprint ? noop : conflicts).push(op); continue; }
-      writes.push({ op, collection: 'prayerDrafts', id: op.targetId, data: { ...draftDocument(payload, { rightsStatus: rights?.[op.sourceId]?.confirmedBy ? 'confirmed' : 'unconfirmed', createdBy: `import:${plan.batch}` }), createdAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() }, before: null });
+      writes.push({ op, collection: 'prayerDrafts', id: op.targetId, data: { ...draftDocument(payload, { rightsStatus: rightsConfirmed(rights, op.sourceId) ? 'confirmed' : 'unconfirmed', createdBy: `import:${plan.batch}`, rightsBasis: rights?.[op.sourceId]?.basis || '', rightsConfirmedBy: rights?.[op.sourceId]?.confirmedBy || '' }), createdAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() }, before: null });
     } else if (op.action === 'REPLACE_KEEP_ID') {
       const old = live.get(op.targetId);
       if (!old) { conflicts.push(op); continue; }

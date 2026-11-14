@@ -19,7 +19,7 @@ describe('canonical import apply/rollback (emulator)', { skip: !emulator }, () =
   const db = getFirestore(initializeApp({ projectId: 'demo-rules' }, 'import-apply'));
   const dir = mkdtempSync(path.join(os.tmpdir(), 'canon-apply-'));
   const planDir = path.join(dir, 'plan'); const backupDir = path.join(dir, 'backups');
-  const rightsOk = { litanies_novenas_chaplets_2024: { confirmedBy: 'owner', basis: 'test' }, rite_penance: { confirmedBy: 'owner', basis: 'test' } };
+  const rightsOk = { litanies_novenas_chaplets_2024: { confirmedBy: 'owner', basis: 'тэставая пісьмовая згода выдаўца, 2026-11-14' }, rite_penance: { confirmedBy: 'owner', basis: 'тэставая пісьмовая згода выдаўца, 2026-11-14' } };
   let plan; let sha;
   const get = async (path_) => (await db.doc(path_).get());
   before(async () => {

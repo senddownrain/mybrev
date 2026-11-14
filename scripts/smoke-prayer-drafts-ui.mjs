@@ -185,7 +185,20 @@ await check('plain admin publishes through the confirmation dialog; one public p
   await page.getByRole('button', { name: 'Апублікаваць' }).first().click();
   const dialog = page.locator('.publish-dialog');
   await dialog.waitFor(); await settle(page);
+  // Rights are not confirmed yet: publication is blocked; a bare tick without a written basis is blocked too.
+  assert.match(await dialog.innerText(), /не пацверджана/);
+  await dialog.getByRole('button', { name: 'Скасаваць' }).click();
+  await page.getByText('Права на лічбавую публікацыю гэтай крыніцы пацверджаны пісьмова').click();
+  await page.locator('[data-test="rights-basis"]').waitFor();
+  await page.getByRole('button', { name: 'Апублікаваць' }).first().click();
+  await dialog.waitFor(); await settle(page);
+  assert.match(await dialog.innerText(), /падставу/);
+  await dialog.getByRole('button', { name: 'Скасаваць' }).click();
+  await page.locator('[data-test="rights-basis"] textarea').first().fill('Ліст выдавецтва ад 2026-11-14, №12 (тэст)');
+  await page.getByRole('button', { name: 'Апублікаваць' }).first().click();
+  await dialog.waitFor(); await settle(page);
   assert.match(await dialog.innerText(), /Усе чытачы/);
+  assert.match(await dialog.innerText(), /Ліст выдавецтва/);
   assert.match(await dialog.innerText(), /\/prayer\/d_bd-litany/);
   await shot(page, '09-publish-confirm-1440-light');
   await dialog.getByRole('button', { name: 'Апублікаваць' }).click();
@@ -194,6 +207,10 @@ await check('plain admin publishes through the confirmation dialog; one public p
   const published = await seed.collection('prayers').where('sourceDraftId', '==', 'bd-litany').get();
   assert.equal(published.size, 1);
   assert.equal((await seed.doc('prayerDrafts/bd-litany').get()).data().status, 'published');
+  const confirmedDoc = (await seed.doc('prayerDrafts/bd-litany').get()).data();
+  assert.equal(confirmedDoc.rightsStatus, 'confirmed');
+  assert.match(confirmedDoc.rightsBasis, /Ліст выдавецтва/);
+  assert.ok(confirmedDoc.rightsConfirmedBy, 'the confirming admin is recorded by the system');
   await page.goto(`${BASE}/prayer/d_bd-litany`);
   await page.getByText('Крыніца:').waitFor(); await settle(page);
   assert.match(await page.locator('.prayer-source').innerText(), /© Пінская дыяцэзія/);

@@ -63,7 +63,8 @@ describe('imported drafts vs Firestore rules (emulator)', { skip: !emulator }, (
     assert.equal(bog.status, 'draft'); assert.equal(bog.origin, 'bog_dobry'); assert.equal(bog.rightsStatus, 'unconfirmed');
     await api.saveDraft(ids.bog, { tags: ['У розных патрэбах'], notes: 'правяраў рэдактар' }, { expectedVersion: bog.version });
     await assert.rejects(() => api.publishDraft(ids.bog), { code: 'blocked' }); // rights still unconfirmed
-    await api.saveDraft(ids.bog, { rightsStatus: 'confirmed' });
+    await assert.rejects(() => api.saveDraft(ids.bog, { rightsStatus: 'confirmed' }), { code: 'invalid' }); // a bare tick is not a confirmation
+    await api.saveDraft(ids.bog, { rightsStatus: 'confirmed', rightsBasis: 'Ліст выдавецтва ад 2026-11-14 (тэст)' });
     const published = await api.publishDraft(ids.bog);
     const prayer = (await fs.getDoc(fs.doc(client(null), `prayers/${published.id}`))).data();
     assert.equal(prayer.title, 'Малітва аб урадлівасці'); assert.match(prayer.source, /Бог Добры/); assert.equal(prayer.sourceDraftId, ids.bog);
