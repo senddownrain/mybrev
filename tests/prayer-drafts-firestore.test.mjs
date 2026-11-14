@@ -24,7 +24,7 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
   };
   const actions = (db, uid) => createDraftActions({ db, fs, actorUid: uid, writer: createPrayerContentWriter({ db, fs }) });
   const denied = (operation) => assert.rejects(operation, { code: 'permission-denied' });
-  const baseDraft = (over = {}) => ({ title: 'Новая малітва', text: 'Тэкст малітвы.', tags: ['Літанія'], sourceBook: '«Кніга»', copyrightNotices: ['© Тэст, 2024'], priestOnly: false, rightsStatus: 'confirmed', rightsBasis: 'Пісьмовая згода выдаўца ад 2026-11-14 (тэст)', ...over });
+  const baseDraft = (over = {}) => ({ title: 'Новая малітва', text: 'Тэкст малітвы.', tags: ['Літанія'], source: '«Кніга»', priestOnly: false, ...over });
   let roles;
   before(async () => {
     for (const name of ['prayers', 'priestProtectedPrayers', 'priestProtectedCategories', 'prayerCategories', 'prayerDrafts', 'priestContentControl', 'admins', 'priestDeviceGrants']) await seed.recursiveDelete(seed.collection(name));
@@ -89,7 +89,7 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
       assert.equal(result.alreadyPublished, false);
       const prayer = (await getDoc(doc(roles.anon, `prayers/${result.id}`))).data();
       assert.equal(prayer.title, 'Літанія тэставая'); assert.equal(prayer.sourceDraftId, 'bd_one'); assert.equal(prayer.priestOnly, false);
-      assert.match(prayer.source, /Кніга/); assert.deepEqual(prayer.copyrightNotices, ['© Тэст, 2024']);
+      assert.match(prayer.source, /Кніга/); assert.deepEqual(prayer.copyrightNotices, []);
       const draft = await api.getDraft('bd_one');
       assert.equal(draft.status, 'published'); assert.equal(draft.publishedBy, 'plain'); assert.equal(draft.targetPrayerId, result.id);
       assert.ok((await api.listAudit('bd_one')).some((e) => e.action === 'publish' && e.targetPrayerId === result.id));
@@ -131,51 +131,36 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
       const forced = await api.publishDraft('bd_dup2', { acknowledgeDuplicates: true });
       assert.notEqual(forced.id, 'existing');
     });
-  it('blocked drafts (no tag, source or rights) are not published and stay drafts', async () => {
-      const api = actions(roles.plain, 'plain');
-      await api.createDraft('bd_bad', baseDraft({ title: 'Без правоў', tags: [], copyrightNotices: [] }));
-      await assert.rejects(() => api.publishDraft('bd_bad'), { code: 'blocked' });
-      assert.equal((await api.getDraft('bd_bad')).status, 'draft');
-    });
-  it('rights: unconfirmed blocks; a bare tick without basis is refused; with basis it publishes and the confirmer is recorded', async () => {
+  it('only missing tags or source block a draft; no rights approval is required', async () => {
     const api = actions(roles.plain, 'plain');
-    await api.createDraft('bd_rights', baseDraft({ title: 'Правы пад пытаннем', rightsStatus: 'unconfirmed', rightsBasis: '' }));
-    await assert.rejects(() => api.publishDraft('bd_rights'), { code: 'blocked' });
-    await assert.rejects(() => api.saveDraft('bd_rights', { rightsStatus: 'confirmed' }), { code: 'invalid' });
-    await assert.rejects(() => api.saveDraft('bd_rights', { rightsStatus: 'confirmed', rightsBasis: 'так' }), { code: 'invalid' });
-    assert.equal((await api.getDraft('bd_rights')).rightsStatus, 'unconfirmed');
-    await api.saveDraft('bd_rights', { rightsStatus: 'confirmed', rightsBasis: 'Ліст выдавецтва ад 2026-11-14, №12' });
-    const confirmed = await api.getDraft('bd_rights');
-    assert.equal(confirmed.rightsConfirmedBy, 'plain');
-    assert.ok(confirmed.rightsConfirmedAt);
+    await api.createDraft('bd_bad', baseDraft({ title: 'Без тэгаў', tags: [] }));
+    await assert.rejects(() => api.publishDraft('bd_bad'), { code: 'blocked' });
+    assert.equal((await api.getDraft('bd_bad')).status, 'draft');
+    await api.createDraft('bd_no_source', baseDraft({ title: 'Без крыніцы', source: '' }));
+    await assert.rejects(() => api.publishDraft('bd_no_source'), { code: 'blocked' });
+    await api.createDraft('bd_rights', baseDraft({ title: 'Без дазволу' }));
+    await seed.doc('prayerDrafts/bd_rights').update({ rightsStatus: 'unconfirmed' });
     assert.equal((await api.publishDraft('bd_rights')).alreadyPublished, false);
   });
-  it('rules: confirmed rights need a basis and the signed-in confirmer; nobody can forge another admin as confirmer', async () => {
+  it('old intermediate and archived statuses can be saved as draft and published', async () => {
     const api = actions(roles.plain, 'plain');
-    await api.createDraft('bd_forge', baseDraft({ title: 'Падробка', rightsStatus: 'unconfirmed', rightsBasis: '' }));
-    const draft = await api.getDraft('bd_forge');
-    const ref = doc(roles.plain, 'prayerDrafts/bd_forge');
-    const base = { rightsStatus: 'confirmed', version: draft.version + 1, updatedAt: serverTimestamp() };
-    await denied(updateDoc(ref, { ...base, rightsConfirmedBy: 'plain' })); // no basis
-    await denied(updateDoc(ref, { ...base, rightsBasis: 'Ліст выдавецтва, 2026', rightsConfirmedBy: 'boss' })); // someone else
-    await denied(updateDoc(ref, { ...base, rightsBasis: 'Ліст выдавецтва, 2026' })); // nobody recorded
-    await updateDoc(ref, { ...base, rightsBasis: 'Ліст выдавецтва, 2026', rightsConfirmedBy: 'plain' });
-    // A second admin edits another field: the original confirmer stays untouched and the draft stays valid.
-    const bossApi = actions(roles.boss, 'boss');
-    await bossApi.saveDraft('bd_forge', { notes: 'правіў boss' });
-    assert.equal((await bossApi.getDraft('bd_forge')).rightsConfirmedBy, 'plain');
+    await seed.doc('prayerDrafts/old_review').set({ ...baseDraft({ title: 'Старая праверка' }), draftId: 'old_review', textFormat: 'mybrev-markdown', status: 'needs_review', version: 1 });
+    await api.saveDraft('old_review', { source: 'Абноўленая крыніца' });
+    assert.equal((await api.getDraft('old_review')).status, 'draft');
+    await seed.doc('prayerDrafts/old_archive').set({ ...baseDraft({ title: 'Стары архіў' }), draftId: 'old_archive', textFormat: 'mybrev-markdown', status: 'archived', version: 1 });
+    const { id } = await api.publishDraft('old_archive');
+    assert.equal((await api.getDraft('old_archive')).status, 'published');
+    assert.equal((await getDoc(doc(roles.anon, `prayers/${id}`))).data().sourceDraftId, 'old_archive');
   });
   it('plain admin: priestOnly draft publishes into the protected collection, status moves and audit work', async () => {
     const api = actions(roles.plain, 'plain');
     await api.createDraft('bd_plain_priest', baseDraft({ title: 'Толькі святарам (plain admin)', priestOnly: true }));
-    await api.saveDraft('bd_plain_priest', {}, { status: 'needs_review' });
-    await api.saveDraft('bd_plain_priest', {}, { status: 'ready_for_publication' });
     const { id } = await api.publishDraft('bd_plain_priest');
     assert.equal((await getDoc(doc(roles.anon, `prayers/${id}`))).exists(), false);
     assert.equal((await getDoc(doc(roles.priest, `priestProtectedPrayers/${id}`))).data().sourceDraftId, 'bd_plain_priest');
     const log = (await api.listAudit('bd_plain_priest')).map((e) => e.action);
     // The log is ordered by whole seconds, so compare the set of actions, not their order.
-    assert.deepEqual([...log].sort(), ['create', 'publish', 'status:needs_review', 'status:ready_for_publication']);
+    assert.deepEqual([...log].sort(), ['create', 'publish']);
   });
   it('plain admin does NOT get superadmin powers: no admin roles, no priest access settings', async () => {
     await denied(setDoc(doc(roles.plain, 'admins/intruder'), { role: 'admin' }));
@@ -201,14 +186,11 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
       await assert.rejects(() => api.saveDraft('bd_ver', { notes: 'b' }, { expectedVersion: draft.version }), { code: 'conflict' });
       await assert.rejects(() => api.publishDraft('bd_ver', { expectedVersion: draft.version }), { code: 'conflict' });
     });
-  it('archived draft cannot be published; archiving does not touch a public prayer; unarchive returns to draft', async () => {
-      const api = actions(roles.plain, 'plain');
-      await api.createDraft('bd_arch', baseDraft({ title: 'Архіў' }));
-      await api.saveDraft('bd_arch', {}, { status: 'archived' });
-      await assert.rejects(() => api.publishDraft('bd_arch'), { code: 'transition' });
-      await api.saveDraft('bd_arch', {}, { status: 'draft' });
-      const before = (await getDocs(collection(roles.anon, 'prayers'))).size;
-      await api.saveDraft('bd_arch', {}, { status: 'archived' });
-      assert.equal((await getDocs(collection(roles.anon, 'prayers'))).size, before);
-    });
+  it('new intermediate states cannot be introduced by admins', async () => {
+    const api = actions(roles.plain, 'plain');
+    await api.createDraft('bd_two_states', baseDraft({ title: 'Толькі два станы' }));
+    await assert.rejects(() => api.saveDraft('bd_two_states', {}, { status: 'ready_for_publication' }), { code: 'transition' });
+    const before = await api.getDraft('bd_two_states');
+    await denied(updateDoc(doc(roles.plain, 'prayerDrafts/bd_two_states'), { status: 'needs_review', version: before.version + 1 }));
+  });
 });
