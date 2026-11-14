@@ -3,14 +3,12 @@
 import { formatSourceNotice } from './prayerSource.mjs';
 
 export const DRAFT_COLLECTION = 'prayerDrafts';
-export const DRAFT_STATUSES = Object.freeze(['draft', 'needs_review', 'ready_for_publication', 'published', 'archived']);
-export const DRAFT_STATUS_LABELS = Object.freeze({
-  draft: 'Чарнавік',
-  needs_review: 'На праверцы',
-  ready_for_publication: 'Гатова',
-  published: 'Апублікавана',
-  archived: 'У архіве',
-});
+export const DRAFT_STATUSES = Object.freeze(['draft', 'published']);
+export const DRAFT_STATUS_LABELS = Object.freeze({ draft: 'Чарнавік', published: 'Апублікавана' });
+// Old imported drafts may still have historical statuses; show and treat all of them as drafts.
+export function normalizeDraftStatus(status) {
+  return ['needs_review', 'ready_for_publication', 'archived'].includes(status) ? 'draft' : status;
+}
 export const DRAFT_ORIGINS = Object.freeze({ bog_dobry: 'Бог Добры', disputed: 'Спрэчныя' });
 export const DRAFT_REASON_LABELS = Object.freeze({
   unique_bog_dobry: 'Новы тэкст з «Бог Добры»',
@@ -22,15 +20,8 @@ export const DRAFT_REASON_LABELS = Object.freeze({
 export const DRAFT_TEXT_LIMIT = 200000;
 export const DRAFT_TITLE_LIMIT = 200;
 
-const TRANSITIONS = {
-  draft: ['draft', 'needs_review', 'ready_for_publication', 'published', 'archived'],
-  needs_review: ['draft', 'needs_review', 'ready_for_publication', 'published', 'archived'],
-  ready_for_publication: ['draft', 'needs_review', 'ready_for_publication', 'published', 'archived'],
-  published: [],
-  archived: ['archived', 'draft'],
-};
 export function canTransition(from, to) {
-  return (TRANSITIONS[from] || []).includes(to);
+  return normalizeDraftStatus(from) === 'draft' && ['draft', 'published'].includes(to);
 }
 
 /** Casefold + graphic variants (і/i, ё/е, ў/у, apostrophes, punctuation) for title matching. */
@@ -84,9 +75,6 @@ export function targetPrayerIdFor(draft) {
   return draft.targetPrayerId || `d_${draft.draftId || draft.id}`.slice(0, 250);
 }
 
-export const RIGHTS_BASIS_MIN = 10;
-export const RIGHTS_BASIS_MAX = 500;
-
 export function validateDraft(data) {
   const errors = [];
   if (!data || typeof data !== 'object') return ['Пусты чарнавік.'];
@@ -97,12 +85,8 @@ export function validateDraft(data) {
   if (!text.trim()) errors.push('Патрэбны тэкст.');
   if (text.length > DRAFT_TEXT_LIMIT) errors.push('Тэкст занадта вялікі.');
   if (data.textFormat !== 'mybrev-markdown') errors.push('Дазволены толькі фармат mybrev-markdown.');
-  if (!DRAFT_STATUSES.includes(data.status)) errors.push('Невядомы статус.');
+  if (!DRAFT_STATUSES.includes(normalizeDraftStatus(data.status))) errors.push('Невядомы статус.');
   if (!Array.isArray(data.tags)) errors.push('Тэгі павінны быць спісам.');
-  // Confirming digital-publication rights needs a written basis; a bare tick is not a confirmation.
-  const basis = String(data.rightsBasis ?? '').trim();
-  if (data.rightsStatus === 'confirmed' && basis.length < RIGHTS_BASIS_MIN) errors.push('Укажыце падставу пацверджання правоў: хто, калі і які дакумент ці ліцэнзія.');
-  if (basis.length > RIGHTS_BASIS_MAX) errors.push(`Падстава даўжэйшая за ${RIGHTS_BASIS_MAX} сімвалаў.`);
   return errors;
 }
 
@@ -111,13 +95,11 @@ export function publishBlockers(draft) {
   const blockers = validateDraft({ ...draft, status: draft.status });
   if (!draft.tags?.length) blockers.push('Дадайце хаця б адзін тэг.');
   if (!draft.sourceBook && !draft.source) blockers.push('Патрэбна крыніца.');
-  if (!draft.copyrightNotices?.length) blockers.push('Патрэбны запіс аб аўтарскіх правах.');
-  if (draft.rightsStatus !== 'confirmed') blockers.push('Права на лічбавую публікацыю не пацверджана.');
   return blockers;
 }
 
 export function draftSourceNotice(draft) {
-  if (draft.source && !draft.sourceBook) return draft.source;
+  if (String(draft.source || '').trim()) return String(draft.source).trim();
   const pages = draft.pdfPageStart ? `${draft.printedPageStart || draft.pdfPageStart}${draft.printedPageEnd && draft.printedPageEnd !== draft.printedPageStart ? `–${draft.printedPageEnd}` : ''}` : '';
   return formatSourceNotice({ book: [draft.sourceBook, draft.sourceEdition].filter(Boolean).join(' '), pages: draft.printedPageStart ? pages : '', copyrightNotices: draft.copyrightNotices });
 }
