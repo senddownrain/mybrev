@@ -89,6 +89,7 @@ service cloud.firestore {
     // Closed prayer drafts: admin-only in both directions (never a flag inside public `prayers`,
     // which older Flutter clients read in full). `admin` and `superadmin` are equal here; a priest
     // grant gives no access. Publishing is a single transaction that also writes the public prayer.
+    // Historical rights/import fields remain allowed for editing old documents; they are not publication gates.
     function draftKeys() {
       return ['draftId', 'sourceId', 'sourceBook', 'sourceEdition', 'sourceSha256', 'sourcePageSpan', 'pdfPageStart', 'pdfPageEnd',
         'printedPageStart', 'printedPageEnd', 'originalEntryId', 'title', 'text', 'textFormat', 'source', 'tags', 'categoryIds',
@@ -96,19 +97,13 @@ service cloud.firestore {
         'status', 'version', 'fingerprint', 'createdBy', 'createdAt', 'updatedAt', 'reviewedBy', 'reviewedAt', 'publishedBy',
         'publishedAt', 'targetPrayerId', 'notes', 'rightsBasis', 'rightsConfirmedBy', 'rightsConfirmedAt'];
     }
-    // Rights are only `confirmed` with a written basis and a recorded confirmer; a bare flag is refused.
-    function rightsBasisOk(data) {
-      return data.get('rightsStatus', '') != 'confirmed'
-        || (data.get('rightsBasis', '') is string && data.get('rightsBasis', '').size() >= 10 && data.get('rightsBasis', '').size() <= 500
-          && data.get('rightsConfirmedBy', '') is string && data.get('rightsConfirmedBy', '') != '');
-    }
     function validDraft(data) {
-      return data.keys().hasOnly(draftKeys()) && rightsBasisOk(data)
+      return data.keys().hasOnly(draftKeys())
         && data.title is string && data.title.size() > 0 && data.title.size() <= 200
         && data.text is string && data.text.size() > 0 && data.text.size() <= 200000
         && data.textFormat == 'mybrev-markdown'
         && data.tags is list && data.tags.size() <= 40
-        && data.status in ['draft', 'needs_review', 'ready_for_publication', 'published', 'archived']
+        && data.status in ['draft', 'published']
         && data.get('priestOnly', false) is bool
         && data.version is int;
     }
@@ -124,12 +119,9 @@ service cloud.firestore {
     match /prayerDrafts/{id} {
       allow read: if isAdmin();
       allow create: if isAdmin() && validDraft(request.resource.data) && request.resource.data.version == 1
-        && (request.resource.data.get('rightsStatus', '') != 'confirmed' || request.resource.data.rightsConfirmedBy == request.auth.uid)
-        && request.resource.data.status in ['draft', 'needs_review'];
+        && request.resource.data.status == 'draft';
       allow update: if isAdmin() && validDraft(request.resource.data)
         && resource.data.status != 'published'
-        && (request.resource.data.get('rightsStatus', '') != 'confirmed' || request.resource.data.rightsConfirmedBy == request.auth.uid
-          || request.resource.data.get('rightsConfirmedBy', '') == resource.data.get('rightsConfirmedBy', '-'))
         && request.resource.data.version == resource.data.version + 1
         && (request.resource.data.status != 'published' || draftPublishedTarget(id, request.resource.data));
       allow delete: if false;
