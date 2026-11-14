@@ -95,7 +95,7 @@ jobs:
         run: node --test tests/dynamic-feast-daytime.test.mjs
 
       - name: Advent Vespers source provenance (2025–2032, all dioceses)
-        run: node --test tests/advent-vespers-provenance.test.mjs
+        run: node --test tests/advent-vespers-provenance.test.mjs tests/advent-benedictus.test.mjs
 
       - name: Audit tests
         run: npm run test:audit

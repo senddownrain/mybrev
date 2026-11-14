@@ -1,6 +1,7 @@
 import { isFromDayReference } from '../constants/days.js';
 import { OFFICE_CONTENT_FIELDS } from '../constants/officeFields.js';
 import { ADVENT_VESPERS_PSALMS } from './adventVespers.js';
+import { adventSundayBenedictus } from './adventBenedictus.js';
 
 const DAY_TEMPLATE_LABELS = Object.freeze({
   apostles: 'Апосталы',
@@ -325,12 +326,32 @@ export function resolveChristmasDateAgainstPeriod(dateDay, periodDay) {
  * psalmody belongs to the current psalter, even when a source-year page has
  * materialized another evening (notably Christmas I Vespers).
  */
-export function resolveAdventDateAgainstPeriod(dateDay, periodDay, dayOfWeek) {
+export function resolveAdventDateAgainstPeriod(dateDay, periodDay, dayOfWeek, { sundayCycle, periodWeek } = {}) {
   const sunday = Number(dayOfWeek) === 1;
+  const fourthSunday = sunday && (periodDay?.id === 'advent-w4-d1' || Number(periodWeek ?? periodDay?._periodWeekNumber) === 4);
+  const christmasEveLauds = fourthSunday && dateDay?.id === 'advent-24-12';
   const resolved = resolveDateDayAgainstPeriod(dateDay, periodDay);
   if (!resolved) return null;
   const sources = { ...periodDay?._fieldSources };
   OFFICE_CONTENT_FIELDS.forEach((field) => {
+    if (fourthSunday && field === 'laudesAntBen'
+      && !['advent-21-12', 'advent-23-12', 'advent-24-12'].includes(dateDay?.id)) {
+      const selected = adventSundayBenedictus(periodDay, sundayCycle);
+      resolved[field] = selected.value;
+      sources[field] = { ...selected.source, ...(!selected.value ? { status: 'missing-source-text' } : {}) };
+      return;
+    }
+    // 24 December has its own complete Lauds. Its psalms remain the current
+    // Sunday IV psalter; the dated document stores those psalms as gaps.
+    const mandatoryDateBenedictus = fourthSunday && field === 'laudesAntBen'
+      && ['advent-21-12', 'advent-23-12', 'advent-24-12'].includes(dateDay?.id);
+    if (mandatoryDateBenedictus || (christmasEveLauds && field.startsWith('laudes') && !/^laudesPs[123]$/.test(field))) {
+      resolved[field] = isMissing(dateDay?.[field]) || isFromDayReference(dateDay[field]) ? '' : dateDay[field];
+      sources[field] = { ...(dateDay?._fieldSources?.[field] || { document: dateDay?.id, field }),
+        ...(!resolved[field] ? { status: 'missing-source-text' } : {}),
+      };
+      return;
+    }
     const dateProper = ['laudesAntBen', 'vesperAntMag'].includes(field);
     const periodOnly = (sunday && !dateProper) || ADVENT_VESPERS_PSALMS.includes(field);
     if (periodOnly) {

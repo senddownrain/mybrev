@@ -76,6 +76,8 @@
     "ordo:migrate-ranks": "node scripts/ordo-migrate-ranks.mjs",
     "ordo:missing-content": "node scripts/ordo-missing-content.mjs",
     "test": "node --test tests/*.test.mjs",
+    "test:category-icons": "node --test tests/prayer-category-icons.test.mjs",
+    "sync:category-icons": "node scripts/export-category-icons.mjs",
     "test:audit": "node --test tests/liturgical-audit.test.mjs",
     "test:fixed-feasts": "node --test tests/fixed-feasts-audit.test.mjs",
     "test:alternatives": "node --test tests/liturgical-alternatives.test.mjs tests/pastors-hymns.test.mjs",

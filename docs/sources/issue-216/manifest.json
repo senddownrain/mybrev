@@ -1,0 +1,37 @@
+{
+  "sources": [
+    {
+      "date": "2022-12-18",
+      "url": "https://lh.catholic.by/showalldates/index.php",
+      "method": "POST",
+      "form": {
+        "DateSelector": "18.12.2022"
+      },
+      "retrievedAt": "2026-11-09T06:27:57.210Z",
+      "sha256": "1c92b4626c506d1cbf66724169175f01f24b91c8609a03965a13af00aaa888b0",
+      "file": "2022-12-18-lauds.html"
+    },
+    {
+      "date": "2024-12-22",
+      "url": "https://lh.catholic.by/showalldates/index.php",
+      "method": "POST",
+      "form": {
+        "DateSelector": "22.12.2024"
+      },
+      "retrievedAt": "2026-11-09T06:27:57.213Z",
+      "sha256": "1c92b4626c506d1cbf66724169175f01f24b91c8609a03965a13af00aaa888b0",
+      "file": "2024-12-22-lauds.html"
+    },
+    {
+      "date": "2023-12-24",
+      "url": "https://lh.catholic.by/showalldates/index.php",
+      "method": "POST",
+      "form": {
+        "DateSelector": "24.12.2023"
+      },
+      "retrievedAt": "2026-11-09T06:27:57.214Z",
+      "sha256": "a6836e14d3569dbcee94fa102abee43ebd54a94a8f993d19f05c046e26e05d20",
+      "file": "2023-12-24-lauds.html"
+    }
+  ]
+}

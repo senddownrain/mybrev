@@ -72,10 +72,12 @@ process.env.VITE_FEEDBACK_API_URL = API;
 const server = await createServer({
   configFile: false, define: { 'process.env': {} }, cacheDir: 'node_modules/.vite-feedback-e2e',
   resolve: { alias: { '@': fileURLToPath(new URL('../src', import.meta.url)) } },
-  server: { host: '127.0.0.1', port: WEB_PORT, strictPort: true },
+  server: { host: '127.0.0.1', port: WEB_PORT, strictPort: true, warmup: { clientFiles: ['src/main.js', 'src/views/**/*.vue'] } },
   plugins: [vue(), vuetify({ styles: false }), { name: 'emulator-only', enforce: 'pre', transform(src, id) { return id.replaceAll('\\', '/').split('?')[0].endsWith('/src/plugins/firebase.js') ? firebaseModule : undefined; } }],
 });
 await server.listen();
+// Cold Vite dep optimizer discovers Vuetify components lazily and force-reloads the page mid-test (login lost -> flaky 15s timeouts). Crawl all views first and wait until the optimizer has settled.
+await server.waitForRequestsIdle();
 
 const browser = await chromium.launch({ executablePath: process.env.BENCHMARK_BROWSER_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true });
 const failures = [];
