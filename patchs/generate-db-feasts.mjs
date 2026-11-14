@@ -22,6 +22,8 @@
  */
 
 import fs from 'node:fs/promises';
+import { inventoryDocument } from '../scripts/liturgy/lib/common-text-audit.mjs';
+import { expandApprovedEditorial } from '../scripts/liturgy/lib/editorial-policy.mjs';
 import path from 'node:path';
 import process from 'node:process';
 import { LOCAL_CALENDAR_REFERENCES } from '../src/data/ordo/layers.js';
@@ -752,6 +754,15 @@ async function main() {
   report.duplicateIds = [...outputIds.entries()].filter(([, files]) => files.length > 1).map(([_id, files]) => ({ _id, files }));
 
   for (const [dir, list] of [[OUTPUT_DIR, allOutputs], [TEMPLATES_OUTPUT_DIR, templateOutputs]]) {
+    // Cache-recovered Proper follows exactly the same scoped editorial policy.
+    // Do not rewrite the cached historical snapshot or materialize a Common.
+    for (const {outputFile,output} of list) for (const row of inventoryDocument(output)) {
+      if (row.rule || typeof row.value !== 'string') continue;
+      const result = expandApprovedEditorial(row.value,row.field);
+      if (!result.edits.length) continue;
+      (report.editorialExpansions ||= []).push({outputFile,field:row.path.join('.'),beforeHtml:row.value,afterHtml:result.value,edits:result.edits});
+      row.container[row.field] = result.value;
+    }
     await fs.mkdir(dir, { recursive: true });
     const old = (await fs.readdir(dir)).filter((name) => name.endsWith('.json'));
     await Promise.all(old.map((name) => fs.unlink(path.join(dir, name))));

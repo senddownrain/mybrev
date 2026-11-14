@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** Follow-up on the frozen PR #245 queue. No corpus audit or live reads. */
 import fs from 'node:fs';
+import { preEditorialDocument } from './lib/editorial-policy.mjs';
 import zlib from 'node:zlib';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,7 +16,7 @@ const printEvidence=printedEvidence(root);
 const reportFile=path.join(out,'manual-verification-first-pass.md');
 const five=JSON.parse(fs.readFileSync(path.join(out,'five-reconstruction-candidates.json')));
 const docs = new Map();
-const read = file => { if (!docs.has(file)) docs.set(file, JSON.parse(fs.readFileSync(path.join(root, file)))); return docs.get(file); };
+const read = file => { if (!docs.has(file)) docs.set(file, preEditorialDocument(JSON.parse(fs.readFileSync(path.join(root, file))),file)); return docs.get(file); };
 const records = seed.cases.map((item, index) => {
   const doc = read(item.file), originalHtml = atPath(doc, item.field), keys = item.field.split('.'), field = keys.pop();
   const container = keys.reduce((value, key) => value?.[key], doc);
@@ -65,12 +66,14 @@ const output = { schema: 2, scope: 'Only the 500 frozen PR #245 manual cases; or
   counts, cases: records };
 const queue = { schema: 2, policy: 'Do not infer liturgical words. Closed cases and all per-case evidence are preserved in manual-review-followup.json.gz.',
   counts, closedCases: records.filter(r => r.status !== 'manual-review').map(r => ({caseId:r.caseId,file:r.file,field:r.field,status:r.status,classification:r.classification})), cases: pending.map(({originalHtml: _originalHtml, proposedHtml: _proposedHtml, longResponses, ...item}) => ({...item, evidenceRecord:'manual-review-followup.json.gz#'+item.caseId, proposalCount:(longResponses||[]).filter(p=>p.proposedReply).length})) };
+const v3Active=fs.existsSync(path.join(out,'v3/summary.json'));
+if (args.includes('--write') && v3Active) throw Error('Frozen historical proof: v3 is active; use editorial-responsories-v3.mjs.');
 if (args.includes('--write')) {
   fs.writeFileSync(path.join(out, 'manual-review-followup.json.gz'), zlib.gzipSync(JSON.stringify(output)+'\n',{level:9}));
   fs.writeFileSync(path.join(out, 'manual-review.json'), JSON.stringify(queue, null, 2) + '\n');
 }
 if (args.includes('--check')) {
   if (zlib.gunzipSync(fs.readFileSync(path.join(out, 'manual-review-followup.json.gz'))).toString() !== JSON.stringify(output) + '\n') throw Error('Follow-up report is stale');
-  if (fs.readFileSync(path.join(out, 'manual-review.json'), 'utf8') !== JSON.stringify(queue, null, 2) + '\n') throw Error('Manual queue is stale');
+  if (!v3Active && fs.readFileSync(path.join(out, 'manual-review.json'), 'utf8') !== JSON.stringify(queue, null, 2) + '\n') throw Error('Manual queue is stale');
 }
 console.log(JSON.stringify(counts, null, 2));

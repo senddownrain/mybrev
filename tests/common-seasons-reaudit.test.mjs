@@ -1,3 +1,4 @@
+import { preEditorialComparison } from '../scripts/liturgy/lib/editorial-policy.mjs';
 import { DOXOLOGY_HTML } from '../scripts/liturgy/lib/psalmody-doxology.mjs';
 /**
  * Re-audit of the seasonal Commons: the three volumes are compared SECTION BY SECTION
@@ -34,7 +35,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const generated = generate();
 const { corpus, analysis, documents } = generated;
 const plain = (value) => htmlToPlain(Array.isArray(value) ? value.join('\n') : String(value || '')).replace(/\s+/g, ' ').trim();
-const variant = (id, season, field) => documents.get(id)?.[season]?.[field];
+// Printed-book assertions use the reversible historical view; current HTML is
+// tested in liturgical-editorial-v3.test.mjs against exact span proofs.
+const variant = (id, season, field) => preEditorialComparison(documents.get(id)?.[season]?.[field], 'patchs/feasts/common-texts/'+id+'.json', '_seasonalVariants.'+season+'.'+field);
 const baseOf = (id, field) => corpus.base.get(id)[field];
 const baseline = JSON.parse(fs.readFileSync(path.join(ROOT, 'reports', 'liturgy', 'common-seasons-audit-baseline-adf6b14.json'), 'utf8'));
 const cellOf = (common, field, season) => analysis.matrix.find((c) => c.common === common && c.field === field && c.season === season);
@@ -393,7 +396,7 @@ test('NR-001: К./Н. lines annotated «(Велікодны перыяд Алл�
     const printedByVolumeI = analysis.variants.get(id)[season][field].method === 'render' && season !== 'lent';
     if (printedByVolumeI) return;
     const count = (v) => (plain(v).match(/аллелюя/g) || []).length;
-    assert.ok(count(value) <= count(baseOf(id, field) || ''), `${id}.${season}.${field}`);
+    assert.ok(count(preEditorialComparison(value,'patchs/feasts/common-texts/'+id+'.json','_seasonalVariants.'+season+'.'+field)) <= count(baseOf(id, field) || ''), `${id}.${season}.${field}`);
   })));
 });
 

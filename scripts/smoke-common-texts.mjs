@@ -13,7 +13,7 @@ import { getBundledCalendarDefinitions } from '../src/utils/ordo/definitions.js'
 import { repairCommonDocument, sourceResponseEvidence } from './liturgy/lib/common-text-audit.mjs';
 import { CONTENT_REVISION, CONTENT_CACHE_SCHEMA } from '../src/constants/contentRevision.js';
 const base=process.env.SMOKE_BASE_URL||'http://127.0.0.1:5191';
-const out='docs/audits/liturgical-common-texts-2026-11/web';fs.mkdirSync(out,{recursive:true});
+const out=process.env.SMOKE_OUT||'docs/audits/liturgical-common-texts-2026-11/web';fs.mkdirSync(out,{recursive:true});
 const source=await openLiturgySource({snapshotDir:'backups/firestore-snapshot-public'});
 const evidence=sourceResponseEvidence(process.cwd());
 source.days=source.days.map(d=>repairCommonDocument(repairDocument(d).after,evidence).after);source.daysById=new Map(source.days.map(d=>[d.id,d]));
@@ -29,6 +29,7 @@ const jos=cache.find(([key])=>key[1]==='2026-11-12')[1].dayOptions.find(o=>o.day
 const regular=cache.find(([key])=>key[1]==='2026-11-05')[1].dayOptions.find(o=>o.dayId!=='office-for-dead');
 const saint=cache.find(([key])=>key[1]==='2026-11-01')[1].dayOptions[0];
 const captureMode=process.env.SMOKE_CAPTURE==='readings';
+const captureEditorial=process.env.SMOKE_CAPTURE==='editorial-v3';
 const scenarios=[
  ...jos.templates.flatMap(t=>['lectionis','laudes','terz','sext','non','vesper'].map(hour=>({name:'josaphat-'+t.choice+'-'+hour,date:'2026-11-12',id:t.id,hour}))),
  ...['lectionis','laudes','terz','sext','non','vesper','completorium'].map(hour=>({name:'dead-'+hour,date:'2026-11-02',id:'office-for-dead',hour})),
@@ -40,7 +41,7 @@ const scenarios=[
 const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
 const results=[];
 try {
- const checkedScenarios=captureMode?scenarios.filter(s=>['josaphat-martyr-one-laudes','josaphat-martyr-one-vesper','josaphat-pastors-laudes'].includes(s.name)):scenarios;
+ const checkedScenarios=captureEditorial?scenarios.filter(s=>['josaphat-pastors-vesper','josaphat-martyr-one-lectionis','dead-lectionis'].includes(s.name)):captureMode?scenarios.filter(s=>['josaphat-martyr-one-laudes','josaphat-martyr-one-vesper','josaphat-pastors-laudes'].includes(s.name)):scenarios;
  for(const profile of [{width:390,height:844,theme:'light',mode:'left-break'},{width:1280,height:900,theme:'dark',mode:'alternating-stanzas'},{width:390,height:844,theme:'dark',mode:'left-break-indent',scale:1.5}]) {
   const context=await browser.newContext({viewport:profile,colorScheme:profile.theme,serviceWorkers:'block',reducedMotion:'reduce'}),page=await context.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
@@ -70,6 +71,18 @@ try {
     assert.equal(replies.length,6);assert.match(replies[4],/Хвала Айцу і Сыну, і Духу Святому/u);
     assert.ok(replies[1].length>30&&replies[5].length>30,'full attested answers');
    }
+   if(captureEditorial){
+    const response=await page.locator('.ora-text p:visible').allTextContents();
+    const replies=response.map(t=>t.trim()).filter(t=>/^[КН]\. /u.test(t));
+    assert.ok(replies.length>=3,'responsory turns visible');
+    if(s.hour==='vesper'){const i=replies.findIndex(t=>t.startsWith('К. '));assert.ok(i>=0);assert.equal(replies[i+1].slice(3),replies[i].slice(3));assert.equal(replies[i+5].slice(3),replies[i].slice(3));}
+    else {
+     const blocks=replies.flatMap((t,i)=>t.startsWith('Н. ')&&replies[i+1]?.startsWith('К. ')&&replies[i+2]?.startsWith('Н. ')&&t.includes('*')?[[t,replies[i+2]]]:[]);
+     assert.ok(blocks.length,'local N/K/N responsory visible');
+     const normalized=t=>t.toLocaleLowerCase('be').replace(/\s+/gu,' ').trim();
+     for(const [opening,repeat]of blocks)assert.equal(normalized(repeat.slice(3)),normalized(opening.slice(opening.indexOf('*')+1)),'long final N repeats local B only');
+    }
+   }
    const roles=await page.locator('.intercessions__response').allTextContents();
    if(s.name.includes('josaphat-martyr-one-vesper'))assert.equal(roles.length,0,'repeated refrains do not turn petitions into responses');
    const headings=await page.locator('p').filter({hasText:/^КАРОТКАЕ ЧЫТАННЕ/u}).count();
@@ -84,9 +97,9 @@ try {
     const ending=s.daniel?shownPsalm.locator('p').last():shownPsalm.locator('p').filter({hasText:'Хвала Айцу і Сыну'}).first();
     await ending.scrollIntoViewIfNeeded();
     await page.waitForFunction(p => Number(getComputedStyle(p).opacity) > 0.9, await ending.elementHandle());
-    if(captureMode||['josaphat-martyr-one-laudes','josaphat-martyr-one-vesper','josaphat-pastors-lectionis','dead-laudes','ordinary'].includes(s.name)){
-     const anchor=page.locator('.intercessions').first();if(captureMode)await page.locator('p').filter({hasText:/^КАРОТКІ РЭСПАНСОРЫЙ/u}).first().scrollIntoViewIfNeeded();else if(await anchor.count())await anchor.scrollIntoViewIfNeeded();
-     await page.screenshot({path:path.join(out,`${captureMode?'reading-':''}${profile.width}-${profile.theme}-${s.name}-${alt}.png`),animations:'disabled'});
+    if(captureEditorial||captureMode||['josaphat-martyr-one-laudes','josaphat-martyr-one-vesper','josaphat-pastors-lectionis','dead-laudes','ordinary'].includes(s.name)){
+     const anchor=page.locator('.intercessions').first();if(captureEditorial)await page.locator('p:visible').filter({hasText:/^[КН]\. /u}).first().scrollIntoViewIfNeeded();else if(captureMode)await page.locator('p').filter({hasText:/^КАРОТКІ РЭСПАНСОРЫЙ/u}).first().scrollIntoViewIfNeeded();else if(await anchor.count())await anchor.scrollIntoViewIfNeeded();
+     await page.screenshot({path:path.join(out,`${captureEditorial?'editorial-':captureMode?'reading-':''}${profile.width}-${profile.theme}-${s.name}-${alt}.png`),animations:'disabled'});
     }
     results.push({scenario:s.name,alternative:alt,profile,counts,metrics,headings,responseParagraphs:roles.length,url:page.url()});
    }
@@ -94,5 +107,5 @@ try {
   assert.deepEqual(errors,[]);await context.close();
  }
 }finally{await browser.close();}
-fs.writeFileSync(path.join(out,captureMode?'results-short-responsories.json':'results.json'),JSON.stringify(results,null,2)+'\n');
+fs.writeFileSync(path.join(out,captureEditorial?'results-editorial-v3.json':captureMode?'results-short-responsories.json':'results.json'),JSON.stringify(results,null,2)+'\n');
 console.log(JSON.stringify({states:results.length,allPassed:true}));

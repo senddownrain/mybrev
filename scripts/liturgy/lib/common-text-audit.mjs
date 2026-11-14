@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { expandApprovedEditorial } from './editorial-policy.mjs';
 import { isTwoLineVersicle } from './manual-common-review.mjs';
 import { expandAttestedResponsories, RESPONSORY_ATTESTATIONS } from './attested-responsories.mjs';
 import path from 'node:path';
@@ -61,10 +62,14 @@ export function inspectField(row, evidence = new Map()) {
     const attested = expandAttestedResponsories(after);
     after = attested.value;
     if (attested.proofs.length) findings.push({type:'source-attested-full-responsory',confidence:'high',status:'reviewed',evidence:attested.proofs.map(id=>RESPONSORY_ATTESTATIONS.find(r=>r.id===id))});
+    const editorial = expandApprovedEditorial(after, field);
+    after = editorial.value;
+    if (editorial.edits.length) findings.push({type:'editorial-display-expansion',confidence:'high',status:'owner-authorized',evidence:editorial.edits});
     const text = liturgicalText(after);
     const short = [...text.matchAll(/(?:^|\s)([КН])\.\s+(.+?)(?=\s+[КН]\.?(?:\s|$)|$)/gu)]
       .filter(m => (m[1] === 'Н' && m[2].split(/\s/u).length <= 3) || /^Хвала Айцу\.?$/u.test(m[2]));
-    if (short.length && !isTwoLineVersicle(after, field)) findings.push({ type: 'abbreviated-responsory', confidence: 'unconfirmed', status: 'manual-review',
+    if (short.length && !isTwoLineVersicle(after, field)
+      && !(editorial.kind && editorial.status !== 'needs-editor' && editorial.blocks.length)) findings.push({ type: 'abbreviated-responsory', confidence: 'unconfirmed', status: 'manual-review',
       excerpts: short.map(m => `${m[1]}. ${m[2]}`),
       evidence: ['printed volumes also abbreviate responses; no independently verified full Belarusian reply available; no expansion'] });
   }

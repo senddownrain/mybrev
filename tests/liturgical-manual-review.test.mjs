@@ -1,3 +1,4 @@
+import { preEditorialComparison } from '../scripts/liturgy/lib/editorial-policy.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -35,7 +36,7 @@ test('all 16 antiphon fields have a preserved, checked classification',()=>{
 test('long response proposals copy only the local marked words and never apply themselves',()=>{
  const doc=JSON.parse(fs.readFileSync('patchs/feasts/common-texts/martyr-one.json'));
  for(const [field,expected]of [['officeOfReadingsR1','Н. Радуйцеся і весяліцеся, бо вялікая ўзнагарода ваша ў нябёсах.'],['officeOfReadingsR2','Н. Нарэшце рыхтуецца мне вянок справядлівасці.']]){
-  const html=doc[field],result=reviewLongResponses(html);assert.equal(result.length,1);assert.equal(result[0].proposedReply,expected);assert.equal(result[0].copyProof.wordsFromOpeningOnly,true);assert.equal(doc[field],html);
+  const html=preEditorialComparison(doc[field],'patchs/feasts/common-texts/martyr-one.json',field),result=reviewLongResponses(html);assert.equal(result.length,1);assert.equal(result[0].proposedReply,expected);assert.equal(result[0].copyProof.wordsFromOpeningOnly,true);assert.equal(preEditorialComparison(doc[field],'patchs/feasts/common-texts/martyr-one.json',field),html);
  }
  for(const c of reviewed.cases)for(const proposal of c.longResponses||[]){if(!proposal.proposedReply)continue;assert.equal(proposal.copyProof.wordsFromOpeningOnly,true);assert.ok(proposal.lines[0].includes(proposal.repeatSource));assert.equal(c.originalHtml,c.proposedHtml);}
 });
@@ -81,7 +82,7 @@ test('the five supplied section C proposals have exact, isolated, reversible cop
  five.cases.forEach((c,index)=>{
   assert.equal(c.proposal.proposedReply,expected[index]);assert.equal(c.status,'candidate-for-source-preserving-expansion');
   assert.equal(c.confidence.independentFullReplyAttestation,false);
-  assert.equal(atPath(JSON.parse(fs.readFileSync(c.file)),c.field),c.originalHtml,'review never activates the proposal');
+  assert.equal(preEditorialComparison(atPath(JSON.parse(fs.readFileSync(c.file)),c.field),c.file,c.field),c.originalHtml,'historical first-pass proof remains reproducible');
   assert.equal(c.proposal.copyProof.wordsFromOpeningOnly,true);
   const {start,end,replacement}=c.patch;
   assert.equal(c.proposedHtml.slice(0,start)+c.originalHtml.slice(start,end)+c.proposedHtml.slice(start+replacement.length),c.originalHtml,'all other bytes survive');

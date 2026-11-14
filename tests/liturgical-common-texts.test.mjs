@@ -1,3 +1,4 @@
+import { preEditorialDocument } from '../scripts/liturgy/lib/editorial-policy.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -56,7 +57,9 @@ test('short reading headings and replies: preserve words, references, alternativ
   const martyr=common('martyr-one');
   assert.equal(getLiturgicalAlternatives(martyr.vesper1R,'reading').length,2);
   const review=inspectField({field:'vesper1R',value:martyr.vesper1R,container:martyr},evidence);
-  assert.ok(review.some(f=>f.type==='abbreviated-responsory'&&f.status==='manual-review'));
+  assert.ok(!review.some(f=>f.type==='abbreviated-responsory'),'v3 canonical replies are full even when the source K. doxology is short');
+  const unreviewed=inspectField({field:'vesper1R',value:normalized,container:{}},evidence);
+  assert.ok(unreviewed.some(f=>f.type==='abbreviated-responsory'&&f.status==='manual-review'),'unknown four-turn structure is still held');
 });
 
 test('repeated acclamation never changes the role of the next petition', () => {
@@ -129,13 +132,13 @@ test('only independently attested complete short responses are restored', () => 
 });
 
 
-test('all 5110 Common fields retain the reviewed baseline words in every period', () => {
+test('all 5110 Common fields retain the printed baseline after reversing proved editorial spans', () => {
   const proof=JSON.parse(zlib.gunzipSync(fs.readFileSync('docs/audits/liturgical-common-texts-2026-11/source-integrity.json.gz')));
   assert.equal(proof.failures,0);assert.equal(proof.rows.length,5110);
   const materialized=new Map();
   for(const row of proof.rows){
     const key=row.file+':'+row.period;
-    if(!materialized.has(key))materialized.set(key,materializeCommonForSeason(common(row.file.replace(/\.json$/u,'')),{period:row.period}));
+    if(!materialized.has(key))materialized.set(key,materializeCommonForSeason(preEditorialDocument(common(row.file.replace(/\.json$/u,'')),'patchs/feasts/common-texts/'+row.file),{period:row.period}));
     const value=materialized.get(key)[row.field];
     const actual=createHash('sha256').update(normalizeForCompare(value||'')).digest('hex');
     assert.equal(actual,row.expectedSha256,`${row.file} ${row.period} ${row.field}`);

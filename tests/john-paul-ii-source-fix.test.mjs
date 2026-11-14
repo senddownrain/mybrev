@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -46,4 +47,9 @@ test('single-document update accepts only old or already-corrected fields', () =
   assert.deepEqual(verifyLiveDocument({ ...old, officeOfReadingsPr: updated.officeOfReadingsPr }, patch), ['officeOfReadingsR2']);
   assert.throws(() => verifyLiveDocument({ ...old, officeOfReadingsPr: 'unverified prayer' }, patch), /Unexpected production/);
   assert.throws(() => verifyLiveDocument(null, patch), /Missing/);
+});
+
+test('historical migration refuses the newer editorial responsory instead of overwriting it',()=>{
+ const current=JSON.parse(fs.readFileSync('patchs/db-feasts/22-10-sv-john-paul-ii.json'));
+ assert.throws(()=>verifyLiveDocument(current,expectedWording()),/Unexpected production/);
 });

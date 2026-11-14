@@ -1,3 +1,4 @@
+import { preEditorialComparison, expandApprovedEditorial } from '../../lib/editorial-policy.mjs';
 /**
  * Seasonal analysis of the Commons: three volumes × stored `common-texts`.
  * Produces the Common × Hour × Field × Season matrix and the PROPOSED sparse
@@ -77,7 +78,7 @@ export function loadCorpus({ sourcesDir, commonDir }) {
     const id = section.file.replace(/\.json$/, '');
     const doc = JSON.parse(fs.readFileSync(path.join(commonDir, section.file), 'utf8'));
     for (const field of OFFICE_CONTENT_FIELDS) {
-      let baseValue = doc[field];
+      let baseValue = preEditorialComparison(doc[field], 'patchs/feasts/common-texts/'+section.file, field);
     // The book prints a repeated antiphon inside each psalm unit. Canonical
     // storage keeps it in AntN. Supply that comparison context in memory;
     // final generation removes an exact duplicate against effective AntN.
@@ -419,7 +420,7 @@ export function analyzeCorpus(corpus) {
             if (target >= 0) {
               state.base.blocks[target] = { html: paragraph(escapeHtml(sentence), 'justify'), elem: state.base.blocks[target].elem };
               const rawValue = fromBlocks(state.base);
-              const finalValue = /R[12]?$|Vers$/u.test(field) && typeof rawValue === 'string' ? expandAttestedResponsories(normalizeReadingHtml(rawValue)).value : rawValue;
+              const finalValue = /R[12]?$|Vers$/u.test(field) && typeof rawValue === 'string' ? expandApprovedEditorial(expandAttestedResponsories(normalizeReadingHtml(rawValue)).value,field).value : rawValue;
               cell.category = 'seasonal_reference_set'; cell.status = 'variant'; cell.relation = 'differs'; cell.kind = 'reading2';
               cell.resolution = 'reference-set-of-variants'; cell.method = 'reference-set'; cell.rules = [];
               cell.note = 'the volume prints only the cross-reference; the season shows the volume\'s own sentence of it together with the further legal reading that Volume III prints («Або іншае»), nothing else is added';

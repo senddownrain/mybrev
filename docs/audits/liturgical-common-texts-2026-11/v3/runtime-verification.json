@@ -1,0 +1,19 @@
+{
+  "web": {
+    "files": [
+      "src/components/oraparts/Reading.vue",
+      "src/components/oraparts/Lectio.vue",
+      "src/utils/liturgicalSourceHtml.js"
+    ],
+    "behavior": "Formats headings/paragraphs only; does not expand response bodies. No extra short doxology is added."
+  },
+  "flutter": {
+    "repositoryEdited": false,
+    "readOnlyFiles": [
+      "lib/utils/liturgical_html.dart",
+      "lib/utils/liturgical_alternatives.dart"
+    ],
+    "behavior": "Read-only current main inspection: heading normalization and response-turn paragraph splitting, no response-text expansion or generated doxology. Existing p/span/asterisk HTML remains compatible.",
+    "releaseBundleCompatibility": "not live-verified; separate release gate"
+  }
+}

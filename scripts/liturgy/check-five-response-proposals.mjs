@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** The five cases named in the supplied report, not a guessed selection. */
 import fs from 'node:fs';
+import { preEditorialComparison } from './lib/editorial-policy.mjs';
 import { atPath, reviewLongResponses, buildLongResponseProposal, reviewHash } from './lib/manual-common-review.mjs';
 import { printedEvidence } from './lib/manual-review-print-evidence.mjs';
 const out='docs/audits/liturgical-common-texts-2026-11',report=out+'/manual-verification-first-pass.md',evidence=printedEvidence(process.cwd());
@@ -12,7 +13,7 @@ const selected=[
  ['common-texts/church-dedication','officeOfReadingsR2','Н. Знемагае.'],
 ];
 const cases=selected.map(([name,field,reply],index)=>{
- const file='patchs/feasts/'+name+'.json',originalHtml=atPath(JSON.parse(fs.readFileSync(file)),field),proposals=reviewLongResponses(originalHtml).filter(p=>p.originalReply===reply);
+ const file='patchs/feasts/'+name+'.json',originalHtml=preEditorialComparison(atPath(JSON.parse(fs.readFileSync(file)),field),file,field),proposals=reviewLongResponses(originalHtml).filter(p=>p.originalReply===reply);
  if(proposals.length!==1)throw Error('Not a unique report case: '+name);
  const proposed=proposals[0],built=buildLongResponseProposal(originalHtml,proposed);
  const printSources=evidence.reply(proposed.lines[0]);

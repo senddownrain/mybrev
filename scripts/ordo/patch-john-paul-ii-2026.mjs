@@ -16,6 +16,7 @@
  * Publication to Flutter requires a separate, validated content:manifest patch.
  */
 import fs from 'node:fs';
+import { preEditorialComparison } from '../liturgy/lib/editorial-policy.mjs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -73,10 +74,13 @@ export function expectedWording(root = ROOT) {
   }
   const result = {};
   for (const [field, { before, after }] of Object.entries(corrections)) {
-    const expected = source[field];
-    if (generated[field] !== expected) {
+    const currentSource = source[field];
+    if (generated[field] !== currentSource) {
       throw new Error(`The source and generated ${field} are not identical, approved texts.`);
     }
+    // This historical migration retains its two original phrase edits. The
+    // newer editorial display is never rolled back by running the old script.
+    const expected = preEditorialComparison(currentSource, `patchs/feasts/${PROPER_ID}.json`, field);
     result[field] = { before: reconstructBefore(field, expected, { before, after }), after: expected };
   }
   if (generated._fieldRules?.laudesPr?.ref !== 'officeOfReadingsPr'

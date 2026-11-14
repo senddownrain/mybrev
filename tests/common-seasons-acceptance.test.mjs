@@ -1,3 +1,4 @@
+import { preEditorialComparison } from '../scripts/liturgy/lib/editorial-policy.mjs';
 /**
  * Golden acceptance for the seasonal Commons (owner prompt 2026-10-16, D-1…D-7).
  *
@@ -110,7 +111,7 @@ test('D-5: the volume I responsories of church-dedication and pastors keep their
   };
   Object.entries(volumeOne).forEach(([common, seasons]) => {
     Object.entries(seasons).forEach(([season, printed]) => {
-      const text = plain(commonOnly(common, SEASONS[season]).officeOfReadingsR1);
+      const text = plain(preEditorialComparison(commonOnly(common, SEASONS[season]).officeOfReadingsR1, 'patchs/feasts/common-texts/'+common+'.json', '_seasonalVariants.'+season+'.officeOfReadingsR1'));
       assert.equal((text.match(/[Аа]ллелюя/gu) || []).length, printed, `${common} / ${season}`);
     });
   });

@@ -1,0 +1,17 @@
+{
+  "schema": 3,
+  "network": false,
+  "checkedFiles": 567,
+  "beforeDigest": "a56f988fd01c608d43d51bc504e645389d4f7c8273641bc45a3ce01f64dcf38f",
+  "afterDigest": "a56f988fd01c608d43d51bc504e645389d4f7c8273641bc45a3ce01f64dcf38f",
+  "changedFiles": [],
+  "passed": true,
+  "commands": [
+    "node scripts/liturgy/editorial-responsories-v3.mjs --check",
+    "node scripts/liturgy/common-seasons.mjs --write --report",
+    "node patchs/generate-db-feasts.mjs --offline",
+    "node scripts/liturgy/common-seasons-fixture.mjs",
+    "node scripts/liturgy/build-editorial-exceptions-v3.mjs",
+    "node scripts/liturgy/prepare-editorial-publication-v3.mjs --snapshot backups/firestore-snapshot-public"
+  ]
+}

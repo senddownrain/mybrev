@@ -96,7 +96,16 @@ export function generate() {
   const responseEvidence = sourceResponseEvidence(ROOT);
   documents.forEach((seasons, commonId) => {
     const normalized = Object.fromEntries(Object.entries(seasons).map(([season, values]) => {
-      const effective = repairCommonDocument({ ...corpus.base.get(commonId), ...values }, responseEvidence).after;
+      const repaired = repairCommonDocument({ ...corpus.base.get(commonId), ...values }, responseEvidence);
+      const effective = repaired.after;
+      for (const field of Object.keys(values)) {
+        const proof = repaired.candidates.find(c=>c.field===field&&c.type==='editorial-display-expansion');
+        if (proof) provenance[commonId][season][field].editorialDisplay = {
+          policy: 'scripts/liturgy/sources/editorial-response-scopes-v3.json',
+          classification: 'owner-authorized-local-word-display-copy',
+          beforeSha256: proof.beforeSha256, afterSha256: proof.afterSha256, independentPrintedFullReply: false,
+        };
+      }
       return [season, Object.fromEntries(Object.keys(values).map(field => [field, effective[field]]))];
     }));
     documents.set(commonId, normalized);

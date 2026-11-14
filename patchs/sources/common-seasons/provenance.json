@@ -9,7 +9,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "47255cf9be96adff69401daf0c0209d102a708769f1765192ef40aa832e04c39"
+        "sha256": "5605e94dd56d81b5d06af998898d995bbec205322e881eb59819d1272285bc7f",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "3681f3049c8decc1f24d310617aa47055948436b563bcf3432c68e05b9d658c7",
+          "afterSha256": "2900f75604d4216c44dde2c8a2a29731d8106a235b3e7270fb00ef466ce70f1a",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -19,7 +26,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "a828efbc651d9babb612cac8f09ab0cf76019fcda68b042b85f661236e482f91"
+        "sha256": "299cd64ffe10f40cd845ab2161a6d28b55329196169cf93f0d20b8006f6b8cfb",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "6abb790e05b577fa27d19c30bd638b1aa676e61c0a6473d845e5ab0fb69c49b4",
+          "afterSha256": "2d940c7c463f7430dbbe1e44d850dc1c4b9554ed7e1bb143ea202b5da9bb84c0",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "I",
@@ -186,7 +200,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "47255cf9be96adff69401daf0c0209d102a708769f1765192ef40aa832e04c39"
+        "sha256": "5605e94dd56d81b5d06af998898d995bbec205322e881eb59819d1272285bc7f",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "3681f3049c8decc1f24d310617aa47055948436b563bcf3432c68e05b9d658c7",
+          "afterSha256": "2900f75604d4216c44dde2c8a2a29731d8106a235b3e7270fb00ef466ce70f1a",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -196,7 +217,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "a828efbc651d9babb612cac8f09ab0cf76019fcda68b042b85f661236e482f91"
+        "sha256": "299cd64ffe10f40cd845ab2161a6d28b55329196169cf93f0d20b8006f6b8cfb",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "6abb790e05b577fa27d19c30bd638b1aa676e61c0a6473d845e5ab0fb69c49b4",
+          "afterSha256": "2d940c7c463f7430dbbe1e44d850dc1c4b9554ed7e1bb143ea202b5da9bb84c0",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "I",
@@ -363,7 +391,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "1463a699d3ffb5dcf6999ed9e6b4ec693ac528e9bab8544e66323e0013ff7f73"
+        "sha256": "ea806fb4bbb106120eb07033dbe98893ae705b9099b28ad17d1a47b922290fd2",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "dfb4daff2987f9e80db8062d5522d3721f74f0f9f8f05bf60d311f433f5727d7",
+          "afterSha256": "13aed78d6e2cd57aeb0a82c0545a4246d64b52770772cc203bdc9abce41b4376",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -373,7 +408,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "8dfe99e93a743b1d5565eda892f463dec959f307e0dae31bf751c84dee69ac90"
+        "sha256": "51010200b6c2aee3416c7ed4185c8ca9503773232749ab56cfd997f5a7039503",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "2b9996f570d5e56575049b9ec54a2568e719535ac934e1cf0420d222e08ff009",
+          "afterSha256": "9c76b9b0b471454573915060df38abd6109b0fe609fb5481762d36300eb57476",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -393,7 +435,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "e1add93c5562089b017657191ea17ac492fcc6ba9e8aa6e57d07deb6624b278b"
+        "sha256": "fa9efd8d65c65a43bd7ebc7f24204f9a6b9448ee2925d3f1e9eef136d3e5232d",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "c42ae04b182d28bacb24277030e0fce53b0e59f3f5b72b310db2f466f2c58adb",
+          "afterSha256": "4a087ee2a0e3e6b3cc1d89c55390de97ee8c7b59ee0a851f8d57761f0645c8bc",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -534,7 +583,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "906735c553cf5b65e2154303e2c6630185f01228ed80c9b06db1167535b4bd30"
+        "sha256": "4f781163f4efb261819ec0d1401e453e7d845848bfae383f054e985e40a84750",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "f10a976d51bf8304b7e474b78e876d609b62270a3f5efd685aad8b11f0e4b708",
+          "afterSha256": "0ec28730ef5b234ab89c3131f76190a3f9f5bc636329f0a044d6cb4903e3df06",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "easter": {
@@ -647,7 +703,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "5ae74d2d51dd6c68a9a8ddcbe37a6cfecc44653f91818c5aefc5074d7b530a74"
+        "sha256": "683861d733739be9c1ea6e747061df1f66a9ff73bd812b001147546a964b5878",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "d9fb495380f735385fa6f43d8cdda15ecbefd547335d2b0fe1dff7d0803e693c",
+          "afterSha256": "2d0d99ea014c136c9661ce4b63a8dbaad144927b13e11946662f34fad6a91942",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -657,7 +720,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "1eb722a42a2ff3f1a72c2b1cac73b0f8665b0138b44987094eead15a48b185e7"
+        "sha256": "beab46197f1dee63e53a4d07742ec9c4fa8dda4bd399d30be0322638c7826424",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "407f2745cd11f637f59e517295cab9a287e3e1db8c195317f160413b416a5af4",
+          "afterSha256": "4aa37e82044256b4f7a3a1150eda809fb18ef9d367798b23a8ea02d0fb8ae46e",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -716,7 +786,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "fe1070f337fdc446ac9357121e8b13321906bf7ff74f0ab101110156e17efc3e"
+        "sha256": "013c1bd9488125288ffb074bef8a08fc34ccf2620c76b5c9fa08db94bfbfb456",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "9cdb67cd50701b345fdd9f805fb3fe8e2cc26f0c90bfa21c19a72d4f1da50052",
+          "afterSha256": "35f79a4bbeb7b057a010abcaae2f323c6364f66bece8c72c8685e120df71f828",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -890,7 +967,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "a3b187c158320c6542b7e2f58e8a2130a8f30fd87094525edc9ed7bdc69bc109"
+        "sha256": "f5f748b626152795d9dd9dc31768d1e5eda7acafd287a40e13493d8b90fecb9c",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "06f04b58160861965306d14e317032f173af8222053407c6531c2fe535004d43",
+          "afterSha256": "522729896c21d0d35f0f6790b2878f99e5bb44338f06bc07e7eb12941fb77daf",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperAntMag": {
         "volume": "II",
@@ -974,7 +1058,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "7c9a48ce34e071db4768ac60203478b5bcfe4d7a970327df0dda5f3dc427e44f"
+        "sha256": "7f5ca7cc4a63079ce15b2f4d2dc6d0e65d478b5cdf99a2886ac2f3e2ffada0e1",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "d3707d8f5ba3ed5a3a600925f320642bf2fac829dbeb0bf5fb40f1c4e824fee8",
+          "afterSha256": "b83f0afafa16b2591e9037a76be4985684310cfe15e58b1d9d4f526638bc79a9",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -1031,7 +1122,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "65b665f1df6d2c4998e2dd94540650c84611ebce83ab8f40e8cf60d0ac7c3bc6"
+        "sha256": "06a9e918034aae7dfcc52bc5f40a5a19e71f96b37ff8ee18e414403129a0fd39",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b5669556d6b9a47d6c41894e677f6d5cdabd8bf3dfb3a8d6bad82f4ab3b7257f",
+          "afterSha256": "7d297347dab0a61e8b766c2fe83c8823c91116950fe31b338ef71dd69347c07e",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -1041,7 +1139,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "e5352c06e7908389a4943e7dfabce2f954a9921eb3394e54d2b247c37b539c4d"
+        "sha256": "335d5c967dffc8e634bfc68c52b6a39367ed278a0ac5818949566ee8fc518b1a",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "2f2865b364a07f4eef744883d18d480b3ee533c2961f0e1cb6fb240d0aa6dd08",
+          "afterSha256": "74179b5a6bc0442999348f8db14053bfa779828c0cb3cecffdd4a2ac7a246731",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "I",
@@ -1082,7 +1187,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "070ddb3e43ad5c30e10a003465b0402c451b6644bfe5e8e41e410911841318c0"
+        "sha256": "316847f8c8bd3f46649de8cda7abb015c0e9a7419158e39050655f096fdbe466",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "a125ad6599ff280e6f0c9fc6c645e3dc2e3c28880366e1586deba6d00c3449c1",
+          "afterSha256": "d641c84fe32d48d06b69a4ea1c336880e2066791d3cae7c762ba7e5b736a412b",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "I",
@@ -1205,7 +1317,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "fb93fb0e10fc6f8e71b50dccedf4240fef4110712163686e676422a8da7cf3cb"
+        "sha256": "020d94cdda5e02fa7c6688048c265549d0373230a68d7ba02b48a19083c1658b",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "9970dd98e9b3d0f289bdabc547b6d5c379b458b5db060b625a24c0874386e497",
+          "afterSha256": "387ebd4a6ecb64d24eaa8143185e251ab1bae2dd2c7f275773a0581d134a25ad",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "I",
@@ -1267,7 +1386,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "65b665f1df6d2c4998e2dd94540650c84611ebce83ab8f40e8cf60d0ac7c3bc6"
+        "sha256": "06a9e918034aae7dfcc52bc5f40a5a19e71f96b37ff8ee18e414403129a0fd39",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b5669556d6b9a47d6c41894e677f6d5cdabd8bf3dfb3a8d6bad82f4ab3b7257f",
+          "afterSha256": "7d297347dab0a61e8b766c2fe83c8823c91116950fe31b338ef71dd69347c07e",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -1277,7 +1403,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "e5352c06e7908389a4943e7dfabce2f954a9921eb3394e54d2b247c37b539c4d"
+        "sha256": "335d5c967dffc8e634bfc68c52b6a39367ed278a0ac5818949566ee8fc518b1a",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "2f2865b364a07f4eef744883d18d480b3ee533c2961f0e1cb6fb240d0aa6dd08",
+          "afterSha256": "74179b5a6bc0442999348f8db14053bfa779828c0cb3cecffdd4a2ac7a246731",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "I",
@@ -1318,7 +1451,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "070ddb3e43ad5c30e10a003465b0402c451b6644bfe5e8e41e410911841318c0"
+        "sha256": "316847f8c8bd3f46649de8cda7abb015c0e9a7419158e39050655f096fdbe466",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "a125ad6599ff280e6f0c9fc6c645e3dc2e3c28880366e1586deba6d00c3449c1",
+          "afterSha256": "d641c84fe32d48d06b69a4ea1c336880e2066791d3cae7c762ba7e5b736a412b",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "I",
@@ -1441,7 +1581,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "fb93fb0e10fc6f8e71b50dccedf4240fef4110712163686e676422a8da7cf3cb"
+        "sha256": "020d94cdda5e02fa7c6688048c265549d0373230a68d7ba02b48a19083c1658b",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "9970dd98e9b3d0f289bdabc547b6d5c379b458b5db060b625a24c0874386e497",
+          "afterSha256": "387ebd4a6ecb64d24eaa8143185e251ab1bae2dd2c7f275773a0581d134a25ad",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "I",
@@ -1493,7 +1640,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "65b665f1df6d2c4998e2dd94540650c84611ebce83ab8f40e8cf60d0ac7c3bc6"
+        "sha256": "06a9e918034aae7dfcc52bc5f40a5a19e71f96b37ff8ee18e414403129a0fd39",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b5669556d6b9a47d6c41894e677f6d5cdabd8bf3dfb3a8d6bad82f4ab3b7257f",
+          "afterSha256": "7d297347dab0a61e8b766c2fe83c8823c91116950fe31b338ef71dd69347c07e",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -1503,7 +1657,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "5644e37e237b0b1790d798fa637bd27fa219fc96a0bd41e2c909176099473060"
+        "sha256": "3d5760377375b3af80d6200235b18a760e8bd5c404b12627ae179fbe5a16cecc",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "38580c11aff7ca3638d213287faa82e5ff2c1eaa060a60196368af3d5339a69d",
+          "afterSha256": "ce12286c61ddea73eb27105f4ece8132b06210414eafa65e242fd284d2ae31cd",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -1544,7 +1705,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "070ddb3e43ad5c30e10a003465b0402c451b6644bfe5e8e41e410911841318c0"
+        "sha256": "316847f8c8bd3f46649de8cda7abb015c0e9a7419158e39050655f096fdbe466",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "e4d5e3035a5542da0b1f8abc3008f4b9de1c2b6e69accf31abc80577ced8f340",
+          "afterSha256": "d641c84fe32d48d06b69a4ea1c336880e2066791d3cae7c762ba7e5b736a412b",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -1617,7 +1785,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "f404152dd9b232383b3401bf6a625dd201763f68c9bdc116e8bfe8250a3d6198"
+        "sha256": "c3f551468806ab25ba392871c516db65a976194cd8d2de04910b27b49805d4e3",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "754ee62cc37f315ecaf2c5acf20d596d7121036ed62ae9af0910f873fd83ae94",
+          "afterSha256": "76f64ca818bcfb37925d1a15e1f20470cc0776aa4f577cf11c95277e5d51fd6f",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperAntMag": {
         "volume": "II",
@@ -1647,7 +1822,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "fb93fb0e10fc6f8e71b50dccedf4240fef4110712163686e676422a8da7cf3cb"
+        "sha256": "020d94cdda5e02fa7c6688048c265549d0373230a68d7ba02b48a19083c1658b",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "2b0012e0285f2b36bb2800a2409bfab6eeda2031eef98f0ea85789ab7dfe59ae",
+          "afterSha256": "387ebd4a6ecb64d24eaa8143185e251ab1bae2dd2c7f275773a0581d134a25ad",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -1787,7 +1969,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "b5630dda9655963dadb4b6ef952944a5bdf98235db640c1fb1d7c3ee8c595e3e"
+        "sha256": "2ce481685302a9ad7fdb650a7a5919279a9f78e447ab75edc69e3c83ef12aad9",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "c8f9d8cc0077d706142950db30c8326b25cb38550d9829cfea51c78c3eabed67",
+          "afterSha256": "068a4564a9d9d0c0d3f91d883923b740c0812e8cdf03f3e16053fb8409bf4909",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -1797,7 +1986,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "121b804824a8af505a44ec07a0ca3af1b407fb47e69422aaa299ccd663741944"
+        "sha256": "ddd221e7de309c8919c7a566568def75bde5debc318aef2cabac7652fe5fd252",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "ad18d872e98a4b7779abde279a03a80a81be5d7d5f705ad24c47165886413ed8",
+          "afterSha256": "5f3a4d9dff814c2493bd7f919791f4bf042fe30303317a3d4c6f6ee9fafcfc97",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -1864,7 +2060,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "843deb55e8778f7523e8454c555e46e326a42720cec65eb62bc16a2707221733"
+        "sha256": "01277df3c8a8d7d3eff82758a51458be18b668ddc6632704ebb5bb938b325d22",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "92d74e7e1ba4cf8267b18a98c82ad5d2f87f09fe33043527ccca0d2019ee6250",
+          "afterSha256": "136f1bf3a5eaa40db2c78b67b208632795762983c9369a2b1873959a415ee332",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -2093,7 +2296,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "2ba3d2f78d3c0aef23518a82b66cadd27ea3b336232fe13074953b986ca53219"
+        "sha256": "84adabcdadbcdac216eb23968d2e150d2a8bee0ac2117da43fcfc656b8678841",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "d7d83bba41cf7764aa05a5b15112c9d6a982f574bb492cf32892aba03d95dd5e",
+          "afterSha256": "c6c86f6648887559e386a5b58c484f01b119356a3520617319ec74308cc8b480",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperAntMag": {
         "volume": "II",
@@ -2201,7 +2411,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "25ba2dae10afdd5eaf83ede2ebdb8ab34927ccf9738fc9f6fc53612e110fdb43"
+        "sha256": "50e38139c99d19734a356d027339de28a16bbbea4cc4ce8f2b3a22ce70c015aa",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "c8ea00f630bea4d1ac8ae430ea16d017897dfe4e4bfa66f1c10bb044b3f981d7",
+          "afterSha256": "ca09a391c123a2f2ea11da91d5047c77c3d6ecba49ea91152764fbdffff246a4",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -2245,7 +2462,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "592ef621e027a12a779c8a1b9bcc2bd7bec49fc987618e98c1c80c645168fb3d"
+        "sha256": "7b4770517b2e920bbe233dc804af4a51871d5981457a83d93fa3b18a7130666c",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "605c4aaed962768e078e318c2ed2fd5f943a21bfb16dafe29438ceae6881b07b",
+          "afterSha256": "5acdf67a48a390043ba728d3fe0c53298b13770138268516f0a27419de85ef31",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperR": {
         "volume": "I",
@@ -2255,7 +2479,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "c00da9d540cf88157d973d2ee2fcd9dd33fa9c904daefe5c5a5e7a97df871007"
+        "sha256": "315f3ced8616f5b0cfc50e3366e038436cb54ba0028dddf71ff9113422db32d2",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "67e51f6e867b6c74f4b0337d870ec4956883d44b561d71bfc8dc30d2e85abf24",
+          "afterSha256": "c594c46f226506e2eb3da606fa1e09347a39b0fbe73951e462dd8167ec3dbd91",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1Ant1": {
         "volume": "I",
@@ -2297,7 +2528,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "592ef621e027a12a779c8a1b9bcc2bd7bec49fc987618e98c1c80c645168fb3d"
+        "sha256": "7b4770517b2e920bbe233dc804af4a51871d5981457a83d93fa3b18a7130666c",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "605c4aaed962768e078e318c2ed2fd5f943a21bfb16dafe29438ceae6881b07b",
+          "afterSha256": "5acdf67a48a390043ba728d3fe0c53298b13770138268516f0a27419de85ef31",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperR": {
         "volume": "I",
@@ -2307,7 +2545,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "c00da9d540cf88157d973d2ee2fcd9dd33fa9c904daefe5c5a5e7a97df871007"
+        "sha256": "315f3ced8616f5b0cfc50e3366e038436cb54ba0028dddf71ff9113422db32d2",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "67e51f6e867b6c74f4b0337d870ec4956883d44b561d71bfc8dc30d2e85abf24",
+          "afterSha256": "c594c46f226506e2eb3da606fa1e09347a39b0fbe73951e462dd8167ec3dbd91",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1Ant1": {
         "volume": "I",
@@ -2339,7 +2584,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "0202f681ef3349e6c2416a388b1283906c284f98b80c625205efc0d9107b9493"
+        "sha256": "388ab07aab4ad9bbecd5efa27c25032446a612214087ba6a3f9e87f4ddf27095",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "cc187af6d283ebec33195a9d2cdc5ea4e1f794d502c2ed6b6a5732e756c0a730",
+          "afterSha256": "1320db8c26c6e450f2765200ba59a7529a1d18e77af57d19348d37d5ee129e99",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -2359,7 +2611,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "7f26f35cb374cfcec7964ad9a7b705e565049c792d2ed25a7163f9d2afd82de1"
+        "sha256": "4914f9d97f36120c6cd785a83684239d5e4d66f8cd546228e1b696515a620106",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "fb55d364f305699ae285e43f7c4a31d71c11973e0bc5b2271f2783f0e497b8bc",
+          "afterSha256": "48e88309188f9e26553680b042ffa5e02553cc5b45f65c4890d25f5bd407da3e",
+          "independentPrintedFullReply": false
+        }
       },
       "sext2R": {
         "volume": "II",
@@ -2389,7 +2648,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "785744f3ccee57322123faedff242a70ad5bb1e28313c341a23b7afc389c02ef"
+        "sha256": "81518394fa547879a98727938b0c0c447c6cc59abb6039b77c99fb7fda2109cc",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b9f3f01221d1ff09fe353d2538b75d5d08ff29b50d32bcb42f3970a8b0af5215",
+          "afterSha256": "53f3c88aefba8d8aacab3e65c7e356cda217bc848896529b80bf3de63c5edfbb",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1Hymn": {
         "volume": "II",
@@ -2450,7 +2716,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "492bad6324a47519db839b52a1ee1e3c5077a176098cd239b82003c0c7150759"
+        "sha256": "79451126025c7b97226a13feeba99704601666ee16ddea5b0288e960ce4786ba",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "d78e22506e235ab63fe5d530a92eaeb04c667f6346990245ad2c4f5ba8d38260",
+          "afterSha256": "5a4118a3925ef5e233db2e7b2eefbd0a379247d10dce4a11a38c954398ae938b",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "easter": {
@@ -2547,7 +2820,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "5ace9723c0993a3efeb424acc752346fcd5cd4844ef97e80125b4c6f66386d4a"
+        "sha256": "ca43aecc138e75df928fc6a3776fb5e89cca40042c49061545656ebc3b53b5d7",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "2c767e54476d32b0b83520cad3595413449364dc5ca95272b1ffc1a6f7fd8acb",
+          "afterSha256": "aa1f828fc887b72f01dbec2eb0ad0c6de438fda14db7b4625d5e5cd2f115aed5",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -2606,7 +2886,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "6a80f76939edc6f44182ecb13b6d557137eafcd05c2e18cd708792c501b7d917"
+        "sha256": "f6752e50c60db004bfa5250ed809a7cf723d24140a65214c96bbe44b8d215b3b",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "88ca8caef2f935bcbb96c0fce7680a382972802182b8545db761e547ac1d68fa",
+          "afterSha256": "da92e5396b8dad53605a2a19c1955a595e60c51b556befbf07d87ab0cc184ecb",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -2789,7 +3076,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "e31f8da791a5b7d78b5520e8acde8f99b769cff912921f43354dde2eb9842c25"
+        "sha256": "f1793a5407a6992de3742547fcadb06dda75b38cf3cd7c52cf5fa3e4fa45275f",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "5f60aaafda4e173a83c97a55840ad6a4c57c73f310fc1cc5d269513de7432dfa",
+          "afterSha256": "9c2f61eb192dba6d282a387eaba09b2f796bca40f929ccc3016567d68b99a507",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperAntMag": {
         "volume": "II",
@@ -2886,7 +3180,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "27e6c24fe0ded4974136b32224c9213837996f89811e35ce12cd998c6d30a91e"
+        "sha256": "64cc97ca50801ad05c1513e20881c73654f33b2b34804cecb72f7cf950097a7d",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "18c5d62c91155bbdce648512b6e0f6a89741c94604d07fa308a3a776fb2b1d14",
+          "afterSha256": "6c3fc05cb49a8fc90144c8b7279eb61856063dd7a9300a96d4c287e7bce3bd97",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -2913,7 +3214,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "a27079547ec8f5b887f432ba53b9cc3ac80b686c62c18e7aee42f9f8016be5b6"
+        "sha256": "2805d6e09c58a2f658a3ff5b97713fb8a5125a098dee203d80f7e6f1c76b1fa6",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "1cc0935db686d7e21c566ded79816ade7cfbe780a12884d70327e6e26c416135",
+          "afterSha256": "439038d7812e090b8d545942bd35c6a3da31c7828a6662925a7466df8c3542a3",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -2923,7 +3231,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "79d32caeace9bdc43549624ad0646c7cf17e16a346cc7365515f1d6c9c4f4f7d"
+        "sha256": "6856f5129d55cd229bbcc130975f0cf7af0e0d5b7558a3c8152b2bfdf8b3ac8c",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "e3e82aacdbec01d04c3cb66548fdba1fe0c9dc3402567093676d6c7a7597f991",
+          "afterSha256": "2089195ed5242bdbee2c75ab4a81d9581787d48ce6899158d4a05fca5fc76239",
+          "independentPrintedFullReply": false
+        }
       },
       "sext1R": {
         "volume": "I",
@@ -2966,7 +3281,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "a27079547ec8f5b887f432ba53b9cc3ac80b686c62c18e7aee42f9f8016be5b6"
+        "sha256": "2805d6e09c58a2f658a3ff5b97713fb8a5125a098dee203d80f7e6f1c76b1fa6",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "1cc0935db686d7e21c566ded79816ade7cfbe780a12884d70327e6e26c416135",
+          "afterSha256": "439038d7812e090b8d545942bd35c6a3da31c7828a6662925a7466df8c3542a3",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -2976,7 +3298,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "79d32caeace9bdc43549624ad0646c7cf17e16a346cc7365515f1d6c9c4f4f7d"
+        "sha256": "6856f5129d55cd229bbcc130975f0cf7af0e0d5b7558a3c8152b2bfdf8b3ac8c",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "e3e82aacdbec01d04c3cb66548fdba1fe0c9dc3402567093676d6c7a7597f991",
+          "afterSha256": "2089195ed5242bdbee2c75ab4a81d9581787d48ce6899158d4a05fca5fc76239",
+          "independentPrintedFullReply": false
+        }
       },
       "sext1R": {
         "volume": "I",
@@ -3019,7 +3348,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "3e722ad7b9acbe778d9222c14c96e538cd0cd50f32b0ea5917fd7b0027a1eed1"
+        "sha256": "c2e34b046e6613c2621417e66343fe6ba2ce36927a38b96ae1f0bfa091477642",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "bdb031c00bb7abfd132148652912bbbbd1af982a41d0c612f75939d8ac5fc748",
+          "afterSha256": "731f3622b2a6a6bbf739e1d9cceb8d76ac4972853f16c6716673cf77f142b5e7",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -3029,7 +3365,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "1c9b515693f568b7460867da831455405dfb895ca7c87afbd5cde4f466756da5"
+        "sha256": "6367ffe42616c1de06fb64e5cfef7bf950cc2dd3730582b0a9b14f80dc9bba16",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "a0cc4d723498dd0613f82e23ec5476bd75f16ef98870d1b25e6d134d16fd04b2",
+          "afterSha256": "4d79760a97d03313f6956af81f405ec4bae9e9e742bc97305ca90c963bae5828",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -3070,7 +3413,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "01566f6ada9636536d60295ec5057b3cf1248c03980dfb5dc8e29e1cc30dff22"
+        "sha256": "897b711419dd44b6dfee3914533ec1500d76760ea4a6bb572b2fb96261d17476",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "fff32f734ac2eb5a4b2f4fc6d01958a9e8057da7b52dbc428aa5950c892d8959",
+          "afterSha256": "f2d8aa64fc5397d655f74a51829be8889d3c79a5c623d1ff50e1c35cf99faf51",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -3173,7 +3523,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "4912296d41e344c8f709f1d944f9a77c2355b72582a50351073bcdd5ec1787e9"
+        "sha256": "b585a2c442164d3055bdfd0d3a4c1adff202369d31979df46f5fed70eeb0b88e",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "0006e132b9352c9ed8fbf18f8f645d4feb62fba7453434e527969b4bc736cc91",
+          "afterSha256": "ff9430f9dd4d0c475e3494fba3c82d78596f98616322d87b99f8042f70190417",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperAntMag": {
         "volume": "II",
@@ -3214,7 +3571,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "ded37572ce94b6b58fc096dc6bbc1557355ecc39216c09998715cc864fbe92f0"
+        "sha256": "0bc0e153489a2035b6f0fb33ccd4f7781473b408086c2593eda648c2f30c8c86",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "4db740fbf9f8789dcb04d5278f39da337a33843d16cee0e6ece4e842b411946b",
+          "afterSha256": "584a7b8e81bf03251dc50cdf7684fc6621695e8a3ae27a3c1815e40cc1aaa59d",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -3347,7 +3711,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "98d1fff9773e3fdadee1e64d0a84cef8680aeaa323ee04466fd889c04201df0a"
+        "sha256": "91781ca363f452cf2b9dea784be9ff12b7c07a21ec146bda5236bb091300a145",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "ab6cd6c870befcca4f2fb8473a779a7a92a40b829f0fa74fe39411abfc3720a9",
+          "afterSha256": "a38ce127402cc244b566c8a7c680bf66bbb6f839e33b594e1a60ebc9836c0ad1",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -3357,7 +3728,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "be045a25e5b52ed562f76ff305b340dab1a5eb8de4aefc7bce18535763077fed"
+        "sha256": "97a562e95aeb85111752746fd1cd35e12497a60305a970e035e8a9d9007a49ab",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "5ddb055dcd594f0dab2f6a1b210f97184a3db2db6562ddceebd1f736169da462",
+          "afterSha256": "b7b5ce1239b18d7bf2bd88c72e4d450ef354c2de91e6e3e4a7542d951f023a92",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -3411,7 +3789,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "ac3afda00496806de18c241dcd377974315d5ef076537c536fd84839233d4120"
+        "sha256": "9ecdcf44741772e5cd7255862cf5e498d9c21b61157adc45b68588298f719fd0",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "837f927f3dbaf4dd8d6da3960119abe10e60c58f3f9deade1bdef0bc281ac30f",
+          "afterSha256": "3992a81cf869f446cc59b63c21788d082c15302af44cfb62f10157724dacf068",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -3631,7 +4016,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "6b475a4bad88be8392c3d28dce7feb33a307a21f0501164c203f5f1dfe3faac9"
+        "sha256": "64378f51f9a453338b2d466693af033e3a3bd524a1315a4de745fe8db105c9aa",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "85470b32e65606c8b45c042dcdfb9ec3eb7994a4dc384da6d613ab7cca88592b",
+          "afterSha256": "62185e89602201d707cd270aa0a0b7486bdb69eb1c772cdd3cdc0a046e3d81c1",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperAntMag": {
         "volume": "II",
@@ -3747,7 +4139,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "b9a2690ceed005dedc2bb5bbb90ed554afd3db4ce6a84330813acb708bf50d20"
+        "sha256": "5606cda29e9ee4eeb5c12fb9867fed8e7232a95ef1714678b319f38a08bc0d08",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b9263a71187df0c9809bf71b26e46d520bac521e6d0a284ce36f0cbee3f296d1",
+          "afterSha256": "c4cf18cb1d51483f776b5d269a64387a905ddb1a0ddb40f5216f474279152ce0",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -3791,7 +4190,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "52dadd8ddc65525ad1cdcd3f0ac33a7b7785c6af0103a88e91d269673b738a96"
+        "sha256": "e0e372929420414cbb8151205f0afadaca5ed08fbf3cce99da90c3abc6774392",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b10b1bd5cc14cf5d9cbbdfd4117db14512b0220481f9bb42b99119ff9306966c",
+          "afterSha256": "37b6049a4e5f5de3d96fd5e5e89ea191d19859d110eb2f3e27daeb21c5d3807b",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -3801,7 +4207,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "4f214185caa65aa9f68cbec2da7bf4ef6e2e28d0cd8e70934802b763df1ffe80"
+        "sha256": "0b14944cc710e709aefb97587b90bc6b3e92023d48fa596eb61fa944a6d2b39e",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "959f1f1192109b336fcce8e40136c507e164dcdafc039abe2af02c756296c99b",
+          "afterSha256": "0617f42240b6692251c4ace3ddcd3365044a979d2ab8dff794b4be9d4e6bdcc3",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "I",
@@ -3914,7 +4327,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "52dadd8ddc65525ad1cdcd3f0ac33a7b7785c6af0103a88e91d269673b738a96"
+        "sha256": "e0e372929420414cbb8151205f0afadaca5ed08fbf3cce99da90c3abc6774392",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b10b1bd5cc14cf5d9cbbdfd4117db14512b0220481f9bb42b99119ff9306966c",
+          "afterSha256": "37b6049a4e5f5de3d96fd5e5e89ea191d19859d110eb2f3e27daeb21c5d3807b",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -3924,7 +4344,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "4f214185caa65aa9f68cbec2da7bf4ef6e2e28d0cd8e70934802b763df1ffe80"
+        "sha256": "0b14944cc710e709aefb97587b90bc6b3e92023d48fa596eb61fa944a6d2b39e",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "959f1f1192109b336fcce8e40136c507e164dcdafc039abe2af02c756296c99b",
+          "afterSha256": "0617f42240b6692251c4ace3ddcd3365044a979d2ab8dff794b4be9d4e6bdcc3",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "I",
@@ -4037,7 +4464,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "2960389b0ef154e877869122e212e7fd634a65848fbec43c9f65fad4a8118512"
+        "sha256": "6f443de89f4ff7a2b4ad605df4bd4a75099ed1f7536bb02b2b29fe5c44fa06b9",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "eadba39cc6fff2c4e500a282ecbfec89e475d4afbacd8f747f0673e9a3895241",
+          "afterSha256": "89a4d98774f476304b1aaae3ffdf95f7bb5d3549220716880fae2bf6419ecc23",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -4047,7 +4481,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "2d4050b55b2b1df4865a00901d6a3b08090484015c4a0fb50b5d3864d81dfbd9"
+        "sha256": "fb0668389ed058eb7758990108c9fdadb6ea07314355494bf998bd899b658eb6",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "700618e7f5094b2c60b97dd6bbfa6bee44f61b71239cd2d8d9e433a33ec171b3",
+          "afterSha256": "71e4191911fd937603c95e7422ab73af9b58697c53eba4f3348aeffc5dcea7a0",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -4232,7 +4673,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "6594ea433def96d997df03703d8e2a1a2e51ae13dc65babea9283982763c3f82"
+        "sha256": "e56be993ef60b2eab019610a6918b66b0de55d51a65dcbae91944e2f41e30562",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "02199f279355111e1033c0cc6df6f89d0ea8b90b7b2c342359df388bda6c88b2",
+          "afterSha256": "0f3dc5aaa14296503b67dcc5d93ab3553961aeeda72b03b5470398cd0c8fcabd",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -4375,7 +4823,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "597825b36db8c53a8534bf67b70ca59eab7a549b6dfc5f39ae554921f6e77bc0"
+        "sha256": "62a18fc042ea0c0e0005bbeb60eb3787b699cabed63deaf0d17672b5357ddf52",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "e2c021b4fde9811cce1ed1a37fc10566912aebc2715304c2ce4eb64c52095f21",
+          "afterSha256": "7dde0b272da73387245f5f1303f3011f350e123db33e030eb2d40ff9ea2dfc17",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -4385,7 +4840,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "5e0097a795a59f3d2e88600464a3fd454a0c07b5a492b7c2656e59b15d35e770"
+        "sha256": "c84a6aefaaecfcbabf30d7831df9aff86fa3750719e4da52773e1d9bd9778987",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "5b0c659d3c528a5a204fa3eb7764a3afb100d02da824951a93d42b340ae2b1d0",
+          "afterSha256": "8c6d6171999df9840b4467f11affe58c9de154053b5ba8fe60db04bfa0ad7380",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "II",
@@ -4455,7 +4917,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "ac3afda00496806de18c241dcd377974315d5ef076537c536fd84839233d4120"
+        "sha256": "9ecdcf44741772e5cd7255862cf5e498d9c21b61157adc45b68588298f719fd0",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "837f927f3dbaf4dd8d6da3960119abe10e60c58f3f9deade1bdef0bc281ac30f",
+          "afterSha256": "3992a81cf869f446cc59b63c21788d082c15302af44cfb62f10157724dacf068",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -4675,7 +5144,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "6b475a4bad88be8392c3d28dce7feb33a307a21f0501164c203f5f1dfe3faac9"
+        "sha256": "64378f51f9a453338b2d466693af033e3a3bd524a1315a4de745fe8db105c9aa",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "85470b32e65606c8b45c042dcdfb9ec3eb7994a4dc384da6d613ab7cca88592b",
+          "afterSha256": "62185e89602201d707cd270aa0a0b7486bdb69eb1c772cdd3cdc0a046e3d81c1",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperAntMag": {
         "volume": "II",
@@ -4791,7 +5267,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "b9a2690ceed005dedc2bb5bbb90ed554afd3db4ce6a84330813acb708bf50d20"
+        "sha256": "5606cda29e9ee4eeb5c12fb9867fed8e7232a95ef1714678b319f38a08bc0d08",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b9263a71187df0c9809bf71b26e46d520bac521e6d0a284ce36f0cbee3f296d1",
+          "afterSha256": "c4cf18cb1d51483f776b5d269a64387a905ddb1a0ddb40f5216f474279152ce0",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -4845,7 +5328,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "ef06cb2f0b13e4bfd09765b28bf05b71cd18736a4fbac20d81f0dc396d60ac1c"
+        "sha256": "ceda4e15f9a8f2c1cc2be2c0f68b6f13b4da25086dfbcefa1e757a9abbbc0795",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "08d9babc1b3920257c351f00784d917b22b000726336ed7c87b4d8f3972c1c15",
+          "afterSha256": "e4c176434e6f4e85f3ab1cea8c772d8200be37a5a7e38c93ec3e31965178bfdf",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -4855,7 +5345,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "24d8a817215b28c077ed5ce0901ee05188ea6dd0a535be08c2a1c9f18fc2510f"
+        "sha256": "36bd44cdae298b58d14cf69722567553f42788330eab6a198e26048663ce250a",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "51d42956545b8c2e8f04b080e162b3913788ea13c7128bdffe336360d8d85e29",
+          "afterSha256": "aa1de875d2770461a6e1ea614d722ffa2ff3d7578b700f01fcde78208b04f174",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "I",
@@ -5012,7 +5509,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "ef06cb2f0b13e4bfd09765b28bf05b71cd18736a4fbac20d81f0dc396d60ac1c"
+        "sha256": "ceda4e15f9a8f2c1cc2be2c0f68b6f13b4da25086dfbcefa1e757a9abbbc0795",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "08d9babc1b3920257c351f00784d917b22b000726336ed7c87b4d8f3972c1c15",
+          "afterSha256": "e4c176434e6f4e85f3ab1cea8c772d8200be37a5a7e38c93ec3e31965178bfdf",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -5022,7 +5526,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "24d8a817215b28c077ed5ce0901ee05188ea6dd0a535be08c2a1c9f18fc2510f"
+        "sha256": "36bd44cdae298b58d14cf69722567553f42788330eab6a198e26048663ce250a",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "51d42956545b8c2e8f04b080e162b3913788ea13c7128bdffe336360d8d85e29",
+          "afterSha256": "aa1de875d2770461a6e1ea614d722ffa2ff3d7578b700f01fcde78208b04f174",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsPr": {
         "volume": "I",
@@ -5169,7 +5680,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "8bf4acebd3244227a31f730e9f9be0d03fe464dd049df884dbf818a22e562f9f"
+        "sha256": "2069bde19101059d1044a5ece154b6ae9e2c07e4f1bf0da448a6e6e96219c3ef",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "2c0bd37145076d2940fb146962e4e00952c5cfc328154c08df1705a530e2507a",
+          "afterSha256": "c9255c5b03b81f2e5854acce9f7940e33fe3049e63a50f83f1ef9ae546724a7d",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -5179,7 +5697,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "71ee52f6ea5497f824e1db562595814eb78e3857b139a370b725dc6802c74e19"
+        "sha256": "9a27233d18d8d72c82fb9622b871c9d1987e91c351f51f7bed2f2f9df47770be",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "3351eeb45cadc08b4d8d21ca5cbd165d21e9f176947fbb661f863d68289583b4",
+          "afterSha256": "acb5fa6cc5eba01e29dffbdbd14ea94032f7fd94c75e7fa4f711ad9f499ded00",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -5219,7 +5744,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "f79a58739bc16d84f266d0b1e62eb2ee62e9e7b15019162e5876d73e49900a6b"
+        "sha256": "4e9744203935ec67c3e85888fd652bdd4d8c6ce5eec582714901a6e330c6c55e",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "9c3d3277f7d6b6943216c4deee11ddd6a981115d42cec69aa638fa072f72e0ce",
+          "afterSha256": "751d26ccca1d9dfa903e1972cb324660888eb158b841fabf2b7f321c698664f5",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1Hymn": {
         "volume": "II",
@@ -5240,7 +5772,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "d41896bd89fa0f9cc6a914b540e65fd5e65d6fb7152c7089a9e351e1dae7aa2c"
+        "sha256": "e87060b842354d66a00f4ceddd560e5757309ebc5adf24cdb5eb131a293f2dcb",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "cb532d4bfefa80a03ed0ef32bc60052c0140cc80cd6375ec15d056b9ccdb4138",
+          "afterSha256": "bfb160679255586c2a9987b87c7a78f725ce4ede1a3313221b4a00f31ec90204",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "easter": {
@@ -5360,7 +5899,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "df84bbf1f32ba494c78462eba50b7f0ad409af47735a57d77330d3f7922bb45d"
+        "sha256": "2363d867bfcffee51028290687566128a7d8c54dcb1b67d0d455abc0709e731e",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "288c26d0d867d120c4e6ef8c423c22ec6b07c7f7628f4faf220f0284fbc0a0c7",
+          "afterSha256": "308e4d616b0417f2142e9e5f282482e2f0a10a318fd7e7df0810f0d55e597543",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -5370,7 +5916,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "e8e75c3e878d5ebb36988ff24f5caf7bb24940abb2b0a32bed8f381c5f547e82"
+        "sha256": "4a4b6410bfb50c25cb41e2a17e43c2541e8d515bce96865aa0a9a81b129f0be9",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "df595140b6ecfe93571d28acd86a32deb498e86165e142680287c8c68bee8b78",
+          "afterSha256": "401e049704897b1e6af6870508770ba86b9ec515208f7458d970402547880509",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -5429,7 +5982,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "0ee55f63d0919ff0ef62e5106e5603706d5b979d380a3cb27a83baa4744e274e"
+        "sha256": "6fd75015e10ef6107a95487faf2826d3d972b731b46ea4b8513b8d288072c230",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "5d47aee179e7f661866a490751d5a77864b5548b96c5176911943409ac35ff2d",
+          "afterSha256": "0462b3886fd23aeefe9f356e574de145d2b6b33467d4ef2492bdef544dd1d34f",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -5618,7 +6178,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "24f22b719609c96123aeac1ecbcfeec9564a126364f70de05bbf35829385c12f"
+        "sha256": "f63a482f1533d25744fd6425a95aa489df9536f18ee4f640335e6bb946ea71a0",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "27b36ef604ecb0ee5e124688cdde80a7f27e8c4ef425775b44ea36e3d2122928",
+          "afterSha256": "b69f54f71581660f37170b6f20cae9e7603d5b333423ad3ac45848a374dd560f",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperAntMag": {
         "volume": "II",
@@ -5730,7 +6297,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "be9b98a0a22cf2d5e6c89aca9ea1568a9dfb5178490baf2ddc0e4e8064169c28"
+        "sha256": "84937cdfaa23fb614d5a00d46c73b4cf305512ca4b8e6bf1190cf3b3910fc968",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "dd0fe0401c698ec28496b32a5f06ef0a13065a2b47824e29dbe8ce98ffb5a722",
+          "afterSha256": "d0ffd82d9555ec3262aac65ed2026ff8faeee6941130cf5e2ca1d46583be359b",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -5768,7 +6342,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "90c18681718996f45399390901009e4a2a18ebcf92bf2f6e638f802e8d6131b5"
+        "sha256": "04f666a8ac96d70e107827c94f6fb9baf0694d05ca1741b74a8935754d19b817",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "353e7b90bbce6db7f8119f920eafc1ca765ac9dd8f9091d1242f10da4fd57d35",
+          "afterSha256": "3ebeb140948a6548011687ae78e1d0da9cb080200436302a733d14209bca9546",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -5778,7 +6359,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "dd136db61b1ac91092bdedbbd1ce4a7282c7e306bc4b37d2728cc109c3f89b96"
+        "sha256": "a39402e93ca7331d1ef53f9021eb82e015bf8a57eedb2b09b07e86e6c2d02e4e",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b203e41920615435912e5aaaff1aa872546c6bfe7fa304efa44805d974be1f37",
+          "afterSha256": "68277a3708f5e5a6579806d3f73b9dede497b2c82cf43550ad8491e5d29cb86b",
+          "independentPrintedFullReply": false
+        }
       },
       "sext3R": {
         "volume": "I",
@@ -5831,7 +6419,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "53815287cf9120a7e7eac9430dd719d8e6b12d9b1f7fc716561eaad6a96696a6"
+        "sha256": "656d781a93b6ef563c412328dcdee96ad437f98f3b0348f075bb411c823b85d3",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b7ca031b3a7c599b0573fc9ec5b1784a3e9e6613c3cf76068e52a7a5f3e1b30d",
+          "afterSha256": "3f25eac5a0fd9280bd31e67d035ac9779abcc70aa9494dd8578c5d51cf9f43a8",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "christmas": {
@@ -5854,7 +6449,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "90c18681718996f45399390901009e4a2a18ebcf92bf2f6e638f802e8d6131b5"
+        "sha256": "04f666a8ac96d70e107827c94f6fb9baf0694d05ca1741b74a8935754d19b817",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "353e7b90bbce6db7f8119f920eafc1ca765ac9dd8f9091d1242f10da4fd57d35",
+          "afterSha256": "3ebeb140948a6548011687ae78e1d0da9cb080200436302a733d14209bca9546",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -5864,7 +6466,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "dd136db61b1ac91092bdedbbd1ce4a7282c7e306bc4b37d2728cc109c3f89b96"
+        "sha256": "a39402e93ca7331d1ef53f9021eb82e015bf8a57eedb2b09b07e86e6c2d02e4e",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b203e41920615435912e5aaaff1aa872546c6bfe7fa304efa44805d974be1f37",
+          "afterSha256": "68277a3708f5e5a6579806d3f73b9dede497b2c82cf43550ad8491e5d29cb86b",
+          "independentPrintedFullReply": false
+        }
       },
       "sext3R": {
         "volume": "I",
@@ -5917,7 +6526,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "53815287cf9120a7e7eac9430dd719d8e6b12d9b1f7fc716561eaad6a96696a6"
+        "sha256": "656d781a93b6ef563c412328dcdee96ad437f98f3b0348f075bb411c823b85d3",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b7ca031b3a7c599b0573fc9ec5b1784a3e9e6613c3cf76068e52a7a5f3e1b30d",
+          "afterSha256": "3f25eac5a0fd9280bd31e67d035ac9779abcc70aa9494dd8578c5d51cf9f43a8",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "lent": {
@@ -5929,7 +6545,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "e8bbe0dac4a2af59e7d70fe477958c8a6ce0287bb8ed7a25bf8bab57e83b2f81"
+        "sha256": "da984a07b6db82a84a037dbde5a3534b6dd4f6af0eab06d8937869d8f5197416",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "e223407d27cfdfc1877e9df83388cb98ea58616661d8c1bfb5a920344e0ec5aa",
+          "afterSha256": "21dc5b742ceb5eb69250a435369942089ed0dbf2c41c0556e0f9718fd0c2bb3d",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -5939,7 +6562,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "aef23a7ced19ef9527b548637dab24ddc299695f9bfd257024f86b3a2d42ce52"
+        "sha256": "73a88cbdd395ad45dd4dec03b1131506fa15e98247e47031eb2e4adcd34d9dcc",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "02ded4f7a01ef68cbb4760cab3a53953e9c1ac3e1844d29c405dc334d2310e04",
+          "afterSha256": "0b53add3f523bf1d5ef3dcb1f62f988a3ab50fd213a098e79abdc626746d63a3",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesR": {
         "volume": "II",
@@ -5949,7 +6579,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "8c12c0afff0367b15ce9df3c7162b2cbfecac73e9d58947095cc975b5533c469"
+        "sha256": "2c180a9f7d618041705d966b1b5c62fc2d8de6f25eb934b0b0bbfb5529cbe739",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b0af42b2e63b8f80cafaa62501d33e202cc91b5f93f84473a8bd77f1a9fc0091",
+          "afterSha256": "b8be8a47579ee94552b5f2ea6f562962d2626976108315e2bd4f4c792fc4d3e4",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperHymn": {
         "volume": "II",
@@ -5969,7 +6606,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "fd57ec86769db79e31574c6091aa86b376910ec2cd0ab741a4dfcc4082f78340"
+        "sha256": "27ebb573f4ba84170a3277434abaf80ba1752e2519f20f4de9e92c3e6aa985ca",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "daeb9ee7c0de4d06a115d08de9113c89d9a883754584ec4634fff2079d3d1b43",
+          "afterSha256": "b1b94f8a7f35c40534e34583db732dd0168153879316493ff592f5de7aeb3dbd",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1Hymn": {
         "volume": "II",
@@ -5990,7 +6634,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "1cfca13c2365137bd5ebcfcec5b79c8d69382618c3959156d784ad8ee08989b1"
+        "sha256": "e63afc2f8826bf065bc5a75fcf9e9d2d2421af467632fbaa6251370c751a388e",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "836ab857b5346f5ca0e335c7abcb5d9668bdefb6b555dd55c4463e32a53fb7c0",
+          "afterSha256": "ba7de6d3a7c8453ee6cbd3ebf0b48d99199f545834508fd55596ab35e3b738df",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "easter": {
@@ -6107,7 +6758,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "b4cef5ca83ae981b2f18c5bc9d7c8a43e9bf6baf8550ef3d0aa1614c871927b2"
+        "sha256": "a9c200fdb6baf8f037c4c40cfce8a6a98cfb6c651f971b13b8c3469c5bdc5f4b",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b5aadc10c8b247bcf21c06c13eafaf54cbbe4f8a18b1e8e1066deb86475475b5",
+          "afterSha256": "6e31cfbb17e61bf328e366ae3da016b2206fbad73c64260265dd934dfc62c71e",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -6117,7 +6775,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "450bf1e887a4d6958184e329fc68bf2160033e14476de9137b2436666828973f"
+        "sha256": "7beafd869e2f11ffb74435aa2693ce99edd12b281fdf188ac84b5c7d666f7049",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "61ce4036eddb1b2b3d051a11348baa95325d4db6807d9ef6f537fce2712a9429",
+          "afterSha256": "85f117389597f40a2542f18789f2ed6f56fa5f4324ec891cbce8be349762fb30",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAnt1": {
         "volume": "II",
@@ -6169,7 +6834,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "bdc6231cb43fa22fa99d1d6a3f19d6f07889293436398e07f28892d9096e3834"
+        "sha256": "62c9754b2b51ff7945dd2061ab8908cd6f103d2c05674023f3f64edca0882f3b",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "26bd85e884aac2f0b21a35811d3daa8e4eb27804dc336a008491ce636f964ebe",
+          "afterSha256": "60c5c9ee173bbd229f15e95b87ce56d3781f85ca08e1816d96568d8765b0517e",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -6370,7 +7042,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "cb2495a0a9bcf63cb53f6e969791cf806744fb500ca3165b60de7719720d73f7"
+        "sha256": "9a006707ab8f5382aae9b16785de6e816c3b75334909407f18761b8104c53e48",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "df169ac15c852acb8a2e7582476838a3c992d05fdd45c6a7b747c4bff921e509",
+          "afterSha256": "a2270a077b235b65890f31d9fa75c31a7304afe3c78cc5f2012d762df99217c1",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperAntMag": {
         "volume": "II",
@@ -6488,7 +7167,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "492eb3d92c04f10d7d4a9e526445c2bbdead4617350e72e447afc08198a470dd"
+        "sha256": "f3a3f4e73b65488159073e2b12f84d2fd4dcc710f5b2231cb8bfce71a1e17ac5",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "e4fba3f780ef843dfe128e8290fc446790ac72a8a8865037ef9019851ee8b260",
+          "afterSha256": "a89b6d56a3e1e92cbca8b8142ae694cf2fb09a1f7ed792b51a06de1ac2a044d0",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -6555,7 +7241,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "710a77cab152b01b381432af5bb721666dd748284ca376f44a22c7498ed1dcf0"
+        "sha256": "f4fcf4fe1b64fdcf380a77f1ebb173ac9422f0088ced3c915b268fc21b8d8d2f",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "82e67eabae28bd4d20b563dad4a085e1c3827baa7c0d277d28ed4c4c4fa00764",
+          "afterSha256": "9fa958e29bd86ffecb3a32537b1d4f4b2fc993acdbe852d857b42ef2040dad31",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -6565,7 +7258,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "61867764c7641718f7dc4b0441f1eed2b79a4683d2316734428df43c867b0c26"
+        "sha256": "90a3c7032d9e562ad27b31317e4bb59a70af0605c0ecbf87aa64c22fe811bd56",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "4da2efa1b9e34c536dde72e85126258a7a7ed4cfb29e42210bb908a42b748c8c",
+          "afterSha256": "0bf7993dac62a05f27d2285dfefdc440f2b09355cbb5f75179c487d7cafa3008",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "I",
@@ -6627,7 +7327,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "710a77cab152b01b381432af5bb721666dd748284ca376f44a22c7498ed1dcf0"
+        "sha256": "f4fcf4fe1b64fdcf380a77f1ebb173ac9422f0088ced3c915b268fc21b8d8d2f",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "82e67eabae28bd4d20b563dad4a085e1c3827baa7c0d277d28ed4c4c4fa00764",
+          "afterSha256": "9fa958e29bd86ffecb3a32537b1d4f4b2fc993acdbe852d857b42ef2040dad31",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -6637,7 +7344,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "61867764c7641718f7dc4b0441f1eed2b79a4683d2316734428df43c867b0c26"
+        "sha256": "90a3c7032d9e562ad27b31317e4bb59a70af0605c0ecbf87aa64c22fe811bd56",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "4da2efa1b9e34c536dde72e85126258a7a7ed4cfb29e42210bb908a42b748c8c",
+          "afterSha256": "0bf7993dac62a05f27d2285dfefdc440f2b09355cbb5f75179c487d7cafa3008",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "I",
@@ -6689,7 +7403,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "5793189062b38b976f40fc0fb2b19b8f742be4c9c01c11aca093b08c0d7a9bb2"
+        "sha256": "1245ddc51d7715a71d7e68dbc538f24de3a341799ab75c48e6f8f68a535bdb68",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "221c34d5a14ae894da4b74a790192c91182edf6a16fae3073694847f5444dab9",
+          "afterSha256": "2282a649724d0ba545c7c1d95697f59acaf245a7a1182186d7115142f217eed9",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -6699,7 +7420,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "3f1734b304999663d308cdd503a0c894f862a3d45860e5b250fd9ecf5a2d757d"
+        "sha256": "2cabba12abe4405c670532305313929777afdbdcbb0ed64b3177b3d7949fb1ae",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "6e436dc0b5dfa4cbdde3fcee3c5e32dab6015cbc71bd06c7be96fd7022b251de",
+          "afterSha256": "ff3ca5071002bc183c04fdf98176584481a27fa381fdd70bebb9db805be22522",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -6719,7 +7447,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "a76c105381bfc416ccac060326304c1fb3dcadac205b9c3b2ec6964b784cd5db"
+        "sha256": "c195bb2d330ac8df4a5e67941c5181daf4fc7039e92993d3b552ca6486def345",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "e565fb54ce014780fe735d2f6414cecf711d597252343dd85b8b37aa35ec58b9",
+          "afterSha256": "01f9aa2b0b0f45b6cc86ea1720c5db24012ee67d079916fb7c4b37b3cc5b1aeb",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperR": {
         "volume": "II",
@@ -6729,7 +7464,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "c83e5ea78b59b304ce05578aea2c88b049f03dd671f27cbe6edc00aeac94d0d7"
+        "sha256": "79c386259e2f7829352098513ebf88d5d3bb31ae570be756285705fcab9cebee",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "1ef08cf6377d3271242735c5f1302f4546c35091b65583e6af6321bc55629473",
+          "afterSha256": "60ff6b3cd948d71ab0712b076b55eb91e1a50a0f21d4b447b6794d12fafc982e",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1R": {
         "volume": "II",
@@ -6856,7 +7598,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "a0d3394b1c575749e9df0b0de7b0db12df43f4799cd4165a667c5875b26960b5"
+        "sha256": "180a189c53bdcb966ad2fcb8656ae81517e4cf08273a6a98d122cee0120f6cd6",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "0ad8ce521a42f677a49dfdea3a09fbc16ad057d6c2896e0c9ee2fbf0b6d7d037",
+          "afterSha256": "2e35c7bd822c27a5d2f5bf8c39e8a2b12b38236931b43986d687a8a90e52ec7f",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -6866,7 +7615,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "ffc2e1a4fd223654b98155b3cffda6c9ccb9a979a173d644899f2698f22c649d"
+        "sha256": "85d031b4e73b6d38c4a81cfb7f71daa69adf86c766644bfb61c499edf2894675",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "02dca893d04fa33917d8688072da4853ebaaac1e47ef4563c46ccf67e3a20183",
+          "afterSha256": "cb6a0caa14f0369286a62cb9b13ceb9f4e9bb0ac02e02b1afc36403f2e11daaf",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -6925,7 +7681,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "8da6c003a2d888b76fef4e680d0fc4691c649f23cfb5fd48400aa968fd92b6e3"
+        "sha256": "e37b20fc5d3e92ec0045891353d2790a192d6907f1269e5b9a9dac6258607c98",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "22907b0c2b04fd81055d63f2e9b50b18bd423fa7e76251a233a645764e6889c6",
+          "afterSha256": "03182f798e90e12af9ccd8a95f2c4402354d4b674b141fb68d213de92d74f4d6",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -7104,7 +7867,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "bba21658d94d473b2088116f98b290c047823c0d4d361d650ce3f70a01ca93a2"
+        "sha256": "ebd33c1acc03f21b718b6a5786b4c27c3bc472475a992863ee0791ce3c554ea5",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "921eb22ddd15dd55bf9bfab005db54d72324b878e46b26b5fe759dcda9f10b88",
+          "afterSha256": "fba676d4424ae304031b485fd12f12fada06ce06dd3941ab3a16efb6759ae1c9",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperAntMag": {
         "volume": "II",
@@ -7205,7 +7975,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "1ca527829797c30402da7c4f082d2d1e2a24492eef3f8fd1ed6bcea6d5d4ad6a"
+        "sha256": "42df053ed6a2ebaf4355cef4e72fe5f037874b50ca163410686f29149f0a4ba1",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "bcdda6e668932cb74e77ab43af1ad66c231623abc475b13b2f729c697d72681b",
+          "afterSha256": "765cfbdfd42ed58826f073398d9e697d07030c8cf081af363dfb3b496afef615",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -7242,7 +8019,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "85394f385032feea0f4d7530539d68c9b6f1e34719e821b0f1452b7f29360dee"
+        "sha256": "54a70a5f3d975985670f0f3ac806889d117202ac05df42caa641acd9d66a4685",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b49acec740d83fd2335669e6cc5533bfab946825ecf64011a539854a3fab7d86",
+          "afterSha256": "d0e441c20e3994d15d0bc03acb4b35f5bab5beb8819e69a69c7e19ecd0324ec1",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -7252,7 +8036,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "6a66bdb76905c69bebc0969a634733fdfa4a583805ad7fc212673a2baaf8ae84"
+        "sha256": "581e9cc821d3063ad685583dabb444014da964e6f106384948505b3dc9168285",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b00176de94c818f6ae98eeef3f28b0c6b656b3400cb4008c2164eabe2d29658b",
+          "afterSha256": "9f5f089b6ce64196ff845d6471c11385a07259c08b6bbf71b46b6f287be4c369",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "I",
@@ -7325,7 +8116,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "85394f385032feea0f4d7530539d68c9b6f1e34719e821b0f1452b7f29360dee"
+        "sha256": "54a70a5f3d975985670f0f3ac806889d117202ac05df42caa641acd9d66a4685",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b49acec740d83fd2335669e6cc5533bfab946825ecf64011a539854a3fab7d86",
+          "afterSha256": "d0e441c20e3994d15d0bc03acb4b35f5bab5beb8819e69a69c7e19ecd0324ec1",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -7335,7 +8133,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "6a66bdb76905c69bebc0969a634733fdfa4a583805ad7fc212673a2baaf8ae84"
+        "sha256": "581e9cc821d3063ad685583dabb444014da964e6f106384948505b3dc9168285",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b00176de94c818f6ae98eeef3f28b0c6b656b3400cb4008c2164eabe2d29658b",
+          "afterSha256": "9f5f089b6ce64196ff845d6471c11385a07259c08b6bbf71b46b6f287be4c369",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "I",
@@ -7408,7 +8213,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "590c336369f107a9956783b09e38d027d0a5415632e4636f665d00b6cb30aebf"
+        "sha256": "38c9a1f5229ac016936ac9810747bef1b6403b14b207a4fdc050828df98b9d6d",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "142b99d512c32d5db178a2b5f6ef3b501881e8f7d6d08d48b62b9477a36dabc3",
+          "afterSha256": "7ea4c96859466fdae7ddea04bd10a2efea3a6f280735e983145f701b4e6a3625",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -7418,7 +8230,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "21ed87564d297fbfa49262150a727a1d2ec4ed753e2493bb7a805d4dced0ef2e"
+        "sha256": "e3ede8981093b68231aac52eb8a1dc060ca04e65eaa757c909dd99999a819057",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "09b40465b1bf8903166371a777c0ce0e6220c46f6dcced4f6ee0ddd59ce48b9c",
+          "afterSha256": "647f5046a727a68c88365f9f5d3648c0f854a3e8935f9603437121b9f80daa8e",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -7438,7 +8257,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "d4a0c11c0ce949a124650177ecf7dd4c66b3f83b7532df9f9d15374ffd1defb8"
+        "sha256": "ea045a7d0c8247c7d8c6c3deaeeb5e9280a1accbc54b486e3a1199284e4a44b6",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "a445e86468d3251a0eebc39256257560a3daded47a410e59536f706f6477439b",
+          "afterSha256": "4d9d7a4424a75c49e1b1dc15552d8b0e928c2750cd675025b7597cbac29cb176",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperHymn": {
         "volume": "II",
@@ -7479,7 +8305,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "940c60badf2385b6a3a09d156411169d2c6a229d7d865533386429145131578b"
+        "sha256": "5c8d1600a9ed4b3c0752bdaa3692d11990fcaa6af61a93651a3457045d4e54e3",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "a141bf79c343d0f2cdc9b932720f4113fd5938e3fbe9588ecb7d6a638e66ee05",
+          "afterSha256": "fe1362dd13eb2037a2b10838999bbcfe44494da2506ec278b38d8e919ee0170d",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "easter": {
@@ -7599,7 +8432,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "f862e74511bf1254825a3b211b82c9ca32fb6e54c3f3a42119d998f4d2eb0659"
+        "sha256": "ba61946bdb1f577694f146c215059602141c9784069ce1506c445c623f581489",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "aa769dc4460a619239638d3055a885bad216fe22f5b3cf14600d5ac444660380",
+          "afterSha256": "676c8ba19cca3d1804fa32c272af08918e5c78e5e94c71c1b3c42d131adf9103",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -7609,7 +8449,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "5faaf0ff4e44e055bc53727d47824c3e12f2d3723563ee14ce7c29f24751d67d"
+        "sha256": "eec37e009dbf376a1bb1096428551634be484d659c7ed22cdd520016f5631a70",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "281e6016573e3f0410d8096a646420e0d165afba287b74bcae946b8ad93c815f",
+          "afterSha256": "f4c1a8e119326a80ea8da817c28e4704c8ede41f79763bd2fa41248d152a3729",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -7668,7 +8515,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "3fc1f4471cc9abed3778b1fc6a109c798c64e39431bcf77ec975a6ccd77d8a49"
+        "sha256": "0dcab3d7521c563d5a171deb4cf47a1bde10bc613380cb7fdc0239539905a2e3",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "5c8bd28dc18e3b741ff1def1ce0e109c2193fe100944ed5e2abef2550def5be0",
+          "afterSha256": "fd0e5f89e6e6ae0640421bf4e54300b9ff1b2ee9e303611a78d35da8a6d097c0",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -7969,7 +8823,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "0b4ddd553acac201de06b380da2a35f276dc936b0cf00448f302d39324aee438"
+        "sha256": "84b1c4026efa5db9c295b3716d31b295edc9f69a1759b7c83157144667f9b1ec",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "e9db20269c4045856eb5c2f2473a3483278c0674585c3480a9c92fe1fa24e2ec",
+          "afterSha256": "e1318b88a01c4188763c4485bc200fdfd88e896f692ebb21a6618461e8ff0330",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -8006,7 +8867,14 @@
         ],
         "method": "render+reference-set",
         "kind": "reading1",
-        "sha256": "1d0c5d7c74fd46c47beff612db59659c6fbc4b7bafb4f64d571e03f4574e6d18"
+        "sha256": "1ac34f3081e00afa39369a0ab8b291368546cafba838acf5708a9febcd726388",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "3114df702e9b31eac4f6227675a51651f59be92036b9d282a609757de01b4e06",
+          "afterSha256": "5abb67bbf3fbd8be0702d620b84f3b180c08573e90e245a0dec48f732ce0030f",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -8016,7 +8884,14 @@
         ],
         "method": "reference-set",
         "kind": "reading2",
-        "sha256": "05ea2e95b6218223306d8a73b372f820519366da9015b34a3ca4b96462462d8c"
+        "sha256": "ef569c5e55180692060616f458c2d5ab7730b6d83957c6b4fec7f1c7cd982158",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "90a5e52e2feaf62fa179fadfed61fa0ca693c6da9306f77aca853dcfefd841c5",
+          "afterSha256": "6bf35e083fef4e097e04e1d76e0bc730baf7402e461021f893de0246061f5dd0",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesR": {
         "volume": "I",
@@ -8026,7 +8901,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "53dba51abe1c293f01e7b71bea9d1f8eaaa702140827c7ea51ab596d97a17276"
+        "sha256": "6030a26d5b731d892d2260dd4f59a2450ab11147d9b93a1c3505000f41f1cc2b",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "adb1e210ff69d695e5a50780bd735aad4709817402a3533fe1a02b98dd0e4e62",
+          "afterSha256": "8a458c0463841ce3208759a397d130eaac594b9c439a3f42c2930ad16d823a3d",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperHymn": {
         "volume": "I",
@@ -8089,7 +8971,14 @@
         ],
         "method": "render+reference-set",
         "kind": "reading1",
-        "sha256": "1d0c5d7c74fd46c47beff612db59659c6fbc4b7bafb4f64d571e03f4574e6d18"
+        "sha256": "1ac34f3081e00afa39369a0ab8b291368546cafba838acf5708a9febcd726388",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "3114df702e9b31eac4f6227675a51651f59be92036b9d282a609757de01b4e06",
+          "afterSha256": "5abb67bbf3fbd8be0702d620b84f3b180c08573e90e245a0dec48f732ce0030f",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -8099,7 +8988,14 @@
         ],
         "method": "reference-set",
         "kind": "reading2",
-        "sha256": "05ea2e95b6218223306d8a73b372f820519366da9015b34a3ca4b96462462d8c"
+        "sha256": "ef569c5e55180692060616f458c2d5ab7730b6d83957c6b4fec7f1c7cd982158",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "90a5e52e2feaf62fa179fadfed61fa0ca693c6da9306f77aca853dcfefd841c5",
+          "afterSha256": "6bf35e083fef4e097e04e1d76e0bc730baf7402e461021f893de0246061f5dd0",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesR": {
         "volume": "I",
@@ -8109,7 +9005,14 @@
         ],
         "method": "render",
         "kind": "shortReading",
-        "sha256": "53dba51abe1c293f01e7b71bea9d1f8eaaa702140827c7ea51ab596d97a17276"
+        "sha256": "6030a26d5b731d892d2260dd4f59a2450ab11147d9b93a1c3505000f41f1cc2b",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "adb1e210ff69d695e5a50780bd735aad4709817402a3533fe1a02b98dd0e4e62",
+          "afterSha256": "8a458c0463841ce3208759a397d130eaac594b9c439a3f42c2930ad16d823a3d",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperHymn": {
         "volume": "I",
@@ -8162,7 +9065,14 @@
         ],
         "method": "render+reference-set",
         "kind": "reading1",
-        "sha256": "b1c1fc9f6fcf07f5f75341a2e70ac3623bbfdf32a343cbb7963cfdb854feec2c"
+        "sha256": "1b945de3457df9e9c237b8634bf2d31d7ddedd495618553f20a8361530efc1f0",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "db1eb99851610e5ea4136282806c7c9ffb4fbce5229b3829a28f0490f089c509",
+          "afterSha256": "689c9b014d2f17e90b3915758707745c5dcbf0f33b410a76f0ef7802f78b1ac4",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -8172,7 +9082,14 @@
         ],
         "method": "reference-set",
         "kind": "reading2",
-        "sha256": "b34e997ae555956dfef531ccd79107262fbb3fec0ccd62bba08443d5042adf58"
+        "sha256": "025ea11a30bfaecb7f022ea5aeb12bc793cf15c3d820074e070d7c6abb95b11a",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "3090f04cfb9f2e2392261b6124d4251eee8274dab389e0415faa943b2570c1ec",
+          "afterSha256": "4857d46fff406efeec34b2b4c1cbf0e78db329c9788e733505c4ff77b802e983",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesR": {
         "volume": "II",
@@ -8182,7 +9099,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "a6e99cd7d7c6be7e15ce8ce531552bd8af4b2d2fe5986badd678236b5a6a79f7"
+        "sha256": "239da14be022ca213ac13a3d321635e93e898c91bd0f622addd92e76513adc16",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "270b4d577d99f2330a49940234fe0d6c96a0f7d311d45d8a14572846fa7ecaa4",
+          "afterSha256": "fb5129390cc191ed3ffbe64f2759d52dfa2a20609d4096bda004a60c5d43ad0f",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperHymn": {
         "volume": "II",
@@ -8202,7 +9126,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "69a90b86a8bdc393b6da2829c67855720ab33c046a972a86eee95aee609158a3"
+        "sha256": "da9929c824bbc32a94bf8865d721dc3d778e9a684fdd6a22aa5f54b1b2959f46",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "b97d8fb2416a164b352a0c6862658001012fbb5a16c9c6cb73505196c6425cfe",
+          "afterSha256": "0a97ca2a356eff530c037b81e115e7ea579f1a3fa499ec1a9a6c5312a5203c9a",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1Hymn": {
         "volume": "II",
@@ -8223,7 +9154,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "de629ff60230f12fa85d27a81cffe12a95f27b743272b92adcbe49317ae68ad4"
+        "sha256": "07bb4fe50c999b3c27b2a1c266a6af9c158620ee352dab33c150337ddeead51f",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "31e921e56bc230de59c53f5371d61de2451071bf10e340734a1580c2fdc00024",
+          "afterSha256": "9f2c6a1e53c0ee5f99c33a1cc9001b8a98aeed79a44df7deac22011f946b09d3",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "easter": {
@@ -8336,7 +9274,14 @@
         ],
         "method": "render+reference-set",
         "kind": "reading1",
-        "sha256": "b3c2f3ac7916ac9728d2776945282a130262c15f0bbbb35c3ef8a73fd1d2686c"
+        "sha256": "94f3849750ad6cbb5993ae98cf47614c635a9d0f72e4676e3b9883ae21d6eb0d",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "282bc8e040a105bada9d4f807c78593261be59211ed44b9ddf6a6857a72b70b5",
+          "afterSha256": "fa6d5adf9d50d6d0baf41b3da85e24fe8d88b821787dd1e2d559e49de4cf1588",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -8346,7 +9291,14 @@
         ],
         "method": "reference-set",
         "kind": "reading2",
-        "sha256": "c472c27e3a35b1468abb2f0539ff8bb4f27b1373c616076fa0ee9aa0d158c6d4"
+        "sha256": "289e28b6e2a5d0b51ce948a9049c797d3e1f16da96fdf2c0720111cea966fa82",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "2864f34a0965ad0f2041f36002e3c5fd036f76325194d22f43702098c8085973",
+          "afterSha256": "4cf695a6b27449f644cec98517a441917f3930822a340589a9e4458c23e44431",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAnt1": {
         "volume": "II",
@@ -8395,7 +9347,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "6260823e95d434f918b00aa3c29f369a7a015cd8cc48b7ee434e7ef66757d422"
+        "sha256": "c3b48e682c7e596045fd63ea7f26485986e0457d9bb26e4426d461b0a39506f9",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "9dcb74c068f6bd82f0223f4148716bbbd12fb8416ab45013ecef4c2a5f2d39c3",
+          "afterSha256": "18693a62cdd78398ffd39da286db1fc3515e1dc484d1b3a4802dd011c3c05f59",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -8584,7 +9543,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "004bc151edb4723a513895f88161aa7e134b02fdd8791dda704ad54c6709eb8d"
+        "sha256": "702c5e40a7c58f31b0da03b5b96eacb31491b3ecc0c21ee9f1c34c1dfd236321",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "efe6fe0bdbedfc7820caa3f0f4b258a3f9bca40298147e4f6f275edfbf64ebaf",
+          "afterSha256": "459fda9b5c4646e8bdf73845c392cd61968ce6ac1025f94dc5c7459b318fad48",
+          "independentPrintedFullReply": false
+        }
       },
       "vesperAntMag": {
         "volume": "II",
@@ -8696,7 +9662,14 @@
         ],
         "method": "carrier+render",
         "kind": "shortReading",
-        "sha256": "80a1c2f8cfcb50f7e8bdfba0904909cdfd9b3176fcbc69295c8ca89e77c85dd9"
+        "sha256": "fc47255367803aab66c16beca4d64c7410055e5e5eea5c2ca4207d10e2a557fb",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "75a5aa260cb2c461a2368728217680a9ee371d9d1827382f5396e88396e6d5d3",
+          "afterSha256": "101c029ed1b68606bb619d58e1b2332f845bb0ea085490638f06f8b4514106dd",
+          "independentPrintedFullReply": false
+        }
       },
       "vesper1AntMag": {
         "volume": "II",
@@ -8723,7 +9696,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "5aee1795997e9115c6948e030d82602fce47ebb47629b426cedd19cd99d11ffc"
+        "sha256": "78cc43f0d67d7ecc251e3d82bc3daf721bf437d1b5327500546c27e0868ea9eb",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "3e58f5018be081c59f5279d7fb884e9e1f26937e7505f115ca3a39516ea24991",
+          "afterSha256": "31d29c946d4ed73dc8471b9e7cf6988b02bf1dafa14e1a8f6d6ec143b767992a",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -8733,7 +9713,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "fdc980e4f9959ca5c6647c140969b56e8277c237d6f32eda997e7bb79907731e"
+        "sha256": "e49f942342d17ea56f94ea569866093658d642d0d48de0611b402c3112b9de23",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "cdf839466bf6a427a22a92dc850071f58bf2c92f7669f9e70be125c76c13c8b4",
+          "afterSha256": "dbc43a05fef7b8c718a7c7cb644f1161950f86fd715a1d6e613f2fd9bb2a257d",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "I",
@@ -8785,7 +9772,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "5aee1795997e9115c6948e030d82602fce47ebb47629b426cedd19cd99d11ffc"
+        "sha256": "78cc43f0d67d7ecc251e3d82bc3daf721bf437d1b5327500546c27e0868ea9eb",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "3e58f5018be081c59f5279d7fb884e9e1f26937e7505f115ca3a39516ea24991",
+          "afterSha256": "31d29c946d4ed73dc8471b9e7cf6988b02bf1dafa14e1a8f6d6ec143b767992a",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -8795,7 +9789,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "fdc980e4f9959ca5c6647c140969b56e8277c237d6f32eda997e7bb79907731e"
+        "sha256": "e49f942342d17ea56f94ea569866093658d642d0d48de0611b402c3112b9de23",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "cdf839466bf6a427a22a92dc850071f58bf2c92f7669f9e70be125c76c13c8b4",
+          "afterSha256": "dbc43a05fef7b8c718a7c7cb644f1161950f86fd715a1d6e613f2fd9bb2a257d",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "I",
@@ -8847,7 +9848,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "4891ae2ca6a352e6b0756a0ac4ed597e01bdf30e428c29d2d7557a9694a05d9f"
+        "sha256": "6f047cec019cf6febabf58d335e7fc490e26d3ddd6478c34460b305de21d7127",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "8f49a7c39b8b82dacb788ca79ce13ac0145dd767ab6c09741142191bc99eb419",
+          "afterSha256": "26ae205589031e747281ad8e9ccca99188ad8aab7e9726cb0f2aff3bba5dcb63",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -8857,7 +9865,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "10426737698f2645a7711b1d7c64599989483bf1bf615b28508781d74aa02c1c"
+        "sha256": "d64d3a41b2fcb91cd0c884867b08c7f0f03a8ced007525efc818ebab8fdc44d0",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "d0083dcffbf48e1624833305003943b9661652892b230494a4dd81f783faa6d7",
+          "afterSha256": "a34e16740cef05da18ef4fc715d08e2c69efbac8652bf234d3bb3d125eb7cc5c",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -8912,7 +9927,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "34526bd79828f4a8a0a41afe7e7a0e19e2f89f4edf98f4e5a6f0079556ca3fef"
+        "sha256": "6e0cd033bd44d7467897ed90bdbd981a03c4662844760306d3a5430611ca0333",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "d6fab23d0000d7a6635655463c7a824cbbbfb4da13aab114b1efcb57ee2d4058",
+          "afterSha256": "1820131f2ae6ed370888475951477d49b82d0a389d6eb4f044aa687958268453",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -8922,7 +9944,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "033317c0096f1633d4c75fad805bf4924c8465d75425f7343cfb7c7fddf5df10"
+        "sha256": "4f5b20e014af1a9038c950828de559e478a090beb8136b692e7e48477133c88b",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "26574f2e678b2fca02e2be601cef926e6f8563f324effc6da5a376a0d6a8f00a",
+          "afterSha256": "97ac892f4b23fe51c9affeeb8d8e3966919222a3ea770bae8fe776de52b69706",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesHymn": {
         "volume": "II",
@@ -8992,7 +10021,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "7f8b49fd13ddac2dabd0e90eb9269160cd92142e18b2af2a088cec2f8178806e"
+        "sha256": "fd859a1b2acd9b91ba1adb2d089636846dfafa0621b380842bcea823fb1125e6",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "d33fa9465a2e4b71d6d500fd8fc01fd5f2a418c50bd224e7760c4f83d7365327",
+          "afterSha256": "4349619c844f0eb20fce38b00505f6f5b005283047002d516ee8cc4f5debe9ad",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -9002,7 +10038,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "15bbdeaf280db2e301c2dabd750954eb166a509fe5a0e11bd8b11ece95fc0cc2"
+        "sha256": "f7c2f7560b6eef8ccbbaa1449798dc44d45631726960f06826d290099b96ab0e",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "ee4e29d0f5658881bbdcfc523098c04dad33ff038d7f8bfe99bed1322d1b386f",
+          "afterSha256": "3c5db5c901bf351cab8bea71fc67355da8cb8b83dfc726877768226fbfd863f9",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "christmas": {
@@ -9014,7 +10057,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "7f8b49fd13ddac2dabd0e90eb9269160cd92142e18b2af2a088cec2f8178806e"
+        "sha256": "fd859a1b2acd9b91ba1adb2d089636846dfafa0621b380842bcea823fb1125e6",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "d33fa9465a2e4b71d6d500fd8fc01fd5f2a418c50bd224e7760c4f83d7365327",
+          "afterSha256": "4349619c844f0eb20fce38b00505f6f5b005283047002d516ee8cc4f5debe9ad",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "I",
@@ -9024,7 +10074,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "15bbdeaf280db2e301c2dabd750954eb166a509fe5a0e11bd8b11ece95fc0cc2"
+        "sha256": "f7c2f7560b6eef8ccbbaa1449798dc44d45631726960f06826d290099b96ab0e",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "ee4e29d0f5658881bbdcfc523098c04dad33ff038d7f8bfe99bed1322d1b386f",
+          "afterSha256": "3c5db5c901bf351cab8bea71fc67355da8cb8b83dfc726877768226fbfd863f9",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "lent": {
@@ -9036,7 +10093,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "abed0d3bb7d05b83f86402f2ccfb786c793eec054db1994494071e4853c6e91f"
+        "sha256": "d9d3157bbdfb619fabf334766740284022fd2637b799c5bdcbae034e0d6b9ece",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "18b9bf51e78025cc6dae5088ba70ba39f11d83c298541a52b4bc3a520b8f8ae9",
+          "afterSha256": "30fef8ef09389f8917a8ca35fb1fc14ff56ae60786ff80b5ed7a6c9eb78a9506",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -9046,7 +10110,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "468d22bc8cb8fad5b253e9e26b2fd750310a5c98acdaa3b0b71ef641a22e602a"
+        "sha256": "ac9c2d31788e93cb981c7bf897f7e898ae1d99d8c8af4ea3081f56c28ef3f8ac",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "5869c1bbfd6a30c1c92848546ddf946d365441c2147b8c25500c5ec8e7373c87",
+          "afterSha256": "60febda0e7cfce7ea37b8303f5a885710ff9a56e5db6c1eecde40568c66801e3",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "easter": {
@@ -9058,7 +10129,14 @@
         ],
         "method": "render",
         "kind": "reading1",
-        "sha256": "1364118a32c3efde4a9016412a55c8d6db4177950237c75b0ffd5f5ae9129f18"
+        "sha256": "d646fb5e1db887c5a5096be2503c377475cfd6361927d092c6d9a79b6fedda4e",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "a427433651f5dbca40a3ff62a78eb355843fe7efd04e44c279c5fe015a20a6e4",
+          "afterSha256": "6daa00f121a9756a744866e38ff2b75f3bf2fd1625262f8722c74e0381659fd8",
+          "independentPrintedFullReply": false
+        }
       },
       "officeOfReadingsR2": {
         "volume": "II",
@@ -9068,7 +10146,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "ad4f98a37863d60cd4d477021e746b06cbf1dc859041c35db3174a189b7ec2f3"
+        "sha256": "eaa5feb77ada0dfc3a7b6112401fb445e72cda9fb6c33b34bd40dc6da0c572ee",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "beca548cefa93ba84dbb02a2d743878651083f48db5aa94f87f4571387875f6b",
+          "afterSha256": "b188642b57aefcd5283f9577337ab70a4e677bd26b9213580ca20b70a55d801d",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",
@@ -9121,7 +10206,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "cb78ace3546396ccfcdefbecb33cf8e62eb0721d7e2f4f5113170d0160d78ffa"
+        "sha256": "079abaeef2f2cd6c70a7d614d475c56f50265f672f969440a57ab6a031d57480",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "81530d000575ff1fff5de82f92eabf7d7ccdf07f3c4621fcf729019abc39fe50",
+          "afterSha256": "0e1a6cec00d11f48a396bc1c74cec1153a27ffa15a41cf483d2ba89925433ba4",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "christmas": {
@@ -9133,7 +10225,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "cb78ace3546396ccfcdefbecb33cf8e62eb0721d7e2f4f5113170d0160d78ffa"
+        "sha256": "079abaeef2f2cd6c70a7d614d475c56f50265f672f969440a57ab6a031d57480",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "81530d000575ff1fff5de82f92eabf7d7ccdf07f3c4621fcf729019abc39fe50",
+          "afterSha256": "0e1a6cec00d11f48a396bc1c74cec1153a27ffa15a41cf483d2ba89925433ba4",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "lent": {
@@ -9145,7 +10244,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "643ef24d6dba752f33bd9b7d5fd8855abbdfa2a5b0721e0255dddcbee4a00930"
+        "sha256": "7ef7d82b411b254569a7cb6e6c27aa85a6a4b2139c921424ef115a28abd813c2",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "a214000c75d63e77f9c154a46950fc90f91761c4154d3e7058b05a1a77a0a103",
+          "afterSha256": "51a994bed32ce88cd4b1469f486173963a39e7f06a7d0f7ffad890cbb823c58b",
+          "independentPrintedFullReply": false
+        }
       }
     },
     "easter": {
@@ -9157,7 +10263,14 @@
         ],
         "method": "render",
         "kind": "reading2",
-        "sha256": "b881b5b87496feebeb648f79be17f8deb059e17b2d4d3143bd690fb305903d69"
+        "sha256": "6d57fc6d521d258edf5811a5a57e163318628af89dc7a8d6a5c7264c01e536c9",
+        "editorialDisplay": {
+          "policy": "scripts/liturgy/sources/editorial-response-scopes-v3.json",
+          "classification": "owner-authorized-local-word-display-copy",
+          "beforeSha256": "3d3e025e4519a04fcf9ad6da5cd816bf392a8fa087cfb57bf3a1c1629cf7e0da",
+          "afterSha256": "2b7993e1a79ba1fb0d042bee8bd0dc7d4d9452d3fd73f7a7ddd4b30b02aaee99",
+          "independentPrintedFullReply": false
+        }
       },
       "laudesAntBen": {
         "volume": "II",

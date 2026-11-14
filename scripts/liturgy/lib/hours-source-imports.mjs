@@ -1,3 +1,4 @@
+import { expandApprovedEditorial } from './editorial-policy.mjs';
 /**
  * Hours texts imported from checked-in lh.catholic.by source pages
  * (`patchs/sources/lh-catholic-by/*.html`, read by `lh-catholic-by.mjs`).
@@ -82,7 +83,7 @@ export function planProperImports(root = process.cwd()) {
     item.files.forEach((file) => {
       const doc = JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
       Object.entries(map).forEach(([target, from]) => {
-        const value = /R[12]?$|Vers$/u.test(target) ? normalizeReadingHtml(fields[from]) : fields[from];
+        const value = /R[12]?$|Vers$/u.test(target) ? expandApprovedEditorial(normalizeReadingHtml(fields[from]),target).value : fields[from];
         if (!value) throw new Error(`${item.page}: no ${from}`);
         if (doc[target] === value) return;
         changes.push({ file, field: target, value, from: doc[target] ?? null, textChanged: !same(doc[target], value), task: item.task, page: item.page });
