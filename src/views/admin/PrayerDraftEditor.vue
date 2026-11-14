@@ -39,9 +39,6 @@
             <h2>Крыніца</h2>
             <v-textarea v-model="form.source" label="Крыніца" variant="outlined" rows="2" auto-grow hide-details="auto" :readonly="locked" />
             <p class="hint">Крыніца з імпартаванай кнігі і старонак падстаўляецца аўтаматычна. Яе можна адрэдагаваць як звычайны тэкст.</p>
-            <dl v-if="provenance.length" class="provenance">
-              <template v-for="row in provenance" :key="row[0]"><dt>{{ row[0] }}</dt><dd>{{ row[1] }}</dd></template>
-            </dl>
           </v-card>
         </div>
 
@@ -154,12 +151,7 @@ const duplicates = computed(() => findDuplicateCandidates(form.value.title, pray
 const hasExactDuplicate = computed(() => duplicates.value.some((item) => item.kind === 'exact'));
 const blockers = computed(() => publishBlockers(merged.value));
 const targetId = computed(() => (draft.value ? targetPrayerIdFor(draft.value) : ''));
-const provenance = computed(() => [
-  ['Крыніца ў парсеры', draft.value?.sourceId], ['Запіс', draft.value?.originalEntryId],
-  ['Старонкі PDF', draft.value?.pdfPageStart ? `${draft.value.pdfPageStart}–${draft.value.pdfPageEnd || draft.value.pdfPageStart}` : ''],
-  ['SHA-256 кнігі', draft.value?.sourceSha256 ? `${draft.value.sourceSha256.slice(0, 16)}…` : ''],
-  ['Партыя імпарту', draft.value?.originBatch],
-].filter((row) => row[1]));
+
 
 function hydrate(source) {
   form.value = { title: source.title || '', text: source.text || '', tags: [...(source.tags || [])], priestOnly: source.priestOnly === true, source: draftSourceNotice(source) };
@@ -221,8 +213,6 @@ onMounted(() => { categoriesStore.init?.(); load(); });
 .card h2 { margin: 0 0 12px; font-size: 1rem; }
 .hint { margin: 8px 0 0; color: var(--nav-muted); font-size: 0.82rem; }
 .hint--warn { color: rgb(var(--v-theme-warning)); }
-.provenance { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 14px 0 0; font-size: 0.8rem; color: var(--nav-muted); }
-.provenance dd { margin: 0; overflow-wrap: anywhere; }
 .preview h3 { margin: 0 0 10px; font-size: 1.05rem; }
 .prayer-preview { color: var(--reader-ink); font-family: var(--reader-font-family); font-size: 1rem; line-height: 1.7; overflow-wrap: anywhere; }
 .prayer-preview :deep(p) { margin: 0 0 1em; }
