@@ -227,6 +227,16 @@ const routes = [
         component: () => import('@/views/admin/PrayerCategories.vue'),
       },
       {
+        path: 'prayer-drafts',
+        name: 'AdminPrayerDrafts',
+        component: () => import('@/views/admin/PrayerDrafts.vue'),
+      },
+      {
+        path: 'prayer-drafts/:id',
+        name: 'AdminPrayerDraftEdit',
+        component: () => import('@/views/admin/PrayerDraftEditor.vue'),
+      },
+      {
         path: 'ordo/year-overrides',
         name: 'AdminYearOverrides',
         component: () => import('@/views/admin/YearOverrides.vue'),

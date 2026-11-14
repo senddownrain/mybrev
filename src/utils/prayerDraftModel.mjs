@@ -1,0 +1,148 @@
+// Pure model for closed prayer drafts (`prayerDrafts`, admin-only).
+// Used by the admin UI, the publish transaction and the import tooling.
+import { formatSourceNotice } from './prayerSource.mjs';
+
+export const DRAFT_COLLECTION = 'prayerDrafts';
+export const DRAFT_STATUSES = Object.freeze(['draft', 'needs_review', 'ready_for_publication', 'published', 'archived']);
+export const DRAFT_STATUS_LABELS = Object.freeze({
+  draft: 'Чарнавік',
+  needs_review: 'На праверцы',
+  ready_for_publication: 'Гатова',
+  published: 'Апублікавана',
+  archived: 'У архіве',
+});
+export const DRAFT_ORIGINS = Object.freeze({ bog_dobry: 'Бог Добры', disputed: 'Спрэчныя' });
+export const DRAFT_REASON_LABELS = Object.freeze({
+  unique_bog_dobry: 'Новы тэкст з «Бог Добры»',
+  ambiguous: 'Нявызначанае супадзенне са старой малітвай',
+  needs_review: 'Патрэбна праверка',
+  rights_unconfirmed: 'Права на публікацыю не пацверджана',
+  structure: 'Спрэчная сегментацыя або структура',
+});
+export const DRAFT_TEXT_LIMIT = 200000;
+export const DRAFT_TITLE_LIMIT = 200;
+
+const TRANSITIONS = {
+  draft: ['draft', 'needs_review', 'ready_for_publication', 'published', 'archived'],
+  needs_review: ['draft', 'needs_review', 'ready_for_publication', 'published', 'archived'],
+  ready_for_publication: ['draft', 'needs_review', 'ready_for_publication', 'published', 'archived'],
+  published: [],
+  archived: ['archived', 'draft'],
+};
+export function canTransition(from, to) {
+  return (TRANSITIONS[from] || []).includes(to);
+}
+
+/** Casefold + graphic variants (і/i, ё/е, ў/у, apostrophes, punctuation) for title matching. */
+export function normalizeTitleKey(value) {
+  return String(value ?? '')
+    .normalize('NFKD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[’‘`´ʼ'"«»„“”]/g, '')
+    .replace(/і/g, 'и').replace(/i/g, 'и').replace(/ё/g, 'е').replace(/ў/g, 'у').replace(/ґ/g, 'г')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim();
+}
+
+export function prayerTitleOf(prayer) {
+  return prayer?.title || prayer?.titleVersions?.be || Object.values(prayer?.titleVersions || {})[0] || '';
+}
+
+function tokenSet(key) {
+  return new Set(key.split(' ').filter((word) => word.length > 2));
+}
+
+/**
+ * Candidates for "already exists": exact normalized title => `exact`, high token overlap => `similar`.
+ * @param {string} title
+ * @param {Array<object>} prayers published prayers (both collections)
+ */
+export function findDuplicateCandidates(title, prayers, { limit = 8 } = {}) {
+  const key = normalizeTitleKey(title);
+  if (!key) return [];
+  const tokens = tokenSet(key);
+  const found = [];
+  for (const prayer of prayers || []) {
+    const other = normalizeTitleKey(prayerTitleOf(prayer));
+    if (!other) continue;
+    if (other === key) { found.push({ id: prayer.id, title: prayerTitleOf(prayer), kind: 'exact', score: 1 }); continue; }
+    const otherTokens = tokenSet(other);
+    if (!tokens.size || !otherTokens.size) continue;
+    let shared = 0;
+    for (const token of tokens) if (otherTokens.has(token)) shared += 1;
+    const score = shared / Math.max(tokens.size, otherTokens.size);
+    if (score >= 0.6 || other.includes(key) || key.includes(other)) found.push({ id: prayer.id, title: prayerTitleOf(prayer), kind: 'similar', score: Math.round(score * 100) / 100 });
+  }
+  return found.sort((a, b) => (b.kind === 'exact') - (a.kind === 'exact') || b.score - a.score).slice(0, limit);
+}
+
+export function slugDraftId(...parts) {
+  return parts.join('__').replace(/[^\p{L}\p{N}_-]+/gu, '_').replace(/_+/g, '_').slice(0, 240);
+}
+/** Deterministic id of the single public document a draft produces. */
+export function targetPrayerIdFor(draft) {
+  return draft.targetPrayerId || `d_${draft.draftId || draft.id}`.slice(0, 250);
+}
+
+export const RIGHTS_BASIS_MIN = 10;
+export const RIGHTS_BASIS_MAX = 500;
+
+export function validateDraft(data) {
+  const errors = [];
+  if (!data || typeof data !== 'object') return ['Пусты чарнавік.'];
+  const title = String(data.title ?? '').trim();
+  const text = String(data.text ?? '');
+  if (!title) errors.push('Патрэбна назва.');
+  if (title.length > DRAFT_TITLE_LIMIT) errors.push(`Назва даўжэйшая за ${DRAFT_TITLE_LIMIT} сімвалаў.`);
+  if (!text.trim()) errors.push('Патрэбны тэкст.');
+  if (text.length > DRAFT_TEXT_LIMIT) errors.push('Тэкст занадта вялікі.');
+  if (data.textFormat !== 'mybrev-markdown') errors.push('Дазволены толькі фармат mybrev-markdown.');
+  if (!DRAFT_STATUSES.includes(data.status)) errors.push('Невядомы статус.');
+  if (!Array.isArray(data.tags)) errors.push('Тэгі павінны быць спісам.');
+  // Confirming digital-publication rights needs a written basis; a bare tick is not a confirmation.
+  const basis = String(data.rightsBasis ?? '').trim();
+  if (data.rightsStatus === 'confirmed' && basis.length < RIGHTS_BASIS_MIN) errors.push('Укажыце падставу пацверджання правоў: хто, калі і які дакумент ці ліцэнзія.');
+  if (basis.length > RIGHTS_BASIS_MAX) errors.push(`Падстава даўжэйшая за ${RIGHTS_BASIS_MAX} сімвалаў.`);
+  return errors;
+}
+
+/** What must be true before a draft may go public (shown in the confirmation dialog). */
+export function publishBlockers(draft) {
+  const blockers = validateDraft({ ...draft, status: draft.status });
+  if (!draft.tags?.length) blockers.push('Дадайце хаця б адзін тэг.');
+  if (!draft.sourceBook && !draft.source) blockers.push('Патрэбна крыніца.');
+  if (!draft.copyrightNotices?.length) blockers.push('Патрэбны запіс аб аўтарскіх правах.');
+  if (draft.rightsStatus !== 'confirmed') blockers.push('Права на лічбавую публікацыю не пацверджана.');
+  return blockers;
+}
+
+export function draftSourceNotice(draft) {
+  if (draft.source && !draft.sourceBook) return draft.source;
+  const pages = draft.pdfPageStart ? `${draft.printedPageStart || draft.pdfPageStart}${draft.printedPageEnd && draft.printedPageEnd !== draft.printedPageStart ? `–${draft.printedPageEnd}` : ''}` : '';
+  return formatSourceNotice({ book: [draft.sourceBook, draft.sourceEdition].filter(Boolean).join(' '), pages: draft.printedPageStart ? pages : '', copyrightNotices: draft.copyrightNotices });
+}
+
+/**
+ * Public prayer document for a draft. Only reader-facing fields: no PDF hashes, notes, reasons.
+ * Extra provenance (`sourceDraftId`, `sourceEntryId`) lets the rules and audits link both records.
+ */
+export function buildPrayerFromDraft(draft, { existing } = {}) {
+  const title = String(draft.title).trim();
+  // A replaced multi-language prayer keeps its other versions; only Belarusian is canonical.
+  const versions = existing?.textVersions || existing?.titleVersions
+    ? { textVersions: { ...existing.textVersions, be: draft.text }, titleVersions: { ...existing.titleVersions, be: title } } : {};
+  return {
+    ...versions,
+    title,
+    text: draft.text,
+    textFormat: 'mybrev-markdown',
+    textFormatVersion: 1,
+    tags: [...new Set((draft.tags || []).map((tag) => String(tag).trim()).filter(Boolean))],
+    source: draftSourceNotice(draft),
+    copyrightNotices: [...(draft.copyrightNotices || [])],
+    priestOnly: draft.priestOnly === true,
+    verified: existing?.verified === true,
+    sourceDraftId: draft.draftId || draft.id,
+    ...(draft.originalEntryId ? { sourceEntryId: draft.originalEntryId } : {}),
+  };
+}

@@ -86,6 +86,61 @@ service cloud.firestore {
       allow read: if isAdmin() || hasGrant();
       allow create, update, delete: if contentWrite();
     }
+    // Closed prayer drafts: admin-only in both directions (never a flag inside public `prayers`,
+    // which older Flutter clients read in full). `admin` and `superadmin` are equal here; a priest
+    // grant gives no access. Publishing is a single transaction that also writes the public prayer.
+    function draftKeys() {
+      return ['draftId', 'sourceId', 'sourceBook', 'sourceEdition', 'sourceSha256', 'sourcePageSpan', 'pdfPageStart', 'pdfPageEnd',
+        'printedPageStart', 'printedPageEnd', 'originalEntryId', 'title', 'text', 'textFormat', 'source', 'tags', 'categoryIds',
+        'copyrightNotices', 'rightsStatus', 'priestOnly', 'originBatch', 'origin', 'reason', 'flagReasons', 'possibleDuplicateIds',
+        'status', 'version', 'fingerprint', 'createdBy', 'createdAt', 'updatedAt', 'reviewedBy', 'reviewedAt', 'publishedBy',
+        'publishedAt', 'targetPrayerId', 'notes', 'rightsBasis', 'rightsConfirmedBy', 'rightsConfirmedAt'];
+    }
+    // Rights are only `confirmed` with a written basis and a recorded confirmer; a bare flag is refused.
+    function rightsBasisOk(data) {
+      return data.get('rightsStatus', '') != 'confirmed'
+        || (data.get('rightsBasis', '') is string && data.get('rightsBasis', '').size() >= 10 && data.get('rightsBasis', '').size() <= 500
+          && data.get('rightsConfirmedBy', '') is string && data.get('rightsConfirmedBy', '') != '');
+    }
+    function validDraft(data) {
+      return data.keys().hasOnly(draftKeys()) && rightsBasisOk(data)
+        && data.title is string && data.title.size() > 0 && data.title.size() <= 200
+        && data.text is string && data.text.size() > 0 && data.text.size() <= 200000
+        && data.textFormat == 'mybrev-markdown'
+        && data.tags is list && data.tags.size() <= 40
+        && data.status in ['draft', 'needs_review', 'ready_for_publication', 'published', 'archived']
+        && data.get('priestOnly', false) is bool
+        && data.version is int;
+    }
+    function draftPublishedTarget(id, data) {
+      return data.targetPrayerId is string
+        && data.publishedBy == request.auth.uid && data.publishedAt == request.time
+        && getAfter(/databases/$(database)/documents/priestContentControl/state).data.version == contentVersion() + 1
+        && ((existsAfter(/databases/$(database)/documents/prayers/$(data.targetPrayerId))
+            && getAfter(/databases/$(database)/documents/prayers/$(data.targetPrayerId)).data.get('sourceDraftId', '') == id)
+          || (existsAfter(/databases/$(database)/documents/priestProtectedPrayers/$(data.targetPrayerId))
+            && getAfter(/databases/$(database)/documents/priestProtectedPrayers/$(data.targetPrayerId)).data.get('sourceDraftId', '') == id));
+    }
+    match /prayerDrafts/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() && validDraft(request.resource.data) && request.resource.data.version == 1
+        && (request.resource.data.get('rightsStatus', '') != 'confirmed' || request.resource.data.rightsConfirmedBy == request.auth.uid)
+        && request.resource.data.status in ['draft', 'needs_review'];
+      allow update: if isAdmin() && validDraft(request.resource.data)
+        && resource.data.status != 'published'
+        && (request.resource.data.get('rightsStatus', '') != 'confirmed' || request.resource.data.rightsConfirmedBy == request.auth.uid
+          || request.resource.data.get('rightsConfirmedBy', '') == resource.data.get('rightsConfirmedBy', '-'))
+        && request.resource.data.version == resource.data.version + 1
+        && (request.resource.data.status != 'published' || draftPublishedTarget(id, request.resource.data));
+      allow delete: if false;
+      match /audit/{entry} {
+        allow read: if isAdmin();
+        allow create: if isAdmin() && request.resource.data.keys().hasOnly(['action', 'uid', 'at', 'fromStatus', 'toStatus', 'version', 'note', 'targetPrayerId'])
+          && request.resource.data.uid == request.auth.uid && request.resource.data.at == request.time
+          && request.resource.data.action is string && request.resource.data.action.size() <= 40;
+        allow update, delete: if false;
+      }
+    }
     match /priestContentControl/state {
       allow read: if isAdmin();
       allow create, update: if isAdmin()
@@ -139,7 +194,7 @@ service cloud.firestore {
     function explicitlyRuled(collection) {
       return collection in ['admins', 'prayers', 'prayerCategories', 'priestProtectedPrayers', 'priestProtectedCategories',
         'priestAccess', 'priestAccessPublic', 'priestDeviceGrants', 'priestActivationClaims', 'priestContentControl', 'priestContentMigrationBackups',
-        'priestInstallations', 'priestActivationAttempts'];
+        'priestInstallations', 'priestActivationAttempts', 'prayerDrafts'];
     }
     // Overlapping allows are OR, so every private namespace is excluded here.
     match /{collection}/{document=**} {

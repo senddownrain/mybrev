@@ -81,7 +81,7 @@
           </div>
           <div v-else-if="filteredCategories.length" class="category-list">
             <article v-for="category in filteredCategories" :key="category.id" class="category-item">
-              <span class="category-icon"><v-icon icon="mdi-folder-outline" /></span>
+              <span class="category-icon"><CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="24" /></span>
               <div class="category-main">
                 <div class="category-title-row">
                   <h2>{{ category.name }}</h2>
@@ -169,6 +169,7 @@
           <v-card-text class="dialog-fields">
             <v-switch v-model="categoryDraft.priestOnly" label="Толькі для святароў" color="primary" hide-details />
             <v-select v-model="categoryDraft.parentId" label="Бацькоўская катэгорыя" :items="parentOptions" item-title="name" item-value="id" clearable />
+            <CategoryIconPicker :model-value="categoryDraft.iconKey" @update:model-value="pickIcon" />
             <v-text-field
               v-model="categoryDraft.name"
               label="Назва катэгорыі"
@@ -236,12 +237,15 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNotifier } from '@/composables/useNotifier';
 import { usePrayers } from '@/composables/usePrayers';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { validateCategory } from '@/utils/validators';
+import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
+import CategoryIconPicker from '@/components/prayers/CategoryIconPicker.vue';
+import { DEFAULT_CATEGORY_ICON_KEY, displayCategoryIconKey, normalizeCategoryIconKey, suggestCategoryIconKey } from '@/constants/prayerCategoryIcons';
 import { buildPrayerTagStats } from '@/utils/prayerCategoryAdmin';
 import { updatePrayerCategory } from '@/services/prayerCategoryService';
 import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
@@ -298,8 +302,17 @@ const filteredTagStats = computed(() => {
 });
 
 function emptyCategory() {
-  return { name: '', tags: [], priestOnly: false, parentId: null };
+  return { name: '', tags: [], priestOnly: false, parentId: null, iconKey: DEFAULT_CATEGORY_ICON_KEY };
 }
+
+const iconPicked = ref(false);
+function pickIcon(key) { categoryDraft.value.iconKey = key; iconPicked.value = true; }
+// For a new category the suggested icon follows the name/tags until the admin picks one.
+watch(() => [categoryDraft.value.name, (categoryDraft.value.tags || []).join('|')], () => {
+  if (editingId.value || iconPicked.value || !categoryDialogOpen.value) return;
+  const { name, tags } = categoryDraft.value;
+  categoryDraft.value.iconKey = name.trim() || tags.length ? suggestCategoryIconKey({ name, tags }) : DEFAULT_CATEGORY_ICON_KEY;
+});
 
 function normalizeQuery(value) {
   return String(value || '').trim().toLocaleLowerCase('be');
@@ -310,6 +323,7 @@ function normalizedDraft() {
     name: categoryDraft.value.name.trim(),
     priestOnly: categoryDraft.value.priestOnly === true,
     parentId: categoryDraft.value.parentId || null,
+    iconKey: normalizeCategoryIconKey(categoryDraft.value.iconKey) || undefined,
     order: categoryDraft.value.order,
     tags: [...new Set(categoryDraft.value.tags.map((tag) => String(tag).trim()).filter(Boolean))],
   };
@@ -321,6 +335,7 @@ function errorMessage(error, fallback) {
 
 function openCreateDialog() {
   editingId.value = null;
+  iconPicked.value = false;
   categoryDraft.value = emptyCategory();
   categoryDialogOpen.value = true;
 }
@@ -333,7 +348,8 @@ function closeCategoryDialog() {
 
 function openEditDialog(category) {
   editingId.value = category.id;
-  categoryDraft.value = { ...category, tags: [...category.tags], priestOnly: category.priestOnly === true };
+  categoryDraft.value = { ...category, tags: [...category.tags], priestOnly: category.priestOnly === true, iconKey: displayCategoryIconKey(category) };
+  iconPicked.value = true;
   categoryDialogOpen.value = true;
 }
 

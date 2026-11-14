@@ -4,6 +4,8 @@
  */
 import moment from '../../../src/utils/moment-be.js';
 import reviewed from '../../../src/data/liturgical/advent-vespers-by.json' with { type: 'json' };
+import benedictus from '../../../src/data/liturgical/advent-benedictus-by.json' with { type: 'json' };
+import { selectAdventBenedictus } from '../../../src/utils/adventBenedictus.js';
 import { OFFICE_CONTENT_FIELDS } from '../../../src/constants/officeFields.js';
 import { eveningVespersModel } from '../../../src/utils/liturgicalVespers.js';
 import { contentFor } from './snapshot-content.mjs';
@@ -35,13 +37,14 @@ export function checkAdventProvenance(source, date, diocese, content = contentFo
   const dated = `advent-${m.format('DD')}-12`;
   const sunday = m.day() === 0;
   const rows = [];
-  const assertField = (day, field, expectedDocument, expectedField = field, expectedValue) => {
+  const assertField = (day, field, expectedDocument, expectedField = field, expectedValue, cycle) => {
     const expected = expectedValue ?? valueAt(source, expectedDocument, expectedField);
     const actualSource = day?._fieldSources?.[field] || null;
     const missing = !present(expected) || !present(day?.[field]);
-    const matchesSource = actualSource?.document === expectedDocument && actualSource?.field === expectedField;
+    const matchesSource = actualSource?.document === expectedDocument && actualSource?.field === expectedField
+      && (!cycle || actualSource?.cycle === cycle);
     const matchesText = plain(day?.[field]) === plain(expected);
-    rows.push({ field, expectedSource: { document: expectedDocument, field: expectedField }, actualSource,
+    rows.push({ field, expectedSource: { document: expectedDocument, field: expectedField, ...(cycle ? { cycle } : {}) }, actualSource,
       expectedText: plain(expected).slice(0, 120), actualText: plain(day?.[field]).slice(0, 120),
       status: missing ? 'MISSING_SOURCE_TEXT' : matchesSource && matchesText ? 'PASS' : 'WRONG_SOURCE',
     });
@@ -71,11 +74,16 @@ export function checkAdventProvenance(source, date, diocese, content = contentFo
       }
     }
   }
-  // The whole Sunday Office (НРП), not just Vespers, must be Sunday proper.
-  // Canticle antiphons remain explicitly date-specific.
+  // Sunday Office, with the chosen Benedictus policy and 24 December Lauds.
   if (sunday) {
     for (const field of OFFICE_CONTENT_FIELDS.filter((field) => !field.startsWith('vesper'))) {
-      const expectedDocument = field === 'laudesAntBen' ? dated : period;
+      if (field === 'laudesAntBen' && Number(content.context.periodWeek) === 4 && ![21, 23, 24].includes(m.date())) {
+        const cycle = content.resolved.readingCycle.sunday;
+        assertField(option?.day, field, benedictus.document, field, selectAdventBenedictus(benedictus.value, cycle), cycle);
+        continue;
+      }
+      const dateLauds = m.date() === 24 && field.startsWith('laudes') && !/^laudesPs[123]$/.test(field);
+      const expectedDocument = field === 'laudesAntBen' || dateLauds ? dated : period;
       const expected = valueAt(source, expectedDocument, field);
       // Some optional daytime/Te Deum fields are absent from both sources.
       if (expected === undefined || typeof expected === 'boolean' || !present(expected)) continue;

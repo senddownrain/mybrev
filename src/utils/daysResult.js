@@ -24,6 +24,7 @@ import {
 } from './liturgicalDayResolution.js';
 import { ADVENT_VESPERS_PSALMS, applyReviewedAdventVespers } from './adventVespers.js';
 import { OFFICE_CONTENT_FIELDS } from '../constants/officeFields.js';
+import { lectionaryCyclesFor } from './ordo/season.js';
 
 const normalizedFeastCode = (code) => String(code || '').replace(/^feast-/, '');
 
@@ -127,7 +128,10 @@ export function assembleDaysResult({
     ? withCalendarContext(
       context.periodType === 'christmas'
         ? applySeasonalWeekdayAntiphons(resolveChristmasDateAgainstPeriod(seasonalDay, resolvedPeriodDay), context.dayOfWeek)
-        : resolveAdventDateAgainstPeriod(applyReviewedAdventVespers(seasonalDay), resolvedPeriodDay, context.dayOfWeek),
+        : resolveAdventDateAgainstPeriod(applyReviewedAdventVespers(seasonalDay), resolvedPeriodDay, context.dayOfWeek, {
+          sundayCycle: lectionaryCyclesFor(mDate.format('YYYY-MM-DD')).sunday,
+          periodWeek: context.periodWeek,
+        }),
       { periodType: seasonalPeriodType, periodWeek: context.periodWeek },
     )
     : null;

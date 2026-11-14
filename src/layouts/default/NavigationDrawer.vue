@@ -142,7 +142,7 @@
         :active="selectedCategory?.name === category.name"
       >
         <template #prepend>
-          <PhBookmark :size="22" class="drawer-icon" />
+          <CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="22" class="drawer-icon" />
         </template>
       </v-list-item>
 
@@ -236,11 +236,13 @@ import { useRoute, useRouter } from 'vue-router';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
+import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
+import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
 import { usePrayersStore } from '@/stores/prayers';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { feedbackLocationForRoute } from '@/utils/feedbackContext.js';
 import {
-  PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart, PhBookmark,
+  PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart,
   PhChurch, PhFlag, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll, PhCalendarDots,
 } from '@phosphor-icons/vue';
 
