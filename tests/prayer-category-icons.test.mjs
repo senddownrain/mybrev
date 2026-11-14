@@ -86,14 +86,14 @@ test('personal migration: fills missing keys once, keeps valid and unknown ones,
   assert.deepEqual(renamed.list.map((c) => c.iconKey), first.list.map((c) => c.iconKey));
 });
 
-test('menu keeps iconKey, hierarchy and tag aggregation untouched', () => {
+test('menu keeps iconKey, hierarchy and independent direct tags', () => {
   const globals = [
     { id: 'a', name: 'Бацька', tags: ['t1'], iconKey: 'cross' },
     { id: 'b', name: 'Дзіця', tags: ['t2'], parentId: 'a', iconKey: 'angel' },
   ];
   const menu = buildPrayerCategoryMenu(globals, [{ name: 'Мая', tags: ['z'], iconKey: 'candle' }], []);
   assert.deepEqual(menu.map((c) => [c.name, c.iconKey]), [['Бацька', 'cross'], ['Дзіця', 'angel'], ['Мая', 'candle']]);
-  assert.deepEqual(menu[0].tags.sort(), ['t1', 't2']);
+  assert.deepEqual(menu[0].tags, ['t1']);
 });
 
 test('iconKey flows into the Flutter bundle; protected categories stay out', () => {

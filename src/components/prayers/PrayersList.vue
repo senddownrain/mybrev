@@ -1,8 +1,17 @@
 <template>
   <v-container class="prayers-list-container">
     <div class="prayers-page-header">
+      <router-link
+        v-if="selectedCategory"
+        class="category-parent-link"
+        :to="categoryNavigation.parent ? categoryLocation(categoryNavigation.parent) : { name: 'Prayers' }"
+        @click="clearPersonalCategory"
+      >
+        <PhArrowLeft :size="20" aria-hidden="true" />
+        <span>{{ categoryNavigation.parent?.name || 'Усе малітвы' }}</span>
+      </router-link>
       <div class="prayers-page-eyebrow">Малітоўнік</div>
-      <h1 class="prayers-page-title">{{ selectedCategory?.name || 'Малітвы' }}</h1>
+      <h1 ref="categoryHeading" tabindex="-1" class="prayers-page-title">{{ selectedCategory?.name || 'Малітвы' }}</h1>
       <v-select v-if="authStore.isAdmin" v-model="accessFilter" label="Доступ" :items="accessFilters" class="mt-4" hide-details />
     </div>
 
@@ -25,7 +34,21 @@
     </v-alert>
     
     <div v-else>
-      <v-list lines="one" bg-color="transparent" class="prayer-options-list">
+      <nav v-if="categoryNavigation.children.length" class="subcategory-list" aria-label="Падкатэгорыі">
+        <router-link
+          v-for="category in categoryNavigation.children"
+          :id="`category-row-${category.id}`"
+          :key="category.id"
+          :to="categoryLocation(category)"
+          class="subcategory-link"
+          @click="rememberChild(category, $event)"
+        >
+          <CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="24" />
+          <span>{{ category.name }}</span>
+          <PhCaretRight :size="20" aria-hidden="true" />
+        </router-link>
+      </nav>
+      <v-list v-if="filteredPrayers.length" lines="one" bg-color="transparent" class="prayer-options-list">
         <v-list-item
           v-for="prayer in filteredPrayers"
           :key="prayer.id"
@@ -91,7 +114,7 @@
         </v-list-item>
       </v-list>
 
-      <div v-if="!isLoading && filteredPrayers.length === 0" class="text-center text-grey-darken-1 mt-16">
+      <div v-if="!isLoading && filteredPrayers.length === 0 && !categoryNavigation.children.length" class="text-center text-grey-darken-1 mt-16">
         <v-icon size="48" class="mb-2">mdi-note-off-outline</v-icon>
         <p>Малітвы не знойдзены</p>
         <p v-if="searchQuery || selectedTags.length > 0" class="text-caption mt-2">
@@ -166,7 +189,7 @@
 
 <script setup>
 import '@/styles/prayers-list.css';
-import { ref, computed, watch, nextTick } from 'vue';
+import { ref, computed, watch, nextTick, onBeforeUnmount } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useAuthStore } from '@/stores/auth';
@@ -175,7 +198,12 @@ import { useNotifier } from '@/composables/useNotifier';
 import { usePrayersFilters } from '@/composables/usePrayersFilters';
 import { matchesPrayerTags } from '@/utils/prayerTagFilter';
 import { prayerCategoryMatch } from '@/utils/prayerCategoryMembership.mjs';
-import { PhMagnifyingGlass, PhSlidersHorizontal, PhX } from '@phosphor-icons/vue';
+import { PhMagnifyingGlass, PhSlidersHorizontal, PhX, PhArrowLeft, PhCaretRight } from '@phosphor-icons/vue';
+import CategoryIcon from './CategoryIcon.vue';
+import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
+import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
+import { buildCategoryTree, categoryPageNavigation } from '@/utils/prayerCategoryTree.mjs';
+import { priestAccess } from '@/services/priestAccessService';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
 
@@ -190,7 +218,22 @@ const accessFilter = ref('all');
 const accessFilters = [{ title: 'Усе', value: 'all' }, { title: 'Агульнадаступныя', value: 'public' }, { title: 'Толькі для святароў', value: 'priest' }];
 const settings = useSettingsStore();
 const { notifySuccess, notifyError } = useNotifier();
-const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, lastOpenedPrayerId, setSelectedCategory, toggleFilter } = usePrayersFilters();
+const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, lastOpenedPrayerId, categoryReturnFocus, setSelectedCategory, toggleFilter } = usePrayersFilters();
+const categoryHeading = ref(null);
+const categoryTree = computed(() => buildCategoryTree(buildPrayerCategoryMenu(
+  categoriesStore.categories, [], settings.hiddenGlobalPrayerCategoryIds, prayers.value, authStore.isAdmin || priestAccess.active,
+)));
+const categoryNavigation = computed(() => selectedCategory.value?.scope === 'global'
+  ? categoryPageNavigation(categoryTree.value, selectedCategory.value.id) : { parent: null, children: [] });
+const categoryLocation = (category) => ({ name: 'Prayers', query: { category: category.id } });
+function rememberChild(category, event) {
+  if (event?.ctrlKey || event?.metaKey || event?.shiftKey || event?.altKey || event?.button > 0) return;
+  categoryReturnFocus.value = { ...categoryReturnFocus.value, [selectedCategory.value.id]: category.id };
+}
+function clearPersonalCategory(event) {
+  if (event?.ctrlKey || event?.metaKey || event?.shiftKey || event?.altKey || event?.button > 0) return;
+  if (selectedCategory.value?.scope !== 'global') setSelectedCategory(null);
+}
 // The existing /prayers route accepts an optional stable ID; old URLs still work.
 watch(() => [route.query.category, categoriesStore.categories], ([id]) => {
   if (id) {
@@ -200,6 +243,21 @@ watch(() => [route.query.category, categoriesStore.categories], ([id]) => {
     else setSelectedCategory(next);
   } else if (selectedCategory.value?.scope === 'global') setSelectedCategory(null);
 }, { immediate: true });
+
+const previousTitle = document.title;
+watch(() => selectedCategory.value?.name, (name) => { document.title = `${name || 'Малітвы'} · Малітоўнік`; }, { immediate: true });
+onBeforeUnmount(() => { document.title = previousTitle; });
+let focusedPage = null;
+let restoringPrayerFocus = Boolean(lastOpenedPrayerId.value);
+watch([() => route.fullPath, isLoading, () => categoriesStore.isLoading], async () => {
+  if (isLoading.value || categoriesStore.isLoading || focusedPage === route.fullPath) return;
+  focusedPage = route.fullPath;
+  await nextTick();
+  if (restoringPrayerFocus || lastOpenedPrayerId.value) { restoringPrayerFocus = false; return; }
+  const childId = categoryReturnFocus.value[selectedCategory.value?.id];
+  const target = childId && document.getElementById(`category-row-${childId}`);
+  (target || categoryHeading.value)?.focus({ preventScroll: true });
+}, { immediate: true, flush: 'post' });
 
 const deleteDialogOpen = ref(false);
 const prayerToDelete = ref(null);
@@ -259,13 +317,14 @@ function viewPrayer(id) {
 }
 
 // Browser history restores scroll; restore keyboard focus without scrolling.
+let restoredPrayerFocusId = null;
 watch(filteredPrayers, async (items) => {
   const id = lastOpenedPrayerId.value;
-  if (!id || !items.some((p) => p.id === id)) return;
+  if (!id || restoredPrayerFocusId === id || !items.some((p) => p.id === id)) return;
   await nextTick();
   if (lastOpenedPrayerId.value !== id) return;
   document.getElementById(`prayer-row-${id}`)?.focus({ preventScroll: true });
-  lastOpenedPrayerId.value = null;
+  restoredPrayerFocusId = id;
 }, { immediate: true });
 
 function isFavorite(prayerId) {
@@ -302,3 +361,14 @@ async function confirmDelete() {
 }
 </script>
 <style scoped src="@/styles/prayers-list.css"></style>
+<style scoped>
+.category-parent-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-bottom: 12px; color: var(--chrome-accent); text-decoration: none; overflow-wrap: anywhere; }
+.category-parent-link svg { flex: none; }
+.subcategory-list { display: grid; gap: 8px; margin: 0 0 20px; }
+.subcategory-link { display: flex; align-items: center; gap: 14px; min-height: 60px; padding: 12px 16px; border: 1px solid var(--nav-border); border-radius: 16px; background: var(--nav-surface); color: var(--nav-on-surface); text-decoration: none; }
+.subcategory-link > span:not(.category-icon-glyph) { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.subcategory-link > svg { flex: none; color: var(--nav-muted); }
+.subcategory-link:hover { background: var(--nav-active); }
+.subcategory-link:focus-visible, .category-parent-link:focus-visible { outline: 2px solid var(--chrome-accent); outline-offset: 3px; }
+.prayers-page-title:focus { outline: none; }
+</style>

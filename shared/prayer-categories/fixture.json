@@ -1,13 +1,13 @@
 {
   "contractVersion": 1,
   "categories": [
-    {"id":"root","name":"Fixture root","tags":["root-tag"],"prayerIds":["manual","both","shared-private"],"parentId":null,"order":10,"priestOnly":false,"iconId":"folder"},
-    {"id":"middle","name":"Fixture middle","tags":[],"prayerIds":[],"parentId":"root","order":10,"priestOnly":false},
-    {"id":"leaf","name":"Fixture leaf","tags":[],"prayerIds":["leaf-prayer"],"parentId":"middle","order":20,"priestOnly":false},
-    {"id":"legacy","name":"Fixture legacy","tags":["legacy-tag"],"parentId":null,"order":20},
-    {"id":"folder","name":"Fixture empty folder","tags":[],"prayerIds":[],"parentId":null,"order":30,"priestOnly":false},
-    {"id":"closed","name":"Fixture protected","tags":[],"prayerIds":["shared-private"],"parentId":null,"order":40,"priestOnly":true},
-    {"id":"closed-child","name":"Fixture protected child","tags":[],"prayerIds":["inherited-private"],"parentId":"closed","order":10,"priestOnly":false}
+    {"id":"root","name":"Марыйныя малітвы","tags":["root-tag"],"prayerIds":["manual","both","shared-private"],"parentId":null,"order":10,"priestOnly":false,"iconId":"folder","iconKey":"virgin-mary"},
+    {"id":"middle","name":"Ружанец","tags":[],"prayerIds":["rosary-prayer"],"parentId":"root","order":10,"priestOnly":false,"iconKey":"rosary"},
+    {"id":"leaf","name":"Таямніцы ружанца","tags":[],"prayerIds":["leaf-prayer"],"parentId":"middle","order":20,"priestOnly":false,"iconKey":"candle"},
+    {"id":"legacy","name":"Fixture legacy","tags":["legacy-tag"],"parentId":null,"order":20,"iconKey":"litany"},
+    {"id":"folder","name":"Fixture empty folder","tags":[],"prayerIds":[],"parentId":null,"order":30,"priestOnly":false,"iconKey":"church"},
+    {"id":"closed","name":"Fixture protected","tags":[],"prayerIds":["shared-private"],"parentId":null,"order":40,"priestOnly":true,"iconKey":"cross"},
+    {"id":"closed-child","name":"Fixture protected child","tags":[],"prayerIds":["inherited-private"],"parentId":"closed","order":10,"priestOnly":false,"iconKey":"chalice-host"}
   ],
   "prayers": [
     {"id":"tagged","title":"Fixture tagged","tags":["root-tag"]},
@@ -18,7 +18,8 @@
     {"id":"legacy-linked","title":"Fixture legacy linked","tags":[],"categoryId":"legacy"},
     {"id":"shared-private","title":"PRIVATE SHARED FIXTURE","tags":[]},
     {"id":"inherited-private","title":"PRIVATE INHERITED FIXTURE","tags":[]},
-    {"id":"own-private","title":"PRIVATE OWN FIXTURE","tags":[],"priestOnly":true}
+    {"id":"own-private","title":"PRIVATE OWN FIXTURE","tags":[],"priestOnly":true},
+    {"id":"rosary-prayer","title":"Тэставая малітва ружанца","tags":[]}
   ],
   "cases": [
     {"caseId":"C01-old-field-absent","categoryId":"legacy","expectedDirectIds":["legacy-tagged","legacy-linked"]},

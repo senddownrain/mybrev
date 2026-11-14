@@ -14,7 +14,7 @@ import { usePrayersFiltersStore } from '/src/stores/prayersFilters.js';
 import { usePrayersStore } from '/src/stores/prayers.js';
 import { vReaderProse } from '/src/directives/readerProse.js';
 const Dummy = { render: () => h('p', 'Fixture destination') };
-const router = createRouter({ history: createWebHashHistory(), routes: [
+const router = createRouter({ history: createWebHashHistory(), scrollBehavior: (_to, _from, saved) => saved || { top: 0, left: 0 }, routes: [
   { path: '/', component: () => import('/src/views/admin/PrayerCategories.vue'), name: 'Admin' },
   { path: '/prayers', component: () => import('/src/components/prayers/PrayersList.vue'), name: 'Prayers' },
   { path: '/prayers/list', component: () => import('/src/components/prayers/PrayersList.vue'), name: 'PrayersList' },

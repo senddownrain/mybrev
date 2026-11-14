@@ -24,13 +24,14 @@ await db.doc(`admins/${primaryUid}`).set({priestAccess:true});
 for(const name of ['prayers','prayerCategories','priestProtectedPrayers','priestProtectedCategories','priestDeviceGrants','priestActivationClaims'])await db.recursiveDelete(db.collection(name));
 const fixture=JSON.parse(await readFile(new URL('../shared/prayer-categories/fixture.json',import.meta.url)));
 const content=new Map([['prayers',[...fixture.prayers.map(p=>({...p,text:'Synthetic local fixture text, not production content.'})),...Array.from({length:75},(_,i)=>({id:`catalog-${i}`,title:`Каталог ${String(i).padStart(2,'0')}`,tags:[],text:'Synthetic local catalog fixture.'}))]],['prayerCategories',fixture.categories]]);
+content.get('prayerCategories').push({id:'nav-folder',name:'Fixture grouping folder',parentId:'root',order:30,tags:[],prayerIds:[],iconKey:'church'},{id:'nav-folder-child',name:'Fixture grouping child',parentId:'nav-folder',order:0,tags:[],prayerIds:['catalog-74'],iconKey:'candle'});
 for(const [name,rows] of prayerStoragePlan(content).desired)for(const {id,...data} of rows)await db.doc(`${name}/${id}`).set(data);
 await db.doc('priestContentControl/state').set({version:0,lockUid:'',updatedAt:new Date()});
 await db.doc('priestAccess/settings').set({activeCodeProof:await codeProof(initialCode),changedAt:new Date(),helpText:''});
 const firebaseModule=`import {initializeApp} from 'firebase/app';import {initializeFirestore,memoryLocalCache,connectFirestoreEmulator} from 'firebase/firestore';import {getAuth,connectAuthEmulator,signInWithEmailAndPassword} from 'firebase/auth';
 export const firebaseApp=initializeApp({projectId:'demo-rules',apiKey:'demo-key',authDomain:'demo-rules.firebaseapp.com'});export const db=initializeFirestore(firebaseApp,{localCache:memoryLocalCache()});connectFirestoreEmulator(db,'${firestoreHost.split(':')[0]}',${firestoreHost.split(':')[1]});
 const auth=getAuth(firebaseApp);connectAuthEmulator(auth,'http://${authHost}',{disableWarnings:true});await auth.authStateReady();if(!auth.currentUser)await signInWithEmailAndPassword(auth,'categories-ui@example.test','Local-test-password-2345');`;
-const server=await createServer({configFile:false,cacheDir:'node_modules/.vite-categories-ui',resolve:{alias:{'@':fileURLToPath(new URL('../src',import.meta.url))}},optimizeDeps:{noDiscovery:true,entries:[],include:['vue','pinia','vue-router','vuetify','vuetify/components','markdown-it','firebase/app','firebase/auth','firebase/firestore','firebase/firestore/lite']},server:{host:'127.0.0.1',port:uiPort,strictPort:true},plugins:[vue(),vuetify({styles:false}),{
+const server=await createServer({configFile:false,cacheDir:'node_modules/.vite-categories-ui',resolve:{alias:{'@':fileURLToPath(new URL('../src',import.meta.url))}},optimizeDeps:{noDiscovery:true,entries:[],include:['vue','pinia','vue-router','vuetify','vuetify/components','markdown-it','node-html-parser','turndown','firebase/app','firebase/auth','firebase/firestore','firebase/firestore/lite']},server:{host:'127.0.0.1',port:uiPort,strictPort:true,warmup:{clientFiles:['tests/ui/prayer-categories-harness.mjs','src/views/admin/PrayerCategories.vue','src/components/prayers/PrayersList.vue','src/components/prayers/PrayerView.vue']}},plugins:[vue(),vuetify({styles:false}),{
  name:'category-local-emulator-only',enforce:'pre',configureServer(server){server.middlewares.use((req,res,next)=>{if(!req.url.startsWith('/__category_ui'))return next();res.setHeader('Content-Type','text/html');res.end('<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div id="app"></div><script type="module" src="/tests/ui/prayer-categories-harness.mjs"></script></body></html>');});},
  transform(source,id){const file=id.replaceAll('\\','/').split('?')[0];
   if(file.endsWith('/src/plugins/firebase.js'))return firebaseModule;
@@ -43,10 +44,11 @@ const server=await createServer({configFile:false,cacheDir:'node_modules/.vite-c
    .replace('initializeAuth(priestEditorFirebase.app, { persistence: inMemoryPersistence })','testAuth(initializeAuth(priestEditorFirebase.app, { persistence: inMemoryPersistence }))');
  }}]});
 await server.listen();
+await server.waitForRequestsIdle();
 const browser=await chromium.launch({executablePath:process.env.BENCHMARK_BROWSER_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
 const context=await browser.newContext({viewport:{width:1280,height:900}});
 await context.route(/https?:\/\//,route=>{const url=new URL(route.request().url());return ['127.0.0.1','localhost'].includes(url.hostname)?route.continue():route.abort();});
-const page=await context.newPage();page.setDefaultTimeout(20000);const failures=[];
+const page=await context.newPage();page.setDefaultTimeout(20000);page.setDefaultNavigationTimeout(120000);const failures=[];
 page.on('pageerror',error=>{failures.push(error.message);console.error(error.stack);});
 page.on('console',msg=>{if(msg.type()==='error')console.error('Browser:',msg.text());});
 await mkdir('reports/prayer-categories',{recursive:true});
@@ -55,18 +57,17 @@ const overflow=async()=>assert.ok(await page.evaluate(()=>document.documentEleme
 const adminDialog=()=>page.getByRole('dialog').filter({has:page.getByText('Рэдагаванне катэгорыі',{exact:true})});
 try {
  await page.goto(`http://127.0.0.1:${uiPort}/__category_ui`,{waitUntil:'domcontentloaded'});
- await page.getByLabel('Рэдагаваць катэгорыю Fixture root',{exact:true}).waitFor({timeout:120000});
- assert.equal(await page.getByLabel('Рэдагаваць катэгорыю Fixture leaf',{exact:true}).count(),0);
- await page.getByLabel('Падкатэгорыі: Fixture root',{exact:true}).click();
- await page.getByLabel('Падкатэгорыі: Fixture middle',{exact:true}).click();
- await page.getByLabel('Рэдагаваць катэгорыю Fixture leaf',{exact:true}).waitFor();
- await page.getByLabel('Падкатэгорыі: Fixture root',{exact:true}).click();
- assert.equal(await page.getByLabel('Рэдагаваць катэгорыю Fixture leaf',{exact:true}).count(),0);
- await page.getByLabel('Пошук па назве або тэгу',{exact:true}).fill('Fixture leaf');
- await page.getByLabel('Рэдагаваць катэгорыю Fixture leaf',{exact:true}).waitFor();
- assert.equal(await page.getByLabel('Рэдагаваць катэгорыю Fixture root',{exact:true}).count(),1,'search preserves context');
+ await page.getByLabel('Рэдагаваць катэгорыю Марыйныя малітвы',{exact:true}).waitFor({timeout:120000});
+ await page.getByLabel('Рэдагаваць катэгорыю Таямніцы ружанца',{exact:true}).waitFor();
+ assert.equal(await page.locator('.category-list [aria-expanded]').count(),0,'admin hierarchy has no disclosure controls');
+ await page.getByLabel('Пошук па назве або тэгу',{exact:true}).fill('Таямніцы ружанца');
+ await page.getByLabel('Рэдагаваць катэгорыю Таямніцы ружанца',{exact:true}).waitFor();
+ assert.equal(await page.getByLabel('Рэдагаваць катэгорыю Марыйныя малітвы',{exact:true}).count(),1,'search preserves context');
  await page.getByLabel('Пошук па назве або тэгу',{exact:true}).fill('');
- await page.getByLabel('Рэдагаваць катэгорыю Fixture root',{exact:true}).click();
+ await page.getByLabel('Рэдагаваць катэгорыю Марыйныя малітвы',{exact:true}).click();
+ await adminDialog().locator('.icon-picker__trigger').click();
+ assert.equal(await adminDialog().getByRole('radio').count(),48);
+ await adminDialog().locator('[data-icon-key=immaculate-heart]').click();
  await adminDialog().getByText('Выніковы склад · 4',{exact:true}).waitFor();
  await adminDialog().getByRole('button',{name:'Выбраць малітвы',exact:true}).click();
  const picker=page.getByRole('dialog').filter({has:page.getByLabel('Пошук малітваў па назве',{exact:true})});
@@ -92,21 +93,21 @@ try {
  await adminDialog().getByRole('button',{name:'Захаваць',exact:true}).click();
  await page.getByRole('dialog').waitFor({state:'hidden'});
  let root=(await db.doc('prayerCategories/root').get()).data();
- assert.deepEqual(root.prayerIds,['manual','shared-private','catalog-1']);assert.equal(root.order,12);assert.equal(root.iconId,'folder');
+ assert.deepEqual(root.prayerIds,['manual','shared-private','catalog-1']);assert.equal(root.order,12);assert.equal(root.iconId,'folder');assert.equal(root.iconKey,'immaculate-heart');
  assert.deepEqual((await db.doc('prayers/both').get()).data().tags,['root-tag']);
- await page.reload();await page.getByLabel('Рэдагаваць катэгорыю Fixture root',{exact:true}).click();
+ await page.reload();await page.getByLabel('Рэдагаваць катэгорыю Марыйныя малітвы',{exact:true}).click();
  await adminDialog().getByText('Асобныя малітвы · 3',{exact:true}).waitFor();
  await adminDialog().getByRole('button',{name:'Скасаваць',exact:true}).click();
- await page.getByLabel('Выдаліць катэгорыю Fixture root',{exact:true}).click();
+ await page.getByLabel('Выдаліць катэгорыю Марыйныя малітвы',{exact:true}).click();
  assert.equal(await page.getByRole('dialog').getByRole('button',{name:'Выдаліць',exact:true}).isDisabled(),true);
  await page.getByRole('dialog').getByRole('button',{name:'Скасаваць',exact:true}).click();
  // Real atomic manual membership transfer via the admin editor.
- await page.getByLabel('Рэдагаваць катэгорыю Fixture root',{exact:true}).click();
+ await page.getByLabel('Рэдагаваць катэгорыю Марыйныя малітвы',{exact:true}).click();
  await adminDialog().getByLabel('Толькі для святароў',{exact:true}).check();
  await adminDialog().getByRole('button',{name:'Захаваць',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});
  assert.equal((await db.doc('prayers/manual').get()).exists,false);assert.equal((await db.doc('priestProtectedPrayers/manual').get()).exists,true);
  assert.equal((await db.doc('priestProtectedCategories/leaf').get()).data().priestOnly,false);
- await page.getByLabel('Рэдагаваць катэгорыю Fixture root',{exact:true}).click();
+ await page.getByLabel('Рэдагаваць катэгорыю Марыйныя малітвы',{exact:true}).click();
  await adminDialog().getByLabel('Толькі для святароў',{exact:true}).uncheck();
  await adminDialog().getByRole('button',{name:'Захаваць',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});
  assert.equal((await db.doc('prayers/manual').get()).exists,true);
@@ -132,7 +133,7 @@ try {
   if(theme==='light'&&width===1280)await page.screenshot({path:`${evidence}/admin-light-1280.png`,fullPage:true});
  }
  await page.setViewportSize({width:375,height:850});await page.evaluate(()=>{window.__categoryUi.settings.themePreference='dark';});
- await page.getByLabel('Рэдагаваць катэгорыю Fixture root',{exact:true}).click();await overflow();
+ await page.getByLabel('Рэдагаваць катэгорыю Марыйныя малітвы',{exact:true}).click();await overflow();
  await adminDialog().locator('.dialog-fields').evaluate(el=>{el.scrollTop=el.scrollHeight;});
  await page.screenshot({path:`${evidence}/editor-dark-375.png`,fullPage:true});
  for(const theme of ['light','dark','marian'])for(const width of [320,375,768,1280]){
@@ -146,29 +147,54 @@ try {
  assert.ok(!JSON.stringify(await page.evaluate(()=>window.__categoryUi.prayers.prayers)).includes('PRIVATE'));
  await page.getByRole('button',{name:'Меню катэгорый',exact:true}).click();
  const drawer=page.locator('.app-drawer');
- const rootButton=drawer.getByRole('button',{name:'Fixture root',exact:true});
- assert.equal(await rootButton.getAttribute('aria-expanded'),'false');
- await rootButton.focus();await page.keyboard.press('Enter');assert.equal(await rootButton.getAttribute('aria-expanded'),'true');
- await drawer.getByRole('button',{name:'Fixture middle',exact:true}).click();
- await drawer.getByRole('button',{name:'Fixture leaf',exact:true}).click();
- await page.waitForURL(/category=leaf/);await page.getByText('Fixture leaf prayer',{exact:true}).waitFor();
- assert.equal(await page.getByText('Fixture manual',{exact:true}).count(),0);
- await page.getByText('Fixture leaf prayer',{exact:true}).click();await page.locator('.prayer-title').filter({hasText:'Fixture leaf prayer'}).waitFor();
- await page.goBack();await page.waitForURL(/category=leaf/);await page.waitForFunction(()=>document.activeElement?.id==='prayer-row-leaf-prayer');await page.getByRole('button',{name:'Меню катэгорый',exact:true}).click();
- assert.equal(await rootButton.getAttribute('aria-expanded'),'true','expansion survives reader/back');
- assert.equal(await drawer.getByRole('button',{name:'Fixture middle',exact:true}).getAttribute('aria-expanded'),'true');
- assert.equal(await drawer.getByText('Fixture protected',{exact:true}).count(),0);
- assert.equal(await drawer.getByText('Fixture protected child',{exact:true}).count(),0);
+ const rootLink=drawer.getByRole('link',{name:'Марыйныя малітвы',exact:true});
+ assert.equal(await drawer.getByRole('link',{name:'Ружанец',exact:true}).count(),0,'sidebar only contains roots');
+ assert.equal(await drawer.locator('[aria-expanded]').count(),0);
+ assert.equal(await rootLink.locator('.category-icon-svg svg').count(),1,'stored SVG icon is rendered');
+ await rootLink.focus();await page.keyboard.press('Enter');await page.waitForURL(/category=root/);
+ await page.getByRole('heading',{name:'Марыйныя малітвы',exact:true}).waitFor();
+ await page.getByText('Fixture manual',{exact:true}).waitFor();
+ assert.equal(await page.getByText('Fixture leaf prayer',{exact:true}).count(),0,'parent direct list excludes descendants');
+ assert.equal(await page.getByText('Малітвы гэтай катэгорыі',{exact:true}).count(),0);
+ assert.equal(await page.locator('#category-row-middle .category-icon-svg svg').count(),1,'rosary has its own icon');
+ const childBeforePrayer=await page.evaluate(()=>Boolean(document.querySelector('.subcategory-list').compareDocumentPosition(document.querySelector('.prayer-options-list'))&window.Node.DOCUMENT_POSITION_FOLLOWING));
+ assert.equal(childBeforePrayer,true);
  for(const theme of ['light','dark','marian'])for(const width of [320,375,768,1280]){
   await page.setViewportSize({width,height:900});await page.evaluate(theme=>{window.__categoryUi.settings.themePreference=theme;},theme);await overflow();
-  await page.screenshot({path:`reports/prayer-categories/accordion-${theme}-${width}.png`,fullPage:true});
-  if(theme==='marian'&&width===320)await page.screenshot({path:`${evidence}/accordion-marian-320.png`,fullPage:true});
+  await page.screenshot({path:`reports/prayer-categories/category-page-${theme}-${width}.png`,fullPage:true});
+  if(theme==='marian'&&width===320)await page.screenshot({path:`${evidence}/category-page-marian-320.png`,fullPage:true});
  }
- await drawer.getByRole('button',{name:'Малітвы гэтай катэгорыі',exact:true}).click();await page.waitForURL(/category=root/);
- await page.getByText('Fixture manual',{exact:true}).waitFor();
- assert.equal(await page.getByText('Fixture leaf prayer',{exact:true}).count(),0,'parent direct list excludes children');
+ // Required route: Mary -> Rosary -> prayer; both levels retain their own direct content.
+ await page.setViewportSize({width:375,height:450});
+ await page.evaluate(()=>{window.scrollTo(0,160);document.querySelector('#category-row-middle').addEventListener('click',()=>{window.__categoryReturnScroll=window.scrollY;},{once:true,capture:true});});
+ await page.locator('#category-row-middle').click();await page.waitForURL(/category=middle/);
+ await page.getByText('Тэставая малітва ружанца',{exact:true}).click();await page.locator('.prayer-title').filter({hasText:'Тэставая малітва ружанца'}).waitFor();
+ await page.goBack();await page.waitForURL(/category=middle/);await page.waitForFunction(()=>document.activeElement?.id==='prayer-row-rosary-prayer');
+ await page.goForward();await page.locator('.prayer-title').filter({hasText:'Тэставая малітва ружанца'}).waitFor();
+ await page.goBack();await page.waitForURL(/category=middle/);await page.waitForFunction(()=>document.activeElement?.id==='prayer-row-rosary-prayer');
+ await page.goBack();await page.waitForURL(/category=root/);await page.waitForFunction(()=>document.activeElement?.id==='category-row-middle');
+ await page.waitForFunction(()=>Math.abs(window.scrollY-window.__categoryReturnScroll)<5);
+ assert.ok(await page.evaluate(()=>window.__categoryReturnScroll>0),'parent history test exercises a nonzero scroll');
+ await page.goForward();await page.waitForURL(/category=middle/);
+ // A further level works identically, and history restores the clicked category row.
+ await page.locator('#category-row-leaf').click();await page.waitForURL(/category=leaf/);await page.getByText('Fixture leaf prayer',{exact:true}).waitFor();
+ await page.goBack();await page.waitForURL(/category=middle/);await page.waitForFunction(()=>document.activeElement?.id==='category-row-leaf');
+ await page.goForward();await page.waitForURL(/category=leaf/);await page.getByText('Fixture leaf prayer',{exact:true}).waitFor();
+ await page.goBack();await page.waitForURL(/category=middle/);await page.waitForFunction(()=>document.activeElement?.id==='category-row-leaf');
+ await page.goForward();await page.waitForURL(/category=leaf/);
+ await page.locator('.category-parent-link').click();await page.waitForURL(/category=middle/);
+ await page.locator('.category-parent-link').click();await page.waitForURL(/category=root/);
+ await page.locator('#category-row-nav-folder').click();await page.waitForURL(/category=nav-folder/);
+ await page.getByRole('link',{name:'Fixture grouping child',exact:true}).waitFor();
+ assert.equal(await page.locator('.prayer-list-item').count(),0);
+ assert.equal(await page.getByText('Малітвы не знойдзены',{exact:true}).count(),0,'folder with children is not falsely empty');
+ await page.locator('.category-parent-link').click();await page.waitForURL(/category=root/);
  await page.reload();await page.getByText('Fixture manual',{exact:true}).waitFor();
  assert.equal(await page.getByText('PRIVATE SHARED FIXTURE',{exact:true}).count(),0);
+ await page.evaluate(async()=>{await window.__categoryUi.router.push('/prayers?category=leaf');});
+ await page.reload();await page.getByRole('heading',{name:'Таямніцы ружанца',exact:true}).waitFor();
+ await page.getByText('Fixture leaf prayer',{exact:true}).waitFor();
+ await page.evaluate(async()=>{await window.__categoryUi.router.push('/prayers?category=root');});await page.getByText('Fixture manual',{exact:true}).waitFor();
  // Extra tag filters survive reader/back without changing manual membership.
  await page.evaluate(()=>window.__categoryUi.filters.setSelectedTags(['root-tag']));
  assert.equal(await page.getByText('Fixture manual',{exact:true}).count(),0);
@@ -178,7 +204,7 @@ try {
  assert.equal(await page.getByText('Fixture manual',{exact:true}).count(),0);
  await page.evaluate(()=>{window.__categoryUi.filters.setSelectedTags([]);window.__categoryUi.settings.addCategory({name:'Fixture personal',tags:['root-tag']});});
  await page.getByRole('button',{name:'Меню катэгорый',exact:true}).click();
- await drawer.getByRole('button',{name:'Fixture personal',exact:true}).click();
+ await drawer.getByRole('link',{name:'Fixture personal',exact:true}).click();
  await page.waitForURL(url=>url.hash==='#/prayers');
  await page.getByText('Fixture both',{exact:true}).waitFor();assert.equal(await page.getByText('Fixture manual',{exact:true}).count(),0);
  const bothRow=page.locator('#prayer-row-both');await bothRow.getByLabel('Дадаць у абраныя',{exact:true}).click();
@@ -188,13 +214,22 @@ try {
  await page.getByLabel('Пошук малітваў',{exact:true}).fill('');
  await page.getByRole('button',{name:'Меню катэгорый',exact:true}).click();
  await page.evaluate(()=>window.__categoryUi.settings.hideGlobalPrayerCategory('root'));
- assert.equal(await drawer.getByRole('button',{name:'Fixture root',exact:true}).count(),0);
- await drawer.getByRole('button',{name:'Fixture middle',exact:true}).waitFor();
+ assert.equal(await drawer.getByRole('link',{name:'Марыйныя малітвы',exact:true}).count(),0);
+ await drawer.getByRole('link',{name:'Ружанец',exact:true}).waitFor();
  await drawer.getByLabel('Закрыць меню',{exact:true}).click();
  await page.evaluate(async()=>{await window.__categoryUi.router.push('/prayers?category=closed');});
  await page.getByRole('heading',{name:'Катэгорыя недаступная',exact:true}).waitFor();
  assert.equal(await page.locator('.prayer-list-item').count(),0);
  assert.equal(await page.getByText('Fixture protected',{exact:true}).count(),0);
+ await page.evaluate(async code=>{await (await import('/src/services/priestAccessService.js')).activatePriestAccess(code,'Local category fixture');},initialCode);
+ await page.waitForFunction(()=>!window.__categoryUi.prayers.isLoading&&window.__categoryUi.prayers.prayers.some(p=>p.id==='inherited-private'));
+ await page.getByRole('heading',{name:'Fixture protected',exact:true}).waitFor();
+ await page.getByText('PRIVATE SHARED FIXTURE',{exact:true}).waitFor();
+ await page.locator('#category-row-closed-child').click();await page.waitForURL(/category=closed-child/);
+ await page.getByText('PRIVATE INHERITED FIXTURE',{exact:true}).waitFor();
+ await page.evaluate(async()=>{await (await import('/src/services/priestAccessService.js')).disablePriestAccess();});
+ await page.waitForFunction(()=>!window.__categoryUi.prayers.isLoading&&!window.__categoryUi.prayers.prayers.some(p=>p.id==='inherited-private'));
+ assert.equal(await page.getByText('PRIVATE INHERITED FIXTURE',{exact:true}).count(),0);
  assert.deepEqual(failures,[]);
- console.log('PASS: admin persistence, manual/tag union, atomic access, empty folder, tag removal, public accordion, keyboard, reader/back, reload, 36 viewport/theme checks.');
+ console.log('PASS: admin persistence, manual/tag union, atomic access, empty folder, tag removal, hierarchical pages, root-only sidebar, 48 icons, priest grant/revoke, keyboard, reader/back/forward, reload, 36 viewport/theme checks.');
 }catch(error){await page.screenshot({path:'reports/prayer-categories/failure.png',fullPage:true});console.error((await page.locator('body').innerText()).slice(-10000));throw error;}finally{await browser.close();await server.close();await deleteApp(owner);}

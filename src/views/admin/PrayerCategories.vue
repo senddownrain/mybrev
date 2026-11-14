@@ -81,8 +81,7 @@
           </div>
           <div v-else-if="filteredCategories.length" class="category-list">
             <article v-for="category in filteredCategories" :key="category.id" class="category-item" :style="{ paddingInlineStart: `${Math.min(category.depth, 5) * 12}px` }">
-              <v-btn v-if="category.children.length" :icon="expandedCategories.has(category.id) || isFiltering ? 'mdi-chevron-down' : 'mdi-chevron-right'" variant="text" :aria-label="`Падкатэгорыі: ${category.name}`" :aria-expanded="isFiltering || expandedCategories.has(category.id)" @click="toggleExpanded(category.id)" />
-              <span v-else class="category-icon"><CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="24" /></span>
+              <span class="category-icon"><CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="24" /></span>
               <div class="category-main">
                 <div class="category-title-row">
                   <h2>{{ category.name }}</h2>
@@ -339,14 +338,8 @@ initPrayers();
 
 const tagStats = computed(() => buildPrayerTagStats(prayers.value, categories.value));
 const availableTagNames = computed(() => tagStats.value.map((tag) => tag.name));
-const expandedCategories = ref(new Set());
 const isFiltering = computed(() => Boolean(normalizeQuery(categoryQuery.value)) || accessFilter.value !== 'all');
-function toggleExpanded(id) {
-  const next = new Set(expandedCategories.value);
-  if (next.has(id)) next.delete(id); else next.add(id);
-  expandedCategories.value = next;
-}
-const filteredCategories = computed(() => flattenCategoryTree(buildCategoryTree(categories.value), expandedCategories.value, isFiltering.value ? (category) => {
+const filteredCategories = computed(() => flattenCategoryTree(buildCategoryTree(categories.value), isFiltering.value ? (category) => {
   const query = normalizeQuery(categoryQuery.value);
   return (accessFilter.value === 'all' || accessPolicy.value.categoryRestricted(category.id) === (accessFilter.value === 'priest'))
     && (!query || normalizeQuery(category.name).includes(query) || (category.tags || []).some((tag) => normalizeQuery(tag).includes(query)));

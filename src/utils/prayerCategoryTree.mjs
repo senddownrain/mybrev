@@ -22,13 +22,26 @@ export function buildCategoryTree(categories) {
   return roots.sort((a, b) => Number(a.scope === 'personal') - Number(b.scope === 'personal') || comparePrayerCategories(a, b));
 }
 
-export function flattenCategoryTree(tree, expanded = new Set(), predicate = null, depth = 0) {
+export function flattenCategoryTree(tree, predicate = null, depth = 0) {
   const rows = [];
   for (const node of tree) {
-    const children = flattenCategoryTree(node.children, expanded, predicate, depth + 1);
+    const children = flattenCategoryTree(node.children, predicate, depth + 1);
     if (predicate && !predicate(node) && !children.length) continue;
     rows.push({ ...node, depth, contextOnly: predicate ? !predicate(node) : false });
-    if (predicate || expanded.has(node.id || node.key)) rows.push(...children);
+    rows.push(...children);
   }
   return rows;
+}
+
+/** Page navigation follows the visible tree, including promoted hidden-parent roots. */
+export function categoryPageNavigation(tree, categoryId) {
+  const pending = tree.map((category) => ({ category, parent: null }));
+  while (pending.length) {
+    const { category, parent } = pending.pop();
+    if (category.id === categoryId) return { category, parent, children: category.children };
+    pending.push(...category.children.map((child) => ({ category: child, parent: category })));
+  }
+  // Hidden is a menu preference, not an access restriction: direct URLs can
+  // still show permitted immediate children that were promoted to roots.
+  return { category: null, parent: null, children: tree.filter((c) => c.parentId === categoryId) };
 }

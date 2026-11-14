@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { gunzipSync } from 'node:zlib';
 import { directCategoryPrayers, prayerCategoryMatch, validateCategoryChange, removeCategoryFromContent, MAX_CATEGORY_DEPTH } from '../src/utils/prayerCategoryMembership.mjs';
-import { buildCategoryTree, flattenCategoryTree } from '../src/utils/prayerCategoryTree.mjs';
+import { buildCategoryTree, flattenCategoryTree, categoryPageNavigation } from '../src/utils/prayerCategoryTree.mjs';
 import { buildPrayerCategoryMenu } from '../src/utils/prayerCategoryMenu.js';
 import { prayerAccessPolicy, permittedPrayerContent } from '../src/utils/priestPolicy.mjs';
 import { prayerStoragePlan, canonicalPrayerContent, MAX_ATOMIC_CONTENT_WRITES } from '../src/utils/prayerStoragePlan.mjs';
@@ -70,18 +70,25 @@ test('remove protected manual link and change parent recompute physical storage 
   assert.ok(!permittedPrayerContent(moved.prayers, moved.categories).prayers.some((p) => ['leaf-prayer', 'inherited-private', 'own-private'].includes(p.id)));
 });
 
-test('tree order, two levels, collapsed/expanded, ancestor context, hidden parent and personal categories', () => {
+test('page navigation: roots, two levels, parent links, ancestor context, hidden parent and personal categories', () => {
   const c = copy(), allowed = permittedPrayerContent(c.prayers, c.categories);
   const menu = buildPrayerCategoryMenu(allowed.categories, [{ name: 'Personal', tags: ['root-tag'] }], [], allowed.prayers);
   assert.deepEqual(ids(menu.filter((c) => c.scope === 'global')), fixture.cases.find((c) => c.caseId.startsWith('C06')).expectedPublicMenuIds.sort());
   const tree = buildCategoryTree(menu);
-  assert.equal(flattenCategoryTree(tree).some((c) => c.id === 'leaf'), false);
-  const expanded = flattenCategoryTree(tree, new Set(['root', 'middle']));
-  assert.equal(expanded.find((c) => c.id === 'leaf').depth, 2);
-  assert.equal(flattenCategoryTree(tree, new Set(['root'])).some((c) => c.id === 'leaf'), false);
-  assert.deepEqual(flattenCategoryTree(tree, new Set(), (c) => c.id === 'leaf').map((c) => c.id), ['root', 'middle', 'leaf']);
+  assert.deepEqual(tree.filter((c) => c.scope === 'global').map((c) => c.id), ['root', 'legacy']);
+  assert.equal(flattenCategoryTree(tree).find((c) => c.id === 'leaf').depth, 2);
+  const root = categoryPageNavigation(tree, 'root');
+  assert.deepEqual(root.children.map((c) => c.id), ['middle']); assert.equal(root.parent, null);
+  const middle = categoryPageNavigation(tree, 'middle');
+  assert.deepEqual(middle.children.map((c) => c.id), ['leaf']); assert.equal(middle.parent.id, 'root');
+  const leaf = categoryPageNavigation(tree, 'leaf');
+  assert.deepEqual(leaf.children, []); assert.equal(leaf.parent.id, 'middle');
+  assert.deepEqual(categoryPageNavigation(tree, 'missing'), { category: null, parent: null, children: [] });
+  assert.deepEqual(flattenCategoryTree(tree, (c) => c.id === 'leaf').map((c) => c.id), ['root', 'middle', 'leaf']);
   const hidden = buildCategoryTree(buildPrayerCategoryMenu(allowed.categories, [], ['root'], allowed.prayers));
   assert.equal(hidden[0].id, 'middle');
+  assert.equal(categoryPageNavigation(hidden, 'middle').parent, null);
+  assert.deepEqual(categoryPageNavigation(hidden, 'root').children.map((c) => c.id), ['middle']);
   assert.equal(menu.at(-1).scope, 'personal');
   const sorted = buildCategoryTree([{id:'z',name:'B',order:1},{id:'a',name:'A',order:1},{id:'x',name:'X',order:0}]);
   assert.deepEqual(sorted.map((c) => c.id), ['x','a','z']);
@@ -102,6 +109,11 @@ test('cycles, self links, unknown parents, depth and invalid manual IDs are reje
   assert.deepEqual(permittedPrayerContent(p,bad), {prayers:[],categories:[]});
   assert.equal(flattenCategoryTree(buildCategoryTree(bad)).length, 3);
   const deep = Array.from({length:MAX_CATEGORY_DEPTH + 1},(_,i)=>({id:String(i),name:String(i),parentId:i?String(i-1):null,tags:[],prayerIds:[],order:0}));
+  const valid = deep.slice(0, MAX_CATEGORY_DEPTH);
+  validateCategoryChange(valid.at(-1), valid, []);
+  const tree = buildCategoryTree(valid);
+  assert.equal(flattenCategoryTree(tree).length, MAX_CATEGORY_DEPTH);
+  assert.equal(categoryPageNavigation(tree, valid.at(-1).id).parent.id, valid.at(-2).id);
   assert.throws(()=>validateCategoryChange(deep.at(-1),deep,[]), /глыбокая/);
   assert.equal(prayerAccessPolicy([],deep).categoryRestricted(deep.at(-1).id),true);
 });

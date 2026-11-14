@@ -132,13 +132,18 @@
         </template>
       </v-list-item>
 
-      <PrayerCategoryBranch
+      <v-list-item
         v-for="category in menuCategories"
         :key="category.key"
-        :category="category"
-        :selected-key="selectedCategory?.key || ''"
-        @select="selectCategory"
-      />
+        :title="category.name"
+        :to="{ name: 'Prayers', query: category.scope === 'global' ? { category: category.id } : {} }"
+        :active="isPrayersPage && selectedCategory?.key === category.key"
+        @click="selectCategory(category, $event)"
+      >
+        <template #prepend>
+          <CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="22" class="drawer-icon" />
+        </template>
+      </v-list-item>
 
       <div class="drawer-section-label drawer-section-label--spaced">Праграма</div>
 
@@ -233,7 +238,6 @@ import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
 import { buildCategoryTree } from '@/utils/prayerCategoryTree.mjs';
-import PrayerCategoryBranch from '@/components/prayers/PrayerCategoryBranch.vue';
 import { priestAccess } from '@/services/priestAccessService';
 import { usePrayersStore } from '@/stores/prayers';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
@@ -270,7 +274,7 @@ const menuCategories = computed(() => {
     prayerCategories.categories,
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
-    auth.isAdmin ? null : prayersStore.prayers,
+    prayersStore.prayers,
     auth.isAdmin || priestAccess.active,
   ));
 });
@@ -279,10 +283,10 @@ const isPrayersPage = computed(() =>
   route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView',
 );
 
-const selectCategory = (category) => {
+const selectCategory = (category, event) => {
+  if (event?.ctrlKey || event?.metaKey || event?.shiftKey || event?.altKey || event?.button > 0) return;
   setSelectedCategory(category);
   isDrawerOpen.value = false;
-  router.push({ name: 'Prayers', query: category.scope === 'global' ? { category: category.id } : {} });
 };
 
 const showAllPrayers = () => {

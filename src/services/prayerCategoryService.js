@@ -10,6 +10,7 @@ import { mutatePrayerContent, subscribeAdminPrayerContent } from './prayerStorag
 export const PRAYER_CATEGORIES_COLLECTION = 'prayerCategories';
 function cleanTags(tags) { return [...new Set((tags || []).map((tag) => String(tag).trim()).filter(Boolean))]; }
 function categoryPayload(category) {
+  // iconKey is only written when it is on the allowlist; otherwise an existing stored value is left alone by the merge in update.
   const iconKey = normalizeCategoryIconKey(category.iconKey);
   return { ...(iconKey ? { iconKey } : {}), name: String(category.name || '').trim(), priestOnly: category.priestOnly === true,
     parentId: category.parentId || null, tags: cleanTags(category.tags), prayerIds: category.prayerIds || [],

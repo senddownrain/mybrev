@@ -16,11 +16,7 @@ export const usePrayersFiltersStore = defineStore('prayersFilters', () => {
   const lastOpenedPrayerId = ref(null);
   const isSearchExpanded = ref(false);
   const isFilterExpanded = ref(false);
-  const expandedCategoryKeys = ref([]);
-  function toggleCategoryExpanded(key) {
-    expandedCategoryKeys.value = expandedCategoryKeys.value.includes(key)
-      ? expandedCategoryKeys.value.filter((value) => value !== key) : [...expandedCategoryKeys.value, key];
-  }
+  const categoryReturnFocus = ref({});
 
   // Debounced version of searchQuery — no onUnmounted needed since the store
   // is a singleton that lives for the entire app lifetime.
@@ -70,8 +66,7 @@ export const usePrayersFiltersStore = defineStore('prayersFilters', () => {
   }
 
   return {
-    expandedCategoryKeys,
-    toggleCategoryExpanded,
+    categoryReturnFocus,
     searchQuery,
     debouncedSearchQuery,
     selectedTags,
