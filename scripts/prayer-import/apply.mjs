@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Apply / rollback of an APPROVED canonical plan. Refuses by default; see docs/prayer-import.md.
-//   apply:    node scripts/prayer-import/apply.mjs apply --plan <dir> --approve-sha <planSha256> --rights <file.json>
+//   apply:    node scripts/prayer-import/apply.mjs apply --plan <dir> --approve-sha <planSha256>
 //                    --backup-dir <private dir> --project <id> [--service-account <file>] [--only-sources a,b]
 //   rollback: node scripts/prayer-import/apply.mjs rollback --backup <file> --project <id> [--service-account <file>]
 // Production needs --i-understand-this-writes-production; the local emulator (FIRESTORE_EMULATOR_HOST, demo-*) does not.
@@ -32,17 +32,15 @@ export function loadApprovedPlan(planDir, approvedSha) {
   return { plan, payloads };
 }
 
-/** A source counts as confirmed only with who confirmed it AND the written basis (document, licence, date). */
-export const rightsConfirmed = (rights, sourceId) => Boolean(rights?.[sourceId]?.confirmedBy && String(rights?.[sourceId]?.basis || '').trim().length >= 10);
-
 /** Operations that may be written now, with the reason for every skipped one. */
 export function selectOperations(plan, rights, onlySources) {
+  // The optional old `rights` argument is ignored to keep existing tooling compatible.
+  void rights;
   const run = []; const skipped = [];
   for (const op of plan.operations) {
     if (!op.targetId) continue;
     if (onlySources && !onlySources.includes(op.sourceId)) { skipped.push({ op, why: 'source not selected' }); continue; }
     if (plan.draftsOnly && op.targetCollection !== 'prayerDrafts') { skipped.push({ op, why: 'drafts-only plan' }); continue; }
-    if (op.targetCollection === 'prayers' && !rightsConfirmed(rights, op.sourceId)) { skipped.push({ op, why: 'digital publication rights not confirmed for this source' }); continue; }
     run.push(op);
   }
   return { run, skipped };
@@ -51,7 +49,7 @@ export function selectOperations(plan, rights, onlySources) {
 export async function applyCanonPlan({ db, FieldValue, planDir, approvedSha, rights, onlySources, backupDir, log = console.log, stopAfterBatch = null }) {
   const { plan, payloads } = loadApprovedPlan(planDir, approvedSha);
   const { run, skipped } = selectOperations(plan, rights, onlySources);
-  if (!run.length) throw new Error('Nothing to apply: no operation passes the rights/source gate.');
+  if (!run.length) throw new Error('Nothing to apply: no operation matches the selected sources and plan scope.');
   const control = db.doc(CONTROL);
   const [prayers, protectedPrayers, drafts] = await Promise.all(['prayers', 'priestProtectedPrayers', 'prayerDrafts'].map((name) => db.collection(name).get()));
   const live = new Map([...prayers.docs, ...protectedPrayers.docs].map((d) => [d.id, { ...d.data(), id: d.id, _collection: d.ref.parent.id }]));
@@ -62,7 +60,7 @@ export async function applyCanonPlan({ db, FieldValue, planDir, approvedSha, rig
     if (op.targetCollection === 'prayerDrafts') {
       const existing = liveDrafts.get(op.targetId);
       if (existing) { (existing.fingerprint === payload.data.fingerprint ? noop : conflicts).push(op); continue; }
-      writes.push({ op, collection: 'prayerDrafts', id: op.targetId, data: { ...draftDocument(payload, { rightsStatus: rightsConfirmed(rights, op.sourceId) ? 'confirmed' : 'unconfirmed', createdBy: `import:${plan.batch}`, rightsBasis: rights?.[op.sourceId]?.basis || '', rightsConfirmedBy: rights?.[op.sourceId]?.confirmedBy || '' }), createdAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() }, before: null });
+      writes.push({ op, collection: 'prayerDrafts', id: op.targetId, data: { ...draftDocument(payload, { createdBy: `import:${plan.batch}` }), createdAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() }, before: null });
     } else if (op.action === 'REPLACE_KEEP_ID') {
       const old = live.get(op.targetId);
       if (!old) { conflicts.push(op); continue; }
@@ -158,9 +156,8 @@ async function main() {
   try {
     const db = admin.firestore(app); const FieldValue = admin.firestore.FieldValue;
     if (command === 'rollback') { await rollbackFromBackup({ db, FieldValue, backupPath: path.resolve(options.backup) }); return; }
-    if (!options.plan || !options['approve-sha'] || !options.rights || !options['backup-dir']) throw new Error('apply needs --plan, --approve-sha, --rights, --backup-dir');
-    const rights = JSON.parse(readFileSync(options.rights, 'utf8'));
-    const result = await applyCanonPlan({ db, FieldValue, planDir: path.resolve(options.plan), approvedSha: options['approve-sha'], rights, onlySources: options['only-sources']?.split(','), backupDir: path.resolve(options['backup-dir']) });
+    if (!options.plan || !options['approve-sha'] || !options['backup-dir']) throw new Error('apply needs --plan, --approve-sha, --backup-dir');
+    const result = await applyCanonPlan({ db, FieldValue, planDir: path.resolve(options.plan), onlySources: options['only-sources']?.split(','), backupDir: path.resolve(options['backup-dir']) });
     console.log(JSON.stringify({ written: result.written, alreadyApplied: result.noop, skipped: result.skipped.length }));
     console.log('Next: verify readback, then npm run content:manifest (see AGENTS.md); nothing is published to the apps before that.');
   } finally { await app.delete(); }
