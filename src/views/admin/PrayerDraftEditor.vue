@@ -11,7 +11,7 @@
           <p class="eyebrow">Чарнавік · {{ originLabel }}</p>
           <h1>{{ form.title || 'Без назвы' }}</h1>
         </div>
-        <v-chip :color="statusColor" variant="flat">{{ DRAFT_STATUS_LABELS[draft.status] }}</v-chip>
+        <v-chip :color="statusColor" variant="flat">{{ DRAFT_STATUS_LABELS[displayStatus] }}</v-chip>
       </header>
 
       <v-alert v-if="draft.status === 'published'" type="success" variant="tonal" class="mb-4">
@@ -36,15 +36,10 @@
           </v-card>
 
           <v-card class="card" elevation="0">
-            <h2>Крыніца і правы</h2>
-            <v-text-field v-model="form.sourceBook" label="Кніга і выданне" variant="outlined" hide-details="auto" :readonly="locked" />
-            <v-textarea v-model="copyrightText" label="Аўтарскія правы (кожны запіс з новага радка)" variant="outlined" rows="2" auto-grow hide-details="auto" class="mt-3" :readonly="locked" />
-            <v-checkbox v-model="rightsConfirmed" class="mt-2" color="primary" hide-details :readonly="locked"
-              label="Права на лічбавую публікацыю гэтай крыніцы пацверджаны пісьмова" />
-            <v-textarea v-if="rightsConfirmed" v-model="form.rightsBasis" data-test="rights-basis" label="Падстава пацверджання (хто, калі і які дакумент ці ліцэнзія)" variant="outlined" rows="2" auto-grow
-              counter="500" maxlength="500" hide-details="auto" class="mt-2" :readonly="locked" :error="!basisValid" :error-messages="basisValid ? [] : ['Без падставы пацверджанне не дзейнічае (мінімум 10 сімвалаў).']" />
-            <p class="hint">Без пацверджання і падставы кнопка «Апублікаваць» заблакаваная. Права на кнігу не вынікаюць з наяўнасці PDF; сістэма запісвае, хто і калі пацвердзіў.</p>
-            <dl class="provenance">
+            <h2>Крыніца</h2>
+            <v-textarea v-model="form.source" label="Крыніца" variant="outlined" rows="2" auto-grow hide-details="auto" :readonly="locked" />
+            <p class="hint">Крыніца з імпартаванай кнігі і старонак падстаўляецца аўтаматычна. Яе можна адрэдагаваць як звычайны тэкст.</p>
+            <dl v-if="provenance.length" class="provenance">
               <template v-for="row in provenance" :key="row[0]"><dt>{{ row[0] }}</dt><dd>{{ row[1] }}</dd></template>
             </dl>
           </v-card>
@@ -78,12 +73,8 @@
 
       <div v-if="!locked" class="action-bar" role="toolbar" aria-label="Дзеянні з чарнавіком">
         <v-btn variant="tonal" class="text-none" :loading="busy === 'save'" :disabled="Boolean(busy)" @click="save()">Захаваць чарнавік</v-btn>
-        <v-btn variant="tonal" class="text-none" :disabled="Boolean(busy)" @click="save('needs_review')">Адправіць на праверку</v-btn>
-        <v-btn variant="tonal" class="text-none" :disabled="Boolean(busy)" @click="save('ready_for_publication')">Гатова да публікацыі</v-btn>
         <v-spacer />
-        <v-btn v-if="draft.status === 'archived'" variant="text" class="text-none" :disabled="Boolean(busy)" @click="save('draft')">Вярнуць у працу</v-btn>
-        <v-btn v-else variant="text" class="text-none" :disabled="Boolean(busy)" @click="save('archived')">Адхіліць / архіваваць</v-btn>
-        <v-btn color="primary" class="text-none" prepend-icon="mdi-publish" :disabled="Boolean(busy) || draft.status === 'archived'" @click="openPublish">Апублікаваць</v-btn>
+        <v-btn color="primary" class="text-none" prepend-icon="mdi-publish" :disabled="Boolean(busy)" @click="openPublish">Апублікаваць</v-btn>
       </div>
     </template>
 
@@ -96,7 +87,6 @@
             <dt>Крыніца</dt><dd>{{ sourceNotice || '—' }}</dd>
             <dt>Тэгі</dt><dd>{{ form.tags.join(', ') || '—' }}</dd>
             <dt>Катэгорыі</dt><dd>{{ categoryNames || '—' }}</dd>
-            <dt>Падстава правоў</dt><dd>{{ form.rightsBasis || '—' }}</dd>
             <dt>Хто бачыць</dt><dd>{{ form.priestOnly ? 'Толькі святары (абароненая калекцыя)' : 'Усе чытачы Web і Flutter' }}</dd>
             <dt>Будучы адрас</dt><dd>/prayer/{{ replaceId || targetId }}</dd>
           </dl>
@@ -109,7 +99,7 @@
             </v-radio-group>
             <v-checkbox v-if="!replaceId && hasExactDuplicate" v-model="acknowledge" label="Разумею, што такая назва ўжо ёсць" hide-details density="compact" />
           </div>
-          <p class="hint mt-3">Права на лічбавую публікацыю гэтай крыніцы павінна быць пацверджана. Пры замене захоўваюцца ID, абранае і спасылкі.</p>
+          <p class="hint mt-3">Пры замене захоўваюцца ID, абранае і спасылкі.</p>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -128,7 +118,7 @@ import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue'
 import { usePrayers } from '@/composables/usePrayers';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { renderPrayerMarkdown } from '@/utils/prayerMarkdown';
-import { DRAFT_ORIGINS, DRAFT_REASON_LABELS, DRAFT_STATUS_LABELS, draftSourceNotice, findDuplicateCandidates, publishBlockers, targetPrayerIdFor } from '@/utils/prayerDraftModel.mjs';
+import { DRAFT_ORIGINS, DRAFT_REASON_LABELS, DRAFT_STATUS_LABELS, draftSourceNotice, findDuplicateCandidates, normalizeDraftStatus, publishBlockers, targetPrayerIdFor } from '@/utils/prayerDraftModel.mjs';
 import { getDraftActions } from '@/services/prayerDraftService';
 
 const route = useRoute();
@@ -143,18 +133,13 @@ const publishOpen = ref(false);
 const replaceId = ref('');
 const acknowledge = ref(false);
 const audit = ref([]);
-const form = ref({ title: '', text: '', tags: [], priestOnly: false, sourceBook: '', copyrightNotices: [], rightsStatus: '', rightsBasis: '' });
-const basisValid = computed(() => form.value.rightsStatus !== 'confirmed' || form.value.rightsBasis.trim().length >= 10);
-const rightsConfirmed = computed({ get: () => form.value.rightsStatus === 'confirmed', set: (value) => { form.value.rightsStatus = value ? 'confirmed' : 'unconfirmed'; } });
-const copyrightText = computed({
-  get: () => form.value.copyrightNotices.join('\n'),
-  set: (value) => { form.value.copyrightNotices = value.split('\n').map((line) => line.trim()).filter(Boolean); },
-});
+const form = ref({ title: '', text: '', tags: [], priestOnly: false, source: '' });
 let actions;
 
 const locked = computed(() => draft.value?.status === 'published');
 const originLabel = computed(() => DRAFT_ORIGINS[draft.value?.origin] || 'Бог Добры');
-const statusColor = computed(() => ({ draft: 'grey', needs_review: 'warning', ready_for_publication: 'info', published: 'success', archived: 'grey' }[draft.value?.status] || 'grey'));
+const displayStatus = computed(() => normalizeDraftStatus(draft.value?.status));
+const statusColor = computed(() => displayStatus.value === 'published' ? 'success' : 'grey');
 const availableTags = computed(() => [...new Set(allTags.value || [])].sort((a, b) => a.localeCompare(b, 'be')));
 const newTags = computed(() => form.value.tags.filter((tag) => !availableTags.value.includes(tag)));
 const categoryNames = computed(() => {
@@ -174,15 +159,14 @@ const provenance = computed(() => [
   ['Старонкі PDF', draft.value?.pdfPageStart ? `${draft.value.pdfPageStart}–${draft.value.pdfPageEnd || draft.value.pdfPageStart}` : ''],
   ['SHA-256 кнігі', draft.value?.sourceSha256 ? `${draft.value.sourceSha256.slice(0, 16)}…` : ''],
   ['Партыя імпарту', draft.value?.originBatch],
-  ['Правы пацвердзіў', draft.value?.rightsConfirmedBy && draft.value?.rightsStatus === 'confirmed' ? `${draft.value.rightsConfirmedBy}${draft.value.rightsConfirmedAt?.seconds ? `, ${new Date(draft.value.rightsConfirmedAt.seconds * 1000).toLocaleDateString('be-BY')}` : ''}` : ''],
 ].filter((row) => row[1]));
 
 function hydrate(source) {
-  form.value = { title: source.title || '', text: source.text || '', tags: [...(source.tags || [])], priestOnly: source.priestOnly === true, sourceBook: source.sourceBook || source.source || '', copyrightNotices: [...(source.copyrightNotices || [])], rightsStatus: source.rightsStatus || '', rightsBasis: source.rightsBasis || '' };
+  form.value = { title: source.title || '', text: source.text || '', tags: [...(source.tags || [])], priestOnly: source.priestOnly === true, source: draftSourceNotice(source) };
 }
 const auditLabel = (entry) => {
   const date = entry.at?.toDate?.().toLocaleString('be-BY') || '';
-  const names = { create: 'Створана', edit: 'Праўка', publish: 'Апублікавана', 'status:needs_review': 'На праверку', 'status:ready_for_publication': 'Гатова', 'status:archived': 'Архіў', 'status:draft': 'Вернута ў працу' };
+  const names = { create: 'Створана', edit: 'Праўка', publish: 'Апублікавана', 'status:draft': 'Чарнавік', 'status:needs_review': 'Раней: праверка', 'status:ready_for_publication': 'Раней: гатова', 'status:archived': 'Раней: архіў' };
   return `${date} · ${names[entry.action] || entry.action}`;
 };
 const describeError = (error) => (error?.name === 'DraftError' ? error.message
@@ -200,7 +184,7 @@ async function load() {
 async function save(status) {
   busy.value = 'save'; message.value = null;
   try {
-    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, sourceBook: form.value.sourceBook, copyrightNotices: form.value.copyrightNotices, ...(form.value.rightsStatus ? { rightsStatus: form.value.rightsStatus, rightsBasis: form.value.rightsBasis.trim() } : {}) };
+    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, source: form.value.source.trim() };
     await actions.saveDraft(draft.value.id, patch, { expectedVersion: draft.value.version, status });
     message.value = { type: 'success', text: status ? `Статус: ${DRAFT_STATUS_LABELS[status]}.` : 'Чарнавік захаваны.' };
     await load();
@@ -211,7 +195,7 @@ async function publish() {
   busy.value = 'publish'; message.value = null;
   try {
     // Unsaved edits go first, so exactly the confirmed text is published.
-    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, sourceBook: form.value.sourceBook, copyrightNotices: form.value.copyrightNotices, ...(form.value.rightsStatus ? { rightsStatus: form.value.rightsStatus, rightsBasis: form.value.rightsBasis.trim() } : {}) };
+    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, source: form.value.source.trim() };
     await actions.saveDraft(draft.value.id, patch, { expectedVersion: draft.value.version });
     const fresh = await actions.getDraft(draft.value.id);
     const result = await actions.publishDraft(draft.value.id, { replaceId: replaceId.value || undefined, acknowledgeDuplicates: acknowledge.value, expectedVersion: fresh.version });
