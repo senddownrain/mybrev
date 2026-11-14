@@ -42,7 +42,7 @@ describe('imported drafts vs Firestore rules (emulator)', { skip: !emulator }, (
     const entry = { id: 'bog-1', sourceId: BOG_SOURCE_ID, type: 'prayer', title: 'Малітва аб урадлівасці', printedHeading: 'x', language: 'be', status: 'complete', sectionTrail: ['МАЛІТОЎНІК'], pdfPageStart: 40, pdfPageEnd: 40, printedPageStart: 40, printedPageEnd: 40, uncertainties: [], blocks: [{ type: 'paragraph', text: 'Божа, дабраславі нашы палі і ўсе пасевы, дай нам дажджу ў час.', runs: [{ text: 'Божа, дабраславі нашы палі і ўсе пасевы, дай нам дажджу ў час.', color: '#231f20' }] }] };
     const bog = planBogDobry({ corpus: { index: [{ ...entry, blocks: undefined }], readEntry: () => entry }, sources: SOURCES_JSON, canonical, oldPrayers: [], categories: [], sourceSha256: 'a'.repeat(64) });
     const bogSha = writeBogReports(path.join(dir, 'bog'), bog, { generatedAt: 't', snapshot: [] });
-    const run = (sub, sha) => applyCanonPlan({ db: admin, FieldValue, planDir: path.join(dir, sub), approvedSha: sha, rights: {}, backupDir: path.join(dir, `b-${sub}`), log: () => {} });
+    const run = (sub, sha) => applyCanonPlan({ db: admin, FieldValue, planDir: path.join(dir, sub), approvedSha: sha, backupDir: path.join(dir, `b-${sub}`), log: () => {} });
     await run('canon', canonSha); await run('bog', bogSha);
     ids = { rite: canonical.operations[0].targetId, bog: bog.operations[0].targetId };
   });
@@ -54,23 +54,20 @@ describe('imported drafts vs Firestore rules (emulator)', { skip: !emulator }, (
       await assert.rejects(fs.getDoc(fs.doc(client(who), `prayerDrafts/${ids.bog}`)), { code: 'permission-denied' });
     }
   });
-  it('a plain admin lists, edits (field whitelist accepted), confirms rights and publishes an imported draft', async () => {
+  it('a plain admin lists, edits and directly publishes an imported draft', async () => {
     const db = client('plain');
     const api = createDraftActions({ db, fs, actorUid: 'plain', writer: createPrayerContentWriter({ db, fs }) });
     const drafts = await api.listDrafts();
     assert.deepEqual(drafts.map((d) => d.id).sort(), [ids.bog, ids.rite].sort());
     const bog = drafts.find((d) => d.id === ids.bog);
-    assert.equal(bog.status, 'draft'); assert.equal(bog.origin, 'bog_dobry'); assert.equal(bog.rightsStatus, 'unconfirmed');
+    assert.equal(bog.status, 'draft'); assert.equal(bog.origin, 'bog_dobry'); assert.equal(bog.rightsStatus, undefined);
     await api.saveDraft(ids.bog, { tags: ['У розных патрэбах'], notes: 'правяраў рэдактар' }, { expectedVersion: bog.version });
-    await assert.rejects(() => api.publishDraft(ids.bog), { code: 'blocked' }); // rights still unconfirmed
-    await assert.rejects(() => api.saveDraft(ids.bog, { rightsStatus: 'confirmed' }), { code: 'invalid' }); // a bare tick is not a confirmation
-    await api.saveDraft(ids.bog, { rightsStatus: 'confirmed', rightsBasis: 'Ліст выдавецтва ад 2026-11-14 (тэст)' });
     const published = await api.publishDraft(ids.bog);
     const prayer = (await fs.getDoc(fs.doc(client(null), `prayers/${published.id}`))).data();
     assert.equal(prayer.title, 'Малітва аб урадлівасці'); assert.match(prayer.source, /Бог Добры/); assert.equal(prayer.sourceDraftId, ids.bog);
     assert.ok(!JSON.stringify(prayer).includes('aaaaaaaa')); // no PDF hash in the public document
     const rite = await api.getDraft(ids.rite);
-    assert.equal(rite.reason, 'rite_scope'); assert.equal(rite.status, 'needs_review');
+    assert.equal(rite.reason, 'rite_scope'); assert.equal(rite.status, 'draft');
     assert.equal((await fs.getDocs(fs.collection(client(null), 'prayers'))).size, 1); // the rite draft is still closed
   });
 });
