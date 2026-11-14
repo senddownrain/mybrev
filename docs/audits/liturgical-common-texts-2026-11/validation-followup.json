@@ -1,0 +1,41 @@
+{
+  "scope": "Frozen 500-case manual queue only; initial audit not repeated",
+  "sourceBaseline": "dd1a20d4fdac8ea83e4e244728091077a5a1f9f2",
+  "submittedReportSha256": "7694f1bd14a67f87ccbcd87ff152790188f852c059cdba4b62b913dae458abac",
+  "twoLineCasesRemoved": 17,
+  "otherFalsePositiveCases": 1,
+  "confirmedAntiphonClassifications": 15,
+  "antiphonFormattingCases": 9,
+  "antiphonLexicalVariantCases": 6,
+  "unresolvedFields": 467,
+  "requestedReconstructions": {
+    "checked": 5,
+    "exactCopyVerified": 5,
+    "independentlyFullTextAttested": 0,
+    "applied": 0
+  },
+  "existingWordProposals": 421,
+  "publicationSubset": {
+    "sourceDocuments": 975,
+    "sourceFields": 9041,
+    "readyDocuments": 727,
+    "readyFields": 6400,
+    "heldFields": 2641,
+    "maximumCommitWrites": 400,
+    "maximumCommitBytes": 8388608,
+    "estimatedBatches": 2
+  },
+  "preflightRequired": true,
+  "tests": {
+    "command": "node --test tests/liturgical-manual-review.test.mjs tests/liturgical-common-texts.test.mjs tests/liturgical-alternatives.test.mjs tests/psalmody-doxology.test.mjs",
+    "passed": 60,
+    "failed": 0
+  },
+  "lint": "passed, no warnings",
+  "priorFixturesAndTests": "preserved, including all 5110 baseline field hashes",
+  "contentSourceFilesChanged": 0,
+  "newFirestoreReads": 0,
+  "productionWrites": 0,
+  "manifestPublications": 0,
+  "deployments": 0
+}

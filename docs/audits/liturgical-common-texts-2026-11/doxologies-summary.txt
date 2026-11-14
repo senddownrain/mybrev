@@ -1,0 +1,31 @@
+JSON sources scanned: 118
+Scanning snapshot: liturgicalTemplates 16
+Scanning snapshot: liturgicalProperTexts 291
+Scanning snapshot: days 736
+Scanning snapshot: completoriums 35
+Scanning snapshot: invitatoriums 4
+{
+  "scannedJsonFiles": 557,
+  "metadataFiles": 1,
+  "documents": 1200,
+  "fields": 17980,
+  "alternatives": 12104,
+  "statuses": {
+    "complete": 11700,
+    "exception-daniel-3-57-88-56": 388,
+    "invitatory-strophe": 16
+  },
+  "bySource": {
+    "json": {
+      "documents": 118,
+      "fields": 1931
+    },
+    "firestore-snapshot": {
+      "documents": 1082,
+      "fields": 16049
+    }
+  },
+  "productionDocuments": 0,
+  "productionFields": 0,
+  "writtenSourceDocuments": 0
+}

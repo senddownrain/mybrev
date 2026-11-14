@@ -117,7 +117,9 @@
     "analytics:e2e": "node experiments/analytics-ingest/e2e/p09-e2e.mjs --out docs/analytics-evidence/p09/e2e-out",
     "audit:doxologies": "node scripts/liturgy/audit-doxologies.mjs",
     "test:doxologies": "node --test tests/psalmody-doxology.test.mjs",
-    "verify:doxologies": "node scripts/liturgy/verify-doxologies.mjs"
+    "verify:doxologies": "node scripts/liturgy/verify-doxologies.mjs",
+    "audit:common-texts": "node scripts/liturgy/audit-common-texts.mjs",
+    "test:common-texts": "node --test tests/liturgical-common-texts.test.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",

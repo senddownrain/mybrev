@@ -379,7 +379,7 @@ export function formatIntercessions(html) {
   const anchor = refrainIndex >= 0 ? refrainIndex : Math.min(1, paragraphs.length - 1);
   const introIndex = Math.max(0, anchor - 1);
   const refrainText = textOf(paragraphs[anchor].toString());
-  let separateLineIndex = 0;
+  const repeatedRefrain = paragraphs.slice(anchor + 1).some((p) => textOf(p.toString()) === refrainText);
   paragraphs.forEach((paragraph, index) => {
     if (index === introIndex) paragraph.classList.add('intercessions__intro');
     if (index === anchor) paragraph.classList.add('intercessions__refrain');
@@ -388,12 +388,15 @@ export function formatIntercessions(html) {
       if (/^Ойча\s+наш\.?$/iu.test(paragraphText)) {
         paragraph.classList.add('intercessions__conclusion');
       } else if (paragraphText === refrainText) {
-        paragraph.classList.add('intercessions__refrain', 'intercessions__refrain--repeat');
+        paragraph.classList.add('intercessions__refrain');
+        paragraph.classList.add('intercessions__refrain--repeat');
       } else {
-        separateLineIndex += 1;
-        const className = separateLineIndex % 2 === 1
-          ? 'intercessions__petition'
-          : 'intercessions__response';
+        const explicitRole = paragraph.getAttribute('data-intercession-role');
+        const previousText = textOf(paragraphs[index - 1]?.toString());
+        const isResponse = /^(?:–|—|-)/u.test(paragraphText)
+          || (!repeatedRefrain && /[,;:]$/u.test(previousText) && /^\p{Ll}/u.test(paragraphText));
+        const className = explicitRole === 'response' || (explicitRole !== 'petition' && isResponse)
+          ? 'intercessions__response' : 'intercessions__petition';
         paragraph.classList.add(className);
         if (className === 'intercessions__response') {
           paragraph.innerHTML = paragraph.innerHTML.replace(

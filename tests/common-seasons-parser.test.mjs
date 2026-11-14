@@ -1,3 +1,4 @@
+import { preEditorialComparison } from '../scripts/liturgy/lib/editorial-policy.mjs';
 import { DOXOLOGY_HTML } from '../scripts/liturgy/lib/psalmody-doxology.mjs';
 /**
  * Offline parser of the three volumes: structure, idempotency, provenance and
@@ -118,16 +119,17 @@ test('provenance: every variant field names its volume, lines and a hash that ma
 });
 
 test('regression hashes of the mandatory church-dedication / blessed-virgin-mary cases', () => {
-  const hash = (value) => sha(plain(value)).slice(0, 16);
+  const hash = (value, field) => sha(plain(preEditorialComparison(value,'patchs/feasts/common-texts/church-dedication.json',field))).slice(0, 16);
   const d = documents.get('church-dedication');
   assert.equal(hash(d.lent.vesper1Ant3), 'fb798d8ee91e13a4');
   assert.equal(hash(d.easter.vesper1Ant3), '6d08f86ee3b73c45');
-  assert.equal(hash(d.lent.vesper1Ps3), '9ff533bd153a6b13');
-  assert.equal(hash(d.easter.vesper1Ps3), '38e64ebc53e41542');
-  assert.equal(hash(d.lent.officeOfReadingsR1), '1ddc4dd25056b36c');
-  assert.equal(hash(d.easter.officeOfReadingsR1), '33e605ef7d5d8756');
-  assert.equal(hash(d.lent.laudesR), '7ba6ba7aad998761');
-  assert.equal(hash(d.easter.laudesR), '35e69fb8a108880e');
+  // Closing repeats now live in Ant3; biblical words and doxology are unchanged.
+  assert.equal(hash(d.lent.vesper1Ps3), '3e90f00c974a1f48');
+  assert.equal(hash(d.easter.vesper1Ps3), 'ffcf5af82f5acf66');
+  assert.equal(hash(d.lent.officeOfReadingsR1,'_seasonalVariants.lent.officeOfReadingsR1'), '1ddc4dd25056b36c');
+  assert.equal(hash(d.easter.officeOfReadingsR1,'_seasonalVariants.easter.officeOfReadingsR1'), '33e605ef7d5d8756');
+  assert.equal(hash(d.lent.laudesR,'_seasonalVariants.lent.laudesR'), '7ba6ba7aad998761');
+  assert.equal(hash(d.easter.laudesR,'_seasonalVariants.easter.laudesR'), '35e69fb8a108880e');
   const b = documents.get('blessed-virgin-mary');
   assert.equal(hash(b.advent.laudesPr), '66ea9a6c882bb36d');
   assert.equal(hash(b.christmas.laudesPr), '3a3954861152d4f7');

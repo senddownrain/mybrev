@@ -34,7 +34,8 @@ concurrency:
 jobs:
   deploy:
     name: Build and publish web
-    if: github.ref == 'refs/heads/main'
+    # PR245's dispatch-only writer must finish before its cache revision is served.
+    if: github.ref == 'refs/heads/main' && (github.event_name != 'push' || !contains(github.event.head_commit.message, '[pr245-data-before-web]'))
     runs-on: ubuntu-latest
     environment: production
     timeout-minutes: 25

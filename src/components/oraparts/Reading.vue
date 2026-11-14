@@ -10,6 +10,7 @@
 
 
 <script setup>
+import { normalizeReadingHtml } from '@/utils/liturgicalSourceHtml';
 import { computed } from 'vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 import { markLeadingLiturgicalSubheadings } from '@/utils/liturgicalHtml';
@@ -18,6 +19,6 @@ const props = defineProps({
   text: String,
 })
 
-const formattedText = computed(() => markLeadingLiturgicalSubheadings(props.text));
+const formattedText = computed(() => markLeadingLiturgicalSubheadings(normalizeReadingHtml(props.text)));
 </script>
 

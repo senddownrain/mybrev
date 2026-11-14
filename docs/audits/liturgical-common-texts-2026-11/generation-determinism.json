@@ -1,0 +1,10 @@
+{
+  "files": 554,
+  "beforeSha256": "e5ca9559e2aa545f3a4cc23ae24cac990284911e0936a64a24b38f02f3855d54",
+  "afterSha256": "e5ca9559e2aa545f3a4cc23ae24cac990284911e0936a64a24b38f02f3855d54",
+  "secondRunChangedFiles": 0,
+  "commands": [
+    "node scripts/liturgy/common-seasons.mjs --write",
+    "npm run generate:fixed-feasts -- --offline"
+  ]
+}

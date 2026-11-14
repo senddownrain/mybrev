@@ -17,6 +17,7 @@
 
 
 <script setup>
+import { normalizeReadingHtml } from '@/utils/liturgicalSourceHtml';
 import { computed, ref } from 'vue';
 import { useReadingChoice } from '@/composables/useReadingChoice';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
@@ -36,6 +37,6 @@ const optionCount = ref(Infinity);
 const choice = useReadingChoice(() => props.field, () => optionCount.value);
 
 const formattedText = computed(() => markLeadingLiturgicalSubheadings(
-  removeLectionSectionHeading(props.text, props.title),
+  normalizeReadingHtml(removeLectionSectionHeading(props.text, props.title)),
 ));
 </script>

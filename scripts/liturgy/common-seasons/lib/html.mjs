@@ -102,9 +102,9 @@ export function blockRole(html) {
   const plain = htmlToPlain(html).replace(/\s+/g, ' ').trim();
   if (!/^<p/i.test(html)) return null;
   if (/^(К\.|Н\.)(\s|$)/u.test(plain)) return 'kn';
-  if (/^Кароткі\s+рэспансорый/u.test(plain)) return 'short-responsory';
+  if (/^Кароткі\s+рэспансорый/iu.test(plain)) return 'short-responsory';
   if (/^Рэспансорый/u.test(plain)) return 'responsory';
-  if (/^(Кароткае чытанне|Першае чытанне|Другое чытанне)/u.test(plain)) return 'reading-heading';
+  if (/^(Кароткае чытанне|Першае чытанне|Другое чытанне)/iu.test(plain)) return 'reading-heading';
   if (/<em>/.test(html)) return 'title';
   return 'body';
 }

@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "groups": 10,
+  "fields": 10,
+  "replies": 15,
+  "export": "15 defer decisions in temporary directory only; no owner decisions inferred",
+  "validShaImport": "passed-local-plan-only",
+  "staleShaImport": "rejected",
+  "network": "blocked",
+  "sourceWrites": 0,
+  "productionWrites": 0
+}

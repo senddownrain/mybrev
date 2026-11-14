@@ -18,8 +18,8 @@
     "matrixCells": 2276,
     "cellsByCategory": {
       "editorial_difference": 65,
-      "missing_source": 236,
-      "ordinary_base": 1080,
+      "missing_source": 356,
+      "ordinary_base": 960,
       "seasonal_explicit": 451,
       "seasonal_inherited": 34,
       "seasonal_reference_set": 4,
@@ -927,7 +927,7 @@
     },
     "missingSource": {
       "before": 314,
-      "after": 236
+      "after": 356
     }
   },
   "reclassification": {
@@ -4798,8 +4798,8 @@
   "wordCoverage": {
     "cells": 1782,
     "buckets": {
-      "0": 1512,
-      "1–5": 248,
+      "0": 1516,
+      "1–5": 244,
       "6–19": 22,
       "≥ 20": 0
     },
@@ -10247,12 +10247,12 @@
       "field": "laudesPs1",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -10260,12 +10260,12 @@
       "field": "laudesPs1",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -10273,12 +10273,12 @@
       "field": "laudesPs1",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -10286,12 +10286,12 @@
       "field": "laudesPs1",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -10299,12 +10299,12 @@
       "field": "laudesPs2",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -10312,12 +10312,12 @@
       "field": "laudesPs2",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -10325,12 +10325,12 @@
       "field": "laudesPs2",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -10338,12 +10338,12 @@
       "field": "laudesPs2",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -10351,12 +10351,12 @@
       "field": "laudesPs3",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -10364,12 +10364,12 @@
       "field": "laudesPs3",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -10377,12 +10377,12 @@
       "field": "laudesPs3",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -10390,12 +10390,12 @@
       "field": "laudesPs3",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "church-dedication",
@@ -16650,12 +16650,12 @@
       "field": "laudesPs1",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -16663,12 +16663,12 @@
       "field": "laudesPs1",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -16676,12 +16676,12 @@
       "field": "laudesPs1",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -16689,12 +16689,12 @@
       "field": "laudesPs1",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -16702,12 +16702,12 @@
       "field": "laudesPs2",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -16715,12 +16715,12 @@
       "field": "laudesPs2",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -16728,12 +16728,12 @@
       "field": "laudesPs2",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -16741,12 +16741,12 @@
       "field": "laudesPs2",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -16754,12 +16754,12 @@
       "field": "laudesPs3",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -16767,12 +16767,12 @@
       "field": "laudesPs3",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -16780,12 +16780,12 @@
       "field": "laudesPs3",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -16793,12 +16793,12 @@
       "field": "laudesPs3",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "blessed-virgin-mary",
@@ -22901,12 +22901,12 @@
       "field": "laudesPs1",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -22914,12 +22914,12 @@
       "field": "laudesPs1",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -22927,12 +22927,12 @@
       "field": "laudesPs1",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -22940,12 +22940,12 @@
       "field": "laudesPs1",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -22953,12 +22953,12 @@
       "field": "laudesPs2",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -22966,12 +22966,12 @@
       "field": "laudesPs2",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -22979,12 +22979,12 @@
       "field": "laudesPs2",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -22992,12 +22992,12 @@
       "field": "laudesPs2",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -23005,12 +23005,12 @@
       "field": "laudesPs3",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -23018,12 +23018,12 @@
       "field": "laudesPs3",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -23031,12 +23031,12 @@
       "field": "laudesPs3",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -23044,12 +23044,12 @@
       "field": "laudesPs3",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "apostles",
@@ -28850,12 +28850,12 @@
       "field": "laudesPs1",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -28863,12 +28863,12 @@
       "field": "laudesPs1",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -28876,12 +28876,12 @@
       "field": "laudesPs1",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -28889,12 +28889,12 @@
       "field": "laudesPs1",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -28902,12 +28902,12 @@
       "field": "laudesPs2",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -28915,12 +28915,12 @@
       "field": "laudesPs2",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -28928,12 +28928,12 @@
       "field": "laudesPs2",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -28941,12 +28941,12 @@
       "field": "laudesPs2",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -28954,12 +28954,12 @@
       "field": "laudesPs3",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -28967,12 +28967,12 @@
       "field": "laudesPs3",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -28980,12 +28980,12 @@
       "field": "laudesPs3",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -28993,12 +28993,12 @@
       "field": "laudesPs3",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyrs-many",
@@ -34620,12 +34620,12 @@
       "field": "laudesPs1",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -34633,12 +34633,12 @@
       "field": "laudesPs1",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -34646,12 +34646,12 @@
       "field": "laudesPs1",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -34659,12 +34659,12 @@
       "field": "laudesPs1",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -34672,12 +34672,12 @@
       "field": "laudesPs2",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -34685,12 +34685,12 @@
       "field": "laudesPs2",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -34698,12 +34698,12 @@
       "field": "laudesPs2",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -34711,12 +34711,12 @@
       "field": "laudesPs2",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -34724,12 +34724,12 @@
       "field": "laudesPs3",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -34737,12 +34737,12 @@
       "field": "laudesPs3",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -34750,12 +34750,12 @@
       "field": "laudesPs3",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -34763,12 +34763,12 @@
       "field": "laudesPs3",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "martyr-one",
@@ -37077,7 +37077,7 @@
       "volume": "II",
       "category": "seasonal_explicit",
       "status": "variant",
-      "relation": "same",
+      "relation": "differs",
       "method": "render",
       "source": {
         "volume": "II",
@@ -37088,8 +37088,7 @@
         "units": [
           "vespers2.reading"
         ]
-      },
-      "note": "explicit seasonal text of the volume equals the stored base; stored explicitly so the season does not depend on the base"
+      }
     },
     {
       "common": "martyr-one",
@@ -40810,12 +40809,12 @@
       "field": "laudesPs1",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -40823,12 +40822,12 @@
       "field": "laudesPs1",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -40836,12 +40835,12 @@
       "field": "laudesPs1",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -40849,12 +40848,12 @@
       "field": "laudesPs1",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -40862,12 +40861,12 @@
       "field": "laudesPs2",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -40875,12 +40874,12 @@
       "field": "laudesPs2",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -40888,12 +40887,12 @@
       "field": "laudesPs2",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -40901,12 +40900,12 @@
       "field": "laudesPs2",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -40914,12 +40913,12 @@
       "field": "laudesPs3",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -40927,12 +40926,12 @@
       "field": "laudesPs3",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -40940,12 +40939,12 @@
       "field": "laudesPs3",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -40953,12 +40952,12 @@
       "field": "laudesPs3",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "pastors",
@@ -41018,7 +41017,7 @@
       "volume": "II",
       "category": "seasonal_explicit",
       "status": "variant",
-      "relation": "same",
+      "relation": "differs",
       "method": "carrier+render",
       "source": {
         "volume": "II",
@@ -41029,8 +41028,7 @@
         "units": [
           "laudes.reading"
         ]
-      },
-      "note": "explicit seasonal text of the volume equals the stored base; stored explicitly so the season does not depend on the base"
+      }
     },
     {
       "common": "pastors",
@@ -46125,12 +46123,12 @@
       "field": "laudesPs1",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -46138,12 +46136,12 @@
       "field": "laudesPs1",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -46151,12 +46149,12 @@
       "field": "laudesPs1",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -46164,12 +46162,12 @@
       "field": "laudesPs1",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -46177,12 +46175,12 @@
       "field": "laudesPs2",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -46190,12 +46188,12 @@
       "field": "laudesPs2",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -46203,12 +46201,12 @@
       "field": "laudesPs2",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -46216,12 +46214,12 @@
       "field": "laudesPs2",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -46229,12 +46227,12 @@
       "field": "laudesPs3",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -46242,12 +46240,12 @@
       "field": "laudesPs3",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -46255,12 +46253,12 @@
       "field": "laudesPs3",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -46268,12 +46266,12 @@
       "field": "laudesPs3",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "doctors-of-church",
@@ -51283,12 +51281,12 @@
       "field": "laudesPs1",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -51296,12 +51294,12 @@
       "field": "laudesPs1",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -51309,12 +51307,12 @@
       "field": "laudesPs1",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -51322,12 +51320,12 @@
       "field": "laudesPs1",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -51335,12 +51333,12 @@
       "field": "laudesPs2",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -51348,12 +51346,12 @@
       "field": "laudesPs2",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -51361,12 +51359,12 @@
       "field": "laudesPs2",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -51374,12 +51372,12 @@
       "field": "laudesPs2",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -51387,12 +51385,12 @@
       "field": "laudesPs3",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -51400,12 +51398,12 @@
       "field": "laudesPs3",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -51413,12 +51411,12 @@
       "field": "laudesPs3",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -51426,12 +51424,12 @@
       "field": "laudesPs3",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "virgins",
@@ -56905,12 +56903,12 @@
       "field": "laudesPs1",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -56918,12 +56916,12 @@
       "field": "laudesPs1",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -56931,12 +56929,12 @@
       "field": "laudesPs1",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -56944,12 +56942,12 @@
       "field": "laudesPs1",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -56957,12 +56955,12 @@
       "field": "laudesPs2",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -56970,12 +56968,12 @@
       "field": "laudesPs2",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -56983,12 +56981,12 @@
       "field": "laudesPs2",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -56996,12 +56994,12 @@
       "field": "laudesPs2",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -57009,12 +57007,12 @@
       "field": "laudesPs3",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -57022,12 +57020,12 @@
       "field": "laudesPs3",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -57035,12 +57033,12 @@
       "field": "laudesPs3",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -57048,12 +57046,12 @@
       "field": "laudesPs3",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-men",
@@ -62652,12 +62650,12 @@
       "field": "laudesPs1",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",
@@ -62665,12 +62663,12 @@
       "field": "laudesPs1",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",
@@ -62678,12 +62676,12 @@
       "field": "laudesPs1",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",
@@ -62691,12 +62689,12 @@
       "field": "laudesPs1",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",
@@ -62704,12 +62702,12 @@
       "field": "laudesPs2",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",
@@ -62717,12 +62715,12 @@
       "field": "laudesPs2",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",
@@ -62730,12 +62728,12 @@
       "field": "laudesPs2",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",
@@ -62743,12 +62741,12 @@
       "field": "laudesPs2",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",
@@ -62756,12 +62754,12 @@
       "field": "laudesPs3",
       "season": "advent",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",
@@ -62769,12 +62767,12 @@
       "field": "laudesPs3",
       "season": "christmas",
       "volume": "I",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",
@@ -62782,12 +62780,12 @@
       "field": "laudesPs3",
       "season": "lent",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",
@@ -62795,12 +62793,12 @@
       "field": "laudesPs3",
       "season": "easter",
       "volume": "II",
-      "category": "ordinary_base",
+      "category": "missing_source",
       "status": "inherit",
       "relation": "n/a",
       "method": null,
       "source": null,
-      "note": "neither the volume nor the stored base carry text"
+      "note": "the volume does not print this field (the stored base is inherited)"
     },
     {
       "common": "holy-women",

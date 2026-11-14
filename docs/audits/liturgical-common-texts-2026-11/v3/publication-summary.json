@@ -1,0 +1,21 @@
+{
+  "state": "content-ready, awaiting-live-preflight",
+  "snapshotAt": "2026-11-13T21:53:10.384Z",
+  "sourceRevision": "b05699f4366ae1fe4f66bde0e28ee27e2c07a37c",
+  "oldReadyFields": 6400,
+  "oldReadyDocuments": 727,
+  "readyDocuments": 974,
+  "readyFields": 8153,
+  "heldFields": 888,
+  "newlyReadyFromOldHeld": 1753,
+  "newFieldsBeyondOldPlan": 0,
+  "cacheDerivedFields": 1,
+  "releaseClassification": "MASS CONTENT REBUILD",
+  "expandedFirestoreReplies": 3629,
+  "estimatedBatches": 3,
+  "maximumCommitWrites": 400,
+  "maximumCommitBytes": 8388608,
+  "livePreflight": false,
+  "productionWrites": 0,
+  "releaseGate": "MASS CONTENT REBUILD; owner authorization + Flutter bundle/app release required. No manifest/revision override."
+}

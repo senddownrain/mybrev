@@ -1,0 +1,73 @@
+name: Publish PR245 compatible Proper fields
+
+on:
+  workflow_dispatch:
+    inputs:
+      plan_sha256:
+        description: Exact reviewed v4 publication-plan.json.gz SHA256
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firebase-firestore-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main' && github.repository == 'senddownrain/mybrev'
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Verify exact plan and compatible scope without production reads
+        env:
+          EXPECTED_PLAN_SHA: ${{ inputs.plan_sha256 }}
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import zlib from 'node:zlib';
+          import { editorialHash } from './scripts/liturgy/lib/editorial-responsories.mjs';
+          import { validatePublicationPlan } from './scripts/liturgy/lib/editorial-publication.mjs';
+          const bytes=fs.readFileSync('docs/audits/liturgical-common-texts-2026-11/v4/publication-plan.json.gz');
+          if(editorialHash(bytes)!==process.env.EXPECTED_PLAN_SHA)throw Error('Reviewed plan SHA mismatch');
+          const plan=JSON.parse(zlib.gunzipSync(bytes));validatePublicationPlan(plan);
+          if(plan.compatibility?.policy!=='proper-only-keep-manifest'||plan.documents.some(d=>!d.document.startsWith('liturgicalProperTexts/')))throw Error('Scope violation');
+          JS
+      - name: Load protected credential within Actions only
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IBREVIARYBY }}
+          EXPECTED_PLAN_SHA: ${{ inputs.plan_sha256 }}
+        run: |
+          set -euo pipefail
+          test -n "$FIREBASE_SERVICE_ACCOUNT" || { echo '::error::Missing protected Firebase credential'; exit 1; }
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/pr245-firebase.json"
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const file=process.env.RUNNER_TEMP+'/pr245-authorization.json';
+          fs.writeFileSync(file,JSON.stringify({project:'ibreviaryby',planSha256:process.env.EXPECTED_PLAN_SHA,action:'execute',ownerApproved:true,massRebuildReleaseGateReviewed:true,reason:'Owner PR245 comments 6877040538/6878311145 authorize execution. Review limits writes to existing Proper omitted from current manifest; fresh runtime guard enforces omission. No published-collection/manifest/bundle override.'}),{mode:0o600});
+          JS
+      - name: One fresh guarded execute, exact masks, one readback per successful write
+        run: |
+          mkdir -p backups/pr245-release
+          node scripts/liturgy/future-publish-editorial-v3.mjs --mode execute --plan docs/audits/liturgical-common-texts-2026-11/v4/publication-plan.json.gz --authorization "$RUNNER_TEMP/pr245-authorization.json" --service-account "$RUNNER_TEMP/pr245-firebase.json" --receipt backups/pr245-release/server-receipt.json
+      - name: Retain actual server receipt and rollback inputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr245-server-receipt-${{ github.run_id }}
+          path: backups/pr245-release/
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Remove credentials and authorization
+        if: always()
+        run: rm -f "$RUNNER_TEMP/pr245-firebase.json" "$RUNNER_TEMP/pr245-authorization.json"

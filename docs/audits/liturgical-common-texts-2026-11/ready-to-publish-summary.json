@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "mode": "content-reviewed-dry-run-only",
+  "scope": "Subset of the existing PR245 plan, not a new audit.",
+  "sourcePlanSha256": "2fba2d976a4f4925f5f22cf1f9b1119fe7c267e37b9562f5abb389805fe98fa8",
+  "snapshotAt": "2026-11-13T21:53:10.384Z",
+  "preflightRequired": "Snapshot updateTime and beforeSha256 must still match a fresh read before any future authorized write. Conflict means stop/review. This file authorizes no production action.",
+  "publication": "Independent content verification does not bypass MASS CONTENT REBUILD, app release or manifest gates. No manifest/revision/deploy operation is included.",
+  "summary": {
+    "sourceDocuments": 975,
+    "sourceFields": 9041,
+    "readyDocuments": 727,
+    "readyFields": 6400,
+    "heldFields": 2641,
+    "maximumCommitWrites": 400,
+    "maximumCommitBytes": 8388608,
+    "estimatedBatches": 2
+  }
+}

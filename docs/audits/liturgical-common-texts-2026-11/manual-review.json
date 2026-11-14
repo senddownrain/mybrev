@@ -1,0 +1,108 @@
+{
+  "schema": 4,
+  "counts": {
+    "initial": 500,
+    "closedBeforeV3": 33,
+    "falsePositives": 18,
+    "confirmedAntiphonClassifications": 15,
+    "editorialExpandedFields": 455,
+    "alreadyFullFields": 2,
+    "unresolvedFields": 0,
+    "exceptionGroups": 0,
+    "exceptionReplies": 0,
+    "ownerApprovedExceptionFields": 10
+  },
+  "cases": [],
+  "closedCases": [
+    {
+      "caseId": "PR245-234",
+      "file": "patchs/feasts/29-07-sv-martha.json",
+      "field": "officeOfReadingsR2",
+      "status": "owner-approved",
+      "afterSha256": "db639eb27847bfeac08e0a57db7ee1bf1a71148e0cb58adb10e04e738a65a463",
+      "evidence": "v4/source-proofs.json.gz"
+    },
+    {
+      "caseId": "PR245-305",
+      "file": "patchs/feasts/common-texts/church-dedication.json",
+      "field": "vesperR",
+      "status": "owner-approved",
+      "afterSha256": "b68bee59e7972f6447f1062d5d818ef8ca81afaa378bd259fab18379dc3f5a51",
+      "evidence": "v4/source-proofs.json.gz"
+    },
+    {
+      "caseId": "PR245-313",
+      "file": "patchs/feasts/common-texts/church-dedication.json",
+      "field": "_seasonalVariants.lent.vesperR",
+      "status": "owner-approved",
+      "afterSha256": "b68bee59e7972f6447f1062d5d818ef8ca81afaa378bd259fab18379dc3f5a51",
+      "evidence": "v4/source-proofs.json.gz"
+    },
+    {
+      "caseId": "PR245-355",
+      "file": "patchs/feasts/common-texts/holy-men.json",
+      "field": "vesperR",
+      "status": "owner-approved",
+      "afterSha256": "f75e038423e90189a59da34aa26d07068b3be853917f1429c5303d2df90b7657",
+      "evidence": "v4/source-proofs.json.gz"
+    },
+    {
+      "caseId": "PR245-358",
+      "file": "patchs/feasts/common-texts/holy-men.json",
+      "field": "_seasonalVariants.advent.vesperR",
+      "status": "owner-approved",
+      "afterSha256": "933b52eeff7020ab772a9e70e1310599fb8bd9ff0747b893d27cf9582ab3293c",
+      "evidence": "v4/source-proofs.json.gz"
+    },
+    {
+      "caseId": "PR245-361",
+      "file": "patchs/feasts/common-texts/holy-men.json",
+      "field": "_seasonalVariants.christmas.vesperR",
+      "status": "owner-approved",
+      "afterSha256": "933b52eeff7020ab772a9e70e1310599fb8bd9ff0747b893d27cf9582ab3293c",
+      "evidence": "v4/source-proofs.json.gz"
+    },
+    {
+      "caseId": "PR245-365",
+      "file": "patchs/feasts/common-texts/holy-men.json",
+      "field": "_seasonalVariants.lent.vesperR",
+      "status": "owner-approved",
+      "afterSha256": "f75e038423e90189a59da34aa26d07068b3be853917f1429c5303d2df90b7657",
+      "evidence": "v4/source-proofs.json.gz"
+    },
+    {
+      "caseId": "PR245-370",
+      "file": "patchs/feasts/common-texts/holy-men.json",
+      "field": "_seasonalVariants.easter.vesperR",
+      "status": "owner-approved",
+      "afterSha256": "08640053e198a43912fbadaa9f28a2808c427c133a7744d886e5828e188d78ab",
+      "evidence": "v4/source-proofs.json.gz"
+    },
+    {
+      "caseId": "PR245-472",
+      "file": "patchs/feasts/common-texts/virgins.json",
+      "field": "vesper1R",
+      "status": "owner-approved",
+      "afterSha256": "cdfbe61048d9f9e919adac4fe2f7c1293753321359f437f991d31ab217819e34",
+      "evidence": "v4/source-proofs.json.gz"
+    },
+    {
+      "caseId": "PR245-485",
+      "file": "patchs/feasts/common-texts/virgins.json",
+      "field": "_seasonalVariants.lent.vesper1R",
+      "status": "owner-approved",
+      "afterSha256": "cdfbe61048d9f9e919adac4fe2f7c1293753321359f437f991d31ab217819e34",
+      "evidence": "v4/source-proofs.json.gz"
+    },
+    {
+      "caseId": "PR245-490",
+      "file": "patchs/feasts/common-texts/virgins.json",
+      "field": "_seasonalVariants.easter.vesper1R",
+      "status": "owner-approved",
+      "afterSha256": "d0902c41cab2ed9a1267150149b2d0ba26cbbd998b06727379fd6e0cf43343cf",
+      "evidence": "v4/source-proofs.json.gz"
+    }
+  ],
+  "historicalQueue": "v3/exceptions.json",
+  "ownerApproval": "v4/owner-instructions.json"
+}

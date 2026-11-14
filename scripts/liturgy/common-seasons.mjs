@@ -14,6 +14,7 @@
  * After --write regenerate the templates: `npm run generate:fixed-feasts`.
  */
 import fs from 'node:fs';
+import { repairCommonDocument, sourceResponseEvidence, sha256 } from './lib/common-text-audit.mjs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -90,6 +91,31 @@ export function generate() {
     if (Object.keys(fields).length) mainSections.set(commonId, fields);
     mainSectionReport.push(...report);
   });
+  // Persist the same source-safe HTML contract in regenerated seasonal and
+  // Marian main sections; otherwise the next parser run restores duplicates.
+  const responseEvidence = sourceResponseEvidence(ROOT);
+  documents.forEach((seasons, commonId) => {
+    const normalized = Object.fromEntries(Object.entries(seasons).map(([season, values]) => {
+      const repaired = repairCommonDocument({ ...corpus.base.get(commonId), ...values }, responseEvidence);
+      const effective = repaired.after;
+      for (const field of Object.keys(values)) {
+        const proof = repaired.candidates.find(c=>c.field===field&&c.type==='editorial-display-expansion');
+        if (proof) provenance[commonId][season][field].editorialDisplay = {
+          policy: 'scripts/liturgy/sources/editorial-response-scopes-v3.json',
+          classification: 'owner-authorized-local-word-display-copy',
+          beforeSha256: proof.beforeSha256, afterSha256: proof.afterSha256, independentPrintedFullReply: false,
+        };
+      }
+      return [season, Object.fromEntries(Object.keys(values).map(field => [field, effective[field]]))];
+    }));
+    documents.set(commonId, normalized);
+    for (const [season, values] of Object.entries(normalized)) {
+      for (const [field, html] of Object.entries(values)) {
+        provenance[commonId][season][field].sha256 = sha256(JSON.stringify(html));
+      }
+    }
+  });
+  mainSections.forEach((fields, id) => mainSections.set(id, repairCommonDocument(fields, responseEvidence).after));
   analysis.mainSectionReport = mainSectionReport;
   return { corpus, analysis, documents, provenance, mainSections };
 }

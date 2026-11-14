@@ -1,3 +1,4 @@
+import { preEditorialComparison } from '../scripts/liturgy/lib/editorial-policy.mjs';
 import { DOXOLOGY_HTML } from '../scripts/liturgy/lib/psalmody-doxology.mjs';
 /**
  * Re-audit of the seasonal Commons: the three volumes are compared SECTION BY SECTION
@@ -34,7 +35,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const generated = generate();
 const { corpus, analysis, documents } = generated;
 const plain = (value) => htmlToPlain(Array.isArray(value) ? value.join('\n') : String(value || '')).replace(/\s+/g, ' ').trim();
-const variant = (id, season, field) => documents.get(id)?.[season]?.[field];
+// Printed-book assertions use the reversible historical view; current HTML is
+// tested in liturgical-editorial-v3.test.mjs against exact span proofs.
+const variant = (id, season, field) => preEditorialComparison(documents.get(id)?.[season]?.[field], 'patchs/feasts/common-texts/'+id+'.json', '_seasonalVariants.'+season+'.'+field);
 const baseOf = (id, field) => corpus.base.get(id)[field];
 const baseline = JSON.parse(fs.readFileSync(path.join(ROOT, 'reports', 'liturgy', 'common-seasons-audit-baseline-adf6b14.json'), 'utf8'));
 const cellOf = (common, field, season) => analysis.matrix.find((c) => c.common === common && c.field === field && c.season === season);
@@ -288,7 +291,7 @@ test('nothing printed by Volume I or II is lost: every word is found in the text
   const coverage = volumeWordCoverage({ corpus, variants: analysis.variants, seasons: SEASONS, seasonVolume: SEASON_VOLUME });
   assert.equal(coverage.cells, 1782);
   // D-4: the volume's own wording is the season's text, so far more cells are word for word (1326 → 1512)
-  assert.deepEqual(coverage.buckets, { 0: 1512, '1–5': 248, '6–19': 22, '≥ 20': 0 });
+  assert.deepEqual(coverage.buckets, { 0: 1516, '1–5': 244, '6–19': 22, '≥ 20': 0 });
   const large = coverage.largest.filter((r) => r.notFoundWords >= 20).map((r) => `${r.common}.${r.field}.${r.season}`).sort();
   // D-6 completed martyr-one.vesper1R in the base and D-4/D-1 made the seasons print the volume's text: nothing of 20 words or more is missing
   assert.deepEqual(large, []);
@@ -353,7 +356,8 @@ test('NR-003: Ps 64 (63) of the apostles — psalm body identical, antiphons cor
   assert.equal(ps.psalmWordsDifferent, 0);
   assert.match(plain(baseOf('apostles', 'officeOfReadingsAnt2')), /абвяшчалі справу Бога/);
   const easter = plain(variant('apostles', 'easter', 'officeOfReadingsPs2'));
-  assert.match(easter, /Ант\. Яны абвяшчалі справу Бога \* і зразумелі Яго ўчынкі, \/ аллелюя\.$/);
+  assert.doesNotMatch(easter, /Ант\./u, 'the matching repeat is owned by Ant2');
+  assert.match(easter, /і на векі вечныя\. Амэн\.$/u);
   assert.match(easter, /Яны абвесцяць справу Бога/);
   assert.match(plain(variant('apostles', 'easter', 'officeOfReadingsAnt2')), /2 ант\. Яны абвяшчалі справу Бога \* і зразумелі Яго ўчынкі, \/ аллелюя\./);
   assert.equal(variant('apostles', 'lent', 'officeOfReadingsPs2'), undefined, 'Lent: no variant of this psalm');
@@ -392,7 +396,7 @@ test('NR-001: К./Н. lines annotated «(Велікодны перыяд Алл�
     const printedByVolumeI = analysis.variants.get(id)[season][field].method === 'render' && season !== 'lent';
     if (printedByVolumeI) return;
     const count = (v) => (plain(v).match(/аллелюя/g) || []).length;
-    assert.ok(count(value) <= count(baseOf(id, field) || ''), `${id}.${season}.${field}`);
+    assert.ok(count(preEditorialComparison(value,'patchs/feasts/common-texts/'+id+'.json','_seasonalVariants.'+season+'.'+field)) <= count(baseOf(id, field) || ''), `${id}.${season}.${field}`);
   })));
 });
 
