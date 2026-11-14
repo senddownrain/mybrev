@@ -1,0 +1,25 @@
+{
+  "decidedBy": "owner (editorial decision, final)",
+  "decidedAt": "2026-11-14",
+  "note": "Editorial approval only. It is NOT a legal confirmation of digital-publication rights; those stay in rights.json (confirmedBy per source).",
+  "titleOverrides": {
+    "our_father_needs-p277-malitva_za_ajchynu": "Малітва за Айчыну (паводле а. Пятра Скаргі)",
+    "our_father_needs-p278-malitva_za_ajchynu": "Малітва за Айчыну (паводле св. Яна Паўла ІІ)",
+    "our_father_needs-p280-malitva_za_ajchynu": "Малітва за Айчыну (чытаецца на заканчэнне года)"
+  },
+  "duplicateOf": {
+    "our_father_weekly-p182-malitva_da_sv_arkhaniola_rafala": {
+      "keep": "our_father_saints-p233-malitva_da_sv_arkhaniola_rafala",
+      "reason": "same text and same addressee (archangel Raphael), printed in the weekly section and again among the saints; one prayer is created. A prayer to St Rafał Kalinowski is a different addressee and is never merged."
+    }
+  },
+  "approvedTitleChanges": {
+    "mDIF7QIvGxH5zHmF1iMN": "Літанія да Дзіцятка Езуса",
+    "JcqOxKZRhOW3z4w0WPo5": "Навэнна да Дзіцятка Езуса",
+    "catholicby-yearcycle-100111": "Навэнна да Божай Міласэрнасці",
+    "v4g6eUqZvze29v5vq4o1": "Пампейская навэнна",
+    "sDKM8ML4dOCdmBeIY6qa": "Малітва святога Францішка аб духу любові"
+  },
+  "allowedNewTags": ["Вяночак"],
+  "holdAsDrafts": ["rite_baptism", "rite_penance", "rite_anointing"]
+}

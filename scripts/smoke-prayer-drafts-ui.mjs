@@ -62,6 +62,22 @@ const drafts = [
 ];
 for (const draft of drafts) { const { id, ...rest } = draft; await seed.doc(`prayerDrafts/${id}`).set({ ...base, ...rest, draftId: id }); }
 
+// Private preview of REAL dry-run payloads (full book text: screenshots stay outside git):
+//   PREVIEW_PAYLOADS=<plan dir> PREVIEW_ENTRIES=id1,id2 PREVIEW_SHOTS=<private dir> ...
+const previewIds = [];
+if (process.env.PREVIEW_PAYLOADS) {
+  const { readFileSync, readdirSync } = await import('node:fs');
+  const plan = JSON.parse(readFileSync(`${process.env.PREVIEW_PAYLOADS}/planned_operations.json`, 'utf8'));
+  for (const match of (process.env.PREVIEW_ENTRIES || '').split(',').filter(Boolean)) {
+    const op = plan.operations.find((item) => item.sourceEntryId.includes(match) && item.targetId);
+    if (!op) continue;
+    const payload = JSON.parse(readFileSync(`${process.env.PREVIEW_PAYLOADS}/payloads/${op.targetId}.json`, 'utf8')).data;
+    const id = `preview-${previewIds.length}`;
+    await seed.doc(`prayerDrafts/${id}`).set({ ...base, draftId: id, title: payload.title, text: payload.text, tags: payload.tags, sourceBook: op.source.split('. ©')[0], copyrightNotices: op.copyrightNotices, status: 'needs_review', origin: 'disputed', reason: 'ambiguous', printedPageStart: op.printedPageStart, printedPageEnd: op.printedPageEnd, pdfPageStart: op.pdfPageStart, originalEntryId: op.sourceEntryId });
+    previewIds.push({ id, label: op.kind });
+  }
+  void readdirSync;
+}
 const firebaseModule = `import { initializeApp } from 'firebase/app';
 import { initializeFirestore, memoryLocalCache, connectFirestoreEmulator } from 'firebase/firestore';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
@@ -194,6 +210,16 @@ await check('a signed-in non-admin never reaches the drafts pages', async () => 
   await context.close();
 });
 
+if (previewIds.length) {
+  for (const [width, theme] of [[1440, 'light'], [390, 'dark']]) {
+    for (const item of previewIds) {
+      const { context, page } = await open('admin', { width, height: width < 500 ? 844 : 900, theme, path: `/admin/prayer-drafts/${item.id}` });
+      await page.locator('.preview').waitFor(); await settle(page);
+      await page.screenshot({ path: `${process.env.PREVIEW_SHOTS}/preview-${item.label}-${width}-${theme}.png` });
+      await context.close();
+    }
+  }
+}
 await browser.close();
 await server.close();
 process.exit(failures.length ? 1 : 0);
