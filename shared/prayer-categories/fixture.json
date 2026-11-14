@@ -1,0 +1,34 @@
+{
+  "contractVersion": 1,
+  "categories": [
+    {"id":"root","name":"Fixture root","tags":["root-tag"],"prayerIds":["manual","both","shared-private"],"parentId":null,"order":10,"priestOnly":false,"iconId":"folder"},
+    {"id":"middle","name":"Fixture middle","tags":[],"prayerIds":[],"parentId":"root","order":10,"priestOnly":false},
+    {"id":"leaf","name":"Fixture leaf","tags":[],"prayerIds":["leaf-prayer"],"parentId":"middle","order":20,"priestOnly":false},
+    {"id":"legacy","name":"Fixture legacy","tags":["legacy-tag"],"parentId":null,"order":20},
+    {"id":"folder","name":"Fixture empty folder","tags":[],"prayerIds":[],"parentId":null,"order":30,"priestOnly":false},
+    {"id":"closed","name":"Fixture protected","tags":[],"prayerIds":["shared-private"],"parentId":null,"order":40,"priestOnly":true},
+    {"id":"closed-child","name":"Fixture protected child","tags":[],"prayerIds":["inherited-private"],"parentId":"closed","order":10,"priestOnly":false}
+  ],
+  "prayers": [
+    {"id":"tagged","title":"Fixture tagged","tags":["root-tag"]},
+    {"id":"manual","title":"Fixture manual","tags":[]},
+    {"id":"both","title":"Fixture both","tags":["root-tag"]},
+    {"id":"leaf-prayer","title":"Fixture leaf prayer","tags":[]},
+    {"id":"legacy-tagged","title":"Fixture legacy tagged","tags":["legacy-tag"]},
+    {"id":"legacy-linked","title":"Fixture legacy linked","tags":[],"categoryId":"legacy"},
+    {"id":"shared-private","title":"PRIVATE SHARED FIXTURE","tags":[]},
+    {"id":"inherited-private","title":"PRIVATE INHERITED FIXTURE","tags":[]},
+    {"id":"own-private","title":"PRIVATE OWN FIXTURE","tags":[],"priestOnly":true}
+  ],
+  "cases": [
+    {"caseId":"C01-old-field-absent","categoryId":"legacy","expectedDirectIds":["legacy-tagged","legacy-linked"]},
+    {"caseId":"C02-folder","categoryId":"folder","expectedDirectIds":[]},
+    {"caseId":"C03-union-no-descendants","categoryId":"root","expectedDirectIds":["tagged","manual","both","shared-private"],"expectedPublicDirectIds":["tagged","manual","both"]},
+    {"caseId":"C04-two-level-leaf","categoryId":"leaf","expectedDirectIds":["leaf-prayer"]},
+    {"caseId":"C05-restriction-wins","expectedProtectedPrayerIds":["shared-private","inherited-private","own-private"],"expectedProtectedCategoryIds":["closed","closed-child"]},
+    {"caseId":"C06-visible-ancestors","expectedPublicMenuIds":["root","middle","leaf","legacy"]},
+    {"caseId":"C07-remove-manual-keep-tag","categoryId":"root","removePrayerId":"both","expectedStillDirect":true},
+    {"caseId":"C08-remove-last-protected-link","categoryId":"closed","removePrayerId":"shared-private","expectedNewPublicPrayerId":"shared-private"},
+    {"caseId":"C09-parent-move","categoryId":"middle","newParentId":"closed","expectedNewProtectedPrayerId":"leaf-prayer"}
+  ]
+}

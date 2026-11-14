@@ -1,21 +1,29 @@
-/** Shared policy for existing tag categories and optional explicit parent links. */
+import { prayerCategoryMatch, MAX_CATEGORY_DEPTH } from './prayerCategoryMembership.mjs';
+/** Shared policy for tag, manual and legacy membership. Restriction always wins. */
 export function prayerAccessPolicy(_prayers = [], categories = []) {
   const byId = new Map(categories.map((c) => [c.id, c]));
   const restrictions = new Map();
-  function categoryRestricted(id, visiting = new Set()) {
+  function categoryRestricted(id) {
     if (restrictions.has(id)) return restrictions.get(id);
-    const category = byId.get(id);
-    // Broken links and cycles fail closed; admin can repair without losing flags.
-    if (!category || visiting.has(id)) return true;
-    const next = new Set(visiting).add(id);
-    const restricted = category.priestOnly === true
-      || Boolean(category.parentId && categoryRestricted(category.parentId, next));
+    const seen = new Set();
+    let current = byId.get(id);
+    let restricted = false;
+    // Inspect the whole bounded path: a cached parent must not bypass depth.
+    while (true) {
+      if (!current || seen.has(current.id) || seen.size >= MAX_CATEGORY_DEPTH) { restricted = true; break; }
+      seen.add(current.id);
+      if (current.priestOnly === true) { restricted = true; break; }
+      if (!current.parentId) break;
+      current = byId.get(current.parentId);
+    }
     restrictions.set(id, restricted);
     return restricted;
   }
   const restrictedTags = new Set(categories.filter((c) => categoryRestricted(c.id)).flatMap((c) => c.tags || []));
+  const restrictedPrayerIds = new Set(categories.filter((c) => categoryRestricted(c.id)).flatMap((c) => c.prayerIds || []));
   function prayerRestricted(prayer) {
     return prayer.priestOnly === true
+      || restrictedPrayerIds.has(prayer.id)
       || (prayer.tags || []).some((tag) => restrictedTags.has(tag))
       || [prayer.categoryId, ...(prayer.categoryIds || [])].filter(Boolean).some((id) => categoryRestricted(id));
   }
@@ -29,8 +37,7 @@ export function permittedPrayerContent(prayers, categories, priest = false) {
   const nonempty = new Set();
   for (const c of categories) {
     if (!priest && policy.categoryRestricted(c.id)) continue;
-    if (permitted.some((p) => (c.tags || []).some((tag) => (p.tags || []).includes(tag))
-      || p.categoryId === c.id || (p.categoryIds || []).includes(c.id))) nonempty.add(c.id);
+    if (permitted.some((p) => prayerCategoryMatch(p, c).matches)) nonempty.add(c.id);
   }
   // Keep ancestors of visible descendants, including grouping categories without tags.
   for (const id of [...nonempty]) {

@@ -1,42 +1,36 @@
+import { prayerAccessPolicy } from './priestPolicy.mjs';
+import { directCategoryPrayers } from './prayerCategoryMembership.mjs';
+
 export function buildPrayerCategoryMenu(
-  globalCategories = [],
-  personalCategories = [],
-  hiddenGlobalCategoryIds = [],
-  permittedPrayers = null,
+  globalCategories = [], personalCategories = [], hiddenGlobalCategoryIds = [], permittedPrayers = null, allowRestricted = false,
 ) {
   const hiddenIds = new Set(hiddenGlobalCategoryIds);
-  const categoriesByName = new Map();
-
-  globalCategories
-    .filter((category) => !hiddenIds.has(category.id))
-    .forEach((category) => {
-      categoriesByName.set(category.name.toLocaleLowerCase('be'), {
-        ...category,
-        key: `global-${category.id}`,
-        scope: 'global',
-      });
+  const policy = prayerAccessPolicy(permittedPrayers || [], globalCategories);
+  const globalNames = new Set();
+  const items = globalCategories
+    .filter((c) => !hiddenIds.has(c.id) && (permittedPrayers === null || allowRestricted || !policy.categoryRestricted(c.id)))
+    .map((c) => {
+      globalNames.add(c.name.toLocaleLowerCase('be'));
+      return { ...c, tags: c.tags || [], prayerIds: c.prayerIds || [], key: `global-${c.id}`, scope: 'global',
+        directCount: permittedPrayers === null ? null : directCategoryPrayers(permittedPrayers, c).length };
     });
-
-  personalCategories.forEach((category, index) => {
-    const nameKey = category.name.toLocaleLowerCase('be');
-    if (categoriesByName.has(nameKey)) return;
-    categoriesByName.set(nameKey, {
-      ...category,
-      key: `personal-${index}-${category.name}`,
-      scope: 'personal',
-      personalIndex: index,
-    });
+  // Keep empty folders only when they lead to visible content. Preserve each ID,
+  // including same-name nodes in different branches. Personal categories stay flat.
+  const visible = new Set(items.filter((c) => permittedPrayers === null || c.directCount > 0).map((c) => c.id));
+  const byId = new Map(items.map((c) => [c.id, c]));
+  for (const id of [...visible]) {
+    let parent = byId.get(id)?.parentId;
+    const seen = new Set([id]);
+    while (parent && byId.has(parent) && !seen.has(parent)) {
+      seen.add(parent); visible.add(parent); parent = byId.get(parent).parentId;
+    }
+  }
+  const personal = personalCategories.flatMap((c, index) => {
+    const name = c.name.toLocaleLowerCase('be');
+    if (globalNames.has(name)) return [];
+    globalNames.add(name);
+    if (permittedPrayers !== null && !directCategoryPrayers(permittedPrayers, c).length) return [];
+    return [{ ...c, parentId: null, key: `personal-${index}-${c.name}`, scope: 'personal', personalIndex: index }];
   });
-
-  const items = [...categoriesByName.values()].map((category) => {
-    if (category.scope !== 'global') return category;
-    const descendantIds = new Set([category.id]);
-    let size;
-    do {
-      size = descendantIds.size;
-      globalCategories.forEach((c) => { if (descendantIds.has(c.parentId)) descendantIds.add(c.id); });
-    } while (size !== descendantIds.size);
-    return { ...category, tags: [...new Set(globalCategories.filter((c) => descendantIds.has(c.id)).flatMap((c) => c.tags || []))] };
-  });
-  return permittedPrayers === null ? items : items.filter((c) => permittedPrayers.some((p) => (p.tags || []).some((t) => c.tags.includes(t))));
+  return [...items.filter((c) => visible.has(c.id)), ...personal];
 }

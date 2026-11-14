@@ -132,19 +132,13 @@
         </template>
       </v-list-item>
 
-      <v-list-item
+      <PrayerCategoryBranch
         v-for="category in menuCategories"
-        :key="category.id || category.name"
-        :title="category.name"
-        tag="button"
-        tabindex="0"
-        @click="selectCategory(category)"
-        :active="selectedCategory?.name === category.name"
-      >
-        <template #prepend>
-          <CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="22" class="drawer-icon" />
-        </template>
-      </v-list-item>
+        :key="category.key"
+        :category="category"
+        :selected-key="selectedCategory?.key || ''"
+        @select="selectCategory"
+      />
 
       <div class="drawer-section-label drawer-section-label--spaced">Праграма</div>
 
@@ -238,6 +232,9 @@ import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
+import { buildCategoryTree } from '@/utils/prayerCategoryTree.mjs';
+import PrayerCategoryBranch from '@/components/prayers/PrayerCategoryBranch.vue';
+import { priestAccess } from '@/services/priestAccessService';
 import { usePrayersStore } from '@/stores/prayers';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { feedbackLocationForRoute } from '@/utils/feedbackContext.js';
@@ -269,12 +266,13 @@ const { selectedCategory, setSelectedCategory } = usePrayersFilters();
 prayerCategories.init();
 
 const menuCategories = computed(() => {
-  return buildPrayerCategoryMenu(
+  return buildCategoryTree(buildPrayerCategoryMenu(
     prayerCategories.categories,
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
     auth.isAdmin ? null : prayersStore.prayers,
-  );
+    auth.isAdmin || priestAccess.active,
+  ));
 });
 
 const isPrayersPage = computed(() =>
@@ -284,7 +282,7 @@ const isPrayersPage = computed(() =>
 const selectCategory = (category) => {
   setSelectedCategory(category);
   isDrawerOpen.value = false;
-  router.push({ name: 'Prayers' });
+  router.push({ name: 'Prayers', query: category.scope === 'global' ? { category: category.id } : {} });
 };
 
 const showAllPrayers = () => {

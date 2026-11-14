@@ -29,6 +29,7 @@
         <v-list-item
           v-for="prayer in filteredPrayers"
           :key="prayer.id"
+          :id="`prayer-row-${prayer.id}`"
           @click="viewPrayer(prayer.id)"
           class="prayer-list-item"
         >
@@ -165,19 +166,21 @@
 
 <script setup>
 import '@/styles/prayers-list.css';
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, watch, nextTick } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useAuthStore } from '@/stores/auth';
 import { useSettingsStore } from '@/stores/settings';
 import { useNotifier } from '@/composables/useNotifier';
 import { usePrayersFilters } from '@/composables/usePrayersFilters';
 import { matchesPrayerTags } from '@/utils/prayerTagFilter';
+import { prayerCategoryMatch } from '@/utils/prayerCategoryMembership.mjs';
 import { PhMagnifyingGlass, PhSlidersHorizontal, PhX } from '@phosphor-icons/vue';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
 
 const router = useRouter();
+const route = useRoute();
 const { prayers, isLoading, getTitle, getText, error, deletePrayer } = usePrayers();
 const authStore = useAuthStore();
 const categoriesStore = usePrayerCategoriesStore();
@@ -187,7 +190,16 @@ const accessFilter = ref('all');
 const accessFilters = [{ title: 'Усе', value: 'all' }, { title: 'Агульнадаступныя', value: 'public' }, { title: 'Толькі для святароў', value: 'priest' }];
 const settings = useSettingsStore();
 const { notifySuccess, notifyError } = useNotifier();
-const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, toggleFilter } = usePrayersFilters();
+const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, lastOpenedPrayerId, setSelectedCategory, toggleFilter } = usePrayersFilters();
+// The existing /prayers route accepts an optional stable ID; old URLs still work.
+watch(() => [route.query.category, categoriesStore.categories], ([id]) => {
+  if (id) {
+    const category = categoriesStore.categories.find((c) => c.id === id);
+    const next = category ? { ...category, key: `global-${category.id}`, scope: 'global' } : { id, name: 'Катэгорыя недаступная', tags: [], prayerIds: [], scope: 'global' };
+    if (selectedCategory.value?.scope === 'global' && selectedCategory.value.id === id) selectedCategory.value = next;
+    else setSelectedCategory(next);
+  } else if (selectedCategory.value?.scope === 'global') setSelectedCategory(null);
+}, { immediate: true });
 
 const deleteDialogOpen = ref(false);
 const prayerToDelete = ref(null);
@@ -204,7 +216,9 @@ const filteredPrayers = computed(() => {
   let filtered = [...prayersArray];
   if (authStore.isAdmin && accessFilter.value !== 'all') filtered = filtered.filter((p) => accessPolicy.value.prayerRestricted(p) === (accessFilter.value === 'priest'));
   
-  // Малітва ўваходзіць у катэгорыю, калі мае хаця б адзін яе тэг.
+  const category = selectedCategory.value?.scope === 'global'
+    ? categoriesStore.categories.find((c) => c.id === selectedCategory.value.id) : selectedCategory.value;
+  if (selectedCategory.value) filtered = category ? filtered.filter((p) => prayerCategoryMatch(p, category).matches) : [];
   if (selectedTags.value && selectedTags.value.length > 0) {
     filtered = filtered.filter((prayer) => matchesPrayerTags(prayer.tags, selectedTags.value));
   }
@@ -240,8 +254,19 @@ const filteredPrayers = computed(() => {
 });
 
 function viewPrayer(id) {
+  lastOpenedPrayerId.value = id;
   router.push({ name: 'PrayerView', params: { id } });
 }
+
+// Browser history restores scroll; restore keyboard focus without scrolling.
+watch(filteredPrayers, async (items) => {
+  const id = lastOpenedPrayerId.value;
+  if (!id || !items.some((p) => p.id === id)) return;
+  await nextTick();
+  if (lastOpenedPrayerId.value !== id) return;
+  document.getElementById(`prayer-row-${id}`)?.focus({ preventScroll: true });
+  lastOpenedPrayerId.value = null;
+}, { immediate: true });
 
 function isFavorite(prayerId) {
   return settings.favoritePrayers.includes(prayerId);

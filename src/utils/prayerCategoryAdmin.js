@@ -46,7 +46,7 @@ export function buildPrayerTagRemovalPlan(tag, prayers = [], categories = []) {
     .filter((category) => category.tags?.some(matchesTag))
     .map((category) => {
       const tags = category.tags.filter((item) => !matchesTag(item));
-      return { id: category.id, type: tags.length ? 'update' : 'delete', tags };
+      return { id: category.id, type: 'update', tags };
     });
 
   return {

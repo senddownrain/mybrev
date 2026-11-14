@@ -37,6 +37,7 @@
     "test:priest": "node --test tests/priest-*.test.mjs",
     "test:priest:rules": "firebase emulators:exec --only auth,firestore --project demo-rules \"node scripts/test-priest-emulator.mjs\"",
     "smoke:priest": "node scripts/smoke-priest-ui.mjs",
+    "smoke:prayer-categories": "firebase emulators:exec --only auth,firestore --project demo-rules \"node scripts/smoke-prayer-categories.mjs\"",
     "db:autofix-prayers": "node scripts/autofix-prayer-markdown.mjs",
     "db:normalize-prayers": "node scripts/normalize-prayer-legacy.mjs",
     "test:prayer-normalization": "node --test tests/prayer-normalization-stage2.test.mjs tests/prayer-formatting.test.mjs tests/prayer-markdown.test.mjs",
