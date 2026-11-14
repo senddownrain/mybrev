@@ -32,7 +32,11 @@ export async function saveStoredPrayer(id, data, create = false) {
   return { id: key };
 }
 export async function removeStoredPrayer(id) {
-  await mutatePrayerContent((content) => { content.prayers = content.prayers.filter((item) => item.id !== id); });
+  await mutatePrayerContent((content) => {
+    content.prayers = content.prayers.filter((item) => item.id !== id);
+    content.categories = content.categories.map((c) => (c.prayerIds || []).includes(id)
+      ? { ...c, prayerIds: c.prayerIds.filter((value) => value !== id), updatedAt: serverTimestamp() } : c);
+  });
 }
 
 // One shared subscription for both admin stores. Protected documents never

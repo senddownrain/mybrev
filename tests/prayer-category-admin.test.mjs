@@ -23,7 +23,7 @@ test('buildPrayerTagStats counts each tag once per prayer and category', () => {
   ]);
 });
 
-test('buildPrayerTagRemovalPlan updates prayers and deletes categories left empty', () => {
+test('buildPrayerTagRemovalPlan updates prayers and preserves categories left empty', () => {
   const plan = buildPrayerTagRemovalPlan(
     'Марыя',
     [
@@ -40,10 +40,10 @@ test('buildPrayerTagRemovalPlan updates prayers and deletes categories left empt
     tag: 'Марыя',
     prayerUpdates: [{ id: 'p1', tags: ['Ружанец'] }],
     categoryChanges: [
-      { id: 'c1', type: 'delete', tags: [] },
+      { id: 'c1', type: 'update', tags: [] },
       { id: 'c2', type: 'update', tags: ['Ружанец'] },
     ],
-    deletedCategories: 1,
+    deletedCategories: 0,
   });
 });
 

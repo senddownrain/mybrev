@@ -29,8 +29,8 @@ export function validateCategory(category) {
   if (!category || !category.name || !category.name.trim()) {
     return 'Назва катэгорыі абавязковая';
   }
-  if (!category.tags || !Array.isArray(category.tags) || category.tags.length === 0) {
-    return 'Катэгорыя павінна мець хаця б адзін тэг';
+  if (category.tags != null && !Array.isArray(category.tags)) {
+    return 'Некарэктны спіс тэгаў';
   }
   return true;
 }

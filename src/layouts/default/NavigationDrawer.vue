@@ -134,12 +134,11 @@
 
       <v-list-item
         v-for="category in menuCategories"
-        :key="category.id || category.name"
+        :key="category.key"
         :title="category.name"
-        tag="button"
-        tabindex="0"
-        @click="selectCategory(category)"
-        :active="selectedCategory?.name === category.name"
+        :to="{ name: 'Prayers', query: category.scope === 'global' ? { category: category.id } : {} }"
+        :active="isPrayersPage && selectedCategory?.key === category.key"
+        @click="selectCategory(category, $event)"
       >
         <template #prepend>
           <CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="22" class="drawer-icon" />
@@ -238,6 +237,8 @@ import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
+import { buildCategoryTree } from '@/utils/prayerCategoryTree.mjs';
+import { priestAccess } from '@/services/priestAccessService';
 import { usePrayersStore } from '@/stores/prayers';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { feedbackLocationForRoute } from '@/utils/feedbackContext.js';
@@ -269,22 +270,23 @@ const { selectedCategory, setSelectedCategory } = usePrayersFilters();
 prayerCategories.init();
 
 const menuCategories = computed(() => {
-  return buildPrayerCategoryMenu(
+  return buildCategoryTree(buildPrayerCategoryMenu(
     prayerCategories.categories,
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
-    auth.isAdmin ? null : prayersStore.prayers,
-  );
+    prayersStore.prayers,
+    auth.isAdmin || priestAccess.active,
+  ));
 });
 
 const isPrayersPage = computed(() =>
   route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView',
 );
 
-const selectCategory = (category) => {
+const selectCategory = (category, event) => {
+  if (event?.ctrlKey || event?.metaKey || event?.shiftKey || event?.altKey || event?.button > 0) return;
   setSelectedCategory(category);
   isDrawerOpen.value = false;
-  router.push({ name: 'Prayers' });
 };
 
 const showAllPrayers = () => {

@@ -156,6 +156,7 @@ import { PhCaretDown, PhCheck, PhFolders, PhMinus, PhPencilSimple, PhPlus, PhSli
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
+import { priestAccess } from '@/services/priestAccessService';
 import { usePrayersStore } from '@/stores/prayers';
 import { useNotifier } from '@/composables/useNotifier';
 import AddCategoryDialog from '@/components/prayers/AddCategoryDialog.vue';
@@ -207,6 +208,7 @@ const visibleCategories = computed(() => {
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
     prayersStore.prayers,
+    priestAccess.active,
   );
 });
 

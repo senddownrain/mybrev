@@ -3,6 +3,7 @@ import { getPriestEditorDb } from '@/plugins/priestFirebase';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { normalizeCategoryIconKey } from '@/constants/prayerCategoryIcons';
 import { buildPrayerTagRemovalPlan } from '@/utils/prayerCategoryAdmin';
+import { comparePrayerCategories, validateCategoryChange, removeCategoryFromContent } from '@/utils/prayerCategoryMembership.mjs';
 import { getPrayerContent } from './prayerContentService';
 import { mutatePrayerContent, subscribeAdminPrayerContent } from './prayerStorageService';
 
@@ -12,26 +13,33 @@ function categoryPayload(category) {
   // iconKey is only written when it is on the allowlist; otherwise an existing stored value is left alone by the merge in update.
   const iconKey = normalizeCategoryIconKey(category.iconKey);
   return { ...(iconKey ? { iconKey } : {}), name: String(category.name || '').trim(), priestOnly: category.priestOnly === true,
-    parentId: category.parentId || null, tags: cleanTags(category.tags), order: Number.isFinite(category.order) ? category.order : Date.now() };
+    parentId: category.parentId || null, tags: cleanTags(category.tags), prayerIds: category.prayerIds || [],
+    order: category.order == null ? Date.now() : Number(category.order) };
 }
-const sorted = (categories) => categories.map((item) => ({ ...item, tags: cleanTags(item.tags) })).sort((left, right) =>
-  (left.order ?? Number.MAX_SAFE_INTEGER) - (right.order ?? Number.MAX_SAFE_INTEGER) || left.name.localeCompare(right.name, 'be', { sensitivity: 'base' }));
+const sorted = (categories) => categories.map((item) => ({ ...item, tags: cleanTags(item.tags), prayerIds: item.prayerIds || [] })).sort(comparePrayerCategories);
 export async function getSavedPrayerCategories() { return sorted((await getPrayerContent()).categories); }
 export function subscribePrayerCategories(onData, onError) { return subscribeAdminPrayerContent((content) => onData(sorted(content.categories)), onError); }
 export async function updatePrayerCategory(id, category) {
   await mutatePrayerContent((content) => {
-    if (!content.categories.some((item) => item.id === id)) throw new Error('Катэгорыя не знойдзена.');
-    content.categories = content.categories.map((item) => item.id === id ? { ...item, ...categoryPayload(category), updatedAt: serverTimestamp() } : item);
+    const old = content.categories.find((item) => item.id === id);
+    if (!old) throw new Error('Катэгорыя не знойдзена.');
+    const next = { ...old, ...categoryPayload({ ...old, ...category }), id, updatedAt: serverTimestamp() };
+    validateCategoryChange(next, content.categories, content.prayers);
+    content.categories = content.categories.map((item) => item.id === id ? next : item);
   });
 }
 export async function createPrayerCategory(category) {
   const db = await getPriestEditorDb();
   const id = doc(collection(db, PRAYER_CATEGORIES_COLLECTION)).id;
-  await mutatePrayerContent((content) => { content.categories.push({ ...categoryPayload(category), id, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); });
+  await mutatePrayerContent((content) => {
+    const next = { ...categoryPayload(category), id, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+    validateCategoryChange(next, content.categories, content.prayers);
+    content.categories.push(next);
+  });
   return { id };
 }
 export async function deletePrayerCategory(id) {
-  await mutatePrayerContent((content) => { content.categories = content.categories.filter((item) => item.id !== id); });
+  await mutatePrayerContent((content) => removeCategoryFromContent(content, id));
 }
 export async function restoreDefaultPrayerCategories() {
   return mutatePrayerContent((content) => {
