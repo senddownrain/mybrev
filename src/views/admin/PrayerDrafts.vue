@@ -49,7 +49,7 @@
               <v-chip v-for="tag in (draft.tags || []).slice(0, 4)" :key="tag" size="x-small" variant="tonal">{{ tag }}</v-chip>
               <span v-if="(draft.tags || []).length > 4" class="more">+{{ draft.tags.length - 4 }}</span>
               <v-chip v-if="draft.priestOnly" size="x-small" color="warning" variant="tonal">Святарам</v-chip>
-              <v-chip v-if="draft.reason" size="x-small" color="warning" variant="outlined">{{ reasonLabel(draft.reason) }}</v-chip>
+              <v-chip v-if="draft.reason && draft.reason !== 'rights_unconfirmed'" size="x-small" color="warning" variant="outlined">{{ reasonLabel(draft.reason) }}</v-chip>
             </div>
           </div>
           <div class="draft-row__side">
