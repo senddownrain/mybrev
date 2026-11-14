@@ -4,9 +4,9 @@
 
 Карпусы кніг (поўны тэкст) і справаздачы dry-run жывуць толькі ў ігнараваным `backups/prayer-import/`; у git трапляюць код, тэсты, `sources.json` (назвы кніг і © без тэксту) і дакументацыя.
 
-## Крыніцы і правы
+## Крыніцы
 
-`sources.json` — кніга, выданне і правы па кожным `sourceId` (з `schemas/source_priority_and_rights.json` пакета). Кожны тэкст атрымлівае `source` («Кніга (месца, год), с. N. © …»), `copyrightNotices`, `sourceId`, `sourceEntryId`. **Права на публічную лічбавую публікацыю не пацверджана**: усе запісы `rightsStatus: unconfirmed`; `apply` прапускае публічныя аперацыі крыніцы, пакуль у файле правоў няма `confirmedBy` і падставы.
+`sources.json` — кніга, выданне і правы па кожным `sourceId` (з `schemas/source_priority_and_rights.json` пакета). Кожны тэкст атрымлівае `source` («Кніга (месца, год), с. N. © …»), `copyrightNotices`, `sourceId`, `sourceEntryId`. Адміністрацыйнае пацверджанне правоў не патрабуецца: `apply` не мае прававога блакатара. Крыніца захоўваецца як `source`; старыя пазнакі © могуць быць часткай крыніцы.
 
 ## Першы заход (афіцыйны канон)
 
@@ -29,8 +29,8 @@ node scripts/prayer-import/canon-import.mjs plan --official <Official_8_PDF_Clau
 1. **Backup (read-only)** і аналіз па ім:
    `npm run db:backup -- --collection prayers --collection priestProtectedPrayers --collection prayerCategories --collection priestProtectedCategories --collection priestContentControl --output backups/prayer-import/live-<дата> --require-new-output` (патрэбны ключ сэрвіснага акаўнта, у рэпазіторый не кладзецца).
 2. `canon-import.mjs plan … --snapshot backups/prayer-import/live-<дата>` → `planSha256`.
-3. Уладальнік правярае справаздачы і пацвярджае правы (`rights.json`: `{ "<sourceId>": { "confirmedBy": "…", "basis": "…" } }`).
-4. `node scripts/prayer-import/apply.mjs apply --plan <каталог> --approve-sha <planSha256> --rights rights.json --backup-dir backups/prayer-import/applied --project <id> --service-account <файл> --i-understand-this-writes-production`.
+3. Адміністратар правярае справаздачы і `planSha256` (без асобнага файла `rights.json`).
+4. `node scripts/prayer-import/apply.mjs apply --plan <каталог> --approve-sha <planSha256> --backup-dir backups/prayer-import/applied --project <id> --service-account <файл> --i-understand-this-writes-production`.
    Праверкі: хэш плана і payload-аў, жывыя дакументы супадаюць з dry-run (`oldFingerprint`), lock `priestContentControl/state`, партыі ≤200, прыватны backup кожнага змененага дакумента, ідэмпатэнтнасць, аднаўленне пасля перапынку.
 5. `apply.mjs rollback --backup <файл> --project <id> …` аднаўляе змененыя дакументы і выдаляе створаныя.
 6. Пасля — `npm run content:manifest` (AGENTS.md); да гэтага змены не трапляюць у Flutter.
@@ -45,7 +45,7 @@ node scripts/prayer-import/canon-import.mjs plan --official <Official_8_PDF_Clau
 - `approvedTitleChanges`: толькі пяць адобраных змен назваў; любая іншая змена назвы пры `REPLACE_KEEP_ID` перапыняе план;
 - `allowedNewTags`: `Вяночак`; `holdAsDrafts`: тры абрады застаюцца ў закрытых чарнавіках.
 
-Гэта рэдакцыйнае пагадненне, а **не** юрыдычнае пацверджанне правоў на лічбавую публікацыю: яно жыве асобна ў `rights.json` (`confirmedBy` па кожнай крыніцы).
+Гэтыя рэдакцыйныя рашэнні вызначаюць, што імпартаваць, але не дадаюць этапаў пацверджання правоў.
 
 ## Другі заход: «Бог Добры» (Пінск, 2022) — толькі чарнавікі
 
@@ -61,8 +61,8 @@ node scripts/prayer-import/bog-import.mjs plan --bog <Bog_Dobry_2022_Codex_struc
 - **EXCLUDE**: песні, раздзелы, катэхізіс, гадзінкі (office), тытул/выходныя даныя, артыкулы, табліцы; не-беларускія тэксты (pl/la — рашэнне рэдактара); парадкі сакрамэнтаў (канкурыруюць з афіцыйнымі абрадамі / Імшой); памылкова тыпізаваныя («Абавязковыя святы», «Песні жальбы»).
 - **ALREADY_EXISTS**: тэкст ужо ёсць у каноне/базе (біграмы, укладзеная малітва) або паўтараецца ў самой кнізе.
 - **UNIQUE_DRAFT**: сапраўды новы тэкст → адзін чарнавік `status: draft`, `origin: bog_dobry`.
-- **REVIEW**: падобная малітва без пацверджання, QA-флаг парсера, даведка замест малітвы, абрад, вялікае набажэнства → чарнавік `status: needs_review`, `origin: disputed`.
+- **REVIEW**: падобная малітва без пацверджання, QA-флаг парсера, даведка замест малітвы, абрад, вялікае набажэнства → чарнавік `status: draft`, `origin: disputed`.
 
-Кожны чарнавік: кніга, старонкі, `originalEntryId`, SHA кнігі, правы, тэгі з існуючых, катэгорыі па тэгах, `possibleDuplicateIds`. План мае `draftsOnly: true`, і `apply.mjs` для такога плана **не піша ў публічныя калекцыі** нават з файлам правоў. Публікацыя — толькі ўручную адміністратарам у «Чарнавіках малітваў» пасля пацверджання правоў у рэдактары.
+Кожны чарнавік: кніга, старонкі, `originalEntryId`, SHA кнігі, тэгі з існуючых, катэгорыі па тэгах, `possibleDuplicateIds`. План мае `draftsOnly: true`, і `apply.mjs` для такога плана **не піша ў публічныя калекцыі** незалежна ад правоў. Публікацыя — толькі ўручную адміністратарам у «Чарнавіках малітваў», непасрэдна са стану `draft`.
 
 Справаздачы: `bog_dobry_drafts.csv`, `excluded_bog_dobry.csv`, `duplicates_review.csv`, `source_coverage.csv`, `tag_mapping.csv`, `proposed_new_tags.csv`, `proposed_new_categories.csv`, `old_to_new_ids.csv`, `migration_qa.md`, `planned_operations.json`.
