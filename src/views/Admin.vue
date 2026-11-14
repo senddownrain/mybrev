@@ -50,6 +50,12 @@ const editors = [
     to: { name: 'PrayerAdd' },
   },
   {
+    title: 'Чарнавікі малітваў',
+    description: 'Закрытыя тэксты: праверыць, выправіць і апублікаваць уручную.',
+    icon: 'mdi-file-document-edit-outline',
+    to: { name: 'AdminPrayerDrafts' },
+  },
+  {
     title: 'Катэгорыі малітваў',
     description: 'Праглядзець, дадаць, выдаліць і выбраць катэгорыі па змаўчанні.',
     icon: 'mdi-folder-cog-outline',

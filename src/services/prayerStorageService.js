@@ -1,54 +1,22 @@
 import { collection, doc, getDocFromServer, getDocsFromServer, onSnapshot, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { getPriestEditorDb } from '@/plugins/priestFirebase';
-import { canonicalPrayerContent, comparablePrayerValue, CONTENT_CONTROL, MAX_ATOMIC_CONTENT_WRITES, PRAYER_STORAGE, prayerStoragePlan } from '@/utils/prayerStoragePlan.mjs';
+import { PRAYER_STORAGE } from '@/utils/prayerStoragePlan.mjs';
+import { createPrayerContentWriter } from '@/utils/prayerContentWriter.mjs';
 import { requestContentRefresh } from '@/utils/publicContentCache';
 import { quotaSafeTransaction } from '@/utils/retry';
 import { noteFirestoreError, withFirestoreQuota } from '@/utils/firestoreErrors.mjs';
 
 const collectionNames = Object.entries(PRAYER_STORAGE).flat();
 const rows = (snapshot) => snapshot.docs.map((item) => ({ ...item.data(), id: item.id }));
-const controlVersion = (snapshot) => snapshot.data()?.version || 0;
-async function readState(db) {
-  // All supported writers serialize through one version. Web transactions do
-  // not support collection queries, so validate the complete read with it.
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const before = await withFirestoreQuota(() => getDocFromServer(doc(db, CONTENT_CONTROL)));
-    if (before.data()?.lockUid) throw new Error('Міграцыя змесціва працягваецца. Рэдагаванне часова недаступнае.');
-    const collections = new Map(await Promise.all(collectionNames.map(async (name) => [name, rows(await withFirestoreQuota(() => getDocsFromServer(collection(db, name))))])));
-    const after = await withFirestoreQuota(() => getDocFromServer(doc(db, CONTENT_CONTROL)));
-    if (controlVersion(before) === controlVersion(after) && !after.data()?.lockUid) return { collections, version: controlVersion(after) };
-  }
-  throw new Error('Змесціва змянілася ў іншай сесіі. Паспрабуйце яшчэ раз.');
-}
-export async function mutatePrayerContent(edit) {
+const firestoreFns = { doc, collection, getDocFromServer, getDocsFromServer, runTransaction, serverTimestamp };
+export async function getPrayerContentWriter() {
   const db = await getPriestEditorDb();
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const { collections, version } = await readState(db);
-    const content = canonicalPrayerContent(collections);
-    const result = edit(content);
-    const plan = prayerStoragePlan(collections, content);
-    if (plan.operations.length > MAX_ATOMIC_CONTENT_WRITES
-      || new globalThis.TextEncoder().encode(JSON.stringify(comparablePrayerValue(plan.operations))).length > 7000000) {
-      throw new Error('Змена занадта вялікая для бяспечнай атамарнай аперацыі. Патрэбна правераная міграцыя з рэзервовай копіяй.');
-    }
-    if (!plan.operations.length) return result;
-    try {
-      await quotaSafeTransaction(runTransaction, db, async (transaction) => {
-        const control = doc(db, CONTENT_CONTROL);
-        const current = await transaction.get(control);
-        if (controlVersion(current) !== version || current.data()?.lockUid) throw new Error('CONTENT_CONFLICT');
-        for (const operation of plan.operations) {
-          const reference = doc(db, operation.collection, operation.id);
-          if (operation.type === 'delete') transaction.delete(reference);
-          else transaction.set(reference, operation.data);
-        }
-        transaction.set(control, { version: version + 1, lockUid: '', updatedAt: serverTimestamp() });
-      });
-      requestContentRefresh();
-      return result;
-    } catch (error) { if (error.message !== 'CONTENT_CONFLICT') throw error; }
-  }
-  throw new Error('Змесціва змянілася ў іншай сесіі. Паспрабуйце яшчэ раз.');
+  return createPrayerContentWriter({ db, fs: firestoreFns, withQuota: withFirestoreQuota, transact: (dbRef, update) => quotaSafeTransaction(runTransaction, dbRef, update) });
+}
+export async function mutatePrayerContent(edit, hooks) {
+  const result = await (await getPrayerContentWriter()).mutate(edit, hooks);
+  requestContentRefresh();
+  return result;
 }
 export async function saveStoredPrayer(id, data, create = false) {
   const db = await getPriestEditorDb();

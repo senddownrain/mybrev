@@ -74,6 +74,7 @@
 .mdi-eye-off-outline::before { content: "\F06D1"; }
 .mdi-eye-outline::before { content: "\F06D0"; }
 .mdi-eyedropper::before { content: "\F020A"; }
+.mdi-file-document-edit-outline::before { content: "\F0DC9"; }
 .mdi-file-question-outline::before { content: "\F1036"; }
 .mdi-folder-cog-outline::before { content: "\F1080"; }
 .mdi-folder-multiple-outline::before { content: "\F0255"; }
@@ -117,6 +118,7 @@
 .mdi-playlist-music::before { content: "\F0CB8"; }
 .mdi-plus::before { content: "\F0415"; }
 .mdi-plus-box::before { content: "\F0416"; }
+.mdi-publish::before { content: "\F06A7"; }
 .mdi-radiobox-blank::before { content: "\F043D"; }
 .mdi-radiobox-marked::before { content: "\F043E"; }
 .mdi-refresh::before { content: "\F0450"; }
@@ -131,6 +133,7 @@
 .mdi-tag-outline::before { content: "\F04FC"; }
 .mdi-tag-search-outline::before { content: "\F1908"; }
 .mdi-text-box-outline::before { content: "\F09ED"; }
+.mdi-text-box-search-outline::before { content: "\F0EAF"; }
 .mdi-theme-light-dark::before { content: "\F050E"; }
 .mdi-undo::before { content: "\F054C"; }
 .mdi-unfold-more-horizontal::before { content: "\F054F"; }
