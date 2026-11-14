@@ -17,7 +17,7 @@
       <v-alert v-if="draft.status === 'published'" type="success" variant="tonal" class="mb-4">
         Апублікавана. Малітва: <router-link :to="`/prayer/${draft.targetPrayerId}`">/prayer/{{ draft.targetPrayerId }}</router-link>. Чарнавік толькі захоўвае гісторыю і не змяняецца.
       </v-alert>
-      <v-alert v-if="draft.reason && draft.status !== 'published'" type="warning" variant="tonal" class="mb-4">{{ DRAFT_REASON_LABELS[draft.reason] || draft.reason }}<template v-if="draft.flagReasons?.length">: {{ draft.flagReasons.join('; ') }}</template></v-alert>
+      <v-alert v-if="draft.reason && draft.reason !== 'rights_unconfirmed' && draft.status !== 'published'" type="warning" variant="tonal" class="mb-4">{{ DRAFT_REASON_LABELS[draft.reason] || draft.reason }}<template v-if="draft.flagReasons?.length">: {{ draft.flagReasons.join('; ') }}</template></v-alert>
       <v-alert v-if="message" :type="message.type" variant="tonal" class="mb-4" closable @click:close="message = null">{{ message.text }}</v-alert>
 
       <div class="editor-grid">
