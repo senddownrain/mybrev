@@ -14,7 +14,6 @@ export const DRAFT_REASON_LABELS = Object.freeze({
   unique_bog_dobry: 'Новы тэкст з «Бог Добры»',
   ambiguous: 'Нявызначанае супадзенне са старой малітвай',
   needs_review: 'Патрэбна праверка',
-  rights_unconfirmed: 'Права на публікацыю не пацверджана',
   structure: 'Спрэчная сегментацыя або структура',
 });
 export const DRAFT_TEXT_LIMIT = 200000;
