@@ -23,7 +23,7 @@ export function writeBogReports(out, result, meta) {
   writeFileSync(path.join(out, 'planned_operations.json'), `${JSON.stringify(plan, null, 2)}\n`);
   for (const [id, payload] of Object.entries(result.payloads)) writeFileSync(path.join(out, 'payloads', `${id}.json`), JSON.stringify(payload));
   const drafts = result.operations.filter((op) => op.targetId);
-  writeFileSync(path.join(out, 'bog_dobry_drafts.csv'), toCsv(drafts.map((op) => ({ draftId: op.targetId, decision: op.action, title: op.title, type: op.type, page: `${op.printedPageStart}${op.printedPageEnd && op.printedPageEnd !== op.printedPageStart ? `–${op.printedPageEnd}` : ''}`, section: op.sectionTrail.slice(-1)[0] || '', tags: op.tags, categories: op.categories, status: op.action === 'REVIEW' ? 'needs_review' : 'draft', flags: op.flags, sourceEntryId: op.sourceEntryId })), ['draftId', 'decision', 'title', 'type', 'page', 'section', 'tags', 'categories', 'status', 'flags', 'sourceEntryId']));
+  writeFileSync(path.join(out, 'bog_dobry_drafts.csv'), toCsv(drafts.map((op) => ({ draftId: op.targetId, decision: op.action, title: op.title, type: op.type, page: `${op.printedPageStart}${op.printedPageEnd && op.printedPageEnd !== op.printedPageStart ? `–${op.printedPageEnd}` : ''}`, section: op.sectionTrail.slice(-1)[0] || '', tags: op.tags, categories: op.categories, status: 'draft', flags: op.flags, sourceEntryId: op.sourceEntryId })), ['draftId', 'decision', 'title', 'type', 'page', 'section', 'tags', 'categories', 'status', 'flags', 'sourceEntryId']));
   writeFileSync(path.join(out, 'excluded_bog_dobry.csv'), toCsv(result.excluded.map((row) => ({ sourceEntryId: row.sourceEntryId, type: row.type, language: row.language, title: row.title, page: row.printedPageStart, reason: row.reason, detail: row.detail })), ['sourceEntryId', 'type', 'language', 'title', 'page', 'reason', 'detail']));
   writeFileSync(path.join(out, 'old_to_new_ids.csv'), toCsv(drafts.map((op) => ({ sourceEntryId: op.sourceEntryId, action: op.action, oldIds: '', newId: op.targetId, collection: 'prayerDrafts', title: op.title, url: '(closed draft, no public URL)' })), ['sourceEntryId', 'action', 'oldIds', 'newId', 'collection', 'title', 'url']));
   writeFileSync(path.join(out, 'duplicates_review.csv'), toCsv(result.duplicateRows.map((row) => ({ ...row, matches: row.matches.map((m) => `${m.origin || ''} ${m.id} «${m.title || ''}» x=${m.textScore ?? ''}`) })), ['sourceEntryId', 'title', 'decision', 'matches']));
@@ -48,7 +48,7 @@ export function bogQaMarkdown(result, meta, planSha256) {
 - Блокаў-малюнкаў прапушчана: ${result.qa.imagesSkipped}; без тэгаў: ${result.qa.noTags}; загалоўкаў з вялікімі літарамі прыведзена да сказа: ${result.qa.titleCase}.
 - Новыя тэгі (толькі прапанова): ${result.proposedNewTags.map((t) => t.tag).join(', ') || '—'}.
 
-Правы: \`rightsStatus: unconfirmed\`; чарнавікі нельга апублікаваць, пакуль права на лічбавую публікацыю не пацверджана.
+Публікацыя: адміністратар можа апублікаваць любы поўны чарнавік непасрэдна, без дадатковых станаў і пацверджанняў правоў.
 `;
 }
 

@@ -31,11 +31,11 @@ test('excluded groups never become drafts: songs, sections, catechism, offices, 
   assert.deepEqual(Object.keys(plan.payloads), []);
   assert.ok(plan.exclusionReasons['language:pl'] && plan.exclusionReasons['language:la'] && plan.exclusionReasons.rite && plan.exclusionReasons.title);
 });
-test('unique prayer -> one closed draft with book, pages, rights, tags from existing tags; images skipped; no public document', () => {
+test('unique prayer -> one closed draft with book, pages, tags from existing tags; images skipped; no public document', () => {
   const plan = build([bog('p-1', 'prayer', 'Малітва аб урадлівасці', UNIQUE)], [{ id: 'live-1', title: 'Іншая', text: 'зусім іншы тэкст', tags: ['У розных патрэбах'] }]);
   assert.deepEqual(plan.counts, { EXCLUDE: 0, ALREADY_EXISTS: 0, UNIQUE_DRAFT: 1, REVIEW: 0 });
   const draft = plan.payloads[bogDraftId('p-1')].data;
-  assert.equal(draft.status, 'draft'); assert.equal(draft.origin, 'bog_dobry'); assert.equal(draft.rightsStatus, 'unconfirmed');
+  assert.equal(draft.status, 'draft'); assert.equal(draft.origin, 'bog_dobry'); assert.equal(draft.rightsStatus, undefined);
   assert.match(draft.sourceBook, /Бог Добры/); assert.equal(draft.printedPageStart, 40); assert.equal(draft.sourceSha256.length, 64);
   assert.ok(draft.copyrightNotices.length >= 1); assert.deepEqual(draft.tags, ['У розных патрэбах']);
   assert.equal(plan.qa.imagesSkipped, 1);
@@ -60,13 +60,13 @@ test('uncertain cases become REVIEW drafts (parser flag, similar title, instruct
     bog('r-3', 'prayer', 'Ойча наш', 'зусім іншы тэкст пра нешта іншае і доўгі такі, каб не супасці з нічым', {}),
   ], [{ id: 'live-3', title: 'Ойча наш', text: 'Ойча наш які ёсць на небе', tags: [] }]);
   assert.deepEqual([plan.counts.REVIEW, plan.counts.UNIQUE_DRAFT], [3, 0]);
-  for (const op of plan.operations) { const doc = plan.payloads[op.targetId].data; assert.equal(doc.status, 'needs_review'); assert.equal(doc.origin, 'disputed'); }
+  for (const op of plan.operations) { const doc = plan.payloads[op.targetId].data; assert.equal(doc.status, 'draft'); assert.equal(doc.origin, 'disputed'); }
 });
 test('title case: ALL-CAPS headings become sentence case with sacred names capitalised', () => {
   assert.equal(sentenceCase('НАБАЖЭНСТВА ДА НАЙСВЯЦЕЙШАГА СЭРЦА ПАНА ЕЗУСА'), 'Набажэнства да Найсвяцейшага Сэрца Пана Езуса');
   assert.equal(sentenceCase('Малітва да св. Юзафа'), 'Малітва да св. Юзафа');
 });
-test('a drafts-only plan can never write public content, whatever the rights file says', () => {
+test('a drafts-only plan can never write public content', () => {
   const plan = { draftsOnly: true, operations: [{ sourceId: 'x', targetId: 'a', targetCollection: 'prayerDrafts' }, { sourceId: 'x', targetId: 'b', targetCollection: 'prayers' }] };
   const { run, skipped } = selectOperations(plan, { x: { confirmedBy: 'owner', basis: 'тэставая пісьмовая згода выдаўца, 2026-11-14' } }, null);
   assert.deepEqual(run.map((op) => op.targetId), ['a']); assert.equal(skipped.length, 1);

@@ -59,10 +59,10 @@ test('plan: every entry gets exactly one route; structure is preserved not creat
   assert.equal(by('lit-new').action, 'CREATE'); assert.equal(by('lit-new').targetId, canonId('lit-new'));
   assert.equal(by('lit-old').action, 'REPLACE_KEEP_ID'); assert.equal(by('lit-old').targetId, 'P1'); assert.deepEqual(by('lit-old').oldIds, ['P1']);
   assert.equal(by('week-sunday').action, 'PRESERVE_STRUCTURE'); assert.equal(by('week-sunday').targetId, undefined);
-  for (const id of ['nov-flag', 'rite-1']) { assert.equal(by(id).action, 'REVIEW_AMBIGUOUS'); assert.equal(by(id).targetCollection, 'prayerDrafts'); assert.equal(plan.payloads[by(id).targetId].data.status, 'needs_review'); }
+  for (const id of ['nov-flag', 'rite-1']) { assert.equal(by(id).action, 'REVIEW_AMBIGUOUS'); assert.equal(by(id).targetCollection, 'prayerDrafts'); assert.equal(plan.payloads[by(id).targetId].data.status, 'draft'); }
   assert.equal(by('rite-1').reason, 'rite_scope');
   for (const op of plan.operations.filter((item) => item.action !== 'PRESERVE_STRUCTURE')) {
-    assert.ok(op.source && op.copyrightNotices.length, `source and © on ${op.sourceEntryId}`); assert.equal(op.rightsStatus, 'unconfirmed');
+    assert.ok(op.source && op.copyrightNotices.length, `source and © on ${op.sourceEntryId}`); assert.equal(op.rightsStatus, undefined);
     assert.ok(op.printedPageStart && op.pdfPageStart);
   }
   assert.ok(plan.payloads[canonId('lit-new')].data.source.includes('© Выдавецтва'));

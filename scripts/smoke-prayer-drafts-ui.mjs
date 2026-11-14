@@ -54,8 +54,8 @@ _Хрыстэ, элейсон, Кірые, элейсон._
 **Молімся.** Божа, Ты даў нам святога Юзафа ў абаронцы. Дай нам заўсёды карыстацца яго заступніцтвам.`;
 const base = { textFormat: 'mybrev-markdown', version: 1, createdBy: 'import-dry-run', createdAt: ts(1.79e9), updatedAt: ts(1.79e9), sourceBook: '«Бог Добры» (Пінск, 2022)', copyrightNotices: ['© Пінская дыяцэзія, 2022', '© Выдавецтва Пінскай дыяцэзіі Рымска-Каталіцкага Касцёла ў РБ, 2022'], priestOnly: false, originBatch: 'demo' };
 const drafts = [
-  { id: 'bd-litany', title: 'Літанія да святога Юзафа (набожнае выданне)', text: litany, tags: ['Літанія'], status: 'ready_for_publication', origin: 'bog_dobry', reason: 'unique_bog_dobry', sourceId: 'bog_dobry_pinsk_edition_2022', originalEntryId: 'bog-0412', printedPageStart: 412, printedPageEnd: 414, pdfPageStart: 430, pdfPageEnd: 432, sourceSha256: 'a'.repeat(64) },
-  { id: 'bd-dup', title: 'Навэнна да св. Юзафа', text: 'Дзень першы\n\nТэставы тэкст навэнны.', tags: ['Навэнна'], status: 'needs_review', origin: 'disputed', reason: 'ambiguous', flagReasons: ['Назва супадае з існуючай малітвай, тэксты розныя'], originalEntryId: 'bog-0101', printedPageStart: 120, pdfPageStart: 138 },
+  { id: 'bd-litany', title: 'Літанія да святога Юзафа (набожнае выданне)', text: litany, tags: ['Літанія'], status: 'draft', origin: 'bog_dobry', reason: 'unique_bog_dobry', sourceId: 'bog_dobry_pinsk_edition_2022', originalEntryId: 'bog-0412', printedPageStart: 412, printedPageEnd: 414, pdfPageStart: 430, pdfPageEnd: 432, sourceSha256: 'a'.repeat(64) },
+  { id: 'bd-dup', title: 'Навэнна да св. Юзафа', text: 'Дзень першы\n\nТэставы тэкст навэнны.', tags: ['Навэнна'], status: 'draft', origin: 'disputed', reason: 'ambiguous', flagReasons: ['Назва супадае з існуючай малітвай, тэксты розныя'], originalEntryId: 'bog-0101', printedPageStart: 120, pdfPageStart: 138 },
   { id: 'bd-draft', title: 'Малітва за ўрадлівасць зямлі', text: 'Усемагутны Божа, дабраславі палі.', tags: [], status: 'draft', origin: 'bog_dobry', reason: 'unique_bog_dobry', printedPageStart: 305, pdfPageStart: 323 },
   { id: 'bd-priest', title: 'Малітва святара перад споведдзю', text: 'Тэставы тэкст.', tags: ['Сакрамэнт'], status: 'draft', origin: 'bog_dobry', priestOnly: true, printedPageStart: 55, pdfPageStart: 73 },
   { id: 'bd-done', title: 'Ужо апублікаваная малітва', text: 'Тэкст.', tags: ['Марыя'], status: 'published', origin: 'bog_dobry', targetPrayerId: 'p-mary', printedPageStart: 9, pdfPageStart: 27 },
@@ -73,7 +73,7 @@ if (process.env.PREVIEW_PAYLOADS) {
     if (!op) continue;
     const payload = JSON.parse(readFileSync(`${process.env.PREVIEW_PAYLOADS}/payloads/${op.targetId}.json`, 'utf8')).data;
     const id = `preview-${previewIds.length}`;
-    await seed.doc(`prayerDrafts/${id}`).set({ ...base, draftId: id, title: payload.title, text: payload.text, tags: payload.tags, sourceBook: op.source.split('. ©')[0], copyrightNotices: op.copyrightNotices, status: 'needs_review', origin: 'disputed', reason: 'ambiguous', printedPageStart: op.printedPageStart, printedPageEnd: op.printedPageEnd, pdfPageStart: op.pdfPageStart, originalEntryId: op.sourceEntryId });
+    await seed.doc(`prayerDrafts/${id}`).set({ ...base, draftId: id, title: payload.title, text: payload.text, tags: payload.tags, sourceBook: op.source.split('. ©')[0], copyrightNotices: op.copyrightNotices, status: 'draft', origin: 'disputed', reason: 'ambiguous', printedPageStart: op.printedPageStart, printedPageEnd: op.printedPageEnd, pdfPageStart: op.pdfPageStart, originalEntryId: op.sourceEntryId });
     previewIds.push({ id, label: op.kind });
   }
   void readdirSync;
@@ -185,20 +185,9 @@ await check('plain admin publishes through the confirmation dialog; one public p
   await page.getByRole('button', { name: 'Апублікаваць' }).first().click();
   const dialog = page.locator('.publish-dialog');
   await dialog.waitFor(); await settle(page);
-  // Rights are not confirmed yet: publication is blocked; a bare tick without a written basis is blocked too.
-  assert.match(await dialog.innerText(), /не пацверджана/);
-  await dialog.getByRole('button', { name: 'Скасаваць' }).click();
-  await page.getByText('Права на лічбавую публікацыю гэтай крыніцы пацверджаны пісьмова').click();
-  await page.locator('[data-test="rights-basis"]').waitFor();
-  await page.getByRole('button', { name: 'Апублікаваць' }).first().click();
-  await dialog.waitFor(); await settle(page);
-  assert.match(await dialog.innerText(), /падставу/);
-  await dialog.getByRole('button', { name: 'Скасаваць' }).click();
-  await page.locator('[data-test="rights-basis"] textarea').first().fill('Ліст выдавецтва ад 2026-11-14, №12 (тэст)');
-  await page.getByRole('button', { name: 'Апублікаваць' }).first().click();
-  await dialog.waitFor(); await settle(page);
+  // No legal approval or intermediate readiness state is required.
+  assert.equal(await dialog.getByText('Падстава правоў').count(), 0);
   assert.match(await dialog.innerText(), /Усе чытачы/);
-  assert.match(await dialog.innerText(), /Ліст выдавецтва/);
   assert.match(await dialog.innerText(), /\/prayer\/d_bd-litany/);
   await shot(page, '09-publish-confirm-1440-light');
   await dialog.getByRole('button', { name: 'Апублікаваць' }).click();
@@ -207,10 +196,6 @@ await check('plain admin publishes through the confirmation dialog; one public p
   const published = await seed.collection('prayers').where('sourceDraftId', '==', 'bd-litany').get();
   assert.equal(published.size, 1);
   assert.equal((await seed.doc('prayerDrafts/bd-litany').get()).data().status, 'published');
-  const confirmedDoc = (await seed.doc('prayerDrafts/bd-litany').get()).data();
-  assert.equal(confirmedDoc.rightsStatus, 'confirmed');
-  assert.match(confirmedDoc.rightsBasis, /Ліст выдавецтва/);
-  assert.ok(confirmedDoc.rightsConfirmedBy, 'the confirming admin is recorded by the system');
   await page.goto(`${BASE}/prayer/d_bd-litany`);
   await page.getByText('Крыніца:').waitFor(); await settle(page);
   assert.match(await page.locator('.prayer-source').innerText(), /© Пінская дыяцэзія/);

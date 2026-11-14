@@ -1,12 +1,12 @@
 // Draft workflow against Firestore (admin-only `prayerDrafts`). Dependencies are injected so the
 // very same code runs in the app and in the emulator tests. Roles are enforced by firestore.rules
 // (`admin`, `superadmin`, legacy admins); nothing here trusts a client-side `isAdmin` flag.
-import { buildPrayerFromDraft, canTransition, DRAFT_COLLECTION, findDuplicateCandidates, normalizeTitleKey, prayerTitleOf, publishBlockers, targetPrayerIdFor, validateDraft } from './prayerDraftModel.mjs';
+import { buildPrayerFromDraft, canTransition, DRAFT_COLLECTION, findDuplicateCandidates, normalizeDraftStatus, normalizeTitleKey, prayerTitleOf, publishBlockers, targetPrayerIdFor, validateDraft } from './prayerDraftModel.mjs';
 
 export class DraftError extends Error {
   constructor(code, message, details = {}) { super(message); this.name = 'DraftError'; this.code = code; Object.assign(this, details); }
 }
-const DRAFT_FIELDS = ['title', 'text', 'source', 'sourceBook', 'sourceEdition', 'tags', 'categoryIds', 'copyrightNotices', 'priestOnly', 'notes', 'rightsStatus', 'rightsBasis'];
+const DRAFT_FIELDS = ['title', 'text', 'source', 'sourceBook', 'sourceEdition', 'tags', 'categoryIds', 'priestOnly', 'notes'];
 const pick = (data, keys) => Object.fromEntries(keys.filter((key) => data[key] !== undefined).map((key) => [key, data[key]]));
 
 export function createDraftActions({ db, fs, writer, actorUid }) {
@@ -33,7 +33,7 @@ export function createDraftActions({ db, fs, writer, actorUid }) {
     const record = { ...pick(data, [...DRAFT_FIELDS, 'sourceId', 'sourceSha256', 'sourcePageSpan', 'pdfPageStart', 'pdfPageEnd', 'printedPageStart', 'printedPageEnd',
       'originalEntryId', 'originBatch', 'origin', 'reason', 'flagReasons', 'possibleDuplicateIds', 'fingerprint']),
       draftId, textFormat: 'mybrev-markdown', status: 'draft', version: 1, tags: data.tags || [], createdBy: actorUid, createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
-      ...(data.rightsStatus === 'confirmed' ? { rightsConfirmedBy: actorUid, rightsConfirmedAt: serverTimestamp() } : {}) };
+    };
     const errors = validateDraft(record);
     if (errors.length) throw new DraftError('invalid', errors.join(' '));
     await runTransaction(db, async (transaction) => {
@@ -52,19 +52,13 @@ export function createDraftActions({ db, fs, writer, actorUid }) {
       const current = snap.data();
       if (expectedVersion !== undefined && current.version !== expectedVersion) throw new DraftError('conflict', 'Чарнавік змянілі ў іншай сесіі. Абнавіце старонку.');
       if (current.status === 'published') throw new DraftError('published', 'Апублікаваны чарнавік не рэдагуецца.');
-      const next = status || current.status;
+      const next = status || normalizeDraftStatus(current.status);
       if (!canTransition(current.status, next)) throw new DraftError('transition', 'Недапушчальная змена статуса.');
       if (next === 'published') throw new DraftError('transition', 'Публікацыя — асобная аперацыя.');
       const merged = { ...current, ...pick(patch || {}, DRAFT_FIELDS), status: next };
       const errors = validateDraft(merged);
       if (errors.length) throw new DraftError('invalid', errors.join(' '));
-      // Who confirmed the rights and when is recorded by the system, never typed by the editor.
-      const basisChanged = String(merged.rightsBasis ?? '').trim() !== String(current.rightsBasis ?? '').trim();
-      const rightsMeta = merged.rightsStatus === 'confirmed'
-        ? (current.rightsStatus !== 'confirmed' || basisChanged || !current.rightsConfirmedBy ? { rightsConfirmedBy: actorUid, rightsConfirmedAt: serverTimestamp() } : {})
-        : (current.rightsConfirmedBy ? { rightsConfirmedBy: '', rightsConfirmedAt: null } : {});
-      const reviewed = next !== current.status && ['needs_review', 'ready_for_publication'].includes(next) ? { reviewedBy: actorUid, reviewedAt: serverTimestamp() } : {};
-      transaction.update(draftRef(draftId), { ...pick(patch || {}, DRAFT_FIELDS), ...rightsMeta, ...reviewed, status: next, version: current.version + 1, updatedAt: serverTimestamp() });
+      transaction.update(draftRef(draftId), { ...pick(patch || {}, DRAFT_FIELDS), status: next, version: current.version + 1, updatedAt: serverTimestamp() });
       audit(transaction, draftId, { action: next === current.status ? 'edit' : `status:${next}`, fromStatus: current.status, toStatus: next, version: current.version + 1, ...(note ? { note: String(note).slice(0, 300) } : {}) });
     });
   }
@@ -106,7 +100,7 @@ export function createDraftActions({ db, fs, writer, actorUid }) {
           const live = snap.data();
           if (live.status === 'published') throw new DraftError('already-published', 'Чарнавік ужо апублікаваны.', { targetPrayerId: live.targetPrayerId });
           if (live.version !== before.version) throw new DraftError('conflict', 'Чарнавік змянілі ў іншай сесіі. Абнавіце старонку.');
-          if (!canTransition(live.status, 'published') || live.status === 'archived') throw new DraftError('transition', 'Чарнавік у архіве. Верніце яго ў працу перад публікацыяй.');
+          if (!canTransition(live.status, 'published')) throw new DraftError('transition', 'Немагчыма апублікаваць гэты чарнавік.');
         },
         write(transaction) {
           transaction.update(draftRef(draftId), { status: 'published', publishedBy: actorUid, publishedAt: serverTimestamp(), targetPrayerId: targetId, version: before.version + 1, updatedAt: serverTimestamp() });

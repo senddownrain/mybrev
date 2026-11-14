@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildPrayerFromDraft, canTransition, findDuplicateCandidates, normalizeTitleKey, publishBlockers, targetPrayerIdFor, validateDraft } from '../src/utils/prayerDraftModel.mjs';
+import { buildPrayerFromDraft, canTransition, draftSourceNotice, findDuplicateCandidates, normalizeTitleKey, publishBlockers, targetPrayerIdFor, validateDraft } from '../src/utils/prayerDraftModel.mjs';
 import { formatSourceNotice } from '../src/utils/prayerSource.mjs';
 
 const draft = { draftId: 'd1', title: ' Літанія ', text: 'Кірые', textFormat: 'mybrev-markdown', status: 'draft', tags: ['Літанія', 'Літанія', ' '], sourceBook: '«Бог Добры»', sourceEdition: '(Пінск, 2022)', printedPageStart: 10, printedPageEnd: 12, pdfPageStart: 12, copyrightNotices: ['© Пінская дыяцэзія, 2022'] };
@@ -16,21 +16,20 @@ test('duplicate candidates: exact first, similar by tokens, none for unrelated',
   assert.equal(findDuplicateCandidates('Літанія да Найсвяцейшага Імя Езус Хрыста', prayers)[0].id, 'a');
   assert.equal(findDuplicateCandidates('Невядомая', prayers).length, 0);
 });
-test('status machine: published is terminal, archived only returns to draft', () => {
-  assert.ok(canTransition('draft', 'published') && canTransition('ready_for_publication', 'archived'));
-  assert.ok(!canTransition('published', 'draft') && !canTransition('archived', 'published') && canTransition('archived', 'draft'));
+test('two-state machine: direct publish, old statuses are treated as drafts', () => {
+  assert.ok(canTransition('draft', 'published') && canTransition('draft', 'draft'));
+  assert.ok(canTransition('needs_review', 'published') && canTransition('archived', 'published'));
+  assert.ok(!canTransition('published', 'draft') && !canTransition('draft', 'archived'));
 });
 test('validation and publish blockers', () => {
   assert.deepEqual(validateDraft(draft), []);
   assert.ok(validateDraft({ ...draft, textFormat: 'html' }).length);
   assert.ok(validateDraft({ ...draft, title: '' }).length);
-  const confirmed = { ...draft, rightsStatus: 'confirmed', rightsBasis: 'Ліст выдавецтва ад 2026-11-14' };
-  assert.deepEqual(publishBlockers(confirmed), []);
-  assert.ok(publishBlockers(draft).some((x) => /лічбавую/.test(x)), 'no explicit rights confirmation blocks publication');
-  assert.ok(publishBlockers({ ...confirmed, rightsBasis: '' }).some((x) => /падставу/.test(x)), 'confirmed without a basis is not a confirmation');
-  assert.ok(publishBlockers({ ...confirmed, rightsBasis: 'так' }).some((x) => /падставу/.test(x)));
-  assert.ok(publishBlockers({ ...draft, tags: [] }).length && publishBlockers({ ...draft, copyrightNotices: [] }).length);
-  assert.ok(publishBlockers({ ...draft, rightsStatus: 'unconfirmed' }).some((x) => /лічбавую/.test(x)));
+  assert.deepEqual(publishBlockers(draft), []);
+  assert.deepEqual(publishBlockers({ ...draft, copyrightNotices: [], rightsStatus: 'unconfirmed', rightsBasis: '' }), []);
+  assert.ok(publishBlockers({ ...draft, tags: [] }).length);
+  assert.ok(publishBlockers({ ...draft, sourceBook: '', source: '' }).length);
+  assert.equal(draftSourceNotice({ ...draft, source: 'Рэдакцыйная крыніца' }), 'Рэдакцыйная крыніца');
 });
 test('published document: reader fields only, deduped tags, book source with rights, no PDF hashes', () => {
   const prayer = buildPrayerFromDraft({ ...draft, sourceSha256: 'abc', notes: 'private', reason: 'ambiguous' });

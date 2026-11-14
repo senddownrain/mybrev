@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Two-state prayer draft and canonical import regressions
+        run: node --test tests/prayer-draft-model.test.mjs tests/prayer-import-plan.test.mjs tests/prayer-import-bog.test.mjs tests/prayer-import-editorial.test.mjs
+
       - name: Administrator-only Songbook regression tests
         run: node --test tests/admin-access.test.mjs
 
@@ -110,3 +113,23 @@ jobs:
         run: |
           npm run audit:doxologies -- --check
           npm run test:doxologies
+
+  draft-publication-emulator:
+    name: Draft publication Firestore emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci
+      - name: Admin roles, two statuses, source and import integration
+        run: >
+          npx --yes firebase-tools@latest emulators:exec --only firestore --project demo-rules
+          "node --test --test-concurrency=1 tests/prayer-drafts-firestore.test.mjs tests/prayer-import-apply.test.mjs tests/prayer-import-drafts-compat.test.mjs"

@@ -11,7 +11,10 @@ export function replacementDocument(old, payload) {
   return merged;
 }
 export const newDocument = (payload) => ({ ...payload.data, priestOnly: false });
-export function draftDocument(payload, { rightsStatus, createdBy, rightsBasis = '', rightsConfirmedBy = '' }) {
-  const confirmed = rightsStatus === 'confirmed' ? { rightsBasis, rightsConfirmedBy } : {};
-  return { ...payload.data, rightsStatus, ...confirmed, version: 1, createdBy, status: payload.data.status || 'needs_review' };
+export function draftDocument(payload, { createdBy }) {
+  // Old pre-approved plans may still contain editorial rights and review fields.
+  // Never require or copy them into new draft records.
+  const data = { ...payload.data };
+  for (const key of ['rightsStatus', 'rightsBasis', 'rightsConfirmedBy', 'rightsConfirmedAt', 'reviewedBy', 'reviewedAt']) delete data[key];
+  return { ...data, version: 1, createdBy, status: 'draft' };
 }
