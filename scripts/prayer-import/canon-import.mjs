@@ -14,6 +14,7 @@ import { planCanonical, CANON_BATCH } from './lib/plan-canon.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const sources = JSON.parse(readFileSync(path.join(here, 'sources.json'), 'utf8'));
+const editorial = JSON.parse(readFileSync(path.join(here, 'editorial-decisions.json'), 'utf8'));
 
 export function parseArgs(argv) {
   const options = { snapshots: [], out: null };
@@ -87,7 +88,7 @@ async function main() {
   mkdirSync(workspace, { recursive: true });
   const corpus = loadOfficialCorpus(openCorpusRoot(path.resolve(options.official), workspace, 'official'));
   const snapshot = await loadPrayerSnapshot(options.snapshots.map((d) => path.resolve(d)));
-  const result = planCanonical({ corpus, sources, oldPrayers: snapshot.prayers, categories: snapshot.categories });
+  const result = planCanonical({ corpus, sources, oldPrayers: snapshot.prayers, categories: snapshot.categories, editorial });
   const meta = { generatedAt: new Date().toISOString(), snapshot: snapshot.info, missingCollections: snapshot.missingCollections };
   const planSha256 = writeReports(out, result, meta);
   writeFileSync(path.join(out, 'migration_qa.md'), qaMarkdown(result, meta, planSha256));

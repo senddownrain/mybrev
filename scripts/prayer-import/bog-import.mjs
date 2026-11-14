@@ -13,6 +13,7 @@ import { BOG_BATCH, BOG_SOURCE_ID, planBogDobry } from './lib/plan-bog.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const sources = JSON.parse(readFileSync(path.join(here, 'sources.json'), 'utf8'));
+const editorial = JSON.parse(readFileSync(path.join(here, 'editorial-decisions.json'), 'utf8'));
 const BOG_PDF_SHA256 = '898151275d4dba9202541f993d629ef1b047ff38ee8ec5242d82fc44893a98d1'; // schemas/INPUT_MANIFEST.json
 
 export function writeBogReports(out, result, meta) {
@@ -68,7 +69,7 @@ async function main() {
   const official = loadOfficialCorpus(openCorpusRoot(path.resolve(options.official), workspace, 'official'));
   const bog = loadBogCorpus(openCorpusRoot(path.resolve(options.bog), workspace, 'bog'));
   const snapshot = await loadPrayerSnapshot(options.snapshots.map((d) => path.resolve(d)));
-  const canonical = planCanonical({ corpus: official, sources, oldPrayers: snapshot.prayers, categories: snapshot.categories });
+  const canonical = planCanonical({ corpus: official, sources, oldPrayers: snapshot.prayers, categories: snapshot.categories, editorial });
   const result = planBogDobry({ corpus: bog, sources, canonical, oldPrayers: snapshot.prayers, drafts: [], categories: snapshot.categories, sourceSha256: BOG_PDF_SHA256 });
   const meta = { generatedAt: new Date().toISOString(), snapshot: snapshot.info, canonicalCount: Object.keys(canonical.payloads).length, liveCount: snapshot.prayers.length, draftCount: 0 };
   const planSha256 = writeBogReports(out, result, meta);

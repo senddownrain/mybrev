@@ -15,7 +15,12 @@ const RITE_HINTS = { rite_baptism: /хрост|хрышчэн/, rite_penance: /�
 /**
  * @param {{ corpus: {index, readEntry, sourceHashes}, sources: object, oldPrayers: Array, categories: Array }} input
  */
-export function planCanonical({ corpus, sources, oldPrayers, categories = [] }) {
+/**
+ * `editorial` carries the owner's final decisions (scripts/prayer-import/editorial-decisions.json):
+ *  - titleOverrides: { sourceEntryId: finalTitle } (same-titled different prayers keep distinct titles);
+ *  - duplicateOf: { sourceEntryId: { keep: sourceEntryId, reason } } (identical text, same addressee, printed twice).
+ */
+export function planCanonical({ corpus, sources, oldPrayers, categories = [], editorial = {} }) {
   const universe = buildTagUniverse(oldPrayers, categories);
   const operations = []; const payloads = {}; const tagRows = []; const proposedTags = new Map(); const duplicateRows = []; const coverage = new Map();
   const qa = { mixedRedBlocks: 0, unresolvedLinks: 0, resolvedLinks: 0, latinFixes: 0, emptyTexts: 0, withoutTags: [], titleChanged: 0 };
@@ -51,20 +56,34 @@ export function planCanonical({ corpus, sources, oldPrayers, categories = [] }) 
     const group = groupOf.get(item.meta.entryId);
     if (group) { item.printedTitle = item.title; item.title = `${item.title} (${group})`; }
   }
+  const titleOverrides = editorial.titleOverrides || {}; const duplicateOf = editorial.duplicateOf || {};
+  for (const [entryId, item] of planned) {
+    if (item.title && titleOverrides[entryId] && titleOverrides[entryId] !== item.title) { item.printedTitle = item.printedTitle || item.title; item.title = titleOverrides[entryId]; }
+    if (duplicateOf[entryId] && item.decision.decision !== 'PRESERVE_STRUCTURE') {
+      if (!planned.has(duplicateOf[entryId].keep)) throw new Error(`editorial duplicateOf: kept entry not found: ${duplicateOf[entryId].keep}`);
+      item.decision = { decision: 'SKIP_DUPLICATE', reason: duplicateOf[entryId].reason || 'identical text printed twice', keep: duplicateOf[entryId].keep };
+    }
+  }
   const targetOf = new Map();
   for (const [entryId, item] of planned) {
     const d = item.decision.decision;
     if (d === 'CREATE') targetOf.set(entryId, canonId(entryId));
     if (d === 'REPLACE_KEEP_ID') targetOf.set(entryId, item.decision.targetId);
   }
+  // Links to an entry that is only a printed duplicate point at the kept prayer.
+  for (const [entryId, item] of planned) if (item.decision.decision === 'SKIP_DUPLICATE' && targetOf.get(item.decision.keep)) targetOf.set(entryId, targetOf.get(item.decision.keep));
 
   for (const [entryId, item] of planned) {
     const { meta, entry, decision } = item;
     const rights = rightsOf(meta.sourceId);
     const row = coverage.get(meta.sourceId) || { sourceId: meta.sourceId, book: rights.book, entries: 0, CREATE: 0, REPLACE_KEEP_ID: 0, REVIEW_AMBIGUOUS: 0, PRESERVE_STRUCTURE: 0 };
-    row.entries += 1; row[decision.decision] += 1; coverage.set(meta.sourceId, row);
+    row.entries += 1; row[decision.decision] = (row[decision.decision] || 0) + 1; coverage.set(meta.sourceId, row);
     const pages = pageSpanLabel(meta.printedPageStart, meta.printedPageEnd);
     const base = { sourceId: meta.sourceId, sourceEntryId: entryId, kind: meta.kind, parserStatus: meta.status, pdfPageStart: meta.pdfPageStart, pdfPageEnd: meta.pdfPageEnd, printedPageStart: meta.printedPageStart, printedPageEnd: meta.printedPageEnd };
+    if (decision.decision === 'SKIP_DUPLICATE') {
+      operations.push({ ...base, action: 'SKIP_DUPLICATE', title: item.title, rationale: decision.reason, keepEntryId: decision.keep });
+      continue;
+    }
     if (decision.decision === 'PRESERVE_STRUCTURE') {
       operations.push({ ...base, action: 'PRESERVE_STRUCTURE', title: entry.title, rationale: decision.reason, members: meta.members || [] });
       continue;
@@ -87,6 +106,10 @@ export function planCanonical({ corpus, sources, oldPrayers, categories = [] }) 
       const priestOnly = old?.priestOnly === true;
       const action = decision.decision;
       if (action === 'REPLACE_KEEP_ID' && old && oldTitle(old) !== item.title) qa.titleChanged += 1;
+      const approved = editorial.approvedTitleChanges;
+      if (approved && action === 'REPLACE_KEEP_ID' && old && oldTitle(old).trim() !== item.title.trim() && approved[old.id] !== item.title) {
+        throw new Error(`Unapproved title change for ${old.id}: «${oldTitle(old).trim()}» -> «${item.title}». Add it to editorial-decisions.json after the owner approves it.`);
+      }
       const doc = { title: item.title, text: finalMarkdown, textFormat: 'mybrev-markdown', textFormatVersion: 1, tags, source: sourceNotice, copyrightNotices: rights.copyrightNotices, priestOnly, sourceId: meta.sourceId, sourceEntryId: entryId };
       payloads[id] = { collection: 'prayers', id, data: doc, preserve: action === 'REPLACE_KEEP_ID' ? ['createdAt', 'verified', 'priestOnly', 'effectivePriestOnly', 'titleVersions', 'textVersions'] : [] };
       operations.push({ ...common, action, targetCollection: 'prayers', targetId: id, oldIds: old ? [old.id] : [], oldTitle: old ? oldTitle(old) : null, oldFingerprint: old ? fingerprintOf(old) : null, rationale: decision.reason, confidence: decision.confidence, evidence: decision.candidates, tagTrace: trace.map((t) => `${t.tag}←${t.via}`) });
