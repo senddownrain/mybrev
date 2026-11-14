@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "policy": "Exact K. first and second verses must match; existing N. fragments must be prefixes of attested full replies. No cross-season/gender/formula expansion.",
+  "records": [
+    {
+      "id": "2026-11-12-laudesR",
+      "url": "https://lh.catholic.by/showalldates/index.php",
+      "request": {
+        "method": "POST",
+        "DateSelector": "12.11.2026"
+      },
+      "sourceDate": "2026-11-12",
+      "sourceTitle": "СВ. ЯЗАФАТА, БІСКУПА І МУЧАНІКА",
+      "sourceField": "laudesR",
+      "pageSha256": "8f2b1f899644e270255812012cadc66b45287ae6f1ec458ed1d5abb13f9ad358",
+      "lines": [
+        "К. Моц мая * і мая хвала – Пан.",
+        "Н. Моц мая * і мая хвала – Пан.",
+        "К. Ён маё збаўленне.",
+        "Н. І мая хвала – Пан.",
+        "К. Хвала Айцу і Сыну, і Духу Святому.",
+        "Н. Моц мая * і мая хвала – Пан."
+      ]
+    },
+    {
+      "id": "2026-11-12-vesper1R",
+      "url": "https://lh.catholic.by/showalldates/index.php",
+      "request": {
+        "method": "POST",
+        "DateSelector": "12.11.2026"
+      },
+      "sourceDate": "2026-11-12",
+      "sourceTitle": "СВ. ЯЗАФАТА, БІСКУПА І МУЧАНІКА",
+      "sourceField": "vesper1R",
+      "pageSha256": "8f2b1f899644e270255812012cadc66b45287ae6f1ec458ed1d5abb13f9ad358",
+      "limitation": "The viewer labels the evening as a foreign first-Vespers identity. This attests only the exact responsory verses, never calendar rights, readings or the evening identity.",
+      "lines": [
+        "К. Божа, Ты выпрабаваў нас * і вывеў нас на свабоду.",
+        "Н. Божа, Ты выпрабаваў нас * і вывеў нас на свабоду.",
+        "К. Ты выпрабаваў нас агнём, як выпрабоўваюць срэбра.",
+        "Н. І вывеў нас на свабоду.",
+        "К. Хвала Айцу і Сыну, і Духу Святому.",
+        "Н. Божа, Ты выпрабаваў нас * і вывеў нас на свабоду."
+      ]
+    },
+    {
+      "id": "2026-02-14-laudesR",
+      "url": "https://lh.catholic.by/showalldates/index.php",
+      "request": {
+        "method": "POST",
+        "DateSelector": "14.2.2026"
+      },
+      "sourceDate": "2026-02-14",
+      "sourceTitle": "СВ. КІРЫЛА, МНІХА, І МЯТОДА, БІСКУПА, АПЕКУНОЎ ЕЎРОПЫ",
+      "sourceField": "laudesR",
+      "pageSha256": "ef32094b2ae4016b7ee32d6fc228eed91261308d908d9c3196ca434345734679",
+      "lines": [
+        "К. Над табой, Ерузалем, * Я паставіў вартаўнікоў.",
+        "Н. Над табой, Ерузалем, * Я паставіў вартаўнікоў.",
+        "К. Удзень і ўначы будуць абвяшчаць імя Пана.",
+        "Н. Я паставіў вартаўнікоў.",
+        "К. Хвала Айцу і Сыну, і Духу Святому.",
+        "Н. Над табой, Ерузалем, * Я паставіў вартаўнікоў."
+      ]
+    }
+  ]
+}

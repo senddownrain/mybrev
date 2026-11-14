@@ -56,11 +56,6 @@ defineProps({
   font-style: italic;
 }
 
-.ora-text :deep(.intercessions__response::first-letter) {
-  color: var(--rubric-color);
-  font-weight: 800;
-}
-
 .ora-text :deep(.intercessions__marker) {
   color: var(--rubric-color);
   font-weight: 800;

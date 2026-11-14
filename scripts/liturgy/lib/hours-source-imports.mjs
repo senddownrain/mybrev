@@ -8,6 +8,7 @@
  * a source (`extractPageFields` keeps it apart).
  */
 import fs from 'node:fs';
+import { normalizeReadingHtml } from '../../../src/utils/liturgicalSourceHtml.js';
 import path from 'node:path';
 import { extractPageFields, parseLhPage, plain } from './lh-catholic-by.mjs';
 import { OFFICE_CONTENT_FIELDS, TE_DEUM_FIELD } from '../../../src/constants/officeFields.js';
@@ -81,7 +82,7 @@ export function planProperImports(root = process.cwd()) {
     item.files.forEach((file) => {
       const doc = JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
       Object.entries(map).forEach(([target, from]) => {
-        const value = fields[from];
+        const value = /R[12]?$|Vers$/u.test(target) ? normalizeReadingHtml(fields[from]) : fields[from];
         if (!value) throw new Error(`${item.page}: no ${from}`);
         if (doc[target] === value) return;
         changes.push({ file, field: target, value, from: doc[target] ?? null, textChanged: !same(doc[target], value), task: item.task, page: item.page });

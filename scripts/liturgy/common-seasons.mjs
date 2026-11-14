@@ -14,6 +14,7 @@
  * After --write regenerate the templates: `npm run generate:fixed-feasts`.
  */
 import fs from 'node:fs';
+import { repairCommonDocument, sourceResponseEvidence, sha256 } from './lib/common-text-audit.mjs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
@@ -90,6 +91,22 @@ export function generate() {
     if (Object.keys(fields).length) mainSections.set(commonId, fields);
     mainSectionReport.push(...report);
   });
+  // Persist the same source-safe HTML contract in regenerated seasonal and
+  // Marian main sections; otherwise the next parser run restores duplicates.
+  const responseEvidence = sourceResponseEvidence(ROOT);
+  documents.forEach((seasons, commonId) => {
+    const normalized = Object.fromEntries(Object.entries(seasons).map(([season, values]) => {
+      const effective = repairCommonDocument({ ...corpus.base.get(commonId), ...values }, responseEvidence).after;
+      return [season, Object.fromEntries(Object.keys(values).map(field => [field, effective[field]]))];
+    }));
+    documents.set(commonId, normalized);
+    for (const [season, values] of Object.entries(normalized)) {
+      for (const [field, html] of Object.entries(values)) {
+        provenance[commonId][season][field].sha256 = sha256(JSON.stringify(html));
+      }
+    }
+  });
+  mainSections.forEach((fields, id) => mainSections.set(id, repairCommonDocument(fields, responseEvidence).after));
   analysis.mainSectionReport = mainSectionReport;
   return { corpus, analysis, documents, provenance, mainSections };
 }

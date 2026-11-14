@@ -56,7 +56,7 @@ test('uses the highest-priority tomorrow option that has first Vespers', () => {
   assert.equal(result.day.vesperAnt1, '<p>Першая антыфона</p>');
 });
 
-test('never takes first Vespers from a memorial', () => {
+test('never takes first Vespers from a memorial or a saint feast', () => {
   const content = {
     dayOptions: [
       {
@@ -70,11 +70,10 @@ test('never takes first Vespers from a memorial', () => {
     ],
   };
   const options = getTomorrowFirstVespersOptions(content);
-  assert.deepEqual(options.map((item) => item.sourceDayId), ['feast']);
-  assert.equal(options[0].day.vesperHymn, '<p>Браць</p>');
-  assert.equal(isLocalFirstVespers(options[0]), true);
+  assert.deepEqual(options, []);
+  assert.equal(isLocalFirstVespers({ places: ['grodno'] }), true);
   assert.equal(hasFirstVespersRank(content.dayOptions[0].day), false);
-  assert.equal(hasFirstVespersRank(content.dayOptions[1].day), true);
+  assert.equal(hasFirstVespersRank(content.dayOptions[1].day), false);
 });
 
 test('office for the dead retains its own Vespers', () => {
@@ -145,7 +144,7 @@ test('Sunday I Vespers preserve explicit first-Vespers Propers and never borrow 
 
 test('non-Sunday celebrations preserve their existing first Vespers fallback', () => {
   const current = { id: 'sat', _ordo: { vespers: { type: 'first', celebrationId: 'saint-solemnity' } } };
-  const tomorrow = { dayOptions: [{ title: 'Saint solemnity', day: { id: 'saint', vesperHymn: 'solemnity own hymn' }, ordo: { role: 'primary' } }] };
+  const tomorrow = { dayOptions: [{ title: 'Saint solemnity', day: { id: 'saint', vesperHymn: 'solemnity own hymn' }, ordo: { role: 'primary', optionId: 'saint-solemnity' } }] };
   const evening = eveningVespersModel(current, tomorrow, {
     isoWeekday: 6, periodDay: { vesperHymn: 'Saturday psalter hymn' },
   });

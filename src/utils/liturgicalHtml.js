@@ -1,3 +1,5 @@
+import { removeMatchingPsalmAntiphons } from './liturgicalSourceHtml.js';
+
 /**
  * Cadence signs mark pauses inside a psalm verse. Source texts often contain
  * a legacy <br> immediately after them; in the reading layout the text should
@@ -17,7 +19,6 @@ const ASTERISK_PATTERN = /(?:\*|&#0*42;|&ast;)/iu;
 const PSALM_MARKER_PATTERN = /(?:\*|&#0*42;|&ast;|†|&#0*8224;|&#x0*2020;|&dagger;)/giu;
 const PARAGRAPH_PATTERN = /<p\b([^>]*)>([\s\S]*?)<\/p>/giu;
 const BREAK_PATTERN = /(<br\s*\/?>)/giu;
-const TRAILING_ANTIPHON_PATTERN = /<p\b[^>]*>(?=(?:\s|&nbsp;|<[^>]+>)*(?:\d+\s*)?Ант\.)[\s\S]*?<\/p>\s*$/iu;
 
 /**
  * Highlight the psalmody cadence signs without changing the source text.
@@ -222,13 +223,11 @@ function splitPsalmParagraph(attributes, content) {
  * repeated antiphon to the psalm itself. Psalmody renders antiphons from their
  * dedicated fields, so the embedded copy must not be displayed a second time.
  */
-export function formatPsalmHtml(html, { stripEmbeddedAntiphon = false } = {}) {
+export function formatPsalmHtml(html, { stripEmbeddedAntiphon = false, antiphon = '' } = {}) {
   let formatted = String(html || '');
 
   if (stripEmbeddedAntiphon) {
-    while (TRAILING_ANTIPHON_PATTERN.test(formatted)) {
-      formatted = formatted.replace(TRAILING_ANTIPHON_PATTERN, '');
-    }
+    formatted = removeMatchingPsalmAntiphons(formatted, antiphon);
   }
 
   const withStrophes = markPsalmCadenceSigns(removeBreakAfterPsalmCadenceSign(formatted)).replace(

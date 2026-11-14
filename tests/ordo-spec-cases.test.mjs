@@ -273,8 +273,8 @@ test('23 source calendars vs current MyBrev behaviour', () => {
   const sunday = resolve('2024-12-08');
   assert.equal(sunday.primary.officeKind, 'sunday');
   assert.equal(sunday.suppressed.find((item) => item.id === 'immaculate-conception').transferredTo, '2024-12-09');
-  // (b) Current I Vespers audit treats every `festum` as having I Vespers.
-  assert.equal(hasFirstVespersRank({ _rank: 'festum' }), true);
+  // (b) Legacy fallback now agrees with the liturgical right: saint feasts have no I Vespers.
+  assert.equal(hasFirstVespersRank({ _rank: 'festum' }), false);
   assert.equal(resolve('2026-07-03').officeResolution.firstVespers.byRight, false);
   // (c) Vitebsk 2025/26 prints "27 снежня … прапускаецца свята святых Немаўлят";
   // by the Table it is St John (27.12) that is omitted; the Innocents stay on 28.12.

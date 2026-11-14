@@ -288,7 +288,7 @@ test('nothing printed by Volume I or II is lost: every word is found in the text
   const coverage = volumeWordCoverage({ corpus, variants: analysis.variants, seasons: SEASONS, seasonVolume: SEASON_VOLUME });
   assert.equal(coverage.cells, 1782);
   // D-4: the volume's own wording is the season's text, so far more cells are word for word (1326 → 1512)
-  assert.deepEqual(coverage.buckets, { 0: 1512, '1–5': 248, '6–19': 22, '≥ 20': 0 });
+  assert.deepEqual(coverage.buckets, { 0: 1516, '1–5': 244, '6–19': 22, '≥ 20': 0 });
   const large = coverage.largest.filter((r) => r.notFoundWords >= 20).map((r) => `${r.common}.${r.field}.${r.season}`).sort();
   // D-6 completed martyr-one.vesper1R in the base and D-4/D-1 made the seasons print the volume's text: nothing of 20 words or more is missing
   assert.deepEqual(large, []);
@@ -353,7 +353,8 @@ test('NR-003: Ps 64 (63) of the apostles — psalm body identical, antiphons cor
   assert.equal(ps.psalmWordsDifferent, 0);
   assert.match(plain(baseOf('apostles', 'officeOfReadingsAnt2')), /абвяшчалі справу Бога/);
   const easter = plain(variant('apostles', 'easter', 'officeOfReadingsPs2'));
-  assert.match(easter, /Ант\. Яны абвяшчалі справу Бога \* і зразумелі Яго ўчынкі, \/ аллелюя\.$/);
+  assert.doesNotMatch(easter, /Ант\./u, 'the matching repeat is owned by Ant2');
+  assert.match(easter, /і на векі вечныя\. Амэн\.$/u);
   assert.match(easter, /Яны абвесцяць справу Бога/);
   assert.match(plain(variant('apostles', 'easter', 'officeOfReadingsAnt2')), /2 ант\. Яны абвяшчалі справу Бога \* і зразумелі Яго ўчынкі, \/ аллелюя\./);
   assert.equal(variant('apostles', 'lent', 'officeOfReadingsPs2'), undefined, 'Lent: no variant of this psalm');

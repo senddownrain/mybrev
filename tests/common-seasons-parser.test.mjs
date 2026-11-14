@@ -122,8 +122,9 @@ test('regression hashes of the mandatory church-dedication / blessed-virgin-mary
   const d = documents.get('church-dedication');
   assert.equal(hash(d.lent.vesper1Ant3), 'fb798d8ee91e13a4');
   assert.equal(hash(d.easter.vesper1Ant3), '6d08f86ee3b73c45');
-  assert.equal(hash(d.lent.vesper1Ps3), '9ff533bd153a6b13');
-  assert.equal(hash(d.easter.vesper1Ps3), '38e64ebc53e41542');
+  // Closing repeats now live in Ant3; biblical words and doxology are unchanged.
+  assert.equal(hash(d.lent.vesper1Ps3), '3e90f00c974a1f48');
+  assert.equal(hash(d.easter.vesper1Ps3), 'ffcf5af82f5acf66');
   assert.equal(hash(d.lent.officeOfReadingsR1), '1ddc4dd25056b36c');
   assert.equal(hash(d.easter.officeOfReadingsR1), '33e605ef7d5d8756');
   assert.equal(hash(d.lent.laudesR), '7ba6ba7aad998761');

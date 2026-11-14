@@ -1,0 +1,659 @@
+[
+  {
+    "field": "invitatoriumAnt",
+    "slot": [
+      "invitatory",
+      "antiphon"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "officeOfReadingsHymn",
+    "slot": [
+      "officeOfReadings",
+      "hymn"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "officeOfReadingsAnt1",
+    "slot": [
+      "officeOfReadings",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "officeOfReadingsAnt2",
+    "slot": [
+      "officeOfReadings",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "officeOfReadingsAnt3",
+    "slot": [
+      "officeOfReadings",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "officeOfReadingsPs1",
+    "slot": [
+      "officeOfReadings",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "officeOfReadingsPs2",
+    "slot": [
+      "officeOfReadings",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "officeOfReadingsPs3",
+    "slot": [
+      "officeOfReadings",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "officeOfReadingsVers",
+    "slot": [
+      "officeOfReadings",
+      "versicle"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "officeOfReadingsR1",
+    "slot": [
+      "officeOfReadings",
+      "reading1"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "officeOfReadingsR2",
+    "slot": [
+      "officeOfReadings",
+      "reading2"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "officeOfReadingsTeDeum",
+    "slot": [
+      "officeOfReadings",
+      "teDeum"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "boolean/rule"
+  },
+  {
+    "field": "officeOfReadingsPr",
+    "slot": [
+      "officeOfReadings",
+      "prayer"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "laudesHymn",
+    "slot": [
+      "lauds",
+      "hymn"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "laudesAnt1",
+    "slot": [
+      "lauds",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "laudesAnt2",
+    "slot": [
+      "lauds",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "laudesAnt3",
+    "slot": [
+      "lauds",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "laudesPs1",
+    "slot": [
+      "lauds",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "laudesPs2",
+    "slot": [
+      "lauds",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "laudesPs3",
+    "slot": [
+      "lauds",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "laudesR",
+    "slot": [
+      "lauds",
+      "reading"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "laudesAntBen",
+    "slot": [
+      "lauds",
+      "canticleAntiphon"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "laudesInter",
+    "slot": [
+      "lauds",
+      "intercessions"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "laudesPr",
+    "slot": [
+      "lauds",
+      "prayer"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext1Hymn",
+    "slot": [
+      "daytime",
+      "hymn"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext1Ant1",
+    "slot": [
+      "daytime",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext1Ant2",
+    "slot": [
+      "daytime",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext1Ant3",
+    "slot": [
+      "daytime",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext1Ps1",
+    "slot": [
+      "daytime",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext1Ps2",
+    "slot": [
+      "daytime",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext1Ps3",
+    "slot": [
+      "daytime",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext1R",
+    "slot": [
+      "daytime",
+      "reading"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext1Pr",
+    "slot": [
+      "daytime",
+      "prayer"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext2Hymn",
+    "slot": [
+      "daytime",
+      "hymn"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext2Ant1",
+    "slot": [
+      "daytime",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext2Ant2",
+    "slot": [
+      "daytime",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext2Ant3",
+    "slot": [
+      "daytime",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext2Ps1",
+    "slot": [
+      "daytime",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext2Ps2",
+    "slot": [
+      "daytime",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext2Ps3",
+    "slot": [
+      "daytime",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext2R",
+    "slot": [
+      "daytime",
+      "reading"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext2Pr",
+    "slot": [
+      "daytime",
+      "prayer"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext3Hymn",
+    "slot": [
+      "daytime",
+      "hymn"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext3Ant1",
+    "slot": [
+      "daytime",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext3Ant2",
+    "slot": [
+      "daytime",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext3Ant3",
+    "slot": [
+      "daytime",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext3Ps1",
+    "slot": [
+      "daytime",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext3Ps2",
+    "slot": [
+      "daytime",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext3Ps3",
+    "slot": [
+      "daytime",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext3R",
+    "slot": [
+      "daytime",
+      "reading"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "sext3Pr",
+    "slot": [
+      "daytime",
+      "prayer"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesperHymn",
+    "slot": [
+      "vespers",
+      "hymn"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesperAnt1",
+    "slot": [
+      "vespers",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesperAnt2",
+    "slot": [
+      "vespers",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesperAnt3",
+    "slot": [
+      "vespers",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesperPs1",
+    "slot": [
+      "vespers",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesperPs2",
+    "slot": [
+      "vespers",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesperPs3",
+    "slot": [
+      "vespers",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesperR",
+    "slot": [
+      "vespers",
+      "reading"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesperAntMag",
+    "slot": [
+      "vespers",
+      "canticleAntiphon"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesperInter",
+    "slot": [
+      "vespers",
+      "intercessions"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesperPr",
+    "slot": [
+      "vespers",
+      "prayer"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesper1Hymn",
+    "slot": [
+      "vespers",
+      "hymn"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesper1Ant1",
+    "slot": [
+      "vespers",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesper1Ant2",
+    "slot": [
+      "vespers",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesper1Ant3",
+    "slot": [
+      "vespers",
+      "antiphons"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesper1Ps1",
+    "slot": [
+      "vespers",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesper1Ps2",
+    "slot": [
+      "vespers",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesper1Ps3",
+    "slot": [
+      "vespers",
+      "psalmody"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesper1R",
+    "slot": [
+      "vespers",
+      "reading"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesper1AntMag",
+    "slot": [
+      "vespers",
+      "canticleAntiphon"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesper1Inter",
+    "slot": [
+      "vespers",
+      "intercessions"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  },
+  {
+    "field": "vesper1Pr",
+    "slot": [
+      "vespers",
+      "prayer"
+    ],
+    "storage": "flat or _mainSection or _seasonalVariants.<season>; rule at corresponding _fieldRules",
+    "type": "HTML, alternatives, reference or structured rule"
+  }
+]

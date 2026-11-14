@@ -1,0 +1,80 @@
+{
+  "baseline": "5f36981",
+  "full": {
+    "command": "npm test",
+    "tests": 1257,
+    "passed": 1236,
+    "failed": 2,
+    "skipped": 19
+  },
+  "baselineFull": {
+    "tests": 1240,
+    "passed": 1219,
+    "failed": 2,
+    "skipped": 19
+  },
+  "knownBaselineFailures": [
+    "tests/ordo-layers.test.mjs: obsolete spelling Куаўхтлатаацына; current approved spelling Куаўтлатаацына",
+    "tests/sources.test.mjs: About/Sources page footer assertion"
+  ],
+  "targeted": {
+    "command": "node --test tests/common-seasons-*.test.mjs tests/liturgical-common-texts.test.mjs tests/office-for-dead-content.test.mjs tests/psalmody-doxology.test.mjs",
+    "passed": 157,
+    "failed": 0
+  },
+  "latestCommon": {
+    "command": "npm run test:common-texts",
+    "passed": 18,
+    "failed": 0
+  },
+  "build": {
+    "command": "npm run build",
+    "passed": true,
+    "configuration": "compile-only demo Firebase config; no network/deploy"
+  },
+  "web": {
+    "fullStates": 72,
+    "attestedResponseStates": 9,
+    "widths": [
+      390,
+      1280
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "fontScale": [
+      1,
+      1.5
+    ],
+    "externalBrowserRequests": "aborted"
+  },
+  "flutter": {
+    "executed": false,
+    "reason": "Explicit Web-only scope; repository and application bundle untouched."
+  },
+  "snapshot": {
+    "method": "public REST GET, owner-authorized",
+    "serviceAccountEnvironmentVariable": "FIREBASE_SERVICE_ACCOUNT_B64 absent; no secret value printed"
+  },
+  "scripts": {
+    "npm run test:doxologies": {
+      "tests": 19,
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0
+    },
+    "npm run test:alternatives": {
+      "tests": 21,
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0
+    },
+    "npm run test:ordo": {
+      "tests": 227,
+      "passed": 218,
+      "failed": 1,
+      "skipped": 8
+    }
+  }
+}

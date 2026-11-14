@@ -61,6 +61,7 @@ const ant2Option = ref(0);
 const ant3Option = ref(0);
 const formatPsalm = (psalm, antiphon) => formatPsalmHtml(psalm, {
   stripEmbeddedAntiphon: Boolean(antiphon),
+  antiphon,
 });
 </script>
 

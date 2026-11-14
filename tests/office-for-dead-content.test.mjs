@@ -40,10 +40,10 @@ test('every office prayer exposes five selectable alternatives', () => {
 });
 
 test('Lauds short reading uses the standard rubric and responsory formatting', () => {
-  assert.match(source.laudesR, /<span style="color: #ff0000;">Кароткае чытанне 1 Тэс 4, 14<\/span>/u);
-  assert.match(source.laudesR, /<span style="color: #ff0000;">Кароткі рэспансорый<\/span>/u);
-  assert.equal((source.laudesR.match(/<span style="color: #ff0000;">К\. <\/span>/g) || []).length, 3);
-  assert.equal((source.laudesR.match(/<span style="color: #ff0000;">Н\. <\/span>/g) || []).length, 3);
+  assert.match(source.laudesR, /<span style="color: #ff0000;">КАРОТКАЕ ЧЫТАННЕ 1 Тэс 4, 14<\/span>/u);
+  assert.match(source.laudesR, /<span style="color: #ff0000;">КАРОТКІ РЭСПАНСОРЫЙ<\/span>/u);
+  assert.equal((source.laudesR.match(/<span style="color: #ff0000;">К\.\s*<\/span>/g) || []).length, 3);
+  assert.equal((source.laudesR.match(/<span style="color: #ff0000;">Н\.\s*<\/span>/g) || []).length, 3);
 });
 
 test('Lauds and Vespers intercessions use the standard response and petition layout', () => {
@@ -55,11 +55,11 @@ test('Lauds and Vespers intercessions use the standard response and petition lay
 
 test('all office readings and responsories use rubrics and expose alternatives', () => {
   for (const field of ['laudesR', 'sext1R', 'sext2R', 'sext3R', 'vesperR']) {
-    assert.match(source[field], /<span style="color: #ff0000;">Кароткае чытанне/u, field);
+    assert.match(source[field], /<span style="color: #ff0000;">КАРОТКАЕ ЧЫТАННЕ/u, field);
   }
   for (const field of ['sext1R', 'sext2R', 'sext3R']) {
-    assert.match(source[field], /<span style="color: #ff0000;">К\. <\/span>/u, field);
-    assert.match(source[field], /<span style="color: #ff0000;">Н\. <\/span>/u, field);
+    assert.match(source[field], /<span style="color: #ff0000;">К\.\s*<\/span>/u, field);
+    assert.match(source[field], /<span style="color: #ff0000;">Н\.\s*<\/span>/u, field);
   }
   assert.equal((source.sext1R.match(/data-alternative-title=/g) || []).length, 2);
   assert.equal((source.vesperR.match(/data-alternative-title=/g) || []).length, 2);

@@ -11,6 +11,8 @@
  *   D  the stored text has an Alleluia built in, the Lent volume prints none
  */
 import fs from 'node:fs';
+import { expandAttestedResponsories } from '../../lib/attested-responsories.mjs';
+import { normalizeReadingHtml } from '../../../../src/utils/liturgicalSourceHtml.js';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { VOLUMES, normalizeForCompare, readVolume } from './volume.mjs';
@@ -73,7 +75,23 @@ export function loadCorpus({ sourcesDir, commonDir }) {
   const base = new Map();
   manifest.sections.forEach((section) => {
     const id = section.file.replace(/\.json$/, '');
-    base.set(id, JSON.parse(fs.readFileSync(path.join(commonDir, section.file), 'utf8')));
+    const doc = JSON.parse(fs.readFileSync(path.join(commonDir, section.file), 'utf8'));
+    for (const field of OFFICE_CONTENT_FIELDS) {
+      let baseValue = doc[field];
+    // The book prints a repeated antiphon inside each psalm unit. Canonical
+    // storage keeps it in AntN. Supply that comparison context in memory;
+    // final generation removes an exact duplicate against effective AntN.
+    if (/Ps[123]$/u.test(field) && typeof baseValue === 'string'
+      && !/<hr|data-alternative/iu.test(baseValue)
+      && !splitBlocks(baseValue).some(block => /^(?:[123]\s*)?Ант\./iu.test(htmlToPlain(block).trim()))) {
+      const ant = doc[field.replace(/Ps([123])$/u, 'Ant$1')];
+      if (typeof ant === 'string' && splitBlocks(ant).length === 1) {
+        baseValue += '\n' + paragraph(escapeHtml(htmlToPlain(ant).trim().replace(/^[123]\s+ант\./iu, 'Ант.')));
+      }
+    }
+      if (baseValue !== undefined) doc[field] = baseValue;
+    }
+    base.set(id, doc);
   });
   return { volumes, manifest, base };
 }
@@ -150,7 +168,7 @@ function stepExplicit({ units, season, base, ctx }) {
     const onlyResponsory = active.length === 1 && unit.branches.length && unit.branches.every((b) => b.lines.every((l) => /^(К\.|Н\.)\s/u.test(l.text)));
     if (onlyResponsory && base) {
       const blocks = base.blocks;
-      const headingIndex = blocks.findIndex((b) => /Кароткі\s+рэспансорый/u.test(htmlToPlain(b.html)));
+      const headingIndex = blocks.findIndex((b) => /Кароткі\s+рэспансорый/iu.test(htmlToPlain(b.html)));
       if (headingIndex < 0) return { fail: 'stored short reading has no «Кароткі рэспансорый» block' };
       const branch = unit.branches.find((b) => b.season === season);
       const respLines = lines.filter((l) => branch.lines.some((bl) => bl.n === l.n));
@@ -180,9 +198,11 @@ function stepExplicit({ units, season, base, ctx }) {
     const antIndex = storedBlocks.map((b, i) => [b, i]).filter(([b]) => /^Ант\./u.test(htmlToPlain(b.html).trim())).map(([, i]) => i).pop();
     const bodyPlain = normalizeForCompare(body.map((l) => l.text).join(' '));
     const storedBody = normalizeForCompare(withoutDoxology(storedBlocks.filter((b, i) => i !== antIndex).map((b) => b.html).join('\n')));
-    if (antIndex !== undefined && repeats.length === 1 && similarity(bodyPlain, storedBody) >= 0.95) {
+    if (repeats.length === 1 && similarity(bodyPlain, storedBody) >= 0.95) {
       const out = [...storedBlocks];
-      out[antIndex] = { html: renderAntiphonParagraph(repeats[0].text), elem: storedBlocks[antIndex].elem };
+      const repeat = { html: renderAntiphonParagraph(repeats[0].text), elem: storedBlocks[antIndex]?.elem || 0 };
+      if (antIndex === undefined) out.push(repeat);
+      else out[antIndex] = repeat;
       return { blocks: out, method: 'carrier+repeat', kind };
     }
   }
@@ -211,12 +231,14 @@ function stepRepeats({ units, season, state, ctx }) {
   if (!labelled.length) return false;
   if (!state.base) { ctx.problems.push({ reason: 'no stored psalm to carry the seasonal antiphon' }); return false; }
   const antIndex = [...state.base.blocks].map((b, i) => [b, i]).filter(([b]) => /^Ант\./u.test(htmlToPlain(b.html).trim())).map(([, i]) => i).pop();
-  if (antIndex === undefined) { ctx.problems.push({ reason: 'stored psalm has no closing «Ант.» block' }); return false; }
+  // Canonical psalms need no embedded repeat when a dedicated antiphon exists.
+  // Keep the parser's comparison copy until the final source-safe cleanup.
+  const targetIndex = antIndex ?? state.base.blocks.length;
   const text = fixSourceTypos(labelled[0].text.replace(/^Ант\.\s+у\s+(?:Вялікі пост|Велікодны перыяд)\s*:/u, 'Ант.'));
   const resolved = hasAnnotation(text) ? (season === 'easter' ? addAlleluiaToText(text) : { ok: true, text: stripAnnotationText(text) }) : { ok: true, text };
   if (!resolved.ok) { ctx.problems.push({ reason: resolved.reason, text: text.slice(0, 90) }); return false; }
   if (hasAnnotation(text) && season === 'easter') ctx.alleluia.push({ line: labelled[0].n, rule: resolved.rule, before: stripAnnotationText(text), after: resolved.text });
-  state.base.blocks[antIndex] = { html: renderAntiphonParagraph(resolved.text), elem: state.base.blocks[antIndex].elem };
+  state.base.blocks[targetIndex] = { html: renderAntiphonParagraph(resolved.text), elem: state.base.blocks[antIndex]?.elem || 0 };
   state.methods.add('carrier+repeat');
   return true;
 }
@@ -396,7 +418,8 @@ export function analyzeCorpus(corpus) {
             const target = sentence ? state.base.blocks.findIndex((b) => REFERENCE_SENTENCE.test(htmlToPlain(b.html).replace(/\s+/g, ' ').trim())) : -1;
             if (target >= 0) {
               state.base.blocks[target] = { html: paragraph(escapeHtml(sentence), 'justify'), elem: state.base.blocks[target].elem };
-              const finalValue = fromBlocks(state.base);
+              const rawValue = fromBlocks(state.base);
+              const finalValue = /R[12]?$|Vers$/u.test(field) && typeof rawValue === 'string' ? expandAttestedResponsories(normalizeReadingHtml(rawValue)).value : rawValue;
               cell.category = 'seasonal_reference_set'; cell.status = 'variant'; cell.relation = 'differs'; cell.kind = 'reading2';
               cell.resolution = 'reference-set-of-variants'; cell.method = 'reference-set'; cell.rules = [];
               cell.note = 'the volume prints only the cross-reference; the season shows the volume\'s own sentence of it together with the further legal reading that Volume III prints («Або іншае»), nothing else is added';
