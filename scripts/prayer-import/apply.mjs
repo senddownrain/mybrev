@@ -18,7 +18,8 @@ export const isEmulator = () => /^(localhost|127\.0\.0\.1):\d+$/.test(process.en
 
 export function loadApprovedPlan(planDir, approvedSha) {
   const plan = JSON.parse(readFileSync(path.join(planDir, 'planned_operations.json'), 'utf8'));
-  const recomputed = sha256(stableJson(plan.operations.map(({ evidence: _evidence, ...op }) => op)));
+  // Same field set the planners exclude from the hash: `evidence` (both) and `matches` (the Bog Dobry plan).
+  const recomputed = sha256(stableJson(plan.operations.map(({ evidence: _evidence, matches: _matches, ...op }) => op)));
   if (recomputed !== plan.planSha256) throw new Error('Plan file was modified after the dry-run (hash mismatch).');
   if (approvedSha !== plan.planSha256) throw new Error('Apply refused: --approve-sha does not match the dry-run planSha256.');
   const payloads = {};
@@ -37,6 +38,7 @@ export function selectOperations(plan, rights, onlySources) {
   for (const op of plan.operations) {
     if (!op.targetId) continue;
     if (onlySources && !onlySources.includes(op.sourceId)) { skipped.push({ op, why: 'source not selected' }); continue; }
+    if (plan.draftsOnly && op.targetCollection !== 'prayerDrafts') { skipped.push({ op, why: 'drafts-only plan' }); continue; }
     if (op.targetCollection === 'prayers' && !rights?.[op.sourceId]?.confirmedBy) { skipped.push({ op, why: 'digital publication rights not confirmed for this source' }); continue; }
     run.push(op);
   }

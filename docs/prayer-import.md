@@ -46,3 +46,23 @@ node scripts/prayer-import/canon-import.mjs plan --official <Official_8_PDF_Clau
 - `allowedNewTags`: `Вяночак`; `holdAsDrafts`: тры абрады застаюцца ў закрытых чарнавіках.
 
 Гэта рэдакцыйнае пагадненне, а **не** юрыдычнае пацверджанне правоў на лічбавую публікацыю: яно жыве асобна ў `rights.json` (`confirmedBy` па кожнай крыніцы).
+
+## Другі заход: «Бог Добры» (Пінск, 2022) — толькі чарнавікі
+
+```bash
+node scripts/prayer-import/bog-import.mjs plan --bog <Bog_Dobry_2022_Codex_structured.zip|каталог> \
+  --official <Official_8_PDF_Claude_structured.zip|каталог> --snapshot <каталог> [--out <каталог>]
+```
+
+План першага заходу будуецца ў памяці, таму «ужо ёсць» правяраецца супраць **фінальнага кананічнага набору** + жывых малітваў + існуючых чарнавікоў, а не супраць старой базы.
+
+Для кожнага з 707 запісаў адзін вынік:
+
+- **EXCLUDE**: песні, раздзелы, катэхізіс, гадзінкі (office), тытул/выходныя даныя, артыкулы, табліцы; не-беларускія тэксты (pl/la — рашэнне рэдактара); парадкі сакрамэнтаў (канкурыруюць з афіцыйнымі абрадамі / Імшой); памылкова тыпізаваныя («Абавязковыя святы», «Песні жальбы»).
+- **ALREADY_EXISTS**: тэкст ужо ёсць у каноне/базе (біграмы, укладзеная малітва) або паўтараецца ў самой кнізе.
+- **UNIQUE_DRAFT**: сапраўды новы тэкст → адзін чарнавік `status: draft`, `origin: bog_dobry`.
+- **REVIEW**: падобная малітва без пацверджання, QA-флаг парсера, даведка замест малітвы, абрад, вялікае набажэнства → чарнавік `status: needs_review`, `origin: disputed`.
+
+Кожны чарнавік: кніга, старонкі, `originalEntryId`, SHA кнігі, правы, тэгі з існуючых, катэгорыі па тэгах, `possibleDuplicateIds`. План мае `draftsOnly: true`, і `apply.mjs` для такога плана **не піша ў публічныя калекцыі** нават з файлам правоў. Публікацыя — толькі ўручную адміністратарам у «Чарнавіках малітваў» пасля пацверджання правоў у рэдактары.
+
+Справаздачы: `bog_dobry_drafts.csv`, `excluded_bog_dobry.csv`, `duplicates_review.csv`, `source_coverage.csv`, `tag_mapping.csv`, `proposed_new_tags.csv`, `proposed_new_categories.csv`, `old_to_new_ids.csv`, `migration_qa.md`, `planned_operations.json`.
