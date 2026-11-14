@@ -1,0 +1,203 @@
+[
+ {
+  "id": "mary",
+  "name": "Марыйныя",
+  "tags": [
+   "Марыя"
+  ],
+  "expected": "virgin-mary"
+ },
+ {
+  "id": "x1",
+  "name": "Ружанец",
+  "tags": [],
+  "expected": "rosary"
+ },
+ {
+  "id": "x2",
+  "name": "Непарочнае Сэрца Марыі",
+  "tags": [
+   "Марыя"
+  ],
+  "expected": "immaculate-heart"
+ },
+ {
+  "id": "x3",
+  "name": "Адарацыя",
+  "tags": [],
+  "expected": "monstrance"
+ },
+ {
+  "id": "x4",
+  "name": "Эўхарыстыя",
+  "tags": [],
+  "expected": "chalice-host"
+ },
+ {
+  "id": "x5",
+  "name": "Найсвяцейшае Сэрца Езуса",
+  "tags": [],
+  "expected": "sacred-heart"
+ },
+ {
+  "id": "x6",
+  "name": "Крыжовы шлях",
+  "tags": [
+   "Крыжовы шлях"
+  ],
+  "expected": "crucifix"
+ },
+ {
+  "id": "x7",
+  "name": "Дух Святы",
+  "tags": [],
+  "expected": "holy-spirit-dove"
+ },
+ {
+  "id": "x8",
+  "name": "Да святых",
+  "tags": [
+   "Святыя"
+  ],
+  "expected": "saint-halo"
+ },
+ {
+  "id": "x9",
+  "name": "За памерлых",
+  "tags": [],
+  "expected": "candle"
+ },
+ {
+  "id": "a1",
+  "name": "Раніца",
+  "tags": [],
+  "expected": "morning"
+ },
+ {
+  "id": "a2",
+  "name": "Вечар",
+  "tags": [],
+  "expected": "evening"
+ },
+ {
+  "id": "a3",
+  "name": "Сям’я",
+  "tags": [],
+  "expected": "family"
+ },
+ {
+  "id": "a4",
+  "name": "Мір",
+  "tags": [],
+  "expected": "peace"
+ },
+ {
+  "id": "a5",
+  "name": "Паломніцтва",
+  "tags": [],
+  "expected": "pilgrimage"
+ },
+ {
+  "id": "a6",
+  "name": "Літаніі",
+  "tags": [
+   "Літанія"
+  ],
+  "expected": "litany"
+ },
+ {
+  "id": "a7",
+  "name": "Навэнны",
+  "tags": [
+   "Навэнна"
+  ],
+  "expected": "novena"
+ },
+ {
+  "id": "a8",
+  "name": "Падзяка",
+  "tags": [],
+  "expected": "thanksgiving"
+ },
+ {
+  "id": "a9",
+  "name": "Пакаянне",
+  "tags": [],
+  "expected": "repentance"
+ },
+ {
+  "id": "b1",
+  "name": "Просьбы",
+  "tags": [],
+  "expected": "petitions"
+ },
+ {
+  "id": "b2",
+  "name": "Хвала",
+  "tags": [],
+  "expected": "praise"
+ },
+ {
+  "id": "b3",
+  "name": "Для святара",
+  "tags": [
+   "Благаслаўленне",
+   "Сакрамэнт"
+  ],
+  "expected": "meditation"
+ },
+ {
+  "id": "devotions",
+  "name": "Набажэнствы",
+  "tags": [
+   "Набажэнства"
+  ],
+  "expected": "prayer"
+ },
+ {
+  "id": "b4",
+  "name": "Мае малітвы",
+  "tags": [
+   "Асабістыя"
+  ],
+  "expected": "daily"
+ },
+ {
+  "id": "",
+  "name": "Без ідэнтыфікатара",
+  "tags": [],
+  "expected": "spiritual-reading"
+ },
+ {
+  "id": "",
+  "name": "Разважанні на кожны дзень",
+  "tags": [],
+  "expected": "meditation"
+ },
+ {
+  "id": "b5",
+  "name": "Анёл Ахоўнік",
+  "tags": [],
+  "expected": "angel"
+ },
+ {
+  "id": "b6",
+  "name": "Святы Язэп",
+  "tags": [],
+  "expected": "saint-halo"
+ },
+ {
+  "id": "b7",
+  "name": "Кансэкраванае жыццё",
+  "tags": [
+   "Марыяне"
+  ],
+  "expected": "vocation"
+ },
+ {
+  "id": "b8",
+  "name": "Дзеці",
+  "tags": [],
+  "expected": "children"
+ }
+]

@@ -12,7 +12,7 @@
           <span class="dialog-icon"><PhFolderPlus :size="24" /></span>
           <div>
             <span class="dialog-eyebrow">Малітвы</span>
-            <h2>Новая катэгорыя</h2>
+            <h2>{{ isEditing ? 'Рэдагаванне катэгорыі' : 'Новая катэгорыя' }}</h2>
           </div>
         </div>
         <button
@@ -26,7 +26,7 @@
       </header>
 
       <v-card-text class="dialog-content">
-        <p class="dialog-intro">Дайце катэгорыі назву і абярыце тэгі, па якіх будуць сабраныя малітвы.</p>
+        <p class="dialog-intro">{{ isEditing ? 'Змяніце назву, значок або тэгі. Малітвы і абранае застануцца на месцы.' : 'Дайце катэгорыі назву, абярыце значок і тэгі, па якіх будуць сабраныя малітвы.' }}</p>
         <v-form class="category-form" @submit.prevent="onAddCategory">
           <label class="field-label" for="category-name">Назва катэгорыі</label>
           <v-text-field
@@ -39,6 +39,7 @@
             class="category-field"
             required
           />
+          <CategoryIconPicker :model-value="newCategory.iconKey" @update:model-value="pickIcon" />
           <div class="tag-label-row">
             <label class="field-label" for="category-tags">Тэгі для фільтрацыі</label>
             <span class="selection-count">Абрана: {{ newCategory.tags.length }}</span>
@@ -104,8 +105,8 @@
       <footer class="dialog-actions">
         <button type="button" class="cancel-button" @click="$emit('update:modelValue', false)">Скасаваць</button>
         <button type="button" class="submit-button" :disabled="!isValid" @click="onAddCategory">
-          <PhPlus :size="18" weight="bold" />
-          Дадаць
+          <PhPlus v-if="!isEditing" :size="18" weight="bold" />
+          {{ isEditing ? 'Захаваць' : 'Дадаць' }}
         </button>
       </footer>
     </v-card>
@@ -119,19 +120,43 @@ import { useSettingsStore } from '@/stores/settings';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
 import { validateCategory } from '@/utils/validators';
+import CategoryIconPicker from './CategoryIconPicker.vue';
+import { DEFAULT_CATEGORY_ICON_KEY, displayCategoryIconKey, suggestCategoryIconKey } from '@/constants/prayerCategoryIcons';
 
-const props = defineProps({ modelValue: Boolean });
+const props = defineProps({
+  modelValue: Boolean,
+  /** A personal category to edit; omit to create a new one. */
+  category: { type: Object, default: null },
+  categoryIndex: { type: Number, default: -1 },
+});
 const emit = defineEmits(['update:modelValue', 'category-added']);
 
 const settings = useSettingsStore();
 const { allTags, isLoading, init: initPrayers } = usePrayers();
 const { notifySuccess, notifyError } = useNotifier();
-const newCategory = ref({ name: '', tags: [] });
+const isEditing = computed(() => Boolean(props.category) && props.categoryIndex >= 0);
+const newCategory = ref({ name: '', tags: [], iconKey: DEFAULT_CATEGORY_ICON_KEY });
+// While creating, the suggested icon follows the name until the user picks one themselves.
+const iconPicked = ref(false);
+function pickIcon(key) { newCategory.value.iconKey = key; iconPicked.value = true; }
+watch(() => [newCategory.value.name, newCategory.value.tags.join('|')], () => {
+  if (isEditing.value || iconPicked.value) return;
+  const { name, tags } = newCategory.value;
+  newCategory.value.iconKey = name.trim() || tags.length ? suggestCategoryIconKey({ name, tags }) : DEFAULT_CATEGORY_ICON_KEY;
+});
+function resetForm() {
+  iconPicked.value = false;
+  newCategory.value = isEditing.value
+    ? { name: props.category.name || '', tags: [...(props.category.tags || [])], iconKey: displayCategoryIconKey(props.category) }
+    : { name: '', tags: [], iconKey: DEFAULT_CATEGORY_ICON_KEY };
+  tagQuery.value = '';
+}
 const tagQuery = ref('');
 
 watch(
   () => props.modelValue,
   (isOpen) => {
+    if (isOpen) resetForm();
     if (isOpen && !allTags.value.length) initPrayers();
   },
 );
@@ -167,10 +192,15 @@ function onAddCategory() {
   }
   
   try {
-    settings.addCategory({ ...newCategory.value });
-    notifySuccess('Катэгорыя дададзена');
-    newCategory.value = { name: '', tags: [] };
-    tagQuery.value = '';
+    if (isEditing.value) {
+      const { name, tags, iconKey } = newCategory.value;
+      if (!settings.updateCategory(props.categoryIndex, { name: name.trim(), tags: [...tags], iconKey })) throw new Error('Не ўдалося захаваць катэгорыю');
+      notifySuccess('Катэгорыя захавана');
+    } else {
+      settings.addCategory({ ...newCategory.value });
+      notifySuccess('Катэгорыя дададзена');
+    }
+    resetForm();
     // Закрываем диалог
     emit('update:modelValue', false);
     // Также эмитим событие для совместимости
