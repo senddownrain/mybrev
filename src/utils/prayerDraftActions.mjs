@@ -6,7 +6,7 @@ import { buildPrayerFromDraft, canTransition, DRAFT_COLLECTION, findDuplicateCan
 export class DraftError extends Error {
   constructor(code, message, details = {}) { super(message); this.name = 'DraftError'; this.code = code; Object.assign(this, details); }
 }
-const DRAFT_FIELDS = ['title', 'text', 'source', 'sourceBook', 'sourceEdition', 'tags', 'categoryIds', 'copyrightNotices', 'priestOnly', 'notes', 'rightsStatus'];
+const DRAFT_FIELDS = ['title', 'text', 'source', 'sourceBook', 'sourceEdition', 'tags', 'categoryIds', 'copyrightNotices', 'priestOnly', 'notes', 'rightsStatus', 'rightsBasis'];
 const pick = (data, keys) => Object.fromEntries(keys.filter((key) => data[key] !== undefined).map((key) => [key, data[key]]));
 
 export function createDraftActions({ db, fs, writer, actorUid }) {
@@ -32,7 +32,8 @@ export function createDraftActions({ db, fs, writer, actorUid }) {
   async function createDraft(draftId, data) {
     const record = { ...pick(data, [...DRAFT_FIELDS, 'sourceId', 'sourceSha256', 'sourcePageSpan', 'pdfPageStart', 'pdfPageEnd', 'printedPageStart', 'printedPageEnd',
       'originalEntryId', 'originBatch', 'origin', 'reason', 'flagReasons', 'possibleDuplicateIds', 'fingerprint']),
-      draftId, textFormat: 'mybrev-markdown', status: 'draft', version: 1, tags: data.tags || [], createdBy: actorUid, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+      draftId, textFormat: 'mybrev-markdown', status: 'draft', version: 1, tags: data.tags || [], createdBy: actorUid, createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
+      ...(data.rightsStatus === 'confirmed' ? { rightsConfirmedBy: actorUid, rightsConfirmedAt: serverTimestamp() } : {}) };
     const errors = validateDraft(record);
     if (errors.length) throw new DraftError('invalid', errors.join(' '));
     await runTransaction(db, async (transaction) => {
@@ -57,8 +58,13 @@ export function createDraftActions({ db, fs, writer, actorUid }) {
       const merged = { ...current, ...pick(patch || {}, DRAFT_FIELDS), status: next };
       const errors = validateDraft(merged);
       if (errors.length) throw new DraftError('invalid', errors.join(' '));
+      // Who confirmed the rights and when is recorded by the system, never typed by the editor.
+      const basisChanged = String(merged.rightsBasis ?? '').trim() !== String(current.rightsBasis ?? '').trim();
+      const rightsMeta = merged.rightsStatus === 'confirmed'
+        ? (current.rightsStatus !== 'confirmed' || basisChanged || !current.rightsConfirmedBy ? { rightsConfirmedBy: actorUid, rightsConfirmedAt: serverTimestamp() } : {})
+        : (current.rightsConfirmedBy ? { rightsConfirmedBy: '', rightsConfirmedAt: null } : {});
       const reviewed = next !== current.status && ['needs_review', 'ready_for_publication'].includes(next) ? { reviewedBy: actorUid, reviewedAt: serverTimestamp() } : {};
-      transaction.update(draftRef(draftId), { ...pick(patch || {}, DRAFT_FIELDS), ...reviewed, status: next, version: current.version + 1, updatedAt: serverTimestamp() });
+      transaction.update(draftRef(draftId), { ...pick(patch || {}, DRAFT_FIELDS), ...rightsMeta, ...reviewed, status: next, version: current.version + 1, updatedAt: serverTimestamp() });
       audit(transaction, draftId, { action: next === current.status ? 'edit' : `status:${next}`, fromStatus: current.status, toStatus: next, version: current.version + 1, ...(note ? { note: String(note).slice(0, 300) } : {}) });
     });
   }

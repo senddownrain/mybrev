@@ -94,10 +94,16 @@ service cloud.firestore {
         'printedPageStart', 'printedPageEnd', 'originalEntryId', 'title', 'text', 'textFormat', 'source', 'tags', 'categoryIds',
         'copyrightNotices', 'rightsStatus', 'priestOnly', 'originBatch', 'origin', 'reason', 'flagReasons', 'possibleDuplicateIds',
         'status', 'version', 'fingerprint', 'createdBy', 'createdAt', 'updatedAt', 'reviewedBy', 'reviewedAt', 'publishedBy',
-        'publishedAt', 'targetPrayerId', 'notes'];
+        'publishedAt', 'targetPrayerId', 'notes', 'rightsBasis', 'rightsConfirmedBy', 'rightsConfirmedAt'];
+    }
+    // Rights are only `confirmed` with a written basis and a recorded confirmer; a bare flag is refused.
+    function rightsBasisOk(data) {
+      return data.get('rightsStatus', '') != 'confirmed'
+        || (data.get('rightsBasis', '') is string && data.get('rightsBasis', '').size() >= 10 && data.get('rightsBasis', '').size() <= 500
+          && data.get('rightsConfirmedBy', '') is string && data.get('rightsConfirmedBy', '') != '');
     }
     function validDraft(data) {
-      return data.keys().hasOnly(draftKeys())
+      return data.keys().hasOnly(draftKeys()) && rightsBasisOk(data)
         && data.title is string && data.title.size() > 0 && data.title.size() <= 200
         && data.text is string && data.text.size() > 0 && data.text.size() <= 200000
         && data.textFormat == 'mybrev-markdown'
@@ -118,9 +124,12 @@ service cloud.firestore {
     match /prayerDrafts/{id} {
       allow read: if isAdmin();
       allow create: if isAdmin() && validDraft(request.resource.data) && request.resource.data.version == 1
+        && (request.resource.data.get('rightsStatus', '') != 'confirmed' || request.resource.data.rightsConfirmedBy == request.auth.uid)
         && request.resource.data.status in ['draft', 'needs_review'];
       allow update: if isAdmin() && validDraft(request.resource.data)
         && resource.data.status != 'published'
+        && (request.resource.data.get('rightsStatus', '') != 'confirmed' || request.resource.data.rightsConfirmedBy == request.auth.uid
+          || request.resource.data.get('rightsConfirmedBy', '') == resource.data.get('rightsConfirmedBy', '-'))
         && request.resource.data.version == resource.data.version + 1
         && (request.resource.data.status != 'published' || draftPublishedTarget(id, request.resource.data));
       allow delete: if false;

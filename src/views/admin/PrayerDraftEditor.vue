@@ -41,7 +41,9 @@
             <v-textarea v-model="copyrightText" label="Аўтарскія правы (кожны запіс з новага радка)" variant="outlined" rows="2" auto-grow hide-details="auto" class="mt-3" :readonly="locked" />
             <v-checkbox v-model="rightsConfirmed" class="mt-2" color="primary" hide-details :readonly="locked"
               label="Права на лічбавую публікацыю гэтай крыніцы пацверджаны пісьмова" />
-            <p class="hint">Без пацверджання кнопка «Апублікаваць» заблакаваная. Права на кнігу не вынікаюць з наяўнасці PDF.</p>
+            <v-textarea v-if="rightsConfirmed" v-model="form.rightsBasis" data-test="rights-basis" label="Падстава пацверджання (хто, калі і які дакумент ці ліцэнзія)" variant="outlined" rows="2" auto-grow
+              counter="500" maxlength="500" hide-details="auto" class="mt-2" :readonly="locked" :error="!basisValid" :error-messages="basisValid ? [] : ['Без падставы пацверджанне не дзейнічае (мінімум 10 сімвалаў).']" />
+            <p class="hint">Без пацверджання і падставы кнопка «Апублікаваць» заблакаваная. Права на кнігу не вынікаюць з наяўнасці PDF; сістэма запісвае, хто і калі пацвердзіў.</p>
             <dl class="provenance">
               <template v-for="row in provenance" :key="row[0]"><dt>{{ row[0] }}</dt><dd>{{ row[1] }}</dd></template>
             </dl>
@@ -94,6 +96,7 @@
             <dt>Крыніца</dt><dd>{{ sourceNotice || '—' }}</dd>
             <dt>Тэгі</dt><dd>{{ form.tags.join(', ') || '—' }}</dd>
             <dt>Катэгорыі</dt><dd>{{ categoryNames || '—' }}</dd>
+            <dt>Падстава правоў</dt><dd>{{ form.rightsBasis || '—' }}</dd>
             <dt>Хто бачыць</dt><dd>{{ form.priestOnly ? 'Толькі святары (абароненая калекцыя)' : 'Усе чытачы Web і Flutter' }}</dd>
             <dt>Будучы адрас</dt><dd>/prayer/{{ replaceId || targetId }}</dd>
           </dl>
@@ -140,7 +143,8 @@ const publishOpen = ref(false);
 const replaceId = ref('');
 const acknowledge = ref(false);
 const audit = ref([]);
-const form = ref({ title: '', text: '', tags: [], priestOnly: false, sourceBook: '', copyrightNotices: [], rightsStatus: '' });
+const form = ref({ title: '', text: '', tags: [], priestOnly: false, sourceBook: '', copyrightNotices: [], rightsStatus: '', rightsBasis: '' });
+const basisValid = computed(() => form.value.rightsStatus !== 'confirmed' || form.value.rightsBasis.trim().length >= 10);
 const rightsConfirmed = computed({ get: () => form.value.rightsStatus === 'confirmed', set: (value) => { form.value.rightsStatus = value ? 'confirmed' : 'unconfirmed'; } });
 const copyrightText = computed({
   get: () => form.value.copyrightNotices.join('\n'),
@@ -170,10 +174,11 @@ const provenance = computed(() => [
   ['Старонкі PDF', draft.value?.pdfPageStart ? `${draft.value.pdfPageStart}–${draft.value.pdfPageEnd || draft.value.pdfPageStart}` : ''],
   ['SHA-256 кнігі', draft.value?.sourceSha256 ? `${draft.value.sourceSha256.slice(0, 16)}…` : ''],
   ['Партыя імпарту', draft.value?.originBatch],
+  ['Правы пацвердзіў', draft.value?.rightsConfirmedBy && draft.value?.rightsStatus === 'confirmed' ? `${draft.value.rightsConfirmedBy}${draft.value.rightsConfirmedAt?.seconds ? `, ${new Date(draft.value.rightsConfirmedAt.seconds * 1000).toLocaleDateString('be-BY')}` : ''}` : ''],
 ].filter((row) => row[1]));
 
 function hydrate(source) {
-  form.value = { title: source.title || '', text: source.text || '', tags: [...(source.tags || [])], priestOnly: source.priestOnly === true, sourceBook: source.sourceBook || source.source || '', copyrightNotices: [...(source.copyrightNotices || [])], rightsStatus: source.rightsStatus || '' };
+  form.value = { title: source.title || '', text: source.text || '', tags: [...(source.tags || [])], priestOnly: source.priestOnly === true, sourceBook: source.sourceBook || source.source || '', copyrightNotices: [...(source.copyrightNotices || [])], rightsStatus: source.rightsStatus || '', rightsBasis: source.rightsBasis || '' };
 }
 const auditLabel = (entry) => {
   const date = entry.at?.toDate?.().toLocaleString('be-BY') || '';
@@ -195,7 +200,7 @@ async function load() {
 async function save(status) {
   busy.value = 'save'; message.value = null;
   try {
-    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, sourceBook: form.value.sourceBook, copyrightNotices: form.value.copyrightNotices, ...(form.value.rightsStatus ? { rightsStatus: form.value.rightsStatus } : {}) };
+    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, sourceBook: form.value.sourceBook, copyrightNotices: form.value.copyrightNotices, ...(form.value.rightsStatus ? { rightsStatus: form.value.rightsStatus, rightsBasis: form.value.rightsBasis.trim() } : {}) };
     await actions.saveDraft(draft.value.id, patch, { expectedVersion: draft.value.version, status });
     message.value = { type: 'success', text: status ? `Статус: ${DRAFT_STATUS_LABELS[status]}.` : 'Чарнавік захаваны.' };
     await load();
@@ -206,7 +211,7 @@ async function publish() {
   busy.value = 'publish'; message.value = null;
   try {
     // Unsaved edits go first, so exactly the confirmed text is published.
-    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, sourceBook: form.value.sourceBook, copyrightNotices: form.value.copyrightNotices, ...(form.value.rightsStatus ? { rightsStatus: form.value.rightsStatus } : {}) };
+    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, sourceBook: form.value.sourceBook, copyrightNotices: form.value.copyrightNotices, ...(form.value.rightsStatus ? { rightsStatus: form.value.rightsStatus, rightsBasis: form.value.rightsBasis.trim() } : {}) };
     await actions.saveDraft(draft.value.id, patch, { expectedVersion: draft.value.version });
     const fresh = await actions.getDraft(draft.value.id);
     const result = await actions.publishDraft(draft.value.id, { replaceId: replaceId.value || undefined, acknowledgeDuplicates: acknowledge.value, expectedVersion: fresh.version });

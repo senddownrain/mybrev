@@ -84,6 +84,9 @@ export function targetPrayerIdFor(draft) {
   return draft.targetPrayerId || `d_${draft.draftId || draft.id}`.slice(0, 250);
 }
 
+export const RIGHTS_BASIS_MIN = 10;
+export const RIGHTS_BASIS_MAX = 500;
+
 export function validateDraft(data) {
   const errors = [];
   if (!data || typeof data !== 'object') return ['Пусты чарнавік.'];
@@ -96,6 +99,10 @@ export function validateDraft(data) {
   if (data.textFormat !== 'mybrev-markdown') errors.push('Дазволены толькі фармат mybrev-markdown.');
   if (!DRAFT_STATUSES.includes(data.status)) errors.push('Невядомы статус.');
   if (!Array.isArray(data.tags)) errors.push('Тэгі павінны быць спісам.');
+  // Confirming digital-publication rights needs a written basis; a bare tick is not a confirmation.
+  const basis = String(data.rightsBasis ?? '').trim();
+  if (data.rightsStatus === 'confirmed' && basis.length < RIGHTS_BASIS_MIN) errors.push('Укажыце падставу пацверджання правоў: хто, калі і які дакумент ці ліцэнзія.');
+  if (basis.length > RIGHTS_BASIS_MAX) errors.push(`Падстава даўжэйшая за ${RIGHTS_BASIS_MAX} сімвалаў.`);
   return errors;
 }
 
@@ -105,7 +112,7 @@ export function publishBlockers(draft) {
   if (!draft.tags?.length) blockers.push('Дадайце хаця б адзін тэг.');
   if (!draft.sourceBook && !draft.source) blockers.push('Патрэбна крыніца.');
   if (!draft.copyrightNotices?.length) blockers.push('Патрэбны запіс аб аўтарскіх правах.');
-  if (draft.reason === 'rights_unconfirmed' || draft.rightsStatus === 'unconfirmed') blockers.push('Права на лічбавую публікацыю не пацверджана.');
+  if (draft.rightsStatus !== 'confirmed') blockers.push('Права на лічбавую публікацыю не пацверджана.');
   return blockers;
 }
 
