@@ -759,8 +759,8 @@ async function main() {
     for (const {outputFile,output} of list) for (const row of inventoryDocument(output)) {
       if (row.rule || typeof row.value !== 'string') continue;
       const result = expandApprovedEditorial(row.value,row.field);
-      if (!result.edits.length) continue;
-      (report.editorialExpansions ||= []).push({outputFile,field:row.path.join('.'),beforeHtml:row.value,afterHtml:result.value,edits:result.edits});
+      if (result.value === row.value) continue;
+      (report.editorialExpansions ||= []).push({outputFile,field:row.path.join('.'),beforeHtml:row.value,afterHtml:result.value,edits:result.edits,ownerEdits:result.ownerEdits||[]});
       row.container[row.field] = result.value;
     }
     await fs.mkdir(dir, { recursive: true });

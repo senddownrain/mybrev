@@ -64,7 +64,7 @@ export function inspectField(row, evidence = new Map()) {
     if (attested.proofs.length) findings.push({type:'source-attested-full-responsory',confidence:'high',status:'reviewed',evidence:attested.proofs.map(id=>RESPONSORY_ATTESTATIONS.find(r=>r.id===id))});
     const editorial = expandApprovedEditorial(after, field);
     after = editorial.value;
-    if (editorial.edits.length) findings.push({type:'editorial-display-expansion',confidence:'high',status:'owner-authorized',evidence:editorial.edits});
+    if (editorial.value !== attested.value) findings.push({type:'editorial-display-expansion',confidence:'high',status:'owner-authorized',evidence:editorial.stages||editorial.edits});
     const text = liturgicalText(after);
     const short = [...text.matchAll(/(?:^|\s)([КН])\.\s+(.+?)(?=\s+[КН]\.?(?:\s|$)|$)/gu)]
       .filter(m => (m[1] === 'Н' && m[2].split(/\s/u).length <= 3) || /^Хвала Айцу\.?$/u.test(m[2]));

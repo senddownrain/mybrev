@@ -38,7 +38,7 @@ function operation(target,expectedHtml,source,mode){
 }
 const contiguous=nodes=>nodes.every((p,i)=>!i||(nodes[i-1].parentNode===p.parentNode&&nodes[i-1].nextElementSibling===p));
 const sameArray=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
-export function expandEditorialResponsories(html,field,{allow=null}={}){
+export function expandEditorialResponsories(html,field,{allow=null,repeatOverrides=null}={}){
  const source=String(html||''),kind=/^officeOfReadingsR[12]$/u.test(field)?'long':/^(?:laudes|vesper1?)R$/u.test(field)?'short':null;
  if(!kind)return {kind,status:'already-full',value:source,edits:[],blocks:[],exceptions:[],repeatedReplies:0,alreadyFullReplies:0};
  const paragraphs=parse(source).querySelectorAll('p'),covered=new Set(),blocks=[],exceptions=[],edits=[],replyChecks=[];let repeatedReplies=0,alreadyFullReplies=0;
@@ -76,6 +76,8 @@ export function expandEditorialResponsories(html,field,{allow=null}={}){
   signature=editorialHash(JSON.stringify([kind,liturgicalText(opening.html),verse]));
   if(allow&&!allow.has(signature)){reject(group,'outside-reviewed-source-signatures',{signature});continue;}
   expected=kind==='short'?[opening.html,tailHtml,opening.html]:[tailHtml];
+  const approvedOverrides=repeatOverrides?.get(signature);
+  if(approvedOverrides)expected=expected.map((body,i)=>approvedOverrides[i]||body);
   const result=targets.map((node,i)=>operation(node,expected[i],source,kind==='short'?['full-initial','marked-tail','full-initial'][i]:'marked-tail'));
   const block={kind,signature,sourceReply:liturgicalText(opening.html),sourceHtml:opening.html,verse,lines:group.map(node=>liturgicalText(node.innerHTML)),
    sourceParagraphs:group.slice(0,kind==='long'?group.length-2:1).map(node=>paragraphs.indexOf(node)),targetParagraphs:targets.map(node=>paragraphs.indexOf(node)),doxologyPolicy:'preserve source K. unchanged; never copy it into N.'};
