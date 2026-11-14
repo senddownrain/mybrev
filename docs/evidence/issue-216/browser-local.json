@@ -1,0 +1,903 @@
+{
+  "base": "http://127.0.0.1:4174",
+  "publicRun": false,
+  "checkedAt": "2026-11-13T21:42:58.074Z",
+  "results": [
+    {
+      "date": "2025-12-21",
+      "diocese": "minsk-mohilev",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2025-12-21/ora/advent-21-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2026-12-20",
+      "diocese": "minsk-mohilev",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2026-12-20/ora/advent-20-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2027-12-19",
+      "diocese": "minsk-mohilev",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2027-12-19/ora/advent-19-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2028-12-24",
+      "diocese": "minsk-mohilev",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2028-12-24/ora/advent-24-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-24-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Надышоў час Марыі * нарадзіць свайго першароднага Сына."
+    },
+    {
+      "date": "2029-12-23",
+      "diocese": "minsk-mohilev",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2029-12-23/ora/advent-23-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-23-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Вось, споўнілася ўсё сказанае анёлам * пра Дзеву Марыю."
+    },
+    {
+      "date": "2030-12-22",
+      "diocese": "minsk-mohilev",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2030-12-22/ora/advent-22-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2031-12-21",
+      "diocese": "minsk-mohilev",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2031-12-21/ora/advent-21-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2032-12-19",
+      "diocese": "minsk-mohilev",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2032-12-19/ora/advent-19-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2025-12-21",
+      "diocese": "vitebsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2025-12-21/ora/advent-21-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2026-12-20",
+      "diocese": "vitebsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2026-12-20/ora/advent-20-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2027-12-19",
+      "diocese": "vitebsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2027-12-19/ora/advent-19-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2028-12-24",
+      "diocese": "vitebsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2028-12-24/ora/advent-24-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-24-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Надышоў час Марыі * нарадзіць свайго першароднага Сына."
+    },
+    {
+      "date": "2029-12-23",
+      "diocese": "vitebsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2029-12-23/ora/advent-23-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-23-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Вось, споўнілася ўсё сказанае анёлам * пра Дзеву Марыю."
+    },
+    {
+      "date": "2030-12-22",
+      "diocese": "vitebsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2030-12-22/ora/advent-22-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2031-12-21",
+      "diocese": "vitebsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2031-12-21/ora/advent-21-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2032-12-19",
+      "diocese": "vitebsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2032-12-19/ora/advent-19-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2025-12-21",
+      "diocese": "pinsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2025-12-21/ora/advent-21-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2026-12-20",
+      "diocese": "pinsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2026-12-20/ora/advent-20-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2027-12-19",
+      "diocese": "pinsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2027-12-19/ora/advent-19-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2028-12-24",
+      "diocese": "pinsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2028-12-24/ora/advent-24-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-24-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Надышоў час Марыі * нарадзіць свайго першароднага Сына."
+    },
+    {
+      "date": "2029-12-23",
+      "diocese": "pinsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2029-12-23/ora/advent-23-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-23-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Вось, споўнілася ўсё сказанае анёлам * пра Дзеву Марыю."
+    },
+    {
+      "date": "2030-12-22",
+      "diocese": "pinsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2030-12-22/ora/advent-22-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2031-12-21",
+      "diocese": "pinsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2031-12-21/ora/advent-21-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2032-12-19",
+      "diocese": "pinsk",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2032-12-19/ora/advent-19-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2025-12-21",
+      "diocese": "grodno",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2025-12-21/ora/advent-21-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2026-12-20",
+      "diocese": "grodno",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2026-12-20/ora/advent-20-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2027-12-19",
+      "diocese": "grodno",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2027-12-19/ora/advent-19-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2028-12-24",
+      "diocese": "grodno",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2028-12-24/ora/advent-24-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-24-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Надышоў час Марыі * нарадзіць свайго першароднага Сына."
+    },
+    {
+      "date": "2029-12-23",
+      "diocese": "grodno",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2029-12-23/ora/advent-23-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-23-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Вось, споўнілася ўсё сказанае анёлам * пра Дзеву Марыю."
+    },
+    {
+      "date": "2030-12-22",
+      "diocese": "grodno",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2030-12-22/ora/advent-22-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2031-12-21",
+      "diocese": "grodno",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2031-12-21/ora/advent-21-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2032-12-19",
+      "diocese": "grodno",
+      "profile": "desktop-light",
+      "url": "http://127.0.0.1:4174/day/2032-12-19/ora/advent-19-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2025-12-21",
+      "diocese": "minsk-mohilev",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2025-12-21/ora/advent-21-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2026-12-20",
+      "diocese": "minsk-mohilev",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2026-12-20/ora/advent-20-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2027-12-19",
+      "diocese": "minsk-mohilev",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2027-12-19/ora/advent-19-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2028-12-24",
+      "diocese": "minsk-mohilev",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2028-12-24/ora/advent-24-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-24-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Надышоў час Марыі * нарадзіць свайго першароднага Сына."
+    },
+    {
+      "date": "2029-12-23",
+      "diocese": "minsk-mohilev",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2029-12-23/ora/advent-23-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-23-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Вось, споўнілася ўсё сказанае анёлам * пра Дзеву Марыю."
+    },
+    {
+      "date": "2030-12-22",
+      "diocese": "minsk-mohilev",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2030-12-22/ora/advent-22-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2031-12-21",
+      "diocese": "minsk-mohilev",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2031-12-21/ora/advent-21-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2032-12-19",
+      "diocese": "minsk-mohilev",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2032-12-19/ora/advent-19-12/laudes?diocese=minsk-mohilev",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2025-12-21",
+      "diocese": "vitebsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2025-12-21/ora/advent-21-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2026-12-20",
+      "diocese": "vitebsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2026-12-20/ora/advent-20-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2027-12-19",
+      "diocese": "vitebsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2027-12-19/ora/advent-19-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2028-12-24",
+      "diocese": "vitebsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2028-12-24/ora/advent-24-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-24-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Надышоў час Марыі * нарадзіць свайго першароднага Сына."
+    },
+    {
+      "date": "2029-12-23",
+      "diocese": "vitebsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2029-12-23/ora/advent-23-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-23-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Вось, споўнілася ўсё сказанае анёлам * пра Дзеву Марыю."
+    },
+    {
+      "date": "2030-12-22",
+      "diocese": "vitebsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2030-12-22/ora/advent-22-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2031-12-21",
+      "diocese": "vitebsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2031-12-21/ora/advent-21-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2032-12-19",
+      "diocese": "vitebsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2032-12-19/ora/advent-19-12/laudes?diocese=vitebsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2025-12-21",
+      "diocese": "pinsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2025-12-21/ora/advent-21-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2026-12-20",
+      "diocese": "pinsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2026-12-20/ora/advent-20-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2027-12-19",
+      "diocese": "pinsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2027-12-19/ora/advent-19-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2028-12-24",
+      "diocese": "pinsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2028-12-24/ora/advent-24-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-24-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Надышоў час Марыі * нарадзіць свайго першароднага Сына."
+    },
+    {
+      "date": "2029-12-23",
+      "diocese": "pinsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2029-12-23/ora/advent-23-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-23-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Вось, споўнілася ўсё сказанае анёлам * пра Дзеву Марыю."
+    },
+    {
+      "date": "2030-12-22",
+      "diocese": "pinsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2030-12-22/ora/advent-22-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2031-12-21",
+      "diocese": "pinsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2031-12-21/ora/advent-21-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2032-12-19",
+      "diocese": "pinsk",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2032-12-19/ora/advent-19-12/laudes?diocese=pinsk",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2025-12-21",
+      "diocese": "grodno",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2025-12-21/ora/advent-21-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2026-12-20",
+      "diocese": "grodno",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2026-12-20/ora/advent-20-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    },
+    {
+      "date": "2027-12-19",
+      "diocese": "grodno",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2027-12-19/ora/advent-19-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2028-12-24",
+      "diocese": "grodno",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2028-12-24/ora/advent-24-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-24-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Надышоў час Марыі * нарадзіць свайго першароднага Сына."
+    },
+    {
+      "date": "2029-12-23",
+      "diocese": "grodno",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2029-12-23/ora/advent-23-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-23-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Вось, споўнілася ўсё сказанае анёлам * пра Дзеву Марыю."
+    },
+    {
+      "date": "2030-12-22",
+      "diocese": "grodno",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2030-12-22/ora/advent-22-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "C",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "C",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год C: Сабраўшыся, Марыя паспяшыла ў горную краіну, у горад Юды. * І ўвайшла ў дом Захарыі, / і прывітала Альжбету."
+    },
+    {
+      "date": "2031-12-21",
+      "diocese": "grodno",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2031-12-21/ora/advent-21-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "A",
+      "source": {
+        "document": "advent-21-12",
+        "field": "laudesAntBen"
+      },
+      "text": "Ант. да песні Захарыі: Не бойцеся, * бо на пяты дзень прыйдзе да вас Пан ваш."
+    },
+    {
+      "date": "2032-12-19",
+      "diocese": "grodno",
+      "profile": "mobile-dark",
+      "url": "http://127.0.0.1:4174/day/2032-12-19/ora/advent-19-12/laudes?diocese=grodno",
+      "status": "PASS",
+      "cycle": "B",
+      "source": {
+        "document": "advent-w4-d1",
+        "field": "laudesAntBen",
+        "cycle": "B",
+        "edition": "docs/sources/issue-216/2024-12-22-lauds.html"
+      },
+      "text": "Антыфона да песні Захарыі Год B: Бог паслаў анёла Габрыэля ў горад галілейскі * да Дзевы, заручанай з Юзафам, з дому Давіда, / а імя Дзевы – Марыя, / аллелюя."
+    }
+  ]
+}
