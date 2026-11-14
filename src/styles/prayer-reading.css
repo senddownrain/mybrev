@@ -377,3 +377,67 @@
     padding-inline-start: 1.4em;
   }
 }
+
+/* Quiet feedback block at the foot of a prayer: thin rule, aligned to the
+   reading column (same 20/16px gutter as the text and the source line). */
+.prayer-report {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 0 20px;
+  padding: 16px 0 22px;
+  border-top: 1px solid var(--reader-border);
+  color: color-mix(in srgb, var(--reader-ink) 62%, transparent);
+  font-family: var(--reader-font-family);
+}
+
+.prayer-source + .prayer-report {
+  margin-top: 0;
+}
+
+.prayer-report__text {
+  flex: 1 1 14rem;
+  min-width: 0;
+  margin: 0;
+  font-size: calc(0.88rem * var(--font-size-multiplier, 1));
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.prayer-report__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 0 16px;
+  border: 1px solid var(--reader-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--reader-ink) 4%, transparent);
+  color: var(--reader-ink);
+  font-size: calc(0.88rem * var(--font-size-multiplier, 1));
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.prayer-report__action:hover {
+  border-color: color-mix(in srgb, var(--reader-ink) 28%, transparent);
+  background: color-mix(in srgb, var(--reader-ink) 8%, transparent);
+}
+
+.prayer-report__icon {
+  flex: none;
+}
+
+@media (max-width: 600px) {
+  .prayer-report {
+    margin-inline: 16px;
+  }
+}
