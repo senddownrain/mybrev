@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { isTwoLineVersicle } from './manual-common-review.mjs';
 import { expandAttestedResponsories, RESPONSORY_ATTESTATIONS } from './attested-responsories.mjs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
@@ -63,7 +64,7 @@ export function inspectField(row, evidence = new Map()) {
     const text = liturgicalText(after);
     const short = [...text.matchAll(/(?:^|\s)([КН])\.\s+(.+?)(?=\s+[КН]\.?(?:\s|$)|$)/gu)]
       .filter(m => (m[1] === 'Н' && m[2].split(/\s/u).length <= 3) || /^Хвала Айцу\.?$/u.test(m[2]));
-    if (short.length) findings.push({ type: 'abbreviated-responsory', confidence: 'unconfirmed', status: 'manual-review',
+    if (short.length && !isTwoLineVersicle(after, field)) findings.push({ type: 'abbreviated-responsory', confidence: 'unconfirmed', status: 'manual-review',
       excerpts: short.map(m => `${m[1]}. ${m[2]}`),
       evidence: ['printed volumes also abbreviate responses; no independently verified full Belarusian reply available; no expansion'] });
   }
