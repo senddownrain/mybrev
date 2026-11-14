@@ -1,0 +1,14 @@
+{
+  "schema": 4,
+  "scope": "Only owner decisions, graph review, incremental subset, manifest gate and v3 historical invariants; no full audit/date sweep",
+  "tests": {
+    "command": "node --test tests/liturgical-owner-v4.test.mjs tests/liturgical-editorial-v3.test.mjs",
+    "passed": 20,
+    "failed": 0
+  },
+  "eslintPassed": true,
+  "sourcePending": 0,
+  "productionResult": "Await actual Actions receipt; not inferred from plan",
+  "adventSource": "Owner completion statement + current server read of exact two documents; private original receipt unavailable",
+  "flutterRepositoryEdited": false
+}

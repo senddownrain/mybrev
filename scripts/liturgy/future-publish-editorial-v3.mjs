@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** FUTURE, separately authorized phase. Never invoked by build/audit/test. */
 import fs from 'node:fs';
+import { verifyCompatibleSubset } from './lib/editorial-compatible-subset.mjs';
 import zlib from 'node:zlib';
 import { editorialHash } from './lib/editorial-responsories.mjs';
 import { prepareFreshPublication, executePreparedPublication, boundPublicationWrites } from './lib/editorial-publication.mjs';
@@ -19,13 +20,19 @@ const read=async names=>{const records=new Map();for(let i=0;i<names.length;i+=1
 const startedAt=new Date().toISOString(),planSha256=editorialHash(bytes);
 const journal=data=>fs.writeFileSync(receiptFile,JSON.stringify({schema:3,mode,startedAt,project:'ibreviaryby',planSha256,...data},null,2)+'\n',{mode:0o600});
 try{
+ let compatibility;
+ if(plan.compatibility){
+  const manifest=await db.doc('contentManifest/current').get();
+  if(!manifest.exists)throw Error('Missing published manifest');
+  compatibility={...verifyCompatibleSubset(plan,manifest.data().collections),serverUpdateTime:{seconds:manifest.updateTime.seconds,nanoseconds:manifest.updateTime.nanoseconds}};
+ }
  const records=await read(plan.documents.map(d=>d.document));
  const prepared=prepareFreshPublication(plan,records); // ALL documents before FIRST write
  if(mode==='preflight'){journal({state:'fresh-preflight-passed-no-writes',documents:prepared.length,batches:boundPublicationWrites(prepared).length});}
  else{
   journal({state:'preflight-passed-write-phase-starting',receipts:[]});
   const commit=async writes=>{const token=await credential.getAccessToken();const response=await fetch('https://firestore.googleapis.com/v1/projects/ibreviaryby/databases/(default)/documents:commit',{method:'POST',headers:{authorization:'Bearer '+token.access_token,'content-type':'application/json'},body:JSON.stringify({writes})});const result=await response.json();if(!response.ok)throw Error('Commit failed '+response.status+'; inspect private receipt, do not retry blindly');return result;};
-  const receipts=await executePreparedPublication(prepared,{read,commit,journal:receipts=>journal({state:'in-progress',receipts})});journal({state:'all-field-readbacks-verified',receipts});
+  const receipts=await executePreparedPublication(prepared,{read,commit,journal:receipts=>journal({state:'in-progress',receipts})});journal({state:'all-field-readbacks-verified',compatibility,receipts});
  }
  console.log('Receipt saved; no manifest/revision/deploy action performed.');
 }catch(error){if(!fs.existsSync(receiptFile))journal({state:'preflight-blocked-no-writes',conflicts:error.conflicts||[],reason:error.message});throw error;}

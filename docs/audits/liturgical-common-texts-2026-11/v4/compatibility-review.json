@@ -1,0 +1,170 @@
+{
+  "policy": "proper-only-keep-manifest",
+  "project": "ibreviaryby",
+  "manifestCollectionsSha256": "eb2ef3d4f5d86d03ad57754224e08ccab24f87015985fa1bc52e0ce2e9ee7e39",
+  "manifestUpdateTime": "2026-11-14T13:45:04.423583Z",
+  "daysVersion": 6,
+  "properInPublishedManifest": false,
+  "publishedCollectionsWritten": [],
+  "manifestWrites": 0,
+  "publishedCollections": {
+    "days": {
+      "count": 736,
+      "version": 6,
+      "bytes": 53983820,
+      "digest": "d777ac8f0051e81c"
+    },
+    "prayers": {
+      "digest": "43711607f69fe4c5",
+      "count": 115,
+      "version": 4,
+      "bytes": 2369569
+    },
+    "liturgicalTemplates": {
+      "count": 16,
+      "version": 3,
+      "bytes": 2897626,
+      "digest": "fd4b4f8eac9c9902"
+    },
+    "readings": {
+      "bytes": 4813227,
+      "digest": "93314983ba9c1bd5",
+      "count": 822,
+      "version": 7
+    },
+    "songs": {
+      "count": 447,
+      "bytes": 369604,
+      "version": 1,
+      "digest": "9752aef2fd846b49"
+    },
+    "completoriums": {
+      "version": 1,
+      "count": 35,
+      "bytes": 323076,
+      "digest": "42eb55a0b377d638"
+    },
+    "invitatoriums": {
+      "version": 1,
+      "bytes": 9678,
+      "count": 4,
+      "digest": "587d64f9ff8e7b0d"
+    },
+    "prayerCategories": {
+      "version": 2,
+      "digest": "2615b158b86e8582",
+      "count": 5,
+      "bytes": 1058
+    }
+  },
+  "schemaChanged": false,
+  "flutterRepositoryEdited": false,
+  "reason": "Proper is an existing Firestore collection omitted from the published manifest. Stage its approved string-field fixes for Web only; do not introduce it to old Flutter clients. All days/templates updates are held: bulk delivery needs the deferred bundle/release and must not invalidate days=6 hashes.",
+  "ownerApproval": "https://github.com/senddownrain/mybrev/pull/245#issuecomment-6878311145",
+  "advent": [
+    {
+      "document": "days/advent-21-12",
+      "serverReadUpdateTime": "2026-11-14T12:25:53.056153Z",
+      "changedFields": [
+        {
+          "field": "vesperR",
+          "beforeSha256": "2291f83793ed64a19236c50ec3512e046e764263488f275422d9ff2ae2795a9b",
+          "afterSha256": "a825cbd1eb15eadf2970345ded21ffcd554c65f416e2904a7bd7474d9e5b2286"
+        },
+        {
+          "field": "vesperInter",
+          "beforeSha256": "46787367571da235ce255b6bd1e2570d73843075a70e1b69ca94cc744b038535",
+          "afterSha256": "148c5149159ade83c8f6e66098ba36953d3f3c535fb4a4c157860699a6013c8b"
+        },
+        {
+          "field": "vesperPr",
+          "beforeSha256": "1e1a696c2bbc061ee5d32d5d6dc78da584b100096382b30b5c7d07e017d764ca",
+          "afterSha256": "8139ff99e1edf0e5dc1f7f7aa0d97712f1b59b0abf06f4ed162f40a0657c9e48"
+        }
+      ],
+      "pr245Fields": [
+        "officeOfReadingsR1",
+        "officeOfReadingsR2",
+        "officeOfReadingsVers",
+        "sext1R",
+        "sext2R",
+        "sext3R"
+      ],
+      "targetFieldCount": 6,
+      "disjoint": true,
+      "rawReadSha256": "3add4696c59ffb5cdd0188ffe4803b8ccf70494c62374ff821cbe167cf1476b0"
+    },
+    {
+      "document": "days/advent-w4-d1",
+      "serverReadUpdateTime": "2026-11-14T12:25:53.056153Z",
+      "changedFields": [
+        {
+          "field": "vesper1Ant2",
+          "beforeSha256": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "afterSha256": "6951f346b4e99b53c282b2ce507b6013f75a54dbc44d962b929078f252e73626"
+        },
+        {
+          "field": "vesper1Ps2",
+          "beforeSha256": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "afterSha256": "40d0acd51693ef9f36f8411e31d7b445a8ca26d4bc1c570a9f2de5ca411efbd6"
+        },
+        {
+          "field": "vesper1R",
+          "beforeSha256": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "afterSha256": "2291f83793ed64a19236c50ec3512e046e764263488f275422d9ff2ae2795a9b"
+        },
+        {
+          "field": "vesper1Hymn",
+          "beforeSha256": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "afterSha256": "5aa1e08aa3abf2708df7907b7032120bd410baf233156e12c96d6c5aa67b03ab"
+        },
+        {
+          "field": "vesper1Ant3",
+          "beforeSha256": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "afterSha256": "1568b54cf63b720ceb7fcdaac40215a26512fb311cd6e6d29b5815648ab14076"
+        },
+        {
+          "field": "vesper1Pr",
+          "beforeSha256": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "afterSha256": "1e1a696c2bbc061ee5d32d5d6dc78da584b100096382b30b5c7d07e017d764ca"
+        },
+        {
+          "field": "laudesAntBen",
+          "beforeSha256": "89cbfe5a23a8079b60212865ee1158bb70ef51c3328997d9adcd6d1ad1dde524",
+          "afterSha256": "b76578c802acee335ef10ef8c9203cf1f8ab6bd34d5fae5705feb46d8d1179dd"
+        },
+        {
+          "field": "vesper1Ant1",
+          "beforeSha256": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "afterSha256": "17f5d814664108a9351eca9607df4c4693be80ce6f64be062d5160f7d9392413"
+        },
+        {
+          "field": "vesper1Ps1",
+          "beforeSha256": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "afterSha256": "d0af7822c22c0c24c5fd63cf31467ee5f5c04d11c27870dbdcaa731f3574d058"
+        },
+        {
+          "field": "vesper1Inter",
+          "beforeSha256": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "afterSha256": "46787367571da235ce255b6bd1e2570d73843075a70e1b69ca94cc744b038535"
+        },
+        {
+          "field": "vesper1Ps3",
+          "beforeSha256": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "afterSha256": "0418716d6cfaa84af887b8d0d1d57d0fcebc26e0b415e6e9913a6a69daf74db8"
+        }
+      ],
+      "pr245Fields": [
+        "officeOfReadingsR1",
+        "officeOfReadingsR2",
+        "officeOfReadingsVers",
+        "sext1R",
+        "sext2R",
+        "sext3R"
+      ],
+      "targetFieldCount": 6,
+      "disjoint": true,
+      "rawReadSha256": "ebc580bc1949ddce638278cecb4c36cafed71f747f1f45bb2fc3345ffa37a6a4"
+    }
+  ]
+}

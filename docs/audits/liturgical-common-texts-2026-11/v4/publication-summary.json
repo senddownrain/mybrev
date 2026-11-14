@@ -1,0 +1,25 @@
+{
+  "state": "compatible-subset-ready; execute requires one fresh preflight",
+  "readyDocuments": 226,
+  "readyFields": 406,
+  "contentReadyDocuments": 975,
+  "contentReadyFields": 8197,
+  "heldUnresolvedFields": 843,
+  "supersededAdventFields": 1,
+  "heldReleaseFields": 7791,
+  "heldFields": 8635,
+  "previousReadyFields": 8153,
+  "ownerApprovedExceptions": 10,
+  "sourceEditorPending": 0,
+  "deliveryPolicy": "proper-only-keep-manifest",
+  "manifestWrites": 0,
+  "productionWrites": 0,
+  "freshLivePreflight": false,
+  "batches": [
+    {
+      "writes": 226,
+      "bytes": 1565181
+    }
+  ],
+  "planSha256": "4a9aceb089a77ce50aeda1ba39dbf0a08f41130214cd77327fff032c753dd589"
+}

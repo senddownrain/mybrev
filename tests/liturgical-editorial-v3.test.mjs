@@ -10,11 +10,14 @@ import { inspectField } from '../scripts/liturgy/lib/common-text-audit.mjs';
 import { liturgicalText,normalizeReadingHtml } from '../src/utils/liturgicalSourceHtml.js';
 import { getLiturgicalAlternatives } from '../src/utils/liturgicalAlternatives.js';
 const dir='docs/audits/liturgical-common-texts-2026-11',gz=f=>JSON.parse(zlib.gunzipSync(fs.readFileSync(dir+'/'+f))),proof=gz('v3/editorial-source-proofs.json.gz');
+const ownerProof=gz('v4/source-proofs.json.gz');
+const historicalOwnerValue=(value,file,field)=>{const r=ownerProof.records.find(r=>r.file===file&&r.field===field&&r.afterHtml===value);return r?r.beforeHtml:value;};
+const historicalOwnerDoc=(doc,file)=>{const d=structuredClone(doc);for(const r of ownerProof.records.filter(r=>r.file===file)){const keys=r.field.split('.'),last=keys.pop(),node=keys.reduce((v,k)=>v[k],d);node[last]=historicalOwnerValue(node[last],file,r.field);}return d;};
 const baseline=gz('v3/source-baseline.json.gz'),at=(d,p)=>p.split('.').reduce((v,k)=>v?.[k],d);
 const words=s=>(s.toLocaleLowerCase('be').match(/[\p{L}\p{N}]+(?:[’'ʼ][\p{L}\p{N}]+)*/gu)||[]);
 for(const kind of ['short','long'])test('every '+kind+' field has exact local span copies, reversible source and idempotent output',()=>{
  for(const r of proof.records.filter(r=>r.kind===kind)){
-  const field=r.field.split('.').at(-1),actual=at(JSON.parse(fs.readFileSync(r.file)),r.field),computed=expandEditorialResponsories(r.beforeHtml,field);
+  const field=r.field.split('.').at(-1),actual=historicalOwnerValue(at(JSON.parse(fs.readFileSync(r.file)),r.field),r.file,r.field),computed=expandEditorialResponsories(r.beforeHtml,field);
   assert.equal(r.beforeSha256,editorialHash(r.beforeHtml));assert.equal(r.afterSha256,editorialHash(r.afterHtml));assert.equal(actual,r.afterHtml,r.caseId);assert.equal(computed.value,actual);
   assert.equal(expandEditorialResponsories(actual,field).edits.length,0,r.caseId);
   let expected=r.beforeHtml;
@@ -33,7 +36,7 @@ for(const kind of ['short','long'])test('every '+kind+' field has exact local sp
 });
 test('canonical JSON changes are exactly the 455 proved fields / 820 replies; unrelated values and all exceptions survive',()=>{
  let changed=0;const walk=(before,after,file,path=[])=>{if(typeof before==='string'){if(before!==after){changed++;const row=proof.records.find(r=>r.file===file&&r.field===path.join('.'));assert.ok(row,'Unproved '+file+':'+path.join('.'));assert.equal(row.status,'safe-auto');assert.equal(after,row.afterHtml);assert.equal(before,row.beforeHtml);}return;}if(before&&typeof before==='object'){assert.deepEqual(Object.keys(after),Object.keys(before),file);for(const k of Object.keys(before))walk(before[k],after[k],file,[...path,k]);}else assert.deepEqual(after,before);};
- for(const[file,doc]of Object.entries(baseline))walk(doc,JSON.parse(fs.readFileSync(file)),file);
+ for(const[file,doc]of Object.entries(baseline))walk(doc,historicalOwnerDoc(JSON.parse(fs.readFileSync(file)),file),file);
  assert.equal(changed,455);assert.equal(proof.records.reduce((n,r)=>n+r.edits.length,0),820);
  assert.deepEqual(proof.records.reduce((tot,r)=>(tot[r.status]=(tot[r.status]||0)+1,tot),{}),{'safe-auto':455,'needs-editor':10,'already-full':2});
 });
@@ -59,7 +62,7 @@ test('no cross-boundary, partial-word, wrong role, multiple-star or unknown-sign
  const s='<p>К. А * Б.</p><p>Н. А.</p><p>К. В.</p><p>Н. Б.</p><p>К. Невядома.</p><p>Н. А.</p>';assert.equal(expandEditorialResponsories(s,'laudesR').value,s);
 });
 test('only ten fields / fifteen replies are sent to the editor; SHA and seasons remain separate',()=>{
- const q=JSON.parse(fs.readFileSync(dir+'/manual-review.json'));assert.equal(q.cases.length,10);assert.equal(q.counts.exceptionReplies,15);assert.ok(q.cases.every(r=>r.status==='needs-editor'&&r.beforeHtml===r.afterHtml));
+ const q=JSON.parse(fs.readFileSync(dir+'/v3/exceptions.json'));assert.equal(q.cases.length,10);assert.equal(q.cases.flatMap(r=>r.replies).length,15);assert.ok(q.cases.every(r=>r.status==='needs-editor'&&r.beforeHtml===r.afterHtml));
  const season=q.cases.filter(r=>r.file.endsWith('/holy-men.json'));assert.equal(season.length,5);assert.equal(new Set(season.map(r=>r.season)).size,5);
  for(const row of q.cases)for(const reply of row.replies){assert.equal(editorialHash(reply.originalHtml),reply.replySha);assert.ok(reply.reason);assert.ok(reply.proposedBodyHtml);}
 });
