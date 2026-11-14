@@ -33,8 +33,17 @@
             <span class="prayer-source__label">Крыніца:</span>
             <span class="prayer-source__content" v-html="sourceHtml" />
           </footer>
-          <footer class="prayer-report">
-            <router-link :to="feedbackTo" data-test="prayer-report-error">Паведаміць пра памылку</router-link>
+          <footer class="prayer-report" data-test="prayer-report">
+            <p id="prayer-report-label" class="prayer-report__text">Заўважылі памылку ў тэксце?</p>
+            <router-link
+              :to="feedbackTo"
+              class="prayer-report__action"
+              aria-describedby="prayer-report-label"
+              data-test="prayer-report-error"
+            >
+              <PhFlag :size="18" aria-hidden="true" class="prayer-report__icon" />
+              <span>Паведаміць</span>
+            </router-link>
           </footer>
       </article>
     </div>
@@ -64,7 +73,8 @@
 
 <script setup>
 import { vReaderProse } from '@/directives/readerProse';
-import { feedbackLink } from '@/utils/feedbackContext';
+import { PhFlag } from '@phosphor-icons/vue';
+import { prayerFeedbackLink } from '@/utils/feedbackContext';
 import '@/styles/prayer-reading.css';
 import { ref, computed, watch, nextTick, onUnmounted, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -147,7 +157,7 @@ const displayTitle = computed(() => {
   if (!variant || variant.prayerId === MASS_ORDER_PRAYER_ID) return getTitle(prayer.value);
   return getTitle(massVariantPrayer.value) || variant.title;
 });
-const feedbackTo = computed(() => feedbackLink({ kind: 'prayer', id: route.params.id, title: displayTitle.value }));
+const feedbackTo = computed(() => prayerFeedbackLink(route, displayTitle.value));
 const displaySource = computed(() => (
   massVariant.value && massVariant.value.prayerId !== MASS_ORDER_PRAYER_ID
     ? massVariantPrayer.value?.source || massVariant.value.source || ''
@@ -367,7 +377,3 @@ defineExpose({
 });
 </script>
 <style scoped src="@/styles/prayer-reading.css"></style>
-<style scoped>
-.prayer-report { margin-top: 28px; font-size: .9rem; opacity: .75; }
-.prayer-report a { color: inherit; text-decoration: underline; }
-</style>

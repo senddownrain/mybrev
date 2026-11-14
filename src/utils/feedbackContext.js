@@ -26,6 +26,14 @@ export const feedbackLink = ({ kind, id, date, hour, title }) => ({
   query: Object.fromEntries(Object.entries({ ctx_kind: kind, ctx_id: id, ctx_date: date, ctx_hour: hour, ctx_title: title }).filter(([, v]) => v)),
 });
 
+/** Link from the foot of a prayer: the same location the side menu builds (id + return path), plus the shown title. */
+export function prayerFeedbackLink(route, title) {
+  const auto = feedbackLocationForRoute(route);
+  const base = auto || feedbackLink({ kind: 'prayer', id: safeId(route?.params?.id) });
+  const t = typeof title === 'string' ? title.trim() : '';
+  return t ? { ...base, query: { ...base.query, ctx_title: t } } : base;
+}
+
 const HOUR_BY_ROUTE = {
   invitatorium: 'invitatory', lectionis: 'office_of_readings', morning: 'lauds', laudes: 'lauds',
   terz: 'daytime', sext: 'daytime', non: 'daytime', vesper: 'vespers', completorium: 'compline',
