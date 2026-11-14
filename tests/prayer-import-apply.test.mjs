@@ -19,7 +19,6 @@ describe('canonical import apply/rollback (emulator)', { skip: !emulator }, () =
   const db = getFirestore(initializeApp({ projectId: 'demo-rules' }, 'import-apply'));
   const dir = mkdtempSync(path.join(os.tmpdir(), 'canon-apply-'));
   const planDir = path.join(dir, 'plan'); const backupDir = path.join(dir, 'backups');
-  const rightsOk = { litanies_novenas_chaplets_2024: { confirmedBy: 'owner', basis: 'тэставая пісьмовая згода выдаўца, 2026-11-14' }, rite_penance: { confirmedBy: 'owner', basis: 'тэставая пісьмовая згода выдаўца, 2026-11-14' } };
   let plan; let sha;
   const get = async (path_) => (await db.doc(path_).get());
   before(async () => {
@@ -35,7 +34,7 @@ describe('canonical import apply/rollback (emulator)', { skip: !emulator }, () =
     sha = writeReports(planDir, result, { generatedAt: 'test', snapshot: [] });
     plan = result;
   });
-  const apply = (over = {}) => applyCanonPlan({ db, FieldValue, planDir, approvedSha: sha, rights: rightsOk, backupDir, log: () => {}, ...over });
+  const apply = (over = {}) => applyCanonPlan({ db, FieldValue, planDir, approvedSha: sha, backupDir, log: () => {}, ...over });
 
   it('refuses a wrong approval hash and a tampered plan', () => {
     assert.throws(() => loadApprovedPlan(planDir, 'f'.repeat(64)), /approve-sha/);
@@ -43,10 +42,10 @@ describe('canonical import apply/rollback (emulator)', { skip: !emulator }, () =
     writeFileSync(path.join(tampered, 'planned_operations.json'), JSON.stringify({ ...JSON.parse(JSON.stringify({ planSha256: sha, operations: [{ ...plan.operations[0], title: 'changed' }] })) }));
     assert.throws(() => loadApprovedPlan(tampered, sha), /modified/);
   });
-  it('rights gate: without written confirmation public operations are skipped (drafts still allowed)', () => {
+  it('canonical create/replace operations do not need a rights.json file', () => {
     const { run, skipped } = selectOperations(JSON.parse(JSON.stringify({ operations: plan.operations })), {}, null);
-    assert.equal(run.filter((op) => op.targetCollection === 'prayers').length, 0);
-    assert.ok(skipped.length >= 2); assert.ok(run.every((op) => op.targetCollection === 'prayerDrafts'));
+    assert.equal(run.filter((op) => op.targetCollection === 'prayers').length, 2);
+    assert.equal(skipped.length, 0);
   });
   it('apply: create + replace keep ID and old fields + closed draft; control version moves, lock released', async () => {
     const result = await apply();
@@ -57,7 +56,7 @@ describe('canonical import apply/rollback (emulator)', { skip: !emulator }, () =
     assert.equal(replaced.sourceEntryId, 'lit-old'); assert.equal(replaced.createdAt.toMillis(), 1e12); assert.equal(replaced.verified, true);
     assert.equal(replaced.textVersions.ru, 'ru-text'); assert.equal(replaced.titleVersions.ru, 'ru-title'); assert.ok(replaced.textVersions.be.startsWith('Кірые'));
     const draft = (await get(`prayerDrafts/${plan.operations.find((op) => op.action === 'REVIEW_AMBIGUOUS').targetId}`)).data();
-    assert.equal(draft.status, 'needs_review'); assert.equal(draft.reason, 'rite_scope'); assert.equal(draft.rightsStatus, 'confirmed');
+    assert.equal(draft.status, 'draft'); assert.equal(draft.reason, 'rite_scope'); assert.equal(draft.rightsStatus, undefined);
     const state = (await get('priestContentControl/state')).data();
     assert.equal(state.lockUid, ''); assert.ok(state.version >= 7);
     assert.equal((await db.collection('priestProtectedPrayers').get()).size, 0);
