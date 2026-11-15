@@ -17,6 +17,8 @@ on:
       - 'src/layouts/default/NavigationDrawer.vue'
       # Deploy this reader update after the reviewed PR reaches main.
       - 'src/utils/readerPreferences.js'
+      # A verified content publication must refresh the Web reader cache.
+      - 'src/constants/contentRevision.js'
       - 'src/components/oraparts/Reading.vue'
       - 'src/components/oraparts/Lectio.vue'
       - 'src/components/oraparts/LastPrayer.vue'
