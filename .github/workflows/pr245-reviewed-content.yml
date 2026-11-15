@@ -3,6 +3,22 @@ name: Publish PR245 compatible Proper fields
 on:
   workflow_dispatch:
     inputs:
+      mode:
+        description: Read-only quota diagnostics, or authorized guarded execution
+        required: true
+        default: diagnose
+        type: choice
+        options: [diagnose, execute]
+      batch_size:
+        description: Maximum documents per guarded batch (content plan stays unchanged)
+        required: true
+        default: '25'
+        type: choice
+        options: ['25', '50']
+      resume_run_id:
+        description: Prior PR245 run receipt to resume; empty for the first run
+        required: false
+        type: string
       plan_sha256:
         description: Exact reviewed v4 publication-plan.json.gz SHA256
         required: true
@@ -10,6 +26,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: firebase-firestore-production
@@ -56,10 +73,28 @@ jobs:
           const file=process.env.RUNNER_TEMP+'/pr245-authorization.json';
           fs.writeFileSync(file,JSON.stringify({project:'ibreviaryby',planSha256:process.env.EXPECTED_PLAN_SHA,action:'execute',ownerApproved:true,massRebuildReleaseGateReviewed:true,reason:'Owner PR245 comments 6877040538/6878311145 authorize execution. Review limits writes to existing Proper omitted from current manifest; fresh runtime guard enforces omission. No published-collection/manifest/bundle override.'}),{mode:0o600});
           JS
-      - name: One fresh guarded execute, exact masks, one readback per successful write
+      - name: Inspect current Firestore/API quota and Monitoring metrics (no document reads)
         run: |
           mkdir -p backups/pr245-release
-          node scripts/liturgy/future-publish-editorial-v3.mjs --mode execute --plan docs/audits/liturgical-common-texts-2026-11/v4/publication-plan.json.gz --authorization "$RUNNER_TEMP/pr245-authorization.json" --service-account "$RUNNER_TEMP/pr245-firebase.json" --receipt backups/pr245-release/server-receipt.json
+          node scripts/liturgy/inspect-firestore-quota.mjs --service-account "$RUNNER_TEMP/pr245-firebase.json" --out backups/pr245-release/quota-report.json
+      - name: Fetch the exact prior protected receipt for resume
+        if: inputs.mode == 'execute' && inputs.resume_run_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+        run: |
+          case "$RESUME_RUN_ID" in *[!0-9]*|'') echo 'Invalid resume run ID'; exit 1;; esac
+          gh run download "$RESUME_RUN_ID" --repo senddownrain/mybrev --name "pr245-server-receipt-$RESUME_RUN_ID" --dir "$RUNNER_TEMP/pr245-previous"
+      - name: Fresh guarded execute, small batches, exact masks and readback
+        if: inputs.mode == 'execute'
+        env:
+          RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+          BATCH_SIZE: ${{ inputs.batch_size }}
+        run: |
+          mkdir -p backups/pr245-release
+          args=()
+          if [ -n "$RESUME_RUN_ID" ]; then args+=(--resume "$RUNNER_TEMP/pr245-previous/server-receipt.json"); fi
+          node scripts/liturgy/future-publish-editorial-v3.mjs --mode execute --plan docs/audits/liturgical-common-texts-2026-11/v4/publication-plan.json.gz --authorization "$RUNNER_TEMP/pr245-authorization.json" --service-account "$RUNNER_TEMP/pr245-firebase.json" --receipt backups/pr245-release/server-receipt.json --quota-report backups/pr245-release/quota-report.json --batch-size "$BATCH_SIZE" "${args[@]}"
       - name: Retain actual server receipt and rollback inputs
         if: always()
         uses: actions/upload-artifact@v4
