@@ -18,7 +18,7 @@ if(db)report.database=Object.fromEntries(['name','locationId','type','databaseEd
 const billing=await get('billing','https://cloudbilling.googleapis.com/v1/projects/ibreviaryby/billingInfo');if(billing)report.billing={billingEnabled:billing.billingEnabled};
 const project=await get('project','https://cloudresourcemanager.googleapis.com/v3/projects/ibreviaryby');
 const projectNumber=project?.name?.split('/').at(-1);
-if(projectNumber){const quota=await get('consumerQuota','https://serviceusage.googleapis.com/v1/projects/'+projectNumber+'/services/firestore.googleapis.com/consumerQuotaMetrics?view=FULL&pageSize=200');if(quota)report.consumerQuotaMetrics=sanitizeReleaseValue(quota.metrics||[]);}
+if(projectNumber){const quota=await get('consumerQuota','https://serviceusage.googleapis.com/v1beta1/projects/'+projectNumber+'/services/firestore.googleapis.com/consumerQuotaMetrics?view=FULL&pageSize=200');if(quota)report.consumerQuotaMetrics=sanitizeReleaseValue(quota.metrics||[]);}
 const descriptorUrl=new URL('https://monitoring.googleapis.com/v3/projects/ibreviaryby/metricDescriptors');descriptorUrl.searchParams.set('filter','metric.type = starts_with("firestore.googleapis.com/")');descriptorUrl.searchParams.set('pageSize','200');
 const descriptors=await get('metricDescriptors',descriptorUrl);if(descriptors)report.metricDescriptors=(descriptors.metricDescriptors||[]).map(d=>({type:d.type,metricKind:d.metricKind,unit:d.unit,labels:d.labels,description:d.description}));
 async function metric(name,filter,alignment='ALIGN_SUM'){
