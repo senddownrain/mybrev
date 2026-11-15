@@ -29,3 +29,14 @@ Merge title содержит `[pr245-data-before-web]`: существующий
 Результат записи **не следует** из этого подготовленного файла. Фактические счётчики и server receipts — в artifact run `Publish PR245 compatible Proper fields`; финальный PR description и ответ владельцу должны указывать его фактический результат. При ошибке записи Web deploy не запускать.
 
 Проверены только затронутые регрессии: 20/20 (`liturgical-owner-v4` + обратимые v3-проверки), ESLint. Прежние полные аудиты, 74/1 260 проверки и 16k-date sweep повторно не запускались. Обычный обязательный CI выполняется штатно для merge.
+
+## Локальная подготовка оставшихся days/templates
+
+`prepare-days-templates.mjs` выделяет ровно 7 791 подтверждённое поле / 749 документов из сохранённого полного плана, исключая опубликованные Proper и все 843 неподтверждённых поля. Исходные тексты, hashes и masks не меняются. Проверены локальные beforeSHA/updateTime, согласованность шаблонов с генератором, утверждённые сезонные ответы и отсутствие пересечений с 14 Advent-правками. Единственное отличие от generated — завершающий перевод строки в `church-dedication._seasonalVariants.easter.vesper1Ps3`; слова/HTML совпадают, ранее проверенное значение сохранено.
+
+```bash
+node scripts/liturgy/prepare-days-templates.mjs --snapshot backups/firestore-snapshot-public --advent-baseline backups/pr245-after-advent --out backups/pr245-days-templates-prepared.json.gz
+node --test tests/days-templates-preparation.test.mjs
+```
+
+Локальный пакет создан в ignored `backups/`; SHA256 `df938a10e8180b39fe3549b1998a6e8d34b483d76af8ac83570a5295d5af61f7`. Четыре целевые проверки и ESLint проходят. Firebase reads/writes = 0; deploy отсутствует, Flutter/bundle не менялись. Пакет содержит блокирующую compatibility policy, которую текущий publisher отклоняет. Это готовность содержания по сохранённым данным, а не свежая сверка production. До окончательной публикации нужны совместимый bundle/release, согласованная доставка manifest и отдельно разрешённый свежий preflight, затем masks/updateTime + receipts/readback. Proper повторно не публикуется, 843 поля не включаются.
