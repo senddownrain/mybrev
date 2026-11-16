@@ -97,15 +97,28 @@ service cloud.firestore {
         'status', 'version', 'fingerprint', 'createdBy', 'createdAt', 'updatedAt', 'reviewedBy', 'reviewedAt', 'publishedBy',
         'publishedAt', 'targetPrayerId', 'notes', 'rightsBasis', 'rightsConfirmedBy', 'rightsConfirmedAt'];
     }
-    function validDraft(data) {
-      return data.keys().hasOnly(draftKeys())
-        && data.title is string && data.title.size() > 0 && data.title.size() <= 200
+    function validDraftFields(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() <= 200
         && data.text is string && data.text.size() > 0 && data.text.size() <= 200000
         && data.textFormat == 'mybrev-markdown'
         && data.tags is list && data.tags.size() <= 40
         && data.status in ['draft', 'published']
         && data.get('priestOnly', false) is bool
         && data.version is int;
+    }
+    function validDraft(data) {
+      return data.keys().hasOnly(draftKeys()) && validDraftFields(data);
+    }
+    // Historical imported drafts can contain extra fields not written by today's editor.
+    // Keep them immutable, but do not reject an admin's edit or publish solely because
+    // a legacy field exists. New drafts still require the strict draftKeys() allowlist.
+    function validDraftEdit(data) {
+      return validDraftFields(data)
+        && data.diff(resource.data).affectedKeys().hasOnly([
+          'title', 'text', 'source', 'sourceBook', 'sourceEdition', 'tags',
+          'categoryIds', 'priestOnly', 'notes', 'status', 'version', 'updatedAt',
+          'publishedBy', 'publishedAt', 'targetPrayerId'
+        ]);
     }
     function draftPublishedTarget(id, data) {
       return data.targetPrayerId is string
@@ -120,7 +133,7 @@ service cloud.firestore {
       allow read: if isAdmin();
       allow create: if isAdmin() && validDraft(request.resource.data) && request.resource.data.version == 1
         && request.resource.data.status == 'draft';
-      allow update: if isAdmin() && validDraft(request.resource.data)
+      allow update: if isAdmin() && validDraftEdit(request.resource.data)
         && resource.data.status != 'published'
         && request.resource.data.version == resource.data.version + 1
         && (request.resource.data.status != 'published' || draftPublishedTarget(id, request.resource.data));
