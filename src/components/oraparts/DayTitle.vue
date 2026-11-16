@@ -121,6 +121,9 @@ const displayTitle = computed(() => {
   if (!day) return '';
   const hasCelebrationIdentity = day._feast || day._rank || day._feastType;
   if (day._kind === 'office-for-dead') return day._feastName || day._title || 'Афіцый за памерлых';
+  if (day._feast === 'feast-christking' || day._celebrationId === 'christ-king' || day.id === 'feast-christking') {
+    return 'Пана нашага Езуса Хрыста, Валадара Сусвету';
+  }
   const isChristmasDateDay = day._periodType === 'christmas'
     && (isSeasonalDateDocumentId(day.id) || (!day._feast && !day._rank && !day._feastType));
   if ((day._periodType && !hasCelebrationIdentity) || isChristmasDateDay) {

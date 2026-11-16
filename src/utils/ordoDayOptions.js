@@ -43,6 +43,9 @@ function buildPeriodTitle(context, date) {
 }
 
 export function buildDayTitle(day, context, date) {
+  if (day?._feast === 'feast-christking' || day?._celebrationId === 'christ-king' || day?.id === 'feast-christking') {
+    return 'Пана нашага Езуса Хрыста, Валадара Сусвету';
+  }
   const hasCelebrationIdentity = day?._feast || day?._rank || day?._feastType;
   // Seasonal date documents were imported with headings from a particular
   // source year (for example a 21 December document may say "IV Sunday").
