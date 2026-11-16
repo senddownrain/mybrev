@@ -20,7 +20,12 @@ export function readingGroupsOf(items = []) {
   }
   return [...groups.values()].map((group) => ({
     ...group,
-    label: group.documents.find((document) => document.title)?.title || 'Чытанні дня',
+    // A legacy lectionary document may still have the nominative title.
+    // Match the feast identity, not arbitrary strings inside readings.
+    label: group.documents.some((document) =>
+      document._feast === 'feast-christking' || document._ordoOptionId === 'christ-king')
+      ? 'Пана нашага Езуса Хрыста, Валадара Сусвету'
+      : (group.documents.find((document) => document.title)?.title || 'Чытанні дня'),
   }));
 }
 
