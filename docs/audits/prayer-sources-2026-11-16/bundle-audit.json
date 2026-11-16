@@ -1,0 +1,1312 @@
+{
+  "schemaVersion": 1,
+  "analysisSource": "flutter-bundle",
+  "coverage": {
+    "prayers": {
+      "bundleVersion": 1791877294111,
+      "currentProduction": false
+    }
+  },
+  "counts": {
+    "total": 115,
+    "published": 115,
+    "drafts": 0,
+    "withPages": 0,
+    "longCorrected": 48,
+    "changedDocuments": 52
+  },
+  "changes": [
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-100105",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100105.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-100106",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100106.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-100107",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100107.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-100108",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100108.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-100109",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100109.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-100111",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100111.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-100115",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100115.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-105679",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/105679.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-105681",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/105681.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-105683",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/105683.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-105811",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/105811.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-108432",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/108432.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-111854",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/111854-kryzowy-szlach.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-111877",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/111877-kryzowy-szlach.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-116633",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/116633.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-116634",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/116634.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-116694",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/116694-wialiki-post.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-125067",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/125067-kshalenyblusenkowaj.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-128936",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/128936.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-128938",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/128938.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-128988",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/128988.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-129259",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/129259.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-129262",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/129262.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-129406",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/129406.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-129467",
+      "before": {
+        "source": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/129467.html)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-01-malitvy-na-kozhny-dzen-tydnya",
+      "before": {
+        "source": "[https://catholic.by/3/lib/pray/4484-malitvy-na-kozhny-dzen-tydnya](https://catholic.by/3/lib/pray/4484-malitvy-na-kozhny-dzen-tydnya)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-03-sakrament-pakayannya-spovedz",
+      "before": {
+        "source": "[https://katecheta.narod.ru/confession.htm](https://katecheta.narod.ru/confession.htm)"
+      },
+      "updates": {
+        "source": "katecheta.narod.ru"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-05-vyanochak-za-kanayuchykh-i-pamerlykh",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/dead/2940-vyanochak-za-kanayuchykh-i-pamerlykh](https://ave-maria.by/prayers/dead/2940-vyanochak-za-kanayuchykh-i-pamerlykh)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-06-malitvy-u-roznykh-patrebakh",
+      "before": {
+        "source": "[https://catholic.by/3/lib/pray/4481-malitvy-u-roznykh-patrebakh](https://catholic.by/3/lib/pray/4481-malitvy-u-roznykh-patrebakh)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-07-malitvy-da-matsi-bozhaj",
+      "before": {
+        "source": "[https://catholic.by/3/lib/pray/4482-malitvy-da-matsi-bozhaj](https://catholic.by/3/lib/pray/4482-malitvy-da-matsi-bozhaj)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-08-asnounyya-malitvy-na-pratsyagu-dnya",
+      "before": {
+        "source": "https://catholic.by/3/lib/pray/4479-asnounyya-malitvy-na-pratsyagu-dnya"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-09-litaniya-da-khrysta-svyatara-i-akhvyary",
+      "before": {
+        "source": "[https://kasciolhomiel.by/orationis-liber/litany/litaniya-da-hrysta-svyatara-i-ahvyary](https://kasciolhomiel.by/orationis-liber/litany/litaniya-da-hrysta-svyatara-i-ahvyary)"
+      },
+      "updates": {
+        "source": "kasciolhomiel.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-10-navenna-za-pamerlykh-z-bl-a-hanaratam",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/dead/2377-navenna-za-pamerlykh](https://ave-maria.by/prayers/dead/2377-navenna-za-pamerlykh)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-11-asnounyya-malitvy-na-latsinskaj-move",
+      "before": {
+        "source": "https://catholic.by/3/lib/pray/4521-asnounyya-malitvy-na-latsinskaj-move"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-12-nabazhenstvy-na-pratsyagu-liturgichnaga-goda",
+      "before": {
+        "source": "[https://catholic.by/3/lib/pray/4512-nabazhenstvy-na-pratsyagu-liturgichnaga-goda](https://catholic.by/3/lib/pray/4512-nabazhenstvy-na-pratsyagu-liturgichnaga-goda)"
+      },
+      "updates": {
+        "source": "Catholic.by"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-13-nabazhenstva-pershykh-subotau-mesyatsa-peraprashenne-bezzahannaha-sertsa-maryi",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/need/3099-nabazhenstva-pershykh-subota-mesyatsa-peraprashenne-bezzagannaga-sertsa-maryi](https://ave-maria.by/prayers/need/3099-nabazhenstva-pershykh-subota-mesyatsa-peraprashenne-bezzagannaga-sertsa-maryi)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-14-malitvy-da-matsi-bozhaj-barunskaj-sutsyashalnitsy-zasmuchanykh",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/need/3161-malitvy-da-matsi-bozhaj-barunskaj-sutsyashalnitsy-zasmuchanykh](https://ave-maria.by/prayers/need/3161-malitvy-da-matsi-bozhaj-barunskaj-sutsyashalnitsy-zasmuchanykh)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-15-malitvy-za-semi",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/need/665-malitvy-za-sem-i](https://ave-maria.by/prayers/need/665-malitvy-za-sem-i)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-16-nabazhenstva-prysvyachennya-parafii-najsvyatsejshamu-sertsu-ezusa",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/need/3340-nabazhenstva-prysvyachennya-parafii-najsvyatsejshamu-sertsu-ezusa](https://ave-maria.by/prayers/need/3340-nabazhenstva-prysvyachennya-parafii-najsvyatsejshamu-sertsu-ezusa)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-18-kryzhovy-shlyakh-prabachennya",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/crossway/1910-kryzhovy-shlyakh-prabachennya](https://ave-maria.by/prayers/crossway/1910-kryzhovy-shlyakh-prabachennya)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-19-uhledzemsya-u-kryzh",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/crossway/3082-ugledzemsya-kryzh](https://ave-maria.by/prayers/crossway/3082-ugledzemsya-kryzh)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-20-kryzhovy-shlyakh-dlya-dzyatsej-shlyakh-laski-bozhaj",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/crossway/2733-kryzhovy-shlyakh-dlya-dzyatsej-shlyakh-laski-bozhaj](https://ave-maria.by/prayers/crossway/2733-kryzhovy-shlyakh-dlya-dzyatsej-shlyakh-laski-bozhaj)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-21-kryzhovy-shlyakh-pavodle-dzennika-svyatoj-syastry-faustyny",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/crossway/588-shliah-faustyny](https://ave-maria.by/prayers/crossway/588-shliah-faustyny)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-22-kryzhovy-shlyakh-nenarodzhanykh",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/crossway/2748-kryzhovy-shlyakh-nenarodzhanykh](https://ave-maria.by/prayers/crossway/2748-kryzhovy-shlyakh-nenarodzhanykh)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-23-razvazhanni-kryzhovaha-shlyakhu",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/crossway/3216-razvazhanni-kryzhovaga-shlyakhu](https://ave-maria.by/prayers/crossway/3216-razvazhanni-kryzhovaga-shlyakhu)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-24-nabazhenstvy-vyalikaha-postu-kryzhovy-shlyakh",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/crossway/59-nabazhenstvy-vyalikaga-postu](https://ave-maria.by/prayers/crossway/59-nabazhenstvy-vyalikaga-postu)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "import-25-tady-i-tsyaper-kryzhovy-shlyakh-pavodle-ks-yana-tvardouskaha",
+      "before": {
+        "source": "[https://ave-maria.by/prayers/crossway/773-u-toj-chas1](https://ave-maria.by/prayers/crossway/773-u-toj-chas1)"
+      },
+      "updates": {
+        "source": "Ave Maria"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "mybrev-devotion-blessed-virgin-mary-laudes",
+      "before": {
+        "source": "Літургія гадзінаў MyBrev — Агульныя тэксты пра Найсвяцейшую Панну Марыю"
+      },
+      "updates": {
+        "source": "Літургія гадзін"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "mybrev-devotion-blessed-virgin-mary-vesper",
+      "before": {
+        "source": "Літургія гадзінаў MyBrev — Агульныя тэксты пра Найсвяцейшую Панну Марыю"
+      },
+      "updates": {
+        "source": "Літургія гадзін"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "mybrev-devotion-office-for-dead-laudes",
+      "before": {
+        "source": "Літургія гадзінаў MyBrev — Агульныя тэксты за памерлых"
+      },
+      "updates": {
+        "source": "Літургія гадзін"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "mybrev-devotion-office-for-dead-vesper",
+      "before": {
+        "source": "Літургія гадзінаў MyBrev — Агульныя тэксты за памерлых"
+      },
+      "updates": {
+        "source": "Літургія гадзін"
+      }
+    },
+    {
+      "collection": "prayers",
+      "id": "order-of-mass-en",
+      "before": {
+        "source": "Excerpts from the English translation of The Roman Missal © 2010, International Commission on English in the Liturgy Corporation. All rights reserved. Compilation & layout © 2011 Catholic Bishops’ Conference of England and Wales. www.missal.org.uk"
+      },
+      "updates": {
+        "source": "The Roman Missal"
+      }
+    }
+  ],
+  "disputed": [
+    {
+      "collection": "prayers",
+      "id": "0AAlyUXOjOtzbPdt3Gql",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "0I7bXIWkQxoNzI2VunnX",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "41hXdpcp6zs7ZOrItrpe",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "4nwUUjhdkxYWyn4BrQgr",
+      "field": "source",
+      "reason": "empty",
+      "before": ""
+    },
+    {
+      "collection": "prayers",
+      "id": "5aiMGl3bAqptTb3Mo9th",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "5fbSVswIy0tSftxQ4o2J",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "6h0UMNTyQ88pRz7Vgpwa",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "AAazUF2ItrRRdPXI5XKU",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "BM6NBd38XEsffKbAOfoj",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "BwaAAX6vNeZ7EFbCEJW8",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "CBnO75Ev2RATQQq2rU2l",
+      "field": "source",
+      "reason": "empty",
+      "before": ""
+    },
+    {
+      "collection": "prayers",
+      "id": "CZqnxQcNQQy7uTGHyNma",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "DVCz2NZEvgNdVFmQJaJB",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "ENT0boullpckkhp9u28X",
+      "field": "source",
+      "reason": "empty",
+      "before": ""
+    },
+    {
+      "collection": "prayers",
+      "id": "Fd9rN0S9NU1mAmqb2isZ",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "GNFT4IfETGwV5tN73xaw",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "HLokRVVJhS1Bvn325Lkz",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "IKC9f3pDomKxtz325KMg",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "Iiufha8NyLABTw92rA5S",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "JQ1a4aIBnrNqOYcjox8i",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "JcqOxKZRhOW3z4w0WPo5",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "LIlRAW1cIzp1oUS72AUX",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "LKgfV44EfYac5uYsWFwi",
+      "field": "source",
+      "reason": "empty",
+      "before": ""
+    },
+    {
+      "collection": "prayers",
+      "id": "NuBe7DGx7bxbsdMSRbmJ",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "OTjzStompoMCIglXiqjT",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "Prbvb1Ian16Y3mKeNv4d",
+      "field": "source",
+      "reason": "empty",
+      "before": ""
+    },
+    {
+      "collection": "prayers",
+      "id": "VS7iOWZnrBFxK2QM3Dff",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "WByFA78v610f7PGvgbca",
+      "field": "source",
+      "reason": "empty",
+      "before": ""
+    },
+    {
+      "collection": "prayers",
+      "id": "WDRJk8hSs7CZEkvZeDCh",
+      "field": "source",
+      "reason": "empty",
+      "before": ""
+    },
+    {
+      "collection": "prayers",
+      "id": "WVfKV6kmhJ1w1dPZZbnC",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "Wf9vo99Lt2z0VV1pucz5",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "WtIx27Bbz8PX7JyR9vJj",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "XMJCWmBqkteNID7PxGeC",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "YIhZBel5S4BDSIke4MKP",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "YQStgXVdqwXTB89ky5uS",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "YYn88Cm7zbOelAtb03aQ",
+      "field": "source",
+      "reason": "empty",
+      "before": ""
+    },
+    {
+      "collection": "prayers",
+      "id": "a8tYTDVjR2Ni75PjzOyz",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "b9F5qGGznu8z0v3jlLM3",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "catholicby-yearcycle-100116",
+      "field": "source",
+      "reason": "unknown",
+      "before": "Тэкст паводле пададзенага дакумента «Гадзінкі.docx»"
+    },
+    {
+      "collection": "prayers",
+      "id": "dCwOvya9ZskMCtvC3scV",
+      "field": "source",
+      "reason": "unknown",
+      "before": "складзеная Піем VII"
+    },
+    {
+      "collection": "prayers",
+      "id": "eMmCtxwyJ75ogmL5rwye",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "edc7LXLBYXd8qxqOaqrZ",
+      "field": "source",
+      "reason": "empty",
+      "before": ""
+    },
+    {
+      "collection": "prayers",
+      "id": "efSzmpslyEaLhhPSNwTt",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "i5WLrqxPGZj1jVt3z8RY",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "import-02-agulny-katekhizis",
+      "field": "source",
+      "reason": "unknown",
+      "before": "https://catholic.by/3/lib/pray/4480-agulny-katekhizis](https://catholic.by/3/lib/pray/4480-agulny-katekhizis"
+    },
+    {
+      "collection": "prayers",
+      "id": "import-malitvy-ajcou-maryjanau",
+      "field": "source",
+      "reason": "empty",
+      "before": ""
+    },
+    {
+      "collection": "prayers",
+      "id": "jbfkIE8sxTEm0sy1Cb35",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "kibOzcwhAfunlGfNYnVz",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "kivnMNlWhl89zFjtZAxW",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "mDIF7QIvGxH5zHmF1iMN",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "ns0Ir8cuah7Ep2ypDgX8",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "oP3C3W6wnw5Iga5d6aln",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "prtwzXPV6DBKcL3Vlmlc",
+      "field": "source",
+      "reason": "empty",
+      "before": ""
+    },
+    {
+      "collection": "prayers",
+      "id": "qrRI9AV3wNNFxuFJb0uj",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "rBu49yHfeX05CfHZy8p3",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "sqIqIfB7tQbom08IPu0t",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "tMXEYwIYAAAORyXqJjHX",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "umz7DxYafLUPj5qlvAGl",
+      "field": "source",
+      "reason": "unknown",
+      "before": "Св. Бонавэнтура"
+    },
+    {
+      "collection": "prayers",
+      "id": "ut2R6oL558wsDXvDApPC",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "v4g6eUqZvze29v5vq4o1",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "xGfztLXGNqKqlcjHSNZY",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "zdro66KYVuQ9p2KbqizD",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    },
+    {
+      "collection": "prayers",
+      "id": "zvkoIQoxh7ilXp7oUjFg",
+      "field": "source",
+      "reason": "missing",
+      "before": null
+    }
+  ],
+  "disputedDocuments": 63,
+  "mapping": [
+    {
+      "before": "",
+      "after": "",
+      "status": "empty"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100105.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100106.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100107.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100108.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100109.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100111.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/100115.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "Тэкст паводле пададзенага дакумента «Гадзінкі.docx»",
+      "after": "Тэкст паводле пададзенага дакумента «Гадзінкі.docx»",
+      "status": "unknown"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/105679.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/105681.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/105683.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/105811.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/108432.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/111854-kryzowy-szlach.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/111877-kryzowy-szlach.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/116633.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/116634.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/116694-wialiki-post.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/125067-kshalenyblusenkowaj.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/128936.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/128938.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/128988.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/129259.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/129262.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/129406.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[Catholic.by](https://old.catholic.by/2/liturgy/pray/year-cycle/129467.html)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "складзеная Піем VII",
+      "after": "складзеная Піем VII",
+      "status": "unknown"
+    },
+    {
+      "before": "[https://catholic.by/3/lib/pray/4484-malitvy-na-kozhny-dzen-tydnya](https://catholic.by/3/lib/pray/4484-malitvy-na-kozhny-dzen-tydnya)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "https://catholic.by/3/lib/pray/4480-agulny-katekhizis](https://catholic.by/3/lib/pray/4480-agulny-katekhizis",
+      "after": "https://catholic.by/3/lib/pray/4480-agulny-katekhizis](https://catholic.by/3/lib/pray/4480-agulny-katekhizis",
+      "status": "unknown"
+    },
+    {
+      "before": "[https://katecheta.narod.ru/confession.htm](https://katecheta.narod.ru/confession.htm)",
+      "after": "katecheta.narod.ru",
+      "status": "known",
+      "sourceId": "katecheta"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/dead/2940-vyanochak-za-kanayuchykh-i-pamerlykh](https://ave-maria.by/prayers/dead/2940-vyanochak-za-kanayuchykh-i-pamerlykh)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://catholic.by/3/lib/pray/4481-malitvy-u-roznykh-patrebakh](https://catholic.by/3/lib/pray/4481-malitvy-u-roznykh-patrebakh)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[https://catholic.by/3/lib/pray/4482-malitvy-da-matsi-bozhaj](https://catholic.by/3/lib/pray/4482-malitvy-da-matsi-bozhaj)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "https://catholic.by/3/lib/pray/4479-asnounyya-malitvy-na-pratsyagu-dnya",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[https://kasciolhomiel.by/orationis-liber/litany/litaniya-da-hrysta-svyatara-i-ahvyary](https://kasciolhomiel.by/orationis-liber/litany/litaniya-da-hrysta-svyatara-i-ahvyary)",
+      "after": "kasciolhomiel.by",
+      "status": "known",
+      "sourceId": "kasciolhomiel"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/dead/2377-navenna-za-pamerlykh](https://ave-maria.by/prayers/dead/2377-navenna-za-pamerlykh)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "https://catholic.by/3/lib/pray/4521-asnounyya-malitvy-na-latsinskaj-move",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[https://catholic.by/3/lib/pray/4512-nabazhenstvy-na-pratsyagu-liturgichnaga-goda](https://catholic.by/3/lib/pray/4512-nabazhenstvy-na-pratsyagu-liturgichnaga-goda)",
+      "after": "Catholic.by",
+      "status": "known",
+      "sourceId": "catholic-by"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/need/3099-nabazhenstva-pershykh-subota-mesyatsa-peraprashenne-bezzagannaga-sertsa-maryi](https://ave-maria.by/prayers/need/3099-nabazhenstva-pershykh-subota-mesyatsa-peraprashenne-bezzagannaga-sertsa-maryi)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/need/3161-malitvy-da-matsi-bozhaj-barunskaj-sutsyashalnitsy-zasmuchanykh](https://ave-maria.by/prayers/need/3161-malitvy-da-matsi-bozhaj-barunskaj-sutsyashalnitsy-zasmuchanykh)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/need/665-malitvy-za-sem-i](https://ave-maria.by/prayers/need/665-malitvy-za-sem-i)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/need/3340-nabazhenstva-prysvyachennya-parafii-najsvyatsejshamu-sertsu-ezusa](https://ave-maria.by/prayers/need/3340-nabazhenstva-prysvyachennya-parafii-najsvyatsejshamu-sertsu-ezusa)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/crossway/1910-kryzhovy-shlyakh-prabachennya](https://ave-maria.by/prayers/crossway/1910-kryzhovy-shlyakh-prabachennya)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/crossway/3082-ugledzemsya-kryzh](https://ave-maria.by/prayers/crossway/3082-ugledzemsya-kryzh)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/crossway/2733-kryzhovy-shlyakh-dlya-dzyatsej-shlyakh-laski-bozhaj](https://ave-maria.by/prayers/crossway/2733-kryzhovy-shlyakh-dlya-dzyatsej-shlyakh-laski-bozhaj)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/crossway/588-shliah-faustyny](https://ave-maria.by/prayers/crossway/588-shliah-faustyny)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/crossway/2748-kryzhovy-shlyakh-nenarodzhanykh](https://ave-maria.by/prayers/crossway/2748-kryzhovy-shlyakh-nenarodzhanykh)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/crossway/3216-razvazhanni-kryzhovaga-shlyakhu](https://ave-maria.by/prayers/crossway/3216-razvazhanni-kryzhovaga-shlyakhu)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/crossway/59-nabazhenstvy-vyalikaga-postu](https://ave-maria.by/prayers/crossway/59-nabazhenstvy-vyalikaga-postu)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "[https://ave-maria.by/prayers/crossway/773-u-toj-chas1](https://ave-maria.by/prayers/crossway/773-u-toj-chas1)",
+      "after": "Ave Maria",
+      "status": "known",
+      "sourceId": "ave-maria"
+    },
+    {
+      "before": "Літургія гадзінаў MyBrev — Агульныя тэксты пра Найсвяцейшую Панну Марыю",
+      "after": "Літургія гадзін",
+      "status": "known",
+      "sourceId": "liturhiya-hadzinau-2012-2020"
+    },
+    {
+      "before": "Літургія гадзінаў MyBrev — Агульныя тэксты за памерлых",
+      "after": "Літургія гадзін",
+      "status": "known",
+      "sourceId": "liturhiya-hadzinau-2012-2020"
+    },
+    {
+      "before": "Excerpts from the English translation of The Roman Missal © 2010, International Commission on English in the Liturgy Corporation. All rights reserved. Compilation & layout © 2011 Catholic Bishops’ Conference of England and Wales. www.missal.org.uk",
+      "after": "The Roman Missal",
+      "status": "known",
+      "sourceId": "roman-missal-english"
+    },
+    {
+      "before": "Св. Бонавэнтура",
+      "after": "Св. Бонавэнтура",
+      "status": "unknown"
+    }
+  ],
+  "planSha256": "effdda7f9f3b004a46879f8f800cf83610db3493651f28457822cc68b7531c21"
+}

@@ -24,7 +24,7 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
   };
   const actions = (db, uid) => createDraftActions({ db, fs, actorUid: uid, writer: createPrayerContentWriter({ db, fs }) });
   const denied = (operation) => assert.rejects(operation, { code: 'permission-denied' });
-  const baseDraft = (over = {}) => ({ title: 'Новая малітва', text: 'Тэкст малітвы.', tags: ['Літанія'], source: '«Кніга»', priestOnly: false, ...over });
+  const baseDraft = (over = {}) => ({ title: 'Новая малітва', text: 'Тэкст малітвы.', tags: ['Літанія'], source: 'Бог добры', priestOnly: false, ...over });
   let roles;
   before(async () => {
     for (const name of ['prayers', 'priestProtectedPrayers', 'priestProtectedCategories', 'prayerCategories', 'prayerDrafts', 'priestContentControl', 'admins', 'priestDeviceGrants']) await seed.recursiveDelete(seed.collection(name));
@@ -89,7 +89,7 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
       assert.equal(result.alreadyPublished, false);
       const prayer = (await getDoc(doc(roles.anon, `prayers/${result.id}`))).data();
       assert.equal(prayer.title, 'Літанія тэставая'); assert.equal(prayer.sourceDraftId, 'bd_one'); assert.equal(prayer.priestOnly, false);
-      assert.match(prayer.source, /Кніга/); assert.deepEqual(prayer.copyrightNotices, []);
+      assert.match(prayer.source, /Бог добры/); assert.deepEqual(prayer.copyrightNotices, []);
       const draft = await api.getDraft('bd_one');
       assert.equal(draft.status, 'published'); assert.equal(draft.publishedBy, 'plain'); assert.equal(draft.targetPrayerId, result.id);
       assert.ok((await api.listAudit('bd_one')).some((e) => e.action === 'publish' && e.targetPrayerId === result.id));
@@ -145,7 +145,7 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
   it('old intermediate and archived statuses can be saved as draft and published', async () => {
     const api = actions(roles.plain, 'plain');
     await seed.doc('prayerDrafts/old_review').set({ ...baseDraft({ title: 'Старая праверка' }), draftId: 'old_review', textFormat: 'mybrev-markdown', status: 'needs_review', version: 1 });
-    await api.saveDraft('old_review', { source: 'Абноўленая крыніца' });
+    await api.saveDraft('old_review', { source: 'Рымскі Імшал' });
     assert.equal((await api.getDraft('old_review')).status, 'draft');
     await seed.doc('prayerDrafts/old_archive').set({ ...baseDraft({ title: 'Стары архіў' }), draftId: 'old_archive', textFormat: 'mybrev-markdown', status: 'archived', version: 1 });
     const { id } = await api.publishDraft('old_archive');

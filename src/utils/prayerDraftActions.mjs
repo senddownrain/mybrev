@@ -3,6 +3,8 @@
 // (`admin`, `superadmin`, legacy admins); nothing here trusts a client-side `isAdmin` flag.
 import { buildPrayerFromDraft, canTransition, DRAFT_COLLECTION, findDuplicateCandidates, normalizeDraftStatus, normalizeTitleKey, prayerTitleOf, publishBlockers, targetPrayerIdFor, validateDraft } from './prayerDraftModel.mjs';
 
+import { normalizePrayerSourceFields } from './prayerSource.mjs';
+
 export class DraftError extends Error {
   constructor(code, message, details = {}) { super(message); this.name = 'DraftError'; this.code = code; Object.assign(this, details); }
 }
@@ -30,7 +32,7 @@ export function createDraftActions({ db, fs, writer, actorUid }) {
   }
 
   async function createDraft(draftId, data) {
-    const record = { ...pick(data, [...DRAFT_FIELDS, 'sourceId', 'sourceSha256', 'sourcePageSpan', 'pdfPageStart', 'pdfPageEnd', 'printedPageStart', 'printedPageEnd',
+    const record = { ...pick(normalizePrayerSourceFields(data), [...DRAFT_FIELDS, 'sourceId', 'sourceSha256', 'sourcePageSpan', 'pdfPageStart', 'pdfPageEnd', 'printedPageStart', 'printedPageEnd',
       'originalEntryId', 'originBatch', 'origin', 'reason', 'flagReasons', 'possibleDuplicateIds', 'fingerprint']),
       draftId, textFormat: 'mybrev-markdown', status: 'draft', version: 1, tags: data.tags || [], createdBy: actorUid, createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
     };
@@ -55,10 +57,12 @@ export function createDraftActions({ db, fs, writer, actorUid }) {
       const next = status || normalizeDraftStatus(current.status);
       if (!canTransition(current.status, next)) throw new DraftError('transition', 'Недапушчальная змена статуса.');
       if (next === 'published') throw new DraftError('transition', 'Публікацыя — асобная аперацыя.');
-      const merged = { ...current, ...pick(patch || {}, DRAFT_FIELDS), status: next };
+      const normalized = normalizePrayerSourceFields({ ...current, ...pick(patch || {}, DRAFT_FIELDS) });
+      const savedFields = { ...pick(patch || {}, DRAFT_FIELDS), ...pick(normalized, ['source', 'sourceBook']) };
+      const merged = { ...current, ...savedFields, status: next };
       const errors = validateDraft(merged);
       if (errors.length) throw new DraftError('invalid', errors.join(' '));
-      transaction.update(draftRef(draftId), { ...pick(patch || {}, DRAFT_FIELDS), status: next, version: current.version + 1, updatedAt: serverTimestamp() });
+      transaction.update(draftRef(draftId), { ...savedFields, status: next, version: current.version + 1, updatedAt: serverTimestamp() });
       audit(transaction, draftId, { action: next === current.status ? 'edit' : `status:${next}`, fromStatus: current.status, toStatus: next, version: current.version + 1, ...(note ? { note: String(note).slice(0, 300) } : {}) });
     });
   }

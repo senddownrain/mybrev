@@ -91,6 +91,9 @@ jobs:
       - name: Liturgical alternatives regression tests
         run: npm run test:alternatives
 
+      - name: Prayer source canonical names and import guards (offline)
+        run: npm run test:prayer-sources
+
       - name: Public content cache refresh regression tests
         run: node --test tests/content-cache.test.mjs
 
@@ -138,4 +141,4 @@ jobs:
       - name: Admin roles, two statuses, source and import integration
         run: >
           npx --yes firebase-tools@latest emulators:exec --only firestore --project demo-rules
-          "node --test --test-concurrency=1 tests/prayer-drafts-firestore.test.mjs tests/prayer-import-apply.test.mjs tests/prayer-import-drafts-compat.test.mjs"
+          "node --test --test-concurrency=1 tests/prayer-drafts-firestore.test.mjs tests/prayer-import-apply.test.mjs tests/prayer-import-drafts-compat.test.mjs tests/prayer-source-migration-emulator.test.mjs"

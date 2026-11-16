@@ -1,6 +1,6 @@
 // Pure model for closed prayer drafts (`prayerDrafts`, admin-only).
 // Used by the admin UI, the publish transaction and the import tooling.
-import { formatSourceNotice } from './prayerSource.mjs';
+import { normalizePrayerSource, sourceForSave } from './prayerSource.mjs';
 
 export const DRAFT_COLLECTION = 'prayerDrafts';
 export const DRAFT_STATUSES = Object.freeze(['draft', 'published']);
@@ -94,13 +94,13 @@ export function publishBlockers(draft) {
   const blockers = validateDraft({ ...draft, status: draft.status });
   if (!draft.tags?.length) blockers.push('Дадайце хаця б адзін тэг.');
   if (!draft.sourceBook && !draft.source) blockers.push('Патрэбна крыніца.');
+  try { sourceForSave(draftSourceNotice(draft)); } catch (error) { blockers.push(error.message); }
   return blockers;
 }
 
 export function draftSourceNotice(draft) {
-  if (String(draft.source || '').trim()) return String(draft.source).trim();
-  const pages = draft.pdfPageStart ? `${draft.printedPageStart || draft.pdfPageStart}${draft.printedPageEnd && draft.printedPageEnd !== draft.printedPageStart ? `–${draft.printedPageEnd}` : ''}` : '';
-  return formatSourceNotice({ book: [draft.sourceBook, draft.sourceEdition].filter(Boolean).join(' '), pages: draft.printedPageStart ? pages : '', copyrightNotices: draft.copyrightNotices });
+  if (String(draft.source || '').trim()) return normalizePrayerSource(draft.source);
+  return normalizePrayerSource(draft.sourceBook || '');
 }
 
 /**
@@ -119,7 +119,7 @@ export function buildPrayerFromDraft(draft, { existing } = {}) {
     textFormat: 'mybrev-markdown',
     textFormatVersion: 1,
     tags: [...new Set((draft.tags || []).map((tag) => String(tag).trim()).filter(Boolean))],
-    source: draftSourceNotice(draft),
+    source: sourceForSave(draftSourceNotice(draft)),
     copyrightNotices: [...(draft.copyrightNotices || [])],
     priestOnly: draft.priestOnly === true,
     verified: existing?.verified === true,

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { sourceForSave } from '../src/utils/prayerSource.mjs';
+
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -101,11 +103,11 @@ async function applyPlan(plan, serviceAccountPath) {
         if (current.source !== change.legacySource) {
           throw new Error(`Unexpected current source for ${change.id}: ${current.source ?? '<missing>'}`);
         }
-        if (change.source && extracted.source !== change.source) {
+        if (change.source && sourceForSave(extracted.source) !== change.source) {
           throw new Error(`Embedded source no longer matches the local import: ${change.id}`);
         }
         const updates = {
-          source: change.source || admin.firestore.FieldValue.delete(),
+          source: sourceForSave(change.source) || admin.firestore.FieldValue.delete(),
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         };
         if (extracted.source) updates.text = extracted.text;

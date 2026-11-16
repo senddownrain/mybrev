@@ -1,0 +1,103 @@
+i  emulators: Starting emulators: firestore
+i  emulators: Detected demo project ID "demo-rules", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
+✔  firestore: Firestore Emulator was started in standard edition.
+✔  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: node --test --test-isolation=none --test-concurrency=1 tests/prayer-drafts-firestore.test.mjs tests/prayer-import-apply.test.mjs tests/prayer-import-drafts-compat.test.mjs tests/prayer-source-migration-emulator.test.mjs
+(node:6268) MetadataLookupWarning: received unexpected error = Request failed with status code 403 code = UNKNOWN
+(Use `node --trace-warnings ...` to show where the warning was created)
+[2026-11-16T07:50:18.379Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69c3 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L121, false for 'create' @ L194, false for 'update' @ L123, false for 'update' @ L194
+[2026-11-16T07:50:18.483Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69c4 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L123, false for 'update' @ L194
+[2026-11-16T07:50:18.565Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69c5 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L127, false for 'delete' @ L194
+[2026-11-16T07:50:19.186Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69c7 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L121:24 for 'create' @ L121, false for 'create' @ L194, evaluation error at L123:24 for 'update' @ L123, false for 'update' @ L194, false for 'create' @ L121, false for 'create' @ L194
+[2026-11-16T07:50:19.295Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69c8 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L123:24 for 'update' @ L123, false for 'update' @ L194, false for 'update' @ L123, false for 'update' @ L194
+[2026-11-16T07:50:19.353Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69c9 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L127, false for 'delete' @ L194
+[2026-11-16T07:50:19.597Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69cb error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L121:24 for 'create' @ L121, false for 'create' @ L194, evaluation error at L123:24 for 'update' @ L123, false for 'update' @ L194, false for 'create' @ L121, false for 'create' @ L194
+[2026-11-16T07:50:19.674Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69cc error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L123:24 for 'update' @ L123, false for 'update' @ L194, false for 'update' @ L123, false for 'update' @ L194
+[2026-11-16T07:50:19.701Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69cd error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L127, false for 'delete' @ L194
+[2026-11-16T07:50:19.961Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69cf error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L121:24 for 'create' @ L121, false for 'create' @ L194, evaluation error at L123:24 for 'update' @ L123, false for 'update' @ L194, false for 'create' @ L121, false for 'create' @ L194
+[2026-11-16T07:50:20.006Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69d0 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L123:24 for 'update' @ L123, false for 'update' @ L194, false for 'update' @ L123, false for 'update' @ L194
+[2026-11-16T07:50:20.069Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69d1 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L127, false for 'delete' @ L194
+▶ prayerDrafts: roles, publish transaction, concurrency, hiding
+  ✔ no access without an admin role: anonymous, user, priest grant, unknown role (2972.479518ms)
+  ✔ draft is invisible to the legacy full read of prayers and to protected readers (106.942982ms)
+  ✔ admin, superadmin, legacy admin and role-less admin document read and edit drafts (1597.80674ms)
+[2026-11-16T07:50:21.811Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69de error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L127, false for 'delete' @ L194
+[2026-11-16T07:50:21.894Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69df error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'update' @ L133, false for 'update' @ L194
+[2026-11-16T07:50:21.970Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69e0 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'delete' @ L133, false for 'delete' @ L194
+[2026-11-16T07:50:22.010Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69e1 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L121, false for 'create' @ L194, false for 'update' @ L123, false for 'update' @ L194
+[2026-11-16T07:50:22.114Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69e2 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L121, false for 'create' @ L194, false for 'update' @ L123, false for 'update' @ L194
+[2026-11-16T07:50:22.198Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69e3 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L121, false for 'create' @ L194, evaluation error at L123:24 for 'update' @ L123, false for 'update' @ L194, false for 'create' @ L121, false for 'create' @ L194
+  ✔ audit log and drafts cannot be deleted; audit is append-only; unknown fields rejected (423.529853ms)
+[2026-11-16T07:50:22.361Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e69e4 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L123:24 for 'update' @ L123, false for 'update' @ L194, false for 'update' @ L123, false for 'update' @ L194
+  ✔ a raw status=published write without the public prayer in the same commit is refused (179.757062ms)
+  ✔ plain admin (no superadmin, no priestAccess) publishes: one public document, draft marked, audit written (605.326462ms)
+  ✔ repeat publish is idempotent (223.431307ms)
+  ✔ two admins publishing the same draft at once create exactly one public prayer (1058.742066ms)
+  ✔ priestOnly draft lands in priestProtectedPrayers only; public readers never see it (533.34076ms)
+  ✔ duplicate title stops publication until replace or explicit confirmation; replace keeps ID and createdAt (1087.024846ms)
+  ✔ only missing tags or source block a draft; no rights approval is required (513.511523ms)
+  ✔ old intermediate and archived statuses can be saved as draft and published (365.230562ms)
+  ✔ plain admin: priestOnly draft publishes into the protected collection, status moves and audit work (398.26788ms)
+[2026-11-16T07:50:27.189Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e6a17 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L69, false for 'create' @ L194, false for 'update' @ L69, false for 'update' @ L194
+[2026-11-16T07:50:27.212Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e6a18 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+false for 'create' @ L69, false for 'create' @ L194, false for 'update' @ L69, false for 'update' @ L194
+[2026-11-16T07:50:27.289Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e6a19 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L147:32 for 'create' @ L147, false for 'create' @ L194, evaluation error at L147:32 for 'update' @ L147, false for 'update' @ L194, false for 'create' @ L147, false for 'create' @ L194
+  ✔ plain admin does NOT get superadmin powers: no admin roles, no priest access settings (149.162324ms)
+  ✔ a content lock aborts publication and leaves draft and public content consistent (750.144381ms)
+  ✔ stale version is rejected (optimistic conflict) (190.092952ms)
+[2026-11-16T07:50:28.355Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x809e6a27 error. Code: 7 Message: 7 PERMISSION_DENIED: 
+evaluation error at L123:24 for 'update' @ L123, false for 'update' @ L194, false for 'update' @ L123, false for 'update' @ L194
+  ✔ new intermediate states cannot be introduced by admins (100.562731ms)
+✔ prayerDrafts: roles, publish transaction, concurrency, hiding (17191.35461ms)
+(node:6268) MetadataLookupWarning: received unexpected error = Request failed with status code 403 code = UNKNOWN
+▶ canonical import apply/rollback (emulator)
+  ✔ refuses a wrong approval hash and a tampered plan (1.227849ms)
+  ✔ canonical create/replace operations do not need a rights.json file (0.248284ms)
+  ✔ apply: create + replace keep ID and old fields + closed draft; control version moves, lock released (211.745095ms)
+  ✔ apply again is a no-op (idempotent) (84.120605ms)
+  ✔ a live change after the dry-run aborts without writing (154.107905ms)
+  ✔ rollback restores the exact earlier state (replaced fields back, created documents removed) (421.886192ms)
+  ✔ interrupted apply keeps the lock, blocks foreign runs and is resumed idempotently by the same plan (488.856351ms)
+✔ canonical import apply/rollback (emulator) (1702.092267ms)
+(node:6268) MetadataLookupWarning: received unexpected error = Request failed with status code 403 code = UNKNOWN
+▶ imported drafts vs Firestore rules (emulator)
+  ✔ everyone without an admin role is refused (471.593077ms)
+  ✔ a plain admin lists, edits and directly publishes an imported draft (547.23773ms)
+✔ imported drafts vs Firestore rules (emulator) (1543.668586ms)
+(node:6268) MetadataLookupWarning: received unexpected error = Request failed with status code 403 code = UNKNOWN
+✔ source migration and rollback touch only source fields in all access/status collections (800.209448ms)
+ℹ tests 27
+ℹ suites 3
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 22451.329163
+✔  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator

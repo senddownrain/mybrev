@@ -1,0 +1,1746 @@
+✔ legacy document without role is admin and keeps priestAccess (2.373244ms)
+✔ role admin and superadmin are read from the document (0.209496ms)
+✔ superadmin manages priest access without the priestAccess flag (0.100091ms)
+✔ unknown or malformed explicit role grants nothing (0.208093ms)
+✔ every fallback UID with an explicit superadmin document is superadmin (0.127572ms)
+✔ fallback UID without document, on read error or with unknown role is only the former admin (0.152881ms)
+✔ regular uid has no rights without a document or on read error (0.102524ms)
+✔ fallback UIDs are unchanged and not hardcoded as superadmin (0.138178ms)
+✔ route decisions: anonymous, admin, superadmin, priest-only (0.30507ms)
+✔ analytics URL: https or localhost only, no credentials, empty when unset (0.883371ms)
+✔ wiring: analytics route is superadmin-only, card is superadmin-only, link is hardened (1.115019ms)
+✔ songbook is available to admins only in navigation and on both direct routes (0.402396ms)
+✔ reviewed Belarusian ABC field is verbatim from two independently dated source pages (5.773937ms)
+✔ 2025-12-21: A, advent-21-12, all four dioceses (154.996527ms)
+✔ 2026-12-20: B, advent-w4-d1, all four dioceses (133.788973ms)
+✔ 2027-12-19: C, advent-w4-d1, all four dioceses (92.811252ms)
+✔ 2028-12-24: A, advent-24-12, all four dioceses (75.095099ms)
+✔ 2029-12-23: B, advent-23-12, all four dioceses (57.55612ms)
+✔ 2030-12-22: C, advent-w4-d1, all four dioceses (88.819911ms)
+✔ 2031-12-21: A, advent-21-12, all four dioceses (119.572696ms)
+✔ 2032-12-19: B, advent-w4-d1, all four dioceses (64.330077ms)
+✔ 24 December uses its verified complete Lauds; the psalm texts stay Sunday IV (14.988424ms)
+✔ cycle selection handles Latin/Cyrillic labels, <br> and separate paragraphs, and A is reachable (11.350404ms)
+✔ future editions win; missing or ambiguous variants do not silently fall back (34.907615ms)
+✔ semantic audit rejects wrong text, provenance, and cycle even when nonempty (35.491793ms)
+✔ issue #200: the four reported evenings use the actual proper texts and source slots (207.313322ms)
+✔ 2025–2032, all dioceses: every late-Advent source assertion, Sunday rotation and commemorations (1570.922363ms)
+✔ semantic audit rejects nonempty wrong-source text, including identical values and embedded responsory (24.896415ms)
+✔ weekday psalmody ignores materialized date psalms, other proper fields are preserved (5.248966ms)
+✔ canonical document id does not bless newly corrupted proper text (3.136444ms)
+✔ audit refuses IV Sunday II Vespers on the Christmas boundary even when all fields are nonempty (7.662371ms)
+✔ reviewed data bridge preserves future edits and becomes inert after the patch (0.387584ms)
+✔ every restored Belarusian field is verbatim from its recorded original source (0.213462ms)
+✔ offline migration plan backs up originals, refuses drift and is idempotent after publication (2.942181ms)
+✔ disabled by default: nothing is collected (1.681923ms)
+✔ a read visit yields screen_view plus fv, sd and er cells in a valid packet (1.600861ms)
+✔ short opens (1-5 s) give fv=lt5s only; under 1 s is discarded (0.370508ms)
+✔ closed or unknown material is never measured (fail closed) (0.23187ms)
+✔ background time is not visible time; 5+ minutes in background starts a new visit (0.632392ms)
+✔ same-material double trigger within 2 s and same-material re-entry are one visit (0.394725ms)
+✔ back navigation to the same material after more than 2 s is a new visit (0.403558ms)
+✔ sections without content ids count views only; text that fits reports fit (0.282014ms)
+✔ unmeasurable scroll is counted as an error, not guessed (0.407604ms)
+✔ clock going backwards is a measurement error, not negative time (0.537299ms)
+✔ feature_use validates ids; unknown features and sections are dropped (0.33812ms)
+✔ local queue is bounded and overflow is counted (13.195112ms)
+✔ pruneOlderThan drops stale days; disabling clears everything (0.29201ms)
+✔ app version is coarsened to major.minor (0.067031ms)
+✔ discardView drops the active visit without recording it (0.234704ms)
+✔ daily readings are measured as one generic material with fv, sd and er; no date anywhere (0.426552ms)
+✔ catalog screens count catalog_open once per visit and never a material (0.347584ms)
+✔ catalog visit under one second is discarded; background time does not count (0.161754ms)
+✔ importPackets restores persisted counters; invalid, foreign and closed-id packets are ignored (0.367464ms)
+✔ snapshot({ includeOpen }) counts the open visit without ending it (0.319882ms)
+✔ contract is v2 and the network gate defaults to off (1.82556ms)
+✔ visible-time buckets follow the golden vectors (0.271058ms)
+✔ scroll-depth buckets follow the golden vectors (0.241113ms)
+✔ estimated reading time is bounded by visible time and by the text reached (0.309135ms)
+✔ the golden packet is valid and every invalid cell is rejected (1.594611ms)
+✔ packets reject identifiers, unknown fields and bad envelopes (1.141489ms)
+✔ closed material cannot pass: content_id must be in the public inventory (0.175775ms)
+✔ whitelists contain no closed or personal sections and no free-text features (0.271609ms)
+✔ stage guard: only main.js, behind the build flag, may reach the analytics code (133.918693ms)
+✔ no analytics module contains a network call; only the DOM glue may touch localStorage (1.072174ms)
+✔ trackFeature is an empty function in a normal build and call sites pass only a feature id (159.294902ms)
+✔ inventory ids are unique, sorted, well-formed and match their section kind (35.11803ms)
+✔ inventory counts and checksum are consistent (1.472388ms)
+✔ inventory covers the fixed sets: mass order, nine hours, both Bible languages (0.510549ms)
+✔ nothing outside the public kinds can be in the inventory (1.038674ms)
+﹣ inventory is in sync with the app bundle when the bundle is available (0.506934ms) # bundle moved on: rebuild with scripts/analytics/build-public-inventory.mjs
+✔ committed parity golden equals what the WEB sources produce (drift guard) (10.93602ms)
+✔ golden pins the shared fixture and the public inventory (0.648527ms)
+✔ every route case is mapped exactly as the golden promises (0.906896ms)
+✔ content id probes agree with the validator (0.177176ms)
+✔ synthetic visits replay to the golden cells; packets are valid and text-free (3.864981ms)
+✔ feature_use coverage: 24/27 hooked, the rest declared with a reason (52.416334ms)
+✔ every section that is measured has a content block selector; catalogs and settings have none (0.783099ms)
+✔ readiness: a short prayer under 200 characters is ready; loader, error alert, empty and missing blocks are not (1.279266ms)
+✔ depth uses the text block, not the document: a block that fits is fit, a tall one reports how far it has been seen (0.325651ms)
+✔ a block that is short but starts low enough to need a scroll is not fit (1.021609ms)
+✔ nested scroller: the visible area is the scroller, not the window; the scroller is found once (0.251179ms)
+✔ degradation: a hidden block or an empty viewport is unmeasurable, never an invented depth (0.125109ms)
+✔ public routes map to contract sections (1.266217ms)
+✔ daily readings are one generic material; catalogs map to catalog ids, never a material (0.300592ms)
+✔ lists, admin, login, personal prayers and incomplete routes are not measured (0.218219ms)
+✔ every mapped content id is shaped for its section; unknown ids fail the inventory (0.273021ms)
+{"code":"ok","status":204,"cells":6,"rowsWritten":7}
+✔ real HTTP: the server accepts the closed day and stored counters equal the sent n (32.064592ms)
+{"code":"ingest_disabled","status":503}
+✔ real HTTP: server kill switch (admin endpoint) -> 503 -> client pauses, nothing is stored, nothing is retried (17.367938ms)
+{"code":"ingest_disabled","status":503}
+✔ real HTTP: INGEST_ENABLED=false (default) -> 503, client loses the day and stores nothing (4.678205ms)
+✔ real HTTP: connection refused / timeout -> lost, no retry, no throw (2.989563ms)
+✔ real HTTP: a slow server hits the client timeout (AbortController) and the day is lost (155.233866ms)
+✔ endpoint gate: https or loopback http only, no credentials / query (2.080614ms)
+✔ only CLOSED days are sent: today stays local, nothing is sent the same day (3.350245ms)
+✔ request shape: POST, text/plain, no credentials/referrer, body is a valid contract-v2 packet without IDs (1.720702ms)
+✔ at-most-once: the day is removed BEFORE the request; a repeat flush and a second tab send nothing (1.2748ms)
+✔ no retry on any failure; the day is lost, not re-queued (timeout / 5xx / 4xx / thrown) (4.310933ms)
+✔ kill switch: 503 ingest_disabled pauses 24 h, nothing more is sent or queued (0.679083ms)
+✔ offline: nothing is taken or sent, the data is kept for the next trigger (0.415846ms)
+✔ persisting the removal fails => nothing is sent (no replay possible) (0.386763ms)
+✔ a ledger that cannot be written => nothing is sent (0.507495ms)
+✔ a day older than the server window is dropped, not sent; a tiny day (< 3 cells) is held back and dropped (0.585883ms)
+✔ days outside the server window are not sent; eligible closed days go out oldest first (<= MAX_PACKETS_PER_FLUSH) (0.994448ms)
+✔ private / priest-only / unknown ids never leave: the collector drops them and the packet is re-validated (0.674506ms)
+✔ the transport source has no ID, URL-of-page, referrer, cookie, storage-of-ids or SDK references (0.534705ms)
+✔ canonical JSON sorts keys at every level (0.910151ms)
+✔ a document hash ignores bookkeeping, not text (0.740495ms)
+✔ timestamps become epoch milliseconds, as the app stores them (0.818994ms)
+✔ long strings are stored once and decode to the same documents (0.525101ms)
+✔ the digest depends on ids and hashes only, in id order (0.360312ms)
+✔ the manifest version moves only with the content (0.576949ms)
+✔ +100 prayers, 8 songs, 3 days, 2 readings: a safe patch (19.981684ms)
+✔ most days rebuilt: refused as a mass rebuild (12.517363ms)
+✔ size alone can make a patch a rebuild (1.658237ms)
+✔ a schema change is refused; the large-patch override does not help (0.369887ms)
+✔ invalid documents are never published (0.271919ms)
+✔ Ordo collections new to the manifest are introduced only explicitly (1.711017ms)
+✔ the Ordo collections are validated like the engine reads them (0.621356ms)
+✔ every bundled collection carries the version of its own snapshot (14.598511ms)
+✔ collections new to the manifest are held back unless introduced, so a patch of the others is published (0.249255ms)
+✔ light: text, accents and keyboard focus stay readable on application surfaces (1.425327ms)
+✔ marian: text, accents and keyboard focus stay readable on application surfaces (0.310017ms)
+✔ dark: text, accents and keyboard focus stay readable on application surfaces (0.202605ms)
+✔ CSS and Vuetify share the same application palette, including overlay themes (1.509844ms)
+✔ first paint, saved theme, runtime status bar and PWA manifest agree (60.079354ms)
+✔ PWA native chrome fallback is neutral graphite and readable in every theme (0.381265ms)
+✔ document canvas and body use the selected PWA appearance in all themes (0.467884ms)
+✔ purple literals only belong to liturgical or source-document ink, never application chrome (89.984414ms)
+✔ periods and feast overrides retain their independent liturgical colours (1.325596ms)
+✔ Marian palette keeps the requested materials and readable functional colours (0.616158ms)
+✔ all four preferences, legacy migration, restoration and OS independence (0.283066ms)
+✔ Marian prayer paper remains almost white with AA text and focus contrast (0.115755ms)
+✔ Bible catalogues contain the expected canon sizes (1.300048ms)
+✔ Belarusian catalogue keeps 46 OT books and 27 NT books starting at Matthew (0.29873ms)
+✔ Belarusian metadata no longer claims the whole Bible is Chernyavski (0.319261ms)
+✔ mixed Belarusian seed: Chernyavski OT unchanged, Catholic.by NT with 27 books (130.70277ms)
+✔ New Testament text is Catholic.by, not Chernyavski (0.515938ms)
+✔ Catholic.by NT keeps canonical verse numbers and clean text (19.783736ms)
+✔ Belarusian catalogue follows the Chernyavski translation for the OT (0.382687ms)
+✔ Russian catalogue includes the supplied extended chapters (0.214583ms)
+✔ parallel language navigation maps different Firestore ids (0.25918ms)
+✔ bottom navigation labels use language-specific abbreviations (0.355406ms)
+✔ verse normalisation supports both stored schemas (0.284388ms)
+✔ highlight keys remain isolated by language and location (0.306351ms)
+✔ browser favicon uses the approved full-colour art instead of the old brown micro icon (1.333008ms)
+✔ installed PWA icon URLs change while installation identity and manifest path stay stable (0.226341ms)
+✔ cleans only breaks after dagger signs (0.961118ms)
+✔ plans only psalm fields and keeps report data content-free (0.67751ms)
+✔ 04.12.2026, diocese Grodno, grodno-cathedral-dedication: first reading of the Office is Rev 21, 9-27, not 1 Pet 2, 1-17 (28.829028ms)
+✔ the same celebration in Ordinary Time keeps the Volume III reading (1 Pet 2, 1-17): the season, not the Common, decides (1.251885ms)
+✔ golden: church-dedication / advent: Office of Readings, first reading (1.009931ms)
+✔ golden: church-dedication / christmas: Office of Readings, first reading (0.948899ms)
+✔ golden: church-dedication / lent: Office of Readings, first reading (1.197694ms)
+✔ golden: church-dedication / easter: Office of Readings, first reading (2.896282ms)
+✔ golden: religious / advent: Office of Readings, first reading (0.698933ms)
+✔ golden: religious / christmas: Office of Readings, first reading (0.640084ms)
+✔ golden: religious / lent: Office of Readings, first reading (0.837682ms)
+✔ golden: religious / easter: Office of Readings, first reading (0.898152ms)
+✔ golden: works-of-mercy / advent: Office of Readings, first reading (0.729159ms)
+✔ golden: works-of-mercy / christmas: Office of Readings, first reading (0.510529ms)
+✔ golden: works-of-mercy / lent: Office of Readings, first reading (0.530379ms)
+✔ golden: works-of-mercy / easter: Office of Readings, first reading (0.532362ms)
+✔ D-7: religious (Eph 4, 1-24) and works of mercy (1 Jn 4, 7-21) replace the Ordinary Time readings in every special season (3.406961ms)
+✔ D-7: «аллелюя» is not added outside Easter to the religious / works-of-mercy readings; in Easter it stays only where the volume marks it (2.307235ms)
+✔ D-5: the volume I responsories of church-dedication and pastors keep their printed «аллелюя» and no extra one is added (119.754851ms)
+✔ D-3: volume I verse «Дачка Тыру!…» is in virgins.officeOfReadingsPs3 AND holy-women.officeOfReadingsPs3, in Advent AND Christmas, and nowhere else (8.938933ms)
+✔ D-6: martyr-one first Vespers prints the Rom 8, 35. 37-39 reading before the responsory; religious Office of Readings has the Philippians line and the nun responsory (1.722695ms)
+✔ D-6: the seasonal I and II volumes are not overwritten by the Ordinary Time completion (0.57123ms)
+✔ D-1: holy-women second reading: Volumes I/II offer the reference AND the holy-men texts of the same volume (readable set); the Pius XII address is Volume III only (7.468799ms)
+✔ D-1 limitation (not "fully solved"): the legal choices are shown as text; the app has no per-reading selector for a Common that is not among the celebration's _templates (53.334001ms)
+✔ A3: the base fields that Volume III prints with extra rubric words differ from the volume by rubrics/references only, no prayer text is lost (1.315693ms)
+✔ church-dedication I Vespers: Lent and Easter take different antiphon AND canticle (vesper1Ant3 + vesper1Ps3) (6.222662ms)
+✔ church-dedication Office of Readings: three readings, never glued together (8.771201ms)
+✔ church-dedication Lauds short responsory: Lent and Easter differ, the reading stays (1.622424ms)
+✔ «(Велікодны перыяд Аллелюя)» is applied to the single element it follows, never globally (2.447846ms)
+✔ blessed-virgin-mary: ONE prayer per season (Advent / Christmas), the optional list in Ordinary Time (13.446381ms)
+✔ the celebration's own Proper always wins over a seasonal Common text (3.171267ms)
+✔ memorial: «З дня» stays the weekday, the Common choice takes the seasonal texts (2.478633ms)
+✔ first Vespers of a celebration use the celebration's own season (2.484521ms)
+✔ shared (cached) templates are never mutated and seasons never leak between calls or dates (50.249981ms)
+✔ calendar 2026–2028, four dioceses: every legal Common-based Office gets exactly the variant of its date (1767.751921ms)
+✔ boundaries: Christmas→Ordinary, Ash Wednesday, Palm Sunday, Triduum, Easter, Pentecost, Advent (2026–2028) (2.216985ms)
+✔ no Common-based Office is celebrated in Holy Week or the Triduum (so «holyweek → Lent» never decides a real celebration) (41.695085ms)
+✔ every season variant key is a known key and every stored delta field exists in the flat Common or is a rule (0.496424ms)
+✔ the publication validator accepts the generated Commons and refuses a broken delta (41.096969ms)
+✔ generated templates keep the stored flat fields and carry exactly the stored deltas (49.903426ms)
+✔ publication verdict comes from the real classifier: a delta-only change of 13 documents is a content patch, not a rebuild (72.927824ms)
+✔ fixture is deterministic and has the documented shape (403.861066ms)
+✔ fixture cases: Holy Week = Lent, Triduum and Ordinary Time = the flat base, no case without provenance (25.249029ms)
+✔ fixture assembly cases: own Proper wins; current-day keeps the weekday; a Common memorial takes only its Common elements (0.251227ms)
+{
+ "templates": {
+  "target": 13,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 13,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "feasts": {
+  "target": 0,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "legacyCopies": {
+  "listed": 0,
+  "markObsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/scoped-import-LdcVT5/plan.json
+Dry run only. Nothing was written to Firestore.
+backup: ../../tmp/scoped-mock-VeVC0F/backup/2026-11-16T07-49-54-165Z.json
+{
+ "templates": {
+  "target": 13,
+  "create": 0,
+  "update": 0,
+  "unchanged": 13,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "feasts": {
+  "target": 0,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "legacyCopies": {
+  "listed": 0,
+  "markObsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/scoped-mock-VeVC0F/plan.json
+Dry run only. Nothing was written to Firestore.
+backup: ../../tmp/scoped-mock-5OJqLS/backup/2026-11-16T07-49-54-332Z.json
+{
+ "templates": {
+  "target": 13,
+  "create": 0,
+  "update": 0,
+  "unchanged": 13,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "feasts": {
+  "target": 0,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "legacyCopies": {
+  "listed": 0,
+  "markObsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/scoped-mock-5OJqLS/plan.json
+Dry run only. Nothing was written to Firestore.
+backup: ../../tmp/scoped-mock-UXsYVR/backup/2026-11-16T07-49-54-440Z.json
+{
+ "templates": {
+  "target": 13,
+  "create": 0,
+  "update": 13,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "feasts": {
+  "target": 0,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "legacyCopies": {
+  "listed": 0,
+  "markObsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/scoped-mock-UXsYVR/plan.json
+Dry run only. Nothing was written to Firestore.
+backup: ../../tmp/scoped-mock-almuVr/backup/2026-11-16T07-49-54-522Z.json
+{
+ "templates": {
+  "target": 13,
+  "create": 1,
+  "update": 0,
+  "unchanged": 12,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "feasts": {
+  "target": 0,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "legacyCopies": {
+  "listed": 0,
+  "markObsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/scoped-mock-almuVr/plan.json
+Dry run only. Nothing was written to Firestore.
+backup: ../../tmp/scoped-mock-gvmUTj/backup/2026-11-16T07-49-54-622Z.json
+{
+ "templates": {
+  "target": 13,
+  "create": 0,
+  "update": 1,
+  "unchanged": 12,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "feasts": {
+  "target": 0,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "legacyCopies": {
+  "listed": 0,
+  "markObsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/scoped-mock-gvmUTj/plan.json
+Dry run only. Nothing was written to Firestore.
+backup: ../../tmp/scoped-mock-DRX2Ei/backup/2026-11-16T07-49-54-719Z.json
+{
+ "templates": {
+  "target": 13,
+  "create": 0,
+  "update": 1,
+  "unchanged": 12,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "feasts": {
+  "target": 0,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "legacyCopies": {
+  "listed": 0,
+  "markObsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/scoped-mock-DRX2Ei/plan.json
+backup: ../../tmp/scoped-mock-UeNHtT/backup/2026-11-16T07-49-54-984Z.json
+{
+ "templates": {
+  "target": 13,
+  "create": 0,
+  "update": 13,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "feasts": {
+  "target": 0,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "legacyCopies": {
+  "listed": 0,
+  "markObsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/scoped-mock-UeNHtT/plan.json
+{"written":14,"revisions":{"templatesRevision":8}}
+backup: ../../tmp/full-mock-ndkOeP/backup/2026-11-16T07-49-55-273Z.json
+{
+ "templates": {
+  "target": 16,
+  "create": 16,
+  "update": 0,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "feasts": {
+  "target": 291,
+  "create": 291,
+  "update": 0,
+  "unchanged": 0,
+  "set": 0,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "legacyCopies": {
+  "listed": 0,
+  "markObsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/full-mock-ndkOeP/plan.json
+Dry run only. Nothing was written to Firestore.
+✔ the allowlist is exactly the 13 Commons with seasonal data; no protected document is in it (2.767761ms)
+✔ scopeTemplateIds keeps only the allowlist and refuses unknown, protected and empty lists (0.666861ms)
+✔ importer: --ids needs --only templates; the offline plan of a scoped run covers exactly the allowlist (52.810507ms)
+✔ importer: a scoped run that names a protected document fails before any plan is written (66.593338ms)
+✔ scoped dry-run reads exactly the 13 allowlisted documents plus the meta document, scans nothing, writes nothing (182.635997ms)
+✔ an identical live state gives an all-unchanged plan; a live state without _seasonalVariants gives 13 updates with created paths (200.0303ms)
+✔ a missing live document is a create, not an error (95.842276ms)
+✔ live-only fields (also nested) are listed; service timestamp fields are ignored; apply is refused before the first write (299.439547ms)
+✔ a scoped apply with a clean live diff writes only the allowlist and the meta revision in ONE batch; protected documents never appear (205.702076ms)
+✔ a read failure (quota) stops the run safely: nothing is written, nothing is planned as applied (93.961958ms)
+✔ without --ids the importer keeps its full-collection read path (unchanged behaviour) (109.802685ms)
+✔ pure helpers: nested live-only paths, created/changed paths, service fields (0.422543ms)
+✔ Ordo period → variant key; Holy Week follows Lent, the Triduum and Ordinary Time take the flat base (2.025498ms)
+✔ a template without variants, and an ordinary-season date, are returned as the very same object (0.482223ms)
+✔ lent materialises a plain flat object: texts replaced, null = intentionally empty, rule overrides, nothing mutated (0.498177ms)
+✔ Holy Week takes Lent, the Triduum and Easter do not mix with it (0.298909ms)
+✔ invalid delta entries are ignored by the materializer (never a half-applied field) (0.163074ms)
+✔ seasonalTemplateGetter materialises per call and never mixes seasons through a shared Map (0.345478ms)
+✔ validator: allowed seasons and fields, value types, HTML, leftovers of the book (1.819649ms)
+✔ the three volumes are the verified UTF-8 sources (5.44477ms)
+✔ structure: every volume yields its Commons, none of the fields is lost to the antiphon index (0.961596ms)
+✔ season markers are recognised by structure, not by a search for a word (2.515994ms)
+✔ Advent / Christmas: the three pairs of Volume I are bound to their exact hours (0.635436ms)
+✔ regeneration is idempotent and the canonical sources are up to date (12765.659403ms)
+✔ the stored variants are valid and never touch the flat base (50.802498ms)
+✔ provenance: every variant field names its volume, lines and a hash that matches the stored value (43.762759ms)
+✔ regression hashes of the mandatory church-dedication / blessed-virgin-mary cases (102.413773ms)
+✔ explicit variants rendered from a volume keep its first/last paragraph and every rubric mark (123.948547ms)
+✔ the Easter Alleluia: antiphons «…, / аллелюя.», К./Н. lines «…, аллелюя.» (NR-001), «!» keeps the mark, a «†» after the annotation is dropped (NR-002) (96.197185ms)
+✔ printed misprints are corrected visibly and countably (6.047555ms)
+✔ layout helpers: psalm and hymn strophes; K./N. paragraphs keep their marks (0.293231ms)
+✔ the matrix covers every field of every Common for every variant season, with a category (11.137028ms)
+✔ a verse that merely begins with the word «Гімн» is text, not a reference to a hymn (the pastors hymn was cut after four lines) (2.149618ms)
+✔ Volume III parsed by the same parser is the stored base: words of the volume missing in the base are exactly the known, listed gaps (682.221894ms)
+✔ unknown switches are an error, the retired --include-unverified never enables anything (15588.035795ms)
+✔ classes of difference: orthography, wording, another text, another composition (0.799033ms)
+✔ every one of the 500 editorial_difference cells of the first audit is classified (six classes) and has a resolution (1588.805531ms)
+✔ A3: every word of Volume III that the base lacks in the four remaining fields is a rubric or a cross-reference, never prayer text (347.432659ms)
+✔ before / after numbers of the audit (1862.072657ms)
+✔ apostles: Advent / Christmas read 1 Кар 1, 18 – 2, 5 (Volume I), the base keeps 1 Кар 4, 1–16, Lent / Easter read their own readings (122.596293ms)
+✔ religious and works-of-mercy: the whole first reading with its responsory, in every season of both volumes, not spread beyond the proof (2693.145464ms)
+✔ Volume I whole readings: every Common that prints another first reading in Advent / Christmas gets it, and only there (1410.736196ms)
+✔ blessed-virgin-mary: the versicle and the short responsories printed by Volume I replace the base in Advent / Christmas only (67.657541ms)
+✔ doctors-of-church inherits what the volume does not print («Усё з Агульных тэкстаў пра пастыраў»), where the stored text equals the pastors (1.05837ms)
+✔ nothing printed by Volume I or II is lost: every word is found in the text of the season, the unfound ones are wording, references and listed gaps (1013.352206ms)
+✔ hymns, antiphons, psalms, short readings, prayers and readings printed by a volume are in the variant of their season word for word, and only there (803.521489ms)
+✔ NR-007…009: К./Н. of officeOfReadingsVers are in the right order in the base, in the variants and in every Common (14.808766ms)
+✔ NR-003: Ps 64 (63) of the apostles — psalm body identical, antiphons corrected, the Easter variant carries the Alleluia (5.015939ms)
+✔ NR-002: church-dedication Ant2 gets «/ аллелюя.» in Easter and no †; the † printed by both volumes stays in the base (1.730713ms)
+✔ NR-001: К./Н. lines annotated «(Велікодны перыяд Аллелюя)» end with «, аллелюя.» in Easter only, once, and the short responses stay as printed (1848.051635ms)
+✔ NR-001: the Alleluia a variant gains is exactly the number of annotated elements of its field (no element missed, none doubled) (8.259125ms)
+✔ NR-010: «аллеюя» is corrected in the variants, counted, and the three places of Volume II are on record (16.361076ms)
+✔ NR-012: Advent / Christmas show ONE prayer of Volume I, Ordinary Time keeps the list, the Saturday memorial alternatives are not in the seasonal field (229.802765ms)
+✔ NR-011: Holy Week takes the Lent texts until the Triduum; the Ordo phase decides, never the period or the civil date (646.11834ms)
+✔ the seasons of the Ordo and the key of the variant on the boundaries (2026–2040): Christmas ends with the Baptism, Pentecost ends Easter, Advent begins on its Sunday (8.530195ms)
+✔ assembly: the whole readings arrive through assembleOffice by the season of the Ordo, never in another season, never over the own Proper (15.757528ms)
+✔ documents stay far below the Firestore limit and the patch is a SAFE CONTENT PATCH for the real classifier (133.575649ms)
+✔ the committed audit and the base-corrections ledger are what the parser reports now (run --report after a change) (1375.91608ms)
+✔ D-1 (owner decision 2026-10-24): the first reading of a holy woman in a season = the volume's reference, the first readings of holy men of the SAME volume, then the readings printed for a holy woman (390.407935ms)
+✔ D-1: Volume III base of holy-women (Ordinary Time) offers the holy-men readings the reference points to, then the printed readings for a holy woman, word for word (8.496454ms)
+✔ D-1: the apply script is idempotent (82.870174ms)
+✔ calendar: the Saturday memorial is offered on free Saturdays of Ordinary Time only, never in the other seasons or against an obligatory memorial (115.020254ms)
+✔ storage: the Saturday section stays in the stored fields (nothing is deleted); _mainSection is the prefix that Volume III prints as the main section (6.892056ms)
+✔ assembly: a Marian celebration of Ordinary Time shows the main section only; the Saturday memorial shows the whole field (47.11061ms)
+✔ seasons: a Marian celebration of Advent / Lent / Easter uses the season's volume text, never the Saturday section; the Saturday memorial is not offered there (4.073814ms)
+✔ boundaries: the Saturday memorial follows the rubrics at every season border and against Marian / obligatory memorials, in all four dioceses (45.251636ms)
+✔ every Marian celebration shows the main section of ALL eight split fields and none shows the Saturday heading; only the Saturday memorial shows them whole (51.626138ms)
+✔ 04.12.2026 Grodno: the loaded Firestore shape yields Rev 21, 9-27 on the Office card (153.997158ms)
+✔ cause classification: the SAME code with production-like data (no _seasonalVariants) shows 1 Pet 2, 1-17 (118.912743ms)
+✔ other dioceses on 04.12.2026 do not get the Grodno celebration (873.047677ms)
+✔ matrix: seasons × dioceses — Common-based Office cards show the stored seasonal reading; propers keep their own text (917.329109ms)
+✔ negative control: the Common in Ordinary Time (Volume III) is not the seasonal reading (190.774596ms)
+✔ committed dataset is exactly what the parser produces from the cached source (132.36329ms)
+✔ all 598 questions are present exactly once, in order, without gaps (2.453624ms)
+✔ hierarchy follows the four official parts and their question ranges (4.067785ms)
+✔ no introductory material or unnumbered texts leak into questions (4.07076ms)
+✔ question, answer and citation texts are verbatim source text (216.376409ms)
+✔ source attribution and copyright notices are kept (0.214703ms)
+✔ validator reports gaps, duplicates and broken order (45.139646ms)
+✔ root keeps four parts; one Part view renders all questions as one row style (2.2518ms)
+✔ each part has exactly its canonical questions in order; 598 total without duplicates (8.934102ms)
+✔ Part I starts section → q1 → subsection → lead quotation → q2–5 → named topic → q6 (0.326562ms)
+✔ all structural and thematic headings are inline dividers, never destinations (2.774668ms)
+✔ edge cases preserve headings and direct questions across all parts (0.589427ms)
+✔ subtopic titles appear only when their value changes (0.423377ms)
+✔ canonical ГЛАВА labels remain in data; UI derives masculine ПАДРАЗДЗЕЛ labels (0.492341ms)
+✔ legacy node, topic and technical group links resolve to a Part anchor that exists (1.221569ms)
+✔ reader context links and Да часткі lead back to inline anchors (2.54369ms)
+✔ persistent global search on Part retains query, Back and scroll after clearing (74.535947ms)
+✔ drawer keeps Кампендый between Bible and songs (1.353658ms)
+✔ root, Part and question are the normal routes; node and topic are compatibility redirects (0.46516ms)
+✔ one persistent search dock covers root, Part and question; no inline source footers (5.441022ms)
+✔ Back uses history, with Part anchor fallback for legacy deep links (0.973406ms)
+✔ Part styles use existing theme tokens and reserve room for the search dock (0.474014ms)
+✔ index: flat order, lookup by number/id and reading groups (15.025985ms)
+✔ answer paragraphs keep source text and emphasis (0.354313ms)
+✔ normalisation folds Belarusian orthographic variants (0.142865ms)
+✔ number search puts the exact question first (55.625055ms)
+✔ Belarusian search is case-insensitive and prefers question matches (239.002546ms)
+✔ hidden Russian aliases widen matching only (341.593016ms)
+✔ every alias target exists in the Belarusian text (32.611233ms)
+✔ Firestore documents reassemble into the canonical dataset (4.260976ms)
+✔ loader: bundled content when Firestore has nothing newer (one meta read) (1.583945ms)
+✔ loader: newer valid Firestore content replaces the bundle (2.498491ms)
+✔ loader: invalid remote data and failed refresh keep usable content (4.893909ms)
+[ContentCache] IndexedDB unavailable
+[ContentCache] IndexedDB unavailable
+[ContentCache] IndexedDB unavailable
+[ContentCache] IndexedDB unavailable
+[ContentCache] IndexedDB unavailable
+[ContentCache] IndexedDB unavailable
+✔ reference Office and readings caches cannot populate canonical day keys (1853.400351ms)
+✔ a new app instance restores a complete day with zero network reads, regardless of age (1.660701ms)
+✔ access-sensitive public data revalidates online even at the same revision and remains offline (0.883921ms)
+✔ concurrent screen and warmup share one request and persist confirmed empty queries (4.963815ms)
+✔ revision change returns old content immediately and refreshes in background (0.470949ms)
+✔ offline revision change never starts a refresh and preserves old content (0.184608ms)
+✔ failed or incomplete refresh never replaces a complete offline day (0.302316ms)
+✔ partial cold cache is not persisted and can be completed when online (0.52446ms)
+✔ a request begun before invalidation cannot overwrite the new revision (3.052867ms)
+✔ storage corruption, unavailable IndexedDB and quota errors do not prevent rendering (0.724781ms)
+✔ date, linked-day and alternatives keys are isolated (1.632448ms)
+✔ completeness requires every dependency to be server-confirmed without pending writes (0.189476ms)
+✔ updated Hours cache revision never exposes old assembled page as a fresh immediate hit (0.238579ms)
+✔ offline stale Hours remain readable after revision bump without a network request (0.380944ms)
+✔ 2026-10-28: corrected legacy document is shadowed by Common in public Vespers (125.547548ms)
+✔ 2026-10-28: editor saves to the public Proper; reopen and public display use saved HTML (57.009424ms)
+✔ all Office fields: own edits survive save/reopen and public assembly, including references (137.097046ms)
+✔ canonical Proper and alternative links win over legacy copies; diocesan suffixes retain identity (0.962299ms)
+✔ saved alternative texts keep both choices and their inline spaces in public assembly (46.472894ms)
+✔ ordinary days and unpublished/obsolete Propers keep days as the editable source (0.949249ms)
+✔ server verification rejects missing fields, deleted fields and whitespace differences (0.379521ms)
+✔ intercessions retain spaces inside, outside and between inline tags without inventing word boundaries (14.114182ms)
+✔ select exactly 7791 reviewed fields, exclude Proper and all 843 unresolved fields, retain exact original values/masks (596.504023ms)
+✔ all 14 captured Advent changes are outside selected masks, with the post-Advent baseline retained (1.987583ms)
+✔ owner-approved seasonal responsories agree with canonical source and preserve Easter Alleluia (20.255078ms)
+✔ offline readiness never bypasses the existing runtime compatibility gate (0.500381ms)
+✔ Gadzinki hymn headings use section presentation and preserve all strophes (39.400562ms)
+✔ four office readings have a single section title, separate reference and ordinary body (3.474294ms)
+✔ responsories preserve every label and response, with one compact line per reply (17.872716ms)
+✔ all responsory alternatives get compact replies without changing the selected reading (2.40657ms)
+✔ Mary, Zechariah and Simeon bodies use the same psalm formatter and keep antiphons (8.715838ms)
+✔ ordinary prayer blocks and inline К./Н. outside a responsory keep their display (0.19031ms)
+✔ office blocks retain source spans and repeated antiphons (8.022202ms)
+✔ reader variant policy is keyed by prayer ID and leaves Gadzinki alone (0.374159ms)
+✔ speaker labels are marked once only at the start of a response line (13.637484ms)
+✔ office heading policy hides import labels without changing Gadzinki headings (0.248147ms)
+✔ office document assigns every source block exactly once (1.521635ms)
+✔ all five confirmed IDs gate on observed section structure (3.150502ms)
+✔ real office headings form sections; one psalm body keeps all strophes (1.290863ms)
+✔ observed alternative headings attach to the matching part without losing blocks (0.960762ms)
+✔ every alternative heading recorded by the five-document audit has a target (2.615047ms)
+✔ Gospel canticle antiphon label is separate and markup is escaped (0.852587ms)
+✔ Gadzinki keeps exactly eight ordered parts and nested headings (3.576481ms)
+﹣ provided Gadzinki source retains all lines and eight parts when available (0.077047ms) # SKIP
+﹣ four locally captured published texts retain source and select complete variants (0.063126ms) # SKIP
+✔ 28 May 2026 is the feast of Christ the Eternal High Priest in Pinsk (50.565774ms)
+✔ Belarusian supplied source contains three distinct daytime readings, antiphons and responses (0.45328ms)
+✔ High Priest feast uses supplied Proper, with weekday psalms and hymn for each hour (4.616893ms)
+✔ the canonical Proper is only overlaid on the High Priest feast, not other feasts (0.819887ms)
+✔ missing daytime collect of another movable feast inherits its own Lauds, not the weekday (0.621645ms)
+✔ dynamic solemnities keep their own missing-field semantics (no weekday psalter fallback) (0.711493ms)
+✔ context keeps only whitelisted safe values (3.545914ms)
+✔ feedbackLink carries only context keys (0.327358ms)
+✔ feedbackLocationForRoute gives automatic context for materials only (3.070661ms)
+✔ request id: identical retry keeps it, an edited message gets a new one (0.40774ms)
+✔ context summary is human readable and Ordo/path are carried (0.340558ms)
+✔ prayer report block: prompt text, flag icon, compact action, same data-test hook (1.031613ms)
+✔ prayer report styles: thin rule, wrapping, 44px target, no overflow, visible focus inherited (0.346362ms)
+✔ footer link keeps prayer context: id, title, kind, return path (1.376062ms)
+✔ footer link matches the side-menu location apart from the title (0.25217ms)
+✔ footer link degrades safely: unsafe id dropped, no title, unknown route (0.15976ms)
+✔ side-menu entry stays untouched (0.100001ms)
+✔ rejects missing client configuration before emitting a deployable bundle (1.034307ms)
+✔ accepts the six configured fields without optional analytics or realtime database settings (0.17275ms)
+✔ wrapped IndexedDB errors trigger one reload and memory cache on the next boot (1.183121ms)
+✔ network and permission failures do not switch cache mode (0.16585ms)
+✔ offline and blocked session storage cannot cause a reload loop (0.27948ms)
+✔ Firestore retries skip broken persistence but still retry network failures (9.963843ms)
+✔ Firestore error classes retain SDK/GRPC codes and Belarusian messages without confusing local disk quota (4.284241ms)
+✔ Connection failed and Auth/browser network errors remain distinct from quota and permission failures (0.440303ms)
+✔ quota never retries, even when caller enables retries; later automatic requests fail before network (7.038378ms)
+✔ permission failures do not retry; settled unavailable requests have bounded retries (19.171978ms)
+✔ default Firestore retry never overlaps a slow unresolved SDK request (1.755623ms)
+✔ transaction disables SDK retry and only retries contention; quota executes exactly once (196.320647ms)
+✔ acknowledged code survives quota/permission/network failures of the optional verification read (15.511667ms)
+✔ rejected code transaction never returns a plaintext success and does not attempt verification (2.6765ms)
+✔ verified concurrent replacement is not presented as the active code; normal success includes server date (2.535638ms)
+✔ help save returns only acknowledged metadata without a redundant settings read (0.802418ms)
+✔ sanitized failures preserve exact API code/quota details and safe headers, never tokens or bodies (38.879355ms)
+✔ daily quota and unknown RESOURCE_EXHAUSTED stop after one request, with durable failed-write event (4.166234ms)
+✔ definite temporary rate rejection uses bounded backoff and the identical request SHA (2.160373ms)
+✔ partial publication keeps the first server receipt when a later batch fails, then resumes only remaining docs (4.478443ms)
+✔ lost aggregate receipt is reconstructed only from acknowledged server timestamps and current hashes (1.0757ms)
+✔ hash-only partial receipts rebuild a field-exact rollback from the pinned original plan (211.651189ms)
+✔ local snapshot supports collection, document, and filtered reads (16.504111ms)
+✔ usage audit requires local snapshots and reports only counts, never grant proofs or owner data (20.71401ms)
+✔ scenario budgets bound the device registry and remove unused reading warmups (0.439773ms)
+✔ automatic warmup fetches only today/tomorrow Hours and preserves static offline collections (4.49658ms)
+✔ admin/login visits do not trigger unrelated liturgical warmup (0.56449ms)
+✔ explicit public offline prefetch still supports the complete nine-day window (1.468741ms)
+✔ quota stops later prefetch batches and prevents subsequent automatic warmups (0.879014ms)
+✔ removes the embedded heading and final Lord's Prayer (2.959887ms)
+✔ removes a final Russian Lord's Prayer without touching other occurrences (0.315485ms)
+✔ removes a standalone first heading paragraph (0.172941ms)
+✔ does not remove a heading-like word outside the first paragraph prefix (0.183316ms)
+✔ builds changes only for intercession fields (0.223907ms)
+✔ normalizes canonical fixed-day dimensions (2.553746ms)
+✔ builds comparison key only from date, rank, and place (1.671637ms)
+✔ treats the same place set as equal regardless of input order (0.483017ms)
+✔ builds unique fixed-day id with optional place and required slug (0.316096ms)
+✔ migrates legacy feast metadata without losing content (0.404438ms)
+✔ one resolved I Vespers field always uses Sunday explicit Proper or Saturday psalter, never Sunday II (2.448196ms)
+✔ missing source fields are not misreported as a match; absence of content blocks (1.099145ms)
+✔ without independent source, completeness alone does not claim liturgical correctness (0.263637ms)
+✔ a populated Saturday from another celebration blocks even without external HTML (0.300633ms)
+✔ injected base64 credentials are read in memory without accessing a key file (0.235064ms)
+✔ one-document release contains only 12 explicit references (4.045241ms)
+✔ already published state is idempotent and never writes again (0.442406ms)
+✔ refuses unexpected edits in the actual day (0.824802ms)
+✔ refuses target that differs from published baseline (0.353042ms)
+✔ refuses inconsistent manifest summary, digest and version (0.658401ms)
+✔ refuses patch if day already changed but manifest is stale (4.128246ms)
+✔ current content version remains monotonic (0.326101ms)
+✔ calendar registers Marian Common for the movable memorial (1.338426ms)
+✔ missing movable Proper keeps canonical route and assembles non-empty Lauds (480.841757ms)
+✔ incomplete legacy Proper retains its own texts but fills gaps from the correct source (39.154038ms)
+✔ 13 June 2026 retains both memorial choices and the weekday option when both are optional (65.42192ms)
+✔ Sacred Heart solemnity still uses the legacy dynamic document path (1.625959ms)
+✔ Christmas defaults to Psalm 95 (94) (1.684867ms)
+✔ other periods preserve the first configured Invitatory Psalm (0.143747ms)
+✔ Christmas falls back to the first option if Psalm 95 is unavailable (0.109725ms)
+✔ 22 October: owner-approved text agrees in both source copies (103.386686ms)
+✔ the old responsory differs only in the second occurrence, not the heading (12.893114ms)
+✔ single-document update accepts only old or already-corrected fields (12.515716ms)
+✔ historical migration refuses the newer editorial responsory instead of overwriting it (46.96541ms)
+✔ 9 December is an explicitly optional memorial in the liturgical data and published web addendum (83.8966ms)
+✔ published calendar presents 9 December in italic with no optional-memorial rank caption (0.603379ms)
+✔ older Firestore titles are corrected by stable celebration ID at runtime (15.152235ms)
+✔ updateFields: only the differing top-level fields, deletions for absent ones, bookkeeping ignored (1.674651ms)
+✔ apply: backup first, only planned fields written, every document read back as the reviewed after-state (5.394563ms)
+✔ apply: refuses to re-apply a wave that is fully applied (idempotent) and writes nothing (3.498858ms)
+✔ apply: a document edited after the reviewed snapshot aborts the whole wave before the first write (1.179787ms)
+✔ apply: a missing document aborts before any write (0.559022ms)
+✔ apply: the update-time precondition stops the wave when a document changes between the read and the write (1.614151ms)
+✔ apply: an error stops the wave (no further write) and is logged (2.030347ms)
+✔ resume: finishes only the remaining documents, against the verified backup of the first run (3.536355ms)
+✔ backup: sha256 manifest detects a tampered or truncated file (37.025561ms)
+✔ backup: Firestore Timestamps survive the JSON round trip (0.593785ms)
+✔ rollback: restores the exact original documents (Timestamps, removed fields); dry run changes nothing; refuses a diverged document (4.853429ms)
+✔ the crawl snapshot covers every article of the index (listed + unlisted holes), all HTTP 200 (7.658127ms)
+✔ lossless parse: every word of every source article is in the parsed sets (617 pages) (2584.694611ms)
+✔ only two reading pages fail the structural validation and each one is a documented source defect (5.173207ms)
+✔ pattern: weekday years «Год І / Год ІІ» tag the first reading and psalm, the Gospel is shared (1.892063ms)
+✔ pattern: a second refrain «Або: (Р.: 9а) Рэфрэн: …» is the alternative refrain, never a strophe (1.174257ms)
+✔ pattern: two refrains printed one after another before the strophes (1.602785ms)
+✔ pattern: refrain text repeated between strophes, plain citation lines, «альбо» after the conclusion (2.505461ms)
+✔ pattern: heading + citation on one line and «або:» + a second heading of the same slot (Mary Mother of the Church) (1.201078ms)
+✔ pattern: long and short first reading (Lent III B): the long form keeps its citation, the short form is an alternative (1.294469ms)
+✔ pattern: cycle markers «Год А.» (and the missing markers inferred from the table of contents) (6.287734ms)
+✔ pattern: preface, collect and a plain summary line before the bold title (22 October) (0.921825ms)
+✔ pattern: a title that is not bold, a divider letter outside the divider span (1.629816ms)
+✔ pattern: the page repeats «Гэта слова Божае.» inside the text (4690): reported, stripped (1.025292ms)
+✔ pattern: bold lower-case «Секвенцыя» is a heading (Corpus Christi) (1.347699ms)
+✔ pattern: several Masses of a page keep their source labels (24.06, 29.06, 15.08, 25.12, All Souls, Palm Sunday) (13.21145ms)
+✔ identity: titles of all 617 articles normalize to a liturgical identity (mixed Latin/Cyrillic numerals and typos) (0.855744ms)
+✔ source duplicates are detected: identical words (5105=5109, 5106=5108) and the same identity under two articles (Christ the King) (0.306814ms)
+✔ comparison: typography differences are not differences; words, citations and structure are (1.514431ms)
+✔ comparison: the last strophe stored as «altChorus» is a structure error with all words present (0.179742ms)
+✔ comparison against the Catholic.by page: a legacy document with the typical artifacts is found and fixed by the resync plan, idempotently (8.076451ms)
+✔ a weekday-year-2 document that carries the first reading of year 1 is a WRONG_CYCLE, not a typo (3.117306ms)
+✔ resync waves stay under the manifest patch limits (0.810546ms)
+✔ engine: a Sunday inside the date-keyed windows reads the Sunday lectionary documents (71.007712ms)
+✔ engine: independent oracle of the page identity of temporal options (3.669352ms)
+✔ engine: on a Sunday 24 December the Christmas Vigil Mass is a lookup of the option (evening default) (11.560482ms)
+✔ the Readings screen is a pure module: cycle documents, sets and the route query (0.846765ms)
+✔ the sets migration covers 24.06 (vigil + day, day default) and the Transfiguration (A/B/C Gospels) (101.343041ms)
+✔ legacy editor: every page-derived flat document round-trips unchanged (600 reading pages) (212.060692ms)
+✔ legacy editor keeps unknown fields of sections, alternatives, psalm, alleluia and sequence; null Lent week stays null (0.66691ms)
+✔ sets editor: canonical documents round-trip with roles, cycles, ordered sections, rubrics, reference-only and unknown fields (90.017847ms)
+✔ sets editor: sanitizing a draft keeps new source fields (year, form, altChorusRef, prayers, preface) and drops markup (0.780877ms)
+✔ sets editor: a linked projection follows its set; a non-projected legacy mix is left alone (0.396027ms)
+✔ InlineEditor preview is sanitized (formatting survives, scripts/handlers/frames/unsafe URLs do not); cancel never writes the model (1.455733ms)
+✔ DayEditor: a sparse Proper is written as a difference only (unknown fields untouched), a full day with merge (0.654346ms)
+✔ reports: counts are consistent with each other and never claim completeness while mismatches exist (59.356979ms)
+✔ safety: the audit and its analysis scripts are read-only; only resync-readings.mjs --apply can write, behind guards (4.550295ms)
+✔ the content of pageIdOfUrl and the snapshot loader (0.222565ms)
+✔ reports: the published data were verified after the write (apply record, memorial classification, post-write verification) (2.721931ms)
+✔ names hymns by first verse and short readings by Scripture reference (27.507342ms)
+✔ keeps category names but never uses a prayer or instruction as a tab title (8.37995ms)
+✔ names alternative Marian antiphons by their first verse line (0.807472ms)
+✔ recognizes structured choices and preserves shared content and suffixes (48.957719ms)
+✔ turns Gospel antiphons for years A, B, and C into selectable alternatives (5.030642ms)
+✔ does not split a reading at the narrative phrase "У тыя дні" (4.042576ms)
+✔ Office category boundaries require a heading line; quoted prose stays in its reading (15.199048ms)
+✔ all common-template rule-separated fields become selectable with short safe titles (671.619096ms)
+✔ formats intercessions as intro, highlighted refrain and alternating petition pairs (9.53037ms)
+✔ normalizes line-broken intercessions into the standard petition and response paragraphs (4.267036ms)
+✔ gives all supported intercession source shapes the same paragraph structure (1.931372ms)
+✔ keeps Psalm 26:7-14 whole when verse 8 begins with “Пра ...:” (0.88502ms)
+✔ keeps genuine explicit psalm alternatives selectable (0.30413ms)
+✔ a hymn stanza that begins with «Для …» and ends a later line with a colon is verse, not a heading (17.869447ms)
+✔ intercession formatting preserves a space between separately styled Belarusian words (0.787912ms)
+✔ auditFixedDates flags missing fixed date in both collections (1.232305ms)
+✔ auditFixedDates accepts empty rank value when rank field exists (0.533667ms)
+✔ auditFixedDates marks records without rank field as missing (1.91659ms)
+✔ auditCrossCollectionCoverage checks period + feast + date/rank parity (1.579801ms)
+✔ buildCoverageMarkdownReport returns markdown sections (0.50872ms)
+✔ places Holy Family on December 30 only when Christmas is Sunday (5.034648ms)
+✔ places Baptism of the Lord on the first Sunday after January 6 (1.395692ms)
+✔ uses Firestore document IDs as canonical dynamic feast codes (0.894193ms)
+✔ maps the four opening days of Lent to week zero (0.935816ms)
+✔ resolves Mary, Mother of the Church through the dynamic feast map (0.279463ms)
+✔ uses actual weekdays, the December octave, and Christmas week 1 after the octave (2.744643ms)
+✔ when Christmas is Sunday, week 1 begins on the following Sunday (0.572537ms)
+✔ keeps early January in the Christmas season of the previous year (0.884258ms)
+✔ counts Christmas weeks from the first Sunday after Christmas (1.014175ms)
+✔ ends Christmas with Baptism even when stored ordinary start is later (0.91241ms)
+✔ counts the final Ordinary Time weeks backward from Advent (0.457152ms)
+✔ calculates Christmas dates from the first Sunday after Christmas (0.988395ms)
+✔ does not invent Ordinary Time weeks skipped by Lent and Easter (0.579326ms)
+✔ round-trips valid picker positions through calendar dates (2.525291ms)
+✔ antiphon equality across HTML spans and whitespace: Ант. (52.857408ms)
+✔ antiphon equality across HTML spans and whitespace: 1 ант. (1.425818ms)
+✔ antiphon equality across HTML spans and whitespace: 2 ант. (1.127256ms)
+✔ antiphon equality across HTML spans and whitespace: 3 ант. (3.355377ms)
+✔ psalm alternatives retain internally owned antiphons; exact duplicate branches can be cleaned (208.145463ms)
+✔ one antiphon on three psalms: no invented antiphon fields (2.124595ms)
+✔ short reading headings and replies: preserve words, references, alternatives and abbreviations (30.245423ms)
+✔ repeated acclamation never changes the role of the next petition (2.69648ms)
+✔ responses require structural evidence; ambiguous paragraphs remain petitions (6.566335ms)
+✔ source dashes have exact printed evidence, idempotency and no content reconstruction (439.278139ms)
+✔ all Commons, sparse inherited fields, main and seasonal sections are stable (2479.305449ms)
+✔ Josaphat 11–12 November 2026: vitebsk (17.072751ms)
+✔ Josaphat 11–12 November 2026: minsk-mohilev (6.062312ms)
+✔ Josaphat 11–12 November 2026: pinsk (6.179009ms)
+✔ Josaphat 11–12 November 2026: grodno (5.331773ms)
+✔ one card for two Commons, preserved diocesan scope and both old direct URLs (1.227269ms)
+✔ only independently attested complete short responses are restored (38.969418ms)
+✔ all 5110 Common fields retain the printed baseline after reversing proved editorial spans (46562.248023ms)
+✔ builds deterministic Advent and Christmas exception IDs (8.962952ms)
+✔ builds a canonical period ID for a from-day fallback (0.515697ms)
+✔ maps a period week to its four-week psalter template (0.470799ms)
+✔ repairs empty period daytime fields from the matching psalter day only (0.726404ms)
+✔ resolves legacy and canonical from-day markers without replacing identity (1.513821ms)
+✔ can reapply an already loaded period day to preserved from-day fields (2.587628ms)
+✔ never leaves unresolved from-day markers in assembled fields (0.605823ms)
+✔ seasonal resolution fills gaps and expands weekday antiphons (1.761454ms)
+✔ date documents inherit every missing text from the period day (1.107038ms)
+✔ second Christmas Sunday keeps its proper office and takes only from-day texts from the date (0.739193ms)
+✔ date documents keep one antiphon around three inherited psalms (0.928168ms)
+✔ each daytime hour keeps its one antiphon while hymns and psalms inherit (2.345023ms)
+✔ groups templates and dioceses by celebration rank (0.57775ms)
+✔ deduplicates identical templates across dioceses within the same rank (1.353159ms)
+✔ keeps distinct templates and ranks as distinct choices (0.490459ms)
+✔ daytime hours inherit each missing field from sext1 (0.311099ms)
+✔ detects one antiphon surrounding a complete group of three psalms (0.592993ms)
+✔ Pentecost Saturday taken by the Visitation (31.05.2031): the feast Mass AND the evening Vigil Mass of Pentecost, vigil default (95.939125ms)
+✔ Pentecost Saturday in an ordinary year or with a memorial is unchanged (the Saturday document carries the morning and vigil sets) (17.091109ms)
+✔ the variant lookup selects only the variant document; a lookup without a variant is unchanged (0.220433ms)
+✔ Our Lady of Budslav (02.07): rank and readings per diocese, from the diocesan calendars (16.372976ms)
+✔ source correction: «Мк 22, 1–10» printed under «паводле Мацвея» is read as «Мц 22, 1–10»; nothing else is touched (0.364629ms)
+✔ marks explicit and implicit date inheritance as assembled content (1.055721ms)
+✔ explains daytime fallback without duplicating the shared text (1.81212ms)
+✔ editor layout keeps separate shared sources out of days fields (0.356828ms)
+✔ every short field has exact local span copies, reversible source and idempotent output (2201.506581ms)
+✔ every long field has exact local span copies, reversible source and idempotent output (7802.147837ms)
+✔ canonical JSON changes are exactly the 455 proved fields / 820 replies; unrelated values and all exceptions survive (85.712243ms)
+✔ the two specified apostles short examples follow A+B / B / A+B and keep source K. doxology (1.378871ms)
+✔ all five named historical proposals are now activated only under v3 authorization (545.405941ms)
+✔ continuation after star remains within its own N. and does not move original paragraphs (8.557797ms)
+✔ no cross-boundary, partial-word, wrong role, multiple-star or unknown-signature substitution (2.435072ms)
+✔ only ten fields / fifteen replies are sent to the editor; SHA and seasons remain separate (5.528047ms)
+✔ publication union keeps every old ready field and exact masks; no held path is writable (4185.478195ms)
+✔ fresh updateTime / hash conflicts and tampered masks fail before the first write (1.841377ms)
+✔ future executor bounds requests, journals committed writes, verifies hashes/time and stops on conflict without retry (101.844992ms)
+✔ cache-recovered Proper is expanded by the generator with a separate proof, never a sparse overwrite of days (2.756257ms)
+✔ identical rendered text can reverse to distinct printed abbreviations only with exact file/field context (41.83149ms)
+✔ reply counters distinguish applied copies, complete replies and field-atomic holds (0.280954ms)
+✔ liturgical antiphon/refrain emphasis is on by default and persists independently of sentence highlighting (0.750742ms)
+✔ plain book appearance covers Hours antiphons, intercession responses and daily reading refrains (0.566054ms)
+✔ the next-hour sequence follows the canonical office order (1.357077ms)
+✔ ambiguous invitatory and final compline have no automatic successor (0.140732ms)
+✔ removes a line break immediately after a psalm asterisk (1.088362ms)
+✔ handles an asterisk wrapped in a rubric span (0.162185ms)
+✔ removes a line break after literal and encoded dagger signs (0.167974ms)
+✔ preserves all other line breaks (0.097937ms)
+✔ marks asterisks and daggers with the rubric class (0.297338ms)
+✔ marks ordinary psalm paragraphs as strophes and keeps the heading separate (1.530939ms)
+✔ splits a legacy single-paragraph psalm into marked strophes (0.299181ms)
+✔ removes a trailing antiphon embedded in psalm HTML (5.83475ms)
+✔ keeps an embedded antiphon when no separate antiphon is available (0.50359ms)
+✔ marks the first two psalm subtitles without changing the psalm strophes (0.859416ms)
+✔ marks matching subtitles at the beginning of a reading only (0.189936ms)
+✔ does not shrink a reading paragraph just because its heading is red (0.493444ms)
+✔ marks a centred reading theme after the mixed reading heading (0.22546ms)
+✔ does not shrink a psalm strophe containing red response markers (0.255445ms)
+✔ marks a paragraph whose complete content is rubric-coloured (0.107011ms)
+✔ marks centred psalm part and theme captions even after earlier subtitles (0.13934ms)
+✔ promotes standalone first and second reading labels to section headings (0.255846ms)
+✔ removes a standalone legacy lection heading before structural rendering (0.639504ms)
+✔ treats encoded spaces after a legacy lection heading as whitespace (0.598433ms)
+✔ removes only the legacy label from a mixed lection heading (0.399152ms)
+✔ marks an inline bibliography in a mixed reading heading (0.309547ms)
+✔ the 17 owner-confirmed versicles are excluded without editing any words (73.178437ms)
+✔ all 16 antiphon fields have a preserved, checked classification (25.521341ms)
+✔ long response proposals copy only the local marked words and never apply themselves (169.685929ms)
+✔ no unique star or no prefix means no reconstruction, including variant boundaries (1.332209ms)
+✔ review totals balance against the frozen queue, preserving every initial case and hash (6.747186ms)
+✔ ready field list excludes each held field and contains exactly original reviewed patches (2500.913992ms)
+✔ the five supplied section C proposals have exact, isolated, reversible copy proofs (321.898ms)
+✔ all six lexical antiphon variants have both forms in the printed transcriptions (0.481821ms)
+✔ Sunday Compline is reserved for solemnities, not ordinary feasts (0.735842ms)
+✔ Te Deum follows rank and Sunday season rules (1.039236ms)
+✔ Te Deum is included throughout the Christmas and Easter octaves (0.27374ms)
+✔ Te Deum is omitted on Palm Sunday and during the Paschal Triduum (0.148011ms)
+✔ all ten owner decisions plus the mixed-script copied source resolve atomically and idempotently (227.324766ms)
+✔ U, Cyrillic C, source Справялівы and Easter star are exactly the owner-approved forms (2.186434ms)
+✔ all 820 old generated replies receive the requested initial-letter/graph review; only two copies need correction (938.330878ms)
+✔ source comparison can reverse both editorial layers without modifying printed evidence (691.507751ms)
+✔ publication preserves old ready work, rebases only two shared documents and holds published collections (5553.18943ms)
+✔ fresh manifest gate rejects a new Proper introduction, changed digest or a days write (84.619186ms)
+✔ uses dedicated Sunday titles for every liturgical period (1.234667ms)
+✔ keeps the existing weekday title pattern (0.343715ms)
+Deprecation warning: use moment.updateLocale(localeName, config) to change an existing locale. moment.defineLocale(localeName, config) should only be used for creating a new locale See http://momentjs.com/guides/#/warnings/define-locale/ for more info.
+✔ feast search survives reader Back without extra entries for query/filter edits (3424.504382ms)
+✔ period selection emits the reader directly without an intermediate options list (1.513685ms)
+✔ offers every privileged Advent date from 17 through 24 December (4.970818ms)
+✔ offers Christmas exclusively as dates from 25 December through the Baptism (5.151138ms)
+✔ repeats period weeks in a four-week psalter cycle (0.999325ms)
+✔ uses week IV before the first Lent Sunday and week II in Holy Week (0.218029ms)
+✔ keeps week IV from a weekday Christmas until Sunday starts week I (3.268301ms)
+✔ starts week I immediately when Christmas is Sunday (3.894383ms)
+✔ formats the compact Belarusian title label (0.143807ms)
+✔ solemnities and feasts have display priority over regular days (1.178824ms)
+✔ celebration themes follow rank and red exceptions (1.690506ms)
+✔ regular days keep their period theme (0.199911ms)
+✔ the calendar day keeps its period theme beneath lower-rank celebrations (1.546739ms)
+✔ formats supported HTML break tags as line breaks in liturgical titles (0.711291ms)
+✔ escapes other markup in liturgical titles (0.11938ms)
+✔ recognizes and normalizes the first Vespers fields (1.257063ms)
+✔ can use tomorrow regular Vespers for Saturday evening (0.372051ms)
+✔ uses the highest-priority tomorrow option that has first Vespers (1.431596ms)
+✔ never takes first Vespers from a memorial or a saint feast (0.769278ms)
+✔ office for the dead retains its own Vespers (0.281484ms)
+✔ 13 June 2026: I Vespers of XI Sunday use Saturday psalter, never Sunday II Vespers (616.188271ms)
+✔ Sunday I Vespers preserve explicit first-Vespers Propers and never borrow II Vespers (0.373041ms)
+✔ non-Sunday celebrations preserve their existing first Vespers fallback (0.350688ms)
+✔ structured rule kinds are validated and described, never raw instructions (2.462567ms)
+✔ §7.1 apostles Common laudesHymn is a structured Proper ref, not a literal instruction (18.907406ms)
+✔ §7.2 Matthias: Lauds hymn = the Office of Readings hymn (same-day field) (45.518695ms)
+✔ §7.3 Cyril & Methodius: Vespers hymn is the confirmed full Lauds hymn (15.57544ms)
+✔ §7.4 Holy Name (03.01): no Common, the Office is the Christmas weekday (5.209093ms)
+✔ §7.5–7.7 confirmed Commons: Juan Diego, Dismas (holy men), Jadwiga (holy women) (0.247223ms)
+✔ §25 07.06.2023: daytime is IX week Wednesday, Vespers belong to Corpus Christi (75.870659ms)
+✔ §10 ordinary-w9-d4 Vespers: clean 06.06.2018 page = psalter week I Wednesday (30.08.2023) (4.512224ms)
+✔ §8.1 ordinary-w21-d3 (Tuesday) and -d4 (Wednesday): R1/R2 with responsories from the source (8.054446ms)
+✔ §8.2 lent-w5-d1 is created complete enough for every hour (1.834482ms)
+✔ §5.17 St Andrew Bobola: own R2 and hymns from the 16.05.2025 source survive every choice (43.512031ms)
+✔ §8.3 Vitebsk 12.06 martyrs: optional memorial, martyrs Common, sparse Proper (46.683876ms)
+✔ §9.2 18.11: own elements from the source, Vespers hymn → Lauds hymn (structured) (1.163181ms)
+✔ §9.1 All Faithful Departed matches the 02.11.2026 source in the compared fields (2.133722ms)
+✔ §9.3 Holy Innocents: one Daytime antiphon, as in the 28.12 source (5.045646ms)
+✔ every former unexplained legacy difference has a source verdict (1.101639ms)
+✔ §15 editor: own / Common / current day / structured ref are told apart; save writes only overrides (1.541471ms)
+✔ recheck §19: a Proper with only an Office of Readings prayer has it at Lauds and Vespers (every source page: OOR prayer = Lauds prayer) (3.402152ms)
+✔ known instructions become structured rules (3.188391ms)
+✔ a whole-hour instruction covers every field of that hour without own text (1.373317ms)
+✔ page references are unresolved, never text (0.855067ms)
+✔ the printed heading of the intercessions is not part of the text (0.514304ms)
+✔ field audit: instructions, short suspicious values, real short antiphons (1.345736ms)
+✔ «… або з будня»: the Common, but «З дня» keeps the weekday (21.052566ms)
+✔ complementary psalmody exists and is never silently replaced by the day (2.801608ms)
+✔ complementary psalmody is extracted only from identical sources (1.387299ms)
+✔ All Souls takes the Office for the Dead, not the weekday (2.664291ms)
+✔ 2026-10-02 Guardian Angels: real Sunday week I psalms, own antiphons, no instruction (17.039013ms)
+✔ 2026-10-06 St Bruno: «З дня» first, Commons after, the Proper survives switching (3.657887ms)
+✔ before the migration Bruno depends on legacy days and has no «З дня» (1.330513ms)
+✔ a movable memorial without a document is assembled from its Common (38.361285ms)
+✔ 26.12: the octave date document is the current day of St Stephen (4.832115ms)
+✔ temporal repair fills only empty fields, from agreeing equivalents (2.923381ms)
+✔ the June devotion never appears in September or October (215.398569ms)
+✔ the June devotion appears in June (where the calendar printed it) (3.1749ms)
+✔ first Thursday / Friday / Saturday of the month in every diocese (78.32846ms)
+✔ an Ordinary Time day unrelated to a month devotion does not inherit it (6.334437ms)
+✔ a year-instance note stays in its year and on its day (6.724043ms)
+✔ guards: explicit dates, month words, headings, bare marks (2.990743ms)
+✔ a month word that names the subject does not restrict the note (0.672433ms)
+✔ sparse occurrences are not generalized to the whole period (125.507281ms)
+✔ search cards keep canonical celebration accents without vestment dots or labels (507.124792ms)
+✔ ordinary weekday: the day's citations (1.874888ms)
+✔ days after Ash Wednesday: the week-less weekday documents (Firestore == null) (1.138451ms)
+✔ Sunday: the cycle of the year (A in 2026, B in 2027) (0.804489ms)
+✔ feast and solemnity: their own readings (1.263629ms)
+✔ memorial: the weekday readings by default, its own ones «або» (0.63833ms)
+✔ optional memorial keeps the weekday default (0.663176ms)
+✔ reference-only and missing are explicit, never silently replaced (2.970444ms)
+✔ the reference index is a projection of readings: citations only, no texts (0.648615ms)
+✔ one diocese: the options as they are (0.345028ms)
+✔ two dioceses: shared options merge, diocesan ones keep a badge, a different rank is its own row (0.844409ms)
+✔ settings: one or several dioceses, never none; the old single setting migrates (0.199199ms)
+✔ date picker: colours and options of every selected diocese (1.781137ms)
+✔ the Ordo vestment colour decides; Marian blue is only a secondary accent (0.1732ms)
+✔ every liturgical accent stays visible on light and dark surfaces (0.470127ms)
+✔ Ordo day: «Святкаванні дня», explicit vestment colour, actionable celebrations (0.369685ms)
+✔ Ordo readings rows wrap instead of overflowing the card (0.224147ms)
+✔ Ordo → Hours capsule: the viewed date, today on the month, diocese context kept (0.403897ms)
+✔ «Выбраць»: a date alone opens the main screen of that day (Hours and Readings) (0.249805ms)
+✔ Immaculate Heart + another obligatory memorial: weekday and two optional memorials (2671/98/L) (0.331598ms)
+✔ /picker by period: every position comes from the engine, impossible ones are absent (1000.985472ms)
+✔ /picker by feast: all definitions, Ordo dates and all four dioceses (13.394902ms)
+✔ Marian feast references are structured rules resolved from the Common (142.99573ms)
+✔ all generated Marian feasts are free of unresolved text instructions (382.588715ms)
+✔ the new Sorrows hymns keep three lines within each stanza (1.512243ms)
+✔ hymn formatter joins verse lines without joining separate stanzas (0.526661ms)
+✔ bold formatting toggles off when the visible text remains selected (1.573876ms)
+✔ bold formatting toggles off when Markdown markers are selected too (0.319309ms)
+✔ unformatted text receives one pair of delimiters and stays selected (0.140011ms)
+✔ italic formatting uses the same toggle behavior (0.113851ms)
+✔ an empty selection inserts and selects fallback text (1.329748ms)
+✔ V4.1 replaces exactly the eight approved Russian service lines and is idempotent (2.628701ms)
+✔ V4.1 rejects Latin wording, punctuation, markup, extra lines and unreviewed Cyrillic (0.970508ms)
+✔ new Belarusian markers preserve semantic sections, rubric classes and V./R. roles (10.035272ms)
+✔ planner accepts only the three identical Latin Mass text fields (1.68385ms)
+✔ CLI dry run backs up untouched data; apply uses the reviewed plan and is idempotent (25.748036ms)
+✔ apply refuses a changed updateTime before writing (40.201368ms)
+﹣ real dry-run output has no Russian service lines and preserves semantic block shape (0.605891ms) # SKIP
+✔ the five major headings are visible in Belarusian in every language, before and after the migration (88.062997ms)
+✔ migrated texts carry the canonical headings themselves (1.680085ms)
+✔ every ritual variant lists the canonical heading first and keeps the former one as a fallback marker (0.342535ms)
+✔ switching language keeps the semantic section in the real section lists (8.484381ms)
+✔ migration changes only headings, speaker prefixes, markup and whitespace (40.217502ms)
+✔ the allow-list rejects any change of words, punctuation, speakers or sections (6.947561ms)
+﹣ real dry-run output: allow-list holds and both versions render the same structure (0.146681ms) # SKIP
+✔ dialogue roles and labels are detected with the same meaning in all three languages (26.725846ms)
+✔ labels stay off long prayers, hymns, rubric-led lines and comments (73.81134ms)
+✔ role labels are ritual metadata for every role and language (0.725471ms)
+✔ section picker model: five Belarusian sections, the current one selected, subsections secondary (13.488511ms)
+✔ section control shows the full current section name and opens a picker of the five sections (1133.803793ms)
+✔ Mass reader uses the section control, keeps the language menu in the header and has no dock or Share (0.477548ms)
+✔ English renders the same from the bundled file, the published document and the pre-V4 text (74.358902ms)
+✔ dry run reads the three documents, backs them up untouched and writes nothing (5.445334ms)
+✔ the CLI dry run writes backup, plan and report files and never calls update (66.614694ms)
+✔ apply writes only the planned text fields of the two existing documents and is idempotent (28.125249ms)
+✔ apply refuses to run without a plan or when a document changed since the dry run (18.596659ms)
+✔ planning picks the displayed text field and refuses a text that would lose a section (3.748393ms)
+✔ the service-account key is ignored, untracked and nothing like it is committed (190.085194ms)
+✔ Holy Mass keeps the existing Belarusian prayer as the ritual entry (1.196258ms)
+✔ Latin reuses the existing Ordo Missae prayer and English has its own id (0.221072ms)
+✔ language resolution prefers the URL, then the stored choice, then Belarusian (0.129525ms)
+✔ every variant marker points to a known semantic section (0.316566ms)
+✔ English source exposes all its semantic sections in ritual order (87.848815ms)
+✔ English text is taken from MCFL.pdf without invented prayers (0.311128ms)
+✔ Belarusian and Latin markers match their real section blocks (0.560462ms)
+✔ marker matching ignores emphasis, case, dashes and apostrophe style (0.15334ms)
+✔ switching language keeps the section, then falls back to parent and neighbours (0.301683ms)
+✔ active section is the last heading above the reading line (0.213601ms)
+✔ ritual schema v3 has exactly the five canonical Belarusian major sections (0.223887ms)
+✔ the retired liturgy-of-the-eucharist id still resolves (0.854855ms)
+✔ every anchor and classifier references known sections and block types (0.314343ms)
+✔ English document keeps wording and uses the shared semantic types (13.524506ms)
+✔ Belarusian excerpt: headings, roles from labels and cues, quoted rubric words (3.581502ms)
+✔ Latin excerpt (pre-migration): Russian headings become canonical sections, V./R. become roles (1.415177ms)
+✔ Mass renderer gives every block one shared class and escapes source text (0.491588ms)
+✔ the rule: weekday by default; proper readings only for the closed, source-confirmed list (1.826935ms)
+✔ every prescribed memorial is a memorial option of the engine (id and rank), in every diocese (100.899429ms)
+✔ descriptor: the lookup order follows the rule and the allowed choice names it (2.221389ms)
+✔ 22.10 John Paul II (optional memorial with own readings): the calendar route opens the WEEKDAY readings, own readings are an alternative (9.372326ms)
+✔ 03.11 Martin de Porres and 23.11 Clement behave the same way (3.532329ms)
+✔ 29.07 Martha (proper Gospel prescribed): the route and the default open the memorial readings; the weekday group stays selectable (1.61746ms)
+✔ a prescribed optional memorial without a document of its own falls back to the weekday readings (a data gap, reported by the audit) (1.610711ms)
+✔ Hours -> Readings route: a document linked by the Hours day id is shown only when the plan offers it (4.382426ms)
+✔ memoria and memoria-ad-libitum × Proper/Common: never a festive structure (GILH 235-238) (28.694895ms)
+✔ every memorial of 2026-2027 keeps the weekday structure for each selectable Common (1790.552144ms)
+✔ real feasts and solemnities keep Te Deum and the festive structure (1.434729ms)
+✔ Trakai: the canonical calendar source says 05.07, memoria; 10.07 is gone (2.257037ms)
+✔ Trakai: exactly one active Proper — the obsolete memoria-ad-libitum variant is never offered (0.620955ms)
+✔ Trakai: document choice does not depend on the order of the bundle or on publication state (1.097061ms)
+✔ two sparse documents of one celebration: the calendar rank decides, equivalent copies keep id order, never the bundle order (0.434754ms)
+✔ Trakai: 2025-2035 — Grodno only, one memoria card on 5 July (Sunday keeps priority), nothing on 10 July (158.522934ms)
+✔ Trakai memorial uses the Marian Common without a festive structure (1.543202ms)
+✔ uses the genitive form of every Belarusian month in a date (6.759981ms)
+✔ keeps the nominative month form when the month is shown by itself (0.287132ms)
+✔ every Hours field has a slot of the Office descriptor (17.284755ms)
+✔ generated feast documents are sparse: one per celebration, no placeholders (89.103792ms)
+✔ Commons and the Sunday, week I psalter are reusable templates (0.607173ms)
+✔ textual instructions are normalized to structured rules (1.327056ms)
+✔ vesperHymn = laudesHymn: the reference is resolved at assembly (6.809505ms)
+✔ feast: Proper → chosen Common → rubrical source, never a blanket day fallback (2.517587ms)
+✔ memorial: own texts stay, the rest is of the day; quick switch to a Common (10.230252ms)
+✔ Paul of the Cross, 19 October 2026: the day choice keeps weekday Hours (1.679757ms)
+✔ Paul of the Cross: pastors supplies only the Common elements of a memorial, never the festive structure (61.627245ms)
+✔ Paul of the Cross: religious inherits the holy-men Common elements of a memorial; psalmody stays of the weekday (19.095929ms)
+✔ religious references respect explicit rules and seasons; an unavailable base remains a diagnosed gap (2.743568ms)
+✔ religious base uses existing Common bindings for other men and women, independently of IDs and titles (2.617037ms)
+✔ an explicit base needs one metadata entry; unknown, conflicting or inferred bindings never guess (2.88494ms)
+✔ all 29 confirmed metadata bindings survive generation/import and assemble without unintended gaps (387.776561ms)
+✔ seven Servite founders keep their collective Proper and own prayer in the Common formulary (1.40906ms)
+✔ only Commons with a confirmed introductory rubric inherit through the same resolver (2.895966ms)
+✔ Invitatorium: day/pastors/religious select their antiphon, while Proper always wins (1.607529ms)
+✔ memorial with a Common: Proper texts and references take priority; a Common gap falls back to the weekday, reported (1.410152ms)
+✔ legacy Sunday week I markers reuse the published psalter template (0.338119ms)
+✔ Guardian Angels Lauds route pairs own antiphons with Sunday week I psalms in both document formats (6.979531ms)
+✔ structured omit, explicit sources and a missing Common (1.227697ms)
+✔ after the migration one sparse document gives the day/Common choices (1.66183ms)
+✔ before the migration the live per-template documents still work (0.419832ms)
+✔ a celebration without a days document stays visible (45.300072ms)
+✔ Saturday memorial of the BVM is offered from its Common (1.61494ms)
+✔ office-for-dead hymns expose three selectable endings and separated stanzas (6.378126ms)
+✔ office-for-dead psalms use verse paragraphs without duplicated trailing antiphons (0.327323ms)
+✔ Lauds third psalm has two alternatives with their own antiphons (0.144508ms)
+✔ every office prayer exposes five selectable alternatives (0.12616ms)
+✔ Lauds short reading uses the standard rubric and responsory formatting (0.678131ms)
+✔ Lauds and Vespers intercessions use the standard response and petition layout (0.14622ms)
+✔ all office readings and responsories use rubrics and expose alternatives (0.25924ms)
+✔ plan replaces only the 11 proved fields and commit guards all three documents (3.805254ms)
+✔ unknown contamination, missing text, missing version and wrong selectors abort (0.663488ms)
+✔ snapshot timestamp preconditions retain nanosecond precision (0.756368ms)
+✔ successful apply backs up before commit, verifies all fields and becomes a no-op (3.340516ms)
+✔ stale versions (including source and feast), modified plans and failed backups never write (5.237469ms)
+✔ concurrent commit rejection propagates; unexpected post-write changes are detected (2.666081ms)
+✔ CLI refuses an unreviewed apply before credentials or network are accessed (88.619304ms)
+✔ all dioceses: bad Fridays reproduce via content; planned repair preserves lawful I/II Vespers (383.644648ms)
+✔ all 262 source rows produce 959 approved effective assignments, including source default optional ranks (14.162727ms)
+✔ 2025–2035 × four dioceses: all roles, Vespers, Office and Mass refs; 23 scoped assignments absent (3178.068795ms)
+✔ 8 September is Braslau only in Vitebsk, Nativity elsewhere, with Nativity Office/Mass source (25.010417ms)
+✔ 16 November 2026/2027, Mother Church and cancelled manual moves (6.59395ms)
+✔ Newman starts in 2026 with no spurious Leonardi content; Sopocko is a Lent commemoration (14.442758ms)
+✔ runtime memo invalidates for an already visited date; future schema is rejected, rollback has a larger revision (5.382097ms)
+✔ online revalidation bypasses complete caches on a bound, shares concurrent calls and backs off offline/failure (0.971993ms)
+✔ High Priest and Christ King are different days and both follow the general Table (5.040573ms)
+✔ old Nativity/Braslau direct links follow the single current diocesan Office, never a stale raw document (3.524733ms)
+✔ old materialized auto dates cannot undo the corrected general transfer rule (5.021715ms)
+✔ Braslau legacy fallback is not reported as a published Proper collection (116.777727ms)
+✔ sealed publisher accepts exactly 71 approved operations with strict masks and no deletes (13.455378ms)
+✔ altered hash, foreign project, revision, scope, extra fields and ignored-metadata injection all fail closed (6.543284ms)
+﹣ every baseline ID, hash, updateTime and every operation precondition matches offline (0.160972ms) # Requires explicitly provided private local snapshot; never fetches Firestore for tests
+﹣ changed document, updateTime, ID or collection size prevents publication (0.069685ms) # Requires explicitly provided private local snapshot; never fetches Firestore for tests
+﹣ already applied revision 4, changed independent revisions and wrong schema are refused (0.066681ms) # Requires explicitly provided private local snapshot; never fetches Firestore for tests
+﹣ post-commit verifier checks all scoped documents and every one of the 71 outcomes (0.082404ms) # Requires explicitly provided private local snapshot; never fetches Firestore for tests
+﹣ one atomic commit only; a failure of one write leaves the entire fake database unchanged (0.059349ms) # Requires explicitly provided private local snapshot; never fetches Firestore for tests
+﹣ success performs exactly one commit; readback failure never retries or automatically rolls back data (0.049484ms) # Requires explicitly provided private local snapshot; never fetches Firestore for tests
+﹣ rollback blueprint restores old fields under revision 5, disables created IDs and preserves notes6 independently (0.380923ms) # Requires explicitly provided private local snapshot; never fetches Firestore for tests
+﹣ replacement baseline cannot legitimize independent production changes (0.565361ms) # Requires explicitly provided private local snapshot; never fetches Firestore for tests
+✔ rank plan is deterministic regardless of input order (68.068345ms)
+✔ rank plan aligns Mary Magdalene and All Souls, and the linked readings (8.124032ms)
+✔ plan never deletes without the explicit flag (15.744847ms)
+✔ uncertain documents stay in place as review items (6.031784ms)
+✔ dry run writes only the local plan and never opens Firestore (46.211854ms)
+✔ --apply requires the confirmation token before any Firestore access (16.572127ms)
+✔ --apply writes updates and obsolete marks with preconditions, no deletes without the flag (13.266769ms)
+✔ applyPlan refuses delete items unless deletes are allowed (10.929153ms)
+✔ missing-content detection on fixtures (302.241788ms)
+✔ suggested Commons (0.481795ms)
+✔ missing-content script writes JSON and Markdown only locally (363.894581ms)
+✔ REST cache round-trips through the snapshot reader (12.798275ms)
+✔ one colour: a plain circle (79.72993ms)
+✔ two and three colours: segments of a conic gradient (90.898953ms)
+✔ only legal options are offered, with rank and colour; suppressed never colour a date (20.643447ms)
+✔ Hours route of the chosen option (1.763523ms)
+✔ Readings route of the chosen option (38.681825ms)
+✔ the picker uses the resolved day; both navigation bars pass the screen context (0.890199ms)
+✔ diocesan context of a route: explicit, kept within the same day, dropped elsewhere (0.326331ms)
+✔ the bundled snapshot is up to date with the seed sources (25.160633ms)
+✔ the permanent calendar is rules, not 365 annual rows (2.04091ms)
+✔ definitions reproduce the seed calendar for every diocese (55.610522ms)
+✔ date DSL is a white list; nothing from the database is executed (0.418639ms)
+✔ a published Firestore revision replaces the active calendar; reset returns the snapshot (27.740004ms)
+✔ source selection: exactly one calendar is active (3.411142ms)
+✔ one-year override for the whole of Belarus (27.121198ms)
+✔ one-year override for one diocese; a disabled override does nothing (280.246837ms)
+✔ override actions: suppress, add, changeColor; validation (18.841186ms)
+✔ override preview: «было па разліку → стане» (564.718906ms)
+✔ automatic transfers and collisions are computed, not stored (76.483536ms)
+✔ open cases are structured and shown only for the years that hit them (1418.927811ms)
+✔ Advent 17–24 December keeps its phase and date documents (26.457301ms)
+✔ Christmas: the season ends with the Baptism, the date documents reach 12 January (7.441102ms)
+✔ aligns by celebration identity across sources of different years (0.865162ms)
+✔ diocesan proper and cathedral dedications are DIOCESAN (0.161804ms)
+✔ agreement of all sources against MyBrev is flagged as a MyBrev divergence (0.181553ms)
+✔ celebrations missing from MyBrev are listed with a scope guess (0.32571ms)
+✔ impediments of a particular year are YEAR_SPECIFIC, not conflicts (0.278068ms)
+✔ every diocese has an evidence file from its own adapter (4.63241ms)
+✔ adapters cover a full liturgical year of contiguous days (0.9706ms)
+✔ every extracted item carries provenance and a classification (252.497605ms)
+✔ PDF evidence is coordinate-aware, DOCX evidence is paragraph-based (32.699785ms)
+✔ alignment uses liturgical identity, not only the civil date (4.99185ms)
+✔ celebrations map to MyBrev identities (2.25351ms)
+✔ Office descriptors keep the published rubrics as oracle flags (0.498299ms)
+✔ recognises every excluded category (3.40277ms)
+✔ keeps liturgical content that only looks similar (0.140762ms)
+✔ no collection or clergy-personal data leaks into committed Ordo files (178.852854ms)
+✔ the adapters actually met and excluded such content (0.240061ms)
+✔ excluded records keep only a location, never the personal text (0.430728ms)
+{
+ "celebrations": {
+  "target": 242,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 242,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "dioceseOverrides": {
+  "target": 39,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 39,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "notes": {
+  "target": 1347,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 1347,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "yearOverrides": {
+  "target": 4,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 4,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/ordo-import-B5dlwh/calendar.json
+Dry run only. Nothing was written to Firestore.
+{
+ "templates": {
+  "target": 16,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 16,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "feasts": {
+  "target": 291,
+  "create": 0,
+  "update": 0,
+  "unchanged": 0,
+  "set": 291,
+  "keepExisting": 0,
+  "obsolete": 0,
+  "delete": 0
+ },
+ "legacyCopies": {
+  "listed": 192,
+  "markObsolete": 0,
+  "delete": 0
+ }
+}
+plan: ../../tmp/ordo-import-B5dlwh/feasts.json
+Dry run only. Nothing was written to Firestore.
+✔ plan: create / update / unchanged / obsolete, never delete (1.676762ms)
+✔ calendar targets: definitions, notes without evidence, meta last (4.950929ms)
+✔ dry runs write a local plan only; destructive options need a confirmation (152.945891ms)
+✔ feast targets: sparse documents, templates and the copies they replace (80.616911ms)
+✔ every diocesan layer entry is proven by an evidence item with the same rank (1.198888ms)
+✔ layers never copy the universal calendar (18.802386ms)
+✔ year overrides are valid, proven and not computable transfers (0.174714ms)
+✔ fixedCalendar fixes found by stage 2 (21.506665ms)
+✔ diocesan data layers change only their diocese (35.706014ms)
+✔ the real notes.json is accepted as context.notes (31.453006ms)
+✔ Belarus layer changes are proven in every diocese that prints them (0.268255ms)
+✔ 16.11 in Pinsk resolves to the multi-place diocesan document, not the universal one (15.724895ms)
+✔ 16.05 in Vitebsk resolves to the multi-place diocesan document, not the universal one (5.413784ms)
+✔ generated identities point every diocese of a multi-place document to the live id (0.699875ms)
+✔ resolveLiveDayIds keeps live ids, keeps Common variants and leaves unknown ids alone (0.585663ms)
+✔ obsolete documents are filtered (0.196617ms)
+✔ runtime never selects an obsolete document, by id or by title (1.122172ms)
+✔ computes Gregorian Easter (1.545701ms)
+✔ matches the movable dates printed by the Vitebsk 2025–2026 calendar (1.951723ms)
+✔ matches the movable dates printed by the Grodno 2027 calendar (0.22542ms)
+✔ Holy Family falls on 30 December when Christmas is a Sunday (0.386443ms)
+✔ derived year options drive the existing calendar context (8.336162ms)
+✔ lectionary cycles follow the liturgical year (19.222631ms)
+✔ computes Easter and derived movable feasts for 2025–2030 (1.966005ms)
+✔ Easter computus matches reference dates across centuries (0.130006ms)
+✔ Holy Family and Baptism agree with the existing moment-based rules (6.894779ms)
+✔ Belarus keeps Ascension on Thursday and adds Christ the High Priest (0.609549ms)
+✔ season identities match computeLiturgicalContext for every day 2020–2035 (579.390299ms)
+✔ toYearOptions reproduces the stored 2026 yearOptions shape (0.203146ms)
+✔ computes phases, psalter weeks and lectionary cycles (0.467615ms)
+✔ no clergy personal data and no collections in the published notes (31.381337ms)
+✔ Grodno and Pinsk general notes are recovered from the front matter (99.956498ms)
+✔ general-notes extraction skips tables, pro populo obligations and money (55.677923ms)
+✔ Lectionary / Hours volumes are structured metadata, not «Асаблівыя заўвагі» (28.249775ms)
+✔ the same volume value is stored once per selector (no duplicates across dioceses) (0.804814ms)
+✔ recheck §13: every extracted Grodno / Pinsk general note is published (none is lost in a cross-diocese cluster) (106.523923ms)
+✔ recheck §13.1: period volumes are Belarus-wide structured metadata for every diocese (Minsk + Grodno calendars) (123.134724ms)
+✔ celebration and fixed-date selectors (40.375241ms)
+✔ celebration selector follows a transfer; fixed-date does not (1.559662ms)
+✔ nth weekday with an exclusion, period and period-phase selectors (2.728485ms)
+✔ period-day, relative, exact-date selectors and diocesan scope (38.30582ms)
+✔ nth-weekday supports "last" and month restriction (0.239211ms)
+✔ notes without a structured effect are display-only (0.611322ms)
+✔ solemnity: Proper → Common fallbacks, no user choices (22.688948ms)
+✔ memorial: current Psalter, current first reading, hagiographic second reading (1.14704ms)
+✔ readings use the same resolved identity as the Office (16.094833ms)
+✔ alternatives carry their own Office and Readings descriptors (1.106819ms)
+✔ Saturday memorial of the BVM is offered only without an obligatory memorial (1.535796ms)
+✔ Immaculate Heart + another obligatory memorial: two optional memorials and weekday primary (CDW 2671/98/L) (2.420882ms)
+✔ Advent 17–24 and Christmas keep their date-based documents (1.802999ms)
+✔ warm complete cache detects new publication, refreshes manual years, rejects schema99 and preserves notes6 (733.96553ms)
+✔ citations are compared by book and chapter (1.84961ms)
+✔ audit statuses (0.854349ms)
+✔ the audit covers every primary / alternative celebration of the calendars (494.098828ms)
+✔ missing readings: the celebration is shown with its reference, nothing is substituted (3.576273ms)
+✔ a memorial keeps the weekday readings and gives no notice (0.703731ms)
+✔ reference texts retain their own prayer and all Common choices in every diocese (287.873893ms)
+✔ Hours and Readings receive the same resolved identity for a date (31.219132ms)
+✔ dayOptions only contain legal Offices; a weekday never competes with an obligatory memorial or feast (500.38724ms)
+✔ display resolver cases on real days documents (1.537774ms)
+✔ Office for the Dead is a votive option only on ordinary weekdays (0.960165ms)
+✔ I Vespers by liturgical right, II vs I Vespers conflict (5.718367ms)
+✔ I Vespers are assembled from Proper/Common when no vesper1 texts exist (0.267903ms)
+✔ Compline and Te Deum follow the descriptor flags (1.716764ms)
+✔ same date in two dioceses gives different Offices and readings plans (1.035378ms)
+✔ readings follow the engine lookup order (no independent priority) (4.465331ms)
+✔ Firestore yearOptions never override computed dates; a discrepancy is only reported (0.52462ms)
+✔ any future year is generated without a stored yearOptions document (198.089961ms)
+✔ period reader opens its temporal position even under an obligatory saint, without changing Ordo (21.630892ms)
+✔ period reader preserves temporal seasons, date entities and reading cycles (22.57413ms)
+✔ feast reading reference dates keep exact diocesan identities and leave Ordo unchanged (71.298823ms)
+✔ permanently impeded memorials use isolated reference descriptors and preserve diocesan text refs (287.667209ms)
+✔ feast search includes every effective definition even when Ordo suppresses it (388.268266ms)
+✔ feast search permissions are those of Ordo for each date, mode and diocese (614.494505ms)
+✔ feast search preserves text/color/title/date/rank variants and local suppression (769.119816ms)
+✔ feast search uses Ordo for named, movable, last-weekday dates and transfers (98.329844ms)
+✔ router has lazy /ordo and /ordo/:date routes with the Ordo bottom navigation (0.64453ms)
+✔ drawer entry «Літургічны каляндар» with a Phosphor icon (0.574355ms)
+✔ route helpers: /ordo is the month, a day is /ordo/:date, invalid dates fall back (0.609888ms)
+✔ notes are grouped by category in display order, deduplicated, with diocesan variants (2.435255ms)
+✔ one-year notes stay in their year; copied announcements only on the date they name (0.307503ms)
+✔ grouping the real notes of a date through the engine (27.861484ms)
+✔ startup code never statically imports notes.json (lazy chunk of the Ordo screen) (38.826488ms)
+✔ no LocalChurch anywhere in the runtime (63.833785ms)
+✔ parish-title notes are not part of the runtime Ordo (39.52615ms)
+✔ celebration list covers fixed, diocesan and movable celebrations (1.257622ms)
+✔ day summaries: Office directions, Mass, suppressed reasons (2.954577ms)
+✔ month overview: one row per day with primary, rank and colour; year generation memoized (124.310458ms)
+✔ the Ordo main page is one month; the Hours screen links to the Ordo (0.568065ms)
+✔ display filter: valid, ordered, never empty, stored separately from the Hours diocese (0.181974ms)
+✔ month union: the same result in every selected diocese is one row (38.828741ms)
+✔ month union: different ranks are split by diocese (60.885658ms)
+✔ day union: shared data once, differences with diocesan badges (94.032958ms)
+✔ first Friday becomes a recurring selector, not twelve dates (12.606955ms)
+✔ a novena day is relative to its (movable) celebration (2.084568ms)
+✔ notes follow the celebration rather than the civil date (4.941368ms)
+✔ Paschal-cycle days are relative to Easter (0.47171ms)
+✔ plain period days keep a period-day selector; year markers force exact-date (32.599214ms)
+✔ repeated notes collapse to period selectors (0.469947ms)
+✔ single examples are never promoted silently (0.912354ms)
+✔ office flags recognise I Vespers, Sunday Compline and optional memorials (1.457223ms)
+✔ 01 ordinary weekday without a saint (41.567613ms)
+✔ 02 weekday + optional memorial: the weekday is primary, the memorial an alternative (1.665256ms)
+✔ 03 several optional memorials are all legal alternatives (1.118504ms)
+✔ 04 obligatory memorial: weekday is not an alternative Office (0.827315ms)
+✔ 05 feast: no I Vespers, Sunday-week-I psalms at Lauds, weekday Compline, Te Deum (0.676538ms)
+✔ 06 solemnity: I and II Vespers, Sunday Compline, Te Deum (1.44881ms)
+✔ 07 Sunday + conflicting fixed saint; feasts of the Lord replace a Sunday of Ordinary Time (6.768516ms)
+✔ 08 Sundays of Advent, Lent and Easter outrank feasts and solemnities (1.076561ms)
+✔ 09 17–24 December + saint: commemoration only (0.608075ms)
+✔ 10 Lent weekday + memorial: commemoratio, but a diocesan feast is celebrated (6.144749ms)
+✔ 11 Christmas octave (6.81029ms)
+✔ 12 Easter octave: every day ranks as a solemnity, memorials omitted (5.012223ms)
+✔ 13 Holy Week: Monday–Thursday exclude every other celebration (0.897952ms)
+✔ 14 Paschal Triduum (0.856089ms)
+✔ 15 Saturday evening belongs to Sunday (0.369156ms)
+✔ 16 II Vespers of today vs I Vespers of tomorrow (GNLYC 61) (7.19586ms)
+✔ 17 diocesan rank override (St Josaphat, 12 November) (7.319296ms)
+✔ 18 cathedral dedication stays a diocesan feast (no own-church level) (0.43826ms)
+✔ 19 there is no local titular solemnity: a saint on a Sunday stays impeded (3.052144ms)
+✔ 20 transferred solemnity (Annunciation 2027 → Monday after Divine Mercy) (3.079394ms)
+✔ 21 Baptism of the Lord closes the Christmas season (8.011928ms)
+✔ 22 Holy Family: Sunday in the octave, or 30 December without I Vespers (0.624049ms)
+✔ 23 source calendars vs current MyBrev behaviour (1.275419ms)
+✔ 24 same date, different dioceses (29.702235ms)
+✔ All Souls on a Sunday: Hours of the Sunday, Mass of All Souls with 3 reading sets (§11.1) (21.33452ms)
+✔ Immaculate Heart + obligatory memorial: both optional, weekday primary (13.06.2026) (40.601358ms)
+✔ Mary, Mother of the Church + obligatory memorial: prevails over the saint memorial (CDW 24.03.2018) (8.218679ms)
+✔ Christ the High Priest + another feast: general Table precedence, one feast (2.951082ms)
+✔ St Joseph in Holy Week: computed transfer + materialized auto override (case B) (16.374675ms)
+✔ Annunciation impeded: computed transfer + materialized auto override (case C) (14.608507ms)
+✔ diocesan patron transfers only with a source-confirmed solemnity rank (case A) (7.883315ms)
+✔ every rank confirmation is a solemnity printed by that diocese (65.049194ms)
+✔ Lord solemnity collision: the Lord stays, the other solemnity transfers (case D) (13.585187ms)
+✔ auto materialization is idempotent (11.977197ms)
+✔ a manual-confirmed override survives regeneration and controls the effective date (3.028438ms)
+✔ materialized auto records do not change the generated year (345.987455ms)
+✔ legacy from/to overrides normalize to one canonical representation (7.76023ms)
+✔ Annunciation in Holy Week or the Easter octave → Monday after Divine Mercy Sunday (39.844088ms)
+✔ St Joseph: Sunday of Lent → Monday; Holy Week → Saturday before Palm Sunday (9.027657ms)
+✔ Immaculate Conception on a Sunday of Advent → Monday (6.33197ms)
+✔ coinciding solemnities: the solemnity of the Lord keeps the day (2.656388ms)
+✔ proper solemnity impeded by Pentecost moves only in its diocese (6.282165ms)
+✔ feasts and memorials are never transferred (19.754973ms)
+✔ year override: move, suppress, add and changeRank, in scope order (22.03913ms)
+✔ validates YearOverride records (0.216505ms)
+✔ the validation runs over every published day of the four calendars (8.68265ms)
+✔ MATCH plus explicitly approved source differences meets the unchanged threshold (0.188654ms)
+✔ every GENERATOR_MISMATCH has been investigated (0.262896ms)
+✔ core liturgical checks agree with every calendar (0.176376ms)
+✔ office types printed by the calendars are normalized (0.150307ms)
+✔ the markdown report renders the summary (49.263457ms)
+✔ generates complete years 2025–2030 for every diocese without errors (1528.587767ms)
+✔ display invariants hold for a whole year (51.704579ms)
+✔ every Sunday and solemnity has I Vespers by right; feasts only on Sundays (27.567631ms)
+✔ resolution is deterministic and accepts Date/route formats (2.064817ms)
+✔ keeps alternative readings, sequence and italic headings after editing (2.08626ms)
+✔ creates a human-facing draft from a linked readings document (0.249305ms)
+✔ builds the canonical structured payload and keeps nullable fields (0.293862ms)
+✔ clears obsolete selectors when the editor changes source type (0.1994ms)
+✔ validates a complete reading and reports incomplete core sections (0.521695ms)
+✔ accepts complete reading content and lectionary headings (3.111202ms)
+✔ detects comments misplaced in reading and gospel title fields (0.517349ms)
+✔ requires canonical year and the nullable psalm altChorus field (0.233392ms)
+✔ rejects normalized-but-noncanonical year values (0.282395ms)
+✔ validates every additional readingN section when present (0.211709ms)
+✔ detects swapped and duplicated psalm refrains (0.470328ms)
+✔ allows an explicit null Bible reference for non-biblical acclamations (0.184027ms)
+✔ accepts the Paschal Vigil alleluia as the final psalm refrain (0.231649ms)
+✔ detects liturgical response wrappers embedded in the alleluia verse (0.37878ms)
+✔ normalizes readings selectors to the days vocabulary (1.199886ms)
+✔ builds IDs from the days base and a normalized lectionary cycle (0.316536ms)
+✔ repairs legacy dynamic-feast metadata from authoritative titles (12.193652ms)
+✔ repairs legacy Holy Week selectors and preserves distinct rites (4.932023ms)
+✔ recognizes content in every supported reading section shape (0.443999ms)
+✔ removes only the known standalone parser stub (0.287032ms)
+✔ moves a duplicated Bible reference out of the section text (0.380072ms)
+✔ normalizes source-page titles for fixed-day matching (2.069676ms)
+✔ selects one cycle per celebration without hiding other fixed celebrations (1.560408ms)
+✔ uses the Sunday cycle for A/B/C feasts celebrated on weekdays (0.390638ms)
+✔ keeps an independent rite variant alongside the selected feast cycle (0.196306ms)
+✔ selects an exact calendar-weekday variant before a generic date reading (0.147131ms)
+✔ maps period and feast readings directly to days (0.389006ms)
+✔ uses title, rank, and place to disambiguate fixed celebrations (0.215845ms)
+✔ uses inflection-tolerant title similarity without merging another feast (0.217948ms)
+✔ links seasonal readings and shared local celebrations conservatively (1.123451ms)
+✔ all Pastors common hymns assemble all and only the right stanzas (30.028457ms)
+✔ Pope John Paul II, bishops, presbyters and plural titles select the appropriate default (29.699788ms)
+✔ does not modify unrelated, unknown or malformed hymn data (0.184688ms)
+✔ seasonal Pastors hymns assemble the same four complete hymns as the base text (54.60308ms)
+✔ a flattened hymn with an unrecognizable shape is left untouched (1.090902ms)
+✔ seasonal Pastors hymns match the stanza layout of the source volumes (55.619895ms)
+✔ buildPrayerTagStats counts each tag once per prayer and category (29.281298ms)
+✔ buildPrayerTagRemovalPlan updates prayers and preserves categories left empty (0.486031ms)
+✔ buildPrayerTagRemovalPlan rejects an empty tag (0.485121ms)
+✔ removes a displayed normalized tag even when stored values contain spaces (0.269365ms)
+✔ shared Flutter fixture: old field, empty folder, manual/tag/legacy union, no descendants (2.31837ms)
+✔ Public vs Priest vs Admin: restriction wins for manual intersection and inherited parents (2.915619ms)
+✔ membership edit/reload preserves IDs, order, icon and manual-only members without touching prayers (3.638818ms)
+✔ remove protected manual link and change parent recompute physical storage atomically (1.243692ms)
+✔ page navigation: roots, two levels, parent links, ancestor context, hidden parent and personal categories (1.748723ms)
+✔ same-name global siblings in separate branches retain distinct IDs (0.320712ms)
+✔ cycles, self links, unknown parents, depth and invalid manual IDs are rejected; old malformed graphs fail closed (2.92332ms)
+✔ last tag removal preserves folders, children and manual IDs; category deletion cleans legacy links only (0.807025ms)
+✔ large manual membership produces a dry-run exceeding the existing atomic budget (3.574882ms)
+✔ real gzip bundle retains optional prayerIds; protected collection codec preserves manual IDs (5.352196ms)
+✔ exactly 48 unique keys: 36 Phosphor + 12 authored, 12 per group (3.827811ms)
+✔ every Phosphor glyph exists in the installed package and every authored SVG is real artwork (3.794933ms)
+✔ allowlist: unknown values are rejected, not stored (0.527184ms)
+✔ the three built-in categories carry their required icons (2.234244ms)
+✔ suggestions are deterministic and match the shared vectors (also run by the Flutter app) (4.891734ms)
+✔ a stored choice wins over a suggestion; renaming never changes it (0.569407ms)
+✔ personal migration: fills missing keys once, keeps valid and unknown ones, keeps every other field (1.020245ms)
+✔ menu keeps iconKey, hierarchy and independent direct tags (1.413918ms)
+✔ iconKey flows into the Flutter bundle; protected categories stay out (2.034562ms)
+✔ migration plan: assigns only missing/invalid keys, never moves collections, is idempotent (1.313096ms)
+✔ catalog exported for Flutter lists the same 48 keys, groups and labels (0.691271ms)
+✔ new users see global categories followed by their personal categories (1.615001ms)
+✔ a global category can be hidden locally without changing the global list (0.183276ms)
+✔ clearing local hidden ids restores the default global list (1.14242ms)
+✔ copy stays in the editor, gets a marked title, and is available before the next snapshot (108.572164ms)
+✔ saving edits after copying updates only the copy and retains dirty navigation protection (22.466319ms)
+✔ saving an edited prayer persists its verification flag (11.27329ms)
+✔ returning to the original rehydrates the reused form (11.67859ms)
+✔ copy title fits the 200-character limit (35.908482ms)
+✔ failed copy keeps the original route and unsaved draft (12.750815ms)
+✔ invalid form does not create a copy (6.738994ms)
+✔ copy and save cannot race while asynchronous validation is pending (8.020283ms)
+✔ title keys fold graphic variants (1.410964ms)
+✔ duplicate candidates: exact first, similar by tokens, none for unrelated (1.008027ms)
+✔ two-state machine: direct publish, old statuses are treated as drafts (0.169425ms)
+✔ validation and publish blockers (0.855308ms)
+✔ published document: reader fields only, deduped tags, short book source, no PDF hashes (0.349215ms)
+✔ replacement keeps other language versions of a multi-language prayer (0.492983ms)
+✔ source notice without pages (0.146951ms)
+﹣ prayerDrafts: roles, publish transaction, concurrency, hiding (0.585091ms) # SKIP
+✔ all supported bare labels preserve punctuation and spoken words (76.530962ms)
+✔ paragraphs, hard breaks and long litany responses keep labels and text (14.140866ms)
+✔ initials, lookalikes, prose, quoted narrative and explicit Markdown are excluded (23.420876ms)
+✔ bare participants in quote paragraphs retain the container, punctuation and source ranges (46.639416ms)
+✔ quoted names, prose, wrappers and protected blocks do not acquire participant spans (3.645158ms)
+✔ links and ordinary emphasis in a response retain their semantics (0.74377ms)
+✔ raw HTML and unsafe URLs cannot execute in canonical Markdown (1.039525ms)
+✔ plain text strips structural tokens, preserves underscores and quoted words (0.482927ms)
+✔ Mass parsing and inline rendering never receive generic speaker spans (0.367843ms)
+✔ Word paste preserves formulas and explicit rubric class without invented roles (8.688429ms)
+✔ safe plans preserve metadata and ambiguous sources; review is separate (10.151201ms)
+✔ audit covers empty, invalid localized fields and malformed rubrics (1.381981ms)
+✔ technical proposals are idempotent and never strip quotes or alter code (1.265445ms)
+✔ synthetic litany, devotion and Way of the Cross keep authored sections and formulas (1.503743ms)
+✔ rubric proposals protect quotations, speaker lines, lists and code (0.998233ms)
+﹣ canonical import apply/rollback (emulator) (0.526032ms) # SKIP
+✔ excluded groups never become drafts: songs, sections, catechism, offices, front matter, articles, tables, other languages, sacrament orders, misclassified lists (49.488967ms)
+✔ unique prayer -> one closed draft with book, pages, tags from existing tags; images skipped; no public document (3.643515ms)
+✔ already present (canon text, live prayer, repeated in the book) -> ALREADY_EXISTS, no draft (2.868007ms)
+✔ uncertain cases become REVIEW drafts (parser flag, similar title, instruction), never silent (4.123738ms)
+✔ title case: ALL-CAPS headings become sentence case with sacred names capitalised (1.677935ms)
+✔ a drafts-only plan can never write public content (0.221493ms)
+﹣ real corpus: 707 entries, 403 candidates, excluded types never drafted (0.076314ms) # SKIP
+✔ litany: title dropped, lines kept as lines, italics, rubric block, speaker labels and prayer label (7.129713ms)
+✔ rendered by the app renderer every word survives and no raw HTML appears (55.107694ms)
+✔ mixed red/black block: red part becomes bold (colour is not representable in Markdown) (1.479087ms)
+✔ emphasis hugs the words; lone punctuation and intra-word styling do not leak markers (1.058593ms)
+✔ escaping keeps list-like and emphasis characters literal (0.1997ms)
+✔ cross references become /prayer/<id> links only for planned targets (0.622887ms)
+✔ days become headings, separators a rule, Latin look-alikes in Cyrillic words are fixed (0.485481ms)
+﹣ imported drafts vs Firestore rules (emulator) (0.437158ms) # SKIP
+✔ editorial decisions: titles of the three «Малітва за Айчыну» are kept distinct (10.568309ms)
+✔ editorial decisions: the same Raphael prayer printed twice becomes ONE public prayer (0.778872ms)
+✔ editorial decisions: only the five approved renames may change a live title (1.371575ms)
+✔ loadApprovedPlan accepts a plan whose operations carry evidence and matches (2.622318ms)
+✔ matching: exact title + text confirms, kinds never cross, unrelated -> CREATE, same title/different text -> REVIEW (3.288861ms)
+✔ matching: graphic variants (і/i, ’) match; different saints do not (0.413803ms)
+✔ tags: only existing tags, type tag, one proposed generic tag for chaplets, old tags kept (deduped) (3.949445ms)
+✔ plan: every entry gets exactly one route; structure is preserved not created; rites and flagged entries are closed drafts (13.469136ms)
+✔ plan is deterministic (same inputs -> same operations and ids) (45.571399ms)
+✔ rights policy lists every source with a book and © (no empty source) (0.181553ms)
+﹣ real corpus: 139 (69+52+18) + 87 prayers + 9 structure + 3 rites, all words survive conversion (0.271729ms) # SKIP
+✔ prayer links are relative and survive rendering and autofix (40.838696ms)
+✔ existing prayer links recover their ID and literal label for editing (1.112374ms)
+✔ editor syntax identifies the full link, not links written inside code or images (6.559373ms)
+✔ link labels remain literal text, including Markdown punctuation (1.868342ms)
+﹣ the supplied full collection produces 25 tagged Markdown prayer documents (0.878252ms) # source files not found in /home/agent/Downloads
+✔ autofix repairs common Markdown and Word artifacts (10.242374ms)
+✔ autofix removes orphan rubric closers and closes nested rubric blocks (1.116751ms)
+✔ autofix attaches standalone strong markers to the enclosed text (46.169755ms)
+✔ autofix formats separate paragraphs between standalone strong markers (0.594004ms)
+✔ prayer autofix migration updates text fields without exposing untouched documents (42.286064ms)
+✔ prayer autofix migration repairs legacy localized text and sets its Markdown format (5.854063ms)
+✔ promotes clear liturgical directions to rubric blocks (18.126365ms)
+✔ does not promote speaker labels, spoken lines, quotations, or litany responses (0.444859ms)
+✔ prayer autofix migration can include action-direction rubric promotion (0.410468ms)
+✔ renders CommonMark and the MyBrev rubric block (10.707318ms)
+✔ preserves intentional single line breaks in litanies (0.39857ms)
+✔ does not execute raw HTML from prayer source (17.129826ms)
+✔ converts legacy rich HTML while preserving ordinary emphasis (42.44376ms)
+✔ keeps emphasized list items inside the CommonMark list (1.689282ms)
+✔ can promote inline legacy emphasis to rubric blocks for Mass orders (0.934497ms)
+✔ validates paired rubric markers (0.288454ms)
+✔ drops empty legacy headings (0.840225ms)
+✔ creates clean text for search and copying (0.427583ms)
+✔ anonymized real corpus shapes normalize without changing words, links or quotations (156.975697ms)
+✔ reader recovers styled labels, full names and body emphasis without editing stored text (6.020403ms)
+✔ multiline emphasis and label-only dialogue preserve authored emphasis and undo-compatible source positions (3.608402ms)
+✔ quoted source stays unchanged; quoted wrappers, code, initials and named narrative stay protected (11.623226ms)
+✔ only exact structural directions become rubrics; formulas and broad actor sentences remain authored (8.429789ms)
+✔ confirmed legacy HTML preserves visible words, hrefs and metadata; literal/mixed/unsafe HTML cannot apply automatically (162.336947ms)
+✔ frozen plans, subset rules and precise locale updates reject unapproved paths and preserve other fields (9.091266ms)
+✔ snapshot and live Timestamp encodings have stable hashes after JSON persistence (4.398ms)
+✔ version drift is rejected even if a later edit reverted the document to identical data (3.315281ms)
+✔ real SDK validates locale FieldPath and updateTime overload without any remote commit (233.894232ms)
+✔ small batches create durable backup before writes, verify unchanged metadata and restore original texts (55.090062ms)
+✔ full-document drift, a race and post-write corruption are refused; partial batches resume safely (6.020923ms)
+✔ an interrupted batch with unknown commit outcome is reconciled before resume or further writes (4.594857ms)
+✔ Mass fields are not migrated without parity; parser output remains stable in all three languages (9.624558ms)
+✔ CLI rejects missing approvals and unknown switches before importing Firebase (1.560809ms)
+﹣ optional real local corpus is idempotent and preserves every automatic proposal; authentic Angelus section is quoted (0.23264ms) # SKIP
+✔ builds the compact public route and safely encodes its id (1.003841ms)
+✔ builds a direct absolute URL for the selected prayer route (0.14592ms)
+✔ uses the native share sheet when available (0.691241ms)
+✔ copies the direct URL when native sharing is unavailable (0.159039ms)
+✔ does not copy when the native share sheet is cancelled (32.059318ms)
+﹣ source migration and rollback touch only source fields in all access/status collections (0.676409ms) # SKIP
+✔ known sources are canonical, without pages, ranges, editions or legal notices; idempotent (5.04857ms)
+✔ every configured book importer uses a registered short source (0.947737ms)
+✔ unknown and mixed sources are preserved, never guessed or mechanically truncated (1.10307ms)
+✔ document/Markdown import and historical source extraction plan normalize before saving (1.83975ms)
+✔ all import document constructors and publication normalize without changing prayer text (0.565932ms)
+✔ manual content writer and draft create/edit use the common normalizer (2.895859ms)
+✔ audit covers published, ordinary and closed drafts, protected and unknown records; patch contains source fields only (2.021312ms)
+✔ apply persists journal before writes, acknowledges each write, samples readback and stops on 429 without retry (1.148419ms)
+✔ /sources preserves complete notices and English Mass uses the canonical attribution (2.35827ms)
+✔ offline Flutter bundle candidate preserves all non-source data and old decoder schema (3.088949ms)
+✔ extracts an explicit source note from the end of prayer Markdown (5.858549ms)
+✔ extracts the imported blockquote source and removes it from the prayer text (0.287443ms)
+✔ does not treat ordinary attribution or a Scripture citation as a source note (0.143546ms)
+✔ extracts an explicit author attribution from a prayer title (0.302456ms)
+✔ moves identical localized source notes into one source field (1.120547ms)
+✔ reports conflicting localized sources instead of guessing (0.243026ms)
+✔ a multi-tag category includes prayers matching any of its tags (0.939634ms)
+✔ an empty tag selection does not filter out prayers (0.198228ms)
+✔ 24-symbol random code generation and strict manual validation (5.145855ms)
+✔ Web and Dart shared SHA-256 vectors (6.180884ms)
+✔ inheritance moves IDs and texts physically and keeps sibling public (26.921425ms)
+✔ reopening parent preserves own child flags; repeated planning is idempotent (0.717811ms)
+✔ cycles, missing parents and duplicate IDs fail closed (0.586493ms)
+✔ Firestore reference values are compared without traversing SDK cycles (0.243817ms)
+✔ bundle/manifest/export omit all private namespaces and restricted texts (0.276586ms)
+✔ default restoration uses complete protected/public state and preserves renamed own flags (6.215937ms)
+✔ private texts stay in memory; public content survives offline restart (3.043111ms)
+✔ public category containing only private prayers reappears after activation (0.63747ms)
+✔ revoked access prevents any protected query (1.169531ms)
+✔ late response after disable is discarded (3.083411ms)
+✔ protected quota failure falls back to public data without another grant read or caching private text (5.933462ms)
+✔ legacy cache strips own and inherited secrets (1.622373ms)
+﹣ Spark Firestore authoritative registration, revocation, legacy compatibility and atomic moves (1.104543ms) # SKIP
+✔ grant migration refuses uncovered source and reports no proof values (20.40836ms)
+﹣ emulator field-only migration backs up legacy proof, preserves access and concurrent revocation; stale source fails (0.469086ms) # SKIP
+✔ scoped publication preserves every unselected collection and its version (2.694587ms)
+✔ scoped no-op retains published version; scope cannot initialise an incomplete manifest (0.590129ms)
+✔ incomplete snapshot fails readiness and dry-run never assumes missing categories empty (74.239738ms)
+✔ maintenance plan quarantines every public row before private/public target writes (1.465731ms)
+✔ explicit category policy closes descendants, preserves Mass and binds approval to policy (13.713998ms)
+﹣ emulator migration: full backup, large phased transfer, interruption/resume and stale-snapshot refusal (0.289256ms) # SKIP
+✔ activation waits for acknowledged batch and server status; readable grant has no proof (62.45031ms)
+✔ denied registration leaves access off and a retry uses the same anonymous UID (10.26664ms)
+✔ lost acknowledgement is not reported as success; retry reads the existing grant without replaying claim (5.123441ms)
+✔ pending local writes and failed server confirmation never enable access (4.534932ms)
+✔ offline activation sends no writes; legacy proof-bearing grant is not accepted (4.525117ms)
+✔ privacy document is public, standalone HTML and identifies both apps (5.631277ms)
+✔ About links to privacy route and Hosting returns static page (0.538272ms)
+✔ privacy policy describes the actual feedback collection and Cloudflare processing (1.130747ms)
+✔ insert before repeated antiphon, preserve every existing byte and attribute (32.388227ms)
+✔ every structured or hr alternative owns its ending; attributes and antiphons survive (62.383967ms)
+✔ short rubric and each isolated incomplete stanza expand once (12.57294ms)
+✔ already complete Alleluia canticle and ordinary psalm remain byte-identical (9.489508ms)
+✔ Daniel 3:57–88.56 is untouched; Daniel 3:52–57 still needs its ending (5.424745ms)
+✔ references, including array references and sparse rules, are never expanded (1.165189ms)
+✔ Office for the Dead: all hours, both alternatives, nine daytime psalms (197.504086ms)
+✔ canonical Commons and Propers including seasonal and I Vespers fields have no gaps (2158.778046ms)
+✔ generator keeps the canonical common psalmody identical to source (208.764761ms)
+✔ dry-run patch verifies updateTime and SHA-256, changes only psalmody and is idempotent (4.334039ms)
+✔ canonical plan accepts paragraph whitespace only and refuses other drift (0.770974ms)
+✔ audit rejects a doxology before Scripture or after a repeated antiphon (20.411257ms)
+✔ structured alternatives without ora-psalm keep the ending inside their own wrapper (3.033016ms)
+✔ shared alternative suffixes are held for review without adding duplicate endings (1.11349ms)
+✔ a canticle may repeat its choral response after the doxology (1.191087ms)
+✔ invitatory fragments cannot hide an extra ending before the final fragment (1.744843ms)
+✔ a damaged Daniel 3 ending requires review instead of an invented replacement (4.722035ms)
+✔ a complete ending cannot hide another partial ending (1.330968ms)
+✔ standard snapshot Timestamp metadata survives planning without mutation (0.521938ms)
+✔ new installs default to left-break and valid saved mode wins over legacy keys (0.904855ms)
+✔ all legacy combinations migrate, including partially stored preferences (1.352651ms)
+✔ every hour preserves date, selected day and diocesan context (3.073437ms)
+✔ alignment defaults to justify; a saved explicit left choice survives (0.728599ms)
+✔ only selected Hours parts opt into reader alignment (7.233334ms)
+✔ only prose paragraphs are marked; structured and liturgical content stays intact (75.987942ms)
+✔ preview is an exact, consecutive excerpt from the verified public Hours source (3.675645ms)
+✔ Palm Sunday 29.03.2026: raw, assembled and Lectio HTML keep Hebrews and its responsory as one reading (179.914187ms)
+✔ Office for the Dead keeps its three explicit first readings and all their shared content (6.290692ms)
+✔ the same narrative-category collision in martyr-one and St Sebastian does not hide the end of R2 (61.025886ms)
+✔ holy-women R2 in Advent, Christmas, Lent, Easter: reference note + the two readings of holy men of the same volume (19.805012ms)
+✔ holy-women R2 in Ordinary Time (Volume III): reference note, the two holy-men texts, then Pius XII as the printed "Або іншае" (6.545286ms)
+✔ holy-women R1: reference note, the first readings of holy men of the same volume, then the two printed for a married saint (195.880086ms)
+✔ no choice is invented or lost: the choices and notes together are the stored text, word for word (122.333689ms)
+✔ a single legal reading gets no picker, and a text that is only a reference stays readable (5.05692ms)
+✔ other fields and kinds keep their choices: the new rules are for office readings only (1.142564ms)
+✔ holy-men R2 (the legal set the reference points to) offers exactly the two volume texts in every period (57.902073ms)
+✔ a retained local proper of a holy woman in Easter keeps its reading choices (Jadwiga, no general diocesan assignment) (195.012407ms)
+✔ the picked reading is remembered per field, day and Office option, and reset by any change of them (0.565102ms)
+✔ a broken or missing storage only means "no memory" (1.037626ms)
+✔ religious R1: the responsory variant «Пра законніцу» stays inside its reading, it is not a second reading (found on screen, D1 phase 8) (13.157002ms)
+✔ responsory variants are only merged when they are responsory-only blocks: real alternative readings stay choices (31.366386ms)
+✔ short poetic lines lose only the accidental blank line and stay idempotent (1.032918ms)
+✔ a prose introduction keeps its paragraph before a run of poetic lines (0.17854ms)
+✔ mixed prose and real paragraphs are left for review (0.128133ms)
+✔ plan examines every reading and gospel without changing uncertain fields (2.477658ms)
+✔ responsorial psalm gets verse breaks and rubric spans without empty lines (3.415924ms)
+✔ psalm formatting leaves HTML attributes intact (0.134433ms)
+✔ plain psalm text and existing cadence breaks remain well formed (0.142305ms)
+✔ highlights are isolated by document, Mass set and cycle; saving and removing retains other documents (4.040546ms)
+✔ invalid and inaccessible storage does not break reading; unknown colours are discarded (0.859106ms)
+✔ Belarusian sentences retain exact text, punctuation and offsets (10.168913ms)
+✔ sentence fallback works on browsers without Intl.Segmenter (1.821939ms)
+✔ prose cleanup preserves narrative and intro while extracting title and trailing markers (2.961799ms)
+✔ Pentecost sequence is extracted without losing a word (2.765392ms)
+✔ every special Lectionary page parses and passes the semantic validation (43.265489ms)
+✔ 15.08 Assumption: exactly vigil + day, default day, source labels (0.410099ms)
+✔ 29.06 Peter and Paul: exactly vigil + day, default day (0.167462ms)
+✔ 25.12 Christmas: exactly 3 sets with source labels, default day (0.135345ms)
+✔ 24.12: morning + evening (vigil) sets, default evening; legacy groups prefer the evening too (0.345421ms)
+✔ Palm Sunday: shared readings once, cycle-specific procession Gospel and Mass Passion (0.792806ms)
+✔ Holy Thursday: two Mass contexts, default the evening Mass of the Lord’s Supper (0.547987ms)
+✔ Good Friday: one set, role-marked Passion preserved with its rubrics (0.873027ms)
+✔ Easter Vigil: ordered multi-reading structure, rubrics and cycle Gospels (0.237949ms)
+✔ Pentecost: Saturday morning / evening vigil on Saturday, Sunday day Mass separate (7.372284ms)
+✔ Ascension: shared readings + A/B/C Gospel, no three identical documents (0.708259ms)
+✔ sequence is a first-class section: parse, project, edit round trip (0.882902ms)
+✔ reference-only sets: citations only, rendered as such, invisible to old apps (0.33812ms)
+✔ Bonaventure, Clare and Andrew Bobola follow the Catholic.by pages (0.152591ms)
+✔ All Souls: 3 reading sets; on a Sunday 2 November the Mass readings are All Souls (47.720444ms)
+✔ the Readings screen hides legacy documents covered by a canonical one (0.335977ms)
+✔ editor: linked legacy documents follow an edited set; unknown fields kept (0.618103ms)
+✔ reading HTML is sanitized (0.487806ms)
+✔ app-content contract: canonical set documents are valid, broken sets refused (0.558382ms)
+✔ reference projection of a single set keeps the cycle Gospel of the legacy document (0.142224ms)
+✔ Mass reading-set buttons do not inherit the compact A/B/C shrink on phones (1.691462ms)
+✔ the standalone acclamation scales with the text multiplier and is never scaled twice (1.893897ms)
+✔ long section labels wrap instead of being clipped (24.42816ms)
+✔ dioceses use their own 2 x 2 grid and the theme switch keeps its flex layout (2.349415ms)
+✔ only the open drawer casts a shadow (0.410469ms)
+✔ enabling requests one lock; disabling releases it and stops automatic resume (4.355661ms)
+✔ the enabled lock is reacquired on returning to a visible tab (0.771384ms)
+✔ initially hidden documents request only after becoming visible (34.945755ms)
+✔ an in-flight request is deduplicated and released if switched off (0.479113ms)
+✔ a refused request can retry on a gesture without losing the preference (4.984401ms)
+✔ unsupported browsers do not crash or make a request (1.014941ms)
+✔ single day patch does not publish unrelated pending documents (11.491479ms)
+✔ already published correction is a strict no-op (10.145283ms)
+✔ rejects still-polluted Friday and mismatch between current and index (4.560556ms)
+✔ rejects published manifest without target (0.324899ms)
+✔ transposes roots, lowercase minors, suffixes and slash bass independently (1.821852ms)
+✔ legacy compact progressions transpose but chorus words and punctuation survive (0.747636ms)
+✔ lyrics and chord columns keep blank lines and overflow chord rows (3.386739ms)
+✔ song search, tags and favorites combine, with pinned songs first (9.880644ms)
+✔ import preserves duplicate titles and rows with stable IDs and source on every song (40.615793ms)
+✔ initial songbook contains all 447 songs, unique IDs, text, numeric categories and attribution (98.11408ms)
+✔ numeric export categories map to names for display, search and filters (0.721216ms)
+✔ song list is always compact: no toggle, no tags in rows, search and tag filter remain (1.614671ms)
+✔ the separate songbook settings UI and its entry points are gone (0.566533ms)
+✔ chord controls live on the song page (0.196866ms)
+✔ chords can be shown and hidden (25.718772ms)
+✔ layout offers only "above" and "right" (2.580584ms)
+✔ stored "left" layout migrates to "right"; unknown values fall back to "above" (0.289877ms)
+✔ transpose still works, within −12…+12, and resets to the original (3.100577ms)
+✔ the control keeps the same structure and fixed-width value for every offset and state (43.008045ms)
+✔ reset to the original key is visible and labelled on the offset itself (2.77705ms)
+✔ on narrow text the layout selector stays, shows the rendered layout and explains "right" (5.003012ms)
+✔ songs.scss has no classes left over from the removed songbook UI (0.780134ms)
+✔ right layout places each chord cell beside its own lyric line (0.961287ms)
+✔ normal phone widths retain right layout; only cramped text falls back without changing preference (2.74984ms)
+✔ song filter contains only compact multi-select tags and keeps removal and reset controls (0.575627ms)
+✔ right chords fit and lyrics wrap on 360–430px phones without page overflow (2811.102893ms)
+✔ the pilgrim songbook name is visible in navigation, list and reader (6.193739ms)
+✔ public sources page retains original editions and adds confirmed prayer sources (5.463625ms)
+✔ all four full decrees match the primary text, issuer, date and signature in order (4.997584ms)
+✔ static calendar has the source title, all 13 sheets and 365 printed date rows (1.32212ms)
+✔ protocols, printed styles, nested dioceses and movable celebrations survive (0.663548ms)
+✔ static document UI renders all runs without a public calendar PDF link and retains safe navigation (4.33797ms)
+✔ full Apostolic See decrees are embedded and source-verifiable without outbound links (0.797631ms)
+✔ complete introduction preserves all 284 points, five chapters and every source word in order (12.042659ms)
+✔ registry and document metadata agree strictly for every decree (0.415505ms)
+✔ 06.11.2026 source page12 includes Vitebsk in the obligatory memorial group (0.818432ms)
+✔ introduction renders original text without the editorial footnote or external source links (28.556038ms)
+✔ portable UTF-8 registry parses with unique stable IDs and explicit unknowns (2.771211ms)
+✔ all registry bindings and consumer references resolve (0.330748ms)
+✔ required notices and every former Bible attribution are retained (0.459141ms)
+✔ four documented KKBB decrees keep decree and approval numbers distinct (0.296306ms)
+✔ every Bible book retains correct visible translation by language and testament (8.318313ms)
+✔ Bible, Readings and all Hours have no old source footers; About links to a dedicated Sources page (4.064839ms)
+﹣ PR leaves prayer, song, Bible text, readings, Hours and calendar modules untouched (0.090506ms) # SKIP
+✔ Web layer reproduces all 7791 approved values, with exact scope, immutable inputs and idempotence (1216.498907ms)
+✔ later edits, missing fields, unknown documents and Proper pass through unchanged (2.26139ms)
+✔ corrected presentation survives a cache restart and offline reload without another loader call (2.114789ms)
+✔ static patch chunks fit existing PWA precache limits; no baseline documents are exported (58.220855ms)
+✔ dry run targets only the XI Sunday day and exactly its two manifest records (4.814429ms)
+✔ reject wrong source selector, conflict in a nonempty field, or corrupt existing digests (0.427194ms)
+✔ idempotent when all eleven fields and published manifest already match (0.739635ms)
+✔ XI Sunday I Vespers: 11 fields from Belarusian volumes, psalms III week, real collect, and A/B/C Gospel antiphons (5.155814ms)
+✔ Only missing I Vespers fields are patched, never overwrite a nonempty other text (1.051245ms)
+✔ Vespers model selects all eleven Sunday-specific fields instead of corrupted Saturday Trinity (0.386513ms)
+ℹ tests 1384
+ℹ suites 3
+ℹ pass 1362
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 22
+ℹ todo 0
+ℹ duration_ms 135499.677468

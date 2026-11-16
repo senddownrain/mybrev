@@ -1,3 +1,4 @@
+import { sourceForSave } from '../../../src/utils/prayerSource.mjs';
 // Dry-run planner for the canonical (first-pass) import. Pure: no I/O besides the injected corpus,
 // returns operations + payloads + report rows. Nothing here talks to Firestore.
 import { createHash } from 'node:crypto';
@@ -97,7 +98,7 @@ export function planCanonical({ corpus, sources, oldPrayers, categories = [], ed
     for (const entryTag of proposedNew) { const known = proposedTags.get(entryTag.tag) || { tag: entryTag.tag, reason: entryTag.reason, affected: [] }; known.affected.push(entryId); proposedTags.set(entryTag.tag, known); }
     for (const t of trace) tagRows.push({ sourceEntryId: entryId, title: item.title, tag: t.tag, via: t.via });
     if (!tags.length) qa.withoutTags.push(entryId);
-    const sourceFields = { sourceBook: rights.book, copyrightNotices: rights.copyrightNotices };
+    const sourceFields = { source: sourceForSave(rights.book), sourceBook: sourceForSave(rights.book), copyrightNotices: rights.copyrightNotices };
     const sourceNotice = draftSourceNotice({ ...sourceFields, printedPageStart: meta.printedPageStart, printedPageEnd: meta.printedPageEnd, pdfPageStart: meta.pdfPageStart });
     const hash = textHash(finalMarkdown);
     const common = { ...base, title: item.title, canonicalTitle: item.title, ...(item.printedTitle ? { printedTitle: item.printedTitle } : {}), tags, source: sourceNotice, copyrightNotices: rights.copyrightNotices, textSha256: hash, textLength: finalMarkdown.length, blocks: stats.blocks };
@@ -118,7 +119,7 @@ export function planCanonical({ corpus, sources, oldPrayers, categories = [], ed
       const draftId = canonId(entryId);
       const reason = meta.kind === 'ritual' ? 'rite_scope' : meta.status !== 'complete' ? 'needs_review' : 'ambiguous';
       const hasLatinN = meta.kind === 'ritual';
-      const draft = { draftId, sourceId: meta.sourceId, sourceBook: rights.book, sourceSha256: corpusHash(corpus, meta.sourceId), pdfPageStart: meta.pdfPageStart, pdfPageEnd: meta.pdfPageEnd, printedPageStart: meta.printedPageStart, printedPageEnd: meta.printedPageEnd, sourcePageSpan: pages, originalEntryId: entryId, title: item.title, text: finalMarkdown, textFormat: 'mybrev-markdown', tags, copyrightNotices: rights.copyrightNotices, priestOnly: false, originBatch: CANON_BATCH, origin: 'disputed', reason, flagReasons: [decision.reason, ...(decision.flags || [])].slice(0, 6), possibleDuplicateIds: (decision.candidates || []).map((c) => c.id).filter(Boolean).slice(0, 10), status: 'draft', fingerprint: hash, ...(hasLatinN ? { notes: 'Рытуал: вытрымка з кнігі. Метка N. — месца для імя; незавершаныя заўвагі рэдактара не вырашаюцца аўтаматычна.' } : {}) };
+      const draft = { draftId, sourceId: meta.sourceId, source: sourceForSave(rights.book), sourceBook: sourceForSave(rights.book), sourceSha256: corpusHash(corpus, meta.sourceId), pdfPageStart: meta.pdfPageStart, pdfPageEnd: meta.pdfPageEnd, printedPageStart: meta.printedPageStart, printedPageEnd: meta.printedPageEnd, sourcePageSpan: pages, originalEntryId: entryId, title: item.title, text: finalMarkdown, textFormat: 'mybrev-markdown', tags, copyrightNotices: rights.copyrightNotices, priestOnly: false, originBatch: CANON_BATCH, origin: 'disputed', reason, flagReasons: [decision.reason, ...(decision.flags || [])].slice(0, 6), possibleDuplicateIds: (decision.candidates || []).map((c) => c.id).filter(Boolean).slice(0, 10), status: 'draft', fingerprint: hash, ...(hasLatinN ? { notes: 'Рытуал: вытрымка з кнігі. Метка N. — месца для імя; незавершаныя заўвагі рэдактара не вырашаюцца аўтаматычна.' } : {}) };
       payloads[draftId] = { collection: 'prayerDrafts', id: draftId, data: draft };
       operations.push({ ...common, action: 'REVIEW_AMBIGUOUS', targetCollection: 'prayerDrafts', targetId: draftId, oldIds: [], rationale: decision.reason, flags: decision.flags || [], reason, confidence: decision.confidence, evidence: decision.candidates });
       duplicateRows.push({ sourceEntryId: entryId, title: item.title, decision: 'REVIEW_AMBIGUOUS', chosen: draftId, candidates: decision.candidates || [], reason: decision.reason });

@@ -38,7 +38,7 @@
           <v-card class="card" elevation="0">
             <h2>Крыніца</h2>
             <v-textarea v-model="form.source" label="Крыніца" variant="outlined" rows="2" auto-grow hide-details="auto" :readonly="locked" />
-            <p class="hint">Крыніца з імпартаванай кнігі і старонак падстаўляецца аўтаматычна. Яе можна адрэдагаваць як звычайны тэкст.</p>
+            <p class="hint">Толькі кароткая назва крыніцы, без старонак. Поўныя звесткі — на старонцы «Крыніцы».</p>
           </v-card>
         </div>
 

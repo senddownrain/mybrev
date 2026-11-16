@@ -1,0 +1,12 @@
+{
+  "candidateOnly": true,
+  "releaseReady": false,
+  "baselineVersion": 1791877294111,
+  "count": 115,
+  "changedDocuments": 52,
+  "disputedDocuments": 63,
+  "candidateDigest": "fd3576cf48ff95d2",
+  "firestoreReads": 0,
+  "firestoreWrites": 0,
+  "manifestWrites": 0
+}

@@ -6,6 +6,8 @@ import { requestContentRefresh } from '@/utils/publicContentCache';
 import { quotaSafeTransaction } from '@/utils/retry';
 import { noteFirestoreError, withFirestoreQuota } from '@/utils/firestoreErrors.mjs';
 
+import { normalizePrayerSourceFields } from '@/utils/prayerSource.mjs';
+
 const collectionNames = Object.entries(PRAYER_STORAGE).flat();
 const rows = (snapshot) => snapshot.docs.map((item) => ({ ...item.data(), id: item.id }));
 const firestoreFns = { doc, collection, getDocFromServer, getDocsFromServer, runTransaction, serverTimestamp };
@@ -24,7 +26,7 @@ export async function saveStoredPrayer(id, data, create = false) {
   await mutatePrayerContent((content) => {
     const old = content.prayers.find((item) => item.id === key);
     if (!create && !old) throw new Error('Малітва не знойдзена.');
-    const { id: _id, ...payload } = data;
+    const { id: _id, ...payload } = normalizePrayerSourceFields({ ...old, ...data });
     content.prayers = content.prayers.filter((item) => item.id !== key);
     content.prayers.push({ ...old, ...payload, id: key, priestOnly: payload.priestOnly === undefined ? old?.priestOnly === true : payload.priestOnly === true,
       ...(create ? { createdAt: serverTimestamp() } : {}), updatedAt: serverTimestamp() });

@@ -2,6 +2,8 @@
 // wiring so the same code runs in the app and against the Firestore emulator in tests.
 import { canonicalPrayerContent, comparablePrayerValue, CONTENT_CONTROL, MAX_ATOMIC_CONTENT_WRITES, PRAYER_STORAGE, prayerStoragePlan } from './prayerStoragePlan.mjs';
 
+import { normalizePrayerSourceFields } from './prayerSource.mjs';
+
 const collectionNames = Object.entries(PRAYER_STORAGE).flat();
 const rows = (snapshot) => snapshot.docs.map((item) => ({ ...item.data(), id: item.id }));
 const controlVersion = (snapshot) => snapshot.data()?.version || 0;
@@ -49,7 +51,7 @@ export function createPrayerContentWriter({ db, fs, withQuota = passthrough, tra
           for (const operation of plan.operations) {
             const reference = doc(db, operation.collection, operation.id);
             if (operation.type === 'delete') transaction.delete(reference);
-            else transaction.set(reference, operation.data);
+            else transaction.set(reference, ['prayers', 'priestProtectedPrayers'].includes(operation.collection) ? normalizePrayerSourceFields(operation.data) : operation.data);
           }
           hooks.write?.(transaction);
           transaction.set(control, { version: version + 1, lockUid: '', updatedAt: serverTimestamp() });

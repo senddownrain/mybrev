@@ -14,12 +14,12 @@ const text = row => (row.runs || []).map(run => run.text).join('');
 const rows = calendar.pages.flatMap(page => page.rows);
 
 
-test('public sources page displays 15 church and 2 other items in document order', () => {
+test('public sources page retains original editions and adds confirmed prayer sources', () => {
   assert.equal(bibliography.schemaVersion, 1);
   assert.deepEqual(bibliography.sections, ['Касцёльныя крыніцы', 'Іншыя крыніцы']);
-  assert.equal(bibliography.entries.length, 17);
-  assert.equal(new Set(bibliography.entries.map(entry => entry.id)).size, 17);
-  assert.deepEqual(bibliography.sections.map(section => bibliography.entries.filter(entry => entry.section === section).length), [15, 2]);
+  assert.equal(bibliography.entries.length, 23);
+  assert.equal(new Set(bibliography.entries.map(entry => entry.id)).size, 23);
+  assert.deepEqual(bibliography.sections.map(section => bibliography.entries.filter(entry => entry.section === section).length), [17, 6]);
   assert.equal(bibliography.entries[0].title, '«Новы запавет» (Мінск, 2017)');
   assert.equal(bibliography.entries[10].title, 'Спеўнік «Божа, мы Цябе ўслаўляем» (Мінск, 2026)');
   assert.deepEqual(bibliography.entries[11].notices, [

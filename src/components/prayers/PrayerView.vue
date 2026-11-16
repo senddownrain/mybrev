@@ -101,6 +101,8 @@ import MassSectionNav from '@/components/prayers/MassSectionNav.vue';
 import DevotionalOfficeReader from '@/components/prayers/DevotionalOfficeReader.vue';
 import { DEVOTIONAL_OFFICE_PROFILES, devotionalOfficeProfile } from '@/utils/devotionalOffice';
 
+import { normalizePrayerSource } from '@/utils/prayerSource.mjs';
+
 const route = useRoute();
 const router = useRouter();
 const { prayers, isLoading, getTitle, getText } = usePrayers();
@@ -158,7 +160,7 @@ const displayTitle = computed(() => {
   return getTitle(massVariantPrayer.value) || variant.title;
 });
 const feedbackTo = computed(() => prayerFeedbackLink(route, displayTitle.value));
-const displaySource = computed(() => (
+const displaySource = computed(() => normalizePrayerSource(
   massVariant.value && massVariant.value.prayerId !== MASS_ORDER_PRAYER_ID
     ? massVariantPrayer.value?.source || massVariant.value.source || ''
     : prayer.value?.source || ''

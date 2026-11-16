@@ -51,7 +51,7 @@ describe('canonical import apply/rollback (emulator)', { skip: !emulator }, () =
     const result = await apply();
     assert.equal(result.written, 3);
     const created = (await get(`prayers/${plan.operations.find((op) => op.action === 'CREATE').targetId}`)).data();
-    assert.equal(created.sourceEntryId, 'lit-new'); assert.match(created.source, /Про Хрысто/); assert.equal(created.priestOnly, false);
+    assert.equal(created.sourceEntryId, 'lit-new'); assert.equal(created.source, 'Прасіце і атрымаеце'); assert.equal(created.priestOnly, false);
     const replaced = (await get('prayers/OLD1')).data();
     assert.equal(replaced.sourceEntryId, 'lit-old'); assert.equal(replaced.createdAt.toMillis(), 1e12); assert.equal(replaced.verified, true);
     assert.equal(replaced.textVersions.ru, 'ru-text'); assert.equal(replaced.titleVersions.ru, 'ru-title'); assert.ok(replaced.textVersions.be.startsWith('Кірые'));

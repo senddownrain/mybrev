@@ -164,7 +164,7 @@ await check('editor renders rubric preview, tags and simple source; responsive w
     console.log('  width', width);
     await page.locator('.preview').waitFor(); await settle(page);
     assert.match(await page.locator('.preview').innerText(), /Кірые, элейсон/);
-    assert.match(await page.locator('.preview-source').innerText(), /Пінская дыяцэзія/);
+    assert.match(await page.locator('.preview-source').innerText(), /Бог добры/);
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `no horizontal scroll at ${width}`);
     await shot(page, name);
     await context.close();
@@ -198,7 +198,7 @@ await check('plain admin publishes through the confirmation dialog; one public p
   assert.equal((await seed.doc('prayerDrafts/bd-litany').get()).data().status, 'published');
   await page.goto(`${BASE}/prayer/d_bd-litany`);
   await page.getByText('Крыніца:').waitFor(); await settle(page);
-  assert.match(await page.locator('.prayer-source').innerText(), /© Пінская дыяцэзія/);
+  assert.match(await page.locator('.prayer-source').innerText(), /Бог добры/);
   await shot(page, '11-published-prayer-with-source-1440-light');
   await context.close();
 });

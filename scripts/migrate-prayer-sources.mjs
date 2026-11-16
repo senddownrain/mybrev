@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { sourceForSave } from '../src/utils/prayerSource.mjs';
+
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
@@ -102,7 +104,7 @@ function setPath(object, fieldPath, value) {
 }
 
 function firestoreUpdates(updates) {
-  const result = { source: updates.source };
+  const result = { source: sourceForSave(updates.source) };
   for (const versionField of ['textVersions', 'titleVersions']) {
     Object.entries(updates[versionField] || {}).forEach(([locale, value]) => {
       result[`${versionField}.${locale}`] = value;
@@ -159,7 +161,13 @@ export function buildPrayerSourcePlan(documents) {
       continue;
     }
 
-    const updates = { source: existingSource || sources[0] };
+    let source;
+    try { source = sourceForSave(existingSource || sources[0]); }
+    catch (error) {
+      ambiguous.push({ id: document.id, existingSource, extractedSources: sources, reason: error.code, fields: extracted.map(({ field }) => field) });
+      continue;
+    }
+    const updates = { source };
     extracted.forEach(({ field, after }) => setPath(updates, field, after));
     changes.push({
       id: document.id,
