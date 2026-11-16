@@ -50,3 +50,18 @@ test('legacy feast documents do not leak an obsolete title into Office selectors
     assert.equal(buildDayTitle(identity, {}, new Date(2026, 10, 22)), TITLE);
   }
 });
+
+
+test('old Christ the King lectionary labels render in genitive', () => {
+  const readings = [
+    { id: 'king-a', _feast: 'feast-christking', title: 'Езус Хрыстус, Валадар Сусвету', year: 'A' },
+    { id: 'king-b', _feast: 'feast-christking', title: 'Езус Хрыстус, Валадар Сусвету', year: 'B' },
+  ];
+  const groups = readingGroupsOf(readings);
+  assert.ok(groups.length >= 1);
+  assert.ok(groups.every(group => group.label === TITLE));
+  assert.equal(
+    readingGroupsOf([{ id: 'ordinary', title: 'XXIII нядзеля звычайная', _feast: 'feast-other' }])[0].label,
+    'XXIII нядзеля звычайная',
+  );
+});
