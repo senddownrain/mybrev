@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { getBundledCalendarDefinitions, setCalendarDefinitions } from '../src/utils/ordo/definitions.js';
 import { resolveRuntimeDay } from '../src/utils/ordo/runtime.js';
 import { buildDayTitle } from '../src/utils/ordoDayOptions.js';
+import { readingGroupsOf } from '../src/utils/readingsScreen.js';
 
 const TITLE = 'Пана нашага Езуса Хрыста, Валадара Сусвету';
 const DIOCESES = ['minsk-mohilev', 'vitebsk', 'grodno', 'pinsk'];
