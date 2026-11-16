@@ -36,6 +36,9 @@ jobs:
       - name: Sunday first Vespers and cache release regression tests
         run: node --test tests/liturgical-vespers.test.mjs tests/content-cache.test.mjs
 
+      - name: Reviewed Web-only liturgical corrections (offline)
+        run: node --test tests/web-liturgical-corrections.test.mjs tests/days-templates-preparation.test.mjs
+
       - name: I Vespers independent-source audit safety checks
         run: node --test tests/heart-first-vespers-source-audit.test.mjs
 
