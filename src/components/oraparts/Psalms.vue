@@ -2,7 +2,7 @@
     <div>
         <v-card class="ora" flat>
             <v-card-title class="ora-title">
-                ПСАЛМОДЫЯ
+                ПСАЛЬМОДЫЯ
             </v-card-title>
             <v-card-text class="ora-text">
                 <alternative-text v-model="ant1Option" class="ora-ant" :text="ant1" aria-label="Выбар першай антыфоны" />
