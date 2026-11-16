@@ -218,7 +218,7 @@ export const MOVABLE_CELEBRATIONS = Object.freeze([
     anchor: 'christTheHighPriest', layer: 'belarus', color: 'albus', countryRule: 'christTheHighPriest',
   },
   {
-    id: 'christ-king', ...feast('christKing'), title: 'Езус Хрыстус, Валадар Сусвету',
+    id: 'christ-king', ...feast('christKing'), title: 'Пана нашага Езуса Хрыста, Валадара Сусвету',
     rank: LITURGICAL_RANK.SOLEMNITY, category: 'lord', anchor: 'christKing', color: 'albus',
   },
   {
