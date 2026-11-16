@@ -2,14 +2,14 @@
     <div>
         <v-card class="ora" flat>
             <v-card-title class="ora-title">
-                ПЕСНЯ З ЕВАНГЕЛЛЯ
+                ПЕСНЯ ЗАХАРЫІ
             </v-card-title>
             <v-card-text class="ora-text">
                 <alternative-text v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" aria-label="Выбар антыфоны" />
                 
                 <!-- <div v-html="ps1"></div> -->
                 <p class="ora-sub">
-                    <span style="color:red">Песня Захарыі (Лк 1, 68-79)</span>
+                    <span style="color:red">Лк 1, 68-79</span>
                 <br>
                 <span style="color:red">Месія і Яго папярэднік</span>
                 </p>

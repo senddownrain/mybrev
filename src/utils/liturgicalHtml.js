@@ -95,6 +95,16 @@ function isLectionSectionHeading(content) {
   return /^(?:ПЕРШАЕ|ДРУГОЕ)\s+ЧЫТАННЕ\s*$/iu.test(visibleText(content));
 }
 
+// These are section labels stored in the legacy short-reading HTML, not
+// references or prose. Long/multiline paragraphs must not be styled as titles.
+function isShortOfficeSectionHeading(content) {
+  if (/<br\s*\/?>/iu.test(content)) return false;
+  const text = visibleText(content);
+  return /^(?:КАРОТКАЕ ЧЫТАННЕ|КАРОТКІ РЭСПАНСОРЫЙ)(?:\s|$)/iu.test(text)
+    && text.length <= 85
+    && !/[.!?]\s+\p{L}/u.test(text);
+}
+
 function escapePattern(value) {
   return String(value || '').replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
 }
@@ -159,6 +169,10 @@ export function markLeadingLiturgicalSubheadings(html) {
     (paragraph, attributes, content) => {
       if (isLectionSectionHeading(content)) {
         return `<p${markAsLiturgicalHeading(attributes)}>${content}</p>`;
+      }
+
+      if (isShortOfficeSectionHeading(content)) {
+        return `<p${markAsLiturgicalHeading(attributes)}>${markInlineReadingReference(content)}</p>`;
       }
 
       // Centred lines in the source are structural captions (psalm parts,

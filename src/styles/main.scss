@@ -423,17 +423,30 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   border-top: 1px solid var(--nav-border);
 }
 
+// All structural labels (including titles contained in legacy reading HTML)
+// share a single type scale. Metadata below a title keeps its own smaller size.
+.liturgical-hour-column {
+  --office-section-font-size: calc(0.94rem * var(--font-size-multiplier, 1));
+  --office-section-letter-spacing: 0.055em;
+}
+
+.liturgical-hour-column .ora-title,
+.liturgical-hour-column .ora-header,
+.liturgical-hour-column .ora-text p[data-liturgical-heading] {
+  color: var(--rubric-color) !important;
+  font-family: var(--reader-display-font-family) !important;
+  font-size: var(--office-section-font-size) !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  letter-spacing: var(--office-section-letter-spacing) !important;
+  text-transform: uppercase;
+  white-space: normal;
+}
+
 .liturgical-hour-column .ora-title,
 .liturgical-hour-column .ora-header {
   padding: 30px 28px 9px !important;
-  color: var(--rubric-color);
-  font-family: var(--reader-display-font-family) !important;
-  font-size: calc(0.94rem * var(--font-size-multiplier, 1)) !important;
-  font-weight: 700 !important;
-  line-height: 1.25 !important;
-  letter-spacing: 0.055em !important;
-  text-transform: uppercase;
-  white-space: normal;
 }
 
 .liturgical-hour-column .ora-text {
@@ -476,13 +489,20 @@ $base-content-font-size: 1rem; // 16px по умолчанию
 
 .liturgical-hour-column .ora-text p[data-liturgical-heading] {
   margin: 0 0 0.8em;
-  color: var(--rubric-color);
-  font-family: var(--reader-display-font-family);
-  font-size: calc(0.94rem * var(--font-size-multiplier, 1));
-  font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: 0.045em;
-  text-transform: uppercase;
+  padding: 0;
+  text-align: left !important;
+}
+
+// Source-provided red/bold spans must not silently change the heading's
+// typography; only the dedicated structural title receives this override.
+.liturgical-hour-column .ora-text p[data-liturgical-heading] :is(span, b, strong, i, em) {
+  color: inherit !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-style: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
 }
 
 .liturgical-hour-column .ora-text [data-liturgical-reference] {

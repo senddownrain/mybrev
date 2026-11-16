@@ -2,14 +2,14 @@
     <div>
         <v-card class="ora" flat>
             <v-card-title class="ora-title">
-                ПЕСНЯ З ЕВАНГЕЛЛЯ
+                ПЕСНЯ СІМЯОНА
             </v-card-title>
             <v-card-text class="ora-text">
                 <alternative-text v-model="antOption" class="ora-ant" :text="ant" aria-label="Выбар антыфоны" />
                 
                 <!-- <div v-html="ps1"></div> -->
                 <p class="ora-sub">
-                    <span style="color:red">Песня Сімяона (Лк 2, 29-32)</span>
+                    <span style="color:red">Лк 2, 29-32</span>
                 <br>
                 <span style="color:red">Хрыстус – святло народаў і хвала Ізраэля</span>
                 </p>
