@@ -16,6 +16,11 @@ test('short-reading and short-responsory headings use the same semantic marker',
   assert.match(normalized, /Пачатак чытання/u);
 });
 
+test('a centered short responsory is a structural title, not a small subtitle', () => {
+  const html = '<p style="text-align: center;"><span style="color:red">Кароткі рэспансорый</span></p>';
+  assert.match(markLeadingLiturgicalSubheadings(html), /data-liturgical-heading/u);
+});
+
 test('a mixed reading title and body must never make the entire paragraph a heading', () => {
   const source = '<p><span style="color:red">КАРОТКАЕ ЧЫТАННЕ</span><br>Тэкст чытання.</p>';
   assert.doesNotMatch(markLeadingLiturgicalSubheadings(source), /data-liturgical-heading/u);
