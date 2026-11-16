@@ -171,16 +171,16 @@ export function markLeadingLiturgicalSubheadings(html) {
         return `<p${markAsLiturgicalHeading(attributes)}>${content}</p>`;
       }
 
+      if (isShortOfficeSectionHeading(content)) {
+        return `<p${markAsLiturgicalHeading(attributes)}>${markInlineReadingReference(content)}</p>`;
+      }
+
       // Centred lines in the source are structural captions (psalm parts,
       // references, and themes), including captions after the first two
       // leading metadata paragraphs.
       if (/text-align\s*:\s*center/iu.test(attributes)) {
         if (canMark && remaining > 0) remaining -= 1;
         return `<p${markAsLiturgicalSubheading(attributes)}>${content}</p>`;
-      }
-
-      if (isShortOfficeSectionHeading(content)) {
-        return `<p${markAsLiturgicalHeading(attributes)}>${markInlineReadingReference(content)}</p>`;
       }
 
       if (isReadingHeading(content)) {
