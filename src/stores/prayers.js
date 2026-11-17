@@ -160,14 +160,15 @@ export const usePrayersStore = defineStore('prayers', () => {
    */
   async function updatePrayerAction(id, data) {
     try {
-      await prayerService.updatePrayer(id, data);
+      const saved = await prayerService.updatePrayer(id, data);
       requestContentRefresh();
-      // Do not wait for the next Firestore snapshot before showing the saved
-      // value. The listener will reconcile timestamps and remote changes later.
+      // Use the server-confirmed document, not the optimistic form payload.
+      // This also preserves normalization, sourceManual and server timestamps.
       prayers.value = prayers.value.map((prayer) => (
-        prayer.id === id ? { ...prayer, ...data, id } : prayer
+        prayer.id === id ? saved.prayer : prayer
       ));
       refreshAllTags();
+      return saved;
     } catch (err) {
       error.value = err;
       throw err;

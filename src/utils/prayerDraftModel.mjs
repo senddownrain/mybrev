@@ -99,7 +99,8 @@ export function publishBlockers(draft) {
 }
 
 export function draftSourceNotice(draft) {
-  if (String(draft.source || '').trim()) return normalizePrayerSource(draft.source);
+  // A manually edited source must be shown and published exactly as saved.
+  if (String(draft.source || '').trim()) return String(draft.source).trim();
   return normalizePrayerSource(draft.sourceBook || '');
 }
 
@@ -127,6 +128,7 @@ export function buildPrayerFromDraft(draft, { existing, editorSource = false } =
     textFormatVersion: 1,
     tags: [...new Set((draft.tags || []).map((tag) => String(tag).trim()).filter(Boolean))],
     source: (editorSource ? sourceForEditor : sourceForSave)(draftSourceNotice(draft)),
+    ...(editorSource ? { sourceManual: normalizePrayerSource(draftSourceNotice(draft)) !== draftSourceNotice(draft) } : {}),
     copyrightNotices: [...(draft.copyrightNotices || [])],
     priestOnly: draft.priestOnly === true,
     verified: existing?.verified === true,
