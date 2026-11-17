@@ -14,7 +14,7 @@ import { createReleaseCommit } from '../scripts/liturgy/lib/firestore-release-co
 import {
   COORDINATED_COLLECTIONS as names, COORDINATED_POLICY, FLUTTER_MERGE, loadCoordinatedContract, binarySha256, valueSha256,
   verifyCoordinatedAuthorization, prepareCoordinatedFresh, catalogEntry, describeCatalog, verifyLiveCatalog,
-  coordinatedManifestPlan, executeCoordinatedRelease, publishCoordinatedManifest, timestampString, loadVerifiedPreflightCheckpoint,
+  coordinatedManifestPlan, executeCoordinatedRelease, publishCoordinatedManifest, timestampString, loadVerifiedPreflightCheckpoint, verifyManifestOnlyResume,
 } from '../scripts/liturgy/lib/coordinated-release.mjs';
 const dir = 'docs/audits/liturgical-common-texts-2026-11/v4';
 const sourceBytes = fs.readFileSync(`${dir}/full-content-plan.json.gz`), full = JSON.parse(zlib.gunzipSync(sourceBytes));
@@ -362,4 +362,15 @@ test('zero-write preflight checkpoint reuses exact hashed documents and timestam
     const attempted=structuredClone(previous);attempted.attempts.push({event:'attempt'});assert.throws(()=>loadVerifiedPreflightCheckpoint({...args,previous:attempted}),/zero-write/);
     fs.appendFileSync(path.join(dir,f.plan.documents[0].document+'.json'),' ');assert.throws(()=>loadVerifiedPreflightCheckpoint(args),/file SHA/);
   } finally {fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('manifest-only target amendment accepts fully verified original masks and refuses pending/missing/catalog-changed data', () => {
+  const f=fixture();
+  const receipts=[{readback:'verified',documents:f.plan.documents.map(d=>({document:d.document,serverUpdateTime:timestampString(f.nextRecords.get(d.document).updateTime),readbackUpdateTime:f.nextRecords.get(d.document).updateTime,writtenFieldMasks:d.fields.map(x=>x.field),fields:d.fields.map(x=>({field:x.field,path:x.path,beforeSha256:x.beforeSha256,afterSha256:x.afterSha256}))}))}];
+  const previous={state:'coordinated-release-blocked',reason:'Live bundle digest/count/bytes mismatch: liturgicalProperTexts; current manifest must not switch',compatibility:{planBinarySha256:'a'.repeat(64),releaseEvidenceSha256:'b'.repeat(64)},receipts,catalog:Object.fromEntries([...f.nextRecords].map(([n,r])=>[n,catalogEntry(n,r)]))};
+  const receiptBytes=Buffer.from(JSON.stringify(previous)),authorization={planBinarySha256:'a'.repeat(64),resumeReceiptSha256:binarySha256(receiptBytes),manifestOnlyResume:{receiptSha256:binarySha256(receiptBytes),previousReleaseEvidenceSha256:'b'.repeat(64)}};
+  const args={plan:f.plan,previous,authorization,receiptBytes,contract:f.contract};assert.equal(verifyManifestOnlyResume(args),true);
+  const pending=structuredClone(previous);pending.receipts[0].readback='pending';assert.throws(()=>verifyManifestOnlyResume({...args,previous:pending}),/readback/);
+  const missing=structuredClone(previous);missing.receipts[0].documents.pop();assert.throws(()=>verifyManifestOnlyResume({...args,previous:missing}),/preflight|requires/);
+  const changed=structuredClone(previous);changed.catalog['days/one'].hash='wrong';assert.throws(()=>verifyManifestOnlyResume({...args,previous:changed}),/catalog changed/);
 });

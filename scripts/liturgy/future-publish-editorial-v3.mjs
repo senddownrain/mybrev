@@ -5,7 +5,7 @@ import zlib from 'node:zlib';
 import path from 'node:path';
 import { toStorable } from '../content/lib/app-content.mjs';
 import { selectDaysTemplates } from './prepare-days-templates.mjs';
-import { loadCoordinatedContract,verifyCoordinatedAuthorization,binarySha256,executeCoordinatedRelease,publishCoordinatedManifest,loadVerifiedPreflightCheckpoint } from './lib/coordinated-release.mjs';
+import { loadCoordinatedContract,verifyCoordinatedAuthorization,binarySha256,executeCoordinatedRelease,publishCoordinatedManifest,loadVerifiedPreflightCheckpoint,verifyManifestOnlyResume } from './lib/coordinated-release.mjs';
 import { verifyCompatibleSubset } from './lib/editorial-compatible-subset.mjs';
 import { editorialHash } from './lib/editorial-responsories.mjs';
 import { preparePublicationResume,executePreparedPublication,boundPublicationWrites,validatePublicationPlan } from './lib/editorial-publication.mjs';
@@ -38,7 +38,8 @@ const batchSize=Number(get('--batch-size')||25);if(!Number.isInteger(batchSize)|
 if(coordinated&&batchSize>25)throw Error('Coordinated release batches must be <=25');
 const previous=get('--resume')?JSON.parse(fs.readFileSync(get('--resume'))):{receipts:[]};
 if(get('--resume')&&(previous.project!=='ibreviaryby'||previous.planSha256!==planSha256))throw Error('Resume receipt project/plan SHA mismatch');
-if(coordinated&&get('--resume')&&(previous.compatibility?.planBinarySha256!==releaseCompatibility.planBinarySha256||(!authorization.preflightCheckpoint&&previous.compatibility?.releaseEvidenceSha256!==releaseCompatibility.releaseEvidenceSha256)))throw Error('Resume coordinated release bindings changed');
+if(coordinated&&get('--resume')&&(previous.compatibility?.planBinarySha256!==releaseCompatibility.planBinarySha256||(!authorization.preflightCheckpoint&&!authorization.manifestOnlyResume&&previous.compatibility?.releaseEvidenceSha256!==releaseCompatibility.releaseEvidenceSha256)))throw Error('Resume coordinated release bindings changed');
+if(coordinated&&authorization.manifestOnlyResume)verifyManifestOnlyResume({plan,previous,authorization,receiptBytes:fs.readFileSync(get('--resume')),contract});
 const checkpoint=coordinated&&authorization.preflightCheckpoint?loadVerifiedPreflightCheckpoint({plan,previous,authorization,receiptBytes:fs.readFileSync(get('--resume')),directory:get('--resume')+'.documents'}):null;
 const startedAt=new Date().toISOString();let state={...(coordinated?previous:{}),manifestReceipt:null,resumedManifest:false,compatibility:releaseCompatibility,receipts:previous.receipts||[],attempts:coordinated?(previous.attempts||[]):[],resumedFrom:get('--resume')?editorialHash(fs.readFileSync(get('--resume'))):null,batchSize};
 const journal=update=>{state={...state,...update};const fd=fs.openSync(receiptFile+'.tmp','w',0o600);try{fs.writeFileSync(fd,JSON.stringify({schema:3,mode,startedAt,project:'ibreviaryby',planSha256,...state},null,2)+'\n');fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(receiptFile+'.tmp',receiptFile);};

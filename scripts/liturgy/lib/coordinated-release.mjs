@@ -60,8 +60,14 @@ export function loadCoordinatedContract(dir = CONTRACT_DIR, { testApp = false } 
     check(live.scope === 'flutter-bundle-live-baseline-only' && live.firestoreWrites === 0 && live.changes.length === 3
       && live.changes.every(c => c.document === 'days/office-for-dead' && ['checked','allowedAlleluia','vesperPs3'].includes(c.field))
       && isDeepStrictEqual(live.before, patch.after), 'Unexpected live-baseline scope');
-    contract.expected = live.after;
-    contract.testApp = { policy: 'pr255-test-app-before-mobile-release', supplementSha256: binarySha256(bytes), liveBaselinePreservationSha256: binarySha256(liveBytes) };
+    const properBytes = fs.readFileSync(`${dir}/../final-execution/live-Proper-preservation.json`);
+    check(binarySha256(properBytes) === '9f4fa716f551c6b6a6ee5a332ca7598cdaf915af82662ade38dd5627dc83fb95', 'Unpinned live Proper baseline');
+    const proper = JSON.parse(properBytes);
+    check(proper.scope === 'flutter-bundle-live-Proper-baseline-only' && proper.firestoreWrites === 0
+      && proper.document === 'liturgicalProperTexts/17-11-sv-elizabeth-hungary' && proper.field === 'vesperPs2'
+      && valueSha256(proper.value) === proper.afterFieldSha256 && isDeepStrictEqual(proper.before, live.after), 'Invalid live Proper preservation');
+    contract.expected = proper.after;
+    contract.testApp = { policy: 'pr255-test-app-before-mobile-release', supplementSha256: binarySha256(bytes), liveBaselinePreservationSha256: binarySha256(liveBytes), liveProperPreservationSha256: binarySha256(properBytes) };
     contract.targetContractSha256 = valueSha256({ reportSha256: contract.reportSha256, ...contract.testApp, expected: contract.expected });
   }
   return contract;
@@ -137,6 +143,26 @@ export function verifyTestAppCompatibility(e, a, contract) {
   }
   check(tests.appReleaseDataPreservation === true && tests.appReleaseRestart === true && tests.upgradeStatusClears === true
     && tests.settingsFavoritesPersonalPrayersPreserved === true && tests.targetHashesVerified === true, 'Test-app data preservation/target verification incomplete');
+}
+
+/** A changed target may complete only the manifest after all original fields
+ * were already readback-verified. It can never authorize another data write. */
+export function verifyManifestOnlyResume({ plan, previous, authorization, receiptBytes, contract }) {
+  const p = authorization.manifestOnlyResume;
+  check(p && p.receiptSha256 === binarySha256(receiptBytes) && p.receiptSha256 === authorization.resumeReceiptSha256
+    && previous.state === 'coordinated-release-blocked'
+    && previous.reason === 'Live bundle digest/count/bytes mismatch: liturgicalProperTexts; current manifest must not switch'
+    && previous.compatibility.planBinarySha256 === authorization.planBinarySha256
+    && previous.compatibility.releaseEvidenceSha256 === p.previousReleaseEvidenceSha256, 'Invalid manifest-only resume binding');
+  const checked = preparePublicationResume(plan, new Map(), previous, { prepare: prepareCoordinatedFresh });
+  check(checked.prepared.length === 0 && checked.alreadyVerifiedDocuments === plan.documents.length
+    && checked.receipts.every(batch => batch.readback === 'verified'), 'Manifest-only resume requires every original field readback');
+  for (const batch of checked.receipts) for (const d of batch.documents) {
+    const [name,id] = d.document.split('/'), entry = previous.catalog?.[d.document];
+    check(entry && timeEqual(entry.updateTime,d.readbackUpdateTime) && timeEqual(entry.updateTime,serverTime(d.serverUpdateTime))
+      && entry.hash === contract.expected[name].hashes[id] && entry.bytes === contract.expected[name].sizes[id], 'Verified data catalog changed on manifest-only resume');
+  }
+  return true;
 }
 
 /** Reuse the ONE completed fresh preflight after a target-only amendment.
