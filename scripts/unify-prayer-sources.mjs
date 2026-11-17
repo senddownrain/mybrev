@@ -10,7 +10,7 @@ import { PRAYER_COLLECTIONS, isPrayerCollection, buildShortSourcePlan, sourceWri
 const options = {};
 for (let i = 2; i < process.argv.length; i++) {
   const flag = process.argv[i];
-  if (['--capture', '--apply', '--rollback'].includes(flag)) options[flag.slice(2)] = true;
+  if (['--capture', '--apply', '--rollback', '--manifest-context'].includes(flag)) options[flag.slice(2)] = true;
   else if (['--snapshot', '--bundle', '--out', '--plan', '--approve-sha', '--service-account', '--journal'].includes(flag)) options[flag.slice(2)] = process.argv[++i];
   else throw new Error(`Unknown option: ${flag}`);
 }
@@ -30,37 +30,57 @@ async function main() {
     const capture = path.join(out, 'snapshot');
     await fs.mkdir(capture, { recursive: false });
     const api = await live();
+    const receipt = { requests:[], documentsReturned:0, writes:0 };
+    const captureRequest = async (url, body, method='POST') => {
+      const row={method,path:new URL(url).pathname};
+      try {
+        const response=await api.request(url,body,method);
+        row.status=200;row.documents=(response.documents || (response.name ? [response] : [])).length;
+        receipt.documentsReturned+=row.documents;receipt.requests.push(row);
+        // Preserve each successful response before the next request, even if a later page fails.
+        await writeJson(path.join(capture,'pages',`${receipt.requests.length}.json`),response,true);
+        await writeJson(path.join(capture,'capture-receipt.json'),receipt);
+        return response;
+      } catch (error) {
+        if (!receipt.requests.includes(row)) {row.status=error.status || 'transport-error';receipt.requests.push(row);}
+        await writeJson(path.join(capture,'capture-receipt.json'),receipt);
+        throw error;
+      }
+    };
     const names = new Set(PRAYER_COLLECTIONS);
+    if (options['manifest-context']) for (const name of ['prayerCategories','priestProtectedCategories']) names.add(name);
     let pageToken;
     do {
-      const response = await api.request(api.base + '/documents:listCollectionIds', { pageSize: 1000, ...(pageToken ? { pageToken } : {}) });
+      const response = await captureRequest(api.base + '/documents:listCollectionIds', { pageSize: 1000, ...(pageToken ? { pageToken } : {}) });
       for (const name of response.collectionIds || []) if (isPrayerCollection(name)) names.add(name);
       pageToken = response.nextPageToken;
     } while (pageToken);
     const manifest = { schemaVersion: 1, projectId: 'ibreviaryby', snapshotVersion: new Date().toISOString(), scope: 'prayer collections only; top-level discovery', collections: {} };
-    const decode = (value) => {
-      if ('stringValue' in value) return value.stringValue;
-      if ('booleanValue' in value) return value.booleanValue;
-      if ('nullValue' in value) return null;
-      if ('integerValue' in value) return Number(value.integerValue);
-      if ('doubleValue' in value) return value.doubleValue;
-      if ('timestampValue' in value) return value.timestampValue;
-      if ('arrayValue' in value) return (value.arrayValue.values || []).map(decode);
-      if ('mapValue' in value) return Object.fromEntries(Object.entries(value.mapValue.fields || {}).map(([k,v]) => [k,decode(v)]));
-      return value;
-    };
+    const {decodeSourceRestValue:decode} = await import('./lib/prayer-source-rest.mjs');
     for (const collection of names) {
       const documents = []; let page;
       do {
         const url = new URL(api.base + '/documents/' + collection); url.searchParams.set('pageSize', '1000');
         if (page) url.searchParams.set('pageToken', page);
-        const response = await api.request(url, undefined, 'GET');
+        const response = await captureRequest(url, undefined, 'GET');
         for (const doc of response.documents || []) documents.push({ id: doc.name.split('/').at(-1), data: Object.fromEntries(Object.entries(doc.fields || {}).map(([k,v]) => [k,decode(v)])), updateTime: doc.updateTime });
         page = response.nextPageToken;
       } while (page);
       const file = `${collection}.json`, text = JSON.stringify({ schemaVersion: 1, collectionPath: collection, documents });
       await fs.writeFile(path.join(capture, file), text, {mode:0o600});
       manifest.collections[collection] = { file, documentCount: documents.length, sha256: hash(text) };
+    }
+    if (options['manifest-context']) {
+      // Two exact manifest documents, never a scan of unrelated published collections.
+      const documents=[];
+      for (const id of ['current','prayers']) {
+        const doc=await captureRequest(api.base+'/documents/contentManifest/'+id,undefined,'GET');
+        documents.push({id,data:Object.fromEntries(Object.entries(doc.fields || {}).map(([k,v])=>[k,decode(v)])),updateTime:doc.updateTime});
+      }
+      const file='contentManifest.json', text=JSON.stringify({schemaVersion:1,collectionPath:'contentManifest',documents});
+      await fs.writeFile(path.join(capture,file),text,{mode:0o600});
+      manifest.collections.contentManifest={file,documentCount:documents.length,sha256:hash(text)};
+      manifest.scope+='; access categories and two targeted prayers manifest documents';
     }
     await writeJson(path.join(capture, 'manifest.json'), manifest, true);
     options.snapshot = capture;

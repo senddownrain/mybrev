@@ -10,6 +10,7 @@ import { encodeCollection, describeDocuments, decodeCollection } from '../script
 import { sourceToPrayer } from '../scripts/import-prayer-markdown-collection.mjs';
 import { buildPrayerSourcePlan } from '../scripts/migrate-prayer-sources.mjs';
 import { newDocument, replacementDocument, draftDocument } from '../scripts/prayer-import/lib/documents.mjs';
+import {decodeSourceRestValue} from '../scripts/lib/prayer-source-rest.mjs';
 import { buildShortSourcePlan, sourceWrites, applySourcePlan, rollbackSourcePlan } from '../scripts/lib/prayer-source-plan.mjs';
 
 const source = 'Бог добры, с. 135–136';
@@ -196,4 +197,12 @@ test('draft editor preserves sourceBook-only unknown attribution on unrelated ed
   assert.equal(result.sourceBook,old.sourceBook);assert.equal(Object.hasOwn(result,'source'),false);
   assert.equal(result.title,'Новая назва');
   assert.deepEqual(draftSourcePatch(old,'Бог добры'),{source:'Бог добры'});
+});
+
+
+test('scoped snapshot retains timestamps for exact offline app hashes', () => {
+  const data=decodeSourceRestValue({mapValue:{fields:{createdAt:{timestampValue:'2026-11-17T12:00:00.123456789Z'},source:{stringValue:'Бог добры'}}}});
+  assert.deepEqual(data.createdAt,{__firestoreType:'timestamp',seconds:1794916800,nanoseconds:123456789});
+  assert.equal(data.source,'Бог добры');
+  assert.deepEqual(decodeSourceRestValue({timestampValue:'2026-11-17T12:00:00Z'}),{__firestoreType:'timestamp',seconds:1794916800,nanoseconds:0});
 });

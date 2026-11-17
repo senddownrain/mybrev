@@ -4,6 +4,23 @@ import { createSign } from 'node:crypto';
 import https from 'node:https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
+/** REST values in the existing private snapshot schema; retain timestamp precision. */
+export function decodeSourceRestValue(value) {
+  if ('stringValue' in value) return value.stringValue;
+  if ('booleanValue' in value) return value.booleanValue;
+  if ('nullValue' in value) return null;
+  if ('integerValue' in value) return Number(value.integerValue);
+  if ('doubleValue' in value) return value.doubleValue;
+  if ('timestampValue' in value) return {
+    __firestoreType:'timestamp', seconds:Math.floor(Date.parse(value.timestampValue)/1000),
+    nanoseconds:Number((value.timestampValue.match(/\.(\d+)Z$/u)?.[1] || '').padEnd(9,'0')),
+  };
+  if ('bytesValue' in value) return {__firestoreType:'bytes',base64:value.bytesValue};
+  if ('arrayValue' in value) return (value.arrayValue.values || []).map(decodeSourceRestValue);
+  if ('mapValue' in value) return Object.fromEntries(Object.entries(value.mapValue.fields || {}).map(([k,v])=>[k,decodeSourceRestValue(v)]));
+  return value;
+}
+
 export async function createSourceRest({ serviceAccount } = {}) {
   const credentials = JSON.parse(serviceAccount
     ? await readFile(serviceAccount, 'utf8')
