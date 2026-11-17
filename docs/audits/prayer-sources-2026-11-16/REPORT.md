@@ -1,0 +1,124 @@
+# Унификация источников молитв — результат и остаток
+
+Дата аудита: 2026-11-16; продолжение: 2026-11-17. Код Web и миграция подготовлены; production Firestore, manifest и Hosting не обновлены. После уточнения владельца работа продолжалась только офлайн. PR не означает разрешения production-записи.
+
+## Точные числа и границы аудита
+
+Исходный `backups/firestore-snapshot/manifest.json` отсутствовал. Вместо массового восстановления использован существующий публичный Flutter bundle: `prayers.contentVersion=1791877294111`, дата 2026-10-13, 115 записей. Общий manifest bundle от 2026-11-08 не делает коллекцию prayers свежей.
+
+| Показатель | Подтверждённый результат |
+|---|---:|
+| Уникальных молитв проверено в доступном публичном bundle | 115 |
+| Опубликованных молитв проверено в bundle | 115 |
+| Черновиков проверено по реальным данным | 0 — в bundle отсутствуют |
+| Production prayer documents прочитано в этой задаче | 0 |
+| Источников со страницами в доступном bundle | 0 |
+| Подготовлено source-only изменений документов bundle | 52 |
+| Из них длинных / библиографических источников | 48 |
+| Длинных источников реально исправлено в Firestore | 0 |
+| Документов реально обновлено в Firestore | 0 |
+| Спорных записей старого bundle | 63 |
+| Из них источник отсутствует / пустой / иной неподтверждённый | 48 / 11 / 4 |
+
+Точные общие production totals, опубликованные/обычные/закрытые черновики, protected/priest и недавние импорты ещё не установлены. Числа bundle нельзя выдавать за полный production-аудит. Новые полные import corpus/payload files в checkout отсутствуют; проверены все 9 book-конфигураций импорта, English Mass dry-run и fixtures импортёров.
+
+Все 52 source diff и все 63 спорные записи с ID/старыми значениями: [bundle-audit.json](bundle-audit.json). Единая таблица старое → каноническое / disputed: [mapping.md](mapping.md). Отсутствующие источники не назначались по соседним молитвам, заголовкам или догадке.
+
+Четыре иных спорных значения: документ «Гадзінкі.docx», «складзеная Піем VII», повреждённая Markdown-ссылка `import-02-agulny-katekhizis`, «Св. Бонавэнтура». Их первичное происхождение/корректное описание нужно подтвердить, прежде чем пополнять справочник.
+
+## Что изменено
+
+Единый справочник — `src/data/sourceBibliography.json`, тот же файл отображается на `/sources`. У каждой записи есть короткое `shortTitle` и подтверждённые aliases. Издания, notices и подробности сохранены; добавлены известные цифровые источники и полный существующий English Mass copyright. Номеров страниц в канонических названиях нет. Неоднозначное «Біблія» не приравнивается к конкретному переводу; точное описание издания распознаётся по наиболее специфичному подтверждённому alias.
+
+Общая функция `src/utils/prayerSource.mjs` нормализует известные названия идемпотентно. Поля исходного текста молитвы не передаются в неё. Неизвестный источник возвращается byte-for-byte для отчёта и предпросмотра; сохранение блокируется с понятной ошибкой до подтверждения справочника. Ввод не подменяется фиктивным источником. В админке осталось одно обычное поле «Крыніца».
+
+Проверенные пути записи:
+
+| Путь | Общая защита |
+|---|---|
+| Создание и редактирование молитвы через админку | saveStoredPrayer + transactional content writer |
+| Создание/сохранение закрытого или исторического черновика | createDraftActions, source и sourceBook |
+| Публикация черновика | buildPrayerFromDraft + writer; source без страниц и copyright |
+| Канонический и Bog Dobry bulk import | planners + new/replacement/draft document constructors |
+| Старые уже подготовленные import payloads | нормализация на границе apply constructors |
+| Markdown/document import | sourceToPrayer / buildImportPlan |
+| English Mass import | sourceForSave; static variant source также короткий |
+| Исторические source-fix / source-extraction utilities | тот же guard; неопределённые извлечения попадают в ambiguous |
+| Показ существующих известных source в Web cache | чистая нормализация для отображения, без Firestore write |
+
+Существующие source-only изменения не затрагивают текст, title, категории, доступ, publication status, copyrightNotices или другие поля. Старые утилиты извлечения источников из текста сохраняют своё прежнее назначение, но здесь не запускались; новый unify writer вообще не редактирует текст/заголовок.
+
+## Миграция, применение и восстановление
+
+`npm run db:unify-prayer-sources` по умолчанию работает офлайн. Она принимает snapshot или старый bundle для анализа. План перечисляет coverage, категории статусов, old/new, спорные случаи и SHA256; готовится отдельно от apply. Bundle-план не разрешается применять к production. Для apply нужны snapshot всех трёх известных коллекций, точный approved SHA, исходные updateTime и новый private output directory для первого запуска.
+
+При наличии частного snapshot:
+
+```sh
+npm run db:unify-prayer-sources -- --snapshot backups/firestore-snapshot --out backups/prayer-sources-review
+```
+
+После будущего отдельного разрешения production:
+
+```sh
+node scripts/unify-prayer-sources.mjs --apply --plan backups/prayer-sources-review/plan.json --approve-sha PLAN_SHA --out backups/prayer-sources-apply
+```
+
+Авторизация берётся из предусмотренного безопасного окружения (`FIREBASE_SERVICE_ACCOUNT_B64`) либо `--service-account` с частным внешним файлом. Ключей в репозитории нет, секреты в чате не требуются. `--capture` — отдельная явно вызываемая возможность однократного scoped export, не включённая в dry-run и не разрешённая текущим офлайн-этапом.
+
+До первой записи эксклюзивно сохраняется `before.json`. Пакеты не больше 100 операций. Пишутся только реально изменённые `source`/`sourceBook` через updateMask с updateTime precondition. Не обновляется даже updatedAt. Ack каждого commit и новые updateTime сохраняются в journal; один документ на батч читается для readback. Любая ошибка, включая 429, немедленно останавливает работу без retry. При прерывании требуется проверить journal; автоматического продолжения нет. Явный повтор той же команды с тем же output проверяет immutable backup/journal и пропускает уже acknowledged записи; незавершённый контрольный readback выполняется до следующих батчей. Полностью завершённый journal даёт 0 записей и 0 новых readback, даже без авторизации.
+
+Откат только подтверждённых этим journal записей, с проверкой принадлежности исходному плану и новыми updateTime:
+
+```sh
+node scripts/unify-prayer-sources.mjs --rollback --plan backups/prayer-sources-review/plan.json --approve-sha PLAN_SHA --journal backups/prayer-sources-apply/journal.json --out backups/prayer-sources-rollback
+```
+
+Повторный офлайн dry-run над нормализованными значениями даёт 0 изменений. Старый apply-план не перезаписывает изменившиеся документы: устаревший updateTime блокирует запись.
+
+## Проверки
+
+- Полный Web suite: 1 370 успешно, 22 пропущены, 0 ошибок (1 392 зарегистрировано); результат в `evidence/full-suite.log`; целевые source tests проверяют страницы, диапазоны, тома, годы, одноимённые источники, ручное сохранение, draft save/publish, Markdown/bulk import, неизвестные источники, повторное сохранение, checksum и маски.
+- Firestore emulator: 28/28 успешно — реальные admin/draft/import транзакции, создание/редактирование/публикация, source-only REST migration, точный round-trip rollback и отказ при устаревшем updateTime. Production не используется.
+- ESLint изменённых модулей и Vue-компонентов прошёл; production Web build прошёл.
+- Chromium: `/sources` и обычная молитва, 390/1440 px, light/dark, без JS-ошибок и горизонтального overflow. Библейский текст `Пс 23, 1–6. Ян 3, 16` сохранён. Скриншоты просмотрены. Воспроизведение: `npm run build`, `npm run preview -- --host 127.0.0.1`, `npm run smoke:prayer-sources`. Все внешние запросы, включая Firebase, в smoke блокируются.
+- В продолжении 2026-11-17 установлен Flutter 3.41.4 / Dart 3.11.1. Форматирование, analyze по CI-политике --no-fatal-infos и 50 целевых тестов прошли (6 source tests). Обычная молитва и office проверены в реальном Google Chrome на 390px, light/dark 200%, с прокруткой и переходом по ссылке. Скриншоты просмотрены; все внешние запросы приложения блокировались, CanvasKit того же engine и bootstrap font загружались из локального cache. Native/app release не выполнялся. Старый shipped bundle не изменён.
+
+Подробный контракт, офлайн-кандидат prayers bundle и порядок согласования с пакетом PR #245/#255: [FLUTTER_CONTRACT.md](FLUTTER_CONTRACT.md). 7 791 литургическое исправление не подменяет snapshot молитв и не включено в эту source-only миграцию.
+
+## Подтверждённые production-блокировки
+
+В начале, до уточнения офлайн-границ, запрос metadata подтвердил `ibreviaryby/(default)`, STANDARD. Первый запрос `documents:listCollectionIds` вернул HTTP 429 `Quota exceeded / RESOURCE_EXHAUSTED`; повторов и чтения документов не было. CLI Hosting сначала не смог аутентифицироваться через proxy, затем OAuth-запрос metadata Firebase проекта вернул HTTP 403 `The caller does not have permission`. Деплоя не было. После уточнения владельца production-запросов не выполнялось. Временный credential file удалён; IAM не менялся.
+
+Осталось: получить существующий полный snapshot/подтверждённые материалы без массового Firebase reread; проверить все actual drafts/protected/imported records; разрешить disputed; подготовить actual dry-run; затем в отдельном production-этапе выполнить source-only apply/readback, предусмотренную проверку/публикацию manifest и штатный Hosting release. Для Flutter завершить SDK/Chrome проверки и согласованный bundle/app release. Actual production dispute count пока неизвестен.
+
+## Чек-лист задачи
+
+- [ ] Во всех существующих production-молитвах источники унифицированы либо спорные случаи перечислены — полный production snapshot пока недоступен; bundle полностью перечислен.
+- [ ] Все реальные черновики проверены — только fixtures/emulator, реальные drafts в bundle отсутствуют.
+- [x] Код всех обнаруженных путей добавления/сохранения больше не записывает страницы; неизвестные значения блокируются. Production deploy ещё не выполнен.
+- [x] Все обнаруженные механизмы импорта исправлены в коде и проверены доступными fixtures.
+- [x] Единая справочная страница `/sources` сохранена с полной библиографией и notices.
+- [x] Web и Flutter совместимы на уровне кода и проверенного локального reader: Web suite/Chrome и Flutter analyze/50 tests/Google Chrome прошли. Установленный мобильный релиз и production-синхронизация отдельно не заявляются.
+- [ ] Production Firestore обновлён с подтверждением записи — записей 0.
+
+## Продолжение 2026-11-17
+
+PR Web: https://github.com/senddownrain/mybrev/pull/259; companion Flutter: https://github.com/senddownrain/ibreviarybyapp/pull/114. Web CI исходного PR прошёл. Ветка обновлена поверх #260, сохранив исправление публикации legacy drafts и неизменяемую дополнительную metadata. Свежий локальный Web suite: 1 370 passed, 22 skipped; эмулятор: 28 passed. Ошибки прежнего повторного запуска из ограниченного sandbox были EPERM/Chrome sandbox и не воспроизводятся при разрешённом локальном запуске; проверки не ослаблялись.
+
+За продолжение 17 ноября production Firestore: 0 чтений, 0 записей. Production manifest, Hosting и shipped Flutter bundle не менялись. Миграция production и полный аудит актуальных drafts/protected остаются отдельным этапом из handoff, а не результатом этого PR.
+
+
+## Финальная проверка перед production, 2026-11-17
+
+По новому разрешению владельца разрешены merge, штатный Hosting deploy и последующая source-only миграция; прежняя офлайн-граница выше относится к предыдущему этапу.
+
+Найдена и исправлена блокировка редактирования существующего неизвестного источника. Unchanged attribution сохраняется дословно при обычном/защищённом редактировании, переносе доступа, сохранении черновика и replacement import; новый либо изменённый неизвестный источник по-прежнему требует подтверждения. Черновик только с sourceBook не получает синтетический source при сохранении других полей. Страница списка черновиков больше не дописывает страницы к источнику.
+
+Добавлена серверная проверка source/sourceBook для всех трёх коллекций: новые/изменённые значения принимаются только из единого канонического справочника; точное старое значение разрешено при других правках. Даже открытая старая форма не может вернуть длинный источник после миграции. Перенос между public/protected коллекциями сохраняет существующую атрибуцию по тому же ID. Правила не изменяют читательский доступ, роли или статусы. Allowlist генерируется из sourceBibliography.json; prebuild и тест проверяют синхронность. Статический no-store marker `/prayer-source-policy.json` позволяет подтвердить опубликованную версию без чтений Firestore.
+
+Локальная проверка: полный Web suite **1 373 passed / 22 skipped, 0 failures (1 395 total)**; source/draft targeted **20 passed**; draft/import/migration emulator **30 passed**; priest/access emulator **18 passed**; ESLint и production build прошли. Все emulator проверки выполнены локально. Companion Flutter #114 merged с проверенным SHA 804559286a7a022025f61d3b90d832d071d7d9d2, merge commit 6ef0ba811e351d787eec349af81e82b9f94d465a; мобильный релиз не выполнялся.
+
+Фактические результаты Hosting, scoped snapshot, apply и manifest фиксируются отдельным production-отчётом после завершения соответствующих операций; этот раздел не заявляет обновление базы.
+
+Экспорт дополнен `--capture --manifest-context`: единственный последовательный обход коллекций молитв, категории доступа для штатного privacy filter и ровно два документа contentManifest/current + contentManifest/prayers. Это позволяет выполнить последующий prayers manifest dry-run офлайн без повторного сканирования базы. Каждая успешная REST-страница сохраняется до следующего запроса, capture-receipt фиксирует количество возвращённых документов и HTTP-результаты, при ошибке/429 немедленный stop. Firestore timestamps сохраняют наносекунды в существующем private snapshot формате, чтобы offline app hashes совпадали с Firebase SDK.

@@ -1,0 +1,38 @@
+[
+  {
+    "theme": "light",
+    "width": 390,
+    "bibliographyEntries": 23,
+    "source": "Бог добры",
+    "scripturePreserved": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "theme": "light",
+    "width": 1440,
+    "bibliographyEntries": 23,
+    "source": "Бог добры",
+    "scripturePreserved": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "theme": "dark",
+    "width": 390,
+    "bibliographyEntries": 23,
+    "source": "Бог добры",
+    "scripturePreserved": true,
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "theme": "dark",
+    "width": 1440,
+    "bibliographyEntries": 23,
+    "source": "Бог добры",
+    "scripturePreserved": true,
+    "overflow": false,
+    "errors": []
+  }
+]

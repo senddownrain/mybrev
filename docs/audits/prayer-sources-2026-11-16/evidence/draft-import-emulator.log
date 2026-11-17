@@ -1,0 +1,110 @@
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated json-ptr@3.1.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+npm warn deprecated uuid@9.0.1: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+i  emulators: Starting emulators: firestore
+i  emulators: Detected demo project ID "demo-rules", emulated services will use a demo configuration and attempts to access non-emulated services for this project will fail.
+i  firestore: Firestore Emulator logging to firestore-debug.log
+✔  firestore: Firestore Emulator was started in standard edition.
+✔  firestore: Firestore Emulator UI websocket is running on 9150.
+i  Running script: node --test --test-isolation=none --test-concurrency=1 tests/prayer-drafts-firestore.test.mjs tests/prayer-import-apply.test.mjs tests/prayer-import-drafts-compat.test.mjs tests/prayer-source-migration-emulator.test.mjs
+(node:2569) MetadataLookupWarning: received unexpected error = Request failed with status code 403 code = UNKNOWN
+(Use `node --trace-warnings ...` to show where the warning was created)
+[2026-11-17T10:17:27.550Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a4d error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'create' @ L134, false for 'create' @ L207, false for 'update' @ L136, false for 'update' @ L207
+[2026-11-17T10:17:27.634Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a4e error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'update' @ L136, false for 'update' @ L207
+[2026-11-17T10:17:27.663Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a4f error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'delete' @ L140, false for 'delete' @ L207
+[2026-11-17T10:17:28.174Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a51 error. Code: 7 Message: 7 PERMISSION_DENIED:
+evaluation error at L134:24 for 'create' @ L134, false for 'create' @ L207, evaluation error at L136:24 for 'update' @ L136, false for 'update' @ L207, false for 'create' @ L134, false for 'create' @ L207
+[2026-11-17T10:17:28.327Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a52 error. Code: 7 Message: 7 PERMISSION_DENIED:
+evaluation error at L136:24 for 'update' @ L136, false for 'update' @ L207, false for 'update' @ L136, false for 'update' @ L207
+[2026-11-17T10:17:28.368Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a53 error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'delete' @ L140, false for 'delete' @ L207
+[2026-11-17T10:17:28.723Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a55 error. Code: 7 Message: 7 PERMISSION_DENIED:
+evaluation error at L134:24 for 'create' @ L134, false for 'create' @ L207, evaluation error at L136:24 for 'update' @ L136, false for 'update' @ L207, false for 'create' @ L134, false for 'create' @ L207
+[2026-11-17T10:17:28.762Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a56 error. Code: 7 Message: 7 PERMISSION_DENIED:
+evaluation error at L136:24 for 'update' @ L136, false for 'update' @ L207, false for 'update' @ L136, false for 'update' @ L207
+[2026-11-17T10:17:28.817Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a57 error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'delete' @ L140, false for 'delete' @ L207
+[2026-11-17T10:17:29.148Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a59 error. Code: 7 Message: 7 PERMISSION_DENIED:
+evaluation error at L134:24 for 'create' @ L134, false for 'create' @ L207, evaluation error at L136:24 for 'update' @ L136, false for 'update' @ L207, false for 'create' @ L134, false for 'create' @ L207
+[2026-11-17T10:17:29.231Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a5a error. Code: 7 Message: 7 PERMISSION_DENIED:
+evaluation error at L136:24 for 'update' @ L136, false for 'update' @ L207, false for 'update' @ L136, false for 'update' @ L207
+[2026-11-17T10:17:29.252Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a5b error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'delete' @ L140, false for 'delete' @ L207
+▶ prayerDrafts: roles, publish transaction, concurrency, hiding
+  ✔ no access without an admin role: anonymous, user, priest grant, unknown role (2594.170355ms)
+  ✔ draft is invisible to the legacy full read of prayers and to protected readers (125.856002ms)
+  ✔ admin, superadmin, legacy admin and role-less admin document read and edit drafts (2074.806608ms)
+[2026-11-17T10:17:31.524Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a68 error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'delete' @ L140, false for 'delete' @ L207
+[2026-11-17T10:17:31.544Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a69 error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'update' @ L146, false for 'update' @ L207
+[2026-11-17T10:17:31.566Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a6a error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'delete' @ L146, false for 'delete' @ L207
+[2026-11-17T10:17:31.653Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a6b error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'create' @ L134, false for 'create' @ L207, evaluation error at L136:24 for 'update' @ L136, false for 'update' @ L207, false for 'create' @ L134, false for 'create' @ L207
+[2026-11-17T10:17:31.729Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a6c error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'create' @ L134, false for 'create' @ L207, false for 'update' @ L136, false for 'update' @ L207
+[2026-11-17T10:17:31.819Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a6d error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'create' @ L134, false for 'create' @ L207, evaluation error at L136:24 for 'update' @ L136, false for 'update' @ L207, false for 'create' @ L134, false for 'create' @ L207
+  ✔ audit log and drafts cannot be deleted; audit is append-only; unknown fields rejected (367.070306ms)
+[2026-11-17T10:17:31.921Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a6e error. Code: 7 Message: 7 PERMISSION_DENIED:
+evaluation error at L136:24 for 'update' @ L136, false for 'update' @ L207, false for 'update' @ L136, false for 'update' @ L207
+  ✔ a raw status=published write without the public prayer in the same commit is refused (118.423481ms)
+  ✔ plain admin (no superadmin, no priestAccess) publishes: one public document, draft marked, audit written (692.877943ms)
+[2026-11-17T10:17:32.684Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250a74 error. Code: 7 Message: 7 PERMISSION_DENIED:
+evaluation error at L136:24 for 'update' @ L136, false for 'update' @ L207, false for 'update' @ L136, false for 'update' @ L207
+  ✔ plain admin can edit and publish legacy imported drafts with extra immutable metadata (580.463324ms)
+  ✔ repeat publish is idempotent (146.841757ms)
+  ✔ two admins publishing the same draft at once create exactly one public prayer (785.706373ms)
+  ✔ priestOnly draft lands in priestProtectedPrayers only; public readers never see it (494.460386ms)
+  ✔ duplicate title stops publication until replace or explicit confirmation; replace keeps ID and createdAt (1428.979132ms)
+  ✔ only missing tags or source block a draft; no rights approval is required (373.136025ms)
+  ✔ old intermediate and archived statuses can be saved as draft and published (280.40041ms)
+  ✔ plain admin: priestOnly draft publishes into the protected collection, status moves and audit work (312.748096ms)
+[2026-11-17T10:17:37.058Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250aa7 error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'create' @ L69, false for 'create' @ L207, false for 'update' @ L69, false for 'update' @ L207
+[2026-11-17T10:17:37.072Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250aa8 error. Code: 7 Message: 7 PERMISSION_DENIED:
+false for 'create' @ L69, false for 'create' @ L207, false for 'update' @ L69, false for 'update' @ L207
+[2026-11-17T10:17:37.132Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250aa9 error. Code: 7 Message: 7 PERMISSION_DENIED:
+evaluation error at L160:32 for 'create' @ L160, false for 'create' @ L207, evaluation error at L160:32 for 'update' @ L160, false for 'update' @ L207, false for 'create' @ L160, false for 'create' @ L207
+  ✔ plain admin does NOT get superadmin powers: no admin roles, no priest access settings (99.166166ms)
+  ✔ a content lock aborts publication and leaves draft and public content consistent (333.992173ms)
+  ✔ stale version is rejected (optimistic conflict) (279.303989ms)
+[2026-11-17T10:17:37.950Z]  @firebase/firestore: Firestore (10.14.1): GrpcConnection RPC 'Write' stream 0x5d250ab7 error. Code: 7 Message: 7 PERMISSION_DENIED:
+evaluation error at L136:24 for 'update' @ L136, false for 'update' @ L207, false for 'update' @ L136, false for 'update' @ L207
+  ✔ new intermediate states cannot be introduced by admins (195.770832ms)
+✔ prayerDrafts: roles, publish transaction, concurrency, hiding (15894.68515ms)
+(node:2569) MetadataLookupWarning: received unexpected error = Request failed with status code 403 code = UNKNOWN
+▶ canonical import apply/rollback (emulator)
+  ✔ refuses a wrong approval hash and a tampered plan (1.283564ms)
+  ✔ canonical create/replace operations do not need a rights.json file (0.224998ms)
+  ✔ apply: create + replace keep ID and old fields + closed draft; control version moves, lock released (329.374082ms)
+  ✔ apply again is a no-op (idempotent) (82.822474ms)
+  ✔ a live change after the dry-run aborts without writing (92.993735ms)
+  ✔ rollback restores the exact earlier state (replaced fields back, created documents removed) (437.644153ms)
+  ✔ interrupted apply keeps the lock, blocks foreign runs and is resumed idempotently by the same plan (460.754054ms)
+✔ canonical import apply/rollback (emulator) (1879.501175ms)
+(node:2569) MetadataLookupWarning: received unexpected error = Request failed with status code 403 code = UNKNOWN
+▶ imported drafts vs Firestore rules (emulator)
+  ✔ everyone without an admin role is refused (359.500113ms)
+  ✔ a plain admin lists, edits and directly publishes an imported draft (441.439401ms)
+✔ imported drafts vs Firestore rules (emulator) (1230.184831ms)
+(node:2569) MetadataLookupWarning: received unexpected error = Request failed with status code 403 code = UNKNOWN
+✔ source migration and rollback touch only source fields in all access/status collections (1175.722944ms)
+ℹ tests 28
+ℹ suites 3
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20993.886568
+✔  Script exited successfully (code 0)
+i  emulators: Shutting down emulators.
+i  firestore: Stopping Firestore Emulator
+i  hub: Stopping emulator hub
+i  logging: Stopping Logging Emulator

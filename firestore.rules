@@ -66,11 +66,63 @@ service cloud.firestore {
       return request.resource.data.get('priestOnly', false) == false
         && request.resource.data.get('effectivePriestOnly', false) == false;
     }
+    // Optional source/sourceBook strings: canonical for creates/changes; exact
+    // historical values may survive unrelated edits. Access checks remain outside.
+    // BEGIN GENERATED PRAYER SOURCE NAMES
+    function canonicalPrayerSource(value) {
+      return value is string && value in [
+        "",
+        "Новы Запавет",
+        "Рымскі Імшал",
+        "Літургія гадзін",
+        "Кампендый ККК",
+        "Парадак хросту дзяцей",
+        "Парадак пакаяння",
+        "Парадак намашчэння хворых",
+        "Святая Камунія і культ эўхарыстычнай таямніцы па-за Імшой",
+        "Лекцыянарый",
+        "Літургічная агенда",
+        "Божа, мы Цябе ўслаўляем",
+        "Ойча наш",
+        "Прасіце і атрымаеце",
+        "Бог добры",
+        "Каб пазналі Цябе",
+        "Біблія (Чарняўскі)",
+        "Библия. Синодальный перевод",
+        "The Roman Missal",
+        "Catholic.by",
+        "Ave Maria",
+        "katecheta.narod.ru",
+        "kasciolhomiel.by",
+        "Святое Пісанне"
+      ];
+    }
+    // END GENERATED PRAYER SOURCE NAMES
+    function validSourceField(field) {
+      return !(field in request.resource.data)
+        || canonicalPrayerSource(request.resource.data[field])
+        || (request.method == 'update' && field in resource.data
+          && request.resource.data[field] == resource.data[field]);
+    }
+    function validSourceFields() {
+      return validSourceField('source') && validSourceField('sourceBook');
+    }
+    function validPrayerSourceField(field, counterpart) {
+      return validSourceField(field)
+        || (request.method == 'create' && exists(counterpart)
+          && field in get(counterpart).data
+          && request.resource.data[field] == get(counterpart).data[field]);
+    }
+    function validPrayerSources(counterpart) {
+      return validPrayerSourceField('source', counterpart)
+        && validPrayerSourceField('sourceBook', counterpart);
+    }
     match /admins/{uid} { allow read: if own(uid); allow write: if false; }
     // Physical separation preserves old Flutter queries with no new filters.
     match /prayers/{id} {
       allow read: if true;
-      allow create, update: if contentWrite() && publicContent();
+      allow create, update: if contentWrite() && publicContent()
+        && validPrayerSources(/databases/$(database)/documents/priestProtectedPrayers/$(id));
       allow delete: if contentWrite();
     }
     match /prayerCategories/{id} {
@@ -80,7 +132,9 @@ service cloud.firestore {
     }
     match /priestProtectedPrayers/{id} {
       allow read: if isAdmin() || hasGrant();
-      allow create, update, delete: if contentWrite();
+      allow create, update: if contentWrite()
+        && validPrayerSources(/databases/$(database)/documents/prayers/$(id));
+      allow delete: if contentWrite();
     }
     match /priestProtectedCategories/{id} {
       allow read: if isAdmin() || hasGrant();
@@ -131,9 +185,9 @@ service cloud.firestore {
     }
     match /prayerDrafts/{id} {
       allow read: if isAdmin();
-      allow create: if isAdmin() && validDraft(request.resource.data) && request.resource.data.version == 1
+      allow create: if isAdmin() && validDraft(request.resource.data) && validSourceFields() && request.resource.data.version == 1
         && request.resource.data.status == 'draft';
-      allow update: if isAdmin() && validDraftEdit(request.resource.data)
+      allow update: if isAdmin() && validDraftEdit(request.resource.data) && validSourceFields()
         && resource.data.status != 'published'
         && request.resource.data.version == resource.data.version + 1
         && (request.resource.data.status != 'published' || draftPublishedTarget(id, request.resource.data));

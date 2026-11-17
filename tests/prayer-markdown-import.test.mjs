@@ -28,15 +28,15 @@ test('the supplied full collection produces 25 tagged Markdown prayer documents'
   assert.ok(prayers.every((prayer) => !prayer.text.startsWith('# ')));
   assert.equal(
     prayers.find((prayer) => prayer.id === 'import-02-agulny-katekhizis').source,
-    '[https://catholic.by/3/lib/pray/4480-agulny-katekhizis](https://catholic.by/3/lib/pray/4480-agulny-katekhizis)',
+    'Catholic.by',
   );
   assert.equal(
     prayers.find((prayer) => prayer.id === 'import-05-vyanochak-za-kanayuchykh-i-pamerlykh').source,
-    '[https://ave-maria.by/prayers/dead/2940-vyanochak-za-kanayuchykh-i-pamerlykh](https://ave-maria.by/prayers/dead/2940-vyanochak-za-kanayuchykh-i-pamerlykh)',
+    'Ave Maria',
   );
   assert.equal(
     prayers.find((prayer) => prayer.id === 'import-01-malitvy-na-kozhny-dzen-tydnya').source,
-    '[https://catholic.by/3/lib/pray/4484-malitvy-na-kozhny-dzen-tydnya](https://catholic.by/3/lib/pray/4484-malitvy-na-kozhny-dzen-tydnya)',
+    'Catholic.by',
   );
   assert.equal(prayers.filter((prayer) => prayer.source).length, 24);
   assert.equal(prayers.find((prayer) => prayer.id === 'import-malitvy-ajcou-maryjanau').source, '');

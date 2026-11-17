@@ -38,7 +38,7 @@
           <v-card class="card" elevation="0">
             <h2>Крыніца</h2>
             <v-textarea v-model="form.source" label="Крыніца" variant="outlined" rows="2" auto-grow hide-details="auto" :readonly="locked" />
-            <p class="hint">Крыніца з імпартаванай кнігі і старонак падстаўляецца аўтаматычна. Яе можна адрэдагаваць як звычайны тэкст.</p>
+            <p class="hint">Толькі кароткая назва крыніцы, без старонак. Поўныя звесткі — на старонцы «Крыніцы».</p>
           </v-card>
         </div>
 
@@ -115,7 +115,7 @@ import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue'
 import { usePrayers } from '@/composables/usePrayers';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { renderPrayerMarkdown } from '@/utils/prayerMarkdown';
-import { DRAFT_ORIGINS, DRAFT_REASON_LABELS, DRAFT_STATUS_LABELS, draftSourceNotice, findDuplicateCandidates, normalizeDraftStatus, publishBlockers, targetPrayerIdFor } from '@/utils/prayerDraftModel.mjs';
+import { DRAFT_ORIGINS, DRAFT_REASON_LABELS, DRAFT_STATUS_LABELS, draftSourceNotice, draftSourcePatch, findDuplicateCandidates, normalizeDraftStatus, publishBlockers, targetPrayerIdFor } from '@/utils/prayerDraftModel.mjs';
 import { getDraftActions } from '@/services/prayerDraftService';
 
 const route = useRoute();
@@ -176,7 +176,7 @@ async function load() {
 async function save(status) {
   busy.value = 'save'; message.value = null;
   try {
-    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, source: form.value.source.trim() };
+    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, ...draftSourcePatch(draft.value, form.value.source) };
     await actions.saveDraft(draft.value.id, patch, { expectedVersion: draft.value.version, status });
     message.value = { type: 'success', text: status ? `Статус: ${DRAFT_STATUS_LABELS[status]}.` : 'Чарнавік захаваны.' };
     await load();
@@ -187,7 +187,7 @@ async function publish() {
   busy.value = 'publish'; message.value = null;
   try {
     // Unsaved edits go first, so exactly the confirmed text is published.
-    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, source: form.value.source.trim() };
+    const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, ...draftSourcePatch(draft.value, form.value.source) };
     await actions.saveDraft(draft.value.id, patch, { expectedVersion: draft.value.version });
     const fresh = await actions.getDraft(draft.value.id);
     const result = await actions.publishDraft(draft.value.id, { replaceId: replaceId.value || undefined, acknowledgeDuplicates: acknowledge.value, expectedVersion: fresh.version });

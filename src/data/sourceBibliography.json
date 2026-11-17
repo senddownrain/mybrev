@@ -11,7 +11,9 @@
       "notices": [
         "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2017"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Новы Запавет",
+      "aliases": []
     },
     {
       "id": "rymski-imshal-2004",
@@ -19,7 +21,11 @@
       "notices": [
         "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2004"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Рымскі Імшал",
+      "aliases": [
+        "Рымскі Імшал для дыяцэзій на Беларусі"
+      ]
     },
     {
       "id": "liturhiya-hadzinau-2012-2020",
@@ -27,7 +33,13 @@
       "notices": [
         "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2012-2020"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Літургія гадзін",
+      "aliases": [
+        "Літургія гадзінаў",
+        "Літургія гадзінаў MyBrev — Агульныя тэксты пра Найсвяцейшую Панну Марыю",
+        "Літургія гадзінаў MyBrev — Агульныя тэксты за памерлых"
+      ]
     },
     {
       "id": "kampendyi-2010",
@@ -35,7 +47,11 @@
       "notices": [
         "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2010"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Кампендый ККК",
+      "aliases": [
+        "Катэхізіс Каталіцкага Касцёла. Кампендый"
+      ]
     },
     {
       "id": "paradak-khrostu-2026",
@@ -43,7 +59,9 @@
       "notices": [
         "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2026"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Парадак хросту дзяцей",
+      "aliases": []
     },
     {
       "id": "paradak-pakajannia-2016",
@@ -51,7 +69,9 @@
       "notices": [
         "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2016"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Парадак пакаяння",
+      "aliases": []
     },
     {
       "id": "paradak-namashchennia-2009",
@@ -59,7 +79,9 @@
       "notices": [
         "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2009"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Парадак намашчэння хворых",
+      "aliases": []
     },
     {
       "id": "sviataja-kamunija-2017",
@@ -67,7 +89,9 @@
       "notices": [
         "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2017"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Святая Камунія і культ эўхарыстычнай таямніцы па-за Імшой",
+      "aliases": []
     },
     {
       "id": "lektsyjanaryi-2002-2005",
@@ -75,7 +99,9 @@
       "notices": [
         "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2002-2005"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Лекцыянарый",
+      "aliases": []
     },
     {
       "id": "liturhichnaja-ahenda-2010",
@@ -83,7 +109,9 @@
       "notices": [
         "© Мінска-Магілёўская архідыяцэзія, 2010"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Літургічная агенда",
+      "aliases": []
     },
     {
       "id": "bozha-my-tsiabe-uslavljajem-2026",
@@ -91,7 +119,9 @@
       "notices": [
         "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2026"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Божа, мы Цябе ўслаўляем",
+      "aliases": []
     },
     {
       "id": "ojcha-nash-2022",
@@ -100,7 +130,9 @@
         "© Камісія Божага Культу і Дысцыпліны Сакрамэнтаў, 2022",
         "© Выдавецтва «Про Хрысто», 2022"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Ойча наш",
+      "aliases": []
     },
     {
       "id": "prasitsee-i-atrymaetse-2024",
@@ -108,7 +140,9 @@
       "notices": [
         "© Выдавецтва «Про Хрысто», 2024"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Прасіце і атрымаеце",
+      "aliases": []
     },
     {
       "id": "bog-dobry-2018",
@@ -116,7 +150,14 @@
       "notices": [
         "© Выдавецтва Пінскай дыяцэзіі, 2018"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Бог добры",
+      "aliases": [],
+      "details": [
+        "«Бог Добры», ІІІ выданне (Пінск, 2022)",
+        "© Пінская дыяцэзія, 2022",
+        "© Выдавецтва Пінскай дыяцэзіі Рымска-Каталіцкага Касцёла ў РБ, 2022"
+      ]
     },
     {
       "id": "kab-paznali-tsiabe-2014",
@@ -124,7 +165,9 @@
       "notices": [
         "© Выдавецтва Гродзенскай дыяцэзіі, 2014"
       ],
-      "section": "Касцёльныя крыніцы"
+      "section": "Касцёльныя крыніцы",
+      "shortTitle": "Каб пазналі Цябе",
+      "aliases": []
     },
     {
       "id": "biblia-charniauski-2017",
@@ -135,13 +178,120 @@
       "notices": [
         "© «Біблійнае таварыства ў Рэспубліцы Беларусь», 2017"
       ],
-      "section": "Іншыя крыніцы"
+      "section": "Іншыя крыніцы",
+      "shortTitle": "Біблія (Чарняўскі)",
+      "aliases": [
+        "«Біблія» (Мінск, 2017)"
+      ]
     },
     {
       "id": "biblia-synodal",
       "title": "«Біблія» Синодальный перевод",
       "notices": [],
-      "section": "Іншыя крыніцы"
+      "section": "Іншыя крыніцы",
+      "shortTitle": "Библия. Синодальный перевод",
+      "aliases": [
+        "«Біблія» Синодальный перевод"
+      ]
+    },
+    {
+      "id": "roman-missal-english",
+      "title": "The Roman Missal — English translation (2010); Order of Mass compilation (2011)",
+      "shortTitle": "The Roman Missal",
+      "aliases": [
+        "Excerpts from the English translation of The Roman Missal © 2010, International Commission on English in the Liturgy Corporation. All rights reserved. Compilation & layout © 2011 Catholic Bishops’ Conference of England and Wales. www.missal.org.uk"
+      ],
+      "notices": [
+        "© 2010, International Commission on English in the Liturgy Corporation. All rights reserved.",
+        "Compilation & layout © 2011 Catholic Bishops’ Conference of England and Wales."
+      ],
+      "details": [
+        "www.missal.org.uk"
+      ],
+      "section": "Касцёльныя крыніцы",
+      "evidence": [
+        "src/data/mass/order-of-mass.ritual.json"
+      ]
+    },
+    {
+      "id": "catholic-by",
+      "title": "Catholic.by",
+      "shortTitle": "Catholic.by",
+      "aliases": [],
+      "digitalHosts": [
+        "catholic.by",
+        "old.catholic.by"
+      ],
+      "details": [
+        "https://catholic.by"
+      ],
+      "notices": [],
+      "section": "Іншыя крыніцы",
+      "evidence": [
+        "ibreviarybyapp/assets/content/prayers.json.gz"
+      ]
+    },
+    {
+      "id": "ave-maria",
+      "title": "Ave Maria",
+      "shortTitle": "Ave Maria",
+      "aliases": [],
+      "digitalHosts": [
+        "ave-maria.by"
+      ],
+      "details": [
+        "https://ave-maria.by"
+      ],
+      "notices": [],
+      "section": "Іншыя крыніцы",
+      "evidence": [
+        "ibreviarybyapp/assets/content/prayers.json.gz"
+      ]
+    },
+    {
+      "id": "katecheta",
+      "title": "katecheta.narod.ru",
+      "shortTitle": "katecheta.narod.ru",
+      "aliases": [],
+      "digitalHosts": [
+        "katecheta.narod.ru"
+      ],
+      "details": [
+        "https://katecheta.narod.ru"
+      ],
+      "notices": [],
+      "section": "Іншыя крыніцы",
+      "evidence": [
+        "ibreviarybyapp/assets/content/prayers.json.gz"
+      ]
+    },
+    {
+      "id": "kasciolhomiel",
+      "title": "kasciolhomiel.by",
+      "shortTitle": "kasciolhomiel.by",
+      "aliases": [],
+      "digitalHosts": [
+        "kasciolhomiel.by"
+      ],
+      "details": [
+        "https://kasciolhomiel.by"
+      ],
+      "notices": [],
+      "section": "Іншыя крыніцы",
+      "evidence": [
+        "ibreviarybyapp/assets/content/prayers.json.gz"
+      ]
+    },
+    {
+      "id": "sviatoe-pisanne",
+      "title": "Святое Пісанне",
+      "shortTitle": "Святое Пісанне",
+      "aliases": [],
+      "details": [
+        "Выданні і пераклады пададзены ў бібліяграфічных запісах Святога Пісання на гэтай старонцы."
+      ],
+      "notices": [],
+      "section": "Касцёльныя крыніцы"
     }
   ]
 }

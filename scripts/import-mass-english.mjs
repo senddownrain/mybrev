@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+
+import { sourceForSave } from '../src/utils/prayerSource.mjs';
 // Publishes the bundled English Order of Mass (MCFL.pdf) as the prayer document
 // referenced by the Holy Mass ritual. Dry run by default; `--apply` creates the
 // document only when it does not exist yet and never overwrites edits.
@@ -32,7 +34,7 @@ async function main() {
     textFormat: 'mybrev-markdown',
     textFormatVersion: 1,
     tags: ['Святая Імша'],
-    source: variant.source,
+    source: sourceForSave(variant.source),
   };
   const plan = { collection: 'prayers', documentId: variant.prayerId, policy: 'create-only-never-overwrite', document };
   await mkdir(path.dirname(options.output), { recursive: true });

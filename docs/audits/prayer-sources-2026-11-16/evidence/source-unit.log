@@ -1,0 +1,18 @@
+✔ known sources are canonical, without pages, ranges, editions or legal notices; idempotent (4.822929ms)
+✔ every configured book importer uses a registered short source (2.10731ms)
+✔ unknown and mixed sources are preserved, never guessed or mechanically truncated (5.800224ms)
+✔ document/Markdown import and historical source extraction plan normalize before saving (2.467254ms)
+✔ all import document constructors and publication normalize without changing prayer text (0.925857ms)
+✔ manual content writer and draft create/edit use the common normalizer (3.304386ms)
+✔ audit covers published, ordinary and closed drafts, protected and unknown records; patch contains source fields only (3.047249ms)
+✔ apply persists journal before writes, acknowledges each write, samples readback and stops on 429 without retry (2.662769ms)
+✔ /sources preserves complete notices and English Mass uses the canonical attribution (0.688509ms)
+✔ offline Flutter bundle candidate preserves all non-source data and old decoder schema (1.719075ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 139.029922

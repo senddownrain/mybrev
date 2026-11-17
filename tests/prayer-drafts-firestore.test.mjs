@@ -24,7 +24,7 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
   };
   const actions = (db, uid) => createDraftActions({ db, fs, actorUid: uid, writer: createPrayerContentWriter({ db, fs }) });
   const denied = (operation) => assert.rejects(operation, { code: 'permission-denied' });
-  const baseDraft = (over = {}) => ({ title: 'Новая малітва', text: 'Тэкст малітвы.', tags: ['Літанія'], source: '«Кніга»', priestOnly: false, ...over });
+  const baseDraft = (over = {}) => ({ title: 'Новая малітва', text: 'Тэкст малітвы.', tags: ['Літанія'], source: 'Бог добры', priestOnly: false, ...over });
   let roles;
   before(async () => {
     for (const name of ['prayers', 'priestProtectedPrayers', 'priestProtectedCategories', 'prayerCategories', 'prayerDrafts', 'priestContentControl', 'admins', 'priestDeviceGrants']) await seed.recursiveDelete(seed.collection(name));
@@ -89,7 +89,7 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
       assert.equal(result.alreadyPublished, false);
       const prayer = (await getDoc(doc(roles.anon, `prayers/${result.id}`))).data();
       assert.equal(prayer.title, 'Літанія тэставая'); assert.equal(prayer.sourceDraftId, 'bd_one'); assert.equal(prayer.priestOnly, false);
-      assert.match(prayer.source, /Кніга/); assert.deepEqual(prayer.copyrightNotices, []);
+      assert.match(prayer.source, /Бог добры/); assert.deepEqual(prayer.copyrightNotices, []);
       const draft = await api.getDraft('bd_one');
       assert.equal(draft.status, 'published'); assert.equal(draft.publishedBy, 'plain'); assert.equal(draft.targetPrayerId, result.id);
       assert.ok((await api.listAudit('bd_one')).some((e) => e.action === 'publish' && e.targetPrayerId === result.id));
@@ -166,7 +166,7 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
   it('old intermediate and archived statuses can be saved as draft and published', async () => {
     const api = actions(roles.plain, 'plain');
     await seed.doc('prayerDrafts/old_review').set({ ...baseDraft({ title: 'Старая праверка' }), draftId: 'old_review', textFormat: 'mybrev-markdown', status: 'needs_review', version: 1 });
-    await api.saveDraft('old_review', { source: 'Абноўленая крыніца' });
+    await api.saveDraft('old_review', { source: 'Рымскі Імшал' });
     assert.equal((await api.getDraft('old_review')).status, 'draft');
     await seed.doc('prayerDrafts/old_archive').set({ ...baseDraft({ title: 'Стары архіў' }), draftId: 'old_archive', textFormat: 'mybrev-markdown', status: 'archived', version: 1 });
     const { id } = await api.publishDraft('old_archive');
@@ -214,4 +214,53 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
     const before = await api.getDraft('bd_two_states');
     await denied(updateDoc(doc(roles.plain, 'prayerDrafts/bd_two_states'), { status: 'needs_review', version: before.version + 1 }));
   });
+  it('server guard rejects old forms while preserving unchanged unknown attribution in all prayer stores', async () => {
+    const db = roles.plain;
+    const raw = '  Невядомая кніга (1950), с. 127. © Аўтар. \n';
+    const writePrayer = async (collectionName, id, data, replace = false) => {
+      const control = doc(db, 'priestContentControl/state');
+      const version = (await getDoc(control)).data().version;
+      const batch = fs.writeBatch(db);
+      batch.update(control, { version: version + 1, lockUid: '', updatedAt: serverTimestamp() });
+      if (replace) batch.update(doc(db, collectionName, id), data);
+      else batch.set(doc(db, collectionName, id), data);
+      await batch.commit();
+    };
+    for (const collectionName of ['prayers', 'priestProtectedPrayers']) {
+      const id = `source_guard_${collectionName}`;
+      const data = { ...baseDraft(), textFormat: 'mybrev-markdown', priestOnly: collectionName !== 'prayers' };
+      await writePrayer(collectionName, id, data);
+      await denied(writePrayer(collectionName, id, {source:'Бог добры, с. 127'}, true));
+      await denied(writePrayer(collectionName, `${id}_bad`, {...data,source:raw}));
+      await denied(writePrayer(collectionName, `${id}_book`, {...data,sourceBook:'Бог добры, т. II'}, false));
+      await seed.doc(`${collectionName}/${id}`).update({source:raw});
+      await writePrayer(collectionName,id,{title:'Дазволенае рэдагаванне'},true);
+      assert.equal((await seed.doc(`${collectionName}/${id}`).get()).data().source,raw);
+      await denied(writePrayer(collectionName,id,{source:'Іншая невядомая'},true));
+      await writePrayer(collectionName,id,{source:'Бог добры'},true);
+      // A still-open old form cannot undo the source-only migration.
+      await denied(writePrayer(collectionName,id,{source:raw},true));
+    }
+    const api=actions(db,'plain');
+    await seed.doc('prayerDrafts/source_guard_legacy').set({
+      ...baseDraft({source:raw}),draftId:'source_guard_legacy',textFormat:'mybrev-markdown',status:'draft',version:1,
+    });
+    await api.saveDraft('source_guard_legacy',{title:'Новая назва',source:raw.trim()},{expectedVersion:1});
+    assert.equal((await seed.doc('prayerDrafts/source_guard_legacy').get()).data().source,raw);
+    await denied(updateDoc(doc(db,'prayerDrafts/source_guard_legacy'),{source:'Бог добры, с. 1',version:3}));
+    await denied(setDoc(doc(db,'prayerDrafts/source_guard_new'),{
+      ...baseDraft({source:'Бог добры, с. 1'}),draftId:'source_guard_new',textFormat:'mybrev-markdown',status:'draft',version:1,
+    }));
+    await api.saveDraft('source_guard_legacy',{source:'Бог добры'},{expectedVersion:2});
+    await denied(updateDoc(doc(db,'prayerDrafts/source_guard_legacy'),{source:raw,version:4}));
+  });
+  it('moving a legacy prayer to protected storage retains unknown source exactly', async () => {
+    const raw='Невядомая кніга, том III, с. 5';
+    await seed.doc('prayers/source_guard_move').set({...baseDraft({source:raw}),textFormat:'mybrev-markdown'});
+    const writer=createPrayerContentWriter({db:roles.plain,fs});
+    await writer.mutate((content)=>{content.prayers.find((p)=>p.id==='source_guard_move').priestOnly=true;});
+    assert.equal((await seed.doc('priestProtectedPrayers/source_guard_move').get()).data().source,raw);
+    assert.equal((await seed.doc('prayers/source_guard_move').get()).exists,false);
+  });
+
 });

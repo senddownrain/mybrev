@@ -8,7 +8,7 @@
     "content:version:bump": "node scripts/bump-content-revision.mjs",
     "predev": "npm run icons:generate",
     "dev": "node --no-deprecation ./node_modules/vite/bin/vite.js",
-    "prebuild": "npm run icons:generate",
+    "prebuild": "npm run icons:generate && node scripts/generate-prayer-source-rules.mjs --check",
     "build": "node --no-deprecation ./node_modules/vite/bin/vite.js build",
     "deploy:hosting": "npm run build && firebase deploy --only hosting",
     "release:hosting": "node scripts/ensure-clean-worktree.mjs && git push && npm run deploy:hosting",
@@ -120,7 +120,10 @@
     "test:doxologies": "node --test tests/psalmody-doxology.test.mjs",
     "verify:doxologies": "node scripts/liturgy/verify-doxologies.mjs",
     "audit:common-texts": "node scripts/liturgy/audit-common-texts.mjs",
-    "test:common-texts": "node --test tests/liturgical-common-texts.test.mjs"
+    "test:common-texts": "node --test tests/liturgical-common-texts.test.mjs",
+    "db:unify-prayer-sources": "node scripts/unify-prayer-sources.mjs",
+    "test:prayer-sources": "node --test tests/prayer-source-unification.test.mjs tests/prayer-draft-model.test.mjs tests/prayer-import-plan.test.mjs tests/prayer-import-bog.test.mjs tests/prayer-import-editorial.test.mjs tests/prayer-import-plan-hash.test.mjs tests/source-documents.test.mjs tests/sources.test.mjs",
+    "smoke:prayer-sources": "node scripts/smoke-prayer-source-unification.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { sourceForSave } from '../src/utils/prayerSource.mjs';
+
 import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
 import os from 'node:os';
@@ -107,7 +109,7 @@ export function extractEmbeddedSource(markdown) {
   return { text, source: `[${url}](${url})` };
 }
 
-function sourceToPrayer(id, markdown, tags) {
+export function sourceToPrayer(id, markdown, tags) {
   const normalized = markdown.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n');
   const match = /^#\s+(.+?)\s*\n(?:\n|$)/m.exec(normalized);
   if (!match) throw new Error(`${id} does not contain a level-one Markdown title`);
@@ -118,7 +120,7 @@ function sourceToPrayer(id, markdown, tags) {
   );
   return {
     id: `import-${id.replace(/\.md$/, '').replace(/[^a-z0-9]+/gi, '-')}`.toLowerCase(),
-    source: extracted.source,
+    source: sourceForSave(extracted.source),
     title: match[1].trim(),
     text: extracted.text,
     tags,

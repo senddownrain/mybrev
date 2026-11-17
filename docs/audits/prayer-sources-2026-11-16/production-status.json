@@ -1,0 +1,22 @@
+{
+  "project": "ibreviaryby",
+  "database": "(default)",
+  "edition": "STANDARD",
+  "firestore": {
+    "operation": "documents:listCollectionIds",
+    "httpStatus": 429,
+    "message": "Quota exceeded. RESOURCE_EXHAUSTED",
+    "automaticRetries": 0,
+    "prayerDocumentsRead": 0,
+    "documentsWritten": 0
+  },
+  "hosting": {
+    "released": false,
+    "httpStatus": 403,
+    "endpoint": "https://firebase.googleapis.com/v1beta1/projects/ibreviaryby",
+    "message": "The caller does not have permission"
+  },
+  "manifestChanged": false,
+  "snapshotAvailable": false,
+  "flutterSDKAvailable": false
+}

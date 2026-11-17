@@ -31,10 +31,10 @@ test('validation and publish blockers', () => {
   assert.ok(publishBlockers({ ...draft, sourceBook: '', source: '' }).length);
   assert.equal(draftSourceNotice({ ...draft, source: 'Рэдакцыйная крыніца' }), 'Рэдакцыйная крыніца');
 });
-test('published document: reader fields only, deduped tags, book source with rights, no PDF hashes', () => {
+test('published document: reader fields only, deduped tags, short book source, no PDF hashes', () => {
   const prayer = buildPrayerFromDraft({ ...draft, sourceSha256: 'abc', notes: 'private', reason: 'ambiguous' });
   assert.equal(prayer.title, 'Літанія'); assert.deepEqual(prayer.tags, ['Літанія']);
-  assert.equal(prayer.source, '«Бог Добры» (Пінск, 2022), с. 10–12. © Пінская дыяцэзія, 2022');
+  assert.equal(prayer.source, 'Бог добры');
   assert.ok(!('sourceSha256' in prayer) && !('notes' in prayer) && !('reason' in prayer));
   assert.equal(prayer.sourceDraftId, 'd1'); assert.equal(targetPrayerIdFor(draft), 'd_d1');
 });
@@ -42,4 +42,4 @@ test('replacement keeps other language versions of a multi-language prayer', () 
   const prayer = buildPrayerFromDraft(draft, { existing: { titleVersions: { be: 'a', ru: 'b' }, textVersions: { be: 'x', ru: 'y' } } });
   assert.deepEqual(prayer.textVersions, { be: 'Кірые', ru: 'y' }); assert.deepEqual(prayer.titleVersions, { be: 'Літанія', ru: 'b' });
 });
-test('source notice without pages', () => assert.equal(formatSourceNotice({ book: 'Кніга', copyrightNotices: ['© A', '© A'] }), 'Кніга. © A'));
+test('source notice without pages', () => assert.equal(formatSourceNotice({ book: 'Бог добры', copyrightNotices: ['© A', '© A'] }), 'Бог добры'));
