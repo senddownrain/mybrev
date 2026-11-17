@@ -24,6 +24,8 @@ on:
       - 'src/components/oraparts/LastPrayer.vue'
       - 'src/components/oraparts/DayTitle.vue'
       - 'src/components/OrasList.vue'
+      # Publish Ordo-backed fixed celebration labels in the Hours reader.
+      - 'src/utils/ordoDayOptions.js'
       - 'src/styles/main.scss'
       # Draft editor and its Firestore policy are deployed together.
       - 'src/views/admin/PrayerDraftEditor.vue'
