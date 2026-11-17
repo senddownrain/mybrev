@@ -1,3 +1,29 @@
+// Antiphon labels are rubrics; never change the text of the antiphon itself.
+const antiphonSpace = String.raw`(?:\s|&nbsp;|&#0*160;|&#x0*a0;)`;
+const antiphonLabelStart = new RegExp(
+  String.raw`^(${antiphonSpace}*)((?:[1-9]${antiphonSpace}*)?ант\.)(${antiphonSpace}*да${antiphonSpace}+[^:<\r\n]{1,80}:)?`,
+  'iu',
+);
+
+/** Style the leading label only; retain the complete, original source HTML. */
+export function markAntiphonLabel(html) {
+  const source = String(html || '');
+  const mark = (leadingText) => {
+    const match = antiphonLabelStart.exec(leadingText);
+    if (!match) return leadingText;
+    const label = match[2] + (match[3] || '');
+    return `${match[1]}<span class="ora-antiphon-label">${label}</span>${leadingText.slice(match[0].length)}`;
+  };
+  if (/<p\b/iu.test(source)) {
+    return source.replace(
+      /(<p\b[^>]*>)([^<]*)/giu,
+      (_full, openingTag, leadingText) => openingTag + mark(leadingText),
+    );
+  }
+  // Legacy plain-text antiphons do not always have a paragraph wrapper.
+  return source.includes('<') ? source : mark(source);
+}
+
 import { removeMatchingPsalmAntiphons } from './liturgicalSourceHtml.js';
 
 /**
