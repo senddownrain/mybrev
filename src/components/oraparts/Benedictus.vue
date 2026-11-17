@@ -5,7 +5,7 @@
                 ПЕСНЯ ЗАХАРЫІ
             </v-card-title>
             <v-card-text class="ora-text">
-                <alternative-text v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" aria-label="Выбар антыфоны" />
+                <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" aria-label="Выбар антыфоны" />
                 
                 <!-- <div v-html="ps1"></div> -->
                 <p class="ora-sub">
@@ -15,7 +15,7 @@
                 </p>
                 <PsalmText :html="formatPsalm(ben)" />
                
-                <alternative-text v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" :show-picker="false" />
+                <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" :show-picker="false" />
             </v-card-text>
         </v-card>
     </div>
