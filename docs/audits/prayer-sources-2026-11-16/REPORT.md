@@ -1,6 +1,6 @@
 # Унификация источников молитв — результат и остаток
 
-Дата: 2026-11-16. Код Web и миграция подготовлены; production Firestore, manifest и Hosting не обновлены. После уточнения владельца работа продолжалась только офлайн. PR не означает разрешения production-записи.
+Дата аудита: 2026-11-16; продолжение: 2026-11-17. Код Web и миграция подготовлены; production Firestore, manifest и Hosting не обновлены. После уточнения владельца работа продолжалась только офлайн. PR не означает разрешения production-записи.
 
 ## Точные числа и границы аудита
 
@@ -78,11 +78,11 @@ node scripts/unify-prayer-sources.mjs --rollback --plan backups/prayer-sources-r
 
 ## Проверки
 
-- Полный Web suite: 1 362 успешно, 22 пропущены, 0 ошибок (1 384 зарегистрировано); результат в `evidence/full-suite.log`; целевые source tests проверяют страницы, диапазоны, тома, годы, одноимённые источники, ручное сохранение, draft save/publish, Markdown/bulk import, неизвестные источники, повторное сохранение, checksum и маски.
-- Firestore emulator: 27/27 успешно — реальные admin/draft/import транзакции, создание/редактирование/публикация, source-only REST migration, точный round-trip rollback и отказ при устаревшем updateTime. Production не используется.
+- Полный Web suite: 1 370 успешно, 22 пропущены, 0 ошибок (1 392 зарегистрировано); результат в `evidence/full-suite.log`; целевые source tests проверяют страницы, диапазоны, тома, годы, одноимённые источники, ручное сохранение, draft save/publish, Markdown/bulk import, неизвестные источники, повторное сохранение, checksum и маски.
+- Firestore emulator: 28/28 успешно — реальные admin/draft/import транзакции, создание/редактирование/публикация, source-only REST migration, точный round-trip rollback и отказ при устаревшем updateTime. Production не используется.
 - ESLint изменённых модулей и Vue-компонентов прошёл; production Web build прошёл.
 - Chromium: `/sources` и обычная молитва, 390/1440 px, light/dark, без JS-ошибок и горизонтального overflow. Библейский текст `Пс 23, 1–6. Ян 3, 16` сохранён. Скриншоты просмотрены. Воспроизведение: `npm run build`, `npm run preview -- --host 127.0.0.1`, `npm run smoke:prayer-sources`. Все внешние запросы, включая Firebase, в smoke блокируются.
-- Flutter SDK отсутствует; Dart unit/widget/analyze и Flutter Chrome visual smoke не заявляются выполненными. Подготовлены patch и тесты, старый shipped bundle не изменён.
+- В продолжении 2026-11-17 установлен Flutter 3.41.4 / Dart 3.11.1. Форматирование, analyze по CI-политике --no-fatal-infos и 50 целевых тестов прошли (6 source tests). Обычная молитва и office проверены в реальном Google Chrome на 390px, light/dark 200%, с прокруткой и переходом по ссылке. Скриншоты просмотрены; все внешние запросы приложения блокировались, CanvasKit того же engine и bootstrap font загружались из локального cache. Native/app release не выполнялся. Старый shipped bundle не изменён.
 
 Подробный контракт, офлайн-кандидат prayers bundle и порядок согласования с пакетом PR #245/#255: [FLUTTER_CONTRACT.md](FLUTTER_CONTRACT.md). 7 791 литургическое исправление не подменяет snapshot молитв и не включено в эту source-only миграцию.
 
@@ -99,5 +99,11 @@ node scripts/unify-prayer-sources.mjs --rollback --plan backups/prayer-sources-r
 - [x] Код всех обнаруженных путей добавления/сохранения больше не записывает страницы; неизвестные значения блокируются. Production deploy ещё не выполнен.
 - [x] Все обнаруженные механизмы импорта исправлены в коде и проверены доступными fixtures.
 - [x] Единая справочная страница `/sources` сохранена с полной библиографией и notices.
-- [ ] Web и Flutter проверены до готовности релиза — Web прошёл проверки, контракт/Flutter patch готовы, SDK/Chrome Flutter проверки впереди.
+- [x] Web и Flutter совместимы на уровне кода и проверенного локального reader: Web suite/Chrome и Flutter analyze/50 tests/Google Chrome прошли. Установленный мобильный релиз и production-синхронизация отдельно не заявляются.
 - [ ] Production Firestore обновлён с подтверждением записи — записей 0.
+
+## Продолжение 2026-11-17
+
+PR Web: https://github.com/senddownrain/mybrev/pull/259; companion Flutter: https://github.com/senddownrain/ibreviarybyapp/pull/114. Web CI исходного PR прошёл. Ветка обновлена поверх #260, сохранив исправление публикации legacy drafts и неизменяемую дополнительную metadata. Свежий локальный Web suite: 1 370 passed, 22 skipped; эмулятор: 28 passed. Ошибки прежнего повторного запуска из ограниченного sandbox были EPERM/Chrome sandbox и не воспроизводятся при разрешённом локальном запуске; проверки не ослаблялись.
+
+За продолжение 17 ноября production Firestore: 0 чтений, 0 записей. Production manifest, Hosting и shipped Flutter bundle не менялись. Миграция production и полный аудит актуальных drafts/protected остаются отдельным этапом из handoff, а не результатом этого PR.

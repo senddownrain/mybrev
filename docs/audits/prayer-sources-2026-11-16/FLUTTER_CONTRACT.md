@@ -17,11 +17,11 @@
 Checkout `senddownrain/ibreviarybyapp` проверен на commit `66288466d6a6ef8c9bfded22fe63bcc71a1337f3`.
 Старая модель Prayer игнорировала `source`, поэтому старая установленная версия не ломается от короткой строки, но обычную атрибуцию не показывает. Подготовлены изменения модели (`fromMap`, `toMap`, `copyWith`), примечания источника для обычной молитвы и devotional office и четыре Dart-теста. English Mass использует короткое `The Roman Missal`; полный notice сохранён в Web `/sources`.
 
-Flutter/Dart SDK в этой среде нет. `flutter analyze`, `dart format`, `flutter test` и обязательный Flutter Chrome visual smoke не выполнены. Это блокер готовности Flutter-релиза, не блокер Web PR. Перед релизом выполнить:
+Продолжение 2026-11-17: установлен Flutter 3.41.4 / Dart 3.11.1; форматирование, analyze по CI-политике --no-fatal-infos, все 50 целевых tests и реальный Chrome visual smoke выполнены. Native/установленный мобильный релиз не проверялись. Результаты: companion Flutter PR #114, audit-evidence/prayer-sources/. Анализатор сообщает 29 прежних info, без ошибок и предупреждений; новых diagnostics в изменённых файлах нет. Перед релизом выполнить:
 
 ```sh
 dart format lib/models/prayer.dart lib/widgets/prayer_content.dart lib/screens/prayer_detail_screen.dart test/prayer_source_test.dart
-flutter analyze
+flutter analyze --no-fatal-infos
 flutter test test/prayer_source_test.dart test/prayer_formatting_widget_test.dart test/mass_reader_test.dart
 flutter devices
 flutter run -d chrome -t tool/prayer_formatting_smoke.dart --web-port 5237

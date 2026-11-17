@@ -99,14 +99,14 @@ jobs:
           printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
 
-      # Web can be published with the previous rules (they already accept draft -> published).
-      # The rules step remains mandatory and visibly fails if the service account lacks IAM.
-      - name: Deploy Hosting only
-        run: npx --yes firebase-tools@latest deploy --only hosting --project ibreviaryby --non-interactive
-
+      # Publish the approved security rules BEFORE the new draft editor.
+      # If rules deployment is denied, keep the existing Web release unchanged.
       - name: Deploy Firestore rules for approved draft workflow change
         if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[deploy-draft-rules]')
         run: npx --yes firebase-tools@latest deploy --only firestore:rules --project ibreviaryby --non-interactive
+
+      - name: Deploy Hosting only
+        run: npx --yes firebase-tools@latest deploy --only hosting --project ibreviaryby --non-interactive
 
       - name: Clean up credentials
         if: always()

@@ -94,6 +94,27 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
       assert.equal(draft.status, 'published'); assert.equal(draft.publishedBy, 'plain'); assert.equal(draft.targetPrayerId, result.id);
       assert.ok((await api.listAudit('bd_one')).some((e) => e.action === 'publish' && e.targetPrayerId === result.id));
     });
+  it('plain admin can edit and publish legacy imported drafts with extra immutable metadata', async () => {
+      const id = 'legacy_import_extra';
+      const api = actions(roles.plain, 'plain');
+      await seed.doc(`prayerDrafts/${id}`).set({
+        ...baseDraft({ title: 'Імпартаваная старая малітва' }),
+        draftId: id, textFormat: 'mybrev-markdown', status: 'needs_review', version: 1,
+        legacyImportAnnotation: { origin: 'old importer' },
+      });
+      // Additional historical fields must remain immutable for clients.
+      await denied(updateDoc(doc(roles.plain, `prayerDrafts/${id}`), {
+        legacyImportAnnotation: { origin: 'tampered' }, status: 'draft', version: 2,
+      }));
+      await api.saveDraft(id, { title: 'Адрэдагаваная старая малітва' }, { expectedVersion: 1 });
+      assert.equal((await api.getDraft(id)).status, 'draft');
+      const result = await api.publishDraft(id);
+      assert.equal(result.alreadyPublished, false);
+      assert.equal((await getDoc(doc(roles.anon, `prayers/${result.id}`))).data().title, 'Адрэдагаваная старая малітва');
+      const stored = (await seed.doc(`prayerDrafts/${id}`).get()).data();
+      assert.equal(stored.status, 'published');
+      assert.deepEqual(stored.legacyImportAnnotation, { origin: 'old importer' });
+    });
   it('repeat publish is idempotent', async () => {
       const api = actions(roles.boss, 'boss');
       const first = (await api.getDraft('bd_one')).targetPrayerId;
