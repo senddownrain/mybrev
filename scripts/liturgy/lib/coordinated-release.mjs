@@ -187,9 +187,9 @@ export function loadVerifiedPreflightCheckpoint({ plan, previous, authorization,
   return records;
 }
 
-export function catalogEntry(document, record) {
+export function catalogEntry(document, record, allowedCollections = COORDINATED_COLLECTIONS) {
   const [name, id] = document.split('/');
-  check(COORDINATED_COLLECTIONS.includes(name) && id && record?.updateTime, 'Invalid live catalog record');
+  check(allowedCollections.includes(name) && id && record?.updateTime, 'Invalid live catalog record');
   const stored = storedDocument(id, record.data);
   check(validateCollection(name, [stored]).length === 0, `Invalid public document ${document}`);
   const described = describeDocuments([stored]);
@@ -260,7 +260,7 @@ export function verifyProjectedTargets(plan, records, contract) {
 
 export function describeCatalog(catalog, contract) {
   const described = {};
-  for (const name of COORDINATED_COLLECTIONS) {
+  for (const name of (contract.collections || COORDINATED_COLLECTIONS)) {
     const items = Object.entries(catalog).filter(([document]) => document.startsWith(name + '/'));
     const hashes = Object.fromEntries(items.map(([document, entry]) => [document.split('/')[1], entry.hash]));
     const sizes = Object.fromEntries(items.map(([document, entry]) => [document.split('/')[1], entry.bytes]));
@@ -281,7 +281,7 @@ export function coordinatedManifestPlan(described, manifestRecords, authorizatio
   const baseline = manifestRecords.get('contentManifest/current')?.data;
   check(baseline?.schemaVersion === 1 && valueSha256(baseline) === authorization.manifestBaselineSha256, 'Published manifest baseline changed');
   check(now >= contract.report.contentVersion && now >= baseline.contentVersion, 'Publication clock predates bundle/published manifest');
-  for (const name of COORDINATED_COLLECTIONS) {
+  for (const name of (contract.collections || COORDINATED_COLLECTIONS)) {
     const before = baseline.collections[name];
     if (!before) { check(authorization.introduceCollections.includes(name), `Introduction not reviewed: ${name}`); continue; }
     check(Number.isSafeInteger(before.version) && before.version > 0, `Invalid current version ${name}`);
@@ -296,7 +296,7 @@ export function coordinatedManifestPlan(described, manifestRecords, authorizatio
   const next = planManifest(described, baseline, now, { partial: true });
   const current = { ...baseline, ...next.current };
   if (current.contentVersion < contract.report.contentVersion) { current.contentVersion = now; current.publishedAt = new Date(now).toISOString(); }
-  const payloads = Object.fromEntries(COORDINATED_COLLECTIONS.map(name => [`contentManifest/${name}`, {
+  const payloads = Object.fromEntries((contract.collections || COORDINATED_COLLECTIONS).map(name => [`contentManifest/${name}`, {
     ...manifestRecords.get(`contentManifest/${name}`)?.data, collection: name, digest: described[name].digest,
     version: current.collections[name].version, hashes: described[name].hashes, sizes: described[name].sizes,
   }]));
@@ -309,13 +309,13 @@ export function coordinatedManifestPlan(described, manifestRecords, authorizatio
 export async function verifyLiveCatalog(metadata, catalog, readChanged, contract, budget) {
   const actual = Object.fromEntries(metadata.map(record => [record.document, record]));
   check(Object.keys(actual).length === metadata.length, 'Duplicate live metadata record');
-  const expectedNames = COORDINATED_COLLECTIONS.flatMap(name => Object.keys(contract.expected[name].hashes).map(id => `${name}/${id}`)).sort();
+  const expectedNames = (contract.collections || COORDINATED_COLLECTIONS).flatMap(name => Object.keys(contract.expected[name].hashes).map(id => `${name}/${id}`)).sort();
   check(isDeepStrictEqual(Object.keys(actual).sort(), expectedNames), 'Live collection IDs/count changed; no manifest switch');
   const changed = expectedNames.filter(name => !timeEqual(actual[name].updateTime, catalog[name]?.updateTime));
   check(changed.length <= budget, `Uncached live documents ${changed.length} exceed reviewed read budget ${budget}`);
   if (changed.length) {
     const records = await readChanged(changed);
-    for (const name of changed) { check(timeEqual(records.get(name)?.updateTime, actual[name].updateTime), 'Inconsistent transaction snapshot'); catalog[name] = catalogEntry(name, records.get(name)); }
+    for (const name of changed) { check(timeEqual(records.get(name)?.updateTime, actual[name].updateTime), 'Inconsistent transaction snapshot'); catalog[name] = catalogEntry(name, records.get(name), contract.collections || COORDINATED_COLLECTIONS); }
   }
   return { described: describeCatalog(catalog, contract), projectedDocuments: expectedNames.length, additionalDocumentReads: changed.length };
 }
@@ -377,16 +377,17 @@ export function manifestReceipt(records, payloads) {
 /** Production adapter: reference-only transaction fence, indexes before root.
  * No automatic transaction retry: a conflict requires explicit guarded resume. */
 export async function publishCoordinatedManifest(db, { catalog, manifests, contract, authorization, journal, onReads = () => {} }) {
- const refs=['contentManifest/days','contentManifest/liturgicalTemplates','contentManifest/liturgicalProperTexts','contentManifest/current'];
+ const collections=contract.collections || COORDINATED_COLLECTIONS;
+ const refs=[...collections.map(n=>'contentManifest/'+n),'contentManifest/current'];
  const mapDocs=docs=>new Map(docs.filter(d=>d.exists).map(d=>[d.ref.path,{data:d.data(),updateTime:{seconds:d.updateTime.seconds,nanoseconds:d.updateTime.nanoseconds}}]));
    const result=await db.runTransaction(async tx=>{
     const fresh=mapDocs(await tx.getAll(...refs.map(n=>db.doc(n))));onReads('manifestDocumentReads',refs.length);
     for(const name of refs)if(valueSha256(fresh.get(name)||null)!==valueSha256(manifests.get(name)||null))throw Error('Manifest CAS baseline changed: '+name);
     const metadata=[];
-    for(const name of COORDINATED_COLLECTIONS){const projection=await tx.get(db.collection(name).select());onReads('metadataDocumentReads',Math.max(1,projection.docs.length));for(const doc of projection.docs)metadata.push({document:doc.ref.path,updateTime:{seconds:doc.updateTime.seconds,nanoseconds:doc.updateTime.nanoseconds}});}
+    for(const name of collections){const projection=await tx.get(db.collection(name).select());onReads('metadataDocumentReads',Math.max(1,projection.docs.length));for(const doc of projection.docs)metadata.push({document:doc.ref.path,updateTime:{seconds:doc.updateTime.seconds,nanoseconds:doc.updateTime.nanoseconds}});}
     const gate=await verifyLiveCatalog(metadata,catalog,async names=>{const docs=await tx.getAll(...names.map(n=>db.doc(n)));onReads('uncachedDocumentReads',names.length);return mapDocs(docs);},contract,authorization.maxUncachedDocumentReads);
     const planned=coordinatedManifestPlan(gate.described,fresh,authorization,contract);
-    const liveDigestGate={projectedDocuments:gate.projectedDocuments,additionalDocumentReads:gate.additionalDocumentReads,collections:Object.fromEntries(COORDINATED_COLLECTIONS.map(n=>[n,{digest:gate.described[n].digest,count:gate.described[n].count,bytes:gate.described[n].bytes}]))};
+    const liveDigestGate={projectedDocuments:gate.projectedDocuments,additionalDocumentReads:gate.additionalDocumentReads,collections:Object.fromEntries(collections.map(n=>[n,{digest:gate.described[n].digest,count:gate.described[n].count,bytes:gate.described[n].bytes}]))};
     const writeDocuments=refs.filter(name=>valueSha256(fresh.get(name)?.data??null)!==valueSha256(planned.payloads[name]));
     await journal({state:'coordinated-manifest-prepared',catalog,manifestAttempt:{payloads:planned.payloads,writeDocuments,liveDigestGate}});
     // Queue indexes first and current last, in ONE atomic transaction. No
