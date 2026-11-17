@@ -50,6 +50,10 @@ test('checked-in Office for the Dead: all antiphon fields are safely renderable 
     assert.ok(formatted.includes(marker), field);
     assert.equal(formatted.replace(/<span class="ora-antiphon-label">([\s\S]*?)<\/span>/gu, '$1'), original, field);
   }
+  // The 146/150 third-psalm chooser has two independent embedded antiphons.
+  const embedded = markAntiphonLabel(data.laudesPs3);
+  assert.equal((embedded.match(/class="ora-antiphon-label"/gu) || []).length, 2);
+  assert.equal(embedded.replace(/<span class="ora-antiphon-label">([\s\S]*?)<\/span>/gu, '$1'), data.laudesPs3);
 });
 
 test('all Web antiphon render entry points and repeated antiphons opt in; styling stays theme-aware', () => {
@@ -68,5 +72,6 @@ test('all Web antiphon render entry points and repeated antiphons opt in; stylin
     tags.forEach((tag) => assert.match(tag, /\bhighlight-antiphon-label\b/u, file));
   }
   assert.match(load('src/components/oraparts/AlternativeText.vue'), /markAntiphonLabel\(formatted\)/u);
-  assert.match(load('src/styles/main.scss'), /\.ora-ant \.ora-antiphon-label\s*\{\s*color: var\(--rubric-color\) !important;/u);
+  assert.match(load('src/components/oraparts/Psalms.vue'), /markAntiphonLabel\(formatPsalmHtml\(psalm,/u);
+  assert.match(load('src/styles/main.scss'), /\.ora-psalm \.ora-antiphon-label\s*\{\s*color: var\(--rubric-color\) !important;/u);
 });
