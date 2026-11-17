@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { normalizePrayerSource, resolvePrayerSource, sourceForSave, formatSourceNotice, hasSourcePages, PRAYER_SOURCE_REGISTRY, normalizePrayerSourceFields, PRAYER_SOURCE_POLICY_VERSION } from '../src/utils/prayerSource.mjs';
+import { normalizePrayerSource, resolvePrayerSource, sourceForSave, formatSourceNotice, hasSourcePages, PRAYER_SOURCE_REGISTRY, normalizePrayerSourceFields, sourceForEditor, EDITOR_SOURCE_MAX_LENGTH, PRAYER_SOURCE_POLICY_VERSION } from '../src/utils/prayerSource.mjs';
 import { buildPrayerFromDraft, draftSourceNotice, draftSourcePatch } from '../src/utils/prayerDraftModel.mjs';
 import { createDraftActions } from '../src/utils/prayerDraftActions.mjs';
 import { createPrayerContentWriter } from '../src/utils/prayerContentWriter.mjs';
@@ -94,16 +94,18 @@ function mockDb() {
 test('manual content writer and draft create/edit use the common normalizer', async () => {
   const deps = mockDb(); const writer=createPrayerContentWriter(deps);
   await writer.mutate((content)=>content.prayers.push({...prayer,id:'p'}));
-  assert.equal(deps.rows.get('prayers/p').source,'Бог добры');
+  assert.equal(deps.rows.get('prayers/p').source,source);
   const actions=createDraftActions({...deps,writer,actorUid:'admin'});
   await actions.createDraft('d',prayer);
-  assert.equal(deps.rows.get('prayerDrafts/d').source,'Бог добры');
+  assert.equal(deps.rows.get('prayerDrafts/d').source,source);
   await actions.saveDraft('d',{source:'Рымскі Імшал, стар. 42–43'},{expectedVersion:1});
-  assert.equal(deps.rows.get('prayerDrafts/d').source,'Рымскі Імшал');
+  assert.equal(deps.rows.get('prayerDrafts/d').source,'Рымскі Імшал, стар. 42–43');
   await actions.saveDraft('d',{source:'Рымскі Імшал'},{expectedVersion:2});
   assert.equal(deps.rows.get('prayerDrafts/d').source,'Рымскі Імшал');
-  await assert.rejects(actions.saveDraft('d',{source:'Невядомая, с. 5'},{expectedVersion:3}),{code:'unknown-prayer-source'});
-  assert.equal(deps.rows.get('prayerDrafts/d').source,'Рымскі Імшал');
+  await actions.saveDraft('d',{source:'Невядомая, с. 5'},{expectedVersion:3});
+  assert.equal(deps.rows.get('prayerDrafts/d').source,'Невядомая, с. 5');
+  await assert.rejects(actions.saveDraft('d',{source:'A'.repeat(501)},{expectedVersion:4}),{code:'invalid-prayer-source'});
+  assert.equal(deps.rows.get('prayerDrafts/d').source,'Невядомая, с. 5');
   assert.equal(deps.rows.get('prayerDrafts/d').text,prayer.text);
 });
 
@@ -170,8 +172,9 @@ test('unchanged legacy attribution allows other edits and retains original bytes
   assert.equal(deps.rows.get('prayerDrafts/old').source,raw);
   assert.equal(deps.rows.get('prayerDrafts/old').sourceBook,old.sourceBook);
   assert.equal(deps.rows.get('prayerDrafts/old').title,'Адрэдагаваны чарнавік');
-  await assert.rejects(actions.saveDraft('old',{source:'Іншая невядомая, с. 5'},{expectedVersion:2}),{code:'unknown-prayer-source'});
-  assert.equal(deps.rows.get('prayerDrafts/old').source,raw);
+  await actions.saveDraft('old',{source:'Іншая невядомая, с. 5'},{expectedVersion:2});
+  assert.equal(deps.rows.get('prayerDrafts/old').source,'Іншая невядомая, с. 5');
+  assert.equal(deps.rows.get('prayerDrafts/old').sourceBook,old.sourceBook);
 });
 
 
@@ -182,6 +185,8 @@ test('deployed policy marker and generated rules share the source registry', () 
   const block=rules.split('// BEGIN GENERATED PRAYER SOURCE NAMES')[1].split('// END GENERATED PRAYER SOURCE NAMES')[0];
   const values=[...block.matchAll(/"([^"\n]*)"/gu)].map((m)=>m[1]);
   assert.deepEqual(values,['',...PRAYER_SOURCE_REGISTRY.map((entry)=>entry.shortTitle)]);
+  assert.match(rules,/function editablePrayerSource\(value\)/);
+  assert.match(rules,/value\.size\(\) <= 500/);
 });
 
 
@@ -231,4 +236,46 @@ test('confirmed production bibliographic variants use the same registry without 
     'для прыватнага карыстання, https://unknown.invalid/book',
     'для прыватнага карыстання, https://ave-maria.by/book https://catholic.by/other',
   ]){assert.equal(resolvePrayerSource(unknown).status,'unknown');assert.equal(normalizePrayerSource(unknown),unknown);}
+});
+
+test('Web editor accepts custom short sources while import remains strict', () => {
+  assert.equal(sourceForEditor('  Уласныя малітвы айцоў марыянаў  '), 'Уласныя малітвы айцоў марыянаў');
+  assert.equal(sourceForEditor('Невядомая кніга, с. 127'), 'Невядомая кніга, с. 127');
+  assert.equal(sourceForEditor('Рымскі Імшал, стар. 42–43'), 'Рымскі Імшал, стар. 42–43');
+  assert.equal(normalizePrayerSource(sourceForEditor('Рымскі Імшал, стар. 42–43')), 'Рымскі Імшал');
+  assert.equal(sourceForEditor(''), '');
+  assert.equal(EDITOR_SOURCE_MAX_LENGTH, 500);
+  assert.throws(() => sourceForEditor('A'.repeat(501)), {code: 'invalid-prayer-source'});
+  assert.throws(() => sourceForEditor({foo: 1}), {code: 'invalid-prayer-source'});
+  assert.throws(() => sourceForSave('Невядомая кніга, с. 127'), {code: 'unknown-prayer-source'});
+  const draft = {...prayer, source: 'Уласныя малітвы парафіі', tags: ['Малітва']};
+  assert.equal(buildPrayerFromDraft(draft, {editorSource: true}).source, 'Уласныя малітвы парафіі');
+  assert.throws(() => buildPrayerFromDraft(draft), {code: 'unknown-prayer-source'});
+});
+
+test('Web content writer saves edited sources in public and protected prayer storage', async () => {
+  const deps = mockDb();
+  const writer = createPrayerContentWriter(deps);
+  const custom = 'Уласны зборнік малітваў';
+  await writer.mutate((content) => content.prayers.push({...prayer, id: 'custom', source: custom}));
+  assert.equal(deps.rows.get('prayers/custom').source, custom);
+  await writer.mutate((content) => {content.prayers.find((p) => p.id === 'custom').source = 'Зборнік другой парафіі';});
+  assert.equal(deps.rows.get('prayers/custom').source, 'Зборнік другой парафіі');
+  await writer.mutate((content) => {content.prayers.find((p) => p.id === 'custom').priestOnly = true;});
+  assert.equal(deps.rows.get('priestProtectedPrayers/custom').source, 'Зборнік другой парафіі');
+  await assert.rejects(writer.mutate((content) => {
+    content.prayers.find((p) => p.id === 'custom').source = 'x'.repeat(501);
+  }), {code: 'invalid-prayer-source'});
+  assert.equal(deps.rows.get('priestProtectedPrayers/custom').source, 'Зборнік другой парафіі');
+});
+
+test('manual known-alias source is published verbatim from draft', async () => {
+  const deps = mockDb(), writer = createPrayerContentWriter(deps);
+  const actions = createDraftActions({...deps, writer, actorUid:'admin'});
+  const input = 'Рымскі Імшал, стар. 42–43';
+  await actions.createDraft('manual_alias', {...prayer, source:input});
+  assert.equal(deps.rows.get('prayerDrafts/manual_alias').source, input);
+  assert.equal(draftSourceNotice(deps.rows.get('prayerDrafts/manual_alias')), input);
+  assert.equal(buildPrayerFromDraft(deps.rows.get('prayerDrafts/manual_alias'), {editorSource:true}).source, input);
+  assert.equal(buildPrayerFromDraft(deps.rows.get('prayerDrafts/manual_alias'), {editorSource:true}).sourceManual, true);
 });

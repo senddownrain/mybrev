@@ -381,8 +381,10 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
       ordo: { ...ordo, properSource },
       key: `fixed-${option.id}`,
       source: docs[0]?._kind === 'office-for-dead' ? LITURGICAL_OPTION_SOURCE.OFFICE_FOR_DEAD : LITURGICAL_OPTION_SOURCE.FIXED,
-      title: buildDayTitle(day, context, date) || option.title,
-      subtitle: fixedSubtitle(day, documentTemplates.length),
+      // The published Ordo is authoritative: legacy fixed documents can still
+      // contain the former optional rank or an outdated feast title.
+      title: option.title || buildDayTitle(day, context, date),
+      subtitle: fixedSubtitle({ ...day, _rank: option.rank }, documentTemplates.length),
       day,
       templates: documentTemplates,
       order: 3,
@@ -418,7 +420,16 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
     dayOptions: options.map((option) => {
       // One colour for the card, its Office pages and its readings: the Ordo's.
       const stamp = visualStamp(option.ordo || {});
-      const stamped = (day) => (day && Object.keys(stamp).length ? { ...day, ...stamp } : day);
+      const stamped = (day) => {
+        if (!day) return day;
+        // Old `days` documents are content sources, not calendar authorities.
+        // Align the card and every template's rank with the resolved legal Office.
+        // Preserve text-specific titles: some are inflected or styled for the Office.
+        const canonical = option.ordo?.celebrationId
+          ? { ...day, _rank: option.ordo.rank }
+          : day;
+        return Object.keys(stamp).length ? { ...canonical, ...stamp } : canonical;
+      };
       return {
         ...option,
         day: stamped(option.day),

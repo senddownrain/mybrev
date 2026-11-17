@@ -214,9 +214,9 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
     const before = await api.getDraft('bd_two_states');
     await denied(updateDoc(doc(roles.plain, 'prayerDrafts/bd_two_states'), { status: 'needs_review', version: before.version + 1 }));
   });
-  it('server guard rejects old forms while preserving unchanged unknown attribution in all prayer stores', async () => {
+  it('admin edits arbitrary short sources in published and protected prayers; invalid values remain denied', async () => {
     const db = roles.plain;
-    const raw = '  Невядомая кніга (1950), с. 127. © Аўтар. \n';
+    const raw = '  Невядомая кніга (1950), с. 127. © Аўтар. \\n';
     const writePrayer = async (collectionName, id, data, replace = false) => {
       const control = doc(db, 'priestContentControl/state');
       const version = (await getDoc(control)).data().version;
@@ -230,29 +230,44 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
       const id = `source_guard_${collectionName}`;
       const data = { ...baseDraft(), textFormat: 'mybrev-markdown', priestOnly: collectionName !== 'prayers' };
       await writePrayer(collectionName, id, data);
-      await denied(writePrayer(collectionName, id, {source:'Бог добры, с. 127'}, true));
-      await denied(writePrayer(collectionName, `${id}_bad`, {...data,source:raw}));
-      await denied(writePrayer(collectionName, `${id}_book`, {...data,sourceBook:'Бог добры, т. II'}, false));
+      await writePrayer(collectionName, id, {source:'Бог добры, с. 127'}, true);
+      assert.equal((await seed.doc(`${collectionName}/${id}`).get()).data().source, 'Бог добры, с. 127');
+      await writePrayer(collectionName, `${id}_new`, {...data,source:raw});
+      await writePrayer(collectionName, `${id}_book`, {...data,sourceBook:'Уласная крыніца'}, false);
       await seed.doc(`${collectionName}/${id}`).update({source:raw});
-      await writePrayer(collectionName,id,{title:'Дазволенае рэдагаванне'},true);
+      await writePrayer(collectionName, id, {title:'Дазволенае рэдагаванне'}, true);
+      assert.equal((await seed.doc(`${collectionName}/${id}`).get()).data().source, raw);
+      await writePrayer(collectionName, id, {source:'Іншая невядомая'}, true);
+      await writePrayer(collectionName, id, {source:'Бог добры'}, true);
+      await writePrayer(collectionName, id, {source:raw}, true);
+      await denied(writePrayer(collectionName,id,{source:'x'.repeat(501)},true));
+      await denied(writePrayer(collectionName,`${id}_invalid`,{...data,source:42}));
       assert.equal((await seed.doc(`${collectionName}/${id}`).get()).data().source,raw);
-      await denied(writePrayer(collectionName,id,{source:'Іншая невядомая'},true));
-      await writePrayer(collectionName,id,{source:'Бог добры'},true);
-      // A still-open old form cannot undo the source-only migration.
-      await denied(writePrayer(collectionName,id,{source:raw},true));
     }
-    const api=actions(db,'plain');
+  });
+  it('ordinary admin can edit a custom draft source, publish it, and keep the source', async () => {
+    const db = roles.plain;
+    const raw = '  Невядомая кніга (1950), с. 127. © Аўтар. \\n';
+    const api = actions(db,'plain');
     await seed.doc('prayerDrafts/source_guard_legacy').set({
       ...baseDraft({source:raw}),draftId:'source_guard_legacy',textFormat:'mybrev-markdown',status:'draft',version:1,
     });
     await api.saveDraft('source_guard_legacy',{title:'Новая назва',source:raw.trim()},{expectedVersion:1});
     assert.equal((await seed.doc('prayerDrafts/source_guard_legacy').get()).data().source,raw);
-    await denied(updateDoc(doc(db,'prayerDrafts/source_guard_legacy'),{source:'Бог добры, с. 1',version:3}));
-    await denied(setDoc(doc(db,'prayerDrafts/source_guard_new'),{
-      ...baseDraft({source:'Бог добры, с. 1'}),draftId:'source_guard_new',textFormat:'mybrev-markdown',status:'draft',version:1,
-    }));
-    await api.saveDraft('source_guard_legacy',{source:'Бог добры'},{expectedVersion:2});
-    await denied(updateDoc(doc(db,'prayerDrafts/source_guard_legacy'),{source:raw,version:4}));
+    await updateDoc(doc(db,'prayerDrafts/source_guard_legacy'),{source:'Бог добры, с. 1',version:3});
+    await setDoc(doc(db,'prayerDrafts/source_guard_new'),{
+      ...baseDraft({source:'Новая крыніца'}),draftId:'source_guard_new',textFormat:'mybrev-markdown',status:'draft',version:1,
+    });
+    await api.saveDraft('source_guard_legacy',{source:'Уласныя малітвы парафіі'},{expectedVersion:3});
+    await denied(updateDoc(doc(db,'prayerDrafts/source_guard_legacy'),{source:'x'.repeat(501),version:5}));
+    assert.equal((await api.getDraft('source_guard_legacy')).source,'Уласныя малітвы парафіі');
+    await api.createDraft('source_manual_publish', baseDraft({title:'Ручная крыніца ў чарнавіку', source:'Новая крыніца, с. 5'}));
+    const fresh = await api.getDraft('source_manual_publish');
+    assert.equal(fresh.source,'Новая крыніца, с. 5');
+    await api.saveDraft('source_manual_publish',{source:'Крыніца пасля рэдагавання'},{expectedVersion:fresh.version});
+    const result = await api.publishDraft('source_manual_publish');
+    assert.equal((await getDoc(doc(roles.anon,`prayers/${result.id}`))).data().source,'Крыніца пасля рэдагавання');
+    assert.equal((await api.getDraft('source_manual_publish')).status,'published');
   });
   it('moving a legacy prayer to protected storage retains unknown source exactly', async () => {
     const raw='Невядомая кніга, том III, с. 5';

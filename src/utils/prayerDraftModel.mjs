@@ -1,6 +1,6 @@
 // Pure model for closed prayer drafts (`prayerDrafts`, admin-only).
 // Used by the admin UI, the publish transaction and the import tooling.
-import { normalizePrayerSource, sourceForSave } from './prayerSource.mjs';
+import { normalizePrayerSource, sourceForEditor, sourceForSave } from './prayerSource.mjs';
 
 export const DRAFT_COLLECTION = 'prayerDrafts';
 export const DRAFT_STATUSES = Object.freeze(['draft', 'published']);
@@ -94,12 +94,13 @@ export function publishBlockers(draft) {
   const blockers = validateDraft({ ...draft, status: draft.status });
   if (!draft.tags?.length) blockers.push('Дадайце хаця б адзін тэг.');
   if (!draft.sourceBook && !draft.source) blockers.push('Патрэбна крыніца.');
-  try { sourceForSave(draftSourceNotice(draft)); } catch (error) { blockers.push(error.message); }
+  try { sourceForEditor(draftSourceNotice(draft)); } catch (error) { blockers.push(error.message); }
   return blockers;
 }
 
 export function draftSourceNotice(draft) {
-  if (String(draft.source || '').trim()) return normalizePrayerSource(draft.source);
+  // A manually edited source must be shown and published exactly as saved.
+  if (String(draft.source || '').trim()) return String(draft.source).trim();
   return normalizePrayerSource(draft.sourceBook || '');
 }
 
@@ -114,7 +115,7 @@ export function draftSourcePatch(draft, input) {
  * Public prayer document for a draft. Only reader-facing fields: no PDF hashes, notes, reasons.
  * Extra provenance (`sourceDraftId`, `sourceEntryId`) lets the rules and audits link both records.
  */
-export function buildPrayerFromDraft(draft, { existing } = {}) {
+export function buildPrayerFromDraft(draft, { existing, editorSource = false } = {}) {
   const title = String(draft.title).trim();
   // A replaced multi-language prayer keeps its other versions; only Belarusian is canonical.
   const versions = existing?.textVersions || existing?.titleVersions
@@ -126,7 +127,8 @@ export function buildPrayerFromDraft(draft, { existing } = {}) {
     textFormat: 'mybrev-markdown',
     textFormatVersion: 1,
     tags: [...new Set((draft.tags || []).map((tag) => String(tag).trim()).filter(Boolean))],
-    source: sourceForSave(draftSourceNotice(draft)),
+    source: (editorSource ? sourceForEditor : sourceForSave)(draftSourceNotice(draft)),
+    ...(editorSource ? { sourceManual: normalizePrayerSource(draftSourceNotice(draft)) !== draftSourceNotice(draft) } : {}),
     copyrightNotices: [...(draft.copyrightNotices || [])],
     priestOnly: draft.priestOnly === true,
     verified: existing?.verified === true,

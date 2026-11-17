@@ -37,8 +37,8 @@
 
           <v-card class="card" elevation="0">
             <h2>Крыніца</h2>
-            <v-textarea v-model="form.source" label="Крыніца" variant="outlined" rows="2" auto-grow hide-details="auto" :readonly="locked" />
-            <p class="hint">Толькі кароткая назва крыніцы, без старонак. Поўныя звесткі — на старонцы «Крыніцы».</p>
+            <v-textarea v-model="form.source" label="Крыніца" variant="outlined" rows="2" auto-grow counter="500" maxlength="500" hide-details="auto" :readonly="locked" />
+            <p class="hint">Можна ўвесці або змяніць назву крыніцы ўручную. Поўныя звесткі — на старонцы «Крыніцы».</p>
           </v-card>
         </div>
 
@@ -178,8 +178,12 @@ async function save(status) {
   try {
     const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, ...draftSourcePatch(draft.value, form.value.source) };
     await actions.saveDraft(draft.value.id, patch, { expectedVersion: draft.value.version, status });
-    message.value = { type: 'success', text: status ? `Статус: ${DRAFT_STATUS_LABELS[status]}.` : 'Чарнавік захаваны.' };
     await load();
+    if (loadError.value || !draft.value || (Object.hasOwn(patch, 'source')
+      && draft.value.source !== patch.source.trim())) {
+      throw new Error('Змены крыніцы не пацверджаныя серверам. Перазагрузіце чарнавік і праверце значэнне.');
+    }
+    message.value = { type: 'success', text: status ? `Статус: ${DRAFT_STATUS_LABELS[status]}.` : 'Чарнавік захаваны.' };
   } catch (error) { message.value = { type: 'error', text: describeError(error) }; } finally { busy.value = ''; }
 }
 function openPublish() { replaceId.value = ''; acknowledge.value = false; publishOpen.value = true; }

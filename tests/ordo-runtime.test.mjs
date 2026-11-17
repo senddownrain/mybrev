@@ -53,6 +53,39 @@ function content(date, diocese = 'minsk-mohilev') {
   return { resolved, context, ...built };
 }
 
+
+test('16 November Vitebsk Hours use the approved obligatory rank even with legacy optional documents', () => {
+  for (const year of [2026, 2027]) {
+    const date = `${year}-11-16`;
+    const diocese = 'vitebsk';
+    const resolved = resolveRuntimeDay(date, { diocese });
+    assert.equal(resolved.primary.id, 'our-lady-mother-mercy');
+    assert.equal(resolved.primary.rank, 'memoria');
+    const { context, daysResult } = daysFixture(resolved);
+    const legacy = {
+      id: '16-11-our-lady-mother-mercy',
+      _date: '16.11',
+      _rank: 'memoria-ad-libitum',
+      _feastName: 'Загаловак уласнага літургічнага тэксту',
+      vesperPr: 'Тэкст успаміну',
+    };
+    const built = buildOrdoDayOptions({
+      resolved, context, date, diocese,
+      daysResult: { ...daysResult, properDays: [], fixedDateDays: [legacy] },
+    });
+    const option = built.dayOptions.find((item) => item.ordo?.optionId === 'our-lady-mother-mercy');
+    assert.ok(option, `${date}: the memorial is present`);
+    assert.equal(option.ordo.rank, 'memoria');
+    assert.match(option.subtitle, /^Успамін/u);
+    assert.ok(!option.subtitle.includes('Неабавязковы'), option.subtitle);
+    assert.equal(option.day._rank, 'memoria');
+    assert.equal(option.title, resolved.primary.title);
+    assert.equal(option.day._feastName, legacy._feastName, 'Office source title is not rewritten');
+    assert.ok(option.templates.length > 0);
+    for (const template of option.templates) assert.equal(template.day._rank, 'memoria');
+  }
+});
+
 /** The Hours day as `useResolvedLiturgicalDay` returns it for a card. */
 function hoursDay(built, index = 0) {
   const option = built.dayOptions[index];

@@ -3,7 +3,7 @@ import bibliography from '../data/sourceBibliography.json' with { type: 'json' }
 
 const clean = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
 const key = (value) => clean(value).toLocaleLowerCase('be').replace(/[«»„“”"']/gu, '');
-export const PRAYER_SOURCE_POLICY_VERSION = '2026-11-17-source-policy-v3';
+export const PRAYER_SOURCE_POLICY_VERSION = '2026-11-17-source-policy-v4';
 export const PRAYER_SOURCE_REGISTRY = bibliography.entries;
 export const hasSourcePages = (value) => /(?:^|[\s,.;(])(?:с\.|стар\.?|старонк[аіуы]|стр\.?|страниц[аы]?|pp?\.)\s*\d/iu.test(String(value ?? ''));
 export const hasLongSourceDetails = (value) => hasSourcePages(value) || /©|ISBN|https?:\/\/|выдавецтв|издательств|\b\d{4}\b|(?:том|частка|часть|выданне)\s+[\dIVІX]+/iu.test(String(value ?? '')) || /\d+\s*[–—-]\s*\d+/u.test(String(value ?? '')) || clean(value).length > 100;
@@ -67,8 +67,24 @@ export function sourceForSave(value) {
   return result.status === 'empty' ? '' : result.value;
 }
 
-export function normalizePrayerSourceFields(data, { forSave = true, existing } = {}) {
-  const normalize = forSave ? sourceForSave : normalizePrayerSource;
+// The editor may save a manually attributed source not yet present in /sources.
+// Imports continue to use sourceForSave and still require the canonical registry.
+export const EDITOR_SOURCE_MAX_LENGTH = 500;
+export function sourceForEditor(value) {
+  if (value == null) return '';
+  if (typeof value !== 'string' || value.trim().length > EDITOR_SOURCE_MAX_LENGTH) {
+    const error = new Error('Крыніца павінна быць тэкстам да 500 сімвалаў.');
+    error.code = 'invalid-prayer-source';
+    throw error;
+  }
+  const input = value.trim();
+  // Manual editor input is an explicit attribution, not an importer hint.
+  // Do not silently map an admin's words back to a registry title.
+  return input;
+}
+
+export function normalizePrayerSourceFields(data, { forSave = true, existing, editor = false } = {}) {
+  const normalize = editor ? sourceForEditor : forSave ? sourceForSave : normalizePrayerSource;
   const result = { ...data };
   for (const field of ['source', 'sourceBook']) if (Object.hasOwn(data, field)) {
     const value = data[field];

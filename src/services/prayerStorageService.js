@@ -6,7 +6,9 @@ import { requestContentRefresh } from '@/utils/publicContentCache';
 import { quotaSafeTransaction } from '@/utils/retry';
 import { noteFirestoreError, withFirestoreQuota } from '@/utils/firestoreErrors.mjs';
 
-import { normalizePrayerSourceFields } from '@/utils/prayerSource.mjs';
+import { normalizePrayerSource, normalizePrayerSourceFields } from '@/utils/prayerSource.mjs';
+import { prayerAccessPolicy } from '@/utils/priestPolicy.mjs';
+import { assertPrayerSaveConfirmed } from '@/utils/prayerSaveVerification.mjs';
 
 const collectionNames = Object.entries(PRAYER_STORAGE).flat();
 const rows = (snapshot) => snapshot.docs.map((item) => ({ ...item.data(), id: item.id }));
@@ -23,15 +25,34 @@ export async function mutatePrayerContent(edit, hooks) {
 export async function saveStoredPrayer(id, data, create = false) {
   const db = await getPriestEditorDb();
   const key = id || doc(collection(db, 'prayers')).id;
+  let targetCollection = 'prayers';
+  let expected;
   await mutatePrayerContent((content) => {
     const old = content.prayers.find((item) => item.id === key);
     if (!create && !old) throw new Error('Малітва не знойдзена.');
-    const { id: _id, ...payload } = normalizePrayerSourceFields({ ...old, ...data }, { existing: old });
+    const { id: _id, ...payload } = normalizePrayerSourceFields({ ...old, ...data }, { existing: old, editor: true });
+    // Preserve exactly what the Web administrator entered, even when a title
+    // matches a registry alias which the reader usually abbreviates.
+    const sourceManual = typeof payload.source === 'string' && normalizePrayerSource(payload.source) !== payload.source;
+    expected = { ...old, ...payload, id: key, sourceManual,
+      priestOnly: payload.priestOnly === undefined ? old?.priestOnly === true : payload.priestOnly === true,
+      ...(create ? { createdAt: serverTimestamp() } : {}), updatedAt: serverTimestamp() };
     content.prayers = content.prayers.filter((item) => item.id !== key);
-    content.prayers.push({ ...old, ...payload, id: key, priestOnly: payload.priestOnly === undefined ? old?.priestOnly === true : payload.priestOnly === true,
-      ...(create ? { createdAt: serverTimestamp() } : {}), updatedAt: serverTimestamp() });
+    content.prayers.push(expected);
+    targetCollection = prayerAccessPolicy(content.prayers, content.categories).prayerRestricted(expected)
+      ? PRAYER_STORAGE.prayers : 'prayers';
   });
-  return { id: key };
+  // One targeted server read: never present a local/optimistic value as a
+  // confirmed save. The same target is used for public and priest-only prayers.
+  let snapshot;
+  try {
+    snapshot = await withFirestoreQuota(() => getDocFromServer(doc(db, targetCollection, key)));
+  } catch (error) {
+    throw new Error('Захаванне адпраўлена, але праверыць вынік на серверы не атрымалася. Абнавіце малітву перад паўторнай спробай.', { cause: error });
+  }
+  const prayer = snapshot.exists() ? { ...snapshot.data(), id: key } : null;
+  assertPrayerSaveConfirmed(prayer, expected);
+  return { id: key, prayer };
 }
 export async function removeStoredPrayer(id) {
   await mutatePrayerContent((content) => {
