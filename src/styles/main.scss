@@ -527,7 +527,8 @@ $base-content-font-size: 1rem; // 16px по умолчанию
 
 // Liturgical labels (1 ант., Ант. да песні Захарыі) stay rubric-red
 // even when the legacy database stores them as plain text.
-.prayer-content-area .liturgical-hour-column .ora-ant .ora-antiphon-label {
+.prayer-content-area .liturgical-hour-column .ora-ant .ora-antiphon-label,
+.prayer-content-area .liturgical-hour-column .ora-psalm .ora-antiphon-label {
   color: var(--rubric-color) !important;
 }
 
