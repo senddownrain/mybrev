@@ -30,6 +30,8 @@ on:
       - 'src/views/admin/PrayerDrafts.vue'
       - 'src/utils/prayerDraftModel.mjs'
       - 'src/utils/prayerDraftActions.mjs'
+      - 'src/utils/prayerSource.mjs'
+      - 'src/data/sourceBibliography.json'
       - 'firestore.rules'
       - '.github/workflows/deploy-firebase-hosting.yml'
 
@@ -85,7 +87,7 @@ jobs:
       - name: Verify build output
         run: |
           test -s dist/prayer-source-policy.json
-          node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('dist/prayer-source-policy.json')); if(p.version!=='2026-11-17-source-policy-v2')process.exit(1)"
+          node --input-type=module -e "import fs from 'node:fs'; import {PRAYER_SOURCE_POLICY_VERSION} from './src/utils/prayerSource.mjs'; const p=JSON.parse(fs.readFileSync('dist/prayer-source-policy.json')); if(p.version!==PRAYER_SOURCE_POLICY_VERSION)process.exit(1)"
           test -s dist/index.html
           test -s dist/privacy.html
           grep -q "Палітыка прыватнасці" dist/privacy.html

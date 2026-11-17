@@ -3,7 +3,7 @@ import bibliography from '../data/sourceBibliography.json' with { type: 'json' }
 
 const clean = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
 const key = (value) => clean(value).toLocaleLowerCase('be').replace(/[«»„“”"']/gu, '');
-export const PRAYER_SOURCE_POLICY_VERSION = '2026-11-17-source-policy-v2';
+export const PRAYER_SOURCE_POLICY_VERSION = '2026-11-17-source-policy-v3';
 export const PRAYER_SOURCE_REGISTRY = bibliography.entries;
 export const hasSourcePages = (value) => /(?:^|[\s,.;(])(?:с\.|стар\.?|старонк[аіуы]|стр\.?|страниц[аы]?|pp?\.)\s*\d/iu.test(String(value ?? ''));
 export const hasLongSourceDetails = (value) => hasSourcePages(value) || /©|ISBN|https?:\/\/|выдавецтв|издательств|\b\d{4}\b|(?:том|частка|часть|выданне)\s+[\dIVІX]+/iu.test(String(value ?? '')) || /\d+\s*[–—-]\s*\d+/u.test(String(value ?? '')) || clean(value).length > 100;
@@ -22,6 +22,7 @@ function metadataOnly(value) {
     .replace(/(?:том|т\.|частка|часть|ч\.)\s*[\dIVІX]+/giu, '')
     .replace(/[\dIVІX]+\s*[-–]?\s*(?:е|я|га)?\s*выданне/giu, '')
     .replace(/©[^©]*/gu, '')
+    .replace(/(?:[-–—]\s*)?гл\.\s*№\s*\d+/giu, '')
     .replace(/ISBN\s*[\d–-]+/giu, '')
     .replace(/[\s,.;:]+/gu, '');
   return !rest;
@@ -31,8 +32,9 @@ function metadataOnly(value) {
 export function resolvePrayerSource(value) {
   if (typeof value !== 'string') return { value, status: value == null ? 'empty' : 'unknown' };
   const input = key(value);
-  const link = /^\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)$/u.exec(clean(value));
-  const urlText = link ? link[2] : clean(value);
+  const digitalInput = clean(value).replace(/^для прыватнага карыстання,\s*/iu, '');
+  const link = /^\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)$/u.exec(digitalInput);
+  const urlText = link ? link[2] : /^\[(https?:\/\/[^\s[\]()]+)\]$/u.exec(digitalInput)?.[1] || digitalInput;
   if (/^https?:\/\/[^\s[\]()]+$/u.test(urlText)) {
     try {
       const url = new URL(urlText);
