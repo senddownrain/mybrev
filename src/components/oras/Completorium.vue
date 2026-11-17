@@ -9,8 +9,8 @@
         </v-col>
         <v-col v-else-if="day" class="liturgical-hour-column">
                 <day-title :day-data="selectedDay" />
-                <intro :title="title"    />
                 <p v-if="triduumComplineNotice(selectedDay)" class="ora-text" style="color:var(--rubric-color)">{{ triduumComplineNotice(selectedDay) }}</p>
+                <intro :title="title"    />
                 <exam />
                 <hymnus :text="day.compHymn" />
                 <psalms :ant1="day.compAnt1" :ant2="day.compAnt2" :ant3="day.compAnt3" :ps1="day.compPs1" :ps2="day.compPs2"
