@@ -2,6 +2,8 @@
 /** Explicit production phase. Content plan stays immutable across small batches. */
 import fs from 'node:fs';
 import zlib from 'node:zlib';
+import path from 'node:path';
+import { toStorable } from '../content/lib/app-content.mjs';
 import { selectDaysTemplates } from './prepare-days-templates.mjs';
 import { loadCoordinatedContract,verifyCoordinatedAuthorization,binarySha256,executeCoordinatedRelease,publishCoordinatedManifest } from './lib/coordinated-release.mjs';
 import { verifyCompatibleSubset } from './lib/editorial-compatible-subset.mjs';
@@ -20,12 +22,13 @@ const coordinated=!!get('--coordinated-release');
 let releaseCompatibility,contract,baselineCatalog;
 if(coordinated){
  if(!get('--baseline-catalog'))throw Error('Coordinated hash/time catalog required');
- contract=loadCoordinatedContract();
+ const evidenceBytes=fs.readFileSync(get('--coordinated-release'));
+ contract=loadCoordinatedContract(undefined,{testApp:JSON.parse(evidenceBytes).policy==='pr255-test-app-before-mobile-release'});
  const root='docs/audits/liturgical-common-texts-2026-11/v4',sourceBytes=fs.readFileSync(root+'/full-content-plan.json.gz'),published=JSON.parse(fs.readFileSync(root+'/PUBLICATION_RESULT.json'));
  const expectedPlan=selectDaysTemplates(JSON.parse(zlib.gunzipSync(sourceBytes)),published),catalogBytes=fs.readFileSync(get('--baseline-catalog'));
  baselineCatalog=JSON.parse(zlib.gunzipSync(catalogBytes));
  if(baselineCatalog.schema!==1||baselineCatalog.inputs?.sourcePlanBinarySha256!==binarySha256(sourceBytes)||baselineCatalog.inputs?.properResultBinarySha256!==binarySha256(fs.readFileSync(root+'/PUBLICATION_RESULT.json')))throw Error('Catalog provenance mismatch');
- releaseCompatibility=verifyCoordinatedAuthorization({plan,expectedPlan,planBytes:bytes,sourceBytes,catalogBytes,evidenceBytes:fs.readFileSync(get('--coordinated-release')),authorization,mode,contract});
+ releaseCompatibility=verifyCoordinatedAuthorization({plan,expectedPlan,planBytes:bytes,sourceBytes,catalogBytes,evidenceBytes,authorization,mode,contract});
  if(get('--resume')&&authorization.resumeReceiptSha256!==binarySha256(fs.readFileSync(get('--resume'))))throw Error('Resume receipt binary SHA must be explicitly bound to authorization');
 }else if(get('--baseline-catalog'))throw Error('Catalog requires coordinated release evidence');
 if(!coordinated&&(authorization.project!=='ibreviaryby'||authorization.planSha256!==planSha256||authorization.action!==mode||authorization.ownerApproved!==true||!authorization.reason||authorization.massRebuildReleaseGateReviewed!==true))throw Error('Concrete owner authorization and compatibility review required');
@@ -46,13 +49,22 @@ try{
  const {initializeApp,cert}=await import('firebase-admin/app'),{getFirestore}=await import('firebase-admin/firestore');
  const credential=cert(key),app=initializeApp({credential,projectId:'ibreviaryby'}),db=getFirestore(app);
  db.settings({preferRest:true});
- const read=async names=>{const records=new Map();for(let i=0;i<names.length;i+=100)for(const doc of await db.getAll(...names.slice(i,i+100).map(n=>db.doc(n))))if(doc.exists)records.set(doc.ref.path,{data:doc.data(),updateTime:{seconds:doc.updateTime.seconds,nanoseconds:doc.updateTime.nanoseconds}});return records;};
+ const usage={dataDocumentReads:0,manifestDocumentReads:0,metadataDocumentReads:0,uncachedDocumentReads:0,...previous.firebaseUsage};
+ const account=(kind,count)=>{usage[kind]+=count;journal({firebaseUsage:{...usage}});};
+ const persist=record=>{
+  const file=path.join(receiptFile+'.documents',record.document+'.json');fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
+  const fd=fs.openSync(file+'.tmp','w',0o600);try{fs.writeFileSync(fd,JSON.stringify(record)+'\n');fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(file+'.tmp',file);
+ };
+ const read=async names=>{const records=new Map();for(let i=0;i<names.length;i+=100){
+  const part=names.slice(i,i+100),docs=await db.getAll(...part.map(n=>db.doc(n)));if(coordinated)account('dataDocumentReads',part.length);
+  for(const doc of docs)if(doc.exists){const record={data:doc.data(),updateTime:{seconds:doc.updateTime.seconds,nanoseconds:doc.updateTime.nanoseconds}};records.set(doc.ref.path,record);if(coordinated)persist({document:doc.ref.path,data:toStorable(record.data),updateTime:record.updateTime});}
+ }return records;};
  if(coordinated){
   const refs=['contentManifest/days','contentManifest/liturgicalTemplates','contentManifest/liturgicalProperTexts','contentManifest/current'];
   const mapDocs=docs=>new Map(docs.filter(d=>d.exists).map(d=>[d.ref.path,{data:d.data(),updateTime:{seconds:d.updateTime.seconds,nanoseconds:d.updateTime.nanoseconds}}]));
-  const readManifest=async()=>mapDocs(await db.getAll(...refs.map(n=>db.doc(n))));
-  const commit=createReleaseCommit(credential,{initialRequestNumber:Math.max(0,...(previous.attempts||[]).map(e=>e.request?.requestNumber||e.requestNumber||0)),onEvent:async event=>journal({attempts:[...state.attempts,event],state:event.event==='failed-write'?'failed-write':'coordinated-write-in-progress',...(event.failure?{failure:event.failure,classification:event.classification}:event.event==='acknowledged'?{failure:null,classification:null}:{})})});
-  const publishManifest=async parameters=>{phase='manifest';return publishCoordinatedManifest(db,parameters);};
+  const readManifest=async()=>{const docs=await db.getAll(...refs.map(n=>db.doc(n)));account('manifestDocumentReads',refs.length);return mapDocs(docs);};
+  const commit=createReleaseCommit(credential,{maxAttempts:1,maxTotalRetries:0,initialRequestNumber:Math.max(0,...(previous.attempts||[]).map(e=>e.request?.requestNumber||e.requestNumber||0)),onEvent:async event=>journal({attempts:[...state.attempts,event],state:event.event==='failed-write'?'failed-write':'coordinated-write-in-progress',...(event.failure?{failure:event.failure,classification:event.classification}:event.event==='acknowledged'?{failure:null,classification:null}:{})})});
+  const publishManifest=async parameters=>{phase='manifest';return publishCoordinatedManifest(db,{...parameters,onReads:account});};
   try{await executeCoordinatedRelease({plan,adapter:{read,readManifest,commit,publishManifest},contract,authorization,compatibility:releaseCompatibility,baselineCatalog,previous,mode,batchSize,journal});}
   finally{await app.delete();}
   console.log(JSON.stringify({state:state.state,verifiedFields:plan.summary.readyFields,documents:(state.receipts||[]).reduce((n,b)=>n+b.documents.filter(d=>d.writtenFieldMasks?.length).length,0),fields:(state.receipts||[]).reduce((n,b)=>n+b.documents.reduce((m,d)=>m+(d.writtenFieldMasks?.length||0),0),0),manifestWritesAcknowledged:state.manifestReceipt?(state.manifestAttempt?.writeDocuments?.length||0):0,manifestWritesThisRun:state.manifestReceipt&&!state.resumedManifest?(state.manifestAttempt?.writeDocuments?.length||0):0,receipt:receiptFile}));

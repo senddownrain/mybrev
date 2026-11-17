@@ -45,6 +45,9 @@ jobs:
       - name: Liturgical hour structural headings (offline)
         run: node --test tests/office-heading-consistency.test.mjs tests/liturgical-html.test.mjs tests/office-reading-presentation.test.mjs
 
+      - name: Coordinated PR255 writer and test-app policy safeguards (offline)
+        run: node --test tests/coordinated-release.test.mjs tests/flutter-baseline-reconciliation.test.mjs tests/firestore-release-recovery.test.mjs
+
       - name: I Vespers independent-source audit safety checks
         run: node --test tests/heart-first-vespers-source-audit.test.mjs
 

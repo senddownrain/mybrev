@@ -14,7 +14,7 @@ on:
         required: false
         type: string
       flutter_release_evidence_path:
-        description: Git-tracked docs JSON with actual released-build/native/inventory proofs (coordinated only)
+        description: Git-tracked release proofs or owner-authorized test-app source/test proofs (coordinated only)
         required: false
         type: string
       mode:
@@ -102,7 +102,7 @@ jobs:
             if(binarySha256(bytes)!==process.env.EXPECTED_PLAN_SHA)throw Error('Reviewed binary plan SHA mismatch');
             const authorization=JSON.parse(fs.readFileSync(process.env.COORDINATED_AUTHORIZATION));
             verifyCoordinatedAuthorization({plan,expectedPlan:selectDaysTemplates(full,published),planBytes:bytes,sourceBytes,
-              catalogBytes:fs.readFileSync(root+'/coordinated-baseline.json.gz'),evidenceBytes:fs.readFileSync(process.env.COORDINATED_EVIDENCE),authorization,mode:'execute',contract:loadCoordinatedContract()});
+              catalogBytes:fs.readFileSync(root+'/coordinated-baseline.json.gz'),evidenceBytes:fs.readFileSync(process.env.COORDINATED_EVIDENCE),authorization,mode:'execute',contract:loadCoordinatedContract(undefined,{testApp:JSON.parse(fs.readFileSync(process.env.COORDINATED_EVIDENCE)).policy==='pr255-test-app-before-mobile-release'})});
             if(process.env.RESUME_RUN_ID&&authorization.resumeReceiptSha256!==binarySha256(fs.readFileSync(process.env.RUNNER_TEMP+'/pr245-previous/server-receipt.json')))throw Error('Resume receipt SHA mismatch');
             planFile=process.env.RUNNER_TEMP+'/pr255-reviewed-plan.json.gz';fs.writeFileSync(planFile,bytes,{mode:0o600});
           }else{

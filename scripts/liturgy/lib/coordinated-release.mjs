@@ -1,5 +1,6 @@
 /** PR255 only: reviewed release gate, exact masks, reusable receipts and digest fence. */
 import fs from 'node:fs';
+import zlib from 'node:zlib';
 import { createHash } from 'node:crypto';
 import { isDeepStrictEqual } from 'node:util';
 import { canonicalJson, collectionDigest, describeDocuments, storedDocument, validateCollection } from '../../content/lib/app-content.mjs';
@@ -19,7 +20,7 @@ const timeEqual = (a, b) => a?.seconds === b?.seconds && a?.nanoseconds === b?.n
 const validSha = value => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value);
 const proof = item => item && validSha(item.sha256) && /^https:\/\//u.test(item.url || '');
 
-export function loadCoordinatedContract(dir = CONTRACT_DIR) {
+export function loadCoordinatedContract(dir = CONTRACT_DIR, { testApp = false } = {}) {
   const provenance = JSON.parse(fs.readFileSync(`${dir}/provenance.json`));
   check(provenance.repository === 'senddownrain/ibreviarybyapp' && provenance.pullRequest === 113 && provenance.mergeSha === FLUTTER_MERGE, 'Unpinned Flutter handoff');
   const files = {};
@@ -43,7 +44,21 @@ export function loadCoordinatedContract(dir = CONTRACT_DIR) {
       && item.digest === requirements.collections[name].digest && count === requirements.collections[name].count && bytes === requirements.collections[name].bytes, `Bundle/candidate mismatch ${name}`);
     expected[name] = { hashes: item.hashes, sizes: item.sizes, digest: item.digest, count, bytes };
   }
-  return { report, requirements, expected, reportSha256: binarySha256(files['bundle-report.json']), provenanceSha256: valueSha256(provenance) };
+  const contract = { report, requirements, expected, reportSha256: binarySha256(files['bundle-report.json']), provenanceSha256: valueSha256(provenance) };
+  if (testApp) {
+    const bytes = fs.readFileSync(`${dir}/../flutter-baseline-reconciliation.json.gz`);
+    check(binarySha256(bytes) === 'e08c154ff6d7d5d1443a4f89b297c0c9de2da2d6195a3527ee33a9d0718a2692', 'Unpinned test-app supplement');
+    const patch = JSON.parse(zlib.gunzipSync(bytes));
+    check(patch.scope === 'flutter-bundle-baseline-only' && patch.firestoreWrites === 0 && patch.summary.totalFields === 344
+      && patch.summary.heldWebValuesChanged === 0 && isDeepStrictEqual(patch.before, expected), 'Supplement differs from PR113');
+    for (const name of COORDINATED_COLLECTIONS) check(collectionDigest(patch.after[name].hashes) === patch.after[name].digest
+      && Object.keys(patch.after[name].hashes).length === patch.after[name].count
+      && Object.values(patch.after[name].sizes).reduce((a,b) => a+b,0) === patch.after[name].bytes, 'Invalid reconciled target');
+    contract.expected = patch.after;
+    contract.testApp = { policy: 'pr255-test-app-before-mobile-release', supplementSha256: binarySha256(bytes) };
+    contract.targetContractSha256 = valueSha256({ reportSha256: contract.reportSha256, ...contract.testApp, expected: contract.expected });
+  }
+  return contract;
 }
 
 /** Runs BEFORE reading credentials, importing the SDK, or making a request. */
@@ -58,6 +73,9 @@ export function verifyCoordinatedAuthorization({ plan, expectedPlan, planBytes, 
     && a.releaseEvidenceSha256 === binarySha256(evidenceBytes) && validSha(a.manifestBaselineSha256), 'Concrete coordinated authorization/SHA bindings required');
   check(e.schema === 1 && e.project === 'ibreviaryby' && e.flutterMergeSha === FLUTTER_MERGE && e.bundleReportSha256 === contract.reportSha256
     && e.bundleManifestSha256 === contract.report.files['manifest.json'].sha256, 'Release evidence does not identify this Flutter bundle');
+  if (contract.testApp) {
+    verifyTestAppCompatibility(e, a, contract);
+  } else {
   check(e.release?.confirmed === true && Number.isFinite(Date.parse(e.release.releasedAt)) && Date.parse(e.release.releasedAt) <= now
     && Array.isArray(e.release.builds) && e.release.builds.length > 0, 'Flutter release not confirmed; no Firebase access');
   for (const build of e.release.builds) check(['android', 'ios'].includes(build.platform) && Number.isInteger(build.buildNumber) && build.buildNumber > 6
@@ -74,13 +92,45 @@ export function verifyCoordinatedAuthorization({ plan, expectedPlan, planBytes, 
     check(validSha(build.artifactSha256) && result?.kind === 'installed-binary' && proof(result) && result.downloads === 0 && result.dataPreserved === true
       && ['current', 'appReleaseRequired'].includes(result.result), 'Installed-binary compatibility/upgrade proof missing');
   }
+  }
   const review = a.massManifestReview;
   check(review?.approved === true && review.reviewer && /^https:\/\//u.test(review.url || '') && review.releaseEvidenceSha256 === a.releaseEvidenceSha256
     && review.bundleReportSha256 === contract.reportSha256, 'Explicit release-specific MASS manifest review required');
   check(Array.isArray(a.introduceCollections) && a.introduceCollections.every(n => n === 'liturgicalProperTexts')
     && Number.isInteger(a.maxUncachedDocumentReads) && a.maxUncachedDocumentReads >= 0 && a.maxUncachedDocumentReads <= 50, 'Invalid introduction/read budget');
   return { policy: COORDINATED_POLICY, flutterMergeSha: FLUTTER_MERGE, planBinarySha256: a.planBinarySha256,
+    ...(contract.testApp ? { executionPolicy: contract.testApp.policy, targetContractSha256: contract.targetContractSha256 } : {}),
     releaseEvidenceSha256: a.releaseEvidenceSha256, bundleReportSha256: contract.reportSha256, baselineCatalogSha256: a.baselineCatalogSha256 };
+}
+
+// Source/tests are sufficient for the owner's test-app policy. This branch
+// explicitly makes no released-build or installed-client inventory claim.
+export function verifyTestAppCompatibility(e, a, contract) {
+  check(e.policy === contract.testApp.policy && a.executionPolicy === e.policy
+    && e.targetContractSha256 === contract.targetContractSha256 && a.targetContractSha256 === contract.targetContractSha256
+    && e.supplementSha256 === contract.testApp.supplementSha256, 'Exact test-app target authorization required');
+  check(e.mobileReleaseRequired === false && e.mobileReleasePerformed === false && e.installedClientInventory === 'not-available'
+    && e.release === undefined && e.nativeSmoke === undefined, 'Test-app evidence must not fabricate release/native/inventory evidence');
+  const readProof = item => {
+    check(item && /^docs\/[\w./-]+$/u.test(item.path || '') && !item.path.split('/').includes('..') && validSha(item.sha256), 'Invalid source/test proof');
+    const bytes = fs.readFileSync(item.path);
+    check(binarySha256(bytes) === item.sha256, 'Source/test proof SHA mismatch');
+    return JSON.parse(bytes);
+  };
+  const review = readProof(e.sourceReview), tests = readProof(e.testResults), target = readProof(e.targetHashVerification);
+  check(target.status === 'passed' && target.targetContractSha256 === contract.targetContractSha256
+    && isDeepStrictEqual(target.collections, contract.expected)
+    && COORDINATED_COLLECTIONS.every(name => target.sourceFiles?.[name+'.json.gz'] === contract.report.files[name+'.json.gz'].sha256), 'Reconciled target not verified against source assets');
+  check(review.repository === 'senddownrain/ibreviarybyapp' && review.schema === 1 && tests.schema === 1
+    && tests.failed === 0 && tests.passed > 0 && tests.firebaseReads === 0 && tests.firebaseWrites === 0, 'Compatibility tests not verified');
+  for (const revision of ['6b5b278fcb0f77f557cf5f739c455236cb19029c', '84d1d6dd61f8cb78aa33fb1b6538996f9156fc20', '6ef0ba811e351d787eec349af81e82b9f94d465a']) {
+    const source = review.revisions?.find(r => r.revision === revision);
+    const run = tests.runs?.find(r => r.revision === revision);
+    check(source && validSha(source.updaterSha256) && source.userDataBoxesUntouched === true
+      && run?.status === 'passed' && run.passed > 0 && run.failed === 0, 'Known updater revision not verified: ' + revision);
+  }
+  check(tests.appReleaseDataPreservation === true && tests.appReleaseRestart === true && tests.upgradeStatusClears === true
+    && tests.settingsFavoritesPersonalPrayersPreserved === true && tests.targetHashesVerified === true, 'Test-app data preservation/target verification incomplete');
 }
 
 export function catalogEntry(document, record) {
@@ -272,15 +322,15 @@ export function manifestReceipt(records, payloads) {
 
 /** Production adapter: reference-only transaction fence, indexes before root.
  * No automatic transaction retry: a conflict requires explicit guarded resume. */
-export async function publishCoordinatedManifest(db, { catalog, manifests, contract, authorization, journal }) {
+export async function publishCoordinatedManifest(db, { catalog, manifests, contract, authorization, journal, onReads = () => {} }) {
  const refs=['contentManifest/days','contentManifest/liturgicalTemplates','contentManifest/liturgicalProperTexts','contentManifest/current'];
  const mapDocs=docs=>new Map(docs.filter(d=>d.exists).map(d=>[d.ref.path,{data:d.data(),updateTime:{seconds:d.updateTime.seconds,nanoseconds:d.updateTime.nanoseconds}}]));
    const result=await db.runTransaction(async tx=>{
-    const fresh=mapDocs(await tx.getAll(...refs.map(n=>db.doc(n))));
+    const fresh=mapDocs(await tx.getAll(...refs.map(n=>db.doc(n))));onReads('manifestDocumentReads',refs.length);
     for(const name of refs)if(valueSha256(fresh.get(name)||null)!==valueSha256(manifests.get(name)||null))throw Error('Manifest CAS baseline changed: '+name);
     const metadata=[];
-    for(const name of COORDINATED_COLLECTIONS){const projection=await tx.get(db.collection(name).select());for(const doc of projection.docs)metadata.push({document:doc.ref.path,updateTime:{seconds:doc.updateTime.seconds,nanoseconds:doc.updateTime.nanoseconds}});}
-    const gate=await verifyLiveCatalog(metadata,catalog,async names=>mapDocs(await tx.getAll(...names.map(n=>db.doc(n)))),contract,authorization.maxUncachedDocumentReads);
+    for(const name of COORDINATED_COLLECTIONS){const projection=await tx.get(db.collection(name).select());onReads('metadataDocumentReads',Math.max(1,projection.docs.length));for(const doc of projection.docs)metadata.push({document:doc.ref.path,updateTime:{seconds:doc.updateTime.seconds,nanoseconds:doc.updateTime.nanoseconds}});}
+    const gate=await verifyLiveCatalog(metadata,catalog,async names=>{const docs=await tx.getAll(...names.map(n=>db.doc(n)));onReads('uncachedDocumentReads',names.length);return mapDocs(docs);},contract,authorization.maxUncachedDocumentReads);
     const planned=coordinatedManifestPlan(gate.described,fresh,authorization,contract);
     const liveDigestGate={projectedDocuments:gate.projectedDocuments,additionalDocumentReads:gate.additionalDocumentReads,collections:Object.fromEntries(COORDINATED_COLLECTIONS.map(n=>[n,{digest:gate.described[n].digest,count:gate.described[n].count,bytes:gate.described[n].bytes}]))};
     const writeDocuments=refs.filter(name=>valueSha256(fresh.get(name)?.data??null)!==valueSha256(planned.payloads[name]));

@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "project": "ibreviaryby",
+  "flutterMergeSha": "bb145d8e366236af930b7d1086c24b3d1c52256a",
+  "bundleReportSha256": "a83002d05726dd60c3a707fd42cf58c27784bc9a693aefdad33562646884521b",
+  "bundleManifestSha256": "d7a515cf5e748f3cc5504729fb326bf7ab375fb77f442e2b95cb07d6f6e711af",
+  "policy": "pr255-test-app-before-mobile-release",
+  "targetContractSha256": "ac7dbfccaf6b4e78437cf347fd8c35262cf6522b2fbcc4fd2f833b83066c762f",
+  "supplementSha256": "e08c154ff6d7d5d1443a4f89b297c0c9de2da2d6195a3527ee33a9d0718a2692",
+  "mobileReleaseRequired": false,
+  "mobileReleasePerformed": false,
+  "installedClientInventory": "not-available",
+  "sourceReview": {
+    "path": "docs/audits/liturgical-common-texts-2026-11/v4/final-execution/source-review.json",
+    "sha256": "4c6ac2efef111161dba03386cefb7985d2264c64929a85b596bab773f60dd87d"
+  },
+  "testResults": {
+    "path": "docs/audits/liturgical-common-texts-2026-11/v4/final-execution/test-results.json",
+    "sha256": "fc198d2c7c45cfd5ee1b34ee18589e3c5f44dbd136b2a43bc6029b1487c08535"
+  },
+  "targetHashVerification": {
+    "path": "docs/audits/liturgical-common-texts-2026-11/v4/final-execution/target-hash-verification.json",
+    "sha256": "de073c66ed1eefc0b2383ca2c14ff05f4afd7a40514bb599ce271a9e3a18c7a7"
+  },
+  "note": "PR113 identifies original offline candidate input, not a distributed mobile release. Final single bundle is prepared only after Firestore readback."
+}

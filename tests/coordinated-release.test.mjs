@@ -302,3 +302,45 @@ test('rollback uses acknowledged masks only, preserving fields/docs already afte
     assert.deepEqual(rollback.documents[0].updateTime, { seconds: 20, nanoseconds: 9 });
   } finally { fs.rmSync(temp, { recursive: true, force: true }); }
 });
+
+test('owner test-app policy requires exact reconciled target and real proof files, without fake mobile evidence', () => {
+  const target = loadCoordinatedContract(undefined, { testApp: true });
+  assert.notDeepEqual(target.expected, contract.expected);
+  assert.equal(target.expected.days.digest, 'cbe2b5a263890a42');
+  const folder = 'docs/.test-pr255-test-app-gate';
+  fs.mkdirSync(folder, { recursive: true });
+  try {
+    const revisions = ['6b5b278fcb0f77f557cf5f739c455236cb19029c', '84d1d6dd61f8cb78aa33fb1b6538996f9156fc20', '6ef0ba811e351d787eec349af81e82b9f94d465a'];
+    const write = (name, data) => {
+      const file = `${folder}/${name}.json`, bytes = Buffer.from(JSON.stringify(data));
+      fs.writeFileSync(file, bytes); return { path: file, sha256: binarySha256(bytes) };
+    };
+    const sourceReview = write('review', { schema: 1, repository: 'senddownrain/ibreviarybyapp', revisions: revisions.map(revision => ({ revision, updaterSha256: 'a'.repeat(64), userDataBoxesUntouched: true })) });
+    const testResults = write('results', { schema: 1, passed: 3, failed: 0, firebaseReads: 0, firebaseWrites: 0,
+      runs: revisions.map(revision => ({ revision, status: 'passed', passed: 1, failed: 0 })),
+      appReleaseDataPreservation: true, appReleaseRestart: true, upgradeStatusClears: true,
+      settingsFavoritesPersonalPrayersPreserved: true, targetHashesVerified: true });
+    const fixture = releaseFixture();
+    const { evidence, authorization } = fixture;
+    delete evidence.release; delete evidence.nativeSmoke; delete evidence.compatibility;
+    Object.assign(evidence, { policy: target.testApp.policy, targetContractSha256: target.targetContractSha256,
+      supplementSha256: target.testApp.supplementSha256, mobileReleaseRequired: false, mobileReleasePerformed: false,
+      installedClientInventory: 'not-available', sourceReview, testResults,
+      targetHashVerification: write('target', { status: 'passed', targetContractSha256: target.targetContractSha256, collections: target.expected,
+        sourceFiles: Object.fromEntries(names.map(n => [n+'.json.gz', contract.report.files[n+'.json.gz'].sha256])) }) });
+    Object.assign(authorization, { executionPolicy: evidence.policy, targetContractSha256: target.targetContractSha256 });
+    const bind = () => {
+      fixture.evidenceBytes = Buffer.from(JSON.stringify(evidence));
+      authorization.releaseEvidenceSha256 = binarySha256(fixture.evidenceBytes);
+      authorization.massManifestReview.releaseEvidenceSha256 = authorization.releaseEvidenceSha256;
+    };
+    bind();
+    assert.equal(verify(fixture, { contract: target }).executionPolicy, target.testApp.policy);
+    assert.throws(() => verify(fixture), /Flutter release not confirmed/);
+    evidence.targetContractSha256 = '0'.repeat(64); bind(); assert.throws(() => verify(fixture, { contract: target }), /target authorization/);
+    evidence.targetContractSha256 = target.targetContractSha256;
+    evidence.release = { confirmed: true }; bind(); assert.throws(() => verify(fixture, { contract: target }), /fabricate/);
+    delete evidence.release; evidence.testResults.sha256 = '0'.repeat(64); bind(); assert.throws(() => verify(fixture, { contract: target }), /proof SHA/);
+    assert.equal(publicationDecision('MASS CONTENT REBUILD').publish, false);
+  } finally { fs.rmSync(folder, { recursive: true, force: true }); }
+});

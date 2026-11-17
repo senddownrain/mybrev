@@ -1,3 +1,15 @@
+> 2026-11-17 FINAL EXECUTION: the owner explicitly permits the exact PR255/261
+> publication before the next **test** Flutter release. The existing coordinated
+> writer now supports the narrow test-app policy in `final-execution/authorization.json`.
+> Original PR113 provenance remains immutable; reconciled target descriptors are
+> separately bound to its 344-field supplement. Source review covers all updater
+> revisions; 101 executed tests cover main, pre-PR113 and earliest updater, including
+> exact mass success/download interruption/Hive restart and user data preservation.
+> No released build, installed-client inventory or native smoke is claimed. Generic
+> MASS publication remains refused. See `final-execution/test-app-evidence.json`.
+> Current manifest was read once to bind authorization. Execution/readback results
+> must be recorded separately; this note does not claim a production write.
+
 # PR245 — утверждённые решения и совместимая публикация
 
 Все 10 редакционных исключений закрыты решением владельца: `owner-instructions.json`. В source дополнительно изменены 11 полей: 28 прежде удержанных ответов, две уже раскрытые пасхальные копии с латинской `c`, три исходные К. того же слова. Точные послойные диапазоны — `source-proofs.json.gz`. Проверка всех прежних 820 ответов: нет строчных начальных букв или начальной `Ў`; две смешанные графемы были только в PR245-490. Сохранены написание «Справялівы», указанные `У`/`С`, пасхальная звезда и `аллелюя`. Печатные транскрипции не изменены.
