@@ -78,8 +78,9 @@ export function sourceForEditor(value) {
     throw error;
   }
   const input = value.trim();
-  const resolved = resolvePrayerSource(input);
-  return resolved.status === 'known' ? resolved.value : input;
+  // Manual editor input is an explicit attribution, not an importer hint.
+  // Do not silently map an admin's words back to a registry title.
+  return input;
 }
 
 export function normalizePrayerSourceFields(data, { forSave = true, existing, editor = false } = {}) {
