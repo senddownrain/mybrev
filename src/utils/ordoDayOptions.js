@@ -423,9 +423,10 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
       const stamped = (day) => {
         if (!day) return day;
         // Old `days` documents are content sources, not calendar authorities.
-        // Align the card and every template with the resolved legal Office.
+        // Align the card and every template's rank with the resolved legal Office.
+        // Preserve text-specific titles: some are inflected or styled for the Office.
         const canonical = option.ordo?.celebrationId
-          ? { ...day, _rank: option.ordo.rank, _feastName: option.ordo.title || day._feastName }
+          ? { ...day, _rank: option.ordo.rank }
           : day;
         return Object.keys(stamp).length ? { ...canonical, ...stamp } : canonical;
       };
