@@ -94,12 +94,12 @@ function mockDb() {
 test('manual content writer and draft create/edit use the common normalizer', async () => {
   const deps = mockDb(); const writer=createPrayerContentWriter(deps);
   await writer.mutate((content)=>content.prayers.push({...prayer,id:'p'}));
-  assert.equal(deps.rows.get('prayers/p').source,'Бог добры');
+  assert.equal(deps.rows.get('prayers/p').source,source);
   const actions=createDraftActions({...deps,writer,actorUid:'admin'});
   await actions.createDraft('d',prayer);
-  assert.equal(deps.rows.get('prayerDrafts/d').source,'Бог добры');
+  assert.equal(deps.rows.get('prayerDrafts/d').source,source);
   await actions.saveDraft('d',{source:'Рымскі Імшал, стар. 42–43'},{expectedVersion:1});
-  assert.equal(deps.rows.get('prayerDrafts/d').source,'Рымскі Імшал');
+  assert.equal(deps.rows.get('prayerDrafts/d').source,'Рымскі Імшал, стар. 42–43');
   await actions.saveDraft('d',{source:'Рымскі Імшал'},{expectedVersion:2});
   assert.equal(deps.rows.get('prayerDrafts/d').source,'Рымскі Імшал');
   await actions.saveDraft('d',{source:'Невядомая, с. 5'},{expectedVersion:3});
@@ -241,7 +241,8 @@ test('confirmed production bibliographic variants use the same registry without 
 test('Web editor accepts custom short sources while import remains strict', () => {
   assert.equal(sourceForEditor('  Уласныя малітвы айцоў марыянаў  '), 'Уласныя малітвы айцоў марыянаў');
   assert.equal(sourceForEditor('Невядомая кніга, с. 127'), 'Невядомая кніга, с. 127');
-  assert.equal(sourceForEditor('Рымскі Імшал, стар. 42–43'), 'Рымскі Імшал');
+  assert.equal(sourceForEditor('Рымскі Імшал, стар. 42–43'), 'Рымскі Імшал, стар. 42–43');
+  assert.equal(normalizePrayerSource(sourceForEditor('Рымскі Імшал, стар. 42–43')), 'Рымскі Імшал');
   assert.equal(sourceForEditor(''), '');
   assert.equal(EDITOR_SOURCE_MAX_LENGTH, 500);
   assert.throws(() => sourceForEditor('A'.repeat(501)), {code: 'invalid-prayer-source'});
@@ -266,4 +267,15 @@ test('Web content writer saves edited sources in public and protected prayer sto
     content.prayers.find((p) => p.id === 'custom').source = 'x'.repeat(501);
   }), {code: 'invalid-prayer-source'});
   assert.equal(deps.rows.get('priestProtectedPrayers/custom').source, 'Зборнік другой парафіі');
+});
+
+test('manual known-alias source is published verbatim from draft', async () => {
+  const deps = mockDb(), writer = createPrayerContentWriter(deps);
+  const actions = createDraftActions({...deps, writer, actorUid:'admin'});
+  const input = 'Рымскі Імшал, стар. 42–43';
+  await actions.createDraft('manual_alias', {...prayer, source:input});
+  assert.equal(deps.rows.get('prayerDrafts/manual_alias').source, input);
+  assert.equal(draftSourceNotice(deps.rows.get('prayerDrafts/manual_alias')), input);
+  assert.equal(buildPrayerFromDraft(deps.rows.get('prayerDrafts/manual_alias'), {editorSource:true}).source, input);
+  assert.equal(buildPrayerFromDraft(deps.rows.get('prayerDrafts/manual_alias'), {editorSource:true}).sourceManual, true);
 });

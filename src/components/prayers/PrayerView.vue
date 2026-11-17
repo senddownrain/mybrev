@@ -160,11 +160,17 @@ const displayTitle = computed(() => {
   return getTitle(massVariantPrayer.value) || variant.title;
 });
 const feedbackTo = computed(() => prayerFeedbackLink(route, displayTitle.value));
-const displaySource = computed(() => normalizePrayerSource(
-  massVariant.value && massVariant.value.prayerId !== MASS_ORDER_PRAYER_ID
-    ? massVariantPrayer.value?.source || massVariant.value.source || ''
-    : prayer.value?.source || ''
-));
+const displaySource = computed(() => {
+  const variant = massVariant.value;
+  const sourcePrayer = variant && variant.prayerId !== MASS_ORDER_PRAYER_ID
+    ? massVariantPrayer.value : prayer.value;
+  const value = variant && variant.prayerId !== MASS_ORDER_PRAYER_ID
+    ? sourcePrayer?.source || variant.source || ''
+    : sourcePrayer?.source || '';
+  // Older imported sources retain their canonical display, but manually
+  // edited attributions must never be replaced with a different label.
+  return sourcePrayer?.sourceManual === true ? value : normalizePrayerSource(value);
+});
 // Every Mass language goes through the same semantic adapter and renderer, so
 // equal liturgical elements look the same in every language.
 const massDocument = computed(() => (
