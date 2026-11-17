@@ -52,7 +52,7 @@ test('checked-in Office for the Dead: all antiphon fields are safely renderable 
   }
   // The 146/150 third-psalm chooser has two independent embedded antiphons.
   const embedded = markAntiphonLabel(data.laudesPs3);
-  assert.equal((embedded.match(/class="ora-antiphon-label"/gu) || []).length, 2);
+  assert.equal((embedded.match(/class="ora-antiphon-label"/gu) || []).length, 4, 'opening and repeated antiphons for both psalms');
   assert.equal(embedded.replace(/<span class="ora-antiphon-label">([\s\S]*?)<\/span>/gu, '$1'), data.laudesPs3);
 });
 
