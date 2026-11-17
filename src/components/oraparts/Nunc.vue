@@ -5,7 +5,7 @@
                 ПЕСНЯ СІМЯОНА
             </v-card-title>
             <v-card-text class="ora-text">
-                <alternative-text v-model="antOption" class="ora-ant" :text="ant" aria-label="Выбар антыфоны" />
+                <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="ant" aria-label="Выбар антыфоны" />
                 
                 <!-- <div v-html="ps1"></div> -->
                 <p class="ora-sub">
@@ -15,7 +15,7 @@
                 </p>
                 <PsalmText :html="formatPsalm(nunc)" />
                 
-                <alternative-text v-model="antOption" class="ora-ant" :text="ant" :show-picker="false" />
+                <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="ant" :show-picker="false" />
             </v-card-text>
         </v-card>
     </div>
