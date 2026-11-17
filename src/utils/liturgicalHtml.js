@@ -1,3 +1,5 @@
+import { removeMatchingPsalmAntiphons } from './liturgicalSourceHtml.js';
+
 // Antiphon labels are rubrics; never change the text of the antiphon itself.
 const antiphonSpace = String.raw`(?:\s|&nbsp;|&#0*160;|&#x0*a0;)`;
 const antiphonLabelStart = new RegExp(
@@ -23,8 +25,6 @@ export function markAntiphonLabel(html) {
   // Legacy plain-text antiphons do not always have a paragraph wrapper.
   return source.includes('<') ? source : mark(source);
 }
-
-import { removeMatchingPsalmAntiphons } from './liturgicalSourceHtml.js';
 
 /**
  * Cadence signs mark pauses inside a psalm verse. Source texts often contain
