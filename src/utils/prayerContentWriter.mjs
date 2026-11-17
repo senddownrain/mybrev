@@ -35,6 +35,10 @@ export function createPrayerContentWriter({ db, fs, withQuota = passthrough, tra
     for (let attempt = 0; attempt < 3; attempt++) {
       const { collections, version } = await readState();
       const content = canonicalPrayerContent(collections);
+      const existingPrayers = new Map(content.prayers.map((item) => [item.id,
+        Object.fromEntries(['source', 'sourceBook'].filter((field) => Object.hasOwn(item, field))
+          .map((field) => [field, structuredClone(item[field])])),
+      ]));
       const result = edit(content);
       const plan = prayerStoragePlan(collections, content);
       if (plan.operations.length > MAX_ATOMIC_CONTENT_WRITES
@@ -51,7 +55,8 @@ export function createPrayerContentWriter({ db, fs, withQuota = passthrough, tra
           for (const operation of plan.operations) {
             const reference = doc(db, operation.collection, operation.id);
             if (operation.type === 'delete') transaction.delete(reference);
-            else transaction.set(reference, ['prayers', 'priestProtectedPrayers'].includes(operation.collection) ? normalizePrayerSourceFields(operation.data) : operation.data);
+            else transaction.set(reference, ['prayers', 'priestProtectedPrayers'].includes(operation.collection)
+              ? normalizePrayerSourceFields(operation.data, { existing: existingPrayers.get(operation.id) }) : operation.data);
           }
           hooks.write?.(transaction);
           transaction.set(control, { version: version + 1, lockUid: '', updatedAt: serverTimestamp() });

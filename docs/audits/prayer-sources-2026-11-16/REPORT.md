@@ -107,3 +107,16 @@ node scripts/unify-prayer-sources.mjs --rollback --plan backups/prayer-sources-r
 PR Web: https://github.com/senddownrain/mybrev/pull/259; companion Flutter: https://github.com/senddownrain/ibreviarybyapp/pull/114. Web CI исходного PR прошёл. Ветка обновлена поверх #260, сохранив исправление публикации legacy drafts и неизменяемую дополнительную metadata. Свежий локальный Web suite: 1 370 passed, 22 skipped; эмулятор: 28 passed. Ошибки прежнего повторного запуска из ограниченного sandbox были EPERM/Chrome sandbox и не воспроизводятся при разрешённом локальном запуске; проверки не ослаблялись.
 
 За продолжение 17 ноября production Firestore: 0 чтений, 0 записей. Production manifest, Hosting и shipped Flutter bundle не менялись. Миграция production и полный аудит актуальных drafts/protected остаются отдельным этапом из handoff, а не результатом этого PR.
+
+
+## Финальная проверка перед production, 2026-11-17
+
+По новому разрешению владельца разрешены merge, штатный Hosting deploy и последующая source-only миграция; прежняя офлайн-граница выше относится к предыдущему этапу.
+
+Найдена и исправлена блокировка редактирования существующего неизвестного источника. Unchanged attribution сохраняется дословно при обычном/защищённом редактировании, переносе доступа, сохранении черновика и replacement import; новый либо изменённый неизвестный источник по-прежнему требует подтверждения. Черновик только с sourceBook не получает синтетический source при сохранении других полей. Страница списка черновиков больше не дописывает страницы к источнику.
+
+Добавлена серверная проверка source/sourceBook для всех трёх коллекций: новые/изменённые значения принимаются только из единого канонического справочника; точное старое значение разрешено при других правках. Даже открытая старая форма не может вернуть длинный источник после миграции. Перенос между public/protected коллекциями сохраняет существующую атрибуцию по тому же ID. Правила не изменяют читательский доступ, роли или статусы. Allowlist генерируется из sourceBibliography.json; prebuild и тест проверяют синхронность. Статический no-store marker `/prayer-source-policy.json` позволяет подтвердить опубликованную версию без чтений Firestore.
+
+Локальная проверка: полный Web suite **1 373 passed / 22 skipped, 0 failures (1 395 total)**; source/draft targeted **20 passed**; draft/import/migration emulator **30 passed**; priest/access emulator **18 passed**; ESLint и production build прошли. Все emulator проверки выполнены локально. Companion Flutter #114 merged с проверенным SHA 804559286a7a022025f61d3b90d832d071d7d9d2, merge commit 6ef0ba811e351d787eec349af81e82b9f94d465a; мобильный релиз не выполнялся.
+
+Фактические результаты Hosting, scoped snapshot, apply и manifest фиксируются отдельным production-отчётом после завершения соответствующих операций; этот раздел не заявляет обновление базы.

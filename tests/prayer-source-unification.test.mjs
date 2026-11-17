@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { normalizePrayerSource, resolvePrayerSource, sourceForSave, formatSourceNotice, hasSourcePages, PRAYER_SOURCE_REGISTRY } from '../src/utils/prayerSource.mjs';
-import { buildPrayerFromDraft } from '../src/utils/prayerDraftModel.mjs';
+import { normalizePrayerSource, resolvePrayerSource, sourceForSave, formatSourceNotice, hasSourcePages, PRAYER_SOURCE_REGISTRY, normalizePrayerSourceFields, PRAYER_SOURCE_POLICY_VERSION } from '../src/utils/prayerSource.mjs';
+import { buildPrayerFromDraft, draftSourceNotice, draftSourcePatch } from '../src/utils/prayerDraftModel.mjs';
 import { createDraftActions } from '../src/utils/prayerDraftActions.mjs';
 import { createPrayerContentWriter } from '../src/utils/prayerContentWriter.mjs';
 import { buildPrayerBundleCandidate } from '../scripts/prepare-prayer-source-bundle.mjs';
@@ -146,4 +146,54 @@ test('offline Flutter bundle candidate preserves all non-source data and old dec
   assert.equal(decoded.known.source,'Бог добры');assert.deepEqual(decoded.unknown,docs[1]);
   assert.deepEqual({...decoded.known,source:docs[0].source},docs[0]);
   assert.equal(buildPrayerBundleCandidate(candidate).summary.changedDocuments,0);
+});
+
+
+test('unchanged legacy attribution allows other edits and retains original bytes', async () => {
+  const raw = '  Невядомая кніга (Мінск, 1950), с. 127. © Аўтар. \n';
+  const old = {...prayer, source:raw, sourceBook:'Невядомая кніга, том III'};
+  const normalized = normalizePrayerSourceFields({...old,title:'Новая назва',source:raw.trim()}, {existing:old});
+  assert.equal(normalized.source,raw);assert.equal(normalized.sourceBook,old.sourceBook);
+  assert.throws(()=>normalizePrayerSourceFields({...old,source:'Іншая невядомая, с. 5'},{existing:old}),{code:'unknown-prayer-source'});
+  assert.throws(()=>newDocument({data:old}),{code:'unknown-prayer-source'});
+  assert.equal(replacementDocument(old,{data:{title:'Новая назва'}}).source,raw);
+  const deps=mockDb();deps.rows.set('prayers/legacy',{...old,status:'published',effectivePriestOnly:false});
+  const writer=createPrayerContentWriter(deps);
+  await writer.mutate((content)=>{content.prayers[0].title='Новая назва';});
+  assert.equal(deps.rows.get('prayers/legacy').source,raw);
+  await writer.mutate((content)=>{content.prayers[0].priestOnly=true;});
+  assert.equal(deps.rows.get('priestProtectedPrayers/legacy').source,raw);
+  const actions=createDraftActions({...deps,writer,actorUid:'admin'});
+  deps.rows.set('prayerDrafts/old',{...old,version:1});
+  await actions.saveDraft('old',{title:'Адрэдагаваны чарнавік',source:raw.trim()},{expectedVersion:1});
+  assert.equal(deps.rows.get('prayerDrafts/old').source,raw);
+  assert.equal(deps.rows.get('prayerDrafts/old').sourceBook,old.sourceBook);
+  assert.equal(deps.rows.get('prayerDrafts/old').title,'Адрэдагаваны чарнавік');
+  await assert.rejects(actions.saveDraft('old',{source:'Іншая невядомая, с. 5'},{expectedVersion:2}),{code:'unknown-prayer-source'});
+  assert.equal(deps.rows.get('prayerDrafts/old').source,raw);
+});
+
+
+test('deployed policy marker and generated rules share the source registry', () => {
+  const marker=JSON.parse(readFileSync(new URL('../public/prayer-source-policy.json',import.meta.url)));
+  assert.equal(marker.version,PRAYER_SOURCE_POLICY_VERSION);
+  const rules=readFileSync(new URL('../firestore.rules',import.meta.url),'utf8');
+  const block=rules.split('// BEGIN GENERATED PRAYER SOURCE NAMES')[1].split('// END GENERATED PRAYER SOURCE NAMES')[0];
+  const values=[...block.matchAll(/"([^"\n]*)"/gu)].map((m)=>m[1]);
+  assert.deepEqual(values,['',...PRAYER_SOURCE_REGISTRY.map((entry)=>entry.shortTitle)]);
+});
+
+
+test('draft editor preserves sourceBook-only unknown attribution on unrelated edits', async () => {
+  const old={...prayer,sourceBook:'  Старая невядомая кніга, т. III, с. 123  '};delete old.source;
+  const deps=mockDb();deps.rows.set('prayerDrafts/book_only',old);
+  const writer=createPrayerContentWriter(deps);
+  const actions=createDraftActions({...deps,writer,actorUid:'admin'});
+  const patch={title:'Новая назва',...draftSourcePatch(old,draftSourceNotice(old))};
+  assert.equal(Object.hasOwn(patch,'source'),false);
+  await actions.saveDraft('book_only',patch,{expectedVersion:1});
+  const result=deps.rows.get('prayerDrafts/book_only');
+  assert.equal(result.sourceBook,old.sourceBook);assert.equal(Object.hasOwn(result,'source'),false);
+  assert.equal(result.title,'Новая назва');
+  assert.deepEqual(draftSourcePatch(old,'Бог добры'),{source:'Бог добры'});
 });

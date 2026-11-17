@@ -67,7 +67,7 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { DRAFT_REASON_LABELS, DRAFT_STATUS_LABELS, normalizeDraftStatus, normalizeTitleKey } from '@/utils/prayerDraftModel.mjs';
+import { DRAFT_REASON_LABELS, DRAFT_STATUS_LABELS, draftSourceNotice, normalizeDraftStatus, normalizeTitleKey } from '@/utils/prayerDraftModel.mjs';
 import { getDraftActions } from '@/services/prayerDraftService';
 
 const drafts = ref([]);
@@ -98,8 +98,7 @@ const visible = computed(() => filtered.value.slice(0, shown.value));
 watch([query, originFilter, statusFilter], () => { shown.value = 50; });
 
 function sourceLine(draft) {
-  const pages = draft.printedPageStart ? `, с. ${draft.printedPageStart}${draft.printedPageEnd && draft.printedPageEnd !== draft.printedPageStart ? `–${draft.printedPageEnd}` : ''}` : '';
-  return draft.source || `${draft.sourceBook || 'Крыніца не пазначана'}${pages}`;
+  return draftSourceNotice(draft) || 'Крыніца не пазначана';
 }
 function dateLabel(value) {
   const date = value?.toDate?.();

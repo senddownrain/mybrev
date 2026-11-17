@@ -141,4 +141,4 @@ jobs:
       - name: Admin roles, two statuses, source and import integration
         run: >
           npx --yes firebase-tools@latest emulators:exec --only firestore --project demo-rules
-          "node --test --test-concurrency=1 tests/prayer-drafts-firestore.test.mjs tests/prayer-import-apply.test.mjs tests/prayer-import-drafts-compat.test.mjs tests/prayer-source-migration-emulator.test.mjs"
+          "node --test --test-concurrency=1 tests/prayer-drafts-firestore.test.mjs tests/prayer-import-apply.test.mjs tests/prayer-import-drafts-compat.test.mjs tests/prayer-source-migration-emulator.test.mjs tests/priest-firestore.test.mjs"

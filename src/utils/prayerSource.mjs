@@ -3,6 +3,7 @@ import bibliography from '../data/sourceBibliography.json' with { type: 'json' }
 
 const clean = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
 const key = (value) => clean(value).toLocaleLowerCase('be').replace(/[«»„“”"']/gu, '');
+export const PRAYER_SOURCE_POLICY_VERSION = '2026-11-17-source-policy-v2';
 export const PRAYER_SOURCE_REGISTRY = bibliography.entries;
 export const hasSourcePages = (value) => /(?:^|[\s,.;(])(?:с\.|стар\.?|старонк[аіуы]|стр\.?|страниц[аы]?|pp?\.)\s*\d/iu.test(String(value ?? ''));
 export const hasLongSourceDetails = (value) => hasSourcePages(value) || /©|ISBN|https?:\/\/|выдавецтв|издательств|\b\d{4}\b|(?:том|частка|часть|выданне)\s+[\dIVІX]+/iu.test(String(value ?? '')) || /\d+\s*[–—-]\s*\d+/u.test(String(value ?? '')) || clean(value).length > 100;
@@ -58,15 +59,26 @@ export function sourceForSave(value) {
   if (result.status === 'unknown') {
     const error = new Error('Невядомая крыніца: захавайце зыходныя звесткі і ўдакладніце кароткую назву ў даведніку /sources.');
     error.code = 'unknown-prayer-source';
+    error.policyVersion = PRAYER_SOURCE_POLICY_VERSION;
     throw error;
   }
   return result.status === 'empty' ? '' : result.value;
 }
 
-export function normalizePrayerSourceFields(data, { forSave = true } = {}) {
+export function normalizePrayerSourceFields(data, { forSave = true, existing } = {}) {
   const normalize = forSave ? sourceForSave : normalizePrayerSource;
   const result = { ...data };
-  for (const field of ['source', 'sourceBook']) if (Object.hasOwn(data, field)) result[field] = normalize(data[field]);
+  for (const field of ['source', 'sourceBook']) if (Object.hasOwn(data, field)) {
+    const value = data[field];
+    const unchanged = existing && Object.hasOwn(existing, field)
+      && (typeof value === 'string' && typeof existing[field] === 'string'
+        ? clean(value) === clean(existing[field])
+        : JSON.stringify(value) === JSON.stringify(existing[field]));
+    // Existing attribution is evidence, even when unresolved. Editing another
+    // field must neither erase it nor silently replace it with trimmed UI input.
+    result[field] = forSave && unchanged && resolvePrayerSource(value).status === 'unknown'
+      ? existing[field] : normalize(value);
+  }
   return result;
 }
 

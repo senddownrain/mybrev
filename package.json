@@ -8,7 +8,7 @@
     "content:version:bump": "node scripts/bump-content-revision.mjs",
     "predev": "npm run icons:generate",
     "dev": "node --no-deprecation ./node_modules/vite/bin/vite.js",
-    "prebuild": "npm run icons:generate",
+    "prebuild": "npm run icons:generate && node scripts/generate-prayer-source-rules.mjs --check",
     "build": "node --no-deprecation ./node_modules/vite/bin/vite.js build",
     "deploy:hosting": "npm run build && firebase deploy --only hosting",
     "release:hosting": "node scripts/ensure-clean-worktree.mjs && git push && npm run deploy:hosting",

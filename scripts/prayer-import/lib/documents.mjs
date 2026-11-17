@@ -10,7 +10,7 @@ export function replacementDocument(old, payload) {
     merged.titleVersions = { ...old.titleVersions, be: payload.data.title };
   }
   if (old.effectivePriestOnly !== undefined) merged.effectivePriestOnly = old.effectivePriestOnly;
-  return normalizePrayerSourceFields(merged);
+  return normalizePrayerSourceFields(merged, { existing: old });
 }
 export const newDocument = (payload) => normalizePrayerSourceFields({ ...payload.data, priestOnly: false });
 export function draftDocument(payload, { createdBy }) {

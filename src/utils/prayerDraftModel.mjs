@@ -103,6 +103,13 @@ export function draftSourceNotice(draft) {
   return normalizePrayerSource(draft.sourceBook || '');
 }
 
+/** Only submit an attribution edit when the administrator changes the displayed field.
+ * Legacy sourceBook-only drafts must not acquire a synthetic unknown source on unrelated edits. */
+export function draftSourcePatch(draft, input) {
+  const comparable = (value) => String(value ?? '').replace(/\s+/gu, ' ').trim();
+  return comparable(input) === comparable(draftSourceNotice(draft)) ? {} : { source: input };
+}
+
 /**
  * Public prayer document for a draft. Only reader-facing fields: no PDF hashes, notes, reasons.
  * Extra provenance (`sourceDraftId`, `sourceEntryId`) lets the rules and audits link both records.

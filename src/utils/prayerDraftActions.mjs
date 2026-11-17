@@ -57,7 +57,7 @@ export function createDraftActions({ db, fs, writer, actorUid }) {
       const next = status || normalizeDraftStatus(current.status);
       if (!canTransition(current.status, next)) throw new DraftError('transition', 'Недапушчальная змена статуса.');
       if (next === 'published') throw new DraftError('transition', 'Публікацыя — асобная аперацыя.');
-      const normalized = normalizePrayerSourceFields({ ...current, ...pick(patch || {}, DRAFT_FIELDS) });
+      const normalized = normalizePrayerSourceFields({ ...current, ...pick(patch || {}, DRAFT_FIELDS) }, { existing: current });
       const savedFields = { ...pick(patch || {}, DRAFT_FIELDS), ...pick(normalized, ['source', 'sourceBook']) };
       const merged = { ...current, ...savedFields, status: next };
       const errors = validateDraft(merged);
