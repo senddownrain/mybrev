@@ -2,14 +2,14 @@
   "schema": 1,
   "status": "passed",
   "kind": "in-memory-target-descriptors-with-exact-live-baseline-preservation",
-  "targetContractSha256": "6624be611627ae7e50eba59dbf963736da72f3993b2f3c7fe7c9b5ce545754cc",
+  "targetContractSha256": "894bcbe4724110f33385851c5ffdf774115613b4f465b7a4adc2c8a3e7f9a353",
   "supplementSha256": "e08c154ff6d7d5d1443a4f89b297c0c9de2da2d6195a3527ee33a9d0718a2692",
   "sourceFiles": {
     "days.json.gz": "9b691b3229d0dccb3835e13873d4a6f79c5c98ce9b90216219988ac6708fbae7",
     "liturgicalTemplates.json.gz": "cd55ff3fbfe024cb6905e2e1b238effdc6740cc07ffdb676d3dac61cfd8b27ad",
     "liturgicalProperTexts.json.gz": "e73cf03ef2652e904465e3743c872f292f40a420443e9762d49f1361716bcc18"
   },
-  "outputSha256": "ca2b313f991df7dc3490019af76cdd371aaab15fc3ce015c0a26737f9de89e5e",
+  "outputSha256": "ef1695d011e4c7d6e1d8b1bea38857bc2ef6bcdd87d265c3f6b2b3b5e18fa485",
   "collections": {
     "days": {
       "hashes": {
@@ -1701,7 +1701,7 @@
         "17-09-sv-hildegard-bingen": "7f43ee97a6b77c1f",
         "17-09-sv-robert-bellarmine": "51e5de051fe5fa44",
         "17-10-sv-ignatius-antioch": "c93d07478f223a77",
-        "17-11-sv-elizabeth-hungary": "b1ecfad89f1fcc0d",
+        "17-11-sv-elizabeth-hungary": "dc88e421e5f12d52",
         "18-03-sv-cyril-jerusalem": "0f1fcbb6d877d670",
         "18-05-sv-john-i": "59d932eaec0fd427",
         "18-08-bl-sancja-szymkowiak-grodno": "1c3aefd407b06f9b",
@@ -1994,7 +1994,7 @@
         "17-09-sv-hildegard-bingen": 435,
         "17-09-sv-robert-bellarmine": 7412,
         "17-10-sv-ignatius-antioch": 7861,
-        "17-11-sv-elizabeth-hungary": 7121,
+        "17-11-sv-elizabeth-hungary": 9183,
         "18-03-sv-cyril-jerusalem": 7268,
         "18-05-sv-john-i": 7685,
         "18-08-bl-sancja-szymkowiak-grodno": 385,
@@ -2120,12 +2120,13 @@
         "31-07-sv-ignatius-loyola": 8546,
         "31-12-sv-sylvester-i": 7294
       },
-      "digest": "dccd7a25a8393a4f",
+      "digest": "b23370f9d589fff1",
       "count": 291,
-      "bytes": 3279569
+      "bytes": 3281631
     }
   },
   "firebaseReads": 0,
   "firebaseWrites": 0,
-  "liveBaselinePreservationSha256": "d1ef62b1008cdedf2c9d1a2763b1890e59259f53ba111577ac39c348057403a5"
+  "liveBaselinePreservationSha256": "d1ef62b1008cdedf2c9d1a2763b1890e59259f53ba111577ac39c348057403a5",
+  "liveProperPreservationSha256": "9f4fa716f551c6b6a6ee5a332ca7598cdaf915af82662ade38dd5627dc83fb95"
 }
