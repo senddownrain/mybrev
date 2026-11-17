@@ -46,6 +46,23 @@ runAfterLoadAndIdle(() => {
   })
 }, { delay: 5000, idleTimeout: 5000 })
 
+// The optional nine-day window is deliberately disabled by default while
+// Firestore Spark quota is exhausted. Even when enabled, it starts only AFTER
+// the fast today/tomorrow warmup has finished and the reader is idle.
+if (import.meta.env.VITE_ENABLE_EXTENDED_CACHE_WARMUP === 'true') {
+  runAfterLoadAndIdle(() => {
+    import('./utils/cacheWarmup').then(async ({ warmupCache }) => {
+      // Share the same in-flight content cache with the initial warmup.
+      await warmupCache()
+      runAfterLoadAndIdle(() => {
+        import('./utils/extendedCacheWarmup').then(({ warmupExtendedDateWindow }) =>
+          warmupExtendedDateWindow()).catch(error => console.warn('[extended warmup] skipped:', error.message))
+      }, { delay: 20000, idleTimeout: 12000 })
+    }).catch(error => console.warn('[extended warmup] initial stage unavailable:', error.message))
+  }, { delay: 6000, idleTimeout: 5000 })
+}
+
+
 // Local-only analytics for test builds (decision D-10 = B). The flag is a build-time
 // constant: when it is not 'true' this branch and the analytics code are removed from the bundle.
 if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {
