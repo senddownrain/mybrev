@@ -1,3 +1,9 @@
+/** Compact hour name for both the list and the text header; no separate rubric chip. */
+export function vespersHourTitle(model, uppercase = false) {
+  const ordinal = model?.firstVespers ? 'I ' : (model?.second ? 'II ' : '');
+  return `${ordinal}${uppercase ? 'НЕШПАРЫ' : 'Нешпары'}`;
+}
+
 const VESPER_FIELDS = [
   'Hymn', 'Ant1', 'Ant2', 'Ant3', 'Ps1', 'Ps2', 'Ps3', 'R', 'AntMag', 'Inter', 'Pr',
 ];
