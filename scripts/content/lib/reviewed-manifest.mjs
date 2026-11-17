@@ -8,7 +8,7 @@ import { binarySha256, valueSha256, describeCatalog, coordinatedManifestPlan, pu
 export const REVIEWED_PLAN_SHA = '707e13042ed74996cf996aacbd9564c2dc3200448f05eca11946abe502d1e95a';
 export const REVIEWED_DIR = 'docs/releases/final-test-2026-11-17';
 export function assertReviewedManifestExecutable() {
-  throw Error('Reviewed manifest plan retired: captured Firestore calendar revision3 predates accepted Flutter calendar revision5; reconcile approved calendar and bind the final candidate before any production access. Quota pause remains in effect.');
+  throw Error('Reviewed manifest plan retired: captured Firestore calendar revision3 predates accepted Flutter calendar from main (bundled revision4; separate revision5 release remains pending); reconcile approved calendar and bind the final candidate before any production access. Quota pause remains in effect.');
 }
 const check = (v, why) => { if (!v) throw Error(why); };
 export function loadReviewedManifest(file, expectedSha) {
