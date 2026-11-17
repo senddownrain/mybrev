@@ -12,6 +12,7 @@ import {
   isSolemnity,
   normalizeFirstVespers,
   usesOwnVespers,
+  vespersHourTitle,
 } from '../src/utils/liturgicalVespers.js';
 
 test('recognizes and normalizes the first Vespers fields', () => {
@@ -150,4 +151,13 @@ test('non-Sunday celebrations preserve their existing first Vespers fallback', (
   });
   assert.equal(evening.firstVespers.day.vesperHymn, 'solemnity own hymn');
   assert.equal(evening.firstVespers.day._firstVespersSource, 'proper');
+});
+
+test('Vespers names are built into hour titles rather than a detached rubric', () => {
+  assert.equal(vespersHourTitle({ firstVespers: { day: {} }, second: true }), 'I Нешпары');
+  assert.equal(vespersHourTitle({ firstVespers: { day: {} } }, true), 'I НЕШПАРЫ');
+  assert.equal(vespersHourTitle({ second: true }), 'II Нешпары');
+  assert.equal(vespersHourTitle({ second: true }, true), 'II НЕШПАРЫ');
+  assert.equal(vespersHourTitle({ firstVespers: null, second: false }), 'Нешпары');
+  assert.equal(vespersHourTitle(null, true), 'НЕШПАРЫ');
 });
