@@ -5,6 +5,7 @@
       <v-col class="liturgical-hour-column" v-if="!isLoading && vesperDay">
                 <day-title :day-data="vesperDay" />
                 <intro title="НЕШПАРЫ" />
+                <p v-if="triduumVespersNotice(vesperDay)" class="ora-text" style="color:var(--rubric-color)">{{ triduumVespersNotice(vesperDay) }}</p>
                 <v-chip
                     v-if="vespersRubric"
                     class="mb-4 vespers-rubric-chip"
@@ -21,8 +22,9 @@
                 <psalms :ant1="vesperDay.vesperAnt1" :ant2="vesperDay.vesperAnt2" :ant3="vesperDay.vesperAnt3" :ps1="vesperDay.vesperPs1"
                     :ps2="vesperDay.vesperPs2" :ps3="vesperDay.vesperPs3" />
                 <reading :text="vesperDay.vesperR" />
+                <resp v-if="triduumVespersAntiphon" :text="triduumVespersAntiphon" />
                 <magnificat :ant="vesperDay.vesperAntMag" />
-                <inters :text="vesperDay.vesperInter" />
+                <inters :text="vesperDay.vesperInter" :rubric="goodFridayIntercessionsRubric(vesperDay)" />
                 <pater-noster />
                 <last-prayer :text="vesperDay.vesperPr == '' ? vesperDay.laudesPr : vesperDay.vesperPr" />
                 <end-of-vesper/>
@@ -51,6 +53,8 @@ import Intro from '@/components/oraparts/Intro.vue';
 import Psalms from '@/components/oraparts/Psalms.vue';
 import Reading from '@/components/oraparts/Reading.vue';
 import Inters from '@/components/oraparts/Inters.vue';
+import Resp from '@/components/oraparts/Resp.vue';
+import { triduumAntiphon, triduumVespersNotice, goodFridayIntercessionsRubric } from '@/utils/triduumCompline';
 import Magnificat from '@/components/oraparts/Magnificat.vue';
 import PaterNoster from '@/components/oraparts/PaterNoster.vue';
 import LastPrayer from '@/components/oraparts/LastPrayer.vue';
@@ -65,6 +69,10 @@ const checkingTomorrow = ref(false);
 let requestVersion = 0;
 
 const vesperDay = computed(() => tomorrowFirstVespers.value?.day || day.value);
+const triduumVespersAntiphon = computed(() => (
+  String(vesperDay.value?.vesperR || '').includes('Хрыстус стаў дзеля нас')
+    ? '' : triduumAntiphon(vesperDay.value)
+));
 const isLoading = computed(() => pending.value || checkingTomorrow.value);
 const vespersRubricStyle = computed(() => {
   const theme = getLiturgicalTheme(vesperDay.value, vesperDay.value?._periodType);
