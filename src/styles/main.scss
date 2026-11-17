@@ -431,20 +431,6 @@ $base-content-font-size: 1rem; // 16px по умолчанию
 }
 
 .liturgical-hour-column .ora-title,
-.liturgical-hour-column .ora-header,
-.liturgical-hour-column .ora-text p[data-liturgical-heading] {
-  color: var(--rubric-color) !important;
-  font-family: var(--reader-display-font-family) !important;
-  font-size: var(--office-section-font-size) !important;
-  font-style: normal !important;
-  font-weight: 700 !important;
-  line-height: 1.25 !important;
-  letter-spacing: var(--office-section-letter-spacing) !important;
-  text-transform: uppercase;
-  white-space: normal;
-}
-
-.liturgical-hour-column .ora-title,
 .liturgical-hour-column .ora-header {
   padding: 30px 28px 9px !important;
 }
@@ -487,7 +473,8 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   margin-bottom: 1.15em;
 }
 
-.liturgical-hour-column .ora-text p[data-liturgical-heading] {
+.liturgical-hour-column .ora-text p[data-liturgical-heading],
+.liturgical-hour-column .ora-text div[data-liturgical-heading] {
   margin: 0 0 0.8em;
   padding: 0;
   text-align: left !important;
@@ -1108,4 +1095,68 @@ html[data-liturgical-emphasis="off"] .parsed-reading .psalm-refrain__label,
 html[data-liturgical-emphasis="off"] .parsed-reading .alleluia-acclamation__label {
   color: var(--reader-muted);
   font-weight: 700;
+}
+
+.liturgical-hour-column .ora-title,
+.liturgical-hour-column .ora-header,
+.liturgical-hour-column .ora-text p[data-liturgical-heading],
+.liturgical-hour-column .ora-text div[data-liturgical-heading] {
+  color: var(--rubric-color) !important;
+  font-family: var(--reader-display-font-family) !important;
+  font-size: var(--office-section-font-size) !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  letter-spacing: var(--office-section-letter-spacing) !important;
+  text-transform: uppercase;
+  white-space: normal;
+}
+
+// Shared Office reading/responsory presentation. References are separate flex
+// items: when the combined intrinsic widths do not fit, the reference wraps
+// as a whole item and retains its right edge. Long references can wrap too.
+.liturgical-hour-column .ora-text [data-liturgical-heading]:has([data-office-label]) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2em 1em;
+}
+.liturgical-hour-column .ora-text [data-office-label] {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.liturgical-hour-column .ora-text [data-liturgical-heading] [data-office-reference],
+.liturgical-hour-column .ora-text [data-office-reference],
+.liturgical-hour-column .ora-text [data-office-reference] *,
+.liturgical-hour-column .ora-text [data-liturgical-heading] [data-office-reference] * {
+  color: var(--rubric-color) !important;
+  font-family: var(--reader-font-family) !important;
+  font-size: var(--office-section-font-size) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  text-align: right !important;
+  line-height: 1.45 !important;
+  overflow-wrap: anywhere;
+}
+.liturgical-hour-column .ora-text [data-office-reference] {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  margin-left: auto !important;
+}
+.liturgical-hour-column .ora-text [data-office-response] {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+.liturgical-hour-column .ora-text [data-office-response-gap] {
+  display: none;
+}
+.liturgical-hour-column .ora-text [data-office-speaker],
+.liturgical-hour-column .ora-text [data-office-speaker] * {
+  color: var(--rubric-color) !important;
 }
