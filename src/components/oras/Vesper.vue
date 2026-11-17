@@ -4,8 +4,8 @@
       justify="center">
       <v-col class="liturgical-hour-column" v-if="!isLoading && vesperDay">
                 <day-title :day-data="vesperDay" />
-                <intro title="НЕШПАРЫ" />
                 <p v-if="triduumVespersNotice(vesperDay)" class="ora-text" style="color:var(--rubric-color)">{{ triduumVespersNotice(vesperDay) }}</p>
+                <intro title="НЕШПАРЫ" />
                 <v-chip
                     v-if="vespersRubric"
                     class="mb-4 vespers-rubric-chip"
