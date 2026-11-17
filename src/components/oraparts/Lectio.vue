@@ -17,6 +17,7 @@
 
 
 <script setup>
+import { formatOfficeReadingPresentation } from '@/utils/officeReadingPresentation';
 import { normalizeReadingHtml } from '@/utils/liturgicalSourceHtml';
 import { computed, ref } from 'vue';
 import { useReadingChoice } from '@/composables/useReadingChoice';
@@ -36,7 +37,7 @@ const props = defineProps({
 const optionCount = ref(Infinity);
 const choice = useReadingChoice(() => props.field, () => optionCount.value);
 
-const formattedText = computed(() => markLeadingLiturgicalSubheadings(
+const formattedText = computed(() => formatOfficeReadingPresentation(markLeadingLiturgicalSubheadings(
   normalizeReadingHtml(removeLectionSectionHeading(props.text, props.title)),
-));
+)));
 </script>
