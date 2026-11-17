@@ -37,8 +37,8 @@
 
           <v-card class="card" elevation="0">
             <h2>Крыніца</h2>
-            <v-textarea v-model="form.source" label="Крыніца" variant="outlined" rows="2" auto-grow hide-details="auto" :readonly="locked" />
-            <p class="hint">Толькі кароткая назва крыніцы, без старонак. Поўныя звесткі — на старонцы «Крыніцы».</p>
+            <v-textarea v-model="form.source" label="Крыніца" variant="outlined" rows="2" auto-grow counter="500" maxlength="500" hide-details="auto" :readonly="locked" />
+            <p class="hint">Можна ўвесці або змяніць назву крыніцы ўручную. Поўныя звесткі — на старонцы «Крыніцы».</p>
           </v-card>
         </div>
 
