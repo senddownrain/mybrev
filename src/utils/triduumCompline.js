@@ -9,7 +9,7 @@ const TRIDUUM_RESPONSORIES = Object.freeze({
   7: 'Хрыстус стаў дзеля нас паслухмяным ажно да смерці, смерці крыжовай. * Таму Бог узвысіў Яго і даў Яму імя па-над усялякае імя.',
 });
 
-const SOLEMNITY_PRAYER = '<p>Просім Цябе, Пане, наведай гэты дом і аддалі ад яго ўсе варожыя подступы. Няхай Твае святыя анёлы апякуюцца ім і захоўваюць нас у спакоі, а Тваё благаслаўленне няхай заўсёды будзе над намі. Праз Хрыста, Пана нашага.</p>';
+const SOLEMNITY_PRAYER = '<p>Просім Цябе, Пане, наведай гэты дом і аддалі ад яго ўсе варожыя подступы. Няхай Твае святыя анёлы апякуюцца ім і захоўваюць нас у спакоі, а Тваё благаслаўленне няхай заўсёды будзе над намі. Праз Хрыста, Пана нашага. Амэн.</p>';
 
 const GOOD_FRIDAY_INTERCESSIONS = 'У якасці просьбаў будзе пахвальным выкарыстаць агульную малітву, якая пададзена ў Імшале на гэты дзень. Аднак на выбар могуць выкарыстоўвацца ніжэйпададзеныя просьбы або малітва ў маўчанні ў прапанаваных тут інтэнцыях.';
 
@@ -43,14 +43,14 @@ export function goodFridayIntercessionsRubric(day) {
 }
 
 export function completoriumSolemnityPrayer(day) {
-  const officeKind = day?._ordo?.officeKind;
-  const isWeekdaySolemnity = officeKind === 'solemnity' && Number(day?._dayOfWeek) !== 1;
-  return officeKind === 'triduum' || isWeekdaySolemnity ? SOLEMNITY_PRAYER : '';
+  return day?._ordo?.complineSolemnityPrayer ? SOLEMNITY_PRAYER : '';
 }
 
 export function applyComplineRubrics(record, liturgicalDay) {
   if (!record) return record;
-  const responsory = triduumAntiphon(liturgicalDay);
+  const responsory = liturgicalDay?._ordo?.complineChoice
+    ? '<p><span style="color:red">Ант.</span> Вось дзень, які Пан учыніў, * будзем радавацца ў ім і весяліцца,<br>аллелюя</p>'
+    : triduumAntiphon(liturgicalDay);
   const prayer = completoriumSolemnityPrayer(liturgicalDay);
   return {
     ...record,

@@ -250,7 +250,8 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
         ...base,
         key: `${seasonal ? 'fixed' : 'period'}-${temporal.id}`,
         source: seasonal ? LITURGICAL_OPTION_SOURCE.FIXED : LITURGICAL_OPTION_SOURCE.PERIOD,
-        title: buildDayTitle(temporal, context, date),
+        title: option.id === 'temporal:ordinary-w3-d1'
+          ? option.title : buildDayTitle(temporal, context, date),
         ...(seasonal ? { titleIncludesWeekday: true } : {}),
         subtitle: seasonal ? fixedSubtitle(temporal, 1) : 'Літургічны дзень',
         day: temporal,

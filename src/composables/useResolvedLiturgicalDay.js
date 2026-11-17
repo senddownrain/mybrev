@@ -10,6 +10,7 @@ import {
   getPeriodDayDocumentId,
   resolveDayAgainstPeriod,
 } from '@/utils/liturgicalDayResolution';
+import { resolveComplineDescriptor } from '@/utils/ordo/runtime';
 import { findOptionByDayId, findResolvedDayById } from '@/utils/ordoDayOptions';
 
 /**
@@ -17,7 +18,7 @@ import { findOptionByDayId, findResolvedDayById } from '@/utils/ordoDayOptions';
  * Firestore document. This guarantees from-day and seasonal inheritance in
  * every hour component.
  */
-export function useResolvedLiturgicalDay() {
+export function useResolvedLiturgicalDay({ forCompline = false } = {}) {
   const route = useRoute();
   const {
     getLiturgicalContentForDate,
@@ -46,10 +47,11 @@ export function useResolvedLiturgicalDay() {
       return;
     }
 
+    const canResolveCompline = forCompline && id !== 'office-for-dead' && route.query.view !== 'reference';
     const resolveDay = (content) => {
       context.value = content.context || null;
       const selected = findResolvedDayById(content, id);
-      if (!selected) return null;
+      if (!selected && !canResolveCompline) return null;
 
       // A fixed celebration may have been loaded before its regular period
       // day. `_fromDayFields` preserves the exact references, so if that day
@@ -62,18 +64,31 @@ export function useResolvedLiturgicalDay() {
       );
       const currentPeriodDay = content.itemsDays?.find((item) => item.id === periodId) || null;
       periodDay.value = currentPeriodDay;
-      const resolved = currentPeriodDay ? resolveDayAgainstPeriod(selected, currentPeriodDay) : selected;
+      const resolved = selected && currentPeriodDay ? resolveDayAgainstPeriod(selected, currentPeriodDay) : selected;
       // Office descriptor of the legal option that owns this document
       // (officeKind, Te Deum, Compline, I/II Vespers, fallbacks vs choices).
       // A document reached by an old link that is not a legal Office keeps
       // `_ordo: null` and the components use their legacy fallbacks.
       const option = findOptionByDayId(content, id);
+      let ordo = option?.ordo || null;
+      if (canResolveCompline) {
+        // Cached options and legacy links use the current Ordo.
+        ordo = resolveComplineDescriptor(date.format('YYYY-MM-DD'), {
+          diocese: effectiveOrdoDiocese.value,
+          optionId: ordo?.optionId,
+        });
+      }
       return {
         ...resolved,
-        ...(option?.ordo?.celebrationId ? { _feastName: option.ordo.title, _rank: option.ordo.rank } : {}),
+        ...(ordo?.celebrationId ? { _feastName: ordo.title, _rank: ordo.rank } : {}),
+        ...(canResolveCompline ? {
+          _periodType: content.context?.periodType || resolved?._periodType,
+          _periodWeekNumber: content.context?.periodWeek ?? resolved?._periodWeekNumber,
+          _dayOfWeek: (date.day() + 1),
+        } : {}),
         _calendarDate: date.format('YYYY-MM-DD'),
         _contextPeriodType: content.context?.periodType || '',
-        _ordo: option?.ordo || null,
+        _ordo: ordo,
       };
     };
 
@@ -114,7 +129,10 @@ export function useResolvedLiturgicalDay() {
       if (!day.value) error.value = 'Літургічны дзень не знойдзены.';
     } catch (loadError) {
       logger.error('[useResolvedLiturgicalDay] load failed:', loadError);
-      if (currentSequence === sequence) error.value = firestoreErrorMessage(loadError);
+      if (currentSequence === sequence) {
+        if (canResolveCompline) day.value = resolveDay({});
+        error.value = firestoreErrorMessage(loadError);
+      }
     } finally {
       if (currentSequence === sequence) pending.value = false;
     }

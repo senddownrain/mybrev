@@ -91,7 +91,15 @@ export function optionDescriptor(day, option) {
   const office = officeOf(day, option.id);
   const { evening } = day.officeResolution;
   const tomorrowWins = evening.vespers.type === 'first';
-  const compline = tomorrowWins ? evening.compline : (office?.compline || 'current-weekday');
+  const complineChoice = day.period === 'easter' && day.periodPhase === 'octave';
+  const compline = complineChoice
+    ? 'sunday-after-first-or-second-vespers'
+    : tomorrowWins ? evening.compline : (office?.compline || 'current-weekday');
+  const complineSolemnityPrayer = !complineChoice && (
+    option.officeKind === 'triduum' || (tomorrowWins
+      ? evening.complineSolemnityPrayer
+      : option.officeKind === 'solemnity' && Number(day.dayOfWeek) !== 1)
+  );
   return {
     date: day.date,
     diocese: day.context.diocese,
@@ -107,6 +115,8 @@ export function optionDescriptor(day, option) {
     teDeum: Boolean(office?.teDeum),
     compline,
     complineDay: complineWeekday(compline, day.dayOfWeek),
+    complineChoice,
+    complineSolemnityPrayer,
     firstVespersByRight: Boolean(office?.firstVespers?.byRight),
     vespers: tomorrowWins
       ? { ...evening.vespers }
@@ -123,6 +133,13 @@ export function optionDescriptor(day, option) {
       ? day.commemorations.map((item) => ({ id: item.id, title: item.title, rank: item.rank }))
       : [],
   };
+}
+
+/** Rebuild the descriptor for a legacy link or an older cached option. */
+export function resolveComplineDescriptor(date, { diocese, optionId } = {}) {
+  const day = resolveRuntimeDay(date, { diocese });
+  const option = day.officeOptions.find((item) => item.id === optionId) || day.officeOptions[0];
+  return optionDescriptor(day, option);
 }
 
 /** Compact, cacheable summary of the resolved day for the content payload. */

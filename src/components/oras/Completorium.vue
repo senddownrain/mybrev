@@ -11,6 +11,16 @@
                 <day-title :day-data="selectedDay" />
                 <p v-if="triduumComplineNotice(selectedDay)" class="ora-text" style="color:var(--rubric-color)">{{ triduumComplineNotice(selectedDay) }}</p>
                 <intro :title="title"    />
+                <v-select
+                    v-if="selectedDay?._ordo?.complineChoice"
+                    v-model="formula"
+                    :items="formulas"
+                    label="Фармуляр Камплеты"
+                    density="compact"
+                    variant="outlined"
+                    hide-details
+                    class="mb-4"
+                />
                 <exam />
                 <hymnus :text="day.compHymn" />
                 <psalms :ant1="day.compAnt1" :ant2="day.compAnt2" :ant3="day.compAnt3" :ps1="day.compPs1" :ps2="day.compPs2"
@@ -45,26 +55,34 @@ import Exam from '@/components/oraparts/Exam.vue';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
 
 const route = useRoute();
-const { getCompletoriumForDate } = useCompletorium();
+const { getComplineFormulasForDate } = useCompletorium();
 
-const { day: selectedDay, pending: selectedDayPending } = useResolvedLiturgicalDay();
+const { day: selectedDay, pending: selectedDayPending } = useResolvedLiturgicalDay({ forCompline: true });
 
-const day = ref(null);
+const records = ref(null);
+const day = computed(() => applyComplineRubrics(records.value?.[formula.value], selectedDay.value));
 const loadingCompletorium = ref(false);
 const error = ref('');
 const pending = computed(() => selectedDayPending.value || loadingCompletorium.value);
 const title = 'КАМПЛЕТА';
+const formula = ref('second');
+const formulas = [
+  { title: 'Пасля II Нешпараў нядзелі', value: 'second' },
+  { title: 'Пасля I Нешпараў нядзелі', value: 'first' },
+];
+
+watch(() => route.params.day, () => { formula.value = 'second'; }, { flush: 'sync' });
 
 let loadSequence = 0;
 
 watch(
   [() => route.params.day, selectedDay, selectedDayPending],
   async ([dateParam, currentDay, isDayPending]) => {
-    if (!dateParam || isDayPending) return;
-
     const sequence = ++loadSequence;
+    if (!dateParam || isDayPending) return;
     const currentDate = moment(String(dateParam), ['YYYY-MM-DD', 'DD-MM-YYYY'], true);
-    day.value = null;
+    records.value = null;
+    loadingCompletorium.value = false;
     error.value = '';
 
     if (!currentDate.isValid()) {
@@ -74,8 +92,8 @@ watch(
 
     loadingCompletorium.value = true;
     try {
-      const result = await getCompletoriumForDate(currentDate.toDate(), currentDay || null);
-      if (sequence === loadSequence) day.value = applyComplineRubrics(result, currentDay);
+      const result = await getComplineFormulasForDate(currentDate.toDate(), currentDay || null);
+      if (sequence === loadSequence) records.value = result;
     } catch (loadError) {
       logger.error('[Completorium] Памылка загрузкі:', loadError);
       if (sequence === loadSequence) {

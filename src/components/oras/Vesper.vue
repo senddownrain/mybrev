@@ -4,7 +4,7 @@
       justify="center">
       <v-col class="liturgical-hour-column" v-if="!isLoading && vesperDay">
                 <day-title :day-data="vesperDay" />
-                <p v-if="triduumVespersNotice(vesperDay)" class="ora-text" style="color:var(--rubric-color)">{{ triduumVespersNotice(vesperDay) }}</p>
+                <p v-if="participationNotice" class="ora-text" style="color:var(--rubric-color)">{{ participationNotice }}</p>
                 <intro title="НЕШПАРЫ" />
                 <v-chip
                     v-if="vespersRubric"
@@ -24,7 +24,7 @@
                 <reading :text="vesperDay.vesperR" />
                 <resp v-if="triduumVespersAntiphon" :text="triduumVespersAntiphon" />
                 <magnificat :ant="vesperDay.vesperAntMag" />
-                <inters :text="vesperDay.vesperInter" :rubric="goodFridayIntercessionsRubric(vesperDay)" />
+                <inters :text="vesperDay.vesperInter" :rubric="intercessionsRubric" />
                 <pater-noster />
                 <last-prayer :text="vesperDay.vesperPr == '' ? vesperDay.laudesPr : vesperDay.vesperPr" />
                 <end-of-vesper/>
@@ -46,6 +46,7 @@ import moment from '@/utils/moment-be';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { eveningVespersModel } from '@/utils/liturgicalVespers';
+import { liturgicalText } from '@/utils/liturgicalSourceHtml';
 import { logger } from '@/utils/logger';
 import { getLiturgicalTheme, PLACE_LABEL_MAP } from '@/constants/liturgical';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
@@ -70,9 +71,17 @@ let requestVersion = 0;
 
 const vesperDay = computed(() => tomorrowFirstVespers.value?.day || day.value);
 const triduumVespersAntiphon = computed(() => (
-  String(vesperDay.value?.vesperR || '').includes('Хрыстус стаў дзеля нас')
+  liturgicalText(vesperDay.value?.vesperR).includes('Хрыстус стаў дзеля нас паслухмяным')
     ? '' : triduumAntiphon(vesperDay.value)
 ));
+const participationNotice = computed(() => {
+  const notice = triduumVespersNotice(vesperDay.value);
+  return liturgicalText(vesperDay.value?.vesperR).includes(notice) ? '' : notice;
+});
+const intercessionsRubric = computed(() => {
+  const rubric = goodFridayIntercessionsRubric(vesperDay.value);
+  return liturgicalText(vesperDay.value?.vesperInter).includes(rubric) ? '' : rubric;
+});
 const isLoading = computed(() => pending.value || checkingTomorrow.value);
 const vespersRubricStyle = computed(() => {
   const theme = getLiturgicalTheme(vesperDay.value, vesperDay.value?._periodType);

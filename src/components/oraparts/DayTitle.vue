@@ -119,6 +119,7 @@ watch(
 const displayTitle = computed(() => {
   const day = resolvedDay.value;
   if (!day) return '';
+  if (day._ordo?.officeKind === 'sunday' && day._ordo.optionId === 'temporal:ordinary-w3-d1') return day._ordo.title;
   const hasCelebrationIdentity = day._feast || day._rank || day._feastType;
   if (day._kind === 'office-for-dead') return day._feastName || day._title || 'Афіцый за памерлых';
   if (day._feast === 'feast-christking' || day._celebrationId === 'christ-king' || day.id === 'feast-christking') {
