@@ -1,0 +1,41 @@
+{
+  "collection": "liturgicalTemplates",
+  "digest": "a1d498c34dd96ab8",
+  "version": 4,
+  "hashes": {
+    "apostles": "037b55fae44b5d72",
+    "blessed-virgin-mary": "4a55d3f39e19ff19",
+    "church-dedication": "47d80474e6312c91",
+    "complementary-psalmody": "e18dc872838598bd",
+    "doctors-of-church": "1f2017cbf10a26c6",
+    "educators": "4e51bcf9abdeee8e",
+    "holy-men": "fe332e60f18d9398",
+    "holy-women": "61716ce8541acf79",
+    "martyr-one": "093d23c6a4a5948b",
+    "martyrs-many": "e16d8f21cbe48d2f",
+    "office-for-dead": "2b4e2d0dd595bf14",
+    "pastors": "dee662e1b13df4a1",
+    "religious": "a66c0e2b86ed56e1",
+    "sunday-week-1": "f85198d476c07205",
+    "virgins": "0bd2bdf0b219f2ba",
+    "works-of-mercy": "2db60496d5ba15fe"
+  },
+  "sizes": {
+    "apostles": 122022,
+    "blessed-virgin-mary": 351368,
+    "church-dedication": 250350,
+    "complementary-psalmody": 15191,
+    "doctors-of-church": 190894,
+    "educators": 44134,
+    "holy-men": 273627,
+    "holy-women": 312458,
+    "martyr-one": 298090,
+    "martyrs-many": 214816,
+    "office-for-dead": 112559,
+    "pastors": 409641,
+    "religious": 91202,
+    "sunday-week-1": 72195,
+    "virgins": 210750,
+    "works-of-mercy": 58769
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "status": "offline-candidate-not-a-production-receipt",
+  "schemaVersion": 1,
+  "bundleContentVersion": 1794815100000,
+  "publicationContentVersion": "actual publication epoch milliseconds, >= bundleContentVersion",
+  "collections": {
+    "days": {
+      "digest": "259c01cbdac7469d",
+      "count": 736,
+      "bytes": 54673238,
+      "versionIfPublishedBaselineUnchanged": 7,
+      "requiresFreshPriorManifestCheck": true
+    },
+    "liturgicalTemplates": {
+      "digest": "a1d498c34dd96ab8",
+      "count": 16,
+      "bytes": 3028066,
+      "versionIfPublishedBaselineUnchanged": 4,
+      "requiresFreshPriorManifestCheck": true
+    },
+    "liturgicalProperTexts": {
+      "digest": "dccd7a25a8393a4f",
+      "count": 291,
+      "bytes": 3271712,
+      "versionIfPublishedBaselineUnchanged": 1,
+      "requiresFreshPriorManifestCheck": true
+    }
+  }
+}

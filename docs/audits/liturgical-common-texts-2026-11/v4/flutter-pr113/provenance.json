@@ -1,0 +1,31 @@
+{
+  "repository": "senddownrain/ibreviarybyapp",
+  "pullRequest": 113,
+  "mergeSha": "bb145d8e366236af930b7d1086c24b3d1c52256a",
+  "files": {
+    "liturgicalProperTexts-manifest-candidate.json": {
+      "sha256": "75163fa50777500ec5dc2ee25ba3d94f00bef73358242ecac588a145ab717bcb",
+      "bytes": 27428
+    },
+    "liturgicalTemplates-manifest-candidate.json": {
+      "sha256": "726e9e5d9cf9431456ef2034ab2318d9dcde7bdee39b5099f7b3c89612ea4d50",
+      "bytes": 1218
+    },
+    "manifest-requirements.json": {
+      "sha256": "8aa7c0a02f3bbd9f70c10bb58cabf162bbab10eded1977cd6b64dce99f90da87",
+      "bytes": 861
+    },
+    "bundle-report.json": {
+      "sha256": "a83002d05726dd60c3a707fd42cf58c27784bc9a693aefdad33562646884521b",
+      "bytes": 7671
+    },
+    "HANDOFF.md": {
+      "sha256": "c6bd1e08a57e2eb41c58dfbee5196d62876656e6d676cfd0bba084e819236df5",
+      "bytes": 21928
+    },
+    "days-manifest-candidate.json": {
+      "sha256": "da67c7496bbbd348283c27a69f0c55392a4edc0da878cbd6dd3a9c53c74790d0",
+      "bytes": 63247
+    }
+  }
+}

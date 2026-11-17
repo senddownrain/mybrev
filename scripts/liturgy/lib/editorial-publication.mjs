@@ -3,6 +3,7 @@ import { editorialHash } from './editorial-responsories.mjs';
 import { buildFirestoreWrite } from '../audit-doxologies.mjs';
 const at=(d,p)=>p.reduce((v,k)=>v?.[k],d);
 const sameTime=(a,b)=>a?.seconds===b?.seconds&&a?.nanoseconds===b?.nanoseconds;
+export const serverTime=value=>{const m=/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?Z$/u.exec(value||'');if(!m)throw Error('Invalid server updateTime');return {seconds:Date.parse(m[1]+'Z')/1000,nanoseconds:Number((m[2]||'').padEnd(9,'0'))};};
 export function validatePublicationPlan(plan){
  if(plan.schema!==3||plan.network!==false||!Array.isArray(plan.documents))throw Error('Unsupported offline plan');
  const seen=new Set(),docs=new Set();for(const d of plan.documents){
@@ -41,7 +42,7 @@ export async function executePreparedPublication(prepared,adapter,{maxWrites=400
  for(const batch of boundPublicationWrites(prepared,{maxWrites})){
   const result=await adapter.commit(batch.map(p=>p.write));
   if(!Array.isArray(result.writeResults)||result.writeResults.length!==batch.length)throw Error('Incomplete commit response; inspect server before continuing');
-  const receipt={documents:batch.map((p,i)=>({document:p.plan.document,serverUpdateTime:result.writeResults[i].updateTime,fields:p.plan.fields.map(f=>({field:f.field,path:f.path,...(includeValues?{before:f.before,after:f.after}:{}),beforeSha256:f.beforeSha256,afterSha256:f.afterSha256}))})),readback:'pending'};
+  const receipt={documents:batch.map((p,i)=>({document:p.plan.document,serverUpdateTime:result.writeResults[i].updateTime,writtenFieldMasks:p.write.updateMask.fieldPaths,fields:p.plan.fields.map(f=>({field:f.field,path:f.path,...(includeValues?{before:f.before,after:f.after}:{}),beforeSha256:f.beforeSha256,afterSha256:f.afterSha256}))})),readback:'pending'};
   receipts.push(receipt);await adapter.journal(receipts);
   const records=await adapter.read(batch.map(p=>p.plan.document));
   for(const item of receipt.documents){const actual=records.get(item.document);if(!actual)throw Error('Readback missing document');
@@ -56,7 +57,7 @@ export async function executePreparedPublication(prepared,adapter,{maxWrites=400
 }
 
 /** The immutable original plan supplies values; receipts contain hashes only. */
-export function preparePublicationResume(plan,records,previous={receipts:[]}){
+export function preparePublicationResume(plan,records,previous={receipts:[]},{prepare=prepareFreshPublication}={}){
  validatePublicationPlan(plan);
  const owners=new Map(plan.documents.map(d=>[d.document,d])),seen=new Set(),receipts=structuredClone(previous.receipts||[]),done=new Set();
  const recorded=new Set(receipts.flatMap(b=>b.documents.map(d=>d.document)));
@@ -67,17 +68,19 @@ export function preparePublicationResume(plan,records,previous={receipts:[]}){
   if(!attempt||ack.writeResults.length!==attempt.request.documents.length)throw Error('Incomplete acknowledgement journal');
   const missing=attempt.request.documents.filter(n=>!recorded.has(n));if(!missing.length)continue;
   if(missing.length!==attempt.request.documents.length)throw Error('Partial duplicate acknowledgement journal');
-  const documents=attempt.request.documents.map((name,i)=>{const d=owners.get(name);if(!d)throw Error('Acknowledgement outside pinned plan');recorded.add(name);return {document:name,serverUpdateTime:ack.writeResults[i].updateTime,fields:d.fields.map(f=>({field:f.field,path:f.path,beforeSha256:f.beforeSha256,afterSha256:f.afterSha256}))};});
+  const documents=attempt.request.documents.map((name,i)=>{const d=owners.get(name);if(!d)throw Error('Acknowledgement outside pinned plan');recorded.add(name);return {document:name,serverUpdateTime:ack.writeResults[i].updateTime,writtenFieldMasks:attempt.request.fieldMasks?.[i]||d.fields.map(f=>f.field),fields:d.fields.map(f=>({field:f.field,path:f.path,beforeSha256:f.beforeSha256,afterSha256:f.afterSha256}))};});
   receipts.push({documents,readback:'pending',recoveredFromAcknowledgement:ack.requestNumber});
  }
  for(const batch of receipts)for(const d of batch.documents){
   const source=owners.get(d.document);if(!source||seen.has(d.document))throw Error('Unknown/duplicate resumed document');seen.add(d.document);
+  if(d.writtenFieldMasks&&(!Array.isArray(d.writtenFieldMasks)||new Set(d.writtenFieldMasks).size!==d.writtenFieldMasks.length||d.writtenFieldMasks.some(mask=>!source.fields.some(f=>f.field===mask))))throw Error('Resumed write mask outside pinned plan');
   if(!d.serverUpdateTime||d.fields.length!==source.fields.length||d.fields.some(f=>!source.fields.some(s=>s.field===f.field&&s.beforeSha256===f.beforeSha256&&s.afterSha256===f.afterSha256)))throw Error('Resumed receipt differs from pinned plan');
   if(batch.readback==='verified'){done.add(d.document);continue;}
   const current=records.get(d.document);if(!current||source.fields.some(f=>typeof at(current.data,f.path)!=='string'||editorialHash(at(current.data,f.path))!==f.afterSha256))throw Error('Pending committed batch needs manual readback resolution');
+  if(!sameTime(current.updateTime,serverTime(d.serverUpdateTime)))throw Error('Pending committed batch updateTime conflict');
   d.readbackUpdateTime=current.updateTime;done.add(d.document);
  }
  for(const batch of receipts)batch.readback='verified';
  const remaining=plan.documents.filter(d=>!done.has(d.document)),reduced={...plan,documents:remaining,summary:{...plan.summary,readyDocuments:remaining.length,readyFields:remaining.reduce((n,d)=>n+d.fields.length,0)}};
- return {prepared:prepareFreshPublication(reduced,records),receipts,alreadyVerifiedDocuments:done.size};
+ return {prepared:prepare(reduced,records),receipts,alreadyVerifiedDocuments:done.size};
 }

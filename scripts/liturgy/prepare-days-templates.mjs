@@ -43,10 +43,16 @@ export async function verifyLocalBaseline(plan,snapshotPath,adventPath){
  return {checkedDocuments:plan.documents.length,checkedFields:plan.summary.readyFields,formattingOnlyTrailingNewlineDifferences:formattingDifferences,batchesOf25:boundPublicationWrites(writes,{maxWrites:25}).length};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
- const a=process.argv.slice(2);if(a.length!==6||a[0]!=='--snapshot'||a[2]!=='--advent-baseline'||a[4]!=='--out'||!a[5].startsWith('backups/'))throw Error('Usage: --snapshot <existing-local> --advent-baseline <existing-local> --out backups/<plan.gz>');
+ const a=process.argv.slice(2);if(![6,8].includes(a.length)||(a.length===8&&(a[6]!=='--coordinated-catalog'||!a[7].startsWith('backups/')))||a[0]!=='--snapshot'||a[2]!=='--advent-baseline'||a[4]!=='--out'||!a[5].startsWith('backups/'))throw Error('Usage: --snapshot <existing-local> --advent-baseline <existing-local> --out backups/<plan.gz> [--coordinated-catalog backups/<catalog.gz>]');
  const source=fs.readFileSync(root+'/full-content-plan.json.gz'),full=JSON.parse(zlib.gunzipSync(source)),published=JSON.parse(fs.readFileSync(root+'/PUBLICATION_RESULT.json'));
  const plan=selectDaysTemplates(full,published),verification=await verifyLocalBaseline(plan,a[1],a[3]);
  plan.inputs={fullPlanSha256:editorialHash(source),publishedReceiptSha256:published.receiptSha256};
  const output=zlib.gzipSync(JSON.stringify(plan)+'\n',{level:9});fs.writeFileSync(a[5],output,{mode:0o600});
+ if(a.length===8){
+  const {buildCoordinatedCatalog,binarySha256}=await import('./lib/coordinated-release.mjs');
+  const catalog=await buildCoordinatedCatalog(await openFirestoreSnapshot(a[1]),full,published);
+  catalog.inputs={sourcePlanBinarySha256:binarySha256(source),snapshotManifestBinarySha256:binarySha256(fs.readFileSync(a[1]+'/manifest.json')),properResultBinarySha256:binarySha256(fs.readFileSync(root+'/PUBLICATION_RESULT.json'))};
+  fs.writeFileSync(a[7],zlib.gzipSync(JSON.stringify(catalog)+'\n',{level:9}),{mode:0o600});
+ }
  console.log(JSON.stringify({...plan.summary,...verification,planSha256:editorialHash(output),output:a[5],firebaseReads:0,firebaseWrites:0},null,2));
 }

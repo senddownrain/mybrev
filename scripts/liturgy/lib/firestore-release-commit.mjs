@@ -2,8 +2,9 @@ import { editorialHash } from './editorial-responsories.mjs';
 import { captureFirestoreFailure,classifyFirestoreFailure,retryDelayMs,sanitizeReleaseValue } from './firestore-release-errors.mjs';
 /** Retry only a definite rejected rate/capacity error. Never retry unknown
  * RESOURCE_EXHAUSTED, daily quota, transport failure or an ambiguous 5xx. */
-export function createReleaseCommit(credential,{fetchImpl=fetch,onEvent=async()=>{},wait=ms=>new Promise(resolve=>setTimeout(resolve,ms)),maxAttempts=3,maxTotalRetries=4,random=Math.random}={}){
- let totalRetries=0,requestNumber=0;
+export function createReleaseCommit(credential,{fetchImpl=fetch,onEvent=async()=>{},wait=ms=>new Promise(resolve=>setTimeout(resolve,ms)),maxAttempts=3,maxTotalRetries=4,initialRequestNumber=0,random=Math.random}={}){
+ if(!Number.isSafeInteger(initialRequestNumber)||initialRequestNumber<0)throw Error('Invalid resume request number');
+ let totalRetries=0,requestNumber=initialRequestNumber;
  return async writes=>{
   const body=JSON.stringify({writes});
   for(let attempt=1;attempt<=maxAttempts;attempt++){
