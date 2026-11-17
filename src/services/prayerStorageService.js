@@ -26,7 +26,7 @@ export async function saveStoredPrayer(id, data, create = false) {
   await mutatePrayerContent((content) => {
     const old = content.prayers.find((item) => item.id === key);
     if (!create && !old) throw new Error('Малітва не знойдзена.');
-    const { id: _id, ...payload } = normalizePrayerSourceFields({ ...old, ...data }, { existing: old });
+    const { id: _id, ...payload } = normalizePrayerSourceFields({ ...old, ...data }, { existing: old, editor: true });
     content.prayers = content.prayers.filter((item) => item.id !== key);
     content.prayers.push({ ...old, ...payload, id: key, priestOnly: payload.priestOnly === undefined ? old?.priestOnly === true : payload.priestOnly === true,
       ...(create ? { createdAt: serverTimestamp() } : {}), updatedAt: serverTimestamp() });

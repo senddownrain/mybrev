@@ -32,7 +32,7 @@ export function createDraftActions({ db, fs, writer, actorUid }) {
   }
 
   async function createDraft(draftId, data) {
-    const record = { ...pick(normalizePrayerSourceFields(data), [...DRAFT_FIELDS, 'sourceId', 'sourceSha256', 'sourcePageSpan', 'pdfPageStart', 'pdfPageEnd', 'printedPageStart', 'printedPageEnd',
+    const record = { ...pick(normalizePrayerSourceFields(data, { editor: true }), [...DRAFT_FIELDS, 'sourceId', 'sourceSha256', 'sourcePageSpan', 'pdfPageStart', 'pdfPageEnd', 'printedPageStart', 'printedPageEnd',
       'originalEntryId', 'originBatch', 'origin', 'reason', 'flagReasons', 'possibleDuplicateIds', 'fingerprint']),
       draftId, textFormat: 'mybrev-markdown', status: 'draft', version: 1, tags: data.tags || [], createdBy: actorUid, createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
     };
@@ -57,7 +57,7 @@ export function createDraftActions({ db, fs, writer, actorUid }) {
       const next = status || normalizeDraftStatus(current.status);
       if (!canTransition(current.status, next)) throw new DraftError('transition', 'Недапушчальная змена статуса.');
       if (next === 'published') throw new DraftError('transition', 'Публікацыя — асобная аперацыя.');
-      const normalized = normalizePrayerSourceFields({ ...current, ...pick(patch || {}, DRAFT_FIELDS) }, { existing: current });
+      const normalized = normalizePrayerSourceFields({ ...current, ...pick(patch || {}, DRAFT_FIELDS) }, { existing: current, editor: true });
       const savedFields = { ...pick(patch || {}, DRAFT_FIELDS), ...pick(normalized, ['source', 'sourceBook']) };
       const merged = { ...current, ...savedFields, status: next };
       const errors = validateDraft(merged);
@@ -94,7 +94,7 @@ export function createDraftActions({ db, fs, writer, actorUid }) {
           }
         }
         const old = content.prayers.find((item) => item.id === targetId);
-        const built = buildPrayerFromDraft(before, { existing: old });
+        const built = buildPrayerFromDraft(before, { existing: old, editorSource: true });
         content.prayers = content.prayers.filter((item) => item.id !== targetId);
         content.prayers.push({ ...old, ...built, id: targetId, ...(old ? {} : { createdAt: serverTimestamp() }), updatedAt: serverTimestamp() });
       }, {

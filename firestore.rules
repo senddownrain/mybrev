@@ -66,8 +66,9 @@ service cloud.firestore {
       return request.resource.data.get('priestOnly', false) == false
         && request.resource.data.get('effectivePriestOnly', false) == false;
     }
-    // Optional source/sourceBook strings: canonical for creates/changes; exact
-    // historical values may survive unrelated edits. Access checks remain outside.
+    // Canonical names remain recognized by the import pipeline, while Web admins
+    // may edit attribution freely (up to 500 characters). Preserve unchanged
+    // historical longer values without opening access to non-admin writers.
     // BEGIN GENERATED PRAYER SOURCE NAMES
     function canonicalPrayerSource(value) {
       return value is string && value in [
@@ -98,9 +99,13 @@ service cloud.firestore {
       ];
     }
     // END GENERATED PRAYER SOURCE NAMES
+    function editablePrayerSource(value) {
+      return value is string && value.size() <= 500;
+    }
     function validSourceField(field) {
       return !(field in request.resource.data)
         || canonicalPrayerSource(request.resource.data[field])
+        || editablePrayerSource(request.resource.data[field])
         || (request.method == 'update' && field in resource.data
           && request.resource.data[field] == resource.data[field]);
     }
