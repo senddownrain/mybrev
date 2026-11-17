@@ -30,6 +30,9 @@ jobs:
       - name: Administrator-only Songbook regression tests
         run: node --test tests/admin-access.test.mjs
 
+      - name: Triduum and Compline regression
+        run: node --test tests/triduum-compline.test.mjs tests/liturgical-period-title.test.mjs
+
       - name: Immaculate Heart movable memorial regression tests
         run: node --test tests/immaculate-heart-hours.test.mjs
 

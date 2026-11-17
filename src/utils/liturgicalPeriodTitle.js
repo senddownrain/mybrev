@@ -55,7 +55,9 @@ export function formatLiturgicalPeriodTitle({ periodType, periodWeek, dayOfWeek,
 
   if (Number(dayOfWeek) === 1 && week) {
     const sundayLabels = {
-      ordinary: `${week} нядзеля звычайная`,
+      ordinary: Number(periodWeek) === 3
+        ? `${week} нядзеля звычайная · Нядзеля Божага Слова`
+        : `${week} нядзеля звычайная`,
       advent: `${week} нядзеля Адвэнту`,
       lent: `${week} нядзеля Вялікага посту`,
       easter: `${week} велікодная нядзеля`,

@@ -303,6 +303,8 @@ export function resolveEvening(today, tomorrow) {
         title: todayPrimary.title,
       },
     compline,
+    complineSolemnityPrayer: tomorrowWins
+      && tomorrowPrimary.officeKind === 'solemnity' && !tomorrow.season.isSunday,
     conflict,
     omittedFirstVespers: tomorrowHasFirst && !tomorrowWins ? tomorrowPrimary.id : null,
   };
