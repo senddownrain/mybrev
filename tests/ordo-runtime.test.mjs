@@ -66,7 +66,7 @@ test('16 November Vitebsk Hours use the approved obligatory rank even with legac
       id: '16-11-our-lady-mother-mercy',
       _date: '16.11',
       _rank: 'memoria-ad-libitum',
-      _feastName: 'Найсв. Панны Марыі, Маці Міласэрнасці (Маці Божай Вастрабрамскай)',
+      _feastName: 'Загаловак уласнага літургічнага тэксту',
       vesperPr: 'Тэкст успаміну',
     };
     const built = buildOrdoDayOptions({
@@ -79,7 +79,8 @@ test('16 November Vitebsk Hours use the approved obligatory rank even with legac
     assert.match(option.subtitle, /^Успамін/u);
     assert.ok(!option.subtitle.includes('Неабавязковы'), option.subtitle);
     assert.equal(option.day._rank, 'memoria');
-    assert.equal(option.day._feastName, resolved.primary.title);
+    assert.equal(option.title, resolved.primary.title);
+    assert.equal(option.day._feastName, legacy._feastName, 'Office source title is not rewritten');
     assert.ok(option.templates.length > 0);
     for (const template of option.templates) assert.equal(template.day._rank, 'memoria');
   }
