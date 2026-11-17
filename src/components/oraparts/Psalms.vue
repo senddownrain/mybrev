@@ -40,7 +40,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { hasSingleAntiphonPsalmody } from '@/utils/liturgicalDayResolution';
-import { formatPsalmHtml } from '@/utils/liturgicalHtml';
+import { formatPsalmHtml, markAntiphonLabel } from '@/utils/liturgicalHtml';
 import PsalmText from '@/components/oraparts/PsalmText.vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 
@@ -59,10 +59,10 @@ const hasEmbeddedThirdPsalmAlternatives = computed(() => (
 const ant1Option = ref(0);
 const ant2Option = ref(0);
 const ant3Option = ref(0);
-const formatPsalm = (psalm, antiphon) => formatPsalmHtml(psalm, {
+const formatPsalm = (psalm, antiphon) => markAntiphonLabel(formatPsalmHtml(psalm, {
   stripEmbeddedAntiphon: Boolean(antiphon),
   antiphon,
-});
+}));
 </script>
 
 <style scoped>
