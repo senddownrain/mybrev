@@ -100,8 +100,8 @@ jobs:
       - name: Prayer source canonical names and import guards (offline)
         run: npm run test:prayer-sources
 
-      - name: Public content cache refresh regression tests
-        run: node --test tests/content-cache.test.mjs
+      - name: Public content cache, staged warmup and quota regressions (offline)
+        run: node --test tests/content-cache.test.mjs tests/firestore-warmup.test.mjs tests/extended-cache-warmup.test.mjs
 
       - name: Ordinary Friday Vespers repair regressions (offline)
         run: node --test tests/ordinary-friday-vespers.test.mjs
