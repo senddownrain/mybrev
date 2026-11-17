@@ -90,8 +90,9 @@ jobs:
           let planFile=root+'/publication-plan.json.gz';
           if(process.env.RELEASE_SCOPE==='final-test-manifest'){
             if(process.env.MODE!=='execute')throw Error('Metadata scope requires execute');
-            const {loadReviewedManifest}=await import('./scripts/content/lib/reviewed-manifest.mjs');
+            const {loadReviewedManifest,assertReviewedManifestExecutable}=await import('./scripts/content/lib/reviewed-manifest.mjs');
             loadReviewedManifest(process.env.COORDINATED_AUTHORIZATION,process.env.EXPECTED_PLAN_SHA);
+            assertReviewedManifestExecutable();
             execFileSync('git',['ls-files','--error-unmatch',process.env.COORDINATED_AUTHORIZATION],{stdio:'pipe'});
             planFile=process.env.COORDINATED_AUTHORIZATION;
           }else if(process.env.RELEASE_SCOPE==='coordinated-pr255'){

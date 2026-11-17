@@ -1,4 +1,10 @@
-# Final test bundle manifest parity
+# RETIRED — production execution disabled before credentials
+
+The protected run44185030376 stopped with Firestore code8 Quota exceeded before preparing any write; no retry. Actual source revision3 also predates the accepted Flutter calendar from main (bundled revision4; separate revision5 release remains pending) (#107). Candidate CI exposed a real regression (Juan Diego enabled in the older server snapshot). The final candidate must retain the exact accepted main calendar, so the old bundleSHA19ed… and this metadata-only plan are historical evidence, not an executable continuation.
+
+Both the existing publisher CLI and protected workflow reject this exact plan before credential loading/Firestore access. A future, separately bounded plan must reconcile the already approved calendar using the existing calendar publication process, preserve newer production values, bind the revised single candidate SHA and verify manifest parity after quota recovery. No calendar migration or Firestore call was performed here.
+
+## Historical plan and verification
 
 The owner explicitly approved the additional four-index plan (canonical SHA256 `90c78bfdd348b96f37897be3ac0e6939876097f763b15dd76464a28b5a5cb3f4`) and then authorized completion of all required work: “все разрешаю. делай больше и даже максимум”. This scope completes metadata parity with all 16 existing public collections in the single final Flutter test candidate. No document content changes, prayer-source migration, mobile binary release or installed-client inventory claim.
 

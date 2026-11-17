@@ -30,3 +30,7 @@ test('same production transaction fence publishes only ten changed metadata docs
 test('updateTime drift or root conflict stops without any queued write; no retries',async()=>{
  for(const options of [{changedTime:true},{conflict:true}]){const r=reviewed(),db=fakeDb(r,options);await assert.rejects(executeReviewedManifest({db,reviewed:r,journal:()=>{}}),/budget|CAS/);assert.equal(db.writes.length,0);}
 });
+
+test('retired raw-calendar plan cannot execute or resume, before credential/receipt access', async () => {
+ await assert.rejects(reviewedManifestMain(['--reviewed-manifest-authorization',REVIEWED_DIR+'/plan.json','--expected-plan-sha',REVIEWED_PLAN_SHA,'--apply','--service-account','/nonexistent','--receipt','/nonexistent','--resume','/nonexistent']),/plan retired/);
+});
