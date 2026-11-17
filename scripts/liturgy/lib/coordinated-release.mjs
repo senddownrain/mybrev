@@ -54,8 +54,14 @@ export function loadCoordinatedContract(dir = CONTRACT_DIR, { testApp = false } 
     for (const name of COORDINATED_COLLECTIONS) check(collectionDigest(patch.after[name].hashes) === patch.after[name].digest
       && Object.keys(patch.after[name].hashes).length === patch.after[name].count
       && Object.values(patch.after[name].sizes).reduce((a,b) => a+b,0) === patch.after[name].bytes, 'Invalid reconciled target');
-    contract.expected = patch.after;
-    contract.testApp = { policy: 'pr255-test-app-before-mobile-release', supplementSha256: binarySha256(bytes) };
+    const liveBytes = fs.readFileSync(`${dir}/../final-execution/live-baseline-preservation.json`);
+    check(binarySha256(liveBytes) === 'd1ef62b1008cdedf2c9d1a2763b1890e59259f53ba111577ac39c348057403a5', 'Unpinned live baseline preservation');
+    const live = JSON.parse(liveBytes);
+    check(live.scope === 'flutter-bundle-live-baseline-only' && live.firestoreWrites === 0 && live.changes.length === 3
+      && live.changes.every(c => c.document === 'days/office-for-dead' && ['checked','allowedAlleluia','vesperPs3'].includes(c.field))
+      && isDeepStrictEqual(live.before, patch.after), 'Unexpected live-baseline scope');
+    contract.expected = live.after;
+    contract.testApp = { policy: 'pr255-test-app-before-mobile-release', supplementSha256: binarySha256(bytes), liveBaselinePreservationSha256: binarySha256(liveBytes) };
     contract.targetContractSha256 = valueSha256({ reportSha256: contract.reportSha256, ...contract.testApp, expected: contract.expected });
   }
   return contract;
@@ -131,6 +137,28 @@ export function verifyTestAppCompatibility(e, a, contract) {
   }
   check(tests.appReleaseDataPreservation === true && tests.appReleaseRestart === true && tests.upgradeStatusClears === true
     && tests.settingsFavoritesPersonalPrayersPreserved === true && tests.targetHashesVerified === true, 'Test-app data preservation/target verification incomplete');
+}
+
+/** Reuse the ONE completed fresh preflight after a target-only amendment.
+ * This cannot reuse an ambiguous write attempt or a partial/changed checkpoint.
+ * The original server updateTimes remain exact CAS preconditions on every write. */
+export function loadVerifiedPreflightCheckpoint({ plan, previous, authorization, receiptBytes, directory }) {
+  const p = authorization.preflightCheckpoint;
+  check(p && p.receiptSha256 === binarySha256(receiptBytes) && p.receiptSha256 === authorization.resumeReceiptSha256
+    && previous.state === 'coordinated-release-blocked' && previous.reason === 'Target preflight cannot match Flutter bundle without unapproved field changes; no writes'
+    && previous.writtenDocumentsAcknowledged === 0 && previous.writtenFieldsAcknowledged === 0
+    && !(previous.receipts || []).length && !(previous.attempts || []).length
+    && previous.compatibility.planBinarySha256 === authorization.planBinarySha256
+    && previous.compatibility.releaseEvidenceSha256 === p.previousReleaseEvidenceSha256, 'Not a verified zero-write preflight checkpoint');
+  const records = new Map(), files = {};
+  for (const doc of plan.documents) {
+    const bytes = fs.readFileSync(`${directory}/${doc.document}.json`), record = JSON.parse(bytes);
+    check(record.document === doc.document && Number.isSafeInteger(record.updateTime?.seconds) && Number.isSafeInteger(record.updateTime?.nanoseconds), 'Invalid preflight checkpoint document');
+    files[doc.document] = binarySha256(bytes); records.set(doc.document, { data: record.data, updateTime: record.updateTime });
+  }
+  check(valueSha256(files) === p.documentFilesSha256, 'Preflight checkpoint file SHA mismatch');
+  prepareCoordinatedFresh(plan, records); // Every selected before/already-after SHA still has to be valid.
+  return records;
 }
 
 export function catalogEntry(document, record) {

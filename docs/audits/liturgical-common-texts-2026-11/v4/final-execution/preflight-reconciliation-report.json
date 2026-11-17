@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "previousRun": 44136754414,
+  "previousReceiptSha256": "972354c12a970bb4d787d265550db50e78b046e1aa3374c58372947fb8fe7971",
+  "previousReadDocuments": 753,
+  "previousWrites": 0,
+  "checkpointDocuments": 749,
+  "checkpointFilesSha256": "f88fcb280ef892049ce3bb88122f4073a0b9e78a54446b0f2eee1a3caa68912b",
+  "unchangedPlanSha256": "3f395bd371666099a92158c183349fa0984e01e61b672735c559d76e2ed809d8",
+  "targetContractSha256": "6624be611627ae7e50eba59dbf963736da72f3993b2f3c7fe7c9b5ce545754cc",
+  "preservedFields": [
+    "days/office-for-dead.checked",
+    "days/office-for-dead.allowedAlleluia",
+    "days/office-for-dead.vesperPs3"
+  ],
+  "projectedTargets": "749/749 match after exactly original 7791 masks",
+  "newFirestoreReads": 0,
+  "newFirestoreWrites": 0
+}

@@ -1,15 +1,15 @@
 {
   "schema": 1,
   "status": "passed",
-  "kind": "in-memory-target-descriptors-not-a-new-bundle",
-  "targetContractSha256": "ac7dbfccaf6b4e78437cf347fd8c35262cf6522b2fbcc4fd2f833b83066c762f",
+  "kind": "in-memory-target-descriptors-with-exact-live-baseline-preservation",
+  "targetContractSha256": "6624be611627ae7e50eba59dbf963736da72f3993b2f3c7fe7c9b5ce545754cc",
   "supplementSha256": "e08c154ff6d7d5d1443a4f89b297c0c9de2da2d6195a3527ee33a9d0718a2692",
   "sourceFiles": {
     "days.json.gz": "9b691b3229d0dccb3835e13873d4a6f79c5c98ce9b90216219988ac6708fbae7",
     "liturgicalTemplates.json.gz": "cd55ff3fbfe024cb6905e2e1b238effdc6740cc07ffdb676d3dac61cfd8b27ad",
     "liturgicalProperTexts.json.gz": "e73cf03ef2652e904465e3743c872f292f40a420443e9762d49f1361716bcc18"
   },
-  "outputSha256": "62e34e19a9f0a635a27bf2b4fb7d67e05c3a90261d8f122c2b78b6f7dd5fa686",
+  "outputSha256": "ca2b313f991df7dc3490019af76cdd371aaab15fc3ce015c0a26737f9de89e5e",
   "collections": {
     "days": {
       "hashes": {
@@ -512,7 +512,7 @@
         "lent-w5-d5": "ef24fc9e36b7fb1c",
         "lent-w5-d6": "c29ead19b6b3adf3",
         "lent-w5-d7": "c263a784afd524f0",
-        "office-for-dead": "01ddb121ad3c9909",
+        "office-for-dead": "672f2fc576b913d0",
         "ordinary-w1-d2": "b926d9db768a184c",
         "ordinary-w1-d3": "30b3b90fe26cbd6f",
         "ordinary-w1-d4": "e99f90e712d3fa18",
@@ -1250,7 +1250,7 @@
         "lent-w5-d5": 74337,
         "lent-w5-d6": 75744,
         "lent-w5-d7": 74200,
-        "office-for-dead": 90596,
+        "office-for-dead": 90652,
         "ordinary-w1-d2": 70856,
         "ordinary-w1-d3": 71045,
         "ordinary-w1-d4": 68375,
@@ -1488,9 +1488,9 @@
         "ordinary-w9-d6": 71400,
         "ordinary-w9-d7": 67082
       },
-      "digest": "cbe2b5a263890a42",
+      "digest": "b80a2589e5651bd7",
       "count": 736,
-      "bytes": 54678841
+      "bytes": 54678897
     },
     "liturgicalTemplates": {
       "hashes": {
@@ -2126,5 +2126,6 @@
     }
   },
   "firebaseReads": 0,
-  "firebaseWrites": 0
+  "firebaseWrites": 0,
+  "liveBaselinePreservationSha256": "d1ef62b1008cdedf2c9d1a2763b1890e59259f53ba111577ac39c348057403a5"
 }

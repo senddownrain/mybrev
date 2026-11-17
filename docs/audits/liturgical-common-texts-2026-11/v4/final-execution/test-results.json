@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "passed": 101,
+  "passed": 102,
   "failed": 0,
   "firebaseReads": 0,
   "firebaseWrites": 0,
@@ -54,6 +54,19 @@
       "log": {
         "path": "docs/audits/liturgical-common-texts-2026-11/v4/final-execution/main-tests.jsonl.gz",
         "sha256": "aad35959d4d4dfa892df1191f00f4915dd4057dfaae5b64db8e912110e062f93"
+      },
+      "native": false
+    },
+    {
+      "name": "live-target-safety",
+      "revision": "6ef0ba811e351d787eec349af81e82b9f94d465a",
+      "sdk": "3.41.4",
+      "status": "passed",
+      "passed": 1,
+      "failed": 0,
+      "log": {
+        "path": "docs/audits/liturgical-common-texts-2026-11/v4/final-execution/live-target-safety-tests.jsonl.gz",
+        "sha256": "7097984445776d919b68b7616e667b952543034a8a17cf3cf04ce300220ca47b"
       },
       "native": false
     }
