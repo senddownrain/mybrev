@@ -10,6 +10,7 @@
         <v-col v-else-if="day" class="liturgical-hour-column">
                 <day-title :day-data="selectedDay" />
                 <intro :title="title"    />
+                <p v-if="triduumComplineNotice(selectedDay)" class="ora-text" style="color:var(--rubric-color)">{{ triduumComplineNotice(selectedDay) }}</p>
                 <exam />
                 <hymnus :text="day.compHymn" />
                 <psalms :ant1="day.compAnt1" :ant2="day.compAnt2" :ant3="day.compAnt3" :ps1="day.compPs1" :ps2="day.compPs2"
@@ -28,6 +29,7 @@ import { computed, ref, watch } from 'vue';
 import moment from '@/utils/moment-be';
 import { useRoute } from 'vue-router';
 import { useCompletorium } from '@/composables/useCompletorium';
+import { applyComplineRubrics, triduumComplineNotice } from '@/utils/triduumCompline';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { logger } from '@/utils/logger';
 import { firestoreErrorMessage } from '@/utils/firestoreErrors.mjs';
@@ -73,7 +75,7 @@ watch(
     loadingCompletorium.value = true;
     try {
       const result = await getCompletoriumForDate(currentDate.toDate(), currentDay || null);
-      if (sequence === loadSequence) day.value = result;
+      if (sequence === loadSequence) day.value = applyComplineRubrics(result, currentDay);
     } catch (loadError) {
       logger.error('[Completorium] Памылка загрузкі:', loadError);
       if (sequence === loadSequence) {
