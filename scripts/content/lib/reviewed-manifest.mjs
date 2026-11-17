@@ -7,6 +7,9 @@ import { APP_CONTENT_COLLECTIONS } from './app-content.mjs';
 import { binarySha256, valueSha256, describeCatalog, coordinatedManifestPlan, publishCoordinatedManifest, manifestReceipt } from '../../liturgy/lib/coordinated-release.mjs';
 export const REVIEWED_PLAN_SHA = '707e13042ed74996cf996aacbd9564c2dc3200448f05eca11946abe502d1e95a';
 export const REVIEWED_DIR = 'docs/releases/final-test-2026-11-17';
+export function assertReviewedManifestExecutable() {
+  throw Error('Reviewed manifest plan retired: captured Firestore calendar revision3 predates accepted Flutter calendar revision5; reconcile approved calendar and bind the final candidate before any production access. Quota pause remains in effect.');
+}
 const check = (v, why) => { if (!v) throw Error(why); };
 export function loadReviewedManifest(file, expectedSha) {
   check(file === REVIEWED_DIR + '/plan.json' && expectedSha === REVIEWED_PLAN_SHA, 'Exact reviewed manifest plan required');
@@ -74,6 +77,7 @@ export async function reviewedManifestMain(argv) {
   }
   const reviewed = loadReviewedManifest(options['--reviewed-manifest-authorization'], options['--expected-plan-sha']);
   if (!options.apply) { console.log('Verified exact metadata-only plan; Firebase reads/writes: 0/0'); return; }
+  assertReviewedManifestExecutable(); // Retired exact plan cannot resume or access production.
   check(options['--receipt'] && options['--service-account'], 'Receipt and credential paths required');
   const receiptFile = options['--receipt']; fs.mkdirSync(path.dirname(receiptFile), { recursive: true });
   let state = options['--resume'] ? JSON.parse(fs.readFileSync(options['--resume'])) : {};
