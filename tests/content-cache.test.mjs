@@ -218,3 +218,36 @@ test('offline stale Hours remain readable after revision bump without a network 
   assert.equal(saved.data.offlineText, 'previous saved text');
   assert.equal(saved.complete, false);
 });
+
+
+test('background-only seven-day freshness avoids rereads without weakening UI freshness', async () => {
+  let currentTime = 100000000;
+  let revision = 'published-v1';
+  const records = new Map();
+  const storage = {
+    get: async (key) => structuredClone(records.get(key)),
+    set: async (key, value) => { records.set(key, structuredClone(value)); },
+    keys: async () => [...records.keys()],
+  };
+  const create = () => createContentCache({
+    storage, getRevision: () => revision, isOnline: () => true,
+    maxAgeMs: 15 * 60 * 1000, now: () => currentTime,
+  });
+  let reads = 0;
+  const load = async () => { reads += 1; return complete({ text: 'ready' }); };
+  await create().read('week-day', load);
+  const next = create();
+  await next.prime(['week-day']);
+  currentTime += 16 * 60 * 1000;
+  assert.equal(next.peekFresh('week-day'), undefined, 'UI TTL still 15 minutes');
+  assert.equal(next.hasRecentComplete('week-day', 7 * 24 * 60 * 60 * 1000), true,
+    'speculative warmup must not reread a complete week');
+  assert.equal(reads, 1);
+  revision = 'published-v2';
+  assert.equal(next.hasRecentComplete('week-day', 7 * 24 * 60 * 60 * 1000), false,
+    'new publication invalidates speculative freshness immediately');
+  revision = 'published-v1';
+  currentTime += 7 * 24 * 60 * 60 * 1000;
+  assert.equal(next.hasRecentComplete('week-day', 7 * 24 * 60 * 60 * 1000), false,
+    'an aged out entry can be refreshed on a later idle visit');
+});
