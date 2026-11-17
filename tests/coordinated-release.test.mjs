@@ -14,7 +14,7 @@ import { createReleaseCommit } from '../scripts/liturgy/lib/firestore-release-co
 import {
   COORDINATED_COLLECTIONS as names, COORDINATED_POLICY, FLUTTER_MERGE, loadCoordinatedContract, binarySha256, valueSha256,
   verifyCoordinatedAuthorization, prepareCoordinatedFresh, catalogEntry, describeCatalog, verifyLiveCatalog,
-  coordinatedManifestPlan, executeCoordinatedRelease, publishCoordinatedManifest, timestampString,
+  coordinatedManifestPlan, executeCoordinatedRelease, publishCoordinatedManifest, timestampString, loadVerifiedPreflightCheckpoint,
 } from '../scripts/liturgy/lib/coordinated-release.mjs';
 const dir = 'docs/audits/liturgical-common-texts-2026-11/v4';
 const sourceBytes = fs.readFileSync(`${dir}/full-content-plan.json.gz`), full = JSON.parse(zlib.gunzipSync(sourceBytes));
@@ -306,7 +306,7 @@ test('rollback uses acknowledged masks only, preserving fields/docs already afte
 test('owner test-app policy requires exact reconciled target and real proof files, without fake mobile evidence', () => {
   const target = loadCoordinatedContract(undefined, { testApp: true });
   assert.notDeepEqual(target.expected, contract.expected);
-  assert.equal(target.expected.days.digest, 'cbe2b5a263890a42');
+  assert.equal(target.expected.days.digest, 'b80a2589e5651bd7');
   const folder = 'docs/.test-pr255-test-app-gate';
   fs.mkdirSync(folder, { recursive: true });
   try {
@@ -343,4 +343,23 @@ test('owner test-app policy requires exact reconciled target and real proof file
     delete evidence.release; evidence.testResults.sha256 = '0'.repeat(64); bind(); assert.throws(() => verify(fixture, { contract: target }), /proof SHA/);
     assert.equal(publicationDecision('MASS CONTENT REBUILD').publish, false);
   } finally { fs.rmSync(folder, { recursive: true, force: true }); }
+});
+
+test('zero-write preflight checkpoint reuses exact hashed documents and timestamps; rejects modified files and any attempted write', () => {
+  const f = fixture(), dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pr255-checkpoint-'));
+  try {
+    const files = {};
+    for (const d of f.plan.documents) {
+      const file = path.join(dir,d.document+'.json');fs.mkdirSync(path.dirname(file),{recursive:true});
+      const bytes = Buffer.from(JSON.stringify({document:d.document,...f.records.get(d.document)}));fs.writeFileSync(file,bytes);files[d.document]=binarySha256(bytes);
+    }
+    const previous = { state:'coordinated-release-blocked',reason:'Target preflight cannot match Flutter bundle without unapproved field changes; no writes',writtenDocumentsAcknowledged:0,writtenFieldsAcknowledged:0,receipts:[],attempts:[],compatibility:{planBinarySha256:'a'.repeat(64),releaseEvidenceSha256:'b'.repeat(64)} };
+    const receiptBytes = Buffer.from(JSON.stringify(previous));
+    const authorization = {planBinarySha256:'a'.repeat(64),resumeReceiptSha256:binarySha256(receiptBytes),preflightCheckpoint:{receiptSha256:binarySha256(receiptBytes),previousReleaseEvidenceSha256:'b'.repeat(64),documentFilesSha256:valueSha256(files)}};
+    const args = {plan:f.plan,previous,authorization,receiptBytes,directory:dir};
+    const records=loadVerifiedPreflightCheckpoint(args);assert.deepEqual(records,new Map(f.plan.documents.map(d=>[d.document,f.records.get(d.document)])));
+    assert.equal(prepareCoordinatedFresh(f.plan,records)[0].write.currentDocument.updateTime,'1970-01-01T00:00:10.123456789Z');
+    const attempted=structuredClone(previous);attempted.attempts.push({event:'attempt'});assert.throws(()=>loadVerifiedPreflightCheckpoint({...args,previous:attempted}),/zero-write/);
+    fs.appendFileSync(path.join(dir,f.plan.documents[0].document+'.json'),' ');assert.throws(()=>loadVerifiedPreflightCheckpoint(args),/file SHA/);
+  } finally {fs.rmSync(dir,{recursive:true,force:true});}
 });

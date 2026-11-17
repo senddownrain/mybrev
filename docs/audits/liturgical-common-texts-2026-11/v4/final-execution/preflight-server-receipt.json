@@ -1,0 +1,49 @@
+{
+  "schema": 3,
+  "mode": "execute",
+  "startedAt": "2026-11-17T17:26:43.422Z",
+  "project": "ibreviaryby",
+  "planSha256": "df938a10e8180b39fe3549b1998a6e8d34b483d76af8ac83570a5295d5af61f7",
+  "receipts": [],
+  "manifestReceipt": null,
+  "resumedManifest": false,
+  "compatibility": {
+    "policy": "pr255-coordinated-bundle-release",
+    "flutterMergeSha": "bb145d8e366236af930b7d1086c24b3d1c52256a",
+    "planBinarySha256": "3f395bd371666099a92158c183349fa0984e01e61b672735c559d76e2ed809d8",
+    "executionPolicy": "pr255-test-app-before-mobile-release",
+    "targetContractSha256": "ac7dbfccaf6b4e78437cf347fd8c35262cf6522b2fbcc4fd2f833b83066c762f",
+    "releaseEvidenceSha256": "28dda1f6bdbb713464591dc6252827cc5d2dc106e6f2e40a93a8216581e73bb2",
+    "bundleReportSha256": "a83002d05726dd60c3a707fd42cf58c27784bc9a693aefdad33562646884521b",
+    "baselineCatalogSha256": "c11ee7fb60c4c5ab5806f8e04fee589575c4e7d364b37675ecad690e3fdc5be9"
+  },
+  "attempts": [],
+  "resumedFrom": null,
+  "batchSize": 25,
+  "firebaseUsage": {
+    "dataDocumentReads": 749,
+    "manifestDocumentReads": 4,
+    "metadataDocumentReads": 0,
+    "uncachedDocumentReads": 0
+  },
+  "state": "coordinated-release-blocked",
+  "reason": "Target preflight cannot match Flutter bundle without unapproved field changes; no writes",
+  "sdkFailure": {
+    "code": null,
+    "status": null,
+    "message": "Target preflight cannot match Flutter bundle without unapproved field changes; no writes",
+    "details": null
+  },
+  "conflicts": [
+    {
+      "document": "days/office-for-dead",
+      "reason": "projected-bundle-mismatch-outside-reviewed-masks",
+      "actualHash": "672f2fc576b913d0",
+      "expectedHash": "01ddb121ad3c9909",
+      "actualBytes": 90652,
+      "expectedBytes": 90596
+    }
+  ],
+  "writtenDocumentsAcknowledged": 0,
+  "writtenFieldsAcknowledged": 0
+}

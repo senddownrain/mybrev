@@ -5,7 +5,7 @@ import zlib from 'node:zlib';
 import path from 'node:path';
 import { toStorable } from '../content/lib/app-content.mjs';
 import { selectDaysTemplates } from './prepare-days-templates.mjs';
-import { loadCoordinatedContract,verifyCoordinatedAuthorization,binarySha256,executeCoordinatedRelease,publishCoordinatedManifest } from './lib/coordinated-release.mjs';
+import { loadCoordinatedContract,verifyCoordinatedAuthorization,binarySha256,executeCoordinatedRelease,publishCoordinatedManifest,loadVerifiedPreflightCheckpoint } from './lib/coordinated-release.mjs';
 import { verifyCompatibleSubset } from './lib/editorial-compatible-subset.mjs';
 import { editorialHash } from './lib/editorial-responsories.mjs';
 import { preparePublicationResume,executePreparedPublication,boundPublicationWrites,validatePublicationPlan } from './lib/editorial-publication.mjs';
@@ -38,7 +38,8 @@ const batchSize=Number(get('--batch-size')||25);if(!Number.isInteger(batchSize)|
 if(coordinated&&batchSize>25)throw Error('Coordinated release batches must be <=25');
 const previous=get('--resume')?JSON.parse(fs.readFileSync(get('--resume'))):{receipts:[]};
 if(get('--resume')&&(previous.project!=='ibreviaryby'||previous.planSha256!==planSha256))throw Error('Resume receipt project/plan SHA mismatch');
-if(coordinated&&get('--resume')&&(previous.compatibility?.planBinarySha256!==releaseCompatibility.planBinarySha256||previous.compatibility?.releaseEvidenceSha256!==releaseCompatibility.releaseEvidenceSha256))throw Error('Resume coordinated release bindings changed');
+if(coordinated&&get('--resume')&&(previous.compatibility?.planBinarySha256!==releaseCompatibility.planBinarySha256||(!authorization.preflightCheckpoint&&previous.compatibility?.releaseEvidenceSha256!==releaseCompatibility.releaseEvidenceSha256)))throw Error('Resume coordinated release bindings changed');
+const checkpoint=coordinated&&authorization.preflightCheckpoint?loadVerifiedPreflightCheckpoint({plan,previous,authorization,receiptBytes:fs.readFileSync(get('--resume')),directory:get('--resume')+'.documents'}):null;
 const startedAt=new Date().toISOString();let state={...(coordinated?previous:{}),manifestReceipt:null,resumedManifest:false,compatibility:releaseCompatibility,receipts:previous.receipts||[],attempts:coordinated?(previous.attempts||[]):[],resumedFrom:get('--resume')?editorialHash(fs.readFileSync(get('--resume'))):null,batchSize};
 const journal=update=>{state={...state,...update};const fd=fs.openSync(receiptFile+'.tmp','w',0o600);try{fs.writeFileSync(fd,JSON.stringify({schema:3,mode,startedAt,project:'ibreviaryby',planSha256,...state},null,2)+'\n');fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(receiptFile+'.tmp',receiptFile);};
 let phase='preflight';
@@ -55,7 +56,8 @@ try{
   const file=path.join(receiptFile+'.documents',record.document+'.json');fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
   const fd=fs.openSync(file+'.tmp','w',0o600);try{fs.writeFileSync(fd,JSON.stringify(record)+'\n');fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(file+'.tmp',file);
  };
- const read=async names=>{const records=new Map();for(let i=0;i<names.length;i+=100){
+ let checkpointUnused=!!checkpoint;
+ const read=async names=>{if(checkpointUnused){if(names.length!==checkpoint.size||names.some(n=>!checkpoint.has(n)))throw Error('Checkpoint scope mismatch');checkpointUnused=false;for(const [document,record] of checkpoint)persist({document,...record});journal({preflightCheckpointReusedDocuments:names.length});return checkpoint;}const records=new Map();for(let i=0;i<names.length;i+=100){
   const part=names.slice(i,i+100),docs=await db.getAll(...part.map(n=>db.doc(n)));if(coordinated)account('dataDocumentReads',part.length);
   for(const doc of docs)if(doc.exists){const record={data:doc.data(),updateTime:{seconds:doc.updateTime.seconds,nanoseconds:doc.updateTime.nanoseconds}};records.set(doc.ref.path,record);if(coordinated)persist({document:doc.ref.path,data:toStorable(record.data),updateTime:record.updateTime});}
  }return records;};
