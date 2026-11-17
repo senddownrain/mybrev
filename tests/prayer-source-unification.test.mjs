@@ -206,3 +206,29 @@ test('scoped snapshot retains timestamps for exact offline app hashes', () => {
   assert.equal(data.source,'Бог добры');
   assert.deepEqual(decodeSourceRestValue({timestampValue:'2026-11-17T12:00:00Z'}),{__firestoreType:'timestamp',seconds:1794916800,nanoseconds:0});
 });
+
+test('confirmed production bibliographic variants use the same registry without guessing ambiguous Agendas', () => {
+  const cases=[
+    ['Малітоўнік «Бог Добры», Выдавецтва Пінскай дыяцэзіі, 2022','Бог добры'],
+    ['малітоўнік "Бог добры", Выдавецтва Пінскай Дыяцэзіі, 2018','Бог добры'],
+    ['Малітоўнік "Ойча наш", ПРО ХРЫСТО, 202','Ойча наш'],
+    ['Малітоўнік «Прасіце і атрымаеце» (Мінск, 2024), Выдавецтва «Про Хрысто»','Прасіце і атрымаеце'],
+    ['«Літургічная агенда», Мінска-Магілёўская архідыяцэзія, 2010','Літургічная агенда'],
+    ['Малітоўнік для мужчын «Каб пазналі Цябе…» © Гродзенская дыяцэзія Рымскакаталіцкага Касцёла ў Рэспубліцы Беларусь, 2014','Каб пазналі Цябе'],
+    ['Тэкст паводле спеўніка «Божа, мы Цябе ўслаўляем» - гл. № 402','Божа, мы Цябе ўслаўляем'],
+    ['для прыватнага карыстання, [https://kasciolhomiel.by/orationis-liber/litany/litaniya-da-hrysta-svyatara-i-ahvyary]','kasciolhomiel.by'],
+    ['для прыватнага карыстання, \n[https://ave-maria.by/prayers/dead/2377-navenna-za-pamerlykh](https://ave-maria.by/prayers/dead/2377-navenna-za-pamerlykh)','Ave Maria'],
+    ['catholic.by — «Святы ружанец»','Catholic.by'],
+    ['«Парадак хросту дзяцей», Мінск 2026','Парадак хросту дзяцей'],
+    ['«Парадак намашчэння хворых», Мінск 2009','Парадак намашчэння хворых'],
+  ];
+  for(const [before,after] of cases){assert.equal(sourceForSave(before),after);assert.equal(sourceForSave(after),after);}
+  for(const unknown of [
+    'Парафіяльная Агенда, Выдавецтва Пінскай дыяцэзіі, 2018',
+    'Агенда. Сакрамэнталіі — частка 2, с. 214–217.',
+    '«Парадак ��ак��яння», Мінск 2016',
+    'для прыватнага карыстання, уласныя малітвы айцоў марыянаў',
+    'для прыватнага карыстання, https://unknown.invalid/book',
+    'для прыватнага карыстання, https://ave-maria.by/book https://catholic.by/other',
+  ]){assert.equal(resolvePrayerSource(unknown).status,'unknown');assert.equal(normalizePrayerSource(unknown),unknown);}
+});
