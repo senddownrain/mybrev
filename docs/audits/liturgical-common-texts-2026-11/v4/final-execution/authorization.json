@@ -1,0 +1,24 @@
+{
+  "project": "ibreviaryby",
+  "policy": "pr255-coordinated-bundle-release",
+  "action": "execute",
+  "ownerApproved": true,
+  "reason": "Owner FINAL EXECUTION instruction on 2026-11-17 explicitly authorizes controlled publication of exact PR255/261 7791 fields before the next TEST Flutter release. Retain CAS/updateTime/exact masks/SHA/readback/resume/manifest. No source migrations, Proper/Advent rewrites, global large-patch override or mobile release.",
+  "executionPolicy": "pr255-test-app-before-mobile-release",
+  "targetContractSha256": "ac7dbfccaf6b4e78437cf347fd8c35262cf6522b2fbcc4fd2f833b83066c762f",
+  "planBinarySha256": "3f395bd371666099a92158c183349fa0984e01e61b672735c559d76e2ed809d8",
+  "baselineCatalogSha256": "c11ee7fb60c4c5ab5806f8e04fee589575c4e7d364b37675ecad690e3fdc5be9",
+  "releaseEvidenceSha256": "28dda1f6bdbb713464591dc6252827cc5d2dc106e6f2e40a93a8216581e73bb2",
+  "manifestBaselineSha256": "6f10e2b9111ca11a6d8ff4d005b003dc6bf1cce10d0e4fd9ca5fcd82ef5c41af",
+  "introduceCollections": [
+    "liturgicalProperTexts"
+  ],
+  "maxUncachedDocumentReads": 10,
+  "massManifestReview": {
+    "approved": true,
+    "reviewer": "Project owner authorization in current FINAL EXECUTION task, 2026-11-17",
+    "url": "https://github.com/senddownrain/mybrev/pull/261",
+    "releaseEvidenceSha256": "28dda1f6bdbb713464591dc6252827cc5d2dc106e6f2e40a93a8216581e73bb2",
+    "bundleReportSha256": "a83002d05726dd60c3a707fd42cf58c27784bc9a693aefdad33562646884521b"
+  }
+}

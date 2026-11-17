@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "passed": 101,
+  "failed": 0,
+  "firebaseReads": 0,
+  "firebaseWrites": 0,
+  "runs": [
+    {
+      "name": "legacy",
+      "revision": "6b5b278fcb0f77f557cf5f739c455236cb19029c",
+      "sdk": "3.38.9",
+      "status": "passed",
+      "passed": 18,
+      "failed": 0,
+      "log": {
+        "path": "docs/audits/liturgical-common-texts-2026-11/v4/final-execution/legacy-tests.jsonl.gz",
+        "sha256": "9ece7fab913ad0379333f791e9a84e2bbf165ed5e9c9c5dc56d87cc33b10496c"
+      },
+      "native": false
+    },
+    {
+      "name": "legacy-mass",
+      "revision": "6b5b278fcb0f77f557cf5f739c455236cb19029c",
+      "sdk": "3.38.9",
+      "status": "passed",
+      "passed": 2,
+      "failed": 0,
+      "log": {
+        "path": "docs/audits/liturgical-common-texts-2026-11/v4/final-execution/legacy-mass-tests.jsonl.gz",
+        "sha256": "bbab585e9444154496764f938fd3236a08ac38594d961aca7f33f34714e4ec9a"
+      },
+      "native": false
+    },
+    {
+      "name": "pre113",
+      "revision": "84d1d6dd61f8cb78aa33fb1b6538996f9156fc20",
+      "sdk": "3.41.4",
+      "status": "passed",
+      "passed": 38,
+      "failed": 0,
+      "log": {
+        "path": "docs/audits/liturgical-common-texts-2026-11/v4/final-execution/pre113-tests.jsonl.gz",
+        "sha256": "4baac2eaf49d1fa7beaa93ac19986b9b8f061b1359529c56fa5f17d1f27ce0e7"
+      },
+      "native": false
+    },
+    {
+      "name": "main",
+      "revision": "6ef0ba811e351d787eec349af81e82b9f94d465a",
+      "sdk": "3.41.4",
+      "status": "passed",
+      "passed": 43,
+      "failed": 0,
+      "log": {
+        "path": "docs/audits/liturgical-common-texts-2026-11/v4/final-execution/main-tests.jsonl.gz",
+        "sha256": "aad35959d4d4dfa892df1191f00f4915dd4057dfaae5b64db8e912110e062f93"
+      },
+      "native": false
+    }
+  ],
+  "appReleaseDataPreservation": true,
+  "appReleaseRestart": true,
+  "upgradeStatusClears": true,
+  "settingsFavoritesPersonalPrayersPreserved": true,
+  "targetHashesVerified": true,
+  "limitations": "VM unit/widget and real Hive tests; no installed binaries/native smoke claimed."
+}

@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "repository": "senddownrain/ibreviarybyapp",
+  "kind": "source-review-not-installed-binary-inventory",
+  "revisions": [
+    {
+      "revision": "6b5b278fcb0f77f557cf5f739c455236cb19029c",
+      "updaterSha256": "e16e05e4c73d3919db1d165def0f8d0d2ed3a98e26f44cf3a9e050f3cb942824",
+      "storeSha256": "20b742ab1a336d024dfd79c25fe8022c686fe11dfbf97ad9a7cbd94cca63f79c",
+      "bundleContractSha256": "2dd19d40cbcc9bd7f068fd397a2a0dbce1ec9f16dbe4493e45041497adacc87e",
+      "userDataBoxesUntouched": true,
+      "checkHasAppReleaseRequired": false,
+      "applyHasRebuildGuard": false,
+      "atomicPublicContentGeneration": false,
+      "sourceUrl": "https://github.com/senddownrain/ibreviarybyapp/blob/6b5b278fcb0f77f557cf5f739c455236cb19029c/lib/content/content_updater.dart",
+      "review": "Updater/store touch canonical content collections only. Personal boxes are separate. All downloads are hash-verified before activation. Earliest version can download a mass update and activates public collections sequentially; later versions stage an atomic generation."
+    },
+    {
+      "revision": "826d23c2b24deb3d5f31ba02dbfd856475d32e57",
+      "updaterSha256": "734b8e6941e43f8d6aef0222b6edc9c880b18e37bdbbfdbfbc141f5ff9a4be7d",
+      "storeSha256": "4d8ff8c7e75a89dca73b30324d1c3b0f2c23b3a45a53b481ee58227345831bdd",
+      "bundleContractSha256": "2dd19d40cbcc9bd7f068fd397a2a0dbce1ec9f16dbe4493e45041497adacc87e",
+      "userDataBoxesUntouched": true,
+      "checkHasAppReleaseRequired": false,
+      "applyHasRebuildGuard": false,
+      "atomicPublicContentGeneration": true,
+      "sourceUrl": "https://github.com/senddownrain/ibreviarybyapp/blob/826d23c2b24deb3d5f31ba02dbfd856475d32e57/lib/content/content_updater.dart",
+      "review": "Updater/store touch canonical content collections only. Personal boxes are separate. All downloads are hash-verified before activation. Earliest version can download a mass update and activates public collections sequentially; later versions stage an atomic generation."
+    },
+    {
+      "revision": "33945b44243fadc57bef8c214240b0a9db159b00",
+      "updaterSha256": "311c453f2653d32d62db358e7a1a6737df54ff149d8ba7f70d66f806b3ca1bc3",
+      "storeSha256": "358b3d3c429704e338823a1271656cee14a8950fd6a55f5b44d8da87508f4f6f",
+      "bundleContractSha256": "21e73f3b61ed94b348ab6915cd40a775ced357a529edaf690e4c6e5ae398b77f",
+      "userDataBoxesUntouched": true,
+      "checkHasAppReleaseRequired": true,
+      "applyHasRebuildGuard": false,
+      "atomicPublicContentGeneration": true,
+      "sourceUrl": "https://github.com/senddownrain/ibreviarybyapp/blob/33945b44243fadc57bef8c214240b0a9db159b00/lib/content/content_updater.dart",
+      "review": "Updater/store touch canonical content collections only. Personal boxes are separate. All downloads are hash-verified before activation. Earliest version can download a mass update and activates public collections sequentially; later versions stage an atomic generation."
+    },
+    {
+      "revision": "94fbc08d694645581e85336ee0cf73d1c6849a1e",
+      "updaterSha256": "1d5a7712950adc8b5dab24d4af2e9147ea871a2b6ef7eaceff13a7b1565f21b1",
+      "storeSha256": "655aaa162aa467269eb26fcbd86cc6e7e86ecf776d2fca2b55748248d7d74748",
+      "bundleContractSha256": "afbc0669d30ad924f81fea459fdb64f2a319e72b234f46eb941ba1e4fee2b221",
+      "userDataBoxesUntouched": true,
+      "checkHasAppReleaseRequired": true,
+      "applyHasRebuildGuard": false,
+      "atomicPublicContentGeneration": true,
+      "sourceUrl": "https://github.com/senddownrain/ibreviarybyapp/blob/94fbc08d694645581e85336ee0cf73d1c6849a1e/lib/content/content_updater.dart",
+      "review": "Updater/store touch canonical content collections only. Personal boxes are separate. All downloads are hash-verified before activation. Earliest version can download a mass update and activates public collections sequentially; later versions stage an atomic generation."
+    },
+    {
+      "revision": "84d1d6dd61f8cb78aa33fb1b6538996f9156fc20",
+      "updaterSha256": "4a182339f799a4ea8a8905a9d3d42efa6377d1e70fc1ecb35f10f224d2e619ef",
+      "storeSha256": "82a905b92fd5df0a3cfe11872d2d01411d61057117a3d9b14ff037aa58267c78",
+      "bundleContractSha256": "a21664d822f76b7d07e93e9e7b67eb5d33b784cc79470ad79c2d491bcc976143",
+      "userDataBoxesUntouched": true,
+      "checkHasAppReleaseRequired": true,
+      "applyHasRebuildGuard": false,
+      "atomicPublicContentGeneration": true,
+      "sourceUrl": "https://github.com/senddownrain/ibreviarybyapp/blob/84d1d6dd61f8cb78aa33fb1b6538996f9156fc20/lib/content/content_updater.dart",
+      "review": "Updater/store touch canonical content collections only. Personal boxes are separate. All downloads are hash-verified before activation. Earliest version can download a mass update and activates public collections sequentially; later versions stage an atomic generation."
+    },
+    {
+      "revision": "6ef0ba811e351d787eec349af81e82b9f94d465a",
+      "updaterSha256": "de79d9c91e7e0388822b14593b7890ca6df9ab3f0e585327d20cb353a1c09385",
+      "storeSha256": "82a905b92fd5df0a3cfe11872d2d01411d61057117a3d9b14ff037aa58267c78",
+      "bundleContractSha256": "a21664d822f76b7d07e93e9e7b67eb5d33b784cc79470ad79c2d491bcc976143",
+      "userDataBoxesUntouched": true,
+      "checkHasAppReleaseRequired": true,
+      "applyHasRebuildGuard": true,
+      "atomicPublicContentGeneration": true,
+      "sourceUrl": "https://github.com/senddownrain/ibreviarybyapp/blob/6ef0ba811e351d787eec349af81e82b9f94d465a/lib/content/content_updater.dart",
+      "review": "Updater/store touch canonical content collections only. Personal boxes are separate. All downloads are hash-verified before activation. Earliest version can download a mass update and activates public collections sequentially; later versions stage an atomic generation."
+    }
+  ],
+  "limitations": [
+    "No installed-client inventory or native binary execution is claimed.",
+    "Earliest updater has sequential public collection activation; user data is stored separately."
+  ]
+}
