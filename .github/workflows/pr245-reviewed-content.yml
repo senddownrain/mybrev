@@ -8,7 +8,7 @@ on:
         required: true
         default: proper-only
         type: choice
-        options: [proper-only, coordinated-pr255]
+        options: [proper-only, coordinated-pr255, final-test-manifest]
       release_authorization_path:
         description: Git-tracked docs JSON with concrete owner/release-specific approval (coordinated only)
         required: false
@@ -88,7 +88,13 @@ jobs:
           import { binarySha256, loadCoordinatedContract, verifyCoordinatedAuthorization } from './scripts/liturgy/lib/coordinated-release.mjs';
           const root='docs/audits/liturgical-common-texts-2026-11/v4';
           let planFile=root+'/publication-plan.json.gz';
-          if(process.env.RELEASE_SCOPE==='coordinated-pr255'){
+          if(process.env.RELEASE_SCOPE==='final-test-manifest'){
+            if(process.env.MODE!=='execute')throw Error('Metadata scope requires execute');
+            const {loadReviewedManifest}=await import('./scripts/content/lib/reviewed-manifest.mjs');
+            loadReviewedManifest(process.env.COORDINATED_AUTHORIZATION,process.env.EXPECTED_PLAN_SHA);
+            execFileSync('git',['ls-files','--error-unmatch',process.env.COORDINATED_AUTHORIZATION],{stdio:'pipe'});
+            planFile=process.env.COORDINATED_AUTHORIZATION;
+          }else if(process.env.RELEASE_SCOPE==='coordinated-pr255'){
             if(process.env.MODE!=='execute'||process.env.BATCH_SIZE!=='25')throw Error('Coordinated scope requires execute and <=25-document batches');
             for(const key of ['COORDINATED_AUTHORIZATION','COORDINATED_EVIDENCE']){
               const file=process.env[key]||'';
@@ -127,11 +133,11 @@ jobs:
           node --input-type=module <<'JS'
           import fs from 'node:fs';
           const file=process.env.RUNNER_TEMP+'/pr245-authorization.json';
-          if(process.env.RELEASE_SCOPE==='coordinated-pr255')fs.copyFileSync(process.env.COORDINATED_AUTHORIZATION,file);
+          if(['coordinated-pr255','final-test-manifest'].includes(process.env.RELEASE_SCOPE))fs.copyFileSync(process.env.COORDINATED_AUTHORIZATION,file);
           else fs.writeFileSync(file,JSON.stringify({project:'ibreviaryby',planSha256:process.env.EXPECTED_PLAN_SHA,action:'execute',ownerApproved:true,massRebuildReleaseGateReviewed:true,reason:'Owner PR245 comments 6877040538/6878311145 authorize execution. Review limits writes to existing Proper omitted from current manifest; fresh runtime guard enforces omission. No published-collection/manifest/bundle override.'}),{mode:0o600});
           JS
       - name: Inspect current Firestore/API quota and Monitoring metrics (no document reads)
-        if: inputs.release_scope != 'coordinated-pr255'
+        if: inputs.release_scope == 'proper-only'
         run: |
           mkdir -p backups/pr245-release
           node scripts/liturgy/inspect-firestore-quota.mjs --service-account "$RUNNER_TEMP/pr245-firebase.json" --out backups/pr245-release/quota-report.json
@@ -142,8 +148,15 @@ jobs:
           BATCH_SIZE: ${{ inputs.batch_size }}
           RELEASE_SCOPE: ${{ inputs.release_scope }}
           COORDINATED_EVIDENCE: ${{ inputs.flutter_release_evidence_path }}
+          EXPECTED_PLAN_SHA: ${{ inputs.plan_sha256 }}
         run: |
           mkdir -p backups/pr245-release
+          if [ "$RELEASE_SCOPE" = final-test-manifest ]; then
+            resume_args=()
+            if [ -n "$RESUME_RUN_ID" ]; then resume_args+=(--resume "$RUNNER_TEMP/pr245-previous/server-receipt.json"); fi
+            node scripts/content/publish-manifest.mjs --reviewed-manifest-authorization "$REVIEWED_PLAN_PATH" --expected-plan-sha "$EXPECTED_PLAN_SHA" --apply --service-account "$RUNNER_TEMP/pr245-firebase.json" --receipt backups/pr245-release/server-receipt.json "${resume_args[@]}"
+            exit 0
+          fi
           args=()
           if [ -n "$RESUME_RUN_ID" ]; then args+=(--resume "$RUNNER_TEMP/pr245-previous/server-receipt.json"); fi
           if [ "$RELEASE_SCOPE" = coordinated-pr255 ]; then
