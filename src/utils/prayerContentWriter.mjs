@@ -56,7 +56,7 @@ export function createPrayerContentWriter({ db, fs, withQuota = passthrough, tra
             const reference = doc(db, operation.collection, operation.id);
             if (operation.type === 'delete') transaction.delete(reference);
             else transaction.set(reference, ['prayers', 'priestProtectedPrayers'].includes(operation.collection)
-              ? normalizePrayerSourceFields(operation.data, { existing: existingPrayers.get(operation.id) }) : operation.data);
+              ? normalizePrayerSourceFields(operation.data, { existing: existingPrayers.get(operation.id), editor: true }) : operation.data);
           }
           hooks.write?.(transaction);
           transaction.set(control, { version: version + 1, lockUid: '', updatedAt: serverTimestamp() });
