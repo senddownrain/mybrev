@@ -29,6 +29,9 @@ on:
       # A verified content publication must refresh the Web reader cache.
       - 'src/constants/contentRevision.js'
       - 'src/components/oraparts/Reading.vue'
+      - 'src/components/oraparts/AlternativeText.vue'
+      - 'src/utils/officeResponsoryRepeats.js'
+      - 'tests/office-responsory-repeats.test.mjs'
       - 'src/components/oraparts/Lectio.vue'
       - 'src/components/oraparts/LastPrayer.vue'
       - 'src/components/oraparts/DayTitle.vue'
