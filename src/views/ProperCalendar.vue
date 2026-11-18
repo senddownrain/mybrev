@@ -25,7 +25,7 @@
           </template>
         </section>
       </article>
-      <p class="calendar-publication-note" role="note">Заўвага: запіс 9 снежня дададзены пасля публікацыі зыходнага PDF.</p>
+      <p class="calendar-publication-note" role="note">Заўвага: запіс 9 снежня дададзены пасля публікацыі зыходнага PDF; у назве Маці Божай Ларэтанскай (10 снежня) выпраўлена памылка зыходнага тэксту.</p>
     </main>
   </v-container>
 </template>
