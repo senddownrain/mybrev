@@ -74,6 +74,6 @@ test('all Web antiphon render entry points and repeated antiphons opt in; stylin
   assert.match(load('src/components/oraparts/AlternativeText.vue'), /markAntiphonLabel\(formatted\)/u);
   const psalms = load('src/components/oraparts/Psalms.vue');
   assert.match(psalms, /formatPsalmHtml\(psalm,\s*\{/u);
-  assert.match(psalms, /markAntiphonLabel\(omitEchoedPsalmOpening\(formatted, chosen\)\)/u);
+  assert.match(psalms, /markAntiphonLabel\(formatPsalmHtml\(psalm, /u);
   assert.match(load('src/styles/main.scss'), /\.ora-psalm \.ora-antiphon-label\s*\{\s*color: var\(--rubric-color\) !important;/u);
 });

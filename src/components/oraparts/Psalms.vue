@@ -5,23 +5,23 @@
                 ПСАЛЬМОДЫЯ
             </v-card-title>
             <v-card-text class="ora-text">
-                <alternative-text highlight-antiphon-label v-model="ant1Option" class="ora-ant" :text="ant1" :following-psalm-html="formatPsalmHtml(ps1)" aria-label="Выбар першай антыфоны" />
-                <alternative-text class="ora-psalm" kind="psalm" :text="formatPsalm(ps1, ant1, ant1Option)" aria-label="Выбар першага псальма">
-                  <template #default="{ html }"><PsalmText :html="html" /></template>
+                <alternative-text highlight-antiphon-label v-model="ant1Option" class="ora-ant" :text="ant1" :following-psalm-html="selectedPsalm(formattedPs1, ps1Option)" aria-label="Выбар першай антыфоны" />
+                <alternative-text class="ora-psalm" kind="psalm" v-model="ps1Option" :text="formattedPs1" aria-label="Выбар першага псальма">
+                  <template #default="{ html }"><PsalmText :html="displayPsalm(html, ant1, ant1Option)" /></template>
                 </alternative-text>
                 <alternative-text highlight-antiphon-label v-if="!singleAntiphon" v-model="ant1Option" class="ora-ant" :text="ant1" :show-picker="false" />
-                <alternative-text highlight-antiphon-label v-if="!singleAntiphon && ant2" v-model="ant2Option" class="ora-ant ora-ant--separated" :text="ant2" :following-psalm-html="formatPsalmHtml(ps2)" aria-label="Выбар другой антыфоны" />
-                <alternative-text v-if="ps2" class="ora-psalm" kind="psalm" :text="formatPsalm(ps2, singleAntiphon ? ant1 : ant2, singleAntiphon ? null : ant2Option)" aria-label="Выбар другога псальма">
-                  <template #default="{ html }"><PsalmText :html="html" /></template>
+                <alternative-text highlight-antiphon-label v-if="!singleAntiphon && ant2" v-model="ant2Option" class="ora-ant ora-ant--separated" :text="ant2" :following-psalm-html="selectedPsalm(formattedPs2, ps2Option)" aria-label="Выбар другой антыфоны" />
+                <alternative-text v-if="ps2" class="ora-psalm" kind="psalm" v-model="ps2Option" :text="formattedPs2" aria-label="Выбар другога псальма">
+                  <template #default="{ html }"><PsalmText :html="displayPsalm(html, ant2, singleAntiphon ? null : ant2Option)" /></template>
                 </alternative-text>
                 <alternative-text highlight-antiphon-label v-if="!singleAntiphon && ant2" v-model="ant2Option" class="ora-ant" :text="ant2" :show-picker="false" />
-                <alternative-text highlight-antiphon-label v-if="!singleAntiphon && ant3 && !hasEmbeddedThirdPsalmAlternatives" v-model="ant3Option" class="ora-ant ora-ant--separated" :text="ant3" :following-psalm-html="formatPsalmHtml(ps3)" aria-label="Выбар трэцяй антыфоны" />
+                <alternative-text highlight-antiphon-label v-if="!singleAntiphon && ant3 && !hasEmbeddedThirdPsalmAlternatives" v-model="ant3Option" class="ora-ant ora-ant--separated" :text="ant3" :following-psalm-html="selectedPsalm(formattedPs3, ps3Option)" aria-label="Выбар трэцяй антыфоны" />
                 <alternative-text
                   v-if="ps3"
                   class="ora-psalm" kind="psalm"
-                  :text="formatPsalm(ps3, singleAntiphon ? ant1 : ant3, singleAntiphon ? null : ant3Option)"
+                  v-model="ps3Option" :text="formattedPs3"
                   aria-label="Выбар трэцяга псальма">
-                  <template #default="{ html }"><PsalmText :html="html" /></template>
+                  <template #default="{ html }"><PsalmText :html="displayPsalm(html, ant3, singleAntiphon ? null : ant3Option)" /></template>
                 </alternative-text>
                 <alternative-text highlight-antiphon-label v-if="singleAntiphon" v-model="ant1Option" class="ora-ant" :text="ant1" :show-picker="false" />
                 <alternative-text highlight-antiphon-label v-else-if="ant3 && !hasEmbeddedThirdPsalmAlternatives" v-model="ant3Option" class="ora-ant" :text="ant3" :show-picker="false" />
@@ -61,16 +61,21 @@ const hasEmbeddedThirdPsalmAlternatives = computed(() => (
 const ant1Option = ref(0);
 const ant2Option = ref(0);
 const ant3Option = ref(0);
-const formatPsalm = (psalm, antiphon, selectedIndex = 0) => {
-  const formatted = formatPsalmHtml(psalm, {
-    stripEmbeddedAntiphon: Boolean(antiphon),
-    antiphon,
-  });
-  // Single-antiphon psalmody announces the antiphon only before psalm 1.
-  if (selectedIndex === null || !antiphon) return markAntiphonLabel(formatted);
-  const alternatives = getLiturgicalAlternatives(antiphon);
-  const chosen = alternatives[selectedIndex]?.html;
-  return markAntiphonLabel(omitEchoedPsalmOpening(formatted, chosen));
+const ps1Option = ref(0);
+const ps2Option = ref(0);
+const ps3Option = ref(0);
+const formatPsalm = (psalm, antiphon) => markAntiphonLabel(formatPsalmHtml(psalm, {
+  stripEmbeddedAntiphon: Boolean(antiphon),
+  antiphon,
+}));
+const formattedPs1 = computed(() => formatPsalm(props.ps1, props.ant1));
+const formattedPs2 = computed(() => formatPsalm(props.ps2, singleAntiphon.value ? props.ant1 : props.ant2));
+const formattedPs3 = computed(() => formatPsalm(props.ps3, singleAntiphon.value ? props.ant1 : props.ant3));
+const selectedPsalm = (formatted, index) => getLiturgicalAlternatives(formatted, 'psalm')[index]?.html || '';
+const displayPsalm = (html, antiphon, index) => {
+  // A shared antiphon is announced only before the first psalm.
+  const chosen = index === null ? '' : getLiturgicalAlternatives(antiphon)[index]?.html;
+  return omitEchoedPsalmOpening(html, chosen);
 };
 </script>
 

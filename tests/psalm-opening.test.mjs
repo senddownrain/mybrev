@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { getLiturgicalAlternatives } from '../src/utils/liturgicalAlternatives.js';
 import { parse } from 'node-html-parser';
 import { formatPsalmHtml } from '../src/utils/liturgicalHtml.js';
 import { omitEchoedPsalmOpening, addOpeningAntiphonFlexa } from '../src/utils/psalmOpening.js';
@@ -61,25 +63,58 @@ test('only first stanza gets opening †; later cadence and doxology stay intact
 });
 
 
-test('Psalm 27: full opening verse echoed by antiphon is omitted; leading † stays with Пан', () => {
-  const source = '<p>Псальм 27 (26)</p>'
-    + '<p>Пан – маё святло і маё збаўленне, * каго ж мне баяцца?</p>'
-    + '<p>† Пан – ахова жыцця майго, * каго ж мне палохацца?</p>'
-    + '<p>Калі злачынцы пойдуць супраць мяне, * каб знішчыць цела маё,</p>';
-  const prepared = formatPsalmHtml(source);
-  const selectedAntiphon = '<p>1 ант. Пан – маё святло і маё збаўленне, * каго ж мне баяцца?</p>';
-  const result = omitEchoedPsalmOpening(prepared, selectedAntiphon);
-  const root = parse(result);
-  const strophes = root.querySelectorAll('p[data-psalm-strophe]');
+// The two public liturgical fields of days/ordinary-w33-d4, captured from
+// the published Vespers page's local Firestore cache on 2026-11-18.
+const { vesperAnt1, vesperPs1 } = JSON.parse(
+  readFileSync(new URL('./fixtures/psalm-27-vespers.json', import.meta.url), 'utf8'),
+);
+const strophes = (html) => parse(html).querySelectorAll('p[data-psalm-strophe]');
+const fullAntiphon = 'Пан – маё святло і маё збаўленне, * каго ж мне баяцца?';
+const halfAntiphon = 'Пан – маё святло і маё збаўленне,';
+const prepare = (html) => formatPsalmHtml(html, { stripEmbeddedAntiphon: true, antiphon: vesperAnt1 });
 
-  assert.equal(strophes.length, 2);
-  assert.doesNotMatch(root.text, /Пан – маё святло і маё збаўленне/u);
-  assert.match(strophes[0].text.trim(), /^†\s*Пан – ахова жыцця майго,\s*\*\s*каго ж мне палохацца/u);
-  assert.match(strophes[0].innerHTML, /psalm-opening-flexa[^>]*>†<\/span>&nbsp;Пан/u);
-  assert.equal(strophes[0].querySelectorAll('.psalm-marker.psalm-opening-flexa').length, 1);
-  assert.equal(strophes[0].querySelectorAll('.psalm-marker').length, 2);
-  assert.match(strophes[1].text, /^Калі злачынцы пойдуць супраць мяне/u);
-  assert.equal(strophes[1].querySelectorAll('.psalm-opening-flexa').length, 0);
+test('Psalm 27 from the Vespers cache keeps one nonbreaking † and preserves subsequent verses', () => {
+  const prepared = prepare(vesperPs1);
+  const result = omitEchoedPsalmOpening(prepared, vesperAnt1);
+  const [continuation, ...later] = strophes(result);
+  assert.match(continuation.innerHTML, /psalm-opening-flexa[^>]*>†<\/span>&nbsp;Пан/u);
+  assert.equal(continuation.querySelectorAll('.psalm-marker').length, 2);
+  assert.doesNotMatch(result, /маё святло/u);
+  assert.deepEqual(later.map(String), strophes(prepared).slice(2).map(String));
+  assert.match(later.at(-1).text, /Амэн/u);
+  assert.equal(addOpeningAntiphonFlexa(vesperAnt1), vesperAnt1);
+});
+
+test('Psalm 27 alternatives remove a matching whole verse or half and leave a mismatch intact', () => {
+  const prepared = prepare(vesperPs1);
+  const alternatives = getLiturgicalAlternatives(
+    `${vesperAnt1}<hr><p><em>1 ант.</em> ${halfAntiphon}</p><hr><p>1 ант. Пан – маё святло.</p>`,
+  );
+  assert.equal(alternatives.length, 3);
+  const [whole, half, different] = alternatives.map(({ html }) => omitEchoedPsalmOpening(prepared, html));
+  assert.match(strophes(whole)[0].text, /^†\s+Пан – ахова/u);
+  assert.match(strophes(half)[0].text, /^†\s+каго ж мне баяцца\?/u);
+  assert.deepEqual(strophes(half).slice(1).map(String), strophes(prepared).slice(1).map(String));
+  assert.equal(different, prepared);
+});
+
+test('Psalm 27 can start with a split verse and a separate dagger paragraph', () => {
+  const split = vesperPs1
+    .replace('*<br />каго ж мне баяцца?', '*</p><p>каго ж мне баяцца?')
+    .replace('&dagger; Пан &ndash; ахова', '</p><p><em>&dagger;</em></p><p>Пан &ndash; ахова');
+  const prepared = prepare(split);
+  const whole = omitEchoedPsalmOpening(prepared, fullAntiphon);
+  const half = omitEchoedPsalmOpening(prepared, halfAntiphon);
+  assert.doesNotMatch(whole, /каго ж мне баяцца/u);
+  assert.match(strophes(whole)[0].innerHTML, /psalm-opening-flexa[^>]*>†<\/span>&nbsp;Пан/u);
+  assert.equal(parse(whole).querySelectorAll('p').filter(p => p.text.trim() === '†').length, 0);
+  assert.match(strophes(half)[0].text, /^†\s+каго ж мне баяцца\?/u);
+});
+
+test('Psalm 27 has no source break after a dagger inside nested markup', () => {
+  const nested = vesperPs1.replace('&dagger; Пан', '<em>&dagger;</em><br class="legacy"><strong>Пан</strong>');
+  const result = omitEchoedPsalmOpening(prepare(nested), vesperAnt1);
+  assert.match(strophes(result)[0].innerHTML, /†<\/span>&nbsp;<\/em><strong>Пан<\/strong>/u);
 });
 
 test('full-verse echo adds a single † when the following stanza has none', () => {
