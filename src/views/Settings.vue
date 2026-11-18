@@ -15,14 +15,6 @@
         <div class="setting-copy"><strong>Не выключаць экран</strong><span>Карысна падчас малітвы або доўгага чытання</span></div>
         <v-switch :model-value="settings.keepScreenOn" color="primary" hide-details inset aria-label="Не выключаць экран" @update:model-value="settings.setKeepScreenOn" />
       </div>
-      <div class="setting-row">
-        <div class="setting-copy"><strong>Каляровае вылучэнне ў чытаннях</strong><span>Выбірайце сказы і захоўвайце іх колер</span></div>
-        <v-switch v-model="settings.readingHighlightsEnabled" color="primary" hide-details inset aria-label="Каляровае вылучэнне ў чытаннях" />
-      </div>
-      <div class="setting-row" data-test="liturgical-emphasis-setting">
-        <div class="setting-copy"><strong>Вылучэнне антыфон і рэфрэнаў</strong><span>Каляровыя падкладкі і рыскі ў Літургіі гадзін і Чытаннях дня. Без вылучэння — спакойны кніжны выгляд.</span></div>
-        <v-switch v-model="settings.liturgicalEmphasisEnabled" color="primary" hide-details inset aria-label="Вылучэнне антыфон і рэфрэнаў" />
-      </div>
       <div class="setting-row setting-row--theme">
         <div class="setting-copy"><strong>Тэма</strong><span>Сістэмная аўтаматычна сочыць за наладамі прылады</span></div>
         <div class="theme-options" role="radiogroup" aria-label="Тэма праграмы">
@@ -98,7 +90,30 @@
       </v-expand-transition>
     </section>
 
-    <section class="settings-section"><PsalmodySettings /></section>
+    <section class="settings-section" aria-labelledby="liturgy-title">
+      <h2 class="text-group-heading">
+        <button type="button" class="section-heading text-group-toggle"
+          :aria-expanded="settings.liturgicalSettingsExpanded"
+          aria-controls="liturgical-settings-content" @click="settings.liturgicalSettingsExpanded = !settings.liturgicalSettingsExpanded">
+          <span class="section-icon"><PhBookOpen :size="22" /></span>
+          <span class="text-group-copy"><span id="liturgy-title">Літургічныя налады</span><span>Вылучэнне тэксту і выгляд псальмодыі</span></span>
+          <PhCaretDown :size="20" class="text-group-chevron" :class="{ 'is-expanded': settings.liturgicalSettingsExpanded }" aria-hidden="true" />
+        </button>
+      </h2>
+      <v-expand-transition>
+        <div v-show="settings.liturgicalSettingsExpanded" id="liturgical-settings-content">
+          <div class="setting-row">
+            <div class="setting-copy"><strong>Каляровае вылучэнне ў чытаннях</strong><span>Выбірайце сказы і захоўвайце іх колер</span></div>
+            <v-switch v-model="settings.readingHighlightsEnabled" color="primary" hide-details inset aria-label="Каляровае вылучэнне ў чытаннях" />
+          </div>
+          <div class="setting-row" data-test="liturgical-emphasis-setting">
+            <div class="setting-copy"><strong>Вылучэнне антыфон і рэфрэнаў</strong><span>Каляровыя падкладкі і рыскі ў Літургіі гадзін і Чытаннях дня. Без вылучэння — спакойны кніжны выгляд.</span></div>
+            <v-switch v-model="settings.liturgicalEmphasisEnabled" color="primary" hide-details inset aria-label="Вылучэнне антыфон і рэфрэнаў" />
+          </div>
+          <PsalmodySettings />
+        </div>
+      </v-expand-transition>
+    </section>
 
     <section class="settings-section" aria-labelledby="feedback-title">
       <div class="setting-row setting-row--feedback">
@@ -155,7 +170,7 @@ import PriestAccessSettings from '@/components/prayers/PriestAccessSettings.vue'
 import TextAlignmentSettings from '@/components/TextAlignmentSettings.vue';
 import PsalmodySettings from '@/components/PsalmodySettings.vue';
 import { computed, ref } from 'vue';
-import { PhCaretDown, PhCheck, PhFolders, PhMinus, PhPencilSimple, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
+import { PhBookOpen, PhCaretDown, PhCheck, PhFolders, PhMinus, PhPencilSimple, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
