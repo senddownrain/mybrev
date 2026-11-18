@@ -69,13 +69,18 @@ export const LITURGICAL_HOUR_TITLES = Object.freeze({
   oras: 'Літургія гадзінаў',
 });
 
-// The combined morning office proceeds to Terce. Invitatory has two possible
-// successors; Compline stays on the selected date without a successor.
-export const NEXT_LITURGICAL_HOUR = Object.freeze(Object.fromEntries(
-  LITURGICAL_HOURS.filter((hour) => !['invitatorium', 'completorium'].includes(hour.name))
-    .map((hour) => [hour.name, hour.name === 'morning' ? 'terz'
-      : LITURGICAL_HOURS[LITURGICAL_HOURS.indexOf(hour) + 1].name]),
-));
+// Explicit reader-footer navigation (not the picker order).
+// The combined morning Office and Compline are terminal; the Invitatory and
+// Office of Readings both lead to Lauds. Keep the selected day/diocese/variant.
+export const NEXT_LITURGICAL_HOUR = Object.freeze({
+  invitatorium: 'laudes',
+  lectionis: 'laudes',
+  laudes: 'terz',
+  terz: 'sext',
+  sext: 'non',
+  non: 'vesper',
+  vesper: 'completorium',
+});
 
 export function liturgicalHourRoute(route, name, queryOverrides = {}) {
   const query = { ...route.query, ...queryOverrides };
