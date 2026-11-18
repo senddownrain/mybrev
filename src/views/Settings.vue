@@ -102,14 +102,14 @@
       </h2>
       <v-expand-transition>
         <div v-show="settings.liturgicalSettingsExpanded" id="liturgical-settings-content">
-      <div class="setting-row">
-        <div class="setting-copy"><strong>Каляровае вылучэнне ў чытаннях</strong><span>Выбірайце сказы і захоўвайце іх колер</span></div>
-        <v-switch v-model="settings.readingHighlightsEnabled" color="primary" hide-details inset aria-label="Каляровае вылучэнне ў чытаннях" />
-      </div>
-      <div class="setting-row" data-test="liturgical-emphasis-setting">
-        <div class="setting-copy"><strong>Вылучэнне антыфон і рэфрэнаў</strong><span>Каляровыя падкладкі і рыскі ў Літургіі гадзін і Чытаннях дня. Без вылучэння — спакойны кніжны выгляд.</span></div>
-        <v-switch v-model="settings.liturgicalEmphasisEnabled" color="primary" hide-details inset aria-label="Вылучэнне антыфон і рэфрэнаў" />
-      </div>
+          <div class="setting-row">
+            <div class="setting-copy"><strong>Каляровае вылучэнне ў чытаннях</strong><span>Выбірайце сказы і захоўвайце іх колер</span></div>
+            <v-switch v-model="settings.readingHighlightsEnabled" color="primary" hide-details inset aria-label="Каляровае вылучэнне ў чытаннях" />
+          </div>
+          <div class="setting-row" data-test="liturgical-emphasis-setting">
+            <div class="setting-copy"><strong>Вылучэнне антыфон і рэфрэнаў</strong><span>Каляровыя падкладкі і рыскі ў Літургіі гадзін і Чытаннях дня. Без вылучэння — спакойны кніжны выгляд.</span></div>
+            <v-switch v-model="settings.liturgicalEmphasisEnabled" color="primary" hide-details inset aria-label="Вылучэнне антыфон і рэфрэнаў" />
+          </div>
           <PsalmodySettings />
         </div>
       </v-expand-transition>
