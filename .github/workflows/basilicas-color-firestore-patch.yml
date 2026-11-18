@@ -1,6 +1,11 @@
 name: Correct 18 November basilica dedication color
 
 on:
+  # One targeted, idempotent publication on merge into main.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/basilicas-color-firestore-patch.yml'
   workflow_dispatch:
     inputs:
       mode:
@@ -49,16 +54,16 @@ jobs:
       - name: Inspect target only (two Firestore reads)
         run: node scripts/ordo/patch-basilicas-color.mjs --service-account "$BASILICAS_KEY"
       - name: Atomically correct calendar color and increment revision
-        if: inputs.mode == 'apply'
+        if: github.event_name == 'push' || inputs.mode == 'apply'
         run: node scripts/ordo/patch-basilicas-color.mjs --service-account "$BASILICAS_KEY" --apply --confirm basilicas-white
       - name: Validate Flutter content diff (read-only)
-        if: inputs.mode == 'apply'
+        if: github.event_name == 'push' || inputs.mode == 'apply'
         run: npm run content:manifest -- --collection liturgicalCelebrations --collection liturgicalCalendarMeta --service-account "$BASILICAS_KEY"
       - name: Publish safe Flutter content patch
-        if: inputs.mode == 'apply'
+        if: github.event_name == 'push' || inputs.mode == 'apply'
         run: npm run content:manifest -- --collection liturgicalCelebrations --collection liturgicalCalendarMeta --service-account "$BASILICAS_KEY" --apply
       - name: Verify final color and calendar revision
-        if: inputs.mode == 'apply'
+        if: github.event_name == 'push' || inputs.mode == 'apply'
         run: node scripts/ordo/patch-basilicas-color.mjs --service-account "$BASILICAS_KEY"
       - name: Delete temporary credential
         if: always()
