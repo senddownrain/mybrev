@@ -36,6 +36,9 @@ jobs:
       - name: Triduum and Compline regression
         run: node --test tests/triduum-compline.test.mjs tests/liturgical-period-title.test.mjs
 
+      - name: Explicit liturgical next-hour navigation
+        run: node --test tests/liturgical-hour-navigation.test.mjs
+
       - name: Immaculate Heart movable memorial regression tests
         run: node --test tests/immaculate-heart-hours.test.mjs
 
