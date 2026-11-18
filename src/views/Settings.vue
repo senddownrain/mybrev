@@ -15,14 +15,6 @@
         <div class="setting-copy"><strong>Не выключаць экран</strong><span>Карысна падчас малітвы або доўгага чытання</span></div>
         <v-switch :model-value="settings.keepScreenOn" color="primary" hide-details inset aria-label="Не выключаць экран" @update:model-value="settings.setKeepScreenOn" />
       </div>
-      <div class="setting-row">
-        <div class="setting-copy"><strong>Каляровае вылучэнне ў чытаннях</strong><span>Выбірайце сказы і захоўвайце іх колер</span></div>
-        <v-switch v-model="settings.readingHighlightsEnabled" color="primary" hide-details inset aria-label="Каляровае вылучэнне ў чытаннях" />
-      </div>
-      <div class="setting-row" data-test="liturgical-emphasis-setting">
-        <div class="setting-copy"><strong>Вылучэнне антыфон і рэфрэнаў</strong><span>Каляровыя падкладкі і рыскі ў Літургіі гадзін і Чытаннях дня. Без вылучэння — спакойны кніжны выгляд.</span></div>
-        <v-switch v-model="settings.liturgicalEmphasisEnabled" color="primary" hide-details inset aria-label="Вылучэнне антыфон і рэфрэнаў" />
-      </div>
       <div class="setting-row setting-row--theme">
         <div class="setting-copy"><strong>Тэма</strong><span>Сістэмная аўтаматычна сочыць за наладамі прылады</span></div>
         <div class="theme-options" role="radiogroup" aria-label="Тэма праграмы">
@@ -98,12 +90,38 @@
       </v-expand-transition>
     </section>
 
-    <section class="settings-section"><PsalmodySettings /></section>
+    <section class="settings-section" aria-labelledby="liturgy-title">
+      <h2 class="text-group-heading">
+        <button type="button" class="section-heading text-group-toggle"
+          :aria-expanded="settings.liturgicalSettingsExpanded"
+          aria-controls="liturgical-settings-content" @click="settings.liturgicalSettingsExpanded = !settings.liturgicalSettingsExpanded">
+          <span class="section-icon"><PhBookOpen :size="22" /></span>
+          <span class="text-group-copy"><span id="liturgy-title">Літургічныя налады</span><span>Вылучэнне тэксту і выгляд псальмодыі</span></span>
+          <PhCaretDown :size="20" class="text-group-chevron" :class="{ 'is-expanded': settings.liturgicalSettingsExpanded }" aria-hidden="true" />
+        </button>
+      </h2>
+      <v-expand-transition>
+        <div v-show="settings.liturgicalSettingsExpanded" id="liturgical-settings-content">
+          <div class="setting-row">
+            <div class="setting-copy"><strong>Каляровае вылучэнне ў чытаннях</strong><span>Выбірайце сказы і захоўвайце іх колер</span></div>
+            <v-switch v-model="settings.readingHighlightsEnabled" color="primary" hide-details inset aria-label="Каляровае вылучэнне ў чытаннях" />
+          </div>
+          <div class="setting-row" data-test="liturgical-emphasis-setting">
+            <div class="setting-copy"><strong>Вылучэнне антыфон і рэфрэнаў</strong><span>Каляровыя падкладкі і рыскі ў Літургіі гадзін і Чытаннях дня. Без вылучэння — спакойны кніжны выгляд.</span></div>
+            <v-switch v-model="settings.liturgicalEmphasisEnabled" color="primary" hide-details inset aria-label="Вылучэнне антыфон і рэфрэнаў" />
+          </div>
+          <PsalmodySettings />
+        </div>
+      </v-expand-transition>
+    </section>
 
     <section class="settings-section" aria-labelledby="feedback-title">
-      <div class="setting-row">
-        <div class="setting-copy"><strong id="feedback-title">Зваротная сувязь</strong><span>Прапанова, пытанне або праблема з праграмай. Пра памылку ў тэксце — праз пункт «Памылка ў тэксце» ў меню старонкі.</span></div>
-        <v-btn :to="{ name: 'Feedback' }" variant="tonal" class="text-none" data-test="settings-feedback">Напісаць</v-btn>
+      <div class="setting-row setting-row--feedback">
+        <div class="setting-copy">
+          <strong id="feedback-title">Зваротная сувязь</strong>
+          <span>Пытанні і прапановы пра праграму. Пра памылку ў тэксце можна паведаміць унізе адпаведнай старонкі.</span>
+        </div>
+        <v-btn :to="{ name: 'Feedback' }" variant="tonal" class="text-none feedback-settings-action" data-test="settings-feedback">Напісаць</v-btn>
       </div>
     </section>
     <PriestAccessSettings />
@@ -152,7 +170,7 @@ import PriestAccessSettings from '@/components/prayers/PriestAccessSettings.vue'
 import TextAlignmentSettings from '@/components/TextAlignmentSettings.vue';
 import PsalmodySettings from '@/components/PsalmodySettings.vue';
 import { computed, ref } from 'vue';
-import { PhCaretDown, PhCheck, PhFolders, PhMinus, PhPencilSimple, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
+import { PhBookOpen, PhCaretDown, PhCheck, PhFolders, PhMinus, PhPencilSimple, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
@@ -248,6 +266,9 @@ function restoreGlobalCategories() {
 .setting-copy strong, .category-copy strong { color: var(--nav-on-surface); font-size: .9rem; font-weight: 720; }
 .setting-copy span, .category-copy span { overflow-wrap: anywhere; color: var(--nav-muted); font-size: .76rem; line-height: 1.4; }
 .setting-row :deep(.v-switch) { flex: 0 0 auto; }
+.setting-row--feedback { padding-block: 16px; }
+.setting-row--feedback .setting-copy { flex: 1 1 auto; }
+.feedback-settings-action { flex: 0 0 auto; min-width: 104px; }
 .font-picker { padding: 4px 20px 20px; border-top: 1px solid var(--nav-border); }
 .control-label { display: block; margin: 15px 0 11px; }
 .font-options { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -294,6 +315,8 @@ function restoreGlobalCategories() {
   .section-heading { padding-inline: 16px; }
   .setting-row, .text-size-control, .category-row { margin-inline: 16px; }
   .setting-row--theme { align-items: flex-start; flex-direction: column; padding-block: 14px; }
+  .setting-row--feedback { align-items: stretch; flex-direction: column; gap: 12px; }
+  .feedback-settings-action { align-self: flex-start; min-height: 40px; }
   .theme-options { width: 100%; justify-content: stretch; }
   .theme-options button { flex: 1; }
   .setting-row--theme .theme-options button { flex-basis: calc(50% - 5px); }

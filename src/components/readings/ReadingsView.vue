@@ -153,6 +153,11 @@
         Магчыма, яны яшчэ не дададзены ў базу даных
       </p>
     </div>
+    <FeedbackPrompt
+      v-if="!isLoading && !error"
+      class="readings-feedback"
+      :to="readingFeedbackTo"
+    />
     <BackToTop bottom-nav />
   </v-container>
 </template>
@@ -160,6 +165,8 @@
 <script setup>
 import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import BackToTop from '@/components/BackToTop.vue';
+import FeedbackPrompt from '@/components/common/FeedbackPrompt.vue';
+import { readingFeedbackLink } from '@/utils/feedbackContext';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useReadings } from '@/composables/useReadings';
@@ -233,6 +240,15 @@ const availableCycles = computed(() => screen.value.availableCycles);
 const currentCycle = computed(() => screen.value.currentCycle);
 const activeCycle = computed(() => screen.value.activeCycle);
 const activeReading = computed(() => screen.value.activeReading);
+
+// Preserve the exact date and selected reading document. The generic route
+// helper cannot infer today's date or the actively selected cycle/set.
+const readingFeedbackTo = computed(() => readingFeedbackLink({
+  id: activeReading.value?.id,
+  date: selectedDate.value.format('YYYY-MM-DD'),
+  title: ordoOption.value?.title || 'Чытанні дня',
+  path: route.path,
+}));
 
 function groupIcon(group) {
   const reading = group.documents[0] || {};
@@ -357,6 +373,11 @@ watch(() => [ordoCalendarEpoch.value, route.params.date || route.query.date, rou
   font-family: var(--reader-font-family);
   line-height: 1.6;
 }
+.readings-feedback {
+  margin-top: 24px;
+  margin-bottom: calc(94px + env(safe-area-inset-bottom, 0px));
+}
+
 .readings-container {
   --reading-visible-color: var(--reading-period-color);
   --reading-visible-color: color-mix(

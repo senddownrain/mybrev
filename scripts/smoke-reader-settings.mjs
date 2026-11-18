@@ -60,7 +60,15 @@ try {
       }); db.close();
     }, { namespace, revision: CONTENT_REVISION, content, date, prose, prayerText });
     await page.goto(`${base}/settings`);
-    const toggle = page.locator('.text-group-toggle');
+    const liturgicalToggle = page.locator('[aria-controls="liturgical-settings-content"]');
+    await liturgicalToggle.waitFor();
+    assert.equal(await liturgicalToggle.getAttribute('aria-expanded'), 'false');
+    await liturgicalToggle.click();
+    assert.equal(await liturgicalToggle.getAttribute('aria-expanded'), 'true');
+    await page.reload();
+    assert.equal(await liturgicalToggle.getAttribute('aria-expanded'), 'true', 'liturgical section state persists');
+    assert.equal(await page.locator('#liturgical-settings-content .setting-row').count(), 2);
+    const toggle = page.locator('[aria-controls="text-settings-content"]');
     await toggle.waitFor();
     assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
     assert.equal(await page.locator('#text-settings-content').isVisible(), false);
@@ -102,7 +110,13 @@ try {
           assert.equal(metrics.indent > 0, mode === 'left-break-indent');
           if (mode === 'alternating-stanzas') assert.equal(metrics.br, 0);
           assert.ok(metrics.targets.every(t => t.height >= 44 && t.width >= 44));
-          if (width <= 600) assert.equal(metrics.groupWidth, metrics.headingWidth, 'mobile psalmody fills available width');
+          const sameRow = await page.locator('.psalmody-heading').evaluate(el => {
+            const heading = el.querySelector('h3').getBoundingClientRect();
+            const modes = el.querySelector('.psalmody-modes').getBoundingClientRect();
+            return Math.abs((heading.top + heading.height / 2) - (modes.top + modes.height / 2)) < 3;
+          });
+          assert.ok(sameRow, 'psalmody label and mode icons share a row');
+          if (width <= 600) assert.ok(metrics.groupWidth < metrics.headingWidth, 'mobile psalmody icons stay compact on the right');
           if (width <= 600) assert.ok(Math.max(...metrics.targets.map(t => t.width)) - Math.min(...metrics.targets.map(t => t.width)) <= 1);
           assert.equal((await page.locator('.psalmody-preview').textContent()).replace(/\s/gu, ''), originalPsalm);
         }

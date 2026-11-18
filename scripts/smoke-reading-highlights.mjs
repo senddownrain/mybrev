@@ -59,6 +59,7 @@ try {
       }); db.close();
     }, { namespace, revision: CONTENT_REVISION, content, date, prose });
     await page.goto(`${base}/settings`);
+    await page.locator('[aria-controls="liturgical-settings-content"]').click();
     const setting = page.getByRole('checkbox', { name: 'Каляровае вылучэнне ў чытаннях', exact: true });
     const wake = page.getByRole('checkbox', { name: 'Не выключаць экран', exact: true });
     await setting.waitFor();

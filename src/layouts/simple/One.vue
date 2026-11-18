@@ -9,6 +9,7 @@
       <router-view v-if="!hideLayoutTopNav" name="topNav" />
       <router-view />
       <NextHourLink />
+      <FeedbackPrompt class="ora-feedback" />
       <BackToTop v-if="isHour" />
 
       <router-view name="bottomNav" />
@@ -27,6 +28,7 @@
   import { providePsalmody } from '@/composables/usePsalmody';
   import { provideLiturgicalHours } from '@/composables/useLiturgicalHours';
   import NextHourLink from '@/components/liturgical/NextHourLink.vue';
+  import FeedbackPrompt from '@/components/common/FeedbackPrompt.vue';
   import { useSettingsStore } from '@/stores/settings.js';
   
   const settings = useSettingsStore();
@@ -41,5 +43,12 @@
 <style scoped>
 .has-bottom-nav {
   padding-bottom: 92px;
+}
+
+/* After the next-hour action, the quiet feedback divider ends the reading flow.
+   Keep clear of the floating back-to-top control and the system safe area. */
+:deep(.ora-feedback) {
+  margin-top: 18px;
+  margin-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
 }
 </style>

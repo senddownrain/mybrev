@@ -26,6 +26,10 @@ on:
       - 'src/layouts/default/NavigationDrawer.vue'
       # Deploy this reader update after the reviewed PR reaches main.
       - 'src/utils/readerPreferences.js'
+      # Publish grouped liturgical settings and mobile psalmody controls.
+      - 'src/views/Settings.vue'
+      - 'src/components/PsalmodySettings.vue'
+      - 'src/stores/settings.js'
       # A verified content publication must refresh the Web reader cache.
       - 'src/constants/contentRevision.js'
       - 'src/components/oraparts/Reading.vue'

@@ -27,7 +27,7 @@ const nextRoute = computed(() => liturgicalHourRoute(route, nextHour.value.name)
 <style scoped>
 .next-hour {
   width: min(calc(100% - 32px), 760px);
-  margin: 8px auto calc(84px + env(safe-area-inset-bottom, 0px));
+  margin: 8px auto 0;
 }
 
 .next-hour__link {
