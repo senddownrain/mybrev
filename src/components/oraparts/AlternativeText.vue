@@ -50,6 +50,7 @@
 import { computed, getCurrentInstance, nextTick, ref, watch } from 'vue';
 import { formatIntercessions, getLiturgicalAlternatives } from '@/utils/liturgicalAlternatives';
 import { markAntiphonLabel } from '@/utils/liturgicalHtml';
+import { omitEchoedPsalmOpening, addOpeningAntiphonFlexa } from '@/utils/psalmOpening';
 import { expandOfficeResponsoryRepeats } from '@/utils/officeResponsoryRepeats';
 import { expandOfficeCollectConclusion } from '@/utils/officeCollectConclusion';
 
@@ -58,6 +59,7 @@ const props = defineProps({
   ariaLabel: { type: String, default: 'Выбар варыянта' },
   kind: { type: String, default: 'generic' },
   highlightAntiphonLabel: { type: Boolean, default: false },
+  followingPsalmHtml: { type: String, default: '' },
   modelValue: { type: Number, default: undefined },
   showPicker: { type: Boolean, default: true },
   expandCollectConclusion: { type: Boolean, default: false },
@@ -88,7 +90,12 @@ const displayedHtml = computed(() => {
   if (props.kind === 'prayer' && props.expandCollectConclusion) {
     formatted = expandOfficeCollectConclusion(formatted);
   }
-  return props.highlightAntiphonLabel ? markAntiphonLabel(formatted) : formatted;
+  if (props.highlightAntiphonLabel) formatted = markAntiphonLabel(formatted);
+  // Only the opening antiphon directly before its psalm gets †.
+  if (props.followingPsalmHtml && omitEchoedPsalmOpening(props.followingPsalmHtml, html) !== props.followingPsalmHtml) {
+    formatted = addOpeningAntiphonFlexa(formatted);
+  }
+  return formatted;
 });
 
 watch(() => props.text, () => {
@@ -214,4 +221,8 @@ function selectOption(index) {
   outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
 }
+.alternative-text :deep(.psalm-antiphon-flexa) {
+  color: var(--rubric-color);
+}
+
 </style>
