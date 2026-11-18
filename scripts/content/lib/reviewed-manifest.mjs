@@ -7,11 +7,15 @@ import { APP_CONTENT_COLLECTIONS } from './app-content.mjs';
 import { binarySha256, valueSha256, describeCatalog, coordinatedManifestPlan, publishCoordinatedManifest, manifestReceipt } from '../../liturgy/lib/coordinated-release.mjs';
 export const REVIEWED_PLAN_SHA = '707e13042ed74996cf996aacbd9564c2dc3200448f05eca11946abe502d1e95a';
 export const REVIEWED_DIR = 'docs/releases/final-test-2026-11-17';
-export function assertReviewedManifestExecutable() {
-  throw Error('Reviewed manifest plan retired: captured Firestore calendar revision3 predates accepted Flutter calendar from main (bundled revision4; separate revision5 release remains pending); reconcile approved calendar and bind the final candidate before any production access. Quota pause remains in effect.');
+export const FINAL_REVIEWED_DIR = 'docs/releases/final-test-2026-11-18';
+export const FINAL_REVIEWED_PLAN_SHA = 'ae362f365a88754478504544d52b515eb46835f147ace9493cc2d037405c9da2';
+export function assertReviewedManifestExecutable(reviewed) {
+  if(reviewed?.planSha===FINAL_REVIEWED_PLAN_SHA&&reviewed?.finalCalendar5Verified===true)return;
+  throw Error('Reviewed manifest plan retired: it binds the old calendar3 snapshot; only the new immutable plan after actual calendar5 readback may execute.');
 }
 const check = (v, why) => { if (!v) throw Error(why); };
 export function loadReviewedManifest(file, expectedSha) {
+  if(file===FINAL_REVIEWED_DIR+'/plan.json')return loadFinalReviewedManifest(file,expectedSha);
   check(file === REVIEWED_DIR + '/plan.json' && expectedSha === REVIEWED_PLAN_SHA, 'Exact reviewed manifest plan required');
   const bytes = fs.readFileSync(file);
   check(binarySha256(bytes) === expectedSha, 'Reviewed plan SHA mismatch');
@@ -41,21 +45,45 @@ export function loadReviewedManifest(file, expectedSha) {
   check(isDeepStrictEqual(planned.changed.sort(), [...plan.changedCollections].sort()) && planned.changed.length + 1 === plan.maxManifestWrites, 'Reviewed manifest scope changed');
   for (const [name, entry] of Object.entries(catalog)) check(name.split('/').length === 2 && plan.collections.includes(name.split('/')[0])
     && Number.isSafeInteger(entry.updateTime?.seconds) && Number.isSafeInteger(entry.updateTime?.nanoseconds), 'Invalid catalog timestamp/scope');
-  return { plan, catalog, manifests, contract };
+  return { plan, catalog, manifests, contract, planSha: expectedSha };
+}
+
+/** New exact plan only after both calendar commits were really readback-verified. */
+export function loadFinalReviewedManifest(file,expectedSha){
+ check(file===FINAL_REVIEWED_DIR+'/plan.json'&&expectedSha===FINAL_REVIEWED_PLAN_SHA,'Exact final calendar5 plan required');
+ const bytes=fs.readFileSync(file);check(binarySha256(bytes)===expectedSha,'Final plan SHA mismatch');const plan=JSON.parse(bytes);
+ check(plan.schema===1&&plan.project==='ibreviaryby'&&plan.policy==='final-test-manifest-after-verified-calendar5-2026-11-18'&&plan.ownerApproved===true
+   &&plan.ownerAuthorization==='все разрешаю. делай больше и даже максимум; Разрешаю обе календарные операции'&&plan.contentWrites===0&&plan.maxUncachedDocumentReads===0&&plan.maxManifestWrites===11
+   &&plan.bundleSha256==='203f7ef439bb1b9d90cb8e6a4e9d8efec7a34e6fb7a3c41850eeca7f20838184'&&plan.protectedOrDraftIncluded===0&&plan.publicPolicyCount===8&&/^[a-f0-9]{64}$/u.test(plan.publicPolicySha256),'Final publication scope differs');
+ check(isDeepStrictEqual([...APP_CONTENT_COLLECTIONS].sort(),plan.collections)&&plan.compatibility.mobileReleasePerformed===false&&plan.compatibility.installedClientInventory==='not-available','Only existing public schema1 collections; no fabricated release');
+ const catalogBytes=fs.readFileSync(FINAL_REVIEWED_DIR+'/catalog.json.gz'),beforeBytes=fs.readFileSync(FINAL_REVIEWED_DIR+'/manifest-before.json');
+ check(binarySha256(catalogBytes)===plan.catalogSha256&&binarySha256(beforeBytes)===plan.manifestRecordsSha256,'Final catalog/manifest SHA mismatch');
+ const proofBytes=fs.readFileSync(FINAL_REVIEWED_DIR+'/compatibility.json');check(binarySha256(proofBytes)===plan.compatibilitySha256,'Final updater proof SHA mismatch');const proof=JSON.parse(proofBytes);
+ check(proof.status==='passed'&&proof.passed===2&&proof.failed===0&&proof.bundleSha256===plan.bundleSha256&&proof.settingsFavoritesPersonalPrayersPreserved===true&&proof.firebaseReads===0&&proof.firebaseWrites===0
+   &&binarySha256(fs.readFileSync(FINAL_REVIEWED_DIR+'/legacy-full-bundle-tests.jsonl.gz'))===proof.logsSha256&&binarySha256(fs.readFileSync(FINAL_REVIEWED_DIR+'/legacy-full-bundle-test.dart.txt'))===proof.sourceSha256,'Final updater/source proof incomplete');
+ const receiptBytes=fs.readFileSync(FINAL_REVIEWED_DIR+'/calendar5-receipt.json');check(binarySha256(receiptBytes)===plan.calendar5ReceiptSha256,'Calendar5 receipt SHA mismatch');const receipt=JSON.parse(receiptBytes);
+ check(receipt.mode==='PUBLISHED_AND_VERIFIED'&&receipt.revision===5&&receipt.writes===3&&receipt.deletes===0&&receipt.outsideScopeWrites===0&&receipt.operations.length===3&&receipt.operations.every(o=>o.result==='VERIFIED'),'Calendar5 publication/readback not verified');
+ const catalog=JSON.parse(zlib.gunzipSync(catalogBytes)).documents,manifests=new Map(Object.entries(JSON.parse(beforeBytes).records));
+ check(Object.keys(catalog).length===4476&&Object.entries(catalog).every(([n,e])=>n.split('/').length===2&&plan.collections.includes(n.split('/')[0])&&Number.isSafeInteger(e.updateTime?.seconds)&&Number.isSafeInteger(e.updateTime?.nanoseconds)),'Final catalog scope/timestamps invalid');
+ const contract={collections:plan.collections,expected:plan.expected,report:{contentVersion:plan.bundleContentVersion},publicPolicySha256:plan.publicPolicySha256,publicPolicyCount:plan.publicPolicyCount};
+ describeCatalog(catalog,contract);const planned=coordinatedManifestPlan(plan.expected,manifests,plan,contract);
+ const writes=Object.keys(planned.payloads).filter(n=>valueSha256(manifests.get(n)?.data??null)!==valueSha256(planned.payloads[n]));
+ check(isDeepStrictEqual(writes,plan.writeDocuments)&&writes.length===11&&isDeepStrictEqual(planned.changed.sort(),[...plan.changedCollections].sort()),'Final exact manifest write scope changed');
+ return{plan,catalog,manifests,contract,planSha:expectedSha,finalCalendar5Verified:true};
 }
 
 export async function executeReviewedManifest({ db, reviewed, previous = {}, journal }) {
   const { plan, catalog, manifests, contract } = reviewed;
   const refs = [...plan.collections.map(n => 'contentManifest/' + n), 'contentManifest/current'];
   const usage = { manifestDocumentReads: 0, metadataDocumentReads: 0, uncachedDocumentReads: 0 };
-  const onReads = (kind, count) => { usage[kind] += count; journal({ firebaseUsage: { ...usage } }); };
+  const onReads = (kind, count) => { usage[kind] = (usage[kind] || 0) + count; journal({ firebaseUsage: { ...usage } }); };
   const readback = async payloads => {
     const docs = await db.getAll(...refs.map(n => db.doc(n))); onReads('manifestDocumentReads', refs.length);
     const records = new Map(docs.filter(d => d.exists).map(d => [d.ref.path, { data: d.data(), updateTime: { seconds: d.updateTime.seconds, nanoseconds: d.updateTime.nanoseconds } }]));
     return manifestReceipt(records, payloads);
   };
   if (previous.manifestAttempt) {
-    check(previous.planSha256 === REVIEWED_PLAN_SHA && previous.manifestAttempt.writeDocuments.every(n => refs.includes(n)), 'Resume plan/scope mismatch');
+    check(previous.planSha256 === reviewed.planSha && previous.manifestAttempt.writeDocuments.every(n => refs.includes(n)), 'Resume plan/scope mismatch');
     // Recovery only verifies the acknowledged/ambiguous atomic payload. It cannot repeat writes.
     const receipt = await readback(previous.manifestAttempt.payloads);
     await journal({ state: 'reviewed-manifest-readbacks-verified', manifestReceipt: receipt, resumedManifest: true, contentWrites: 0 });
@@ -77,12 +105,12 @@ export async function reviewedManifestMain(argv) {
   }
   const reviewed = loadReviewedManifest(options['--reviewed-manifest-authorization'], options['--expected-plan-sha']);
   if (!options.apply) { console.log('Verified exact metadata-only plan; Firebase reads/writes: 0/0'); return; }
-  assertReviewedManifestExecutable(); // Retired exact plan cannot resume or access production.
+  assertReviewedManifestExecutable(reviewed); // Retired exact plan cannot resume or access production.
   check(options['--receipt'] && options['--service-account'], 'Receipt and credential paths required');
   const receiptFile = options['--receipt']; fs.mkdirSync(path.dirname(receiptFile), { recursive: true });
   let state = options['--resume'] ? JSON.parse(fs.readFileSync(options['--resume'])) : {};
   const journal = update => {
-    state = { ...state, ...update, schema: 1, project: 'ibreviaryby', planSha256: REVIEWED_PLAN_SHA };
+    state = { ...state, ...update, schema: 1, project: 'ibreviaryby', planSha256: reviewed.planSha };
     const fd = fs.openSync(receiptFile + '.tmp', 'w', 0o600);
     try { fs.writeFileSync(fd, JSON.stringify(state, null, 2) + '\n'); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
     fs.renameSync(receiptFile + '.tmp', receiptFile);

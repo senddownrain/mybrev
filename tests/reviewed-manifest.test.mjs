@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { loadReviewedManifest, executeReviewedManifest, REVIEWED_DIR, REVIEWED_PLAN_SHA, reviewedManifestMain } from '../scripts/content/lib/reviewed-manifest.mjs';
+import { loadReviewedManifest, executeReviewedManifest, REVIEWED_DIR, REVIEWED_PLAN_SHA, reviewedManifestMain, FINAL_REVIEWED_DIR, FINAL_REVIEWED_PLAN_SHA, assertReviewedManifestExecutable } from '../scripts/content/lib/reviewed-manifest.mjs';
+import {valueSha256} from '../scripts/liturgy/lib/coordinated-release.mjs';
 import { publicationDecision } from '../scripts/content/publish-manifest.mjs';
 const reviewed = () => loadReviewedManifest(REVIEWED_DIR + '/plan.json', REVIEWED_PLAN_SHA);
 test('exact final-test plan describes 4473 public docs; ordinary MASS remains closed', () => {
@@ -11,14 +12,14 @@ test('wrong SHA, path and broad flags are refused before nonexistent credential 
  assert.throws(()=>loadReviewedManifest('/tmp/plan.json',REVIEWED_PLAN_SHA),/Exact reviewed/);
  await assert.rejects(reviewedManifestMain(['--allow-large-patch','--service-account','/nonexistent']),/Unreviewed flag/);
 });
-function fakeDb(r,{changedTime=false,conflict=false}={}) {
+function fakeDb(r,{changedTime=false,conflict=false,policyRows=[]}={}) {
  const records=new Map(structuredClone([...r.manifests]));const writes=[],events=[];
  const doc=path=>({path});
  const snapshot=(name,record)=>({exists:!!record,ref:doc(name),data:()=>record?.data,updateTime:record?.updateTime});
  const getAll=async(...refs)=>refs.map(ref=>snapshot(ref.path,records.get(ref.path)));
- return {writes,events,doc,getAll,collection:name=>({select:()=>({name})}),runTransaction:async(fn,options)=>{
+ return {writes,events,doc,getAll,collection:name=>({select:()=>({name}),limit:()=>({name})}),runTransaction:async(fn,options)=>{
   assert.equal(options.maxAttempts,1);const queued=[];
-  const result=await fn({getAll:async(...refs)=>{if(conflict)records.get('contentManifest/current').data.contentVersion++;return getAll(...refs);},get:async query=>({docs:Object.entries(r.catalog).filter(([p])=>p.startsWith(query.name+'/')).map(([p,e])=>({ref:doc(p),updateTime:changedTime?{seconds:0,nanoseconds:0}:e.updateTime}))}),set:(ref,data)=>{assert(ref.path.startsWith('contentManifest/'));queued.push([ref.path,data]);}});
+  const result=await fn({getAll:async(...refs)=>{if(conflict)records.get('contentManifest/current').data.contentVersion++;return getAll(...refs);},get:async query=>query.name==='priestProtectedCategories'?{docs:policyRows.map(row=>({id:row.id,data:()=>row}))}:({docs:Object.entries(r.catalog).filter(([p])=>p.startsWith(query.name+'/')).map(([p,e])=>({ref:doc(p),updateTime:changedTime?{seconds:0,nanoseconds:0}:e.updateTime}))}),set:(ref,data)=>{assert(ref.path.startsWith('contentManifest/'));queued.push([ref.path,data]);}});
   for(const [name,data]of queued){writes.push(name);records.set(name,{data,updateTime:{seconds:1794945000,nanoseconds:1}});}return result;
  }};
 }
@@ -33,4 +34,19 @@ test('updateTime drift or root conflict stops without any queued write; no retri
 
 test('retired raw-calendar plan cannot execute or resume, before credential/receipt access', async () => {
  await assert.rejects(reviewedManifestMain(['--reviewed-manifest-authorization',REVIEWED_DIR+'/plan.json','--expected-plan-sha',REVIEWED_PLAN_SHA,'--apply','--service-account','/nonexistent','--receipt','/nonexistent','--resume','/nonexistent']),/plan retired/);
+});
+
+const finalReviewed=()=>loadReviewedManifest(FINAL_REVIEWED_DIR+'/plan.json',FINAL_REVIEWED_PLAN_SHA);
+test('new exact plan binds verified calendar5, final4476 bundle and updater proof; old plan remains retired',()=>{
+ const r=finalReviewed();assert.equal(Object.keys(r.catalog).length,4476);assert.equal(r.plan.maxManifestWrites,11);assert.doesNotThrow(()=>assertReviewedManifestExecutable(r));assert.throws(()=>assertReviewedManifestExecutable(reviewed()),/retired/);assert.equal(publicationDecision('MASS CONTENT REBUILD').publish,false);
+ assert.throws(()=>loadReviewedManifest(FINAL_REVIEWED_DIR+'/plan.json','0'.repeat(64)),/Exact final/);
+});
+test('final transaction writes eleven metadata docs, checks access policy and readbacks all seventeen',async()=>{
+ const r=finalReviewed(),policyRows=Array.from({length:8},(_,i)=>({id:'synthetic-policy-'+i,priestOnly:true}));
+ // Synthetic policy only in this in-memory adapter test; production loads immutable real digest.
+ r.contract.publicPolicySha256=valueSha256(policyRows);const db=fakeDb(r,{policyRows});let state={};await executeReviewedManifest({db,reviewed:r,journal:u=>{state={...state,...u};}});
+ assert.equal(db.writes.length,11);assert.equal(db.writes.at(-1),'contentManifest/current');assert.equal(Object.keys(state.manifestReceipt).length,17);assert.equal(state.firebaseUsage.metadataDocumentReads,4476);assert.equal(state.firebaseUsage.policyDocumentReads,8);
+});
+test('changed private access policy stops final publication before any queued write',async()=>{
+ const r=finalReviewed(),db=fakeDb(r,{policyRows:Array.from({length:8},(_,i)=>({id:'wrong-policy-'+i}))});await assert.rejects(executeReviewedManifest({db,reviewed:r,journal:()=>{}}),/policy changed/);assert.equal(db.writes.length,0);
 });
