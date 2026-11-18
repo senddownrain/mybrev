@@ -5,10 +5,6 @@ const clean = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
 const key = (value) => clean(value).toLocaleLowerCase('be').replace(/[«»„“”"']/gu, '');
 export const PRAYER_SOURCE_POLICY_VERSION = '2026-11-18-edition-policy-v5';
 export const PRAYER_SOURCE_REGISTRY = bibliography.entries;
-export const isUndatedBogDobry = (value) => typeof value === 'string'
-  && /^(?:малітоўнік )?бог добры(?:[\s,.;:]+.+)?$/iu.test(key(value))
-  && !/\b(?:19|20)\d{2}\b/u.test(value)
-  && metadataOnly(key(value).replace(/^(?:малітоўнік )?бог добры/iu, ''));
 export const hasSourcePages = (value) => /(?:^|[\s,.;(])(?:с\.|стар\.?|старонк[аіуы]|стр\.?|страниц[аы]?|pp?\.)\s*\d/iu.test(String(value ?? ''));
 export const hasLongSourceDetails = (value) => hasSourcePages(value) || /©|ISBN|https?:\/\/|выдавецтв|издательств|\b\d{4}\b|(?:том|частка|часть|выданне)\s+[\dIVІX]+/iu.test(String(value ?? '')) || /\d+\s*[–—-]\s*\d+/u.test(String(value ?? '')) || clean(value).length > 100;
 
@@ -56,7 +52,9 @@ export function resolvePrayerSource(value) {
   const longest = Math.max(0, ...candidates.map(({score}) => score));
   const matches = candidates.filter(({score}) => score > 0 && score === longest);
   if (matches.length !== 1) return { value, status: 'unknown' };
-  const entry = matches[0].entry;
+  const matched = matches[0].entry;
+  // Preserve the historical bibliography while applying the approved storage edition.
+  const entry = PRAYER_SOURCE_REGISTRY.find((item) => item.id === matched.storageEditionId) || matched;
   return { value: entry.canonicalValue || entry.shortTitle, status: 'known', sourceId: entry.id };
 }
 export const normalizePrayerSource = (value) => resolvePrayerSource(value).value;

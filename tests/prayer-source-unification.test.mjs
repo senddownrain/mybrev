@@ -35,7 +35,7 @@ test('known sources are canonical, without pages, ranges or legal notices; idemp
   }
   for (const item of PRAYER_SOURCE_REGISTRY) {
     const value = item.canonicalValue || item.shortTitle;
-    assert.equal(normalizePrayerSource(value), value);
+    assert.equal(normalizePrayerSource(value), item.storageEditionId ? bog2022 : value);
     assert.equal(hasSourcePages(value), false);
     assert.doesNotMatch(value, /©|ISBN|\d+[–-]\d+/u);
   }
@@ -186,7 +186,7 @@ test('deployed policy marker and generated rules share the source registry', () 
   const rules=readFileSync(new URL('../firestore.rules',import.meta.url),'utf8');
   const block=rules.split('// BEGIN GENERATED PRAYER SOURCE NAMES')[1].split('// END GENERATED PRAYER SOURCE NAMES')[0];
   const values=[...block.matchAll(/"([^"\n]*)"/gu)].map((m)=>m[1]);
-  assert.deepEqual(values,['',...PRAYER_SOURCE_REGISTRY.map((entry)=>entry.canonicalValue || entry.shortTitle)]);
+  assert.deepEqual(values,['',...PRAYER_SOURCE_REGISTRY.filter((entry)=>!entry.storageEditionId).map((entry)=>entry.canonicalValue || entry.shortTitle)]);
   assert.match(rules,/function editablePrayerSource\(value\)/);
   assert.match(rules,/value\.size\(\) <= 500/);
 });
@@ -217,7 +217,7 @@ test('scoped snapshot retains timestamps for exact offline app hashes', () => {
 test('confirmed production bibliographic variants use the same registry without guessing ambiguous Agendas', () => {
   const cases=[
     ['Малітоўнік «Бог Добры», Выдавецтва Пінскай дыяцэзіі, 2022',bog2022],
-    ['малітоўнік "Бог добры", Выдавецтва Пінскай Дыяцэзіі, 2018','«Бог Добры» (Пінск, 2018)'],
+    ['малітоўнік "Бог добры", Выдавецтва Пінскай Дыяцэзіі, 2018',bog2022],
     ['Малітоўнік "Ойча наш", ПРО ХРЫСТО, 202','«Ойча наш» (Мінск, 2022)'],
     ['Малітоўнік «Прасіце і атрымаеце» (Мінск, 2024), Выдавецтва «Про Хрысто»','«Прасіце і атрымаеце» (Мінск, 2024)'],
     ['«Літургічная агенда», Мінска-Магілёўская архідыяцэзія, 2010','«Літургічная агенда» (Мінск, 2010)'],
@@ -233,8 +233,6 @@ test('confirmed production bibliographic variants use the same registry without 
   for(const unknown of [
     'Парафіяльная Агенда, Выдавецтва Пінскай дыяцэзіі, 2018',
     'Агенда. Сакрамэнталіі — частка 2, с. 214–217.',
-    'Бог добры',
-    'Бог добры, с. 127',
     '«Бог Добры» (Пінск, 2001)',
     '«Літургічная агенда» (Мінск, 2018)',
     'для прыватнага карыстання, уласныя малітвы айцоў марыянаў',
@@ -287,13 +285,14 @@ test('manual known-alias source is published verbatim from draft', async () => {
 
 
 test('editor and draft publication keep the confirmed edition and preserve ambiguous manual attribution', () => {
-  assert.equal(sourceForEditor('Бог добры'), 'Бог добры');
+  assert.equal(sourceForEditor('Бог добры'), bog2022);
   assert.equal(sourceForEditor(source), bog2022);
   assert.equal(buildPrayerFromDraft({...prayer, source:'Бог добры', sourceBook:bog2022}).source, bog2022);
   assert.equal(sourceForSave('«Парадак ��ак��яння», Мінск 2016'), '«Парадак пакаяння» (Мінск, 2016)');
   for (const entry of PRAYER_SOURCE_REGISTRY.filter((item) => item.canonicalValue)) {
-    assert.equal(sourceForEditor(entry.canonicalValue), entry.canonicalValue);
-    assert.equal(buildPrayerFromDraft({...prayer, source: entry.canonicalValue}, {editorSource:true}).source, entry.canonicalValue);
+    const expected = entry.storageEditionId ? bog2022 : entry.canonicalValue;
+    assert.equal(sourceForEditor(entry.canonicalValue), expected);
+    assert.equal(buildPrayerFromDraft({...prayer, source: entry.canonicalValue}, {editorSource:true}).source, expected);
   }
   assert.equal(PRAYER_SOURCE_REGISTRY.filter((item) => item.canonicalValue).length, 11);
 });

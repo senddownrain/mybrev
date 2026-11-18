@@ -181,7 +181,8 @@
         "Малітоўнік «Бог Добры», Выдавецтва Пінскай дыяцэзіі, 2018"
       ],
       "canonicalValue": "«Бог Добры» (Пінск, 2018)",
-      "explicitEdition": true
+      "explicitEdition": true,
+      "storageEditionId": "bog-dobry-2022"
     },
     {
       "id": "bog-dobry-2022",
@@ -193,7 +194,6 @@
       "section": "Касцёльныя крыніцы",
       "shortTitle": "Бог добры",
       "canonicalValue": "«Бог Добры» (Пінск, 2022)",
-      "explicitEdition": true,
       "aliases": [
         "Малітоўнік «Бог Добры», Выдавецтва Пінскай дыяцэзіі, 2022"
       ]

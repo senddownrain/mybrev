@@ -1,6 +1,6 @@
 // Pure model for closed prayer drafts (`prayerDrafts`, admin-only).
 // Used by the admin UI, the publish transaction and the import tooling.
-import { isUndatedBogDobry, normalizePrayerSource, resolvePrayerSource, sourceForEditor, sourceForSave } from './prayerSource.mjs';
+import { normalizePrayerSource, sourceForEditor, sourceForSave } from './prayerSource.mjs';
 
 export const DRAFT_COLLECTION = 'prayerDrafts';
 export const DRAFT_STATUSES = Object.freeze(['draft', 'published']);
@@ -100,11 +100,7 @@ export function publishBlockers(draft) {
 
 export function draftSourceNotice(draft) {
   // The editor preserves unrelated manual attributions and canonicalizes confirmed editions.
-  if (String(draft.source || '').trim()) {
-    const book = resolvePrayerSource(draft.sourceBook);
-    if (isUndatedBogDobry(draft.source) && book.sourceId?.startsWith('bog-dobry-')) return book.value;
-    return sourceForEditor(draft.source);
-  }
+  if (String(draft.source || '').trim()) return sourceForEditor(draft.source);
   return normalizePrayerSource(draft.sourceBook || '');
 }
 
