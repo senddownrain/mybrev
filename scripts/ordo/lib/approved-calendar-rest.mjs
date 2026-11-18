@@ -32,7 +32,8 @@ export function decodedDocument(d) {
   return { id: d.name.split('/').at(-1), data: Object.fromEntries(Object.entries(d.fields || {}).map(([k, v]) => [k, decodeFirestoreValue(v)])), updateTime: d.updateTime };
 }
 
-export function createApprovedRest({ projectId = RELEASE_PROJECT, allowCommit = false } = {}) {
+export function createApprovedRest({ projectId = RELEASE_PROJECT, allowCommit = false, releasePhase = 'sealed-71' } = {}) {
+  if (!['sealed-71','december-3'].includes(releasePhase)) throw Error('Unknown calendar release phase');
   if (projectId !== RELEASE_PROJECT || process.env.VITE_FIREBASE_PROJECT_ID !== RELEASE_PROJECT) throw Error('Project mismatch');
   let credential;
   try { credential = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_B64 || '', 'base64').toString('utf8')); }
@@ -94,7 +95,14 @@ export function createApprovedRest({ projectId = RELEASE_PROJECT, allowCommit = 
     },
     async begin() { return (await request(':beginTransaction', { body: { options: { readWrite: {} } } })).transaction; },
     async commit(writes, transaction) {
-      if (!transaction || !Array.isArray(writes) || writes.length !== 71) throw Error('Invalid sealed transaction');
+      if (!transaction || !Array.isArray(writes) || writes.length !== (releasePhase === 'sealed-71' ? 71 : 3)) throw Error('Invalid sealed transaction');
+      if(releasePhase==='december-3') {
+        const expected=['liturgicalCelebrations/sv-juan-diego','liturgicalCelebrations/our-lady-guadalupe','liturgicalCalendarMeta/current'];
+        for(let i=0;i<3;i++) {
+          const w=writes[i],field=i<2?'enabled':'revision';
+          if(w.update?.name!=='projects/ibreviaryby/databases/(default)/documents/'+expected[i] || Object.keys(w.update.fields||{}).join(',')!==field || JSON.stringify(w.updateMask?.fieldPaths)!==JSON.stringify([field]) || JSON.stringify(w.update.fields[field])!==JSON.stringify(i<2?{booleanValue:false}:{integerValue:'5'}) || JSON.stringify(w.updateTransforms||[])!==JSON.stringify(i<2?[]:[{fieldPath:'publishedAt',setToServerValue:'REQUEST_TIME'}])) throw Error('Outside exact December write scope');
+        }
+      }
       for (const write of writes) {
         const documentPath = write.update?.name?.slice(root.replace('https://firestore.googleapis.com/v1/', '').length + 1);
         const [collection, id, extra] = (documentPath || '').split('/');

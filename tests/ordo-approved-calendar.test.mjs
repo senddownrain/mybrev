@@ -13,6 +13,25 @@ const dioceses = ['minsk-mohilev', 'vitebsk', 'pinsk', 'grodno'];
 const visible = day => [day.primary, ...day.alternatives, ...day.commemorations];
 const refs = JSON.parse(fs.readFileSync(new URL('../docs/audits/belarus-own-calendar-2026/approved-evidence/reference-2026-11-06.json', import.meta.url)));
 
+
+test('Belarus calendar is a closed PDF inventory: no extra fixed memorials in any diocese', () => {
+  for (const diocese of dioceses) {
+    const expected = new Set(refs.filter(row => !row.dioceses || row.dioceses.split(';').includes(diocese))
+      .map(row => row.celebration_id));
+    if (diocese === 'vitebsk') expected.delete('nativity-blessed-virgin-mary');
+    const actual = [...buildCalendarLayers({ diocese }).celebrations.values()]
+      .filter(item => item.date?.type === 'fixed' && !item.suppressedBy);
+    const unexpected = actual.filter(item => !expected.has(item.id))
+      .map(item => `${item.id}@${item.date.month}-${item.date.day}`);
+    assert.deepEqual(unexpected, [], `${diocese}: only fixed celebrations printed in the approved PDF`);
+    assert.equal(actual.length, [...expected].filter(id => actual.some(item => item.id === id)).length);
+    for (const date of ['2026-12-09', '2027-12-09', '2026-12-12', '2027-12-12']) {
+      const day = resolveLiturgicalDate(date, { diocese });
+      assert.ok(!visible(day).some(item => ['sv-juan-diego', 'our-lady-guadalupe'].includes(item.id)), `${diocese} ${date}`);
+    }
+  }
+});
+
 test('all 262 source rows produce 959 approved effective assignments, including source default optional ranks', () => {
   assert.equal(refs.length, 262);
   let count = 0;
