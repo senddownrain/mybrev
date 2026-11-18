@@ -223,6 +223,20 @@ export function assembleOffice({ proper, office, templates, choice, currentDay, 
   };
 
   function resolveField(field) {
+    const isDaytimeCollect = /^sext[123]Pr$/.test(field);
+    // GILH 200, 236: even a proper saint's collect must not replace the
+    // weekday collect at Terce, Sext or None on a memorial.
+    if (isDaytimeCollect && isMemorial) return fromSource(CURRENT_DAY_CHOICE, field);
+    // On feasts and solemnities the proper collect is the same one assembled
+    // at Lauds, before consulting a Common's unrelated daytime collect.
+    // Explicitly supplied proper daytime prayers still take precedence.
+    if (isDaytimeCollect && ['feast', 'solemnity'].includes(office?.officeKind)
+      && isBlank(proper?.[field])
+      && (!isBlank(proper?.laudesPr) || !isBlank(proper?.officeOfReadingsPr)
+        || rules.laudesPr?.ref)) {
+      refs.push({ field, ref: ['laudesPr', 'officeOfReadingsPr'], origin: 'proper' });
+      return { pending: true };
+    }
     if (!isBlank(proper?.[field])) return { value: proper[field], origin: 'proper' };
     const rule = rules[field];
     if (rule?.omit) return { value: '', origin: 'omit' };
