@@ -69,3 +69,17 @@ test('Compendium has one footer across routes and preserves question-specific co
     ctx_path: '/compendium/question/13',
   });
 });
+
+test('Readings have one divider when a reading card is followed by feedback', () => {
+  const readings = source('components/readings/ReadingsView.vue');
+  const card = source('components/readings/ParsedReadingCard.vue');
+  const prompt = source('components/common/FeedbackPrompt.vue');
+
+  // The card's own lower border supplies the single visible divider.
+  assert.match(card, /\.parsed-reading\s*\{[^}]*border:\s*1px solid var\(--reader-border\)/s);
+  assert.match(prompt, /\.feedback-prompt\s*\{[^}]*border-top:\s*1px solid var\(--nav-border\)/s);
+  assert.match(readings, /:class="\{ 'readings-feedback--after-card': !!activeReading \}"/);
+  assert.match(readings, /\.readings-feedback--after-card\s*\{[^}]*border-top:\s*0;/s);
+  // Empty readings do not have a card, so the generic footer divider remains.
+  assert.match(readings, /v-if="!isLoading && !error"/);
+});
