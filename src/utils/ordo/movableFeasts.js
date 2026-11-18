@@ -222,7 +222,7 @@ export const MOVABLE_CELEBRATIONS = Object.freeze([
     rank: LITURGICAL_RANK.SOLEMNITY, category: 'lord', anchor: 'christKing', color: 'albus',
   },
   {
-    id: 'holy-family', ...feast('holyFamily'), title: 'Святая Сям’я: Езус, Марыя і Юзаф',
+    id: 'holy-family', ...feast('holyFamily'), title: 'Святой Сям’і: Езуса, Марыі і Юзафа',
     rank: LITURGICAL_RANK.FEAST, category: 'lord', anchor: 'holyFamily', color: 'albus',
   },
   {
