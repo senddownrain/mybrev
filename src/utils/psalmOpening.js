@@ -78,6 +78,6 @@ export function addOpeningAntiphonFlexa(html) {
   const target = root.querySelectorAll('p').at(-1) || root;
   const visible = target.text.trim();
   if (!visible || /†\s*$/u.test(visible)) return html;
-  target.insertAdjacentHTML('beforeend', ' <span class="psalm-antiphon-flexa">†</span>');
+  target.innerHTML = `${target.innerHTML} <span class="psalm-antiphon-flexa">†</span>`;
   return root.innerHTML;
 }
