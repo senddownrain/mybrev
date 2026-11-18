@@ -60,6 +60,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Feedback context and footer placement regressions (offline)
+        run: node --test tests/feedback-context.test.mjs tests/feedback-footer-placement.test.mjs
+
       - name: Build
         run: npm run build
         env:
