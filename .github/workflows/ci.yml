@@ -49,7 +49,7 @@ jobs:
         run: node --test tests/web-liturgical-corrections.test.mjs tests/days-templates-preparation.test.mjs
 
       - name: Liturgical hour structural headings (offline)
-        run: node --test tests/office-heading-consistency.test.mjs tests/liturgical-html.test.mjs tests/office-reading-presentation.test.mjs
+        run: node --test tests/office-heading-consistency.test.mjs tests/liturgical-html.test.mjs tests/office-reading-presentation.test.mjs tests/office-responsory-repeats.test.mjs
 
       - name: I Vespers independent-source audit safety checks
         run: node --test tests/heart-first-vespers-source-audit.test.mjs
