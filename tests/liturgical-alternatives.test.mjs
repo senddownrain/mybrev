@@ -283,7 +283,7 @@ test('Quill empty paragraphs never turn into repeated empty intercession refrain
     '<p><br></p>',
     '<p>&nbsp;</p>',
     '<p><em>Пане, выслухай нас.</em></p>',
-    '<p>\\n</p>',
+    '<p>\n</p>',
     '<p>Ойча, дай нам мір,</p>',
     '<p><span>&#160;</span></p>',
     '<p>– захавай нас ад зла.</p>',
