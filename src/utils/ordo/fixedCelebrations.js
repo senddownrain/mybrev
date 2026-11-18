@@ -132,6 +132,8 @@ function inferCategory(title) {
 export function inferColor(title, category) {
   const text = normalizeCelebrationTitle(title);
   if (category === 'dead') return 'niger';
+  // The dedication of a church takes white even when apostles are named in its title.
+  if (category === 'dedication') return 'albus';
   if (MARTYR_RE.test(text) || /апостал|евангеліст/u.test(text)) return 'ruber';
   return 'albus';
 }

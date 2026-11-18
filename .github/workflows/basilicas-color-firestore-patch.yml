@@ -1,0 +1,70 @@
+name: Correct 18 November basilica dedication color
+
+on:
+  # One targeted, idempotent publication on merge into main.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/basilicas-color-firestore-patch.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Preview or apply the single-celebration correction'
+        required: true
+        default: dry-run
+        type: choice
+        options:
+          - dry-run
+          - apply
+
+permissions:
+  contents: read
+
+concurrency:
+  group: basilicas-color-firestore-production
+  cancel-in-progress: false
+
+jobs:
+  patch:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Validate source and guards without Firestore
+        run: |
+          node --test tests/basilicas-color-patch.test.mjs
+          node scripts/ordo/patch-basilicas-color.mjs
+      - name: Use existing protected Firebase credential
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IBREVIARYBY }}
+        run: |
+          set -euo pipefail
+          [ -n "$FIREBASE_SERVICE_ACCOUNT" ] || { echo 'Missing protected Firebase credential'; exit 1; }
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
+          node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); if(p.project_id!=='ibreviaryby') process.exit(1)" "$RUNNER_TEMP/firebase-service-account.json"
+          echo "BASILICAS_KEY=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
+      - name: Inspect target only (two Firestore reads)
+        run: node scripts/ordo/patch-basilicas-color.mjs --service-account "$BASILICAS_KEY"
+      - name: Atomically correct calendar color and increment revision
+        if: github.event_name == 'push' || inputs.mode == 'apply'
+        run: node scripts/ordo/patch-basilicas-color.mjs --service-account "$BASILICAS_KEY" --apply --confirm basilicas-white
+      - name: Validate Flutter content diff (read-only)
+        if: github.event_name == 'push' || inputs.mode == 'apply'
+        run: npm run content:manifest -- --collection liturgicalCelebrations --collection liturgicalCalendarMeta --service-account "$BASILICAS_KEY"
+      - name: Publish safe Flutter content patch
+        if: github.event_name == 'push' || inputs.mode == 'apply'
+        run: npm run content:manifest -- --collection liturgicalCelebrations --collection liturgicalCalendarMeta --service-account "$BASILICAS_KEY" --apply
+      - name: Verify final color and calendar revision
+        if: github.event_name == 'push' || inputs.mode == 'apply'
+        run: node scripts/ordo/patch-basilicas-color.mjs --service-account "$BASILICAS_KEY"
+      - name: Delete temporary credential
+        if: always()
+        run: rm -f "$RUNNER_TEMP/firebase-service-account.json"
