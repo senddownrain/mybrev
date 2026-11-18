@@ -61,8 +61,8 @@ const title = computed(() => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 });
 
-const ROLE_LABELS = { alternative: 'на выбар', commemoration: 'успамін (commemoratio)' };
-const rowMeta = (row) => [row.isCelebration || row.role !== 'primary' ? row.rank : '', ROLE_LABELS[row.role] || '']
+const ROLE_LABELS = { alternative: 'на выбар', commemoration: 'Неабавязковы ўспамін' };
+const rowMeta = (row) => [row.role === 'commemoration' ? '' : (row.isCelebration || row.role !== 'primary' ? row.rank : ''), ROLE_LABELS[row.role] || '']
   .filter(Boolean).join(' · ');
 
 function go(delta) {
