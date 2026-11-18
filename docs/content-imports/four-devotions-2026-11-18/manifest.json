@@ -1,0 +1,72 @@
+{
+  "kind": "mybrev-devotional-import-preparation",
+  "categoryTag": "Набажэнства",
+  "categoryDisplayName": "Набажэнствы",
+  "publicationStatus": "FIRESTORE_APPLIED_READBACK_REPORTED",
+  "sourceBibliographyStatus": "OWNER_CONFIRMED_EXISTING_AGENDA_ATTRIBUTION",
+  "documents": [
+    {
+      "id": "devotion-vigilijny-vechar",
+      "title": "Вігілійны вечар",
+      "filename": "01_vigilijny_vechar.md",
+      "sourcePdf": "Vigilijny veczar.pdf",
+      "sourcePageLabels": "378–380",
+      "sha256": "6bf413fea3f524791b89431ea5a2d5e625dbb7a3f9fb3399e45ad189e383fce2",
+      "tags": [
+        "Набажэнства"
+      ],
+      "textFormat": "mybrev-markdown",
+      "textFormatVersion": 1,
+      "publicationStatus": "firestore-applied-readback-reported",
+      "sourcePdfSha256": "6318081b179d503ee1a60da5e6957ced9c8c840411c8a80ddd8c4b2b6f29fe45"
+    },
+    {
+      "id": "devotion-zakanchenne-goda",
+      "title": "Набажэнства на заканчэнне года",
+      "filename": "02_nabazhenstva_na_zakanchenne_goda.md",
+      "sourcePdf": "Zakanczee goda.pdf",
+      "sourcePageLabels": "386–388",
+      "sha256": "e8b5fd1c1f7089f73e07b9eb9133c63b00ec260189a728f0ca9996a072c34bea",
+      "tags": [
+        "Набажэнства"
+      ],
+      "textFormat": "mybrev-markdown",
+      "textFormatVersion": 1,
+      "publicationStatus": "firestore-applied-readback-reported",
+      "sourcePdfSha256": "9f577318caf1629d52ef4b83401e91a2b4bacfb321360fade14d7fc9112cf73c"
+    },
+    {
+      "id": "devotion-vystaulenne-euharystyja",
+      "title": "Парадак выстаўлення і благаслаўлення Найсвяцейшым Сакрамэнтам",
+      "filename": "03_vystaulenne_i_blagaslaulenne.md",
+      "sourcePdf": "Vystaulene_euharist.pdf",
+      "sourcePageLabels": "295–298",
+      "sha256": "dc8e50db3d76b8cd643fa6429154e5bcab2eb443cea59e3118b20e2a7a324142",
+      "tags": [
+        "Набажэнства"
+      ],
+      "textFormat": "mybrev-markdown",
+      "textFormatVersion": 1,
+      "publicationStatus": "firestore-applied-readback-reported",
+      "sourcePdfSha256": "48eaa1d5dbc371362ce544474acb2b2959bc67de82770ef5844ed572fc8b639e"
+    },
+    {
+      "id": "devotion-euharystychnaja-pracesija",
+      "title": "Эўхарыстычная працэсія ва ўрачыстасць Найсвяцейшага Цела і Крыві Хрыста",
+      "filename": "04_euharystychnaja_pracesija.md",
+      "sourcePdf": "Euhar_pacesja.pdf",
+      "sourcePageLabels": "299–305",
+      "sha256": "80a4c1af5291facbf1f5c44e605f62062c868153c830dc11f5184c63a2149e53",
+      "tags": [
+        "Набажэнства"
+      ],
+      "textFormat": "mybrev-markdown",
+      "textFormatVersion": 1,
+      "publicationStatus": "firestore-applied-readback-reported",
+      "sourcePdfSha256": "95e83c285bec3ebf79c9aa1e0ea101e259d7b847e8b031a447ba663c2f94f293"
+    }
+  ],
+  "proofreadingStatus": "PAGE_IMAGES_VERIFIED",
+  "source": "«Літургічная агенда» (Мінск, 2010)",
+  "deliveryStatus": "WEB_HOSTING_AND_FLUTTER_BUNDLE_NOT_VERIFIED"
+}
