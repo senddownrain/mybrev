@@ -89,7 +89,7 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
       assert.equal(result.alreadyPublished, false);
       const prayer = (await getDoc(doc(roles.anon, `prayers/${result.id}`))).data();
       assert.equal(prayer.title, 'Літанія тэставая'); assert.equal(prayer.sourceDraftId, 'bd_one'); assert.equal(prayer.priestOnly, false);
-      assert.match(prayer.source, /Бог добры/); assert.deepEqual(prayer.copyrightNotices, []);
+      assert.match(prayer.source, /«Бог Добры» \(Пінск, 2022\)/u); assert.deepEqual(prayer.copyrightNotices, []);
       const draft = await api.getDraft('bd_one');
       assert.equal(draft.status, 'published'); assert.equal(draft.publishedBy, 'plain'); assert.equal(draft.targetPrayerId, result.id);
       assert.ok((await api.listAudit('bd_one')).some((e) => e.action === 'publish' && e.targetPrayerId === result.id));

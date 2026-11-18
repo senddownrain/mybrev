@@ -36,7 +36,7 @@ test('unique prayer -> one closed draft with book, pages, tags from existing tag
   assert.deepEqual(plan.counts, { EXCLUDE: 0, ALREADY_EXISTS: 0, UNIQUE_DRAFT: 1, REVIEW: 0 });
   const draft = plan.payloads[bogDraftId('p-1')].data;
   assert.equal(draft.status, 'draft'); assert.equal(draft.origin, 'bog_dobry'); assert.equal(draft.rightsStatus, undefined);
-  assert.match(draft.sourceBook, /Бог добры/); assert.equal(draft.printedPageStart, 40); assert.equal(draft.sourceSha256.length, 64);
+  assert.match(draft.sourceBook, /«Бог Добры» \(Пінск, 2022\)/u); assert.equal(draft.printedPageStart, 40); assert.equal(draft.sourceSha256.length, 64);
   assert.ok(draft.copyrightNotices.length >= 1); assert.deepEqual(draft.tags, ['У розных патрэбах']);
   assert.equal(plan.qa.imagesSkipped, 1);
   assert.equal(plan.operations[0].targetCollection, 'prayerDrafts');

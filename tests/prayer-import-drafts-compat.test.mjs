@@ -64,7 +64,7 @@ describe('imported drafts vs Firestore rules (emulator)', { skip: !emulator }, (
     await api.saveDraft(ids.bog, { tags: ['У розных патрэбах'], notes: 'правяраў рэдактар' }, { expectedVersion: bog.version });
     const published = await api.publishDraft(ids.bog);
     const prayer = (await fs.getDoc(fs.doc(client(null), `prayers/${published.id}`))).data();
-    assert.equal(prayer.title, 'Малітва аб урадлівасці'); assert.match(prayer.source, /Бог добры/); assert.equal(prayer.sourceDraftId, ids.bog);
+    assert.equal(prayer.title, 'Малітва аб урадлівасці'); assert.match(prayer.source, /«Бог Добры» \(Пінск, 2022\)/u); assert.equal(prayer.sourceDraftId, ids.bog);
     assert.ok(!JSON.stringify(prayer).includes('aaaaaaaa')); // no PDF hash in the public document
     const rite = await api.getDraft(ids.rite);
     assert.equal(rite.reason, 'rite_scope'); assert.equal(rite.status, 'draft');

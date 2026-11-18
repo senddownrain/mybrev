@@ -31,8 +31,7 @@ export async function saveStoredPrayer(id, data, create = false) {
     const old = content.prayers.find((item) => item.id === key);
     if (!create && !old) throw new Error('Малітва не знойдзена.');
     const { id: _id, ...payload } = normalizePrayerSourceFields({ ...old, ...data }, { existing: old, editor: true });
-    // Preserve exactly what the Web administrator entered, even when a title
-    // matches a registry alias which the reader usually abbreviates.
+    // Keep manual wording for sources outside the confirmed edition list.
     const sourceManual = typeof payload.source === 'string' && normalizePrayerSource(payload.source) !== payload.source;
     expected = { ...old, ...payload, id: key, sourceManual,
       priestOnly: payload.priestOnly === undefined ? old?.priestOnly === true : payload.priestOnly === true,

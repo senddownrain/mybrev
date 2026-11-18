@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { buildPrayerFromDraft, canTransition, draftSourceNotice, findDuplicateCandidates, normalizeTitleKey, publishBlockers, targetPrayerIdFor, validateDraft } from '../src/utils/prayerDraftModel.mjs';
 import { formatSourceNotice } from '../src/utils/prayerSource.mjs';
 
-const draft = { draftId: 'd1', title: ' Літанія ', text: 'Кірые', textFormat: 'mybrev-markdown', status: 'draft', tags: ['Літанія', 'Літанія', ' '], sourceBook: '«Бог Добры»', sourceEdition: '(Пінск, 2022)', printedPageStart: 10, printedPageEnd: 12, pdfPageStart: 12, copyrightNotices: ['© Пінская дыяцэзія, 2022'] };
+const draft = { draftId: 'd1', title: ' Літанія ', text: 'Кірые', textFormat: 'mybrev-markdown', status: 'draft', tags: ['Літанія', 'Літанія', ' '], sourceBook: '«Бог Добры» (Пінск, 2022)', sourceEdition: '(Пінск, 2022)', printedPageStart: 10, printedPageEnd: 12, pdfPageStart: 12, copyrightNotices: ['© Пінская дыяцэзія, 2022'] };
 
 test('title keys fold graphic variants', () => {
   assert.equal(normalizeTitleKey('Літанія да Ёсіфа'), normalizeTitleKey('Litanija да Есіфа'.replace('Litanija', 'Літанія')));
@@ -34,7 +34,7 @@ test('validation and publish blockers', () => {
 test('published document: reader fields only, deduped tags, short book source, no PDF hashes', () => {
   const prayer = buildPrayerFromDraft({ ...draft, sourceSha256: 'abc', notes: 'private', reason: 'ambiguous' });
   assert.equal(prayer.title, 'Літанія'); assert.deepEqual(prayer.tags, ['Літанія']);
-  assert.equal(prayer.source, 'Бог добры');
+  assert.equal(prayer.source, '«Бог Добры» (Пінск, 2022)');
   assert.ok(!('sourceSha256' in prayer) && !('notes' in prayer) && !('reason' in prayer));
   assert.equal(prayer.sourceDraftId, 'd1'); assert.equal(targetPrayerIdFor(draft), 'd_d1');
 });
@@ -42,4 +42,4 @@ test('replacement keeps other language versions of a multi-language prayer', () 
   const prayer = buildPrayerFromDraft(draft, { existing: { titleVersions: { be: 'a', ru: 'b' }, textVersions: { be: 'x', ru: 'y' } } });
   assert.deepEqual(prayer.textVersions, { be: 'Кірые', ru: 'y' }); assert.deepEqual(prayer.titleVersions, { be: 'Літанія', ru: 'b' });
 });
-test('source notice without pages', () => assert.equal(formatSourceNotice({ book: 'Бог добры', copyrightNotices: ['© A', '© A'] }), 'Бог добры'));
+test('source notice without pages', () => assert.equal(formatSourceNotice({ book: '«Бог Добры» (Пінск, 2022)', copyrightNotices: ['© A', '© A'] }), '«Бог Добры» (Пінск, 2022)'));

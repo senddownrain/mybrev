@@ -65,7 +65,7 @@ test('plan: every entry gets exactly one route; structure is preserved not creat
     assert.ok(op.source && op.copyrightNotices.length, `source and © on ${op.sourceEntryId}`); assert.equal(op.rightsStatus, undefined);
     assert.ok(op.printedPageStart && op.pdfPageStart);
   }
-  assert.equal(plan.payloads[canonId('lit-new')].data.source, 'Прасіце і атрымаеце');
+  assert.equal(plan.payloads[canonId('lit-new')].data.source, '«Прасіце і атрымаеце» (Мінск, 2024)');
   assert.ok(!('sourceSha256' in plan.payloads[canonId('lit-new')].data)); // no PDF hashes in public documents
   assert.equal(plan.payloads[canonId('nov-flag')].data.sourceSha256.length, 64);
   assert.equal(plan.proposedNewTags.length, 0);

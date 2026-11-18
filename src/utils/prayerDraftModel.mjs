@@ -99,8 +99,8 @@ export function publishBlockers(draft) {
 }
 
 export function draftSourceNotice(draft) {
-  // A manually edited source must be shown and published exactly as saved.
-  if (String(draft.source || '').trim()) return String(draft.source).trim();
+  // The editor preserves unrelated manual attributions and canonicalizes confirmed editions.
+  if (String(draft.source || '').trim()) return sourceForEditor(draft.source);
   return normalizePrayerSource(draft.sourceBook || '');
 }
 

@@ -17,9 +17,9 @@ const rows = calendar.pages.flatMap(page => page.rows);
 test('public sources page retains original editions and adds confirmed prayer sources', () => {
   assert.equal(bibliography.schemaVersion, 1);
   assert.deepEqual(bibliography.sections, ['Касцёльныя крыніцы', 'Іншыя крыніцы']);
-  assert.equal(bibliography.entries.length, 23);
-  assert.equal(new Set(bibliography.entries.map(entry => entry.id)).size, 23);
-  assert.deepEqual(bibliography.sections.map(section => bibliography.entries.filter(entry => entry.section === section).length), [17, 6]);
+  assert.equal(bibliography.entries.length, 24);
+  assert.equal(new Set(bibliography.entries.map(entry => entry.id)).size, 24);
+  assert.deepEqual(bibliography.sections.map(section => bibliography.entries.filter(entry => entry.section === section).length), [18, 6]);
   assert.equal(bibliography.entries[0].title, '«Новы запавет» (Мінск, 2017)');
   assert.equal(bibliography.entries[10].title, 'Спеўнік «Божа, мы Цябе ўслаўляем» (Мінск, 2026)');
   assert.deepEqual(bibliography.entries[11].notices, [
@@ -27,12 +27,14 @@ test('public sources page retains original editions and adds confirmed prayer so
     '© Выдавецтва «Про Хрысто», 2022',
   ]);
   assert.equal(bibliography.entries[13].title, 'Малітоўнік «Бог Добры» (Пінск, 2018)');
-  assert.equal(bibliography.entries[14].title, 'Малітоўнік «Каб пазналі Цябе» (Гродна, 2014)');
-  assert.equal(bibliography.entries[15].title, '«Біблія» (Мінск, 2017)');
-  assert.deepEqual(bibliography.entries[15].details, ['Стары Запавет - на падставе рукапісаў кс. У. Чарняўскага']);
-  assert.deepEqual(bibliography.entries[15].notices, ['© «Біблійнае таварыства ў Рэспубліцы Беларусь», 2017']);
-  assert.equal(bibliography.entries[16].title, '«Біблія» Синодальный перевод');
-  assert.deepEqual(bibliography.entries[16].notices, []);
+  assert.equal(bibliography.entries[14].title, '«Бог Добры», ІІІ выданне (Пінск, 2022)');
+  assert.equal(bibliography.entries[14].notices.length, 2);
+  assert.equal(bibliography.entries[15].title, 'Малітоўнік «Каб пазналі Цябе» (Гродна, 2014)');
+  assert.equal(bibliography.entries[16].title, '«Біблія» (Мінск, 2017)');
+  assert.deepEqual(bibliography.entries[16].details, ['Стары Запавет - на падставе рукапісаў кс. У. Чарняўскага']);
+  assert.deepEqual(bibliography.entries[16].notices, ['© «Біблійнае таварыства ў Рэспубліцы Беларусь», 2017']);
+  assert.equal(bibliography.entries[17].title, '«Біблія» Синодальный перевод');
+  assert.deepEqual(bibliography.entries[17].notices, []);
   assert.ok(bibliography.entries.every(entry => entry.title && Array.isArray(entry.notices)));
   const sourceComponent = read('src/components/SourceRights.vue');
   assert.match(sourceComponent, /bibliography\.sections/);
