@@ -271,7 +271,7 @@ function buildVisualDecorations(editorView) {
     const heading = /^(#{1,6})\s+/.exec(line.text);
     if (heading) {
       ranges.push(Decoration.replace({}).range(line.from, line.from + heading[0].length));
-      ranges.push(Decoration.line({ class: `cm-visual-heading cm-visual-heading-${Math.min(heading[1].length, 3)}` }).range(line.from));
+      ranges.push(Decoration.line({ class: `cm-visual-heading cm-visual-heading-${heading[1].length}` }).range(line.from));
     }
 
     addInlineDecorations(line, ranges);
@@ -356,11 +356,14 @@ function createEditor() {
           '.cm-selectionBackground, ::selection': { backgroundColor: 'rgba(var(--v-theme-primary), 0.2) !important' },
           '.cm-tooltip': { backgroundColor: 'var(--nav-surface)', color: 'var(--nav-on-surface)', borderColor: 'var(--nav-border)' },
           '.cm-rubric-marker-line': { height: '0', minHeight: '0', overflow: 'hidden', lineHeight: '0', padding: '0' },
-          '.cm-rubric-line': { borderLeft: '3px solid var(--rubric-color)', color: 'var(--rubric-color)', fontSize: '0.9em', lineHeight: '1.5', paddingLeft: '16px' },
-          '.cm-visual-heading': { fontFamily: 'var(--reader-display-font-family)', fontWeight: '700', lineHeight: '1.35', paddingTop: '0.45em', paddingBottom: '0.18em' },
-          '.cm-visual-heading-1': { fontSize: '1.45em' },
-          '.cm-visual-heading-2': { fontSize: '1.25em' },
-          '.cm-visual-heading-3': { fontSize: '1.1em' },
+          '.cm-rubric-line': { color: 'var(--rubric-color)', fontSize: '0.9em', lineHeight: '1.5' },
+          '.cm-visual-heading': { fontFamily: 'var(--reader-display-font-family)', fontWeight: '650', lineHeight: '1.35', paddingTop: '0.45em', paddingBottom: '0.18em' },
+          '.cm-visual-heading-1': { fontSize: '1.34em', fontWeight: '650' },
+          '.cm-visual-heading-2': { fontSize: '1.24em', fontWeight: '650' },
+          '.cm-visual-heading-3': { fontSize: '1.15em', fontWeight: '630' },
+          '.cm-visual-heading-4': { fontSize: '1.09em', fontWeight: '620' },
+          '.cm-visual-heading-5': { fontSize: '1.03em', fontWeight: '600' },
+          '.cm-visual-heading-6': { fontSize: '0.98em', fontWeight: '600' },
           '.cm-visual-strong': { fontWeight: '750' },
           '.cm-visual-emphasis': { fontStyle: 'italic' },
           '.cm-prayer-speaker': { color: 'var(--rubric-color)', fontWeight: '700', fontStyle: 'normal' },
