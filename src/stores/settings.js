@@ -50,6 +50,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const fontSizeMultiplier = ref(parseFloat(localStorage.getItem('fontSizeMultiplier')) || 1.0);
   const textAlignment = ref(normalizeTextAlignment(localStorage.getItem('textAlignment')));
   const textSettingsExpanded = ref(localStorage.getItem('textSettingsExpanded') === 'true');
+  const liturgicalSettingsExpanded = ref(localStorage.getItem('liturgicalSettingsExpanded') === 'true');
   watch(textAlignment, (value) => {
     const alignment = normalizeTextAlignment(value);
     if (alignment !== value) { textAlignment.value = alignment; return; }
@@ -57,6 +58,7 @@ export const useSettingsStore = defineStore('settings', () => {
     document.documentElement.style.setProperty('--reader-text-alignment', alignment);
   }, { immediate: true, flush: 'sync' });
   watch(textSettingsExpanded, value => localStorage.setItem('textSettingsExpanded', String(value)));
+  watch(liturgicalSettingsExpanded, value => localStorage.setItem('liturgicalSettingsExpanded', String(value)));
   const psalmodyMode = ref(loadPsalmodyMode(localStorage));
   watch(psalmodyMode, (value, previous) => {
     const mode = normalizePsalmodyMode(value);
@@ -276,6 +278,7 @@ export const useSettingsStore = defineStore('settings', () => {
     psalmodyMode,
     textAlignment,
     textSettingsExpanded,
+    liturgicalSettingsExpanded,
     menuCategories,
     personalPrayerCategories: menuCategories,
     hiddenGlobalPrayerCategoryIds,
