@@ -101,9 +101,12 @@
     <section class="settings-section"><PsalmodySettings /></section>
 
     <section class="settings-section" aria-labelledby="feedback-title">
-      <div class="setting-row">
-        <div class="setting-copy"><strong id="feedback-title">Зваротная сувязь</strong><span>Прапанова, пытанне або праблема з праграмай. Пра памылку ў тэксце — праз пункт «Памылка ў тэксце» ў меню старонкі.</span></div>
-        <v-btn :to="{ name: 'Feedback' }" variant="tonal" class="text-none" data-test="settings-feedback">Напісаць</v-btn>
+      <div class="setting-row setting-row--feedback">
+        <div class="setting-copy">
+          <strong id="feedback-title">Зваротная сувязь</strong>
+          <span>Пытанні і прапановы пра праграму. Пра памылку ў тэксце можна паведаміць унізе адпаведнай старонкі.</span>
+        </div>
+        <v-btn :to="{ name: 'Feedback' }" variant="tonal" class="text-none feedback-settings-action" data-test="settings-feedback">Напісаць</v-btn>
       </div>
     </section>
     <PriestAccessSettings />
@@ -248,6 +251,9 @@ function restoreGlobalCategories() {
 .setting-copy strong, .category-copy strong { color: var(--nav-on-surface); font-size: .9rem; font-weight: 720; }
 .setting-copy span, .category-copy span { overflow-wrap: anywhere; color: var(--nav-muted); font-size: .76rem; line-height: 1.4; }
 .setting-row :deep(.v-switch) { flex: 0 0 auto; }
+.setting-row--feedback { padding-block: 16px; }
+.setting-row--feedback .setting-copy { flex: 1 1 auto; }
+.feedback-settings-action { flex: 0 0 auto; min-width: 104px; }
 .font-picker { padding: 4px 20px 20px; border-top: 1px solid var(--nav-border); }
 .control-label { display: block; margin: 15px 0 11px; }
 .font-options { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -294,6 +300,8 @@ function restoreGlobalCategories() {
   .section-heading { padding-inline: 16px; }
   .setting-row, .text-size-control, .category-row { margin-inline: 16px; }
   .setting-row--theme { align-items: flex-start; flex-direction: column; padding-block: 14px; }
+  .setting-row--feedback { align-items: stretch; flex-direction: column; gap: 12px; }
+  .feedback-settings-action { align-self: flex-start; min-height: 40px; }
   .theme-options { width: 100%; justify-content: stretch; }
   .theme-options button { flex: 1; }
   .setting-row--theme .theme-options button { flex-basis: calc(50% - 5px); }
