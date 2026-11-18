@@ -229,6 +229,19 @@ export function markLeadingLiturgicalSubheadings(html) {
   );
 }
 
+// Legacy HTML occasionally breaks before a very short, lower-case ending
+// of the same psalm verse. Keep that ending in its stanza rather than
+// creating a separate alternating strophe; other line breaks stay as-is.
+function isShortPsalmTail(previous, rest) {
+  if (/<br\s*\/?>/iu.test(rest)
+    || /(?:\*|†|&ast;|&dagger;|&#0*42;|&#0*8224;|&#x0*2020;)/iu.test(rest)) return false;
+
+  const text = visibleText(rest);
+  return /^\p{Ll}/u.test(text)
+    && text.split(/\s+/u).length <= 3
+    && !/[.!?]$/u.test(visibleText(previous));
+}
+
 function splitPsalmParagraph(attributes, content) {
   if (!ASTERISK_PATTERN.test(content)) return `<p${attributes}>${content}</p>`;
 
@@ -236,12 +249,17 @@ function splitPsalmParagraph(attributes, content) {
   const strophes = [];
   let current = '';
 
-  for (const part of parts) {
+  for (let index = 0; index < parts.length; index += 1) {
+    const part = parts[index];
     if (!part) continue;
 
     if (/^<br\s*\/?>$/iu.test(part) && ASTERISK_PATTERN.test(current)) {
-      strophes.push(current);
-      current = '';
+      if (isShortPsalmTail(current, parts.slice(index + 1).join(''))) {
+        current += ' ';
+      } else {
+        strophes.push(current);
+        current = '';
+      }
     } else {
       current += part;
     }

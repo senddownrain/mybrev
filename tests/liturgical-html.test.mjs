@@ -64,6 +64,28 @@ test('splits a legacy single-paragraph psalm into marked strophes', () => {
   );
 });
 
+test('keeps a short lower-case final psalm line attached to its verse (13 Nov Lauds regression)', () => {
+  const html = '<p>Прымі * маю малітву,<br><em>ўпрыгнечаным сэрцам</em></p>';
+  assert.equal(
+    formatPsalmHtml(html),
+    '<p data-psalm-strophe>Прымі <span class="psalm-marker">*</span> маю малітву, <em>ўпрыгнечаным сэрцам</em></p>',
+  );
+});
+
+test('does not join another real psalm stanza or a capitalised closing line', () => {
+  const marked = '<p>Першы * заканчэнне,<br>Другі * працяг.</p>';
+  assert.equal(
+    (formatPsalmHtml(marked).match(/data-psalm-strophe/gu) || []).length,
+    2,
+  );
+
+  const independent = '<p>Першы * заканчэнне.<br>Слава Айцу.</p>';
+  assert.equal(
+    (formatPsalmHtml(independent).match(/data-psalm-strophe/gu) || []).length,
+    2,
+  );
+});
+
 test('removes a trailing antiphon embedded in psalm HTML', () => {
   const html = '<p>Страфа *<br>канец.</p>\n<p><span style="color: #ff0000;">Ант.</span> Святыя жанчыны.</p>';
 
