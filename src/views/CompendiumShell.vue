@@ -47,7 +47,8 @@ const onDockFocus = () => { reopen(); };
 <style scoped src="@/styles/compendium.css"></style>
 <style scoped>
 /* Reserve the fixed search dock below the footer instead of inside the list. */
-.compendium-shell--idle :deep(.prayers-list-container.compendium-container) {
+.compendium-shell--idle :deep(.prayers-list-container.compendium-container),
+.compendium-shell--idle :deep(.prayer-view-container.compendium-reader) {
   padding-bottom: 16px !important;
 }
 .compendium-shell :deep(.compendium-feedback) {
