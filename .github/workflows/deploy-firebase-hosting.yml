@@ -37,6 +37,8 @@ on:
       - 'src/utils/officeResponsoryRepeats.js'
       # Publish reader-only psalm HTML fixes from reviewed PRs.
       - 'src/utils/liturgicalHtml.js'
+      # Publish antiphon/psalm opening echo and inline leading dagger fixes.
+      - 'src/utils/psalmOpening.js'
       - 'tests/office-responsory-repeats.test.mjs'
       - 'src/components/oraparts/Lectio.vue'
       - 'src/components/oraparts/LastPrayer.vue'
