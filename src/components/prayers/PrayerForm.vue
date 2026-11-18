@@ -613,15 +613,23 @@ onBeforeUnmount(() => {
 .preview-heading { display: flex; align-items: center; justify-content: space-between; padding: 20px 22px 16px; border-bottom: 1px solid var(--nav-border); }
 .preview-heading h2 { margin: 0; font-size: 1rem; font-weight: 720; }
 .prayer-preview { padding: 26px 24px 28px; }
-.prayer-preview h3 { margin: 0 0 22px; font-size: 1.65rem; font-weight: 740; line-height: 1.18; letter-spacing: -0.025em; overflow-wrap: anywhere; }
+.prayer-preview h3 { margin: 0 0 22px; font-size: calc(1.65rem * var(--font-size-multiplier, 1)); font-weight: 700; line-height: 1.18; letter-spacing: -0.025em; overflow-wrap: anywhere; }
 .prayer-preview__text { color: var(--reader-ink); font-family: var(--reader-font-family); font-size: calc(1.04rem * var(--font-size-multiplier, 1)); line-height: 1.78; overflow-wrap: anywhere; }
+/* Preview matches the published reader; internal headings remain below the title. */
+.prayer-preview__text :deep(:is(h1, h2, h3, h4, h5, h6)) { margin: 1.35em 0 0.5em; color: var(--reader-ink); font-family: var(--reader-display-font-family); line-height: 1.32; letter-spacing: -0.01em; overflow-wrap: break-word; }
+.prayer-preview__text :deep(h1) { font-size: 1.34em !important; font-weight: 650; }
+.prayer-preview__text :deep(h2) { font-size: 1.24em !important; font-weight: 650; }
+.prayer-preview__text :deep(h3) { font-size: 1.15em !important; font-weight: 630; }
+.prayer-preview__text :deep(h4) { font-size: 1.09em !important; font-weight: 620; }
+.prayer-preview__text :deep(h5) { font-size: 1.03em !important; font-weight: 600; }
+.prayer-preview__text :deep(h6) { font-size: 0.98em !important; font-weight: 600; }
 .prayer-preview__text :deep(p) { margin: 0 0 1em; }
 .prayer-preview__text :deep(p:last-child) { margin-bottom: 0; }
 .prayer-preview__text :deep(ul), .prayer-preview__text :deep(ol) { max-width: 100%; margin: 0.65em 0 1em; padding-inline-start: 1.45em; list-style-position: outside; }
 .prayer-preview__text :deep(li) { min-width: 0; padding-inline-start: 0.16em; overflow-wrap: anywhere; }
 .prayer-preview__text :deep(li::marker) { font-variant-numeric: tabular-nums; }
 .prayer-preview__text :deep(ul ul), .prayer-preview__text :deep(ul ol), .prayer-preview__text :deep(ol ul), .prayer-preview__text :deep(ol ol) { margin-block: 0.3em; padding-inline-start: 1.2em; }
-.prayer-preview__text :deep(.prayer-rubric) { margin: 1.05em 0; padding: 0.08em 0 0.08em 0.85em; border-left: 3px solid var(--rubric-color); color: var(--rubric-color); font-size: 0.86em; line-height: 1.45; }
+.prayer-preview__text :deep(.prayer-rubric) { margin: 1.05em 0; padding: 0.08em 0; color: var(--rubric-color); font-size: 0.86em; line-height: 1.45; }
 .prayer-preview__text :deep(.prayer-rubric p) { margin-bottom: 0.45em; }
 .prayer-preview__text :deep(.prayer-speaker) { color: var(--rubric-color); font-weight: 700; font-size: inherit; font-style: normal; }
 .preview-placeholder { margin: 0; color: var(--nav-muted); font-style: italic; line-height: 1.6; }
