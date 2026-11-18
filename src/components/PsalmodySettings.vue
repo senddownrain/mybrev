@@ -47,9 +47,10 @@ function onKeydown(event) {
 </script>
 
 <style scoped>
-.psalmody-settings { display: grid; gap: 14px; padding: 16px; color: var(--nav-on-surface); }
+.psalmody-settings { display: grid; gap: 14px; margin: 0 20px; padding: 16px 0 20px; border-top: 1px solid var(--nav-border); color: var(--nav-on-surface); }
 h3 { margin: 0; font-size: 1rem; }
-.psalmody-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.psalmody-heading { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.psalmody-heading h3 { min-width: 0; overflow-wrap: anywhere; }
 .psalmody-preview { min-width: 0; padding-top: 12px; border-top: 1px solid var(--nav-border); }
 .preview-label { display: block; margin-bottom: 8px; color: var(--nav-muted); font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
 .psalmody-preview :deep(.psalmody-text) { max-width: 36em; font-family: var(--reader-font-family); font-size: calc(1rem * var(--font-size-multiplier, 1)); line-height: 1.65; }
@@ -61,6 +62,6 @@ h3 { margin: 0; font-size: 1rem; }
 .psalmody-modes button + button { border-inline-start: 1px solid var(--nav-border); }
 .psalmody-modes button[aria-checked="true"] { background: var(--nav-active); color: var(--chrome-accent); box-shadow: inset 0 -3px currentColor; }
 .psalmody-modes button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -4px; }
-@media (max-width: 600px) { .psalmody-heading { align-items: stretch; flex-direction: column; } .psalmody-modes { width: 100%; } }
+@media (max-width: 560px) { .psalmody-settings { margin-inline: 16px; } .psalmody-modes { width: 132px; } }
 @media (forced-colors: active) { .psalmody-modes button[aria-checked="true"] { border-bottom: 3px solid Highlight; } }
 </style>
