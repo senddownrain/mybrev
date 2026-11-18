@@ -32,3 +32,11 @@ node scripts/validate-four-devotions.mjs --snapshot backups/firestore-snapshot-s
 ```
 
 The private `plan.json` includes the full proposed text and must NOT be committed. If the snapshot lacks either public or priest-protected prayers/categories, the validator refuses to compare. This command is **not** an apply mechanism; it makes 0 Firestore requests and 0 writes. An explicit verified release operation via the existing approved migration machinery is still required for the documents to become visible in Web and Flutter.
+
+## Public catalog cross-check
+
+The [public Web catalog](https://ibreviaryby.web.app/public-prayers-v1.json) dated 2026-11-18 12:47 UTC identifies the existing «Набажэнствы» category as `devotions` with tag `Набажэнства`. The first three candidates had no matches by ID, normalized title, complete normalized text, or shared long paragraphs. The public catalog cannot establish the live or protected state of Firestore.
+
+The [published Corpus Christi procession](https://ibreviaryby.web.app/prayer/Fd9rN0S9NU1mAmqb2isZ) has the same four stations and Gospel references. Four long paragraphs match after normalization. Review the full verified candidate against this record before selecting any write. If they are the same service, plan an update at `Fd9rN0S9NU1mAmqb2isZ` that preserves its metadata and existing reader links. Do not create `devotion-euharystychnaja-pracesija` alongside it.
+
+The supplied ZIP contains Markdown and metadata. The original PDF page images and a complete Firestore snapshot were unavailable for this preflight. The four checksums matched and the local Web reader rendered all four fixtures at 390 px and 1440 px. Production apply and manifest publication remain pending.
