@@ -34,7 +34,7 @@ test('public sources page retains original editions and adds confirmed prayer so
   assert.equal(bibliography.entries[16].title, '«Біблія» (Мінск, 2017)');
   assert.deepEqual(bibliography.entries[16].details, ['Стары Запавет - на падставе рукапісаў кс. У. Чарняўскага']);
   assert.deepEqual(bibliography.entries[16].notices, ['© «Біблійнае таварыства ў Рэспубліцы Беларусь», 2017']);
-  assert.equal(bibliography.entries[17].title, '«Библия» (Синодальный перевод, на русском языке)');
+  assert.equal(bibliography.entries[17].title, '«Библия» (Синодальный перевод)');
   assert.deepEqual(bibliography.entries[17].notices, []);
   assert.ok(bibliography.entries.every(entry => entry.title && Array.isArray(entry.notices)));
   const hiddenIds = ['bog-dobry-2018', 'katecheta', 'kasciolhomiel', 'sviatoe-pisanne'];
