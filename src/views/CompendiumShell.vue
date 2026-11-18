@@ -14,26 +14,44 @@
       <CompendiumSearchResults v-if="store.ready" :results="store.searchResults" />
       <v-progress-linear v-else indeterminate aria-label="Загрузка Кампендыя" />
     </v-container>
-    <FeedbackPrompt v-if="!resultsOpen" class="compendium-feedback" label="Заўважылі памылку ў Кампендыі?" />
+    <FeedbackPrompt v-if="!resultsOpen" class="compendium-feedback" label="Заўважылі памылку ў Кампендыі?" :to="compendiumFeedbackTo" />
     <!-- The only search dock of the Compendium: pages never mount their own. -->
     <CompendiumSearchDock @focus="onDockFocus" />
   </div>
 </template>
 
 <script setup>
-import { toRef } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, toRef } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useCompendiumStore } from '@/stores/compendium';
 import { COMPENDIUM_TITLE } from '@/constants/compendium';
 import { createCompendiumSearchSync } from '@/utils/compendiumSearchRoute';
 import CompendiumSearchDock from '@/components/compendium/CompendiumSearchDock.vue';
 import CompendiumSearchResults from '@/components/compendium/CompendiumSearchResults.vue';
 import FeedbackPrompt from '@/components/common/FeedbackPrompt.vue';
+import { feedbackLocationForRoute } from '@/utils/feedbackContext';
 
 // Shared shell of every Compendium level: one persistent search dock and one
 // global results layer. See `createCompendiumSearchSync` for the history rules.
 const store = useCompendiumStore();
+const route = useRoute();
 store.init();
+
+// Show the actual Compendium question or part in the feedback form instead of
+// an opaque numeric ID, while preserving the original path and ID as context.
+const compendiumFeedbackTo = computed(() => {
+  const base = feedbackLocationForRoute(route);
+  if (!base) return null; // Index: FeedbackPrompt provides the Compendium fallback.
+  let title = '';
+  if (route.name === 'CompendiumQuestion') {
+    const question = store.getQuestion(route.params.number);
+    title = question ? `Пытанне ${question.number}: ${question.question}` : `Пытанне ${route.params.number}`;
+  } else if (route.name === 'CompendiumPart') {
+    const part = store.getPart(route.params.partId);
+    title = part ? `Частка ${part.number}: ${part.title}` : `Частка ${route.params.partId}`;
+  }
+  return title ? { ...base, query: { ...base.query, ctx_title: title.slice(0, 120) } } : base;
+});
 const { resultsOpen, reopen } = createCompendiumSearchSync({
   router: useRouter(),
   query: toRef(store, 'searchQuery'),
