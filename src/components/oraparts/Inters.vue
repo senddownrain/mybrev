@@ -5,6 +5,7 @@
             ПРОСЬБЫ
             </v-card-title>
             <v-card-text class="ora-text">
+                <p v-if="rubric" style="color:var(--rubric-color)" class="mb-4">{{ rubric }}</p>
                 <alternative-text :text="text" kind="intercession" aria-label="Выбар просьбаў" />
             </v-card-text>
         </v-card>
@@ -17,6 +18,7 @@ import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 
 defineProps({
   text: String,
+  rubric: { type: String, default: '' },
 })
 </script>
 
@@ -54,11 +56,6 @@ defineProps({
   margin-top: 1.35rem;
   color: var(--reader-muted);
   font-style: italic;
-}
-
-.ora-text :deep(.intercessions__response::first-letter) {
-  color: var(--rubric-color);
-  font-weight: 800;
 }
 
 .ora-text :deep(.intercessions__marker) {

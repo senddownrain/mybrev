@@ -1,3 +1,4 @@
+import { applyWebLiturgicalCorrections } from '@/utils/webLiturgicalCorrections';
 import { collection } from 'firebase/firestore';
 import { db } from '@/plugins/firebase';
 import { getDocsOfflineAware } from '@/utils/firestoreRead';
@@ -33,7 +34,11 @@ export async function getLiturgicalTemplates(options = {}) {
       const snapshot = await getDocsOfflineAware(collection(db, 'liturgicalTemplates'), session);
       return { data: snapshot.docs.map((item) => ({ id: item.id, ...item.data() })), complete: session.complete };
     }, options);
-    return new Map((entry.data || []).map((item) => [item.id, item]));
+    // Apply after restoring the raw collection too: an old persistent cache
+    // receives the Web layer without another Firestore collection read.
+    const items = await Promise.all((entry.data || []).map((item) =>
+      options.webCorrections === false ? item : applyWebLiturgicalCorrections('liturgicalTemplates', item)));
+    return new Map(items.map((item) => [item.id, item]));
   } catch {
     return new Map();
   }

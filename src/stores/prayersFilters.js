@@ -13,8 +13,10 @@ export const usePrayersFiltersStore = defineStore('prayersFilters', () => {
   const searchQuery = ref('');
   const selectedTags = ref([]);
   const selectedCategory = ref(null);
+  const lastOpenedPrayerId = ref(null);
   const isSearchExpanded = ref(false);
   const isFilterExpanded = ref(false);
+  const categoryReturnFocus = ref({});
 
   // Debounced version of searchQuery — no onUnmounted needed since the store
   // is a singleton that lives for the entire app lifetime.
@@ -37,11 +39,13 @@ export const usePrayersFiltersStore = defineStore('prayersFilters', () => {
   }
 
   function setSelectedCategory(category) {
+    if (selectedCategory.value?.id !== category?.id || selectedCategory.value?.name !== category?.name) lastOpenedPrayerId.value = null;
     selectedCategory.value = category;
-    selectedTags.value = category?.tags ? [...category.tags] : [];
+    selectedTags.value = [];
   }
 
   function clearFilters() {
+    lastOpenedPrayerId.value = null;
     searchQuery.value = '';
     selectedTags.value = [];
     selectedCategory.value = null;
@@ -62,10 +66,12 @@ export const usePrayersFiltersStore = defineStore('prayersFilters', () => {
   }
 
   return {
+    categoryReturnFocus,
     searchQuery,
     debouncedSearchQuery,
     selectedTags,
     selectedCategory,
+    lastOpenedPrayerId,
     isSearchExpanded,
     isFilterExpanded,
     setSearchQuery,

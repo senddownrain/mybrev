@@ -19,7 +19,6 @@
           <template #append><v-icon class="prayer-list-item__arrow" icon="mdi-chevron-right" size="24" /></template>
         </v-list-item>
       </v-list>
-      <div class="compendium-source-note"><CompendiumSource /></div>
     </template>
   </v-container>
 </template>
@@ -28,7 +27,6 @@ import { computed } from 'vue';
 import { useCompendiumStore } from '@/stores/compendium';
 import { COMPENDIUM_TITLE } from '@/constants/compendium';
 import { romanNumeral } from '@/utils/compendiumData';
-import CompendiumSource from '@/components/compendium/CompendiumSource.vue';
 import { useCompendiumScroll } from '@/composables/useCompendiumScroll';
 const store = useCompendiumStore();
 const parts = computed(() => store.parts.map((part) => {
@@ -40,6 +38,3 @@ useCompendiumScroll();
 </script>
 <style scoped src="@/styles/prayers-list.css"></style>
 <style scoped src="@/styles/compendium.css"></style>
-<style scoped>
-.compendium-source-note :deep(.prayer-source) { margin: 0; padding: 0; }
-</style>

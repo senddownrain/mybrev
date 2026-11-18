@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "revision": "6b5b278fcb0f77f557cf5f739c455236cb19029c",
+  "sdk": "Flutter 3.38.9",
+  "passed": 2,
+  "failed": 0,
+  "target": "single-final-test-bundle-all-known-legacy-collections",
+  "bundleSha256": "19ed6b4b8247baa4d97e20a8404975b6f539a9531bf9061e1b063f73c9e9152c",
+  "successAndRestart": true,
+  "interruptedDownloadAndRestart": true,
+  "settingsFavoritesPersonalPrayersPreserved": true,
+  "firebaseReads": 0,
+  "firebaseWrites": 0,
+  "nativeSmoke": "not-performed",
+  "logsSha256": "40efedd720d8a5e9b159907cdae36fa40a605e7874d7b0b7e74ca25e004115bb",
+  "sourceSha256": "bff61aeebe655104836156a564ebf80f500f6595e1302b3a6cbede393ebb5678"
+}

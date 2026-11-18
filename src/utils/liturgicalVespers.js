@@ -1,3 +1,9 @@
+/** Compact hour name for both the list and the text header; no separate rubric chip. */
+export function vespersHourTitle(model, uppercase = false) {
+  const ordinal = model?.firstVespers ? 'I ' : (model?.second ? 'II ' : '');
+  return `${ordinal}${uppercase ? 'НЕШПАРЫ' : 'Нешпары'}`;
+}
+
 const VESPER_FIELDS = [
   'Hymn', 'Ant1', 'Ant2', 'Ant3', 'Ps1', 'Ps2', 'Ps3', 'R', 'AntMag', 'Inter', 'Pr',
 ];
@@ -8,7 +14,6 @@ function hasText(value) {
 
 const FIRST_VESPERS_RANKS = new Set([
   'solemnitas', 'solemnity', 'урачыстасць', 'ўрачыстасць',
-  'festum', 'feast', 'свята',
 ]);
 
 function normalizedRank(day) {
@@ -66,23 +71,51 @@ export function assembleFirstVespers(day) {
   return result;
 }
 
+/**
+ * The ordinary Sunday document stores II Vespers in `vesper*`. When its
+ * `vesper1*` are empty, I Vespers are the Saturday psalter's `vesper*`,
+ * NOT Sunday's `vesper*`. Preserve any explicit Sunday `vesper1*` Proper.
+ * Missing source fields are left blank and reported, never silently filled
+ * with Sunday's II Vespers.
+ */
+export function assembleOrdinarySundayFirstVespers(sunday, saturdayPsalter) {
+  if (!sunday) return null;
+  const result = { ...sunday };
+  const missing = [];
+  VESPER_FIELDS.forEach((field) => {
+    const first = sunday[`vesper1${field}`];
+    const saturday = saturdayPsalter?.[`vesper${field}`];
+    const value = hasText(first) ? first : (hasText(saturday) ? saturday : '');
+    result[`vesper${field}`] = value;
+    if (!hasText(value)) missing.push(field);
+    if (sunday._fieldSources || saturdayPsalter?._fieldSources) {
+      const selected = hasText(first) ? sunday : saturdayPsalter;
+      const key = hasText(first) ? `vesper1${field}` : `vesper${field}`;
+      result._fieldSources = { ...result._fieldSources,
+        [`vesper${field}`]: selected?._fieldSources?.[key] || { document: selected?.id || '', field: key },
+      };
+    }
+  });
+  result._firstVespersSource = hasFirstVespers(sunday) ? 'vesper1+saturday-psalter' : 'saturday-psalter';
+  result._missingFirstVespersFields = missing;
+  return result;
+}
+
 /** Tomorrow's option that owns I Vespers tonight (by celebration id). */
 export function findFirstVespersOption(tomorrowContent, celebrationId) {
   const options = tomorrowContent?.dayOptions || [];
-  return options.find((option) => option.ordo?.optionId === celebrationId)
-    || options.find((option) => option.ordo?.role === 'primary')
-    || null;
+  return options.find((option) => option.ordo?.optionId === celebrationId) || null;
 }
 
 /**
  * Evening model shared by the hours list and the Vespers screen.
  * With an Ordo descriptor (`day._ordo.vespers`) the engine decides II Vespers
  * vs I Vespers of tomorrow by precedence (GNLYC 61); legacy days fall back to
- * the old rank + `vesper1*` heuristics.
+ * conservative solemnity + `vesper1*` fallback.
  *
  * @returns {{ firstVespers: object|null, local: object[], second: boolean }}
  */
-export function eveningVespersModel(day, tomorrowContent, { isoWeekday, requestedDayId = '' } = {}) {
+export function eveningVespersModel(day, tomorrowContent, { isoWeekday, requestedDayId = '', periodDay = null } = {}) {
   const none = { firstVespers: null, local: [], second: false };
   if (!day || usesOwnVespers(day)) return none;
   if (day._ordo?.vespers) {
@@ -90,7 +123,12 @@ export function eveningVespersModel(day, tomorrowContent, { isoWeekday, requeste
     if (vespers.type === 'first') {
       const option = findFirstVespersOption(tomorrowContent, vespers.celebrationId);
       if (!option?.day) return none;
-      const firstDay = assembleFirstVespers(option.day);
+      const ordinarySunday = Number(isoWeekday) === 6
+        && option.ordo?.officeKind === 'sunday'
+        && String(vespers.celebrationId || '').startsWith('temporal:ordinary-');
+      const firstDay = ordinarySunday
+        ? assembleOrdinarySundayFirstVespers(option.day, periodDay)
+        : assembleFirstVespers(option.day);
       // The O antiphon follows the civil evening, including I Vespers of an
       // Advent Sunday (it must not advance to tomorrow's O antiphon).
       if (day._periodType === 'advent' && option.day._periodType === 'advent'
@@ -113,7 +151,7 @@ export function eveningVespersModel(day, tomorrowContent, { isoWeekday, requeste
     return { ...none, second: vespers.type === 'second' };
   }
   const options = getTomorrowFirstVespersOptions(tomorrowContent);
-  const requested = requestedDayId ? options.find((item) => item.sourceDayId === String(requestedDayId)) : null;
+  const requested = requestedDayId ? options.find((item) => item.dayIds.includes(String(requestedDayId))) : null;
   const universal = options.find((item) => !isLocalFirstVespers(item));
   return {
     firstVespers: requested || universal
@@ -124,11 +162,11 @@ export function eveningVespersModel(day, tomorrowContent, { isoWeekday, requeste
 }
 
 /**
- * Legacy heuristic for documents without an Ordo descriptor: only feasts and
- * solemnities may replace the preceding evening's office. The Ordo grants
+ * Legacy heuristic for documents without an Ordo descriptor: only solemnities may replace the preceding evening's office. The Ordo grants
  * I Vespers to a feast only when it is a feast of the Lord on a Sunday.
  */
 export function hasFirstVespersRank(day) {
+  if (typeof day?._ordo?.firstVespersByRight === 'boolean') return day._ordo.firstVespersByRight;
   return FIRST_VESPERS_RANKS.has(normalizedRank(day));
 }
 
@@ -137,25 +175,38 @@ export function isLocalFirstVespers(item) {
   return Boolean(item?.places?.length);
 }
 
-/** Return every eligible feast/solemnity with explicit first-Vespers texts. */
+/** Return one card per eligible celebration and diocesan scope with explicit first-Vespers texts. */
 export function getTomorrowFirstVespersOptions(content) {
   const results = [];
-  const seen = new Set();
-  for (const option of content?.dayOptions || []) {
+  const seen = new Map();
+  for (const [optionIndex, option] of (content?.dayOptions || []).entries()) {
     const candidates = [
       ...(option.templates?.map((template) => template.day).filter(Boolean) || []),
       option.day,
     ].filter(Boolean);
     candidates.forEach((source) => {
-      const key = source.id || source;
-      if (seen.has(key) || !hasFirstVespersRank(source) || !hasFirstVespers(source)) return;
-      seen.add(key);
-      results.push({
+      const descriptor = option.ordo || source._ordo;
+      const eligible = typeof descriptor?.firstVespersByRight === 'boolean'
+        ? descriptor.firstVespersByRight : hasFirstVespersRank(source);
+      if (!eligible || !hasFirstVespers(source)) return;
+      const places = normalizedPlaces(source).sort();
+      const identity = descriptor?.celebrationId || source._celebrationId || option.key || optionIndex;
+      const key = JSON.stringify([identity, places, normalizedRank(source)]);
+      const aliases = [source.id, ...(option.templates || [])
+        .filter((template) => template.day === source).flatMap((template) => template.dayIds || [])].filter(Boolean);
+      if (seen.has(key)) {
+        seen.get(key).dayIds = [...new Set([...seen.get(key).dayIds, ...aliases])];
+        return;
+      }
+      const item = {
         day: normalizeFirstVespers(source),
         sourceDayId: source.id || '',
+        dayIds: aliases,
         title: option.title || source._feastName || source._title || 'заўтрашняга дня',
-        places: normalizedPlaces(source),
-      });
+        places,
+      };
+      seen.set(key, item);
+      results.push(item);
     });
   }
   return results;

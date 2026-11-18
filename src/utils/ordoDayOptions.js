@@ -43,6 +43,9 @@ function buildPeriodTitle(context, date) {
 }
 
 export function buildDayTitle(day, context, date) {
+  if (day?._feast === 'feast-christking' || day?._celebrationId === 'christ-king' || day?.id === 'feast-christking') {
+    return 'Пана нашага Езуса Хрыста, Валадара Сусвету';
+  }
   const hasCelebrationIdentity = day?._feast || day?._rank || day?._feastType;
   // Seasonal date documents were imported with headings from a particular
   // source year (for example a 21 December document may say "IV Sunday").
@@ -247,7 +250,8 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
         ...base,
         key: `${seasonal ? 'fixed' : 'period'}-${temporal.id}`,
         source: seasonal ? LITURGICAL_OPTION_SOURCE.FIXED : LITURGICAL_OPTION_SOURCE.PERIOD,
-        title: buildDayTitle(temporal, context, date),
+        title: option.id === 'temporal:ordinary-w3-d1'
+          ? option.title : buildDayTitle(temporal, context, date),
         ...(seasonal ? { titleIncludesWeekday: true } : {}),
         subtitle: seasonal ? fixedSubtitle(temporal, 1) : 'Літургічны дзень',
         day: temporal,
@@ -262,15 +266,42 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
       // Ash Wednesday, Palm Sunday, Easter, Pentecost ARE the temporal day:
       // without a dynamic document the period document carries the Office.
       if (!docs.length && option.temporal && temporal) docs = [temporal];
-      // A movable memorial without its own document (Mary, Mother of the
-      // Church) is assembled from its Common and the day, like a fixed one.
-      if (!docs.length && !option.temporal && option.templates?.length && currentDayDocument(daysResult)) {
-        unavailable.push({ id: option.id, title: option.title, reason: 'no-days-document', assembled: true });
-        const proper = scaffoldOf(option);
+      // Movable memorials obey the same Proper → Common → weekday rules as
+      // fixed memorials. Assemble from the RAW document: the legacy resolved
+      // map already contains weekday fields, which must not masquerade as
+      // the celebration's own texts.
+      if (!option.temporal && ['memorial', 'optional-memorial'].includes(option.officeKind)
+        && option.templates?.length && currentDayDocument(daysResult)) {
+        const rawDocs = dynamicDocuments(option, {
+          dynamicDaysByFeast: daysResult.rawDynamicDaysByFeast || daysResult.dynamicDaysByFeast,
+        });
+        const raw = rawDocs.find(isSparseDayDocument) || rawDocs[0] || null;
+        const proper = raw
+          ? {
+            ...raw,
+            _templates: raw._templates?.length ? raw._templates : option.templates,
+            _defaultTemplate: raw._defaultTemplate || option.defaultTemplate,
+            _feast: raw._feast || option.feastCode,
+            _feastName: raw._feastName || option.title,
+            _celebrationId: raw._celebrationId || option.id,
+          }
+          : {
+            ...scaffoldOf(option),
+            // Keep the canonical feast-* URL working even without a days document.
+            id: option.feastCode,
+            _feast: option.feastCode,
+          };
+        if (!raw) unavailable.push({ id: option.id, title: option.title, reason: 'no-days-document', assembled: true });
         const variants = assembledTemplates({ proper, option, resolved, daysResult, templates });
+        if (!raw) variants[0].dayIds = [...new Set([...(variants[0].dayIds || []), option.id])];
         options.push({
           ...base,
-          ordo: { ...ordo, missingProper: true, contentStatus: proper._contentStatus, properSource: PROPER_SOURCE.NONE },
+          ordo: {
+            ...ordo,
+            ...(raw ? {} : { missingProper: true }),
+            contentStatus: proper._contentStatus || option.contentStatus,
+            properSource: raw ? PROPER_SOURCE.LEGACY_DAYS : PROPER_SOURCE.NONE,
+          },
           key: `dynamic-${option.id}`,
           source: LITURGICAL_OPTION_SOURCE.DYNAMIC,
           title: option.title,
@@ -302,7 +333,6 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
       : []);
     let docs = select(properDocs);
     let properSource = docs.length ? PROPER_SOURCE.PROPER_TEXTS : null;
-    if (docs.length && option.id === 'our-lady-braslau') docs = select([...properDocs, ...fixedDocs]);
     if (!docs.length) {
       docs = select(fixedDocs);
       if (docs.length) properSource = PROPER_SOURCE.LEGACY_DAYS;
@@ -352,8 +382,10 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
       ordo: { ...ordo, properSource },
       key: `fixed-${option.id}`,
       source: docs[0]?._kind === 'office-for-dead' ? LITURGICAL_OPTION_SOURCE.OFFICE_FOR_DEAD : LITURGICAL_OPTION_SOURCE.FIXED,
-      title: buildDayTitle(day, context, date) || option.title,
-      subtitle: fixedSubtitle(day, documentTemplates.length),
+      // The published Ordo is authoritative: legacy fixed documents can still
+      // contain the former optional rank or an outdated feast title.
+      title: option.title || buildDayTitle(day, context, date),
+      subtitle: fixedSubtitle({ ...day, _rank: option.rank }, documentTemplates.length),
       day,
       templates: documentTemplates,
       order: 3,
@@ -389,7 +421,16 @@ export function buildOrdoDayOptions({ resolved, daysResult, context, date, dioce
     dayOptions: options.map((option) => {
       // One colour for the card, its Office pages and its readings: the Ordo's.
       const stamp = visualStamp(option.ordo || {});
-      const stamped = (day) => (day && Object.keys(stamp).length ? { ...day, ...stamp } : day);
+      const stamped = (day) => {
+        if (!day) return day;
+        // Old `days` documents are content sources, not calendar authorities.
+        // Align the card and every template's rank with the resolved legal Office.
+        // Preserve text-specific titles: some are inflected or styled for the Office.
+        const canonical = option.ordo?.celebrationId
+          ? { ...day, _rank: option.ordo.rank }
+          : day;
+        return Object.keys(stamp).length ? { ...canonical, ...stamp } : canonical;
+      };
       return {
         ...option,
         day: stamped(option.day),

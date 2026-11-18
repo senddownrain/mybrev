@@ -8,10 +8,14 @@ import { fileURLToPath } from 'node:url';
 test('reference Office and readings caches cannot populate canonical day keys', async () => {
   const server = await createServer({ configFile: false, cacheDir: 'node_modules/.cache/cache-test-vite', server: { middlewareMode: true }, optimizeDeps: { noDiscovery: true, entries: [] }, root: fileURLToPath(new URL('../', import.meta.url)) });
   try {
-    const { contentKey, readingsKey, publicContentCache, calendarContentVersion } = await server.ssrLoadModule('/src/utils/publicContentCache.js');
+    const { contentKey, readingsKey, publicContentCache } = await server.ssrLoadModule('/src/utils/publicContentCache.js');
     const date = '2026-12-06', diocese = 'minsk-mohilev';
-    assert.deepEqual(JSON.parse(contentKey(date, diocese)), ['content', date, diocese, calendarContentVersion()]);
-    assert.deepEqual(JSON.parse(readingsKey(date, { diocese })), ['readings', date, '', false, diocese, calendarContentVersion()]);
+    const contentParts = JSON.parse(contentKey(date, diocese));
+    const readingsParts = JSON.parse(readingsKey(date, { diocese }));
+    assert.deepEqual(contentParts.slice(0, 3), ['content', date, diocese]);
+    assert.match(contentParts[3], /^calendar:/);
+    assert.deepEqual(readingsParts.slice(0, 5), ['readings', date, '', false, diocese]);
+    assert.equal(readingsParts[5], contentParts[3], 'Ordo calendar revision is part of both cache namespaces');
     const office = contentKey(date, diocese, 'sv-nicholas');
     const readings = readingsKey(date, { diocese, referenceOptionId: 'sv-nicholas' });
     const period = contentKey(date, diocese, '', true);
@@ -24,13 +28,6 @@ test('reference Office and readings caches cannot populate canonical day keys', 
     assert.notEqual(office, contentKey(date, diocese, 'sv-patryk'));
     assert.notEqual(period, office);
     assert.notEqual(readingsKey(date, { diocese, periodOnly: true }), readingsKey(date, { diocese }));
-    const definitions = await server.ssrLoadModule('/src/utils/ordo/definitions.js');
-    const before = contentKey(date, diocese);
-    await publicContentCache.read(before, async () => ({ data: { title: 'old identity' }, complete: true }));
-    definitions.setCalendarDefinitions({ ...definitions.getBundledCalendarDefinitions(), revision: 5 });
-    assert.notEqual(contentKey(date, diocese), before);
-    assert.equal(publicContentCache.peek(contentKey(date, diocese)), undefined);
-    definitions.setCalendarDefinitions(null);
   } finally {
     await server.close();
   }
@@ -191,56 +188,66 @@ test('completeness requires every dependency to be server-confirmed without pend
   assert.equal(missingMetadata.complete, false);
 });
 
-test('TTL refreshes corrected liturgical content on the next online visit, not on every navigation', async () => {
+test('updated Hours cache revision never exposes old assembled page as a fresh immediate hit', async () => {
   const f = fixture();
-  let time = 1_000_000;
-  let online = true;
-  let reads = 0;
-  const create = () => createContentCache({
-    storage: f.storage,
-    getRevision: () => '1',
-    isOnline: () => online,
-    maxAgeMs: 15 * 60 * 1000,
-    now: () => time,
-  });
-  const cache = create();
-  assert.equal((await cache.read('day', async () => {
-    reads++;
-    return complete('хторупліва');
-  })).data, 'хторупліва');
-  time += 14 * 60 * 1000;
-  assert.equal((await create().read('day', () => assert.fail('cache should still be fresh'))).data, 'хторупліва');
-  time += 2 * 60 * 1000;
-  assert.equal((await create().read('day', async () => {
-    reads++;
-    return complete('хто рупліва');
-  })).data, 'хто рупліва');
-  assert.equal(f.records.get('day').data, 'хто рупліва');
-  assert.equal(reads, 2);
-  assert.equal((await create().read('day', () => assert.fail('repeat navigation should be cached'))).data, 'хто рупліва');
-  online = false;
-  time += 60 * 60 * 1000;
-  const offline = await create().read('day', () => assert.fail('offline must not fetch'));
-  assert.equal(offline.data, 'хто рупліва');
-  assert.equal(offline.complete, false);
+  const previousApp = f.create();
+  await previousApp.read('2026-06-13', async () => complete({ laudesHymn: '', vesperHymn: 'old II Vespers' }));
+  assert.equal(previousApp.peekFresh('2026-06-13').laudesHymn, '');
+  f.revision('pr184');
+  const updatedApp = f.create();
+  await updatedApp.prime(['2026-06-13']);
+  assert.equal(updatedApp.peekFresh('2026-06-13'), undefined);
+  assert.equal(updatedApp.peek('2026-06-13').vesperHymn, 'old II Vespers', 'offline copy retained');
+  const fresh = await updatedApp.read('2026-06-13', async () => complete({
+    laudesHymn: 'Marian proper', vesperHymn: 'Sunday I Vespers',
+  }), { fresh: true });
+  assert.deepEqual(fresh.data, { laudesHymn: 'Marian proper', vesperHymn: 'Sunday I Vespers' });
+  assert.equal(updatedApp.peekFresh('2026-06-13').laudesHymn, 'Marian proper');
+  assert.equal(f.records.get('2026-06-13').revision, 'pr184');
 });
 
-test('legacy cache without timestamp refreshes online and survives offline or failed updates', async () => {
+test('offline stale Hours remain readable after revision bump without a network request', async () => {
   const f = fixture();
-  f.records.set('day', { complete: true, revision: '1', data: 'offline text' });
-  let online = false;
+  const old = f.create();
+  await old.read('2026-06-13', async () => complete({ offlineText: 'previous saved text' }));
+  f.revision('pr184'); f.online(false);
+  const freshApp = f.create();
+  await freshApp.prime(['2026-06-13']);
+  assert.equal(freshApp.peekFresh('2026-06-13'), undefined);
+  const saved = await freshApp.read('2026-06-13', () => assert.fail('offline should not fetch'), { fresh: true });
+  assert.equal(saved.data.offlineText, 'previous saved text');
+  assert.equal(saved.complete, false);
+});
+
+
+test('background-only seven-day freshness avoids rereads without weakening UI freshness', async () => {
+  let currentTime = 100000000;
+  let revision = 'published-v1';
+  const records = new Map();
+  const storage = {
+    get: async (key) => structuredClone(records.get(key)),
+    set: async (key, value) => { records.set(key, structuredClone(value)); },
+    keys: async () => [...records.keys()],
+  };
   const create = () => createContentCache({
-    storage: f.storage,
-    getRevision: () => '1',
-    isOnline: () => online,
-    maxAgeMs: 30_000,
-    now: () => 120_000,
+    storage, getRevision: () => revision, isOnline: () => true,
+    maxAgeMs: 15 * 60 * 1000, now: () => currentTime,
   });
-  assert.equal((await create().read('day', () => assert.fail('offline fetch'))).data, 'offline text');
-  online = true;
-  const failed = await create().read('day', async () => { throw new Error('no network'); });
-  assert.equal(failed.data, 'offline text');
-  assert.equal(failed.complete, false);
-  assert.equal((await create().read('day', async () => complete('corrected'))).data, 'corrected');
-  assert.equal(f.records.get('day').fetchedAt, 120_000);
+  let reads = 0;
+  const load = async () => { reads += 1; return complete({ text: 'ready' }); };
+  await create().read('week-day', load);
+  const next = create();
+  await next.prime(['week-day']);
+  currentTime += 16 * 60 * 1000;
+  assert.equal(next.peekFresh('week-day'), undefined, 'UI TTL still 15 minutes');
+  assert.equal(next.hasRecentComplete('week-day', 7 * 24 * 60 * 60 * 1000), true,
+    'speculative warmup must not reread a complete week');
+  assert.equal(reads, 1);
+  revision = 'published-v2';
+  assert.equal(next.hasRecentComplete('week-day', 7 * 24 * 60 * 60 * 1000), false,
+    'new publication invalidates speculative freshness immediately');
+  revision = 'published-v1';
+  currentTime += 7 * 24 * 60 * 60 * 1000;
+  assert.equal(next.hasRecentComplete('week-day', 7 * 24 * 60 * 60 * 1000), false,
+    'an aged out entry can be refreshed on a later idle visit');
 });

@@ -1,0 +1,179 @@
+name: Publish reviewed liturgical fields
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_scope:
+        description: Historical Proper subset or reviewed PR255 coordinated bundle release
+        required: true
+        default: proper-only
+        type: choice
+        options: [proper-only, coordinated-pr255, final-test-manifest]
+      release_authorization_path:
+        description: Git-tracked docs JSON with concrete owner/release-specific approval (coordinated only)
+        required: false
+        type: string
+      flutter_release_evidence_path:
+        description: Git-tracked release proofs or owner-authorized test-app source/test proofs (coordinated only)
+        required: false
+        type: string
+      mode:
+        description: Read-only quota diagnostics, or authorized guarded execution
+        required: true
+        default: diagnose
+        type: choice
+        options: [diagnose, execute]
+      batch_size:
+        description: Maximum documents per guarded batch (content plan stays unchanged)
+        required: true
+        default: '25'
+        type: choice
+        options: ['25', '50']
+      resume_run_id:
+        description: Prior PR245 run receipt to resume; empty for the first run
+        required: false
+        type: string
+      plan_sha256:
+        description: Exact plan SHA (Proper legacy hash; coordinated binary SHA256)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: firebase-firestore-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main' && github.repository == 'senddownrain/mybrev'
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Fetch the exact prior protected receipt for resume
+        if: inputs.mode == 'execute' && inputs.resume_run_id != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+        run: |
+          case "$RESUME_RUN_ID" in *[!0-9]*|'') echo 'Invalid resume run ID'; exit 1;; esac
+          gh run download "$RESUME_RUN_ID" --repo senddownrain/mybrev --name "pr245-server-receipt-$RESUME_RUN_ID" --dir "$RUNNER_TEMP/pr245-previous"
+      - name: Verify exact plan and compatible scope without production reads
+        env:
+          EXPECTED_PLAN_SHA: ${{ inputs.plan_sha256 }}
+          RELEASE_SCOPE: ${{ inputs.release_scope }}
+          COORDINATED_AUTHORIZATION: ${{ inputs.release_authorization_path }}
+          COORDINATED_EVIDENCE: ${{ inputs.flutter_release_evidence_path }}
+          MODE: ${{ inputs.mode }}
+          BATCH_SIZE: ${{ inputs.batch_size }}
+          RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import zlib from 'node:zlib';
+          import { editorialHash } from './scripts/liturgy/lib/editorial-responsories.mjs';
+          import { validatePublicationPlan } from './scripts/liturgy/lib/editorial-publication.mjs';
+          import path from 'node:path';
+          import { execFileSync } from 'node:child_process';
+          import { selectDaysTemplates } from './scripts/liturgy/prepare-days-templates.mjs';
+          import { binarySha256, loadCoordinatedContract, verifyCoordinatedAuthorization } from './scripts/liturgy/lib/coordinated-release.mjs';
+          const root='docs/audits/liturgical-common-texts-2026-11/v4';
+          let planFile=root+'/publication-plan.json.gz';
+          if(process.env.RELEASE_SCOPE==='final-test-manifest'){
+            if(process.env.MODE!=='execute')throw Error('Metadata scope requires execute');
+            const {loadReviewedManifest,assertReviewedManifestExecutable}=await import('./scripts/content/lib/reviewed-manifest.mjs');
+            loadReviewedManifest(process.env.COORDINATED_AUTHORIZATION,process.env.EXPECTED_PLAN_SHA);
+            assertReviewedManifestExecutable();
+            execFileSync('git',['ls-files','--error-unmatch',process.env.COORDINATED_AUTHORIZATION],{stdio:'pipe'});
+            planFile=process.env.COORDINATED_AUTHORIZATION;
+          }else if(process.env.RELEASE_SCOPE==='coordinated-pr255'){
+            if(process.env.MODE!=='execute'||process.env.BATCH_SIZE!=='25')throw Error('Coordinated scope requires execute and <=25-document batches');
+            for(const key of ['COORDINATED_AUTHORIZATION','COORDINATED_EVIDENCE']){
+              const file=process.env[key]||'';
+              if(!file.startsWith('docs/')||!file.endsWith('.json')||path.normalize(file)!==file||file.split('/').includes('..'))throw Error('Reviewed docs JSON required: '+key);
+              execFileSync('git',['ls-files','--error-unmatch',file],{stdio:'pipe'});
+            }
+            const sourceBytes=fs.readFileSync(root+'/full-content-plan.json.gz'),full=JSON.parse(zlib.gunzipSync(sourceBytes)),published=JSON.parse(fs.readFileSync(root+'/PUBLICATION_RESULT.json'));
+            const plan=selectDaysTemplates(full,published);
+            plan.inputs={fullPlanSha256:editorialHash(sourceBytes),publishedReceiptSha256:published.receiptSha256};
+            const bytes=zlib.gzipSync(JSON.stringify(plan)+'\n',{level:9});
+            if(binarySha256(bytes)!==process.env.EXPECTED_PLAN_SHA)throw Error('Reviewed binary plan SHA mismatch');
+            const authorization=JSON.parse(fs.readFileSync(process.env.COORDINATED_AUTHORIZATION));
+            verifyCoordinatedAuthorization({plan,expectedPlan:selectDaysTemplates(full,published),planBytes:bytes,sourceBytes,
+              catalogBytes:fs.readFileSync(root+'/coordinated-baseline.json.gz'),evidenceBytes:fs.readFileSync(process.env.COORDINATED_EVIDENCE),authorization,mode:'execute',contract:loadCoordinatedContract(undefined,{testApp:JSON.parse(fs.readFileSync(process.env.COORDINATED_EVIDENCE)).policy==='pr255-test-app-before-mobile-release'})});
+            if(process.env.RESUME_RUN_ID&&authorization.resumeReceiptSha256!==binarySha256(fs.readFileSync(process.env.RUNNER_TEMP+'/pr245-previous/server-receipt.json')))throw Error('Resume receipt SHA mismatch');
+            planFile=process.env.RUNNER_TEMP+'/pr255-reviewed-plan.json.gz';fs.writeFileSync(planFile,bytes,{mode:0o600});
+          }else{
+            const bytes=fs.readFileSync(planFile);
+            if(editorialHash(bytes)!==process.env.EXPECTED_PLAN_SHA)throw Error('Reviewed plan SHA mismatch');
+            const plan=JSON.parse(zlib.gunzipSync(bytes));validatePublicationPlan(plan);
+            if(plan.compatibility?.policy!=='proper-only-keep-manifest'||plan.documents.some(d=>!d.document.startsWith('liturgicalProperTexts/')))throw Error('Scope violation');
+          }
+          fs.appendFileSync(process.env.GITHUB_ENV,'REVIEWED_PLAN_PATH='+planFile+'\n');
+          JS
+      - name: Load protected credential within Actions only
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IBREVIARYBY }}
+          EXPECTED_PLAN_SHA: ${{ inputs.plan_sha256 }}
+          RELEASE_SCOPE: ${{ inputs.release_scope }}
+          COORDINATED_AUTHORIZATION: ${{ inputs.release_authorization_path }}
+        run: |
+          set -euo pipefail
+          test -n "$FIREBASE_SERVICE_ACCOUNT" || { echo '::error::Missing protected Firebase credential'; exit 1; }
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/pr245-firebase.json"
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const file=process.env.RUNNER_TEMP+'/pr245-authorization.json';
+          if(['coordinated-pr255','final-test-manifest'].includes(process.env.RELEASE_SCOPE))fs.copyFileSync(process.env.COORDINATED_AUTHORIZATION,file);
+          else fs.writeFileSync(file,JSON.stringify({project:'ibreviaryby',planSha256:process.env.EXPECTED_PLAN_SHA,action:'execute',ownerApproved:true,massRebuildReleaseGateReviewed:true,reason:'Owner PR245 comments 6877040538/6878311145 authorize execution. Review limits writes to existing Proper omitted from current manifest; fresh runtime guard enforces omission. No published-collection/manifest/bundle override.'}),{mode:0o600});
+          JS
+      - name: Inspect current Firestore/API quota and Monitoring metrics (no document reads)
+        if: inputs.release_scope == 'proper-only'
+        run: |
+          mkdir -p backups/pr245-release
+          node scripts/liturgy/inspect-firestore-quota.mjs --service-account "$RUNNER_TEMP/pr245-firebase.json" --out backups/pr245-release/quota-report.json
+      - name: Fresh guarded execute, small batches, exact masks and readback
+        if: inputs.mode == 'execute'
+        env:
+          RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+          BATCH_SIZE: ${{ inputs.batch_size }}
+          RELEASE_SCOPE: ${{ inputs.release_scope }}
+          COORDINATED_EVIDENCE: ${{ inputs.flutter_release_evidence_path }}
+          EXPECTED_PLAN_SHA: ${{ inputs.plan_sha256 }}
+        run: |
+          mkdir -p backups/pr245-release
+          if [ "$RELEASE_SCOPE" = final-test-manifest ]; then
+            resume_args=()
+            if [ -n "$RESUME_RUN_ID" ]; then resume_args+=(--resume "$RUNNER_TEMP/pr245-previous/server-receipt.json"); fi
+            node scripts/content/publish-manifest.mjs --reviewed-manifest-authorization "$REVIEWED_PLAN_PATH" --expected-plan-sha "$EXPECTED_PLAN_SHA" --apply --service-account "$RUNNER_TEMP/pr245-firebase.json" --receipt backups/pr245-release/server-receipt.json "${resume_args[@]}"
+            exit 0
+          fi
+          args=()
+          if [ -n "$RESUME_RUN_ID" ]; then args+=(--resume "$RUNNER_TEMP/pr245-previous/server-receipt.json"); fi
+          if [ "$RELEASE_SCOPE" = coordinated-pr255 ]; then
+            args+=(--coordinated-release "$COORDINATED_EVIDENCE" --baseline-catalog docs/audits/liturgical-common-texts-2026-11/v4/coordinated-baseline.json.gz)
+          else
+            args+=(--quota-report backups/pr245-release/quota-report.json)
+          fi
+          node scripts/liturgy/future-publish-editorial-v3.mjs --mode execute --plan "$REVIEWED_PLAN_PATH" --authorization "$RUNNER_TEMP/pr245-authorization.json" --service-account "$RUNNER_TEMP/pr245-firebase.json" --receipt backups/pr245-release/server-receipt.json --batch-size "$BATCH_SIZE" "${args[@]}"
+      - name: Retain actual server receipt and rollback inputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr245-server-receipt-${{ github.run_id }}
+          path: backups/pr245-release/
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Remove credentials and authorization
+        if: always()
+        run: rm -f "$RUNNER_TEMP/pr245-firebase.json" "$RUNNER_TEMP/pr245-authorization.json"

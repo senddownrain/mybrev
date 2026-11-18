@@ -157,7 +157,15 @@ export function normalizeCalendarDefinitions(raw = {}) {
     schemaVersion: Number(raw.schemaVersion) || CALENDAR_SCHEMA_VERSION,
     revision: Number(raw.revision) || 0,
     ...(raw.publishedAt ? { publishedAt: raw.publishedAt } : {}),
-    celebrations: keep(raw.celebrations, validateCelebrationDefinition, 'celebration'),
+    // Use the approved Belarusian spelling even if an older Firestore
+    // publication still carries the previous title for this stable ID.
+    celebrations: keep(raw.celebrations, validateCelebrationDefinition, 'celebration')
+      .map((doc) => {
+        if (doc.id === 'sv-juan-diego') return { ...doc, title: 'Св. Хуана Дыега Куаўтлатаацына' };
+        // Old public Firestore revisions must not reintroduce the nominative title.
+        if (doc.id === 'christ-king') return { ...doc, title: 'Пана нашага Езуса Хрыста, Валадара Сусвету' };
+        return doc;
+      }),
     dioceseOverrides: keep(raw.dioceseOverrides, validateDioceseOverride, 'dioceseOverride'),
     yearOverrides: (Array.isArray(raw.yearOverrides) ? raw.yearOverrides : []).map((item) => ({ ...item })),
     warnings,

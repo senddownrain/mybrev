@@ -1,3 +1,4 @@
+import { preEditorialComparison } from '../scripts/liturgy/lib/editorial-policy.mjs';
 /**
  * Golden acceptance for the seasonal Commons (owner prompt 2026-10-16, D-1…D-7).
  *
@@ -110,7 +111,7 @@ test('D-5: the volume I responsories of church-dedication and pastors keep their
   };
   Object.entries(volumeOne).forEach(([common, seasons]) => {
     Object.entries(seasons).forEach(([season, printed]) => {
-      const text = plain(commonOnly(common, SEASONS[season]).officeOfReadingsR1);
+      const text = plain(preEditorialComparison(commonOnly(common, SEASONS[season]).officeOfReadingsR1, 'patchs/feasts/common-texts/'+common+'.json', '_seasonalVariants.'+season+'.officeOfReadingsR1'));
       assert.equal((text.match(/[Аа]ллелюя/gu) || []).length, printed, `${common} / ${season}`);
     });
   });
@@ -134,7 +135,7 @@ test('D-3: volume I verse «Дачка Тыру!…» is in virgins.officeOfRead
 test('D-6: martyr-one first Vespers prints the Rom 8, 35. 37-39 reading before the responsory; religious Office of Readings has the Philippians line and the nun responsory', () => {
   const martyr = plain(commonOnly('martyr-one', SEASONS.ordinary).vesper1R);
   assert.match(martyr, /Рым[^.]*8, 35\. 37-39/u);
-  assert.ok(martyr.indexOf('Хто адлучыць нас') < martyr.indexOf('рэспансорый'), 'the reading comes before the responsory heading');
+  assert.ok(martyr.indexOf('Хто адлучыць нас') < martyr.toLocaleLowerCase('be').indexOf('рэспансорый'), 'the reading comes before the responsory heading');
   const religious = plain(commonOnly('religious', SEASONS.ordinary).officeOfReadingsR1);
   assert.match(religious, /Філіпянаў[^.]*3, 7 – 4, 1\. 4-9/u);
   assert.match(religious, /Пра законніцу: Пс 45 \(44\), 2/u);

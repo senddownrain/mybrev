@@ -14,7 +14,7 @@
         rounded="pill"
         prepend-icon="mdi-plus"
         class="hero-action text-none"
-        @click="openCreateDialog"
+        @click="openCreateDialog()"
       >
         Новая катэгорыя
       </v-btn>
@@ -80,17 +80,20 @@
             <v-btn variant="tonal" rounded="pill" prepend-icon="mdi-refresh" class="text-none" @click="retryCategories">Паўтарыць</v-btn>
           </div>
           <div v-else-if="filteredCategories.length" class="category-list">
-            <article v-for="category in filteredCategories" :key="category.id" class="category-item">
-              <span class="category-icon"><v-icon icon="mdi-folder-outline" /></span>
+            <article v-for="category in filteredCategories" :key="category.id" class="category-item" :style="{ paddingInlineStart: `${Math.min(category.depth, 5) * 12}px` }">
+              <span class="category-icon"><CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="24" /></span>
               <div class="category-main">
                 <div class="category-title-row">
                   <h2>{{ category.name }}</h2>
                   <v-icon v-if="accessPolicy.categoryRestricted(category.id)" icon="mdi-key" size="small" aria-label="Толькі для святароў" />
                 </div>
+                <small class="category-counts">Падкатэгорыі: {{ category.children.length }} · Малітвы: {{ directCount(category) }}<span v-if="category.contextOnly"> · Бацькоўскі раздзел</span></small>
                 <div class="tag-chips">
                   <span v-for="tag in category.tags" :key="tag">{{ tag }}</span>
                 </div>
               </div>
+              <div class="category-actions">
+              <v-btn icon="mdi-plus" variant="text" :aria-label="`Дадаць падкатэгорыю: ${category.name}`" @click="openCreateDialog(category.id)" />
               <v-btn icon="mdi-pencil" variant="text" :aria-label="`Рэдагаваць катэгорыю ${category.name}`" @click="openEditDialog(category)" />
               <v-btn
                 icon="mdi-delete-outline"
@@ -99,6 +102,7 @@
                 :aria-label="`Выдаліць катэгорыю ${category.name}`"
                 @click="categoryToDelete = category"
               />
+              </div>
             </article>
           </div>
           <div v-else class="state-panel state-panel--empty">
@@ -161,14 +165,16 @@
       </v-window>
     </v-card>
 
-    <v-dialog v-model="categoryDialogOpen" max-width="560" persistent>
+    <v-dialog v-model="categoryDialogOpen" max-width="720" persistent scrollable>
       <v-card class="dialog-card">
         <v-card-title>{{ editingId ? 'Рэдагаванне катэгорыі' : 'Новая катэгорыя' }}</v-card-title>
         <v-card-subtitle>Катэгорыя стане часткай меню па змаўчанні для ўсіх карыстальнікаў.</v-card-subtitle>
-        <v-form ref="categoryFormRef" @submit.prevent="saveCategory">
+        <v-form class="category-form" ref="categoryFormRef" @submit.prevent="saveCategory">
           <v-card-text class="dialog-fields">
+            <v-alert v-if="categoryDraft.parentId && accessPolicy.categoryRestricted(categoryDraft.parentId)" type="info" variant="tonal">Бацькоўская катэгорыя абмяжоўвае доступ для святароў.</v-alert>
             <v-switch v-model="categoryDraft.priestOnly" label="Толькі для святароў" color="primary" hide-details />
             <v-select v-model="categoryDraft.parentId" label="Бацькоўская катэгорыя" :items="parentOptions" item-title="name" item-value="id" clearable />
+            <CategoryIconPicker :model-value="categoryDraft.iconKey" @update:model-value="pickIcon" />
             <v-text-field
               v-model="categoryDraft.name"
               label="Назва катэгорыі"
@@ -178,6 +184,8 @@
               autofocus
               :rules="[value => Boolean(value?.trim()) || 'Увядзіце назву']"
             />
+            <v-text-field v-model.number="categoryDraft.order" type="number" label="Парадак" :rules="[v => Number.isFinite(Number(v)) || 'Увядзіце лік']" />
+            <p v-if="categoryDraft.icon || categoryDraft.iconId" class="text-caption">Іконка: {{ categoryDraft.icon || categoryDraft.iconId }} (захоўваецца)</p>
             <v-combobox
               v-model="categoryDraft.tags"
               :items="availableTagNames"
@@ -188,17 +196,54 @@
               chips
               closable-chips
               variant="outlined"
-              :rules="[value => Boolean(value?.length) || 'Дадайце хаця б адзін тэг']"
             />
+            <section class="membership-editor" aria-label="Асобныя малітвы">
+              <h3>Асобныя малітвы · {{ categoryDraft.prayerIds.length }}</h3>
+              <p class="text-caption">Без тэгаў і асобных малітваў катэгорыя будзе пустой папкай. У склад не ўваходзяць малітвы падкатэгорый.</p>
+              <v-btn variant="tonal" class="my-2 text-none" :disabled="prayersLoading || Boolean(prayersError)" @click="openPrayerPicker">Выбраць малітвы</v-btn>
+              <v-alert v-if="prayersError" type="error" variant="tonal">Не ўдалося загрузіць малітвы. Захаванне недаступнае.</v-alert>
+              <h4>Выніковы склад · {{ previewPrayers.length }}</h4>
+              <p v-if="!previewPrayers.length" class="text-caption my-2">Пакуль няма прамых малітваў.</p>
+              <ul class="membership-list">
+                <li v-for="prayer in previewPageItems" :key="prayer.id"><span>{{ getTitle(prayer) }}</span><small>{{ inclusionReason(prayer) }}</small></li>
+              </ul>
+              <v-pagination v-if="previewPrayers.length > 20" v-model="previewPage" :length="Math.ceil(previewPrayers.length / 20)" :total-visible="3" density="comfortable" />
+              <v-alert v-if="missingPrayerIds.length" type="warning" variant="tonal">
+                Неапублікаваныя або выдаленыя спасылкі:
+                <v-chip v-for="id in missingPrayerIds" :key="id" closable @click:close="categoryDraft.prayerIds = categoryDraft.prayerIds.filter(value => value !== id)">{{ id }}</v-chip>
+              </v-alert>
+              <v-alert v-if="storagePreview" :type="storagePreview.tooLarge ? 'error' : 'info'" variant="tonal" class="mt-3">
+                План без запісу: {{ storagePreview.writes }} аперацый са змесцівам (ліміт {{ MAX_ATOMIC_CONTENT_WRITES }}).
+                Малітваў, якія змяняюць доступ: {{ storagePreview.transfers }}.
+                <span v-if="storagePreview.tooLarge">Патрэбна асобная правераная міграцыя; захаванне заблакавана.</span>
+              </v-alert>
+            </section>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
             <v-btn variant="text" class="text-none" :disabled="savingDialog" @click="closeCategoryDialog">Скасаваць</v-btn>
-            <v-btn type="submit" color="primary" variant="flat" class="text-none" :loading="savingDialog">
+            <v-btn type="submit" color="primary" variant="flat" class="text-none" :loading="savingDialog" :disabled="prayersLoading || Boolean(prayersError) || storagePreview?.tooLarge || missingPrayerIds.length > 0">
               Захаваць
             </v-btn>
           </v-card-actions>
         </v-form>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="prayerPickerOpen" max-width="660" scrollable persistent>
+      <v-card class="dialog-card">
+        <v-card-title>Асобныя малітвы · {{ pickerIds.length }}</v-card-title>
+        <v-card-text>
+          <v-text-field v-model="prayerQuery" label="Пошук малітваў па назве" clearable prepend-inner-icon="mdi-magnify" />
+          <v-switch v-model="pickerSelectedOnly" label="Толькі выбраныя" hide-details />
+          <p class="text-caption">Выдаленне асобнай сувязі не прыбірае малітву, якая адпавядае тэгам.</p>
+          <div class="picker-list">
+            <v-checkbox v-for="prayer in pickerPageItems" :key="prayer.id" v-model="pickerIds" :value="prayer.id" :label="getTitle(prayer)" hide-details density="comfortable" />
+          </div>
+          <p v-if="!pickerPrayers.length">Малітвы не знойдзены.</p>
+          <v-pagination v-if="pickerPrayers.length > 30" v-model="pickerPage" :length="Math.ceil(pickerPrayers.length / 30)" :total-visible="3" />
+        </v-card-text>
+        <v-card-actions><v-spacer /><v-btn @click="prayerPickerOpen = false">Скасаваць</v-btn><v-btn color="primary" @click="applyPrayerPicker">Гатова</v-btn></v-card-actions>
       </v-card>
     </v-dialog>
 
@@ -207,12 +252,13 @@
         <v-card-title>Выдаліць катэгорыю?</v-card-title>
         <v-card-text>
           Катэгорыя «{{ categoryToDelete?.name }}» знікне ва ўсіх карыстальнікаў.
-          Малітвы і іх тэгі застануцца без зменаў.
+          Малітвы і іх тэгі застануцца. Старыя спасылкі на катэгорыю будуць прыбраныя.
+          <v-alert v-if="hasChildrenToDelete" type="warning" variant="tonal" class="mt-3">Спачатку перанясіце або выдаліце падкатэгорыі.</v-alert>
         </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn variant="text" class="text-none" @click="categoryToDelete = null">Скасаваць</v-btn>
-          <v-btn color="error" variant="flat" class="text-none" :loading="deletingCategory" @click="removeCategory">Выдаліць</v-btn>
+          <v-btn color="error" variant="flat" class="text-none" :loading="deletingCategory" :disabled="hasChildrenToDelete" @click="removeCategory">Выдаліць</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -222,7 +268,7 @@
         <v-card-title>Выдаліць тэг усюды?</v-card-title>
         <v-card-text>
           <p>Тэг «{{ tagToDelete?.name }}» будзе выдалены з {{ pluralize(tagToDelete?.prayerCount || 0, 'малітвы', 'малітваў', 'малітваў') }}.</p>
-          <p v-if="tagToDelete?.categoryCount">Таксама зменяцца {{ pluralize(tagToDelete.categoryCount, 'катэгорыя', 'катэгорыі', 'катэгорый') }}. Катэгорыі без тэгаў будуць выдалены.</p>
+          <p v-if="tagToDelete?.categoryCount">Таксама зменяцца {{ pluralize(tagToDelete.categoryCount, 'катэгорыя', 'катэгорыі', 'катэгорый') }}. Катэгорыі, падкатэгорыі і асобна прызначаныя малітвы застануцца.</p>
           <strong>Гэта дзеянне нельга адмяніць.</strong>
         </v-card-text>
         <v-card-actions>
@@ -236,19 +282,25 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch, onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNotifier } from '@/composables/useNotifier';
 import { usePrayers } from '@/composables/usePrayers';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { validateCategory } from '@/utils/validators';
+import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
+import CategoryIconPicker from '@/components/prayers/CategoryIconPicker.vue';
+import { DEFAULT_CATEGORY_ICON_KEY, displayCategoryIconKey, normalizeCategoryIconKey, suggestCategoryIconKey } from '@/constants/prayerCategoryIcons';
 import { buildPrayerTagStats } from '@/utils/prayerCategoryAdmin';
 import { updatePrayerCategory } from '@/services/prayerCategoryService';
 import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
+import { directCategoryPrayers, prayerCategoryMatch, MAX_CATEGORY_DEPTH } from '@/utils/prayerCategoryMembership.mjs';
+import { buildCategoryTree, flattenCategoryTree } from '@/utils/prayerCategoryTree.mjs';
+import { prayerStoragePlan, MAX_ATOMIC_CONTENT_WRITES, comparablePrayerValue } from '@/utils/prayerStoragePlan.mjs';
 
 const prayerCategories = usePrayerCategoriesStore();
 const { categories, isLoading: categoriesLoading, error: categoriesError } = storeToRefs(prayerCategories);
-const { prayers, isLoading: prayersLoading, error: prayersError, init: initPrayers } = usePrayers();
+const { prayers, getTitle, isLoading: prayersLoading, error: prayersError, init: initPrayers } = usePrayers();
 const { notifyError, notifySuccess } = useNotifier();
 
 const activeTab = ref('categories');
@@ -263,7 +315,10 @@ const parentOptions = computed(() => categories.value.filter((c) => {
   while (current) {
     if (current.id === editingId.value || seen.has(current.id)) return false;
     seen.add(current.id);
+    if (seen.size >= MAX_CATEGORY_DEPTH) return false;
+    if (!current.parentId) return true;
     current = categories.value.find((p) => p.id === current.parentId);
+    if (!current) return false;
   }
   return true;
 }));
@@ -283,14 +338,61 @@ initPrayers();
 
 const tagStats = computed(() => buildPrayerTagStats(prayers.value, categories.value));
 const availableTagNames = computed(() => tagStats.value.map((tag) => tag.name));
-const filteredCategories = computed(() => {
+const isFiltering = computed(() => Boolean(normalizeQuery(categoryQuery.value)) || accessFilter.value !== 'all');
+const filteredCategories = computed(() => flattenCategoryTree(buildCategoryTree(categories.value), isFiltering.value ? (category) => {
   const query = normalizeQuery(categoryQuery.value);
-  return categories.value.filter((category) => (
-    (accessFilter.value === 'all' || accessPolicy.value.categoryRestricted(category.id) === (accessFilter.value === 'priest'))
-    && (!query || normalizeQuery(category.name).includes(query)
-    || category.tags.some((tag) => normalizeQuery(tag).includes(query)))
-  ));
+  return (accessFilter.value === 'all' || accessPolicy.value.categoryRestricted(category.id) === (accessFilter.value === 'priest'))
+    && (!query || normalizeQuery(category.name).includes(query) || (category.tags || []).some((tag) => normalizeQuery(tag).includes(query)));
+} : null));
+const hasChildrenToDelete = computed(() => categories.value.some((c) => c.parentId === categoryToDelete.value?.id));
+function directCount(category) { return directCategoryPrayers(prayers.value, category).length; }
+const previewPage = ref(1);
+const previewPrayers = computed(() => directCategoryPrayers(prayers.value, { ...categoryDraft.value, id: editingId.value }));
+const previewPageItems = computed(() => previewPrayers.value.slice((previewPage.value - 1) * 20, previewPage.value * 20));
+watch(previewPrayers, () => { previewPage.value = 1; });
+const missingPrayerIds = computed(() => categoryDraft.value.prayerIds.filter((id) => !prayers.value.some((p) => p.id === id)));
+function inclusionReason(prayer) {
+  const match = prayerCategoryMatch(prayer, { ...categoryDraft.value, id: editingId.value });
+  const reason = match.tagged && match.manual ? 'Абодва' : match.tagged ? 'Па тэгах' : match.manual ? 'Дададзена асобна' : '';
+  return [reason, match.legacy ? 'Старая сувязь' : ''].filter(Boolean).join(' · ');
+}
+const storagePreview = computed(() => {
+  if (!categoryDialogOpen.value || prayersLoading.value) return null;
+  const baseline = new Map([['prayers', prayers.value], ['prayerCategories', categories.value]]);
+  const stored = prayerStoragePlan(baseline).desired;
+  const draft = { ...categoryDraft.value, id: editingId.value || '__new_category__' };
+  const after = { prayers: prayers.value, categories: [...categories.value.filter((c) => c.id !== editingId.value), draft] };
+  const plan = prayerStoragePlan(stored, after);
+  const bytes = new globalThis.TextEncoder().encode(JSON.stringify(comparablePrayerValue(plan.operations))).length;
+  return { writes: plan.operations.length, tooLarge: plan.operations.length > MAX_ATOMIC_CONTENT_WRITES || bytes > 7000000,
+    transfers: plan.operations.filter((op) => op.type === 'delete' && ['prayers', 'priestProtectedPrayers'].includes(op.collection)).length };
 });
+const prayerPickerOpen = ref(false);
+const pickerIds = ref([]);
+const prayerQuery = ref('');
+const debouncedPrayerQuery = ref('');
+const pickerSelectedOnly = ref(false);
+const pickerPage = ref(1);
+let queryTimer;
+watch(prayerQuery, (value) => {
+  clearTimeout(queryTimer);
+  queryTimer = setTimeout(() => { debouncedPrayerQuery.value = normalizeQuery(value); }, 250);
+});
+onBeforeUnmount(() => clearTimeout(queryTimer));
+const pickerPrayers = computed(() => prayers.value.filter((p) => (!pickerSelectedOnly.value || pickerIds.value.includes(p.id))
+  && (!debouncedPrayerQuery.value || normalizeQuery(getTitle(p)).includes(debouncedPrayerQuery.value)))
+  .sort((a, b) => getTitle(a).localeCompare(getTitle(b), 'be')));
+watch(pickerPrayers, () => { pickerPage.value = 1; });
+const pickerPageItems = computed(() => pickerPrayers.value.slice((pickerPage.value - 1) * 30, pickerPage.value * 30));
+function openPrayerPicker() {
+  pickerIds.value = [...categoryDraft.value.prayerIds];
+  prayerQuery.value = ''; debouncedPrayerQuery.value = ''; pickerSelectedOnly.value = false; pickerPage.value = 1;
+  prayerPickerOpen.value = true;
+}
+function applyPrayerPicker() {
+  categoryDraft.value.prayerIds = [...new Set(pickerIds.value)];
+  prayerPickerOpen.value = false;
+}
 const filteredTagStats = computed(() => {
   const query = normalizeQuery(tagQuery.value);
   if (!query) return tagStats.value;
@@ -298,8 +400,17 @@ const filteredTagStats = computed(() => {
 });
 
 function emptyCategory() {
-  return { name: '', tags: [], priestOnly: false, parentId: null };
+  return { name: '', tags: [], prayerIds: [], order: 0, priestOnly: false, parentId: null, iconKey: DEFAULT_CATEGORY_ICON_KEY };
 }
+
+const iconPicked = ref(false);
+function pickIcon(key) { categoryDraft.value.iconKey = key; iconPicked.value = true; }
+// For a new category the suggested icon follows the name/tags until the admin picks one.
+watch(() => [categoryDraft.value.name, (categoryDraft.value.tags || []).join('|')], () => {
+  if (editingId.value || iconPicked.value || !categoryDialogOpen.value) return;
+  const { name, tags } = categoryDraft.value;
+  categoryDraft.value.iconKey = name.trim() || tags.length ? suggestCategoryIconKey({ name, tags }) : DEFAULT_CATEGORY_ICON_KEY;
+});
 
 function normalizeQuery(value) {
   return String(value || '').trim().toLocaleLowerCase('be');
@@ -310,7 +421,9 @@ function normalizedDraft() {
     name: categoryDraft.value.name.trim(),
     priestOnly: categoryDraft.value.priestOnly === true,
     parentId: categoryDraft.value.parentId || null,
-    order: categoryDraft.value.order,
+    iconKey: normalizeCategoryIconKey(categoryDraft.value.iconKey) || undefined,
+    order: Number(categoryDraft.value.order),
+    prayerIds: [...categoryDraft.value.prayerIds],
     tags: [...new Set(categoryDraft.value.tags.map((tag) => String(tag).trim()).filter(Boolean))],
   };
 }
@@ -319,9 +432,10 @@ function errorMessage(error, fallback) {
   return error?.message || fallback;
 }
 
-function openCreateDialog() {
+function openCreateDialog(parentId = null) {
   editingId.value = null;
-  categoryDraft.value = emptyCategory();
+  iconPicked.value = false;
+  categoryDraft.value = { ...emptyCategory(), parentId };
   categoryDialogOpen.value = true;
 }
 
@@ -333,7 +447,8 @@ function closeCategoryDialog() {
 
 function openEditDialog(category) {
   editingId.value = category.id;
-  categoryDraft.value = { ...category, tags: [...category.tags], priestOnly: category.priestOnly === true };
+  categoryDraft.value = { ...emptyCategory(), ...category, tags: [...(category.tags || [])], prayerIds: [...(category.prayerIds || [])], priestOnly: category.priestOnly === true, iconKey: displayCategoryIconKey(category) };
+  iconPicked.value = true;
   categoryDialogOpen.value = true;
 }
 
@@ -343,7 +458,7 @@ function retryCategories() {
 }
 
 async function saveCategory() {
-  if (savingDialog.value) return;
+  if (savingDialog.value || prayersLoading.value || prayersError.value || missingPrayerIds.value.length || storagePreview.value?.tooLarge) return;
   const formValidation = await categoryFormRef.value?.validate();
   const category = normalizedDraft();
   const validation = validateCategory(category);
@@ -351,7 +466,7 @@ async function saveCategory() {
   if (validation !== true) return notifyError(validation);
 
   const duplicate = categories.value.some((item) => (
-    item.id !== editingId.value && item.name.localeCompare(category.name, 'be', { sensitivity: 'base' }) === 0
+    item.id !== editingId.value && (item.parentId || null) === category.parentId && item.name.localeCompare(category.name, 'be', { sensitivity: 'base' }) === 0
   ));
   if (duplicate) return notifyError('Катэгорыя з такой назвай ужо існуе');
 
@@ -418,6 +533,22 @@ function pluralize(count, one, few, many) {
 </script>
 
 <style scoped>
+.category-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; }
+.category-counts { color: var(--nav-muted); font-size: .72rem; }
+.category-form { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.dialog-fields { overflow-y: auto; }
+.membership-editor { min-width: 0; margin-top: 12px; }
+.membership-list { list-style: none; padding: 0; }
+.membership-list li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; padding: 10px 0; border-bottom: 1px solid var(--nav-border); overflow-wrap: anywhere; }
+.membership-list small { color: var(--nav-muted); }
+.picker-list { min-height: 100px; }
+.picker-list :deep(.v-label) { white-space: normal; overflow-wrap: anywhere; }
+@media (max-width: 430px) {
+  .category-actions { grid-column: 2 / -1; }
+  .category-title-row h2 { white-space: normal !important; overflow-wrap: anywhere; }
+  .dialog-fields { padding-inline: 16px !important; }
+}
+
 .category-admin { width: min(100%, 980px); padding: 38px 22px 80px !important; color: var(--nav-on-surface); }
 .page-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; margin: 0 4px 26px; }
 .eyebrow { margin: 0 0 8px; color: var(--chrome-accent); font-size: .72rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }

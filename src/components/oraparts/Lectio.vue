@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-card class="ora" flat>
-            <v-card-text class="ora-text">
+            <v-card-text class="ora-text reader-align-office">
                 <p v-if="title" data-liturgical-heading>{{ title }}</p>
                 <alternative-text
                     v-model="choice"
@@ -17,6 +17,8 @@
 
 
 <script setup>
+import { formatOfficeReadingPresentation } from '@/utils/officeReadingPresentation';
+import { normalizeReadingHtml } from '@/utils/liturgicalSourceHtml';
 import { computed, ref } from 'vue';
 import { useReadingChoice } from '@/composables/useReadingChoice';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
@@ -35,7 +37,7 @@ const props = defineProps({
 const optionCount = ref(Infinity);
 const choice = useReadingChoice(() => props.field, () => optionCount.value);
 
-const formattedText = computed(() => markLeadingLiturgicalSubheadings(
-  removeLectionSectionHeading(props.text, props.title),
-));
+const formattedText = computed(() => formatOfficeReadingPresentation(markLeadingLiturgicalSubheadings(
+  normalizeReadingHtml(removeLectionSectionHeading(props.text, props.title)),
+)));
 </script>

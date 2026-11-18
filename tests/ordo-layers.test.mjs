@@ -71,7 +71,7 @@ test('fixedCalendar fixes found by stage 2', () => {
     ['27.02', 'Нарэцкага'], ['05.09', 'Калькуты'], ['17.09', 'Хільдэгарды'], ['05.10', 'Фаўстыны'],
     ['11.10', 'XXIII'], ['10.05', 'Авільскага'], ['29.07', 'Лазара'], ['10.12', 'Ларэтанскай'],
   ].forEach(([date, fragment]) => assert.equal(find(date, fragment).length, 1, `${date} ${fragment}`));
-  assert.equal(find('09.12', 'Куаўхтлатаацына').length, 0, 'Not in approved BY PDF');
+  assert.equal(find('09.12', 'Куаўтлатаацына').length, 0, 'Not in approved BY PDF');
   assert.equal(find('12.12', 'Гвадэлупы').length, 0, 'Not in approved BY PDF');
   assert.equal(find('06.06', 'Баніфацыя').length, 0, 'Vitebsk keeps St Boniface on 5 June');
   const day = resolveLiturgicalDate('2026-07-22', { diocese: 'vitebsk' });

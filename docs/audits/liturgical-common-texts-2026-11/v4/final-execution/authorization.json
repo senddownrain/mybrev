@@ -1,0 +1,30 @@
+{
+  "project": "ibreviaryby",
+  "policy": "pr255-coordinated-bundle-release",
+  "action": "execute",
+  "ownerApproved": true,
+  "reason": "Owner FINAL EXECUTION instruction on 2026-11-17 explicitly authorizes controlled publication of exact PR255/261 7791 fields before the next TEST Flutter release. Retain CAS/updateTime/exact masks/SHA/readback/resume/manifest. No source migrations, Proper/Advent rewrites, global large-patch override or mobile release.",
+  "executionPolicy": "pr255-test-app-before-mobile-release",
+  "targetContractSha256": "894bcbe4724110f33385851c5ffdf774115613b4f465b7a4adc2c8a3e7f9a353",
+  "planBinarySha256": "3f395bd371666099a92158c183349fa0984e01e61b672735c559d76e2ed809d8",
+  "baselineCatalogSha256": "c11ee7fb60c4c5ab5806f8e04fee589575c4e7d364b37675ecad690e3fdc5be9",
+  "releaseEvidenceSha256": "e5f24f7e880d9096181756ffdda46b766c920f22498618c5aa51cb7ce00f48a4",
+  "manifestBaselineSha256": "6f10e2b9111ca11a6d8ff4d005b003dc6bf1cce10d0e4fd9ca5fcd82ef5c41af",
+  "introduceCollections": [
+    "liturgicalProperTexts"
+  ],
+  "maxUncachedDocumentReads": 10,
+  "massManifestReview": {
+    "approved": true,
+    "reviewer": "Project owner authorization in current FINAL EXECUTION task, 2026-11-17",
+    "url": "https://github.com/senddownrain/mybrev/pull/261",
+    "releaseEvidenceSha256": "e5f24f7e880d9096181756ffdda46b766c920f22498618c5aa51cb7ce00f48a4",
+    "bundleReportSha256": "a83002d05726dd60c3a707fd42cf58c27784bc9a693aefdad33562646884521b"
+  },
+  "resumeReceiptSha256": "f52bee6efc0452f4ca1ec1a70474607bb07eb7eb486a4838e61802d8de928edf",
+  "manifestOnlyResume": {
+    "receiptSha256": "f52bee6efc0452f4ca1ec1a70474607bb07eb7eb486a4838e61802d8de928edf",
+    "previousReleaseEvidenceSha256": "db5ffb0dbabae538e0568e2ca39aa71b1e5d032253322d29a45641db07880d23",
+    "reason": "7791/7791 original fields already readback verified. Keep existing Proper vesperPs2 baseline and perform only the original manifest/index transaction, with fresh metadata fence. No data rewrite or full target preflight."
+  }
+}

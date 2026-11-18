@@ -1,0 +1,93 @@
+name: Readings day title live screenshots
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/readings-title-live-capture.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    name: Capture actual published readings UI
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Screenshot published reading header and drawer
+        run: |
+          set -euo pipefail
+          BROWSER_PATH="$(command -v google-chrome || command -v chromium || true)"
+          if [ -z "$BROWSER_PATH" ]; then
+            npx playwright install chromium
+          else
+            export BENCHMARK_BROWSER_PATH="$BROWSER_PATH"
+          fi
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import { chromium } from 'playwright-core';
+
+          const output = 'audit-evidence/readings-day-title/live-20261109';
+          fs.mkdirSync(output, { recursive: true });
+          const browser = await chromium.launch({
+            headless: true,
+            ...(process.env.BENCHMARK_BROWSER_PATH
+              ? { executablePath: process.env.BENCHMARK_BROWSER_PATH } : {}),
+          });
+          const cases = [
+            { name: 'web-mobile-light', width: 390, height: 844, scheme: 'light' },
+            { name: 'web-mobile-dark', width: 390, height: 844, scheme: 'dark' },
+            { name: 'web-desktop', width: 1365, height: 900, scheme: 'light' },
+          ];
+          const audit = [];
+          try {
+            for (const testCase of cases) {
+              const context = await browser.newContext({
+                viewport: { width: testCase.width, height: testCase.height },
+                colorScheme: testCase.scheme, reducedMotion: 'reduce',
+              });
+              try {
+                const page = await context.newPage();
+                const response = await page.goto('https://ibreviaryby.web.app/readings',
+                  { waitUntil: 'domcontentloaded', timeout: 60000 });
+                assert.ok(response && response.status() < 400, 'Hosting response failed');
+                const heading = page.locator('h1.section-page-title');
+                await heading.waitFor({ state: 'visible', timeout: 60000 });
+                assert.equal((await heading.innerText()).trim(), 'Чытанні дня');
+                await page.evaluate(() => document.fonts.ready);
+                await page.screenshot({
+                  path: output + '/' + testCase.name + '-readings.png',
+                  fullPage: false, animations: 'disabled'
+                });
+                await page.getByRole('button', { name: 'Адкрыць меню' }).first().click();
+                const drawerItem = page.locator('.v-navigation-drawer .v-list-item-title')
+                  .getByText('Чытанні дня', { exact: true }).first();
+                await drawerItem.waitFor({ state: 'visible', timeout: 10000 });
+                await page.screenshot({
+                  path: output + '/' + testCase.name + '-drawer.png',
+                  fullPage: false, animations: 'disabled'
+                });
+                audit.push({ ...testCase, heading: 'Чытанні дня', drawer: 'Чытанні дня',
+                  url: page.url(), captured: true });
+                console.log('PASS', testCase.name, 'real web UI captured');
+              } finally { await context.close(); }
+            }
+            fs.writeFileSync(output + '/manifest.json', JSON.stringify(audit, null, 2));
+          } finally { await browser.close(); }
+          NODE
+      - name: Archive real screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: readings-day-title-live-20261109
+          path: audit-evidence/readings-day-title/live-20261109/
+          if-no-files-found: warn
+          retention-days: 30

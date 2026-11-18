@@ -77,8 +77,8 @@ test('English text is taken from MCFL.pdf without invented prayers', () => {
   assert.match(englishText, /Deliver us, Lord, we pray…/);
   assert.match(englishText, /Lord Jesus Christ…/);
   assert.doesNotMatch(englishText, /Eucharistic Prayer II|Preface Dialogue|Penitential Act\s*\(Form/);
-  assert.match(getMassVariant('en').source, /International Commission on English in the Liturgy/);
-  assert.match(getMassVariant('en').source, /Catholic Bishops’ Conference of England and Wales/);
+  assert.equal(getMassVariant('en').source, 'The Roman Missal');
+
 });
 
 test('Belarusian and Latin markers match their real section blocks', () => {

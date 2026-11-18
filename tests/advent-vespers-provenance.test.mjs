@@ -5,6 +5,8 @@ import zlib from 'node:zlib';
 import moment from '../src/utils/moment-be.js';
 import { OFFICE_CONTENT_FIELDS } from '../src/constants/officeFields.js';
 import reviewed from '../src/data/liturgical/advent-vespers-by.json' with { type: 'json' };
+import benedictus from '../src/data/liturgical/advent-benedictus-by.json' with { type: 'json' };
+import { selectAdventBenedictus } from '../src/utils/adventBenedictus.js';
 import { applyReviewedAdventVespers } from '../src/utils/adventVespers.js';
 import { contentFor } from '../scripts/liturgy/lib/snapshot-content.mjs';
 import { checkAdventProvenance } from '../scripts/liturgy/lib/advent-provenance.mjs';
@@ -79,7 +81,11 @@ test('2025–2032, all dioceses: every late-Advent source assertion, Sunday rota
         if (day === 21 && moment(date).day() !== 0) {
           assert.ok(c.dayOptions[0].ordo.commemorations.some((item) => item.id === 'sv-peter-canisius'));
         }
-        assert.equal(c.dayOptions[0].day.laudesAntBen, source.daysById.get(`advent-${day}-12`).laudesAntBen);
+        const alternative = moment(date).day() === 0 && c.context.periodWeek === 4 && ![21, 23, 24].includes(day);
+        assert.equal(c.dayOptions[0].day.laudesAntBen, alternative
+          ? selectAdventBenedictus(benedictus.value, c.resolved.readingCycle.sunday)
+          : source.daysById.get(`advent-${day}-12`).laudesAntBen);
+        assert.equal(c.dayOptions[0].day._fieldSources.laudesAntBen.document, alternative ? 'advent-w4-d1' : `advent-${day}-12`);
         checked++;
       }
       const first = evening(`${year}-12-${sundays[year - 2025] - 1}`, diocese);

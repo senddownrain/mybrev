@@ -37,19 +37,10 @@
 | 17.09 | Св. Хільдэгарды Бінгенскай, панны і доктара Касцёла | memoria-ad-libitum | — | doctors-of-church, virgins | выведзена з назвы |
 | 05.10 | Св. Фаўстыны Кавальскай, панны | memoria-ad-libitum | — | virgins | выведзена з назвы |
 | 11.10 | Св. Яна XXIII, папы | memoria-ad-libitum | — | pastors | выведзена з назвы |
-| 09.12 | Св. Яна Дыега Куаўхтлатаацына | memoria-ad-libitum | — | holy-men | пацверджана |
+| 09.12 | Св. Хуана Дыега Куаўтлатаацына | memoria-ad-libitum | — | holy-men | пацверджана |
 | 10.12 | Найсв. Панны Марыі Ларэтанскай | memoria-ad-libitum | — | blessed-virgin-mary | выведзена з назвы |
 | 12.12 | Найсв. Панны Марыі з Гвадэлупы | memoria-ad-libitum | — | blessed-virgin-mary | выведзена з назвы |
 | 26.10 | Бл. Цэліны Бажэнцкай, законніцы | memoria-ad-libitum | vitebsk | religious | выведзена з назвы |
-| 26.03 | Св. Дызмы, Добрага Злачынцы | memoria-ad-libitum | pinsk | holy-men | пацверджана |
-| 04.05 | Св. Фларыяна, мучаніка | memoria-ad-libitum | pinsk | martyr-one | выведзена з назвы |
-| 27.06 | Маці Божай Нястомнай Дапамогі | memoria-ad-libitum | pinsk | blessed-virgin-mary | выведзена з назвы |
-| 20.07 | Бл. Чэслава, прэзбітэра | memoria-ad-libitum | pinsk | pastors | выведзена з назвы |
-| 17.08 | Св. Яцэка, прэзбітэра | memoria-ad-libitum | pinsk | pastors | выведзена з назвы |
-| 22.08 | Найсв. Панны Марыі Лагішынскай, апякункі Пінскай дыяцэзіі | solemnitas | pinsk | blessed-virgin-mary | выведзена з назвы |
-| 04.09 | Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц | memoria-ad-libitum | pinsk | martyrs-many, virgins | выведзена з назвы |
-| 13.10 | Бл. Ганарата Казмінскага, прэзбітэра | memoria-ad-libitum | pinsk | pastors | выведзена з назвы |
-| 04.12 | Св. Барбары, панны і мучаніцы | memoria-ad-libitum | pinsk | martyr-one, virgins | выведзена з назвы |
 | 23.01 | Бл. Вінцэнта Леванюка і 12 паплечнікаў, мучанікаў з Пратуліна | memoria-ad-libitum | grodno | martyrs-many, martyr-one | выведзена з назвы |
 | 24.05 | Найсв. Панны Марыі, Успамогі Вернікаў | memoria | grodno | blessed-virgin-mary | выведзена з назвы |
 | 08.06 | Св. Ядвігі, каралевы | memoria | grodno | holy-women | пацверджана |
@@ -64,6 +55,15 @@
 | 19.11 | Бл. Саламеі, панны | memoria-ad-libitum | grodno | virgins | выведзена з назвы |
 | 25.11 | Бл. Марыі ад Езуса Добрага Пастыра, панны | memoria-ad-libitum | grodno | pastors, virgins | выведзена з назвы |
 | 04.12 | Св. Барбары, панны і мучаніцы | memoria-ad-libitum | grodno | martyr-one, virgins | выведзена з назвы |
+| 26.03 | Св. Дызмы, Добрага Злачынцы | memoria-ad-libitum | pinsk | holy-men | пацверджана |
+| 04.05 | Св. Фларыяна, мучаніка | memoria-ad-libitum | pinsk | martyr-one | выведзена з назвы |
+| 27.06 | Маці Божай Нястомнай Дапамогі | memoria-ad-libitum | pinsk | blessed-virgin-mary | выведзена з назвы |
+| 20.07 | Бл. Чэслава, прэзбітэра | memoria-ad-libitum | pinsk | pastors | выведзена з назвы |
+| 17.08 | Св. Яцэка, прэзбітэра | memoria-ad-libitum | pinsk | pastors | выведзена з назвы |
+| 22.08 | Найсв. Панны Марыі Лагішынскай, апякункі Пінскай дыяцэзіі | solemnitas | pinsk | blessed-virgin-mary | выведзена з назвы |
+| 04.09 | Бл. Марыі Стэлы і паплечніц, паннаў і мучаніц | memoria-ad-libitum | pinsk | martyrs-many, virgins | выведзена з назвы |
+| 13.10 | Бл. Ганарата Казмінскага, прэзбітэра | memoria-ad-libitum | pinsk | pastors | выведзена з назвы |
+| 04.12 | Св. Барбары, панны і мучаніцы | memoria-ad-libitum | pinsk | martyr-one, virgins | выведзена з назвы |
 
 ## Нявырашаныя спасылкі ў крыніцах
 

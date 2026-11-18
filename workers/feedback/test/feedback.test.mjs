@@ -211,3 +211,49 @@ test('retention purge removes closed items older than 180 days and expired rate 
   assert.equal(ctx.env.DB.raw.prepare('SELECT COUNT(*) n FROM feedback').get().n, 4);
   assert.equal(ctx.env.DB.raw.prepare('SELECT COUNT(*) n FROM feedback_events').get().n, 0);
 });
+
+test('same requestId with another message is refused (409), an identical retry stays idempotent', async () => {
+  const ctx = setup();
+  const requestId = '11111111-2222-3333-4444-555555555555';
+  const first = await (await call(ctx, 'POST', '/api/feedback', { body: good({ requestId, body: 'first text' }) })).json();
+  const same = await call(ctx, 'POST', '/api/feedback', { body: good({ requestId, body: 'first text' }) });
+  assert.equal(same.status, 201); assert.equal((await same.json()).id, first.id);
+  const changed = await call(ctx, 'POST', '/api/feedback', { body: good({ requestId, body: 'edited text' }) });
+  assert.equal(changed.status, 409); assert.equal((await changed.json()).error, 'request_id_reused');
+  assert.equal(ctx.env.DB.raw.prepare('SELECT COUNT(*) n FROM feedback').get().n, 1);
+});
+
+test('export: role scope, no personal data, redaction, CSV safety, validation, auth', async () => {
+  const ctx = setup();
+  await seed(ctx);
+  await submit(ctx, { category: 'text_error', body: '=HYPERLINK("x") mail me a.b@mail.by or +375 29 123-45-67 see https://x.example/y?t=1', email: 'secret@person.by', context: { kind: 'prayer', id: 'p9', title: '=cmd', path: '/prayer/p9' } });
+  assert.equal((await call(ctx, 'GET', '/api/admin/export')).status, 401);
+  const nobody = makeEnv({ [NOBODY]: 'unknown' });
+  assert.equal((await call(nobody, 'GET', '/api/admin/export', { token: as(NOBODY) })).status, 403);
+
+  const adminJson = await (await call(ctx, 'GET', '/api/admin/export', { token: as(ADMIN) })).json();
+  assert.equal(adminJson.role, 'admin');
+  assert.ok(adminJson.items.length >= 3 && adminJson.items.every((r) => ['text_error', 'content_suggestion'].includes(r.category)));
+  const superJson = await (await call(ctx, 'GET', '/api/admin/export?category=technical_bug', { token: as(SUPER) })).json();
+  assert.equal(superJson.items.length, 1);
+  const adminOverride = await (await call(ctx, 'GET', '/api/admin/export?category=technical_bug', { token: as(ADMIN) })).json();
+  assert.equal(adminOverride.items.length, 0); // scope is enforced before the URL filter
+
+  const dump = JSON.stringify([adminJson, superJson]);
+  assert.ok(!/secret@person\.by|person@example\.com|a\.b@mail\.by|375 29|123-45-67|x\.example/.test(dump), 'no e-mail, phone or link leaks');
+  assert.ok(!('contactEmail' in adminJson.items[0]) && !('email' in adminJson.items[0]));
+  const msg = adminJson.items.find((r) => r.context_id === 'p9').message;
+  assert.match(msg, /\[email\]/); assert.match(msg, /\[phone\]/); assert.match(msg, /\[link\]/);
+  assert.ok(!('app_version' in adminJson.items[0]) && 'app_version' in superJson.items[0]);
+
+  const csv = await call(ctx, 'GET', '/api/admin/export?format=csv', { token: as(SUPER) });
+  assert.equal(csv.status, 200); assert.match(csv.headers.get('content-type'), /text\/csv/); assert.match(csv.headers.get('content-disposition'), /attachment/);
+  const text = await csv.text();
+  assert.ok(!/(^|,)=cmd/.test(text) && text.includes("'=cmd"), 'formula cells are neutralised');
+  assert.ok(text.endsWith('\r\n') && text.split('\r\n')[0].startsWith('id,date,category'));
+
+  for (const bad of ['format=xml', 'status=nope', 'category=x', 'platform=pc', 'from=2026-13-40', 'to=yesterday']) {
+    assert.equal((await call(ctx, 'GET', `/api/admin/export?${bad}`, { token: as(SUPER) })).status, 400, bad);
+  }
+  assert.equal((await call(ctx, 'GET', '/api/admin/export?from=2999-01-01', { token: as(SUPER) }).then((r) => r.json())).items.length, 0);
+});

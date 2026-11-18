@@ -423,17 +423,16 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   border-top: 1px solid var(--nav-border);
 }
 
+// All structural labels (including titles contained in legacy reading HTML)
+// share a single type scale. Metadata below a title keeps its own smaller size.
+.liturgical-hour-column {
+  --office-section-font-size: calc(0.94rem * var(--font-size-multiplier, 1));
+  --office-section-letter-spacing: 0.055em;
+}
+
 .liturgical-hour-column .ora-title,
 .liturgical-hour-column .ora-header {
   padding: 30px 28px 9px !important;
-  color: var(--rubric-color);
-  font-family: var(--reader-display-font-family) !important;
-  font-size: calc(0.94rem * var(--font-size-multiplier, 1)) !important;
-  font-weight: 700 !important;
-  line-height: 1.25 !important;
-  letter-spacing: 0.055em !important;
-  text-transform: uppercase;
-  white-space: normal;
 }
 
 .liturgical-hour-column .ora-text {
@@ -474,15 +473,23 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   margin-bottom: 1.15em;
 }
 
-.liturgical-hour-column .ora-text p[data-liturgical-heading] {
+.liturgical-hour-column .ora-text p[data-liturgical-heading],
+.liturgical-hour-column .ora-text div[data-liturgical-heading] {
   margin: 0 0 0.8em;
-  color: var(--rubric-color);
-  font-family: var(--reader-display-font-family);
-  font-size: calc(0.94rem * var(--font-size-multiplier, 1));
-  font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: 0.045em;
-  text-transform: uppercase;
+  padding: 0;
+  text-align: left !important;
+}
+
+// Source-provided red/bold spans must not silently change the heading's
+// typography; only the dedicated structural title receives this override.
+.liturgical-hour-column .ora-text p[data-liturgical-heading] :is(span, b, strong, i, em) {
+  color: inherit !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-style: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
 }
 
 .liturgical-hour-column .ora-text [data-liturgical-reference] {
@@ -516,6 +523,13 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   background: var(--rubric-soft);
   font-weight: 650;
   line-height: 1.55;
+}
+
+// Liturgical labels (1 ант., Ант. да песні Захарыі) stay rubric-red
+// even when the legacy database stores them as plain text.
+.prayer-content-area .liturgical-hour-column .ora-ant .ora-antiphon-label,
+.prayer-content-area .liturgical-hour-column .ora-psalm .ora-antiphon-label {
+  color: var(--rubric-color) !important;
 }
 
 .liturgical-hour-column .ora-ant + .ora-psalm {
@@ -1006,6 +1020,150 @@ $base-content-font-size: 1rem; // 16px по умолчанию
   overflow-wrap: anywhere;
   word-break: normal;
 }
+
+// Only continuous prose in the canonical Hours uses the reader alignment
+// preference. Psalms, antiphons, hymns, responsories, headings and rubrics
+// retain their established layout. This opt-in overrides legacy left !important
+// rules above, without changing the source HTML or other liturgical parts.
+.prayer-content-area .liturgical-hour-column .ora .ora-text.reader-align-office,
+.prayer-content-area .liturgical-hour-column .ora .ora-text.reader-align-office .alternative-text [role="tabpanel"],
+.prayer-content-area .liturgical-hour-column .ora .ora-text.reader-align-office .alternative-text [role="tabpanel"] > div,
+.prayer-content-area .liturgical-hour-column .ora .ora-text.reader-align-office .alternative-text [role="tabpanel"] p:not(
+  [data-liturgical-heading],
+  [data-liturgical-subheading],
+  .liturgical-rubric,
+  .liturgical-reference,
+  .liturgical-service-heading,
+  .liturgical-reading-reference,
+  .responsory-turn,
+  .office-reading-pericope-title,
+  .ora-sub
+) {
+  text-align: var(--reader-text-alignment, justify) !important;
+  text-align-last: start;
+  hyphens: auto;
+  word-break: normal;
+}
+
+// Celebration commentary can appear either expanded in the day hero or
+// inline below the day title. Its label and toggle are not prose.
+.prayer-content-area .day-title-comment.reader-align-comment,
+.prayer-content-area .day-title-comment.reader-align-comment :is(p, div):not(
+  .liturgical-rubric,
+  [data-liturgical-heading],
+  [data-liturgical-subheading]
+) {
+  text-align: var(--reader-text-alignment, justify) !important;
+  text-align-last: start;
+  hyphens: auto;
+  word-break: normal;
+}
 @media (prefers-reduced-motion: reduce) {
   .expand-transition-enter-active, .expand-transition-leave-active { transition-duration: 0s !important; }
+}
+
+
+// Quiet Book / liturgical reader: an optional plain-text appearance for
+// antiphons and communal refrains. The decorated original remains the default.
+// Do not affect psalm verses, rubrics, reading highlights or liturgical colours.
+html[data-liturgical-emphasis="off"] .liturgical-hour-column .ora-ant,
+html[data-liturgical-emphasis="off"] .liturgical-hour-column .ora-text .intercessions__refrain,
+html[data-liturgical-emphasis="off"] .parsed-reading .psalm-refrain,
+html[data-liturgical-emphasis="off"] .parsed-reading .alleluia-acclamation {
+  // With no card/stripe there is no reason to indent the liturgical line.
+  // Align with the surrounding psalm strophes and reading text.
+  padding: 0;
+  margin-inline: 0;
+  text-align: left;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--reader-ink);
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+// Keep comfortable pauses around text-only refrains, including repetitions.
+html[data-liturgical-emphasis="off"] .liturgical-hour-column .ora-ant {
+  margin-block: 14px 20px;
+}
+html[data-liturgical-emphasis="off"] .liturgical-hour-column .ora-text .intercessions__refrain {
+  margin: 0.4rem 0 1.3rem;
+}
+html[data-liturgical-emphasis="off"] .parsed-reading .psalm-refrain,
+html[data-liturgical-emphasis="off"] .parsed-reading .alleluia-acclamation {
+  margin-block: 14px 18px;
+}
+
+// Neutral labels distinguish communal responses without a coloured callout.
+// Traditional red source rubrics and cadence symbols retain their meaning.
+html[data-liturgical-emphasis="off"] .parsed-reading .psalm-refrain__label,
+html[data-liturgical-emphasis="off"] .parsed-reading .alleluia-acclamation__label {
+  color: var(--reader-muted);
+  font-weight: 700;
+}
+
+.liturgical-hour-column .ora-title,
+.liturgical-hour-column .ora-header,
+.liturgical-hour-column .ora-text p[data-liturgical-heading],
+.liturgical-hour-column .ora-text div[data-liturgical-heading] {
+  color: var(--rubric-color) !important;
+  font-family: var(--reader-display-font-family) !important;
+  font-size: var(--office-section-font-size) !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  letter-spacing: var(--office-section-letter-spacing) !important;
+  text-transform: uppercase;
+  white-space: normal;
+}
+
+// Shared Office reading/responsory presentation. References are separate flex
+// items: when the combined intrinsic widths do not fit, the reference wraps
+// as a whole item and retains its right edge. Long references can wrap too.
+.liturgical-hour-column .ora-text [data-liturgical-heading]:has([data-office-label]) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2em 1em;
+}
+.liturgical-hour-column .ora-text [data-office-label] {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.liturgical-hour-column .ora-text [data-liturgical-heading] [data-office-reference],
+.liturgical-hour-column .ora-text [data-office-reference],
+.liturgical-hour-column .ora-text [data-office-reference] *,
+.liturgical-hour-column .ora-text [data-liturgical-heading] [data-office-reference] * {
+  color: var(--rubric-color) !important;
+  font-family: var(--reader-font-family) !important;
+  font-size: var(--office-section-font-size) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  text-align: right !important;
+  line-height: 1.45 !important;
+  overflow-wrap: anywhere;
+}
+.liturgical-hour-column .ora-text [data-office-reference] {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  margin-left: auto !important;
+}
+.liturgical-hour-column .ora-text [data-office-response] {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+.liturgical-hour-column .ora-text [data-office-response-gap] {
+  display: none;
+}
+.liturgical-hour-column .ora-text [data-office-speaker],
+.liturgical-hour-column .ora-text [data-office-speaker] * {
+  color: var(--rubric-color) !important;
 }

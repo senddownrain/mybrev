@@ -1,0 +1,18 @@
+main base: 5f36981
+Full npm test:
+ℹ tests 1253
+ℹ suites 0
+ℹ pass 1234
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 19
+ℹ todo 0
+ℹ duration_ms 43813.022597
+
+Final targeted suite: 22 PASS / 0 FAIL (includes HTML entity-only missing-text regression).
+ESLint: PASS (no warnings).
+Production build: PASS.
+Offline doxology audit --check: PASS.
+Final Chromium: 64 PASS / 0 FAIL.
+GitHub Actions: blocked before any steps by account billing/spending limit; see PR #221.
+No production Firestore writes or content manifest publication.

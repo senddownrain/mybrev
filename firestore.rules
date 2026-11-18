@@ -66,11 +66,68 @@ service cloud.firestore {
       return request.resource.data.get('priestOnly', false) == false
         && request.resource.data.get('effectivePriestOnly', false) == false;
     }
+    // Canonical names remain recognized by the import pipeline, while Web admins
+    // may edit attribution freely (up to 500 characters). Preserve unchanged
+    // historical longer values without opening access to non-admin writers.
+    // BEGIN GENERATED PRAYER SOURCE NAMES
+    function canonicalPrayerSource(value) {
+      return value is string && value in [
+        "",
+        "Новы Запавет",
+        "Рымскі Імшал",
+        "Літургія гадзін",
+        "Кампендый ККК",
+        "Парадак хросту дзяцей",
+        "Парадак пакаяння",
+        "Парадак намашчэння хворых",
+        "Святая Камунія і культ эўхарыстычнай таямніцы па-за Імшой",
+        "Лекцыянарый",
+        "Літургічная агенда",
+        "Божа, мы Цябе ўслаўляем",
+        "Ойча наш",
+        "Прасіце і атрымаеце",
+        "Бог добры",
+        "Каб пазналі Цябе",
+        "Біблія (Чарняўскі)",
+        "Библия. Синодальный перевод",
+        "The Roman Missal",
+        "Catholic.by",
+        "Ave Maria",
+        "katecheta.narod.ru",
+        "kasciolhomiel.by",
+        "Святое Пісанне"
+      ];
+    }
+    // END GENERATED PRAYER SOURCE NAMES
+    function editablePrayerSource(value) {
+      return value is string && value.size() <= 500;
+    }
+    function validSourceField(field) {
+      return !(field in request.resource.data)
+        || canonicalPrayerSource(request.resource.data[field])
+        || editablePrayerSource(request.resource.data[field])
+        || (request.method == 'update' && field in resource.data
+          && request.resource.data[field] == resource.data[field]);
+    }
+    function validSourceFields() {
+      return validSourceField('source') && validSourceField('sourceBook');
+    }
+    function validPrayerSourceField(field, counterpart) {
+      return validSourceField(field)
+        || (request.method == 'create' && exists(counterpart)
+          && field in get(counterpart).data
+          && request.resource.data[field] == get(counterpart).data[field]);
+    }
+    function validPrayerSources(counterpart) {
+      return validPrayerSourceField('source', counterpart)
+        && validPrayerSourceField('sourceBook', counterpart);
+    }
     match /admins/{uid} { allow read: if own(uid); allow write: if false; }
     // Physical separation preserves old Flutter queries with no new filters.
     match /prayers/{id} {
       allow read: if true;
-      allow create, update: if contentWrite() && publicContent();
+      allow create, update: if contentWrite() && publicContent()
+        && validPrayerSources(/databases/$(database)/documents/priestProtectedPrayers/$(id));
       allow delete: if contentWrite();
     }
     match /prayerCategories/{id} {
@@ -80,11 +137,73 @@ service cloud.firestore {
     }
     match /priestProtectedPrayers/{id} {
       allow read: if isAdmin() || hasGrant();
-      allow create, update, delete: if contentWrite();
+      allow create, update: if contentWrite()
+        && validPrayerSources(/databases/$(database)/documents/prayers/$(id));
+      allow delete: if contentWrite();
     }
     match /priestProtectedCategories/{id} {
       allow read: if isAdmin() || hasGrant();
       allow create, update, delete: if contentWrite();
+    }
+    // Closed prayer drafts: admin-only in both directions (never a flag inside public `prayers`,
+    // which older Flutter clients read in full). `admin` and `superadmin` are equal here; a priest
+    // grant gives no access. Publishing is a single transaction that also writes the public prayer.
+    // Historical rights/import fields remain allowed for editing old documents; they are not publication gates.
+    function draftKeys() {
+      return ['draftId', 'sourceId', 'sourceBook', 'sourceEdition', 'sourceSha256', 'sourcePageSpan', 'pdfPageStart', 'pdfPageEnd',
+        'printedPageStart', 'printedPageEnd', 'originalEntryId', 'title', 'text', 'textFormat', 'source', 'tags', 'categoryIds',
+        'copyrightNotices', 'rightsStatus', 'priestOnly', 'originBatch', 'origin', 'reason', 'flagReasons', 'possibleDuplicateIds',
+        'status', 'version', 'fingerprint', 'createdBy', 'createdAt', 'updatedAt', 'reviewedBy', 'reviewedAt', 'publishedBy',
+        'publishedAt', 'targetPrayerId', 'notes', 'rightsBasis', 'rightsConfirmedBy', 'rightsConfirmedAt'];
+    }
+    function validDraftFields(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() <= 200
+        && data.text is string && data.text.size() > 0 && data.text.size() <= 200000
+        && data.textFormat == 'mybrev-markdown'
+        && data.tags is list && data.tags.size() <= 40
+        && data.status in ['draft', 'published']
+        && data.get('priestOnly', false) is bool
+        && data.version is int;
+    }
+    function validDraft(data) {
+      return data.keys().hasOnly(draftKeys()) && validDraftFields(data);
+    }
+    // Historical imported drafts can contain extra fields not written by today's editor.
+    // Keep them immutable, but do not reject an admin's edit or publish solely because
+    // a legacy field exists. New drafts still require the strict draftKeys() allowlist.
+    function validDraftEdit(data) {
+      return validDraftFields(data)
+        && data.diff(resource.data).affectedKeys().hasOnly([
+          'title', 'text', 'source', 'sourceBook', 'sourceEdition', 'tags',
+          'categoryIds', 'priestOnly', 'notes', 'status', 'version', 'updatedAt',
+          'publishedBy', 'publishedAt', 'targetPrayerId'
+        ]);
+    }
+    function draftPublishedTarget(id, data) {
+      return data.targetPrayerId is string
+        && data.publishedBy == request.auth.uid && data.publishedAt == request.time
+        && getAfter(/databases/$(database)/documents/priestContentControl/state).data.version == contentVersion() + 1
+        && ((existsAfter(/databases/$(database)/documents/prayers/$(data.targetPrayerId))
+            && getAfter(/databases/$(database)/documents/prayers/$(data.targetPrayerId)).data.get('sourceDraftId', '') == id)
+          || (existsAfter(/databases/$(database)/documents/priestProtectedPrayers/$(data.targetPrayerId))
+            && getAfter(/databases/$(database)/documents/priestProtectedPrayers/$(data.targetPrayerId)).data.get('sourceDraftId', '') == id));
+    }
+    match /prayerDrafts/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() && validDraft(request.resource.data) && validSourceFields() && request.resource.data.version == 1
+        && request.resource.data.status == 'draft';
+      allow update: if isAdmin() && validDraftEdit(request.resource.data) && validSourceFields()
+        && resource.data.status != 'published'
+        && request.resource.data.version == resource.data.version + 1
+        && (request.resource.data.status != 'published' || draftPublishedTarget(id, request.resource.data));
+      allow delete: if false;
+      match /audit/{entry} {
+        allow read: if isAdmin();
+        allow create: if isAdmin() && request.resource.data.keys().hasOnly(['action', 'uid', 'at', 'fromStatus', 'toStatus', 'version', 'note', 'targetPrayerId'])
+          && request.resource.data.uid == request.auth.uid && request.resource.data.at == request.time
+          && request.resource.data.action is string && request.resource.data.action.size() <= 40;
+        allow update, delete: if false;
+      }
     }
     match /priestContentControl/state {
       allow read: if isAdmin();
@@ -139,7 +258,7 @@ service cloud.firestore {
     function explicitlyRuled(collection) {
       return collection in ['admins', 'prayers', 'prayerCategories', 'priestProtectedPrayers', 'priestProtectedCategories',
         'priestAccess', 'priestAccessPublic', 'priestDeviceGrants', 'priestActivationClaims', 'priestContentControl', 'priestContentMigrationBackups',
-        'priestInstallations', 'priestActivationAttempts'];
+        'priestInstallations', 'priestActivationAttempts', 'prayerDrafts'];
     }
     // Overlapping allows are OR, so every private namespace is excluded here.
     match /{collection}/{document=**} {

@@ -1,0 +1,97 @@
+{
+  "date": "2026-06-13",
+  "office": "First Vespers of XI Sunday in Ordinary Time",
+  "readOnly": true,
+  "saturdayFound": true,
+  "sundayFound": true,
+  "fields": [
+    {
+      "field": "vesperHymn",
+      "selectedFrom": "saturday.vesper",
+      "status": "SOURCE_NOT_PROVIDED",
+      "selectedCharacters": 667,
+      "selectedHash": "b573dc792da740f2"
+    },
+    {
+      "field": "vesperAnt1",
+      "selectedFrom": "saturday.vesper",
+      "status": "SOURCE_NOT_PROVIDED",
+      "selectedCharacters": 79,
+      "selectedHash": "854c6bf3ffd72276"
+    },
+    {
+      "field": "vesperAnt2",
+      "selectedFrom": "saturday.vesper",
+      "status": "SOURCE_NOT_PROVIDED",
+      "selectedCharacters": 126,
+      "selectedHash": "a5d2f5b312e03b4c"
+    },
+    {
+      "field": "vesperAnt3",
+      "selectedFrom": "saturday.vesper",
+      "status": "SOURCE_NOT_PROVIDED",
+      "selectedCharacters": 89,
+      "selectedHash": "1a82e7b9f812512c"
+    },
+    {
+      "field": "vesperPs1",
+      "selectedFrom": "saturday.vesper",
+      "status": "SOURCE_NOT_PROVIDED",
+      "selectedCharacters": 635,
+      "selectedHash": "1507ad5c8b6dbe94"
+    },
+    {
+      "field": "vesperPs2",
+      "selectedFrom": "saturday.vesper",
+      "status": "SOURCE_NOT_PROVIDED",
+      "selectedCharacters": 726,
+      "selectedHash": "4e6a0ee9dafea6fd"
+    },
+    {
+      "field": "vesperPs3",
+      "selectedFrom": "saturday.vesper",
+      "status": "SOURCE_NOT_PROVIDED",
+      "selectedCharacters": 858,
+      "selectedHash": "c3b5179467b9a35c"
+    },
+    {
+      "field": "vesperR",
+      "selectedFrom": "saturday.vesper",
+      "status": "SOURCE_NOT_PROVIDED",
+      "selectedCharacters": 621,
+      "selectedHash": "8c9344fb5e508186"
+    },
+    {
+      "field": "vesperAntMag",
+      "selectedFrom": "saturday.vesper",
+      "status": "SOURCE_NOT_PROVIDED",
+      "selectedCharacters": 135,
+      "selectedHash": "a78b4567ac71e2ed"
+    },
+    {
+      "field": "vesperInter",
+      "selectedFrom": "saturday.vesper",
+      "status": "SOURCE_NOT_PROVIDED",
+      "selectedCharacters": 838,
+      "selectedHash": "12b966cc68de845c"
+    },
+    {
+      "field": "vesperPr",
+      "selectedFrom": "saturday.vesper",
+      "status": "SOURCE_NOT_PROVIDED",
+      "selectedCharacters": 374,
+      "selectedHash": "601151c17cad1173"
+    }
+  ],
+  "counts": {
+    "SOURCE_NOT_PROVIDED": 11
+  },
+  "sourceIssues": [
+    {
+      "code": "INCONSISTENT_SUNDAY_COLLECT",
+      "saturdayField": "days/ordinary-w10-d7.vesperPr",
+      "sundayField": "days/ordinary-w11-d1.vesperPr"
+    }
+  ],
+  "verdict": "BLOCKED"
+}

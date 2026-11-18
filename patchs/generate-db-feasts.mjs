@@ -22,8 +22,11 @@
  */
 
 import fs from 'node:fs/promises';
+import { inventoryDocument } from '../scripts/liturgy/lib/common-text-audit.mjs';
+import { expandApprovedEditorial } from '../scripts/liturgy/lib/editorial-policy.mjs';
 import path from 'node:path';
 import process from 'node:process';
+import { LOCAL_CALENDAR_REFERENCES } from '../src/data/ordo/layers.js';
 import { fixedCalendar } from '../src/constants/fixedCalendar.js';
 import {
   buildFixedComparisonKey,
@@ -561,7 +564,9 @@ function buildScaffolds({ definitions, outputs, report }) {
     return (places.length ? places : ['']).map((place) => `${place || '-'}|${output._celebrationId}`);
   }));
   const scaffolds = [];
-  const add = ({ id, title, rank, dateRule, place }) => {
+  const add = ({ id, title, rank, dateRule, place, daysRef, contentStatus }) => {
+    if (contentStatus?.proper === 'missing') return;
+    if (daysRef?.dayIds?.some(ref => outputs.some(({output}) => output._id === ref && output._celebrationId === id))) return;
     if (dateRule?.type !== 'fixed' || PROPER_OF_SEASONS.has(id)) return;
     const date = ddmm(dateRule);
     if (covered.has(key(date, place, id)) || (place && coveredAnyDate.has(`${place}|${id}`))) return;
@@ -609,9 +614,17 @@ function buildScaffolds({ definitions, outputs, report }) {
   // Coverage is decided by the source material only (never by `dayIds`, which
   // are derived from this output).
   definitions.celebrations.filter((doc) => doc.daysRef?.source === 'fixed')
-    .forEach((doc) => add({ id: doc.id, title: doc.title, rank: doc.rank, dateRule: doc.dateRule, place: '' }));
+    .forEach((doc) => add({ id: doc.id, title: doc.title, rank: doc.rank, dateRule: doc.dateRule, daysRef: doc.daysRef, contentStatus: doc.contentStatus, place: '' }));
   definitions.dioceseOverrides.filter((doc) => doc.action === 'add' && doc.daysRef?.source === 'fixed')
-    .forEach((doc) => add({ id: doc.celebrationId, title: doc.title, rank: doc.rank, dateRule: doc.dateRule, place: doc.dioceseId }));
+    .forEach((doc) => add({ id: doc.celebrationId, title: doc.title, rank: doc.rank, dateRule: doc.dateRule, daysRef: doc.daysRef, contentStatus: doc.contentStatus, place: doc.dioceseId }));
+  // These source-confirmed local additions are not all materialized in an
+  // older bundled definitions snapshot. Regenerating content must not delete
+  // their identity-only scaffolds or their index bindings.
+  LOCAL_CALENDAR_REFERENCES.forEach((doc) => {
+    const [month, day] = doc.mmdd.split('-').map(Number);
+    add({ id: doc.id, title: doc.title, rank: doc.rank,
+      dateRule: { type: 'fixed', month, day }, place: doc.dioceseId });
+  });
   return scaffolds;
 }
 
@@ -741,6 +754,15 @@ async function main() {
   report.duplicateIds = [...outputIds.entries()].filter(([, files]) => files.length > 1).map(([_id, files]) => ({ _id, files }));
 
   for (const [dir, list] of [[OUTPUT_DIR, allOutputs], [TEMPLATES_OUTPUT_DIR, templateOutputs]]) {
+    // Cache-recovered Proper follows exactly the same scoped editorial policy.
+    // Do not rewrite the cached historical snapshot or materialize a Common.
+    for (const {outputFile,output} of list) for (const row of inventoryDocument(output)) {
+      if (row.rule || typeof row.value !== 'string') continue;
+      const result = expandApprovedEditorial(row.value,row.field);
+      if (result.value === row.value) continue;
+      (report.editorialExpansions ||= []).push({outputFile,field:row.path.join('.'),beforeHtml:row.value,afterHtml:result.value,edits:result.edits,ownerEdits:result.ownerEdits||[]});
+      row.container[row.field] = result.value;
+    }
     await fs.mkdir(dir, { recursive: true });
     const old = (await fs.readdir(dir)).filter((name) => name.endsWith('.json'));
     await Promise.all(old.map((name) => fs.unlink(path.join(dir, name))));

@@ -2,6 +2,52 @@ name: Deploy Web to Firebase Hosting
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/views/About.vue'
+      - 'src/services/prayerContentService.js'
+      - 'src/utils/publicPrayerCatalog.mjs'
+      - 'src/main.js'
+      - 'src/utils/ordoRevalidation.js'
+      - 'scripts/export-public-prayers-hosting.mjs'
+      - 'scripts/verify-public-prayers-hosting.mjs'
+      - 'firebase.json'
+      - 'tests/public-prayer-catalog.test.mjs'
+      - 'package.json'
+      - 'src/views/LiturgyHoursDecrees.vue'
+      - 'src/views/ProperCalendar.vue'
+      - 'src/views/Compendium.vue'
+      - 'src/views/CompendiumNode.vue'
+      - 'src/views/CompendiumQuestion.vue'
+      - 'src/data/documents/proper-calendar-additions.js'
+      - 'src/data/documents/proper-calendar.json'
+      - 'src/data/documents/liturgy-hours-decrees.json'
+      - 'src/layouts/default/NavigationDrawer.vue'
+      # Deploy this reader update after the reviewed PR reaches main.
+      - 'src/utils/readerPreferences.js'
+      # A verified content publication must refresh the Web reader cache.
+      - 'src/constants/contentRevision.js'
+      - 'src/components/oraparts/Reading.vue'
+      - 'src/components/oraparts/AlternativeText.vue'
+      - 'src/utils/officeResponsoryRepeats.js'
+      - 'tests/office-responsory-repeats.test.mjs'
+      - 'src/components/oraparts/Lectio.vue'
+      - 'src/components/oraparts/LastPrayer.vue'
+      - 'src/components/oraparts/DayTitle.vue'
+      - 'src/components/OrasList.vue'
+      # Publish Ordo-backed fixed celebration labels in the Hours reader.
+      - 'src/utils/ordoDayOptions.js'
+      - 'src/styles/main.scss'
+      # Draft editor and its Firestore policy are deployed together.
+      - 'src/views/admin/PrayerDraftEditor.vue'
+      - 'src/views/admin/PrayerDrafts.vue'
+      - 'src/utils/prayerDraftModel.mjs'
+      - 'src/utils/prayerDraftActions.mjs'
+      - 'src/utils/prayerSource.mjs'
+      - 'src/data/sourceBibliography.json'
+      - 'firestore.rules'
+      - '.github/workflows/deploy-firebase-hosting.yml'
 
 permissions:
   contents: read
@@ -13,7 +59,8 @@ concurrency:
 jobs:
   deploy:
     name: Build and publish web
-    if: github.ref == 'refs/heads/main'
+    # PR245's dispatch-only writer must finish before its cache revision is served.
+    if: github.ref == 'refs/heads/main' && (github.event_name != 'push' || !contains(github.event.head_commit.message, '[pr245-data-before-web]'))
     runs-on: ubuntu-latest
     environment: production
     timeout-minutes: 25
@@ -32,6 +79,7 @@ jobs:
 
       - name: Build web
         env:
+          VITE_LAUNCH_QUOTA_GUARD: 'true'
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
           VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
@@ -53,6 +101,8 @@ jobs:
 
       - name: Verify build output
         run: |
+          test -s dist/prayer-source-policy.json
+          node --input-type=module -e "import fs from 'node:fs'; import {PRAYER_SOURCE_POLICY_VERSION} from './src/utils/prayerSource.mjs'; const p=JSON.parse(fs.readFileSync('dist/prayer-source-policy.json')); if(p.version!==PRAYER_SOURCE_POLICY_VERSION)process.exit(1)"
           test -s dist/index.html
           test -s dist/privacy.html
           grep -q "Палітыка прыватнасці" dist/privacy.html
@@ -67,6 +117,20 @@ jobs:
           fi
           printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
+
+      # Generate only the allowlisted public catalog from the source of truth.
+      # This reads three collections ONCE per deployment, not per visitor;
+      # a quota error fails the release before any Hosting changes.
+      - name: Export public prayers to Hosting
+        run: |
+          node scripts/export-public-prayers-hosting.mjs --live --project ibreviaryby --out dist/public-prayers-v1.json
+          node scripts/verify-public-prayers-hosting.mjs dist/public-prayers-v1.json
+
+      # Publish the approved security rules BEFORE the new draft editor.
+      # If rules deployment is denied, keep the existing Web release unchanged.
+      - name: Deploy Firestore rules for approved draft workflow change
+        if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[deploy-draft-rules]')
+        run: npx --yes firebase-tools@latest deploy --only firestore:rules --project ibreviaryby --non-interactive
 
       - name: Deploy Hosting only
         run: npx --yes firebase-tools@latest deploy --only hosting --project ibreviaryby --non-interactive

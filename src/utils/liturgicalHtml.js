@@ -1,3 +1,31 @@
+import { removeMatchingPsalmAntiphons } from './liturgicalSourceHtml.js';
+
+// Antiphon labels are rubrics; never change the text of the antiphon itself.
+const antiphonSpace = String.raw`(?:\s|&nbsp;|&#0*160;|&#x0*a0;)`;
+const antiphonLabelStart = new RegExp(
+  String.raw`^(${antiphonSpace}*)((?:[1-9]${antiphonSpace}*)?ант\.)(${antiphonSpace}*да${antiphonSpace}+[^:<\r\n]{1,80}:)?`,
+  'iu',
+);
+
+/** Style the leading label only; retain the complete, original source HTML. */
+export function markAntiphonLabel(html) {
+  const source = String(html || '');
+  const mark = (leadingText) => {
+    const match = antiphonLabelStart.exec(leadingText);
+    if (!match) return leadingText;
+    const label = match[2] + (match[3] || '');
+    return `${match[1]}<span class="ora-antiphon-label">${label}</span>${leadingText.slice(match[0].length)}`;
+  };
+  if (/<p\b/iu.test(source)) {
+    return source.replace(
+      /(<p\b[^>]*>)([^<]*)/giu,
+      (_full, openingTag, leadingText) => openingTag + mark(leadingText),
+    );
+  }
+  // Legacy plain-text antiphons do not always have a paragraph wrapper.
+  return source.includes('<') ? source : mark(source);
+}
+
 /**
  * Cadence signs mark pauses inside a psalm verse. Source texts often contain
  * a legacy <br> immediately after them; in the reading layout the text should
@@ -17,7 +45,6 @@ const ASTERISK_PATTERN = /(?:\*|&#0*42;|&ast;)/iu;
 const PSALM_MARKER_PATTERN = /(?:\*|&#0*42;|&ast;|†|&#0*8224;|&#x0*2020;|&dagger;)/giu;
 const PARAGRAPH_PATTERN = /<p\b([^>]*)>([\s\S]*?)<\/p>/giu;
 const BREAK_PATTERN = /(<br\s*\/?>)/giu;
-const TRAILING_ANTIPHON_PATTERN = /<p\b[^>]*>(?=(?:\s|&nbsp;|<[^>]+>)*(?:\d+\s*)?Ант\.)[\s\S]*?<\/p>\s*$/iu;
 
 /**
  * Highlight the psalmody cadence signs without changing the source text.
@@ -94,6 +121,16 @@ function isLectionSectionHeading(content) {
   return /^(?:ПЕРШАЕ|ДРУГОЕ)\s+ЧЫТАННЕ\s*$/iu.test(visibleText(content));
 }
 
+// These are section labels stored in the legacy short-reading HTML, not
+// references or prose. Long/multiline paragraphs must not be styled as titles.
+function isShortOfficeSectionHeading(content) {
+  if (/<br\s*\/?>/iu.test(content)) return false;
+  const text = visibleText(content);
+  return /^(?:КАРОТКАЕ ЧЫТАННЕ|КАРОТКІ РЭСПАНСОРЫЙ)(?:\s|$)/iu.test(text)
+    && text.length <= 85
+    && !/[.!?]\s+\p{L}/u.test(text);
+}
+
 function escapePattern(value) {
   return String(value || '').replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
 }
@@ -160,6 +197,10 @@ export function markLeadingLiturgicalSubheadings(html) {
         return `<p${markAsLiturgicalHeading(attributes)}>${content}</p>`;
       }
 
+      if (isShortOfficeSectionHeading(content)) {
+        return `<p${markAsLiturgicalHeading(attributes)}>${markInlineReadingReference(content)}</p>`;
+      }
+
       // Centred lines in the source are structural captions (psalm parts,
       // references, and themes), including captions after the first two
       // leading metadata paragraphs.
@@ -222,13 +263,11 @@ function splitPsalmParagraph(attributes, content) {
  * repeated antiphon to the psalm itself. Psalmody renders antiphons from their
  * dedicated fields, so the embedded copy must not be displayed a second time.
  */
-export function formatPsalmHtml(html, { stripEmbeddedAntiphon = false } = {}) {
+export function formatPsalmHtml(html, { stripEmbeddedAntiphon = false, antiphon = '' } = {}) {
   let formatted = String(html || '');
 
   if (stripEmbeddedAntiphon) {
-    while (TRAILING_ANTIPHON_PATTERN.test(formatted)) {
-      formatted = formatted.replace(TRAILING_ANTIPHON_PATTERN, '');
-    }
+    formatted = removeMatchingPsalmAntiphons(formatted, antiphon);
   }
 
   const withStrophes = markPsalmCadenceSigns(removeBreakAfterPsalmCadenceSign(formatted)).replace(

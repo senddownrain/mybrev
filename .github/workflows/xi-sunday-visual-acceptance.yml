@@ -1,0 +1,42 @@
+name: XI Sunday live visual acceptance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/liturgy/smoke-xi-sunday-prod.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-visual:
+    name: Screenshot real rendered Hours (mobile/light/dark + desktop)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Capture visible I Vespers prayer cards, antiphon and collect
+        run: |
+          set -euo pipefail
+          BROWSER_PATH="$(command -v google-chrome || command -v chromium || true)"
+          if [ -z "$BROWSER_PATH" ]; then
+            npx playwright install chromium
+          else
+            export BENCHMARK_BROWSER_PATH="$BROWSER_PATH"
+          fi
+          node scripts/liturgy/smoke-xi-sunday-prod.mjs
+      - name: Archive visible live screenshots and display assertions
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xi-sunday-visible-live-acceptance
+          path: audit-evidence/xi-sunday-production/
+          if-no-files-found: warn
+          retention-days: 30

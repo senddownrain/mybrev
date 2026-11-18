@@ -15,6 +15,14 @@
         <div class="setting-copy"><strong>Не выключаць экран</strong><span>Карысна падчас малітвы або доўгага чытання</span></div>
         <v-switch :model-value="settings.keepScreenOn" color="primary" hide-details inset aria-label="Не выключаць экран" @update:model-value="settings.setKeepScreenOn" />
       </div>
+      <div class="setting-row">
+        <div class="setting-copy"><strong>Каляровае вылучэнне ў чытаннях</strong><span>Выбірайце сказы і захоўвайце іх колер</span></div>
+        <v-switch v-model="settings.readingHighlightsEnabled" color="primary" hide-details inset aria-label="Каляровае вылучэнне ў чытаннях" />
+      </div>
+      <div class="setting-row" data-test="liturgical-emphasis-setting">
+        <div class="setting-copy"><strong>Вылучэнне антыфон і рэфрэнаў</strong><span>Каляровыя падкладкі і рыскі ў Літургіі гадзін і Чытаннях дня. Без вылучэння — спакойны кніжны выгляд.</span></div>
+        <v-switch v-model="settings.liturgicalEmphasisEnabled" color="primary" hide-details inset aria-label="Вылучэнне антыфон і рэфрэнаў" />
+      </div>
       <div class="setting-row setting-row--theme">
         <div class="setting-copy"><strong>Тэма</strong><span>Сістэмная аўтаматычна сочыць за наладамі прылады</span></div>
         <div class="theme-options" role="radiogroup" aria-label="Тэма праграмы">
@@ -94,7 +102,7 @@
 
     <section class="settings-section" aria-labelledby="feedback-title">
       <div class="setting-row">
-        <div class="setting-copy"><strong id="feedback-title">Зваротная сувязь</strong><span>Паведаміць пра памылку ў тэксце або даслаць прапанову</span></div>
+        <div class="setting-copy"><strong id="feedback-title">Зваротная сувязь</strong><span>Прапанова, пытанне або праблема з праграмай. Пра памылку ў тэксце — праз пункт «Памылка ў тэксце» ў меню старонкі.</span></div>
         <v-btn :to="{ name: 'Feedback' }" variant="tonal" class="text-none" data-test="settings-feedback">Напісаць</v-btn>
       </div>
     </section>
@@ -107,6 +115,7 @@
       </div>
       <div v-if="visibleCategories.length" class="category-list">
         <div v-for="category in visibleCategories" :key="category.key" class="category-row">
+          <span class="category-glyph"><CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="24" /></span>
           <div class="category-copy">
             <div class="category-title-line">
               <strong>{{ category.name }}</strong>
@@ -114,6 +123,7 @@
             </div>
             <span>{{ category.tags.join(' · ') }}</span>
           </div>
+          <button v-if="category.scope === 'personal'" type="button" class="delete-button edit-button" :aria-label="`Рэдагаваць катэгорыю ${category.name}`" @click="editCategory(category)"><PhPencilSimple :size="19" /></button>
           <button type="button" class="delete-button" :aria-label="`Прыбраць катэгорыю ${category.name} з меню`" @click="removeCategory(category)"><PhTrash :size="19" /></button>
         </div>
       </div>
@@ -121,7 +131,7 @@
       <button v-if="settings.hiddenGlobalPrayerCategoryIds.length" type="button" class="restore-categories-button" @click="restoreGlobalCategories">
         Аднавіць катэгорыі па змаўчанні
       </button>
-      <button type="button" class="add-category-button" @click="showAddCategoryDialog = true"><PhPlus :size="19" weight="bold" />Дадаць катэгорыю</button>
+      <button type="button" class="add-category-button" @click="openAddCategory"><PhPlus :size="19" weight="bold" />Дадаць катэгорыю</button>
     </section>
 
     <section class="settings-section" aria-labelledby="saved-content-title">
@@ -133,7 +143,7 @@
       <v-btn class="cache-refresh-button" variant="tonal" color="primary" :loading="refreshingContent" :disabled="refreshingContent" @click="refreshContent">Абнавіць захаваныя тэксты</v-btn>
       <p v-if="refreshStatus" class="cache-description" role="status" aria-live="polite">{{ refreshStatus }}</p>
     </section>
-    <AddCategoryDialog v-model="showAddCategoryDialog" @category-added="showAddCategoryDialog = false" />
+    <AddCategoryDialog v-model="showAddCategoryDialog" :category="editingCategory" :category-index="editingIndex" @category-added="showAddCategoryDialog = false" />
   </v-container>
 </template>
 
@@ -142,13 +152,16 @@ import PriestAccessSettings from '@/components/prayers/PriestAccessSettings.vue'
 import TextAlignmentSettings from '@/components/TextAlignmentSettings.vue';
 import PsalmodySettings from '@/components/PsalmodySettings.vue';
 import { computed, ref } from 'vue';
-import { PhCaretDown, PhCheck, PhFolders, PhMinus, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
+import { PhCaretDown, PhCheck, PhFolders, PhMinus, PhPencilSimple, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
+import { priestAccess } from '@/services/priestAccessService';
 import { usePrayersStore } from '@/stores/prayers';
 import { useNotifier } from '@/composables/useNotifier';
 import AddCategoryDialog from '@/components/prayers/AddCategoryDialog.vue';
+import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
+import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
 import { THEME_OPTIONS } from '@/constants/appearance';
 import { READER_FONT_OPTIONS } from '@/constants/fonts';
 import { ORDO_DIOCESES } from '@/utils/ordoDiocese';
@@ -159,6 +172,14 @@ const prayersStore = usePrayersStore();
 prayersStore.init();
 const { notifySuccess } = useNotifier();
 const showAddCategoryDialog = ref(false);
+const editingCategory = ref(null);
+const editingIndex = ref(-1);
+function openAddCategory() { editingCategory.value = null; editingIndex.value = -1; showAddCategoryDialog.value = true; }
+function editCategory(category) {
+  editingCategory.value = settings.personalPrayerCategories[category.personalIndex] || null;
+  editingIndex.value = category.personalIndex;
+  showAddCategoryDialog.value = true;
+}
 const fontOptions = READER_FONT_OPTIONS;
 const dioceseOptions = ORDO_DIOCESES;
 const themeOptions = THEME_OPTIONS;
@@ -187,6 +208,7 @@ const visibleCategories = computed(() => {
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
     prayersStore.prayers,
+    priestAccess.active,
   );
 });
 
@@ -259,6 +281,9 @@ function restoreGlobalCategories() {
 .global-badge { padding: 3px 7px; border-radius: 99px; background: var(--nav-active); color: var(--chrome-accent) !important; font-size: .62rem !important; font-weight: 750; white-space: nowrap; }
 .categories-empty { margin: 8px 20px 0; padding: 14px 0; border-top: 1px solid var(--nav-border); color: var(--nav-muted); font-size: .8rem; text-align: center; }
 .delete-button { display: grid; flex: 0 0 40px; width: 40px; height: 40px; place-items: center; border-radius: 13px; background: transparent; color: var(--rubric-color); transition: background .18s ease; }
+.category-row .category-copy { flex: 1 1 auto; text-align: left; }
+.category-glyph { display: grid; flex: 0 0 40px; width: 40px; height: 40px; place-items: center; border-radius: 13px; background: var(--devotional-soft, rgba(var(--v-theme-primary), .1)); color: var(--devotional-accent, rgb(var(--v-theme-primary))); }
+.edit-button { color: var(--nav-muted); }
 .delete-button:hover { background: rgba(var(--v-theme-error), .08); }
 .restore-categories-button { display: block; margin: 12px auto 0; border: 0; background: transparent; color: var(--chrome-accent); font: inherit; font-size: .76rem; font-weight: 720; cursor: pointer; }
 .add-category-button { display: flex; align-items: center; justify-content: center; gap: 8px; width: calc(100% - 40px); min-height: 48px; margin: 14px 20px 20px; border-radius: 16px; background: var(--nav-active); color: var(--nav-on-surface); font-size: .86rem; font-weight: 750; transition: transform .16s ease; }

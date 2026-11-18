@@ -24,6 +24,39 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Two-state prayer draft and canonical import regressions
+        run: node --test tests/prayer-draft-model.test.mjs tests/prayer-import-plan.test.mjs tests/prayer-import-bog.test.mjs tests/prayer-import-editorial.test.mjs
+
+      - name: Public prayer Hosting export safety tests (offline; no Firestore)
+        run: node --test tests/public-prayer-catalog.test.mjs
+
+      - name: Administrator-only Songbook regression tests
+        run: node --test tests/admin-access.test.mjs
+
+      - name: Triduum and Compline regression
+        run: node --test tests/triduum-compline.test.mjs tests/liturgical-period-title.test.mjs
+
+      - name: Immaculate Heart movable memorial regression tests
+        run: node --test tests/immaculate-heart-hours.test.mjs
+
+      - name: Sunday first Vespers and cache release regression tests
+        run: node --test tests/liturgical-vespers.test.mjs tests/content-cache.test.mjs
+
+      - name: Coordinated PR255 release, recovery and test-app safeguards (offline)
+        run: node --test tests/reviewed-manifest.test.mjs tests/coordinated-release.test.mjs tests/flutter-baseline-reconciliation.test.mjs tests/firestore-release-recovery.test.mjs
+
+      - name: Reviewed Web-only liturgical corrections (offline)
+        run: node --test tests/web-liturgical-corrections.test.mjs tests/days-templates-preparation.test.mjs
+
+      - name: Liturgical hour structural headings (offline)
+        run: node --test tests/office-heading-consistency.test.mjs tests/liturgical-html.test.mjs tests/office-reading-presentation.test.mjs tests/office-responsory-repeats.test.mjs
+
+      - name: I Vespers independent-source audit safety checks
+        run: node --test tests/heart-first-vespers-source-audit.test.mjs
+
+      - name: XI Sunday printed-source integrity and three-document atomic release
+        run: node --test tests/xi-sunday-first-vespers-source.test.mjs tests/xi-sunday-atomic-release.test.mjs
+
       - name: Lint
         run: npm run lint
 
@@ -39,15 +72,23 @@ jobs:
           VITE_FIREBASE_STORAGE_BUCKET: demo-mybrev-ci.invalid
           VITE_FIREBASE_MESSAGING_SENDER_ID: '123456789012'
           VITE_FIREBASE_APP_ID: '1:123456789012:web:0000000000000000000000'
+          # Compile the extended cache feature in CI with fake Firebase values only.
+          VITE_ENABLE_EXTENDED_CACHE_WARMUP: 'true'
 
       - name: Approved calendar and source documents
-        run: npm run test:ordo && node --test tests/source-documents.test.mjs
+        run: npm run test:ordo && node --test tests/source-documents.test.mjs tests/juan-diego-calendar.test.mjs
+
+      - name: Reading sentence highlights and screen wake lock regressions (offline)
+        run: node --test tests/reading-highlights.test.mjs tests/screen-wake-lock.test.mjs
 
       - name: Prayer normalization tests (offline)
         run: npm run test:prayer-normalization
 
       - name: John Paul II source and migration validator tests (offline)
         run: node --test tests/john-paul-ii-source-fix.test.mjs
+
+      - name: High Priest targeted manifest publication safeguards (offline)
+        run: node --test tests/high-priest-targeted-release.test.mjs
 
       - name: Firebase web build configuration tests (offline)
         run: node --test tests/firebase-web-config.test.mjs
@@ -61,8 +102,11 @@ jobs:
       - name: Liturgical alternatives regression tests
         run: npm run test:alternatives
 
-      - name: Public content cache refresh regression tests
-        run: node --test tests/content-cache.test.mjs
+      - name: Prayer source canonical names and import guards (offline)
+        run: npm run test:prayer-sources
+
+      - name: Public content cache, staged warmup and quota regressions (offline)
+        run: node --test tests/content-cache.test.mjs tests/firestore-warmup.test.mjs tests/extended-cache-warmup.test.mjs
 
       - name: Ordinary Friday Vespers repair regressions (offline)
         run: node --test tests/ordinary-friday-vespers.test.mjs
@@ -74,7 +118,7 @@ jobs:
         run: node --test tests/dynamic-feast-daytime.test.mjs
 
       - name: Advent Vespers source provenance (2025–2032, all dioceses)
-        run: node --test tests/advent-vespers-provenance.test.mjs
+        run: node --test tests/advent-vespers-provenance.test.mjs tests/advent-benedictus.test.mjs
 
       - name: Audit tests
         run: npm run test:audit
@@ -89,3 +133,23 @@ jobs:
         run: |
           npm run audit:doxologies -- --check
           npm run test:doxologies
+
+  draft-publication-emulator:
+    name: Draft publication Firestore emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci
+      - name: Admin roles, two statuses, source and import integration
+        run: >
+          npx --yes firebase-tools@latest emulators:exec --only firestore --project demo-rules
+          "node --test --test-concurrency=1 tests/prayer-drafts-firestore.test.mjs tests/prayer-import-apply.test.mjs tests/prayer-import-drafts-compat.test.mjs tests/prayer-source-migration-emulator.test.mjs tests/priest-firestore.test.mjs"

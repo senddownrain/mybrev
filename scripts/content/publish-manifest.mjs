@@ -233,5 +233,7 @@ async function main() {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
-  main().catch((error) => { console.error(error.message || error); process.exitCode = 1; });
+  const run = process.argv.includes('--reviewed-manifest-authorization')
+    ? import('./lib/reviewed-manifest.mjs').then(m => m.reviewedManifestMain(process.argv.slice(2))) : main();
+  run.catch((error) => { console.error(error.message || error); process.exitCode = 1; });
 }

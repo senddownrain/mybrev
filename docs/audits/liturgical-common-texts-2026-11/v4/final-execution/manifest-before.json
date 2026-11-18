@@ -1,0 +1,66 @@
+{
+  "project": "ibreviaryby",
+  "capturedAt": "2026-11-17T17:12:26.452Z",
+  "firebaseReads": 1,
+  "firebaseWrites": 0,
+  "data": {
+    "schemaVersion": 1,
+    "publishedAt": "2026-11-14T13:45:03.773Z",
+    "collections": {
+      "readings": {
+        "digest": "93314983ba9c1bd5",
+        "count": 822,
+        "bytes": 4813227,
+        "version": 7
+      },
+      "liturgicalTemplates": {
+        "digest": "fd4b4f8eac9c9902",
+        "count": 16,
+        "bytes": 2897626,
+        "version": 3
+      },
+      "invitatoriums": {
+        "digest": "587d64f9ff8e7b0d",
+        "count": 4,
+        "bytes": 9678,
+        "version": 1
+      },
+      "completoriums": {
+        "digest": "42eb55a0b377d638",
+        "count": 35,
+        "bytes": 323076,
+        "version": 1
+      },
+      "prayers": {
+        "digest": "43711607f69fe4c5",
+        "count": 115,
+        "bytes": 2369569,
+        "version": 4
+      },
+      "prayerCategories": {
+        "digest": "2615b158b86e8582",
+        "count": 5,
+        "bytes": 1058,
+        "version": 2
+      },
+      "songs": {
+        "digest": "9752aef2fd846b49",
+        "count": 447,
+        "bytes": 369604,
+        "version": 1
+      },
+      "days": {
+        "count": 736,
+        "digest": "d777ac8f0051e81c",
+        "version": 6,
+        "bytes": 53983820
+      }
+    },
+    "contentVersion": 1794663903773
+  },
+  "updateTime": {
+    "seconds": 1794663904,
+    "nanoseconds": 423583000
+  },
+  "sha256": "6f10e2b9111ca11a6d8ff4d005b003dc6bf1cce10d0e4fd9ca5fcd82ef5c41af"
+}

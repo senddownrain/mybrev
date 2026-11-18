@@ -43,13 +43,13 @@ test('moves identical localized source notes into one source field', () => {
     id: 'one',
     titleVersions: { be: 'Малітва' },
     textVersions: {
-      be: 'Тэкст.\n\nКрыніца: Малітоўнік',
-      ru: 'Текст.\n\nИсточник: Малітоўнік',
+      be: 'Тэкст.\n\nКрыніца: Бог добры',
+      ru: 'Текст.\n\nИсточник: Бог добры',
     },
   }]);
   assert.equal(plan.changes.length, 1);
   assert.deepEqual(plan.changes[0].updates, {
-    source: 'Малітоўнік',
+    source: 'Бог добры',
     textVersions: { be: 'Тэкст.', ru: 'Текст.' },
   });
   assert.deepEqual(plan.ambiguous, []);

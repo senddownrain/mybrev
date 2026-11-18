@@ -49,11 +49,14 @@
 <script setup>
 import { computed, getCurrentInstance, nextTick, ref, watch } from 'vue';
 import { formatIntercessions, getLiturgicalAlternatives } from '@/utils/liturgicalAlternatives';
+import { markAntiphonLabel } from '@/utils/liturgicalHtml';
+import { expandOfficeResponsoryRepeats } from '@/utils/officeResponsoryRepeats';
 
 const props = defineProps({
   text: { type: String, default: '' },
   ariaLabel: { type: String, default: 'Выбар варыянта' },
   kind: { type: String, default: 'generic' },
+  highlightAntiphonLabel: { type: Boolean, default: false },
   modelValue: { type: Number, default: undefined },
   showPicker: { type: Boolean, default: true },
 });
@@ -75,7 +78,12 @@ watch(options, (list) => emit('options', list.length), { immediate: true });
 const activeOption = computed(() => options.value[activeIndex.value] || options.value[0] || null);
 const displayedHtml = computed(() => {
   const html = activeOption.value?.html || '';
-  return props.kind === 'intercession' ? formatIntercessions(html) : html;
+  let formatted = props.kind === 'intercession' ? formatIntercessions(html) : html;
+  // Expand only after choosing a reading alternative; no cross-variant text reuse.
+  if (['reading', 'office-reading', 'responsory'].includes(props.kind)) {
+    formatted = expandOfficeResponsoryRepeats(formatted);
+  }
+  return props.highlightAntiphonLabel ? markAntiphonLabel(formatted) : formatted;
 });
 
 watch(() => props.text, () => {

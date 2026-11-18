@@ -77,8 +77,8 @@ const routes = [
           { path: 'question/:number', name: 'CompendiumQuestion', component: () => import('@/views/CompendiumQuestion.vue'), props: true },
         ],
       },
-      { path: 'songs', name: 'Songs', component: () => import('@/views/Songs.vue') },
-      { path: 'song/:id', name: 'SongView', component: () => import('@/views/Song.vue'), props: true },
+      { path: 'songs', name: 'Songs', component: () => import('@/views/Songs.vue'), meta: { requiresAuth: true } },
+      { path: 'song/:id', name: 'SongView', component: () => import('@/views/Song.vue'), props: true, meta: { requiresAuth: true } },
       {
         path: 'prayers',
         name: 'Prayers',
@@ -225,6 +225,16 @@ const routes = [
         path: 'prayer-categories',
         name: 'AdminPrayerCategories',
         component: () => import('@/views/admin/PrayerCategories.vue'),
+      },
+      {
+        path: 'prayer-drafts',
+        name: 'AdminPrayerDrafts',
+        component: () => import('@/views/admin/PrayerDrafts.vue'),
+      },
+      {
+        path: 'prayer-drafts/:id',
+        name: 'AdminPrayerDraftEdit',
+        component: () => import('@/views/admin/PrayerDraftEditor.vue'),
       },
       {
         path: 'ordo/year-overrides',

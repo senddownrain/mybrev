@@ -1,0 +1,113 @@
+{
+  "results": [
+    {
+      "name": "heart-laudes",
+      "theme": "light",
+      "length": 8164,
+      "overflow": false,
+      "first": false,
+      "second": false,
+      "trinity": false
+    },
+    {
+      "name": "heart-lectionis",
+      "theme": "light",
+      "length": 9295,
+      "overflow": false,
+      "first": false,
+      "second": false,
+      "trinity": false
+    },
+    {
+      "name": "heart-sext",
+      "theme": "light",
+      "length": 4443,
+      "overflow": false,
+      "first": false,
+      "second": false,
+      "trinity": false
+    },
+    {
+      "name": "heart-vesper",
+      "theme": "light",
+      "length": 7265,
+      "overflow": false,
+      "first": true,
+      "second": false,
+      "trinity": true
+    },
+    {
+      "name": "anthony-laudes",
+      "theme": "light",
+      "length": 8462,
+      "overflow": false,
+      "first": false,
+      "second": false,
+      "trinity": false
+    },
+    {
+      "name": "sunday-vesper",
+      "theme": "light",
+      "length": 6817,
+      "overflow": false,
+      "first": true,
+      "second": true,
+      "trinity": false
+    },
+    {
+      "name": "heart-laudes",
+      "theme": "dark",
+      "length": 8164,
+      "overflow": false,
+      "first": false,
+      "second": false,
+      "trinity": false
+    },
+    {
+      "name": "heart-lectionis",
+      "theme": "dark",
+      "length": 9295,
+      "overflow": false,
+      "first": false,
+      "second": false,
+      "trinity": false
+    },
+    {
+      "name": "heart-sext",
+      "theme": "dark",
+      "length": 4443,
+      "overflow": false,
+      "first": false,
+      "second": false,
+      "trinity": false
+    },
+    {
+      "name": "heart-vesper",
+      "theme": "dark",
+      "length": 7265,
+      "overflow": false,
+      "first": true,
+      "second": false,
+      "trinity": true
+    },
+    {
+      "name": "anthony-laudes",
+      "theme": "dark",
+      "length": 8462,
+      "overflow": false,
+      "first": false,
+      "second": false,
+      "trinity": false
+    },
+    {
+      "name": "sunday-vesper",
+      "theme": "dark",
+      "length": 6817,
+      "overflow": false,
+      "first": true,
+      "second": true,
+      "trinity": false
+    }
+  ],
+  "errors": []
+}

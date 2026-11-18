@@ -1,0 +1,92 @@
+{
+  "policyVersion": "two-pass-2026-11-12-v1",
+  "rightsNote": "Possession of a PDF is not proof of a licence for public digital reproduction. Every source stays rightsStatus=unconfirmed until the owner supplies written confirmation.",
+  "sources": {
+    "rite_baptism": {
+      "priority": 1,
+      "scope": "baptism ritual only",
+      "publication": "canonical",
+      "book": "«Парадак хросту дзяцей» (Мінск, 2026)",
+      "copyrightNotices": [
+        "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2026"
+      ]
+    },
+    "rite_penance": {
+      "priority": 1,
+      "scope": "penance ritual only",
+      "publication": "canonical",
+      "book": "«Парадак пакаяння» (Мінск, 2016)",
+      "copyrightNotices": [
+        "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2016"
+      ]
+    },
+    "rite_anointing": {
+      "priority": 1,
+      "scope": "anointing ritual only",
+      "publication": "canonical",
+      "book": "«Парадак намашчэння хворых» (Мінск, 2009)",
+      "copyrightNotices": [
+        "© Канферэнцыя Каталіцкіх Біскупаў Беларусі, 2009"
+      ]
+    },
+    "litanies_novenas_chaplets_2024": {
+      "priority": 2,
+      "scope": "litanies, novenas, chaplets",
+      "publication": "canonical",
+      "book": "«Прасіце і атрымаеце» (Мінск, 2024)",
+      "copyrightNotices": [
+        "© Выдавецтва «Про Хрысто», 2024"
+      ]
+    },
+    "our_father_weekly": {
+      "priority": 3,
+      "scope": "prayers and references",
+      "publication": "canonical",
+      "book": "«Ойча наш», 5-е выданне (Мінск, 2022)",
+      "copyrightNotices": [
+        "© Камісія Божага Культу і Дысцыпліны Сакрамэнтаў, 2022",
+        "© Выдавецтва «Про Хрысто», 2022"
+      ]
+    },
+    "our_father_marian": {
+      "priority": 3,
+      "scope": "prayers and references",
+      "publication": "canonical",
+      "book": "«Ойча наш», 5-е выданне (Мінск, 2022)",
+      "copyrightNotices": [
+        "© Камісія Божага Культу і Дысцыпліны Сакрамэнтаў, 2022",
+        "© Выдавецтва «Про Хрысто», 2022"
+      ]
+    },
+    "our_father_saints": {
+      "priority": 3,
+      "scope": "prayers and references",
+      "publication": "canonical",
+      "book": "«Ойча наш», 5-е выданне (Мінск, 2022)",
+      "copyrightNotices": [
+        "© Камісія Божага Культу і Дысцыпліны Сакрамэнтаў, 2022",
+        "© Выдавецтва «Про Хрысто», 2022"
+      ]
+    },
+    "our_father_needs": {
+      "priority": 3,
+      "scope": "prayers and references",
+      "publication": "canonical",
+      "book": "«Ойча наш», 5-е выданне (Мінск, 2022)",
+      "copyrightNotices": [
+        "© Камісія Божага Культу і Дысцыпліны Сакрамэнтаў, 2022",
+        "© Выдавецтва «Про Хрысто», 2022"
+      ]
+    },
+    "bog_dobry_pinsk_edition_2022": {
+      "priority": 4,
+      "scope": "only truly missing suitable prayers after canonical import",
+      "publication": "draft_only",
+      "book": "«Бог Добры», ІІІ выданне (Пінск, 2022)",
+      "copyrightNotices": [
+        "© Пінская дыяцэзія, 2022",
+        "© Выдавецтва Пінскай дыяцэзіі Рымска-Каталіцкага Касцёла ў РБ, 2022"
+      ]
+    }
+  }
+}

@@ -4,6 +4,7 @@ import { useTheme } from 'vuetify';
 import { normalizeReaderFont, SYSTEM_FONT } from '@/constants/fonts';
 import { APP_STATUS_BAR_COLORS, isThemePreference, loadThemePreference, resolveTheme } from '@/constants/appearance';
 import { DEFAULT_CATEGORIES } from '@/constants/categories';
+import { migratePersonalCategoryIcons, normalizeCategoryIconKey, suggestCategoryIconKey } from '@/constants/prayerCategoryIcons';
 import { validateCategory } from '@/utils/validators';
 import { logger } from '@/utils/logger';
 import { requestWakeLock, releaseWakeLock } from '@/composables/useWakeLock';
@@ -26,12 +27,18 @@ function categoryMatchesDefault(category) {
 
 function loadPersonalCategories() {
   const personal = localStorage.getItem(PERSONAL_CATEGORIES_KEY);
-  if (personal !== null) return JSON.parse(personal);
-
   // One-time migration: the old key mixed three app-wide defaults with the
   // user's own categories. Only carry the genuinely personal entries forward.
-  const legacy = JSON.parse(localStorage.getItem('menuCategories') || '[]');
-  return legacy.filter((category) => !categoryMatchesDefault(category));
+  const stored = personal !== null
+    ? JSON.parse(personal)
+    : JSON.parse(localStorage.getItem('menuCategories') || '[]').filter((category) => !categoryMatchesDefault(category));
+  // Second one-time migration: give every category without an iconKey a meaningful one and persist it,
+  // so renaming later never changes the icon. A stored valid choice is never touched.
+  const { list, changed } = migratePersonalCategoryIcons(stored);
+  if (changed) {
+    try { localStorage.setItem(PERSONAL_CATEGORIES_KEY, JSON.stringify(list)); } catch { /* storage unavailable: kept in memory */ }
+  }
+  return list;
 }
 
 export const useSettingsStore = defineStore('settings', () => {
@@ -69,6 +76,15 @@ export const useSettingsStore = defineStore('settings', () => {
   if (localStorage.getItem('songChordLayout') !== null) localStorage.setItem('songChordLayout', songChordLayout.value);
   // The song list is always compact now; drop the obsolete toggle.
   localStorage.removeItem('songCompactList');
+  const readingHighlightsEnabled = ref(localStorage.getItem('readingHighlightsEnabled') === 'true');
+  watch(readingHighlightsEnabled, value => localStorage.setItem('readingHighlightsEnabled', String(value)), { flush: 'sync' });
+  // Presentation-only preference. Liturgical colours and the texts themselves stay unchanged.
+  // Enabled by default, preserving the established coloured cards for existing readers.
+  const liturgicalEmphasisEnabled = ref(localStorage.getItem('liturgicalEmphasisEnabled') !== 'false');
+  watch(liturgicalEmphasisEnabled, (enabled) => {
+    document.documentElement.dataset.liturgicalEmphasis = enabled ? 'on' : 'off';
+    localStorage.setItem('liturgicalEmphasisEnabled', String(enabled));
+  }, { immediate: true, flush: 'sync' });
   const keepScreenOn = ref(localStorage.getItem('keepScreenOn') !== 'false');
 
   function applyThemePreference() {
@@ -199,8 +215,20 @@ export const useSettingsStore = defineStore('settings', () => {
   function addCategory(cat) {
     const validation = validateCategory(cat);
     if (validation === true) {
-      menuCategories.value.push(cat);
+      menuCategories.value.push({ ...cat, iconKey: normalizeCategoryIconKey(cat.iconKey) || suggestCategoryIconKey(cat) });
     }
+  }
+
+  /** Edit a personal category in place; fields not in `patch` (and unknown extra fields) are preserved. */
+  function updateCategory(index, patch) {
+    const current = menuCategories.value[index];
+    if (!current) return false;
+    const next = { ...current, ...patch };
+    if (validateCategory(next) !== true) return false;
+    const iconKey = normalizeCategoryIconKey(patch.iconKey) || normalizeCategoryIconKey(current.iconKey)
+      || (typeof current.iconKey === 'string' && current.iconKey.trim() ? current.iconKey : suggestCategoryIconKey(next));
+    menuCategories.value.splice(index, 1, { ...next, iconKey });
+    return true;
   }
 
   function removeCategory(index) {
@@ -256,6 +284,8 @@ export const useSettingsStore = defineStore('settings', () => {
     songShowChords,
     songChordLayout,
     toggleFavoriteSong,
+    readingHighlightsEnabled,
+    liturgicalEmphasisEnabled,
     keepScreenOn,
     diocese: ordoDiocese,
     dioceses: ordoDioceses,
@@ -268,6 +298,7 @@ export const useSettingsStore = defineStore('settings', () => {
     increaseFontSize,
     decreaseFontSize,
     addCategory,
+    updateCategory,
     removeCategory,
     hideGlobalPrayerCategory,
     restoreGlobalPrayerCategories,

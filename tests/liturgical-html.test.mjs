@@ -68,7 +68,7 @@ test('removes a trailing antiphon embedded in psalm HTML', () => {
   const html = '<p>Страфа *<br>канец.</p>\n<p><span style="color: #ff0000;">Ант.</span> Святыя жанчыны.</p>';
 
   assert.equal(
-    formatPsalmHtml(html, { stripEmbeddedAntiphon: true }),
+    formatPsalmHtml(html, { stripEmbeddedAntiphon: true, antiphon: '<p>1 ант. Святыя жанчыны.</p>' }),
     '<p data-psalm-strophe>Страфа <span class="psalm-marker">*</span> канец.</p>\n',
   );
 });

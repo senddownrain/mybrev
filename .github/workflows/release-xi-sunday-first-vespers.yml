@@ -1,0 +1,117 @@
+name: Release XI Sunday first Vespers (content + Hosting)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/liturgy/sources/xi-sunday-first-vespers-by.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firebase-hosting-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Verify, publish targeted content, update manifest, deploy Web
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 35
+    steps:
+      - name: Checkout approved main
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate the 11 source fields and protected mutation rules
+        run: |
+          node --test tests/xi-sunday-first-vespers-source.test.mjs tests/xi-sunday-atomic-release.test.mjs
+          node scripts/liturgy/patch-xi-sunday-first-vespers.mjs --validate-only
+
+      - name: Load protected production credential
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IBREVIARYBY }}
+        run: |
+          set -euo pipefail
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "::error::FIREBASE_SERVICE_ACCOUNT_IBREVIARYBY is missing."
+            exit 1
+          fi
+          umask 077
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
+          node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));if(x.project_id!=='ibreviaryby')throw Error('Wrong Firebase project')" "$RUNNER_TEMP/firebase-service-account.json"
+
+      - name: Preview atomic XI Sunday day + manifest patch (read only)
+        run: node scripts/content/publish-xi-sunday-targeted.mjs --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
+
+      - name: Atomically publish only XI Sunday and its two manifest documents
+        run: node scripts/content/publish-xi-sunday-targeted.mjs --service-account "$GOOGLE_APPLICATION_CREDENTIALS" --apply --approved
+
+      - name: Verify the three target documents (read only)
+        run: node scripts/content/publish-xi-sunday-targeted.mjs --service-account "$GOOGLE_APPLICATION_CREDENTIALS"
+
+      - name: Build production Web
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+          VITE_FIREBASE_DATABASE_URL: ${{ secrets.VITE_FIREBASE_DATABASE_URL }}
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+          VITE_FEEDBACK_API_URL: https://mybrev-feedback.slovo-app.workers.dev
+          VITE_ANALYTICS_REPORTS_URL: https://mybrev-analytics-reports-staging.slovo-app.workers.dev/reports
+        run: |
+          test "$VITE_FIREBASE_PROJECT_ID" = "ibreviaryby"
+          npm run build
+          test -s dist/index.html
+
+      - name: Deploy Firebase Hosting only
+        run: npx --yes firebase-tools@latest deploy --only hosting --project ibreviaryby --non-interactive
+
+      - name: Capture live mobile and desktop screenshots (XI Sunday)
+        run: |
+          set -euo pipefail
+          BROWSER_PATH="$(command -v google-chrome || command -v chromium || true)"
+          if [ -z "$BROWSER_PATH" ]; then
+            npx playwright install chromium
+          else
+            export BENCHMARK_BROWSER_PATH="$BROWSER_PATH"
+          fi
+          node scripts/liturgy/smoke-xi-sunday-prod.mjs
+
+      - name: Upload screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xi-sunday-production-screenshots
+          path: audit-evidence/xi-sunday-production/*.png
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload backup (public liturgical content only)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xi-sunday-firestore-backup
+          path: backups/liturgy/xi-sunday-first-vespers-atomic-*.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Clean up temporary credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/firebase-service-account.json"

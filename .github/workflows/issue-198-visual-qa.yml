@@ -1,0 +1,37 @@
+name: Issue 198 independent visual acceptance after production release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/issue-198-visual-qa.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    if: github.repository == 'senddownrain/mybrev' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Chromium
+        run: npx --no-install playwright-core install --with-deps chromium
+      - name: Verify real rendered pixels for ten date and screen combinations
+        run: node scripts/qa/issue-198-visual.mjs
+      - name: Keep visual evidence even if QA fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: issue-198-final-visual-qa
+          path: reports/liturgy/issue-198-visual-final/
+          if-no-files-found: warn
+          retention-days: 14

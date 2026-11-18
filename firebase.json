@@ -20,6 +20,28 @@
         ]
       },
       {
+        "source": "/public-prayers-v1.json",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json; charset=utf-8"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=300, s-maxage=1800"
+          }
+        ]
+      },
+      {
+        "source": "/prayer-source-policy.json",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store"
+          }
+        ]
+      },
+      {
         "source": "/index.html",
         "headers": [
           {
@@ -91,6 +113,9 @@
         "source": "**",
         "destination": "/index.html"
       }
+    ],
+    "predeploy": [
+      "node scripts/verify-public-prayers-hosting.mjs dist/public-prayers-v1.json"
     ]
   },
   "emulators": {

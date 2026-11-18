@@ -1,0 +1,85 @@
+{
+  "schema": 4,
+  "ownerComment": "https://github.com/senddownrain/mybrev/pull/245#issuecomment-6876995850",
+  "policy": "Explicit local replies; U and Cyrillic C are owner decisions, not generic uppercase. Preserve source Справялівы and Easter star/Alleluia. Correct the exact mixed-script source word cказала where it affects copied replies.",
+  "scopes": [
+    {
+      "signature": "dc45bd4fc85267deed4c39e7b09cdf286a2584c3209791c2ce62357fc33616e4",
+      "kind": "long",
+      "caseIds": [
+        "PR245-234"
+      ],
+      "allowedAbbreviations": [
+        "Калі."
+      ],
+      "initialU": false,
+      "correctMixedScriptSource": false
+    },
+    {
+      "signature": "959bad5a4a9be0dcc130fe034dcc361775ade83ae7291b1ce57b7209114df5b6",
+      "kind": "short",
+      "caseIds": [
+        "PR245-305",
+        "PR245-313"
+      ],
+      "allowedAbbreviations": [
+        "У доме."
+      ],
+      "initialU": true,
+      "correctMixedScriptSource": false,
+      "tailBodyHtml": "У доме Тваім, Пане."
+    },
+    {
+      "signature": "0066922d30b3bfa605c7eb1a167f338d6865d35bbc9fc04a94bd519e9b1b4bfb",
+      "kind": "short",
+      "caseIds": [
+        "PR245-355",
+        "PR245-358",
+        "PR245-361",
+        "PR245-365"
+      ],
+      "allowedAbbreviations": [
+        "Справядлівы."
+      ],
+      "initialU": false,
+      "correctMixedScriptSource": false
+    },
+    {
+      "signature": "7212e7a3ae1aef72507d07b2708e5a209bc69d43469a0224dadbc9209e49e3bf",
+      "kind": "short",
+      "caseIds": [
+        "PR245-370"
+      ],
+      "allowedAbbreviations": [
+        "Справядлівы."
+      ],
+      "initialU": false,
+      "correctMixedScriptSource": false
+    },
+    {
+      "signature": "8f39f78a185f27c48d1734ac8405f644da7a8c6212ee434fbea0b345388eebea",
+      "kind": "short",
+      "caseIds": [
+        "PR245-472",
+        "PR245-485"
+      ],
+      "allowedAbbreviations": [
+        "Сказала."
+      ],
+      "initialU": false,
+      "correctMixedScriptSource": true,
+      "correctedSignature": "cb52969efb119bb8cc0f18c649a37cd334ec3fc302d042d628d16a9bf7ee0309"
+    },
+    {
+      "signature": "55fe61e9a26fb191f1ccc2c497daabb75d841f30c25f62a6fbc689502f1c070c",
+      "kind": "short",
+      "caseIds": [
+        "PR245-490"
+      ],
+      "allowedAbbreviations": [],
+      "initialU": false,
+      "correctMixedScriptSource": true,
+      "correctedSignature": "853f3af3ed07dda7f6661fdd715e35572bc85e4fff47a8822a4d8334477303ea"
+    }
+  ]
+}

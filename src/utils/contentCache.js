@@ -71,6 +71,15 @@ export function createContentCache({ storage, getRevision, isOnline, onError = (
   return {
     read,
     peek: (key) => memory.get(key)?.data,
+    peekFresh: (key) => (isFresh(memory.get(key)) ? memory.get(key).data : undefined),
+    // Only for opportunistic background prefetch. Reader pages retain their
+    // shorter online revalidation TTL; revisions still invalidate this check.
+    hasRecentComplete: (key, ageMs) => {
+      const entry = memory.get(key);
+      return entry?.complete === true && entry.revision === getRevision()
+        && Number.isFinite(entry.fetchedAt) && Number.isFinite(ageMs)
+        && now() >= entry.fetchedAt && now() - entry.fetchedAt < ageMs;
+    },
     prime: (keys) => Promise.all(keys.map(restore)),
     async keys() {
       try { return [...new Set([...memory.keys(), ...await storage.keys()])]; }

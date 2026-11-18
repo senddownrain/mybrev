@@ -2,19 +2,19 @@
     <div>
         <v-card class="ora" flat>
             <v-card-title class="ora-title">
-                ПЕСНЯ З ЕВАНГЕЛЛЯ
+                ПЕСНЯ МАРЫІ
             </v-card-title>
             <v-card-text class="ora-text">
-                <alternative-text v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" aria-label="Выбар антыфоны" />
+                <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" aria-label="Выбар антыфоны" />
                 
                 <!-- <div v-html="ps1"></div> -->
                 <p class="ora-sub">
-                    <span style="color:red">Песня Марыі (Лк 1, 46-55)</span>
+                    <span style="color:red">Лк 1, 46-55</span>
                 <br>
                 <span style="color:red">Радасць душы ў Пану</span>
                 </p>
                <PsalmText :html="formatPsalm(mag)" />
-               <alternative-text v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" :show-picker="false" />
+               <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="ant" kind="gospel-antiphon" :show-picker="false" />
             </v-card-text>
         </v-card>
     </div>

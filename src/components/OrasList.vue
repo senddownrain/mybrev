@@ -90,19 +90,7 @@
             <v-list-item-subtitle v-if="ora.subtitle" class="ora-card__subtitle">
               {{ ora.subtitle }}
             </v-list-item-subtitle>
-            <v-chip
-              v-if="ora.rubric"
-              class="mt-2 vespers-rubric-chip"
-              :class="`vespers-rubric-chip--${ora.rubric.kind}`"
-              density="compact"
-              :prepend-icon="ora.rubric.icon || undefined"
-              size="small"
-              :style="ora.rubricStyle"
-              variant="tonal"
-            >
-              <span class="vespers-rubric__line" aria-hidden="true"></span>
-              <span class="vespers-rubric__label" v-html="ora.rubric.labelHtml"></span>
-            </v-chip>
+
             <template v-slot:append>
               <v-icon class="ora-card__arrow" icon="mdi-chevron-right" size="24"></v-icon>
             </template>
@@ -178,10 +166,8 @@ const templateOptions = computed(() => (
     option.templates?.some((template) => templateContainsDay(template, dayId.value))
   ))?.templates || []
 ));
-// A memorial may take the rest of its texts from the day or from a Common.
-const templateLabel = computed(() => (
-  templateOptions.value.some((template) => template.choice === 'current-day') ? 'Тэксты Літургіі гадзінаў апрача ўласных' : 'Шаблон літургіі дня'
-));
+// The heading applies equally to weekday and Common-only text variants.
+const templateLabel = 'Тэксты Літургіі гадзінаў апрача ўласных';
 const selectedTemplateId = computed(() => (
   templateOptions.value.find((template) => templateContainsDay(template, dayId.value))?.id
     || dayId.value
@@ -453,38 +439,6 @@ watch([dateParam, dayId, ordoCalendarEpoch, effectiveOrdoDiocese], ([newDatePara
   letter-spacing: 0.01em;
 }
 
-.vespers-rubric-chip {
-  width: fit-content;
-  max-width: 100%;
-  height: auto !important;
-  min-height: 22px;
-  padding-inline: 2px !important;
-  white-space: normal;
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  color: color-mix(in srgb, var(--vespers-rubric-color) 34%, var(--nav-muted)) !important;
-  font-size: 0.68rem !important;
-  font-weight: 750;
-  letter-spacing: 0.03em;
-}
-
-.vespers-rubric-chip :deep(.v-chip__content) {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  overflow-wrap: anywhere;
-  line-height: 1.35;
-  white-space: normal;
-}
-
-.vespers-rubric__line {
-  width: 16px;
-  height: 1px;
-  flex: 0 0 16px;
-  margin-right: 7px;
-  background: rgba(var(--vespers-rubric-rgb), 0.26);
-}
 
 :deep(.reading-card .v-list-item-subtitle),
 :deep(.ora-card .v-list-item-subtitle) {

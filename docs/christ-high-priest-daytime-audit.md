@@ -29,7 +29,7 @@ The supplied concluding prayer of Lauds starts **«Божа, Ты дзеля х�
 
 The user-provided Word text is a **source supplied for the repair**, not evidence that the production Firestore document already has its fields or that the translation's ecclesiastical approval has been independently checked.
 
-**Web:** after merging and deploying PR #183, the bundled content fallback should make the daytime Proper available even if Firestore still contains empty/stale source fields. The live URL must then be visually checked at `terz`, `sext` and `none` for Pinsk on 2026-05-28; also check the corresponding movable date for 2027.
+**Web:** after merging and deploying PR #183, the bundled content fallback should make the daytime Proper available even if Firestore still contains empty/stale source fields. The live URL must then be visually checked at `terz`, `sext` and `non` (the Web router uses `non`, not `none`) for Pinsk on 2026-05-28; also check the corresponding movable date for 2027.
 
 **Firestore / Flutter:** this PR does not write to Firestore. The JSON is ready to become a field-level content patch for `days` documents of `feast-christthehighpriest`, after inspecting a local snapshot and confirming the live document IDs. Do not overwrite unrelated Office fields or perform quota-consuming live reads without explicit authorization. Once Firestore is patched, follow `AGENTS.md` and `docs/app-content-distribution.md` for the content manifest and Flutter publication.
 

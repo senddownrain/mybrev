@@ -24,6 +24,7 @@ import {
 } from './liturgicalDayResolution.js';
 import { ADVENT_VESPERS_PSALMS, applyReviewedAdventVespers } from './adventVespers.js';
 import { OFFICE_CONTENT_FIELDS } from '../constants/officeFields.js';
+import { lectionaryCyclesFor } from './ordo/season.js';
 
 const normalizedFeastCode = (code) => String(code || '').replace(/^feast-/, '');
 
@@ -127,7 +128,10 @@ export function assembleDaysResult({
     ? withCalendarContext(
       context.periodType === 'christmas'
         ? applySeasonalWeekdayAntiphons(resolveChristmasDateAgainstPeriod(seasonalDay, resolvedPeriodDay), context.dayOfWeek)
-        : resolveAdventDateAgainstPeriod(applyReviewedAdventVespers(seasonalDay), resolvedPeriodDay, context.dayOfWeek),
+        : resolveAdventDateAgainstPeriod(applyReviewedAdventVespers(seasonalDay), resolvedPeriodDay, context.dayOfWeek, {
+          sundayCycle: lectionaryCyclesFor(mDate.format('YYYY-MM-DD')).sunday,
+          periodWeek: context.periodWeek,
+        }),
       { periodType: seasonalPeriodType, periodWeek: context.periodWeek },
     )
     : null;
@@ -141,8 +145,11 @@ export function assembleDaysResult({
     .map(resolveFixed);
   if (seasonal) resolvedFixed.unshift(seasonal);
 
-  const resolvedDynamicDays = new Map(dynamicEntries
-    .filter(([code]) => !exclusiveFeastCode || normalizedFeastCode(code) === exclusiveFeastCode)
+  const movableEntries = dynamicEntries
+    .filter(([code]) => !exclusiveFeastCode || normalizedFeastCode(code) === exclusiveFeastCode);
+  // Assemble movable memorials from the RAW Proper, not period-inherited data.
+  const rawDynamicDaysByFeast = new Map(movableEntries);
+  const resolvedDynamicDays = new Map(movableEntries
     .map(([code, docs]) => [
       code,
       docs.map((item) => {
@@ -169,6 +176,7 @@ export function assembleDaysResult({
     periodFallback: resolvedPeriodDay,
     fixedDateDays: exclusiveFeastCode ? [] : resolvedFixed,
     dynamicDaysByFeast: resolvedDynamicDays,
+    rawDynamicDaysByFeast,
     seasonalException: exclusiveFeastCode ? null : seasonal,
     seasonalDateDay,
     exclusiveFeastCode,

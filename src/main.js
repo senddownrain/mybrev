@@ -38,13 +38,29 @@ function runAfterLoadAndIdle(task, { delay = 0, idleTimeout = 2000 } = {}) {
   else window.addEventListener('load', schedule, { once: true })
 }
 
-// Navigation prefetch is intentionally delayed until the document has loaded,
-// so it cannot compete with the first screen's critical requests.
+// Navigation prefetch is delayed until the first screen has loaded, so it
+// never competes with the first screen's critical requests.
+// Launch-safety mode: new visitors should pay only for the content they open.
+// The main screen still fetches its own Hours; no speculative tomorrow/static
+// collection queries occur on production during the public announcement.
+if (import.meta.env.VITE_LAUNCH_QUOTA_GUARD !== 'true') {
 runAfterLoadAndIdle(() => {
-  import('./utils/cacheWarmup').then(({ warmupCache }) => warmupCache()).catch(error => {
+  import('./utils/cacheWarmup').then(async ({ warmupCache }) => {
+    // Stage 1: existing lightweight today/tomorrow Hours + static collections.
+    await warmupCache()
+    // Stage 2: OPTIONAL and deliberately disabled by default while Spark quota
+    // is exhausted. Never runs twice or competes with Stage 1.
+    if (import.meta.env.VITE_ENABLE_EXTENDED_CACHE_WARMUP === 'true') {
+      runAfterLoadAndIdle(() => {
+        import('./utils/extendedCacheWarmup').then(({ warmupExtendedDateWindow }) =>
+          warmupExtendedDateWindow()).catch(error => console.warn('[extended warmup] skipped:', error.message))
+      }, { delay: 20000, idleTimeout: 12000 })
+    }
+  }).catch(error => {
     console.error('[main] Cache warmup error:', error)
   })
 }, { delay: 5000, idleTimeout: 5000 })
+}
 
 // Local-only analytics for test builds (decision D-10 = B). The flag is a build-time
 // constant: when it is not 'true' this branch and the analytics code are removed from the bundle.

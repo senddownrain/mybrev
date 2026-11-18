@@ -129,5 +129,34 @@ test('Spark Firestore authoritative registration, revocation, legacy compatibili
    const stale=writeBatch(editor);stale.set(doc(editor,'prayers/stale'),{text:'PUBLIC'});stale.set(doc(editor,'priestContentControl/state'),{version:3,lockUid:'',updatedAt:serverTimestamp()});await denied(stale.commit());
    await seed.doc('priestContentControl/state').update({lockUid:'migration'});const locked=writeBatch(editor);locked.set(doc(editor,'prayers/locked'),{text:'PUBLIC'});locked.set(doc(editor,'priestContentControl/state'),{version:4,lockUid:'',updatedAt:serverTimestamp()});await denied(locked.commit());
   });
+  await t.test('manual membership: Public vs Priest vs Admin, removed links and parent changes',async()=>{
+   await seed.doc('priestContentControl/state').set({version:0,lockUid:'',updatedAt:new Date()});
+   await seed.doc('priestDeviceGrants/device').update({status:'active',revokedAt:null});
+   const state=new Map([['prayers',[{id:'manual-matrix',title:'MATRIX PRIVATE',tags:[]}]],['prayerCategories',[
+    {id:'manual-public',name:'Matrix public',prayerIds:['manual-matrix'],priestOnly:false},
+    {id:'manual-closed',name:'Matrix closed',priestOnly:true},
+    {id:'manual-child',name:'Matrix child',parentId:'manual-public',prayerIds:['manual-matrix'],priestOnly:false}
+   ]]]);
+   let stored=prayerStoragePlan(state).desired;
+   for(const [name,items] of stored)for(const {id,...data} of items)await seed.doc(`${name}/${id}`).set(data);
+   let version=0;
+   const apply=async content=>{const plan=prayerStoragePlan(stored,content),batch=writeBatch(editor);
+    for(const op of plan.operations){const ref=doc(editor,op.collection,op.id);if(op.type==='delete')batch.delete(ref);else batch.set(ref,op.data);}
+    batch.set(doc(editor,'priestContentControl/state'),{version:++version,lockUid:'',updatedAt:serverTimestamp()});await batch.commit();stored=plan.desired;
+   };
+   assert.equal((await read(guest,'prayers/manual-matrix')).exists(),true);
+   let content=canonicalPrayerContent(stored);content.categories.find(c=>c.id==='manual-child').parentId='manual-closed';await apply(content);
+   assert.equal((await read(guest,'prayers/manual-matrix')).exists(),false);
+   for(const path of ['priestProtectedPrayers/manual-matrix','priestProtectedCategories/manual-child']){
+    await denied(read(guest,path));for(const db of [device,editor])assert.equal((await read(db,path)).exists(),true);
+   }
+   await denied(updateDoc(doc(device,'priestProtectedCategories/manual-child'),{prayerIds:[]}));
+   assert.deepEqual((await read(guest,'prayerCategories/manual-public')).data().prayerIds,['manual-matrix']);
+   content=canonicalPrayerContent(stored);content.categories.find(c=>c.id==='manual-child').prayerIds=[];await apply(content);
+   assert.equal((await read(guest,'prayers/manual-matrix')).exists(),true);
+   assert.equal((await read(editor,'priestProtectedPrayers/manual-matrix')).exists(),false);
+   assert.equal((await read(editor,'priestProtectedCategories/manual-child')).data().priestOnly,false);
+  });
+
  } finally {await Promise.all(apps.map(deleteApp));await deleteAdmin(owner);}
 });

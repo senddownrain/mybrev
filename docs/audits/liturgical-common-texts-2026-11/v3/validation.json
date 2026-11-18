@@ -1,0 +1,159 @@
+{
+  "schema": 3,
+  "scope": "Follow-up on frozen PR245 queue; no initial audit repeated",
+  "sourceBaseline": "b05699f4366ae1fe4f66bde0e28ee27e2c07a37c",
+  "full": {
+    "command": "npm test",
+    "tests": 1281,
+    "passed": 1260,
+    "failed": 2,
+    "skipped": 19
+  },
+  "targeted": {
+    "command": "node --test tests/liturgical-editorial-v3.test.mjs tests/liturgical-manual-review.test.mjs tests/liturgical-common-texts.test.mjs tests/liturgical-alternatives.test.mjs tests/psalmody-doxology.test.mjs",
+    "tests": 74,
+    "passed": 74,
+    "failed": 0,
+    "skipped": 0,
+    "preservedPreviousTests": 60
+  },
+  "knownBaselineFailures": [
+    "tests/ordo-layers.test.mjs: obsolete spelling Куаўхтлатаацына; current approved spelling Куаўтлатаацына",
+    "tests/sources.test.mjs: About/Sources page footer assertion"
+  ],
+  "baselineEvidence": "../validation.json; previous main checkout reproduced both, not changed or skipped by v3",
+  "additionalParserAndHistoricalMigration": {
+    "command": "node --test tests/liturgical-editorial-v3.test.mjs tests/john-paul-ii-source-fix.test.mjs tests/common-seasons-parser.test.mjs",
+    "passed": 31,
+    "failed": 0
+  },
+  "eslint": {
+    "command": "npx eslint .",
+    "passed": true
+  },
+  "gitDiffCheck": true,
+  "build": {
+    "command": "npm run build",
+    "passed": true,
+    "configuration": "Compile-only demo Firebase web config; no production credentials, deploy or network action. Unconfigured build correctly refused missing VITE_FIREBASE_*."
+  },
+  "web": {
+    "actualReaderStates": 9,
+    "profiles": [
+      "390 light",
+      "1280 dark",
+      "390 dark, 1.5 font"
+    ],
+    "externalRequests": "blocked",
+    "evidence": "web/results-editorial-v3.json",
+    "previousEvidencePreserved": "../web (72 states plus 9 attested-response states)"
+  },
+  "viewer": {
+    "passed": true,
+    "groups": 10,
+    "fields": 10,
+    "replies": 15,
+    "export": "15 defer decisions in temporary directory only; no owner decisions inferred",
+    "validShaImport": "passed-local-plan-only",
+    "staleShaImport": "rejected",
+    "network": "blocked",
+    "sourceWrites": 0,
+    "productionWrites": 0
+  },
+  "regeneration": {
+    "schema": 3,
+    "network": false,
+    "checkedFiles": 567,
+    "beforeDigest": "a56f988fd01c608d43d51bc504e645389d4f7c8273641bc45a3ce01f64dcf38f",
+    "afterDigest": "a56f988fd01c608d43d51bc504e645389d4f7c8273641bc45a3ce01f64dcf38f",
+    "changedFiles": [],
+    "passed": true,
+    "commands": [
+      "node scripts/liturgy/editorial-responsories-v3.mjs --check",
+      "node scripts/liturgy/common-seasons.mjs --write --report",
+      "node patchs/generate-db-feasts.mjs --offline",
+      "node scripts/liturgy/common-seasons-fixture.mjs",
+      "node scripts/liturgy/build-editorial-exceptions-v3.mjs",
+      "node scripts/liturgy/prepare-editorial-publication-v3.mjs --snapshot backups/firestore-snapshot-public"
+    ]
+  },
+  "sourceCounts": {
+    "sourceRevision": "b05699f4366ae1fe4f66bde0e28ee27e2c07a37c",
+    "inputFields": 467,
+    "short": {
+      "fields": 141,
+      "autoExpanded": 130,
+      "alreadyFull": 2,
+      "needsEditor": 9,
+      "blockedByTechnicalConstraint": 0,
+      "repliesExpanded": 396,
+      "repeatedReplies": 441,
+      "alreadyFullReplies": 18,
+      "replyClassification": {
+        "auto-expanded": 396,
+        "already-full": 18,
+        "held-safe-candidate": 13,
+        "needs-editor": 14
+      }
+    },
+    "long": {
+      "fields": 326,
+      "autoExpanded": 325,
+      "alreadyFull": 0,
+      "needsEditor": 1,
+      "blockedByTechnicalConstraint": 0,
+      "repliesExpanded": 424,
+      "repeatedReplies": 425,
+      "alreadyFullReplies": 0,
+      "replyClassification": {
+        "auto-expanded": 424,
+        "needs-editor": 1
+      }
+    },
+    "sourceFieldsExpanded": 455,
+    "repliesExpanded": 820,
+    "needsEditorFields": 10,
+    "scopes": 393,
+    "productionWrites": 0,
+    "livePreflight": false
+  },
+  "publication": {
+    "state": "content-ready, awaiting-live-preflight",
+    "snapshotAt": "2026-11-13T21:53:10.384Z",
+    "sourceRevision": "b05699f4366ae1fe4f66bde0e28ee27e2c07a37c",
+    "oldReadyFields": 6400,
+    "oldReadyDocuments": 727,
+    "readyDocuments": 974,
+    "readyFields": 8153,
+    "heldFields": 888,
+    "newlyReadyFromOldHeld": 1753,
+    "newFieldsBeyondOldPlan": 0,
+    "cacheDerivedFields": 1,
+    "releaseClassification": "MASS CONTENT REBUILD",
+    "expandedFirestoreReplies": 3629,
+    "estimatedBatches": 3,
+    "maximumCommitWrites": 400,
+    "maximumCommitBytes": 8388608,
+    "livePreflight": false,
+    "productionWrites": 0,
+    "releaseGate": "MASS CONTENT REBUILD; owner authorization + Flutter bundle/app release required. No manifest/revision override."
+  },
+  "artifacts": {
+    "publicationPlanSha256": "dbb4477f664a080ee5199414abec5f71816107fe747b0bb95b4f1888afac54fe",
+    "sourceProofSha256": "9836269ca63e2e6b31eeadbfd65919ffdd1e4a25289d57a6d35152dfe6f78ff4",
+    "scopePolicySha256": "8e09b2fc52cb87890e7d7c934af47d0783e1efcd97cb59dd087281b1a5926357"
+  },
+  "flutter": {
+    "repositoryEdited": false,
+    "formatterInspectedReadOnly": true,
+    "releasedBundleVerified": false
+  },
+  "production": {
+    "writes": 0,
+    "manifestPublished": false,
+    "contentRevisionBumped": false,
+    "deployed": false,
+    "merged": false,
+    "freshLivePreflight": false
+  }
+}

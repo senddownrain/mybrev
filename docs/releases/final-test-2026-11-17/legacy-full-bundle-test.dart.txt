@@ -1,0 +1,115 @@
+// Run in the immutable 6b5b278 worktree using its pinned Flutter 3.38.9.
+// Target documents are an ignored, locally verified PR113+supplement projection.
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:hive/hive.dart';
+import 'package:mybrev_flutter/content/content_bundle.dart';
+import 'package:mybrev_flutter/content/content_store.dart';
+import 'package:mybrev_flutter/content/content_updater.dart';
+import 'package:mybrev_flutter/services/hive_service.dart';
+import '../../test/content_offline_test.dart' show FakeRemote;
+
+class _InterruptedRemote extends FakeRemote {
+  _InterruptedRemote(super.collections, {super.contentVersion});
+  int calls = 0;
+  @override
+  Future<Map<String, Map<String, dynamic>>> fetchDocuments(
+    String name,
+    List<String> ids,
+  ) async {
+    if (++calls == 2)
+      throw StateError('Simulated download interruption before activation');
+    return super.fetchDocuments(name, ids);
+  }
+}
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  for (final interrupted in [false, true]) {
+    test(
+      'legacy mass update ${interrupted ? 'download interruption' : 'success and restart'} preserves personal data',
+      () async {
+        final dir = await Directory.systemTemp.createTemp('legacy-pr255-');
+        try {
+          await HiveService.init(path: dir.path, loadBundle: true);
+          final store = ContentStore.instance;
+          await store.ensureLoaded(kContentCollections);
+          const prefs = {
+            'fontSize': 22,
+            'theme': 'dark',
+            'favoriteIds': '["mine"]',
+          };
+          const prayer = {'title': 'Мая малітва', 'text': 'Асабісты тэкст'};
+          await HiveService.settingsBox.putAll(prefs);
+          await HiveService.localPrayersBox.put('mine', prayer);
+          final before = {
+            for (final n in kContentCollections)
+              n: store.collection(n).digest(),
+          };
+          final raw =
+              jsonDecode(
+                    File(
+                      Platform.environment['PR255_EXPECTED_DOCUMENTS']!,
+                    ).readAsStringSync(),
+                  )
+                  as Map;
+          final target = {
+            for (final n in kContentCollections.where(raw.containsKey))
+              n: {
+                for (final entry in (raw[n] as Map).entries)
+                  entry.key as String: Map<String, dynamic>.from(
+                    entry.value as Map,
+                  ),
+              },
+          };
+          final remote = interrupted
+              ? _InterruptedRemote(target, contentVersion: 1795000000000)
+              : FakeRemote(target, contentVersion: 1795000000000);
+          final updater = ContentUpdater(remote: remote);
+          final plan = await updater.check();
+          expect(plan, isNotNull);
+          expect(plan!.documents, greaterThan(700));
+          if (interrupted) {
+            await expectLater(updater.apply(plan), throwsStateError);
+            expect({
+              for (final n in kContentCollections)
+                n: store.collection(n).digest(),
+            }, before);
+          } else {
+            await updater.apply(plan);
+            for (final n in target.keys)
+              expect(
+                store.collection(n).digest(),
+                contentDigest({
+                  for (final e in target[n]!.entries)
+                    e.key: documentHash(e.value),
+                }),
+              );
+          }
+          for (final e in prefs.entries)
+            expect(HiveService.settingsBox.get(e.key), e.value);
+          expect(HiveService.localPrayersBox.get('mine'), prayer);
+          final after = {
+            for (final n in kContentCollections)
+              n: store.collection(n).digest(),
+          };
+          await Hive.close();
+          await HiveService.init(path: dir.path, loadBundle: true);
+          await store.ensureLoaded(kContentCollections);
+          expect({
+            for (final n in kContentCollections)
+              n: store.collection(n).digest(),
+          }, after);
+          for (final e in prefs.entries)
+            expect(HiveService.settingsBox.get(e.key), e.value);
+          expect(HiveService.localPrayersBox.get('mine'), prayer);
+        } finally {
+          await Hive.close();
+          await dir.delete(recursive: true);
+        }
+      },
+      timeout: const Timeout(Duration(minutes: 3)),
+    );
+  }
+}

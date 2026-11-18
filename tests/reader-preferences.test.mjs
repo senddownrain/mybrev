@@ -7,9 +7,22 @@ import { markReaderProse } from '../src/directives/readerProse.js';
 import { PSALMODY_PREVIEW_HTML, PSALMODY_PREVIEW_SOURCE } from '../src/constants/psalmodyPreview.js';
 import { formatPsalmHtml } from '../src/utils/liturgicalHtml.js';
 
-test('alignment defaults to start; unknown stored values are safe and both choices survive', () => {
-  for (const value of [null, undefined, '', 'left', 'obsolete', 1, {}, 'JUSTIFY']) assert.equal(normalizeTextAlignment(value), 'start');
+test('alignment defaults to justify; a saved explicit left choice survives', () => {
+  for (const value of [null, undefined, '', 'left', 'obsolete', 1, {}, 'JUSTIFY']) assert.equal(normalizeTextAlignment(value), 'justify');
   for (const alignment of TEXT_ALIGNMENTS) assert.equal(normalizeTextAlignment(alignment), alignment);
+});
+
+test('only selected Hours parts opt into reader alignment', () => {
+  const base = new URL('../src/components/oraparts/', import.meta.url);
+  for (const name of ['Reading', 'Lectio', 'LastPrayer']) {
+    const content = readFileSync(new URL(`${name}.vue`, base), 'utf8');
+    assert.match(content, /class="ora-text reader-align-office"/);
+  }
+  const dayTitle = readFileSync(new URL('DayTitle.vue', base), 'utf8');
+  assert.match(dayTitle, /reader-align-comment/g);
+  const css = readFileSync(new URL('../src/styles/main.scss', import.meta.url), 'utf8');
+  assert.match(css, /\.ora-text\.reader-align-office/);
+  assert.match(css, /\.day-title-comment\.reader-align-comment/);
 });
 
 test('only prose paragraphs are marked; structured and liturgical content stays intact', () => {

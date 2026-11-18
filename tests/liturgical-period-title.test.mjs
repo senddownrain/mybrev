@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { formatLiturgicalPeriodTitle } from '../src/utils/liturgicalPeriodTitle.js';
 
 test('uses dedicated Sunday titles for every liturgical period', () => {
-  assert.equal(formatLiturgicalPeriodTitle({ periodType: 'ordinary', periodWeek: 3, dayOfWeek: 1 }), 'III нядзеля звычайная');
+  assert.equal(formatLiturgicalPeriodTitle({ periodType: 'ordinary', periodWeek: 3, dayOfWeek: 1 }), 'III нядзеля звычайная · Нядзеля Божага Слова');
+  assert.equal(formatLiturgicalPeriodTitle({ periodType: 'ordinary', periodWeek: 4, dayOfWeek: 1 }), 'IV нядзеля звычайная');
   assert.equal(formatLiturgicalPeriodTitle({ periodType: 'advent', periodWeek: 3, dayOfWeek: 1 }), 'III нядзеля Адвэнту');
   assert.equal(formatLiturgicalPeriodTitle({ periodType: 'lent', periodWeek: 3, dayOfWeek: 1 }), 'III нядзеля Вялікага посту');
   assert.equal(formatLiturgicalPeriodTitle({ periodType: 'easter', periodWeek: 3, dayOfWeek: 1 }), 'III велікодная нядзеля');

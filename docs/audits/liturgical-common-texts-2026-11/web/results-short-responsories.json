@@ -1,0 +1,230 @@
+[
+  {
+    "scenario": "josaphat-martyr-one-laudes",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      0,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "headings": 1,
+    "responseParagraphs": 4,
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/laudes"
+  },
+  {
+    "scenario": "josaphat-martyr-one-vesper",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "headings": 1,
+    "responseParagraphs": 0,
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/vesper"
+  },
+  {
+    "scenario": "josaphat-pastors-laudes",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "mode": "left-break"
+    },
+    "counts": [
+      1,
+      0,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(155, 48, 42)",
+        "rgb(155, 48, 42)"
+      ]
+    },
+    "headings": 1,
+    "responseParagraphs": 4,
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors/laudes"
+  },
+  {
+    "scenario": "josaphat-martyr-one-laudes",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      0,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "headings": 1,
+    "responseParagraphs": 4,
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/laudes"
+  },
+  {
+    "scenario": "josaphat-martyr-one-vesper",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "headings": 1,
+    "responseParagraphs": 0,
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/vesper"
+  },
+  {
+    "scenario": "josaphat-pastors-laudes",
+    "alternative": 0,
+    "profile": {
+      "width": 1280,
+      "height": 900,
+      "theme": "dark",
+      "mode": "alternating-stanzas"
+    },
+    "counts": [
+      1,
+      0,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "headings": 1,
+    "responseParagraphs": 4,
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors/laudes"
+  },
+  {
+    "scenario": "josaphat-martyr-one-laudes",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      0,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "headings": 1,
+    "responseParagraphs": 4,
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/laudes"
+  },
+  {
+    "scenario": "josaphat-martyr-one-vesper",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      1,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "headings": 1,
+    "responseParagraphs": 0,
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk/vesper"
+  },
+  {
+    "scenario": "josaphat-pastors-laudes",
+    "alternative": 0,
+    "profile": {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "mode": "left-break-indent",
+      "scale": 1.5
+    },
+    "counts": [
+      1,
+      0,
+      1
+    ],
+    "metrics": {
+      "overflow": false,
+      "markers": [
+        "rgb(239, 145, 136)",
+        "rgb(239, 145, 136)"
+      ]
+    },
+    "headings": 1,
+    "responseParagraphs": 4,
+    "url": "http://127.0.0.1:5191/day/2026-11-12/ora/12-11-sv-josaphat-minsk-mohilev-pinsk--pinsk--pastors/laudes"
+  }
+]

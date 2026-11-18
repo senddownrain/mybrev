@@ -1,0 +1,40 @@
+{
+  "sourceRevision": "b05699f4366ae1fe4f66bde0e28ee27e2c07a37c",
+  "inputFields": 467,
+  "short": {
+    "fields": 141,
+    "autoExpanded": 130,
+    "alreadyFull": 2,
+    "needsEditor": 9,
+    "blockedByTechnicalConstraint": 0,
+    "repliesExpanded": 396,
+    "repeatedReplies": 441,
+    "alreadyFullReplies": 18,
+    "replyClassification": {
+      "auto-expanded": 396,
+      "already-full": 18,
+      "held-safe-candidate": 13,
+      "needs-editor": 14
+    }
+  },
+  "long": {
+    "fields": 326,
+    "autoExpanded": 325,
+    "alreadyFull": 0,
+    "needsEditor": 1,
+    "blockedByTechnicalConstraint": 0,
+    "repliesExpanded": 424,
+    "repeatedReplies": 425,
+    "alreadyFullReplies": 0,
+    "replyClassification": {
+      "auto-expanded": 424,
+      "needs-editor": 1
+    }
+  },
+  "sourceFieldsExpanded": 455,
+  "repliesExpanded": 820,
+  "needsEditorFields": 10,
+  "scopes": 393,
+  "productionWrites": 0,
+  "livePreflight": false
+}

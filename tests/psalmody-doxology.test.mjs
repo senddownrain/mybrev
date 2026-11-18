@@ -23,7 +23,7 @@ test('insert before repeated antiphon, preserve every existing byte and attribut
   assert.equal(result.value.replace('\n'+DOXOLOGY_HTML+'\n',''),before);
   assert.ok(result.value.indexOf('Хвала Айцу')<result.value.indexOf('Ант.'));
   check(result.value);
-  const display=formatPsalmHtml(result.value,{stripEmbeddedAntiphon:true});
+  const display=formatPsalmHtml(result.value,{stripEmbeddedAntiphon:true,antiphon:'<p>1 ант. Хваліце Пана.</p>'});
   assert.match(display,/Хвала Айцу і Сыну/u);
   assert.doesNotMatch(display,/Ант\./u);
 });
