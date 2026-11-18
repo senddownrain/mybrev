@@ -2,7 +2,7 @@
   <footer
     class="feedback-prompt"
     :class="{ 'feedback-prompt--reader': reader }"
-    data-test="feedback-prompt"
+    :data-test="rootTest || 'feedback-prompt'"
   >
     <p :id="labelId || undefined" class="feedback-prompt__text prayer-report__text">{{ label }}</p>
     <RouterLink
@@ -30,6 +30,7 @@ const props = defineProps({
   to: { type: [Object, String], default: null },
   labelId: { type: String, default: '' },
   actionTest: { type: String, default: '' },
+  rootTest: { type: String, default: '' },
 });
 
 const route = useRoute();
