@@ -81,7 +81,7 @@
     "sync:category-icons": "node scripts/export-category-icons.mjs",
     "test:audit": "node --test tests/liturgical-audit.test.mjs",
     "test:fixed-feasts": "node --test tests/fixed-feasts-audit.test.mjs",
-    "test:alternatives": "node --test tests/liturgical-alternatives.test.mjs tests/pastors-hymns.test.mjs tests/liturgical-antiphon-label.test.mjs",
+    "test:alternatives": "node --test tests/liturgical-alternatives.test.mjs tests/pastors-hymns.test.mjs tests/liturgical-antiphon-label.test.mjs tests/psalm-opening.test.mjs",
     "test:parsed-readings": "node --test tests/parsed-readings-identity.test.mjs tests/parsed-readings-content-integrity.test.mjs",
     "test:prayer-markdown": "node --test tests/prayer-markdown.test.mjs",
     "test:ordo": "node --test tests/ordo-*.test.mjs",

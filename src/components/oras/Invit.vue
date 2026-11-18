@@ -41,17 +41,17 @@
                     <v-card-text class="ora-text">
                         <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" aria-label="Выбар антыфоны закліку" />
                       
-                        <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs1)" />
+                        <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs1, displayedDay.invitatoriumAnt, antOption)" />
                         <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
-                        <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs2)" />
+                        <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs2, displayedDay.invitatoriumAnt, antOption)" />
                         <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
-                        <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs3)" />
+                        <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs3, displayedDay.invitatoriumAnt, antOption)" />
                         <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
-                        <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs4)" />
+                        <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs4, displayedDay.invitatoriumAnt, antOption)" />
                         <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
-                        <PsalmText v-if="displayedDay.invitatoriumPs5" :html="formatPsalm(displayedDay.invitatoriumPs5)" />
+                        <PsalmText v-if="displayedDay.invitatoriumPs5" :html="formatPsalm(displayedDay.invitatoriumPs5, displayedDay.invitatoriumAnt, antOption)" />
                         <alternative-text highlight-antiphon-label v-if="displayedDay.invitatoriumPs5" v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
-                        <PsalmText v-if="displayedDay.invitatoriumPs6" :html="formatPsalm(displayedDay.invitatoriumPs6)" />
+                        <PsalmText v-if="displayedDay.invitatoriumPs6" :html="formatPsalm(displayedDay.invitatoriumPs6, displayedDay.invitatoriumAnt, antOption)" />
                         <alternative-text highlight-antiphon-label v-if="displayedDay.invitatoriumPs6" v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
                       </v-card-text>
                 </v-card>
@@ -73,6 +73,8 @@ import DayTitle from '@/components/oraparts/DayTitle.vue';
 import PsalmText from '@/components/oraparts/PsalmText.vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 import { formatPsalmHtml } from '@/utils/liturgicalHtml';
+import { getLiturgicalAlternatives } from '@/utils/liturgicalAlternatives';
+import { omitEchoedPsalmOpening } from '@/utils/psalmOpening';
 import { getDefaultInvitatoriumId } from '@/utils/invitatorium';
 
 const { day, context, pending } = useResolvedLiturgicalDay();
@@ -89,7 +91,11 @@ const invitatoriumOptions = computed(() => invitatoriums.value.map((item, index)
 })));
 const selectedInvitatorium = computed(() => invitatoriums.value.find((item) => item.id === selectedInvitatoriumId.value));
 const displayedDay = computed(() => ({ ...(day.value || {}), ...(selectedInvitatorium.value || {}) }));
-const formatPsalm = formatPsalmHtml;
+const formatPsalm = (psalm, antiphon, selectedIndex) => {
+  const formatted = formatPsalmHtml(psalm);
+  const selected = getLiturgicalAlternatives(antiphon || '')[selectedIndex]?.html;
+  return omitEchoedPsalmOpening(formatted, selected);
+};
 const periodType = computed(() => day.value?._periodType || context.value?.periodType);
 
 watch([invitatoriums, periodType], () => {
