@@ -27,18 +27,25 @@ test('public sources page retains original editions and adds confirmed prayer so
     '© Выдавецтва «Про Хрысто», 2022',
   ]);
   assert.equal(bibliography.entries[13].title, 'Малітоўнік «Бог Добры» (Пінск, 2018)');
-  assert.equal(bibliography.entries[14].title, '«Бог Добры», ІІІ выданне (Пінск, 2022)');
-  assert.equal(bibliography.entries[14].notices.length, 2);
+  assert.equal(bibliography.entries[13].visibleInSources, false);
+  assert.equal(bibliography.entries[14].title, 'Малітоўнік «Бог Добры» (Пінск, 2022)');
+  assert.deepEqual(bibliography.entries[14].notices, ['© Выдавецтва Пінскай дыяцэзіі, 2022']);
   assert.equal(bibliography.entries[15].title, 'Малітоўнік «Каб пазналі Цябе» (Гродна, 2014)');
   assert.equal(bibliography.entries[16].title, '«Біблія» (Мінск, 2017)');
   assert.deepEqual(bibliography.entries[16].details, ['Стары Запавет - на падставе рукапісаў кс. У. Чарняўскага']);
   assert.deepEqual(bibliography.entries[16].notices, ['© «Біблійнае таварыства ў Рэспубліцы Беларусь», 2017']);
-  assert.equal(bibliography.entries[17].title, '«Біблія» Синодальный перевод');
+  assert.equal(bibliography.entries[17].title, '«Библия» (Синодальный перевод, на русском языке)');
   assert.deepEqual(bibliography.entries[17].notices, []);
   assert.ok(bibliography.entries.every(entry => entry.title && Array.isArray(entry.notices)));
+  const hiddenIds = ['bog-dobry-2018', 'katecheta', 'kasciolhomiel', 'sviatoe-pisanne'];
+  for (const id of hiddenIds) {
+    assert.equal(bibliography.entries.find(entry => entry.id === id)?.visibleInSources, false);
+  }
+  assert.deepEqual(bibliography.sections.map(section => bibliography.entries.filter(entry => entry.section === section && entry.visibleInSources !== false).length), [16, 4]);
   const sourceComponent = read('src/components/SourceRights.vue');
   assert.match(sourceComponent, /bibliography\.sections/);
   assert.match(sourceComponent, /bibliography\.entries/);
+  assert.match(sourceComponent, /visibleInSources !== false/);
   assert.match(sourceComponent, /source\.details/);
   assert.doesNotMatch(sourceComponent, /bindings\.bible|groups\.map/);
 });
