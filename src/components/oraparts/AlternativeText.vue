@@ -50,6 +50,7 @@
 import { computed, getCurrentInstance, nextTick, ref, watch } from 'vue';
 import { formatIntercessions, getLiturgicalAlternatives } from '@/utils/liturgicalAlternatives';
 import { markAntiphonLabel } from '@/utils/liturgicalHtml';
+import { expandOfficeResponsoryRepeats } from '@/utils/officeResponsoryRepeats';
 
 const props = defineProps({
   text: { type: String, default: '' },
@@ -78,7 +79,10 @@ const activeOption = computed(() => options.value[activeIndex.value] || options.
 const displayedHtml = computed(() => {
   const html = activeOption.value?.html || '';
   const formatted = props.kind === 'intercession' ? formatIntercessions(html) : html;
-  return props.highlightAntiphonLabel ? markAntiphonLabel(formatted) : formatted;
+  // Expand only after choosing a reading alternative; no cross-variant text reuse.
+  const expanded = ['reading', 'office-reading', 'responsory'].includes(props.kind)
+    ? expandOfficeResponsoryRepeats(formatted) : formatted;
+  return props.highlightAntiphonLabel ? markAntiphonLabel(expanded) : expanded;
 });
 
 watch(() => props.text, () => {
