@@ -1,5 +1,5 @@
 <template>
-  <div class="compendium-shell">
+  <div class="compendium-shell" :class="{ 'compendium-shell--idle': !resultsOpen }">
     <!-- The current page stays mounted while results are shown, so closing the
          search returns to exactly the same page state. -->
     <!-- Keyed by path: `?q` and an anchor never remount the Part page. -->
@@ -14,6 +14,7 @@
       <CompendiumSearchResults v-if="store.ready" :results="store.searchResults" />
       <v-progress-linear v-else indeterminate aria-label="Загрузка Кампендыя" />
     </v-container>
+    <FeedbackPrompt v-if="!resultsOpen" class="compendium-feedback" label="Заўважылі памылку ў Кампендыі?" />
     <!-- The only search dock of the Compendium: pages never mount their own. -->
     <CompendiumSearchDock @focus="onDockFocus" />
   </div>
@@ -27,6 +28,7 @@ import { COMPENDIUM_TITLE } from '@/constants/compendium';
 import { createCompendiumSearchSync } from '@/utils/compendiumSearchRoute';
 import CompendiumSearchDock from '@/components/compendium/CompendiumSearchDock.vue';
 import CompendiumSearchResults from '@/components/compendium/CompendiumSearchResults.vue';
+import FeedbackPrompt from '@/components/common/FeedbackPrompt.vue';
 
 // Shared shell of every Compendium level: one persistent search dock and one
 // global results layer. See `createCompendiumSearchSync` for the history rules.
@@ -43,3 +45,12 @@ const onDockFocus = () => { reopen(); };
 
 <style scoped src="@/styles/prayers-list.css"></style>
 <style scoped src="@/styles/compendium.css"></style>
+<style scoped>
+/* Reserve the fixed search dock below the footer instead of inside the list. */
+.compendium-shell--idle :deep(.prayers-list-container.compendium-container) {
+  padding-bottom: 16px !important;
+}
+.compendium-shell :deep(.compendium-feedback) {
+  margin-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
+}
+</style>
