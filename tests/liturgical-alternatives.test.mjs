@@ -256,3 +256,43 @@ test('intercession formatting preserves a space between separately styled Belaru
   assert.match(response.text, /хто\s+рупліва/u);
   assert.doesNotMatch(response.text, /хторупліва/u);
 });
+
+test('28 October Simon and Jude Vespers: empty saved paragraphs are not rubric bars', () => {
+  // Historical public Firestore fixture: the legacy day copy contains
+  // <p>\\n</p> between every petition and response.
+  const fixture = JSON.parse(fs.readFileSync(
+    path.resolve('tests/fixtures/liturgical-editor/2026-10-28.json'), 'utf8',
+  ));
+  const source = fixture.documents['days/28-10-sv-simon-jude-apostles'].vesperInter;
+  const root = parse(formatIntercessions(source));
+  const paragraphs = root.querySelectorAll('p');
+
+  assert.equal(paragraphs.length, 12);
+  assert.ok(paragraphs.every((paragraph) => paragraph.text.trim()), 'no blank HTML paragraphs in the reader');
+  assert.equal(root.querySelectorAll('.intercessions__intro').length, 1);
+  assert.equal(root.querySelectorAll('.intercessions__refrain').length, 1);
+  assert.equal(root.querySelector('.intercessions__refrain').text.trim(), 'Памятай, Пане, пра свой Касцёл.');
+  assert.equal(root.querySelectorAll('.intercessions__petition').length, 5);
+  assert.equal(root.querySelectorAll('.intercessions__response').length, 5);
+  assert.match(root.text, /хто рупліва сее слова/u);
+});
+
+test('Quill empty paragraphs never turn into repeated empty intercession refrains', () => {
+  const html = [
+    '<p>Паклічам Айца:</p>',
+    '<p><br></p>',
+    '<p>&nbsp;</p>',
+    '<p><em>Пане, выслухай нас.</em></p>',
+    '<p>\n</p>',
+    '<p>Ойча, дай нам мір,</p>',
+    '<p><span>&#160;</span></p>',
+    '<p>– захавай нас ад зла.</p>',
+  ].join('');
+  const root = parse(formatIntercessions(html));
+  assert.equal(root.querySelectorAll('p').length, 4);
+  assert.equal(root.querySelectorAll('.intercessions__refrain').length, 1);
+  assert.equal(root.querySelector('.intercessions__refrain').text.trim(), 'Пане, выслухай нас.');
+  assert.equal(root.querySelectorAll('.intercessions__petition').length, 1);
+  assert.equal(root.querySelectorAll('.intercessions__response').length, 1);
+  assert.ok(root.querySelectorAll('p').every((paragraph) => paragraph.text.trim()));
+});
