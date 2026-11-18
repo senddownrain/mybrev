@@ -46,6 +46,9 @@ on:
       - 'src/components/OrasList.vue'
       # Publish Ordo-backed fixed celebration labels in the Hours reader.
       - 'src/utils/ordoDayOptions.js'
+      # Publish changes to sparse Office prayer sources and assembly rules.
+      - 'src/utils/ordo/officeAssembly.js'
+      - 'src/utils/ordo/office.js'
       # Calendar display and canonical Ordo updates must reach Hosting.
       - 'src/components/ordo/OrdoDay.vue'
       - 'src/components/ordo/OrdoMonth.vue'
