@@ -3,7 +3,8 @@
  *
  * Do not mutate proper-calendar.json: it is a byte-faithful extraction of the
  * published PDF, and build-proper-calendar.py --check verifies that invariant.
- * The liturgical entry itself already exists in the universal Ordo layer.
+ * Presentation-only overlays may add approved entries or correct source typos.
+ * They do not modify liturgical definitions, ranks or the published PDF.
  */
 export const calendarAdditions = Object.freeze([
   Object.freeze({
@@ -12,6 +13,15 @@ export const calendarAdditions = Object.freeze([
     date: 9,
     title: 'Св. Хуана Дыега Куаўтлатаацына',
     rank: '', // In the published calendar, optional memorials have an empty rank column.
+    ordoRank: 'memoria-ad-libitum',
+  }),
+  // Correct the source typo ("Латэранскай") only in the presented calendar.
+  Object.freeze({
+    id: 'mother-of-god-loreto',
+    month: 12,
+    date: 10,
+    title: 'Маці Божай Ларэтанскай',
+    rank: '',
     ordoRank: 'memoria-ad-libitum',
   }),
 ]);
