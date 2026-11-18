@@ -9,6 +9,7 @@
     <!-- `/ordo` is one month; `/ordo/:date` the detail of a day. -->
     <OrdoDay v-if="route.params.date" />
     <OrdoMonth v-else />
+    <FeedbackPrompt label="Заўважылі памылку ў календары?" />
   </v-container>
 </template>
 
@@ -17,6 +18,7 @@ import { useRoute } from 'vue-router';
 import OrdoDay from '@/components/ordo/OrdoDay.vue';
 import OrdoMonth from '@/components/ordo/OrdoMonth.vue';
 import OrdoDioceseFilter from '@/components/ordo/OrdoDioceseFilter.vue';
+import FeedbackPrompt from '@/components/common/FeedbackPrompt.vue';
 
 const route = useRoute();
 </script>

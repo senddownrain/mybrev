@@ -24,7 +24,6 @@
       </div>
     </Transition>
     <TextScaleControl v-if="isHour" class="ora-action-start" />
-    <v-btn :to="reportLocation" icon variant="text" class="ora-circle-btn" :class="{ 'ora-action-start': !isHour && !auth.isAdmin }" aria-label="Паведаміць пра памылку" data-test="ora-report-error"><PhFlag :size="21" /></v-btn>
     <v-btn v-if="auth.isAdmin" icon variant="flat" class="ora-circle-btn" :class="{ 'ora-action-start': !isHour }" aria-label="Рэдагаваць" @click="onEditClick"><PhPencilSimple :size="21" /></v-btn>
   </v-app-bar>
 </template>
@@ -33,9 +32,8 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
-import { PhArrowLeft, PhCaretDown, PhFlag, PhPencilSimple } from '@phosphor-icons/vue';
+import { PhArrowLeft, PhCaretDown, PhPencilSimple } from '@phosphor-icons/vue';
 import { trackFeature } from '@/utils/trackFeature';
-import { feedbackLocationForRoute } from '@/utils/feedbackContext.js';
 import TextScaleControl from '@/components/TextScaleControl.vue';
 import LiturgyNavLink from '@/components/common/LiturgyNavLink.vue';
 import { useLiturgicalHours } from '@/composables/useLiturgicalHours';
@@ -46,7 +44,6 @@ const router = useRouter();
 const route = useRoute();
 const auth = useAuthStore();
 const hours = useLiturgicalHours();
-const reportLocation = computed(() => feedbackLocationForRoute(route));
 const isHour = computed(() => route.name !== 'oras');
 const hourTitle = computed(() => LITURGICAL_HOUR_TITLES[route.name] || 'Літургія гадзінаў');
 const showCapsule = ref(false);

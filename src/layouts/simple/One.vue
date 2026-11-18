@@ -8,6 +8,7 @@
     <v-main :class="{ 'has-bottom-nav': hasBottomNav }">
       <router-view v-if="!hideLayoutTopNav" name="topNav" />
       <router-view />
+      <FeedbackPrompt />
       <NextHourLink />
       <BackToTop v-if="isHour" />
 
@@ -27,6 +28,7 @@
   import { providePsalmody } from '@/composables/usePsalmody';
   import { provideLiturgicalHours } from '@/composables/useLiturgicalHours';
   import NextHourLink from '@/components/liturgical/NextHourLink.vue';
+  import FeedbackPrompt from '@/components/common/FeedbackPrompt.vue';
   import { useSettingsStore } from '@/stores/settings.js';
   
   const settings = useSettingsStore();

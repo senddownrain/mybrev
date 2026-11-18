@@ -33,18 +33,14 @@
             <span class="prayer-source__label">Крыніца:</span>
             <span class="prayer-source__content" v-html="sourceHtml" />
           </footer>
-          <footer class="prayer-report" data-test="prayer-report">
-            <p id="prayer-report-label" class="prayer-report__text">Заўважылі памылку ў тэксце?</p>
-            <router-link
-              :to="feedbackTo"
-              class="prayer-report__action"
-              aria-describedby="prayer-report-label"
-              data-test="prayer-report-error"
-            >
-              <PhFlag :size="18" aria-hidden="true" class="prayer-report__icon" />
-              <span>Паведаміць</span>
-            </router-link>
-          </footer>
+          <FeedbackPrompt
+            class="prayer-report"
+            reader
+            :to="feedbackTo"
+            label-id="prayer-report-label"
+            root-test="prayer-report"
+            action-test="prayer-report-error"
+          />
       </article>
     </div>
 
@@ -73,7 +69,7 @@
 
 <script setup>
 import { vReaderProse } from '@/directives/readerProse';
-import { PhFlag } from '@phosphor-icons/vue';
+import FeedbackPrompt from '@/components/common/FeedbackPrompt.vue';
 import { prayerFeedbackLink } from '@/utils/feedbackContext';
 import '@/styles/prayer-reading.css';
 import { ref, computed, watch, nextTick, onUnmounted, onMounted } from 'vue';
