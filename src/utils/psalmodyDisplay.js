@@ -31,12 +31,6 @@ export function decoratePsalmody(root, { mode = 'left-break', dimmedSide = null,
     // Structural paragraphs own strophe boundaries. Only the continuous
     // stanza mode removes source line breaks inside those boundaries.
     if (mode === 'alternating-stanzas') {
-      // Tie the flexa to the first word when it is not a forced line break.
-      p.querySelectorAll('.psalm-marker').forEach((marker) => {
-        if (marker.textContent.trim() !== '†') return;
-        const next = marker.nextSibling;
-        if (next?.nodeType === 3) next.textContent = next.textContent.replace(/^[ \t]+/u, '\u00a0');
-      });
       p.querySelectorAll('br').forEach((br) => br.replaceWith(root.ownerDocument.createTextNode(' ')));
       return;
     }
@@ -45,9 +39,11 @@ export function decoratePsalmody(root, { mode = 'left-break', dimmedSide = null,
     const markers = [...p.querySelectorAll('.psalm-marker')].reverse();
     for (const marker of markers) {
       const range = root.ownerDocument.createRange();
-      // The flexa belongs to the continuation visually, unlike the * cadence.
-      if (marker.textContent.trim() === '†') range.setStartBefore(marker);
-      else range.setStartAfter(marker);
+      // Default: break AFTER both † and * (as the user's mode requests).
+      // Exception: the opening † stands for an omitted half-verse; it is
+      // already at the start of the psalm and must stay with the next word.
+      if (marker.classList.contains('psalm-opening-flexa')) continue;
+      range.setStartAfter(marker);
       range.setEnd(p, p.childNodes.length);
       if (!range.toString().trim()) continue;
       const continuation = root.ownerDocument.createElement('span');
