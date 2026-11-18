@@ -166,7 +166,7 @@
 import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import BackToTop from '@/components/BackToTop.vue';
 import FeedbackPrompt from '@/components/common/FeedbackPrompt.vue';
-import { feedbackLink } from '@/utils/feedbackContext';
+import { readingFeedbackLink } from '@/utils/feedbackContext';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useReadings } from '@/composables/useReadings';
@@ -243,17 +243,12 @@ const activeReading = computed(() => screen.value.activeReading);
 
 // Preserve the exact date and selected reading document. The generic route
 // helper cannot infer today's date or the actively selected cycle/set.
-const readingFeedbackTo = computed(() => {
-  const rawId = activeReading.value?.id;
-  const id = typeof rawId === 'string' && /^[\\p{L}\\p{N}_\\-.:]{1,128}$/u.test(rawId) ? rawId : undefined;
-  const base = feedbackLink({
-    kind: 'reading',
-    id,
-    date: selectedDate.value.format('YYYY-MM-DD'),
-    title: ordoOption.value?.title || 'Чытанні дня',
-  });
-  return { ...base, query: { ...base.query, ctx_path: route.path } };
-});
+const readingFeedbackTo = computed(() => readingFeedbackLink({
+  id: activeReading.value?.id,
+  date: selectedDate.value.format('YYYY-MM-DD'),
+  title: ordoOption.value?.title || 'Чытанні дня',
+  path: route.path,
+}));
 
 function groupIcon(group) {
   const reading = group.documents[0] || {};
