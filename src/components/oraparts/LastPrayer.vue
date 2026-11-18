@@ -5,7 +5,7 @@
             МАЛІТВА
             </v-card-title>
             <v-card-text class="ora-text reader-align-office">
-                <alternative-text :text="text" kind="prayer" aria-label="Выбар малітвы" />
+                <alternative-text :text="text" kind="prayer" :expand-collect-conclusion="fullConclusion" aria-label="Выбар малітвы" />
             </v-card-text>
         </v-card>
     </div>
@@ -17,5 +17,6 @@ import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 
 defineProps({
   text: String,
+  fullConclusion: { type: Boolean, default: false },
 })
 </script>

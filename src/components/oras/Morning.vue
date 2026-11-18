@@ -83,7 +83,7 @@
         <benedictus :ant="day.laudesAntBen" />
         <inters :text="day.laudesInter" />
         <pater-noster />
-        <last-prayer :text="day.laudesPr" />
+        <last-prayer :text="day.laudesPr" full-conclusion />
         <end-of-vesper />
       </v-col>
     </v-row>
