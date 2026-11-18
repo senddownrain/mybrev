@@ -39,18 +39,18 @@
 
                 <v-card class="ora" flat>
                     <v-card-text class="ora-text">
-                        <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" aria-label="Выбар антыфоны закліку" />
+                        <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" aria-label="Выбар антыфоны закліку" :following-psalm-html="formatPsalmHtml(displayedDay.invitatoriumPs1)" />
                       
                         <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs1, displayedDay.invitatoriumAnt, antOption)" />
-                        <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
+                        <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" :following-psalm-html="formatPsalmHtml(displayedDay.invitatoriumPs2)" />
                         <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs2, displayedDay.invitatoriumAnt, antOption)" />
-                        <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
+                        <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" :following-psalm-html="formatPsalmHtml(displayedDay.invitatoriumPs3)" />
                         <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs3, displayedDay.invitatoriumAnt, antOption)" />
-                        <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
+                        <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" :following-psalm-html="formatPsalmHtml(displayedDay.invitatoriumPs4)" />
                         <PsalmText :html="formatPsalm(displayedDay.invitatoriumPs4, displayedDay.invitatoriumAnt, antOption)" />
-                        <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
+                        <alternative-text highlight-antiphon-label v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" :following-psalm-html="formatPsalmHtml(displayedDay.invitatoriumPs5)" />
                         <PsalmText v-if="displayedDay.invitatoriumPs5" :html="formatPsalm(displayedDay.invitatoriumPs5, displayedDay.invitatoriumAnt, antOption)" />
-                        <alternative-text highlight-antiphon-label v-if="displayedDay.invitatoriumPs5" v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
+                        <alternative-text highlight-antiphon-label v-if="displayedDay.invitatoriumPs5" v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" :following-psalm-html="formatPsalmHtml(displayedDay.invitatoriumPs6)" />
                         <PsalmText v-if="displayedDay.invitatoriumPs6" :html="formatPsalm(displayedDay.invitatoriumPs6, displayedDay.invitatoriumAnt, antOption)" />
                         <alternative-text highlight-antiphon-label v-if="displayedDay.invitatoriumPs6" v-model="antOption" class="ora-ant" :text="displayedDay.invitatoriumAnt" :show-picker="false" />
                       </v-card-text>
