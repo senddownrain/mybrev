@@ -5,17 +5,17 @@
                 ПСАЛЬМОДЫЯ
             </v-card-title>
             <v-card-text class="ora-text">
-                <alternative-text highlight-antiphon-label v-model="ant1Option" class="ora-ant" :text="ant1" aria-label="Выбар першай антыфоны" />
+                <alternative-text highlight-antiphon-label v-model="ant1Option" class="ora-ant" :text="ant1" :following-psalm-html="formatPsalmHtml(ps1)" aria-label="Выбар першай антыфоны" />
                 <alternative-text class="ora-psalm" kind="psalm" :text="formatPsalm(ps1, ant1, ant1Option)" aria-label="Выбар першага псальма">
                   <template #default="{ html }"><PsalmText :html="html" /></template>
                 </alternative-text>
                 <alternative-text highlight-antiphon-label v-if="!singleAntiphon" v-model="ant1Option" class="ora-ant" :text="ant1" :show-picker="false" />
-                <alternative-text highlight-antiphon-label v-if="!singleAntiphon && ant2" v-model="ant2Option" class="ora-ant ora-ant--separated" :text="ant2" aria-label="Выбар другой антыфоны" />
+                <alternative-text highlight-antiphon-label v-if="!singleAntiphon && ant2" v-model="ant2Option" class="ora-ant ora-ant--separated" :text="ant2" :following-psalm-html="formatPsalmHtml(ps2)" aria-label="Выбар другой антыфоны" />
                 <alternative-text v-if="ps2" class="ora-psalm" kind="psalm" :text="formatPsalm(ps2, singleAntiphon ? ant1 : ant2, singleAntiphon ? null : ant2Option)" aria-label="Выбар другога псальма">
                   <template #default="{ html }"><PsalmText :html="html" /></template>
                 </alternative-text>
                 <alternative-text highlight-antiphon-label v-if="!singleAntiphon && ant2" v-model="ant2Option" class="ora-ant" :text="ant2" :show-picker="false" />
-                <alternative-text highlight-antiphon-label v-if="!singleAntiphon && ant3 && !hasEmbeddedThirdPsalmAlternatives" v-model="ant3Option" class="ora-ant ora-ant--separated" :text="ant3" aria-label="Выбар трэцяй антыфоны" />
+                <alternative-text highlight-antiphon-label v-if="!singleAntiphon && ant3 && !hasEmbeddedThirdPsalmAlternatives" v-model="ant3Option" class="ora-ant ora-ant--separated" :text="ant3" :following-psalm-html="formatPsalmHtml(ps3)" aria-label="Выбар трэцяй антыфоны" />
                 <alternative-text
                   v-if="ps3"
                   class="ora-psalm" kind="psalm"
