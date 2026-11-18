@@ -362,8 +362,16 @@ export function formatIntercessions(html) {
       });
   }).join('\n');
   const root = parse(normalizedHtml);
-  const paragraphs = root.querySelectorAll('p');
-  if (!paragraphs.length) return String(html || '');
+  // Quill and legacy Firestore HTML may contain empty <p> separators. They are
+  // not liturgical refrains: classifying them creates repeated empty rubric bars.
+  // Drop them only from the rendered copy; never mutate the stored source.
+  const paragraphs = root.querySelectorAll('p').filter((paragraph) => {
+    const visible = textOf(paragraph.toString()).replace(/[\u200B-\u200D\uFEFF]/gu, '').trim();
+    if (visible) return true;
+    paragraph.remove();
+    return false;
+  });
+  if (!paragraphs.length) return root.innerHTML;
 
   let refrainIndex = paragraphs.findIndex((paragraph, index) => (
     index < 3 && Boolean(paragraph.querySelector('em'))
