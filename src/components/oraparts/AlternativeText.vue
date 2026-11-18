@@ -50,7 +50,7 @@
 import { computed, getCurrentInstance, nextTick, ref, watch } from 'vue';
 import { formatIntercessions, getLiturgicalAlternatives } from '@/utils/liturgicalAlternatives';
 import { markAntiphonLabel } from '@/utils/liturgicalHtml';
-import { omitEchoedPsalmOpening, addOpeningAntiphonFlexa } from '@/utils/psalmOpening';
+import { formatPsalmOpening, addOpeningAntiphonFlexa } from '@/utils/psalmOpening';
 import { expandOfficeResponsoryRepeats } from '@/utils/officeResponsoryRepeats';
 import { expandOfficeCollectConclusion } from '@/utils/officeCollectConclusion';
 
@@ -92,7 +92,7 @@ const displayedHtml = computed(() => {
   }
   if (props.highlightAntiphonLabel) formatted = markAntiphonLabel(formatted);
   // Only the opening antiphon directly before its psalm gets †.
-  if (props.followingPsalmHtml && omitEchoedPsalmOpening(props.followingPsalmHtml, html) !== props.followingPsalmHtml) {
+  if (props.followingPsalmHtml && formatPsalmOpening(props.followingPsalmHtml, html) !== props.followingPsalmHtml) {
     formatted = addOpeningAntiphonFlexa(formatted);
   }
   return formatted;

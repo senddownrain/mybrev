@@ -42,7 +42,7 @@ import { computed, ref } from 'vue';
 import { hasSingleAntiphonPsalmody } from '@/utils/liturgicalDayResolution';
 import { formatPsalmHtml, markAntiphonLabel } from '@/utils/liturgicalHtml';
 import { getLiturgicalAlternatives } from '@/utils/liturgicalAlternatives';
-import { omitEchoedPsalmOpening } from '@/utils/psalmOpening';
+import { formatPsalmOpening } from '@/utils/psalmOpening';
 import PsalmText from '@/components/oraparts/PsalmText.vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 
@@ -75,7 +75,7 @@ const selectedPsalm = (formatted, index) => getLiturgicalAlternatives(formatted,
 const displayPsalm = (html, antiphon, index) => {
   // A shared antiphon is announced only before the first psalm.
   const chosen = index === null ? '' : getLiturgicalAlternatives(antiphon)[index]?.html;
-  return omitEchoedPsalmOpening(html, chosen);
+  return formatPsalmOpening(html, chosen);
 };
 </script>
 
