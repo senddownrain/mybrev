@@ -51,12 +51,33 @@ export function omitEchoedPsalmOpening(psalmHtml, selectedAntiphonHtml) {
     }
     current = parent;
   }
-  marker.parentNode.removeChild(marker);
+  // The antiphon already supplied the first half-verse. Retain a dagger
+  // at the *start* of its continuation, rather than deleting the cadence.
+  // This is the ONLY dagger that bypasses forced psalmody line breaks.
+  marker.textContent = '†';
+  marker.classList.add('psalm-opening-flexa');
   paragraph.innerHTML = paragraph.innerHTML
     .replace(/<(em|i|span|b|strong)(?:\s[^>]*)?><\/\1>/giu, '')
-    .replace(/^((?:<[^>]+>)*)(?:\s|&nbsp;)+/iu, '$1');
+    .replace(/^((?:<[^>]+>)*)(?:\s|&nbsp;)+/iu, '$1')
+    // Keep the leading † with the following word on a narrow screen.
+    .replace(/(<span\b[^>]*\bpsalm-opening-flexa\b[^>]*>†<\/span>(?:<\/(?:em|i|b|strong|span|font)>)*)(?:[ \t\r\n]|&nbsp;)*/iu, '$1&nbsp;');
   if (!normalizeWords(paragraph.text) && root.querySelectorAll('p[data-psalm-strophe]').length > 1) {
     paragraph.remove();
   }
+  return root.innerHTML;
+}
+
+/**
+ * Adds the liturgical cross to an opening antiphon only if its complete text
+ * replaces the first psalm half-verse. The closing/repeated antiphon is not
+ * modified; no source, alternatives or Firestore fields are changed.
+ */
+export function addOpeningAntiphonFlexa(html) {
+  if (!html) return html;
+  const root = parse(String(html));
+  const target = root.querySelectorAll('p').at(-1) || root;
+  const visible = target.text.trim();
+  if (!visible || /†\s*$/u.test(visible)) return html;
+  target.innerHTML = `${target.innerHTML} <span class="psalm-antiphon-flexa">†</span>`;
   return root.innerHTML;
 }
