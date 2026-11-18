@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "revision": "6b5b278fcb0f77f557cf5f739c455236cb19029c",
+  "sdk": "Flutter 3.38.9",
+  "passed": 2,
+  "failed": 0,
+  "target": "final-published-calendar5-and-live-delta-4476-docs",
+  "bundleSha256": "203f7ef439bb1b9d90cb8e6a4e9d8efec7a34e6fb7a3c41850eeca7f20838184",
+  "successAndRestart": true,
+  "interruptedDownloadAndRestart": true,
+  "settingsFavoritesPersonalPrayersPreserved": true,
+  "firebaseReads": 0,
+  "firebaseWrites": 0,
+  "nativeSmoke": "not-performed",
+  "logsSha256": "0b4bd3e6907f2b46bb90397cac00913077d5c2f3e5fc6f6d7400bede22b9be13",
+  "sourceSha256": "bff61aeebe655104836156a564ebf80f500f6595e1302b3a6cbede393ebb5678"
+}

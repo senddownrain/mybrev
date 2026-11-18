@@ -1,0 +1,50 @@
+{
+  "mode": "PUBLISHED_AND_VERIFIED",
+  "project": "ibreviaryby",
+  "revision": 5,
+  "operations": [
+    {
+      "document": "liturgicalCelebrations/sv-juan-diego",
+      "mask": [
+        "enabled"
+      ],
+      "result": "VERIFIED",
+      "updateTime": "2026-11-18T09:58:55.449002Z",
+      "afterSha256": "8fa038d6c217c4d98ff2425072f98f48629e508e0a3c6ed13f112d0c83add7be"
+    },
+    {
+      "document": "liturgicalCelebrations/our-lady-guadalupe",
+      "mask": [
+        "enabled"
+      ],
+      "result": "VERIFIED",
+      "updateTime": "2026-11-18T09:58:55.449002Z",
+      "afterSha256": "d8d43b4d5c1797c42e88ed008b631c14ce4d05505998f0a7904d30e7c17ce555"
+    },
+    {
+      "document": "liturgicalCalendarMeta/current",
+      "mask": [
+        "revision"
+      ],
+      "result": "VERIFIED",
+      "updateTime": "2026-11-18T09:58:55.449002Z",
+      "afterSha256": "279664814062c3b7f6cc4dca5e5258f74cecd3dd053df5e93abc9fd56b99635a"
+    }
+  ],
+  "commitTime": "2026-11-18T09:58:55.449002Z",
+  "sourcePdfSha256": "a55dc34c89317bd0a4b683ea84b46941213aa2b981d0a9de1fe3ebeb71dc9696",
+  "counts": {
+    "liturgicalCalendarMeta": 1,
+    "liturgicalCelebrations": 242,
+    "liturgicalDioceseOverrides": 77,
+    "liturgicalYearOverrides": 15
+  },
+  "enabled": {
+    "celebrations": 240,
+    "dioceseOverrides": 39,
+    "yearOverrides": 11
+  },
+  "writes": 3,
+  "deletes": 0,
+  "outsideScopeWrites": 0
+}

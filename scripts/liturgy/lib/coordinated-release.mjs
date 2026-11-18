@@ -385,9 +385,15 @@ export async function publishCoordinatedManifest(db, { catalog, manifests, contr
     for(const name of refs)if(valueSha256(fresh.get(name)||null)!==valueSha256(manifests.get(name)||null))throw Error('Manifest CAS baseline changed: '+name);
     const metadata=[];
     for(const name of collections){const projection=await tx.get(db.collection(name).select());onReads('metadataDocumentReads',Math.max(1,projection.docs.length));for(const doc of projection.docs)metadata.push({document:doc.ref.path,updateTime:{seconds:doc.updateTime.seconds,nanoseconds:doc.updateTime.nanoseconds}});}
+    if(contract.publicPolicySha256){
+      const policy=await tx.get(db.collection('priestProtectedCategories').limit(101));onReads('policyDocumentReads',Math.max(1,policy.docs.length));
+      check(policy.docs.length===contract.publicPolicyCount&&policy.docs.length<=100,'Public access policy count changed');
+      const rows=policy.docs.map(d=>storedDocument(d.id,d.data())).sort((a,b)=>a.id<b.id?-1:1);
+      check(valueSha256(rows)===contract.publicPolicySha256,'Public access policy changed; no manifest switch');
+    }
     const gate=await verifyLiveCatalog(metadata,catalog,async names=>{const docs=await tx.getAll(...names.map(n=>db.doc(n)));onReads('uncachedDocumentReads',names.length);return mapDocs(docs);},contract,authorization.maxUncachedDocumentReads);
     const planned=coordinatedManifestPlan(gate.described,fresh,authorization,contract);
-    const liveDigestGate={projectedDocuments:gate.projectedDocuments,additionalDocumentReads:gate.additionalDocumentReads,collections:Object.fromEntries(collections.map(n=>[n,{digest:gate.described[n].digest,count:gate.described[n].count,bytes:gate.described[n].bytes}]))};
+    const liveDigestGate={projectedDocuments:gate.projectedDocuments,additionalDocumentReads:gate.additionalDocumentReads,...(contract.publicPolicySha256?{publicPolicyVerified:true,publicPolicyDocuments:contract.publicPolicyCount,publicPolicySha256:contract.publicPolicySha256}:{}),collections:Object.fromEntries(collections.map(n=>[n,{digest:gate.described[n].digest,count:gate.described[n].count,bytes:gate.described[n].bytes}]))};
     const writeDocuments=refs.filter(name=>valueSha256(fresh.get(name)?.data??null)!==valueSha256(planned.payloads[name]));
     await journal({state:'coordinated-manifest-prepared',catalog,manifestAttempt:{payloads:planned.payloads,writeDocuments,liveDigestGate}});
     // Queue indexes first and current last, in ONE atomic transaction. No
