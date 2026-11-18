@@ -78,11 +78,12 @@ watch(options, (list) => emit('options', list.length), { immediate: true });
 const activeOption = computed(() => options.value[activeIndex.value] || options.value[0] || null);
 const displayedHtml = computed(() => {
   const html = activeOption.value?.html || '';
-  const formatted = props.kind === 'intercession' ? formatIntercessions(html) : html;
+  let formatted = props.kind === 'intercession' ? formatIntercessions(html) : html;
   // Expand only after choosing a reading alternative; no cross-variant text reuse.
-  const expanded = ['reading', 'office-reading', 'responsory'].includes(props.kind)
-    ? expandOfficeResponsoryRepeats(formatted) : formatted;
-  return props.highlightAntiphonLabel ? markAntiphonLabel(expanded) : expanded;
+  if (['reading', 'office-reading', 'responsory'].includes(props.kind)) {
+    formatted = expandOfficeResponsoryRepeats(formatted);
+  }
+  return props.highlightAntiphonLabel ? markAntiphonLabel(formatted) : formatted;
 });
 
 watch(() => props.text, () => {
