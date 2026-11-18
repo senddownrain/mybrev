@@ -53,8 +53,8 @@ export function omitEchoedPsalmOpening(psalmHtml, selectedAntiphonHtml) {
   }
   marker.parentNode.removeChild(marker);
   paragraph.innerHTML = paragraph.innerHTML
-    .replace(/<(em|i|span|b|strong)(?:\\s[^>]*)?><\\/\\1>/giu, '')
-    .replace(/^((?:<[^>]+>)*)(?:\\s|&nbsp;)+/iu, '$1');
+    .replace(/<(em|i|span|b|strong)(?:\s[^>]*)?><\/\1>/giu, '')
+    .replace(/^((?:<[^>]+>)*)(?:\s|&nbsp;)+/iu, '$1');
   if (!normalizeWords(paragraph.text) && root.querySelectorAll('p[data-psalm-strophe]').length > 1) {
     paragraph.remove();
   }
