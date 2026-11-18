@@ -3,7 +3,7 @@
     <section v-for="section in bibliography.sections" :key="section" class="source-rights__group">
       <h2>{{ section }}</h2>
       <ul class="source-rights__list">
-        <li v-for="source in bibliography.entries.filter(entry => entry.section === section)" :id="source.id" :key="source.id" class="source-rights__entry">
+        <li v-for="source in bibliography.entries.filter(entry => entry.section === section && entry.visibleInSources !== false)" :id="source.id" :key="source.id" class="source-rights__entry">
           <p class="source-rights__edition">{{ source.title }}</p>
           <p v-for="detail in source.details || []" :key="detail">{{ detail }}</p>
           <p v-for="notice in source.notices" :key="notice">{{ notice }}</p>
