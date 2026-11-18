@@ -366,7 +366,9 @@ export function formatIntercessions(html) {
   // not liturgical refrains: classifying them creates repeated empty rubric bars.
   // Drop them only from the rendered copy; never mutate the stored source.
   const paragraphs = root.querySelectorAll('p').filter((paragraph) => {
-    const visible = textOf(paragraph.toString()).replace(/[\u200B-\u200D\uFEFF]/gu, '').trim();
+    const visible = textOf(paragraph.toString())
+      .replace(/&(?:nbsp|ZeroWidthSpace|NoBreak);|&#(?:0*160|0*8203);|&#x(?:0*a0|0*200b);/giu, ' ')
+      .replace(/[\u200B-\u200D\uFEFF]/gu, '').trim();
     if (visible) return true;
     paragraph.remove();
     return false;
