@@ -25,7 +25,6 @@
           </template>
         </section>
       </article>
-      <p class="calendar-publication-note" role="note">Заўвага: запіс 9 снежня дададзены пасля публікацыі зыходнага PDF; у назве Маці Божай Ларэтанскай (10 снежня) выпраўлена памылка зыходнага тэксту.</p>
     </main>
   </v-container>
 </template>
@@ -44,7 +43,6 @@ const introRuns = calendar.pages.flatMap(page => page.rows).filter(row => row.ki
 .proper-calendar { font-family: 'Times New Roman', serif; font-size: 1.125rem; line-height: 1.45; }
 .calendar-month { margin: 30px 0 16px; color: var(--document-red); text-align: center; font-size: 1.2rem; font-weight: 700; scroll-margin-top: 80px; }
 .calendar-intro { margin: 0; }
-.calendar-publication-note { margin: 8px 0 4px; font-size: .9rem; line-height: 1.45; opacity: .82; }
 .calendar-addition-title { font-style: italic; }
 .calendar-note { margin-top: 8px; }
 .calendar-row { display: grid; grid-template-columns: 2rem minmax(0, 1fr) 8.25rem; column-gap: 8px; min-height: 1.5em; }
