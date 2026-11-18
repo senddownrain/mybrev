@@ -41,6 +41,19 @@ const HOUR_BY_ROUTE = {
 const isDate = (v) => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
 const safeId = (v) => (typeof v === 'string' && SAFE_ID.test(v) ? v : undefined);
 
+/** Report the specific selected readings document and date, including today's /readings page.
+ *  Only public, allowlisted context reaches the feedback form. */
+export function readingFeedbackLink({ id, date, title, path } = {}) {
+  const base = feedbackLink({
+    kind: 'reading',
+    id: safeId(id),
+    date: isDate(date) ? date : undefined,
+    title: typeof title === 'string' ? title.slice(0, 120) : undefined,
+  });
+  if (typeof path !== 'string' || !/^\/[\w\-./%]{0,198}$/.test(path) || path.includes('..')) return base;
+  return { ...base, query: { ...base.query, ctx_path: path } };
+}
+
 /** Automatic "Памылка" location for the current route; null when the screen is not a material (lists, settings, about, editors, the form itself). */
 export function feedbackLocationForRoute(route) {
   const link = locationForRoute(route);
