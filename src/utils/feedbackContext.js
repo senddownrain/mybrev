@@ -50,7 +50,7 @@ export function readingFeedbackLink({ id, date, title, path } = {}) {
     date: isDate(date) ? date : undefined,
     title: typeof title === 'string' ? title.slice(0, 120) : undefined,
   });
-  if (typeof path !== 'string' || !/^\\/[\\w\\-./%]{0,198}$/.test(path) || path.includes('..')) return base;
+  if (typeof path !== 'string' || !/^\/[\w\-./%]{0,198}$/.test(path) || path.includes('..')) return base;
   return { ...base, query: { ...base.query, ctx_path: path } };
 }
 
