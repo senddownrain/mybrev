@@ -1,0 +1,65 @@
+{
+  "kind": "mybrev-devotional-import-preparation",
+  "categoryTag": "Набажэнства",
+  "categoryDisplayName": "Набажэнствы",
+  "publicationStatus": "NOT_IMPORTED",
+  "sourceBibliographyStatus": "NEEDS_SOURCE_REVIEW",
+  "documents": [
+    {
+      "id": "devotion-vigilijny-vechar",
+      "title": "Вігілійны вечар",
+      "filename": "01_vigilijny_vechar.md",
+      "sourcePdf": "Vigilijny veczar.pdf",
+      "sourcePageLabels": "378–380",
+      "sha256": "6bf413fea3f524791b89431ea5a2d5e625dbb7a3f9fb3399e45ad189e383fce2",
+      "tags": [
+        "Набажэнства"
+      ],
+      "textFormat": "mybrev-markdown",
+      "textFormatVersion": 1,
+      "publicationStatus": "draft-not-imported"
+    },
+    {
+      "id": "devotion-zakanchenne-goda",
+      "title": "Набажэнства на заканчэнне года",
+      "filename": "02_nabazhenstva_na_zakanchenne_goda.md",
+      "sourcePdf": "Zakanczee goda.pdf",
+      "sourcePageLabels": "386–388",
+      "sha256": "e8b5fd1c1f7089f73e07b9eb9133c63b00ec260189a728f0ca9996a072c34bea",
+      "tags": [
+        "Набажэнства"
+      ],
+      "textFormat": "mybrev-markdown",
+      "textFormatVersion": 1,
+      "publicationStatus": "draft-not-imported"
+    },
+    {
+      "id": "devotion-vystaulenne-euharystyja",
+      "title": "Парадак выстаўлення і благаслаўлення Найсвяцейшым Сакрамэнтам",
+      "filename": "03_vystaulenne_i_blagaslaulenne.md",
+      "sourcePdf": "Vystaulene_euharist.pdf",
+      "sourcePageLabels": "295–298",
+      "sha256": "5a09be07d48b6a831ab0aefafccc365d8789908d50aa78f2b0e615316394757c",
+      "tags": [
+        "Набажэнства"
+      ],
+      "textFormat": "mybrev-markdown",
+      "textFormatVersion": 1,
+      "publicationStatus": "draft-not-imported"
+    },
+    {
+      "id": "devotion-euharystychnaja-pracesija",
+      "title": "Эўхарыстычная працэсія ва ўрачыстасць Найсвяцейшага Цела і Крыві Хрыста",
+      "filename": "04_euharystychnaja_pracesija.md",
+      "sourcePdf": "Euhar_pacesja.pdf",
+      "sourcePageLabels": "299–305",
+      "sha256": "80a4c1af5291facbf1f5c44e605f62062c868153c830dc11f5184c63a2149e53",
+      "tags": [
+        "Набажэнства"
+      ],
+      "textFormat": "mybrev-markdown",
+      "textFormatVersion": 1,
+      "publicationStatus": "draft-not-imported"
+    }
+  ]
+}
