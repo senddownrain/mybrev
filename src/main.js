@@ -40,6 +40,10 @@ function runAfterLoadAndIdle(task, { delay = 0, idleTimeout = 2000 } = {}) {
 
 // Navigation prefetch is delayed until the first screen has loaded, so it
 // never competes with the first screen's critical requests.
+// Launch-safety mode: new visitors should pay only for the content they open.
+// The main screen still fetches its own Hours; no speculative tomorrow/static
+// collection queries occur on production during the public announcement.
+if (import.meta.env.VITE_LAUNCH_QUOTA_GUARD !== 'true') {
 runAfterLoadAndIdle(() => {
   import('./utils/cacheWarmup').then(async ({ warmupCache }) => {
     // Stage 1: existing lightweight today/tomorrow Hours + static collections.
@@ -56,6 +60,7 @@ runAfterLoadAndIdle(() => {
     console.error('[main] Cache warmup error:', error)
   })
 }, { delay: 5000, idleTimeout: 5000 })
+}
 
 // Local-only analytics for test builds (decision D-10 = B). The flag is a build-time
 // constant: when it is not 'true' this branch and the analytics code are removed from the bundle.

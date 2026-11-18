@@ -2,6 +2,7 @@ import { publicContentCache, publicContentKey } from '@/utils/publicContentCache
 import { checkPriestAccess, priestAccess } from './priestAccessService';
 import { permittedPrayerContent, prayerAccessPolicy } from '@/utils/priestPolicy.mjs';
 import { collection, getDocsFromServer } from 'firebase/firestore';
+import { PUBLIC_PRAYERS_ASSET, validatePublicPrayerCatalog } from '@/utils/publicPrayerCatalog.mjs';
 import { db } from '@/plugins/firebase';
 import { priestFirebase } from '@/plugins/priestFirebase';
 import { assertFirestoreQuotaAvailable, isFirestoreQuotaBlocked, isFirestoreQuotaError, noteFirestoreError } from '@/utils/firestoreErrors.mjs';
@@ -37,7 +38,7 @@ export async function getPrayerContent() {
     }
     const entry = await publicContentCache.read(PRAYER_PUBLIC_CACHE_KEY, async () => ({
       data: await readPublic(), complete: true,
-    }), { fresh: true, revalidate: true });
+    }), { fresh: true });
     const publicData = permittedPrayerContent(entry.data.prayers, entry.data.categories);
     if (navigator.onLine === false || isFirestoreQuotaBlocked()) return publicData;
     try { await checkPriestAccess(); } catch { return publicData; }
@@ -58,10 +59,16 @@ export async function getPrayerContent() {
   return inFlight;
 }
 async function readPublic() {
-  const content = await readCollections(db, 'prayers', 'prayerCategories');
-  const policy = prayerAccessPolicy(content.prayers, content.categories);
-  // Keep safe empty category metadata in the public cache so a grant can
-  // restore private prayers inside their existing public parent category.
-  return { prayers: content.prayers.filter((item) => item.effectivePriestOnly !== true && !policy.prayerRestricted(item)),
-    categories: content.categories.filter((item) => item.effectivePriestOnly !== true && !policy.categoryRestricted(item.id)) };
+  // Development keeps using the old Firestore path without an export snapshot.
+  // Production is STRICTLY Hosting-only. A missing/invalid asset must not
+  // generate hundreds of live Firestore reads per visitor at launch.
+  if (import.meta.env.DEV) {
+    const content = await readCollections(db, 'prayers', 'prayerCategories');
+    const policy = prayerAccessPolicy(content.prayers, content.categories);
+    return { prayers: content.prayers.filter((item) => item.effectivePriestOnly !== true && !policy.prayerRestricted(item)),
+      categories: content.categories.filter((item) => item.effectivePriestOnly !== true && !policy.categoryRestricted(item.id)) };
+  }
+  const response = await fetch(PUBLIC_PRAYERS_ASSET, { credentials: 'same-origin' });
+  if (!response.ok) throw new Error('Не атрымалася загрузіць публічны каталог малітваў.');
+  return validatePublicPrayerCatalog(await response.json());
 }

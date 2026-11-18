@@ -10,7 +10,7 @@
     "dev": "node --no-deprecation ./node_modules/vite/bin/vite.js",
     "prebuild": "npm run icons:generate && node scripts/generate-prayer-source-rules.mjs --check",
     "build": "node --no-deprecation ./node_modules/vite/bin/vite.js build",
-    "deploy:hosting": "npm run build && firebase deploy --only hosting",
+    "deploy:hosting": "npm run build && node scripts/export-public-prayers-hosting.mjs --live --project ibreviaryby --out dist/public-prayers-v1.json && firebase deploy --only hosting",
     "release:hosting": "node scripts/ensure-clean-worktree.mjs && git push && npm run deploy:hosting",
     "preview": "node --no-deprecation ./node_modules/vite/bin/vite.js preview",
     "benchmark:routes": "node scripts/benchmark-routes.mjs",
@@ -123,7 +123,8 @@
     "test:common-texts": "node --test tests/liturgical-common-texts.test.mjs",
     "db:unify-prayer-sources": "node scripts/unify-prayer-sources.mjs",
     "test:prayer-sources": "node --test tests/prayer-source-unification.test.mjs tests/prayer-draft-model.test.mjs tests/prayer-import-plan.test.mjs tests/prayer-import-bog.test.mjs tests/prayer-import-editorial.test.mjs tests/prayer-import-plan-hash.test.mjs tests/source-documents.test.mjs tests/sources.test.mjs",
-    "smoke:prayer-sources": "node scripts/smoke-prayer-source-unification.mjs"
+    "smoke:prayer-sources": "node scripts/smoke-prayer-source-unification.mjs",
+    "public-prayers:export": "node scripts/export-public-prayers-hosting.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",
