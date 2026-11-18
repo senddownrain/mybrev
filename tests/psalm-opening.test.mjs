@@ -59,3 +59,57 @@ test('only first stanza gets opening †; later cadence and doxology stay intact
   assert.match(verses[1].text, /† пасля крыжыка/u);
   assert.match(verses[2].text, /Хвала Айцу/u);
 });
+
+
+test('Psalm 27: full opening verse echoed by antiphon is omitted; leading † stays with Пан', () => {
+  const source = '<p>Псальм 27 (26)</p>'
+    + '<p>Пан – маё святло і маё збаўленне, * каго ж мне баяцца?</p>'
+    + '<p>† Пан – ахова жыцця майго, * каго ж мне палохацца?</p>'
+    + '<p>Калі злачынцы пойдуць супраць мяне, * каб знішчыць цела маё,</p>';
+  const prepared = formatPsalmHtml(source);
+  const selectedAntiphon = '<p>1 ант. Пан – маё святло і маё збаўленне, * каго ж мне баяцца?</p>';
+  const result = omitEchoedPsalmOpening(prepared, selectedAntiphon);
+  const root = parse(result);
+  const strophes = root.querySelectorAll('p[data-psalm-strophe]');
+
+  assert.equal(strophes.length, 2);
+  assert.doesNotMatch(root.text, /Пан – маё святло і маё збаўленне/u);
+  assert.match(strophes[0].text.trim(), /^†\s*Пан – ахова жыцця майго,\s*\*\s*каго ж мне палохацца/u);
+  assert.match(strophes[0].innerHTML, /psalm-opening-flexa[^>]*>†<\/span>&nbsp;Пан/u);
+  assert.equal(strophes[0].querySelectorAll('.psalm-marker.psalm-opening-flexa').length, 1);
+  assert.equal(strophes[0].querySelectorAll('.psalm-marker').length, 2);
+  assert.match(strophes[1].text, /^Калі злачынцы пойдуць супраць мяне/u);
+  assert.equal(strophes[1].querySelectorAll('.psalm-opening-flexa').length, 0);
+});
+
+test('full-verse echo adds a single † when the following stanza has none', () => {
+  const prepared = formatPsalmHtml(
+    '<p>Пан – маё святло * каго ж мне баяцца?</p>'
+    + '<p>Пан – ахова жыцця майго * каго ж мне палохацца?</p>',
+  );
+  const result = omitEchoedPsalmOpening(prepared, 'Ант. Пан – маё святло * каго ж мне баяцца?');
+  const root = parse(result);
+  assert.equal(root.querySelectorAll('p[data-psalm-strophe]').length, 1);
+  assert.match(root.querySelector('p[data-psalm-strophe]').text, /^†\s*Пан – ахова жыцця майго/u);
+  assert.equal(root.querySelectorAll('.psalm-opening-flexa').length, 1);
+  assert.match(root.innerHTML, /psalm-opening-flexa[^>]*>†<\/span>&nbsp;Пан/u);
+});
+
+test('partial or different whole-verse antiphon does not omit a psalm stanza', () => {
+  const prepared = formatPsalmHtml(
+    '<p>Пан – маё святло і маё збаўленне, * каго ж мне баяцца?</p>'
+    + '<p>† Пан – ахова жыцця майго, * каго ж мне палохацца?</p>',
+  );
+  for (const antiphon of [
+    '1 ант. Пан – маё святло і маё збаўленне',
+    '1 ант. Пан – маё святло і маё збаўленне, каго ж мне баяцца заўтра?',
+  ]) {
+    assert.equal(omitEchoedPsalmOpening(prepared, antiphon), prepared);
+  }
+
+  const noContinuation = formatPsalmHtml('<p>Пан – маё святло * каго ж мне баяцца?</p>');
+  assert.equal(
+    omitEchoedPsalmOpening(noContinuation, 'Ант. Пан – маё святло * каго ж мне баяцца?'),
+    noContinuation,
+  );
+});
