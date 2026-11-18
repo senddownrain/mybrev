@@ -156,6 +156,7 @@
     <FeedbackPrompt
       v-if="!isLoading && !error"
       class="readings-feedback"
+      :class="{ 'readings-feedback--after-card': !!activeReading }"
       :to="readingFeedbackTo"
     />
     <BackToTop bottom-nav />
@@ -376,6 +377,14 @@ watch(() => [ordoCalendarEpoch.value, route.params.date || route.query.date, rou
 .readings-feedback {
   margin-top: 24px;
   margin-bottom: calc(94px + env(safe-area-inset-bottom, 0px));
+}
+
+/* The reading card already ends with a border. Avoid drawing a second
+   divider above feedback; keep the shared footer rule for empty readings. */
+.readings-feedback--after-card {
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 0;
 }
 
 .readings-container {
