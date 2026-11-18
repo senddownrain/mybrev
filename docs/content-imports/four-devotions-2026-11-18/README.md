@@ -20,3 +20,15 @@ This is an **unpublished import candidate** for four texts from user-supplied PD
 6. Add Markdown/renderer tests, Web mobile/desktop visual checks, and Flutter parser tests if there is a demonstrated discrepancy. Report exact status separately as `prepared`, `proofread`, `imported`, `verified`, `published`.
 
 Status: **PREPARED / NOT PROOFREAD BY AN INDEPENDENT REVIEWER / NOT IMPORTED / NOT DEPLOYED**.
+
+## Safe local preflight (added in this PR)
+
+Run `node --test tests/four-devotions-content.test.mjs` to validate immutable checksums and the basic Markdown structure. No Firebase access is needed.
+
+Run `node scripts/validate-four-devotions.mjs` to inspect exactly four staged documents without Firestore access or writes. For local duplicate/category verification, use an existing complete snapshot:
+
+```sh
+node scripts/validate-four-devotions.mjs --snapshot backups/firestore-snapshot-static --out backups/four-devotions/plan.json
+```
+
+The private `plan.json` includes the full proposed text and must NOT be committed. If the snapshot lacks either public or priest-protected prayers/categories, the validator refuses to compare. This command is **not** an apply mechanism; it makes 0 Firestore requests and 0 writes. An explicit verified release operation via the existing approved migration machinery is still required for the documents to become visible in Web and Flutter.
