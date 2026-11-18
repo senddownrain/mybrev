@@ -16,7 +16,7 @@ test('source migration and rollback touch only source fields in all access/statu
   };
   try {
     for (const collection of ['prayers','priestProtectedPrayers','prayerDrafts']) {
-      const data = {title:'Назва',text:'Пс 23, 1–6',source:'Бог добры, с. 135–136',status:collection==='prayerDrafts'?'archived':'published',priestOnly:collection==='priestProtectedPrayers',categoryIds:['keep'],verified:false,unknownField:{keep:'unchanged'}};
+      const data = {title:'Назва',text:'Пс 23, 1–6',source:'«Бог Добры» (Пінск, 2022), с. 135–136',status:collection==='prayerDrafts'?'archived':'published',priestOnly:collection==='priestProtectedPrayers',categoryIds:['keep'],verified:false,unknownField:{keep:'unchanged'}};
       await db.doc(`${collection}/source-migration-test`).set(data);
       originals.set(collection,data);
       const raw = await request(`/${collection}/source-migration-test`);
@@ -32,7 +32,7 @@ test('source migration and rollback touch only source fields in all access/statu
     assert.equal(journal.committed.length,3);assert.equal(journal.verified.length,2);
     for (const [collection,original] of originals) {
       const actual = (await db.doc(`${collection}/source-migration-test`).get()).data();
-      assert.deepEqual(actual,{...original,source:'Бог добры'});
+      assert.deepEqual(actual,{...original,source:'«Бог Добры» (Пінск, 2022)'});
     }
     await applySourcePlan(plan,{...api,commit:async()=>{throw new Error('Idempotent repeat must not write')}},{journal});
     const rollback = {...plan,changes:journal.committed.map((change)=>({...change,before:change.updates,updates:change.before}))};

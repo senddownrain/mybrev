@@ -31,7 +31,7 @@ try {
     await noOverflow();
     await page.screenshot({path: `${output}/sources-${width}-${theme}.jpg`, fullPage: true, type:'jpeg', quality:65});
     await page.evaluate(async (project) => {
-      const data = {revision:'test',complete:true,data:{prayers:[{id:'source-smoke',title:'Малітва',text:'Пс 23, 1–6. Ян 3, 16',textFormat:'mybrev-markdown',source:'Бог добры, с. 135–136',tags:[]}],categories:[]}};
+      const data = {revision:'test',complete:true,data:{prayers:[{id:'source-smoke',title:'Малітва',text:'Пс 23, 1–6. Ян 3, 16',textFormat:'mybrev-markdown',source:'«Бог Добры» (Пінск, 2022), с. 135–136',tags:[]}],categories:[]}};
       const db = await new Promise((resolve, reject) => {
         const request = globalThis.indexedDB.open(`mybrev-public-${project}-v1`, 1);
         request.onupgradeneeded = () => request.result.createObjectStore('entries');
@@ -47,11 +47,11 @@ try {
     }, process.env.SMOKE_PROJECT_ID || 'ibreviaryby');
     await page.goto(baseUrl + '/prayer/source-smoke');
     await page.locator('.prayer-source').waitFor();
-    assert.equal((await page.locator('.prayer-source').innerText()).replace(/\s+/g,' ').trim(), 'Крыніца: Бог добры');
+    assert.equal((await page.locator('.prayer-source').innerText()).replace(/\s+/g,' ').trim(), 'Крыніца: «Бог Добры» (Пінск, 2022)');
     assert.ok((await page.locator('body').innerText()).includes('Пс 23, 1–6. Ян 3, 16'));
     await noOverflow(); assert.deepEqual(errors, []);
     await page.screenshot({path: `${output}/prayer-${width}-${theme}.jpg`, fullPage: true, type:'jpeg', quality:65});
-    results.push({theme,width,bibliographyEntries:bibliography.entries.length,source:'Бог добры',scripturePreserved:true,overflow:false,errors});
+    results.push({theme,width,bibliographyEntries:bibliography.entries.length,source:'«Бог Добры» (Пінск, 2022)',scripturePreserved:true,overflow:false,errors});
     await context.close();
   }
   await fs.writeFile(output + '/smoke.json', JSON.stringify(results,null,2) + '\n');

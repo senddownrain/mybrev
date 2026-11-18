@@ -1,17 +1,22 @@
-// The /sources bibliography is also the single registry of short prayer source names.
+// The /sources bibliography is also the single registry of canonical prayer source names.
 import bibliography from '../data/sourceBibliography.json' with { type: 'json' };
 
 const clean = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
 const key = (value) => clean(value).toLocaleLowerCase('be').replace(/[«»„“”"']/gu, '');
-export const PRAYER_SOURCE_POLICY_VERSION = '2026-11-17-source-policy-v4';
+export const PRAYER_SOURCE_POLICY_VERSION = '2026-11-18-edition-policy-v5';
 export const PRAYER_SOURCE_REGISTRY = bibliography.entries;
+export const isUndatedBogDobry = (value) => typeof value === 'string'
+  && /^(?:малітоўнік )?бог добры(?:[\s,.;:]+.+)?$/iu.test(key(value))
+  && !/\b(?:19|20)\d{2}\b/u.test(value)
+  && metadataOnly(key(value).replace(/^(?:малітоўнік )?бог добры/iu, ''));
 export const hasSourcePages = (value) => /(?:^|[\s,.;(])(?:с\.|стар\.?|старонк[аіуы]|стр\.?|страниц[аы]?|pp?\.)\s*\d/iu.test(String(value ?? ''));
 export const hasLongSourceDetails = (value) => hasSourcePages(value) || /©|ISBN|https?:\/\/|выдавецтв|издательств|\b\d{4}\b|(?:том|частка|часть|выданне)\s+[\dIVІX]+/iu.test(String(value ?? '')) || /\d+\s*[–—-]\s*\d+/u.test(String(value ?? '')) || clean(value).length > 100;
 
 function aliases(entry) {
   // Extract the title only from an explicitly quoted edition; never guess from arbitrary input.
   const printed = /«([^»]+)»/u.exec(entry.title)?.[1];
-  return [...new Set([entry.shortTitle, entry.title, printed, printed ? entry.title.slice(0, entry.title.indexOf('»') + 1) : null, ...(entry.aliases || [])].filter(Boolean).map(key))];
+  const shorthand = entry.explicitEdition ? [] : [entry.shortTitle, printed, printed ? entry.title.slice(0, entry.title.indexOf('»') + 1) : null];
+  return [...new Set([entry.canonicalValue, entry.title, ...shorthand, ...(entry.aliases || [])].filter(Boolean).map(key))];
 }
 const registry = PRAYER_SOURCE_REGISTRY.map((entry) => ({ entry, aliases: aliases(entry) }));
 // Only publication metadata may follow a known title. A second work or arbitrary prose is disputed.
@@ -43,7 +48,8 @@ export function resolvePrayerSource(value) {
     } catch { /* Preserve malformed URLs for editorial review. */ }
   }
   if (!input) return { value, status: 'empty' };
-  const candidates = registry.map(({entry, aliases}) => ({
+  const citedYears = [...input.matchAll(/(?:мінск|пінск|гродна|минск|minsk)\s*,?\s*(\d{4})/giu)].map((match) => match[1]);
+  const candidates = registry.filter(({entry}) => !entry.canonicalValue || citedYears.every((year) => entry.canonicalValue.endsWith(year + ')'))).map(({entry, aliases}) => ({
     entry,
     score: Math.max(0, ...aliases.filter((alias) => input === alias || (input.startsWith(alias) && /^[\s,.;:(]/u.test(input.slice(alias.length)) && metadataOnly(input.slice(alias.length)))).map((alias) => alias.length)),
   }));
@@ -51,7 +57,7 @@ export function resolvePrayerSource(value) {
   const matches = candidates.filter(({score}) => score > 0 && score === longest);
   if (matches.length !== 1) return { value, status: 'unknown' };
   const entry = matches[0].entry;
-  return { value: entry.shortTitle, status: 'known', sourceId: entry.id };
+  return { value: entry.canonicalValue || entry.shortTitle, status: 'known', sourceId: entry.id };
 }
 export const normalizePrayerSource = (value) => resolvePrayerSource(value).value;
 
@@ -78,9 +84,9 @@ export function sourceForEditor(value) {
     throw error;
   }
   const input = value.trim();
-  // Manual editor input is an explicit attribution, not an importer hint.
-  // Do not silently map an admin's words back to a registry title.
-  return input;
+  const resolved = resolvePrayerSource(input);
+  return registry.some(({entry}) => entry.canonicalValue === resolved.value && entry.id === resolved.sourceId)
+    ? resolved.value : input;
 }
 
 export function normalizePrayerSourceFields(data, { forSave = true, existing, editor = false } = {}) {

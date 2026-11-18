@@ -5,7 +5,7 @@ import bibliography from '../src/data/sourceBibliography.json' with { type: 'jso
 const file = new URL('../firestore.rules', import.meta.url);
 const begin = '    // BEGIN GENERATED PRAYER SOURCE NAMES';
 const end = '    // END GENERATED PRAYER SOURCE NAMES';
-const names = ['', ...new Set(bibliography.entries.map(({shortTitle}) => shortTitle))];
+const names = ['', ...new Set(bibliography.entries.map(({canonicalValue, shortTitle}) => canonicalValue || shortTitle))];
 const generated = `${begin}\n    function canonicalPrayerSource(value) {\n      return value is string && value in [\n${names.map((name) => '        ' + JSON.stringify(name)).join(',\n')}\n      ];\n    }\n${end}`;
 const current = fs.readFileSync(file, 'utf8');
 const updated = current.replace(new RegExp(`${begin}[\\s\\S]*?${end}`, 'u'), generated);

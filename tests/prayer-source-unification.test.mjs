@@ -13,14 +13,15 @@ import { newDocument, replacementDocument, draftDocument } from '../scripts/pray
 import {decodeSourceRestValue} from '../scripts/lib/prayer-source-rest.mjs';
 import { buildShortSourcePlan, sourceWrites, applySourcePlan, rollbackSourcePlan } from '../scripts/lib/prayer-source-plan.mjs';
 
-const source = 'Бог добры, с. 135–136';
+const bog2022 = '«Бог Добры» (Пінск, 2022)';
+const source = bog2022 + ', с. 135–136';
 const stamp = '2026-11-16T00:00:00.123456789Z';
 const prayer = { title: 'Малітва', text: 'Пс 23, 1–6. Ян 3, 16', tags: ['Малітва'], source, textFormat: 'mybrev-markdown', status: 'draft', version: 1 };
 
-test('known sources are canonical, without pages, ranges, editions or legal notices; idempotent', () => {
+test('known sources are canonical, without pages, ranges or legal notices; idempotent', () => {
   for (const [before, after] of [
-    [source, 'Бог добры'], ['Святое Пісанне', 'Святое Пісанне'], ['Бог Добры, с. 127', 'Бог добры'], ['Малітоўнік «Бог Добры», с. 127', 'Бог добры'],
-    ['«Бог Добры», ІІІ выданне (Пінск, 2022), с. 42–43. © Пінская дыяцэзія, 2022', 'Бог добры'],
+    [source, bog2022], ['Святое Пісанне', 'Святое Пісанне'],
+    ['«Бог Добры», ІІІ выданне (Пінск, 2022), с. 42–43. © Пінская дыяцэзія, 2022', bog2022],
     ['Літургія гадзін. Том II. Старонка 245', 'Літургія гадзін'],
     ['Літургія гадзінаў, стар. 245–246', 'Літургія гадзін'],
     ['Рымскі Імшал, стар. 42–43', 'Рымскі Імшал'],
@@ -33,18 +34,19 @@ test('known sources are canonical, without pages, ranges, editions or legal noti
     assert.equal(hasSourcePages(after), false);
   }
   for (const item of PRAYER_SOURCE_REGISTRY) {
-    assert.equal(normalizePrayerSource(item.shortTitle), item.shortTitle);
-    assert.equal(hasSourcePages(item.shortTitle), false);
-    assert.doesNotMatch(item.shortTitle, /©|ISBN|\d+[–-]\d+/u);
+    const value = item.canonicalValue || item.shortTitle;
+    assert.equal(normalizePrayerSource(value), value);
+    assert.equal(hasSourcePages(value), false);
+    assert.doesNotMatch(value, /©|ISBN|\d+[–-]\d+/u);
   }
 });
 
-test('every configured book importer uses a registered short source', () => {
+test('every configured book importer uses a registered canonical source', () => {
   const config=JSON.parse(readFileSync(new URL('../scripts/prayer-import/sources.json',import.meta.url)));
   for (const {book} of Object.values(config.sources)) {
     assert.equal(resolvePrayerSource(book).status,'known',book);
     assert.equal(hasSourcePages(sourceForSave(book)),false);
-    assert.doesNotMatch(sourceForSave(book),/©|\d{4}|выданне/iu);
+    assert.doesNotMatch(sourceForSave(book),/©|ISBN|выданне/iu);
   }
 });
 
@@ -57,23 +59,23 @@ test('unknown and mixed sources are preserved, never guessed or mechanically tru
   assert.equal(normalizePrayerSource('  Невядомая кніга  '), '  Невядомая кніга  ');
   assert.throws(()=>sourceForSave('  Невядомая кніга  '),{code:'unknown-prayer-source'});
   assert.equal(sourceForSave(''), '');assert.equal(sourceForSave('   '), '');assert.equal(sourceForSave(null), '');
-  assert.equal(formatSourceNotice({book:'Бог добры',pages:'99–100',copyrightNotices:['© A']}), 'Бог добры');
+  assert.equal(formatSourceNotice({book:bog2022,pages:'99–100',copyrightNotices:['© A']}), bog2022);
 });
 
 test('document/Markdown import and historical source extraction plan normalize before saving', () => {
   const markdown='# Малітва\n\nТэкст. Пс 23, 1–6.\n\n> Крыніца: https://catholic.by/3/lib/pray/4481-malitvy-u-roznykh-patrebakh';
   const imported=sourceToPrayer('test.md',markdown,[]);assert.equal(imported.source,'Catholic.by');assert.equal(imported.text,'Тэкст. Пс 23, 1–6.');
-  const plan=buildPrayerSourcePlan([{id:'p',text:'Тэкст.\n\nКрыніца: Бог добры, с. 127'}]);
-  assert.equal(plan.changes[0].updates.source,'Бог добры');
+  const plan=buildPrayerSourcePlan([{id:'p',text:'Тэкст.\n\nКрыніца: «Бог Добры» (Пінск, 2022), с. 127'}]);
+  assert.equal(plan.changes[0].updates.source,bog2022);
   const unknown=buildPrayerSourcePlan([{id:'p',text:'Тэкст.\n\nКрыніца: Невядомая кніга, с. 127'}]);
   assert.equal(unknown.changes.length,0);assert.equal(unknown.ambiguous.length,1);
 });
 
 test('all import document constructors and publication normalize without changing prayer text', () => {
   for (const doc of [newDocument({data:prayer}), replacementDocument({...prayer,id:'p'}, {data:prayer}), draftDocument({data:prayer}, {createdBy:'test'}), buildPrayerFromDraft({...prayer,id:'d'})]) {
-    assert.equal(doc.source,'Бог добры'); assert.equal(doc.text,prayer.text);
+    assert.equal(doc.source,bog2022); assert.equal(doc.text,prayer.text);
   }
-  assert.equal(draftDocument({data:{...prayer,sourceBook:source}}, {createdBy:'test'}).sourceBook,'Бог добры');
+  assert.equal(draftDocument({data:{...prayer,sourceBook:source}}, {createdBy:'test'}) .sourceBook,bog2022);
   assert.throws(()=>newDocument({data:{...prayer,source:'Невядомая, с. 1'}}));
 });
 
@@ -94,10 +96,10 @@ function mockDb() {
 test('manual content writer and draft create/edit use the common normalizer', async () => {
   const deps = mockDb(); const writer=createPrayerContentWriter(deps);
   await writer.mutate((content)=>content.prayers.push({...prayer,id:'p'}));
-  assert.equal(deps.rows.get('prayers/p').source,source);
+  assert.equal(deps.rows.get('prayers/p').source,bog2022);
   const actions=createDraftActions({...deps,writer,actorUid:'admin'});
   await actions.createDraft('d',prayer);
-  assert.equal(deps.rows.get('prayerDrafts/d').source,source);
+  assert.equal(deps.rows.get('prayerDrafts/d').source,bog2022);
   await actions.saveDraft('d',{source:'Рымскі Імшал, стар. 42–43'},{expectedVersion:1});
   assert.equal(deps.rows.get('prayerDrafts/d').source,'Рымскі Імшал, стар. 42–43');
   await actions.saveDraft('d',{source:'Рымскі Імшал'},{expectedVersion:2});
@@ -115,16 +117,16 @@ test('audit covers published, ordinary and closed drafts, protected and unknown 
   const p=plan();assert.equal(p.counts.total,3);assert.equal(p.counts.drafts,3);assert.equal(p.counts.withPages,3);
   const writes=sourceWrites(p,'ibreviaryby');
   for (const w of writes) { assert.deepEqual(w.updateMask.fieldPaths,['source']);assert.deepEqual(Object.keys(w.update.fields),['source']);assert.equal(w.currentDocument.updateTime,stamp); }
-  const records=new Map([['prayers',[{id:'published',data:{...prayer,status:'published',source:'Бог добры'}},{id:'ordinary',data:prayer},{id:'unknown',data:{source:'Не вядома, с. 12'}}]],['prayerDrafts',[{id:'old',data:{...prayer,status:'archived'}}]]]);
+  const records=new Map([['prayers',[{id:'published',data:{...prayer,status:'published',source:bog2022}},{id:'ordinary',data:prayer},{id:'unknown',data:{source:'Не вядома, с. 12'}}]],['prayerDrafts',[{id:'old',data:{...prayer,status:'archived'}}]]]);
   const audit=buildShortSourcePlan(records); assert.equal(audit.counts.published,2);assert.equal(audit.counts.drafts,2);assert.equal(audit.disputedDocuments,1);assert.equal(audit.changes.length,2);
-  const conflict=buildShortSourcePlan(new Map([['prayerDrafts',[{id:'conflict',data:{source:'Бог добры, с. 1',sourceBook:'Ойча наш, с. 2'}}]]]));
+  const conflict=buildShortSourcePlan(new Map([['prayerDrafts',[{id:'conflict',data:{source:source,sourceBook:'Ойча наш, с. 2'}}]]]));
   assert.equal(conflict.changes.length,0);assert.equal(conflict.disputed[0].reason,'conflicting-sources');
-  const second=buildShortSourcePlan(new Map([['prayers',[{id:'p',data:{...prayer,source:'Бог добры'}}]]])); assert.equal(second.changes.length,0);
+  const second=buildShortSourcePlan(new Map([['prayers',[{id:'p',data:{...prayer,source:bog2022}}]]])); assert.equal(second.changes.length,0);
 });
 
 test('apply persists journal before writes, acknowledges each write, samples readback and stops on 429 without retry', async () => {
   const p=plan(); let commits=0,journals=0,reads=0;
-  const api={saveJournal:async()=>{journals++},commit:async(writes)=>{assert.ok(journals>0);commits++;return {writeResults:writes.map(()=>({updateTime:stamp}))}},readback:async()=>{reads++;return {source:'Бог добры'}}};
+  const api={saveJournal:async()=>{journals++},commit:async(writes)=>{assert.ok(journals>0);commits++;return {writeResults:writes.map(()=>({updateTime:stamp}))}},readback:async()=>{reads++;return {source:bog2022}}};
   const journal=await applySourcePlan(p,api,{batchSize:2});assert.equal(journal.committed.length,3);assert.equal(commits,2);assert.equal(reads,2);
   commits=0;reads=0;
   await applySourcePlan(p,api,{journal});assert.equal(commits,0);assert.equal(reads,0);
@@ -146,7 +148,7 @@ test('offline Flutter bundle candidate preserves all non-source data and old dec
   const {candidate,summary}=buildPrayerBundleCandidate(bundle);
   const decoded=decodeCollection(candidate);
   assert.equal(candidate.schemaVersion,1);assert.equal(candidate.contentVersion,123);assert.equal(summary.releaseReady,false);
-  assert.equal(decoded.known.source,'Бог добры');assert.deepEqual(decoded.unknown,docs[1]);
+  assert.equal(decoded.known.source,bog2022);assert.deepEqual(decoded.unknown,docs[1]);
   assert.deepEqual({...decoded.known,source:docs[0].source},docs[0]);
   assert.equal(buildPrayerBundleCandidate(candidate).summary.changedDocuments,0);
 });
@@ -184,7 +186,7 @@ test('deployed policy marker and generated rules share the source registry', () 
   const rules=readFileSync(new URL('../firestore.rules',import.meta.url),'utf8');
   const block=rules.split('// BEGIN GENERATED PRAYER SOURCE NAMES')[1].split('// END GENERATED PRAYER SOURCE NAMES')[0];
   const values=[...block.matchAll(/"([^"\n]*)"/gu)].map((m)=>m[1]);
-  assert.deepEqual(values,['',...PRAYER_SOURCE_REGISTRY.map((entry)=>entry.shortTitle)]);
+  assert.deepEqual(values,['',...PRAYER_SOURCE_REGISTRY.map((entry)=>entry.canonicalValue || entry.shortTitle)]);
   assert.match(rules,/function editablePrayerSource\(value\)/);
   assert.match(rules,/value\.size\(\) <= 500/);
 });
@@ -214,24 +216,27 @@ test('scoped snapshot retains timestamps for exact offline app hashes', () => {
 
 test('confirmed production bibliographic variants use the same registry without guessing ambiguous Agendas', () => {
   const cases=[
-    ['Малітоўнік «Бог Добры», Выдавецтва Пінскай дыяцэзіі, 2022','Бог добры'],
-    ['малітоўнік "Бог добры", Выдавецтва Пінскай Дыяцэзіі, 2018','Бог добры'],
-    ['Малітоўнік "Ойча наш", ПРО ХРЫСТО, 202','Ойча наш'],
-    ['Малітоўнік «Прасіце і атрымаеце» (Мінск, 2024), Выдавецтва «Про Хрысто»','Прасіце і атрымаеце'],
-    ['«Літургічная агенда», Мінска-Магілёўская архідыяцэзія, 2010','Літургічная агенда'],
-    ['Малітоўнік для мужчын «Каб пазналі Цябе…» © Гродзенская дыяцэзія Рымскакаталіцкага Касцёла ў Рэспубліцы Беларусь, 2014','Каб пазналі Цябе'],
-    ['Тэкст паводле спеўніка «Божа, мы Цябе ўслаўляем» - гл. № 402','Божа, мы Цябе ўслаўляем'],
+    ['Малітоўнік «Бог Добры», Выдавецтва Пінскай дыяцэзіі, 2022',bog2022],
+    ['малітоўнік "Бог добры", Выдавецтва Пінскай Дыяцэзіі, 2018','«Бог Добры» (Пінск, 2018)'],
+    ['Малітоўнік "Ойча наш", ПРО ХРЫСТО, 202','«Ойча наш» (Мінск, 2022)'],
+    ['Малітоўнік «Прасіце і атрымаеце» (Мінск, 2024), Выдавецтва «Про Хрысто»','«Прасіце і атрымаеце» (Мінск, 2024)'],
+    ['«Літургічная агенда», Мінска-Магілёўская архідыяцэзія, 2010','«Літургічная агенда» (Мінск, 2010)'],
+    ['Малітоўнік для мужчын «Каб пазналі Цябе…» © Гродзенская дыяцэзія Рымскакаталіцкага Касцёла ў Рэспубліцы Беларусь, 2014','«Каб пазналі Цябе» (Гродна, 2014)'],
+    ['Тэкст паводле спеўніка «Божа, мы Цябе ўслаўляем» - гл. № 402','«Божа, мы Цябе ўслаўляем» (Мінск, 2026)'],
     ['для прыватнага карыстання, [https://kasciolhomiel.by/orationis-liber/litany/litaniya-da-hrysta-svyatara-i-ahvyary]','kasciolhomiel.by'],
     ['для прыватнага карыстання, \n[https://ave-maria.by/prayers/dead/2377-navenna-za-pamerlykh](https://ave-maria.by/prayers/dead/2377-navenna-za-pamerlykh)','Ave Maria'],
     ['catholic.by — «Святы ружанец»','Catholic.by'],
-    ['«Парадак хросту дзяцей», Мінск 2026','Парадак хросту дзяцей'],
-    ['«Парадак намашчэння хворых», Мінск 2009','Парадак намашчэння хворых'],
+    ['«Парадак хросту дзяцей», Мінск 2026','«Парадак хросту дзяцей» (Мінск, 2026)'],
+    ['«Парадак намашчэння хворых», Мінск 2009','«Парадак намашчэння хворых» (Мінск, 2009)'],
   ];
   for(const [before,after] of cases){assert.equal(sourceForSave(before),after);assert.equal(sourceForSave(after),after);}
   for(const unknown of [
     'Парафіяльная Агенда, Выдавецтва Пінскай дыяцэзіі, 2018',
     'Агенда. Сакрамэнталіі — частка 2, с. 214–217.',
-    '«Парадак ��ак��яння», Мінск 2016',
+    'Бог добры',
+    'Бог добры, с. 127',
+    '«Бог Добры» (Пінск, 2001)',
+    '«Літургічная агенда» (Мінск, 2018)',
     'для прыватнага карыстання, уласныя малітвы айцоў марыянаў',
     'для прыватнага карыстання, https://unknown.invalid/book',
     'для прыватнага карыстання, https://ave-maria.by/book https://catholic.by/other',
@@ -278,4 +283,17 @@ test('manual known-alias source is published verbatim from draft', async () => {
   assert.equal(draftSourceNotice(deps.rows.get('prayerDrafts/manual_alias')), input);
   assert.equal(buildPrayerFromDraft(deps.rows.get('prayerDrafts/manual_alias'), {editorSource:true}).source, input);
   assert.equal(buildPrayerFromDraft(deps.rows.get('prayerDrafts/manual_alias'), {editorSource:true}).sourceManual, true);
+});
+
+
+test('editor and draft publication keep the confirmed edition and preserve ambiguous manual attribution', () => {
+  assert.equal(sourceForEditor('Бог добры'), 'Бог добры');
+  assert.equal(sourceForEditor(source), bog2022);
+  assert.equal(buildPrayerFromDraft({...prayer, source:'Бог добры', sourceBook:bog2022}).source, bog2022);
+  assert.equal(sourceForSave('«Парадак ��ак��яння», Мінск 2016'), '«Парадак пакаяння» (Мінск, 2016)');
+  for (const entry of PRAYER_SOURCE_REGISTRY.filter((item) => item.canonicalValue)) {
+    assert.equal(sourceForEditor(entry.canonicalValue), entry.canonicalValue);
+    assert.equal(buildPrayerFromDraft({...prayer, source: entry.canonicalValue}, {editorSource:true}).source, entry.canonicalValue);
+  }
+  assert.equal(PRAYER_SOURCE_REGISTRY.filter((item) => item.canonicalValue).length, 11);
 });
