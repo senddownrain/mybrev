@@ -101,7 +101,7 @@ test('partial or different whole-verse antiphon does not omit a psalm stanza', (
     + '<p>† Пан – ахова жыцця майго, * каго ж мне палохацца?</p>',
   );
   for (const antiphon of [
-    '1 ант. Пан – маё святло і маё збаўленне',
+    '1 ант. Пан – маё святло',
     '1 ант. Пан – маё святло і маё збаўленне, каго ж мне баяцца заўтра?',
   ]) {
     assert.equal(omitEchoedPsalmOpening(prepared, antiphon), prepared);
