@@ -37,15 +37,16 @@ test('retired raw-calendar plan cannot execute or resume, before credential/rece
 });
 
 const finalReviewed=()=>loadReviewedManifest(FINAL_REVIEWED_DIR+'/plan.json',FINAL_REVIEWED_PLAN_SHA);
-test('new exact plan binds verified calendar5, final4476 bundle and updater proof; old plan remains retired',()=>{
- const r=finalReviewed();assert.equal(Object.keys(r.catalog).length,4476);assert.equal(r.plan.maxManifestWrites,11);assert.doesNotThrow(()=>assertReviewedManifestExecutable(r));assert.throws(()=>assertReviewedManifestExecutable(reviewed()),/retired/);assert.equal(publicationDecision('MASS CONTENT REBUILD').publish,false);
+test('new exact plan binds verified calendar5, final4474 bundle and updater proof; old plan remains retired',()=>{
+ const r=finalReviewed();assert.equal(Object.keys(r.catalog).length,4474);assert.equal(r.plan.maxManifestWrites,11);assert.doesNotThrow(()=>assertReviewedManifestExecutable(r));assert.throws(()=>assertReviewedManifestExecutable(reviewed()),/retired/);assert.equal(publicationDecision('MASS CONTENT REBUILD').publish,false);
  assert.throws(()=>loadReviewedManifest(FINAL_REVIEWED_DIR+'/plan.json','0'.repeat(64)),/Exact final/);
 });
 test('final transaction writes eleven metadata docs, checks access policy and readbacks all seventeen',async()=>{
  const r=finalReviewed(),policyRows=Array.from({length:8},(_,i)=>({id:'synthetic-policy-'+i,priestOnly:true}));
  // Synthetic policy only in this in-memory adapter test; production loads immutable real digest.
  r.contract.publicPolicySha256=valueSha256(policyRows);const db=fakeDb(r,{policyRows});let state={};await executeReviewedManifest({db,reviewed:r,journal:u=>{state={...state,...u};}});
- assert.equal(db.writes.length,11);assert.equal(db.writes.at(-1),'contentManifest/current');assert.equal(Object.keys(state.manifestReceipt).length,17);assert.equal(state.firebaseUsage.metadataDocumentReads,4476);assert.equal(state.firebaseUsage.policyDocumentReads,8);
+ assert.equal(db.writes.length,11);assert.equal(db.writes.at(-1),'contentManifest/current');assert.equal(Object.keys(state.manifestReceipt).length,17);assert.equal(state.firebaseUsage.metadataDocumentReads,4474);assert.equal(state.firebaseUsage.policyDocumentReads,8);
+ const writes=db.writes.length;await executeReviewedManifest({db,reviewed:r,previous:{...state,planSha256:r.planSha},journal:u=>{state={...state,...u};}});assert.equal(db.writes.length,writes);assert.equal(state.manifestWritesThisRun,0);assert.equal(state.resumedManifest,true);
 });
 test('changed private access policy stops final publication before any queued write',async()=>{
  const r=finalReviewed(),db=fakeDb(r,{policyRows:Array.from({length:8},(_,i)=>({id:'wrong-policy-'+i}))});await assert.rejects(executeReviewedManifest({db,reviewed:r,journal:()=>{}}),/policy changed/);assert.equal(db.writes.length,0);

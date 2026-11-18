@@ -310,7 +310,12 @@ export async function verifyLiveCatalog(metadata, catalog, readChanged, contract
   const actual = Object.fromEntries(metadata.map(record => [record.document, record]));
   check(Object.keys(actual).length === metadata.length, 'Duplicate live metadata record');
   const expectedNames = (contract.collections || COORDINATED_COLLECTIONS).flatMap(name => Object.keys(contract.expected[name].hashes).map(id => `${name}/${id}`)).sort();
-  check(isDeepStrictEqual(Object.keys(actual).sort(), expectedNames), 'Live collection IDs/count changed; no manifest switch');
+  if(!isDeepStrictEqual(Object.keys(actual).sort(),expectedNames)){
+    const error=Error('Live collection IDs/count changed; no manifest switch');
+    const expectedSet=new Set(expectedNames);
+    error.conflicts=[...expectedNames.filter(n=>!actual[n]).map(document=>({document,reason:'missing-live-id'})),...Object.keys(actual).filter(n=>!expectedSet.has(n)).map(document=>({document,reason:'unexpected-live-id'}))];
+    throw error;
+  }
   const changed = expectedNames.filter(name => !timeEqual(actual[name].updateTime, catalog[name]?.updateTime));
   check(changed.length <= budget, `Uncached live documents ${changed.length} exceed reviewed read budget ${budget}`);
   if (changed.length) {
@@ -391,6 +396,7 @@ export async function publishCoordinatedManifest(db, { catalog, manifests, contr
       const rows=policy.docs.map(d=>storedDocument(d.id,d.data())).sort((a,b)=>a.id<b.id?-1:1);
       check(valueSha256(rows)===contract.publicPolicySha256,'Public access policy changed; no manifest switch');
     }
+    await journal({state:'coordinated-live-metadata-checkpoint',liveMetadata:metadata,manifestBaseline:Object.fromEntries(fresh)});
     const gate=await verifyLiveCatalog(metadata,catalog,async names=>{const docs=await tx.getAll(...names.map(n=>db.doc(n)));onReads('uncachedDocumentReads',names.length);return mapDocs(docs);},contract,authorization.maxUncachedDocumentReads);
     const planned=coordinatedManifestPlan(gate.described,fresh,authorization,contract);
     const liveDigestGate={projectedDocuments:gate.projectedDocuments,additionalDocumentReads:gate.additionalDocumentReads,...(contract.publicPolicySha256?{publicPolicyVerified:true,publicPolicyDocuments:contract.publicPolicyCount,publicPolicySha256:contract.publicPolicySha256}:{}),collections:Object.fromEntries(collections.map(n=>[n,{digest:gate.described[n].digest,count:gate.described[n].count,bytes:gate.described[n].bytes}]))};
@@ -399,7 +405,7 @@ export async function publishCoordinatedManifest(db, { catalog, manifests, contr
     // Queue indexes first and current last, in ONE atomic transaction. No
     // reader can observe current pointing at an uncommitted collection index.
     for(const name of writeDocuments)tx.set(db.doc(name),planned.payloads[name]);
-    return {...planned,liveDigestGate};
+    return {...planned,liveDigestGate,writeDocuments};
    },{maxAttempts:1});
  await journal({state:'coordinated-manifest-commit-acknowledged'});
  return result;

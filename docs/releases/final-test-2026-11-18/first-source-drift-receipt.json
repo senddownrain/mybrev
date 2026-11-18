@@ -1,0 +1,14 @@
+{
+  "firebaseUsage": {
+    "manifestDocumentReads": 17,
+    "metadataDocumentReads": 4474,
+    "uncachedDocumentReads": 0,
+    "policyDocumentReads": 8
+  },
+  "schema": 1,
+  "project": "ibreviaryby",
+  "planSha256": "ae362f365a88754478504544d52b515eb46835f147ace9493cc2d037405c9da2",
+  "state": "reviewed-manifest-blocked",
+  "reason": "Live collection IDs/count changed; no manifest switch",
+  "code": null
+}

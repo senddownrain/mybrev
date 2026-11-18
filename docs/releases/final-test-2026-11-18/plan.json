@@ -4,9 +4,9 @@
   "policy": "final-test-manifest-after-verified-calendar5-2026-11-18",
   "ownerApproved": true,
   "ownerAuthorization": "все разрешаю. делай больше и даже максимум; Разрешаю обе календарные операции",
-  "bundleSha256": "203f7ef439bb1b9d90cb8e6a4e9d8efec7a34e6fb7a3c41850eeca7f20838184",
-  "bundleManifestSha256": "c15f2f4dd560e643a112acf4e3914e821bab3682848e469a2326000abff19c52",
-  "bundleContentVersion": 1794995935449,
+  "bundleSha256": "bce11ef5e1cc59818a2f2563c12c5814a8b445852515df0bfafb21d57174c69d",
+  "bundleManifestSha256": "7d1bd7d9c4d17308b0817ae70ecb007c448d51e8e1aea5c03e4f8b888935d412",
+  "bundleContentVersion": 1794997584628,
   "contentWrites": 0,
   "maxUncachedDocumentReads": 0,
   "collections": [
@@ -3573,7 +3573,6 @@
         "d_bd_03af307ed6b3ae67": "3bda50c025902984",
         "d_bd_05347acc50ffec88": "263be24bcca7c03b",
         "d_bd_077af2c66fdf4fbc": "e0b94203eecf23ea",
-        "d_bd_0d9099c5139b3386": "17976e4d1d9c1604",
         "d_bd_0fe2787c7514ac21": "b849e199c1e3ee54",
         "d_bd_11e7955de2d43cf2": "7e9dea619ff3c1fc",
         "d_bd_1b7d515988a5d39e": "e5f483222c90514d",
@@ -3628,7 +3627,6 @@
         "i5WLrqxPGZj1jVt3z8RY": "e2c58c3baae02da0",
         "import-01-malitvy-na-kozhny-dzen-tydnya": "ce1efd1d73aebc7c",
         "import-02-agulny-katekhizis": "565627b0ca241b4b",
-        "import-03-sakrament-pakayannya-spovedz": "25dc49fd04b21cb6",
         "import-05-vyanochak-za-kanayuchykh-i-pamerlykh": "37bfd79c8e85912f",
         "import-08-asnounyya-malitvy-na-pratsyagu-dnya": "572dedc4b01adef3",
         "import-09-litaniya-da-khrysta-svyatara-i-akhvyary": "da752dec643421f3",
@@ -3968,7 +3966,6 @@
         "d_bd_03af307ed6b3ae67": 3127,
         "d_bd_05347acc50ffec88": 3398,
         "d_bd_077af2c66fdf4fbc": 3737,
-        "d_bd_0d9099c5139b3386": 7640,
         "d_bd_0fe2787c7514ac21": 1670,
         "d_bd_11e7955de2d43cf2": 1891,
         "d_bd_1b7d515988a5d39e": 1780,
@@ -4023,7 +4020,6 @@
         "i5WLrqxPGZj1jVt3z8RY": 32592,
         "import-01-malitvy-na-kozhny-dzen-tydnya": 19595,
         "import-02-agulny-katekhizis": 7732,
-        "import-03-sakrament-pakayannya-spovedz": 47013,
         "import-05-vyanochak-za-kanayuchykh-i-pamerlykh": 1124,
         "import-08-asnounyya-malitvy-na-pratsyagu-dnya": 12670,
         "import-09-litaniya-da-khrysta-svyatara-i-akhvyary": 9074,
@@ -4099,9 +4095,9 @@
         "zdro66KYVuQ9p2KbqizD": 39238,
         "zvkoIQoxh7ilXp7oUjFg": 23888
       },
-      "digest": "0528e3f09a81c9c6",
-      "count": 393,
-      "bytes": 3449647
+      "digest": "fa7b6df4e9f302c3",
+      "count": 391,
+      "bytes": 3394994
     },
     "prayerCategories": {
       "hashes": {
@@ -9136,15 +9132,15 @@
   },
   "manifestBaselineSha256": "5f27917de5334b5369ac637ee63bcac49c1a1fd7c929a581fa9b08e7328f667d",
   "manifestRecordsSha256": "ff2c57443209357fe92660b40a360c895f0f24fc57b86bb2ffd886a802ada982",
-  "catalogSha256": "7ed0bb7505961b018430474947130f2aa0be2048ab85bacb37592c2c635cfac0",
-  "compatibilitySha256": "3176309b09015e807a5c3574ce85de0c765f7b69394e95e5a840b09b9df7d832",
+  "catalogSha256": "096deaaedf5cb4fd123b49e53a29c071a4676823542b16fae2e350c144a4f08e",
+  "compatibilitySha256": "e3caf513b767423c5f53c4a20cc611e03a0b6fc400d1d70635eb6e048d9be5f5",
   "calendar5ReceiptSha256": "02ec7e26f0718ee9df717f131fc6f4f3c297e65e1b26ee779d69bee96c7ce9f9",
   "publicPolicySha256": "9c82ac5bdc869c3d7b07da606c1e69963af1477e1dc6aef33961c4f4fc4520cb",
   "publicPolicyCount": 8,
   "protectedOrDraftIncluded": 0,
   "snapshotManifestShas": {
     "liturgical": "e09b01a1a389ee939fa9b6d76a9378133bb9064c01183adddbd334addf6798ab",
-    "public": "7429020e9609cbcb7cba89a709e6ac3a16b21dacff8413c4b0bec265e06b9f58",
+    "public": "520a8ee2c8053637aa44eb0e163e2241dab16e06f995717a5433cdd39a3ced28",
     "calendar": "f07b62a60ee313ecbdb962409ab7a0bcd4b53bb88181878e15dfe40993b1d477"
   },
   "massManifestReview": {

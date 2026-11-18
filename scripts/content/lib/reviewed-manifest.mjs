@@ -8,7 +8,7 @@ import { binarySha256, valueSha256, describeCatalog, coordinatedManifestPlan, pu
 export const REVIEWED_PLAN_SHA = '707e13042ed74996cf996aacbd9564c2dc3200448f05eca11946abe502d1e95a';
 export const REVIEWED_DIR = 'docs/releases/final-test-2026-11-17';
 export const FINAL_REVIEWED_DIR = 'docs/releases/final-test-2026-11-18';
-export const FINAL_REVIEWED_PLAN_SHA = 'ae362f365a88754478504544d52b515eb46835f147ace9493cc2d037405c9da2';
+export const FINAL_REVIEWED_PLAN_SHA = '585910950d765c8181791c688f3d60d7043aaf862c553536c570330b4dea5f04';
 export function assertReviewedManifestExecutable(reviewed) {
   if(reviewed?.planSha===FINAL_REVIEWED_PLAN_SHA&&reviewed?.finalCalendar5Verified===true)return;
   throw Error('Reviewed manifest plan retired: it binds the old calendar3 snapshot; only the new immutable plan after actual calendar5 readback may execute.');
@@ -54,7 +54,7 @@ export function loadFinalReviewedManifest(file,expectedSha){
  const bytes=fs.readFileSync(file);check(binarySha256(bytes)===expectedSha,'Final plan SHA mismatch');const plan=JSON.parse(bytes);
  check(plan.schema===1&&plan.project==='ibreviaryby'&&plan.policy==='final-test-manifest-after-verified-calendar5-2026-11-18'&&plan.ownerApproved===true
    &&plan.ownerAuthorization==='все разрешаю. делай больше и даже максимум; Разрешаю обе календарные операции'&&plan.contentWrites===0&&plan.maxUncachedDocumentReads===0&&plan.maxManifestWrites===11
-   &&plan.bundleSha256==='203f7ef439bb1b9d90cb8e6a4e9d8efec7a34e6fb7a3c41850eeca7f20838184'&&plan.protectedOrDraftIncluded===0&&plan.publicPolicyCount===8&&/^[a-f0-9]{64}$/u.test(plan.publicPolicySha256),'Final publication scope differs');
+   &&plan.bundleSha256==='bce11ef5e1cc59818a2f2563c12c5814a8b445852515df0bfafb21d57174c69d'&&plan.protectedOrDraftIncluded===0&&plan.publicPolicyCount===8&&/^[a-f0-9]{64}$/u.test(plan.publicPolicySha256),'Final publication scope differs');
  check(isDeepStrictEqual([...APP_CONTENT_COLLECTIONS].sort(),plan.collections)&&plan.compatibility.mobileReleasePerformed===false&&plan.compatibility.installedClientInventory==='not-available','Only existing public schema1 collections; no fabricated release');
  const catalogBytes=fs.readFileSync(FINAL_REVIEWED_DIR+'/catalog.json.gz'),beforeBytes=fs.readFileSync(FINAL_REVIEWED_DIR+'/manifest-before.json');
  check(binarySha256(catalogBytes)===plan.catalogSha256&&binarySha256(beforeBytes)===plan.manifestRecordsSha256,'Final catalog/manifest SHA mismatch');
@@ -64,7 +64,7 @@ export function loadFinalReviewedManifest(file,expectedSha){
  const receiptBytes=fs.readFileSync(FINAL_REVIEWED_DIR+'/calendar5-receipt.json');check(binarySha256(receiptBytes)===plan.calendar5ReceiptSha256,'Calendar5 receipt SHA mismatch');const receipt=JSON.parse(receiptBytes);
  check(receipt.mode==='PUBLISHED_AND_VERIFIED'&&receipt.revision===5&&receipt.writes===3&&receipt.deletes===0&&receipt.outsideScopeWrites===0&&receipt.operations.length===3&&receipt.operations.every(o=>o.result==='VERIFIED'),'Calendar5 publication/readback not verified');
  const catalog=JSON.parse(zlib.gunzipSync(catalogBytes)).documents,manifests=new Map(Object.entries(JSON.parse(beforeBytes).records));
- check(Object.keys(catalog).length===4476&&Object.entries(catalog).every(([n,e])=>n.split('/').length===2&&plan.collections.includes(n.split('/')[0])&&Number.isSafeInteger(e.updateTime?.seconds)&&Number.isSafeInteger(e.updateTime?.nanoseconds)),'Final catalog scope/timestamps invalid');
+ check(Object.keys(catalog).length===4474&&Object.entries(catalog).every(([n,e])=>n.split('/').length===2&&plan.collections.includes(n.split('/')[0])&&Number.isSafeInteger(e.updateTime?.seconds)&&Number.isSafeInteger(e.updateTime?.nanoseconds)),'Final catalog scope/timestamps invalid');
  const contract={collections:plan.collections,expected:plan.expected,report:{contentVersion:plan.bundleContentVersion},publicPolicySha256:plan.publicPolicySha256,publicPolicyCount:plan.publicPolicyCount};
  describeCatalog(catalog,contract);const planned=coordinatedManifestPlan(plan.expected,manifests,plan,contract);
  const writes=Object.keys(planned.payloads).filter(n=>valueSha256(manifests.get(n)?.data??null)!==valueSha256(planned.payloads[n]));
@@ -86,13 +86,13 @@ export async function executeReviewedManifest({ db, reviewed, previous = {}, jou
     check(previous.planSha256 === reviewed.planSha && previous.manifestAttempt.writeDocuments.every(n => refs.includes(n)), 'Resume plan/scope mismatch');
     // Recovery only verifies the acknowledged/ambiguous atomic payload. It cannot repeat writes.
     const receipt = await readback(previous.manifestAttempt.payloads);
-    await journal({ state: 'reviewed-manifest-readbacks-verified', manifestReceipt: receipt, resumedManifest: true, contentWrites: 0 });
+    await journal({ state: 'reviewed-manifest-readbacks-verified', manifestReceipt: receipt, resumedManifest: true, manifestWritesThisRun: 0, contentWrites: 0 });
     return;
   }
   const result = await publishCoordinatedManifest(db, { catalog: structuredClone(catalog), manifests, contract, authorization: plan, journal, onReads });
   const receipt = await readback(result.payloads);
   await journal({ state: 'reviewed-manifest-readbacks-verified', manifestReceipt: receipt, liveDigestGate: result.liveDigestGate,
-    publishedCurrent: result.current, contentWrites: 0 });
+    publishedCurrent: result.current, manifestWritesThisRun: result.writeDocuments.length, contentWrites: 0 });
 }
 
 export async function reviewedManifestMain(argv) {
@@ -123,9 +123,9 @@ export async function reviewedManifestMain(argv) {
   const db = admin.firestore(app); db.settings({ preferRest: true });
   try {
     await executeReviewedManifest({ db, reviewed, previous: state, journal });
-    console.log(JSON.stringify({ state: state.state, firebaseUsage: state.firebaseUsage, manifestWrites: state.manifestAttempt?.writeDocuments.length, contentWrites: 0 }));
+    console.log(JSON.stringify({ state: state.state, firebaseUsage: state.firebaseUsage, manifestWrites: state.manifestWritesThisRun, contentWrites: 0 }));
   } catch (error) {
-    journal({ state: 'reviewed-manifest-blocked', reason: error.message, code: error.code ?? null });
+    journal({ state: 'reviewed-manifest-blocked', reason: error.message, code: error.code ?? null, conflicts: error.conflicts || [] });
     throw error; // No retry, including RESOURCE_EXHAUSTED/unknown failures.
   } finally { await app.delete(); }
 }

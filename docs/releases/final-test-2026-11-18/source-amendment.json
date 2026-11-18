@@ -1,0 +1,17 @@
+{
+  "writes": 0,
+  "retries": 0,
+  "metadataReads": 391,
+  "changedReads": 0,
+  "removed": [
+    "d_bd_0d9099c5139b3386",
+    "import-03-sakrament-pakayannya-spovedz"
+  ],
+  "exportedAt": "2026-11-18T10:26:24.628Z",
+  "state": "reconciled",
+  "previousPlanSha256": "ae362f365a88754478504544d52b515eb46835f147ace9493cc2d037405c9da2",
+  "previousBundleSha256": "203f7ef439bb1b9d90cb8e6a4e9d8efec7a34e6fb7a3c41850eeca7f20838184",
+  "failedReceiptSha256": "585dadfef030010325779af73d99cb044fb350cd4516253bb9a98e243257100b",
+  "failedRun": 44284033897,
+  "reason": "Two public records were removed by an independent production change after preflight; do not restore stale rows. Same eleven metadata-write scope, zero content writes."
+}
