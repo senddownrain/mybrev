@@ -2,7 +2,7 @@
   "kind": "mybrev-devotional-import-preparation",
   "categoryTag": "Набажэнства",
   "categoryDisplayName": "Набажэнствы",
-  "publicationStatus": "NOT_IMPORTED",
+  "publicationStatus": "FIRESTORE_APPLIED_READBACK_REPORTED",
   "sourceBibliographyStatus": "OWNER_CONFIRMED_EXISTING_AGENDA_ATTRIBUTION",
   "documents": [
     {
@@ -17,7 +17,7 @@
       ],
       "textFormat": "mybrev-markdown",
       "textFormatVersion": 1,
-      "publicationStatus": "draft-not-imported",
+      "publicationStatus": "firestore-applied-readback-reported",
       "sourcePdfSha256": "6318081b179d503ee1a60da5e6957ced9c8c840411c8a80ddd8c4b2b6f29fe45"
     },
     {
@@ -32,7 +32,7 @@
       ],
       "textFormat": "mybrev-markdown",
       "textFormatVersion": 1,
-      "publicationStatus": "draft-not-imported",
+      "publicationStatus": "firestore-applied-readback-reported",
       "sourcePdfSha256": "9f577318caf1629d52ef4b83401e91a2b4bacfb321360fade14d7fc9112cf73c"
     },
     {
@@ -47,7 +47,7 @@
       ],
       "textFormat": "mybrev-markdown",
       "textFormatVersion": 1,
-      "publicationStatus": "draft-not-imported",
+      "publicationStatus": "firestore-applied-readback-reported",
       "sourcePdfSha256": "48eaa1d5dbc371362ce544474acb2b2959bc67de82770ef5844ed572fc8b639e"
     },
     {
@@ -62,10 +62,11 @@
       ],
       "textFormat": "mybrev-markdown",
       "textFormatVersion": 1,
-      "publicationStatus": "draft-not-imported",
+      "publicationStatus": "firestore-applied-readback-reported",
       "sourcePdfSha256": "95e83c285bec3ebf79c9aa1e0ea101e259d7b847e8b031a447ba663c2f94f293"
     }
   ],
   "proofreadingStatus": "PAGE_IMAGES_VERIFIED",
-  "source": "«Літургічная агенда» (Мінск, 2010)"
+  "source": "«Літургічная агенда» (Мінск, 2010)",
+  "deliveryStatus": "WEB_HOSTING_AND_FLUTTER_BUNDLE_NOT_VERIFIED"
 }
