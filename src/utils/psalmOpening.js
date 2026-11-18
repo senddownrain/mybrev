@@ -1,7 +1,7 @@
 import { parse } from 'node-html-parser';
 
-// A display-only concession for an antiphon that is the ENTIRE opening
-// psalm half-verse. Never remove a merely similar beginning or alter a source.
+// Display-only omission of an EXACTLY echoed opening half-verse or complete
+// first psalm verse. Never remove a merely similar beginning or alter a source.
 const normalizeWords = (text) => String(text || '')
   .replace(/&nbsp;|&#160;/giu, ' ')
   .replace(/[^\p{L}\p{N}]+/gu, ' ')
@@ -22,21 +22,50 @@ function precedingText(paragraph, marker) {
 }
 
 /**
- * When the selected antiphon exactly echoes a whole first half-verse ending
- * at † or *, show the continuation once. The HTML passed to this function
+ * When the selected antiphon exactly echoes the first half-verse or the entire
+ * first verse, show the continuation once. The HTML passed to this function
  * must already be the selected psalm alternative, not the entire source.
  */
 export function omitEchoedPsalmOpening(psalmHtml, selectedAntiphonHtml) {
   if (!selectedAntiphonHtml) return psalmHtml;
   const root = parse(String(psalmHtml || ''));
-  const paragraph = root.querySelector('p[data-psalm-strophe]');
+  const strophes = root.querySelectorAll('p[data-psalm-strophe]');
+  const paragraph = strophes[0];
+  const antiphonText = parse(String(selectedAntiphonHtml)).text
+    .replace(/^\s*(?:[1-9]\s*)?ант\.\s*/iu, '');
+  const antiphonWords = normalizeWords(antiphonText);
+
+  // Some antiphons reproduce the ENTIRE first verse (both parts separated
+  // by *), not merely the first half-verse. Omit that whole repeated strophe
+  // and keep † immediately before the beginning of the NEXT verse.
+  // Never do this for a partial match or if there is no following verse.
+  const fullOpening = paragraph?.text.replace(/^\s*\d+[.)]\s*/u, '');
+  if (antiphonWords && antiphonWords === normalizeWords(fullOpening) && strophes[1]) {
+    const next = strophes[1];
+    const nextMarker = next.querySelector('.psalm-marker');
+    const existingLeadingDagger = nextMarker?.text.trim() === '†'
+      && !normalizeWords(precedingText(next, nextMarker).replace(/^\s*\d+[.)]\s*/u, ''));
+    if (existingLeadingDagger) {
+      nextMarker.classList.add('psalm-opening-flexa');
+    } else {
+      next.innerHTML = '<span class="psalm-marker psalm-opening-flexa">†</span>&nbsp;' + next.innerHTML;
+    }
+    // Prevent a source space or <br> from orphaning the special leading †.
+    // Other † and * signs retain the reader's selected break behavior.
+    next.innerHTML = next.innerHTML
+      .replace(/^((?:<[^>]+>)*)(?:\s|&nbsp;)+/iu, '$1')
+      .replace(/(<span\b[^>]*\bpsalm-opening-flexa\b[^>]*>†<\/span>(?:<\/(?:em|i|b|strong|span|font)>)*)(?:[ \t\r\n]|&nbsp;)*/iu, '$1&nbsp;');
+    paragraph.remove();
+    return root.innerHTML;
+  }
+
+  // Preserve the existing half-verse behavior for antiphons that reproduce
+  // only the words before the first † or *.
   const marker = paragraph?.querySelector('.psalm-marker');
   if (!marker || !['†', '*'].includes(marker.text.trim())) return psalmHtml;
 
-  const antiphonText = parse(String(selectedAntiphonHtml)).text
-    .replace(/^\s*(?:[1-9]\s*)?ант\.\s*/iu, '');
   const opening = precedingText(paragraph, marker).replace(/^\s*\d+[.)]\s*/u, '');
-  if (!normalizeWords(antiphonText) || normalizeWords(antiphonText) !== normalizeWords(opening)) {
+  if (!antiphonWords || antiphonWords !== normalizeWords(opening)) {
     return psalmHtml;
   }
 
@@ -69,7 +98,7 @@ export function omitEchoedPsalmOpening(psalmHtml, selectedAntiphonHtml) {
 
 /**
  * Adds the liturgical cross to an opening antiphon only if its complete text
- * replaces the first psalm half-verse. The closing/repeated antiphon is not
+ * replaces the first psalm half-verse or entire first verse. Closing antiphons are not
  * modified; no source, alternatives or Firestore fields are changed.
  */
 export function addOpeningAntiphonFlexa(html) {
