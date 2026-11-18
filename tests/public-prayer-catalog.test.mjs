@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildPublicPrayerCatalog, validatePublicPrayerCatalog } from '../src/utils/publicPrayerCatalog.mjs';
 import { parseArgs } from '../scripts/export-public-prayers-hosting.mjs';
+import { verifyHostingCatalog } from '../scripts/verify-public-prayers-hosting.mjs';
 
 const prayer = (id, extra = {}) => ({ id, title: id, text: 'Test prayer ' + id, tags: [], ...extra });
 const category = (id, extra = {}) => ({ id, name: id, tags: [], prayerIds: [], ...extra });
@@ -43,4 +44,14 @@ test('publication fails closed for incomplete collections', () => {
   assert.throws(() => buildPublicPrayerCatalog({ prayers: [prayer('p')], categories: null }), /collection arrays/);
   assert.throws(() => parseArgs(['--live', '--out', 'dist/test.json']), /explicit ibreviaryby/);
   assert.equal(parseArgs(['--snapshot', 'backups/local', '--out', 'backups/a.json']).snapshot, 'backups/local');
+});
+
+test('hosting deploy refuses missing or old catalogs', () => {
+  const now = Date.now();
+  const catalog = buildPublicPrayerCatalog(seed(), new Date(now).toISOString());
+  assert.throws(() => verifyHostingCatalog(catalog, now), /unexpectedly small/);
+  const full = { ...catalog, prayers: Array.from({ length: 60 }, (_, i) => prayer('public' + i)) };
+  assert.deepEqual(verifyHostingCatalog(full, now), { prayers: 60, categories: 1 });
+  const stale = { ...full, publishedAt: new Date(now - 3 * 86400000).toISOString() };
+  assert.throws(() => verifyHostingCatalog(stale, now), /last 24 hours/);
 });
