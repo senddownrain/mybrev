@@ -62,6 +62,6 @@ h3 { margin: 0; font-size: 1rem; }
 .psalmody-modes button + button { border-inline-start: 1px solid var(--nav-border); }
 .psalmody-modes button[aria-checked="true"] { background: var(--nav-active); color: var(--chrome-accent); box-shadow: inset 0 -3px currentColor; }
 .psalmody-modes button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -4px; }
-@media (max-width: 560px) { .psalmody-settings { margin-inline: 16px; } .psalmody-modes { width: 132px; } }
+@media (max-width: 560px) { .psalmody-settings { margin-inline: 16px; } .psalmody-modes { width: 144px; } }
 @media (forced-colors: active) { .psalmody-modes button[aria-checked="true"] { border-bottom: 3px solid Highlight; } }
 </style>
