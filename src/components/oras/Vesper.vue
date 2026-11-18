@@ -16,7 +16,7 @@
                 <magnificat :ant="vesperDay.vesperAntMag" />
                 <inters :text="vesperDay.vesperInter" :rubric="intercessionsRubric" />
                 <pater-noster />
-                <last-prayer :text="vesperDay.vesperPr == '' ? vesperDay.laudesPr : vesperDay.vesperPr" />
+                <last-prayer :text="vesperDay.vesperPr == '' ? vesperDay.laudesPr : vesperDay.vesperPr" full-conclusion />
                 <end-of-vesper/>
             </v-col>
         </v-row>
