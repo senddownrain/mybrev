@@ -61,7 +61,7 @@
           <span class="color-dot" :class="{ 'color-dot--large': row.role === 'primary' }" :style="{ '--dot': colorInfo(row.color).swatch }" aria-hidden="true"></span>
           <div class="celebration__copy">
             <strong>{{ row.title }}</strong>
-            <span class="celebration__meta">{{ [row.rank, ROLE_LABELS[row.role], colorNote(row)].filter(Boolean).join(' · ') }}</span>
+            <span class="celebration__meta">{{ [row.role === 'commemoration' ? '' : row.rank, ROLE_LABELS[row.role], colorNote(row)].filter(Boolean).join(' · ') }}</span>
             <span v-if="row.badges.length" class="badges">
               <span v-for="badge in row.badges" :key="badge" class="badge badge--diocese">{{ badge }}</span>
             </span>
@@ -98,7 +98,7 @@
       </div>
 
       <div v-if="day.commemorations.length" class="ordo-block">
-        <span class="control-label">Успамін (commemoratio)</span>
+        <span class="control-label">Неабавязковыя ўспаміны</span>
         <div v-for="item in day.commemorations" :key="item.id" class="celebration">
           <span class="color-dot" :style="{ '--dot': colorInfo(item.color).swatch }" aria-hidden="true"></span>
           <div class="celebration__copy">
@@ -260,7 +260,7 @@ const contextDiocese = computed(() => {
 const engineOptions = computed(() => ({ diocese: contextDiocese.value, epoch: ordoCalendarEpoch.value }));
 const union = computed(() => (ordoCalendarEpoch.value, buildDayUnion(iso.value, dioceses.value)));
 const contextLabel = computed(() => (dioceses.value.length > 1 ? DIOCESE_SHORT_LABELS[contextDiocese.value] : ''));
-const ROLE_LABELS = { primary: '', alternative: 'на выбар', commemoration: 'успамін (commemoratio)' };
+const ROLE_LABELS = { primary: '', alternative: 'на выбар', commemoration: 'Неабавязковы ўспамін' };
 
 // Notes are a separate lazy chunk (~1.3 MB JSON); the day renders without
 // them and gains them when the chunk arrives.

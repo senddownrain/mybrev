@@ -164,6 +164,8 @@ export function normalizeCalendarDefinitions(raw = {}) {
         if (doc.id === 'sv-juan-diego') return { ...doc, title: 'Св. Хуана Дыега Куаўтлатаацына' };
         // Old public Firestore revisions must not reintroduce the nominative title.
         if (doc.id === 'christ-king') return { ...doc, title: 'Пана нашага Езуса Хрыста, Валадара Сусвету' };
+        // Keep the Holy Family in the genitive even when Firestore serves an older calendar snapshot.
+        if (doc.id === 'holy-family') return { ...doc, title: 'Святой Сям’і: Езуса, Марыі і Юзафа' };
         return doc;
       }),
     dioceseOverrides: keep(raw.dioceseOverrides, validateDioceseOverride, 'dioceseOverride'),
