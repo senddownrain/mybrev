@@ -6,6 +6,14 @@ on:
     branches: [main]
     paths:
       - 'src/views/About.vue'
+      - 'src/services/prayerContentService.js'
+      - 'src/utils/publicPrayerCatalog.mjs'
+      - 'src/main.js'
+      - 'src/utils/ordoRevalidation.js'
+      - 'scripts/export-public-prayers-hosting.mjs'
+      - 'firebase.json'
+      - 'tests/public-prayer-catalog.test.mjs'
+      - 'package.json'
       - 'src/views/LiturgyHoursDecrees.vue'
       - 'src/views/ProperCalendar.vue'
       - 'src/views/Compendium.vue'
@@ -67,6 +75,7 @@ jobs:
 
       - name: Build web
         env:
+          VITE_LAUNCH_QUOTA_GUARD: 'true'
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
           VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
@@ -104,6 +113,15 @@ jobs:
           fi
           printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/firebase-service-account.json"
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
+
+      # Generate only the allowlisted public catalog from the source of truth.
+      # This reads three collections ONCE per deployment, not per visitor;
+      # a quota error fails the release before any Hosting changes.
+      - name: Export public prayers to Hosting
+        run: |
+          node scripts/export-public-prayers-hosting.mjs --live --project ibreviaryby --out dist/public-prayers-v1.json
+          test -s dist/public-prayers-v1.json
+          node --input-type=module -e "import fs from 'node:fs'; import {validatePublicPrayerCatalog} from './src/utils/publicPrayerCatalog.mjs'; const c=JSON.parse(fs.readFileSync('dist/public-prayers-v1.json')); validatePublicPrayerCatalog(c); console.log('Public catalog verified',c.prayers.length,'prayers',c.categories.length,'categories');"
 
       # Publish the approved security rules BEFORE the new draft editor.
       # If rules deployment is denied, keep the existing Web release unchanged.
