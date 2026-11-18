@@ -11,6 +11,7 @@ on:
       - 'src/main.js'
       - 'src/utils/ordoRevalidation.js'
       - 'scripts/export-public-prayers-hosting.mjs'
+      - 'scripts/verify-public-prayers-hosting.mjs'
       - 'firebase.json'
       - 'tests/public-prayer-catalog.test.mjs'
       - 'package.json'
@@ -120,8 +121,7 @@ jobs:
       - name: Export public prayers to Hosting
         run: |
           node scripts/export-public-prayers-hosting.mjs --live --project ibreviaryby --out dist/public-prayers-v1.json
-          test -s dist/public-prayers-v1.json
-          node --input-type=module -e "import fs from 'node:fs'; import {validatePublicPrayerCatalog} from './src/utils/publicPrayerCatalog.mjs'; const c=JSON.parse(fs.readFileSync('dist/public-prayers-v1.json')); validatePublicPrayerCatalog(c); console.log('Public catalog verified',c.prayers.length,'prayers',c.categories.length,'categories');"
+          node scripts/verify-public-prayers-hosting.mjs dist/public-prayers-v1.json
 
       # Publish the approved security rules BEFORE the new draft editor.
       # If rules deployment is denied, keep the existing Web release unchanged.
