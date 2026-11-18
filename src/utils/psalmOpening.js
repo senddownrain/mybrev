@@ -70,8 +70,8 @@ function placeOpeningDagger(paragraph, cadence) {
   paragraph.setAttribute('data-psalm-strophe', '');
 }
 
-/** Omit an exact opening verse or first hemistich from the selected psalm. */
-export function omitEchoedPsalmOpening(psalmHtml, selectedAntiphonHtml) {
+/** Keep a fully echoed opening verse and omit an echoed first hemistich. */
+export function formatPsalmOpening(psalmHtml, selectedAntiphonHtml) {
   const antiphon = normalizeWords(liturgicalText(selectedAntiphonHtml).replace(antiphonLabel, ''));
   if (!antiphon) return psalmHtml;
 
@@ -97,8 +97,6 @@ export function omitEchoedPsalmOpening(psalmHtml, selectedAntiphonHtml) {
     if (!isPsalmParagraph(continuation) || isDoxology(continuation)) return psalmHtml;
     placeOpeningDagger(continuation);
     standaloneDagger?.remove();
-    if (splitHalf) next.remove();
-    paragraph.remove();
     return root.innerHTML;
   }
 
@@ -120,8 +118,7 @@ export function omitEchoedPsalmOpening(psalmHtml, selectedAntiphonHtml) {
 
 /**
  * Adds the liturgical cross to an opening antiphon only if its complete text
- * replaces the first psalm half-verse or entire first verse. Closing antiphons are not
- * modified; no source, alternatives or Firestore fields are changed.
+ * matches the opening verse or its first half. Closing antiphons keep their source text.
  */
 export function addOpeningAntiphonFlexa(html) {
   if (!html) return html;

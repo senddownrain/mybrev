@@ -40,8 +40,7 @@ export function decoratePsalmody(root, { mode = 'left-break', dimmedSide = null,
     for (const marker of markers) {
       const range = root.ownerDocument.createRange();
       // Default: break AFTER both † and * (as the user's mode requests).
-      // Exception: the opening † stands for an omitted half-verse; it is
-      // already at the start of the psalm and must stay with the next word.
+      // The marked † introduces the continuation and stays with its first word.
       if (marker.classList.contains('psalm-opening-flexa')) continue;
       range.setStartAfter(marker);
       range.setEnd(p, p.childNodes.length);

@@ -74,7 +74,7 @@ import PsalmText from '@/components/oraparts/PsalmText.vue';
 import AlternativeText from '@/components/oraparts/AlternativeText.vue';
 import { formatPsalmHtml } from '@/utils/liturgicalHtml';
 import { getLiturgicalAlternatives } from '@/utils/liturgicalAlternatives';
-import { omitEchoedPsalmOpening } from '@/utils/psalmOpening';
+import { formatPsalmOpening } from '@/utils/psalmOpening';
 import { getDefaultInvitatoriumId } from '@/utils/invitatorium';
 
 const { day, context, pending } = useResolvedLiturgicalDay();
@@ -94,7 +94,7 @@ const displayedDay = computed(() => ({ ...(day.value || {}), ...(selectedInvitat
 const formatPsalm = (psalm, antiphon, selectedIndex) => {
   const formatted = formatPsalmHtml(psalm);
   const selected = getLiturgicalAlternatives(antiphon || '')[selectedIndex]?.html;
-  return omitEchoedPsalmOpening(formatted, selected);
+  return formatPsalmOpening(formatted, selected);
 };
 const periodType = computed(() => day.value?._periodType || context.value?.periodType);
 
