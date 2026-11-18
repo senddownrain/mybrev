@@ -42,6 +42,13 @@ on:
       - 'src/components/OrasList.vue'
       # Publish Ordo-backed fixed celebration labels in the Hours reader.
       - 'src/utils/ordoDayOptions.js'
+      # Calendar display and canonical Ordo updates must reach Hosting.
+      - 'src/components/ordo/OrdoDay.vue'
+      - 'src/components/ordo/OrdoMonth.vue'
+      - 'src/data/ordo/calendar-definitions.json'
+      - 'src/utils/ordo/definitions.js'
+      - 'src/utils/ordo/movableFeasts.js'
+      - 'src/utils/ordoScreen.js'
       - 'src/styles/main.scss'
       # Draft editor and its Firestore policy are deployed together.
       - 'src/views/admin/PrayerDraftEditor.vue'
