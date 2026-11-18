@@ -14,6 +14,7 @@ import {
 } from '../src/utils/ordo/definitions.js';
 import { applyLayers, buildCalendarLayers } from '../src/utils/ordo/layers.js';
 import { buildCalendarDefinitionsSeed, buildSeedCalendarLayers, SEED_DIOCESES } from '../src/utils/ordo/seed.js';
+import { inferColor } from '../src/utils/ordo/fixedCelebrations.js';
 import { validateYearOverride } from '../src/utils/ordo/yearOverrides.js';
 import {
   automaticTransfers, previewYearOverride, storedYearOverrides, yearCollisions,
@@ -295,4 +296,23 @@ test('Christmas: the season ends with the Baptism, the date documents reach 12 J
   assert.equal(temporalOf('2026-12-29').daysRef.seasonalDateId, 'christmas-29-12');
   // Boundary of the season ≠ storage key of the proper content.
   assert.equal(temporalOf('2026-12-25').daysRef.fixedDateOnly, true);
+});
+
+test('18 November dedication of the basilicas is white, unlike apostle feasts', () => {
+  const id = 'dedication-basilicas-peter-paul';
+  const seed = buildCalendarDefinitionsSeed();
+  const fromSeed = seed.celebrations.find((entry) => entry.id === id);
+  const bundled = getBundledCalendarDefinitions().celebrations.find((entry) => entry.id === id);
+  assert.equal(fromSeed?.category, 'dedication');
+  assert.equal(fromSeed?.color, 'albus');
+  assert.equal(bundled?.color, 'albus');
+  assert.equal(inferColor('Гадавіна пасвячэння рымскіх базылік св. апосталаў Пятра і Паўла', 'dedication'), 'albus');
+  assert.equal(inferColor('Святых апосталаў Пятра і Паўла', 'saint'), 'ruber');
+  for (const diocese of ['grodno', 'minsk-mohilev', 'pinsk', 'vitebsk']) {
+    const day = resolveLiturgicalDate('2026-11-18', { country: 'BY', diocese });
+    const memorial = day.candidates.find((item) => item.id === id);
+    assert.equal(memorial?.color, 'albus', diocese);
+    const weekday = day.candidates.find((item) => item.kind === 'temporal');
+    assert.equal(weekday?.color, 'viridis', diocese);
+  }
 });
