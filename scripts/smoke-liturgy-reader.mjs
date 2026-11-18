@@ -75,6 +75,7 @@ try {
       db.close();
     }, { namespace, revision: CONTENT_REVISION, content, date, theme: profile.theme, scale: profile.scale });
     await page.goto(`${base}/settings`, { waitUntil: 'domcontentloaded' });
+    await page.locator('[aria-controls="liturgical-settings-content"]').click();
     assert.equal(await page.locator('[data-mode="left-break"]').getAttribute('aria-checked'), 'true');
     assert.equal(await page.getByLabel('Не выключаць экран', { exact: true }).isChecked(), true);
     assert.equal(await page.locator('.psalmody-settings select').count(), 0, 'psalmody uses radio buttons');
