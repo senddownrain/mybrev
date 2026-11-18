@@ -112,6 +112,7 @@ test('static document UI renders all runs without a public calendar PDF link and
   }
   assert.match(read('src/views/ProperCalendar.vue'), /calendar.pages/);
   assert.doesNotMatch(read('src/views/ProperCalendar.vue'), /Арыгінал PDF|:href="calendar.sourceFile"|class="document-original"/);
+  assert.doesNotMatch(read('src/views/ProperCalendar.vue'), /calendar-publication-note|Заўвага: запіс 9 снежня/);
   assert.match(read('src/components/DocumentBack.vue'), /router.push\(\{ name: 'Sources' \}\)/);
   for (const route of ['documents/proper-calendar', 'documents/liturgy-hours-decrees', 'documents/liturgy-hours-introduction']) assert.ok(read('src/router/index.js').includes(route));
 });
