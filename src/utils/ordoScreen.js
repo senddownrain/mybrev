@@ -239,7 +239,7 @@ export function massSummary(day) {
   if (readings.variantsKind === 'reading-sets') lines.push(`Тры Імшы за памерлых: ${readings.variants.length} камплекты чытанняў на выбар`);
   else if (readings.variants?.length) lines.push('Імша Крыжма і Імша Вячэры Пана');
   if (day.sources?.split) lines.push(`Літургія гадзінаў — з дня: ${day.sources.office.title}`);
-  if (day.commemorations.length) lines.push('Успамін (commemoratio): калекта можа быць уласная');
+  if (day.commemorations.length) lines.push('Неабавязковы ўспамін: калекта можа быць уласная');
   const cycle = readings.cycle || {};
   const year = cycle.year ? (cycle.lectionary === 'weekday' ? toRomanNumeral(Number(cycle.year)) : cycle.year) : '';
   return {
