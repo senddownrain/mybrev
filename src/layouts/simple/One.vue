@@ -8,8 +8,8 @@
     <v-main :class="{ 'has-bottom-nav': hasBottomNav }">
       <router-view v-if="!hideLayoutTopNav" name="topNav" />
       <router-view />
-      <FeedbackPrompt />
       <NextHourLink />
+      <FeedbackPrompt class="ora-feedback" />
       <BackToTop v-if="isHour" />
 
       <router-view name="bottomNav" />
@@ -43,5 +43,12 @@
 <style scoped>
 .has-bottom-nav {
   padding-bottom: 92px;
+}
+
+/* After the next-hour action, the quiet feedback divider ends the reading flow.
+   Keep clear of the floating back-to-top control and the system safe area. */
+:deep(.ora-feedback) {
+  margin-top: 18px;
+  margin-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
 }
 </style>
