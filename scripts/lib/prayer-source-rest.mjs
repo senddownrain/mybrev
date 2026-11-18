@@ -36,6 +36,7 @@ export async function createSourceRest({ serviceAccount } = {}) {
       },
     }, (res) => {
       let result = '';
+      res.setEncoding('utf8');
       res.on('data', (chunk) => { result += chunk; });
       res.on('error', reject);
       res.on('end', () => {

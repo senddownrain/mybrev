@@ -1,42 +1,19 @@
-# Four devotional texts — staging only
+# Four Belarusian devotions
 
-This is an **unpublished import candidate** for four texts from user-supplied PDF extracts. The Markdown files are in the canonical MyBrev prayer format; no Firestore data, category, app bundle, hosting deployment or content manifest has been changed.
+The four prayers use `mybrev-markdown` version 1 and the existing public category «Набажэнствы» (`devotions`, tag `Набажэнства`). The title is stored separately from the Markdown body.
 
-## Source / mapping
+## Source review
 
-- See `manifest.json` for stable draft IDs, titles, printed page labels, source PDFs and SHA-256 checksums.
-- The intended existing public section is «Набажэнствы» and its existing tag is `Набажэнства`. Verify the actual category ID and membership before writes; do not create a duplicate category.
-- Use `title` as a separate Firestore field; do not prepend `#` to `text`. Store `textFormat: 'mybrev-markdown'` and `textFormatVersion: 1`.
-- Rubrics follow `:::rubric` + `:::`; sections follow Markdown headings; `Ц.:` / `Н.:` are speaker markers. Keep multiple alternative prayers, Scripture, the four procession stations and the blessing cross glyph `✠`.
-- The original extracts do not identify the full book title/publisher. Verify the approved bibliography for `source` and `sourceBook`; do not infer or fabricate it. **No production apply until source and text are reviewed.**
+All 17 printed pages were compared with the four supplied PDFs. Pages 296–298 and 302–303 were read from the page images because of their damaged text layers. Page 296 needed a comma after «маўчання». Page 298 needed the direction «і ўкленчвае» restored in section 8. The draft's corrections of three apparent print errors were retained: «Сакармэнт» on 295, «урачыстаці» on 299 and «Захаваў» in the petition on 388. The four procession stations, four Gospel references and blessing alternatives were checked in sequence. The reference to the hymn «Цябе, Бога, праслаўляем» follows the source, which only names the hymn.
 
-## Validation / continuation
+Use the owner-confirmed attribution «Літургічная агенда» (Мінск, 2010) in `source`, following the registered bibliography and the existing Agenda entries for Святой Сям’і and святога Юзафа. Those records leave `sourceBook` unset. The PDF fragments have PageMaker filenames containing `Agenda` but omit the imprint page. The import manifest records the SHA-256 of each PDF and final Markdown body.
 
-1. Read `AGENTS.md`, `docs/prayer-formatting-standard.md`, `docs/prayer-markdown.md`, `docs/prayer-categories-contract.md`, `docs/app-content-distribution.md`.
-2. Compare the four files line by line with the original PDF page images, particularly printed pages 296–298 and 302–303 whose embedded text layers are corrupted. Independently verify liturgical formulas and Scripture references.
-3. Prepare an idempotent local import dry-run based on existing authorized snapshot: detect duplicates by exact ID and content, preserve existing unrelated fields, log page provenance and hash.
-4. Only after confirmed production quota and authorization, use the existing canonical mutation/import path with preconditions and readback verification. Never refresh the snapshot or run live audits as part of a dry-run.
-5. For Flutter, validate the renderer and content distribution contract; `npm run content:manifest` must report `SAFE CONTENT PATCH` before an explicitly authorized `-- --apply`. Do not override MASS CONTENT REBUILD or schema gates.
-6. Add Markdown/renderer tests, Web mobile/desktop visual checks, and Flutter parser tests if there is a demonstrated discrepancy. Report exact status separately as `prepared`, `proofread`, `imported`, `verified`, `published`.
+## Import and delivery
 
-Status: **PREPARED / NOT PROOFREAD BY AN INDEPENDENT REVIEWER / NOT IMPORTED / NOT DEPLOYED**.
+The [published Web catalog](https://ibreviaryby.web.app/public-prayers-v1.json) identified three new entries and one overlap. The [existing procession](https://ibreviaryby.web.app/prayer/Fd9rN0S9NU1mAmqb2isZ) already included the four stations and Gospel readings. Its Firestore ID and other language fields were preserved. The base and Belarusian title and text were updated with the complete version.
 
-## Safe local preflight (added in this PR)
+On 2026-11-18, the scoped Firestore dry run was followed by an atomic commit at 14:48:32 UTC. Readback verified all four text hashes. A second checked commit at 14:51:04 UTC added the Agenda attribution to the four records and verified the source and text hashes. No category was created or modified. The Firebase service account was scoped to project `ibreviaryby`.
 
-Run `node --test tests/four-devotions-content.test.mjs` to validate immutable checksums and the basic Markdown structure. No Firebase access is needed.
+`node scripts/validate-four-devotions.mjs` runs the offline validation. A full local snapshot can be checked with `--snapshot backups/firestore-snapshot`. An optional `--out` file contains private proposed bodies. `scripts/apply-four-devotions.mjs` checks the public catalog and the relevant live Firestore records and detects exact and partial duplicate candidates. Without `--apply` it rolls back the read transaction. With `--apply` it saves the private dry run and before images, commits using document preconditions, then verifies Firestore readback. Keep the plan files out of Git.
 
-Run `node scripts/validate-four-devotions.mjs` to inspect exactly four staged documents without Firestore access or writes. For local duplicate/category verification, use an existing complete snapshot:
-
-```sh
-node scripts/validate-four-devotions.mjs --snapshot backups/firestore-snapshot-static --out backups/four-devotions/plan.json
-```
-
-The private `plan.json` includes the full proposed text and must NOT be committed. If the snapshot lacks either public or priest-protected prayers/categories, the validator refuses to compare. This command is **not** an apply mechanism; it makes 0 Firestore requests and 0 writes. An explicit verified release operation via the existing approved migration machinery is still required for the documents to become visible in Web and Flutter.
-
-## Public catalog cross-check
-
-The [public Web catalog](https://ibreviaryby.web.app/public-prayers-v1.json) dated 2026-11-18 12:47 UTC identifies the existing «Набажэнствы» category as `devotions` with tag `Набажэнства`. The first three candidates had no matches by ID, normalized title, complete normalized text, or shared long paragraphs. The public catalog cannot establish the live or protected state of Firestore.
-
-The [published Corpus Christi procession](https://ibreviaryby.web.app/prayer/Fd9rN0S9NU1mAmqb2isZ) has the same four stations and Gospel references. Four long paragraphs match after normalization. Review the full verified candidate against this record before selecting any write. If they are the same service, plan an update at `Fd9rN0S9NU1mAmqb2isZ` that preserves its metadata and existing reader links. Do not create `devotion-euharystychnaja-pracesija` alongside it.
-
-The supplied ZIP contains Markdown and metadata. The original PDF page images and a complete Firestore snapshot were unavailable for this preflight. The four checksums matched and the local Web reader rendered all four fixtures at 390 px and 1440 px. Production apply and manifest publication remain pending.
+The public Web page reads the Hosting catalog. Flutter updates are governed by the prayer manifest and its `SAFE CONTENT PATCH` gate. The Flutter bundle is a separate release operation.

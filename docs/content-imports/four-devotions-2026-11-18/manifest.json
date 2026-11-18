@@ -3,7 +3,7 @@
   "categoryTag": "Набажэнства",
   "categoryDisplayName": "Набажэнствы",
   "publicationStatus": "NOT_IMPORTED",
-  "sourceBibliographyStatus": "NEEDS_SOURCE_REVIEW",
+  "sourceBibliographyStatus": "OWNER_CONFIRMED_EXISTING_AGENDA_ATTRIBUTION",
   "documents": [
     {
       "id": "devotion-vigilijny-vechar",
@@ -17,7 +17,8 @@
       ],
       "textFormat": "mybrev-markdown",
       "textFormatVersion": 1,
-      "publicationStatus": "draft-not-imported"
+      "publicationStatus": "draft-not-imported",
+      "sourcePdfSha256": "6318081b179d503ee1a60da5e6957ced9c8c840411c8a80ddd8c4b2b6f29fe45"
     },
     {
       "id": "devotion-zakanchenne-goda",
@@ -31,7 +32,8 @@
       ],
       "textFormat": "mybrev-markdown",
       "textFormatVersion": 1,
-      "publicationStatus": "draft-not-imported"
+      "publicationStatus": "draft-not-imported",
+      "sourcePdfSha256": "9f577318caf1629d52ef4b83401e91a2b4bacfb321360fade14d7fc9112cf73c"
     },
     {
       "id": "devotion-vystaulenne-euharystyja",
@@ -39,13 +41,14 @@
       "filename": "03_vystaulenne_i_blagaslaulenne.md",
       "sourcePdf": "Vystaulene_euharist.pdf",
       "sourcePageLabels": "295–298",
-      "sha256": "5a09be07d48b6a831ab0aefafccc365d8789908d50aa78f2b0e615316394757c",
+      "sha256": "dc8e50db3d76b8cd643fa6429154e5bcab2eb443cea59e3118b20e2a7a324142",
       "tags": [
         "Набажэнства"
       ],
       "textFormat": "mybrev-markdown",
       "textFormatVersion": 1,
-      "publicationStatus": "draft-not-imported"
+      "publicationStatus": "draft-not-imported",
+      "sourcePdfSha256": "48eaa1d5dbc371362ce544474acb2b2959bc67de82770ef5844ed572fc8b639e"
     },
     {
       "id": "devotion-euharystychnaja-pracesija",
@@ -59,7 +62,10 @@
       ],
       "textFormat": "mybrev-markdown",
       "textFormatVersion": 1,
-      "publicationStatus": "draft-not-imported"
+      "publicationStatus": "draft-not-imported",
+      "sourcePdfSha256": "95e83c285bec3ebf79c9aa1e0ea101e259d7b847e8b031a447ba663c2f94f293"
     }
-  ]
+  ],
+  "proofreadingStatus": "PAGE_IMAGES_VERIFIED",
+  "source": "«Літургічная агенда» (Мінск, 2010)"
 }

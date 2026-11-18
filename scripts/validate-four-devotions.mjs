@@ -16,7 +16,7 @@ const hash = (s) => createHash('sha256').update(s).digest('hex');
 const titleKey = (s) => String(s || '').normalize('NFC').toLocaleLowerCase('be').replace(/[’‘ʼ]/gu, "'").replace(/\s+/gu, ' ').trim();
 const stations = ['Першы', 'Другі', 'Трэці', 'Чацвёрты'];
 
-function contentKeys(prayer) {
+export function contentKeys(prayer) {
   const plain = prayerMarkdownToPlainText(prayer.text, prayer.textFormat);
   const paragraphs = plain.split(/\n+/u).map((line) => titleKey(line).replace(/[^\p{L}\p{N}]+/gu, ' ').trim());
   return { text: titleKey(plain), paragraphs: new Set(paragraphs.filter((line) => line.length >= 160)) };
@@ -68,12 +68,14 @@ export async function prepareFourDevotions({ snapshotPath, out } = {}) {
       errors.push('Unsupported prayer Markdown version');
     }
     candidates.push({ id: item.id, title: item.title, hash: item.sha256, errors,
-      sourcePdf: item.sourcePdf, sourcePageLabels: item.sourcePageLabels,
+      sourcePdf: item.sourcePdf, sourcePdfSha256: item.sourcePdfSha256, sourcePageLabels: item.sourcePageLabels,
       proposed: { title: item.title, text, tags: [manifest.categoryTag], priestOnly: false, effectivePriestOnly: false,
+        ...(manifest.source ? { source: manifest.source } : {}),
         textFormat: PRAYER_TEXT_FORMAT, textFormatVersion: PRAYER_TEXT_FORMAT_VERSION },
       decision: errors.length ? 'INVALID' : 'PENDING_SNAPSHOT' });
   }
-  const blockers = ['Independent page-by-page proofreading is pending', 'Source book/imprint is unverified'];
+  const blockers = [];
+  if (manifest.proofreadingStatus !== 'PAGE_IMAGES_VERIFIED') blockers.push('Independent page-by-page proofreading is pending');
   let category = null, snapshotChecked = false;
   if (!snapshotPath) blockers.push('No local snapshot supplied: category/duplicates unverified');
   else {
@@ -121,7 +123,8 @@ export async function prepareFourDevotions({ snapshotPath, out } = {}) {
     }
     snapshotChecked = true;
   }
-  const report = { mode: 'OFFLINE_DRY_RUN', writesPerformed: 0, snapshotChecked, category, blockers, candidates };
+  const report = { mode: 'OFFLINE_DRY_RUN', writesPerformed: 0, snapshotChecked, category,
+    sourceBibliographyStatus: manifest.sourceBibliographyStatus, blockers, candidates };
   if (out) {
     await mkdir(path.dirname(out), { recursive: true });
     await writeFile(out, JSON.stringify(report, null, 2) + '\n', { mode: 0o600 });
