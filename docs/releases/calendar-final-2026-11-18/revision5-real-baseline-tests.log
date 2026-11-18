@@ -1,0 +1,13 @@
+✔ exact three-write continuation requires complete sealed revision4 receipts (46.601954ms)
+✔ extra fields, changed scope, fake authorization, changed baseline and source are rejected (39.926522ms)
+✔ fresh ID/hash/updateTime drift prevents any write (27.143191ms)
+✔ one atomic commit, full readback and no write retry on unknown outcome (44.508148ms)
+✔ outside-mask mutation or wrong server acknowledgement fails verification (13.34241ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 294.31298

@@ -177,13 +177,17 @@ async function privateJson(file, value, exclusive = false) {
   await fs.writeFile(file, `${JSON.stringify(value, null, 2)}\n`, { mode: 0o600, flag: exclusive ? 'wx' : 'w' });
 }
 async function main(args) {
-  const flags = new Set(['--live', '--apply']); const opts = {};
+  const flags = new Set(['--live', '--apply', '--december']); const opts = {};
   for (let i = 0; i < args.length; i++) {
     if (flags.has(args[i])) opts[args[i]] = true;
     else if (['--plan', '--baseline', '--out', '--confirm-hash'].includes(args[i])) opts[args[i]] = args[++i];
     else fail('Unknown option; only --plan, --baseline, --out, --live, --apply, --confirm-hash supported');
   }
   if (!opts['--plan'] || !opts['--baseline'] || !opts['--out']) fail('Plan, private baseline and private output required');
+  if (opts['--december']) {
+    const {runDecember}=await import('./lib/approved-calendar-december.mjs');
+    return runDecember(opts,path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..'));
+  }
   if (opts['--apply'] && (!opts['--live'] || opts['--confirm-hash'] !== APPROVED_OPERATIONS_HASH)) fail('Explicit live apply and exact confirmation hash required');
   const out = path.resolve(opts['--out']);
   const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
