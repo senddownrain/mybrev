@@ -43,6 +43,10 @@ on:
       # Publish Ordo-backed fixed celebration labels in the Hours reader.
       - 'src/utils/ordoDayOptions.js'
       - 'src/styles/main.scss'
+      # Publish prayer typography changes without needing a manual dispatch.
+      - 'src/styles/prayer-reading.css'
+      - 'src/components/prayers/PrayerForm.vue'
+      - 'src/components/prayers/PrayerMarkdownEditor.vue'
       # Draft editor and its Firestore policy are deployed together.
       - 'src/views/admin/PrayerDraftEditor.vue'
       - 'src/views/admin/PrayerDrafts.vue'

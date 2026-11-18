@@ -89,6 +89,8 @@ jobs:
 
       - name: Prayer normalization tests (offline)
         run: npm run test:prayer-normalization
+      - name: Prayer rubric and heading presentation regressions (offline)
+        run: node --test tests/prayer-reader-typography.test.mjs
 
       - name: John Paul II source and migration validator tests (offline)
         run: node --test tests/john-paul-ii-source-fix.test.mjs

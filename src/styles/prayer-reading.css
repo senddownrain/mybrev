@@ -8,11 +8,11 @@
   padding-inline: 0;
 }
 
-.prayer-title {
+.prayer-content-area .prayer-reading-header .prayer-title {
   max-width: 760px;
   margin: 0;
   color: rgb(var(--v-theme-on-surface));
-  font-size: calc(clamp(1.55rem, 5.6vw, 2.05rem) * var(--font-size-multiplier, 1));
+  font-size: calc(clamp(1.55rem, 5.6vw, 2.05rem) * var(--font-size-multiplier, 1)) !important;
   font-family: var(--reader-display-font-family);
   font-weight: 700;
   word-wrap: break-word;
@@ -107,6 +107,24 @@
   margin-bottom: 0;
 }
 
+/* The document title lives in the header. Markdown headings are subordinate,
+   scale once with the reader text, and retain six distinct levels. These
+   selectors beat the legacy blanket h1-h6 rule in main.scss (including mobile). */
+.prayer-content-area .prayer-text :is(h1, h2, h3, h4, h5, h6) {
+  margin: 1.35em 0 0.5em;
+  color: var(--reader-ink);
+  font-family: var(--reader-display-font-family);
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+  overflow-wrap: break-word;
+}
+.prayer-content-area .prayer-text h1 { font-size: 1.34em !important; font-weight: 650; }
+.prayer-content-area .prayer-text h2 { font-size: 1.24em !important; font-weight: 650; }
+.prayer-content-area .prayer-text h3 { font-size: 1.15em !important; font-weight: 630; }
+.prayer-content-area .prayer-text h4 { font-size: 1.09em !important; font-weight: 620; }
+.prayer-content-area .prayer-text h5 { font-size: 1.03em !important; font-weight: 600; }
+.prayer-content-area .prayer-text h6 { font-size: 0.98em !important; font-weight: 600; }
+
 /* Keep list markers inside the reading column: the default browser indentation
    places them outside and they get clipped on narrow screens. */
 .prayer-text :deep(ul),
@@ -137,18 +155,17 @@
   padding-inline-start: 1.3em;
 }
 
-.prayer-text :deep(.prayer-rubric) {
+.prayer-text .prayer-rubric {
   margin: 1.05em 0;
-  padding: 0.08em 0 0.08em 0.85em;
-  border-left: 3px solid var(--rubric-color);
+  padding: 0.08em 0;
   color: var(--rubric-color);
   font-size: 0.86em;
   line-height: 1.45;
 }
 
-.prayer-text :deep(.prayer-rubric p) { margin: 0 0 0.45em; }
-.prayer-text :deep(.prayer-rubric p:last-child) { margin-bottom: 0; }
-.prayer-text :deep(.prayer-speaker) { color: var(--rubric-color); font-weight: 700; font-size: inherit; font-style: normal; }
+.prayer-text .prayer-rubric p { margin: 0 0 0.45em; }
+.prayer-text .prayer-rubric p:last-child { margin-bottom: 0; }
+.prayer-text .prayer-speaker { color: var(--rubric-color); font-weight: 700; font-size: inherit; font-style: normal; }
 
 .prayer-text :deep(*) {
   max-width: 100% !important;
@@ -354,7 +371,7 @@
     overflow-x: hidden;
   }
 
-  .prayer-title {
+  .prayer-content-area .prayer-reading-header .prayer-title {
     font-size: calc(1.55rem * var(--font-size-multiplier, 1)) !important;
     word-wrap: break-word;
     overflow-wrap: break-word;
