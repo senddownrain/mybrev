@@ -1,97 +1,119 @@
 import { parse } from 'node-html-parser';
+import { liturgicalText } from './liturgicalSourceHtml.js';
 
-// Display-only omission of an EXACTLY echoed opening half-verse or complete
-// first psalm verse. Never remove a merely similar beginning or alter a source.
-const normalizeWords = (text) => String(text || '')
-  .replace(/&nbsp;|&#160;/giu, ' ')
-  .replace(/[^\p{L}\p{N}]+/gu, ' ')
-  .trim()
-  .toLocaleLowerCase();
+const antiphonLabel = /^(?:[1-9]\s*)?ант\.\s*/iu;
+const verseNumber = /^\s*\d+[.)]\s*/u;
+const leadingSpace = /^(?:\s|&nbsp;|&#0*160;|&#x0*a0;)+/iu;
+const normalizeWords = (text) => text.replace(/[^\p{L}\p{N}]+/gu, ' ').trim().toLocaleLowerCase('be');
+const textOf = (node) => liturgicalText(node?.innerHTML);
+const isDoxology = (node) => /^(?:Хвала Айцу|Хвала Отцу|Як была спрадвеку)(?:\s|[,.]|$)/iu.test(textOf(node));
+const isPsalmParagraph = (node) => node?.rawTagName === 'p'
+  && !node.hasAttribute('data-liturgical-heading')
+  && !node.hasAttribute('data-liturgical-subheading')
+  && !antiphonLabel.test(textOf(node));
 
 function precedingText(paragraph, marker) {
   let current = marker;
-  let text = '';
+  let html = '';
   while (current !== paragraph) {
     const parent = current.parentNode;
-    if (!parent) return '';
     const index = parent.childNodes.indexOf(current);
-    text = parent.childNodes.slice(0, index).map((node) => node.textContent).join('') + text;
+    html = parent.childNodes.slice(0, index).join('') + html;
     current = parent;
   }
-  return text;
+  return liturgicalText(html).replace(verseNumber, '');
 }
 
-/**
- * When the selected antiphon exactly echoes the first half-verse or the entire
- * first verse, show the continuation once. The HTML passed to this function
- * must already be the selected psalm alternative, not the entire source.
- */
-export function omitEchoedPsalmOpening(psalmHtml, selectedAntiphonHtml) {
-  if (!selectedAntiphonHtml) return psalmHtml;
-  const root = parse(String(psalmHtml || ''));
-  const strophes = root.querySelectorAll('p[data-psalm-strophe]');
-  const paragraph = strophes[0];
-  const antiphonText = parse(String(selectedAntiphonHtml)).text
-    .replace(/^\s*(?:[1-9]\s*)?ант\.\s*/iu, '');
-  const antiphonWords = normalizeWords(antiphonText);
+function followingParagraph(paragraph) {
+  let next = paragraph.nextElementSibling;
+  while (next?.rawTagName === 'p' && !textOf(next)) next = next.nextElementSibling;
+  return next;
+}
 
-  // Some antiphons reproduce the ENTIRE first verse (both parts separated
-  // by *), not merely the first half-verse. Omit that whole repeated strophe
-  // and keep † immediately before the beginning of the NEXT verse.
-  // Never do this for a partial match or if there is no following verse.
-  const fullOpening = paragraph?.text.replace(/^\s*\d+[.)]\s*/u, '');
-  if (antiphonWords && antiphonWords === normalizeWords(fullOpening) && strophes[1]) {
-    const next = strophes[1];
-    const nextMarker = next.querySelector('.psalm-marker');
-    const existingLeadingDagger = nextMarker?.text.trim() === '†'
-      && !normalizeWords(precedingText(next, nextMarker).replace(/^\s*\d+[.)]\s*/u, ''));
-    if (existingLeadingDagger) {
-      nextMarker.classList.add('psalm-opening-flexa');
-    } else {
-      next.innerHTML = '<span class="psalm-marker psalm-opening-flexa">†</span>&nbsp;' + next.innerHTML;
+function trimLeadingSpace(nodes) {
+  for (const node of nodes) {
+    if (node.nodeType === 3) {
+      node.rawText = node.rawText.replace(leadingSpace, '');
+      if (node.text.trim()) return true;
+    } else if (node.rawTagName !== 'br' && trimLeadingSpace([...node.childNodes])) {
+      return true;
     }
-    // Prevent a source space or <br> from orphaning the special leading †.
-    // Other † and * signs retain the reader's selected break behavior.
-    next.innerHTML = next.innerHTML
-      .replace(/^((?:<[^>]+>)*)(?:\s|&nbsp;)+/iu, '$1')
-      .replace(/(<span\b[^>]*\bpsalm-opening-flexa\b[^>]*>†<\/span>(?:<\/(?:em|i|b|strong|span|font)>)*)(?:[ \t\r\n]|&nbsp;)*/iu, '$1&nbsp;');
+    node.remove();
+  }
+  return false;
+}
+
+function placeOpeningDagger(paragraph, cadence) {
+  const markers = paragraph.querySelectorAll('.psalm-marker');
+  const firstMarker = markers[0] === cadence && cadence?.text.trim() === '*' ? markers[1] : markers[0];
+  const leadingDagger = firstMarker?.text.trim() === '†'
+    && !precedingText(paragraph, firstMarker).replace(/^\s*\*?\s*$/u, '');
+  if (leadingDagger && cadence && firstMarker !== cadence) {
+    cadence.remove();
+    trimLeadingSpace([...paragraph.childNodes]);
+  }
+
+  let marker = leadingDagger ? firstMarker : cadence;
+  if (!marker) {
+    trimLeadingSpace([...paragraph.childNodes]);
+    paragraph.insertAdjacentHTML('afterbegin', '<span class="psalm-marker">†</span>');
+    marker = paragraph.firstChild;
+  }
+  marker.classList.add('psalm-opening-flexa');
+  marker.set_content('†');
+  // Trim source breaks and spaces even when the sign is inside inline markup.
+  for (let node = marker; node !== paragraph; node = node.parentNode) {
+    const siblings = node.parentNode.childNodes;
+    if (trimLeadingSpace(siblings.slice(siblings.indexOf(node) + 1))) break;
+  }
+  marker.insertAdjacentHTML('afterend', '&nbsp;');
+  paragraph.setAttribute('data-psalm-strophe', '');
+}
+
+/** Omit an exact opening verse or first hemistich from the selected psalm. */
+export function omitEchoedPsalmOpening(psalmHtml, selectedAntiphonHtml) {
+  const antiphon = normalizeWords(liturgicalText(selectedAntiphonHtml).replace(antiphonLabel, ''));
+  if (!antiphon) return psalmHtml;
+
+  const root = parse(String(psalmHtml || ''));
+  const paragraph = root.querySelectorAll('p[data-psalm-strophe]').find(isPsalmParagraph);
+  const cadence = paragraph?.querySelector('.psalm-marker');
+  if (!cadence) return psalmHtml;
+
+  const firstHalf = normalizeWords(precedingText(paragraph, cadence));
+  if (!firstHalf) return psalmHtml;
+  const opening = normalizeWords(textOf(paragraph).replace(verseNumber, ''));
+  const next = followingParagraph(paragraph);
+  // Some sources put the unmarked second half in its own paragraph.
+  const splitHalf = firstHalf === opening && isPsalmParagraph(next)
+    && !next.querySelector('.psalm-marker') && /[*†]$/u.test(textOf(paragraph))
+    && !isDoxology(next);
+  const wholeVerse = splitHalf ? `${opening} ${normalizeWords(textOf(next))}` : opening;
+
+  if (wholeVerse !== firstHalf && antiphon === wholeVerse) {
+    const following = followingParagraph(splitHalf ? next : paragraph);
+    const standaloneDagger = textOf(following) === '†' ? following : null;
+    const continuation = standaloneDagger ? followingParagraph(standaloneDagger) : following;
+    if (!isPsalmParagraph(continuation) || isDoxology(continuation)) return psalmHtml;
+    placeOpeningDagger(continuation);
+    standaloneDagger?.remove();
+    if (splitHalf) next.remove();
     paragraph.remove();
     return root.innerHTML;
   }
 
-  // Preserve the existing half-verse behavior for antiphons that reproduce
-  // only the words before the first † or *.
-  const marker = paragraph?.querySelector('.psalm-marker');
-  if (!marker || !['†', '*'].includes(marker.text.trim())) return psalmHtml;
-
-  const opening = precedingText(paragraph, marker).replace(/^\s*\d+[.)]\s*/u, '');
-  if (!antiphonWords || antiphonWords !== normalizeWords(opening)) {
-    return psalmHtml;
-  }
-
-  // Remove preceding siblings at each nesting level, preserving all following
-  // inline markup (bold/italic) and subsequent strophes untouched.
-  let current = marker;
-  while (current !== paragraph) {
-    const parent = current.parentNode;
-    if (!parent) return psalmHtml;
-    for (const sibling of parent.childNodes.slice(0, parent.childNodes.indexOf(current))) {
-      parent.removeChild(sibling);
-    }
-    current = parent;
-  }
-  // The antiphon already supplied the first half-verse. Retain a dagger
-  // at the *start* of its continuation, rather than deleting the cadence.
-  // This is the ONLY dagger that bypasses forced psalmody line breaks.
-  marker.textContent = '†';
-  marker.classList.add('psalm-opening-flexa');
-  paragraph.innerHTML = paragraph.innerHTML
-    .replace(/<(em|i|span|b|strong)(?:\s[^>]*)?><\/\1>/giu, '')
-    .replace(/^((?:<[^>]+>)*)(?:\s|&nbsp;)+/iu, '$1')
-    // Keep the leading † with the following word on a narrow screen.
-    .replace(/(<span\b[^>]*\bpsalm-opening-flexa\b[^>]*>†<\/span>(?:<\/(?:em|i|b|strong|span|font)>)*)(?:[ \t\r\n]|&nbsp;)*/iu, '$1&nbsp;');
-  if (!normalizeWords(paragraph.text) && root.querySelectorAll('p[data-psalm-strophe]').length > 1) {
+  if (antiphon !== firstHalf) return psalmHtml;
+  if (splitHalf) {
+    placeOpeningDagger(next);
     paragraph.remove();
+  } else {
+    if (opening === firstHalf) return psalmHtml;
+    // Keep the markup of the continuation, including the cadence wrapper.
+    for (let node = cadence; node !== paragraph; node = node.parentNode) {
+      const siblings = node.parentNode.childNodes;
+      siblings.slice(0, siblings.indexOf(node)).forEach((sibling) => sibling.remove());
+    }
+    placeOpeningDagger(paragraph, cadence);
   }
   return root.innerHTML;
 }
