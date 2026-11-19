@@ -4,17 +4,15 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { openFirestoreSnapshot } from './lib/firestore-snapshot.mjs';
+import { RANK_ONLY_FEAST_COMMENTS, isRankOnlyFeastComment } from '../src/utils/feastComment.js';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, '..');
-const COLLECTION = 'days';
+const COLLECTIONS = ['days', 'liturgicalProperTexts', 'liturgicalTemplates'];
 const DEFAULT_SNAPSHOT_DIR = path.join(ROOT, 'backups', 'firestore-snapshot');
 const REPORT_PATH = path.join(ROOT, 'reports', 'feast-comment-rank-cleanup-report.json');
 const SERVICE_ACCOUNT_PATH = path.join(ROOT, 'patchs', 'serviceAccountKey.json');
 const WRITE_CHUNK_SIZE = 100;
-
-// These are standalone labels for a liturgical rank, not descriptive comments.
-const RANK_COMMENTS = new Set(['Урачыстасць', 'Свята', 'Успамін']);
 
 function parseArgs(argv) {
   const options = { apply: false, snapshot: DEFAULT_SNAPSHOT_DIR };
@@ -29,7 +27,7 @@ function parseArgs(argv) {
 }
 
 function printHelp() {
-  console.log(`Remove standalone rank labels accidentally stored in days.feastComment.
+  console.log(`Remove standalone liturgical rank labels in days and proper/template comments.
 
 This script uses the local Firestore snapshot for analysis. It is a dry run by default.
 
@@ -46,30 +44,42 @@ function chunks(items, size) {
   ));
 }
 
-function comment(value) {
-  return typeof value === 'string' ? value.trim() : '';
-}
-
-function candidateFrom(document) {
-  const feastComment = comment(document.feastComment);
-  if (!RANK_COMMENTS.has(feastComment)) return null;
+function candidateFrom(document, collection) {
+  const fields = ['feastComment', 'comment'].filter(field => isRankOnlyFeastComment(document[field]));
+  if (fields.length === 0) return null;
   return {
+    collection,
     id: document.id,
     date: document._date ?? null,
-    feastComment,
-    rank: document.rank ?? null,
-    internalRank: document._rank ?? null,
+    fields,
+    // Compare exact source values again before any production write.
+    expected: Object.fromEntries(fields.map(field => [field, document[field]])),
+    rank: document.rank ?? document._rank ?? null,
     feastName: document._feastName ?? document.title ?? null,
   };
 }
 
 async function loadPlan(snapshotDirectory) {
   const snapshot = await openFirestoreSnapshot(snapshotDirectory);
-  const documents = await snapshot.collection(COLLECTION);
-  if (!documents) throw new Error(`Snapshot does not contain ${COLLECTION}: ${snapshot.root}`);
-
-  const candidates = documents.map(candidateFrom).filter(Boolean)
-    .sort((left, right) => left.id.localeCompare(right.id));
+  const candidates = [];
+  const scannedDocuments = {};
+  const skippedCollections = [];
+  for (const collection of COLLECTIONS) {
+    const documents = await snapshot.collection(collection);
+    if (!documents) {
+      skippedCollections.push(collection);
+      continue;
+    }
+    scannedDocuments[collection] = documents.length;
+    for (const document of documents) {
+      const candidate = candidateFrom(document, collection);
+      if (candidate) candidates.push(candidate);
+    }
+  }
+  if (!Object.hasOwn(scannedDocuments, 'days')) {
+    throw new Error(`Snapshot does not contain days: ${snapshot.root}`);
+  }
+  candidates.sort((a, b) => a.collection.localeCompare(b.collection) || a.id.localeCompare(b.id));
   return {
     analysisSource: 'local-firestore-snapshot',
     snapshot: {
@@ -77,10 +87,13 @@ async function loadPlan(snapshotDirectory) {
       version: snapshot.manifest.snapshotVersion,
       exportedAt: snapshot.manifest.exportedAt,
     },
-    collection: COLLECTION,
-    rankComments: [...RANK_COMMENTS],
-    totalDocuments: documents.length,
+    collections: COLLECTIONS,
+    scannedDocuments,
+    skippedCollections,
+    rankComments: RANK_ONLY_FEAST_COMMENTS,
+    totalDocuments: Object.values(scannedDocuments).reduce((total, n) => total + n, 0),
     candidateCount: candidates.length,
+    fieldsToRemove: candidates.reduce((total, candidate) => total + candidate.fields.length, 0),
     candidates,
   };
 }
@@ -91,6 +104,10 @@ async function writeReport(report) {
 }
 
 async function applyPlan(plan) {
+  if (plan.candidates.length === 0) {
+    return { applied: 0, removedFields: 0, verification: 'no matching comments' };
+  }
+
   const [{ default: admin }, serviceAccountJson] = await Promise.all([
     import('firebase-admin'),
     readFile(SERVICE_ACCOUNT_PATH, 'utf8'),
@@ -98,13 +115,14 @@ async function applyPlan(plan) {
   const app = admin.initializeApp({ credential: admin.credential.cert(JSON.parse(serviceAccountJson)) });
   try {
     const db = admin.firestore();
-    const refs = plan.candidates.map(({ id }) => db.collection(COLLECTION).doc(id));
+    const refs = plan.candidates.map(({ collection, id }) => db.collection(collection).doc(id));
     const current = await db.getAll(...refs);
     const stale = current.flatMap((snapshot, index) => {
       const candidate = plan.candidates[index];
-      return snapshot.exists && comment(snapshot.data().feastComment) === candidate.feastComment
+      const data = snapshot.data();
+      return snapshot.exists && candidate.fields.every(field => data[field] === candidate.expected[field])
         ? []
-        : [candidate.id];
+        : [`${candidate.collection}/${candidate.id}`];
     });
     if (stale.length) {
       throw new Error(`Live data differs from the snapshot for: ${stale.join(', ')}. No writes were made.`);
@@ -113,13 +131,18 @@ async function applyPlan(plan) {
     for (const group of chunks(plan.candidates, WRITE_CHUNK_SIZE)) {
       const batch = db.batch();
       for (const candidate of group) {
-        batch.update(db.collection(COLLECTION).doc(candidate.id), {
-          feastComment: admin.firestore.FieldValue.delete(),
-        });
+        const deletions = Object.fromEntries(candidate.fields.map(field => [
+          field, admin.firestore.FieldValue.delete(),
+        ]));
+        batch.update(db.collection(candidate.collection).doc(candidate.id), deletions);
       }
       await batch.commit();
     }
-    return { applied: plan.candidates.length, verification: 'pre-write snapshot match passed' };
+    return {
+      applied: plan.candidates.length,
+      removedFields: plan.fieldsToRemove,
+      verification: 'exact pre-write snapshot match passed',
+    };
   } finally {
     await app.delete();
   }
