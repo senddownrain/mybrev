@@ -52,3 +52,8 @@ experiments/analytics-ingest/dashboard-demo/out/
 # wrangler local state / cache
 .wrangler/
 .dev.vars
+
+# Local commission documents, baselines, snapshots and scratch evidence
+/out/songbook-review/
+/work/
+/.venv-song-review/
