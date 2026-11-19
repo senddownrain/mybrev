@@ -51,7 +51,3 @@ export async function getCompletoriumById(id, options) {
   const items = await getCompletoriums(options);
   return items.find((item) => item.id === id) || null;
 }
-
-export async function warmupStaticLiturgicalCollections() {
-  return Promise.allSettled([getInvitatoriums(), getCompletoriums(), getLiturgicalTemplates()]);
-}

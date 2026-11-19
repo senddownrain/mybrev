@@ -107,6 +107,11 @@ export function findFirstVespersOption(tomorrowContent, celebrationId) {
   return options.find((option) => option.ordo?.optionId === celebrationId) || null;
 }
 
+export function needsTomorrowVespers(day) {
+  const type = day?._ordo?.vespers?.type;
+  return Boolean(day && !usesOwnVespers(day) && (!type || type === 'first'));
+}
+
 /**
  * Evening model shared by the hours list and the Vespers screen.
  * With an Ordo descriptor (`day._ordo.vespers`) the engine decides II Vespers

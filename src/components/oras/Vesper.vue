@@ -2,7 +2,10 @@
     <v-container  class="prayer-content-area">
         <v-row lign="center"
       justify="center">
-      <v-col class="liturgical-hour-column" v-if="!isLoading && vesperDay">
+      <v-alert v-if="firstVespersUnavailable" type="warning" variant="tonal" role="status">
+        Тэксты I Нешпараў недаступныя.
+      </v-alert>
+      <v-col class="liturgical-hour-column" v-else-if="!isLoading && vesperDay">
                 <day-title :day-data="vesperDay" />
                 <p v-if="participationNotice" class="ora-text" style="color:var(--rubric-color)">{{ participationNotice }}</p>
                 <intro :title="vespersHeading" />
@@ -35,7 +38,7 @@ import { useRoute } from 'vue-router';
 import moment from '@/utils/moment-be';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
 import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
-import { eveningVespersModel, vespersHourTitle } from '@/utils/liturgicalVespers';
+import { eveningVespersModel, needsTomorrowVespers, vespersHourTitle } from '@/utils/liturgicalVespers';
 import { liturgicalText } from '@/utils/liturgicalSourceHtml';
 import { logger } from '@/utils/logger';
 import Hymnus from '@/components/oraparts/Hymnus.vue';
@@ -85,6 +88,11 @@ const eveningModel = computed(() => (
     })
 ));
 const tomorrowFirstVespers = computed(() => eveningModel.value.firstVespers);
+const firstVespersRequired = computed(() => day.value?._ordo?.vespers?.type === 'first'
+  || Boolean(route.query.firstVespersDayId));
+const shouldLoadTomorrow = computed(() => route.params.id !== 'office-for-dead' && needsTomorrowVespers(day.value));
+const firstVespersUnavailable = computed(() => day.value && firstVespersRequired.value
+  && !isLoading.value && !tomorrowFirstVespers.value);
 const vespersHeading = computed(() => vespersHourTitle(eveningModel.value, true));
 const firstVespersWarning = computed(() => (
   tomorrowFirstVespers.value?.day?._missingFirstVespersFields?.length
@@ -92,16 +100,22 @@ const firstVespersWarning = computed(() => (
     : ''
 ));
 watch(
-  () => [route.params.day, ordoCalendarEpoch.value, effectiveOrdoDiocese.value],
-  async ([routeDateParam]) => {
+  [shouldLoadTomorrow, routeDate, ordoCalendarEpoch, effectiveOrdoDiocese,
+    () => route.params.id, () => route.query.reference, () => route.query.view],
+  async ([needed, date]) => {
     const version = ++requestVersion;
     tomorrowContent.value = null;
-    const date = moment(String(routeDateParam), ['YYYY-MM-DD', 'DD-MM-YYYY'], true);
-    if (!date.isValid() || String(route.params.id) === 'office-for-dead') return;
+    checkingTomorrow.value = false;
+    if (!needed || !date.isValid()) return;
     checkingTomorrow.value = true;
+    const show = (content) => {
+      if (version === requestVersion) {
+        tomorrowContent.value = content;
+        if (tomorrowFirstVespers.value) checkingTomorrow.value = false;
+      }
+    };
     try {
-      const content = await getLiturgicalContentForDate(date.clone().add(1, 'day').toDate());
-      if (version === requestVersion) tomorrowContent.value = content;
+      show(await getLiturgicalContentForDate(date.clone().add(1, 'day').toDate(), undefined, { onCached: show }));
     } catch (error) {
       // The current day's Vespers remain usable if preloading tomorrow failed.
       logger.error('[Vesper] tomorrow first-Vespers lookup failed:', error);

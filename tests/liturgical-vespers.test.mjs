@@ -13,6 +13,7 @@ import {
   normalizeFirstVespers,
   usesOwnVespers,
   vespersHourTitle,
+  needsTomorrowVespers,
 } from '../src/utils/liturgicalVespers.js';
 
 test('recognizes and normalizes the first Vespers fields', () => {
@@ -160,4 +161,12 @@ test('Vespers names are built into hour titles rather than a detached rubric', (
   assert.equal(vespersHourTitle({ second: true }, true), 'II НЕШПАРЫ');
   assert.equal(vespersHourTitle({ firstVespers: null, second: false }), 'Нешпары');
   assert.equal(vespersHourTitle(null, true), 'НЕШПАРЫ');
+});
+
+test('only first Vespers and legacy offices need the following date', () => {
+  assert.equal(needsTomorrowVespers(null), false);
+  assert.equal(needsTomorrowVespers({}), true);
+  assert.equal(needsTomorrowVespers({ _ordo: { vespers: { type: 'first' } } }), true);
+  assert.equal(needsTomorrowVespers({ _ordo: { vespers: { type: 'second' } } }), false);
+  assert.equal(needsTomorrowVespers({ _ordo: { vespers: { type: 'of-the-day' } } }), false);
 });

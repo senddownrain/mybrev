@@ -106,7 +106,7 @@
 
       <template v-if="isSongViewPage">
         <v-btn :icon="settings.favoriteSongs.includes(route.params.id) ? 'mdi-heart' : 'mdi-heart-outline'" :color="settings.favoriteSongs.includes(route.params.id) ? 'red' : undefined" class="top-circle-btn" variant="flat" :aria-label="settings.favoriteSongs.includes(route.params.id) ? 'Выдаліць з абраных' : 'Дадаць у абраныя'" @click="settings.toggleFavoriteSong(route.params.id)" />
-        <v-btn v-if="authStore.isAdmin" icon="mdi-pencil-outline" class="top-circle-btn" variant="flat" aria-label="Рэдагаваць" :to="{ name: 'AdminSongEdit', params: { id: route.params.id } }" />
+        <v-btn v-if="authStore?.isAdmin" icon="mdi-pencil-outline" class="top-circle-btn" variant="flat" aria-label="Рэдагаваць" :to="{ name: 'AdminSongEdit', params: { id: route.params.id } }" />
       </template>
 
       <!-- Кнопки для страницы редактирования молитвы (PrayerEdit) -->
@@ -161,7 +161,7 @@
       <template v-else-if="isPrayerViewPage">
         <MassLanguageMenu v-if="isMassPage" />
         <v-btn
-          v-if="authStore.isAdmin"
+          v-if="authStore?.isAdmin"
           icon
           class="top-circle-btn"
           variant="flat"
@@ -188,7 +188,7 @@
 
     </v-app-bar>
 
-    <NavigationDrawer />
+    <NavigationDrawer v-if="drawerRequested" />
 
     <v-main :class="{ 'app-main--bottom-nav': hasBottomNav }">
       <router-view name="topNav" />
@@ -197,7 +197,7 @@
 
     <router-view name="bottomNav" />
 
-    <TextSettingsSheet />
+    <TextSettingsSheet v-if="settingsSheetRequested" />
 
     <!-- Compact tag filter used by the prayer search dock -->
     <v-bottom-sheet v-model="isFilterExpanded" :scrim="false">
@@ -236,22 +236,17 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, defineAsyncComponent, ref, shallowRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { PhShareNetwork } from '@phosphor-icons/vue';
 import { useAppBar } from '@/composables/useAppBar.js';
 import { useNotifier } from '@/composables/useNotifier.js';
 import { useUiStore } from '@/stores/ui.js';
-import NavigationDrawer from './NavigationDrawer.vue';
-import TextSettingsSheet from '@/components/TextSettingsSheet.vue';
 import TextScaleControl from '@/components/TextScaleControl.vue';
 import LiturgyNavLink from '@/components/common/LiturgyNavLink.vue';
-import MassLanguageMenu from '@/components/prayers/MassLanguageMenu.vue';
 import NotificationSnackbar from '@/components/NotificationSnackbar.vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
-import { usePrayers } from '@/composables/usePrayers.js';
-import { useAuthStore } from '@/stores/auth.js';
 import { buildPrayerSharePath, buildPrayerShareUrl, sharePrayerLink } from '@/utils/prayerShare.js';
 import { logger } from '@/utils/logger.js';
 import { MASS_ORDER_PRAYER_ID } from '@/utils/massRitual.js';
@@ -262,17 +257,24 @@ import { ordoDiocese } from '@/utils/ordoDiocese';
 import { trackFeature } from '@/utils/trackFeature';
 import { ordoDioceseFilter } from '@/utils/ordoMonthFilter';
 
-const { isDrawerOpen } = useAppBar();
+const NavigationDrawer = defineAsyncComponent(() => import('./NavigationDrawer.vue'));
+const TextSettingsSheet = defineAsyncComponent(() => import('@/components/TextSettingsSheet.vue'));
+const MassLanguageMenu = defineAsyncComponent(() => import('@/components/prayers/MassLanguageMenu.vue'));
+const { isDrawerOpen, isSettingsSheetOpen } = useAppBar();
+const drawerRequested = ref(isDrawerOpen.value);
+const settingsSheetRequested = ref(isSettingsSheetOpen.value);
+watch(isDrawerOpen, (open) => { if (open) drawerRequested.value = true; });
+watch(isSettingsSheetOpen, (open) => { if (open) settingsSheetRequested.value = true; });
 const uiStore = useUiStore();
 const settings = useSettingsStore();
 const router = useRouter();
 const route = useRoute();
-const authStore = useAuthStore();
+const authStore = shallowRef(null);
 const { notifySuccess, notifyError } = useNotifier();
 const sharingPrayerLink = ref(false);
 
 const { selectedTags, selectedCategory, isFilterExpanded } = usePrayersFilters();
-const { prayers, allTags, getTitle, init: initPrayers } = usePrayers();
+const prayerState = shallowRef(null);
 const prayerRouteNames = new Set([
   'Prayers',
   'PrayersList',
@@ -285,15 +287,27 @@ const prayerRouteNames = new Set([
 watch(
   () => route.name,
   (routeName) => {
-    if (prayerRouteNames.has(routeName)) initPrayers();
+    if (prayerRouteNames.has(routeName)) {
+      import('@/composables/usePrayers.js').then(({ usePrayers }) => {
+        if (!prayerRouteNames.has(route.name)) return;
+        prayerState.value ??= usePrayers();
+        prayerState.value.init();
+      }).catch((error) => logger.error('[Default] Prayer catalog unavailable:', error));
+    }
+    if (['Readings', 'ReadingsByDate', 'PrayerView', 'SongView'].includes(routeName)) {
+      import('@/stores/auth.js').then(({ useAuthStore }) => {
+        authStore.value = useAuthStore();
+        return authStore.value.init();
+      }).catch(() => {});
+    }
   },
   { immediate: true },
 );
 const filterTags = computed(() => (
-  [...new Set(allTags.value || [])].sort((a, b) => a.localeCompare(b, 'be', { sensitivity: 'base' }))
+  [...new Set(prayerState.value?.allTags.value || [])].sort((a, b) => a.localeCompare(b, 'be', { sensitivity: 'base' }))
 ));
 const currentPrayer = computed(() => (
-  prayers.value.find((prayer) => prayer.id === route.params.id) || null
+  prayerState.value?.prayers.value.find((prayer) => prayer.id === route.params.id) || null
 ));
 
 const isPrayerViewPage = computed(() => {
@@ -441,7 +455,7 @@ const shareCurrentPrayer = async () => {
   sharingPrayerLink.value = true;
   try {
     const result = await sharePrayerLink({
-      title: getTitle(currentPrayer.value),
+      title: prayerState.value.getTitle(currentPrayer.value),
       url,
     });
     if (result !== 'cancelled') trackFeature('share_use');

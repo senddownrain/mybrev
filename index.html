@@ -98,6 +98,8 @@
             : 'family=Literata:ital,opsz,wght@0,7..72,300..800;1,7..72,300..800&'
     const fontStylesheet = document.createElement('link')
     fontStylesheet.rel = 'stylesheet'
+    fontStylesheet.media = 'print'
+    fontStylesheet.addEventListener('load', () => { fontStylesheet.media = 'all' }, { once: true })
     fontStylesheet.dataset.readerFont = selectedReaderFont
     fontStylesheet.href = `https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600;700&${readerFontQuery}family=Source+Sans+3:ital,wght@0,400..800;1,400..800&display=swap`
     document.head.appendChild(fontStylesheet)

@@ -91,10 +91,9 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, watch } from 'vue';
+import { ref, computed, nextTick, watch, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAppBar } from '@/composables/useAppBar';
-import CustomDatePicker from '@/components/common/CustomDatePicker.vue';
 import '@/styles/date-dialog.css';
 import moment from '@/utils/moment-be';
 import { PhListBullets, PhSunHorizon, PhCalendarBlank, PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue';
@@ -103,6 +102,8 @@ import { ordoDioceseFilter } from '@/utils/ordoMonthFilter';
 
 // Navigation of the Ordo screen: on `/ordo` the arrows page months, on
 // `/ordo/:date` days. The same pill and date dialog as the Hours and Readings.
+const CustomDatePicker = defineAsyncComponent(() => import('@/components/common/CustomDatePicker.vue'));
+
 const route = useRoute();
 const router = useRouter();
 const { isCalendarDialogOpen, toggleCalendarDialog } = useAppBar();

@@ -18,14 +18,11 @@ import { findOptionByDayId, findResolvedDayById } from '@/utils/ordoDayOptions';
  * Firestore document. This guarantees from-day and seasonal inheritance in
  * every hour component.
  */
-export function useResolvedLiturgicalDay({ forCompline = false } = {}) {
+export function useResolvedLiturgicalDay({ forCompline = false, enabled } = {}) {
   const route = useRoute();
-  const {
-    getLiturgicalContentForDate,
-    getCachedLiturgicalContentForDate,
-    restoreCachedLiturgicalContentForDate,
-  } = useLiturgicalContent();
+  const { getLiturgicalContentForDate } = useLiturgicalContent();
   const day = ref(null);
+  const dayOptions = ref([]);
   const context = ref(null);
   const periodDay = ref(null);
   const pending = ref(false);
@@ -39,8 +36,10 @@ export function useResolvedLiturgicalDay({ forCompline = false } = {}) {
     pending.value = false;
     error.value = '';
     day.value = null;
+    dayOptions.value = [];
     context.value = null;
     periodDay.value = null;
+    if (enabled?.value === false) return;
     if (!date.isValid()) {
       error.value = 'Няправільная дата літургічнага дня.';
       pending.value = false;
@@ -49,6 +48,7 @@ export function useResolvedLiturgicalDay({ forCompline = false } = {}) {
 
     const canResolveCompline = forCompline && id !== 'office-for-dead' && route.query.view !== 'reference';
     const resolveDay = (content) => {
+      dayOptions.value = content.dayOptions || [];
       context.value = content.context || null;
       const selected = findResolvedDayById(content, id);
       if (!selected && !canResolveCompline) return null;
@@ -92,41 +92,17 @@ export function useResolvedLiturgicalDay({ forCompline = false } = {}) {
       };
     };
 
-    let cached = getCachedLiturgicalContentForDate(date.toDate());
-    let cacheWaitTimer;
-    if (!cached) {
-      cacheWaitTimer = setTimeout(() => {
-        if (currentSequence === sequence) pending.value = true;
-      }, 100);
-      cached = await restoreCachedLiturgicalContentForDate(date.toDate());
-      clearTimeout(cacheWaitTimer);
-    }
-    if (currentSequence !== sequence) return;
-    if (cached) {
-      day.value = resolveDay(cached);
-      if (!day.value) error.value = 'Літургічны дзень не знойдзены.';
+    let displayed;
+    const show = (content) => {
+      if (currentSequence !== sequence || displayed === content) return;
+      displayed = content;
+      day.value = resolveDay(content);
+      error.value = day.value ? '' : 'Літургічны дзень не знойдзены.';
       pending.value = false;
-      // Show the offline copy immediately, but apply a completed online refresh
-      // too. Otherwise the reader stays on old content even after the cache
-      // has fetched a corrected version in the background.
-      try {
-        const updated = await getLiturgicalContentForDate(date.toDate());
-        if (currentSequence !== sequence) return;
-        day.value = resolveDay(updated);
-        error.value = day.value ? '' : 'Літургічны дзень не знойдзены.';
-      } catch (refreshError) {
-        // The existing complete cached day remains usable offline.
-        logger.warn('[useResolvedLiturgicalDay] cached day refresh failed:', refreshError);
-      }
-      return;
-    }
-
+    };
     pending.value = true;
     try {
-      const content = await getLiturgicalContentForDate(date.toDate());
-      if (currentSequence !== sequence) return;
-      day.value = resolveDay(content);
-      if (!day.value) error.value = 'Літургічны дзень не знойдзены.';
+      show(await getLiturgicalContentForDate(date.toDate(), undefined, { onCached: show }));
     } catch (loadError) {
       logger.error('[useResolvedLiturgicalDay] load failed:', loadError);
       if (currentSequence === sequence) {
@@ -138,9 +114,10 @@ export function useResolvedLiturgicalDay({ forCompline = false } = {}) {
     }
   }
 
-  watch([ordoCalendarEpoch, effectiveOrdoDiocese, () => route.params.day, () => route.params.id, () => route.query.reference, () => route.query.diocese, () => route.query.view], load, { immediate: true });
+  watch([() => enabled?.value, ordoCalendarEpoch, effectiveOrdoDiocese, () => route.params.day, () => route.params.id, () => route.query.reference, () => route.query.diocese, () => route.query.view], load, { immediate: true });
   return {
     day,
+    dayOptions,
     context: computed(() => context.value),
     periodDay: computed(() => periodDay.value),
     pending: computed(() => pending.value),

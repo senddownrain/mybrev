@@ -1,9 +1,8 @@
 /**
  * Optional, deliberately opt-in nine-day OFFLINE warmup.
  *
- * Stage 1 lives in cacheWarmup.js: today/tomorrow Hours + static collections.
- * This module is imported only after Stage 1, an additional delay, and browser
- * idle time. It never touches protected prayers, admin data, or the Bible.
+ * This development-only experiment runs after startup and browser idle time.
+ * It never touches protected prayers, admin data, or the Bible.
  *
  * Extended content is re-prefetched no more often than once every seven days
  * at the same publication revision. Opening a page still uses the existing
@@ -80,8 +79,7 @@ async function fillWindow(baseDate, { eligible, cache, store, waitForSlot }) {
   const result = { loaded: 0, alreadyCached: 0, incomplete: 0, stopped: false };
 
   try {
-    // Today and tomorrow's Hours should already be cached by Stage 1. Readings
-    // for those days are next; then yesterday and days +2 .. +7.
+    // Try the visible date first, then visit its neighbours in order.
     const dates = buildDateWarmupOrder(baseDate, CACHE_DAYS_BEHIND, CACHE_DAYS_AHEAD);
     outer: for (const date of dates) {
       if (!allowed()) { result.stopped = true; break; }

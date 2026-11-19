@@ -12,9 +12,43 @@ import { VitePWA } from 'vite-plugin-pwa'; // Импортируем
 
 import { visualizer } from 'rollup-plugin-visualizer' // Импортируем
 
+// Keep the shell and the ordinary readers available across service-worker
+// updates. Other hashed assets enter the runtime cache only when opened.
+const offlineReaders = new Set([
+  'src/layouts/default/Default.vue', 'src/layouts/default/BottomNav.vue',
+  'src/layouts/default/ReadingsBottomNav.vue', 'src/layouts/default/NavigationDrawer.vue',
+  'src/layouts/default/OraBar.vue', 'src/layouts/simple/One.vue',
+  'src/components/ItemsList.vue', 'src/components/OrasList.vue', 'src/components/common/CustomDatePicker.vue',
+  'src/components/readings/ReadingsView.vue', 'src/components/prayers/PrayerView.vue',
+  'src/components/prayers/PrayersList.vue', 'src/views/Prayers.vue', 'src/views/FavoritePrayers.vue',
+  'src/services/liturgicalContentService.js', 'src/services/readingsService.js',
+]);
+
+function collectOfflineAssets(root, entries) {
+  return {
+    name: 'mybrev-offline-assets',
+    apply: 'build',
+    generateBundle(_options, bundle) {
+      const add = (chunk) => {
+        if (entries.has(chunk.fileName)) return;
+        entries.add(chunk.fileName);
+        for (const file of chunk.viteMetadata?.importedCss || []) entries.add(file);
+        for (const file of chunk.viteMetadata?.importedAssets || []) entries.add(file);
+        for (const file of chunk.imports) if (bundle[file]?.type === 'chunk') add(bundle[file]);
+      };
+      for (const chunk of Object.values(bundle)) {
+        if (chunk.type !== 'chunk') continue;
+        const source = chunk.facadeModuleId?.replace(root, '').replaceAll('\\', '/');
+        if (chunk.isEntry || offlineReaders.has(source) || source?.startsWith('src/components/oras/')) add(chunk);
+      }
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   if (command === 'build') validateFirebaseWebConfig(loadEnv(mode, process.cwd(), 'VITE_'));
+  const offlineAssets = new Set();
   return {
   plugins: [
     // Плагин для поддержки однофайловых компонентов Vue (.vue)
@@ -43,10 +77,12 @@ export default defineConfig(({ command, mode }) => {
       },
     }),
 
+    collectOfflineAssets(fileURLToPath(new URL('./', import.meta.url)), offlineAssets),
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       strategies: 'generateSW',
+      includeManifestIcons: false,
       manifestFilename: 'manifest.webmanifest',
       manifest: {
         name: 'Каталіцкі малітоўнік',
@@ -96,19 +132,20 @@ export default defineConfig(({ command, mode }) => {
         cleanupOutdatedCaches: true,
         // Legal page must bypass the SPA navigation fallback in installed PWAs.
         navigateFallbackDenylist: [/^\/privacy(?:\.html)?\/?$/],
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2,webmanifest}'],
-        // Admin/login code remains route-lazy and network-loaded. It must not
-        // consume every reader's offline install budget.
-        globIgnores: [
-          'privacy.html', // Always fetch the current legal text from Hosting.
-          'app-icon-master.png',
-          'maria-menu-logo.svg',
-          '**/vendor-firebase-auth-*.js',
-          '**/vendor-quill-*.{js,css}',
-          '**/vendor-markdown-editor-*.js',
-          '**/{Admin,DayEditor,ParsedReadingEditor,SongEditor,PrayerCategories,PriestAccess,PrayerForm,Login}-*.{js,css}',
-        ],
+        globPatterns: ['index.html', 'registerSW.js', 'manifest.webmanifest', 'assets/*.{js,css,woff2}'],
+        manifestTransforms: [(entries) => ({
+          manifest: entries.filter(({ url }) => !url.startsWith('assets/') || offlineAssets.has(url)),
+        })],
         runtimeCaching: [
+          {
+            urlPattern: ({ sameOrigin, url, request }) => sameOrigin && url.pathname.startsWith('/assets/')
+              && ['script', 'style', 'font'].includes(request.destination),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'mybrev-opened-assets-v1',
+              expiration: { maxEntries: 160, maxAgeSeconds: 60 * 60 * 24 * 180 },
+            },
+          },
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'StaleWhileRevalidate',
@@ -237,15 +274,13 @@ export default defineConfig(({ command, mode }) => {
           if (id.includes('node_modules/moment')) {
             return 'vendor-moment';
           }
-          // The component library is used on the first screen, but separating it
-          // from Vue lets the browser cache the two libraries independently.
-          if (id.includes('node_modules/vuetify')) {
-            return 'vendor-vuetify';
-          }
           // Firebase services are sizeable and have different loading paths:
           // authentication is deferred, while Firestore is used by the public app.
           if (id.includes('node_modules/@firebase/auth') || id.includes('node_modules/firebase/auth')) {
             return 'vendor-firebase-auth';
+          }
+          if (id.includes('node_modules/@firebase/firestore/dist/lite/') || id.includes('node_modules/firebase/firestore/lite/')) {
+            return 'vendor-firebase-firestore-lite';
           }
           if (id.includes('node_modules/@firebase/firestore') || id.includes('node_modules/firebase/firestore')) {
             return 'vendor-firebase-firestore';

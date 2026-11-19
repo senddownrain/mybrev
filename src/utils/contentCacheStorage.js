@@ -5,12 +5,22 @@ export function createContentCacheStorage(name, indexedDB = globalThis.indexedDB
     if (!indexedDB) return Promise.reject(new Error('IndexedDB unavailable'));
     if (!connection) connection = new Promise((resolve, reject) => {
       const request = indexedDB.open(name, 1);
-      const timeout = setTimeout(() => reject(new Error('Content cache open timed out')), 1000);
+      let abandoned = false;
+      const fail = (error) => {
+        abandoned = true;
+        clearTimeout(timeout);
+        reject(error);
+      };
+      const timeout = setTimeout(() => fail(new Error('Content cache open timed out')), 1000);
       request.onupgradeneeded = () => request.result.createObjectStore('entries');
-      request.onerror = () => { clearTimeout(timeout); reject(request.error); };
-      request.onblocked = () => { clearTimeout(timeout); reject(new Error('Content cache blocked')); };
+      request.onerror = () => fail(request.error);
+      request.onblocked = () => fail(new Error('Content cache blocked'));
       request.onsuccess = () => {
         clearTimeout(timeout);
+        if (abandoned) {
+          request.result.close();
+          return;
+        }
         request.result.onversionchange = () => { request.result.close(); connection = null; };
         resolve(request.result);
       };

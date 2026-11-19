@@ -144,13 +144,9 @@ test('a complete cache is not touched if it already contains all nine days', asy
 });
 
 
-test('startup keeps one fast today/tomorrow pass and gates the delayed stage', async () => {
+test('startup can enable speculative prefetch only in development', async () => {
   const main = await readFile(new URL('../src/main.js', import.meta.url), 'utf8');
-  assert.equal((main.match(/await warmupCache\(\)/g) || []).length, 1,
-    'initial warmup must never be scheduled twice');
-  assert.match(main, /delay: 5000, idleTimeout: 5000/);
-  assert.match(main, /VITE_ENABLE_EXTENDED_CACHE_WARMUP === 'true'/);
+  assert.match(main, /import.meta.env.DEV && import.meta.env.VITE_ENABLE_EXTENDED_CACHE_WARMUP === 'true'/);
   assert.match(main, /delay: 20000, idleTimeout: 12000/);
-  assert.ok(main.indexOf('await warmupCache()') < main.indexOf('warmupExtendedDateWindow()'),
-    'the extended stage cannot run before the fast stage has finished');
+  assert.doesNotMatch(main, /warmupCache\(/);
 });

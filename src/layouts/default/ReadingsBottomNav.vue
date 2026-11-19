@@ -95,15 +95,16 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAppBar } from '@/composables/useAppBar';
-import CustomDatePicker from '@/components/common/CustomDatePicker.vue';
 import '@/styles/date-dialog.css';
 import { effectiveOrdoDiocese, effectiveOrdoDioceses, ordoDiocese } from '@/utils/ordoDiocese';
 import { pickerDateRoute, pickerRouteFor } from '@/utils/ordoDatePicker';
 import moment from '@/utils/moment-be';
 import { PhListBullets, PhSunHorizon, PhCalendarBlank, PhCaretLeft, PhCaretRight } from '@phosphor-icons/vue';
+
+const CustomDatePicker = defineAsyncComponent(() => import('@/components/common/CustomDatePicker.vue'));
 
 const route  = useRoute();
 const router = useRouter();
