@@ -22,6 +22,8 @@ const offlineReaders = new Set([
   'src/components/readings/ReadingsView.vue', 'src/components/prayers/PrayerView.vue',
   'src/components/prayers/PrayersList.vue', 'src/views/Prayers.vue', 'src/views/FavoritePrayers.vue',
   'src/services/liturgicalContentService.js', 'src/services/readingsService.js',
+  // An offline launch still needs to register the calendar's online listener.
+  'src/services/ordoCalendarService.js',
 ]);
 
 function collectOfflineAssets(root, entries) {
