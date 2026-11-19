@@ -153,6 +153,11 @@ async function main() {
   if (options.help) return printHelp();
 
   const plan = await loadPlan(options.snapshot);
+  if (options.apply && plan.skippedCollections.length) {
+    throw new Error(
+      `Snapshot is incomplete (${plan.skippedCollections.join(', ')}). No writes were made.`,
+    );
+  }
   const report = {
     generatedAt: new Date().toISOString(),
     mode: options.apply ? 'apply' : 'dry-run',
@@ -163,6 +168,8 @@ async function main() {
   console.log(JSON.stringify({
     mode: report.mode,
     candidateCount: report.candidateCount,
+    fieldsToRemove: report.fieldsToRemove,
+    skippedCollections: report.skippedCollections,
     reportPath: REPORT_PATH,
     ...(options.apply ? { applied: report.applied } : {}),
   }, null, 2));
