@@ -294,7 +294,7 @@ watch(
         prayerState.value.init();
       }).catch((error) => logger.error('[Default] Prayer catalog unavailable:', error));
     }
-    if (['Readings', 'ReadingsByDate', 'PrayerView', 'SongView'].includes(routeName)) {
+    if (prayerRouteNames.has(routeName) || ['Readings', 'ReadingsByDate', 'SongView', 'LiturgicalPicker'].includes(routeName)) {
       import('@/stores/auth.js').then(({ useAuthStore }) => {
         authStore.value = useAuthStore();
         return authStore.value.init();

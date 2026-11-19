@@ -25,6 +25,7 @@ const offlineReaders = new Set([
 ]);
 
 function collectOfflineAssets(root, entries) {
+  const base = root.replaceAll('\\', '/');
   return {
     name: 'mybrev-offline-assets',
     apply: 'build',
@@ -38,7 +39,7 @@ function collectOfflineAssets(root, entries) {
       };
       for (const chunk of Object.values(bundle)) {
         if (chunk.type !== 'chunk') continue;
-        const source = chunk.facadeModuleId?.replace(root, '').replaceAll('\\', '/');
+        const source = chunk.facadeModuleId?.replaceAll('\\', '/').replace(base, '');
         if (chunk.isEntry || offlineReaders.has(source) || source?.startsWith('src/components/oras/')) add(chunk);
       }
     },
