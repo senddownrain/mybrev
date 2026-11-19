@@ -1,17 +1,12 @@
 import { nextRouteDiocese, routeDiocese, setRouteDiocese } from '@/utils/ordoDiocese';
 import { createRouter, createWebHistory } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
-import { adminRouteDecision } from '@/utils/adminAccess';
-import { getMassVariantByPrayerId, MASS_ORDER_PRAYER_ID } from '@/utils/massRitual';
-
-import DefaultVue from '@/layouts/default/Default.vue';
-import ItemsListVue from '@/components/ItemsList.vue';
-import BottomNavVue from '@/layouts/default/BottomNav.vue';
+const ItemsListVue = () => import('@/components/ItemsList.vue');
+const BottomNavVue = () => import('@/layouts/default/BottomNav.vue');
 
 const routes = [
   {
     path: '/',
-    component: DefaultVue,
+    component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
         path: '',
@@ -148,7 +143,8 @@ const routes = [
         props: { default: true },
         // Raw Latin/English Mass variants are addressable prayers, but they
         // open inside the single Holy Mass reader with that language selected.
-        beforeEnter(to) {
+        async beforeEnter(to) {
+          const { getMassVariantByPrayerId, MASS_ORDER_PRAYER_ID } = await import('@/utils/massRitual');
           const variant = getMassVariantByPrayerId(to.params.id);
           if (!variant || to.params.id === MASS_ORDER_PRAYER_ID) return true;
           return {
@@ -299,18 +295,17 @@ const router = createRouter({
   },
 });
 
-router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore();
+router.beforeEach(async (to) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  if (!requiresAuth) return true;
 
-  if (requiresAuth) {
-    await authStore.init();
-
-    const metas = to.matched.reduce((acc, record) => ({ ...acc, ...record.meta }), {});
-    next(adminRouteDecision(metas, authStore, to.fullPath));
-  } else {
-    next();
-  }
+  const [{ useAuthStore }, { adminRouteDecision }] = await Promise.all([
+    import('@/stores/auth'), import('@/utils/adminAccess'),
+  ]);
+  const authStore = useAuthStore();
+  await authStore.init();
+  const metas = to.matched.reduce((acc, record) => ({ ...acc, ...record.meta }), {});
+  return adminRouteDecision(metas, authStore, to.fullPath);
 });
 
 // Diocesan context of Hours / Readings opened from the Ordo (`?diocese=`).

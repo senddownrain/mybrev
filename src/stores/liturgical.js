@@ -7,9 +7,6 @@ import {
 } from '@/utils/ordo/runtime';
 import { currentOrdoDiocese } from '@/utils/ordoDiocese';
 import { celebrationTextContext, periodTextContext } from '@/utils/ordoScreen';
-import { fetchContentForDate } from '@/services/liturgicalContentService';
-import { fetchDaysForDate, findDayByPeriod } from '@/services/liturgicalDayService';
-import { getReadingsForDate } from '@/services/readingsService';
 import { createReadSession } from '@/utils/contentCache';
 import {
   publicContentCache, publicContentKey, contentKey, readingsKey, requestContentRefresh,
@@ -58,6 +55,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     const diocese = options.diocese || currentOrdoDiocese();
     return readResource(contentKey(dateKey(date), diocese, options.referenceOptionId, options.periodOnly), async (session) => {
       const { context, dynamicFeastCodes, resolved } = resolveContext(mDate, diocese, options.referenceOptionId, options.periodOnly);
+      const { fetchContentForDate } = await import('@/services/liturgicalContentService');
       return fetchContentForDate(mDate, context, dynamicFeastCodes, session, { resolved, diocese });
     }, { ...options, fresh: true });
   }
@@ -67,6 +65,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     const diocese = options.diocese || currentOrdoDiocese();
     return readResource(publicContentKey('days', dateKey(date), diocese), async (session) => {
       const { context, dynamicFeastCodes, resolved } = resolveContext(mDate, diocese);
+      const { fetchDaysForDate } = await import('@/services/liturgicalDayService');
       const { periodDays, fixedDateDays, dynamicDaysByFeast } = await fetchDaysForDate(
         mDate, context, dynamicFeastCodes, session,
       );
@@ -84,6 +83,7 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
     const diocese = options.diocese || currentOrdoDiocese();
     return readResource(readingsKey(dateKey(date), { ...options, diocese }), async (session) => {
       const { context, resolved } = resolveContext(mDate, diocese, options.referenceOptionId, options.periodOnly);
+      const { getReadingsForDate } = await import('@/services/readingsService');
       // The same ResolvedLiturgicalDay as the Hours: identity, cycles and
       // lookup order all come from the engine.
       const plan = planReadings(resolved, { dayId: options.dayId || '' });
@@ -105,16 +105,15 @@ export const useLiturgicalStore = defineStore('liturgical', () => {
   }
 
   // Used by editor/picker: intentional online-first access, not immutable cache.
-  const fetchDayByPeriod = (type, week, day) => findDayByPeriod(type, week, day);
+  const fetchDayByPeriod = async (type, week, day) => {
+    const { findDayByPeriod } = await import('@/services/liturgicalDayService');
+    return findDayByPeriod(type, week, day);
+  };
 
   return {
     isLoading, error,
     fetchContentByDate, fetchDaysByDate, fetchReadingsByDate, fetchDayByPeriod,
-    getCachedContent: (date, diocese, referenceOptionId, periodOnly) => publicContentCache.peekFresh(contentKey(dateKey(date), diocese, referenceOptionId, periodOnly)) ?? null,
     resolveOrdoDay: (date, diocese = currentOrdoDiocese()) => resolveRuntimeDay(dateKey(date), { diocese }),
-    getCachedReadings: (date, options) => publicContentCache.peek(readingsKey(dateKey(date), options)) ?? null,
-    primeContent: (date, diocese, referenceOptionId, periodOnly) => publicContentCache.prime([contentKey(dateKey(date), diocese, referenceOptionId, periodOnly)]),
-    primeReadings: (date, options) => publicContentCache.prime([readingsKey(dateKey(date), options)]),
     // Compatibility: invalidate instead of deleting precious offline content.
     clearCache: requestContentRefresh,
   };

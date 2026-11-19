@@ -251,3 +251,35 @@ test('background-only seven-day freshness avoids rereads without weakening UI fr
   assert.equal(next.hasRecentComplete('week-day', 7 * 24 * 60 * 60 * 1000), false,
     'an aged out entry can be refreshed on a later idle visit');
 });
+
+test('a reader sees an expired current-publication copy before one shared refresh completes', async () => {
+  const f = fixture();
+  let now = 0;
+  const create = () => createContentCache({ storage: f.storage, getRevision: () => '1', isOnline: () => true, maxAgeMs: 100, now: () => now });
+  await create().read('hours', async () => complete('saved'));
+  now = 101;
+
+  const cache = create();
+  const revalidation = deferred();
+  const seen = [];
+  let reads = 0;
+  const loader = () => { reads++; return revalidation.promise; };
+  const first = cache.read('hours', loader, { onCached: (value) => seen.push(value) });
+  const second = cache.read('hours', loader, { onCached: (value) => seen.push(value) });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.deepEqual(seen, ['saved', 'saved']);
+  assert.equal(reads, 1);
+
+  revalidation.resolve(complete('updated'));
+  assert.deepEqual((await Promise.all([first, second])).map((entry) => entry.data), ['updated', 'updated']);
+});
+
+test('online revision changes and explicit reloads bypass the reader preview', async () => {
+  const f = fixture();
+  await f.create().read('readings', async () => complete('old'));
+  f.revision('2');
+  const cache = f.create();
+  const onCached = () => assert.fail('obsolete or explicitly invalidated copy was displayed');
+  assert.equal((await cache.read('readings', async () => complete('new'), { fresh: true, onCached })).data, 'new');
+  assert.equal((await cache.read('readings', async () => complete('newer'), { revalidate: true, onCached })).data, 'newer');
+});

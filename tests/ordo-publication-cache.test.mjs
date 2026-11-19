@@ -67,5 +67,11 @@ test('warm complete cache detects new publication, refreshes manual years, rejec
     state.online = false;
     const beforeOffline = state.reads.length;
     await service.refreshCalendarDefinitions({ revalidate: true }); assert.equal(state.reads.length, beforeOffline);
+    defs.setCalendarDefinitions(null);
+    await cache.restoreCalendarCache();
+    assert.equal(defs.getCalendarDefinitions().revision, revision);
+    assert.ok(defs.getCalendarDefinitions().dioceseOverrides.some(x => x.title === 'New publication'));
+    assert.ok(defs.getCalendarDefinitions().yearOverrides.every(x => x.enabled === false));
+    assert.equal(state.reads.length, beforeOffline, 'startup applies the saved calendar without consulting Firestore');
   } finally { await server.close(); }
 });

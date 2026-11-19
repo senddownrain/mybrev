@@ -124,14 +124,12 @@
 <script setup>
 import { ordoCalendarEpoch } from '@/utils/ordoCalendarState';
 import { effectiveOrdoDiocese } from '@/utils/ordoDiocese';
-import { ref, computed, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import moment from '@/utils/moment-be';
 
-import { useLiturgicalContent } from '@/composables/useLiturgicalContent';
 import { useReadings } from '@/composables/useReadings';
 import { useResolvedLiturgicalDay } from '@/composables/useResolvedLiturgicalDay';
-import { logger } from '@/utils/logger';
 import { useAuthStore } from '@/stores/auth';
 import { trackFeature } from '@/utils/trackFeature';
 import DayTitle from '@/components/oraparts/DayTitle.vue';
@@ -143,7 +141,6 @@ import { useLiturgicalHours } from '@/composables/useLiturgicalHours';
 
 const route = useRoute();
 const router = useRouter();
-const { getLiturgicalContentForDate } = useLiturgicalContent();
 const {
   items: readings,
   loadForDate: loadReadingsForDate,
@@ -154,9 +151,8 @@ const isAdmin = computed(() => authStore.isAdmin);
 const dayId = computed(() => route.params.id);
 const dateParam = computed(() => route.params.day);
 
-const { day: dayData, pending: loadingDay } = useResolvedLiturgicalDay();
+const { day: dayData, dayOptions, pending: loadingDay } = useResolvedLiturgicalDay();
 
-const dayOptions = ref([]);
 const oras = useLiturgicalHours();
 const templateContainsDay = (template, id) => (
   template?.id === id || template?.dayIds?.includes(id)
@@ -173,8 +169,7 @@ const selectedTemplateId = computed(() => (
     || dayId.value
 ));
 
-// The selected day is the only render-blocking resource. Readings and
-// tomorrow's first Vespers enrich the screen after its saved content appears.
+// Readings references can appear after the selected Office is ready.
 const loadingOra = computed(() => loadingDay.value);
 
 // The icon and the card must follow the same celebration override. A second
@@ -228,24 +223,9 @@ const selectTemplate = (id) => {
   router.replace({ name: 'oras', params: { day: dateParam.value, id }, query: { ...route.query } });
 };
 
-let contentLoadSequence = 0;
-const loadReadings = async () => {
-  const sequence = ++contentLoadSequence;
-  const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');
-
-  try {
-    const [result] = await Promise.all([
-      getLiturgicalContentForDate(mDate.toDate()),
-      loadReadingsForDate(mDate.toDate(), {
-        dayId: dayId.value === 'office-for-dead' ? '' : dayId.value || '',
-      }),
-    ]);
-    if (sequence !== contentLoadSequence) return;
-    dayOptions.value = Array.isArray(result.dayOptions) ? result.dayOptions : [];
-  } catch (e) {
-    logger.error('[OrasList] Памылка пры загрузцы чытанняў:', e);
-  }
-};
+const loadReadings = () => loadReadingsForDate(moment(dateParam.value, 'YYYY-MM-DD').toDate(), {
+  dayId: dayId.value === 'office-for-dead' ? '' : dayId.value || '',
+});
 
 const goToCreateDay = () => {
   const mDate = moment(dateParam.value, 'YYYY-MM-DD').startOf('day');

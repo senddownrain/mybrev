@@ -50,6 +50,7 @@ const showCapsule = ref(false);
 let headingObserver;
 let contentObserver;
 let heading;
+let authTimer;
 function isCurrentHour(hour) {
   return hour.path.name === route.name && (hour.path.query.firstVespersDayId || '') === (route.query.firstVespersDayId || '');
 }
@@ -66,6 +67,8 @@ function observeHeading() {
   headingObserver.observe(heading);
 }
 onMounted(async () => {
+  // The editor action can resolve the saved account after the reader opens.
+  authTimer = window.setTimeout(() => { void auth.init().catch(() => {}); }, 1500);
   await nextTick();
   contentObserver = new window.MutationObserver(observeHeading);
   contentObserver.observe(document.querySelector('.v-main'), { childList: true, subtree: true });
@@ -78,7 +81,11 @@ watch(() => route.fullPath, async () => {
   await nextTick();
   observeHeading();
 });
-onBeforeUnmount(() => { headingObserver?.disconnect(); contentObserver?.disconnect(); });
+onBeforeUnmount(() => {
+  window.clearTimeout(authTimer);
+  headingObserver?.disconnect();
+  contentObserver?.disconnect();
+});
 const dateHomeRoute = computed(() => {
   const selectedDate = moment(route.params.day, 'YYYY-MM-DD', true);
   return !selectedDate.isValid() || selectedDate.isSame(moment(), 'day')

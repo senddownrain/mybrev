@@ -49,14 +49,19 @@ export function createContentCache({ storage, getRevision, isOnline, onError = (
     return request;
   }
 
-  async function read(key, loader, { fresh = false, revalidate = false } = {}) {
+  async function read(key, loader, { fresh = false, revalidate = false, onCached } = {}) {
     const entry = await restore(key);
-    if (isFresh(entry) && !(revalidate && isOnline())) return entry;
-    if (entry && (!isOnline() || (!fresh && !revalidate && !Number.isFinite(maxAgeMs)))) {
+    const online = isOnline();
+    // Reader screens can display a complete copy from the current publication
+    // while awaiting the TTL refresh. Explicit refreshes and editors still wait.
+    const usable = entry?.complete && (!online || entry.revision === getRevision());
+    if (usable && !revalidate) onCached?.(entry.data);
+    if (isFresh(entry) && !(revalidate && online)) return entry;
+    if (entry && (!online || (!fresh && !revalidate && !Number.isFinite(maxAgeMs)))) {
       // With no TTL keep the previous stale-while-revalidate behaviour.
       // TTL-controlled public content is awaited online to avoid rendering an
       // obsolete result as though it were the final version.
-      if (isOnline()) refresh(key, loader).catch(onError);
+      if (online) refresh(key, loader).catch(onError);
       return { ...entry, complete: false };
     }
     try {

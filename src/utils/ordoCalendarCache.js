@@ -1,6 +1,6 @@
 /**
  * Locally cached calendar publication → engine. No Firestore import here:
- * `primeContentCache` applies the cache before the first screen is created.
+ * Startup restores these definitions before a route can resolve any dates.
  */
 import { publicContentCache, publicContentKey, requestContentRefresh } from './publicContentCache.js';
 import { getBundledCalendarDefinitions, getCalendarDefinitions, setCalendarDefinitions } from './ordo/definitions.js';
@@ -9,6 +9,11 @@ import { selectCalendarSource, sameDefinitions } from './ordoCalendarSource.js';
 export const CALENDAR_CACHE_KEY = publicContentKey('ordo-calendar');
 export const YEAR_OVERRIDES_CACHE_KEY = publicContentKey('ordo-year-overrides');
 export const NOTES_CACHE_KEY = publicContentKey('ordo-notes');
+
+export async function restoreCalendarCache() {
+  await publicContentCache.prime([CALENDAR_CACHE_KEY, YEAR_OVERRIDES_CACHE_KEY]);
+  applyCachedCalendar();
+}
 
 /** Definitions the cache asks for (partial), or null when it has nothing newer. */
 export function definitionsFromCache({ calendar, overrides, bundled }) {

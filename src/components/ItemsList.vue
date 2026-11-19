@@ -8,7 +8,6 @@
         type="button"
         class="date-header"
         aria-label="Адкрыць каляндар і выбраць дату"
-        :aria-busy="softLoading"
         @click="toggleCalendarDialog"
       >
         <span class="date-header__eyebrow">
@@ -23,15 +22,9 @@
           <v-icon class="date-header__caret" icon="mdi-chevron-down" size="20"></v-icon>
         </span>
       </button>
-      <v-progress-linear
-        v-if="softLoading"
-        indeterminate
-        height="4"
-        class="date-loading-bar"
-      ></v-progress-linear>
     </div>
 
-    <!-- Большой спиннер только для самого первого экрана, когда вообще нет данных -->
+    <!-- Wait for the selected day before showing any Office options. -->
     <v-row
       v-if="loading && !dayOptions.length && !error"
       class="justify-center mt-16"
@@ -72,8 +65,6 @@
         <v-list
           bg-color="transparent"
           class="day-options-list"
-          :class="{ 'day-options-list--loading': softLoading }"
-          :aria-busy="softLoading"
         >
           <v-list-item
             v-for="option in dayOptions"
@@ -151,18 +142,13 @@ import { unionDayOptions } from '@/utils/dayOptionsUnion';
 const route = useRoute();
 const router = useRouter();
 
-const {
-  getLiturgicalContentForDate,
-  getCachedLiturgicalContentForDate,
-  restoreCachedLiturgicalContentForDate,
-} = useLiturgicalContent();
+const { getLiturgicalContentForDate } = useLiturgicalContent();
 
 const { toggleCalendarDialog } = useAppBar();
 const { error: notifyError } = useNotifier();
 
 const dayOptions = ref([]);
-const loading = ref(false);     // включается только после промаха постоянного кэша
-const softLoading = ref(false); // перелистывание — полоска
+const loading = ref(true);
 const error = ref(null);
 
 const currentDate = ref(moment().startOf('day'));
@@ -236,73 +222,37 @@ const dioceses = computed(() => route.query.view === 'reference'
 const unite = (results) => (results.length > 1
   ? unionDayOptions(results, { primary: ordoDiocese.value })
   : (results[0]?.dayOptions || []));
-const cachedFor = (date, diocese) => getCachedLiturgicalContentForDate(date.toDate(), diocese);
-
 const fetchItemsForDate = async (date) => {
   const fetchId = ++_currentFetchId;
-  const key = date.format('YYYY-MM-DD');
   const list = dioceses.value;
-
-  // 1. Try cache first — no spinners needed
-  let cached = list.map((diocese) => cachedFor(date, diocese));
-  let cacheWaitTimer;
-  if (cached.some((entry) => !entry)) {
-    cacheWaitTimer = setTimeout(() => {
-      if (fetchId === _currentFetchId && !dayOptions.value.length) loading.value = true;
-    }, 100);
-    cached = await Promise.all(list.map((diocese, index) => cached[index]
-      || restoreCachedLiturgicalContentForDate(date.toDate(), diocese)));
-    clearTimeout(cacheWaitTimer);
-  }
-  if (fetchId !== _currentFetchId) return;
-  if (cached.every(Boolean)) {
-    logger.log(`[ItemsList] Cache hit for date: ${key} (${list.join(', ')})`);
-    dayOptions.value = unite(cached.map((entry, index) => ({ diocese: list[index], dayOptions: entry.dayOptions || [] })));
+  const cached = list.map(() => null);
+  const show = (results) => {
+    if (fetchId !== _currentFetchId) return;
+    dayOptions.value = unite(results.map((result, index) => ({
+      diocese: list[index], dayOptions: result?.dayOptions || [],
+    })));
     loading.value = false;
-    softLoading.value = false;
-    return;
-  }
+  };
 
-  logger.log(`[ItemsList] Cache miss, fetching data for date: ${key}`);
-
+  dayOptions.value = [];
+  loading.value = true;
   error.value = null;
-
-  // 2. Decide spinner type
-  if (!dayOptions.value.length) {
-    loading.value = true;
-    softLoading.value = false;
-  } else {
-    softLoading.value = true;
-    loading.value = false;
-  }
-
   try {
-    const results = await Promise.all(list.map((diocese, index) => cached[index]
-      || getLiturgicalContentForDate(date.toDate(), diocese)));
-
-    // Discard stale response if another fetch was started while we waited
-    if (fetchId !== _currentFetchId) {
-      logger.log(`[ItemsList] Discarding stale response for date: ${key}`);
-      return;
-    }
-
-    dayOptions.value = unite(results.map((result, index) => ({ diocese: list[index], dayOptions: result?.dayOptions || [] })));
-
-    if (dayOptions.value.length === 0) {
-      logger.warn(`[ItemsList] No liturgical items found for date: ${key}`);
-    }
+    const results = await Promise.all(list.map((diocese, index) =>
+      getLiturgicalContentForDate(date.toDate(), diocese, {
+        onCached(result) {
+          cached[index] = result;
+          if (cached.every(Boolean)) show(cached);
+        },
+      })));
+    if (results.some((result, index) => result !== cached[index])) show(results);
   } catch (e) {
-    if (fetchId !== _currentFetchId) return; // stale — ignore
-
+    if (fetchId !== _currentFetchId) return;
     logger.error('[ItemsList] Critical error loading data:', e);
-    const errorMessage = firestoreErrorMessage(e);
-    error.value = errorMessage;
-    notifyError(errorMessage);
+    error.value = firestoreErrorMessage(e);
+    notifyError(error.value);
   } finally {
-    if (fetchId === _currentFetchId) {
-      loading.value = false;
-      softLoading.value = false;
-    }
+    if (fetchId === _currentFetchId) loading.value = false;
   }
 };
 
@@ -361,17 +311,12 @@ const getOptionIcon = (option) => {
 };
 
 // The legal Offices depend on the dioceses (Settings) and the route context.
-watch([() => dioceses.value.join(','), ordoCalendarEpoch], () => fetchItemsForDate(currentDate.value));
-
 watch(
-  () => route.params.day,
-  (newDay) => {
-    const targetDate = newDay
-      ? moment(newDay, 'YYYY-MM-DD')
-      : moment().startOf('day');
-
-    currentDate.value = targetDate;
-    fetchItemsForDate(targetDate);
+  [() => route.params.day, () => dioceses.value.join(','), ordoCalendarEpoch, () => route.query.reference, () => route.query.view],
+  ([newDay]) => {
+    const date = newDay ? moment(newDay, 'YYYY-MM-DD') : moment().startOf('day');
+    currentDate.value = date;
+    fetchItemsForDate(date);
   },
   { immediate: true },
 );
@@ -442,24 +387,6 @@ watch(
   transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
 
-.date-loading-bar {
-  position: absolute !important;
-  right: 20px;
-  bottom: 0;
-  left: 20px;
-  z-index: 2;
-  width: auto !important;
-  overflow: hidden;
-  border-radius: 999px 999px 0 0;
-  color: var(--liturgical-color) !important;
-  pointer-events: none;
-}
-
-.date-loading-bar :deep(.v-progress-linear__background),
-.date-loading-bar :deep(.v-progress-linear__indeterminate) {
-  background-color: var(--liturgical-color) !important;
-}
-
 .date-header:hover {
   border-color: rgba(var(--liturgical-rgb), 0.34);
   box-shadow: 0 10px 32px var(--nav-shadow);
@@ -527,12 +454,6 @@ watch(
   gap: 12px;
   padding: 0 !important;
   transition: opacity 0.18s ease, transform 0.18s ease;
-}
-
-.day-options-list--loading {
-  opacity: 0.48;
-  transform: translateY(2px);
-  pointer-events: none;
 }
 
 .day-option {

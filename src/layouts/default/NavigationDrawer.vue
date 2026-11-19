@@ -257,7 +257,7 @@ const drawerShell = ref(null);
 let returnFocusTo = null;
 let inertElements = [];
 const auth = useAuthStore();
-// Resolve the persisted Firebase login when the visitor opens a public page.
+// Resolve the persisted Firebase login when the menu is first opened.
 onMounted(() => { void auth.init().catch(() => {}); });
 const route = useRoute();
 const router = useRouter();
@@ -353,7 +353,7 @@ watch(isDrawerOpen, async (open, wasOpen) => {
     if (returnFocusTo?.isConnected) returnFocusTo.focus();
     returnFocusTo = null;
   }
-});
+}, { immediate: true });
 
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleDrawerKeydown, true);
