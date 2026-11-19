@@ -342,7 +342,8 @@ test('startup code never statically imports notes.json (lazy chunk of the Ordo s
   const graph = staticGraph(join(root, 'src/main.js'));
   const notesPath = join(root, 'src/data/ordo/notes.json');
   assert.ok(graph.has(join(root, 'src/router/index.js')), 'the walker follows the startup graph');
-  assert.ok(graph.has(join(root, 'src/utils/ordo/index.js')), 'the engine itself is part of the startup graph');
+  assert.ok(graph.has(join(root, 'src/utils/ordoCalendarCache.js')), 'startup restores calendar definitions');
+  assert.ok(!graph.has(join(root, 'src/utils/ordo/index.js')), 'the calendar engine loads with the route');
   assert.ok(!graph.has(notesPath), 'notes.json is reachable from src/main.js through static imports');
   assert.ok(!graph.has(join(root, 'src/utils/ordoNotesLoader.js')));
   assert.ok(!graph.has(join(root, 'src/views/Ordo.vue')));
@@ -352,6 +353,7 @@ test('startup code never statically imports notes.json (lazy chunk of the Ordo s
   assert.deepEqual(staticImports(loader), []);
   // The Ordo view is the only static importer of the loader.
   const view = staticGraph(join(root, 'src/views/Ordo.vue'));
+  assert.ok(view.has(join(root, 'src/utils/ordo/index.js')));
   assert.ok(view.has(join(root, 'src/utils/ordoNotesLoader.js')));
   assert.ok(!view.has(notesPath));
 });
