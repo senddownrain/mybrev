@@ -19,7 +19,7 @@ test('public sources page retains original editions and adds confirmed prayer so
   assert.deepEqual(bibliography.sections, ['Касцёльныя крыніцы', 'Іншыя крыніцы']);
   assert.equal(bibliography.entries.length, 24);
   assert.equal(new Set(bibliography.entries.map(entry => entry.id)).size, 24);
-  assert.deepEqual(bibliography.sections.map(section => bibliography.entries.filter(entry => entry.section === section).length), [18, 6]);
+  assert.deepEqual(bibliography.sections.map(section => bibliography.entries.filter(entry => entry.section === section).length), [20, 4]);
   assert.equal(bibliography.entries[0].title, '«Новы запавет» (Мінск, 2017)');
   assert.equal(bibliography.entries[10].title, 'Спеўнік «Божа, мы Цябе ўслаўляем» (Мінск, 2026)');
   assert.deepEqual(bibliography.entries[11].notices, [
@@ -41,7 +41,7 @@ test('public sources page retains original editions and adds confirmed prayer so
   for (const id of hiddenIds) {
     assert.equal(bibliography.entries.find(entry => entry.id === id)?.visibleInSources, false);
   }
-  assert.deepEqual(bibliography.sections.map(section => bibliography.entries.filter(entry => entry.section === section && entry.visibleInSources !== false).length), [16, 4]);
+  assert.deepEqual(bibliography.sections.map(section => bibliography.entries.filter(entry => entry.section === section && entry.visibleInSources !== false).length), [18, 2]);
   const sourceComponent = read('src/components/SourceRights.vue');
   assert.match(sourceComponent, /bibliography\.sections/);
   assert.match(sourceComponent, /bibliography\.entries/);
