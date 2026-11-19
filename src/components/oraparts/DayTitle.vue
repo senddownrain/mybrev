@@ -97,6 +97,7 @@ import { isSeasonalDateDocumentId } from '@/utils/liturgicalDayResolution';
 import { formatLiturgicalPeriodTitle } from '@/utils/liturgicalPeriodTitle';
 import { formatLiturgicalTitleHtml } from '@/utils/liturgicalTitle';
 import { calculatePsalterWeek, formatPsalterWeekLabel } from '@/utils/liturgicalPsalter';
+import { visibleFeastComment } from '@/utils/feastComment';
 
 const props = defineProps({
   dayData: { type: Object, default: null },
@@ -109,7 +110,8 @@ const loading = computed(() => props.dayData ? false : routeDay?.pending.value);
 const isHero = computed(() => props.variant === 'hero');
 const commentExpanded = ref(false);
 const dayComment = computed(() => (
-  resolvedDay.value?.feastComment || resolvedDay.value?.comment || ''
+  visibleFeastComment(resolvedDay.value?.feastComment)
+    || visibleFeastComment(resolvedDay.value?.comment)
 ));
 
 watch(
