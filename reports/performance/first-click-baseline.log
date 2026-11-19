@@ -1,0 +1,123 @@
+cold | menu | 1 | FAIL | 180.70000000006985 | page.waitForFunction: Timeout 5000ms exceeded.
+cold | menu | 2 | FAIL | 81.69999999995343 | page.waitForFunction: Timeout 5000ms exceeded.
+cold | menu | 3 | FAIL | 92.09999999997672 | page.waitForFunction: Timeout 5000ms exceeded.
+cold | menu | 4 | OK | 98.09999999997672 |
+cold | menu | 5 | OK | 184.19999999995343 |
+cold | menu | 6 | FAIL | 93.89999999990687 | page.waitForFunction: Timeout 5000ms exceeded.
+cold | menu | 7 | FAIL | 106.20000000006985 | page.waitForFunction: Timeout 5000ms exceeded.
+cold | menu | 8 | OK | 104.30000000004657 |
+cold | day-option | 1 | OK | 111.30000000004657 |
+cold | day-option | 2 | OK | 101.79999999993015 |
+cold | day-option | 3 | OK | 110.5 |
+cold | day-option | 4 | OK | 113.30000000004657 |
+cold | day-option | 5 | OK | 128.19999999995343 |
+cold | day-option | 6 | OK | 97.19999999995343 |
+cold | day-option | 7 | OK | 108.90000000002328 |
+cold | day-option | 8 | OK | 99.59999999997672 |
+warm | menu | 1 | FAIL | 110.70000000006985 | page.waitForFunction: Timeout 5000ms exceeded.
+warm | menu | 2 | FAIL | 49.90000000002328 | page.waitForFunction: Timeout 5000ms exceeded.
+warm | menu | 3 | FAIL | 90 | page.waitForFunction: Timeout 5000ms exceeded.
+warm | menu | 4 | FAIL | 57.59999999997672 | page.waitForFunction: Timeout 5000ms exceeded.
+warm | menu | 5 | FAIL | 57.70000000006985 | page.waitForFunction: Timeout 5000ms exceeded.
+warm | menu | 6 | FAIL | 92.90000000002328 | page.waitForFunction: Timeout 5000ms exceeded.
+warm | menu | 7 | FAIL | 69.30000000004657 | page.waitForFunction: Timeout 5000ms exceeded.
+warm | menu | 8 | FAIL | 61.699999999953434 | page.waitForFunction: Timeout 5000ms exceeded.
+warm | day-option | 1 | OK | 145 |
+warm | day-option | 2 | OK | 106.70000000006985 |
+warm | day-option | 3 | OK | 82.39999999990687 |
+warm | day-option | 4 | OK | 123 |
+warm | day-option | 5 | OK | 102.09999999997672 |
+warm | day-option | 6 | OK | 134.30000000004657 |
+warm | day-option | 7 | OK | 148 |
+warm | day-option | 8 | OK | 94.5 |
+slow | menu | 1 | OK | 306.4000000000233 |
+slow | menu | 2 | OK | 217.59999999997672 |
+slow | menu | 3 | OK | 248.59999999997672 |
+slow | menu | 4 | OK | 193 |
+slow | menu | 5 | OK | 273.29999999993015 |
+slow | menu | 6 | OK | 221.59999999997672 |
+slow | menu | 7 | OK | 172 |
+slow | menu | 8 | OK | 210.90000000002328 |
+slow | day-option | 1 | OK | 254.10000000009313 |
+slow | day-option | 2 | OK | 278.20000000006985 |
+slow | day-option | 3 | OK | 307 |
+slow | day-option | 4 | OK | 333.5 |
+slow | day-option | 5 | OK | 236.79999999993015 |
+slow | day-option | 6 | OK | 219.59999999997672 |
+slow | day-option | 7 | OK | 332.70000000006985 |
+slow | day-option | 8 | OK | 273.9000000000233 |
+Report: /workspace/mybrev/reports/performance/first-interactions-1792701675683.json
+[
+  {
+    "mode": "cold",
+    "case": "menu",
+    "attempts": 8,
+    "success": 3,
+    "failed": 5,
+    "clickToResponseP50Ms": 104.3,
+    "clickToResponseP95Ms": 184.2,
+    "clickToResponseMaxMs": 184.2,
+    "over250Ms": 0,
+    "longTasksOver50Ms": 30
+  },
+  {
+    "mode": "cold",
+    "case": "day-option",
+    "attempts": 8,
+    "success": 8,
+    "failed": 0,
+    "clickToResponseP50Ms": 108.9,
+    "clickToResponseP95Ms": 128.2,
+    "clickToResponseMaxMs": 128.2,
+    "over250Ms": 0,
+    "longTasksOver50Ms": 25
+  },
+  {
+    "mode": "warm",
+    "case": "menu",
+    "attempts": 8,
+    "success": 0,
+    "failed": 8,
+    "clickToResponseP50Ms": null,
+    "clickToResponseP95Ms": null,
+    "clickToResponseMaxMs": null,
+    "over250Ms": 0,
+    "longTasksOver50Ms": 5
+  },
+  {
+    "mode": "warm",
+    "case": "day-option",
+    "attempts": 8,
+    "success": 8,
+    "failed": 0,
+    "clickToResponseP50Ms": 106.7,
+    "clickToResponseP95Ms": 148,
+    "clickToResponseMaxMs": 148,
+    "over250Ms": 0,
+    "longTasksOver50Ms": 3
+  },
+  {
+    "mode": "slow",
+    "case": "menu",
+    "attempts": 8,
+    "success": 8,
+    "failed": 0,
+    "clickToResponseP50Ms": 217.6,
+    "clickToResponseP95Ms": 306.4,
+    "clickToResponseMaxMs": 306.4,
+    "over250Ms": 2,
+    "longTasksOver50Ms": 47
+  },
+  {
+    "mode": "slow",
+    "case": "day-option",
+    "attempts": 8,
+    "success": 8,
+    "failed": 0,
+    "clickToResponseP50Ms": 273.9,
+    "clickToResponseP95Ms": 333.5,
+    "clickToResponseMaxMs": 333.5,
+    "over250Ms": 6,
+    "longTasksOver50Ms": 49
+  }
+]

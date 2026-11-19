@@ -1,0 +1,1477 @@
+{
+  "snapshotAvailable": false,
+  "fixedDate": "2026-02-08T12:00:00.000Z",
+  "sources": [
+    {
+      "file": "patchs/json/ordinary-w5-d1-fixed-day.json",
+      "collection": "days",
+      "id": "ordinary-w5-d1",
+      "sha256": "2c49e14adbc4cc06bef91fa6ab4c51e472d9ed3c7ec286a5edecaa6cad6487e6"
+    },
+    {
+      "file": "patchs/feasts/01-05-dedication-pinsk-cathedral-diocese.json",
+      "collection": "days",
+      "id": "01-05-dedication-pinsk-cathedral-diocese",
+      "sha256": "cdf3bfc21fa3c7bd60ac2a4c0c6085fd47efe33701feec85be3102d56771dac8"
+    },
+    {
+      "file": "patchs/feasts/01-05-sv-joseph-worker.json",
+      "collection": "days",
+      "id": "01-05-sv-joseph-worker",
+      "sha256": "39b45fbda03f19a5cf8a1513bef76ddf9b9f19e4950056058da9c0a0a379f700"
+    },
+    {
+      "file": "patchs/feasts/01-06-sv-justin.json",
+      "collection": "days",
+      "id": "01-06-sv-justin",
+      "sha256": "42e7e1780ea4cc597c76a1b2c0d78ae1e6fd884d0ab528e532dc949a3991e0e7"
+    },
+    {
+      "file": "patchs/feasts/01-08-sv-alphonsus-liguori.json",
+      "collection": "days",
+      "id": "01-08-sv-alphonsus-liguori",
+      "sha256": "74e0b58c3a7d5a39a8ddb076d97e6606286dbe6748db574763b307f64b72f8d3"
+    },
+    {
+      "file": "patchs/feasts/01-10-sv-teresa-lisieux.json",
+      "collection": "days",
+      "id": "01-10-sv-teresa-lisieux",
+      "sha256": "23c60f993fa7e14428187aa40f5a53833a392446373cb80751855066672b1373"
+    },
+    {
+      "file": "patchs/feasts/02-01-sv-basil-gregory-nazianzen.json",
+      "collection": "days",
+      "id": "02-01-sv-basil-gregory-nazianzen",
+      "sha256": "7d0f686288c2f3029ab95b2a92c6b9aed0648d0c201829d8ec544906a93e3baa"
+    },
+    {
+      "file": "patchs/feasts/02-04-sv-francis-paola.json",
+      "collection": "days",
+      "id": "02-04-sv-francis-paola",
+      "sha256": "24687824198c04c87d7a5e310ca628d0f2488f4f125550c030f6da36fc9822a1"
+    },
+    {
+      "file": "patchs/feasts/02-05-sv-athanasius.json",
+      "collection": "days",
+      "id": "02-05-sv-athanasius",
+      "sha256": "aaf364dfa993fed1e1eb42e18d06db7d9c115fdf1e3aa3bc4a283047c13d10e0"
+    },
+    {
+      "file": "patchs/feasts/02-06-sv-marcellinus-peter.json",
+      "collection": "days",
+      "id": "02-06-sv-marcellinus-peter",
+      "sha256": "418e6973aa5469d5a18276e99066df0711770a20197775c383ccf909badfb454"
+    },
+    {
+      "file": "patchs/feasts/02-07-our-lady-budslav-minsk.json",
+      "collection": "days",
+      "id": "02-07-our-lady-budslav-minsk",
+      "sha256": "b039b74a5d87f2a2b1153fce0140d0b05b1ad312ea7e05e5aa5caa021b9cc778"
+    },
+    {
+      "file": "patchs/feasts/02-07-our-lady-budslav-vitebsk.json",
+      "collection": "days",
+      "id": "02-07-our-lady-budslav-vitebsk",
+      "sha256": "6059c499f13238a2df41790278ed736a53307c7fa56b0a473f5809af9e07bf1b"
+    },
+    {
+      "file": "patchs/feasts/02-08-sv-eusebius-vercelli.json",
+      "collection": "days",
+      "id": "02-08-sv-eusebius-vercelli",
+      "sha256": "033552656c71f744843865be20c89d1364cf8803a22e160376a3071963ec898d"
+    },
+    {
+      "file": "patchs/feasts/02-08-sv-peter-julian-eymard.json",
+      "collection": "days",
+      "id": "02-08-sv-peter-julian-eymard",
+      "sha256": "070624294c892234e26ab733d35ceb5fb320a981b0856fa01060e94155b44658"
+    },
+    {
+      "file": "patchs/feasts/02-10-holy-guardian-angels.json",
+      "collection": "days",
+      "id": "02-10-holy-guardian-angels",
+      "sha256": "e893c7cf141008f91d3d9a88310ddb540b40bb7547214410857dd5b8fd8c0425"
+    },
+    {
+      "file": "patchs/feasts/02-11-all-faithful-departed.json",
+      "collection": "days",
+      "id": "02-11-all-faithful-departed",
+      "sha256": "c087081127db73cfeb850da662c1dcfe4008f324811f5ee78c243b6033666eab"
+    },
+    {
+      "file": "patchs/feasts/03-02-sv-anzgar.json",
+      "collection": "days",
+      "id": "03-02-sv-anzgar",
+      "sha256": "53436fa24304f21595646d89f5244c8b22c8f6746b786c2f9c784257690b7332"
+    },
+    {
+      "file": "patchs/feasts/03-02-sv-blazej.json",
+      "collection": "days",
+      "id": "03-02-sv-blazej",
+      "sha256": "61d3accbcbdc1472b28f4249369fd4e01e749128c0c53acfce589374d2dc58b4"
+    },
+    {
+      "file": "patchs/feasts/03-06-sv-charles-lwanga-companions.json",
+      "collection": "days",
+      "id": "03-06-sv-charles-lwanga-companions",
+      "sha256": "828727ca92d170511bcec31cf90e63f136b295409786be0732f89324562f33f3"
+    },
+    {
+      "file": "patchs/feasts/03-07-sv-thomas-apostle.json",
+      "collection": "days",
+      "id": "03-07-sv-thomas-apostle",
+      "sha256": "01ca08f1c5020ab76c0a93228e2e7a9514d5ec846fd7362118c19a8dac8c1fe8"
+    },
+    {
+      "file": "patchs/feasts/03-09-sv-gregory-great.json",
+      "collection": "days",
+      "id": "03-09-sv-gregory-great",
+      "sha256": "1f4ad1a02115869066b76a46d6784df34745defbe9473118b21c30ae6e1dfa0e"
+    },
+    {
+      "file": "patchs/feasts/03-11-sv-martin-de-porres.json",
+      "collection": "days",
+      "id": "03-11-sv-martin-de-porres",
+      "sha256": "51a2c45b991095918e83dbf1ef754b4f8df91c459b94f0736c09f5e548aeb730"
+    },
+    {
+      "file": "patchs/feasts/03-12-sv-francis-xavier.json",
+      "collection": "days",
+      "id": "03-12-sv-francis-xavier",
+      "sha256": "e7b1be384d279f8cb98614d80922af0b3b2b0b75d71aa7f8b31f25aa5a052c2f"
+    },
+    {
+      "file": "patchs/feasts/04-03-sv-casimir-grodno.json",
+      "collection": "days",
+      "id": "04-03-sv-casimir-grodno",
+      "sha256": "377b3c213334eee0413a3f15bf5bfd4b6efc5ddd3cb9bf7facb6e34e6d5c8953"
+    },
+    {
+      "file": "patchs/feasts/04-03-sv-casimir.json",
+      "collection": "days",
+      "id": "04-03-sv-casimir",
+      "sha256": "4f49d1261155da5dd8e79e119f17ade0021c39724dc4880fac0d0746d1d23eb7"
+    },
+    {
+      "file": "patchs/feasts/04-04-sv-isidore-seville.json",
+      "collection": "days",
+      "id": "04-04-sv-isidore-seville",
+      "sha256": "8707a2d7ff3e5f07894b66b338076f10c4afb5aad34c01e8a715127d025ea0dc"
+    },
+    {
+      "file": "patchs/feasts/04-07-sv-elizabeth-portugal.json",
+      "collection": "days",
+      "id": "04-07-sv-elizabeth-portugal",
+      "sha256": "4f32c3724262a9195563a0c64596d9efaa5ab8065512b8237aa010cdcd141041"
+    },
+    {
+      "file": "patchs/feasts/04-08-sv-john-vianney.json",
+      "collection": "days",
+      "id": "04-08-sv-john-vianney",
+      "sha256": "8f26750da4418e2c9c4f4c98901af6443b6da4feb2b2a63fb8e8cd15c7399737"
+    },
+    {
+      "file": "patchs/feasts/04-09-bl-maria-stella-companions-grodno.json",
+      "collection": "days",
+      "id": "04-09-bl-maria-stella-companions-grodno",
+      "sha256": "a1ab36f66df8adba470fcb84bd3db68ba1f66e37591d6f45e5e4e128fa17abc9"
+    },
+    {
+      "file": "patchs/feasts/04-10-sv-francis-assisi.json",
+      "collection": "days",
+      "id": "04-10-sv-francis-assisi",
+      "sha256": "9ebd3b3be172413f4b97a599116c907f4d74a43b74378177d791fd50411fe041"
+    },
+    {
+      "file": "patchs/feasts/04-11-sv-charles-borromeo.json",
+      "collection": "days",
+      "id": "04-11-sv-charles-borromeo",
+      "sha256": "8c6815a1fffaaf8725ba30d6ce3db37dffb36d9709de14877d778b7c059c7217"
+    },
+    {
+      "file": "patchs/feasts/04-12-grodno-cathedral-dedication.json",
+      "collection": "days",
+      "id": "04-12-grodno-cathedral-dedication",
+      "sha256": "68266b96c5d8ca6b45e4f9ea803bfa3da79c65e4a1029ae266c265a097ba7d97"
+    },
+    {
+      "file": "patchs/feasts/04-12-sv-john-damascene.json",
+      "collection": "days",
+      "id": "04-12-sv-john-damascene",
+      "sha256": "6a3ba694accad9f37bf57a60f3b6bfcac139a2c878239434258e170cfe896541"
+    },
+    {
+      "file": "patchs/feasts/05-02-sv-agata.json",
+      "collection": "days",
+      "id": "05-02-sv-agata",
+      "sha256": "4bf685167d6e3770ad2ff85e28884b0b1c9977ef253b60c4ff9b4144d7f2c147"
+    },
+    {
+      "file": "patchs/feasts/05-04-sv-vincent-ferrer.json",
+      "collection": "days",
+      "id": "05-04-sv-vincent-ferrer",
+      "sha256": "83b4be57c2680f44632de0d555509d11b9845147e6241e64409c9ee903eb2bc6"
+    },
+    {
+      "file": "patchs/feasts/05-06-sv-boniface.json",
+      "collection": "days",
+      "id": "05-06-sv-boniface",
+      "sha256": "5226f9752aa1293434b28da8bfa936dc4fc6dc6e4951913475c62780ea778e03"
+    },
+    {
+      "file": "patchs/feasts/05-06-vitebsk-cathedral-dedication.json",
+      "collection": "days",
+      "id": "05-06-vitebsk-cathedral-dedication",
+      "sha256": "7512b1402718076b87724a7d4fb7b505bb42ac2b24c847f91dc333a50c89c36a"
+    },
+    {
+      "file": "patchs/feasts/05-07-our-lady-trakai-grodno.json",
+      "collection": "days",
+      "id": "05-07-our-lady-trakai-grodno",
+      "sha256": "18ad23a603a2301c6cf0adc73736d2f618cfb2d7485c66971e51c7622719efbf"
+    },
+    {
+      "file": "patchs/feasts/05-07-our-lady-trakai-sanctuary.json",
+      "collection": "days",
+      "id": "05-07-our-lady-trakai-sanctuary",
+      "sha256": "e816bdbcb0da8c32ac365261f3b57d7d675002cd3b49f23083555cf8d6f68ac8"
+    },
+    {
+      "file": "patchs/feasts/05-07-sv-anthony-mary-zaccaria.json",
+      "collection": "days",
+      "id": "05-07-sv-anthony-mary-zaccaria",
+      "sha256": "347081315ef40200de9ae8bd794e6eccc80997367598e354880b15c66874a68b"
+    },
+    {
+      "file": "patchs/feasts/05-08-dedication-st-mary-major.json",
+      "collection": "days",
+      "id": "05-08-dedication-st-mary-major",
+      "sha256": "e9cdcf1433aee11a0e08dbf65fd9611abed7dac7bae9ad13fafe5b5f2b92b484"
+    },
+    {
+      "file": "patchs/feasts/05-08-our-lady-congregational-grodno.json",
+      "collection": "days",
+      "id": "05-08-our-lady-congregational-grodno",
+      "sha256": "551843242a582f01382a0f82c56e0a6008fd922a3ed467f48b41090f54ed8bd9"
+    },
+    {
+      "file": "patchs/feasts/06-02-sv-paul-miki.json",
+      "collection": "days",
+      "id": "06-02-sv-paul-miki",
+      "sha256": "dfc936b7c006e4a9953b67fa5be993756171cc0885475b1b5f12b1c94a950908"
+    },
+    {
+      "file": "patchs/feasts/06-06-sv-norbert.json",
+      "collection": "days",
+      "id": "06-06-sv-norbert",
+      "sha256": "ba4067b7fce538922808ae04e22fa6324d732d78b0ad9e629001088c8402af6f"
+    },
+    {
+      "file": "patchs/feasts/06-07-sv-maria-goretti.json",
+      "collection": "days",
+      "id": "06-07-sv-maria-goretti",
+      "sha256": "e30fe15553487a059234637936f3d79825f3510d59aa7dd2cd65e101a6e967c9"
+    },
+    {
+      "file": "patchs/feasts/06-10-sv-bruno.json",
+      "collection": "days",
+      "id": "06-10-sv-bruno",
+      "sha256": "fa8bfc96d53b0d86ce76f834bc651e36daaff4bc552578fdbe4100025f24ee38"
+    },
+    {
+      "file": "patchs/feasts/06-12-sv-nicholas.json",
+      "collection": "days",
+      "id": "06-12-sv-nicholas",
+      "sha256": "28a072541c53681dce7555d6d2668bc04dcd4654fb0d17a9ccc49280d04f32cb"
+    },
+    {
+      "file": "patchs/feasts/07-01-sv-raymond-penyafort.json",
+      "collection": "days",
+      "id": "07-01-sv-raymond-penyafort",
+      "sha256": "c31f8cd15ccb4ffdc5db24319761148222365d04c7a8544d2e971e2e63074515"
+    },
+    {
+      "file": "patchs/feasts/07-03-sv-perpetua-felicity.json",
+      "collection": "days",
+      "id": "07-03-sv-perpetua-felicity",
+      "sha256": "c0cae5e4d5a4a36666d3003efc43025c96e30cf70419c8bf0409fac116cc2b49"
+    },
+    {
+      "file": "patchs/feasts/07-04-sv-jean-baptiste-de-la-salle.json",
+      "collection": "days",
+      "id": "07-04-sv-jean-baptiste-de-la-salle",
+      "sha256": "1c7be47a501cf99ca81e7db9a0800a33ff016388670224fb44e0c2a395325a17"
+    },
+    {
+      "file": "patchs/feasts/07-08-sv-cajetan.json",
+      "collection": "days",
+      "id": "07-08-sv-cajetan",
+      "sha256": "63286afd18675dc6cf2f3cc95c9a702912559c05dc4b0996b20220870dc6c9aa"
+    },
+    {
+      "file": "patchs/feasts/07-08-sv-sixtus-ii-companions.json",
+      "collection": "days",
+      "id": "07-08-sv-sixtus-ii-companions",
+      "sha256": "c6d6b8533a14503c36a769d69bd4b9162245b3999e7d1b34d76540219886ce4d"
+    },
+    {
+      "file": "patchs/feasts/07-10-our-lady-rosary.json",
+      "collection": "days",
+      "id": "07-10-our-lady-rosary",
+      "sha256": "644740f01fdd1abf9405600d6c8fb3301ca18c9717060f0929b663caf1366f65"
+    },
+    {
+      "file": "patchs/feasts/07-12-sv-ambrose.json",
+      "collection": "days",
+      "id": "07-12-sv-ambrose",
+      "sha256": "707d518d86fd99fc093035859d9298339e0140d83b76edce55b671472d6d1e71"
+    },
+    {
+      "file": "patchs/feasts/08-02-sv-jerome-emiliani.json",
+      "collection": "days",
+      "id": "08-02-sv-jerome-emiliani",
+      "sha256": "22bf509bcbb20efb930fa87c11d045c9eef408d53b1655cc31b80fd3026456c6"
+    },
+    {
+      "file": "patchs/feasts/08-02-sv-josephine-bakhita.json",
+      "collection": "days",
+      "id": "08-02-sv-josephine-bakhita",
+      "sha256": "325aa117cc9fb8f47a5883b71555a27f6bcec09a946bd1705f22a9e1c904dedf"
+    },
+    {
+      "file": "patchs/feasts/08-03-sv-john-of-god.json",
+      "collection": "days",
+      "id": "08-03-sv-john-of-god",
+      "sha256": "68faf5c6f718135a87d5beeb76486bc8e2040e7be441792122b4a9eab7cd883f"
+    },
+    {
+      "file": "patchs/feasts/08-08-sv-dominic.json",
+      "collection": "days",
+      "id": "08-08-sv-dominic",
+      "sha256": "56304169184f81094ad3a9ab886238c8790d46e7b52fe816ef44a386d680b059"
+    },
+    {
+      "file": "patchs/feasts/08-09-nativity-blessed-virgin-mary.json",
+      "collection": "days",
+      "id": "08-09-nativity-blessed-virgin-mary",
+      "sha256": "f21611b0e0956a956a9cbe3b3f6c21a2d9b1033a0ac47018b4f61470abe455b5"
+    },
+    {
+      "file": "patchs/feasts/08-09-our-lady-braslau-vitebsk.json",
+      "collection": "days",
+      "id": "08-09-our-lady-braslau-vitebsk",
+      "sha256": "3a7e8ee381bcd22a28490309e35749313c6a4bf498b24b0b76d5e4dbc181e5f8"
+    },
+    {
+      "file": "patchs/feasts/08-12-immaculate-conception.json",
+      "collection": "days",
+      "id": "08-12-immaculate-conception",
+      "sha256": "970dc33549b3c524958f88d0ddae5f8a09ded97a815ae73ea14af7605202dfa1"
+    },
+    {
+      "file": "patchs/feasts/09-03-sv-frances-of-rome.json",
+      "collection": "days",
+      "id": "09-03-sv-frances-of-rome",
+      "sha256": "2d6eeb17abf21e02143d91d9600501cbea10cfb23845515a8a5e6811c880b1d2"
+    },
+    {
+      "file": "patchs/feasts/09-06-sv-ephrem.json",
+      "collection": "days",
+      "id": "09-06-sv-ephrem",
+      "sha256": "3d538ea081d3fc16efa194ab5361a3ce562bb5c50cdf412f7eff2215e9678095"
+    },
+    {
+      "file": "patchs/feasts/09-07-sv-augustine-zhao-rong-companions.json",
+      "collection": "days",
+      "id": "09-07-sv-augustine-zhao-rong-companions",
+      "sha256": "9450f923821a67dee0ab90f2176f7939c11c8d9510fbadc2f5a3ee8505ca65d4"
+    },
+    {
+      "file": "patchs/feasts/09-08-sv-teresa-benedicta-cross.json",
+      "collection": "days",
+      "id": "09-08-sv-teresa-benedicta-cross",
+      "sha256": "83e31afaa3432bfd357c6f85cbabbbdbea272350b85a0978b45548d01c485087"
+    },
+    {
+      "file": "patchs/feasts/09-09-sv-peter-claver.json",
+      "collection": "days",
+      "id": "09-09-sv-peter-claver",
+      "sha256": "8bec713c21bbeaff199088154cbcb84123b432867a3c8a71f380437a9d1b72cd"
+    },
+    {
+      "file": "patchs/feasts/09-10-sv-denis-companions.json",
+      "collection": "days",
+      "id": "09-10-sv-denis-companions",
+      "sha256": "ac98a74d4d179a05e18ecd7a243dc1ac1cf04a3170ea55a00a503f7ba43bab26"
+    },
+    {
+      "file": "patchs/feasts/09-10-sv-john-leonardi.json",
+      "collection": "days",
+      "id": "09-10-sv-john-leonardi",
+      "sha256": "2d38efb60e6940aead5b63306325cb65f5e1f6c40196afc3ed20dfee1f791de5"
+    },
+    {
+      "file": "patchs/feasts/09-11-dedication-lateran-basilica.json",
+      "collection": "days",
+      "id": "09-11-dedication-lateran-basilica",
+      "sha256": "543b42fd18714bf5a7a4c7d4cdf439126a4b92310d3a8d75052db2b6083e9a8a"
+    },
+    {
+      "file": "patchs/feasts/10-02-sv-scholastica.json",
+      "collection": "days",
+      "id": "10-02-sv-scholastica",
+      "sha256": "f12e7a92c47e53cad09169cd08079bf197c93f256cd4d2e4d313c05aa6cf71f3"
+    },
+    {
+      "file": "patchs/feasts/10-10-vitebsk-cathedral-dedication.json",
+      "collection": "days",
+      "id": "10-10-vitebsk-cathedral-dedication",
+      "sha256": "390cbed0b63efda8aa0851b6b5cae1cffc7ddb10d6c39ce718f6ccb1582fc089"
+    },
+    {
+      "file": "patchs/feasts/10-11-sv-leo-great.json",
+      "collection": "days",
+      "id": "10-11-sv-leo-great",
+      "sha256": "081bd1baa8bb79ed4117bfe886802e1678b99f79b8c1117cabc2c34af6462412"
+    },
+    {
+      "file": "patchs/feasts/11-02-our-lady-of-lourdes.json",
+      "collection": "days",
+      "id": "11-02-our-lady-of-lourdes",
+      "sha256": "25126f54e391576fafa2f283077395d4b311170c090ce4420fb295c3dd66b6c1"
+    },
+    {
+      "file": "patchs/feasts/11-04-sv-stanislaus-bishop-martyr.json",
+      "collection": "days",
+      "id": "11-04-sv-stanislaus-bishop-martyr",
+      "sha256": "50e9467529a102057406281cfc0420e7f5d58fcc594fd48657620b959172fc1d"
+    },
+    {
+      "file": "patchs/feasts/11-06-sv-barnabas.json",
+      "collection": "days",
+      "id": "11-06-sv-barnabas",
+      "sha256": "e7d22968ae698dd46a42aec1fae3b7598dd26dbb2e7754d67fe1967bf4b394e1"
+    },
+    {
+      "file": "patchs/feasts/11-07-sv-benedict.json",
+      "collection": "days",
+      "id": "11-07-sv-benedict",
+      "sha256": "5f843d4bcc4330c068ab0211423246617de691034953add34d18f9d2f0528688"
+    },
+    {
+      "file": "patchs/feasts/11-08-sv-clare.json",
+      "collection": "days",
+      "id": "11-08-sv-clare",
+      "sha256": "92cba167b5168e63d9b8fe1f1a5559d8b04d5a0eda460a7a6361310698def0db"
+    },
+    {
+      "file": "patchs/feasts/11-11-sv-martin-tours.json",
+      "collection": "days",
+      "id": "11-11-sv-martin-tours",
+      "sha256": "51aa8e36b4ef5613b6e48b1a52b1279295e094d439b48fea80df98e56d9ad7ae"
+    },
+    {
+      "file": "patchs/feasts/11-12-sv-damasus-i.json",
+      "collection": "days",
+      "id": "11-12-sv-damasus-i",
+      "sha256": "059be88e1579b4b9db3c851407034a5029e252f05ed01ef864efaf88b9e74ec6"
+    },
+    {
+      "file": "patchs/feasts/12-05-sv-nereus-achilleus.json",
+      "collection": "days",
+      "id": "12-05-sv-nereus-achilleus",
+      "sha256": "0b26be670989ed137d5265f5e9ff769c253132ffeaeea8a0881adf06e20237fa"
+    },
+    {
+      "file": "patchs/feasts/12-05-sv-pancras.json",
+      "collection": "days",
+      "id": "12-05-sv-pancras",
+      "sha256": "d437129bc397bdac821786017957032437ac110d572dc482f107db81a326a100"
+    },
+    {
+      "file": "patchs/feasts/12-06-bl-antoni-leszczewicz-jerzy-kaszyra-vitebsk.json",
+      "collection": "days",
+      "id": "12-06-bl-antoni-leszczewicz-jerzy-kaszyra-vitebsk",
+      "sha256": "e397da16b739031aa833e1c6d77e93681fca5856646cdfcd8252f59c32b79062"
+    },
+    {
+      "file": "patchs/feasts/12-06-bl-henryk-hlebowicz-grodno.json",
+      "collection": "days",
+      "id": "12-06-bl-henryk-hlebowicz-grodno",
+      "sha256": "ce8bf90dedf91300f58c526bdcd39d356334ed78632f21756ed236b8aedaa603"
+    },
+    {
+      "file": "patchs/feasts/12-08-sv-jane-frances-de-chantal.json",
+      "collection": "days",
+      "id": "12-08-sv-jane-frances-de-chantal",
+      "sha256": "088d9080e9f6ab71fe951b9f8dbcda62c90f2de351fda78f39e7fb4ee9e7e2f5"
+    },
+    {
+      "file": "patchs/feasts/12-09-holy-name-mary-minsk-mohilev-pinsk.json",
+      "collection": "days",
+      "id": "12-09-holy-name-mary-minsk-mohilev-pinsk",
+      "sha256": "39de8c182ea43d5a59fa76c880969d0de182fda9b5cd44af92f290566821044b"
+    },
+    {
+      "file": "patchs/feasts/12-09-holy-name-mary.json",
+      "collection": "days",
+      "id": "12-09-holy-name-mary",
+      "sha256": "487acb4becd72152d9624d73ea0e9e16afce1eeee2ad8afbcc57ae607a5695f6"
+    },
+    {
+      "file": "patchs/feasts/12-11-sv-josaphat-minsk-mohilev-pinsk.json",
+      "collection": "days",
+      "id": "12-11-sv-josaphat-minsk-mohilev-pinsk",
+      "sha256": "b521bc174c3d92a39e86aaf9702776ce3e1055884146e2c8df0c9925a8edb8bf"
+    },
+    {
+      "file": "patchs/feasts/12-11-sv-josaphat-vitebsk.json",
+      "collection": "days",
+      "id": "12-11-sv-josaphat-vitebsk",
+      "sha256": "3a616fbd7957d678f2d0feca8636e8d92b52aaf59ab3981ba7a720b860e0df83"
+    },
+    {
+      "file": "patchs/feasts/12-11-sv-josaphat.json",
+      "collection": "days",
+      "id": "12-11-sv-josaphat",
+      "sha256": "33f668c4687a6cdb95e3a73b02a2f165c6269f179bd7c5f4d1da8d7f895597e7"
+    },
+    {
+      "file": "patchs/feasts/13-01-sv-hilary.json",
+      "collection": "days",
+      "id": "13-01-sv-hilary",
+      "sha256": "938505d11b56714cea9d5c30f497f2048bf5b1a7f3ad42ff2e00d768268ad81b"
+    },
+    {
+      "file": "patchs/feasts/13-04-sv-martin-i-pope-martyr.json",
+      "collection": "days",
+      "id": "13-04-sv-martin-i-pope-martyr",
+      "sha256": "14701c66bf14e155fd0b58d662ae2c0477993e73330f338a1828b9f3b006ccf4"
+    },
+    {
+      "file": "patchs/feasts/13-05-our-lady-of-fatima.json",
+      "collection": "days",
+      "id": "13-05-our-lady-of-fatima",
+      "sha256": "14978e4110f050a566c92ff1985ac3bccba632333698a51568b8d4411e2ba953"
+    },
+    {
+      "file": "patchs/feasts/13-06-sv-anthony-padua.json",
+      "collection": "days",
+      "id": "13-06-sv-anthony-padua",
+      "sha256": "65022a7afbee2db0bfc7635b9952dcf5b1ae4d9fa7bc2c2c832f288c0912a4af"
+    },
+    {
+      "file": "patchs/feasts/13-07-sv-henry.json",
+      "collection": "days",
+      "id": "13-07-sv-henry",
+      "sha256": "8af38230b5768104ab8d282b317d88cc9aaa0079f6ba724748caa2a92ee8979f"
+    },
+    {
+      "file": "patchs/feasts/13-08-sv-pontian-hippolytus.json",
+      "collection": "days",
+      "id": "13-08-sv-pontian-hippolytus",
+      "sha256": "e3eb4b95c92da646e209760f4e7b74fa04ee06de9b72c6d1c29360481b37f931"
+    },
+    {
+      "file": "patchs/feasts/13-09-sv-john-chrysostom.json",
+      "collection": "days",
+      "id": "13-09-sv-john-chrysostom",
+      "sha256": "04d8dd3097a552f7b4721ac61a1aa57036e70f5397a3e9af28d3bf3cec430327"
+    },
+    {
+      "file": "patchs/feasts/13-12-sv-lucy.json",
+      "collection": "days",
+      "id": "13-12-sv-lucy",
+      "sha256": "e0c76ae6a5b7b6e4bc6c8bce3cce6d35f6441bd383cfcaaad4537f2002b066c3"
+    },
+    {
+      "file": "patchs/feasts/14-02-sv-cyril-methodius.json",
+      "collection": "days",
+      "id": "14-02-sv-cyril-methodius",
+      "sha256": "c6766189474809f600daba7332e091281c8bd4f1fa9015d7e983019ab568a82d"
+    },
+    {
+      "file": "patchs/feasts/14-05-sv-matthias.json",
+      "collection": "days",
+      "id": "14-05-sv-matthias",
+      "sha256": "78461886b7a4afb1d4b7c40800acc0691ec65f53618523d1737a2c4b22926a2d"
+    },
+    {
+      "file": "patchs/feasts/14-07-sv-camillus-de-lellis.json",
+      "collection": "days",
+      "id": "14-07-sv-camillus-de-lellis",
+      "sha256": "7147ee2c21fe6fead96629fac5821190adb01ec2e1a7f557c7f84dd55ab79f5d"
+    },
+    {
+      "file": "patchs/feasts/14-08-sv-maximilian-kolbe-grodno.json",
+      "collection": "days",
+      "id": "14-08-sv-maximilian-kolbe-grodno",
+      "sha256": "23c7a9f5b0f9e93efe4a65aa00ee5f28cc63a334b7cd226a0f391ae63cbf3bbe"
+    },
+    {
+      "file": "patchs/feasts/14-08-sv-maximilian-kolbe.json",
+      "collection": "days",
+      "id": "14-08-sv-maximilian-kolbe",
+      "sha256": "e247b69fbd409116186448093f0aec507580a9acdc912414f7130a36a96f7a48"
+    },
+    {
+      "file": "patchs/feasts/14-10-sv-callistus-i.json",
+      "collection": "days",
+      "id": "14-10-sv-callistus-i",
+      "sha256": "fe68f2def873b55a04049ce7c4171d31d561a0a71425f841453d43ddddb12a7e"
+    },
+    {
+      "file": "patchs/feasts/14-12-sv-john-cross.json",
+      "collection": "days",
+      "id": "14-12-sv-john-cross",
+      "sha256": "546fbe23e344740977c887600ee4006e08fe21cd9ed69a5cbd93d0e764fbf62f"
+    },
+    {
+      "file": "patchs/feasts/15-02-bl-michal-sopocko-grodno.json",
+      "collection": "days",
+      "id": "15-02-bl-michal-sopocko-grodno",
+      "sha256": "b7e39e2304f831254811157a1e8f8af7c215d4892ccc974c9baa6d5aaa3fb986"
+    },
+    {
+      "file": "patchs/feasts/15-07-sv-bonaventure.json",
+      "collection": "days",
+      "id": "15-07-sv-bonaventure",
+      "sha256": "a882a5f00ae3e2b4ebcceb388782a74b9431ea5db9a91832471922913d265e7b"
+    },
+    {
+      "file": "patchs/feasts/15-09-our-lady-sorrows.json",
+      "collection": "days",
+      "id": "15-09-our-lady-sorrows",
+      "sha256": "36a817502d4e12dd1d435cb9dc3b079d67b87ea4bacacf4bffe73f288c08c648"
+    },
+    {
+      "file": "patchs/feasts/15-10-sv-teresa-of-jesus.json",
+      "collection": "days",
+      "id": "15-10-sv-teresa-of-jesus",
+      "sha256": "e41323b149d7bfdb469554114759cb93597b7f66dfbb269966774147916a3b1a"
+    },
+    {
+      "file": "patchs/feasts/15-11-sv-albert-great.json",
+      "collection": "days",
+      "id": "15-11-sv-albert-great",
+      "sha256": "0bcf18122ad7b618b2e88f3b71e66b5e082a18bdbc26488f1e5e17c6e09e77d5"
+    },
+    {
+      "file": "patchs/feasts/16-03-minsk-mohilev-cathedral-dedication.json",
+      "collection": "days",
+      "id": "16-03-minsk-mohilev-cathedral-dedication",
+      "sha256": "9f30cff115f4706b99362c31e63372e8f261dd807c74704057065af83a6dd9e6"
+    },
+    {
+      "file": "patchs/feasts/16-05-sv-andrei-bobola-minsk-mohilev.json",
+      "collection": "days",
+      "id": "16-05-sv-andrei-bobola-minsk-mohilev",
+      "sha256": "ccf4806fc4fb1f80565cc27d7f383a2c7e95a68ab29671f05fb82255bf77912d"
+    },
+    {
+      "file": "patchs/feasts/16-05-sv-andrei-bobola-pinsk.json",
+      "collection": "days",
+      "id": "16-05-sv-andrei-bobola-pinsk",
+      "sha256": "545819e8124074001a49bcf00738f7d8fcd5c24210fed625f7503c6c13c8b410"
+    },
+    {
+      "file": "patchs/feasts/16-05-sv-andrei-bobola.json",
+      "collection": "days",
+      "id": "16-05-sv-andrei-bobola",
+      "sha256": "8cf1891b80e8954cbfcb86df0973e20fa8a35bee0da0a25e33595a83e8194c1a"
+    },
+    {
+      "file": "patchs/feasts/16-07-our-lady-mount-carmel.json",
+      "collection": "days",
+      "id": "16-07-our-lady-mount-carmel",
+      "sha256": "83fb857c36865e51c288e1f58092f841a2c4527e1c8b6d3a5c941403bba02300"
+    },
+    {
+      "file": "patchs/feasts/16-08-sv-stephen-hungary.json",
+      "collection": "days",
+      "id": "16-08-sv-stephen-hungary",
+      "sha256": "62bb28638c339e62db00d0d4c17d199b453805566831912acc3e6d3dd29da71f"
+    },
+    {
+      "file": "patchs/feasts/16-09-sv-cornelius-cyprian.json",
+      "collection": "days",
+      "id": "16-09-sv-cornelius-cyprian",
+      "sha256": "5b48444d543634ea83b631ff3ac3276e0cfb8bd4af64d291c89792009eafdb77"
+    },
+    {
+      "file": "patchs/feasts/16-10-sv-hedwig.json",
+      "collection": "days",
+      "id": "16-10-sv-hedwig",
+      "sha256": "7e68df82d0c7e4d0dfc6b57149e38603d1587bad7d647bc682e6bff9af87168b"
+    },
+    {
+      "file": "patchs/feasts/16-10-sv-margaret-mary-alacoque.json",
+      "collection": "days",
+      "id": "16-10-sv-margaret-mary-alacoque",
+      "sha256": "8183716ddf0080048c6146a88e1d73c638293100b82bfbdf44d00f4cb642c090"
+    },
+    {
+      "file": "patchs/feasts/16-11-our-lady-mother-mercy-grodno.json",
+      "collection": "days",
+      "id": "16-11-our-lady-mother-mercy-grodno",
+      "sha256": "9700c1c90c45ae042becd5ce14379203b9519efedfef1b03d2ac74ff375e0ae7"
+    },
+    {
+      "file": "patchs/feasts/16-11-our-lady-mother-mercy-minsk-mohilev-pinsk.json",
+      "collection": "days",
+      "id": "16-11-our-lady-mother-mercy-minsk-mohilev-pinsk",
+      "sha256": "6d2321129a5047077c322905e41f19a64cca11d6fcec7e2dc489fe74ebe5f232"
+    },
+    {
+      "file": "patchs/feasts/16-11-our-lady-mother-mercy.json",
+      "collection": "days",
+      "id": "16-11-our-lady-mother-mercy",
+      "sha256": "2d7084b1c5021e6a861adb5141d793e4ed9860de59cf32199981619dd8e1b0dd"
+    },
+    {
+      "file": "patchs/feasts/16-11-sv-gertrude.json",
+      "collection": "days",
+      "id": "16-11-sv-gertrude",
+      "sha256": "8d2b91dc57224c43d80938326f604f8dd17da42b86c60bb972ea86006c25070c"
+    },
+    {
+      "file": "patchs/feasts/16-11-sv-margaret-scotland.json",
+      "collection": "days",
+      "id": "16-11-sv-margaret-scotland",
+      "sha256": "824526aceaea462b8c9f31ec31217f69df2d828a4796abb77d17c90fb9455f51"
+    },
+    {
+      "file": "patchs/feasts/17-01-sv-antoni.json",
+      "collection": "days",
+      "id": "17-01-sv-antoni",
+      "sha256": "a85fc6b0761597ba409d2f55fb4dd5fdf6ee52cf6ad28bf9c88dee413c7cec52"
+    },
+    {
+      "file": "patchs/feasts/17-02-seven-servite-founders.json",
+      "collection": "days",
+      "id": "17-02-seven-servite-founders",
+      "sha256": "ce7e3082eaa86109b1c180fb314de4c28b938dd61d296c5a9ba7d5f3d3348022"
+    },
+    {
+      "file": "patchs/feasts/17-03-sv-patryk.json",
+      "collection": "days",
+      "id": "17-03-sv-patryk",
+      "sha256": "6dbacde4eb80a88c4ece7d28b1a53660cf552e729cfcdc49abaf50069c605281"
+    },
+    {
+      "file": "patchs/feasts/17-09-sv-robert-bellarmine.json",
+      "collection": "days",
+      "id": "17-09-sv-robert-bellarmine",
+      "sha256": "201027d7772aff92a46d3a1c6053d6d73dc098b3d818295c11e50feab4b2099a"
+    },
+    {
+      "file": "patchs/feasts/17-10-sv-ignatius-antioch.json",
+      "collection": "days",
+      "id": "17-10-sv-ignatius-antioch",
+      "sha256": "4542debd857f252bee83511807bdd753d61c4d07726c6089219a023e49b683fe"
+    },
+    {
+      "file": "patchs/feasts/17-11-sv-elizabeth-hungary.json",
+      "collection": "days",
+      "id": "17-11-sv-elizabeth-hungary",
+      "sha256": "37f70bd3e1af1c5fab0ed26b9d20ec224657cb28dd4e956d1c843267071889d7"
+    },
+    {
+      "file": "patchs/feasts/18-03-sv-cyril-jerusalem.json",
+      "collection": "days",
+      "id": "18-03-sv-cyril-jerusalem",
+      "sha256": "129415fced7a361f229a8fa6d0cb43e96e073755e8ebd67faf54e424ee5ff7e1"
+    },
+    {
+      "file": "patchs/feasts/18-05-sv-john-i.json",
+      "collection": "days",
+      "id": "18-05-sv-john-i",
+      "sha256": "31ef8104ecc4c69ab4de5f3e5f75b7361090b8febe338a81a9d07d4fc67c7d8e"
+    },
+    {
+      "file": "patchs/feasts/18-09-sv-stanislaus-kostka.json",
+      "collection": "days",
+      "id": "18-09-sv-stanislaus-kostka",
+      "sha256": "95be65ef43c5264818aa3d5f7b325a2f71711fbed42939f892569e610439608d"
+    },
+    {
+      "file": "patchs/feasts/18-10-sv-luke-evangelist.json",
+      "collection": "days",
+      "id": "18-10-sv-luke-evangelist",
+      "sha256": "fe233bb764556e21884fdf8cc42100a8ea2fd2e8f4996d18d31d74948670585f"
+    },
+    {
+      "file": "patchs/feasts/18-11-dedication-basilicas-peter-paul.json",
+      "collection": "days",
+      "id": "18-11-dedication-basilicas-peter-paul",
+      "sha256": "01b9cf9fa992a3d89a566c2f8187bf014e59930d70b47149eb1eda7126186ac4"
+    },
+    {
+      "file": "patchs/feasts/19-06-sv-romuald.json",
+      "collection": "days",
+      "id": "19-06-sv-romuald",
+      "sha256": "659ee1e4f2fd043fd451b8229a794014ad610fb67bf1eeb80cf3cfd142e5b3d1"
+    },
+    {
+      "file": "patchs/feasts/19-08-sv-john-eudes.json",
+      "collection": "days",
+      "id": "19-08-sv-john-eudes",
+      "sha256": "f195ec8f9712f87c1c703ee77d2b961ec515f4c9b3bcf9f7f3eeed52a9df2022"
+    },
+    {
+      "file": "patchs/feasts/19-09-sv-januarius.json",
+      "collection": "days",
+      "id": "19-09-sv-januarius",
+      "sha256": "fe7933e5d7c173322571dcbdce231910570522749688cc30aea2d054ceaee6c2"
+    },
+    {
+      "file": "patchs/feasts/19-10-sv-jean-brebeuf-isaac-jogues-companions.json",
+      "collection": "days",
+      "id": "19-10-sv-jean-brebeuf-isaac-jogues-companions",
+      "sha256": "01a85a8103a8d203d6024eb82c2c2ec2e108181e4e49ea8db7e5d2c1ca1d4fda"
+    },
+    {
+      "file": "patchs/feasts/19-10-sv-paul-of-cross.json",
+      "collection": "days",
+      "id": "19-10-sv-paul-of-cross",
+      "sha256": "12146dbad25b175af5e3ac42d843bff78cc6d06bdc8e73f4ab44302c98f2d8c6"
+    },
+    {
+      "file": "patchs/feasts/20-01-sv-fabian.json",
+      "collection": "days",
+      "id": "20-01-sv-fabian",
+      "sha256": "ecf2aefd7a654e595d777ffeb9cac345485bb0cbb18f651d68de8de9f92c19b5"
+    },
+    {
+      "file": "patchs/feasts/20-01-sv-sebastian.json",
+      "collection": "days",
+      "id": "20-01-sv-sebastian",
+      "sha256": "b41341b58143abf24bcf260b9a10cb4847e8ea0a7fbf32a3f496d2890ff4642f"
+    },
+    {
+      "file": "patchs/feasts/20-05-sv-bernardine-of-siena.json",
+      "collection": "days",
+      "id": "20-05-sv-bernardine-of-siena",
+      "sha256": "2ba9a00bd495ef1014940afb6af18ed6bceca0935ff3b611ce0e08ef4361a2da"
+    },
+    {
+      "file": "patchs/feasts/20-07-sv-apollinaris.json",
+      "collection": "days",
+      "id": "20-07-sv-apollinaris",
+      "sha256": "dfa042ffe801cf870dd71a33ded407aea21488924a37ad10696cb7347b779bd5"
+    },
+    {
+      "file": "patchs/feasts/20-08-sv-bernard.json",
+      "collection": "days",
+      "id": "20-08-sv-bernard",
+      "sha256": "69ab1c5c68f1d1a525a76646846c1b91dea770a519f3b2c1e968647cf0c685df"
+    },
+    {
+      "file": "patchs/feasts/20-09-sv-andrew-kim-paul-chong-companions.json",
+      "collection": "days",
+      "id": "20-09-sv-andrew-kim-paul-chong-companions",
+      "sha256": "d369c0e93150d0c1736f940424f0cc50cc2168312a3fed7769e8f1e4808bc7e4"
+    },
+    {
+      "file": "patchs/feasts/20-09-sv-andrew-kim-taegon-paul-chong-hasang-companions.json",
+      "collection": "days",
+      "id": "20-09-sv-andrew-kim-taegon-paul-chong-hasang-companions",
+      "sha256": "8c0c5c02757b77c7fa11caf6c4c37d29fa6edea9cc436b01f0b4219e2d7c348e"
+    },
+    {
+      "file": "patchs/feasts/20-11-sv-raphael-kalinowski.json",
+      "collection": "days",
+      "id": "20-11-sv-raphael-kalinowski",
+      "sha256": "acc6f1110b0847a2521b1392122692d7a5ddb7a800e161401d0cb992fd2899bf"
+    },
+    {
+      "file": "patchs/feasts/21-01-sv-agnes.json",
+      "collection": "days",
+      "id": "21-01-sv-agnes",
+      "sha256": "63c9a9fa008fd112a39e56e5e6a80e52352cbc631d406184e7865069f4e7115e"
+    },
+    {
+      "file": "patchs/feasts/21-02-sv-peter-damian.json",
+      "collection": "days",
+      "id": "21-02-sv-peter-damian",
+      "sha256": "f721aaad2d303f7a5d25b26711661abaa10be8d4bf2875f6311204dc9fbb78f0"
+    },
+    {
+      "file": "patchs/feasts/21-04-sv-anselm.json",
+      "collection": "days",
+      "id": "21-04-sv-anselm",
+      "sha256": "8325895510c1cd5528e046cc64e9c24557040463aba926897b9919db7e29ec48"
+    },
+    {
+      "file": "patchs/feasts/21-05-sv-christopher-magallanes-companions.json",
+      "collection": "days",
+      "id": "21-05-sv-christopher-magallanes-companions",
+      "sha256": "9947e40b69de4faf543eefb1093144f14305de58526486682965657ffe7837fb"
+    },
+    {
+      "file": "patchs/feasts/21-06-sv-aloysius-gonzaga.json",
+      "collection": "days",
+      "id": "21-06-sv-aloysius-gonzaga",
+      "sha256": "7580aabf61d8c8a1518a85272c08028013626abfdf158443b411a29d8de1fec3"
+    },
+    {
+      "file": "patchs/feasts/21-07-sv-lawrence-brindisi.json",
+      "collection": "days",
+      "id": "21-07-sv-lawrence-brindisi",
+      "sha256": "7803da023bb2bb1d17117cb91957e2913f0b279e1a1ceeffc69833805e9cf0f9"
+    },
+    {
+      "file": "patchs/feasts/21-08-sv-pius-x.json",
+      "collection": "days",
+      "id": "21-08-sv-pius-x",
+      "sha256": "5dcb66f20c7f3d7162665e8876a00502fddf85837fbd4f6b6128947dcd08bbbc"
+    },
+    {
+      "file": "patchs/feasts/21-09-sv-matthew.json",
+      "collection": "days",
+      "id": "21-09-sv-matthew",
+      "sha256": "ca379ccb8d2bcfc217b6e7f9a87a626845ad6d4832345597f49e74591c401f44"
+    },
+    {
+      "file": "patchs/feasts/21-11-presentation-blessed-virgin-mary.json",
+      "collection": "days",
+      "id": "21-11-presentation-blessed-virgin-mary",
+      "sha256": "d4adcfa2473795b95b4ccced7934ea0f743732b386f14fe4ee146f2d6e4044dd"
+    },
+    {
+      "file": "patchs/feasts/21-12-sv-peter-canisius.json",
+      "collection": "days",
+      "id": "21-12-sv-peter-canisius",
+      "sha256": "52a92b752adf9bf958ce0c4a0defb1d44495e2f2efb0a44c3f3d9bcc9677a341"
+    },
+    {
+      "file": "patchs/feasts/22-01-sv-vincent.json",
+      "collection": "days",
+      "id": "22-01-sv-vincent",
+      "sha256": "de9d4a12cb8d59ace48dffa561d09a3a1641929e750e31dd1c0b60c9681db1c1"
+    },
+    {
+      "file": "patchs/feasts/22-02-chair-of-saint-peter.json",
+      "collection": "days",
+      "id": "22-02-chair-of-saint-peter",
+      "sha256": "e04ab1aecd66a11938070b04a6bf75039c3886d6b63354e51ce75e6325395f6a"
+    },
+    {
+      "file": "patchs/feasts/22-05-sv-rita-cascia.json",
+      "collection": "days",
+      "id": "22-05-sv-rita-cascia",
+      "sha256": "2efcd047b3de726a6610d62d9307e7909b22e8d2f4b9e2e121532af439445c2c"
+    },
+    {
+      "file": "patchs/feasts/22-06-sv-john-fisher-thomas-more.json",
+      "collection": "days",
+      "id": "22-06-sv-john-fisher-thomas-more",
+      "sha256": "4d2374d6a5036e1bbc4a5872aadc4dc312d3e2b2228f4735611572a8baf8a24b"
+    },
+    {
+      "file": "patchs/feasts/22-06-sv-paulinus-nola.json",
+      "collection": "days",
+      "id": "22-06-sv-paulinus-nola",
+      "sha256": "21c97d126994de15ceb0b04c4c502e66a5e9f40fc9f913d6827a4020748b4636"
+    },
+    {
+      "file": "patchs/feasts/22-07-sv-mary-magdalene.json",
+      "collection": "days",
+      "id": "22-07-sv-mary-magdalene",
+      "sha256": "5907eca885129de96266a1eccae3487410e267e1165d7dd4122fac5457c0606a"
+    },
+    {
+      "file": "patchs/feasts/22-08-our-lady-queen.json",
+      "collection": "days",
+      "id": "22-08-our-lady-queen",
+      "sha256": "ad5f6145d0882e2ead2f9d38ee4eb43758c854467e7f6e3b508f93b33a7d3828"
+    },
+    {
+      "file": "patchs/feasts/22-10-sv-john-paul-ii.json",
+      "collection": "days",
+      "id": "22-10-sv-john-paul-ii",
+      "sha256": "83bce52e2c8750a858305c792f4b50b0b5712d513a65a542f227c271b949efa0"
+    },
+    {
+      "file": "patchs/feasts/22-11-sv-cecilia.json",
+      "collection": "days",
+      "id": "22-11-sv-cecilia",
+      "sha256": "800f68bc8b7d6776eb2c0d91a357bc0360b080123b6b015fe481fae455fe75b6"
+    },
+    {
+      "file": "patchs/feasts/23-02-sv-polycarp.json",
+      "collection": "days",
+      "id": "23-02-sv-polycarp",
+      "sha256": "9caf42b8f3c0cf3e675c9f4f10a9ea30690f1e6311613a1570c0d15cea5d29c4"
+    },
+    {
+      "file": "patchs/feasts/23-03-sv-turybius-mongrovejo.json",
+      "collection": "days",
+      "id": "23-03-sv-turybius-mongrovejo",
+      "sha256": "f4c13ae7233fd9d8016f72111fc5778b775fe68cf226abe0913fd6046720b027"
+    },
+    {
+      "file": "patchs/feasts/23-04-sv-adalbert-wojciech-bishop-martyr.json",
+      "collection": "days",
+      "id": "23-04-sv-adalbert-wojciech-bishop-martyr",
+      "sha256": "e327763f95b626552344fcf03fba9a1fa3bd0753ed4cd0ba74c881ed5eb192fc"
+    },
+    {
+      "file": "patchs/feasts/23-04-sv-george-martyr.json",
+      "collection": "days",
+      "id": "23-04-sv-george-martyr",
+      "sha256": "76ab153edf4c078ff4536443cb7341fa022f8fc86da294139ecedda6f0e19f46"
+    },
+    {
+      "file": "patchs/feasts/23-07-sv-bridget.json",
+      "collection": "days",
+      "id": "23-07-sv-bridget",
+      "sha256": "4c3c9a1ce00db597860995ae119da39ed7c2baad8728634e7cc7e95235432384"
+    },
+    {
+      "file": "patchs/feasts/23-08-sv-rose-of-lima.json",
+      "collection": "days",
+      "id": "23-08-sv-rose-of-lima",
+      "sha256": "112a437f1bdff37d0fd91096b66b104e75cb9c598d533566b3fc1d8be5ba94ed"
+    },
+    {
+      "file": "patchs/feasts/23-09-sv-pio-pietrelcina.json",
+      "collection": "days",
+      "id": "23-09-sv-pio-pietrelcina",
+      "sha256": "f897b19c8d1ab8ac94ba56715bf33ecc9aee089c4bbf400a61e3fd322e76fd4e"
+    },
+    {
+      "file": "patchs/feasts/23-10-sv-john-capistrano.json",
+      "collection": "days",
+      "id": "23-10-sv-john-capistrano",
+      "sha256": "ef242bd755d0bdda9b80709bf8b5d58097dce6a31a942a1868f0b8095d855109"
+    },
+    {
+      "file": "patchs/feasts/23-11-sv-clement-i.json",
+      "collection": "days",
+      "id": "23-11-sv-clement-i",
+      "sha256": "4e920de3a706c39c2bcfabff991af9e6cabe3a589f4b6fece4dbf428dcd765b8"
+    },
+    {
+      "file": "patchs/feasts/23-11-sv-columban.json",
+      "collection": "days",
+      "id": "23-11-sv-columban",
+      "sha256": "41ed9e072b22c6432e0cbb6d6c0b28cb559a7ee1fd1ccafaa44730ea5d6daaa6"
+    },
+    {
+      "file": "patchs/feasts/23-12-sv-john-kenty.json",
+      "collection": "days",
+      "id": "23-12-sv-john-kenty",
+      "sha256": "a7147ab1dd0b6f00cf42681eae844661dac87b0fdd00de7e6b3c9bf44c030a5d"
+    },
+    {
+      "file": "patchs/feasts/24-01-sv-francis-de-sales.json",
+      "collection": "days",
+      "id": "24-01-sv-francis-de-sales",
+      "sha256": "c341d6034cec85492a5719906ffd293fb7c969b3c59abcdccbdbb1a548412604"
+    },
+    {
+      "file": "patchs/feasts/24-04-sv-fidel-sigmaringen.json",
+      "collection": "days",
+      "id": "24-04-sv-fidel-sigmaringen",
+      "sha256": "3e71810f3164835c15864745fc3501ccb038476aee63dfc814a62fcd527c8b4f"
+    },
+    {
+      "file": "patchs/feasts/24-07-sv-charbel-makhlouf.json",
+      "collection": "days",
+      "id": "24-07-sv-charbel-makhlouf",
+      "sha256": "1093df5dcbb98bf4edacf9afd917e2cc8ac260734b9f47a2395dcbc3811079ab"
+    },
+    {
+      "file": "patchs/feasts/24-08-sv-bartholomew.json",
+      "collection": "days",
+      "id": "24-08-sv-bartholomew",
+      "sha256": "ee8dc7af42b02127d4a987dae496fdbf287c1d03dae70756addf92bc3a9539aa"
+    },
+    {
+      "file": "patchs/feasts/24-10-sv-anthony-mary-claret.json",
+      "collection": "days",
+      "id": "24-10-sv-anthony-mary-claret",
+      "sha256": "4c1aa6a70bb8d6fb54ca86f8e3c05ae74d4fecbc7839c85ebfa9c1bb597b6624"
+    },
+    {
+      "file": "patchs/feasts/24-11-sv-andrew-dung-lac-companions.json",
+      "collection": "days",
+      "id": "24-11-sv-andrew-dung-lac-companions",
+      "sha256": "b2ddd496f1e3aa79b3508fd265c35ab687e9023f702dbbf77398c1179cfc8cde"
+    },
+    {
+      "file": "patchs/feasts/25-01-conversion-saint-paul.json",
+      "collection": "days",
+      "id": "25-01-conversion-saint-paul",
+      "sha256": "45d49fb5e7e541da71c9662eab7592f32c4cb9f24379ef40e3dc5d996fb99851"
+    },
+    {
+      "file": "patchs/feasts/25-05-sv-bede.json",
+      "collection": "days",
+      "id": "25-05-sv-bede",
+      "sha256": "2e274e3a379c9c3a23cdb30e21ff0c4fb9e2a0f16135dce9dd134f9ee8c63e3e"
+    },
+    {
+      "file": "patchs/feasts/25-05-sv-gregory-vii.json",
+      "collection": "days",
+      "id": "25-05-sv-gregory-vii",
+      "sha256": "8ee048e4a823b10f50622767ee6cb6a16b300c25b4cbf4a624dda9f738fedb47"
+    },
+    {
+      "file": "patchs/feasts/25-05-sv-maria-magdalena-de-pazzi.json",
+      "collection": "days",
+      "id": "25-05-sv-maria-magdalena-de-pazzi",
+      "sha256": "a945e846238991cdd6596f8cbd561ff0d90d54bb800bbf99fe70d65a9ab8227e"
+    },
+    {
+      "file": "patchs/feasts/25-07-sv-james-apostle.json",
+      "collection": "days",
+      "id": "25-07-sv-james-apostle",
+      "sha256": "1d940a3a422d4c9bed9b5dae3eb3cec9ca9c06b41972667a9a97cef68be3857e"
+    },
+    {
+      "file": "patchs/feasts/25-08-sv-joseph-calasanz.json",
+      "collection": "days",
+      "id": "25-08-sv-joseph-calasanz",
+      "sha256": "244848abeb7de8fd81e51874a2df3e696a68e8f37702b37936b335c547f5005d"
+    },
+    {
+      "file": "patchs/feasts/25-08-sv-louis.json",
+      "collection": "days",
+      "id": "25-08-sv-louis",
+      "sha256": "b657b8dc24a4cc4e27469b24f5752ec0b1cb6ebf7deced133ce2a3dd00dfffe7"
+    },
+    {
+      "file": "patchs/feasts/25-11-sv-catherine-alexandria.json",
+      "collection": "days",
+      "id": "25-11-sv-catherine-alexandria",
+      "sha256": "18ff77a308a79101f29fbaf964c52686f9e77358879ab1db01d8188ee2b84e1d"
+    },
+    {
+      "file": "patchs/feasts/26-01-sv-timothy-titus.json",
+      "collection": "days",
+      "id": "26-01-sv-timothy-titus",
+      "sha256": "5023c77ee3b3667b5a134bc83f55af9035a4892fe910a4de965183f9d35154d6"
+    },
+    {
+      "file": "patchs/feasts/26-05-sv-philip-neri.json",
+      "collection": "days",
+      "id": "26-05-sv-philip-neri",
+      "sha256": "03e0f46359aad78e5631f20796e8d1e76c48c36bddc1c1df1e23361d4fefadaa"
+    },
+    {
+      "file": "patchs/feasts/26-07-sv-joachim-anne.json",
+      "collection": "days",
+      "id": "26-07-sv-joachim-anne",
+      "sha256": "4e03239db0d52050ed403772221e4fb2687ee08353c104758ae27293884ec07a"
+    },
+    {
+      "file": "patchs/feasts/26-08-our-lady-czestochowa.json",
+      "collection": "days",
+      "id": "26-08-our-lady-czestochowa",
+      "sha256": "a37003b69c3d79df04d733ffb25d20d80f5f6ea41adee56a86324bed6d3fcd89"
+    },
+    {
+      "file": "patchs/feasts/26-09-sv-cosmas-damian.json",
+      "collection": "days",
+      "id": "26-09-sv-cosmas-damian",
+      "sha256": "ed622bc182ea969690685477d2ab733a3fb9b3aa7c90dfee8c1c07fb15eb9337"
+    },
+    {
+      "file": "patchs/feasts/26-10-bl-celina-borzecka-grodno.json",
+      "collection": "days",
+      "id": "26-10-bl-celina-borzecka-grodno",
+      "sha256": "408c4e7574d7ba4b377743423e5e0a34454fa1e6d2b9253898bc738017652cf5"
+    },
+    {
+      "file": "patchs/feasts/26-12-sv-stephen-protomartyr.json",
+      "collection": "days",
+      "id": "26-12-sv-stephen-protomartyr",
+      "sha256": "a6121292f10244431dcaaa4aca758dcc2959cffa1e7637b6153264d06395f3f1"
+    },
+    {
+      "file": "patchs/feasts/27-01-bl-jurgis-matulaitis-vitebsk.json",
+      "collection": "days",
+      "id": "27-01-bl-jurgis-matulaitis-vitebsk",
+      "sha256": "1f199a1f339cd9458896e26faa90fbe68c7c489f5d744a50558eef3f17dfda9e"
+    },
+    {
+      "file": "patchs/feasts/27-01-bl-jurgis-matulaitis.json",
+      "collection": "days",
+      "id": "27-01-bl-jurgis-matulaitis",
+      "sha256": "ef0f6fc4261776bf2bce24916b2d686e9e9ac62551188bcd90e23eda1186304c"
+    },
+    {
+      "file": "patchs/feasts/27-01-sv-angela-merici.json",
+      "collection": "days",
+      "id": "27-01-sv-angela-merici",
+      "sha256": "49adf5a84324a559a9c960577b7bb4798603b31fa41b257fe063aef0e1988aae"
+    },
+    {
+      "file": "patchs/feasts/27-05-sv-augustine-of-canterbury.json",
+      "collection": "days",
+      "id": "27-05-sv-augustine-of-canterbury",
+      "sha256": "9ada0c90f60ed19c87af9cf11961354f00687b0a5bec5aa138f6f103a8fe3e62"
+    },
+    {
+      "file": "patchs/feasts/27-06-sv-cyril-alexandrian.json",
+      "collection": "days",
+      "id": "27-06-sv-cyril-alexandrian",
+      "sha256": "a29a63633f96a5c34f8560e33b0c341c2a2d83440942c146b960365233fc5782"
+    },
+    {
+      "file": "patchs/feasts/27-08-sv-monica.json",
+      "collection": "days",
+      "id": "27-08-sv-monica",
+      "sha256": "9cd41a13e4c2e1159beead0b990dab3da4934e162bab1322407bb7b0cfc0e6e3"
+    },
+    {
+      "file": "patchs/feasts/27-09-sv-vincent-de-paul.json",
+      "collection": "days",
+      "id": "27-09-sv-vincent-de-paul",
+      "sha256": "0edd3ce2ff95fa26d256020937315561f6d7dcd10400ffa1b0cd95bfef28e3f1"
+    },
+    {
+      "file": "patchs/feasts/27-12-sv-john-apostle-evangelist.json",
+      "collection": "days",
+      "id": "27-12-sv-john-apostle-evangelist",
+      "sha256": "166a830360cfcf887d5f80e06ec844aa658e1f9d681536a33c2dfc633505f060"
+    },
+    {
+      "file": "patchs/feasts/28-01-sv-thomas-aquinas.json",
+      "collection": "days",
+      "id": "28-01-sv-thomas-aquinas",
+      "sha256": "d45795036166235432c5744df6d42006efa75c889344ba533ab18a102398a77f"
+    },
+    {
+      "file": "patchs/feasts/28-04-sv-louis-marie-grignion-de-montfort.json",
+      "collection": "days",
+      "id": "28-04-sv-louis-marie-grignion-de-montfort",
+      "sha256": "2a59ede82989229ed65d821424c9f730c1656cd3e94f552b50431b08ffb5abca"
+    },
+    {
+      "file": "patchs/feasts/28-04-sv-peter-chanel.json",
+      "collection": "days",
+      "id": "28-04-sv-peter-chanel",
+      "sha256": "482817dea44aa52d28794e391ee36bdfcec123631829f2492df355acc6f7c17f"
+    },
+    {
+      "file": "patchs/feasts/28-06-sv-irenaeus.json",
+      "collection": "days",
+      "id": "28-06-sv-irenaeus",
+      "sha256": "aeef11ebd248b3e2130eb163283b0ba9abbc237df193c6694ea31ed26cd4fbc9"
+    },
+    {
+      "file": "patchs/feasts/28-08-sv-augustine.json",
+      "collection": "days",
+      "id": "28-08-sv-augustine",
+      "sha256": "85150269bc662cf0f92cc1ed3f4614520aca08e5566177add5b588534cf42945"
+    },
+    {
+      "file": "patchs/feasts/28-09-sv-laurence-ruiz-companions.json",
+      "collection": "days",
+      "id": "28-09-sv-laurence-ruiz-companions",
+      "sha256": "a1fd7c04e159d5a99c1632fbd17ae917008514bc051bfee6a0e321fea603cb84"
+    },
+    {
+      "file": "patchs/feasts/28-09-sv-wenceslaus.json",
+      "collection": "days",
+      "id": "28-09-sv-wenceslaus",
+      "sha256": "e2b14c1dc04cd2506661d445f93546181225a65b38783024aa0a06a6fee56491"
+    },
+    {
+      "file": "patchs/feasts/28-10-sv-simon-jude-apostles.json",
+      "collection": "days",
+      "id": "28-10-sv-simon-jude-apostles",
+      "sha256": "7d5d39605912b29ed55f41aedc90095196c39fb42b16a88b48e1bf442939c949"
+    },
+    {
+      "file": "patchs/feasts/28-12-holy-innocents.json",
+      "collection": "days",
+      "id": "28-12-holy-innocents",
+      "sha256": "f125143d561e09943b7545851837c3224b61b4baae4cf2dbc4aa3068964f57cf"
+    },
+    {
+      "file": "patchs/feasts/29-01-bl-boleslawa-lament.json",
+      "collection": "days",
+      "id": "29-01-bl-boleslawa-lament",
+      "sha256": "a82be96471f15f0ba4b171d6129273c1116c9b3c6cdc6d366aea75d163233ab4"
+    },
+    {
+      "file": "patchs/feasts/29-04-sv-catherine-siena.json",
+      "collection": "days",
+      "id": "29-04-sv-catherine-siena",
+      "sha256": "14dab4f355966f057091058923e2b923209ce2a4cb51db25dedad9356b6d88b7"
+    },
+    {
+      "file": "patchs/feasts/29-05-sv-paul-vi.json",
+      "collection": "days",
+      "id": "29-05-sv-paul-vi",
+      "sha256": "b3ed67cb3cda5f08198915924bc8b45acfe31db9eda0cb139fdbab5f535a5519"
+    },
+    {
+      "file": "patchs/feasts/29-07-sv-martha.json",
+      "collection": "days",
+      "id": "29-07-sv-martha",
+      "sha256": "1c9496433427300bf5efa8c31d15e965aa4bdcc541f39d92abf8a6d3436a89b5"
+    },
+    {
+      "file": "patchs/feasts/29-08-beheading-john-baptist.json",
+      "collection": "days",
+      "id": "29-08-beheading-john-baptist",
+      "sha256": "db652356978ffdfbf8ebd79251f78fe65266ca9773a2e40351fd4fc4194d6609"
+    },
+    {
+      "file": "patchs/feasts/29-09-archangels-michael-gabriel-raphael.json",
+      "collection": "days",
+      "id": "29-09-archangels-michael-gabriel-raphael",
+      "sha256": "35ec1eaeb6360ee0105b26b63fbdc349b81cb602bb67e768cba38bd68a468297"
+    },
+    {
+      "file": "patchs/feasts/29-12-sv-thomas-becket.json",
+      "collection": "days",
+      "id": "29-12-sv-thomas-becket",
+      "sha256": "bdf8bc9cdac588ec5cddcfb3ef74eaa382182ce7bac20df6b37570d94af8abd4"
+    },
+    {
+      "file": "patchs/feasts/30-04-sv-pius-v-pope.json",
+      "collection": "days",
+      "id": "30-04-sv-pius-v-pope",
+      "sha256": "ab272cccdfb8720e26dc5b75be9ed581d603b95c8e1c4c0813531caafaf7a137"
+    },
+    {
+      "file": "patchs/feasts/30-06-holy-roman-protomartyrs.json",
+      "collection": "days",
+      "id": "30-06-holy-roman-protomartyrs",
+      "sha256": "f40d71c57b0758c96c735e4e18cb86fbc35e55103b22f8e07dd06c6d9ce39c1b"
+    },
+    {
+      "file": "patchs/feasts/30-07-sv-peter-chrysologus.json",
+      "collection": "days",
+      "id": "30-07-sv-peter-chrysologus",
+      "sha256": "999dda887086ef2518914fe57e716e0f6b009d3f827df8c490e53487d320ca3d"
+    },
+    {
+      "file": "patchs/feasts/30-09-sv-jerome.json",
+      "collection": "days",
+      "id": "30-09-sv-jerome",
+      "sha256": "f0e909e57f5884a354282bfb3aabfe0d4b937e042ab5ad0333724052b4ac20ec"
+    },
+    {
+      "file": "patchs/feasts/30-11-sv-andrew-apostle.json",
+      "collection": "days",
+      "id": "30-11-sv-andrew-apostle",
+      "sha256": "a0d06a7b72179ec8d46a6bd8b6a50c5c03a69eed2cf87c0406e8bc5533d7fb9d"
+    },
+    {
+      "file": "patchs/feasts/31-01-sv-john-bosco.json",
+      "collection": "days",
+      "id": "31-01-sv-john-bosco",
+      "sha256": "f806d36d6f4eaec050fb43e6e6995bce02a29a22e65202704f11b63232e9ab0d"
+    },
+    {
+      "file": "patchs/feasts/31-07-sv-ignatius-loyola.json",
+      "collection": "days",
+      "id": "31-07-sv-ignatius-loyola",
+      "sha256": "021923099179c489ac244192ce182a27e8e92a86961e514f1dbdaf34b300571e"
+    },
+    {
+      "file": "patchs/feasts/31-12-sv-sylvester-i.json",
+      "collection": "days",
+      "id": "31-12-sv-sylvester-i",
+      "sha256": "163e2c72623085d881f1625058a8ab6047bd9dc19038cdae9e906de5736c8f8f"
+    },
+    {
+      "file": "patchs/feasts/common-texts/apostles.json",
+      "collection": "liturgicalTemplates",
+      "id": "apostles",
+      "sha256": "8d37d3cd3814752f7c3a4e029dfc53ff05af72b586a97edf4752e197ce1333aa"
+    },
+    {
+      "file": "patchs/feasts/common-texts/blessed-virgin-mary.json",
+      "collection": "liturgicalTemplates",
+      "id": "blessed-virgin-mary",
+      "sha256": "7f4355f39cd902109ad6ee60c34bc60080b335bc2f071ab11f09906a5dc9a001"
+    },
+    {
+      "file": "patchs/feasts/common-texts/church-dedication.json",
+      "collection": "liturgicalTemplates",
+      "id": "church-dedication",
+      "sha256": "96f21724e59ed526c01bca0052e3707d3c7dfbfe76594b386b435a727359c2c2"
+    },
+    {
+      "file": "patchs/feasts/common-texts/doctors-of-church.json",
+      "collection": "liturgicalTemplates",
+      "id": "doctors-of-church",
+      "sha256": "e7c9097f96803f40fc058e4bc0ca739a9f6cce1bb4d1ef7c249011276e26142d"
+    },
+    {
+      "file": "patchs/feasts/common-texts/educators.json",
+      "collection": "liturgicalTemplates",
+      "id": "educators",
+      "sha256": "85ca4040e944d2a0406f99ba09c58d304017d3d295306b925b2301319d7e3b61"
+    },
+    {
+      "file": "patchs/feasts/common-texts/holy-men.json",
+      "collection": "liturgicalTemplates",
+      "id": "holy-men",
+      "sha256": "8ca20bda1e574664c96763ae28742ffd69ee9f3364bf9e91e8803ef830965183"
+    },
+    {
+      "file": "patchs/feasts/common-texts/holy-women.json",
+      "collection": "liturgicalTemplates",
+      "id": "holy-women",
+      "sha256": "d4772ca817dc8f78687c616c897f7c240198d5b5b8a5b414aa7d7c4fad6cc03b"
+    },
+    {
+      "file": "patchs/feasts/common-texts/martyr-one.json",
+      "collection": "liturgicalTemplates",
+      "id": "martyr-one",
+      "sha256": "4ab4e7c7bbcb9ac37d45ab88b159809782344f5ccd2a460df9925aa20c85f5d6"
+    },
+    {
+      "file": "patchs/feasts/common-texts/martyrs-many.json",
+      "collection": "liturgicalTemplates",
+      "id": "martyrs-many",
+      "sha256": "695350a37b26e7a0149fc7afede0aa350e97ea2dd580255b011c74b80ae06578"
+    },
+    {
+      "file": "patchs/feasts/common-texts/office-for-dead.json",
+      "collection": "liturgicalTemplates",
+      "id": "office-for-dead",
+      "sha256": "8c3aa7dfdb482e71db3b5f20c6b3aeac09c1b96f52b850ed59e4741a463a217d"
+    },
+    {
+      "file": "patchs/feasts/common-texts/pastors.json",
+      "collection": "liturgicalTemplates",
+      "id": "pastors",
+      "sha256": "9458569112370dced5e51a1dcfc5a25d0acbd3beb788865d177ce63496f03a8c"
+    },
+    {
+      "file": "patchs/feasts/common-texts/religious.json",
+      "collection": "liturgicalTemplates",
+      "id": "religious",
+      "sha256": "db429c2c0c5b75bf7633b9afa0bc57ed2312fb5398fedc52f265b26b6a1e2086"
+    },
+    {
+      "file": "patchs/feasts/common-texts/virgins.json",
+      "collection": "liturgicalTemplates",
+      "id": "virgins",
+      "sha256": "82da5bacc99b12e83217050116240eb4413944c8df1cd168c4422771b28d4beb"
+    },
+    {
+      "file": "patchs/feasts/common-texts/works-of-mercy.json",
+      "collection": "liturgicalTemplates",
+      "id": "works-of-mercy",
+      "sha256": "44c6db7b9df60cf387bf7c7a6575b1caaba27027f3f3bfce8a6bd5d6ac88835d"
+    },
+    {
+      "file": "patchs/feasts/common-texts/office-for-dead.json",
+      "collection": "days",
+      "id": "office-for-dead",
+      "sha256": "8c3aa7dfdb482e71db3b5f20c6b3aeac09c1b96f52b850ed59e4741a463a217d"
+    }
+  ],
+  "limitations": "Repository fixtures, not a production snapshot. Unrepresented collections are empty. SDK reads use a local fixture adapter; public content IndexedDB and UI remain real. No full prayer corpus or Firestore persistence read timing is represented."
+}

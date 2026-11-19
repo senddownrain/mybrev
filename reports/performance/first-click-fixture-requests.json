@@ -1,0 +1,18 @@
+{
+  "scope": "All local fixture server sessions, including excluded exploratory-clock runs; not primary-series request counts. No Firestore backend was contacted.",
+  "counts": {
+    "prayers": 268,
+    "prayerCategories": 268,
+    "liturgicalCalendarMeta/current": 272,
+    "liturgicalYearOverrides": 271,
+    "days/ordinary-w5-d1": 374,
+    "days": 1150,
+    "days/office-for-dead": 492,
+    "liturgicalProperTexts": 984,
+    "liturgicalTemplates": 289,
+    "days/ordinary-w5-d2": 119,
+    "invitatoriums": 30,
+    "completoriums": 30,
+    "readings": 319
+  }
+}
