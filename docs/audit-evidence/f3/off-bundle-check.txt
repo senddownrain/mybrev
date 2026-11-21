@@ -1,0 +1,10 @@
+# OFF bundle check (npm run build, no QA flags), 5d5e10c
+$ grep -rlE "v2/ingest|analytics_local_v1|analytics_staging|workers\.dev|127\.0\.0\.1:8799|127\.0\.0\.1:8788|__analyticsLocal|stagingTransport" dist
+exit=1 (1 = no matches)
+
+$ ls dist/assets | grep -iE "staging|localAnalytics"
+exit=1
+
+QA bundle for comparison:
+localAnalytics-1_f6ahBc.js
+stagingTransport-BtTZRIPH.js
