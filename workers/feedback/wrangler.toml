@@ -21,5 +21,15 @@ database_name = "mybrev-feedback-staging"
 database_id = "00000000-0000-0000-0000-000000000000"   # placeholder, replace after the owner creates the D1
 migrations_dir = "migrations"
 
+# Approximate per-Cloudflare-location burst protection before D1 access.
+# Pick a unique numeric namespace_id for each deployed environment/account;
+# use a different ID in production. The D1 limits remain enforced as well.
+[[ratelimits]]
+name = "FEEDBACK_EDGE_LIMITER"
+namespace_id = "8295111"
+[ratelimits.simple]
+limit = 10
+period = 10
+
 [triggers]
 crons = ["23 3 * * *"]
