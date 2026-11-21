@@ -63,6 +63,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Shared feedback Worker security, CORS, rate-limit regressions (offline)
+        run: node --test workers/feedback/test/*.test.mjs
+
       - name: Feedback context and footer placement regressions (offline)
         run: node --test tests/feedback-context.test.mjs tests/feedback-footer-placement.test.mjs
 
@@ -155,6 +158,10 @@ jobs:
           distribution: temurin
           java-version: '21'
       - run: npm ci
+      - name: Default-deny Firestore rules, public content and private collections
+        run: >
+          npx --yes firebase-tools@latest emulators:exec --only firestore --project demo-rules
+          "node tests/firestore-rules/rules-emulator.mjs"
       - name: Admin roles, two statuses, source and import integration
         run: >
           npx --yes firebase-tools@latest emulators:exec --only firestore --project demo-rules
