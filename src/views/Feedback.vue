@@ -128,7 +128,14 @@ async function send() {
     body.value = '';
     resetAttempt(attempt);
   } catch (e) {
-    errorText.value = ERRORS[e.status] || (e.code === 'network' || e.status === 0 ? 'Няма сеткі. Тэкст захаваны — націсніце «Паспрабаваць яшчэ раз», калі злучэнне вернецца.' : 'Не атрымалася адправіць. Тэкст захаваны, паспрабуйце яшчэ раз.');
+    // Browser fetch() also throws on CORS failures and blocked API requests,
+    // even while the device is online. Do not misdiagnose these as "no internet".
+    const actuallyOffline = typeof navigator !== 'undefined' && navigator.onLine === false;
+    errorText.value = ERRORS[e.status] || ((e.code === 'network' || e.status === 0)
+      ? (actuallyOffline
+        ? 'Няма сеткі. Тэкст захаваны — націсніце «Паспрабаваць яшчэ раз», калі злучэнне вернецца.'
+        : 'Не ўдалося звязацца з сервісам зваротнай сувязі. Тэкст захаваны — паспрабуйце яшчэ раз пазней.')
+      : 'Не атрымалася адправіць. Тэкст захаваны, паспрабуйце яшчэ раз.');
   } finally { sending.value = false; }
 }
 

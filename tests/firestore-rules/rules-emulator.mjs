@@ -25,6 +25,10 @@ await seed('admins/7mszX2IiXHgjWxj0ZE5vEqdkmoD2', { role: { stringValue: 'supera
 await seed('days/x', { a: { stringValue: '1' } });
 await seed('admins/dbadmin', { email: { stringValue: 'a@b' } });
 await seed('liturgicalTemplates/t', { a: { stringValue: '1' } });
+await seed('liturgicalCalendarMeta/current', { revision: { integerValue: '1' } });
+await seed('bible_bel/gn', { title: { stringValue: 'Genesis' } });
+await seed('futureUserData/record1', { email: { stringValue: 'private@example.test' } });
+await seed('days/x/privateNotes/record1', { note: { stringValue: 'private' } });
 await seed('priestProtectedPrayers/hidden', { priestOnly: { booleanValue: true }, text: { stringValue: 'secret' } });
 await seed('priestProtectedCategories/hidden', { priestOnly: { booleanValue: true } });
 await seed('priestAccess/settings', { codeHash: { stringValue: 'private' } });
@@ -50,6 +54,15 @@ const cases = [
   ['admin cannot bypass grant API writes', () => setDoc(doc(dbAdmin.db, 'priestDeviceGrants/device'), { status: 'active' }), false],
   ['anon cannot list installations', () => getDocs(collection(anon.db, 'priestInstallations')), false],
   ['anon reads days', () => getDoc(doc(anon.db, 'days/x')), true],
+  ['anon reads public Bible collection', () => getDoc(doc(anon.db, 'bible_bel/gn')), true],
+  ['anon reads public Ordo metadata', () => getDoc(doc(anon.db, 'liturgicalCalendarMeta/current')), true],
+  ['anon cannot get a known future private collection', () => getDoc(doc(anon.db, 'futureUserData/record1')), false],
+  ['anon cannot list future private collection', () => getDocs(collection(anon.db, 'futureUserData')), false],
+  ['signed-in nonadmin cannot get future private collection', () => getDoc(doc(user.db, 'futureUserData/record1')), false],
+  ['admin can read a future private collection for maintenance', () => getDoc(doc(dbAdmin.db, 'futureUserData/record1')), true],
+  ['anon cannot read nested private data below public days', () => getDoc(doc(anon.db, 'days/x/privateNotes/record1')), false],
+  ['anon cannot list nested private data below public days', () => getDocs(collection(anon.db, 'days/x/privateNotes')), false],
+  ['anon cannot read a missing future collection document', () => getDoc(doc(anon.db, 'yetUncreated/record1')), false],
   ['anon lists templates', () => getDocs(collection(anon.db, 'liturgicalTemplates')), true],
   ['anon writes days', () => setDoc(doc(anon.db, 'days/x'), { a: 2 }), false],
   ['anon creates prayer', () => setDoc(doc(anon.db, 'prayers/p'), { a: 2 }), false],

@@ -10,7 +10,15 @@ const json = (data, status = 200, extra = {}) => new Response(JSON.stringify(dat
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', ...extra },
 });
 const err = (status, code, extra) => json({ error: code }, status, extra);
-const origins = (env) => String(env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
+// Official production Web hosts stay usable if a deployed ALLOWED_ORIGINS
+// variable was left out or contains an obsolete staging address.
+// Other Web hosts must still be explicitly configured. Origin is NOT auth:
+// Flutter/native HTTP clients may legitimately send no Origin.
+const FIRST_PARTY_WEB_ORIGINS = ['https://malitounik.by', 'https://www.malitounik.by'];
+const origins = (env) => [...new Set([
+  ...FIRST_PARTY_WEB_ORIGINS,
+  ...String(env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean),
+])];
 
 async function sha256Hex(text) {
   const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
@@ -49,6 +57,15 @@ function scope(role, where, args) {
 async function submit(request, env, deps) {
   const db = env.DB;
   if (env.FEEDBACK_ENABLED !== 'true') return err(503, 'disabled', { 'retry-after': '3600' });
+  // Optional Cloudflare edge limiter rejects bursts before request body parsing
+  // or any D1 write. The existing atomic D1 per-minute and daily limits stay
+  // authoritative; the edge check is an additional, approximate per-location cap.
+  if (env.FEEDBACK_EDGE_LIMITER) {
+    const { success } = await env.FEEDBACK_EDGE_LIMITER.limit({
+      key: request.headers.get('cf-connecting-ip') || 'unidentified',
+    });
+    if (!success) return err(429, 'rate_limited', { 'retry-after': '10' });
+  }
   const declared = Number(request.headers.get('content-length') || 0);
   if (declared > MAX_BODY_BYTES) return err(413, 'too_large');
   const text = await request.text();

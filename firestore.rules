@@ -260,10 +260,31 @@ service cloud.firestore {
         'priestAccess', 'priestAccessPublic', 'priestDeviceGrants', 'priestActivationClaims', 'priestContentControl', 'priestContentMigrationBackups',
         'priestInstallations', 'priestActivationAttempts', 'prayerDrafts'];
     }
-    // Overlapping allows are OR, so every private namespace is excluded here.
+    // Only published liturgical/scripture/catalogue data may be read without Auth.
+    // Adding a new collection MUST NOT make it public by default.
+    // "prayers", "prayerCategories", and "priestAccessPublic" have their
+    // own explicit rules above and are deliberately omitted from this list.
+    function publicContentCollection(name) {
+      return name in [
+        'days', 'liturgicalProperTexts', 'readings',
+        'liturgicalTemplates', 'invitatoriums', 'completoriums',
+        'songs', 'bible_bel', 'bible_ru',
+        'compendium', 'compendiumMeta',
+        'liturgicalCalendarMeta', 'liturgicalCelebrations',
+        'liturgicalDioceseOverrides', 'liturgicalYearOverrides',
+        'liturgicalOrdoNotes'
+      ];
+    }
+    // Firestore allows are OR-composed; the catch-all must never overlap
+    // explicitly protected namespaces. Public data only at root document
+    // depth: no accidental exposure of future nested private subcollections.
+    match /{collection}/{document} {
+      allow get, list: if !explicitlyRuled(collection) && publicContentCollection(collection);
+    }
+    // Retain authorized editor access to existing and future non-reserved
+    // content, including subcollections; no anonymous catch-all.
     match /{collection}/{document=**} {
-      allow read: if !explicitlyRuled(collection);
-      allow write: if !explicitlyRuled(collection) && isAdmin();
+      allow read, write: if !explicitlyRuled(collection) && isAdmin();
     }
   }
 }
