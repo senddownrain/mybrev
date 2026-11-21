@@ -185,6 +185,43 @@ test('CORS: allowed origin reflected, others refused; native (no Origin) works',
   assert.equal((await call(ctx, 'GET', '/api/admin/feedback', { token: as(SUPER), headers: { origin: 'https://evil.example' } })).status, 403);
 });
 
+test('production Web origins work even if origin config is stale; unknown origins remain forbidden', async () => {
+  const ctx = setup({ ALLOWED_ORIGINS: 'https://old-staging.example' });
+  for (const origin of ['https://malitounik.by', 'https://www.malitounik.by']) {
+    const r = await call(ctx, 'POST', '/api/feedback', { body: good(), headers: { origin } });
+    assert.equal(r.status, 201);
+    assert.equal(r.headers.get('access-control-allow-origin'), origin);
+    const options = await call(ctx, 'OPTIONS', '/api/feedback', { headers: { origin } });
+    assert.equal(options.status, 204);
+  }
+  const spoofed = await call(ctx, 'POST', '/api/feedback', { body: good(), headers: { origin: 'https://malitounik.by.evil.test' } });
+  assert.equal(spoofed.status, 403);
+  // Native Flutter has no browser Origin header. Never block it for a CORS reason.
+  const native = await call(ctx, 'POST', '/api/feedback', { body: good() });
+  assert.equal(native.status, 201);
+});
+
+test('edge burst limit rejects before any D1 access and does not replace D1 quotas', async () => {
+  const ctx = setup();
+  let calls = 0;
+  const keys = [];
+  ctx.env.FEEDBACK_EDGE_LIMITER = {
+    limit: async ({ key }) => { calls++; keys.push(key); return { success: calls === 1 }; },
+  };
+  const first = await call(ctx, 'POST', '/api/feedback', {
+    body: good(), headers: { 'cf-connecting-ip': '198.51.100.45' },
+  });
+  assert.equal(first.status, 201);
+  const second = await call(ctx, 'POST', '/api/feedback', {
+    body: good(), headers: { 'cf-connecting-ip': '198.51.100.45' },
+  });
+  assert.equal(second.status, 429);
+  assert.equal(second.headers.get('retry-after'), '10');
+  assert.deepEqual(keys, ['198.51.100.45', '198.51.100.45']);
+  assert.equal(ctx.env.DB.raw.prepare('SELECT COUNT(*) AS n FROM feedback').get().n, 1);
+  assert.equal(ctx.env.DB.raw.prepare('SELECT SUM(count) AS n FROM rate_limit').get().n, 2);
+});
+
 test('limits: per-minute 429, daily budget 503, kill switch 503, raw IP never stored', async () => {
   const ctx = setup({ RATE_PER_MINUTE: '2' });
   const post = () => call(ctx, 'POST', '/api/feedback', { body: good(), headers: { 'cf-connecting-ip': '203.0.113.9' } });
