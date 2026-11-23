@@ -27,6 +27,7 @@ await seed('admins/dbadmin', { email: { stringValue: 'a@b' } });
 await seed('liturgicalTemplates/t', { a: { stringValue: '1' } });
 await seed('liturgicalCalendarMeta/current', { revision: { integerValue: '1' } });
 await seed('bible_bel/gn', { title: { stringValue: 'Genesis' } });
+await seed('contentManifest/current', { contentVersion: { integerValue: '1' } });
 await seed('futureUserData/record1', { email: { stringValue: 'private@example.test' } });
 await seed('days/x/privateNotes/record1', { note: { stringValue: 'private' } });
 await seed('priestProtectedPrayers/hidden', { priestOnly: { booleanValue: true }, text: { stringValue: 'secret' } });
@@ -55,6 +56,9 @@ const cases = [
   ['anon cannot list installations', () => getDocs(collection(anon.db, 'priestInstallations')), false],
   ['anon reads days', () => getDoc(doc(anon.db, 'days/x')), true],
   ['anon reads public Bible collection', () => getDoc(doc(anon.db, 'bible_bel/gn')), true],
+  ['anon reads content manifest for Flutter updates', () => getDoc(doc(anon.db, 'contentManifest/current')), true],
+  ['anon cannot write content manifest', () => setDoc(doc(anon.db, 'contentManifest/current'), { contentVersion: 2 }), false],
+  ['signed-in nonadmin cannot write content manifest', () => setDoc(doc(user.db, 'contentManifest/current'), { contentVersion: 2 }), false],
   ['anon reads public Ordo metadata', () => getDoc(doc(anon.db, 'liturgicalCalendarMeta/current')), true],
   ['anon cannot get a known future private collection', () => getDoc(doc(anon.db, 'futureUserData/record1')), false],
   ['anon cannot list future private collection', () => getDocs(collection(anon.db, 'futureUserData')), false],
