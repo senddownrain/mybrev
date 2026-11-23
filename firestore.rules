@@ -272,7 +272,10 @@ service cloud.firestore {
         'compendium', 'compendiumMeta',
         'liturgicalCalendarMeta', 'liturgicalCelebrations',
         'liturgicalDioceseOverrides', 'liturgicalYearOverrides',
-        'liturgicalOrdoNotes'
+        'liturgicalOrdoNotes',
+        // Content update manifests (digests/hashes only, no user data) read by the
+        // Flutter ContentUpdater; writes stay admin-only via the catch-all below.
+        'contentManifest'
       ];
     }
     // Firestore allows are OR-composed; the catch-all must never overlap
