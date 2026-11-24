@@ -41,9 +41,10 @@ export function makeEnv(roles = {}, extra = {}) {
   const DB = createD1();
   const calls = [];
   const fetchImpl = async (url, init) => {
-    calls.push({ url: String(url), auth: init?.headers?.authorization, appCheck: init?.headers?.['X-Firebase-AppCheck'] });
+    calls.push({ url: String(url), auth: init?.headers?.authorization, appCheck: init?.headers?.['X-Firebase-AppCheck'], redirect: init?.redirect });
     const uid = decodeURIComponent(String(url).split('/admins/')[1]);
     const r = roles[uid];
+    if (r === 'REDIRECT') return new Response(null, { status: 302, headers: { location: 'https://redirect.example.test' } });
     if (r === 'ERROR') return new Response('boom', { status: 500 });
     if (r === undefined) return new Response('{}', { status: 404 });
     return new Response(JSON.stringify({ fields: r === 'legacy' ? {} : { role: { stringValue: r } } }), { status: 200 });

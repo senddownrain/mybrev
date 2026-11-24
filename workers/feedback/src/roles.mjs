@@ -15,7 +15,9 @@ export async function firestoreRoleProvider({ uid, idToken, appCheckToken, env, 
   try {
     const headers = { authorization: `Bearer ${idToken}` };
     if (appCheckToken) headers['X-Firebase-AppCheck'] = appCheckToken;
-    const res = await fetchImpl(url, { headers, redirect: 'error' });
+    // Workers supports manual redirects. The status check below rejects them
+    // before either token can be forwarded to a different destination.
+    const res = await fetchImpl(url, { headers, redirect: 'manual' });
     if (res.status === 404) return { ok: true, role: resolveAdminAccess(uid, { exists: false }).role };
     if (!res.ok) return { ok: false };
     const doc = await res.json();

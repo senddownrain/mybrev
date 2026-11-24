@@ -97,8 +97,21 @@ test('admin requests forward App Check alongside the verified ID token and remai
   assert.equal((await call(ctx, 'GET', '/api/admin/me', { headers, token })).status, 200);
   assert.equal(ctx.calls.at(-1).auth, `Bearer ${token}`);
   assert.equal(ctx.calls.at(-1).appCheck, 'test-app-check');
+  assert.equal(ctx.calls.at(-1).redirect, 'manual');
   assert.equal((await call(ctx, 'GET', '/api/admin/me', { token })).status, 200);
   assert.equal(ctx.calls.at(-1).appCheck, undefined);
+});
+
+test('admin role lookup rejects a Firestore redirect', async () => {
+  const ctx = makeEnv({ [ADMIN]: 'REDIRECT' });
+  const res = await call(ctx, 'GET', '/api/admin/me', {
+    token: as(ADMIN),
+    headers: { 'X-Firebase-AppCheck': 'test-app-check' },
+  });
+  assert.equal(res.status, 503);
+  assert.deepEqual(await res.json(), { error: 'role_check_unavailable' });
+  assert.equal(ctx.calls.length, 1);
+  assert.equal(ctx.calls[0].redirect, 'manual');
 });
 
 test('admin sees only content categories: list, count, search, pagination, detail, URL override', async () => {
