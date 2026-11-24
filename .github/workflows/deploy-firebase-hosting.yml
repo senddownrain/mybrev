@@ -114,6 +114,10 @@ jobs:
           # Public URLs (not secrets): feedback Worker API and the superadmin-only link to the analytics reports panel.
           VITE_FEEDBACK_API_URL: https://mybrev-feedback.slovo-app.workers.dev
           VITE_ANALYTICS_REPORTS_URL: https://mybrev-analytics-reports-staging.slovo-app.workers.dev/reports
+          # Owner-controlled Cloudflare Analytics v2 switch; absent/false keeps network collection out of the build.
+          VITE_ANALYTICS_LOCAL: ${{ vars.MYBREV_WEB_ANALYTICS_ENABLED == 'true' && 'true' || 'false' }}
+          VITE_ANALYTICS_STAGING: ${{ vars.MYBREV_WEB_ANALYTICS_ENABLED == 'true' && 'true' || 'false' }}
+          VITE_ANALYTICS_STAGING_URL: https://mybrev-analytics-staging.slovo-app.workers.dev
         run: |
           if [ "$VITE_FIREBASE_PROJECT_ID" != "ibreviaryby" ]; then
             echo "::error::VITE_FIREBASE_PROJECT_ID must match the Hosting target ibreviaryby."
