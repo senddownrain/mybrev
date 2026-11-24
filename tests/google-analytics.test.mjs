@@ -10,11 +10,13 @@ function fixture({ enabled = true, consent = 'granted', supported = true, measur
     enabled,
     readConsent: () => choice,
     origin: () => 'https://example.org',
+    setDisabled: (id, disabled) => calls.push(['disabled', disabled]),
     loadSdk: async () => {
       calls.push(['load']);
       return {
         isSupported: async () => supported,
         setConsent: value => calls.push(['consent', value]),
+        setAnalyticsCollectionEnabled: (analytics, enabled) => calls.push(['collection', enabled]),
         initializeAnalytics: (app, options) => { calls.push(['init', options]); return instance; },
         setDefaultEventParameters: value => calls.push(['defaults', value]),
         logEvent: (...args) => calls.push(['event', ...args]),
@@ -53,7 +55,7 @@ test('opt-in initializes once with generic location and advertising disabled', a
   const { start, calls, instance } = fixture();
   assert.equal(await start(), instance);
   assert.equal(await start(), instance);
-  assert.deepEqual(calls.map(call => call[0]), ['load', 'consent', 'init', 'defaults', 'event']);
+  assert.deepEqual(calls.map(call => call[0]), ['load', 'consent', 'init', 'disabled', 'defaults', 'event']);
   assert.deepEqual(calls[1][1], {
     analytics_storage: 'granted', ad_storage: 'denied',
     ad_user_data: 'denied', ad_personalization: 'denied',
@@ -65,7 +67,23 @@ test('opt-in initializes once with generic location and advertising disabled', a
   assert.equal(config.page_referrer, '');
   assert.equal(config.allow_google_signals, false);
   assert.equal(config.allow_ad_personalization_signals, false);
-  assert.deepEqual(calls[4].slice(2), ['page_view', {
+  assert.deepEqual(calls[5].slice(2), ['page_view', {
     page_location: 'https://example.org/', page_title: 'MyBrev', page_referrer: '',
   }]);
+});
+
+test('revocation disables collection before consent update, re-grant reuses instance', async () => {
+  const f = fixture();
+  await f.start();
+  f.setChoice('denied');
+  f.start.stop();
+  assert.deepEqual(f.calls.slice(-3), [
+    ['disabled', true], ['collection', false],
+    ['consent', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' }],
+  ]);
+  assert.equal(await f.start(), null);
+  f.setChoice('granted');
+  assert.equal(await f.start(), f.instance);
+  assert.equal(f.calls.filter(c => c[0] === 'init').length, 1);
+  assert.deepEqual(f.calls.slice(-2), [['disabled', false], ['collection', true]]);
 });
