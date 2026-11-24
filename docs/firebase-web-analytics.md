@@ -16,8 +16,8 @@ Without both flags the feature stays off. The existing Cloudflare flag is unchan
 
 ## User choice
 
-The non-modal Belarusian prompt and Settings > Статыстыка выкарыстання
-use a shared local choice. No analytics SDK initialization before explicit
+The voluntary Belarusian choice is available only in Settings > Статыстыка выкарыстання.
+There is no startup prompt or overlay. No analytics SDK initialization before explicit
 opt-in. A new v2 localStorage key avoids reusing previous QA-only consent.
 Declining leaves the app usable; revocation disables collection and advertising
 consent, and synchronizes other same-origin open tabs through storage events.
@@ -35,7 +35,8 @@ Use a separate test stream or synthetic test traffic in a local build.
    and advertising personalization off. Review data retention and access.
 3. Build locally with VITE_FIREBASE_ANALYTICS=true and test measurement ID.
 4. In a fresh browser: verify no Analytics SDK/tag/cookies/requests before
-   choice; decline and reload; grant via Settings; confirm Realtime/DebugView.
+   choice; verify no startup prompt, grant via Settings, then revoke and reload;
+   re-grant via Settings and confirm Realtime/DebugView.
 5. Inspect actual requests (including SDK automatic events) on direct links,
    SPA navigation, search, and private routes. No sensitive page title, route,
    referrer, prayer IDs, access code, account ID or search text may be sent.
