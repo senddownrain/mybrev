@@ -4,7 +4,9 @@ import { readFile } from 'node:fs/promises';
 import { createContentCache } from '../src/utils/contentCache.js';
 import { prayerAccessPolicy, permittedPrayerContent } from '../src/utils/priestPolicy.mjs';
 import * as firestoreErrors from '../src/utils/firestoreErrors.mjs';
-const source=(await readFile(new URL('../src/services/prayerContentService.js',import.meta.url),'utf8')).replace(/^import .*;\r?\n/gm,'').replace(/export /g,'');
+const source=(await readFile(new URL('../src/services/prayerContentService.js',import.meta.url),'utf8')).replace(/^import .*;\r?\n/gm,'').replace(/export /g,'')
+ // This harness mocks the development Firestore source without running Vite.
+ .replace('import.meta.env.DEV', 'true');
 const publicPrayer={id:'public',text:'Public prayer',tags:['public'],effectivePriestOnly:false};
 const privatePrayer={id:'private',text:'Protected prayer',tags:['private'],priestOnly:true};
 const category={id:'parent',tags:['private'],priestOnly:false};
