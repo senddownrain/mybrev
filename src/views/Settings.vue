@@ -126,7 +126,7 @@
     </section>
     <PriestAccessSettings />
     <section v-if="googleAnalyticsAvailable" class="settings-section" aria-label="Прыватнасць">
-      <GoogleAnalyticsChoice settings />
+      <GoogleAnalyticsChoice />
     </section>
 
     <section class="settings-section" aria-labelledby="categories-title">
