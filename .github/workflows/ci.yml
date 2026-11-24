@@ -139,7 +139,9 @@ jobs:
         run: npm run test:common-seasons
 
       - name: Analytics tests (contract, collector, mapper, inventory, reader signal)
-        run: npm run test:analytics
+        run: |
+          npm run test:analytics
+          node --test tests/google-analytics.test.mjs
 
       - name: Psalmody doxology audit and regressions (offline)
         run: |
