@@ -63,3 +63,17 @@ if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {
     }))
     .catch(error => console.warn('[main] Local analytics unavailable:', error.message))
 }
+
+// Optional Google Analytics integration, separate from the local analytics experiment.
+// Default-off; no network collection without a recorded explicit opt-in.
+if (import.meta.env.VITE_FIREBASE_ANALYTICS === 'true') {
+  runAfterLoadAndIdle(() => {
+    import('./utils/googleAnalytics.js')
+      .then(({ createGoogleAnalyticsStarter, GOOGLE_ANALYTICS_CONSENT_KEY }) =>
+        createGoogleAnalyticsStarter({
+          enabled: true,
+          readConsent: () => window.localStorage.getItem(GOOGLE_ANALYTICS_CONSENT_KEY),
+        })())
+      .catch(error => console.warn('[main] Google Analytics unavailable:', error.message))
+  }, { delay: 2000 })
+}
