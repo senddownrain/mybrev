@@ -42,7 +42,8 @@ async function authenticate(request, env, deps) {
   const v = await verifyFirebaseIdToken(idToken, env, deps);
   if (!v.ok) return { res: err(401, 'unauthorized') };
   const provider = deps.roleProvider || firestoreRoleProvider;
-  const r = await provider({ uid: v.uid, idToken, env, fetchImpl: deps.fetchImpl || fetch });
+  const appCheckToken = request.headers.get('x-firebase-appcheck');
+  const r = await provider({ uid: v.uid, idToken, appCheckToken, env, fetchImpl: deps.fetchImpl || fetch });
   if (!r.ok) return { res: err(503, 'role_check_unavailable') }; // fail closed
   if (!r.role) return { res: err(403, 'forbidden') };
   return { uid: v.uid, role: r.role };
@@ -222,7 +223,7 @@ export async function handle(request, env, deps = {}) {
 
   if (request.method === 'OPTIONS') {
     if (!origin || !corsOk) return new Response(null, { status: 403 });
-    return wrap(new Response(null, { status: 204, headers: { 'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS', 'access-control-allow-headers': 'authorization, content-type', 'access-control-max-age': '600' } }));
+    return wrap(new Response(null, { status: 204, headers: { 'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS', 'access-control-allow-headers': 'authorization, content-type, x-firebase-appcheck', 'access-control-max-age': '600' } }));
   }
   if (origin && !corsOk) return err(403, 'origin_not_allowed');
   const path = url.pathname.replace(/\/+$/, '');

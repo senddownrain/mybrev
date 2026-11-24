@@ -41,7 +41,7 @@ export function makeEnv(roles = {}, extra = {}) {
   const DB = createD1();
   const calls = [];
   const fetchImpl = async (url, init) => {
-    calls.push({ url: String(url), auth: init?.headers?.authorization });
+    calls.push({ url: String(url), auth: init?.headers?.authorization, appCheck: init?.headers?.['X-Firebase-AppCheck'] });
     const uid = decodeURIComponent(String(url).split('/admins/')[1]);
     const r = roles[uid];
     if (r === 'ERROR') return new Response('boom', { status: 500 });

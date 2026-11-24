@@ -82,6 +82,25 @@ test('role provider fail-closed; unknown role => 403; legacy doc => admin', asyn
   assert.match(ctx.calls.at(-1).auth, /^Bearer [\w-]+\.[\w-]+\.[\w-]*$/); // caller's own verified token, no service key
 });
 
+test('admin requests forward App Check alongside the verified ID token and remain compatible without it', async () => {
+  const ctx = setup();
+  const headers = { origin: 'https://app.example', 'X-Firebase-AppCheck': 'test-app-check' };
+  const preflight = await call(ctx, 'OPTIONS', '/api/admin/me', {
+    headers: { origin: headers.origin, 'access-control-request-headers': 'authorization, x-firebase-appcheck' },
+  });
+  assert.equal(preflight.status, 204);
+  assert.match(preflight.headers.get('access-control-allow-headers'), /\bx-firebase-appcheck\b/);
+
+  assert.equal((await call(ctx, 'GET', '/api/admin/me', { headers })).status, 401);
+  assert.equal(ctx.calls.length, 0);
+  const token = as(ADMIN);
+  assert.equal((await call(ctx, 'GET', '/api/admin/me', { headers, token })).status, 200);
+  assert.equal(ctx.calls.at(-1).auth, `Bearer ${token}`);
+  assert.equal(ctx.calls.at(-1).appCheck, 'test-app-check');
+  assert.equal((await call(ctx, 'GET', '/api/admin/me', { token })).status, 200);
+  assert.equal(ctx.calls.at(-1).appCheck, undefined);
+});
+
 test('admin sees only content categories: list, count, search, pagination, detail, URL override', async () => {
   const ctx = setup(); const ids = await seed(ctx);
   const t = as(ADMIN);
