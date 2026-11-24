@@ -25,6 +25,11 @@ const routes = [
         component: () => import('@/views/Settings.vue'),
       },
       {
+        path: 'privacy/analytics',
+        name: 'AnalyticsPrivacy',
+        component: () => import('@/views/AnalyticsPrivacy.vue'),
+      },
+      {
         path: 'feedback',
         name: 'Feedback',
         component: () => import('@/views/Feedback.vue'),
