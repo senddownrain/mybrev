@@ -49,6 +49,7 @@ export function createGoogleAnalyticsStarter({
         config: { ...parameters, send_page_view: false },
       });
       sdk.setDefaultEventParameters(parameters);
+      sdk.logEvent(analytics, 'page_view', { page_location: parameters.page_location, page_title: parameters.page_title, page_referrer: '' });
       return analytics;
     })().then(result => {
       if (!result) pending = undefined;
