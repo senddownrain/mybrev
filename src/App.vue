@@ -3,13 +3,10 @@
     <component :is="Component" v-if="calendarRestored && Component" />
     <div v-else class="launch-status" role="status">Загрузка…</div>
   </router-view>
-  <GoogleAnalyticsChoice v-if="calendarRestored && googleAnalyticsAvailable" />
 </template>
 
 <script setup>
-import { onMounted, ref, defineAsyncComponent } from 'vue'
-const googleAnalyticsAvailable = import.meta.env.VITE_FIREBASE_ANALYTICS === 'true'
-const GoogleAnalyticsChoice = defineAsyncComponent(() => import('@/components/GoogleAnalyticsChoice.vue'))
+import { onMounted, ref } from 'vue'
 import { initTelegramWebApp } from '@/utils/telegram'
 
 const props = defineProps({ calendarReady: { type: Promise, required: true } })
