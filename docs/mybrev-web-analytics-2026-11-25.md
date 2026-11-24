@@ -33,3 +33,44 @@ ID: `mybrev-web-analytics-2026-11-25`
 5. Проверить реальные закрытые сутки при следующем посещении, HTTP 204, D1 Metrics, агрегированный отчёт с k=5 и отсутствие ошибок основного приложения. Не считать открытия уникальными пользователями.
 
 **На дату подготовки LIVE_RELEASE_CARD не утверждена. Не использовать ID черновика как подтверждение выпуска.**
+
+## 25.11.2026 — подтверждение публикации и ручная проверка Cloudflare
+
+- [CI main](https://github.com/senddownrain/mybrev/actions/runs/45502090963) — success.
+- [Deploy Web to Firebase Hosting после #313](https://github.com/senddownrain/mybrev/actions/runs/45502090943) — success. Сам факт доставки сборки не подтверждает, что analytics flags были true; владелец ранее сообщил о создании переменной, инструкция предусматривала false.
+- Существующий reports UI открылся у владельца в qa, за семь дней данных не было. Прямой доступ к Cloudflare из текущей сессии отсутствует; проверки ниже выполняет владелец.
+- Политика и основание сбора отложены по решению владельца, остаются OPEN. Карточка не утверждена для реального сбора.
+
+### D1: проверка без изменений данных
+
+В Cloudflare → D1 → mybrev-analytics-staging → Console выполнить отдельно:
+
+```sql
+SELECT key, value FROM control WHERE key = 'ingest';
+```
+
+Отсутствие строки или value=on означает, что дополнительный выключатель не блокирует приём. value=off означает, что приём остановлен независимо от master.
+
+```sql
+SELECT COUNT(*) AS cells, COALESCE(SUM(n), 0) AS events
+FROM cell_counts;
+```
+
+```sql
+SELECT day, rows_written, cap FROM daily_budget
+ORDER BY day DESC LIMIT 7;
+```
+
+Проверить в Bindings каждого из двух Workers, что DB указывает на mybrev-analytics-staging. Ничего не удалять из D1. Ненулевые счётчики могут быть исторической синтетикой, не реальными пользователями.
+
+### Проверка HTTP без записи аналитических ячеек (Windows PowerShell)
+
+```powershell
+curl.exe -i -X POST "https://mybrev-analytics-staging.slovo-app.workers.dev/v2/ingest" -H "Origin: https://malitounik.by" -H "Content-Type: application/json" --data "{}"
+```
+
+Пустой объект не является пакетом v2. Ожидается 400/426 при открытом приёме, либо 503 при выключенном приёме (проверить код ответа, исключить storage_unavailable). Не ожидается 204. Заголовок Access-Control-Allow-Origin должен соответствовать запрошенному origin. Повторить для www при необходимости. Это не доказывает успешную запись корректного пакета.
+
+### Синхронизация конфигурации
+
+До утверждения выпуска сохраняем в wrangler.toml безопасный master=false. Фактические origins в Dashboard полностью не видны; не перезаписываем конфиг вслепую, не развёртываем Worker поверх ручных настроек. Reports Worker в репозитории имеет placeholder D1 ID; перед будущим wrangler deploy потребуется сверить фактический binding и Access-параметры. Не менять или раскрывать токены.
