@@ -38,20 +38,26 @@ test('privacy policy describes the actual feedback collection and Cloudflare pro
   assert.match(html, /25 лістапада 2026/);
 });
 
-test('privacy policy describes dormant Web Google Analytics', () => {
+test('privacy policy describes optional Web Google Analytics and withdrawal', () => {
   const html = read('../public/privacy.html');
-  assert.match(html, /Google Analytics for Firebase<\/strong> не актывуецца/);
-  assert.match(html, /спыняе далейшы збор/);
-  assert.match(html, /не выдаляюцца аўтаматычна/);
+  assert.match(html, /Google Analytics for Firebase/);
+  assert.match(html, /толькі пасля вашага добраахвотнага дазволу/);
+  assert.match(html, /href="\/privacy\/analytics"/);
+  assert.match(html, /адкліканне дазволу спыняе далейшы збор/);
+  assert.match(html, /не выдаляе аўтаматычна ўжо сабраныя даныя/);
 });
 
-test('Web has no analytics prompt or settings entry and does not start Analytics', () => {
+test('Web choice is accessible from privacy but not startup or Settings', () => {
   const app = read('../src/App.vue');
   const settings = read('../src/views/Settings.vue');
   const main = read('../src/main.js');
+  const router = read('../src/router/index.js');
   const workflow = read('../.github/workflows/deploy-firebase-hosting.yml');
   assert.doesNotMatch(app, /GoogleAnalyticsChoice/);
   assert.doesNotMatch(settings, /GoogleAnalyticsChoice/);
-  assert.doesNotMatch(main, /initGoogleAnalyticsChoice|import\([^)]*googleAnalytics/);
-  assert.match(workflow, /VITE_FIREBASE_ANALYTICS: 'false'/);
+  assert.match(router, /path: 'privacy\/analytics'/);
+  assert.match(read('../src/views/AnalyticsPrivacy.vue'), /<GoogleAnalyticsChoice/);
+  assert.match(main, /VITE_FIREBASE_ANALYTICS === 'true'/);
+  assert.match(main, /initGoogleAnalyticsChoice/);
+  assert.match(workflow, /vars\.VITE_FIREBASE_ANALYTICS_RELEASE_APPROVED == 'true'/);
 });
