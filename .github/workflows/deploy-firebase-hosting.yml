@@ -114,8 +114,8 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_FIREBASE_APP_CHECK_SITE_KEY: ${{ vars.VITE_FIREBASE_APP_CHECK_SITE_KEY }}
           VITE_FIREBASE_MEASUREMENT_ID: ${{ vars.VITE_FIREBASE_MEASUREMENT_ID }}
-          # Keep real-user collection off until the SDK network privacy QA is approved.
-          VITE_FIREBASE_ANALYTICS: ${{ vars.VITE_FIREBASE_ANALYTICS == 'true' && vars.VITE_FIREBASE_ANALYTICS_RELEASE_APPROVED == 'true' && 'true' || 'false' }}
+          # No user consent interface in this release: keep Firebase Analytics dormant.
+          VITE_FIREBASE_ANALYTICS: 'false'
           VITE_FIREBASE_DATABASE_URL: ${{ secrets.VITE_FIREBASE_DATABASE_URL }}
           VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
           # Public URLs (not secrets): feedback Worker API and the superadmin-only link to the analytics reports panel.
