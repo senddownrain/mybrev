@@ -125,6 +125,9 @@
       </div>
     </section>
     <PriestAccessSettings />
+    <section v-if="googleAnalyticsAvailable" class="settings-section" aria-label="Прыватнасць">
+      <GoogleAnalyticsChoice settings />
+    </section>
 
     <section class="settings-section" aria-labelledby="categories-title">
       <div class="section-heading">
@@ -169,7 +172,9 @@
 import PriestAccessSettings from '@/components/prayers/PriestAccessSettings.vue';
 import TextAlignmentSettings from '@/components/TextAlignmentSettings.vue';
 import PsalmodySettings from '@/components/PsalmodySettings.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, defineAsyncComponent } from 'vue';
+const googleAnalyticsAvailable = import.meta.env.VITE_FIREBASE_ANALYTICS === 'true';
+const GoogleAnalyticsChoice = defineAsyncComponent(() => import('@/components/GoogleAnalyticsChoice.vue'));
 import { PhBookOpen, PhCaretDown, PhCheck, PhFolders, PhMinus, PhPencilSimple, PhPlus, PhSlidersHorizontal, PhTextAa, PhTrash } from '@phosphor-icons/vue';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
