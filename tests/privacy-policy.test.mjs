@@ -35,5 +35,14 @@ test('privacy policy describes the actual feedback collection and Cloudflare pro
   assert.match(html, /180 дзён/);
   assert.match(html, /без адраса пошты/);
   assert.match(html, /Прыкладанні \(скрыншоты, файлы\) форма не прымае/);
-  assert.match(html, /13 лістапада 2026/);
+  assert.match(html, /25 лістапада 2026/);
+});
+
+test('privacy policy describes optional Web Google Analytics and withdrawal', () => {
+  const html = read('../public/privacy.html');
+  assert.match(html, /Google Analytics for Firebase/);
+  assert.match(html, /толькі пасля вашага добраахвотнага дазволу/);
+  assert.match(html, /Налады.*Статыстыка выкарыстання/);
+  assert.match(html, /адкліканне дазволу спыняе далейшы збор/);
+  assert.match(html, /не выдаляе аўтаматычна ўжо сабраныя даныя/);
 });
