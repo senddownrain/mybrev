@@ -64,6 +64,11 @@ if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {
     .catch(error => console.warn('[main] Local analytics unavailable:', error.message))
 }
 
-// Analytics is dormant while no user choice is offered. Clear the old choice
-// so older same-origin tabs receive a storage event and stop their collection.
-try { window.localStorage.removeItem('mybrev_google_analytics_consent_v2') } catch { /* storage unavailable */ }
+// Optional Google Analytics: initialize choice handling after the first render.
+if (import.meta.env.VITE_FIREBASE_ANALYTICS === 'true') {
+  runAfterLoadAndIdle(() => {
+    import('./utils/googleAnalyticsConsent.js')
+      .then(({ initGoogleAnalyticsChoice }) => initGoogleAnalyticsChoice())
+      .catch(error => console.warn('[main] Google Analytics unavailable:', error.message))
+  }, { delay: 2000 })
+}
