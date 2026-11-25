@@ -1,3 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 branding/source/pwa-bookmark.svg text eol=lf
+# The generated source allowlist is checked byte for byte.
+firestore.rules text eol=lf
