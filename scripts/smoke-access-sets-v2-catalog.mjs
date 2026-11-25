@@ -23,9 +23,10 @@ const pendingRequests = new Set();
 try {
   await build({
     configFile: false, publicDir: false, logLevel: 'warn',
+    define: { 'process.env.NODE_ENV': JSON.stringify('production') },
     resolve: { alias: { '@': fileURLToPath(new URL('../src', import.meta.url)) } },
     build: {
-      outDir, minify: false,
+      outDir, minify: false, emptyOutDir: false,
       lib: { entry: fileURLToPath(new URL('../tests/ui/access-sets-catalog-harness.mjs', import.meta.url)),
         formats: ['es'], fileName: () => 'catalog.js', cssFileName: 'catalog' },
     },
@@ -67,7 +68,10 @@ try {
   const privateTitle = page.getByText('Synthetic private title', { exact: true });
   const publicTitle = page.getByText('Synthetic public title', { exact: true });
   await page.goto(`http://127.0.0.1:${server.address().port}/`, { waitUntil: 'commit', timeout: 60_000 });
-  await privateTitle.waitFor({ timeout: 120_000 });
+  await Promise.race([
+    privateTitle.waitFor({ timeout: 120_000 }),
+    page.waitForEvent('pageerror', { timeout: 120_000 }).then((error) => { throw error; }),
+  ]);
   await publicTitle.waitFor();
   const search = page.getByRole('searchbox');
   await search.fill('Synthetic private body');
