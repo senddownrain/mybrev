@@ -1,5 +1,6 @@
 import { collection, doc, getDocFromServer, getDocsFromServer, onSnapshot, runTransaction, serverTimestamp } from 'firebase/firestore';
-import { getPriestEditorDb } from '@/plugins/priestFirebase';
+import { doc as liteDoc, getDoc as getLiteDoc } from 'firebase/firestore/lite';
+import { getPriestEditorDb, getPriestEditorWriteDb } from '@/plugins/priestFirebase';
 import { PRAYER_STORAGE } from '@/utils/prayerStoragePlan.mjs';
 import { createPrayerContentWriter } from '@/utils/prayerContentWriter.mjs';
 import { requestContentRefresh } from '@/utils/publicContentCache';
@@ -9,10 +10,38 @@ import { noteFirestoreError, withFirestoreQuota } from '@/utils/firestoreErrors.
 import { normalizePrayerSource, normalizePrayerSourceFields } from '@/utils/prayerSource.mjs';
 import { prayerAccessPolicy } from '@/utils/priestPolicy.mjs';
 import { assertPrayerSaveConfirmed } from '@/utils/prayerSaveVerification.mjs';
+import { createAccessSetsV2Gateway } from './accessSetsV2Gateway.mjs';
 
 const collectionNames = Object.entries(PRAYER_STORAGE).flat();
+const protectedCollections = new Set(Object.values(PRAYER_STORAGE));
 const rows = (snapshot) => snapshot.docs.map((item) => ({ ...item.data(), id: item.id }));
 const firestoreFns = { doc, collection, getDocFromServer, getDocsFromServer, runTransaction, serverTimestamp };
+
+// S3 injects the approved authenticated transport when its editor is linked.
+// Calls pass plain request data. Firestore mutations stay inside the Callable.
+export function createCanonicalPrayerSaveApi(invoke) {
+  return {
+    preview: (edits) => invoke({ action: 'preview', edits }),
+    save: (edits, preview) => invoke({ action: 'save', edits,
+      expectedVersion: preview.version, planDigest: preview.planDigest }),
+    verify: (preview) => invoke({ action: 'verify', expectedVersion: preview.version + Number(Boolean(preview.writes)),
+      afterDigest: preview.afterDigest }),
+  };
+}
+
+export async function readStoredPrayerForEditor(id) {
+  const db = await getPriestEditorWriteDb();
+  const gateway = createAccessSetsV2Gateway(db);
+  // Legacy Rules deployed before S1 may deny the rollout document. The only
+  // fallback is a separately authorized get on the existing legacy path.
+  const mode = await withFirestoreQuota(() => gateway.readMode()).catch((error) => {
+    if (error?.code === 'permission-denied') return 'legacy';
+    throw error;
+  });
+  if (mode === 'canonical') return withFirestoreQuota(() => gateway.readContent('prayers', id));
+  const snapshot = await withFirestoreQuota(() => getLiteDoc(liteDoc(db, PRAYER_STORAGE.prayers, id)));
+  return snapshot.exists() ? { ...snapshot.data(), id, effectivePriestOnly: true } : null;
+}
 export async function getPrayerContentWriter() {
   const db = await getPriestEditorDb();
   return createPrayerContentWriter({ db, fs: firestoreFns, withQuota: withFirestoreQuota, transact: (dbRef, update) => quotaSafeTransaction(runTransaction, dbRef, update) });
@@ -72,9 +101,14 @@ export function subscribeAdminPrayerContent(callback, onError) {
   if (!pending && !stop) {
     pending = getPriestEditorDb().then((db) => {
       if (!observers.size) return;
+      let active = true;
+      let failed = false;
       const latest = new Map();
-      const unsubscribers = collectionNames.map((name) => onSnapshot(collection(db, name), (snapshot) => {
-        latest.set(name, rows(snapshot));
+      const unsubscribers = collectionNames.map((name) => onSnapshot(collection(db, name), { includeMetadataChanges: true }, (snapshot) => {
+        if (!active || failed || snapshot.metadata.fromCache || snapshot.metadata.hasPendingWrites) return;
+        const items = rows(snapshot);
+        latest.set(name, protectedCollections.has(name)
+          ? items.map((row) => ({ ...row, effectivePriestOnly: true })) : items);
         if (latest.size === collectionNames.length) {
           // Atomic transfers can arrive through separate listeners in either
           // order. Admin-only presentation deduplicates with private priority.
@@ -86,8 +120,21 @@ export function subscribeAdminPrayerContent(callback, onError) {
           lastContent = content;
           for (const item of observers) item.callback(content);
         }
-      }, (error) => { noteFirestoreError(error); for (const item of observers) item.onError?.(error); }));
-      stop = () => { unsubscribers.forEach((unsubscribe) => unsubscribe()); stop = null; lastContent = null; };
+      }, (error) => {
+        if (!active || failed) return;
+        failed = true;
+        latest.clear();
+        lastContent = null;
+        noteFirestoreError(error);
+        for (const item of observers) item.onError?.(error);
+      }));
+      stop = () => {
+        active = false;
+        latest.clear();
+        unsubscribers.forEach((unsubscribe) => unsubscribe());
+        stop = null;
+        lastContent = null;
+      };
     }).catch((error) => { for (const item of observers) item.onError?.(error); }).finally(() => { pending = null; });
   }
   return () => { observers.delete(observer); if (!observers.size) stop?.(); };
