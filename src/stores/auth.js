@@ -17,6 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
   const role = ref(null);
   const isSuperAdmin = ref(false);
   const canManagePriestAccess = ref(false);
+  const canManageAccessSetsV2 = ref(false);
   let authReadyPromise = null;
   let accessCheckId = 0;
 
@@ -25,6 +26,7 @@ export const useAuthStore = defineStore('auth', () => {
     role.value = access.role;
     isSuperAdmin.value = access.isSuperAdmin;
     canManagePriestAccess.value = access.canManagePriestAccess;
+    canManageAccessSetsV2.value = access.canManageAccessSetsV2;
   }
 
   /**
@@ -35,7 +37,11 @@ export const useAuthStore = defineStore('auth', () => {
   async function fetchAccess(uid) {
     try {
       const adminDoc = await getDoc(doc(db, 'admins', uid));
-      return resolveAdminAccess(uid, { exists: adminDoc.exists(), data: adminDoc.exists() ? adminDoc.data() : null });
+      return resolveAdminAccess(uid, {
+        exists: adminDoc.exists(),
+        data: adminDoc.data(),
+        fromCache: adminDoc.metadata.fromCache || adminDoc.metadata.hasPendingWrites,
+      });
     } catch (error) {
       logger.error('[auth] Failed to check admin status in Firestore:', error);
       return resolveAdminAccess(uid, { failed: true });
@@ -112,5 +118,5 @@ export const useAuthStore = defineStore('auth', () => {
     await router.push('/');
   };
 
-  return { user, loading, isAdmin, role, isSuperAdmin, canManagePriestAccess, init, login, logout };
+  return { user, loading, isAdmin, role, isSuperAdmin, canManagePriestAccess, canManageAccessSetsV2, init, login, logout };
 });

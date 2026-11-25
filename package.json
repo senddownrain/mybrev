@@ -37,6 +37,7 @@
     "test:access-sets-v2": "node --test tests/access-sets-v2-code.test.mjs && firebase emulators:exec --only auth,firestore --project demo-rules \"node --test tests/access-sets-v2-rules.test.mjs\"",
     "test:priest": "node --test tests/priest-*.test.mjs",
     "test:priest:rules": "firebase emulators:exec --only auth,firestore --project demo-rules \"node scripts/test-priest-emulator.mjs\"",
+    "test:access-sets-admin-ui": "firebase emulators:exec --only auth,firestore --project demo-rules \"node scripts/smoke-access-sets-admin.mjs\"",
     "smoke:priest": "node scripts/smoke-priest-ui.mjs",
     "smoke:prayer-categories": "firebase emulators:exec --only auth,firestore --project demo-rules \"node scripts/smoke-prayer-categories.mjs\"",
     "db:autofix-prayers": "node scripts/autofix-prayer-markdown.mjs",
