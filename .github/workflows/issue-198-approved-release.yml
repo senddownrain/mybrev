@@ -1,28 +1,32 @@
 name: Issue 198 approved production repair and visual QA
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/issue-198-approved-release.yml
   workflow_dispatch:
+    inputs:
+      approved_sha:
+        description: Full SHA of the reviewed commit at the tip of main
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: issue-198-approved-production
+  group: firebase-hosting-production
   cancel-in-progress: false
 
 jobs:
   repair-publish-verify:
-    if: github.repository == 'senddownrain/mybrev' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && github.repository == 'senddownrain/mybrev' && github.ref == 'refs/heads/main' && inputs.approved_sha == github.sha
     runs-on: ubuntu-latest
     environment: production
     timeout-minutes: 50
     steps:
       - name: Checkout approved main
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
 
       - name: Setup Node 22
         uses: actions/setup-node@v4

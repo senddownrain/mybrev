@@ -1,11 +1,12 @@
 name: Release XI Sunday first Vespers (content + Hosting)
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - scripts/liturgy/sources/xi-sunday-first-vespers-by.json
   workflow_dispatch:
+    inputs:
+      approved_sha:
+        description: Full SHA of the reviewed commit at the tip of main
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -17,13 +18,16 @@ concurrency:
 jobs:
   publish:
     name: Verify, publish targeted content, update manifest, deploy Web
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && github.repository == 'senddownrain/mybrev' && github.ref == 'refs/heads/main' && inputs.approved_sha == github.sha
     runs-on: ubuntu-latest
     environment: production
     timeout-minutes: 35
     steps:
       - name: Checkout approved main
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
 
       - name: Setup Node 22
         uses: actions/setup-node@v4
