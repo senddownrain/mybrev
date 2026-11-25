@@ -22,6 +22,12 @@ jobs:
     environment: production
     timeout-minutes: 50
     steps:
+      - name: Verify the exact production ref and approved SHA
+        env:
+          APPROVED_SHA: ${{ inputs.approved_sha }}
+        run: |
+          [[ "$GITHUB_REF" == refs/heads/main && "$APPROVED_SHA" == "$GITHUB_SHA" ]]
+
       - name: Checkout approved main
         uses: actions/checkout@v4
         with:
