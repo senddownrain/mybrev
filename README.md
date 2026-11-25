@@ -44,3 +44,5 @@ npm run db:snapshot:query -- --collection days
 Не обновляйте snapshot и не запускайте live-аудит без подтверждения доступной квоты. Локальный service account хранится в `patchs/serviceAccountKey.json`, но исключён из Git.
 
 Подробности: [Firestore snapshots](docs/firestore-snapshots.md) и [архитектура литургических данных](docs/liturgical-data-architecture.md).
+
+Настройка сборок и порядок выпуска App Check описаны в [инструкции](docs/firebase-app-check.md).
