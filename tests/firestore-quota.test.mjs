@@ -63,7 +63,7 @@ test('transaction disables SDK retry and only retries contention; quota executes
 function service({transactionError,readError,conflict=false}={}){
   errors.resetFirestoreQuota();
   let value={activeCodeProof:'old',changedAt:'previous',helpText:'Contact'},transactions=0,reads=0,writes=0;
-  const bindings={...errors,quotaSafeTransaction,codeProof,validNewCode,generateCode:()=>code,reactive:v=>v,
+  const bindings={...errors,quotaSafeTransaction,codeProof,validNewCode,generateCode:()=>code,ref:value=>({value}),s2Session:{},publicDevice:()=>{},onFirestoreQuotaBlocked:()=>{},
     getPriestEditorDb:async()=>({}),getPriestEditorWriteDb:async()=>({}),doc:(_db,a,b)=>`${a}/${b}`,activationDoc:(_db,a,b)=>`${a}/${b}`,activationTimestamp:()=> 'SERVER_TIMESTAMP',
     runTransaction:async(_db,action,options)=>{transactions++;assert.equal(options.maxAttempts,1);if(transactionError)throw transactionError;let pending;
       const result=await action({get:async()=>({data:()=>value}),set:(path,data)=>{if(path==='priestAccess/settings')pending=data;},update:(_path,data)=>{pending={...value,...data};}});
