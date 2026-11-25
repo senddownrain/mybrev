@@ -19,19 +19,21 @@ const prayers = [
   content('direct-only', { title: 'Synthetic direct title', text: 'Synthetic direct body' }),
 ];
 const categories = [content('private-category', { name: 'Synthetic private category', parentId: 'public-category' })];
+const calls = { confirm: 0, list: 0, get: 0 };
 const gateway = {
-  async listIds(kind) { return { ids: (kind === 'prayers' ? prayers.slice(0, 1) : categories).map((row) => row.id), cursor: null }; },
-  async readContent(kind, id) { return (kind === 'prayers' ? prayers : categories).find((row) => row.id === id) ?? null; },
+  async listIds(kind) { calls.list++; return { ids: (kind === 'prayers' ? prayers.slice(0, 1) : categories).map((row) => row.id), cursor: null }; },
+  async readContent(kind, id) { calls.get++; return (kind === 'prayers' ? prayers : categories).find((row) => row.id === id) ?? null; },
 };
 let allowedSets = ['marian'];
 let invalidate;
 installPrayerCatalogEntitlements({
-  async confirm() { return { mode: 'canonical', uid: 'synthetic', allowedSets, gateway }; },
+  async confirm() { calls.confirm++; return { mode: 'canonical', uid: 'synthetic', allowedSets, gateway }; },
   subscribe(callback) { invalidate = callback; return () => { invalidate = undefined; }; },
 });
 
 const router = createRouter({ history: createWebHashHistory(), routes: [
   { path: '/', component: PrayersList, name: 'Prayers' },
+  { path: '/home', component: { render: () => 'Synthetic home' }, name: 'Home' },
   { path: '/all', component: PrayersList, name: 'PrayersList' },
   { path: '/prayers/:id', component: PrayerView, name: 'PrayerView' },
   { path: '/favorites', component: FavoritePrayers, name: 'FavoritePrayers' },
@@ -40,12 +42,15 @@ const router = createRouter({ history: createWebHashHistory(), routes: [
 window.catalogHarness = {
   go: (to) => router.push(to),
   revoke() { allowedSets = []; invalidate(); },
+  counts: () => ({ ...calls }),
 };
 
 createApp({
   setup() {
-    usePrayersStore().init();
-    usePrayerCategoriesStore().init();
+    const prayerStore = usePrayersStore();
+    const categoryStore = usePrayerCategoriesStore();
+    window.catalogHarness.openMenu = () => { prayerStore.init(); categoryStore.init(); };
+    window.catalogHarness.publicReady = () => !prayerStore.isLoading && !categoryStore.isLoading;
     return () => h(VApp, () => h(RouterView));
   },
 }).use(createPinia()).use(router).use(vuetify).mount('#app');

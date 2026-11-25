@@ -67,11 +67,29 @@ try {
   const go = (to) => page.evaluate((target) => window.catalogHarness.go(target), to);
   const privateTitle = page.getByText('Synthetic private title', { exact: true });
   const publicTitle = page.getByText('Synthetic public title', { exact: true });
-  await page.goto(`http://127.0.0.1:${server.address().port}/`, { waitUntil: 'commit', timeout: 60_000 });
+  const counts = () => page.evaluate(() => window.catalogHarness.counts());
+  const foreground = (hidden) => page.evaluate((value) => {
+    Object.defineProperty(document, 'hidden', { configurable: true, value });
+    document.dispatchEvent(new Event('visibilitychange'));
+  }, hidden);
+  await page.goto(`http://127.0.0.1:${server.address().port}/#/home`, { waitUntil: 'commit', timeout: 60_000 });
   await Promise.race([
-    privateTitle.waitFor({ timeout: 120_000 }),
+    page.getByText('Synthetic home').waitFor({ timeout: 120_000 }),
     page.waitForEvent('pageerror', { timeout: 120_000 }).then((error) => { throw error; }),
   ]);
+  assert.deepEqual(await counts(), { confirm: 0, list: 0, get: 0 });
+  await page.evaluate(() => window.catalogHarness.openMenu());
+  await page.waitForFunction(() => window.catalogHarness.publicReady());
+  assert.deepEqual(await counts(), { confirm: 0, list: 0, get: 0 });
+  await go('/prayers/public-prayer');
+  await page.getByText('Synthetic public body', { exact: true }).waitFor();
+  assert.deepEqual(await counts(), { confirm: 0, list: 0, get: 0 });
+  await go('/prayers/direct-only');
+  await page.getByText('Synthetic direct body', { exact: true }).waitFor();
+  assert.deepEqual(await counts(), { confirm: 1, list: 0, get: 1 });
+  await go('/');
+  await privateTitle.waitFor();
+  assert.deepEqual(await counts(), { confirm: 1, list: 2, get: 3 });
   await publicTitle.waitFor();
   const search = page.getByRole('searchbox');
   await search.fill('Synthetic private body');
@@ -91,6 +109,7 @@ try {
   await go('/prayers/direct-only');
   await page.getByText('Synthetic direct body', { exact: true }).waitFor();
   assert.equal((await page.locator('[data-test="prayer-report-error"]').getAttribute('href')).includes('ctx_'), false);
+  assert.deepEqual(await counts(), { confirm: 1, list: 2, get: 3 });
   await mkdir('reports/access-sets-v2-s4', { recursive: true });
   await page.screenshot({ path: 'reports/access-sets-v2-s4/reader-mobile.png' });
 
@@ -111,16 +130,19 @@ try {
   assert.match(saved, /Synthetic public body/);
   assert.doesNotMatch(saved, /Synthetic (private|direct)|private-prayer|private-category|direct-only/);
 
-  await page.evaluate(() => {
-    Object.defineProperty(document, 'hidden', { configurable: true, value: true });
-    document.dispatchEvent(new Event('visibilitychange'));
-  });
+  await foreground(true);
   await page.getByText('Synthetic direct body', { exact: true }).waitFor({ state: 'hidden' });
-  await page.evaluate(() => {
-    delete document.hidden;
-    document.dispatchEvent(new Event('visibilitychange'));
-  });
+  await foreground(false);
   await page.getByText('Synthetic direct body', { exact: true }).waitFor();
+  assert.deepEqual(await counts(), { confirm: 2, list: 2, get: 4 });
+  await go('/home');
+  await foreground(true);
+  await foreground(false);
+  await page.waitForFunction(() => window.catalogHarness.publicReady());
+  assert.deepEqual(await counts(), { confirm: 2, list: 2, get: 4 });
+  await go('/prayers/direct-only');
+  await page.getByText('Synthetic direct body', { exact: true }).waitFor();
+  assert.deepEqual(await counts(), { confirm: 3, list: 2, get: 5 });
   await page.evaluate(() => window.catalogHarness.revoke());
   await page.getByText('Synthetic direct body', { exact: true }).waitFor({ state: 'hidden' });
   await go('/favorites');
@@ -132,6 +154,7 @@ try {
   await publicTitle.waitFor();
   assert.equal(await privateTitle.count(), 0);
   assert.deepEqual(errors, []);
+  console.log('S4 reads: startup/menu/public link/home foreground = 0 protected requests; cold deep link = 0 lists + 1 get; full fixture = 2 lists + 2 gets; warm route = 0.');
   console.log('PASS S4 Chromium: search, category tree, session favorites, direct reader, background, revoke, public offline, and storage scan.');
 } catch (error) {
   console.error('Browser errors:', errors);

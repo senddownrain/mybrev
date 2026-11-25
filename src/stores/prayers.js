@@ -3,8 +3,8 @@ import { ref, computed, watch } from 'vue';
 import { logger } from '@/utils/logger';
 import * as prayerService from '@/services/prayerService';
 import { useAuthStore } from '@/stores/auth';
-import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
-import { getPublicPrayerContent } from '@/services/prayerContentService';
+import { canReadPrayerCatalog, prayerCatalogDemand, prayerCatalogRevision } from '@/services/prayerCatalogAccess';
+import { clearEditorPrayerReads, getPublicPrayerContent } from '@/services/prayerContentService';
 import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 import { requestContentRefresh } from '@/utils/publicContentCache';
 
@@ -50,11 +50,13 @@ export const usePrayersStore = defineStore('prayers', () => {
       unsubscribe();
     }
 
+    const sequence = loadSequence;
     try {
       logger.log('[prayersStore] Initializing prayers subscription...');
       
       unsubscribe = prayerService.subscribePrayers(
         (items) => {
+          if (sequence !== loadSequence) return;
           prayers.value = items;
           refreshAllTags();
           isLoading.value = false;
@@ -62,6 +64,9 @@ export const usePrayersStore = defineStore('prayers', () => {
           logger.log('[prayersStore] Prayers loaded:', prayers.value.length);
         },
         (err) => {
+          if (sequence !== loadSequence) return;
+          prayers.value = prayers.value.filter((row) => !isProtectedPrayerRow(row));
+          refreshAllTags();
           logger.error('[prayersStore] Error loading prayers:', err);
           logger.error('[prayersStore] Error details:', err.code, err.message);
           error.value = err;
@@ -75,42 +80,44 @@ export const usePrayersStore = defineStore('prayers', () => {
     }
   }
 
-  async function loadPublicPrayers() {
-      const sequence = ++loadSequence;
-      if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+  async function loadPrayers(includeProtected) {
+    const sequence = ++loadSequence;
+    if (unsubscribe) { unsubscribe(); unsubscribe = null; }
     prayers.value = prayers.value.filter((row) => !isProtectedPrayerRow(row));
-      refreshAllTags();
+    refreshAllTags();
     isLoading.value = !prayers.value.length;
-      try {
+    try {
       const publicData = await getPublicPrayerContent();
       if (sequence !== loadSequence) return;
       prayers.value = publicData.prayers;
       refreshAllTags();
       isLoading.value = false;
       error.value = null;
+      if (!includeProtected) return;
       const items = await prayerService.getSavedPrayers(publicData);
       if (sequence !== loadSequence) return;
       prayers.value = items;
       refreshAllTags();
-      } catch (err) {
-        if (sequence === loadSequence) error.value = err;
-      } finally {
-        if (sequence === loadSequence) isLoading.value = false;
-      }
+    } catch (err) {
+      if (sequence === loadSequence) error.value = err;
+    } finally {
+      if (sequence === loadSequence) isLoading.value = false;
+    }
   }
 
   function init() {
     const authStore = useAuthStore();
     if (stopAuthWatch) return;
-    const stopAuth = watch(() => authStore.isAdmin, (isAdmin) => {
-      if (!isAdmin) return loadPublicPrayers();
+    const stopEditor = watch([() => authStore.isAdmin, () => authStore.user?.uid, prayerCatalogRevision], clearEditorPrayerReads, { flush: 'sync' });
+    const stopLoad = watch([() => authStore.isAdmin, () => authStore.user?.uid, () => prayerCatalogDemand.value > 0, prayerCatalogRevision], ([isAdmin, , requested]) => {
+      const includeProtected = requested && canReadPrayerCatalog();
+      if (!isAdmin || !includeProtected) return loadPrayers(includeProtected);
       loadSequence++;
+      prayers.value = prayers.value.filter((row) => !isProtectedPrayerRow(row));
+      refreshAllTags();
       startLiveSubscription();
     }, { immediate: true, flush: 'sync' });
-    const stopCatalog = watch(prayerCatalogRevision, () => {
-      if (!authStore.isAdmin) loadPublicPrayers();
-    }, { flush: 'sync' });
-    stopAuthWatch = () => { stopAuth(); stopCatalog(); };
+    stopAuthWatch = () => { stopEditor(); stopLoad(); clearEditorPrayerReads(); };
   }
 
   /**

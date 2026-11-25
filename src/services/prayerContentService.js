@@ -2,10 +2,32 @@ import { publicContentCache, publicContentKey } from '@/utils/publicContentCache
 import { permittedPrayerContent } from '@/utils/priestPolicy.mjs';
 import { collection, getDocsFromServer } from 'firebase/firestore';
 import { PUBLIC_PRAYERS_ASSET, publicPrayerRows, validatePublicPrayerCatalog } from '@/utils/publicPrayerCatalog.mjs';
-import { assembleCanonicalCatalog } from '@/utils/accessSetsV2Policy.mjs';
+import { assembleCanonicalCatalog, validCatalogId } from '@/utils/accessSetsV2Policy.mjs';
 import { db } from '@/plugins/firebase';
 import { withFirestoreQuota } from '@/utils/firestoreErrors.mjs';
-import { prayerCatalogAccess } from './prayerCatalogAccess';
+import { canReadPrayerCatalog, prayerCatalogAccess } from './prayerCatalogAccess';
+
+let editorGeneration;
+let editorReads = new Map();
+let editorEpoch = 0;
+
+function readEditorPrayer(id, editorUid, generation, epoch) {
+  if (editorGeneration?.uid !== editorUid || editorGeneration?.generation !== generation) {
+    editorGeneration = { uid: editorUid, generation };
+    editorReads = new Map();
+  }
+  if (!editorReads.has(id)) editorReads.set(id, import('./prayerStorageService').then(({ readStoredPrayerForEditor }) => {
+    if (epoch !== editorEpoch || generation !== prayerCatalogAccess.generation || !canReadPrayerCatalog()) return null;
+    return readStoredPrayerForEditor(id);
+  }));
+  return editorReads.get(id);
+}
+
+export function clearEditorPrayerReads() {
+  editorEpoch++;
+  editorGeneration = undefined;
+  editorReads.clear();
+}
 
 export const PRAYER_PUBLIC_CACHE_KEY = publicContentKey('prayer-content', 3);
 const documents = (snapshot) => snapshot.docs.map((item) => ({ ...item.data(), id: item.id }));
@@ -56,10 +78,17 @@ export async function getPrayerContent(publicData) {
     withProtected(publicData.categories, legacy.categories.map((row) => ({ ...row, priestOnly: true }))), true);
 }
 
-export async function getPrayerForDeepLink(id) {
+export async function getPrayerForDeepLink(id, editorUid) {
+  if (!validCatalogId(id)) return null;
+  const generation = prayerCatalogAccess.generation;
+  const epoch = editorEpoch;
   const publicData = await getPublicPrayerContent();
   const existing = publicData.prayers.find((row) => row.id === id);
-  return existing || prayerCatalogAccess.readPrayer(id, publicData);
+  if (existing) return existing;
+  if (!editorUid) return prayerCatalogAccess.readPrayer(id, publicData);
+  if (epoch !== editorEpoch || generation !== prayerCatalogAccess.generation || !canReadPrayerCatalog()) return null;
+  const row = await readEditorPrayer(id, editorUid, generation, epoch);
+  return epoch === editorEpoch && generation === prayerCatalogAccess.generation && canReadPrayerCatalog() ? row : null;
 }
 
 async function readPublic() {

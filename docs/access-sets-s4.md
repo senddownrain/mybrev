@@ -1,14 +1,18 @@
 # Access Sets V2 · Web-каталог и writer S4
 
 База [PR #320](https://github.com/senddownrain/mybrev/pull/320) зафиксирована на
-`56d398c2c20d505d9476e267bd1b29b1ecf77991`. Ветка S4 использует тот же wire-контракт.
+`56d398c2c20d505d9476e267bd1b29b1ecf77991`. Ветка S4 использует тот же wire-контракт. Контракт S3,
+замеры ленивого чтения и регламент подключения описаны в
+[документе Callable](access-sets-s4-callable.md).
 
 ## Чтение и границы сессии
 
 Публичная выдача строится из Hosting JSON и доступна независимо от подтверждения
 установки. Закрытый слой использует только Firestore Lite и серверный S1 gateway.
 `createAccessSetsCatalogSession` обходит индексы страницами по 25 ID, с одним
-активным запросом списка и общим пределом в четыре одновременных запроса. Один
+активным запросом списка и общим пределом в четыре одновременных запроса.
+Обход начинается при открытии каталога, избранного или редактора. Холодная
+прямая ссылка запрашивает только свой документ и требуемые правилами связи. Один
 `get` на пару (тип, ID) обслуживает выдачу и прямую ссылку в пределах поколения.
 Отказ отдельного `get`, отсутствие документа, неверная привязка к индексу,
 неизвестный родитель и несовместимое членство исключают результат из каталога.
@@ -37,13 +41,13 @@
 ## Запись и парность
 
 Доверенный writer находится в `scripts/lib/access-sets-v2-writer.mjs`.
-`bindCanonicalCatalogCallable({ db, onCall, HttpsError })` привязывается
-к выбранному транспорту с проверенным Firebase Auth и App Check. Серверный
-Admin SDK инициализируется с `useBigInt: true` для целых Firestore int64.
-Доступ получают `superadmin` и `admin` с `accessSetsV2: true`.
-Production endpoint не зарегистрирован в этом PR.
+Одна функция `canonicalCatalog` принимает `preview`, `save` и `verify`.
+Callable требует Firebase Auth, App Check и актуальные серверные права.
+Серверный Admin SDK инициализируется с `useBigInt: true` для целых
+Firestore int64. Доступ получают `superadmin` и `admin` с
+`accessSetsV2: true`.
 
-S3 передаёт в `createCanonicalPrayerSaveApi(invoke)` аутентифицированный вызов
+S3 вызывает `connectCanonicalPrayerSaveApi()` для аутентифицированного вызова
 и работает с массивом правок `{ kind, id, action, patch }`. `kind` принимает
 `prayers` или `categories`, `action` принимает `create`, `update` или
 `delete`. `patch.accessSets` задаёт собственные альтернативы.
@@ -89,7 +93,7 @@ S5 может использовать `readCanonicalCatalogSnapshot` и `assert
 JSON-формат снимка. Реальный copy, его журнал и подтверждение открытия
 canonical остаются отдельными операциями.
 
-## Spark и публичные артефакты
+## Чтения Firestore и публичные артефакты
 
 Тест в Emulator считает фактические запросы gateway. Для трёх документов и
 двух наборов, с одним пересечением и страницей 2, он ожидает 6 запросов к
@@ -123,8 +127,7 @@ Firestore остаётся `NetworkOnly` в service worker. Запись в пу
 ## Интеграция и воспроизведение
 
 - S2 подключает серверный провайдер. S3 подключает формы, публикацию
-  черновиков и утверждённый транспорт writer. Окружение Spark не меняется
-  этим PR. Release gate [#317](https://github.com/senddownrain/mybrev/pull/317)
+  черновиков и транспорт writer через Callable. Release gate [#317](https://github.com/senddownrain/mybrev/pull/317)
   и стек [#319](https://github.com/senddownrain/mybrev/pull/319) →
   [#318](https://github.com/senddownrain/mybrev/pull/318) →
   [#320](https://github.com/senddownrain/mybrev/pull/320) остаются зависимостями.

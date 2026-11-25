@@ -265,6 +265,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
+import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
 import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
@@ -283,6 +284,7 @@ import {
 const route = useRoute();
 const router = useRouter();
 const { prayers, isLoading, addPrayer, updatePrayer, allTags } = usePrayers();
+usePrayerCatalog();
 const { notifySuccess, notifyError } = useNotifier();
 const uiStore = useUiStore();
 

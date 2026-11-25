@@ -205,6 +205,7 @@ import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { buildCategoryTree, categoryPageNavigation } from '@/utils/prayerCategoryTree.mjs';
 import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
+import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
 import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
 import { hasV2ContentFields, isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 
@@ -213,7 +214,7 @@ const route = useRoute();
 const { prayers, isLoading, getTitle, getText, error, deletePrayer } = usePrayers();
 const authStore = useAuthStore();
 const categoriesStore = usePrayerCategoriesStore();
-categoriesStore.init();
+usePrayerCatalog();
 const accessPolicy = computed(() => prayerAccessPolicy(prayers.value, categoriesStore.categories));
 const accessFilter = ref('all');
 const accessFilters = [{ title: 'Усе', value: 'all' }, { title: 'Агульнадаступныя', value: 'public' }, { title: 'Толькі для святароў', value: 'priest' }];

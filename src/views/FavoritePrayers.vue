@@ -84,12 +84,14 @@ import { useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useAuthStore } from '@/stores/auth';
 import { useSettingsStore } from '@/stores/settings';
+import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
 import { hasV2ContentFields } from '@/utils/accessSetsV2Policy.mjs';
 
 const router = useRouter();
 const { prayers, isLoading, getTitle } = usePrayers();
 const authStore = useAuthStore();
 const settings = useSettingsStore();
+usePrayerCatalog();
 
 const favoritePrayers = computed(() => {
   if (!prayers.value || !Array.isArray(prayers.value)) return [];

@@ -4,7 +4,7 @@ import {
 import { ACCESS_SET_ID } from '../../src/utils/accessSetsV2Code.mjs';
 import { removeCategoryFromContent } from '../../src/utils/prayerCategoryMembership.mjs';
 import { PRAYER_STORAGE, MAX_ATOMIC_CONTENT_WRITES } from '../../src/utils/prayerStoragePlan.mjs';
-import { ACCESS_V2 } from '../../src/services/accessSetsV2Gateway.mjs';
+import { ACCESS_V2 } from '../../src/utils/accessSetsV2Paths.mjs';
 import { catalogContentHash, catalogPayload, catalogValueJson, digestCatalogValue } from './access-sets-v2-content-values.mjs';
 
 export const CATALOG_ROLLOUT = 'priestContentControl/accessSetsV2';

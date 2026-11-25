@@ -101,10 +101,12 @@ import { normalizePrayerSource } from '@/utils/prayerSource.mjs';
 import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 import { getPrayerForDeepLink } from '@/services/prayerContentService';
 import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
+import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
 const router = useRouter();
 const { prayers, isLoading, getTitle, getText } = usePrayers();
+const auth = useAuthStore();
 const { notifySuccess } = useNotifier();
 const uiStore = useUiStore();
 const MASS_READING_LINE = 132;
@@ -125,7 +127,8 @@ const directPrayer = shallowRef(null);
 const directPending = ref(false);
 const listedPrayer = computed(() => prayers.value.find((row) => row.id === route.params.id));
 const prayer = computed(() => listedPrayer.value || directPrayer.value);
-watch([() => route.params.id, listedPrayer, prayerCatalogRevision], async ([id, listed], _, onCleanup) => {
+const editorUid = computed(() => auth.isAdmin ? auth.user?.uid : undefined);
+watch([() => route.params.id, listedPrayer, prayerCatalogRevision, editorUid], async ([id, listed, , uid], _, onCleanup) => {
   directPrayer.value = null;
   directPending.value = false;
   if (listed || typeof id !== 'string') return;
@@ -133,7 +136,7 @@ watch([() => route.params.id, listedPrayer, prayerCatalogRevision], async ([id, 
   onCleanup(() => { current = false; });
   directPending.value = true;
   try {
-    const row = await getPrayerForDeepLink(id);
+    const row = await getPrayerForDeepLink(id, uid);
     if (current) directPrayer.value = row;
   } catch { /* Catalog stores handle public load errors; a denied deep link stays hidden. */ }
   finally { if (current) directPending.value = false; }

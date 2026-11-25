@@ -1,0 +1,40 @@
+{
+  "functions": [
+    {
+      "source": "reports/access-sets-v2-s4/callable-source",
+      "codebase": "s4-catalog",
+      "runtime": "nodejs22",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "*.local",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ]
+    }
+  ],
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "emulators": {
+    "auth": {
+      "port": 19399
+    },
+    "firestore": {
+      "port": 18289,
+      "websocketPort": 18290
+    },
+    "functions": {
+      "port": 15301
+    },
+    "hub": {
+      "port": 14800
+    },
+    "logging": {
+      "port": 14900
+    },
+    "ui": {
+      "enabled": false
+    }
+  }
+}

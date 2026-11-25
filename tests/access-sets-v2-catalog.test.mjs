@@ -138,6 +138,25 @@ test('preflight rejects oversized atomic plans and non-Firestore values', () => 
 });
 
 const data = { prayers: [{ ...publicPrayer, id: 'public' }], categories: [{ ...publicCategory, id: 'public' }] };
+test('legacy deep links use a targeted read and reuse it without listing the mirror', async () => {
+  let lists = 0;
+  let gets = 0;
+  const session = createAccessSetsCatalogSession({
+    confirm: async () => ({
+      mode: 'legacy', legacyActive: true,
+      async readLegacyPrayer(id) { gets++; return { ...oldPrayer, id }; },
+      async readLegacy() { lists++; return { prayers: [{ ...oldPrayer, id: 'old' }], categories: [] }; },
+    }),
+  });
+  assert.equal((await session.readPrayer('old', data)).effectivePriestOnly, true);
+  assert.equal((await session.readPrayer('old', data)).id, 'old');
+  assert.deepEqual({ lists, gets }, { lists: 0, gets: 1 });
+  session.invalidate();
+  assert.ok((await session.catalog()).content.prayers.length);
+  assert.equal((await session.readPrayer('old', data)).id, 'old');
+  assert.deepEqual({ lists, gets }, { lists: 1, gets: 1 });
+});
+
 const protectedRow = (id, access, extra) => ({ ...canonical({ ...publicPrayer, ...extra }, access), id });
 
 test('paged S1 reads deduplicate each kind, omit unknown bindings, and share one memory cache', async () => {

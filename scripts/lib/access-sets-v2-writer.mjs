@@ -9,6 +9,11 @@ import {
 const MAX_CATALOG_SCAN_READS = 2500;
 const fail = (code) => { throw catalogError(code); };
 
+export function canManageCanonicalCatalog(admin) {
+  const role = admin && (Object.hasOwn(admin, 'role') ? admin.role : 'admin');
+  return role === 'superadmin' || (role === 'admin' && admin.accessSetsV2 === true);
+}
+
 // Admin Firestore instance, owned by a trusted operator/service. No default
 // app initialization or endpoint registration happens when importing S4.
 export function createCanonicalCatalogWriter(db) {
@@ -16,11 +21,7 @@ export function createCanonicalCatalogWriter(db) {
     const [role, rollout, control] = await transaction.getAll(
       db.collection('admins').doc(uid), db.doc(CATALOG_ROLLOUT), db.doc(CONTENT_CONTROL),
     );
-    const admin = role.data();
-    const adminRole = admin && (Object.hasOwn(admin, 'role') ? admin.role : 'admin');
-    if (!(adminRole === 'superadmin' || (adminRole === 'admin' && admin.accessSetsV2 === true))) {
-      fail('permission-denied');
-    }
+    if (!canManageCanonicalCatalog(role.data())) fail('permission-denied');
     if (rollout.data()?.mode !== 'canonical' || control.data()?.lockUid !== '') fail('canonical-writer-locked');
     const storedVersion = control.data()?.version;
     const version = typeof storedVersion === 'bigint' ? Number(storedVersion) : storedVersion;
@@ -95,14 +96,14 @@ export function createCanonicalCatalogWriter(db) {
   };
 }
 
-// Entry point for the eventual trusted host. Inject firebase-functions's
-// onCall and HttpsError so the writer stays importable in Spark/offline tools.
-export function bindCanonicalCatalogCallable({ db, onCall, HttpsError }) {
+export function createCanonicalCatalogHandler({ db, HttpsError, authorize }) {
   const writer = createCanonicalCatalogWriter(db);
-  return onCall({ enforceAppCheck: true, concurrency: 1, maxInstances: 2 }, async (request) => {
+  return async (request) => {
     try {
+      await authorize(request);
       return await writer.call(request);
     } catch (error) {
+      if (error instanceof HttpsError) throw error;
       const code = error?.code;
       if (code === 'permission-denied' || code === 'unauthenticated') throw new HttpsError(code, code);
       if (code === 'content-snapshot-drift') throw new HttpsError('aborted', code);
@@ -112,5 +113,5 @@ export function bindCanonicalCatalogCallable({ db, onCall, HttpsError }) {
       }
       throw new HttpsError('internal', 'catalog-writer-failed');
     }
-  });
+  };
 }

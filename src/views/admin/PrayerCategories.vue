@@ -286,6 +286,7 @@ import { computed, ref, watch, onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNotifier } from '@/composables/useNotifier';
 import { usePrayers } from '@/composables/usePrayers';
+import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { validateCategory } from '@/utils/validators';
 import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
@@ -333,7 +334,7 @@ const deletingCategory = ref(false);
 const deletingTag = ref(false);
 const restoringDefaults = ref(false);
 
-prayerCategories.init();
+usePrayerCatalog();
 initPrayers();
 
 const tagStats = computed(() => buildPrayerTagStats(prayers.value, categories.value));

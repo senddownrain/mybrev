@@ -1,5 +1,5 @@
 import { readonly, ref, watch } from 'vue';
-import { collection, getDocs } from 'firebase/firestore/lite';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore/lite';
 import { getPriestActivationDb } from '@/plugins/priestFirebase';
 import { checkPriestAccess, priestAccess } from './priestAccessService';
 import { createAccessSetsCatalogSession } from './accessSetsCatalogSession.mjs';
@@ -7,8 +7,14 @@ import { isFirestoreQuotaBlocked, withFirestoreQuota } from '@/utils/firestoreEr
 
 const revision = ref(0);
 export const prayerCatalogRevision = readonly(revision);
+const demand = ref(0);
+export const prayerCatalogDemand = readonly(demand);
+export function retainPrayerCatalog() {
+  demand.value++;
+  return () => { demand.value--; };
+}
 let pageActive = true;
-const canRead = () => globalThis.navigator?.onLine !== false
+export const canReadPrayerCatalog = () => globalThis.navigator?.onLine !== false
   && pageActive && !globalThis.document?.hidden && !isFirestoreQuotaBlocked();
 
 const legacyProvider = {
@@ -16,6 +22,10 @@ const legacyProvider = {
     if (!(await checkPriestAccess()).active) return null;
     return {
       mode: 'legacy', legacyActive: true,
+      async readLegacyPrayer(id) {
+        const snapshot = await getDoc(doc(getPriestActivationDb(), 'priestProtectedPrayers', id));
+        return snapshot.exists() ? { ...snapshot.data(), id } : null;
+      },
       async readLegacy(assertCurrent) {
         const db = getPriestActivationDb();
         const read = async (name) => (await withFirestoreQuota(() => getDocs(collection(db, name)))).docs
@@ -31,7 +41,8 @@ const legacyProvider = {
 };
 let provider = legacyProvider;
 export const prayerCatalogAccess = createAccessSetsCatalogSession({
-  confirm: () => provider.confirm(), canRead, perform: withFirestoreQuota, onInvalidated: () => { revision.value++; },
+  confirm: () => provider.confirm(), canRead: canReadPrayerCatalog,
+  perform: withFirestoreQuota, onInvalidated: () => { revision.value++; },
 });
 let unsubscribe = provider.subscribe(prayerCatalogAccess.invalidate);
 

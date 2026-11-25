@@ -72,7 +72,8 @@ export function createAccessSetsCatalogSession({
       current = session;
       session.confirmation = Promise.resolve().then(() => perform(confirm)).then((source) => {
         assertCurrent(session);
-        if (source?.mode === 'legacy' && source.legacyActive === true && typeof source.readLegacy === 'function') {
+        if (source?.mode === 'legacy' && source.legacyActive === true
+          && (typeof source.readLegacy === 'function' || typeof source.readLegacyPrayer === 'function')) {
           session.source = source;
           return session;
         }
@@ -104,9 +105,30 @@ export function createAccessSetsCatalogSession({
     return session.rows.get(key);
   }
 
+  function fetchLegacyPrayer(session, id) {
+    const key = `prayers/${id}`;
+    if (!session.rows.has(key)) {
+      const pending = request(session, () => session.source.readLegacyPrayer(id)).then((row) => (
+        row?.id === id ? { ...row, priestOnly: true, effectivePriestOnly: true } : null
+      )).catch((error) => {
+        if (expectedDenial(error)) return null;
+        throw error;
+      });
+      session.rows.set(key, pending);
+    }
+    return session.rows.get(key);
+  }
+
   async function collect(session) {
     if (session.source.mode === 'legacy') {
-      return request(session, () => session.source.readLegacy(() => assertCurrent(session)));
+      if (typeof session.source.readLegacy !== 'function') return empty();
+      const result = await request(session, () => session.source.readLegacy(() => assertCurrent(session)));
+      assertCurrent(session);
+      for (const prayer of result.prayers) {
+        const key = `prayers/${prayer.id}`;
+        if (!session.rows.has(key)) session.rows.set(key, Promise.resolve({ ...prayer, priestOnly: true, effectivePriestOnly: true }));
+      }
+      return result;
     }
     const result = empty();
     for (const kind of kinds) {
@@ -145,8 +167,15 @@ export function createAccessSetsCatalogSession({
   async function readPrayer(id, publicData) {
     if (!validCatalogId(id)) return null;
     const session = await sessionForRead();
-    if (session?.source.mode !== 'canonical') return null;
+    if (!session) return null;
     try {
+      if (session.source.mode === 'legacy') {
+        const cached = session.rows.get(`prayers/${id}`);
+        const prayer = cached || (typeof session.source.readLegacyPrayer === 'function' && fetchLegacyPrayer(session, id));
+        const result = prayer ? await prayer : null;
+        assertCurrent(session);
+        return result;
+      }
       const row = await fetchRow(session, 'prayers', id);
       if (!row || (row.categoryIds !== undefined && !Array.isArray(row.categoryIds))) return null;
       const categories = new Map(publicData.categories.map((category) => [category.id, category]));
