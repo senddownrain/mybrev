@@ -321,6 +321,8 @@ export function resolveChristmasDateAgainstPeriod(dateDay, periodDay) {
   return resolveDateDayAgainstPeriod(dateDay, periodDay);
 }
 
+const SUNDAY_IV_DATED_READING_FIELDS = Object.freeze(['officeOfReadingsVers', 'officeOfReadingsR1', 'officeOfReadingsR2']);
+
 /** Late Advent combines three sources, rather than treating a saved date page
  * as an entire Office. Sundays retain their proper Office; weekday evening
  * psalmody belongs to the current psalter, even when a source-year page has
@@ -352,6 +354,16 @@ export function resolveAdventDateAgainstPeriod(dateDay, periodDay, dayOfWeek, { 
       };
       return;
     }
+    // Sunday IV of Advent on 17–24 December: «Верш, чытанні і рэспансорыі
+    // бяруцца з бягучага дня» (Тэксты на розныя перыяды, IV нядзеля Адвэнту).
+    // Hymn, antiphons and psalms stay the Sunday's; the verse and both readings
+    // (each with its responsory) belong to the calendar date.
+    if (fourthSunday && SUNDAY_IV_DATED_READING_FIELDS.includes(field)
+      && !isMissing(dateDay?.[field]) && !isFromDayReference(dateDay[field])) {
+      resolved[field] = dateDay[field];
+      sources[field] = dateDay?._fieldSources?.[field] || { document: dateDay.id, field };
+      return;
+    }
     const dateProper = ['laudesAntBen', 'vesperAntMag'].includes(field);
     const periodOnly = (sunday && !dateProper) || ADVENT_VESPERS_PSALMS.includes(field);
     if (periodOnly) {
@@ -367,7 +379,7 @@ export function resolveAdventDateAgainstPeriod(dateDay, periodDay, dayOfWeek, { 
   // Do not let the route resolver reapply a date's old from-day instructions
   // after this deliberate source selection.
   delete resolved._fromDayFields;
-  return sunday ? resolved : applySeasonalWeekdayAntiphons(resolved, dayOfWeek);
+  return sunday ? resolved : applySeasonalWeekdayAntiphons(resolved, dayOfWeek, dateDay);
 }
 
 function splitAntiphons(html) {
@@ -380,13 +392,17 @@ function splitAntiphons(html) {
  * Dec 17–24 documents keep the three Lauds/Vespers antiphons under weekday
  * field names. Expand the current weekday into the regular rendering fields.
  */
-export function applySeasonalWeekdayAntiphons(day, dayOfWeek) {
+export function applySeasonalWeekdayAntiphons(day, dayOfWeek, ownDay = null) {
   if (!day) return day;
   const value = day[WEEKDAY_FIELD[Number(dayOfWeek)]];
   const antiphons = splitAntiphons(value);
   if (antiphons.length < 3) return day;
   const resolved = { ...day };
   ['laudes', 'vesper'].forEach((office) => {
+    // A date document that carries its own antiphons for this Hour (24 December:
+    // «Ты, Бэтлеем…») keeps them; the weekday set is only the 17–23 Dec default.
+    const own = ownDay?.[`${office}Ant1`];
+    if (!isMissing(own) && !isFromDayReference(own)) return;
     antiphons.forEach((antiphon, index) => {
       resolved[`${office}Ant${index + 1}`] = antiphon;
       if (resolved._fieldSources) {
