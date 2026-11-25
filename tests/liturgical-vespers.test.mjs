@@ -170,3 +170,23 @@ test('only first Vespers and legacy offices need the following date', () => {
   assert.equal(needsTomorrowVespers({ _ordo: { vespers: { type: 'second' } } }), false);
   assert.equal(needsTomorrowVespers({ _ordo: { vespers: { type: 'of-the-day' } } }), false);
 });
+
+test('ADV-03/09: Advent Sunday I Vespers come from the preceding Saturday, never from Sunday II Vespers', () => {
+  const sundayDoc = { id: 'advent-w2-d1', vesperHymn: 'II Vespers hymn', vesperAnt1: '<p>II ant</p>', vesperR: 'II reading' };
+  const saturdayDoc = { id: 'advent-w1-d7', vesperHymn: 'I Vespers hymn', vesperAnt1: '<p>I ant</p>', vesperR: 'I reading',
+    vesperAnt2: 'a2', vesperAnt3: 'a3', vesperPs1: 'p1', vesperPs2: 'p2', vesperPs3: 'p3', vesperAntMag: 'mag', vesperInter: 'i', vesperPr: 'pr' };
+  const current = { id: 'advent-w1-d7', _ordo: { vespers: { type: 'first', celebrationId: 'temporal:advent-w2-d1' } } };
+  const tomorrow = { dayOptions: [{ title: 'II нядзеля Адвэнту', day: sundayDoc,
+    ordo: { role: 'primary', optionId: 'temporal:advent-w2-d1', officeKind: 'sunday' } }] };
+  const evening = eveningVespersModel(current, tomorrow, { isoWeekday: 6, periodDay: saturdayDoc });
+  assert.equal(evening.firstVespers.day.vesperHymn, 'I Vespers hymn');
+  assert.equal(evening.firstVespers.day.vesperAnt1, '<p>I ant</p>');
+  assert.equal(evening.firstVespers.day.vesperR, 'I reading');
+  assert.equal(evening.firstVespers.day._firstVespersSource, 'saturday-psalter');
+  // IV Sunday has explicit vesper1* and keeps the previous behaviour.
+  const w4 = { id: 'advent-w4-d1', vesper1Hymn: 'own I hymn', vesperHymn: 'II hymn' };
+  const e4 = eveningVespersModel({ ...current, _ordo: { vespers: { type: 'first', celebrationId: 'temporal:advent-w4-d1' } } },
+    { dayOptions: [{ day: w4, ordo: { role: 'primary', optionId: 'temporal:advent-w4-d1', officeKind: 'sunday' } }] },
+    { isoWeekday: 6, periodDay: saturdayDoc });
+  assert.equal(e4.firstVespers.day.vesperHymn, 'own I hymn');
+});
