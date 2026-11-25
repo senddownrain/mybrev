@@ -62,8 +62,11 @@ service cloud.firestore {
           || get(/databases/$(database)/documents/priestContentControl/state).data.lockUid == '')
         && getAfter(/databases/$(database)/documents/priestContentControl/state).data.version == contentVersion() + 1;
     }
+    function legacyAccessFields() {
+      return !request.resource.data.keys().hasAny(['accessSchemaVersion', 'accessSets', 'effectiveAccessSets']);
+    }
     function publicContent() {
-      return request.resource.data.get('priestOnly', false) == false
+      return legacyAccessFields() && request.resource.data.get('priestOnly', false) == false
         && request.resource.data.get('effectivePriestOnly', false) == false;
     }
     // Canonical names remain recognized by the import pipeline, while Web admins
@@ -137,13 +140,14 @@ service cloud.firestore {
     }
     match /priestProtectedPrayers/{id} {
       allow read: if isAdmin() || hasGrant();
-      allow create, update: if contentWrite()
+      allow create, update: if contentWrite() && legacyAccessFields()
         && validPrayerSources(/databases/$(database)/documents/prayers/$(id));
       allow delete: if contentWrite();
     }
     match /priestProtectedCategories/{id} {
       allow read: if isAdmin() || hasGrant();
-      allow create, update, delete: if contentWrite();
+      allow create, update: if contentWrite() && legacyAccessFields();
+      allow delete: if contentWrite();
     }
     // Closed prayer drafts: admin-only in both directions (never a flag inside public `prayers`,
     // which older Flutter clients read in full). `admin` and `superadmin` are equal here; a priest
@@ -255,10 +259,218 @@ service cloud.firestore {
       // getAfter() is an internal Rules check, not a client read permission.
       allow read, update, delete: if false;
     }
+
+    // S1: only the trusted release operator writes the corpus, its derived
+    // set index, or the rollout mode. The legacy writer remains unchanged.
+    function accessV2GrantPath(uid) {
+      return /databases/$(database)/documents/accessDeviceGrantsV2/$(uid);
+    }
+    function accessV2ClaimPath(uid) {
+      return /databases/$(database)/documents/accessActivationClaimsV2/$(uid);
+    }
+    function accessV2ProfilePath(profileId) {
+      return /databases/$(database)/documents/accessProfilesV2/$(profileId);
+    }
+    function accessV2EntitlementsPath(profileId) {
+      return /databases/$(database)/documents/accessProfilesV2/$(profileId)/client/entitlements;
+    }
+    function accessV2CodePath(codeId) {
+      return /databases/$(database)/documents/accessCodesV2/$(codeId);
+    }
+    function accessV2CodeProfilePath(codeId) {
+      return /databases/$(database)/documents/accessCodesV2/$(codeId)/client/profile;
+    }
+    function accessV2Live() {
+      let state = get(/databases/$(database)/documents/priestContentControl/accessSetsV2);
+      return state != null && state.data.mode == 'canonical';
+    }
+    function managesAccessV2() {
+      return isAdmin() && (
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.get('role', '') == 'superadmin'
+        || get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.get('accessSetsV2', false) == true
+      );
+    }
+    function accessV2Id(value) {
+      return value is string && value.matches('^[a-z][a-z0-9-]{0,63}$');
+    }
+    function accessV2CodeId(value) {
+      return value is string && value.matches('^[ABCDEFGHJKLMNPQRSTUVWXYZ2-9]{16}$');
+    }
+    function accessV2SetIds(values) {
+      return values is list && values.toSet().size() == values.size()
+        && values.join('!').matches('^([a-z][a-z0-9-]{0,63}(![a-z][a-z0-9-]{0,63})*)?$');
+    }
+    function validAccessV2Profile(data) {
+      return data.keys().hasOnly(['name', 'status', 'allowedSets', 'revision', 'updatedAt'])
+        && data.name is string && data.name.size() > 0 && shortText(data.name)
+        && data.status in ['active', 'disabled', 'revoked']
+        && accessV2SetIds(data.allowedSets)
+        && data.revision is int && data.revision > 0 && data.updatedAt == request.time;
+    }
+    function sameAccessV2Projection(profile, projection) {
+      return profile != null && projection != null
+        && projection.keys().hasOnly(['allowedSets', 'revision'])
+        && projection.allowedSets == profile.allowedSets && projection.revision == profile.revision;
+    }
+    function validAccessV2Set(data, setId) {
+      return accessV2Id(setId)
+        && data.keys().hasOnly(['name', 'status', 'updatedAt'])
+        && data.name is string && data.name.size() > 0 && shortText(data.name)
+        && data.status == 'active' && data.updatedAt == request.time;
+    }
+    function activeAccessV2Profile(profileId) {
+      let profile = get(accessV2ProfilePath(profileId)).data;
+      return profile != null && profile.status == 'active';
+    }
+    function validAccessV2Code(data) {
+      return data.keys().hasOnly(['profileId', 'codeProof', 'status', 'issuedAt', 'disabledAt', 'label'])
+        && accessV2Id(data.profileId) && proof(data.codeProof) && shortText(data.label)
+        && data.issuedAt is timestamp
+        && ((data.status == 'active' && data.disabledAt == null)
+          || (data.status == 'disabled' && data.disabledAt == request.time));
+    }
+    function sameAccessV2CodeProfile(code, projection) {
+      return code != null && projection != null && projection.keys().hasOnly(['profileId'])
+        && projection.profileId == code.profileId;
+    }
+    function validAccessV2Grant(uid, data) {
+      return data.keys().hasOnly([
+          'uid', 'codeId', 'status', 'deviceName', 'client', 'platform', 'label',
+          'activatedAt', 'lastActiveAt', 'revokedAt'
+        ])
+        && data.uid == uid && accessV2CodeId(data.codeId)
+        && data.deviceName is string && data.deviceName.size() > 0 && shortText(data.deviceName)
+        && data.client in ['Web', 'Flutter'] && shortText(data.platform) && shortText(data.label)
+        && data.activatedAt is timestamp && data.lastActiveAt is timestamp
+        && ((data.status == 'active' && data.revokedAt == null)
+          || (data.status == 'revoked' && data.revokedAt == request.time));
+    }
+    function validAccessV2Claim(uid, data) {
+      return data != null && data.keys().hasOnly(['uid', 'codeId', 'activationProof', 'createdAt'])
+        && data.uid == uid && accessV2CodeId(data.codeId)
+        && proof(data.activationProof) && data.createdAt == request.time;
+    }
+    function accessV2CodeAuthorizes(claim) {
+      let code = get(accessV2CodePath(claim.codeId)).data;
+      return code != null && code.status == 'active'
+        && code.codeProof == claim.activationProof && activeAccessV2Profile(code.profileId);
+    }
+    function validAccessV2Activation(uid, claim, grant) {
+      return validAccessV2Claim(uid, claim) && grant != null && validAccessV2Grant(uid, grant)
+        && grant.status == 'active' && grant.label == '' && grant.codeId == claim.codeId
+        && grant.activatedAt == request.time && grant.lastActiveAt == request.time
+        && accessV2CodeAuthorizes(claim);
+    }
+    function activatingAccessV2(uid) {
+      return own(uid) && request.auth.token.firebase.sign_in_provider == 'anonymous' && accessV2Live();
+    }
+    function activeAccessV2Grant(data, uid) {
+      return data != null && data.uid == uid && data.status == 'active' && accessV2CodeId(data.codeId);
+    }
+    function accessV2ProfilePermits(codeId, sets) {
+      let code = get(accessV2CodePath(codeId)).data;
+      let profile = code == null ? null : get(accessV2ProfilePath(code.profileId)).data;
+      return profile != null && profile.status == 'active' && profile.allowedSets.hasAny(sets);
+    }
+    function v2GrantPermits(sets) {
+      let grant = get(accessV2GrantPath(request.auth.uid)).data;
+      return activeAccessV2Grant(grant, request.auth.uid) && accessV2ProfilePermits(grant.codeId, sets);
+    }
+    function v2CodeHasProfile(codeId, profileId) {
+      let code = get(accessV2CodePath(codeId)).data;
+      return code != null && code.profileId == profileId;
+    }
+    function v2MayReadEntitlements(profileId) {
+      let grant = get(accessV2GrantPath(request.auth.uid)).data;
+      return activeAccessV2Grant(grant, request.auth.uid) && v2CodeHasProfile(grant.codeId, profileId)
+        && activeAccessV2Profile(profileId);
+    }
+    function v2MayResolveCode(codeId) {
+      let grant = get(accessV2GrantPath(request.auth.uid)).data;
+      return activeAccessV2Grant(grant, request.auth.uid) && grant.codeId == codeId;
+    }
+    function accessV2Permits(sets) {
+      return request.auth != null && accessV2Live()
+        && ((sets.hasAny(['priest']) && hasGrant()) || v2GrantPermits(sets));
+    }
+    function accessV2GrantUpdate(uid) {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return resource.data.status == 'active' && validAccessV2Grant(uid, request.resource.data)
+        && ((own(uid) && changed.hasOnly(['lastActiveAt'])
+            && request.resource.data.lastActiveAt == request.time
+            && request.time >= resource.data.lastActiveAt + duration.value(1, 'h'))
+          || ((own(uid) || managesAccessV2()) && changed.hasOnly(['status', 'revokedAt'])
+            && request.resource.data.status == 'revoked'));
+    }
+
+    match /priestContentControl/accessSetsV2 {
+      allow get: if request.auth != null;
+    }
+    match /accessSetsV2/{setId} {
+      allow get, list: if managesAccessV2();
+      allow create, update: if managesAccessV2() && validAccessV2Set(request.resource.data, setId);
+
+      // The index contains only IDs. Rules authorize by the set in the path
+      // and independently check each canonical read.
+      match /{kind}/{id} {
+        allow get: if kind in ['prayers', 'categories'] && accessV2Permits([setId]);
+        allow list: if kind in ['prayers', 'categories'] && request.query.limit <= 100
+          && accessV2Permits([setId]);
+      }
+    }
+    match /accessProfilesV2/{profileId} {
+      allow get, list: if managesAccessV2();
+      allow create: if managesAccessV2() && accessV2Id(profileId)
+        && validAccessV2Profile(request.resource.data)
+        && request.resource.data.status == 'active' && request.resource.data.revision == 1
+        && sameAccessV2Projection(request.resource.data, getAfter(accessV2EntitlementsPath(profileId)).data);
+      allow update: if managesAccessV2() && validAccessV2Profile(request.resource.data)
+        && resource.data.status != 'revoked' && request.resource.data.revision == resource.data.revision + 1
+        && sameAccessV2Projection(request.resource.data, getAfter(accessV2EntitlementsPath(profileId)).data);
+      match /client/entitlements {
+        allow get: if request.auth != null && accessV2Live() && v2MayReadEntitlements(profileId);
+        allow create, update: if managesAccessV2()
+          && sameAccessV2Projection(getAfter(accessV2ProfilePath(profileId)).data, request.resource.data);
+      }
+    }
+    match /accessCodesV2/{codeId} {
+      allow get, list: if managesAccessV2();
+      allow create: if managesAccessV2() && accessV2CodeId(codeId)
+        && validAccessV2Code(request.resource.data) && request.resource.data.status == 'active'
+        && request.resource.data.issuedAt == request.time && activeAccessV2Profile(request.resource.data.profileId)
+        && sameAccessV2CodeProfile(request.resource.data, getAfter(accessV2CodeProfilePath(codeId)).data);
+      allow update: if managesAccessV2() && resource.data.status == 'active'
+        && validAccessV2Code(request.resource.data) && request.resource.data.status == 'disabled'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'disabledAt']);
+      match /client/profile {
+        allow get: if request.auth != null && accessV2Live() && v2MayResolveCode(codeId);
+        allow create: if managesAccessV2()
+          && sameAccessV2CodeProfile(getAfter(accessV2CodePath(codeId)).data, request.resource.data);
+      }
+    }
+    match /accessDeviceGrantsV2/{uid} {
+      allow get: if own(uid) || managesAccessV2();
+      allow list: if managesAccessV2();
+      allow create: if activatingAccessV2(uid) && !exists(accessV2ClaimPath(uid))
+        && validAccessV2Activation(uid, getAfter(accessV2ClaimPath(uid)).data, request.resource.data);
+      allow update: if accessV2GrantUpdate(uid);
+    }
+    match /accessActivationClaimsV2/{uid} {
+      allow create: if activatingAccessV2(uid) && !exists(accessV2GrantPath(uid))
+        && validAccessV2Activation(uid, request.resource.data, getAfter(accessV2GrantPath(uid)).data);
+    }
+    match /{protectedCollection}/{id} {
+      allow get: if protectedCollection in ['protectedPrayers', 'protectedCategories']
+        && (isAdmin() || accessV2Permits(resource.data.effectiveAccessSets));
+      allow list: if protectedCollection in ['protectedPrayers', 'protectedCategories'] && isAdmin();
+    }
+
     function explicitlyRuled(collection) {
       return collection in ['admins', 'prayers', 'prayerCategories', 'priestProtectedPrayers', 'priestProtectedCategories',
         'priestAccess', 'priestAccessPublic', 'priestDeviceGrants', 'priestActivationClaims', 'priestContentControl', 'priestContentMigrationBackups',
-        'priestInstallations', 'priestActivationAttempts', 'prayerDrafts'];
+        'priestInstallations', 'priestActivationAttempts', 'prayerDrafts',
+        'accessSetsV2', 'accessProfilesV2', 'accessCodesV2', 'accessDeviceGrantsV2',
+        'accessActivationClaimsV2', 'protectedPrayers', 'protectedCategories'];
     }
     // Only published liturgical/scripture/catalogue data may be read without Auth.
     // Adding a new collection MUST NOT make it public by default.
