@@ -172,8 +172,9 @@
         <v-form class="category-form" ref="categoryFormRef" @submit.prevent="saveCategory">
           <v-card-text class="dialog-fields">
             <v-alert v-if="categoryDraft.parentId && accessPolicy.categoryRestricted(categoryDraft.parentId)" type="info" variant="tonal">Бацькоўская катэгорыя абмяжоўвае доступ для святароў.</v-alert>
-            <v-switch v-model="categoryDraft.priestOnly" label="Толькі для святароў" color="primary" hide-details />
-            <ContentAccessSets />
+            <v-switch v-if="!canonical" v-model="categoryDraft.priestOnly" label="Толькі для святароў" color="primary" hide-details />
+            <ContentAccessSets :access="categoryDraft" :model-value="categoryDraft.accessSets ?? (categoryDraft.priestOnly ? ['priest'] : [])"
+              @update:model-value="categoryDraft.accessSets = $event" @mode="canonical = $event" />
             <v-select v-model="categoryDraft.parentId" label="Бацькоўская катэгорыя" :items="parentOptions" item-title="name" item-value="id" clearable />
             <CategoryIconPicker :model-value="categoryDraft.iconKey" @update:model-value="pickIcon" />
             <v-text-field
@@ -329,6 +330,7 @@ const tagQuery = ref('');
 const categoryDialogOpen = ref(false);
 const categoryFormRef = ref(null);
 const categoryDraft = ref(emptyCategory());
+const canonical = ref(false);
 const categoryToDelete = ref(null);
 const tagToDelete = ref(null);
 const savingDialog = ref(false);
@@ -360,7 +362,7 @@ function inclusionReason(prayer) {
   return [reason, match.legacy ? 'Старая сувязь' : ''].filter(Boolean).join(' · ');
 }
 const storagePreview = computed(() => {
-  if (!categoryDialogOpen.value || prayersLoading.value) return null;
+  if (canonical.value || !categoryDialogOpen.value || prayersLoading.value) return null;
   const baseline = new Map([['prayers', prayers.value], ['prayerCategories', categories.value]]);
   const stored = prayerStoragePlan(baseline).desired;
   const draft = { ...categoryDraft.value, id: editingId.value || '__new_category__' };
@@ -423,6 +425,7 @@ function normalizedDraft() {
   return {
     name: categoryDraft.value.name.trim(),
     priestOnly: categoryDraft.value.priestOnly === true,
+    ...(categoryDraft.value.accessSets !== undefined && { accessSets: categoryDraft.value.accessSets }),
     parentId: categoryDraft.value.parentId || null,
     iconKey: normalizeCategoryIconKey(categoryDraft.value.iconKey) || undefined,
     order: Number(categoryDraft.value.order),

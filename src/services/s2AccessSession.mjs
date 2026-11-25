@@ -375,5 +375,13 @@ export function createS2AccessSession({
     return check();
   }
 
-  return { access, activate, check, clearPrivateSession, disable, refresh, storageChanged };
+  async function confirmCatalog() {
+    if (checkRequest || !access.checked || !access.mode) await check();
+    if (!currentUid || !online() || pending(currentUid) || !access.active) return null;
+    if (access.mode === 'legacy' && access.legacyActive) return { mode: 'legacy', legacyActive: true };
+    if (access.mode !== 'canonical') return null;
+    return { mode: 'canonical', uid: currentUid, allowedSets: access.allowedSets, gateway: v2() };
+  }
+
+  return { access, activate, check, clearPrivateSession, confirmCatalog, disable, refresh, storageChanged };
 }

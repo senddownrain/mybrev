@@ -65,8 +65,9 @@ export function createAccessSetsCatalogSession({
     current = { generation, rows: new Map(), confirmation: Promise.resolve(null) };
   }
 
-  async function sessionForRead() {
+  async function sessionForRead(retryConfirmation = true) {
     if (!canRead()) return null;
+    const requestedGeneration = generation;
     if (!current) {
       const session = { generation, rows: new Map() };
       current = session;
@@ -87,6 +88,9 @@ export function createAccessSetsCatalogSession({
       });
     }
     const session = await current.confirmation;
+    // The first server confirmation can publish the restored rights and
+    // invalidate this generation synchronously. Bind to the new one once.
+    if (!session && retryConfirmation && requestedGeneration !== generation) return sessionForRead(false);
     return session?.generation === generation && canRead() ? session : null;
   }
 

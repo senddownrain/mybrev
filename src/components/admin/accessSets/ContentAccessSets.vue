@@ -1,29 +1,42 @@
 <template>
   <details v-if="client" class="access-admin content-access-sets" data-sentry-block @toggle="open = $event.target.open">
-    <summary>Наборы доступу V2 (толькі прагляд)</summary>
-    <p>Выбар і захаванне V2-даступнасці стануць магчымымі пасля падключэння запісу кананічнага каталога.</p>
+    <summary>{{ canonical && !disabled ? 'Наборы доступу V2' : 'Наборы доступу V2 (толькі прагляд)' }}</summary>
+    <p v-if="!canonical">Запіс набораў даступны пасля пераключэння кананічнага каталога.</p>
     <p>Дастаткова аднаго з выбраных набораў. Абмежаванні, атрыманыя праз катэгорыі або тэгі, перасякаюцца з уласнымі і могуць звузіць доступ.</p>
     <template v-if="open">
-      <ContentSetOptions :key="auth.user.uid" :client="client" :selected="access?.accessSets || []" />
-      <p v-if="access">Выніковыя наборы: {{ access.effectiveAccessSets.join(', ') || 'няма' }}</p>
-      <p v-else>Для гэтага запісу няма даных кананічнага каталога V2.</p>
+      <ContentSetOptions :key="auth.user.uid" :client="client" :selected="modelValue" :disabled="!canonical || disabled"
+        @update:selected="$emit('update:modelValue', $event)" />
+      <p v-if="access?.effectiveAccessSets">Захаваныя выніковыя наборы: {{ access.effectiveAccessSets.join(', ') || 'няма' }}</p>
     </template>
   </details>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import { getCatalogEditorMode } from '@/services/prayerStorageService';
 import { createAccessAdminClient } from './client';
 import ContentSetOptions from './ContentSetOptions.vue';
 
-// Canonical preview data comes from the future writer/reader integration.
-// Only display its already-computed values, including inherited constraints.
-defineProps({ access: { type: Object, default: null } });
+defineProps({ access: { type: Object, default: null }, modelValue: { type: Array, default: () => [] }, disabled: Boolean });
+const emit = defineEmits(['update:modelValue', 'mode']);
 const auth = useAuthStore();
 const open = ref(false);
+const canonical = ref(false);
 const client = computed(() => auth.canManageAccessSetsV2 && auth.user?.uid
   ? createAccessAdminClient(auth.user.uid) : null);
+watch(client, async (current, _previous, onCleanup) => {
+  let active = true;
+  onCleanup(() => { active = false; });
+  canonical.value = false;
+  emit('mode', false);
+  if (!current) return;
+  const mode = await getCatalogEditorMode().catch(() => null);
+  if (active) {
+    canonical.value = mode === 'canonical';
+    emit('mode', canonical.value);
+  }
+}, { immediate: true });
 </script>
 
 <style src="./accessAdmin.css"></style>

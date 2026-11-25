@@ -116,6 +116,52 @@ test('catalog callable boundary and real Auth/Firestore transactions', { skip: !
   assert.equal(raw.contentHash, catalogContentHash(raw));
   assert.equal((await db.doc('priestProtectedPrayers/fixture').get()).exists, false);
 
+  const categoryEdits = [{ kind: 'categories', id: 's8-category', action: 'create',
+    patch: { name: 'Synthetic category', tags: ['s8-marian'], accessSets: ['marian'] } }];
+  const category = await invoke(editor, { action: 'preview', edits: categoryEdits });
+  await invoke(editor, { action: 'save', edits: categoryEdits, expectedVersion: category.version, planDigest: category.planDigest });
+  const draftRef = db.doc('prayerDrafts/s8-draft');
+  await draftRef.set({
+    draftId: 's8-draft', title: 'Synthetic draft', text: 'Synthetic unsaved draft',
+    tags: ['s8-marian'], source: 'Synthetic source', textFormat: 'mybrev-markdown', status: 'draft', version: 1,
+  });
+  const draft = { id: draftRef.id, expectedVersion: 1, accessSets: ['marian'],
+    patch: { text: 'Synthetic confirmed draft text' } };
+  const previewDraft = await invoke(editor, { action: 'preview', draft });
+  assert.equal(previewDraft.id, 'd_s8-draft');
+  assert.equal((await draftRef.get()).data().status, 'draft');
+  const saveDraft = { action: 'save', draft, expectedVersion: previewDraft.version, planDigest: previewDraft.planDigest };
+  const draftReceipt = await invoke(editor, saveDraft);
+  const [publishedDraft, payload, audit, version, catalogAudit] = await db.getAll(
+    draftRef, db.doc('protectedPrayers/d_s8-draft'), draftRef.collection('audit').doc('publish-v2-2'),
+    db.doc('priestContentControl/state'),
+    db.doc('priestContentControl/accessSetsV2/catalogAudit/' + draftReceipt.committedVersion),
+  );
+  assert.equal(publishedDraft.data().status, 'published');
+  assert.equal(publishedDraft.data().version, 2);
+  assert.equal(payload.data().text, draft.patch.text);
+  assert.equal(payload.data().sourceDraftId, draftRef.id);
+  assert.equal(audit.data().targetPrayerId, payload.id);
+  assert.equal(catalogAudit.data().action, 'publish-draft');
+  for (const sibling of [payload, audit, version, catalogAudit]) assert.ok(publishedDraft.updateTime.isEqual(sibling.updateTime));
+  assert.equal((await db.doc('prayers/d_s8-draft').get()).exists, false);
+  assert.equal((await db.doc('priestProtectedPrayers/d_s8-draft').get()).exists, false);
+  assert.deepEqual(await invoke(editor, { action: 'verify', draft, expectedVersion: draftReceipt.committedVersion,
+    planDigest: previewDraft.planDigest, afterDigest: previewDraft.afterDigest }),
+  { version: draftReceipt.committedVersion, parity: 'verified', id: payload.id });
+  await assert.rejects(invoke(editor, saveDraft), { code: 'aborted' });
+  assert.equal((await draftRef.collection('audit').get()).size, 1);
+  const staleRef = db.doc('prayerDrafts/s8-stale');
+  await staleRef.set({ ...publishedDraft.data(), draftId: 's8-stale', title: 'Synthetic stale draft',
+    status: 'draft', version: 1, targetPrayerId: '' });
+  const stale = { id: staleRef.id, expectedVersion: 1, accessSets: ['marian'] };
+  const stalePreview = await invoke(editor, { action: 'preview', draft: stale });
+  await staleRef.update({ version: 2 });
+  await assert.rejects(invoke(editor, { action: 'save', draft: stale, expectedVersion: stalePreview.version,
+    planDigest: stalePreview.planDigest }), { code: 'aborted', message: 'draft-conflict' });
+  assert.equal((await db.doc('protectedPrayers/d_s8-stale').get()).exists, false);
+  assert.equal((await staleRef.collection('audit').get()).size, 0);
+
   await auth.updateUser(editor.uid, { disabled: true });
   await assert.rejects(invoke(editor, previewRequest), { code: 'unauthenticated', message: 'editor-session-invalid' });
   await auth.updateUser(editor.uid, { disabled: false });

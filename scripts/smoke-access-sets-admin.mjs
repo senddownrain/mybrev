@@ -1,6 +1,6 @@
 /** Real Vue UI, Auth and Firestore Rules. Local synthetic fixtures only. */
 import assert from 'node:assert/strict';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'vite';
 import vue from '@vitejs/plugin-vue';
@@ -14,7 +14,14 @@ const fsHost = process.env.FIRESTORE_EMULATOR_HOST;
 const authHost = process.env.FIREBASE_AUTH_EMULATOR_HOST;
 for (const host of [fsHost, authHost]) assert.match(host || '', /^(127\.0\.0\.1|localhost):\d+$/, 'Local emulators required');
 const [host, port] = fsHost.split(':');
-const projectId = 'demo-rules';
+const canonicalSmoke = process.env.S8_CANONICAL_ADMIN === '1';
+const projectId = canonicalSmoke ? 'demo-s4-catalog' : 'demo-rules';
+const functionsConfig = canonicalSmoke
+  ? JSON.parse(await readFile(new URL('../firebase.s4-catalog.json', import.meta.url), 'utf8')) : null;
+const callableUrl = functionsConfig
+  ? 'http://127.0.0.1:' + functionsConfig.emulators.functions.port + '/' + projectId + '/europe-west1/canonicalCatalog' : null;
+const encode = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
+const appCheck = [encode({ alg: 'none', typ: 'JWT' }), encode({ sub: 'synthetic-ui' }), 'local-only'].join('.');
 const uiPort = 4783;
 const base = `http://127.0.0.1:${uiPort}`;
 const path = '/admin/access-sets';
@@ -119,6 +126,12 @@ const server = await createServer({
         + source.replace(/components: \{\s*\},/, 'components, directives,');
       if (file.endsWith('/src/plugins/firebase.js')) return firebaseModule;
       if (file.endsWith('/src/plugins/priestFirebase.js')) return emulatePriestFirebase(source);
+      // Use the real request builders and emulator endpoint. The local proxy
+      // supplies test-only attestation without altering production CORS.
+      if (canonicalSmoke && file.endsWith('/src/services/canonicalPrayerCallable.js')) {
+        return source.replace("import { getFunctions, httpsCallable } from 'firebase/functions';", "import { getAuth } from 'firebase/auth';")
+          .replace(/const invoke = httpsCallable.*;/, "const invoke = async data => { const token = await getAuth(firebaseApp).currentUser.getIdToken(); const response = await fetch('/__s8/catalog', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + token }, body: JSON.stringify({ data }) }); const reply = await response.json(); if (!response.ok) throw Object.assign(new Error(reply.error.message), { code: 'functions/' + reply.error.status.toLowerCase().replaceAll('_', '-') }); return { data: reply.result }; };");
+      }
       if (file.endsWith('/accessSets/client.js')) return source.replace('https://firestore.googleapis.com', 'http://' + fsHost);
       return undefined;
     },
@@ -136,10 +149,16 @@ let ordinal = 0;
 async function session(who) {
   const context = await browser.newContext({ viewport: { width: 1160, height: 900 }, serviceWorkers: 'block' });
   const runtimeErrors = [];
-  await context.route(/https?:\/\//, route => {
+  await context.route(/https?:\/\//, async route => {
     const request = route.request();
     const url = new URL(request.url());
     if (!['127.0.0.1', 'localhost'].includes(url.hostname)) return route.abort();
+    if (canonicalSmoke && url.origin === base && url.pathname === '/__s8/catalog' && request.method() === 'POST') {
+      const reply = await fetch(callableUrl, { method: 'POST', headers: {
+        'content-type': 'application/json', authorization: request.headers().authorization, 'X-Firebase-AppCheck': appCheck,
+      }, body: request.postData() });
+      return route.fulfill({ status: reply.status, contentType: 'application/json', body: await reply.text() });
+    }
     if (url.pathname.endsWith('/documents:runQuery') && request.method() === 'POST') {
       const { structuredQuery } = request.postDataJSON();
       if (structuredQuery?.select) {
@@ -429,6 +448,38 @@ try {
   await categoryChoice.waitFor();
   assert.equal(await categoryChoice.isEnabled(), false);
   assert.equal((await seed.doc('prayerCategories/synthetic-category').get()).data().accessSets, undefined);
+  if (canonicalSmoke) {
+    await seed.doc('priestContentControl/state').set({ version: 0, lockUid: '' });
+    await seed.doc('priestContentControl/accessSetsV2').set({ mode: 'canonical' });
+    await seed.doc('prayerDrafts/s8-browser').set({
+      draftId: 's8-browser', title: 'Synthetic browser draft', text: 'Synthetic text for canonical publication',
+      tags: ['s8-ui'], source: 'Synthetic source', textFormat: 'mybrev-markdown', status: 'draft', version: 1,
+    });
+    const confirm = async (prompt) => {
+      assert.match(prompt.message(), /Запісаў:/);
+      await prompt.accept();
+    };
+    await page.goto(base + '/admin/prayer-categories');
+    await page.getByLabel('Рэдагаваць катэгорыю Сінтэтычная катэгорыя').click();
+    await dialog(page).getByText('Наборы доступу V2', { exact: true }).click();
+    await dialog(page).getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
+    page.once('dialog', confirm);
+    await button(dialog(page), 'Захаваць').click();
+    await hasText(page, 'Катэгорыя захавана');
+    assert.deepEqual((await seed.doc('protectedCategories/synthetic-category').get()).data().effectiveAccessSets, ['marian']);
+    assert.equal((await seed.doc('prayerCategories/synthetic-category').get()).exists, false);
+
+    await page.goto(base + '/admin/prayer-drafts/s8-browser');
+    await page.getByText('Наборы доступу V2', { exact: true }).click();
+    await page.getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
+    await button(page, 'Апублікаваць').click();
+    page.once('dialog', confirm);
+    await button(dialog(page), 'Апублікаваць').click();
+    await hasText(page, 'Апублікавана: /prayer/d_s8-browser');
+    assert.deepEqual((await seed.doc('protectedPrayers/d_s8-browser').get()).data().effectiveAccessSets, ['marian']);
+    assert.equal((await seed.doc('prayerDrafts/s8-browser/audit/publish-v2-2').get()).exists, true);
+    console.log('PASS S8 canonical category and draft from the administrator UI through Callable.');
+  }
   await manager.close();
 
   const superadmin = await session('super');

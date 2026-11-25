@@ -1,3 +1,4 @@
+import { catalogContentHash } from './lib/access-sets-v2-content-values.mjs';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -41,6 +42,20 @@ const seedCode = (vector, profileId) => {
   batch.set(db.doc('accessCodesV2/' + vector.codeId + '/client/profile'), { profileId });
   return batch.commit();
 };
+
+async function seedCatalog() {
+  const batch = db.batch();
+  for (const [set, id] of [['priest', 's8-priest'], ['marian', 's8-marian']]) {
+    const payload = { title: 'Synthetic ' + set, text: 'Synthetic protected text ' + set };
+    batch.set(db.doc('accessSetsV2/' + set), { status: 'active' });
+    batch.set(db.doc('protectedPrayers/' + id), {
+      ...payload, accessSets: [set], effectiveAccessSets: [set], accessSchemaVersion: 2,
+      contentHash: catalogContentHash(payload),
+    });
+    batch.set(db.doc('accessSetsV2/' + set + '/prayers/' + id), {});
+  }
+  await batch.commit();
+}
 
 const server = await createServer({
   configFile: false, cacheDir: 'node_modules/.vite-s2-ui',
@@ -97,7 +112,7 @@ try {
     db.doc('priestProtectedPrayers/s2-fixture').set({ text: 'Synthetic restricted S2 fixture' }),
     ...(!legacyOnly ? [
       profile('s2-marian', 'active', ['marian'], 1), profile('s2-priest', 'active', ['priest'], 1),
-      seedCode(first, 's2-marian'), seedCode(second, 's2-priest'),
+      seedCode(first, 's2-marian'), seedCode(second, 's2-priest'), seedCatalog(),
     ] : []),
   ]);
   await server.listen();
@@ -157,6 +172,7 @@ try {
   assert.equal(await page.evaluate(() => window.__s2.modeReadable()), !legacyOnly);
   const mirror = () => page.evaluate(() => window.__s2.legacyText());
   assert.equal(await mirror(), 'Synthetic restricted S2 fixture');
+  assert.deepEqual(await page.evaluate(() => window.__s2.catalogIds()), ['s2-fixture']);
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => window.__s2?.session.legacyActive);
   assert.equal(await uid(page), deviceUid);
@@ -172,9 +188,12 @@ try {
     await mode('canonical');
     await sets(page, ['priest'], 'canonical');
     assert.equal(await mirror(), null);
+    assert.deepEqual(await page.evaluate(() => window.__s2.catalogIds()), ['s8-priest']);
+    assert.equal(await page.evaluate(() => window.__s2.deepLink('s8-marian')), null);
     await enter(page, first.input);
     await sets(page, ['marian', 'priest'], 'canonical');
     assert.equal(lostCommits, 1);
+    assert.deepEqual(await page.evaluate(() => window.__s2.catalogIds()), ['s8-marian', 's8-priest']);
     assert.equal(await uid(page), deviceUid);
     assert.equal(await page.evaluate(() => window.__s2.adminUid()), adminUid);
     assert.equal((await db.doc('accessDeviceGrantsV2/' + deviceUid).get()).data().codeId, first.codeId);
@@ -186,6 +205,9 @@ try {
     await enter(marianOnly.page, first.input);
     await sets(marianOnly.page, ['marian'], 'canonical');
     assert.equal(await marianOnly.page.evaluate(() => window.__s2.legacyText()), null);
+    assert.equal(await marianOnly.page.evaluate(() => window.__s2.deepLink('s8-marian')), 's8-marian');
+    assert.equal(await marianOnly.page.evaluate(() => window.__s2.deepLink('s8-priest')), null);
+    assert.deepEqual(await marianOnly.page.evaluate(() => window.__s2.catalogIds()), ['s8-marian']);
     assert.equal((await db.doc('priestDeviceGrants/' + await uid(marianOnly.page)).get()).exists, false);
     const priestOnly = await open();
     await enter(priestOnly.page, second.input);
@@ -199,6 +221,7 @@ try {
     await sets(marianOnly.page, ['priest'], 'canonical');
     await profile('s2-marian', 'disabled', ['priest'], 3);
     await sets(marianOnly.page, [], 'canonical');
+    assert.deepEqual(await marianOnly.page.evaluate(() => window.__s2.catalogIds()), []);
     await sets(page, ['priest'], 'canonical');
     await profile('s2-marian', 'active', ['marian'], 4);
     await page.evaluate(() => window.__s2.refresh());
@@ -210,6 +233,7 @@ try {
 
     await mode('suspended');
     await sets(page, [], 'suspended');
+    assert.deepEqual(await page.evaluate(() => window.__s2.catalogIds()), []);
     await mode('canonical');
     await sets(page, ['priest'], 'canonical');
 

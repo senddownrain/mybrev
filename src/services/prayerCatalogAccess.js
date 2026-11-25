@@ -1,7 +1,7 @@
 import { readonly, ref, watch } from 'vue';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore/lite';
 import { getPriestActivationDb } from '@/plugins/priestFirebase';
-import { checkPriestAccess, priestAccess } from './priestAccessService';
+import { s2Session } from './s2AccessFirebase';
 import { createAccessSetsCatalogSession } from './accessSetsCatalogSession.mjs';
 import { isFirestoreQuotaBlocked, withFirestoreQuota } from '@/utils/firestoreErrors.mjs';
 
@@ -17,11 +17,12 @@ let pageActive = true;
 export const canReadPrayerCatalog = () => globalThis.navigator?.onLine !== false
   && pageActive && !globalThis.document?.hidden && !isFirestoreQuotaBlocked();
 
-const legacyProvider = {
+const sessionProvider = {
   async confirm() {
-    if (!(await checkPriestAccess()).active) return null;
+    const confirmed = await s2Session.confirmCatalog();
+    if (confirmed?.mode !== 'legacy') return confirmed;
     return {
-      mode: 'legacy', legacyActive: true,
+      ...confirmed,
       async readLegacyPrayer(id) {
         const snapshot = await getDoc(doc(getPriestActivationDb(), 'priestProtectedPrayers', id));
         return snapshot.exists() ? { ...snapshot.data(), id } : null;
@@ -37,9 +38,9 @@ const legacyProvider = {
       },
     };
   },
-  subscribe(invalidate) { return watch(() => priestAccess.revision, invalidate, { flush: 'sync' }); },
+  subscribe(invalidate) { return watch(() => s2Session.access.revision, invalidate, { flush: 'sync' }); },
 };
-let provider = legacyProvider;
+let provider = sessionProvider;
 export const prayerCatalogAccess = createAccessSetsCatalogSession({
   confirm: () => provider.confirm(), canRead: canReadPrayerCatalog,
   perform: withFirestoreQuota, onInvalidated: () => { revision.value++; },
@@ -56,7 +57,7 @@ export function installPrayerCatalogEntitlements(nextProvider) {
   provider = nextProvider;
   unsubscribe = provider.subscribe(prayerCatalogAccess.invalidate);
   prayerCatalogAccess.invalidate();
-  return () => { if (provider === nextProvider) installPrayerCatalogEntitlements(legacyProvider); };
+  return () => { if (provider === nextProvider) installPrayerCatalogEntitlements(sessionProvider); };
 }
 
 if (typeof window !== 'undefined') {

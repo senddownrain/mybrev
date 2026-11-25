@@ -7,6 +7,7 @@ import vuetify from '/src/plugins/vuetify.js';
 import { firebaseApp } from '/src/plugins/firebase.js';
 import { getPriestAuth, priestFirebase } from '/src/plugins/priestFirebase.js';
 import { accessSetsSession, startPriestAccess } from '/src/services/priestAccessService.js';
+import { prayerCatalogAccess } from '/src/services/prayerCatalogAccess.js';
 import PriestAccessSettings from '/src/components/prayers/PriestAccessSettings.vue';
 
 window.__s2 = {
@@ -18,6 +19,12 @@ window.__s2 = {
   },
   adminUid: () => getAuth(firebaseApp).currentUser.uid,
   refresh: () => startPriestAccess(),
+  async catalogIds() {
+    return (await prayerCatalogAccess.catalog())?.content.prayers.map(row => row.id).sort() ?? [];
+  },
+  async deepLink(id) {
+    return (await prayerCatalogAccess.readPrayer(id, { prayers: [], categories: [] }))?.id ?? null;
+  },
   async modeReadable() {
     try {
       await getDocFromServer(doc(priestFirebase.db, 'priestContentControl', 'accessSetsV2'));

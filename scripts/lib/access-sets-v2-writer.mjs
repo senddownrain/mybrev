@@ -1,10 +1,13 @@
 import { FieldValue } from 'firebase-admin/firestore';
 import { catalogError } from '../../src/utils/accessSetsV2Policy.mjs';
-import { CONTENT_CONTROL } from '../../src/utils/prayerStoragePlan.mjs';
+import { CONTENT_CONTROL, MAX_ATOMIC_CONTENT_WRITES } from '../../src/utils/prayerStoragePlan.mjs';
 import {
   assertCatalogParity, catalogDigest, CATALOG_KINDS, CATALOG_PATHS, CATALOG_ROLLOUT,
   planCanonicalCatalog, planCatalogRestore, summarizeCatalogPlan,
 } from './access-sets-v2-storage-plan.mjs';
+
+import { digestCatalogValue } from './access-sets-v2-content-values.mjs';
+import { draftAuditPath, prepareDraftPublication, validatePublication, writeDraftPublication } from './access-sets-v2-draft-publication.mjs';
 
 const MAX_CATALOG_SCAN_READS = 2500;
 const fail = (code) => { throw catalogError(code); };
@@ -45,21 +48,25 @@ export function createCanonicalCatalogWriter(db) {
     return { version, sets, documents };
   }
 
-  function apply(transaction, plan) {
+  function apply(transaction, plan, advance = Boolean(plan.operations.length)) {
     for (const operation of plan.operations) {
       const ref = db.doc(operation.path);
       if (operation.after === null) transaction.delete(ref);
       else transaction.set(ref, operation.after);
     }
-    if (plan.operations.length) {
+    if (advance) {
       transaction.update(db.doc(CONTENT_CONTROL), { version: plan.version + 1, updatedAt: FieldValue.serverTimestamp() });
     }
   }
 
   async function save(uid, request) {
     if (typeof uid !== 'string' || !uid.length || uid.includes('/')) fail('unauthenticated');
-    const { action, edits, expectedVersion, planDigest, afterDigest } = request ?? {};
+    const { action, edits, draft, expectedVersion, planDigest, afterDigest } = request ?? {};
     if (!['preview', 'save', 'verify'].includes(action)) fail('invalid-writer-action');
+    if (draft !== undefined) {
+      validatePublication(draft);
+      if (edits !== undefined) fail('invalid-draft-publication');
+    }
     if (action !== 'preview' && (!Number.isSafeInteger(expectedVersion)
       || !/^[a-f0-9]{64}$/.test(action === 'save' ? planDigest : afterDigest))) {
       fail('missing-content-precondition');
@@ -70,14 +77,39 @@ export function createCanonicalCatalogWriter(db) {
       if (action === 'verify') {
         if (catalogDigest(snapshot.documents) !== afterDigest) fail('content-snapshot-drift');
         assertCatalogParity(snapshot);
+        if (draft) {
+          const [published, audit] = await transaction.getAll(
+            db.collection('prayerDrafts').doc(draft.id), db.doc(draftAuditPath(draft.id, draft.expectedVersion + 1)),
+          );
+          const receipt = audit.data();
+          const state = published.data();
+          if (!receipt || !/^[a-f0-9]{64}$/.test(planDigest) || receipt.planDigest !== planDigest
+            || state?.status !== 'published' || Number(state.version) !== draft.expectedVersion + 1
+            || state.targetPrayerId !== receipt.targetPrayerId) fail('draft-conflict');
+          return { version: snapshot.version, parity: 'verified', id: receipt.targetPrayerId };
+        }
         return { version: snapshot.version, parity: 'verified' };
       }
-      const plan = planCanonicalCatalog(snapshot, edits);
+      const publication = draft && await prepareDraftPublication(db, transaction, snapshot, draft);
+      const plan = planCanonicalCatalog(snapshot, publication ? [publication.edit] : edits, draft?.id);
+      const advance = Boolean(publication || plan.operations.length);
+      const extraWrites = publication ? 4 : advance ? 2 : 0; // control, catalog audit, draft, draft audit
+      if (plan.operations.length + extraWrites > MAX_ATOMIC_CONTENT_WRITES) fail('content-transaction-too-large');
+      const digest = publication ? digestCatalogValue({
+        catalog: plan.planDigest, draftId: draft.id, version: publication.version, patch: publication.saved,
+      }) : plan.planDigest;
+      const summary = summarizeCatalogPlan(plan);
       if (action === 'save') {
-        if (plan.planDigest !== planDigest) fail('content-snapshot-drift');
-        apply(transaction, plan);
+        if (digest !== planDigest) fail('content-snapshot-drift');
+        apply(transaction, plan, advance);
+        if (publication) writeDraftPublication(db, transaction, publication, uid, digest);
+        if (advance) transaction.create(db.doc(CATALOG_ROLLOUT + '/catalogAudit/' + (plan.version + 1)), {
+          action: publication ? 'publish-draft' : 'edit-catalog', uid, at: FieldValue.serverTimestamp(),
+          version: plan.version + 1, planDigest: digest, writes: summary.writes,
+        });
       }
-      return { ...summarizeCatalogPlan(plan), committedVersion: action === 'save' ? plan.version + Number(Boolean(plan.operations.length)) : null };
+      return { ...summary, planDigest: digest, ...(publication && { id: publication.id }),
+        extraWrites, committedVersion: action === 'save' ? plan.version + Number(advance) : null };
     }, { maxAttempts: 2 });
   }
 
@@ -106,7 +138,7 @@ export function createCanonicalCatalogHandler({ db, HttpsError, authorize }) {
       if (error instanceof HttpsError) throw error;
       const code = error?.code;
       if (code === 'permission-denied' || code === 'unauthenticated') throw new HttpsError(code, code);
-      if (code === 'content-snapshot-drift') throw new HttpsError('aborted', code);
+      if (code === 'content-snapshot-drift' || code === 'draft-conflict') throw new HttpsError('aborted', code);
       if (code === 8 || code === 'resource-exhausted') throw new HttpsError('resource-exhausted', 'quota-exhausted');
       if (typeof code === 'string' && /^[a-z-]+$/.test(code) && error.message === code) {
         throw new HttpsError('failed-precondition', code);

@@ -32,8 +32,9 @@
             <v-combobox v-model="form.tags" :items="availableTags" label="Тэгі" multiple chips closable-chips variant="outlined" hide-details="auto" :readonly="locked" hint="Абярыце існуючыя тэгі; новыя дадавайце толькі пры патрэбе." persistent-hint />
             <p v-if="newTags.length" class="hint hint--warn">Новыя тэгі (іх няма ў базе): {{ newTags.join(', ') }}</p>
             <p class="hint">Катэгорыі збіраюцца па тэгах: {{ categoryNames || 'пакуль ніводная не падыходзіць' }}.</p>
-            <v-switch v-model="form.priestOnly" label="Толькі для святароў пасля публікацыі" color="primary" hide-details :readonly="locked" />
-            <ContentAccessSets />
+            <v-switch v-if="!canonical" v-model="form.priestOnly" label="Толькі для святароў пасля публікацыі" color="primary" hide-details :readonly="locked" />
+            <ContentAccessSets :model-value="form.accessSets ?? (form.priestOnly ? ['priest'] : [])" :disabled="locked"
+              @update:model-value="form.accessSets = $event" @mode="canonical = $event" />
           </v-card>
 
           <v-card class="card" elevation="0">
@@ -135,6 +136,7 @@ const replaceId = ref('');
 const acknowledge = ref(false);
 const audit = ref([]);
 const form = ref({ title: '', text: '', tags: [], priestOnly: false, source: '' });
+const canonical = ref(false);
 let actions;
 
 const locked = computed(() => draft.value?.status === 'published');
@@ -194,11 +196,12 @@ function openPublish() { replaceId.value = ''; acknowledge.value = false; publis
 async function publish() {
   busy.value = 'publish'; message.value = null;
   try {
-    // Unsaved edits go first, so exactly the confirmed text is published.
     const patch = { title: form.value.title.trim(), text: form.value.text, tags: form.value.tags, priestOnly: form.value.priestOnly, ...draftSourcePatch(draft.value, form.value.source) };
-    await actions.saveDraft(draft.value.id, patch, { expectedVersion: draft.value.version });
-    const fresh = await actions.getDraft(draft.value.id);
-    const result = await actions.publishDraft(draft.value.id, { replaceId: replaceId.value || undefined, acknowledgeDuplicates: acknowledge.value, expectedVersion: fresh.version });
+    const result = await actions.publishDraft(draft.value.id, {
+      patch, acknowledgeDuplicates: acknowledge.value, expectedVersion: draft.value.version,
+      ...(replaceId.value && { replaceId: replaceId.value }),
+      ...(form.value.accessSets !== undefined && { accessSets: form.value.accessSets }),
+    });
     publishOpen.value = false;
     message.value = { type: 'success', text: result.alreadyPublished ? 'Гэты чарнавік ужо быў апублікаваны.' : `Апублікавана: /prayer/${result.id}` };
     await load();

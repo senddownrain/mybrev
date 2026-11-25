@@ -40,8 +40,9 @@
       @submit.prevent="handleSave"
     >
       <div class="editor-column">
-        <v-switch v-model="form.priestOnly" label="Толькі для святароў" color="primary" hide-details class="mb-4" />
-        <ContentAccessSets />
+        <v-switch v-if="!canonical" v-model="form.priestOnly" label="Толькі для святароў" color="primary" hide-details class="mb-4" />
+        <ContentAccessSets :access="form" :model-value="form.accessSets ?? (form.priestOnly ? ['priest'] : [])"
+          @update:model-value="form.accessSets = $event" @mode="canonical = $event" />
         <v-card class="editor-card" elevation="0">
           <section class="editor-section">
             <div class="section-heading">
@@ -300,6 +301,7 @@ const showPreview = ref(true);
 const initialSnapshot = ref('');
 const allowNavigation = ref(false);
 
+const canonical = ref(false);
 const form = ref({ title: '', text: '', source: '', tags: [], verified: false, priestOnly: false });
 const tagQuery = ref('');
 const tagInputFocused = ref(false);
@@ -335,6 +337,7 @@ const currentSnapshot = computed(() => JSON.stringify({
   tags: [...form.value.tags].sort(),
   verified: form.value.verified,
   priestOnly: form.value.priestOnly,
+  accessSets: form.value.accessSets,
 }));
 const isDirty = computed(() => hydrated.value && currentSnapshot.value !== initialSnapshot.value);
 
@@ -372,6 +375,8 @@ const hydrateForm = () => {
     tags: [...(prayer.tags || [])],
     verified: prayer.verified === true,
     priestOnly: prayer.priestOnly === true,
+    ...(Array.isArray(prayer.accessSets) && { accessSets: [...prayer.accessSets],
+      effectiveAccessSets: prayer.effectiveAccessSets }),
   };
   loadError.value = '';
   hydrated.value = true;
@@ -455,6 +460,7 @@ async function validateAndBuildPayload() {
     tags: [...form.value.tags],
     verified: form.value.verified === true,
     priestOnly: form.value.priestOnly === true,
+    ...(form.value.accessSets !== undefined && { accessSets: form.value.accessSets }),
   };
 }
 

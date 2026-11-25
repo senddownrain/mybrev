@@ -195,13 +195,19 @@ function makePlan(version, before, after) {
   return { version, beforeDigest, afterDigest, planDigest, operations };
 }
 
-export function planCanonicalCatalog(snapshot, edits) {
+export function planCanonicalCatalog(snapshot, edits, draftId) {
   if (!Number.isSafeInteger(snapshot.version) || snapshot.version < 0 || snapshot.version >= Number.MAX_SAFE_INTEGER) {
     fail('invalid-content-version');
   }
   const { content, activeSets } = assertCatalogParity(snapshot);
   if (!Array.isArray(edits) || !edits.length || edits.length >= MAX_ATOMIC_CONTENT_WRITES) fail('invalid-content-edits');
   for (const edit of edits) applyEdit(content, edit);
+  if (draftId !== undefined) {
+    if (edits.length !== 1 || edits[0].kind !== 'prayers' || edits[0].action === 'delete' || !validCatalogId(draftId)) {
+      fail('invalid-draft-publication');
+    }
+    content.prayers.find((row) => row.id === edits[0].id).sourceDraftId = draftId;
+  }
   const effective = evaluateAccessSets(content, activeSets);
   const desired = projectCatalog(content, effective, snapshot.documents);
   assertCatalogParity({ documents: desired, sets: snapshot.sets });
