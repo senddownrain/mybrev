@@ -2,6 +2,7 @@ import { getApp, getApps, initializeApp } from 'firebase/app';
 import { initializeFirestore, memoryLocalCache, setLogLevel } from 'firebase/firestore';
 import { getFirestore as getActivationFirestore, setLogLevel as setActivationLogLevel } from 'firebase/firestore/lite';
 import { firebaseApp } from './firebase';
+import { initializeClientAppCheck } from './firebaseAppCheck';
 
 // SDK diagnostics can include a failed REST write's complete payload/proof.
 // Keep application error handling, but never let SDK logging print secrets.
@@ -12,10 +13,21 @@ setActivationLogLevel('silent');
 // primary administrator Auth in anonymously. Protected Firestore is memory-only.
 function memoryApp(name) {
   const app = getApps().some((item) => item.name === name) ? getApp(name) : initializeApp(firebaseApp.options, name);
+  initializeClientAppCheck(app, import.meta.env.VITE_FIREBASE_APP_CHECK_SITE_KEY);
   return { app, db: initializeFirestore(app, { localCache: memoryLocalCache() }) };
 }
-export const priestFirebase = memoryApp('mybrev-priest');
-export const priestEditorFirebase = memoryApp('mybrev-priest-editor');
+
+// App Check can exchange and refresh tokens immediately after initialization.
+// Defer the isolated clients until their reader/editor paths are actually used.
+function lazyMemoryApp(name) {
+  let client;
+  return {
+    get app() { return (client ??= memoryApp(name)).app; },
+    get db() { return (client ??= memoryApp(name)).db; },
+  };
+}
+export const priestFirebase = lazyMemoryApp('mybrev-priest');
+export const priestEditorFirebase = lazyMemoryApp('mybrev-priest-editor');
 // Lite uses the same app/Auth but has no local store or offline write queue.
 // The proof-bearing claim must never enter the long-lived reader SDK cache.
 export function getPriestActivationDb() {

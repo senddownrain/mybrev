@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { buildPublicPrayerCatalog, validatePublicPrayerCatalog } from '../src/utils/publicPrayerCatalog.mjs';
 import { parseArgs } from '../scripts/export-public-prayers-hosting.mjs';
 import { verifyHostingCatalog } from '../scripts/verify-public-prayers-hosting.mjs';
@@ -49,9 +50,13 @@ test('publication fails closed for incomplete collections', () => {
 test('hosting deploy refuses missing or old catalogs', () => {
   const now = Date.now();
   const catalog = buildPublicPrayerCatalog(seed(), new Date(now).toISOString());
-  assert.throws(() => verifyHostingCatalog(catalog, now), /unexpectedly small/);
+  assert.throws(() => verifyHostingCatalog(JSON.stringify(catalog), now), /unexpectedly small/);
   const full = { ...catalog, prayers: Array.from({ length: 60 }, (_, i) => prayer('public' + i)) };
-  assert.deepEqual(verifyHostingCatalog(full, now), { prayers: 60, categories: 1 });
+  assert.deepEqual(verifyHostingCatalog(JSON.stringify(full), now), { prayers: 60, categories: 1 });
   const stale = { ...full, publishedAt: new Date(now - 3 * 86400000).toISOString() };
-  assert.throws(() => verifyHostingCatalog(stale, now), /last 24 hours/);
+  const published = JSON.stringify(stale);
+  assert.throws(() => verifyHostingCatalog(published, now), /last 24 hours/);
+  const approvedSha256 = createHash('sha256').update(published).digest('hex');
+  assert.deepEqual(verifyHostingCatalog(published, now, approvedSha256), { prayers: 60, categories: 1 });
+  assert.throws(() => verifyHostingCatalog(`${published}\n`, now, approvedSha256), /differs from the approved/);
 });
