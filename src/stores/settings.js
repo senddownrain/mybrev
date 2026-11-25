@@ -14,6 +14,7 @@ import { normalizeTextAlignment } from '@/utils/readerPreferences';
 import { normalizeChordLayout } from '@/utils/songDisplay';
 import { trackFeature } from '../utils/trackFeature.js';
 import { ordoDiocese, ordoDioceses, setOrdoDiocese, toggleOrdoDiocese } from '@/utils/ordoDiocese';
+import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
 
 const PERSONAL_CATEGORIES_KEY = 'personalPrayerCategories';
 const HIDDEN_GLOBAL_CATEGORIES_KEY = 'hiddenGlobalPrayerCategoryIds';
@@ -71,6 +72,8 @@ export const useSettingsStore = defineStore('settings', () => {
     localStorage.getItem(HIDDEN_GLOBAL_CATEGORIES_KEY) || '[]',
   ));
   const favoritePrayers = ref(JSON.parse(localStorage.getItem('favoritePrayers') || '[]'));
+  const protectedFavorites = ref([]);
+  watch(prayerCatalogRevision, () => { protectedFavorites.value = []; }, { flush: 'sync' });
   const favoriteSongs = ref(JSON.parse(localStorage.getItem('favoriteSongs') || '[]'));
   const songShowChords = ref(localStorage.getItem('songShowChords') === 'true');
   // Older versions stored "left"; it is migrated to "right" and saved back.
@@ -248,19 +251,20 @@ export const useSettingsStore = defineStore('settings', () => {
     hiddenGlobalPrayerCategoryIds.value = [];
   }
 
-  function toggleFavoritePrayer(prayerId) {
-    const index = favoritePrayers.value.indexOf(prayerId);
+  function toggleFavoritePrayer(prayerId, isProtected = false) {
+    const favorites = isProtected ? protectedFavorites : favoritePrayers;
+    const index = favorites.value.indexOf(prayerId);
     if (index > -1) {
       trackFeature('favorite_remove');
-      favoritePrayers.value.splice(index, 1);
+      favorites.value.splice(index, 1);
     } else {
       trackFeature('favorite_add');
-      favoritePrayers.value.push(prayerId);
+      favorites.value.push(prayerId);
     }
   }
 
-  function isFavoritePrayer(prayerId) {
-    return favoritePrayers.value.includes(prayerId);
+  function isFavoritePrayer(prayerId, isProtected = false) {
+    return (isProtected ? protectedFavorites : favoritePrayers).value.includes(prayerId);
   }
 
   function toggleFavoriteSong(id) {

@@ -58,12 +58,13 @@ service cloud.firestore {
     }
     function contentWrite() {
       return isAdmin()
+        && legacyCatalogEditing()
         && (!exists(/databases/$(database)/documents/priestContentControl/state)
           || get(/databases/$(database)/documents/priestContentControl/state).data.lockUid == '')
         && getAfter(/databases/$(database)/documents/priestContentControl/state).data.version == contentVersion() + 1;
     }
     function legacyAccessFields() {
-      return !request.resource.data.keys().hasAny(['accessSchemaVersion', 'accessSets', 'effectiveAccessSets']);
+      return !request.resource.data.keys().hasAny(['accessSchemaVersion', 'accessSets', 'effectiveAccessSets', 'contentHash']);
     }
     function publicContent() {
       return legacyAccessFields() && request.resource.data.get('priestOnly', false) == false
@@ -211,7 +212,7 @@ service cloud.firestore {
     }
     match /priestContentControl/state {
       allow read: if isAdmin();
-      allow create, update: if isAdmin()
+      allow create, update: if isAdmin() && legacyCatalogEditing()
         && request.resource.data.keys().hasOnly(['version', 'lockUid', 'updatedAt'])
         && request.resource.data.version == contentVersion() + 1
         && request.resource.data.lockUid == '' && request.resource.data.updatedAt == request.time
@@ -260,8 +261,12 @@ service cloud.firestore {
       allow read, update, delete: if false;
     }
 
-    // S1: only the trusted release operator writes the corpus, its derived
-    // set index, or the rollout mode. The legacy writer remains unchanged.
+    // Canonical corpus and index writes require the trusted catalog writer.
+    // Only a release operator can change mode. Legacy clients retain reads.
+    function legacyCatalogEditing() {
+      let rollout = get(/databases/$(database)/documents/priestContentControl/accessSetsV2);
+      return rollout == null || rollout.data.mode == 'legacy';
+    }
     function accessV2GrantPath(uid) {
       return /databases/$(database)/documents/accessDeviceGrantsV2/$(uid);
     }

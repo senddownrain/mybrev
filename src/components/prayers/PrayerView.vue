@@ -54,7 +54,7 @@
     />
   </v-container>
 
-  <v-container v-else-if="isLoading" class="text-center">
+  <v-container v-else-if="isLoading || directPending" class="text-center">
     <v-progress-circular indeterminate color="primary"></v-progress-circular>
     <p class="mt-4">Загрузка малітвы...</p>
   </v-container>
@@ -72,7 +72,7 @@ import { vReaderProse } from '@/directives/readerProse';
 import FeedbackPrompt from '@/components/common/FeedbackPrompt.vue';
 import { prayerFeedbackLink } from '@/utils/feedbackContext';
 import '@/styles/prayer-reading.css';
-import { ref, computed, watch, nextTick, onUnmounted, onMounted } from 'vue';
+import { ref, shallowRef, computed, watch, nextTick, onUnmounted, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useNotifier } from '@/composables/useNotifier';
@@ -98,6 +98,9 @@ import DevotionalOfficeReader from '@/components/prayers/DevotionalOfficeReader.
 import { DEVOTIONAL_OFFICE_PROFILES, devotionalOfficeProfile } from '@/utils/devotionalOffice';
 
 import { normalizePrayerSource } from '@/utils/prayerSource.mjs';
+import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
+import { getPrayerForDeepLink } from '@/services/prayerContentService';
+import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
 
 const route = useRoute();
 const router = useRouter();
@@ -118,9 +121,23 @@ const bundledMassText = ref({});
 let pendingMassSection = massSectionFromHash(route.hash);
 let scrollFrame = 0;
 
-const prayer = computed(() => {
-  return prayers.value.find(p => p.id === route.params.id);
-});
+const directPrayer = shallowRef(null);
+const directPending = ref(false);
+const listedPrayer = computed(() => prayers.value.find((row) => row.id === route.params.id));
+const prayer = computed(() => listedPrayer.value || directPrayer.value);
+watch([() => route.params.id, listedPrayer, prayerCatalogRevision], async ([id, listed], _, onCleanup) => {
+  directPrayer.value = null;
+  directPending.value = false;
+  if (listed || typeof id !== 'string') return;
+  let current = true;
+  onCleanup(() => { current = false; });
+  directPending.value = true;
+  try {
+    const row = await getPrayerForDeepLink(id);
+    if (current) directPrayer.value = row;
+  } catch { /* Catalog stores handle public load errors; a denied deep link stays hidden. */ }
+  finally { if (current) directPending.value = false; }
+}, { immediate: true, flush: 'sync' });
 const isMassOrder = computed(() => route.params.id === MASS_ORDER_PRAYER_ID);
 const massVariant = computed(() => (isMassOrder.value ? getMassVariant(massLanguage.value) : null));
 // The Belarusian variant is the Mass prayer itself; other variants are their
@@ -155,7 +172,8 @@ const displayTitle = computed(() => {
   if (!variant || variant.prayerId === MASS_ORDER_PRAYER_ID) return getTitle(prayer.value);
   return getTitle(massVariantPrayer.value) || variant.title;
 });
-const feedbackTo = computed(() => prayerFeedbackLink(route, displayTitle.value));
+const feedbackTo = computed(() => isProtectedPrayerRow(prayer.value) || isProtectedPrayerRow(textPrayer.value)
+  ? { name: 'Feedback' } : prayerFeedbackLink(route, displayTitle.value));
 const displaySource = computed(() => {
   const variant = massVariant.value;
   const sourcePrayer = variant && variant.prayerId !== MASS_ORDER_PRAYER_ID

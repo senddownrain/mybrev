@@ -203,9 +203,10 @@ import CategoryIcon from './CategoryIcon.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { buildCategoryTree, categoryPageNavigation } from '@/utils/prayerCategoryTree.mjs';
-import { priestAccess } from '@/services/priestAccessService';
+import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
+import { hasV2ContentFields, isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 
 const router = useRouter();
 const route = useRoute();
@@ -221,7 +222,7 @@ const { notifySuccess, notifyError } = useNotifier();
 const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, lastOpenedPrayerId, categoryReturnFocus, setSelectedCategory, toggleFilter } = usePrayersFilters();
 const categoryHeading = ref(null);
 const categoryTree = computed(() => buildCategoryTree(buildPrayerCategoryMenu(
-  categoriesStore.categories, [], settings.hiddenGlobalPrayerCategoryIds, prayers.value, authStore.isAdmin || priestAccess.active,
+  categoriesStore.categories, [], settings.hiddenGlobalPrayerCategoryIds, prayers.value, true,
 )));
 const categoryNavigation = computed(() => selectedCategory.value?.scope === 'global'
   ? categoryPageNavigation(categoryTree.value, selectedCategory.value.id) : { parent: null, children: [] });
@@ -245,7 +246,9 @@ watch(() => [route.query.category, categoriesStore.categories], ([id]) => {
 }, { immediate: true });
 
 const previousTitle = document.title;
-watch(() => selectedCategory.value?.name, (name) => { document.title = `${name || 'Малітвы'} · Малітоўнік`; }, { immediate: true });
+watch(() => selectedCategory.value, (category) => {
+  document.title = `${(!isProtectedPrayerRow(category) && category?.name) || 'Малітвы'} · Малітоўнік`;
+}, { immediate: true });
 onBeforeUnmount(() => { document.title = previousTitle; });
 let focusedPage = null;
 let restoringPrayerFocus = Boolean(lastOpenedPrayerId.value);
@@ -261,6 +264,12 @@ watch([() => route.fullPath, isLoading, () => categoriesStore.isLoading], async 
 
 const deleteDialogOpen = ref(false);
 const prayerToDelete = ref(null);
+watch(prayerCatalogRevision, () => {
+  if (isProtectedPrayerRow(prayerToDelete.value)) {
+    prayerToDelete.value = null;
+    deleteDialogOpen.value = false;
+  }
+}, { flush: 'sync' });
 const isDeleting = ref(false);
 
 const filteredPrayers = computed(() => {
@@ -328,11 +337,13 @@ watch(filteredPrayers, async (items) => {
 }, { immediate: true });
 
 function isFavorite(prayerId) {
-  return settings.favoritePrayers.includes(prayerId);
+  const prayer = prayers.value.find((row) => row.id === prayerId);
+  return settings.isFavoritePrayer(prayerId, Boolean(prayer && hasV2ContentFields(prayer)));
 }
 
 function toggleFavorite(prayerId) {
-  settings.toggleFavoritePrayer(prayerId);
+  const prayer = prayers.value.find((row) => row.id === prayerId);
+  if (prayer) settings.toggleFavoritePrayer(prayerId, hasV2ContentFields(prayer));
 }
 
 function openDeleteDialog(prayer) {

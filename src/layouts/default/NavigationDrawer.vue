@@ -238,7 +238,7 @@ import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
 import { buildCategoryTree } from '@/utils/prayerCategoryTree.mjs';
-import { priestAccess } from '@/services/priestAccessService';
+import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 import { usePrayersStore } from '@/stores/prayers';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { feedbackLocationForRoute } from '@/utils/feedbackContext.js';
@@ -261,7 +261,13 @@ const auth = useAuthStore();
 onMounted(() => { void auth.init().catch(() => {}); });
 const route = useRoute();
 const router = useRouter();
-const reportLocation = computed(() => feedbackLocationForRoute(route));
+const reportLocation = computed(() => {
+  if (route.name === 'PrayerView') {
+    const row = prayersStore.prayers.find((prayer) => prayer.id === route.params.id);
+    if (!row || isProtectedPrayerRow(row)) return { name: 'Feedback' };
+  }
+  return feedbackLocationForRoute(route);
+});
 const settings = useSettingsStore();
 const prayerCategories = usePrayerCategoriesStore();
 const prayersStore = usePrayersStore();
@@ -275,7 +281,7 @@ const menuCategories = computed(() => {
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
     prayersStore.prayers,
-    auth.isAdmin || priestAccess.active,
+    true,
   ));
 });
 

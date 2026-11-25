@@ -84,6 +84,7 @@ import { useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
 import { useAuthStore } from '@/stores/auth';
 import { useSettingsStore } from '@/stores/settings';
+import { hasV2ContentFields } from '@/utils/accessSetsV2Policy.mjs';
 
 const router = useRouter();
 const { prayers, isLoading, getTitle } = usePrayers();
@@ -92,9 +93,8 @@ const settings = useSettingsStore();
 
 const favoritePrayers = computed(() => {
   if (!prayers.value || !Array.isArray(prayers.value)) return [];
-  if (!settings.favoritePrayers || !Array.isArray(settings.favoritePrayers)) return [];
   
-  const filtered = prayers.value.filter(prayer => settings.favoritePrayers.includes(prayer.id));
+  const filtered = prayers.value.filter((prayer) => settings.isFavoritePrayer(prayer.id, hasV2ContentFields(prayer)));
   filtered.sort((a, b) => getTitle(a).trim().localeCompare(getTitle(b).trim(), 'be', { sensitivity: 'base' }));
   
   return filtered;
@@ -105,7 +105,8 @@ function viewPrayer(id) {
 }
 
 function toggleFavorite(prayerId) {
-  settings.toggleFavoritePrayer(prayerId);
+  const prayer = prayers.value.find((row) => row.id === prayerId);
+  if (prayer) settings.toggleFavoritePrayer(prayerId, hasV2ContentFields(prayer));
 }
 </script>
 

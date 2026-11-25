@@ -10,7 +10,10 @@ import {
 } from '@/services/prayerCategoryService';
 import { logger } from '@/utils/logger';
 import { useAuthStore } from '@/stores/auth';
-import { priestAccess } from '@/services/priestAccessService';
+import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
+import { getPublicPrayerContent } from '@/services/prayerContentService';
+import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
+import { comparePrayerCategories } from '@/utils/prayerCategoryMembership.mjs';
 
 export const usePrayerCategoriesStore = defineStore('prayerCategories', () => {
   const categories = ref([]);
@@ -41,13 +44,16 @@ export const usePrayerCategoriesStore = defineStore('prayerCategories', () => {
     const sequence = ++loadSequence;
     unsubscribe?.();
     unsubscribe = null;
-    categories.value = [];
+    categories.value = categories.value.filter((row) => !isProtectedPrayerRow(row));
     isLoading.value = categories.value.length === 0;
     try {
-      const items = await getSavedPrayerCategories();
+      const publicData = await getPublicPrayerContent();
       if (sequence !== loadSequence) return;
-      categories.value = items;
+      categories.value = [...publicData.categories].sort(comparePrayerCategories);
       error.value = null;
+      isLoading.value = false;
+      const items = await getSavedPrayerCategories(publicData);
+      if (sequence === loadSequence) categories.value = items;
     } catch (loadError) {
       if (sequence === loadSequence) {
         logger.error('[prayerCategories] One-shot load failed:', loadError);
@@ -60,18 +66,16 @@ export const usePrayerCategoriesStore = defineStore('prayerCategories', () => {
 
   function init() {
     const authStore = useAuthStore();
-    if (stopAuthWatch) {
-      if (!authStore.isAdmin && !unsubscribe && categories.value.length === 0) loadPublicCategories();
-      return;
-    }
-    stopAuthWatch = watch(() => [authStore.isAdmin, priestAccess.revision], ([isAdmin]) => {
-      if (isAdmin) {
-        loadSequence += 1;
-        startLiveSubscription();
-      } else {
-        loadPublicCategories();
-      }
-    }, { immediate: true });
+    if (stopAuthWatch) return;
+    const stopAuth = watch(() => authStore.isAdmin, (isAdmin) => {
+      if (!isAdmin) return loadPublicCategories();
+      loadSequence++;
+      startLiveSubscription();
+    }, { immediate: true, flush: 'sync' });
+    const stopCatalog = watch(prayerCatalogRevision, () => {
+      if (!authStore.isAdmin) loadPublicCategories();
+    }, { flush: 'sync' });
+    stopAuthWatch = () => { stopAuth(); stopCatalog(); };
   }
 
   async function addCategory(category) {
@@ -111,6 +115,8 @@ export const usePrayerCategoriesStore = defineStore('prayerCategories', () => {
   }
 
   function cleanup() {
+    loadSequence++;
+    categories.value = categories.value.filter((row) => !isProtectedPrayerRow(row));
     unsubscribe?.();
     unsubscribe = null;
     stopAuthWatch?.();

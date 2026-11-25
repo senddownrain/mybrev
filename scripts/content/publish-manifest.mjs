@@ -33,6 +33,7 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import {
   APP_CONTENT_COLLECTIONS,
+  PRAYER_EXPORT_GUARDS,
   CONTENT_SCHEMA_VERSION,
   classifyPatch,
   describeDocuments,
@@ -44,6 +45,7 @@ import {
 } from './lib/app-content.mjs';
 import { readCollections } from './build-app-bundle.mjs';
 import { recordMigration } from '../liturgy/lib/migration-report.mjs';
+import { CONTENT_CONTROL } from '../../src/utils/prayerStoragePlan.mjs';
 
 export const MANIFEST_COLLECTION = 'contentManifest';
 const ROOT = process.cwd();
@@ -136,15 +138,26 @@ async function main() {
     if (firestore) {
       const collections = new Map();
       const selected=options.collections.length?options.collections:APP_CONTENT_COLLECTIONS;
-      const readNames=[...new Set([...selected,...(selected.includes('prayers')?['prayerCategories']:[])])];
+      const includesPrayers = selected.includes('prayers') || selected.includes('prayerCategories');
+      const readNames = [...new Set([...selected, ...(includesPrayers ? ['prayers', 'prayerCategories', ...PRAYER_EXPORT_GUARDS] : [])])];
+      const before = includesPrayers ? (await firestore.doc(CONTENT_CONTROL).get()).data() : null;
       for (const name of readNames) {
         console.log(`reading ${name}…`);
         const snapshot = await firestore.collection(name).get();
         const docs = snapshot.docs.map((doc) => storedDocument(doc.id, doc.data()));
-        invalid.push(...validateCollection(name, docs));
         collections.set(name, docs);
       }
-      for (const [name, docs] of publicAppCollections(collections)) if(!options.collections.length||options.collections.includes(name))described[name] = describeDocuments(docs);
+      if (includesPrayers) {
+        const after = (await firestore.doc(CONTENT_CONTROL).get()).data();
+        if (before?.lockUid || after?.lockUid || before?.version !== after?.version) {
+          throw new Error('Prayer storage changed during manifest generation');
+        }
+      }
+      for (const [name, docs] of publicAppCollections(collections)) {
+        if (options.collections.length && !options.collections.includes(name)) continue;
+        invalid.push(...validateCollection(name, docs));
+        described[name] = describeDocuments(docs);
+      }
     } else {
       const { collections } = await readCollections(options.snapshots);
       for (const [name, docs] of publicAppCollections(collections)) {

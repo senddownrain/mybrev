@@ -3,7 +3,9 @@ import { ref, computed, watch } from 'vue';
 import { logger } from '@/utils/logger';
 import * as prayerService from '@/services/prayerService';
 import { useAuthStore } from '@/stores/auth';
-import { priestAccess } from '@/services/priestAccessService';
+import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
+import { getPublicPrayerContent } from '@/services/prayerContentService';
+import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 import { requestContentRefresh } from '@/utils/publicContentCache';
 
 /**
@@ -58,7 +60,6 @@ export const usePrayersStore = defineStore('prayers', () => {
           isLoading.value = false;
           error.value = null;
           logger.log('[prayersStore] Prayers loaded:', prayers.value.length);
-          logger.log('[prayersStore] First 3 prayers:', prayers.value.slice(0, 3).map(p => ({ id: p.id, title: getTitle(p) })));
         },
         (err) => {
           logger.error('[prayersStore] Error loading prayers:', err);
@@ -77,15 +78,20 @@ export const usePrayersStore = defineStore('prayers', () => {
   async function loadPublicPrayers() {
       const sequence = ++loadSequence;
       if (unsubscribe) { unsubscribe(); unsubscribe = null; }
-      prayers.value = [];
+    prayers.value = prayers.value.filter((row) => !isProtectedPrayerRow(row));
       refreshAllTags();
-      isLoading.value = true;
+    isLoading.value = !prayers.value.length;
       try {
-        const items = await prayerService.getSavedPrayers();
-        if (sequence !== loadSequence) return;
-        prayers.value = items;
-        refreshAllTags();
-        error.value = null;
+      const publicData = await getPublicPrayerContent();
+      if (sequence !== loadSequence) return;
+      prayers.value = publicData.prayers;
+      refreshAllTags();
+      isLoading.value = false;
+      error.value = null;
+      const items = await prayerService.getSavedPrayers(publicData);
+      if (sequence !== loadSequence) return;
+      prayers.value = items;
+      refreshAllTags();
       } catch (err) {
         if (sequence === loadSequence) error.value = err;
       } finally {
@@ -95,18 +101,16 @@ export const usePrayersStore = defineStore('prayers', () => {
 
   function init() {
     const authStore = useAuthStore();
-    if (stopAuthWatch) {
+    if (stopAuthWatch) return;
+    const stopAuth = watch(() => authStore.isAdmin, (isAdmin) => {
+      if (!isAdmin) return loadPublicPrayers();
+      loadSequence++;
+      startLiveSubscription();
+    }, { immediate: true, flush: 'sync' });
+    const stopCatalog = watch(prayerCatalogRevision, () => {
       if (!authStore.isAdmin) loadPublicPrayers();
-      return;
-    }
-    stopAuthWatch = watch(() => [authStore.isAdmin, priestAccess.revision], ([isAdmin]) => {
-      if (isAdmin) {
-        loadSequence += 1;
-        startLiveSubscription();
-      } else {
-        loadPublicPrayers();
-      }
-    }, { immediate: true });
+    }, { flush: 'sync' });
+    stopAuthWatch = () => { stopAuth(); stopCatalog(); };
   }
 
   /**
@@ -220,6 +224,8 @@ export const usePrayersStore = defineStore('prayers', () => {
    */
   function cleanup() {
     loadSequence += 1;
+    prayers.value = prayers.value.filter((row) => !isProtectedPrayerRow(row));
+    refreshAllTags();
     if (stopAuthWatch) { stopAuthWatch(); stopAuthWatch = null; }
     if (unsubscribe) {
       unsubscribe();

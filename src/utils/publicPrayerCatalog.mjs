@@ -1,5 +1,6 @@
 /** Public Hosting snapshot contract. No admin/priest/draft fields may reach this file. */
 import { prayerAccessPolicy } from './priestPolicy.mjs';
+import { hasV2ContentFields } from './accessSetsV2Policy.mjs';
 
 export const PUBLIC_PRAYERS_ASSET = '/public-prayers-v1.json';
 export const PUBLIC_PRAYERS_SCHEMA = 1;
@@ -31,12 +32,42 @@ function toPlain(value) {
 const select = (item, fields) => Object.fromEntries(fields
   .filter((field) => Object.hasOwn(item, field))
   .map((field) => [field, toPlain(item[field])]));
-const explicitlyPublic = (item) => item.priestOnly !== true && item.effectivePriestOnly !== true
+const explicitlyPublic = (item) => !hasV2ContentFields(item) && (item.priestOnly === undefined || item.priestOnly === false)
+  && (item.effectivePriestOnly === undefined || item.effectivePriestOnly === false)
   && item.published !== false && !BLOCKED_STATUSES.has(String(item.status || '').toLowerCase());
 
+// Shared by Web, the Hosting exporter and Flutter bundle/manifest generation.
+// Physical protected paths stay protected even if their payload is incomplete.
+export function publicPrayerRows({
+  prayers, categories, protectedCategories = [], protectedPrayers = [],
+}, { legacyPrayerIds = [] } = {}) {
+  const privatePrayerIds = new Set(protectedPrayers.map((item) => item.id));
+  const privateCategoryIds = new Set(protectedCategories.map((item) => item.id));
+  const guardedCategories = [...categories.map((item) => explicitlyPublic(item) ? item : { ...item, priestOnly: true }),
+    ...protectedCategories.map((item) => ({ ...item, priestOnly: true }))];
+  const policy = prayerAccessPolicy(prayers, guardedCategories);
+  const allowedPrayers = prayers.filter((item) => explicitlyPublic(item)
+    && !privatePrayerIds.has(item.id) && !policy.prayerRestricted(item));
+  const allowedCategories = categories.filter((item) => explicitlyPublic(item)
+    && !privateCategoryIds.has(item.id) && !policy.categoryRestricted(item.id));
+  const prayerIds = new Set([...allowedPrayers.map((item) => item.id), ...legacyPrayerIds]);
+  const categoryIds = new Set(allowedCategories.map((item) => item.id));
+  return {
+    prayers: allowedPrayers.map((item) => {
+      const row = { ...item };
+      if (row.categoryId && !categoryIds.has(row.categoryId)) delete row.categoryId;
+      if (row.categoryIds) row.categoryIds = row.categoryIds.filter((id) => categoryIds.has(id));
+      return row;
+    }),
+    categories: allowedCategories.map((item) => item.prayerIds
+      ? { ...item, prayerIds: item.prayerIds.filter((id) => prayerIds.has(id)) } : item),
+  };
+}
+
 /** Takes collections available only to the trusted exporter and projects an explicit public allowlist. */
-export function buildPublicPrayerCatalog({ prayers, categories, protectedCategories = [] }, publishedAt = new Date().toISOString()) {
-  if (!Array.isArray(prayers) || !Array.isArray(categories) || !Array.isArray(protectedCategories)) {
+export function buildPublicPrayerCatalog(collections, publishedAt = new Date().toISOString()) {
+  const { prayers, categories, protectedCategories = [], protectedPrayers = [] } = collections;
+  if (![prayers, categories, protectedCategories, protectedPrayers].every(Array.isArray)) {
     throw new Error('Public catalog export needs all three collection arrays');
   }
   const byId = (items, label) => {
@@ -47,26 +78,9 @@ export function buildPublicPrayerCatalog({ prayers, categories, protectedCategor
   };
   byId(prayers, 'prayer');
   byId(categories, 'category');
-  // A protected category can restrict a prayer via membership, tags or ancestry.
-  const policy = prayerAccessPolicy(prayers, [...categories, ...protectedCategories]);
-  const allowedPrayers = prayers.filter((prayer) => explicitlyPublic(prayer) && !policy.prayerRestricted(prayer));
-  const allowedIds = new Set(allowedPrayers.map((prayer) => prayer.id));
-  const allowedCategories = categories.filter((category) =>
-    explicitlyPublic(category) && !policy.categoryRestricted(category.id));
-  const allowedCategoryIds = new Set(allowedCategories.map((category) => category.id));
-  const projectedPrayers = allowedPrayers.map((prayer) => {
-    const item = select(prayer, PRAYER_FIELDS);
-    if (item.categoryId && !allowedCategoryIds.has(item.categoryId)) delete item.categoryId;
-    if (item.categoryIds) item.categoryIds = item.categoryIds.filter((id) => allowedCategoryIds.has(id));
-    return item;
-  });
-  const projectedCategories = allowedCategories.map((category) => {
-    const item = select(category, CATEGORY_FIELDS);
-    if (item.prayerIds) item.prayerIds = item.prayerIds.filter((id) => allowedIds.has(id));
-    // No private parent/category IDs in the public payload.
-    if (item.parentId && !allowedCategoryIds.has(item.parentId)) throw new Error('Public category has a protected parent');
-    return item;
-  });
+  const allowed = publicPrayerRows(collections);
+  const projectedPrayers = allowed.prayers.map((item) => select(item, PRAYER_FIELDS));
+  const projectedCategories = allowed.categories.map((item) => select(item, CATEGORY_FIELDS));
   if (!projectedPrayers.length || !projectedCategories.length) {
     throw new Error('Refusing to export an empty public prayer catalog');
   }
@@ -101,8 +115,9 @@ export function validatePublicPrayerCatalog(catalog) {
     }
   }
   const policy = prayerAccessPolicy(catalog.prayers, catalog.categories);
-  if (catalog.prayers.some((item) => policy.prayerRestricted(item))) {
-    throw new Error('Public prayer catalog contains restricted prayer');
+  if (catalog.prayers.some((item) => policy.prayerRestricted(item))
+    || catalog.categories.some((item) => policy.categoryRestricted(item.id))) {
+    throw new Error('Public prayer catalog contains restricted content');
   }
   return { prayers: catalog.prayers, categories: catalog.categories };
 }

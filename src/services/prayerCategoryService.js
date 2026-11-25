@@ -17,7 +17,7 @@ function categoryPayload(category) {
     order: category.order == null ? Date.now() : Number(category.order) };
 }
 const sorted = (categories) => categories.map((item) => ({ ...item, tags: cleanTags(item.tags), prayerIds: item.prayerIds || [] })).sort(comparePrayerCategories);
-export async function getSavedPrayerCategories() { return sorted((await getPrayerContent()).categories); }
+export async function getSavedPrayerCategories(publicData) { return sorted((await getPrayerContent(publicData)).categories); }
 export function subscribePrayerCategories(onData, onError) { return subscribeAdminPrayerContent((content) => onData(sorted(content.categories)), onError); }
 export async function updatePrayerCategory(id, category) {
   await mutatePrayerContent((content) => {

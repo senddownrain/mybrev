@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
+import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
+import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 
 /**
  * Prayers filter/search state store.
@@ -17,6 +19,12 @@ export const usePrayersFiltersStore = defineStore('prayersFilters', () => {
   const isSearchExpanded = ref(false);
   const isFilterExpanded = ref(false);
   const categoryReturnFocus = ref({});
+  watch(prayerCatalogRevision, () => {
+    if (isProtectedPrayerRow(selectedCategory.value)) selectedCategory.value = null;
+    selectedTags.value = [];
+    lastOpenedPrayerId.value = null;
+    categoryReturnFocus.value = {};
+  }, { flush: 'sync' });
 
   // Debounced version of searchQuery — no onUnmounted needed since the store
   // is a singleton that lives for the entire app lifetime.

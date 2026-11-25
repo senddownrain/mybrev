@@ -13,6 +13,18 @@ import { assertPrayerSaveConfirmed } from '@/utils/prayerSaveVerification.mjs';
 const collectionNames = Object.entries(PRAYER_STORAGE).flat();
 const rows = (snapshot) => snapshot.docs.map((item) => ({ ...item.data(), id: item.id }));
 const firestoreFns = { doc, collection, getDocFromServer, getDocsFromServer, runTransaction, serverTimestamp };
+
+// S3 injects the approved authenticated transport when its editor is linked.
+// Both calls pass plain edit data, never an arbitrary mutator or SDK write.
+export function createCanonicalPrayerSaveApi(invoke) {
+  return {
+    preview: (edits) => invoke({ action: 'preview', edits }),
+    save: (edits, preview) => invoke({ action: 'save', edits,
+      expectedVersion: preview.version, planDigest: preview.planDigest }),
+    verify: (preview) => invoke({ action: 'verify', expectedVersion: preview.version + Number(Boolean(preview.writes)),
+      afterDigest: preview.afterDigest }),
+  };
+}
 export async function getPrayerContentWriter() {
   const db = await getPriestEditorDb();
   return createPrayerContentWriter({ db, fs: firestoreFns, withQuota: withFirestoreQuota, transact: (dbRef, update) => quotaSafeTransaction(runTransaction, dbRef, update) });
