@@ -63,3 +63,12 @@ if (import.meta.env.VITE_ANALYTICS_LOCAL === 'true') {
     }))
     .catch(error => console.warn('[main] Local analytics unavailable:', error.message))
 }
+
+// Optional Google Analytics: initialize choice handling after the first render.
+if (import.meta.env.VITE_FIREBASE_ANALYTICS === 'true') {
+  runAfterLoadAndIdle(() => {
+    import('./utils/googleAnalyticsConsent.js')
+      .then(({ initGoogleAnalyticsChoice }) => initGoogleAnalyticsChoice())
+      .catch(error => console.warn('[main] Google Analytics unavailable:', error.message))
+  }, { delay: 2000 })
+}
