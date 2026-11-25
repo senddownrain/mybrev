@@ -175,6 +175,14 @@ test('Access Sets V2 authorization in local Auth and Firestore emulators', {
       await deny(setDoc(doc(editor.db, path), { synthetic: true }));
       await deny(get(manager, path));
     }
+    for (const allowedSets of [['priest!marian'], ['marian', true], ['marian', 'marian']]) {
+      const batch = writeBatch(manager.db);
+      batch.set(doc(manager.db, 'accessProfilesV2/malformed'), {
+        name: 'Synthetic profile', status: 'active', revision: 1, updatedAt: serverTimestamp(), allowedSets,
+      });
+      batch.set(doc(manager.db, 'accessProfilesV2/malformed/client/entitlements'), { allowedSets, revision: 1 });
+      await deny(batch.commit());
+    }
     await deny(get(editor, 'accessProfilesV2/marian'));
     await deny(get(editor, 'accessCodesV2/' + marianCode.codeId));
     await deny(setDoc(doc(editor.db, 'protectedPrayers', 's1-direct-write'), { effectiveAccessSets: ['marian'] }));
