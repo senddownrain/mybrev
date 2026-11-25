@@ -13,7 +13,8 @@ import { createAccessSetsCatalogSession } from '../src/services/accessSetsCatalo
 
 const firestoreHost = process.env.FIRESTORE_EMULATOR_HOST;
 const authHost = process.env.FIREBASE_AUTH_EMULATOR_HOST;
-const projectId = 'demo-rules';
+const projectId = process.env.S8_TEST_PROJECT || 'demo-rules';
+assert.match(projectId, /^demo-[a-z0-9-]+$/);
 const loopback = /^(127\.0\.0\.1|localhost):[0-9]+$/;
 const pathMode = 'priestContentControl/accessSetsV2';
 const pathControl = 'priestContentControl/state';
@@ -180,12 +181,17 @@ test('S4 writer, mirror and reader use one real atomic Firestore commit', { skip
   assert.equal((await db.doc('protectedPrayers/new-mixed').get()).exists, false);
   assert.equal((await db.doc('accessSetsV2/marian/prayers/new-mixed').get()).exists, false);
 
-  const maxEdits = Array.from({ length: 133 }, (_, i) => ({
-    kind: 'prayers', action: 'create', id: `batch-${i}`,
+  const mirrorEdits = Array.from({ length: 133 }, (_, i) => ({
+    kind: 'prayers', action: 'create', id: 'batch-' + i,
     patch: { title: 'Synthetic limit test', text: 'Synthetic', accessSets: ['priest'] },
   }));
+  await assert.rejects(preview(mirrorEdits), { code: 'content-transaction-too-large' });
+  const maxEdits = [...mirrorEdits.slice(0, 132), {
+    kind: 'prayers', action: 'create', id: 'batch-marian',
+    patch: { title: 'Synthetic limit test', text: 'Synthetic', accessSets: ['marian'] },
+  }];
   const maxReview = await preview(maxEdits);
-  assert.equal(maxReview.writes, 399);
+  assert.equal(maxReview.writes + maxReview.extraWrites, 400);
   await call(saveRequest(maxEdits, maxReview));
   assert.deepEqual(await call({ action: 'verify', expectedVersion: 4, afterDigest: maxReview.afterDigest }), { version: 4, parity: 'verified' });
 

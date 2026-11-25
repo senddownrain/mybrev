@@ -22,7 +22,7 @@ const callableUrl = functionsConfig
   ? 'http://127.0.0.1:' + functionsConfig.emulators.functions.port + '/' + projectId + '/europe-west1/canonicalCatalog' : null;
 const encode = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
 const appCheck = [encode({ alg: 'none', typ: 'JWT' }), encode({ sub: 'synthetic-ui' }), 'local-only'].join('.');
-const uiPort = 4783;
+const uiPort = Number(process.env.S8_ADMIN_UI_PORT || (canonicalSmoke ? 4883 : 4783));
 const base = `http://127.0.0.1:${uiPort}`;
 const path = '/admin/access-sets';
 const password = 'Synthetic-test-password2345';
@@ -111,7 +111,7 @@ function testLite(app) {
 const server = await createServer({
   configFile: false,
   define: { 'process.env': {} },
-  cacheDir: 'node_modules/.vite-access-admin',
+  cacheDir: canonicalSmoke ? 'node_modules/.vite-access-admin-canonical' : 'node_modules/.vite-access-admin',
   resolve: { alias: { '@': fileURLToPath(new URL('../src', import.meta.url)) } },
   optimizeDeps: { include: ['vuetify/components', 'vuetify/directives', 'firebase/auth', 'firebase/firestore/lite'] },
   server: { host: '127.0.0.1', port: uiPort, strictPort: true },
@@ -155,7 +155,7 @@ async function session(who) {
     if (!['127.0.0.1', 'localhost'].includes(url.hostname)) return route.abort();
     if (canonicalSmoke && url.origin === base && url.pathname === '/__s8/catalog' && request.method() === 'POST') {
       const reply = await fetch(callableUrl, { method: 'POST', headers: {
-        'content-type': 'application/json', authorization: request.headers().authorization, 'X-Firebase-AppCheck': appCheck,
+        'content-type': 'application/json', authorization: (await request.allHeaders()).authorization, 'X-Firebase-AppCheck': appCheck,
       }, body: request.postData() });
       return route.fulfill({ status: reply.status, contentType: 'application/json', body: await reply.text() });
     }
@@ -175,7 +175,7 @@ async function session(who) {
     return route.continue();
   });
   const page = await context.newPage();
-  page.setDefaultTimeout(23000);
+  page.setDefaultTimeout(Number(process.env.S8_BROWSER_TIMEOUT || (canonicalSmoke ? 120000 : 23000)));
   page.on('pageerror', error => { runtimeErrors.push(error.name); });
   await page.goto(base + path);
   try {

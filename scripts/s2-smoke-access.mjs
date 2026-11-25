@@ -13,7 +13,8 @@ import { codeProof } from '../src/utils/priestCode.mjs';
 const authHost = process.env.FIREBASE_AUTH_EMULATOR_HOST;
 const firestoreHost = process.env.FIRESTORE_EMULATOR_HOST;
 for (const host of [authHost, firestoreHost]) assert.match(host || '', /^(127\.0\.0\.1|localhost):\d+$/);
-const projectId = 'demo-rules';
+const projectId = process.env.S2_TEST_PROJECT || 'demo-rules';
+assert.match(projectId, /^demo-[a-z0-9-]+$/);
 const uiPort = Number(process.env.S2_UI_PORT || 5182);
 const legacyOnly = process.env.S2_LEGACY_RULES === '1';
 const [host, port] = firestoreHost.split(':');
@@ -76,7 +77,7 @@ const server = await createServer({
       if (id.endsWith('/src/plugins/firebase.js')) return `
         import { initializeApp } from 'firebase/app';
         import { getAuth, connectAuthEmulator, signInWithEmailAndPassword } from 'firebase/auth';
-        export const firebaseApp = initializeApp({projectId:'demo-rules', apiKey:'demo-key'});
+        export const firebaseApp = initializeApp({projectId:'${projectId}', apiKey:'demo-key'});
         const auth = getAuth(firebaseApp);
         connectAuthEmulator(auth, 'http://${authHost}', {disableWarnings:true});
         await auth.authStateReady();
@@ -138,7 +139,7 @@ try {
       return route.continue();
     });
     const page = await context.newPage();
-    page.setDefaultTimeout(20000);
+    page.setDefaultTimeout(Number(process.env.S8_BROWSER_TIMEOUT || 20000));
     page.on('pageerror', error => errors.push(error.name));
     page.on('console', entry => consoleEntries.push(entry.text()));
     await page.goto(`http://127.0.0.1:${uiPort}/__s2`, { waitUntil: 'domcontentloaded' });

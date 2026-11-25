@@ -70,7 +70,7 @@ try {
   const counts = () => page.evaluate(() => window.catalogHarness.counts());
   const foreground = (hidden) => page.evaluate((value) => {
     Object.defineProperty(document, 'hidden', { configurable: true, value });
-    document.dispatchEvent(new Event('visibilitychange'));
+    document.dispatchEvent(new globalThis.Event('visibilitychange'));
   }, hidden);
   await page.goto(`http://127.0.0.1:${server.address().port}/#/home`, { waitUntil: 'commit', timeout: 60_000 });
   await Promise.race([
@@ -115,8 +115,8 @@ try {
 
   const saved = await page.evaluate(async () => {
     const entries = [JSON.stringify(localStorage), JSON.stringify(sessionStorage)];
-    for (const { name } of await indexedDB.databases()) {
-      const open = indexedDB.open(name);
+    for (const { name } of await globalThis.indexedDB.databases()) {
+      const open = globalThis.indexedDB.open(name);
       const database = await new Promise((resolve, reject) => { open.onsuccess = () => resolve(open.result); open.onerror = reject; });
       for (const store of database.objectStoreNames) {
         const request = database.transaction(store).objectStore(store).getAll();
@@ -150,7 +150,7 @@ try {
   await go('/');
   await publicTitle.waitFor();
   await context.setOffline(true);
-  await page.evaluate(() => window.dispatchEvent(new Event('offline')));
+  await page.evaluate(() => window.dispatchEvent(new globalThis.Event('offline')));
   await publicTitle.waitFor();
   assert.equal(await privateTitle.count(), 0);
   assert.deepEqual(errors, []);

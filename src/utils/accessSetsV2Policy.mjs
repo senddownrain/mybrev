@@ -10,7 +10,7 @@ export const isProtectedPrayerRow = (row) => Boolean(row && (row.priestOnly === 
 export function validCatalogId(id) {
   return typeof id === 'string' && id.length > 0 && id !== '.' && id !== '..'
     && !id.includes('/') && !/^__.*__$/su.test(id) && !/[\uD800-\uDFFF]/u.test(id)
-    && new TextEncoder().encode(id).length <= 1500;
+    && new globalThis.TextEncoder().encode(id).length <= 1500;
 }
 
 export function validAccessSetList(sets) {
