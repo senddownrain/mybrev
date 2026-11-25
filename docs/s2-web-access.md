@@ -38,6 +38,7 @@ npm run test:access-sets-v2
 npm run test:priest:rules
 firebase emulators:exec --only auth,firestore --project demo-rules "node scripts/s2-smoke-access.mjs"
 npm run build
+node scripts/s2-scan-public-build.mjs
 ```
 
 Smoke блокирует внешние запросы браузера и использует синтетические fixtures. `BENCHMARK_BROWSER_PATH` задаёт путь к Chromium, `S2_SCREENSHOT` — путь для снимка пустой формы. Для прохода со старыми Rules используется отдельная конфигурация Emulator с `firestore.rules` из `c1359b0289db070521e646c844157464802b5073` и `S2_LEGACY_RULES=1`.
