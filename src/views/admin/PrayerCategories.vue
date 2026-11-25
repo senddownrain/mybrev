@@ -173,6 +173,7 @@
           <v-card-text class="dialog-fields">
             <v-alert v-if="categoryDraft.parentId && accessPolicy.categoryRestricted(categoryDraft.parentId)" type="info" variant="tonal">Бацькоўская катэгорыя абмяжоўвае доступ для святароў.</v-alert>
             <v-switch v-model="categoryDraft.priestOnly" label="Толькі для святароў" color="primary" hide-details />
+            <ContentAccessSets />
             <v-select v-model="categoryDraft.parentId" label="Бацькоўская катэгорыя" :items="parentOptions" item-title="name" item-value="id" clearable />
             <CategoryIconPicker :model-value="categoryDraft.iconKey" @update:model-value="pickIcon" />
             <v-text-field
@@ -282,6 +283,7 @@
 </template>
 
 <script setup>
+import ContentAccessSets from '@/components/admin/accessSets/ContentAccessSets.vue';
 import { computed, ref, watch, onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNotifier } from '@/composables/useNotifier';

@@ -33,6 +33,7 @@
             <p v-if="newTags.length" class="hint hint--warn">Новыя тэгі (іх няма ў базе): {{ newTags.join(', ') }}</p>
             <p class="hint">Катэгорыі збіраюцца па тэгах: {{ categoryNames || 'пакуль ніводная не падыходзіць' }}.</p>
             <v-switch v-model="form.priestOnly" label="Толькі для святароў пасля публікацыі" color="primary" hide-details :readonly="locked" />
+            <ContentAccessSets />
           </v-card>
 
           <v-card class="card" elevation="0">
@@ -109,6 +110,7 @@
 </template>
 
 <script setup>
+import ContentAccessSets from '@/components/admin/accessSets/ContentAccessSets.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue';

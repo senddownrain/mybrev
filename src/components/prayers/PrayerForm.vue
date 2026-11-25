@@ -41,6 +41,7 @@
     >
       <div class="editor-column">
         <v-switch v-model="form.priestOnly" label="Толькі для святароў" color="primary" hide-details class="mb-4" />
+        <ContentAccessSets />
         <v-card class="editor-card" elevation="0">
           <section class="editor-section">
             <div class="section-heading">
@@ -262,6 +263,7 @@
 </template>
 
 <script setup>
+import ContentAccessSets from '@/components/admin/accessSets/ContentAccessSets.vue';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { usePrayers } from '@/composables/usePrayers';
