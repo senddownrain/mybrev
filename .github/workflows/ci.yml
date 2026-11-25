@@ -66,6 +66,9 @@ jobs:
       - name: Shared feedback Worker security, CORS, rate-limit regressions (offline)
         run: node --test workers/feedback/test/*.test.mjs
 
+      - name: App Check for the default, priest and editor Web clients (mocked attestation)
+        run: node scripts/smoke-firebase-app-check.mjs
+
       - name: Feedback context and footer placement regressions (offline)
         run: node --test tests/feedback-context.test.mjs tests/feedback-footer-placement.test.mjs
 
@@ -136,7 +139,9 @@ jobs:
         run: npm run test:common-seasons
 
       - name: Analytics tests (contract, collector, mapper, inventory, reader signal)
-        run: npm run test:analytics
+        run: |
+          npm run test:analytics
+          node --test tests/google-analytics.test.mjs
 
       - name: Psalmody doxology audit and regressions (offline)
         run: |

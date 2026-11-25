@@ -14,6 +14,9 @@ on:
         options:
           - hosting
           - firestore-rules
+      published_catalog_sha256:
+        description: Optional reviewed SHA-256 to reuse the published public catalog (Hosting only)
+        type: string
 
 permissions:
   contents: read
@@ -61,12 +64,19 @@ jobs:
           VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
-          VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+          VITE_FIREBASE_APP_CHECK_SITE_KEY: ${{ vars.VITE_FIREBASE_APP_CHECK_SITE_KEY }}
+          VITE_FIREBASE_MEASUREMENT_ID: ${{ vars.VITE_FIREBASE_MEASUREMENT_ID }}
+          # Keep real-user collection off until the SDK network privacy QA is approved.
+          VITE_FIREBASE_ANALYTICS: ${{ vars.VITE_FIREBASE_ANALYTICS == 'true' && vars.VITE_FIREBASE_ANALYTICS_RELEASE_APPROVED == 'true' && 'true' || 'false' }}
           VITE_FIREBASE_DATABASE_URL: ${{ secrets.VITE_FIREBASE_DATABASE_URL }}
           VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
           # Public URLs (not secrets): feedback Worker API and the superadmin-only link to the analytics reports panel.
           VITE_FEEDBACK_API_URL: https://mybrev-feedback.slovo-app.workers.dev
           VITE_ANALYTICS_REPORTS_URL: https://mybrev-analytics-reports-staging.slovo-app.workers.dev/reports
+          # Owner-controlled Cloudflare Analytics v2 switch; absent/false keeps network collection out of the build.
+          VITE_ANALYTICS_LOCAL: ${{ vars.MYBREV_WEB_ANALYTICS_ENABLED == 'true' && 'true' || 'false' }}
+          VITE_ANALYTICS_STAGING: ${{ vars.MYBREV_WEB_ANALYTICS_ENABLED == 'true' && 'true' || 'false' }}
+          VITE_ANALYTICS_STAGING_URL: https://mybrev-analytics-staging.slovo-app.workers.dev
         run: |
           if [ "$VITE_FIREBASE_PROJECT_ID" != "ibreviaryby" ]; then
             echo "::error::VITE_FIREBASE_PROJECT_ID must match the Hosting target ibreviaryby."
@@ -98,10 +108,26 @@ jobs:
       # This reads three collections ONCE per deployment, not per visitor;
       # a quota error fails the release before any Hosting changes.
       - name: Export public prayers to Hosting
-        if: inputs.target == 'hosting'
+        if: inputs.target == 'hosting' && inputs.published_catalog_sha256 == ''
         run: |
           node scripts/export-public-prayers-hosting.mjs --live --project ibreviaryby --out dist/public-prayers-v1.json
           node scripts/verify-public-prayers-hosting.mjs dist/public-prayers-v1.json
+
+      # A code-only release may carry forward the exact public catalog already on Hosting.
+      - name: Reuse the published public prayer catalog
+        if: inputs.target == 'hosting' && inputs.published_catalog_sha256 != ''
+        env:
+          HOSTING_PUBLISHED_CATALOG_SHA256: ${{ inputs.published_catalog_sha256 }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$HOSTING_PUBLISHED_CATALOG_SHA256" =~ ^[0-9a-f]{64}$ ]]; then
+            echo '::error::Provide the reviewed lowercase SHA-256 of the published catalog.'
+            exit 1
+          fi
+          curl --fail --silent --show-error --max-time 30 \
+            https://ibreviaryby.web.app/public-prayers-v1.json --output dist/public-prayers-v1.json
+          node scripts/verify-public-prayers-hosting.mjs dist/public-prayers-v1.json
+          printf 'HOSTING_PUBLISHED_CATALOG_SHA256=%s\n' "$HOSTING_PUBLISHED_CATALOG_SHA256" >> "$GITHUB_ENV"
 
       - name: Deploy Firestore Rules only
         if: inputs.target == 'firestore-rules'
