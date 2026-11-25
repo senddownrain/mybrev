@@ -30,6 +30,12 @@ function runAfterLoadAndIdle(task, { delay = 0, idleTimeout = 2000 } = {}) {
 }
 
 runAfterLoadAndIdle(() => {
+  import('./services/priestAccessService')
+    .then(({ startPriestAccess }) => startPriestAccess())
+    .catch(() => {})
+})
+
+runAfterLoadAndIdle(() => {
   calendarReady.then(() => import('./services/ordoCalendarService'))
     .then(({ startCalendarRevalidation }) => startCalendarRevalidation())
     .catch(error => console.warn('[main] Calendar refresh skipped:', error.message))
