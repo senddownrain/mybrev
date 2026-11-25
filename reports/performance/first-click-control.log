@@ -1,0 +1,123 @@
+cold | menu | 1 | OK | 122.69999999995343 |
+cold | menu | 2 | OK | 106.90000000002328 |
+cold | menu | 3 | OK | 103.20000000006985 |
+cold | menu | 4 | OK | 95.79999999993015 |
+cold | menu | 5 | OK | 112.5 |
+cold | menu | 6 | OK | 72.80000000004657 |
+cold | menu | 7 | OK | 81.09999999997672 |
+cold | menu | 8 | OK | 75.89999999990687 |
+cold | day-option | 1 | OK | 105.10000000009313 |
+cold | day-option | 2 | OK | 105.19999999995343 |
+cold | day-option | 3 | OK | 130.89999999990687 |
+cold | day-option | 4 | OK | 122.40000000002328 |
+cold | day-option | 5 | OK | 120.90000000002328 |
+cold | day-option | 6 | OK | 107.19999999995343 |
+cold | day-option | 7 | OK | 102.40000000002328 |
+cold | day-option | 8 | OK | 97 |
+warm | menu | 1 | OK | 55.40000000002328 |
+warm | menu | 2 | OK | 48.699999999953434 |
+warm | menu | 3 | OK | 51.59999999997672 |
+warm | menu | 4 | OK | 56.70000000006985 |
+warm | menu | 5 | OK | 51.199999999953434 |
+warm | menu | 6 | OK | 54.59999999997672 |
+warm | menu | 7 | OK | 60 |
+warm | menu | 8 | OK | 50 |
+warm | day-option | 1 | OK | 121.79999999993015 |
+warm | day-option | 2 | OK | 97.5 |
+warm | day-option | 3 | OK | 107.69999999995343 |
+warm | day-option | 4 | OK | 125.90000000002328 |
+warm | day-option | 5 | OK | 95.20000000006985 |
+warm | day-option | 6 | OK | 100 |
+warm | day-option | 7 | OK | 99.5 |
+warm | day-option | 8 | OK | 143.40000000002328 |
+slow | menu | 1 | OK | 369.80000000004657 |
+slow | menu | 2 | OK | 238.19999999995343 |
+slow | menu | 3 | OK | 358.5 |
+slow | menu | 4 | OK | 240.09999999997672 |
+slow | menu | 5 | OK | 213.19999999995343 |
+slow | menu | 6 | OK | 212.40000000002328 |
+slow | menu | 7 | OK | 315.5 |
+slow | menu | 8 | OK | 207.69999999995343 |
+slow | day-option | 1 | OK | 279.0999999999767 |
+slow | day-option | 2 | OK | 286 |
+slow | day-option | 3 | OK | 283.0999999999767 |
+slow | day-option | 4 | OK | 216 |
+slow | day-option | 5 | OK | 227.29999999993015 |
+slow | day-option | 6 | OK | 301.5999999999767 |
+slow | day-option | 7 | OK | 273.79999999993015 |
+slow | day-option | 8 | OK | 297.70000000006985 |
+Report: /workspace/mybrev/reports/performance/first-interactions-1792701825659.json
+[
+  {
+    "mode": "cold",
+    "case": "menu",
+    "attempts": 8,
+    "success": 8,
+    "failed": 0,
+    "clickToResponseP50Ms": 95.8,
+    "clickToResponseP95Ms": 122.7,
+    "clickToResponseMaxMs": 122.7,
+    "over250Ms": 0,
+    "longTasksOver50Ms": 33
+  },
+  {
+    "mode": "cold",
+    "case": "day-option",
+    "attempts": 8,
+    "success": 8,
+    "failed": 0,
+    "clickToResponseP50Ms": 105.2,
+    "clickToResponseP95Ms": 130.9,
+    "clickToResponseMaxMs": 130.9,
+    "over250Ms": 0,
+    "longTasksOver50Ms": 23
+  },
+  {
+    "mode": "warm",
+    "case": "menu",
+    "attempts": 8,
+    "success": 8,
+    "failed": 0,
+    "clickToResponseP50Ms": 51.6,
+    "clickToResponseP95Ms": 60,
+    "clickToResponseMaxMs": 60,
+    "over250Ms": 0,
+    "longTasksOver50Ms": 4
+  },
+  {
+    "mode": "warm",
+    "case": "day-option",
+    "attempts": 8,
+    "success": 8,
+    "failed": 0,
+    "clickToResponseP50Ms": 100,
+    "clickToResponseP95Ms": 143.4,
+    "clickToResponseMaxMs": 143.4,
+    "over250Ms": 0,
+    "longTasksOver50Ms": 1
+  },
+  {
+    "mode": "slow",
+    "case": "menu",
+    "attempts": 8,
+    "success": 8,
+    "failed": 0,
+    "clickToResponseP50Ms": 238.2,
+    "clickToResponseP95Ms": 369.8,
+    "clickToResponseMaxMs": 369.8,
+    "over250Ms": 3,
+    "longTasksOver50Ms": 54
+  },
+  {
+    "mode": "slow",
+    "case": "day-option",
+    "attempts": 8,
+    "success": 8,
+    "failed": 0,
+    "clickToResponseP50Ms": 279.1,
+    "clickToResponseP95Ms": 301.6,
+    "clickToResponseMaxMs": 301.6,
+    "over250Ms": 6,
+    "longTasksOver50Ms": 51
+  }
+]

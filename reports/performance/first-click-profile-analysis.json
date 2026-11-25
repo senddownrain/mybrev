@@ -1,0 +1,627 @@
+{
+  "report": "reports/performance/first-interactions-1792701859938.json",
+  "method": "CPU samples mapped to native navigation start from CDP. Samples are statistical and include idle / program / GC buckets. Profiling is separate from primary runs.",
+  "profiles": [
+    {
+      "case": "menu",
+      "profile": "reports/performance/profiles/1792701848943-slow-menu-1.cpuprofile",
+      "metrics": [
+        {
+          "name": "Timestamp",
+          "value": 1016.033343
+        },
+        {
+          "name": "LayoutDuration",
+          "value": 0.406489
+        },
+        {
+          "name": "RecalcStyleDuration",
+          "value": 0.155334
+        },
+        {
+          "name": "ScriptDuration",
+          "value": 0.290533
+        },
+        {
+          "name": "TaskDuration",
+          "value": 2.232252
+        },
+        {
+          "name": "NavigationStart",
+          "value": 1012.651061
+        }
+      ],
+      "windows": [
+        {
+          "action": "hamburger",
+          "startMs": 2236.8000000000466,
+          "durationMs": 163.90000000002328,
+          "profileSampleMs": 163.37999999999997,
+          "topSampleBucketsMs": [
+            [
+              "index-eQzADfnj.js",
+              51.842
+            ],
+            [
+              "vendor-vue-CBKyuEcF.js",
+              31.100999999999996
+            ],
+            [
+              "(idle)",
+              29.748000000000005
+            ],
+            [
+              "(program)",
+              28.370999999999995
+            ],
+            [
+              "vendor-vuetify-B2wI3zza.js",
+              11.955
+            ],
+            [
+              "getComputedStyle",
+              4.206
+            ],
+            [
+              "vendor-firebase-firestore-DbZFqf1R.js",
+              2.301
+            ],
+            [
+              "document.addEventListener.capture",
+              1.697
+            ],
+            [
+              "vendor-firebase-core-BhJkUvTi.js",
+              0.971
+            ],
+            [
+              "fetch",
+              0.653
+            ]
+          ],
+          "topFramesMs": [
+            {
+              "function": "(idle)",
+              "script": "",
+              "sampleMs": 29.748000000000005
+            },
+            {
+              "function": "Ro",
+              "script": "index-eQzADfnj.js",
+              "sampleMs": 28.547
+            },
+            {
+              "function": "(program)",
+              "script": "",
+              "sampleMs": 28.370999999999995
+            },
+            {
+              "function": "",
+              "script": "index-eQzADfnj.js",
+              "sampleMs": 23.294999999999998
+            },
+            {
+              "function": "Lr",
+              "script": "vendor-vue-CBKyuEcF.js",
+              "sampleMs": 4.823
+            },
+            {
+              "function": "getComputedStyle",
+              "script": "",
+              "sampleMs": 4.206
+            },
+            {
+              "function": "rf",
+              "script": "vendor-vue-CBKyuEcF.js",
+              "sampleMs": 4.097
+            },
+            {
+              "function": "sn",
+              "script": "vendor-vuetify-B2wI3zza.js",
+              "sampleMs": 4.074
+            },
+            {
+              "function": "Xo",
+              "script": "vendor-vue-CBKyuEcF.js",
+              "sampleMs": 3.145
+            },
+            {
+              "function": "A",
+              "script": "vendor-vue-CBKyuEcF.js",
+              "sampleMs": 2.967
+            }
+          ],
+          "resources": []
+        },
+        {
+          "action": "readings-link",
+          "startMs": 2607.5,
+          "durationMs": 694.8000000000466,
+          "profileSampleMs": 695.6039999999994,
+          "topSampleBucketsMs": [
+            [
+              "(program)",
+              221.875
+            ],
+            [
+              "(idle)",
+              148.60899999999998
+            ],
+            [
+              "vendor-vue-CBKyuEcF.js",
+              144.13699999999997
+            ],
+            [
+              "index-eQzADfnj.js",
+              48.14799999999999
+            ],
+            [
+              "BackToTop-BeQU5muv.js",
+              29.576999999999998
+            ],
+            [
+              "vendor-vuetify-B2wI3zza.js",
+              29.525000000000006
+            ],
+            [
+              "vendor-firebase-auth-B0ZQgNvn.js",
+              18.256
+            ],
+            [
+              "vendor-firebase-firestore-DbZFqf1R.js",
+              16.488000000000003
+            ],
+            [
+              "appendChild",
+              10.265
+            ],
+            [
+              "vendor-moment-BLMuvzoS.js",
+              6.208
+            ]
+          ],
+          "topFramesMs": [
+            {
+              "function": "(program)",
+              "script": "",
+              "sampleMs": 221.875
+            },
+            {
+              "function": "(idle)",
+              "script": "",
+              "sampleMs": 148.60899999999998
+            },
+            {
+              "function": "Us",
+              "script": "vendor-vue-CBKyuEcF.js",
+              "sampleMs": 42.185
+            },
+            {
+              "function": "r",
+              "script": "BackToTop-BeQU5muv.js",
+              "sampleMs": 29.576999999999998
+            },
+            {
+              "function": "De",
+              "script": "index-eQzADfnj.js",
+              "sampleMs": 19.773
+            },
+            {
+              "function": "",
+              "script": "vendor-vuetify-B2wI3zza.js",
+              "sampleMs": 15.872
+            },
+            {
+              "function": "En",
+              "script": "vendor-vue-CBKyuEcF.js",
+              "sampleMs": 11.979000000000003
+            },
+            {
+              "function": "",
+              "script": "index-eQzADfnj.js",
+              "sampleMs": 10.873000000000001
+            },
+            {
+              "function": "appendChild",
+              "script": "",
+              "sampleMs": 10.265
+            },
+            {
+              "function": "",
+              "script": "vendor-firebase-auth-B0ZQgNvn.js",
+              "sampleMs": 8.481000000000002
+            }
+          ],
+          "resources": [
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/vendor-firebase-auth-B0ZQgNvn.js",
+              "at": 2586.0999999999767,
+              "duration": 280.60000000009313,
+              "responseStart": 2589.3000000000466,
+              "responseEnd": 2866.70000000007,
+              "transferSize": 25384
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/ReadingsView-BzDvpUIZ.js",
+              "at": 2640.5999999999767,
+              "duration": 188.20000000006985,
+              "responseStart": 2642,
+              "responseEnd": 2828.8000000000466,
+              "transferSize": 300
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/BackToTop-BeQU5muv.js",
+              "at": 2640.9000000000233,
+              "duration": 190.30000000004657,
+              "responseStart": 2642.20000000007,
+              "responseEnd": 2831.20000000007,
+              "transferSize": 300
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/BackToTop-Dw9JFzgM.css",
+              "at": 2644.5999999999767,
+              "duration": 190.80000000004657,
+              "responseStart": 2645.5999999999767,
+              "responseEnd": 2835.4000000000233,
+              "transferSize": 300
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/useReadings-UMnj5V3N.js",
+              "at": 2646.9000000000233,
+              "duration": 192.09999999997672,
+              "responseStart": 2649.5,
+              "responseEnd": 2839,
+              "transferSize": 300
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/ParsedReadingCard-CsRhGHPf.js",
+              "at": 2647.70000000007,
+              "duration": 193.5,
+              "responseStart": 2649.3000000000466,
+              "responseEnd": 2841.20000000007,
+              "transferSize": 300
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/ParsedReadingCard-CNiPgHS2.css",
+              "at": 2648.5999999999767,
+              "duration": 363.10000000009313,
+              "responseStart": 2830.3000000000466,
+              "responseEnd": 3011.70000000007,
+              "transferSize": 300
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/ReadingsView-C35WeeUb.css",
+              "at": 2649.8000000000466,
+              "duration": 365.4000000000233,
+              "responseStart": 2831.20000000007,
+              "responseEnd": 3015.20000000007,
+              "transferSize": 300
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/ReadingsBottomNav-C38EK_ZK.js",
+              "at": 2651.20000000007,
+              "duration": 371.0999999999767,
+              "responseStart": 2839.5999999999767,
+              "responseEnd": 3022.3000000000466,
+              "transferSize": 300
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/ReadingsBottomNav-P3xgGU8o.css",
+              "at": 2652.20000000007,
+              "duration": 366.5,
+              "responseStart": 2836,
+              "responseEnd": 3018.70000000007,
+              "transferSize": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "day-option",
+      "profile": "reports/performance/profiles/1792701848943-slow-day-option-1.cpuprofile",
+      "metrics": [
+        {
+          "name": "Timestamp",
+          "value": 1023.262553
+        },
+        {
+          "name": "LayoutDuration",
+          "value": 0.369043
+        },
+        {
+          "name": "RecalcStyleDuration",
+          "value": 0.372959
+        },
+        {
+          "name": "ScriptDuration",
+          "value": 0.314678
+        },
+        {
+          "name": "TaskDuration",
+          "value": 3.131439
+        },
+        {
+          "name": "NavigationStart",
+          "value": 1016.435258
+        }
+      ],
+      "windows": [
+        {
+          "action": "day-card",
+          "startMs": 6333.79999999993,
+          "durationMs": 329.9000000000233,
+          "profileSampleMs": 330.92300000000023,
+          "topSampleBucketsMs": [
+            [
+              "(program)",
+              142.32399999999993
+            ],
+            [
+              "vendor-vue-CBKyuEcF.js",
+              110.02799999999996
+            ],
+            [
+              "vendor-vuetify-B2wI3zza.js",
+              24.432
+            ],
+            [
+              "appendChild",
+              16.438999999999997
+            ],
+            [
+              "removeChild",
+              6.962999999999999
+            ],
+            [
+              "(idle)",
+              6.627
+            ],
+            [
+              "OrasList-DtXJ56fm.js",
+              5.367
+            ],
+            [
+              "index-eQzADfnj.js",
+              3.646
+            ],
+            [
+              "vendor-moment-BLMuvzoS.js",
+              3.46
+            ],
+            [
+              "OraBar-DE2OeYVm.js",
+              2.467
+            ]
+          ],
+          "topFramesMs": [
+            {
+              "function": "(program)",
+              "script": "",
+              "sampleMs": 142.32399999999993
+            },
+            {
+              "function": "appendChild",
+              "script": "",
+              "sampleMs": 16.438999999999997
+            },
+            {
+              "function": "",
+              "script": "vendor-vuetify-B2wI3zza.js",
+              "sampleMs": 8.943999999999999
+            },
+            {
+              "function": "nr",
+              "script": "vendor-vue-CBKyuEcF.js",
+              "sampleMs": 8.408999999999999
+            },
+            {
+              "function": "s",
+              "script": "vendor-vue-CBKyuEcF.js",
+              "sampleMs": 8.142
+            },
+            {
+              "function": "removeChild",
+              "script": "",
+              "sampleMs": 6.962999999999999
+            },
+            {
+              "function": "(idle)",
+              "script": "",
+              "sampleMs": 6.627
+            },
+            {
+              "function": "Dr",
+              "script": "vendor-vue-CBKyuEcF.js",
+              "sampleMs": 5.835
+            },
+            {
+              "function": "get value",
+              "script": "vendor-vue-CBKyuEcF.js",
+              "sampleMs": 4.742
+            },
+            {
+              "function": "fd",
+              "script": "vendor-vuetify-B2wI3zza.js",
+              "sampleMs": 4.493
+            }
+          ],
+          "resources": [
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/cacheWarmup-BzGUHG0_.js",
+              "at": 6338.29999999993,
+              "duration": 3.700000000069849,
+              "responseStart": 6341.899999999907,
+              "responseEnd": 6342,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/One-D3nDyByc.js",
+              "at": 6384.79999999993,
+              "duration": 1.400000000023283,
+              "responseStart": 6386.099999999977,
+              "responseEnd": 6386.199999999953,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/BackToTop-BeQU5muv.js",
+              "at": 6388.399999999907,
+              "duration": 1.400000000023283,
+              "responseStart": 6389.399999999907,
+              "responseEnd": 6389.79999999993,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/BackToTop-Dw9JFzgM.css",
+              "at": 6389.399999999907,
+              "duration": 2.1000000000931323,
+              "responseStart": 6390.29999999993,
+              "responseEnd": 6391.5,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/usePsalmody-qNFQbW6T.js",
+              "at": 6390.099999999977,
+              "duration": 4.799999999930151,
+              "responseStart": 6393.399999999907,
+              "responseEnd": 6394.899999999907,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/useLiturgicalHours-DxpRmdZI.js",
+              "at": 6390.699999999953,
+              "duration": 5.400000000023283,
+              "responseStart": 6393.599999999977,
+              "responseEnd": 6396.099999999977,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/useResolvedLiturgicalDay-BWyKVNfP.js",
+              "at": 6391.29999999993,
+              "duration": 5.099999999976717,
+              "responseStart": 6394.599999999977,
+              "responseEnd": 6396.399999999907,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/liturgicalVespers-BsHGJQCF.js",
+              "at": 6391.5,
+              "duration": 5.099999999976717,
+              "responseStart": 6394.899999999907,
+              "responseEnd": 6396.599999999977,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/PhArrowRight.vue-JEEeJ3YG.js",
+              "at": 6391.599999999977,
+              "duration": 5.099999999976717,
+              "responseStart": 6396,
+              "responseEnd": 6396.699999999953,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/One-CVEAY3TW.css",
+              "at": 6393.29999999993,
+              "duration": 3.5,
+              "responseStart": 6396.599999999977,
+              "responseEnd": 6396.79999999993,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/OrasList-DtXJ56fm.js",
+              "at": 6393.5,
+              "duration": 6.5,
+              "responseStart": 6397.79999999993,
+              "responseEnd": 6400,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/useReadings-UMnj5V3N.js",
+              "at": 6394.899999999907,
+              "duration": 6.200000000069849,
+              "responseStart": 6398.399999999907,
+              "responseEnd": 6401.099999999977,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/DayTitle-D7YdNf4U.js",
+              "at": 6395,
+              "duration": 6.099999999976717,
+              "responseStart": 6399.899999999907,
+              "responseEnd": 6401.099999999977,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/DayTitle-BbN8NPYQ.css",
+              "at": 6396.399999999907,
+              "duration": 4.700000000069849,
+              "responseStart": 6401.099999999977,
+              "responseEnd": 6401.099999999977,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/OrasList-CsdoXhOx.css",
+              "at": 6397.699999999953,
+              "duration": 7.099999999976717,
+              "responseStart": 6403,
+              "responseEnd": 6404.79999999993,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/OraBar-DE2OeYVm.js",
+              "at": 6398.29999999993,
+              "duration": 6.900000000023283,
+              "responseStart": 6403,
+              "responseEnd": 6405.199999999953,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/PhCaretDown.vue-Dht8cVBN.js",
+              "at": 6399.199999999953,
+              "duration": 6,
+              "responseStart": 6404.79999999993,
+              "responseEnd": 6405.199999999953,
+              "transferSize": 0
+            },
+            {
+              "host": "127.0.0.1:4173",
+              "path": "/assets/OraBar-C_7aPs3l.css",
+              "at": 6399.399999999907,
+              "duration": 5.800000000046566,
+              "responseStart": 6404.79999999993,
+              "responseEnd": 6405.199999999953,
+              "transferSize": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
