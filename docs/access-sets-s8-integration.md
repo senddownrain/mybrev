@@ -45,11 +45,14 @@
 
 ## Результаты проверок
 
-- Web unit — 36 PASS. Auth/Firestore Rules S1 — 8 PASS. В первом общем запуске writer унаследовал suspended от предыдущей фикстуры, поэтому критические сценарии повторяются с отдельной базой и портами.
+- Web unit — 36 PASS. Auth/Firestore Rules S1 — 8 PASS. В первом общем запуске writer унаследовал suspended от предыдущей фикстуры. В отдельной базе проход writer подтвердил парность, откат и точную границу в 400 записей с аудитом.
 - S5 — 8 PASS. Проверены backup, offline dry-run, copy, parity/readback, interruption/resume, restore и отказ при drift.
 - Callable HTTP — PASS в Auth + Firestore + Functions Emulator. Протестированы отказ без Auth/App Check, обычный администратор, отзыв, stale draft, повторный save и verify. Для публикации подтверждены одинаковый commit time у документа, статуса черновика, версии и обеих записей аудита, отсутствие public/legacy копий Marian и сохранение графа.
-- Web Chromium S4 — PASS. Публичный PWA build и сканы экспортов, артефактов и service worker — PASS. Проверено 308 файлов с синтетическим экспортом. В отдельном S2 scan проверено 307 файлов.
+- Web Chromium S2 + S4 — PASS на правилах Firestore Emulator. Подтверждены прежний UID, активация обоих форматов, выдача по разрешённым наборам, запрет чужого прямого чтения, изменение прав, suspended, offline/reconnect и отсутствие следов кода в кеше. Отдельный Chromium smoke S4 подтвердил ленивую загрузку и отсутствие постоянного кеша.
+- Публичный PWA build и сканы экспортов, артефактов и service worker — PASS. Проверено 308 файлов с синтетическим экспортом. В отдельном S2 scan проверено 307 файлов.
+- Браузерный smoke S3 дошёл до вызова Callable из редактора, но Functions Emulator не запустил worker этого запроса. Сквозной ответ редактора остаётся непроверенным. У самого Callable прошёл отдельный HTTP-тест с теми же Auth и Firestore Emulator.
 - Flutter #148 — 33 PASS по доступу, настройкам, состоянию старого UID и публичному хранению.
+- В GitHub CI прошли Lint & Build и Draft publication Firestore emulator, включая legacy-тесты и S1 Rules. [Прогон CI](https://github.com/senddownrain/mybrev/actions/runs/45707564365).
 
 Firebase Emulator не подтверждает IAM, настоящие подписи App Check, cloud p95 или сумму счёта проекта. [Границы Emulator Suite](https://firebase.google.com/docs/emulator-suite/connect_functions#cloud_iam).
 
@@ -65,6 +68,30 @@ Firebase Emulator не подтверждает IAM, настоящие подп
 Верхние оценки включают зависимые чтения Rules и цену пустых страниц. Отдельные запросы подтверждения S2 и обработку контента Callable учитывают отдельно. S4 Chromium подтвердил ноль protected-запросов на старте, в меню и на публичной ссылке. Холодная прямая ссылка без закрытого предка сделала один get и ноль списков. Тёплая выдача в пределах поколения дала ноль чтений. В синтетическом прогоне худшая конкурентность — 4 запроса. Холодный полный проход занял примерно 4,0–14,9 с на локальном Windows при параллельных прогонах. Это не cloud p95. [Firestore pricing](https://firebase.google.com/docs/firestore/pricing#cloud-firestore-security-rules).
 
 Обычная запись резервирует два места из лимита 400 для версии каталога и аудита. Публикация черновика резервирует четыре места, включая обновление черновика и его аудит.
+
+### Воспроизведение в локальном Worktree
+
+Node.js 22, Java 21 и Chrome с путём в BENCHMARK_BROWSER_PATH. Профили и данные в этих командах синтетические. Каждая команда emulators:exec использует новый набор данных.
+
+```powershell
+npm ci
+npm run test:access-sets-v2-copy
+$env:S8_TEST_PROJECT = 'demo-s8-web'
+firebase emulators:exec --config firebase.s8-qa.json --only auth,firestore --project demo-s8-web 'node --test tests/access-sets-v2-writer-firestore.test.mjs'
+$env:S2_TEST_PROJECT = 'demo-s8-web'
+$env:S8_BROWSER_TIMEOUT = '120000'
+firebase emulators:exec --config firebase.s8-qa.json --only auth,firestore --project demo-s8-web 'node scripts/s2-smoke-access.mjs'
+node scripts/smoke-access-sets-v2-catalog.mjs
+node scripts/stage-canonical-catalog-function.mjs
+npm ci --prefix reports/access-sets-v2-s4/callable-source
+$env:FUNCTIONS_DISCOVERY_TIMEOUT = '180'
+firebase emulators:exec --config firebase.s4-catalog.json --only auth,firestore,functions --project demo-s4-catalog 'node --test tests/access-sets-v2-callable-emulator.test.mjs'
+$env:S8_CANONICAL_ADMIN = '1'
+$env:S8_BROWSER_TIMEOUT = '180000'
+firebase emulators:exec --config firebase.s4-catalog.json --only auth,firestore,functions --project demo-s4-catalog 'node scripts/smoke-access-sets-admin.mjs'
+```
+
+Запуск измерений использует конфигурацию demo-s4-catalog и команду node scripts/benchmark-access-sets-catalog.mjs. Для Web-скана соберите PWA с demo-переменными CI, запустите tests/access-sets-v2-public.test.mjs с S4_DIST_SCAN=1 и затем node scripts/s2-scan-public-build.mjs. Flutter-тесты по пяти файлам запущены из отдельного checkout зафиксированного SHA PR #148.
 
 ## План production и отката
 

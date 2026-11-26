@@ -177,7 +177,7 @@ async function session(who) {
   const page = await context.newPage();
   page.setDefaultTimeout(Number(process.env.S8_BROWSER_TIMEOUT || (canonicalSmoke ? 120000 : 23000)));
   page.on('pageerror', error => { runtimeErrors.push(error.name); });
-  await page.goto(base + path);
+  await page.goto(base + path, { waitUntil: 'commit' });
   try {
     await page.locator('input[type="email"]').waitFor();
   } catch (error) {
@@ -253,7 +253,45 @@ async function readAndCloseCode(page, prefix) {
   return parsed.codeId;
 }
 
-try {
+async function runCanonicalAdminSmoke() {
+  await seed.doc('accessSetsV2/marian').set({ name: 'Сінтэтычны набор B', status: 'active' });
+  const manager = await session('manager');
+  const { page } = manager;
+  await page.waitForURL(base + path);
+  await seed.doc('priestContentControl/state').set({ version: 0, lockUid: '' });
+  await seed.doc('priestContentControl/accessSetsV2').set({ mode: 'canonical' });
+  await seed.doc('prayerDrafts/s8-browser').set({
+    draftId: 's8-browser', title: 'Synthetic browser draft', text: 'Synthetic text for canonical publication',
+    tags: ['s8-ui'], source: 'Synthetic source', textFormat: 'mybrev-markdown', status: 'draft', version: 1,
+  });
+  const confirm = async (prompt) => {
+    assert.match(prompt.message(), /Запісаў:/);
+    await prompt.accept();
+  };
+  await page.goto(base + '/admin/prayer-categories', { waitUntil: 'commit' });
+  await page.getByLabel('Рэдагаваць катэгорыю Сінтэтычная катэгорыя').click();
+  await dialog(page).getByText('Наборы доступу V2', { exact: true }).click();
+  await dialog(page).getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
+  page.once('dialog', confirm);
+  await button(dialog(page), 'Захаваць').click();
+  await hasText(page, 'Катэгорыя захавана');
+  assert.deepEqual((await seed.doc('protectedCategories/synthetic-category').get()).data().effectiveAccessSets, ['marian']);
+  assert.equal((await seed.doc('prayerCategories/synthetic-category').get()).exists, false);
+
+  await page.goto(base + '/admin/prayer-drafts/s8-browser', { waitUntil: 'commit' });
+  await page.getByText('Наборы доступу V2', { exact: true }).click();
+  await page.getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
+  await button(page, 'Апублікаваць').click();
+  page.once('dialog', confirm);
+  await button(dialog(page), 'Апублікаваць').click();
+  await hasText(page, 'Апублікавана: /prayer/d_s8-browser');
+  assert.deepEqual((await seed.doc('protectedPrayers/d_s8-browser').get()).data().effectiveAccessSets, ['marian']);
+  assert.equal((await seed.doc('prayerDrafts/s8-browser/audit/publish-v2-2').get()).exists, true);
+  console.log('PASS S8 canonical category and draft from the administrator UI through Callable.');
+  await manager.close();
+}
+
+async function runAdminSmoke() {
   await seedData();
   function registryFor(who) {
     return createRegistry({
@@ -272,6 +310,10 @@ try {
   assert.equal(projection.id, 'legacy-test');
   assert.ok(!JSON.stringify(projection).includes(proofMarker));
   await server.listen();
+  if (canonicalSmoke) {
+    await runCanonicalAdminSmoke();
+    return;
+  }
 
   for (const who of [null, 'ordinary', 'admin', 'priest']) {
     const before = queries.length;
@@ -441,45 +483,14 @@ try {
   assert.equal((await seed.collection('protectedPrayers').get()).size, 0);
   assert.equal((await seed.collection('protectedCategories').get()).size, 0);
   await shot(page, 'locked-prayer-access');
-  await page.goto(base + '/admin/prayer-categories');
+  await page.goto(base + '/admin/prayer-categories', { waitUntil: 'commit' });
   await page.getByLabel('Рэдагаваць катэгорыю Сінтэтычная катэгорыя').click();
   await dialog(page).getByText('Наборы доступу V2 (толькі прагляд)', { exact: true }).click();
   const categoryChoice = dialog(page).getByRole('checkbox', { name: /Сінтэтычны набор B/ });
   await categoryChoice.waitFor();
   assert.equal(await categoryChoice.isEnabled(), false);
   assert.equal((await seed.doc('prayerCategories/synthetic-category').get()).data().accessSets, undefined);
-  if (canonicalSmoke) {
-    await seed.doc('priestContentControl/state').set({ version: 0, lockUid: '' });
-    await seed.doc('priestContentControl/accessSetsV2').set({ mode: 'canonical' });
-    await seed.doc('prayerDrafts/s8-browser').set({
-      draftId: 's8-browser', title: 'Synthetic browser draft', text: 'Synthetic text for canonical publication',
-      tags: ['s8-ui'], source: 'Synthetic source', textFormat: 'mybrev-markdown', status: 'draft', version: 1,
-    });
-    const confirm = async (prompt) => {
-      assert.match(prompt.message(), /Запісаў:/);
-      await prompt.accept();
-    };
-    await page.goto(base + '/admin/prayer-categories');
-    await page.getByLabel('Рэдагаваць катэгорыю Сінтэтычная катэгорыя').click();
-    await dialog(page).getByText('Наборы доступу V2', { exact: true }).click();
-    await dialog(page).getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
-    page.once('dialog', confirm);
-    await button(dialog(page), 'Захаваць').click();
-    await hasText(page, 'Катэгорыя захавана');
-    assert.deepEqual((await seed.doc('protectedCategories/synthetic-category').get()).data().effectiveAccessSets, ['marian']);
-    assert.equal((await seed.doc('prayerCategories/synthetic-category').get()).exists, false);
 
-    await page.goto(base + '/admin/prayer-drafts/s8-browser');
-    await page.getByText('Наборы доступу V2', { exact: true }).click();
-    await page.getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
-    await button(page, 'Апублікаваць').click();
-    page.once('dialog', confirm);
-    await button(dialog(page), 'Апублікаваць').click();
-    await hasText(page, 'Апублікавана: /prayer/d_s8-browser');
-    assert.deepEqual((await seed.doc('protectedPrayers/d_s8-browser').get()).data().effectiveAccessSets, ['marian']);
-    assert.equal((await seed.doc('prayerDrafts/s8-browser/audit/publish-v2-2').get()).exists, true);
-    console.log('PASS S8 canonical category and draft from the administrator UI through Callable.');
-  }
   await manager.close();
 
   const superadmin = await session('super');
@@ -515,6 +526,10 @@ try {
     assert.ok(!request.from.some(from => /claim/i.test(from.collectionId)));
   }
   console.log('PASS locked editor component, superadmin legacy revoke, bounded field-projected queries');
+}
+
+try {
+  await runAdminSmoke();
 } finally {
   await browser.close();
   await server.close();
