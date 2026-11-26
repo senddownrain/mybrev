@@ -119,8 +119,6 @@
         </template>
       </v-list-item>
 
-      <div class="drawer-section-label drawer-section-label--spaced">Малітоўныя зборнікі</div>
-
       <v-list-item
         tabindex="0"
         title="Абраныя малітвы"
@@ -132,22 +130,37 @@
         </template>
       </v-list-item>
 
-      <v-list-item
-        v-for="category in menuCategories"
-        :key="category.key"
-        :title="readerPrayerCategoryName(category)"
-        :class="{ 'drawer-collection--protected': isProtectedPrayerRow(category), 'drawer-collection--separator': category.key === firstProtectedCollection }"
-        :to="{ name: 'Prayers', query: category.scope === 'global' ? { category: category.id } : {} }"
-        :active="isPrayersPage && selectedCategory?.key === category.key"
-        @click="selectCategory(category, $event)"
+      <button
+        type="button"
+        class="drawer-collections-toggle"
+        :aria-expanded="collectionsExpanded"
+        aria-controls="drawer-collections"
+        @click="collectionsExpanded = !collectionsExpanded"
       >
-        <template #prepend>
-          <CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="22" class="drawer-icon" />
+        <PhFolders :size="22" class="drawer-icon" aria-hidden="true" />
+        <span>Малітоўныя зборнікі</span>
+        <PhCaretDown :size="16" class="drawer-collections-chevron" aria-hidden="true" />
+      </button>
+      <div id="drawer-collections" :hidden="!collectionsExpanded">
+        <template v-if="collectionsExpanded">
+          <v-list-item
+            v-for="category in menuCategories"
+            :key="category.key"
+            :title="readerPrayerCategoryName(category)"
+            :class="{ 'drawer-collection--protected': isProtectedPrayerRow(category), 'drawer-collection--separator': category.key === firstProtectedCollection }"
+            :to="{ name: 'Prayers', query: category.scope === 'global' ? { category: category.id } : {} }"
+            :active="isPrayersPage && selectedCategory?.key === category.key"
+            @click="selectCategory(category, $event)"
+          >
+            <template #prepend>
+              <CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="22" class="drawer-icon" />
+            </template>
+            <template v-if="isProtectedPrayerRow(category)" #append>
+              <PhLockSimple :size="15" class="drawer-collection-lock" aria-hidden="true" />
+            </template>
+          </v-list-item>
         </template>
-        <template v-if="isProtectedPrayerRow(category)" #append>
-          <PhLockSimple :size="15" class="drawer-collection-lock" aria-hidden="true" />
-        </template>
-      </v-list-item>
+      </div>
 
       <div class="drawer-section-label drawer-section-label--spaced">Праграма</div>
 
@@ -247,7 +260,7 @@ import { usePrayersStore } from '@/stores/prayers';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { feedbackLocationForRoute } from '@/utils/feedbackContext.js';
 import {
-  PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart,
+  PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart, PhFolders, PhCaretDown,
   PhChurch, PhFlag, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll, PhLockSimple, PhCalendarDots,
 } from '@phosphor-icons/vue';
 
@@ -257,6 +270,8 @@ const COMPENDIUM_ROUTE_NAMES = new Set(['Compendium', 'CompendiumPart', 'Compend
 
 const MASS_ORDER_PRAYER_ID = 'eMmCtxwyJ75ogmL5rwye';
 const { isDrawerOpen } = useAppBar();
+const collectionsExpanded = ref(sessionStorage.getItem('prayerCollectionsExpanded') === 'true');
+watch(collectionsExpanded, (expanded) => sessionStorage.setItem('prayerCollectionsExpanded', String(expanded)));
 const drawerShell = ref(null);
 let returnFocusTo = null;
 let inertElements = [];
@@ -296,7 +311,8 @@ const isPrayersPage = computed(() =>
 
 const selectCategory = (category, event) => {
   if (event?.ctrlKey || event?.metaKey || event?.shiftKey || event?.altKey || event?.button > 0) return;
-  setSelectedCategory(category);
+  const { children: _children, comment: _comment, ...selection } = category;
+  setSelectedCategory(selection);
   isDrawerOpen.value = false;
 };
 
@@ -511,6 +527,29 @@ onBeforeUnmount(() => {
   font-size: 0.94rem;
   font-weight: 560;
 }
+
+.drawer-collections-toggle {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  width: 100%;
+  min-height: 50px;
+  margin-bottom: 4px;
+  padding: 8px 14px;
+  border-radius: 17px;
+  color: var(--nav-on-surface);
+  text-align: start;
+  font-size: 0.94rem;
+  font-weight: 560;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.drawer-collections-toggle:hover { background: var(--nav-active); }
+.drawer-collections-toggle:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: -3px; }
+.drawer-collections-chevron { margin-inline-start: 8px; color: var(--nav-muted); }
+.drawer-collections-toggle[aria-expanded='true'] .drawer-collections-chevron { transform: rotate(180deg); }
+#drawer-collections :deep(.v-list-item-title) { white-space: normal; overflow-wrap: anywhere; }
 
 .drawer-list :deep(.v-list-item--active) {
   background: rgba(var(--chrome-accent-rgb), 0.13) !important;
