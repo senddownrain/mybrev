@@ -6,10 +6,11 @@
  * State is now managed by Pinia, which means it appears in DevTools and
  * is properly isolated per app instance (no module-level singleton issues).
  */
-import { usePrayersFiltersStore } from '@/stores/prayersFilters';
+import { createPrayersFiltersState, usePrayersFiltersStore } from '@/stores/prayersFilters';
 import { storeToRefs } from 'pinia';
 
-export function usePrayersFilters() {
+export function usePrayersFilters(editorial = false) {
+  if (editorial) return createPrayersFiltersState(false);
   const store = usePrayersFiltersStore();
 
   // Pinia unwraps refs when a store is accessed directly. Returning the store

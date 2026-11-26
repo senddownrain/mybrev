@@ -12,7 +12,7 @@
       </router-link>
       <div class="prayers-page-eyebrow">Малітоўнік</div>
       <h1 ref="categoryHeading" tabindex="-1" class="prayers-page-title">{{ selectedCategory?.name || 'Малітвы' }}</h1>
-      <v-select v-if="editorial" v-model="accessFilter" label="Доступ" :items="accessFilters" class="mt-4" hide-details />
+      <v-select v-if="editorial" v-model="accessFilter" data-test="prayer-access-filter" label="Доступ" :items="accessFilters" class="mt-4" hide-details />
     </div>
 
 
@@ -62,6 +62,7 @@
               :class="{ 'prayer-list-item__icon-wrap--favorite': isFavorite(prayer.id) }"
             >
               <v-btn
+                v-if="!editorial"
                 icon
                 variant="text"
                 size="small"
@@ -227,7 +228,7 @@ const accessFilter = ref('all');
 const accessFilters = computed(() => prayerAccessFilters(sets.value));
 const settings = useSettingsStore();
 const { notifySuccess, notifyError } = useNotifier();
-const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, lastOpenedPrayerId, categoryReturnFocus, setSelectedCategory, toggleFilter } = usePrayersFilters();
+const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, lastOpenedPrayerId, categoryReturnFocus, setSelectedCategory, toggleFilter } = usePrayersFilters(editorial);
 const categoryHeading = ref(null);
 const categoryTree = computed(() => buildCategoryTree(editorial ? categories.value : buildPrayerCategoryMenu(
   categories.value, [], settings.hiddenGlobalPrayerCategoryIds, prayers.value, true,
@@ -345,6 +346,7 @@ watch(filteredPrayers, async (items) => {
 }, { immediate: true });
 
 function isFavorite(prayerId) {
+  if (editorial) return false;
   const prayer = prayers.value.find((row) => row.id === prayerId);
   return settings.isFavoritePrayer(prayerId, Boolean(prayer && hasV2ContentFields(prayer)));
 }

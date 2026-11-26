@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, watch } from 'vue';
+import { onScopeDispose, ref, watch } from 'vue';
 import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
 import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 
@@ -11,7 +11,7 @@ import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
  * Debounce is implemented inline because this store has no component lifecycle.
  * and would throw a Vue warning inside a Pinia store setup function.
  */
-export const usePrayersFiltersStore = defineStore('prayersFilters', () => {
+export function createPrayersFiltersState(reader = true) {
   const searchQuery = ref('');
   const selectedTags = ref([]);
   const selectedCategory = ref(null);
@@ -19,7 +19,7 @@ export const usePrayersFiltersStore = defineStore('prayersFilters', () => {
   const isSearchExpanded = ref(false);
   const isFilterExpanded = ref(false);
   const categoryReturnFocus = ref({});
-  watch(prayerCatalogRevision, () => {
+  if (reader) watch(prayerCatalogRevision, () => {
     if (isProtectedPrayerRow(selectedCategory.value)) selectedCategory.value = null;
     selectedTags.value = [];
     lastOpenedPrayerId.value = null;
@@ -37,6 +37,7 @@ export const usePrayersFiltersStore = defineStore('prayersFilters', () => {
       debouncedSearchQuery.value = newValue;
     }, 300);
   }, { immediate: true });
+  onScopeDispose(() => clearTimeout(_debounceTimer));
 
   function setSearchQuery(value) {
     searchQuery.value = value;
@@ -89,4 +90,6 @@ export const usePrayersFiltersStore = defineStore('prayersFilters', () => {
     toggleSearch,
     toggleFilter,
   };
-});
+}
+
+export const usePrayersFiltersStore = defineStore('prayersFilters', () => createPrayersFiltersState());

@@ -123,7 +123,7 @@ try {
   await page.setViewportSize({ width: 1200, height: 900 });
   await go('/admin/prayers');
   await page.waitForFunction(() => document.querySelectorAll('[id^="prayer-row-"]').length === 104);
-  await page.getByRole('combobox', { name: 'Доступ' }).click();
+  await page.locator('[data-test="prayer-access-filter"]').click();
   await page.getByRole('option', { name: 'Айцы марыяне' }).click();
   await page.waitForFunction(() => document.querySelectorAll('[id^="prayer-row-"]').length === 56);
   await page.locator('#prayer-row-marian-prayer-1').getByRole('button', { name: 'Рэдагаваць малітву' }).click();
@@ -137,7 +137,8 @@ try {
   const form = page.getByRole('dialog');
   await form.getByText('Выніковы доступ:', { exact: true }).waitFor();
   assert.ok((await form.getByText('Выніковы доступ:', { exact: true }).locator('..').innerText()).includes('Айцы марыяне'));
-  assert.ok((await form.boundingBox()).width > 900);
+  const { width } = await form.locator('.dialog-card').boundingBox();
+  assert.ok(width >= 900 && width <= 970);
   assert.ok(await form.getByRole('button', { name: 'Захаваць' }).isVisible());
   await form.getByRole('button', { name: 'Выбраць малітвы' }).click();
   const picker = page.getByRole('dialog').last();
