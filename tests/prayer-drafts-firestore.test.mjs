@@ -183,11 +183,13 @@ describe('prayerDrafts: roles, publish transaction, concurrency, hiding', { skip
     // The log is ordered by whole seconds, so compare the set of actions, not their order.
     assert.deepEqual([...log].sort(), ['create', 'publish']);
   });
-  it('plain admin does NOT get superadmin powers: no admin roles, no priest access settings', async () => {
+  it('plain admin manages legacy access settings and cannot manage admin roles', async () => {
     await denied(setDoc(doc(roles.plain, 'admins/intruder'), { role: 'admin' }));
     await denied(setDoc(doc(roles.plain, 'admins/plain'), { role: 'superadmin' }));
-    await denied(setDoc(doc(roles.plain, 'priestAccess/settings'), { activeCodeProof: '', changedAt: null, helpText: 'x' }));
-    await denied(getDoc(doc(roles.plain, 'priestAccess/settings')));
+    const settings = doc(roles.plain, 'priestAccess/settings');
+    await setDoc(settings, { activeCodeProof: '', changedAt: null, helpText: 'Synthetic help' });
+    assert.equal((await getDoc(settings)).data().helpText, 'Synthetic help');
+    await denied(getDoc(doc(roles.anon, 'priestAccess/settings')));
   });
   it('a content lock aborts publication and leaves draft and public content consistent', async () => {
       const api = actions(roles.plain, 'plain');

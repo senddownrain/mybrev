@@ -13,11 +13,6 @@ service cloud.firestore {
     function isAdmin() {
       return request.auth != null && (legacyAdmin() || adminRecord());
     }
-    function managesPriests() {
-      return isAdmin() && (legacyAdmin()
-        || get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.get('role', 'admin') == 'superadmin'
-        || get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.get('priestAccess', false) == true);
-    }
     function hasGrant() {
       return request.auth != null
         && get(/databases/$(database)/documents/priestDeviceGrants/$(request.auth.uid)).data.status == 'active'
@@ -220,8 +215,8 @@ service cloud.firestore {
       allow delete: if false;
     }
     match /priestAccess/settings {
-      allow read: if managesPriests();
-      allow create, update: if managesPriests()
+      allow read: if isAdmin();
+      allow create, update: if isAdmin()
         && request.resource.data.keys().hasOnly(['activeCodeProof', 'changedAt', 'helpText'])
         && request.resource.data.helpText is string && request.resource.data.helpText.size() <= 1000
         && ((request.resource.data.activeCodeProof == '' && request.resource.data.changedAt == null)
@@ -232,16 +227,16 @@ service cloud.firestore {
     }
     match /priestAccessPublic/help {
       allow read: if true;
-      allow create, update: if managesPriests() && request.resource.data.keys().hasOnly(['helpText'])
+      allow create, update: if isAdmin() && request.resource.data.keys().hasOnly(['helpText'])
         && request.resource.data.helpText is string && request.resource.data.helpText.size() <= 1000
         && request.resource.data.helpText == getAfter(/databases/$(database)/documents/priestAccess/settings).data.helpText;
-      allow delete: if managesPriests();
+      allow delete: if isAdmin();
     }
     match /priestDeviceGrants/{uid} {
       // Legacy grants must be scrubbed by the Admin SDK before owner reads.
-      allow get: if managesPriests() || (own(uid)
+      allow get: if isAdmin() || (own(uid)
         && (resource == null || !resource.data.keys().hasAny(['activationProof'])));
-      allow list: if managesPriests();
+      allow list: if isAdmin();
       allow create: if registerGrant(uid);
       allow update: if (own(uid) && resource.data.status == 'active'
         && ((request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastActiveAt'])
@@ -249,7 +244,7 @@ service cloud.firestore {
             && request.time >= resource.data.lastActiveAt + duration.value(1, 'h'))
           || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'revokedAt'])
             && request.resource.data.status == 'revoked' && request.resource.data.revokedAt == request.time)))
-        || (managesPriests() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'revokedAt', 'label'])
+        || (isAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'revokedAt', 'label'])
           && shortText(request.resource.data.label)
           && ((request.resource.data.status == resource.data.status && request.resource.data.revokedAt == resource.data.revokedAt)
             || (request.resource.data.status == 'revoked' && request.resource.data.revokedAt == request.time)));
@@ -288,12 +283,6 @@ service cloud.firestore {
     function accessV2Live() {
       let state = get(/databases/$(database)/documents/priestContentControl/accessSetsV2);
       return state != null && state.data.mode == 'canonical';
-    }
-    function managesAccessV2() {
-      return isAdmin() && (
-        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.get('role', '') == 'superadmin'
-        || get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.get('accessSetsV2', false) == true
-      );
     }
     function accessV2Id(value) {
       return value is string && value.matches('^[a-z][a-z0-9-]{0,63}$');
@@ -406,7 +395,7 @@ service cloud.firestore {
         && ((own(uid) && changed.hasOnly(['lastActiveAt'])
             && request.resource.data.lastActiveAt == request.time
             && request.time >= resource.data.lastActiveAt + duration.value(1, 'h'))
-          || ((own(uid) || managesAccessV2()) && changed.hasOnly(['status', 'revokedAt'])
+          || ((own(uid) || isAdmin()) && changed.hasOnly(['status', 'revokedAt'])
             && request.resource.data.status == 'revoked'));
     }
 
@@ -414,8 +403,8 @@ service cloud.firestore {
       allow get: if request.auth != null;
     }
     match /accessSetsV2/{setId} {
-      allow get, list: if managesAccessV2();
-      allow create, update: if managesAccessV2() && validAccessV2Set(request.resource.data, setId);
+      allow get, list: if isAdmin();
+      allow create, update: if isAdmin() && validAccessV2Set(request.resource.data, setId);
 
       // The index contains only IDs. Rules authorize by the set in the path
       // and independently check each canonical read.
@@ -426,38 +415,38 @@ service cloud.firestore {
       }
     }
     match /accessProfilesV2/{profileId} {
-      allow get, list: if managesAccessV2();
-      allow create: if managesAccessV2() && accessV2Id(profileId)
+      allow get, list: if isAdmin();
+      allow create: if isAdmin() && accessV2Id(profileId)
         && validAccessV2Profile(request.resource.data)
         && request.resource.data.status == 'active' && request.resource.data.revision == 1
         && sameAccessV2Projection(request.resource.data, getAfter(accessV2EntitlementsPath(profileId)).data);
-      allow update: if managesAccessV2() && validAccessV2Profile(request.resource.data)
+      allow update: if isAdmin() && validAccessV2Profile(request.resource.data)
         && resource.data.status != 'revoked' && request.resource.data.revision == resource.data.revision + 1
         && sameAccessV2Projection(request.resource.data, getAfter(accessV2EntitlementsPath(profileId)).data);
       match /client/entitlements {
         allow get: if request.auth != null && accessV2Live() && v2MayReadEntitlements(profileId);
-        allow create, update: if managesAccessV2()
+        allow create, update: if isAdmin()
           && sameAccessV2Projection(getAfter(accessV2ProfilePath(profileId)).data, request.resource.data);
       }
     }
     match /accessCodesV2/{codeId} {
-      allow get, list: if managesAccessV2();
-      allow create: if managesAccessV2() && accessV2CodeId(codeId)
+      allow get, list: if isAdmin();
+      allow create: if isAdmin() && accessV2CodeId(codeId)
         && validAccessV2Code(request.resource.data) && request.resource.data.status == 'active'
         && request.resource.data.issuedAt == request.time && activeAccessV2Profile(request.resource.data.profileId)
         && sameAccessV2CodeProfile(request.resource.data, getAfter(accessV2CodeProfilePath(codeId)).data);
-      allow update: if managesAccessV2() && resource.data.status == 'active'
+      allow update: if isAdmin() && resource.data.status == 'active'
         && validAccessV2Code(request.resource.data) && request.resource.data.status == 'disabled'
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'disabledAt']);
       match /client/profile {
         allow get: if request.auth != null && accessV2Live() && v2MayResolveCode(codeId);
-        allow create: if managesAccessV2()
+        allow create: if isAdmin()
           && sameAccessV2CodeProfile(getAfter(accessV2CodePath(codeId)).data, request.resource.data);
       }
     }
     match /accessDeviceGrantsV2/{uid} {
-      allow get: if own(uid) || managesAccessV2();
-      allow list: if managesAccessV2();
+      allow get: if own(uid) || isAdmin();
+      allow list: if isAdmin();
       allow create: if activatingAccessV2(uid) && !exists(accessV2ClaimPath(uid))
         && validAccessV2Activation(uid, getAfter(accessV2ClaimPath(uid)).data, request.resource.data);
       allow update: if accessV2GrantUpdate(uid);

@@ -56,8 +56,7 @@ function grant(id, codeId) {
 async function seedData() {
   await Promise.all([
     seedUser('super', { role: 'superadmin' }),
-    seedUser('manager', { role: 'admin', accessSetsV2: true }),
-    seedUser('priest', { role: 'admin', priestAccess: true }),
+    seedUser('legacy', { name: 'Legacy admin fixture' }),
     seedUser('admin', { role: 'admin' }),
     seedUser('ordinary', null),
   ]);
@@ -255,9 +254,47 @@ async function readAndCloseCode(page, prefix) {
 
 async function runCanonicalAdminSmoke() {
   await seed.doc('accessSetsV2/marian').set({ name: 'Сінтэтычны набор B', status: 'active' });
-  const manager = await session('manager');
+  await seed.doc('prayers/synthetic-public').set({
+    title: 'Synthetic public prayer', text: 'Synthetic public text', textFormat: 'mybrev-markdown', tags: [],
+  });
+  const manager = await session('admin');
   const { page } = manager;
   await page.waitForURL(base + path);
+  await addSet(page, 'synthetic-extra', 'Сінтэтычны дадатковы набор');
+  await hasText(page, 'Сінтэтычны дадатковы набор');
+  const extraSet = page.locator('li').filter({ hasText: 'Сінтэтычны дадатковы набор' });
+  await button(extraSet, 'Змяніць назву').click();
+  await page.getByLabel('Назва набору').fill('Сінтэтычны абноўлены набор');
+  await button(page, 'Захаваць назву').click();
+  await hasText(page, 'Сінтэтычны абноўлены набор');
+  await tab(page, 'Профілі');
+  await fillProfile(page, 'synthetic-profile', 'Сінтэтычны профіль');
+  await page.getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
+  await saveProfile(page);
+  await hasText(page, 'Профіль захаваны. Рэвізія 1.');
+  await button(page.locator('li').filter({ hasText: 'Сінтэтычны профіль' }), 'Рэдагаваць').click();
+  await page.getByRole('checkbox', { name: /Сінтэтычны абноўлены набор/ }).check();
+  await saveProfile(page);
+  await hasText(page, 'Профіль захаваны. Рэвізія 2.');
+  assert.deepEqual((await seed.doc('accessProfilesV2/synthetic-profile').get()).data().allowedSets, ['marian', 'synthetic-extra']);
+  await tab(page, 'Коды');
+  await contextPermission(manager.context);
+  await prepareCode(page, 'synthetic-profile', 'MARI');
+  const codeId = await readAndCloseCode(page, 'MARI');
+  assert.equal((await seed.doc('accessCodesV2/' + codeId).get()).data().profileId, 'synthetic-profile');
+  await tab(page, 'Прылады');
+  await button(page, 'Адклікаць device-00').click();
+  await button(dialog(page), 'Пацвердзіць адкліканне').click();
+  await hasText(page, 'Адкліканне пацверджана.');
+  assert.equal((await seed.doc('accessDeviceGrantsV2/device-00').get()).data().status, 'revoked');
+  for (const id of ['device-01', 'device-02']) await page.getByLabel('Выбраць ' + id).check();
+  await button(page, 'Адклікаць выбраныя (2)').click();
+  await button(dialog(page), 'Пацвердзіць адкліканне').click();
+  await dialog(page).waitFor({ state: 'hidden' });
+  for (const id of ['device-01', 'device-02']) {
+    assert.equal((await seed.doc('accessDeviceGrantsV2/' + id).get()).data().status, 'revoked');
+  }
+
   await seed.doc('priestContentControl/state').set({ version: 0, lockUid: '' });
   await seed.doc('priestContentControl/accessSetsV2').set({ mode: 'canonical' });
   await seed.doc('prayerDrafts/s8-browser').set({
@@ -274,9 +311,18 @@ async function runCanonicalAdminSmoke() {
   await dialog(page).getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
   page.once('dialog', confirm);
   await button(dialog(page), 'Захаваць').click();
-  await hasText(page, 'Катэгорыя захавана');
+  await dialog(page).waitFor({ state: 'hidden' });
   assert.deepEqual((await seed.doc('protectedCategories/synthetic-category').get()).data().effectiveAccessSets, ['marian']);
   assert.equal((await seed.doc('prayerCategories/synthetic-category').get()).exists, false);
+  await button(page, 'Новая катэгорыя').click();
+  await dialog(page).getByLabel('Назва катэгорыі').fill('Сінтэтычная закрытая катэгорыя');
+  await dialog(page).getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
+  page.once('dialog', confirm);
+  await button(dialog(page), 'Захаваць').click();
+  await dialog(page).waitFor({ state: 'hidden' });
+  const created = await seed.collection('protectedCategories').where('name', '==', 'Сінтэтычная закрытая катэгорыя').get();
+  assert.equal(created.size, 1);
+  assert.deepEqual(created.docs[0].data().effectiveAccessSets, ['marian']);
 
   await page.goto(base + '/admin/prayer-drafts/s8-browser', { waitUntil: 'commit' });
   await page.getByRole('heading', { name: 'Доступ', exact: true }).waitFor();
@@ -287,7 +333,18 @@ async function runCanonicalAdminSmoke() {
   await hasText(page, 'Апублікавана: /prayer/d_s8-browser');
   assert.deepEqual((await seed.doc('protectedPrayers/d_s8-browser').get()).data().effectiveAccessSets, ['marian']);
   assert.equal((await seed.doc('prayerDrafts/s8-browser/audit/publish-v2-2').get()).exists, true);
-  console.log('PASS S8 canonical category and draft from the administrator UI through Callable.');
+
+  for (const [id, collection] of [['synthetic-public', 'prayers'], ['d_s8-browser', 'protectedPrayers']]) {
+    const title = 'Edited ' + id;
+    await page.goto(base + '/prayer/edit/' + id, { waitUntil: 'commit' });
+    await page.getByRole('heading', { name: 'Доступ', exact: true }).waitFor();
+    await page.getByLabel('Назва малітвы').fill(title);
+    page.once('dialog', confirm);
+    await button(page, 'Захаваць змены').click();
+    await page.waitForURL(base + '/prayer/' + id);
+    assert.equal((await seed.doc(collection + '/' + id).get()).data().title, title);
+  }
+  console.log('PASS plain admin: set, profile, code, device revoke, closed categories, draft audit and public/Marian editors.');
   await manager.close();
 }
 
@@ -300,13 +357,12 @@ async function runAdminSmoke() {
       headers: () => who ? { Authorization: 'Bearer ' + users[who].idToken } : {},
     });
   }
-  for (const who of [null, 'ordinary', 'admin', 'priest']) {
+  for (const who of [null, 'ordinary']) {
     for (const kind of ['sets', 'profiles', 'codes', 'v2']) {
       await assert.rejects(registryFor(who).list(kind), { code: 'permission-denied' });
     }
   }
-  await assert.rejects(registryFor('manager').list('legacy'), { code: 'permission-denied' });
-  const projection = await registryFor('super').read('legacy', 'legacy-test');
+  const projection = await registryFor('admin').read('legacy', 'legacy-test');
   assert.equal(projection.id, 'legacy-test');
   assert.ok(!JSON.stringify(projection).includes(proofMarker));
   await server.listen();
@@ -315,26 +371,20 @@ async function runAdminSmoke() {
     return;
   }
 
-  for (const who of [null, 'ordinary', 'admin', 'priest']) {
+  for (const who of [null, 'ordinary']) {
     const before = queries.length;
     const login = await session(who);
     const { page } = login;
-    if (!who || who === 'ordinary') {
-      await page.waitForURL(/\/login\?/);
-      if (who) await page.locator('.v-alert').waitFor();
-    } else {
-      await page.waitForURL(base + '/admin');
-      await page.locator('.admin-home__card').first().waitFor();
-      assert.equal(await page.getByRole('link', { name: /Доступ для святароў/ }).count(), who === 'priest' ? 1 : 0);
-    }
+    await page.waitForURL(/\/login\?/);
+    if (who) await page.locator('.v-alert').waitFor();
     assert.equal(await page.getByRole('heading', { name: 'Асаблівы доступ' }).count(), 0);
     assert.equal(await page.getByRole('link', { name: /Асаблівы доступ/ }).count(), 0);
     assert.equal(queries.length, before);
     await login.close();
   }
-  console.log('PASS anonymous, ordinary, admin and priest role gates');
+  console.log('PASS guest and ordinary user cannot open admin routes');
 
-  const manager = await session('manager');
+  const manager = await session('admin');
   const { page } = manager;
   await page.waitForURL(base + path);
   await page.getByRole('heading', { name: 'Наборы малітваў' }).waitFor();
@@ -419,7 +469,7 @@ async function runAdminSmoke() {
   await tab(page, 'Прылады');
   await hasText(page, 'device-24');
   assert.equal(await page.getByText('device-25', { exact: true }).count(), 0);
-  assert.equal(await page.getByLabel('Тып дазволу').count(), 0);
+  assert.equal(await page.getByLabel('Тып дазволу').count(), 1);
   await button(page, 'Наступная').click();
   await hasText(page, 'device-26');
   await button(page, 'Папярэдняя').click();

@@ -34,11 +34,11 @@ export function useAdminPrayerCatalog() {
   }
 
   watch(uid, reload, { immediate: true, flush: 'sync' });
-  watch([uid, () => auth.canManageAccessSetsV2], async ([owner, allowed], _, onCleanup) => {
+  watch(uid, async (owner, _, onCleanup) => {
     let current = true;
     onCleanup(() => { current = false; });
     sets.value = [];
-    if (!owner || !allowed) return;
+    if (!owner) return;
     try {
       const client = createAccessAdminClient(owner);
       const result = [];

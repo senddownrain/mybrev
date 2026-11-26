@@ -3,7 +3,17 @@ import { ADMIN_UIDS } from '../constants/admin.js';
 export const ROLE_ADMIN = 'admin';
 export const ROLE_SUPERADMIN = 'superadmin';
 
-export const NO_ACCESS = Object.freeze({ isAdmin: false, role: null, isSuperAdmin: false, canManagePriestAccess: false, canManageAccessSetsV2: false });
+export const NO_ACCESS = Object.freeze({ isAdmin: false, role: null, isSuperAdmin: false });
+
+// A missing role on an existing record is the legacy format. The bootstrap
+// UIDs match Firestore Rules and never imply superadmin.
+export function resolveAdminRole(uid, record) {
+  if (record && typeof record === 'object') {
+    const role = Object.hasOwn(record, 'role') ? record.role : ROLE_ADMIN;
+    if (role === ROLE_ADMIN || role === ROLE_SUPERADMIN) return role;
+  }
+  return ADMIN_UIDS.includes(uid) ? ROLE_ADMIN : null;
+}
 
 /**
  * Resolve admin access from the `admins/{uid}` document. The single place for role logic.
@@ -14,37 +24,20 @@ export const NO_ACCESS = Object.freeze({ isAdmin: false, role: null, isSuperAdmi
  * @param {{ exists: boolean, data?: object|null, failed?: boolean, fromCache?: boolean }} snapshot
  */
 export function resolveAdminAccess(uid, { exists = false, data = null, failed = false, fromCache = false } = {}) {
-  const legacy = ADMIN_UIDS.includes(uid);
-  let role = null;
-  let priestAccess = false;
-  let managesV2 = false;
-  if (exists && !failed) {
-    const fields = data || {};
-    const declared = fields.role === undefined ? ROLE_ADMIN : fields.role;
-    if (declared === ROLE_ADMIN || declared === ROLE_SUPERADMIN) {
-      role = declared;
-      priestAccess = fields.priestAccess === true;
-    }
-    // An explicit flag also applies to the existing legacy UID fallback in Rules.
-    managesV2 = !fromCache && (role === ROLE_SUPERADMIN || fields.accessSetsV2 === true);
-  }
-  if (!role && legacy) return { isAdmin: true, role: ROLE_ADMIN, isSuperAdmin: false, canManagePriestAccess: true, canManageAccessSetsV2: managesV2 };
+  const role = resolveAdminRole(uid, exists && !failed && !fromCache ? data : null);
   if (!role) return { ...NO_ACCESS };
-  const isSuperAdmin = role === ROLE_SUPERADMIN;
-  return { isAdmin: true, role, isSuperAdmin, canManagePriestAccess: legacy || isSuperAdmin || priestAccess, canManageAccessSetsV2: managesV2 };
+  return { isAdmin: true, role, isSuperAdmin: role === ROLE_SUPERADMIN };
 }
 
 /**
  * Router decision for a protected route. Returns `true` to proceed or a redirect target.
  * @param {object} meta merged route meta
- * @param {{ isAdmin: boolean, isSuperAdmin: boolean, canManagePriestAccess: boolean, canManageAccessSetsV2: boolean }} access
+ * @param {{ isAdmin: boolean, isSuperAdmin: boolean }} access
  * @param {string} fullPath
  */
 export function adminRouteDecision(meta, access, fullPath) {
   if (!access.isAdmin) return { name: 'Login', query: { redirect: fullPath } };
   if (meta.requiresSuperAdmin && !access.isSuperAdmin) return { name: 'Admin' };
-  if (meta.requiresAccessSetsV2 && !access.canManageAccessSetsV2) return { name: 'Admin' };
-  if (meta.requiresPriestAdmin && !access.canManagePriestAccess) return { name: 'Admin' };
   return true;
 }
 

@@ -35,7 +35,7 @@ const sections = [
   { label: 'Прылады', view: DevicesPanel },
 ];
 const selected = shallowRef(sections[0]);
-const client = computed(() => auth.canManageAccessSetsV2 && auth.user?.uid
+const client = computed(() => auth.isAdmin && auth.user?.uid
   ? createAccessAdminClient(auth.user.uid) : null);
 </script>
 
