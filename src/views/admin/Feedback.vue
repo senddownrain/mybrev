@@ -30,7 +30,7 @@
         <v-text-field v-model="filters.q" label="Пошук па тэксце" density="compact" hide-details clearable @keyup.enter="reload" @click:clear="reload" />
       </div>
 
-      <v-progress-linear v-if="loading" indeterminate class="my-2" />
+      <v-progress-linear v-if="loading && !items.length" indeterminate class="my-2" />
       <v-alert v-else-if="!items.length" type="info" variant="tonal" class="my-4" data-test="fb-empty">Пакуль няма зваротаў.</v-alert>
 
       <ul v-else class="fb-cards" data-test="fb-list">
@@ -57,8 +57,8 @@
         <p v-if="isSuper && selected.contactEmail" class="fb-meta" data-test="fb-email">Email: {{ selected.contactEmail }}</p>
 
         <div class="fb-actions">
-          <v-select :model-value="selected.status" :items="statusItems" label="Статус" density="compact" hide-details @update:model-value="(v) => change({ status: v })" />
-          <v-select v-if="isSuper" :model-value="selected.category" :items="categoryItems" label="Катэгорыя" density="compact" hide-details data-test="fb-category-select" @update:model-value="(v) => change({ category: v })" />
+          <v-select :model-value="selected.status" :items="statusItems" label="Статус" density="compact" hide-details no-auto-scroll @update:model-value="(v) => change({ status: v })" />
+          <v-select v-if="isSuper" :model-value="selected.category" :items="categoryItems" label="Катэгорыя" density="compact" hide-details no-auto-scroll data-test="fb-category-select" @update:model-value="(v) => change({ category: v })" />
         </div>
 
         <h3 class="mt-4">Заметкі</h3>
