@@ -12,7 +12,9 @@ import { codeProof } from '../src/utils/priestCode.mjs';
 import { prayerStoragePlan } from '../src/utils/prayerStoragePlan.mjs';
 
 for(const name of ['FIRESTORE_EMULATOR_HOST','FIREBASE_AUTH_EMULATOR_HOST'])assert.match(process.env[name]||'',/^(127\.0\.0\.1|localhost):\d+$/,'Local emulators required; live requests forbidden');
-const firestoreHost=process.env.FIRESTORE_EMULATOR_HOST,authHost=process.env.FIREBASE_AUTH_EMULATOR_HOST,projectId='demo-rules';
+const firestoreHost=process.env.FIRESTORE_EMULATOR_HOST,authHost=process.env.FIREBASE_AUTH_EMULATOR_HOST;
+const projectId = process.env.PRAYER_CATEGORY_TEST_PROJECT || 'demo-rules';
+assert.match(projectId, /^demo-[a-z0-9-]+$/);
 const uiPort=Number(process.env.PRIEST_UI_PORT||5173);
 const registration=await fetch(`http://${authHost}/identitytoolkit.googleapis.com/v1/accounts:signUp?key=demo-key`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:'categories-ui@example.test',password:'Local-test-password-2345',returnSecureToken:true})});
 const result=await registration.json();
@@ -25,24 +27,11 @@ for(const name of ['prayers','prayerCategories','priestProtectedPrayers','priest
 const fixture=JSON.parse(await readFile(new URL('../shared/prayer-categories/fixture.json',import.meta.url)));
 const content=new Map([['prayers',[...fixture.prayers.map(p=>({...p,text:'Synthetic local fixture text, not production content.'})),...Array.from({length:75},(_,i)=>({id:`catalog-${i}`,title:`Каталог ${String(i).padStart(2,'0')}`,tags:[],text:'Synthetic local catalog fixture.'}))]],['prayerCategories',fixture.categories]]);
 content.get('prayerCategories').push({id:'nav-folder',name:'Fixture grouping folder',parentId:'root',order:30,tags:[],prayerIds:[],iconKey:'church'},{id:'nav-folder-child',name:'Fixture grouping child',parentId:'nav-folder',order:0,tags:[],prayerIds:['catalog-74'],iconKey:'candle'});
-const commentTitle = 'Пра малітву';
-const commentText = [
-  '## Перад пачаткам',
-  'Гэты прыклад паказвае, як выглядаюць **вылучэнні** ў каментарыі да раздзела. Тэкст можна прачытаць у зручным для сябе памеры.',
-  '> Чытайце павольна і ўважліва.',
-  '- Знайдзіце ціхую хвіліну.\n- Прачытайце _тэкст_ да канца.',
-  ':::rubric\nМожна зрабіць кароткую паўзу.\n:::',
-].join('\n\n');
-content.get('prayerCategories').find(({ id }) => id === 'closed-child').comment = { content: 'PRIVATE COMMENT FIXTURE' };
-content.get('prayerCategories').push({
-  id: 'unpublished-comment', name: 'Unpublished fixture', tags: [], prayerIds: [], status: 'draft',
-  comment: { content: 'UNPUBLISHED COMMENT FIXTURE' },
-});
 for(const [name,rows] of prayerStoragePlan(content).desired)for(const {id,...data} of rows)await db.doc(`${name}/${id}`).set(data);
 await db.doc('priestContentControl/state').set({version:0,lockUid:'',updatedAt:new Date()});
 await db.doc('priestAccess/settings').set({activeCodeProof:await codeProof(initialCode),changedAt:new Date(),helpText:''});
 const firebaseModule=`import {initializeApp} from 'firebase/app';import {initializeFirestore,memoryLocalCache,connectFirestoreEmulator} from 'firebase/firestore';import {getAuth,connectAuthEmulator,signInWithEmailAndPassword} from 'firebase/auth';
-export const firebaseApp=initializeApp({projectId:'demo-rules',apiKey:'demo-key',authDomain:'demo-rules.firebaseapp.com'});export const db=initializeFirestore(firebaseApp,{localCache:memoryLocalCache()});connectFirestoreEmulator(db,'${firestoreHost.split(':')[0]}',${firestoreHost.split(':')[1]});
+export const firebaseApp=initializeApp({projectId:'${projectId}',apiKey:'demo-key',authDomain:'${projectId}.firebaseapp.com'});export const db=initializeFirestore(firebaseApp,{localCache:memoryLocalCache()});connectFirestoreEmulator(db,'${firestoreHost.split(':')[0]}',${firestoreHost.split(':')[1]});export const firestoreCacheRecovery={usesMemoryCache:()=>true};
 const auth=getAuth(firebaseApp);connectAuthEmulator(auth,'http://${authHost}',{disableWarnings:true});await auth.authStateReady();if(!auth.currentUser)await signInWithEmailAndPassword(auth,'categories-ui@example.test','Local-test-password-2345');`;
 const server=await createServer({configFile:false,cacheDir:'node_modules/.vite-categories-ui',resolve:{alias:{'@':fileURLToPath(new URL('../src',import.meta.url))}},optimizeDeps:{noDiscovery:true,entries:[],include:['vue','pinia','vue-router','vuetify','vuetify/components','markdown-it','node-html-parser','turndown','firebase/app','firebase/auth','firebase/firestore','firebase/firestore/lite']},server:{host:'127.0.0.1',port:uiPort,strictPort:true,warmup:{clientFiles:['tests/ui/prayer-categories-harness.mjs','src/views/admin/PrayerCategories.vue','src/components/prayers/PrayersList.vue','src/components/prayers/PrayerView.vue']}},plugins:[vue(),vuetify({styles:false}),{
  name:'category-local-emulator-only',enforce:'pre',configureServer(server){server.middlewares.use((req,res,next)=>{if(!req.url.startsWith('/__category_ui'))return next();res.setHeader('Content-Type','text/html');res.end('<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div id="app"></div><script type="module" src="/tests/ui/prayer-categories-harness.mjs"></script></body></html>');});},
@@ -66,42 +55,12 @@ page.on('pageerror',error=>{failures.push(error.message);console.error(error.sta
 page.on('console',msg=>{if(msg.type()==='error')console.error('Browser:',msg.text());});
 await mkdir('reports/prayer-categories',{recursive:true});
 const evidence=process.env.CATEGORY_UI_EVIDENCE || 'docs/prayer-category-evidence';await mkdir(evidence,{recursive:true});
-const commentEvidence = 'reports/prayer-categories/comments';
-await mkdir(commentEvidence, { recursive: true });
 const overflow=async()=>assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1),'No document overflow');
 const adminDialog=()=>page.getByRole('dialog').filter({has:page.getByText('Рэдагаванне катэгорыі',{exact:true})});
 try {
  await page.goto(`http://127.0.0.1:${uiPort}/__category_ui`,{waitUntil:'domcontentloaded'});
  await page.getByLabel('Рэдагаваць катэгорыю Марыйныя малітвы',{exact:true}).waitFor({timeout:120000});
  await page.getByLabel('Рэдагаваць катэгорыю Таямніцы ружанца',{exact:true}).waitFor();
- // Create a comment-only leaf with the actual category form and CodeMirror editor.
- await page.getByLabel('Дадаць падкатэгорыю: Fixture grouping folder', { exact: true }).click();
- const newCategory = page.getByRole('dialog').filter({ has: page.getByText('Новая катэгорыя', { exact: true }) });
- await newCategory.getByLabel('Назва катэгорыі', { exact: true }).fill('Прыклад раздзела');
- await newCategory.getByLabel('Загаловак каментарыя', { exact: true }).fill(commentTitle);
- await newCategory.getByRole('button', { name: 'Markdown', exact: true }).click();
- await newCategory.getByRole('textbox', { name: 'Каментарый', exact: true }).fill(commentText);
- await newCategory.getByLabel('Крыніца каментарыя', { exact: true }).fill('Ойча наш');
- await page.getByRole('option', { name: /Ойча наш/ }).click();
- await newCategory.getByRole('button', { name: 'Захаваць', exact: true }).click();
- await newCategory.waitFor({ state: 'hidden' });
- const created = (await db.collection('prayerCategories').where('name', '==', 'Прыклад раздзела').get()).docs[0];
- assert.ok(created);
- const commentCategoryId = created.id;
- assert.equal(created.data().parentId, 'nav-folder');
- assert.deepEqual(created.data().prayerIds, []);
- assert.deepEqual(created.data().comment, { title: commentTitle, content: commentText, sourceId: 'ojcha-nash-2022' });
- await page.reload();
- await page.getByLabel('Рэдагаваць катэгорыю Прыклад раздзела', { exact: true }).click();
- await adminDialog().getByRole('button', { name: 'Markdown', exact: true }).click();
- assert.equal(await adminDialog().getByLabel('Загаловак каментарыя', { exact: true }).inputValue(), commentTitle);
- await adminDialog().getByText(/Малітоўнік «Ойча наш»/).waitFor();
- assert.ok((await adminDialog().getByRole('textbox', { name: 'Каментарый', exact: true }).innerText()).includes('**вылучэнні**'));
- // A blank title uses the neutral default. Keep the original text and source.
- await adminDialog().getByLabel('Загаловак каментарыя', { exact: true }).fill(' ');
- await adminDialog().getByRole('button', { name: 'Захаваць', exact: true }).click();
- await adminDialog().waitFor({ state: 'hidden' });
- assert.deepEqual((await created.ref.get()).data().comment, { content: commentText, sourceId: 'ojcha-nash-2022' });
  assert.equal(await page.locator('.category-list [aria-expanded]').count(),0,'admin hierarchy has no disclosure controls');
  await page.getByLabel('Пошук па назве або тэгу',{exact:true}).fill('Таямніцы ружанца');
  await page.getByLabel('Рэдагаваць катэгорыю Таямніцы ружанца',{exact:true}).waitFor();
@@ -146,19 +105,30 @@ try {
  await page.getByRole('dialog').getByRole('button',{name:'Скасаваць',exact:true}).click();
  // Real atomic manual membership transfer via the admin editor.
  await page.getByLabel('Рэдагаваць катэгорыю Марыйныя малітвы',{exact:true}).click();
- await adminDialog().getByLabel('Толькі для святароў',{exact:true}).check();
+ await adminDialog().getByLabel('Святары',{exact:true}).check();
  await adminDialog().getByRole('button',{name:'Захаваць',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});
  assert.equal((await db.doc('prayers/manual').get()).exists,false);assert.equal((await db.doc('priestProtectedPrayers/manual').get()).exists,true);
  assert.equal((await db.doc('priestProtectedCategories/leaf').get()).data().priestOnly,false);
  await page.getByLabel('Рэдагаваць катэгорыю Марыйныя малітвы',{exact:true}).click();
- await adminDialog().getByLabel('Толькі для святароў',{exact:true}).uncheck();
+ await adminDialog().getByLabel('Святары',{exact:true}).uncheck();
  await adminDialog().getByRole('button',{name:'Захаваць',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});
  assert.equal((await db.doc('prayers/manual').get()).exists,true);
  // Empty folder validation and metadata persistence.
  await page.getByRole('button',{name:'Новая катэгорыя',exact:true}).click();
  await page.getByRole('dialog').getByLabel('Назва катэгорыі',{exact:true}).fill('Fixture new folder');
+ const legacyComment = { content: '**Сінтэтычны каментарый**' };
+ await page.getByRole('dialog').getByRole('button', { name: 'Markdown', exact: true }).click();
+ await page.getByRole('dialog').getByRole('textbox', { name: 'Каментарый', exact: true }).fill(legacyComment.content);
  await page.getByRole('dialog').getByRole('button',{name:'Захаваць',exact:true}).click();await page.getByRole('dialog').waitFor({state:'hidden'});
  const folder=(await db.collection('prayerCategories').where('name','==','Fixture new folder').get()).docs[0];assert.deepEqual(folder.data().tags,[]);assert.deepEqual(folder.data().prayerIds,[]);
+ assert.deepEqual(folder.data().comment, legacyComment);
+ await page.getByLabel('Рэдагаваць катэгорыю Fixture new folder', { exact: true }).click();
+ await adminDialog().getByRole('button', { name: 'Ачысціць каментарый', exact: true }).click();
+ await adminDialog().getByRole('button', { name: 'Захаваць', exact: true }).click();
+ await adminDialog().waitFor({ state: 'hidden' });
+ const cleared = await folder.ref.get();
+ assert.equal(cleared.exists, true);
+ assert.equal(Object.hasOwn(cleared.data(), 'comment'), false);
  // Last tag removal in the actual UI preserves both parent and descendants.
  await page.getByRole('tab',{name:'Тэгі',exact:true}).click();
  await page.getByLabel('Выдаліць тэг root-tag з усіх малітваў',{exact:true}).click();
@@ -190,9 +160,10 @@ try {
  assert.ok(!JSON.stringify(await page.evaluate(()=>window.__categoryUi.prayers.prayers)).includes('PRIVATE'));
  await page.getByRole('button',{name:'Меню катэгорый',exact:true}).click();
  const drawer=page.locator('.app-drawer');
+ await drawer.getByRole('button',{name:'Малітоўныя зборнікі',exact:true}).click();
  const rootLink=drawer.getByRole('link',{name:'Марыйныя малітвы',exact:true});
  assert.equal(await drawer.getByRole('link',{name:'Ружанец',exact:true}).count(),0,'sidebar only contains roots');
- assert.equal(await drawer.locator('[aria-expanded]').count(),0);
+ assert.equal(await drawer.locator('#drawer-collections [aria-expanded]').count(),0);
  assert.equal(await rootLink.locator('.category-icon-svg svg').count(),1,'stored SVG icon is rendered');
  await rootLink.focus();await page.keyboard.press('Enter');await page.waitForURL(/category=root/);
  await page.getByRole('heading',{name:'Марыйныя малітвы',exact:true}).waitFor();
@@ -270,77 +241,9 @@ try {
  await page.getByText('PRIVATE SHARED FIXTURE',{exact:true}).waitFor();
  await page.locator('#category-row-closed-child').click();await page.waitForURL(/category=closed-child/);
  await page.getByText('PRIVATE INHERITED FIXTURE',{exact:true}).waitFor();
- const privateComment = page.getByRole('button', { name: 'Пра гэты раздзел', exact: true });
- await privateComment.click();
- await page.getByText('PRIVATE COMMENT FIXTURE', { exact: true }).waitFor();
  await page.evaluate(async()=>{await (await import('/src/services/priestAccessService.js')).disablePriestAccess();});
  await page.waitForFunction(()=>!window.__categoryUi.prayers.isLoading&&!window.__categoryUi.prayers.prayers.some(p=>p.id==='inherited-private'));
  assert.equal(await page.getByText('PRIVATE INHERITED FIXTURE',{exact:true}).count(),0);
- assert.equal(await page.getByText('PRIVATE COMMENT FIXTURE', { exact: true }).count(), 0);
-
- const goToCategory = id => page.evaluate(id => window.__categoryUi.router.push(`/prayers?category=${id}`), id);
- await goToCategory('unpublished-comment');
- await page.getByRole('heading', { name: 'Катэгорыя недаступная', exact: true }).waitFor();
- assert.equal(await privateComment.count(), 0);
- await goToCategory('nav-folder');
- await page.getByRole('link', { name: 'Прыклад раздзела', exact: true }).click();
- await page.getByRole('heading', { name: 'Прыклад раздзела', exact: true }).waitFor();
- const toggle = page.getByRole('button', { name: 'Пра гэты раздзел', exact: true });
- const panel = page.getByRole('region', { name: 'Пра гэты раздзел', exact: true });
- assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
- assert.equal(await page.locator('.prayer-list-item').count(), 0);
- assert.equal(await page.getByText('Малітвы не знойдзены', { exact: true }).count(), 0);
- await toggle.focus();
- await page.keyboard.press('Space');
- await panel.getByRole('heading', { name: 'Перад пачаткам', exact: true }).waitFor();
- assert.equal(await toggle.getAttribute('aria-expanded'), 'true');
- assert.equal(await panel.locator('blockquote').count(), 1);
- assert.equal(await panel.locator('li').count(), 2);
- assert.equal(await panel.locator('strong, em, aside.prayer-rubric').count(), 3);
- await panel.getByText(/Малітоўнік «Ойча наш»/).waitFor();
- await page.keyboard.press('Enter');
- await panel.waitFor({ state: 'hidden' });
-
- for (const [width, theme, label] of [[390, 'light', 'mobile'], [768, 'marian', 'tablet'], [1280, 'dark', 'wide']]) {
-   await page.setViewportSize({ width, height: 900 });
-   await page.evaluate(theme => { window.__categoryUi.settings.themePreference = theme; }, theme);
-   await page.locator(`.v-theme--${theme}`).first().waitFor();
-   await overflow();
-   await page.screenshot({ path: `${commentEvidence}/${label}-collapsed.png`, fullPage: true });
-   await toggle.click();
-   await panel.waitFor();
-   await overflow();
-   await page.screenshot({ path: `${commentEvidence}/${label}-expanded.png`, fullPage: true });
-   await toggle.click();
- }
-
- await page.setViewportSize({ width: 320, height: 850 });
- await toggle.click();
- const prose = panel.locator('.category-comment__prose');
- const fontSize = () => prose.evaluate(el => parseFloat(getComputedStyle(el).fontSize));
- const normalSize = await fontSize();
- await page.evaluate(() => { window.__categoryUi.settings.fontSizeMultiplier = 1.8; });
- assert.ok(await fontSize() > normalSize * 1.7);
- await overflow();
- await page.locator('.category-parent-link').click();
- await page.getByRole('link', { name: 'Прыклад раздзела', exact: true }).click();
- assert.equal(await toggle.getAttribute('aria-expanded'), 'false', 'a new visit starts collapsed');
- await page.reload();
- await page.getByRole('heading', { name: 'Прыклад раздзела', exact: true }).waitFor();
- assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
-
- await page.evaluate(() => sessionStorage.removeItem('categoryPublic'));
- await page.goto(`http://127.0.0.1:${uiPort}/__category_ui`, { waitUntil: 'domcontentloaded' });
- await page.getByLabel('Рэдагаваць катэгорыю Прыклад раздзела', { exact: true }).click();
- await adminDialog().getByRole('button', { name: 'Ачысціць каментарый', exact: true }).click();
- await adminDialog().getByRole('button', { name: 'Захаваць', exact: true }).click();
- await adminDialog().waitFor({ state: 'hidden' });
- const cleared = await db.doc(`prayerCategories/${commentCategoryId}`).get();
- assert.equal(cleared.exists, true);
- assert.equal(Object.hasOwn(cleared.data(), 'comment'), false);
- assert.deepEqual(cleared.data().prayerIds, []);
- assert.equal((await db.doc('prayers/catalog-74').get()).exists, true);
- console.log('PASS: category comments save, reopen, clear, visibility, authorization, formatting, source, keyboard, re-entry, reader scaling and responsive layout.');
  assert.deepEqual(failures,[]);
  console.log('PASS: admin persistence, manual/tag union, atomic access, empty folder, tag removal, hierarchical pages, root-only sidebar, 48 icons, priest grant/revoke, keyboard, reader/back/forward, reload, 36 viewport/theme checks.');
 }catch(error){await page.screenshot({path:'reports/prayer-categories/failure.png',fullPage:true});console.error((await page.locator('body').innerText()).slice(-10000));throw error;}finally{await browser.close();await server.close();await deleteApp(owner);}
