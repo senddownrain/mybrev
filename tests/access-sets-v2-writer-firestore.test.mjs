@@ -202,4 +202,48 @@ test('S4 writer, mirror and reader use one real atomic Firestore commit', { skip
   assert.ok((await clientRead(legacyReader, mirrorPath)).exists());
   await mode('legacy');
   await legacySet('prayers/legacy-edit', 5);
+
+  await mode('canonical');
+  const comment = { title: 'Synthetic comment', content: '**Text**\n\n:::rubric\nDirection\n:::', sourceId: 'ojcha-nash-2022' };
+  const categoryId = 'comment-leaf';
+  const publicCategory = db.doc('prayerCategories/' + categoryId);
+  const privateCategory = db.doc('protectedCategories/' + categoryId);
+  const mirrorCategory = db.doc('priestProtectedCategories/' + categoryId);
+  const editCategory = async (patch, action = 'update') => {
+    const change = [{ kind: 'categories', action, id: categoryId, patch }];
+    const version = await preview(change);
+    await call(saveRequest(change, version));
+    return version;
+  };
+  await editCategory({ name: 'Synthetic comment-only category', tags: [], prayerIds: [], comment }, 'create');
+  assert.deepEqual((await publicCategory.get()).data().comment, comment);
+  await editCategory({ order: 7 });
+  assert.deepEqual((await publicCategory.get()).data().comment, comment, 'an unrelated patch preserves comment');
+  await assert.rejects(editCategory({ comment: { ...comment, editorNote: 'synthetic' } }), { code: 'invalid-content-patch' });
+
+  const move = await editCategory({ accessSets: ['priest'] });
+  const [priest, legacy, publicAfter, index, audit] = await db.getAll(privateCategory, mirrorCategory, publicCategory,
+    db.doc(`accessSetsV2/priest/categories/${categoryId}`),
+    db.doc(`priestContentControl/accessSetsV2/catalogAudit/${move.version + 1}`));
+  assert.equal(publicAfter.exists, false);
+  assert.deepEqual(priest.data().comment, comment);
+  assert.deepEqual(legacy.data().comment, comment);
+  assert.equal(priest.data().contentHash, catalogContentHash(legacy.data()));
+  assert.deepEqual(index.data(), {});
+  for (const sibling of [legacy, index, audit]) assert.ok(priest.updateTime.isEqual(sibling.updateTime));
+
+  await editCategory({ accessSets: ['marian', 'priest'] });
+  assert.equal((await mirrorCategory.get()).exists, false);
+  assert.deepEqual((await privateCategory.get()).data().comment, comment);
+  await editCategory({ accessSets: ['marian'] });
+  assert.deepEqual((await privateCategory.get()).data().effectiveAccessSets, ['marian']);
+  assert.equal((await mirrorCategory.get()).exists, false);
+  assert.equal((await publicCategory.get()).exists, false);
+  await editCategory({ comment: null });
+  assert.equal(Object.hasOwn((await privateCategory.get()).data(), 'comment'), false);
+  assert.deepEqual((await privateCategory.get()).data().effectiveAccessSets, ['marian']);
+  await editCategory({ accessSets: [], comment: { content: ' ' } });
+  assert.equal((await privateCategory.get()).exists, false);
+  assert.equal(Object.hasOwn((await publicCategory.get()).data(), 'comment'), false);
+  assert.equal((await publicCategory.get()).data().order, 7n);
 });

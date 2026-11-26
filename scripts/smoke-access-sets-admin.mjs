@@ -9,6 +9,7 @@ import { initializeApp, deleteApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { createRegistry } from '../src/components/admin/accessSets/registry.mjs';
 import { parseAccessSetsV2Code } from '../src/utils/accessSetsV2Code.mjs';
+import { catalogContentHash } from './lib/access-sets-v2-content-values.mjs';
 
 const fsHost = process.env.FIRESTORE_EMULATOR_HOST;
 const authHost = process.env.FIREBASE_AUTH_EMULATOR_HOST;
@@ -272,10 +273,21 @@ async function runCanonicalAdminSmoke() {
   await page.getByLabel('Рэдагаваць катэгорыю Сінтэтычная катэгорыя').click();
   await dialog(page).getByRole('heading', { name: 'Доступ', exact: true }).waitFor();
   await dialog(page).getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
+  const comment = { title: 'Сінтэтычны каментарый', content: 'Узор **афармлення**.\n\n:::rubric\nУзор рубрыкі.\n:::', sourceId: 'ojcha-nash-2022' };
+  await dialog(page).getByLabel('Загаловак каментарыя').fill(comment.title);
+  await button(dialog(page), 'Markdown').click();
+  await dialog(page).getByRole('textbox', { name: 'Каментарый', exact: true }).fill(comment.content);
+  await dialog(page).getByLabel('Крыніца каментарыя').fill('Ойча наш');
+  await page.getByRole('option', { name: /Ойча наш/ }).click();
   page.once('dialog', confirm);
   await button(dialog(page), 'Захаваць').click();
   await hasText(page, 'Катэгорыя захавана');
-  assert.deepEqual((await seed.doc('protectedCategories/synthetic-category').get()).data().effectiveAccessSets, ['marian']);
+  const canonicalCategory = seed.doc('protectedCategories/synthetic-category');
+  const stored = (await canonicalCategory.get()).data();
+  assert.deepEqual(stored.effectiveAccessSets, ['marian']);
+  assert.deepEqual(stored.comment, comment);
+  assert.equal(stored.contentHash, catalogContentHash(stored));
+  assert.equal((await seed.doc('priestProtectedCategories/synthetic-category').get()).exists, false);
   assert.equal((await seed.doc('prayerCategories/synthetic-category').get()).exists, false);
 
   await page.goto(base + '/admin/prayer-drafts/s8-browser', { waitUntil: 'commit' });
@@ -287,7 +299,35 @@ async function runCanonicalAdminSmoke() {
   await hasText(page, 'Апублікавана: /prayer/d_s8-browser');
   assert.deepEqual((await seed.doc('protectedPrayers/d_s8-browser').get()).data().effectiveAccessSets, ['marian']);
   assert.equal((await seed.doc('prayerDrafts/s8-browser/audit/publish-v2-2').get()).exists, true);
-  console.log('PASS S8 canonical category and draft from the administrator UI through Callable.');
+
+  await page.goto(base + '/admin/prayer-categories', { waitUntil: 'commit' });
+  const openCategory = () => page.getByLabel('Рэдагаваць катэгорыю Сінтэтычная катэгорыя').click();
+  const saveCategory = async () => {
+    page.once('dialog', confirm);
+    await button(dialog(page), 'Захаваць').click();
+    await dialog(page).waitFor({ state: 'hidden' });
+  };
+  await openCategory();
+  assert.equal(await dialog(page).getByLabel('Загаловак каментарыя').inputValue(), comment.title);
+  await dialog(page).getByText(/Малітоўнік «Ойча наш»/).waitFor();
+  await button(dialog(page), 'Markdown').click();
+  assert.match(await dialog(page).getByRole('textbox', { name: 'Каментарый', exact: true }).innerText(), /\*\*афармлення\*\*/);
+  await dialog(page).getByLabel('Загаловак каментарыя').fill('Будзе скасавана');
+  await button(dialog(page), 'Скасаваць').click();
+  await dialog(page).waitFor({ state: 'hidden' });
+  assert.deepEqual((await canonicalCategory.get()).data().comment, comment);
+  await openCategory();
+  await dialog(page).getByLabel('Парадак').fill('17');
+  await saveCategory();
+  assert.deepEqual((await canonicalCategory.get()).data().comment, comment);
+  await openCategory();
+  await button(dialog(page), 'Ачысціць каментарый').click();
+  await saveCategory();
+  const cleared = (await canonicalCategory.get()).data();
+  assert.equal(Object.hasOwn(cleared, 'comment'), false);
+  assert.equal(cleared.order, 17);
+  assert.deepEqual(cleared.effectiveAccessSets, ['marian']);
+  console.log('PASS S8 canonical category and draft from the administrator UI through Callable, including comment readback, cancel, unrelated edit and clear.');
   await manager.close();
 }
 

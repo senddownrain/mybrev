@@ -82,5 +82,7 @@ test('schema 1 app bundle retains the document hash and discards protected categ
   assert.deepEqual(leaf.comment, comment);
   assert.equal(parsed.hashes.leaf, documentHash(leaf));
   assert.notEqual(documentHash(leaf), documentHash(category('leaf', { parentId: 'root' })));
-  assert.throws(() => publicAppCollections(new Map([[collection, categories]])), /cannot export an unpublished comment/);
+  assert.ok(!publicAppCollections(new Map([[collection, categories]])).get(collection).some(({ id }) => id === 'unpublished'));
+  const unexpected = category('unexpected', { comment: { ...comment, editorNote: 'synthetic' } });
+  assert.throws(() => publicAppCollections(new Map([[collection, [unexpected]]])), /Invalid category comment fields/);
 });

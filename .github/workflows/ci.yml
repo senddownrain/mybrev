@@ -28,7 +28,7 @@ jobs:
         run: node --test tests/prayer-draft-model.test.mjs tests/prayer-import-plan.test.mjs tests/prayer-import-bog.test.mjs tests/prayer-import-editorial.test.mjs
 
       - name: Public prayer Hosting export safety tests (offline; no Firestore)
-        run: node --test tests/public-prayer-catalog.test.mjs
+        run: node --test tests/public-prayer-catalog.test.mjs tests/prayer-category-comment.test.mjs
 
       - name: Administrator-only Songbook regression tests
         run: node --test tests/admin-access.test.mjs

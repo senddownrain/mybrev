@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -11,9 +11,26 @@ import vuetify from 'vite-plugin-vuetify';
 import { buildPublicPrayerCatalog } from '../src/utils/publicPrayerCatalog.mjs';
 
 const publicCatalog = buildPublicPrayerCatalog({
-  prayers: [{ id: 'public-prayer', title: 'Synthetic public title', text: 'Synthetic public body', categoryId: 'public-category' }],
-  categories: [{ id: 'public-category', name: 'Synthetic public category' }],
+  prayers: [{ id: 'public-prayer', title: 'Synthetic public title', text: 'Synthetic public body', categoryId: 'public-category', tags: ['Малітвы'] }],
+  categories: [
+    { id: 'public-category', name: 'Synthetic public category' },
+    { id: 'comment-root', name: 'Для чытання і разважання', order: 2 },
+    {
+      id: 'comment-only', parentId: 'comment-root', name: 'Прыклад раздзела', comment: {
+        content: [
+          '## Перад пачаткам',
+          'Гэты прыклад паказвае, як выглядаюць **вылучэнні** ў каментарыі да раздзела. Тэкст можна прачытаць у зручным для сябе памеры.',
+          '> Чытайце павольна і ўважліва.',
+          '- Знайдзіце ціхую хвіліну.\n- Прачытайце _тэкст_ да канца.',
+          ':::rubric\nМожна зрабіць кароткую паўзу.\n:::',
+        ].join('\n\n'),
+        sourceId: 'ojcha-nash-2022',
+      },
+    },
+  ],
 });
+const evidence = process.env.CATEGORY_UI_EVIDENCE;
+if (evidence) await mkdir(evidence, { recursive: true });
 const outDir = await mkdtemp(join(tmpdir(), 'mybrev-s4-browser-'));
 let server;
 let browser;
@@ -35,7 +52,7 @@ try {
       name: 's4-synthetic-catalog', enforce: 'pre',
       transform(source, id) {
         const file = id.replaceAll('\\', '/').split('?')[0];
-        if (file.endsWith('/src/plugins/firebase.js')) return 'export const firebaseApp = null; export const db = null;';
+        if (file.endsWith('/src/plugins/firebase.js')) return 'export const firebaseApp = null; export const db = null; export const firestoreCacheRecovery = {};';
         if (file.endsWith('/src/stores/auth.js')) return "import { reactive } from 'vue'; export const authFixture = reactive({ isAdmin: false, init: async () => {} }); export const useAuthStore = () => authFixture;";
         if (file.endsWith('/src/services/prayerStorageService.js')) return source.replace(
           /export async function readAdminPrayerContent\(\) \{[\s\S]*?\n\}/,
@@ -46,13 +63,14 @@ try {
     }],
   });
   const output = new Map(await Promise.all((await readdir(outDir)).map(async (name) => [`/${name}`, await readFile(join(outDir, name))])));
+  output.set('/app-brand-96.png', await readFile(new URL('../public/app-brand-96.png', import.meta.url)));
   output.set('/public-prayers-v1.json', JSON.stringify(publicCatalog));
-  output.set('/', '<!doctype html><meta name="viewport" content="width=device-width"><link rel="stylesheet" href="/catalog.css"><div id="app"></div><script type="module" src="/catalog.js"></script>');
+  output.set('/', '<!doctype html><html lang="be"><meta name="viewport" content="width=device-width"><link rel="stylesheet" href="/catalog.css"><div id="app"></div><script type="module" src="/catalog.js"></script>');
   server = createServer((request, response) => {
     const path = new URL(request.url, 'http://127.0.0.1').pathname;
     const content = output.get(path);
     if (!content) return response.writeHead(204).end();
-    const type = path.endsWith('.js') ? 'text/javascript' : path.endsWith('.css') ? 'text/css'
+    const type = path.endsWith('.png') ? 'image/png' : path.endsWith('.js') ? 'text/javascript' : path.endsWith('.css') ? 'text/css'
       : path.endsWith('.json') ? 'application/json' : 'text/html';
     response.writeHead(200, { 'Content-Type': type }).end(content);
   });
@@ -80,11 +98,22 @@ try {
   const counts = () => page.evaluate(() => window.catalogHarness.counts());
   const drawer = page.locator('.app-drawer');
   const category = (name) => drawer.getByRole('link', { name, exact: true });
+  const drawerToggle = drawer.getByRole('button', { name: 'Малітоўныя зборнікі', exact: true });
+  const favorites = drawer.getByRole('link', { name: 'Абраныя малітвы', exact: true });
+  const commentToggle = page.getByRole('button', { name: 'Пра гэты раздзел', exact: true });
+  const screenshot = async (name) => { if (evidence) await page.screenshot({ path: join(evidence, `${name}.png`) }); };
+  const noOverflow = async () => assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= globalThis.innerWidth + 1));
 
   await page.goto('http://127.0.0.1:' + server.address().port + '/#/home', { waitUntil: 'commit', timeout: 60_000 });
   await page.getByText('Synthetic home').waitFor({ timeout: 120_000 });
   assert.deepEqual(await counts(), { confirm: 0, list: 0, get: 0 });
   await menu();
+  await drawerToggle.waitFor();
+  await favorites.waitFor();
+  assert.equal(await drawerToggle.getAttribute('aria-expanded'), 'false');
+  assert.equal(await drawer.locator('#drawer-collections a').count(), 0);
+  await drawerToggle.focus();
+  await page.keyboard.press('Space');
   await category('Synthetic public category').waitFor();
   const protectedLinks = () => drawer.getByRole('link', { name: /Для святароў|Для марыянаў|Трэці зборнік|^(marian|priest|another) category/ });
   assert.equal(await protectedLinks().count(), 0);
@@ -105,17 +134,29 @@ try {
     assert.notEqual(await ink('Для марыянаў'), await ink('Synthetic public category'));
   }
   const warm = await counts();
+  await drawerToggle.click();
+  assert.equal(await drawer.locator('#drawer-collections a').count(), 0);
+  await favorites.waitFor();
+  await drawerToggle.press('Enter');
+  await category('Для марыянаў').waitFor();
+  assert.deepEqual(await counts(), warm);
   await closeMenu();
   await menu();
   await category('Для марыянаў').waitFor();
   assert.deepEqual(await counts(), warm);
   await category('Для марыянаў').click();
   await page.getByRole('heading', { name: 'Для марыянаў' }).waitFor();
+  await menu();
+  await category('Для марыянаў').waitFor();
+  assert.match(await category('Для марыянаў').getAttribute('class'), /v-list-item--active/);
+  await closeMenu();
   const marianRows = page.locator('[id^="prayer-row-marian-prayer-"]');
   await page.waitForFunction(() => document.querySelectorAll('[id^="prayer-row-marian-prayer-"]').length === 56);
   assert.deepEqual(await marianRows.evaluateAll((rows) => rows.map((row) => row.id)),
     Array.from({ length: 56 }, (_, i) => 'prayer-row-marian-prayer-' + i));
   assert.equal(await page.locator('.subcategory-link').count(), 0);
+  await commentToggle.click();
+  await page.getByText('Synthetic marian category commentary', { exact: true }).waitFor();
   await page.getByText('marian prayer 1', { exact: true }).click();
   await page.getByText('marian synthetic prayer text 1', { exact: true }).waitFor();
   await page.locator('.prayer-text').evaluate((element) => { element.dataset.focusProbe = 'same-document'; });
@@ -170,12 +211,105 @@ try {
   await category('Трэці зборнік').waitFor();
   assert.equal(await protectedLinks().count(), 1);
   assert.equal(await category('Трэці зборнік').locator('.drawer-collection-lock').count(), 1);
-  await rights([]);
+  await category('Трэці зборнік').click();
+  await commentToggle.click();
+  await page.getByText('Synthetic another category commentary', { exact: true }).waitFor();
+  await rights('suspended');
+  await page.getByText('Synthetic another category commentary', { exact: true }).waitFor({ state: 'detached' });
+  await menu();
   await category('Трэці зборнік').waitFor({ state: 'hidden' });
   assert.equal(await protectedLinks().count(), 0);
   assert.equal(await drawer.locator('.drawer-collection-lock, .drawer-collection--separator').count(), 0);
   await closeMenu();
   await go('/home');
+
+  await rights([]);
+  await menu();
+  await category('Для чытання і разважання').click();
+  await page.getByRole('link', { name: 'Прыклад раздзела', exact: true }).click();
+  await page.getByRole('heading', { name: 'Прыклад раздзела', exact: true }).waitFor();
+  assert.equal(await commentToggle.getAttribute('aria-expanded'), 'false');
+  assert.equal(await page.locator('.prayer-list-item').count(), 0);
+  assert.equal(await page.getByText('Малітвы не знойдзены', { exact: true }).count(), 0);
+  for (const [width, theme, label] of [[390, 'light', 'mobile'], [768, 'marian', 'tablet'], [1280, 'dark', 'wide']]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.evaluate((theme) => window.catalogHarness.theme(theme), theme);
+    await page.locator(`.v-theme--${theme}`).first().waitFor();
+    await noOverflow();
+    await screenshot(`comment-${label}-collapsed`);
+    await commentToggle.press('Space');
+    const prose = page.locator('.category-comment__prose');
+    await prose.getByRole('heading', { name: 'Перад пачаткам' }).waitFor();
+    assert.equal(await prose.locator('blockquote, ul, strong, em, .prayer-rubric').count(), 5);
+    await page.getByText(/Малітоўнік «Ойча наш»/).waitFor();
+    await noOverflow();
+    await screenshot(`comment-${label}-expanded`);
+    await commentToggle.press('Enter');
+  }
+  await page.setViewportSize({ width: 320, height: 780 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await commentToggle.click();
+  const proseSize = () => page.locator('.category-comment__prose').evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  const normalSize = await proseSize();
+  await page.evaluate(() => window.catalogHarness.fontSize(1.8));
+  assert.ok(await proseSize() > normalSize * 1.7);
+  await noOverflow();
+  await page.locator('.category-parent-link').click();
+  await page.getByRole('link', { name: 'Прыклад раздзела', exact: true }).click();
+  assert.equal(await commentToggle.getAttribute('aria-expanded'), 'false');
+  await page.evaluate(() => window.catalogHarness.fontSize(1));
+
+  await go('/settings');
+  const settingsToggle = page.getByRole('button', { name: 'Катэгорыі ў меню', exact: true });
+  const addCategory = page.getByRole('button', { name: 'Дадаць катэгорыю', exact: true });
+  assert.equal(await settingsToggle.getAttribute('aria-expanded'), 'false');
+  assert.equal(await addCategory.isVisible(), false);
+  await settingsToggle.press('Space');
+  await addCategory.click();
+  const settingsDialog = page.getByRole('dialog');
+  await settingsDialog.getByLabel('Назва катэгорыі').fill('Мой спіс');
+  await settingsDialog.getByRole('button', { name: 'Малітвы', exact: true }).click();
+  await settingsDialog.getByRole('button', { name: /Дадаць/ }).last().click();
+  await settingsDialog.waitFor({ state: 'hidden' });
+  assert.equal(await settingsToggle.getAttribute('aria-expanded'), 'true');
+  await page.getByRole('button', { name: 'Рэдагаваць катэгорыю Мой спіс' }).click();
+  await settingsDialog.getByLabel('Назва катэгорыі').fill('Мой новы спіс');
+  await settingsDialog.getByRole('button', { name: 'Захаваць', exact: true }).click();
+  await settingsDialog.waitFor({ state: 'hidden' });
+  await page.getByRole('button', { name: 'Прыбраць катэгорыю Мой новы спіс з меню' }).click();
+  await page.getByRole('button', { name: 'Прыбраць катэгорыю Прыклад раздзела з меню' }).click();
+  await page.getByRole('button', { name: 'Аднавіць катэгорыі па змаўчанні' }).click();
+  await page.getByRole('button', { name: 'Прыбраць катэгорыю Прыклад раздзела з меню' }).waitFor();
+  assert.equal(await settingsToggle.getAttribute('aria-expanded'), 'true');
+
+  for (const [width, theme] of [[320, 'light'], [768, 'marian'], [1280, 'dark']]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.evaluate((theme) => window.catalogHarness.theme(theme), theme);
+    await page.locator(`.v-theme--${theme}`).first().waitFor();
+    await settingsToggle.click();
+    await settingsToggle.scrollIntoViewIfNeeded();
+    await noOverflow();
+    await screenshot(`settings-${theme}-collapsed`);
+    await settingsToggle.press('Enter');
+    await addCategory.waitFor();
+    await noOverflow();
+    await screenshot(`settings-${theme}-expanded`);
+    await menu();
+    await drawerToggle.click();
+    await favorites.waitFor();
+    assert.equal(await drawer.locator('#drawer-collections a').count(), 0);
+    await screenshot(`drawer-${theme}-collapsed`);
+    const before = await counts();
+    await drawerToggle.press('Space');
+    await category('Для чытання і разважання').waitFor();
+    assert.deepEqual(await counts(), before);
+    assert.ok(await drawer.locator('.drawer-list').evaluate((el) => el.scrollWidth <= el.clientWidth + 1));
+    await screenshot(`drawer-${theme}-expanded`);
+    await closeMenu();
+  }
+  await go('/home');
+  await go('/settings');
+  assert.equal(await settingsToggle.getAttribute('aria-expanded'), 'false');
 
   // An editor without any device access gets a separate, complete snapshot.
   await page.evaluate(() => window.catalogHarness.editor());

@@ -349,6 +349,7 @@ const tagQuery = ref('');
 const categoryDialogOpen = ref(false);
 const categoryFormRef = ref(null);
 const categoryDraft = ref(emptyCategory());
+const originalComment = ref(null);
 const canonical = computed(() => mode.value === 'canonical');
 const inheritedAccess = computed(() => [storedPrayerAccess(categories.value.find((row) => row.id === categoryDraft.value.parentId))]);
 const categoryToDelete = ref(null);
@@ -452,6 +453,7 @@ function normalizeQuery(value) {
 }
 
 function normalizedDraft() {
+  const comment = normalizePrayerCategoryComment(categoryDraft.value.comment);
   return {
     name: categoryDraft.value.name.trim(),
     priestOnly: categoryDraft.value.priestOnly === true,
@@ -461,7 +463,7 @@ function normalizedDraft() {
     order: Number(categoryDraft.value.order),
     prayerIds: [...categoryDraft.value.prayerIds],
     tags: [...new Set(categoryDraft.value.tags.map((tag) => String(tag).trim()).filter(Boolean))],
-    comment: normalizePrayerCategoryComment(categoryDraft.value.comment),
+    ...(JSON.stringify(comment) !== JSON.stringify(originalComment.value) && { comment }),
   };
 }
 
@@ -472,6 +474,7 @@ function errorMessage(error, fallback) {
 function openCreateDialog(parentId = null) {
   editingId.value = null;
   iconPicked.value = false;
+  originalComment.value = null;
   categoryDraft.value = { ...emptyCategory(), parentId };
   categoryDialogOpen.value = true;
 }
@@ -484,7 +487,8 @@ function closeCategoryDialog() {
 
 function openEditDialog(category) {
   editingId.value = category.id;
-  categoryDraft.value = { ...emptyCategory(), ...category, tags: [...(category.tags || [])], prayerIds: [...(category.prayerIds || [])], priestOnly: category.priestOnly === true, iconKey: displayCategoryIconKey(category), comment: { ...emptyComment(), ...normalizePrayerCategoryComment(category.comment) } };
+  originalComment.value = normalizePrayerCategoryComment(category.comment);
+  categoryDraft.value = { ...emptyCategory(), ...category, tags: [...(category.tags || [])], prayerIds: [...(category.prayerIds || [])], priestOnly: category.priestOnly === true, iconKey: displayCategoryIconKey(category), comment: { ...emptyComment(), ...originalComment.value } };
   iconPicked.value = true;
   categoryDialogOpen.value = true;
 }
