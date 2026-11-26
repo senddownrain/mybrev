@@ -165,7 +165,7 @@
       </v-window>
     </v-card>
 
-    <v-dialog v-model="categoryDialogOpen" max-width="960" :fullscreen="xs" persistent scrollable>
+    <v-dialog v-model="categoryDialogOpen" :width="xs ? undefined : 960" :fullscreen="xs" persistent scrollable>
       <v-card class="dialog-card">
         <v-card-title>{{ editingId ? 'Рэдагаванне катэгорыі' : 'Новая катэгорыя' }}</v-card-title>
         <v-form class="category-form" ref="categoryFormRef" @submit.prevent="saveCategory">

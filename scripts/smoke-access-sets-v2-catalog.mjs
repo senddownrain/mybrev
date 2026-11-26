@@ -133,12 +133,12 @@ try {
   await go('/admin/categories');
   await page.getByRole('heading', { name: 'priest category 7', exact: true }).waitFor();
   await page.getByRole('heading', { name: 'marian category 10', exact: true }).waitFor();
-  await page.getByRole('button', { name: 'Рэдагаваць катэгорыю marian category 1' }).click();
+  await page.getByRole('button', { name: 'Рэдагаваць катэгорыю marian category 1', exact: true }).click();
   const form = page.getByRole('dialog');
   await form.getByText('Выніковы доступ:', { exact: true }).waitFor();
   assert.ok((await form.getByText('Выніковы доступ:', { exact: true }).locator('..').innerText()).includes('Айцы марыяне'));
-  const { width } = await form.locator('.dialog-card').boundingBox();
-  assert.ok(width >= 900 && width <= 970);
+  const width = await form.locator('.dialog-card').evaluate((element) => element.clientWidth);
+  assert.ok(width >= 900 && width <= 970, 'category editor width: ' + width);
   assert.ok(await form.getByRole('button', { name: 'Захаваць' }).isVisible());
   await form.getByRole('button', { name: 'Выбраць малітвы' }).click();
   const picker = page.getByRole('dialog').last();
