@@ -10,6 +10,7 @@
  */
 import { createHash } from 'node:crypto';
 import { prayerAccessPolicy } from '../../../src/utils/priestPolicy.mjs';
+import { isPublishedPrayerContent, normalizePrayerCategoryComment } from '../../../src/utils/prayerCategoryComment.mjs';
 import { validateCelebrationDefinition, validateDioceseOverride } from '../../../src/utils/ordo/definitions.js';
 import { validateYearOverride } from '../../../src/utils/ordo/yearOverrides.js';
 import { validateMassReadings } from '../../../src/utils/massReadingSets.js';
@@ -77,7 +78,13 @@ export function publicAppCollections(collections) {
   const result = new Map([...collections].filter(([name]) => APP_CONTENT_COLLECTIONS.includes(name)));
   const policy = prayerAccessPolicy(collections.get('prayers') || [], [...(collections.get('prayerCategories') || []), ...(collections.get('priestProtectedCategories') || [])]);
   if (result.has('prayers')) result.set('prayers', result.get('prayers').filter((p) => p.effectivePriestOnly !== true && !policy.prayerRestricted(p)));
-  if (result.has('prayerCategories')) result.set('prayerCategories', result.get('prayerCategories').filter((c) => c.effectivePriestOnly !== true && !policy.categoryRestricted(c.id)));
+  if (result.has('prayerCategories')) {
+    const categories = result.get('prayerCategories').filter((c) => c.effectivePriestOnly !== true && !policy.categoryRestricted(c.id));
+    const unpublished = categories.find((category) => !isPublishedPrayerContent(category) && normalizePrayerCategoryComment(category.comment));
+    // The updater hashes the whole source document. A public bundle cannot silently redact a field.
+    if (unpublished) throw new Error(`prayerCategories/${unpublished.id}: cannot export an unpublished comment`);
+    result.set('prayerCategories', categories);
+  }
   return result;
 }
 /** Marks a reference into the string table; never the start of real text. */

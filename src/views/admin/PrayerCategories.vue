@@ -197,9 +197,36 @@
               closable-chips
               variant="outlined"
             />
+            <section class="comment-editor" aria-labelledby="category-comment-label">
+              <v-text-field v-model="categoryDraft.comment.title" label="Загаловак каментарыя" variant="outlined" />
+              <div id="category-comment-label" class="comment-editor__label">Каментарый</div>
+              <PrayerMarkdownEditor
+                v-model="categoryDraft.comment.content"
+                aria-label="Каментарый"
+                placeholder="Увядзіце каментарый…"
+                :prayers="prayers"
+                :prayers-loading="prayersLoading"
+                :normalize-legacy="false"
+              />
+              <v-autocomplete
+                v-model="categoryDraft.comment.sourceId"
+                :items="commentSources"
+                label="Крыніца каментарыя"
+                item-title="title"
+                item-value="id"
+                variant="outlined"
+                clearable
+              />
+              <v-btn
+                v-if="categoryDraft.comment.content || categoryDraft.comment.title || categoryDraft.comment.sourceId"
+                variant="text"
+                class="comment-editor__clear text-none"
+                @click="categoryDraft.comment = emptyComment()"
+              >Ачысціць каментарый</v-btn>
+            </section>
             <section class="membership-editor" aria-label="Асобныя малітвы">
               <h3>Асобныя малітвы · {{ categoryDraft.prayerIds.length }}</h3>
-              <p class="text-caption">Без тэгаў і асобных малітваў катэгорыя будзе пустой папкай. У склад не ўваходзяць малітвы падкатэгорый.</p>
+              <p class="text-caption">Без тэгаў і асобных малітваў катэгорыя можа змяшчаць каментарый або падкатэгорыі. У склад не ўваходзяць малітвы падкатэгорый.</p>
               <v-btn variant="tonal" class="my-2 text-none" :disabled="prayersLoading || Boolean(prayersError)" @click="openPrayerPicker">Выбраць малітвы</v-btn>
               <v-alert v-if="prayersError" type="error" variant="tonal">Не ўдалося загрузіць малітвы. Захаванне недаступнае.</v-alert>
               <h4>Выніковы склад · {{ previewPrayers.length }}</h4>
@@ -282,7 +309,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, onBeforeUnmount } from 'vue';
+import { computed, defineAsyncComponent, ref, watch, onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNotifier } from '@/composables/useNotifier';
 import { usePrayers } from '@/composables/usePrayers';
@@ -297,6 +324,10 @@ import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
 import { directCategoryPrayers, prayerCategoryMatch, MAX_CATEGORY_DEPTH } from '@/utils/prayerCategoryMembership.mjs';
 import { buildCategoryTree, flattenCategoryTree } from '@/utils/prayerCategoryTree.mjs';
 import { prayerStoragePlan, MAX_ATOMIC_CONTENT_WRITES, comparablePrayerValue } from '@/utils/prayerStoragePlan.mjs';
+import { normalizePrayerCategoryComment } from '@/utils/prayerCategoryComment.mjs';
+import { PRAYER_SOURCE_REGISTRY } from '@/utils/prayerSource.mjs';
+
+const PrayerMarkdownEditor = defineAsyncComponent(() => import('@/components/prayers/PrayerMarkdownEditor.vue'));
 
 const prayerCategories = usePrayerCategoriesStore();
 const { categories, isLoading: categoriesLoading, error: categoriesError } = storeToRefs(prayerCategories);
@@ -360,7 +391,9 @@ const storagePreview = computed(() => {
   if (!categoryDialogOpen.value || prayersLoading.value) return null;
   const baseline = new Map([['prayers', prayers.value], ['prayerCategories', categories.value]]);
   const stored = prayerStoragePlan(baseline).desired;
-  const draft = { ...categoryDraft.value, id: editingId.value || '__new_category__' };
+  const { comment: _comment, ...fields } = categoryDraft.value;
+  const comment = normalizePrayerCategoryComment(categoryDraft.value.comment);
+  const draft = { ...fields, ...(comment ? { comment } : {}), id: editingId.value || '__new_category__' };
   const after = { prayers: prayers.value, categories: [...categories.value.filter((c) => c.id !== editingId.value), draft] };
   const plan = prayerStoragePlan(stored, after);
   const bytes = new globalThis.TextEncoder().encode(JSON.stringify(comparablePrayerValue(plan.operations))).length;
@@ -399,9 +432,20 @@ const filteredTagStats = computed(() => {
   return tagStats.value.filter((tag) => normalizeQuery(tag.name).includes(query));
 });
 
-function emptyCategory() {
-  return { name: '', tags: [], prayerIds: [], order: 0, priestOnly: false, parentId: null, iconKey: DEFAULT_CATEGORY_ICON_KEY };
+function emptyComment() {
+  return { title: '', content: '', sourceId: null };
 }
+
+function emptyCategory() {
+  return { name: '', tags: [], prayerIds: [], order: 0, priestOnly: false, parentId: null, iconKey: DEFAULT_CATEGORY_ICON_KEY, comment: emptyComment() };
+}
+
+const commentSources = computed(() => {
+  const id = categoryDraft.value.comment.sourceId;
+  return id && !PRAYER_SOURCE_REGISTRY.some((source) => source.id === id)
+    ? [...PRAYER_SOURCE_REGISTRY, { id, title: id }]
+    : PRAYER_SOURCE_REGISTRY;
+});
 
 const iconPicked = ref(false);
 function pickIcon(key) { categoryDraft.value.iconKey = key; iconPicked.value = true; }
@@ -425,6 +469,7 @@ function normalizedDraft() {
     order: Number(categoryDraft.value.order),
     prayerIds: [...categoryDraft.value.prayerIds],
     tags: [...new Set(categoryDraft.value.tags.map((tag) => String(tag).trim()).filter(Boolean))],
+    comment: normalizePrayerCategoryComment(categoryDraft.value.comment),
   };
 }
 
@@ -447,7 +492,7 @@ function closeCategoryDialog() {
 
 function openEditDialog(category) {
   editingId.value = category.id;
-  categoryDraft.value = { ...emptyCategory(), ...category, tags: [...(category.tags || [])], prayerIds: [...(category.prayerIds || [])], priestOnly: category.priestOnly === true, iconKey: displayCategoryIconKey(category) };
+  categoryDraft.value = { ...emptyCategory(), ...category, tags: [...(category.tags || [])], prayerIds: [...(category.prayerIds || [])], priestOnly: category.priestOnly === true, iconKey: displayCategoryIconKey(category), comment: { ...emptyComment(), ...normalizePrayerCategoryComment(category.comment) } };
   iconPicked.value = true;
   categoryDialogOpen.value = true;
 }
@@ -536,6 +581,9 @@ function pluralize(count, one, few, many) {
 .category-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; }
 .category-counts { color: var(--nav-muted); font-size: .72rem; }
 .category-form { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.comment-editor { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-bottom: 18px; }
+.comment-editor__label { font-weight: 650; }
+.comment-editor__clear { justify-self: start; }
 .dialog-fields { overflow-y: auto; }
 .membership-editor { min-width: 0; margin-top: 12px; }
 .membership-list { list-style: none; padding: 0; }

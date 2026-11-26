@@ -1,5 +1,6 @@
 /** Public Hosting snapshot contract. No admin/priest/draft fields may reach this file. */
 import { prayerAccessPolicy } from './priestPolicy.mjs';
+import { isPublishedPrayerContent, normalizePrayerCategoryComment } from './prayerCategoryComment.mjs';
 
 export const PUBLIC_PRAYERS_ASSET = '/public-prayers-v1.json';
 export const PUBLIC_PRAYERS_SCHEMA = 1;
@@ -14,7 +15,6 @@ const PRAYER_FIELDS = Object.freeze([
 const CATEGORY_FIELDS = Object.freeze([
   'id', 'name', 'parentId', 'tags', 'prayerIds', 'order', 'iconKey',
 ]);
-const BLOCKED_STATUSES = new Set(['draft', 'pending', 'review', 'rejected', 'archived']);
 
 function toPlain(value) {
   if (value instanceof Date) return value.getTime();
@@ -32,7 +32,7 @@ const select = (item, fields) => Object.fromEntries(fields
   .filter((field) => Object.hasOwn(item, field))
   .map((field) => [field, toPlain(item[field])]));
 const explicitlyPublic = (item) => item.priestOnly !== true && item.effectivePriestOnly !== true
-  && item.published !== false && !BLOCKED_STATUSES.has(String(item.status || '').toLowerCase());
+  && isPublishedPrayerContent(item);
 
 /** Takes collections available only to the trusted exporter and projects an explicit public allowlist. */
 export function buildPublicPrayerCatalog({ prayers, categories, protectedCategories = [] }, publishedAt = new Date().toISOString()) {
@@ -77,6 +77,12 @@ export function buildPublicPrayerCatalog({ prayers, categories, protectedCategor
     prayers: projectedPrayers,
     categories: projectedCategories,
   };
+  const categoryComments = Object.fromEntries(allowedCategories.flatMap(({ id, comment }) => {
+    const normalized = normalizePrayerCategoryComment(comment);
+    return normalized ? [[id, normalized]] : [];
+  }));
+  // The original v1 reader allowlists fields on individual categories and ignores this root extension.
+  if (Object.keys(categoryComments).length) catalog.categoryComments = categoryComments;
   validatePublicPrayerCatalog(catalog);
   return catalog;
 }
@@ -104,5 +110,21 @@ export function validatePublicPrayerCatalog(catalog) {
   if (catalog.prayers.some((item) => policy.prayerRestricted(item))) {
     throw new Error('Public prayer catalog contains restricted prayer');
   }
-  return { prayers: catalog.prayers, categories: catalog.categories };
+  if (!Object.hasOwn(catalog, 'categoryComments')) return { prayers: catalog.prayers, categories: catalog.categories };
+  const { categoryComments } = catalog;
+  if (!categoryComments || typeof categoryComments !== 'object' || Array.isArray(categoryComments)) {
+    throw new Error('Invalid public category comments');
+  }
+  const categoryIds = new Set(catalog.categories.map(({ id }) => id));
+  const comments = new Map();
+  for (const [id, comment] of Object.entries(categoryComments)) {
+    const normalized = normalizePrayerCategoryComment(comment);
+    if (!categoryIds.has(id) || policy.categoryRestricted(id) || !normalized
+      || Object.keys(comment).some((key) => !Object.hasOwn(normalized, key) || comment[key] !== normalized[key])) {
+      throw new Error('Unsafe or malformed public category comment');
+    }
+    comments.set(id, normalized);
+  }
+  return { prayers: catalog.prayers, categories: catalog.categories.map((category) =>
+    comments.has(category.id) ? { ...category, comment: comments.get(category.id) } : category) };
 }

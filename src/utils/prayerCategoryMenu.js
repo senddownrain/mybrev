@@ -1,5 +1,6 @@
 import { prayerAccessPolicy } from './priestPolicy.mjs';
 import { directCategoryPrayers } from './prayerCategoryMembership.mjs';
+import { publishedPrayerCategoryComment } from './prayerCategoryComment.mjs';
 
 export function buildPrayerCategoryMenu(
   globalCategories = [], personalCategories = [], hiddenGlobalCategoryIds = [], permittedPrayers = null, allowRestricted = false,
@@ -14,9 +15,9 @@ export function buildPrayerCategoryMenu(
       return { ...c, tags: c.tags || [], prayerIds: c.prayerIds || [], key: `global-${c.id}`, scope: 'global',
         directCount: permittedPrayers === null ? null : directCategoryPrayers(permittedPrayers, c).length };
     });
-  // Keep empty folders only when they lead to visible content. Preserve each ID,
+  // Keep grouping folders that lead to visible content. Preserve each ID,
   // including same-name nodes in different branches. Personal categories stay flat.
-  const visible = new Set(items.filter((c) => permittedPrayers === null || c.directCount > 0).map((c) => c.id));
+  const visible = new Set(items.filter((c) => permittedPrayers === null || c.directCount > 0 || publishedPrayerCategoryComment(c)).map((c) => c.id));
   const byId = new Map(items.map((c) => [c.id, c]));
   for (const id of [...visible]) {
     let parent = byId.get(id)?.parentId;

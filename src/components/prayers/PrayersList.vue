@@ -34,6 +34,7 @@
     </v-alert>
     
     <div v-else>
+      <PrayerCategoryComment v-if="categoryComment" :key="selectedCategory.id" :comment="categoryComment" />
       <nav v-if="categoryNavigation.children.length" class="subcategory-list" aria-label="Падкатэгорыі">
         <router-link
           v-for="category in categoryNavigation.children"
@@ -114,7 +115,7 @@
         </v-list-item>
       </v-list>
 
-      <div v-if="!isLoading && filteredPrayers.length === 0 && !categoryNavigation.children.length" class="text-center text-grey-darken-1 mt-16">
+      <div v-if="!isLoading && filteredPrayers.length === 0 && !categoryNavigation.children.length && (!categoryComment || searchQuery || selectedTags.length)" class="text-center text-grey-darken-1 mt-16">
         <v-icon size="48" class="mb-2">mdi-note-off-outline</v-icon>
         <p>Малітвы не знойдзены</p>
         <p v-if="searchQuery || selectedTags.length > 0" class="text-caption mt-2">
@@ -200,12 +201,14 @@ import { matchesPrayerTags } from '@/utils/prayerTagFilter';
 import { prayerCategoryMatch } from '@/utils/prayerCategoryMembership.mjs';
 import { PhMagnifyingGlass, PhSlidersHorizontal, PhX, PhArrowLeft, PhCaretRight } from '@phosphor-icons/vue';
 import CategoryIcon from './CategoryIcon.vue';
+import PrayerCategoryComment from './PrayerCategoryComment.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import { buildCategoryTree, categoryPageNavigation } from '@/utils/prayerCategoryTree.mjs';
 import { priestAccess } from '@/services/priestAccessService';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
 import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
+import { publishedPrayerCategoryComment } from '@/utils/prayerCategoryComment.mjs';
 
 const router = useRouter();
 const route = useRoute();
@@ -225,6 +228,13 @@ const categoryTree = computed(() => buildCategoryTree(buildPrayerCategoryMenu(
 )));
 const categoryNavigation = computed(() => selectedCategory.value?.scope === 'global'
   ? categoryPageNavigation(categoryTree.value, selectedCategory.value.id) : { parent: null, children: [] });
+const categoryComment = computed(() => {
+  const category = selectedCategory.value;
+  if (category?.scope !== 'global') return null;
+  if (!authStore.isAdmin && !priestAccess.active
+    && (category.effectivePriestOnly === true || accessPolicy.value.categoryRestricted(category.id))) return null;
+  return publishedPrayerCategoryComment(category);
+});
 const categoryLocation = (category) => ({ name: 'Prayers', query: { category: category.id } });
 function rememberChild(category, event) {
   if (event?.ctrlKey || event?.metaKey || event?.shiftKey || event?.altKey || event?.button > 0) return;

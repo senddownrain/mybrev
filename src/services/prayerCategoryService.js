@@ -4,6 +4,7 @@ import { DEFAULT_CATEGORIES } from '@/constants/categories';
 import { normalizeCategoryIconKey } from '@/constants/prayerCategoryIcons';
 import { buildPrayerTagRemovalPlan } from '@/utils/prayerCategoryAdmin';
 import { comparePrayerCategories, validateCategoryChange, removeCategoryFromContent } from '@/utils/prayerCategoryMembership.mjs';
+import { normalizePrayerCategoryComment } from '@/utils/prayerCategoryComment.mjs';
 import { getPrayerContent } from './prayerContentService';
 import { mutatePrayerContent, subscribeAdminPrayerContent } from './prayerStorageService';
 
@@ -16,6 +17,12 @@ function categoryPayload(category) {
     parentId: category.parentId || null, tags: cleanTags(category.tags), prayerIds: category.prayerIds || [],
     order: category.order == null ? Date.now() : Number(category.order) };
 }
+function applyCommentPatch(category, patch) {
+  if (!Object.hasOwn(patch, 'comment')) return;
+  const comment = normalizePrayerCategoryComment(patch.comment);
+  if (comment) category.comment = comment;
+  else delete category.comment;
+}
 const sorted = (categories) => categories.map((item) => ({ ...item, tags: cleanTags(item.tags), prayerIds: item.prayerIds || [] })).sort(comparePrayerCategories);
 export async function getSavedPrayerCategories() { return sorted((await getPrayerContent()).categories); }
 export function subscribePrayerCategories(onData, onError) { return subscribeAdminPrayerContent((content) => onData(sorted(content.categories)), onError); }
@@ -24,6 +31,7 @@ export async function updatePrayerCategory(id, category) {
     const old = content.categories.find((item) => item.id === id);
     if (!old) throw new Error('Катэгорыя не знойдзена.');
     const next = { ...old, ...categoryPayload({ ...old, ...category }), id, updatedAt: serverTimestamp() };
+    applyCommentPatch(next, category);
     validateCategoryChange(next, content.categories, content.prayers);
     content.categories = content.categories.map((item) => item.id === id ? next : item);
   });
@@ -33,6 +41,7 @@ export async function createPrayerCategory(category) {
   const id = doc(collection(db, PRAYER_CATEGORIES_COLLECTION)).id;
   await mutatePrayerContent((content) => {
     const next = { ...categoryPayload(category), id, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+    applyCommentPatch(next, category);
     validateCategoryChange(next, content.categories, content.prayers);
     content.categories.push(next);
   });

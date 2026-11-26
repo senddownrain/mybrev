@@ -127,6 +127,7 @@ import { normalizePrayerLegacyMarkdown, explicitPrayerDirectionLines, prayerLega
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
+  ariaLabel: { type: String, default: '' },
   placeholder: { type: String, default: 'Увядзіце тэкст малітвы…' },
   error: { type: Boolean, default: false },
   prayers: { type: Array, default: () => [] },
@@ -335,6 +336,7 @@ function createEditor() {
         markdown(),
         autocompletion({ override: [rubricCompletionSource] }),
         keymap.of(completionKeymap),
+        EditorView.contentAttributes.of(props.ariaLabel ? { 'aria-label': props.ariaLabel } : {}),
         editorPlaceholder(props.placeholder),
         EditorView.lineWrapping,
         EditorView.domEventHandlers({ paste: insertPastedContent }),

@@ -359,8 +359,10 @@ export function toPrayerMarkdown(value = '', format = '', options = {}) {
   return looksLikeHtml(source) && (knownHtml || richRoot) ? htmlToPrayerMarkdown(source, options) : source;
 }
 
-export function renderPrayerMarkdown(value = '', format = '') {
-  const source = projectLegacyPrayerSpeakers(toPrayerMarkdown(value, format));
+export function renderPrayerMarkdown(value = '', format = '', { normalizeLegacy = true } = {}) {
+  const markdownSource = toPrayerMarkdown(value, format);
+  if (!normalizeLegacy) return markdown.render(markdownSource);
+  const source = projectLegacyPrayerSpeakers(markdownSource);
   const eligible = new Map(prayerSpeakerRanges(source).map((range) => [range.line, range]));
   const tokens = markdown.parse(source, {});
   for (const token of tokens) {
