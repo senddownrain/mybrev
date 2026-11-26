@@ -161,7 +161,7 @@ export function createAccessSetsCatalogSession({
       session.list ??= collect(session);
       const content = await session.list;
       assertCurrent(session);
-      return { mode: session.source.mode, content };
+      return { mode: session.source.mode, content, generation: session.generation };
     } catch {
       failClosed(session);
       return null;

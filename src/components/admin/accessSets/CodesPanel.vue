@@ -6,8 +6,8 @@
       <ul class="access-admin__list">
         <li v-for="entry in rows" :key="entry.id">
           <div>
-            <strong>{{ entry.label || 'Без пазнакі' }}</strong> · <code>{{ entry.id }}</code>
-            <div>Профіль <code>{{ entry.profileId }}</code> · {{ codeStatus(entry.status) }}</div>
+            <strong>{{ labelForCode(entry) }}</strong> <span class="text-caption">…{{ entry.id.slice(-4) }}</span>
+            <div>{{ nameForProfile(entry.profileId) }} · {{ codeStatus(entry.status) }}</div>
           </div>
           <div v-if="entry.status === 'active'" class="access-admin__actions">
             <button type="button" :disabled="busy" @click="rotate(entry)">Замяніць код</button>
@@ -20,12 +20,15 @@
 
     <form class="access-admin__box access-admin__form" @submit.prevent="confirmIssue">
       <h3>{{ replacing ? 'Замена кода' : 'Новы код' }}</h3>
-      <p v-if="replacing">Будзе адключаны <code>{{ replacing.id }}</code>.</p>
-      <label>Ідэнтыфікатар актыўнага профілю
-        <input v-model="profileId" required maxlength="64" pattern="[a-z][a-z0-9\-]{0,63}" :readonly="Boolean(replacing)" :disabled="busy">
+      <p v-if="replacing">Будзе адключаны код …{{ replacing.id.slice(-4) }} гэтага профілю.</p>
+      <label>Актыўны профіль
+        <select v-model="profileId" required :disabled="busy || Boolean(replacing)">
+          <option disabled value="">Абярыце профіль</option>
+          <option v-for="profile in activeProfiles" :key="profile.id" :value="profile.id">{{ profile.name }}</option>
+        </select>
       </label>
       <label>Прэфікс <input ref="editField" v-model="prefix" required maxlength="10" pattern="[A-Za-z]{3,10}" placeholder="PRST" :disabled="busy"></label>
-      <p><code>PREFIX-YYYYMMDD-CODEID-SECRET</code>. Правы вызначае профіль. Прэфікс і дата служаць для пазнакі і праверкі фармату.</p>
+      <p>Правы вызначае выбраны профіль.</p>
       <label>Пазнака (неабавязкова) <input v-model.trim="label" maxlength="120" :disabled="busy"></label>
       <p v-if="error" class="access-admin__error" role="alert">{{ error }}</p>
       <p v-if="notice" role="status">{{ notice }}</p>
@@ -41,8 +44,8 @@
       <v-card v-if="pending" data-sentry-block>
         <v-card-title id="code-confirm-title">{{ pending.title }}</v-card-title>
         <v-card-text>
-          <p>Профіль <code>{{ pending.profileId }}</code></p>
-          <p v-if="pending.codeId">Код <code>{{ pending.codeId }}</code> стане недаступны для новых актывацый. Дазволы прылад працягнуць дзейнічаць.</p>
+          <p>Профіль «{{ nameForProfile(pending.profileId) }}»</p>
+          <p v-if="pending.codeId">Код …{{ pending.codeId.slice(-4) }} стане недаступны для новых актывацый. Дазволы прылад працягнуць дзейнічаць.</p>
           <p v-if="!pending.disable">Падрыхтуйцеся скапіяваць новы код. Ён з’явіцца адзін раз пасля пацвярджэння серверам.</p>
         </v-card-text>
         <v-card-actions>
@@ -72,7 +75,7 @@
 </template>
 
 <script setup>
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import { accessV2Error } from '@/services/accessSetsV2Gateway.mjs';
 import { isAccessSetId } from './model.mjs';
 import { useAdminAction, useRegistryPage } from './useRegistryPage';
@@ -81,6 +84,21 @@ import RegistryControls from './RegistryControls.vue';
 const { client } = defineProps({ client: { type: Object, required: true } });
 const page = useRegistryPage(client, () => 'codes');
 const { rows } = page;
+const profiles = ref([]);
+const activeProfiles = computed(() => profiles.value.filter((profile) => profile.status === 'active'));
+const nameForProfile = (id) => profiles.value.find((profile) => profile.id === id)?.name || 'Профіль недаступны';
+const labelForCode = ({ label }) => !label || label === 'Access Sets V2' ? 'Код доступу' : label;
+
+async function loadProfiles() {
+  const result = [];
+  let after;
+  do {
+    const page = await client.list('profiles', { after });
+    result.push(...page.rows);
+    after = page.next;
+  } while (after);
+  profiles.value = result;
+}
 const { busy, error, run } = useAdminAction();
 const editField = ref(null);
 const profileId = ref('');
@@ -162,6 +180,7 @@ async function copySecret() {
 }
 onMounted(() => {
   page.load();
+  void loadProfiles().catch(() => {});
   window.addEventListener('pagehide', clearSecret);
 });
 onBeforeUnmount(() => {

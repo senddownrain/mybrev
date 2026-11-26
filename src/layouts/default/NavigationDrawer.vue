@@ -136,6 +136,7 @@
         v-for="category in menuCategories"
         :key="category.key"
         :title="category.name"
+        :style="{ marginInlineStart: category.depth ? Math.min(category.depth, 3) * 12 + 'px' : undefined }"
         :to="{ name: 'Prayers', query: category.scope === 'global' ? { category: category.id } : {} }"
         :active="isPrayersPage && selectedCategory?.key === category.key"
         @click="selectCategory(category, $event)"
@@ -237,8 +238,9 @@ import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
 import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
 import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
-import { buildCategoryTree } from '@/utils/prayerCategoryTree.mjs';
+import { buildCategoryTree, flattenCategoryTree } from '@/utils/prayerCategoryTree.mjs';
 import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
+import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
 import { usePrayersStore } from '@/stores/prayers';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { feedbackLocationForRoute } from '@/utils/feedbackContext.js';
@@ -271,18 +273,17 @@ const reportLocation = computed(() => {
 const settings = useSettingsStore();
 const prayerCategories = usePrayerCategoriesStore();
 const prayersStore = usePrayersStore();
-prayersStore.init();
+usePrayerCatalog(isDrawerOpen);
 const { selectedCategory, setSelectedCategory } = usePrayersFilters();
-prayerCategories.init();
 
 const menuCategories = computed(() => {
-  return buildCategoryTree(buildPrayerCategoryMenu(
+  return flattenCategoryTree(buildCategoryTree(buildPrayerCategoryMenu(
     prayerCategories.categories,
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
     prayersStore.prayers,
     true,
-  ));
+  ))).filter((category) => !category.depth || isProtectedPrayerRow(category));
 });
 
 const isPrayersPage = computed(() =>

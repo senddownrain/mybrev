@@ -152,7 +152,7 @@ export function assembleCanonicalCatalog(publicData, protectedData) {
   });
   const populated = new Set();
   for (const row of visibleCategories) {
-    if (!visiblePrayers.some((prayer) => prayerCategoryMatch(prayer, row).matches)) continue;
+    if (!row.effectiveAccessSets?.length && !visiblePrayers.some((prayer) => prayerCategoryMatch(prayer, row).matches)) continue;
     for (let current = row; current && !populated.has(current.id); current = categories.get(current.parentId)) {
       populated.add(current.id);
     }

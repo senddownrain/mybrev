@@ -32,9 +32,9 @@
             <v-combobox v-model="form.tags" :items="availableTags" label="Тэгі" multiple chips closable-chips variant="outlined" hide-details="auto" :readonly="locked" hint="Абярыце існуючыя тэгі; новыя дадавайце толькі пры патрэбе." persistent-hint />
             <p v-if="newTags.length" class="hint hint--warn">Новыя тэгі (іх няма ў базе): {{ newTags.join(', ') }}</p>
             <p class="hint">Катэгорыі збіраюцца па тэгах: {{ categoryNames || 'пакуль ніводная не падыходзіць' }}.</p>
-            <v-switch v-if="!canonical" v-model="form.priestOnly" label="Толькі для святароў пасля публікацыі" color="primary" hide-details :readonly="locked" />
-            <ContentAccessSets :model-value="form.accessSets ?? (form.priestOnly ? ['priest'] : [])" :disabled="locked"
-              @update:model-value="form.accessSets = $event" @mode="canonical = $event" />
+            <v-switch v-if="mode === 'legacy'" v-model="form.priestOnly" label="Святары" color="primary" hide-details :readonly="locked" />
+            <ContentAccessSets :sets="sets" :canonical="canonical" :inherited="inheritedAccess" :model-value="ownAccess" :disabled="locked"
+              @update:model-value="form.accessSets = $event" />
           </v-card>
 
           <v-card class="card" elevation="0">
@@ -86,7 +86,7 @@
             <dt>Крыніца</dt><dd>{{ sourceNotice || '—' }}</dd>
             <dt>Тэгі</dt><dd>{{ form.tags.join(', ') || '—' }}</dd>
             <dt>Катэгорыі</dt><dd>{{ categoryNames || '—' }}</dd>
-            <dt>Хто бачыць</dt><dd>{{ form.priestOnly ? 'Толькі святары (абароненая калекцыя)' : 'Усе чытачы Web і Flutter' }}</dd>
+            <dt>Доступ</dt><dd>{{ prayerAccessLabel(effectivePrayerAccess(ownAccess, inheritedAccess), sets) }}</dd>
             <dt>Будучы адрас</dt><dd>/prayer/{{ replaceId || targetId }}</dd>
           </dl>
           <v-alert v-if="blockers.length" type="error" variant="tonal" density="compact" class="mt-3"><div v-for="item in blockers" :key="item">{{ item }}</div></v-alert>
@@ -115,17 +115,14 @@ import ContentAccessSets from '@/components/admin/accessSets/ContentAccessSets.v
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import PrayerMarkdownEditor from '@/components/prayers/PrayerMarkdownEditor.vue';
-import { usePrayers } from '@/composables/usePrayers';
-import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
-import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
+import { useAdminPrayerCatalog } from '@/composables/useAdminPrayerCatalog';
+import { effectivePrayerAccess, inheritedPrayerAccess, prayerAccessLabel } from '@/utils/prayerAccessPresentation.mjs';
 import { renderPrayerMarkdown } from '@/utils/prayerMarkdown';
 import { DRAFT_ORIGINS, DRAFT_REASON_LABELS, DRAFT_STATUS_LABELS, draftSourceNotice, draftSourcePatch, findDuplicateCandidates, normalizeDraftStatus, publishBlockers, targetPrayerIdFor } from '@/utils/prayerDraftModel.mjs';
 import { getDraftActions } from '@/services/prayerDraftService';
 
 const route = useRoute();
-const { prayers, allTags, isLoading: prayersLoading } = usePrayers();
-const categoriesStore = usePrayerCategoriesStore();
-usePrayerCatalog();
+const { prayers, categories, sets, mode, allTags, isLoading: prayersLoading } = useAdminPrayerCatalog();
 const draft = ref(null);
 const loading = ref(true);
 const loadError = ref('');
@@ -136,7 +133,11 @@ const replaceId = ref('');
 const acknowledge = ref(false);
 const audit = ref([]);
 const form = ref({ title: '', text: '', tags: [], priestOnly: false, source: '' });
-const canonical = ref(false);
+const canonical = computed(() => mode.value === 'canonical');
+const ownAccess = computed(() => form.value.accessSets ?? (form.value.priestOnly ? ['priest'] : []));
+const inheritedAccess = computed(() => inheritedPrayerAccess({
+  ...prayers.value.find((prayer) => prayer.id === replaceId.value), ...form.value, id: replaceId.value || undefined,
+}, categories.value));
 let actions;
 
 const locked = computed(() => draft.value?.status === 'published');
@@ -147,7 +148,7 @@ const availableTags = computed(() => [...new Set(allTags.value || [])].sort((a, 
 const newTags = computed(() => form.value.tags.filter((tag) => !availableTags.value.includes(tag)));
 const categoryNames = computed(() => {
   const tags = new Set(form.value.tags);
-  return (categoriesStore.categories || []).filter((category) => (category.tags || []).some((tag) => tags.has(tag))).map((category) => category.name).join(', ');
+  return categories.value.filter((category) => (category.tags || []).some((tag) => tags.has(tag))).map((category) => category.name).join(', ');
 });
 const merged = computed(() => ({ ...draft.value, ...form.value }));
 const sourceNotice = computed(() => draftSourceNotice(merged.value));
@@ -208,7 +209,7 @@ async function publish() {
   } catch (error) { message.value = { type: 'error', text: describeError(error) }; await load().catch(() => {}); } finally { busy.value = ''; }
 }
 watch(() => route.params.id, load);
-onMounted(() => { categoriesStore.init?.(); load(); });
+onMounted(load);
 </script>
 
 <style scoped>

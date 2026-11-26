@@ -223,7 +223,7 @@ async function saveProfile(page) {
 }
 
 async function prepareCode(page, profileId, prefix, rotation = false) {
-  if (!rotation) await page.getByLabel('Ідэнтыфікатар актыўнага профілю').fill(profileId);
+  if (!rotation) await page.getByLabel('Актыўны профіль').selectOption(profileId);
   await page.getByLabel('Прэфікс').fill(prefix);
   await button(page, rotation ? 'Падрыхтаваць замену' : 'Падрыхтаваць выдачу').click();
   await dialog(page).waitFor();
@@ -270,7 +270,7 @@ async function runCanonicalAdminSmoke() {
   };
   await page.goto(base + '/admin/prayer-categories', { waitUntil: 'commit' });
   await page.getByLabel('Рэдагаваць катэгорыю Сінтэтычная катэгорыя').click();
-  await dialog(page).getByText('Наборы доступу V2', { exact: true }).click();
+  await dialog(page).getByRole('heading', { name: 'Доступ', exact: true }).waitFor();
   await dialog(page).getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
   page.once('dialog', confirm);
   await button(dialog(page), 'Захаваць').click();
@@ -279,7 +279,7 @@ async function runCanonicalAdminSmoke() {
   assert.equal((await seed.doc('prayerCategories/synthetic-category').get()).exists, false);
 
   await page.goto(base + '/admin/prayer-drafts/s8-browser', { waitUntil: 'commit' });
-  await page.getByText('Наборы доступу V2', { exact: true }).click();
+  await page.getByRole('heading', { name: 'Доступ', exact: true }).waitFor();
   await page.getByRole('checkbox', { name: /Сінтэтычны набор B/ }).check();
   await button(page, 'Апублікаваць').click();
   page.once('dialog', confirm);
@@ -469,15 +469,15 @@ async function runAdminSmoke() {
   console.log('PASS device paging, UID/status filtering, individual and partial group revoke, denied/quota/unavailable');
 
   await page.goto(base + '/prayer/add');
-  await page.getByText('Наборы доступу V2 (толькі прагляд)', { exact: true }).click();
+  await page.getByRole('heading', { name: 'Доступ', exact: true }).waitFor();
   assert.equal(await page.getByRole('checkbox', { name: /Сінтэтычны набор A/ }).isEnabled(), false);
   const control = page.getByRole('checkbox', { name: /Сінтэтычны набор A/ });
   await control.evaluate(input => {
     input.checked = true;
     input.dispatchEvent(new window.Event('change', { bubbles: true }));
   });
-  await page.getByText('Наборы доступу V2 (толькі прагляд)', { exact: true }).click();
-  await page.getByText('Наборы доступу V2 (толькі прагляд)', { exact: true }).click();
+  await page.getByRole('heading', { name: 'Доступ', exact: true }).waitFor();
+  await page.getByRole('heading', { name: 'Доступ', exact: true }).waitFor();
   await control.waitFor();
   assert.equal(await control.isChecked(), false);
   assert.equal((await seed.collection('protectedPrayers').get()).size, 0);
@@ -485,7 +485,7 @@ async function runAdminSmoke() {
   await shot(page, 'locked-prayer-access');
   await page.goto(base + '/admin/prayer-categories', { waitUntil: 'commit' });
   await page.getByLabel('Рэдагаваць катэгорыю Сінтэтычная катэгорыя').click();
-  await dialog(page).getByText('Наборы доступу V2 (толькі прагляд)', { exact: true }).click();
+  await dialog(page).getByRole('heading', { name: 'Доступ', exact: true }).waitFor();
   const categoryChoice = dialog(page).getByRole('checkbox', { name: /Сінтэтычны набор B/ });
   await categoryChoice.waitFor();
   assert.equal(await categoryChoice.isEnabled(), false);

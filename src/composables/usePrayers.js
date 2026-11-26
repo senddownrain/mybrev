@@ -13,9 +13,7 @@ export function usePrayers() {
     isLoading,
     error,
     init: prayersStore.init,
-    addPrayer: prayersStore.addPrayer,
     deletePrayer: prayersStore.deletePrayer,
-    updatePrayer: prayersStore.updatePrayer,
     getTitle: prayersStore.getTitle,
     getText: prayersStore.getText,
   };

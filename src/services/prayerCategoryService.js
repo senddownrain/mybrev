@@ -5,7 +5,7 @@ import { normalizeCategoryIconKey } from '@/constants/prayerCategoryIcons';
 import { buildPrayerTagRemovalPlan } from '@/utils/prayerCategoryAdmin';
 import { comparePrayerCategories, validateCategoryChange, removeCategoryFromContent } from '@/utils/prayerCategoryMembership.mjs';
 import { getPrayerContent } from './prayerContentService';
-import { commitCanonicalCatalog, mutatePrayerContent, readCanonicalEditorContent, subscribeAdminPrayerContent, usesCanonicalCatalogWriter } from './prayerStorageService';
+import { commitCanonicalCatalog, mutatePrayerContent, readCanonicalEditorContent, usesCanonicalCatalogWriter } from './prayerStorageService';
 
 export const PRAYER_CATEGORIES_COLLECTION = 'prayerCategories';
 function cleanTags(tags) { return [...new Set((tags || []).map((tag) => String(tag).trim()).filter(Boolean))]; }
@@ -24,7 +24,6 @@ function canonicalCategoryPatch(category, create = false) {
 
 const sorted = (categories) => categories.map((item) => ({ ...item, tags: cleanTags(item.tags), prayerIds: item.prayerIds || [] })).sort(comparePrayerCategories);
 export async function getSavedPrayerCategories(publicData) { return sorted((await getPrayerContent(publicData)).categories); }
-export function subscribePrayerCategories(onData, onError) { return subscribeAdminPrayerContent((content) => onData(sorted(content.categories)), onError); }
 export async function updatePrayerCategory(id, category) {
   if (await usesCanonicalCatalogWriter()) {
     await commitCanonicalCatalog({ edits: [{ kind: 'categories', id, action: 'update', patch: canonicalCategoryPatch(category) }] });

@@ -28,7 +28,7 @@
     <v-alert v-else-if="loadError" type="error" variant="tonal" class="load-alert">
       {{ loadError }}
       <template #append>
-        <v-btn variant="text" :to="{ name: 'PrayersList' }">Да спіса</v-btn>
+        <v-btn variant="text" :to="{ name: 'AdminPrayers' }">Да спіса</v-btn>
       </template>
     </v-alert>
 
@@ -40,9 +40,9 @@
       @submit.prevent="handleSave"
     >
       <div class="editor-column">
-        <v-switch v-if="!canonical" v-model="form.priestOnly" label="Толькі для святароў" color="primary" hide-details class="mb-4" />
-        <ContentAccessSets :access="form" :model-value="form.accessSets ?? (form.priestOnly ? ['priest'] : [])"
-          @update:model-value="form.accessSets = $event" @mode="canonical = $event" />
+        <v-switch v-if="mode === 'legacy'" v-model="form.priestOnly" label="Святары" color="primary" hide-details class="mb-4" />
+        <ContentAccessSets :sets="sets" :canonical="canonical" :inherited="inheritedAccess"
+          :model-value="form.accessSets ?? (form.priestOnly ? ['priest'] : [])" @update:model-value="form.accessSets = $event" />
         <v-card class="editor-card" elevation="0">
           <section class="editor-section">
             <div class="section-heading">
@@ -267,8 +267,8 @@
 import ContentAccessSets from '@/components/admin/accessSets/ContentAccessSets.vue';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
-import { usePrayers } from '@/composables/usePrayers';
-import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
+import { useAdminPrayerCatalog } from '@/composables/useAdminPrayerCatalog';
+import { inheritedPrayerAccess } from '@/utils/prayerAccessPresentation.mjs';
 import { useNotifier } from '@/composables/useNotifier';
 import { useUiStore } from '@/stores/ui';
 import { validatePrayerTitle, validatePrayerText } from '@/utils/validators';
@@ -286,8 +286,7 @@ import {
 
 const route = useRoute();
 const router = useRouter();
-const { prayers, isLoading, addPrayer, updatePrayer, allTags } = usePrayers();
-usePrayerCatalog();
+const { prayers, categories, sets, mode, isLoading, addPrayer, updatePrayer, allTags } = useAdminPrayerCatalog();
 const { notifySuccess, notifyError } = useNotifier();
 const uiStore = useUiStore();
 
@@ -301,8 +300,11 @@ const showPreview = ref(true);
 const initialSnapshot = ref('');
 const allowNavigation = ref(false);
 
-const canonical = ref(false);
+const canonical = computed(() => mode.value === 'canonical');
 const form = ref({ title: '', text: '', source: '', tags: [], verified: false, priestOnly: false });
+const inheritedAccess = computed(() => inheritedPrayerAccess({
+  ...prayers.value.find((prayer) => prayer.id === route.params.id), ...form.value,
+}, categories.value));
 const tagQuery = ref('');
 const tagInputFocused = ref(false);
 
@@ -431,7 +433,7 @@ const addTagQuery = () => {
 
 const cancel = () => {
   if (window.history.length > 1) router.go(-1);
-  else router.push({ name: 'PrayersList' });
+  else router.push({ name: 'AdminPrayers' });
 };
 
 async function validateAndBuildPayload() {
@@ -481,7 +483,7 @@ async function handleSave() {
     allowNavigation.value = true;
     await router.push(isEditMode.value
       ? { name: 'PrayerView', params: { id: route.params.id } }
-      : { name: 'PrayersList' });
+      : { name: 'AdminPrayers' });
   } catch (error) {
     const { handleFirestoreError } = await import('@/utils/errorHandler');
     handleFirestoreError(error, 'PrayerForm');

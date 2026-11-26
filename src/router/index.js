@@ -223,6 +223,11 @@ const routes = [
         meta: { hideLayoutAppBar: true },
       },
       {
+        path: 'prayers', name: 'AdminPrayers',
+        component: () => import('@/components/prayers/PrayersList.vue'),
+        props: { editorial: true },
+      },
+      {
         path: 'prayer-categories',
         name: 'AdminPrayerCategories',
         component: () => import('@/views/admin/PrayerCategories.vue'),
