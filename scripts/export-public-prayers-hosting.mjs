@@ -9,6 +9,15 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildPublicPrayerCatalog, validatePublicPrayerCatalog } from '../src/utils/publicPrayerCatalog.mjs';
+import { CONTENT_CONTROL } from '../src/utils/prayerStoragePlan.mjs';
+
+const catalogPaths = ['prayers', 'prayerCategories', 'priestProtectedCategories',
+  'protectedCategories', 'protectedPrayers', 'priestProtectedPrayers'];
+
+function inputCollections([prayers, categories, legacyCategories, canonicalCategories, canonicalPrayers, legacyPrayers]) {
+  return { prayers, categories, protectedCategories: [...legacyCategories, ...canonicalCategories],
+    protectedPrayers: [...legacyPrayers, ...canonicalPrayers] };
+}
 
 export function parseArgs(argv) {
   const opts = { live: false, snapshot: null, project: '', out: '' };
@@ -30,14 +39,18 @@ export function parseArgs(argv) {
 export async function readLocalCatalog(snapshotDir) {
   const { openFirestoreSnapshot } = await import('./lib/firestore-snapshot.mjs');
   const snapshot = await openFirestoreSnapshot(snapshotDir);
-  const [prayers, categories, protectedCategories] = await Promise.all([
-    snapshot.collection('prayers'), snapshot.collection('prayerCategories'),
-    snapshot.collection('priestProtectedCategories'),
-  ]);
-  if (!prayers || !categories || !protectedCategories) {
+  const rows = await Promise.all(catalogPaths.map(async (name) => {
+    const docs = await snapshot.collectionEntries(name);
+    return docs?.map(({ id, data }) => ({ ...data, id }));
+  }));
+  if (rows.slice(0, 3).some((row) => !row)) {
     throw new Error('Local snapshot must include prayers, prayerCategories and priestProtectedCategories');
   }
-  return { prayers, categories, protectedCategories };
+  const rollout = await snapshot.document('priestContentControl', 'accessSetsV2');
+  if (['canonical', 'suspended'].includes(rollout?.mode) && rows.slice(3).some((row) => !row)) {
+    throw new Error('Canonical snapshot must include both protected paths and the legacy mirror');
+  }
+  return inputCollections(rows.map((row) => row || []));
 }
 
 export async function readLiveCatalog(project) {
@@ -46,15 +59,22 @@ export async function readLiveCatalog(project) {
   const app = initializeApp({ credential: applicationDefault(), projectId: project }, 'hosting-public-prayers-export');
   try {
     const db = getFirestore(app);
-    // Three queries total, only in the deployment job. The protected category query
-    // is used for policy decisions and is NEVER copied to the Hosting payload.
-    const names = ['prayers', 'prayerCategories', 'priestProtectedCategories'];
-    const snapshots = await Promise.all(names.map((name) => db.collection(name).get()));
-    const total = snapshots.reduce((sum, snap) => sum + snap.size, 0);
-    if (total > 2500) throw new Error('Export exceeded 2500 document guard; review before deployment');
-    const [prayers, categories, protectedCategories] = snapshots.map((snap) =>
-      snap.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    return { prayers, categories, protectedCategories };
+    // Protected collections are exclusion inputs. Version brackets stop a
+    // transfer racing the export from exposing the older public copy.
+    const before = (await db.doc(CONTENT_CONTROL).get()).data();
+    const snapshots = [];
+    let total = 0;
+    for (const name of catalogPaths) {
+      const page = await db.collection(name).limit(2501 - total).get();
+      total += page.size;
+      if (total > 2500) throw new Error('Export exceeded 2500 document guard; review before deployment');
+      snapshots.push(page);
+    }
+    const after = (await db.doc(CONTENT_CONTROL).get()).data();
+    if (before?.lockUid || after?.lockUid || before?.version !== after?.version) {
+      throw new Error('Prayer storage changed during Hosting export');
+    }
+    return inputCollections(snapshots.map((snap) => snap.docs.map((doc) => ({ ...doc.data(), id: doc.id }))));
   } finally {
     await deleteApp(app);
   }

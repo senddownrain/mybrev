@@ -26,6 +26,7 @@ import zlib from 'node:zlib';
 import { openFirestoreSnapshot } from '../lib/firestore-snapshot.mjs';
 import {
   APP_CONTENT_COLLECTIONS,
+  PRAYER_EXPORT_GUARDS,
   CONTENT_SCHEMA_VERSION,
   describeDocuments,
   encodeCollection,
@@ -50,9 +51,18 @@ function parseArgs(argv) {
 export async function readCollections(snapshotDirs, names = APP_CONTENT_COLLECTIONS) {
   const found = new Map();
   const versions = new Map();
+  const readsPrayers = names.includes('prayers') || names.includes('prayerCategories');
+  const sources = readsPrayers ? [...new Set([...names, ...PRAYER_EXPORT_GUARDS])] : names;
   for (const dir of snapshotDirs) {
     const snapshot = await openFirestoreSnapshot(dir);
-    for (const name of names) {
+    if (readsPrayers && ['prayers', 'prayerCategories'].some((name) => snapshot.collectionPaths.includes(name))) {
+      const rollout = await snapshot.document('priestContentControl', 'accessSetsV2');
+      if (['canonical', 'suspended'].includes(rollout?.mode)
+        && !['prayers', 'prayerCategories', ...PRAYER_EXPORT_GUARDS].every((name) => snapshot.collectionPaths.includes(name))) {
+        throw new Error('Canonical prayer bundle snapshot must cover public paths, canonical paths and legacy mirrors');
+      }
+    }
+    for (const name of sources) {
       if (found.has(name)) continue;
       // Document id and data apart: a data field `id` (compendiumMeta has
       // one) must not replace the document id — as in the app and Firestore.

@@ -85,9 +85,9 @@
               <div class="category-main">
                 <div class="category-title-row">
                   <h2>{{ category.name }}</h2>
-                  <v-icon v-if="accessPolicy.categoryRestricted(category.id)" icon="mdi-key" size="small" aria-label="Толькі для святароў" />
+                  <v-icon v-if="storedPrayerAccess(category)" icon="mdi-key" size="small" aria-hidden="true" />
                 </div>
-                <small class="category-counts">Падкатэгорыі: {{ category.children.length }} · Малітвы: {{ directCount(category) }}<span v-if="category.contextOnly"> · Бацькоўскі раздзел</span></small>
+                <small class="category-counts">{{ prayerAccessLabel(storedPrayerAccess(category), sets) }} · Падкатэгорыі: {{ category.children.length }} · Малітвы: {{ directCount(category) }}<span v-if="category.contextOnly"> · Бацькоўскі раздзел</span></small>
                 <div class="tag-chips">
                   <span v-for="tag in category.tags" :key="tag">{{ tag }}</span>
                 </div>
@@ -165,38 +165,30 @@
       </v-window>
     </v-card>
 
-    <v-dialog v-model="categoryDialogOpen" max-width="720" persistent scrollable>
+    <v-dialog v-model="categoryDialogOpen" :width="xs ? undefined : 960" :fullscreen="xs" persistent scrollable>
       <v-card class="dialog-card">
         <v-card-title>{{ editingId ? 'Рэдагаванне катэгорыі' : 'Новая катэгорыя' }}</v-card-title>
-        <v-card-subtitle>Катэгорыя стане часткай меню па змаўчанні для ўсіх карыстальнікаў.</v-card-subtitle>
         <v-form class="category-form" ref="categoryFormRef" @submit.prevent="saveCategory">
           <v-card-text class="dialog-fields">
-            <v-alert v-if="categoryDraft.parentId && accessPolicy.categoryRestricted(categoryDraft.parentId)" type="info" variant="tonal">Бацькоўская катэгорыя абмяжоўвае доступ для святароў.</v-alert>
-            <v-switch v-model="categoryDraft.priestOnly" label="Толькі для святароў" color="primary" hide-details />
-            <v-select v-model="categoryDraft.parentId" label="Бацькоўская катэгорыя" :items="parentOptions" item-title="name" item-value="id" clearable />
-            <CategoryIconPicker :model-value="categoryDraft.iconKey" @update:model-value="pickIcon" />
-            <v-text-field
-              v-model="categoryDraft.name"
-              label="Назва катэгорыі"
-              variant="outlined"
-              maxlength="80"
-              counter="80"
-              autofocus
-              :rules="[value => Boolean(value?.trim()) || 'Увядзіце назву']"
-            />
-            <v-text-field v-model.number="categoryDraft.order" type="number" label="Парадак" :rules="[v => Number.isFinite(Number(v)) || 'Увядзіце лік']" />
-            <p v-if="categoryDraft.icon || categoryDraft.iconId" class="text-caption">Іконка: {{ categoryDraft.icon || categoryDraft.iconId }} (захоўваецца)</p>
-            <v-combobox
-              v-model="categoryDraft.tags"
-              :items="availableTagNames"
-              label="Тэгі"
-              hint="Можна выбраць існуючыя або ўвесці новыя"
-              persistent-hint
-              multiple
-              chips
-              closable-chips
-              variant="outlined"
-            />
+            <div class="category-dialog-grid">
+              <section class="category-dialog-column" aria-label="Назва і размяшчэнне">
+                <v-text-field v-model="categoryDraft.name" label="Назва катэгорыі" variant="outlined" maxlength="80"
+                  counter="80" autofocus :rules="[value => Boolean(value?.trim()) || 'Увядзіце назву']" />
+                <v-select v-model="categoryDraft.parentId" label="Бацькоўская катэгорыя" :items="parentOptions"
+                  item-title="name" item-value="id" clearable />
+                <v-text-field v-model.number="categoryDraft.order" type="number" label="Парадак"
+                  :rules="[v => Number.isFinite(Number(v)) || 'Увядзіце лік']" />
+                <CategoryIconPicker :model-value="categoryDraft.iconKey" @update:model-value="pickIcon" />
+              </section>
+              <section class="category-dialog-column" aria-label="Доступ і тэгі">
+                <v-switch v-if="mode === 'legacy'" v-model="categoryDraft.priestOnly" label="Святары" color="primary" hide-details />
+                <ContentAccessSets :sets="sets" :canonical="canonical" :inherited="inheritedAccess"
+                  :model-value="categoryDraft.accessSets ?? (categoryDraft.priestOnly ? ['priest'] : [])"
+                  @update:model-value="categoryDraft.accessSets = $event" />
+                <v-combobox v-model="categoryDraft.tags" :items="availableTagNames" label="Тэгі"
+                  hint="Можна выбраць існуючыя або ўвесці новыя" persistent-hint multiple chips closable-chips variant="outlined" />
+              </section>
+            </div>
             <section class="comment-editor" aria-labelledby="category-comment-label">
               <v-text-field v-model="categoryDraft.comment.title" label="Загаловак каментарыя" variant="outlined" />
               <div id="category-comment-label" class="comment-editor__label">Каментарый</div>
@@ -309,18 +301,18 @@
 </template>
 
 <script setup>
+import ContentAccessSets from '@/components/admin/accessSets/ContentAccessSets.vue';
 import { computed, defineAsyncComponent, ref, watch, onBeforeUnmount } from 'vue';
-import { storeToRefs } from 'pinia';
+import { useDisplay } from 'vuetify';
 import { useNotifier } from '@/composables/useNotifier';
-import { usePrayers } from '@/composables/usePrayers';
-import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
+import { useAdminPrayerCatalog } from '@/composables/useAdminPrayerCatalog';
 import { validateCategory } from '@/utils/validators';
 import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
 import CategoryIconPicker from '@/components/prayers/CategoryIconPicker.vue';
 import { DEFAULT_CATEGORY_ICON_KEY, displayCategoryIconKey, normalizeCategoryIconKey, suggestCategoryIconKey } from '@/constants/prayerCategoryIcons';
 import { buildPrayerTagStats } from '@/utils/prayerCategoryAdmin';
-import { updatePrayerCategory } from '@/services/prayerCategoryService';
-import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
+import { createPrayerCategory, updatePrayerCategory, deletePrayerCategory, deletePrayerTagEverywhere, restoreDefaultPrayerCategories } from '@/services/prayerCategoryService';
+import { matchesPrayerAccessFilter, prayerAccessFilters, prayerAccessLabel, storedPrayerAccess } from '@/utils/prayerAccessPresentation.mjs';
 import { directCategoryPrayers, prayerCategoryMatch, MAX_CATEGORY_DEPTH } from '@/utils/prayerCategoryMembership.mjs';
 import { buildCategoryTree, flattenCategoryTree } from '@/utils/prayerCategoryTree.mjs';
 import { prayerStoragePlan, MAX_ATOMIC_CONTENT_WRITES, comparablePrayerValue } from '@/utils/prayerStoragePlan.mjs';
@@ -329,17 +321,17 @@ import { PRAYER_SOURCE_REGISTRY } from '@/utils/prayerSource.mjs';
 
 const PrayerMarkdownEditor = defineAsyncComponent(() => import('@/components/prayers/PrayerMarkdownEditor.vue'));
 
-const prayerCategories = usePrayerCategoriesStore();
-const { categories, isLoading: categoriesLoading, error: categoriesError } = storeToRefs(prayerCategories);
-const { prayers, getTitle, isLoading: prayersLoading, error: prayersError, init: initPrayers } = usePrayers();
+const { xs } = useDisplay();
+const { categories, prayers, getTitle, sets, mode, isLoading: categoriesLoading, error: categoriesError, reload } = useAdminPrayerCatalog();
+const prayersLoading = categoriesLoading;
+const prayersError = categoriesError;
 const { notifyError, notifySuccess } = useNotifier();
 
 const activeTab = ref('categories');
 const categoryQuery = ref('');
 const editingId = ref(null);
 const accessFilter = ref('all');
-const accessFilters = [{ title: 'Усе', value: 'all' }, { title: 'Агульнадаступныя', value: 'public' }, { title: 'Толькі для святароў', value: 'priest' }];
-const accessPolicy = computed(() => prayerAccessPolicy(prayers.value, categories.value));
+const accessFilters = computed(() => prayerAccessFilters(sets.value));
 const parentOptions = computed(() => categories.value.filter((c) => {
   let current = c;
   const seen = new Set();
@@ -357,6 +349,8 @@ const tagQuery = ref('');
 const categoryDialogOpen = ref(false);
 const categoryFormRef = ref(null);
 const categoryDraft = ref(emptyCategory());
+const canonical = computed(() => mode.value === 'canonical');
+const inheritedAccess = computed(() => [storedPrayerAccess(categories.value.find((row) => row.id === categoryDraft.value.parentId))]);
 const categoryToDelete = ref(null);
 const tagToDelete = ref(null);
 const savingDialog = ref(false);
@@ -364,15 +358,12 @@ const deletingCategory = ref(false);
 const deletingTag = ref(false);
 const restoringDefaults = ref(false);
 
-prayerCategories.init();
-initPrayers();
-
 const tagStats = computed(() => buildPrayerTagStats(prayers.value, categories.value));
 const availableTagNames = computed(() => tagStats.value.map((tag) => tag.name));
 const isFiltering = computed(() => Boolean(normalizeQuery(categoryQuery.value)) || accessFilter.value !== 'all');
 const filteredCategories = computed(() => flattenCategoryTree(buildCategoryTree(categories.value), isFiltering.value ? (category) => {
   const query = normalizeQuery(categoryQuery.value);
-  return (accessFilter.value === 'all' || accessPolicy.value.categoryRestricted(category.id) === (accessFilter.value === 'priest'))
+  return matchesPrayerAccessFilter(category, accessFilter.value)
     && (!query || normalizeQuery(category.name).includes(query) || (category.tags || []).some((tag) => normalizeQuery(tag).includes(query)));
 } : null));
 const hasChildrenToDelete = computed(() => categories.value.some((c) => c.parentId === categoryToDelete.value?.id));
@@ -388,7 +379,7 @@ function inclusionReason(prayer) {
   return [reason, match.legacy ? 'Старая сувязь' : ''].filter(Boolean).join(' · ');
 }
 const storagePreview = computed(() => {
-  if (!categoryDialogOpen.value || prayersLoading.value) return null;
+  if (mode.value !== 'legacy' || !categoryDialogOpen.value || prayersLoading.value) return null;
   const baseline = new Map([['prayers', prayers.value], ['prayerCategories', categories.value]]);
   const stored = prayerStoragePlan(baseline).desired;
   const { comment: _comment, ...fields } = categoryDraft.value;
@@ -464,6 +455,7 @@ function normalizedDraft() {
   return {
     name: categoryDraft.value.name.trim(),
     priestOnly: categoryDraft.value.priestOnly === true,
+    ...(categoryDraft.value.accessSets !== undefined && { accessSets: categoryDraft.value.accessSets }),
     parentId: categoryDraft.value.parentId || null,
     iconKey: normalizeCategoryIconKey(categoryDraft.value.iconKey) || undefined,
     order: Number(categoryDraft.value.order),
@@ -497,10 +489,7 @@ function openEditDialog(category) {
   categoryDialogOpen.value = true;
 }
 
-function retryCategories() {
-  prayerCategories.cleanup();
-  prayerCategories.init();
-}
+function retryCategories() { void reload(); }
 
 async function saveCategory() {
   if (savingDialog.value || prayersLoading.value || prayersError.value || missingPrayerIds.value.length || storagePreview.value?.tooLarge) return;
@@ -518,9 +507,10 @@ async function saveCategory() {
   savingDialog.value = true;
   try {
     if (editingId.value) await updatePrayerCategory(editingId.value, category);
-    else await prayerCategories.addCategory(category);
+    else await createPrayerCategory(category);
     notifySuccess('Катэгорыя захавана');
     closeCategoryDialog();
+    await reload();
   } catch (error) {
     notifyError(errorMessage(error, 'Не ўдалося захаваць катэгорыю'));
   } finally {
@@ -532,7 +522,8 @@ async function removeCategory() {
   if (!categoryToDelete.value || deletingCategory.value) return;
   deletingCategory.value = true;
   try {
-    await prayerCategories.removeCategory(categoryToDelete.value.id);
+    await deletePrayerCategory(categoryToDelete.value.id);
+    await reload();
     categoryToDelete.value = null;
     notifySuccess('Катэгорыя выдалена');
   } catch (error) {
@@ -546,7 +537,8 @@ async function restoreDefaults() {
   if (restoringDefaults.value) return;
   restoringDefaults.value = true;
   try {
-    const restored = await prayerCategories.restoreDefaults();
+    const restored = await restoreDefaultPrayerCategories();
+    await reload();
     notifySuccess(restored ? `Адноўлена катэгорый: ${restored}` : 'Усе базавыя катэгорыі ўжо ёсць');
   } catch (error) {
     notifyError(errorMessage(error, 'Не ўдалося аднавіць базавыя катэгорыі'));
@@ -559,7 +551,8 @@ async function removeTag() {
   if (!tagToDelete.value || deletingTag.value) return;
   deletingTag.value = true;
   try {
-    const result = await prayerCategories.removeTagEverywhere(tagToDelete.value.name, prayers.value);
+    const result = await deletePrayerTagEverywhere(tagToDelete.value.name);
+    await reload();
     tagToDelete.value = null;
     notifySuccess(`Тэг выдалены з малітваў: ${result.prayers}`);
   } catch (error) {
@@ -584,7 +577,11 @@ function pluralize(count, one, few, many) {
 .comment-editor { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-bottom: 18px; }
 .comment-editor__label { font-weight: 650; }
 .comment-editor__clear { justify-self: start; }
-.dialog-fields { overflow-y: auto; }
+.dialog-fields { overflow-y: auto; min-height: 0; }
+.category-dialog-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; }
+.category-dialog-column { min-width: 0; }
+.category-form :deep(.v-card-actions) { flex-shrink: 0; border-top: 1px solid var(--nav-border); background: var(--overlay-surface); }
+@media (max-width: 720px) { .category-dialog-grid { grid-template-columns: minmax(0, 1fr); gap: 8px; } }
 .membership-editor { min-width: 0; margin-top: 12px; }
 .membership-list { list-style: none; padding: 0; }
 .membership-list li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; padding: 10px 0; border-bottom: 1px solid var(--nav-border); overflow-wrap: anywhere; }

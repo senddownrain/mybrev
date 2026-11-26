@@ -2,10 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { parse, compileScript } from '@vue/compiler-sfc';
-import { computed, effectScope, nextTick, reactive, ref, watch } from 'vue';
-import { createPinia, defineStore, setActivePinia, storeToRefs } from 'pinia';
+import { computed, effectScope, nextTick, onScopeDispose, reactive, ref, shallowRef, watch } from 'vue';
+import { createPinia, setActivePinia, storeToRefs } from 'pinia';
 import { useUiStore } from '../src/stores/ui.js';
 import * as markdown from '../src/utils/prayerMarkdown.js';
+import { inheritedPrayerAccess } from '../src/utils/prayerAccessPresentation.mjs';
 import { MASS_RITUAL } from '../src/utils/massRitual.js';
 
 // Execute the real SFC/store logic with injected network and router boundaries.
@@ -28,7 +29,7 @@ function loadLogic(path, bindings, exposed, setup = false) {
   );
 }
 
-function createEditor(t, options = {}) {
+async function createEditor(t, options = {}) {
   setActivePinia(createPinia());
   const original = {
     id: 'original', title: options.title || 'Малітва',
@@ -39,33 +40,29 @@ function createEditor(t, options = {}) {
   const writes = [];
   const notices = [];
   const errors = [];
-  const { usePrayersStore } = loadLogic('../src/stores/prayers.js', {
-    defineStore, ref, computed, watch,
-    logger: { log() {}, error() {} },
-    publicContentCache: { peek: () => null },
-    publicContentKey: (name) => name,
-    requestContentRefresh: () => {},
-    useAuthStore: () => reactive({ isAdmin: true }),
-    priestAccess: reactive({ revision: 0 }),
-    getPrayersQuery: () => 'mock-query',
-    onSnapshot: (_query, callback) => {
-      callback({ docs: [{ id: original.id, data: () => ({ ...original }) }] });
-      return () => {};
-    },
+  const scope = effectScope();
+  t.after(() => scope.stop());
+  const catalog = scope.run(() => loadLogic('../src/composables/useAdminPrayerCatalog.js', {
+    computed, ref, watch, shallowRef, onScopeDispose,
+    useAuthStore: () => reactive({ isAdmin: true, user: { uid: 'synthetic-editor' } }),
+    usePrayers: () => ({}),
+    readAdminPrayerContent: async () => ({ prayers: [{ ...original }], categories: [], mode: 'legacy' }),
+    comparePrayerCategories: () => 0,
     prayerService: {
-      subscribePrayers: (callback) => { callback([{ ...original }]); return () => {}; },
       addPrayer: async (data) => {
         if (options.failWrite) throw new Error('Test write failed');
         const id = `copy-${writes.length + 1}`;
         writes.push({ operation: 'add', id, data });
-        // Deliberately do not emit a snapshot for the new document.
-        return { id };
+        return { id, prayer: { ...data, id } };
       },
-      updatePrayer: async (id, data) => { writes.push({ operation: 'update', id, data }); },
+      updatePrayer: async (id, data) => {
+        writes.push({ operation: 'update', id, data });
+        return { id, prayer: { ...data, id } };
+      },
     },
-  }, ['usePrayersStore']);
-  const store = usePrayersStore();
-  store.init();
+  }, ['useAdminPrayerCatalog']).useAdminPrayerCatalog());
+  await nextTick();
+  const store = reactive(catalog);
   const route = reactive({ name: 'PrayerEdit', params: { id: original.id } });
   const guards = {};
   const router = {
@@ -78,15 +75,11 @@ function createEditor(t, options = {}) {
     },
   };
   const ui = useUiStore();
-  const scope = effectScope();
-  t.after(() => scope.stop());
   const form = scope.run(() => loadLogic('../src/components/prayers/PrayerForm.vue', {
-    ...markdown, MASS_RITUAL, computed, ref, watch, storeToRefs,
+    ...markdown, MASS_RITUAL, computed, ref, watch, storeToRefs, inheritedPrayerAccess,
     useRoute: () => route,
     useRouter: () => router,
-    usePrayers: () => ({
-      ...storeToRefs(store), addPrayer: store.addPrayer, updatePrayer: store.updatePrayer,
-    }),
+    useAdminPrayerCatalog: () => catalog,
     useNotifier: () => ({ notifySuccess: (message) => notices.push(message), notifyError: (message) => errors.push(message) }),
     useUiStore: () => ui,
     validatePrayerTitle: (title) => title.trim() && title.length <= 200 ? true : 'Invalid title',
@@ -103,7 +96,7 @@ function createEditor(t, options = {}) {
 }
 
 test('copy stays in the editor, gets a marked title, and is available before the next snapshot', async (t) => {
-  const editor = createEditor(t);
+  const editor = await createEditor(t);
   editor.form.value.text = 'Новы тэкст, які яшчэ не быў захаваны.';
   editor.form.value.source = 'Іншая крыніца';
   editor.form.value.tags.push('Новы тэг');
@@ -126,7 +119,7 @@ test('copy stays in the editor, gets a marked title, and is available before the
 });
 
 test('saving edits after copying updates only the copy and retains dirty navigation protection', async (t) => {
-  const editor = createEditor(t);
+  const editor = await createEditor(t);
   await editor.handleCreateCopy();
   editor.form.value.title = 'Другая малітва';
   assert.equal(editor.isDirty.value, true);
@@ -141,7 +134,7 @@ test('saving edits after copying updates only the copy and retains dirty navigat
 });
 
 test('saving an edited prayer persists its verification flag', async (t) => {
-  const editor = createEditor(t);
+  const editor = await createEditor(t);
   editor.form.value.verified = false;
   await editor.handleSave();
 
@@ -151,7 +144,7 @@ test('saving an edited prayer persists its verification flag', async (t) => {
 });
 
 test('returning to the original rehydrates the reused form', async (t) => {
-  const editor = createEditor(t);
+  const editor = await createEditor(t);
   await editor.handleCreateCopy();
   await editor.router.push({ name: 'PrayerEdit', params: { id: 'original' } });
   assert.equal(editor.form.value.title, 'Малітва');
@@ -159,7 +152,7 @@ test('returning to the original rehydrates the reused form', async (t) => {
 });
 
 test('copy title fits the 200-character limit', async (t) => {
-  const editor = createEditor(t, { title: 'А'.repeat(200) });
+  const editor = await createEditor(t, { title: 'А'.repeat(200) });
   await editor.handleCreateCopy();
   assert.equal(editor.form.value.title.length, 200);
   assert.ok(editor.form.value.title.endsWith(' (копія)'));
@@ -167,7 +160,7 @@ test('copy title fits the 200-character limit', async (t) => {
 });
 
 test('failed copy keeps the original route and unsaved draft', async (t) => {
-  const editor = createEditor(t, { failWrite: true });
+  const editor = await createEditor(t, { failWrite: true });
   editor.form.value.title = 'Незахаваныя змены';
   await editor.handleCreateCopy();
   assert.equal(editor.route.params.id, 'original');
@@ -180,7 +173,7 @@ test('failed copy keeps the original route and unsaved draft', async (t) => {
 });
 
 test('invalid form does not create a copy', async (t) => {
-  const editor = createEditor(t, { validate: async () => ({ valid: false }) });
+  const editor = await createEditor(t, { validate: async () => ({ valid: false }) });
   await editor.handleCreateCopy();
   assert.equal(editor.writes.length, 0);
   assert.equal(editor.route.params.id, 'original');
@@ -189,7 +182,7 @@ test('invalid form does not create a copy', async (t) => {
 
 test('copy and save cannot race while asynchronous validation is pending', async (t) => {
   let finishValidation;
-  const editor = createEditor(t, {
+  const editor = await createEditor(t, {
     validate: () => new Promise((resolve) => { finishValidation = resolve; }),
   });
   const pendingCopy = editor.handleCreateCopy();

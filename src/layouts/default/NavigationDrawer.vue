@@ -135,13 +135,17 @@
       <v-list-item
         v-for="category in menuCategories"
         :key="category.key"
-        :title="category.name"
+        :title="readerPrayerCategoryName(category)"
+        :class="{ 'drawer-collection--protected': isProtectedPrayerRow(category), 'drawer-collection--separator': category.key === firstProtectedCollection }"
         :to="{ name: 'Prayers', query: category.scope === 'global' ? { category: category.id } : {} }"
         :active="isPrayersPage && selectedCategory?.key === category.key"
         @click="selectCategory(category, $event)"
       >
         <template #prepend>
           <CategoryIcon :icon-key="displayCategoryIconKey(category)" :size="22" class="drawer-icon" />
+        </template>
+        <template v-if="isProtectedPrayerRow(category)" #append>
+          <PhLockSimple :size="15" class="drawer-collection-lock" aria-hidden="true" />
         </template>
       </v-list-item>
 
@@ -234,17 +238,17 @@ import { useAuthStore } from '@/stores/auth.js';
 import { useRoute, useRouter } from 'vue-router';
 import { useSettingsStore } from '@/stores/settings.js';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories.js';
-import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
+import { buildPrayerCategoryMenu, prayerCollectionMenu, readerPrayerCategoryName } from '@/utils/prayerCategoryMenu.js';
 import CategoryIcon from '@/components/prayers/CategoryIcon.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
-import { buildCategoryTree } from '@/utils/prayerCategoryTree.mjs';
-import { priestAccess } from '@/services/priestAccessService';
+import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
+import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
 import { usePrayersStore } from '@/stores/prayers';
 import { usePrayersFilters } from '@/composables/usePrayersFilters.js';
 import { feedbackLocationForRoute } from '@/utils/feedbackContext.js';
 import {
   PhCross, PhBookOpenText, PhBookOpen, PhBookBookmark, PhHeart,
-  PhChurch, PhFlag, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll, PhCalendarDots,
+  PhChurch, PhFlag, PhGear, PhInfo, PhSignIn, PhSignOut, PhShieldCheck, PhX, PhMusicNotes, PhScroll, PhLockSimple, PhCalendarDots,
 } from '@phosphor-icons/vue';
 
 const ORDO_ROUTE_NAMES = ['Ordo', 'OrdoByDate'];
@@ -261,23 +265,30 @@ const auth = useAuthStore();
 onMounted(() => { void auth.init().catch(() => {}); });
 const route = useRoute();
 const router = useRouter();
-const reportLocation = computed(() => feedbackLocationForRoute(route));
+const reportLocation = computed(() => {
+  if (route.name === 'PrayerView') {
+    const row = prayersStore.prayers.find((prayer) => prayer.id === route.params.id);
+    if (!row || isProtectedPrayerRow(row)) return { name: 'Feedback' };
+  }
+  return feedbackLocationForRoute(route);
+});
 const settings = useSettingsStore();
 const prayerCategories = usePrayerCategoriesStore();
 const prayersStore = usePrayersStore();
-prayersStore.init();
+usePrayerCatalog(isDrawerOpen);
 const { selectedCategory, setSelectedCategory } = usePrayersFilters();
-prayerCategories.init();
 
 const menuCategories = computed(() => {
-  return buildCategoryTree(buildPrayerCategoryMenu(
+  const categories = prayerCollectionMenu(buildPrayerCategoryMenu(
     prayerCategories.categories,
     settings.personalPrayerCategories,
     settings.hiddenGlobalPrayerCategoryIds,
     prayersStore.prayers,
-    auth.isAdmin || priestAccess.active,
+    true,
   ));
+  return [...categories.filter((category) => !isProtectedPrayerRow(category)), ...categories.filter(isProtectedPrayerRow)];
 });
+const firstProtectedCollection = computed(() => menuCategories.value.find(isProtectedPrayerRow)?.key);
 
 const isPrayersPage = computed(() =>
   route.name === 'Prayers' || route.name === 'PrayersList' || route.name === 'PrayerView',
@@ -512,6 +523,20 @@ onBeforeUnmount(() => {
 
 .drawer-list :deep(.v-list-item--active .drawer-icon) {
   color: var(--chrome-accent);
+}
+
+.drawer-list :deep(.drawer-collection--protected),
+.drawer-collection--protected .drawer-icon {
+  color: color-mix(in srgb, var(--nav-on-surface) 63%, var(--devotional-accent) 37%);
+}
+
+.drawer-collection--separator {
+  margin-top: 7px;
+}
+
+.drawer-collection-lock {
+  margin-inline: 8px 1px;
+  opacity: 0.72;
 }
 
 .drawer-section-label {

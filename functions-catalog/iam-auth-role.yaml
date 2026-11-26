@@ -1,0 +1,5 @@
+title: MyBrev catalog writer Auth session readback
+description: Read an Auth user to verify token revocation and disabled status
+stage: GA
+includedPermissions:
+  - firebaseauth.users.get

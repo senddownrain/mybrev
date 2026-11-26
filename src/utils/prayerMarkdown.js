@@ -10,16 +10,17 @@ export const PRAYER_TEXT_FORMAT_VERSION = 1;
 export const PRAYER_SPEAKERS = Object.freeze({
   'К.': 'cantor', 'С.': 'priest', 'Н.': 'people', 'Д.': 'deacon',
   'Л.': 'reader', 'Ц.': 'celebrant', 'V.': 'versicle', 'R.': 'response',
-  'Усе:': 'all', 'Цэлебрант:': 'celebrant',
+  'У.': 'all', 'Усе:': 'all', 'Цэлебрант:': 'celebrant',
 });
 
-export function prayerSpeakerPrefix(value) {
-  const match = /^( {0,3})([КСНДЛЦVR]\.:?|Усе:|Цэлебрант:)(?=[ \t]+\S)/u.exec(value);
+export function prayerSpeakerPrefix(value, { pairedInvocation = false } = {}) {
+  const match = /^( {0,3})([КСНДЛЦУVR]\.:?|Усе:|Цэлебрант:)(?=[ \t]+\S)/u.exec(value);
   if (!match) return null;
   const rest = value.slice(match[0].length).trim();
   // Initials and an unpunctuated surname are ambiguous, so leave them alone.
-  if (match[2].includes('.') && (/^\p{Lu}\./u.test(rest) || /^\p{Lu}\p{Ll}+(?:\s+\p{Lu}\p{Ll}+)*$/u.test(rest))) return null;
-  if (/^[КСНДЛЦ]/u.test(match[2]) && /^\p{Lu}[\p{Ll}\p{M}-]+(?:\s+\p{Lu}[\p{Ll}\p{M}-]+)*:/u.test(rest)
+  if (match[2].includes('.') && (/^\p{Lu}\./u.test(rest)
+    || (!pairedInvocation && /^\p{Lu}\p{Ll}+(?:\s+\p{Lu}\p{Ll}+)*$/u.test(rest)))) return null;
+  if (/^[КСНДЛЦУ]/u.test(match[2]) && /^\p{Lu}[\p{Ll}\p{M}-]+(?:\s+\p{Lu}[\p{Ll}\p{M}-]+)*:/u.test(rest)
     && !/^(?:Молімся|Памолімся):/u.test(rest)) return null;
   return { from: match[1].length, to: match[0].length, label: match[2], role: PRAYER_SPEAKERS[match[2].replace(/\.:$/, '.')] };
 }
@@ -376,7 +377,7 @@ export function renderPrayerMarkdown(value = '', format = '', { normalizeLegacy 
         const label = new child.constructor('html_inline', '', 0);
         label.content = `<span class="prayer-speaker" data-role="${prefix.role}">${markdown.utils.escapeHtml(prefix.label)}</span>`;
         children.push(label);
-        child.content = child.content.replace(/^(?: {0,3})(?:[КСНДЛЦVR]\.:?|Усе:|Цэлебрант:)/u, '');
+        child.content = child.content.replace(/^(?: {0,3})(?:[КСНДЛЦУVR]\.:?|Усе:|Цэлебрант:)/u, '');
       }
       children.push(child);
       start = child.type === 'softbreak' || child.type === 'hardbreak';
@@ -453,7 +454,7 @@ export function diagnosePrayerMarkdown(value = '') {
     if (protectedLines.has(index)) return;
     const add = (code, message, severity = 'review') => findings.push({ line: index + 1, code, message, severity });
     if (/^\s*>/.test(line)) add('quotation', 'Цытата: праверце намер аўтара; знак > захоўваецца.');
-    if (/^\s*[КСНДЛЦVR]\.:\s/u.test(line)) add('legacy-label', 'Спадчынная метка з двукроп’ем чытаецца без змены тэксту.');
+    if (/^\s*[КСНДЛЦУVR]\.:\s/u.test(line)) add('legacy-label', 'Спадчынная метка з двукроп’ем чытаецца без змены тэксту.');
     if (/^\s*[CKHNP]\.[ :]?/u.test(line)) add('ambiguous-label', 'Неадназначная лацінская літара або ініцыял; праверце ўдзельніка.', 'manual');
     if (looksLikeHtml(line)) add('html', 'HTML: праверце пераўтварэнне і захаванне зместу.');
     if (/^\s*[_*].+[_*]\s*$/.test(line)) add('emphasis', 'Вылучэнне не азначае рубрыку або адказ народу.');

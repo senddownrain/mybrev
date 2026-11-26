@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref, computed, watch } from 'vue';
-import { logger } from '@/utils/logger';
 import * as prayerService from '@/services/prayerService';
 import { useAuthStore } from '@/stores/auth';
-import { priestAccess } from '@/services/priestAccessService';
+import { canReadPrayerCatalog, prayerCatalogDemand, prayerCatalogRevision } from '@/services/prayerCatalogAccess';
+import { clearEditorPrayerReads, getPublicPrayerContent } from '@/services/prayerContentService';
+import { isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 import { requestContentRefresh } from '@/utils/publicContentCache';
 
 /**
@@ -27,110 +28,53 @@ export const usePrayersStore = defineStore('prayers', () => {
   const isLoading = ref(true);
   const error = ref(null);
 
-  let unsubscribe = null;
   let stopAuthWatch = null;
   let loadSequence = 0;
+  let protectedRevision;
 
   function refreshAllTags() {
     const tagsArray = prayers.value.flatMap(prayer => prayer.tags || []);
     allTags.value = [...new Set(tagsArray)].sort();
   }
 
-  /**
-   * Initialize the Firestore real-time subscription for prayers.
-   * Cleans up any existing subscription before creating a new one.
-   * Populates `prayers`, `allTags`, `isLoading`, and `error` reactively.
-   *
-   * @returns {void}
-   */
-  function startLiveSubscription() {
-    if (unsubscribe) {
-      unsubscribe();
-    }
-
+  async function loadPrayers(includeProtected) {
+    const sequence = ++loadSequence;
+    isLoading.value = includeProtected || !prayers.value.length;
     try {
-      logger.log('[prayersStore] Initializing prayers subscription...');
-      
-      unsubscribe = prayerService.subscribePrayers(
-        (items) => {
-          prayers.value = items;
-          refreshAllTags();
-          isLoading.value = false;
-          error.value = null;
-          logger.log('[prayersStore] Prayers loaded:', prayers.value.length);
-          logger.log('[prayersStore] First 3 prayers:', prayers.value.slice(0, 3).map(p => ({ id: p.id, title: getTitle(p) })));
-        },
-        (err) => {
-          logger.error('[prayersStore] Error loading prayers:', err);
-          logger.error('[prayersStore] Error details:', err.code, err.message);
-          error.value = err;
-          isLoading.value = false;
-        }
-      );
-    } catch (initError) {
-      logger.error('[prayersStore] Initialization error:', initError);
-      error.value = initError;
-      isLoading.value = false;
-    }
-  }
-
-  async function loadPublicPrayers() {
-      const sequence = ++loadSequence;
-      if (unsubscribe) { unsubscribe(); unsubscribe = null; }
-      prayers.value = [];
+      const publicData = await getPublicPrayerContent();
+      if (sequence !== loadSequence) return;
+      prayers.value = publicData.prayers;
       refreshAllTags();
-      isLoading.value = true;
-      try {
-        const items = await prayerService.getSavedPrayers();
-        if (sequence !== loadSequence) return;
-        prayers.value = items;
-        refreshAllTags();
-        error.value = null;
-      } catch (err) {
-        if (sequence === loadSequence) error.value = err;
-      } finally {
-        if (sequence === loadSequence) isLoading.value = false;
-      }
+      error.value = null;
+      if (!includeProtected) return;
+      const items = await prayerService.getSavedPrayers(publicData);
+      if (sequence !== loadSequence) return;
+      prayers.value = items;
+      refreshAllTags();
+    } catch (err) {
+      if (sequence === loadSequence) error.value = err;
+    } finally {
+      if (sequence === loadSequence) isLoading.value = false;
+    }
   }
 
   function init() {
     const authStore = useAuthStore();
-    if (stopAuthWatch) {
-      if (!authStore.isAdmin) loadPublicPrayers();
-      return;
-    }
-    stopAuthWatch = watch(() => [authStore.isAdmin, priestAccess.revision], ([isAdmin]) => {
-      if (isAdmin) {
-        loadSequence += 1;
-        startLiveSubscription();
-      } else {
-        loadPublicPrayers();
-      }
-    }, { immediate: true });
-  }
-
-  /**
-   * Add a new prayer document to Firestore.
-   *
-   * @param {Omit<Prayer, 'id'>} data - Prayer data without the document ID
-   * @returns {Promise<import('firebase/firestore').DocumentReference>} Reference to the created document
-   * @throws {Error} If the Firestore write fails
-   */
-  async function addPrayerAction(data) {
-    try {
-      const docRef = await prayerService.addPrayer(data);
-      requestContentRefresh();
-      // The copy editor must be able to load the new prayer immediately,
-      // even if the real-time listener has not delivered it yet.
-      if (!prayers.value.some((prayer) => prayer.id === docRef.id)) {
-        prayers.value = [{ ...data, tags: [...(data.tags || [])], id: docRef.id }, ...prayers.value];
+    if (stopAuthWatch) return;
+    const stopEditor = watch([() => authStore.isAdmin, () => authStore.user?.uid, prayerCatalogRevision], clearEditorPrayerReads, { flush: 'sync' });
+    const stopLoad = watch([() => prayerCatalogDemand.value > 0, prayerCatalogRevision], ([requested, revision], [, previous]) => {
+      const changed = revision !== previous;
+      if (changed) {
+        prayers.value = prayers.value.filter((row) => !isProtectedPrayerRow(row));
         refreshAllTags();
       }
-      return docRef;
-    } catch (err) {
-      error.value = err;
-      throw err;
-    }
+      if (requested && canReadPrayerCatalog()) {
+        if (protectedRevision === revision) return;
+        protectedRevision = revision;
+        void loadPrayers(true);
+      } else if (changed) void loadPrayers(false);
+    }, { immediate: true, flush: 'sync' });
+    stopAuthWatch = () => { stopEditor(); stopLoad(); clearEditorPrayerReads(); };
   }
 
   /**
@@ -144,31 +88,6 @@ export const usePrayersStore = defineStore('prayers', () => {
     try {
       await prayerService.deletePrayer(id);
       requestContentRefresh();
-    } catch (err) {
-      error.value = err;
-      throw err;
-    }
-  }
-
-  /**
-   * Update an existing prayer document in Firestore.
-   *
-   * @param {string} id - Firestore document ID of the prayer to update
-   * @param {Partial<Omit<Prayer, 'id'>>} data - Fields to update
-   * @returns {Promise<void>}
-   * @throws {Error} If the Firestore update fails
-   */
-  async function updatePrayerAction(id, data) {
-    try {
-      const saved = await prayerService.updatePrayer(id, data);
-      requestContentRefresh();
-      // Use the server-confirmed document, not the optimistic form payload.
-      // This also preserves normalization, sourceManual and server timestamps.
-      prayers.value = prayers.value.map((prayer) => (
-        prayer.id === id ? saved.prayer : prayer
-      ));
-      refreshAllTags();
-      return saved;
     } catch (err) {
       error.value = err;
       throw err;
@@ -220,11 +139,10 @@ export const usePrayersStore = defineStore('prayers', () => {
    */
   function cleanup() {
     loadSequence += 1;
+    protectedRevision = undefined;
+    prayers.value = prayers.value.filter((row) => !isProtectedPrayerRow(row));
+    refreshAllTags();
     if (stopAuthWatch) { stopAuthWatch(); stopAuthWatch = null; }
-    if (unsubscribe) {
-      unsubscribe();
-      unsubscribe = null;
-    }
   }
 
   return {
@@ -240,9 +158,7 @@ export const usePrayersStore = defineStore('prayers', () => {
     error: computed(() => error.value),
     
     init,
-    addPrayer: addPrayerAction,
     deletePrayer: deletePrayerAction,
-    updatePrayer: updatePrayerAction,
     cleanup,
     
     getTitle,

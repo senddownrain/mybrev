@@ -4,15 +4,15 @@
       <router-link
         v-if="selectedCategory"
         class="category-parent-link"
-        :to="categoryNavigation.parent ? categoryLocation(categoryNavigation.parent) : { name: 'Prayers' }"
+        :to="categoryNavigation.parent ? categoryLocation(categoryNavigation.parent) : { name: catalogRoute }"
         @click="clearPersonalCategory"
       >
         <PhArrowLeft :size="20" aria-hidden="true" />
-        <span>{{ categoryNavigation.parent?.name || 'Усе малітвы' }}</span>
+        <span>{{ categoryName(categoryNavigation.parent) || 'Усе малітвы' }}</span>
       </router-link>
       <div class="prayers-page-eyebrow">Малітоўнік</div>
-      <h1 ref="categoryHeading" tabindex="-1" class="prayers-page-title">{{ selectedCategory?.name || 'Малітвы' }}</h1>
-      <v-select v-if="authStore.isAdmin" v-model="accessFilter" label="Доступ" :items="accessFilters" class="mt-4" hide-details />
+      <h1 ref="categoryHeading" tabindex="-1" class="prayers-page-title">{{ categoryName(selectedCategory) || 'Малітвы' }}</h1>
+      <v-select v-if="editorial" v-model="accessFilter" data-test="prayer-access-filter" label="Доступ" :items="accessFilters" class="mt-4" hide-details />
     </div>
 
 
@@ -34,7 +34,7 @@
     </v-alert>
     
     <div v-else>
-      <PrayerCategoryComment v-if="categoryComment" :key="selectedCategory.id" :comment="categoryComment" />
+      <PrayerCategoryComment v-if="categoryComment" :key="categoryCommentKey" :comment="categoryComment" />
       <nav v-if="categoryNavigation.children.length" class="subcategory-list" aria-label="Падкатэгорыі">
         <router-link
           v-for="category in categoryNavigation.children"
@@ -63,6 +63,7 @@
               :class="{ 'prayer-list-item__icon-wrap--favorite': isFavorite(prayer.id) }"
             >
               <v-btn
+                v-if="!editorial"
                 icon
                 variant="text"
                 size="small"
@@ -77,7 +78,9 @@
 
           <v-list-item-title class="prayer-title-text">
             <span>{{ getTitle(prayer) }}</span>
-            <v-icon v-if="authStore.isAdmin && accessPolicy.prayerRestricted(prayer)" icon="mdi-key" size="small" aria-label="Толькі для святароў" />
+            <v-chip v-if="editorial" size="x-small" variant="tonal" :prepend-icon="storedPrayerAccess(prayer) ? 'mdi-key' : undefined">
+              {{ prayerAccessLabel(storedPrayerAccess(prayer), sets) }}
+            </v-chip>
             <v-chip
               v-if="authStore.isAdmin && prayer.verified === true"
               color="success"
@@ -203,39 +206,45 @@ import { PhMagnifyingGlass, PhSlidersHorizontal, PhX, PhArrowLeft, PhCaretRight 
 import CategoryIcon from './CategoryIcon.vue';
 import PrayerCategoryComment from './PrayerCategoryComment.vue';
 import { displayCategoryIconKey } from '@/constants/prayerCategoryIcons.js';
-import { buildPrayerCategoryMenu } from '@/utils/prayerCategoryMenu.js';
+import { buildPrayerCategoryMenu, readerPrayerCategoryName } from '@/utils/prayerCategoryMenu.js';
 import { buildCategoryTree, categoryPageNavigation } from '@/utils/prayerCategoryTree.mjs';
-import { priestAccess } from '@/services/priestAccessService';
+import { prayerCatalogRevision } from '@/services/prayerCatalogAccess';
 import { usePrayerCategoriesStore } from '@/stores/prayerCategories';
-import { prayerAccessPolicy } from '../../utils/priestPolicy.mjs';
+import { usePrayerCatalog } from '@/composables/usePrayerCatalog';
+import { useAdminPrayerCatalog } from '@/composables/useAdminPrayerCatalog';
+import { matchesPrayerAccessFilter, prayerAccessFilters, prayerAccessLabel, storedPrayerAccess } from '@/utils/prayerAccessPresentation.mjs';
+import { hasV2ContentFields, isProtectedPrayerRow } from '@/utils/accessSetsV2Policy.mjs';
 import { publishedPrayerCategoryComment } from '@/utils/prayerCategoryComment.mjs';
 
+const { editorial } = defineProps({ editorial: Boolean });
 const router = useRouter();
 const route = useRoute();
-const { prayers, isLoading, getTitle, getText, error, deletePrayer } = usePrayers();
 const authStore = useAuthStore();
+const catalog = editorial ? useAdminPrayerCatalog() : usePrayers();
+const { prayers, isLoading, getTitle, getText, error, deletePrayer } = catalog;
 const categoriesStore = usePrayerCategoriesStore();
-categoriesStore.init();
-const accessPolicy = computed(() => prayerAccessPolicy(prayers.value, categoriesStore.categories));
+if (!editorial) usePrayerCatalog();
+const categories = editorial ? catalog.categories : computed(() => categoriesStore.categories);
+const sets = editorial ? catalog.sets : ref([]);
+const catalogRoute = editorial ? 'AdminPrayers' : 'Prayers';
+const categoryName = (category) => editorial ? category?.name : readerPrayerCategoryName(category);
 const accessFilter = ref('all');
-const accessFilters = [{ title: 'Усе', value: 'all' }, { title: 'Агульнадаступныя', value: 'public' }, { title: 'Толькі для святароў', value: 'priest' }];
+const accessFilters = computed(() => prayerAccessFilters(sets.value));
 const settings = useSettingsStore();
 const { notifySuccess, notifyError } = useNotifier();
-const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, lastOpenedPrayerId, categoryReturnFocus, setSelectedCategory, toggleFilter } = usePrayersFilters();
+const { searchQuery, debouncedSearchQuery, selectedTags, selectedCategory, lastOpenedPrayerId, categoryReturnFocus, setSelectedCategory, toggleFilter } = usePrayersFilters(editorial);
 const categoryHeading = ref(null);
-const categoryTree = computed(() => buildCategoryTree(buildPrayerCategoryMenu(
-  categoriesStore.categories, [], settings.hiddenGlobalPrayerCategoryIds, prayers.value, authStore.isAdmin || priestAccess.active,
+const categoryTree = computed(() => buildCategoryTree(editorial ? categories.value : buildPrayerCategoryMenu(
+  categories.value, [], settings.hiddenGlobalPrayerCategoryIds, prayers.value, true,
 )));
 const categoryNavigation = computed(() => selectedCategory.value?.scope === 'global'
   ? categoryPageNavigation(categoryTree.value, selectedCategory.value.id) : { parent: null, children: [] });
-const categoryComment = computed(() => {
-  const category = selectedCategory.value;
-  if (category?.scope !== 'global') return null;
-  if (!authStore.isAdmin && !priestAccess.active
-    && (category.effectivePriestOnly === true || accessPolicy.value.categoryRestricted(category.id))) return null;
-  return publishedPrayerCategoryComment(category);
-});
-const categoryLocation = (category) => ({ name: 'Prayers', query: { category: category.id } });
+const activeCommentCategory = computed(() => selectedCategory.value?.scope === 'global'
+  ? categories.value.find((category) => category.id === selectedCategory.value.id) : null);
+const categoryComment = computed(() => publishedPrayerCategoryComment(activeCommentCategory.value));
+const categoryCommentKey = computed(() => !editorial && isProtectedPrayerRow(activeCommentCategory.value)
+  ? `${activeCommentCategory.value.id}:${prayerCatalogRevision.value}` : activeCommentCategory.value?.id);
+const categoryLocation = (category) => ({ name: catalogRoute, query: { category: category.id } });
 function rememberChild(category, event) {
   if (event?.ctrlKey || event?.metaKey || event?.shiftKey || event?.altKey || event?.button > 0) return;
   categoryReturnFocus.value = { ...categoryReturnFocus.value, [selectedCategory.value.id]: category.id };
@@ -245,22 +254,24 @@ function clearPersonalCategory(event) {
   if (selectedCategory.value?.scope !== 'global') setSelectedCategory(null);
 }
 // The existing /prayers route accepts an optional stable ID; old URLs still work.
-watch(() => [route.query.category, categoriesStore.categories], ([id]) => {
+watch(() => [route.query.category, categories.value], ([id]) => {
   if (id) {
-    const category = categoriesStore.categories.find((c) => c.id === id);
-    const next = category ? { ...category, key: `global-${category.id}`, scope: 'global' } : { id, name: 'Катэгорыя недаступная', tags: [], prayerIds: [], scope: 'global' };
+    const { comment: _comment, ...category } = categories.value.find((c) => c.id === id) || {};
+    const next = category.id ? { ...category, key: `global-${category.id}`, scope: 'global' } : { id, name: 'Катэгорыя недаступная', tags: [], prayerIds: [], scope: 'global' };
     if (selectedCategory.value?.scope === 'global' && selectedCategory.value.id === id) selectedCategory.value = next;
     else setSelectedCategory(next);
   } else if (selectedCategory.value?.scope === 'global') setSelectedCategory(null);
 }, { immediate: true });
 
 const previousTitle = document.title;
-watch(() => selectedCategory.value?.name, (name) => { document.title = `${name || 'Малітвы'} · Малітоўнік`; }, { immediate: true });
+watch(() => selectedCategory.value, (category) => {
+  document.title = `${(!isProtectedPrayerRow(category) && category?.name) || 'Малітвы'} · Малітоўнік`;
+}, { immediate: true });
 onBeforeUnmount(() => { document.title = previousTitle; });
 let focusedPage = null;
 let restoringPrayerFocus = Boolean(lastOpenedPrayerId.value);
 watch([() => route.fullPath, isLoading, () => categoriesStore.isLoading], async () => {
-  if (isLoading.value || categoriesStore.isLoading || focusedPage === route.fullPath) return;
+  if (isLoading.value || (!editorial && categoriesStore.isLoading) || focusedPage === route.fullPath) return;
   focusedPage = route.fullPath;
   await nextTick();
   if (restoringPrayerFocus || lastOpenedPrayerId.value) { restoringPrayerFocus = false; return; }
@@ -271,6 +282,12 @@ watch([() => route.fullPath, isLoading, () => categoriesStore.isLoading], async 
 
 const deleteDialogOpen = ref(false);
 const prayerToDelete = ref(null);
+watch(prayerCatalogRevision, () => {
+  if (isProtectedPrayerRow(prayerToDelete.value)) {
+    prayerToDelete.value = null;
+    deleteDialogOpen.value = false;
+  }
+}, { flush: 'sync' });
 const isDeleting = ref(false);
 
 const filteredPrayers = computed(() => {
@@ -282,11 +299,15 @@ const filteredPrayers = computed(() => {
   }
   
   let filtered = [...prayersArray];
-  if (authStore.isAdmin && accessFilter.value !== 'all') filtered = filtered.filter((p) => accessPolicy.value.prayerRestricted(p) === (accessFilter.value === 'priest'));
+  if (editorial) filtered = filtered.filter((prayer) => matchesPrayerAccessFilter(prayer, accessFilter.value));
   
   const category = selectedCategory.value?.scope === 'global'
-    ? categoriesStore.categories.find((c) => c.id === selectedCategory.value.id) : selectedCategory.value;
+    ? categories.value.find((c) => c.id === selectedCategory.value.id) : selectedCategory.value;
   if (selectedCategory.value) filtered = category ? filtered.filter((p) => prayerCategoryMatch(p, category).matches) : [];
+  // A closed collection with complete explicit membership uses its saved sequence.
+  const explicitOrder = !editorial && isProtectedPrayerRow(category) && !category.parentId && category.prayerIds?.length
+    ? new Map(category.prayerIds.map((id, position) => [id, position])) : null;
+  const useExplicitOrder = explicitOrder && filtered.every(({ id }) => explicitOrder.has(id));
   if (selectedTags.value && selectedTags.value.length > 0) {
     filtered = filtered.filter((prayer) => matchesPrayerTags(prayer.tags, selectedTags.value));
   }
@@ -302,8 +323,8 @@ const filteredPrayers = computed(() => {
     });
   }
   
-  // Сортировка: избранные молитвы вверху, затем по алфавиту
   filtered.sort((a, b) => {
+    if (useExplicitOrder) return explicitOrder.get(a.id) - explicitOrder.get(b.id);
     const aIsFavorite = isFavorite(a.id);
     const bIsFavorite = isFavorite(b.id);
 
@@ -338,11 +359,14 @@ watch(filteredPrayers, async (items) => {
 }, { immediate: true });
 
 function isFavorite(prayerId) {
-  return settings.favoritePrayers.includes(prayerId);
+  if (editorial) return false;
+  const prayer = prayers.value.find((row) => row.id === prayerId);
+  return settings.isFavoritePrayer(prayerId, Boolean(prayer && hasV2ContentFields(prayer)));
 }
 
 function toggleFavorite(prayerId) {
-  settings.toggleFavoritePrayer(prayerId);
+  const prayer = prayers.value.find((row) => row.id === prayerId);
+  if (prayer) settings.toggleFavoritePrayer(prayerId, hasV2ContentFields(prayer));
 }
 
 function openDeleteDialog(prayer) {

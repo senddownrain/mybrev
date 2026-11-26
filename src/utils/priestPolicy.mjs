@@ -31,14 +31,15 @@ export function prayerAccessPolicy(_prayers = [], categories = []) {
   return { categoryRestricted, prayerRestricted };
 }
 
-export function permittedPrayerContent(prayers, categories, priest = false) {
+export function permittedPrayerContent(prayers, categories, priest = false, { keepEmptyProtected = false } = {}) {
   const policy = prayerAccessPolicy(prayers, categories);
   const permitted = prayers.filter((p) => priest || !policy.prayerRestricted(p))
     .map((p) => ({ ...p, effectivePriestOnly: policy.prayerRestricted(p) }));
   const nonempty = new Set();
   for (const c of categories) {
     if (!priest && policy.categoryRestricted(c.id)) continue;
-    if (publishedPrayerCategoryComment(c) || permitted.some((p) => prayerCategoryMatch(p, c).matches)) nonempty.add(c.id);
+    if (publishedPrayerCategoryComment(c) || (priest && keepEmptyProtected && c.priestOnly === true)
+      || permitted.some((p) => prayerCategoryMatch(p, c).matches)) nonempty.add(c.id);
   }
   // Keep ancestors of visible descendants, including grouping categories without tags.
   for (const id of [...nonempty]) {

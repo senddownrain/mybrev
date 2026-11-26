@@ -7,9 +7,9 @@ export async function refreshSavedContent() {
   await refreshCalendarDefinitions({ fresh: true, revalidate: true });
   const keys = await publicContentCache.keys();
   requestContentRefresh();
-  const [{ useLiturgicalStore }, { getStaticCollection, getLiturgicalTemplates }, { getSavedPrayers }] = await Promise.all([
+  const [{ useLiturgicalStore }, { getStaticCollection, getLiturgicalTemplates }, { getPublicPrayerContent }] = await Promise.all([
     import('../stores/liturgical.js'),
-    import('../services/staticLiturgicalService.js'), import('../services/prayerService.js'),
+    import('../services/staticLiturgicalService.js'), import('../services/prayerContentService.js'),
   ]);
   const liturgical = useLiturgicalStore();
   const options = { fresh: true, requireFresh: true };
@@ -31,7 +31,7 @@ export async function refreshSavedContent() {
             else await getStaticCollection(value, options);
             break;
           case 'prayer-content':
-          case 'prayers': await getSavedPrayers(options); break;
+          case 'prayers': await getPublicPrayerContent(); break;
           case 'songs': await (await import('../services/songService.js')).getSavedSongs(options); break;
           // Legacy keys: year options are computed now, and the feast list of
           // `/picker` comes from the Ordo engine (no full `days` read).

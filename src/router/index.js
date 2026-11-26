@@ -204,6 +204,11 @@ const routes = [
         meta: { requiresPriestAdmin: true },
       },
       {
+        path: 'access-sets', name: 'AdminAccessSets',
+        component: () => import('@/views/admin/AccessSets.vue'),
+        meta: { requiresAccessSetsV2: true },
+      },
+      {
         path: 'day-editor/:id',
         name: 'AdminDayEditor',
         component: () => import('@/views/admin/DayEditor.vue'),
@@ -216,6 +221,11 @@ const routes = [
         component: () => import('@/views/admin/ParsedReadingEditor.vue'),
         props: true,
         meta: { hideLayoutAppBar: true },
+      },
+      {
+        path: 'prayers', name: 'AdminPrayers',
+        component: () => import('@/components/prayers/PrayersList.vue'),
+        props: { editorial: true },
       },
       {
         path: 'prayer-categories',

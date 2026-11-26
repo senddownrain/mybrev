@@ -26,7 +26,16 @@ export function firestoreErrorMessage(error) {
 // Session-only circuit breaker. Never persist an error payload, code or proof.
 // Only an explicit user retry/reload clears it; no timer retries the quota.
 let quotaBlocked = false;
-export function noteFirestoreError(error) { if (isFirestoreQuotaError(error)) quotaBlocked = true; }
+const quotaListeners = new Set();
+export function onFirestoreQuotaBlocked(listener) {
+  quotaListeners.add(listener);
+  return () => quotaListeners.delete(listener);
+}
+export function noteFirestoreError(error) {
+  if (quotaBlocked || !isFirestoreQuotaError(error)) return;
+  quotaBlocked = true;
+  for (const listener of quotaListeners) listener();
+}
 export const isFirestoreQuotaBlocked = () => quotaBlocked;
 export function resetFirestoreQuota() { quotaBlocked = false; }
 export async function withFirestoreQuota(read) {

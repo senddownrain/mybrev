@@ -34,8 +34,10 @@
     "db:migrate-core-collections": "node scripts/migrate-core-collections.mjs",
     "db:migrate-prayer-categories": "node scripts/migrate-prayer-categories.mjs",
     "db:migrate-priest-access": "node scripts/migrate-priest-access.mjs",
+    "test:access-sets-v2": "node --test tests/access-sets-v2-code.test.mjs && firebase emulators:exec --only auth,firestore --project demo-rules \"node --test tests/access-sets-v2-rules.test.mjs\"",
     "test:priest": "node --test tests/priest-*.test.mjs",
     "test:priest:rules": "firebase emulators:exec --only auth,firestore --project demo-rules \"node scripts/test-priest-emulator.mjs\"",
+    "test:access-sets-admin-ui": "firebase emulators:exec --only auth,firestore --project demo-rules \"node scripts/smoke-access-sets-admin.mjs\"",
     "smoke:priest": "node scripts/smoke-priest-ui.mjs",
     "smoke:prayer-categories": "firebase emulators:exec --only auth,firestore --project demo-rules \"node scripts/smoke-prayer-categories.mjs\"",
     "db:autofix-prayers": "node scripts/autofix-prayer-markdown.mjs",
@@ -124,7 +126,9 @@
     "db:unify-prayer-sources": "node scripts/unify-prayer-sources.mjs",
     "test:prayer-sources": "node --test tests/prayer-source-unification.test.mjs tests/prayer-draft-model.test.mjs tests/prayer-import-plan.test.mjs tests/prayer-import-bog.test.mjs tests/prayer-import-editorial.test.mjs tests/prayer-import-plan-hash.test.mjs tests/source-documents.test.mjs tests/sources.test.mjs",
     "smoke:prayer-sources": "node scripts/smoke-prayer-source-unification.mjs",
-    "public-prayers:export": "node scripts/export-public-prayers-hosting.mjs"
+    "public-prayers:export": "node scripts/export-public-prayers-hosting.mjs",
+    "db:access-sets-v2-copy": "node scripts/migrate-access-sets-v2-copy.mjs",
+    "test:access-sets-v2-copy": "firebase emulators:exec --only firestore --project demo-access-s5 \"node --test tests/access-sets-v2-copy.test.mjs\""
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",
@@ -150,6 +154,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "eslint-plugin-vue": "^10.8.0",
     "firebase-admin": "^13.6.0",
+    "google-gax": "^4.6.1",
     "https-proxy-agent": "^7.0.6",
     "playwright-core": "^1.63.0",
     "rollup-plugin-visualizer": "^5.12.0",
